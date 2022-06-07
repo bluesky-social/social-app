@@ -5,7 +5,8 @@ In-progress social app.
 Uses:
 
 - [React Native](https://reactnative.dev)
-- (todo) [React Native for Web](https://necolas.github.io/react-native-web/)
+- (blocked) [React Native for Web](https://necolas.github.io/react-native-web/)
+  - Needs [0.18 preview release #2248](https://github.com/necolas/react-native-web/pull/2248) to merge
 - (todo) [React Navigation](https://reactnative.dev/docs/navigation#react-navigation)
 - (todo) [MobX](https://mobx.js.org/README.html) and [MobX State Tree](https://mobx-state-tree.js.org/)
 - (todo) [Async Storage](https://github.com/react-native-async-storage/async-storage)
