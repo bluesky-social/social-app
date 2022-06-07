@@ -15,9 +15,12 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  Button,
   useColorScheme,
   View,
 } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import {
   Colors,
@@ -26,6 +29,12 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
+type RootStackParamList = {
+  Home: undefined;
+  Profile: { name: string };
+};
+const Stack = createNativeStackNavigator();
 
 const Section: React.FC<{
   title: string;
@@ -55,13 +64,12 @@ const Section: React.FC<{
   );
 };
 
-const App = () => {
+const HomeScreen = ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
@@ -76,6 +84,10 @@ const App = () => {
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
+            <Button
+              title="Go to Jane's profile"
+              onPress={() => navigation.navigate('Profile', {name: 'Jane'})}
+            />
           </Section>
           <Section title="See Your Changes">
             <ReloadInstructions />
@@ -90,6 +102,26 @@ const App = () => {
         </View>
       </ScrollView>
     </SafeAreaView>
+  )
+}
+
+const ProfileScreen = ({ navigation, route }: NativeStackScreenProps<RootStackParamList, 'Profile'>) => {
+  return <Text>This is {route.params.name}'s profile</Text>;
+};
+
+const App = () => {
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: 'Welcome' }}
+        />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
