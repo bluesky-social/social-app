@@ -19,68 +19,39 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
-
+import {NavigationContainer} from '@react-navigation/native';
 import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 
 type RootStackParamList = {
   Home: undefined;
-  Profile: { name: string };
+  Profile: {name: string};
 };
 const Stack = createNativeStackNavigator();
 
 const Section: React.FC<{
   title: string;
 }> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      <Text style={styles.sectionDescription}>{children}</Text>
     </View>
   );
 };
 
-const HomeScreen = ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
+const HomeScreen = ({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <SafeAreaView>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <View>
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
@@ -89,35 +60,29 @@ const HomeScreen = ({ navigation }: NativeStackScreenProps<RootStackParamList, '
               onPress={() => navigation.navigate('Profile', {name: 'Jane'})}
             />
           </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
           <Section title="Learn More">
             Read the docs to discover what to do next:
           </Section>
-          <LearnMoreLinks />
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-const ProfileScreen = ({ navigation, route }: NativeStackScreenProps<RootStackParamList, 'Profile'>) => {
+const ProfileScreen = ({
+  route,
+}: NativeStackScreenProps<RootStackParamList, 'Profile'>) => {
   return <Text>This is {route.params.name}'s profile</Text>;
 };
 
 const App = () => {
-
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: 'Welcome' }}
+          options={{title: 'Welcome'}}
         />
         <Stack.Screen name="Profile" component={ProfileScreen} />
       </Stack.Navigator>

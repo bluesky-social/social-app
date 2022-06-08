@@ -5,6 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "web": "react-scripts start",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
@@ -13,9 +14,11 @@
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
     "react": "17.0.2",
+    "react-dom": "17.0.2",
     "react-native": "0.68.2",
     "react-native-safe-area-context": "^4.3.1",
-    "react-native-screens": "^3.13.1"
+    "react-native-screens": "^3.13.1",
+    "react-native-web": "^0.17.7"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -27,9 +30,11 @@
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
     "babel-jest": "^26.6.3",
+    "babel-plugin-react-native-web": "^0.17.7",
     "eslint": "^7.32.0",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.67.0",
+    "react-scripts": "^5.0.1",
     "react-test-renderer": "17.0.2",
     "typescript": "^4.4.4"
   },
@@ -48,6 +53,18 @@
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|rollbar-react-native|@fortawesome|@react-native|@react-navigation)"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
   }
 }
