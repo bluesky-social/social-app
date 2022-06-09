@@ -11,8 +11,11 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.17.6",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
+    "mobx": "^6.6.0",
+    "mobx-state-tree": "^5.1.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-native": "0.68.2",

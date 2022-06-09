@@ -7,8 +7,8 @@ Uses:
 - [React Native](https://reactnative.dev)
 - [React Native for Web](https://necolas.github.io/react-native-web/)
 - [React Navigation](https://reactnative.dev/docs/navigation#react-navigation)
-- (todo) [MobX](https://mobx.js.org/README.html) and [MobX State Tree](https://mobx-state-tree.js.org/)
-- (todo) [Async Storage](https://github.com/react-native-async-storage/async-storage)
+- [MobX](https://mobx.js.org/README.html) and [MobX State Tree](https://mobx-state-tree.js.org/)
+- [Async Storage](https://github.com/react-native-async-storage/async-storage)
 
 ## Build instructions
 

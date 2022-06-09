@@ -10,7 +10,8 @@ module.exports = {
         '@typescript-eslint/no-shadow': 'off',
         'no-shadow': 'off',
         'no-undef': 'off',
+        semi: [2, 'never'],
       },
     },
   ],
-};
+}
