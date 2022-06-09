@@ -1,5 +1,9 @@
 import {onSnapshot} from 'mobx-state-tree'
-import {RootStoreModel, RootStore} from './models/root-store'
+import {
+  RootStoreModel,
+  RootStore,
+  createDefaultRootStore,
+} from './models/root-store'
 import {Environment} from './env'
 import * as storage from './storage'
 
@@ -15,7 +19,7 @@ export async function setupState() {
     rootStore = RootStoreModel.create(data, env)
   } catch (e) {
     console.error('Failed to load state from storage', e)
-    rootStore = RootStoreModel.create({}, env)
+    rootStore = RootStoreModel.create(createDefaultRootStore(), env)
   }
 
   // track changes & save to storage

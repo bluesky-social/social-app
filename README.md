@@ -24,8 +24,6 @@ Uses:
 
 ## TODOs
 
-- Navigation
-  - Auth / Unauthed
 - Web
   - Desktop vs mobile styling
 - API
