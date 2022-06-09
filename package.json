@@ -12,8 +12,10 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.6",
+    "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
+    "@react-navigation/stack": "^6.2.1",
     "mobx": "^6.6.0",
     "mobx-state-tree": "^5.1.5",
     "react": "17.0.2",

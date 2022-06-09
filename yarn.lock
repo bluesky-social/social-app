@@ -2012,6 +2012,15 @@
   resolved "https://registry.yarnpkg.com/@react-native/polyfills/-/polyfills-2.0.0.tgz#4c40b74655c83982c8cf47530ee7dc13d957b6aa"
   integrity sha512-K0aGNn1TjalKj+65D7ycc1//H9roAQ51GJVk5ZJQFb2teECGmzd86bYDC0aYdbRf7gtovescq4Zt6FR0tgXiHQ==
 
+"@react-navigation/bottom-tabs@^6.3.1":
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-6.3.1.tgz#1552ccdb789b6c9fc05af0877f8f3a50ab28870c"
+  integrity sha512-sL9F4WMhhR6I9bE7bpsPVHnK1cN9doaFHAuy5YmD+Sw6OyO0TAmNgQFx4xZWqboA5ZwSkN0tWcRCr6wGXaRRag==
+  dependencies:
+    "@react-navigation/elements" "^1.3.3"
+    color "^3.1.3"
+    warn-once "^0.1.0"
+
 "@react-navigation/core@^6.2.1":
   version "6.2.1"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-6.2.1.tgz#90459f9afd25b71a9471b0706ebea2cdd2534fc4"
@@ -2052,6 +2061,15 @@
   integrity sha512-8xJL+djIzpFdRW/sGlKojQ06fWgFk1c5jER9501HYJ12LF5DIJFr/tqBI2TJ6bk+y+QFu0nbNyeRC80OjRlmkA==
   dependencies:
     nanoid "^3.1.23"
+
+"@react-navigation/stack@^6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-6.2.1.tgz#2b14473579eced6def5cca06860044d60e59d06e"
+  integrity sha512-JI7boxtPAMCBXi4VJHVEq61jLVHFW5f3npvbndS+XfOsv7Gf0f91HOVJ28DS5c2Fn4+CO4AByjUozzlN296X+A==
+  dependencies:
+    "@react-navigation/elements" "^1.3.3"
+    color "^3.1.3"
+    warn-once "^0.1.0"
 
 "@rollup/plugin-babel@^5.2.0":
   version "5.3.1"
@@ -3998,7 +4016,7 @@ collection-visit@^1.0.0:
     map-visit "^1.0.0"
     object-visit "^1.0.0"
 
-color-convert@^1.9.0:
+color-convert@^1.9.0, color-convert@^1.9.3:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.3.tgz#bb71850690e1f136567de629d2d5471deda4c1e8"
   integrity sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==
@@ -4017,10 +4035,26 @@ color-name@1.1.3:
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
   integrity sha512-72fSenhMw2HZMTVHeCA9KCmpEIbzWiQsjN+BHcBbS9vr1mtt+vJjPdksIBNUmKAW8TFUDPJK5SUU3QhE9NEXDw==
 
-color-name@^1.1.4, color-name@~1.1.4:
+color-name@^1.0.0, color-name@^1.1.4, color-name@~1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
+
+color-string@^1.6.0:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/color-string/-/color-string-1.9.1.tgz#4467f9146f036f855b764dfb5bf8582bf342c7a4"
+  integrity sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==
+  dependencies:
+    color-name "^1.0.0"
+    simple-swizzle "^0.2.2"
+
+color@^3.1.3:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/color/-/color-3.2.1.tgz#3544dc198caf4490c3ecc9a790b54fe9ff45e164"
+  integrity sha512-aBl7dZI9ENN6fUGC7mWpMTPNHmWUSNan9tuWN6ahh5ZLNk9baLJOnSMlrQkHcrfFgz2/RigjUVAjdx36VcemKA==
+  dependencies:
+    color-convert "^1.9.3"
+    color-string "^1.6.0"
 
 colord@^2.9.1:
   version "2.9.2"
@@ -6467,6 +6501,11 @@ is-arrayish@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.2.1.tgz#77c99840527aa8ecb1a8ba697b80645a7a926a9d"
   integrity sha512-zz06S8t0ozoDXMG+ube26zeCTNXcKIPJZJi8hBrF4idCLms4CG9QtK7qBl1boi5ODzFpjswb5JPmHCbMpjaYzg==
+
+is-arrayish@^0.3.1:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.3.2.tgz#4574a2ae56f7ab206896fb431eaeed066fdf8f03"
+  integrity sha512-eVRqCvVlZbuw3GrM63ovNSNAeA1K16kaR/LRY/92w0zxQ5/1YzwblUX652i4Xs9RwAGjW9d9y6X88t8OaAJfWQ==
 
 is-bigint@^1.0.1:
   version "1.0.4"
@@ -10831,6 +10870,13 @@ simple-plist@^1.1.0:
     bplist-creator "0.1.0"
     bplist-parser "0.3.1"
     plist "^3.0.5"
+
+simple-swizzle@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"
+  integrity sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==
+  dependencies:
+    is-arrayish "^0.3.1"
 
 sisteransi@^1.0.5:
   version "1.0.5"

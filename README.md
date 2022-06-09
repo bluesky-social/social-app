@@ -21,3 +21,14 @@ Uses:
 - Tips
   - `npx react-native info` Checks what has been installed.
   - Android instructions are a *little* inaccurate but not as much as you might think. I had to manually create a virtual device, then run `yarn android` twice (once to start the emulator and the second time to connect to it).
+
+## TODOs
+
+- Navigation
+  - Auth / Unauthed
+- Web
+  - Desktop vs mobile styling
+- API
+  - Create mock api
+- Tests
+  - Should just try to catch errors on basic load
