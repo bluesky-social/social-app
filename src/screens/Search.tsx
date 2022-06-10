@@ -1,19 +1,14 @@
 import React from 'react'
-import {SafeAreaView, ScrollView, Text, Button, View} from 'react-native'
-import type {PrimaryTabScreenProps} from '../routes/types'
+import {Shell} from '../platform/shell'
+import {Text, View} from 'react-native'
+import type {RootTabsScreenProps} from '../routes/types'
 
-export const Search = ({navigation}: PrimaryTabScreenProps<'Search'>) => {
+export const Search = (_props: RootTabsScreenProps<'Search'>) => {
   return (
-    <SafeAreaView>
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
-        <View>
-          <Text>Hello world</Text>
-          <Button
-            title="Go to Jane's profile"
-            onPress={() => navigation.navigate('Profile', {name: 'Jane'})}
-          />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <Shell>
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <Text style={{fontSize: 20, fontWeight: 'bold'}}>Search</Text>
+      </View>
+    </Shell>
   )
 }

@@ -1,19 +1,16 @@
 import React from 'react'
-import {SafeAreaView, ScrollView, Text, Button, View} from 'react-native'
-import type {PrimaryTabScreenProps} from '../routes/types'
+import {Shell} from '../platform/shell'
+import {ScrollView, Text, View} from 'react-native'
+import type {RootTabsScreenProps} from '../routes/types'
 
-export const Menu = ({navigation}: PrimaryTabScreenProps<'Menu'>) => {
+export const Menu = (_props: RootTabsScreenProps<'Menu'>) => {
   return (
-    <SafeAreaView>
+    <Shell>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
-        <View>
-          <Text>Hello world</Text>
-          <Button
-            title="Go to Jane's profile"
-            onPress={() => navigation.navigate('Profile', {name: 'Jane'})}
-          />
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={{fontSize: 20, fontWeight: 'bold'}}>Menu</Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </Shell>
   )
 }

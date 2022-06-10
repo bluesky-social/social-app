@@ -9,8 +9,9 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {observer} from 'mobx-react-lite'
-import type {RootStackParamList} from './types'
+import type {RootTabsParamList} from './types'
 import {useStores} from '../state'
+import * as platform from '../platform/detection'
 import {Home} from '../screens/Home'
 import {Search} from '../screens/Search'
 import {Notifications} from '../screens/Notifications'
@@ -20,74 +21,77 @@ import {Login} from '../screens/Login'
 import {Signup} from '../screens/Signup'
 import {NotFound} from '../screens/NotFound'
 
-const linking: LinkingOptions<RootStackParamList> = {
+const linking: LinkingOptions<RootTabsParamList> = {
   prefixes: [
     'http://localhost:3000', // local dev
   ],
   config: {
     screens: {
-      Primary: {
-        screens: {
-          Home: '',
-          Search: 'search',
-          Notifications: 'notifications',
-          Menu: 'menu',
-        },
-      },
+      Home: '',
+      Profile: 'profile/:name',
+      Search: 'search',
+      Notifications: 'notifications',
+      Menu: 'menu',
       Login: 'login',
       Signup: 'signup',
-      Profile: 'profile/:name',
       NotFound: '*',
     },
   },
 }
 
-export const RootStack = createNativeStackNavigator()
-export const PrimaryTab = createBottomTabNavigator()
+export const RootTabs = createBottomTabNavigator()
+export const PrimaryStack = createNativeStackNavigator()
 
 const tabBarScreenOptions = ({
   route,
 }: {
   route: RouteProp<ParamListBase, string>
 }) => ({
+  headerShown: false,
   tabBarIcon: (_state: {focused: boolean; color: string; size: number}) => {
     // TODO: icons
     return <Text>{route.name.at(0)}</Text>
   },
 })
 
-function Primary() {
-  return (
-    <PrimaryTab.Navigator
-      screenOptions={tabBarScreenOptions}
-      initialRouteName="Home">
-      <PrimaryTab.Screen name="Home" component={Home} />
-      <PrimaryTab.Screen name="Search" component={Search} />
-      <PrimaryTab.Screen name="Notifications" component={Notifications} />
-      <PrimaryTab.Screen name="Menu" component={Menu} />
-    </PrimaryTab.Navigator>
-  )
-}
+const HIDE_TAB = {tabBarButton: () => null}
 
 export const Root = observer(() => {
   const store = useStores()
+
+  // hide the tabbar on desktop web
+  const tabBar = platform.isDesktopWeb ? () => null : undefined
+
   return (
     <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
-      <RootStack.Navigator
-        initialRouteName={store.session.isAuthed ? 'Primary' : 'Login'}>
+      <RootTabs.Navigator
+        initialRouteName={store.session.isAuthed ? 'Home' : 'Login'}
+        screenOptions={tabBarScreenOptions}
+        tabBar={tabBar}>
         {store.session.isAuthed ? (
           <>
-            <RootStack.Screen name="Primary" component={Primary} />
-            <RootStack.Screen name="Profile" component={Profile} />
-            <RootStack.Screen name="NotFound" component={NotFound} />
+            <RootTabs.Screen name="Home" component={Home} />
+            <RootTabs.Screen name="Search" component={Search} />
+            <RootTabs.Screen name="Notifications" component={Notifications} />
+            <RootTabs.Screen name="Menu" component={Menu} />
+            <RootTabs.Screen
+              name="Profile"
+              component={Profile}
+              options={HIDE_TAB}
+            />
           </>
         ) : (
           <>
-            <RootStack.Screen name="Login" component={Login} />
-            <RootStack.Screen name="Signup" component={Signup} />
+            <RootTabs.Screen name="Login" component={Login} />
+            <RootTabs.Screen name="Signup" component={Signup} />
           </>
         )}
-      </RootStack.Navigator>
+        <RootTabs.Screen
+          name="NotFound"
+          component={NotFound}
+          options={HIDE_TAB}
+        />
+      </RootTabs.Navigator>
     </NavigationContainer>
   )
 })

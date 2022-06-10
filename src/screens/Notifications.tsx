@@ -1,21 +1,14 @@
 import React from 'react'
-import {SafeAreaView, ScrollView, Text, Button, View} from 'react-native'
-import type {PrimaryTabScreenProps} from '../routes/types'
+import {Shell} from '../platform/shell'
+import {Text, View} from 'react-native'
+import type {RootTabsScreenProps} from '../routes/types'
 
-export const Notifications = ({
-  navigation,
-}: PrimaryTabScreenProps<'Notifications'>) => {
+export const Notifications = (_props: RootTabsScreenProps<'Notifications'>) => {
   return (
-    <SafeAreaView>
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
-        <View>
-          <Text>Hello world</Text>
-          <Button
-            title="Go to Jane's profile"
-            onPress={() => navigation.navigate('Profile', {name: 'Jane'})}
-          />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <Shell>
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <Text style={{fontSize: 20, fontWeight: 'bold'}}>Notifications</Text>
+      </View>
+    </Shell>
   )
 }

@@ -1,20 +1,21 @@
 import React from 'react'
-import {Text, Button, View, SafeAreaView} from 'react-native'
-import type {PrimaryTabScreenProps} from '../routes/types'
+import {Text, Button, View} from 'react-native'
+import {Shell} from '../platform/shell'
+import type {RootTabsScreenProps} from '../routes/types'
 import {useStores} from '../state'
 
-export function Home({navigation}: PrimaryTabScreenProps<'Home'>) {
+export function Home({navigation}: RootTabsScreenProps<'Home'>) {
   const store = useStores()
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={{flex: 1}}>
-        <Text>Hello world</Text>
+    <Shell>
+      <View style={{alignItems: 'center'}}>
+        <Text style={{fontSize: 20, fontWeight: 'bold'}}>Home</Text>
         <Button
           title="Go to Jane's profile"
           onPress={() => navigation.navigate('Profile', {name: 'Jane'})}
         />
         <Button title="Logout" onPress={() => store.session.setAuthed(false)} />
       </View>
-    </SafeAreaView>
+    </Shell>
   )
 }

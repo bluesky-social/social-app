@@ -1,26 +1,36 @@
-import type {NavigatorScreenParams} from '@react-navigation/native'
-import type {CompositeScreenProps} from '@react-navigation/native'
 import type {StackScreenProps} from '@react-navigation/stack'
-import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs'
 
-export type RootStackParamList = {
-  Primary: undefined
+export type RootTabsParamList = {
+  Home: undefined
+  Search: undefined
+  Notifications: undefined
+  Menu: undefined
   Profile: {name: string}
   Login: undefined
   Signup: undefined
   NotFound: undefined
 }
-export type RootStackScreenProps<T extends keyof RootStackParamList> =
-  StackScreenProps<RootStackParamList, T>
+export type RootTabsScreenProps<T extends keyof RootTabsParamList> =
+  StackScreenProps<RootTabsParamList, T>
 
-export type PrimaryTabParamList = {
-  Home: NavigatorScreenParams<RootStackParamList>
-  Search: undefined
-  Notifications: undefined
-  Menu: undefined
+/*
+NOTE
+this is leftover from a nested nav implementation
+keeping it around for future reference
+-prf
+
+import type {NavigatorScreenParams} from '@react-navigation/native'
+import type {CompositeScreenProps} from '@react-navigation/native'
+import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs'
+
+Container: NavigatorScreenParams<PrimaryStacksParamList>
+export type PrimaryStacksParamList = {
+  Home: undefined
+  Profile: {name: string}
 }
-export type PrimaryTabScreenProps<T extends keyof PrimaryTabParamList> =
+export type PrimaryStacksScreenProps<T extends keyof PrimaryStacksParamList> =
   CompositeScreenProps<
-    BottomTabScreenProps<PrimaryTabParamList, T>,
-    RootStackScreenProps<keyof RootStackParamList>
+    BottomTabScreenProps<PrimaryStacksParamList, T>,
+    RootTabsScreenProps<keyof RootTabsParamList>
   >
+*/

@@ -1,14 +1,15 @@
 import React from 'react'
-import {Text, Button, View, SafeAreaView} from 'react-native'
-import type {RootStackScreenProps} from '../routes/types'
+import {Shell} from '../platform/shell'
+import {Text, Button, View} from 'react-native'
+import type {RootTabsScreenProps} from '../routes/types'
 import {useStores} from '../state'
 
-export function Signup({navigation}: RootStackScreenProps<'Signup'>) {
+export function Signup({navigation}: RootTabsScreenProps<'Signup'>) {
   const store = useStores()
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={{flex: 1}}>
-        <Text>Let's create your account</Text>
+    <Shell>
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <Text style={{fontSize: 20, fontWeight: 'bold'}}>Create Account</Text>
         <Button
           title="Create new account"
           onPress={() => store.session.setAuthed(true)}
@@ -18,6 +19,6 @@ export function Signup({navigation}: RootStackScreenProps<'Signup'>) {
           onPress={() => navigation.navigate('Login')}
         />
       </View>
-    </SafeAreaView>
+    </Shell>
   )
 }

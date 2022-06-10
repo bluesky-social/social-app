@@ -24,8 +24,6 @@ Uses:
 
 ## TODOs
 
-- Web
-  - Desktop vs mobile styling
 - API
   - Create mock api
 - Tests
