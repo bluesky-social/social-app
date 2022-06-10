@@ -4,8 +4,11 @@
  */
 
 import {getEnv, IStateTreeNode} from 'mobx-state-tree'
+import {API} from '../api'
 
 export class Environment {
+  api = new API()
+
   constructor() {}
 
   async setup() {}

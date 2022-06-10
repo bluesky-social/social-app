@@ -7,6 +7,7 @@
     "ios": "react-native run-ios",
     "web": "react-scripts start",
     "start": "react-native start",
+    "dev-backend": "node ./scripts/testing-server.mjs",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
@@ -24,7 +25,8 @@
     "react-native": "0.68.2",
     "react-native-safe-area-context": "^4.3.1",
     "react-native-screens": "^3.13.1",
-    "react-native-web": "^0.17.7"
+    "react-native-web": "^0.17.7",
+    "ucans": "0.9.0-alpha3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
