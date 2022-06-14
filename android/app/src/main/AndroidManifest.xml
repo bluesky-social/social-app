@@ -21,6 +21,15 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
+        <!-- deep linking via web links -->
+        <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <!-- debug host: https://pubsq.pfrazee.com -->
+            <data android:scheme="https" />
+            <data android:host="pubsq.pfrazee.com" />
+        </intent-filter>
       </activity>
     </application>
 </manifest>

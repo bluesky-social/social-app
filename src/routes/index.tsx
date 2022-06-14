@@ -51,7 +51,7 @@ const tabBarScreenOptions = ({
   headerShown: false,
   tabBarIcon: (_state: {focused: boolean; color: string; size: number}) => {
     // TODO: icons
-    return <Text>{route.name.at(0)}</Text>
+    return <Text>{route.name?.[0] || ''}</Text>
   },
 })
 
