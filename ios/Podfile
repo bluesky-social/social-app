@@ -5,6 +5,7 @@ platform :ios, '11.0'
 install! 'cocoapods', :deterministic_uuids => false
 
 target 'app' do
+  pod 'React-RCTLinking', :path => '../node_modules/react-native/Libraries/LinkingIOS'
   config = use_native_modules!
 
   # Flags change depending on the env values.

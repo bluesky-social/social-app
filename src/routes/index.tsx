@@ -1,5 +1,5 @@
-import React from 'react'
-import {Text} from 'react-native'
+import React, {useEffect} from 'react'
+import {Text, Linking} from 'react-native'
 import {
   NavigationContainer,
   LinkingOptions,
@@ -24,6 +24,7 @@ import {NotFound} from '../screens/NotFound'
 const linking: LinkingOptions<RootTabsParamList> = {
   prefixes: [
     'http://localhost:3000', // local dev
+    'https://pubsq.pfrazee.com', // test server (universal links only)
   ],
   config: {
     screens: {
@@ -58,6 +59,16 @@ const HIDE_TAB = {tabBarButton: () => null}
 
 export const Root = observer(() => {
   const store = useStores()
+
+  useEffect(() => {
+    console.log('Initial link setup')
+    Linking.getInitialURL().then((url: string | null) => {
+      console.log('Initial url', url)
+    })
+    Linking.addEventListener('url', ({url}) => {
+      console.log('Deep link opened with', url)
+    })
+  }, [])
 
   // hide the tabbar on desktop web
   const tabBar = platform.isDesktopWeb ? () => null : undefined
