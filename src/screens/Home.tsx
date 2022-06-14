@@ -14,7 +14,7 @@ export function Home({navigation}: RootTabsScreenProps<'Home'>) {
           title="Go to Jane's profile"
           onPress={() => navigation.navigate('Profile', {name: 'Jane'})}
         />
-        <Button title="Logout" onPress={() => store.session.setAuthed(false)} />
+        <Button title="Logout" onPress={() => store.session.logout()} />
       </View>
     </Shell>
   )

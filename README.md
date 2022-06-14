@@ -14,20 +14,16 @@ Uses:
 
 - Setup your environment [using the react native instructions](https://reactnative.dev/docs/environment-setup).
 - After initial setup:
-  - `cd ios ; pod install` Installs the React Navigation deps ([info](https://reactnative.dev/docs/navigation#installation-and-setup)).
-- To run the iOS simulator: `yarn ios`
-- To run the Android simulator: `yarn android`
-- To run the Web app: `yarn web`
+  - `cd ios ; pod install`
+- Start the dev servers
+  - `yarn dev-pds`
+  - `yarn dev-wallet`
+- Run the dev app
+  - iOS: `yarn ios`
+  - Android: `yarn android`
+  - Web: `yarn web`
 - Tips
   - `npx react-native info` Checks what has been installed.
-  - Android instructions are a *little* inaccurate but not as much as you might think. I had to manually create a virtual device, then run `yarn android` twice (once to start the emulator and the second time to connect to it).
-
-## TODOs
-
-- API
-  - Create mock api
-- Tests
-  - Should just try to catch errors on basic load
 
 ## Various notes
 

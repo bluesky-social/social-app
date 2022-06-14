@@ -1,12 +1,13 @@
 import {Instance, SnapshotOut, types, flow} from 'mobx-state-tree'
-import {UserConfig} from '../../api'
+// import {UserConfig} from '../../api'
+import * as auth from '../../api/auth'
 import {withEnvironment} from '../env'
 
 export const SessionModel = types
   .model('Session')
   .props({
     isAuthed: types.boolean,
-    uiState: types.enumeration('idle', ['idle', 'working']),
+    uiIsProcessing: types.maybe(types.boolean),
     uiError: types.maybe(types.string),
 
     // TODO: these should be stored somewhere secret
@@ -14,56 +15,84 @@ export const SessionModel = types
     secretKeyStr: types.maybe(types.string),
     rootAuthToken: types.maybe(types.string),
   })
-  .views(self => ({
-    get hasAccount() {
-      return self.serverUrl && self.secretKeyStr && self.rootAuthToken
-    },
-  }))
   .extend(withEnvironment)
   .actions(self => ({
     setAuthed: (v: boolean) => {
       self.isAuthed = v
     },
-    loadAccount: flow(function* () {
-      if (!self.hasAccount) {
-        return false
-      }
-      self.uiState = 'working'
+    login: flow(function* () {
+      self.uiIsProcessing = true
       self.uiError = undefined
       try {
-        const cfg = yield UserConfig.hydrate({
-          serverUrl: self.serverUrl,
-          secretKeyStr: self.secretKeyStr,
-          rootAuthToken: self.rootAuthToken,
-        })
-        self.environment.api.setUserCfg(cfg)
+        if (!self.environment.authStore) {
+          throw new Error('Auth store not initialized')
+        }
+        const res = yield auth.requestAppUcan(self.environment.authStore)
+        self.isAuthed = res
+        self.uiIsProcessing = false
+        return res
+      } catch (e: any) {
+        console.error('Failed to request app ucan', e)
+        self.uiError = e.toString()
+        self.uiIsProcessing = false
+        return false
+      }
+    }),
+    logout: flow(function* () {
+      self.uiIsProcessing = true
+      self.uiError = undefined
+      try {
+        if (!self.environment.authStore) {
+          throw new Error('Auth store not initialized')
+        }
+        const res = yield auth.logout(self.environment.authStore)
+        self.isAuthed = false
+        self.uiIsProcessing = false
+        return res
+      } catch (e: any) {
+        console.error('Failed to log out', e)
+        self.uiError = e.toString()
+        self.uiIsProcessing = false
+        return false
+      }
+    }),
+    /*loadAccount: flow(function* () {
+      self.uiIsProcessing = true
+      self.uiError = undefined
+      try {
+        // const cfg = yield UserConfig.hydrate({
+        //   serverUrl: self.serverUrl,
+        //   secretKeyStr: self.secretKeyStr,
+        //   rootAuthToken: self.rootAuthToken,
+        // })
+        // self.environment.api.setUserCfg(cfg)
         self.isAuthed = true
-        self.uiState = 'idle'
+        self.uiIsProcessing = false
         return true
       } catch (e: any) {
         console.error('Failed to create test account', e)
         self.uiError = e.toString()
-        self.uiState = 'idle'
+        self.uiIsProcessing = false
         return false
       }
     }),
-    createTestAccount: flow(function* (serverUrl: string) {
-      self.uiState = 'working'
+    createTestAccount: flow(function* (_serverUrl: string) {
+      self.uiIsProcessing = true
       self.uiError = undefined
       try {
-        const cfg = yield UserConfig.createTest(serverUrl)
-        const state = yield cfg.serialize()
-        self.serverUrl = state.serverUrl
-        self.secretKeyStr = state.secretKeyStr
-        self.rootAuthToken = state.rootAuthToken
+        // const cfg = yield UserConfig.createTest(serverUrl)
+        // const state = yield cfg.serialize()
+        // self.serverUrl = state.serverUrl
+        // self.secretKeyStr = state.secretKeyStr
+        // self.rootAuthToken = state.rootAuthToken
         self.isAuthed = true
-        self.environment.api.setUserCfg(cfg)
+        // self.environment.api.setUserCfg(cfg)
       } catch (e: any) {
         console.error('Failed to create test account', e)
         self.uiError = e.toString()
       }
-      self.uiState = 'idle'
-    }),
+      self.uiIsProcessing = false
+    }),*/
   }))
 
 export interface Session extends Instance<typeof SessionModel> {}

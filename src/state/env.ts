@@ -4,14 +4,18 @@
  */
 
 import {getEnv, IStateTreeNode} from 'mobx-state-tree'
+import * as auth from '@adxp/auth'
 import {API} from '../api'
 
 export class Environment {
   api = new API()
+  authStore?: auth.BrowserStore
 
   constructor() {}
 
-  async setup() {}
+  async setup() {
+    this.authStore = await auth.BrowserStore.load()
+  }
 }
 
 /**

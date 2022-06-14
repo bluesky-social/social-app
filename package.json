@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "pubsq",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -7,11 +7,14 @@
     "ios": "react-native run-ios",
     "web": "react-scripts start",
     "start": "react-native start",
-    "dev-backend": "node ./scripts/testing-server.mjs",
+    "dev-pds": "node ./scripts/testing-server.mjs",
+    "dev-wallet": "cd node_modules/\\@adxp/auth-lobby && npm run start:authed",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@adxp/auth": "*",
+    "@adxp/common": "*",
     "@react-native-async-storage/async-storage": "^1.17.6",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
@@ -29,6 +32,9 @@
     "ucans": "0.9.0-alpha3"
   },
   "devDependencies": {
+    "@adxp/auth-lobby": "*",
+    "@adxp/server": "*",
+    "@adxp/ws-relay": "*",
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",

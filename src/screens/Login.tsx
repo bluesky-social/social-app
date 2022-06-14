@@ -12,14 +12,9 @@ export const Login = observer(({navigation}: RootTabsScreenProps<'Login'>) => {
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <Text style={{fontSize: 20, fontWeight: 'bold'}}>Sign In</Text>
         {store.session.uiError ?? <Text>{store.session.uiError}</Text>}
-        {store.session.uiState === 'idle' ? (
+        {!store.session.uiIsProcessing ? (
           <>
-            {store.session.hasAccount ?? (
-              <Button
-                title="Login"
-                onPress={() => store.session.loadAccount()}
-              />
-            )}
+            <Button title="Login" onPress={() => store.session.login()} />
             <Button
               title="Sign Up"
               onPress={() => navigation.navigate('Signup')}

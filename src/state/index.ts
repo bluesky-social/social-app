@@ -6,6 +6,7 @@ import {
 } from './models/root-store'
 import {Environment} from './env'
 import * as storage from './storage'
+import * as auth from '../api/auth'
 
 const ROOT_STATE_STORAGE_KEY = 'root'
 
@@ -14,6 +15,7 @@ export async function setupState() {
   let data: any
 
   const env = new Environment()
+  await env.setup()
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
     rootStore = RootStoreModel.create(data, env)
@@ -26,6 +28,16 @@ export async function setupState() {
   onSnapshot(rootStore, snapshot =>
     storage.save(ROOT_STATE_STORAGE_KEY, snapshot),
   )
+
+  if (env.authStore) {
+    const isAuthed = await auth.isAuthed(env.authStore)
+    rootStore.session.setAuthed(isAuthed)
+    const ucan = await auth.parseUrlForUcan()
+    if (ucan) {
+      await env.authStore.addUcan(ucan)
+      rootStore.session.setAuthed(true)
+    }
+  }
 
   return rootStore
 }

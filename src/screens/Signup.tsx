@@ -13,13 +13,11 @@ export const Signup = observer(
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <Text style={{fontSize: 20, fontWeight: 'bold'}}>Create Account</Text>
           {store.session.uiError ?? <Text>{store.session.uiError}</Text>}
-          {store.session.uiState === 'idle' ? (
+          {!store.session.uiIsProcessing ? (
             <>
               <Button
                 title="Create new account"
-                onPress={() =>
-                  store.session.createTestAccount('http://localhost:1986')
-                }
+                onPress={() => store.session.login()}
               />
               <Button
                 title="Log in to an existing account"

@@ -1,5 +1,26 @@
-import {MicroblogDelegator, MicroblogReader, auth} from '@adx/common'
-import * as ucan from 'ucans'
+// import {MicroblogDelegator, MicroblogReader, auth} from '@adx/common'
+// import * as ucan from 'ucans'
+
+class MicroblogReader {
+  constructor(public url: string, public did: any) {}
+}
+class MicroblogDelegator {
+  constructor(
+    public url: string,
+    public did: any,
+    public keypair: any,
+    public ucanStore: any,
+  ) {}
+}
+const auth = {
+  async claimFull(_one: any, _two: any) {
+    return {
+      encoded() {
+        return 'todo'
+      },
+    }
+  },
+}
 
 export class API {
   userCfg?: UserConfig
@@ -51,9 +72,9 @@ export interface SerializedUserConfig {
 export class UserConfig {
   serverUrl?: string
   did?: string
-  keypair?: ucan.EdKeypair
+  keypair?: any //ucan.EdKeypair
   rootAuthToken?: string
-  ucanStore?: ucan.Store
+  ucanStore?: any //ucan.Store
 
   get hasWriteCaps() {
     return Boolean(this.did && this.keypair && this.ucanStore)
@@ -62,10 +83,10 @@ export class UserConfig {
   static async createTest(serverUrl: string) {
     const cfg = new UserConfig()
     cfg.serverUrl = serverUrl
-    cfg.keypair = await ucan.EdKeypair.create()
+    cfg.keypair = true //await ucan.EdKeypair.create()
     cfg.did = cfg.keypair.did()
     cfg.rootAuthToken = (await auth.claimFull(cfg.did, cfg.keypair)).encoded()
-    cfg.ucanStore = await ucan.Store.fromTokens([cfg.rootAuthToken])
+    cfg.ucanStore = true // await ucan.Store.fromTokens([cfg.rootAuthToken])
     return cfg
   }
 
@@ -88,10 +109,10 @@ export class UserConfig {
   async hydrate(state: SerializedUserConfig) {
     this.serverUrl = state.serverUrl
     if (state.secretKeyStr && state.rootAuthToken) {
-      this.keypair = ucan.EdKeypair.fromSecretKey(state.secretKeyStr)
+      this.keypair = true // ucan.EdKeypair.fromSecretKey(state.secretKeyStr)
       this.did = this.keypair.did()
       this.rootAuthToken = state.rootAuthToken
-      this.ucanStore = await ucan.Store.fromTokens([this.rootAuthToken])
+      this.ucanStore = true // await ucan.Store.fromTokens([this.rootAuthToken])
     }
   }
 }
