@@ -25,6 +25,8 @@ const linking: LinkingOptions<RootTabsParamList> = {
   prefixes: [
     'http://localhost:3000', // local dev
     'https://pubsq.pfrazee.com', // test server (universal links only)
+    'pubsqapp://', // custom protocol (ios)
+    'pubsq://app', // custom protocol (android)
   ],
   config: {
     screens: {

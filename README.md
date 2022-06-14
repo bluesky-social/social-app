@@ -28,3 +28,10 @@ Uses:
   - Create mock api
 - Tests
   - Should just try to catch errors on basic load
+
+## Various notes
+
+- ["SSO" flows on mobile](https://developer.okta.com/blog/2022/01/13/mobile-sso)
+  - Suggests we might want to use `ASWebAuthenticationSession` on iOS
+  - [react-native-inappbrowser-reborn](https://www.npmjs.com/package/react-native-inappbrowser-reborn) with `openAuth: true` might be worth exploring
+  - We might even [get rejected by the app store](https://community.auth0.com/t/react-native-ios-app-rejected-on-appstore-for-using-react-native-auth0/36793) if we don't

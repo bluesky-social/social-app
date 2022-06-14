@@ -30,6 +30,15 @@
             <data android:scheme="https" />
             <data android:host="pubsq.pfrazee.com" />
         </intent-filter>
+        <!-- deep linking via custom links -->
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <!-- debug scheme: pubsq://app -->
+            <data android:scheme="pubsq" />
+            <data android:host="app" />
+        </intent-filter>
       </activity>
     </application>
 </manifest>
