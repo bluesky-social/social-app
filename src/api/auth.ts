@@ -1,5 +1,8 @@
+import {Linking} from 'react-native'
 import * as auth from '@adxp/auth'
+import {InAppBrowser} from 'react-native-inappbrowser-reborn'
 import {isWeb} from '../platform/detection'
+import {makeAppUrl} from '../platform/urls'
 import * as env from '../env'
 
 const SCOPE = auth.writeCap(
@@ -33,16 +36,33 @@ export async function parseUrlForUcan() {
 
 export async function requestAppUcan(authStore: auth.BrowserStore) {
   const did = await authStore.getDid()
+  const returnUrl = makeAppUrl()
+  const fragment = auth.requestAppUcanHashFragment(did, SCOPE, returnUrl)
+  const url = `${env.AUTH_LOBBY}#${fragment}`
+
   if (isWeb) {
     // @ts-ignore window is defined -prf
-    const redirectTo = window.location.origin
-    const fragment = auth.requestAppUcanHashFragment(did, SCOPE, redirectTo)
-    // @ts-ignore window is defined -prf
-    window.location.href = `${env.AUTH_LOBBY}#${fragment}`
+    window.location.href = url
     return false
-  } else {
-    // TODO
-    console.log('TODO')
   }
-  return false
+
+  if (await InAppBrowser.isAvailable()) {
+    const res = await InAppBrowser.openAuth(url, returnUrl, {
+      // iOS Properties
+      ephemeralWebSession: false,
+      // Android Properties
+      showTitle: false,
+      enableUrlBarHiding: true,
+      enableDefaultShare: false,
+    })
+    if (res.type === 'success' && res.url) {
+      Linking.openURL(res.url)
+    } else {
+      console.error('Bad response', res)
+      return false
+    }
+  } else {
+    Linking.openURL(url)
+  }
+  return true
 }

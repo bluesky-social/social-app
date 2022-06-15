@@ -26,10 +26,11 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-native": "0.68.2",
+    "react-native-inappbrowser-reborn": "^3.6.3",
     "react-native-safe-area-context": "^4.3.1",
     "react-native-screens": "^3.13.1",
     "react-native-web": "^0.17.7",
-    "ucans": "0.9.0-alpha3"
+    "ucans": "0.9.1"
   },
   "devDependencies": {
     "@adxp/auth-lobby": "*",
