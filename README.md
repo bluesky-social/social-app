@@ -24,6 +24,8 @@ Uses:
   - Web: `yarn web`
 - Tips
   - `npx react-native info` Checks what has been installed.
+  - On M1 macs, you need to exclude "arm64" from the target architectures
+    - Annoyingly this must be re-set via XCode after every pod install
 
 ## Various notes
 
@@ -31,3 +33,8 @@ Uses:
   - Suggests we might want to use `ASWebAuthenticationSession` on iOS
   - [react-native-inappbrowser-reborn](https://www.npmjs.com/package/react-native-inappbrowser-reborn) with `openAuth: true` might be worth exploring
   - We might even [get rejected by the app store](https://community.auth0.com/t/react-native-ios-app-rejected-on-appstore-for-using-react-native-auth0/36793) if we don't
+- Cryptography
+  - We rely on [isomorphic-webcrypto](https://github.com/kevlened/isomorphic-webcrypto)
+  - For the CRNG this uses [react-native-securerandom](https://github.com/robhogan/react-native-securerandom) which provides proper random on mobile
+  - For the crypto this uses [msrcrypto](https://github.com/kevlened/msrCrypto) - but we should consider switching to [the MS maintained version](https://github.com/microsoft/MSR-JavaScript-Crypto)
+  - In the future it might be preferable to move off of msrcrypto and use iOS and Android native modules, but nothing is available right now

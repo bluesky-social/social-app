@@ -4,17 +4,17 @@
  */
 
 import {getEnv, IStateTreeNode} from 'mobx-state-tree'
-import * as auth from '@adxp/auth'
+import {ReactNativeStore} from './auth'
 import {API} from '../api'
 
 export class Environment {
   api = new API()
-  authStore?: auth.BrowserStore
+  authStore?: ReactNativeStore
 
   constructor() {}
 
   async setup() {
-    this.authStore = await auth.BrowserStore.load()
+    this.authStore = await ReactNativeStore.load()
   }
 }
 

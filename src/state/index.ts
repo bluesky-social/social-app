@@ -6,7 +6,7 @@ import {
 } from './models/root-store'
 import {Environment} from './env'
 import * as storage from './storage'
-import * as auth from '../api/auth'
+import * as auth from './auth'
 
 const ROOT_STATE_STORAGE_KEY = 'root'
 

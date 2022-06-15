@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import {whenWebCrypto} from './platform/polyfills.native'
 import {RootStore, setupState, RootStoreProvider} from './state'
 import * as Routes from './routes'
 
@@ -7,7 +8,7 @@ function App() {
 
   // init
   useEffect(() => {
-    setupState().then(setRootStore)
+    whenWebCrypto.then(() => setupState()).then(setRootStore)
   }, [])
 
   // show nothing prior to init

@@ -1,6 +1,6 @@
 import {Instance, SnapshotOut, types, flow} from 'mobx-state-tree'
 // import {UserConfig} from '../../api'
-import * as auth from '../../api/auth'
+import * as auth from '../auth'
 import {withEnvironment} from '../env'
 
 export const SessionModel = types
