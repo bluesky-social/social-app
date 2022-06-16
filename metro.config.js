@@ -6,7 +6,6 @@
  */
 const metroResolver = require('metro-resolver')
 const path = require('path')
-console.log(metroResolver)
 
 module.exports = {
   resolver: {

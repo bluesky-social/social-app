@@ -1,4 +1,4 @@
-package com.app;
+package xyz.blueskyweb.pubsq;
 
 import android.app.Application;
 import android.content.Context;
@@ -9,7 +9,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
-import com.app.newarchitecture.MainApplicationReactNativeHost;
+import xyz.blueskyweb.pubsq.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
