@@ -7,7 +7,6 @@ import {
 import {Environment} from './env'
 import * as storage from './storage'
 import * as auth from './auth'
-import * as urls from '../platform/urls'
 
 const ROOT_STATE_STORAGE_KEY = 'root'
 

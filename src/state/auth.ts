@@ -1,16 +1,8 @@
-import {Linking} from 'react-native'
 import * as auth from '@adxp/auth'
 import * as ucan from 'ucans'
-import {InAppBrowser} from 'react-native-inappbrowser-reborn'
-import {isWeb} from '../platform/detection'
-import {
-  getInitialURL,
-  extractHashFragment,
-  clearHash,
-  makeAppUrl,
-} from '../platform/urls'
+import {getInitialURL, extractHashFragment, clearHash} from '../platform/urls'
+import * as authFlow from '../platform/auth-flow'
 import * as storage from './storage'
-import * as env from '../env'
 
 const SCOPE = auth.writeCap(
   'did:key:z6MkfRiFMLzCxxnw6VMrHK8pPFt4QAHS3jX3XM87y9rta6kP',
@@ -48,45 +40,7 @@ export async function initialLoadUcanCheck(authStore: ReactNativeStore) {
 }
 
 export async function requestAppUcan(authStore: ReactNativeStore) {
-  const did = await authStore.getDid()
-  const returnUrl = makeAppUrl()
-  const fragment = auth.requestAppUcanHashFragment(did, SCOPE, returnUrl)
-  const url = `${env.AUTH_LOBBY}#${fragment}`
-
-  if (isWeb) {
-    // @ts-ignore window is defined -prf
-    window.location.href = url
-    return false
-  }
-
-  if (await InAppBrowser.isAvailable()) {
-    // use in-app browser
-    const res = await InAppBrowser.openAuth(url, returnUrl, {
-      // iOS Properties
-      ephemeralWebSession: false,
-      // Android Properties
-      showTitle: false,
-      enableUrlBarHiding: true,
-      enableDefaultShare: false,
-    })
-    if (res.type === 'success' && res.url) {
-      const fragment = extractHashFragment(res.url)
-      if (fragment) {
-        const ucan = await parseUrlForUcan(fragment)
-        if (ucan) {
-          await authStore.addUcan(ucan)
-          return true
-        }
-      }
-    } else {
-      console.log('Not completed', res)
-      return false
-    }
-  } else {
-    // use system browser
-    Linking.openURL(url)
-  }
-  return true
+  return authFlow.requestAppUcan(authStore, SCOPE)
 }
 
 export class ReactNativeStore extends auth.AuthStore {
