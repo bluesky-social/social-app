@@ -10,6 +10,11 @@ Uses:
 - [MobX](https://mobx.js.org/README.html) and [MobX State Tree](https://mobx-state-tree.js.org/)
 - [Async Storage](https://github.com/react-native-async-storage/async-storage)
 
+## TODOs
+
+- Handle the "unauthed" state better than changing route definitions
+  - Currently it's possible to get a 404 if the auth state changes
+
 ## Build instructions
 
 - Setup your environment [using the react native instructions](https://reactnative.dev/docs/environment-setup).
@@ -56,3 +61,7 @@ For native builds, we must provide a polyfill of `webcrypto`. We use [react-nati
 
 - webcrypto
 - TextEncoder / TextDecoder
+
+### Auth flow
+
+The auth flow is based on a browser app which is specified by the `REACT_APP_AUTH_LOBBY` env var. The app redirects to that location with the UCAN request, and then waits for a redirect back. In the native platforms with proper support, it will do this using an in-app browser. In native without in-app browser, or in the Web platform, it will handle this with redirects. The ucan is extracted from the hash fragment of the "return url" which is provided either by the in-app browser in response or detected during initial setup in the case of redirects.

@@ -7,6 +7,7 @@ import {
 import {Environment} from './env'
 import * as storage from './storage'
 import * as auth from './auth'
+import * as urls from '../platform/urls'
 
 const ROOT_STATE_STORAGE_KEY = 'root'
 
@@ -32,9 +33,9 @@ export async function setupState() {
   if (env.authStore) {
     const isAuthed = await auth.isAuthed(env.authStore)
     rootStore.session.setAuthed(isAuthed)
-    const ucan = await auth.parseUrlForUcan()
-    if (ucan) {
-      await env.authStore.addUcan(ucan)
+
+    // handle redirect from auth
+    if (await auth.initialLoadUcanCheck(env.authStore)) {
       rootStore.session.setAuthed(true)
     }
   }

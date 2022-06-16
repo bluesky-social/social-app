@@ -3,7 +3,12 @@ import * as auth from '@adxp/auth'
 import * as ucan from 'ucans'
 import {InAppBrowser} from 'react-native-inappbrowser-reborn'
 import {isWeb} from '../platform/detection'
-import {makeAppUrl} from '../platform/urls'
+import {
+  getInitialURL,
+  extractHashFragment,
+  clearHash,
+  makeAppUrl,
+} from '../platform/urls'
 import * as storage from './storage'
 import * as env from '../env'
 
@@ -20,24 +25,26 @@ export async function logout(authStore: ReactNativeStore) {
   await authStore.reset()
 }
 
-export async function parseUrlForUcan() {
-  if (isWeb) {
-    // @ts-ignore window is defined -prf
-    const fragment = window.location.hash
-    if (fragment.length < 1) {
-      return undefined
-    }
-    try {
-      const ucan = await auth.parseLobbyResponseHashFragment(fragment)
-      // @ts-ignore window is defined -prf
-      window.location.hash = ''
-      return ucan
-    } catch (err) {
-      return undefined
-    }
-  } else {
-    // TODO
+export async function parseUrlForUcan(fragment: string) {
+  try {
+    return await auth.parseLobbyResponseHashFragment(fragment)
+  } catch (err) {
+    return undefined
   }
+}
+
+export async function initialLoadUcanCheck(authStore: ReactNativeStore) {
+  let wasAuthed = false
+  const fragment = extractHashFragment(await getInitialURL())
+  if (fragment) {
+    const ucan = await parseUrlForUcan(fragment)
+    if (ucan) {
+      await authStore.addUcan(ucan)
+      wasAuthed = true
+      clearHash()
+    }
+  }
+  return wasAuthed
 }
 
 export async function requestAppUcan(authStore: ReactNativeStore) {
@@ -53,6 +60,7 @@ export async function requestAppUcan(authStore: ReactNativeStore) {
   }
 
   if (await InAppBrowser.isAvailable()) {
+    // use in-app browser
     const res = await InAppBrowser.openAuth(url, returnUrl, {
       // iOS Properties
       ephemeralWebSession: false,
@@ -62,12 +70,20 @@ export async function requestAppUcan(authStore: ReactNativeStore) {
       enableDefaultShare: false,
     })
     if (res.type === 'success' && res.url) {
-      Linking.openURL(res.url)
+      const fragment = extractHashFragment(res.url)
+      if (fragment) {
+        const ucan = await parseUrlForUcan(fragment)
+        if (ucan) {
+          await authStore.addUcan(ucan)
+          return true
+        }
+      }
     } else {
-      console.error('Bad response', res)
+      console.log('Not completed', res)
       return false
     }
   } else {
+    // use system browser
     Linking.openURL(url)
   }
   return true
