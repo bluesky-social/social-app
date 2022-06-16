@@ -29,12 +29,30 @@ Uses:
 
 ## Various notes
 
-- ["SSO" flows on mobile](https://developer.okta.com/blog/2022/01/13/mobile-sso)
-  - Suggests we might want to use `ASWebAuthenticationSession` on iOS
-  - [react-native-inappbrowser-reborn](https://www.npmjs.com/package/react-native-inappbrowser-reborn) with `openAuth: true` might be worth exploring
-  - We might even [get rejected by the app store](https://community.auth0.com/t/react-native-ios-app-rejected-on-appstore-for-using-react-native-auth0/36793) if we don't
-- Cryptography
-  - We rely on [isomorphic-webcrypto](https://github.com/kevlened/isomorphic-webcrypto)
-  - For the CRNG this uses [react-native-securerandom](https://github.com/robhogan/react-native-securerandom) which provides proper random on mobile
-  - For the crypto this uses [msrcrypto](https://github.com/kevlened/msrCrypto) - but we should consider switching to [the MS maintained version](https://github.com/microsoft/MSR-JavaScript-Crypto)
-  - In the future it might be preferable to move off of msrcrypto and use iOS and Android native modules, but nothing is available right now
+### Env vars
+
+Set using the `.env` file or using bash.
+
+```
+REACT_APP_AUTH_LOBBY = 'http://localhost:3001'
+```
+
+### Build behaviors
+
+The `metro.config.js` file rewrites a couple of imports. This is partly to work around missing features in Metro, and partly to patch the bundle. Affected imports include:
+
+- ucans
+- one-webcrypto
+
+### Cryptography
+
+For native builds, we must provide a polyfill of `webcrypto`. We use [react-native-securerandom](https://github.com/robhogan/react-native-securerandom) for the CRNG and [msrcrypto](https://github.com/kevlened/msrCrypto) for the cryptography.
+
+**NOTE** Keys are not currently stored securely.
+
+### Polyfills
+
+`./platform/polyfills.*.ts` adds polyfills to the environment. Currently this includes:
+
+- webcrypto
+- TextEncoder / TextDecoder
