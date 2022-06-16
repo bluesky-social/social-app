@@ -51,7 +51,7 @@ The `metro.config.js` file rewrites a couple of imports. This is partly to work 
 
 ### Cryptography
 
-For native builds, we must provide a polyfill of `webcrypto`. We use [react-native-securerandom](https://github.com/robhogan/react-native-securerandom) for the CRNG and [msrcrypto](https://github.com/kevlened/msrCrypto) for the cryptography.
+For native builds, we must provide a polyfill of `webcrypto`. We use a custom native module AppSecureRandom (based on [react-native-securerandom](https://github.com/robhogan/react-native-securerandom)) for the CRNG and [msrcrypto](https://github.com/kevlened/msrCrypto) for the cryptography.
 
 **NOTE** Keys are not currently stored securely.
 

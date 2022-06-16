@@ -13,6 +13,8 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		5CEAE7B7A55582F96F1D5952 /* libPods-app.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FCB672808307A6013805A3FE /* libPods-app.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		E4BD704B285AD57E00A8FED9 /* AppSecureRandomModule.m in Sources */ = {isa = PBXBuildFile; fileRef = E4BD704A285AD57E00A8FED9 /* AppSecureRandomModule.m */; };
+		E4BD704C285AD57E00A8FED9 /* AppSecureRandomModule.m in Sources */ = {isa = PBXBuildFile; fileRef = E4BD704A285AD57E00A8FED9 /* AppSecureRandomModule.m */; };
 		FEB90D21557517F9279AECA4 /* libPods-app-appTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BAD3BC60FA05CF2D4F6F9BA2 /* libPods-app-appTests.a */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +44,8 @@
 		970005155A83960D1D13380F /* Pods-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app.release.xcconfig"; path = "Target Support Files/Pods-app/Pods-app.release.xcconfig"; sourceTree = "<group>"; };
 		BAD3BC60FA05CF2D4F6F9BA2 /* libPods-app-appTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-app-appTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4437C9E28581FA7006DA9E7 /* app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = app.entitlements; path = app/app.entitlements; sourceTree = "<group>"; };
+		E4BD7049285AD54000A8FED9 /* AppSecureRandomModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppSecureRandomModule.h; sourceTree = "<group>"; };
+		E4BD704A285AD57E00A8FED9 /* AppSecureRandomModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppSecureRandomModule.m; sourceTree = "<group>"; };
 		ED22CAA45207BC18E75DB44B /* Pods-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app.debug.xcconfig"; path = "Target Support Files/Pods-app/Pods-app.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FCB672808307A6013805A3FE /* libPods-app.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-app.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,6 +98,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				E4BD7049285AD54000A8FED9 /* AppSecureRandomModule.h */,
+				E4BD704A285AD57E00A8FED9 /* AppSecureRandomModule.m */,
 			);
 			name = app;
 			sourceTree = "<group>";
@@ -369,6 +375,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* appTests.m in Sources */,
+				E4BD704C285AD57E00A8FED9 /* AppSecureRandomModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,6 +384,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				E4BD704B285AD57E00A8FED9 /* AppSecureRandomModule.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
