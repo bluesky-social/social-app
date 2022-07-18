@@ -1,7 +1,7 @@
 import * as auth from '@adxp/auth'
 import * as ucan from 'ucans'
 import {makeAppUrl} from '../platform/urls'
-import {ReactNativeStore} from '../state/auth'
+import {ReactNativeStore} from '../state/lib/auth'
 import * as env from '../env'
 
 export async function requestAppUcan(

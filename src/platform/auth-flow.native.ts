@@ -4,7 +4,7 @@ import * as ucan from 'ucans'
 import {InAppBrowser} from 'react-native-inappbrowser-reborn'
 import {isWeb} from '../platform/detection'
 import {extractHashFragment, makeAppUrl} from '../platform/urls'
-import {ReactNativeStore, parseUrlForUcan} from '../state/auth'
+import {ReactNativeStore, parseUrlForUcan} from '../state/lib/auth'
 import * as env from '../env'
 
 export async function requestAppUcan(

@@ -1,7 +1,11 @@
 import * as auth from '@adxp/auth'
 import * as ucan from 'ucans'
-import {getInitialURL, extractHashFragment, clearHash} from '../platform/urls'
-import * as authFlow from '../platform/auth-flow'
+import {
+  getInitialURL,
+  extractHashFragment,
+  clearHash,
+} from '../../platform/urls'
+import * as authFlow from '../../platform/auth-flow'
 import * as storage from './storage'
 
 const SCOPE = auth.writeCap(

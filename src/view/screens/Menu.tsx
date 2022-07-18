@@ -1,5 +1,5 @@
 import React from 'react'
-import {Shell} from '../platform/shell'
+import {Shell} from '../shell'
 import {ScrollView, Text, View} from 'react-native'
 import type {RootTabsScreenProps} from '../routes/types'
 

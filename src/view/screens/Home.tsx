@@ -1,8 +1,8 @@
 import React from 'react'
 import {Text, Button, View} from 'react-native'
-import {Shell} from '../platform/shell'
+import {Shell} from '../shell'
 import type {RootTabsScreenProps} from '../routes/types'
-import {useStores} from '../state'
+import {useStores} from '../../state'
 
 export function Home({navigation}: RootTabsScreenProps<'Home'>) {
   const store = useStores()

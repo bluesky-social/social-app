@@ -1,9 +1,9 @@
 import React from 'react'
 import {Text, Button, View, ActivityIndicator} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {Shell} from '../platform/shell'
+import {Shell} from '../shell'
 import type {RootTabsScreenProps} from '../routes/types'
-import {useStores} from '../state'
+import {useStores} from '../../state'
 
 export const Login = observer(({navigation}: RootTabsScreenProps<'Login'>) => {
   const store = useStores()

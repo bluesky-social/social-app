@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {RootStore, setupState, RootStoreProvider} from './state'
-import * as Routes from './routes'
+import * as Routes from './view/routes'
 
 function App() {
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)

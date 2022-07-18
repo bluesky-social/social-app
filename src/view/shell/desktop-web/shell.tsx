@@ -3,7 +3,7 @@ import {observer} from 'mobx-react-lite'
 import {View, StyleSheet} from 'react-native'
 import {DesktopLeftColumn} from './left-column'
 import {DesktopRightColumn} from './right-column'
-import {useStores} from '../../state'
+import {useStores} from '../../../state'
 
 export const DesktopWebShell: React.FC = observer(({children}) => {
   const store = useStores()

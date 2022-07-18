@@ -5,8 +5,8 @@ import {
   createDefaultRootStore,
 } from './models/root-store'
 import {Environment} from './env'
-import * as storage from './storage'
-import * as auth from './auth'
+import * as storage from './lib/storage'
+// import * as auth from './auth' TODO
 
 const ROOT_STATE_STORAGE_KEY = 'root'
 
@@ -29,15 +29,19 @@ export async function setupState() {
     storage.save(ROOT_STATE_STORAGE_KEY, snapshot),
   )
 
-  if (env.authStore) {
-    const isAuthed = await auth.isAuthed(env.authStore)
-    rootStore.session.setAuthed(isAuthed)
+  // TODO
+  rootStore.session.setAuthed(true)
+  // if (env.authStore) {
+  //   const isAuthed = await auth.isAuthed(env.authStore)
+  //   rootStore.session.setAuthed(isAuthed)
 
-    // handle redirect from auth
-    if (await auth.initialLoadUcanCheck(env.authStore)) {
-      rootStore.session.setAuthed(true)
-    }
-  }
+  //   // handle redirect from auth
+  //   if (await auth.initialLoadUcanCheck(env.authStore)) {
+  //     rootStore.session.setAuthed(true)
+  //   }
+  // }
+  await rootStore.me.load()
+  console.log(rootStore.me)
 
   return rootStore
 }

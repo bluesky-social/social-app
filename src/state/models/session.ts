@@ -1,6 +1,6 @@
 import {Instance, SnapshotOut, types, flow} from 'mobx-state-tree'
 // import {UserConfig} from '../../api'
-import * as auth from '../auth'
+import * as auth from '../lib/auth'
 import {withEnvironment} from '../env'
 
 export const SessionModel = types
@@ -24,10 +24,10 @@ export const SessionModel = types
       self.uiIsProcessing = true
       self.uiError = undefined
       try {
-        if (!self.environment.authStore) {
+        if (!self.env.authStore) {
           throw new Error('Auth store not initialized')
         }
-        const res = yield auth.requestAppUcan(self.environment.authStore)
+        const res = yield auth.requestAppUcan(self.env.authStore)
         self.isAuthed = res
         self.uiIsProcessing = false
         return res
@@ -42,10 +42,10 @@ export const SessionModel = types
       self.uiIsProcessing = true
       self.uiError = undefined
       try {
-        if (!self.environment.authStore) {
+        if (!self.env.authStore) {
           throw new Error('Auth store not initialized')
         }
-        const res = yield auth.logout(self.environment.authStore)
+        const res = yield auth.logout(self.env.authStore)
         self.isAuthed = false
         self.uiIsProcessing = false
         return res
@@ -65,7 +65,7 @@ export const SessionModel = types
         //   secretKeyStr: self.secretKeyStr,
         //   rootAuthToken: self.rootAuthToken,
         // })
-        // self.environment.api.setUserCfg(cfg)
+        // self.env.api.setUserCfg(cfg)
         self.isAuthed = true
         self.uiIsProcessing = false
         return true
@@ -86,7 +86,7 @@ export const SessionModel = types
         // self.secretKeyStr = state.secretKeyStr
         // self.rootAuthToken = state.rootAuthToken
         self.isAuthed = true
-        // self.environment.api.setUserCfg(cfg)
+        // self.env.api.setUserCfg(cfg)
       } catch (e: any) {
         console.error('Failed to create test account', e)
         self.uiError = e.toString()
