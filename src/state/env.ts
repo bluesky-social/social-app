@@ -140,14 +140,12 @@ export async function generateMockData() {
       reply: {root: alicePosts[0].uri, parent: alicePosts[0].uri},
       createdAt: date.next().value,
     })
-  const carlaReply1 = await carla
-    .collection('blueskyweb.xyz:Posts')
-    .create('Post', {
-      $type: 'blueskyweb.xyz:Post',
-      text: 'Carla reply',
-      reply: {root: alicePosts[0].uri, parent: alicePosts[0].uri},
-      createdAt: date.next().value,
-    })
+  await carla.collection('blueskyweb.xyz:Posts').create('Post', {
+    $type: 'blueskyweb.xyz:Post',
+    text: 'Carla reply',
+    reply: {root: alicePosts[0].uri, parent: alicePosts[0].uri},
+    createdAt: date.next().value,
+  })
   const aliceReply1 = await alice
     .collection('blueskyweb.xyz:Posts')
     .create('Post', {
@@ -222,14 +220,12 @@ export async function generateMockData() {
       assertion: {type: 'tag', tag: 'tech'},
       createdAt: date.next().value,
     })
-  const employeeBadge = await bob
-    .collection('blueskyweb.xyz:Badges')
-    .create('Badge', {
-      $type: 'blueskyweb.xyz:Badge',
-      subject: {did: alice.did, name: 'alice.com'},
-      assertion: {type: 'employee'},
-      createdAt: date.next().value,
-    })
+  await bob.collection('blueskyweb.xyz:Badges').create('Badge', {
+    $type: 'blueskyweb.xyz:Badge',
+    subject: {did: alice.did, name: 'alice.com'},
+    assertion: {type: 'employee'},
+    createdAt: date.next().value,
+  })
   await alice.collection('blueskyweb.xyz:Profiles').put('Profile', 'profile', {
     $type: 'blueskyweb.xyz:Profile',
     displayName: 'Alice',

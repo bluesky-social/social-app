@@ -1,6 +1,6 @@
 import {Instance, SnapshotOut, types, flow} from 'mobx-state-tree'
 // import {UserConfig} from '../../api'
-import * as auth from '../lib/auth'
+// import * as auth from '../lib/auth'
 import {withEnvironment} from '../env'
 
 export const SessionModel = types
@@ -21,7 +21,7 @@ export const SessionModel = types
       self.isAuthed = v
     },
     login: flow(function* () {
-      self.uiIsProcessing = true
+      /*self.uiIsProcessing = true
       self.uiError = undefined
       try {
         if (!self.env.authStore) {
@@ -36,10 +36,10 @@ export const SessionModel = types
         self.uiError = e.toString()
         self.uiIsProcessing = false
         return false
-      }
+      }*/
     }),
     logout: flow(function* () {
-      self.uiIsProcessing = true
+      /*self.uiIsProcessing = true
       self.uiError = undefined
       try {
         if (!self.env.authStore) {
@@ -54,7 +54,7 @@ export const SessionModel = types
         self.uiError = e.toString()
         self.uiIsProcessing = false
         return false
-      }
+      }*/
     }),
     /*loadAccount: flow(function* () {
       self.uiIsProcessing = true
