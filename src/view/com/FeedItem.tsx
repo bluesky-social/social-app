@@ -3,6 +3,7 @@ import {observer} from 'mobx-react-lite'
 import {Text, Image, ImageSourcePropType, StyleSheet, View} from 'react-native'
 import {bsky} from '@adxp/mock-api'
 import moment from 'moment'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedViewItemModel} from '../../state/models/feed-view'
 
 const IMAGES: Record<string, ImageSourcePropType> = {
@@ -20,9 +21,12 @@ export const FeedItem = observer(function FeedItem({
   return (
     <View style={styles.outer}>
       {item.repostedBy && (
-        <Text style={styles.repostedBy}>
-          Reposted by {item.repostedBy.displayName}
-        </Text>
+        <View style={styles.repostedBy}>
+          <FontAwesomeIcon icon="retweet" style={styles.repostedByIcon} />
+          <Text style={styles.repostedByText}>
+            Reposted by {item.repostedBy.displayName}
+          </Text>
+        </View>
       )}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
@@ -44,6 +48,36 @@ export const FeedItem = observer(function FeedItem({
             </Text>
           </View>
           <Text style={styles.postText}>{record.text}</Text>
+          <View style={styles.ctrls}>
+            <View style={styles.ctrl}>
+              <FontAwesomeIcon
+                style={styles.ctrlReplyIcon}
+                icon={['far', 'comment']}
+              />
+              <Text>{item.replyCount}</Text>
+            </View>
+            <View style={styles.ctrl}>
+              <FontAwesomeIcon
+                style={styles.ctrlRepostIcon}
+                icon="retweet"
+                size={22}
+              />
+              <Text>{item.repostCount}</Text>
+            </View>
+            <View style={styles.ctrl}>
+              <FontAwesomeIcon
+                style={styles.ctrlLikeIcon}
+                icon={['far', 'heart']}
+              />
+              <Text>{item.likeCount}</Text>
+            </View>
+            <View style={styles.ctrl}>
+              <FontAwesomeIcon
+                style={styles.ctrlShareIcon}
+                icon="share-from-square"
+              />
+            </View>
+          </View>
         </View>
       </View>
     </View>
@@ -58,7 +92,14 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   repostedBy: {
+    flexDirection: 'row',
     paddingLeft: 70,
+  },
+  repostedByIcon: {
+    marginRight: 2,
+    color: 'gray',
+  },
+  repostedByText: {
     color: 'gray',
     fontWeight: 'bold',
     fontSize: 13,
@@ -100,5 +141,32 @@ const styles = StyleSheet.create({
   },
   postText: {
     fontSize: 15,
+    paddingBottom: 5,
+  },
+  ctrls: {
+    flexDirection: 'row',
+  },
+  ctrl: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    paddingLeft: 4,
+    paddingRight: 4,
+  },
+  ctrlReplyIcon: {
+    marginRight: 5,
+    color: 'gray',
+  },
+  ctrlRepostIcon: {
+    marginRight: 5,
+    color: 'gray',
+  },
+  ctrlLikeIcon: {
+    marginRight: 5,
+    color: 'gray',
+  },
+  ctrlShareIcon: {
+    marginRight: 5,
+    color: 'gray',
   },
 })

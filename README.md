@@ -29,7 +29,7 @@ Uses:
   - Web: `yarn web`
 - Tips
   - `npx react-native info` Checks what has been installed.
-  - On M1 macs, you need to exclude "arm64" from the target architectures
+  - On M1 macs, [you need to exclude "arm64" from the target architectures](https://stackoverflow.com/a/65399525)
     - Annoyingly this must be re-set via XCode after every pod install
   - The android simulator won't be able to access localhost services unless you run `adb reverse tcp:{PORT} tcp:{PORT}`
     - For instance, the localhosted dev-wallet will need `adb reverse tcp:3001 tcp:3001`

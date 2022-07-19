@@ -14,9 +14,6 @@ export function Home(/*{navigation}: RootTabsScreenProps<'Home'>*/) {
   return (
     <Shell>
       <View>
-        <Text style={{fontSize: 20, fontWeight: 'bold'}}>
-          Hello, {store.me.displayName} ({store.me.name})
-        </Text>
         <Feed feed={store.homeFeed} />
       </View>
     </Shell>
