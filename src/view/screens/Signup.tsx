@@ -1,18 +1,18 @@
 import React from 'react'
-import {Text, Button, View, ActivityIndicator} from 'react-native'
+import {Text, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {Shell} from '../shell'
-import type {RootTabsScreenProps} from '../routes/types'
-import {useStores} from '../../state'
+// import type {RootTabsScreenProps} from '../routes/types'
+// import {useStores} from '../../state'
 
 export const Signup = observer(
-  ({navigation}: RootTabsScreenProps<'Signup'>) => {
-    const store = useStores()
+  (/*{navigation}: RootTabsScreenProps<'Signup'>*/) => {
+    // const store = useStores()
     return (
       <Shell>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <Text style={{fontSize: 20, fontWeight: 'bold'}}>Create Account</Text>
-          {store.session.uiError ?? <Text>{store.session.uiError}</Text>}
+          {/*store.session.uiError ?? <Text>{store.session.uiError}</Text>}
           {!store.session.uiIsProcessing ? (
             <>
               <Button
@@ -26,7 +26,7 @@ export const Signup = observer(
             </>
           ) : (
             <ActivityIndicator />
-          )}
+          )*/}
         </View>
       </Shell>
     )

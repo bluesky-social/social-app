@@ -3,48 +3,19 @@
  * models live. They are made available to every model via dependency injection.
  */
 
-import {getEnv, IStateTreeNode} from 'mobx-state-tree'
 // import {ReactNativeStore} from './auth'
-import {AdxClient, blueskywebSchemas, AdxRepoClient} from '@adxp/mock-api'
-import * as storage from './lib/storage'
+import {AdxClient, AdxRepoClient} from '@adxp/mock-api'
+import * as storage from './storage'
 
-export const adx = new AdxClient({
-  pds: 'http://localhost',
-  schemas: blueskywebSchemas,
-})
-
-export class Environment {
-  adx = adx
-  // authStore?: ReactNativeStore
-
-  constructor() {}
-
-  async setup() {
-    await adx.setupMock(
-      () => storage.load('mock-root'),
-      async root => {
-        await storage.save('mock-root', root)
-      },
-      generateMockData,
-    )
-    // this.authStore = await ReactNativeStore.load()
-  }
-}
-
-/**
- * Extension to the MST models that adds the env property.
- * Usage:
- *
- *   .extend(withEnvironment)
- *
- */
-export const withEnvironment = (self: IStateTreeNode) => ({
-  views: {
-    get env() {
-      return getEnv<Environment>(self)
+export async function setup(adx: AdxClient) {
+  await adx.setupMock(
+    () => storage.load('mock-root'),
+    async root => {
+      await storage.save('mock-root', root)
     },
-  },
-})
+    () => generateMockData(adx),
+  )
+}
 
 // TEMPORARY
 // mock api config
@@ -59,20 +30,20 @@ function* dateGen() {
 }
 const date = dateGen()
 
-function repo(didOrName: string) {
+function repo(adx: AdxClient, didOrName: string) {
   const userDb = adx.mockDb.getUser(didOrName)
   if (!userDb) throw new Error(`User not found: ${didOrName}`)
   return adx.mainPds.repo(userDb.did, userDb.writable)
 }
 
-export async function generateMockData() {
+export async function generateMockData(adx: AdxClient) {
   await adx.mockDb.addUser({name: 'alice.com', writable: true})
   await adx.mockDb.addUser({name: 'bob.com', writable: true})
   await adx.mockDb.addUser({name: 'carla.com', writable: true})
 
-  const alice = repo('alice.com')
-  const bob = repo('bob.com')
-  const carla = repo('carla.com')
+  const alice = repo(adx, 'alice.com')
+  const bob = repo(adx, 'bob.com')
+  const carla = repo(adx, 'carla.com')
 
   await alice.collection('blueskyweb.xyz:Profiles').put('Profile', 'profile', {
     $type: 'blueskyweb.xyz:Profile',

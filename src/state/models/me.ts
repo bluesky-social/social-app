@@ -1,48 +1,41 @@
-import {Instance, SnapshotOut, types, flow, getRoot} from 'mobx-state-tree'
-import {RootStore} from './root-store'
-import {withEnvironment} from '../env'
+import {makeAutoObservable, runInAction} from 'mobx'
+import {RootStoreModel} from './root-store'
 
-export const MeModel = types
-  .model('Me')
-  .props({
-    did: types.maybe(types.string),
-    name: types.maybe(types.string),
-    displayName: types.maybe(types.string),
-    description: types.maybe(types.string),
-  })
-  .extend(withEnvironment)
-  .actions(self => ({
-    load: flow(function* () {
-      const sess = (getRoot(self) as RootStore).session
-      if (sess.isAuthed) {
-        // TODO temporary
-        const userDb = self.env.adx.mockDb.mainUser
-        self.did = userDb.did
-        self.name = userDb.name
-        const profile = yield self.env.adx
-          .repo(self.did, true)
-          .collection('blueskyweb.xyz:Profiles')
-          .get('Profile', 'profile')
-          .catch(_ => undefined)
+export class MeModel {
+  did?: string
+  name?: string
+  displayName?: string
+  description?: string
+
+  constructor(public rootStore: RootStoreModel) {
+    makeAutoObservable(this, {rootStore: false}, {autoBind: true})
+  }
+
+  async load() {
+    const sess = this.rootStore.session
+    if (sess.isAuthed) {
+      const userDb = this.rootStore.api.mockDb.mainUser
+      this.did = userDb.did
+      this.name = userDb.name
+      const profile = await this.rootStore.api
+        .repo(this.did, true)
+        .collection('blueskyweb.xyz:Profiles')
+        .get('Profile', 'profile')
+        .catch(_ => undefined)
+      runInAction(() => {
         if (profile?.valid) {
-          self.displayName = profile.value.displayName
-          self.description = profile.value.description
+          this.displayName = profile.value.displayName
+          this.description = profile.value.description
         } else {
-          self.displayName = ''
-          self.description = ''
+          this.displayName = ''
+          this.description = ''
         }
-      } else {
-        self.did = undefined
-        self.name = undefined
-        self.displayName = undefined
-        self.description = undefined
-      }
-    }),
-  }))
-
-export interface Me extends Instance<typeof MeModel> {}
-export interface MeSnapshot extends SnapshotOut<typeof MeModel> {}
-
-export function createDefaultMe() {
-  return {}
+      })
+    } else {
+      this.did = undefined
+      this.name = undefined
+      this.displayName = undefined
+      this.description = undefined
+    }
+  }
 }

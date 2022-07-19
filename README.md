@@ -7,7 +7,7 @@ Uses:
 - [React Native](https://reactnative.dev)
 - [React Native for Web](https://necolas.github.io/react-native-web/)
 - [React Navigation](https://reactnative.dev/docs/navigation#react-navigation)
-- [MobX](https://mobx.js.org/README.html) and [MobX State Tree](https://mobx-state-tree.js.org/)
+- [MobX](https://mobx.js.org/README.html)
 - [Async Storage](https://github.com/react-native-async-storage/async-storage)
 
 ## TODOs
@@ -54,7 +54,7 @@ The `metro.config.js` file rewrites a couple of imports. This is partly to work 
 
 ### Cryptography
 
-For native builds, we must provide a polyfill of `webcrypto`. We use a custom native module AppSecureRandom (based on [react-native-securerandom](https://github.com/robhogan/react-native-securerandom)) for the CRNG and [msrcrypto](https://github.com/kevlened/msrCrypto) for the cryptography.
+For native builds, we must provide a polyfill of `webcrypto`. We use a custom native module AppSecureRandom (based on [react-native-securerandom](https://github.com/robhogan/react-native-securerandom)) for the CRNG and [msrcrypto](https://github.com/microsoft/MSR-JavaScript-Crypto) for the cryptography.
 
 **NOTE** Keys are not currently stored securely.
 

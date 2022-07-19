@@ -2,27 +2,43 @@
  * The root store is the base of all modeled state.
  */
 
-import {Instance, SnapshotOut, types} from 'mobx-state-tree'
+import {makeAutoObservable} from 'mobx'
+import {adx, AdxClient} from '@adxp/mock-api'
 import {createContext, useContext} from 'react'
-import {SessionModel, createDefaultSession} from './session'
-import {MeModel, createDefaultMe} from './me'
+import {isObj, hasProp} from '../lib/type-guards'
+import {SessionModel} from './session'
+import {MeModel} from './me'
+import {FeedViewModel} from './feed-view'
 
-export const RootStoreModel = types.model('RootStore').props({
-  session: SessionModel,
-  me: MeModel,
-})
+export class RootStoreModel {
+  session = new SessionModel()
+  me = new MeModel(this)
+  homeFeed = new FeedViewModel(this, {})
 
-export interface RootStore extends Instance<typeof RootStoreModel> {}
-export interface RootStoreSnapshot extends SnapshotOut<typeof RootStoreModel> {}
+  constructor(public api: AdxClient) {
+    makeAutoObservable(this, {
+      api: false,
+      serialize: false,
+      hydrate: false,
+    })
+  }
 
-export function createDefaultRootStore() {
-  return {
-    session: createDefaultSession(),
-    me: createDefaultMe(),
+  serialize(): unknown {
+    return {
+      session: this.session.serialize(),
+    }
+  }
+
+  hydrate(v: unknown) {
+    if (isObj(v)) {
+      if (hasProp(v, 'session')) {
+        this.session.hydrate(v.session)
+      }
+    }
   }
 }
 
-// react context & hook utilities
-const RootStoreContext = createContext<RootStore>({} as RootStore)
+const throwawayInst = new RootStoreModel(adx) // this will be replaced by the loader
+const RootStoreContext = createContext<RootStoreModel>(throwawayInst)
 export const RootStoreProvider = RootStoreContext.Provider
 export const useStores = () => useContext(RootStoreContext)

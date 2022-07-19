@@ -1,33 +1,35 @@
-import {onSnapshot} from 'mobx-state-tree'
-import {
-  RootStoreModel,
-  RootStore,
-  createDefaultRootStore,
-} from './models/root-store'
-import {Environment} from './env'
+import {autorun} from 'mobx'
+import {AdxClient, blueskywebSchemas} from '@adxp/mock-api'
+import {RootStoreModel} from './models/root-store'
+import * as libapi from './lib/api'
 import * as storage from './lib/storage'
 // import * as auth from './auth' TODO
 
 const ROOT_STATE_STORAGE_KEY = 'root'
 
 export async function setupState() {
-  let rootStore: RootStore
+  let rootStore: RootStoreModel
   let data: any
 
-  const env = new Environment()
-  await env.setup()
+  const api = new AdxClient({
+    pds: 'http://localhost',
+    schemas: blueskywebSchemas,
+  })
+  await libapi.setup(api)
+  rootStore = new RootStoreModel(api)
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
-    rootStore = RootStoreModel.create(data, env)
+    rootStore.hydrate(data)
   } catch (e) {
     console.error('Failed to load state from storage', e)
-    rootStore = RootStoreModel.create(createDefaultRootStore(), env)
   }
 
   // track changes & save to storage
-  onSnapshot(rootStore, snapshot =>
-    storage.save(ROOT_STATE_STORAGE_KEY, snapshot),
-  )
+  autorun(() => {
+    const snapshot = rootStore.serialize()
+    console.log('saving', snapshot)
+    storage.save(ROOT_STATE_STORAGE_KEY, snapshot)
+  })
 
   // TODO
   rootStore.session.setAuthed(true)
@@ -47,4 +49,3 @@ export async function setupState() {
 }
 
 export {useStores, RootStoreModel, RootStoreProvider} from './models/root-store'
-export type {RootStore} from './models/root-store'
