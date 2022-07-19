@@ -2,7 +2,7 @@ import {NativeModules} from 'react-native'
 const {AppSecureRandomModule} = NativeModules
 import {toByteArray} from 'base64-js'
 // @ts-ignore we dont have types for this -prf
-import crypto from 'msrcrypto'
+import crypto from '../third-party/msrcrypto'
 import '@zxing/text-encoding' // TextEncoder / TextDecoder
 
 async function generateSecureRandom(bytes: number) {

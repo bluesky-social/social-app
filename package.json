@@ -26,7 +26,6 @@
     "mobx": "^6.6.0",
     "mobx-react-lite": "^3.4.0",
     "mobx-state-tree": "^5.1.5",
-    "msrcrypto": "^1.5.8",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-native": "0.68.2",
