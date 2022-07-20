@@ -1,10 +1,18 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {Text, Image, ImageSourcePropType, StyleSheet, View} from 'react-native'
+import {
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {bsky} from '@adxp/mock-api'
 import moment from 'moment'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {FeedViewItemModel} from '../../state/models/feed-view'
+import {OnNavigateContent} from '../../routes/types'
+import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
 
 const IMAGES: Record<string, ImageSourcePropType> = {
   'alice.com': require('../../assets/alice.jpg'),
@@ -12,22 +20,18 @@ const IMAGES: Record<string, ImageSourcePropType> = {
   'carla.com': require('../../assets/carla.jpg'),
 }
 
-export const FeedItem = observer(function FeedItem({
-  item,
+export const PostThreadItem = observer(function PostThreadItem({
+  item, // onNavigateContent,
 }: {
-  item: FeedViewItemModel
+  item: PostThreadViewPostModel
+  onNavigateContent: OnNavigateContent
 }) {
   const record = item.record as unknown as bsky.Post.Record
+  const onPressOuter = () => {
+    // TODO onNavigateContent
+  }
   return (
-    <View style={styles.outer}>
-      {item.repostedBy && (
-        <View style={styles.repostedBy}>
-          <FontAwesomeIcon icon="retweet" style={styles.repostedByIcon} />
-          <Text style={styles.repostedByText}>
-            Reposted by {item.repostedBy.displayName}
-          </Text>
-        </View>
-      )}
+    <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Image
@@ -80,7 +84,7 @@ export const FeedItem = observer(function FeedItem({
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 })
 

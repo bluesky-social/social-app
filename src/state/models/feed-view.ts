@@ -1,9 +1,9 @@
-import {makeAutoObservable, runInAction} from 'mobx'
+import {makeAutoObservable} from 'mobx'
 import {bsky} from '@adxp/mock-api'
 import {RootStoreModel} from './root-store'
 
 export class FeedViewItemModel implements bsky.FeedView.FeedItem {
-  key: string = ''
+  _reactKey: string = ''
   uri: string = ''
   author: bsky.FeedView.User = {did: '', name: '', displayName: ''}
   repostedBy?: bsky.FeedView.User
@@ -17,9 +17,9 @@ export class FeedViewItemModel implements bsky.FeedView.FeedItem {
   likeCount: number = 0
   indexedAt: string = ''
 
-  constructor(key: string, v: bsky.FeedView.FeedItem) {
+  constructor(reactKey: string, v: bsky.FeedView.FeedItem) {
     makeAutoObservable(this)
-    this.key = key
+    this._reactKey = reactKey
     Object.assign(this, v)
   }
 }
@@ -115,7 +115,6 @@ export class FeedViewModel implements bsky.FeedView.Response {
   // =
 
   private async _initialLoad() {
-    console.log('_initialLoad()')
     this._xLoading()
     await new Promise(r => setTimeout(r, 1e3)) // DEBUG
     try {
@@ -131,7 +130,6 @@ export class FeedViewModel implements bsky.FeedView.Response {
   }
 
   private async _loadMore() {
-    console.log('_loadMore()')
     this._xLoading()
     await new Promise(r => setTimeout(r, 1e3)) // DEBUG
     try {
@@ -150,7 +148,6 @@ export class FeedViewModel implements bsky.FeedView.Response {
   }
 
   private async _refresh() {
-    console.log('_refresh()')
     this._xLoading(true)
     // TODO: refetch and update items
     await new Promise(r => setTimeout(r, 1e3)) // DEBUG

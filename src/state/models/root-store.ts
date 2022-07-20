@@ -18,9 +18,16 @@ export class RootStoreModel {
   constructor(public api: AdxClient) {
     makeAutoObservable(this, {
       api: false,
+      resolveName: false,
       serialize: false,
       hydrate: false,
     })
+  }
+
+  async resolveName(didOrName: string) {
+    const userDb = this.api.mockDb.getUser(didOrName)
+    if (!userDb) throw new Error(`User not found: ${didOrName}`)
+    return userDb.did
   }
 
   serialize(): unknown {

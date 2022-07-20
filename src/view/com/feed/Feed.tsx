@@ -1,12 +1,23 @@
 import React from 'react'
-import {observer, Observer} from 'mobx-react-lite'
+import {observer} from 'mobx-react-lite'
 import {Text, View, FlatList} from 'react-native'
-import {FeedViewModel, FeedViewItemModel} from '../../state/models/feed-view'
+import {OnNavigateContent} from '../../routes/types'
+import {FeedViewModel, FeedViewItemModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
 
-export const Feed = observer(function Feed({feed}: {feed: FeedViewModel}) {
+export const Feed = observer(function Feed({
+  feed,
+  onNavigateContent,
+}: {
+  feed: FeedViewModel
+  onNavigateContent: OnNavigateContent
+}) {
+  // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
+  //   VirtualizedList: You have a large list that is slow to update - make sure your
+  //   renderItem function renders components that follow React performance best practices
+  //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = ({item}: {item: FeedViewItemModel}) => (
-    <Observer>{() => <FeedItem item={item} />}</Observer>
+    <FeedItem item={item} onNavigateContent={onNavigateContent} />
   )
   const onRefresh = () => {
     feed.refresh().catch(err => console.error('Failed to refresh', err))
@@ -21,6 +32,7 @@ export const Feed = observer(function Feed({feed}: {feed: FeedViewModel}) {
       {feed.hasContent && (
         <FlatList
           data={feed.feed}
+          keyExtractor={item => item._reactKey}
           renderItem={renderItem}
           refreshing={feed.isRefreshing}
           onRefresh={onRefresh}

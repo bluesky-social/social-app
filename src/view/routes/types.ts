@@ -6,12 +6,15 @@ export type RootTabsParamList = {
   Notifications: undefined
   Menu: undefined
   Profile: {name: string}
+  PostThread: {name: string; recordKey: string}
   Login: undefined
   Signup: undefined
   NotFound: undefined
 }
 export type RootTabsScreenProps<T extends keyof RootTabsParamList> =
   StackScreenProps<RootTabsParamList, T>
+
+export type OnNavigateContent = (screen: string, params: Record<string, string>): void
 
 /*
 NOTE

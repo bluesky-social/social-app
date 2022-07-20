@@ -16,7 +16,8 @@ import {Home} from '../screens/Home'
 import {Search} from '../screens/Search'
 import {Notifications} from '../screens/Notifications'
 import {Menu} from '../screens/Menu'
-import {Profile} from '../screens/Profile'
+import {Profile} from '../screens/content/Profile'
+import {PostThread} from '../screens/content/PostThread'
 import {Login} from '../screens/Login'
 import {Signup} from '../screens/Signup'
 import {NotFound} from '../screens/NotFound'
@@ -32,6 +33,7 @@ const linking: LinkingOptions<RootTabsParamList> = {
     screens: {
       Home: '',
       Profile: 'profile/:name',
+      PostThread: 'profile/:name/post/:recordKey',
       Search: 'search',
       Notifications: 'notifications',
       Menu: 'menu',
@@ -42,7 +44,7 @@ const linking: LinkingOptions<RootTabsParamList> = {
   },
 }
 
-export const RootTabs = createBottomTabNavigator()
+export const RootTabs = createBottomTabNavigator<RootTabsParamList>()
 export const PrimaryStack = createNativeStackNavigator()
 
 const tabBarScreenOptions = ({
@@ -90,6 +92,11 @@ export const Root = observer(() => {
             <RootTabs.Screen
               name="Profile"
               component={Profile}
+              options={HIDE_TAB}
+            />
+            <RootTabs.Screen
+              name="PostThread"
+              component={PostThread}
               options={HIDE_TAB}
             />
           </>
