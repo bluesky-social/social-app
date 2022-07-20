@@ -4,8 +4,10 @@
  */
 
 // import {ReactNativeStore} from './auth'
-import {AdxClient, AdxRepoClient} from '@adxp/mock-api'
+import {AdxClient, AdxRepoClient, AdxUri, bsky} from '@adxp/mock-api'
 import * as storage from './storage'
+import {postTexts} from './mock-data/post-texts'
+import {replyTexts} from './mock-data/reply-texts'
 
 export async function setup(adx: AdxClient) {
   await adx.setupMock(
@@ -37,6 +39,14 @@ function repo(adx: AdxClient, didOrName: string) {
 }
 
 export async function generateMockData(adx: AdxClient) {
+  const rand = (n: number) => Math.floor(Math.random() * n)
+  const picka = <T>(arr: Array<T>): T => {
+    if (arr.length) {
+      return arr[rand(arr.length)] || arr[0]
+    }
+    throw new Error('Not found')
+  }
+
   await adx.mockDb.addUser({name: 'alice.com', writable: true})
   await adx.mockDb.addUser({name: 'bob.com', writable: true})
   await adx.mockDb.addUser({name: 'carla.com', writable: true})
@@ -44,6 +54,7 @@ export async function generateMockData(adx: AdxClient) {
   const alice = repo(adx, 'alice.com')
   const bob = repo(adx, 'bob.com')
   const carla = repo(adx, 'carla.com')
+  const repos = [alice, bob, carla]
 
   await alice.collection('blueskyweb.xyz:Profiles').put('Profile', 'profile', {
     $type: 'blueskyweb.xyz:Profile',
@@ -80,91 +91,63 @@ export async function generateMockData(adx: AdxClient) {
   await follow(carla, 'alice.com')
   await follow(carla, 'bob.com')
 
-  // 2 posts on each user
-  const alicePosts: {uri: string}[] = []
-  for (let i = 0; i < 2; i++) {
-    alicePosts.push(
-      await alice.collection('blueskyweb.xyz:Posts').create('Post', {
+  // a set of posts and reposts
+  const posts: {uri: string}[] = []
+  for (let i = 0; i < postTexts.length; i++) {
+    const author = picka(repos)
+    posts.push(
+      await author.collection('blueskyweb.xyz:Posts').create('Post', {
         $type: 'blueskyweb.xyz:Post',
-        text: `Alice post ${i + 1}`,
+        text: postTexts[i],
         createdAt: date.next().value,
       }),
     )
-    await bob.collection('blueskyweb.xyz:Posts').create('Post', {
-      $type: 'blueskyweb.xyz:Post',
-      text: `Bob post ${i + 1}`,
-      createdAt: date.next().value,
-    })
-    await carla.collection('blueskyweb.xyz:Posts').create('Post', {
-      $type: 'blueskyweb.xyz:Post',
-      text: `Carla post ${i + 1}`,
-      createdAt: date.next().value,
-    })
+    if (rand(10) === 0) {
+      await picka(repos)
+        .collection('blueskyweb.xyz:Posts')
+        .create('Repost', {
+          $type: 'blueskyweb.xyz:Repost',
+          subject: picka(posts).uri,
+          createdAt: date.next().value,
+        })
+    }
   }
 
-  // small thread of replies on alice's first post
-  const bobReply1 = await bob
-    .collection('blueskyweb.xyz:Posts')
-    .create('Post', {
-      $type: 'blueskyweb.xyz:Post',
-      text: 'Bob reply',
-      reply: {root: alicePosts[0].uri, parent: alicePosts[0].uri},
-      createdAt: date.next().value,
-    })
-  await carla.collection('blueskyweb.xyz:Posts').create('Post', {
-    $type: 'blueskyweb.xyz:Post',
-    text: 'Carla reply',
-    reply: {root: alicePosts[0].uri, parent: alicePosts[0].uri},
-    createdAt: date.next().value,
-  })
-  const aliceReply1 = await alice
-    .collection('blueskyweb.xyz:Posts')
-    .create('Post', {
-      $type: 'blueskyweb.xyz:Post',
-      text: 'Alice reply',
-      reply: {root: alicePosts[0].uri, parent: bobReply1.uri},
-      createdAt: date.next().value,
-    })
-
-  // bob and carla repost alice's first post
-  await bob.collection('blueskyweb.xyz:Posts').create('Repost', {
-    $type: 'blueskyweb.xyz:Repost',
-    subject: alicePosts[0].uri,
-    createdAt: date.next().value,
-  })
-  await carla.collection('blueskyweb.xyz:Posts').create('Repost', {
-    $type: 'blueskyweb.xyz:Repost',
-    subject: alicePosts[0].uri,
-    createdAt: date.next().value,
-  })
-
-  // bob likes all of alice's posts
-  for (let i = 0; i < 2; i++) {
-    await bob.collection('blueskyweb.xyz:Likes').create('Like', {
-      $type: 'blueskyweb.xyz:Like',
-      subject: alicePosts[i].uri,
-      createdAt: date.next().value,
-    })
+  // a set of replies
+  for (let i = 0; i < 100; i++) {
+    const targetUri = picka(posts).uri
+    const urip = new AdxUri(targetUri)
+    const target = await adx.mainPds
+      .repo(urip.host, true)
+      .collection(urip.collection)
+      .get('Post', urip.recordKey)
+    const targetRecord = target.value as bsky.Post.Record
+    const author = picka(repos)
+    posts.push(
+      await author.collection('blueskyweb.xyz:Posts').create('Post', {
+        $type: 'blueskyweb.xyz:Post',
+        text: picka(replyTexts),
+        reply: {
+          root: targetRecord.reply ? targetRecord.reply.root : target.uri,
+          parent: target.uri,
+        },
+        createdAt: date.next().value,
+      }),
+    )
   }
 
-  // carla likes all of alice's posts and everybody's replies
-  for (let i = 0; i < 2; i++) {
-    await carla.collection('blueskyweb.xyz:Likes').create('Like', {
-      $type: 'blueskyweb.xyz:Like',
-      subject: alicePosts[i].uri,
-      createdAt: date.next().value,
-    })
+  // a set of likes
+  for (const post of posts) {
+    for (const repo of repos) {
+      if (rand(3) === 0) {
+        await repo.collection('blueskyweb.xyz:Likes').create('Like', {
+          $type: 'blueskyweb.xyz:Like',
+          subject: post.uri,
+          createdAt: date.next().value,
+        })
+      }
+    }
   }
-  await carla.collection('blueskyweb.xyz:Likes').create('Like', {
-    $type: 'blueskyweb.xyz:Like',
-    subject: aliceReply1.uri,
-    createdAt: date.next().value,
-  })
-  await carla.collection('blueskyweb.xyz:Likes').create('Like', {
-    $type: 'blueskyweb.xyz:Like',
-    subject: bobReply1.uri,
-    createdAt: date.next().value,
-  })
 
   // give alice 3 badges, 2 from bob and 2 from carla, with one ignored
   const inviteBadge = await bob
