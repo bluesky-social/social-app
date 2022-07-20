@@ -9,7 +9,7 @@ export function Home(/*{navigation}: RootTabsScreenProps<'Home'>*/) {
   const store = useStores()
   useEffect(() => {
     console.log('Fetching home feed')
-    store.homeFeed.fetch()
+    store.homeFeed.setup()
   }, [store.homeFeed])
   return (
     <Shell>
