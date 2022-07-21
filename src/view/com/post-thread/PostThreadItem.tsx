@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {bsky} from '@adxp/mock-api'
+import {bsky, AdxUri} from '@adxp/mock-api'
 import moment from 'moment'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {OnNavigateContent} from '../../routes/types'
@@ -31,7 +31,8 @@ function iter<T>(n: number, fn: (i: number) => T): Array<T> {
 }
 
 export const PostThreadItem = observer(function PostThreadItem({
-  item, // onNavigateContent,
+  item,
+  onNavigateContent,
 }: {
   item: PostThreadViewPostModel
   onNavigateContent: OnNavigateContent
@@ -39,12 +40,16 @@ export const PostThreadItem = observer(function PostThreadItem({
   const record = item.record as unknown as bsky.Post.Record
   const hasEngagement = item.likeCount || item.repostCount
   const onPressOuter = () => {
-    // TODO onNavigateContent
+    const urip = new AdxUri(item.uri)
+    onNavigateContent('PostThread', {
+      name: item.author.name,
+      recordKey: urip.recordKey,
+    })
   }
   return (
     <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
       <View style={styles.layout}>
-        {iter(item._depth, () => (
+        {iter(Math.abs(item._depth), () => (
           <View style={styles.replyBar} />
         ))}
         <View style={styles.layoutAvi}>
@@ -143,7 +148,7 @@ const styles = StyleSheet.create({
   },
   replyBar: {
     width: 5,
-    backgroundColor: '#d4f0ff',
+    backgroundColor: 'gray',
     marginRight: 2,
   },
   layoutAvi: {

@@ -8,7 +8,6 @@ Paul's todo list
 - Thread view
   - Mock API support fetch on thread that's not root
   - Header (back btn, highlight)
-  - Navigate on post press
   - View likes list
   - View reposts list
   - Reply control

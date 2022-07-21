@@ -55,9 +55,9 @@
     ucans "0.9.0-alpha3"
     uint8arrays "^3.0.0"
 
-"@adxp/mock-api@git+ssh://git@github.com:bluesky-social/adx-mock-api.git#3714722a09503caad6e3aba7f9e9027994d07bdb":
+"@adxp/mock-api@git+ssh://git@github.com:bluesky-social/adx-mock-api.git#464712517e8f42b307622aa625bf2b2e11ad763e":
   version "0.0.1"
-  resolved "git+ssh://git@github.com:bluesky-social/adx-mock-api.git#3714722a09503caad6e3aba7f9e9027994d07bdb"
+  resolved "git+ssh://git@github.com:bluesky-social/adx-mock-api.git#464712517e8f42b307622aa625bf2b2e11ad763e"
   dependencies:
     ajv "^8.11.0"
     ajv-formats "^2.1.1"

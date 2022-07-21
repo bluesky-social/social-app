@@ -54,20 +54,24 @@ const tabBarScreenOptions = ({
   route: RouteProp<ParamListBase, string>
 }) => ({
   headerShown: false,
-  tabBarIcon: (_state: {focused: boolean; color: string; size: number}) => {
+  tabBarIcon: (state: {focused: boolean; color: string; size: number}) => {
     switch (route.name) {
       case 'Home':
-        return <FontAwesomeIcon icon="house" />
+        return <FontAwesomeIcon icon="house" style={{color: state.color}} />
       case 'Search':
-        return <FontAwesomeIcon icon="magnifying-glass" />
+        return (
+          <FontAwesomeIcon
+            icon="magnifying-glass"
+            style={{color: state.color}}
+          />
+        )
       case 'Notifications':
-        return <FontAwesomeIcon icon="bell" />
+        return <FontAwesomeIcon icon="bell" style={{color: state.color}} />
       case 'Menu':
-        return <FontAwesomeIcon icon="bars" />
+        return <FontAwesomeIcon icon="bars" style={{color: state.color}} />
       default:
-        return <FontAwesomeIcon icon="bars" />
+        return <FontAwesomeIcon icon="bars" style={{color: state.color}} />
     }
-    // return <Text>{route.name?.[0] || ''}</Text>
   },
 })
 

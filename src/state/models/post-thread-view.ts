@@ -24,6 +24,7 @@ export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
     | bsky.PostThreadView.RecordEmbed
     | bsky.PostThreadView.ExternalEmbed
     | bsky.PostThreadView.UnknownEmbed
+  parent?: PostThreadViewPostModel
   replyCount: number = 0
   replies?: PostThreadViewPostModel[]
   repostCount: number = 0
@@ -34,11 +35,25 @@ export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
     makeAutoObservable(this)
     this._reactKey = reactKey
     if (v) {
-      Object.assign(this, _omit(v, 'replies')) // copy everything but the replies
+      Object.assign(this, _omit(v, 'parent', 'replies')) // copy everything but the replies and the parent
     }
   }
 
-  setReplies(keyGen: Generator<string>, v: bsky.PostThreadView.Post) {
+  assignTreeModels(keyGen: Generator<string>, v: bsky.PostThreadView.Post) {
+    // parents
+    if (v.parent) {
+      // TODO: validate .record
+      const parentModel = new PostThreadViewPostModel(
+        keyGen.next().value,
+        v.parent,
+      )
+      parentModel._depth = this._depth - 1
+      if (v.parent.parent) {
+        parentModel.assignTreeModels(keyGen, v.parent)
+      }
+      this.parent = parentModel
+    }
+    // replies
     if (v.replies) {
       const replies = []
       for (const item of v.replies) {
@@ -46,7 +61,7 @@ export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
         const itemModel = new PostThreadViewPostModel(keyGen.next().value, item)
         itemModel._depth = this._depth + 1
         if (item.replies) {
-          itemModel.setReplies(keyGen, item)
+          itemModel.assignTreeModels(keyGen, item)
         }
         replies.push(itemModel)
       }
@@ -161,7 +176,7 @@ export class PostThreadViewModel implements bsky.PostThreadView.Response {
     const keyGen = reactKeyGenerator()
     const thread = new PostThreadViewPostModel(keyGen.next().value, res.thread)
     thread._isHighlightedPost = true
-    thread.setReplies(keyGen, res.thread)
+    thread.assignTreeModels(keyGen, res.thread)
     this.thread = thread
   }
 }

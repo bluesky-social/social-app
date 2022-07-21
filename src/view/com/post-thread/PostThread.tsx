@@ -78,6 +78,9 @@ export const PostThread = observer(function PostThread({
 function* flattenThread(
   post: PostThreadViewPostModel,
 ): Generator<PostThreadViewPostModel, void> {
+  if (post.parent) {
+    yield* flattenThread(post.parent)
+  }
   yield post
   if (post.replies?.length) {
     for (const reply of post.replies) {
