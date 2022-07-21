@@ -13,11 +13,21 @@ import moment from 'moment'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {OnNavigateContent} from '../../routes/types'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
+import {s} from '../../lib/styles'
+import {pluralize} from '../../lib/strings'
 
 const IMAGES: Record<string, ImageSourcePropType> = {
   'alice.com': require('../../assets/alice.jpg'),
   'bob.com': require('../../assets/bob.jpg'),
   'carla.com': require('../../assets/carla.jpg'),
+}
+
+function iter<T>(n: number, fn: (i: number) => T): Array<T> {
+  const arr: T[] = []
+  for (let i = 0; i < n; i++) {
+    arr.push(fn(i))
+  }
+  return arr
 }
 
 export const PostThreadItem = observer(function PostThreadItem({
@@ -27,12 +37,16 @@ export const PostThreadItem = observer(function PostThreadItem({
   onNavigateContent: OnNavigateContent
 }) {
   const record = item.record as unknown as bsky.Post.Record
+  const hasEngagement = item.likeCount || item.repostCount
   const onPressOuter = () => {
     // TODO onNavigateContent
   }
   return (
     <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
       <View style={styles.layout}>
+        {iter(item._depth, () => (
+          <View style={styles.replyBar} />
+        ))}
         <View style={styles.layoutAvi}>
           <Image
             style={styles.avi}
@@ -41,28 +55,58 @@ export const PostThreadItem = observer(function PostThreadItem({
         </View>
         <View style={styles.layoutContent}>
           <View style={styles.meta}>
-            <Text style={[styles.metaItem, styles.metaDisplayName]}>
+            <Text style={[styles.metaItem, s.f15, s.bold]}>
               {item.author.displayName}
             </Text>
-            <Text style={[styles.metaItem, styles.metaName]}>
+            <Text style={[styles.metaItem, s.f14, s.gray]}>
               @{item.author.name}
             </Text>
-            <Text style={[styles.metaItem, styles.metaDate]}>
+            <Text style={[styles.metaItem, s.f14, s.gray]}>
               &middot; {moment(item.indexedAt).fromNow(true)}
             </Text>
           </View>
-          <Text style={styles.postText}>{record.text}</Text>
+          <Text
+            style={[
+              styles.postText,
+              ...(item._isHighlightedPost
+                ? [s.f16, s['lh16-1.3']]
+                : [s.f15, s['lh15-1.3']]),
+            ]}>
+            {record.text}
+          </Text>
+          {item._isHighlightedPost && hasEngagement ? (
+            <View style={styles.expandedInfo}>
+              {item.repostCount ? (
+                <Text style={[styles.expandedInfoItem, s.gray, s.semiBold]}>
+                  <Text style={[s.bold, s.black]}>{item.repostCount}</Text>{' '}
+                  {pluralize(item.repostCount, 'repost')}
+                </Text>
+              ) : (
+                <></>
+              )}
+              {item.likeCount ? (
+                <Text style={[styles.expandedInfoItem, s.gray, s.semiBold]}>
+                  <Text style={[s.bold, s.black]}>{item.likeCount}</Text>{' '}
+                  {pluralize(item.likeCount, 'like')}
+                </Text>
+              ) : (
+                <></>
+              )}
+            </View>
+          ) : (
+            <></>
+          )}
           <View style={styles.ctrls}>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={styles.ctrlReplyIcon}
+                style={[styles.ctrlIcon, s.gray]}
                 icon={['far', 'comment']}
               />
               <Text>{item.replyCount}</Text>
             </View>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={styles.ctrlRepostIcon}
+                style={[styles.ctrlIcon, s.gray]}
                 icon="retweet"
                 size={22}
               />
@@ -70,14 +114,14 @@ export const PostThreadItem = observer(function PostThreadItem({
             </View>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={styles.ctrlLikeIcon}
+                style={[styles.ctrlIcon, s.gray]}
                 icon={['far', 'heart']}
               />
               <Text>{item.likeCount}</Text>
             </View>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={styles.ctrlShareIcon}
+                style={[styles.ctrlIcon, s.gray]}
                 icon="share-from-square"
               />
             </View>
@@ -93,26 +137,20 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#e8e8e8',
     backgroundColor: '#fff',
-    padding: 10,
-  },
-  repostedBy: {
-    flexDirection: 'row',
-    paddingLeft: 70,
-  },
-  repostedByIcon: {
-    marginRight: 2,
-    color: 'gray',
-  },
-  repostedByText: {
-    color: 'gray',
-    fontWeight: 'bold',
-    fontSize: 13,
   },
   layout: {
     flexDirection: 'row',
   },
+  replyBar: {
+    width: 5,
+    backgroundColor: '#d4f0ff',
+    marginRight: 2,
+  },
   layoutAvi: {
-    width: 70,
+    width: 80,
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   avi: {
     width: 60,
@@ -122,6 +160,9 @@ const styles = StyleSheet.create({
   },
   layoutContent: {
     flex: 1,
+    paddingRight: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   meta: {
     flexDirection: 'row',
@@ -131,21 +172,20 @@ const styles = StyleSheet.create({
   metaItem: {
     paddingRight: 5,
   },
-  metaDisplayName: {
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-  metaName: {
-    fontSize: 14,
-    color: 'gray',
-  },
-  metaDate: {
-    fontSize: 14,
-    color: 'gray',
-  },
   postText: {
-    fontSize: 15,
     paddingBottom: 5,
+  },
+  expandedInfo: {
+    flexDirection: 'row',
+    padding: 10,
+    borderColor: '#e8e8e8',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 5,
+    marginBottom: 10,
+  },
+  expandedInfoItem: {
+    marginRight: 10,
   },
   ctrls: {
     flexDirection: 'row',
@@ -157,20 +197,7 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
     paddingRight: 4,
   },
-  ctrlReplyIcon: {
+  ctrlIcon: {
     marginRight: 5,
-    color: 'gray',
-  },
-  ctrlRepostIcon: {
-    marginRight: 5,
-    color: 'gray',
-  },
-  ctrlLikeIcon: {
-    marginRight: 5,
-    color: 'gray',
-  },
-  ctrlShareIcon: {
-    marginRight: 5,
-    color: 'gray',
   },
 })

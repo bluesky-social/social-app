@@ -13,6 +13,7 @@ import moment from 'moment'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {OnNavigateContent} from '../../routes/types'
 import {FeedViewItemModel} from '../../../state/models/feed-view'
+import {s} from '../../lib/styles'
 
 const IMAGES: Record<string, ImageSourcePropType> = {
   'alice.com': require('../../assets/alice.jpg'),
@@ -39,8 +40,11 @@ export const FeedItem = observer(function FeedItem({
     <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
       {item.repostedBy && (
         <View style={styles.repostedBy}>
-          <FontAwesomeIcon icon="retweet" style={styles.repostedByIcon} />
-          <Text style={styles.repostedByText}>
+          <FontAwesomeIcon
+            icon="retweet"
+            style={[styles.repostedByIcon, s.gray]}
+          />
+          <Text style={[s.gray, s.bold, s.f13]}>
             Reposted by {item.repostedBy.displayName}
           </Text>
         </View>
@@ -54,28 +58,30 @@ export const FeedItem = observer(function FeedItem({
         </View>
         <View style={styles.layoutContent}>
           <View style={styles.meta}>
-            <Text style={[styles.metaItem, styles.metaDisplayName]}>
+            <Text style={[styles.metaItem, s.f15, s.bold]}>
               {item.author.displayName}
             </Text>
-            <Text style={[styles.metaItem, styles.metaName]}>
+            <Text style={[styles.metaItem, s.f14, s.gray]}>
               @{item.author.name}
             </Text>
-            <Text style={[styles.metaItem, styles.metaDate]}>
+            <Text style={[styles.metaItem, s.f14, s.gray]}>
               &middot; {moment(item.indexedAt).fromNow(true)}
             </Text>
           </View>
-          <Text style={styles.postText}>{record.text}</Text>
+          <Text style={[styles.postText, s.f15, s['lh15-1.3']]}>
+            {record.text}
+          </Text>
           <View style={styles.ctrls}>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={styles.ctrlReplyIcon}
+                style={[styles.ctrlIcon, s.gray]}
                 icon={['far', 'comment']}
               />
               <Text>{item.replyCount}</Text>
             </View>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={styles.ctrlRepostIcon}
+                style={[styles.ctrlIcon, s.gray]}
                 icon="retweet"
                 size={22}
               />
@@ -83,14 +89,14 @@ export const FeedItem = observer(function FeedItem({
             </View>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={styles.ctrlLikeIcon}
+                style={[styles.ctrlIcon, s.gray]}
                 icon={['far', 'heart']}
               />
               <Text>{item.likeCount}</Text>
             </View>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={styles.ctrlShareIcon}
+                style={[styles.ctrlIcon, s.gray]}
                 icon="share-from-square"
               />
             </View>
@@ -114,12 +120,6 @@ const styles = StyleSheet.create({
   },
   repostedByIcon: {
     marginRight: 2,
-    color: 'gray',
-  },
-  repostedByText: {
-    color: 'gray',
-    fontWeight: 'bold',
-    fontSize: 13,
   },
   layout: {
     flexDirection: 'row',
@@ -144,20 +144,7 @@ const styles = StyleSheet.create({
   metaItem: {
     paddingRight: 5,
   },
-  metaDisplayName: {
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-  metaName: {
-    fontSize: 14,
-    color: 'gray',
-  },
-  metaDate: {
-    fontSize: 14,
-    color: 'gray',
-  },
   postText: {
-    fontSize: 15,
     paddingBottom: 5,
   },
   ctrls: {
@@ -170,20 +157,7 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
     paddingRight: 4,
   },
-  ctrlReplyIcon: {
+  ctrlIcon: {
     marginRight: 5,
-    color: 'gray',
-  },
-  ctrlRepostIcon: {
-    marginRight: 5,
-    color: 'gray',
-  },
-  ctrlLikeIcon: {
-    marginRight: 5,
-    color: 'gray',
-  },
-  ctrlShareIcon: {
-    marginRight: 5,
-    color: 'gray',
   },
 })

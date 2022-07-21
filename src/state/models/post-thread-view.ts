@@ -3,8 +3,20 @@ import {bsky, AdxUri} from '@adxp/mock-api'
 import _omit from 'lodash.omit'
 import {RootStoreModel} from './root-store'
 
+function* reactKeyGenerator(): Generator<string> {
+  let counter = 0
+  while (true) {
+    yield `item-${counter++}`
+  }
+}
+
 export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
+  // ui state
   _reactKey: string = ''
+  _depth = 0
+  _isHighlightedPost = false
+
+  // data
   uri: string = ''
   author: bsky.PostThreadView.User = {did: '', name: '', displayName: ''}
   record: Record<string, unknown> = {}
@@ -26,15 +38,15 @@ export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
     }
   }
 
-  setReplies(v: bsky.PostThreadView.Post) {
+  setReplies(keyGen: Generator<string>, v: bsky.PostThreadView.Post) {
     if (v.replies) {
       const replies = []
-      let counter = 0
       for (const item of v.replies) {
         // TODO: validate .record
-        const itemModel = new PostThreadViewPostModel(`item-${counter++}`, item)
+        const itemModel = new PostThreadViewPostModel(keyGen.next().value, item)
+        itemModel._depth = this._depth + 1
         if (item.replies) {
-          itemModel.setReplies(item)
+          itemModel.setReplies(keyGen, item)
         }
         replies.push(itemModel)
       }
@@ -146,8 +158,10 @@ export class PostThreadViewModel implements bsky.PostThreadView.Response {
 
   private _replaceAll(res: bsky.PostThreadView.Response) {
     // TODO: validate .record
-    const thread = new PostThreadViewPostModel('item-0', res.thread)
-    thread.setReplies(res.thread)
+    const keyGen = reactKeyGenerator()
+    const thread = new PostThreadViewPostModel(keyGen.next().value, res.thread)
+    thread._isHighlightedPost = true
+    thread.setReplies(keyGen, res.thread)
     this.thread = thread
   }
 }

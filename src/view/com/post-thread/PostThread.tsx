@@ -62,7 +62,6 @@ export const PostThread = observer(function PostThread({
   }
   return (
     <View>
-      {view.isRefreshing && <ActivityIndicator />}
       {view.hasContent && (
         <FlatList
           data={posts}
