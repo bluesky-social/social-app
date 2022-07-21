@@ -1,13 +1,6 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {
-  Image,
-  ImageSourcePropType,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {bsky, AdxUri} from '@adxp/mock-api'
 import moment from 'moment'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -15,14 +8,9 @@ import {OnNavigateContent} from '../../routes/types'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
 import {s} from '../../lib/styles'
 import {pluralize} from '../../lib/strings'
+import {AVIS} from '../../lib/assets'
 
-const IMAGES: Record<string, ImageSourcePropType> = {
-  'alice.com': require('../../assets/alice.jpg'),
-  'bob.com': require('../../assets/bob.jpg'),
-  'carla.com': require('../../assets/carla.jpg'),
-}
-
-function iter<T>(n: number, fn: (i: number) => T): Array<T> {
+function iter<T>(n: number, fn: (_i: number) => T): Array<T> {
   const arr: T[] = []
   for (let i = 0; i < n; i++) {
     arr.push(fn(i))
@@ -49,13 +37,13 @@ export const PostThreadItem = observer(function PostThreadItem({
   return (
     <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
       <View style={styles.layout}>
-        {iter(Math.abs(item._depth), () => (
-          <View style={styles.replyBar} />
+        {iter(Math.abs(item._depth), (i: number) => (
+          <View key={i} style={styles.replyBar} />
         ))}
         <View style={styles.layoutAvi}>
           <Image
             style={styles.avi}
-            source={IMAGES[item.author.name] || IMAGES['alice.com']}
+            source={AVIS[item.author.name] || AVIS['alice.com']}
           />
         </View>
         <View style={styles.layoutContent}>
@@ -104,14 +92,14 @@ export const PostThreadItem = observer(function PostThreadItem({
           <View style={styles.ctrls}>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={[styles.ctrlIcon, s.gray]}
+                style={styles.ctrlIcon}
                 icon={['far', 'comment']}
               />
               <Text>{item.replyCount}</Text>
             </View>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={[styles.ctrlIcon, s.gray]}
+                style={styles.ctrlIcon}
                 icon="retweet"
                 size={22}
               />
@@ -119,14 +107,14 @@ export const PostThreadItem = observer(function PostThreadItem({
             </View>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={[styles.ctrlIcon, s.gray]}
+                style={styles.ctrlIcon}
                 icon={['far', 'heart']}
               />
               <Text>{item.likeCount}</Text>
             </View>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={[styles.ctrlIcon, s.gray]}
+                style={styles.ctrlIcon}
                 icon="share-from-square"
               />
             </View>
@@ -204,5 +192,6 @@ const styles = StyleSheet.create({
   },
   ctrlIcon: {
     marginRight: 5,
+    color: 'gray',
   },
 })

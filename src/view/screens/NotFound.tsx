@@ -8,7 +8,7 @@ export const NotFound = ({navigation}: RootTabsScreenProps<'NotFound'>) => {
     <Shell>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <Text style={{fontSize: 20, fontWeight: 'bold'}}>Page not found</Text>
-        <Button title="Home" onPress={() => navigation.navigate('Home')} />
+        <Button title="Home" onPress={() => navigation.navigate('HomeTab')} />
       </View>
     </Shell>
   )

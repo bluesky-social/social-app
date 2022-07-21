@@ -3,7 +3,9 @@ import {Shell} from '../shell'
 import {Text, View} from 'react-native'
 import type {RootTabsScreenProps} from '../routes/types'
 
-export const Notifications = (_props: RootTabsScreenProps<'Notifications'>) => {
+export const Notifications = (
+  _props: RootTabsScreenProps<'NotificationsTab'>,
+) => {
   return (
     <Shell>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>

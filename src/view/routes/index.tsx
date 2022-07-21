@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {Text, Linking} from 'react-native'
+import {Linking, Text} from 'react-native'
 import {
   NavigationContainer,
   LinkingOptions,
@@ -32,12 +32,12 @@ const linking: LinkingOptions<RootTabsParamList> = {
   ],
   config: {
     screens: {
-      Home: '',
+      HomeTab: '',
+      SearchTab: 'search',
+      NotificationsTab: 'notifications',
+      MenuTab: 'menu',
       Profile: 'profile/:name',
       PostThread: 'profile/:name/post/:recordKey',
-      Search: 'search',
-      Notifications: 'notifications',
-      Menu: 'menu',
       Login: 'login',
       Signup: 'signup',
       NotFound: '*',
@@ -46,7 +46,9 @@ const linking: LinkingOptions<RootTabsParamList> = {
 }
 
 export const RootTabs = createBottomTabNavigator<RootTabsParamList>()
-export const PrimaryStack = createNativeStackNavigator()
+export const HomeTabStack = createNativeStackNavigator()
+export const SearchTabStack = createNativeStackNavigator()
+export const NotificationsTabStack = createNativeStackNavigator()
 
 const tabBarScreenOptions = ({
   route,
@@ -56,18 +58,18 @@ const tabBarScreenOptions = ({
   headerShown: false,
   tabBarIcon: (state: {focused: boolean; color: string; size: number}) => {
     switch (route.name) {
-      case 'Home':
+      case 'HomeTab':
         return <FontAwesomeIcon icon="house" style={{color: state.color}} />
-      case 'Search':
+      case 'SearchTab':
         return (
           <FontAwesomeIcon
             icon="magnifying-glass"
             style={{color: state.color}}
           />
         )
-      case 'Notifications':
+      case 'NotificationsTab':
         return <FontAwesomeIcon icon="bell" style={{color: state.color}} />
-      case 'Menu':
+      case 'MenuTab':
         return <FontAwesomeIcon icon="bars" style={{color: state.color}} />
       default:
         return <FontAwesomeIcon icon="bars" style={{color: state.color}} />
@@ -75,7 +77,45 @@ const tabBarScreenOptions = ({
   },
 })
 
+const HIDE_HEADER = {headerShown: false}
 const HIDE_TAB = {tabBarButton: () => null}
+
+function HomeStackCom() {
+  return (
+    <HomeTabStack.Navigator>
+      <HomeTabStack.Screen name="Home" component={Home} options={HIDE_HEADER} />
+      <HomeTabStack.Screen name="Profile" component={Profile} />
+      <HomeTabStack.Screen name="PostThread" component={PostThread} />
+    </HomeTabStack.Navigator>
+  )
+}
+
+function SearchStackCom() {
+  return (
+    <SearchTabStack.Navigator>
+      <SearchTabStack.Screen
+        name="Search"
+        component={Search}
+        options={HIDE_HEADER}
+      />
+      <SearchTabStack.Screen name="Profile" component={Profile} />
+      <SearchTabStack.Screen name="PostThread" component={PostThread} />
+    </SearchTabStack.Navigator>
+  )
+}
+
+function NotificationsStackCom() {
+  return (
+    <NotificationsTabStack.Navigator>
+      <NotificationsTabStack.Screen
+        name="Notifications"
+        component={Notifications}
+      />
+      <NotificationsTabStack.Screen name="Profile" component={Profile} />
+      <NotificationsTabStack.Screen name="PostThread" component={PostThread} />
+    </NotificationsTabStack.Navigator>
+  )
+}
 
 export const Root = observer(() => {
   const store = useStores()
@@ -96,25 +136,18 @@ export const Root = observer(() => {
   return (
     <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
       <RootTabs.Navigator
-        initialRouteName={store.session.isAuthed ? 'Home' : 'Login'}
+        initialRouteName={store.session.isAuthed ? 'HomeTab' : 'Login'}
         screenOptions={tabBarScreenOptions}
         tabBar={tabBar}>
         {store.session.isAuthed ? (
           <>
-            <RootTabs.Screen name="Home" component={Home} />
-            <RootTabs.Screen name="Search" component={Search} />
-            <RootTabs.Screen name="Notifications" component={Notifications} />
-            <RootTabs.Screen name="Menu" component={Menu} />
+            <RootTabs.Screen name="HomeTab" component={HomeStackCom} />
+            <RootTabs.Screen name="SearchTab" component={SearchStackCom} />
             <RootTabs.Screen
-              name="Profile"
-              component={Profile}
-              options={HIDE_TAB}
+              name="NotificationsTab"
+              component={NotificationsStackCom}
             />
-            <RootTabs.Screen
-              name="PostThread"
-              component={PostThread}
-              options={HIDE_TAB}
-            />
+            <RootTabs.Screen name="MenuTab" component={Menu} />
           </>
         ) : (
           <>

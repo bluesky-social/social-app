@@ -7,7 +7,6 @@ Paul's todo list
   - Navigate to profile on avi or username click
 - Thread view
   - Mock API support fetch on thread that's not root
-  - Header (back btn, highlight)
   - View likes list
   - View reposts list
   - Reply control

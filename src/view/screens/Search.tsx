@@ -3,7 +3,7 @@ import {Shell} from '../shell'
 import {Text, View} from 'react-native'
 import type {RootTabsScreenProps} from '../routes/types'
 
-export const Search = (_props: RootTabsScreenProps<'Search'>) => {
+export const Search = (_props: RootTabsScreenProps<'SearchTab'>) => {
   return (
     <Shell>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>

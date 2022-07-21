@@ -1,6 +1,7 @@
 import moment from 'moment'
 import {library} from '@fortawesome/fontawesome-svg-core'
 
+import {faArrowLeft} from '@fortawesome/free-solid-svg-icons/faArrowLeft'
 import {faBars} from '@fortawesome/free-solid-svg-icons/faBars'
 import {faBell} from '@fortawesome/free-solid-svg-icons/faBell'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
@@ -32,6 +33,7 @@ export function setup() {
     },
   })
   library.add(
+    faArrowLeft,
     faBars,
     faBell,
     faComment,

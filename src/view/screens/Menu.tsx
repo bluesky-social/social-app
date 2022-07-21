@@ -3,7 +3,7 @@ import {Shell} from '../shell'
 import {ScrollView, Text, View} from 'react-native'
 import type {RootTabsScreenProps} from '../routes/types'
 
-export const Menu = (_props: RootTabsScreenProps<'Menu'>) => {
+export const Menu = (_props: RootTabsScreenProps<'MenuTab'>) => {
   return (
     <Shell>
       <ScrollView contentInsetAdjustmentBehavior="automatic">

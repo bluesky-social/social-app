@@ -1,25 +1,13 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {
-  Image,
-  ImageSourcePropType,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {bsky, AdxUri} from '@adxp/mock-api'
 import moment from 'moment'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {OnNavigateContent} from '../../routes/types'
 import {FeedViewItemModel} from '../../../state/models/feed-view'
 import {s} from '../../lib/styles'
-
-const IMAGES: Record<string, ImageSourcePropType> = {
-  'alice.com': require('../../assets/alice.jpg'),
-  'bob.com': require('../../assets/bob.jpg'),
-  'carla.com': require('../../assets/carla.jpg'),
-}
+import {AVIS} from '../../lib/assets'
 
 export const FeedItem = observer(function FeedItem({
   item,
@@ -40,10 +28,7 @@ export const FeedItem = observer(function FeedItem({
     <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
       {item.repostedBy && (
         <View style={styles.repostedBy}>
-          <FontAwesomeIcon
-            icon="retweet"
-            style={[styles.repostedByIcon, s.gray]}
-          />
+          <FontAwesomeIcon icon="retweet" style={styles.repostedByIcon} />
           <Text style={[s.gray, s.bold, s.f13]}>
             Reposted by {item.repostedBy.displayName}
           </Text>
@@ -53,7 +38,7 @@ export const FeedItem = observer(function FeedItem({
         <View style={styles.layoutAvi}>
           <Image
             style={styles.avi}
-            source={IMAGES[item.author.name] || IMAGES['alice.com']}
+            source={AVIS[item.author.name] || AVIS['alice.com']}
           />
         </View>
         <View style={styles.layoutContent}>
@@ -74,14 +59,14 @@ export const FeedItem = observer(function FeedItem({
           <View style={styles.ctrls}>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={[styles.ctrlIcon, s.gray]}
+                style={styles.ctrlIcon}
                 icon={['far', 'comment']}
               />
               <Text>{item.replyCount}</Text>
             </View>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={[styles.ctrlIcon, s.gray]}
+                style={styles.ctrlIcon}
                 icon="retweet"
                 size={22}
               />
@@ -89,14 +74,14 @@ export const FeedItem = observer(function FeedItem({
             </View>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={[styles.ctrlIcon, s.gray]}
+                style={styles.ctrlIcon}
                 icon={['far', 'heart']}
               />
               <Text>{item.likeCount}</Text>
             </View>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
-                style={[styles.ctrlIcon, s.gray]}
+                style={styles.ctrlIcon}
                 icon="share-from-square"
               />
             </View>
@@ -120,6 +105,7 @@ const styles = StyleSheet.create({
   },
   repostedByIcon: {
     marginRight: 2,
+    color: 'gray',
   },
   layout: {
     flexDirection: 'row',
@@ -159,5 +145,6 @@ const styles = StyleSheet.create({
   },
   ctrlIcon: {
     marginRight: 5,
+    color: 'gray',
   },
 })

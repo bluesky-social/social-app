@@ -1,10 +1,10 @@
 import type {StackScreenProps} from '@react-navigation/stack'
 
 export type RootTabsParamList = {
-  Home: undefined
-  Search: undefined
-  Notifications: undefined
-  Menu: undefined
+  HomeTab: undefined
+  SearchTab: undefined
+  NotificationsTab: undefined
+  MenuTab: undefined
   Profile: {name: string}
   PostThread: {name: string; recordKey: string}
   Login: undefined
@@ -14,7 +14,10 @@ export type RootTabsParamList = {
 export type RootTabsScreenProps<T extends keyof RootTabsParamList> =
   StackScreenProps<RootTabsParamList, T>
 
-export type OnNavigateContent = (screen: string, params: Record<string, string>): void
+export type OnNavigateContent = (
+  screen: string,
+  params: Record<string, string>,
+) => void
 
 /*
 NOTE
