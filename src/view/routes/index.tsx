@@ -9,6 +9,7 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {observer} from 'mobx-react-lite'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import type {RootTabsParamList} from './types'
 import {useStores} from '../../state'
 import * as platform from '../../platform/detection'
@@ -54,8 +55,19 @@ const tabBarScreenOptions = ({
 }) => ({
   headerShown: false,
   tabBarIcon: (_state: {focused: boolean; color: string; size: number}) => {
-    // TODO: icons
-    return <Text>{route.name?.[0] || ''}</Text>
+    switch (route.name) {
+      case 'Home':
+        return <FontAwesomeIcon icon="house" />
+      case 'Search':
+        return <FontAwesomeIcon icon="magnifying-glass" />
+      case 'Notifications':
+        return <FontAwesomeIcon icon="bell" />
+      case 'Menu':
+        return <FontAwesomeIcon icon="bars" />
+      default:
+        return <FontAwesomeIcon icon="bars" />
+    }
+    // return <Text>{route.name?.[0] || ''}</Text>
   },
 })
 

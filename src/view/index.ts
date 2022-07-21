@@ -1,8 +1,12 @@
 import moment from 'moment'
 import {library} from '@fortawesome/fontawesome-svg-core'
 
+import {faBars} from '@fortawesome/free-solid-svg-icons/faBars'
+import {faBell} from '@fortawesome/free-solid-svg-icons/faBell'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
 import {faHeart} from '@fortawesome/free-regular-svg-icons/faHeart'
+import {faHouse} from '@fortawesome/free-solid-svg-icons/faHouse'
+import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
 import {faShareFromSquare} from '@fortawesome/free-solid-svg-icons/faShareFromSquare'
 import {faRetweet} from '@fortawesome/free-solid-svg-icons/faRetweet'
 
@@ -27,5 +31,14 @@ export function setup() {
       yy: '%dy',
     },
   })
-  library.add(faComment, faHeart, faRetweet, faShareFromSquare)
+  library.add(
+    faBars,
+    faBell,
+    faComment,
+    faHeart,
+    faHouse,
+    faMagnifyingGlass,
+    faRetweet,
+    faShareFromSquare,
+  )
 }
