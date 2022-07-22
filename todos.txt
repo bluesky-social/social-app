@@ -1,15 +1,21 @@
 Paul's todo list
 
-- Posts in Thread and Feed view
+- Feed view
+  - Refresh
   - Share btn
 - Thread view
-  - View likes list
-  - View reposts list
+  - Refresh
+  - Share btn
   - Reply control
 - Profile view
+  - Refresh
   - Follow / Unfollow
   - Badges
 - Compose post control
+- Search view
+  - *
+- Notifications view
+  - *
 - Linking
   - Web linking
   - App linking

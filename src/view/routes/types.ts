@@ -7,6 +7,8 @@ export type RootTabsParamList = {
   MenuTab: undefined
   Profile: {name: string}
   PostThread: {name: string; recordKey: string}
+  PostLikedBy: {name: string; recordKey: string}
+  PostRepostedBy: {name: string; recordKey: string}
   Login: undefined
   Signup: undefined
   NotFound: undefined

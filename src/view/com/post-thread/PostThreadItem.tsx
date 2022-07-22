@@ -40,6 +40,20 @@ export const PostThreadItem = observer(function PostThreadItem({
       name: item.author.name,
     })
   }
+  const onPressLikes = () => {
+    const urip = new AdxUri(item.uri)
+    onNavigateContent('PostLikedBy', {
+      name: item.author.name,
+      recordKey: urip.recordKey,
+    })
+  }
+  const onPressReposts = () => {
+    const urip = new AdxUri(item.uri)
+    onNavigateContent('PostRepostedBy', {
+      name: item.author.name,
+      recordKey: urip.recordKey,
+    })
+  }
   const onPressToggleRepost = () => {
     item
       .toggleRepost()
@@ -91,7 +105,9 @@ export const PostThreadItem = observer(function PostThreadItem({
           {item._isHighlightedPost && hasEngagement ? (
             <View style={styles.expandedInfo}>
               {item.repostCount ? (
-                <Text style={[styles.expandedInfoItem, s.gray, s.semiBold]}>
+                <Text
+                  style={[styles.expandedInfoItem, s.gray, s.semiBold]}
+                  onPress={onPressReposts}>
                   <Text style={[s.bold, s.black]}>{item.repostCount}</Text>{' '}
                   {pluralize(item.repostCount, 'repost')}
                 </Text>
@@ -99,7 +115,9 @@ export const PostThreadItem = observer(function PostThreadItem({
                 <></>
               )}
               {item.likeCount ? (
-                <Text style={[styles.expandedInfoItem, s.gray, s.semiBold]}>
+                <Text
+                  style={[styles.expandedInfoItem, s.gray, s.semiBold]}
+                  onPress={onPressLikes}>
                   <Text style={[s.bold, s.black]}>{item.likeCount}</Text>{' '}
                   {pluralize(item.likeCount, 'like')}
                 </Text>

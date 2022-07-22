@@ -4,19 +4,19 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {makeRecordUri} from '../../lib/strings'
 import {Shell} from '../../shell'
 import type {RootTabsScreenProps} from '../../routes/types'
-import {PostThread as PostThreadComponent} from '../../com/post-thread/PostThread'
+import {PostLikedBy as PostLikedByComponent} from '../../com/post-thread/PostLikedBy'
 
-export const PostThread = ({
+export const PostLikedBy = ({
   navigation,
   route,
-}: RootTabsScreenProps<'PostThread'>) => {
+}: RootTabsScreenProps<'PostLikedBy'>) => {
   const {name, recordKey} = route.params
   const uri = makeRecordUri(name, 'blueskyweb.xyz:Posts', recordKey)
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      headerTitle: 'Thread',
+      headerTitle: 'Liked By',
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <FontAwesomeIcon icon="arrow-left" />
@@ -32,7 +32,7 @@ export const PostThread = ({
 
   return (
     <Shell>
-      <PostThreadComponent uri={uri} onNavigateContent={onNavigateContent} />
+      <PostLikedByComponent uri={uri} onNavigateContent={onNavigateContent} />
     </Shell>
   )
 }

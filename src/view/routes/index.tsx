@@ -19,6 +19,8 @@ import {Notifications} from '../screens/Notifications'
 import {Menu} from '../screens/Menu'
 import {Profile} from '../screens/content/Profile'
 import {PostThread} from '../screens/content/PostThread'
+import {PostLikedBy} from '../screens/content/PostLikedBy'
+import {PostRepostedBy} from '../screens/content/PostRepostedBy'
 import {Login} from '../screens/Login'
 import {Signup} from '../screens/Signup'
 import {NotFound} from '../screens/NotFound'
@@ -38,6 +40,8 @@ const linking: LinkingOptions<RootTabsParamList> = {
       MenuTab: 'menu',
       Profile: 'profile/:name',
       PostThread: 'profile/:name/post/:recordKey',
+      PostLikedBy: 'profile/:name/post/:recordKey/liked-by',
+      PostRepostedBy: 'profile/:name/post/:recordKey/reposted-by',
       Login: 'login',
       Signup: 'signup',
       NotFound: '*',
@@ -87,6 +91,8 @@ function HomeStackCom() {
       <HomeTabStack.Screen name="Home" component={Home} options={HIDE_HEADER} />
       <HomeTabStack.Screen name="Profile" component={Profile} />
       <HomeTabStack.Screen name="PostThread" component={PostThread} />
+      <HomeTabStack.Screen name="PostLikedBy" component={PostLikedBy} />
+      <HomeTabStack.Screen name="PostRepostedBy" component={PostRepostedBy} />
     </HomeTabStack.Navigator>
   )
 }
@@ -101,6 +107,8 @@ function SearchStackCom() {
       />
       <SearchTabStack.Screen name="Profile" component={Profile} />
       <SearchTabStack.Screen name="PostThread" component={PostThread} />
+      <SearchTabStack.Screen name="PostLikedBy" component={PostLikedBy} />
+      <SearchTabStack.Screen name="PostRepostedBy" component={PostRepostedBy} />
     </SearchTabStack.Navigator>
   )
 }
@@ -114,6 +122,14 @@ function NotificationsStackCom() {
       />
       <NotificationsTabStack.Screen name="Profile" component={Profile} />
       <NotificationsTabStack.Screen name="PostThread" component={PostThread} />
+      <NotificationsTabStack.Screen
+        name="PostLikedBy"
+        component={PostLikedBy}
+      />
+      <NotificationsTabStack.Screen
+        name="PostRepostedBy"
+        component={PostRepostedBy}
+      />
     </NotificationsTabStack.Navigator>
   )
 }
