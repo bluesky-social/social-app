@@ -6,12 +6,13 @@ Paul's todo list
 - Thread view
   - Refresh
   - Share btn
-  - Reply control
 - Profile view
   - Refresh
   - Follow / Unfollow
   - Badges
-- Compose post control
+- Composer
+  - Refresh original view after reply
+  - Check on navigation stack during a bunch of replies
 - Search view
   - *
 - Notifications view

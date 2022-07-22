@@ -34,7 +34,7 @@ export const s = StyleSheet.create({
   // colors
   black: {color: 'black'},
   gray: {color: 'gray'},
-  blue: {color: 'blue'},
+  blue: {color: '#006bf7'},
   green: {color: 'green'},
   red: {color: 'red'},
 
@@ -52,6 +52,25 @@ export const s = StyleSheet.create({
   mb5: {marginBottom: 5},
   mb10: {marginBottom: 10},
 
+  // paddings
+  p2: {padding: 2},
+  p5: {padding: 5},
+  p10: {padding: 10},
+  pr2: {paddingRight: 2},
+  pr5: {paddingRight: 5},
+  pr10: {paddingRight: 10},
+  pl2: {paddingLeft: 2},
+  pl5: {paddingLeft: 5},
+  pl10: {paddingLeft: 10},
+  pt2: {paddingTop: 2},
+  pt5: {paddingTop: 5},
+  pt10: {paddingTop: 10},
+  pb2: {paddingBottom: 2},
+  pb5: {paddingBottom: 5},
+  pb10: {paddingBottom: 10},
+
   // flex
   flexRow: {flexDirection: 'row'},
+  flexCol: {flexDirection: 'column'},
+  flex1: {flex: 1},
 })

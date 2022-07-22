@@ -9,8 +9,10 @@ import {faHeart} from '@fortawesome/free-regular-svg-icons/faHeart'
 import {faHeart as fasHeart} from '@fortawesome/free-solid-svg-icons/faHeart'
 import {faHouse} from '@fortawesome/free-solid-svg-icons/faHouse'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
+import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus'
 import {faShareFromSquare} from '@fortawesome/free-solid-svg-icons/faShareFromSquare'
 import {faRetweet} from '@fortawesome/free-solid-svg-icons/faRetweet'
+import {faX} from '@fortawesome/free-solid-svg-icons/faX'
 
 export function setup() {
   moment.updateLocale('en', {
@@ -41,8 +43,10 @@ export function setup() {
     faHeart,
     fasHeart,
     faHouse,
+    faPlus,
     faMagnifyingGlass,
     faRetweet,
     faShareFromSquare,
+    faX,
   )
 }

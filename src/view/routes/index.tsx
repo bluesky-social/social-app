@@ -13,17 +13,18 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import type {RootTabsParamList} from './types'
 import {useStores} from '../../state'
 import * as platform from '../../platform/detection'
-import {Home} from '../screens/Home'
-import {Search} from '../screens/Search'
-import {Notifications} from '../screens/Notifications'
-import {Menu} from '../screens/Menu'
-import {Profile} from '../screens/content/Profile'
-import {PostThread} from '../screens/content/PostThread'
-import {PostLikedBy} from '../screens/content/PostLikedBy'
-import {PostRepostedBy} from '../screens/content/PostRepostedBy'
-import {Login} from '../screens/Login'
-import {Signup} from '../screens/Signup'
-import {NotFound} from '../screens/NotFound'
+import {Home} from '../screens/tabroots/Home'
+import {Search} from '../screens/tabroots/Search'
+import {Notifications} from '../screens/tabroots/Notifications'
+import {Menu} from '../screens/tabroots/Menu'
+import {Login} from '../screens/tabroots/Login'
+import {Signup} from '../screens/tabroots/Signup'
+import {NotFound} from '../screens/tabroots/NotFound'
+import {Composer} from '../screens/stacks/Composer'
+import {PostThread} from '../screens/stacks/PostThread'
+import {PostLikedBy} from '../screens/stacks/PostLikedBy'
+import {PostRepostedBy} from '../screens/stacks/PostRepostedBy'
+import {Profile} from '../screens/stacks/Profile'
 
 const linking: LinkingOptions<RootTabsParamList> = {
   prefixes: [
@@ -42,6 +43,7 @@ const linking: LinkingOptions<RootTabsParamList> = {
       PostThread: 'profile/:name/post/:recordKey',
       PostLikedBy: 'profile/:name/post/:recordKey/liked-by',
       PostRepostedBy: 'profile/:name/post/:recordKey/reposted-by',
+      Composer: 'compose',
       Login: 'login',
       Signup: 'signup',
       NotFound: '*',
@@ -88,7 +90,8 @@ const HIDE_TAB = {tabBarButton: () => null}
 function HomeStackCom() {
   return (
     <HomeTabStack.Navigator>
-      <HomeTabStack.Screen name="Home" component={Home} options={HIDE_HEADER} />
+      <HomeTabStack.Screen name="Home" component={Home} />
+      <HomeTabStack.Screen name="Composer" component={Composer} />
       <HomeTabStack.Screen name="Profile" component={Profile} />
       <HomeTabStack.Screen name="PostThread" component={PostThread} />
       <HomeTabStack.Screen name="PostLikedBy" component={PostLikedBy} />

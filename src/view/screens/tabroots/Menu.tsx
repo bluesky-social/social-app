@@ -1,7 +1,7 @@
 import React from 'react'
-import {Shell} from '../shell'
+import {Shell} from '../../shell'
 import {ScrollView, Text, View} from 'react-native'
-import type {RootTabsScreenProps} from '../routes/types'
+import type {RootTabsScreenProps} from '../../routes/types'
 
 export const Menu = (_props: RootTabsScreenProps<'MenuTab'>) => {
   return (

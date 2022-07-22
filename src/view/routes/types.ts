@@ -9,6 +9,7 @@ export type RootTabsParamList = {
   PostThread: {name: string; recordKey: string}
   PostLikedBy: {name: string; recordKey: string}
   PostRepostedBy: {name: string; recordKey: string}
+  Composer: {replyTo?: string}
   Login: undefined
   Signup: undefined
   NotFound: undefined

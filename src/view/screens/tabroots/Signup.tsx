@@ -1,7 +1,7 @@
 import React from 'react'
 import {Text, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {Shell} from '../shell'
+import {Shell} from '../../shell'
 // import type {RootTabsScreenProps} from '../routes/types'
 // import {useStores} from '../../state'
 

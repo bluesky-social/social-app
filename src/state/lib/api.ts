@@ -28,12 +28,46 @@ export async function setup(adx: AdxClient) {
   )
 }
 
+export async function post(
+  adx: AdxClient,
+  user: string,
+  text: string,
+  replyToUri?: string,
+) {
+  let reply
+  if (replyToUri) {
+    const replyToUrip = new AdxUri(replyToUri)
+    const parentPost = await adx
+      .repo(replyToUrip.host, false)
+      .collection(replyToUrip.collection)
+      .get('Post', replyToUrip.recordKey)
+    if (parentPost) {
+      reply = {
+        root: parentPost.value.reply?.root || parentPost.uri,
+        parent: parentPost.uri,
+      }
+    }
+  }
+  return await adx
+    .repo(user, true)
+    .collection('blueskyweb.xyz:Posts')
+    .create('Post', {
+      $type: 'blueskyweb.xyz:Post',
+      text,
+      reply,
+      createdAt: new Date().toISOString(),
+    })
+}
+
 export async function like(adx: AdxClient, user: string, uri: string) {
-  await adx.repo(user, true).collection('blueskyweb.xyz:Likes').create('Like', {
-    $type: 'blueskyweb.xyz:Like',
-    subject: uri,
-    createdAt: new Date().toISOString(),
-  })
+  return await adx
+    .repo(user, true)
+    .collection('blueskyweb.xyz:Likes')
+    .create('Like', {
+      $type: 'blueskyweb.xyz:Like',
+      subject: uri,
+      createdAt: new Date().toISOString(),
+    })
 }
 
 export async function unlike(adx: AdxClient, user: string, uri: string) {
@@ -45,7 +79,7 @@ export async function unlike(adx: AdxClient, user: string, uri: string) {
 }
 
 export async function repost(adx: AdxClient, user: string, uri: string) {
-  await adx
+  return await adx
     .repo(user, true)
     .collection('blueskyweb.xyz:Posts')
     .create('Repost', {

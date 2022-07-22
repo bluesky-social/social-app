@@ -30,6 +30,11 @@ export const FeedItem = observer(function FeedItem({
       name: item.author.name,
     })
   }
+  const onPressReply = () => {
+    onNavigateContent('Composer', {
+      replyTo: item.uri,
+    })
+  }
   const onPressToggleRepost = () => {
     item
       .toggleRepost()
@@ -78,13 +83,13 @@ export const FeedItem = observer(function FeedItem({
             {record.text}
           </Text>
           <View style={styles.ctrls}>
-            <View style={styles.ctrl}>
+            <TouchableOpacity style={styles.ctrl} onPress={onPressReply}>
               <FontAwesomeIcon
                 style={styles.ctrlIcon}
                 icon={['far', 'comment']}
               />
               <Text>{item.replyCount}</Text>
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.ctrl} onPress={onPressToggleRepost}>
               <FontAwesomeIcon
                 style={
