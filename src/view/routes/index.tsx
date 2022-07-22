@@ -56,6 +56,7 @@ const tabBarScreenOptions = ({
   route: RouteProp<ParamListBase, string>
 }) => ({
   headerShown: false,
+  tabBarShowLabel: false,
   tabBarIcon: (state: {focused: boolean; color: string; size: number}) => {
     switch (route.name) {
       case 'HomeTab':

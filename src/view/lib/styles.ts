@@ -34,4 +34,21 @@ export const s = StyleSheet.create({
   // colors
   black: {color: 'black'},
   gray: {color: 'gray'},
+
+  // margins
+  mr2: {marginRight: 2},
+  mr5: {marginRight: 5},
+  mr10: {marginRight: 10},
+  ml2: {marginLeft: 2},
+  ml5: {marginLeft: 5},
+  ml10: {marginLeft: 10},
+  mt2: {marginTop: 2},
+  mt5: {marginTop: 5},
+  mt10: {marginTop: 10},
+  mb2: {marginBottom: 2},
+  mb5: {marginBottom: 5},
+  mb10: {marginBottom: 10},
+
+  // flex
+  flexRow: {flexDirection: 'row'},
 })

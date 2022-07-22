@@ -3,7 +3,10 @@ import {bsky} from '@adxp/mock-api'
 import {RootStoreModel} from './root-store'
 
 export class FeedViewItemModel implements bsky.FeedView.FeedItem {
+  // ui state
   _reactKey: string = ''
+
+  // data
   uri: string = ''
   author: bsky.FeedView.User = {did: '', name: '', displayName: ''}
   repostedBy?: bsky.FeedView.User
@@ -25,13 +28,16 @@ export class FeedViewItemModel implements bsky.FeedView.FeedItem {
 }
 
 export class FeedViewModel implements bsky.FeedView.Response {
+  // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
   params: bsky.FeedView.Params
-  feed: FeedViewItemModel[] = []
   _loadMorePromise: Promise<void> | undefined
+
+  // data
+  feed: FeedViewItemModel[] = []
 
   constructor(public rootStore: RootStoreModel, params: bsky.FeedView.Params) {
     makeAutoObservable(

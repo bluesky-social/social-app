@@ -72,12 +72,15 @@ export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
 const UNLOADED_THREAD = new PostThreadViewPostModel('')
 
 export class PostThreadViewModel implements bsky.PostThreadView.Response {
+  // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
   resolvedUri = ''
   params: bsky.PostThreadView.Params
+
+  // data
   thread: PostThreadViewPostModel = UNLOADED_THREAD
 
   constructor(
@@ -167,7 +170,7 @@ export class PostThreadViewModel implements bsky.PostThreadView.Response {
   private async _refresh() {
     this._xLoading(true)
     // TODO: refetch and update items
-    await new Promise(r => setTimeout(r, 1e3)) // DEBUG
+    await new Promise(r => setTimeout(r, 250)) // DEBUG
     this._xIdle()
   }
 

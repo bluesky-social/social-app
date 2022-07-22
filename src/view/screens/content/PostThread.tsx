@@ -34,6 +34,7 @@ export const PostThread = ({
     // @ts-ignore it's up to the callers to supply correct params -prf
     navigation.push(screen, props)
   }
+
   return (
     <Shell>
       <PostThreadComponent uri={uri} onNavigateContent={onNavigateContent} />

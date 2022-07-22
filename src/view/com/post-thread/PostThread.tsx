@@ -30,7 +30,8 @@ export const PostThread = observer(function PostThread({
     newView.setup().catch(err => console.error('Failed to fetch thread', err))
   }, [uri, view?.params.uri, store])
 
-  // not yet setup
+  // loading
+  // =
   if (
     !view ||
     (view.isLoading && !view.isRefreshing) ||
@@ -44,6 +45,7 @@ export const PostThread = observer(function PostThread({
   }
 
   // error
+  // =
   if (view.hasError) {
     return (
       <View>
@@ -52,7 +54,8 @@ export const PostThread = observer(function PostThread({
     )
   }
 
-  // rendering
+  // loaded
+  // =
   const posts = Array.from(flattenThread(view.thread))
   const renderItem = ({item}: {item: PostThreadViewPostModel}) => (
     <PostThreadItem item={item} onNavigateContent={onNavigateContent} />

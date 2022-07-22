@@ -27,6 +27,7 @@ export const PostThreadItem = observer(function PostThreadItem({
 }) {
   const record = item.record as unknown as bsky.Post.Record
   const hasEngagement = item.likeCount || item.repostCount
+
   const onPressOuter = () => {
     const urip = new AdxUri(item.uri)
     onNavigateContent('PostThread', {
@@ -34,24 +35,34 @@ export const PostThreadItem = observer(function PostThreadItem({
       recordKey: urip.recordKey,
     })
   }
+  const onPressAuthor = () => {
+    onNavigateContent('Profile', {
+      name: item.author.name,
+    })
+  }
+
   return (
     <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
       <View style={styles.layout}>
         {iter(Math.abs(item._depth), (i: number) => (
           <View key={i} style={styles.replyBar} />
         ))}
-        <View style={styles.layoutAvi}>
+        <TouchableOpacity style={styles.layoutAvi} onPress={onPressAuthor}>
           <Image
             style={styles.avi}
             source={AVIS[item.author.name] || AVIS['alice.com']}
           />
-        </View>
+        </TouchableOpacity>
         <View style={styles.layoutContent}>
           <View style={styles.meta}>
-            <Text style={[styles.metaItem, s.f15, s.bold]}>
+            <Text
+              style={[styles.metaItem, s.f15, s.bold]}
+              onPress={onPressAuthor}>
               {item.author.displayName}
             </Text>
-            <Text style={[styles.metaItem, s.f14, s.gray]}>
+            <Text
+              style={[styles.metaItem, s.f14, s.gray]}
+              onPress={onPressAuthor}>
               @{item.author.name}
             </Text>
             <Text style={[styles.metaItem, s.f14, s.gray]}>

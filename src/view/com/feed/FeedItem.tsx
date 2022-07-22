@@ -17,6 +17,7 @@ export const FeedItem = observer(function FeedItem({
   onNavigateContent: OnNavigateContent
 }) {
   const record = item.record as unknown as bsky.Post.Record
+
   const onPressOuter = () => {
     const urip = new AdxUri(item.uri)
     onNavigateContent('PostThread', {
@@ -24,6 +25,12 @@ export const FeedItem = observer(function FeedItem({
       recordKey: urip.recordKey,
     })
   }
+  const onPressAuthor = () => {
+    onNavigateContent('Profile', {
+      name: item.author.name,
+    })
+  }
+
   return (
     <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
       {item.repostedBy && (
@@ -35,18 +42,22 @@ export const FeedItem = observer(function FeedItem({
         </View>
       )}
       <View style={styles.layout}>
-        <View style={styles.layoutAvi}>
+        <TouchableOpacity style={styles.layoutAvi} onPress={onPressAuthor}>
           <Image
             style={styles.avi}
             source={AVIS[item.author.name] || AVIS['alice.com']}
           />
-        </View>
+        </TouchableOpacity>
         <View style={styles.layoutContent}>
           <View style={styles.meta}>
-            <Text style={[styles.metaItem, s.f15, s.bold]}>
+            <Text
+              style={[styles.metaItem, s.f15, s.bold]}
+              onPress={onPressAuthor}>
               {item.author.displayName}
             </Text>
-            <Text style={[styles.metaItem, s.f14, s.gray]}>
+            <Text
+              style={[styles.metaItem, s.f14, s.gray]}
+              onPress={onPressAuthor}>
               @{item.author.name}
             </Text>
             <Text style={[styles.metaItem, s.f14, s.gray]}>
