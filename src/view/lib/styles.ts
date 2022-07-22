@@ -34,6 +34,9 @@ export const s = StyleSheet.create({
   // colors
   black: {color: 'black'},
   gray: {color: 'gray'},
+  blue: {color: 'blue'},
+  green: {color: 'green'},
+  red: {color: 'red'},
 
   // margins
   mr2: {marginRight: 2},

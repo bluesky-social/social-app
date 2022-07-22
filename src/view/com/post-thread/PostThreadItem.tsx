@@ -40,6 +40,16 @@ export const PostThreadItem = observer(function PostThreadItem({
       name: item.author.name,
     })
   }
+  const onPressToggleRepost = () => {
+    item
+      .toggleRepost()
+      .catch(e => console.error('Failed to toggle repost', record, e))
+  }
+  const onPressToggleLike = () => {
+    item
+      .toggleLike()
+      .catch(e => console.error('Failed to toggle like', record, e))
+  }
 
   return (
     <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
@@ -108,21 +118,34 @@ export const PostThreadItem = observer(function PostThreadItem({
               />
               <Text>{item.replyCount}</Text>
             </View>
-            <View style={styles.ctrl}>
+            <TouchableOpacity style={styles.ctrl} onPress={onPressToggleRepost}>
               <FontAwesomeIcon
-                style={styles.ctrlIcon}
+                style={
+                  item.myState.hasReposted
+                    ? styles.ctrlIconReposted
+                    : styles.ctrlIcon
+                }
                 icon="retweet"
                 size={22}
               />
-              <Text>{item.repostCount}</Text>
-            </View>
-            <View style={styles.ctrl}>
+              <Text
+                style={
+                  item.myState.hasReposted ? [s.bold, s.green] : undefined
+                }>
+                {item.repostCount}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.ctrl} onPress={onPressToggleLike}>
               <FontAwesomeIcon
-                style={styles.ctrlIcon}
-                icon={['far', 'heart']}
+                style={
+                  item.myState.hasLiked ? styles.ctrlIconLiked : styles.ctrlIcon
+                }
+                icon={[item.myState.hasLiked ? 'fas' : 'far', 'heart']}
               />
-              <Text>{item.likeCount}</Text>
-            </View>
+              <Text style={item.myState.hasLiked ? [s.bold, s.red] : undefined}>
+                {item.likeCount}
+              </Text>
+            </TouchableOpacity>
             <View style={styles.ctrl}>
               <FontAwesomeIcon
                 style={styles.ctrlIcon}
@@ -204,5 +227,13 @@ const styles = StyleSheet.create({
   ctrlIcon: {
     marginRight: 5,
     color: 'gray',
+  },
+  ctrlIconReposted: {
+    marginRight: 5,
+    color: 'green',
+  },
+  ctrlIconLiked: {
+    marginRight: 5,
+    color: 'red',
   },
 })

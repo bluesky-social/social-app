@@ -56,7 +56,7 @@ export const PostThread = observer(function PostThread({
 
   // loaded
   // =
-  const posts = Array.from(flattenThread(view.thread))
+  const posts = view.thread ? Array.from(flattenThread(view.thread)) : []
   const renderItem = ({item}: {item: PostThreadViewPostModel}) => (
     <PostThreadItem item={item} onNavigateContent={onNavigateContent} />
   )

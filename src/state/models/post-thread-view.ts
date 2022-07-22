@@ -2,11 +2,21 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {bsky, AdxUri} from '@adxp/mock-api'
 import _omit from 'lodash.omit'
 import {RootStoreModel} from './root-store'
+import * as apilib from '../lib/api'
 
 function* reactKeyGenerator(): Generator<string> {
   let counter = 0
   while (true) {
     yield `item-${counter++}`
+  }
+}
+
+export class PostThreadViewPostMyStateModel {
+  hasLiked: boolean = false
+  hasReposted: boolean = false
+
+  constructor() {
+    makeAutoObservable(this)
   }
 }
 
@@ -30,12 +40,20 @@ export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
   repostCount: number = 0
   likeCount: number = 0
   indexedAt: string = ''
+  myState = new PostThreadViewPostMyStateModel()
 
-  constructor(reactKey: string, v?: bsky.PostThreadView.Post) {
-    makeAutoObservable(this)
+  constructor(
+    public rootStore: RootStoreModel,
+    reactKey: string,
+    v?: bsky.PostThreadView.Post,
+  ) {
+    makeAutoObservable(this, {rootStore: false})
     this._reactKey = reactKey
     if (v) {
-      Object.assign(this, _omit(v, 'parent', 'replies')) // copy everything but the replies and the parent
+      Object.assign(this, _omit(v, 'parent', 'replies', 'myState')) // replies and parent are handled via assignTreeModels
+      if (v.myState) {
+        Object.assign(this.myState, v.myState)
+      }
     }
   }
 
@@ -44,6 +62,7 @@ export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
     if (v.parent) {
       // TODO: validate .record
       const parentModel = new PostThreadViewPostModel(
+        this.rootStore,
         keyGen.next().value,
         v.parent,
       )
@@ -58,7 +77,11 @@ export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
       const replies = []
       for (const item of v.replies) {
         // TODO: validate .record
-        const itemModel = new PostThreadViewPostModel(keyGen.next().value, item)
+        const itemModel = new PostThreadViewPostModel(
+          this.rootStore,
+          keyGen.next().value,
+          item,
+        )
         itemModel._depth = this._depth + 1
         if (item.replies) {
           itemModel.assignTreeModels(keyGen, item)
@@ -68,10 +91,41 @@ export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
       this.replies = replies
     }
   }
-}
-const UNLOADED_THREAD = new PostThreadViewPostModel('')
 
-export class PostThreadViewModel implements bsky.PostThreadView.Response {
+  async toggleLike() {
+    if (this.myState.hasLiked) {
+      await apilib.unlike(this.rootStore.api, 'alice.com', this.uri)
+      runInAction(() => {
+        this.likeCount--
+        this.myState.hasLiked = false
+      })
+    } else {
+      await apilib.like(this.rootStore.api, 'alice.com', this.uri)
+      runInAction(() => {
+        this.likeCount++
+        this.myState.hasLiked = true
+      })
+    }
+  }
+
+  async toggleRepost() {
+    if (this.myState.hasReposted) {
+      await apilib.unrepost(this.rootStore.api, 'alice.com', this.uri)
+      runInAction(() => {
+        this.repostCount--
+        this.myState.hasReposted = false
+      })
+    } else {
+      await apilib.repost(this.rootStore.api, 'alice.com', this.uri)
+      runInAction(() => {
+        this.repostCount++
+        this.myState.hasReposted = true
+      })
+    }
+  }
+}
+
+export class PostThreadViewModel {
   // state
   isLoading = false
   isRefreshing = false
@@ -81,7 +135,7 @@ export class PostThreadViewModel implements bsky.PostThreadView.Response {
   params: bsky.PostThreadView.Params
 
   // data
-  thread: PostThreadViewPostModel = UNLOADED_THREAD
+  thread?: PostThreadViewPostModel
 
   constructor(
     public rootStore: RootStoreModel,
@@ -99,7 +153,7 @@ export class PostThreadViewModel implements bsky.PostThreadView.Response {
   }
 
   get hasContent() {
-    return this.thread !== UNLOADED_THREAD
+    return typeof this.thread !== 'undefined'
   }
 
   get hasError() {
@@ -177,7 +231,11 @@ export class PostThreadViewModel implements bsky.PostThreadView.Response {
   private _replaceAll(res: bsky.PostThreadView.Response) {
     // TODO: validate .record
     const keyGen = reactKeyGenerator()
-    const thread = new PostThreadViewPostModel(keyGen.next().value, res.thread)
+    const thread = new PostThreadViewPostModel(
+      this.rootStore,
+      keyGen.next().value,
+      res.thread,
+    )
     thread._isHighlightedPost = true
     thread.assignTreeModels(keyGen, res.thread)
     this.thread = thread

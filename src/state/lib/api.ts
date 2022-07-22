@@ -4,7 +4,16 @@
  */
 
 // import {ReactNativeStore} from './auth'
-import {AdxClient, AdxRepoClient, AdxUri, bsky} from '@adxp/mock-api'
+import {
+  AdxClient,
+  AdxRepoClient,
+  AdxRepoCollectionClient,
+  AdxUri,
+  bsky,
+  SchemaOpt,
+  ListRecordsResponseValidated,
+  GetRecordResponseValidated,
+} from '@adxp/mock-api'
 import * as storage from './storage'
 import {postTexts} from './mock-data/post-texts'
 import {replyTexts} from './mock-data/reply-texts'
@@ -17,6 +26,78 @@ export async function setup(adx: AdxClient) {
     },
     () => generateMockData(adx),
   )
+}
+
+export async function like(adx: AdxClient, user: string, uri: string) {
+  await adx.repo(user, true).collection('blueskyweb.xyz:Likes').create('Like', {
+    $type: 'blueskyweb.xyz:Like',
+    subject: uri,
+    createdAt: new Date().toISOString(),
+  })
+}
+
+export async function unlike(adx: AdxClient, user: string, uri: string) {
+  const coll = adx.repo(user, true).collection('blueskyweb.xyz:Likes')
+  const numDels = await deleteWhere(coll, 'Like', record => {
+    return record.value.subject === uri
+  })
+  return numDels > 0
+}
+
+export async function repost(adx: AdxClient, user: string, uri: string) {
+  await adx
+    .repo(user, true)
+    .collection('blueskyweb.xyz:Posts')
+    .create('Repost', {
+      $type: 'blueskyweb.xyz:Repost',
+      subject: uri,
+      createdAt: new Date().toISOString(),
+    })
+}
+
+export async function unrepost(adx: AdxClient, user: string, uri: string) {
+  const coll = adx.repo(user, true).collection('blueskyweb.xyz:Posts')
+  const numDels = await deleteWhere(coll, 'Repost', record => {
+    return record.value.subject === uri
+  })
+  return numDels > 0
+}
+
+type WherePred = (record: GetRecordResponseValidated) => Boolean
+async function deleteWhere(
+  coll: AdxRepoCollectionClient,
+  schema: SchemaOpt,
+  cond: WherePred,
+) {
+  const toDelete: string[] = []
+  iterateAll(coll, schema, record => {
+    if (cond(record)) {
+      toDelete.push(record.key)
+    }
+  })
+  for (const key of toDelete) {
+    await coll.del(key)
+  }
+  return toDelete.length
+}
+
+type IterateAllCb = (record: GetRecordResponseValidated) => void
+async function iterateAll(
+  coll: AdxRepoCollectionClient,
+  schema: SchemaOpt,
+  cb: IterateAllCb,
+) {
+  let cursor
+  let res: ListRecordsResponseValidated
+  do {
+    res = await coll.list(schema, {after: cursor, limit: 100})
+    for (const record of res.records) {
+      if (record.valid) {
+        cb(record)
+        cursor = record.key
+      }
+    }
+  } while (res.records.length === 100)
 }
 
 // TEMPORARY

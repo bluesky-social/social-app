@@ -1,8 +1,6 @@
 Paul's todo list
 
 - Posts in Thread and Feed view
-  - Like btn
-  - Repost btn
   - Share btn
 - Thread view
   - View likes list

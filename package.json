@@ -15,7 +15,7 @@
   "dependencies": {
     "@adxp/auth": "*",
     "@adxp/common": "*",
-    "@adxp/mock-api": "git+ssh://git@github.com:bluesky-social/adx-mock-api.git#19dc93e569fa71ae3de85876b3707afd47a6fe8c",
+    "@adxp/mock-api": "git+ssh://git@github.com:bluesky-social/adx-mock-api.git#0159e865560c12fb7004862c7d9d48420ed93878",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",

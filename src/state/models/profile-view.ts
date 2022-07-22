@@ -2,6 +2,14 @@ import {makeAutoObservable} from 'mobx'
 import {bsky} from '@adxp/mock-api'
 import {RootStoreModel} from './root-store'
 
+export class ProfileViewMyStateModel {
+  hasFollowed: boolean = false
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+}
+
 export class ProfileViewModel implements bsky.ProfileView.Response {
   // state
   isLoading = false
@@ -19,6 +27,7 @@ export class ProfileViewModel implements bsky.ProfileView.Response {
   followsCount: number = 0
   postsCount: number = 0
   badges: bsky.ProfileView.Badge[] = []
+  myState = new ProfileViewMyStateModel()
 
   constructor(
     public rootStore: RootStoreModel,
@@ -101,5 +110,8 @@ export class ProfileViewModel implements bsky.ProfileView.Response {
     this.followsCount = res.followsCount
     this.postsCount = res.postsCount
     this.badges = res.badges
+    if (res.myState) {
+      Object.assign(this.myState, res.myState)
+    }
   }
 }

@@ -1,6 +1,17 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {bsky} from '@adxp/mock-api'
+import _omit from 'lodash.omit'
 import {RootStoreModel} from './root-store'
+import * as apilib from '../lib/api'
+
+export class FeedViewItemMyStateModel {
+  hasLiked: boolean = false
+  hasReposted: boolean = false
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+}
 
 export class FeedViewItemModel implements bsky.FeedView.FeedItem {
   // ui state
@@ -19,11 +30,51 @@ export class FeedViewItemModel implements bsky.FeedView.FeedItem {
   repostCount: number = 0
   likeCount: number = 0
   indexedAt: string = ''
+  myState = new FeedViewItemMyStateModel()
 
-  constructor(reactKey: string, v: bsky.FeedView.FeedItem) {
-    makeAutoObservable(this)
+  constructor(
+    public rootStore: RootStoreModel,
+    reactKey: string,
+    v: bsky.FeedView.FeedItem,
+  ) {
+    makeAutoObservable(this, {rootStore: false})
     this._reactKey = reactKey
-    Object.assign(this, v)
+    Object.assign(this, _omit(v, 'myState'))
+    if (v.myState) {
+      Object.assign(this.myState, v.myState)
+    }
+  }
+
+  async toggleLike() {
+    if (this.myState.hasLiked) {
+      await apilib.unlike(this.rootStore.api, 'alice.com', this.uri)
+      runInAction(() => {
+        this.likeCount--
+        this.myState.hasLiked = false
+      })
+    } else {
+      await apilib.like(this.rootStore.api, 'alice.com', this.uri)
+      runInAction(() => {
+        this.likeCount++
+        this.myState.hasLiked = true
+      })
+    }
+  }
+
+  async toggleRepost() {
+    if (this.myState.hasReposted) {
+      await apilib.unrepost(this.rootStore.api, 'alice.com', this.uri)
+      runInAction(() => {
+        this.repostCount--
+        this.myState.hasReposted = false
+      })
+    } else {
+      await apilib.repost(this.rootStore.api, 'alice.com', this.uri)
+      runInAction(() => {
+        this.repostCount++
+        this.myState.hasReposted = true
+      })
+    }
   }
 }
 
@@ -177,6 +228,6 @@ export class FeedViewModel implements bsky.FeedView.Response {
 
   private _append(keyId: number, item: bsky.FeedView.FeedItem) {
     // TODO: validate .record
-    this.feed.push(new FeedViewItemModel(`item-${keyId}`, item))
+    this.feed.push(new FeedViewItemModel(this.rootStore, `item-${keyId}`, item))
   }
 }
