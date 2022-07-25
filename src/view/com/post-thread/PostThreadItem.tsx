@@ -21,9 +21,11 @@ function iter<T>(n: number, fn: (_i: number) => T): Array<T> {
 export const PostThreadItem = observer(function PostThreadItem({
   item,
   onNavigateContent,
+  onPressShare,
 }: {
   item: PostThreadViewPostModel
   onNavigateContent: OnNavigateContent
+  onPressShare: (uri: string) => void
 }) {
   const record = item.record as unknown as bsky.Post.Record
   const hasEngagement = item.likeCount || item.repostCount
@@ -169,12 +171,14 @@ export const PostThreadItem = observer(function PostThreadItem({
                 {item.likeCount}
               </Text>
             </TouchableOpacity>
-            <View style={styles.ctrl}>
+            <TouchableOpacity
+              style={styles.ctrl}
+              onPress={() => onPressShare(item.uri)}>
               <FontAwesomeIcon
                 style={styles.ctrlIcon}
                 icon="share-from-square"
               />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

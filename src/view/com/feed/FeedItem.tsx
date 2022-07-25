@@ -12,9 +12,11 @@ import {AVIS} from '../../lib/assets'
 export const FeedItem = observer(function FeedItem({
   item,
   onNavigateContent,
+  onPressShare,
 }: {
   item: FeedViewItemModel
   onNavigateContent: OnNavigateContent
+  onPressShare: (uri: string) => void
 }) {
   const record = item.record as unknown as bsky.Post.Record
 
@@ -118,12 +120,14 @@ export const FeedItem = observer(function FeedItem({
                 {item.likeCount}
               </Text>
             </TouchableOpacity>
-            <View style={styles.ctrl}>
+            <TouchableOpacity
+              style={styles.ctrl}
+              onPress={() => onPressShare(item.uri)}>
               <FontAwesomeIcon
                 style={styles.ctrlIcon}
                 icon="share-from-square"
               />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

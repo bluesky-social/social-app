@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, Text, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
@@ -9,6 +9,8 @@ import {
 } from '../../../state/models/post-thread-view'
 import {useStores} from '../../../state'
 import {PostThreadItem} from './PostThreadItem'
+import {ShareBottomSheet} from '../sheets/SharePost'
+import {s} from '../../lib/styles'
 
 const UPDATE_DELAY = 2e3 // wait 2s before refetching the thread for updates
 
@@ -22,6 +24,7 @@ export const PostThread = observer(function PostThread({
   const store = useStores()
   const [view, setView] = useState<PostThreadViewModel | undefined>()
   const [lastUpdate, setLastUpdate] = useState<number>(Date.now())
+  const shareSheetRef = useRef<{open: (uri: string) => void}>()
 
   useEffect(() => {
     if (view?.params.uri === uri) {
@@ -40,6 +43,13 @@ export const PostThread = observer(function PostThread({
       setLastUpdate(Date.now())
     }
   })
+
+  const onPressShare = (uri: string) => {
+    shareSheetRef.current?.open(uri)
+  }
+  const onRefresh = () => {
+    view?.refresh().catch(err => console.error('Failed to refresh', err))
+  }
 
   // loading
   // =
@@ -69,22 +79,22 @@ export const PostThread = observer(function PostThread({
   // =
   const posts = view.thread ? Array.from(flattenThread(view.thread)) : []
   const renderItem = ({item}: {item: PostThreadViewPostModel}) => (
-    <PostThreadItem item={item} onNavigateContent={onNavigateContent} />
+    <PostThreadItem
+      item={item}
+      onNavigateContent={onNavigateContent}
+      onPressShare={onPressShare}
+    />
   )
-  const onRefresh = () => {
-    view.refresh().catch(err => console.error('Failed to refresh', err))
-  }
   return (
-    <View>
-      {view.hasContent && (
-        <FlatList
-          data={posts}
-          keyExtractor={item => item._reactKey}
-          renderItem={renderItem}
-          refreshing={view.isRefreshing}
-          onRefresh={onRefresh}
-        />
-      )}
+    <View style={s.h100pct}>
+      <FlatList
+        data={posts}
+        keyExtractor={item => item._reactKey}
+        renderItem={renderItem}
+        refreshing={view.isRefreshing}
+        onRefresh={onRefresh}
+      />
+      <ShareBottomSheet ref={shareSheetRef} />
     </View>
   )
 })

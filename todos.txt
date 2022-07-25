@@ -1,9 +1,5 @@
 Paul's todo list
 
-- Feed view
-  - Share btn
-- Thread view
-  - Share btn
 - Profile view
   - Follow / Unfollow
   - Badges

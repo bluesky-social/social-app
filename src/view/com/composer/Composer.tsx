@@ -1,6 +1,7 @@
 import React, {useState, forwardRef, useImperativeHandle} from 'react'
 import {observer} from 'mobx-react-lite'
 import {KeyboardAvoidingView, StyleSheet, TextInput, View} from 'react-native'
+import Toast from 'react-native-root-toast'
 // @ts-ignore no type definition -prf
 import ProgressCircle from 'react-native-progress/Circle'
 import {useStores} from '../../../state'
@@ -37,6 +38,13 @@ export const Composer = observer(
           return false
         }
         await apilib.post(store.api, 'alice.com', text, replyTo)
+        Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been created`, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.TOP,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+        })
         return true
       },
     }))

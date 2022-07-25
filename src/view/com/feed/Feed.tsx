@@ -1,9 +1,10 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Text, View, FlatList} from 'react-native'
 import {OnNavigateContent} from '../../routes/types'
 import {FeedViewModel, FeedViewItemModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
+import {ShareBottomSheet} from '../sheets/SharePost'
 
 export const Feed = observer(function Feed({
   feed,
@@ -12,12 +13,21 @@ export const Feed = observer(function Feed({
   feed: FeedViewModel
   onNavigateContent: OnNavigateContent
 }) {
+  const shareSheetRef = useRef<{open: (uri: string) => void}>()
+
+  const onPressShare = (uri: string) => {
+    shareSheetRef.current?.open(uri)
+  }
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your
   //   renderItem function renders components that follow React performance best practices
   //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = ({item}: {item: FeedViewItemModel}) => (
-    <FeedItem item={item} onNavigateContent={onNavigateContent} />
+    <FeedItem
+      item={item}
+      onNavigateContent={onNavigateContent}
+      onPressShare={onPressShare}
+    />
   )
   const onRefresh = () => {
     feed.refresh().catch(err => console.error('Failed to refresh', err))
@@ -42,6 +52,7 @@ export const Feed = observer(function Feed({
         />
       )}
       {feed.isEmpty && <Text>This feed is empty!</Text>}
+      <ShareBottomSheet ref={shareSheetRef} />
     </View>
   )
 })

@@ -73,4 +73,13 @@ export const s = StyleSheet.create({
   flexRow: {flexDirection: 'row'},
   flexCol: {flexDirection: 'column'},
   flex1: {flex: 1},
+
+  // dimensions
+  w100pct: {width: '100%'},
+  h100pct: {height: '100%'},
+
+  // text align
+  textLeft: {textAlign: 'left'},
+  textCenter: {textAlign: 'center'},
+  textRight: {textAlign: 'right'},
 })
