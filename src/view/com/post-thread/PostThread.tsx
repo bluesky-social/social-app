@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, Text, View} from 'react-native'
+import {useFocusEffect} from '@react-navigation/native'
 import {OnNavigateContent} from '../../routes/types'
 import {
   PostThreadViewModel,
@@ -8,6 +9,8 @@ import {
 } from '../../../state/models/post-thread-view'
 import {useStores} from '../../../state'
 import {PostThreadItem} from './PostThreadItem'
+
+const UPDATE_DELAY = 2e3 // wait 2s before refetching the thread for updates
 
 export const PostThread = observer(function PostThread({
   uri,
@@ -18,6 +21,7 @@ export const PostThread = observer(function PostThread({
 }) {
   const store = useStores()
   const [view, setView] = useState<PostThreadViewModel | undefined>()
+  const [lastUpdate, setLastUpdate] = useState<number>(Date.now())
 
   useEffect(() => {
     if (view?.params.uri === uri) {
@@ -29,6 +33,13 @@ export const PostThread = observer(function PostThread({
     setView(newView)
     newView.setup().catch(err => console.error('Failed to fetch thread', err))
   }, [uri, view?.params.uri, store])
+
+  useFocusEffect(() => {
+    if (Date.now() - lastUpdate > UPDATE_DELAY) {
+      view?.update()
+      setLastUpdate(Date.now())
+    }
+  })
 
   // loading
   // =

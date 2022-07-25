@@ -1,6 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {bsky} from '@adxp/mock-api'
-import _omit from 'lodash.omit'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
@@ -39,9 +38,22 @@ export class FeedViewItemModel implements bsky.FeedView.FeedItem {
   ) {
     makeAutoObservable(this, {rootStore: false})
     this._reactKey = reactKey
-    Object.assign(this, _omit(v, 'myState'))
+    this.copy(v)
+  }
+
+  copy(v: bsky.FeedView.FeedItem) {
+    this.uri = v.uri
+    this.author = v.author
+    this.repostedBy = v.repostedBy
+    this.record = v.record
+    this.embed = v.embed
+    this.replyCount = v.replyCount
+    this.repostCount = v.repostCount
+    this.likeCount = v.likeCount
+    this.indexedAt = v.indexedAt
     if (v.myState) {
-      Object.assign(this.myState, v.myState)
+      this.myState.hasLiked = v.myState.hasLiked
+      this.myState.hasReposted = v.myState.hasReposted
     }
   }
 
@@ -85,7 +97,9 @@ export class FeedViewModel implements bsky.FeedView.Response {
   hasLoaded = false
   error = ''
   params: bsky.FeedView.Params
+  _loadPromise: Promise<void> | undefined
   _loadMorePromise: Promise<void> | undefined
+  _updatePromise: Promise<void> | undefined
 
   // data
   feed: FeedViewItemModel[] = []
@@ -97,6 +111,7 @@ export class FeedViewModel implements bsky.FeedView.Response {
         rootStore: false,
         params: false,
         _loadMorePromise: false,
+        _updatePromise: false,
       },
       {autoBind: true},
     )
@@ -125,31 +140,50 @@ export class FeedViewModel implements bsky.FeedView.Response {
   // public api
   // =
 
-  async setup() {
-    if (this._loadMorePromise) {
-      return this._loadMorePromise
+  /**
+   * Load for first render
+   */
+  async setup(isRefreshing = false) {
+    if (this._loadPromise) {
+      return this._loadPromise
     }
-    if (this.hasContent) {
-      await this._refresh()
-    } else {
-      await this._initialLoad()
-    }
+    await this._pendingWork()
+    this._loadPromise = this._initialLoad(isRefreshing)
+    await this._loadPromise
+    this._loadPromise = undefined
   }
 
+  /**
+   * Reset and load
+   */
   async refresh() {
-    if (this._loadMorePromise) {
-      return this._loadMorePromise
-    }
-    await this._refresh()
+    return this.setup(true)
   }
 
+  /**
+   * Load more posts to the end of the feed
+   */
   async loadMore() {
     if (this._loadMorePromise) {
       return this._loadMorePromise
     }
+    await this._pendingWork()
     this._loadMorePromise = this._loadMore()
     await this._loadMorePromise
     this._loadMorePromise = undefined
+  }
+
+  /**
+   * Update content in-place
+   */
+  async update() {
+    if (this._updatePromise) {
+      return this._updatePromise
+    }
+    await this._pendingWork()
+    this._updatePromise = this._update()
+    await this._updatePromise
+    this._updatePromise = undefined
   }
 
   // state transitions
@@ -171,9 +205,21 @@ export class FeedViewModel implements bsky.FeedView.Response {
   // loader functions
   // =
 
-  private async _initialLoad() {
-    this._xLoading()
-    await new Promise(r => setTimeout(r, 1e3)) // DEBUG
+  private async _pendingWork() {
+    if (this._loadPromise) {
+      await this._loadPromise
+    }
+    if (this._loadMorePromise) {
+      await this._loadMorePromise
+    }
+    if (this._updatePromise) {
+      await this._updatePromise
+    }
+  }
+
+  private async _initialLoad(isRefreshing = false) {
+    this._xLoading(isRefreshing)
+    await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const res = (await this.rootStore.api.mainPds.view(
         'blueskyweb.xyz:FeedView',
@@ -188,7 +234,7 @@ export class FeedViewModel implements bsky.FeedView.Response {
 
   private async _loadMore() {
     this._xLoading()
-    await new Promise(r => setTimeout(r, 1e3)) // DEBUG
+    await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const params = Object.assign({}, this.params, {
         before: this.loadMoreCursor,
@@ -204,19 +250,37 @@ export class FeedViewModel implements bsky.FeedView.Response {
     }
   }
 
-  private async _refresh() {
-    this._xLoading(true)
-    // TODO: refetch and update items
-    await new Promise(r => setTimeout(r, 1e3)) // DEBUG
-    this._xIdle()
+  private async _update() {
+    this._xLoading()
+    await new Promise(r => setTimeout(r, 250)) // DEBUG
+    let numToFetch = this.feed.length
+    let cursor = undefined
+    try {
+      do {
+        const res = (await this.rootStore.api.mainPds.view(
+          'blueskyweb.xyz:FeedView',
+          {
+            before: cursor,
+            limit: Math.min(numToFetch, 100),
+          },
+        )) as bsky.FeedView.Response
+        if (res.feed.length === 0) {
+          break // sanity check
+        }
+        this._updateAll(res)
+        numToFetch -= res.feed.length
+        cursor = this.feed[res.feed.length - 1].indexedAt
+        console.log(numToFetch, cursor, res.feed.length)
+      } while (numToFetch > 0)
+      this._xIdle()
+    } catch (e: any) {
+      this._xIdle(`Failed to update feed: ${e.toString()}`)
+    }
   }
 
   private _replaceAll(res: bsky.FeedView.Response) {
     this.feed.length = 0
-    let counter = 0
-    for (const item of res.feed) {
-      this._append(counter++, item)
-    }
+    this._appendAll(res)
   }
 
   private _appendAll(res: bsky.FeedView.Response) {
@@ -229,5 +293,19 @@ export class FeedViewModel implements bsky.FeedView.Response {
   private _append(keyId: number, item: bsky.FeedView.FeedItem) {
     // TODO: validate .record
     this.feed.push(new FeedViewItemModel(this.rootStore, `item-${keyId}`, item))
+  }
+
+  private _updateAll(res: bsky.FeedView.Response) {
+    for (const item of res.feed) {
+      const existingItem = this.feed.find(
+        // this find function has a key subtley- the indexedAt comparison
+        // the reason for this is reposts: they set the URI of the original post, not of the repost record
+        // the indexedAt time will be for the repost however, so we use that to help us
+        item2 => item.uri === item2.uri && item.indexedAt === item2.indexedAt,
+      )
+      if (existingItem) {
+        existingItem.copy(item)
+      }
+    }
   }
 }

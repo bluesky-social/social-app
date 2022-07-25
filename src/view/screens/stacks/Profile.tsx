@@ -11,18 +11,31 @@ export const Profile = ({
   route,
 }: RootTabsScreenProps<'Profile'>) => {
   const store = useStores()
+  const [hasSetup, setHasSetup] = useState<string>('')
   const [feedView, setFeedView] = useState<FeedViewModel | undefined>()
 
   useEffect(() => {
-    if (feedView?.params.author === route.params.name) {
-      console.log('Profile feed view')
+    const author = route.params.name
+    if (feedView?.params.author === author) {
       return // no change needed? or trigger refresh?
     }
-    console.log('Fetching profile feed view', route.params.name)
-    const newFeedView = new FeedViewModel(store, {author: route.params.name})
+    console.log('Fetching profile feed', author)
+    const newFeedView = new FeedViewModel(store, {author})
     setFeedView(newFeedView)
-    newFeedView.setup().catch(err => console.error('Failed to fetch feed', err))
+    newFeedView
+      .setup()
+      .catch(err => console.error('Failed to fetch feed', err))
+      .then(() => setHasSetup(author))
   }, [route.params.name, feedView?.params.author, store])
+
+  useEffect(() => {
+    return navigation.addListener('focus', () => {
+      if (hasSetup === feedView?.params.author) {
+        console.log('Updating profile feed', hasSetup)
+        feedView?.update()
+      }
+    })
+  }, [navigation, feedView, hasSetup])
 
   const onNavigateContent = (screen: string, props: Record<string, string>) => {
     // @ts-ignore it's up to the callers to supply correct params -prf

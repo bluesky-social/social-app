@@ -1,17 +1,13 @@
 Paul's todo list
 
 - Feed view
-  - Refresh
   - Share btn
 - Thread view
-  - Refresh
   - Share btn
 - Profile view
-  - Refresh
   - Follow / Unfollow
   - Badges
 - Composer
-  - Refresh original view after reply
   - Check on navigation stack during a bunch of replies
 - Search view
   - *

@@ -163,19 +163,35 @@ export class PostThreadViewModel {
   // public api
   // =
 
+  /**
+   * Load for first render
+   */
   async setup() {
     if (!this.resolvedUri) {
       await this._resolveUri()
     }
     if (this.hasContent) {
-      await this._refresh()
+      await this.update()
     } else {
-      await this._initialLoad()
+      await this._load()
     }
   }
 
+  /**
+   * Reset and load
+   */
   async refresh() {
-    await this._refresh()
+    await this._load(true)
+  }
+
+  /**
+   * Update content in-place
+   */
+  async update() {
+    // NOTE: it currently seems that a full load-and-replace works fine for this
+    //       if the UI loses its place or has jarring re-arrangements, replace this
+    //       with a more in-place update
+    this._load()
   }
 
   // state transitions
@@ -207,8 +223,8 @@ export class PostThreadViewModel {
     })
   }
 
-  private async _initialLoad() {
-    this._xLoading()
+  private async _load(isRefreshing = false) {
+    this._xLoading(isRefreshing)
     try {
       const res = (await this.rootStore.api.mainPds.view(
         'blueskyweb.xyz:PostThreadView',
@@ -219,13 +235,6 @@ export class PostThreadViewModel {
     } catch (e: any) {
       this._xIdle(`Failed to load thread: ${e.toString()}`)
     }
-  }
-
-  private async _refresh() {
-    this._xLoading(true)
-    // TODO: refetch and update items
-    await new Promise(r => setTimeout(r, 250)) // DEBUG
-    this._xIdle()
   }
 
   private _replaceAll(res: bsky.PostThreadView.Response) {

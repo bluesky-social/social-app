@@ -27,7 +27,9 @@ export const Feed = observer(function Feed({
   }
   return (
     <View>
-      {feed.isLoading && !feed.isRefreshing && <Text>Loading...</Text>}
+      {feed.isLoading && !feed.isRefreshing && !feed.hasContent && (
+        <Text>Loading...</Text>
+      )}
       {feed.hasError && <Text>{feed.error}</Text>}
       {feed.hasContent && (
         <FlatList

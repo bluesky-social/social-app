@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect} from 'react'
+import React, {useState, useEffect, useLayoutEffect} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Shell} from '../../shell'
@@ -8,16 +8,26 @@ import {useStores} from '../../../state'
 import {AVIS} from '../../lib/assets'
 
 export function Home({navigation}: RootTabsScreenProps<'HomeTab'>) {
+  const [hasSetup, setHasSetup] = useState<boolean>(false)
   const store = useStores()
   useEffect(() => {
     console.log('Fetching home feed')
-    store.homeFeed.setup()
+    store.homeFeed.setup().then(() => setHasSetup(true))
   }, [store.homeFeed])
 
   const onNavigateContent = (screen: string, props: Record<string, string>) => {
     // @ts-ignore it's up to the callers to supply correct params -prf
     navigation.navigate(screen, props)
   }
+
+  useEffect(() => {
+    return navigation.addListener('focus', () => {
+      if (hasSetup) {
+        console.log('Updating home feed')
+        store.homeFeed.update()
+      }
+    })
+  }, [navigation, store.homeFeed, hasSetup])
 
   useLayoutEffect(() => {
     navigation.setOptions({
