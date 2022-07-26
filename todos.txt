@@ -4,8 +4,6 @@ Paul's todo list
   - Check on navigation stack during a bunch of replies
 - Search view
   - *
-- Notifications view
-  - *
 - Linking
   - Web linking
   - App linking
