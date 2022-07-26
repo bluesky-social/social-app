@@ -2,11 +2,11 @@ import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {bsky, AdxUri} from '@adxp/mock-api'
-import moment from 'moment'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {OnNavigateContent} from '../../routes/types'
 import {FeedViewItemModel} from '../../../state/models/feed-view'
 import {s} from '../../lib/styles'
+import {ago} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
 
 export const FeedItem = observer(function FeedItem({
@@ -78,7 +78,7 @@ export const FeedItem = observer(function FeedItem({
               @{item.author.name}
             </Text>
             <Text style={[styles.metaItem, s.f14, s.gray]}>
-              &middot; {moment(item.indexedAt).fromNow(true)}
+              &middot; {ago(item.indexedAt)}
             </Text>
           </View>
           <Text style={[styles.postText, s.f15, s['lh15-1.3']]}>

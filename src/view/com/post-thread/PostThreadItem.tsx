@@ -2,12 +2,11 @@ import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {bsky, AdxUri} from '@adxp/mock-api'
-import moment from 'moment'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {OnNavigateContent} from '../../routes/types'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
 import {s} from '../../lib/styles'
-import {pluralize} from '../../lib/strings'
+import {ago, pluralize} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
 
 function iter<T>(n: number, fn: (_i: number) => T): Array<T> {
@@ -97,7 +96,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               @{item.author.name}
             </Text>
             <Text style={[styles.metaItem, s.f14, s.gray]}>
-              &middot; {moment(item.indexedAt).fromNow(true)}
+              &middot; {ago(item.indexedAt)}
             </Text>
           </View>
           <Text
