@@ -6,6 +6,8 @@ export type RootTabsParamList = {
   NotificationsTab: undefined
   MenuTab: undefined
   Profile: {name: string}
+  ProfileFollowers: {name: string}
+  ProfileFollows: {name: string}
   PostThread: {name: string; recordKey: string}
   PostLikedBy: {name: string; recordKey: string}
   PostRepostedBy: {name: string; recordKey: string}

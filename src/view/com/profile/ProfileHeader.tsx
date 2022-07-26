@@ -6,6 +6,7 @@ import {
   Image,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native'
 import {OnNavigateContent} from '../../routes/types'
@@ -18,8 +19,8 @@ import Toast from '../util/Toast'
 
 export const ProfileHeader = observer(function ProfileHeader({
   user,
-}: // onNavigateContent,
-{
+  onNavigateContent,
+}: {
   user: string
   onNavigateContent: OnNavigateContent
 }) {
@@ -52,6 +53,12 @@ export const ProfileHeader = observer(function ProfileHeader({
       },
       err => console.error('Failed to toggle follow', err),
     )
+  }
+  const onPressFollowers = () => {
+    onNavigateContent('ProfileFollowers', {name: user})
+  }
+  const onPressFollows = () => {
+    onNavigateContent('ProfileFollows', {name: user})
   }
 
   // loading
@@ -91,16 +98,18 @@ export const ProfileHeader = observer(function ProfileHeader({
         <Text style={[s.mb5, s.f15, s['lh15-1.3']]}>{view.description}</Text>
       )}
       <View style={s.flexRow}>
-        <View style={[s.flexRow, s.mr10]}>
+        <TouchableOpacity
+          style={[s.flexRow, s.mr10]}
+          onPress={onPressFollowers}>
           <Text style={[s.bold, s.mr2]}>{view.followersCount}</Text>
           <Text style={s.gray}>
             {pluralize(view.followersCount, 'follower')}
           </Text>
-        </View>
-        <View style={[s.flexRow, s.mr10]}>
+        </TouchableOpacity>
+        <TouchableOpacity style={[s.flexRow, s.mr10]} onPress={onPressFollows}>
           <Text style={[s.bold, s.mr2]}>{view.followsCount}</Text>
           <Text style={s.gray}>following</Text>
-        </View>
+        </TouchableOpacity>
         <View style={[s.flexRow, s.mr10]}>
           <Text style={[s.bold, s.mr2]}>{view.postsCount}</Text>
           <Text style={s.gray}>{pluralize(view.postsCount, 'post')}</Text>

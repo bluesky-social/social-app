@@ -25,6 +25,8 @@ import {PostThread} from '../screens/stacks/PostThread'
 import {PostLikedBy} from '../screens/stacks/PostLikedBy'
 import {PostRepostedBy} from '../screens/stacks/PostRepostedBy'
 import {Profile} from '../screens/stacks/Profile'
+import {ProfileFollowers} from '../screens/stacks/ProfileFollowers'
+import {ProfileFollows} from '../screens/stacks/ProfileFollows'
 
 const linking: LinkingOptions<RootTabsParamList> = {
   prefixes: [
@@ -40,6 +42,8 @@ const linking: LinkingOptions<RootTabsParamList> = {
       NotificationsTab: 'notifications',
       MenuTab: 'menu',
       Profile: 'profile/:name',
+      ProfileFollowers: 'profile/:name/followers',
+      ProfileFollows: 'profile/:name/follows',
       PostThread: 'profile/:name/post/:recordKey',
       PostLikedBy: 'profile/:name/post/:recordKey/liked-by',
       PostRepostedBy: 'profile/:name/post/:recordKey/reposted-by',
@@ -93,6 +97,11 @@ function HomeStackCom() {
       <HomeTabStack.Screen name="Home" component={Home} />
       <HomeTabStack.Screen name="Composer" component={Composer} />
       <HomeTabStack.Screen name="Profile" component={Profile} />
+      <HomeTabStack.Screen
+        name="ProfileFollowers"
+        component={ProfileFollowers}
+      />
+      <HomeTabStack.Screen name="ProfileFollows" component={ProfileFollows} />
       <HomeTabStack.Screen name="PostThread" component={PostThread} />
       <HomeTabStack.Screen name="PostLikedBy" component={PostLikedBy} />
       <HomeTabStack.Screen name="PostRepostedBy" component={PostRepostedBy} />
@@ -109,6 +118,11 @@ function SearchStackCom() {
         options={HIDE_HEADER}
       />
       <SearchTabStack.Screen name="Profile" component={Profile} />
+      <SearchTabStack.Screen
+        name="ProfileFollowers"
+        component={ProfileFollowers}
+      />
+      <SearchTabStack.Screen name="ProfileFollows" component={ProfileFollows} />
       <SearchTabStack.Screen name="PostThread" component={PostThread} />
       <SearchTabStack.Screen name="PostLikedBy" component={PostLikedBy} />
       <SearchTabStack.Screen name="PostRepostedBy" component={PostRepostedBy} />
@@ -124,6 +138,14 @@ function NotificationsStackCom() {
         component={Notifications}
       />
       <NotificationsTabStack.Screen name="Profile" component={Profile} />
+      <NotificationsTabStack.Screen
+        name="ProfileFollowers"
+        component={ProfileFollowers}
+      />
+      <NotificationsTabStack.Screen
+        name="ProfileFollows"
+        component={ProfileFollows}
+      />
       <NotificationsTabStack.Screen name="PostThread" component={PostThread} />
       <NotificationsTabStack.Screen
         name="PostLikedBy"

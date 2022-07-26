@@ -1,8 +1,5 @@
 Paul's todo list
 
-- Profile view
-  - Followers list
-  - Follows list
 - Composer
   - Check on navigation stack during a bunch of replies
 - Search view
@@ -12,3 +9,8 @@ Paul's todo list
 - Linking
   - Web linking
   - App linking
+- Pagination
+  - Liked by
+  - Reposted by
+  - Followers list
+  - Follows list

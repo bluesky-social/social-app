@@ -73,7 +73,11 @@ export class LikedByViewModel implements bsky.LikedByView.Response {
   }
 
   async refresh() {
-    await this._refresh()
+    await this._fetch(true)
+  }
+
+  async loadMore() {
+    // TODO
   }
 
   // state transitions
@@ -105,8 +109,8 @@ export class LikedByViewModel implements bsky.LikedByView.Response {
     })
   }
 
-  private async _fetch() {
-    this._xLoading()
+  private async _fetch(isRefreshing = false) {
+    this._xLoading(isRefreshing)
     await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const res = (await this.rootStore.api.mainPds.view(
@@ -118,13 +122,6 @@ export class LikedByViewModel implements bsky.LikedByView.Response {
     } catch (e: any) {
       this._xIdle(`Failed to load feed: ${e.toString()}`)
     }
-  }
-
-  private async _refresh() {
-    this._xLoading(true)
-    // TODO: refetch and update items
-    await new Promise(r => setTimeout(r, 250)) // DEBUG
-    this._xIdle()
   }
 
   private _replaceAll(res: bsky.LikedByView.Response) {

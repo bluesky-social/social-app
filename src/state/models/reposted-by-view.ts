@@ -73,7 +73,11 @@ export class RepostedByViewModel implements bsky.RepostedByView.Response {
   }
 
   async refresh() {
-    await this._refresh()
+    await this._fetch(true)
+  }
+
+  async loadMore() {
+    // TODO
   }
 
   // state transitions
@@ -105,8 +109,8 @@ export class RepostedByViewModel implements bsky.RepostedByView.Response {
     })
   }
 
-  private async _fetch() {
-    this._xLoading()
+  private async _fetch(isRefreshing = false) {
+    this._xLoading(isRefreshing)
     await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const res = (await this.rootStore.api.mainPds.view(
