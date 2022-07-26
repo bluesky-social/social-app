@@ -1,5 +1,4 @@
 import React, {useState, forwardRef, useImperativeHandle} from 'react'
-import {observer} from 'mobx-react-lite'
 import {KeyboardAvoidingView, StyleSheet, TextInput, View} from 'react-native'
 import Toast from '../util/Toast'
 import ProgressCircle from '../util/ProgressCircle'

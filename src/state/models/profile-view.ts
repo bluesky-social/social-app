@@ -1,6 +1,7 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {bsky} from '@adxp/mock-api'
 import {RootStoreModel} from './root-store'
+import * as apilib from '../lib/api'
 
 export class ProfileViewMyStateModel {
   hasFollowed: boolean = false
@@ -65,6 +66,27 @@ export class ProfileViewModel implements bsky.ProfileView.Response {
 
   async refresh() {
     await this._load()
+  }
+
+  async toggleFollowing() {
+    if (this.myState.hasFollowed) {
+      await apilib.unfollow(this.rootStore.api, 'alice.com', {
+        did: this.did,
+      })
+      runInAction(() => {
+        this.followersCount--
+        this.myState.hasFollowed = false
+      })
+    } else {
+      await apilib.follow(this.rootStore.api, 'alice.com', {
+        did: this.did,
+        name: this.name,
+      })
+      runInAction(() => {
+        this.followersCount++
+        this.myState.hasFollowed = true
+      })
+    }
   }
 
   // state transitions

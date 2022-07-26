@@ -97,6 +97,33 @@ export async function unrepost(adx: AdxClient, user: string, uri: string) {
   return numDels > 0
 }
 
+export async function follow(
+  adx: AdxClient,
+  user: string,
+  subject: {did: string; name: string},
+) {
+  return await adx
+    .repo(user, true)
+    .collection('blueskyweb.xyz:Follows')
+    .create('Follow', {
+      $type: 'blueskyweb.xyz:Follow',
+      subject,
+      createdAt: new Date().toISOString(),
+    })
+}
+
+export async function unfollow(
+  adx: AdxClient,
+  user: string,
+  subject: {did: string},
+) {
+  const coll = adx.repo(user, true).collection('blueskyweb.xyz:Follows')
+  const numDels = await deleteWhere(coll, 'Follow', record => {
+    return record.value.subject.did === subject.did
+  })
+  return numDels > 0
+}
+
 type WherePred = (_record: GetRecordResponseValidated) => Boolean
 async function deleteWhere(
   coll: AdxRepoCollectionClient,
@@ -104,7 +131,7 @@ async function deleteWhere(
   cond: WherePred,
 ) {
   const toDelete: string[] = []
-  iterateAll(coll, schema, record => {
+  await iterateAll(coll, schema, record => {
     if (cond(record)) {
       toDelete.push(record.key)
     }

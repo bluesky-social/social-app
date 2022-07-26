@@ -1,12 +1,20 @@
 import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native'
+import {
+  ActivityIndicator,
+  Button,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import {OnNavigateContent} from '../../routes/types'
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {useStores} from '../../../state'
 import {pluralize} from '../../lib/strings'
 import {s} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
+import Toast from '../util/Toast'
 
 export const ProfileHeader = observer(function ProfileHeader({
   user,
@@ -28,6 +36,23 @@ export const ProfileHeader = observer(function ProfileHeader({
     setView(newView)
     newView.setup().catch(err => console.error('Failed to fetch profile', err))
   }, [user, view?.params.user, store])
+
+  const onPressToggleFollow = () => {
+    view?.toggleFollowing().then(
+      () => {
+        Toast.show(
+          `${view.myState.hasFollowed ? 'Following' : 'No longer following'} ${
+            view.displayName || view.name
+          }`,
+          {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.TOP,
+          },
+        )
+      },
+      err => console.error('Failed to toggle follow', err),
+    )
+  }
 
   // loading
   // =
@@ -80,6 +105,12 @@ export const ProfileHeader = observer(function ProfileHeader({
           <Text style={[s.bold, s.mr2]}>{view.postsCount}</Text>
           <Text style={s.gray}>{pluralize(view.postsCount, 'post')}</Text>
         </View>
+      </View>
+      <View>
+        <Button
+          title={view.myState.hasFollowed ? 'Unfollow' : 'Follow'}
+          onPress={onPressToggleFollow}
+        />
       </View>
     </View>
   )
