@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import {View, StyleSheet} from 'react-native'
 import {Shell} from '../../shell'
 import type {RootTabsScreenProps} from '../../routes/types'
 import {FeedViewModel} from '../../../state/models/feed-view'
@@ -44,13 +45,27 @@ export const Profile = ({
 
   return (
     <Shell>
-      <ProfileHeader
-        user={route.params.name}
-        onNavigateContent={onNavigateContent}
-      />
-      {feedView && (
-        <Feed feed={feedView} onNavigateContent={onNavigateContent} />
-      )}
+      <View style={styles.container}>
+        <ProfileHeader
+          user={route.params.name}
+          onNavigateContent={onNavigateContent}
+        />
+        <View style={styles.feed}>
+          {feedView && (
+            <Feed feed={feedView} onNavigateContent={onNavigateContent} />
+          )}
+        </View>
+      </View>
     </Shell>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    height: '100%',
+  },
+  feed: {
+    flex: 1,
+  },
+})

@@ -3,6 +3,8 @@ Paul's todo list
 - Profile view
   - Follow / Unfollow
   - Badges
+  - Followers list
+  - Follows list
 - Composer
   - Check on navigation stack during a bunch of replies
 - Search view
