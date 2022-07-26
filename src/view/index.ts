@@ -4,6 +4,7 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons/faArrowLeft'
 import {faBars} from '@fortawesome/free-solid-svg-icons/faBars'
 import {faBell} from '@fortawesome/free-solid-svg-icons/faBell'
+import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
 import {faHeart} from '@fortawesome/free-regular-svg-icons/faHeart'
 import {faHeart as fasHeart} from '@fortawesome/free-solid-svg-icons/faHeart'
@@ -39,6 +40,7 @@ export function setup() {
     faArrowLeft,
     faBars,
     faBell,
+    faCheck,
     faComment,
     faHeart,
     fasHeart,

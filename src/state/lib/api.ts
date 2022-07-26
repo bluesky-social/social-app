@@ -97,7 +97,7 @@ export async function unrepost(adx: AdxClient, user: string, uri: string) {
   return numDels > 0
 }
 
-type WherePred = (record: GetRecordResponseValidated) => Boolean
+type WherePred = (_record: GetRecordResponseValidated) => Boolean
 async function deleteWhere(
   coll: AdxRepoCollectionClient,
   schema: SchemaOpt,
@@ -115,7 +115,7 @@ async function deleteWhere(
   return toDelete.length
 }
 
-type IterateAllCb = (record: GetRecordResponseValidated) => void
+type IterateAllCb = (_record: GetRecordResponseValidated) => void
 async function iterateAll(
   coll: AdxRepoCollectionClient,
   schema: SchemaOpt,

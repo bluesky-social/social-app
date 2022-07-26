@@ -16,7 +16,7 @@ export const FeedItem = observer(function FeedItem({
 }: {
   item: FeedViewItemModel
   onNavigateContent: OnNavigateContent
-  onPressShare: (uri: string) => void
+  onPressShare: (_uri: string) => void
 }) {
   const record = item.record as unknown as bsky.Post.Record
 

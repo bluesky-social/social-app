@@ -9,7 +9,7 @@ import {
 } from '../../../state/models/post-thread-view'
 import {useStores} from '../../../state'
 import {PostThreadItem} from './PostThreadItem'
-import {ShareBottomSheet} from '../sheets/SharePost'
+import {ShareModal} from '../modals/SharePost'
 import {s} from '../../lib/styles'
 
 const UPDATE_DELAY = 2e3 // wait 2s before refetching the thread for updates
@@ -24,7 +24,7 @@ export const PostThread = observer(function PostThread({
   const store = useStores()
   const [view, setView] = useState<PostThreadViewModel | undefined>()
   const [lastUpdate, setLastUpdate] = useState<number>(Date.now())
-  const shareSheetRef = useRef<{open: (uri: string) => void}>()
+  const shareSheetRef = useRef<{open: (_uri: string) => void}>()
 
   useEffect(() => {
     if (view?.params.uri === uri) {
@@ -94,7 +94,7 @@ export const PostThread = observer(function PostThread({
         refreshing={view.isRefreshing}
         onRefresh={onRefresh}
       />
-      <ShareBottomSheet ref={shareSheetRef} />
+      <ShareModal ref={shareSheetRef} />
     </View>
   )
 })

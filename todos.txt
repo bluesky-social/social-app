@@ -12,3 +12,5 @@ Paul's todo list
 - Linking
   - Web linking
   - App linking
+- Housekeeping
+  - Remove moment.js -- it's too heavy a dependency

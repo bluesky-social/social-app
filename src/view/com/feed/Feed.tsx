@@ -4,7 +4,7 @@ import {Text, View, FlatList} from 'react-native'
 import {OnNavigateContent} from '../../routes/types'
 import {FeedViewModel, FeedViewItemModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
-import {ShareBottomSheet} from '../sheets/SharePost'
+import {ShareModal} from '../modals/SharePost'
 
 export const Feed = observer(function Feed({
   feed,
@@ -13,7 +13,7 @@ export const Feed = observer(function Feed({
   feed: FeedViewModel
   onNavigateContent: OnNavigateContent
 }) {
-  const shareSheetRef = useRef<{open: (uri: string) => void}>()
+  const shareSheetRef = useRef<{open: (_uri: string) => void}>()
 
   const onPressShare = (uri: string) => {
     shareSheetRef.current?.open(uri)
@@ -52,7 +52,7 @@ export const Feed = observer(function Feed({
         />
       )}
       {feed.isEmpty && <Text>This feed is empty!</Text>}
-      <ShareBottomSheet ref={shareSheetRef} />
+      <ShareModal ref={shareSheetRef} />
     </View>
   )
 })

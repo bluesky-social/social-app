@@ -19,14 +19,11 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import Toast from 'react-native-root-toast'
+import Toast from '../util/Toast'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {s} from '../../lib/styles'
 
-export const ShareBottomSheet = forwardRef(function ShareBottomSheet(
-  {}: {},
-  ref,
-) {
+export const ShareModal = forwardRef(function ShareModal({}: {}, ref) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [uri, setUri] = useState<string>('')
   const bottomSheetRef = useRef<BottomSheet>(null)
@@ -41,6 +38,9 @@ export const ShareBottomSheet = forwardRef(function ShareBottomSheet(
 
   const onPressCopy = () => {
     Clipboard.setString(uri)
+    console.log('showing')
+    console.log(Toast)
+    console.log(Toast.show)
     Toast.show('Link copied', {
       position: Toast.positions.TOP,
     })
@@ -56,7 +56,6 @@ export const ShareBottomSheet = forwardRef(function ShareBottomSheet(
   }
 
   const CustomBackdrop = ({animatedIndex, style}: BottomSheetBackdropProps) => {
-    console.log('hit!', animatedIndex.value)
     // animated variables
     const opacity = useAnimatedStyle(() => ({
       opacity: interpolate(

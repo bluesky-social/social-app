@@ -25,7 +25,7 @@ export const PostThreadItem = observer(function PostThreadItem({
 }: {
   item: PostThreadViewPostModel
   onNavigateContent: OnNavigateContent
-  onPressShare: (uri: string) => void
+  onPressShare: (_uri: string) => void
 }) {
   const record = item.record as unknown as bsky.Post.Record
   const hasEngagement = item.likeCount || item.repostCount
