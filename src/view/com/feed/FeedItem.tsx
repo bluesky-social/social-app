@@ -137,8 +137,11 @@ export const FeedItem = observer(function FeedItem({
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: 1,
-    borderTopColor: '#e8e8e8',
+    // borderWidth: 1,
+    // borderColor: '#e8e8e8',
+    borderRadius: 10,
+    margin: 2,
+    marginBottom: 0,
     backgroundColor: '#fff',
     padding: 10,
   },
@@ -175,6 +178,7 @@ const styles = StyleSheet.create({
   },
   postText: {
     paddingBottom: 5,
+    fontFamily: 'Helvetica Neue',
   },
   ctrls: {
     flexDirection: 'row',

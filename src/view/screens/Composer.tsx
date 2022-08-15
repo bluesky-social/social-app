@@ -1,14 +1,11 @@
 import React, {useLayoutEffect, useRef} from 'react'
 import {Text, TouchableOpacity} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Shell} from '../../shell'
-import type {RootTabsScreenProps} from '../../routes/types'
-import {Composer as ComposerComponent} from '../../com/composer/Composer'
+import {Shell} from '../shell'
+import type {ScreensProps} from '../routes/types'
+import {Composer as ComposerComponent} from '../com/composer/Composer'
 
-export const Composer = ({
-  navigation,
-  route,
-}: RootTabsScreenProps<'Composer'>) => {
+export const Composer = ({navigation, route}: ScreensProps<'Composer'>) => {
   const {replyTo} = route.params
   const ref = useRef<{publish: () => Promise<boolean>}>()
 

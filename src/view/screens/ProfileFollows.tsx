@@ -1,20 +1,20 @@
 import React, {useLayoutEffect} from 'react'
 import {TouchableOpacity} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Shell} from '../../shell'
-import type {RootTabsScreenProps} from '../../routes/types'
-import {ProfileFollowers as ProfileFollowersComponent} from '../../com/profile/ProfileFollowers'
+import {Shell} from '../shell'
+import type {ScreensProps} from '../routes/types'
+import {ProfileFollows as ProfileFollowsComponent} from '../com/profile/ProfileFollows'
 
-export const ProfileFollowers = ({
+export const ProfileFollows = ({
   navigation,
   route,
-}: RootTabsScreenProps<'ProfileFollowers'>) => {
+}: ScreensProps<'ProfileFollows'>) => {
   const {name} = route.params
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      headerTitle: 'Followers',
+      headerTitle: 'Following',
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <FontAwesomeIcon icon="arrow-left" />
@@ -30,7 +30,7 @@ export const ProfileFollowers = ({
 
   return (
     <Shell>
-      <ProfileFollowersComponent
+      <ProfileFollowsComponent
         name={name}
         onNavigateContent={onNavigateContent}
       />

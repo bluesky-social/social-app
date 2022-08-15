@@ -1,16 +1,13 @@
 import React, {useState, useEffect} from 'react'
 import {View, StyleSheet} from 'react-native'
-import {Shell} from '../../shell'
-import type {RootTabsScreenProps} from '../../routes/types'
-import {FeedViewModel} from '../../../state/models/feed-view'
-import {useStores} from '../../../state'
-import {ProfileHeader} from '../../com/profile/ProfileHeader'
-import {Feed} from '../../com/feed/Feed'
+import {Shell} from '../shell'
+import type {ScreensProps} from '../routes/types'
+import {FeedViewModel} from '../../state/models/feed-view'
+import {useStores} from '../../state'
+import {ProfileHeader} from '../com/profile/ProfileHeader'
+import {Feed} from '../com/feed/Feed'
 
-export const Profile = ({
-  navigation,
-  route,
-}: RootTabsScreenProps<'Profile'>) => {
+export const Profile = ({navigation, route}: ScreensProps<'Profile'>) => {
   const store = useStores()
   const [hasSetup, setHasSetup] = useState<string>('')
   const [feedView, setFeedView] = useState<FeedViewModel | undefined>()

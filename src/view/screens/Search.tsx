@@ -1,9 +1,9 @@
 import React from 'react'
-import {Shell} from '../../shell'
+import {Shell} from '../shell'
 import {Text, View} from 'react-native'
-import type {RootTabsScreenProps} from '../../routes/types'
+import type {ScreensProps} from '../routes/types'
 
-export const Search = (_props: RootTabsScreenProps<'SearchTab'>) => {
+export const Search = (_props: ScreensProps<'Search'>) => {
   return (
     <Shell>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>

@@ -1,20 +1,22 @@
 import React, {useLayoutEffect} from 'react'
 import {TouchableOpacity} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Shell} from '../../shell'
-import type {RootTabsScreenProps} from '../../routes/types'
-import {ProfileFollows as ProfileFollowsComponent} from '../../com/profile/ProfileFollows'
+import {makeRecordUri} from '../lib/strings'
+import {Shell} from '../shell'
+import type {ScreensProps} from '../routes/types'
+import {PostLikedBy as PostLikedByComponent} from '../com/post-thread/PostLikedBy'
 
-export const ProfileFollows = ({
+export const PostLikedBy = ({
   navigation,
   route,
-}: RootTabsScreenProps<'ProfileFollows'>) => {
-  const {name} = route.params
+}: ScreensProps<'PostLikedBy'>) => {
+  const {name, recordKey} = route.params
+  const uri = makeRecordUri(name, 'blueskyweb.xyz:Posts', recordKey)
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      headerTitle: 'Following',
+      headerTitle: 'Liked By',
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <FontAwesomeIcon icon="arrow-left" />
@@ -30,10 +32,7 @@ export const ProfileFollows = ({
 
   return (
     <Shell>
-      <ProfileFollowsComponent
-        name={name}
-        onNavigateContent={onNavigateContent}
-      />
+      <PostLikedByComponent uri={uri} onNavigateContent={onNavigateContent} />
     </Shell>
   )
 }

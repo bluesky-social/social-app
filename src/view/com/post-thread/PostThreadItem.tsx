@@ -227,6 +227,7 @@ const styles = StyleSheet.create({
   },
   postText: {
     paddingBottom: 5,
+    fontFamily: 'Helvetica Neue',
   },
   expandedInfo: {
     flexDirection: 'row',

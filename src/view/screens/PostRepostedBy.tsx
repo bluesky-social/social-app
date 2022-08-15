@@ -1,15 +1,15 @@
 import React, {useLayoutEffect} from 'react'
 import {TouchableOpacity} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {makeRecordUri} from '../../lib/strings'
-import {Shell} from '../../shell'
-import type {RootTabsScreenProps} from '../../routes/types'
-import {PostRepostedBy as PostRepostedByComponent} from '../../com/post-thread/PostRepostedBy'
+import {makeRecordUri} from '../lib/strings'
+import {Shell} from '../shell'
+import type {ScreensProps} from '../routes/types'
+import {PostRepostedBy as PostRepostedByComponent} from '../com/post-thread/PostRepostedBy'
 
 export const PostRepostedBy = ({
   navigation,
   route,
-}: RootTabsScreenProps<'PostRepostedBy'>) => {
+}: ScreensProps<'PostRepostedBy'>) => {
   const {name, recordKey} = route.params
   const uri = makeRecordUri(name, 'blueskyweb.xyz:Posts', recordKey)
 

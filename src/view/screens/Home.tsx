@@ -1,13 +1,13 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Shell} from '../../shell'
-import {Feed} from '../../com/feed/Feed'
-import type {RootTabsScreenProps} from '../../routes/types'
-import {useStores} from '../../../state'
-import {AVIS} from '../../lib/assets'
+import {Shell} from '../shell'
+import {Feed} from '../com/feed/Feed'
+import type {ScreensProps} from '../routes/types'
+import {useStores} from '../../state'
+import {AVIS} from '../lib/assets'
 
-export function Home({navigation}: RootTabsScreenProps<'HomeTab'>) {
+export function Home({navigation}: ScreensProps<'Home'>) {
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const store = useStores()
   useEffect(() => {
