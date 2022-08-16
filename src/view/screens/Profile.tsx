@@ -22,7 +22,10 @@ export const Profile = ({params}: ScreenParams) => {
     newFeedView
       .setup()
       .catch(err => console.error('Failed to fetch feed', err))
-      .then(() => setHasSetup(author))
+      .then(() => {
+        setHasSetup(author)
+        store.nav.setTitle(author)
+      })
   }, [params.name, feedView?.params.author, store])
 
   // TODO

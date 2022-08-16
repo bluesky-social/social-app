@@ -4,6 +4,7 @@ import {
   GestureResponderEvent,
   SafeAreaView,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native'
@@ -11,6 +12,25 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {useStores} from '../../../state'
 import {match} from '../../routes'
+
+const Location = ({icon, title}: {icon: IconProp; title?: string}) => {
+  return (
+    <TouchableOpacity style={styles.location}>
+      {title ? (
+        <FontAwesomeIcon size={16} style={styles.locationIcon} icon={icon} />
+      ) : (
+        <FontAwesomeIcon
+          size={16}
+          style={styles.locationIconLight}
+          icon="magnifying-glass"
+        />
+      )}
+      <Text style={title ? styles.locationText : styles.locationTextLight}>
+        {title || 'Search'}
+      </Text>
+    </TouchableOpacity>
+  )
+}
 
 const Btn = ({
   icon,
@@ -26,7 +46,7 @@ const Btn = ({
       <View style={styles.ctrl}>
         <FontAwesomeIcon
           size={18}
-          style={[styles.icon, styles.inactive]}
+          style={[styles.ctrlIcon, styles.inactive]}
           icon={icon}
         />
       </View>
@@ -34,7 +54,7 @@ const Btn = ({
   }
   return (
     <TouchableOpacity style={styles.ctrl} onPress={onPress}>
-      <FontAwesomeIcon size={18} style={styles.icon} icon={icon} />
+      <FontAwesomeIcon size={18} style={styles.ctrlIcon} icon={icon} />
     </TouchableOpacity>
   )
 }
@@ -44,9 +64,12 @@ export const MobileShell: React.FC = observer(() => {
   const onPressBack = () => stores.nav.tab.goBack()
   const onPressForward = () => stores.nav.tab.goForward()
   const onPressHome = () => stores.nav.navigate('/')
-  const {Com, params} = match(stores.nav.tab.current.url)
+  const {Com, icon, params} = match(stores.nav.tab.current.url)
   return (
     <View style={styles.outerContainer}>
+      <View style={styles.topBar}>
+        <Location icon={icon} title={stores.nav.tab.current.title} />
+      </View>
       <SafeAreaView style={styles.innerContainer}>
         <Com params={params} />
       </SafeAreaView>
@@ -76,6 +99,40 @@ const styles = StyleSheet.create({
   innerContainer: {
     flex: 1,
   },
+  topBar: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 40,
+    paddingBottom: 5,
+  },
+  location: {
+    flex: 1,
+    flexDirection: 'row',
+    borderRadius: 4,
+    paddingLeft: 10,
+    paddingRight: 6,
+    paddingTop: 6,
+    paddingBottom: 6,
+    backgroundColor: '#F8F3F3',
+  },
+  locationIcon: {
+    color: '#DB00FF',
+    marginRight: 8,
+  },
+  locationIconLight: {
+    color: '#909090',
+    marginRight: 8,
+  },
+  locationText: {
+    color: '#000',
+  },
+  locationTextLight: {
+    color: '#868788',
+  },
   bottomBar: {
     flexDirection: 'row',
     backgroundColor: '#fff',
@@ -90,7 +147,7 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
   },
-  icon: {
+  ctrlIcon: {
     marginLeft: 'auto',
     marginRight: 'auto',
   },

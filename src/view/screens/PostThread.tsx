@@ -4,10 +4,13 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {makeRecordUri} from '../lib/strings'
 import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {ScreenParams} from '../routes'
+import {useStores} from '../../state'
 
 export const PostThread = ({params}: ScreenParams) => {
+  const store = useStores()
   const {name, recordKey} = params
   const uri = makeRecordUri(name, 'blueskyweb.xyz:Posts', recordKey)
+  store.nav.setTitle(`Post by ${name}`)
 
   // TODO
   // useLayoutEffect(() => {

@@ -9,8 +9,9 @@ import {ScreenParams} from '../routes'
 export const Notifications = ({params}: ScreenParams) => {
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const store = useStores()
+  store.nav.setTitle('Notifications')
   useEffect(() => {
-    console.log('Fetching home feed')
+    console.log('Fetching notifications feed')
     store.notesFeed.setup().then(() => setHasSetup(true))
   }, [store.notesFeed])
 

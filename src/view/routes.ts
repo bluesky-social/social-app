@@ -1,4 +1,5 @@
 import React from 'react'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {Home} from './screens/Home'
 import {Search} from './screens/Search'
 import {Notifications} from './screens/Notifications'
@@ -16,38 +17,47 @@ import {ProfileFollows} from './screens/ProfileFollows'
 export type ScreenParams = {
   params: Record<string, any>
 }
-
-const r = (pattern: string) => new RegExp('^' + pattern + '([?]|$)', 'i')
-
-type Route = [React.FC<ScreenParams>, RegExp]
-export const routes: Route[] = [
-  [Home, r('/')],
-  [Search, r('/search')],
-  [Notifications, r('/notifications')],
-  [Profile, r('/profile/(?<name>[^/]+)')],
-  [ProfileFollowers, r('/profile/(?<name>[^/]+)/followers')],
-  [ProfileFollows, r('/profile/(?<name>[^/]+)/follows')],
-  [PostThread, r('/profile/(?<name>[^/]+)/post/(?<recordKey>[^/]+)')],
-  [PostLikedBy, r('/profile/(?<name>[^/]+)/post/(?<recordKey>[^/]+)/liked-by')],
-  [
-    PostRepostedBy,
-    r('/profile/(?<name>[^/]+)/post/(?<recordKey>[^/]+)/reposted-by'),
-  ],
-  [Composer, r('/compose')],
-  [Login, r('/login')],
-  [Signup, r('/signup')],
-]
-
+export type Route = [React.FC<ScreenParams>, IconProp, RegExp]
 export type MatchResult = {
   Com: React.FC<ScreenParams>
+  icon: IconProp
   params: Record<string, any>
 }
+
+const r = (pattern: string) => new RegExp('^' + pattern + '([?]|$)', 'i')
+export const routes: Route[] = [
+  [Home, 'house', r('/')],
+  [Search, 'magnifying-glass', r('/search')],
+  [Notifications, 'bell', r('/notifications')],
+  [Profile, ['far', 'user'], r('/profile/(?<name>[^/]+)')],
+  [ProfileFollowers, 'users', r('/profile/(?<name>[^/]+)/followers')],
+  [ProfileFollows, 'users', r('/profile/(?<name>[^/]+)/follows')],
+  [
+    PostThread,
+    ['far', 'message'],
+    r('/profile/(?<name>[^/]+)/post/(?<recordKey>[^/]+)'),
+  ],
+  [
+    PostLikedBy,
+    'heart',
+    r('/profile/(?<name>[^/]+)/post/(?<recordKey>[^/]+)/liked-by'),
+  ],
+  [
+    PostRepostedBy,
+    'retweet',
+    r('/profile/(?<name>[^/]+)/post/(?<recordKey>[^/]+)/reposted-by'),
+  ],
+  [Composer, 'pen-nib', r('/compose')],
+  [Login, ['far', 'user'], r('/login')],
+  [Signup, ['far', 'user'], r('/signup')],
+]
+
 export function match(url: string): MatchResult {
-  for (const [Com, pattern] of routes) {
+  for (const [Com, icon, pattern] of routes) {
     const res = pattern.exec(url)
     if (res) {
       // TODO: query params
-      return {Com, params: res.groups || {}}
+      return {Com, icon, params: res.groups || {}}
     }
   }
   return {Com: NotFound, params: {}}

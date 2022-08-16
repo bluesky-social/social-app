@@ -55,9 +55,6 @@ export class NavigationTabModel {
     }
   }
 
-  // utilities
-  // =
-
   setTitle(title: string) {
     this.current.title = title
   }
@@ -124,6 +121,10 @@ export class NavigationModel {
 
   navigate(url: string, title?: string) {
     this.tab.navigate(url, title)
+  }
+
+  setTitle(title: string) {
+    this.tab.setTitle(title)
   }
 
   // tab management
