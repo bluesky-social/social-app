@@ -1,19 +1,18 @@
 import React, {useState, useEffect} from 'react'
 import {View, StyleSheet} from 'react-native'
-import {Shell} from '../shell'
-import type {ScreensProps} from '../routes/types'
 import {FeedViewModel} from '../../state/models/feed-view'
 import {useStores} from '../../state'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {Feed} from '../com/feed/Feed'
+import {ScreenParams} from '../routes'
 
-export const Profile = ({navigation, route}: ScreensProps<'Profile'>) => {
+export const Profile = ({params}: ScreenParams) => {
   const store = useStores()
   const [hasSetup, setHasSetup] = useState<string>('')
   const [feedView, setFeedView] = useState<FeedViewModel | undefined>()
 
   useEffect(() => {
-    const author = route.params.name
+    const author = params.name
     if (feedView?.params.author === author) {
       return // no change needed? or trigger refresh?
     }
@@ -24,36 +23,23 @@ export const Profile = ({navigation, route}: ScreensProps<'Profile'>) => {
       .setup()
       .catch(err => console.error('Failed to fetch feed', err))
       .then(() => setHasSetup(author))
-  }, [route.params.name, feedView?.params.author, store])
+  }, [params.name, feedView?.params.author, store])
 
-  useEffect(() => {
-    return navigation.addListener('focus', () => {
-      if (hasSetup === feedView?.params.author) {
-        console.log('Updating profile feed', hasSetup)
-        feedView?.update()
-      }
-    })
-  }, [navigation, feedView, hasSetup])
-
-  const onNavigateContent = (screen: string, props: Record<string, string>) => {
-    // @ts-ignore it's up to the callers to supply correct params -prf
-    navigation.push(screen, props)
-  }
+  // TODO
+  // useEffect(() => {
+  //   return navigation.addListener('focus', () => {
+  //     if (hasSetup === feedView?.params.author) {
+  //       console.log('Updating profile feed', hasSetup)
+  //       feedView?.update()
+  //     }
+  //   })
+  // }, [navigation, feedView, hasSetup])
 
   return (
-    <Shell>
-      <View style={styles.container}>
-        <ProfileHeader
-          user={route.params.name}
-          onNavigateContent={onNavigateContent}
-        />
-        <View style={styles.feed}>
-          {feedView && (
-            <Feed feed={feedView} onNavigateContent={onNavigateContent} />
-          )}
-        </View>
-      </View>
-    </Shell>
+    <View style={styles.container}>
+      <ProfileHeader user={params.name} />
+      <View style={styles.feed}>{feedView && <Feed feed={feedView} />}</View>
+    </View>
   )
 }
 

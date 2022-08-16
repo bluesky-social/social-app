@@ -1,39 +1,24 @@
 import React, {useLayoutEffect} from 'react'
 import {TouchableOpacity} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Shell} from '../shell'
-import type {ScreensProps} from '../routes/types'
 import {ProfileFollowers as ProfileFollowersComponent} from '../com/profile/ProfileFollowers'
+import {ScreenParams} from '../routes'
 
-export const ProfileFollowers = ({
-  navigation,
-  route,
-}: ScreensProps<'ProfileFollowers'>) => {
-  const {name} = route.params
+export const ProfileFollowers = ({params}: ScreenParams) => {
+  const {name} = params
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      headerTitle: 'Followers',
-      headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesomeIcon icon="arrow-left" />
-        </TouchableOpacity>
-      ),
-    })
-  }, [navigation])
+  // TODO
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerShown: true,
+  //     headerTitle: 'Followers',
+  //     headerLeft: () => (
+  //       <TouchableOpacity onPress={() => navigation.goBack()}>
+  //         <FontAwesomeIcon icon="arrow-left" />
+  //       </TouchableOpacity>
+  //     ),
+  //   })
+  // }, [navigation])
 
-  const onNavigateContent = (screen: string, props: Record<string, string>) => {
-    // @ts-ignore it's up to the callers to supply correct params -prf
-    navigation.push(screen, props)
-  }
-
-  return (
-    <Shell>
-      <ProfileFollowersComponent
-        name={name}
-        onNavigateContent={onNavigateContent}
-      />
-    </Shell>
-  )
+  return <ProfileFollowersComponent name={name} />
 }

@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {OnNavigateContent} from '../../routes/types'
 import {
   UserFollowersViewModel,
   FollowerItem,
@@ -20,10 +19,8 @@ import {AVIS} from '../../lib/assets'
 
 export const ProfileFollowers = observer(function ProfileFollowers({
   name,
-  onNavigateContent,
 }: {
   name: string
-  onNavigateContent: OnNavigateContent
 }) {
   const store = useStores()
   const [view, setView] = useState<UserFollowersViewModel | undefined>()
@@ -67,9 +64,7 @@ export const ProfileFollowers = observer(function ProfileFollowers({
 
   // loaded
   // =
-  const renderItem = ({item}: {item: FollowerItem}) => (
-    <User item={item} onNavigateContent={onNavigateContent} />
-  )
+  const renderItem = ({item}: {item: FollowerItem}) => <User item={item} />
   return (
     <View>
       <FlatList
@@ -81,17 +76,10 @@ export const ProfileFollowers = observer(function ProfileFollowers({
   )
 })
 
-const User = ({
-  item,
-  onNavigateContent,
-}: {
-  item: FollowerItem
-  onNavigateContent: OnNavigateContent
-}) => {
+const User = ({item}: {item: FollowerItem}) => {
+  const store = useStores()
   const onPressOuter = () => {
-    onNavigateContent('Profile', {
-      name: item.name,
-    })
+    store.nav.navigate(`/profile/${item.name}`)
   }
   return (
     <TouchableOpacity style={styles.outer} onPress={onPressOuter}>

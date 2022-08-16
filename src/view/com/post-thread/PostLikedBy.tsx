@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {OnNavigateContent} from '../../routes/types'
 import {
   LikedByViewModel,
   LikedByViewItemModel,
@@ -18,13 +17,7 @@ import {useStores} from '../../../state'
 import {s} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
 
-export const PostLikedBy = observer(function PostLikedBy({
-  uri,
-  onNavigateContent,
-}: {
-  uri: string
-  onNavigateContent: OnNavigateContent
-}) {
+export const PostLikedBy = observer(function PostLikedBy({uri}: {uri: string}) {
   const store = useStores()
   const [view, setView] = useState<LikedByViewModel | undefined>()
 
@@ -66,7 +59,7 @@ export const PostLikedBy = observer(function PostLikedBy({
   // loaded
   // =
   const renderItem = ({item}: {item: LikedByViewItemModel}) => (
-    <LikedByItem item={item} onNavigateContent={onNavigateContent} />
+    <LikedByItem item={item} />
   )
   return (
     <View>
@@ -79,17 +72,10 @@ export const PostLikedBy = observer(function PostLikedBy({
   )
 })
 
-const LikedByItem = ({
-  item,
-  onNavigateContent,
-}: {
-  item: LikedByViewItemModel
-  onNavigateContent: OnNavigateContent
-}) => {
+const LikedByItem = ({item}: {item: LikedByViewItemModel}) => {
+  const store = useStores()
   const onPressOuter = () => {
-    onNavigateContent('Profile', {
-      name: item.name,
-    })
+    store.nav.navigate(`/profile/${item.name}`)
   }
   return (
     <TouchableOpacity style={styles.outer} onPress={onPressOuter}>

@@ -1,15 +1,13 @@
 import React from 'react'
-import {Shell} from '../shell'
 import {Text, Button, View} from 'react-native'
-import type {ScreensProps} from '../routes/types'
+import {useStores} from '../../state'
 
-export const NotFound = ({navigation}: ScreensProps<'NotFound'>) => {
+export const NotFound = () => {
+  const stores = useStores()
   return (
-    <Shell>
-      <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        <Text style={{fontSize: 20, fontWeight: 'bold'}}>Page not found</Text>
-        <Button title="Home" onPress={() => navigation.navigate('HomeTab')} />
-      </View>
-    </Shell>
+    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      <Text style={{fontSize: 20, fontWeight: 'bold'}}>Page not found</Text>
+      <Button title="Home" onPress={() => stores.nav.navigate('/')} />
+    </View>
   )
 }
