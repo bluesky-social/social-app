@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
-import {Shell} from './view/shell'
+import {DesktopWebShell} from './view/shell/desktop-web'
 import Toast from './view/com/util/Toast'
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
 
   return (
     <RootStoreProvider value={rootStore}>
-      <Shell />
+      <DesktopWebShell />
       <Toast.ToastContainer />
     </RootStoreProvider>
   )

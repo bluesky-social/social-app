@@ -137,6 +137,22 @@ export class NavigationModel {
     this.tabIndex = this.tabs.length - 1
   }
 
+  setActiveTab(tabIndex: number) {
+    this.tabIndex = Math.max(Math.min(tabIndex, this.tabs.length - 1), 0)
+  }
+
+  closeTab(tabIndex: number) {
+    this.tabs = [
+      ...this.tabs.slice(0, tabIndex),
+      ...this.tabs.slice(tabIndex + 1),
+    ]
+    if (this.tabs.length === 0) {
+      this.newTab('/')
+    } else if (this.tabIndex >= this.tabs.length) {
+      this.tabIndex = this.tabs.length - 1
+    }
+  }
+
   // persistence
   // =
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   GestureResponderEvent,
@@ -12,6 +12,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {useStores} from '../../../state'
 import {match} from '../../routes'
+import {TabsSelectorModal} from './tabs-selector'
 
 const Location = ({icon, title}: {icon: IconProp; title?: string}) => {
   return (
@@ -61,10 +62,19 @@ const Btn = ({
 
 export const MobileShell: React.FC = observer(() => {
   const stores = useStores()
+  const tabSelectorRef = useRef<{open: () => void}>()
+  const {Com, icon, params} = match(stores.nav.tab.current.url)
+
   const onPressBack = () => stores.nav.tab.goBack()
   const onPressForward = () => stores.nav.tab.goForward()
   const onPressHome = () => stores.nav.navigate('/')
-  const {Com, icon, params} = match(stores.nav.tab.current.url)
+  const onPressNotifications = () => stores.nav.navigate('/notifications')
+  const onPressTabs = () => tabSelectorRef.current?.open()
+
+  const onNewTab = () => stores.nav.newTab('/')
+  const onChangeTab = (tabIndex: number) => stores.nav.setActiveTab(tabIndex)
+  const onCloseTab = (tabIndex: number) => stores.nav.closeTab(tabIndex)
+
   return (
     <View style={styles.outerContainer}>
       <View style={styles.topBar}>
@@ -85,9 +95,17 @@ export const MobileShell: React.FC = observer(() => {
           onPress={onPressForward}
         />
         <Btn icon="house" onPress={onPressHome} />
-        <Btn icon={['far', 'bell']} />
-        <Btn icon={['far', 'clone']} />
+        <Btn icon={['far', 'bell']} onPress={onPressNotifications} />
+        <Btn icon={['far', 'clone']} onPress={onPressTabs} />
       </View>
+      <TabsSelectorModal
+        ref={tabSelectorRef}
+        tabs={stores.nav.tabs}
+        currentTabIndex={stores.nav.tabIndex}
+        onNewTab={onNewTab}
+        onChangeTab={onChangeTab}
+        onCloseTab={onCloseTab}
+      />
     </View>
   )
 })
