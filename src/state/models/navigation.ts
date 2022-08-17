@@ -32,6 +32,26 @@ export class NavigationTabModel {
     return this.index < this.history.length - 1
   }
 
+  get backTen() {
+    const start = Math.max(this.index - 10, 0)
+    const end = Math.min(this.index, 10)
+    return this.history.slice(start, end).map((item, i) => ({
+      url: item.url,
+      title: item.title,
+      index: start + i,
+    }))
+  }
+
+  get forwardTen() {
+    const start = Math.min(this.index + 1, this.history.length)
+    const end = Math.min(this.index + 10, this.history.length)
+    return this.history.slice(start, end).map((item, i) => ({
+      url: item.url,
+      title: item.title,
+      index: start + i,
+    }))
+  }
+
   // navigation
   // =
 
@@ -52,6 +72,12 @@ export class NavigationTabModel {
   goForward() {
     if (this.canGoForward) {
       this.index++
+    }
+  }
+
+  goToIndex(index: number) {
+    if (index >= 0 && index <= this.history.length - 1) {
+      this.index = index
     }
   }
 

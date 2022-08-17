@@ -23,8 +23,6 @@ export const ShareModal = forwardRef(function ShareModal({}: {}, ref) {
   const onPressCopy = () => {
     Clipboard.setString(uri)
     console.log('showing')
-    console.log(Toast)
-    console.log(Toast.show)
     Toast.show('Link copied', {
       position: Toast.positions.TOP,
     })

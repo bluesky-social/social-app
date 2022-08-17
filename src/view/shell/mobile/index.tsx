@@ -13,6 +13,7 @@ import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {useStores} from '../../../state'
 import {match} from '../../routes'
 import {TabsSelectorModal} from './tabs-selector'
+import {createBackMenu, createForwardMenu} from './history-menu'
 
 const Location = ({icon, title}: {icon: IconProp; title?: string}) => {
   return (
@@ -37,10 +38,12 @@ const Btn = ({
   icon,
   inactive,
   onPress,
+  onLongPress,
 }: {
   icon: IconProp
   inactive?: boolean
   onPress?: (event: GestureResponderEvent) => void
+  onLongPress?: (event: GestureResponderEvent) => void
 }) => {
   if (inactive) {
     return (
@@ -54,7 +57,10 @@ const Btn = ({
     )
   }
   return (
-    <TouchableOpacity style={styles.ctrl} onPress={onPress}>
+    <TouchableOpacity
+      style={styles.ctrl}
+      onPress={onPress}
+      onLongPress={onLongPress}>
       <FontAwesomeIcon size={18} style={styles.ctrlIcon} icon={icon} />
     </TouchableOpacity>
   )
@@ -70,6 +76,9 @@ export const MobileShell: React.FC = observer(() => {
   const onPressHome = () => stores.nav.navigate('/')
   const onPressNotifications = () => stores.nav.navigate('/notifications')
   const onPressTabs = () => tabSelectorRef.current?.open()
+
+  const onLongPressBack = () => createBackMenu(stores.nav.tab)
+  const onLongPressForward = () => createForwardMenu(stores.nav.tab)
 
   const onNewTab = () => stores.nav.newTab('/')
   const onChangeTab = (tabIndex: number) => stores.nav.setActiveTab(tabIndex)
@@ -88,11 +97,13 @@ export const MobileShell: React.FC = observer(() => {
           icon="angle-left"
           inactive={!stores.nav.tab.canGoBack}
           onPress={onPressBack}
+          onLongPress={onLongPressBack}
         />
         <Btn
           icon="angle-right"
           inactive={!stores.nav.tab.canGoForward}
           onPress={onPressForward}
+          onLongPress={onLongPressForward}
         />
         <Btn icon="house" onPress={onPressHome} />
         <Btn icon={['far', 'bell']} onPress={onPressNotifications} />
