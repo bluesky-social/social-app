@@ -12,6 +12,6 @@ Paul's todo list
   - Reposted by
   - Followers list
   - Follows list
-
-- Bugs
-  - Navigations (esp to current page?) sometimes throw an error
+- Navigation
+  - Navs to the current location should just "refresh"
+  - Views should be cached

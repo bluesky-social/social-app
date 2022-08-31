@@ -9,8 +9,8 @@ import {ScreenParams} from '../routes'
 export function Home({params}: ScreenParams) {
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const store = useStores()
-  store.nav.setTitle('Home')
   useEffect(() => {
+    store.nav.setTitle('Home')
     console.log('Fetching home feed')
     store.homeFeed.setup().then(() => setHasSetup(true))
   }, [store.nav, store.homeFeed])

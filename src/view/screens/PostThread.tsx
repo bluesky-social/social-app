@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react'
+import React, {useEffect, useLayoutEffect} from 'react'
 import {TouchableOpacity} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {makeRecordUri} from '../lib/strings'
@@ -10,7 +10,9 @@ export const PostThread = ({params}: ScreenParams) => {
   const store = useStores()
   const {name, recordKey} = params
   const uri = makeRecordUri(name, 'blueskyweb.xyz:Posts', recordKey)
-  store.nav.setTitle(`Post by ${name}`)
+  useEffect(() => {
+    store.nav.setTitle(`Post by ${name}`)
+  }, [store.nav, name])
 
   // TODO
   // useLayoutEffect(() => {
