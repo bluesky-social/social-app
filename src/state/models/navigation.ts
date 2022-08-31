@@ -1,6 +1,11 @@
 import {makeAutoObservable} from 'mobx'
 import {isObj, hasProp} from '../lib/type-guards'
 
+let __tabId = 0
+function genTabId() {
+  return ++__tabId
+}
+
 interface HistoryItem {
   url: string
   ts: number
@@ -8,6 +13,7 @@ interface HistoryItem {
 }
 
 export class NavigationTabModel {
+  id = genTabId()
   history: HistoryItem[] = [{url: '/', ts: Date.now()}]
   index = 0
 
@@ -33,9 +39,23 @@ export class NavigationTabModel {
     return this.index < this.history.length - 1
   }
 
+  getBackList(n: number) {
+    const start = Math.max(this.index - n, 0)
+    const end = Math.min(this.index, n)
+    return this.history.slice(start, end).map((item, i) => ({
+      url: item.url,
+      title: item.title,
+      index: start + i,
+    }))
+  }
+
   get backTen() {
-    const start = Math.max(this.index - 10, 0)
-    const end = Math.min(this.index, 10)
+    return this.getBackList(10)
+  }
+
+  getForwardList(n: number) {
+    const start = Math.min(this.index + 1, this.history.length)
+    const end = Math.min(this.index + n, this.history.length)
     return this.history.slice(start, end).map((item, i) => ({
       url: item.url,
       title: item.title,
@@ -44,13 +64,7 @@ export class NavigationTabModel {
   }
 
   get forwardTen() {
-    const start = Math.min(this.index + 1, this.history.length)
-    const end = Math.min(this.index + 10, this.history.length)
-    return this.history.slice(start, end).map((item, i) => ({
-      url: item.url,
-      title: item.title,
-      index: start + i,
-    }))
+    return this.getForwardList(10)
   }
 
   // navigation
@@ -159,6 +173,10 @@ export class NavigationModel {
 
   get tab() {
     return this.tabs[this.tabIndex]
+  }
+
+  isCurrentScreen(tabId: number, index: number) {
+    return this.tab.id === tabId && this.tab.index === index
   }
 
   // navigation

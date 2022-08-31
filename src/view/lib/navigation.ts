@@ -8,5 +8,5 @@ type CB = () => void
  */
 export function useLoadEffect(cb: CB, deps: any[] = []) {
   const store = useStores()
-  useEffect(cb, [cb, store.nav.tab, ...deps])
+  useEffect(cb, [store.nav.tab, ...deps])
 }

@@ -8,10 +8,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import {ScreenContainer, Screen} from 'react-native-screens'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {useStores} from '../../../state'
-import {match} from '../../routes'
+import {NavigationModel} from '../../../state/models/navigation'
+import {match, MatchResult} from '../../routes'
 import {TabsSelectorModal} from './tabs-selector'
 import {createBackMenu, createForwardMenu} from './history-menu'
 
@@ -69,7 +71,7 @@ const Btn = ({
 export const MobileShell: React.FC = observer(() => {
   const stores = useStores()
   const tabSelectorRef = useRef<{open: () => void}>()
-  const {Com, icon, params} = match(stores.nav.tab.current.url)
+  const screenRenderDesc = constructScreenRenderDesc(stores.nav)
 
   const onPressBack = () => stores.nav.tab.goBack()
   const onPressForward = () => stores.nav.tab.goForward()
@@ -87,10 +89,22 @@ export const MobileShell: React.FC = observer(() => {
   return (
     <View style={styles.outerContainer}>
       <View style={styles.topBar}>
-        <Location icon={icon} title={stores.nav.tab.current.title} />
+        <Location
+          icon={screenRenderDesc.icon}
+          title={stores.nav.tab.current.title}
+        />
       </View>
       <SafeAreaView style={styles.innerContainer}>
-        <Com params={params} />
+        <ScreenContainer>
+          {screenRenderDesc.screens.map(({Com, params, key, activityState}) => (
+            <Screen
+              key={key}
+              style={{backgroundColor: '#fff'}}
+              activityState={activityState}>
+              <Com params={params} />
+            </Screen>
+          ))}
+        </ScreenContainer>
       </SafeAreaView>
       <View style={styles.bottomBar}>
         <Btn
@@ -120,6 +134,41 @@ export const MobileShell: React.FC = observer(() => {
     </View>
   )
 })
+
+/**
+ * This method produces the information needed by the shell to
+ * render the current screens with screen-caching behaviors.
+ */
+type ScreenRenderDesc = MatchResult & {key: string; activityState: 0 | 1 | 2}
+function constructScreenRenderDesc(nav: NavigationModel): {
+  icon: IconProp
+  screens: ScreenRenderDesc[]
+} {
+  let icon: IconProp = 'magnifying-glass'
+  let screens: ScreenRenderDesc[] = []
+  for (const tab of nav.tabs) {
+    const tabScreens = [
+      ...tab.getBackList(5),
+      Object.assign({}, tab.current, {index: tab.index}),
+    ]
+    const parsedTabScreens = tabScreens.map(screen => {
+      const isCurrent = nav.isCurrentScreen(tab.id, screen.index)
+      const matchRes = match(screen.url)
+      if (isCurrent) {
+        icon = matchRes.icon
+      }
+      return Object.assign(matchRes, {
+        key: `t${tab.id}-s${screen.index}`,
+        activityState: isCurrent ? 2 : 0,
+      })
+    })
+    screens = screens.concat(parsedTabScreens)
+  }
+  return {
+    icon,
+    screens,
+  }
+}
 
 const styles = StyleSheet.create({
   outerContainer: {
