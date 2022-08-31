@@ -10,20 +10,13 @@ import {
   View,
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {OnNavigateContent} from '../../routes/types'
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {useStores} from '../../../state'
 import {s} from '../../lib/styles'
 import {ago} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
 
-export const Post = observer(function Post({
-  uri,
-  onNavigateContent,
-}: {
-  uri: string
-  onNavigateContent: OnNavigateContent
-}) {
+export const Post = observer(function Post({uri}: {uri: string}) {
   const store = useStores()
   const [view, setView] = useState<PostThreadViewModel | undefined>()
 
@@ -63,20 +56,13 @@ export const Post = observer(function Post({
 
   const onPressOuter = () => {
     const urip = new AdxUri(item.uri)
-    onNavigateContent('PostThread', {
-      name: item.author.name,
-      recordKey: urip.recordKey,
-    })
+    store.nav.navigate(`/profile/${item.author.name}/post/${urip.recordKey}`)
   }
   const onPressAuthor = () => {
-    onNavigateContent('Profile', {
-      name: item.author.name,
-    })
+    store.nav.navigate(`/profile/${item.author.name}`)
   }
   const onPressReply = () => {
-    onNavigateContent('Composer', {
-      replyTo: item.uri,
-    })
+    store.nav.navigate(`/composer?replyTo=${item.uri}`)
   }
   const onPressToggleRepost = () => {
     item

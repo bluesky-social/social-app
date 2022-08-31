@@ -5,7 +5,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {whenWebCrypto} from './platform/polyfills.native'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
-import * as Routes from './view/routes'
+import {MobileShell} from './view/shell/mobile'
 
 function App() {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -31,7 +31,7 @@ function App() {
     <GestureHandlerRootView style={{flex: 1}}>
       <RootSiblingParent>
         <RootStoreProvider value={rootStore}>
-          <Routes.Root />
+          <MobileShell />
         </RootStoreProvider>
       </RootSiblingParent>
     </GestureHandlerRootView>

@@ -3,44 +3,34 @@ import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {AdxUri} from '@adxp/mock-api'
 import {FontAwesomeIcon, Props} from '@fortawesome/react-native-fontawesome'
-import {OnNavigateContent} from '../../routes/types'
 import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
 import {s} from '../../lib/styles'
 import {ago} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
 import {PostText} from '../post/PostText'
 import {Post} from '../post/Post'
+import {useStores} from '../../../state'
 
 export const FeedItem = observer(function FeedItem({
   item,
-  onNavigateContent,
 }: {
   item: NotificationsViewItemModel
-  onNavigateContent: OnNavigateContent
 }) {
+  const store = useStores()
+
   const onPressOuter = () => {
     if (item.isLike || item.isRepost) {
       const urip = new AdxUri(item.subjectUri)
-      onNavigateContent('PostThread', {
-        name: urip.host,
-        recordKey: urip.recordKey,
-      })
+      store.nav.navigate(`/profile/${urip.host}/post/${urip.recordKey}`)
     } else if (item.isFollow) {
-      onNavigateContent('Profile', {
-        name: item.author.name,
-      })
+      store.nav.navigate(`/profile/${item.author.name}`)
     } else if (item.isReply) {
       const urip = new AdxUri(item.uri)
-      onNavigateContent('PostThread', {
-        name: urip.host,
-        recordKey: urip.recordKey,
-      })
+      store.nav.navigate(`/profile/${urip.host}/post/${urip.recordKey}`)
     }
   }
   const onPressAuthor = () => {
-    onNavigateContent('Profile', {
-      name: item.author.name,
-    })
+    store.nav.navigate(`/profile/${item.author.name}`)
   }
 
   let action = ''
@@ -92,7 +82,7 @@ export const FeedItem = observer(function FeedItem({
       </View>
       {item.isReply ? (
         <View style={s.pt5}>
-          <Post uri={item.uri} onNavigateContent={onNavigateContent} />
+          <Post uri={item.uri} />
         </View>
       ) : (
         <></>

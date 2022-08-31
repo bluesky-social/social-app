@@ -3,11 +3,11 @@ import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {bsky, AdxUri} from '@adxp/mock-api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {OnNavigateContent} from '../../routes/types'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
 import {s} from '../../lib/styles'
 import {ago, pluralize} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
+import {useStores} from '../../../state'
 
 function iter<T>(n: number, fn: (_i: number) => T): Array<T> {
   const arr: T[] = []
@@ -19,46 +19,36 @@ function iter<T>(n: number, fn: (_i: number) => T): Array<T> {
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
-  onNavigateContent,
   onPressShare,
 }: {
   item: PostThreadViewPostModel
-  onNavigateContent: OnNavigateContent
   onPressShare: (_uri: string) => void
 }) {
+  const store = useStores()
   const record = item.record as unknown as bsky.Post.Record
   const hasEngagement = item.likeCount || item.repostCount
 
   const onPressOuter = () => {
     const urip = new AdxUri(item.uri)
-    onNavigateContent('PostThread', {
-      name: item.author.name,
-      recordKey: urip.recordKey,
-    })
+    store.nav.navigate(`/profile/${item.author.name}/post/${urip.recordKey}`)
   }
   const onPressAuthor = () => {
-    onNavigateContent('Profile', {
-      name: item.author.name,
-    })
+    store.nav.navigate(`/profile/${item.author.name}`)
   }
   const onPressLikes = () => {
     const urip = new AdxUri(item.uri)
-    onNavigateContent('PostLikedBy', {
-      name: item.author.name,
-      recordKey: urip.recordKey,
-    })
+    store.nav.navigate(
+      `/profile/${item.author.name}/post/${urip.recordKey}/liked-by`,
+    )
   }
   const onPressReposts = () => {
     const urip = new AdxUri(item.uri)
-    onNavigateContent('PostRepostedBy', {
-      name: item.author.name,
-      recordKey: urip.recordKey,
-    })
+    store.nav.navigate(
+      `/profile/${item.author.name}/post/${urip.recordKey}/reposted-by`,
+    )
   }
   const onPressReply = () => {
-    onNavigateContent('Composer', {
-      replyTo: item.uri,
-    })
+    store.nav.navigate(`/composer?replyTo=${item.uri}`)
   }
   const onPressToggleRepost = () => {
     item
@@ -227,6 +217,7 @@ const styles = StyleSheet.create({
   },
   postText: {
     paddingBottom: 5,
+    fontFamily: 'Helvetica Neue',
   },
   expandedInfo: {
     flexDirection: 'row',
