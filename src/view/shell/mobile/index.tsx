@@ -16,6 +16,7 @@ import {NavigationModel} from '../../../state/models/navigation'
 import {match, MatchResult} from '../../routes'
 import {TabsSelectorModal} from './tabs-selector'
 import {createBackMenu, createForwardMenu} from './history-menu'
+import {colors} from '../../lib/styles'
 
 const Location = ({icon, title}: {icon: IconProp; title?: string}) => {
   return (
@@ -99,7 +100,7 @@ export const MobileShell: React.FC = observer(() => {
           {screenRenderDesc.screens.map(({Com, params, key, activityState}) => (
             <Screen
               key={key}
-              style={{backgroundColor: '#fff'}}
+              style={styles.screen}
               activityState={activityState}>
               <Com params={params} />
             </Screen>
@@ -177,11 +178,14 @@ const styles = StyleSheet.create({
   innerContainer: {
     flex: 1,
   },
+  screen: {
+    backgroundColor: colors.gray1,
+  },
   topBar: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: colors.gray2,
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 40,
@@ -198,24 +202,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F3F3',
   },
   locationIcon: {
-    color: '#DB00FF',
+    color: colors.pink3,
     marginRight: 8,
   },
   locationIconLight: {
-    color: '#909090',
+    color: colors.gray3,
     marginRight: 8,
   },
   locationText: {
-    color: '#000',
+    color: colors.black,
   },
   locationTextLight: {
-    color: '#868788',
+    color: colors.gray4,
   },
   bottomBar: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderTopWidth: 1,
-    borderTopColor: '#ccc',
+    borderTopColor: colors.gray2,
     paddingLeft: 5,
     paddingRight: 15,
     paddingBottom: 20,
@@ -230,6 +234,6 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   inactive: {
-    color: '#888',
+    color: colors.gray3,
   },
 })

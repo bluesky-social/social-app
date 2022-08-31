@@ -1,5 +1,41 @@
 import {StyleSheet} from 'react-native'
 
+// 1 is lightest, 2 is light, 3 is mid, 4 is dark, 5 is darkest
+export const colors = {
+  white: '#ffffff',
+  black: '#000000',
+
+  gray1: '#f8f3f3',
+  gray2: '#e4e2e2',
+  gray3: '#c1b9b9',
+  gray4: '#968d8d',
+  gray5: '#645454',
+
+  blue1: '#8bc7fd',
+  blue2: '#52acfe',
+  blue3: '#0085ff',
+  blue4: '#0062bd',
+  blue5: '#034581',
+
+  pink1: '#f8ccff',
+  pink2: '#e966ff',
+  pink3: '#db00ff',
+  pink4: '#a601c1',
+  pink5: '#570066',
+
+  purple1: '#ebdbff',
+  purple2: '#ba85ff',
+  purple3: '#9747ff',
+  purple4: '#6d00fa',
+  purple5: '#380080',
+
+  green1: '#c1ffb8',
+  green2: '#27f406',
+  green3: '#20bc07',
+  green4: '#148203',
+  green5: '#082b03',
+}
+
 export const s = StyleSheet.create({
   // font weights
   fw600: {fontWeight: '600'},
@@ -30,13 +66,6 @@ export const s = StyleSheet.create({
   ['lh16-1.3']: {lineHeight: 20.8}, // 1.3 of 16px
   ['lh18-1']: {lineHeight: 18},
   ['lh18-1.3']: {lineHeight: 23.4}, // 1.3 of 18px
-
-  // colors
-  black: {color: 'black'},
-  gray: {color: 'gray'},
-  blue: {color: '#006bf7'},
-  green: {color: 'green'},
-  red: {color: 'red'},
 
   // margins
   mr2: {marginRight: 2},
@@ -82,4 +111,38 @@ export const s = StyleSheet.create({
   textLeft: {textAlign: 'left'},
   textCenter: {textAlign: 'center'},
   textRight: {textAlign: 'right'},
+
+  // colors
+  white: {color: colors.white},
+  black: {color: colors.black},
+
+  gray1: {color: colors.gray1},
+  gray2: {color: colors.gray2},
+  gray3: {color: colors.gray3},
+  gray4: {color: colors.gray4},
+  gray5: {color: colors.gray5},
+
+  blue1: {color: colors.blue1},
+  blue2: {color: colors.blue2},
+  blue3: {color: colors.blue3},
+  blue4: {color: colors.blue4},
+  blue5: {color: colors.blue5},
+
+  pink1: {color: colors.pink1},
+  pink2: {color: colors.pink2},
+  pink3: {color: colors.pink3},
+  pink4: {color: colors.pink4},
+  pink5: {color: colors.pink5},
+
+  purple1: {color: colors.purple1},
+  purple2: {color: colors.purple2},
+  purple3: {color: colors.purple3},
+  purple4: {color: colors.purple4},
+  purple5: {color: colors.purple5},
+
+  green1: {color: colors.green1},
+  green2: {color: colors.green2},
+  green3: {color: colors.green3},
+  green4: {color: colors.green4},
+  green5: {color: colors.green5},
 })

@@ -4,7 +4,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {bsky, AdxUri} from '@adxp/mock-api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
-import {s} from '../../lib/styles'
+import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
 import {useStores} from '../../../state'
@@ -81,11 +81,11 @@ export const PostThreadItem = observer(function PostThreadItem({
               {item.author.displayName}
             </Text>
             <Text
-              style={[styles.metaItem, s.f14, s.gray]}
+              style={[styles.metaItem, s.f14, s.gray5]}
               onPress={onPressAuthor}>
               @{item.author.name}
             </Text>
-            <Text style={[styles.metaItem, s.f14, s.gray]}>
+            <Text style={[styles.metaItem, s.f14, s.gray5]}>
               &middot; {ago(item.indexedAt)}
             </Text>
           </View>
@@ -102,7 +102,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             <View style={styles.expandedInfo}>
               {item.repostCount ? (
                 <Text
-                  style={[styles.expandedInfoItem, s.gray, s.semiBold]}
+                  style={[styles.expandedInfoItem, s.gray5, s.semiBold]}
                   onPress={onPressReposts}>
                   <Text style={[s.bold, s.black]}>{item.repostCount}</Text>{' '}
                   {pluralize(item.repostCount, 'repost')}
@@ -112,7 +112,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               )}
               {item.likeCount ? (
                 <Text
-                  style={[styles.expandedInfoItem, s.gray, s.semiBold]}
+                  style={[styles.expandedInfoItem, s.gray5, s.semiBold]}
                   onPress={onPressLikes}>
                   <Text style={[s.bold, s.black]}>{item.likeCount}</Text>{' '}
                   {pluralize(item.likeCount, 'like')}
@@ -144,7 +144,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               />
               <Text
                 style={
-                  item.myState.hasReposted ? [s.bold, s.green] : undefined
+                  item.myState.hasReposted ? [s.bold, s.green3] : undefined
                 }>
                 {item.repostCount}
               </Text>
@@ -156,7 +156,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                 }
                 icon={[item.myState.hasLiked ? 'fas' : 'far', 'heart']}
               />
-              <Text style={item.myState.hasLiked ? [s.bold, s.red] : undefined}>
+              <Text
+                style={item.myState.hasLiked ? [s.bold, s.pink3] : undefined}>
                 {item.likeCount}
               </Text>
             </TouchableOpacity>
@@ -177,16 +178,15 @@ export const PostThreadItem = observer(function PostThreadItem({
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: 1,
-    borderTopColor: '#e8e8e8',
-    backgroundColor: '#fff',
+    marginTop: 1,
+    backgroundColor: colors.white,
   },
   layout: {
     flexDirection: 'row',
   },
   replyBar: {
     width: 5,
-    backgroundColor: 'gray',
+    backgroundColor: colors.gray2,
     marginRight: 2,
   },
   layoutAvi: {
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   expandedInfo: {
     flexDirection: 'row',
     padding: 10,
-    borderColor: '#e8e8e8',
+    borderColor: colors.gray2,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     marginTop: 5,
@@ -243,14 +243,14 @@ const styles = StyleSheet.create({
   },
   ctrlIcon: {
     marginRight: 5,
-    color: 'gray',
+    color: colors.gray5,
   },
   ctrlIconReposted: {
     marginRight: 5,
-    color: 'green',
+    color: colors.green3,
   },
   ctrlIconLiked: {
     marginRight: 5,
-    color: 'red',
+    color: colors.pink3,
   },
 })

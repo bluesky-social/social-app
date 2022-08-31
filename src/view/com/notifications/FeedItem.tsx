@@ -4,7 +4,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {AdxUri} from '@adxp/mock-api'
 import {FontAwesomeIcon, Props} from '@fortawesome/react-native-fontawesome'
 import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
-import {s} from '../../lib/styles'
+import {s, colors} from '../../lib/styles'
 import {ago} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
 import {PostText} from '../post/PostText'
@@ -69,12 +69,12 @@ export const FeedItem = observer(function FeedItem({
               {item.author.displayName}
             </Text>
             <Text style={[styles.metaItem, s.f14]}>{action}</Text>
-            <Text style={[styles.metaItem, s.f14, s.gray]}>
+            <Text style={[styles.metaItem, s.f14, s.gray5]}>
               {ago(item.indexedAt)}
             </Text>
           </View>
           {item.isLike || item.isRepost ? (
-            <PostText uri={item.subjectUri} style={[s.gray]} />
+            <PostText uri={item.subjectUri} style={[s.gray5]} />
           ) : (
             <></>
           )}
@@ -93,7 +93,7 @@ export const FeedItem = observer(function FeedItem({
 
 const styles = StyleSheet.create({
   outer: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     padding: 10,
     paddingBottom: 0,
   },

@@ -12,7 +12,7 @@ import {
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {useStores} from '../../../state'
 import {pluralize} from '../../lib/strings'
-import {s} from '../../lib/styles'
+import {s, colors} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
 import Toast from '../util/Toast'
 
@@ -89,7 +89,7 @@ export const ProfileHeader = observer(function ProfileHeader({
       <Image style={styles.avi} source={AVIS[view.name] || AVIS['alice.com']} />
       <View style={[styles.nameLine, s.mb2]}>
         <Text style={[s.bold, s.f18, s.mr2]}>{view.displayName}</Text>
-        <Text style={[s.gray]}>@{view.name}</Text>
+        <Text style={[s.gray5]}>@{view.name}</Text>
       </View>
       {view.description && (
         <Text style={[s.mb5, s.f15, s['lh15-1.3']]}>{view.description}</Text>
@@ -99,17 +99,17 @@ export const ProfileHeader = observer(function ProfileHeader({
           style={[s.flexRow, s.mr10]}
           onPress={onPressFollowers}>
           <Text style={[s.bold, s.mr2]}>{view.followersCount}</Text>
-          <Text style={s.gray}>
+          <Text style={s.gray5}>
             {pluralize(view.followersCount, 'follower')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={[s.flexRow, s.mr10]} onPress={onPressFollows}>
           <Text style={[s.bold, s.mr2]}>{view.followsCount}</Text>
-          <Text style={s.gray}>following</Text>
+          <Text style={s.gray5}>following</Text>
         </TouchableOpacity>
         <View style={[s.flexRow, s.mr10]}>
           <Text style={[s.bold, s.mr2]}>{view.postsCount}</Text>
-          <Text style={s.gray}>{pluralize(view.postsCount, 'post')}</Text>
+          <Text style={s.gray5}>{pluralize(view.postsCount, 'post')}</Text>
         </View>
       </View>
       <View>
@@ -124,10 +124,10 @@ export const ProfileHeader = observer(function ProfileHeader({
 
 const styles = StyleSheet.create({
   outer: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     padding: 10,
     borderBottomWidth: 1,
-    borderColor: '#eee',
+    borderColor: colors.gray2,
   },
   avi: {
     width: 60,

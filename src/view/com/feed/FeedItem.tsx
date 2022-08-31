@@ -4,7 +4,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {bsky, AdxUri} from '@adxp/mock-api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedViewItemModel} from '../../../state/models/feed-view'
-import {s} from '../../lib/styles'
+import {s, colors} from '../../lib/styles'
 import {ago} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
 import {useStores} from '../../../state'
@@ -45,7 +45,7 @@ export const FeedItem = observer(function FeedItem({
       {item.repostedBy && (
         <View style={styles.repostedBy}>
           <FontAwesomeIcon icon="retweet" style={styles.repostedByIcon} />
-          <Text style={[s.gray, s.bold, s.f13]}>
+          <Text style={[s.gray4, s.bold, s.f13]}>
             Reposted by {item.repostedBy.displayName}
           </Text>
         </View>
@@ -65,11 +65,11 @@ export const FeedItem = observer(function FeedItem({
               {item.author.displayName}
             </Text>
             <Text
-              style={[styles.metaItem, s.f14, s.gray]}
+              style={[styles.metaItem, s.f14, s.gray5]}
               onPress={onPressAuthor}>
               @{item.author.name}
             </Text>
-            <Text style={[styles.metaItem, s.f14, s.gray]}>
+            <Text style={[styles.metaItem, s.f14, s.gray5]}>
               &middot; {ago(item.indexedAt)}
             </Text>
           </View>
@@ -96,7 +96,7 @@ export const FeedItem = observer(function FeedItem({
               />
               <Text
                 style={
-                  item.myState.hasReposted ? [s.bold, s.green] : undefined
+                  item.myState.hasReposted ? [s.bold, s.green3] : undefined
                 }>
                 {item.repostCount}
               </Text>
@@ -108,7 +108,8 @@ export const FeedItem = observer(function FeedItem({
                 }
                 icon={[item.myState.hasLiked ? 'fas' : 'far', 'heart']}
               />
-              <Text style={item.myState.hasLiked ? [s.bold, s.red] : undefined}>
+              <Text
+                style={item.myState.hasLiked ? [s.bold, s.pink3] : undefined}>
                 {item.likeCount}
               </Text>
             </TouchableOpacity>
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 2,
     marginBottom: 0,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     padding: 10,
   },
   repostedBy: {
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
   },
   repostedByIcon: {
     marginRight: 2,
-    color: 'gray',
+    color: colors.gray4,
   },
   layout: {
     flexDirection: 'row',
@@ -184,14 +185,14 @@ const styles = StyleSheet.create({
   },
   ctrlIcon: {
     marginRight: 5,
-    color: 'gray',
+    color: colors.gray5,
   },
   ctrlIconReposted: {
     marginRight: 5,
-    color: 'green',
+    color: colors.green3,
   },
   ctrlIconLiked: {
     marginRight: 5,
-    color: 'red',
+    color: colors.pink3,
   },
 })
