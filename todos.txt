@@ -13,5 +13,6 @@ Paul's todo list
   - Followers list
   - Follows list
 - Navigation
-  - Navs to the current location should just "refresh"
   - Views should be cached
+  - Restore all functionality that was disabled during the refactor
+  - Reduce extraneous triggers of useLoadEffect

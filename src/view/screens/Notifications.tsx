@@ -5,11 +5,12 @@ import {Feed} from '../com/notifications/Feed'
 import {useStores} from '../../state'
 import {AVIS} from '../lib/assets'
 import {ScreenParams} from '../routes'
+import {useLoadEffect} from '../lib/navigation'
 
 export const Notifications = ({params}: ScreenParams) => {
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const store = useStores()
-  useEffect(() => {
+  useLoadEffect(() => {
     store.nav.setTitle('Notifications')
     console.log('Fetching notifications feed')
     store.notesFeed.setup().then(() => setHasSetup(true))

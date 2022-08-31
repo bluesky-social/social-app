@@ -3,11 +3,12 @@ import {isObj, hasProp} from '../lib/type-guards'
 
 interface HistoryItem {
   url: string
+  ts: number
   title?: string
 }
 
 export class NavigationTabModel {
-  history: HistoryItem[] = [{url: '/'}]
+  history: HistoryItem[] = [{url: '/', ts: Date.now()}]
   index = 0
 
   constructor() {
@@ -56,11 +57,23 @@ export class NavigationTabModel {
   // =
 
   navigate(url: string, title?: string) {
-    if (this.index < this.history.length - 1) {
-      this.history.length = this.index + 1
+    if (this.current?.url === url) {
+      this.refresh()
+    } else {
+      if (this.index < this.history.length - 1) {
+        this.history.length = this.index + 1
+      }
+      this.history.push({url, title, ts: Date.now()})
+      this.index = this.history.length - 1
     }
-    this.history.push({url, title})
-    this.index = this.history.length - 1
+  }
+
+  refresh() {
+    this.history = [
+      ...this.history.slice(0, this.index),
+      {url: this.current.url, title: this.current.title, ts: Date.now()},
+      ...this.history.slice(this.index + 1),
+    ]
   }
 
   goBack() {
@@ -106,7 +119,13 @@ export class NavigationTabModel {
             hasProp(item, 'url') &&
             typeof item.url === 'string'
           ) {
-            let copy: HistoryItem = {url: item.url}
+            let copy: HistoryItem = {
+              url: item.url,
+              ts:
+                hasProp(item, 'ts') && typeof item.ts === 'number'
+                  ? item.ts
+                  : Date.now(),
+            }
             if (hasProp(item, 'title') && typeof item.title === 'string') {
               copy.title = item.title
             }
@@ -147,6 +166,10 @@ export class NavigationModel {
 
   navigate(url: string, title?: string) {
     this.tab.navigate(url, title)
+  }
+
+  refresh() {
+    this.tab.refresh()
   }
 
   setTitle(title: string) {

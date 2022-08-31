@@ -3,13 +3,14 @@ import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Feed} from '../com/feed/Feed'
 import {useStores} from '../../state'
+import {useLoadEffect} from '../lib/navigation'
 import {AVIS} from '../lib/assets'
 import {ScreenParams} from '../routes'
 
 export function Home({params}: ScreenParams) {
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const store = useStores()
-  useEffect(() => {
+  useLoadEffect(() => {
     store.nav.setTitle('Home')
     console.log('Fetching home feed')
     store.homeFeed.setup().then(() => setHasSetup(true))

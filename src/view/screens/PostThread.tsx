@@ -5,12 +5,13 @@ import {makeRecordUri} from '../lib/strings'
 import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
+import {useLoadEffect} from '../lib/navigation'
 
 export const PostThread = ({params}: ScreenParams) => {
   const store = useStores()
   const {name, recordKey} = params
   const uri = makeRecordUri(name, 'blueskyweb.xyz:Posts', recordKey)
-  useEffect(() => {
+  useLoadEffect(() => {
     store.nav.setTitle(`Post by ${name}`)
   }, [store.nav, name])
 

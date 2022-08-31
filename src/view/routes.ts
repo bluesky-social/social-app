@@ -60,5 +60,5 @@ export function match(url: string): MatchResult {
       return {Com, icon, params: res.groups || {}}
     }
   }
-  return {Com: NotFound, params: {}}
+  return {Com: NotFound, icon: 'magnifying-glass', params: {}}
 }

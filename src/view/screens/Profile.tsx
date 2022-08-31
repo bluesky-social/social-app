@@ -5,13 +5,14 @@ import {useStores} from '../../state'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {Feed} from '../com/feed/Feed'
 import {ScreenParams} from '../routes'
+import {useLoadEffect} from '../lib/navigation'
 
 export const Profile = ({params}: ScreenParams) => {
   const store = useStores()
   const [hasSetup, setHasSetup] = useState<string>('')
   const [feedView, setFeedView] = useState<FeedViewModel | undefined>()
 
-  useEffect(() => {
+  useLoadEffect(() => {
     const author = params.name
     if (feedView?.params.author === author) {
       return // no change needed? or trigger refresh?
