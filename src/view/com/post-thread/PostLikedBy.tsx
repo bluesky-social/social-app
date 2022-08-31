@@ -14,7 +14,7 @@ import {
   LikedByViewItemModel,
 } from '../../../state/models/liked-by-view'
 import {useStores} from '../../../state'
-import {s} from '../../lib/styles'
+import {s, colors} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
 
 export const PostLikedBy = observer(function PostLikedBy({uri}: {uri: string}) {
@@ -88,7 +88,7 @@ const LikedByItem = ({item}: {item: LikedByViewItemModel}) => {
         </View>
         <View style={styles.layoutContent}>
           <Text style={[s.f15, s.bold]}>{item.displayName}</Text>
-          <Text style={[s.f14, s.gray]}>@{item.name}</Text>
+          <Text style={[s.f14, s.gray5]}>@{item.name}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -97,9 +97,8 @@ const LikedByItem = ({item}: {item: LikedByViewItemModel}) => {
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: 1,
-    borderTopColor: '#e8e8e8',
-    backgroundColor: '#fff',
+    marginTop: 1,
+    backgroundColor: colors.white,
   },
   layout: {
     flexDirection: 'row',

@@ -12,7 +12,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {useStores} from '../../../state'
-import {s} from '../../lib/styles'
+import {s, colors} from '../../lib/styles'
 import {ago} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
 
@@ -92,11 +92,11 @@ export const Post = observer(function Post({uri}: {uri: string}) {
               {item.author.displayName}
             </Text>
             <Text
-              style={[styles.metaItem, s.f14, s.gray]}
+              style={[styles.metaItem, s.f14, s.gray5]}
               onPress={onPressAuthor}>
               @{item.author.name}
             </Text>
-            <Text style={[styles.metaItem, s.f14, s.gray]}>
+            <Text style={[styles.metaItem, s.f14, s.gray5]}>
               &middot; {ago(item.indexedAt)}
             </Text>
           </View>
@@ -123,7 +123,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
               />
               <Text
                 style={
-                  item.myState.hasReposted ? [s.bold, s.green] : undefined
+                  item.myState.hasReposted ? [s.bold, s.green3] : undefined
                 }>
                 {item.repostCount}
               </Text>
@@ -135,7 +135,8 @@ export const Post = observer(function Post({uri}: {uri: string}) {
                 }
                 icon={[item.myState.hasLiked ? 'fas' : 'far', 'heart']}
               />
-              <Text style={item.myState.hasLiked ? [s.bold, s.red] : undefined}>
+              <Text
+                style={item.myState.hasLiked ? [s.bold, s.pink3] : undefined}>
                 {item.likeCount}
               </Text>
             </TouchableOpacity>
@@ -154,10 +155,9 @@ export const Post = observer(function Post({uri}: {uri: string}) {
 
 const styles = StyleSheet.create({
   outer: {
-    borderWidth: 1,
-    borderColor: '#e8e8e8',
+    marginTop: 1,
     borderRadius: 4,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     padding: 10,
   },
   layout: {
@@ -198,14 +198,14 @@ const styles = StyleSheet.create({
   },
   ctrlIcon: {
     marginRight: 5,
-    color: 'gray',
+    color: colors.gray5,
   },
   ctrlIconReposted: {
     marginRight: 5,
-    color: 'green',
+    color: colors.green3,
   },
   ctrlIconLiked: {
     marginRight: 5,
-    color: 'red',
+    color: colors.pink3,
   },
 })
