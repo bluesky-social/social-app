@@ -1,27 +1,10 @@
-import React, {
-  forwardRef,
-  useState,
-  useMemo,
-  useImperativeHandle,
-  useRef,
-} from 'react'
-import {
-  Button,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
-import BottomSheet, {BottomSheetBackdropProps} from '@gorhom/bottom-sheet'
-import Animated, {
-  Extrapolate,
-  interpolate,
-  useAnimatedStyle,
-} from 'react-native-reanimated'
+import React, {forwardRef, useState, useImperativeHandle, useRef} from 'react'
+import {Button, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import BottomSheet from '@gorhom/bottom-sheet'
 import Toast from '../util/Toast'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {s} from '../../lib/styles'
+import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 
 export const ShareModal = forwardRef(function ShareModal({}: {}, ref) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -33,14 +16,13 @@ export const ShareModal = forwardRef(function ShareModal({}: {}, ref) {
       console.log('sharing', uri)
       setUri(uri)
       setIsOpen(true)
+      bottomSheetRef.current?.expand()
     },
   }))
 
   const onPressCopy = () => {
     Clipboard.setString(uri)
     console.log('showing')
-    console.log(Toast)
-    console.log(Toast.show)
     Toast.show('Link copied', {
       position: Toast.positions.TOP,
     })
@@ -55,50 +37,25 @@ export const ShareModal = forwardRef(function ShareModal({}: {}, ref) {
     bottomSheetRef.current?.close()
   }
 
-  const CustomBackdrop = ({animatedIndex, style}: BottomSheetBackdropProps) => {
-    // animated variables
-    const opacity = useAnimatedStyle(() => ({
-      opacity: interpolate(
-        animatedIndex.value, // current snap index
-        [-1, 0], // input range
-        [0, 0.5], // output range
-        Extrapolate.CLAMP,
-      ),
-    }))
-
-    const containerStyle = useMemo(
-      () => [style, {backgroundColor: '#000'}, opacity],
-      [style, opacity],
-    )
-
-    return (
-      <TouchableWithoutFeedback onPress={onClose}>
-        <Animated.View style={containerStyle} />
-      </TouchableWithoutFeedback>
-    )
-  }
   return (
-    <>
-      {isOpen && (
-        <BottomSheet
-          ref={bottomSheetRef}
-          snapPoints={['50%']}
-          enablePanDownToClose
-          backdropComponent={CustomBackdrop}
-          onChange={onShareBottomSheetChange}>
-          <View>
-            <Text style={[s.textCenter, s.bold, s.mb10]}>Share this post</Text>
-            <Text style={[s.textCenter, s.mb10]}>{uri}</Text>
-            <Button title="Copy to clipboard" onPress={onPressCopy} />
-            <View style={s.p10}>
-              <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-                <Text style={s.textCenter}>Close</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </BottomSheet>
-      )}
-    </>
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={-1}
+      snapPoints={['50%']}
+      enablePanDownToClose
+      backdropComponent={isOpen ? createCustomBackdrop(onClose) : undefined}
+      onChange={onShareBottomSheetChange}>
+      <View>
+        <Text style={[s.textCenter, s.bold, s.mb10]}>Share this post</Text>
+        <Text style={[s.textCenter, s.mb10]}>{uri}</Text>
+        <Button title="Copy to clipboard" onPress={onPressCopy} />
+        <View style={s.p10}>
+          <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
+            <Text style={s.textCenter}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </BottomSheet>
   )
 })
 

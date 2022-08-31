@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {OnNavigateContent} from '../../routes/types'
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {useStores} from '../../../state'
 import {pluralize} from '../../lib/strings'
@@ -19,10 +18,8 @@ import Toast from '../util/Toast'
 
 export const ProfileHeader = observer(function ProfileHeader({
   user,
-  onNavigateContent,
 }: {
   user: string
-  onNavigateContent: OnNavigateContent
 }) {
   const store = useStores()
   const [view, setView] = useState<ProfileViewModel | undefined>()
@@ -55,10 +52,10 @@ export const ProfileHeader = observer(function ProfileHeader({
     )
   }
   const onPressFollowers = () => {
-    onNavigateContent('ProfileFollowers', {name: user})
+    store.nav.navigate(`/profile/${user}/followers`)
   }
   const onPressFollows = () => {
-    onNavigateContent('ProfileFollows', {name: user})
+    store.nav.navigate(`/profile/${user}/follows`)
   }
 
   // loading

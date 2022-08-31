@@ -1,13 +1,11 @@
 import React from 'react'
 import {Pressable, View, StyleSheet} from 'react-native'
-import {Link} from '@react-navigation/native'
-import {useRoute} from '@react-navigation/native'
 
 export const NavItem: React.FC<{label: string; screen: string}> = ({
   label,
   screen,
 }) => {
-  const route = useRoute()
+  const Link = <></> // TODO
   return (
     <View>
       <Pressable
@@ -18,7 +16,7 @@ export const NavItem: React.FC<{label: string; screen: string}> = ({
         <Link
           style={[
             styles.navItemLink,
-            route.name === screen && styles.navItemLinkSelected,
+            false /* TODO route.name === screen*/ && styles.navItemLinkSelected,
           ]}
           to={{screen, params: {}}}>
           {label}

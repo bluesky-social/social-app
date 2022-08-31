@@ -12,3 +12,6 @@ Paul's todo list
   - Reposted by
   - Followers list
   - Follows list
+- Navigation
+  - Restore all functionality that was disabled during the refactor
+  - Reduce extraneous triggers of useLoadEffect

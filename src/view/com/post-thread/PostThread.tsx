@@ -1,8 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, Text, View} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
-import {OnNavigateContent} from '../../routes/types'
 import {
   PostThreadViewModel,
   PostThreadViewPostModel,
@@ -14,13 +12,7 @@ import {s} from '../../lib/styles'
 
 const UPDATE_DELAY = 2e3 // wait 2s before refetching the thread for updates
 
-export const PostThread = observer(function PostThread({
-  uri,
-  onNavigateContent,
-}: {
-  uri: string
-  onNavigateContent: OnNavigateContent
-}) {
+export const PostThread = observer(function PostThread({uri}: {uri: string}) {
   const store = useStores()
   const [view, setView] = useState<PostThreadViewModel | undefined>()
   const [lastUpdate, setLastUpdate] = useState<number>(Date.now())
@@ -37,12 +29,13 @@ export const PostThread = observer(function PostThread({
     newView.setup().catch(err => console.error('Failed to fetch thread', err))
   }, [uri, view?.params.uri, store])
 
-  useFocusEffect(() => {
-    if (Date.now() - lastUpdate > UPDATE_DELAY) {
-      view?.update()
-      setLastUpdate(Date.now())
-    }
-  })
+  // TODO
+  // useFocusEffect(() => {
+  //   if (Date.now() - lastUpdate > UPDATE_DELAY) {
+  //     view?.update()
+  //     setLastUpdate(Date.now())
+  //   }
+  // })
 
   const onPressShare = (uri: string) => {
     shareSheetRef.current?.open(uri)
@@ -79,11 +72,7 @@ export const PostThread = observer(function PostThread({
   // =
   const posts = view.thread ? Array.from(flattenThread(view.thread)) : []
   const renderItem = ({item}: {item: PostThreadViewPostModel}) => (
-    <PostThreadItem
-      item={item}
-      onNavigateContent={onNavigateContent}
-      onPressShare={onPressShare}
-    />
+    <PostThreadItem item={item} onPressShare={onPressShare} />
   )
   return (
     <View style={s.h100pct}>

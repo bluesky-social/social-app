@@ -3,39 +3,31 @@ import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {bsky, AdxUri} from '@adxp/mock-api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {OnNavigateContent} from '../../routes/types'
 import {FeedViewItemModel} from '../../../state/models/feed-view'
 import {s} from '../../lib/styles'
 import {ago} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
+import {useStores} from '../../../state'
 
 export const FeedItem = observer(function FeedItem({
   item,
-  onNavigateContent,
   onPressShare,
 }: {
   item: FeedViewItemModel
-  onNavigateContent: OnNavigateContent
   onPressShare: (_uri: string) => void
 }) {
+  const store = useStores()
   const record = item.record as unknown as bsky.Post.Record
 
   const onPressOuter = () => {
     const urip = new AdxUri(item.uri)
-    onNavigateContent('PostThread', {
-      name: item.author.name,
-      recordKey: urip.recordKey,
-    })
+    store.nav.navigate(`/profile/${item.author.name}/post/${urip.recordKey}`)
   }
   const onPressAuthor = () => {
-    onNavigateContent('Profile', {
-      name: item.author.name,
-    })
+    store.nav.navigate(`/profile/${item.author.name}`)
   }
   const onPressReply = () => {
-    onNavigateContent('Composer', {
-      replyTo: item.uri,
-    })
+    store.nav.navigate('/composer')
   }
   const onPressToggleRepost = () => {
     item
@@ -137,8 +129,11 @@ export const FeedItem = observer(function FeedItem({
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: 1,
-    borderTopColor: '#e8e8e8',
+    // borderWidth: 1,
+    // borderColor: '#e8e8e8',
+    borderRadius: 10,
+    margin: 2,
+    marginBottom: 0,
     backgroundColor: '#fff',
     padding: 10,
   },
@@ -175,6 +170,7 @@ const styles = StyleSheet.create({
   },
   postText: {
     paddingBottom: 5,
+    fontFamily: 'Helvetica Neue',
   },
   ctrls: {
     flexDirection: 'row',

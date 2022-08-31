@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {OnNavigateContent} from '../../routes/types'
 import {
   RepostedByViewModel,
   RepostedByViewItemModel,
@@ -20,10 +19,8 @@ import {AVIS} from '../../lib/assets'
 
 export const PostRepostedBy = observer(function PostRepostedBy({
   uri,
-  onNavigateContent,
 }: {
   uri: string
-  onNavigateContent: OnNavigateContent
 }) {
   const store = useStores()
   const [view, setView] = useState<RepostedByViewModel | undefined>()
@@ -68,7 +65,7 @@ export const PostRepostedBy = observer(function PostRepostedBy({
   // loaded
   // =
   const renderItem = ({item}: {item: RepostedByViewItemModel}) => (
-    <RepostedByItem item={item} onNavigateContent={onNavigateContent} />
+    <RepostedByItem item={item} />
   )
   return (
     <View>
@@ -81,17 +78,10 @@ export const PostRepostedBy = observer(function PostRepostedBy({
   )
 })
 
-const RepostedByItem = ({
-  item,
-  onNavigateContent,
-}: {
-  item: RepostedByViewItemModel
-  onNavigateContent: OnNavigateContent
-}) => {
+const RepostedByItem = ({item}: {item: RepostedByViewItemModel}) => {
+  const store = useStores()
   const onPressOuter = () => {
-    onNavigateContent('Profile', {
-      name: item.name,
-    })
+    store.nav.navigate(`/profile/${item.name}`)
   }
   return (
     <TouchableOpacity style={styles.outer} onPress={onPressOuter}>

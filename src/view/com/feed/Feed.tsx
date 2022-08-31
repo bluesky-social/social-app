@@ -1,18 +1,11 @@
 import React, {useRef} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Text, View, FlatList} from 'react-native'
-import {OnNavigateContent} from '../../routes/types'
 import {FeedViewModel, FeedViewItemModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
 import {ShareModal} from '../modals/SharePost'
 
-export const Feed = observer(function Feed({
-  feed,
-  onNavigateContent,
-}: {
-  feed: FeedViewModel
-  onNavigateContent: OnNavigateContent
-}) {
+export const Feed = observer(function Feed({feed}: {feed: FeedViewModel}) {
   const shareSheetRef = useRef<{open: (_uri: string) => void}>()
 
   const onPressShare = (uri: string) => {
@@ -23,11 +16,7 @@ export const Feed = observer(function Feed({
   //   renderItem function renders components that follow React performance best practices
   //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = ({item}: {item: FeedViewItemModel}) => (
-    <FeedItem
-      item={item}
-      onNavigateContent={onNavigateContent}
-      onPressShare={onPressShare}
-    />
+    <FeedItem item={item} onPressShare={onPressShare} />
   )
   const onRefresh = () => {
     feed.refresh().catch(err => console.error('Failed to refresh', err))
