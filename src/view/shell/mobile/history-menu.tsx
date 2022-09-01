@@ -36,6 +36,7 @@ export function createBackMenu(tab: NavigationTabModel): RootSiblings {
   )
   return sibling
 }
+
 export function createForwardMenu(tab: NavigationTabModel): RootSiblings {
   const onPressItem = (index: number) => {
     sibling.destroy()

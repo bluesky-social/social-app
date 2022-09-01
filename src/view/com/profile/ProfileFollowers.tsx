@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   avi: {
     width: 40,
     height: 40,
-    borderRadius: 30,
+    borderRadius: 20,
     resizeMode: 'cover',
   },
   layoutContent: {
