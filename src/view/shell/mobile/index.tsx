@@ -112,11 +112,11 @@ export const MobileShell: React.FC = observer(() => {
         </TouchableOpacity>
       </View>
       <SafeAreaView style={styles.innerContainer}>
-        <ScreenContainer>
+        <ScreenContainer style={styles.screenContainer}>
           {screenRenderDesc.screens.map(({Com, params, key, activityState}) => (
             <Screen
               key={key}
-              style={styles.screen}
+              style={[StyleSheet.absoluteFill, styles.screen]}
               activityState={activityState}>
               <Com params={params} />
             </Screen>
@@ -177,7 +177,7 @@ function constructScreenRenderDesc(nav: NavigationModel): {
       return Object.assign(matchRes, {
         key: `t${tab.id}-s${screen.index}`,
         activityState: isCurrent ? 2 : 0,
-      })
+      }) as ScreenRenderDesc
     })
     screens = screens.concat(parsedTabScreens)
   }
@@ -192,6 +192,9 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   innerContainer: {
+    flex: 1,
+  },
+  screenContainer: {
     flex: 1,
   },
   screen: {
