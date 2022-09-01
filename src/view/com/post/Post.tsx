@@ -136,7 +136,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
                 icon={[item.myState.hasLiked ? 'fas' : 'far', 'heart']}
               />
               <Text
-                style={item.myState.hasLiked ? [s.bold, s.pink3] : undefined}>
+                style={item.myState.hasLiked ? [s.bold, s.red3] : undefined}>
                 {item.likeCount}
               </Text>
             </TouchableOpacity>
@@ -164,12 +164,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   layoutAvi: {
-    width: 70,
+    width: 60,
   },
   avi: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     resizeMode: 'cover',
   },
   layoutContent: {
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   meta: {
     flexDirection: 'row',
     paddingTop: 2,
-    paddingBottom: 4,
+    paddingBottom: 2,
   },
   metaItem: {
     paddingRight: 5,
@@ -206,6 +206,6 @@ const styles = StyleSheet.create({
   },
   ctrlIconLiked: {
     marginRight: 5,
-    color: colors.pink3,
+    color: colors.red3,
   },
 })

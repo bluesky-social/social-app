@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   meta: {
     flexDirection: 'row',
     paddingTop: 6,
-    paddingBottom: 4,
+    paddingBottom: 2,
   },
   metaItem: {
     paddingRight: 3,

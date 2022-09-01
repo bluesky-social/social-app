@@ -81,8 +81,9 @@ export const FeedItem = observer(function FeedItem({
               <FontAwesomeIcon
                 style={styles.ctrlIcon}
                 icon={['far', 'comment']}
+                size={14}
               />
-              <Text>{item.replyCount}</Text>
+              <Text style={s.f13}>{item.replyCount}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.ctrl} onPress={onPressToggleRepost}>
               <FontAwesomeIcon
@@ -92,11 +93,11 @@ export const FeedItem = observer(function FeedItem({
                     : styles.ctrlIcon
                 }
                 icon="retweet"
-                size={22}
+                size={18}
               />
               <Text
                 style={
-                  item.myState.hasReposted ? [s.bold, s.green3] : undefined
+                  item.myState.hasReposted ? [s.bold, s.green3, s.f13] : s.f13
                 }>
                 {item.repostCount}
               </Text>
@@ -107,9 +108,10 @@ export const FeedItem = observer(function FeedItem({
                   item.myState.hasLiked ? styles.ctrlIconLiked : styles.ctrlIcon
                 }
                 icon={[item.myState.hasLiked ? 'fas' : 'far', 'heart']}
+                size={14}
               />
               <Text
-                style={item.myState.hasLiked ? [s.bold, s.pink3] : undefined}>
+                style={item.myState.hasLiked ? [s.bold, s.red3, s.f13] : s.f13}>
                 {item.likeCount}
               </Text>
             </TouchableOpacity>
@@ -119,6 +121,7 @@ export const FeedItem = observer(function FeedItem({
               <FontAwesomeIcon
                 style={styles.ctrlIcon}
                 icon="share-from-square"
+                size={14}
               />
             </TouchableOpacity>
           </View>
@@ -140,7 +143,7 @@ const styles = StyleSheet.create({
   },
   repostedBy: {
     flexDirection: 'row',
-    paddingLeft: 70,
+    paddingLeft: 60,
   },
   repostedByIcon: {
     marginRight: 2,
@@ -150,12 +153,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   layoutAvi: {
-    width: 70,
+    width: 60,
+    paddingTop: 5,
   },
   avi: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     resizeMode: 'cover',
   },
   layoutContent: {
@@ -164,7 +168,7 @@ const styles = StyleSheet.create({
   meta: {
     flexDirection: 'row',
     paddingTop: 2,
-    paddingBottom: 4,
+    paddingBottom: 2,
   },
   metaItem: {
     paddingRight: 5,
@@ -193,6 +197,6 @@ const styles = StyleSheet.create({
   },
   ctrlIconLiked: {
     marginRight: 5,
-    color: colors.pink3,
+    color: colors.red3,
   },
 })

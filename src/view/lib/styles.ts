@@ -17,6 +17,12 @@ export const colors = {
   blue4: '#0062bd',
   blue5: '#034581',
 
+  red1: '#ffe6f2',
+  red2: '#fba2ce',
+  red3: '#ec4899',
+  red4: '#d1106f',
+  red5: '#97074e',
+
   pink1: '#f8ccff',
   pink2: '#e966ff',
   pink3: '#db00ff',
@@ -34,6 +40,10 @@ export const colors = {
   green3: '#20bc07',
   green4: '#148203',
   green5: '#082b03',
+}
+
+export const gradients = {
+  primary: {start: '#db00ff', end: '#ff007a'},
 }
 
 export const s = StyleSheet.create({
@@ -127,6 +137,12 @@ export const s = StyleSheet.create({
   blue3: {color: colors.blue3},
   blue4: {color: colors.blue4},
   blue5: {color: colors.blue5},
+
+  red1: {color: colors.red1},
+  red2: {color: colors.red2},
+  red3: {color: colors.red3},
+  red4: {color: colors.red4},
+  red5: {color: colors.red5},
 
   pink1: {color: colors.pink1},
   pink2: {color: colors.pink2},
