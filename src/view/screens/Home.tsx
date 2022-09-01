@@ -1,53 +1,31 @@
-import React, {useState, useEffect, useLayoutEffect} from 'react'
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import React, {useState, useEffect} from 'react'
+import {View} from 'react-native'
 import {Feed} from '../com/feed/Feed'
 import {FAB} from '../com/util/FloatingActionButton'
 import {useStores} from '../../state'
-import {useLoadEffect} from '../lib/navigation'
-import {AVIS} from '../lib/assets'
+import {FeedViewModel} from '../../state/models/feed-view'
 import {ScreenParams} from '../routes'
 
-export function Home({params}: ScreenParams) {
+export function Home({visible}: ScreenParams) {
   const [hasSetup, setHasSetup] = useState<boolean>(false)
+  const [feedView, setFeedView] = useState<FeedViewModel | undefined>()
   const store = useStores()
-  useLoadEffect(() => {
-    store.nav.setTitle('Home')
-    console.log('Fetching home feed')
-    store.homeFeed.setup().then(() => setHasSetup(true))
-  }, [store.nav, store.homeFeed])
 
-  // TODO
-  // useEffect(() => {
-  //   return navigation.addListener('focus', () => {
-  //     if (hasSetup) {
-  //       console.log('Updating home feed')
-  //       store.homeFeed.update()
-  //     }
-  //   })
-  // }, [navigation, store.homeFeed, hasSetup])
-
-  // TODO
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerShown: true,
-  //     headerTitle: 'V I B E',
-  //     headerLeft: () => (
-  //       <TouchableOpacity
-  //         onPress={() => navigation.push('Profile', {name: 'alice.com'})}>
-  //         <Image source={AVIS['alice.com']} style={styles.avi} />
-  //       </TouchableOpacity>
-  //     ),
-  //     headerRight: () => (
-  //       <TouchableOpacity
-  //         onPress={() => {
-  //           navigation.push('Composer', {})
-  //         }}>
-  //         <FontAwesomeIcon icon="plus" style={{color: '#006bf7'}} />
-  //       </TouchableOpacity>
-  //     ),
-  //   })
-  // }, [navigation])
+  useEffect(() => {
+    if (!visible) {
+      return
+    }
+    if (hasSetup) {
+      console.log('Updating home feed')
+      feedView?.update()
+    } else {
+      store.nav.setTitle('Home')
+      console.log('Fetching home feed')
+      const newFeedView = new FeedViewModel(store, {})
+      setFeedView(newFeedView)
+      newFeedView.setup().then(() => setHasSetup(true))
+    }
+  }, [visible, store])
 
   const onComposePress = () => {
     store.nav.navigate('/compose')
@@ -55,17 +33,8 @@ export function Home({params}: ScreenParams) {
 
   return (
     <View>
-      <Feed feed={store.homeFeed} />
+      {feedView && <Feed feed={feedView} />}
       <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  avi: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    resizeMode: 'cover',
-  },
-})

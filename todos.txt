@@ -12,6 +12,6 @@ Paul's todo list
   - Reposted by
   - Followers list
   - Follows list
-- Navigation
-  - Restore all functionality that was disabled during the refactor
-  - Reduce extraneous triggers of useLoadEffect
+- Bugs
+  - Check that sub components arent reloading too much
+  - Check that caching is choosing the right views

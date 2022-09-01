@@ -1,24 +1,17 @@
-import React, {useLayoutEffect} from 'react'
-import {TouchableOpacity} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import React, {useEffect} from 'react'
 import {ProfileFollows as ProfileFollowsComponent} from '../com/profile/ProfileFollows'
 import {ScreenParams} from '../routes'
+import {useStores} from '../../state'
 
-export const ProfileFollows = ({params}: ScreenParams) => {
+export const ProfileFollows = ({visible, params}: ScreenParams) => {
+  const store = useStores()
   const {name} = params
 
-  // TODO
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerShown: true,
-  //     headerTitle: 'Following',
-  //     headerLeft: () => (
-  //       <TouchableOpacity onPress={() => navigation.goBack()}>
-  //         <FontAwesomeIcon icon="arrow-left" />
-  //       </TouchableOpacity>
-  //     ),
-  //   })
-  // }, [navigation])
+  useEffect(() => {
+    if (visible) {
+      store.nav.setTitle('Followers of')
+    }
+  }, [store, visible])
 
   return <ProfileFollowsComponent name={name} />
 }

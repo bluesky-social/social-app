@@ -27,7 +27,6 @@ export async function setupState() {
   // track changes & save to storage
   autorun(() => {
     const snapshot = rootStore.serialize()
-    console.log('saving', snapshot)
     storage.save(ROOT_STATE_STORAGE_KEY, snapshot)
   })
 

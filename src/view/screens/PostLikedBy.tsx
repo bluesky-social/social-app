@@ -1,26 +1,19 @@
-import React, {useLayoutEffect} from 'react'
-import {TouchableOpacity} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import React, {useEffect} from 'react'
 import {makeRecordUri} from '../lib/strings'
 import {PostLikedBy as PostLikedByComponent} from '../com/post-thread/PostLikedBy'
 import {ScreenParams} from '../routes'
+import {useStores} from '../../state'
 
-export const PostLikedBy = ({params}: ScreenParams) => {
+export const PostLikedBy = ({visible, params}: ScreenParams) => {
+  const store = useStores()
   const {name, recordKey} = params
   const uri = makeRecordUri(name, 'blueskyweb.xyz:Posts', recordKey)
 
-  // TODO
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerShown: true,
-  //     headerTitle: 'Liked By',
-  //     headerLeft: () => (
-  //       <TouchableOpacity onPress={() => navigation.goBack()}>
-  //         <FontAwesomeIcon icon="arrow-left" />
-  //       </TouchableOpacity>
-  //     ),
-  //   })
-  // }, [navigation])
+  useEffect(() => {
+    if (visible) {
+      store.nav.setTitle('Liked by')
+    }
+  }, [store, visible])
 
   return <PostLikedByComponent uri={uri} />
 }

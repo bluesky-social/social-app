@@ -113,12 +113,12 @@ export const MobileShell: React.FC = observer(() => {
       </View>
       <SafeAreaView style={styles.innerContainer}>
         <ScreenContainer style={styles.screenContainer}>
-          {screenRenderDesc.screens.map(({Com, params, key, activityState}) => (
+          {screenRenderDesc.screens.map(({Com, params, key, visible}) => (
             <Screen
               key={key}
               style={[StyleSheet.absoluteFill, styles.screen]}
-              activityState={activityState}>
-              <Com params={params} />
+              activityState={visible ? 2 : 0}>
+              <Com params={params} visible={visible} />
             </Screen>
           ))}
         </ScreenContainer>
@@ -156,7 +156,7 @@ export const MobileShell: React.FC = observer(() => {
  * This method produces the information needed by the shell to
  * render the current screens with screen-caching behaviors.
  */
-type ScreenRenderDesc = MatchResult & {key: string; activityState: 0 | 1 | 2}
+type ScreenRenderDesc = MatchResult & {key: string; visible: boolean}
 function constructScreenRenderDesc(nav: NavigationModel): {
   icon: IconProp
   screens: ScreenRenderDesc[]
@@ -176,7 +176,7 @@ function constructScreenRenderDesc(nav: NavigationModel): {
       }
       return Object.assign(matchRes, {
         key: `t${tab.id}-s${screen.index}`,
-        activityState: isCurrent ? 2 : 0,
+        visible: isCurrent,
       }) as ScreenRenderDesc
     })
     screens = screens.concat(parsedTabScreens)
