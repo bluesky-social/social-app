@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useState, useRef} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   GestureResponderEvent,
@@ -16,16 +16,25 @@ import {useStores} from '../../../state'
 import {NavigationModel} from '../../../state/models/navigation'
 import {match, MatchResult} from '../../routes'
 import {TabsSelectorModal} from './tabs-selector'
+import {LocationMenu} from './location-menu'
 import {createBackMenu, createForwardMenu} from './history-menu'
 import {colors} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
 
 const locationIconNeedsNudgeUp = (icon: IconProp) => icon === 'house'
 
-const Location = ({icon, title}: {icon: IconProp; title?: string}) => {
+const Location = ({
+  icon,
+  title,
+  onPress,
+}: {
+  icon: IconProp
+  title?: string
+  onPress?: (event: GestureResponderEvent) => void
+}) => {
   const nudgeUp = locationIconNeedsNudgeUp(icon)
   return (
-    <TouchableOpacity style={styles.location}>
+    <TouchableOpacity style={styles.location} onPress={onPress}>
       {title ? (
         <FontAwesomeIcon
           size={12}
@@ -84,7 +93,15 @@ const Btn = ({
 export const MobileShell: React.FC = observer(() => {
   const stores = useStores()
   const tabSelectorRef = useRef<{open: () => void}>()
+  const [isLocationMenuActive, setLocationMenuActive] = useState(false)
   const screenRenderDesc = constructScreenRenderDesc(stores.nav)
+
+  const onPressLocation = () => setLocationMenuActive(true)
+  const onNavigateLocationMenu = (url: string) => {
+    setLocationMenuActive(false)
+    stores.nav.navigate(url)
+  }
+  const onDismissLocationMenu = () => setLocationMenuActive(false)
 
   const onPressBack = () => stores.nav.tab.goBack()
   const onPressForward = () => stores.nav.tab.goForward()
@@ -102,10 +119,11 @@ export const MobileShell: React.FC = observer(() => {
   return (
     <View style={styles.outerContainer}>
       <View style={styles.topBar}>
-        <Image style={styles.avi} source={AVIS['carla.com']} />
+        <Image style={styles.avi} source={AVIS['alice.com']} />
         <Location
           icon={screenRenderDesc.icon}
           title={stores.nav.tab.current.title}
+          onPress={onPressLocation}
         />
         <TouchableOpacity style={styles.topBarBtn}>
           <FontAwesomeIcon icon="ellipsis" />
@@ -148,6 +166,13 @@ export const MobileShell: React.FC = observer(() => {
         onChangeTab={onChangeTab}
         onCloseTab={onCloseTab}
       />
+      {isLocationMenuActive && (
+        <LocationMenu
+          url={stores.nav.tab.current.url}
+          onNavigate={onNavigateLocationMenu}
+          onDismiss={onDismissLocationMenu}
+        />
+      )}
     </View>
   )
 })
