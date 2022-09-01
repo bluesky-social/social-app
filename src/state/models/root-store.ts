@@ -9,15 +9,11 @@ import {isObj, hasProp} from '../lib/type-guards'
 import {SessionModel} from './session'
 import {NavigationModel} from './navigation'
 import {MeModel} from './me'
-import {FeedViewModel} from './feed-view'
-import {NotificationsViewModel} from './notifications-view'
 
 export class RootStoreModel {
   session = new SessionModel()
   nav = new NavigationModel()
   me = new MeModel(this)
-  homeFeed = new FeedViewModel(this, {})
-  notesFeed = new NotificationsViewModel(this, {})
 
   constructor(public api: AdxClient) {
     makeAutoObservable(this, {

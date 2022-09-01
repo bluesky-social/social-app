@@ -16,6 +16,7 @@ import {ProfileFollows} from './screens/ProfileFollows'
 
 export type ScreenParams = {
   params: Record<string, any>
+  visible: boolean
 }
 export type Route = [React.FC<ScreenParams>, IconProp, RegExp]
 export type MatchResult = {
