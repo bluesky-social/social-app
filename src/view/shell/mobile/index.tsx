@@ -2,6 +2,7 @@ import React, {useRef} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   GestureResponderEvent,
+  Image,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -17,15 +18,26 @@ import {match, MatchResult} from '../../routes'
 import {TabsSelectorModal} from './tabs-selector'
 import {createBackMenu, createForwardMenu} from './history-menu'
 import {colors} from '../../lib/styles'
+import {AVIS} from '../../lib/assets'
+
+const locationIconNeedsNudgeUp = (icon: IconProp) => icon === 'house'
 
 const Location = ({icon, title}: {icon: IconProp; title?: string}) => {
+  const nudgeUp = locationIconNeedsNudgeUp(icon)
   return (
     <TouchableOpacity style={styles.location}>
       {title ? (
-        <FontAwesomeIcon size={16} style={styles.locationIcon} icon={icon} />
+        <FontAwesomeIcon
+          size={12}
+          style={[
+            styles.locationIcon,
+            nudgeUp ? styles.locationIconNudgeUp : undefined,
+          ]}
+          icon={icon}
+        />
       ) : (
         <FontAwesomeIcon
-          size={16}
+          size={12}
           style={styles.locationIconLight}
           icon="magnifying-glass"
         />
@@ -90,10 +102,14 @@ export const MobileShell: React.FC = observer(() => {
   return (
     <View style={styles.outerContainer}>
       <View style={styles.topBar}>
+        <Image style={styles.avi} source={AVIS['carla.com']} />
         <Location
           icon={screenRenderDesc.icon}
           title={stores.nav.tab.current.title}
         />
+        <TouchableOpacity style={styles.topBarBtn}>
+          <FontAwesomeIcon icon="ellipsis" />
+        </TouchableOpacity>
       </View>
       <SafeAreaView style={styles.innerContainer}>
         <ScreenContainer>
@@ -191,22 +207,34 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     paddingBottom: 5,
   },
+  avi: {
+    width: 28,
+    height: 28,
+    marginRight: 8,
+    borderRadius: 14,
+  },
   location: {
     flex: 1,
     flexDirection: 'row',
-    borderRadius: 4,
+    borderRadius: 6,
     paddingLeft: 10,
     paddingRight: 6,
     paddingTop: 6,
     paddingBottom: 6,
-    backgroundColor: '#F8F3F3',
+    backgroundColor: colors.gray1,
+    // justifyContent: 'center',
   },
   locationIcon: {
-    color: colors.pink3,
-    marginRight: 8,
+    color: colors.gray5,
+    marginTop: 3,
+    marginRight: 6,
+  },
+  locationIconNudgeUp: {
+    marginTop: 2,
   },
   locationIconLight: {
-    color: colors.gray3,
+    color: colors.gray5,
+    marginTop: 2,
     marginRight: 8,
   },
   locationText: {
@@ -214,6 +242,12 @@ const styles = StyleSheet.create({
   },
   locationTextLight: {
     color: colors.gray4,
+  },
+  topBarBtn: {
+    marginLeft: 8,
+    justifyContent: 'center',
+    borderRadius: 6,
+    paddingHorizontal: 6,
   },
   bottomBar: {
     flexDirection: 'row',
