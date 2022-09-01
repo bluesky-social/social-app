@@ -14,4 +14,3 @@ Paul's todo list
   - Follows list
 - Bugs
   - Check that sub components arent reloading too much
-  - Check that caching is choosing the right views
