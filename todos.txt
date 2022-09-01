@@ -15,5 +15,3 @@ Paul's todo list
 - Navigation
   - Restore all functionality that was disabled during the refactor
   - Reduce extraneous triggers of useLoadEffect
-- Bugs
-  - Home screen goes white sometimes, not sure why (possibly related to multiple active instances of the screen)
