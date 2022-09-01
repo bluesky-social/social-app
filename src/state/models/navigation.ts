@@ -41,7 +41,7 @@ export class NavigationTabModel {
 
   getBackList(n: number) {
     const start = Math.max(this.index - n, 0)
-    const end = Math.min(this.index, n)
+    const end = this.index
     return this.history.slice(start, end).map((item, i) => ({
       url: item.url,
       title: item.title,
