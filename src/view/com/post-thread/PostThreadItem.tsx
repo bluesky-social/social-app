@@ -9,14 +9,6 @@ import {ago, pluralize} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
 import {useStores} from '../../../state'
 
-function iter<T>(n: number, fn: (_i: number) => T): Array<T> {
-  const arr: T[] = []
-  for (let i = 0; i < n; i++) {
-    arr.push(fn(i))
-  }
-  return arr
-}
-
 export const PostThreadItem = observer(function PostThreadItem({
   item,
   onPressShare,
@@ -61,41 +53,83 @@ export const PostThreadItem = observer(function PostThreadItem({
       .catch(e => console.error('Failed to toggle like', record, e))
   }
 
-  return (
-    <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
-      <View style={styles.layout}>
-        {iter(Math.abs(item._depth), (i: number) => (
-          <View key={i} style={styles.replyBar} />
-        ))}
-        <TouchableOpacity style={styles.layoutAvi} onPress={onPressAuthor}>
-          <Image
-            style={styles.avi}
-            source={AVIS[item.author.name] || AVIS['alice.com']}
-          />
-        </TouchableOpacity>
-        <View style={styles.layoutContent}>
-          <View style={styles.meta}>
-            <Text
-              style={[styles.metaItem, s.f15, s.bold]}
-              onPress={onPressAuthor}>
-              {item.author.displayName}
-            </Text>
-            <Text
-              style={[styles.metaItem, s.f14, s.gray5]}
-              onPress={onPressAuthor}>
-              @{item.author.name}
-            </Text>
-            <Text style={[styles.metaItem, s.f14, s.gray5]}>
-              &middot; {ago(item.indexedAt)}
-            </Text>
+  const Ctrls = () => (
+    <View style={styles.ctrls}>
+      <TouchableOpacity style={styles.ctrl} onPress={onPressReply}>
+        <FontAwesomeIcon
+          style={styles.ctrlIcon}
+          icon={['far', 'comment']}
+          size={14}
+        />
+        <Text style={s.f13}>{item.replyCount}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.ctrl} onPress={onPressToggleRepost}>
+        <FontAwesomeIcon
+          style={
+            item.myState.hasReposted ? styles.ctrlIconReposted : styles.ctrlIcon
+          }
+          icon="retweet"
+          size={18}
+        />
+        <Text
+          style={item.myState.hasReposted ? [s.bold, s.green3, s.f13] : s.f13}>
+          {item.repostCount}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.ctrl} onPress={onPressToggleLike}>
+        <FontAwesomeIcon
+          style={item.myState.hasLiked ? styles.ctrlIconLiked : styles.ctrlIcon}
+          icon={[item.myState.hasLiked ? 'fas' : 'far', 'heart']}
+          size={14}
+        />
+        <Text style={item.myState.hasLiked ? [s.bold, s.red3, s.f13] : s.f13}>
+          {item.likeCount}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.ctrl}
+        onPress={() => onPressShare(item.uri)}>
+        <FontAwesomeIcon
+          style={styles.ctrlIcon}
+          icon="share-from-square"
+          size={14}
+        />
+      </TouchableOpacity>
+    </View>
+  )
+
+  if (item._isHighlightedPost) {
+    return (
+      <View style={styles.outer}>
+        <View style={styles.layout}>
+          <TouchableOpacity style={styles.layoutAvi} onPress={onPressAuthor}>
+            <Image
+              style={styles.avi}
+              source={AVIS[item.author.name] || AVIS['alice.com']}
+            />
+          </TouchableOpacity>
+          <View style={styles.layoutContent}>
+            <View style={[styles.meta, s.mt5]}>
+              <Text
+                style={[styles.metaItem, s.f15, s.bold]}
+                onPress={onPressAuthor}>
+                {item.author.displayName}
+              </Text>
+              <Text style={[styles.metaItem, s.f14, s.gray5]}>
+                &middot; {ago(item.indexedAt)}
+              </Text>
+            </View>
+            <View style={styles.meta}>
+              <Text
+                style={[styles.metaItem, s.f14, s.gray5]}
+                onPress={onPressAuthor}>
+                @{item.author.name}
+              </Text>
+            </View>
           </View>
-          <Text
-            style={[
-              styles.postText,
-              ...(item._isHighlightedPost
-                ? [s.f16, s['lh16-1.3']]
-                : [s.f15, s['lh15-1.3']]),
-            ]}>
+        </View>
+        <View style={[s.pl10, s.pr10, s.pb10]}>
+          <Text style={[styles.postText, s.f18, s['lh18-1.3']]}>
             {record.text}
           </Text>
           {item._isHighlightedPost && hasEngagement ? (
@@ -124,73 +158,58 @@ export const PostThreadItem = observer(function PostThreadItem({
           ) : (
             <></>
           )}
-          <View style={styles.ctrls}>
-            <TouchableOpacity style={styles.ctrl} onPress={onPressReply}>
-              <FontAwesomeIcon
-                style={styles.ctrlIcon}
-                icon={['far', 'comment']}
-                size={14}
-              />
-              <Text style={s.f13}>{item.replyCount}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.ctrl} onPress={onPressToggleRepost}>
-              <FontAwesomeIcon
-                style={
-                  item.myState.hasReposted
-                    ? styles.ctrlIconReposted
-                    : styles.ctrlIcon
-                }
-                icon="retweet"
-                size={18}
-              />
-              <Text
-                style={
-                  item.myState.hasReposted ? [s.bold, s.green3, s.f13] : s.f13
-                }>
-                {item.repostCount}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.ctrl} onPress={onPressToggleLike}>
-              <FontAwesomeIcon
-                style={
-                  item.myState.hasLiked ? styles.ctrlIconLiked : styles.ctrlIcon
-                }
-                icon={[item.myState.hasLiked ? 'fas' : 'far', 'heart']}
-                size={14}
-              />
-              <Text
-                style={item.myState.hasLiked ? [s.bold, s.red3, s.f13] : s.f13}>
-                {item.likeCount}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.ctrl}
-              onPress={() => onPressShare(item.uri)}>
-              <FontAwesomeIcon
-                style={styles.ctrlIcon}
-                icon="share-from-square"
-                size={14}
-              />
-            </TouchableOpacity>
+          <View style={[s.pl10]}>
+            <Ctrls />
           </View>
         </View>
       </View>
-    </TouchableOpacity>
-  )
+    )
+  } else {
+    return (
+      <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
+        <View style={styles.layout}>
+          <TouchableOpacity style={styles.layoutAvi} onPress={onPressAuthor}>
+            <Image
+              style={styles.avi}
+              source={AVIS[item.author.name] || AVIS['alice.com']}
+            />
+          </TouchableOpacity>
+          <View style={styles.layoutContent}>
+            <View style={styles.meta}>
+              <Text
+                style={[styles.metaItem, s.f15, s.bold]}
+                onPress={onPressAuthor}>
+                {item.author.displayName}
+              </Text>
+              <Text
+                style={[styles.metaItem, s.f14, s.gray5]}
+                onPress={onPressAuthor}>
+                @{item.author.name}
+              </Text>
+              <Text style={[styles.metaItem, s.f14, s.gray5]}>
+                &middot; {ago(item.indexedAt)}
+              </Text>
+            </View>
+            <Text style={[styles.postText, s.f15, s['lh15-1.3']]}>
+              {record.text}
+            </Text>
+            <Ctrls />
+          </View>
+        </View>
+      </TouchableOpacity>
+    )
+  }
 })
 
 const styles = StyleSheet.create({
   outer: {
-    marginTop: 1,
     backgroundColor: colors.white,
+    borderRadius: 10,
+    margin: 2,
+    marginBottom: 0,
   },
   layout: {
     flexDirection: 'row',
-  },
-  replyBar: {
-    width: 5,
-    backgroundColor: colors.gray2,
-    marginRight: 2,
   },
   layoutAvi: {
     width: 70,

@@ -133,8 +133,6 @@ export const FeedItem = observer(function FeedItem({
 
 const styles = StyleSheet.create({
   outer: {
-    // borderWidth: 1,
-    // borderColor: '#e8e8e8',
     borderRadius: 10,
     margin: 2,
     marginBottom: 0,
