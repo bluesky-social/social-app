@@ -2,6 +2,7 @@ import React, {useState, useEffect, useLayoutEffect} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Feed} from '../com/feed/Feed'
+import {FAB} from '../com/util/FloatingActionButton'
 import {useStores} from '../../state'
 import {useLoadEffect} from '../lib/navigation'
 import {AVIS} from '../lib/assets'
@@ -48,9 +49,14 @@ export function Home({params}: ScreenParams) {
   //   })
   // }, [navigation])
 
+  const onComposePress = () => {
+    store.nav.navigate('/compose')
+  }
+
   return (
     <View>
       <Feed feed={store.homeFeed} />
+      <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
   )
 }

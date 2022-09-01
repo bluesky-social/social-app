@@ -34,6 +34,7 @@
     "react-native": "0.68.2",
     "react-native-gesture-handler": "^2.5.0",
     "react-native-inappbrowser-reborn": "^3.6.3",
+    "react-native-linear-gradient": "^2.6.2",
     "react-native-progress": "^5.0.0",
     "react-native-reanimated": "^2.9.1",
     "react-native-root-siblings": "^4.1.1",
