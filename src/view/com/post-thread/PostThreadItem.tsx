@@ -5,6 +5,7 @@ import {bsky, AdxUri} from '@adxp/mock-api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
+import {PostDropdownBtn} from '../util/DropdownBtn'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
@@ -119,6 +120,17 @@ export const PostThreadItem = observer(function PostThreadItem({
               <Text style={[styles.metaItem, s.f14, s.gray5]}>
                 &middot; {ago(item.indexedAt)}
               </Text>
+              <View style={s.flex1} />
+              <PostDropdownBtn
+                style={styles.metaItem}
+                itemHref={itemHref}
+                itemTitle={itemTitle}>
+                <FontAwesomeIcon
+                  icon="ellipsis-h"
+                  size={14}
+                  style={[s.mt2, s.mr5]}
+                />
+              </PostDropdownBtn>
             </View>
             <View style={styles.meta}>
               <Link
@@ -199,6 +211,17 @@ export const PostThreadItem = observer(function PostThreadItem({
               <Text style={[styles.metaItem, s.f14, s.gray5]}>
                 &middot; {ago(item.indexedAt)}
               </Text>
+              <View style={s.flex1} />
+              <PostDropdownBtn
+                style={styles.metaItem}
+                itemHref={itemHref}
+                itemTitle={itemTitle}>
+                <FontAwesomeIcon
+                  icon="ellipsis-h"
+                  size={14}
+                  style={[s.mt2, s.mr5]}
+                />
+              </PostDropdownBtn>
             </View>
             <Text style={[styles.postText, s.f15, s['lh15-1.3']]}>
               {record.text}
