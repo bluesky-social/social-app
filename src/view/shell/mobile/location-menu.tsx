@@ -1,176 +1,81 @@
-import React, {useState, useRef} from 'react'
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import React from 'react'
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
+import RootSiblings from 'react-native-root-siblings'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import {s, gradients, colors} from '../../lib/styles'
+import {s, colors} from '../../lib/styles'
 
-export function LocationMenu({
-  url,
-  onNavigate,
-  onDismiss,
-}: {
-  url: string
-  onNavigate: (url: string) => void
-  onDismiss: () => void
-}) {
-  const [searchText, onChangeSearchText] = useState(url !== '/' ? url : '')
-  const inputRef = useRef<TextInput | null>(null)
-
-  const onFocusSearchText = () => {
-    if (inputRef.current && searchText.length) {
-      // select the text on focus
-      inputRef.current.setNativeProps({
-        selection: {start: 0, end: searchText.length},
-      })
-    }
+export function createLocationMenu(): RootSiblings {
+  const onPressItem = (_index: number) => {
+    sibling.destroy()
   }
-
-  const FatMenuItem = ({
-    icon,
-    label,
-    url,
-    gradient,
-  }: {
-    icon: IconProp
-    label: string
-    url: string
-    gradient: keyof typeof gradients
-  }) => (
-    <TouchableOpacity
-      style={styles.fatMenuItem}
-      onPress={() => onNavigate(url)}>
-      <LinearGradient
-        style={[styles.fatMenuItemIconWrapper]}
-        colors={[gradients[gradient].start, gradients[gradient].end]}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}>
-        <FontAwesomeIcon icon={icon} style={styles.fatMenuItemIcon} size={24} />
-      </LinearGradient>
-      <Text style={styles.fatMenuItemLabel}>{label}</Text>
-    </TouchableOpacity>
-  )
-
-  const ThinMenuItem = ({label, url}: {label: string; url: string}) => (
-    <TouchableOpacity
-      style={styles.thinMenuItem}
-      onPress={() => onNavigate(url)}>
-      <Text style={styles.thinMenuItemLabel}>{label}</Text>
-    </TouchableOpacity>
-  )
-
-  return (
-    <View style={styles.menu}>
-      <View style={styles.searchContainer}>
-        <FontAwesomeIcon
-          icon="magnifying-glass"
-          size={18}
-          style={styles.searchIcon}
-        />
-        <TextInput
-          autoFocus
-          ref={inputRef}
-          value={searchText}
-          style={styles.searchInput}
-          onChangeText={onChangeSearchText}
-          onFocus={onFocusSearchText}
-        />
-        <TouchableOpacity onPress={() => onDismiss()}>
-          <Text style={[s.blue3, s.f15]}>Cancel</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.menuItemsContainer}>
-        <View style={styles.fatMenuItems}>
-          <FatMenuItem icon="house" label="Feed" url="/" gradient="primary" />
-          <FatMenuItem
-            icon="bell"
-            label="Notifications"
-            url="/notifications"
-            gradient="purple"
-          />
-          <FatMenuItem
-            icon={['far', 'user']}
-            label="My Profile"
-            url="/"
-            gradient="blue"
-          />
-          <FatMenuItem icon="gear" label="Settings" url="/" gradient="blue" />
+  const onOuterPress = () => sibling.destroy()
+  const sibling = new RootSiblings(
+    (
+      <>
+        <TouchableWithoutFeedback onPress={onOuterPress}>
+          <View style={styles.bg} />
+        </TouchableWithoutFeedback>
+        <View style={[styles.menu]}>
+          <TouchableOpacity
+            style={[styles.menuItem]}
+            onPress={() => onPressItem(0)}>
+            <FontAwesomeIcon style={styles.icon} icon="share" />
+            <Text style={styles.label}>Share</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.menuItem, styles.menuItemBorder]}
+            onPress={() => onPressItem(0)}>
+            <FontAwesomeIcon style={styles.icon} icon="link" />
+            <Text style={styles.label}>Copy Link</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.thinMenuItems}>
-          <ThinMenuItem label="Send us feedback" url="/" />
-          <ThinMenuItem label="Get help..." url="/" />
-          <ThinMenuItem label="Settings" url="/" />
-        </View>
-      </View>
-    </View>
+      </>
+    ),
   )
+  return sibling
 }
 
 const styles = StyleSheet.create({
+  bg: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: '#000',
+    opacity: 0.1,
+  },
   menu: {
     position: 'absolute',
-    left: 0,
-    top: 0,
-    width: '100%',
-    height: '100%',
+    right: 4,
+    top: 70,
     backgroundColor: '#fff',
+    borderRadius: 14,
     opacity: 1,
+    paddingVertical: 2,
   },
-  searchContainer: {
+  menuItem: {
     flexDirection: 'row',
-    backgroundColor: colors.gray1,
-    borderBottomWidth: 1,
-    borderColor: colors.gray2,
-    paddingHorizontal: 16,
-    paddingTop: 48,
-    paddingBottom: 8,
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingLeft: 10,
+    paddingRight: 30,
   },
-  searchIcon: {
-    color: colors.gray5,
+  menuItemBorder: {
+    borderTopWidth: 1,
+    borderTopColor: colors.gray1,
+  },
+  icon: {
+    marginLeft: 6,
     marginRight: 8,
   },
-  searchInput: {
-    flex: 1,
-  },
-  menuItemsContainer: {
-    paddingVertical: 30,
-    paddingHorizontal: 8,
-  },
-  fatMenuItems: {
-    flexDirection: 'row',
-    marginBottom: 20,
-  },
-  fatMenuItem: {
-    width: 86,
-    alignItems: 'center',
-    marginRight: 6,
-  },
-  fatMenuItemIconWrapper: {
-    borderRadius: 6,
-    width: 50,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 5,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: {width: 0, height: 2},
-    shadowRadius: 2,
-  },
-  fatMenuItemIcon: {
-    color: colors.white,
-  },
-  fatMenuItemLabel: {
-    fontSize: 12,
-  },
-  thinMenuItems: {
-    paddingHorizontal: 18,
-  },
-  thinMenuItem: {
-    paddingVertical: 4,
-  },
-  thinMenuItemLabel: {
-    color: colors.blue3,
-    fontSize: 16,
+  label: {
+    fontSize: 15,
   },
 })
