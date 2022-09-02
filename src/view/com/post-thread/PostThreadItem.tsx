@@ -1,9 +1,10 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {bsky, AdxUri} from '@adxp/mock-api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
+import {Link} from '../util/Link'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
@@ -20,25 +21,24 @@ export const PostThreadItem = observer(function PostThreadItem({
   const record = item.record as unknown as bsky.Post.Record
   const hasEngagement = item.likeCount || item.repostCount
 
-  const onPressOuter = () => {
+  const itemHref = useMemo(() => {
     const urip = new AdxUri(item.uri)
-    store.nav.navigate(`/profile/${item.author.name}/post/${urip.recordKey}`)
-  }
-  const onPressAuthor = () => {
-    store.nav.navigate(`/profile/${item.author.name}`)
-  }
-  const onPressLikes = () => {
+    return `/profile/${item.author.name}/post/${urip.recordKey}`
+  }, [item.uri, item.author.name])
+  const itemTitle = `Post by ${item.author.name}`
+  const authorHref = `/profile/${item.author.name}`
+  const authorTitle = item.author.name
+  const likesHref = useMemo(() => {
     const urip = new AdxUri(item.uri)
-    store.nav.navigate(
-      `/profile/${item.author.name}/post/${urip.recordKey}/liked-by`,
-    )
-  }
-  const onPressReposts = () => {
+    return `/profile/${item.author.name}/post/${urip.recordKey}/liked-by`
+  }, [item.uri, item.author.name])
+  const likesTitle = 'Likes on this post'
+  const repostsHref = useMemo(() => {
     const urip = new AdxUri(item.uri)
-    store.nav.navigate(
-      `/profile/${item.author.name}/post/${urip.recordKey}/reposted-by`,
-    )
-  }
+    return `/profile/${item.author.name}/post/${urip.recordKey}/reposted-by`
+  }, [item.uri, item.author.name])
+  const repostsTitle = 'Reposts of this post'
+
   const onPressReply = () => {
     store.nav.navigate(`/composer?replyTo=${item.uri}`)
   }
@@ -102,29 +102,31 @@ export const PostThreadItem = observer(function PostThreadItem({
     return (
       <View style={styles.outer}>
         <View style={styles.layout}>
-          <TouchableOpacity style={styles.layoutAvi} onPress={onPressAuthor}>
+          <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
             <Image
               style={styles.avi}
               source={AVIS[item.author.name] || AVIS['alice.com']}
             />
-          </TouchableOpacity>
+          </Link>
           <View style={styles.layoutContent}>
             <View style={[styles.meta, s.mt5]}>
-              <Text
-                style={[styles.metaItem, s.f15, s.bold]}
-                onPress={onPressAuthor}>
-                {item.author.displayName}
-              </Text>
+              <Link
+                style={styles.metaItem}
+                href={authorHref}
+                title={authorTitle}>
+                <Text style={[s.f15, s.bold]}>{item.author.displayName}</Text>
+              </Link>
               <Text style={[styles.metaItem, s.f14, s.gray5]}>
                 &middot; {ago(item.indexedAt)}
               </Text>
             </View>
             <View style={styles.meta}>
-              <Text
-                style={[styles.metaItem, s.f14, s.gray5]}
-                onPress={onPressAuthor}>
-                @{item.author.name}
-              </Text>
+              <Link
+                style={styles.metaItem}
+                href={authorHref}
+                title={authorTitle}>
+                <Text style={[s.f14, s.gray5]}>@{item.author.name}</Text>
+              </Link>
             </View>
           </View>
         </View>
@@ -135,22 +137,28 @@ export const PostThreadItem = observer(function PostThreadItem({
           {item._isHighlightedPost && hasEngagement ? (
             <View style={styles.expandedInfo}>
               {item.repostCount ? (
-                <Text
-                  style={[styles.expandedInfoItem, s.gray5, s.semiBold]}
-                  onPress={onPressReposts}>
-                  <Text style={[s.bold, s.black]}>{item.repostCount}</Text>{' '}
-                  {pluralize(item.repostCount, 'repost')}
-                </Text>
+                <Link
+                  style={styles.expandedInfoItem}
+                  href={repostsHref}
+                  title={repostsTitle}>
+                  <Text style={[s.gray5, s.semiBold]}>
+                    <Text style={[s.bold, s.black]}>{item.repostCount}</Text>{' '}
+                    {pluralize(item.repostCount, 'repost')}
+                  </Text>
+                </Link>
               ) : (
                 <></>
               )}
               {item.likeCount ? (
-                <Text
-                  style={[styles.expandedInfoItem, s.gray5, s.semiBold]}
-                  onPress={onPressLikes}>
-                  <Text style={[s.bold, s.black]}>{item.likeCount}</Text>{' '}
-                  {pluralize(item.likeCount, 'like')}
-                </Text>
+                <Link
+                  style={styles.expandedInfoItem}
+                  href={likesHref}
+                  title={likesTitle}>
+                  <Text style={[s.gray5, s.semiBold]}>
+                    <Text style={[s.bold, s.black]}>{item.likeCount}</Text>{' '}
+                    {pluralize(item.likeCount, 'like')}
+                  </Text>
+                </Link>
               ) : (
                 <></>
               )}
@@ -166,26 +174,28 @@ export const PostThreadItem = observer(function PostThreadItem({
     )
   } else {
     return (
-      <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
+      <Link style={styles.outer} href={itemHref} title={itemTitle}>
         <View style={styles.layout}>
-          <TouchableOpacity style={styles.layoutAvi} onPress={onPressAuthor}>
+          <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
             <Image
               style={styles.avi}
               source={AVIS[item.author.name] || AVIS['alice.com']}
             />
-          </TouchableOpacity>
+          </Link>
           <View style={styles.layoutContent}>
             <View style={styles.meta}>
-              <Text
-                style={[styles.metaItem, s.f15, s.bold]}
-                onPress={onPressAuthor}>
-                {item.author.displayName}
-              </Text>
-              <Text
-                style={[styles.metaItem, s.f14, s.gray5]}
-                onPress={onPressAuthor}>
-                @{item.author.name}
-              </Text>
+              <Link
+                style={styles.metaItem}
+                href={authorHref}
+                title={authorTitle}>
+                <Text style={[s.f15, s.bold]}>{item.author.displayName}</Text>
+              </Link>
+              <Link
+                style={styles.metaItem}
+                href={authorHref}
+                title={authorTitle}>
+                <Text style={[s.f14, s.gray5]}>@{item.author.name}</Text>
+              </Link>
               <Text style={[styles.metaItem, s.f14, s.gray5]}>
                 &middot; {ago(item.indexedAt)}
               </Text>
@@ -196,7 +206,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             <Ctrls />
           </View>
         </View>
-      </TouchableOpacity>
+      </Link>
     )
   }
 })

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {AdxUri} from '@adxp/mock-api'
@@ -9,29 +9,36 @@ import {ago} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
 import {PostText} from '../post/PostText'
 import {Post} from '../post/Post'
-import {useStores} from '../../../state'
+import {Link} from '../util/Link'
 
 export const FeedItem = observer(function FeedItem({
   item,
 }: {
   item: NotificationsViewItemModel
 }) {
-  const store = useStores()
-
-  const onPressOuter = () => {
+  const itemHref = useMemo(() => {
     if (item.isLike || item.isRepost) {
       const urip = new AdxUri(item.subjectUri)
-      store.nav.navigate(`/profile/${urip.host}/post/${urip.recordKey}`)
+      return `/profile/${urip.host}/post/${urip.recordKey}`
     } else if (item.isFollow) {
-      store.nav.navigate(`/profile/${item.author.name}`)
+      return `/profile/${item.author.name}`
     } else if (item.isReply) {
       const urip = new AdxUri(item.uri)
-      store.nav.navigate(`/profile/${urip.host}/post/${urip.recordKey}`)
+      return `/profile/${urip.host}/post/${urip.recordKey}`
     }
-  }
-  const onPressAuthor = () => {
-    store.nav.navigate(`/profile/${item.author.name}`)
-  }
+    return ''
+  }, [item])
+  const itemTitle = useMemo(() => {
+    if (item.isLike || item.isRepost) {
+      return 'Post'
+    } else if (item.isFollow) {
+      return item.author.name
+    } else if (item.isReply) {
+      return 'Post'
+    }
+  }, [item])
+  const authorHref = `/profile/${item.author.name}`
+  const authorTitle = item.author.name
 
   let action = ''
   let icon: Props['icon']
@@ -52,22 +59,20 @@ export const FeedItem = observer(function FeedItem({
   }
 
   return (
-    <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
+    <Link style={styles.outer} href={itemHref} title={itemTitle}>
       <View style={styles.layout}>
-        <TouchableOpacity style={styles.layoutAvi} onPress={onPressAuthor}>
+        <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
           <Image
             style={styles.avi}
             source={AVIS[item.author.name] || AVIS['alice.com']}
           />
-        </TouchableOpacity>
+        </Link>
         <View style={styles.layoutContent}>
           <View style={styles.meta}>
             <FontAwesomeIcon icon={icon} size={14} style={[s.mt2, s.mr5]} />
-            <Text
-              style={[styles.metaItem, s.f14, s.bold]}
-              onPress={onPressAuthor}>
-              {item.author.displayName}
-            </Text>
+            <Link style={styles.metaItem} href={authorHref} title={authorTitle}>
+              <Text style={[s.f14, s.bold]}>{item.author.displayName}</Text>
+            </Link>
             <Text style={[styles.metaItem, s.f14]}>{action}</Text>
             <Text style={[styles.metaItem, s.f14, s.gray5]}>
               {ago(item.indexedAt)}
@@ -87,7 +92,7 @@ export const FeedItem = observer(function FeedItem({
       ) : (
         <></>
       )}
-    </TouchableOpacity>
+    </Link>
   )
 })
 

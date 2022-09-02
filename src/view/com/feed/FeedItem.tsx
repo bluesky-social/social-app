@@ -1,9 +1,10 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {bsky, AdxUri} from '@adxp/mock-api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedViewItemModel} from '../../../state/models/feed-view'
+import {Link} from '../util/Link'
 import {s, colors} from '../../lib/styles'
 import {ago} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
@@ -18,14 +19,12 @@ export const FeedItem = observer(function FeedItem({
 }) {
   const store = useStores()
   const record = item.record as unknown as bsky.Post.Record
-
-  const onPressOuter = () => {
+  const postHref = useMemo(() => {
     const urip = new AdxUri(item.uri)
-    store.nav.navigate(`/profile/${item.author.name}/post/${urip.recordKey}`)
-  }
-  const onPressAuthor = () => {
-    store.nav.navigate(`/profile/${item.author.name}`)
-  }
+    return `/profile/${item.author.name}/post/${urip.recordKey}`
+  }, [item.uri, item.author.name])
+  const authorHref = `/profile/${item.author.name}`
+
   const onPressReply = () => {
     store.nav.navigate('/composer')
   }
@@ -41,7 +40,10 @@ export const FeedItem = observer(function FeedItem({
   }
 
   return (
-    <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
+    <Link
+      style={styles.outer}
+      href={postHref}
+      title={`Post by ${item.author.name}`}>
       {item.repostedBy && (
         <View style={styles.repostedBy}>
           <FontAwesomeIcon icon="retweet" style={styles.repostedByIcon} />
@@ -51,24 +53,29 @@ export const FeedItem = observer(function FeedItem({
         </View>
       )}
       <View style={styles.layout}>
-        <TouchableOpacity style={styles.layoutAvi} onPress={onPressAuthor}>
+        <Link
+          style={styles.layoutAvi}
+          href={authorHref}
+          title={item.author.name}>
           <Image
             style={styles.avi}
             source={AVIS[item.author.name] || AVIS['alice.com']}
           />
-        </TouchableOpacity>
+        </Link>
         <View style={styles.layoutContent}>
           <View style={styles.meta}>
-            <Text
-              style={[styles.metaItem, s.f15, s.bold]}
-              onPress={onPressAuthor}>
-              {item.author.displayName}
-            </Text>
-            <Text
-              style={[styles.metaItem, s.f14, s.gray5]}
-              onPress={onPressAuthor}>
-              @{item.author.name}
-            </Text>
+            <Link
+              style={styles.metaItem}
+              href={authorHref}
+              title={item.author.name}>
+              <Text style={[s.f15, s.bold]}>{item.author.displayName}</Text>
+            </Link>
+            <Link
+              style={styles.metaItem}
+              href={authorHref}
+              title={item.author.name}>
+              <Text style={[s.f14, s.gray5]}>@{item.author.name}</Text>
+            </Link>
             <Text style={[styles.metaItem, s.f14, s.gray5]}>
               &middot; {ago(item.indexedAt)}
             </Text>
@@ -127,7 +134,7 @@ export const FeedItem = observer(function FeedItem({
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </Link>
   )
 })
 

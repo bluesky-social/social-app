@@ -14,6 +14,7 @@ import {
   FollowItem,
 } from '../../../state/models/user-follows-view'
 import {useStores} from '../../../state'
+import {Link} from '../util/Link'
 import {s, colors} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
 
@@ -77,12 +78,8 @@ export const ProfileFollows = observer(function ProfileFollows({
 })
 
 const User = ({item}: {item: FollowItem}) => {
-  const store = useStores()
-  const onPressOuter = () => {
-    store.nav.navigate(`/profile/${item.name}`)
-  }
   return (
-    <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
+    <Link style={styles.outer} href={`/profile/${item.name}`} title={item.name}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Image
@@ -95,7 +92,7 @@ const User = ({item}: {item: FollowItem}) => {
           <Text style={[s.f14, s.gray5]}>@{item.name}</Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </Link>
   )
 }
 

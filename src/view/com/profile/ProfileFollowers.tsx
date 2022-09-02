@@ -6,13 +6,13 @@ import {
   Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native'
 import {
   UserFollowersViewModel,
   FollowerItem,
 } from '../../../state/models/user-followers-view'
+import {Link} from '../util/Link'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
@@ -77,12 +77,8 @@ export const ProfileFollowers = observer(function ProfileFollowers({
 })
 
 const User = ({item}: {item: FollowerItem}) => {
-  const store = useStores()
-  const onPressOuter = () => {
-    store.nav.navigate(`/profile/${item.name}`)
-  }
   return (
-    <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
+    <Link style={styles.outer} href={`/profile/${item.name}`} title={item.name}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Image
@@ -95,7 +91,7 @@ const User = ({item}: {item: FollowerItem}) => {
           <Text style={[s.f14, s.gray5]}>@{item.name}</Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </Link>
   )
 }
 
