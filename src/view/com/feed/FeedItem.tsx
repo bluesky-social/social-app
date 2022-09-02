@@ -5,6 +5,7 @@ import {bsky, AdxUri} from '@adxp/mock-api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedViewItemModel} from '../../../state/models/feed-view'
 import {Link} from '../util/Link'
+import {PostDropdownBtn} from '../util/DropdownBtn'
 import {s, colors} from '../../lib/styles'
 import {ago} from '../../lib/strings'
 import {AVIS} from '../../lib/assets'
@@ -19,10 +20,11 @@ export const FeedItem = observer(function FeedItem({
 }) {
   const store = useStores()
   const record = item.record as unknown as bsky.Post.Record
-  const postHref = useMemo(() => {
+  const itemHref = useMemo(() => {
     const urip = new AdxUri(item.uri)
     return `/profile/${item.author.name}/post/${urip.recordKey}`
   }, [item.uri, item.author.name])
+  const itemTitle = `Post by ${item.author.name}`
   const authorHref = `/profile/${item.author.name}`
 
   const onPressReply = () => {
@@ -40,10 +42,7 @@ export const FeedItem = observer(function FeedItem({
   }
 
   return (
-    <Link
-      style={styles.outer}
-      href={postHref}
-      title={`Post by ${item.author.name}`}>
+    <Link style={styles.outer} href={itemHref} title={itemTitle}>
       {item.repostedBy && (
         <View style={styles.repostedBy}>
           <FontAwesomeIcon icon="retweet" style={styles.repostedByIcon} />
@@ -79,6 +78,17 @@ export const FeedItem = observer(function FeedItem({
             <Text style={[styles.metaItem, s.f14, s.gray5]}>
               &middot; {ago(item.indexedAt)}
             </Text>
+            <View style={s.flex1} />
+            <PostDropdownBtn
+              style={styles.metaItem}
+              itemHref={itemHref}
+              itemTitle={itemTitle}>
+              <FontAwesomeIcon
+                icon="ellipsis-h"
+                size={14}
+                style={[s.mt2, s.mr5]}
+              />
+            </PostDropdownBtn>
           </View>
           <Text style={[styles.postText, s.f15, s['lh15-1.3']]}>
             {record.text}

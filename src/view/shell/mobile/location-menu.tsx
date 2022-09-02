@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import RootSiblings from 'react-native-root-siblings'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {s, colors} from '../../lib/styles'
+import {colors} from '../../lib/styles'
 
 export function createLocationMenu(): RootSiblings {
   const onPressItem = (_index: number) => {
