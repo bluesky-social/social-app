@@ -16,9 +16,10 @@ import {useStores} from '../../../state'
 import {NavigationModel} from '../../../state/models/navigation'
 import {match, MatchResult} from '../../routes'
 import {TabsSelectorModal} from './tabs-selector'
-import {LocationMenu} from './location-menu'
+import {LocationNavigator} from './location-navigator'
 import {createBackMenu, createForwardMenu} from './history-menu'
 import {createAccountsMenu} from './accounts-menu'
+import {createLocationMenu} from './location-menu'
 import {colors} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
 
@@ -99,11 +100,13 @@ export const MobileShell: React.FC = observer(() => {
 
   const onPressAvi = () => createAccountsMenu()
   const onPressLocation = () => setLocationMenuActive(true)
-  const onNavigateLocationMenu = (url: string) => {
+  const onPressEllipsis = () => createLocationMenu()
+
+  const onNavigateLocation = (url: string) => {
     setLocationMenuActive(false)
     stores.nav.navigate(url)
   }
-  const onDismissLocationMenu = () => setLocationMenuActive(false)
+  const onDismissLocationNavigator = () => setLocationMenuActive(false)
 
   const onPressBack = () => stores.nav.tab.goBack()
   const onPressForward = () => stores.nav.tab.goForward()
@@ -129,7 +132,7 @@ export const MobileShell: React.FC = observer(() => {
           title={stores.nav.tab.current.title}
           onPress={onPressLocation}
         />
-        <TouchableOpacity style={styles.topBarBtn}>
+        <TouchableOpacity style={styles.topBarBtn} onPress={onPressEllipsis}>
           <FontAwesomeIcon icon="ellipsis" />
         </TouchableOpacity>
       </View>
@@ -171,10 +174,10 @@ export const MobileShell: React.FC = observer(() => {
         onCloseTab={onCloseTab}
       />
       {isLocationMenuActive && (
-        <LocationMenu
+        <LocationNavigator
           url={stores.nav.tab.current.url}
-          onNavigate={onNavigateLocationMenu}
-          onDismiss={onDismissLocationMenu}
+          onNavigate={onNavigateLocation}
+          onDismiss={onDismissLocationNavigator}
         />
       )}
     </View>
