@@ -44,6 +44,9 @@ export const colors = {
 
 export const gradients = {
   primary: {start: '#db00ff', end: '#ff007a'},
+  purple: {start: colors.pink3, end: colors.purple3},
+  blue: {start: colors.purple3, end: colors.blue3},
+  green: {start: colors.blue3, end: colors.green3},
 }
 
 export const s = StyleSheet.create({
