@@ -6,9 +6,8 @@ import {
   PostThreadViewPostModel,
 } from '../../../state/models/post-thread-view'
 import {useStores} from '../../../state'
+import {SharePostModel} from '../../../state/models/shell'
 import {PostThreadItem} from './PostThreadItem'
-import {ShareModal} from '../modals/SharePost'
-import {s} from '../../lib/styles'
 
 const UPDATE_DELAY = 2e3 // wait 2s before refetching the thread for updates
 
@@ -16,7 +15,6 @@ export const PostThread = observer(function PostThread({uri}: {uri: string}) {
   const store = useStores()
   const [view, setView] = useState<PostThreadViewModel | undefined>()
   const [lastUpdate, setLastUpdate] = useState<number>(Date.now())
-  const shareSheetRef = useRef<{open: (_uri: string) => void}>()
 
   useEffect(() => {
     if (view?.params.uri === uri) {
@@ -38,7 +36,7 @@ export const PostThread = observer(function PostThread({uri}: {uri: string}) {
   // })
 
   const onPressShare = (uri: string) => {
-    shareSheetRef.current?.open(uri)
+    store.shell.openModal(new SharePostModel(uri))
   }
   const onRefresh = () => {
     view?.refresh().catch(err => console.error('Failed to refresh', err))
@@ -83,7 +81,6 @@ export const PostThread = observer(function PostThread({uri}: {uri: string}) {
         refreshing={view.isRefreshing}
         onRefresh={onRefresh}
       />
-      <ShareModal ref={shareSheetRef} />
     </View>
   )
 })
