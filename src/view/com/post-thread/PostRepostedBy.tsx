@@ -13,6 +13,7 @@ import {
   RepostedByViewModel,
   RepostedByViewItemModel,
 } from '../../../state/models/reposted-by-view'
+import {Link} from '../util/Link'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
@@ -79,12 +80,8 @@ export const PostRepostedBy = observer(function PostRepostedBy({
 })
 
 const RepostedByItem = ({item}: {item: RepostedByViewItemModel}) => {
-  const store = useStores()
-  const onPressOuter = () => {
-    store.nav.navigate(`/profile/${item.name}`)
-  }
   return (
-    <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
+    <Link style={styles.outer} href={`/profile/${item.name}`} title={item.name}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Image
@@ -97,7 +94,7 @@ const RepostedByItem = ({item}: {item: RepostedByViewItemModel}) => {
           <Text style={[s.f14, s.gray5]}>@{item.name}</Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </Link>
   )
 }
 

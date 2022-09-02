@@ -13,6 +13,7 @@ import {
   LikedByViewModel,
   LikedByViewItemModel,
 } from '../../../state/models/liked-by-view'
+import {Link} from '../util/Link'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
@@ -73,12 +74,8 @@ export const PostLikedBy = observer(function PostLikedBy({uri}: {uri: string}) {
 })
 
 const LikedByItem = ({item}: {item: LikedByViewItemModel}) => {
-  const store = useStores()
-  const onPressOuter = () => {
-    store.nav.navigate(`/profile/${item.name}`)
-  }
   return (
-    <TouchableOpacity style={styles.outer} onPress={onPressOuter}>
+    <Link style={styles.outer} href={`/profile/${item.name}`} title={item.name}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Image
@@ -91,7 +88,7 @@ const LikedByItem = ({item}: {item: LikedByViewItemModel}) => {
           <Text style={[s.f14, s.gray5]}>@{item.name}</Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </Link>
   )
 }
 
