@@ -8,11 +8,13 @@ import {createContext, useContext} from 'react'
 import {isObj, hasProp} from '../lib/type-guards'
 import {SessionModel} from './session'
 import {NavigationModel} from './navigation'
+import {ShellModel} from './shell'
 import {MeModel} from './me'
 
 export class RootStoreModel {
   session = new SessionModel()
   nav = new NavigationModel()
+  shell = new ShellModel()
   me = new MeModel(this)
 
   constructor(public api: AdxClient) {

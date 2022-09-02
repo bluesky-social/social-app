@@ -29,10 +29,16 @@ export function createLocationMenu(): RootSiblings {
             <Text style={styles.label}>Share</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.menuItem, styles.menuItemBorder]}
+            style={[styles.menuItem]}
             onPress={() => onPressItem(0)}>
             <FontAwesomeIcon style={styles.icon} icon="link" />
             <Text style={styles.label}>Copy Link</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.menuItem, styles.menuItemBorder]}
+            onPress={() => onPressItem(0)}>
+            <FontAwesomeIcon style={styles.icon} icon={['far', 'clone']} />
+            <Text style={styles.label}>Duplicate Tab</Text>
           </TouchableOpacity>
         </View>
       </>
@@ -58,18 +64,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 14,
     opacity: 1,
-    paddingVertical: 2,
+    paddingVertical: 6,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 6,
     paddingLeft: 10,
     paddingRight: 30,
   },
   menuItemBorder: {
     borderTopWidth: 1,
     borderTopColor: colors.gray1,
+    marginTop: 4,
+    paddingTop: 12,
   },
   icon: {
     marginLeft: 6,

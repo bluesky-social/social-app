@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {View} from 'react-native'
+import {observer} from 'mobx-react-lite'
 import {Feed} from '../com/feed/Feed'
 import {FAB} from '../com/util/FloatingActionButton'
 import {useStores} from '../../state'
@@ -7,7 +8,7 @@ import {FeedViewModel} from '../../state/models/feed-view'
 import {ScreenParams} from '../routes'
 import {s} from '../lib/styles'
 
-export function Home({visible}: ScreenParams) {
+export const Home = observer(function Home({visible}: ScreenParams) {
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const [feedView, setFeedView] = useState<FeedViewModel | undefined>()
   const store = useStores()
@@ -38,4 +39,4 @@ export function Home({visible}: ScreenParams) {
       <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
   )
-}
+})

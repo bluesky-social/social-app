@@ -5,6 +5,8 @@ import * as libapi from './lib/api'
 import * as storage from './lib/storage'
 // import * as auth from './auth' TODO
 
+import {ShellModel} from './models/shell'
+
 const ROOT_STATE_STORAGE_KEY = 'root'
 
 export async function setupState() {

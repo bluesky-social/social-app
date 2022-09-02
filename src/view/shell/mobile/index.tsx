@@ -15,6 +15,7 @@ import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {useStores} from '../../../state'
 import {NavigationModel} from '../../../state/models/navigation'
 import {match, MatchResult} from '../../routes'
+import {Modal} from '../../com/modals/Modal'
 import {TabsSelectorModal} from './tabs-selector'
 import {LocationNavigator} from './location-navigator'
 import {createBackMenu, createForwardMenu} from './history-menu'
@@ -93,10 +94,10 @@ const Btn = ({
 }
 
 export const MobileShell: React.FC = observer(() => {
-  const stores = useStores()
+  const store = useStores()
   const tabSelectorRef = useRef<{open: () => void}>()
   const [isLocationMenuActive, setLocationMenuActive] = useState(false)
-  const screenRenderDesc = constructScreenRenderDesc(stores.nav)
+  const screenRenderDesc = constructScreenRenderDesc(store.nav)
 
   const onPressAvi = () => createAccountsMenu()
   const onPressLocation = () => setLocationMenuActive(true)
@@ -104,22 +105,22 @@ export const MobileShell: React.FC = observer(() => {
 
   const onNavigateLocation = (url: string) => {
     setLocationMenuActive(false)
-    stores.nav.navigate(url)
+    store.nav.navigate(url)
   }
   const onDismissLocationNavigator = () => setLocationMenuActive(false)
 
-  const onPressBack = () => stores.nav.tab.goBack()
-  const onPressForward = () => stores.nav.tab.goForward()
-  const onPressHome = () => stores.nav.navigate('/')
-  const onPressNotifications = () => stores.nav.navigate('/notifications')
+  const onPressBack = () => store.nav.tab.goBack()
+  const onPressForward = () => store.nav.tab.goForward()
+  const onPressHome = () => store.nav.navigate('/')
+  const onPressNotifications = () => store.nav.navigate('/notifications')
   const onPressTabs = () => tabSelectorRef.current?.open()
 
-  const onLongPressBack = () => createBackMenu(stores.nav.tab)
-  const onLongPressForward = () => createForwardMenu(stores.nav.tab)
+  const onLongPressBack = () => createBackMenu(store.nav.tab)
+  const onLongPressForward = () => createForwardMenu(store.nav.tab)
 
-  const onNewTab = () => stores.nav.newTab('/')
-  const onChangeTab = (tabIndex: number) => stores.nav.setActiveTab(tabIndex)
-  const onCloseTab = (tabIndex: number) => stores.nav.closeTab(tabIndex)
+  const onNewTab = () => store.nav.newTab('/')
+  const onChangeTab = (tabIndex: number) => store.nav.setActiveTab(tabIndex)
+  const onCloseTab = (tabIndex: number) => store.nav.closeTab(tabIndex)
 
   return (
     <View style={styles.outerContainer}>
@@ -129,7 +130,7 @@ export const MobileShell: React.FC = observer(() => {
         </TouchableOpacity>
         <Location
           icon={screenRenderDesc.icon}
-          title={stores.nav.tab.current.title}
+          title={store.nav.tab.current.title}
           onPress={onPressLocation}
         />
         <TouchableOpacity style={styles.topBarBtn} onPress={onPressEllipsis}>
@@ -151,13 +152,13 @@ export const MobileShell: React.FC = observer(() => {
       <View style={styles.bottomBar}>
         <Btn
           icon="angle-left"
-          inactive={!stores.nav.tab.canGoBack}
+          inactive={!store.nav.tab.canGoBack}
           onPress={onPressBack}
           onLongPress={onLongPressBack}
         />
         <Btn
           icon="angle-right"
-          inactive={!stores.nav.tab.canGoForward}
+          inactive={!store.nav.tab.canGoForward}
           onPress={onPressForward}
           onLongPress={onLongPressForward}
         />
@@ -167,15 +168,16 @@ export const MobileShell: React.FC = observer(() => {
       </View>
       <TabsSelectorModal
         ref={tabSelectorRef}
-        tabs={stores.nav.tabs}
-        currentTabIndex={stores.nav.tabIndex}
+        tabs={store.nav.tabs}
+        currentTabIndex={store.nav.tabIndex}
         onNewTab={onNewTab}
         onChangeTab={onChangeTab}
         onCloseTab={onCloseTab}
       />
+      <Modal />
       {isLocationMenuActive && (
         <LocationNavigator
-          url={stores.nav.tab.current.url}
+          url={store.nav.tab.current.url}
           onNavigate={onNavigateLocation}
           onDismiss={onDismissLocationNavigator}
         />
