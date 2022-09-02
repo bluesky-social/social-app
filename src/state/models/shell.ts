@@ -8,15 +8,23 @@ export class LinkActionsModel {
   }
 }
 
+export class SharePostModel {
+  name = 'share-post'
+
+  constructor(public href: string) {
+    makeAutoObservable(this)
+  }
+}
+
 export class ShellModel {
   isModalActive = false
-  activeModal: LinkActionsModel | undefined
+  activeModal: LinkActionsModel | SharePostModel | undefined
 
   constructor() {
     makeAutoObservable(this)
   }
 
-  openModal(modal: LinkActionsModel) {
+  openModal(modal: LinkActionsModel | SharePostModel) {
     this.isModalActive = true
     this.activeModal = modal
   }

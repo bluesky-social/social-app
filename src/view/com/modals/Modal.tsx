@@ -6,6 +6,7 @@ import {useStores} from '../../../state'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 
 import * as LinkActionsModal from './LinkActions'
+import * as SharePostModal from './SharePost.native'
 
 export const Modal = observer(function Modal() {
   const store = useStores()
@@ -28,6 +29,9 @@ export const Modal = observer(function Modal() {
   if (store.shell.activeModal?.name === 'link-actions') {
     snapPoints = LinkActionsModal.snapPoints
     element = <LinkActionsModal.Component {...store.shell.activeModal} />
+  } else if (store.shell.activeModal?.name === 'share-post') {
+    snapPoints = SharePostModal.snapPoints
+    element = <SharePostModal.Component {...store.shell.activeModal} />
   } else {
     return <View />
   }

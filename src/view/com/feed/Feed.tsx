@@ -1,15 +1,16 @@
-import React, {useRef} from 'react'
+import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {Text, View, FlatList} from 'react-native'
 import {FeedViewModel, FeedViewItemModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
-import {ShareModal} from '../modals/SharePost'
+import {SharePostModel} from '../../../state/models/shell'
+import {useStores} from '../../../state'
 
 export const Feed = observer(function Feed({feed}: {feed: FeedViewModel}) {
-  const shareSheetRef = useRef<{open: (_uri: string) => void}>()
+  const store = useStores()
 
   const onPressShare = (uri: string) => {
-    shareSheetRef.current?.open(uri)
+    store.shell.openModal(new SharePostModel(uri))
   }
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your
@@ -41,7 +42,6 @@ export const Feed = observer(function Feed({feed}: {feed: FeedViewModel}) {
         />
       )}
       {feed.isEmpty && <Text>This feed is empty!</Text>}
-      <ShareModal ref={shareSheetRef} />
     </View>
   )
 })
