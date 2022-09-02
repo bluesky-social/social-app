@@ -1,16 +1,9 @@
 import React, {useState, useRef} from 'react'
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import {s, colors} from '../../lib/styles'
+import {s, gradients, colors} from '../../lib/styles'
 
 export function LocationMenu({
   url,
@@ -37,19 +30,23 @@ export function LocationMenu({
     icon,
     label,
     url,
-    color,
+    gradient,
   }: {
     icon: IconProp
     label: string
     url: string
-    color: string
+    gradient: keyof typeof gradients
   }) => (
     <TouchableOpacity
       style={styles.fatMenuItem}
       onPress={() => onNavigate(url)}>
-      <View style={[styles.fatMenuItemIconWrapper, {backgroundColor: color}]}>
+      <LinearGradient
+        style={[styles.fatMenuItemIconWrapper]}
+        colors={[gradients[gradient].start, gradients[gradient].end]}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 1}}>
         <FontAwesomeIcon icon={icon} style={styles.fatMenuItemIcon} size={24} />
-      </View>
+      </LinearGradient>
       <Text style={styles.fatMenuItemLabel}>{label}</Text>
     </TouchableOpacity>
   )
@@ -84,25 +81,20 @@ export function LocationMenu({
       </View>
       <View style={styles.menuItemsContainer}>
         <View style={styles.fatMenuItems}>
-          <FatMenuItem icon="house" label="Feed" url="/" color={colors.red3} />
+          <FatMenuItem icon="house" label="Feed" url="/" gradient="primary" />
           <FatMenuItem
             icon="bell"
             label="Notifications"
             url="/notifications"
-            color={colors.pink3}
+            gradient="purple"
           />
           <FatMenuItem
             icon={['far', 'user']}
             label="My Profile"
             url="/"
-            color={colors.purple3}
+            gradient="blue"
           />
-          <FatMenuItem
-            icon="gear"
-            label="Settings"
-            url="/"
-            color={colors.blue3}
-          />
+          <FatMenuItem icon="gear" label="Settings" url="/" gradient="blue" />
         </View>
         <View style={styles.thinMenuItems}>
           <ThinMenuItem label="Send us feedback" url="/" />
@@ -142,13 +134,14 @@ const styles = StyleSheet.create({
   },
   menuItemsContainer: {
     paddingVertical: 30,
+    paddingHorizontal: 8,
   },
   fatMenuItems: {
     flexDirection: 'row',
     marginBottom: 20,
   },
   fatMenuItem: {
-    width: 90,
+    width: 86,
     alignItems: 'center',
     marginRight: 6,
   },

@@ -18,6 +18,7 @@ import {match, MatchResult} from '../../routes'
 import {TabsSelectorModal} from './tabs-selector'
 import {LocationMenu} from './location-menu'
 import {createBackMenu, createForwardMenu} from './history-menu'
+import {createAccountsMenu} from './accounts-menu'
 import {colors} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
 
@@ -96,6 +97,7 @@ export const MobileShell: React.FC = observer(() => {
   const [isLocationMenuActive, setLocationMenuActive] = useState(false)
   const screenRenderDesc = constructScreenRenderDesc(stores.nav)
 
+  const onPressAvi = () => createAccountsMenu()
   const onPressLocation = () => setLocationMenuActive(true)
   const onNavigateLocationMenu = (url: string) => {
     setLocationMenuActive(false)
@@ -119,7 +121,9 @@ export const MobileShell: React.FC = observer(() => {
   return (
     <View style={styles.outerContainer}>
       <View style={styles.topBar}>
-        <Image style={styles.avi} source={AVIS['alice.com']} />
+        <TouchableOpacity onPress={onPressAvi}>
+          <Image style={styles.avi} source={AVIS['alice.com']} />
+        </TouchableOpacity>
         <Location
           icon={screenRenderDesc.icon}
           title={stores.nav.tab.current.title}

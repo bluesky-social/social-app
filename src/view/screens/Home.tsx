@@ -5,6 +5,7 @@ import {FAB} from '../com/util/FloatingActionButton'
 import {useStores} from '../../state'
 import {FeedViewModel} from '../../state/models/feed-view'
 import {ScreenParams} from '../routes'
+import {s} from '../lib/styles'
 
 export function Home({visible}: ScreenParams) {
   const [hasSetup, setHasSetup] = useState<boolean>(false)
@@ -32,7 +33,7 @@ export function Home({visible}: ScreenParams) {
   }
 
   return (
-    <View>
+    <View style={s.flex1}>
       {feedView && <Feed feed={feedView} />}
       <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
