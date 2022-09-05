@@ -5,3 +5,5 @@ export const AVIS: Record<string, ImageSourcePropType> = {
   'bob.com': {uri: '/img/bob.jpg'},
   'carla.com': {uri: '/img/carla.jpg'},
 }
+
+export const BANNER: ImageSourcePropType = {uri: '/img/banner.jpg'}
