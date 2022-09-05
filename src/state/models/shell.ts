@@ -16,15 +16,23 @@ export class SharePostModel {
   }
 }
 
+export class ComposePostModel {
+  name = 'compose-post'
+
+  constructor(public replyTo?: string) {
+    makeAutoObservable(this)
+  }
+}
+
 export class ShellModel {
   isModalActive = false
-  activeModal: LinkActionsModel | SharePostModel | undefined
+  activeModal: LinkActionsModel | SharePostModel | ComposePostModel | undefined
 
   constructor() {
     makeAutoObservable(this)
   }
 
-  openModal(modal: LinkActionsModel | SharePostModel) {
+  openModal(modal: LinkActionsModel | SharePostModel | ComposePostModel) {
     this.isModalActive = true
     this.activeModal = modal
   }

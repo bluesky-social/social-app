@@ -1,7 +1,7 @@
 Paul's todo list
 
 - Composer
-  - Check on navigation stack during a bunch of replies
+  - Update the view after creating a post
 - Search view
   - *
 - Linking

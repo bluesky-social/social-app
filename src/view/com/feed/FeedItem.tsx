@@ -4,6 +4,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {bsky, AdxUri} from '@adxp/mock-api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedViewItemModel} from '../../../state/models/feed-view'
+import {ComposePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
 import {PostDropdownBtn} from '../util/DropdownBtn'
 import {s, colors} from '../../lib/styles'
@@ -28,7 +29,7 @@ export const FeedItem = observer(function FeedItem({
   const authorHref = `/profile/${item.author.name}`
 
   const onPressReply = () => {
-    store.nav.navigate('/composer')
+    store.shell.openModal(new ComposePostModel(item.uri))
   }
   const onPressToggleRepost = () => {
     item
