@@ -4,6 +4,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {bsky, AdxUri} from '@adxp/mock-api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
+import {ComposePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
 import {PostDropdownBtn} from '../util/DropdownBtn'
 import {s, colors} from '../../lib/styles'
@@ -41,7 +42,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   const repostsTitle = 'Reposts of this post'
 
   const onPressReply = () => {
-    store.nav.navigate(`/composer?replyTo=${item.uri}`)
+    store.shell.openModal(new ComposePostModel(item.uri))
   }
   const onPressToggleRepost = () => {
     item

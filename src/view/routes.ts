@@ -6,7 +6,6 @@ import {Notifications} from './screens/Notifications'
 import {Login} from './screens/Login'
 import {Signup} from './screens/Signup'
 import {NotFound} from './screens/NotFound'
-import {Composer} from './screens/Composer'
 import {PostThread} from './screens/PostThread'
 import {PostLikedBy} from './screens/PostLikedBy'
 import {PostRepostedBy} from './screens/PostRepostedBy'
@@ -48,7 +47,6 @@ export const routes: Route[] = [
     'retweet',
     r('/profile/(?<name>[^/]+)/post/(?<recordKey>[^/]+)/reposted-by'),
   ],
-  [Composer, 'pen-nib', r('/compose')],
   [Login, ['far', 'user'], r('/login')],
   [Signup, ['far', 'user'], r('/signup')],
 ]

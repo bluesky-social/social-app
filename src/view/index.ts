@@ -14,6 +14,7 @@ import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck'
 import {faClone} from '@fortawesome/free-regular-svg-icons/faClone'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
 import {faEllipsis} from '@fortawesome/free-solid-svg-icons/faEllipsis'
+import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation'
 import {faGear} from '@fortawesome/free-solid-svg-icons/faGear'
 import {faHeart} from '@fortawesome/free-regular-svg-icons/faHeart'
 import {faHeart as fasHeart} from '@fortawesome/free-solid-svg-icons/faHeart'
@@ -46,6 +47,7 @@ export function setup() {
     faClone,
     faComment,
     faEllipsis,
+    faExclamation,
     faGear,
     faHeart,
     fasHeart,

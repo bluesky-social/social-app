@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
+import {ComposePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
@@ -63,7 +64,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
   const authorHref = `/profile/${item.author.name}`
   const authorTitle = item.author.name
   const onPressReply = () => {
-    store.nav.navigate(`/composer?replyTo=${item.uri}`)
+    store.shell.openModal(new ComposePostModel(item.uri))
   }
   const onPressToggleRepost = () => {
     item

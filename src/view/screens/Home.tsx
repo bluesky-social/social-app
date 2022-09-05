@@ -5,6 +5,7 @@ import {Feed} from '../com/feed/Feed'
 import {FAB} from '../com/util/FloatingActionButton'
 import {useStores} from '../../state'
 import {FeedViewModel} from '../../state/models/feed-view'
+import {ComposePostModel} from '../../state/models/shell'
 import {ScreenParams} from '../routes'
 import {s} from '../lib/styles'
 
@@ -30,7 +31,7 @@ export const Home = observer(function Home({visible}: ScreenParams) {
   }, [visible, store])
 
   const onComposePress = () => {
-    store.nav.navigate('/compose')
+    store.shell.openModal(new ComposePostModel())
   }
 
   return (
