@@ -5,3 +5,5 @@ export const AVIS: Record<string, ImageSourcePropType> = {
   'bob.com': require('../../../public/img/bob.jpg'),
   'carla.com': require('../../../public/img/carla.jpg'),
 }
+
+export const BANNER: ImageSourcePropType = require('../../../public/img/banner.jpg')

@@ -62,6 +62,10 @@ export const s = StyleSheet.create({
   fw200: {fontWeight: '200'},
 
   // font sizes
+  f9: {fontSize: 9},
+  f10: {fontSize: 10},
+  f11: {fontSize: 11},
+  f12: {fontSize: 12},
   f13: {fontSize: 13},
   f14: {fontSize: 14},
   f15: {fontSize: 15},
