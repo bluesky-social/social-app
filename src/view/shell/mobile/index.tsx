@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   GestureResponderEvent,
@@ -10,6 +10,13 @@ import {
   View,
 } from 'react-native'
 import {ScreenContainer, Screen} from 'react-native-screens'
+import {GestureDetector, Gesture} from 'react-native-gesture-handler'
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  runOnJS,
+} from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {useStores} from '../../../state'
@@ -21,10 +28,12 @@ import {LocationNavigator} from './location-navigator'
 import {createBackMenu, createForwardMenu} from './history-menu'
 import {createAccountsMenu} from './accounts-menu'
 import {createLocationMenu} from './location-menu'
-import {colors} from '../../lib/styles'
+import {s, colors} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
 
 const locationIconNeedsNudgeUp = (icon: IconProp) => icon === 'house'
+const SWIPE_GESTURE_HIT_SLOP = {left: 0, top: 0, width: 20, bottom: 0}
+const SWIPE_GESTURE_MAX_DISTANCE = 150
 
 const Location = ({
   icon,
@@ -97,6 +106,7 @@ export const MobileShell: React.FC = observer(() => {
   const store = useStores()
   const tabSelectorRef = useRef<{open: () => void}>()
   const [isLocationMenuActive, setLocationMenuActive] = useState(false)
+  const swipeGesturePosition = useSharedValue<number>(0)
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
 
   const onPressAvi = () =>
@@ -125,6 +135,36 @@ export const MobileShell: React.FC = observer(() => {
   const onChangeTab = (tabIndex: number) => store.nav.setActiveTab(tabIndex)
   const onCloseTab = (tabIndex: number) => store.nav.closeTab(tabIndex)
 
+  const goBack = useMemo(() => {
+    return () => {
+      store.nav.tab.goBack()
+    }
+  }, [store.nav.tab])
+  const swipeGesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .hitSlop(SWIPE_GESTURE_HIT_SLOP)
+        .onUpdate(e => {
+          swipeGesturePosition.value = Math.min(
+            e.translationX,
+            SWIPE_GESTURE_MAX_DISTANCE,
+          )
+        })
+        .onEnd(e => {
+          if (swipeGesturePosition.value >= SWIPE_GESTURE_MAX_DISTANCE) {
+            runOnJS(goBack)()
+            swipeGesturePosition.value = 0
+          } else {
+            swipeGesturePosition.value = withTiming(0, {duration: 100})
+          }
+        }),
+    [swipeGesturePosition, goBack],
+  )
+
+  const swipeViewAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{translateX: swipeGesturePosition.value}],
+  }))
+
   return (
     <View style={styles.outerContainer}>
       <View style={styles.topBar}>
@@ -142,14 +182,37 @@ export const MobileShell: React.FC = observer(() => {
       </View>
       <SafeAreaView style={styles.innerContainer}>
         <ScreenContainer style={styles.screenContainer}>
-          {screenRenderDesc.screens.map(({Com, params, key, visible}) => (
-            <Screen
-              key={key}
-              style={[StyleSheet.absoluteFill, styles.screen]}
-              activityState={visible ? 2 : 0}>
-              <Com params={params} visible={visible} />
-            </Screen>
-          ))}
+          {screenRenderDesc.screens.map(({Com, params, key, current}) => {
+            if (current && store.nav.tab.canGoBack) {
+              return (
+                <Screen
+                  key={key}
+                  style={[StyleSheet.absoluteFill]}
+                  activityState={2}>
+                  <GestureDetector gesture={swipeGesture}>
+                    <Animated.View
+                      style={[s.flex1, styles.screen, swipeViewAnimatedStyle]}>
+                      <FontAwesomeIcon
+                        icon="arrow-left"
+                        size={30}
+                        style={[styles.swipeGestureIcon]}
+                      />
+                      <Com params={params} visible={true} />
+                    </Animated.View>
+                  </GestureDetector>
+                </Screen>
+              )
+            } else {
+              return (
+                <Screen
+                  key={key}
+                  style={[StyleSheet.absoluteFill, styles.screen]}
+                  activityState={current ? 2 : 0}>
+                  <Com params={params} visible={current} />
+                </Screen>
+              )
+            }
+          })}
         </ScreenContainer>
       </SafeAreaView>
       <View style={styles.bottomBar}>
@@ -193,7 +256,11 @@ export const MobileShell: React.FC = observer(() => {
  * This method produces the information needed by the shell to
  * render the current screens with screen-caching behaviors.
  */
-type ScreenRenderDesc = MatchResult & {key: string; visible: boolean}
+type ScreenRenderDesc = MatchResult & {
+  key: string
+  current: boolean
+  previous: boolean
+}
 function constructScreenRenderDesc(nav: NavigationModel): {
   icon: IconProp
   screens: ScreenRenderDesc[]
@@ -213,7 +280,7 @@ function constructScreenRenderDesc(nav: NavigationModel): {
       }
       return Object.assign(matchRes, {
         key: `t${tab.id}-s${screen.index}`,
-        visible: isCurrent,
+        current: isCurrent,
       }) as ScreenRenderDesc
     })
     screens = screens.concat(parsedTabScreens)
@@ -236,6 +303,11 @@ const styles = StyleSheet.create({
   },
   screen: {
     backgroundColor: colors.gray1,
+  },
+  swipeGestureIcon: {
+    position: 'absolute',
+    left: -75,
+    top: '50%',
   },
   topBar: {
     flexDirection: 'row',
