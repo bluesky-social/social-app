@@ -17,31 +17,13 @@ import {s, gradients, colors} from '../../lib/styles'
 import {AVIS, BANNER} from '../../lib/assets'
 import Toast from '../util/Toast'
 import {Link} from '../util/Link'
-import {Selector, SelectorItem} from '../util/Selector'
 
 export const ProfileHeader = observer(function ProfileHeader({
-  user,
+  view,
 }: {
-  user: string
+  view: ProfileViewModel
 }) {
   const store = useStores()
-  const [view, setView] = useState<ProfileViewModel | undefined>()
-
-  useEffect(() => {
-    if (view?.params.user === user) {
-      console.log('Profile header doing nothing')
-      return // no change needed? or trigger refresh?
-    }
-    console.log('Fetching profile', user)
-    const newView = new ProfileViewModel(store, {user: user})
-    setView(newView)
-    newView.setup().catch(err => console.error('Failed to fetch profile', err))
-  }, [user, view?.params.user, store])
-
-  const selectorItems: SelectorItem[] = [
-    {label: 'Posts', onSelect() {}},
-    {label: 'Badges', onSelect() {}},
-  ]
 
   const onPressToggleFollow = () => {
     view?.toggleFollowing().then(
@@ -66,19 +48,15 @@ export const ProfileHeader = observer(function ProfileHeader({
     // TODO
   }
   const onPressFollowers = () => {
-    store.nav.navigate(`/profile/${user}/followers`)
+    store.nav.navigate(`/profile/${view.name}/followers`)
   }
   const onPressFollows = () => {
-    store.nav.navigate(`/profile/${user}/follows`)
+    store.nav.navigate(`/profile/${view.name}/follows`)
   }
 
   // loading
   // =
-  if (
-    !view ||
-    (view.isLoading && !view.isRefreshing) ||
-    view.params.user !== user
-  ) {
+  if (!view || (view.isLoading && !view.isRefreshing)) {
     return (
       <View>
         <ActivityIndicator />
@@ -120,13 +98,13 @@ export const ProfileHeader = observer(function ProfileHeader({
             <TouchableOpacity
               onPress={onPressEditProfile}
               style={[styles.mainBtn, styles.btn]}>
-              <Text style={[s.fw600, s.f16]}>Edit Profile</Text>
+              <Text style={[s.fw400, s.f14]}>Edit Profile</Text>
             </TouchableOpacity>
           ) : view.myState.hasFollowed ? (
             <TouchableOpacity
               onPress={onPressToggleFollow}
               style={[styles.mainBtn, styles.btn]}>
-              <Text style={[s.fw600, s.f16]}>Following</Text>
+              <Text style={[s.fw400, s.f14]}>Following</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity onPress={onPressToggleFollow}>
@@ -146,7 +124,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             <FontAwesomeIcon icon="ellipsis" style={[s.gray5]} />
           </TouchableOpacity>
         </View>
-        <View style={[s.flexRow, s.mb10]}>
+        <View style={[s.flexRow]}>
           <TouchableOpacity
             style={[s.flexRow, s.mr10]}
             onPress={onPressFollowers}>
@@ -167,10 +145,9 @@ export const ProfileHeader = observer(function ProfileHeader({
           </View>
         </View>
         {view.description && (
-          <Text style={[s.mb10, s.f15, s['lh15-1.3']]}>{view.description}</Text>
+          <Text style={[s.mt10, s.f15, s['lh15-1.3']]}>{view.description}</Text>
         )}
       </View>
-      <Selector items={selectorItems} />
     </View>
   )
 })
@@ -178,8 +155,6 @@ export const ProfileHeader = observer(function ProfileHeader({
 const styles = StyleSheet.create({
   outer: {
     backgroundColor: colors.white,
-    borderBottomWidth: 1,
-    borderColor: colors.gray2,
   },
   banner: {
     width: '100%',
@@ -222,14 +197,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 60,
+    paddingVertical: 6,
+    paddingLeft: 55,
+    paddingRight: 60,
     borderRadius: 30,
+    borderWidth: 1,
+    borderColor: 'transparent',
   },
   btn: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
+    paddingVertical: 7,
     borderRadius: 30,
     borderWidth: 1,
     borderColor: colors.gray2,

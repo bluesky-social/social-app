@@ -12,9 +12,14 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AVIS} from '../../lib/assets'
 import {s, colors} from '../../lib/styles'
 
-export function createAccountsMenu(): RootSiblings {
+export function createAccountsMenu({
+  debug_onPressItem,
+}: {
+  debug_onPressItem: () => void
+}): RootSiblings {
   const onPressItem = (_index: number) => {
     sibling.destroy()
+    debug_onPressItem() // TODO
   }
   const onOuterPress = () => sibling.destroy()
   const sibling = new RootSiblings(

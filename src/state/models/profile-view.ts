@@ -65,7 +65,7 @@ export class ProfileViewModel implements bsky.ProfileView.Response {
   }
 
   async refresh() {
-    await this._load()
+    await this._load(true)
   }
 
   async toggleFollowing() {
@@ -108,8 +108,8 @@ export class ProfileViewModel implements bsky.ProfileView.Response {
   // loader functions
   // =
 
-  private async _load() {
-    this._xLoading()
+  private async _load(isRefreshing = false) {
+    this._xLoading(isRefreshing)
     await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const res = (await this.rootStore.api.mainPds.view(
@@ -119,7 +119,7 @@ export class ProfileViewModel implements bsky.ProfileView.Response {
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load feed: ${e.toString()}`)
+      this._xIdle(e.toString())
     }
   }
 

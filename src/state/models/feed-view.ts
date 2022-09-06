@@ -95,6 +95,7 @@ export class FeedViewModel implements bsky.FeedView.Response {
   isLoading = false
   isRefreshing = false
   hasLoaded = false
+  hasReachedEnd = false
   error = ''
   params: bsky.FeedView.Params
   _loadPromise: Promise<void> | undefined
@@ -244,7 +245,13 @@ export class FeedViewModel implements bsky.FeedView.Response {
         'blueskyweb.xyz:FeedView',
         params,
       )) as bsky.FeedView.Response
-      this._appendAll(res)
+      if (res.feed.length === 0) {
+        runInAction(() => {
+          this.hasReachedEnd = true
+        })
+      } else {
+        this._appendAll(res)
+      }
       this._xIdle()
     } catch (e: any) {
       this._xIdle(`Failed to load feed: ${e.toString()}`)
@@ -281,6 +288,7 @@ export class FeedViewModel implements bsky.FeedView.Response {
 
   private _replaceAll(res: bsky.FeedView.Response) {
     this.feed.length = 0
+    this.hasReachedEnd = false
     this._appendAll(res)
   }
 
