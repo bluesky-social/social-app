@@ -1,7 +1,15 @@
 Paul's todo list
 
+- General
+  - Update to RN 0.70
+  - Selector swipe gesture
 - Composer
   - Update the view after creating a post
+- Profile
+  - Real badges
+  - Edit profile
+  - More button
+  - Followers & following as modal?
 - Search view
   - *
 - Linking

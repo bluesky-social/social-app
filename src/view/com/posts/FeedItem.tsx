@@ -4,7 +4,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {bsky, AdxUri} from '@adxp/mock-api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedViewItemModel} from '../../../state/models/feed-view'
-import {ComposePostModel} from '../../../state/models/shell'
+import {ComposePostModel, SharePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
 import {PostDropdownBtn} from '../util/DropdownBtn'
 import {s, colors} from '../../lib/styles'
@@ -14,10 +14,8 @@ import {useStores} from '../../../state'
 
 export const FeedItem = observer(function FeedItem({
   item,
-  onPressShare,
 }: {
   item: FeedViewItemModel
-  onPressShare: (_uri: string) => void
 }) {
   const store = useStores()
   const record = item.record as unknown as bsky.Post.Record
@@ -40,6 +38,9 @@ export const FeedItem = observer(function FeedItem({
     item
       .toggleLike()
       .catch(e => console.error('Failed to toggle like', record, e))
+  }
+  const onPressShare = (uri: string) => {
+    store.shell.openModal(new SharePostModel(uri))
   }
 
   return (
@@ -151,7 +152,7 @@ export const FeedItem = observer(function FeedItem({
 
 const styles = StyleSheet.create({
   outer: {
-    borderRadius: 10,
+    borderRadius: 6,
     margin: 2,
     marginBottom: 0,
     backgroundColor: colors.white,

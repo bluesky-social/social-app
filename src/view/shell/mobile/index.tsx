@@ -99,7 +99,10 @@ export const MobileShell: React.FC = observer(() => {
   const [isLocationMenuActive, setLocationMenuActive] = useState(false)
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
 
-  const onPressAvi = () => createAccountsMenu()
+  const onPressAvi = () =>
+    createAccountsMenu({
+      debug_onPressItem: () => store.nav.navigate('/profile/alice.com'),
+    })
   const onPressLocation = () => setLocationMenuActive(true)
   const onPressEllipsis = () => createLocationMenu()
 

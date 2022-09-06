@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {Feed} from '../com/feed/Feed'
+import {Feed} from '../com/posts/Feed'
 import {FAB} from '../com/util/FloatingActionButton'
 import {useStores} from '../../state'
 import {FeedViewModel} from '../../state/models/feed-view'

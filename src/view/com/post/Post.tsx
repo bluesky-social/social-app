@@ -154,7 +154,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
 const styles = StyleSheet.create({
   outer: {
     marginTop: 1,
-    borderRadius: 4,
+    borderRadius: 6,
     backgroundColor: colors.white,
     padding: 10,
   },

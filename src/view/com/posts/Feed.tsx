@@ -3,21 +3,17 @@ import {observer} from 'mobx-react-lite'
 import {Text, View, FlatList} from 'react-native'
 import {FeedViewModel, FeedViewItemModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
-import {SharePostModel} from '../../../state/models/shell'
 import {useStores} from '../../../state'
 
 export const Feed = observer(function Feed({feed}: {feed: FeedViewModel}) {
   const store = useStores()
 
-  const onPressShare = (uri: string) => {
-    store.shell.openModal(new SharePostModel(uri))
-  }
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your
   //   renderItem function renders components that follow React performance best practices
   //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = ({item}: {item: FeedViewItemModel}) => (
-    <FeedItem item={item} onPressShare={onPressShare} />
+    <FeedItem item={item} />
   )
   const onRefresh = () => {
     feed.refresh().catch(err => console.error('Failed to refresh', err))
@@ -33,7 +29,7 @@ export const Feed = observer(function Feed({feed}: {feed: FeedViewModel}) {
       {feed.hasError && <Text>{feed.error}</Text>}
       {feed.hasContent && (
         <FlatList
-          data={feed.feed}
+          data={feed.feed.slice()}
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
           refreshing={feed.isRefreshing}

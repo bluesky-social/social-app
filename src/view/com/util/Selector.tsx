@@ -9,17 +9,13 @@ import {
 } from 'react-native'
 import {colors} from '../../lib/styles'
 
-export interface SelectorItem {
-  label: string
-}
-
 export function Selector({
   style,
   items,
   onSelect,
 }: {
   style?: StyleProp<ViewStyle>
-  items: SelectorItem[]
+  items: string[]
   onSelect?: (index: number) => void
 }) {
   const [selectedIndex, setSelectedIndex] = useState<number>(0)
@@ -36,7 +32,7 @@ export function Selector({
           <TouchableWithoutFeedback key={i} onPress={() => onPressItem(i)}>
             <View style={selected ? styles.itemSelected : styles.item}>
               <Text style={selected ? styles.labelSelected : styles.label}>
-                {item.label}
+                {item}
               </Text>
             </View>
           </TouchableWithoutFeedback>

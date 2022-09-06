@@ -238,7 +238,7 @@ export const PostThreadItem = observer(function PostThreadItem({
 const styles = StyleSheet.create({
   outer: {
     backgroundColor: colors.white,
-    borderRadius: 10,
+    borderRadius: 6,
     margin: 2,
     marginBottom: 0,
   },

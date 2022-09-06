@@ -1,12 +1,5 @@
 import React, {useState} from 'react'
-import {
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
