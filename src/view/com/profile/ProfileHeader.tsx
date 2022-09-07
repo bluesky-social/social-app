@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
@@ -12,6 +12,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {useStores} from '../../../state'
+import {EditProfileModel} from '../../../state/models/shell'
 import {pluralize} from '../../lib/strings'
 import {s, gradients, colors} from '../../lib/styles'
 import {AVIS, BANNER} from '../../lib/assets'
@@ -42,7 +43,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     )
   }
   const onPressEditProfile = () => {
-    // TODO
+    store.shell.openModal(new EditProfileModel(view))
   }
   const onPressMenu = () => {
     // TODO
