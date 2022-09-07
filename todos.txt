@@ -22,3 +22,4 @@ Paul's todo list
   - Follows list
 - Bugs
   - Check that sub components arent reloading too much
+  - Profile isn't caching on nav anymore
