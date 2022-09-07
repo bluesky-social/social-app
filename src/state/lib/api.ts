@@ -124,6 +124,17 @@ export async function unfollow(
   return numDels > 0
 }
 
+export async function updateProfile(
+  adx: AdxClient,
+  user: string,
+  profile: bsky.Profile.Record,
+) {
+  return await adx
+    .repo(user, true)
+    .collection('blueskyweb.xyz:Profiles')
+    .put('Profile', 'profile', {$type: 'blueskyweb.xyz:Profile', ...profile})
+}
+
 type WherePred = (_record: GetRecordResponseValidated) => Boolean
 async function deleteWhere(
   coll: AdxRepoCollectionClient,

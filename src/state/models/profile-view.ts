@@ -89,6 +89,14 @@ export class ProfileViewModel implements bsky.ProfileView.Response {
     }
   }
 
+  async updateProfile(profile: bsky.Profile.Record) {
+    if (this.did !== this.rootStore.me.did) {
+      throw new Error('Not your profile!')
+    }
+    await apilib.updateProfile(this.rootStore.api, this.did, profile)
+    await this.refresh()
+  }
+
   // state transitions
   // =
 

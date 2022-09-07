@@ -52,7 +52,7 @@ export const gradients = {
 export const s = StyleSheet.create({
   // font weights
   fw600: {fontWeight: '600'},
-  bold: {fontWeight: '600'},
+  bold: {fontWeight: 'bold'},
   fw500: {fontWeight: '500'},
   semiBold: {fontWeight: '500'},
   fw400: {fontWeight: '400'},

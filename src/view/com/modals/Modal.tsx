@@ -10,6 +10,7 @@ import * as models from '../../../state/models/shell'
 import * as LinkActionsModal from './LinkActions'
 import * as SharePostModal from './SharePost.native'
 import * as ComposePostModal from './ComposePost'
+import * as EditProfile from './EditProfile'
 
 export const Modal = observer(function Modal() {
   const store = useStores()
@@ -48,6 +49,13 @@ export const Modal = observer(function Modal() {
     element = (
       <ComposePostModal.Component
         {...(store.shell.activeModal as models.ComposePostModel)}
+      />
+    )
+  } else if (store.shell.activeModal?.name === 'edit-profile') {
+    snapPoints = EditProfile.snapPoints
+    element = (
+      <EditProfile.Component
+        {...(store.shell.activeModal as models.EditProfileModel)}
       />
     )
   } else {

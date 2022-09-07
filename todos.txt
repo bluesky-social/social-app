@@ -7,9 +7,8 @@ Paul's todo list
   - Update the view after creating a post
 - Profile
   - Real badges
-  - Edit profile
+  - Edit profile: avatar, cover photo
   - More button
-  - Followers & following as modal?
 - Search view
   - *
 - Linking

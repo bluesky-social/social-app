@@ -35,7 +35,6 @@ export function ErrorMessage({
 
 const styles = StyleSheet.create({
   outer: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.red1,

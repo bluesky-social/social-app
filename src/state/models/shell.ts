@@ -1,4 +1,5 @@
 import {makeAutoObservable} from 'mobx'
+import {ProfileViewModel} from './profile-view'
 
 export class LinkActionsModel {
   name = 'link-actions'
@@ -24,15 +25,34 @@ export class ComposePostModel {
   }
 }
 
+export class EditProfileModel {
+  name = 'edit-profile'
+
+  constructor(public profileView: ProfileViewModel) {
+    makeAutoObservable(this)
+  }
+}
+
 export class ShellModel {
   isModalActive = false
-  activeModal: LinkActionsModel | SharePostModel | ComposePostModel | undefined
+  activeModal:
+    | LinkActionsModel
+    | SharePostModel
+    | ComposePostModel
+    | EditProfileModel
+    | undefined
 
   constructor() {
     makeAutoObservable(this)
   }
 
-  openModal(modal: LinkActionsModel | SharePostModel | ComposePostModel) {
+  openModal(
+    modal:
+      | LinkActionsModel
+      | SharePostModel
+      | ComposePostModel
+      | EditProfileModel,
+  ) {
     this.isModalActive = true
     this.activeModal = modal
   }
