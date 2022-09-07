@@ -1,6 +1,7 @@
 import React, {useState, useRef, useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
+  useWindowDimensions,
   GestureResponderEvent,
   Image,
   SafeAreaView,
@@ -16,6 +17,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   runOnJS,
+  interpolate,
 } from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
@@ -33,7 +35,7 @@ import {AVIS} from '../../lib/assets'
 
 const locationIconNeedsNudgeUp = (icon: IconProp) => icon === 'house'
 const SWIPE_GESTURE_HIT_SLOP = {left: 0, top: 0, width: 20, bottom: 0}
-const SWIPE_GESTURE_MAX_DISTANCE = 150
+const SWIPE_GESTURE_TRIGGER = 0.5
 
 const Location = ({
   icon,
@@ -106,7 +108,8 @@ export const MobileShell: React.FC = observer(() => {
   const store = useStores()
   const tabSelectorRef = useRef<{open: () => void}>()
   const [isLocationMenuActive, setLocationMenuActive] = useState(false)
-  const swipeGesturePosition = useSharedValue<number>(0)
+  const winDim = useWindowDimensions()
+  const swipeGestureInterp = useSharedValue<number>(0)
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
 
   const onPressAvi = () =>
@@ -145,24 +148,31 @@ export const MobileShell: React.FC = observer(() => {
       Gesture.Pan()
         .hitSlop(SWIPE_GESTURE_HIT_SLOP)
         .onUpdate(e => {
-          swipeGesturePosition.value = Math.min(
-            e.translationX,
-            SWIPE_GESTURE_MAX_DISTANCE,
-          )
+          if (store.nav.tab.canGoBack) {
+            swipeGestureInterp.value = Math.max(
+              e.translationX / winDim.width,
+              0,
+            )
+          }
         })
-        .onEnd(e => {
-          if (swipeGesturePosition.value >= SWIPE_GESTURE_MAX_DISTANCE) {
+        .onEnd(_e => {
+          if (swipeGestureInterp.value >= SWIPE_GESTURE_TRIGGER) {
             runOnJS(goBack)()
-            swipeGesturePosition.value = 0
+            swipeGestureInterp.value = withTiming(1, {duration: 100}, () => {
+              swipeGestureInterp.value = 0
+            })
           } else {
-            swipeGesturePosition.value = withTiming(0, {duration: 100})
+            swipeGestureInterp.value = withTiming(0, {duration: 100})
           }
         }),
-    [swipeGesturePosition, goBack],
+    [swipeGestureInterp, winDim, store.nav.tab.canGoBack, goBack],
   )
 
-  const swipeViewAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{translateX: swipeGesturePosition.value}],
+  const swipeTransform = useAnimatedStyle(() => ({
+    transform: [{translateX: swipeGestureInterp.value * winDim.width}],
+  }))
+  const swipeOpacity = useAnimatedStyle(() => ({
+    opacity: interpolate(swipeGestureInterp.value, [0, 1.0], [0.6, 0.0]),
   }))
 
   return (
@@ -181,39 +191,34 @@ export const MobileShell: React.FC = observer(() => {
         </TouchableOpacity>
       </View>
       <SafeAreaView style={styles.innerContainer}>
-        <ScreenContainer style={styles.screenContainer}>
-          {screenRenderDesc.screens.map(({Com, params, key, current}) => {
-            if (current && store.nav.tab.canGoBack) {
-              return (
-                <Screen
-                  key={key}
-                  style={[StyleSheet.absoluteFill]}
-                  activityState={2}>
-                  <GestureDetector gesture={swipeGesture}>
+        <GestureDetector gesture={swipeGesture}>
+          <ScreenContainer style={styles.screenContainer}>
+            {screenRenderDesc.screens.map(
+              ({Com, params, key, current, previous}) => {
+                return (
+                  <Screen
+                    key={key}
+                    style={[StyleSheet.absoluteFill]}
+                    activityState={current ? 2 : previous ? 1 : 0}>
                     <Animated.View
-                      style={[s.flex1, styles.screen, swipeViewAnimatedStyle]}>
-                      <FontAwesomeIcon
-                        icon="arrow-left"
-                        size={30}
-                        style={[styles.swipeGestureIcon]}
-                      />
+                      style={
+                        current ? [styles.screenMask, swipeOpacity] : undefined
+                      }
+                    />
+                    <Animated.View
+                      style={[
+                        s.flex1,
+                        styles.screen,
+                        current ? swipeTransform : undefined,
+                      ]}>
                       <Com params={params} visible={true} />
                     </Animated.View>
-                  </GestureDetector>
-                </Screen>
-              )
-            } else {
-              return (
-                <Screen
-                  key={key}
-                  style={[StyleSheet.absoluteFill, styles.screen]}
-                  activityState={current ? 2 : 0}>
-                  <Com params={params} visible={current} />
-                </Screen>
-              )
-            }
-          })}
-        </ScreenContainer>
+                  </Screen>
+                )
+              },
+            )}
+          </ScreenContainer>
+        </GestureDetector>
       </SafeAreaView>
       <View style={styles.bottomBar}>
         <Btn
@@ -274,6 +279,7 @@ function constructScreenRenderDesc(nav: NavigationModel): {
     ]
     const parsedTabScreens = tabScreens.map(screen => {
       const isCurrent = nav.isCurrentScreen(tab.id, screen.index)
+      const isPrevious = nav.isCurrentScreen(tab.id, screen.index + 1)
       const matchRes = match(screen.url)
       if (isCurrent) {
         icon = matchRes.icon
@@ -281,6 +287,7 @@ function constructScreenRenderDesc(nav: NavigationModel): {
       return Object.assign(matchRes, {
         key: `t${tab.id}-s${screen.index}`,
         current: isCurrent,
+        previous: isPrevious,
       }) as ScreenRenderDesc
     })
     screens = screens.concat(parsedTabScreens)
@@ -304,10 +311,14 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: colors.gray1,
   },
-  swipeGestureIcon: {
+  screenMask: {
     position: 'absolute',
-    left: -75,
-    top: '50%',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#000',
+    opacity: 0.5,
   },
   topBar: {
     flexDirection: 'row',
