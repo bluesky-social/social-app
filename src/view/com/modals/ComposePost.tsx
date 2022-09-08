@@ -1,8 +1,9 @@
-import React, {useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Autocomplete} from './composer/Autocomplete'
 import Toast from '../util/Toast'
 import ProgressCircle from '../util/ProgressCircle'
 import {useStores} from '../../../state'
@@ -14,16 +15,27 @@ const WARNING_TEXT_LENGTH = 200
 const DANGER_TEXT_LENGTH = 255
 export const snapPoints = ['100%']
 
+const DEBUG_USERNAMES = ['alice.com', 'bob.com', 'carla.com']
+
 export function Component({replyTo}: {replyTo?: string}) {
   const store = useStores()
-  const [text, setText] = useState('')
   const [error, setError] = useState('')
+  const [text, setText] = useState('')
+  const [autocompleteOptions, setAutocompleteOptions] = useState<string[]>([])
 
   const onChangeText = (newText: string) => {
     if (newText.length > MAX_TEXT_LENGTH) {
-      setText(newText.slice(0, MAX_TEXT_LENGTH))
-    } else {
-      setText(newText)
+      newText = newText.slice(0, MAX_TEXT_LENGTH)
+    }
+    setText(newText)
+
+    const prefix = extractTextAutocompletePrefix(newText)
+    if (typeof prefix === 'string') {
+      setAutocompleteOptions(
+        DEBUG_USERNAMES.filter(name => name.includes(prefix)),
+      )
+    } else if (autocompleteOptions) {
+      setAutocompleteOptions([])
     }
   }
   const onPressCancel = () => {
@@ -53,6 +65,10 @@ export function Component({replyTo}: {replyTo?: string}) {
       hideOnPress: true,
     })
   }
+  const onSelectAutocompleteItem = (item: string) => {
+    setText(replaceTextAutocompletePrefix(text, item))
+    setAutocompleteOptions([])
+  }
 
   const progressColor =
     text.length > DANGER_TEXT_LENGTH
@@ -60,6 +76,19 @@ export function Component({replyTo}: {replyTo?: string}) {
       : text.length > WARNING_TEXT_LENGTH
       ? '#f7c600'
       : undefined
+
+  const textDecorated = useMemo(() => {
+    return (text || '').split(/(\s)/g).map((item, i) => {
+      if (/@[a-zA-Z0-9]+/g.test(item)) {
+        return (
+          <Text key={i} style={{color: colors.blue3}}>
+            {item}
+          </Text>
+        )
+      }
+      return item
+    })
+  }, [text])
 
   return (
     <View style={styles.outer}>
@@ -95,10 +124,10 @@ export function Component({replyTo}: {replyTo?: string}) {
         scrollEnabled
         autoFocus
         onChangeText={(text: string) => onChangeText(text)}
-        value={text}
         placeholder={replyTo ? 'Write your reply' : "What's new?"}
-        style={styles.textInput}
-      />
+        style={styles.textInput}>
+        {textDecorated}
+      </BottomSheetTextInput>
       <View style={[s.flexRow, s.pt10, s.pb10, s.pr5]}>
         <View style={s.flex1} />
         <View>
@@ -108,8 +137,25 @@ export function Component({replyTo}: {replyTo?: string}) {
           />
         </View>
       </View>
+      <Autocomplete
+        active={autocompleteOptions.length > 0}
+        items={autocompleteOptions}
+        onSelect={onSelectAutocompleteItem}
+      />
     </View>
   )
+}
+
+const atPrefixRegex = /@([\S]*)$/i
+function extractTextAutocompletePrefix(text: string) {
+  const match = atPrefixRegex.exec(text)
+  if (match) {
+    return match[1]
+  }
+  return undefined
+}
+function replaceTextAutocompletePrefix(text: string, item: string) {
+  return text.replace(atPrefixRegex, `@${item} `)
 }
 
 const styles = StyleSheet.create({
