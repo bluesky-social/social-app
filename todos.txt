@@ -2,7 +2,6 @@ Paul's todo list
 
 - General
   - Update to RN 0.70
-  - Selector swipe gesture
 - Composer
   - Update the view after creating a post
 - Profile
