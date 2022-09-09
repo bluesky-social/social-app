@@ -1,4 +1,4 @@
-import React, {createRef, useRef, useMemo} from 'react'
+import React, {createRef, useRef, useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ScrollView,
@@ -8,6 +8,12 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  runOnJS,
+} from 'react-native-reanimated'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
@@ -16,14 +22,22 @@ import {useStores} from '../../../state'
 import {s, colors, gradients} from '../../lib/styles'
 import {match} from '../../routes'
 
+const TAB_HEIGHT = 42
+
 export const snapPoints = [500]
 
 export const Component = observer(() => {
   const store = useStores()
+  const [closingTabIndex, setClosingTabIndex] = useState<number | undefined>(
+    undefined,
+  )
+  const closeInterp = useSharedValue<number>(0)
   const tabsRef = useRef<ScrollView>(null)
   const tabRefs = useMemo(
     () =>
-      Array.from({length: store.nav.tabs.length}).map(() => createRef<View>()),
+      Array.from({length: store.nav.tabs.length}).map(() =>
+        createRef<Animated.View>(),
+      ),
     [store.nav.tabs.length],
   )
 
@@ -46,7 +60,15 @@ export const Component = observer(() => {
     store.nav.setActiveTab(tabIndex)
     onClose()
   }
-  const onCloseTab = (tabIndex: number) => store.nav.closeTab(tabIndex)
+  const doCloseTab = (index: number) => store.nav.closeTab(index)
+  const onCloseTab = (tabIndex: number) => {
+    setClosingTabIndex(tabIndex)
+    closeInterp.value = 0
+    closeInterp.value = withTiming(1, {duration: 300}, () => {
+      runOnJS(setClosingTabIndex)(undefined)
+      runOnJS(doCloseTab)(tabIndex)
+    })
+  }
   const onNavigate = (url: string) => {
     store.nav.navigate(url)
     onClose()
@@ -101,6 +123,11 @@ export const Component = observer(() => {
   }
 
   const currentTabIndex = store.nav.tabIndex
+  const closingTabAnimStyle = useAnimatedStyle(() => ({
+    height: TAB_HEIGHT * (1 - closeInterp.value),
+    opacity: 1 - closeInterp.value,
+    marginBottom: 4 * (1 - closeInterp.value),
+  }))
   return (
     <View onLayout={onLayout}>
       <View style={[s.p10, styles.section]}>
@@ -154,6 +181,7 @@ export const Component = observer(() => {
           {store.nav.tabs.map((tab, tabIndex) => {
             const {icon} = match(tab.current.url)
             const isActive = tabIndex === currentTabIndex
+            const isClosing = closingTabIndex === tabIndex
             return (
               <Swipeable
                 key={tab.id}
@@ -162,43 +190,48 @@ export const Component = observer(() => {
                 leftThreshold={100}
                 rightThreshold={100}
                 onSwipeableWillOpen={() => onCloseTab(tabIndex)}>
-                <View
-                  ref={tabRefs[tabIndex]}
+                <Animated.View
                   style={[
-                    styles.tab,
-                    styles.existing,
-                    isActive && styles.active,
+                    styles.tabOuter,
+                    isClosing ? closingTabAnimStyle : undefined,
                   ]}>
-                  <TouchableWithoutFeedback
-                    onPress={() => onPressChangeTab(tabIndex)}>
-                    <View style={styles.tabIcon}>
-                      <FontAwesomeIcon size={20} icon={icon} />
-                    </View>
-                  </TouchableWithoutFeedback>
-                  <TouchableWithoutFeedback
-                    onPress={() => onPressChangeTab(tabIndex)}>
-                    <Text
-                      ellipsizeMode="tail"
-                      numberOfLines={1}
-                      suppressHighlighting={true}
-                      style={[
-                        styles.tabText,
-                        isActive && styles.tabTextActive,
-                      ]}>
-                      {tab.current.title || tab.current.url}
-                    </Text>
-                  </TouchableWithoutFeedback>
-                  <TouchableWithoutFeedback
-                    onPress={() => onCloseTab(tabIndex)}>
-                    <View style={styles.tabClose}>
-                      <FontAwesomeIcon
-                        size={14}
-                        icon="x"
-                        style={styles.tabCloseIcon}
-                      />
-                    </View>
-                  </TouchableWithoutFeedback>
-                </View>
+                  <Animated.View
+                    ref={tabRefs[tabIndex]}
+                    style={[
+                      styles.tab,
+                      styles.existing,
+                      isActive && styles.active,
+                    ]}>
+                    <TouchableWithoutFeedback
+                      onPress={() => onPressChangeTab(tabIndex)}>
+                      <View style={styles.tabInner}>
+                        <View style={styles.tabIcon}>
+                          <FontAwesomeIcon size={20} icon={icon} />
+                        </View>
+                        <Text
+                          ellipsizeMode="tail"
+                          numberOfLines={1}
+                          suppressHighlighting={true}
+                          style={[
+                            styles.tabText,
+                            isActive && styles.tabTextActive,
+                          ]}>
+                          {tab.current.title || tab.current.url}
+                        </Text>
+                      </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback
+                      onPress={() => onCloseTab(tabIndex)}>
+                      <View style={styles.tabClose}>
+                        <FontAwesomeIcon
+                          size={14}
+                          icon="x"
+                          style={styles.tabCloseIcon}
+                        />
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </Animated.View>
+                </Animated.View>
               </Swipeable>
             )
           })}
@@ -247,14 +280,23 @@ const styles = StyleSheet.create({
   tabs: {
     height: 240,
   },
+  tabOuter: {
+    height: TAB_HEIGHT + 4,
+    overflow: 'hidden',
+  },
   tab: {
     flexDirection: 'row',
+    height: TAB_HEIGHT,
     backgroundColor: colors.gray1,
     alignItems: 'center',
     borderRadius: 4,
+  },
+  tabInner: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
     paddingLeft: 12,
-    paddingRight: 16,
-    marginBottom: 4,
+    paddingVertical: 12,
   },
   existing: {
     borderColor: colors.gray4,
@@ -269,14 +311,14 @@ const styles = StyleSheet.create({
   tabText: {
     flex: 1,
     paddingHorizontal: 10,
-    paddingVertical: 12,
     fontSize: 16,
   },
   tabTextActive: {
     fontWeight: '500',
   },
   tabClose: {
-    padding: 2,
+    paddingVertical: 16,
+    paddingRight: 16,
   },
   tabCloseIcon: {
     color: '#655',
