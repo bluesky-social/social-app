@@ -8,7 +8,8 @@ const HEADER_ITEM = {_reactKey: '__header__'}
 const SELECTOR_ITEM = {_reactKey: '__selector__'}
 const STICKY_HEADER_INDICES = [1]
 const SWIPE_GESTURE_MAX_DISTANCE = 200
-const SWIPE_GESTURE_HIT_SLOP = {left: -20, top: 0, right: 0, bottom: 0} // we ignore the left 20 pixels to avoid conflicts with the page-nav gesture
+const SWIPE_GESTURE_VEL_TRIGGER = 2000
+const SWIPE_GESTURE_HIT_SLOP = {left: -50, top: 0, right: 0, bottom: 0} // we ignore the left 20 pixels to avoid conflicts with the page-nav gesture
 
 export function ViewSelector({
   sections,
@@ -55,7 +56,11 @@ export function ViewSelector({
           swipeGestureInterp.value = scaled
         })
         .onEnd(e => {
-          if (swipeGestureInterp.value >= 0.5) {
+          const vx = e.velocityX
+          if (
+            swipeGestureInterp.value >= 0.5 ||
+            (vx < 0 && Math.abs(vx) > SWIPE_GESTURE_VEL_TRIGGER)
+          ) {
             // swiped to next
             if (selectedIndex < sections.length - 1) {
               // interp to the next item's position...
@@ -66,7 +71,10 @@ export function ViewSelector({
             } else {
               swipeGestureInterp.value = withTiming(0, {duration: 100})
             }
-          } else if (swipeGestureInterp.value <= -0.5) {
+          } else if (
+            swipeGestureInterp.value <= -0.5 ||
+            (vx > 0 && Math.abs(vx) > SWIPE_GESTURE_VEL_TRIGGER)
+          ) {
             // swiped to prev
             if (selectedIndex > 0) {
               // interp to the prev item's position...
