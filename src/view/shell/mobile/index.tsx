@@ -34,8 +34,8 @@ import {s, colors} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
 
 const locationIconNeedsNudgeUp = (icon: IconProp) => icon === 'house'
-const SWIPE_GESTURE_HIT_SLOP = {left: 0, top: 0, width: 20, bottom: 0}
-const SWIPE_GESTURE_TRIGGER = 0.5
+const SWIPE_GESTURE_DIST_TRIGGER = 0.5
+const SWIPE_GESTURE_VEL_TRIGGER = 2500
 
 const Location = ({
   icon,
@@ -154,8 +154,11 @@ export const MobileShell: React.FC = observer(() => {
             )
           }
         })
-        .onEnd(_e => {
-          if (swipeGestureInterp.value >= SWIPE_GESTURE_TRIGGER) {
+        .onEnd(e => {
+          if (
+            swipeGestureInterp.value >= SWIPE_GESTURE_DIST_TRIGGER ||
+            e.velocityX > SWIPE_GESTURE_VEL_TRIGGER
+          ) {
             runOnJS(goBack)()
             swipeGestureInterp.value = withTiming(1, {duration: 100}, () => {
               swipeGestureInterp.value = 0
@@ -344,7 +347,6 @@ const styles = StyleSheet.create({
     paddingTop: 9,
     paddingBottom: 9,
     backgroundColor: colors.gray1,
-    // justifyContent: 'center',
   },
   locationIcon: {
     color: colors.gray5,
