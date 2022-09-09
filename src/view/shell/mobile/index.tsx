@@ -146,7 +146,6 @@ export const MobileShell: React.FC = observer(() => {
   const swipeGesture = useMemo(
     () =>
       Gesture.Pan()
-        .hitSlop(SWIPE_GESTURE_HIT_SLOP)
         .onUpdate(e => {
           if (store.nav.tab.canGoBack) {
             swipeGestureInterp.value = Math.max(
