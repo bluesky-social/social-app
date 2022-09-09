@@ -144,7 +144,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           </View>
         </View>
         <View style={[s.pl10, s.pr10, s.pb10]}>
-          <Text style={[styles.postText, s.f18, s['lh18-1.3']]}>
+          <Text style={[styles.postText, styles.postTextLarge]}>
             {record.text}
           </Text>
           {item._isHighlightedPost && hasEngagement ? (
@@ -272,8 +272,15 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   postText: {
-    paddingBottom: 5,
+    paddingBottom: 8,
     fontFamily: 'Helvetica Neue',
+  },
+  postTextLarge: {
+    paddingLeft: 4,
+    paddingBottom: 20,
+    fontSize: 24,
+    lineHeight: 32,
+    fontWeight: '300',
   },
   expandedInfo: {
     flexDirection: 'row',
