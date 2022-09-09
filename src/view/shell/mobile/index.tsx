@@ -23,9 +23,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {useStores} from '../../../state'
 import {NavigationModel} from '../../../state/models/navigation'
+import {TabsSelectorModel} from '../../../state/models/shell'
 import {match, MatchResult} from '../../routes'
 import {Modal} from '../../com/modals/Modal'
-import {TabsSelectorModal} from './tabs-selector'
 import {LocationNavigator} from './location-navigator'
 import {createBackMenu, createForwardMenu} from './history-menu'
 import {createAccountsMenu} from './accounts-menu'
@@ -106,7 +106,6 @@ const Btn = ({
 
 export const MobileShell: React.FC = observer(() => {
   const store = useStores()
-  const tabSelectorRef = useRef<{open: () => void}>()
   const [isLocationMenuActive, setLocationMenuActive] = useState(false)
   const winDim = useWindowDimensions()
   const swipeGestureInterp = useSharedValue<number>(0)
@@ -129,14 +128,10 @@ export const MobileShell: React.FC = observer(() => {
   const onPressForward = () => store.nav.tab.goForward()
   const onPressHome = () => store.nav.navigate('/')
   const onPressNotifications = () => store.nav.navigate('/notifications')
-  const onPressTabs = () => tabSelectorRef.current?.open()
+  const onPressTabs = () => store.shell.openModal(new TabsSelectorModel())
 
   const onLongPressBack = () => createBackMenu(store.nav.tab)
   const onLongPressForward = () => createForwardMenu(store.nav.tab)
-
-  const onNewTab = () => store.nav.newTab('/')
-  const onChangeTab = (tabIndex: number) => store.nav.setActiveTab(tabIndex)
-  const onCloseTab = (tabIndex: number) => store.nav.closeTab(tabIndex)
 
   const goBack = () => store.nav.tab.goBack()
   const swipeGesture = Gesture.Pan()
@@ -231,14 +226,6 @@ export const MobileShell: React.FC = observer(() => {
         <Btn icon={['far', 'bell']} onPress={onPressNotifications} />
         <Btn icon={['far', 'clone']} onPress={onPressTabs} />
       </View>
-      <TabsSelectorModal
-        ref={tabSelectorRef}
-        tabs={store.nav.tabs}
-        currentTabIndex={store.nav.tabIndex}
-        onNewTab={onNewTab}
-        onChangeTab={onChangeTab}
-        onCloseTab={onCloseTab}
-      />
       <Modal />
       {isLocationMenuActive && (
         <LocationNavigator

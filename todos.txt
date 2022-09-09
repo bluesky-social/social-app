@@ -2,6 +2,7 @@ Paul's todo list
 
 - General
   - Update to RN 0.70
+  - Add close animation to tabs selector
 - Composer
   - Update the view after creating a post
 - Profile

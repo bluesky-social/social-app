@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useRef, useEffect} from 'react'
 import {View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import BottomSheet from '@gorhom/bottom-sheet'
@@ -7,10 +7,13 @@ import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 
 import * as models from '../../../state/models/shell'
 
+import * as TabsSelectorModal from './TabsSelector'
 import * as LinkActionsModal from './LinkActions'
 import * as SharePostModal from './SharePost.native'
 import * as ComposePostModal from './ComposePost'
 import * as EditProfile from './EditProfile'
+
+const CLOSED_SNAPPOINTS = ['10%']
 
 export const Modal = observer(function Modal() {
   const store = useStores()
@@ -25,12 +28,24 @@ export const Modal = observer(function Modal() {
     bottomSheetRef.current?.close()
   }
 
-  if (!store.shell.isModalActive) {
-    return <View />
-  }
+  useEffect(() => {
+    if (store.shell.isModalActive) {
+      bottomSheetRef.current?.expand()
+    } else {
+      bottomSheetRef.current?.close()
+    }
+  }, [store.shell.isModalActive, bottomSheetRef])
 
-  let snapPoints, element
-  if (store.shell.activeModal?.name === 'link-actions') {
+  let snapPoints: (string | number)[] = CLOSED_SNAPPOINTS
+  let element
+  if (store.shell.activeModal?.name === 'tabs-selector') {
+    snapPoints = TabsSelectorModal.snapPoints
+    element = (
+      <TabsSelectorModal.Component
+        {...(store.shell.activeModal as models.TabsSelectorModel)}
+      />
+    )
+  } else if (store.shell.activeModal?.name === 'link-actions') {
     snapPoints = LinkActionsModal.snapPoints
     element = (
       <LinkActionsModal.Component
@@ -59,16 +74,19 @@ export const Modal = observer(function Modal() {
       />
     )
   } else {
-    return <View />
+    element = <View />
   }
 
   return (
     <BottomSheet
       ref={bottomSheetRef}
       snapPoints={snapPoints}
+      index={store.shell.isModalActive ? 0 : -1}
       enablePanDownToClose
       keyboardBehavior="fillParent"
-      backdropComponent={createCustomBackdrop(onClose)}
+      backdropComponent={
+        store.shell.isModalActive ? createCustomBackdrop(onClose) : undefined
+      }
       onChange={onShareBottomSheetChange}>
       {element}
     </BottomSheet>

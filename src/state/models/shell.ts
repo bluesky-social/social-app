@@ -1,5 +1,13 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {ProfileViewModel} from './profile-view'
+
+export class TabsSelectorModel {
+  name = 'tabs-selector'
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+}
 
 export class LinkActionsModel {
   name = 'link-actions'
@@ -36,6 +44,7 @@ export class EditProfileModel {
 export class ShellModel {
   isModalActive = false
   activeModal:
+    | TabsSelectorModel
     | LinkActionsModel
     | SharePostModel
     | ComposePostModel
@@ -48,6 +57,7 @@ export class ShellModel {
 
   openModal(
     modal:
+      | TabsSelectorModel
       | LinkActionsModel
       | SharePostModel
       | ComposePostModel
