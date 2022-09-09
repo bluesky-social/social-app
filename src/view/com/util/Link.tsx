@@ -21,7 +21,11 @@ export const Link = observer(function Link({
     store.shell.openModal(new LinkActionsModel(href, title || href))
   }
   return (
-    <TouchableOpacity style={style} onPress={onPress} onLongPress={onLongPress}>
+    <TouchableOpacity
+      style={style}
+      onPress={onPress}
+      onLongPress={onLongPress}
+      delayPressIn={50}>
       {children ? children : <Text>{title || 'link'}</Text>}
     </TouchableOpacity>
   )
