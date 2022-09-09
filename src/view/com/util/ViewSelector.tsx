@@ -15,6 +15,7 @@ export function ViewSelector({
   sections,
   items,
   refreshing,
+  swipeEnabled,
   renderHeader,
   renderItem,
   onSelectView,
@@ -24,6 +25,7 @@ export function ViewSelector({
   sections: string[]
   items: any[]
   refreshing?: boolean
+  swipeEnabled?: boolean
   renderHeader?: () => JSX.Element
   renderItem: (item: any) => JSX.Element
   onSelectView?: (viewIndex: number) => void
@@ -44,53 +46,52 @@ export function ViewSelector({
   // gestures
   // =
 
-  const swipeGesture = useMemo(
-    () =>
-      Gesture.Pan()
-        .hitSlop(SWIPE_GESTURE_HIT_SLOP)
-        .onUpdate(e => {
-          // calculate [-1, 1] range for the gesture
-          const clamped = Math.min(e.translationX, SWIPE_GESTURE_MAX_DISTANCE)
-          const reversed = clamped * -1
-          const scaled = reversed / SWIPE_GESTURE_MAX_DISTANCE
-          swipeGestureInterp.value = scaled
-        })
-        .onEnd(e => {
-          const vx = e.velocityX
-          if (
-            swipeGestureInterp.value >= 0.5 ||
-            (vx < 0 && Math.abs(vx) > SWIPE_GESTURE_VEL_TRIGGER)
-          ) {
-            // swiped to next
-            if (selectedIndex < sections.length - 1) {
-              // interp to the next item's position...
-              swipeGestureInterp.value = withTiming(1, {duration: 100}, () => {
-                // ...then update the index, which triggers the useEffect() below [1]
-                runOnJS(setSelectedIndex)(selectedIndex + 1)
-              })
-            } else {
-              swipeGestureInterp.value = withTiming(0, {duration: 100})
-            }
-          } else if (
-            swipeGestureInterp.value <= -0.5 ||
-            (vx > 0 && Math.abs(vx) > SWIPE_GESTURE_VEL_TRIGGER)
-          ) {
-            // swiped to prev
-            if (selectedIndex > 0) {
-              // interp to the prev item's position...
-              swipeGestureInterp.value = withTiming(-1, {duration: 100}, () => {
-                // ...then update the index, which triggers the useEffect() below [1]
-                runOnJS(setSelectedIndex)(selectedIndex - 1)
-              })
-            } else {
-              swipeGestureInterp.value = withTiming(0, {duration: 100})
-            }
+  const swipeGesture = useMemo(() => {
+    if (!swipeEnabled) return undefined
+    return Gesture.Pan()
+      .hitSlop(SWIPE_GESTURE_HIT_SLOP)
+      .onUpdate(e => {
+        // calculate [-1, 1] range for the gesture
+        const clamped = Math.min(e.translationX, SWIPE_GESTURE_MAX_DISTANCE)
+        const reversed = clamped * -1
+        const scaled = reversed / SWIPE_GESTURE_MAX_DISTANCE
+        swipeGestureInterp.value = scaled
+      })
+      .onEnd(e => {
+        const vx = e.velocityX
+        if (
+          swipeGestureInterp.value >= 0.5 ||
+          (vx < 0 && Math.abs(vx) > SWIPE_GESTURE_VEL_TRIGGER)
+        ) {
+          // swiped to next
+          if (selectedIndex < sections.length - 1) {
+            // interp to the next item's position...
+            swipeGestureInterp.value = withTiming(1, {duration: 100}, () => {
+              // ...then update the index, which triggers the useEffect() below [1]
+              runOnJS(setSelectedIndex)(selectedIndex + 1)
+            })
           } else {
             swipeGestureInterp.value = withTiming(0, {duration: 100})
           }
-        }),
-    [swipeGestureInterp, selectedIndex, sections.length],
-  )
+        } else if (
+          swipeGestureInterp.value <= -0.5 ||
+          (vx > 0 && Math.abs(vx) > SWIPE_GESTURE_VEL_TRIGGER)
+        ) {
+          // swiped to prev
+          if (selectedIndex > 0) {
+            // interp to the prev item's position...
+            swipeGestureInterp.value = withTiming(-1, {duration: 100}, () => {
+              // ...then update the index, which triggers the useEffect() below [1]
+              runOnJS(setSelectedIndex)(selectedIndex - 1)
+            })
+          } else {
+            swipeGestureInterp.value = withTiming(0, {duration: 100})
+          }
+        } else {
+          swipeGestureInterp.value = withTiming(0, {duration: 100})
+        }
+      })
+  }, [swipeEnabled, swipeGestureInterp, selectedIndex, sections.length])
   useEffect(() => {
     // [1] completes the swipe gesture animation by resetting the interp value
     // this has to be done as an effect so that it occurs *after* the selectedIndex has been updated
@@ -121,19 +122,21 @@ export function ViewSelector({
   }
 
   const data = [HEADER_ITEM, SELECTOR_ITEM, ...items]
-  return (
-    <GestureDetector gesture={swipeGesture}>
-      <FlatList
-        data={data}
-        keyExtractor={item => item._reactKey}
-        renderItem={renderItemInternal}
-        stickyHeaderIndices={STICKY_HEADER_INDICES}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-        onEndReached={onEndReached}
-      />
-    </GestureDetector>
+  const listEl = (
+    <FlatList
+      data={data}
+      keyExtractor={item => item._reactKey}
+      renderItem={renderItemInternal}
+      stickyHeaderIndices={STICKY_HEADER_INDICES}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+      onEndReached={onEndReached}
+    />
   )
+  if (swipeEnabled) {
+    return <GestureDetector gesture={swipeGesture}>{listEl}</GestureDetector>
+  }
+  return listEl
 }
 
 const styles = StyleSheet.create({})
