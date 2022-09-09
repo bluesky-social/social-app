@@ -87,7 +87,7 @@ const Btn = ({
     return (
       <View style={styles.ctrl}>
         <FontAwesomeIcon
-          size={18}
+          size={21}
           style={[styles.ctrlIcon, styles.inactive]}
           icon={icon}
         />
@@ -99,7 +99,7 @@ const Btn = ({
       style={styles.ctrl}
       onPress={onPress}
       onLongPress={onLongPress}>
-      <FontAwesomeIcon size={18} style={styles.ctrlIcon} icon={icon} />
+      <FontAwesomeIcon size={21} style={styles.ctrlIcon} icon={icon} />
     </TouchableOpacity>
   )
 }
@@ -331,19 +331,19 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   avi: {
-    width: 28,
-    height: 28,
+    width: 34,
+    height: 34,
     marginRight: 8,
-    borderRadius: 14,
+    borderRadius: 17,
   },
   location: {
     flex: 1,
     flexDirection: 'row',
     borderRadius: 6,
-    paddingLeft: 10,
+    paddingLeft: 12,
     paddingRight: 6,
-    paddingTop: 6,
-    paddingBottom: 6,
+    paddingTop: 9,
+    paddingBottom: 9,
     backgroundColor: colors.gray1,
     // justifyContent: 'center',
   },

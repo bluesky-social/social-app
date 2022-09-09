@@ -16,7 +16,7 @@ export function FAB({icon, onPress}: {icon: IconProp; onPress: OnPress}) {
         end={{x: 1, y: 1}}
         style={styles.inner}>
         <FontAwesomeIcon
-          size={20}
+          size={24}
           icon={icon}
           color={colors.white}
           style={styles.icon}
@@ -32,17 +32,17 @@ const styles = StyleSheet.create({
     zIndex: zIndex.FAB,
     right: 20,
     bottom: 10,
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     shadowColor: '#000',
     shadowOpacity: 0.3,
     shadowOffset: {width: 0, height: 1},
   },
   inner: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
   },

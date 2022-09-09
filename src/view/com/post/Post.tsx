@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   postText: {
-    paddingBottom: 5,
+    paddingBottom: 8,
   },
   ctrls: {
     flexDirection: 'row',

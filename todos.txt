@@ -20,3 +20,4 @@ Paul's todo list
   - Follows list
 - Bugs
   - Check that sub components arent reloading too much
+  - Titles are getting screwed up (possibly swipe related)
