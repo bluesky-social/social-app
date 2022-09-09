@@ -1,4 +1,4 @@
-import React, {useState, useRef, useMemo} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   useWindowDimensions,
@@ -138,37 +138,29 @@ export const MobileShell: React.FC = observer(() => {
   const onChangeTab = (tabIndex: number) => store.nav.setActiveTab(tabIndex)
   const onCloseTab = (tabIndex: number) => store.nav.closeTab(tabIndex)
 
-  const goBack = useMemo(() => {
-    return () => {
-      store.nav.tab.goBack()
-    }
-  }, [store.nav.tab])
-  const swipeGesture = useMemo(
-    () =>
-      Gesture.Pan()
-        .onUpdate(e => {
-          if (store.nav.tab.canGoBack) {
-            swipeGestureInterp.value = Math.max(
-              e.translationX / winDim.width,
-              0,
-            )
-          }
+  const goBack = () => store.nav.tab.goBack()
+  const swipeGesture = Gesture.Pan()
+    .onUpdate(e => {
+      if (store.nav.tab.canGoBack) {
+        swipeGestureInterp.value = Math.max(e.translationX / winDim.width, 0)
+      }
+    })
+    .onEnd(e => {
+      if (
+        swipeGestureInterp.value >= SWIPE_GESTURE_DIST_TRIGGER ||
+        e.velocityX > SWIPE_GESTURE_VEL_TRIGGER
+      ) {
+        swipeGestureInterp.value = withTiming(1, {duration: 100}, () => {
+          runOnJS(goBack)()
         })
-        .onEnd(e => {
-          if (
-            swipeGestureInterp.value >= SWIPE_GESTURE_DIST_TRIGGER ||
-            e.velocityX > SWIPE_GESTURE_VEL_TRIGGER
-          ) {
-            runOnJS(goBack)()
-            swipeGestureInterp.value = withTiming(1, {duration: 100}, () => {
-              swipeGestureInterp.value = 0
-            })
-          } else {
-            swipeGestureInterp.value = withTiming(0, {duration: 100})
-          }
-        }),
-    [swipeGestureInterp, winDim, store.nav.tab.canGoBack, goBack],
-  )
+      } else {
+        swipeGestureInterp.value = withTiming(0, {duration: 100})
+      }
+    })
+  useEffect(() => {
+    // reset the swipe interopolation when the page changes
+    swipeGestureInterp.value = 0
+  }, [swipeGestureInterp, store.nav.tab.current])
 
   const swipeTransform = useAnimatedStyle(() => ({
     transform: [{translateX: swipeGestureInterp.value * winDim.width}],
