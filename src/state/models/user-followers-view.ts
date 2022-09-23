@@ -1,18 +1,18 @@
 import {makeAutoObservable} from 'mobx'
-import {bsky} from '@adxp/mock-api'
+import * as GetUserFollowers from '../../third-party/api/src/types/todo/social/getUserFollowers'
 import {RootStoreModel} from './root-store'
 
-type Subject = bsky.UserFollowersView.Response['subject']
+type Subject = GetUserFollowers.OutputSchema['subject']
 export type FollowerItem =
-  bsky.UserFollowersView.Response['followers'][number] & {_reactKey: string}
+  GetUserFollowers.OutputSchema['followers'][number] & {_reactKey: string}
 
-export class UserFollowersViewModel implements bsky.UserFollowersView.Response {
+export class UserFollowersViewModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
-  params: bsky.UserFollowersView.Params
+  params: GetUserFollowers.QueryParams
 
   // data
   subject: Subject = {did: '', name: '', displayName: ''}
@@ -20,7 +20,7 @@ export class UserFollowersViewModel implements bsky.UserFollowersView.Response {
 
   constructor(
     public rootStore: RootStoreModel,
-    params: bsky.UserFollowersView.Params,
+    params: GetUserFollowers.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -83,10 +83,9 @@ export class UserFollowersViewModel implements bsky.UserFollowersView.Response {
     this._xLoading(isRefreshing)
     await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
-      const res = (await this.rootStore.api.mainPds.view(
-        'blueskyweb.xyz:UserFollowersView',
+      const res = await this.rootStore.api.todo.social.getUserFollowers(
         this.params,
-      )) as bsky.UserFollowersView.Response
+      )
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -94,13 +93,13 @@ export class UserFollowersViewModel implements bsky.UserFollowersView.Response {
     }
   }
 
-  private _replaceAll(res: bsky.UserFollowersView.Response) {
-    this.subject.did = res.subject.did
-    this.subject.name = res.subject.name
-    this.subject.displayName = res.subject.displayName
+  private _replaceAll(res: GetUserFollowers.Response) {
+    this.subject.did = res.data.subject.did
+    this.subject.name = res.data.subject.name
+    this.subject.displayName = res.data.subject.displayName
     this.followers.length = 0
     let counter = 0
-    for (const item of res.followers) {
+    for (const item of res.data.followers) {
       this._append({_reactKey: `item-${counter++}`, ...item})
     }
   }

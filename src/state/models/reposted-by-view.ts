@@ -1,8 +1,9 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {bsky, AdxUri} from '@adxp/mock-api'
+import {AdxUri} from '../../third-party/uri'
+import * as GetRepostedBy from '../../third-party/api/src/types/todo/social/getRepostedBy'
 import {RootStoreModel} from './root-store'
 
-type RepostedByItem = bsky.RepostedByView.Response['repostedBy'][number]
+type RepostedByItem = GetRepostedBy.OutputSchema['repostedBy'][number]
 
 export class RepostedByViewItemModel implements RepostedByItem {
   // ui state
@@ -22,14 +23,14 @@ export class RepostedByViewItemModel implements RepostedByItem {
   }
 }
 
-export class RepostedByViewModel implements bsky.RepostedByView.Response {
+export class RepostedByViewModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
   resolvedUri = ''
-  params: bsky.RepostedByView.Params
+  params: GetRepostedBy.QueryParams
 
   // data
   uri: string = ''
@@ -37,7 +38,7 @@ export class RepostedByViewModel implements bsky.RepostedByView.Response {
 
   constructor(
     public rootStore: RootStoreModel,
-    params: bsky.RepostedByView.Params,
+    params: GetRepostedBy.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -113,10 +114,9 @@ export class RepostedByViewModel implements bsky.RepostedByView.Response {
     this._xLoading(isRefreshing)
     await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
-      const res = (await this.rootStore.api.mainPds.view(
-        'blueskyweb.xyz:RepostedByView',
+      const res = await this.rootStore.api.todo.social.getRepostedBy(
         Object.assign({}, this.params, {uri: this.resolvedUri}),
-      )) as bsky.RepostedByView.Response
+      )
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -131,10 +131,10 @@ export class RepostedByViewModel implements bsky.RepostedByView.Response {
     this._xIdle()
   }
 
-  private _replaceAll(res: bsky.RepostedByView.Response) {
+  private _replaceAll(res: GetRepostedBy.Response) {
     this.repostedBy.length = 0
     let counter = 0
-    for (const item of res.repostedBy) {
+    for (const item of res.data.repostedBy) {
       this._append(counter++, item)
     }
   }

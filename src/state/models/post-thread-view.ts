@@ -1,5 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {bsky, AdxUri} from '@adxp/mock-api'
+import * as GetPostThread from '../../third-party/api/src/types/todo/social/getPostThread'
+import {AdxUri} from '../../third-party/uri'
 import _omit from 'lodash.omit'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
@@ -12,15 +13,15 @@ function* reactKeyGenerator(): Generator<string> {
 }
 
 export class PostThreadViewPostMyStateModel {
-  hasLiked: boolean = false
-  hasReposted: boolean = false
+  like?: string
+  repost?: string
 
   constructor() {
     makeAutoObservable(this)
   }
 }
 
-export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
+export class PostThreadViewPostModel implements GetPostThread.Post {
   // ui state
   _reactKey: string = ''
   _depth = 0
@@ -28,12 +29,12 @@ export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
 
   // data
   uri: string = ''
-  author: bsky.PostThreadView.User = {did: '', name: '', displayName: ''}
+  author: GetPostThread.User = {did: '', name: '', displayName: ''}
   record: Record<string, unknown> = {}
   embed?:
-    | bsky.PostThreadView.RecordEmbed
-    | bsky.PostThreadView.ExternalEmbed
-    | bsky.PostThreadView.UnknownEmbed
+    | GetPostThread.RecordEmbed
+    | GetPostThread.ExternalEmbed
+    | GetPostThread.UnknownEmbed
   parent?: PostThreadViewPostModel
   replyCount: number = 0
   replies?: PostThreadViewPostModel[]
@@ -45,7 +46,7 @@ export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
-    v?: bsky.PostThreadView.Post,
+    v?: GetPostThread.Post,
   ) {
     makeAutoObservable(this, {rootStore: false})
     this._reactKey = reactKey
@@ -57,7 +58,7 @@ export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
     }
   }
 
-  assignTreeModels(keyGen: Generator<string>, v: bsky.PostThreadView.Post) {
+  assignTreeModels(keyGen: Generator<string>, v: GetPostThread.Post) {
     // parents
     if (v.parent) {
       // TODO: validate .record
@@ -93,33 +94,37 @@ export class PostThreadViewPostModel implements bsky.PostThreadView.Post {
   }
 
   async toggleLike() {
-    if (this.myState.hasLiked) {
-      await apilib.unlike(this.rootStore.api, 'alice.com', this.uri)
+    if (this.myState.like) {
+      await apilib.unlike(this.rootStore.api, 'alice.test', this.uri)
       runInAction(() => {
         this.likeCount--
-        this.myState.hasLiked = false
+        this.myState.like = undefined
       })
     } else {
-      await apilib.like(this.rootStore.api, 'alice.com', this.uri)
+      const res = await apilib.like(this.rootStore.api, 'alice.test', this.uri)
       runInAction(() => {
         this.likeCount++
-        this.myState.hasLiked = true
+        this.myState.like = res.uri
       })
     }
   }
 
   async toggleRepost() {
-    if (this.myState.hasReposted) {
-      await apilib.unrepost(this.rootStore.api, 'alice.com', this.uri)
+    if (this.myState.repost) {
+      await apilib.unrepost(this.rootStore.api, 'alice.test', this.uri)
       runInAction(() => {
         this.repostCount--
-        this.myState.hasReposted = false
+        this.myState.repost = undefined
       })
     } else {
-      await apilib.repost(this.rootStore.api, 'alice.com', this.uri)
+      const res = await apilib.repost(
+        this.rootStore.api,
+        'alice.test',
+        this.uri,
+      )
       runInAction(() => {
         this.repostCount++
-        this.myState.hasReposted = true
+        this.myState.repost = res.uri
       })
     }
   }
@@ -132,14 +137,14 @@ export class PostThreadViewModel {
   hasLoaded = false
   error = ''
   resolvedUri = ''
-  params: bsky.PostThreadView.Params
+  params: GetPostThread.QueryParams
 
   // data
   thread?: PostThreadViewPostModel
 
   constructor(
     public rootStore: RootStoreModel,
-    params: bsky.PostThreadView.Params,
+    params: GetPostThread.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -226,10 +231,9 @@ export class PostThreadViewModel {
   private async _load(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = (await this.rootStore.api.mainPds.view(
-        'blueskyweb.xyz:PostThreadView',
+      const res = await this.rootStore.api.todo.social.getPostThread(
         Object.assign({}, this.params, {uri: this.resolvedUri}),
-      )) as bsky.PostThreadView.Response
+      )
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -237,16 +241,16 @@ export class PostThreadViewModel {
     }
   }
 
-  private _replaceAll(res: bsky.PostThreadView.Response) {
+  private _replaceAll(res: GetPostThread.Response) {
     // TODO: validate .record
     const keyGen = reactKeyGenerator()
     const thread = new PostThreadViewPostModel(
       this.rootStore,
       keyGen.next().value,
-      res.thread,
+      res.data.thread,
     )
     thread._isHighlightedPost = true
-    thread.assignTreeModels(keyGen, res.thread)
+    thread.assignTreeModels(keyGen, res.data.thread)
     this.thread = thread
   }
 }

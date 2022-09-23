@@ -113,7 +113,7 @@ export const MobileShell: React.FC = observer(() => {
 
   const onPressAvi = () =>
     createAccountsMenu({
-      debug_onPressItem: () => store.nav.navigate('/profile/alice.com'),
+      debug_onPressItem: () => store.nav.navigate('/profile/alice.test'),
     })
   const onPressLocation = () => setLocationMenuActive(true)
   const onPressEllipsis = () => createLocationMenu()
@@ -168,7 +168,7 @@ export const MobileShell: React.FC = observer(() => {
     <View style={styles.outerContainer}>
       <View style={styles.topBar}>
         <TouchableOpacity onPress={onPressAvi}>
-          <Image style={styles.avi} source={AVIS['alice.com']} />
+          <Image style={styles.avi} source={AVIS['alice.test']} />
         </TouchableOpacity>
         <Location
           icon={screenRenderDesc.icon}

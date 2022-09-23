@@ -3,7 +3,7 @@
  */
 
 import {makeAutoObservable} from 'mobx'
-import {adx, AdxClient} from '@adxp/mock-api'
+import AdxApi, {ServiceClient} from '../../third-party/api'
 import {createContext, useContext} from 'react'
 import {isObj, hasProp} from '../lib/type-guards'
 import {SessionModel} from './session'
@@ -17,7 +17,7 @@ export class RootStoreModel {
   shell = new ShellModel()
   me = new MeModel(this)
 
-  constructor(public api: AdxClient) {
+  constructor(public api: ServiceClient) {
     makeAutoObservable(this, {
       api: false,
       resolveName: false,
@@ -27,9 +27,11 @@ export class RootStoreModel {
   }
 
   async resolveName(didOrName: string) {
-    const userDb = this.api.mockDb.getUser(didOrName)
-    if (!userDb) throw new Error(`User not found: ${didOrName}`)
-    return userDb.did
+    throw new Error('TODO')
+    return ''
+    // const userDb = this.api.mockDb.getUser(didOrName)
+    // if (!userDb) throw new Error(`User not found: ${didOrName}`)
+    // return userDb.did
   }
 
   serialize(): unknown {
@@ -51,7 +53,7 @@ export class RootStoreModel {
   }
 }
 
-const throwawayInst = new RootStoreModel(adx) // this will be replaced by the loader
+const throwawayInst = new RootStoreModel(AdxApi.service('http://localhost')) // this will be replaced by the loader
 const RootStoreContext = createContext<RootStoreModel>(throwawayInst)
 export const RootStoreProvider = RootStoreContext.Provider
 export const useStores = () => useContext(RootStoreContext)

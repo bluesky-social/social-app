@@ -1,38 +1,39 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {bsky} from '@adxp/mock-api'
+import * as GetProfile from '../../third-party/api/src/types/todo/social/getProfile'
+import * as Profile from '../../third-party/api/src/types/todo/social/profile'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
 export class ProfileViewMyStateModel {
-  hasFollowed: boolean = false
+  follow?: string
 
   constructor() {
     makeAutoObservable(this)
   }
 }
 
-export class ProfileViewModel implements bsky.ProfileView.Response {
+export class ProfileViewModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
-  params: bsky.ProfileView.Params
+  params: GetProfile.QueryParams
 
   // data
   did: string = ''
   name: string = ''
-  displayName: string = ''
-  description: string = ''
+  displayName?: string
+  description?: string
   followersCount: number = 0
   followsCount: number = 0
   postsCount: number = 0
-  badges: bsky.ProfileView.Badge[] = []
+  badges: GetProfile.Badge[] = []
   myState = new ProfileViewMyStateModel()
 
   constructor(
     public rootStore: RootStoreModel,
-    params: bsky.ProfileView.Params,
+    params: GetProfile.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -69,27 +70,31 @@ export class ProfileViewModel implements bsky.ProfileView.Response {
   }
 
   async toggleFollowing() {
-    if (this.myState.hasFollowed) {
-      await apilib.unfollow(this.rootStore.api, 'alice.com', {
+    if (!this.rootStore.me.did) {
+      throw new Error('Not logged in')
+    }
+    if (this.myState.follow) {
+      await apilib.unfollow(this.rootStore.api, this.rootStore.me.did, {
         did: this.did,
       })
       runInAction(() => {
         this.followersCount--
-        this.myState.hasFollowed = false
+        this.myState.follow = undefined
       })
     } else {
-      await apilib.follow(this.rootStore.api, 'alice.com', {
-        did: this.did,
-        name: this.name,
-      })
+      const res = await apilib.follow(
+        this.rootStore.api,
+        this.rootStore.me.did,
+        this.did,
+      )
       runInAction(() => {
         this.followersCount++
-        this.myState.hasFollowed = true
+        this.myState.follow = res.uri
       })
     }
   }
 
-  async updateProfile(profile: bsky.Profile.Record) {
+  async updateProfile(profile: Profile.Record) {
     if (this.did !== this.rootStore.me.did) {
       throw new Error('Not your profile!')
     }
@@ -120,10 +125,7 @@ export class ProfileViewModel implements bsky.ProfileView.Response {
     this._xLoading(isRefreshing)
     await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
-      const res = (await this.rootStore.api.mainPds.view(
-        'blueskyweb.xyz:ProfileView',
-        this.params,
-      )) as bsky.ProfileView.Response
+      const res = await this.rootStore.api.todo.social.getProfile(this.params)
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -131,17 +133,17 @@ export class ProfileViewModel implements bsky.ProfileView.Response {
     }
   }
 
-  private _replaceAll(res: bsky.ProfileView.Response) {
-    this.did = res.did
-    this.name = res.name
-    this.displayName = res.displayName
-    this.description = res.description
-    this.followersCount = res.followersCount
-    this.followsCount = res.followsCount
-    this.postsCount = res.postsCount
-    this.badges = res.badges
-    if (res.myState) {
-      Object.assign(this.myState, res.myState)
+  private _replaceAll(res: GetProfile.Response) {
+    this.did = res.data.did
+    this.name = res.data.name
+    this.displayName = res.data.displayName
+    this.description = res.data.description
+    this.followersCount = res.data.followersCount
+    this.followsCount = res.data.followsCount
+    this.postsCount = res.data.postsCount
+    this.badges = res.data.badges
+    if (res.data.myState) {
+      Object.assign(this.myState, res.data.myState)
     }
   }
 }

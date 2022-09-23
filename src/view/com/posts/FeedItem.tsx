@@ -1,7 +1,8 @@
 import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {bsky, AdxUri} from '@adxp/mock-api'
+import {AdxUri} from '../../../third-party/uri'
+import * as PostType from '../../../third-party/api/src/types/todo/social/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedViewItemModel} from '../../../state/models/feed-view'
 import {ComposePostModel, SharePostModel} from '../../../state/models/shell'
@@ -18,7 +19,7 @@ export const FeedItem = observer(function FeedItem({
   item: FeedViewItemModel
 }) {
   const store = useStores()
-  const record = item.record as unknown as bsky.Post.Record
+  const record = item.record as unknown as PostType.Record
   const itemHref = useMemo(() => {
     const urip = new AdxUri(item.uri)
     return `/profile/${item.author.name}/post/${urip.recordKey}`
@@ -60,7 +61,7 @@ export const FeedItem = observer(function FeedItem({
           title={item.author.name}>
           <Image
             style={styles.avi}
-            source={AVIS[item.author.name] || AVIS['alice.com']}
+            source={AVIS[item.author.name] || AVIS['alice.test']}
           />
         </Link>
         <View style={styles.layoutContent}>
@@ -107,7 +108,7 @@ export const FeedItem = observer(function FeedItem({
             <TouchableOpacity style={styles.ctrl} onPress={onPressToggleRepost}>
               <FontAwesomeIcon
                 style={
-                  item.myState.hasReposted
+                  item.myState.repost
                     ? styles.ctrlIconReposted
                     : styles.ctrlIcon
                 }
@@ -115,22 +116,19 @@ export const FeedItem = observer(function FeedItem({
                 size={18}
               />
               <Text
-                style={
-                  item.myState.hasReposted ? [s.bold, s.green3, s.f13] : s.f13
-                }>
+                style={item.myState.repost ? [s.bold, s.green3, s.f13] : s.f13}>
                 {item.repostCount}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.ctrl} onPress={onPressToggleLike}>
               <FontAwesomeIcon
                 style={
-                  item.myState.hasLiked ? styles.ctrlIconLiked : styles.ctrlIcon
+                  item.myState.like ? styles.ctrlIconLiked : styles.ctrlIcon
                 }
-                icon={[item.myState.hasLiked ? 'fas' : 'far', 'heart']}
+                icon={[item.myState.like ? 'fas' : 'far', 'heart']}
                 size={14}
               />
-              <Text
-                style={item.myState.hasLiked ? [s.bold, s.red3, s.f13] : s.f13}>
+              <Text style={item.myState.like ? [s.bold, s.red3, s.f13] : s.f13}>
                 {item.likeCount}
               </Text>
             </TouchableOpacity>

@@ -32,7 +32,7 @@ export function createAccountsMenu({
           <TouchableOpacity
             style={[styles.menuItem]}
             onPress={() => onPressItem(0)}>
-            <Image style={styles.avi} source={AVIS['alice.com']} />
+            <Image style={styles.avi} source={AVIS['alice.test']} />
             <Text style={[styles.label, s.bold]}>Alice</Text>
           </TouchableOpacity>
           <TouchableOpacity

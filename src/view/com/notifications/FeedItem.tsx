@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {AdxUri} from '@adxp/mock-api'
+import {Image, StyleSheet, Text, View} from 'react-native'
+import {AdxUri} from '../../../third-party/uri'
 import {FontAwesomeIcon, Props} from '@fortawesome/react-native-fontawesome'
 import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
 import {s, colors} from '../../lib/styles'
@@ -64,7 +64,7 @@ export const FeedItem = observer(function FeedItem({
         <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
           <Image
             style={styles.avi}
-            source={AVIS[item.author.name] || AVIS['alice.com']}
+            source={AVIS[item.author.name] || AVIS['alice.test']}
           />
         </Link>
         <View style={styles.layoutContent}>

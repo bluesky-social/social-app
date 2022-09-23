@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
-import {bsky, AdxUri} from '@adxp/mock-api'
+import {AdxUri} from '../../../third-party/uri'
+import * as PostType from '../../../third-party/api/src/types/todo/social/post'
 import {
   ActivityIndicator,
   Image,
@@ -54,7 +55,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
   // loaded
   // =
   const item = view.thread
-  const record = view.thread?.record as unknown as bsky.Post.Record
+  const record = view.thread?.record as unknown as PostType.Record
 
   const itemHref = useMemo(() => {
     const urip = new AdxUri(item.uri)
@@ -83,7 +84,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
         <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
           <Image
             style={styles.avi}
-            source={AVIS[item.author.name] || AVIS['alice.com']}
+            source={AVIS[item.author.name] || AVIS['alice.test']}
           />
         </Link>
         <View style={styles.layoutContent}>
@@ -112,7 +113,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
             <TouchableOpacity style={styles.ctrl} onPress={onPressToggleRepost}>
               <FontAwesomeIcon
                 style={
-                  item.myState.hasReposted
+                  item.myState.repost
                     ? styles.ctrlIconReposted
                     : styles.ctrlIcon
                 }
@@ -120,21 +121,18 @@ export const Post = observer(function Post({uri}: {uri: string}) {
                 size={22}
               />
               <Text
-                style={
-                  item.myState.hasReposted ? [s.bold, s.green3] : undefined
-                }>
+                style={item.myState.repost ? [s.bold, s.green3] : undefined}>
                 {item.repostCount}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.ctrl} onPress={onPressToggleLike}>
               <FontAwesomeIcon
                 style={
-                  item.myState.hasLiked ? styles.ctrlIconLiked : styles.ctrlIcon
+                  item.myState.like ? styles.ctrlIconLiked : styles.ctrlIcon
                 }
-                icon={[item.myState.hasLiked ? 'fas' : 'far', 'heart']}
+                icon={[item.myState.like ? 'fas' : 'far', 'heart']}
               />
-              <Text
-                style={item.myState.hasLiked ? [s.bold, s.red3] : undefined}>
+              <Text style={item.myState.like ? [s.bold, s.red3] : undefined}>
                 {item.likeCount}
               </Text>
             </TouchableOpacity>

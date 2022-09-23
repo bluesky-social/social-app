@@ -1,4 +1,4 @@
-import {AdxUri} from '@adxp/mock-api'
+import {AdxUri} from '../../third-party/uri'
 
 export function pluralize(n: number, base: string, plural?: string): string {
   if (n === 1) {

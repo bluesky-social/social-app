@@ -3,33 +3,18 @@
  * models live. They are made available to every model via dependency injection.
  */
 
+import RNFetchBlob from 'rn-fetch-blob'
 // import {ReactNativeStore} from './auth'
-import {
-  AdxClient,
-  AdxRepoClient,
-  AdxRepoCollectionClient,
-  AdxUri,
-  bsky,
-  SchemaOpt,
-  ListRecordsResponseValidated,
-  GetRecordResponseValidated,
-} from '@adxp/mock-api'
+import AdxApi, {ServiceClient} from '../../third-party/api'
+import {AdxUri} from '../../third-party/uri'
 import * as storage from './storage'
-import {postTexts} from './mock-data/post-texts'
-import {replyTexts} from './mock-data/reply-texts'
 
-export async function setup(adx: AdxClient) {
-  await adx.setupMock(
-    () => storage.load('mock-root'),
-    async root => {
-      await storage.save('mock-root', root)
-    },
-    () => generateMockData(adx),
-  )
+export async function setup(adx: ServiceClient) {
+  AdxApi.xrpc.fetch = fetchHandler
 }
 
 export async function post(
-  adx: AdxClient,
+  adx: ServiceClient,
   user: string,
   text: string,
   replyToUri?: string,
@@ -37,10 +22,10 @@ export async function post(
   let reply
   if (replyToUri) {
     const replyToUrip = new AdxUri(replyToUri)
-    const parentPost = await adx
-      .repo(replyToUrip.host, false)
-      .collection(replyToUrip.collection)
-      .get('Post', replyToUrip.recordKey)
+    const parentPost = await adx.todo.social.post.get({
+      nameOrDid: replyToUrip.host,
+      tid: replyToUrip.recordKey,
+    })
     if (parentPost) {
       reply = {
         root: parentPost.value.reply?.root || parentPost.uri,
@@ -48,94 +33,126 @@ export async function post(
       }
     }
   }
-  return await adx
-    .repo(user, true)
-    .collection('blueskyweb.xyz:Posts')
-    .create('Post', {
-      $type: 'blueskyweb.xyz:Post',
+  return await adx.todo.social.post.create(
+    {did: user},
+    {
       text,
       reply,
       createdAt: new Date().toISOString(),
-    })
+    },
+  )
 }
 
-export async function like(adx: AdxClient, user: string, uri: string) {
-  return await adx
-    .repo(user, true)
-    .collection('blueskyweb.xyz:Likes')
-    .create('Like', {
-      $type: 'blueskyweb.xyz:Like',
+export async function like(adx: ServiceClient, user: string, uri: string) {
+  return await adx.todo.social.like.create(
+    {did: user},
+    {
       subject: uri,
       createdAt: new Date().toISOString(),
-    })
+    },
+  )
 }
 
-export async function unlike(adx: AdxClient, user: string, uri: string) {
-  const coll = adx.repo(user, true).collection('blueskyweb.xyz:Likes')
-  const numDels = await deleteWhere(coll, 'Like', record => {
-    return record.value.subject === uri
-  })
-  return numDels > 0
+export async function unlike(adx: ServiceClient, user: string, uri: string) {
+  throw new Error('TODO')
 }
 
-export async function repost(adx: AdxClient, user: string, uri: string) {
-  return await adx
-    .repo(user, true)
-    .collection('blueskyweb.xyz:Posts')
-    .create('Repost', {
-      $type: 'blueskyweb.xyz:Repost',
+export async function repost(adx: ServiceClient, user: string, uri: string) {
+  return await adx.todo.social.repost.create(
+    {did: user},
+    {
       subject: uri,
       createdAt: new Date().toISOString(),
-    })
+    },
+  )
 }
 
-export async function unrepost(adx: AdxClient, user: string, uri: string) {
-  const coll = adx.repo(user, true).collection('blueskyweb.xyz:Posts')
-  const numDels = await deleteWhere(coll, 'Repost', record => {
-    return record.value.subject === uri
-  })
-  return numDels > 0
+export async function unrepost(adx: ServiceClient, user: string, uri: string) {
+  throw new Error('TODO')
 }
 
 export async function follow(
-  adx: AdxClient,
+  adx: ServiceClient,
   user: string,
-  subject: {did: string; name: string},
+  subject: string,
 ) {
-  return await adx
-    .repo(user, true)
-    .collection('blueskyweb.xyz:Follows')
-    .create('Follow', {
-      $type: 'blueskyweb.xyz:Follow',
+  return await adx.todo.social.follow.create(
+    {did: user},
+    {
       subject,
       createdAt: new Date().toISOString(),
-    })
+    },
+  )
 }
 
 export async function unfollow(
-  adx: AdxClient,
+  adx: ServiceClient,
   user: string,
   subject: {did: string},
 ) {
-  const coll = adx.repo(user, true).collection('blueskyweb.xyz:Follows')
-  const numDels = await deleteWhere(coll, 'Follow', record => {
-    return record.value.subject.did === subject.did
-  })
-  return numDels > 0
+  throw new Error('TODO')
 }
 
 export async function updateProfile(
-  adx: AdxClient,
+  adx: ServiceClient,
   user: string,
   profile: bsky.Profile.Record,
 ) {
-  return await adx
-    .repo(user, true)
-    .collection('blueskyweb.xyz:Profiles')
-    .put('Profile', 'profile', {$type: 'blueskyweb.xyz:Profile', ...profile})
+  throw new Error('TODO')
 }
 
-type WherePred = (_record: GetRecordResponseValidated) => Boolean
+interface FetchHandlerResponse {
+  status: number
+  headers: Record<string, string>
+  body: ArrayBuffer | undefined
+}
+
+async function fetchHandler(
+  httpUri: string,
+  httpMethod: string,
+  httpHeaders: Record<string, string>,
+  httpReqBody: any,
+): Promise<FetchHandlerResponse> {
+  httpHeaders['Authorization'] = 'did:test:alice' // DEBUG
+  const res = await RNFetchBlob.fetch(
+    /** @ts-ignore method coersion, it's fine -prf */
+    httpMethod,
+    httpUri,
+    httpHeaders,
+    httpReqBody,
+  )
+
+  const status = res.info().status
+  const headers = (res.info().headers || {}) as Record<string, string>
+  const mimeType = headers['Content-Type'] || headers['content-type']
+  let resBody
+  if (mimeType) {
+    if (mimeType.startsWith('application/json')) {
+      resBody = res.json()
+    } else if (mimeType.startsWith('text/')) {
+      resBody = res.text()
+    } else {
+      resBody = res.base64()
+    }
+  }
+  return {
+    status,
+    headers,
+    body: resBody,
+  }
+  // const res = await fetch(httpUri, {
+  //   method: httpMethod,
+  //   headers: httpHeaders,
+  //   body: encodeMethodCallBody(httpHeaders, httpReqBody),
+  // })
+  // const resBody = await res.arrayBuffer()
+  // return {
+  //   status: res.status,
+  //   headers: Object.fromEntries(res.headers.entries()),
+  //   body: httpResponseBodyParse(res.headers.get('content-type'), resBody),
+  // }
+}
+/*type WherePred = (_record: GetRecordResponseValidated) => Boolean
 async function deleteWhere(
   coll: AdxRepoCollectionClient,
   schema: SchemaOpt,
@@ -170,177 +187,4 @@ async function iterateAll(
       }
     }
   } while (res.records.length === 100)
-}
-
-// TEMPORARY
-// mock api config
-// =======
-
-function* dateGen() {
-  let start = 1657846031914
-  while (true) {
-    yield new Date(start).toISOString()
-    start += 1e3
-  }
-}
-const date = dateGen()
-
-function repo(adx: AdxClient, didOrName: string) {
-  const userDb = adx.mockDb.getUser(didOrName)
-  if (!userDb) throw new Error(`User not found: ${didOrName}`)
-  return adx.mainPds.repo(userDb.did, userDb.writable)
-}
-
-export async function generateMockData(adx: AdxClient) {
-  const rand = (n: number) => Math.floor(Math.random() * n)
-  const picka = <T>(arr: Array<T>): T => {
-    if (arr.length) {
-      return arr[rand(arr.length)] || arr[0]
-    }
-    throw new Error('Not found')
-  }
-
-  await adx.mockDb.addUser({name: 'alice.com', writable: true})
-  await adx.mockDb.addUser({name: 'bob.com', writable: true})
-  await adx.mockDb.addUser({name: 'carla.com', writable: true})
-
-  const alice = repo(adx, 'alice.com')
-  const bob = repo(adx, 'bob.com')
-  const carla = repo(adx, 'carla.com')
-  const repos = [alice, bob, carla]
-
-  await alice.collection('blueskyweb.xyz:Profiles').put('Profile', 'profile', {
-    $type: 'blueskyweb.xyz:Profile',
-    displayName: 'Alice',
-    description: 'Test user 1',
-  })
-  await bob.collection('blueskyweb.xyz:Profiles').put('Profile', 'profile', {
-    $type: 'blueskyweb.xyz:Profile',
-    displayName: 'Bob',
-    description: 'Test user 2',
-  })
-  await carla.collection('blueskyweb.xyz:Profiles').put('Profile', 'profile', {
-    $type: 'blueskyweb.xyz:Profile',
-    displayName: 'Carla',
-    description: 'Test user 3',
-  })
-
-  // everybody follows everybody
-  const follow = async (who: AdxRepoClient, subjectName: string) => {
-    const subjectDb = adx.mockDb.getUser(subjectName)
-    return who.collection('blueskyweb.xyz:Follows').create('Follow', {
-      $type: 'blueskyweb.xyz:Follow',
-      subject: {
-        did: subjectDb?.did,
-        name: subjectDb?.name,
-      },
-      createdAt: date.next().value,
-    })
-  }
-  await follow(alice, 'bob.com')
-  await follow(alice, 'carla.com')
-  await follow(bob, 'alice.com')
-  await follow(bob, 'carla.com')
-  await follow(carla, 'alice.com')
-  await follow(carla, 'bob.com')
-
-  // a set of posts and reposts
-  const posts: {uri: string}[] = []
-  for (let i = 0; i < postTexts.length; i++) {
-    const author = picka(repos)
-    posts.push(
-      await author.collection('blueskyweb.xyz:Posts').create('Post', {
-        $type: 'blueskyweb.xyz:Post',
-        text: postTexts[i],
-        createdAt: date.next().value,
-      }),
-    )
-    if (rand(10) === 0) {
-      await picka(repos)
-        .collection('blueskyweb.xyz:Posts')
-        .create('Repost', {
-          $type: 'blueskyweb.xyz:Repost',
-          subject: picka(posts).uri,
-          createdAt: date.next().value,
-        })
-    }
-  }
-
-  // a set of replies
-  for (let i = 0; i < 100; i++) {
-    const targetUri = picka(posts).uri
-    const urip = new AdxUri(targetUri)
-    const target = await adx.mainPds
-      .repo(urip.host, true)
-      .collection(urip.collection)
-      .get('Post', urip.recordKey)
-    const targetRecord = target.value as bsky.Post.Record
-    const author = picka(repos)
-    posts.push(
-      await author.collection('blueskyweb.xyz:Posts').create('Post', {
-        $type: 'blueskyweb.xyz:Post',
-        text: picka(replyTexts),
-        reply: {
-          root: targetRecord.reply ? targetRecord.reply.root : target.uri,
-          parent: target.uri,
-        },
-        createdAt: date.next().value,
-      }),
-    )
-  }
-
-  // a set of likes
-  for (const post of posts) {
-    for (const repo of repos) {
-      if (rand(3) === 0) {
-        await repo.collection('blueskyweb.xyz:Likes').create('Like', {
-          $type: 'blueskyweb.xyz:Like',
-          subject: post.uri,
-          createdAt: date.next().value,
-        })
-      }
-    }
-  }
-
-  // give alice 3 badges, 2 from bob and 2 from carla, with one ignored
-  const inviteBadge = await bob
-    .collection('blueskyweb.xyz:Badges')
-    .create('Badge', {
-      $type: 'blueskyweb.xyz:Badge',
-      subject: {did: alice.did, name: 'alice.com'},
-      assertion: {type: 'invite'},
-      createdAt: date.next().value,
-    })
-  const techTagBadge1 = await bob
-    .collection('blueskyweb.xyz:Badges')
-    .create('Badge', {
-      $type: 'blueskyweb.xyz:Badge',
-      subject: {did: alice.did, name: 'alice.com'},
-      assertion: {type: 'tag', tag: 'tech'},
-      createdAt: date.next().value,
-    })
-  const techTagBadge2 = await carla
-    .collection('blueskyweb.xyz:Badges')
-    .create('Badge', {
-      $type: 'blueskyweb.xyz:Badge',
-      subject: {did: alice.did, name: 'alice.com'},
-      assertion: {type: 'tag', tag: 'tech'},
-      createdAt: date.next().value,
-    })
-  await bob.collection('blueskyweb.xyz:Badges').create('Badge', {
-    $type: 'blueskyweb.xyz:Badge',
-    subject: {did: alice.did, name: 'alice.com'},
-    assertion: {type: 'employee'},
-    createdAt: date.next().value,
-  })
-  await alice.collection('blueskyweb.xyz:Profiles').put('Profile', 'profile', {
-    $type: 'blueskyweb.xyz:Profile',
-    displayName: 'Alice',
-    description: 'Test user 1',
-    badges: [
-      {uri: inviteBadge.uri},
-      {uri: techTagBadge1.uri},
-      {uri: techTagBadge2.uri},
-    ],
-  })
-}
+}*/

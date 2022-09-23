@@ -231,8 +231,9 @@ export class NavigationModel {
   }
 
   hydrate(v: unknown) {
-    this.tabs.length = 0
-    this.tabIndex = 0
+    // this.tabs.length = 0
+    // this.tabIndex = 0
+    return // DEBUG
     if (isObj(v)) {
       if (hasProp(v, 'tabs') && Array.isArray(v.tabs)) {
         for (const tab of v.tabs) {
