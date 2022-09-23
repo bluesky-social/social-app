@@ -81,7 +81,10 @@ export const ProfileHeader = observer(function ProfileHeader({
   return (
     <View style={styles.outer}>
       <Image style={styles.banner} source={BANNER} />
-      <Image style={styles.avi} source={AVIS[view.name] || AVIS['alice.com']} />
+      <Image
+        style={styles.avi}
+        source={AVIS[view.name] || AVIS['alice.test']}
+      />
       <View style={styles.content}>
         <View style={[styles.displayNameLine]}>
           <Text style={styles.displayName}>{view.displayName}</Text>

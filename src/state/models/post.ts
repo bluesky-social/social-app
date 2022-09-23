@@ -1,10 +1,18 @@
 import {makeAutoObservable} from 'mobx'
-import {bsky, AdxUri} from '@adxp/mock-api'
+import * as Post from '../../third-party/api/src/types/todo/social/post'
+import {AdxUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 
-export type PostEntities = bsky.Post.Record['entities']
-export type PostReply = bsky.Post.Record['reply']
-export class PostModel implements bsky.Post.Record {
+export type PostEntities = Post.Record['entities']
+export type PostReply = Post.Record['reply']
+type RemoveIndex<T> = {
+  [P in keyof T as string extends P
+    ? never
+    : number extends P
+    ? never
+    : P]: T[P]
+}
+export class PostModel implements RemoveIndex<Post.Record> {
   // state
   isLoading = false
   hasLoaded = false
@@ -70,13 +78,14 @@ export class PostModel implements bsky.Post.Record {
     await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const urip = new AdxUri(this.uri)
-      const res = await this.rootStore.api.mainPds
-        .repo(urip.host, false)
-        .collection(urip.collection)
-        .get('Post', urip.recordKey)
-      if (!res.valid) {
-        throw new Error(res.error)
-      }
+      const res = await this.rootStore.api.todo.social.post.get({
+        nameOrDid: urip.host,
+        tid: urip.recordKey,
+      })
+      // TODO
+      // if (!res.valid) {
+      //   throw new Error(res.error)
+      // }
       this._replaceAll(res.value)
       this._xIdle()
     } catch (e: any) {
@@ -84,7 +93,7 @@ export class PostModel implements bsky.Post.Record {
     }
   }
 
-  private _replaceAll(res: bsky.Post.Record) {
+  private _replaceAll(res: Post.Record) {
     this.text = res.text
     this.entities = res.entities
     this.reply = res.reply

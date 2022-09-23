@@ -84,7 +84,7 @@ const User = ({item}: {item: FollowItem}) => {
         <View style={styles.layoutAvi}>
           <Image
             style={styles.avi}
-            source={AVIS[item.name] || AVIS['alice.com']}
+            source={AVIS[item.name] || AVIS['alice.test']}
           />
         </View>
         <View style={styles.layoutContent}>

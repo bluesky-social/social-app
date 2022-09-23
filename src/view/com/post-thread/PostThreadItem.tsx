@@ -1,7 +1,8 @@
 import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {bsky, AdxUri} from '@adxp/mock-api'
+import {AdxUri} from '../../../third-party/uri'
+import * as PostType from '../../../third-party/api/src/types/todo/social/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
 import {ComposePostModel} from '../../../state/models/shell'
@@ -20,7 +21,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   onPressShare: (_uri: string) => void
 }) {
   const store = useStores()
-  const record = item.record as unknown as bsky.Post.Record
+  const record = item.record as unknown as PostType.Record
   const hasEngagement = item.likeCount || item.repostCount
 
   const itemHref = useMemo(() => {
@@ -68,23 +69,22 @@ export const PostThreadItem = observer(function PostThreadItem({
       <TouchableOpacity style={styles.ctrl} onPress={onPressToggleRepost}>
         <FontAwesomeIcon
           style={
-            item.myState.hasReposted ? styles.ctrlIconReposted : styles.ctrlIcon
+            item.myState.repost ? styles.ctrlIconReposted : styles.ctrlIcon
           }
           icon="retweet"
           size={18}
         />
-        <Text
-          style={item.myState.hasReposted ? [s.bold, s.green3, s.f13] : s.f13}>
+        <Text style={item.myState.repost ? [s.bold, s.green3, s.f13] : s.f13}>
           {item.repostCount}
         </Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.ctrl} onPress={onPressToggleLike}>
         <FontAwesomeIcon
-          style={item.myState.hasLiked ? styles.ctrlIconLiked : styles.ctrlIcon}
-          icon={[item.myState.hasLiked ? 'fas' : 'far', 'heart']}
+          style={item.myState.like ? styles.ctrlIconLiked : styles.ctrlIcon}
+          icon={[item.myState.like ? 'fas' : 'far', 'heart']}
           size={14}
         />
-        <Text style={item.myState.hasLiked ? [s.bold, s.red3, s.f13] : s.f13}>
+        <Text style={item.myState.like ? [s.bold, s.red3, s.f13] : s.f13}>
           {item.likeCount}
         </Text>
       </TouchableOpacity>
@@ -107,7 +107,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
             <Image
               style={styles.avi}
-              source={AVIS[item.author.name] || AVIS['alice.com']}
+              source={AVIS[item.author.name] || AVIS['alice.test']}
             />
           </Link>
           <View style={styles.layoutContent}>
@@ -192,7 +192,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
             <Image
               style={styles.avi}
-              source={AVIS[item.author.name] || AVIS['alice.com']}
+              source={AVIS[item.author.name] || AVIS['alice.test']}
             />
           </Link>
           <View style={styles.layoutContent}>

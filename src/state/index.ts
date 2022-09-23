@@ -1,5 +1,5 @@
 import {autorun} from 'mobx'
-import {AdxClient, blueskywebSchemas} from '@adxp/mock-api'
+import AdxApi from '../third-party/api'
 import {RootStoreModel} from './models/root-store'
 import * as libapi from './lib/api'
 import * as storage from './lib/storage'
@@ -13,10 +13,7 @@ export async function setupState() {
   let rootStore: RootStoreModel
   let data: any
 
-  const api = new AdxClient({
-    pds: 'http://localhost',
-    schemas: blueskywebSchemas,
-  })
+  const api = AdxApi.service(`http://localhost:2583`)
   await libapi.setup(api)
   rootStore = new RootStoreModel(api)
   try {

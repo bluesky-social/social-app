@@ -1,30 +1,30 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {bsky} from '@adxp/mock-api'
+import * as GetFeedView from '../../third-party/api/src/types/todo/social/getFeed'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
 export class FeedViewItemMyStateModel {
-  hasLiked: boolean = false
-  hasReposted: boolean = false
+  repost?: string
+  like?: string
 
   constructor() {
     makeAutoObservable(this)
   }
 }
 
-export class FeedViewItemModel implements bsky.FeedView.FeedItem {
+export class FeedViewItemModel implements GetFeedView.FeedItem {
   // ui state
   _reactKey: string = ''
 
   // data
   uri: string = ''
-  author: bsky.FeedView.User = {did: '', name: '', displayName: ''}
-  repostedBy?: bsky.FeedView.User
+  author: GetFeedView.User = {did: '', name: '', displayName: ''}
+  repostedBy?: GetFeedView.User
   record: Record<string, unknown> = {}
   embed?:
-    | bsky.FeedView.RecordEmbed
-    | bsky.FeedView.ExternalEmbed
-    | bsky.FeedView.UnknownEmbed
+    | GetFeedView.RecordEmbed
+    | GetFeedView.ExternalEmbed
+    | GetFeedView.UnknownEmbed
   replyCount: number = 0
   repostCount: number = 0
   likeCount: number = 0
@@ -34,14 +34,14 @@ export class FeedViewItemModel implements bsky.FeedView.FeedItem {
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
-    v: bsky.FeedView.FeedItem,
+    v: GetFeedView.FeedItem,
   ) {
     makeAutoObservable(this, {rootStore: false})
     this._reactKey = reactKey
     this.copy(v)
   }
 
-  copy(v: bsky.FeedView.FeedItem) {
+  copy(v: GetFeedView.FeedItem) {
     this.uri = v.uri
     this.author = v.author
     this.repostedBy = v.repostedBy
@@ -52,52 +52,56 @@ export class FeedViewItemModel implements bsky.FeedView.FeedItem {
     this.likeCount = v.likeCount
     this.indexedAt = v.indexedAt
     if (v.myState) {
-      this.myState.hasLiked = v.myState.hasLiked
-      this.myState.hasReposted = v.myState.hasReposted
+      this.myState.like = v.myState.like
+      this.myState.repost = v.myState.repost
     }
   }
 
   async toggleLike() {
-    if (this.myState.hasLiked) {
-      await apilib.unlike(this.rootStore.api, 'alice.com', this.uri)
+    if (this.myState.like) {
+      await apilib.unlike(this.rootStore.api, 'alice.test', this.uri)
       runInAction(() => {
         this.likeCount--
-        this.myState.hasLiked = false
+        this.myState.like = undefined
       })
     } else {
-      await apilib.like(this.rootStore.api, 'alice.com', this.uri)
+      const res = await apilib.like(this.rootStore.api, 'alice.test', this.uri)
       runInAction(() => {
         this.likeCount++
-        this.myState.hasLiked = true
+        this.myState.like = res.uri
       })
     }
   }
 
   async toggleRepost() {
-    if (this.myState.hasReposted) {
-      await apilib.unrepost(this.rootStore.api, 'alice.com', this.uri)
+    if (this.myState.repost) {
+      await apilib.unrepost(this.rootStore.api, 'alice.test', this.uri)
       runInAction(() => {
         this.repostCount--
-        this.myState.hasReposted = false
+        this.myState.repost = undefined
       })
     } else {
-      await apilib.repost(this.rootStore.api, 'alice.com', this.uri)
+      const res = await apilib.repost(
+        this.rootStore.api,
+        'alice.test',
+        this.uri,
+      )
       runInAction(() => {
         this.repostCount++
-        this.myState.hasReposted = true
+        this.myState.repost = res.uri
       })
     }
   }
 }
 
-export class FeedViewModel implements bsky.FeedView.Response {
+export class FeedViewModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   hasReachedEnd = false
   error = ''
-  params: bsky.FeedView.Params
+  params: GetFeedView.QueryParams
   _loadPromise: Promise<void> | undefined
   _loadMorePromise: Promise<void> | undefined
   _updatePromise: Promise<void> | undefined
@@ -105,7 +109,10 @@ export class FeedViewModel implements bsky.FeedView.Response {
   // data
   feed: FeedViewItemModel[] = []
 
-  constructor(public rootStore: RootStoreModel, params: bsky.FeedView.Params) {
+  constructor(
+    public rootStore: RootStoreModel,
+    params: GetFeedView.QueryParams,
+  ) {
     makeAutoObservable(
       this,
       {
@@ -223,10 +230,7 @@ export class FeedViewModel implements bsky.FeedView.Response {
     this._xLoading(isRefreshing)
     await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
-      const res = (await this.rootStore.api.mainPds.view(
-        'blueskyweb.xyz:FeedView',
-        this.params,
-      )) as bsky.FeedView.Response
+      const res = await this.rootStore.api.todo.social.getFeed(this.params)
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -241,11 +245,8 @@ export class FeedViewModel implements bsky.FeedView.Response {
       const params = Object.assign({}, this.params, {
         before: this.loadMoreCursor,
       })
-      const res = (await this.rootStore.api.mainPds.view(
-        'blueskyweb.xyz:FeedView',
-        params,
-      )) as bsky.FeedView.Response
-      if (res.feed.length === 0) {
+      const res = await this.rootStore.api.todo.social.getFeed(params)
+      if (res.data.feed.length === 0) {
         runInAction(() => {
           this.hasReachedEnd = true
         })
@@ -265,20 +266,18 @@ export class FeedViewModel implements bsky.FeedView.Response {
     let cursor = undefined
     try {
       do {
-        const res = (await this.rootStore.api.mainPds.view(
-          'blueskyweb.xyz:FeedView',
-          {
+        const res: GetFeedView.Response =
+          await this.rootStore.api.todo.social.getFeed({
             before: cursor,
             limit: Math.min(numToFetch, 100),
-          },
-        )) as bsky.FeedView.Response
-        if (res.feed.length === 0) {
+          })
+        if (res.data.feed.length === 0) {
           break // sanity check
         }
         this._updateAll(res)
-        numToFetch -= res.feed.length
-        cursor = this.feed[res.feed.length - 1].indexedAt
-        console.log(numToFetch, cursor, res.feed.length)
+        numToFetch -= res.data.feed.length
+        cursor = this.feed[res.data.feed.length - 1].indexedAt
+        console.log(numToFetch, cursor, res.data.feed.length)
       } while (numToFetch > 0)
       this._xIdle()
     } catch (e: any) {
@@ -286,26 +285,26 @@ export class FeedViewModel implements bsky.FeedView.Response {
     }
   }
 
-  private _replaceAll(res: bsky.FeedView.Response) {
+  private _replaceAll(res: GetFeedView.Response) {
     this.feed.length = 0
     this.hasReachedEnd = false
     this._appendAll(res)
   }
 
-  private _appendAll(res: bsky.FeedView.Response) {
+  private _appendAll(res: GetFeedView.Response) {
     let counter = this.feed.length
-    for (const item of res.feed) {
+    for (const item of res.data.feed) {
       this._append(counter++, item)
     }
   }
 
-  private _append(keyId: number, item: bsky.FeedView.FeedItem) {
+  private _append(keyId: number, item: GetFeedView.FeedItem) {
     // TODO: validate .record
     this.feed.push(new FeedViewItemModel(this.rootStore, `item-${keyId}`, item))
   }
 
-  private _updateAll(res: bsky.FeedView.Response) {
-    for (const item of res.feed) {
+  private _updateAll(res: GetFeedView.Response) {
+    for (const item of res.data.feed) {
       const existingItem = this.feed.find(
         // this find function has a key subtley- the indexedAt comparison
         // the reason for this is reposts: they set the URI of the original post, not of the repost record

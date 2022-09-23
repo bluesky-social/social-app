@@ -4,18 +4,14 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "ios": "react-native run-ios --simulator=\"iPhone 14\"",
     "web": "react-scripts start",
     "start": "react-native start",
-    "dev-pds": "node ./scripts/testing-server.mjs",
-    "dev-wallet": "cd node_modules/\\@adxp/auth-lobby && npm run start:authed",
+    "dev-env": "dev-env",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@adxp/auth": "*",
-    "@adxp/common": "*",
-    "@adxp/mock-api": "git+ssh://git@github.com:bluesky-social/adx-mock-api.git#e6f9ecd510fd54fbc5af32e319342634d9446a07",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
@@ -44,12 +40,10 @@
     "react-native-svg": "^12.4.0",
     "react-native-url-polyfill": "^1.3.0",
     "react-native-web": "^0.17.7",
+    "rn-fetch-blob": "^0.12.0",
     "ucans": "0.9.1"
   },
   "devDependencies": {
-    "@adxp/auth-lobby": "*",
-    "@adxp/server": "*",
-    "@adxp/ws-relay": "*",
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",

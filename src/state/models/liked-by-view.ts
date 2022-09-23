@@ -1,8 +1,9 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {bsky, AdxUri} from '@adxp/mock-api'
+import {AdxUri} from '../../third-party/uri'
+import * as GetLikedBy from '../../third-party/api/src/types/todo/social/getLikedBy'
 import {RootStoreModel} from './root-store'
 
-type LikedByItem = bsky.LikedByView.Response['likedBy'][number]
+type LikedByItem = GetLikedBy.OutputSchema['likedBy'][number]
 
 export class LikedByViewItemModel implements LikedByItem {
   // ui state
@@ -22,14 +23,14 @@ export class LikedByViewItemModel implements LikedByItem {
   }
 }
 
-export class LikedByViewModel implements bsky.LikedByView.Response {
+export class LikedByViewModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
   resolvedUri = ''
-  params: bsky.LikedByView.Params
+  params: GetLikedBy.QueryParams
 
   // data
   uri: string = ''
@@ -37,7 +38,7 @@ export class LikedByViewModel implements bsky.LikedByView.Response {
 
   constructor(
     public rootStore: RootStoreModel,
-    params: bsky.LikedByView.Params,
+    params: GetLikedBy.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -113,10 +114,9 @@ export class LikedByViewModel implements bsky.LikedByView.Response {
     this._xLoading(isRefreshing)
     await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
-      const res = (await this.rootStore.api.mainPds.view(
-        'blueskyweb.xyz:LikedByView',
+      const res = await this.rootStore.api.todo.social.getLikedBy(
         Object.assign({}, this.params, {uri: this.resolvedUri}),
-      )) as bsky.LikedByView.Response
+      )
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -124,10 +124,10 @@ export class LikedByViewModel implements bsky.LikedByView.Response {
     }
   }
 
-  private _replaceAll(res: bsky.LikedByView.Response) {
+  private _replaceAll(res: GetLikedBy.Response) {
     this.likedBy.length = 0
     let counter = 0
-    for (const item of res.likedBy) {
+    for (const item of res.data.likedBy) {
       this._append(counter++, item)
     }
   }

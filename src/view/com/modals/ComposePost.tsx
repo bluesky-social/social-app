@@ -15,7 +15,7 @@ const WARNING_TEXT_LENGTH = 200
 const DANGER_TEXT_LENGTH = 255
 export const snapPoints = ['100%']
 
-const DEBUG_USERNAMES = ['alice.com', 'bob.com', 'carla.com']
+const DEBUG_USERNAMES = ['alice.test', 'bob.test', 'carol.test']
 
 export function Component({replyTo}: {replyTo?: string}) {
   const store = useStores()
@@ -48,7 +48,7 @@ export function Component({replyTo}: {replyTo?: string}) {
       return false
     }
     try {
-      await apilib.post(store.api, 'alice.com', text, replyTo)
+      await apilib.post(store.api, 'alice.test', text, replyTo)
     } catch (e: any) {
       console.error(`Failed to create post: ${e.toString()}`)
       setError(

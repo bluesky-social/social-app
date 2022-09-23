@@ -1,10 +1,10 @@
-import {makeAutoObservable, runInAction} from 'mobx'
-import {bsky} from '@adxp/mock-api'
+import {makeAutoObservable} from 'mobx'
+import * as GetNotifications from '../../third-party/api/src/types/todo/social/getNotifications'
 import {RootStoreModel} from './root-store'
 import {hasProp} from '../lib/type-guards'
 
 export class NotificationsViewItemModel
-  implements bsky.NotificationsView.Notification
+  implements GetNotifications.Notification
 {
   // ui state
   _reactKey: string = ''
@@ -23,14 +23,14 @@ export class NotificationsViewItemModel
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
-    v: bsky.NotificationsView.Notification,
+    v: GetNotifications.Notification,
   ) {
     makeAutoObservable(this, {rootStore: false})
     this._reactKey = reactKey
     this.copy(v)
   }
 
-  copy(v: bsky.NotificationsView.Notification) {
+  copy(v: GetNotifications.Notification) {
     this.uri = v.uri
     this.author = v.author
     this.record = v.record
@@ -77,13 +77,13 @@ export class NotificationsViewItemModel
   }
 }
 
-export class NotificationsViewModel implements bsky.NotificationsView.Response {
+export class NotificationsViewModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
-  params: bsky.NotificationsView.Params
+  params: GetNotifications.QueryParams
   _loadPromise: Promise<void> | undefined
   _loadMorePromise: Promise<void> | undefined
   _updatePromise: Promise<void> | undefined
@@ -93,7 +93,7 @@ export class NotificationsViewModel implements bsky.NotificationsView.Response {
 
   constructor(
     public rootStore: RootStoreModel,
-    params: bsky.NotificationsView.Params,
+    params: GetNotifications.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -212,10 +212,9 @@ export class NotificationsViewModel implements bsky.NotificationsView.Response {
     this._xLoading(isRefreshing)
     await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
-      const res = (await this.rootStore.api.mainPds.view(
-        'blueskyweb.xyz:NotificationsView',
+      const res = await this.rootStore.api.todo.social.getNotifications(
         this.params,
-      )) as bsky.NotificationsView.Response
+      )
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -230,10 +229,7 @@ export class NotificationsViewModel implements bsky.NotificationsView.Response {
       const params = Object.assign({}, this.params, {
         before: this.loadMoreCursor,
       })
-      const res = (await this.rootStore.api.mainPds.view(
-        'blueskyweb.xyz:NotificationsView',
-        params,
-      )) as bsky.NotificationsView.Response
+      const res = await this.rootStore.api.todo.social.getNotifications(params)
       this._appendAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -248,20 +244,18 @@ export class NotificationsViewModel implements bsky.NotificationsView.Response {
     let cursor = undefined
     try {
       do {
-        const res = (await this.rootStore.api.mainPds.view(
-          'blueskyweb.xyz:NotificationsView',
-          {
+        const res: GetNotifications.Response =
+          await this.rootStore.api.todo.social.getNotifications({
             before: cursor,
             limit: Math.min(numToFetch, 100),
-          },
-        )) as bsky.NotificationsView.Response
-        if (res.notifications.length === 0) {
+          })
+        if (res.data.notifications.length === 0) {
           break // sanity check
         }
         this._updateAll(res)
-        numToFetch -= res.notifications.length
-        cursor = this.notifications[res.notifications.length - 1].indexedAt
-        console.log(numToFetch, cursor, res.notifications.length)
+        numToFetch -= res.data.notifications.length
+        cursor = this.notifications[res.data.notifications.length - 1].indexedAt
+        console.log(numToFetch, cursor, res.data.notifications.length)
       } while (numToFetch > 0)
       this._xIdle()
     } catch (e: any) {
@@ -269,27 +263,27 @@ export class NotificationsViewModel implements bsky.NotificationsView.Response {
     }
   }
 
-  private _replaceAll(res: bsky.NotificationsView.Response) {
+  private _replaceAll(res: GetNotifications.Response) {
     this.notifications.length = 0
     this._appendAll(res)
   }
 
-  private _appendAll(res: bsky.NotificationsView.Response) {
+  private _appendAll(res: GetNotifications.Response) {
     let counter = this.notifications.length
-    for (const item of res.notifications) {
+    for (const item of res.data.notifications) {
       this._append(counter++, item)
     }
   }
 
-  private _append(keyId: number, item: bsky.NotificationsView.Notification) {
+  private _append(keyId: number, item: GetNotifications.Notification) {
     // TODO: validate .record
     this.notifications.push(
       new NotificationsViewItemModel(this.rootStore, `item-${keyId}`, item),
     )
   }
 
-  private _updateAll(res: bsky.NotificationsView.Response) {
-    for (const item of res.notifications) {
+  private _updateAll(res: GetNotifications.Response) {
+    for (const item of res.data.notifications) {
       const existingItem = this.notifications.find(
         // this find function has a key subtley- the indexedAt comparison
         // the reason for this is reposts: they set the URI of the original post, not of the repost record

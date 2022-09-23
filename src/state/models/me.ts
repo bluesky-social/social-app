@@ -14,18 +14,16 @@ export class MeModel {
   async load() {
     const sess = this.rootStore.session
     if (sess.isAuthed) {
-      const userDb = this.rootStore.api.mockDb.mainUser
-      this.did = userDb.did
-      this.name = userDb.name
-      const profile = await this.rootStore.api
-        .repo(this.did, true)
-        .collection('blueskyweb.xyz:Profiles')
-        .get('Profile', 'profile')
-        .catch(_ => undefined)
+      // TODO
+      this.did = 'did:test:alice'
+      this.name = 'alice.todo'
+      const profile = await this.rootStore.api.todo.social.getProfile({
+        user: this.did,
+      })
       runInAction(() => {
-        if (profile?.valid) {
-          this.displayName = profile.value.displayName
-          this.description = profile.value.description
+        if (profile?.data) {
+          this.displayName = profile.data.displayName
+          this.description = profile.data.description
         } else {
           this.displayName = ''
           this.description = ''

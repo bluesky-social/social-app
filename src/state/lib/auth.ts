@@ -1,4 +1,5 @@
-import * as auth from '@adxp/auth'
+export {} // TODO
+/*import * as auth from '@adxp/auth'
 import * as ucan from 'ucans'
 import {
   getInitialURL,
@@ -114,3 +115,4 @@ export class ReactNativeStore extends auth.AuthStore {
     this.ucanStore = await ucan.Store.fromTokens([])
   }
 }
+*/

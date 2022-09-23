@@ -26,7 +26,7 @@ export const Feed = observer(function Feed({feed}: {feed: FeedViewModel}) {
       {feed.isLoading && !feed.isRefreshing && !feed.hasContent && (
         <Text>Loading...</Text>
       )}
-      {feed.hasError && <Text>{feed.error}</Text>}
+      {feed.hasError && <Text>{feed.errorStr}</Text>}
       {feed.hasContent && (
         <FlatList
           data={feed.feed.slice()}

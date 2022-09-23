@@ -1,19 +1,19 @@
 import {makeAutoObservable} from 'mobx'
-import {bsky} from '@adxp/mock-api'
+import * as GetUserFollows from '../../third-party/api/src/types/todo/social/getUserFollows'
 import {RootStoreModel} from './root-store'
 
-type Subject = bsky.UserFollowsView.Response['subject']
-export type FollowItem = bsky.UserFollowsView.Response['follows'][number] & {
+type Subject = GetUserFollows.OutputSchema['subject']
+export type FollowItem = GetUserFollows.OutputSchema['follows'][number] & {
   _reactKey: string
 }
 
-export class UserFollowsViewModel implements bsky.UserFollowsView.Response {
+export class UserFollowsViewModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
-  params: bsky.UserFollowsView.Params
+  params: GetUserFollows.QueryParams
 
   // data
   subject: Subject = {did: '', name: '', displayName: ''}
@@ -21,7 +21,7 @@ export class UserFollowsViewModel implements bsky.UserFollowsView.Response {
 
   constructor(
     public rootStore: RootStoreModel,
-    params: bsky.UserFollowsView.Params,
+    params: GetUserFollows.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -84,10 +84,9 @@ export class UserFollowsViewModel implements bsky.UserFollowsView.Response {
     this._xLoading(isRefreshing)
     await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
-      const res = (await this.rootStore.api.mainPds.view(
-        'blueskyweb.xyz:UserFollowsView',
+      const res = await this.rootStore.api.todo.social.getUserFollows(
         this.params,
-      )) as bsky.UserFollowsView.Response
+      )
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -95,13 +94,13 @@ export class UserFollowsViewModel implements bsky.UserFollowsView.Response {
     }
   }
 
-  private _replaceAll(res: bsky.UserFollowsView.Response) {
-    this.subject.did = res.subject.did
-    this.subject.name = res.subject.name
-    this.subject.displayName = res.subject.displayName
+  private _replaceAll(res: GetUserFollows.Response) {
+    this.subject.did = res.data.subject.did
+    this.subject.name = res.data.subject.name
+    this.subject.displayName = res.data.subject.displayName
     this.follows.length = 0
     let counter = 0
-    for (const item of res.follows) {
+    for (const item of res.data.follows) {
       this._append({_reactKey: `item-${counter++}`, ...item})
     }
   }
