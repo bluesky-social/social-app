@@ -59,13 +59,17 @@ export class FeedViewItemModel implements GetFeedView.FeedItem {
 
   async toggleLike() {
     if (this.myState.like) {
-      await apilib.unlike(this.rootStore.api, 'alice.test', this.uri)
+      await apilib.unlike(this.rootStore.api, this.myState.like)
       runInAction(() => {
         this.likeCount--
         this.myState.like = undefined
       })
     } else {
-      const res = await apilib.like(this.rootStore.api, 'alice.test', this.uri)
+      const res = await apilib.like(
+        this.rootStore.api,
+        'did:test:alice',
+        this.uri,
+      )
       runInAction(() => {
         this.likeCount++
         this.myState.like = res.uri
@@ -75,7 +79,7 @@ export class FeedViewItemModel implements GetFeedView.FeedItem {
 
   async toggleRepost() {
     if (this.myState.repost) {
-      await apilib.unrepost(this.rootStore.api, 'alice.test', this.uri)
+      await apilib.unrepost(this.rootStore.api, this.myState.repost)
       runInAction(() => {
         this.repostCount--
         this.myState.repost = undefined
@@ -83,7 +87,7 @@ export class FeedViewItemModel implements GetFeedView.FeedItem {
     } else {
       const res = await apilib.repost(
         this.rootStore.api,
-        'alice.test',
+        'did:test:alice',
         this.uri,
       )
       runInAction(() => {
