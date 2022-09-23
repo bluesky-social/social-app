@@ -30,7 +30,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     view?.toggleFollowing().then(
       () => {
         Toast.show(
-          `${view.myState.hasFollowed ? 'Following' : 'No longer following'} ${
+          `${view.myState.follow ? 'Following' : 'No longer following'} ${
             view.displayName || view.name
           }`,
           {
@@ -104,7 +104,7 @@ export const ProfileHeader = observer(function ProfileHeader({
               style={[styles.mainBtn, styles.btn]}>
               <Text style={[s.fw400, s.f14]}>Edit Profile</Text>
             </TouchableOpacity>
-          ) : view.myState.hasFollowed ? (
+          ) : view.myState.follow ? (
             <TouchableOpacity
               onPress={onPressToggleFollow}
               style={[styles.mainBtn, styles.btn]}>

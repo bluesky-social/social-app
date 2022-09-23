@@ -74,9 +74,7 @@ export class ProfileViewModel {
       throw new Error('Not logged in')
     }
     if (this.myState.follow) {
-      await apilib.unfollow(this.rootStore.api, this.rootStore.me.did, {
-        did: this.did,
-      })
+      await apilib.unfollow(this.rootStore.api, this.myState.follow)
       runInAction(() => {
         this.followersCount--
         this.myState.follow = undefined

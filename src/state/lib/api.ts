@@ -53,8 +53,12 @@ export async function like(adx: ServiceClient, user: string, uri: string) {
   )
 }
 
-export async function unlike(adx: ServiceClient, user: string, uri: string) {
-  throw new Error('TODO')
+export async function unlike(adx: ServiceClient, likeUri: string) {
+  const likeUrip = new AdxUri(likeUri)
+  return await adx.todo.social.like.delete({
+    did: likeUrip.hostname,
+    tid: likeUrip.recordKey,
+  })
 }
 
 export async function repost(adx: ServiceClient, user: string, uri: string) {
@@ -67,8 +71,12 @@ export async function repost(adx: ServiceClient, user: string, uri: string) {
   )
 }
 
-export async function unrepost(adx: ServiceClient, user: string, uri: string) {
-  throw new Error('TODO')
+export async function unrepost(adx: ServiceClient, repostUri: string) {
+  const repostUrip = new AdxUri(repostUri)
+  return await adx.todo.social.repost.delete({
+    did: repostUrip.hostname,
+    tid: repostUrip.recordKey,
+  })
 }
 
 export async function follow(
@@ -85,12 +93,12 @@ export async function follow(
   )
 }
 
-export async function unfollow(
-  adx: ServiceClient,
-  user: string,
-  subject: {did: string},
-) {
-  throw new Error('TODO')
+export async function unfollow(adx: ServiceClient, followUri: string) {
+  const followUrip = new AdxUri(followUri)
+  return await adx.todo.social.follow.delete({
+    did: followUrip.hostname,
+    tid: followUrip.recordKey,
+  })
 }
 
 export async function updateProfile(
@@ -108,36 +116,42 @@ interface FetchHandlerResponse {
 }
 
 async function fetchHandler(
-  httpUri: string,
-  httpMethod: string,
-  httpHeaders: Record<string, string>,
-  httpReqBody: any,
+  reqUri: string,
+  reqMethod: string,
+  reqHeaders: Record<string, string>,
+  reqBody: any,
 ): Promise<FetchHandlerResponse> {
-  httpHeaders['Authorization'] = 'did:test:alice' // DEBUG
+  reqHeaders['Authorization'] = 'did:test:alice' // DEBUG
+
+  const reqMimeType = reqHeaders['Content-Type'] || reqHeaders['content-type']
+  if (reqMimeType && reqMimeType.startsWith('application/json')) {
+    reqBody = JSON.stringify(reqBody)
+  }
+
   const res = await RNFetchBlob.fetch(
     /** @ts-ignore method coersion, it's fine -prf */
-    httpMethod,
-    httpUri,
-    httpHeaders,
-    httpReqBody,
+    reqMethod,
+    reqUri,
+    reqHeaders,
+    reqBody,
   )
 
-  const status = res.info().status
-  const headers = (res.info().headers || {}) as Record<string, string>
-  const mimeType = headers['Content-Type'] || headers['content-type']
+  const resStatus = res.info().status
+  const resHeaders = (res.info().headers || {}) as Record<string, string>
+  const resMimeType = resHeaders['Content-Type'] || resHeaders['content-type']
   let resBody
-  if (mimeType) {
-    if (mimeType.startsWith('application/json')) {
+  if (resMimeType) {
+    if (resMimeType.startsWith('application/json')) {
       resBody = res.json()
-    } else if (mimeType.startsWith('text/')) {
+    } else if (resMimeType.startsWith('text/')) {
       resBody = res.text()
     } else {
       resBody = res.base64()
     }
   }
   return {
-    status,
-    headers,
+    status: resStatus,
+    headers: resHeaders,
     body: resBody,
   }
   // const res = await fetch(httpUri, {

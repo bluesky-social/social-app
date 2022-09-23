@@ -48,7 +48,7 @@ export function Component({replyTo}: {replyTo?: string}) {
       return false
     }
     try {
-      await apilib.post(store.api, 'alice.test', text, replyTo)
+      await apilib.post(store.api, 'did:test:alice', text, replyTo)
     } catch (e: any) {
       console.error(`Failed to create post: ${e.toString()}`)
       setError(
