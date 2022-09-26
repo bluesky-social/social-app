@@ -40,29 +40,27 @@ export class NotificationsViewItemModel
 
   get isLike() {
     return (
-      hasProp(this.record, '$type') &&
-      this.record.$type === 'blueskyweb.xyz:Like'
+      hasProp(this.record, '$type') && this.record.$type === 'todo.social.like'
     )
   }
 
   get isRepost() {
     return (
       hasProp(this.record, '$type') &&
-      this.record.$type === 'blueskyweb.xyz:Repost'
+      this.record.$type === 'todo.social.repost'
     )
   }
 
   get isReply() {
     return (
-      hasProp(this.record, '$type') &&
-      this.record.$type === 'blueskyweb.xyz:Post'
+      hasProp(this.record, '$type') && this.record.$type === 'todo.social.post'
     )
   }
 
   get isFollow() {
     return (
       hasProp(this.record, '$type') &&
-      this.record.$type === 'blueskyweb.xyz:Follow'
+      this.record.$type === 'todo.social.follow'
     )
   }
 

@@ -7,7 +7,7 @@ import {useStores} from '../../state'
 export const PostRepostedBy = ({visible, params}: ScreenParams) => {
   const store = useStores()
   const {name, recordKey} = params
-  const uri = makeRecordUri(name, 'blueskyweb.xyz:Posts', recordKey)
+  const uri = makeRecordUri(name, 'todo.social.post', recordKey)
 
   useEffect(() => {
     if (visible) {
