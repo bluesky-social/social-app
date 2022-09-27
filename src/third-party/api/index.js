@@ -10178,8 +10178,12 @@ var Client = class {
 };
 var ServiceClient = class {
   constructor(baseClient, serviceUri) {
+    this.headers = {};
     this.baseClient = baseClient;
     this.uri = typeof serviceUri === "string" ? new URL(serviceUri) : serviceUri;
+  }
+  setHeader(key, value) {
+    this.headers[key] = value;
   }
   async call(methodNsid, params, data, opts) {
     const schema = this.baseClient.schemas.get(methodNsid);
@@ -10188,7 +10192,13 @@ var ServiceClient = class {
     }
     const httpMethod = getMethodSchemaHTTPMethod(schema);
     const httpUri = constructMethodCallUri(schema, this.uri, params);
-    const httpHeaders = constructMethodCallHeaders(schema, data, opts);
+    const httpHeaders = constructMethodCallHeaders(schema, data, {
+      headers: {
+        ...this.headers,
+        ...opts?.headers
+      },
+      encoding: opts?.encoding
+    });
     const res = await this.baseClient.fetch(
       httpUri,
       httpMethod,
@@ -10243,12 +10253,27 @@ var methodSchemas = [
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["username", "did"],
+        required: ["username", "did", "password"],
         properties: {
           username: {
             type: "string"
           },
           did: {
+            type: "string"
+          },
+          password: {
+            type: "string"
+          }
+        }
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["jwt"],
+        properties: {
+          jwt: {
             type: "string"
           }
         }
@@ -10262,12 +10287,31 @@ var methodSchemas = [
     description: "Create an authentication session.",
     parameters: {},
     input: {
-      encoding: "",
-      schema: {}
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["username", "password"],
+        properties: {
+          username: {
+            type: "string"
+          },
+          password: {
+            type: "string"
+          }
+        }
+      }
     },
     output: {
-      encoding: "",
-      schema: {}
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["jwt"],
+        properties: {
+          jwt: {
+            type: "string"
+          }
+        }
+      }
     }
   },
   {
@@ -10326,8 +10370,19 @@ var methodSchemas = [
       schema: {}
     },
     output: {
-      encoding: "",
-      schema: {}
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["name", "did"],
+        properties: {
+          name: {
+            type: "string"
+          },
+          did: {
+            type: "string"
+          }
+        }
+      }
     }
   },
   {
@@ -11518,6 +11573,9 @@ var ServiceClient2 = class {
     this.xrpc = xrpcService;
     this.todo = new TodoNS(this);
   }
+  setHeader(key, value) {
+    this.xrpc.setHeader(key, value);
+  }
 };
 var TodoNS = class {
   constructor(service) {
@@ -11686,31 +11744,33 @@ var BadgeRecord = class {
     });
     return res.data;
   }
-  async create(params, record) {
+  async create(params, record, headers) {
     record.$type = "todo.social.badge";
     const res = await this._service.xrpc.call(
       "todo.adx.repoCreateRecord",
       { type: "todo.social.badge", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async put(params, record) {
+  async put(params, record, headers) {
     record.$type = "todo.social.badge";
     const res = await this._service.xrpc.call(
       "todo.adx.repoPutRecord",
       { type: "todo.social.badge", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async delete(params) {
-    await this._service.xrpc.call("todo.adx.repoDeleteRecord", {
-      type: "todo.social.badge",
-      ...params
-    });
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "todo.adx.repoDeleteRecord",
+      { type: "todo.social.badge", ...params },
+      void 0,
+      { headers }
+    );
   }
 };
 var FollowRecord = class {
@@ -11731,31 +11791,33 @@ var FollowRecord = class {
     });
     return res.data;
   }
-  async create(params, record) {
+  async create(params, record, headers) {
     record.$type = "todo.social.follow";
     const res = await this._service.xrpc.call(
       "todo.adx.repoCreateRecord",
       { type: "todo.social.follow", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async put(params, record) {
+  async put(params, record, headers) {
     record.$type = "todo.social.follow";
     const res = await this._service.xrpc.call(
       "todo.adx.repoPutRecord",
       { type: "todo.social.follow", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async delete(params) {
-    await this._service.xrpc.call("todo.adx.repoDeleteRecord", {
-      type: "todo.social.follow",
-      ...params
-    });
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "todo.adx.repoDeleteRecord",
+      { type: "todo.social.follow", ...params },
+      void 0,
+      { headers }
+    );
   }
 };
 var LikeRecord = class {
@@ -11776,31 +11838,33 @@ var LikeRecord = class {
     });
     return res.data;
   }
-  async create(params, record) {
+  async create(params, record, headers) {
     record.$type = "todo.social.like";
     const res = await this._service.xrpc.call(
       "todo.adx.repoCreateRecord",
       { type: "todo.social.like", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async put(params, record) {
+  async put(params, record, headers) {
     record.$type = "todo.social.like";
     const res = await this._service.xrpc.call(
       "todo.adx.repoPutRecord",
       { type: "todo.social.like", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async delete(params) {
-    await this._service.xrpc.call("todo.adx.repoDeleteRecord", {
-      type: "todo.social.like",
-      ...params
-    });
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "todo.adx.repoDeleteRecord",
+      { type: "todo.social.like", ...params },
+      void 0,
+      { headers }
+    );
   }
 };
 var MediaEmbedRecord = class {
@@ -11821,31 +11885,33 @@ var MediaEmbedRecord = class {
     });
     return res.data;
   }
-  async create(params, record) {
+  async create(params, record, headers) {
     record.$type = "todo.social.mediaEmbed";
     const res = await this._service.xrpc.call(
       "todo.adx.repoCreateRecord",
       { type: "todo.social.mediaEmbed", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async put(params, record) {
+  async put(params, record, headers) {
     record.$type = "todo.social.mediaEmbed";
     const res = await this._service.xrpc.call(
       "todo.adx.repoPutRecord",
       { type: "todo.social.mediaEmbed", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async delete(params) {
-    await this._service.xrpc.call("todo.adx.repoDeleteRecord", {
-      type: "todo.social.mediaEmbed",
-      ...params
-    });
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "todo.adx.repoDeleteRecord",
+      { type: "todo.social.mediaEmbed", ...params },
+      void 0,
+      { headers }
+    );
   }
 };
 var PostRecord = class {
@@ -11866,31 +11932,33 @@ var PostRecord = class {
     });
     return res.data;
   }
-  async create(params, record) {
+  async create(params, record, headers) {
     record.$type = "todo.social.post";
     const res = await this._service.xrpc.call(
       "todo.adx.repoCreateRecord",
       { type: "todo.social.post", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async put(params, record) {
+  async put(params, record, headers) {
     record.$type = "todo.social.post";
     const res = await this._service.xrpc.call(
       "todo.adx.repoPutRecord",
       { type: "todo.social.post", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async delete(params) {
-    await this._service.xrpc.call("todo.adx.repoDeleteRecord", {
-      type: "todo.social.post",
-      ...params
-    });
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "todo.adx.repoDeleteRecord",
+      { type: "todo.social.post", ...params },
+      void 0,
+      { headers }
+    );
   }
 };
 var ProfileRecord = class {
@@ -11911,31 +11979,33 @@ var ProfileRecord = class {
     });
     return res.data;
   }
-  async create(params, record) {
+  async create(params, record, headers) {
     record.$type = "todo.social.profile";
     const res = await this._service.xrpc.call(
       "todo.adx.repoCreateRecord",
       { type: "todo.social.profile", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async put(params, record) {
+  async put(params, record, headers) {
     record.$type = "todo.social.profile";
     const res = await this._service.xrpc.call(
       "todo.adx.repoPutRecord",
       { type: "todo.social.profile", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async delete(params) {
-    await this._service.xrpc.call("todo.adx.repoDeleteRecord", {
-      type: "todo.social.profile",
-      ...params
-    });
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "todo.adx.repoDeleteRecord",
+      { type: "todo.social.profile", ...params },
+      void 0,
+      { headers }
+    );
   }
 };
 var RepostRecord = class {
@@ -11956,31 +12026,33 @@ var RepostRecord = class {
     });
     return res.data;
   }
-  async create(params, record) {
+  async create(params, record, headers) {
     record.$type = "todo.social.repost";
     const res = await this._service.xrpc.call(
       "todo.adx.repoCreateRecord",
       { type: "todo.social.repost", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async put(params, record) {
+  async put(params, record, headers) {
     record.$type = "todo.social.repost";
     const res = await this._service.xrpc.call(
       "todo.adx.repoPutRecord",
       { type: "todo.social.repost", ...params },
       record,
-      { encoding: "application/json" }
+      { encoding: "application/json", headers }
     );
     return res.data;
   }
-  async delete(params) {
-    await this._service.xrpc.call("todo.adx.repoDeleteRecord", {
-      type: "todo.social.repost",
-      ...params
-    });
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "todo.adx.repoDeleteRecord",
+      { type: "todo.social.repost", ...params },
+      void 0,
+      { headers }
+    );
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

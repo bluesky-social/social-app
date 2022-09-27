@@ -3,13 +3,14 @@ export interface QueryParams {
 }
 export interface CallOptions {
     headers?: Headers;
-    encoding: '';
+    encoding: 'application/json';
 }
 export interface InputSchema {
-    [k: string]: unknown;
+    username: string;
+    password: string;
 }
 export interface OutputSchema {
-    [k: string]: unknown;
+    jwt: string;
 }
 export interface Response {
     success: boolean;

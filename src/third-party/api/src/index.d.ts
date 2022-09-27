@@ -43,6 +43,7 @@ export declare class ServiceClient {
     xrpc: XrpcServiceClient;
     todo: TodoNS;
     constructor(baseClient: Client, xrpcService: XrpcServiceClient);
+    setHeader(key: string, value: string): void;
 }
 export declare class TodoNS {
     _service: ServiceClient;
@@ -103,13 +104,13 @@ export declare class BadgeRecord {
         uri: string;
         value: TodoSocialBadge.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialBadge.Record): Promise<{
+    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialBadge.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialBadge.Record): Promise<{
+    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialBadge.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>): Promise<void>;
+    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class FollowRecord {
     _service: ServiceClient;
@@ -124,13 +125,13 @@ export declare class FollowRecord {
         uri: string;
         value: TodoSocialFollow.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialFollow.Record): Promise<{
+    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialFollow.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialFollow.Record): Promise<{
+    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialFollow.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>): Promise<void>;
+    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class LikeRecord {
     _service: ServiceClient;
@@ -145,13 +146,13 @@ export declare class LikeRecord {
         uri: string;
         value: TodoSocialLike.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialLike.Record): Promise<{
+    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialLike.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialLike.Record): Promise<{
+    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialLike.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>): Promise<void>;
+    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class MediaEmbedRecord {
     _service: ServiceClient;
@@ -166,13 +167,13 @@ export declare class MediaEmbedRecord {
         uri: string;
         value: TodoSocialMediaEmbed.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialMediaEmbed.Record): Promise<{
+    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialMediaEmbed.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialMediaEmbed.Record): Promise<{
+    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialMediaEmbed.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>): Promise<void>;
+    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class PostRecord {
     _service: ServiceClient;
@@ -187,13 +188,13 @@ export declare class PostRecord {
         uri: string;
         value: TodoSocialPost.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialPost.Record): Promise<{
+    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialPost.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialPost.Record): Promise<{
+    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialPost.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>): Promise<void>;
+    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class ProfileRecord {
     _service: ServiceClient;
@@ -208,13 +209,13 @@ export declare class ProfileRecord {
         uri: string;
         value: TodoSocialProfile.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialProfile.Record): Promise<{
+    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialProfile.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialProfile.Record): Promise<{
+    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialProfile.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>): Promise<void>;
+    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class RepostRecord {
     _service: ServiceClient;
@@ -229,11 +230,11 @@ export declare class RepostRecord {
         uri: string;
         value: TodoSocialRepost.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialRepost.Record): Promise<{
+    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialRepost.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialRepost.Record): Promise<{
+    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialRepost.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>): Promise<void>;
+    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }

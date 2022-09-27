@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   useWindowDimensions,
@@ -11,6 +11,8 @@ import {
   View,
 } from 'react-native'
 import {ScreenContainer, Screen} from 'react-native-screens'
+import LinearGradient from 'react-native-linear-gradient'
+// import Svg, {Polygon} from 'react-native-svg'
 import {GestureDetector, Gesture} from 'react-native-gesture-handler'
 import Animated, {
   useSharedValue,
@@ -25,12 +27,13 @@ import {useStores} from '../../../state'
 import {NavigationModel} from '../../../state/models/navigation'
 import {TabsSelectorModel} from '../../../state/models/shell'
 import {match, MatchResult} from '../../routes'
+import {Login} from '../../screens/Login'
 import {Modal} from '../../com/modals/Modal'
 import {LocationNavigator} from './location-navigator'
 import {createBackMenu, createForwardMenu} from './history-menu'
 import {createAccountsMenu} from './accounts-menu'
 import {createLocationMenu} from './location-menu'
-import {s, colors} from '../../lib/styles'
+import {s, colors, gradients} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
 
 const locationIconNeedsNudgeUp = (icon: IconProp) => icon === 'house'
@@ -163,6 +166,53 @@ export const MobileShell: React.FC = observer(() => {
   const swipeOpacity = useAnimatedStyle(() => ({
     opacity: interpolate(swipeGestureInterp.value, [0, 1.0], [0.6, 0.0]),
   }))
+
+  console.log('authed?', store.session.isAuthed)
+  if (!store.session.isAuthed) {
+    return (
+      <LinearGradient
+        colors={['#007CFF', '#00BCFF']}
+        start={{x: 0, y: 0.8}}
+        end={{x: 1, y: 1}}
+        style={styles.outerContainer}>
+        {
+          undefined /* TODO want this? <Svg height={winDim.height} width={winDim.width} style={s.absolute}>
+          <Polygon
+            points={`
+            ${winDim.width},0
+            ${winDim.width - 250},0
+            0,${winDim.height - 140}
+            0,${winDim.height}
+            ${winDim.width},${winDim.height}`}
+            fill="#fff"
+            fillOpacity="0.04"
+          />
+          <Polygon
+            points={`
+            ${winDim.width},0
+            ${winDim.width - 100},0
+            0,${winDim.height - 60}
+            0,${winDim.height}
+            ${winDim.width},${winDim.height}`}
+            fill="#fff"
+            fillOpacity="0.04"
+          />
+          <Polygon
+            points={`
+            ${winDim.width},100
+            0,${winDim.height}
+            ${winDim.width},${winDim.height}`}
+            fill="#fff"
+            fillOpacity="0.04"
+          />
+    </Svg>*/
+        }
+        <SafeAreaView style={styles.innerContainer}>
+          <Login />
+        </SafeAreaView>
+      </LinearGradient>
+    )
+  }
 
   return (
     <View style={styles.outerContainer}>

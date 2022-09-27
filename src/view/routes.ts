@@ -3,8 +3,6 @@ import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {Home} from './screens/Home'
 import {Search} from './screens/Search'
 import {Notifications} from './screens/Notifications'
-import {Login} from './screens/Login'
-import {Signup} from './screens/Signup'
 import {NotFound} from './screens/NotFound'
 import {PostThread} from './screens/PostThread'
 import {PostLikedBy} from './screens/PostLikedBy'
@@ -47,8 +45,6 @@ export const routes: Route[] = [
     'retweet',
     r('/profile/(?<name>[^/]+)/post/(?<recordKey>[^/]+)/reposted-by'),
   ],
-  [Login, ['far', 'user'], r('/login')],
-  [Signup, ['far', 'user'], r('/signup')],
 ]
 
 export function match(url: string): MatchResult {

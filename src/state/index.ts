@@ -8,13 +8,15 @@ import * as storage from './lib/storage'
 import {ShellModel} from './models/shell'
 
 const ROOT_STATE_STORAGE_KEY = 'root'
+const DEFAULT_SERVICE = 'http://localhost:2583'
 
 export async function setupState() {
   let rootStore: RootStoreModel
   let data: any
 
-  const api = AdxApi.service(`http://localhost:2583`)
-  await libapi.setup(api)
+  libapi.doPolyfill()
+
+  const api = AdxApi.service(DEFAULT_SERVICE)
   rootStore = new RootStoreModel(api)
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
@@ -29,17 +31,7 @@ export async function setupState() {
     storage.save(ROOT_STATE_STORAGE_KEY, snapshot)
   })
 
-  // TODO
-  rootStore.session.setAuthed(true)
-  // if (env.authStore) {
-  //   const isAuthed = await auth.isAuthed(env.authStore)
-  //   rootStore.session.setAuthed(isAuthed)
-
-  //   // handle redirect from auth
-  //   if (await auth.initialLoadUcanCheck(env.authStore)) {
-  //     rootStore.session.setAuthed(true)
-  //   }
-  // }
+  await rootStore.session.setup()
   await rootStore.me.load()
   console.log(rootStore.me)
 

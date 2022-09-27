@@ -3,13 +3,13 @@
  * models live. They are made available to every model via dependency injection.
  */
 
-import RNFetchBlob from 'rn-fetch-blob'
 // import {ReactNativeStore} from './auth'
-import AdxApi, {ServiceClient} from '../../third-party/api'
+import AdxApi from '../../third-party/api'
+import {ServiceClient} from '../../third-party/api/src/index'
 import {AdxUri} from '../../third-party/uri'
 import * as storage from './storage'
 
-export async function setup(adx: ServiceClient) {
+export function doPolyfill() {
   AdxApi.xrpc.fetch = fetchHandler
 }
 
@@ -121,32 +121,31 @@ async function fetchHandler(
   reqHeaders: Record<string, string>,
   reqBody: any,
 ): Promise<FetchHandlerResponse> {
-  reqHeaders['Authorization'] = 'did:test:alice' // DEBUG
-
   const reqMimeType = reqHeaders['Content-Type'] || reqHeaders['content-type']
   if (reqMimeType && reqMimeType.startsWith('application/json')) {
     reqBody = JSON.stringify(reqBody)
   }
 
-  const res = await RNFetchBlob.fetch(
-    /** @ts-ignore method coersion, it's fine -prf */
-    reqMethod,
-    reqUri,
-    reqHeaders,
-    reqBody,
-  )
+  const res = await fetch(reqUri, {
+    method: reqMethod,
+    headers: reqHeaders,
+    body: reqBody,
+  })
 
-  const resStatus = res.info().status
-  const resHeaders = (res.info().headers || {}) as Record<string, string>
+  const resStatus = res.status
+  const resHeaders: Record<string, string> = {}
+  res.headers.forEach((value: string, key: string) => {
+    resHeaders[key] = value
+  })
   const resMimeType = resHeaders['Content-Type'] || resHeaders['content-type']
   let resBody
   if (resMimeType) {
     if (resMimeType.startsWith('application/json')) {
-      resBody = res.json()
+      resBody = await res.json()
     } else if (resMimeType.startsWith('text/')) {
-      resBody = res.text()
+      resBody = await res.text()
     } else {
-      resBody = res.base64()
+      throw new Error('TODO: non-textual response body')
     }
   }
   return {
