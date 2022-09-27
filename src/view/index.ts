@@ -3,6 +3,7 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft'
 import {faAngleRight} from '@fortawesome/free-solid-svg-icons/faAngleRight'
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons/faArrowLeft'
+import {faArrowRightFromBracket} from '@fortawesome/free-solid-svg-icons'
 import {faArrowUpFromBracket} from '@fortawesome/free-solid-svg-icons/faArrowUpFromBracket'
 import {faArrowUpRightFromSquare} from '@fortawesome/free-solid-svg-icons/faArrowUpRightFromSquare'
 import {faArrowsRotate} from '@fortawesome/free-solid-svg-icons/faArrowsRotate'
@@ -38,6 +39,7 @@ export function setup() {
     faAngleLeft,
     faAngleRight,
     faArrowLeft,
+    faArrowRightFromBracket,
     faArrowUpFromBracket,
     faArrowUpRightFromSquare,
     faArrowsRotate,

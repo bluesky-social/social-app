@@ -14,8 +14,10 @@ import {s, colors} from '../../lib/styles'
 
 export function createAccountsMenu({
   debug_onPressItem,
+  onPressLogout,
 }: {
   debug_onPressItem: () => void
+  onPressLogout: () => void
 }): RootSiblings {
   const onPressItem = (_index: number) => {
     sibling.destroy()
@@ -40,6 +42,18 @@ export function createAccountsMenu({
             onPress={() => onPressItem(0)}>
             <FontAwesomeIcon style={styles.icon} icon="plus" />
             <Text style={styles.label}>New Account</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.menuItem, styles.menuItemBorder]}
+            onPress={() => {
+              sibling.destroy()
+              onPressLogout()
+            }}>
+            <FontAwesomeIcon
+              style={styles.icon}
+              icon="arrow-right-from-bracket"
+            />
+            <Text style={styles.label}>Log out</Text>
           </TouchableOpacity>
         </View>
       </>
