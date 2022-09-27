@@ -1,7 +1,10 @@
 import {makeAutoObservable} from 'mobx'
 import AdxApi from '../../third-party/api'
+import type * as GetAccountsConfig from '../../third-party/api/src/types/todo/adx/getAccountsConfig'
 import {isObj, hasProp} from '../lib/type-guards'
 import {RootStoreModel} from './root-store'
+
+export type ServiceDescription = GetAccountsConfig.OutputSchema
 
 interface SessionData {
   service: string
@@ -10,8 +13,17 @@ interface SessionData {
   userdid: string
 }
 
+export enum OnboardingStage {
+  Init = 'init',
+}
+
+interface OnboardingState {
+  stage: OnboardingStage
+}
+
 export class SessionModel {
   data: SessionData | null = null
+  onboardingState: OnboardingState | null = null
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -26,31 +38,51 @@ export class SessionModel {
   }
 
   serialize(): unknown {
-    return this.data
+    return {
+      data: this.data,
+      onboardingState: this.onboardingState,
+    }
   }
 
   hydrate(v: unknown) {
     if (isObj(v)) {
-      const data: SessionData = {
-        service: '',
-        token: '',
-        username: '',
-        userdid: '',
+      if (hasProp(v, 'data') && isObj(v.data)) {
+        const data: SessionData = {
+          service: '',
+          token: '',
+          username: '',
+          userdid: '',
+        }
+        if (hasProp(v.data, 'service') && typeof v.data.service === 'string') {
+          data.service = v.data.service
+        }
+        if (hasProp(v.data, 'token') && typeof v.data.token === 'string') {
+          data.token = v.data.token
+        }
+        if (
+          hasProp(v.data, 'username') &&
+          typeof v.data.username === 'string'
+        ) {
+          data.username = v.data.username
+        }
+        if (hasProp(v.data, 'userdid') && typeof v.data.userdid === 'string') {
+          data.userdid = v.data.userdid
+        }
+        if (data.service && data.token && data.username && data.userdid) {
+          this.data = data
+        }
       }
-      if (hasProp(v, 'service') && typeof v.service === 'string') {
-        data.service = v.service
-      }
-      if (hasProp(v, 'token') && typeof v.token === 'string') {
-        data.token = v.token
-      }
-      if (hasProp(v, 'username') && typeof v.username === 'string') {
-        data.username = v.username
-      }
-      if (hasProp(v, 'userdid') && typeof v.userdid === 'string') {
-        data.userdid = v.userdid
-      }
-      if (data.service && data.token && data.username && data.userdid) {
-        this.data = data
+      if (
+        this.data &&
+        hasProp(v, 'onboardingState') &&
+        isObj(v.onboardingState)
+      ) {
+        if (
+          hasProp(v.onboardingState, 'stage') &&
+          typeof v.onboardingState === 'string'
+        ) {
+          this.onboardingState = v.onboardingState
+        }
       }
     }
   }
@@ -100,6 +132,12 @@ export class SessionModel {
     this.clear() // invalid session cached
   }
 
+  async describeService(service: string): Promise<ServiceDescription> {
+    const api = AdxApi.service(service)
+    const res = await api.todo.adx.getAccountsConfig({})
+    return res.data
+  }
+
   async login({
     service,
     username,
@@ -122,6 +160,36 @@ export class SessionModel {
     }
   }
 
+  async createAccount({
+    service,
+    email,
+    password,
+    username,
+    inviteCode,
+  }: {
+    service: string
+    email: string
+    password: string
+    username: string
+    inviteCode?: string
+  }) {
+    const api = AdxApi.service(service)
+    const res = await api.todo.adx.createAccount(
+      {},
+      {username, password, email, inviteCode},
+    )
+    if (res.data.jwt) {
+      this.setState({
+        service: service,
+        token: res.data.jwt,
+        username: res.data.name,
+        userdid: res.data.did,
+      })
+      this.setOnboardingStage(OnboardingStage.Init)
+      this.configureApi()
+    }
+  }
+
   async logout() {
     if (this.isAuthed) {
       this.rootStore.api.todo.adx.deleteSession({}).catch((e: any) => {
@@ -129,5 +197,13 @@ export class SessionModel {
       })
     }
     this.clear()
+  }
+
+  setOnboardingStage(stage: OnboardingStage | null) {
+    if (stage === null) {
+      this.onboardingState = null
+    } else {
+      this.onboardingState = {stage}
+    }
   }
 }

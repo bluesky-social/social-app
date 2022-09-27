@@ -4,6 +4,7 @@ import * as TodoAdxCreateSession from './types/todo/adx/createSession';
 import * as TodoAdxDeleteAccount from './types/todo/adx/deleteAccount';
 import * as TodoAdxDeleteSession from './types/todo/adx/deleteSession';
 import * as TodoAdxGetAccount from './types/todo/adx/getAccount';
+import * as TodoAdxGetAccountsConfig from './types/todo/adx/getAccountsConfig';
 import * as TodoAdxGetSession from './types/todo/adx/getSession';
 import * as TodoAdxRepoBatchWrite from './types/todo/adx/repoBatchWrite';
 import * as TodoAdxRepoCreateRecord from './types/todo/adx/repoCreateRecord';
@@ -59,6 +60,7 @@ export declare class AdxNS {
     deleteAccount(params: TodoAdxDeleteAccount.QueryParams, data?: TodoAdxDeleteAccount.InputSchema, opts?: TodoAdxDeleteAccount.CallOptions): Promise<TodoAdxDeleteAccount.Response>;
     deleteSession(params: TodoAdxDeleteSession.QueryParams, data?: TodoAdxDeleteSession.InputSchema, opts?: TodoAdxDeleteSession.CallOptions): Promise<TodoAdxDeleteSession.Response>;
     getAccount(params: TodoAdxGetAccount.QueryParams, data?: TodoAdxGetAccount.InputSchema, opts?: TodoAdxGetAccount.CallOptions): Promise<TodoAdxGetAccount.Response>;
+    getAccountsConfig(params: TodoAdxGetAccountsConfig.QueryParams, data?: TodoAdxGetAccountsConfig.InputSchema, opts?: TodoAdxGetAccountsConfig.CallOptions): Promise<TodoAdxGetAccountsConfig.Response>;
     getSession(params: TodoAdxGetSession.QueryParams, data?: TodoAdxGetSession.InputSchema, opts?: TodoAdxGetSession.CallOptions): Promise<TodoAdxGetSession.Response>;
     repoBatchWrite(params: TodoAdxRepoBatchWrite.QueryParams, data?: TodoAdxRepoBatchWrite.InputSchema, opts?: TodoAdxRepoBatchWrite.CallOptions): Promise<TodoAdxRepoBatchWrite.Response>;
     repoCreateRecord(params: TodoAdxRepoCreateRecord.QueryParams, data?: TodoAdxRepoCreateRecord.InputSchema, opts?: TodoAdxRepoCreateRecord.CallOptions): Promise<TodoAdxRepoCreateRecord.Response>;

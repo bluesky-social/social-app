@@ -21,6 +21,7 @@
     "@react-native-clipboard/clipboard": "^1.10.0",
     "@zxing/text-encoding": "^0.9.0",
     "base64-js": "^1.5.1",
+    "email-validator": "^2.0.4",
     "lodash.omit": "^4.5.0",
     "mobx": "^6.6.1",
     "mobx-react-lite": "^3.4.0",
