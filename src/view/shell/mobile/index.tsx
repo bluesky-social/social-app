@@ -12,7 +12,6 @@ import {
 } from 'react-native'
 import {ScreenContainer, Screen} from 'react-native-screens'
 import LinearGradient from 'react-native-linear-gradient'
-// import Svg, {Polygon} from 'react-native-svg'
 import {GestureDetector, Gesture} from 'react-native-gesture-handler'
 import Animated, {
   useSharedValue,
@@ -33,7 +32,7 @@ import {LocationNavigator} from './location-navigator'
 import {createBackMenu, createForwardMenu} from './history-menu'
 import {createAccountsMenu} from './accounts-menu'
 import {createLocationMenu} from './location-menu'
-import {s, colors, gradients} from '../../lib/styles'
+import {s, colors} from '../../lib/styles'
 import {AVIS} from '../../lib/assets'
 
 const locationIconNeedsNudgeUp = (icon: IconProp) => icon === 'house'
@@ -174,40 +173,8 @@ export const MobileShell: React.FC = observer(() => {
       <LinearGradient
         colors={['#007CFF', '#00BCFF']}
         start={{x: 0, y: 0.8}}
-        end={{x: 1, y: 1}}
+        end={{x: 0, y: 1}}
         style={styles.outerContainer}>
-        {
-          undefined /* TODO want this? <Svg height={winDim.height} width={winDim.width} style={s.absolute}>
-          <Polygon
-            points={`
-            ${winDim.width},0
-            ${winDim.width - 250},0
-            0,${winDim.height - 140}
-            0,${winDim.height}
-            ${winDim.width},${winDim.height}`}
-            fill="#fff"
-            fillOpacity="0.04"
-          />
-          <Polygon
-            points={`
-            ${winDim.width},0
-            ${winDim.width - 100},0
-            0,${winDim.height - 60}
-            0,${winDim.height}
-            ${winDim.width},${winDim.height}`}
-            fill="#fff"
-            fillOpacity="0.04"
-          />
-          <Polygon
-            points={`
-            ${winDim.width},100
-            0,${winDim.height}
-            ${winDim.width},${winDim.height}`}
-            fill="#fff"
-            fillOpacity="0.04"
-          />
-    </Svg>*/
-        }
         <SafeAreaView style={styles.innerContainer}>
           <Login />
         </SafeAreaView>

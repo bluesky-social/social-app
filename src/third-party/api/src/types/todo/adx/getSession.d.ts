@@ -3,11 +3,8 @@ export interface QueryParams {
 }
 export interface CallOptions {
     headers?: Headers;
-    encoding: '';
 }
-export interface InputSchema {
-    [k: string]: unknown;
-}
+export declare type InputSchema = undefined;
 export interface OutputSchema {
     name: string;
     did: string;

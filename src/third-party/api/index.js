@@ -10253,12 +10253,15 @@ var methodSchemas = [
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["username", "did", "password"],
+        required: ["email", "username", "password"],
         properties: {
+          email: {
+            type: "string"
+          },
           username: {
             type: "string"
           },
-          did: {
+          inviteCode: {
             type: "string"
           },
           password: {
@@ -10271,9 +10274,15 @@ var methodSchemas = [
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["jwt"],
+        required: ["jwt", "name", "did"],
         properties: {
           jwt: {
+            type: "string"
+          },
+          name: {
+            type: "string"
+          },
+          did: {
             type: "string"
           }
         }
@@ -10305,9 +10314,15 @@ var methodSchemas = [
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["jwt"],
+        required: ["jwt", "name", "did"],
         properties: {
           jwt: {
+            type: "string"
+          },
+          name: {
+            type: "string"
+          },
+          did: {
             type: "string"
           }
         }
@@ -10361,14 +10376,35 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
+    id: "todo.adx.getAccountsConfig",
+    type: "query",
+    description: "Get a document describing the service's accounts configuration.",
+    parameters: {},
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["availableUserDomains"],
+        properties: {
+          inviteCodeRequired: {
+            type: "boolean"
+          },
+          availableUserDomains: {
+            type: "array",
+            items: {
+              type: "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    lexicon: 1,
     id: "todo.adx.getSession",
     type: "query",
     description: "Get information about the current session.",
     parameters: {},
-    input: {
-      encoding: "",
-      schema: {}
-    },
     output: {
       encoding: "application/json",
       schema: {
@@ -11602,6 +11638,14 @@ var AdxNS = class {
   }
   getAccount(params, data, opts) {
     return this._service.xrpc.call("todo.adx.getAccount", params, data, opts);
+  }
+  getAccountsConfig(params, data, opts) {
+    return this._service.xrpc.call(
+      "todo.adx.getAccountsConfig",
+      params,
+      data,
+      opts
+    );
   }
   getSession(params, data, opts) {
     return this._service.xrpc.call("todo.adx.getSession", params, data, opts);

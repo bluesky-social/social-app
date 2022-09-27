@@ -3,16 +3,11 @@ export interface QueryParams {
 }
 export interface CallOptions {
     headers?: Headers;
-    encoding: 'application/json';
 }
-export interface InputSchema {
-    username: string;
-    password: string;
-}
+export declare type InputSchema = undefined;
 export interface OutputSchema {
-    jwt: string;
-    name: string;
-    did: string;
+    inviteCodeRequired?: boolean;
+    availableUserDomains: string[];
 }
 export interface Response {
     success: boolean;

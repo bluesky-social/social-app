@@ -1,5 +1,6 @@
 import {library} from '@fortawesome/fontawesome-svg-core'
 
+import {faAngleDown} from '@fortawesome/free-solid-svg-icons/faAngleDown'
 import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft'
 import {faAngleRight} from '@fortawesome/free-solid-svg-icons/faAngleRight'
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons/faArrowLeft'
@@ -7,6 +8,7 @@ import {faArrowRightFromBracket} from '@fortawesome/free-solid-svg-icons'
 import {faArrowUpFromBracket} from '@fortawesome/free-solid-svg-icons/faArrowUpFromBracket'
 import {faArrowUpRightFromSquare} from '@fortawesome/free-solid-svg-icons/faArrowUpRightFromSquare'
 import {faArrowsRotate} from '@fortawesome/free-solid-svg-icons/faArrowsRotate'
+import {faAt} from '@fortawesome/free-solid-svg-icons/faAt'
 import {faBars} from '@fortawesome/free-solid-svg-icons/faBars'
 import {faBell} from '@fortawesome/free-solid-svg-icons/faBell'
 import {faBell as farBell} from '@fortawesome/free-regular-svg-icons/faBell'
@@ -16,12 +18,15 @@ import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck'
 import {faClone} from '@fortawesome/free-regular-svg-icons/faClone'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
 import {faEllipsis} from '@fortawesome/free-solid-svg-icons/faEllipsis'
+import {faEnvelope} from '@fortawesome/free-solid-svg-icons/faEnvelope'
 import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation'
 import {faGear} from '@fortawesome/free-solid-svg-icons/faGear'
+import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
 import {faHeart} from '@fortawesome/free-regular-svg-icons/faHeart'
 import {faHeart as fasHeart} from '@fortawesome/free-solid-svg-icons/faHeart'
 import {faHouse} from '@fortawesome/free-solid-svg-icons/faHouse'
 import {faLink} from '@fortawesome/free-solid-svg-icons/faLink'
+import {faLock} from '@fortawesome/free-solid-svg-icons/faLock'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
 import {faMessage} from '@fortawesome/free-regular-svg-icons/faMessage'
 import {faPenNib} from '@fortawesome/free-solid-svg-icons/faPenNib'
@@ -32,10 +37,12 @@ import {faShield} from '@fortawesome/free-solid-svg-icons/faShield'
 import {faRetweet} from '@fortawesome/free-solid-svg-icons/faRetweet'
 import {faUser} from '@fortawesome/free-regular-svg-icons/faUser'
 import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers'
+import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
 import {faX} from '@fortawesome/free-solid-svg-icons/faX'
 
 export function setup() {
   library.add(
+    faAngleDown,
     faAngleLeft,
     faAngleRight,
     faArrowLeft,
@@ -43,6 +50,7 @@ export function setup() {
     faArrowUpFromBracket,
     faArrowUpRightFromSquare,
     faArrowsRotate,
+    faAt,
     faBars,
     faBell,
     farBell,
@@ -52,12 +60,15 @@ export function setup() {
     faClone,
     faComment,
     faEllipsis,
+    faEnvelope,
     faExclamation,
     faGear,
+    faGlobe,
     faHeart,
     fasHeart,
     faHouse,
     faLink,
+    faLock,
     faMagnifyingGlass,
     faMessage,
     faPenNib,
@@ -68,6 +79,7 @@ export function setup() {
     faShield,
     faUser,
     faUsers,
+    faTicket,
     faX,
   )
 }
