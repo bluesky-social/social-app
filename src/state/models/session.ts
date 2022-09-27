@@ -1,109 +1,133 @@
 import {makeAutoObservable} from 'mobx'
+import AdxApi from '../../third-party/api'
 import {isObj, hasProp} from '../lib/type-guards'
-// import {UserConfig} from '../../api'
-// import * as auth from '../lib/auth'
+import {RootStoreModel} from './root-store'
+
+interface SessionData {
+  service: string
+  token: string
+  username: string
+  userdid: string
+}
 
 export class SessionModel {
-  isAuthed = false
+  data: SessionData | null = null
 
-  constructor() {
+  constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
+      rootStore: false,
       serialize: false,
       hydrate: false,
     })
   }
 
+  get isAuthed() {
+    return this.data !== null
+  }
+
   serialize(): unknown {
-    return {
-      isAuthed: this.isAuthed,
-    }
+    return this.data
   }
 
   hydrate(v: unknown) {
     if (isObj(v)) {
-      if (hasProp(v, 'isAuthed') && typeof v.isAuthed === 'boolean') {
-        this.isAuthed = v.isAuthed
+      const data: SessionData = {
+        service: '',
+        token: '',
+        username: '',
+        userdid: '',
+      }
+      if (hasProp(v, 'service') && typeof v.service === 'string') {
+        data.service = v.service
+      }
+      if (hasProp(v, 'token') && typeof v.token === 'string') {
+        data.token = v.token
+      }
+      if (hasProp(v, 'username') && typeof v.username === 'string') {
+        data.username = v.username
+      }
+      if (hasProp(v, 'userdid') && typeof v.userdid === 'string') {
+        data.userdid = v.userdid
+      }
+      if (data.service && data.token && data.username && data.userdid) {
+        this.data = data
       }
     }
   }
 
-  setAuthed(v: boolean) {
-    this.isAuthed = v
+  clear() {
+    console.log('clear()')
+    this.data = null
+  }
+
+  setState(data: SessionData) {
+    this.data = data
+  }
+
+  private configureApi(): boolean {
+    if (!this.data) {
+      return false
+    }
+
+    try {
+      const serviceUri = new URL(this.data.service)
+      this.rootStore.api.xrpc.uri = serviceUri
+    } catch (e) {
+      console.error(
+        `Invalid service URL: ${this.data.service}. Resetting session.`,
+      )
+      console.error(e)
+      this.clear()
+      return false
+    }
+
+    this.rootStore.api.setHeader('Authorization', `Bearer ${this.data.token}`)
+    return true
+  }
+
+  async setup(): Promise<void> {
+    if (!this.configureApi()) {
+      return
+    }
+
+    try {
+      const sess = await this.rootStore.api.todo.adx.getSession({})
+      if (sess.success && this.data && this.data.userdid === sess.data.did) {
+        return // success
+      }
+    } catch (e: any) {}
+
+    this.clear() // invalid session cached
+  }
+
+  async login({
+    service,
+    username,
+    password,
+  }: {
+    service: string
+    username: string
+    password: string
+  }) {
+    const api = AdxApi.service(service)
+    const res = await api.todo.adx.createSession({}, {username, password})
+    if (res.data.jwt) {
+      this.setState({
+        service: service,
+        token: res.data.jwt,
+        username: res.data.name,
+        userdid: res.data.did,
+      })
+      this.configureApi()
+    }
+  }
+
+  async logout() {
+    if (this.isAuthed) {
+      this.rootStore.api.todo.adx.deleteSession({}).catch((e: any) => {
+        console.error('(Minor issue) Failed to delete session on the server', e)
+      })
+    }
+    this.clear()
   }
 }
-
-// TODO
-/*login: flow(function* () {
-  /*self.uiIsProcessing = true
-  self.uiError = undefined
-  try {
-    if (!self.env.authStore) {
-      throw new Error('Auth store not initialized')
-    }
-    const res = yield auth.requestAppUcan(self.env.authStore)
-    self.isAuthed = res
-    self.uiIsProcessing = false
-    return res
-  } catch (e: any) {
-    console.error('Failed to request app ucan', e)
-    self.uiError = e.toString()
-    self.uiIsProcessing = false
-    return false
-  }
-}),
-logout: flow(function* () {
-  self.uiIsProcessing = true
-  self.uiError = undefined
-  try {
-    if (!self.env.authStore) {
-      throw new Error('Auth store not initialized')
-    }
-    const res = yield auth.logout(self.env.authStore)
-    self.isAuthed = false
-    self.uiIsProcessing = false
-    return res
-  } catch (e: any) {
-    console.error('Failed to log out', e)
-    self.uiError = e.toString()
-    self.uiIsProcessing = false
-    return false
-  }
-}),
-loadAccount: flow(function* () {
-  self.uiIsProcessing = true
-  self.uiError = undefined
-  try {
-    // const cfg = yield UserConfig.hydrate({
-    //   serverUrl: self.serverUrl,
-    //   secretKeyStr: self.secretKeyStr,
-    //   rootAuthToken: self.rootAuthToken,
-    // })
-    // self.env.api.setUserCfg(cfg)
-    self.isAuthed = true
-    self.uiIsProcessing = false
-    return true
-  } catch (e: any) {
-    console.error('Failed to create test account', e)
-    self.uiError = e.toString()
-    self.uiIsProcessing = false
-    return false
-  }
-}),
-createTestAccount: flow(function* (_serverUrl: string) {
-  self.uiIsProcessing = true
-  self.uiError = undefined
-  try {
-    // const cfg = yield UserConfig.createTest(serverUrl)
-    // const state = yield cfg.serialize()
-    // self.serverUrl = state.serverUrl
-    // self.secretKeyStr = state.secretKeyStr
-    // self.rootAuthToken = state.rootAuthToken
-    self.isAuthed = true
-    // self.env.api.setUserCfg(cfg)
-  } catch (e: any) {
-    console.error('Failed to create test account', e)
-    self.uiError = e.toString()
-  }
-  self.uiIsProcessing = false
-}),
-}))*/

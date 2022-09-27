@@ -102,23 +102,31 @@ export const s = StyleSheet.create({
   p2: {padding: 2},
   p5: {padding: 5},
   p10: {padding: 10},
+  p20: {padding: 20},
   pr2: {paddingRight: 2},
   pr5: {paddingRight: 5},
   pr10: {paddingRight: 10},
+  pr20: {paddingRight: 20},
   pl2: {paddingLeft: 2},
   pl5: {paddingLeft: 5},
   pl10: {paddingLeft: 10},
+  pl20: {paddingLeft: 20},
   pt2: {paddingTop: 2},
   pt5: {paddingTop: 5},
   pt10: {paddingTop: 10},
+  pt20: {paddingTop: 20},
   pb2: {paddingBottom: 2},
   pb5: {paddingBottom: 5},
   pb10: {paddingBottom: 10},
+  pb20: {paddingBottom: 20},
 
   // flex
   flexRow: {flexDirection: 'row'},
   flexCol: {flexDirection: 'column'},
   flex1: {flex: 1},
+
+  // position
+  absolute: {position: 'absolute'},
 
   // dimensions
   w100pct: {width: '100%'},

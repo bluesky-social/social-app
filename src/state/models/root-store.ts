@@ -4,7 +4,7 @@
 
 import {makeAutoObservable} from 'mobx'
 import AdxApi from '../../third-party/api'
-import {ServiceClient} from '../../third-party/api/src/index'
+import type {ServiceClient} from '../../third-party/api/src/index'
 import {createContext, useContext} from 'react'
 import {isObj, hasProp} from '../lib/type-guards'
 import {SessionModel} from './session'
@@ -13,7 +13,7 @@ import {ShellModel} from './shell'
 import {MeModel} from './me'
 
 export class RootStoreModel {
-  session = new SessionModel()
+  session = new SessionModel(this)
   nav = new NavigationModel()
   shell = new ShellModel()
   me = new MeModel(this)

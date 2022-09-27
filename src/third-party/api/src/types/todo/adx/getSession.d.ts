@@ -9,7 +9,8 @@ export interface InputSchema {
     [k: string]: unknown;
 }
 export interface OutputSchema {
-    [k: string]: unknown;
+    name: string;
+    did: string;
 }
 export interface Response {
     success: boolean;
