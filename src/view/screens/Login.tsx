@@ -9,7 +9,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native'
-import Svg, {Line} from 'react-native-svg'
+import Svg, {Circle, Line, Text as SvgText} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
 import {s, colors} from '../lib/styles'
@@ -30,6 +30,61 @@ const SigninOrCreateAccount = ({
   return (
     <>
       <View style={styles.hero}>
+        <View style={styles.logo}>
+          <Svg width="100" height="100">
+            <Circle
+              cx="50"
+              cy="50"
+              r="46"
+              fill="none"
+              stroke="white"
+              strokeWidth={2}
+            />
+            <Line
+              stroke="white"
+              strokeWidth={1}
+              x1="30"
+              x2="30"
+              y1="0"
+              y2="100"
+            />
+            <Line
+              stroke="white"
+              strokeWidth={1}
+              x1="74"
+              x2="74"
+              y1="0"
+              y2="100"
+            />
+            <Line
+              stroke="white"
+              strokeWidth={1}
+              x1="0"
+              x2="100"
+              y1="22"
+              y2="22"
+            />
+            <Line
+              stroke="white"
+              strokeWidth={1}
+              x1="0"
+              x2="100"
+              y1="74"
+              y2="74"
+            />
+            <SvgText
+              fill="none"
+              stroke="white"
+              strokeWidth={2}
+              fontSize="60"
+              fontWeight="bold"
+              x="52"
+              y="70"
+              textAnchor="middle">
+              B
+            </SvgText>
+          </Svg>
+        </View>
         <Text style={styles.title}>Bluesky</Text>
         <Text style={styles.subtitle}>[ private beta ]</Text>
       </View>
@@ -85,6 +140,7 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
     } catch (e: any) {
       const errMsg = e.toString()
       console.log(e)
+      setIsProcessing(false)
       if (errMsg.includes('Authentication Required')) {
         setError('Invalid username or password')
       } else if (errMsg.includes('Network request failed')) {
@@ -94,14 +150,12 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
       } else {
         setError(errMsg.replace(/^Error:/, ''))
       }
-    } finally {
-      setIsProcessing(false)
     }
   }
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
-      <View style={styles.hero}>
+      <View style={styles.smallHero}>
         <Text style={styles.title}>Bluesky</Text>
         <Text style={styles.subtitle}>[ private beta ]</Text>
       </View>
@@ -199,7 +253,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   hero: {
+    flex: 2,
+    justifyContent: 'center',
+  },
+  smallHero: {
     flex: 1,
+    justifyContent: 'center',
+  },
+  logo: {
+    flexDirection: 'row',
     justifyContent: 'center',
   },
   title: {

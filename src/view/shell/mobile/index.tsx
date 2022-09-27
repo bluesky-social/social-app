@@ -117,6 +117,7 @@ export const MobileShell: React.FC = observer(() => {
   const onPressAvi = () =>
     createAccountsMenu({
       debug_onPressItem: () => store.nav.navigate('/profile/alice.test'),
+      onPressLogout: () => store.session.logout(),
     })
   const onPressLocation = () => setLocationMenuActive(true)
   const onPressEllipsis = () => createLocationMenu()
