@@ -43,6 +43,9 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
   indexedAt: string = ''
   myState = new PostThreadViewPostMyStateModel()
 
+  // added data
+  replyingToAuthor?: string
+
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
@@ -58,9 +61,14 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
     }
   }
 
-  assignTreeModels(keyGen: Generator<string>, v: GetPostThread.Post) {
+  assignTreeModels(
+    keyGen: Generator<string>,
+    v: GetPostThread.Post,
+    includeParent = true,
+    includeChildren = true,
+  ) {
     // parents
-    if (v.parent) {
+    if (includeParent && v.parent) {
       // TODO: validate .record
       const parentModel = new PostThreadViewPostModel(
         this.rootStore,
@@ -69,12 +77,15 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
       )
       parentModel._depth = this._depth - 1
       if (v.parent.parent) {
-        parentModel.assignTreeModels(keyGen, v.parent)
+        parentModel.assignTreeModels(keyGen, v.parent, true, false)
       }
       this.parent = parentModel
     }
+    if (v.parent?.author.name) {
+      this.replyingToAuthor = v.parent.author.name
+    }
     // replies
-    if (v.replies) {
+    if (includeChildren && v.replies) {
       const replies = []
       for (const item of v.replies) {
         // TODO: validate .record
@@ -85,7 +96,7 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
         )
         itemModel._depth = this._depth + 1
         if (item.replies) {
-          itemModel.assignTreeModels(keyGen, item)
+          itemModel.assignTreeModels(keyGen, item, false, true)
         }
         replies.push(itemModel)
       }
