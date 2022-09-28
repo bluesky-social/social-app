@@ -9,7 +9,7 @@ export interface CallOptions {
 export declare type InputSchema = undefined;
 export interface Response {
     success: boolean;
-    error: boolean;
     headers: Headers;
     data: Uint8Array;
 }
+export declare function toKnownErr(e: any): any;
