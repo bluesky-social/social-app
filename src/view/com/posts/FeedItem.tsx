@@ -10,7 +10,7 @@ import {Link} from '../util/Link'
 import {PostDropdownBtn} from '../util/DropdownBtn'
 import {s, colors} from '../../lib/styles'
 import {ago} from '../../lib/strings'
-import {AVIS} from '../../lib/assets'
+import {DEF_AVATER} from '../../lib/assets'
 import {useStores} from '../../../state'
 
 export const FeedItem = observer(function FeedItem({
@@ -59,10 +59,7 @@ export const FeedItem = observer(function FeedItem({
           style={styles.layoutAvi}
           href={authorHref}
           title={item.author.name}>
-          <Image
-            style={styles.avi}
-            source={AVIS[item.author.name] || AVIS['alice.test']}
-          />
+          <Image style={styles.avi} source={DEF_AVATER} />
         </Link>
         <View style={styles.layoutContent}>
           <View style={styles.meta}>
