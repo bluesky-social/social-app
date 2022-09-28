@@ -8,6 +8,7 @@ import {FeedViewItemModel} from '../../../state/models/feed-view'
 import {ComposePostModel, SharePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
 import {PostDropdownBtn} from '../util/DropdownBtn'
+import {UserInfoText} from '../util/UserInfoText'
 import {s, colors} from '../../lib/styles'
 import {ago} from '../../lib/strings'
 import {DEF_AVATER} from '../../lib/assets'
@@ -26,6 +27,16 @@ export const FeedItem = observer(function FeedItem({
   }, [item.uri, item.author.name])
   const itemTitle = `Post by ${item.author.name}`
   const authorHref = `/profile/${item.author.name}`
+  const replyAuthorDid = useMemo(() => {
+    if (!record.reply) return ''
+    const urip = new AdxUri(record.reply.parent || record.reply.root)
+    return urip.hostname
+  }, [record.reply])
+  const replyHref = useMemo(() => {
+    if (!record.reply) return ''
+    const urip = new AdxUri(record.reply.parent || record.reply.root)
+    return `/profile/${urip.hostname}/post/${urip.recordKey}`
+  }, [record.reply])
 
   const onPressReply = () => {
     store.shell.openModal(new ComposePostModel(item.uri))
@@ -90,6 +101,19 @@ export const FeedItem = observer(function FeedItem({
               />
             </PostDropdownBtn>
           </View>
+          {replyHref !== '' && (
+            <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
+              <FontAwesomeIcon icon="reply" size={9} style={[s.gray4, s.mr5]} />
+              <Text style={[s.gray4, s.f12, s.mr2]}>Reply to</Text>
+              <Link href={replyHref} title="Parent post">
+                <UserInfoText
+                  did={replyAuthorDid}
+                  style={[s.f12, s.gray5]}
+                  prefix="@"
+                />
+              </Link>
+            </View>
+          )}
           <Text style={[styles.postText, s.f15, s['lh15-1.3']]}>
             {record.text}
           </Text>
