@@ -13,9 +13,9 @@ export class MeModel {
 
   async load() {
     const sess = this.rootStore.session
-    if (sess.isAuthed) {
-      this.did = sess.userdid || ''
-      this.name = sess.username
+    if (sess.isAuthed && sess.data) {
+      this.did = sess.data.userdid || ''
+      this.name = sess.data.username
       const profile = await this.rootStore.api.todo.social.getProfile({
         user: this.did,
       })

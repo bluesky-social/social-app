@@ -167,7 +167,6 @@ export const MobileShell: React.FC = observer(() => {
     opacity: interpolate(swipeGestureInterp.value, [0, 1.0], [0.6, 0.0]),
   }))
 
-  console.log('authed?', store.session.isAuthed)
   if (!store.session.isAuthed) {
     return (
       <LinearGradient
