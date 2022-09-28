@@ -6946,7 +6946,40 @@ __export(src_exports, {
   RepostRecord: () => RepostRecord,
   ServiceClient: () => ServiceClient2,
   SocialNS: () => SocialNS,
+  TodoAdxCreateAccount: () => createAccount_exports,
+  TodoAdxCreateSession: () => createSession_exports,
+  TodoAdxDeleteAccount: () => deleteAccount_exports,
+  TodoAdxDeleteSession: () => deleteSession_exports,
+  TodoAdxGetAccount: () => getAccount_exports,
+  TodoAdxGetAccountsConfig: () => getAccountsConfig_exports,
+  TodoAdxGetSession: () => getSession_exports,
+  TodoAdxRepoBatchWrite: () => repoBatchWrite_exports,
+  TodoAdxRepoCreateRecord: () => repoCreateRecord_exports,
+  TodoAdxRepoDeleteRecord: () => repoDeleteRecord_exports,
+  TodoAdxRepoDescribe: () => repoDescribe_exports,
+  TodoAdxRepoGetRecord: () => repoGetRecord_exports,
+  TodoAdxRepoListRecords: () => repoListRecords_exports,
+  TodoAdxRepoPutRecord: () => repoPutRecord_exports,
+  TodoAdxResolveName: () => resolveName_exports,
+  TodoAdxSyncGetRepo: () => syncGetRepo_exports,
+  TodoAdxSyncGetRoot: () => syncGetRoot_exports,
+  TodoAdxSyncUpdateRepo: () => syncUpdateRepo_exports,
   TodoNS: () => TodoNS,
+  TodoSocialBadge: () => badge_exports,
+  TodoSocialFollow: () => follow_exports,
+  TodoSocialGetFeed: () => getFeed_exports,
+  TodoSocialGetLikedBy: () => getLikedBy_exports,
+  TodoSocialGetNotifications: () => getNotifications_exports,
+  TodoSocialGetPostThread: () => getPostThread_exports,
+  TodoSocialGetProfile: () => getProfile_exports,
+  TodoSocialGetRepostedBy: () => getRepostedBy_exports,
+  TodoSocialGetUserFollowers: () => getUserFollowers_exports,
+  TodoSocialGetUserFollows: () => getUserFollows_exports,
+  TodoSocialLike: () => like_exports,
+  TodoSocialMediaEmbed: () => mediaEmbed_exports,
+  TodoSocialPost: () => post_exports,
+  TodoSocialProfile: () => profile_exports,
+  TodoSocialRepost: () => repost_exports,
   default: () => src_default
 });
 module.exports = __toCommonJS(src_exports);
@@ -9875,6 +9908,7 @@ var mod = /* @__PURE__ */ Object.freeze({
 
 // ../xrpc/src/types.ts
 var errorResponseBody = mod.object({
+  error: mod.string().optional(),
   message: mod.string().optional()
 });
 var ResponseType = /* @__PURE__ */ ((ResponseType2) => {
@@ -9894,6 +9928,21 @@ var ResponseType = /* @__PURE__ */ ((ResponseType2) => {
   ResponseType2[ResponseType2["UpstreamTimeout"] = 504] = "UpstreamTimeout";
   return ResponseType2;
 })(ResponseType || {});
+var ResponseTypeNames = {
+  [2 /* InvalidResponse */]: "InvalidResponse",
+  [200 /* Success */]: "Success",
+  [400 /* InvalidRequest */]: "InvalidRequest",
+  [401 /* AuthRequired */]: "AuthenticationRequired",
+  [403 /* Forbidden */]: "Forbidden",
+  [404 /* XRPCNotSupported */]: "XRPCNotSupported",
+  [413 /* PayloadTooLarge */]: "PayloadTooLarge",
+  [429 /* RateLimitExceeded */]: "RateLimitExceeded",
+  [500 /* InternalServerError */]: "InternalServerError",
+  [501 /* MethodNotImplemented */]: "MethodNotImplemented",
+  [502 /* UpstreamFailure */]: "UpstreamFailure",
+  [503 /* NotEnoughResouces */]: "NotEnoughResouces",
+  [504 /* UpstreamTimeout */]: "UpstreamTimeout"
+};
 var ResponseTypeStrings = {
   [2 /* InvalidResponse */]: "Invalid Response",
   [200 /* Success */]: "Success",
@@ -9914,17 +9963,17 @@ var XRPCResponse = class {
     this.data = data;
     this.headers = headers;
     this.success = true;
-    this.error = false;
   }
 };
 var XRPCError = class extends Error {
-  constructor(code, message) {
-    super(
-      message ? `${ResponseTypeStrings[code]}: ${message}` : ResponseTypeStrings[code]
-    );
-    this.code = code;
+  constructor(status, error, message) {
+    super(message || error || ResponseTypeStrings[status]);
+    this.status = status;
+    this.error = error;
     this.success = false;
-    this.error = true;
+    if (!this.error) {
+      this.error = ResponseTypeNames[status];
+    }
   }
 };
 
@@ -10000,6 +10049,10 @@ var methodSchemaParam = mod.object({
   minimum: mod.number().optional(),
   maximum: mod.number().optional()
 });
+var methodSchemaError = mod.object({
+  name: mod.string(),
+  description: mod.string().optional()
+});
 var methodSchema = mod.object({
   lexicon: mod.literal(1),
   id: mod.string(),
@@ -10007,7 +10060,8 @@ var methodSchema = mod.object({
   description: mod.string().optional(),
   parameters: mod.record(methodSchemaParam).optional(),
   input: methodSchemaBody.optional(),
-  output: methodSchemaBody.optional()
+  output: methodSchemaBody.optional(),
+  errors: methodSchemaError.array().optional()
 });
 function isValidMethodSchema(v) {
   return methodSchema.safeParse(v).success;
@@ -10210,7 +10264,7 @@ var ServiceClient = class {
       return new XRPCResponse(res.body, res.headers);
     } else {
       if (res.body && isErrorResponseBody(res.body)) {
-        throw new XRPCError(resCode, res.body.message);
+        throw new XRPCError(resCode, res.body.error, res.body.message);
       } else {
         throw new XRPCError(resCode);
       }
@@ -10253,15 +10307,12 @@ var methodSchemas = [
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["email", "username", "password"],
+        required: ["username", "did", "password"],
         properties: {
-          email: {
-            type: "string"
-          },
           username: {
             type: "string"
           },
-          inviteCode: {
+          did: {
             type: "string"
           },
           password: {
@@ -10274,20 +10325,25 @@ var methodSchemas = [
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["jwt", "name", "did"],
+        required: ["jwt"],
         properties: {
           jwt: {
-            type: "string"
-          },
-          name: {
-            type: "string"
-          },
-          did: {
             type: "string"
           }
         }
       }
-    }
+    },
+    errors: [
+      {
+        name: "InvalidUsername"
+      },
+      {
+        name: "InvalidPassword"
+      },
+      {
+        name: "UsernameNotAvailable"
+      }
+    ]
   },
   {
     lexicon: 1,
@@ -11591,6 +11647,337 @@ var methodSchemas = [
   }
 ];
 
+// src/types/todo/adx/createAccount.ts
+var createAccount_exports = {};
+__export(createAccount_exports, {
+  InvalidPasswordError: () => InvalidPasswordError,
+  InvalidUsernameError: () => InvalidUsernameError,
+  UsernameNotAvailableError: () => UsernameNotAvailableError,
+  toKnownErr: () => toKnownErr
+});
+var InvalidUsernameError = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
+var InvalidPasswordError = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
+var UsernameNotAvailableError = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
+function toKnownErr(e) {
+  if (e instanceof XRPCError) {
+    if (e.error === "InvalidUsername")
+      return new InvalidUsernameError(e);
+    if (e.error === "InvalidPassword")
+      return new InvalidPasswordError(e);
+    if (e.error === "UsernameNotAvailable")
+      return new UsernameNotAvailableError(e);
+  }
+  return e;
+}
+
+// src/types/todo/adx/createSession.ts
+var createSession_exports = {};
+__export(createSession_exports, {
+  toKnownErr: () => toKnownErr2
+});
+function toKnownErr2(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/deleteAccount.ts
+var deleteAccount_exports = {};
+__export(deleteAccount_exports, {
+  toKnownErr: () => toKnownErr3
+});
+function toKnownErr3(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/deleteSession.ts
+var deleteSession_exports = {};
+__export(deleteSession_exports, {
+  toKnownErr: () => toKnownErr4
+});
+function toKnownErr4(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/getAccount.ts
+var getAccount_exports = {};
+__export(getAccount_exports, {
+  toKnownErr: () => toKnownErr5
+});
+function toKnownErr5(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/getAccountsConfig.ts
+var getAccountsConfig_exports = {};
+__export(getAccountsConfig_exports, {
+  toKnownErr: () => toKnownErr6
+});
+function toKnownErr6(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/getSession.ts
+var getSession_exports = {};
+__export(getSession_exports, {
+  toKnownErr: () => toKnownErr7
+});
+function toKnownErr7(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/repoBatchWrite.ts
+var repoBatchWrite_exports = {};
+__export(repoBatchWrite_exports, {
+  toKnownErr: () => toKnownErr8
+});
+function toKnownErr8(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/repoCreateRecord.ts
+var repoCreateRecord_exports = {};
+__export(repoCreateRecord_exports, {
+  toKnownErr: () => toKnownErr9
+});
+function toKnownErr9(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/repoDeleteRecord.ts
+var repoDeleteRecord_exports = {};
+__export(repoDeleteRecord_exports, {
+  toKnownErr: () => toKnownErr10
+});
+function toKnownErr10(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/repoDescribe.ts
+var repoDescribe_exports = {};
+__export(repoDescribe_exports, {
+  toKnownErr: () => toKnownErr11
+});
+function toKnownErr11(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/repoGetRecord.ts
+var repoGetRecord_exports = {};
+__export(repoGetRecord_exports, {
+  toKnownErr: () => toKnownErr12
+});
+function toKnownErr12(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/repoListRecords.ts
+var repoListRecords_exports = {};
+__export(repoListRecords_exports, {
+  toKnownErr: () => toKnownErr13
+});
+function toKnownErr13(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/repoPutRecord.ts
+var repoPutRecord_exports = {};
+__export(repoPutRecord_exports, {
+  toKnownErr: () => toKnownErr14
+});
+function toKnownErr14(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/resolveName.ts
+var resolveName_exports = {};
+__export(resolveName_exports, {
+  toKnownErr: () => toKnownErr15
+});
+function toKnownErr15(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/syncGetRepo.ts
+var syncGetRepo_exports = {};
+__export(syncGetRepo_exports, {
+  toKnownErr: () => toKnownErr16
+});
+function toKnownErr16(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/syncGetRoot.ts
+var syncGetRoot_exports = {};
+__export(syncGetRoot_exports, {
+  toKnownErr: () => toKnownErr17
+});
+function toKnownErr17(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/adx/syncUpdateRepo.ts
+var syncUpdateRepo_exports = {};
+__export(syncUpdateRepo_exports, {
+  toKnownErr: () => toKnownErr18
+});
+function toKnownErr18(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/social/getFeed.ts
+var getFeed_exports = {};
+__export(getFeed_exports, {
+  toKnownErr: () => toKnownErr19
+});
+function toKnownErr19(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/social/getLikedBy.ts
+var getLikedBy_exports = {};
+__export(getLikedBy_exports, {
+  toKnownErr: () => toKnownErr20
+});
+function toKnownErr20(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/social/getNotifications.ts
+var getNotifications_exports = {};
+__export(getNotifications_exports, {
+  toKnownErr: () => toKnownErr21
+});
+function toKnownErr21(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/social/getPostThread.ts
+var getPostThread_exports = {};
+__export(getPostThread_exports, {
+  toKnownErr: () => toKnownErr22
+});
+function toKnownErr22(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/social/getProfile.ts
+var getProfile_exports = {};
+__export(getProfile_exports, {
+  toKnownErr: () => toKnownErr23
+});
+function toKnownErr23(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/social/getRepostedBy.ts
+var getRepostedBy_exports = {};
+__export(getRepostedBy_exports, {
+  toKnownErr: () => toKnownErr24
+});
+function toKnownErr24(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/social/getUserFollowers.ts
+var getUserFollowers_exports = {};
+__export(getUserFollowers_exports, {
+  toKnownErr: () => toKnownErr25
+});
+function toKnownErr25(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/social/getUserFollows.ts
+var getUserFollows_exports = {};
+__export(getUserFollows_exports, {
+  toKnownErr: () => toKnownErr26
+});
+function toKnownErr26(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/social/badge.ts
+var badge_exports = {};
+
+// src/types/todo/social/follow.ts
+var follow_exports = {};
+
+// src/types/todo/social/like.ts
+var like_exports = {};
+
+// src/types/todo/social/mediaEmbed.ts
+var mediaEmbed_exports = {};
+
+// src/types/todo/social/post.ts
+var post_exports = {};
+
+// src/types/todo/social/profile.ts
+var profile_exports = {};
+
+// src/types/todo/social/repost.ts
+var repost_exports = {};
+
 // src/index.ts
 var Client2 = class {
   constructor() {
@@ -11625,88 +12012,94 @@ var AdxNS = class {
     this._service = service;
   }
   createAccount(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.createAccount", params, data, opts);
+    return this._service.xrpc.call("todo.adx.createAccount", params, data, opts).catch((e) => {
+      throw toKnownErr(e);
+    });
   }
   createSession(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.createSession", params, data, opts);
+    return this._service.xrpc.call("todo.adx.createSession", params, data, opts).catch((e) => {
+      throw toKnownErr2(e);
+    });
   }
   deleteAccount(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.deleteAccount", params, data, opts);
+    return this._service.xrpc.call("todo.adx.deleteAccount", params, data, opts).catch((e) => {
+      throw toKnownErr3(e);
+    });
   }
   deleteSession(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.deleteSession", params, data, opts);
+    return this._service.xrpc.call("todo.adx.deleteSession", params, data, opts).catch((e) => {
+      throw toKnownErr4(e);
+    });
   }
   getAccount(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.getAccount", params, data, opts);
+    return this._service.xrpc.call("todo.adx.getAccount", params, data, opts).catch((e) => {
+      throw toKnownErr5(e);
+    });
   }
   getAccountsConfig(params, data, opts) {
-    return this._service.xrpc.call(
-      "todo.adx.getAccountsConfig",
-      params,
-      data,
-      opts
-    );
+    return this._service.xrpc.call("todo.adx.getAccountsConfig", params, data, opts).catch((e) => {
+      throw toKnownErr6(e);
+    });
   }
   getSession(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.getSession", params, data, opts);
+    return this._service.xrpc.call("todo.adx.getSession", params, data, opts).catch((e) => {
+      throw toKnownErr7(e);
+    });
   }
   repoBatchWrite(params, data, opts) {
-    return this._service.xrpc.call(
-      "todo.adx.repoBatchWrite",
-      params,
-      data,
-      opts
-    );
+    return this._service.xrpc.call("todo.adx.repoBatchWrite", params, data, opts).catch((e) => {
+      throw toKnownErr8(e);
+    });
   }
   repoCreateRecord(params, data, opts) {
-    return this._service.xrpc.call(
-      "todo.adx.repoCreateRecord",
-      params,
-      data,
-      opts
-    );
+    return this._service.xrpc.call("todo.adx.repoCreateRecord", params, data, opts).catch((e) => {
+      throw toKnownErr9(e);
+    });
   }
   repoDeleteRecord(params, data, opts) {
-    return this._service.xrpc.call(
-      "todo.adx.repoDeleteRecord",
-      params,
-      data,
-      opts
-    );
+    return this._service.xrpc.call("todo.adx.repoDeleteRecord", params, data, opts).catch((e) => {
+      throw toKnownErr10(e);
+    });
   }
   repoDescribe(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.repoDescribe", params, data, opts);
+    return this._service.xrpc.call("todo.adx.repoDescribe", params, data, opts).catch((e) => {
+      throw toKnownErr11(e);
+    });
   }
   repoGetRecord(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.repoGetRecord", params, data, opts);
+    return this._service.xrpc.call("todo.adx.repoGetRecord", params, data, opts).catch((e) => {
+      throw toKnownErr12(e);
+    });
   }
   repoListRecords(params, data, opts) {
-    return this._service.xrpc.call(
-      "todo.adx.repoListRecords",
-      params,
-      data,
-      opts
-    );
+    return this._service.xrpc.call("todo.adx.repoListRecords", params, data, opts).catch((e) => {
+      throw toKnownErr13(e);
+    });
   }
   repoPutRecord(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.repoPutRecord", params, data, opts);
+    return this._service.xrpc.call("todo.adx.repoPutRecord", params, data, opts).catch((e) => {
+      throw toKnownErr14(e);
+    });
   }
   resolveName(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.resolveName", params, data, opts);
+    return this._service.xrpc.call("todo.adx.resolveName", params, data, opts).catch((e) => {
+      throw toKnownErr15(e);
+    });
   }
   syncGetRepo(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.syncGetRepo", params, data, opts);
+    return this._service.xrpc.call("todo.adx.syncGetRepo", params, data, opts).catch((e) => {
+      throw toKnownErr16(e);
+    });
   }
   syncGetRoot(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.syncGetRoot", params, data, opts);
+    return this._service.xrpc.call("todo.adx.syncGetRoot", params, data, opts).catch((e) => {
+      throw toKnownErr17(e);
+    });
   }
   syncUpdateRepo(params, data, opts) {
-    return this._service.xrpc.call(
-      "todo.adx.syncUpdateRepo",
-      params,
-      data,
-      opts
-    );
+    return this._service.xrpc.call("todo.adx.syncUpdateRepo", params, data, opts).catch((e) => {
+      throw toKnownErr18(e);
+    });
   }
 };
 var SocialNS = class {
@@ -11721,53 +12114,44 @@ var SocialNS = class {
     this.repost = new RepostRecord(service);
   }
   getFeed(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getFeed", params, data, opts);
+    return this._service.xrpc.call("todo.social.getFeed", params, data, opts).catch((e) => {
+      throw toKnownErr19(e);
+    });
   }
   getLikedBy(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getLikedBy", params, data, opts);
+    return this._service.xrpc.call("todo.social.getLikedBy", params, data, opts).catch((e) => {
+      throw toKnownErr20(e);
+    });
   }
   getNotifications(params, data, opts) {
-    return this._service.xrpc.call(
-      "todo.social.getNotifications",
-      params,
-      data,
-      opts
-    );
+    return this._service.xrpc.call("todo.social.getNotifications", params, data, opts).catch((e) => {
+      throw toKnownErr21(e);
+    });
   }
   getPostThread(params, data, opts) {
-    return this._service.xrpc.call(
-      "todo.social.getPostThread",
-      params,
-      data,
-      opts
-    );
+    return this._service.xrpc.call("todo.social.getPostThread", params, data, opts).catch((e) => {
+      throw toKnownErr22(e);
+    });
   }
   getProfile(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getProfile", params, data, opts);
+    return this._service.xrpc.call("todo.social.getProfile", params, data, opts).catch((e) => {
+      throw toKnownErr23(e);
+    });
   }
   getRepostedBy(params, data, opts) {
-    return this._service.xrpc.call(
-      "todo.social.getRepostedBy",
-      params,
-      data,
-      opts
-    );
+    return this._service.xrpc.call("todo.social.getRepostedBy", params, data, opts).catch((e) => {
+      throw toKnownErr24(e);
+    });
   }
   getUserFollowers(params, data, opts) {
-    return this._service.xrpc.call(
-      "todo.social.getUserFollowers",
-      params,
-      data,
-      opts
-    );
+    return this._service.xrpc.call("todo.social.getUserFollowers", params, data, opts).catch((e) => {
+      throw toKnownErr25(e);
+    });
   }
   getUserFollows(params, data, opts) {
-    return this._service.xrpc.call(
-      "todo.social.getUserFollows",
-      params,
-      data,
-      opts
-    );
+    return this._service.xrpc.call("todo.social.getUserFollows", params, data, opts).catch((e) => {
+      throw toKnownErr26(e);
+    });
   }
 };
 var BadgeRecord = class {
@@ -12112,7 +12496,40 @@ var RepostRecord = class {
   RepostRecord,
   ServiceClient,
   SocialNS,
-  TodoNS
+  TodoAdxCreateAccount,
+  TodoAdxCreateSession,
+  TodoAdxDeleteAccount,
+  TodoAdxDeleteSession,
+  TodoAdxGetAccount,
+  TodoAdxGetAccountsConfig,
+  TodoAdxGetSession,
+  TodoAdxRepoBatchWrite,
+  TodoAdxRepoCreateRecord,
+  TodoAdxRepoDeleteRecord,
+  TodoAdxRepoDescribe,
+  TodoAdxRepoGetRecord,
+  TodoAdxRepoListRecords,
+  TodoAdxRepoPutRecord,
+  TodoAdxResolveName,
+  TodoAdxSyncGetRepo,
+  TodoAdxSyncGetRoot,
+  TodoAdxSyncUpdateRepo,
+  TodoNS,
+  TodoSocialBadge,
+  TodoSocialFollow,
+  TodoSocialGetFeed,
+  TodoSocialGetLikedBy,
+  TodoSocialGetNotifications,
+  TodoSocialGetPostThread,
+  TodoSocialGetProfile,
+  TodoSocialGetRepostedBy,
+  TodoSocialGetUserFollowers,
+  TodoSocialGetUserFollows,
+  TodoSocialLike,
+  TodoSocialMediaEmbed,
+  TodoSocialPost,
+  TodoSocialProfile,
+  TodoSocialRepost
 });
 /** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
 //# sourceMappingURL=index.js.map

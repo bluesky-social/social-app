@@ -1,4 +1,4 @@
-import { Headers } from '@adxp/xrpc';
+import { Headers, XRPCError } from '@adxp/xrpc';
 export interface QueryParams {
 }
 export interface CallOptions {
@@ -6,19 +6,25 @@ export interface CallOptions {
     encoding: 'application/json';
 }
 export interface InputSchema {
-    email: string;
     username: string;
-    inviteCode?: string;
+    did: string;
     password: string;
 }
 export interface OutputSchema {
     jwt: string;
-    name: string;
-    did: string;
 }
 export interface Response {
     success: boolean;
-    error: boolean;
     headers: Headers;
     data: OutputSchema;
 }
+export declare class InvalidUsernameError extends XRPCError {
+    constructor(src: XRPCError);
+}
+export declare class InvalidPasswordError extends XRPCError {
+    constructor(src: XRPCError);
+}
+export declare class UsernameNotAvailableError extends XRPCError {
+    constructor(src: XRPCError);
+}
+export declare function toKnownErr(e: any): any;

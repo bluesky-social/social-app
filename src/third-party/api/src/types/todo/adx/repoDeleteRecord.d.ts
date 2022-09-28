@@ -10,6 +10,6 @@ export interface CallOptions {
 export declare type InputSchema = undefined;
 export interface Response {
     success: boolean;
-    error: boolean;
     headers: Headers;
 }
+export declare function toKnownErr(e: any): any;
