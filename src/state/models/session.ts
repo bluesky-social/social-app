@@ -88,7 +88,6 @@ export class SessionModel {
   }
 
   clear() {
-    console.log('clear()')
     this.data = null
   }
 

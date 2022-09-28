@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import Svg, {Line, Circle} from 'react-native-svg'
 import {AdxUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/types/todo/social/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -12,6 +13,8 @@ import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../lib/strings'
 import {DEF_AVATER} from '../../lib/assets'
 import {useStores} from '../../../state'
+
+const PARENT_REPLY_LINE_LENGTH = 8
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
@@ -185,11 +188,56 @@ export const PostThreadItem = observer(function PostThreadItem({
   } else {
     return (
       <Link style={styles.outer} href={itemHref} title={itemTitle}>
+        {!!item.replyingToAuthor && (
+          <View style={styles.parentReplyLine}>
+            <Svg width="10" height={PARENT_REPLY_LINE_LENGTH}>
+              <Line
+                x1="5"
+                x2="5"
+                y1="0"
+                y2={PARENT_REPLY_LINE_LENGTH}
+                stroke={colors.gray2}
+                strokeWidth={2}
+              />
+            </Svg>
+          </View>
+        )}
+        {item.replies?.length !== 0 && (
+          <View style={styles.childReplyLine}>
+            <Svg width="10" height={100}>
+              <Line
+                x1="5"
+                x2="5"
+                y1="0"
+                y2={100}
+                stroke={colors.gray2}
+                strokeWidth={2}
+              />
+            </Svg>
+          </View>
+        )}
         <View style={styles.layout}>
           <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
             <Image style={styles.avi} source={DEF_AVATER} />
           </Link>
           <View style={styles.layoutContent}>
+            {item.replyingToAuthor &&
+              item.replyingToAuthor !== item.author.name && (
+                <View style={[s.flexRow, {alignItems: 'center'}]}>
+                  <FontAwesomeIcon
+                    icon="reply"
+                    size={9}
+                    style={[s.gray4, s.mr5]}
+                  />
+                  <Link
+                    href={`/profile/${item.replyingToAuthor}`}
+                    title={`@${item.replyingToAuthor}`}>
+                    <Text style={[s.f12, s.gray5]}>
+                      @{item.replyingToAuthor}
+                    </Text>
+                  </Link>
+                </View>
+              )}
             <View style={styles.meta}>
               <Link
                 style={styles.metaItem}
@@ -235,6 +283,17 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     margin: 2,
     marginBottom: 0,
+  },
+  parentReplyLine: {
+    position: 'absolute',
+    left: 30,
+    top: -1 * PARENT_REPLY_LINE_LENGTH + 6,
+  },
+  childReplyLine: {
+    position: 'absolute',
+    left: 30,
+    top: 65,
+    bottom: 0,
   },
   layout: {
     flexDirection: 'row',
