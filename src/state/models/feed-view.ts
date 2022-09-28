@@ -17,6 +17,7 @@ export class FeedViewItemModel implements GetFeedView.FeedItem {
   _reactKey: string = ''
 
   // data
+  cursor: string = ''
   uri: string = ''
   author: GetFeedView.User = {did: '', name: '', displayName: ''}
   repostedBy?: GetFeedView.User
@@ -42,6 +43,7 @@ export class FeedViewItemModel implements GetFeedView.FeedItem {
   }
 
   copy(v: GetFeedView.FeedItem) {
+    this.cursor = v.cursor
     this.uri = v.uri
     this.author = v.author
     this.repostedBy = v.repostedBy
@@ -145,7 +147,7 @@ export class FeedViewModel {
 
   get loadMoreCursor() {
     if (this.hasContent) {
-      return this.feed[this.feed.length - 1].indexedAt
+      return this.feed[this.feed.length - 1].cursor
     }
     return undefined
   }

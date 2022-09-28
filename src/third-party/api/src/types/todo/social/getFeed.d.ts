@@ -12,6 +12,7 @@ export interface OutputSchema {
     feed: FeedItem[];
 }
 export interface FeedItem {
+    cursor?: string;
     uri: string;
     author: User;
     repostedBy?: User;

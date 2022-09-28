@@ -10935,6 +10935,9 @@ var methodSchemas = [
               "indexedAt"
             ],
             properties: {
+              cursor: {
+                type: "string"
+              },
               uri: {
                 type: "string"
               },

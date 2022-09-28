@@ -80,7 +80,7 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
       } else if (profileUiState.feed.hasError) {
         items.push({
           _reactKey: '__error__',
-          error: profileUiState.feed.errorStr,
+          error: profileUiState.feed.error,
         })
         renderItem = (item: any) => (
           <View style={s.p5}>
