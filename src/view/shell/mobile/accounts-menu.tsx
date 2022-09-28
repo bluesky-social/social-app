@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import RootSiblings from 'react-native-root-siblings'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {AVIS} from '../../lib/assets'
+import {DEF_AVATER} from '../../lib/assets'
 import {s, colors} from '../../lib/styles'
 
 export function createAccountsMenu({
@@ -34,7 +34,7 @@ export function createAccountsMenu({
           <TouchableOpacity
             style={[styles.menuItem]}
             onPress={() => onPressItem(0)}>
-            <Image style={styles.avi} source={AVIS['alice.test']} />
+            <Image style={styles.avi} source={DEF_AVATER} />
             <Text style={[styles.label, s.bold]}>Alice</Text>
           </TouchableOpacity>
           <TouchableOpacity

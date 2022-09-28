@@ -6,7 +6,6 @@ import {
   Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native'
 import {
@@ -16,7 +15,7 @@ import {
 import {useStores} from '../../../state'
 import {Link} from '../util/Link'
 import {s, colors} from '../../lib/styles'
-import {AVIS} from '../../lib/assets'
+import {DEF_AVATER} from '../../lib/assets'
 
 export const ProfileFollows = observer(function ProfileFollows({
   name,
@@ -82,10 +81,7 @@ const User = ({item}: {item: FollowItem}) => {
     <Link style={styles.outer} href={`/profile/${item.name}`} title={item.name}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <Image
-            style={styles.avi}
-            source={AVIS[item.name] || AVIS['alice.test']}
-          />
+          <Image style={styles.avi} source={DEF_AVATER} />
         </View>
         <View style={styles.layoutContent}>
           <Text style={[s.f15, s.bold]}>{item.displayName}</Text>

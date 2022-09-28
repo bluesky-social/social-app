@@ -17,7 +17,7 @@ import {Link} from '../util/Link'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {ago} from '../../lib/strings'
-import {AVIS} from '../../lib/assets'
+import {DEF_AVATER} from '../../lib/assets'
 
 export const Post = observer(function Post({uri}: {uri: string}) {
   const store = useStores()
@@ -82,10 +82,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
     <Link style={styles.outer} href={itemHref} title={itemTitle}>
       <View style={styles.layout}>
         <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
-          <Image
-            style={styles.avi}
-            source={AVIS[item.author.name] || AVIS['alice.test']}
-          />
+          <Image style={styles.avi} source={DEF_AVATER} />
         </Link>
         <View style={styles.layoutContent}>
           <View style={styles.meta}>

@@ -33,7 +33,7 @@ import {createBackMenu, createForwardMenu} from './history-menu'
 import {createAccountsMenu} from './accounts-menu'
 import {createLocationMenu} from './location-menu'
 import {s, colors} from '../../lib/styles'
-import {AVIS} from '../../lib/assets'
+import {DEF_AVATER} from '../../lib/assets'
 
 const locationIconNeedsNudgeUp = (icon: IconProp) => icon === 'house'
 const SWIPE_GESTURE_DIST_TRIGGER = 0.5
@@ -186,7 +186,7 @@ export const MobileShell: React.FC = observer(() => {
     <View style={styles.outerContainer}>
       <View style={styles.topBar}>
         <TouchableOpacity onPress={onPressAvi}>
-          <Image style={styles.avi} source={AVIS['alice.test']} />
+          <Image style={styles.avi} source={DEF_AVATER} />
         </TouchableOpacity>
         <Location
           icon={screenRenderDesc.icon}

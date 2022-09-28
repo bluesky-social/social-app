@@ -15,7 +15,7 @@ import {useStores} from '../../../state'
 import {EditProfileModel} from '../../../state/models/shell'
 import {pluralize} from '../../lib/strings'
 import {s, gradients, colors} from '../../lib/styles'
-import {AVIS, BANNER} from '../../lib/assets'
+import {DEF_AVATER, BANNER} from '../../lib/assets'
 import Toast from '../util/Toast'
 import {Link} from '../util/Link'
 
@@ -81,10 +81,7 @@ export const ProfileHeader = observer(function ProfileHeader({
   return (
     <View style={styles.outer}>
       <Image style={styles.banner} source={BANNER} />
-      <Image
-        style={styles.avi}
-        source={AVIS[view.name] || AVIS['alice.test']}
-      />
+      <Image style={styles.avi} source={DEF_AVATER} />
       <View style={styles.content}>
         <View style={[styles.displayNameLine]}>
           <Text style={styles.displayName}>{view.displayName}</Text>
