@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
   outer: {
     position: 'absolute',
     zIndex: zIndex.FAB,
-    right: 20,
-    bottom: 10,
+    right: 22,
+    bottom: 14,
     width: 60,
     height: 60,
     borderRadius: 30,
