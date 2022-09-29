@@ -27,6 +27,4 @@ Paul's todo list
 - Bugs
   - Check that sub components arent reloading too much
   - Titles are getting screwed up (possibly swipe related)
-  - Likes, RTs?
-  - Thread view sizing off
   - Home feed not showing own posts

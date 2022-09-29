@@ -73,15 +73,13 @@ export const PostThread = observer(function PostThread({uri}: {uri: string}) {
     <PostThreadItem item={item} onPressShare={onPressShare} />
   )
   return (
-    <View>
-      <FlatList
-        data={posts}
-        keyExtractor={item => item._reactKey}
-        renderItem={renderItem}
-        refreshing={view.isRefreshing}
-        onRefresh={onRefresh}
-      />
-    </View>
+    <FlatList
+      data={posts}
+      keyExtractor={item => item._reactKey}
+      renderItem={renderItem}
+      refreshing={view.isRefreshing}
+      onRefresh={onRefresh}
+    />
   )
 })
 
