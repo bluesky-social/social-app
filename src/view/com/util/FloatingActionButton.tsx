@@ -17,7 +17,7 @@ export function FAB({icon, onPress}: {icon: IconProp; onPress: OnPress}) {
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.outer}>
         <LinearGradient
-          colors={[gradients.primary.start, gradients.primary.end]}
+          colors={[gradients.purple.start, gradients.purple.end]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={styles.inner}>

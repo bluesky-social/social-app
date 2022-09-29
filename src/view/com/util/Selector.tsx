@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   underline: {
     position: 'absolute',
     height: 4,
-    backgroundColor: colors.purple3,
+    backgroundColor: colors.black,
     bottom: 0,
   },
 })
