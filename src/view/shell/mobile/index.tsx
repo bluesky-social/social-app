@@ -183,7 +183,7 @@ export const MobileShell: React.FC = observer(() => {
 
   return (
     <View style={styles.outerContainer}>
-      <View style={styles.topBar}>
+      {/* <View style={styles.topBar}>
         <TouchableOpacity onPress={onPressAvi}>
           <Image style={styles.avi} source={DEF_AVATER} />
         </TouchableOpacity>
@@ -195,7 +195,7 @@ export const MobileShell: React.FC = observer(() => {
         <TouchableOpacity style={styles.topBarBtn} onPress={onPressEllipsis}>
           <FontAwesomeIcon icon="ellipsis" />
         </TouchableOpacity>
-      </View>
+      </View> */}
       <SafeAreaView style={styles.innerContainer}>
         <GestureDetector gesture={swipeGesture}>
           <ScreenContainer style={styles.screenContainer}>
@@ -241,7 +241,7 @@ export const MobileShell: React.FC = observer(() => {
         />
         <Btn icon="house" onPress={onPressHome} />
         <Btn icon={['far', 'bell']} onPress={onPressNotifications} />
-        <Btn icon={['far', 'clone']} onPress={onPressTabs} />
+        <Btn icon="bars" onPress={onPressTabs} />
       </View>
       <Modal />
       {isLocationMenuActive && (
