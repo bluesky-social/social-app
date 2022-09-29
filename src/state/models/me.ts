@@ -11,6 +11,13 @@ export class MeModel {
     makeAutoObservable(this, {rootStore: false}, {autoBind: true})
   }
 
+  clear() {
+    this.did = undefined
+    this.name = undefined
+    this.displayName = undefined
+    this.description = undefined
+  }
+
   async load() {
     const sess = this.rootStore.session
     if (sess.isAuthed && sess.data) {
@@ -29,10 +36,7 @@ export class MeModel {
         }
       })
     } else {
-      this.did = undefined
-      this.name = undefined
-      this.displayName = undefined
-      this.description = undefined
+      this.clear()
     }
   }
 }

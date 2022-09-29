@@ -55,6 +55,12 @@ export class RootStoreModel {
       }
     }
   }
+
+  clearAll() {
+    this.session.clear()
+    this.nav.clear()
+    this.me.clear()
+  }
 }
 
 const throwawayInst = new RootStoreModel(AdxApi.service('http://localhost')) // this will be replaced by the loader

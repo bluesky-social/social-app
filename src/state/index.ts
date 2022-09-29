@@ -32,7 +32,6 @@ export async function setupState() {
   })
 
   await rootStore.session.setup()
-  await rootStore.me.load()
   console.log(rootStore.me)
 
   return rootStore
