@@ -2,13 +2,21 @@ Paul's todo list
 
 - General
   - Update to RN 0.70
+  - Go through every button and make sure it does what it's supposed to
+- Onboarding flow
+  - *
+- Private beta
+  - Users list
+  - Firehose
 - Composer
   - Update the view after creating a post
 - Profile
-  - Real badges
-  - Edit profile: avatar, cover photo
+  - Disable badges for now
+  - Disable editing avi or banner
   - More button
 - Search view
+  - *
+- Notifications view
   - *
 - Linking
   - Web linking
@@ -21,3 +29,4 @@ Paul's todo list
 - Bugs
   - Check that sub components arent reloading too much
   - Titles are getting screwed up (possibly swipe related)
+  - Likes, RTs?
