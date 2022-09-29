@@ -1,6 +1,7 @@
 import React, {createRef, useRef, useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -20,6 +21,7 @@ import Swipeable from 'react-native-gesture-handler/Swipeable'
 import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from '../../../state'
 import {s, colors, gradients} from '../../lib/styles'
+import {DEF_AVATER} from '../../lib/assets'
 import {match} from '../../routes'
 
 const TAB_HEIGHT = 42
@@ -105,7 +107,7 @@ export const Component = observer(() => {
     gradient: keyof typeof gradients
   }) => (
     <TouchableOpacity
-      style={styles.fatMenuItem}
+      style={[styles.fatMenuItem, styles.fatMenuItemMargin]}
       onPress={() => onNavigate(url)}>
       <LinearGradient
         style={[styles.fatMenuItemIconWrapper]}
@@ -114,7 +116,9 @@ export const Component = observer(() => {
         end={{x: 1, y: 1}}>
         <FontAwesomeIcon icon={icon} style={styles.fatMenuItemIcon} size={24} />
       </LinearGradient>
-      <Text style={styles.fatMenuItemLabel}>{label}</Text>
+      <Text style={styles.fatMenuItemLabel} numberOfLines={1}>
+        {label}
+      </Text>
     </TouchableOpacity>
   )
 
@@ -132,18 +136,20 @@ export const Component = observer(() => {
     <View onLayout={onLayout}>
       <View style={[s.p10, styles.section]}>
         <View style={styles.fatMenuItems}>
+          <TouchableOpacity
+            style={styles.fatMenuItem}
+            onPress={() => onNavigate(`/profile/${store.me.name || ''}`)}>
+            <Image style={styles.fatMenuImage} source={DEF_AVATER} />
+            <Text style={styles.fatMenuItemLabel} numberOfLines={1}>
+              {store.me.displayName || store.me.name || 'My profile'}
+            </Text>
+          </TouchableOpacity>
           <FatMenuItem icon="house" label="Feed" url="/" gradient="primary" />
           <FatMenuItem
             icon="bell"
             label="Notifications"
             url="/notifications"
             gradient="purple"
-          />
-          <FatMenuItem
-            icon={['far', 'user']}
-            label="My Profile"
-            url="/"
-            gradient="blue"
           />
           <FatMenuItem icon="gear" label="Settings" url="/" gradient="blue" />
         </View>
@@ -255,9 +261,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   fatMenuItem: {
-    width: 90,
+    width: 80,
     alignItems: 'center',
     marginRight: 6,
+  },
+  fatMenuItemMargin: {
+    marginRight: 14,
   },
   fatMenuItemIconWrapper: {
     borderRadius: 6,
@@ -273,6 +282,12 @@ const styles = StyleSheet.create({
   },
   fatMenuItemIcon: {
     color: colors.white,
+  },
+  fatMenuImage: {
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    marginBottom: 5,
   },
   fatMenuItemLabel: {
     fontSize: 13,
