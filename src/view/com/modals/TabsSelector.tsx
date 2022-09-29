@@ -151,7 +151,12 @@ export const Component = observer(() => {
             url="/notifications"
             gradient="purple"
           />
-          <FatMenuItem icon="gear" label="Settings" url="/" gradient="blue" />
+          <FatMenuItem
+            icon="gear"
+            label="Settings"
+            url="/settings"
+            gradient="blue"
+          />
         </View>
       </View>
       <View style={[s.p10, styles.section]}>

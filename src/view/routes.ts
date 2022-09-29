@@ -10,6 +10,7 @@ import {PostRepostedBy} from './screens/PostRepostedBy'
 import {Profile} from './screens/Profile'
 import {ProfileFollowers} from './screens/ProfileFollowers'
 import {ProfileFollows} from './screens/ProfileFollows'
+import {Settings} from './screens/Settings'
 
 export type ScreenParams = {
   params: Record<string, any>
@@ -27,6 +28,7 @@ export const routes: Route[] = [
   [Home, 'house', r('/')],
   [Search, 'magnifying-glass', r('/search')],
   [Notifications, 'bell', r('/notifications')],
+  [Settings, 'bell', r('/settings')],
   [Profile, ['far', 'user'], r('/profile/(?<name>[^/]+)')],
   [ProfileFollowers, 'users', r('/profile/(?<name>[^/]+)/followers')],
   [ProfileFollows, 'users', r('/profile/(?<name>[^/]+)/follows')],
