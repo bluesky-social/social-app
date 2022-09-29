@@ -33,6 +33,7 @@ import {createBackMenu, createForwardMenu} from './history-menu'
 import {createAccountsMenu} from './accounts-menu'
 import {createLocationMenu} from './location-menu'
 import {s, colors} from '../../lib/styles'
+import {GridIcon, HomeIcon} from '../../lib/icons'
 import {DEF_AVATER} from '../../lib/assets'
 
 const locationIconNeedsNudgeUp = (icon: IconProp) => icon === 'house'
@@ -85,10 +86,19 @@ const Btn = ({
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }) => {
+  let IconEl
+  if (icon === 'bars') {
+    IconEl = GridIcon
+  } else if (icon === 'house') {
+    IconEl = HomeIcon
+  } else {
+    IconEl = FontAwesomeIcon
+  }
+
   if (inactive) {
     return (
       <View style={styles.ctrl}>
-        <FontAwesomeIcon
+        <IconEl
           size={21}
           style={[styles.ctrlIcon, styles.inactive]}
           icon={icon}
@@ -101,7 +111,7 @@ const Btn = ({
       style={styles.ctrl}
       onPress={onPress}
       onLongPress={onLongPress}>
-      <FontAwesomeIcon size={21} style={styles.ctrlIcon} icon={icon} />
+      <IconEl size={21} style={styles.ctrlIcon} icon={icon} />
     </TouchableOpacity>
   )
 }
