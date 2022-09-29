@@ -150,12 +150,12 @@ export const Component = observer(() => {
       </View>
       <View style={[s.p10, styles.section]}>
         <View style={styles.btns}>
-          <TouchableWithoutFeedback onPress={onPressNewTab}>
+          <TouchableWithoutFeedback onPress={onPressShareTab}>
             <View style={[styles.btn]}>
               <View style={styles.btnIcon}>
-                <FontAwesomeIcon size={16} icon="plus" />
+                <FontAwesomeIcon size={16} icon="share" />
               </View>
-              <Text style={styles.btnText}>New tab</Text>
+              <Text style={styles.btnText}>Share</Text>
             </View>
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback onPress={onPressCloneTab}>
@@ -166,12 +166,12 @@ export const Component = observer(() => {
               <Text style={styles.btnText}>Clone tab</Text>
             </View>
           </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={onPressShareTab}>
+          <TouchableWithoutFeedback onPress={onPressNewTab}>
             <View style={[styles.btn]}>
               <View style={styles.btnIcon}>
-                <FontAwesomeIcon size={16} icon="share" />
+                <FontAwesomeIcon size={16} icon="plus" />
               </View>
-              <Text style={styles.btnText}>Share</Text>
+              <Text style={styles.btnText}>New tab</Text>
             </View>
           </TouchableWithoutFeedback>
         </View>
