@@ -14,8 +14,6 @@ Paul's todo list
   - Disable badges for now
   - Disable editing avi or banner
   - More button
-- Search view
-  - *
 - Notifications view
   - *
 - Linking
@@ -30,3 +28,5 @@ Paul's todo list
   - Check that sub components arent reloading too much
   - Titles are getting screwed up (possibly swipe related)
   - Likes, RTs?
+  - Thread view sizing off
+  - Home feed not showing own posts

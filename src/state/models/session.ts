@@ -124,6 +124,9 @@ export class SessionModel {
     try {
       const sess = await this.rootStore.api.todo.adx.getSession({})
       if (sess.success && this.data && this.data.userdid === sess.data.did) {
+        this.rootStore.me.load().catch(e => {
+          console.error('Failed to fetch local user information', e)
+        })
         return // success
       }
     } catch (e: any) {}
@@ -156,6 +159,9 @@ export class SessionModel {
         userdid: res.data.did,
       })
       this.configureApi()
+      this.rootStore.me.load().catch(e => {
+        console.error('Failed to fetch local user information', e)
+      })
     }
   }
 
@@ -186,6 +192,9 @@ export class SessionModel {
       })
       this.setOnboardingStage(OnboardingStage.Init)
       this.configureApi()
+      this.rootStore.me.load().catch(e => {
+        console.error('Failed to fetch local user information', e)
+      })
     }
   }
 
@@ -195,7 +204,7 @@ export class SessionModel {
         console.error('(Minor issue) Failed to delete session on the server', e)
       })
     }
-    this.clear()
+    this.rootStore.clearAll()
   }
 
   setOnboardingStage(stage: OnboardingStage | null) {

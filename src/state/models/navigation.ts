@@ -168,6 +168,11 @@ export class NavigationModel {
     })
   }
 
+  clear() {
+    this.tabs = [new NavigationTabModel()]
+    this.tabIndex = 0
+  }
+
   // accessors
   // =
 
