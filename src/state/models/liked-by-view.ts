@@ -112,7 +112,6 @@ export class LikedByViewModel {
 
   private async _fetch(isRefreshing = false) {
     this._xLoading(isRefreshing)
-    await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const res = await this.rootStore.api.todo.social.getLikedBy(
         Object.assign({}, this.params, {uri: this.resolvedUri}),

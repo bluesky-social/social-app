@@ -82,7 +82,6 @@ export class UserFollowsViewModel {
 
   private async _fetch(isRefreshing = false) {
     this._xLoading(isRefreshing)
-    await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const res = await this.rootStore.api.todo.social.getUserFollows(
         this.params,

@@ -112,7 +112,6 @@ export class RepostedByViewModel {
 
   private async _fetch(isRefreshing = false) {
     this._xLoading(isRefreshing)
-    await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const res = await this.rootStore.api.todo.social.getRepostedBy(
         Object.assign({}, this.params, {uri: this.resolvedUri}),
@@ -127,7 +126,6 @@ export class RepostedByViewModel {
   private async _refresh() {
     this._xLoading(true)
     // TODO: refetch and update items
-    await new Promise(r => setTimeout(r, 250)) // DEBUG
     this._xIdle()
   }
 

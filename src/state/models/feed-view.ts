@@ -234,7 +234,6 @@ export class FeedViewModel {
 
   private async _initialLoad(isRefreshing = false) {
     this._xLoading(isRefreshing)
-    await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const res = await this.rootStore.api.todo.social.getFeed(this.params)
       this._replaceAll(res)
@@ -246,7 +245,6 @@ export class FeedViewModel {
 
   private async _loadMore() {
     this._xLoading()
-    await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const params = Object.assign({}, this.params, {
         before: this.loadMoreCursor,
@@ -267,7 +265,6 @@ export class FeedViewModel {
 
   private async _update() {
     this._xLoading()
-    await new Promise(r => setTimeout(r, 250)) // DEBUG
     let numToFetch = this.feed.length
     let cursor = undefined
     try {
