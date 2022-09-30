@@ -75,7 +75,6 @@ export class PostModel implements RemoveIndex<Post.Record> {
 
   private async _load() {
     this._xLoading()
-    await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const urip = new AdxUri(this.uri)
       const res = await this.rootStore.api.todo.social.post.get({

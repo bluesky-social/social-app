@@ -208,7 +208,6 @@ export class NotificationsViewModel {
 
   private async _initialLoad(isRefreshing = false) {
     this._xLoading(isRefreshing)
-    await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const res = await this.rootStore.api.todo.social.getNotifications(
         this.params,
@@ -222,7 +221,6 @@ export class NotificationsViewModel {
 
   private async _loadMore() {
     this._xLoading()
-    await new Promise(r => setTimeout(r, 250)) // DEBUG
     try {
       const params = Object.assign({}, this.params, {
         before: this.loadMoreCursor,
@@ -237,7 +235,6 @@ export class NotificationsViewModel {
 
   private async _update() {
     this._xLoading()
-    await new Promise(r => setTimeout(r, 250)) // DEBUG
     let numToFetch = this.notifications.length
     let cursor = undefined
     try {
