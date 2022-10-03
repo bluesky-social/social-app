@@ -9,6 +9,7 @@ import {ComposePostModel, SharePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
 import {PostDropdownBtn} from '../util/DropdownBtn'
 import {UserInfoText} from '../util/UserInfoText'
+import {RichText} from '../util/RichText'
 import {s, colors} from '../../lib/styles'
 import {ago} from '../../lib/strings'
 import {DEF_AVATER} from '../../lib/assets'
@@ -114,9 +115,13 @@ export const FeedItem = observer(function FeedItem({
               </Link>
             </View>
           )}
-          <Text style={[styles.postText, s.f15, s['lh15-1.3']]}>
-            {record.text}
-          </Text>
+          <View style={styles.postTextContainer}>
+            <RichText
+              text={record.text}
+              entities={record.entities}
+              style={[s.f15, s['lh15-1.3']]}
+            />
+          </View>
           <View style={styles.ctrls}>
             <TouchableOpacity style={styles.ctrl} onPress={onPressReply}>
               <FontAwesomeIcon
@@ -209,8 +214,13 @@ const styles = StyleSheet.create({
   metaItem: {
     paddingRight: 5,
   },
-  postText: {
+  postTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
     paddingBottom: 8,
+  },
+  postText: {
     fontFamily: 'Helvetica Neue',
   },
   ctrls: {

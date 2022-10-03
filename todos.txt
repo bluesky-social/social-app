@@ -3,6 +3,8 @@ Paul's todo list
 - General
   - Update to RN 0.70
   - Go through every button and make sure it does what it's supposed to
+  - Cache some profile/userinfo lookups
+  - Cursor behaviors on all views
 - Onboarding flow
   - *
 - Private beta
@@ -10,6 +12,7 @@ Paul's todo list
   - Firehose
 - Composer
   - Update the view after creating a post
+  - Mentions
 - Profile
   - Disable badges for now
   - Disable editing avi or banner
