@@ -14,8 +14,6 @@ Paul's todo list
   - Disable badges for now
   - Disable editing avi or banner
   - More button
-- Notifications view
-  - *
 - Linking
   - Web linking
   - App linking
