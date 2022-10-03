@@ -7,22 +7,21 @@
 import AdxApi from '../../third-party/api'
 import {ServiceClient} from '../../third-party/api/src/index'
 import {AdxUri} from '../../third-party/uri'
-import * as storage from './storage'
+import {RootStoreModel} from '../models/root-store'
 
 export function doPolyfill() {
   AdxApi.xrpc.fetch = fetchHandler
 }
 
 export async function post(
-  adx: ServiceClient,
-  user: string,
+  store: RootStoreModel,
   text: string,
   replyToUri?: string,
 ) {
   let reply
   if (replyToUri) {
     const replyToUrip = new AdxUri(replyToUri)
-    const parentPost = await adx.todo.social.post.get({
+    const parentPost = await store.api.todo.social.post.get({
       nameOrDid: replyToUrip.host,
       tid: replyToUrip.recordKey,
     })
@@ -33,8 +32,8 @@ export async function post(
       }
     }
   }
-  return await adx.todo.social.post.create(
-    {did: user},
+  return await store.api.todo.social.post.create(
+    {did: store.me.did || ''},
     {
       text,
       reply,
@@ -43,9 +42,9 @@ export async function post(
   )
 }
 
-export async function like(adx: ServiceClient, user: string, uri: string) {
-  return await adx.todo.social.like.create(
-    {did: user},
+export async function like(store: RootStoreModel, uri: string) {
+  return await store.api.todo.social.like.create(
+    {did: store.me.did || ''},
     {
       subject: uri,
       createdAt: new Date().toISOString(),
@@ -53,17 +52,17 @@ export async function like(adx: ServiceClient, user: string, uri: string) {
   )
 }
 
-export async function unlike(adx: ServiceClient, likeUri: string) {
+export async function unlike(store: RootStoreModel, likeUri: string) {
   const likeUrip = new AdxUri(likeUri)
-  return await adx.todo.social.like.delete({
+  return await store.api.todo.social.like.delete({
     did: likeUrip.hostname,
     tid: likeUrip.recordKey,
   })
 }
 
-export async function repost(adx: ServiceClient, user: string, uri: string) {
-  return await adx.todo.social.repost.create(
-    {did: user},
+export async function repost(store: RootStoreModel, uri: string) {
+  return await store.api.todo.social.repost.create(
+    {did: store.me.did || ''},
     {
       subject: uri,
       createdAt: new Date().toISOString(),
@@ -71,21 +70,17 @@ export async function repost(adx: ServiceClient, user: string, uri: string) {
   )
 }
 
-export async function unrepost(adx: ServiceClient, repostUri: string) {
+export async function unrepost(store: RootStoreModel, repostUri: string) {
   const repostUrip = new AdxUri(repostUri)
-  return await adx.todo.social.repost.delete({
+  return await store.api.todo.social.repost.delete({
     did: repostUrip.hostname,
     tid: repostUrip.recordKey,
   })
 }
 
-export async function follow(
-  adx: ServiceClient,
-  user: string,
-  subject: string,
-) {
-  return await adx.todo.social.follow.create(
-    {did: user},
+export async function follow(store: RootStoreModel, subject: string) {
+  return await store.api.todo.social.follow.create(
+    {did: store.me.did || ''},
     {
       subject,
       createdAt: new Date().toISOString(),
@@ -93,9 +88,9 @@ export async function follow(
   )
 }
 
-export async function unfollow(adx: ServiceClient, followUri: string) {
+export async function unfollow(store: RootStoreModel, followUri: string) {
   const followUrip = new AdxUri(followUri)
-  return await adx.todo.social.follow.delete({
+  return await store.api.todo.social.follow.delete({
     did: followUrip.hostname,
     tid: followUrip.recordKey,
   })

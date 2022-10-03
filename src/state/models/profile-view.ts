@@ -74,17 +74,13 @@ export class ProfileViewModel {
       throw new Error('Not logged in')
     }
     if (this.myState.follow) {
-      await apilib.unfollow(this.rootStore.api, this.myState.follow)
+      await apilib.unfollow(this.rootStore, this.myState.follow)
       runInAction(() => {
         this.followersCount--
         this.myState.follow = undefined
       })
     } else {
-      const res = await apilib.follow(
-        this.rootStore.api,
-        this.rootStore.me.did,
-        this.did,
-      )
+      const res = await apilib.follow(this.rootStore, this.did)
       runInAction(() => {
         this.followersCount++
         this.myState.follow = res.uri

@@ -106,17 +106,13 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
 
   async toggleLike() {
     if (this.myState.like) {
-      await apilib.unlike(this.rootStore.api, this.myState.like)
+      await apilib.unlike(this.rootStore, this.myState.like)
       runInAction(() => {
         this.likeCount--
         this.myState.like = undefined
       })
     } else {
-      const res = await apilib.like(
-        this.rootStore.api,
-        'did:test:alice',
-        this.uri,
-      )
+      const res = await apilib.like(this.rootStore, this.uri)
       runInAction(() => {
         this.likeCount++
         this.myState.like = res.uri
@@ -126,17 +122,13 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
 
   async toggleRepost() {
     if (this.myState.repost) {
-      await apilib.unrepost(this.rootStore.api, this.myState.repost)
+      await apilib.unrepost(this.rootStore, this.myState.repost)
       runInAction(() => {
         this.repostCount--
         this.myState.repost = undefined
       })
     } else {
-      const res = await apilib.repost(
-        this.rootStore.api,
-        'did:test:alice',
-        this.uri,
-      )
+      const res = await apilib.repost(this.rootStore, this.uri)
       runInAction(() => {
         this.repostCount++
         this.myState.repost = res.uri

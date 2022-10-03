@@ -48,7 +48,7 @@ export function Component({replyTo}: {replyTo?: string}) {
       return false
     }
     try {
-      await apilib.post(store.api, 'did:test:alice', text, replyTo)
+      await apilib.post(store, text, replyTo)
     } catch (e: any) {
       console.error(`Failed to create post: ${e.toString()}`)
       setError(
@@ -103,7 +103,7 @@ export function Component({replyTo}: {replyTo?: string}) {
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={styles.postBtn}>
-            <Text style={[s.white, s.f16, s.semiBold]}>Post</Text>
+            <Text style={[s.white, s.f16, s.bold]}>Post</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>
