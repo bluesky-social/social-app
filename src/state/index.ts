@@ -9,6 +9,7 @@ import {ShellModel} from './models/shell'
 
 const ROOT_STATE_STORAGE_KEY = 'root'
 const DEFAULT_SERVICE = 'http://localhost:2583'
+const STATE_FETCH_INTERVAL = 15e3
 
 export async function setupState() {
   let rootStore: RootStoreModel
@@ -32,7 +33,13 @@ export async function setupState() {
   })
 
   await rootStore.session.setup()
+  await rootStore.fetchStateUpdate()
   console.log(rootStore.me)
+
+  // periodic state fetch
+  setInterval(() => {
+    rootStore.fetchStateUpdate()
+  }, STATE_FETCH_INTERVAL)
 
   return rootStore
 }

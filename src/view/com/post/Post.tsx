@@ -14,6 +14,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {ComposePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
+import {UserInfoText} from '../util/UserInfoText'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {ago} from '../../lib/strings'
@@ -57,13 +58,18 @@ export const Post = observer(function Post({uri}: {uri: string}) {
   const item = view.thread
   const record = view.thread?.record as unknown as PostType.Record
 
-  const itemHref = useMemo(() => {
-    const urip = new AdxUri(item.uri)
-    return `/profile/${item.author.name}/post/${urip.recordKey}`
-  }, [item.uri, item.author.name])
+  const itemUrip = new AdxUri(item.uri)
+  const itemHref = `/profile/${item.author.name}/post/${itemUrip.recordKey}`
   const itemTitle = `Post by ${item.author.name}`
   const authorHref = `/profile/${item.author.name}`
   const authorTitle = item.author.name
+  let replyAuthorDid = ''
+  let replyHref = ''
+  if (record.reply) {
+    const urip = new AdxUri(record.reply.parent || record.reply.root)
+    replyAuthorDid = urip.hostname
+    replyHref = `/profile/${urip.hostname}/post/${urip.recordKey}`
+  }
   const onPressReply = () => {
     store.shell.openModal(new ComposePostModel(item.uri))
   }
@@ -96,6 +102,19 @@ export const Post = observer(function Post({uri}: {uri: string}) {
               &middot; {ago(item.indexedAt)}
             </Text>
           </View>
+          {replyHref !== '' && (
+            <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
+              <FontAwesomeIcon icon="reply" size={9} style={[s.gray4, s.mr5]} />
+              <Text style={[s.gray4, s.f12, s.mr2]}>Reply to</Text>
+              <Link href={replyHref} title="Parent post">
+                <UserInfoText
+                  did={replyAuthorDid}
+                  style={[s.f12, s.gray5]}
+                  prefix="@"
+                />
+              </Link>
+            </View>
+          )}
           <Text style={[styles.postText, s.f15, s['lh15-1.3']]}>
             {record.text}
           </Text>

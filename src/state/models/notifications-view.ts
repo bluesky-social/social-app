@@ -3,9 +3,11 @@ import * as GetNotifications from '../../third-party/api/src/types/todo/social/g
 import {RootStoreModel} from './root-store'
 import {hasProp} from '../lib/type-guards'
 
-export class NotificationsViewItemModel
-  implements GetNotifications.Notification
-{
+export interface GroupedNotification extends GetNotifications.Notification {
+  additional?: GetNotifications.Notification[]
+}
+
+export class NotificationsViewItemModel implements GroupedNotification {
   // ui state
   _reactKey: string = ''
 
@@ -14,57 +16,65 @@ export class NotificationsViewItemModel
   author: {
     did: string
     name: string
-    displayName: string
-  } = {did: '', name: '', displayName: ''}
+    displayName?: string
+  } = {did: '', name: ''}
+  reason: string = ''
+  reasonSubject?: string
   record: any = {}
   isRead: boolean = false
   indexedAt: string = ''
+  additional?: NotificationsViewItemModel[]
 
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
-    v: GetNotifications.Notification,
+    v: GroupedNotification,
   ) {
     makeAutoObservable(this, {rootStore: false})
     this._reactKey = reactKey
     this.copy(v)
   }
 
-  copy(v: GetNotifications.Notification) {
+  copy(v: GroupedNotification) {
     this.uri = v.uri
     this.author = v.author
+    this.reason = v.reason
+    this.reasonSubject = v.reasonSubject
     this.record = v.record
     this.isRead = v.isRead
     this.indexedAt = v.indexedAt
+    if (v.additional?.length) {
+      this.additional = []
+      for (const add of v.additional) {
+        this.additional.push(
+          new NotificationsViewItemModel(this.rootStore, '', add),
+        )
+      }
+    } else {
+      this.additional = undefined
+    }
   }
 
   get isLike() {
-    return (
-      hasProp(this.record, '$type') && this.record.$type === 'todo.social.like'
-    )
+    return this.reason === 'like'
   }
 
   get isRepost() {
-    return (
-      hasProp(this.record, '$type') &&
-      this.record.$type === 'todo.social.repost'
-    )
+    return this.reason === 'repost'
   }
 
   get isReply() {
-    return (
-      hasProp(this.record, '$type') && this.record.$type === 'todo.social.post'
-    )
+    return this.reason === 'reply'
   }
 
   get isFollow() {
-    return (
-      hasProp(this.record, '$type') &&
-      this.record.$type === 'todo.social.follow'
-    )
+    return this.reason === 'follow'
   }
 
   get subjectUri() {
+    if (this.reasonSubject) {
+      return this.reasonSubject
+    }
     if (
       hasProp(this.record, 'subject') &&
       typeof this.record.subject === 'string'
@@ -121,7 +131,15 @@ export class NotificationsViewModel {
 
   get loadMoreCursor() {
     if (this.hasContent) {
-      return this.notifications[this.notifications.length - 1].indexedAt
+      const last = this.notifications[this.notifications.length - 1]
+      if (last.additional?.length) {
+        // get the lowest indexedAt from all available
+        return [last, ...last.additional].reduce(
+          (acc, v) => (v.indexedAt < acc ? v.indexedAt : acc),
+          last.indexedAt,
+        )
+      }
+      return last.indexedAt
     }
     return undefined
   }
@@ -139,6 +157,7 @@ export class NotificationsViewModel {
     await this._pendingWork()
     this._loadPromise = this._initialLoad(isRefreshing)
     await this._loadPromise
+    this._updateReadState()
     this._loadPromise = undefined
   }
 
@@ -265,12 +284,12 @@ export class NotificationsViewModel {
 
   private _appendAll(res: GetNotifications.Response) {
     let counter = this.notifications.length
-    for (const item of res.data.notifications) {
+    for (const item of groupNotifications(res.data.notifications)) {
       this._append(counter++, item)
     }
   }
 
-  private _append(keyId: number, item: GetNotifications.Notification) {
+  private _append(keyId: number, item: GroupedNotification) {
     // TODO: validate .record
     this.notifications.push(
       new NotificationsViewItemModel(this.rootStore, `item-${keyId}`, item),
@@ -280,7 +299,7 @@ export class NotificationsViewModel {
   private _updateAll(res: GetNotifications.Response) {
     for (const item of res.data.notifications) {
       const existingItem = this.notifications.find(
-        // this find function has a key subtley- the indexedAt comparison
+        // this find function has a key subtlety- the indexedAt comparison
         // the reason for this is reposts: they set the URI of the original post, not of the repost record
         // the indexedAt time will be for the repost however, so we use that to help us
         item2 => item.uri === item2.uri && item.indexedAt === item2.indexedAt,
@@ -290,4 +309,39 @@ export class NotificationsViewModel {
       }
     }
   }
+
+  private async _updateReadState() {
+    try {
+      await this.rootStore.api.todo.social.postNotificationsSeen(
+        {},
+        {seenAt: new Date().toISOString()},
+      )
+    } catch (e) {
+      console.log('Failed to update notifications read state', e)
+    }
+  }
+}
+
+function groupNotifications(
+  items: GetNotifications.Notification[],
+): GroupedNotification[] {
+  const items2: GroupedNotification[] = []
+  for (const item of items) {
+    let grouped = false
+    for (const item2 of items2) {
+      if (
+        item.reason === item2.reason &&
+        item.reasonSubject === item2.reasonSubject
+      ) {
+        item2.additional = item2.additional || []
+        item2.additional.push(item)
+        grouped = true
+        break
+      }
+    }
+    if (!grouped) {
+      items2.push(item)
+    }
+  }
+  return items2
 }

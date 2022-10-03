@@ -6969,6 +6969,7 @@ __export(src_exports, {
   TodoSocialFollow: () => follow_exports,
   TodoSocialGetFeed: () => getFeed_exports,
   TodoSocialGetLikedBy: () => getLikedBy_exports,
+  TodoSocialGetNotificationCount: () => getNotificationCount_exports,
   TodoSocialGetNotifications: () => getNotifications_exports,
   TodoSocialGetPostThread: () => getPostThread_exports,
   TodoSocialGetProfile: () => getProfile_exports,
@@ -6978,6 +6979,7 @@ __export(src_exports, {
   TodoSocialLike: () => like_exports,
   TodoSocialMediaEmbed: () => mediaEmbed_exports,
   TodoSocialPost: () => post_exports,
+  TodoSocialPostNotificationsSeen: () => postNotificationsSeen_exports,
   TodoSocialProfile: () => profile_exports,
   TodoSocialRepost: () => repost_exports,
   default: () => src_default
@@ -10307,12 +10309,15 @@ var methodSchemas = [
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["username", "did", "password"],
+        required: ["username", "email", "password"],
         properties: {
+          email: {
+            type: "string"
+          },
           username: {
             type: "string"
           },
-          did: {
+          inviteCode: {
             type: "string"
           },
           password: {
@@ -10325,9 +10330,15 @@ var methodSchemas = [
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["jwt"],
+        required: ["jwt", "username", "did"],
         properties: {
           jwt: {
+            type: "string"
+          },
+          username: {
+            type: "string"
+          },
+          did: {
             type: "string"
           }
         }
@@ -11116,6 +11127,24 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
+    id: "todo.social.getNotificationCount",
+    type: "query",
+    parameters: {},
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["count"],
+        properties: {
+          count: {
+            type: "number"
+          }
+        }
+      }
+    }
+  },
+  {
+    lexicon: 1,
     id: "todo.social.getNotifications",
     type: "query",
     parameters: {
@@ -11143,7 +11172,14 @@ var methodSchemas = [
         $defs: {
           notification: {
             type: "object",
-            required: ["uri", "author", "record", "isRead", "indexedAt"],
+            required: [
+              "uri",
+              "author",
+              "reason",
+              "record",
+              "isRead",
+              "indexedAt"
+            ],
             properties: {
               uri: {
                 type: "string",
@@ -11151,7 +11187,7 @@ var methodSchemas = [
               },
               author: {
                 type: "object",
-                required: ["did", "name", "displayName"],
+                required: ["did", "name"],
                 properties: {
                   did: {
                     type: "string"
@@ -11164,6 +11200,13 @@ var methodSchemas = [
                     maxLength: 64
                   }
                 }
+              },
+              reason: {
+                type: "string",
+                $comment: "Expected values are 'like', 'repost', 'follow', 'badge', 'mention' and 'reply'."
+              },
+              reasonSubject: {
+                type: "string"
               },
               record: {
                 type: "object"
@@ -11647,6 +11690,30 @@ var methodSchemas = [
         }
       }
     }
+  },
+  {
+    lexicon: 1,
+    id: "todo.social.postNotificationsSeen",
+    type: "procedure",
+    description: "Notify server that the user has seen notifications",
+    parameters: {},
+    input: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["seenAt"],
+        properties: {
+          seenAt: {
+            type: "string",
+            format: "date-time"
+          }
+        }
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {}
+    }
   }
 ];
 
@@ -11894,9 +11961,9 @@ function toKnownErr20(e) {
   return e;
 }
 
-// src/types/todo/social/getNotifications.ts
-var getNotifications_exports = {};
-__export(getNotifications_exports, {
+// src/types/todo/social/getNotificationCount.ts
+var getNotificationCount_exports = {};
+__export(getNotificationCount_exports, {
   toKnownErr: () => toKnownErr21
 });
 function toKnownErr21(e) {
@@ -11905,9 +11972,9 @@ function toKnownErr21(e) {
   return e;
 }
 
-// src/types/todo/social/getPostThread.ts
-var getPostThread_exports = {};
-__export(getPostThread_exports, {
+// src/types/todo/social/getNotifications.ts
+var getNotifications_exports = {};
+__export(getNotifications_exports, {
   toKnownErr: () => toKnownErr22
 });
 function toKnownErr22(e) {
@@ -11916,9 +11983,9 @@ function toKnownErr22(e) {
   return e;
 }
 
-// src/types/todo/social/getProfile.ts
-var getProfile_exports = {};
-__export(getProfile_exports, {
+// src/types/todo/social/getPostThread.ts
+var getPostThread_exports = {};
+__export(getPostThread_exports, {
   toKnownErr: () => toKnownErr23
 });
 function toKnownErr23(e) {
@@ -11927,9 +11994,9 @@ function toKnownErr23(e) {
   return e;
 }
 
-// src/types/todo/social/getRepostedBy.ts
-var getRepostedBy_exports = {};
-__export(getRepostedBy_exports, {
+// src/types/todo/social/getProfile.ts
+var getProfile_exports = {};
+__export(getProfile_exports, {
   toKnownErr: () => toKnownErr24
 });
 function toKnownErr24(e) {
@@ -11938,9 +12005,9 @@ function toKnownErr24(e) {
   return e;
 }
 
-// src/types/todo/social/getUserFollowers.ts
-var getUserFollowers_exports = {};
-__export(getUserFollowers_exports, {
+// src/types/todo/social/getRepostedBy.ts
+var getRepostedBy_exports = {};
+__export(getRepostedBy_exports, {
   toKnownErr: () => toKnownErr25
 });
 function toKnownErr25(e) {
@@ -11949,12 +12016,34 @@ function toKnownErr25(e) {
   return e;
 }
 
-// src/types/todo/social/getUserFollows.ts
-var getUserFollows_exports = {};
-__export(getUserFollows_exports, {
+// src/types/todo/social/getUserFollowers.ts
+var getUserFollowers_exports = {};
+__export(getUserFollowers_exports, {
   toKnownErr: () => toKnownErr26
 });
 function toKnownErr26(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/social/getUserFollows.ts
+var getUserFollows_exports = {};
+__export(getUserFollows_exports, {
+  toKnownErr: () => toKnownErr27
+});
+function toKnownErr27(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/social/postNotificationsSeen.ts
+var postNotificationsSeen_exports = {};
+__export(postNotificationsSeen_exports, {
+  toKnownErr: () => toKnownErr28
+});
+function toKnownErr28(e) {
   if (e instanceof XRPCError) {
   }
   return e;
@@ -12126,34 +12215,44 @@ var SocialNS = class {
       throw toKnownErr20(e);
     });
   }
+  getNotificationCount(params, data, opts) {
+    return this._service.xrpc.call("todo.social.getNotificationCount", params, data, opts).catch((e) => {
+      throw toKnownErr21(e);
+    });
+  }
   getNotifications(params, data, opts) {
     return this._service.xrpc.call("todo.social.getNotifications", params, data, opts).catch((e) => {
-      throw toKnownErr21(e);
+      throw toKnownErr22(e);
     });
   }
   getPostThread(params, data, opts) {
     return this._service.xrpc.call("todo.social.getPostThread", params, data, opts).catch((e) => {
-      throw toKnownErr22(e);
+      throw toKnownErr23(e);
     });
   }
   getProfile(params, data, opts) {
     return this._service.xrpc.call("todo.social.getProfile", params, data, opts).catch((e) => {
-      throw toKnownErr23(e);
+      throw toKnownErr24(e);
     });
   }
   getRepostedBy(params, data, opts) {
     return this._service.xrpc.call("todo.social.getRepostedBy", params, data, opts).catch((e) => {
-      throw toKnownErr24(e);
+      throw toKnownErr25(e);
     });
   }
   getUserFollowers(params, data, opts) {
     return this._service.xrpc.call("todo.social.getUserFollowers", params, data, opts).catch((e) => {
-      throw toKnownErr25(e);
+      throw toKnownErr26(e);
     });
   }
   getUserFollows(params, data, opts) {
     return this._service.xrpc.call("todo.social.getUserFollows", params, data, opts).catch((e) => {
-      throw toKnownErr26(e);
+      throw toKnownErr27(e);
+    });
+  }
+  postNotificationsSeen(params, data, opts) {
+    return this._service.xrpc.call("todo.social.postNotificationsSeen", params, data, opts).catch((e) => {
+      throw toKnownErr28(e);
     });
   }
 };
@@ -12522,6 +12621,7 @@ var RepostRecord = class {
   TodoSocialFollow,
   TodoSocialGetFeed,
   TodoSocialGetLikedBy,
+  TodoSocialGetNotificationCount,
   TodoSocialGetNotifications,
   TodoSocialGetPostThread,
   TodoSocialGetProfile,
@@ -12531,6 +12631,7 @@ var RepostRecord = class {
   TodoSocialLike,
   TodoSocialMediaEmbed,
   TodoSocialPost,
+  TodoSocialPostNotificationsSeen,
   TodoSocialProfile,
   TodoSocialRepost
 });

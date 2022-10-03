@@ -78,11 +78,13 @@ const Location = ({
 const Btn = ({
   icon,
   inactive,
+  notificationCount,
   onPress,
   onLongPress,
 }: {
   icon: IconProp
   inactive?: boolean
+  notificationCount?: number
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }) => {
@@ -98,6 +100,11 @@ const Btn = ({
   if (inactive) {
     return (
       <View style={styles.ctrl}>
+        {notificationCount ? (
+          <View style={styles.ctrlCount}>
+            <Text style={styles.ctrlCountLabel}>{notificationCount}</Text>
+          </View>
+        ) : undefined}
         <IconEl
           size={21}
           style={[styles.ctrlIcon, styles.inactive]}
@@ -111,6 +118,11 @@ const Btn = ({
       style={styles.ctrl}
       onPress={onPress}
       onLongPress={onLongPress}>
+      {notificationCount ? (
+        <View style={styles.ctrlCount}>
+          <Text style={styles.ctrlCountLabel}>{notificationCount}</Text>
+        </View>
+      ) : undefined}
       <IconEl size={21} style={styles.ctrlIcon} icon={icon} />
     </TouchableOpacity>
   )
@@ -250,7 +262,11 @@ export const MobileShell: React.FC = observer(() => {
           onLongPress={onLongPressForward}
         />
         <Btn icon="house" onPress={onPressHome} />
-        <Btn icon={['far', 'bell']} onPress={onPressNotifications} />
+        <Btn
+          icon={['far', 'bell']}
+          onPress={onPressNotifications}
+          notificationCount={store.me.notificationCount}
+        />
         <Btn icon="bars" onPress={onPressTabs} />
       </View>
       <Modal />
@@ -392,6 +408,19 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 15,
     paddingBottom: 15,
+  },
+  ctrlCount: {
+    position: 'absolute',
+    left: 46,
+    top: 10,
+    backgroundColor: colors.pink3,
+    paddingHorizontal: 3,
+    borderRadius: 3,
+  },
+  ctrlCountLabel: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: colors.white,
   },
   ctrlIcon: {
     marginLeft: 'auto',
