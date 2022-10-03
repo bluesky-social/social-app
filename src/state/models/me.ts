@@ -6,6 +6,7 @@ export class MeModel {
   name?: string
   displayName?: string
   description?: string
+  notificationCount: number = 0
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {rootStore: false}, {autoBind: true})
@@ -16,6 +17,7 @@ export class MeModel {
     this.name = undefined
     this.displayName = undefined
     this.description = undefined
+    this.notificationCount = 0
   }
 
   async load() {
@@ -38,5 +40,12 @@ export class MeModel {
     } else {
       this.clear()
     }
+  }
+
+  async fetchStateUpdate() {
+    const res = await this.rootStore.api.todo.social.getNotificationCount({})
+    runInAction(() => {
+      this.notificationCount = res.data.count
+    })
   }
 }

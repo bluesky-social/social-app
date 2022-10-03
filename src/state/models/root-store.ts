@@ -38,6 +38,17 @@ export class RootStoreModel {
     return res.data.did
   }
 
+  async fetchStateUpdate() {
+    if (!this.session.isAuthed) {
+      return
+    }
+    try {
+      await this.me.fetchStateUpdate()
+    } catch (e) {
+      console.error('Failed to fetch latest state', e)
+    }
+  }
+
   serialize(): unknown {
     return {
       session: this.session.serialize(),

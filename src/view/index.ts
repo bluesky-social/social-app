@@ -38,6 +38,7 @@ import {faReply} from '@fortawesome/free-solid-svg-icons/faReply'
 import {faRetweet} from '@fortawesome/free-solid-svg-icons/faRetweet'
 import {faUser} from '@fortawesome/free-regular-svg-icons/faUser'
 import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers'
+import {faUserPlus} from '@fortawesome/free-solid-svg-icons/faUserPlus'
 import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
 import {faX} from '@fortawesome/free-solid-svg-icons/faX'
 
@@ -81,6 +82,7 @@ export function setup() {
     faShield,
     faUser,
     faUsers,
+    faUserPlus,
     faTicket,
     faX,
   )

@@ -21,6 +21,7 @@ import * as TodoSocialBadge from './types/todo/social/badge';
 import * as TodoSocialFollow from './types/todo/social/follow';
 import * as TodoSocialGetFeed from './types/todo/social/getFeed';
 import * as TodoSocialGetLikedBy from './types/todo/social/getLikedBy';
+import * as TodoSocialGetNotificationCount from './types/todo/social/getNotificationCount';
 import * as TodoSocialGetNotifications from './types/todo/social/getNotifications';
 import * as TodoSocialGetPostThread from './types/todo/social/getPostThread';
 import * as TodoSocialGetProfile from './types/todo/social/getProfile';
@@ -30,6 +31,7 @@ import * as TodoSocialGetUserFollows from './types/todo/social/getUserFollows';
 import * as TodoSocialLike from './types/todo/social/like';
 import * as TodoSocialMediaEmbed from './types/todo/social/mediaEmbed';
 import * as TodoSocialPost from './types/todo/social/post';
+import * as TodoSocialPostNotificationsSeen from './types/todo/social/postNotificationsSeen';
 import * as TodoSocialProfile from './types/todo/social/profile';
 import * as TodoSocialRepost from './types/todo/social/repost';
 export * as TodoAdxCreateAccount from './types/todo/adx/createAccount';
@@ -54,6 +56,7 @@ export * as TodoSocialBadge from './types/todo/social/badge';
 export * as TodoSocialFollow from './types/todo/social/follow';
 export * as TodoSocialGetFeed from './types/todo/social/getFeed';
 export * as TodoSocialGetLikedBy from './types/todo/social/getLikedBy';
+export * as TodoSocialGetNotificationCount from './types/todo/social/getNotificationCount';
 export * as TodoSocialGetNotifications from './types/todo/social/getNotifications';
 export * as TodoSocialGetPostThread from './types/todo/social/getPostThread';
 export * as TodoSocialGetProfile from './types/todo/social/getProfile';
@@ -63,6 +66,7 @@ export * as TodoSocialGetUserFollows from './types/todo/social/getUserFollows';
 export * as TodoSocialLike from './types/todo/social/like';
 export * as TodoSocialMediaEmbed from './types/todo/social/mediaEmbed';
 export * as TodoSocialPost from './types/todo/social/post';
+export * as TodoSocialPostNotificationsSeen from './types/todo/social/postNotificationsSeen';
 export * as TodoSocialProfile from './types/todo/social/profile';
 export * as TodoSocialRepost from './types/todo/social/repost';
 export declare class Client {
@@ -119,12 +123,14 @@ export declare class SocialNS {
     constructor(service: ServiceClient);
     getFeed(params: TodoSocialGetFeed.QueryParams, data?: TodoSocialGetFeed.InputSchema, opts?: TodoSocialGetFeed.CallOptions): Promise<TodoSocialGetFeed.Response>;
     getLikedBy(params: TodoSocialGetLikedBy.QueryParams, data?: TodoSocialGetLikedBy.InputSchema, opts?: TodoSocialGetLikedBy.CallOptions): Promise<TodoSocialGetLikedBy.Response>;
+    getNotificationCount(params: TodoSocialGetNotificationCount.QueryParams, data?: TodoSocialGetNotificationCount.InputSchema, opts?: TodoSocialGetNotificationCount.CallOptions): Promise<TodoSocialGetNotificationCount.Response>;
     getNotifications(params: TodoSocialGetNotifications.QueryParams, data?: TodoSocialGetNotifications.InputSchema, opts?: TodoSocialGetNotifications.CallOptions): Promise<TodoSocialGetNotifications.Response>;
     getPostThread(params: TodoSocialGetPostThread.QueryParams, data?: TodoSocialGetPostThread.InputSchema, opts?: TodoSocialGetPostThread.CallOptions): Promise<TodoSocialGetPostThread.Response>;
     getProfile(params: TodoSocialGetProfile.QueryParams, data?: TodoSocialGetProfile.InputSchema, opts?: TodoSocialGetProfile.CallOptions): Promise<TodoSocialGetProfile.Response>;
     getRepostedBy(params: TodoSocialGetRepostedBy.QueryParams, data?: TodoSocialGetRepostedBy.InputSchema, opts?: TodoSocialGetRepostedBy.CallOptions): Promise<TodoSocialGetRepostedBy.Response>;
     getUserFollowers(params: TodoSocialGetUserFollowers.QueryParams, data?: TodoSocialGetUserFollowers.InputSchema, opts?: TodoSocialGetUserFollowers.CallOptions): Promise<TodoSocialGetUserFollowers.Response>;
     getUserFollows(params: TodoSocialGetUserFollows.QueryParams, data?: TodoSocialGetUserFollows.InputSchema, opts?: TodoSocialGetUserFollows.CallOptions): Promise<TodoSocialGetUserFollows.Response>;
+    postNotificationsSeen(params: TodoSocialPostNotificationsSeen.QueryParams, data?: TodoSocialPostNotificationsSeen.InputSchema, opts?: TodoSocialPostNotificationsSeen.CallOptions): Promise<TodoSocialPostNotificationsSeen.Response>;
 }
 export declare class BadgeRecord {
     _service: ServiceClient;
