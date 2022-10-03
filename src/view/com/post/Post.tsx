@@ -15,6 +15,7 @@ import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {ComposePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
+import {RichText} from '../util/RichText'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {ago} from '../../lib/strings'
@@ -115,9 +116,13 @@ export const Post = observer(function Post({uri}: {uri: string}) {
               </Link>
             </View>
           )}
-          <Text style={[styles.postText, s.f15, s['lh15-1.3']]}>
-            {record.text}
-          </Text>
+          <View style={styles.postTextContainer}>
+            <RichText
+              text={record.text}
+              entities={record.entities}
+              style={[s.f15, s['lh15-1.3']]}
+            />
+          </View>
           <View style={styles.ctrls}>
             <TouchableOpacity style={styles.ctrl} onPress={onPressReply}>
               <FontAwesomeIcon
@@ -195,7 +200,10 @@ const styles = StyleSheet.create({
   metaItem: {
     paddingRight: 5,
   },
-  postText: {
+  postTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
     paddingBottom: 8,
   },
   ctrls: {

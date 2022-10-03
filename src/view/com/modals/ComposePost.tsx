@@ -79,7 +79,7 @@ export function Component({replyTo}: {replyTo?: string}) {
 
   const textDecorated = useMemo(() => {
     return (text || '').split(/(\s)/g).map((item, i) => {
-      if (/@[a-zA-Z0-9]+/g.test(item)) {
+      if (/^@[a-zA-Z0-9\.-]+$/g.test(item)) {
         return (
           <Text key={i} style={{color: colors.blue3}}>
             {item}

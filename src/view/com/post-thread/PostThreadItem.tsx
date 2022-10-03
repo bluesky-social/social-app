@@ -1,13 +1,14 @@
 import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import Svg, {Line, Circle} from 'react-native-svg'
+import Svg, {Line} from 'react-native-svg'
 import {AdxUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/types/todo/social/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
 import {ComposePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
+import {RichText} from '../util/RichText'
 import {PostDropdownBtn} from '../util/DropdownBtn'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../lib/strings'
@@ -144,9 +145,14 @@ export const PostThreadItem = observer(function PostThreadItem({
           </View>
         </View>
         <View style={[s.pl10, s.pr10, s.pb10]}>
-          <Text style={[styles.postText, styles.postTextLarge]}>
-            {record.text}
-          </Text>
+          <View
+            style={[styles.postTextContainer, styles.postTextLargeContainer]}>
+            <RichText
+              text={record.text}
+              entities={record.entities}
+              style={[styles.postText, styles.postTextLarge]}
+            />
+          </View>
           {item._isHighlightedPost && hasEngagement ? (
             <View style={styles.expandedInfo}>
               {item.repostCount ? (
@@ -266,9 +272,13 @@ export const PostThreadItem = observer(function PostThreadItem({
                 />
               </PostDropdownBtn>
             </View>
-            <Text style={[styles.postText, s.f15, s['lh15-1.3']]}>
-              {record.text}
-            </Text>
+            <View style={styles.postTextContainer}>
+              <RichText
+                text={record.text}
+                entities={record.entities}
+                style={[styles.postText, s.f15, s['lh15-1.3']]}
+              />
+            </View>
             <Ctrls />
           </View>
         </View>
@@ -325,15 +335,22 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   postText: {
-    paddingBottom: 8,
     fontFamily: 'Helvetica Neue',
   },
+  postTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    paddingBottom: 8,
+  },
   postTextLarge: {
-    paddingLeft: 4,
-    paddingBottom: 20,
     fontSize: 24,
     lineHeight: 32,
     fontWeight: '300',
+  },
+  postTextLargeContainer: {
+    paddingLeft: 4,
+    paddingBottom: 20,
   },
   expandedInfo: {
     flexDirection: 'row',
