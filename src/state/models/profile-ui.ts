@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from './root-store'
 import {ProfileViewModel} from './profile-view'
-import {FeedViewModel} from './feed-view'
+import {FeedModel} from './feed-view'
 import {BadgesViewModel} from './badges-view'
 
 export const SECTION_IDS = {
@@ -19,7 +19,7 @@ export class ProfileUiModel {
 
   // data
   profile: ProfileViewModel
-  feed: FeedViewModel
+  feed: FeedModel
   badges: BadgesViewModel
 
   // ui state
@@ -38,11 +38,14 @@ export class ProfileUiModel {
       {autoBind: true},
     )
     this.profile = new ProfileViewModel(rootStore, {user: params.user})
-    this.feed = new FeedViewModel(rootStore, {author: params.user, limit: 10})
+    this.feed = new FeedModel(rootStore, 'author', {
+      author: params.user,
+      limit: 10,
+    })
     this.badges = new BadgesViewModel(rootStore)
   }
 
-  get currentView(): FeedViewModel | BadgesViewModel {
+  get currentView(): FeedModel | BadgesViewModel {
     if (this.selectedViewIndex === SECTION_IDS.POSTS) {
       return this.feed
     }

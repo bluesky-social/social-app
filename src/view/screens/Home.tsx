@@ -4,14 +4,14 @@ import {observer} from 'mobx-react-lite'
 import {Feed} from '../com/posts/Feed'
 import {FAB} from '../com/util/FloatingActionButton'
 import {useStores} from '../../state'
-import {FeedViewModel} from '../../state/models/feed-view'
+import {FeedModel} from '../../state/models/feed-view'
 import {ComposePostModel} from '../../state/models/shell'
 import {ScreenParams} from '../routes'
 import {s} from '../lib/styles'
 
 export const Home = observer(function Home({visible}: ScreenParams) {
   const [hasSetup, setHasSetup] = useState<boolean>(false)
-  const [feedView, setFeedView] = useState<FeedViewModel | undefined>()
+  const [feedView, setFeedView] = useState<FeedModel | undefined>()
   const store = useStores()
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export const Home = observer(function Home({visible}: ScreenParams) {
     } else {
       store.nav.setTitle('Home')
       console.log('Fetching home feed')
-      const newFeedView = new FeedViewModel(store, {})
+      const newFeedView = new FeedModel(store, 'home', {})
       setFeedView(newFeedView)
       newFeedView.setup().then(() => setHasSetup(true))
     }
