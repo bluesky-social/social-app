@@ -1,9 +1,10 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import * as GetFeedView from '../../third-party/api/src/types/todo/social/getFeed'
+import * as GetHomeFeed from '../../third-party/api/src/types/todo/social/getHomeFeed'
+import * as GetAuthorFeed from '../../third-party/api/src/types/todo/social/getAuthorFeed'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
-export class FeedViewItemMyStateModel {
+export class FeedItemMyStateModel {
   repost?: string
   like?: string
 
@@ -12,37 +13,37 @@ export class FeedViewItemMyStateModel {
   }
 }
 
-export class FeedViewItemModel implements GetFeedView.FeedItem {
+export class FeedItemModel implements GetHomeFeed.FeedItem {
   // ui state
   _reactKey: string = ''
 
   // data
   cursor: string = ''
   uri: string = ''
-  author: GetFeedView.User = {did: '', name: '', displayName: ''}
-  repostedBy?: GetFeedView.User
+  author: GetHomeFeed.User = {did: '', name: '', displayName: ''}
+  repostedBy?: GetHomeFeed.User
   record: Record<string, unknown> = {}
   embed?:
-    | GetFeedView.RecordEmbed
-    | GetFeedView.ExternalEmbed
-    | GetFeedView.UnknownEmbed
+    | GetHomeFeed.RecordEmbed
+    | GetHomeFeed.ExternalEmbed
+    | GetHomeFeed.UnknownEmbed
   replyCount: number = 0
   repostCount: number = 0
   likeCount: number = 0
   indexedAt: string = ''
-  myState = new FeedViewItemMyStateModel()
+  myState = new FeedItemMyStateModel()
 
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
-    v: GetFeedView.FeedItem,
+    v: GetHomeFeed.FeedItem,
   ) {
     makeAutoObservable(this, {rootStore: false})
     this._reactKey = reactKey
     this.copy(v)
   }
 
-  copy(v: GetFeedView.FeedItem) {
+  copy(v: GetHomeFeed.FeedItem) {
     this.cursor = v.cursor
     this.uri = v.uri
     this.author = v.author
@@ -92,25 +93,26 @@ export class FeedViewItemModel implements GetFeedView.FeedItem {
   }
 }
 
-export class FeedViewModel {
+export class FeedModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   hasReachedEnd = false
   error = ''
-  params: GetFeedView.QueryParams
+  params: GetHomeFeed.QueryParams | GetAuthorFeed.QueryParams
   _loadPromise: Promise<void> | undefined
   _loadMorePromise: Promise<void> | undefined
   _loadLatestPromise: Promise<void> | undefined
   _updatePromise: Promise<void> | undefined
 
   // data
-  feed: FeedViewItemModel[] = []
+  feed: FeedItemModel[] = []
 
   constructor(
     public rootStore: RootStoreModel,
-    params: GetFeedView.QueryParams,
+    public feedType: 'home' | 'author',
+    params: GetHomeFeed.QueryParams | GetAuthorFeed.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -245,7 +247,7 @@ export class FeedViewModel {
   private async _initialLoad(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.todo.social.getFeed(this.params)
+      const res = await this._getFeed()
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -256,7 +258,7 @@ export class FeedViewModel {
   private async _loadLatest() {
     this._xLoading()
     try {
-      const res = await this.rootStore.api.todo.social.getFeed(this.params)
+      const res = await this._getFeed()
       this._prependAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -267,10 +269,9 @@ export class FeedViewModel {
   private async _loadMore() {
     this._xLoading()
     try {
-      const params = Object.assign({}, this.params, {
+      const res = await this._getFeed({
         before: this.loadMoreCursor,
       })
-      const res = await this.rootStore.api.todo.social.getFeed(params)
       if (res.data.feed.length === 0) {
         runInAction(() => {
           this.hasReachedEnd = true
@@ -290,11 +291,10 @@ export class FeedViewModel {
     let cursor = undefined
     try {
       do {
-        const res: GetFeedView.Response =
-          await this.rootStore.api.todo.social.getFeed({
-            before: cursor,
-            limit: Math.min(numToFetch, 100),
-          })
+        const res: GetHomeFeed.Response = await this._getFeed({
+          before: cursor,
+          limit: Math.min(numToFetch, 100),
+        })
         if (res.data.feed.length === 0) {
           break // sanity check
         }
@@ -309,25 +309,25 @@ export class FeedViewModel {
     }
   }
 
-  private _replaceAll(res: GetFeedView.Response) {
+  private _replaceAll(res: GetHomeFeed.Response) {
     this.feed.length = 0
     this.hasReachedEnd = false
     this._appendAll(res)
   }
 
-  private _appendAll(res: GetFeedView.Response) {
+  private _appendAll(res: GetHomeFeed.Response) {
     let counter = this.feed.length
     for (const item of res.data.feed) {
       this._append(counter++, item)
     }
   }
 
-  private _append(keyId: number, item: GetFeedView.FeedItem) {
+  private _append(keyId: number, item: GetHomeFeed.FeedItem) {
     // TODO: validate .record
-    this.feed.push(new FeedViewItemModel(this.rootStore, `item-${keyId}`, item))
+    this.feed.push(new FeedItemModel(this.rootStore, `item-${keyId}`, item))
   }
 
-  private _prependAll(res: GetFeedView.Response) {
+  private _prependAll(res: GetHomeFeed.Response) {
     let counter = this.feed.length
     for (const item of res.data.feed) {
       if (this.feed.find(item2 => item2.uri === item.uri)) {
@@ -337,14 +337,12 @@ export class FeedViewModel {
     }
   }
 
-  private _prepend(keyId: number, item: GetFeedView.FeedItem) {
+  private _prepend(keyId: number, item: GetHomeFeed.FeedItem) {
     // TODO: validate .record
-    this.feed.unshift(
-      new FeedViewItemModel(this.rootStore, `item-${keyId}`, item),
-    )
+    this.feed.unshift(new FeedItemModel(this.rootStore, `item-${keyId}`, item))
   }
 
-  private _updateAll(res: GetFeedView.Response) {
+  private _updateAll(res: GetHomeFeed.Response) {
     for (const item of res.data.feed) {
       const existingItem = this.feed.find(
         // this find function has a key subtley- the indexedAt comparison
@@ -355,6 +353,21 @@ export class FeedViewModel {
       if (existingItem) {
         existingItem.copy(item)
       }
+    }
+  }
+
+  protected _getFeed(
+    params: GetHomeFeed.QueryParams | GetAuthorFeed.QueryParams = {},
+  ): Promise<GetHomeFeed.Response | GetAuthorFeed.Response> {
+    params = Object.assign({}, this.params, params)
+    if (this.feedType === 'home') {
+      return this.rootStore.api.todo.social.getHomeFeed(
+        params as GetHomeFeed.QueryParams,
+      )
+    } else {
+      return this.rootStore.api.todo.social.getAuthorFeed(
+        params as GetAuthorFeed.QueryParams,
+      )
     }
   }
 }

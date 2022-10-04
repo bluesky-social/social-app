@@ -6967,7 +6967,8 @@ __export(src_exports, {
   TodoNS: () => TodoNS,
   TodoSocialBadge: () => badge_exports,
   TodoSocialFollow: () => follow_exports,
-  TodoSocialGetFeed: () => getFeed_exports,
+  TodoSocialGetAuthorFeed: () => getAuthorFeed_exports,
+  TodoSocialGetHomeFeed: () => getHomeFeed_exports,
   TodoSocialGetLikedBy: () => getLikedBy_exports,
   TodoSocialGetNotificationCount: () => getNotificationCount_exports,
   TodoSocialGetNotifications: () => getNotifications_exports,
@@ -10905,11 +10906,178 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.social.getFeed",
+    id: "todo.social.getAuthorFeed",
     type: "query",
-    description: "A computed view of the home feed or a user's feed",
+    description: "A view of a user's feed",
     parameters: {
       author: {
+        type: "string",
+        required: true
+      },
+      limit: {
+        type: "number",
+        maximum: 100
+      },
+      before: {
+        type: "string"
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["feed"],
+        properties: {
+          feed: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/feedItem"
+            }
+          }
+        },
+        $defs: {
+          feedItem: {
+            type: "object",
+            required: [
+              "cursor",
+              "uri",
+              "author",
+              "record",
+              "replyCount",
+              "repostCount",
+              "likeCount",
+              "indexedAt"
+            ],
+            properties: {
+              cursor: {
+                type: "string"
+              },
+              uri: {
+                type: "string"
+              },
+              author: {
+                $ref: "#/$defs/user"
+              },
+              repostedBy: {
+                $ref: "#/$defs/user"
+              },
+              record: {
+                type: "object"
+              },
+              embed: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/recordEmbed"
+                  },
+                  {
+                    $ref: "#/$defs/externalEmbed"
+                  },
+                  {
+                    $ref: "#/$defs/unknownEmbed"
+                  }
+                ]
+              },
+              replyCount: {
+                type: "number"
+              },
+              repostCount: {
+                type: "number"
+              },
+              likeCount: {
+                type: "number"
+              },
+              indexedAt: {
+                type: "string",
+                format: "date-time"
+              },
+              myState: {
+                type: "object",
+                properties: {
+                  repost: {
+                    type: "string"
+                  },
+                  like: {
+                    type: "string"
+                  }
+                }
+              }
+            }
+          },
+          user: {
+            type: "object",
+            required: ["did", "name"],
+            properties: {
+              did: {
+                type: "string"
+              },
+              name: {
+                type: "string"
+              },
+              displayName: {
+                type: "string",
+                maxLength: 64
+              }
+            }
+          },
+          recordEmbed: {
+            type: "object",
+            required: ["type", "author", "record"],
+            properties: {
+              type: {
+                const: "record"
+              },
+              author: {
+                $ref: "#/$defs/user"
+              },
+              record: {
+                type: "object"
+              }
+            }
+          },
+          externalEmbed: {
+            type: "object",
+            required: ["type", "uri", "title", "description", "imageUri"],
+            properties: {
+              type: {
+                const: "external"
+              },
+              uri: {
+                type: "string"
+              },
+              title: {
+                type: "string"
+              },
+              description: {
+                type: "string"
+              },
+              imageUri: {
+                type: "string"
+              }
+            }
+          },
+          unknownEmbed: {
+            type: "object",
+            required: ["type"],
+            properties: {
+              type: {
+                type: "string",
+                not: {
+                  enum: ["record", "external"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    lexicon: 1,
+    id: "todo.social.getHomeFeed",
+    type: "query",
+    description: "A view of the user's home feed",
+    parameters: {
+      algorithm: {
         type: "string"
       },
       limit: {
@@ -10937,6 +11105,7 @@ var methodSchemas = [
           feedItem: {
             type: "object",
             required: [
+              "cursor",
               "uri",
               "author",
               "record",
@@ -11939,9 +12108,9 @@ function toKnownErr18(e) {
   return e;
 }
 
-// src/types/todo/social/getFeed.ts
-var getFeed_exports = {};
-__export(getFeed_exports, {
+// src/types/todo/social/getAuthorFeed.ts
+var getAuthorFeed_exports = {};
+__export(getAuthorFeed_exports, {
   toKnownErr: () => toKnownErr19
 });
 function toKnownErr19(e) {
@@ -11950,9 +12119,9 @@ function toKnownErr19(e) {
   return e;
 }
 
-// src/types/todo/social/getLikedBy.ts
-var getLikedBy_exports = {};
-__export(getLikedBy_exports, {
+// src/types/todo/social/getHomeFeed.ts
+var getHomeFeed_exports = {};
+__export(getHomeFeed_exports, {
   toKnownErr: () => toKnownErr20
 });
 function toKnownErr20(e) {
@@ -11961,9 +12130,9 @@ function toKnownErr20(e) {
   return e;
 }
 
-// src/types/todo/social/getNotificationCount.ts
-var getNotificationCount_exports = {};
-__export(getNotificationCount_exports, {
+// src/types/todo/social/getLikedBy.ts
+var getLikedBy_exports = {};
+__export(getLikedBy_exports, {
   toKnownErr: () => toKnownErr21
 });
 function toKnownErr21(e) {
@@ -11972,9 +12141,9 @@ function toKnownErr21(e) {
   return e;
 }
 
-// src/types/todo/social/getNotifications.ts
-var getNotifications_exports = {};
-__export(getNotifications_exports, {
+// src/types/todo/social/getNotificationCount.ts
+var getNotificationCount_exports = {};
+__export(getNotificationCount_exports, {
   toKnownErr: () => toKnownErr22
 });
 function toKnownErr22(e) {
@@ -11983,9 +12152,9 @@ function toKnownErr22(e) {
   return e;
 }
 
-// src/types/todo/social/getPostThread.ts
-var getPostThread_exports = {};
-__export(getPostThread_exports, {
+// src/types/todo/social/getNotifications.ts
+var getNotifications_exports = {};
+__export(getNotifications_exports, {
   toKnownErr: () => toKnownErr23
 });
 function toKnownErr23(e) {
@@ -11994,9 +12163,9 @@ function toKnownErr23(e) {
   return e;
 }
 
-// src/types/todo/social/getProfile.ts
-var getProfile_exports = {};
-__export(getProfile_exports, {
+// src/types/todo/social/getPostThread.ts
+var getPostThread_exports = {};
+__export(getPostThread_exports, {
   toKnownErr: () => toKnownErr24
 });
 function toKnownErr24(e) {
@@ -12005,9 +12174,9 @@ function toKnownErr24(e) {
   return e;
 }
 
-// src/types/todo/social/getRepostedBy.ts
-var getRepostedBy_exports = {};
-__export(getRepostedBy_exports, {
+// src/types/todo/social/getProfile.ts
+var getProfile_exports = {};
+__export(getProfile_exports, {
   toKnownErr: () => toKnownErr25
 });
 function toKnownErr25(e) {
@@ -12016,9 +12185,9 @@ function toKnownErr25(e) {
   return e;
 }
 
-// src/types/todo/social/getUserFollowers.ts
-var getUserFollowers_exports = {};
-__export(getUserFollowers_exports, {
+// src/types/todo/social/getRepostedBy.ts
+var getRepostedBy_exports = {};
+__export(getRepostedBy_exports, {
   toKnownErr: () => toKnownErr26
 });
 function toKnownErr26(e) {
@@ -12027,9 +12196,9 @@ function toKnownErr26(e) {
   return e;
 }
 
-// src/types/todo/social/getUserFollows.ts
-var getUserFollows_exports = {};
-__export(getUserFollows_exports, {
+// src/types/todo/social/getUserFollowers.ts
+var getUserFollowers_exports = {};
+__export(getUserFollowers_exports, {
   toKnownErr: () => toKnownErr27
 });
 function toKnownErr27(e) {
@@ -12038,12 +12207,23 @@ function toKnownErr27(e) {
   return e;
 }
 
-// src/types/todo/social/postNotificationsSeen.ts
-var postNotificationsSeen_exports = {};
-__export(postNotificationsSeen_exports, {
+// src/types/todo/social/getUserFollows.ts
+var getUserFollows_exports = {};
+__export(getUserFollows_exports, {
   toKnownErr: () => toKnownErr28
 });
 function toKnownErr28(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/todo/social/postNotificationsSeen.ts
+var postNotificationsSeen_exports = {};
+__export(postNotificationsSeen_exports, {
+  toKnownErr: () => toKnownErr29
+});
+function toKnownErr29(e) {
   if (e instanceof XRPCError) {
   }
   return e;
@@ -12205,54 +12385,59 @@ var SocialNS = class {
     this.profile = new ProfileRecord(service);
     this.repost = new RepostRecord(service);
   }
-  getFeed(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getFeed", params, data, opts).catch((e) => {
+  getAuthorFeed(params, data, opts) {
+    return this._service.xrpc.call("todo.social.getAuthorFeed", params, data, opts).catch((e) => {
       throw toKnownErr19(e);
+    });
+  }
+  getHomeFeed(params, data, opts) {
+    return this._service.xrpc.call("todo.social.getHomeFeed", params, data, opts).catch((e) => {
+      throw toKnownErr20(e);
     });
   }
   getLikedBy(params, data, opts) {
     return this._service.xrpc.call("todo.social.getLikedBy", params, data, opts).catch((e) => {
-      throw toKnownErr20(e);
+      throw toKnownErr21(e);
     });
   }
   getNotificationCount(params, data, opts) {
     return this._service.xrpc.call("todo.social.getNotificationCount", params, data, opts).catch((e) => {
-      throw toKnownErr21(e);
+      throw toKnownErr22(e);
     });
   }
   getNotifications(params, data, opts) {
     return this._service.xrpc.call("todo.social.getNotifications", params, data, opts).catch((e) => {
-      throw toKnownErr22(e);
+      throw toKnownErr23(e);
     });
   }
   getPostThread(params, data, opts) {
     return this._service.xrpc.call("todo.social.getPostThread", params, data, opts).catch((e) => {
-      throw toKnownErr23(e);
+      throw toKnownErr24(e);
     });
   }
   getProfile(params, data, opts) {
     return this._service.xrpc.call("todo.social.getProfile", params, data, opts).catch((e) => {
-      throw toKnownErr24(e);
+      throw toKnownErr25(e);
     });
   }
   getRepostedBy(params, data, opts) {
     return this._service.xrpc.call("todo.social.getRepostedBy", params, data, opts).catch((e) => {
-      throw toKnownErr25(e);
+      throw toKnownErr26(e);
     });
   }
   getUserFollowers(params, data, opts) {
     return this._service.xrpc.call("todo.social.getUserFollowers", params, data, opts).catch((e) => {
-      throw toKnownErr26(e);
+      throw toKnownErr27(e);
     });
   }
   getUserFollows(params, data, opts) {
     return this._service.xrpc.call("todo.social.getUserFollows", params, data, opts).catch((e) => {
-      throw toKnownErr27(e);
+      throw toKnownErr28(e);
     });
   }
   postNotificationsSeen(params, data, opts) {
     return this._service.xrpc.call("todo.social.postNotificationsSeen", params, data, opts).catch((e) => {
-      throw toKnownErr28(e);
+      throw toKnownErr29(e);
     });
   }
 };
@@ -12619,7 +12804,8 @@ var RepostRecord = class {
   TodoNS,
   TodoSocialBadge,
   TodoSocialFollow,
-  TodoSocialGetFeed,
+  TodoSocialGetAuthorFeed,
+  TodoSocialGetHomeFeed,
   TodoSocialGetLikedBy,
   TodoSocialGetNotificationCount,
   TodoSocialGetNotifications,
