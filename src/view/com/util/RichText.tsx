@@ -63,7 +63,7 @@ function* toSegments(text: string, entities: Entity[]) {
     let currEnt = entities[i]
     if (cursor < currEnt.index[0]) {
       yield text.slice(cursor, currEnt.index[0])
-    } else {
+    } else if (cursor > currEnt.index[0]) {
       i++
       continue
     }
