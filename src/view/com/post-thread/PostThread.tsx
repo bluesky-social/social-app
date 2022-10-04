@@ -70,7 +70,11 @@ export const PostThread = observer(function PostThread({uri}: {uri: string}) {
   // =
   const posts = view.thread ? Array.from(flattenThread(view.thread)) : []
   const renderItem = ({item}: {item: PostThreadViewPostModel}) => (
-    <PostThreadItem item={item} onPressShare={onPressShare} />
+    <PostThreadItem
+      item={item}
+      onPressShare={onPressShare}
+      onPostReply={onRefresh}
+    />
   )
   return (
     <FlatList

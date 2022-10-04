@@ -9,8 +9,6 @@ Paul's todo list
 - Private beta
   - Users list
   - Firehose
-- Composer
-  - Update the view after creating a post
 - Linking
   - Web linking
   - App linking

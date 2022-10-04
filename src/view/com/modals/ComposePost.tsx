@@ -16,7 +16,13 @@ const WARNING_TEXT_LENGTH = 200
 const DANGER_TEXT_LENGTH = 255
 export const snapPoints = ['100%']
 
-export function Component({replyTo}: {replyTo?: string}) {
+export function Component({
+  replyTo,
+  onPost,
+}: {
+  replyTo?: string
+  onPost?: () => void
+}) {
   const store = useStores()
   const [error, setError] = useState('')
   const [text, setText] = useState('')
@@ -72,6 +78,7 @@ export function Component({replyTo}: {replyTo?: string}) {
       )
       return
     }
+    onPost?.()
     store.shell.closeModal()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`, {
       duration: Toast.durations.LONG,

@@ -102,6 +102,7 @@ export class FeedViewModel {
   params: GetFeedView.QueryParams
   _loadPromise: Promise<void> | undefined
   _loadMorePromise: Promise<void> | undefined
+  _loadLatestPromise: Promise<void> | undefined
   _updatePromise: Promise<void> | undefined
 
   // data
@@ -118,6 +119,7 @@ export class FeedViewModel {
         params: false,
         _loadPromise: false,
         _loadMorePromise: false,
+        _loadLatestPromise: false,
         _updatePromise: false,
       },
       {autoBind: true},
@@ -181,6 +183,19 @@ export class FeedViewModel {
   }
 
   /**
+   * Load more posts to the start of the feed
+   */
+  async loadLatest() {
+    if (this._loadLatestPromise) {
+      return this._loadLatestPromise
+    }
+    await this._pendingWork()
+    this._loadLatestPromise = this._loadLatest()
+    await this._loadLatestPromise
+    this._loadLatestPromise = undefined
+  }
+
+  /**
    * Update content in-place
    */
   async update() {
@@ -219,6 +234,9 @@ export class FeedViewModel {
     if (this._loadMorePromise) {
       await this._loadMorePromise
     }
+    if (this._loadLatestPromise) {
+      await this._loadLatestPromise
+    }
     if (this._updatePromise) {
       await this._updatePromise
     }
@@ -229,6 +247,17 @@ export class FeedViewModel {
     try {
       const res = await this.rootStore.api.todo.social.getFeed(this.params)
       this._replaceAll(res)
+      this._xIdle()
+    } catch (e: any) {
+      this._xIdle(`Failed to load feed: ${e.toString()}`)
+    }
+  }
+
+  private async _loadLatest() {
+    this._xLoading()
+    try {
+      const res = await this.rootStore.api.todo.social.getFeed(this.params)
+      this._prependAll(res)
       this._xIdle()
     } catch (e: any) {
       this._xIdle(`Failed to load feed: ${e.toString()}`)
@@ -296,6 +325,23 @@ export class FeedViewModel {
   private _append(keyId: number, item: GetFeedView.FeedItem) {
     // TODO: validate .record
     this.feed.push(new FeedViewItemModel(this.rootStore, `item-${keyId}`, item))
+  }
+
+  private _prependAll(res: GetFeedView.Response) {
+    let counter = this.feed.length
+    for (const item of res.data.feed) {
+      if (this.feed.find(item2 => item2.uri === item.uri)) {
+        return // stop here - we've hit a post we already ahve
+      }
+      this._prepend(counter++, item)
+    }
+  }
+
+  private _prepend(keyId: number, item: GetFeedView.FeedItem) {
+    // TODO: validate .record
+    this.feed.unshift(
+      new FeedViewItemModel(this.rootStore, `item-${keyId}`, item),
+    )
   }
 
   private _updateAll(res: GetFeedView.Response) {

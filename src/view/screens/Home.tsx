@@ -31,7 +31,10 @@ export const Home = observer(function Home({visible}: ScreenParams) {
   }, [visible, store])
 
   const onComposePress = () => {
-    store.shell.openModal(new ComposePostModel())
+    store.shell.openModal(new ComposePostModel({onPost: onCreatePost}))
+  }
+  const onCreatePost = () => {
+    feedView?.loadLatest()
   }
 
   return (

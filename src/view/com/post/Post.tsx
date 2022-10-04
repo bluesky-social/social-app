@@ -72,7 +72,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
     replyHref = `/profile/${urip.hostname}/post/${urip.recordKey}`
   }
   const onPressReply = () => {
-    store.shell.openModal(new ComposePostModel(item.uri))
+    store.shell.openModal(new ComposePostModel({replyTo: item.uri}))
   }
   const onPressToggleRepost = () => {
     item

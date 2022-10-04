@@ -34,11 +34,19 @@ export class SharePostModel {
   }
 }
 
+export interface ComposePostModelOpts {
+  replyTo?: string
+  onPost?: () => void
+}
 export class ComposePostModel {
   name = 'compose-post'
+  replyTo?: string
+  onPost?: () => void
 
-  constructor(public replyTo?: string) {
+  constructor(opts?: ComposePostModelOpts) {
     makeAutoObservable(this)
+    this.replyTo = opts?.replyTo
+    this.onPost = opts?.onPost
   }
 }
 
