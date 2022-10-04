@@ -1,17 +1,21 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {Text, View, FlatList} from 'react-native'
-import {FeedViewModel, FeedViewItemModel} from '../../../state/models/feed-view'
+import {Text, View, FlatList, StyleProp, ViewStyle} from 'react-native'
+import {FeedModel, FeedItemModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
 
-export const Feed = observer(function Feed({feed}: {feed: FeedViewModel}) {
+export const Feed = observer(function Feed({
+  feed,
+  style,
+}: {
+  feed: FeedModel
+  style?: StyleProp<ViewStyle>
+}) {
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your
   //   renderItem function renders components that follow React performance best practices
   //   like PureComponent, shouldComponentUpdate, etc
-  const renderItem = ({item}: {item: FeedViewItemModel}) => (
-    <FeedItem item={item} />
-  )
+  const renderItem = ({item}: {item: FeedItemModel}) => <FeedItem item={item} />
   const onRefresh = () => {
     feed.refresh().catch(err => console.error('Failed to refresh', err))
   }
@@ -19,7 +23,7 @@ export const Feed = observer(function Feed({feed}: {feed: FeedViewModel}) {
     feed.loadMore().catch(err => console.error('Failed to load more', err))
   }
   return (
-    <View>
+    <View style={style}>
       {feed.isLoading && !feed.isRefreshing && !feed.hasContent && (
         <Text>Loading...</Text>
       )}

@@ -36,14 +36,14 @@ export class FeedItemModel implements GetHomeFeed.FeedItem {
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
-    v: GetHomeFeed.FeedItem,
+    v: GetHomeFeed.FeedItem | GetAuthorFeed.FeedItem,
   ) {
     makeAutoObservable(this, {rootStore: false})
     this._reactKey = reactKey
     this.copy(v)
   }
 
-  copy(v: GetHomeFeed.FeedItem) {
+  copy(v: GetHomeFeed.FeedItem | GetAuthorFeed.FeedItem) {
     this.cursor = v.cursor
     this.uri = v.uri
     this.author = v.author
@@ -309,25 +309,28 @@ export class FeedModel {
     }
   }
 
-  private _replaceAll(res: GetHomeFeed.Response) {
+  private _replaceAll(res: GetHomeFeed.Response | GetAuthorFeed.Response) {
     this.feed.length = 0
     this.hasReachedEnd = false
     this._appendAll(res)
   }
 
-  private _appendAll(res: GetHomeFeed.Response) {
+  private _appendAll(res: GetHomeFeed.Response | GetAuthorFeed.Response) {
     let counter = this.feed.length
     for (const item of res.data.feed) {
       this._append(counter++, item)
     }
   }
 
-  private _append(keyId: number, item: GetHomeFeed.FeedItem) {
+  private _append(
+    keyId: number,
+    item: GetHomeFeed.FeedItem | GetAuthorFeed.FeedItem,
+  ) {
     // TODO: validate .record
     this.feed.push(new FeedItemModel(this.rootStore, `item-${keyId}`, item))
   }
 
-  private _prependAll(res: GetHomeFeed.Response) {
+  private _prependAll(res: GetHomeFeed.Response | GetAuthorFeed.Response) {
     let counter = this.feed.length
     for (const item of res.data.feed) {
       if (this.feed.find(item2 => item2.uri === item.uri)) {
@@ -337,12 +340,15 @@ export class FeedModel {
     }
   }
 
-  private _prepend(keyId: number, item: GetHomeFeed.FeedItem) {
+  private _prepend(
+    keyId: number,
+    item: GetHomeFeed.FeedItem | GetAuthorFeed.FeedItem,
+  ) {
     // TODO: validate .record
     this.feed.unshift(new FeedItemModel(this.rootStore, `item-${keyId}`, item))
   }
 
-  private _updateAll(res: GetHomeFeed.Response) {
+  private _updateAll(res: GetHomeFeed.Response | GetAuthorFeed.Response) {
     for (const item of res.data.feed) {
       const existingItem = this.feed.find(
         // this find function has a key subtley- the indexedAt comparison
