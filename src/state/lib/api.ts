@@ -5,7 +5,7 @@
 
 // import {ReactNativeStore} from './auth'
 import AdxApi from '../../third-party/api'
-import {ServiceClient} from '../../third-party/api/src/index'
+import * as Profile from '../../third-party/api/src/types/todo/social/profile'
 import {AdxUri} from '../../third-party/uri'
 import {RootStoreModel} from '../models/root-store'
 import {extractEntities} from '../../view/lib/strings'
@@ -100,11 +100,29 @@ export async function unfollow(store: RootStoreModel, followUri: string) {
 }
 
 export async function updateProfile(
-  adx: ServiceClient,
-  user: string,
-  profile: bsky.Profile.Record,
+  store: RootStoreModel,
+  modifyFn: (existing?: Profile.Record) => Profile.Record,
 ) {
-  throw new Error('TODO')
+  const res = await store.api.todo.social.profile.list({
+    nameOrDid: store.me.did || '',
+  })
+  const existing = res.records[0]
+  if (existing) {
+    await store.api.todo.social.profile.put(
+      {
+        did: store.me.did || '',
+        tid: new AdxUri(existing.uri).recordKey,
+      },
+      modifyFn(existing.value),
+    )
+  } else {
+    await store.api.todo.social.profile.create(
+      {
+        did: store.me.did || '',
+      },
+      modifyFn(),
+    )
+  }
 }
 
 interface FetchHandlerResponse {
