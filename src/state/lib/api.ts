@@ -6,14 +6,9 @@
 // import {ReactNativeStore} from './auth'
 import AdxApi from '../../third-party/api'
 import {ServiceClient} from '../../third-party/api/src/index'
-import {
-  TextSlice,
-  Entity as Entities,
-} from '../../third-party/api/src/types/todo/social/post'
 import {AdxUri} from '../../third-party/uri'
 import {RootStoreModel} from '../models/root-store'
-
-type Entity = Entities[0]
+import {extractEntities} from '../../view/lib/strings'
 
 export function doPolyfill() {
   AdxApi.xrpc.fetch = fetchHandler
@@ -204,20 +199,3 @@ async function iterateAll(
     }
   } while (res.records.length === 100)
 }*/
-
-function extractEntities(text: string): Entity[] | undefined {
-  let match
-  let ents: Entity[] = []
-  const re = /(^|\s)@([a-zA-Z0-9\.-]+)(\b)/g
-  while ((match = re.exec(text))) {
-    ents.push({
-      type: 'mention',
-      value: match[2],
-      index: [
-        match.index + 1, // skip the (^|\s) but include the '@'
-        match.index + 2 + match[2].length,
-      ],
-    })
-  }
-  return ents.length > 0 ? ents : undefined
-}

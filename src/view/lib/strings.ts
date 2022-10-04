@@ -1,4 +1,7 @@
 import {AdxUri} from '../../third-party/uri'
+import {Entity as Entities} from '../../third-party/api/src/types/todo/social/post'
+
+type Entity = Entities[0]
 
 export function pluralize(n: number, base: string, plural?: string): string {
   if (n === 1) {
@@ -52,4 +55,21 @@ export function ago(date: number | string | Date): string {
   } else {
     return new Date(ts).toLocaleDateString()
   }
+}
+
+export function extractEntities(text: string): Entity[] | undefined {
+  let match
+  let ents: Entity[] = []
+  const re = /(^|\s)(@)([a-zA-Z0-9\.-]+)(\b)/dg
+  while ((match = re.exec(text))) {
+    ents.push({
+      type: 'mention',
+      value: match[3],
+      index: [
+        match.indices[2][0], // skip the (^|\s) but include the '@'
+        match.indices[3][1],
+      ],
+    })
+  }
+  return ents.length > 0 ? ents : undefined
 }
