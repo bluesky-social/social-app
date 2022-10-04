@@ -16,13 +16,24 @@ const WARNING_TEXT_LENGTH = 200
 const DANGER_TEXT_LENGTH = 255
 export const snapPoints = ['100%']
 
-const DEBUG_USERNAMES = ['alice.test', 'bob.test', 'carol.test']
-
 export function Component({replyTo}: {replyTo?: string}) {
   const store = useStores()
   const [error, setError] = useState('')
   const [text, setText] = useState('')
+  const [followedUsers, setFollowedUsers] = useState<
+    undefined | GetUserFollows.OutputSchema['follows']
+  >(undefined)
   const [autocompleteOptions, setAutocompleteOptions] = useState<string[]>([])
+
+  useEffect(() => {
+    store.api.todo.social
+      .getUserFollows({
+        user: store.me.did || '',
+      })
+      .then(res => {
+        setFollowedUsers(res.data.follows)
+      })
+  })
 
   const onChangeText = (newText: string) => {
     if (newText.length > MAX_TEXT_LENGTH) {
@@ -31,9 +42,13 @@ export function Component({replyTo}: {replyTo?: string}) {
     setText(newText)
 
     const prefix = extractTextAutocompletePrefix(newText)
-    if (typeof prefix === 'string') {
+    if (typeof prefix === 'string' && followedUsers) {
       setAutocompleteOptions(
-        DEBUG_USERNAMES.filter(name => name.includes(prefix)),
+        [prefix].concat(
+          followedUsers
+            .filter(user => user.name.startsWith(prefix))
+            .map(user => user.name),
+        ),
       )
     } else if (autocompleteOptions) {
       setAutocompleteOptions([])
