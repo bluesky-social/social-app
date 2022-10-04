@@ -6,6 +6,7 @@ import {ErrorMessage} from '../util/ErrorMessage'
 import {useStores} from '../../../state'
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {s, colors, gradients} from '../../lib/styles'
+import * as Profile from '../../../third-party/api/src/types/todo/social/profile'
 
 export const snapPoints = ['80%']
 
@@ -23,10 +24,19 @@ export function Component({profileView}: {profileView: ProfileViewModel}) {
       setError('')
     }
     try {
-      await profileView.updateProfile({
-        displayName,
-        description,
-      })
+      await profileView.updateProfile(
+        (existing?: Profile.Record): Profile.Record => {
+          if (existing) {
+            existing.displayName = displayName
+            existing.description = description
+            return existing
+          }
+          return {
+            displayName,
+            description,
+          }
+        },
+      )
       Toast.show('Profile updated', {
         position: Toast.positions.TOP,
       })
