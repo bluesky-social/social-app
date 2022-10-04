@@ -1,8 +1,10 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useMemo} from 'react'
+import {useSharedValue} from 'react-native-reanimated'
 import {View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {Feed} from '../com/posts/Feed'
 import {FAB} from '../com/util/FloatingActionButton'
+import {Selector} from '../com/util/Selector'
 import {useStores} from '../../state'
 import {FeedModel} from '../../state/models/feed-view'
 import {ComposePostModel} from '../../state/models/shell'
@@ -10,9 +12,24 @@ import {ScreenParams} from '../routes'
 import {s} from '../lib/styles'
 
 export const Home = observer(function Home({visible}: ScreenParams) {
-  const [hasSetup, setHasSetup] = useState<boolean>(false)
-  const [feedView, setFeedView] = useState<FeedModel | undefined>()
   const store = useStores()
+  const [hasSetup, setHasSetup] = useState<boolean>(false)
+  const [selectedViewIndex, setSelectedViewIndex] = useState<number>(0)
+  const defaultFeedView = useMemo<FeedModel>(
+    () =>
+      new FeedModel(store, 'home', {
+        algorithm: 'reverse-chronological',
+      }),
+    [store],
+  )
+  const firehoseFeedView = useMemo<FeedModel>(
+    () =>
+      new FeedModel(store, 'home', {
+        algorithm: 'firehose',
+      }),
+    [store],
+  )
+  const swipeGestureInterp = useSharedValue<number>(0)
 
   useEffect(() => {
     if (!visible) {
@@ -20,13 +37,13 @@ export const Home = observer(function Home({visible}: ScreenParams) {
     }
     if (hasSetup) {
       console.log('Updating home feed')
-      feedView?.update()
+      defaultFeedView.update()
+      firehoseFeedView.update()
     } else {
       store.nav.setTitle('Home')
       console.log('Fetching home feed')
-      const newFeedView = new FeedModel(store, 'home', {})
-      setFeedView(newFeedView)
-      newFeedView.setup().then(() => setHasSetup(true))
+      defaultFeedView.setup().then(() => setHasSetup(true))
+      firehoseFeedView.setup()
     }
   }, [visible, store])
 
@@ -34,12 +51,31 @@ export const Home = observer(function Home({visible}: ScreenParams) {
     store.shell.openModal(new ComposePostModel({onPost: onCreatePost}))
   }
   const onCreatePost = () => {
-    feedView?.loadLatest()
+    defaultFeedView.loadLatest()
+    firehoseFeedView.loadLatest()
+  }
+  const onSelectView = (viewIndex: number) => {
+    setSelectedViewIndex(viewIndex)
   }
 
   return (
     <View style={s.flex1}>
-      {feedView && <Feed feed={feedView} />}
+      <Selector
+        items={['My Feed', 'Firehose']}
+        selectedIndex={selectedViewIndex}
+        onSelect={onSelectView}
+        swipeGestureInterp={swipeGestureInterp}
+      />
+      <Feed
+        key="default"
+        feed={defaultFeedView}
+        style={{display: selectedViewIndex === 0 ? 'flex' : 'none'}}
+      />
+      <Feed
+        key="firehose"
+        feed={firehoseFeedView}
+        style={{display: selectedViewIndex === 1 ? 'flex' : 'none'}}
+      />
       <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
   )
