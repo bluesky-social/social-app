@@ -40,7 +40,7 @@ export const FeedItem = observer(function FeedItem({
   }, [record.reply])
 
   const onPressReply = () => {
-    store.shell.openModal(new ComposePostModel(item.uri))
+    store.shell.openModal(new ComposePostModel({replyTo: item.uri}))
   }
   const onPressToggleRepost = () => {
     item

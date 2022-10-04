@@ -20,9 +20,11 @@ const PARENT_REPLY_LINE_LENGTH = 8
 export const PostThreadItem = observer(function PostThreadItem({
   item,
   onPressShare,
+  onPostReply,
 }: {
   item: PostThreadViewPostModel
   onPressShare: (_uri: string) => void
+  onPostReply: () => void
 }) {
   const store = useStores()
   const record = item.record as unknown as PostType.Record
@@ -47,7 +49,9 @@ export const PostThreadItem = observer(function PostThreadItem({
   const repostsTitle = 'Reposts of this post'
 
   const onPressReply = () => {
-    store.shell.openModal(new ComposePostModel(item.uri))
+    store.shell.openModal(
+      new ComposePostModel({replyTo: item.uri, onPost: onPostReply}),
+    )
   }
   const onPressToggleRepost = () => {
     item
