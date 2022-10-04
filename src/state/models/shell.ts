@@ -9,11 +9,20 @@ export class TabsSelectorModel {
   }
 }
 
+export interface LinkActionsModelOpts {
+  newTab?: boolean
+}
 export class LinkActionsModel {
   name = 'link-actions'
+  newTab: boolean
 
-  constructor(public href: string, public title: string) {
+  constructor(
+    public href: string,
+    public title: string,
+    opts?: LinkActionsModelOpts,
+  ) {
     makeAutoObservable(this)
+    this.newTab = typeof opts?.newTab === 'boolean' ? opts.newTab : true
   }
 }
 

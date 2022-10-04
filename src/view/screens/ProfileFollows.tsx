@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react'
+import {StyleSheet, Text, View} from 'react-native'
 import {ProfileFollows as ProfileFollowsComponent} from '../com/profile/ProfileFollows'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
@@ -9,9 +10,22 @@ export const ProfileFollows = ({visible, params}: ScreenParams) => {
 
   useEffect(() => {
     if (visible) {
-      store.nav.setTitle('Followers of')
+      store.nav.setTitle(`Followed by ${name}`)
     }
-  }, [store, visible])
+  }, [store, visible, name])
 
-  return <ProfileFollowsComponent name={name} />
+  return (
+    <View>
+      <Text style={styles.title}>Followed by {name}</Text>
+      <ProfileFollowsComponent name={name} />
+    </View>
+  )
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 21,
+    fontWeight: 'bold',
+    padding: 10,
+  },
+})

@@ -86,14 +86,16 @@ export const ProfileHeader = observer(function ProfileHeader({
         <View style={[styles.displayNameLine]}>
           <Text style={styles.displayName}>{view.displayName}</Text>
         </View>
-        <View style={styles.badgesLine}>
+        {
+          undefined /*TODO<View style={styles.badgesLine}>
           <FontAwesomeIcon icon="shield" style={s.mr5} size={12} />
           <Link href="/" title="Badge TODO">
             <Text style={[s.f12, s.bold]}>
               Employee <Text style={[s.blue3]}>@blueskyweb.xyz</Text>
             </Text>
           </Link>
-        </View>
+        </View>*/
+        }
         <View style={[styles.buttonsLine]}>
           {isMe ? (
             <TouchableOpacity
@@ -119,11 +121,13 @@ export const ProfileHeader = observer(function ProfileHeader({
               </LinearGradient>
             </TouchableOpacity>
           )}
-          <TouchableOpacity
+          {
+            undefined /*TODO<TouchableOpacity
             onPress={onPressMenu}
             style={[styles.btn, styles.secondaryBtn, s.ml10]}>
             <FontAwesomeIcon icon="ellipsis" style={[s.gray5]} />
-          </TouchableOpacity>
+          </TouchableOpacity>*/
+          }
         </View>
         <View style={[s.flexRow]}>
           <TouchableOpacity
