@@ -8,7 +8,15 @@ import {s, colors} from '../../lib/styles'
 
 export const snapPoints = ['30%']
 
-export function Component({title, href}: {title: string; href: string}) {
+export function Component({
+  title,
+  href,
+  newTab,
+}: {
+  title: string
+  href: string
+  newTab: boolean
+}) {
   const store = useStores()
 
   const onPressOpenNewTab = () => {
@@ -28,13 +36,15 @@ export function Component({title, href}: {title: string; href: string}) {
     <View>
       <Text style={[s.textCenter, s.bold, s.mb10, s.f16]}>{title || href}</Text>
       <View style={s.p10}>
-        <TouchableOpacity onPress={onPressOpenNewTab} style={styles.btn}>
-          <FontAwesomeIcon
-            icon="arrow-up-right-from-square"
-            style={styles.icon}
-          />
-          <Text style={[s.f16, s.black]}>Open in new tab</Text>
-        </TouchableOpacity>
+        {newTab ? (
+          <TouchableOpacity onPress={onPressOpenNewTab} style={styles.btn}>
+            <FontAwesomeIcon
+              icon="arrow-up-right-from-square"
+              style={styles.icon}
+            />
+            <Text style={[s.f16, s.black]}>Open in new tab</Text>
+          </TouchableOpacity>
+        ) : undefined}
         <TouchableOpacity onPress={onPressCopy} style={styles.btn}>
           <FontAwesomeIcon icon="link" style={styles.icon} />
           <Text style={[s.f16, s.black]}>Copy to clipboard</Text>

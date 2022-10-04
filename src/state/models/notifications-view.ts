@@ -331,7 +331,8 @@ function groupNotifications(
     for (const item2 of items2) {
       if (
         item.reason === item2.reason &&
-        item.reasonSubject === item2.reasonSubject
+        item.reasonSubject === item2.reasonSubject &&
+        item.author.did !== item2.author.did
       ) {
         item2.additional = item2.additional || []
         item2.additional.push(item)
