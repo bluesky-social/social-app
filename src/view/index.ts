@@ -29,15 +29,19 @@ import {faLink} from '@fortawesome/free-solid-svg-icons/faLink'
 import {faLock} from '@fortawesome/free-solid-svg-icons/faLock'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
 import {faMessage} from '@fortawesome/free-regular-svg-icons/faMessage'
+import {faNoteSticky} from '@fortawesome/free-solid-svg-icons/faNoteSticky'
 import {faPenNib} from '@fortawesome/free-solid-svg-icons/faPenNib'
+import {faPenToSquare} from '@fortawesome/free-solid-svg-icons/faPenToSquare'
 import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus'
 import {faShare} from '@fortawesome/free-solid-svg-icons/faShare'
 import {faShareFromSquare} from '@fortawesome/free-solid-svg-icons/faShareFromSquare'
 import {faShield} from '@fortawesome/free-solid-svg-icons/faShield'
 import {faReply} from '@fortawesome/free-solid-svg-icons/faReply'
 import {faRetweet} from '@fortawesome/free-solid-svg-icons/faRetweet'
+import {faRss} from '@fortawesome/free-solid-svg-icons/faRss'
 import {faUser} from '@fortawesome/free-regular-svg-icons/faUser'
 import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers'
+import {faUserCheck} from '@fortawesome/free-solid-svg-icons/faUserCheck'
 import {faUserPlus} from '@fortawesome/free-solid-svg-icons/faUserPlus'
 import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
 import {faX} from '@fortawesome/free-solid-svg-icons/faX'
@@ -73,15 +77,19 @@ export function setup() {
     faLock,
     faMagnifyingGlass,
     faMessage,
+    faNoteSticky,
     faPenNib,
+    faPenToSquare,
     faPlus,
     faReply,
     faRetweet,
+    faRss,
     faShare,
     faShareFromSquare,
     faShield,
     faUser,
     faUsers,
+    faUserCheck,
     faUserPlus,
     faTicket,
     faX,
