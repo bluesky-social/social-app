@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   useWindowDimensions,
+  FlatList,
   GestureResponderEvent,
-  Image,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -97,6 +97,7 @@ export const MobileShell: React.FC = observer(() => {
   const [isLocationMenuActive, setLocationMenuActive] = useState(false)
   const [isMainMenuActive, setMainMenuActive] = useState(false)
   const [isTabsSelectorActive, setTabsSelectorActive] = useState(false)
+  const scrollElRef = useRef<FlatList | undefined>()
   const winDim = useWindowDimensions()
   const swipeGestureInterp = useSharedValue<number>(0)
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
@@ -109,7 +110,13 @@ export const MobileShell: React.FC = observer(() => {
 
   const onPressBack = () => store.nav.tab.goBack()
   const onPressForward = () => store.nav.tab.goForward()
-  const onPressHome = () => store.nav.navigate('/')
+  const onPressHome = () => {
+    if (store.nav.tab.current.url === '/') {
+      scrollElRef.current?.scrollToOffset({offset: 0})
+    } else {
+      store.nav.navigate('/')
+    }
+  }
   const onPressMenu = () => setMainMenuActive(true)
   const onPressTabs = () => setTabsSelectorActive(true)
 
@@ -184,7 +191,11 @@ export const MobileShell: React.FC = observer(() => {
                         styles.screen,
                         current ? swipeTransform : undefined,
                       ]}>
-                      <Com params={params} visible={true} />
+                      <Com
+                        params={params}
+                        visible={true}
+                        scrollElRef={current ? scrollElRef : undefined}
+                      />
                     </Animated.View>
                   </Screen>
                 )
