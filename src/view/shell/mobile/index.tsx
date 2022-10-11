@@ -79,7 +79,8 @@ const Btn = ({
   return (
     <TouchableOpacity
       style={styles.ctrl}
-      onPress={onPress}
+      onPress={onLongPress ? onPress : undefined}
+      onPressIn={onLongPress ? undefined : onPress}
       onLongPress={onLongPress}>
       {notificationCount ? (
         <View style={styles.ctrlCount}>
