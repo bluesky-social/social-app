@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     width: 30,
     height: 30,
-    marginRight: 5,
+    marginRight: 8,
   },
   profileText: {
     fontSize: 15,
