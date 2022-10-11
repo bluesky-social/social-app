@@ -108,14 +108,13 @@ export const MobileShell: React.FC = observer(() => {
   const onDismissLocationNavigator = () => setLocationMenuActive(false)
 
   const onPressBack = () => store.nav.tab.goBack()
-  // const onPressForward = () => store.nav.tab.goForward()
+  const onPressForward = () => store.nav.tab.goForward()
   const onPressHome = () => store.nav.navigate('/')
   const onPressMenu = () => setMainMenuActive(true)
-  const onPressNotifications = () => store.nav.navigate('/notifications')
-  const onPressTabs = () => setTabsSelectorActive(true) //store.shell.openModal(new TabsSelectorModel())
+  const onPressTabs = () => setTabsSelectorActive(true)
 
   const onLongPressBack = () => createBackMenu(store.nav.tab)
-  // const onLongPressForward = () => createForwardMenu(store.nav.tab)
+  const onLongPressForward = () => createForwardMenu(store.nav.tab)
 
   const goBack = () => store.nav.tab.goBack()
   const swipeGesture = Gesture.Pan()
@@ -195,26 +194,23 @@ export const MobileShell: React.FC = observer(() => {
         </GestureDetector>
       </SafeAreaView>
       <View style={styles.bottomBar}>
+        <Btn icon="house" onPress={onPressHome} />
         <Btn
           icon="angle-left"
           inactive={!store.nav.tab.canGoBack}
           onPress={onPressBack}
           onLongPress={onLongPressBack}
         />
-        {
-          undefined /*<Btn
+        <Btn
+          icon="menu"
+          onPress={onPressMenu}
+          notificationCount={store.me.notificationCount}
+        />
+        <Btn
           icon="angle-right"
           inactive={!store.nav.tab.canGoForward}
           onPress={onPressForward}
           onLongPress={onLongPressForward}
-        />*/
-        }
-        <Btn icon="house" onPress={onPressHome} />
-        <Btn icon="menu" onPress={onPressMenu} />
-        <Btn
-          icon={['far', 'bell']}
-          onPress={onPressNotifications}
-          notificationCount={store.me.notificationCount}
         />
         <Btn icon={['far', 'clone']} onPress={onPressTabs} />
       </View>
@@ -368,11 +364,12 @@ const styles = StyleSheet.create({
   },
   ctrlCount: {
     position: 'absolute',
-    left: 46,
+    left: 52,
     top: 10,
-    backgroundColor: colors.pink3,
-    paddingHorizontal: 3,
-    borderRadius: 3,
+    backgroundColor: colors.red3,
+    paddingHorizontal: 4,
+    paddingBottom: 1,
+    borderRadius: 8,
   },
   ctrlCountLabel: {
     fontSize: 12,
