@@ -1,5 +1,6 @@
 import {library} from '@fortawesome/fontawesome-svg-core'
 
+import {faAddressCard} from '@fortawesome/free-regular-svg-icons/faAddressCard'
 import {faAngleDown} from '@fortawesome/free-solid-svg-icons/faAngleDown'
 import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft'
 import {faAngleRight} from '@fortawesome/free-solid-svg-icons/faAngleRight'
@@ -15,6 +16,7 @@ import {faBell as farBell} from '@fortawesome/free-regular-svg-icons/faBell'
 import {faBookmark} from '@fortawesome/free-solid-svg-icons/faBookmark'
 import {faBookmark as farBookmark} from '@fortawesome/free-regular-svg-icons/faBookmark'
 import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck'
+import {faCircleUser} from '@fortawesome/free-regular-svg-icons/faCircleUser'
 import {faClone} from '@fortawesome/free-regular-svg-icons/faClone'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
 import {faEllipsis} from '@fortawesome/free-solid-svg-icons/faEllipsis'
@@ -48,6 +50,7 @@ import {faX} from '@fortawesome/free-solid-svg-icons/faX'
 
 export function setup() {
   library.add(
+    faAddressCard,
     faAngleDown,
     faAngleLeft,
     faAngleRight,
@@ -63,6 +66,7 @@ export function setup() {
     faBookmark,
     farBookmark,
     faCheck,
+    faCircleUser,
     faClone,
     faComment,
     faEllipsis,
