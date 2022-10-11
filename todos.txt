@@ -4,11 +4,11 @@ Paul's todo list
   - Update to RN 0.70
   - Cache some profile/userinfo lookups
   - Cursor behaviors on all views
+  - Home button should scroll to top
 - Onboarding flow
   - *
 - Private beta
   - Users list
-  - Firehose
 - Linking
   - Web linking
   - App linking
@@ -20,4 +20,4 @@ Paul's todo list
 - Bugs
   - Check that sub components arent reloading too much
   - Titles are getting screwed up (possibly swipe related)
-  - Home feed not showing own posts
+  - Home feed sizing is off now

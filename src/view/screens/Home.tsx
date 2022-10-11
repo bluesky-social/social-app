@@ -1,20 +1,20 @@
 import React, {useState, useEffect, useMemo} from 'react'
-import {useSharedValue} from 'react-native-reanimated'
 import {View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {Feed} from '../com/posts/Feed'
 import {FAB} from '../com/util/FloatingActionButton'
-import {Selector} from '../com/util/Selector'
 import {useStores} from '../../state'
 import {FeedModel} from '../../state/models/feed-view'
 import {ComposePostModel} from '../../state/models/shell'
 import {ScreenParams} from '../routes'
 import {s} from '../lib/styles'
 
-export const Home = observer(function Home({visible}: ScreenParams) {
+export const Home = observer(function Home({
+  visible,
+  scrollElRef,
+}: ScreenParams) {
   const store = useStores()
   const [hasSetup, setHasSetup] = useState<boolean>(false)
-  const [selectedViewIndex, setSelectedViewIndex] = useState<number>(0)
   const defaultFeedView = useMemo<FeedModel>(
     () =>
       new FeedModel(store, 'home', {
@@ -43,13 +43,10 @@ export const Home = observer(function Home({visible}: ScreenParams) {
   const onCreatePost = () => {
     defaultFeedView.loadLatest()
   }
-  const onSelectView = (viewIndex: number) => {
-    setSelectedViewIndex(viewIndex)
-  }
 
   return (
     <View style={s.flex1}>
-      <Feed key="default" feed={defaultFeedView} />
+      <Feed key="default" feed={defaultFeedView} scrollElRef={scrollElRef} />
       <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
   )

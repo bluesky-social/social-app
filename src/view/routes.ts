@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {MutableRefObject} from 'react'
+import {FlatList} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {Home} from './screens/Home'
 import {Search} from './screens/Search'
@@ -15,6 +16,7 @@ import {Settings} from './screens/Settings'
 export type ScreenParams = {
   params: Record<string, any>
   visible: boolean
+  scrollElRef: MutableRefObject<FlatList<any> | undefined>
 }
 export type Route = [React.FC<ScreenParams>, IconProp, RegExp]
 export type MatchResult = {

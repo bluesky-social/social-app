@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {MutableRefObject} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Text, View, FlatList, StyleProp, ViewStyle} from 'react-native'
 import {FeedModel, FeedItemModel} from '../../../state/models/feed-view'
@@ -7,9 +7,11 @@ import {FeedItem} from './FeedItem'
 export const Feed = observer(function Feed({
   feed,
   style,
+  scrollElRef,
 }: {
   feed: FeedModel
   style?: StyleProp<ViewStyle>
+  scrollElRef?: MutableRefObject<FlatList<any> | null>
 }) {
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your
@@ -30,6 +32,7 @@ export const Feed = observer(function Feed({
       {feed.hasError && <Text>{feed.error}</Text>}
       {feed.hasContent && (
         <FlatList
+          ref={scrollElRef}
           data={feed.feed.slice()}
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
