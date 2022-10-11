@@ -28,52 +28,15 @@ import {TabsSelectorModel} from '../../../state/models/shell'
 import {match, MatchResult} from '../../routes'
 import {Login} from '../../screens/Login'
 import {Modal} from '../../com/modals/Modal'
-import {LocationNavigator} from './location-navigator'
-import {createBackMenu, createForwardMenu} from './history-menu'
-import {createAccountsMenu} from './accounts-menu'
-import {createLocationMenu} from './location-menu'
+import {LocationNavigator} from './LocationNavigator'
+import {createBackMenu, createForwardMenu} from './HistoryMenu'
+import {MainMenu} from './MainMenu'
+import {TabsSelector} from './TabsSelector'
 import {s, colors} from '../../lib/styles'
 import {GridIcon, HomeIcon} from '../../lib/icons'
-import {DEF_AVATER} from '../../lib/assets'
 
-const locationIconNeedsNudgeUp = (icon: IconProp) => icon === 'house'
 const SWIPE_GESTURE_DIST_TRIGGER = 0.5
 const SWIPE_GESTURE_VEL_TRIGGER = 2500
-
-const Location = ({
-  icon,
-  title,
-  onPress,
-}: {
-  icon: IconProp
-  title?: string
-  onPress?: (event: GestureResponderEvent) => void
-}) => {
-  const nudgeUp = locationIconNeedsNudgeUp(icon)
-  return (
-    <TouchableOpacity style={styles.location} onPress={onPress}>
-      {title ? (
-        <FontAwesomeIcon
-          size={12}
-          style={[
-            styles.locationIcon,
-            nudgeUp ? styles.locationIconNudgeUp : undefined,
-          ]}
-          icon={icon}
-        />
-      ) : (
-        <FontAwesomeIcon
-          size={12}
-          style={styles.locationIconLight}
-          icon="magnifying-glass"
-        />
-      )}
-      <Text style={title ? styles.locationText : styles.locationTextLight}>
-        {title || 'Search'}
-      </Text>
-    </TouchableOpacity>
-  )
-}
 
 const Btn = ({
   icon,
@@ -89,7 +52,7 @@ const Btn = ({
   onLongPress?: (event: GestureResponderEvent) => void
 }) => {
   let IconEl
-  if (icon === 'bars') {
+  if (icon === 'menu') {
     IconEl = GridIcon
   } else if (icon === 'house') {
     IconEl = HomeIcon
@@ -131,17 +94,11 @@ const Btn = ({
 export const MobileShell: React.FC = observer(() => {
   const store = useStores()
   const [isLocationMenuActive, setLocationMenuActive] = useState(false)
+  const [isMainMenuActive, setMainMenuActive] = useState(false)
+  const [isTabsSelectorActive, setTabsSelectorActive] = useState(false)
   const winDim = useWindowDimensions()
   const swipeGestureInterp = useSharedValue<number>(0)
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
-
-  const onPressAvi = () =>
-    createAccountsMenu({
-      debug_onPressItem: () => store.nav.navigate('/profile/alice.test'),
-      onPressLogout: () => store.session.logout(),
-    })
-  const onPressLocation = () => setLocationMenuActive(true)
-  const onPressEllipsis = () => createLocationMenu()
 
   const onNavigateLocation = (url: string) => {
     setLocationMenuActive(false)
@@ -150,13 +107,14 @@ export const MobileShell: React.FC = observer(() => {
   const onDismissLocationNavigator = () => setLocationMenuActive(false)
 
   const onPressBack = () => store.nav.tab.goBack()
-  const onPressForward = () => store.nav.tab.goForward()
+  // const onPressForward = () => store.nav.tab.goForward()
   const onPressHome = () => store.nav.navigate('/')
+  const onPressMenu = () => setMainMenuActive(true)
   const onPressNotifications = () => store.nav.navigate('/notifications')
-  const onPressTabs = () => store.shell.openModal(new TabsSelectorModel())
+  const onPressTabs = () => setTabsSelectorActive(true) //store.shell.openModal(new TabsSelectorModel())
 
   const onLongPressBack = () => createBackMenu(store.nav.tab)
-  const onLongPressForward = () => createForwardMenu(store.nav.tab)
+  // const onLongPressForward = () => createForwardMenu(store.nav.tab)
 
   const goBack = () => store.nav.tab.goBack()
   const swipeGesture = Gesture.Pan()
@@ -205,19 +163,6 @@ export const MobileShell: React.FC = observer(() => {
 
   return (
     <View style={styles.outerContainer}>
-      {/* <View style={styles.topBar}>
-        <TouchableOpacity onPress={onPressAvi}>
-          <Image style={styles.avi} source={DEF_AVATER} />
-        </TouchableOpacity>
-        <Location
-          icon={screenRenderDesc.icon}
-          title={store.nav.tab.current.title}
-          onPress={onPressLocation}
-        />
-        <TouchableOpacity style={styles.topBarBtn} onPress={onPressEllipsis}>
-          <FontAwesomeIcon icon="ellipsis" />
-        </TouchableOpacity>
-      </View> */}
       <SafeAreaView style={styles.innerContainer}>
         <GestureDetector gesture={swipeGesture}>
           <ScreenContainer style={styles.screenContainer}>
@@ -255,21 +200,32 @@ export const MobileShell: React.FC = observer(() => {
           onPress={onPressBack}
           onLongPress={onLongPressBack}
         />
-        <Btn
+        {
+          undefined /*<Btn
           icon="angle-right"
           inactive={!store.nav.tab.canGoForward}
           onPress={onPressForward}
           onLongPress={onLongPressForward}
-        />
+        />*/
+        }
         <Btn icon="house" onPress={onPressHome} />
+        <Btn icon="menu" onPress={onPressMenu} />
         <Btn
           icon={['far', 'bell']}
           onPress={onPressNotifications}
           notificationCount={store.me.notificationCount}
         />
-        <Btn icon="bars" onPress={onPressTabs} />
+        <Btn icon={['far', 'clone']} onPress={onPressTabs} />
       </View>
       <Modal />
+      <MainMenu
+        active={isMainMenuActive}
+        onClose={() => setMainMenuActive(false)}
+      />
+      <TabsSelector
+        active={isTabsSelectorActive}
+        onClose={() => setTabsSelectorActive(false)}
+      />
       {isLocationMenuActive && (
         <LocationNavigator
           url={store.nav.tab.current.url}
