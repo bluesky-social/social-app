@@ -22,14 +22,6 @@ export const Home = observer(function Home({visible}: ScreenParams) {
       }),
     [store],
   )
-  const firehoseFeedView = useMemo<FeedModel>(
-    () =>
-      new FeedModel(store, 'home', {
-        algorithm: 'firehose',
-      }),
-    [store],
-  )
-  const swipeGestureInterp = useSharedValue<number>(0)
 
   useEffect(() => {
     if (!visible) {
@@ -38,12 +30,10 @@ export const Home = observer(function Home({visible}: ScreenParams) {
     if (hasSetup) {
       console.log('Updating home feed')
       defaultFeedView.update()
-      firehoseFeedView.update()
     } else {
       store.nav.setTitle('Home')
       console.log('Fetching home feed')
       defaultFeedView.setup().then(() => setHasSetup(true))
-      firehoseFeedView.setup()
     }
   }, [visible, store])
 
@@ -52,7 +42,6 @@ export const Home = observer(function Home({visible}: ScreenParams) {
   }
   const onCreatePost = () => {
     defaultFeedView.loadLatest()
-    firehoseFeedView.loadLatest()
   }
   const onSelectView = (viewIndex: number) => {
     setSelectedViewIndex(viewIndex)
@@ -60,22 +49,7 @@ export const Home = observer(function Home({visible}: ScreenParams) {
 
   return (
     <View style={s.flex1}>
-      <Selector
-        items={['My Feed', 'Firehose']}
-        selectedIndex={selectedViewIndex}
-        onSelect={onSelectView}
-        swipeGestureInterp={swipeGestureInterp}
-      />
-      <Feed
-        key="default"
-        feed={defaultFeedView}
-        style={{display: selectedViewIndex === 0 ? 'flex' : 'none'}}
-      />
-      <Feed
-        key="firehose"
-        feed={firehoseFeedView}
-        style={{display: selectedViewIndex === 1 ? 'flex' : 'none'}}
-      />
+      <Feed key="default" feed={defaultFeedView} />
       <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
   )
