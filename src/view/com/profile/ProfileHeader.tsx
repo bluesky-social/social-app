@@ -86,16 +86,14 @@ export const ProfileHeader = observer(function ProfileHeader({
         <View style={[styles.displayNameLine]}>
           <Text style={styles.displayName}>{view.displayName}</Text>
         </View>
-        {
-          undefined /*TODO<View style={styles.badgesLine}>
+        <View style={styles.badgesLine}>
           <FontAwesomeIcon icon="shield" style={s.mr5} size={12} />
           <Link href="/" title="Badge TODO">
             <Text style={[s.f12, s.bold]}>
               Employee <Text style={[s.blue3]}>@blueskyweb.xyz</Text>
             </Text>
           </Link>
-        </View>*/
-        }
+        </View>
         <View style={[styles.buttonsLine]}>
           {isMe ? (
             <TouchableOpacity
@@ -103,31 +101,40 @@ export const ProfileHeader = observer(function ProfileHeader({
               style={[styles.mainBtn, styles.btn]}>
               <Text style={[s.fw400, s.f14]}>Edit Profile</Text>
             </TouchableOpacity>
-          ) : view.myState.follow ? (
-            <TouchableOpacity
-              onPress={onPressToggleFollow}
-              style={[styles.mainBtn, styles.btn]}>
-              <Text style={[s.fw400, s.f14]}>Following</Text>
-            </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={onPressToggleFollow}>
-              <LinearGradient
-                colors={[gradients.primary.start, gradients.primary.end]}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 1}}
-                style={[styles.followBtn]}>
-                <FontAwesomeIcon icon="plus" style={[s.white, s.mr5]} />
-                <Text style={[s.white, s.fw600, s.f16]}>Follow</Text>
-              </LinearGradient>
-            </TouchableOpacity>
+            <>
+              {view.myState.follow ? (
+                <TouchableOpacity
+                  onPress={onPressToggleFollow}
+                  style={[styles.mainBtn, styles.btn]}>
+                  <FontAwesomeIcon icon="check" style={[s.mr5]} size={14} />
+                  <Text style={[s.fw400, s.f14]}>Following</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={onPressToggleFollow}
+                  style={[styles.mainBtn, styles.btn]}>
+                  <FontAwesomeIcon icon="rss" style={[s.mr5]} size={13} />
+                  <Text style={[s.fw400, s.f14]}>Follow</Text>
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity
+                onPress={onPressMenu}
+                style={[styles.btn, styles.secondaryBtn, s.mr5]}>
+                <FontAwesomeIcon icon="user-plus" style={[s.gray5]} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={onPressMenu}
+                style={[styles.btn, styles.secondaryBtn, s.mr5]}>
+                <FontAwesomeIcon icon="note-sticky" style={[s.gray5]} />
+              </TouchableOpacity>
+            </>
           )}
-          {
-            undefined /*TODO<TouchableOpacity
+          <TouchableOpacity
             onPress={onPressMenu}
-            style={[styles.btn, styles.secondaryBtn, s.ml10]}>
+            style={[styles.btn, styles.secondaryBtn]}>
             <FontAwesomeIcon icon="ellipsis" style={[s.gray5]} />
-          </TouchableOpacity>*/
-          }
+          </TouchableOpacity>
         </View>
         <View style={[s.flexRow]}>
           <TouchableOpacity
@@ -203,24 +210,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 6,
-    paddingLeft: 55,
-    paddingRight: 60,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: 'transparent',
+    borderRadius: 6,
+    marginRight: 6,
   },
   btn: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 7,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: colors.gray2,
+    borderRadius: 4,
+    backgroundColor: colors.gray1,
+    marginRight: 6,
   },
   mainBtn: {
-    paddingHorizontal: 40,
+    flexDirection: 'row',
   },
   secondaryBtn: {
-    paddingHorizontal: 12,
+    flex: 0,
+    paddingHorizontal: 14,
+    marginRight: 0,
   },
 })
