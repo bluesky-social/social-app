@@ -25,7 +25,7 @@ export class MeModel {
     if (sess.isAuthed && sess.data) {
       this.did = sess.data.userdid || ''
       this.name = sess.data.username
-      const profile = await this.rootStore.api.todo.social.getProfile({
+      const profile = await this.rootStore.api.app.bsky.getProfile({
         user: this.did,
       })
       runInAction(() => {
@@ -43,7 +43,7 @@ export class MeModel {
   }
 
   async fetchStateUpdate() {
-    const res = await this.rootStore.api.todo.social.getNotificationCount({})
+    const res = await this.rootStore.api.app.bsky.getNotificationCount({})
     runInAction(() => {
       this.notificationCount = res.data.count
     })

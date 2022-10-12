@@ -7,7 +7,7 @@ import {useStores} from '../../state'
 export const PostThread = ({visible, params}: ScreenParams) => {
   const store = useStores()
   const {name, recordKey} = params
-  const uri = makeRecordUri(name, 'todo.social.post', recordKey)
+  const uri = makeRecordUri(name, 'app.bsky.post', recordKey)
 
   useEffect(() => {
     if (visible) {

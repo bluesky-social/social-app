@@ -5,7 +5,7 @@
 
 // import {ReactNativeStore} from './auth'
 import AdxApi from '../../third-party/api'
-import * as Profile from '../../third-party/api/src/types/todo/social/profile'
+import * as Profile from '../../third-party/api/src/types/app/bsky/profile'
 import {AdxUri} from '../../third-party/uri'
 import {RootStoreModel} from '../models/root-store'
 import {extractEntities} from '../../view/lib/strings'
@@ -22,7 +22,7 @@ export async function post(
   let reply
   if (replyToUri) {
     const replyToUrip = new AdxUri(replyToUri)
-    const parentPost = await store.api.todo.social.post.get({
+    const parentPost = await store.api.app.bsky.post.get({
       nameOrDid: replyToUrip.host,
       tid: replyToUrip.recordKey,
     })
@@ -34,7 +34,7 @@ export async function post(
     }
   }
   const entities = extractEntities(text)
-  return await store.api.todo.social.post.create(
+  return await store.api.app.bsky.post.create(
     {did: store.me.did || ''},
     {
       text,
@@ -46,7 +46,7 @@ export async function post(
 }
 
 export async function like(store: RootStoreModel, uri: string) {
-  return await store.api.todo.social.like.create(
+  return await store.api.app.bsky.like.create(
     {did: store.me.did || ''},
     {
       subject: uri,
@@ -57,14 +57,14 @@ export async function like(store: RootStoreModel, uri: string) {
 
 export async function unlike(store: RootStoreModel, likeUri: string) {
   const likeUrip = new AdxUri(likeUri)
-  return await store.api.todo.social.like.delete({
+  return await store.api.app.bsky.like.delete({
     did: likeUrip.hostname,
     tid: likeUrip.recordKey,
   })
 }
 
 export async function repost(store: RootStoreModel, uri: string) {
-  return await store.api.todo.social.repost.create(
+  return await store.api.app.bsky.repost.create(
     {did: store.me.did || ''},
     {
       subject: uri,
@@ -75,14 +75,14 @@ export async function repost(store: RootStoreModel, uri: string) {
 
 export async function unrepost(store: RootStoreModel, repostUri: string) {
   const repostUrip = new AdxUri(repostUri)
-  return await store.api.todo.social.repost.delete({
+  return await store.api.app.bsky.repost.delete({
     did: repostUrip.hostname,
     tid: repostUrip.recordKey,
   })
 }
 
 export async function follow(store: RootStoreModel, subject: string) {
-  return await store.api.todo.social.follow.create(
+  return await store.api.app.bsky.follow.create(
     {did: store.me.did || ''},
     {
       subject,
@@ -93,7 +93,7 @@ export async function follow(store: RootStoreModel, subject: string) {
 
 export async function unfollow(store: RootStoreModel, followUri: string) {
   const followUrip = new AdxUri(followUri)
-  return await store.api.todo.social.follow.delete({
+  return await store.api.app.bsky.follow.delete({
     did: followUrip.hostname,
     tid: followUrip.recordKey,
   })
@@ -103,12 +103,12 @@ export async function updateProfile(
   store: RootStoreModel,
   modifyFn: (existing?: Profile.Record) => Profile.Record,
 ) {
-  const res = await store.api.todo.social.profile.list({
+  const res = await store.api.app.bsky.profile.list({
     nameOrDid: store.me.did || '',
   })
   const existing = res.records[0]
   if (existing) {
-    await store.api.todo.social.profile.put(
+    await store.api.app.bsky.profile.put(
       {
         did: store.me.did || '',
         tid: new AdxUri(existing.uri).recordKey,
@@ -116,7 +116,7 @@ export async function updateProfile(
       modifyFn(existing.value),
     )
   } else {
-    await store.api.todo.social.profile.create(
+    await store.api.app.bsky.profile.create(
       {
         did: store.me.did || '',
       },

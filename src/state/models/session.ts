@@ -1,6 +1,6 @@
 import {makeAutoObservable} from 'mobx'
 import AdxApi from '../../third-party/api'
-import type * as GetAccountsConfig from '../../third-party/api/src/types/todo/adx/getAccountsConfig'
+import type * as GetAccountsConfig from '../../third-party/api/src/types/com/atproto/getAccountsConfig'
 import {isObj, hasProp} from '../lib/type-guards'
 import {RootStoreModel} from './root-store'
 
@@ -122,7 +122,7 @@ export class SessionModel {
     }
 
     try {
-      const sess = await this.rootStore.api.todo.adx.getSession({})
+      const sess = await this.rootStore.api.com.atproto.getSession({})
       if (sess.success && this.data && this.data.userdid === sess.data.did) {
         this.rootStore.me.load().catch(e => {
           console.error('Failed to fetch local user information', e)
@@ -136,7 +136,7 @@ export class SessionModel {
 
   async describeService(service: string): Promise<ServiceDescription> {
     const api = AdxApi.service(service)
-    const res = await api.todo.adx.getAccountsConfig({})
+    const res = await api.com.atproto.getAccountsConfig({})
     return res.data
   }
 
@@ -150,7 +150,7 @@ export class SessionModel {
     password: string
   }) {
     const api = AdxApi.service(service)
-    const res = await api.todo.adx.createSession({}, {username, password})
+    const res = await api.com.atproto.createSession({}, {username, password})
     if (res.data.jwt) {
       this.setState({
         service: service,
@@ -179,7 +179,7 @@ export class SessionModel {
     inviteCode?: string
   }) {
     const api = AdxApi.service(service)
-    const res = await api.todo.adx.createAccount(
+    const res = await api.com.atproto.createAccount(
       {},
       {username, password, email, inviteCode},
     )
@@ -200,7 +200,7 @@ export class SessionModel {
 
   async logout() {
     if (this.isAuthed) {
-      this.rootStore.api.todo.adx.deleteSession({}).catch((e: any) => {
+      this.rootStore.api.com.atproto.deleteSession({}).catch((e: any) => {
         console.error('(Minor issue) Failed to delete session on the server', e)
       })
     }

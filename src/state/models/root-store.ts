@@ -34,7 +34,7 @@ export class RootStoreModel {
     if (didOrName.startsWith('did:')) {
       return didOrName
     }
-    const res = await this.api.todo.adx.resolveName({name: didOrName})
+    const res = await this.api.com.atproto.resolveName({name: didOrName})
     return res.data.did
   }
 

@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {AdxUri} from '../../../third-party/uri'
-import * as PostType from '../../../third-party/api/src/types/todo/social/post'
+import * as PostType from '../../../third-party/api/src/types/app/bsky/post'
 import {
   ActivityIndicator,
   Image,

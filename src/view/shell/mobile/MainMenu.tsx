@@ -56,10 +56,12 @@ export const MainMenu = observer(
       icon,
       label,
       url,
+      count,
     }: {
       icon: IconProp
       label: string
       url: string
+      count?: number
     }) => (
       <TouchableOpacity
         style={[styles.menuItem, styles.menuItemMargin]}
@@ -75,6 +77,11 @@ export const MainMenu = observer(
             />
           )}
         </View>
+        {count ? (
+          <View style={styles.menuItemCount}>
+            <Text style={styles.menuItemCountLabel}>{count}</Text>
+          </View>
+        ) : undefined}
         <Text style={styles.menuItemLabel} numberOfLines={1}>
           {label}
         </Text>
@@ -123,6 +130,7 @@ export const MainMenu = observer(
                   icon={['far', 'bell']}
                   label="Notifications"
                   url="/notifications"
+                  count={store.me.notificationCount}
                 />
               </Animated.View>
             </View>
@@ -211,5 +219,19 @@ const styles = StyleSheet.create({
   },
   menuItemLabel: {
     fontSize: 13,
+  },
+  menuItemCount: {
+    position: 'absolute',
+    left: 48,
+    top: 10,
+    backgroundColor: colors.red3,
+    paddingHorizontal: 4,
+    paddingBottom: 1,
+    borderRadius: 6,
+  },
+  menuItemCountLabel: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: colors.white,
   },
 })
