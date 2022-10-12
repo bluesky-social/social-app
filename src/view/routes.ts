@@ -16,7 +16,7 @@ import {Settings} from './screens/Settings'
 export type ScreenParams = {
   params: Record<string, any>
   visible: boolean
-  scrollElRef: MutableRefObject<FlatList<any> | undefined>
+  scrollElRef?: MutableRefObject<FlatList<any> | undefined>
 }
 export type Route = [React.FC<ScreenParams>, IconProp, RegExp]
 export type MatchResult = {

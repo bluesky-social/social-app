@@ -6935,9 +6935,51 @@ var require_dist = __commonJS({
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
-  AdxNS: () => AdxNS,
+  AppBskyBadge: () => badge_exports,
+  AppBskyFollow: () => follow_exports,
+  AppBskyGetAuthorFeed: () => getAuthorFeed_exports,
+  AppBskyGetHomeFeed: () => getHomeFeed_exports,
+  AppBskyGetLikedBy: () => getLikedBy_exports,
+  AppBskyGetNotificationCount: () => getNotificationCount_exports,
+  AppBskyGetNotifications: () => getNotifications_exports,
+  AppBskyGetPostThread: () => getPostThread_exports,
+  AppBskyGetProfile: () => getProfile_exports,
+  AppBskyGetRepostedBy: () => getRepostedBy_exports,
+  AppBskyGetUserFollowers: () => getUserFollowers_exports,
+  AppBskyGetUserFollows: () => getUserFollows_exports,
+  AppBskyLike: () => like_exports,
+  AppBskyMediaEmbed: () => mediaEmbed_exports,
+  AppBskyPost: () => post_exports,
+  AppBskyPostNotificationsSeen: () => postNotificationsSeen_exports,
+  AppBskyProfile: () => profile_exports,
+  AppBskyRepost: () => repost_exports,
+  AppNS: () => AppNS,
+  AtprotoNS: () => AtprotoNS,
   BadgeRecord: () => BadgeRecord,
+  BskyNS: () => BskyNS,
   Client: () => Client2,
+  ComAtprotoCreateAccount: () => createAccount_exports,
+  ComAtprotoCreateInviteCode: () => createInviteCode_exports,
+  ComAtprotoCreateSession: () => createSession_exports,
+  ComAtprotoDeleteAccount: () => deleteAccount_exports,
+  ComAtprotoDeleteSession: () => deleteSession_exports,
+  ComAtprotoGetAccount: () => getAccount_exports,
+  ComAtprotoGetAccountsConfig: () => getAccountsConfig_exports,
+  ComAtprotoGetSession: () => getSession_exports,
+  ComAtprotoRepoBatchWrite: () => repoBatchWrite_exports,
+  ComAtprotoRepoCreateRecord: () => repoCreateRecord_exports,
+  ComAtprotoRepoDeleteRecord: () => repoDeleteRecord_exports,
+  ComAtprotoRepoDescribe: () => repoDescribe_exports,
+  ComAtprotoRepoGetRecord: () => repoGetRecord_exports,
+  ComAtprotoRepoListRecords: () => repoListRecords_exports,
+  ComAtprotoRepoPutRecord: () => repoPutRecord_exports,
+  ComAtprotoRequestAccountPasswordReset: () => requestAccountPasswordReset_exports,
+  ComAtprotoResetAccountPassword: () => resetAccountPassword_exports,
+  ComAtprotoResolveName: () => resolveName_exports,
+  ComAtprotoSyncGetRepo: () => syncGetRepo_exports,
+  ComAtprotoSyncGetRoot: () => syncGetRoot_exports,
+  ComAtprotoSyncUpdateRepo: () => syncUpdateRepo_exports,
+  ComNS: () => ComNS,
   FollowRecord: () => FollowRecord,
   LikeRecord: () => LikeRecord,
   MediaEmbedRecord: () => MediaEmbedRecord,
@@ -6945,44 +6987,6 @@ __export(src_exports, {
   ProfileRecord: () => ProfileRecord,
   RepostRecord: () => RepostRecord,
   ServiceClient: () => ServiceClient2,
-  SocialNS: () => SocialNS,
-  TodoAdxCreateAccount: () => createAccount_exports,
-  TodoAdxCreateSession: () => createSession_exports,
-  TodoAdxDeleteAccount: () => deleteAccount_exports,
-  TodoAdxDeleteSession: () => deleteSession_exports,
-  TodoAdxGetAccount: () => getAccount_exports,
-  TodoAdxGetAccountsConfig: () => getAccountsConfig_exports,
-  TodoAdxGetSession: () => getSession_exports,
-  TodoAdxRepoBatchWrite: () => repoBatchWrite_exports,
-  TodoAdxRepoCreateRecord: () => repoCreateRecord_exports,
-  TodoAdxRepoDeleteRecord: () => repoDeleteRecord_exports,
-  TodoAdxRepoDescribe: () => repoDescribe_exports,
-  TodoAdxRepoGetRecord: () => repoGetRecord_exports,
-  TodoAdxRepoListRecords: () => repoListRecords_exports,
-  TodoAdxRepoPutRecord: () => repoPutRecord_exports,
-  TodoAdxResolveName: () => resolveName_exports,
-  TodoAdxSyncGetRepo: () => syncGetRepo_exports,
-  TodoAdxSyncGetRoot: () => syncGetRoot_exports,
-  TodoAdxSyncUpdateRepo: () => syncUpdateRepo_exports,
-  TodoNS: () => TodoNS,
-  TodoSocialBadge: () => badge_exports,
-  TodoSocialFollow: () => follow_exports,
-  TodoSocialGetAuthorFeed: () => getAuthorFeed_exports,
-  TodoSocialGetHomeFeed: () => getHomeFeed_exports,
-  TodoSocialGetLikedBy: () => getLikedBy_exports,
-  TodoSocialGetNotificationCount: () => getNotificationCount_exports,
-  TodoSocialGetNotifications: () => getNotifications_exports,
-  TodoSocialGetPostThread: () => getPostThread_exports,
-  TodoSocialGetProfile: () => getProfile_exports,
-  TodoSocialGetRepostedBy: () => getRepostedBy_exports,
-  TodoSocialGetUserFollowers: () => getUserFollowers_exports,
-  TodoSocialGetUserFollows: () => getUserFollows_exports,
-  TodoSocialLike: () => like_exports,
-  TodoSocialMediaEmbed: () => mediaEmbed_exports,
-  TodoSocialPost: () => post_exports,
-  TodoSocialPostNotificationsSeen: () => postNotificationsSeen_exports,
-  TodoSocialProfile: () => profile_exports,
-  TodoSocialRepost: () => repost_exports,
   default: () => src_default
 });
 module.exports = __toCommonJS(src_exports);
@@ -10302,7 +10306,7 @@ var defaultInst = new Client();
 var methodSchemas = [
   {
     lexicon: 1,
-    id: "todo.adx.createAccount",
+    id: "com.atproto.createAccount",
     type: "procedure",
     description: "Create an account.",
     parameters: {},
@@ -10353,13 +10357,47 @@ var methodSchemas = [
         name: "InvalidPassword"
       },
       {
+        name: "InvalidInviteCode"
+      },
+      {
         name: "UsernameNotAvailable"
       }
     ]
   },
   {
     lexicon: 1,
-    id: "todo.adx.createSession",
+    id: "com.atproto.createInviteCode",
+    type: "procedure",
+    description: "Create an invite code.",
+    parameters: {},
+    input: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["useCount"],
+        properties: {
+          useCount: {
+            type: "number"
+          }
+        }
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["code"],
+        properties: {
+          code: {
+            type: "string"
+          }
+        }
+      }
+    }
+  },
+  {
+    lexicon: 1,
+    id: "com.atproto.createSession",
     type: "procedure",
     description: "Create an authentication session.",
     parameters: {},
@@ -10399,7 +10437,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.deleteAccount",
+    id: "com.atproto.deleteAccount",
     type: "procedure",
     description: "Delete an account.",
     parameters: {},
@@ -10414,7 +10452,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.deleteSession",
+    id: "com.atproto.deleteSession",
     type: "procedure",
     description: "Delete the current session.",
     parameters: {},
@@ -10429,7 +10467,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.getAccount",
+    id: "com.atproto.getAccount",
     type: "query",
     description: "Get information about an account.",
     parameters: {},
@@ -10444,7 +10482,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.getAccountsConfig",
+    id: "com.atproto.getAccountsConfig",
     type: "query",
     description: "Get a document describing the service's accounts configuration.",
     parameters: {},
@@ -10469,7 +10507,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.getSession",
+    id: "com.atproto.getSession",
     type: "query",
     description: "Get information about the current session.",
     parameters: {},
@@ -10491,7 +10529,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.repoBatchWrite",
+    id: "com.atproto.repoBatchWrite",
     type: "procedure",
     description: "Apply a batch transaction of creates, puts, and deletes.",
     parameters: {
@@ -10576,7 +10614,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.repoCreateRecord",
+    id: "com.atproto.repoCreateRecord",
     type: "procedure",
     description: "Create a new record.",
     parameters: {
@@ -10615,7 +10653,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.repoDeleteRecord",
+    id: "com.atproto.repoDeleteRecord",
     type: "procedure",
     description: "Delete a record.",
     parameters: {
@@ -10638,7 +10676,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.repoDescribe",
+    id: "com.atproto.repoDescribe",
     type: "query",
     description: "Get information about the repo, including the list of collections.",
     parameters: {
@@ -10678,7 +10716,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.repoGetRecord",
+    id: "com.atproto.repoGetRecord",
     type: "query",
     description: "Fetch a record.",
     parameters: {
@@ -10716,7 +10754,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.repoListRecords",
+    id: "com.atproto.repoListRecords",
     type: "query",
     description: "List a range of records in a collection.",
     parameters: {
@@ -10777,7 +10815,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.repoPutRecord",
+    id: "com.atproto.repoPutRecord",
     type: "procedure",
     description: "Write a record.",
     parameters: {
@@ -10821,7 +10859,70 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.resolveName",
+    id: "com.atproto.requestAccountPasswordReset",
+    type: "procedure",
+    description: "Initiate a user account password reset via email",
+    parameters: {},
+    input: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["email"],
+        properties: {
+          email: {
+            type: "string"
+          }
+        }
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        properties: {}
+      }
+    }
+  },
+  {
+    lexicon: 1,
+    id: "com.atproto.resetAccountPassword",
+    type: "procedure",
+    description: "Reset a user account password using a token",
+    parameters: {},
+    input: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["token", "password"],
+        properties: {
+          token: {
+            type: "string"
+          },
+          password: {
+            type: "string"
+          }
+        }
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        properties: {}
+      }
+    },
+    errors: [
+      {
+        name: "ExpiredToken"
+      },
+      {
+        name: "InvalidToken"
+      }
+    ]
+  },
+  {
+    lexicon: 1,
+    id: "com.atproto.resolveName",
     type: "query",
     description: "Provides the DID of a repo.",
     parameters: {
@@ -10845,7 +10946,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.syncGetRepo",
+    id: "com.atproto.syncGetRepo",
     type: "query",
     description: "Gets the repo state.",
     parameters: {
@@ -10865,7 +10966,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.syncGetRoot",
+    id: "com.atproto.syncGetRoot",
     type: "query",
     description: "Gets the current root CID of a repo.",
     parameters: {
@@ -10890,7 +10991,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.adx.syncUpdateRepo",
+    id: "com.atproto.syncUpdateRepo",
     type: "procedure",
     description: "Writes commits to a repo.",
     parameters: {
@@ -10906,7 +11007,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.social.getAuthorFeed",
+    id: "app.bsky.getAuthorFeed",
     type: "query",
     description: "A view of a user's feed",
     parameters: {
@@ -11073,7 +11174,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.social.getHomeFeed",
+    id: "app.bsky.getHomeFeed",
     type: "query",
     description: "A view of the user's home feed",
     parameters: {
@@ -11239,7 +11340,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.social.getLikedBy",
+    id: "app.bsky.getLikedBy",
     type: "query",
     parameters: {
       uri: {
@@ -11296,7 +11397,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.social.getNotificationCount",
+    id: "app.bsky.getNotificationCount",
     type: "query",
     parameters: {},
     output: {
@@ -11314,7 +11415,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.social.getNotifications",
+    id: "app.bsky.getNotifications",
     type: "query",
     parameters: {
       limit: {
@@ -11395,7 +11496,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.social.getPostThread",
+    id: "app.bsky.getPostThread",
     type: "query",
     parameters: {
       uri: {
@@ -11556,7 +11657,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.social.getProfile",
+    id: "app.bsky.getProfile",
     type: "query",
     parameters: {
       user: {
@@ -11663,7 +11764,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.social.getRepostedBy",
+    id: "app.bsky.getRepostedBy",
     type: "query",
     parameters: {
       uri: {
@@ -11720,7 +11821,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.social.getUserFollowers",
+    id: "app.bsky.getUserFollowers",
     type: "query",
     description: "Who is following a user?",
     parameters: {
@@ -11791,7 +11892,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.social.getUserFollows",
+    id: "app.bsky.getUserFollows",
     type: "query",
     description: "Who is a user following?",
     parameters: {
@@ -11862,7 +11963,7 @@ var methodSchemas = [
   },
   {
     lexicon: 1,
-    id: "todo.social.postNotificationsSeen",
+    id: "app.bsky.postNotificationsSeen",
     type: "procedure",
     description: "Notify server that the user has seen notifications",
     parameters: {},
@@ -11886,9 +11987,10 @@ var methodSchemas = [
   }
 ];
 
-// src/types/todo/adx/createAccount.ts
+// src/types/com/atproto/createAccount.ts
 var createAccount_exports = {};
 __export(createAccount_exports, {
+  InvalidInviteCodeError: () => InvalidInviteCodeError,
   InvalidPasswordError: () => InvalidPasswordError,
   InvalidUsernameError: () => InvalidUsernameError,
   UsernameNotAvailableError: () => UsernameNotAvailableError,
@@ -11904,6 +12006,11 @@ var InvalidPasswordError = class extends XRPCError {
     super(src.status, src.error, src.message);
   }
 };
+var InvalidInviteCodeError = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
 var UsernameNotAvailableError = class extends XRPCError {
   constructor(src) {
     super(src.status, src.error, src.message);
@@ -11915,15 +12022,17 @@ function toKnownErr(e) {
       return new InvalidUsernameError(e);
     if (e.error === "InvalidPassword")
       return new InvalidPasswordError(e);
+    if (e.error === "InvalidInviteCode")
+      return new InvalidInviteCodeError(e);
     if (e.error === "UsernameNotAvailable")
       return new UsernameNotAvailableError(e);
   }
   return e;
 }
 
-// src/types/todo/adx/createSession.ts
-var createSession_exports = {};
-__export(createSession_exports, {
+// src/types/com/atproto/createInviteCode.ts
+var createInviteCode_exports = {};
+__export(createInviteCode_exports, {
   toKnownErr: () => toKnownErr2
 });
 function toKnownErr2(e) {
@@ -11932,9 +12041,9 @@ function toKnownErr2(e) {
   return e;
 }
 
-// src/types/todo/adx/deleteAccount.ts
-var deleteAccount_exports = {};
-__export(deleteAccount_exports, {
+// src/types/com/atproto/createSession.ts
+var createSession_exports = {};
+__export(createSession_exports, {
   toKnownErr: () => toKnownErr3
 });
 function toKnownErr3(e) {
@@ -11943,9 +12052,9 @@ function toKnownErr3(e) {
   return e;
 }
 
-// src/types/todo/adx/deleteSession.ts
-var deleteSession_exports = {};
-__export(deleteSession_exports, {
+// src/types/com/atproto/deleteAccount.ts
+var deleteAccount_exports = {};
+__export(deleteAccount_exports, {
   toKnownErr: () => toKnownErr4
 });
 function toKnownErr4(e) {
@@ -11954,9 +12063,9 @@ function toKnownErr4(e) {
   return e;
 }
 
-// src/types/todo/adx/getAccount.ts
-var getAccount_exports = {};
-__export(getAccount_exports, {
+// src/types/com/atproto/deleteSession.ts
+var deleteSession_exports = {};
+__export(deleteSession_exports, {
   toKnownErr: () => toKnownErr5
 });
 function toKnownErr5(e) {
@@ -11965,9 +12074,9 @@ function toKnownErr5(e) {
   return e;
 }
 
-// src/types/todo/adx/getAccountsConfig.ts
-var getAccountsConfig_exports = {};
-__export(getAccountsConfig_exports, {
+// src/types/com/atproto/getAccount.ts
+var getAccount_exports = {};
+__export(getAccount_exports, {
   toKnownErr: () => toKnownErr6
 });
 function toKnownErr6(e) {
@@ -11976,9 +12085,9 @@ function toKnownErr6(e) {
   return e;
 }
 
-// src/types/todo/adx/getSession.ts
-var getSession_exports = {};
-__export(getSession_exports, {
+// src/types/com/atproto/getAccountsConfig.ts
+var getAccountsConfig_exports = {};
+__export(getAccountsConfig_exports, {
   toKnownErr: () => toKnownErr7
 });
 function toKnownErr7(e) {
@@ -11987,9 +12096,9 @@ function toKnownErr7(e) {
   return e;
 }
 
-// src/types/todo/adx/repoBatchWrite.ts
-var repoBatchWrite_exports = {};
-__export(repoBatchWrite_exports, {
+// src/types/com/atproto/getSession.ts
+var getSession_exports = {};
+__export(getSession_exports, {
   toKnownErr: () => toKnownErr8
 });
 function toKnownErr8(e) {
@@ -11998,9 +12107,9 @@ function toKnownErr8(e) {
   return e;
 }
 
-// src/types/todo/adx/repoCreateRecord.ts
-var repoCreateRecord_exports = {};
-__export(repoCreateRecord_exports, {
+// src/types/com/atproto/repoBatchWrite.ts
+var repoBatchWrite_exports = {};
+__export(repoBatchWrite_exports, {
   toKnownErr: () => toKnownErr9
 });
 function toKnownErr9(e) {
@@ -12009,9 +12118,9 @@ function toKnownErr9(e) {
   return e;
 }
 
-// src/types/todo/adx/repoDeleteRecord.ts
-var repoDeleteRecord_exports = {};
-__export(repoDeleteRecord_exports, {
+// src/types/com/atproto/repoCreateRecord.ts
+var repoCreateRecord_exports = {};
+__export(repoCreateRecord_exports, {
   toKnownErr: () => toKnownErr10
 });
 function toKnownErr10(e) {
@@ -12020,9 +12129,9 @@ function toKnownErr10(e) {
   return e;
 }
 
-// src/types/todo/adx/repoDescribe.ts
-var repoDescribe_exports = {};
-__export(repoDescribe_exports, {
+// src/types/com/atproto/repoDeleteRecord.ts
+var repoDeleteRecord_exports = {};
+__export(repoDeleteRecord_exports, {
   toKnownErr: () => toKnownErr11
 });
 function toKnownErr11(e) {
@@ -12031,9 +12140,9 @@ function toKnownErr11(e) {
   return e;
 }
 
-// src/types/todo/adx/repoGetRecord.ts
-var repoGetRecord_exports = {};
-__export(repoGetRecord_exports, {
+// src/types/com/atproto/repoDescribe.ts
+var repoDescribe_exports = {};
+__export(repoDescribe_exports, {
   toKnownErr: () => toKnownErr12
 });
 function toKnownErr12(e) {
@@ -12042,9 +12151,9 @@ function toKnownErr12(e) {
   return e;
 }
 
-// src/types/todo/adx/repoListRecords.ts
-var repoListRecords_exports = {};
-__export(repoListRecords_exports, {
+// src/types/com/atproto/repoGetRecord.ts
+var repoGetRecord_exports = {};
+__export(repoGetRecord_exports, {
   toKnownErr: () => toKnownErr13
 });
 function toKnownErr13(e) {
@@ -12053,9 +12162,9 @@ function toKnownErr13(e) {
   return e;
 }
 
-// src/types/todo/adx/repoPutRecord.ts
-var repoPutRecord_exports = {};
-__export(repoPutRecord_exports, {
+// src/types/com/atproto/repoListRecords.ts
+var repoListRecords_exports = {};
+__export(repoListRecords_exports, {
   toKnownErr: () => toKnownErr14
 });
 function toKnownErr14(e) {
@@ -12064,9 +12173,9 @@ function toKnownErr14(e) {
   return e;
 }
 
-// src/types/todo/adx/resolveName.ts
-var resolveName_exports = {};
-__export(resolveName_exports, {
+// src/types/com/atproto/repoPutRecord.ts
+var repoPutRecord_exports = {};
+__export(repoPutRecord_exports, {
   toKnownErr: () => toKnownErr15
 });
 function toKnownErr15(e) {
@@ -12075,9 +12184,9 @@ function toKnownErr15(e) {
   return e;
 }
 
-// src/types/todo/adx/syncGetRepo.ts
-var syncGetRepo_exports = {};
-__export(syncGetRepo_exports, {
+// src/types/com/atproto/requestAccountPasswordReset.ts
+var requestAccountPasswordReset_exports = {};
+__export(requestAccountPasswordReset_exports, {
   toKnownErr: () => toKnownErr16
 });
 function toKnownErr16(e) {
@@ -12086,20 +12195,36 @@ function toKnownErr16(e) {
   return e;
 }
 
-// src/types/todo/adx/syncGetRoot.ts
-var syncGetRoot_exports = {};
-__export(syncGetRoot_exports, {
+// src/types/com/atproto/resetAccountPassword.ts
+var resetAccountPassword_exports = {};
+__export(resetAccountPassword_exports, {
+  ExpiredTokenError: () => ExpiredTokenError,
+  InvalidTokenError: () => InvalidTokenError,
   toKnownErr: () => toKnownErr17
 });
+var ExpiredTokenError = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
+var InvalidTokenError = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
 function toKnownErr17(e) {
   if (e instanceof XRPCError) {
+    if (e.error === "ExpiredToken")
+      return new ExpiredTokenError(e);
+    if (e.error === "InvalidToken")
+      return new InvalidTokenError(e);
   }
   return e;
 }
 
-// src/types/todo/adx/syncUpdateRepo.ts
-var syncUpdateRepo_exports = {};
-__export(syncUpdateRepo_exports, {
+// src/types/com/atproto/resolveName.ts
+var resolveName_exports = {};
+__export(resolveName_exports, {
   toKnownErr: () => toKnownErr18
 });
 function toKnownErr18(e) {
@@ -12108,9 +12233,9 @@ function toKnownErr18(e) {
   return e;
 }
 
-// src/types/todo/social/getAuthorFeed.ts
-var getAuthorFeed_exports = {};
-__export(getAuthorFeed_exports, {
+// src/types/com/atproto/syncGetRepo.ts
+var syncGetRepo_exports = {};
+__export(syncGetRepo_exports, {
   toKnownErr: () => toKnownErr19
 });
 function toKnownErr19(e) {
@@ -12119,9 +12244,9 @@ function toKnownErr19(e) {
   return e;
 }
 
-// src/types/todo/social/getHomeFeed.ts
-var getHomeFeed_exports = {};
-__export(getHomeFeed_exports, {
+// src/types/com/atproto/syncGetRoot.ts
+var syncGetRoot_exports = {};
+__export(syncGetRoot_exports, {
   toKnownErr: () => toKnownErr20
 });
 function toKnownErr20(e) {
@@ -12130,9 +12255,9 @@ function toKnownErr20(e) {
   return e;
 }
 
-// src/types/todo/social/getLikedBy.ts
-var getLikedBy_exports = {};
-__export(getLikedBy_exports, {
+// src/types/com/atproto/syncUpdateRepo.ts
+var syncUpdateRepo_exports = {};
+__export(syncUpdateRepo_exports, {
   toKnownErr: () => toKnownErr21
 });
 function toKnownErr21(e) {
@@ -12141,9 +12266,9 @@ function toKnownErr21(e) {
   return e;
 }
 
-// src/types/todo/social/getNotificationCount.ts
-var getNotificationCount_exports = {};
-__export(getNotificationCount_exports, {
+// src/types/app/bsky/getAuthorFeed.ts
+var getAuthorFeed_exports = {};
+__export(getAuthorFeed_exports, {
   toKnownErr: () => toKnownErr22
 });
 function toKnownErr22(e) {
@@ -12152,9 +12277,9 @@ function toKnownErr22(e) {
   return e;
 }
 
-// src/types/todo/social/getNotifications.ts
-var getNotifications_exports = {};
-__export(getNotifications_exports, {
+// src/types/app/bsky/getHomeFeed.ts
+var getHomeFeed_exports = {};
+__export(getHomeFeed_exports, {
   toKnownErr: () => toKnownErr23
 });
 function toKnownErr23(e) {
@@ -12163,9 +12288,9 @@ function toKnownErr23(e) {
   return e;
 }
 
-// src/types/todo/social/getPostThread.ts
-var getPostThread_exports = {};
-__export(getPostThread_exports, {
+// src/types/app/bsky/getLikedBy.ts
+var getLikedBy_exports = {};
+__export(getLikedBy_exports, {
   toKnownErr: () => toKnownErr24
 });
 function toKnownErr24(e) {
@@ -12174,9 +12299,9 @@ function toKnownErr24(e) {
   return e;
 }
 
-// src/types/todo/social/getProfile.ts
-var getProfile_exports = {};
-__export(getProfile_exports, {
+// src/types/app/bsky/getNotificationCount.ts
+var getNotificationCount_exports = {};
+__export(getNotificationCount_exports, {
   toKnownErr: () => toKnownErr25
 });
 function toKnownErr25(e) {
@@ -12185,9 +12310,9 @@ function toKnownErr25(e) {
   return e;
 }
 
-// src/types/todo/social/getRepostedBy.ts
-var getRepostedBy_exports = {};
-__export(getRepostedBy_exports, {
+// src/types/app/bsky/getNotifications.ts
+var getNotifications_exports = {};
+__export(getNotifications_exports, {
   toKnownErr: () => toKnownErr26
 });
 function toKnownErr26(e) {
@@ -12196,9 +12321,9 @@ function toKnownErr26(e) {
   return e;
 }
 
-// src/types/todo/social/getUserFollowers.ts
-var getUserFollowers_exports = {};
-__export(getUserFollowers_exports, {
+// src/types/app/bsky/getPostThread.ts
+var getPostThread_exports = {};
+__export(getPostThread_exports, {
   toKnownErr: () => toKnownErr27
 });
 function toKnownErr27(e) {
@@ -12207,9 +12332,9 @@ function toKnownErr27(e) {
   return e;
 }
 
-// src/types/todo/social/getUserFollows.ts
-var getUserFollows_exports = {};
-__export(getUserFollows_exports, {
+// src/types/app/bsky/getProfile.ts
+var getProfile_exports = {};
+__export(getProfile_exports, {
   toKnownErr: () => toKnownErr28
 });
 function toKnownErr28(e) {
@@ -12218,9 +12343,9 @@ function toKnownErr28(e) {
   return e;
 }
 
-// src/types/todo/social/postNotificationsSeen.ts
-var postNotificationsSeen_exports = {};
-__export(postNotificationsSeen_exports, {
+// src/types/app/bsky/getRepostedBy.ts
+var getRepostedBy_exports = {};
+__export(getRepostedBy_exports, {
   toKnownErr: () => toKnownErr29
 });
 function toKnownErr29(e) {
@@ -12229,25 +12354,58 @@ function toKnownErr29(e) {
   return e;
 }
 
-// src/types/todo/social/badge.ts
+// src/types/app/bsky/getUserFollowers.ts
+var getUserFollowers_exports = {};
+__export(getUserFollowers_exports, {
+  toKnownErr: () => toKnownErr30
+});
+function toKnownErr30(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/app/bsky/getUserFollows.ts
+var getUserFollows_exports = {};
+__export(getUserFollows_exports, {
+  toKnownErr: () => toKnownErr31
+});
+function toKnownErr31(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/app/bsky/postNotificationsSeen.ts
+var postNotificationsSeen_exports = {};
+__export(postNotificationsSeen_exports, {
+  toKnownErr: () => toKnownErr32
+});
+function toKnownErr32(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/app/bsky/badge.ts
 var badge_exports = {};
 
-// src/types/todo/social/follow.ts
+// src/types/app/bsky/follow.ts
 var follow_exports = {};
 
-// src/types/todo/social/like.ts
+// src/types/app/bsky/like.ts
 var like_exports = {};
 
-// src/types/todo/social/mediaEmbed.ts
+// src/types/app/bsky/mediaEmbed.ts
 var mediaEmbed_exports = {};
 
-// src/types/todo/social/post.ts
+// src/types/app/bsky/post.ts
 var post_exports = {};
 
-// src/types/todo/social/profile.ts
+// src/types/app/bsky/profile.ts
 var profile_exports = {};
 
-// src/types/todo/social/repost.ts
+// src/types/app/bsky/repost.ts
 var repost_exports = {};
 
 // src/index.ts
@@ -12266,115 +12424,136 @@ var ServiceClient2 = class {
   constructor(baseClient, xrpcService) {
     this._baseClient = baseClient;
     this.xrpc = xrpcService;
-    this.todo = new TodoNS(this);
+    this.com = new ComNS(this);
+    this.app = new AppNS(this);
   }
   setHeader(key, value) {
     this.xrpc.setHeader(key, value);
   }
 };
-var TodoNS = class {
+var ComNS = class {
   constructor(service) {
     this._service = service;
-    this.adx = new AdxNS(service);
-    this.social = new SocialNS(service);
+    this.atproto = new AtprotoNS(service);
   }
 };
-var AdxNS = class {
+var AtprotoNS = class {
   constructor(service) {
     this._service = service;
   }
   createAccount(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.createAccount", params, data, opts).catch((e) => {
+    return this._service.xrpc.call("com.atproto.createAccount", params, data, opts).catch((e) => {
       throw toKnownErr(e);
     });
   }
-  createSession(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.createSession", params, data, opts).catch((e) => {
+  createInviteCode(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.createInviteCode", params, data, opts).catch((e) => {
       throw toKnownErr2(e);
     });
   }
-  deleteAccount(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.deleteAccount", params, data, opts).catch((e) => {
+  createSession(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.createSession", params, data, opts).catch((e) => {
       throw toKnownErr3(e);
     });
   }
-  deleteSession(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.deleteSession", params, data, opts).catch((e) => {
+  deleteAccount(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.deleteAccount", params, data, opts).catch((e) => {
       throw toKnownErr4(e);
     });
   }
-  getAccount(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.getAccount", params, data, opts).catch((e) => {
+  deleteSession(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.deleteSession", params, data, opts).catch((e) => {
       throw toKnownErr5(e);
     });
   }
-  getAccountsConfig(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.getAccountsConfig", params, data, opts).catch((e) => {
+  getAccount(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.getAccount", params, data, opts).catch((e) => {
       throw toKnownErr6(e);
     });
   }
-  getSession(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.getSession", params, data, opts).catch((e) => {
+  getAccountsConfig(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.getAccountsConfig", params, data, opts).catch((e) => {
       throw toKnownErr7(e);
     });
   }
-  repoBatchWrite(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.repoBatchWrite", params, data, opts).catch((e) => {
+  getSession(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.getSession", params, data, opts).catch((e) => {
       throw toKnownErr8(e);
     });
   }
-  repoCreateRecord(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.repoCreateRecord", params, data, opts).catch((e) => {
+  repoBatchWrite(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.repoBatchWrite", params, data, opts).catch((e) => {
       throw toKnownErr9(e);
     });
   }
-  repoDeleteRecord(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.repoDeleteRecord", params, data, opts).catch((e) => {
+  repoCreateRecord(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.repoCreateRecord", params, data, opts).catch((e) => {
       throw toKnownErr10(e);
     });
   }
-  repoDescribe(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.repoDescribe", params, data, opts).catch((e) => {
+  repoDeleteRecord(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.repoDeleteRecord", params, data, opts).catch((e) => {
       throw toKnownErr11(e);
     });
   }
-  repoGetRecord(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.repoGetRecord", params, data, opts).catch((e) => {
+  repoDescribe(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.repoDescribe", params, data, opts).catch((e) => {
       throw toKnownErr12(e);
     });
   }
-  repoListRecords(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.repoListRecords", params, data, opts).catch((e) => {
+  repoGetRecord(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.repoGetRecord", params, data, opts).catch((e) => {
       throw toKnownErr13(e);
     });
   }
-  repoPutRecord(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.repoPutRecord", params, data, opts).catch((e) => {
+  repoListRecords(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.repoListRecords", params, data, opts).catch((e) => {
       throw toKnownErr14(e);
     });
   }
-  resolveName(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.resolveName", params, data, opts).catch((e) => {
+  repoPutRecord(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.repoPutRecord", params, data, opts).catch((e) => {
       throw toKnownErr15(e);
     });
   }
-  syncGetRepo(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.syncGetRepo", params, data, opts).catch((e) => {
+  requestAccountPasswordReset(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.requestAccountPasswordReset", params, data, opts).catch((e) => {
       throw toKnownErr16(e);
     });
   }
-  syncGetRoot(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.syncGetRoot", params, data, opts).catch((e) => {
+  resetAccountPassword(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.resetAccountPassword", params, data, opts).catch((e) => {
       throw toKnownErr17(e);
     });
   }
-  syncUpdateRepo(params, data, opts) {
-    return this._service.xrpc.call("todo.adx.syncUpdateRepo", params, data, opts).catch((e) => {
+  resolveName(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.resolveName", params, data, opts).catch((e) => {
       throw toKnownErr18(e);
     });
   }
+  syncGetRepo(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.syncGetRepo", params, data, opts).catch((e) => {
+      throw toKnownErr19(e);
+    });
+  }
+  syncGetRoot(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.syncGetRoot", params, data, opts).catch((e) => {
+      throw toKnownErr20(e);
+    });
+  }
+  syncUpdateRepo(params, data, opts) {
+    return this._service.xrpc.call("com.atproto.syncUpdateRepo", params, data, opts).catch((e) => {
+      throw toKnownErr21(e);
+    });
+  }
 };
-var SocialNS = class {
+var AppNS = class {
+  constructor(service) {
+    this._service = service;
+    this.bsky = new BskyNS(service);
+  }
+};
+var BskyNS = class {
   constructor(service) {
     this._service = service;
     this.badge = new BadgeRecord(service);
@@ -12386,58 +12565,58 @@ var SocialNS = class {
     this.repost = new RepostRecord(service);
   }
   getAuthorFeed(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getAuthorFeed", params, data, opts).catch((e) => {
-      throw toKnownErr19(e);
-    });
-  }
-  getHomeFeed(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getHomeFeed", params, data, opts).catch((e) => {
-      throw toKnownErr20(e);
-    });
-  }
-  getLikedBy(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getLikedBy", params, data, opts).catch((e) => {
-      throw toKnownErr21(e);
-    });
-  }
-  getNotificationCount(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getNotificationCount", params, data, opts).catch((e) => {
+    return this._service.xrpc.call("app.bsky.getAuthorFeed", params, data, opts).catch((e) => {
       throw toKnownErr22(e);
     });
   }
-  getNotifications(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getNotifications", params, data, opts).catch((e) => {
+  getHomeFeed(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.getHomeFeed", params, data, opts).catch((e) => {
       throw toKnownErr23(e);
     });
   }
-  getPostThread(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getPostThread", params, data, opts).catch((e) => {
+  getLikedBy(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.getLikedBy", params, data, opts).catch((e) => {
       throw toKnownErr24(e);
     });
   }
-  getProfile(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getProfile", params, data, opts).catch((e) => {
+  getNotificationCount(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.getNotificationCount", params, data, opts).catch((e) => {
       throw toKnownErr25(e);
     });
   }
-  getRepostedBy(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getRepostedBy", params, data, opts).catch((e) => {
+  getNotifications(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.getNotifications", params, data, opts).catch((e) => {
       throw toKnownErr26(e);
     });
   }
-  getUserFollowers(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getUserFollowers", params, data, opts).catch((e) => {
+  getPostThread(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.getPostThread", params, data, opts).catch((e) => {
       throw toKnownErr27(e);
     });
   }
-  getUserFollows(params, data, opts) {
-    return this._service.xrpc.call("todo.social.getUserFollows", params, data, opts).catch((e) => {
+  getProfile(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.getProfile", params, data, opts).catch((e) => {
       throw toKnownErr28(e);
     });
   }
-  postNotificationsSeen(params, data, opts) {
-    return this._service.xrpc.call("todo.social.postNotificationsSeen", params, data, opts).catch((e) => {
+  getRepostedBy(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.getRepostedBy", params, data, opts).catch((e) => {
       throw toKnownErr29(e);
+    });
+  }
+  getUserFollowers(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.getUserFollowers", params, data, opts).catch((e) => {
+      throw toKnownErr30(e);
+    });
+  }
+  getUserFollows(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.getUserFollows", params, data, opts).catch((e) => {
+      throw toKnownErr31(e);
+    });
+  }
+  postNotificationsSeen(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.postNotificationsSeen", params, data, opts).catch((e) => {
+      throw toKnownErr32(e);
     });
   }
 };
@@ -12446,34 +12625,34 @@ var BadgeRecord = class {
     this._service = service;
   }
   async list(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoListRecords", {
-      type: "todo.social.badge",
+    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
+      type: "app.bsky.badge",
       ...params
     });
     return res.data;
   }
   async get(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoGetRecord", {
-      type: "todo.social.badge",
+    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
+      type: "app.bsky.badge",
       ...params
     });
     return res.data;
   }
   async create(params, record, headers) {
-    record.$type = "todo.social.badge";
+    record.$type = "app.bsky.badge";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoCreateRecord",
-      { type: "todo.social.badge", ...params },
+      "com.atproto.repoCreateRecord",
+      { type: "app.bsky.badge", ...params },
       record,
       { encoding: "application/json", headers }
     );
     return res.data;
   }
   async put(params, record, headers) {
-    record.$type = "todo.social.badge";
+    record.$type = "app.bsky.badge";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoPutRecord",
-      { type: "todo.social.badge", ...params },
+      "com.atproto.repoPutRecord",
+      { type: "app.bsky.badge", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12481,8 +12660,8 @@ var BadgeRecord = class {
   }
   async delete(params, headers) {
     await this._service.xrpc.call(
-      "todo.adx.repoDeleteRecord",
-      { type: "todo.social.badge", ...params },
+      "com.atproto.repoDeleteRecord",
+      { type: "app.bsky.badge", ...params },
       void 0,
       { headers }
     );
@@ -12493,34 +12672,34 @@ var FollowRecord = class {
     this._service = service;
   }
   async list(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoListRecords", {
-      type: "todo.social.follow",
+    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
+      type: "app.bsky.follow",
       ...params
     });
     return res.data;
   }
   async get(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoGetRecord", {
-      type: "todo.social.follow",
+    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
+      type: "app.bsky.follow",
       ...params
     });
     return res.data;
   }
   async create(params, record, headers) {
-    record.$type = "todo.social.follow";
+    record.$type = "app.bsky.follow";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoCreateRecord",
-      { type: "todo.social.follow", ...params },
+      "com.atproto.repoCreateRecord",
+      { type: "app.bsky.follow", ...params },
       record,
       { encoding: "application/json", headers }
     );
     return res.data;
   }
   async put(params, record, headers) {
-    record.$type = "todo.social.follow";
+    record.$type = "app.bsky.follow";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoPutRecord",
-      { type: "todo.social.follow", ...params },
+      "com.atproto.repoPutRecord",
+      { type: "app.bsky.follow", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12528,8 +12707,8 @@ var FollowRecord = class {
   }
   async delete(params, headers) {
     await this._service.xrpc.call(
-      "todo.adx.repoDeleteRecord",
-      { type: "todo.social.follow", ...params },
+      "com.atproto.repoDeleteRecord",
+      { type: "app.bsky.follow", ...params },
       void 0,
       { headers }
     );
@@ -12540,34 +12719,34 @@ var LikeRecord = class {
     this._service = service;
   }
   async list(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoListRecords", {
-      type: "todo.social.like",
+    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
+      type: "app.bsky.like",
       ...params
     });
     return res.data;
   }
   async get(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoGetRecord", {
-      type: "todo.social.like",
+    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
+      type: "app.bsky.like",
       ...params
     });
     return res.data;
   }
   async create(params, record, headers) {
-    record.$type = "todo.social.like";
+    record.$type = "app.bsky.like";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoCreateRecord",
-      { type: "todo.social.like", ...params },
+      "com.atproto.repoCreateRecord",
+      { type: "app.bsky.like", ...params },
       record,
       { encoding: "application/json", headers }
     );
     return res.data;
   }
   async put(params, record, headers) {
-    record.$type = "todo.social.like";
+    record.$type = "app.bsky.like";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoPutRecord",
-      { type: "todo.social.like", ...params },
+      "com.atproto.repoPutRecord",
+      { type: "app.bsky.like", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12575,8 +12754,8 @@ var LikeRecord = class {
   }
   async delete(params, headers) {
     await this._service.xrpc.call(
-      "todo.adx.repoDeleteRecord",
-      { type: "todo.social.like", ...params },
+      "com.atproto.repoDeleteRecord",
+      { type: "app.bsky.like", ...params },
       void 0,
       { headers }
     );
@@ -12587,34 +12766,34 @@ var MediaEmbedRecord = class {
     this._service = service;
   }
   async list(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoListRecords", {
-      type: "todo.social.mediaEmbed",
+    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
+      type: "app.bsky.mediaEmbed",
       ...params
     });
     return res.data;
   }
   async get(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoGetRecord", {
-      type: "todo.social.mediaEmbed",
+    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
+      type: "app.bsky.mediaEmbed",
       ...params
     });
     return res.data;
   }
   async create(params, record, headers) {
-    record.$type = "todo.social.mediaEmbed";
+    record.$type = "app.bsky.mediaEmbed";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoCreateRecord",
-      { type: "todo.social.mediaEmbed", ...params },
+      "com.atproto.repoCreateRecord",
+      { type: "app.bsky.mediaEmbed", ...params },
       record,
       { encoding: "application/json", headers }
     );
     return res.data;
   }
   async put(params, record, headers) {
-    record.$type = "todo.social.mediaEmbed";
+    record.$type = "app.bsky.mediaEmbed";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoPutRecord",
-      { type: "todo.social.mediaEmbed", ...params },
+      "com.atproto.repoPutRecord",
+      { type: "app.bsky.mediaEmbed", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12622,8 +12801,8 @@ var MediaEmbedRecord = class {
   }
   async delete(params, headers) {
     await this._service.xrpc.call(
-      "todo.adx.repoDeleteRecord",
-      { type: "todo.social.mediaEmbed", ...params },
+      "com.atproto.repoDeleteRecord",
+      { type: "app.bsky.mediaEmbed", ...params },
       void 0,
       { headers }
     );
@@ -12634,34 +12813,34 @@ var PostRecord = class {
     this._service = service;
   }
   async list(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoListRecords", {
-      type: "todo.social.post",
+    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
+      type: "app.bsky.post",
       ...params
     });
     return res.data;
   }
   async get(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoGetRecord", {
-      type: "todo.social.post",
+    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
+      type: "app.bsky.post",
       ...params
     });
     return res.data;
   }
   async create(params, record, headers) {
-    record.$type = "todo.social.post";
+    record.$type = "app.bsky.post";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoCreateRecord",
-      { type: "todo.social.post", ...params },
+      "com.atproto.repoCreateRecord",
+      { type: "app.bsky.post", ...params },
       record,
       { encoding: "application/json", headers }
     );
     return res.data;
   }
   async put(params, record, headers) {
-    record.$type = "todo.social.post";
+    record.$type = "app.bsky.post";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoPutRecord",
-      { type: "todo.social.post", ...params },
+      "com.atproto.repoPutRecord",
+      { type: "app.bsky.post", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12669,8 +12848,8 @@ var PostRecord = class {
   }
   async delete(params, headers) {
     await this._service.xrpc.call(
-      "todo.adx.repoDeleteRecord",
-      { type: "todo.social.post", ...params },
+      "com.atproto.repoDeleteRecord",
+      { type: "app.bsky.post", ...params },
       void 0,
       { headers }
     );
@@ -12681,34 +12860,34 @@ var ProfileRecord = class {
     this._service = service;
   }
   async list(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoListRecords", {
-      type: "todo.social.profile",
+    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
+      type: "app.bsky.profile",
       ...params
     });
     return res.data;
   }
   async get(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoGetRecord", {
-      type: "todo.social.profile",
+    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
+      type: "app.bsky.profile",
       ...params
     });
     return res.data;
   }
   async create(params, record, headers) {
-    record.$type = "todo.social.profile";
+    record.$type = "app.bsky.profile";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoCreateRecord",
-      { type: "todo.social.profile", ...params },
+      "com.atproto.repoCreateRecord",
+      { type: "app.bsky.profile", ...params },
       record,
       { encoding: "application/json", headers }
     );
     return res.data;
   }
   async put(params, record, headers) {
-    record.$type = "todo.social.profile";
+    record.$type = "app.bsky.profile";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoPutRecord",
-      { type: "todo.social.profile", ...params },
+      "com.atproto.repoPutRecord",
+      { type: "app.bsky.profile", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12716,8 +12895,8 @@ var ProfileRecord = class {
   }
   async delete(params, headers) {
     await this._service.xrpc.call(
-      "todo.adx.repoDeleteRecord",
-      { type: "todo.social.profile", ...params },
+      "com.atproto.repoDeleteRecord",
+      { type: "app.bsky.profile", ...params },
       void 0,
       { headers }
     );
@@ -12728,34 +12907,34 @@ var RepostRecord = class {
     this._service = service;
   }
   async list(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoListRecords", {
-      type: "todo.social.repost",
+    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
+      type: "app.bsky.repost",
       ...params
     });
     return res.data;
   }
   async get(params) {
-    const res = await this._service.xrpc.call("todo.adx.repoGetRecord", {
-      type: "todo.social.repost",
+    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
+      type: "app.bsky.repost",
       ...params
     });
     return res.data;
   }
   async create(params, record, headers) {
-    record.$type = "todo.social.repost";
+    record.$type = "app.bsky.repost";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoCreateRecord",
-      { type: "todo.social.repost", ...params },
+      "com.atproto.repoCreateRecord",
+      { type: "app.bsky.repost", ...params },
       record,
       { encoding: "application/json", headers }
     );
     return res.data;
   }
   async put(params, record, headers) {
-    record.$type = "todo.social.repost";
+    record.$type = "app.bsky.repost";
     const res = await this._service.xrpc.call(
-      "todo.adx.repoPutRecord",
-      { type: "todo.social.repost", ...params },
+      "com.atproto.repoPutRecord",
+      { type: "app.bsky.repost", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12763,8 +12942,8 @@ var RepostRecord = class {
   }
   async delete(params, headers) {
     await this._service.xrpc.call(
-      "todo.adx.repoDeleteRecord",
-      { type: "todo.social.repost", ...params },
+      "com.atproto.repoDeleteRecord",
+      { type: "app.bsky.repost", ...params },
       void 0,
       { headers }
     );
@@ -12772,54 +12951,58 @@ var RepostRecord = class {
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  AdxNS,
+  AppBskyBadge,
+  AppBskyFollow,
+  AppBskyGetAuthorFeed,
+  AppBskyGetHomeFeed,
+  AppBskyGetLikedBy,
+  AppBskyGetNotificationCount,
+  AppBskyGetNotifications,
+  AppBskyGetPostThread,
+  AppBskyGetProfile,
+  AppBskyGetRepostedBy,
+  AppBskyGetUserFollowers,
+  AppBskyGetUserFollows,
+  AppBskyLike,
+  AppBskyMediaEmbed,
+  AppBskyPost,
+  AppBskyPostNotificationsSeen,
+  AppBskyProfile,
+  AppBskyRepost,
+  AppNS,
+  AtprotoNS,
   BadgeRecord,
+  BskyNS,
   Client,
+  ComAtprotoCreateAccount,
+  ComAtprotoCreateInviteCode,
+  ComAtprotoCreateSession,
+  ComAtprotoDeleteAccount,
+  ComAtprotoDeleteSession,
+  ComAtprotoGetAccount,
+  ComAtprotoGetAccountsConfig,
+  ComAtprotoGetSession,
+  ComAtprotoRepoBatchWrite,
+  ComAtprotoRepoCreateRecord,
+  ComAtprotoRepoDeleteRecord,
+  ComAtprotoRepoDescribe,
+  ComAtprotoRepoGetRecord,
+  ComAtprotoRepoListRecords,
+  ComAtprotoRepoPutRecord,
+  ComAtprotoRequestAccountPasswordReset,
+  ComAtprotoResetAccountPassword,
+  ComAtprotoResolveName,
+  ComAtprotoSyncGetRepo,
+  ComAtprotoSyncGetRoot,
+  ComAtprotoSyncUpdateRepo,
+  ComNS,
   FollowRecord,
   LikeRecord,
   MediaEmbedRecord,
   PostRecord,
   ProfileRecord,
   RepostRecord,
-  ServiceClient,
-  SocialNS,
-  TodoAdxCreateAccount,
-  TodoAdxCreateSession,
-  TodoAdxDeleteAccount,
-  TodoAdxDeleteSession,
-  TodoAdxGetAccount,
-  TodoAdxGetAccountsConfig,
-  TodoAdxGetSession,
-  TodoAdxRepoBatchWrite,
-  TodoAdxRepoCreateRecord,
-  TodoAdxRepoDeleteRecord,
-  TodoAdxRepoDescribe,
-  TodoAdxRepoGetRecord,
-  TodoAdxRepoListRecords,
-  TodoAdxRepoPutRecord,
-  TodoAdxResolveName,
-  TodoAdxSyncGetRepo,
-  TodoAdxSyncGetRoot,
-  TodoAdxSyncUpdateRepo,
-  TodoNS,
-  TodoSocialBadge,
-  TodoSocialFollow,
-  TodoSocialGetAuthorFeed,
-  TodoSocialGetHomeFeed,
-  TodoSocialGetLikedBy,
-  TodoSocialGetNotificationCount,
-  TodoSocialGetNotifications,
-  TodoSocialGetPostThread,
-  TodoSocialGetProfile,
-  TodoSocialGetRepostedBy,
-  TodoSocialGetUserFollowers,
-  TodoSocialGetUserFollows,
-  TodoSocialLike,
-  TodoSocialMediaEmbed,
-  TodoSocialPost,
-  TodoSocialPostNotificationsSeen,
-  TodoSocialProfile,
-  TodoSocialRepost
+  ServiceClient
 });
 /** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
 //# sourceMappingURL=index.js.map

@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AdxUri} from '../../third-party/uri'
-import * as GetLikedBy from '../../third-party/api/src/types/todo/social/getLikedBy'
+import * as GetLikedBy from '../../third-party/api/src/types/app/bsky/getLikedBy'
 import {RootStoreModel} from './root-store'
 
 type LikedByItem = GetLikedBy.OutputSchema['likedBy'][number]
@@ -113,7 +113,7 @@ export class LikedByViewModel {
   private async _fetch(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.todo.social.getLikedBy(
+      const res = await this.rootStore.api.app.bsky.getLikedBy(
         Object.assign({}, this.params, {uri: this.resolvedUri}),
       )
       this._replaceAll(res)

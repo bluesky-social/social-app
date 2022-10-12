@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import * as GetPostThread from '../../third-party/api/src/types/todo/social/getPostThread'
+import * as GetPostThread from '../../third-party/api/src/types/app/bsky/getPostThread'
 import {AdxUri} from '../../third-party/uri'
 import _omit from 'lodash.omit'
 import {RootStoreModel} from './root-store'
@@ -238,7 +238,7 @@ export class PostThreadViewModel {
   private async _load(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.todo.social.getPostThread(
+      const res = await this.rootStore.api.app.bsky.getPostThread(
         Object.assign({}, this.params, {uri: this.resolvedUri}),
       )
       this._replaceAll(res)

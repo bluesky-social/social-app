@@ -1,76 +1,82 @@
 import { Client as XrpcClient, ServiceClient as XrpcServiceClient } from '@adxp/xrpc';
-import * as TodoAdxCreateAccount from './types/todo/adx/createAccount';
-import * as TodoAdxCreateSession from './types/todo/adx/createSession';
-import * as TodoAdxDeleteAccount from './types/todo/adx/deleteAccount';
-import * as TodoAdxDeleteSession from './types/todo/adx/deleteSession';
-import * as TodoAdxGetAccount from './types/todo/adx/getAccount';
-import * as TodoAdxGetAccountsConfig from './types/todo/adx/getAccountsConfig';
-import * as TodoAdxGetSession from './types/todo/adx/getSession';
-import * as TodoAdxRepoBatchWrite from './types/todo/adx/repoBatchWrite';
-import * as TodoAdxRepoCreateRecord from './types/todo/adx/repoCreateRecord';
-import * as TodoAdxRepoDeleteRecord from './types/todo/adx/repoDeleteRecord';
-import * as TodoAdxRepoDescribe from './types/todo/adx/repoDescribe';
-import * as TodoAdxRepoGetRecord from './types/todo/adx/repoGetRecord';
-import * as TodoAdxRepoListRecords from './types/todo/adx/repoListRecords';
-import * as TodoAdxRepoPutRecord from './types/todo/adx/repoPutRecord';
-import * as TodoAdxResolveName from './types/todo/adx/resolveName';
-import * as TodoAdxSyncGetRepo from './types/todo/adx/syncGetRepo';
-import * as TodoAdxSyncGetRoot from './types/todo/adx/syncGetRoot';
-import * as TodoAdxSyncUpdateRepo from './types/todo/adx/syncUpdateRepo';
-import * as TodoSocialBadge from './types/todo/social/badge';
-import * as TodoSocialFollow from './types/todo/social/follow';
-import * as TodoSocialGetAuthorFeed from './types/todo/social/getAuthorFeed';
-import * as TodoSocialGetHomeFeed from './types/todo/social/getHomeFeed';
-import * as TodoSocialGetLikedBy from './types/todo/social/getLikedBy';
-import * as TodoSocialGetNotificationCount from './types/todo/social/getNotificationCount';
-import * as TodoSocialGetNotifications from './types/todo/social/getNotifications';
-import * as TodoSocialGetPostThread from './types/todo/social/getPostThread';
-import * as TodoSocialGetProfile from './types/todo/social/getProfile';
-import * as TodoSocialGetRepostedBy from './types/todo/social/getRepostedBy';
-import * as TodoSocialGetUserFollowers from './types/todo/social/getUserFollowers';
-import * as TodoSocialGetUserFollows from './types/todo/social/getUserFollows';
-import * as TodoSocialLike from './types/todo/social/like';
-import * as TodoSocialMediaEmbed from './types/todo/social/mediaEmbed';
-import * as TodoSocialPost from './types/todo/social/post';
-import * as TodoSocialPostNotificationsSeen from './types/todo/social/postNotificationsSeen';
-import * as TodoSocialProfile from './types/todo/social/profile';
-import * as TodoSocialRepost from './types/todo/social/repost';
-export * as TodoAdxCreateAccount from './types/todo/adx/createAccount';
-export * as TodoAdxCreateSession from './types/todo/adx/createSession';
-export * as TodoAdxDeleteAccount from './types/todo/adx/deleteAccount';
-export * as TodoAdxDeleteSession from './types/todo/adx/deleteSession';
-export * as TodoAdxGetAccount from './types/todo/adx/getAccount';
-export * as TodoAdxGetAccountsConfig from './types/todo/adx/getAccountsConfig';
-export * as TodoAdxGetSession from './types/todo/adx/getSession';
-export * as TodoAdxRepoBatchWrite from './types/todo/adx/repoBatchWrite';
-export * as TodoAdxRepoCreateRecord from './types/todo/adx/repoCreateRecord';
-export * as TodoAdxRepoDeleteRecord from './types/todo/adx/repoDeleteRecord';
-export * as TodoAdxRepoDescribe from './types/todo/adx/repoDescribe';
-export * as TodoAdxRepoGetRecord from './types/todo/adx/repoGetRecord';
-export * as TodoAdxRepoListRecords from './types/todo/adx/repoListRecords';
-export * as TodoAdxRepoPutRecord from './types/todo/adx/repoPutRecord';
-export * as TodoAdxResolveName from './types/todo/adx/resolveName';
-export * as TodoAdxSyncGetRepo from './types/todo/adx/syncGetRepo';
-export * as TodoAdxSyncGetRoot from './types/todo/adx/syncGetRoot';
-export * as TodoAdxSyncUpdateRepo from './types/todo/adx/syncUpdateRepo';
-export * as TodoSocialBadge from './types/todo/social/badge';
-export * as TodoSocialFollow from './types/todo/social/follow';
-export * as TodoSocialGetAuthorFeed from './types/todo/social/getAuthorFeed';
-export * as TodoSocialGetHomeFeed from './types/todo/social/getHomeFeed';
-export * as TodoSocialGetLikedBy from './types/todo/social/getLikedBy';
-export * as TodoSocialGetNotificationCount from './types/todo/social/getNotificationCount';
-export * as TodoSocialGetNotifications from './types/todo/social/getNotifications';
-export * as TodoSocialGetPostThread from './types/todo/social/getPostThread';
-export * as TodoSocialGetProfile from './types/todo/social/getProfile';
-export * as TodoSocialGetRepostedBy from './types/todo/social/getRepostedBy';
-export * as TodoSocialGetUserFollowers from './types/todo/social/getUserFollowers';
-export * as TodoSocialGetUserFollows from './types/todo/social/getUserFollows';
-export * as TodoSocialLike from './types/todo/social/like';
-export * as TodoSocialMediaEmbed from './types/todo/social/mediaEmbed';
-export * as TodoSocialPost from './types/todo/social/post';
-export * as TodoSocialPostNotificationsSeen from './types/todo/social/postNotificationsSeen';
-export * as TodoSocialProfile from './types/todo/social/profile';
-export * as TodoSocialRepost from './types/todo/social/repost';
+import * as ComAtprotoCreateAccount from './types/com/atproto/createAccount';
+import * as ComAtprotoCreateInviteCode from './types/com/atproto/createInviteCode';
+import * as ComAtprotoCreateSession from './types/com/atproto/createSession';
+import * as ComAtprotoDeleteAccount from './types/com/atproto/deleteAccount';
+import * as ComAtprotoDeleteSession from './types/com/atproto/deleteSession';
+import * as ComAtprotoGetAccount from './types/com/atproto/getAccount';
+import * as ComAtprotoGetAccountsConfig from './types/com/atproto/getAccountsConfig';
+import * as ComAtprotoGetSession from './types/com/atproto/getSession';
+import * as ComAtprotoRepoBatchWrite from './types/com/atproto/repoBatchWrite';
+import * as ComAtprotoRepoCreateRecord from './types/com/atproto/repoCreateRecord';
+import * as ComAtprotoRepoDeleteRecord from './types/com/atproto/repoDeleteRecord';
+import * as ComAtprotoRepoDescribe from './types/com/atproto/repoDescribe';
+import * as ComAtprotoRepoGetRecord from './types/com/atproto/repoGetRecord';
+import * as ComAtprotoRepoListRecords from './types/com/atproto/repoListRecords';
+import * as ComAtprotoRepoPutRecord from './types/com/atproto/repoPutRecord';
+import * as ComAtprotoRequestAccountPasswordReset from './types/com/atproto/requestAccountPasswordReset';
+import * as ComAtprotoResetAccountPassword from './types/com/atproto/resetAccountPassword';
+import * as ComAtprotoResolveName from './types/com/atproto/resolveName';
+import * as ComAtprotoSyncGetRepo from './types/com/atproto/syncGetRepo';
+import * as ComAtprotoSyncGetRoot from './types/com/atproto/syncGetRoot';
+import * as ComAtprotoSyncUpdateRepo from './types/com/atproto/syncUpdateRepo';
+import * as AppBskyBadge from './types/app/bsky/badge';
+import * as AppBskyFollow from './types/app/bsky/follow';
+import * as AppBskyGetAuthorFeed from './types/app/bsky/getAuthorFeed';
+import * as AppBskyGetHomeFeed from './types/app/bsky/getHomeFeed';
+import * as AppBskyGetLikedBy from './types/app/bsky/getLikedBy';
+import * as AppBskyGetNotificationCount from './types/app/bsky/getNotificationCount';
+import * as AppBskyGetNotifications from './types/app/bsky/getNotifications';
+import * as AppBskyGetPostThread from './types/app/bsky/getPostThread';
+import * as AppBskyGetProfile from './types/app/bsky/getProfile';
+import * as AppBskyGetRepostedBy from './types/app/bsky/getRepostedBy';
+import * as AppBskyGetUserFollowers from './types/app/bsky/getUserFollowers';
+import * as AppBskyGetUserFollows from './types/app/bsky/getUserFollows';
+import * as AppBskyLike from './types/app/bsky/like';
+import * as AppBskyMediaEmbed from './types/app/bsky/mediaEmbed';
+import * as AppBskyPost from './types/app/bsky/post';
+import * as AppBskyPostNotificationsSeen from './types/app/bsky/postNotificationsSeen';
+import * as AppBskyProfile from './types/app/bsky/profile';
+import * as AppBskyRepost from './types/app/bsky/repost';
+export * as ComAtprotoCreateAccount from './types/com/atproto/createAccount';
+export * as ComAtprotoCreateInviteCode from './types/com/atproto/createInviteCode';
+export * as ComAtprotoCreateSession from './types/com/atproto/createSession';
+export * as ComAtprotoDeleteAccount from './types/com/atproto/deleteAccount';
+export * as ComAtprotoDeleteSession from './types/com/atproto/deleteSession';
+export * as ComAtprotoGetAccount from './types/com/atproto/getAccount';
+export * as ComAtprotoGetAccountsConfig from './types/com/atproto/getAccountsConfig';
+export * as ComAtprotoGetSession from './types/com/atproto/getSession';
+export * as ComAtprotoRepoBatchWrite from './types/com/atproto/repoBatchWrite';
+export * as ComAtprotoRepoCreateRecord from './types/com/atproto/repoCreateRecord';
+export * as ComAtprotoRepoDeleteRecord from './types/com/atproto/repoDeleteRecord';
+export * as ComAtprotoRepoDescribe from './types/com/atproto/repoDescribe';
+export * as ComAtprotoRepoGetRecord from './types/com/atproto/repoGetRecord';
+export * as ComAtprotoRepoListRecords from './types/com/atproto/repoListRecords';
+export * as ComAtprotoRepoPutRecord from './types/com/atproto/repoPutRecord';
+export * as ComAtprotoRequestAccountPasswordReset from './types/com/atproto/requestAccountPasswordReset';
+export * as ComAtprotoResetAccountPassword from './types/com/atproto/resetAccountPassword';
+export * as ComAtprotoResolveName from './types/com/atproto/resolveName';
+export * as ComAtprotoSyncGetRepo from './types/com/atproto/syncGetRepo';
+export * as ComAtprotoSyncGetRoot from './types/com/atproto/syncGetRoot';
+export * as ComAtprotoSyncUpdateRepo from './types/com/atproto/syncUpdateRepo';
+export * as AppBskyBadge from './types/app/bsky/badge';
+export * as AppBskyFollow from './types/app/bsky/follow';
+export * as AppBskyGetAuthorFeed from './types/app/bsky/getAuthorFeed';
+export * as AppBskyGetHomeFeed from './types/app/bsky/getHomeFeed';
+export * as AppBskyGetLikedBy from './types/app/bsky/getLikedBy';
+export * as AppBskyGetNotificationCount from './types/app/bsky/getNotificationCount';
+export * as AppBskyGetNotifications from './types/app/bsky/getNotifications';
+export * as AppBskyGetPostThread from './types/app/bsky/getPostThread';
+export * as AppBskyGetProfile from './types/app/bsky/getProfile';
+export * as AppBskyGetRepostedBy from './types/app/bsky/getRepostedBy';
+export * as AppBskyGetUserFollowers from './types/app/bsky/getUserFollowers';
+export * as AppBskyGetUserFollows from './types/app/bsky/getUserFollows';
+export * as AppBskyLike from './types/app/bsky/like';
+export * as AppBskyMediaEmbed from './types/app/bsky/mediaEmbed';
+export * as AppBskyPost from './types/app/bsky/post';
+export * as AppBskyPostNotificationsSeen from './types/app/bsky/postNotificationsSeen';
+export * as AppBskyProfile from './types/app/bsky/profile';
+export * as AppBskyRepost from './types/app/bsky/repost';
 export declare class Client {
     xrpc: XrpcClient;
     constructor();
@@ -81,39 +87,47 @@ export default defaultInst;
 export declare class ServiceClient {
     _baseClient: Client;
     xrpc: XrpcServiceClient;
-    todo: TodoNS;
+    com: ComNS;
+    app: AppNS;
     constructor(baseClient: Client, xrpcService: XrpcServiceClient);
     setHeader(key: string, value: string): void;
 }
-export declare class TodoNS {
+export declare class ComNS {
     _service: ServiceClient;
-    adx: AdxNS;
-    social: SocialNS;
+    atproto: AtprotoNS;
     constructor(service: ServiceClient);
 }
-export declare class AdxNS {
+export declare class AtprotoNS {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    createAccount(params: TodoAdxCreateAccount.QueryParams, data?: TodoAdxCreateAccount.InputSchema, opts?: TodoAdxCreateAccount.CallOptions): Promise<TodoAdxCreateAccount.Response>;
-    createSession(params: TodoAdxCreateSession.QueryParams, data?: TodoAdxCreateSession.InputSchema, opts?: TodoAdxCreateSession.CallOptions): Promise<TodoAdxCreateSession.Response>;
-    deleteAccount(params: TodoAdxDeleteAccount.QueryParams, data?: TodoAdxDeleteAccount.InputSchema, opts?: TodoAdxDeleteAccount.CallOptions): Promise<TodoAdxDeleteAccount.Response>;
-    deleteSession(params: TodoAdxDeleteSession.QueryParams, data?: TodoAdxDeleteSession.InputSchema, opts?: TodoAdxDeleteSession.CallOptions): Promise<TodoAdxDeleteSession.Response>;
-    getAccount(params: TodoAdxGetAccount.QueryParams, data?: TodoAdxGetAccount.InputSchema, opts?: TodoAdxGetAccount.CallOptions): Promise<TodoAdxGetAccount.Response>;
-    getAccountsConfig(params: TodoAdxGetAccountsConfig.QueryParams, data?: TodoAdxGetAccountsConfig.InputSchema, opts?: TodoAdxGetAccountsConfig.CallOptions): Promise<TodoAdxGetAccountsConfig.Response>;
-    getSession(params: TodoAdxGetSession.QueryParams, data?: TodoAdxGetSession.InputSchema, opts?: TodoAdxGetSession.CallOptions): Promise<TodoAdxGetSession.Response>;
-    repoBatchWrite(params: TodoAdxRepoBatchWrite.QueryParams, data?: TodoAdxRepoBatchWrite.InputSchema, opts?: TodoAdxRepoBatchWrite.CallOptions): Promise<TodoAdxRepoBatchWrite.Response>;
-    repoCreateRecord(params: TodoAdxRepoCreateRecord.QueryParams, data?: TodoAdxRepoCreateRecord.InputSchema, opts?: TodoAdxRepoCreateRecord.CallOptions): Promise<TodoAdxRepoCreateRecord.Response>;
-    repoDeleteRecord(params: TodoAdxRepoDeleteRecord.QueryParams, data?: TodoAdxRepoDeleteRecord.InputSchema, opts?: TodoAdxRepoDeleteRecord.CallOptions): Promise<TodoAdxRepoDeleteRecord.Response>;
-    repoDescribe(params: TodoAdxRepoDescribe.QueryParams, data?: TodoAdxRepoDescribe.InputSchema, opts?: TodoAdxRepoDescribe.CallOptions): Promise<TodoAdxRepoDescribe.Response>;
-    repoGetRecord(params: TodoAdxRepoGetRecord.QueryParams, data?: TodoAdxRepoGetRecord.InputSchema, opts?: TodoAdxRepoGetRecord.CallOptions): Promise<TodoAdxRepoGetRecord.Response>;
-    repoListRecords(params: TodoAdxRepoListRecords.QueryParams, data?: TodoAdxRepoListRecords.InputSchema, opts?: TodoAdxRepoListRecords.CallOptions): Promise<TodoAdxRepoListRecords.Response>;
-    repoPutRecord(params: TodoAdxRepoPutRecord.QueryParams, data?: TodoAdxRepoPutRecord.InputSchema, opts?: TodoAdxRepoPutRecord.CallOptions): Promise<TodoAdxRepoPutRecord.Response>;
-    resolveName(params: TodoAdxResolveName.QueryParams, data?: TodoAdxResolveName.InputSchema, opts?: TodoAdxResolveName.CallOptions): Promise<TodoAdxResolveName.Response>;
-    syncGetRepo(params: TodoAdxSyncGetRepo.QueryParams, data?: TodoAdxSyncGetRepo.InputSchema, opts?: TodoAdxSyncGetRepo.CallOptions): Promise<TodoAdxSyncGetRepo.Response>;
-    syncGetRoot(params: TodoAdxSyncGetRoot.QueryParams, data?: TodoAdxSyncGetRoot.InputSchema, opts?: TodoAdxSyncGetRoot.CallOptions): Promise<TodoAdxSyncGetRoot.Response>;
-    syncUpdateRepo(params: TodoAdxSyncUpdateRepo.QueryParams, data?: TodoAdxSyncUpdateRepo.InputSchema, opts?: TodoAdxSyncUpdateRepo.CallOptions): Promise<TodoAdxSyncUpdateRepo.Response>;
+    createAccount(params: ComAtprotoCreateAccount.QueryParams, data?: ComAtprotoCreateAccount.InputSchema, opts?: ComAtprotoCreateAccount.CallOptions): Promise<ComAtprotoCreateAccount.Response>;
+    createInviteCode(params: ComAtprotoCreateInviteCode.QueryParams, data?: ComAtprotoCreateInviteCode.InputSchema, opts?: ComAtprotoCreateInviteCode.CallOptions): Promise<ComAtprotoCreateInviteCode.Response>;
+    createSession(params: ComAtprotoCreateSession.QueryParams, data?: ComAtprotoCreateSession.InputSchema, opts?: ComAtprotoCreateSession.CallOptions): Promise<ComAtprotoCreateSession.Response>;
+    deleteAccount(params: ComAtprotoDeleteAccount.QueryParams, data?: ComAtprotoDeleteAccount.InputSchema, opts?: ComAtprotoDeleteAccount.CallOptions): Promise<ComAtprotoDeleteAccount.Response>;
+    deleteSession(params: ComAtprotoDeleteSession.QueryParams, data?: ComAtprotoDeleteSession.InputSchema, opts?: ComAtprotoDeleteSession.CallOptions): Promise<ComAtprotoDeleteSession.Response>;
+    getAccount(params: ComAtprotoGetAccount.QueryParams, data?: ComAtprotoGetAccount.InputSchema, opts?: ComAtprotoGetAccount.CallOptions): Promise<ComAtprotoGetAccount.Response>;
+    getAccountsConfig(params: ComAtprotoGetAccountsConfig.QueryParams, data?: ComAtprotoGetAccountsConfig.InputSchema, opts?: ComAtprotoGetAccountsConfig.CallOptions): Promise<ComAtprotoGetAccountsConfig.Response>;
+    getSession(params: ComAtprotoGetSession.QueryParams, data?: ComAtprotoGetSession.InputSchema, opts?: ComAtprotoGetSession.CallOptions): Promise<ComAtprotoGetSession.Response>;
+    repoBatchWrite(params: ComAtprotoRepoBatchWrite.QueryParams, data?: ComAtprotoRepoBatchWrite.InputSchema, opts?: ComAtprotoRepoBatchWrite.CallOptions): Promise<ComAtprotoRepoBatchWrite.Response>;
+    repoCreateRecord(params: ComAtprotoRepoCreateRecord.QueryParams, data?: ComAtprotoRepoCreateRecord.InputSchema, opts?: ComAtprotoRepoCreateRecord.CallOptions): Promise<ComAtprotoRepoCreateRecord.Response>;
+    repoDeleteRecord(params: ComAtprotoRepoDeleteRecord.QueryParams, data?: ComAtprotoRepoDeleteRecord.InputSchema, opts?: ComAtprotoRepoDeleteRecord.CallOptions): Promise<ComAtprotoRepoDeleteRecord.Response>;
+    repoDescribe(params: ComAtprotoRepoDescribe.QueryParams, data?: ComAtprotoRepoDescribe.InputSchema, opts?: ComAtprotoRepoDescribe.CallOptions): Promise<ComAtprotoRepoDescribe.Response>;
+    repoGetRecord(params: ComAtprotoRepoGetRecord.QueryParams, data?: ComAtprotoRepoGetRecord.InputSchema, opts?: ComAtprotoRepoGetRecord.CallOptions): Promise<ComAtprotoRepoGetRecord.Response>;
+    repoListRecords(params: ComAtprotoRepoListRecords.QueryParams, data?: ComAtprotoRepoListRecords.InputSchema, opts?: ComAtprotoRepoListRecords.CallOptions): Promise<ComAtprotoRepoListRecords.Response>;
+    repoPutRecord(params: ComAtprotoRepoPutRecord.QueryParams, data?: ComAtprotoRepoPutRecord.InputSchema, opts?: ComAtprotoRepoPutRecord.CallOptions): Promise<ComAtprotoRepoPutRecord.Response>;
+    requestAccountPasswordReset(params: ComAtprotoRequestAccountPasswordReset.QueryParams, data?: ComAtprotoRequestAccountPasswordReset.InputSchema, opts?: ComAtprotoRequestAccountPasswordReset.CallOptions): Promise<ComAtprotoRequestAccountPasswordReset.Response>;
+    resetAccountPassword(params: ComAtprotoResetAccountPassword.QueryParams, data?: ComAtprotoResetAccountPassword.InputSchema, opts?: ComAtprotoResetAccountPassword.CallOptions): Promise<ComAtprotoResetAccountPassword.Response>;
+    resolveName(params: ComAtprotoResolveName.QueryParams, data?: ComAtprotoResolveName.InputSchema, opts?: ComAtprotoResolveName.CallOptions): Promise<ComAtprotoResolveName.Response>;
+    syncGetRepo(params: ComAtprotoSyncGetRepo.QueryParams, data?: ComAtprotoSyncGetRepo.InputSchema, opts?: ComAtprotoSyncGetRepo.CallOptions): Promise<ComAtprotoSyncGetRepo.Response>;
+    syncGetRoot(params: ComAtprotoSyncGetRoot.QueryParams, data?: ComAtprotoSyncGetRoot.InputSchema, opts?: ComAtprotoSyncGetRoot.CallOptions): Promise<ComAtprotoSyncGetRoot.Response>;
+    syncUpdateRepo(params: ComAtprotoSyncUpdateRepo.QueryParams, data?: ComAtprotoSyncUpdateRepo.InputSchema, opts?: ComAtprotoSyncUpdateRepo.CallOptions): Promise<ComAtprotoSyncUpdateRepo.Response>;
 }
-export declare class SocialNS {
+export declare class AppNS {
+    _service: ServiceClient;
+    bsky: BskyNS;
+    constructor(service: ServiceClient);
+}
+export declare class BskyNS {
     _service: ServiceClient;
     badge: BadgeRecord;
     follow: FollowRecord;
@@ -123,162 +137,162 @@ export declare class SocialNS {
     profile: ProfileRecord;
     repost: RepostRecord;
     constructor(service: ServiceClient);
-    getAuthorFeed(params: TodoSocialGetAuthorFeed.QueryParams, data?: TodoSocialGetAuthorFeed.InputSchema, opts?: TodoSocialGetAuthorFeed.CallOptions): Promise<TodoSocialGetAuthorFeed.Response>;
-    getHomeFeed(params: TodoSocialGetHomeFeed.QueryParams, data?: TodoSocialGetHomeFeed.InputSchema, opts?: TodoSocialGetHomeFeed.CallOptions): Promise<TodoSocialGetHomeFeed.Response>;
-    getLikedBy(params: TodoSocialGetLikedBy.QueryParams, data?: TodoSocialGetLikedBy.InputSchema, opts?: TodoSocialGetLikedBy.CallOptions): Promise<TodoSocialGetLikedBy.Response>;
-    getNotificationCount(params: TodoSocialGetNotificationCount.QueryParams, data?: TodoSocialGetNotificationCount.InputSchema, opts?: TodoSocialGetNotificationCount.CallOptions): Promise<TodoSocialGetNotificationCount.Response>;
-    getNotifications(params: TodoSocialGetNotifications.QueryParams, data?: TodoSocialGetNotifications.InputSchema, opts?: TodoSocialGetNotifications.CallOptions): Promise<TodoSocialGetNotifications.Response>;
-    getPostThread(params: TodoSocialGetPostThread.QueryParams, data?: TodoSocialGetPostThread.InputSchema, opts?: TodoSocialGetPostThread.CallOptions): Promise<TodoSocialGetPostThread.Response>;
-    getProfile(params: TodoSocialGetProfile.QueryParams, data?: TodoSocialGetProfile.InputSchema, opts?: TodoSocialGetProfile.CallOptions): Promise<TodoSocialGetProfile.Response>;
-    getRepostedBy(params: TodoSocialGetRepostedBy.QueryParams, data?: TodoSocialGetRepostedBy.InputSchema, opts?: TodoSocialGetRepostedBy.CallOptions): Promise<TodoSocialGetRepostedBy.Response>;
-    getUserFollowers(params: TodoSocialGetUserFollowers.QueryParams, data?: TodoSocialGetUserFollowers.InputSchema, opts?: TodoSocialGetUserFollowers.CallOptions): Promise<TodoSocialGetUserFollowers.Response>;
-    getUserFollows(params: TodoSocialGetUserFollows.QueryParams, data?: TodoSocialGetUserFollows.InputSchema, opts?: TodoSocialGetUserFollows.CallOptions): Promise<TodoSocialGetUserFollows.Response>;
-    postNotificationsSeen(params: TodoSocialPostNotificationsSeen.QueryParams, data?: TodoSocialPostNotificationsSeen.InputSchema, opts?: TodoSocialPostNotificationsSeen.CallOptions): Promise<TodoSocialPostNotificationsSeen.Response>;
+    getAuthorFeed(params: AppBskyGetAuthorFeed.QueryParams, data?: AppBskyGetAuthorFeed.InputSchema, opts?: AppBskyGetAuthorFeed.CallOptions): Promise<AppBskyGetAuthorFeed.Response>;
+    getHomeFeed(params: AppBskyGetHomeFeed.QueryParams, data?: AppBskyGetHomeFeed.InputSchema, opts?: AppBskyGetHomeFeed.CallOptions): Promise<AppBskyGetHomeFeed.Response>;
+    getLikedBy(params: AppBskyGetLikedBy.QueryParams, data?: AppBskyGetLikedBy.InputSchema, opts?: AppBskyGetLikedBy.CallOptions): Promise<AppBskyGetLikedBy.Response>;
+    getNotificationCount(params: AppBskyGetNotificationCount.QueryParams, data?: AppBskyGetNotificationCount.InputSchema, opts?: AppBskyGetNotificationCount.CallOptions): Promise<AppBskyGetNotificationCount.Response>;
+    getNotifications(params: AppBskyGetNotifications.QueryParams, data?: AppBskyGetNotifications.InputSchema, opts?: AppBskyGetNotifications.CallOptions): Promise<AppBskyGetNotifications.Response>;
+    getPostThread(params: AppBskyGetPostThread.QueryParams, data?: AppBskyGetPostThread.InputSchema, opts?: AppBskyGetPostThread.CallOptions): Promise<AppBskyGetPostThread.Response>;
+    getProfile(params: AppBskyGetProfile.QueryParams, data?: AppBskyGetProfile.InputSchema, opts?: AppBskyGetProfile.CallOptions): Promise<AppBskyGetProfile.Response>;
+    getRepostedBy(params: AppBskyGetRepostedBy.QueryParams, data?: AppBskyGetRepostedBy.InputSchema, opts?: AppBskyGetRepostedBy.CallOptions): Promise<AppBskyGetRepostedBy.Response>;
+    getUserFollowers(params: AppBskyGetUserFollowers.QueryParams, data?: AppBskyGetUserFollowers.InputSchema, opts?: AppBskyGetUserFollowers.CallOptions): Promise<AppBskyGetUserFollowers.Response>;
+    getUserFollows(params: AppBskyGetUserFollows.QueryParams, data?: AppBskyGetUserFollows.InputSchema, opts?: AppBskyGetUserFollows.CallOptions): Promise<AppBskyGetUserFollows.Response>;
+    postNotificationsSeen(params: AppBskyPostNotificationsSeen.QueryParams, data?: AppBskyPostNotificationsSeen.InputSchema, opts?: AppBskyPostNotificationsSeen.CallOptions): Promise<AppBskyPostNotificationsSeen.Response>;
 }
 export declare class BadgeRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<TodoAdxRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
         records: {
             uri: string;
-            value: TodoSocialBadge.Record;
+            value: AppBskyBadge.Record;
         }[];
     }>;
-    get(params: Omit<TodoAdxRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
         uri: string;
-        value: TodoSocialBadge.Record;
+        value: AppBskyBadge.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialBadge.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-    }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialBadge.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyBadge.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyBadge.Record, headers?: Record<string, string>): Promise<{
+        uri: string;
+    }>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class FollowRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<TodoAdxRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
         records: {
             uri: string;
-            value: TodoSocialFollow.Record;
+            value: AppBskyFollow.Record;
         }[];
     }>;
-    get(params: Omit<TodoAdxRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
         uri: string;
-        value: TodoSocialFollow.Record;
+        value: AppBskyFollow.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialFollow.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-    }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialFollow.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyFollow.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyFollow.Record, headers?: Record<string, string>): Promise<{
+        uri: string;
+    }>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class LikeRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<TodoAdxRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
         records: {
             uri: string;
-            value: TodoSocialLike.Record;
+            value: AppBskyLike.Record;
         }[];
     }>;
-    get(params: Omit<TodoAdxRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
         uri: string;
-        value: TodoSocialLike.Record;
+        value: AppBskyLike.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialLike.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-    }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialLike.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyLike.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyLike.Record, headers?: Record<string, string>): Promise<{
+        uri: string;
+    }>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class MediaEmbedRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<TodoAdxRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
         records: {
             uri: string;
-            value: TodoSocialMediaEmbed.Record;
+            value: AppBskyMediaEmbed.Record;
         }[];
     }>;
-    get(params: Omit<TodoAdxRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
         uri: string;
-        value: TodoSocialMediaEmbed.Record;
+        value: AppBskyMediaEmbed.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialMediaEmbed.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-    }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialMediaEmbed.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyMediaEmbed.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyMediaEmbed.Record, headers?: Record<string, string>): Promise<{
+        uri: string;
+    }>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class PostRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<TodoAdxRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
         records: {
             uri: string;
-            value: TodoSocialPost.Record;
+            value: AppBskyPost.Record;
         }[];
     }>;
-    get(params: Omit<TodoAdxRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
         uri: string;
-        value: TodoSocialPost.Record;
+        value: AppBskyPost.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialPost.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-    }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialPost.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyPost.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyPost.Record, headers?: Record<string, string>): Promise<{
+        uri: string;
+    }>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class ProfileRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<TodoAdxRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
         records: {
             uri: string;
-            value: TodoSocialProfile.Record;
+            value: AppBskyProfile.Record;
         }[];
     }>;
-    get(params: Omit<TodoAdxRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
         uri: string;
-        value: TodoSocialProfile.Record;
+        value: AppBskyProfile.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialProfile.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-    }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialProfile.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyProfile.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyProfile.Record, headers?: Record<string, string>): Promise<{
+        uri: string;
+    }>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class RepostRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<TodoAdxRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
         records: {
             uri: string;
-            value: TodoSocialRepost.Record;
+            value: AppBskyRepost.Record;
         }[];
     }>;
-    get(params: Omit<TodoAdxRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
         uri: string;
-        value: TodoSocialRepost.Record;
+        value: AppBskyRepost.Record;
     }>;
-    create(params: Omit<TodoAdxRepoCreateRecord.QueryParams, 'type'>, record: TodoSocialRepost.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-    }>;
-    put(params: Omit<TodoAdxRepoPutRecord.QueryParams, 'type'>, record: TodoSocialRepost.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyRepost.Record, headers?: Record<string, string>): Promise<{
         uri: string;
     }>;
-    delete(params: Omit<TodoAdxRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyRepost.Record, headers?: Record<string, string>): Promise<{
+        uri: string;
+    }>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
 }

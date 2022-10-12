@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx'
-import * as GetNotifications from '../../third-party/api/src/types/todo/social/getNotifications'
+import * as GetNotifications from '../../third-party/api/src/types/app/bsky/getNotifications'
 import {RootStoreModel} from './root-store'
 import {hasProp} from '../lib/type-guards'
 
@@ -228,7 +228,7 @@ export class NotificationsViewModel {
   private async _initialLoad(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.todo.social.getNotifications(
+      const res = await this.rootStore.api.app.bsky.getNotifications(
         this.params,
       )
       this._replaceAll(res)
@@ -244,7 +244,7 @@ export class NotificationsViewModel {
       const params = Object.assign({}, this.params, {
         before: this.loadMoreCursor,
       })
-      const res = await this.rootStore.api.todo.social.getNotifications(params)
+      const res = await this.rootStore.api.app.bsky.getNotifications(params)
       this._appendAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -259,7 +259,7 @@ export class NotificationsViewModel {
     try {
       do {
         const res: GetNotifications.Response =
-          await this.rootStore.api.todo.social.getNotifications({
+          await this.rootStore.api.app.bsky.getNotifications({
             before: cursor,
             limit: Math.min(numToFetch, 100),
           })
@@ -312,7 +312,7 @@ export class NotificationsViewModel {
 
   private async _updateReadState() {
     try {
-      await this.rootStore.api.todo.social.postNotificationsSeen(
+      await this.rootStore.api.app.bsky.postNotificationsSeen(
         {},
         {seenAt: new Date().toISOString()},
       )

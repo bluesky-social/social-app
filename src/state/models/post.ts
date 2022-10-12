@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx'
-import * as Post from '../../third-party/api/src/types/todo/social/post'
+import * as Post from '../../third-party/api/src/types/app/bsky/post'
 import {AdxUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 
@@ -77,7 +77,7 @@ export class PostModel implements RemoveIndex<Post.Record> {
     this._xLoading()
     try {
       const urip = new AdxUri(this.uri)
-      const res = await this.rootStore.api.todo.social.post.get({
+      const res = await this.rootStore.api.app.bsky.post.get({
         nameOrDid: urip.host,
         tid: urip.recordKey,
       })

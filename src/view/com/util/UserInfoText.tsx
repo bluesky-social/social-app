@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import * as TodoSocialGetProfile from '../../../third-party/api/src/types/todo/social/getProfile'
+import * as AppBskyGetProfile from '../../../third-party/api/src/types/app/bsky/getProfile'
 import {StyleProp, Text, TextStyle} from 'react-native'
 import {useStores} from '../../../state'
 
@@ -12,7 +12,7 @@ export function UserInfoText({
   style,
 }: {
   did: string
-  attr?: keyof TodoSocialGetProfile.OutputSchema
+  attr?: keyof AppBskyGetProfile.OutputSchema
   loading?: string
   failed?: string
   prefix?: string
@@ -24,13 +24,13 @@ export function UserInfoText({
 
   const store = useStores()
   const [profile, setProfile] = useState<
-    undefined | TodoSocialGetProfile.OutputSchema
+    undefined | AppBskyGetProfile.OutputSchema
   >(undefined)
   const [didFail, setFailed] = useState<boolean>(false)
 
   useEffect(() => {
     // TODO use caching to reduce loads
-    store.api.todo.social.getProfile({user: did}).then(
+    store.api.app.bsky.getProfile({user: did}).then(
       v => {
         setProfile(v.data)
       },
@@ -38,7 +38,7 @@ export function UserInfoText({
         setFailed(true)
       },
     )
-  }, [did, store.api.todo.social])
+  }, [did, store.api.app.bsky])
 
   return (
     <Text style={style}>

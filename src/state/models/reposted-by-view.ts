@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AdxUri} from '../../third-party/uri'
-import * as GetRepostedBy from '../../third-party/api/src/types/todo/social/getRepostedBy'
+import * as GetRepostedBy from '../../third-party/api/src/types/app/bsky/getRepostedBy'
 import {RootStoreModel} from './root-store'
 
 type RepostedByItem = GetRepostedBy.OutputSchema['repostedBy'][number]
@@ -113,7 +113,7 @@ export class RepostedByViewModel {
   private async _fetch(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.todo.social.getRepostedBy(
+      const res = await this.rootStore.api.app.bsky.getRepostedBy(
         Object.assign({}, this.params, {uri: this.resolvedUri}),
       )
       this._replaceAll(res)

@@ -1,5 +1,5 @@
 import {AdxUri} from '../../third-party/uri'
-import {Entity as Entities} from '../../third-party/api/src/types/todo/social/post'
+import {Entity as Entities} from '../../third-party/api/src/types/app/bsky/post'
 
 type Entity = Entities[0]
 

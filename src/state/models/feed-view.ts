@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import * as GetHomeFeed from '../../third-party/api/src/types/todo/social/getHomeFeed'
-import * as GetAuthorFeed from '../../third-party/api/src/types/todo/social/getAuthorFeed'
+import * as GetHomeFeed from '../../third-party/api/src/types/app/bsky/getHomeFeed'
+import * as GetAuthorFeed from '../../third-party/api/src/types/app/bsky/getAuthorFeed'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
@@ -367,11 +367,11 @@ export class FeedModel {
   ): Promise<GetHomeFeed.Response | GetAuthorFeed.Response> {
     params = Object.assign({}, this.params, params)
     if (this.feedType === 'home') {
-      return this.rootStore.api.todo.social.getHomeFeed(
+      return this.rootStore.api.app.bsky.getHomeFeed(
         params as GetHomeFeed.QueryParams,
       )
     } else {
-      return this.rootStore.api.todo.social.getAuthorFeed(
+      return this.rootStore.api.app.bsky.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,
       )
     }

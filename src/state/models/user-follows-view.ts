@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx'
-import * as GetUserFollows from '../../third-party/api/src/types/todo/social/getUserFollows'
+import * as GetUserFollows from '../../third-party/api/src/types/app/bsky/getUserFollows'
 import {RootStoreModel} from './root-store'
 
 type Subject = GetUserFollows.OutputSchema['subject']
@@ -83,9 +83,7 @@ export class UserFollowsViewModel {
   private async _fetch(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.todo.social.getUserFollows(
-        this.params,
-      )
+      const res = await this.rootStore.api.app.bsky.getUserFollows(this.params)
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {

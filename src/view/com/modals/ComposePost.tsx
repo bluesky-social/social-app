@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import * as GetUserFollows from '../../../third-party/api/src/types/todo/social/getUserFollows'
+import * as GetUserFollows from '../../../third-party/api/src/types/app/bsky/getUserFollows'
 import {Autocomplete} from './composer/Autocomplete'
 import Toast from '../util/Toast'
 import ProgressCircle from '../util/ProgressCircle'
@@ -32,7 +32,7 @@ export function Component({
   const [autocompleteOptions, setAutocompleteOptions] = useState<string[]>([])
 
   useEffect(() => {
-    store.api.todo.social
+    store.api.app.bsky
       .getUserFollows({
         user: store.me.did || '',
       })

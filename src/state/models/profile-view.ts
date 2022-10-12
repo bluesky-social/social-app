@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import * as GetProfile from '../../third-party/api/src/types/todo/social/getProfile'
-import * as Profile from '../../third-party/api/src/types/todo/social/profile'
+import * as GetProfile from '../../third-party/api/src/types/app/bsky/getProfile'
+import * as Profile from '../../third-party/api/src/types/app/bsky/profile'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
@@ -118,7 +118,7 @@ export class ProfileViewModel {
   private async _load(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.todo.social.getProfile(this.params)
+      const res = await this.rootStore.api.app.bsky.getProfile(this.params)
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
