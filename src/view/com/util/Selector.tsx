@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
   },
   item: {
     marginRight: 20,
+    paddingHorizontal: 10,
   },
   itemLabel: {
     fontWeight: '600',
