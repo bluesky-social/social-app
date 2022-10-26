@@ -214,21 +214,27 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const [username, setUsername] = useState<string>('')
 
   useEffect(() => {
+    let aborted = false
     if (serviceDescription || error) {
       return
     }
     store.session.describeService('http://localhost:2583/').then(
       desc => {
+        if (aborted) return
         setServiceDescription(desc)
         setUserDomain(desc.availableUserDomains[0])
       },
       err => {
+        if (aborted) return
         console.error(err)
         setError(
           'Unable to contact your service. Please check your Internet connection.',
         )
       },
     )
+    return () => {
+      aborted = true
+    }
   }, [])
 
   const onPressNext = async () => {

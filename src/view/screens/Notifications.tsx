@@ -13,6 +13,7 @@ export const Notifications = ({visible}: ScreenParams) => {
   const store = useStores()
 
   useEffect(() => {
+    let aborted = false
     if (!visible) {
       return
     }
@@ -24,7 +25,13 @@ export const Notifications = ({visible}: ScreenParams) => {
       console.log('Fetching notifications feed')
       const newNotesView = new NotificationsViewModel(store, {})
       setNotesView(newNotesView)
-      newNotesView.setup().then(() => setHasSetup(true))
+      newNotesView.setup().then(() => {
+        if (aborted) return
+        setHasSetup(true)
+      })
+    }
+    return () => {
+      aborted = true
     }
   }, [visible, store])
 

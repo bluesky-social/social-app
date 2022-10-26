@@ -23,6 +23,7 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
   >()
 
   useEffect(() => {
+    let aborted = false
     if (!visible) {
       return
     }
@@ -36,8 +37,12 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
       const newProfileUiState = new ProfileUiModel(store, {user})
       setProfileUiState(newProfileUiState)
       newProfileUiState.setup().then(() => {
+        if (aborted) return
         setHasSetup(true)
       })
+    }
+    return () => {
+      aborted = true
     }
   }, [visible, params.name, store])
 

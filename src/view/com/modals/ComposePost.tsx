@@ -33,13 +33,18 @@ export function Component({
   const [autocompleteOptions, setAutocompleteOptions] = useState<string[]>([])
 
   useEffect(() => {
+    let aborted = false
     store.api.app.bsky
       .getUserFollows({
         user: store.me.did || '',
       })
       .then(res => {
+        if (aborted) return
         setFollowedUsers(res.data.follows)
       })
+    return () => {
+      aborted = true
+    }
   })
 
   const onChangeText = (newText: string) => {
