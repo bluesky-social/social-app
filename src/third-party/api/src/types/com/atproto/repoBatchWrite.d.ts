@@ -1,4 +1,4 @@
-import { Headers } from '@adxp/xrpc';
+import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
     did: string;
     validate?: boolean;
@@ -11,16 +11,17 @@ export interface InputSchema {
     writes: ({
         action: 'create';
         collection: string;
+        rkey?: string;
         value: unknown;
     } | {
         action: 'update';
         collection: string;
-        tid: string;
+        rkey: string;
         value: unknown;
     } | {
         action: 'delete';
         collection: string;
-        tid: string;
+        rkey: string;
     })[];
 }
 export interface OutputSchema {

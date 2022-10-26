@@ -1,6 +1,5 @@
 export interface Record {
     assertion: InviteAssertion | EmployeeAssertion | TagAssertion | UnknownAssertion;
-    subject: string;
     createdAt: string;
     [k: string]: unknown;
 }

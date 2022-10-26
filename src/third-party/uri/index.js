@@ -20,19 +20,19 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
-  ADX_URI_REGEX: () => ADX_URI_REGEX,
-  AdxUri: () => AdxUri
+  ATP_URI_REGEX: () => ATP_URI_REGEX,
+  AtUri: () => AtUri
 });
 module.exports = __toCommonJS(src_exports);
-var ADX_URI_REGEX = /^(adx:\/\/)?((?:did:[a-z0-9:%-]+)|(?:[a-z][a-z0-9.:-]*))(\/[^?#\s]*)?(\?[^#\s]+)?(#[^\s]+)?$/i;
+var ATP_URI_REGEX = /^(at:\/\/)?((?:did:[a-z0-9:%-]+)|(?:[a-z][a-z0-9.:-]*))(\/[^?#\s]*)?(\?[^#\s]+)?(#[^\s]+)?$/i;
 var RELATIVE_REGEX = /^(\/[^?#\s]*)?(\?[^#\s]+)?(#[^\s]+)?$/i;
-var AdxUri = class {
+var AtUri = class {
   constructor(uri, base) {
     let parsed;
     if (base) {
       parsed = parse(base);
       if (!parsed) {
-        throw new Error(`Invalid adx uri: ${base}`);
+        throw new Error(`Invalid at uri: ${base}`);
       }
       const relativep = parseRelative(uri);
       if (!relativep) {
@@ -42,7 +42,7 @@ var AdxUri = class {
     } else {
       parsed = parse(uri);
       if (!parsed) {
-        throw new Error(`Invalid adx uri: ${uri}`);
+        throw new Error(`Invalid at uri: ${uri}`);
       }
     }
     this.hash = parsed.hash;
@@ -51,10 +51,10 @@ var AdxUri = class {
     this.searchParams = parsed.searchParams;
   }
   get protocol() {
-    return "adx:";
+    return "at:";
   }
   get origin() {
-    return `adx://${this.host}`;
+    return `at://${this.host}`;
   }
   get hostname() {
     return this.host;
@@ -76,10 +76,10 @@ var AdxUri = class {
     parts[0] = v;
     this.pathname = parts.join("/");
   }
-  get recordKey() {
+  get rkey() {
     return this.pathname.split("/").filter(Boolean)[1] || "";
   }
-  set recordKey(v) {
+  set rkey(v) {
     const parts = this.pathname.split("/").filter(Boolean);
     if (!parts[0])
       parts[0] = "undefined";
@@ -102,11 +102,11 @@ var AdxUri = class {
     if (hash && !hash.startsWith("#")) {
       hash = `#${hash}`;
     }
-    return `adx://${this.host}${path}${qs}${hash}`;
+    return `at://${this.host}${path}${qs}${hash}`;
   }
 };
 function parse(str) {
-  const match = ADX_URI_REGEX.exec(str);
+  const match = ATP_URI_REGEX.exec(str);
   if (match) {
     return {
       hash: match[5] || "",
@@ -130,7 +130,7 @@ function parseRelative(str) {
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  ADX_URI_REGEX,
-  AdxUri
+  ATP_URI_REGEX,
+  AtUri
 });
 //# sourceMappingURL=index.js.map

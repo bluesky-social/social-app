@@ -1,5 +1,6 @@
-import {makeAutoObservable, runInAction} from 'mobx'
+import {makeAutoObservable} from 'mobx'
 import {ProfileViewModel} from './profile-view'
+import * as Post from '../../third-party/api/src/types/app/bsky/post'
 
 export class TabsSelectorModel {
   name = 'tabs-selector'
@@ -35,12 +36,12 @@ export class SharePostModel {
 }
 
 export interface ComposePostModelOpts {
-  replyTo?: string
+  replyTo?: Post.PostRef
   onPost?: () => void
 }
 export class ComposePostModel {
   name = 'compose-post'
-  replyTo?: string
+  replyTo?: Post.PostRef
   onPost?: () => void
 
   constructor(opts?: ComposePostModelOpts) {

@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
-import {AdxUri} from '../../../third-party/uri'
+import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/types/app/bsky/post'
 import {
   ActivityIndicator,
@@ -59,20 +59,22 @@ export const Post = observer(function Post({uri}: {uri: string}) {
   const item = view.thread
   const record = view.thread?.record as unknown as PostType.Record
 
-  const itemUrip = new AdxUri(item.uri)
-  const itemHref = `/profile/${item.author.name}/post/${itemUrip.recordKey}`
+  const itemUrip = new AtUri(item.uri)
+  const itemHref = `/profile/${item.author.name}/post/${itemUrip.rkey}`
   const itemTitle = `Post by ${item.author.name}`
   const authorHref = `/profile/${item.author.name}`
   const authorTitle = item.author.name
   let replyAuthorDid = ''
   let replyHref = ''
   if (record.reply) {
-    const urip = new AdxUri(record.reply.parent || record.reply.root)
+    const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     replyAuthorDid = urip.hostname
-    replyHref = `/profile/${urip.hostname}/post/${urip.recordKey}`
+    replyHref = `/profile/${urip.hostname}/post/${urip.rkey}`
   }
   const onPressReply = () => {
-    store.shell.openModal(new ComposePostModel({replyTo: item.uri}))
+    store.shell.openModal(
+      new ComposePostModel({replyTo: {uri: item.uri, cid: item.cid}}),
+    )
   }
   const onPressToggleRepost = () => {
     item

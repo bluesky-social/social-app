@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, View} from 'react-native'
-import {AdxUri} from '../../../third-party/uri'
+import {AtUri} from '../../../third-party/uri'
 import {FontAwesomeIcon, Props} from '@fortawesome/react-native-fontawesome'
 import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
 import {s, colors} from '../../lib/styles'
@@ -20,13 +20,13 @@ export const FeedItem = observer(function FeedItem({
 }) {
   const itemHref = useMemo(() => {
     if (item.isLike || item.isRepost) {
-      const urip = new AdxUri(item.subjectUri)
-      return `/profile/${urip.host}/post/${urip.recordKey}`
+      const urip = new AtUri(item.subjectUri)
+      return `/profile/${urip.host}/post/${urip.rkey}`
     } else if (item.isFollow) {
       return `/profile/${item.author.name}`
     } else if (item.isReply) {
-      const urip = new AdxUri(item.uri)
-      return `/profile/${urip.host}/post/${urip.recordKey}`
+      const urip = new AtUri(item.uri)
+      return `/profile/${urip.host}/post/${urip.rkey}`
     }
     return ''
   }, [item])

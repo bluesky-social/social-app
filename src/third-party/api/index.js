@@ -6936,8 +6936,11 @@ var require_dist = __commonJS({
 var src_exports = {};
 __export(src_exports, {
   AppBskyBadge: () => badge_exports,
+  AppBskyBadgeAccept: () => badgeAccept_exports,
+  AppBskyBadgeOffer: () => badgeOffer_exports,
   AppBskyFollow: () => follow_exports,
   AppBskyGetAuthorFeed: () => getAuthorFeed_exports,
+  AppBskyGetBadgeMembers: () => getBadgeMembers_exports,
   AppBskyGetHomeFeed: () => getHomeFeed_exports,
   AppBskyGetLikedBy: () => getLikedBy_exports,
   AppBskyGetNotificationCount: () => getNotificationCount_exports,
@@ -6947,14 +6950,19 @@ __export(src_exports, {
   AppBskyGetRepostedBy: () => getRepostedBy_exports,
   AppBskyGetUserFollowers: () => getUserFollowers_exports,
   AppBskyGetUserFollows: () => getUserFollows_exports,
+  AppBskyGetUsersSearch: () => getUsersSearch_exports,
+  AppBskyGetUsersTypeahead: () => getUsersTypeahead_exports,
   AppBskyLike: () => like_exports,
   AppBskyMediaEmbed: () => mediaEmbed_exports,
   AppBskyPost: () => post_exports,
   AppBskyPostNotificationsSeen: () => postNotificationsSeen_exports,
   AppBskyProfile: () => profile_exports,
   AppBskyRepost: () => repost_exports,
+  AppBskyUpdateProfile: () => updateProfile_exports,
   AppNS: () => AppNS,
   AtprotoNS: () => AtprotoNS,
+  BadgeAcceptRecord: () => BadgeAcceptRecord,
+  BadgeOfferRecord: () => BadgeOfferRecord,
   BadgeRecord: () => BadgeRecord,
   BskyNS: () => BskyNS,
   Client: () => Client2,
@@ -10040,10 +10048,13 @@ var recordSchema = mod.object({
   type: mod.enum(["record"]),
   revision: mod.number().optional(),
   description: mod.string().optional(),
-  record: mod.any().optional()
+  key: mod.string().optional(),
+  record: mod.any().optional(),
+  defs: mod.any().optional()
 });
 var methodSchemaBody = mod.object({
   encoding: mod.union([mod.string(), mod.string().array()]),
+  description: mod.string().optional(),
   schema: mod.any().optional()
 });
 var methodSchemaParam = mod.object({
@@ -10068,7 +10079,8 @@ var methodSchema = mod.object({
   parameters: mod.record(methodSchemaParam).optional(),
   input: methodSchemaBody.optional(),
   output: methodSchemaBody.optional(),
-  errors: methodSchemaError.array().optional()
+  errors: methodSchemaError.array().optional(),
+  defs: mod.any().optional()
 });
 function isValidMethodSchema(v) {
   return methodSchema.safeParse(v).success;
@@ -10115,7 +10127,9 @@ function constructMethodCallUri(schema, serviceUri, params) {
       if (!paramSchema) {
         throw new Error(`Invalid query parameter: ${key}`);
       }
-      uri.searchParams.set(key, encodeQueryParam(paramSchema.type, value));
+      if (value !== void 0) {
+        uri.searchParams.set(key, encodeQueryParam(paramSchema.type, value));
+      }
     }
   }
   return uri.toString();
@@ -10303,8 +10317,8 @@ function isErrorResponseBody(v) {
 var defaultInst = new Client();
 
 // src/schemas.ts
-var methodSchemas = [
-  {
+var methodSchemaDict = {
+  "com.atproto.createAccount": {
     lexicon: 1,
     id: "com.atproto.createAccount",
     type: "procedure",
@@ -10327,8 +10341,12 @@ var methodSchemas = [
           },
           password: {
             type: "string"
+          },
+          recoveryKey: {
+            type: "string"
           }
-        }
+        },
+        $defs: {}
       }
     },
     output: {
@@ -10346,7 +10364,8 @@ var methodSchemas = [
           did: {
             type: "string"
           }
-        }
+        },
+        $defs: {}
       }
     },
     errors: [
@@ -10364,7 +10383,7 @@ var methodSchemas = [
       }
     ]
   },
-  {
+  "com.atproto.createInviteCode": {
     lexicon: 1,
     id: "com.atproto.createInviteCode",
     type: "procedure",
@@ -10379,7 +10398,8 @@ var methodSchemas = [
           useCount: {
             type: "number"
           }
-        }
+        },
+        $defs: {}
       }
     },
     output: {
@@ -10391,11 +10411,12 @@ var methodSchemas = [
           code: {
             type: "string"
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "com.atproto.createSession": {
     lexicon: 1,
     id: "com.atproto.createSession",
     type: "procedure",
@@ -10413,7 +10434,8 @@ var methodSchemas = [
           password: {
             type: "string"
           }
-        }
+        },
+        $defs: {}
       }
     },
     output: {
@@ -10431,11 +10453,12 @@ var methodSchemas = [
           did: {
             type: "string"
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "com.atproto.deleteAccount": {
     lexicon: 1,
     id: "com.atproto.deleteAccount",
     type: "procedure",
@@ -10443,14 +10466,18 @@ var methodSchemas = [
     parameters: {},
     input: {
       encoding: "",
-      schema: {}
+      schema: {
+        $defs: {}
+      }
     },
     output: {
       encoding: "",
-      schema: {}
+      schema: {
+        $defs: {}
+      }
     }
   },
-  {
+  "com.atproto.deleteSession": {
     lexicon: 1,
     id: "com.atproto.deleteSession",
     type: "procedure",
@@ -10458,14 +10485,18 @@ var methodSchemas = [
     parameters: {},
     input: {
       encoding: "",
-      schema: {}
+      schema: {
+        $defs: {}
+      }
     },
     output: {
       encoding: "",
-      schema: {}
+      schema: {
+        $defs: {}
+      }
     }
   },
-  {
+  "com.atproto.getAccount": {
     lexicon: 1,
     id: "com.atproto.getAccount",
     type: "query",
@@ -10473,14 +10504,18 @@ var methodSchemas = [
     parameters: {},
     input: {
       encoding: "",
-      schema: {}
+      schema: {
+        $defs: {}
+      }
     },
     output: {
       encoding: "",
-      schema: {}
+      schema: {
+        $defs: {}
+      }
     }
   },
-  {
+  "com.atproto.getAccountsConfig": {
     lexicon: 1,
     id: "com.atproto.getAccountsConfig",
     type: "query",
@@ -10501,11 +10536,12 @@ var methodSchemas = [
               type: "string"
             }
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "com.atproto.getSession": {
     lexicon: 1,
     id: "com.atproto.getSession",
     type: "query",
@@ -10523,11 +10559,12 @@ var methodSchemas = [
           did: {
             type: "string"
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "com.atproto.repoBatchWrite": {
     lexicon: 1,
     id: "com.atproto.repoBatchWrite",
     type: "procedure",
@@ -10535,13 +10572,13 @@ var methodSchemas = [
     parameters: {
       did: {
         type: "string",
-        description: "The DID of the repo.",
-        required: true
+        required: true,
+        description: "The DID of the repo."
       },
       validate: {
         type: "boolean",
-        description: "Validate the records?",
-        default: true
+        default: true,
+        description: "Validate the records?"
       }
     },
     input: {
@@ -10565,12 +10602,15 @@ var methodSchemas = [
                     collection: {
                       type: "string"
                     },
+                    rkey: {
+                      type: "string"
+                    },
                     value: {}
                   }
                 },
                 {
                   type: "object",
-                  required: ["action", "collection", "tid", "value"],
+                  required: ["action", "collection", "rkey", "value"],
                   properties: {
                     action: {
                       type: "string",
@@ -10579,7 +10619,7 @@ var methodSchemas = [
                     collection: {
                       type: "string"
                     },
-                    tid: {
+                    rkey: {
                       type: "string"
                     },
                     value: {}
@@ -10587,7 +10627,7 @@ var methodSchemas = [
                 },
                 {
                   type: "object",
-                  required: ["action", "collection", "tid"],
+                  required: ["action", "collection", "rkey"],
                   properties: {
                     action: {
                       type: "string",
@@ -10596,7 +10636,7 @@ var methodSchemas = [
                     collection: {
                       type: "string"
                     },
-                    tid: {
+                    rkey: {
                       type: "string"
                     }
                   }
@@ -10604,15 +10644,18 @@ var methodSchemas = [
               ]
             }
           }
-        }
+        },
+        $defs: {}
       }
     },
     output: {
       encoding: "application/json",
-      schema: {}
+      schema: {
+        $defs: {}
+      }
     }
   },
-  {
+  "com.atproto.repoCreateRecord": {
     lexicon: 1,
     id: "com.atproto.repoCreateRecord",
     type: "procedure",
@@ -10620,38 +10663,45 @@ var methodSchemas = [
     parameters: {
       did: {
         type: "string",
-        description: "The DID of the repo.",
-        required: true
+        required: true,
+        description: "The DID of the repo."
       },
-      type: {
+      collection: {
         type: "string",
-        description: "The NSID of the record type.",
-        required: true
+        required: true,
+        description: "The NSID of the record collection."
       },
       validate: {
         type: "boolean",
-        description: "Validate the record?",
-        default: true
+        default: true,
+        description: "Validate the record?"
       }
     },
     input: {
       encoding: "application/json",
-      schema: {}
+      description: "The record to create",
+      schema: {
+        $defs: {}
+      }
     },
     output: {
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["uri"],
+        required: ["uri", "cid"],
         properties: {
           uri: {
             type: "string"
+          },
+          cid: {
+            type: "string"
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "com.atproto.repoDeleteRecord": {
     lexicon: 1,
     id: "com.atproto.repoDeleteRecord",
     type: "procedure",
@@ -10659,31 +10709,31 @@ var methodSchemas = [
     parameters: {
       did: {
         type: "string",
-        description: "The DID of the repo.",
-        required: true
+        required: true,
+        description: "The DID of the repo."
       },
-      type: {
+      collection: {
         type: "string",
-        description: "The NSID of the record type.",
-        required: true
+        required: true,
+        description: "The NSID of the record collection."
       },
-      tid: {
+      rkey: {
         type: "string",
-        description: "The TID of the record.",
-        required: true
+        required: true,
+        description: "The key of the record."
       }
     }
   },
-  {
+  "com.atproto.repoDescribe": {
     lexicon: 1,
     id: "com.atproto.repoDescribe",
     type: "query",
     description: "Get information about the repo, including the list of collections.",
     parameters: {
-      nameOrDid: {
+      user: {
         type: "string",
-        description: "The username or DID of the repo.",
-        required: true
+        required: true,
+        description: "The username or DID of the repo."
       }
     },
     output: {
@@ -10710,30 +10760,36 @@ var methodSchemas = [
           nameIsCorrect: {
             type: "boolean"
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "com.atproto.repoGetRecord": {
     lexicon: 1,
     id: "com.atproto.repoGetRecord",
     type: "query",
     description: "Fetch a record.",
     parameters: {
-      nameOrDid: {
+      user: {
         type: "string",
-        description: "The name or DID of the repo.",
-        required: true
+        required: true,
+        description: "The username or DID of the repo."
       },
-      type: {
+      collection: {
         type: "string",
-        description: "The NSID of the record type.",
-        required: true
+        required: true,
+        description: "The NSID of the collection."
       },
-      tid: {
+      rkey: {
         type: "string",
-        description: "The TID of the record.",
-        required: true
+        required: true,
+        description: "The key of the record."
+      },
+      cid: {
+        type: "string",
+        required: false,
+        description: "The CID of the version of the record. If not specified, then return the most recent version."
       }
     },
     output: {
@@ -10745,34 +10801,38 @@ var methodSchemas = [
           uri: {
             type: "string"
           },
+          cid: {
+            type: "string"
+          },
           value: {
             type: "object"
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "com.atproto.repoListRecords": {
     lexicon: 1,
     id: "com.atproto.repoListRecords",
     type: "query",
     description: "List a range of records in a collection.",
     parameters: {
-      nameOrDid: {
+      user: {
         type: "string",
-        description: "The username or DID of the repo.",
-        required: true
+        required: true,
+        description: "The username or DID of the repo."
       },
-      type: {
+      collection: {
         type: "string",
-        description: "The NSID of the record type.",
-        required: true
+        required: true,
+        description: "The NSID of the record type."
       },
       limit: {
         type: "number",
-        description: "The number of records to return. TODO-max number?",
+        minimum: 1,
         default: 50,
-        minimum: 1
+        description: "The number of records to return. TODO-max number?"
       },
       before: {
         type: "string",
@@ -10794,13 +10854,19 @@ var methodSchemas = [
         type: "object",
         required: ["records"],
         properties: {
+          cursor: {
+            type: "string"
+          },
           records: {
             type: "array",
             items: {
               type: "object",
-              required: ["uri", "value"],
+              required: ["uri", "cid", "value"],
               properties: {
                 uri: {
+                  type: "string"
+                },
+                cid: {
                   type: "string"
                 },
                 value: {
@@ -10809,11 +10875,12 @@ var methodSchemas = [
               }
             }
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "com.atproto.repoPutRecord": {
     lexicon: 1,
     id: "com.atproto.repoPutRecord",
     type: "procedure",
@@ -10821,43 +10888,49 @@ var methodSchemas = [
     parameters: {
       did: {
         type: "string",
-        description: "The DID of the repo.",
-        required: true
+        required: true,
+        description: "The DID of the repo."
       },
-      type: {
+      collection: {
         type: "string",
-        description: "The NSID of the record type.",
-        required: true
+        required: true,
+        description: "The NSID of the record type."
       },
-      tid: {
+      rkey: {
         type: "string",
-        description: "The TID of the record.",
-        required: true
+        required: true,
+        description: "The TID of the record."
       },
       validate: {
         type: "boolean",
-        description: "Validate the record?",
-        default: true
+        default: true,
+        description: "Validate the record?"
       }
     },
     input: {
       encoding: "application/json",
-      schema: {}
+      schema: {
+        $defs: {}
+      }
     },
     output: {
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["uri"],
+        required: ["uri", "cid"],
         properties: {
           uri: {
             type: "string"
+          },
+          cid: {
+            type: "string"
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "com.atproto.requestAccountPasswordReset": {
     lexicon: 1,
     id: "com.atproto.requestAccountPasswordReset",
     type: "procedure",
@@ -10872,18 +10945,20 @@ var methodSchemas = [
           email: {
             type: "string"
           }
-        }
+        },
+        $defs: {}
       }
     },
     output: {
       encoding: "application/json",
       schema: {
         type: "object",
-        properties: {}
+        properties: {},
+        $defs: {}
       }
     }
   },
-  {
+  "com.atproto.resetAccountPassword": {
     lexicon: 1,
     id: "com.atproto.resetAccountPassword",
     type: "procedure",
@@ -10901,14 +10976,16 @@ var methodSchemas = [
           password: {
             type: "string"
           }
-        }
+        },
+        $defs: {}
       }
     },
     output: {
       encoding: "application/json",
       schema: {
         type: "object",
-        properties: {}
+        properties: {},
+        $defs: {}
       }
     },
     errors: [
@@ -10920,7 +10997,7 @@ var methodSchemas = [
       }
     ]
   },
-  {
+  "com.atproto.resolveName": {
     lexicon: 1,
     id: "com.atproto.resolveName",
     type: "query",
@@ -10940,11 +11017,12 @@ var methodSchemas = [
           did: {
             type: "string"
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "com.atproto.syncGetRepo": {
     lexicon: 1,
     id: "com.atproto.syncGetRepo",
     type: "query",
@@ -10952,8 +11030,8 @@ var methodSchemas = [
     parameters: {
       did: {
         type: "string",
-        description: "The DID of the repo.",
-        required: true
+        required: true,
+        description: "The DID of the repo."
       },
       from: {
         type: "string",
@@ -10964,7 +11042,7 @@ var methodSchemas = [
       encoding: "application/cbor"
     }
   },
-  {
+  "com.atproto.syncGetRoot": {
     lexicon: 1,
     id: "com.atproto.syncGetRoot",
     type: "query",
@@ -10972,8 +11050,8 @@ var methodSchemas = [
     parameters: {
       did: {
         type: "string",
-        description: "The DID of the repo.",
-        required: true
+        required: true,
+        description: "The DID of the repo."
       }
     },
     output: {
@@ -10985,11 +11063,12 @@ var methodSchemas = [
           root: {
             type: "string"
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "com.atproto.syncUpdateRepo": {
     lexicon: 1,
     id: "com.atproto.syncUpdateRepo",
     type: "procedure",
@@ -10997,15 +11076,15 @@ var methodSchemas = [
     parameters: {
       did: {
         type: "string",
-        description: "The DID of the repo.",
-        required: true
+        required: true,
+        description: "The DID of the repo."
       }
     },
     input: {
       encoding: "application/cbor"
     }
   },
-  {
+  "app.bsky.getAuthorFeed": {
     lexicon: 1,
     id: "app.bsky.getAuthorFeed",
     type: "query",
@@ -11029,6 +11108,9 @@ var methodSchemas = [
         type: "object",
         required: ["feed"],
         properties: {
+          cursor: {
+            type: "string"
+          },
           feed: {
             type: "array",
             items: {
@@ -11040,8 +11122,8 @@ var methodSchemas = [
           feedItem: {
             type: "object",
             required: [
-              "cursor",
               "uri",
+              "cid",
               "author",
               "record",
               "replyCount",
@@ -11050,10 +11132,10 @@ var methodSchemas = [
               "indexedAt"
             ],
             properties: {
-              cursor: {
+              uri: {
                 type: "string"
               },
-              uri: {
+              cid: {
                 type: "string"
               },
               author: {
@@ -11170,9 +11252,210 @@ var methodSchemas = [
           }
         }
       }
+    },
+    defs: {
+      feedItem: {
+        type: "object",
+        required: [
+          "uri",
+          "cid",
+          "author",
+          "record",
+          "replyCount",
+          "repostCount",
+          "likeCount",
+          "indexedAt"
+        ],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          },
+          author: {
+            $ref: "#/$defs/user"
+          },
+          repostedBy: {
+            $ref: "#/$defs/user"
+          },
+          record: {
+            type: "object"
+          },
+          embed: {
+            oneOf: [
+              {
+                $ref: "#/$defs/recordEmbed"
+              },
+              {
+                $ref: "#/$defs/externalEmbed"
+              },
+              {
+                $ref: "#/$defs/unknownEmbed"
+              }
+            ]
+          },
+          replyCount: {
+            type: "number"
+          },
+          repostCount: {
+            type: "number"
+          },
+          likeCount: {
+            type: "number"
+          },
+          indexedAt: {
+            type: "string",
+            format: "date-time"
+          },
+          myState: {
+            type: "object",
+            properties: {
+              repost: {
+                type: "string"
+              },
+              like: {
+                type: "string"
+              }
+            }
+          }
+        }
+      },
+      user: {
+        type: "object",
+        required: ["did", "name"],
+        properties: {
+          did: {
+            type: "string"
+          },
+          name: {
+            type: "string"
+          },
+          displayName: {
+            type: "string",
+            maxLength: 64
+          }
+        }
+      },
+      recordEmbed: {
+        type: "object",
+        required: ["type", "author", "record"],
+        properties: {
+          type: {
+            const: "record"
+          },
+          author: {
+            $ref: "#/$defs/user"
+          },
+          record: {
+            type: "object"
+          }
+        }
+      },
+      externalEmbed: {
+        type: "object",
+        required: ["type", "uri", "title", "description", "imageUri"],
+        properties: {
+          type: {
+            const: "external"
+          },
+          uri: {
+            type: "string"
+          },
+          title: {
+            type: "string"
+          },
+          description: {
+            type: "string"
+          },
+          imageUri: {
+            type: "string"
+          }
+        }
+      },
+      unknownEmbed: {
+        type: "object",
+        required: ["type"],
+        properties: {
+          type: {
+            type: "string",
+            not: {
+              enum: ["record", "external"]
+            }
+          }
+        }
+      }
     }
   },
-  {
+  "app.bsky.getBadgeMembers": {
+    lexicon: 1,
+    id: "app.bsky.getBadgeMembers",
+    type: "query",
+    parameters: {
+      uri: {
+        type: "string",
+        required: true
+      },
+      cid: {
+        type: "string",
+        required: false
+      },
+      limit: {
+        type: "number",
+        maximum: 100
+      },
+      before: {
+        type: "string"
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["uri", "members"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          },
+          cursor: {
+            type: "string"
+          },
+          members: {
+            type: "array",
+            items: {
+              type: "object",
+              required: ["did", "name", "acceptedAt", "offeredAt"],
+              properties: {
+                did: {
+                  type: "string"
+                },
+                name: {
+                  type: "string"
+                },
+                displayName: {
+                  type: "string",
+                  maxLength: 64
+                },
+                offeredAt: {
+                  type: "string",
+                  format: "date-time"
+                },
+                acceptedAt: {
+                  type: "string",
+                  format: "date-time"
+                }
+              }
+            }
+          }
+        },
+        $defs: {}
+      }
+    }
+  },
+  "app.bsky.getHomeFeed": {
     lexicon: 1,
     id: "app.bsky.getHomeFeed",
     type: "query",
@@ -11195,6 +11478,9 @@ var methodSchemas = [
         type: "object",
         required: ["feed"],
         properties: {
+          cursor: {
+            type: "string"
+          },
           feed: {
             type: "array",
             items: {
@@ -11206,8 +11492,8 @@ var methodSchemas = [
           feedItem: {
             type: "object",
             required: [
-              "cursor",
               "uri",
+              "cid",
               "author",
               "record",
               "replyCount",
@@ -11216,10 +11502,10 @@ var methodSchemas = [
               "indexedAt"
             ],
             properties: {
-              cursor: {
+              uri: {
                 type: "string"
               },
-              uri: {
+              cid: {
                 type: "string"
               },
               author: {
@@ -11336,9 +11622,142 @@ var methodSchemas = [
           }
         }
       }
+    },
+    defs: {
+      feedItem: {
+        type: "object",
+        required: [
+          "uri",
+          "cid",
+          "author",
+          "record",
+          "replyCount",
+          "repostCount",
+          "likeCount",
+          "indexedAt"
+        ],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          },
+          author: {
+            $ref: "#/$defs/user"
+          },
+          repostedBy: {
+            $ref: "#/$defs/user"
+          },
+          record: {
+            type: "object"
+          },
+          embed: {
+            oneOf: [
+              {
+                $ref: "#/$defs/recordEmbed"
+              },
+              {
+                $ref: "#/$defs/externalEmbed"
+              },
+              {
+                $ref: "#/$defs/unknownEmbed"
+              }
+            ]
+          },
+          replyCount: {
+            type: "number"
+          },
+          repostCount: {
+            type: "number"
+          },
+          likeCount: {
+            type: "number"
+          },
+          indexedAt: {
+            type: "string",
+            format: "date-time"
+          },
+          myState: {
+            type: "object",
+            properties: {
+              repost: {
+                type: "string"
+              },
+              like: {
+                type: "string"
+              }
+            }
+          }
+        }
+      },
+      user: {
+        type: "object",
+        required: ["did", "name"],
+        properties: {
+          did: {
+            type: "string"
+          },
+          name: {
+            type: "string"
+          },
+          displayName: {
+            type: "string",
+            maxLength: 64
+          }
+        }
+      },
+      recordEmbed: {
+        type: "object",
+        required: ["type", "author", "record"],
+        properties: {
+          type: {
+            const: "record"
+          },
+          author: {
+            $ref: "#/$defs/user"
+          },
+          record: {
+            type: "object"
+          }
+        }
+      },
+      externalEmbed: {
+        type: "object",
+        required: ["type", "uri", "title", "description", "imageUri"],
+        properties: {
+          type: {
+            const: "external"
+          },
+          uri: {
+            type: "string"
+          },
+          title: {
+            type: "string"
+          },
+          description: {
+            type: "string"
+          },
+          imageUri: {
+            type: "string"
+          }
+        }
+      },
+      unknownEmbed: {
+        type: "object",
+        required: ["type"],
+        properties: {
+          type: {
+            type: "string",
+            not: {
+              enum: ["record", "external"]
+            }
+          }
+        }
+      }
     }
   },
-  {
+  "app.bsky.getLikedBy": {
     lexicon: 1,
     id: "app.bsky.getLikedBy",
     type: "query",
@@ -11346,6 +11765,10 @@ var methodSchemas = [
       uri: {
         type: "string",
         required: true
+      },
+      cid: {
+        type: "string",
+        required: false
       },
       limit: {
         type: "number",
@@ -11362,6 +11785,12 @@ var methodSchemas = [
         required: ["uri", "likedBy"],
         properties: {
           uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          },
+          cursor: {
             type: "string"
           },
           likedBy: {
@@ -11391,11 +11820,12 @@ var methodSchemas = [
               }
             }
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "app.bsky.getNotificationCount": {
     lexicon: 1,
     id: "app.bsky.getNotificationCount",
     type: "query",
@@ -11409,11 +11839,12 @@ var methodSchemas = [
           count: {
             type: "number"
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "app.bsky.getNotifications": {
     lexicon: 1,
     id: "app.bsky.getNotifications",
     type: "query",
@@ -11432,6 +11863,9 @@ var methodSchemas = [
         type: "object",
         required: ["notifications"],
         properties: {
+          cursor: {
+            type: "string"
+          },
           notifications: {
             type: "array",
             items: {
@@ -11444,6 +11878,7 @@ var methodSchemas = [
             type: "object",
             required: [
               "uri",
+              "cid",
               "author",
               "reason",
               "record",
@@ -11454,6 +11889,9 @@ var methodSchemas = [
               uri: {
                 type: "string",
                 format: "uri"
+              },
+              cid: {
+                type: "string"
               },
               author: {
                 type: "object",
@@ -11492,9 +11930,65 @@ var methodSchemas = [
           }
         }
       }
+    },
+    defs: {
+      notification: {
+        type: "object",
+        required: [
+          "uri",
+          "cid",
+          "author",
+          "reason",
+          "record",
+          "isRead",
+          "indexedAt"
+        ],
+        properties: {
+          uri: {
+            type: "string",
+            format: "uri"
+          },
+          cid: {
+            type: "string"
+          },
+          author: {
+            type: "object",
+            required: ["did", "name"],
+            properties: {
+              did: {
+                type: "string"
+              },
+              name: {
+                type: "string"
+              },
+              displayName: {
+                type: "string",
+                maxLength: 64
+              }
+            }
+          },
+          reason: {
+            type: "string",
+            $comment: "Expected values are 'like', 'repost', 'follow', 'badge', 'mention' and 'reply'."
+          },
+          reasonSubject: {
+            type: "string"
+          },
+          record: {
+            type: "object"
+          },
+          isRead: {
+            type: "boolean"
+          },
+          indexedAt: {
+            type: "string",
+            format: "date-time"
+          }
+        }
+      }
     }
   },
-  {
+  "app.bsky.getPostThread": {
     lexicon: 1,
     id: "app.bsky.getPostThread",
     type: "query",
@@ -11522,6 +12016,7 @@ var methodSchemas = [
             type: "object",
             required: [
               "uri",
+              "cid",
               "author",
               "record",
               "replyCount",
@@ -11531,6 +12026,9 @@ var methodSchemas = [
             ],
             properties: {
               uri: {
+                type: "string"
+              },
+              cid: {
                 type: "string"
               },
               author: {
@@ -11653,9 +12151,148 @@ var methodSchemas = [
           }
         }
       }
+    },
+    defs: {
+      post: {
+        type: "object",
+        required: [
+          "uri",
+          "cid",
+          "author",
+          "record",
+          "replyCount",
+          "likeCount",
+          "repostCount",
+          "indexedAt"
+        ],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          },
+          author: {
+            $ref: "#/$defs/user"
+          },
+          record: {
+            type: "object"
+          },
+          embed: {
+            oneOf: [
+              {
+                $ref: "#/$defs/recordEmbed"
+              },
+              {
+                $ref: "#/$defs/externalEmbed"
+              },
+              {
+                $ref: "#/$defs/unknownEmbed"
+              }
+            ]
+          },
+          parent: {
+            $ref: "#/$defs/post"
+          },
+          replyCount: {
+            type: "number"
+          },
+          replies: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/post"
+            }
+          },
+          likeCount: {
+            type: "number"
+          },
+          repostCount: {
+            type: "number"
+          },
+          indexedAt: {
+            type: "string",
+            format: "date-time"
+          },
+          myState: {
+            type: "object",
+            properties: {
+              repost: {
+                type: "string"
+              },
+              like: {
+                type: "string"
+              }
+            }
+          }
+        }
+      },
+      user: {
+        type: "object",
+        required: ["did", "name"],
+        properties: {
+          did: {
+            type: "string"
+          },
+          name: {
+            type: "string"
+          },
+          displayName: {
+            type: "string",
+            maxLength: 64
+          }
+        }
+      },
+      recordEmbed: {
+        type: "object",
+        required: ["type", "author", "record"],
+        properties: {
+          type: {
+            const: "record"
+          },
+          author: {
+            $ref: "#/$defs/user"
+          },
+          record: {
+            type: "object"
+          }
+        }
+      },
+      externalEmbed: {
+        type: "object",
+        required: ["type", "uri", "title", "description", "imageUri"],
+        properties: {
+          type: {
+            const: "external"
+          },
+          uri: {
+            type: "string"
+          },
+          title: {
+            type: "string"
+          },
+          description: {
+            type: "string"
+          },
+          imageUri: {
+            type: "string"
+          }
+        }
+      },
+      unknownEmbed: {
+        type: "object",
+        required: ["type"],
+        properties: {
+          type: {
+            type: "string",
+            not: {
+              enum: ["record", "external"]
+            }
+          }
+        }
+      }
     }
   },
-  {
+  "app.bsky.getProfile": {
     lexicon: 1,
     id: "app.bsky.getProfile",
     type: "query",
@@ -11675,7 +12312,7 @@ var methodSchemas = [
           "followersCount",
           "followsCount",
           "postsCount",
-          "badges"
+          "pinnedBadges"
         ],
         properties: {
           did: {
@@ -11701,7 +12338,7 @@ var methodSchemas = [
           postsCount: {
             type: "number"
           },
-          badges: {
+          pinnedBadges: {
             type: "array",
             items: {
               $ref: "#/$defs/badge"
@@ -11719,9 +12356,12 @@ var methodSchemas = [
         $defs: {
           badge: {
             type: "object",
-            required: ["uri"],
+            required: ["uri", "cid"],
             properties: {
               uri: {
+                type: "string"
+              },
+              cid: {
                 type: "string"
               },
               error: {
@@ -11729,7 +12369,7 @@ var methodSchemas = [
               },
               issuer: {
                 type: "object",
-                required: ["did", "name", "displayName"],
+                required: ["did", "name"],
                 properties: {
                   did: {
                     type: "string"
@@ -11749,6 +12389,10 @@ var methodSchemas = [
                 properties: {
                   type: {
                     type: "string"
+                  },
+                  tag: {
+                    type: "string",
+                    maxLength: 64
                   }
                 }
               },
@@ -11760,9 +12404,59 @@ var methodSchemas = [
           }
         }
       }
+    },
+    defs: {
+      badge: {
+        type: "object",
+        required: ["uri", "cid"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          },
+          error: {
+            type: "string"
+          },
+          issuer: {
+            type: "object",
+            required: ["did", "name"],
+            properties: {
+              did: {
+                type: "string"
+              },
+              name: {
+                type: "string"
+              },
+              displayName: {
+                type: "string",
+                maxLength: 64
+              }
+            }
+          },
+          assertion: {
+            type: "object",
+            required: ["type"],
+            properties: {
+              type: {
+                type: "string"
+              },
+              tag: {
+                type: "string",
+                maxLength: 64
+              }
+            }
+          },
+          createdAt: {
+            type: "string",
+            format: "date-time"
+          }
+        }
+      }
     }
   },
-  {
+  "app.bsky.getRepostedBy": {
     lexicon: 1,
     id: "app.bsky.getRepostedBy",
     type: "query",
@@ -11770,6 +12464,10 @@ var methodSchemas = [
       uri: {
         type: "string",
         required: true
+      },
+      cid: {
+        type: "string",
+        required: false
       },
       limit: {
         type: "number",
@@ -11786,6 +12484,12 @@ var methodSchemas = [
         required: ["uri", "repostedBy"],
         properties: {
           uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          },
+          cursor: {
             type: "string"
           },
           repostedBy: {
@@ -11815,11 +12519,12 @@ var methodSchemas = [
               }
             }
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "app.bsky.getUserFollowers": {
     lexicon: 1,
     id: "app.bsky.getUserFollowers",
     type: "query",
@@ -11859,6 +12564,9 @@ var methodSchemas = [
               }
             }
           },
+          cursor: {
+            type: "string"
+          },
           followers: {
             type: "array",
             items: {
@@ -11886,11 +12594,12 @@ var methodSchemas = [
               }
             }
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "app.bsky.getUserFollows": {
     lexicon: 1,
     id: "app.bsky.getUserFollows",
     type: "query",
@@ -11930,6 +12639,9 @@ var methodSchemas = [
               }
             }
           },
+          cursor: {
+            type: "string"
+          },
           follows: {
             type: "array",
             items: {
@@ -11957,11 +12669,119 @@ var methodSchemas = [
               }
             }
           }
-        }
+        },
+        $defs: {}
       }
     }
   },
-  {
+  "app.bsky.getUsersSearch": {
+    lexicon: 1,
+    id: "app.bsky.getUsersSearch",
+    type: "query",
+    description: "Find users matching search criteria",
+    parameters: {
+      term: {
+        type: "string",
+        required: true
+      },
+      limit: {
+        type: "number",
+        maximum: 100
+      },
+      before: {
+        type: "string"
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["users"],
+        properties: {
+          cursor: {
+            type: "string"
+          },
+          users: {
+            type: "array",
+            items: {
+              type: "object",
+              required: ["did", "name", "createdAt", "indexedAt"],
+              properties: {
+                did: {
+                  type: "string"
+                },
+                name: {
+                  type: "string"
+                },
+                displayName: {
+                  type: "string",
+                  maxLength: 64
+                },
+                description: {
+                  type: "string"
+                },
+                createdAt: {
+                  type: "string",
+                  format: "date-time"
+                },
+                indexedAt: {
+                  type: "string",
+                  format: "date-time"
+                }
+              }
+            }
+          }
+        },
+        $defs: {}
+      }
+    }
+  },
+  "app.bsky.getUsersTypeahead": {
+    lexicon: 1,
+    id: "app.bsky.getUsersTypeahead",
+    type: "query",
+    description: "Find user suggestions for a search term",
+    parameters: {
+      term: {
+        type: "string",
+        required: true
+      },
+      limit: {
+        type: "number",
+        maximum: 100
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["users"],
+        properties: {
+          users: {
+            type: "array",
+            items: {
+              type: "object",
+              required: ["did", "name"],
+              properties: {
+                did: {
+                  type: "string"
+                },
+                name: {
+                  type: "string"
+                },
+                displayName: {
+                  type: "string",
+                  maxLength: 64
+                }
+              }
+            }
+          }
+        },
+        $defs: {}
+      }
+    }
+  },
+  "app.bsky.postNotificationsSeen": {
     lexicon: 1,
     id: "app.bsky.postNotificationsSeen",
     type: "procedure",
@@ -11977,15 +12797,681 @@ var methodSchemas = [
             type: "string",
             format: "date-time"
           }
+        },
+        $defs: {}
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        $defs: {}
+      }
+    }
+  },
+  "app.bsky.updateProfile": {
+    lexicon: 1,
+    id: "app.bsky.updateProfile",
+    type: "procedure",
+    description: "Notify server that the user has seen notifications",
+    parameters: {},
+    input: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: [],
+        properties: {
+          displayName: {
+            type: "string",
+            maxLength: 64
+          },
+          description: {
+            type: "string",
+            maxLength: 256
+          },
+          pinnedBadges: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/badgeRef"
+            }
+          }
+        },
+        $defs: {
+          badgeRef: {
+            type: "object",
+            required: ["uri", "cid"],
+            properties: {
+              uri: {
+                type: "string"
+              },
+              cid: {
+                type: "string"
+              }
+            }
+          }
         }
       }
     },
     output: {
       encoding: "application/json",
-      schema: {}
+      schema: {
+        type: "object",
+        required: ["uri", "cid", "record"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          },
+          record: {
+            type: "object"
+          }
+        },
+        $defs: {}
+      }
     }
   }
-];
+};
+var methodSchemas = Object.values(methodSchemaDict);
+var recordSchemaDict = {
+  "app.bsky.badge": {
+    lexicon: 1,
+    id: "app.bsky.badge",
+    type: "record",
+    description: "An assertion about the subject by this user.",
+    key: "tid",
+    record: {
+      type: "object",
+      required: ["assertion", "createdAt"],
+      properties: {
+        assertion: {
+          oneOf: [
+            {
+              $ref: "#/$defs/inviteAssertion"
+            },
+            {
+              $ref: "#/$defs/employeeAssertion"
+            },
+            {
+              $ref: "#/$defs/tagAssertion"
+            },
+            {
+              $ref: "#/$defs/unknownAssertion"
+            }
+          ]
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time"
+        }
+      },
+      $defs: {
+        inviteAssertion: {
+          type: "object",
+          required: ["type"],
+          properties: {
+            type: {
+              const: "invite"
+            }
+          }
+        },
+        employeeAssertion: {
+          type: "object",
+          required: ["type"],
+          properties: {
+            type: {
+              const: "employee"
+            }
+          }
+        },
+        tagAssertion: {
+          type: "object",
+          required: ["type", "tag"],
+          properties: {
+            type: {
+              const: "tag"
+            },
+            tag: {
+              type: "string",
+              maxLength: 64
+            }
+          }
+        },
+        unknownAssertion: {
+          type: "object",
+          required: ["type"],
+          properties: {
+            type: {
+              type: "string",
+              not: {
+                enum: ["invite", "employee", "tag"]
+              }
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      inviteAssertion: {
+        type: "object",
+        required: ["type"],
+        properties: {
+          type: {
+            const: "invite"
+          }
+        }
+      },
+      employeeAssertion: {
+        type: "object",
+        required: ["type"],
+        properties: {
+          type: {
+            const: "employee"
+          }
+        }
+      },
+      tagAssertion: {
+        type: "object",
+        required: ["type", "tag"],
+        properties: {
+          type: {
+            const: "tag"
+          },
+          tag: {
+            type: "string",
+            maxLength: 64
+          }
+        }
+      },
+      unknownAssertion: {
+        type: "object",
+        required: ["type"],
+        properties: {
+          type: {
+            type: "string",
+            not: {
+              enum: ["invite", "employee", "tag"]
+            }
+          }
+        }
+      }
+    }
+  },
+  "app.bsky.badgeAccept": {
+    lexicon: 1,
+    id: "app.bsky.badgeAccept",
+    type: "record",
+    key: "tid",
+    record: {
+      type: "object",
+      required: ["badge", "offer", "createdAt"],
+      properties: {
+        badge: {
+          $ref: "#/$defs/subject"
+        },
+        offer: {
+          $ref: "#/$defs/subject"
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time"
+        }
+      },
+      $defs: {
+        subject: {
+          type: "object",
+          required: ["uri", "cid"],
+          properties: {
+            uri: {
+              type: "string"
+            },
+            cid: {
+              type: "string"
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      subject: {
+        type: "object",
+        required: ["uri", "cid"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          }
+        }
+      }
+    }
+  },
+  "app.bsky.badgeOffer": {
+    lexicon: 1,
+    id: "app.bsky.badgeOffer",
+    type: "record",
+    key: "tid",
+    record: {
+      type: "object",
+      required: ["badge", "subject", "createdAt"],
+      properties: {
+        badge: {
+          $ref: "#/$defs/badge"
+        },
+        subject: {
+          type: "string"
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time"
+        }
+      },
+      $defs: {
+        badge: {
+          type: "object",
+          required: ["uri", "cid"],
+          properties: {
+            uri: {
+              type: "string"
+            },
+            cid: {
+              type: "string"
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      badge: {
+        type: "object",
+        required: ["uri", "cid"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          }
+        }
+      }
+    }
+  },
+  "app.bsky.follow": {
+    lexicon: 1,
+    id: "app.bsky.follow",
+    type: "record",
+    description: "A social follow",
+    key: "tid",
+    record: {
+      type: "object",
+      required: ["subject", "createdAt"],
+      properties: {
+        subject: {
+          type: "string"
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time"
+        }
+      },
+      $defs: {}
+    }
+  },
+  "app.bsky.like": {
+    lexicon: 1,
+    id: "app.bsky.like",
+    type: "record",
+    key: "tid",
+    record: {
+      type: "object",
+      required: ["subject", "createdAt"],
+      properties: {
+        subject: {
+          $ref: "#/$defs/subject"
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time"
+        }
+      },
+      $defs: {
+        subject: {
+          type: "object",
+          required: ["uri", "cid"],
+          properties: {
+            uri: {
+              type: "string"
+            },
+            cid: {
+              type: "string"
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      subject: {
+        type: "object",
+        required: ["uri", "cid"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          }
+        }
+      }
+    }
+  },
+  "app.bsky.mediaEmbed": {
+    lexicon: 1,
+    id: "app.bsky.mediaEmbed",
+    type: "record",
+    description: "A list of media embedded in a post or document.",
+    key: "tid",
+    record: {
+      type: "object",
+      required: ["media"],
+      properties: {
+        media: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/mediaEmbed"
+          }
+        }
+      },
+      $defs: {
+        mediaEmbed: {
+          type: "object",
+          required: ["original"],
+          properties: {
+            alt: {
+              type: "string"
+            },
+            thumb: {
+              $ref: "#/$defs/mediaEmbedBlob"
+            },
+            original: {
+              $ref: "#/$defs/mediaEmbedBlob"
+            }
+          }
+        },
+        mediaEmbedBlob: {
+          type: "object",
+          required: ["mimeType", "blobId"],
+          properties: {
+            mimeType: {
+              type: "string"
+            },
+            blobId: {
+              type: "string"
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      mediaEmbed: {
+        type: "object",
+        required: ["original"],
+        properties: {
+          alt: {
+            type: "string"
+          },
+          thumb: {
+            $ref: "#/$defs/mediaEmbedBlob"
+          },
+          original: {
+            $ref: "#/$defs/mediaEmbedBlob"
+          }
+        }
+      },
+      mediaEmbedBlob: {
+        type: "object",
+        required: ["mimeType", "blobId"],
+        properties: {
+          mimeType: {
+            type: "string"
+          },
+          blobId: {
+            type: "string"
+          }
+        }
+      }
+    }
+  },
+  "app.bsky.post": {
+    lexicon: 1,
+    id: "app.bsky.post",
+    type: "record",
+    key: "tid",
+    record: {
+      type: "object",
+      required: ["text", "createdAt"],
+      properties: {
+        text: {
+          type: "string",
+          maxLength: 256
+        },
+        entities: {
+          $ref: "#/$defs/entity"
+        },
+        reply: {
+          type: "object",
+          required: ["root", "parent"],
+          properties: {
+            root: {
+              $ref: "#/$defs/postRef"
+            },
+            parent: {
+              $ref: "#/$defs/postRef"
+            }
+          }
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time"
+        }
+      },
+      $defs: {
+        entity: {
+          type: "array",
+          items: {
+            type: "object",
+            required: ["index", "type", "value"],
+            properties: {
+              index: {
+                $ref: "#/$defs/textSlice"
+              },
+              type: {
+                type: "string",
+                $comment: "Expected values are 'mention', 'hashtag', and 'link'."
+              },
+              value: {
+                type: "string"
+              }
+            }
+          }
+        },
+        textSlice: {
+          type: "array",
+          items: [
+            {
+              type: "number"
+            },
+            {
+              type: "number"
+            }
+          ],
+          minItems: 2,
+          maxItems: 2
+        },
+        postRef: {
+          type: "object",
+          required: ["uri", "cid"],
+          properties: {
+            uri: {
+              type: "string"
+            },
+            cid: {
+              type: "string"
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      postRef: {
+        type: "object",
+        required: ["uri", "cid"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          }
+        }
+      },
+      entity: {
+        type: "array",
+        items: {
+          type: "object",
+          required: ["index", "type", "value"],
+          properties: {
+            index: {
+              $ref: "#/$defs/textSlice"
+            },
+            type: {
+              type: "string",
+              $comment: "Expected values are 'mention', 'hashtag', and 'link'."
+            },
+            value: {
+              type: "string"
+            }
+          }
+        }
+      },
+      textSlice: {
+        type: "array",
+        items: [
+          {
+            type: "number"
+          },
+          {
+            type: "number"
+          }
+        ],
+        minItems: 2,
+        maxItems: 2
+      }
+    }
+  },
+  "app.bsky.profile": {
+    lexicon: 1,
+    id: "app.bsky.profile",
+    type: "record",
+    key: "literal:self",
+    record: {
+      type: "object",
+      required: ["displayName"],
+      properties: {
+        displayName: {
+          type: "string",
+          maxLength: 64
+        },
+        description: {
+          type: "string",
+          maxLength: 256
+        },
+        pinnedBadges: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/badgeRef"
+          }
+        }
+      },
+      $defs: {
+        badgeRef: {
+          type: "object",
+          required: ["uri", "cid"],
+          properties: {
+            uri: {
+              type: "string"
+            },
+            cid: {
+              type: "string"
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      badgeRef: {
+        type: "object",
+        required: ["uri", "cid"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          }
+        }
+      }
+    }
+  },
+  "app.bsky.repost": {
+    lexicon: 1,
+    id: "app.bsky.repost",
+    type: "record",
+    key: "tid",
+    record: {
+      type: "object",
+      required: ["subject", "createdAt"],
+      properties: {
+        subject: {
+          $ref: "#/$defs/subject"
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time"
+        }
+      },
+      $defs: {
+        subject: {
+          type: "object",
+          required: ["uri", "cid"],
+          properties: {
+            uri: {
+              type: "string"
+            },
+            cid: {
+              type: "string"
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      subject: {
+        type: "object",
+        required: ["uri", "cid"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          }
+        }
+      }
+    }
+  }
+};
+var recordSchemas = Object.values(recordSchemaDict);
 
 // src/types/com/atproto/createAccount.ts
 var createAccount_exports = {};
@@ -12277,9 +13763,9 @@ function toKnownErr22(e) {
   return e;
 }
 
-// src/types/app/bsky/getHomeFeed.ts
-var getHomeFeed_exports = {};
-__export(getHomeFeed_exports, {
+// src/types/app/bsky/getBadgeMembers.ts
+var getBadgeMembers_exports = {};
+__export(getBadgeMembers_exports, {
   toKnownErr: () => toKnownErr23
 });
 function toKnownErr23(e) {
@@ -12288,9 +13774,9 @@ function toKnownErr23(e) {
   return e;
 }
 
-// src/types/app/bsky/getLikedBy.ts
-var getLikedBy_exports = {};
-__export(getLikedBy_exports, {
+// src/types/app/bsky/getHomeFeed.ts
+var getHomeFeed_exports = {};
+__export(getHomeFeed_exports, {
   toKnownErr: () => toKnownErr24
 });
 function toKnownErr24(e) {
@@ -12299,9 +13785,9 @@ function toKnownErr24(e) {
   return e;
 }
 
-// src/types/app/bsky/getNotificationCount.ts
-var getNotificationCount_exports = {};
-__export(getNotificationCount_exports, {
+// src/types/app/bsky/getLikedBy.ts
+var getLikedBy_exports = {};
+__export(getLikedBy_exports, {
   toKnownErr: () => toKnownErr25
 });
 function toKnownErr25(e) {
@@ -12310,9 +13796,9 @@ function toKnownErr25(e) {
   return e;
 }
 
-// src/types/app/bsky/getNotifications.ts
-var getNotifications_exports = {};
-__export(getNotifications_exports, {
+// src/types/app/bsky/getNotificationCount.ts
+var getNotificationCount_exports = {};
+__export(getNotificationCount_exports, {
   toKnownErr: () => toKnownErr26
 });
 function toKnownErr26(e) {
@@ -12321,9 +13807,9 @@ function toKnownErr26(e) {
   return e;
 }
 
-// src/types/app/bsky/getPostThread.ts
-var getPostThread_exports = {};
-__export(getPostThread_exports, {
+// src/types/app/bsky/getNotifications.ts
+var getNotifications_exports = {};
+__export(getNotifications_exports, {
   toKnownErr: () => toKnownErr27
 });
 function toKnownErr27(e) {
@@ -12332,9 +13818,9 @@ function toKnownErr27(e) {
   return e;
 }
 
-// src/types/app/bsky/getProfile.ts
-var getProfile_exports = {};
-__export(getProfile_exports, {
+// src/types/app/bsky/getPostThread.ts
+var getPostThread_exports = {};
+__export(getPostThread_exports, {
   toKnownErr: () => toKnownErr28
 });
 function toKnownErr28(e) {
@@ -12343,9 +13829,9 @@ function toKnownErr28(e) {
   return e;
 }
 
-// src/types/app/bsky/getRepostedBy.ts
-var getRepostedBy_exports = {};
-__export(getRepostedBy_exports, {
+// src/types/app/bsky/getProfile.ts
+var getProfile_exports = {};
+__export(getProfile_exports, {
   toKnownErr: () => toKnownErr29
 });
 function toKnownErr29(e) {
@@ -12354,9 +13840,9 @@ function toKnownErr29(e) {
   return e;
 }
 
-// src/types/app/bsky/getUserFollowers.ts
-var getUserFollowers_exports = {};
-__export(getUserFollowers_exports, {
+// src/types/app/bsky/getRepostedBy.ts
+var getRepostedBy_exports = {};
+__export(getRepostedBy_exports, {
   toKnownErr: () => toKnownErr30
 });
 function toKnownErr30(e) {
@@ -12365,9 +13851,9 @@ function toKnownErr30(e) {
   return e;
 }
 
-// src/types/app/bsky/getUserFollows.ts
-var getUserFollows_exports = {};
-__export(getUserFollows_exports, {
+// src/types/app/bsky/getUserFollowers.ts
+var getUserFollowers_exports = {};
+__export(getUserFollowers_exports, {
   toKnownErr: () => toKnownErr31
 });
 function toKnownErr31(e) {
@@ -12376,9 +13862,9 @@ function toKnownErr31(e) {
   return e;
 }
 
-// src/types/app/bsky/postNotificationsSeen.ts
-var postNotificationsSeen_exports = {};
-__export(postNotificationsSeen_exports, {
+// src/types/app/bsky/getUserFollows.ts
+var getUserFollows_exports = {};
+__export(getUserFollows_exports, {
   toKnownErr: () => toKnownErr32
 });
 function toKnownErr32(e) {
@@ -12387,8 +13873,58 @@ function toKnownErr32(e) {
   return e;
 }
 
+// src/types/app/bsky/getUsersSearch.ts
+var getUsersSearch_exports = {};
+__export(getUsersSearch_exports, {
+  toKnownErr: () => toKnownErr33
+});
+function toKnownErr33(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/app/bsky/getUsersTypeahead.ts
+var getUsersTypeahead_exports = {};
+__export(getUsersTypeahead_exports, {
+  toKnownErr: () => toKnownErr34
+});
+function toKnownErr34(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/app/bsky/postNotificationsSeen.ts
+var postNotificationsSeen_exports = {};
+__export(postNotificationsSeen_exports, {
+  toKnownErr: () => toKnownErr35
+});
+function toKnownErr35(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/types/app/bsky/updateProfile.ts
+var updateProfile_exports = {};
+__export(updateProfile_exports, {
+  toKnownErr: () => toKnownErr36
+});
+function toKnownErr36(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
 // src/types/app/bsky/badge.ts
 var badge_exports = {};
+
+// src/types/app/bsky/badgeAccept.ts
+var badgeAccept_exports = {};
+
+// src/types/app/bsky/badgeOffer.ts
+var badgeOffer_exports = {};
 
 // src/types/app/bsky/follow.ts
 var follow_exports = {};
@@ -12557,6 +14093,8 @@ var BskyNS = class {
   constructor(service) {
     this._service = service;
     this.badge = new BadgeRecord(service);
+    this.badgeAccept = new BadgeAcceptRecord(service);
+    this.badgeOffer = new BadgeOfferRecord(service);
     this.follow = new FollowRecord(service);
     this.like = new LikeRecord(service);
     this.mediaEmbed = new MediaEmbedRecord(service);
@@ -12569,54 +14107,74 @@ var BskyNS = class {
       throw toKnownErr22(e);
     });
   }
+  getBadgeMembers(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.getBadgeMembers", params, data, opts).catch((e) => {
+      throw toKnownErr23(e);
+    });
+  }
   getHomeFeed(params, data, opts) {
     return this._service.xrpc.call("app.bsky.getHomeFeed", params, data, opts).catch((e) => {
-      throw toKnownErr23(e);
+      throw toKnownErr24(e);
     });
   }
   getLikedBy(params, data, opts) {
     return this._service.xrpc.call("app.bsky.getLikedBy", params, data, opts).catch((e) => {
-      throw toKnownErr24(e);
+      throw toKnownErr25(e);
     });
   }
   getNotificationCount(params, data, opts) {
     return this._service.xrpc.call("app.bsky.getNotificationCount", params, data, opts).catch((e) => {
-      throw toKnownErr25(e);
+      throw toKnownErr26(e);
     });
   }
   getNotifications(params, data, opts) {
     return this._service.xrpc.call("app.bsky.getNotifications", params, data, opts).catch((e) => {
-      throw toKnownErr26(e);
+      throw toKnownErr27(e);
     });
   }
   getPostThread(params, data, opts) {
     return this._service.xrpc.call("app.bsky.getPostThread", params, data, opts).catch((e) => {
-      throw toKnownErr27(e);
+      throw toKnownErr28(e);
     });
   }
   getProfile(params, data, opts) {
     return this._service.xrpc.call("app.bsky.getProfile", params, data, opts).catch((e) => {
-      throw toKnownErr28(e);
+      throw toKnownErr29(e);
     });
   }
   getRepostedBy(params, data, opts) {
     return this._service.xrpc.call("app.bsky.getRepostedBy", params, data, opts).catch((e) => {
-      throw toKnownErr29(e);
+      throw toKnownErr30(e);
     });
   }
   getUserFollowers(params, data, opts) {
     return this._service.xrpc.call("app.bsky.getUserFollowers", params, data, opts).catch((e) => {
-      throw toKnownErr30(e);
+      throw toKnownErr31(e);
     });
   }
   getUserFollows(params, data, opts) {
     return this._service.xrpc.call("app.bsky.getUserFollows", params, data, opts).catch((e) => {
-      throw toKnownErr31(e);
+      throw toKnownErr32(e);
+    });
+  }
+  getUsersSearch(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.getUsersSearch", params, data, opts).catch((e) => {
+      throw toKnownErr33(e);
+    });
+  }
+  getUsersTypeahead(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.getUsersTypeahead", params, data, opts).catch((e) => {
+      throw toKnownErr34(e);
     });
   }
   postNotificationsSeen(params, data, opts) {
     return this._service.xrpc.call("app.bsky.postNotificationsSeen", params, data, opts).catch((e) => {
-      throw toKnownErr32(e);
+      throw toKnownErr35(e);
+    });
+  }
+  updateProfile(params, data, opts) {
+    return this._service.xrpc.call("app.bsky.updateProfile", params, data, opts).catch((e) => {
+      throw toKnownErr36(e);
     });
   }
 };
@@ -12626,14 +14184,14 @@ var BadgeRecord = class {
   }
   async list(params) {
     const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      type: "app.bsky.badge",
+      collection: "app.bsky.badge",
       ...params
     });
     return res.data;
   }
   async get(params) {
     const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      type: "app.bsky.badge",
+      collection: "app.bsky.badge",
       ...params
     });
     return res.data;
@@ -12642,17 +14200,7 @@ var BadgeRecord = class {
     record.$type = "app.bsky.badge";
     const res = await this._service.xrpc.call(
       "com.atproto.repoCreateRecord",
-      { type: "app.bsky.badge", ...params },
-      record,
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async put(params, record, headers) {
-    record.$type = "app.bsky.badge";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repoPutRecord",
-      { type: "app.bsky.badge", ...params },
+      { collection: "app.bsky.badge", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12661,7 +14209,81 @@ var BadgeRecord = class {
   async delete(params, headers) {
     await this._service.xrpc.call(
       "com.atproto.repoDeleteRecord",
-      { type: "app.bsky.badge", ...params },
+      { collection: "app.bsky.badge", ...params },
+      void 0,
+      { headers }
+    );
+  }
+};
+var BadgeAcceptRecord = class {
+  constructor(service) {
+    this._service = service;
+  }
+  async list(params) {
+    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
+      collection: "app.bsky.badgeAccept",
+      ...params
+    });
+    return res.data;
+  }
+  async get(params) {
+    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
+      collection: "app.bsky.badgeAccept",
+      ...params
+    });
+    return res.data;
+  }
+  async create(params, record, headers) {
+    record.$type = "app.bsky.badgeAccept";
+    const res = await this._service.xrpc.call(
+      "com.atproto.repoCreateRecord",
+      { collection: "app.bsky.badgeAccept", ...params },
+      record,
+      { encoding: "application/json", headers }
+    );
+    return res.data;
+  }
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "com.atproto.repoDeleteRecord",
+      { collection: "app.bsky.badgeAccept", ...params },
+      void 0,
+      { headers }
+    );
+  }
+};
+var BadgeOfferRecord = class {
+  constructor(service) {
+    this._service = service;
+  }
+  async list(params) {
+    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
+      collection: "app.bsky.badgeOffer",
+      ...params
+    });
+    return res.data;
+  }
+  async get(params) {
+    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
+      collection: "app.bsky.badgeOffer",
+      ...params
+    });
+    return res.data;
+  }
+  async create(params, record, headers) {
+    record.$type = "app.bsky.badgeOffer";
+    const res = await this._service.xrpc.call(
+      "com.atproto.repoCreateRecord",
+      { collection: "app.bsky.badgeOffer", ...params },
+      record,
+      { encoding: "application/json", headers }
+    );
+    return res.data;
+  }
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "com.atproto.repoDeleteRecord",
+      { collection: "app.bsky.badgeOffer", ...params },
       void 0,
       { headers }
     );
@@ -12673,14 +14295,14 @@ var FollowRecord = class {
   }
   async list(params) {
     const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      type: "app.bsky.follow",
+      collection: "app.bsky.follow",
       ...params
     });
     return res.data;
   }
   async get(params) {
     const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      type: "app.bsky.follow",
+      collection: "app.bsky.follow",
       ...params
     });
     return res.data;
@@ -12689,17 +14311,7 @@ var FollowRecord = class {
     record.$type = "app.bsky.follow";
     const res = await this._service.xrpc.call(
       "com.atproto.repoCreateRecord",
-      { type: "app.bsky.follow", ...params },
-      record,
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async put(params, record, headers) {
-    record.$type = "app.bsky.follow";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repoPutRecord",
-      { type: "app.bsky.follow", ...params },
+      { collection: "app.bsky.follow", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12708,7 +14320,7 @@ var FollowRecord = class {
   async delete(params, headers) {
     await this._service.xrpc.call(
       "com.atproto.repoDeleteRecord",
-      { type: "app.bsky.follow", ...params },
+      { collection: "app.bsky.follow", ...params },
       void 0,
       { headers }
     );
@@ -12720,14 +14332,14 @@ var LikeRecord = class {
   }
   async list(params) {
     const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      type: "app.bsky.like",
+      collection: "app.bsky.like",
       ...params
     });
     return res.data;
   }
   async get(params) {
     const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      type: "app.bsky.like",
+      collection: "app.bsky.like",
       ...params
     });
     return res.data;
@@ -12736,17 +14348,7 @@ var LikeRecord = class {
     record.$type = "app.bsky.like";
     const res = await this._service.xrpc.call(
       "com.atproto.repoCreateRecord",
-      { type: "app.bsky.like", ...params },
-      record,
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async put(params, record, headers) {
-    record.$type = "app.bsky.like";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repoPutRecord",
-      { type: "app.bsky.like", ...params },
+      { collection: "app.bsky.like", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12755,7 +14357,7 @@ var LikeRecord = class {
   async delete(params, headers) {
     await this._service.xrpc.call(
       "com.atproto.repoDeleteRecord",
-      { type: "app.bsky.like", ...params },
+      { collection: "app.bsky.like", ...params },
       void 0,
       { headers }
     );
@@ -12767,14 +14369,14 @@ var MediaEmbedRecord = class {
   }
   async list(params) {
     const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      type: "app.bsky.mediaEmbed",
+      collection: "app.bsky.mediaEmbed",
       ...params
     });
     return res.data;
   }
   async get(params) {
     const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      type: "app.bsky.mediaEmbed",
+      collection: "app.bsky.mediaEmbed",
       ...params
     });
     return res.data;
@@ -12783,17 +14385,7 @@ var MediaEmbedRecord = class {
     record.$type = "app.bsky.mediaEmbed";
     const res = await this._service.xrpc.call(
       "com.atproto.repoCreateRecord",
-      { type: "app.bsky.mediaEmbed", ...params },
-      record,
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async put(params, record, headers) {
-    record.$type = "app.bsky.mediaEmbed";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repoPutRecord",
-      { type: "app.bsky.mediaEmbed", ...params },
+      { collection: "app.bsky.mediaEmbed", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12802,7 +14394,7 @@ var MediaEmbedRecord = class {
   async delete(params, headers) {
     await this._service.xrpc.call(
       "com.atproto.repoDeleteRecord",
-      { type: "app.bsky.mediaEmbed", ...params },
+      { collection: "app.bsky.mediaEmbed", ...params },
       void 0,
       { headers }
     );
@@ -12814,14 +14406,14 @@ var PostRecord = class {
   }
   async list(params) {
     const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      type: "app.bsky.post",
+      collection: "app.bsky.post",
       ...params
     });
     return res.data;
   }
   async get(params) {
     const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      type: "app.bsky.post",
+      collection: "app.bsky.post",
       ...params
     });
     return res.data;
@@ -12830,17 +14422,7 @@ var PostRecord = class {
     record.$type = "app.bsky.post";
     const res = await this._service.xrpc.call(
       "com.atproto.repoCreateRecord",
-      { type: "app.bsky.post", ...params },
-      record,
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async put(params, record, headers) {
-    record.$type = "app.bsky.post";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repoPutRecord",
-      { type: "app.bsky.post", ...params },
+      { collection: "app.bsky.post", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12849,7 +14431,7 @@ var PostRecord = class {
   async delete(params, headers) {
     await this._service.xrpc.call(
       "com.atproto.repoDeleteRecord",
-      { type: "app.bsky.post", ...params },
+      { collection: "app.bsky.post", ...params },
       void 0,
       { headers }
     );
@@ -12861,14 +14443,14 @@ var ProfileRecord = class {
   }
   async list(params) {
     const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      type: "app.bsky.profile",
+      collection: "app.bsky.profile",
       ...params
     });
     return res.data;
   }
   async get(params) {
     const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      type: "app.bsky.profile",
+      collection: "app.bsky.profile",
       ...params
     });
     return res.data;
@@ -12877,17 +14459,7 @@ var ProfileRecord = class {
     record.$type = "app.bsky.profile";
     const res = await this._service.xrpc.call(
       "com.atproto.repoCreateRecord",
-      { type: "app.bsky.profile", ...params },
-      record,
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async put(params, record, headers) {
-    record.$type = "app.bsky.profile";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repoPutRecord",
-      { type: "app.bsky.profile", ...params },
+      { collection: "app.bsky.profile", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12896,7 +14468,7 @@ var ProfileRecord = class {
   async delete(params, headers) {
     await this._service.xrpc.call(
       "com.atproto.repoDeleteRecord",
-      { type: "app.bsky.profile", ...params },
+      { collection: "app.bsky.profile", ...params },
       void 0,
       { headers }
     );
@@ -12908,14 +14480,14 @@ var RepostRecord = class {
   }
   async list(params) {
     const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      type: "app.bsky.repost",
+      collection: "app.bsky.repost",
       ...params
     });
     return res.data;
   }
   async get(params) {
     const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      type: "app.bsky.repost",
+      collection: "app.bsky.repost",
       ...params
     });
     return res.data;
@@ -12924,17 +14496,7 @@ var RepostRecord = class {
     record.$type = "app.bsky.repost";
     const res = await this._service.xrpc.call(
       "com.atproto.repoCreateRecord",
-      { type: "app.bsky.repost", ...params },
-      record,
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async put(params, record, headers) {
-    record.$type = "app.bsky.repost";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repoPutRecord",
-      { type: "app.bsky.repost", ...params },
+      { collection: "app.bsky.repost", ...params },
       record,
       { encoding: "application/json", headers }
     );
@@ -12943,7 +14505,7 @@ var RepostRecord = class {
   async delete(params, headers) {
     await this._service.xrpc.call(
       "com.atproto.repoDeleteRecord",
-      { type: "app.bsky.repost", ...params },
+      { collection: "app.bsky.repost", ...params },
       void 0,
       { headers }
     );
@@ -12952,8 +14514,11 @@ var RepostRecord = class {
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   AppBskyBadge,
+  AppBskyBadgeAccept,
+  AppBskyBadgeOffer,
   AppBskyFollow,
   AppBskyGetAuthorFeed,
+  AppBskyGetBadgeMembers,
   AppBskyGetHomeFeed,
   AppBskyGetLikedBy,
   AppBskyGetNotificationCount,
@@ -12963,14 +14528,19 @@ var RepostRecord = class {
   AppBskyGetRepostedBy,
   AppBskyGetUserFollowers,
   AppBskyGetUserFollows,
+  AppBskyGetUsersSearch,
+  AppBskyGetUsersTypeahead,
   AppBskyLike,
   AppBskyMediaEmbed,
   AppBskyPost,
   AppBskyPostNotificationsSeen,
   AppBskyProfile,
   AppBskyRepost,
+  AppBskyUpdateProfile,
   AppNS,
   AtprotoNS,
+  BadgeAcceptRecord,
+  BadgeOfferRecord,
   BadgeRecord,
   BskyNS,
   Client,

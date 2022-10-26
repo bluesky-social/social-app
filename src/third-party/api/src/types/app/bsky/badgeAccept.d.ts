@@ -1,10 +1,10 @@
 export interface Record {
-    displayName: string;
-    description?: string;
-    pinnedBadges?: BadgeRef[];
+    badge: Subject;
+    offer: Subject;
+    createdAt: string;
     [k: string]: unknown;
 }
-export interface BadgeRef {
+export interface Subject {
     uri: string;
     cid: string;
     [k: string]: unknown;

@@ -4,32 +4,37 @@
  */
 
 // import {ReactNativeStore} from './auth'
-import AdxApi from '../../third-party/api'
+import AtpApi from '../../third-party/api'
 import * as Profile from '../../third-party/api/src/types/app/bsky/profile'
-import {AdxUri} from '../../third-party/uri'
+import * as Post from '../../third-party/api/src/types/app/bsky/post'
+import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from '../models/root-store'
 import {extractEntities} from '../../view/lib/strings'
 
 export function doPolyfill() {
-  AdxApi.xrpc.fetch = fetchHandler
+  AtpApi.xrpc.fetch = fetchHandler
 }
 
 export async function post(
   store: RootStoreModel,
   text: string,
-  replyToUri?: string,
+  replyTo?: Post.PostRef,
 ) {
   let reply
-  if (replyToUri) {
-    const replyToUrip = new AdxUri(replyToUri)
+  if (replyTo) {
+    const replyToUrip = new AtUri(replyTo.uri)
     const parentPost = await store.api.app.bsky.post.get({
-      nameOrDid: replyToUrip.host,
-      tid: replyToUrip.recordKey,
+      user: replyToUrip.host,
+      rkey: replyToUrip.rkey,
     })
     if (parentPost) {
+      const parentRef = {
+        uri: parentPost.uri,
+        cid: parentPost.cid,
+      }
       reply = {
-        root: parentPost.value.reply?.root || parentPost.uri,
-        parent: parentPost.uri,
+        root: parentPost.value.reply?.root || parentRef,
+        parent: parentRef,
       }
     }
   }
@@ -45,39 +50,39 @@ export async function post(
   )
 }
 
-export async function like(store: RootStoreModel, uri: string) {
+export async function like(store: RootStoreModel, uri: string, cid: string) {
   return await store.api.app.bsky.like.create(
     {did: store.me.did || ''},
     {
-      subject: uri,
+      subject: {uri, cid},
       createdAt: new Date().toISOString(),
     },
   )
 }
 
 export async function unlike(store: RootStoreModel, likeUri: string) {
-  const likeUrip = new AdxUri(likeUri)
+  const likeUrip = new AtUri(likeUri)
   return await store.api.app.bsky.like.delete({
     did: likeUrip.hostname,
-    tid: likeUrip.recordKey,
+    rkey: likeUrip.rkey,
   })
 }
 
-export async function repost(store: RootStoreModel, uri: string) {
+export async function repost(store: RootStoreModel, uri: string, cid: string) {
   return await store.api.app.bsky.repost.create(
     {did: store.me.did || ''},
     {
-      subject: uri,
+      subject: {uri, cid},
       createdAt: new Date().toISOString(),
     },
   )
 }
 
 export async function unrepost(store: RootStoreModel, repostUri: string) {
-  const repostUrip = new AdxUri(repostUri)
+  const repostUrip = new AtUri(repostUri)
   return await store.api.app.bsky.repost.delete({
     did: repostUrip.hostname,
-    tid: repostUrip.recordKey,
+    rkey: repostUrip.rkey,
   })
 }
 
@@ -92,10 +97,10 @@ export async function follow(store: RootStoreModel, subject: string) {
 }
 
 export async function unfollow(store: RootStoreModel, followUri: string) {
-  const followUrip = new AdxUri(followUri)
+  const followUrip = new AtUri(followUri)
   return await store.api.app.bsky.follow.delete({
     did: followUrip.hostname,
-    tid: followUrip.recordKey,
+    rkey: followUrip.rkey,
   })
 }
 
@@ -103,15 +108,16 @@ export async function updateProfile(
   store: RootStoreModel,
   modifyFn: (existing?: Profile.Record) => Profile.Record,
 ) {
+  // TODO: replaceme
   const res = await store.api.app.bsky.profile.list({
-    nameOrDid: store.me.did || '',
+    user: store.me.did || '',
   })
   const existing = res.records[0]
   if (existing) {
     await store.api.app.bsky.profile.put(
       {
         did: store.me.did || '',
-        tid: new AdxUri(existing.uri).recordKey,
+        rkey: new AtUri(existing.uri).rkey,
       },
       modifyFn(existing.value),
     )

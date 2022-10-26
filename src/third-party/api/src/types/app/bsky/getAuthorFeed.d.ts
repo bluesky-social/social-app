@@ -1,4 +1,4 @@
-import { Headers } from '@adxp/xrpc';
+import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
     author: string;
     limit?: number;
@@ -9,11 +9,12 @@ export interface CallOptions {
 }
 export declare type InputSchema = undefined;
 export interface OutputSchema {
+    cursor?: string;
     feed: FeedItem[];
 }
 export interface FeedItem {
-    cursor: string;
     uri: string;
+    cid: string;
     author: User;
     repostedBy?: User;
     record: {};

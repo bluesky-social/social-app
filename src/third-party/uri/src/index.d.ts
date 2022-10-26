@@ -1,5 +1,5 @@
-export declare const ADX_URI_REGEX: RegExp;
-export declare class AdxUri {
+export declare const ATP_URI_REGEX: RegExp;
+export declare class AtUri {
     hash: string;
     host: string;
     pathname: string;
@@ -13,8 +13,8 @@ export declare class AdxUri {
     set search(v: string);
     get collection(): string;
     set collection(v: string);
-    get recordKey(): string;
-    set recordKey(v: string);
+    get rkey(): string;
+    set rkey(v: string);
     get href(): string;
     toString(): string;
 }

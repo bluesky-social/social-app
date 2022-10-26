@@ -3,7 +3,7 @@
  */
 
 import {makeAutoObservable} from 'mobx'
-import AdxApi from '../../third-party/api'
+import AtpApi from '../../third-party/api'
 import type {ServiceClient} from '../../third-party/api/src/index'
 import {createContext, useContext} from 'react'
 import {isObj, hasProp} from '../lib/type-guards'
@@ -74,7 +74,7 @@ export class RootStoreModel {
   }
 }
 
-const throwawayInst = new RootStoreModel(AdxApi.service('http://localhost')) // this will be replaced by the loader
+const throwawayInst = new RootStoreModel(AtpApi.service('http://localhost')) // this will be replaced by the loader
 const RootStoreContext = createContext<RootStoreModel>(throwawayInst)
 export const RootStoreProvider = RootStoreContext.Provider
 export const useStores = () => useContext(RootStoreContext)

@@ -1,4 +1,4 @@
-import { Headers } from '@adxp/xrpc';
+import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
     user: string;
 }
@@ -14,21 +14,23 @@ export interface OutputSchema {
     followersCount: number;
     followsCount: number;
     postsCount: number;
-    badges: Badge[];
+    pinnedBadges: Badge[];
     myState?: {
         follow?: string;
     };
 }
 export interface Badge {
     uri: string;
+    cid: string;
     error?: string;
     issuer?: {
         did: string;
         name: string;
-        displayName: string;
+        displayName?: string;
     };
     assertion?: {
         type: string;
+        tag?: string;
     };
     createdAt?: string;
 }

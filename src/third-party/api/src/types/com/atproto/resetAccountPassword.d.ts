@@ -1,4 +1,4 @@
-import { Headers, XRPCError } from '@adxp/xrpc';
+import { Headers, XRPCError } from '@atproto/xrpc';
 export interface QueryParams {
 }
 export interface CallOptions {
