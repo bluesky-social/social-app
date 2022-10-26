@@ -24,6 +24,7 @@ export const Home = observer(function Home({
   )
 
   useEffect(() => {
+    let aborted = false
     if (!visible) {
       return
     }
@@ -33,7 +34,13 @@ export const Home = observer(function Home({
     } else {
       store.nav.setTitle('Home')
       console.log('Fetching home feed')
-      defaultFeedView.setup().then(() => setHasSetup(true))
+      defaultFeedView.setup().then(() => {
+        if (aborted) return
+        setHasSetup(true)
+      })
+    }
+    return () => {
+      aborted = true
     }
   }, [visible, store])
 

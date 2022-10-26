@@ -29,15 +29,21 @@ export function UserInfoText({
   const [didFail, setFailed] = useState<boolean>(false)
 
   useEffect(() => {
+    let aborted = false
     // TODO use caching to reduce loads
     store.api.app.bsky.getProfile({user: did}).then(
       v => {
+        if (aborted) return
         setProfile(v.data)
       },
       _err => {
+        if (aborted) return
         setFailed(true)
       },
     )
+    return () => {
+      aborted = true
+    }
   }, [did, store.api.app.bsky])
 
   return (
