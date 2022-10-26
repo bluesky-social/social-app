@@ -1,6 +1,6 @@
-import { Headers } from '@adxp/xrpc';
+import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
-    nameOrDid: string;
+    user: string;
 }
 export interface CallOptions {
     headers?: Headers;

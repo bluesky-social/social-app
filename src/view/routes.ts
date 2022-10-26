@@ -39,17 +39,17 @@ export const routes: Route[] = [
   [
     PostThread,
     ['far', 'message'],
-    r('/profile/(?<name>[^/]+)/post/(?<recordKey>[^/]+)'),
+    r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)'),
   ],
   [
     PostLikedBy,
     'heart',
-    r('/profile/(?<name>[^/]+)/post/(?<recordKey>[^/]+)/liked-by'),
+    r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)/liked-by'),
   ],
   [
     PostRepostedBy,
     'retweet',
-    r('/profile/(?<name>[^/]+)/post/(?<recordKey>[^/]+)/reposted-by'),
+    r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)/reposted-by'),
   ],
 ]
 

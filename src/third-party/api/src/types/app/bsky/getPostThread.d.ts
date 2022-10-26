@@ -1,4 +1,4 @@
-import { Headers } from '@adxp/xrpc';
+import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
     uri: string;
     depth?: number;
@@ -12,6 +12,7 @@ export interface OutputSchema {
 }
 export interface Post {
     uri: string;
+    cid: string;
     author: User;
     record: {};
     embed?: RecordEmbed | ExternalEmbed | UnknownEmbed;

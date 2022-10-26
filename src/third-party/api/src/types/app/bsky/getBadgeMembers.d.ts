@@ -1,22 +1,24 @@
 import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
-    user: string;
-    collection: string;
+    uri: string;
+    cid?: string;
     limit?: number;
     before?: string;
-    after?: string;
-    reverse?: boolean;
 }
 export interface CallOptions {
     headers?: Headers;
 }
 export declare type InputSchema = undefined;
 export interface OutputSchema {
+    uri: string;
+    cid?: string;
     cursor?: string;
-    records: {
-        uri: string;
-        cid: string;
-        value: {};
+    members: {
+        did: string;
+        name: string;
+        displayName?: string;
+        offeredAt: string;
+        acceptedAt: string;
     }[];
 }
 export interface Response {

@@ -1,6 +1,7 @@
-import { Headers } from '@adxp/xrpc';
+import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
     uri: string;
+    cid?: string;
     limit?: number;
     before?: string;
 }
@@ -10,6 +11,8 @@ export interface CallOptions {
 export declare type InputSchema = undefined;
 export interface OutputSchema {
     uri: string;
+    cid?: string;
+    cursor?: string;
     likedBy: {
         did: string;
         name: string;

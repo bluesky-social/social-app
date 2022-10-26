@@ -1,4 +1,4 @@
-import { Headers } from '@adxp/xrpc';
+import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
     limit?: number;
     before?: string;
@@ -8,10 +8,12 @@ export interface CallOptions {
 }
 export declare type InputSchema = undefined;
 export interface OutputSchema {
+    cursor?: string;
     notifications: Notification[];
 }
 export interface Notification {
     uri: string;
+    cid: string;
     author: {
         did: string;
         name: string;

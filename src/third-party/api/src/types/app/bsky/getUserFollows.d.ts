@@ -1,4 +1,4 @@
-import { Headers } from '@adxp/xrpc';
+import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
     user: string;
     limit?: number;
@@ -14,6 +14,7 @@ export interface OutputSchema {
         name: string;
         displayName?: string;
     };
+    cursor?: string;
     follows: {
         did: string;
         name: string;

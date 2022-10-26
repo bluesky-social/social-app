@@ -18,8 +18,8 @@ export class FeedItemModel implements GetHomeFeed.FeedItem {
   _reactKey: string = ''
 
   // data
-  cursor: string = ''
   uri: string = ''
+  cid: string = ''
   author: GetHomeFeed.User = {did: '', name: '', displayName: ''}
   repostedBy?: GetHomeFeed.User
   record: Record<string, unknown> = {}
@@ -44,8 +44,8 @@ export class FeedItemModel implements GetHomeFeed.FeedItem {
   }
 
   copy(v: GetHomeFeed.FeedItem | GetAuthorFeed.FeedItem) {
-    this.cursor = v.cursor
     this.uri = v.uri
+    this.cid = v.cid
     this.author = v.author
     this.repostedBy = v.repostedBy
     this.record = v.record
@@ -68,7 +68,7 @@ export class FeedItemModel implements GetHomeFeed.FeedItem {
         this.myState.like = undefined
       })
     } else {
-      const res = await apilib.like(this.rootStore, this.uri)
+      const res = await apilib.like(this.rootStore, this.uri, this.cid)
       runInAction(() => {
         this.likeCount++
         this.myState.like = res.uri
@@ -84,7 +84,7 @@ export class FeedItemModel implements GetHomeFeed.FeedItem {
         this.myState.repost = undefined
       })
     } else {
-      const res = await apilib.repost(this.rootStore, this.uri)
+      const res = await apilib.repost(this.rootStore, this.uri, this.cid)
       runInAction(() => {
         this.repostCount++
         this.myState.repost = res.uri
@@ -101,6 +101,7 @@ export class FeedModel {
   hasReachedEnd = false
   error = ''
   params: GetHomeFeed.QueryParams | GetAuthorFeed.QueryParams
+  loadMoreCursor: string | undefined
   _loadPromise: Promise<void> | undefined
   _loadMorePromise: Promise<void> | undefined
   _loadLatestPromise: Promise<void> | undefined
@@ -119,6 +120,7 @@ export class FeedModel {
       {
         rootStore: false,
         params: false,
+        loadMoreCursor: false,
         _loadPromise: false,
         _loadMorePromise: false,
         _loadLatestPromise: false,
@@ -139,13 +141,6 @@ export class FeedModel {
 
   get isEmpty() {
     return this.hasLoaded && !this.hasContent
-  }
-
-  get loadMoreCursor() {
-    if (this.hasContent) {
-      return this.feed[this.feed.length - 1].cursor
-    }
-    return undefined
   }
 
   // public api
@@ -316,6 +311,7 @@ export class FeedModel {
   }
 
   private _appendAll(res: GetHomeFeed.Response | GetAuthorFeed.Response) {
+    this.loadMoreCursor = res.data.cursor
     let counter = this.feed.length
     for (const item of res.data.feed) {
       this._append(counter++, item)

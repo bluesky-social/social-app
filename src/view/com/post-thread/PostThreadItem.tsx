@@ -2,7 +2,7 @@ import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import Svg, {Line} from 'react-native-svg'
-import {AdxUri} from '../../../third-party/uri'
+import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/types/app/bsky/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
@@ -31,26 +31,29 @@ export const PostThreadItem = observer(function PostThreadItem({
   const hasEngagement = item.likeCount || item.repostCount
 
   const itemHref = useMemo(() => {
-    const urip = new AdxUri(item.uri)
-    return `/profile/${item.author.name}/post/${urip.recordKey}`
+    const urip = new AtUri(item.uri)
+    return `/profile/${item.author.name}/post/${urip.rkey}`
   }, [item.uri, item.author.name])
   const itemTitle = `Post by ${item.author.name}`
   const authorHref = `/profile/${item.author.name}`
   const authorTitle = item.author.name
   const likesHref = useMemo(() => {
-    const urip = new AdxUri(item.uri)
-    return `/profile/${item.author.name}/post/${urip.recordKey}/liked-by`
+    const urip = new AtUri(item.uri)
+    return `/profile/${item.author.name}/post/${urip.rkey}/liked-by`
   }, [item.uri, item.author.name])
   const likesTitle = 'Likes on this post'
   const repostsHref = useMemo(() => {
-    const urip = new AdxUri(item.uri)
-    return `/profile/${item.author.name}/post/${urip.recordKey}/reposted-by`
+    const urip = new AtUri(item.uri)
+    return `/profile/${item.author.name}/post/${urip.rkey}/reposted-by`
   }, [item.uri, item.author.name])
   const repostsTitle = 'Reposts of this post'
 
   const onPressReply = () => {
     store.shell.openModal(
-      new ComposePostModel({replyTo: item.uri, onPost: onPostReply}),
+      new ComposePostModel({
+        replyTo: {uri: item.uri, cid: item.cid},
+        onPost: onPostReply,
+      }),
     )
   }
   const onPressToggleRepost = () => {

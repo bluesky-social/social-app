@@ -28,7 +28,7 @@ export class ProfileViewModel {
   followersCount: number = 0
   followsCount: number = 0
   postsCount: number = 0
-  badges: GetProfile.Badge[] = []
+  pinnedBadges: GetProfile.Badge[] = []
   myState = new ProfileViewMyStateModel()
 
   constructor(
@@ -134,7 +134,7 @@ export class ProfileViewModel {
     this.followersCount = res.data.followersCount
     this.followsCount = res.data.followsCount
     this.postsCount = res.data.postsCount
-    this.badges = res.data.badges
+    this.pinnedBadges = res.data.pinnedBadges
     if (res.data.myState) {
       Object.assign(this.myState, res.data.myState)
     }

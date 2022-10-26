@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AdxUri} from '../../third-party/uri'
+import {AtUri} from '../../third-party/uri'
 import * as GetRepostedBy from '../../third-party/api/src/types/app/bsky/getRepostedBy'
 import {RootStoreModel} from './root-store'
 
@@ -101,7 +101,7 @@ export class RepostedByViewModel {
   // =
 
   private async _resolveUri() {
-    const urip = new AdxUri(this.params.uri)
+    const urip = new AtUri(this.params.uri)
     if (!urip.host.startsWith('did:')) {
       urip.host = await this.rootStore.resolveName(urip.host)
     }

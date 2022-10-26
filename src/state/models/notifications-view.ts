@@ -13,6 +13,7 @@ export class NotificationsViewItemModel implements GroupedNotification {
 
   // data
   uri: string = ''
+  cid: string = ''
   author: {
     did: string
     name: string
@@ -37,6 +38,7 @@ export class NotificationsViewItemModel implements GroupedNotification {
 
   copy(v: GroupedNotification) {
     this.uri = v.uri
+    this.cid = v.cid
     this.author = v.author
     this.reason = v.reason
     this.reasonSubject = v.reasonSubject
@@ -92,6 +94,7 @@ export class NotificationsViewModel {
   hasLoaded = false
   error = ''
   params: GetNotifications.QueryParams
+  loadMoreCursor?: string
   _loadPromise: Promise<void> | undefined
   _loadMorePromise: Promise<void> | undefined
   _updatePromise: Promise<void> | undefined
@@ -127,21 +130,6 @@ export class NotificationsViewModel {
 
   get isEmpty() {
     return this.hasLoaded && !this.hasContent
-  }
-
-  get loadMoreCursor() {
-    if (this.hasContent) {
-      const last = this.notifications[this.notifications.length - 1]
-      if (last.additional?.length) {
-        // get the lowest indexedAt from all available
-        return [last, ...last.additional].reduce(
-          (acc, v) => (v.indexedAt < acc ? v.indexedAt : acc),
-          last.indexedAt,
-        )
-      }
-      return last.indexedAt
-    }
-    return undefined
   }
 
   // public api
@@ -283,6 +271,7 @@ export class NotificationsViewModel {
   }
 
   private _appendAll(res: GetNotifications.Response) {
+    this.loadMoreCursor = res.data.cursor
     let counter = this.notifications.length
     for (const item of groupNotifications(res.data.notifications)) {
       this._append(counter++, item)

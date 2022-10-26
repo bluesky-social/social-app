@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx'
-import AdxApi from '../../third-party/api'
+import AtpApi from '../../third-party/api'
 import type * as GetAccountsConfig from '../../third-party/api/src/types/com/atproto/getAccountsConfig'
 import {isObj, hasProp} from '../lib/type-guards'
 import {RootStoreModel} from './root-store'
@@ -135,7 +135,7 @@ export class SessionModel {
   }
 
   async describeService(service: string): Promise<ServiceDescription> {
-    const api = AdxApi.service(service)
+    const api = AtpApi.service(service)
     const res = await api.com.atproto.getAccountsConfig({})
     return res.data
   }
@@ -149,7 +149,7 @@ export class SessionModel {
     username: string
     password: string
   }) {
-    const api = AdxApi.service(service)
+    const api = AtpApi.service(service)
     const res = await api.com.atproto.createSession({}, {username, password})
     if (res.data.jwt) {
       this.setState({
@@ -178,7 +178,7 @@ export class SessionModel {
     username: string
     inviteCode?: string
   }) {
-    const api = AdxApi.service(service)
+    const api = AtpApi.service(service)
     const res = await api.com.atproto.createAccount(
       {},
       {username, password, email, inviteCode},

@@ -1,5 +1,5 @@
 import {autorun} from 'mobx'
-import AdxApi from '../third-party/api'
+import AtpApi from '../third-party/api'
 import {RootStoreModel} from './models/root-store'
 import * as libapi from './lib/api'
 import * as storage from './lib/storage'
@@ -17,7 +17,7 @@ export async function setupState() {
 
   libapi.doPolyfill()
 
-  const api = AdxApi.service(DEFAULT_SERVICE)
+  const api = AtpApi.service(DEFAULT_SERVICE)
   rootStore = new RootStoreModel(api)
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}

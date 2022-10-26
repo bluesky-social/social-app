@@ -4,6 +4,7 @@ import {BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as GetUserFollows from '../../../third-party/api/src/types/app/bsky/getUserFollows'
+import * as Post from '../../../third-party/api/src/types/app/bsky/post'
 import {Autocomplete} from './composer/Autocomplete'
 import Toast from '../util/Toast'
 import ProgressCircle from '../util/ProgressCircle'
@@ -20,7 +21,7 @@ export function Component({
   replyTo,
   onPost,
 }: {
-  replyTo?: string
+  replyTo?: Post.PostRef
   onPost?: () => void
 }) {
   const store = useStores()

@@ -1,4 +1,4 @@
-import {AdxUri} from '../../third-party/uri'
+import {AtUri} from '../../third-party/uri'
 import {Entity as Entities} from '../../third-party/api/src/types/app/bsky/post'
 
 type Entity = Entities[0]
@@ -16,12 +16,12 @@ export function pluralize(n: number, base: string, plural?: string): string {
 export function makeRecordUri(
   didOrName: string,
   collection: string,
-  recordKey: string,
+  rkey: string,
 ) {
-  const urip = new AdxUri(`adx://host/`)
+  const urip = new AtUri(`at://host/`)
   urip.host = didOrName
   urip.collection = collection
-  urip.recordKey = recordKey
+  urip.rkey = rkey
   return urip.toString()
 }
 

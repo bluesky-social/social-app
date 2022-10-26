@@ -1,4 +1,4 @@
-import { Headers } from '@adxp/xrpc';
+import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
     did: string;
     from?: string;

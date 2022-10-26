@@ -1,4 +1,4 @@
-import { Client as XrpcClient, ServiceClient as XrpcServiceClient } from '@adxp/xrpc';
+import { Client as XrpcClient, ServiceClient as XrpcServiceClient } from '@atproto/xrpc';
 import * as ComAtprotoCreateAccount from './types/com/atproto/createAccount';
 import * as ComAtprotoCreateInviteCode from './types/com/atproto/createInviteCode';
 import * as ComAtprotoCreateSession from './types/com/atproto/createSession';
@@ -21,8 +21,11 @@ import * as ComAtprotoSyncGetRepo from './types/com/atproto/syncGetRepo';
 import * as ComAtprotoSyncGetRoot from './types/com/atproto/syncGetRoot';
 import * as ComAtprotoSyncUpdateRepo from './types/com/atproto/syncUpdateRepo';
 import * as AppBskyBadge from './types/app/bsky/badge';
+import * as AppBskyBadgeAccept from './types/app/bsky/badgeAccept';
+import * as AppBskyBadgeOffer from './types/app/bsky/badgeOffer';
 import * as AppBskyFollow from './types/app/bsky/follow';
 import * as AppBskyGetAuthorFeed from './types/app/bsky/getAuthorFeed';
+import * as AppBskyGetBadgeMembers from './types/app/bsky/getBadgeMembers';
 import * as AppBskyGetHomeFeed from './types/app/bsky/getHomeFeed';
 import * as AppBskyGetLikedBy from './types/app/bsky/getLikedBy';
 import * as AppBskyGetNotificationCount from './types/app/bsky/getNotificationCount';
@@ -32,12 +35,15 @@ import * as AppBskyGetProfile from './types/app/bsky/getProfile';
 import * as AppBskyGetRepostedBy from './types/app/bsky/getRepostedBy';
 import * as AppBskyGetUserFollowers from './types/app/bsky/getUserFollowers';
 import * as AppBskyGetUserFollows from './types/app/bsky/getUserFollows';
+import * as AppBskyGetUsersSearch from './types/app/bsky/getUsersSearch';
+import * as AppBskyGetUsersTypeahead from './types/app/bsky/getUsersTypeahead';
 import * as AppBskyLike from './types/app/bsky/like';
 import * as AppBskyMediaEmbed from './types/app/bsky/mediaEmbed';
 import * as AppBskyPost from './types/app/bsky/post';
 import * as AppBskyPostNotificationsSeen from './types/app/bsky/postNotificationsSeen';
 import * as AppBskyProfile from './types/app/bsky/profile';
 import * as AppBskyRepost from './types/app/bsky/repost';
+import * as AppBskyUpdateProfile from './types/app/bsky/updateProfile';
 export * as ComAtprotoCreateAccount from './types/com/atproto/createAccount';
 export * as ComAtprotoCreateInviteCode from './types/com/atproto/createInviteCode';
 export * as ComAtprotoCreateSession from './types/com/atproto/createSession';
@@ -60,8 +66,11 @@ export * as ComAtprotoSyncGetRepo from './types/com/atproto/syncGetRepo';
 export * as ComAtprotoSyncGetRoot from './types/com/atproto/syncGetRoot';
 export * as ComAtprotoSyncUpdateRepo from './types/com/atproto/syncUpdateRepo';
 export * as AppBskyBadge from './types/app/bsky/badge';
+export * as AppBskyBadgeAccept from './types/app/bsky/badgeAccept';
+export * as AppBskyBadgeOffer from './types/app/bsky/badgeOffer';
 export * as AppBskyFollow from './types/app/bsky/follow';
 export * as AppBskyGetAuthorFeed from './types/app/bsky/getAuthorFeed';
+export * as AppBskyGetBadgeMembers from './types/app/bsky/getBadgeMembers';
 export * as AppBskyGetHomeFeed from './types/app/bsky/getHomeFeed';
 export * as AppBskyGetLikedBy from './types/app/bsky/getLikedBy';
 export * as AppBskyGetNotificationCount from './types/app/bsky/getNotificationCount';
@@ -71,12 +80,15 @@ export * as AppBskyGetProfile from './types/app/bsky/getProfile';
 export * as AppBskyGetRepostedBy from './types/app/bsky/getRepostedBy';
 export * as AppBskyGetUserFollowers from './types/app/bsky/getUserFollowers';
 export * as AppBskyGetUserFollows from './types/app/bsky/getUserFollows';
+export * as AppBskyGetUsersSearch from './types/app/bsky/getUsersSearch';
+export * as AppBskyGetUsersTypeahead from './types/app/bsky/getUsersTypeahead';
 export * as AppBskyLike from './types/app/bsky/like';
 export * as AppBskyMediaEmbed from './types/app/bsky/mediaEmbed';
 export * as AppBskyPost from './types/app/bsky/post';
 export * as AppBskyPostNotificationsSeen from './types/app/bsky/postNotificationsSeen';
 export * as AppBskyProfile from './types/app/bsky/profile';
 export * as AppBskyRepost from './types/app/bsky/repost';
+export * as AppBskyUpdateProfile from './types/app/bsky/updateProfile';
 export declare class Client {
     xrpc: XrpcClient;
     constructor();
@@ -130,6 +142,8 @@ export declare class AppNS {
 export declare class BskyNS {
     _service: ServiceClient;
     badge: BadgeRecord;
+    badgeAccept: BadgeAcceptRecord;
+    badgeOffer: BadgeOfferRecord;
     follow: FollowRecord;
     like: LikeRecord;
     mediaEmbed: MediaEmbedRecord;
@@ -138,6 +152,7 @@ export declare class BskyNS {
     repost: RepostRecord;
     constructor(service: ServiceClient);
     getAuthorFeed(params: AppBskyGetAuthorFeed.QueryParams, data?: AppBskyGetAuthorFeed.InputSchema, opts?: AppBskyGetAuthorFeed.CallOptions): Promise<AppBskyGetAuthorFeed.Response>;
+    getBadgeMembers(params: AppBskyGetBadgeMembers.QueryParams, data?: AppBskyGetBadgeMembers.InputSchema, opts?: AppBskyGetBadgeMembers.CallOptions): Promise<AppBskyGetBadgeMembers.Response>;
     getHomeFeed(params: AppBskyGetHomeFeed.QueryParams, data?: AppBskyGetHomeFeed.InputSchema, opts?: AppBskyGetHomeFeed.CallOptions): Promise<AppBskyGetHomeFeed.Response>;
     getLikedBy(params: AppBskyGetLikedBy.QueryParams, data?: AppBskyGetLikedBy.InputSchema, opts?: AppBskyGetLikedBy.CallOptions): Promise<AppBskyGetLikedBy.Response>;
     getNotificationCount(params: AppBskyGetNotificationCount.QueryParams, data?: AppBskyGetNotificationCount.InputSchema, opts?: AppBskyGetNotificationCount.CallOptions): Promise<AppBskyGetNotificationCount.Response>;
@@ -147,152 +162,197 @@ export declare class BskyNS {
     getRepostedBy(params: AppBskyGetRepostedBy.QueryParams, data?: AppBskyGetRepostedBy.InputSchema, opts?: AppBskyGetRepostedBy.CallOptions): Promise<AppBskyGetRepostedBy.Response>;
     getUserFollowers(params: AppBskyGetUserFollowers.QueryParams, data?: AppBskyGetUserFollowers.InputSchema, opts?: AppBskyGetUserFollowers.CallOptions): Promise<AppBskyGetUserFollowers.Response>;
     getUserFollows(params: AppBskyGetUserFollows.QueryParams, data?: AppBskyGetUserFollows.InputSchema, opts?: AppBskyGetUserFollows.CallOptions): Promise<AppBskyGetUserFollows.Response>;
+    getUsersSearch(params: AppBskyGetUsersSearch.QueryParams, data?: AppBskyGetUsersSearch.InputSchema, opts?: AppBskyGetUsersSearch.CallOptions): Promise<AppBskyGetUsersSearch.Response>;
+    getUsersTypeahead(params: AppBskyGetUsersTypeahead.QueryParams, data?: AppBskyGetUsersTypeahead.InputSchema, opts?: AppBskyGetUsersTypeahead.CallOptions): Promise<AppBskyGetUsersTypeahead.Response>;
     postNotificationsSeen(params: AppBskyPostNotificationsSeen.QueryParams, data?: AppBskyPostNotificationsSeen.InputSchema, opts?: AppBskyPostNotificationsSeen.CallOptions): Promise<AppBskyPostNotificationsSeen.Response>;
+    updateProfile(params: AppBskyUpdateProfile.QueryParams, data?: AppBskyUpdateProfile.InputSchema, opts?: AppBskyUpdateProfile.CallOptions): Promise<AppBskyUpdateProfile.Response>;
 }
 export declare class BadgeRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>): Promise<{
+        cursor?: string;
         records: {
             uri: string;
             value: AppBskyBadge.Record;
         }[];
     }>;
-    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>): Promise<{
         uri: string;
+        cid: string;
         value: AppBskyBadge.Record;
     }>;
-    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyBadge.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'collection'>, record: AppBskyBadge.Record, headers?: Record<string, string>): Promise<{
         uri: string;
+        cid: string;
     }>;
-    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyBadge.Record, headers?: Record<string, string>): Promise<{
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
+}
+export declare class BadgeAcceptRecord {
+    _service: ServiceClient;
+    constructor(service: ServiceClient);
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>): Promise<{
+        cursor?: string;
+        records: {
+            uri: string;
+            value: AppBskyBadgeAccept.Record;
+        }[];
+    }>;
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>): Promise<{
         uri: string;
+        cid: string;
+        value: AppBskyBadgeAccept.Record;
     }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'collection'>, record: AppBskyBadgeAccept.Record, headers?: Record<string, string>): Promise<{
+        uri: string;
+        cid: string;
+    }>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
+}
+export declare class BadgeOfferRecord {
+    _service: ServiceClient;
+    constructor(service: ServiceClient);
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>): Promise<{
+        cursor?: string;
+        records: {
+            uri: string;
+            value: AppBskyBadgeOffer.Record;
+        }[];
+    }>;
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>): Promise<{
+        uri: string;
+        cid: string;
+        value: AppBskyBadgeOffer.Record;
+    }>;
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'collection'>, record: AppBskyBadgeOffer.Record, headers?: Record<string, string>): Promise<{
+        uri: string;
+        cid: string;
+    }>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class FollowRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>): Promise<{
+        cursor?: string;
         records: {
             uri: string;
             value: AppBskyFollow.Record;
         }[];
     }>;
-    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>): Promise<{
         uri: string;
+        cid: string;
         value: AppBskyFollow.Record;
     }>;
-    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyFollow.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'collection'>, record: AppBskyFollow.Record, headers?: Record<string, string>): Promise<{
         uri: string;
+        cid: string;
     }>;
-    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyFollow.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-    }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class LikeRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>): Promise<{
+        cursor?: string;
         records: {
             uri: string;
             value: AppBskyLike.Record;
         }[];
     }>;
-    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>): Promise<{
         uri: string;
+        cid: string;
         value: AppBskyLike.Record;
     }>;
-    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyLike.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'collection'>, record: AppBskyLike.Record, headers?: Record<string, string>): Promise<{
         uri: string;
+        cid: string;
     }>;
-    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyLike.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-    }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class MediaEmbedRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>): Promise<{
+        cursor?: string;
         records: {
             uri: string;
             value: AppBskyMediaEmbed.Record;
         }[];
     }>;
-    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>): Promise<{
         uri: string;
+        cid: string;
         value: AppBskyMediaEmbed.Record;
     }>;
-    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyMediaEmbed.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'collection'>, record: AppBskyMediaEmbed.Record, headers?: Record<string, string>): Promise<{
         uri: string;
+        cid: string;
     }>;
-    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyMediaEmbed.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-    }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class PostRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>): Promise<{
+        cursor?: string;
         records: {
             uri: string;
             value: AppBskyPost.Record;
         }[];
     }>;
-    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>): Promise<{
         uri: string;
+        cid: string;
         value: AppBskyPost.Record;
     }>;
-    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyPost.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'collection'>, record: AppBskyPost.Record, headers?: Record<string, string>): Promise<{
         uri: string;
+        cid: string;
     }>;
-    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyPost.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-    }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class ProfileRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>): Promise<{
+        cursor?: string;
         records: {
             uri: string;
             value: AppBskyProfile.Record;
         }[];
     }>;
-    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>): Promise<{
         uri: string;
+        cid: string;
         value: AppBskyProfile.Record;
     }>;
-    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyProfile.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'collection'>, record: AppBskyProfile.Record, headers?: Record<string, string>): Promise<{
         uri: string;
+        cid: string;
     }>;
-    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyProfile.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-    }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class RepostRecord {
     _service: ServiceClient;
     constructor(service: ServiceClient);
-    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'type'>): Promise<{
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>): Promise<{
+        cursor?: string;
         records: {
             uri: string;
             value: AppBskyRepost.Record;
         }[];
     }>;
-    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'type'>): Promise<{
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>): Promise<{
         uri: string;
+        cid: string;
         value: AppBskyRepost.Record;
     }>;
-    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'type'>, record: AppBskyRepost.Record, headers?: Record<string, string>): Promise<{
+    create(params: Omit<ComAtprotoRepoCreateRecord.QueryParams, 'collection'>, record: AppBskyRepost.Record, headers?: Record<string, string>): Promise<{
         uri: string;
+        cid: string;
     }>;
-    put(params: Omit<ComAtprotoRepoPutRecord.QueryParams, 'type'>, record: AppBskyRepost.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-    }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'type'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }

@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import * as GetPostThread from '../../third-party/api/src/types/app/bsky/getPostThread'
-import {AdxUri} from '../../third-party/uri'
+import {AtUri} from '../../third-party/uri'
 import _omit from 'lodash.omit'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
@@ -29,6 +29,7 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
 
   // data
   uri: string = ''
+  cid: string = ''
   author: GetPostThread.User = {did: '', name: '', displayName: ''}
   record: Record<string, unknown> = {}
   embed?:
@@ -112,7 +113,7 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
         this.myState.like = undefined
       })
     } else {
-      const res = await apilib.like(this.rootStore, this.uri)
+      const res = await apilib.like(this.rootStore, this.uri, this.cid)
       runInAction(() => {
         this.likeCount++
         this.myState.like = res.uri
@@ -128,7 +129,7 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
         this.myState.repost = undefined
       })
     } else {
-      const res = await apilib.repost(this.rootStore, this.uri)
+      const res = await apilib.repost(this.rootStore, this.uri, this.cid)
       runInAction(() => {
         this.repostCount++
         this.myState.repost = res.uri
@@ -226,7 +227,7 @@ export class PostThreadViewModel {
   // =
 
   private async _resolveUri() {
-    const urip = new AdxUri(this.params.uri)
+    const urip = new AtUri(this.params.uri)
     if (!urip.host.startsWith('did:')) {
       urip.host = await this.rootStore.resolveName(urip.host)
     }
