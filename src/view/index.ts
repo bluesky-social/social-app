@@ -19,6 +19,7 @@ import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck'
 import {faCircleUser} from '@fortawesome/free-regular-svg-icons/faCircleUser'
 import {faClone} from '@fortawesome/free-regular-svg-icons/faClone'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
+import {faCompass} from '@fortawesome/free-regular-svg-icons/faCompass'
 import {faEllipsis} from '@fortawesome/free-solid-svg-icons/faEllipsis'
 import {faEnvelope} from '@fortawesome/free-solid-svg-icons/faEnvelope'
 import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation'
@@ -69,6 +70,7 @@ export function setup() {
     faCircleUser,
     faClone,
     faComment,
+    faCompass,
     faEllipsis,
     faEnvelope,
     faExclamation,

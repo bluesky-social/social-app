@@ -2,6 +2,7 @@ import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   Image,
+  ImageSourcePropType,
   StyleSheet,
   SafeAreaView,
   Text,
@@ -17,7 +18,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {HomeIcon} from '../../lib/icons'
+import {HomeIcon, UserGroupIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {DEF_AVATER} from '../../lib/assets'
@@ -68,7 +69,9 @@ export const MainMenu = observer(
         onPress={() => onNavigate(url)}>
         <View style={[styles.menuItemIconWrapper]}>
           {icon === 'home' ? (
-            <HomeIcon style={styles.menuItemIcon} size={24} />
+            <HomeIcon style={styles.menuItemIcon} />
+          ) : icon === 'user-group' ? (
+            <UserGroupIcon style={styles.menuItemIcon} />
           ) : (
             <FontAwesomeIcon
               icon={icon}
@@ -87,6 +90,32 @@ export const MainMenu = observer(
         </Text>
       </TouchableOpacity>
     )
+    const MenuItemImage = ({
+      img,
+      label,
+      url,
+      count,
+    }: {
+      img: ImageSourcePropType
+      label: string
+      url: string
+      count?: number
+    }) => (
+      <TouchableOpacity
+        style={[styles.menuItem, styles.menuItemMargin]}
+        onPress={() => onNavigate(url)}>
+        <Image style={styles.menuItemImg} source={img} />
+        {count ? (
+          <View style={styles.menuItemCount}>
+            <Text style={styles.menuItemCountLabel}>{count}</Text>
+          </View>
+        ) : undefined}
+        <Text style={styles.menuItemLabel} numberOfLines={1}>
+          {label}
+        </Text>
+      </TouchableOpacity>
+    )
+
     if (!active) {
       return <View />
     }
@@ -118,22 +147,41 @@ export const MainMenu = observer(
                 />
               </TouchableOpacity>
             </View>
-            <View style={[styles.section]}>
-              <Animated.View style={[styles.menuItems, menuItemsAnimStyle]}>
+            <Animated.View style={[styles.section, menuItemsAnimStyle]}>
+              <View style={[styles.menuItems]}>
                 <MenuItem icon="home" label="Home" url="/" />
-                <MenuItem
-                  icon={['far', 'circle-user']}
-                  label="Contacts"
-                  url="/contacts"
-                />
                 <MenuItem
                   icon={['far', 'bell']}
                   label="Notifications"
                   url="/notifications"
                   count={store.me.notificationCount}
                 />
-              </Animated.View>
-            </View>
+              </View>
+
+              <Text style={styles.heading}>Scenes</Text>
+              <View style={[styles.menuItems]}>
+                <MenuItem icon={['far', 'compass']} label="Discover" url="/" />
+                <MenuItem
+                  icon={'user-group'}
+                  label="Create Scene"
+                  url="/contacts"
+                />
+                <MenuItemImage img={DEF_AVATER} label="Galaxy Brain" url="/" />
+                <MenuItemImage
+                  img={DEF_AVATER}
+                  label="Paul's Friends"
+                  url="/"
+                />
+              </View>
+              <View style={[styles.menuItems]}>
+                <MenuItemImage
+                  img={DEF_AVATER}
+                  label="Cool People Only"
+                  url="/"
+                />
+                <MenuItemImage img={DEF_AVATER} label="Techsky" url="/" />
+              </View>
+            </Animated.View>
           </SafeAreaView>
         </Animated.View>
       </>
@@ -168,6 +216,13 @@ const styles = StyleSheet.create({
   section: {
     paddingHorizontal: 10,
   },
+  heading: {
+    fontSize: 21,
+    fontWeight: 'bold',
+    paddingHorizontal: 10,
+    paddingTop: 6,
+    paddingBottom: 12,
+  },
 
   profile: {
     paddingVertical: 10,
@@ -194,16 +249,20 @@ const styles = StyleSheet.create({
 
   menuItems: {
     flexDirection: 'row',
-    marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   menuItem: {
-    width: 80,
+    width: 82,
     alignItems: 'center',
-    marginRight: 6,
   },
   menuItemMargin: {
-    marginRight: 14,
+    marginRight: 10,
+  },
+  menuItemImg: {
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    marginBottom: 5,
   },
   menuItemIconWrapper: {
     borderRadius: 6,
@@ -219,6 +278,7 @@ const styles = StyleSheet.create({
   },
   menuItemLabel: {
     fontSize: 13,
+    textAlign: 'center',
   },
   menuItemCount: {
     position: 'absolute',

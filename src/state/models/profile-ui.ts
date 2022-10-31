@@ -15,7 +15,7 @@ export interface ProfileUiParams {
 
 export class ProfileUiModel {
   // constants
-  static SELECTOR_ITEMS = ['Posts', 'Badges']
+  static SELECTOR_ITEMS = ['Posts', 'Scenes']
 
   // data
   profile: ProfileViewModel

@@ -43,7 +43,7 @@ export const Contacts = ({visible, params}: ScreenParams) => {
         </View>
       </View>
       <Selector
-        items={['All', 'Following']}
+        items={['All', 'Following', 'Scenes']}
         selectedIndex={0}
         swipeGestureInterp={selectorInterp}
       />
