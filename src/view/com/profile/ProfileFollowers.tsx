@@ -13,9 +13,9 @@ import {
   FollowerItem,
 } from '../../../state/models/user-followers-view'
 import {Link} from '../util/Link'
+import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
-import {DEF_AVATER} from '../../lib/assets'
 
 export const ProfileFollowers = observer(function ProfileFollowers({
   name,
@@ -81,7 +81,11 @@ const User = ({item}: {item: FollowerItem}) => {
     <Link style={styles.outer} href={`/profile/${item.name}`} title={item.name}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <Image style={styles.avi} source={DEF_AVATER} />
+          <UserAvatar
+            size={40}
+            displayName={item.displayName}
+            name={item.name}
+          />
         </View>
         <View style={styles.layoutContent}>
           <Text style={[s.f15, s.bold]}>{item.displayName}</Text>
@@ -105,12 +109,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 10,
     paddingBottom: 10,
-  },
-  avi: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    resizeMode: 'cover',
   },
   layoutContent: {
     flex: 1,

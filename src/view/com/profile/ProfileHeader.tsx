@@ -15,8 +15,9 @@ import {useStores} from '../../../state'
 import {EditProfileModel} from '../../../state/models/shell'
 import {pluralize} from '../../lib/strings'
 import {s, gradients, colors} from '../../lib/styles'
-import {DEF_AVATER, BANNER} from '../../lib/assets'
+import {BANNER} from '../../lib/assets'
 import Toast from '../util/Toast'
+import {UserAvatar} from '../util/UserAvatar'
 import {Link} from '../util/Link'
 
 export const ProfileHeader = observer(function ProfileHeader({
@@ -81,7 +82,9 @@ export const ProfileHeader = observer(function ProfileHeader({
   return (
     <View style={styles.outer}>
       <Image style={styles.banner} source={BANNER} />
-      <Image style={styles.avi} source={DEF_AVATER} />
+      <View style={styles.avi}>
+        <UserAvatar size={80} displayName={view.displayName} name={view.name} />
+      </View>
       <View style={styles.content}>
         <View style={[styles.displayNameLine]}>
           <Text style={styles.displayName}>{view.displayName}</Text>
@@ -178,12 +181,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 80,
     left: 10,
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    resizeMode: 'cover',
+    width: 84,
+    height: 84,
+    borderRadius: 42,
     borderWidth: 2,
     borderColor: colors.white,
+    backgroundColor: colors.white,
   },
   content: {
     paddingTop: 8,

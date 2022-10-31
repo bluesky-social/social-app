@@ -19,6 +19,7 @@ import Animated, {
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {HomeIcon, UserGroupIcon} from '../../lib/icons'
+import {UserAvatar} from '../../com/util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {DEF_AVATER} from '../../lib/assets'
@@ -131,7 +132,13 @@ export const MainMenu = observer(
               <TouchableOpacity
                 style={styles.profile}
                 onPress={() => onNavigate(`/profile/${store.me.name || ''}`)}>
-                <Image style={styles.profileImage} source={DEF_AVATER} />
+                <View style={styles.profileImage}>
+                  <UserAvatar
+                    size={30}
+                    displayName={store.me.displayName}
+                    name={store.me.name || ''}
+                  />
+                </View>
                 <Text style={styles.profileText} numberOfLines={1}>
                   {store.me.displayName || store.me.name || 'My profile'}
                 </Text>
@@ -231,9 +238,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileImage: {
-    borderRadius: 15,
-    width: 30,
-    height: 30,
     marginRight: 8,
   },
   profileText: {

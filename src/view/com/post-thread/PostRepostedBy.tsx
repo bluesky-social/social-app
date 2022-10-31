@@ -12,10 +12,10 @@ import {
   RepostedByViewModel,
   RepostedByViewItemModel,
 } from '../../../state/models/reposted-by-view'
+import {UserAvatar} from '../util/UserAvatar'
 import {Link} from '../util/Link'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
-import {DEF_AVATER} from '../../lib/assets'
 
 export const PostRepostedBy = observer(function PostRepostedBy({
   uri,
@@ -83,7 +83,11 @@ const RepostedByItem = ({item}: {item: RepostedByViewItemModel}) => {
     <Link style={styles.outer} href={`/profile/${item.name}`} title={item.name}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <Image style={styles.avi} source={DEF_AVATER} />
+          <UserAvatar
+            size={40}
+            displayName={item.displayName}
+            name={item.name}
+          />
         </View>
         <View style={styles.layoutContent}>
           <Text style={[s.f15, s.bold]}>{item.displayName}</Text>

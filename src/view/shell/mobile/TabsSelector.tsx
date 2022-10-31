@@ -21,7 +21,6 @@ import Swipeable from 'react-native-gesture-handler/Swipeable'
 import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from '../../../state'
 import {s, colors, gradients} from '../../lib/styles'
-import {DEF_AVATER} from '../../lib/assets'
 import {match} from '../../routes'
 import {LinkActionsModel} from '../../../state/models/shell'
 

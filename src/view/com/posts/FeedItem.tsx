@@ -1,24 +1,24 @@
 import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/types/app/bsky/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {FeedViewItemModel} from '../../../state/models/feed-view'
+import {FeedItemModel} from '../../../state/models/feed-view'
 import {ComposePostModel, SharePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
 import {PostDropdownBtn} from '../util/DropdownBtn'
 import {UserInfoText} from '../util/UserInfoText'
 import {RichText} from '../util/RichText'
+import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {ago} from '../../lib/strings'
-import {DEF_AVATER} from '../../lib/assets'
 import {useStores} from '../../../state'
 
 export const FeedItem = observer(function FeedItem({
   item,
 }: {
-  item: FeedViewItemModel
+  item: FeedItemModel
 }) {
   const store = useStores()
   const record = item.record as unknown as PostType.Record
@@ -73,7 +73,11 @@ export const FeedItem = observer(function FeedItem({
           style={styles.layoutAvi}
           href={authorHref}
           title={item.author.name}>
-          <Image style={styles.avi} source={DEF_AVATER} />
+          <UserAvatar
+            size={50}
+            displayName={item.author.displayName}
+            name={item.author.name}
+          />
         </Link>
         <View style={styles.layoutContent}>
           <View style={styles.meta}>
@@ -198,12 +202,6 @@ const styles = StyleSheet.create({
   layoutAvi: {
     width: 60,
     paddingTop: 5,
-  },
-  avi: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    resizeMode: 'cover',
   },
   layoutContent: {
     flex: 1,
