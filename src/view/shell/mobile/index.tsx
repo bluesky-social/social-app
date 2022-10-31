@@ -388,6 +388,7 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   ctrlIcon: {
+    color: colors.black,
     marginLeft: 'auto',
     marginRight: 'auto',
   },

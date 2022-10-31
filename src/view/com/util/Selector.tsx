@@ -12,6 +12,8 @@ interface Layout {
   width: number
 }
 
+const DEFAULT_SWIPE_GESTURE_INTERP = {value: 0}
+
 export function Selector({
   selectedIndex,
   items,
@@ -20,7 +22,7 @@ export function Selector({
 }: {
   selectedIndex: number
   items: string[]
-  swipeGestureInterp: SharedValue<number>
+  swipeGestureInterp?: SharedValue<number>
   onSelect?: (index: number) => void
 }) {
   const [itemLayouts, setItemLayouts] = useState<undefined | Layout[]>(
@@ -41,26 +43,27 @@ export function Selector({
     return [left, middle, right]
   }, [selectedIndex, itemLayouts])
 
+  const interp = swipeGestureInterp || DEFAULT_SWIPE_GESTURE_INTERP
   const underlinePos = useAnimatedStyle(() => {
     const other =
-      swipeGestureInterp.value === 0
+      interp.value === 0
         ? currentLayouts[1]
-        : swipeGestureInterp.value < 0
+        : interp.value < 0
         ? currentLayouts[0]
         : currentLayouts[2]
     return {
       left: interpolate(
-        Math.abs(swipeGestureInterp.value),
+        Math.abs(interp.value),
         [0, 1],
         [currentLayouts[1].x, other.x],
       ),
       width: interpolate(
-        Math.abs(swipeGestureInterp.value),
+        Math.abs(interp.value),
         [0, 1],
         [currentLayouts[1].width, other.width],
       ),
     }
-  }, [currentLayouts, swipeGestureInterp])
+  }, [currentLayouts, interp])
 
   const onLayout = () => {
     const promises = []
@@ -112,7 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   item: {
-    marginRight: 20,
+    marginRight: 14,
     paddingHorizontal: 10,
   },
   itemLabel: {

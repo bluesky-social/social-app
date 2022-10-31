@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
-import {View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 import {Feed} from '../com/notifications/Feed'
+import {colors} from '../lib/styles'
 import {useStores} from '../../state'
 import {NotificationsViewModel} from '../../state/models/notifications-view'
 import {ScreenParams} from '../routes'
@@ -35,5 +36,24 @@ export const Notifications = ({visible}: ScreenParams) => {
     }
   }, [visible, store])
 
-  return <View>{notesView && <Feed view={notesView} />}</View>
+  return (
+    <View>
+      <View style={styles.header}>
+        <Text style={styles.title}>Notifications</Text>
+      </View>
+      {notesView && <Feed view={notesView} />}
+    </View>
+  )
 }
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: colors.white,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+})
