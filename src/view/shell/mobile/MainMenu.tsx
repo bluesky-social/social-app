@@ -22,7 +22,7 @@ import {HomeIcon, UserGroupIcon} from '../../lib/icons'
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
-import {DEF_AVATER} from '../../lib/assets'
+import {DEF_AVATAR} from '../../lib/assets'
 
 export const MainMenu = observer(
   ({active, onClose}: {active: boolean; onClose: () => void}) => {
@@ -173,20 +173,20 @@ export const MainMenu = observer(
                   label="Create Scene"
                   url="/contacts"
                 />
-                <MenuItemImage img={DEF_AVATER} label="Galaxy Brain" url="/" />
+                <MenuItemImage img={DEF_AVATAR} label="Galaxy Brain" url="/" />
                 <MenuItemImage
-                  img={DEF_AVATER}
+                  img={DEF_AVATAR}
                   label="Paul's Friends"
                   url="/"
                 />
               </View>
               <View style={[styles.menuItems]}>
                 <MenuItemImage
-                  img={DEF_AVATER}
+                  img={DEF_AVATAR}
                   label="Cool People Only"
                   url="/"
                 />
-                <MenuItemImage img={DEF_AVATER} label="Techsky" url="/" />
+                <MenuItemImage img={DEF_AVATAR} label="Techsky" url="/" />
               </View>
             </Animated.View>
           </SafeAreaView>
