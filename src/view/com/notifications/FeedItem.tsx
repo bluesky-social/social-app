@@ -6,7 +6,7 @@ import {FontAwesomeIcon, Props} from '@fortawesome/react-native-fontawesome'
 import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../lib/strings'
-import {DEF_AVATER} from '../../lib/assets'
+import {UserAvatar} from '../util/UserAvatar'
 import {PostText} from '../post/PostText'
 import {Post} from '../post/Post'
 import {Link} from '../util/Link'
@@ -114,7 +114,11 @@ export const FeedItem = observer(function FeedItem({
                 key={author.href}
                 href={author.href}
                 title={`@${author.name}`}>
-                <Image style={styles.avi} source={DEF_AVATER} />
+                <UserAvatar
+                  size={30}
+                  displayName={author.displayName}
+                  name={author.name}
+                />
               </Link>
             ))}
             {authors.length > MAX_AUTHORS ? (
@@ -196,12 +200,6 @@ const styles = StyleSheet.create({
   avis: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  avi: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    resizeMode: 'cover',
   },
   aviExtraCount: {
     fontWeight: 'bold',

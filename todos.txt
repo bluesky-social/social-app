@@ -4,11 +4,35 @@ Paul's todo list
   - Update to RN 0.70
   - Cache some profile/userinfo lookups
   - Cursor behaviors on all views
-  - Home button should scroll to top
+  - Update swipe behaviors: edge always goes back, leftmost always goes back, main connects to selector if present
 - Onboarding flow
   - *
-- Private beta
-  - Users list
+- Avatars
+  - SVG generate
+- Main menu
+  - Scenes list
+- Create scene view
+  - *
+- Discover scenes view
+  - *
+- User profile
+  - Distinguish by declared type
+  - User
+    - List scenes
+    - Invite to scene
+    - Remove from scene
+  - Scene
+    - Trending
+    - Members
+    - Profile header
+    - Invite to scene
+    - Remove from scene
+    - Edit profile
+- Notifications
+  - Scene invite
+- Reply gating
+  - Composer
+  - View on post
 - Linking
   - Web linking
   - App linking

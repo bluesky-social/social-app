@@ -10,9 +10,9 @@ import {ComposePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
 import {RichText} from '../util/RichText'
 import {PostDropdownBtn} from '../util/DropdownBtn'
+import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../lib/strings'
-import {DEF_AVATER} from '../../lib/assets'
 import {useStores} from '../../../state'
 
 const PARENT_REPLY_LINE_LENGTH = 8
@@ -116,7 +116,11 @@ export const PostThreadItem = observer(function PostThreadItem({
       <View style={styles.outer}>
         <View style={styles.layout}>
           <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
-            <Image style={styles.avi} source={DEF_AVATER} />
+            <UserAvatar
+              size={50}
+              displayName={item.author.displayName}
+              name={item.author.name}
+            />
           </Link>
           <View style={styles.layoutContent}>
             <View style={[styles.meta, s.mt5]}>
@@ -231,7 +235,11 @@ export const PostThreadItem = observer(function PostThreadItem({
         )}
         <View style={styles.layout}>
           <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
-            <Image style={styles.avi} source={DEF_AVATER} />
+            <UserAvatar
+              size={50}
+              displayName={item.author.displayName}
+              name={item.author.name}
+            />
           </Link>
           <View style={styles.layoutContent}>
             {item.replyingToAuthor &&
@@ -320,12 +328,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 10,
     paddingBottom: 10,
-  },
-  avi: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    resizeMode: 'cover',
   },
   layoutContent: {
     flex: 1,

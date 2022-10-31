@@ -1,22 +1,14 @@
 import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {ActivityIndicator, FlatList, StyleSheet, Text, View} from 'react-native'
 import {
   LikedByViewModel,
   LikedByViewItemModel,
 } from '../../../state/models/liked-by-view'
 import {Link} from '../util/Link'
+import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
-import {DEF_AVATER} from '../../lib/assets'
 
 export const PostLikedBy = observer(function PostLikedBy({uri}: {uri: string}) {
   const store = useStores()
@@ -78,7 +70,11 @@ const LikedByItem = ({item}: {item: LikedByViewItemModel}) => {
     <Link style={styles.outer} href={`/profile/${item.name}`} title={item.name}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <Image style={styles.avi} source={DEF_AVATER} />
+          <UserAvatar
+            size={40}
+            displayName={item.displayName}
+            name={item.name}
+          />
         </View>
         <View style={styles.layoutContent}>
           <Text style={[s.f15, s.bold]}>{item.displayName}</Text>

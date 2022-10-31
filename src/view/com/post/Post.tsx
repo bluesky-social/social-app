@@ -4,7 +4,6 @@ import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/types/app/bsky/post'
 import {
   ActivityIndicator,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -16,10 +15,10 @@ import {ComposePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
 import {RichText} from '../util/RichText'
+import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {ago} from '../../lib/strings'
-import {DEF_AVATER} from '../../lib/assets'
 
 export const Post = observer(function Post({uri}: {uri: string}) {
   const store = useStores()
@@ -91,7 +90,11 @@ export const Post = observer(function Post({uri}: {uri: string}) {
     <Link style={styles.outer} href={itemHref} title={itemTitle}>
       <View style={styles.layout}>
         <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
-          <Image style={styles.avi} source={DEF_AVATER} />
+          <UserAvatar
+            size={50}
+            displayName={item.author.displayName}
+            name={item.author.name}
+          />
         </Link>
         <View style={styles.layoutContent}>
           <View style={styles.meta}>
@@ -184,12 +187,6 @@ const styles = StyleSheet.create({
   },
   layoutAvi: {
     width: 60,
-  },
-  avi: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    resizeMode: 'cover',
   },
   layoutContent: {
     flex: 1,

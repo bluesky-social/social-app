@@ -4,8 +4,8 @@ import {observer} from 'mobx-react-lite'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
 import {s, colors} from '../lib/styles'
-import {DEF_AVATER} from '../lib/assets'
 import {Link} from '../com/util/Link'
+import {UserAvatar} from '../com/util/UserAvatar'
 
 export const Settings = observer(function Settings({visible}: ScreenParams) {
   const store = useStores()
@@ -33,8 +33,12 @@ export const Settings = observer(function Settings({visible}: ScreenParams) {
       </View>
       <Link href={`/profile/${store.me.name}`} title="Your profile">
         <View style={styles.profile}>
-          <Image style={styles.avi} source={DEF_AVATER} />
-          <View>
+          <UserAvatar
+            size={40}
+            displayName={store.me.displayName}
+            name={store.me.name || ''}
+          />
+          <View style={[s.ml10]}>
             <Text style={[s.f18]}>{store.me.displayName}</Text>
             <Text style={[s.gray5]}>@{store.me.name}</Text>
           </View>
