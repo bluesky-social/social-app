@@ -6,7 +6,6 @@ import {Feed} from '../com/posts/Feed'
 import {FAB} from '../com/util/FloatingActionButton'
 import {useStores} from '../../state'
 import {FeedModel} from '../../state/models/feed-view'
-import {ComposePostModel} from '../../state/models/shell'
 import {ScreenParams} from '../routes'
 import {s} from '../lib/styles'
 
@@ -46,7 +45,7 @@ export const Home = observer(function Home({
   }, [visible, store])
 
   const onComposePress = () => {
-    store.shell.openModal(new ComposePostModel({onPost: onCreatePost}))
+    store.shell.openComposer({onPost: onCreatePost})
   }
   const onCreatePost = () => {
     defaultFeedView.loadLatest()

@@ -27,22 +27,6 @@ export class SharePostModel {
   }
 }
 
-export interface ComposePostModelOpts {
-  replyTo?: Post.PostRef
-  onPost?: () => void
-}
-export class ComposePostModel {
-  name = 'compose-post'
-  replyTo?: Post.PostRef
-  onPost?: () => void
-
-  constructor(opts?: ComposePostModelOpts) {
-    makeAutoObservable(this)
-    this.replyTo = opts?.replyTo
-    this.onPost = opts?.onPost
-  }
-}
-
 export class EditProfileModel {
   name = 'edit-profile'
 
@@ -51,26 +35,22 @@ export class EditProfileModel {
   }
 }
 
+export interface ComposerOpts {
+  replyTo?: Post.PostRef
+  onPost?: () => void
+}
+
 export class ShellModel {
   isModalActive = false
-  activeModal:
-    | LinkActionsModel
-    | SharePostModel
-    | ComposePostModel
-    | EditProfileModel
-    | undefined
+  activeModal: LinkActionsModel | SharePostModel | EditProfileModel | undefined
+  isComposerActive = false
+  composerOpts: ComposerOpts | undefined
 
   constructor() {
     makeAutoObservable(this)
   }
 
-  openModal(
-    modal:
-      | LinkActionsModel
-      | SharePostModel
-      | ComposePostModel
-      | EditProfileModel,
-  ) {
+  openModal(modal: LinkActionsModel | SharePostModel | EditProfileModel) {
     this.isModalActive = true
     this.activeModal = modal
   }
@@ -78,5 +58,15 @@ export class ShellModel {
   closeModal() {
     this.isModalActive = false
     this.activeModal = undefined
+  }
+
+  openComposer(opts: ComposerOpts) {
+    this.isComposerActive = true
+    this.composerOpts = opts
+  }
+
+  closeComposer() {
+    this.isComposerActive = false
+    this.composerOpts = undefined
   }
 }

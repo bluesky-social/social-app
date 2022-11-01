@@ -1,28 +1,28 @@
 import React, {useEffect, useMemo, useState} from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {BottomSheetTextInput} from '@gorhom/bottom-sheet'
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as GetUserFollows from '../../../third-party/api/src/types/app/bsky/getUserFollows'
-import * as Post from '../../../third-party/api/src/types/app/bsky/post'
-import {Autocomplete} from './composer/Autocomplete'
+import {Autocomplete} from './Autocomplete'
 import Toast from '../util/Toast'
 import ProgressCircle from '../util/ProgressCircle'
 import {useStores} from '../../../state'
 import * as apilib from '../../../state/lib/api'
+import {ComposerOpts} from '../../../state/models/shell'
 import {s, colors, gradients} from '../../lib/styles'
 
 const MAX_TEXT_LENGTH = 256
 const WARNING_TEXT_LENGTH = 200
 const DANGER_TEXT_LENGTH = 255
-export const snapPoints = ['100%']
 
-export function Component({
+export function ComposePost({
   replyTo,
   onPost,
+  onClose,
 }: {
-  replyTo?: Post.PostRef
-  onPost?: () => void
+  replyTo?: ComposerOpts['replyTo']
+  onPost?: ComposerOpts['onPost']
+  onClose: () => void
 }) {
   const store = useStores()
   const [error, setError] = useState('')
@@ -67,7 +67,7 @@ export function Component({
     }
   }
   const onPressCancel = () => {
-    store.shell.closeModal()
+    onClose()
   }
   const onPressPublish = async () => {
     setError('')
@@ -85,7 +85,7 @@ export function Component({
       return
     }
     onPost?.()
-    store.shell.closeModal()
+    onClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`, {
       duration: Toast.durations.LONG,
       position: Toast.positions.TOP,
@@ -148,7 +148,7 @@ export function Component({
           <Text style={s.red4}>{error}</Text>
         </View>
       )}
-      <BottomSheetTextInput
+      <TextInput
         multiline
         scrollEnabled
         autoFocus
@@ -156,7 +156,7 @@ export function Component({
         placeholder={replyTo ? 'Write your reply' : "What's new?"}
         style={styles.textInput}>
         {textDecorated}
-      </BottomSheetTextInput>
+      </TextInput>
       <View style={[s.flexRow, s.pt10, s.pb10, s.pr5]}>
         <View style={s.flex1} />
         <View>

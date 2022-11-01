@@ -30,6 +30,7 @@ import {Login} from '../../screens/Login'
 import {Modal} from '../../com/modals/Modal'
 import {MainMenu} from './MainMenu'
 import {TabsSelector} from './TabsSelector'
+import {Composer} from './Composer'
 import {s, colors} from '../../lib/styles'
 import {GridIcon, HomeIcon, BellIcon} from '../../lib/icons'
 
@@ -216,6 +217,13 @@ export const MobileShell: React.FC = observer(() => {
       <TabsSelector
         active={isTabsSelectorActive}
         onClose={() => setTabsSelectorActive(false)}
+      />
+      <Composer
+        active={store.shell.isComposerActive}
+        onClose={() => store.shell.closeComposer()}
+        winHeight={winDim.height}
+        replyTo={store.shell.composerOpts?.replyTo}
+        onPost={store.shell.composerOpts?.onPost}
       />
     </View>
   )
