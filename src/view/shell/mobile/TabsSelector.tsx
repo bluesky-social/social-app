@@ -1,26 +1,23 @@
-import React, {createRef, useRef, useMemo, useState} from 'react'
+import React, {createRef, useRef, useMemo, useEffect, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
-  Image,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
 import Animated, {
+  interpolate,
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   runOnJS,
 } from 'react-native-reanimated'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
-import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from '../../../state'
-import {s, colors, gradients} from '../../lib/styles'
+import {s, colors} from '../../lib/styles'
 import {match} from '../../routes'
 import {LinkActionsModel} from '../../../state/models/shell'
 
@@ -32,6 +29,7 @@ export const TabsSelector = observer(
     const [closingTabIndex, setClosingTabIndex] = useState<number | undefined>(
       undefined,
     )
+    const initInterp = useSharedValue<number>(0)
     const closeInterp = useSharedValue<number>(0)
     const tabsRef = useRef<ScrollView>(null)
     const tabRefs = useMemo(
@@ -41,6 +39,17 @@ export const TabsSelector = observer(
         ),
       [store.nav.tabs.length],
     )
+
+    useEffect(() => {
+      if (active) {
+        initInterp.value = withTiming(1, {duration: 150})
+      } else {
+        initInterp.value = 0
+      }
+    }, [initInterp, active])
+    const wrapperAnimStyle = useAnimatedStyle(() => ({
+      bottom: interpolate(initInterp.value, [0, 1.0], [50, 75]),
+    }))
 
     // events
     // =
@@ -76,10 +85,6 @@ export const TabsSelector = observer(
         runOnJS(doCloseTab)(tabIndex)
       })
     }
-    const onNavigate = (url: string) => {
-      store.nav.navigate(url)
-      onClose()
-    }
     const onLayout = () => {
       // focus the current tab
       const targetTab = tabRefs[store.nav.tabIndex]
@@ -96,37 +101,6 @@ export const TabsSelector = observer(
 
     // rendering
     // =
-
-    const FatMenuItem = ({
-      icon,
-      label,
-      url,
-      gradient,
-    }: {
-      icon: IconProp
-      label: string
-      url: string
-      gradient: keyof typeof gradients
-    }) => (
-      <TouchableOpacity
-        style={[styles.fatMenuItem, styles.fatMenuItemMargin]}
-        onPress={() => onNavigate(url)}>
-        <LinearGradient
-          style={[styles.fatMenuItemIconWrapper]}
-          colors={[gradients[gradient].start, gradients[gradient].end]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}>
-          <FontAwesomeIcon
-            icon={icon}
-            style={styles.fatMenuItemIcon}
-            size={24}
-          />
-        </LinearGradient>
-        <Text style={styles.fatMenuItemLabel} numberOfLines={1}>
-          {label}
-        </Text>
-      </TouchableOpacity>
-    )
 
     const renderSwipeActions = () => {
       return <View style={[s.p2]} />
@@ -148,7 +122,7 @@ export const TabsSelector = observer(
         <TouchableWithoutFeedback onPress={onClose}>
           <View style={styles.bg} />
         </TouchableWithoutFeedback>
-        <View style={styles.wrapper}>
+        <Animated.View style={[styles.wrapper, wrapperAnimStyle]}>
           <View onLayout={onLayout}>
             <View style={[s.p10, styles.section]}>
               <View style={styles.btns}>
@@ -240,7 +214,7 @@ export const TabsSelector = observer(
               </ScrollView>
             </View>
           </View>
-        </View>
+        </Animated.View>
       </>
     )
   },
@@ -258,7 +232,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     position: 'absolute',
-    bottom: 75,
+    // bottom: 75,
     width: '100%',
     backgroundColor: '#fff',
     borderRadius: 8,
