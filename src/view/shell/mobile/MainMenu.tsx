@@ -16,7 +16,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {HomeIcon, UserGroupIcon} from '../../lib/icons'
+import {HomeIcon, UserGroupIcon, BellIcon} from '../../lib/icons'
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
@@ -70,6 +70,8 @@ export const MainMenu = observer(
             <HomeIcon style={styles.menuItemIcon} />
           ) : icon === 'user-group' ? (
             <UserGroupIcon style={styles.menuItemIcon} />
+          ) : icon === 'bell' ? (
+            <BellIcon style={styles.menuItemIcon} size="28" />
           ) : (
             <FontAwesomeIcon
               icon={icon}
@@ -160,7 +162,7 @@ export const MainMenu = observer(
               <View style={[styles.menuItems]}>
                 <MenuItem icon="home" label="Home" url="/" />
                 <MenuItem
-                  icon={['far', 'bell']}
+                  icon="bell"
                   label="Notifications"
                   url="/notifications"
                   count={store.me.notificationCount}

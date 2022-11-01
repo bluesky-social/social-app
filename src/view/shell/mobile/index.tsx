@@ -9,6 +9,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ViewStyle,
 } from 'react-native'
 import {ScreenContainer, Screen} from 'react-native-screens'
 import LinearGradient from 'react-native-linear-gradient'
@@ -31,7 +32,7 @@ import {LocationNavigator} from './LocationNavigator'
 import {MainMenu} from './MainMenu'
 import {TabsSelector} from './TabsSelector'
 import {s, colors} from '../../lib/styles'
-import {GridIcon, HomeIcon} from '../../lib/icons'
+import {GridIcon, HomeIcon, BellIcon} from '../../lib/icons'
 
 const SWIPE_GESTURE_DIST_TRIGGER = 0.5
 const SWIPE_GESTURE_VEL_TRIGGER = 2500
@@ -43,17 +44,23 @@ const Btn = ({
   onPress,
   onLongPress,
 }: {
-  icon: IconProp
+  icon: IconProp | 'menu' | 'house' | 'bell'
   inactive?: boolean
   notificationCount?: number
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }) => {
+  let size = 21
+  let addedStyles
   let IconEl
   if (icon === 'menu') {
     IconEl = GridIcon
   } else if (icon === 'house') {
     IconEl = HomeIcon
+  } else if (icon === 'bell') {
+    IconEl = BellIcon
+    size = 24
+    addedStyles = {position: 'relative', top: -1} as ViewStyle
   } else {
     IconEl = FontAwesomeIcon
   }
@@ -67,8 +74,8 @@ const Btn = ({
           </View>
         ) : undefined}
         <IconEl
-          size={21}
-          style={[styles.ctrlIcon, styles.inactive]}
+          size={size}
+          style={[styles.ctrlIcon, styles.inactive, addedStyles]}
           icon={icon}
         />
       </View>
@@ -85,7 +92,7 @@ const Btn = ({
           <Text style={styles.ctrlCountLabel}>{notificationCount}</Text>
         </View>
       ) : undefined}
-      <IconEl size={21} style={styles.ctrlIcon} icon={icon} />
+      <IconEl size={size} style={[styles.ctrlIcon, addedStyles]} icon={icon} />
     </TouchableOpacity>
   )
 }
@@ -203,7 +210,7 @@ export const MobileShell: React.FC = observer(() => {
         <Btn icon="search" inactive={true} onPress={() => {} /* TODO */} />
         <Btn icon="menu" onPress={onPressMenu} />
         <Btn
-          icon={['far', 'bell']}
+          icon="bell"
           onPress={onPressNotifications}
           notificationCount={store.me.notificationCount}
         />
