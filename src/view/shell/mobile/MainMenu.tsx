@@ -40,7 +40,7 @@ export const MainMenu = observer(
       opacity: interpolate(initInterp.value, [0, 1.0], [0, 1.0]),
     }))
     const menuItemsAnimStyle = useAnimatedStyle(() => ({
-      marginTop: interpolate(initInterp.value, [0, 1.0], [15, 0]),
+      top: interpolate(initInterp.value, [0, 1.0], [15, 0]),
     }))
 
     // events
@@ -154,7 +154,12 @@ export const MainMenu = observer(
                 />
               </TouchableOpacity>
             </View>
-            <Animated.View style={[styles.section, menuItemsAnimStyle]}>
+            <Animated.View
+              style={[
+                styles.section,
+                styles.menuItemsAnimContainer,
+                menuItemsAnimStyle,
+              ]}>
               <View style={[styles.menuItems]}>
                 <MenuItem icon="home" label="Home" url="/" />
                 <MenuItem
@@ -217,8 +222,9 @@ const styles = StyleSheet.create({
   topSection: {
     flexDirection: 'row',
     alignItems: 'center',
+    height: 40,
     paddingHorizontal: 10,
-    paddingBottom: 10,
+    marginBottom: 10,
   },
   section: {
     paddingHorizontal: 10,
@@ -251,6 +257,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
 
+  menuItemsAnimContainer: {
+    position: 'relative',
+  },
   menuItems: {
     flexDirection: 'row',
     marginBottom: 20,
