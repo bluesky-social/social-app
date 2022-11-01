@@ -5,7 +5,7 @@ import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/types/app/bsky/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedItemModel} from '../../../state/models/feed-view'
-import {ComposePostModel, SharePostModel} from '../../../state/models/shell'
+import {SharePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
 import {PostDropdownBtn} from '../util/DropdownBtn'
 import {UserInfoText} from '../util/UserInfoText'
@@ -40,9 +40,7 @@ export const FeedItem = observer(function FeedItem({
   }, [record.reply])
 
   const onPressReply = () => {
-    store.shell.openModal(
-      new ComposePostModel({replyTo: {uri: item.uri, cid: item.cid}}),
-    )
+    store.shell.openComposer({replyTo: {uri: item.uri, cid: item.cid}})
   }
   const onPressToggleRepost = () => {
     item

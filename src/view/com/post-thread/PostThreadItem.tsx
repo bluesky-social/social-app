@@ -6,7 +6,6 @@ import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/types/app/bsky/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
-import {ComposePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
 import {RichText} from '../util/RichText'
 import {PostDropdownBtn} from '../util/DropdownBtn'
@@ -49,12 +48,10 @@ export const PostThreadItem = observer(function PostThreadItem({
   const repostsTitle = 'Reposts of this post'
 
   const onPressReply = () => {
-    store.shell.openModal(
-      new ComposePostModel({
-        replyTo: {uri: item.uri, cid: item.cid},
-        onPost: onPostReply,
-      }),
-    )
+    store.shell.openComposer({
+      replyTo: {uri: item.uri, cid: item.cid},
+      onPost: onPostReply,
+    })
   }
   const onPressToggleRepost = () => {
     item
