@@ -27,6 +27,9 @@ export const ProfileHeader = observer(function ProfileHeader({
 }) {
   const store = useStores()
 
+  const onPressBack = () => {
+    store.nav.tab.goBack()
+  }
   const onPressToggleFollow = () => {
     view?.toggleFollowing().then(
       () => {
@@ -82,6 +85,15 @@ export const ProfileHeader = observer(function ProfileHeader({
   return (
     <View style={styles.outer}>
       <Image style={styles.banner} source={BANNER} />
+      {store.nav.tab.canGoBack ? (
+        <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
+          <FontAwesomeIcon
+            size={14}
+            icon="angle-left"
+            style={styles.backIcon}
+          />
+        </TouchableOpacity>
+      ) : undefined}
       <View style={styles.avi}>
         <UserAvatar size={80} displayName={view.displayName} name={view.name} />
       </View>
@@ -176,6 +188,19 @@ const styles = StyleSheet.create({
   banner: {
     width: '100%',
     height: 120,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 6,
+    left: 8,
+    backgroundColor: '#000a',
+    padding: 6,
+    borderRadius: 30,
+  },
+  backIcon: {
+    width: 14,
+    height: 14,
+    color: colors.white,
   },
   avi: {
     position: 'absolute',

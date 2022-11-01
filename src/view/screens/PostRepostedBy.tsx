@@ -1,8 +1,10 @@
 import React, {useEffect} from 'react'
-import {makeRecordUri} from '../lib/strings'
+import {View} from 'react-native'
+import {ViewHeader} from '../com/util/ViewHeader'
 import {PostRepostedBy as PostRepostedByComponent} from '../com/post-thread/PostRepostedBy'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
+import {makeRecordUri} from '../lib/strings'
 
 export const PostRepostedBy = ({visible, params}: ScreenParams) => {
   const store = useStores()
@@ -15,5 +17,10 @@ export const PostRepostedBy = ({visible, params}: ScreenParams) => {
     }
   }, [store, visible])
 
-  return <PostRepostedByComponent uri={uri} />
+  return (
+    <View>
+      <ViewHeader title="Reposted by" />
+      <PostRepostedByComponent uri={uri} />
+    </View>
+  )
 }

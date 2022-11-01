@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {View} from 'react-native'
+import {ViewHeader} from '../com/util/ViewHeader'
 import {ProfileFollows as ProfileFollowsComponent} from '../com/profile/ProfileFollows'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
@@ -16,16 +17,8 @@ export const ProfileFollows = ({visible, params}: ScreenParams) => {
 
   return (
     <View>
-      <Text style={styles.title}>Followed by {name}</Text>
+      <ViewHeader title="Followed" subtitle={`by ${name}`} />
       <ProfileFollowsComponent name={name} />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 21,
-    fontWeight: 'bold',
-    padding: 10,
-  },
-})
