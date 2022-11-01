@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useMemo} from 'react'
 import {View} from 'react-native'
 import {observer} from 'mobx-react-lite'
+import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
 import {FAB} from '../com/util/FloatingActionButton'
 import {useStores} from '../../state'
@@ -53,6 +54,7 @@ export const Home = observer(function Home({
 
   return (
     <View style={s.flex1}>
+      <ViewHeader title="Bluesky" subtitle="Private Beta" />
       <Feed key="default" feed={defaultFeedView} scrollElRef={scrollElRef} />
       <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
