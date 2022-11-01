@@ -1,8 +1,6 @@
 import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
-  Image,
-  ImageSourcePropType,
   StyleSheet,
   SafeAreaView,
   Text,
@@ -22,7 +20,6 @@ import {HomeIcon, UserGroupIcon} from '../../lib/icons'
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
-import {DEF_AVATAR} from '../../lib/assets'
 
 export const MainMenu = observer(
   ({active, onClose}: {active: boolean; onClose: () => void}) => {
@@ -91,13 +88,11 @@ export const MainMenu = observer(
         </Text>
       </TouchableOpacity>
     )
-    const MenuItemImage = ({
-      img,
+    const MenuItemActor = ({
       label,
       url,
       count,
     }: {
-      img: ImageSourcePropType
       label: string
       url: string
       count?: number
@@ -105,7 +100,9 @@ export const MainMenu = observer(
       <TouchableOpacity
         style={[styles.menuItem, styles.menuItemMargin]}
         onPress={() => onNavigate(url)}>
-        <Image style={styles.menuItemImg} source={img} />
+        <View style={s.mb5}>
+          <UserAvatar size={60} displayName={label} name={label} />
+        </View>
         {count ? (
           <View style={styles.menuItemCount}>
             <Text style={styles.menuItemCountLabel}>{count}</Text>
@@ -178,20 +175,12 @@ export const MainMenu = observer(
                   label="Create Scene"
                   url="/contacts"
                 />
-                <MenuItemImage img={DEF_AVATAR} label="Galaxy Brain" url="/" />
-                <MenuItemImage
-                  img={DEF_AVATAR}
-                  label="Paul's Friends"
-                  url="/"
-                />
+                <MenuItemActor label="Galaxy Brain" url="/" />
+                <MenuItemActor label="Paul's Friends" url="/" />
               </View>
               <View style={[styles.menuItems]}>
-                <MenuItemImage
-                  img={DEF_AVATAR}
-                  label="Cool People Only"
-                  url="/"
-                />
-                <MenuItemImage img={DEF_AVATAR} label="Techsky" url="/" />
+                <MenuItemActor label="Cool People Only" url="/" />
+                <MenuItemActor label="Techsky" url="/" />
               </View>
             </Animated.View>
           </SafeAreaView>
@@ -270,12 +259,6 @@ const styles = StyleSheet.create({
   },
   menuItemMargin: {
     marginRight: 10,
-  },
-  menuItemImg: {
-    borderRadius: 30,
-    width: 60,
-    height: 60,
-    marginBottom: 5,
   },
   menuItemIconWrapper: {
     borderRadius: 6,
