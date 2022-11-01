@@ -24,12 +24,10 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {useStores} from '../../../state'
 import {NavigationModel} from '../../../state/models/navigation'
-import {TabsSelectorModel} from '../../../state/models/shell'
 import {match, MatchResult} from '../../routes'
 import {Login} from '../../screens/Login'
 import {Modal} from '../../com/modals/Modal'
 import {LocationNavigator} from './LocationNavigator'
-import {createBackMenu, createForwardMenu} from './HistoryMenu'
 import {MainMenu} from './MainMenu'
 import {TabsSelector} from './TabsSelector'
 import {s, colors} from '../../lib/styles'
@@ -108,8 +106,6 @@ export const MobileShell: React.FC = observer(() => {
   }
   const onDismissLocationNavigator = () => setLocationMenuActive(false)
 
-  const onPressBack = () => store.nav.tab.goBack()
-  const onPressForward = () => store.nav.tab.goForward()
   const onPressHome = () => {
     if (store.nav.tab.current.url === '/') {
       scrollElRef.current?.scrollToOffset({offset: 0})
@@ -118,10 +114,8 @@ export const MobileShell: React.FC = observer(() => {
     }
   }
   const onPressMenu = () => setMainMenuActive(true)
+  const onPressNotifications = () => store.nav.navigate('/notifications')
   const onPressTabs = () => setTabsSelectorActive(true)
-
-  const onLongPressBack = () => createBackMenu(store.nav.tab)
-  const onLongPressForward = () => createForwardMenu(store.nav.tab)
 
   const goBack = () => store.nav.tab.goBack()
   const swipeGesture = Gesture.Pan()
@@ -206,22 +200,12 @@ export const MobileShell: React.FC = observer(() => {
       </SafeAreaView>
       <View style={styles.bottomBar}>
         <Btn icon="house" onPress={onPressHome} />
+        <Btn icon="search" inactive={true} onPress={() => {} /* TODO */} />
+        <Btn icon="menu" onPress={onPressMenu} />
         <Btn
-          icon="angle-left"
-          inactive={!store.nav.tab.canGoBack}
-          onPress={onPressBack}
-          onLongPress={onLongPressBack}
-        />
-        <Btn
-          icon="menu"
-          onPress={onPressMenu}
+          icon={['far', 'bell']}
+          onPress={onPressNotifications}
           notificationCount={store.me.notificationCount}
-        />
-        <Btn
-          icon="angle-right"
-          inactive={!store.nav.tab.canGoForward}
-          onPress={onPressForward}
-          onLongPress={onLongPressForward}
         />
         <Btn icon={['far', 'clone']} onPress={onPressTabs} />
       </View>
