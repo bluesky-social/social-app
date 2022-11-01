@@ -28,7 +28,6 @@ import {NavigationModel} from '../../../state/models/navigation'
 import {match, MatchResult} from '../../routes'
 import {Login} from '../../screens/Login'
 import {Modal} from '../../com/modals/Modal'
-import {LocationNavigator} from './LocationNavigator'
 import {MainMenu} from './MainMenu'
 import {TabsSelector} from './TabsSelector'
 import {s, colors} from '../../lib/styles'
@@ -99,19 +98,12 @@ const Btn = ({
 
 export const MobileShell: React.FC = observer(() => {
   const store = useStores()
-  const [isLocationMenuActive, setLocationMenuActive] = useState(false)
   const [isMainMenuActive, setMainMenuActive] = useState(false)
   const [isTabsSelectorActive, setTabsSelectorActive] = useState(false)
   const scrollElRef = useRef<FlatList | undefined>()
   const winDim = useWindowDimensions()
   const swipeGestureInterp = useSharedValue<number>(0)
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
-
-  const onNavigateLocation = (url: string) => {
-    setLocationMenuActive(false)
-    store.nav.navigate(url)
-  }
-  const onDismissLocationNavigator = () => setLocationMenuActive(false)
 
   const onPressHome = () => {
     if (store.nav.tab.current.url === '/') {
@@ -225,13 +217,6 @@ export const MobileShell: React.FC = observer(() => {
         active={isTabsSelectorActive}
         onClose={() => setTabsSelectorActive(false)}
       />
-      {isLocationMenuActive && (
-        <LocationNavigator
-          url={store.nav.tab.current.url}
-          onNavigate={onNavigateLocation}
-          onDismiss={onDismissLocationNavigator}
-        />
-      )}
     </View>
   )
 })

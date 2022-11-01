@@ -2,14 +2,6 @@ import {makeAutoObservable} from 'mobx'
 import {ProfileViewModel} from './profile-view'
 import * as Post from '../../third-party/api/src/types/app/bsky/post'
 
-export class TabsSelectorModel {
-  name = 'tabs-selector'
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-}
-
 export interface LinkActionsModelOpts {
   newTab?: boolean
 }
@@ -62,7 +54,6 @@ export class EditProfileModel {
 export class ShellModel {
   isModalActive = false
   activeModal:
-    | TabsSelectorModel
     | LinkActionsModel
     | SharePostModel
     | ComposePostModel
@@ -75,7 +66,6 @@ export class ShellModel {
 
   openModal(
     modal:
-      | TabsSelectorModel
       | LinkActionsModel
       | SharePostModel
       | ComposePostModel
