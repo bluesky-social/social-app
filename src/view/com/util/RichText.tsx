@@ -3,7 +3,7 @@ import {Text, TextStyle, StyleProp} from 'react-native'
 import {Link} from './Link'
 import {s} from '../../lib/styles'
 
-type TextSlice = [number, number]
+type TextSlice = {start: number; end: number}
 type Entity = {
   index: TextSlice
   type: string
@@ -53,7 +53,7 @@ export function RichText({
 }
 
 function sortByIndex(a: Entity, b: Entity) {
-  return a.index[0] - b.index[0]
+  return a.index.start - b.index.start
 }
 
 function* toSegments(text: string, entities: Entity[]) {
@@ -61,14 +61,14 @@ function* toSegments(text: string, entities: Entity[]) {
   let i = 0
   do {
     let currEnt = entities[i]
-    if (cursor < currEnt.index[0]) {
-      yield text.slice(cursor, currEnt.index[0])
-    } else if (cursor > currEnt.index[0]) {
+    if (cursor < currEnt.index.start) {
+      yield text.slice(cursor, currEnt.index.start)
+    } else if (cursor > currEnt.index.start) {
       i++
       continue
     }
-    if (currEnt.index[0] < currEnt.index[1]) {
-      let subtext = text.slice(currEnt.index[0], currEnt.index[1])
+    if (currEnt.index.start < currEnt.index.end) {
+      let subtext = text.slice(currEnt.index.start, currEnt.index.end)
       if (
         !subtext.trim() ||
         stripUsername(subtext) !== stripUsername(currEnt.value)
@@ -82,7 +82,7 @@ function* toSegments(text: string, entities: Entity[]) {
         }
       }
     }
-    cursor = currEnt.index[1]
+    cursor = currEnt.index.end
     i++
   } while (i < entities.length)
   if (cursor < text.length) {

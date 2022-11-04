@@ -63,10 +63,10 @@ export function extractEntities(text: string): Entity[] | undefined {
     ents.push({
       type: 'mention',
       value: match[3],
-      index: [
-        match.indices[2][0], // skip the (^|\s) but include the '@'
-        match.indices[3][1],
-      ],
+      index: {
+        start: match.indices[2][0], // skip the (^|\s) but include the '@'
+        end: match.indices[3][1],
+      },
     })
   }
   return ents.length > 0 ? ents : undefined
