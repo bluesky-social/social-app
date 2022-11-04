@@ -12936,17 +12936,18 @@ var recordSchemaDict = {
           }
         },
         textSlice: {
-          type: "array",
-          items: [
-            {
-              type: "number"
+          type: "object",
+          required: ["start", "end"],
+          properties: {
+            start: {
+              type: "number",
+              minimum: 0
             },
-            {
-              type: "number"
+            end: {
+              type: "number",
+              minimum: 0
             }
-          ],
-          minItems: 2,
-          maxItems: 2
+          }
         },
         postRef: {
           type: "object",
@@ -12992,17 +12993,18 @@ var recordSchemaDict = {
         }
       },
       textSlice: {
-        type: "array",
-        items: [
-          {
-            type: "number"
+        type: "object",
+        required: ["start", "end"],
+        properties: {
+          start: {
+            type: "number",
+            minimum: 0
           },
-          {
-            type: "number"
+          end: {
+            type: "number",
+            minimum: 0
           }
-        ],
-        minItems: 2,
-        maxItems: 2
+        }
       }
     }
   },
