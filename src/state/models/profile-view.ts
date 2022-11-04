@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import * as GetProfile from '../../third-party/api/src/types/app/bsky/getProfile'
-import * as Profile from '../../third-party/api/src/types/app/bsky/profile'
+import * as GetProfile from '../../third-party/api/src/client/types/app/bsky/actor/getProfile'
+import * as Profile from '../../third-party/api/src/client/types/app/bsky/actor/profile'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
@@ -22,13 +22,12 @@ export class ProfileViewModel {
 
   // data
   did: string = ''
-  name: string = ''
+  handle: string = ''
   displayName?: string
   description?: string
   followersCount: number = 0
   followsCount: number = 0
   postsCount: number = 0
-  pinnedBadges: GetProfile.Badge[] = []
   myState = new ProfileViewMyStateModel()
 
   constructor(
@@ -118,7 +117,9 @@ export class ProfileViewModel {
   private async _load(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.getProfile(this.params)
+      const res = await this.rootStore.api.app.bsky.actor.getProfile(
+        this.params,
+      )
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -128,13 +129,12 @@ export class ProfileViewModel {
 
   private _replaceAll(res: GetProfile.Response) {
     this.did = res.data.did
-    this.name = res.data.name
+    this.handle = res.data.handle
     this.displayName = res.data.displayName
     this.description = res.data.description
     this.followersCount = res.data.followersCount
     this.followsCount = res.data.followsCount
     this.postsCount = res.data.postsCount
-    this.pinnedBadges = res.data.pinnedBadges
     if (res.data.myState) {
       Object.assign(this.myState, res.data.myState)
     }

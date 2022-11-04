@@ -11,7 +11,7 @@ import Animated, {
   withTiming,
   interpolate,
 } from 'react-native-reanimated'
-import {colors} from '../../../lib/styles'
+import {colors} from '../../lib/styles'
 
 export function Autocomplete({
   active,

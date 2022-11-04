@@ -3,8 +3,8 @@
  */
 
 import {makeAutoObservable} from 'mobx'
-import AtpApi from '../../third-party/api'
-import type {ServiceClient} from '../../third-party/api/src/index'
+import {sessionClient as AtpApi} from '../../third-party/api'
+import type {SessionServiceClient} from '../../third-party/api/src/index'
 import {createContext, useContext} from 'react'
 import {isObj, hasProp} from '../lib/type-guards'
 import {SessionModel} from './session'
@@ -18,7 +18,7 @@ export class RootStoreModel {
   shell = new ShellModel()
   me = new MeModel(this)
 
-  constructor(public api: ServiceClient) {
+  constructor(public api: SessionServiceClient) {
     makeAutoObservable(this, {
       api: false,
       resolveName: false,
@@ -27,14 +27,14 @@ export class RootStoreModel {
     })
   }
 
-  async resolveName(didOrName: string) {
-    if (!didOrName) {
-      throw new Error('Invalid name: ""')
+  async resolveName(didOrHandle: string) {
+    if (!didOrHandle) {
+      throw new Error('Invalid handle: ""')
     }
-    if (didOrName.startsWith('did:')) {
-      return didOrName
+    if (didOrHandle.startsWith('did:')) {
+      return didOrHandle
     }
-    const res = await this.api.com.atproto.resolveName({name: didOrName})
+    const res = await this.api.com.atproto.handle.resolve({handle: didOrHandle})
     return res.data.did
   }
 

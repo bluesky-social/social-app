@@ -1,6 +1,6 @@
 import {makeAutoObservable} from 'mobx'
 import {ProfileViewModel} from './profile-view'
-import * as Post from '../../third-party/api/src/types/app/bsky/post'
+import * as Post from '../../third-party/api/src/client/types/app/bsky/feed/post'
 
 export interface LinkActionsModelOpts {
   newTab?: boolean

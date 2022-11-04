@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import * as GetPostThread from '../../third-party/api/src/types/app/bsky/getPostThread'
+import * as GetPostThread from '../../third-party/api/src/client/types/app/bsky/feed/getPostThread'
 import {AtUri} from '../../third-party/uri'
 import _omit from 'lodash.omit'
 import {RootStoreModel} from './root-store'
@@ -30,7 +30,7 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
   // data
   uri: string = ''
   cid: string = ''
-  author: GetPostThread.User = {did: '', name: '', displayName: ''}
+  author: GetPostThread.User = {did: '', handle: '', displayName: ''}
   record: Record<string, unknown> = {}
   embed?:
     | GetPostThread.RecordEmbed
@@ -82,8 +82,8 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
       }
       this.parent = parentModel
     }
-    if (v.parent?.author.name) {
-      this.replyingToAuthor = v.parent.author.name
+    if (v.parent?.author.handle) {
+      this.replyingToAuthor = v.parent.author.handle
     }
     // replies
     if (includeChildren && v.replies) {
@@ -239,7 +239,7 @@ export class PostThreadViewModel {
   private async _load(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.getPostThread(
+      const res = await this.rootStore.api.app.bsky.feed.getPostThread(
         Object.assign({}, this.params, {uri: this.resolvedUri}),
       )
       this._replaceAll(res)

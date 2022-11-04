@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
-import * as GetRepostedBy from '../../third-party/api/src/types/app/bsky/getRepostedBy'
+import * as GetRepostedBy from '../../third-party/api/src/client/types/app/bsky/feed/getRepostedBy'
 import {RootStoreModel} from './root-store'
 
 type RepostedByItem = GetRepostedBy.OutputSchema['repostedBy'][number]
@@ -11,7 +11,7 @@ export class RepostedByViewItemModel implements RepostedByItem {
 
   // data
   did: string = ''
-  name: string = ''
+  handle: string = ''
   displayName: string = ''
   createdAt?: string
   indexedAt: string = ''
@@ -113,7 +113,7 @@ export class RepostedByViewModel {
   private async _fetch(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.getRepostedBy(
+      const res = await this.rootStore.api.app.bsky.feed.getRepostedBy(
         Object.assign({}, this.params, {uri: this.resolvedUri}),
       )
       this._replaceAll(res)

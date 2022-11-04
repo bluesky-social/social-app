@@ -1,7 +1,5 @@
 import {AtUri} from '../../third-party/uri'
-import {Entity as Entities} from '../../third-party/api/src/types/app/bsky/post'
-
-type Entity = Entities[0]
+import {Entity} from '../../third-party/api/src/client/types/app/bsky/feed/post'
 
 export function pluralize(n: number, base: string, plural?: string): string {
   if (n === 1) {

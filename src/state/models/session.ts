@@ -1,6 +1,7 @@
 import {makeAutoObservable} from 'mobx'
-import AtpApi from '../../third-party/api'
-import type * as GetAccountsConfig from '../../third-party/api/src/types/com/atproto/getAccountsConfig'
+import {sessionClient as AtpApi} from '../../third-party/api/index'
+import type {SessionServiceClient} from '../../third-party/api/src/index'
+import type * as GetAccountsConfig from '../../third-party/api/src/client/types/com/atproto/server/getAccountsConfig'
 import {isObj, hasProp} from '../lib/type-guards'
 import {RootStoreModel} from './root-store'
 
@@ -8,9 +9,10 @@ export type ServiceDescription = GetAccountsConfig.OutputSchema
 
 interface SessionData {
   service: string
-  token: string
-  username: string
-  userdid: string
+  refreshJwt: string
+  accessJwt: string
+  handle: string
+  did: string
 }
 
 export enum OnboardingStage {
@@ -49,26 +51,39 @@ export class SessionModel {
       if (hasProp(v, 'data') && isObj(v.data)) {
         const data: SessionData = {
           service: '',
-          token: '',
-          username: '',
-          userdid: '',
+          refreshJwt: '',
+          accessJwt: '',
+          handle: '',
+          did: '',
         }
         if (hasProp(v.data, 'service') && typeof v.data.service === 'string') {
           data.service = v.data.service
         }
-        if (hasProp(v.data, 'token') && typeof v.data.token === 'string') {
-          data.token = v.data.token
+        if (
+          hasProp(v.data, 'refreshJwt') &&
+          typeof v.data.refreshJwt === 'string'
+        ) {
+          data.refreshJwt = v.data.refreshJwt
         }
         if (
-          hasProp(v.data, 'username') &&
-          typeof v.data.username === 'string'
+          hasProp(v.data, 'accessJwt') &&
+          typeof v.data.accessJwt === 'string'
         ) {
-          data.username = v.data.username
+          data.accessJwt = v.data.accessJwt
         }
-        if (hasProp(v.data, 'userdid') && typeof v.data.userdid === 'string') {
-          data.userdid = v.data.userdid
+        if (hasProp(v.data, 'handle') && typeof v.data.handle === 'string') {
+          data.handle = v.data.handle
         }
-        if (data.service && data.token && data.username && data.userdid) {
+        if (hasProp(v.data, 'did') && typeof v.data.did === 'string') {
+          data.did = v.data.did
+        }
+        if (
+          data.service &&
+          data.refreshJwt &&
+          data.accessJwt &&
+          data.handle &&
+          data.did
+        ) {
           this.data = data
         }
       }
@@ -112,7 +127,10 @@ export class SessionModel {
       return false
     }
 
-    this.rootStore.api.setHeader('Authorization', `Bearer ${this.data.token}`)
+    this.rootStore.api.sessionManager.set({
+      refreshJwt: this.data.refreshJwt,
+      accessJwt: this.data.accessJwt,
+    })
     return true
   }
 
@@ -122,8 +140,8 @@ export class SessionModel {
     }
 
     try {
-      const sess = await this.rootStore.api.com.atproto.getSession({})
-      if (sess.success && this.data && this.data.userdid === sess.data.did) {
+      const sess = await this.rootStore.api.com.atproto.session.get()
+      if (sess.success && this.data && this.data.did === sess.data.did) {
         this.rootStore.me.load().catch(e => {
           console.error('Failed to fetch local user information', e)
         })
@@ -135,28 +153,29 @@ export class SessionModel {
   }
 
   async describeService(service: string): Promise<ServiceDescription> {
-    const api = AtpApi.service(service)
-    const res = await api.com.atproto.getAccountsConfig({})
+    const api = AtpApi.service(service) as SessionServiceClient
+    const res = await api.com.atproto.server.getAccountsConfig({})
     return res.data
   }
 
   async login({
     service,
-    username,
+    handle,
     password,
   }: {
     service: string
-    username: string
+    handle: string
     password: string
   }) {
-    const api = AtpApi.service(service)
-    const res = await api.com.atproto.createSession({}, {username, password})
-    if (res.data.jwt) {
+    const api = AtpApi.service(service) as SessionServiceClient
+    const res = await api.com.atproto.session.create({handle, password})
+    if (res.data.accessJwt && res.data.refreshJwt) {
       this.setState({
         service: service,
-        token: res.data.jwt,
-        username: res.data.name,
-        userdid: res.data.did,
+        accessJwt: res.data.accessJwt,
+        refreshJwt: res.data.refreshJwt,
+        handle: res.data.handle,
+        did: res.data.did,
       })
       this.configureApi()
       this.rootStore.me.load().catch(e => {
@@ -169,26 +188,29 @@ export class SessionModel {
     service,
     email,
     password,
-    username,
+    handle,
     inviteCode,
   }: {
     service: string
     email: string
     password: string
-    username: string
+    handle: string
     inviteCode?: string
   }) {
-    const api = AtpApi.service(service)
-    const res = await api.com.atproto.createAccount(
-      {},
-      {username, password, email, inviteCode},
-    )
-    if (res.data.jwt) {
+    const api = AtpApi.service(service) as SessionServiceClient
+    const res = await api.com.atproto.account.create({
+      handle,
+      password,
+      email,
+      inviteCode,
+    })
+    if (res.data.accessJwt && res.data.refreshJwt) {
       this.setState({
         service: service,
-        token: res.data.jwt,
-        username: res.data.name,
-        userdid: res.data.did,
+        accessJwt: res.data.accessJwt,
+        refreshJwt: res.data.refreshJwt,
+        handle: res.data.handle,
+        did: res.data.did,
       })
       this.setOnboardingStage(OnboardingStage.Init)
       this.configureApi()
@@ -200,7 +222,7 @@ export class SessionModel {
 
   async logout() {
     if (this.isAuthed) {
-      this.rootStore.api.com.atproto.deleteSession({}).catch((e: any) => {
+      this.rootStore.api.com.atproto.session.delete().catch((e: any) => {
         console.error('(Minor issue) Failed to delete session on the server', e)
       })
     }

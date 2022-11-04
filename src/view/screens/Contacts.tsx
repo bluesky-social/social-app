@@ -47,7 +47,7 @@ export const Contacts = ({visible, params}: ScreenParams) => {
         selectedIndex={0}
         swipeGestureInterp={selectorInterp}
       />
-      {!!store.me.name && <ProfileFollowsComponent name={store.me.name} />}
+      {!!store.me.handle && <ProfileFollowsComponent name={store.me.handle} />}
     </View>
   )
 }

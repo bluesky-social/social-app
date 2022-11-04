@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import * as GetUserFollows from '../../../third-party/api/src/types/app/bsky/getUserFollows'
+import * as GetFollows from '../../../third-party/api/src/client/types/app/bsky/graph/getFollows'
 import {Autocomplete} from './Autocomplete'
 import Toast from '../util/Toast'
 import ProgressCircle from '../util/ProgressCircle'
@@ -28,14 +28,14 @@ export function ComposePost({
   const [error, setError] = useState('')
   const [text, setText] = useState('')
   const [followedUsers, setFollowedUsers] = useState<
-    undefined | GetUserFollows.OutputSchema['follows']
+    undefined | GetFollows.OutputSchema['follows']
   >(undefined)
   const [autocompleteOptions, setAutocompleteOptions] = useState<string[]>([])
 
   useEffect(() => {
     let aborted = false
-    store.api.app.bsky
-      .getUserFollows({
+    store.api.app.bsky.graph
+      .getFollows({
         user: store.me.did || '',
       })
       .then(res => {
@@ -58,8 +58,8 @@ export function ComposePost({
       setAutocompleteOptions(
         [prefix].concat(
           followedUsers
-            .filter(user => user.name.startsWith(prefix))
-            .map(user => user.name),
+            .filter(user => user.handle.startsWith(prefix))
+            .map(user => user.handle),
         ),
       )
     } else if (autocompleteOptions) {

@@ -1,9 +1,9 @@
 import {makeAutoObservable} from 'mobx'
-import * as GetUserFollows from '../../third-party/api/src/types/app/bsky/getUserFollows'
+import * as GetFollows from '../../third-party/api/src/client/types/app/bsky/graph/getFollows'
 import {RootStoreModel} from './root-store'
 
-type Subject = GetUserFollows.OutputSchema['subject']
-export type FollowItem = GetUserFollows.OutputSchema['follows'][number] & {
+type Subject = GetFollows.OutputSchema['subject']
+export type FollowItem = GetFollows.OutputSchema['follows'][number] & {
   _reactKey: string
 }
 
@@ -13,15 +13,15 @@ export class UserFollowsViewModel {
   isRefreshing = false
   hasLoaded = false
   error = ''
-  params: GetUserFollows.QueryParams
+  params: GetFollows.QueryParams
 
   // data
-  subject: Subject = {did: '', name: '', displayName: ''}
+  subject: Subject = {did: '', handle: '', displayName: ''}
   follows: FollowItem[] = []
 
   constructor(
     public rootStore: RootStoreModel,
-    params: GetUserFollows.QueryParams,
+    params: GetFollows.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -83,7 +83,9 @@ export class UserFollowsViewModel {
   private async _fetch(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.getUserFollows(this.params)
+      const res = await this.rootStore.api.app.bsky.graph.getFollows(
+        this.params,
+      )
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -91,9 +93,9 @@ export class UserFollowsViewModel {
     }
   }
 
-  private _replaceAll(res: GetUserFollows.Response) {
+  private _replaceAll(res: GetFollows.Response) {
     this.subject.did = res.data.subject.did
-    this.subject.name = res.data.subject.name
+    this.subject.handle = res.data.subject.handle
     this.subject.displayName = res.data.subject.displayName
     this.follows.length = 0
     let counter = 0

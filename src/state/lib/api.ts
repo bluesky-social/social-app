@@ -4,9 +4,9 @@
  */
 
 // import {ReactNativeStore} from './auth'
-import AtpApi from '../../third-party/api'
-import * as Profile from '../../third-party/api/src/types/app/bsky/profile'
-import * as Post from '../../third-party/api/src/types/app/bsky/post'
+import {sessionClient as AtpApi} from '../../third-party/api'
+import * as Profile from '../../third-party/api/src/client/types/app/bsky/actor/profile'
+import * as Post from '../../third-party/api/src/client/types/app/bsky/feed/post'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from '../models/root-store'
 import {extractEntities} from '../../view/lib/strings'
@@ -23,7 +23,7 @@ export async function post(
   let reply
   if (replyTo) {
     const replyToUrip = new AtUri(replyTo.uri)
-    const parentPost = await store.api.app.bsky.post.get({
+    const parentPost = await store.api.app.bsky.feed.post.get({
       user: replyToUrip.host,
       rkey: replyToUrip.rkey,
     })
@@ -39,7 +39,7 @@ export async function post(
     }
   }
   const entities = extractEntities(text)
-  return await store.api.app.bsky.post.create(
+  return await store.api.app.bsky.feed.post.create(
     {did: store.me.did || ''},
     {
       text,
@@ -51,7 +51,7 @@ export async function post(
 }
 
 export async function like(store: RootStoreModel, uri: string, cid: string) {
-  return await store.api.app.bsky.like.create(
+  return await store.api.app.bsky.feed.like.create(
     {did: store.me.did || ''},
     {
       subject: {uri, cid},
@@ -62,14 +62,14 @@ export async function like(store: RootStoreModel, uri: string, cid: string) {
 
 export async function unlike(store: RootStoreModel, likeUri: string) {
   const likeUrip = new AtUri(likeUri)
-  return await store.api.app.bsky.like.delete({
+  return await store.api.app.bsky.feed.like.delete({
     did: likeUrip.hostname,
     rkey: likeUrip.rkey,
   })
 }
 
 export async function repost(store: RootStoreModel, uri: string, cid: string) {
-  return await store.api.app.bsky.repost.create(
+  return await store.api.app.bsky.feed.repost.create(
     {did: store.me.did || ''},
     {
       subject: {uri, cid},
@@ -80,14 +80,15 @@ export async function repost(store: RootStoreModel, uri: string, cid: string) {
 
 export async function unrepost(store: RootStoreModel, repostUri: string) {
   const repostUrip = new AtUri(repostUri)
-  return await store.api.app.bsky.repost.delete({
+  return await store.api.app.bsky.feed.repost.delete({
     did: repostUrip.hostname,
     rkey: repostUrip.rkey,
   })
 }
 
 export async function follow(store: RootStoreModel, subject: string) {
-  return await store.api.app.bsky.follow.create(
+  // TODO NOW needs update
+  return await store.api.app.bsky.graph.follow.create(
     {did: store.me.did || ''},
     {
       subject,
@@ -98,7 +99,7 @@ export async function follow(store: RootStoreModel, subject: string) {
 
 export async function unfollow(store: RootStoreModel, followUri: string) {
   const followUrip = new AtUri(followUri)
-  return await store.api.app.bsky.follow.delete({
+  return await store.api.app.bsky.graph.follow.delete({
     did: followUrip.hostname,
     rkey: followUrip.rkey,
   })
@@ -108,13 +109,13 @@ export async function updateProfile(
   store: RootStoreModel,
   modifyFn: (existing?: Profile.Record) => Profile.Record,
 ) {
-  // TODO: replaceme
-  const res = await store.api.app.bsky.profile.list({
+  // TODO NOW  replaceme
+  const res = await store.api.app.bsky.actor.profile.list({
     user: store.me.did || '',
   })
   const existing = res.records[0]
   if (existing) {
-    await store.api.app.bsky.profile.put(
+    await store.api.app.bsky.actor.profile.put(
       {
         did: store.me.did || '',
         rkey: new AtUri(existing.uri).rkey,
@@ -122,7 +123,7 @@ export async function updateProfile(
       modifyFn(existing.value),
     )
   } else {
-    await store.api.app.bsky.profile.create(
+    await store.api.app.bsky.actor.profile.create(
       {
         did: store.me.did || '',
       },

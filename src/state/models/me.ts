@@ -3,7 +3,7 @@ import {RootStoreModel} from './root-store'
 
 export class MeModel {
   did?: string
-  name?: string
+  handle?: string
   displayName?: string
   description?: string
   notificationCount: number = 0
@@ -14,7 +14,7 @@ export class MeModel {
 
   clear() {
     this.did = undefined
-    this.name = undefined
+    this.handle = undefined
     this.displayName = undefined
     this.description = undefined
     this.notificationCount = 0
@@ -23,9 +23,9 @@ export class MeModel {
   async load() {
     const sess = this.rootStore.session
     if (sess.isAuthed && sess.data) {
-      this.did = sess.data.userdid || ''
-      this.name = sess.data.username
-      const profile = await this.rootStore.api.app.bsky.getProfile({
+      this.did = sess.data.did || ''
+      this.handle = sess.data.handle
+      const profile = await this.rootStore.api.app.bsky.actor.getProfile({
         user: this.did,
       })
       runInAction(() => {
@@ -43,7 +43,7 @@ export class MeModel {
   }
 
   async fetchStateUpdate() {
-    const res = await this.rootStore.api.app.bsky.getNotificationCount({})
+    const res = await this.rootStore.api.app.bsky.notification.getCount()
     runInAction(() => {
       this.notificationCount = res.data.count
     })

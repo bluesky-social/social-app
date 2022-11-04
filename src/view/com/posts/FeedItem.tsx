@@ -2,7 +2,7 @@ import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {AtUri} from '../../../third-party/uri'
-import * as PostType from '../../../third-party/api/src/types/app/bsky/post'
+import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedItemModel} from '../../../state/models/feed-view'
 import {SharePostModel} from '../../../state/models/shell'
@@ -24,10 +24,10 @@ export const FeedItem = observer(function FeedItem({
   const record = item.record as unknown as PostType.Record
   const itemHref = useMemo(() => {
     const urip = new AtUri(item.uri)
-    return `/profile/${item.author.name}/post/${urip.rkey}`
-  }, [item.uri, item.author.name])
-  const itemTitle = `Post by ${item.author.name}`
-  const authorHref = `/profile/${item.author.name}`
+    return `/profile/${item.author.handle}/post/${urip.rkey}`
+  }, [item.uri, item.author.handle])
+  const itemTitle = `Post by ${item.author.handle}`
+  const authorHref = `/profile/${item.author.handle}`
   const replyAuthorDid = useMemo(() => {
     if (!record.reply) return ''
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
@@ -70,11 +70,11 @@ export const FeedItem = observer(function FeedItem({
         <Link
           style={styles.layoutAvi}
           href={authorHref}
-          title={item.author.name}>
+          title={item.author.handle}>
           <UserAvatar
             size={50}
             displayName={item.author.displayName}
-            name={item.author.name}
+            handle={item.author.handle}
           />
         </Link>
         <View style={styles.layoutContent}>
@@ -82,14 +82,14 @@ export const FeedItem = observer(function FeedItem({
             <Link
               style={styles.metaItem}
               href={authorHref}
-              title={item.author.name}>
+              title={item.author.handle}>
               <Text style={[s.f15, s.bold]}>{item.author.displayName}</Text>
             </Link>
             <Link
               style={styles.metaItem}
               href={authorHref}
-              title={item.author.name}>
-              <Text style={[s.f14, s.gray5]}>@{item.author.name}</Text>
+              title={item.author.handle}>
+              <Text style={[s.f14, s.gray5]}>@{item.author.handle}</Text>
             </Link>
             <Text style={[styles.metaItem, s.f14, s.gray5]}>
               &middot; {ago(item.indexedAt)}

@@ -33,16 +33,16 @@ export const Settings = observer(function Settings({visible}: ScreenParams) {
             <Text style={[s.blue3, s.bold]}>Sign out</Text>
           </TouchableOpacity>
         </View>
-        <Link href={`/profile/${store.me.name}`} title="Your profile">
+        <Link href={`/profile/${store.me.handle}`} title="Your profile">
           <View style={styles.profile}>
             <UserAvatar
               size={40}
               displayName={store.me.displayName}
-              name={store.me.name || ''}
+              handle={store.me.handle || ''}
             />
             <View style={[s.ml10]}>
               <Text style={[s.f18]}>{store.me.displayName}</Text>
-              <Text style={[s.gray5]}>@{store.me.name}</Text>
+              <Text style={[s.gray5]}>@{store.me.handle}</Text>
             </View>
           </View>
         </Link>

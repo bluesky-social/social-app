@@ -109,7 +109,7 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
-  const [username, setUsername] = useState<string>('')
+  const [handle, setHandle] = useState<string>('')
   const [password, setPassword] = useState<string>('')
 
   const onPressNext = async () => {
@@ -118,7 +118,7 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
     try {
       await store.session.login({
         service: 'http://localhost:2583/',
-        username,
+        handle,
         password,
       })
     } catch (e: any) {
@@ -164,8 +164,8 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
             placeholderTextColor={colors.blue0}
             autoCapitalize="none"
             autoFocus
-            value={username}
-            onChangeText={setUsername}
+            value={handle}
+            onChangeText={setHandle}
             editable={!isProcessing}
           />
         </View>
@@ -211,7 +211,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const [inviteCode, setInviteCode] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
-  const [username, setUsername] = useState<string>('')
+  const [handle, setHandle] = useState<string>('')
 
   useEffect(() => {
     let aborted = false
@@ -247,7 +247,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     if (!password) {
       return setError('Please choose your password.')
     }
-    if (!username) {
+    if (!handle) {
       return setError('Please choose your username.')
     }
     setError('')
@@ -256,7 +256,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
       await store.session.createAccount({
         service: 'http://localhost:2583/',
         email,
-        username: `${username}.${userDomain}`,
+        handle: `${handle}.${userDomain}`,
         password,
         inviteCode,
       })
@@ -379,8 +379,8 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                 placeholder="eg alice"
                 placeholderTextColor={colors.blue0}
                 autoCapitalize="none"
-                value={username}
-                onChangeText={v => setUsername(cleanUsername(v))}
+                value={handle}
+                onChangeText={v => setHandle(cleanUsername(v))}
                 editable={!isProcessing}
               />
             </View>
@@ -405,7 +405,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
               <Text style={[s.white, s.p10]}>
                 Your full username will be{' '}
                 <Text style={s.bold}>
-                  @{username}.{userDomain}
+                  @{handle}.{userDomain}
                 </Text>
               </Text>
             </View>

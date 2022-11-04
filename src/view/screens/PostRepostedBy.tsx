@@ -9,7 +9,7 @@ import {makeRecordUri} from '../lib/strings'
 export const PostRepostedBy = ({visible, params}: ScreenParams) => {
   const store = useStores()
   const {name, rkey} = params
-  const uri = makeRecordUri(name, 'app.bsky.post', rkey)
+  const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
 
   useEffect(() => {
     if (visible) {
