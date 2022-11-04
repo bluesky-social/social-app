@@ -2,7 +2,6 @@ import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from './root-store'
 import {ProfileViewModel} from './profile-view'
 import {FeedModel} from './feed-view'
-import {BadgesViewModel} from './badges-view'
 
 export const SECTION_IDS = {
   POSTS: 0,
@@ -20,7 +19,6 @@ export class ProfileUiModel {
   // data
   profile: ProfileViewModel
   feed: FeedModel
-  badges: BadgesViewModel
 
   // ui state
   selectedViewIndex = 0
@@ -42,15 +40,11 @@ export class ProfileUiModel {
       author: params.user,
       limit: 10,
     })
-    this.badges = new BadgesViewModel(rootStore)
   }
 
-  get currentView(): FeedModel | BadgesViewModel {
+  get currentView(): FeedModel {
     if (this.selectedViewIndex === SECTION_IDS.POSTS) {
       return this.feed
-    }
-    if (this.selectedViewIndex === SECTION_IDS.BADGES) {
-      return this.badges
     }
     throw new Error(`Invalid selector value: ${this.selectedViewIndex}`)
   }
@@ -79,9 +73,6 @@ export class ProfileUiModel {
       this.feed
         .setup()
         .catch(err => console.error('Failed to fetch feed', err)),
-      this.badges
-        .setup()
-        .catch(err => console.error('Failed to fetch badges', err)),
     ])
   }
 

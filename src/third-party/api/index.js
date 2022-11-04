@@ -6935,67 +6935,84 @@ var require_dist = __commonJS({
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
-  AppBskyBadge: () => badge_exports,
-  AppBskyBadgeAccept: () => badgeAccept_exports,
-  AppBskyBadgeOffer: () => badgeOffer_exports,
-  AppBskyFollow: () => follow_exports,
-  AppBskyGetAuthorFeed: () => getAuthorFeed_exports,
-  AppBskyGetBadgeMembers: () => getBadgeMembers_exports,
-  AppBskyGetHomeFeed: () => getHomeFeed_exports,
-  AppBskyGetLikedBy: () => getLikedBy_exports,
-  AppBskyGetNotificationCount: () => getNotificationCount_exports,
-  AppBskyGetNotifications: () => getNotifications_exports,
-  AppBskyGetPostThread: () => getPostThread_exports,
-  AppBskyGetProfile: () => getProfile_exports,
-  AppBskyGetRepostedBy: () => getRepostedBy_exports,
-  AppBskyGetUserFollowers: () => getUserFollowers_exports,
-  AppBskyGetUserFollows: () => getUserFollows_exports,
-  AppBskyGetUsersSearch: () => getUsersSearch_exports,
-  AppBskyGetUsersTypeahead: () => getUsersTypeahead_exports,
-  AppBskyLike: () => like_exports,
-  AppBskyMediaEmbed: () => mediaEmbed_exports,
-  AppBskyPost: () => post_exports,
-  AppBskyPostNotificationsSeen: () => postNotificationsSeen_exports,
-  AppBskyProfile: () => profile_exports,
-  AppBskyRepost: () => repost_exports,
-  AppBskyUpdateProfile: () => updateProfile_exports,
+  APP_BSKY_SYSTEM: () => APP_BSKY_SYSTEM,
+  AccountNS: () => AccountNS,
+  ActorNS: () => ActorNS,
+  AppBskyActorGetProfile: () => getProfile_exports,
+  AppBskyActorProfile: () => profile_exports,
+  AppBskyActorSearch: () => search_exports,
+  AppBskyActorSearchTypeahead: () => searchTypeahead_exports,
+  AppBskyActorUpdateProfile: () => updateProfile_exports,
+  AppBskyFeedGetAuthorFeed: () => getAuthorFeed_exports,
+  AppBskyFeedGetLikedBy: () => getLikedBy_exports,
+  AppBskyFeedGetPostThread: () => getPostThread_exports,
+  AppBskyFeedGetRepostedBy: () => getRepostedBy_exports,
+  AppBskyFeedGetTimeline: () => getTimeline_exports,
+  AppBskyFeedLike: () => like_exports,
+  AppBskyFeedMediaEmbed: () => mediaEmbed_exports,
+  AppBskyFeedPost: () => post_exports,
+  AppBskyFeedRepost: () => repost_exports,
+  AppBskyGraphFollow: () => follow_exports,
+  AppBskyGraphGetFollowers: () => getFollowers_exports,
+  AppBskyGraphGetFollows: () => getFollows_exports,
+  AppBskyGraphInvite: () => invite_exports,
+  AppBskyGraphInviteAccept: () => inviteAccept_exports,
+  AppBskyNotificationGetCount: () => getCount_exports,
+  AppBskyNotificationList: () => list_exports,
+  AppBskyNotificationUpdateSeen: () => updateSeen_exports,
+  AppBskySystemDeclaration: () => declaration_exports,
   AppNS: () => AppNS,
   AtprotoNS: () => AtprotoNS,
-  BadgeAcceptRecord: () => BadgeAcceptRecord,
-  BadgeOfferRecord: () => BadgeOfferRecord,
-  BadgeRecord: () => BadgeRecord,
   BskyNS: () => BskyNS,
   Client: () => Client2,
-  ComAtprotoCreateAccount: () => createAccount_exports,
-  ComAtprotoCreateInviteCode: () => createInviteCode_exports,
-  ComAtprotoCreateSession: () => createSession_exports,
-  ComAtprotoDeleteAccount: () => deleteAccount_exports,
-  ComAtprotoDeleteSession: () => deleteSession_exports,
-  ComAtprotoGetAccount: () => getAccount_exports,
-  ComAtprotoGetAccountsConfig: () => getAccountsConfig_exports,
-  ComAtprotoGetSession: () => getSession_exports,
-  ComAtprotoRepoBatchWrite: () => repoBatchWrite_exports,
-  ComAtprotoRepoCreateRecord: () => repoCreateRecord_exports,
-  ComAtprotoRepoDeleteRecord: () => repoDeleteRecord_exports,
-  ComAtprotoRepoDescribe: () => repoDescribe_exports,
-  ComAtprotoRepoGetRecord: () => repoGetRecord_exports,
-  ComAtprotoRepoListRecords: () => repoListRecords_exports,
-  ComAtprotoRepoPutRecord: () => repoPutRecord_exports,
-  ComAtprotoRequestAccountPasswordReset: () => requestAccountPasswordReset_exports,
-  ComAtprotoResetAccountPassword: () => resetAccountPassword_exports,
-  ComAtprotoResolveName: () => resolveName_exports,
-  ComAtprotoSyncGetRepo: () => syncGetRepo_exports,
-  ComAtprotoSyncGetRoot: () => syncGetRoot_exports,
-  ComAtprotoSyncUpdateRepo: () => syncUpdateRepo_exports,
+  ComAtprotoAccountCreate: () => create_exports,
+  ComAtprotoAccountCreateInviteCode: () => createInviteCode_exports,
+  ComAtprotoAccountDelete: () => delete_exports,
+  ComAtprotoAccountGet: () => get_exports,
+  ComAtprotoAccountRequestPasswordReset: () => requestPasswordReset_exports,
+  ComAtprotoAccountResetPassword: () => resetPassword_exports,
+  ComAtprotoHandleResolve: () => resolve_exports,
+  ComAtprotoRepoBatchWrite: () => batchWrite_exports,
+  ComAtprotoRepoCreateRecord: () => createRecord_exports,
+  ComAtprotoRepoDeleteRecord: () => deleteRecord_exports,
+  ComAtprotoRepoDescribe: () => describe_exports,
+  ComAtprotoRepoGetRecord: () => getRecord_exports,
+  ComAtprotoRepoListRecords: () => listRecords_exports,
+  ComAtprotoRepoPutRecord: () => putRecord_exports,
+  ComAtprotoServerGetAccountsConfig: () => getAccountsConfig_exports,
+  ComAtprotoSessionCreate: () => create_exports2,
+  ComAtprotoSessionDelete: () => delete_exports2,
+  ComAtprotoSessionGet: () => get_exports2,
+  ComAtprotoSessionRefresh: () => refresh_exports,
+  ComAtprotoSyncGetRepo: () => getRepo_exports,
+  ComAtprotoSyncGetRoot: () => getRoot_exports,
+  ComAtprotoSyncUpdateRepo: () => updateRepo_exports,
   ComNS: () => ComNS,
+  DeclarationRecord: () => DeclarationRecord,
+  FeedNS: () => FeedNS,
   FollowRecord: () => FollowRecord,
+  GraphNS: () => GraphNS,
+  HandleNS: () => HandleNS,
+  InviteAcceptRecord: () => InviteAcceptRecord,
+  InviteRecord: () => InviteRecord,
   LikeRecord: () => LikeRecord,
   MediaEmbedRecord: () => MediaEmbedRecord,
+  NotificationNS: () => NotificationNS,
   PostRecord: () => PostRecord,
   ProfileRecord: () => ProfileRecord,
+  RepoNS: () => RepoNS,
   RepostRecord: () => RepostRecord,
+  ServerNS: () => ServerNS,
   ServiceClient: () => ServiceClient2,
-  default: () => src_default
+  SessionClient: () => SessionClient,
+  SessionManager: () => SessionManager,
+  SessionNS: () => SessionNS,
+  SessionServiceClient: () => SessionServiceClient,
+  SessionXrpcServiceClient: () => SessionXrpcServiceClient,
+  SyncNS: () => SyncNS,
+  SystemNS: () => SystemNS,
+  default: () => client_default,
+  sessionClient: () => session_default
 });
 module.exports = __toCommonJS(src_exports);
 
@@ -10040,6 +10057,16 @@ var NSID = class {
 };
 
 // ../lexicon/src/types.ts
+var tokenSchema = mod.object({
+  lexicon: mod.literal(1),
+  id: mod.string().refine((v) => NSID.isValid(v), {
+    message: "Must be a valid NSID"
+  }),
+  type: mod.enum(["token"]),
+  revision: mod.number().optional(),
+  description: mod.string().optional(),
+  defs: mod.any().optional()
+});
 var recordSchema = mod.object({
   lexicon: mod.literal(1),
   id: mod.string().refine((v) => NSID.isValid(v), {
@@ -10260,6 +10287,9 @@ var ServiceClient = class {
   setHeader(key, value) {
     this.headers[key] = value;
   }
+  unsetHeader(key) {
+    delete this.headers[key];
+  }
   async call(methodNsid, params, data, opts) {
     const schema = this.baseClient.schemas.get(methodNsid);
     if (!schema) {
@@ -10316,24 +10346,23 @@ function isErrorResponseBody(v) {
 // ../xrpc/src/index.ts
 var defaultInst = new Client();
 
-// src/schemas.ts
+// src/client/schemas.ts
 var methodSchemaDict = {
-  "com.atproto.createAccount": {
+  "com.atproto.account.create": {
     lexicon: 1,
-    id: "com.atproto.createAccount",
+    id: "com.atproto.account.create",
     type: "procedure",
     description: "Create an account.",
-    parameters: {},
     input: {
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["username", "email", "password"],
+        required: ["handle", "email", "password"],
         properties: {
           email: {
             type: "string"
           },
-          username: {
+          handle: {
             type: "string"
           },
           inviteCode: {
@@ -10353,15 +10382,27 @@ var methodSchemaDict = {
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["jwt", "username", "did"],
+        required: [
+          "accessJwt",
+          "refreshJwt",
+          "handle",
+          "did",
+          "declarationCid"
+        ],
         properties: {
-          jwt: {
+          accessJwt: {
             type: "string"
           },
-          username: {
+          refreshJwt: {
+            type: "string"
+          },
+          handle: {
             type: "string"
           },
           did: {
+            type: "string"
+          },
+          declarationCid: {
             type: "string"
           }
         },
@@ -10370,7 +10411,7 @@ var methodSchemaDict = {
     },
     errors: [
       {
-        name: "InvalidUsername"
+        name: "InvalidHandle"
       },
       {
         name: "InvalidPassword"
@@ -10379,16 +10420,15 @@ var methodSchemaDict = {
         name: "InvalidInviteCode"
       },
       {
-        name: "UsernameNotAvailable"
+        name: "HandleNotAvailable"
       }
     ]
   },
-  "com.atproto.createInviteCode": {
+  "com.atproto.account.createInviteCode": {
     lexicon: 1,
-    id: "com.atproto.createInviteCode",
+    id: "com.atproto.account.createInviteCode",
     type: "procedure",
     description: "Create an invite code.",
-    parameters: {},
     input: {
       encoding: "application/json",
       schema: {
@@ -10416,19 +10456,76 @@ var methodSchemaDict = {
       }
     }
   },
-  "com.atproto.createSession": {
+  "com.atproto.account.delete": {
     lexicon: 1,
-    id: "com.atproto.createSession",
+    id: "com.atproto.account.delete",
     type: "procedure",
-    description: "Create an authentication session.",
+    description: "Delete an account.",
+    input: {
+      encoding: "",
+      schema: {
+        $defs: {}
+      }
+    },
+    output: {
+      encoding: "",
+      schema: {
+        $defs: {}
+      }
+    }
+  },
+  "com.atproto.account.get": {
+    lexicon: 1,
+    id: "com.atproto.account.get",
+    type: "query",
+    description: "Get information about an account.",
     parameters: {},
+    output: {
+      encoding: "",
+      schema: {
+        $defs: {}
+      }
+    }
+  },
+  "com.atproto.account.requestPasswordReset": {
+    lexicon: 1,
+    id: "com.atproto.account.requestPasswordReset",
+    type: "procedure",
+    description: "Initiate a user account password reset via email",
     input: {
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["username", "password"],
+        required: ["email"],
         properties: {
-          username: {
+          email: {
+            type: "string"
+          }
+        },
+        $defs: {}
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        properties: {},
+        $defs: {}
+      }
+    }
+  },
+  "com.atproto.account.resetPassword": {
+    lexicon: 1,
+    id: "com.atproto.account.resetPassword",
+    type: "procedure",
+    description: "Reset a user account password using a token",
+    input: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["token", "password"],
+        properties: {
+          token: {
             type: "string"
           },
           password: {
@@ -10442,14 +10539,36 @@ var methodSchemaDict = {
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["jwt", "name", "did"],
+        properties: {},
+        $defs: {}
+      }
+    },
+    errors: [
+      {
+        name: "ExpiredToken"
+      },
+      {
+        name: "InvalidToken"
+      }
+    ]
+  },
+  "com.atproto.handle.resolve": {
+    lexicon: 1,
+    id: "com.atproto.handle.resolve",
+    type: "query",
+    description: "Provides the DID of a repo.",
+    parameters: {
+      handle: {
+        type: "string",
+        description: "The handle to resolve. If not supplied, will resolve the host's own handle."
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["did"],
         properties: {
-          jwt: {
-            type: "string"
-          },
-          name: {
-            type: "string"
-          },
           did: {
             type: "string"
           }
@@ -10458,135 +10577,26 @@ var methodSchemaDict = {
       }
     }
   },
-  "com.atproto.deleteAccount": {
+  "com.atproto.repo.batchWrite": {
     lexicon: 1,
-    id: "com.atproto.deleteAccount",
-    type: "procedure",
-    description: "Delete an account.",
-    parameters: {},
-    input: {
-      encoding: "",
-      schema: {
-        $defs: {}
-      }
-    },
-    output: {
-      encoding: "",
-      schema: {
-        $defs: {}
-      }
-    }
-  },
-  "com.atproto.deleteSession": {
-    lexicon: 1,
-    id: "com.atproto.deleteSession",
-    type: "procedure",
-    description: "Delete the current session.",
-    parameters: {},
-    input: {
-      encoding: "",
-      schema: {
-        $defs: {}
-      }
-    },
-    output: {
-      encoding: "",
-      schema: {
-        $defs: {}
-      }
-    }
-  },
-  "com.atproto.getAccount": {
-    lexicon: 1,
-    id: "com.atproto.getAccount",
-    type: "query",
-    description: "Get information about an account.",
-    parameters: {},
-    input: {
-      encoding: "",
-      schema: {
-        $defs: {}
-      }
-    },
-    output: {
-      encoding: "",
-      schema: {
-        $defs: {}
-      }
-    }
-  },
-  "com.atproto.getAccountsConfig": {
-    lexicon: 1,
-    id: "com.atproto.getAccountsConfig",
-    type: "query",
-    description: "Get a document describing the service's accounts configuration.",
-    parameters: {},
-    output: {
-      encoding: "application/json",
-      schema: {
-        type: "object",
-        required: ["availableUserDomains"],
-        properties: {
-          inviteCodeRequired: {
-            type: "boolean"
-          },
-          availableUserDomains: {
-            type: "array",
-            items: {
-              type: "string"
-            }
-          }
-        },
-        $defs: {}
-      }
-    }
-  },
-  "com.atproto.getSession": {
-    lexicon: 1,
-    id: "com.atproto.getSession",
-    type: "query",
-    description: "Get information about the current session.",
-    parameters: {},
-    output: {
-      encoding: "application/json",
-      schema: {
-        type: "object",
-        required: ["name", "did"],
-        properties: {
-          name: {
-            type: "string"
-          },
-          did: {
-            type: "string"
-          }
-        },
-        $defs: {}
-      }
-    }
-  },
-  "com.atproto.repoBatchWrite": {
-    lexicon: 1,
-    id: "com.atproto.repoBatchWrite",
+    id: "com.atproto.repo.batchWrite",
     type: "procedure",
     description: "Apply a batch transaction of creates, puts, and deletes.",
-    parameters: {
-      did: {
-        type: "string",
-        required: true,
-        description: "The DID of the repo."
-      },
-      validate: {
-        type: "boolean",
-        default: true,
-        description: "Validate the records?"
-      }
-    },
     input: {
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["writes"],
+        required: ["did", "writes"],
         properties: {
+          did: {
+            type: "string",
+            description: "The DID of the repo."
+          },
+          validate: {
+            type: "boolean",
+            default: true,
+            description: "Validate the records?"
+          },
           writes: {
             type: "array",
             items: {
@@ -10655,32 +10665,35 @@ var methodSchemaDict = {
       }
     }
   },
-  "com.atproto.repoCreateRecord": {
+  "com.atproto.repo.createRecord": {
     lexicon: 1,
-    id: "com.atproto.repoCreateRecord",
+    id: "com.atproto.repo.createRecord",
     type: "procedure",
     description: "Create a new record.",
-    parameters: {
-      did: {
-        type: "string",
-        required: true,
-        description: "The DID of the repo."
-      },
-      collection: {
-        type: "string",
-        required: true,
-        description: "The NSID of the record collection."
-      },
-      validate: {
-        type: "boolean",
-        default: true,
-        description: "Validate the record?"
-      }
-    },
     input: {
       encoding: "application/json",
-      description: "The record to create",
       schema: {
+        type: "object",
+        required: ["did", "collection", "record"],
+        properties: {
+          did: {
+            type: "string",
+            description: "The DID of the repo."
+          },
+          collection: {
+            type: "string",
+            description: "The NSID of the record collection."
+          },
+          validate: {
+            type: "boolean",
+            default: true,
+            description: "Validate the record?"
+          },
+          record: {
+            type: "object",
+            description: "The record to create"
+          }
+        },
         $defs: {}
       }
     },
@@ -10701,48 +10714,53 @@ var methodSchemaDict = {
       }
     }
   },
-  "com.atproto.repoDeleteRecord": {
+  "com.atproto.repo.deleteRecord": {
     lexicon: 1,
-    id: "com.atproto.repoDeleteRecord",
+    id: "com.atproto.repo.deleteRecord",
     type: "procedure",
     description: "Delete a record.",
-    parameters: {
-      did: {
-        type: "string",
-        required: true,
-        description: "The DID of the repo."
-      },
-      collection: {
-        type: "string",
-        required: true,
-        description: "The NSID of the record collection."
-      },
-      rkey: {
-        type: "string",
-        required: true,
-        description: "The key of the record."
+    input: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["did", "collection", "rkey"],
+        properties: {
+          did: {
+            type: "string",
+            description: "The DID of the repo."
+          },
+          collection: {
+            type: "string",
+            description: "The NSID of the record collection."
+          },
+          rkey: {
+            type: "string",
+            description: "The key of the record."
+          }
+        },
+        $defs: {}
       }
     }
   },
-  "com.atproto.repoDescribe": {
+  "com.atproto.repo.describe": {
     lexicon: 1,
-    id: "com.atproto.repoDescribe",
+    id: "com.atproto.repo.describe",
     type: "query",
     description: "Get information about the repo, including the list of collections.",
     parameters: {
       user: {
         type: "string",
         required: true,
-        description: "The username or DID of the repo."
+        description: "The handle or DID of the repo."
       }
     },
     output: {
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["name", "did", "didDoc", "collections", "nameIsCorrect"],
+        required: ["handle", "did", "didDoc", "collections", "handleIsCorrect"],
         properties: {
-          name: {
+          handle: {
             type: "string"
           },
           did: {
@@ -10757,7 +10775,7 @@ var methodSchemaDict = {
               type: "string"
             }
           },
-          nameIsCorrect: {
+          handleIsCorrect: {
             type: "boolean"
           }
         },
@@ -10765,16 +10783,16 @@ var methodSchemaDict = {
       }
     }
   },
-  "com.atproto.repoGetRecord": {
+  "com.atproto.repo.getRecord": {
     lexicon: 1,
-    id: "com.atproto.repoGetRecord",
+    id: "com.atproto.repo.getRecord",
     type: "query",
     description: "Fetch a record.",
     parameters: {
       user: {
         type: "string",
         required: true,
-        description: "The username or DID of the repo."
+        description: "The handle or DID of the repo."
       },
       collection: {
         type: "string",
@@ -10812,16 +10830,16 @@ var methodSchemaDict = {
       }
     }
   },
-  "com.atproto.repoListRecords": {
+  "com.atproto.repo.listRecords": {
     lexicon: 1,
-    id: "com.atproto.repoListRecords",
+    id: "com.atproto.repo.listRecords",
     type: "query",
     description: "List a range of records in a collection.",
     parameters: {
       user: {
         type: "string",
         required: true,
-        description: "The username or DID of the repo."
+        description: "The handle or DID of the repo."
       },
       collection: {
         type: "string",
@@ -10880,36 +10898,39 @@ var methodSchemaDict = {
       }
     }
   },
-  "com.atproto.repoPutRecord": {
+  "com.atproto.repo.putRecord": {
     lexicon: 1,
-    id: "com.atproto.repoPutRecord",
+    id: "com.atproto.repo.putRecord",
     type: "procedure",
     description: "Write a record.",
-    parameters: {
-      did: {
-        type: "string",
-        required: true,
-        description: "The DID of the repo."
-      },
-      collection: {
-        type: "string",
-        required: true,
-        description: "The NSID of the record type."
-      },
-      rkey: {
-        type: "string",
-        required: true,
-        description: "The TID of the record."
-      },
-      validate: {
-        type: "boolean",
-        default: true,
-        description: "Validate the record?"
-      }
-    },
     input: {
       encoding: "application/json",
       schema: {
+        type: "object",
+        required: ["did", "collection", "rkey", "record"],
+        properties: {
+          did: {
+            type: "string",
+            description: "The DID of the repo."
+          },
+          collection: {
+            type: "string",
+            description: "The NSID of the record type."
+          },
+          rkey: {
+            type: "string",
+            description: "The TID of the record."
+          },
+          validate: {
+            type: "boolean",
+            default: true,
+            description: "Validate the record?"
+          },
+          record: {
+            type: "object",
+            description: "The record to create"
+          }
+        },
         $defs: {}
       }
     },
@@ -10930,47 +10951,44 @@ var methodSchemaDict = {
       }
     }
   },
-  "com.atproto.requestAccountPasswordReset": {
+  "com.atproto.server.getAccountsConfig": {
     lexicon: 1,
-    id: "com.atproto.requestAccountPasswordReset",
-    type: "procedure",
-    description: "Initiate a user account password reset via email",
+    id: "com.atproto.server.getAccountsConfig",
+    type: "query",
+    description: "Get a document describing the service's accounts configuration.",
     parameters: {},
-    input: {
-      encoding: "application/json",
-      schema: {
-        type: "object",
-        required: ["email"],
-        properties: {
-          email: {
-            type: "string"
-          }
-        },
-        $defs: {}
-      }
-    },
     output: {
       encoding: "application/json",
       schema: {
         type: "object",
-        properties: {},
+        required: ["availableUserDomains"],
+        properties: {
+          inviteCodeRequired: {
+            type: "boolean"
+          },
+          availableUserDomains: {
+            type: "array",
+            items: {
+              type: "string"
+            }
+          }
+        },
         $defs: {}
       }
     }
   },
-  "com.atproto.resetAccountPassword": {
+  "com.atproto.session.create": {
     lexicon: 1,
-    id: "com.atproto.resetAccountPassword",
+    id: "com.atproto.session.create",
     type: "procedure",
-    description: "Reset a user account password using a token",
-    parameters: {},
+    description: "Create an authentication session.",
     input: {
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["token", "password"],
+        required: ["handle", "password"],
         properties: {
-          token: {
+          handle: {
             type: "string"
           },
           password: {
@@ -10984,36 +11002,17 @@ var methodSchemaDict = {
       encoding: "application/json",
       schema: {
         type: "object",
-        properties: {},
-        $defs: {}
-      }
-    },
-    errors: [
-      {
-        name: "ExpiredToken"
-      },
-      {
-        name: "InvalidToken"
-      }
-    ]
-  },
-  "com.atproto.resolveName": {
-    lexicon: 1,
-    id: "com.atproto.resolveName",
-    type: "query",
-    description: "Provides the DID of a repo.",
-    parameters: {
-      name: {
-        type: "string",
-        description: "The name to resolve. If not supplied, will resolve the host's own name."
-      }
-    },
-    output: {
-      encoding: "application/json",
-      schema: {
-        type: "object",
-        required: ["did"],
+        required: ["accessJwt", "refreshJwt", "handle", "did"],
         properties: {
+          accessJwt: {
+            type: "string"
+          },
+          refreshJwt: {
+            type: "string"
+          },
+          handle: {
+            type: "string"
+          },
           did: {
             type: "string"
           }
@@ -11022,9 +11021,72 @@ var methodSchemaDict = {
       }
     }
   },
-  "com.atproto.syncGetRepo": {
+  "com.atproto.session.delete": {
     lexicon: 1,
-    id: "com.atproto.syncGetRepo",
+    id: "com.atproto.session.delete",
+    type: "procedure",
+    description: "Delete the current session.",
+    output: {
+      encoding: "application/json",
+      schema: {
+        $defs: {}
+      }
+    }
+  },
+  "com.atproto.session.get": {
+    lexicon: 1,
+    id: "com.atproto.session.get",
+    type: "query",
+    description: "Get information about the current session.",
+    parameters: {},
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["handle", "did"],
+        properties: {
+          handle: {
+            type: "string"
+          },
+          did: {
+            type: "string"
+          }
+        },
+        $defs: {}
+      }
+    }
+  },
+  "com.atproto.session.refresh": {
+    lexicon: 1,
+    id: "com.atproto.session.refresh",
+    type: "procedure",
+    description: "Refresh an authentication session.",
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["accessJwt", "refreshJwt", "handle", "did"],
+        properties: {
+          accessJwt: {
+            type: "string"
+          },
+          refreshJwt: {
+            type: "string"
+          },
+          handle: {
+            type: "string"
+          },
+          did: {
+            type: "string"
+          }
+        },
+        $defs: {}
+      }
+    }
+  },
+  "com.atproto.sync.getRepo": {
+    lexicon: 1,
+    id: "com.atproto.sync.getRepo",
     type: "query",
     description: "Gets the repo state.",
     parameters: {
@@ -11042,9 +11104,9 @@ var methodSchemaDict = {
       encoding: "application/cbor"
     }
   },
-  "com.atproto.syncGetRoot": {
+  "com.atproto.sync.getRoot": {
     lexicon: 1,
-    id: "com.atproto.syncGetRoot",
+    id: "com.atproto.sync.getRoot",
     type: "query",
     description: "Gets the current root CID of a repo.",
     parameters: {
@@ -11068,9 +11130,9 @@ var methodSchemaDict = {
       }
     }
   },
-  "com.atproto.syncUpdateRepo": {
+  "com.atproto.sync.updateRepo": {
     lexicon: 1,
-    id: "com.atproto.syncUpdateRepo",
+    id: "com.atproto.sync.updateRepo",
     type: "procedure",
     description: "Writes commits to a repo.",
     parameters: {
@@ -11084,9 +11146,213 @@ var methodSchemaDict = {
       encoding: "application/cbor"
     }
   },
-  "app.bsky.getAuthorFeed": {
+  "app.bsky.actor.getProfile": {
     lexicon: 1,
-    id: "app.bsky.getAuthorFeed",
+    id: "app.bsky.actor.getProfile",
+    type: "query",
+    parameters: {
+      user: {
+        type: "string",
+        required: true
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: [
+          "did",
+          "handle",
+          "followersCount",
+          "followsCount",
+          "postsCount"
+        ],
+        properties: {
+          did: {
+            type: "string"
+          },
+          handle: {
+            type: "string"
+          },
+          displayName: {
+            type: "string",
+            maxLength: 64
+          },
+          description: {
+            type: "string",
+            maxLength: 256
+          },
+          followersCount: {
+            type: "number"
+          },
+          followsCount: {
+            type: "number"
+          },
+          postsCount: {
+            type: "number"
+          },
+          myState: {
+            type: "object",
+            properties: {
+              follow: {
+                type: "string"
+              }
+            }
+          }
+        },
+        $defs: {}
+      }
+    }
+  },
+  "app.bsky.actor.search": {
+    lexicon: 1,
+    id: "app.bsky.actor.search",
+    type: "query",
+    description: "Find users matching search criteria",
+    parameters: {
+      term: {
+        type: "string",
+        required: true
+      },
+      limit: {
+        type: "number",
+        maximum: 100
+      },
+      before: {
+        type: "string"
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["users"],
+        properties: {
+          cursor: {
+            type: "string"
+          },
+          users: {
+            type: "array",
+            items: {
+              type: "object",
+              required: ["did", "handle"],
+              properties: {
+                did: {
+                  type: "string"
+                },
+                handle: {
+                  type: "string"
+                },
+                displayName: {
+                  type: "string",
+                  maxLength: 64
+                },
+                description: {
+                  type: "string"
+                },
+                indexedAt: {
+                  type: "string",
+                  format: "date-time"
+                }
+              }
+            }
+          }
+        },
+        $defs: {}
+      }
+    }
+  },
+  "app.bsky.actor.searchTypeahead": {
+    lexicon: 1,
+    id: "app.bsky.actor.searchTypeahead",
+    type: "query",
+    description: "Find user suggestions for a search term",
+    parameters: {
+      term: {
+        type: "string",
+        required: true
+      },
+      limit: {
+        type: "number",
+        maximum: 100
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["users"],
+        properties: {
+          users: {
+            type: "array",
+            items: {
+              type: "object",
+              required: ["did", "handle"],
+              properties: {
+                did: {
+                  type: "string"
+                },
+                handle: {
+                  type: "string"
+                },
+                displayName: {
+                  type: "string",
+                  maxLength: 64
+                }
+              }
+            }
+          }
+        },
+        $defs: {}
+      }
+    }
+  },
+  "app.bsky.actor.updateProfile": {
+    lexicon: 1,
+    id: "app.bsky.actor.updateProfile",
+    type: "procedure",
+    description: "Notify server that the user has seen notifications",
+    input: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: [],
+        properties: {
+          displayName: {
+            type: "string",
+            maxLength: 64
+          },
+          description: {
+            type: "string",
+            maxLength: 256
+          }
+        },
+        $defs: {}
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["uri", "cid", "record"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          },
+          record: {
+            type: "object"
+          }
+        },
+        $defs: {}
+      }
+    }
+  },
+  "app.bsky.feed.getAuthorFeed": {
+    lexicon: 1,
+    id: "app.bsky.feed.getAuthorFeed",
     type: "query",
     description: "A view of a user's feed",
     parameters: {
@@ -11188,12 +11454,12 @@ var methodSchemaDict = {
           },
           user: {
             type: "object",
-            required: ["did", "name"],
+            required: ["did", "handle"],
             properties: {
               did: {
                 type: "string"
               },
-              name: {
+              handle: {
                 type: "string"
               },
               displayName: {
@@ -11323,12 +11589,12 @@ var methodSchemaDict = {
       },
       user: {
         type: "object",
-        required: ["did", "name"],
+        required: ["did", "handle"],
         properties: {
           did: {
             type: "string"
           },
-          name: {
+          handle: {
             type: "string"
           },
           displayName: {
@@ -11387,379 +11653,9 @@ var methodSchemaDict = {
       }
     }
   },
-  "app.bsky.getBadgeMembers": {
+  "app.bsky.feed.getLikedBy": {
     lexicon: 1,
-    id: "app.bsky.getBadgeMembers",
-    type: "query",
-    parameters: {
-      uri: {
-        type: "string",
-        required: true
-      },
-      cid: {
-        type: "string",
-        required: false
-      },
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
-      }
-    },
-    output: {
-      encoding: "application/json",
-      schema: {
-        type: "object",
-        required: ["uri", "members"],
-        properties: {
-          uri: {
-            type: "string"
-          },
-          cid: {
-            type: "string"
-          },
-          cursor: {
-            type: "string"
-          },
-          members: {
-            type: "array",
-            items: {
-              type: "object",
-              required: ["did", "name", "acceptedAt", "offeredAt"],
-              properties: {
-                did: {
-                  type: "string"
-                },
-                name: {
-                  type: "string"
-                },
-                displayName: {
-                  type: "string",
-                  maxLength: 64
-                },
-                offeredAt: {
-                  type: "string",
-                  format: "date-time"
-                },
-                acceptedAt: {
-                  type: "string",
-                  format: "date-time"
-                }
-              }
-            }
-          }
-        },
-        $defs: {}
-      }
-    }
-  },
-  "app.bsky.getHomeFeed": {
-    lexicon: 1,
-    id: "app.bsky.getHomeFeed",
-    type: "query",
-    description: "A view of the user's home feed",
-    parameters: {
-      algorithm: {
-        type: "string"
-      },
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
-      }
-    },
-    output: {
-      encoding: "application/json",
-      schema: {
-        type: "object",
-        required: ["feed"],
-        properties: {
-          cursor: {
-            type: "string"
-          },
-          feed: {
-            type: "array",
-            items: {
-              $ref: "#/$defs/feedItem"
-            }
-          }
-        },
-        $defs: {
-          feedItem: {
-            type: "object",
-            required: [
-              "uri",
-              "cid",
-              "author",
-              "record",
-              "replyCount",
-              "repostCount",
-              "likeCount",
-              "indexedAt"
-            ],
-            properties: {
-              uri: {
-                type: "string"
-              },
-              cid: {
-                type: "string"
-              },
-              author: {
-                $ref: "#/$defs/user"
-              },
-              repostedBy: {
-                $ref: "#/$defs/user"
-              },
-              record: {
-                type: "object"
-              },
-              embed: {
-                oneOf: [
-                  {
-                    $ref: "#/$defs/recordEmbed"
-                  },
-                  {
-                    $ref: "#/$defs/externalEmbed"
-                  },
-                  {
-                    $ref: "#/$defs/unknownEmbed"
-                  }
-                ]
-              },
-              replyCount: {
-                type: "number"
-              },
-              repostCount: {
-                type: "number"
-              },
-              likeCount: {
-                type: "number"
-              },
-              indexedAt: {
-                type: "string",
-                format: "date-time"
-              },
-              myState: {
-                type: "object",
-                properties: {
-                  repost: {
-                    type: "string"
-                  },
-                  like: {
-                    type: "string"
-                  }
-                }
-              }
-            }
-          },
-          user: {
-            type: "object",
-            required: ["did", "name"],
-            properties: {
-              did: {
-                type: "string"
-              },
-              name: {
-                type: "string"
-              },
-              displayName: {
-                type: "string",
-                maxLength: 64
-              }
-            }
-          },
-          recordEmbed: {
-            type: "object",
-            required: ["type", "author", "record"],
-            properties: {
-              type: {
-                const: "record"
-              },
-              author: {
-                $ref: "#/$defs/user"
-              },
-              record: {
-                type: "object"
-              }
-            }
-          },
-          externalEmbed: {
-            type: "object",
-            required: ["type", "uri", "title", "description", "imageUri"],
-            properties: {
-              type: {
-                const: "external"
-              },
-              uri: {
-                type: "string"
-              },
-              title: {
-                type: "string"
-              },
-              description: {
-                type: "string"
-              },
-              imageUri: {
-                type: "string"
-              }
-            }
-          },
-          unknownEmbed: {
-            type: "object",
-            required: ["type"],
-            properties: {
-              type: {
-                type: "string",
-                not: {
-                  enum: ["record", "external"]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    defs: {
-      feedItem: {
-        type: "object",
-        required: [
-          "uri",
-          "cid",
-          "author",
-          "record",
-          "replyCount",
-          "repostCount",
-          "likeCount",
-          "indexedAt"
-        ],
-        properties: {
-          uri: {
-            type: "string"
-          },
-          cid: {
-            type: "string"
-          },
-          author: {
-            $ref: "#/$defs/user"
-          },
-          repostedBy: {
-            $ref: "#/$defs/user"
-          },
-          record: {
-            type: "object"
-          },
-          embed: {
-            oneOf: [
-              {
-                $ref: "#/$defs/recordEmbed"
-              },
-              {
-                $ref: "#/$defs/externalEmbed"
-              },
-              {
-                $ref: "#/$defs/unknownEmbed"
-              }
-            ]
-          },
-          replyCount: {
-            type: "number"
-          },
-          repostCount: {
-            type: "number"
-          },
-          likeCount: {
-            type: "number"
-          },
-          indexedAt: {
-            type: "string",
-            format: "date-time"
-          },
-          myState: {
-            type: "object",
-            properties: {
-              repost: {
-                type: "string"
-              },
-              like: {
-                type: "string"
-              }
-            }
-          }
-        }
-      },
-      user: {
-        type: "object",
-        required: ["did", "name"],
-        properties: {
-          did: {
-            type: "string"
-          },
-          name: {
-            type: "string"
-          },
-          displayName: {
-            type: "string",
-            maxLength: 64
-          }
-        }
-      },
-      recordEmbed: {
-        type: "object",
-        required: ["type", "author", "record"],
-        properties: {
-          type: {
-            const: "record"
-          },
-          author: {
-            $ref: "#/$defs/user"
-          },
-          record: {
-            type: "object"
-          }
-        }
-      },
-      externalEmbed: {
-        type: "object",
-        required: ["type", "uri", "title", "description", "imageUri"],
-        properties: {
-          type: {
-            const: "external"
-          },
-          uri: {
-            type: "string"
-          },
-          title: {
-            type: "string"
-          },
-          description: {
-            type: "string"
-          },
-          imageUri: {
-            type: "string"
-          }
-        }
-      },
-      unknownEmbed: {
-        type: "object",
-        required: ["type"],
-        properties: {
-          type: {
-            type: "string",
-            not: {
-              enum: ["record", "external"]
-            }
-          }
-        }
-      }
-    }
-  },
-  "app.bsky.getLikedBy": {
-    lexicon: 1,
-    id: "app.bsky.getLikedBy",
+    id: "app.bsky.feed.getLikedBy",
     type: "query",
     parameters: {
       uri: {
@@ -11797,12 +11693,12 @@ var methodSchemaDict = {
             type: "array",
             items: {
               type: "object",
-              required: ["did", "name", "indexedAt"],
+              required: ["did", "handle", "indexedAt"],
               properties: {
                 did: {
                   type: "string"
                 },
-                name: {
+                handle: {
                   type: "string"
                 },
                 displayName: {
@@ -11825,172 +11721,9 @@ var methodSchemaDict = {
       }
     }
   },
-  "app.bsky.getNotificationCount": {
+  "app.bsky.feed.getPostThread": {
     lexicon: 1,
-    id: "app.bsky.getNotificationCount",
-    type: "query",
-    parameters: {},
-    output: {
-      encoding: "application/json",
-      schema: {
-        type: "object",
-        required: ["count"],
-        properties: {
-          count: {
-            type: "number"
-          }
-        },
-        $defs: {}
-      }
-    }
-  },
-  "app.bsky.getNotifications": {
-    lexicon: 1,
-    id: "app.bsky.getNotifications",
-    type: "query",
-    parameters: {
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
-      }
-    },
-    output: {
-      encoding: "application/json",
-      schema: {
-        type: "object",
-        required: ["notifications"],
-        properties: {
-          cursor: {
-            type: "string"
-          },
-          notifications: {
-            type: "array",
-            items: {
-              $ref: "#/$defs/notification"
-            }
-          }
-        },
-        $defs: {
-          notification: {
-            type: "object",
-            required: [
-              "uri",
-              "cid",
-              "author",
-              "reason",
-              "record",
-              "isRead",
-              "indexedAt"
-            ],
-            properties: {
-              uri: {
-                type: "string",
-                format: "uri"
-              },
-              cid: {
-                type: "string"
-              },
-              author: {
-                type: "object",
-                required: ["did", "name"],
-                properties: {
-                  did: {
-                    type: "string"
-                  },
-                  name: {
-                    type: "string"
-                  },
-                  displayName: {
-                    type: "string",
-                    maxLength: 64
-                  }
-                }
-              },
-              reason: {
-                type: "string",
-                $comment: "Expected values are 'like', 'repost', 'follow', 'badge', 'mention' and 'reply'."
-              },
-              reasonSubject: {
-                type: "string"
-              },
-              record: {
-                type: "object"
-              },
-              isRead: {
-                type: "boolean"
-              },
-              indexedAt: {
-                type: "string",
-                format: "date-time"
-              }
-            }
-          }
-        }
-      }
-    },
-    defs: {
-      notification: {
-        type: "object",
-        required: [
-          "uri",
-          "cid",
-          "author",
-          "reason",
-          "record",
-          "isRead",
-          "indexedAt"
-        ],
-        properties: {
-          uri: {
-            type: "string",
-            format: "uri"
-          },
-          cid: {
-            type: "string"
-          },
-          author: {
-            type: "object",
-            required: ["did", "name"],
-            properties: {
-              did: {
-                type: "string"
-              },
-              name: {
-                type: "string"
-              },
-              displayName: {
-                type: "string",
-                maxLength: 64
-              }
-            }
-          },
-          reason: {
-            type: "string",
-            $comment: "Expected values are 'like', 'repost', 'follow', 'badge', 'mention' and 'reply'."
-          },
-          reasonSubject: {
-            type: "string"
-          },
-          record: {
-            type: "object"
-          },
-          isRead: {
-            type: "boolean"
-          },
-          indexedAt: {
-            type: "string",
-            format: "date-time"
-          }
-        }
-      }
-    }
-  },
-  "app.bsky.getPostThread": {
-    lexicon: 1,
-    id: "app.bsky.getPostThread",
+    id: "app.bsky.feed.getPostThread",
     type: "query",
     parameters: {
       uri: {
@@ -12087,12 +11820,12 @@ var methodSchemaDict = {
           },
           user: {
             type: "object",
-            required: ["did", "name"],
+            required: ["did", "handle"],
             properties: {
               did: {
                 type: "string"
               },
-              name: {
+              handle: {
                 type: "string"
               },
               displayName: {
@@ -12228,12 +11961,12 @@ var methodSchemaDict = {
       },
       user: {
         type: "object",
-        required: ["did", "name"],
+        required: ["did", "handle"],
         properties: {
           did: {
             type: "string"
           },
-          name: {
+          handle: {
             type: "string"
           },
           displayName: {
@@ -12292,173 +12025,9 @@ var methodSchemaDict = {
       }
     }
   },
-  "app.bsky.getProfile": {
+  "app.bsky.feed.getRepostedBy": {
     lexicon: 1,
-    id: "app.bsky.getProfile",
-    type: "query",
-    parameters: {
-      user: {
-        type: "string",
-        required: true
-      }
-    },
-    output: {
-      encoding: "application/json",
-      schema: {
-        type: "object",
-        required: [
-          "did",
-          "name",
-          "followersCount",
-          "followsCount",
-          "postsCount",
-          "pinnedBadges"
-        ],
-        properties: {
-          did: {
-            type: "string"
-          },
-          name: {
-            type: "string"
-          },
-          displayName: {
-            type: "string",
-            maxLength: 64
-          },
-          description: {
-            type: "string",
-            maxLength: 256
-          },
-          followersCount: {
-            type: "number"
-          },
-          followsCount: {
-            type: "number"
-          },
-          postsCount: {
-            type: "number"
-          },
-          pinnedBadges: {
-            type: "array",
-            items: {
-              $ref: "#/$defs/badge"
-            }
-          },
-          myState: {
-            type: "object",
-            properties: {
-              follow: {
-                type: "string"
-              }
-            }
-          }
-        },
-        $defs: {
-          badge: {
-            type: "object",
-            required: ["uri", "cid"],
-            properties: {
-              uri: {
-                type: "string"
-              },
-              cid: {
-                type: "string"
-              },
-              error: {
-                type: "string"
-              },
-              issuer: {
-                type: "object",
-                required: ["did", "name"],
-                properties: {
-                  did: {
-                    type: "string"
-                  },
-                  name: {
-                    type: "string"
-                  },
-                  displayName: {
-                    type: "string",
-                    maxLength: 64
-                  }
-                }
-              },
-              assertion: {
-                type: "object",
-                required: ["type"],
-                properties: {
-                  type: {
-                    type: "string"
-                  },
-                  tag: {
-                    type: "string",
-                    maxLength: 64
-                  }
-                }
-              },
-              createdAt: {
-                type: "string",
-                format: "date-time"
-              }
-            }
-          }
-        }
-      }
-    },
-    defs: {
-      badge: {
-        type: "object",
-        required: ["uri", "cid"],
-        properties: {
-          uri: {
-            type: "string"
-          },
-          cid: {
-            type: "string"
-          },
-          error: {
-            type: "string"
-          },
-          issuer: {
-            type: "object",
-            required: ["did", "name"],
-            properties: {
-              did: {
-                type: "string"
-              },
-              name: {
-                type: "string"
-              },
-              displayName: {
-                type: "string",
-                maxLength: 64
-              }
-            }
-          },
-          assertion: {
-            type: "object",
-            required: ["type"],
-            properties: {
-              type: {
-                type: "string"
-              },
-              tag: {
-                type: "string",
-                maxLength: 64
-              }
-            }
-          },
-          createdAt: {
-            type: "string",
-            format: "date-time"
-          }
-        }
-      }
-    }
-  },
-  "app.bsky.getRepostedBy": {
-    lexicon: 1,
-    id: "app.bsky.getRepostedBy",
+    id: "app.bsky.feed.getRepostedBy",
     type: "query",
     parameters: {
       uri: {
@@ -12496,12 +12065,12 @@ var methodSchemaDict = {
             type: "array",
             items: {
               type: "object",
-              required: ["did", "name", "indexedAt"],
+              required: ["did", "handle", "indexedAt"],
               properties: {
                 did: {
                   type: "string"
                 },
-                name: {
+                handle: {
                   type: "string"
                 },
                 displayName: {
@@ -12524,9 +12093,311 @@ var methodSchemaDict = {
       }
     }
   },
-  "app.bsky.getUserFollowers": {
+  "app.bsky.feed.getTimeline": {
     lexicon: 1,
-    id: "app.bsky.getUserFollowers",
+    id: "app.bsky.feed.getTimeline",
+    type: "query",
+    description: "A view of the user's home timeline",
+    parameters: {
+      algorithm: {
+        type: "string"
+      },
+      limit: {
+        type: "number",
+        maximum: 100
+      },
+      before: {
+        type: "string"
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["feed"],
+        properties: {
+          cursor: {
+            type: "string"
+          },
+          feed: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/feedItem"
+            }
+          }
+        },
+        $defs: {
+          feedItem: {
+            type: "object",
+            required: [
+              "uri",
+              "cid",
+              "author",
+              "record",
+              "replyCount",
+              "repostCount",
+              "likeCount",
+              "indexedAt"
+            ],
+            properties: {
+              uri: {
+                type: "string"
+              },
+              cid: {
+                type: "string"
+              },
+              author: {
+                $ref: "#/$defs/user"
+              },
+              repostedBy: {
+                $ref: "#/$defs/user"
+              },
+              record: {
+                type: "object"
+              },
+              embed: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/recordEmbed"
+                  },
+                  {
+                    $ref: "#/$defs/externalEmbed"
+                  },
+                  {
+                    $ref: "#/$defs/unknownEmbed"
+                  }
+                ]
+              },
+              replyCount: {
+                type: "number"
+              },
+              repostCount: {
+                type: "number"
+              },
+              likeCount: {
+                type: "number"
+              },
+              indexedAt: {
+                type: "string",
+                format: "date-time"
+              },
+              myState: {
+                type: "object",
+                properties: {
+                  repost: {
+                    type: "string"
+                  },
+                  like: {
+                    type: "string"
+                  }
+                }
+              }
+            }
+          },
+          user: {
+            type: "object",
+            required: ["did", "handle"],
+            properties: {
+              did: {
+                type: "string"
+              },
+              handle: {
+                type: "string"
+              },
+              displayName: {
+                type: "string",
+                maxLength: 64
+              }
+            }
+          },
+          recordEmbed: {
+            type: "object",
+            required: ["type", "author", "record"],
+            properties: {
+              type: {
+                const: "record"
+              },
+              author: {
+                $ref: "#/$defs/user"
+              },
+              record: {
+                type: "object"
+              }
+            }
+          },
+          externalEmbed: {
+            type: "object",
+            required: ["type", "uri", "title", "description", "imageUri"],
+            properties: {
+              type: {
+                const: "external"
+              },
+              uri: {
+                type: "string"
+              },
+              title: {
+                type: "string"
+              },
+              description: {
+                type: "string"
+              },
+              imageUri: {
+                type: "string"
+              }
+            }
+          },
+          unknownEmbed: {
+            type: "object",
+            required: ["type"],
+            properties: {
+              type: {
+                type: "string",
+                not: {
+                  enum: ["record", "external"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      feedItem: {
+        type: "object",
+        required: [
+          "uri",
+          "cid",
+          "author",
+          "record",
+          "replyCount",
+          "repostCount",
+          "likeCount",
+          "indexedAt"
+        ],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          },
+          author: {
+            $ref: "#/$defs/user"
+          },
+          repostedBy: {
+            $ref: "#/$defs/user"
+          },
+          record: {
+            type: "object"
+          },
+          embed: {
+            oneOf: [
+              {
+                $ref: "#/$defs/recordEmbed"
+              },
+              {
+                $ref: "#/$defs/externalEmbed"
+              },
+              {
+                $ref: "#/$defs/unknownEmbed"
+              }
+            ]
+          },
+          replyCount: {
+            type: "number"
+          },
+          repostCount: {
+            type: "number"
+          },
+          likeCount: {
+            type: "number"
+          },
+          indexedAt: {
+            type: "string",
+            format: "date-time"
+          },
+          myState: {
+            type: "object",
+            properties: {
+              repost: {
+                type: "string"
+              },
+              like: {
+                type: "string"
+              }
+            }
+          }
+        }
+      },
+      user: {
+        type: "object",
+        required: ["did", "handle"],
+        properties: {
+          did: {
+            type: "string"
+          },
+          handle: {
+            type: "string"
+          },
+          displayName: {
+            type: "string",
+            maxLength: 64
+          }
+        }
+      },
+      recordEmbed: {
+        type: "object",
+        required: ["type", "author", "record"],
+        properties: {
+          type: {
+            const: "record"
+          },
+          author: {
+            $ref: "#/$defs/user"
+          },
+          record: {
+            type: "object"
+          }
+        }
+      },
+      externalEmbed: {
+        type: "object",
+        required: ["type", "uri", "title", "description", "imageUri"],
+        properties: {
+          type: {
+            const: "external"
+          },
+          uri: {
+            type: "string"
+          },
+          title: {
+            type: "string"
+          },
+          description: {
+            type: "string"
+          },
+          imageUri: {
+            type: "string"
+          }
+        }
+      },
+      unknownEmbed: {
+        type: "object",
+        required: ["type"],
+        properties: {
+          type: {
+            type: "string",
+            not: {
+              enum: ["record", "external"]
+            }
+          }
+        }
+      }
+    }
+  },
+  "app.bsky.graph.getFollowers": {
+    lexicon: 1,
+    id: "app.bsky.graph.getFollowers",
     type: "query",
     description: "Who is following a user?",
     parameters: {
@@ -12550,12 +12421,12 @@ var methodSchemaDict = {
         properties: {
           subject: {
             type: "object",
-            required: ["did", "name"],
+            required: ["did", "handle"],
             properties: {
               did: {
                 type: "string"
               },
-              name: {
+              handle: {
                 type: "string"
               },
               displayName: {
@@ -12571,12 +12442,12 @@ var methodSchemaDict = {
             type: "array",
             items: {
               type: "object",
-              required: ["did", "name", "indexedAt"],
+              required: ["did", "handle", "indexedAt"],
               properties: {
                 did: {
                   type: "string"
                 },
-                name: {
+                handle: {
                   type: "string"
                 },
                 displayName: {
@@ -12599,9 +12470,9 @@ var methodSchemaDict = {
       }
     }
   },
-  "app.bsky.getUserFollows": {
+  "app.bsky.graph.getFollows": {
     lexicon: 1,
-    id: "app.bsky.getUserFollows",
+    id: "app.bsky.graph.getFollows",
     type: "query",
     description: "Who is a user following?",
     parameters: {
@@ -12625,12 +12496,12 @@ var methodSchemaDict = {
         properties: {
           subject: {
             type: "object",
-            required: ["did", "name"],
+            required: ["did", "handle"],
             properties: {
               did: {
                 type: "string"
               },
-              name: {
+              handle: {
                 type: "string"
               },
               displayName: {
@@ -12646,12 +12517,12 @@ var methodSchemaDict = {
             type: "array",
             items: {
               type: "object",
-              required: ["did", "name", "indexedAt"],
+              required: ["did", "handle", "indexedAt"],
               properties: {
                 did: {
                   type: "string"
                 },
-                name: {
+                handle: {
                   type: "string"
                 },
                 displayName: {
@@ -12674,16 +12545,30 @@ var methodSchemaDict = {
       }
     }
   },
-  "app.bsky.getUsersSearch": {
+  "app.bsky.notification.getCount": {
     lexicon: 1,
-    id: "app.bsky.getUsersSearch",
+    id: "app.bsky.notification.getCount",
     type: "query",
-    description: "Find users matching search criteria",
+    parameters: {},
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["count"],
+        properties: {
+          count: {
+            type: "number"
+          }
+        },
+        $defs: {}
+      }
+    }
+  },
+  "app.bsky.notification.list": {
+    lexicon: 1,
+    id: "app.bsky.notification.list",
+    type: "query",
     parameters: {
-      term: {
-        type: "string",
-        required: true
-      },
       limit: {
         type: "number",
         maximum: 100
@@ -12696,97 +12581,138 @@ var methodSchemaDict = {
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["users"],
+        required: ["notifications"],
         properties: {
           cursor: {
             type: "string"
           },
-          users: {
+          notifications: {
             type: "array",
             items: {
-              type: "object",
-              required: ["did", "name", "createdAt", "indexedAt"],
-              properties: {
-                did: {
-                  type: "string"
-                },
-                name: {
-                  type: "string"
-                },
-                displayName: {
-                  type: "string",
-                  maxLength: 64
-                },
-                description: {
-                  type: "string"
-                },
-                createdAt: {
-                  type: "string",
-                  format: "date-time"
-                },
-                indexedAt: {
-                  type: "string",
-                  format: "date-time"
-                }
-              }
+              $ref: "#/$defs/notification"
             }
           }
         },
-        $defs: {}
-      }
-    }
-  },
-  "app.bsky.getUsersTypeahead": {
-    lexicon: 1,
-    id: "app.bsky.getUsersTypeahead",
-    type: "query",
-    description: "Find user suggestions for a search term",
-    parameters: {
-      term: {
-        type: "string",
-        required: true
-      },
-      limit: {
-        type: "number",
-        maximum: 100
+        $defs: {
+          notification: {
+            type: "object",
+            required: [
+              "uri",
+              "cid",
+              "author",
+              "reason",
+              "record",
+              "isRead",
+              "indexedAt"
+            ],
+            properties: {
+              uri: {
+                type: "string",
+                format: "uri"
+              },
+              cid: {
+                type: "string"
+              },
+              author: {
+                type: "object",
+                required: ["did", "handle"],
+                properties: {
+                  did: {
+                    type: "string"
+                  },
+                  handle: {
+                    type: "string"
+                  },
+                  displayName: {
+                    type: "string",
+                    maxLength: 64
+                  }
+                }
+              },
+              reason: {
+                type: "string",
+                $comment: "Expected values are 'like', 'repost', 'follow', 'invite', 'mention' and 'reply'."
+              },
+              reasonSubject: {
+                type: "string"
+              },
+              record: {
+                type: "object"
+              },
+              isRead: {
+                type: "boolean"
+              },
+              indexedAt: {
+                type: "string",
+                format: "date-time"
+              }
+            }
+          }
+        }
       }
     },
-    output: {
-      encoding: "application/json",
-      schema: {
+    defs: {
+      notification: {
         type: "object",
-        required: ["users"],
+        required: [
+          "uri",
+          "cid",
+          "author",
+          "reason",
+          "record",
+          "isRead",
+          "indexedAt"
+        ],
         properties: {
-          users: {
-            type: "array",
-            items: {
-              type: "object",
-              required: ["did", "name"],
-              properties: {
-                did: {
-                  type: "string"
-                },
-                name: {
-                  type: "string"
-                },
-                displayName: {
-                  type: "string",
-                  maxLength: 64
-                }
+          uri: {
+            type: "string",
+            format: "uri"
+          },
+          cid: {
+            type: "string"
+          },
+          author: {
+            type: "object",
+            required: ["did", "handle"],
+            properties: {
+              did: {
+                type: "string"
+              },
+              handle: {
+                type: "string"
+              },
+              displayName: {
+                type: "string",
+                maxLength: 64
               }
             }
+          },
+          reason: {
+            type: "string",
+            $comment: "Expected values are 'like', 'repost', 'follow', 'invite', 'mention' and 'reply'."
+          },
+          reasonSubject: {
+            type: "string"
+          },
+          record: {
+            type: "object"
+          },
+          isRead: {
+            type: "boolean"
+          },
+          indexedAt: {
+            type: "string",
+            format: "date-time"
           }
-        },
-        $defs: {}
+        }
       }
     }
   },
-  "app.bsky.postNotificationsSeen": {
+  "app.bsky.notification.updateSeen": {
     lexicon: 1,
-    id: "app.bsky.postNotificationsSeen",
+    id: "app.bsky.notification.updateSeen",
     type: "procedure",
     description: "Notify server that the user has seen notifications",
-    parameters: {},
     input: {
       encoding: "application/json",
       schema: {
@@ -12807,320 +12733,34 @@ var methodSchemaDict = {
         $defs: {}
       }
     }
-  },
-  "app.bsky.updateProfile": {
-    lexicon: 1,
-    id: "app.bsky.updateProfile",
-    type: "procedure",
-    description: "Notify server that the user has seen notifications",
-    parameters: {},
-    input: {
-      encoding: "application/json",
-      schema: {
-        type: "object",
-        required: [],
-        properties: {
-          displayName: {
-            type: "string",
-            maxLength: 64
-          },
-          description: {
-            type: "string",
-            maxLength: 256
-          },
-          pinnedBadges: {
-            type: "array",
-            items: {
-              $ref: "#/$defs/badgeRef"
-            }
-          }
-        },
-        $defs: {
-          badgeRef: {
-            type: "object",
-            required: ["uri", "cid"],
-            properties: {
-              uri: {
-                type: "string"
-              },
-              cid: {
-                type: "string"
-              }
-            }
-          }
-        }
-      }
-    },
-    output: {
-      encoding: "application/json",
-      schema: {
-        type: "object",
-        required: ["uri", "cid", "record"],
-        properties: {
-          uri: {
-            type: "string"
-          },
-          cid: {
-            type: "string"
-          },
-          record: {
-            type: "object"
-          }
-        },
-        $defs: {}
-      }
-    }
   }
 };
 var methodSchemas = Object.values(methodSchemaDict);
 var recordSchemaDict = {
-  "app.bsky.badge": {
+  "app.bsky.actor.profile": {
     lexicon: 1,
-    id: "app.bsky.badge",
+    id: "app.bsky.actor.profile",
     type: "record",
-    description: "An assertion about the subject by this user.",
-    key: "tid",
+    key: "literal:self",
     record: {
       type: "object",
-      required: ["assertion", "createdAt"],
+      required: ["displayName"],
       properties: {
-        assertion: {
-          oneOf: [
-            {
-              $ref: "#/$defs/inviteAssertion"
-            },
-            {
-              $ref: "#/$defs/employeeAssertion"
-            },
-            {
-              $ref: "#/$defs/tagAssertion"
-            },
-            {
-              $ref: "#/$defs/unknownAssertion"
-            }
-          ]
-        },
-        createdAt: {
+        displayName: {
           type: "string",
-          format: "date-time"
-        }
-      },
-      $defs: {
-        inviteAssertion: {
-          type: "object",
-          required: ["type"],
-          properties: {
-            type: {
-              const: "invite"
-            }
-          }
+          maxLength: 64
         },
-        employeeAssertion: {
-          type: "object",
-          required: ["type"],
-          properties: {
-            type: {
-              const: "employee"
-            }
-          }
-        },
-        tagAssertion: {
-          type: "object",
-          required: ["type", "tag"],
-          properties: {
-            type: {
-              const: "tag"
-            },
-            tag: {
-              type: "string",
-              maxLength: 64
-            }
-          }
-        },
-        unknownAssertion: {
-          type: "object",
-          required: ["type"],
-          properties: {
-            type: {
-              type: "string",
-              not: {
-                enum: ["invite", "employee", "tag"]
-              }
-            }
-          }
-        }
-      }
-    },
-    defs: {
-      inviteAssertion: {
-        type: "object",
-        required: ["type"],
-        properties: {
-          type: {
-            const: "invite"
-          }
-        }
-      },
-      employeeAssertion: {
-        type: "object",
-        required: ["type"],
-        properties: {
-          type: {
-            const: "employee"
-          }
-        }
-      },
-      tagAssertion: {
-        type: "object",
-        required: ["type", "tag"],
-        properties: {
-          type: {
-            const: "tag"
-          },
-          tag: {
-            type: "string",
-            maxLength: 64
-          }
-        }
-      },
-      unknownAssertion: {
-        type: "object",
-        required: ["type"],
-        properties: {
-          type: {
-            type: "string",
-            not: {
-              enum: ["invite", "employee", "tag"]
-            }
-          }
-        }
-      }
-    }
-  },
-  "app.bsky.badgeAccept": {
-    lexicon: 1,
-    id: "app.bsky.badgeAccept",
-    type: "record",
-    key: "tid",
-    record: {
-      type: "object",
-      required: ["badge", "offer", "createdAt"],
-      properties: {
-        badge: {
-          $ref: "#/$defs/subject"
-        },
-        offer: {
-          $ref: "#/$defs/subject"
-        },
-        createdAt: {
+        description: {
           type: "string",
-          format: "date-time"
-        }
-      },
-      $defs: {
-        subject: {
-          type: "object",
-          required: ["uri", "cid"],
-          properties: {
-            uri: {
-              type: "string"
-            },
-            cid: {
-              type: "string"
-            }
-          }
-        }
-      }
-    },
-    defs: {
-      subject: {
-        type: "object",
-        required: ["uri", "cid"],
-        properties: {
-          uri: {
-            type: "string"
-          },
-          cid: {
-            type: "string"
-          }
-        }
-      }
-    }
-  },
-  "app.bsky.badgeOffer": {
-    lexicon: 1,
-    id: "app.bsky.badgeOffer",
-    type: "record",
-    key: "tid",
-    record: {
-      type: "object",
-      required: ["badge", "subject", "createdAt"],
-      properties: {
-        badge: {
-          $ref: "#/$defs/badge"
-        },
-        subject: {
-          type: "string"
-        },
-        createdAt: {
-          type: "string",
-          format: "date-time"
-        }
-      },
-      $defs: {
-        badge: {
-          type: "object",
-          required: ["uri", "cid"],
-          properties: {
-            uri: {
-              type: "string"
-            },
-            cid: {
-              type: "string"
-            }
-          }
-        }
-      }
-    },
-    defs: {
-      badge: {
-        type: "object",
-        required: ["uri", "cid"],
-        properties: {
-          uri: {
-            type: "string"
-          },
-          cid: {
-            type: "string"
-          }
-        }
-      }
-    }
-  },
-  "app.bsky.follow": {
-    lexicon: 1,
-    id: "app.bsky.follow",
-    type: "record",
-    description: "A social follow",
-    key: "tid",
-    record: {
-      type: "object",
-      required: ["subject", "createdAt"],
-      properties: {
-        subject: {
-          type: "string"
-        },
-        createdAt: {
-          type: "string",
-          format: "date-time"
+          maxLength: 256
         }
       },
       $defs: {}
     }
   },
-  "app.bsky.like": {
+  "app.bsky.feed.like": {
     lexicon: 1,
-    id: "app.bsky.like",
+    id: "app.bsky.feed.like",
     type: "record",
     key: "tid",
     record: {
@@ -13165,9 +12805,9 @@ var recordSchemaDict = {
       }
     }
   },
-  "app.bsky.mediaEmbed": {
+  "app.bsky.feed.mediaEmbed": {
     lexicon: 1,
-    id: "app.bsky.mediaEmbed",
+    id: "app.bsky.feed.mediaEmbed",
     type: "record",
     description: "A list of media embedded in a post or document.",
     key: "tid",
@@ -13242,9 +12882,9 @@ var recordSchemaDict = {
       }
     }
   },
-  "app.bsky.post": {
+  "app.bsky.feed.post": {
     lexicon: 1,
-    id: "app.bsky.post",
+    id: "app.bsky.feed.post",
     type: "record",
     key: "tid",
     record: {
@@ -13256,7 +12896,10 @@ var recordSchemaDict = {
           maxLength: 256
         },
         entities: {
-          $ref: "#/$defs/entity"
+          type: "array",
+          items: {
+            $ref: "#/$defs/entity"
+          }
         },
         reply: {
           type: "object",
@@ -13277,21 +12920,18 @@ var recordSchemaDict = {
       },
       $defs: {
         entity: {
-          type: "array",
-          items: {
-            type: "object",
-            required: ["index", "type", "value"],
-            properties: {
-              index: {
-                $ref: "#/$defs/textSlice"
-              },
-              type: {
-                type: "string",
-                $comment: "Expected values are 'mention', 'hashtag', and 'link'."
-              },
-              value: {
-                type: "string"
-              }
+          type: "object",
+          required: ["index", "type", "value"],
+          properties: {
+            index: {
+              $ref: "#/$defs/textSlice"
+            },
+            type: {
+              type: "string",
+              $comment: "Expected values are 'mention', 'hashtag', and 'link'."
+            },
+            value: {
+              type: "string"
             }
           }
         },
@@ -13336,21 +12976,18 @@ var recordSchemaDict = {
         }
       },
       entity: {
-        type: "array",
-        items: {
-          type: "object",
-          required: ["index", "type", "value"],
-          properties: {
-            index: {
-              $ref: "#/$defs/textSlice"
-            },
-            type: {
-              type: "string",
-              $comment: "Expected values are 'mention', 'hashtag', and 'link'."
-            },
-            value: {
-              type: "string"
-            }
+        type: "object",
+        required: ["index", "type", "value"],
+        properties: {
+          index: {
+            $ref: "#/$defs/textSlice"
+          },
+          type: {
+            type: "string",
+            $comment: "Expected values are 'mention', 'hashtag', and 'link'."
+          },
+          value: {
+            type: "string"
           }
         }
       },
@@ -13369,63 +13006,9 @@ var recordSchemaDict = {
       }
     }
   },
-  "app.bsky.profile": {
+  "app.bsky.feed.repost": {
     lexicon: 1,
-    id: "app.bsky.profile",
-    type: "record",
-    key: "literal:self",
-    record: {
-      type: "object",
-      required: ["displayName"],
-      properties: {
-        displayName: {
-          type: "string",
-          maxLength: 64
-        },
-        description: {
-          type: "string",
-          maxLength: 256
-        },
-        pinnedBadges: {
-          type: "array",
-          items: {
-            $ref: "#/$defs/badgeRef"
-          }
-        }
-      },
-      $defs: {
-        badgeRef: {
-          type: "object",
-          required: ["uri", "cid"],
-          properties: {
-            uri: {
-              type: "string"
-            },
-            cid: {
-              type: "string"
-            }
-          }
-        }
-      }
-    },
-    defs: {
-      badgeRef: {
-        type: "object",
-        required: ["uri", "cid"],
-        properties: {
-          uri: {
-            type: "string"
-          },
-          cid: {
-            type: "string"
-          }
-        }
-      }
-    }
-  },
-  "app.bsky.repost": {
-    lexicon: 1,
-    id: "app.bsky.repost",
+    id: "app.bsky.feed.repost",
     type: "record",
     key: "tid",
     record: {
@@ -13469,20 +13052,170 @@ var recordSchemaDict = {
         }
       }
     }
+  },
+  "app.bsky.graph.follow": {
+    lexicon: 1,
+    id: "app.bsky.graph.follow",
+    type: "record",
+    description: "A social follow",
+    key: "tid",
+    record: {
+      type: "object",
+      required: ["subject", "createdAt"],
+      properties: {
+        subject: {
+          type: "object",
+          required: ["did", "declarationCid"],
+          properties: {
+            did: {
+              type: "string"
+            },
+            declarationCid: {
+              type: "string"
+            }
+          }
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time"
+        }
+      },
+      $defs: {}
+    }
+  },
+  "app.bsky.graph.invite": {
+    lexicon: 1,
+    id: "app.bsky.graph.invite",
+    type: "record",
+    key: "tid",
+    record: {
+      type: "object",
+      required: ["group", "subject", "createdAt"],
+      properties: {
+        group: {
+          type: "string"
+        },
+        subject: {
+          type: "object",
+          required: ["did", "declarationCid"],
+          properties: {
+            did: {
+              type: "string"
+            },
+            declarationCid: {
+              type: "string"
+            }
+          }
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time"
+        }
+      },
+      $defs: {}
+    }
+  },
+  "app.bsky.graph.inviteAccept": {
+    lexicon: 1,
+    id: "app.bsky.graph.inviteAccept",
+    type: "record",
+    key: "tid",
+    record: {
+      type: "object",
+      required: ["group", "invite", "createdAt"],
+      properties: {
+        group: {
+          type: "object",
+          required: ["did", "declarationCid"],
+          properties: {
+            did: {
+              type: "string"
+            },
+            declarationCid: {
+              type: "string"
+            }
+          }
+        },
+        invite: {
+          type: "object",
+          required: ["uri", "cid"],
+          properties: {
+            uri: {
+              type: "string"
+            },
+            cid: {
+              type: "string"
+            }
+          }
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time"
+        }
+      },
+      $defs: {}
+    }
+  },
+  "app.bsky.system.declaration": {
+    lexicon: 1,
+    id: "app.bsky.system.declaration",
+    description: "Context for an account that is considered intrinsic to it and alters the fundamental understanding of an account of changed. A declaration should be treated as immutable.",
+    type: "record",
+    key: "literal:self",
+    record: {
+      type: "object",
+      required: ["actorType"],
+      properties: {
+        actorType: {
+          oneOf: [
+            {
+              $ref: "#/$defs/actorKnown"
+            },
+            {
+              $ref: "#/$defs/actorUnknown"
+            }
+          ]
+        }
+      },
+      $defs: {
+        actorKnown: {
+          type: "string",
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        },
+        actorUnknown: {
+          type: "string",
+          not: {
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          }
+        }
+      }
+    },
+    defs: {
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
+      }
+    }
   }
 };
 var recordSchemas = Object.values(recordSchemaDict);
 
-// src/types/com/atproto/createAccount.ts
-var createAccount_exports = {};
-__export(createAccount_exports, {
+// src/client/types/com/atproto/account/create.ts
+var create_exports = {};
+__export(create_exports, {
+  HandleNotAvailableError: () => HandleNotAvailableError,
+  InvalidHandleError: () => InvalidHandleError,
   InvalidInviteCodeError: () => InvalidInviteCodeError,
   InvalidPasswordError: () => InvalidPasswordError,
-  InvalidUsernameError: () => InvalidUsernameError,
-  UsernameNotAvailableError: () => UsernameNotAvailableError,
   toKnownErr: () => toKnownErr
 });
-var InvalidUsernameError = class extends XRPCError {
+var InvalidHandleError = class extends XRPCError {
   constructor(src) {
     super(src.status, src.error, src.message);
   }
@@ -13497,26 +13230,26 @@ var InvalidInviteCodeError = class extends XRPCError {
     super(src.status, src.error, src.message);
   }
 };
-var UsernameNotAvailableError = class extends XRPCError {
+var HandleNotAvailableError = class extends XRPCError {
   constructor(src) {
     super(src.status, src.error, src.message);
   }
 };
 function toKnownErr(e) {
   if (e instanceof XRPCError) {
-    if (e.error === "InvalidUsername")
-      return new InvalidUsernameError(e);
+    if (e.error === "InvalidHandle")
+      return new InvalidHandleError(e);
     if (e.error === "InvalidPassword")
       return new InvalidPasswordError(e);
     if (e.error === "InvalidInviteCode")
       return new InvalidInviteCodeError(e);
-    if (e.error === "UsernameNotAvailable")
-      return new UsernameNotAvailableError(e);
+    if (e.error === "HandleNotAvailable")
+      return new HandleNotAvailableError(e);
   }
   return e;
 }
 
-// src/types/com/atproto/createInviteCode.ts
+// src/client/types/com/atproto/account/createInviteCode.ts
 var createInviteCode_exports = {};
 __export(createInviteCode_exports, {
   toKnownErr: () => toKnownErr2
@@ -13527,9 +13260,9 @@ function toKnownErr2(e) {
   return e;
 }
 
-// src/types/com/atproto/createSession.ts
-var createSession_exports = {};
-__export(createSession_exports, {
+// src/client/types/com/atproto/account/delete.ts
+var delete_exports = {};
+__export(delete_exports, {
   toKnownErr: () => toKnownErr3
 });
 function toKnownErr3(e) {
@@ -13538,9 +13271,9 @@ function toKnownErr3(e) {
   return e;
 }
 
-// src/types/com/atproto/deleteAccount.ts
-var deleteAccount_exports = {};
-__export(deleteAccount_exports, {
+// src/client/types/com/atproto/account/get.ts
+var get_exports = {};
+__export(get_exports, {
   toKnownErr: () => toKnownErr4
 });
 function toKnownErr4(e) {
@@ -13549,9 +13282,9 @@ function toKnownErr4(e) {
   return e;
 }
 
-// src/types/com/atproto/deleteSession.ts
-var deleteSession_exports = {};
-__export(deleteSession_exports, {
+// src/client/types/com/atproto/account/requestPasswordReset.ts
+var requestPasswordReset_exports = {};
+__export(requestPasswordReset_exports, {
   toKnownErr: () => toKnownErr5
 });
 function toKnownErr5(e) {
@@ -13560,133 +13293,12 @@ function toKnownErr5(e) {
   return e;
 }
 
-// src/types/com/atproto/getAccount.ts
-var getAccount_exports = {};
-__export(getAccount_exports, {
-  toKnownErr: () => toKnownErr6
-});
-function toKnownErr6(e) {
-  if (e instanceof XRPCError) {
-  }
-  return e;
-}
-
-// src/types/com/atproto/getAccountsConfig.ts
-var getAccountsConfig_exports = {};
-__export(getAccountsConfig_exports, {
-  toKnownErr: () => toKnownErr7
-});
-function toKnownErr7(e) {
-  if (e instanceof XRPCError) {
-  }
-  return e;
-}
-
-// src/types/com/atproto/getSession.ts
-var getSession_exports = {};
-__export(getSession_exports, {
-  toKnownErr: () => toKnownErr8
-});
-function toKnownErr8(e) {
-  if (e instanceof XRPCError) {
-  }
-  return e;
-}
-
-// src/types/com/atproto/repoBatchWrite.ts
-var repoBatchWrite_exports = {};
-__export(repoBatchWrite_exports, {
-  toKnownErr: () => toKnownErr9
-});
-function toKnownErr9(e) {
-  if (e instanceof XRPCError) {
-  }
-  return e;
-}
-
-// src/types/com/atproto/repoCreateRecord.ts
-var repoCreateRecord_exports = {};
-__export(repoCreateRecord_exports, {
-  toKnownErr: () => toKnownErr10
-});
-function toKnownErr10(e) {
-  if (e instanceof XRPCError) {
-  }
-  return e;
-}
-
-// src/types/com/atproto/repoDeleteRecord.ts
-var repoDeleteRecord_exports = {};
-__export(repoDeleteRecord_exports, {
-  toKnownErr: () => toKnownErr11
-});
-function toKnownErr11(e) {
-  if (e instanceof XRPCError) {
-  }
-  return e;
-}
-
-// src/types/com/atproto/repoDescribe.ts
-var repoDescribe_exports = {};
-__export(repoDescribe_exports, {
-  toKnownErr: () => toKnownErr12
-});
-function toKnownErr12(e) {
-  if (e instanceof XRPCError) {
-  }
-  return e;
-}
-
-// src/types/com/atproto/repoGetRecord.ts
-var repoGetRecord_exports = {};
-__export(repoGetRecord_exports, {
-  toKnownErr: () => toKnownErr13
-});
-function toKnownErr13(e) {
-  if (e instanceof XRPCError) {
-  }
-  return e;
-}
-
-// src/types/com/atproto/repoListRecords.ts
-var repoListRecords_exports = {};
-__export(repoListRecords_exports, {
-  toKnownErr: () => toKnownErr14
-});
-function toKnownErr14(e) {
-  if (e instanceof XRPCError) {
-  }
-  return e;
-}
-
-// src/types/com/atproto/repoPutRecord.ts
-var repoPutRecord_exports = {};
-__export(repoPutRecord_exports, {
-  toKnownErr: () => toKnownErr15
-});
-function toKnownErr15(e) {
-  if (e instanceof XRPCError) {
-  }
-  return e;
-}
-
-// src/types/com/atproto/requestAccountPasswordReset.ts
-var requestAccountPasswordReset_exports = {};
-__export(requestAccountPasswordReset_exports, {
-  toKnownErr: () => toKnownErr16
-});
-function toKnownErr16(e) {
-  if (e instanceof XRPCError) {
-  }
-  return e;
-}
-
-// src/types/com/atproto/resetAccountPassword.ts
-var resetAccountPassword_exports = {};
-__export(resetAccountPassword_exports, {
+// src/client/types/com/atproto/account/resetPassword.ts
+var resetPassword_exports = {};
+__export(resetPassword_exports, {
   ExpiredTokenError: () => ExpiredTokenError,
   InvalidTokenError: () => InvalidTokenError,
-  toKnownErr: () => toKnownErr17
+  toKnownErr: () => toKnownErr6
 });
 var ExpiredTokenError = class extends XRPCError {
   constructor(src) {
@@ -13698,7 +13310,7 @@ var InvalidTokenError = class extends XRPCError {
     super(src.status, src.error, src.message);
   }
 };
-function toKnownErr17(e) {
+function toKnownErr6(e) {
   if (e instanceof XRPCError) {
     if (e.error === "ExpiredToken")
       return new ExpiredTokenError(e);
@@ -13708,9 +13320,130 @@ function toKnownErr17(e) {
   return e;
 }
 
-// src/types/com/atproto/resolveName.ts
-var resolveName_exports = {};
-__export(resolveName_exports, {
+// src/client/types/com/atproto/handle/resolve.ts
+var resolve_exports = {};
+__export(resolve_exports, {
+  toKnownErr: () => toKnownErr7
+});
+function toKnownErr7(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/com/atproto/repo/batchWrite.ts
+var batchWrite_exports = {};
+__export(batchWrite_exports, {
+  toKnownErr: () => toKnownErr8
+});
+function toKnownErr8(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/com/atproto/repo/createRecord.ts
+var createRecord_exports = {};
+__export(createRecord_exports, {
+  toKnownErr: () => toKnownErr9
+});
+function toKnownErr9(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/com/atproto/repo/deleteRecord.ts
+var deleteRecord_exports = {};
+__export(deleteRecord_exports, {
+  toKnownErr: () => toKnownErr10
+});
+function toKnownErr10(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/com/atproto/repo/describe.ts
+var describe_exports = {};
+__export(describe_exports, {
+  toKnownErr: () => toKnownErr11
+});
+function toKnownErr11(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/com/atproto/repo/getRecord.ts
+var getRecord_exports = {};
+__export(getRecord_exports, {
+  toKnownErr: () => toKnownErr12
+});
+function toKnownErr12(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/com/atproto/repo/listRecords.ts
+var listRecords_exports = {};
+__export(listRecords_exports, {
+  toKnownErr: () => toKnownErr13
+});
+function toKnownErr13(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/com/atproto/repo/putRecord.ts
+var putRecord_exports = {};
+__export(putRecord_exports, {
+  toKnownErr: () => toKnownErr14
+});
+function toKnownErr14(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/com/atproto/server/getAccountsConfig.ts
+var getAccountsConfig_exports = {};
+__export(getAccountsConfig_exports, {
+  toKnownErr: () => toKnownErr15
+});
+function toKnownErr15(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/com/atproto/session/create.ts
+var create_exports2 = {};
+__export(create_exports2, {
+  toKnownErr: () => toKnownErr16
+});
+function toKnownErr16(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/com/atproto/session/delete.ts
+var delete_exports2 = {};
+__export(delete_exports2, {
+  toKnownErr: () => toKnownErr17
+});
+function toKnownErr17(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/com/atproto/session/get.ts
+var get_exports2 = {};
+__export(get_exports2, {
   toKnownErr: () => toKnownErr18
 });
 function toKnownErr18(e) {
@@ -13719,9 +13452,9 @@ function toKnownErr18(e) {
   return e;
 }
 
-// src/types/com/atproto/syncGetRepo.ts
-var syncGetRepo_exports = {};
-__export(syncGetRepo_exports, {
+// src/client/types/com/atproto/session/refresh.ts
+var refresh_exports = {};
+__export(refresh_exports, {
   toKnownErr: () => toKnownErr19
 });
 function toKnownErr19(e) {
@@ -13730,9 +13463,9 @@ function toKnownErr19(e) {
   return e;
 }
 
-// src/types/com/atproto/syncGetRoot.ts
-var syncGetRoot_exports = {};
-__export(syncGetRoot_exports, {
+// src/client/types/com/atproto/sync/getRepo.ts
+var getRepo_exports = {};
+__export(getRepo_exports, {
   toKnownErr: () => toKnownErr20
 });
 function toKnownErr20(e) {
@@ -13741,9 +13474,9 @@ function toKnownErr20(e) {
   return e;
 }
 
-// src/types/com/atproto/syncUpdateRepo.ts
-var syncUpdateRepo_exports = {};
-__export(syncUpdateRepo_exports, {
+// src/client/types/com/atproto/sync/getRoot.ts
+var getRoot_exports = {};
+__export(getRoot_exports, {
   toKnownErr: () => toKnownErr21
 });
 function toKnownErr21(e) {
@@ -13752,9 +13485,9 @@ function toKnownErr21(e) {
   return e;
 }
 
-// src/types/app/bsky/getAuthorFeed.ts
-var getAuthorFeed_exports = {};
-__export(getAuthorFeed_exports, {
+// src/client/types/com/atproto/sync/updateRepo.ts
+var updateRepo_exports = {};
+__export(updateRepo_exports, {
   toKnownErr: () => toKnownErr22
 });
 function toKnownErr22(e) {
@@ -13763,9 +13496,9 @@ function toKnownErr22(e) {
   return e;
 }
 
-// src/types/app/bsky/getBadgeMembers.ts
-var getBadgeMembers_exports = {};
-__export(getBadgeMembers_exports, {
+// src/client/types/app/bsky/actor/getProfile.ts
+var getProfile_exports = {};
+__export(getProfile_exports, {
   toKnownErr: () => toKnownErr23
 });
 function toKnownErr23(e) {
@@ -13774,9 +13507,9 @@ function toKnownErr23(e) {
   return e;
 }
 
-// src/types/app/bsky/getHomeFeed.ts
-var getHomeFeed_exports = {};
-__export(getHomeFeed_exports, {
+// src/client/types/app/bsky/actor/search.ts
+var search_exports = {};
+__export(search_exports, {
   toKnownErr: () => toKnownErr24
 });
 function toKnownErr24(e) {
@@ -13785,9 +13518,9 @@ function toKnownErr24(e) {
   return e;
 }
 
-// src/types/app/bsky/getLikedBy.ts
-var getLikedBy_exports = {};
-__export(getLikedBy_exports, {
+// src/client/types/app/bsky/actor/searchTypeahead.ts
+var searchTypeahead_exports = {};
+__export(searchTypeahead_exports, {
   toKnownErr: () => toKnownErr25
 });
 function toKnownErr25(e) {
@@ -13796,9 +13529,9 @@ function toKnownErr25(e) {
   return e;
 }
 
-// src/types/app/bsky/getNotificationCount.ts
-var getNotificationCount_exports = {};
-__export(getNotificationCount_exports, {
+// src/client/types/app/bsky/actor/updateProfile.ts
+var updateProfile_exports = {};
+__export(updateProfile_exports, {
   toKnownErr: () => toKnownErr26
 });
 function toKnownErr26(e) {
@@ -13807,9 +13540,9 @@ function toKnownErr26(e) {
   return e;
 }
 
-// src/types/app/bsky/getNotifications.ts
-var getNotifications_exports = {};
-__export(getNotifications_exports, {
+// src/client/types/app/bsky/feed/getAuthorFeed.ts
+var getAuthorFeed_exports = {};
+__export(getAuthorFeed_exports, {
   toKnownErr: () => toKnownErr27
 });
 function toKnownErr27(e) {
@@ -13818,9 +13551,9 @@ function toKnownErr27(e) {
   return e;
 }
 
-// src/types/app/bsky/getPostThread.ts
-var getPostThread_exports = {};
-__export(getPostThread_exports, {
+// src/client/types/app/bsky/feed/getLikedBy.ts
+var getLikedBy_exports = {};
+__export(getLikedBy_exports, {
   toKnownErr: () => toKnownErr28
 });
 function toKnownErr28(e) {
@@ -13829,9 +13562,9 @@ function toKnownErr28(e) {
   return e;
 }
 
-// src/types/app/bsky/getProfile.ts
-var getProfile_exports = {};
-__export(getProfile_exports, {
+// src/client/types/app/bsky/feed/getPostThread.ts
+var getPostThread_exports = {};
+__export(getPostThread_exports, {
   toKnownErr: () => toKnownErr29
 });
 function toKnownErr29(e) {
@@ -13840,7 +13573,7 @@ function toKnownErr29(e) {
   return e;
 }
 
-// src/types/app/bsky/getRepostedBy.ts
+// src/client/types/app/bsky/feed/getRepostedBy.ts
 var getRepostedBy_exports = {};
 __export(getRepostedBy_exports, {
   toKnownErr: () => toKnownErr30
@@ -13851,9 +13584,9 @@ function toKnownErr30(e) {
   return e;
 }
 
-// src/types/app/bsky/getUserFollowers.ts
-var getUserFollowers_exports = {};
-__export(getUserFollowers_exports, {
+// src/client/types/app/bsky/feed/getTimeline.ts
+var getTimeline_exports = {};
+__export(getTimeline_exports, {
   toKnownErr: () => toKnownErr31
 });
 function toKnownErr31(e) {
@@ -13862,9 +13595,9 @@ function toKnownErr31(e) {
   return e;
 }
 
-// src/types/app/bsky/getUserFollows.ts
-var getUserFollows_exports = {};
-__export(getUserFollows_exports, {
+// src/client/types/app/bsky/graph/getFollowers.ts
+var getFollowers_exports = {};
+__export(getFollowers_exports, {
   toKnownErr: () => toKnownErr32
 });
 function toKnownErr32(e) {
@@ -13873,9 +13606,9 @@ function toKnownErr32(e) {
   return e;
 }
 
-// src/types/app/bsky/getUsersSearch.ts
-var getUsersSearch_exports = {};
-__export(getUsersSearch_exports, {
+// src/client/types/app/bsky/graph/getFollows.ts
+var getFollows_exports = {};
+__export(getFollows_exports, {
   toKnownErr: () => toKnownErr33
 });
 function toKnownErr33(e) {
@@ -13884,9 +13617,9 @@ function toKnownErr33(e) {
   return e;
 }
 
-// src/types/app/bsky/getUsersTypeahead.ts
-var getUsersTypeahead_exports = {};
-__export(getUsersTypeahead_exports, {
+// src/client/types/app/bsky/notification/getCount.ts
+var getCount_exports = {};
+__export(getCount_exports, {
   toKnownErr: () => toKnownErr34
 });
 function toKnownErr34(e) {
@@ -13895,9 +13628,9 @@ function toKnownErr34(e) {
   return e;
 }
 
-// src/types/app/bsky/postNotificationsSeen.ts
-var postNotificationsSeen_exports = {};
-__export(postNotificationsSeen_exports, {
+// src/client/types/app/bsky/notification/list.ts
+var list_exports = {};
+__export(list_exports, {
   toKnownErr: () => toKnownErr35
 });
 function toKnownErr35(e) {
@@ -13906,9 +13639,9 @@ function toKnownErr35(e) {
   return e;
 }
 
-// src/types/app/bsky/updateProfile.ts
-var updateProfile_exports = {};
-__export(updateProfile_exports, {
+// src/client/types/app/bsky/notification/updateSeen.ts
+var updateSeen_exports = {};
+__export(updateSeen_exports, {
   toKnownErr: () => toKnownErr36
 });
 function toKnownErr36(e) {
@@ -13917,34 +13650,38 @@ function toKnownErr36(e) {
   return e;
 }
 
-// src/types/app/bsky/badge.ts
-var badge_exports = {};
-
-// src/types/app/bsky/badgeAccept.ts
-var badgeAccept_exports = {};
-
-// src/types/app/bsky/badgeOffer.ts
-var badgeOffer_exports = {};
-
-// src/types/app/bsky/follow.ts
-var follow_exports = {};
-
-// src/types/app/bsky/like.ts
-var like_exports = {};
-
-// src/types/app/bsky/mediaEmbed.ts
-var mediaEmbed_exports = {};
-
-// src/types/app/bsky/post.ts
-var post_exports = {};
-
-// src/types/app/bsky/profile.ts
+// src/client/types/app/bsky/actor/profile.ts
 var profile_exports = {};
 
-// src/types/app/bsky/repost.ts
+// src/client/types/app/bsky/feed/like.ts
+var like_exports = {};
+
+// src/client/types/app/bsky/feed/mediaEmbed.ts
+var mediaEmbed_exports = {};
+
+// src/client/types/app/bsky/feed/post.ts
+var post_exports = {};
+
+// src/client/types/app/bsky/feed/repost.ts
 var repost_exports = {};
 
-// src/index.ts
+// src/client/types/app/bsky/graph/follow.ts
+var follow_exports = {};
+
+// src/client/types/app/bsky/graph/invite.ts
+var invite_exports = {};
+
+// src/client/types/app/bsky/graph/inviteAccept.ts
+var inviteAccept_exports = {};
+
+// src/client/types/app/bsky/system/declaration.ts
+var declaration_exports = {};
+
+// src/client/index.ts
+var APP_BSKY_SYSTEM = {
+  ActorScene: "app.bsky.system.actorScene",
+  ActorUser: "app.bsky.system.actorUser"
+};
 var Client2 = class {
   constructor() {
     this.xrpc = new Client();
@@ -13955,7 +13692,7 @@ var Client2 = class {
   }
 };
 var defaultInst2 = new Client2();
-var src_default = defaultInst2;
+var client_default = defaultInst2;
 var ServiceClient2 = class {
   constructor(baseClient, xrpcService) {
     this._baseClient = baseClient;
@@ -13976,110 +13713,151 @@ var ComNS = class {
 var AtprotoNS = class {
   constructor(service) {
     this._service = service;
+    this.account = new AccountNS(service);
+    this.handle = new HandleNS(service);
+    this.repo = new RepoNS(service);
+    this.server = new ServerNS(service);
+    this.session = new SessionNS(service);
+    this.sync = new SyncNS(service);
   }
-  createAccount(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.createAccount", params, data, opts).catch((e) => {
+};
+var AccountNS = class {
+  constructor(service) {
+    this._service = service;
+  }
+  create(data, opts) {
+    return this._service.xrpc.call("com.atproto.account.create", opts?.qp, data, opts).catch((e) => {
       throw toKnownErr(e);
     });
   }
-  createInviteCode(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.createInviteCode", params, data, opts).catch((e) => {
+  createInviteCode(data, opts) {
+    return this._service.xrpc.call("com.atproto.account.createInviteCode", opts?.qp, data, opts).catch((e) => {
       throw toKnownErr2(e);
     });
   }
-  createSession(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.createSession", params, data, opts).catch((e) => {
+  delete(data, opts) {
+    return this._service.xrpc.call("com.atproto.account.delete", opts?.qp, data, opts).catch((e) => {
       throw toKnownErr3(e);
     });
   }
-  deleteAccount(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.deleteAccount", params, data, opts).catch((e) => {
+  get(params, opts) {
+    return this._service.xrpc.call("com.atproto.account.get", params, void 0, opts).catch((e) => {
       throw toKnownErr4(e);
     });
   }
-  deleteSession(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.deleteSession", params, data, opts).catch((e) => {
+  requestPasswordReset(data, opts) {
+    return this._service.xrpc.call("com.atproto.account.requestPasswordReset", opts?.qp, data, opts).catch((e) => {
       throw toKnownErr5(e);
     });
   }
-  getAccount(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.getAccount", params, data, opts).catch((e) => {
+  resetPassword(data, opts) {
+    return this._service.xrpc.call("com.atproto.account.resetPassword", opts?.qp, data, opts).catch((e) => {
       throw toKnownErr6(e);
     });
   }
-  getAccountsConfig(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.getAccountsConfig", params, data, opts).catch((e) => {
+};
+var HandleNS = class {
+  constructor(service) {
+    this._service = service;
+  }
+  resolve(params, opts) {
+    return this._service.xrpc.call("com.atproto.handle.resolve", params, void 0, opts).catch((e) => {
       throw toKnownErr7(e);
     });
   }
-  getSession(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.getSession", params, data, opts).catch((e) => {
+};
+var RepoNS = class {
+  constructor(service) {
+    this._service = service;
+  }
+  batchWrite(data, opts) {
+    return this._service.xrpc.call("com.atproto.repo.batchWrite", opts?.qp, data, opts).catch((e) => {
       throw toKnownErr8(e);
     });
   }
-  repoBatchWrite(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.repoBatchWrite", params, data, opts).catch((e) => {
+  createRecord(data, opts) {
+    return this._service.xrpc.call("com.atproto.repo.createRecord", opts?.qp, data, opts).catch((e) => {
       throw toKnownErr9(e);
     });
   }
-  repoCreateRecord(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.repoCreateRecord", params, data, opts).catch((e) => {
+  deleteRecord(data, opts) {
+    return this._service.xrpc.call("com.atproto.repo.deleteRecord", opts?.qp, data, opts).catch((e) => {
       throw toKnownErr10(e);
     });
   }
-  repoDeleteRecord(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.repoDeleteRecord", params, data, opts).catch((e) => {
+  describe(params, opts) {
+    return this._service.xrpc.call("com.atproto.repo.describe", params, void 0, opts).catch((e) => {
       throw toKnownErr11(e);
     });
   }
-  repoDescribe(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.repoDescribe", params, data, opts).catch((e) => {
+  getRecord(params, opts) {
+    return this._service.xrpc.call("com.atproto.repo.getRecord", params, void 0, opts).catch((e) => {
       throw toKnownErr12(e);
     });
   }
-  repoGetRecord(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.repoGetRecord", params, data, opts).catch((e) => {
+  listRecords(params, opts) {
+    return this._service.xrpc.call("com.atproto.repo.listRecords", params, void 0, opts).catch((e) => {
       throw toKnownErr13(e);
     });
   }
-  repoListRecords(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.repoListRecords", params, data, opts).catch((e) => {
+  putRecord(data, opts) {
+    return this._service.xrpc.call("com.atproto.repo.putRecord", opts?.qp, data, opts).catch((e) => {
       throw toKnownErr14(e);
     });
   }
-  repoPutRecord(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.repoPutRecord", params, data, opts).catch((e) => {
+};
+var ServerNS = class {
+  constructor(service) {
+    this._service = service;
+  }
+  getAccountsConfig(params, opts) {
+    return this._service.xrpc.call("com.atproto.server.getAccountsConfig", params, void 0, opts).catch((e) => {
       throw toKnownErr15(e);
     });
   }
-  requestAccountPasswordReset(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.requestAccountPasswordReset", params, data, opts).catch((e) => {
+};
+var SessionNS = class {
+  constructor(service) {
+    this._service = service;
+  }
+  create(data, opts) {
+    return this._service.xrpc.call("com.atproto.session.create", opts?.qp, data, opts).catch((e) => {
       throw toKnownErr16(e);
     });
   }
-  resetAccountPassword(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.resetAccountPassword", params, data, opts).catch((e) => {
+  delete(data, opts) {
+    return this._service.xrpc.call("com.atproto.session.delete", opts?.qp, data, opts).catch((e) => {
       throw toKnownErr17(e);
     });
   }
-  resolveName(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.resolveName", params, data, opts).catch((e) => {
+  get(params, opts) {
+    return this._service.xrpc.call("com.atproto.session.get", params, void 0, opts).catch((e) => {
       throw toKnownErr18(e);
     });
   }
-  syncGetRepo(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.syncGetRepo", params, data, opts).catch((e) => {
+  refresh(data, opts) {
+    return this._service.xrpc.call("com.atproto.session.refresh", opts?.qp, data, opts).catch((e) => {
       throw toKnownErr19(e);
     });
   }
-  syncGetRoot(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.syncGetRoot", params, data, opts).catch((e) => {
+};
+var SyncNS = class {
+  constructor(service) {
+    this._service = service;
+  }
+  getRepo(params, opts) {
+    return this._service.xrpc.call("com.atproto.sync.getRepo", params, void 0, opts).catch((e) => {
       throw toKnownErr20(e);
     });
   }
-  syncUpdateRepo(params, data, opts) {
-    return this._service.xrpc.call("com.atproto.syncUpdateRepo", params, data, opts).catch((e) => {
+  getRoot(params, opts) {
+    return this._service.xrpc.call("com.atproto.sync.getRoot", params, void 0, opts).catch((e) => {
       throw toKnownErr21(e);
+    });
+  }
+  updateRepo(data, opts) {
+    return this._service.xrpc.call("com.atproto.sync.updateRepo", opts?.qp, data, opts).catch((e) => {
+      throw toKnownErr22(e);
     });
   }
 };
@@ -14092,238 +13870,108 @@ var AppNS = class {
 var BskyNS = class {
   constructor(service) {
     this._service = service;
-    this.badge = new BadgeRecord(service);
-    this.badgeAccept = new BadgeAcceptRecord(service);
-    this.badgeOffer = new BadgeOfferRecord(service);
-    this.follow = new FollowRecord(service);
-    this.like = new LikeRecord(service);
-    this.mediaEmbed = new MediaEmbedRecord(service);
-    this.post = new PostRecord(service);
+    this.actor = new ActorNS(service);
+    this.feed = new FeedNS(service);
+    this.graph = new GraphNS(service);
+    this.notification = new NotificationNS(service);
+    this.system = new SystemNS(service);
+  }
+};
+var ActorNS = class {
+  constructor(service) {
+    this._service = service;
     this.profile = new ProfileRecord(service);
-    this.repost = new RepostRecord(service);
   }
-  getAuthorFeed(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.getAuthorFeed", params, data, opts).catch((e) => {
-      throw toKnownErr22(e);
-    });
-  }
-  getBadgeMembers(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.getBadgeMembers", params, data, opts).catch((e) => {
+  getProfile(params, opts) {
+    return this._service.xrpc.call("app.bsky.actor.getProfile", params, void 0, opts).catch((e) => {
       throw toKnownErr23(e);
     });
   }
-  getHomeFeed(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.getHomeFeed", params, data, opts).catch((e) => {
+  search(params, opts) {
+    return this._service.xrpc.call("app.bsky.actor.search", params, void 0, opts).catch((e) => {
       throw toKnownErr24(e);
     });
   }
-  getLikedBy(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.getLikedBy", params, data, opts).catch((e) => {
+  searchTypeahead(params, opts) {
+    return this._service.xrpc.call("app.bsky.actor.searchTypeahead", params, void 0, opts).catch((e) => {
       throw toKnownErr25(e);
     });
   }
-  getNotificationCount(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.getNotificationCount", params, data, opts).catch((e) => {
+  updateProfile(data, opts) {
+    return this._service.xrpc.call("app.bsky.actor.updateProfile", opts?.qp, data, opts).catch((e) => {
       throw toKnownErr26(e);
     });
   }
-  getNotifications(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.getNotifications", params, data, opts).catch((e) => {
+};
+var ProfileRecord = class {
+  constructor(service) {
+    this._service = service;
+  }
+  async list(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
+      collection: "app.bsky.actor.profile",
+      ...params
+    });
+    return res.data;
+  }
+  async get(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
+      collection: "app.bsky.actor.profile",
+      ...params
+    });
+    return res.data;
+  }
+  async create(params, record, headers) {
+    record.$type = "app.bsky.actor.profile";
+    const res = await this._service.xrpc.call(
+      "com.atproto.repo.createRecord",
+      void 0,
+      { collection: "app.bsky.actor.profile", ...params, record },
+      { encoding: "application/json", headers }
+    );
+    return res.data;
+  }
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "com.atproto.repo.deleteRecord",
+      void 0,
+      { collection: "app.bsky.actor.profile", ...params },
+      { headers }
+    );
+  }
+};
+var FeedNS = class {
+  constructor(service) {
+    this._service = service;
+    this.like = new LikeRecord(service);
+    this.mediaEmbed = new MediaEmbedRecord(service);
+    this.post = new PostRecord(service);
+    this.repost = new RepostRecord(service);
+  }
+  getAuthorFeed(params, opts) {
+    return this._service.xrpc.call("app.bsky.feed.getAuthorFeed", params, void 0, opts).catch((e) => {
       throw toKnownErr27(e);
     });
   }
-  getPostThread(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.getPostThread", params, data, opts).catch((e) => {
+  getLikedBy(params, opts) {
+    return this._service.xrpc.call("app.bsky.feed.getLikedBy", params, void 0, opts).catch((e) => {
       throw toKnownErr28(e);
     });
   }
-  getProfile(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.getProfile", params, data, opts).catch((e) => {
+  getPostThread(params, opts) {
+    return this._service.xrpc.call("app.bsky.feed.getPostThread", params, void 0, opts).catch((e) => {
       throw toKnownErr29(e);
     });
   }
-  getRepostedBy(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.getRepostedBy", params, data, opts).catch((e) => {
+  getRepostedBy(params, opts) {
+    return this._service.xrpc.call("app.bsky.feed.getRepostedBy", params, void 0, opts).catch((e) => {
       throw toKnownErr30(e);
     });
   }
-  getUserFollowers(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.getUserFollowers", params, data, opts).catch((e) => {
+  getTimeline(params, opts) {
+    return this._service.xrpc.call("app.bsky.feed.getTimeline", params, void 0, opts).catch((e) => {
       throw toKnownErr31(e);
     });
-  }
-  getUserFollows(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.getUserFollows", params, data, opts).catch((e) => {
-      throw toKnownErr32(e);
-    });
-  }
-  getUsersSearch(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.getUsersSearch", params, data, opts).catch((e) => {
-      throw toKnownErr33(e);
-    });
-  }
-  getUsersTypeahead(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.getUsersTypeahead", params, data, opts).catch((e) => {
-      throw toKnownErr34(e);
-    });
-  }
-  postNotificationsSeen(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.postNotificationsSeen", params, data, opts).catch((e) => {
-      throw toKnownErr35(e);
-    });
-  }
-  updateProfile(params, data, opts) {
-    return this._service.xrpc.call("app.bsky.updateProfile", params, data, opts).catch((e) => {
-      throw toKnownErr36(e);
-    });
-  }
-};
-var BadgeRecord = class {
-  constructor(service) {
-    this._service = service;
-  }
-  async list(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      collection: "app.bsky.badge",
-      ...params
-    });
-    return res.data;
-  }
-  async get(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      collection: "app.bsky.badge",
-      ...params
-    });
-    return res.data;
-  }
-  async create(params, record, headers) {
-    record.$type = "app.bsky.badge";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repoCreateRecord",
-      { collection: "app.bsky.badge", ...params },
-      record,
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async delete(params, headers) {
-    await this._service.xrpc.call(
-      "com.atproto.repoDeleteRecord",
-      { collection: "app.bsky.badge", ...params },
-      void 0,
-      { headers }
-    );
-  }
-};
-var BadgeAcceptRecord = class {
-  constructor(service) {
-    this._service = service;
-  }
-  async list(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      collection: "app.bsky.badgeAccept",
-      ...params
-    });
-    return res.data;
-  }
-  async get(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      collection: "app.bsky.badgeAccept",
-      ...params
-    });
-    return res.data;
-  }
-  async create(params, record, headers) {
-    record.$type = "app.bsky.badgeAccept";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repoCreateRecord",
-      { collection: "app.bsky.badgeAccept", ...params },
-      record,
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async delete(params, headers) {
-    await this._service.xrpc.call(
-      "com.atproto.repoDeleteRecord",
-      { collection: "app.bsky.badgeAccept", ...params },
-      void 0,
-      { headers }
-    );
-  }
-};
-var BadgeOfferRecord = class {
-  constructor(service) {
-    this._service = service;
-  }
-  async list(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      collection: "app.bsky.badgeOffer",
-      ...params
-    });
-    return res.data;
-  }
-  async get(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      collection: "app.bsky.badgeOffer",
-      ...params
-    });
-    return res.data;
-  }
-  async create(params, record, headers) {
-    record.$type = "app.bsky.badgeOffer";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repoCreateRecord",
-      { collection: "app.bsky.badgeOffer", ...params },
-      record,
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async delete(params, headers) {
-    await this._service.xrpc.call(
-      "com.atproto.repoDeleteRecord",
-      { collection: "app.bsky.badgeOffer", ...params },
-      void 0,
-      { headers }
-    );
-  }
-};
-var FollowRecord = class {
-  constructor(service) {
-    this._service = service;
-  }
-  async list(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      collection: "app.bsky.follow",
-      ...params
-    });
-    return res.data;
-  }
-  async get(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      collection: "app.bsky.follow",
-      ...params
-    });
-    return res.data;
-  }
-  async create(params, record, headers) {
-    record.$type = "app.bsky.follow";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repoCreateRecord",
-      { collection: "app.bsky.follow", ...params },
-      record,
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async delete(params, headers) {
-    await this._service.xrpc.call(
-      "com.atproto.repoDeleteRecord",
-      { collection: "app.bsky.follow", ...params },
-      void 0,
-      { headers }
-    );
   }
 };
 var LikeRecord = class {
@@ -14331,34 +13979,34 @@ var LikeRecord = class {
     this._service = service;
   }
   async list(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      collection: "app.bsky.like",
+    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
+      collection: "app.bsky.feed.like",
       ...params
     });
     return res.data;
   }
   async get(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      collection: "app.bsky.like",
+    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
+      collection: "app.bsky.feed.like",
       ...params
     });
     return res.data;
   }
   async create(params, record, headers) {
-    record.$type = "app.bsky.like";
+    record.$type = "app.bsky.feed.like";
     const res = await this._service.xrpc.call(
-      "com.atproto.repoCreateRecord",
-      { collection: "app.bsky.like", ...params },
-      record,
+      "com.atproto.repo.createRecord",
+      void 0,
+      { collection: "app.bsky.feed.like", ...params, record },
       { encoding: "application/json", headers }
     );
     return res.data;
   }
   async delete(params, headers) {
     await this._service.xrpc.call(
-      "com.atproto.repoDeleteRecord",
-      { collection: "app.bsky.like", ...params },
+      "com.atproto.repo.deleteRecord",
       void 0,
+      { collection: "app.bsky.feed.like", ...params },
       { headers }
     );
   }
@@ -14368,34 +14016,34 @@ var MediaEmbedRecord = class {
     this._service = service;
   }
   async list(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      collection: "app.bsky.mediaEmbed",
+    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
+      collection: "app.bsky.feed.mediaEmbed",
       ...params
     });
     return res.data;
   }
   async get(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      collection: "app.bsky.mediaEmbed",
+    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
+      collection: "app.bsky.feed.mediaEmbed",
       ...params
     });
     return res.data;
   }
   async create(params, record, headers) {
-    record.$type = "app.bsky.mediaEmbed";
+    record.$type = "app.bsky.feed.mediaEmbed";
     const res = await this._service.xrpc.call(
-      "com.atproto.repoCreateRecord",
-      { collection: "app.bsky.mediaEmbed", ...params },
-      record,
+      "com.atproto.repo.createRecord",
+      void 0,
+      { collection: "app.bsky.feed.mediaEmbed", ...params, record },
       { encoding: "application/json", headers }
     );
     return res.data;
   }
   async delete(params, headers) {
     await this._service.xrpc.call(
-      "com.atproto.repoDeleteRecord",
-      { collection: "app.bsky.mediaEmbed", ...params },
+      "com.atproto.repo.deleteRecord",
       void 0,
+      { collection: "app.bsky.feed.mediaEmbed", ...params },
       { headers }
     );
   }
@@ -14405,71 +14053,34 @@ var PostRecord = class {
     this._service = service;
   }
   async list(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      collection: "app.bsky.post",
+    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
+      collection: "app.bsky.feed.post",
       ...params
     });
     return res.data;
   }
   async get(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      collection: "app.bsky.post",
+    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
+      collection: "app.bsky.feed.post",
       ...params
     });
     return res.data;
   }
   async create(params, record, headers) {
-    record.$type = "app.bsky.post";
+    record.$type = "app.bsky.feed.post";
     const res = await this._service.xrpc.call(
-      "com.atproto.repoCreateRecord",
-      { collection: "app.bsky.post", ...params },
-      record,
+      "com.atproto.repo.createRecord",
+      void 0,
+      { collection: "app.bsky.feed.post", ...params, record },
       { encoding: "application/json", headers }
     );
     return res.data;
   }
   async delete(params, headers) {
     await this._service.xrpc.call(
-      "com.atproto.repoDeleteRecord",
-      { collection: "app.bsky.post", ...params },
+      "com.atproto.repo.deleteRecord",
       void 0,
-      { headers }
-    );
-  }
-};
-var ProfileRecord = class {
-  constructor(service) {
-    this._service = service;
-  }
-  async list(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      collection: "app.bsky.profile",
-      ...params
-    });
-    return res.data;
-  }
-  async get(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      collection: "app.bsky.profile",
-      ...params
-    });
-    return res.data;
-  }
-  async create(params, record, headers) {
-    record.$type = "app.bsky.profile";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repoCreateRecord",
-      { collection: "app.bsky.profile", ...params },
-      record,
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async delete(params, headers) {
-    await this._service.xrpc.call(
-      "com.atproto.repoDeleteRecord",
-      { collection: "app.bsky.profile", ...params },
-      void 0,
+      { collection: "app.bsky.feed.post", ...params },
       { headers }
     );
   }
@@ -14479,79 +14090,393 @@ var RepostRecord = class {
     this._service = service;
   }
   async list(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoListRecords", {
-      collection: "app.bsky.repost",
+    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
+      collection: "app.bsky.feed.repost",
       ...params
     });
     return res.data;
   }
   async get(params) {
-    const res = await this._service.xrpc.call("com.atproto.repoGetRecord", {
-      collection: "app.bsky.repost",
+    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
+      collection: "app.bsky.feed.repost",
       ...params
     });
     return res.data;
   }
   async create(params, record, headers) {
-    record.$type = "app.bsky.repost";
+    record.$type = "app.bsky.feed.repost";
     const res = await this._service.xrpc.call(
-      "com.atproto.repoCreateRecord",
-      { collection: "app.bsky.repost", ...params },
-      record,
+      "com.atproto.repo.createRecord",
+      void 0,
+      { collection: "app.bsky.feed.repost", ...params, record },
       { encoding: "application/json", headers }
     );
     return res.data;
   }
   async delete(params, headers) {
     await this._service.xrpc.call(
-      "com.atproto.repoDeleteRecord",
-      { collection: "app.bsky.repost", ...params },
+      "com.atproto.repo.deleteRecord",
       void 0,
+      { collection: "app.bsky.feed.repost", ...params },
       { headers }
     );
   }
 };
+var GraphNS = class {
+  constructor(service) {
+    this._service = service;
+    this.follow = new FollowRecord(service);
+    this.invite = new InviteRecord(service);
+    this.inviteAccept = new InviteAcceptRecord(service);
+  }
+  getFollowers(params, opts) {
+    return this._service.xrpc.call("app.bsky.graph.getFollowers", params, void 0, opts).catch((e) => {
+      throw toKnownErr32(e);
+    });
+  }
+  getFollows(params, opts) {
+    return this._service.xrpc.call("app.bsky.graph.getFollows", params, void 0, opts).catch((e) => {
+      throw toKnownErr33(e);
+    });
+  }
+};
+var FollowRecord = class {
+  constructor(service) {
+    this._service = service;
+  }
+  async list(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
+      collection: "app.bsky.graph.follow",
+      ...params
+    });
+    return res.data;
+  }
+  async get(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
+      collection: "app.bsky.graph.follow",
+      ...params
+    });
+    return res.data;
+  }
+  async create(params, record, headers) {
+    record.$type = "app.bsky.graph.follow";
+    const res = await this._service.xrpc.call(
+      "com.atproto.repo.createRecord",
+      void 0,
+      { collection: "app.bsky.graph.follow", ...params, record },
+      { encoding: "application/json", headers }
+    );
+    return res.data;
+  }
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "com.atproto.repo.deleteRecord",
+      void 0,
+      { collection: "app.bsky.graph.follow", ...params },
+      { headers }
+    );
+  }
+};
+var InviteRecord = class {
+  constructor(service) {
+    this._service = service;
+  }
+  async list(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
+      collection: "app.bsky.graph.invite",
+      ...params
+    });
+    return res.data;
+  }
+  async get(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
+      collection: "app.bsky.graph.invite",
+      ...params
+    });
+    return res.data;
+  }
+  async create(params, record, headers) {
+    record.$type = "app.bsky.graph.invite";
+    const res = await this._service.xrpc.call(
+      "com.atproto.repo.createRecord",
+      void 0,
+      { collection: "app.bsky.graph.invite", ...params, record },
+      { encoding: "application/json", headers }
+    );
+    return res.data;
+  }
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "com.atproto.repo.deleteRecord",
+      void 0,
+      { collection: "app.bsky.graph.invite", ...params },
+      { headers }
+    );
+  }
+};
+var InviteAcceptRecord = class {
+  constructor(service) {
+    this._service = service;
+  }
+  async list(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
+      collection: "app.bsky.graph.inviteAccept",
+      ...params
+    });
+    return res.data;
+  }
+  async get(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
+      collection: "app.bsky.graph.inviteAccept",
+      ...params
+    });
+    return res.data;
+  }
+  async create(params, record, headers) {
+    record.$type = "app.bsky.graph.inviteAccept";
+    const res = await this._service.xrpc.call(
+      "com.atproto.repo.createRecord",
+      void 0,
+      { collection: "app.bsky.graph.inviteAccept", ...params, record },
+      { encoding: "application/json", headers }
+    );
+    return res.data;
+  }
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "com.atproto.repo.deleteRecord",
+      void 0,
+      { collection: "app.bsky.graph.inviteAccept", ...params },
+      { headers }
+    );
+  }
+};
+var NotificationNS = class {
+  constructor(service) {
+    this._service = service;
+  }
+  getCount(params, opts) {
+    return this._service.xrpc.call("app.bsky.notification.getCount", params, void 0, opts).catch((e) => {
+      throw toKnownErr34(e);
+    });
+  }
+  list(params, opts) {
+    return this._service.xrpc.call("app.bsky.notification.list", params, void 0, opts).catch((e) => {
+      throw toKnownErr35(e);
+    });
+  }
+  updateSeen(data, opts) {
+    return this._service.xrpc.call("app.bsky.notification.updateSeen", opts?.qp, data, opts).catch((e) => {
+      throw toKnownErr36(e);
+    });
+  }
+};
+var SystemNS = class {
+  constructor(service) {
+    this._service = service;
+    this.declaration = new DeclarationRecord(service);
+  }
+};
+var DeclarationRecord = class {
+  constructor(service) {
+    this._service = service;
+  }
+  async list(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
+      collection: "app.bsky.system.declaration",
+      ...params
+    });
+    return res.data;
+  }
+  async get(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
+      collection: "app.bsky.system.declaration",
+      ...params
+    });
+    return res.data;
+  }
+  async create(params, record, headers) {
+    record.$type = "app.bsky.system.declaration";
+    const res = await this._service.xrpc.call(
+      "com.atproto.repo.createRecord",
+      void 0,
+      { collection: "app.bsky.system.declaration", ...params, record },
+      { encoding: "application/json", headers }
+    );
+    return res.data;
+  }
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "com.atproto.repo.deleteRecord",
+      void 0,
+      { collection: "app.bsky.system.declaration", ...params },
+      { headers }
+    );
+  }
+};
+
+// src/session.ts
+var import_events = __toESM(require("events"));
+var CREATE_SESSION = "com.atproto.session.create";
+var REFRESH_SESSION = "com.atproto.session.refresh";
+var DELETE_SESSION = "com.atproto.session.delete";
+var CREATE_ACCOUNT = "com.atproto.account.create";
+var SessionClient = class extends Client2 {
+  service(serviceUri) {
+    const xrpcService = new SessionXrpcServiceClient(this.xrpc, serviceUri);
+    return new SessionServiceClient(this, xrpcService);
+  }
+};
+var defaultInst3 = new SessionClient();
+var session_default = defaultInst3;
+var SessionServiceClient = class extends ServiceClient2 {
+  constructor(baseClient, xrpcService) {
+    super(baseClient, xrpcService);
+    this.sessionManager = this.xrpc.sessionManager;
+  }
+};
+var SessionXrpcServiceClient = class extends ServiceClient {
+  constructor(baseClient, serviceUri) {
+    super(baseClient, serviceUri);
+    this.sessionManager = new SessionManager();
+    this.sessionManager.on("session", () => {
+      const accessHeaders = this.sessionManager.accessHeaders();
+      if (accessHeaders) {
+        this.setHeader("authorization", accessHeaders.authorization);
+      } else {
+        this.unsetHeader("authorization");
+      }
+    });
+  }
+  async call(methodNsid, params, data, opts) {
+    const original = (overrideOpts) => super.call(methodNsid, params, data, overrideOpts ?? opts);
+    if (opts?.headers?.authorization) {
+      return await original();
+    }
+    if (methodNsid === REFRESH_SESSION) {
+      return await this.refresh(opts);
+    }
+    await this.refreshing;
+    if (methodNsid === CREATE_SESSION || methodNsid === CREATE_ACCOUNT) {
+      const result = await original();
+      const { accessJwt, refreshJwt } = result.data;
+      this.sessionManager.set({ accessJwt, refreshJwt });
+      return result;
+    }
+    if (methodNsid === DELETE_SESSION) {
+      const result = await original({
+        ...opts,
+        headers: {
+          ...opts?.headers,
+          ...this.sessionManager.refreshHeaders()
+        }
+      });
+      this.sessionManager.unset();
+      return result;
+    }
+    try {
+      return await original();
+    } catch (err) {
+      if (err instanceof XRPCError && err.status === 400 /* InvalidRequest */ && err.error === "ExpiredToken" && this.sessionManager.active()) {
+        await this.refresh(opts);
+        return await original();
+      }
+      throw err;
+    }
+  }
+  async refresh(opts) {
+    this.refreshing ?? (this.refreshing = this._refresh(opts));
+    try {
+      return await this.refreshing;
+    } finally {
+      this.refreshing = void 0;
+    }
+  }
+  async _refresh(opts) {
+    try {
+      const result = await super.call(REFRESH_SESSION, void 0, void 0, {
+        ...opts,
+        headers: {
+          ...opts?.headers,
+          ...this.sessionManager.refreshHeaders()
+        }
+      });
+      const { accessJwt, refreshJwt } = result.data;
+      this.sessionManager.set({ accessJwt, refreshJwt });
+      return result;
+    } catch (err) {
+      if (err instanceof XRPCError && err.status === 400 /* InvalidRequest */ && (err.error === "ExpiredToken" || err.error === "InvalidToken")) {
+        this.sessionManager.unset();
+      }
+      throw err;
+    }
+  }
+};
+var SessionManager = class extends import_events.default {
+  get() {
+    return this.session;
+  }
+  set(session) {
+    this.session = session;
+    this.emit("session", session);
+  }
+  unset() {
+    this.session = void 0;
+    this.emit("session", void 0);
+  }
+  active() {
+    return !!this.session;
+  }
+  accessHeaders() {
+    return this.session && {
+      authorization: `Bearer ${this.session.accessJwt}`
+    };
+  }
+  refreshHeaders() {
+    return this.session && {
+      authorization: `Bearer ${this.session.refreshJwt}`
+    };
+  }
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  AppBskyBadge,
-  AppBskyBadgeAccept,
-  AppBskyBadgeOffer,
-  AppBskyFollow,
-  AppBskyGetAuthorFeed,
-  AppBskyGetBadgeMembers,
-  AppBskyGetHomeFeed,
-  AppBskyGetLikedBy,
-  AppBskyGetNotificationCount,
-  AppBskyGetNotifications,
-  AppBskyGetPostThread,
-  AppBskyGetProfile,
-  AppBskyGetRepostedBy,
-  AppBskyGetUserFollowers,
-  AppBskyGetUserFollows,
-  AppBskyGetUsersSearch,
-  AppBskyGetUsersTypeahead,
-  AppBskyLike,
-  AppBskyMediaEmbed,
-  AppBskyPost,
-  AppBskyPostNotificationsSeen,
-  AppBskyProfile,
-  AppBskyRepost,
-  AppBskyUpdateProfile,
+  APP_BSKY_SYSTEM,
+  AccountNS,
+  ActorNS,
+  AppBskyActorGetProfile,
+  AppBskyActorProfile,
+  AppBskyActorSearch,
+  AppBskyActorSearchTypeahead,
+  AppBskyActorUpdateProfile,
+  AppBskyFeedGetAuthorFeed,
+  AppBskyFeedGetLikedBy,
+  AppBskyFeedGetPostThread,
+  AppBskyFeedGetRepostedBy,
+  AppBskyFeedGetTimeline,
+  AppBskyFeedLike,
+  AppBskyFeedMediaEmbed,
+  AppBskyFeedPost,
+  AppBskyFeedRepost,
+  AppBskyGraphFollow,
+  AppBskyGraphGetFollowers,
+  AppBskyGraphGetFollows,
+  AppBskyGraphInvite,
+  AppBskyGraphInviteAccept,
+  AppBskyNotificationGetCount,
+  AppBskyNotificationList,
+  AppBskyNotificationUpdateSeen,
+  AppBskySystemDeclaration,
   AppNS,
   AtprotoNS,
-  BadgeAcceptRecord,
-  BadgeOfferRecord,
-  BadgeRecord,
   BskyNS,
   Client,
-  ComAtprotoCreateAccount,
-  ComAtprotoCreateInviteCode,
-  ComAtprotoCreateSession,
-  ComAtprotoDeleteAccount,
-  ComAtprotoDeleteSession,
-  ComAtprotoGetAccount,
-  ComAtprotoGetAccountsConfig,
-  ComAtprotoGetSession,
+  ComAtprotoAccountCreate,
+  ComAtprotoAccountCreateInviteCode,
+  ComAtprotoAccountDelete,
+  ComAtprotoAccountGet,
+  ComAtprotoAccountRequestPasswordReset,
+  ComAtprotoAccountResetPassword,
+  ComAtprotoHandleResolve,
   ComAtprotoRepoBatchWrite,
   ComAtprotoRepoCreateRecord,
   ComAtprotoRepoDeleteRecord,
@@ -14559,20 +14484,39 @@ var RepostRecord = class {
   ComAtprotoRepoGetRecord,
   ComAtprotoRepoListRecords,
   ComAtprotoRepoPutRecord,
-  ComAtprotoRequestAccountPasswordReset,
-  ComAtprotoResetAccountPassword,
-  ComAtprotoResolveName,
+  ComAtprotoServerGetAccountsConfig,
+  ComAtprotoSessionCreate,
+  ComAtprotoSessionDelete,
+  ComAtprotoSessionGet,
+  ComAtprotoSessionRefresh,
   ComAtprotoSyncGetRepo,
   ComAtprotoSyncGetRoot,
   ComAtprotoSyncUpdateRepo,
   ComNS,
+  DeclarationRecord,
+  FeedNS,
   FollowRecord,
+  GraphNS,
+  HandleNS,
+  InviteAcceptRecord,
+  InviteRecord,
   LikeRecord,
   MediaEmbedRecord,
+  NotificationNS,
   PostRecord,
   ProfileRecord,
+  RepoNS,
   RepostRecord,
-  ServiceClient
+  ServerNS,
+  ServiceClient,
+  SessionClient,
+  SessionManager,
+  SessionNS,
+  SessionServiceClient,
+  SessionXrpcServiceClient,
+  SyncNS,
+  SystemNS,
+  sessionClient
 });
 /** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
 //# sourceMappingURL=index.js.map

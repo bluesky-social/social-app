@@ -1,10 +1,11 @@
 import {makeAutoObservable} from 'mobx'
-import * as GetUserFollowers from '../../third-party/api/src/types/app/bsky/getUserFollowers'
+import * as GetFollowers from '../../third-party/api/src/client/types/app/bsky/graph/getFollowers'
 import {RootStoreModel} from './root-store'
 
-type Subject = GetUserFollowers.OutputSchema['subject']
-export type FollowerItem =
-  GetUserFollowers.OutputSchema['followers'][number] & {_reactKey: string}
+type Subject = GetFollowers.OutputSchema['subject']
+export type FollowerItem = GetFollowers.OutputSchema['followers'][number] & {
+  _reactKey: string
+}
 
 export class UserFollowersViewModel {
   // state
@@ -12,15 +13,15 @@ export class UserFollowersViewModel {
   isRefreshing = false
   hasLoaded = false
   error = ''
-  params: GetUserFollowers.QueryParams
+  params: GetFollowers.QueryParams
 
   // data
-  subject: Subject = {did: '', name: '', displayName: ''}
+  subject: Subject = {did: '', handle: '', displayName: ''}
   followers: FollowerItem[] = []
 
   constructor(
     public rootStore: RootStoreModel,
-    params: GetUserFollowers.QueryParams,
+    params: GetFollowers.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -82,7 +83,7 @@ export class UserFollowersViewModel {
   private async _fetch(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.getUserFollowers(
+      const res = await this.rootStore.api.app.bsky.graph.getFollowers(
         this.params,
       )
       this._replaceAll(res)
@@ -92,9 +93,9 @@ export class UserFollowersViewModel {
     }
   }
 
-  private _replaceAll(res: GetUserFollowers.Response) {
+  private _replaceAll(res: GetFollowers.Response) {
     this.subject.did = res.data.subject.did
-    this.subject.name = res.data.subject.name
+    this.subject.handle = res.data.subject.handle
     this.subject.displayName = res.data.subject.displayName
     this.followers.length = 0
     let counter = 0

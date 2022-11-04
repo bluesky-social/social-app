@@ -12,14 +12,14 @@ const GRADIENTS = [
 export function UserAvatar({
   size,
   displayName,
-  name,
+  handle,
 }: {
   size: number
   displayName: string | undefined
-  name: string
+  handle: string
 }) {
-  const initials = getInitials(displayName || name)
-  const gi = cyrb53(name) % GRADIENTS.length
+  const initials = getInitials(displayName || handle)
+  const gi = cyrb53(handle) % GRADIENTS.length
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Defs>

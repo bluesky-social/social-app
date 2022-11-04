@@ -103,7 +103,7 @@ export const MainMenu = observer(
         style={[styles.menuItem, styles.menuItemMargin]}
         onPress={() => onNavigate(url)}>
         <View style={s.mb5}>
-          <UserAvatar size={60} displayName={label} name={label} />
+          <UserAvatar size={60} displayName={label} handle={label} />
         </View>
         {count ? (
           <View style={styles.menuItemCount}>
@@ -130,16 +130,16 @@ export const MainMenu = observer(
             <View style={[styles.topSection]}>
               <TouchableOpacity
                 style={styles.profile}
-                onPress={() => onNavigate(`/profile/${store.me.name || ''}`)}>
+                onPress={() => onNavigate(`/profile/${store.me.handle || ''}`)}>
                 <View style={styles.profileImage}>
                   <UserAvatar
                     size={30}
                     displayName={store.me.displayName}
-                    name={store.me.name || ''}
+                    handle={store.me.handle || ''}
                   />
                 </View>
                 <Text style={styles.profileText} numberOfLines={1}>
-                  {store.me.displayName || store.me.name || 'My profile'}
+                  {store.me.displayName || store.me.handle || 'My profile'}
                 </Text>
               </TouchableOpacity>
               <View style={[s.flex1]} />

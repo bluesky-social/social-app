@@ -1,10 +1,10 @@
 import {makeAutoObservable} from 'mobx'
-import * as GetNotifications from '../../third-party/api/src/types/app/bsky/getNotifications'
+import * as ListNotifications from '../../third-party/api/src/client/types/app/bsky/notification/list'
 import {RootStoreModel} from './root-store'
 import {hasProp} from '../lib/type-guards'
 
-export interface GroupedNotification extends GetNotifications.Notification {
-  additional?: GetNotifications.Notification[]
+export interface GroupedNotification extends ListNotifications.Notification {
+  additional?: ListNotifications.Notification[]
 }
 
 export class NotificationsViewItemModel implements GroupedNotification {
@@ -16,9 +16,9 @@ export class NotificationsViewItemModel implements GroupedNotification {
   cid: string = ''
   author: {
     did: string
-    name: string
+    handle: string
     displayName?: string
-  } = {did: '', name: ''}
+  } = {did: '', handle: ''}
   reason: string = ''
   reasonSubject?: string
   record: any = {}
@@ -93,7 +93,7 @@ export class NotificationsViewModel {
   isRefreshing = false
   hasLoaded = false
   error = ''
-  params: GetNotifications.QueryParams
+  params: ListNotifications.QueryParams
   loadMoreCursor?: string
   _loadPromise: Promise<void> | undefined
   _loadMorePromise: Promise<void> | undefined
@@ -104,7 +104,7 @@ export class NotificationsViewModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    params: GetNotifications.QueryParams,
+    params: ListNotifications.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -216,7 +216,7 @@ export class NotificationsViewModel {
   private async _initialLoad(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.getNotifications(
+      const res = await this.rootStore.api.app.bsky.notification.list(
         this.params,
       )
       this._replaceAll(res)
@@ -232,7 +232,7 @@ export class NotificationsViewModel {
       const params = Object.assign({}, this.params, {
         before: this.loadMoreCursor,
       })
-      const res = await this.rootStore.api.app.bsky.getNotifications(params)
+      const res = await this.rootStore.api.app.bsky.notification.list(params)
       this._appendAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -246,8 +246,8 @@ export class NotificationsViewModel {
     let cursor = undefined
     try {
       do {
-        const res: GetNotifications.Response =
-          await this.rootStore.api.app.bsky.getNotifications({
+        const res: ListNotifications.Response =
+          await this.rootStore.api.app.bsky.notification.list({
             before: cursor,
             limit: Math.min(numToFetch, 100),
           })
@@ -265,12 +265,12 @@ export class NotificationsViewModel {
     }
   }
 
-  private _replaceAll(res: GetNotifications.Response) {
+  private _replaceAll(res: ListNotifications.Response) {
     this.notifications.length = 0
     this._appendAll(res)
   }
 
-  private _appendAll(res: GetNotifications.Response) {
+  private _appendAll(res: ListNotifications.Response) {
     this.loadMoreCursor = res.data.cursor
     let counter = this.notifications.length
     for (const item of groupNotifications(res.data.notifications)) {
@@ -285,7 +285,7 @@ export class NotificationsViewModel {
     )
   }
 
-  private _updateAll(res: GetNotifications.Response) {
+  private _updateAll(res: ListNotifications.Response) {
     for (const item of res.data.notifications) {
       const existingItem = this.notifications.find(
         // this find function has a key subtlety- the indexedAt comparison
@@ -301,10 +301,9 @@ export class NotificationsViewModel {
 
   private async _updateReadState() {
     try {
-      await this.rootStore.api.app.bsky.postNotificationsSeen(
-        {},
-        {seenAt: new Date().toISOString()},
-      )
+      await this.rootStore.api.app.bsky.notification.updateSeen({
+        seenAt: new Date().toISOString(),
+      })
     } catch (e) {
       console.log('Failed to update notifications read state', e)
     }
@@ -312,7 +311,7 @@ export class NotificationsViewModel {
 }
 
 function groupNotifications(
-  items: GetNotifications.Notification[],
+  items: ListNotifications.Notification[],
 ): GroupedNotification[] {
   const items2: GroupedNotification[] = []
   for (const item of items) {

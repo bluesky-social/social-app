@@ -23,7 +23,7 @@ export const FeedItem = observer(function FeedItem({
       const urip = new AtUri(item.subjectUri)
       return `/profile/${urip.host}/post/${urip.rkey}`
     } else if (item.isFollow) {
-      return `/profile/${item.author.name}`
+      return `/profile/${item.author.handle}`
     } else if (item.isReply) {
       const urip = new AtUri(item.uri)
       return `/profile/${urip.host}/post/${urip.rkey}`
@@ -34,7 +34,7 @@ export const FeedItem = observer(function FeedItem({
     if (item.isLike || item.isRepost) {
       return 'Post'
     } else if (item.isFollow) {
-      return item.author.name
+      return item.author.handle
     } else if (item.isReply) {
       return 'Post'
     }
@@ -76,18 +76,18 @@ export const FeedItem = observer(function FeedItem({
     return <></>
   }
 
-  let authors: {href: string; name: string; displayName?: string}[] = [
+  let authors: {href: string; handle: string; displayName?: string}[] = [
     {
-      href: `/profile/${item.author.name}`,
-      name: item.author.name,
+      href: `/profile/${item.author.handle}`,
+      handle: item.author.handle,
       displayName: item.author.displayName,
     },
   ]
   if (item.additional?.length) {
     authors = authors.concat(
       item.additional.map(item2 => ({
-        href: `/profile/${item2.author.name}`,
-        name: item2.author.name,
+        href: `/profile/${item2.author.handle}`,
+        handle: item2.author.handle,
         displayName: item2.author.displayName,
       })),
     )
@@ -113,11 +113,11 @@ export const FeedItem = observer(function FeedItem({
                 style={s.mr2}
                 key={author.href}
                 href={author.href}
-                title={`@${author.name}`}>
+                title={`@${author.handle}`}>
                 <UserAvatar
                   size={30}
                   displayName={author.displayName}
-                  name={author.name}
+                  handle={author.handle}
                 />
               </Link>
             ))}
@@ -132,9 +132,9 @@ export const FeedItem = observer(function FeedItem({
               key={authors[0].href}
               style={styles.metaItem}
               href={authors[0].href}
-              title={`@${authors[0].name}`}>
+              title={`@${authors[0].handle}`}>
               <Text style={[s.f14, s.bold]}>
-                {authors[0].displayName || authors[0].name}
+                {authors[0].displayName || authors[0].handle}
               </Text>
             </Link>
             {authors.length > 1 ? (

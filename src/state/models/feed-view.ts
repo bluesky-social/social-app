@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import * as GetHomeFeed from '../../third-party/api/src/types/app/bsky/getHomeFeed'
-import * as GetAuthorFeed from '../../third-party/api/src/types/app/bsky/getAuthorFeed'
+import * as GetTimeline from '../../third-party/api/src/client/types/app/bsky/feed/getTimeline'
+import * as GetAuthorFeed from '../../third-party/api/src/client/types/app/bsky/feed/getAuthorFeed'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
@@ -13,20 +13,20 @@ export class FeedItemMyStateModel {
   }
 }
 
-export class FeedItemModel implements GetHomeFeed.FeedItem {
+export class FeedItemModel implements GetTimeline.FeedItem {
   // ui state
   _reactKey: string = ''
 
   // data
   uri: string = ''
   cid: string = ''
-  author: GetHomeFeed.User = {did: '', name: '', displayName: ''}
-  repostedBy?: GetHomeFeed.User
+  author: GetTimeline.User = {did: '', handle: '', displayName: ''}
+  repostedBy?: GetTimeline.User
   record: Record<string, unknown> = {}
   embed?:
-    | GetHomeFeed.RecordEmbed
-    | GetHomeFeed.ExternalEmbed
-    | GetHomeFeed.UnknownEmbed
+    | GetTimeline.RecordEmbed
+    | GetTimeline.ExternalEmbed
+    | GetTimeline.UnknownEmbed
   replyCount: number = 0
   repostCount: number = 0
   likeCount: number = 0
@@ -36,14 +36,14 @@ export class FeedItemModel implements GetHomeFeed.FeedItem {
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
-    v: GetHomeFeed.FeedItem | GetAuthorFeed.FeedItem,
+    v: GetTimeline.FeedItem | GetAuthorFeed.FeedItem,
   ) {
     makeAutoObservable(this, {rootStore: false})
     this._reactKey = reactKey
     this.copy(v)
   }
 
-  copy(v: GetHomeFeed.FeedItem | GetAuthorFeed.FeedItem) {
+  copy(v: GetTimeline.FeedItem | GetAuthorFeed.FeedItem) {
     this.uri = v.uri
     this.cid = v.cid
     this.author = v.author
@@ -100,7 +100,7 @@ export class FeedModel {
   hasLoaded = false
   hasReachedEnd = false
   error = ''
-  params: GetHomeFeed.QueryParams | GetAuthorFeed.QueryParams
+  params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams
   loadMoreCursor: string | undefined
   _loadPromise: Promise<void> | undefined
   _loadMorePromise: Promise<void> | undefined
@@ -113,7 +113,7 @@ export class FeedModel {
   constructor(
     public rootStore: RootStoreModel,
     public feedType: 'home' | 'author',
-    params: GetHomeFeed.QueryParams | GetAuthorFeed.QueryParams,
+    params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -286,7 +286,7 @@ export class FeedModel {
     let cursor = undefined
     try {
       do {
-        const res: GetHomeFeed.Response = await this._getFeed({
+        const res: GetTimeline.Response = await this._getFeed({
           before: cursor,
           limit: Math.min(numToFetch, 100),
         })
@@ -304,13 +304,13 @@ export class FeedModel {
     }
   }
 
-  private _replaceAll(res: GetHomeFeed.Response | GetAuthorFeed.Response) {
+  private _replaceAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     this.feed.length = 0
     this.hasReachedEnd = false
     this._appendAll(res)
   }
 
-  private _appendAll(res: GetHomeFeed.Response | GetAuthorFeed.Response) {
+  private _appendAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     this.loadMoreCursor = res.data.cursor
     let counter = this.feed.length
     for (const item of res.data.feed) {
@@ -320,13 +320,13 @@ export class FeedModel {
 
   private _append(
     keyId: number,
-    item: GetHomeFeed.FeedItem | GetAuthorFeed.FeedItem,
+    item: GetTimeline.FeedItem | GetAuthorFeed.FeedItem,
   ) {
     // TODO: validate .record
     this.feed.push(new FeedItemModel(this.rootStore, `item-${keyId}`, item))
   }
 
-  private _prependAll(res: GetHomeFeed.Response | GetAuthorFeed.Response) {
+  private _prependAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     let counter = this.feed.length
     for (const item of res.data.feed) {
       if (this.feed.find(item2 => item2.uri === item.uri)) {
@@ -338,13 +338,13 @@ export class FeedModel {
 
   private _prepend(
     keyId: number,
-    item: GetHomeFeed.FeedItem | GetAuthorFeed.FeedItem,
+    item: GetTimeline.FeedItem | GetAuthorFeed.FeedItem,
   ) {
     // TODO: validate .record
     this.feed.unshift(new FeedItemModel(this.rootStore, `item-${keyId}`, item))
   }
 
-  private _updateAll(res: GetHomeFeed.Response | GetAuthorFeed.Response) {
+  private _updateAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     for (const item of res.data.feed) {
       const existingItem = this.feed.find(
         // this find function has a key subtley- the indexedAt comparison
@@ -359,15 +359,15 @@ export class FeedModel {
   }
 
   protected _getFeed(
-    params: GetHomeFeed.QueryParams | GetAuthorFeed.QueryParams = {},
-  ): Promise<GetHomeFeed.Response | GetAuthorFeed.Response> {
+    params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams = {},
+  ): Promise<GetTimeline.Response | GetAuthorFeed.Response> {
     params = Object.assign({}, this.params, params)
     if (this.feedType === 'home') {
-      return this.rootStore.api.app.bsky.getHomeFeed(
-        params as GetHomeFeed.QueryParams,
+      return this.rootStore.api.app.bsky.feed.getTimeline(
+        params as GetTimeline.QueryParams,
       )
     } else {
-      return this.rootStore.api.app.bsky.getAuthorFeed(
+      return this.rootStore.api.app.bsky.feed.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,
       )
     }

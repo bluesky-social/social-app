@@ -67,18 +67,21 @@ export const PostLikedBy = observer(function PostLikedBy({uri}: {uri: string}) {
 
 const LikedByItem = ({item}: {item: LikedByViewItemModel}) => {
   return (
-    <Link style={styles.outer} href={`/profile/${item.name}`} title={item.name}>
+    <Link
+      style={styles.outer}
+      href={`/profile/${item.handle}`}
+      title={item.handle}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <UserAvatar
             size={40}
             displayName={item.displayName}
-            name={item.name}
+            handle={item.handle}
           />
         </View>
         <View style={styles.layoutContent}>
           <Text style={[s.f15, s.bold]}>{item.displayName}</Text>
-          <Text style={[s.f14, s.gray5]}>@{item.name}</Text>
+          <Text style={[s.f14, s.gray5]}>@{item.handle}</Text>
         </View>
       </View>
     </Link>

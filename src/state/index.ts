@@ -1,11 +1,8 @@
 import {autorun} from 'mobx'
-import AtpApi from '../third-party/api'
+import {sessionClient as AtpApi} from '../third-party/api'
 import {RootStoreModel} from './models/root-store'
 import * as libapi from './lib/api'
 import * as storage from './lib/storage'
-// import * as auth from './auth' TODO
-
-import {ShellModel} from './models/shell'
 
 const ROOT_STATE_STORAGE_KEY = 'root'
 const DEFAULT_SERVICE = 'http://localhost:2583'

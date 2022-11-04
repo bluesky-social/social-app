@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import * as AppBskyGetProfile from '../../../third-party/api/src/types/app/bsky/getProfile'
+import * as GetProfile from '../../../third-party/api/src/client/types/app/bsky/actor/getProfile'
 import {StyleProp, Text, TextStyle} from 'react-native'
 import {useStores} from '../../../state'
 
@@ -12,26 +12,26 @@ export function UserInfoText({
   style,
 }: {
   did: string
-  attr?: keyof AppBskyGetProfile.OutputSchema
+  attr?: keyof GetProfile.OutputSchema
   loading?: string
   failed?: string
   prefix?: string
   style?: StyleProp<TextStyle>
 }) {
-  attr = attr || 'name'
+  attr = attr || 'handle'
   loading = loading || '...'
   failed = failed || 'user'
 
   const store = useStores()
-  const [profile, setProfile] = useState<
-    undefined | AppBskyGetProfile.OutputSchema
-  >(undefined)
+  const [profile, setProfile] = useState<undefined | GetProfile.OutputSchema>(
+    undefined,
+  )
   const [didFail, setFailed] = useState<boolean>(false)
 
   useEffect(() => {
     let aborted = false
     // TODO use caching to reduce loads
-    store.api.app.bsky.getProfile({user: did}).then(
+    store.api.app.bsky.actor.getProfile({user: did}).then(
       v => {
         if (aborted) return
         setProfile(v.data)

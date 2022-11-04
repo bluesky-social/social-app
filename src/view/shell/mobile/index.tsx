@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
   },
   ctrlCount: {
     position: 'absolute',
-    left: 52,
+    left: 46,
     top: 10,
     backgroundColor: colors.red3,
     paddingHorizontal: 4,

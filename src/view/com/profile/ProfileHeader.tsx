@@ -35,7 +35,7 @@ export const ProfileHeader = observer(function ProfileHeader({
       () => {
         Toast.show(
           `${view.myState.follow ? 'Following' : 'No longer following'} ${
-            view.displayName || view.name
+            view.displayName || view.handle
           }`,
           {
             duration: Toast.durations.LONG,
@@ -53,10 +53,10 @@ export const ProfileHeader = observer(function ProfileHeader({
     // TODO
   }
   const onPressFollowers = () => {
-    store.nav.navigate(`/profile/${view.name}/followers`)
+    store.nav.navigate(`/profile/${view.handle}/followers`)
   }
   const onPressFollows = () => {
-    store.nav.navigate(`/profile/${view.name}/follows`)
+    store.nav.navigate(`/profile/${view.handle}/follows`)
   }
 
   // loading
@@ -95,7 +95,11 @@ export const ProfileHeader = observer(function ProfileHeader({
         </TouchableOpacity>
       ) : undefined}
       <View style={styles.avi}>
-        <UserAvatar size={80} displayName={view.displayName} name={view.name} />
+        <UserAvatar
+          size={80}
+          displayName={view.displayName}
+          handle={view.handle}
+        />
       </View>
       <View style={styles.content}>
         <View style={[styles.displayNameLine]}>

@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useMemo} from 'react'
+import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {AtUri} from '../../../third-party/uri'
-import * as PostType from '../../../third-party/api/src/types/app/bsky/post'
+import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -58,10 +58,10 @@ export const Post = observer(function Post({uri}: {uri: string}) {
   const record = view.thread?.record as unknown as PostType.Record
 
   const itemUrip = new AtUri(item.uri)
-  const itemHref = `/profile/${item.author.name}/post/${itemUrip.rkey}`
-  const itemTitle = `Post by ${item.author.name}`
-  const authorHref = `/profile/${item.author.name}`
-  const authorTitle = item.author.name
+  const itemHref = `/profile/${item.author.handle}/post/${itemUrip.rkey}`
+  const itemTitle = `Post by ${item.author.handle}`
+  const authorHref = `/profile/${item.author.handle}`
+  const authorTitle = item.author.handle
   let replyAuthorDid = ''
   let replyHref = ''
   if (record.reply) {
@@ -90,7 +90,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
           <UserAvatar
             size={50}
             displayName={item.author.displayName}
-            name={item.author.name}
+            handle={item.author.handle}
           />
         </Link>
         <View style={styles.layoutContent}>
@@ -99,7 +99,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
               <Text style={[s.f15, s.bold]}>{item.author.displayName}</Text>
             </Link>
             <Link style={styles.metaItem} href={authorHref} title={authorTitle}>
-              <Text style={[s.f14, s.gray5]}>@{item.author.name}</Text>
+              <Text style={[s.f14, s.gray5]}>@{item.author.handle}</Text>
             </Link>
             <Text style={[styles.metaItem, s.f14, s.gray5]}>
               &middot; {ago(item.indexedAt)}
