@@ -14,7 +14,8 @@ import {ProfileViewModel} from '../../../state/models/profile-view'
 import {useStores} from '../../../state'
 import {EditProfileModel} from '../../../state/models/shell'
 import {pluralize} from '../../lib/strings'
-import {s, gradients, colors} from '../../lib/styles'
+import {s, colors} from '../../lib/styles'
+import {getGradient} from '../../lib/asset-gen'
 import Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
@@ -80,6 +81,7 @@ export const ProfileHeader = observer(function ProfileHeader({
 
   // loaded
   // =
+  const gradient = getGradient(view.handle)
   const isMe = store.me.did === view.did
   return (
     <View style={styles.outer}>
@@ -120,7 +122,7 @@ export const ProfileHeader = observer(function ProfileHeader({
               ) : (
                 <TouchableOpacity onPress={onPressToggleFollow}>
                   <LinearGradient
-                    colors={[gradients.primary.start, gradients.primary.end]}
+                    colors={[gradient[1], gradient[0]]}
                     start={{x: 0, y: 0}}
                     end={{x: 1, y: 1}}
                     style={[styles.btn, styles.gradientBtn]}>
