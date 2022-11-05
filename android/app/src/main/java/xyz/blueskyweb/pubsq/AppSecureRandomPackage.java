@@ -1,4 +1,4 @@
-package xyz.blueskyweb.pubsq;
+package app.bsky;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;

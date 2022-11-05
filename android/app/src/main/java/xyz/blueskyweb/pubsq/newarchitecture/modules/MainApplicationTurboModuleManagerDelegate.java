@@ -1,4 +1,4 @@
-package xyz.blueskyweb.pubsq.newarchitecture.modules;
+package app.bsky.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

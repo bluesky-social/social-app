@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:pubsq.pfrazee.com</string>
+		<string>applinks:bsky.pfrazee.com</string>
 	</array>
 </dict>
 </plist>

@@ -1,4 +1,4 @@
-package xyz.blueskyweb.pubsq.newarchitecture;
+package app.bsky.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import xyz.blueskyweb.pubsq.BuildConfig;
-import xyz.blueskyweb.pubsq.newarchitecture.components.MainComponentsRegistry;
-import xyz.blueskyweb.pubsq.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import app.bsky.BuildConfig;
+import app.bsky.newarchitecture.components.MainComponentsRegistry;
+import app.bsky.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

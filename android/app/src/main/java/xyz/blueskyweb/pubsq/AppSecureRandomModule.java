@@ -1,4 +1,4 @@
-package xyz.blueskyweb.pubsq;
+package app.bsky;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
