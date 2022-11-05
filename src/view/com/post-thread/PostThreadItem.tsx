@@ -77,14 +77,14 @@ export const PostThreadItem = observer(function PostThreadItem({
             />
           </Link>
           <View style={styles.layoutContent}>
-            <View style={[styles.meta, s.mt5]}>
+            <View style={[styles.meta, {paddingTop: 5, paddingBottom: 0}]}>
               <Link
                 style={styles.metaItem}
                 href={authorHref}
                 title={authorTitle}>
-                <Text style={[s.f15, s.bold]}>{item.author.displayName}</Text>
+                <Text style={[s.f16, s.bold]}>{item.author.displayName}</Text>
               </Link>
-              <Text style={[styles.metaItem, s.f14, s.gray5]}>
+              <Text style={[styles.metaItem, s.f15, s.gray5]}>
                 &middot; {ago(item.indexedAt)}
               </Text>
               <View style={s.flex1} />
@@ -104,7 +104,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 style={styles.metaItem}
                 href={authorHref}
                 title={authorTitle}>
-                <Text style={[s.f14, s.gray5]}>@{item.author.handle}</Text>
+                <Text style={[s.f15, s.gray5]}>@{item.author.handle}</Text>
               </Link>
             </View>
           </View>
@@ -125,8 +125,10 @@ export const PostThreadItem = observer(function PostThreadItem({
                   style={styles.expandedInfoItem}
                   href={repostsHref}
                   title={repostsTitle}>
-                  <Text style={[s.gray5, s.semiBold]}>
-                    <Text style={[s.bold, s.black]}>{item.repostCount}</Text>{' '}
+                  <Text style={[s.gray5, s.semiBold, s.f16]}>
+                    <Text style={[s.bold, s.black, s.f16]}>
+                      {item.repostCount}
+                    </Text>{' '}
                     {pluralize(item.repostCount, 'repost')}
                   </Text>
                 </Link>
@@ -138,8 +140,10 @@ export const PostThreadItem = observer(function PostThreadItem({
                   style={styles.expandedInfoItem}
                   href={likesHref}
                   title={likesTitle}>
-                  <Text style={[s.gray5, s.semiBold]}>
-                    <Text style={[s.bold, s.black]}>{item.likeCount}</Text>{' '}
+                  <Text style={[s.gray5, s.semiBold, s.f16]}>
+                    <Text style={[s.bold, s.black, s.f16]}>
+                      {item.likeCount}
+                    </Text>{' '}
                     {pluralize(item.likeCount, 'like')}
                   </Text>
                 </Link>
@@ -205,37 +209,20 @@ export const PostThreadItem = observer(function PostThreadItem({
             />
           </Link>
           <View style={styles.layoutContent}>
-            {item.replyingToAuthor &&
-              item.replyingToAuthor !== item.author.handle && (
-                <View style={[s.flexRow, {alignItems: 'center'}]}>
-                  <FontAwesomeIcon
-                    icon="reply"
-                    size={9}
-                    style={[s.gray4, s.mr5]}
-                  />
-                  <Link
-                    href={`/profile/${item.replyingToAuthor}`}
-                    title={`@${item.replyingToAuthor}`}>
-                    <Text style={[s.f12, s.gray5]}>
-                      @{item.replyingToAuthor}
-                    </Text>
-                  </Link>
-                </View>
-              )}
             <View style={styles.meta}>
               <Link
                 style={styles.metaItem}
                 href={authorHref}
                 title={authorTitle}>
-                <Text style={[s.f15, s.bold]}>{item.author.displayName}</Text>
+                <Text style={[s.f17, s.bold]}>{item.author.displayName}</Text>
               </Link>
               <Link
                 style={styles.metaItem}
                 href={authorHref}
                 title={authorTitle}>
-                <Text style={[s.f14, s.gray5]}>@{item.author.handle}</Text>
+                <Text style={[s.f15, s.gray5]}>@{item.author.handle}</Text>
               </Link>
-              <Text style={[styles.metaItem, s.f14, s.gray5]}>
+              <Text style={[styles.metaItem, s.f15, s.gray5]}>
                 &middot; {ago(item.indexedAt)}
               </Text>
               <View style={s.flex1} />
@@ -250,11 +237,24 @@ export const PostThreadItem = observer(function PostThreadItem({
                 />
               </PostDropdownBtn>
             </View>
+            {item.replyingToAuthor &&
+              item.replyingToAuthor !== item.author.handle && (
+                <View style={[s.flexRow, s.mb5, {alignItems: 'center'}]}>
+                  <Text style={[s.gray5, s.f15, s.mr2]}>Replying to</Text>
+                  <Link
+                    href={`/profile/${item.replyingToAuthor}`}
+                    title={`@${item.replyingToAuthor}`}>
+                    <Text style={[s.f14, s.blue3]}>
+                      @{item.replyingToAuthor}
+                    </Text>
+                  </Link>
+                </View>
+              )}
             <View style={styles.postTextContainer}>
               <RichText
                 text={record.text}
                 entities={record.entities}
-                style={[styles.postText, s.f15, s['lh15-1.3']]}
+                style={[styles.postText, s.f17, s['lh17-1.3']]}
               />
             </View>
             <PostCtrls

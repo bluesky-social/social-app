@@ -97,12 +97,12 @@ export const Post = observer(function Post({uri}: {uri: string}) {
         <View style={styles.layoutContent}>
           <View style={styles.meta}>
             <Link style={styles.metaItem} href={authorHref} title={authorTitle}>
-              <Text style={[s.f15, s.bold]}>{item.author.displayName}</Text>
+              <Text style={[s.f16, s.bold]}>{item.author.displayName}</Text>
             </Link>
             <Link style={styles.metaItem} href={authorHref} title={authorTitle}>
-              <Text style={[s.f14, s.gray5]}>@{item.author.handle}</Text>
+              <Text style={[s.f15, s.gray5]}>@{item.author.handle}</Text>
             </Link>
-            <Text style={[styles.metaItem, s.f14, s.gray5]}>
+            <Text style={[styles.metaItem, s.f15, s.gray5]}>
               &middot; {ago(item.indexedAt)}
             </Text>
           </View>
@@ -123,7 +123,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
             <RichText
               text={record.text}
               entities={record.entities}
-              style={[s.f15, s['lh15-1.3']]}
+              style={[s.f16, s['lh16-1.3']]}
             />
           </View>
           <PostCtrls

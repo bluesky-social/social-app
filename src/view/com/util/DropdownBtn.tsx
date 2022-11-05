@@ -157,9 +157,9 @@ const styles = StyleSheet.create({
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 6,
-    paddingLeft: 10,
-    paddingRight: 30,
+    paddingVertical: 10,
+    paddingLeft: 15,
+    paddingRight: 40,
   },
   menuItemBorder: {
     borderTopWidth: 1,
@@ -172,6 +172,6 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   label: {
-    fontSize: 15,
+    fontSize: 18,
   },
 })

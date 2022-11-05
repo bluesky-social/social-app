@@ -84,15 +84,15 @@ export const FeedItem = observer(function FeedItem({
               style={styles.metaItem}
               href={authorHref}
               title={item.author.handle}>
-              <Text style={[s.f15, s.bold]}>{item.author.displayName}</Text>
+              <Text style={[s.f17, s.bold]}>{item.author.displayName}</Text>
             </Link>
             <Link
               style={styles.metaItem}
               href={authorHref}
               title={item.author.handle}>
-              <Text style={[s.f14, s.gray5]}>@{item.author.handle}</Text>
+              <Text style={[s.f15, s.gray5]}>@{item.author.handle}</Text>
             </Link>
-            <Text style={[styles.metaItem, s.f14, s.gray5]}>
+            <Text style={[styles.metaItem, s.f15, s.gray5]}>
               &middot; {ago(item.indexedAt)}
             </Text>
             <View style={s.flex1} />
@@ -108,13 +108,12 @@ export const FeedItem = observer(function FeedItem({
             </PostDropdownBtn>
           </View>
           {replyHref !== '' && (
-            <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
-              <FontAwesomeIcon icon="reply" size={9} style={[s.gray4, s.mr5]} />
-              <Text style={[s.gray4, s.f12, s.mr2]}>Reply to</Text>
+            <View style={[s.flexRow, s.mb5, {alignItems: 'center'}]}>
+              <Text style={[s.gray5, s.f15, s.mr2]}>Replying to</Text>
               <Link href={replyHref} title="Parent post">
                 <UserInfoText
                   did={replyAuthorDid}
-                  style={[s.f12, s.gray5]}
+                  style={[s.f15, s.blue3]}
                   prefix="@"
                 />
               </Link>
@@ -124,7 +123,7 @@ export const FeedItem = observer(function FeedItem({
             <RichText
               text={record.text}
               entities={record.entities}
-              style={[s.f15, s['lh15-1.3']]}
+              style={[s.f17, s['lh17-1.3']]}
             />
           </View>
           <PostCtrls

@@ -31,12 +31,18 @@ export function GridIcon({style}: {style?: StyleProp<ViewStyle>}) {
   )
 }
 
-export function HomeIcon({style}: {style?: StyleProp<ViewStyle>}) {
+export function HomeIcon({
+  style,
+  size,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+}) {
   return (
     <Svg
       viewBox="0 0 48 48"
-      width="24"
-      height="24"
+      width={size || 24}
+      height={size || 24}
       stroke="currentColor"
       style={style}>
       <Path
@@ -73,14 +79,20 @@ export function BellIcon({
 
 // Copyright (c) 2020 Refactoring UI Inc.
 // https://github.com/tailwindlabs/heroicons/blob/master/LICENSE
-export function UserGroupIcon({style}: {style?: StyleProp<ViewStyle>}) {
+export function UserGroupIcon({
+  style,
+  size,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+}) {
   return (
     <Svg
       fill="none"
       viewBox="0 0 24 24"
-      width="32"
-      height="32"
-      strokeWidth={1.5}
+      width={size || 32}
+      height={size || 32}
+      strokeWidth={2}
       stroke="currentColor"
       style={style}>
       <Path
