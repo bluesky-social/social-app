@@ -210,14 +210,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     left: 12,
-    backgroundColor: '#000a',
+    backgroundColor: '#ffff',
     padding: 6,
     borderRadius: 30,
   },
   backIcon: {
     width: 14,
     height: 14,
-    color: colors.white,
+    color: colors.black,
   },
   avi: {
     position: 'absolute',
