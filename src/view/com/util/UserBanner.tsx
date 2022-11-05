@@ -13,7 +13,7 @@ export function UserBanner({handle}: {handle: string}) {
         </LinearGradient>
         <LinearGradient id="grad2" x1="0" y1="0" x2="0" y2="1">
           <Stop offset="0" stopColor="#000" stopOpacity="0" />
-          <Stop offset="1" stopColor="#000" stopOpacity="0.6" />
+          <Stop offset="1" stopColor="#000" stopOpacity="0.1" />
         </LinearGradient>
       </Defs>
       <Rect x="0" y="0" width="400" height="100" fill="url(#grad)" />
