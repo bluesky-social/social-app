@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useMemo} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {ViewSelector} from '../com/util/ViewSelector'
 import {ScreenParams} from '../routes'
-import {ProfileUiModel, SECTION_IDS} from '../../state/models/profile-ui'
+import {ProfileUiModel, Sections} from '../../state/models/profile-ui'
 import {useStores} from '../../state'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedItem} from '../com/posts/FeedItem'
@@ -18,25 +18,23 @@ const EMPTY_ITEM = {_reactKey: '__empty__'}
 export const Profile = observer(({visible, params}: ScreenParams) => {
   const store = useStores()
   const [hasSetup, setHasSetup] = useState<boolean>(false)
-  const [profileUiState, setProfileUiState] = useState<
-    ProfileUiModel | undefined
-  >()
+  const uiState = useMemo(
+    () => new ProfileUiModel(store, {user: params.name}),
+    [params.user],
+  )
 
   useEffect(() => {
     let aborted = false
     if (!visible) {
       return
     }
-    const user = params.name
     if (hasSetup) {
-      console.log('Updating profile for', user)
-      profileUiState?.update()
+      console.log('Updating profile for', params.name)
+      uiState.update()
     } else {
-      console.log('Fetching profile for', user)
-      store.nav.setTitle(user)
-      const newProfileUiState = new ProfileUiModel(store, {user})
-      setProfileUiState(newProfileUiState)
-      newProfileUiState.setup().then(() => {
+      console.log('Fetching profile for', params.name)
+      store.nav.setTitle(params.name)
+      uiState.setup().then(() => {
         if (aborted) return
         setHasSetup(true)
       })
@@ -50,42 +48,45 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
   // =
 
   const onSelectView = (index: number) => {
-    profileUiState?.setSelectedViewIndex(index)
+    uiState.setSelectedViewIndex(index)
   }
   const onRefresh = () => {
-    profileUiState
-      ?.refresh()
+    uiState
+      .refresh()
       .catch((err: any) => console.error('Failed to refresh', err))
   }
   const onEndReached = () => {
-    profileUiState
-      ?.loadMore()
+    uiState
+      .loadMore()
       .catch((err: any) => console.error('Failed to load more', err))
   }
   const onPressTryAgain = () => {
-    profileUiState?.setup()
+    uiState.setup()
   }
 
   // rendering
   // =
 
   const renderHeader = () => {
-    if (!profileUiState) {
+    if (!uiState) {
       return <View />
     }
-    return <ProfileHeader view={profileUiState.profile} />
+    return <ProfileHeader view={uiState.profile} />
   }
   let renderItem
   let items: any[] = []
-  if (profileUiState) {
-    if (profileUiState.selectedViewIndex === SECTION_IDS.POSTS) {
-      if (profileUiState.isInitialLoading) {
+  if (uiState) {
+    if (
+      uiState.selectedView === Sections.Posts ||
+      uiState.selectedView === Sections.Trending
+    ) {
+      if (uiState.isInitialLoading) {
         items.push(LOADING_ITEM)
         renderItem = () => <Text style={styles.loading}>Loading...</Text>
-      } else if (profileUiState.feed.hasError) {
+      } else if (uiState.feed.hasError) {
         items.push({
           _reactKey: '__error__',
-          error: profileUiState.feed.error,
+          error: uiState.feed.error,
         })
         renderItem = (item: any) => (
           <View style={s.p5}>
@@ -95,9 +96,9 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
             />
           </View>
         )
-      } else if (profileUiState.currentView.hasContent) {
-        items = profileUiState.feed.feed.slice()
-        if (profileUiState.feed.hasReachedEnd) {
+      } else if (uiState.currentView.hasContent) {
+        items = uiState.feed.feed.slice()
+        if (uiState.feed.hasReachedEnd) {
           items.push(END_ITEM)
         }
         renderItem = (item: any) => {
@@ -106,12 +107,11 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
           }
           return <FeedItem item={item} />
         }
-      } else if (profileUiState.currentView.isEmpty) {
+      } else if (uiState.currentView.isEmpty) {
         items.push(EMPTY_ITEM)
         renderItem = () => <Text style={styles.loading}>No posts yet!</Text>
       }
-    }
-    if (profileUiState.selectedViewIndex === SECTION_IDS.BADGES) {
+    } else {
       items.push(EMPTY_ITEM)
       renderItem = () => <Text>TODO</Text>
     }
@@ -122,20 +122,20 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
 
   return (
     <View style={styles.container}>
-      {profileUiState?.profile.hasError ? (
+      {uiState.profile.hasError ? (
         <ErrorScreen
           title="Failed to load profile"
           message={`There was an issue when attempting to load ${params.name}`}
-          details={profileUiState.profile.error}
+          details={uiState.profile.error}
           onPressTryAgain={onPressTryAgain}
         />
       ) : (
         <ViewSelector
-          sections={ProfileUiModel.SELECTOR_ITEMS}
+          sections={uiState.selectorItems}
           items={items}
           renderHeader={renderHeader}
           renderItem={renderItem}
-          refreshing={profileUiState?.isRefreshing || false}
+          refreshing={uiState.isRefreshing || false}
           onSelectView={onSelectView}
           onRefresh={onRefresh}
           onEndReached={onEndReached}

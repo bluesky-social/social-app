@@ -102,9 +102,88 @@ export const ProfileHeader = observer(function ProfileHeader({
         />
       </View>
       <View style={styles.content}>
-        <View style={[styles.displayNameLine]}>
+        <View style={[styles.buttonsLine]}>
+          {isMe ? (
+            <TouchableOpacity
+              onPress={onPressEditProfile}
+              style={[styles.btn, styles.mainBtn]}>
+              <Text style={[s.fw400, s.f14]}>Edit Profile</Text>
+            </TouchableOpacity>
+          ) : (
+            <>
+              {view.myState.follow ? (
+                <TouchableOpacity
+                  onPress={onPressToggleFollow}
+                  style={[styles.btn, styles.mainBtn]}>
+                  <FontAwesomeIcon icon="check" style={[s.mr5]} size={14} />
+                  <Text style={[s.fw400, s.f14]}>Following</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={onPressToggleFollow}>
+                  <LinearGradient
+                    colors={[gradients.primary.start, gradients.primary.end]}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 1}}
+                    style={[styles.btn, styles.gradientBtn]}>
+                    <FontAwesomeIcon icon="plus" style={[s.white, s.mr5]} />
+                    <Text style={[s.white, s.fw600, s.f16]}>Follow</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              )}
+            </>
+          )}
+          <TouchableOpacity
+            onPress={onPressMenu}
+            style={[styles.btn, styles.secondaryBtn]}>
+            <FontAwesomeIcon icon="ellipsis" style={[s.gray5]} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.displayNameLine}>
           <Text style={styles.displayName}>{view.displayName}</Text>
         </View>
+        <View style={styles.handleLine}>
+          {view.isScene ? (
+            <View style={styles.typeLabelWrapper}>
+              <Text style={styles.typeLabel}>Scene</Text>
+            </View>
+          ) : undefined}
+          <Text style={styles.handle}>@{view.handle}</Text>
+        </View>
+        <View style={styles.metricsLine}>
+          <TouchableOpacity
+            style={[s.flexRow, s.mr10]}
+            onPress={onPressFollowers}>
+            <Text style={[s.bold, s.mr2]}>{view.followersCount}</Text>
+            <Text style={s.gray5}>
+              {pluralize(view.followersCount, 'follower')}
+            </Text>
+          </TouchableOpacity>
+          {view.isUser ? (
+            <TouchableOpacity
+              style={[s.flexRow, s.mr10]}
+              onPress={onPressFollows}>
+              <Text style={[s.bold, s.mr2]}>{view.followsCount}</Text>
+              <Text style={s.gray5}>following</Text>
+            </TouchableOpacity>
+          ) : undefined}
+          {view.isScene ? (
+            <TouchableOpacity
+              style={[s.flexRow, s.mr10]}
+              onPress={onPressFollows}>
+              <Text style={[s.bold, s.mr2]}>{view.followsCount}</Text>
+              <Text style={s.gray5}>
+                {pluralize(view.followsCount, 'member')}
+              </Text>
+            </TouchableOpacity>
+          ) : undefined}
+          <View style={[s.flexRow, s.mr10]}>
+            <Text style={[s.bold, s.mr2]}>{view.postsCount}</Text>
+            <Text style={s.gray5}>{pluralize(view.postsCount, 'post')}</Text>
+          </View>
+        </View>
+        {view.description && (
+          <Text style={[s.mb5, s.f15, s['lh15-1.3']]}>{view.description}</Text>
+        )}
         {
           undefined /*<View style={styles.badgesLine}>
           <FontAwesomeIcon icon="shield" style={s.mr5} size={12} />
@@ -115,71 +194,6 @@ export const ProfileHeader = observer(function ProfileHeader({
           </Link>
         </View>*/
         }
-        <View style={[styles.buttonsLine]}>
-          {isMe ? (
-            <TouchableOpacity
-              onPress={onPressEditProfile}
-              style={[styles.mainBtn, styles.btn]}>
-              <Text style={[s.fw400, s.f14]}>Edit Profile</Text>
-            </TouchableOpacity>
-          ) : (
-            <>
-              {view.myState.follow ? (
-                <TouchableOpacity
-                  onPress={onPressToggleFollow}
-                  style={[styles.mainBtn, styles.btn]}>
-                  <FontAwesomeIcon icon="check" style={[s.mr5]} size={14} />
-                  <Text style={[s.fw400, s.f14]}>Following</Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  onPress={onPressToggleFollow}
-                  style={[styles.mainBtn, styles.btn]}>
-                  <FontAwesomeIcon icon="rss" style={[s.mr5]} size={13} />
-                  <Text style={[s.fw400, s.f14]}>Follow</Text>
-                </TouchableOpacity>
-              )}
-              <TouchableOpacity
-                onPress={onPressMenu}
-                style={[styles.btn, styles.secondaryBtn, s.mr5]}>
-                <FontAwesomeIcon icon="user-plus" style={[s.gray5]} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={onPressMenu}
-                style={[styles.btn, styles.secondaryBtn, s.mr5]}>
-                <FontAwesomeIcon icon="note-sticky" style={[s.gray5]} />
-              </TouchableOpacity>
-            </>
-          )}
-          <TouchableOpacity
-            onPress={onPressMenu}
-            style={[styles.btn, styles.secondaryBtn]}>
-            <FontAwesomeIcon icon="ellipsis" style={[s.gray5]} />
-          </TouchableOpacity>
-        </View>
-        <View style={[s.flexRow]}>
-          <TouchableOpacity
-            style={[s.flexRow, s.mr10]}
-            onPress={onPressFollowers}>
-            <Text style={[s.bold, s.mr2]}>{view.followersCount}</Text>
-            <Text style={s.gray5}>
-              {pluralize(view.followersCount, 'follower')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[s.flexRow, s.mr10]}
-            onPress={onPressFollows}>
-            <Text style={[s.bold, s.mr2]}>{view.followsCount}</Text>
-            <Text style={s.gray5}>following</Text>
-          </TouchableOpacity>
-          <View style={[s.flexRow, s.mr10]}>
-            <Text style={[s.bold, s.mr2]}>{view.postsCount}</Text>
-            <Text style={s.gray5}>{pluralize(view.postsCount, 'post')}</Text>
-          </View>
-        </View>
-        {view.description && (
-          <Text style={[s.mt10, s.f15, s['lh15-1.3']]}>{view.description}</Text>
-        )}
       </View>
     </View>
   )
@@ -222,46 +236,70 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingBottom: 4,
   },
+
+  buttonsLine: {
+    flexDirection: 'row',
+    marginLeft: 'auto',
+    marginBottom: 12,
+  },
+  gradientBtn: {
+    paddingHorizontal: 24,
+    paddingVertical: 6,
+  },
+  mainBtn: {
+    paddingHorizontal: 24,
+  },
+  secondaryBtn: {
+    paddingHorizontal: 14,
+  },
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 7,
+    borderRadius: 50,
+    backgroundColor: colors.gray1,
+    marginLeft: 6,
+  },
+
   displayNameLine: {
-    paddingLeft: 86,
-    marginBottom: 14,
+    // paddingLeft: 86,
+    // marginBottom: 14,
   },
   displayName: {
     fontSize: 24,
     fontWeight: 'bold',
   },
+
+  handleLine: {
+    flexDirection: 'row',
+    marginBottom: 8,
+  },
+  handle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: colors.gray5,
+  },
+  typeLabelWrapper: {
+    backgroundColor: colors.gray1,
+    paddingHorizontal: 4,
+    borderRadius: 4,
+    marginRight: 5,
+  },
+  typeLabel: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: colors.gray5,
+  },
+
+  metricsLine: {
+    flexDirection: 'row',
+    marginBottom: 8,
+  },
+
   badgesLine: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-  },
-  buttonsLine: {
-    flexDirection: 'row',
-    marginBottom: 12,
-  },
-  followBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 6,
-    borderRadius: 6,
-    marginRight: 6,
-  },
-  btn: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 7,
-    borderRadius: 4,
-    backgroundColor: colors.gray1,
-    marginRight: 6,
-  },
-  mainBtn: {
-    flexDirection: 'row',
-  },
-  secondaryBtn: {
-    flex: 0,
-    paddingHorizontal: 14,
-    marginRight: 0,
   },
 })

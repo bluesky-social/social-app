@@ -4,6 +4,9 @@ import * as Profile from '../../third-party/api/src/client/types/app/bsky/actor/
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
+export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
+export const ACTOR_TYPE_SCENE = 'app.bsky.system.actorScene'
+
 export class ProfileViewMyStateModel {
   follow?: string
 
@@ -23,6 +26,7 @@ export class ProfileViewModel {
   // data
   did: string = ''
   handle: string = ''
+  actorType = ACTOR_TYPE_USER
   displayName?: string
   description?: string
   followersCount: number = 0
@@ -55,6 +59,14 @@ export class ProfileViewModel {
 
   get isEmpty() {
     return this.hasLoaded && !this.hasContent
+  }
+
+  get isUser() {
+    return this.actorType === ACTOR_TYPE_USER
+  }
+
+  get isScene() {
+    return this.actorType === ACTOR_TYPE_SCENE
   }
 
   // public api
