@@ -19,13 +19,13 @@ export function UserAvatar({
   handle: string
 }) {
   const initials = getInitials(displayName || handle)
-  const gi = cyrb53(handle) % GRADIENTS.length
+  const gradient = getGradient(handle)
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Defs>
         <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-          <Stop offset="0" stopColor={GRADIENTS[gi][0]} stopOpacity="1" />
-          <Stop offset="1" stopColor={GRADIENTS[gi][1]} stopOpacity="1" />
+          <Stop offset="0" stopColor={gradient[0]} stopOpacity="1" />
+          <Stop offset="1" stopColor={gradient[1]} stopOpacity="1" />
         </LinearGradient>
       </Defs>
       <Circle cx="50" cy="50" r="50" fill="url(#grad)" />
@@ -40,6 +40,11 @@ export function UserAvatar({
       </Text>
     </Svg>
   )
+}
+
+export function getGradient(handle: string): string[] {
+  const gi = cyrb53(handle) % GRADIENTS.length
+  return GRADIENTS[gi]
 }
 
 function getInitials(str: string): string {

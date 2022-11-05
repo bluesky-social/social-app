@@ -15,10 +15,9 @@ import {useStores} from '../../../state'
 import {EditProfileModel} from '../../../state/models/shell'
 import {pluralize} from '../../lib/strings'
 import {s, gradients, colors} from '../../lib/styles'
-import {BANNER} from '../../lib/assets'
 import Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import {Link} from '../util/Link'
+import {UserBanner} from '../util/UserBanner'
 
 export const ProfileHeader = observer(function ProfileHeader({
   view,
@@ -84,7 +83,7 @@ export const ProfileHeader = observer(function ProfileHeader({
   const isMe = store.me.did === view.did
   return (
     <View style={styles.outer}>
-      <Image style={styles.banner} source={BANNER} />
+      <UserBanner handle={view.handle} />
       {store.nav.tab.canGoBack ? (
         <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
           <FontAwesomeIcon
