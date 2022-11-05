@@ -13,6 +13,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../lib/strings'
 import {useStores} from '../../../state'
+import {PostCtrls} from '../util/PostCtrls'
 
 const PARENT_REPLY_LINE_LENGTH = 8
 
@@ -63,50 +64,6 @@ export const PostThreadItem = observer(function PostThreadItem({
       .toggleLike()
       .catch(e => console.error('Failed to toggle like', record, e))
   }
-
-  const Ctrls = () => (
-    <View style={styles.ctrls}>
-      <TouchableOpacity style={styles.ctrl} onPress={onPressReply}>
-        <FontAwesomeIcon
-          style={styles.ctrlIcon}
-          icon={['far', 'comment']}
-          size={14}
-        />
-        <Text style={s.f13}>{item.replyCount}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.ctrl} onPress={onPressToggleRepost}>
-        <FontAwesomeIcon
-          style={
-            item.myState.repost ? styles.ctrlIconReposted : styles.ctrlIcon
-          }
-          icon="retweet"
-          size={18}
-        />
-        <Text style={item.myState.repost ? [s.bold, s.green3, s.f13] : s.f13}>
-          {item.repostCount}
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.ctrl} onPress={onPressToggleLike}>
-        <FontAwesomeIcon
-          style={item.myState.like ? styles.ctrlIconLiked : styles.ctrlIcon}
-          icon={[item.myState.like ? 'fas' : 'far', 'heart']}
-          size={14}
-        />
-        <Text style={item.myState.like ? [s.bold, s.red3, s.f13] : s.f13}>
-          {item.likeCount}
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.ctrl}
-        onPress={() => onPressShare(item.uri)}>
-        <FontAwesomeIcon
-          style={styles.ctrlIcon}
-          icon="share-from-square"
-          size={14}
-        />
-      </TouchableOpacity>
-    </View>
-  )
 
   if (item._isHighlightedPost) {
     return (
@@ -194,7 +151,16 @@ export const PostThreadItem = observer(function PostThreadItem({
             <></>
           )}
           <View style={[s.pl10]}>
-            <Ctrls />
+            <PostCtrls
+              replyCount={item.replyCount}
+              repostCount={item.repostCount}
+              likeCount={item.likeCount}
+              isReposted={!!item.myState.repost}
+              isLiked={!!item.myState.like}
+              onPressReply={onPressReply}
+              onPressToggleRepost={onPressToggleRepost}
+              onPressToggleLike={onPressToggleLike}
+            />
           </View>
         </View>
       </View>
@@ -291,7 +257,16 @@ export const PostThreadItem = observer(function PostThreadItem({
                 style={[styles.postText, s.f15, s['lh15-1.3']]}
               />
             </View>
-            <Ctrls />
+            <PostCtrls
+              replyCount={item.replyCount}
+              repostCount={item.repostCount}
+              likeCount={item.likeCount}
+              isReposted={!!item.myState.repost}
+              isLiked={!!item.myState.like}
+              onPressReply={onPressReply}
+              onPressToggleRepost={onPressToggleRepost}
+              onPressToggleLike={onPressToggleLike}
+            />
           </View>
         </View>
       </Link>
@@ -369,27 +344,5 @@ const styles = StyleSheet.create({
   },
   expandedInfoItem: {
     marginRight: 10,
-  },
-  ctrls: {
-    flexDirection: 'row',
-  },
-  ctrl: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-    paddingLeft: 4,
-    paddingRight: 4,
-  },
-  ctrlIcon: {
-    marginRight: 5,
-    color: colors.gray5,
-  },
-  ctrlIconReposted: {
-    marginRight: 5,
-    color: colors.green3,
-  },
-  ctrlIconLiked: {
-    marginRight: 5,
-    color: colors.red3,
   },
 })
