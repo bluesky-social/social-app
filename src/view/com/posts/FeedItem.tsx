@@ -9,6 +9,7 @@ import {SharePostModel} from '../../../state/models/shell'
 import {Link} from '../util/Link'
 import {PostDropdownBtn} from '../util/DropdownBtn'
 import {UserInfoText} from '../util/UserInfoText'
+import {PostCtrls} from '../util/PostCtrls'
 import {RichText} from '../util/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
@@ -126,52 +127,16 @@ export const FeedItem = observer(function FeedItem({
               style={[s.f15, s['lh15-1.3']]}
             />
           </View>
-          <View style={styles.ctrls}>
-            <TouchableOpacity style={styles.ctrl} onPress={onPressReply}>
-              <FontAwesomeIcon
-                style={styles.ctrlIcon}
-                icon={['far', 'comment']}
-                size={14}
-              />
-              <Text style={s.f13}>{item.replyCount}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.ctrl} onPress={onPressToggleRepost}>
-              <FontAwesomeIcon
-                style={
-                  item.myState.repost
-                    ? styles.ctrlIconReposted
-                    : styles.ctrlIcon
-                }
-                icon="retweet"
-                size={18}
-              />
-              <Text
-                style={item.myState.repost ? [s.bold, s.green3, s.f13] : s.f13}>
-                {item.repostCount}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.ctrl} onPress={onPressToggleLike}>
-              <FontAwesomeIcon
-                style={
-                  item.myState.like ? styles.ctrlIconLiked : styles.ctrlIcon
-                }
-                icon={[item.myState.like ? 'fas' : 'far', 'heart']}
-                size={14}
-              />
-              <Text style={item.myState.like ? [s.bold, s.red3, s.f13] : s.f13}>
-                {item.likeCount}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.ctrl}
-              onPress={() => onPressShare(item.uri)}>
-              <FontAwesomeIcon
-                style={styles.ctrlIcon}
-                icon="share-from-square"
-                size={14}
-              />
-            </TouchableOpacity>
-          </View>
+          <PostCtrls
+            replyCount={item.replyCount}
+            repostCount={item.repostCount}
+            likeCount={item.likeCount}
+            isReposted={!!item.myState.repost}
+            isLiked={!!item.myState.like}
+            onPressReply={onPressReply}
+            onPressToggleRepost={onPressToggleRepost}
+            onPressToggleLike={onPressToggleLike}
+          />
         </View>
       </View>
     </Link>
@@ -220,27 +185,5 @@ const styles = StyleSheet.create({
   },
   postText: {
     fontFamily: 'Helvetica Neue',
-  },
-  ctrls: {
-    flexDirection: 'row',
-  },
-  ctrl: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-    paddingLeft: 4,
-    paddingRight: 4,
-  },
-  ctrlIcon: {
-    marginRight: 5,
-    color: colors.gray5,
-  },
-  ctrlIconReposted: {
-    marginRight: 5,
-    color: colors.green3,
-  },
-  ctrlIconLiked: {
-    marginRight: 5,
-    color: colors.red3,
   },
 })
