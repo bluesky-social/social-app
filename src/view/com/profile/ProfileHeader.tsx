@@ -208,8 +208,8 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: 6,
-    left: 8,
+    top: 10,
+    left: 12,
     backgroundColor: '#000a',
     padding: 6,
     borderRadius: 30,
