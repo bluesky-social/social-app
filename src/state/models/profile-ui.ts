@@ -3,19 +3,21 @@ import {RootStoreModel} from './root-store'
 import {ProfileViewModel} from './profile-view'
 import {FeedModel} from './feed-view'
 
-export const SECTION_IDS = {
-  POSTS: 0,
-  BADGES: 1,
+export enum Sections {
+  Posts = 'Posts',
+  Scenes = 'Scenes',
+  Trending = 'Trending',
+  Members = 'Members',
 }
+
+const USER_SELECTOR_ITEMS = [Sections.Posts, Sections.Scenes]
+const SCENE_SELECTOR_ITEMS = [Sections.Trending, Sections.Members]
 
 export interface ProfileUiParams {
   user: string
 }
 
 export class ProfileUiModel {
-  // constants
-  static SELECTOR_ITEMS = ['Posts', 'Scenes']
-
   // data
   profile: ProfileViewModel
   feed: FeedModel
@@ -43,7 +45,10 @@ export class ProfileUiModel {
   }
 
   get currentView(): FeedModel {
-    if (this.selectedViewIndex === SECTION_IDS.POSTS) {
+    if (
+      this.selectedView === Sections.Posts ||
+      this.selectedView === Sections.Trending
+    ) {
       return this.feed
     }
     throw new Error(`Invalid selector value: ${this.selectedViewIndex}`)
@@ -56,6 +61,28 @@ export class ProfileUiModel {
 
   get isRefreshing() {
     return this.profile.isRefreshing || this.currentView.isRefreshing
+  }
+
+  get isUser() {
+    return this.profile.isUser
+  }
+
+  get isScene() {
+    return this.profile.isScene
+  }
+
+  get selectorItems() {
+    if (this.isUser) {
+      return USER_SELECTOR_ITEMS
+    } else if (this.isScene) {
+      return SCENE_SELECTOR_ITEMS
+    } else {
+      return USER_SELECTOR_ITEMS
+    }
+  }
+
+  get selectedView() {
+    return this.selectorItems[this.selectedViewIndex]
   }
 
   // public api
