@@ -2,6 +2,7 @@ import 'react-native-url-polyfill/auto'
 import React, {useState, useEffect} from 'react'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
+import SplashScreen from 'react-native-splash-screen'
 import {whenWebCrypto} from './platform/polyfills.native'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
@@ -19,7 +20,10 @@ function App() {
         view.setup()
         return setupState()
       })
-      .then(setRootStore)
+      .then(store => {
+        setRootStore(store)
+        SplashScreen.hide()
+      })
   }, [])
 
   // show nothing prior to init
