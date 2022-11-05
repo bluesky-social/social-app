@@ -133,20 +133,20 @@ export const FeedItem = observer(function FeedItem({
               style={styles.metaItem}
               href={authors[0].href}
               title={`@${authors[0].handle}`}>
-              <Text style={[s.f14, s.bold]}>
+              <Text style={[s.f15, s.bold]}>
                 {authors[0].displayName || authors[0].handle}
               </Text>
             </Link>
             {authors.length > 1 ? (
               <>
-                <Text style={[styles.metaItem, s.f14]}>and</Text>
-                <Text style={[styles.metaItem, s.f14, s.bold]}>
+                <Text style={[styles.metaItem, s.f15]}>and</Text>
+                <Text style={[styles.metaItem, s.f15, s.bold]}>
                   {authors.length - 1} {pluralize(authors.length - 1, 'other')}
                 </Text>
               </>
             ) : undefined}
-            <Text style={[styles.metaItem, s.f14]}>{action}</Text>
-            <Text style={[styles.metaItem, s.f14, s.gray5]}>
+            <Text style={[styles.metaItem, s.f15]}>{action}</Text>
+            <Text style={[styles.metaItem, s.f15, s.gray5]}>
               {ago(item.indexedAt)}
             </Text>
           </View>

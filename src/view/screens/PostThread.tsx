@@ -18,9 +18,11 @@ export const PostThread = ({visible, params}: ScreenParams) => {
   }, [visible, store.nav, name])
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <ViewHeader title="Post" subtitle={`by ${name}`} />
-      <PostThreadComponent uri={uri} />
+      <View style={{flex: 1}}>
+        <PostThreadComponent uri={uri} />
+      </View>
     </View>
   )
 }

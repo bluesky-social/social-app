@@ -5,7 +5,7 @@ import {getGradient} from '../../lib/asset-gen'
 export function UserBanner({handle}: {handle: string}) {
   const gradient = getGradient(handle)
   return (
-    <Svg width="400" height="120" viewBox="50 0 200 100">
+    <Svg width="100%" height="120" viewBox="50 0 200 100">
       <Defs>
         <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
           <Stop offset="0" stopColor={gradient[0]} stopOpacity="1" />

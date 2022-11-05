@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, Text, View} from 'react-native'
 import {
@@ -9,12 +9,9 @@ import {useStores} from '../../../state'
 import {SharePostModel} from '../../../state/models/shell'
 import {PostThreadItem} from './PostThreadItem'
 
-const UPDATE_DELAY = 2e3 // wait 2s before refetching the thread for updates
-
 export const PostThread = observer(function PostThread({uri}: {uri: string}) {
   const store = useStores()
   const [view, setView] = useState<PostThreadViewModel | undefined>()
-  const [lastUpdate, setLastUpdate] = useState<number>(Date.now())
 
   useEffect(() => {
     if (view?.params.uri === uri) {
@@ -26,14 +23,6 @@ export const PostThread = observer(function PostThread({uri}: {uri: string}) {
     setView(newView)
     newView.setup().catch(err => console.error('Failed to fetch thread', err))
   }, [uri, view?.params.uri, store])
-
-  // TODO
-  // useFocusEffect(() => {
-  //   if (Date.now() - lastUpdate > UPDATE_DELAY) {
-  //     view?.update()
-  //     setLastUpdate(Date.now())
-  //   }
-  // })
 
   const onPressShare = (uri: string) => {
     store.shell.openModal(new SharePostModel(uri))
@@ -83,6 +72,7 @@ export const PostThread = observer(function PostThread({uri}: {uri: string}) {
       renderItem={renderItem}
       refreshing={view.isRefreshing}
       onRefresh={onRefresh}
+      style={{flex: 1}}
     />
   )
 })

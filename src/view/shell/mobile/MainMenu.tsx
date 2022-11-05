@@ -51,6 +51,10 @@ export const MainMenu = observer(
     // rendering
     // =
 
+    const MenuItemBlank = () => (
+      <View style={[styles.menuItem, styles.menuItemMargin]} />
+    )
+
     const MenuItem = ({
       icon,
       label,
@@ -67,16 +71,16 @@ export const MainMenu = observer(
         onPress={() => onNavigate(url)}>
         <View style={[styles.menuItemIconWrapper]}>
           {icon === 'home' ? (
-            <HomeIcon style={styles.menuItemIcon} />
+            <HomeIcon style={styles.menuItemIcon} size="32" />
           ) : icon === 'user-group' ? (
-            <UserGroupIcon style={styles.menuItemIcon} />
+            <UserGroupIcon style={styles.menuItemIcon} size="36" />
           ) : icon === 'bell' ? (
-            <BellIcon style={styles.menuItemIcon} size="28" />
+            <BellIcon style={styles.menuItemIcon} size="32" />
           ) : (
             <FontAwesomeIcon
               icon={icon}
               style={styles.menuItemIcon}
-              size={24}
+              size={28}
             />
           )}
         </View>
@@ -133,7 +137,7 @@ export const MainMenu = observer(
                 onPress={() => onNavigate(`/profile/${store.me.handle || ''}`)}>
                 <View style={styles.profileImage}>
                   <UserAvatar
-                    size={30}
+                    size={35}
                     displayName={store.me.displayName}
                     handle={store.me.handle || ''}
                   />
@@ -167,6 +171,8 @@ export const MainMenu = observer(
                   url="/notifications"
                   count={store.me.notificationCount}
                 />
+                <MenuItemBlank />
+                <MenuItemBlank />
               </View>
 
               <Text style={styles.heading}>Scenes</Text>
@@ -183,6 +189,8 @@ export const MainMenu = observer(
               <View style={[styles.menuItems]}>
                 <MenuItemActor label="Cool People Only" url="/" />
                 <MenuItemActor label="Techsky" url="/" />
+                <MenuItemBlank />
+                <MenuItemBlank />
               </View>
             </Animated.View>
           </SafeAreaView>
@@ -215,7 +223,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 40,
     paddingHorizontal: 10,
-    marginBottom: 10,
+    marginBottom: 16,
   },
   section: {
     paddingHorizontal: 10,
@@ -238,7 +246,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   profileText: {
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: 'bold',
   },
 
@@ -256,7 +264,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   menuItem: {
-    width: 82,
+    flex: 1,
     alignItems: 'center',
   },
   menuItemMargin: {

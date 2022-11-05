@@ -154,8 +154,10 @@ export const ProfileHeader = observer(function ProfileHeader({
           <TouchableOpacity
             style={[s.flexRow, s.mr10]}
             onPress={onPressFollowers}>
-            <Text style={[s.bold, s.mr2]}>{view.followersCount}</Text>
-            <Text style={s.gray5}>
+            <Text style={[s.bold, s.mr2, styles.metricsText]}>
+              {view.followersCount}
+            </Text>
+            <Text style={[s.gray5, styles.metricsText]}>
               {pluralize(view.followersCount, 'follower')}
             </Text>
           </TouchableOpacity>
@@ -163,27 +165,35 @@ export const ProfileHeader = observer(function ProfileHeader({
             <TouchableOpacity
               style={[s.flexRow, s.mr10]}
               onPress={onPressFollows}>
-              <Text style={[s.bold, s.mr2]}>{view.followsCount}</Text>
-              <Text style={s.gray5}>following</Text>
+              <Text style={[s.bold, s.mr2, styles.metricsText]}>
+                {view.followsCount}
+              </Text>
+              <Text style={[s.gray5, styles.metricsText]}>following</Text>
             </TouchableOpacity>
           ) : undefined}
           {view.isScene ? (
             <TouchableOpacity
               style={[s.flexRow, s.mr10]}
               onPress={onPressFollows}>
-              <Text style={[s.bold, s.mr2]}>{view.followsCount}</Text>
-              <Text style={s.gray5}>
+              <Text style={[s.bold, s.mr2, styles.metricsText]}>
+                {view.followsCount}
+              </Text>
+              <Text style={[s.gray5, styles.metricsText]}>
                 {pluralize(view.followsCount, 'member')}
               </Text>
             </TouchableOpacity>
           ) : undefined}
           <View style={[s.flexRow, s.mr10]}>
-            <Text style={[s.bold, s.mr2]}>{view.postsCount}</Text>
-            <Text style={s.gray5}>{pluralize(view.postsCount, 'post')}</Text>
+            <Text style={[s.bold, s.mr2, styles.metricsText]}>
+              {view.postsCount}
+            </Text>
+            <Text style={[s.gray5, styles.metricsText]}>
+              {pluralize(view.postsCount, 'post')}
+            </Text>
           </View>
         </View>
         {view.description && (
-          <Text style={[s.mb5, s.f15, s['lh15-1.3']]}>{view.description}</Text>
+          <Text style={[s.mb5, s.f16, s['lh16-1.3']]}>{view.description}</Text>
         )}
         {
           undefined /*<View style={styles.badgesLine}>
@@ -268,7 +278,7 @@ const styles = StyleSheet.create({
     // marginBottom: 14,
   },
   displayName: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
   },
 
@@ -277,7 +287,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   handle: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: 'bold',
     color: colors.gray5,
   },
@@ -288,7 +298,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   typeLabel: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: 'bold',
     color: colors.gray5,
   },
@@ -296,6 +306,9 @@ const styles = StyleSheet.create({
   metricsLine: {
     flexDirection: 'row',
     marginBottom: 8,
+  },
+  metricsText: {
+    fontSize: 15,
   },
 
   badgesLine: {
