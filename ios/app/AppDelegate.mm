@@ -9,6 +9,9 @@
 // universal links
 #import <React/RCTLinkingManager.h>
 
+// splash screen
+#import "RNSplashScreen.h"
+
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -57,6 +60,10 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+
+  // Show the splash screen
+  [RNSplashScreen show]; 
+
   return YES;
 }
 
