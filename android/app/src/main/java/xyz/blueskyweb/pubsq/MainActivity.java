@@ -1,4 +1,4 @@
-package xyz.blueskyweb.pubsq;
+package app.bsky;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -13,7 +13,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "xyz.blueskyweb.pubsq";
+    return "app.bsky";
   }
 
   /**

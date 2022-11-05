@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="xyz.blueskyweb.pubsq">
+  package="app.bsky">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -26,17 +26,17 @@
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <!-- debug host: https://pubsq.pfrazee.com -->
+            <!-- debug host: https://bsky.pfrazee.com -->
             <data android:scheme="https" />
-            <data android:host="pubsq.pfrazee.com" />
+            <data android:host="bsky.pfrazee.com" />
         </intent-filter>
         <!-- deep linking via custom links -->
         <intent-filter>
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <!-- debug scheme: pubsq://app -->
-            <data android:scheme="pubsq" />
+            <!-- debug scheme: bsky://app -->
+            <data android:scheme="bsky" />
             <data android:host="app" />
         </intent-filter>
       </activity>
