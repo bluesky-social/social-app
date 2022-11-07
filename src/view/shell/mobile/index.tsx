@@ -33,7 +33,12 @@ import {MainMenu} from './MainMenu'
 import {TabsSelector} from './TabsSelector'
 import {Composer} from './Composer'
 import {s, colors} from '../../lib/styles'
-import {GridIcon, HomeIcon, BellIcon} from '../../lib/icons'
+import {
+  GridIcon,
+  HomeIcon,
+  MangifyingGlassIcon,
+  BellIcon,
+} from '../../lib/icons'
 
 const SWIPE_GESTURE_DIST_TRIGGER = 0.5
 const SWIPE_GESTURE_VEL_TRIGGER = 2500
@@ -45,7 +50,7 @@ const Btn = ({
   onPress,
   onLongPress,
 }: {
-  icon: IconProp | 'menu' | 'house' | 'bell'
+  icon: IconProp | 'menu' | 'house' | 'bell' | 'search'
   inactive?: boolean
   notificationCount?: number
   onPress?: (event: GestureResponderEvent) => void
@@ -58,6 +63,11 @@ const Btn = ({
     IconEl = GridIcon
   } else if (icon === 'house') {
     IconEl = HomeIcon
+    size = 24
+  } else if (icon === 'search') {
+    IconEl = MangifyingGlassIcon
+    size = 24
+    addedStyles = {position: 'relative', top: -1} as ViewStyle
   } else if (icon === 'bell') {
     IconEl = BellIcon
     size = 24
@@ -114,6 +124,7 @@ export const MobileShell: React.FC = observer(() => {
       store.nav.navigate('/')
     }
   }
+  const onPressSearch = () => store.nav.navigate('/search')
   const onPressMenu = () => setMainMenuActive(true)
   const onPressNotifications = () => store.nav.navigate('/notifications')
   const onPressTabs = () => setTabsSelectorActive(true)
@@ -210,7 +221,7 @@ export const MobileShell: React.FC = observer(() => {
       </SafeAreaView>
       <View style={styles.bottomBar}>
         <Btn icon="house" onPress={onPressHome} />
-        <Btn icon="search" inactive={true} onPress={() => {} /* TODO */} />
+        <Btn icon="search" onPress={onPressSearch} />
         <Btn icon="menu" onPress={onPressMenu} />
         <Btn
           icon="bell"
