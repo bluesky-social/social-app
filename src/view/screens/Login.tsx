@@ -15,7 +15,7 @@ import * as EmailValidator from 'email-validator'
 import {observer} from 'mobx-react-lite'
 import {Picker} from '../com/util/Picker'
 import {s, colors} from '../lib/styles'
-import {useStores} from '../../state'
+import {useStores, DEFAULT_SERVICE} from '../../state'
 import {ServiceDescription} from '../../state/models/session'
 
 enum ScreenState {
@@ -117,7 +117,7 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
     setIsProcessing(true)
     try {
       await store.session.login({
-        service: 'http://localhost:2583/',
+        service: DEFAULT_SERVICE,
         handle,
         password,
       })
@@ -218,7 +218,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     if (serviceDescription || error) {
       return
     }
-    store.session.describeService('http://localhost:2583/').then(
+    store.session.describeService(DEFAULT_SERVICE).then(
       desc => {
         if (aborted) return
         setServiceDescription(desc)
@@ -254,7 +254,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     setIsProcessing(true)
     try {
       await store.session.createAccount({
-        service: 'http://localhost:2583/',
+        service: DEFAULT_SERVICE,
         email,
         handle: `${handle}.${userDomain}`,
         password,
