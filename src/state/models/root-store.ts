@@ -74,7 +74,7 @@ export class RootStoreModel {
   }
 }
 
-const throwawayInst = new RootStoreModel(AtpApi.service('http://localhost')) // this will be replaced by the loader
+const throwawayInst = new RootStoreModel(AtpApi.service('http://localhost')) // this will be replaced by the loader, we just need to supply a value at init
 const RootStoreContext = createContext<RootStoreModel>(throwawayInst)
 export const RootStoreProvider = RootStoreContext.Provider
 export const useStores = () => useContext(RootStoreContext)

@@ -4,8 +4,8 @@ import {RootStoreModel} from './models/root-store'
 import * as libapi from './lib/api'
 import * as storage from './lib/storage'
 
+export const DEFAULT_SERVICE = 'http://localhost:2583'
 const ROOT_STATE_STORAGE_KEY = 'root'
-const DEFAULT_SERVICE = 'http://localhost:2583'
 const STATE_FETCH_INTERVAL = 15e3
 
 export async function setupState() {
