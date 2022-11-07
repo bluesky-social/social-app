@@ -23,13 +23,14 @@ export async function setupState() {
     console.error('Failed to load state from storage', e)
   }
 
+  await rootStore.session.setup()
+
   // track changes & save to storage
   autorun(() => {
     const snapshot = rootStore.serialize()
     storage.save(ROOT_STATE_STORAGE_KEY, snapshot)
   })
 
-  await rootStore.session.setup()
   await rootStore.fetchStateUpdate()
   console.log(rootStore.me)
 

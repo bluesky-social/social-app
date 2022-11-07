@@ -11,12 +11,14 @@ import {SessionModel} from './session'
 import {NavigationModel} from './navigation'
 import {ShellModel} from './shell'
 import {MeModel} from './me'
+import {OnboardModel} from './onboard'
 
 export class RootStoreModel {
   session = new SessionModel(this)
   nav = new NavigationModel()
   shell = new ShellModel()
   me = new MeModel(this)
+  onboard = new OnboardModel()
 
   constructor(public api: SessionServiceClient) {
     makeAutoObservable(this, {
@@ -53,6 +55,7 @@ export class RootStoreModel {
     return {
       session: this.session.serialize(),
       nav: this.nav.serialize(),
+      onboard: this.onboard.serialize(),
     }
   }
 
@@ -63,6 +66,9 @@ export class RootStoreModel {
       }
       if (hasProp(v, 'nav')) {
         this.nav.hydrate(v.nav)
+      }
+      if (hasProp(v, 'onboard')) {
+        this.onboard.hydrate(v.onboard)
       }
     }
   }
