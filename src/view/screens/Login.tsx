@@ -441,7 +441,6 @@ function cleanUsername(v: string): string {
 
 export const Login = observer(
   (/*{navigation}: RootTabsScreenProps<'Login'>*/) => {
-    // const store = useStores()
     const [screenState, setScreenState] = useState<ScreenState>(
       ScreenState.SigninOrCreateAccount,
     )

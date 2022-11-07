@@ -220,6 +220,8 @@ PODS:
   - React-jsinspector (0.68.2)
   - React-logger (0.68.2):
     - glog
+  - react-native-pager-view (6.0.2):
+    - React-Core
   - react-native-safe-area-context (4.3.4):
     - RCT-Folly
     - RCTRequired
@@ -357,6 +359,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -423,6 +426,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-pager-view:
+    :path: "../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
@@ -489,6 +494,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b7b553412f2ec768fe6c8f27cd6bafdb9d8719e6
   React-jsinspector: c5989c77cb89ae6a69561095a61cce56a44ae8e8
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
+  react-native-pager-view: 592421df0259bf7a7a4fe85b74c24f3f39905605
   react-native-safe-area-context: dfe5aa13bee37a0c7e8059d14f72ffc076d120e9
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   React-perflogger: a18b4f0bd933b8b24ecf9f3c54f9bf65180f3fe6

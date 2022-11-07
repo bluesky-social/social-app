@@ -27,6 +27,7 @@ import {useStores} from '../../../state'
 import {NavigationModel} from '../../../state/models/navigation'
 import {match, MatchResult} from '../../routes'
 import {Login} from '../../screens/Login'
+import {Onboard} from '../../screens/Onboard'
 import {Modal} from '../../com/modals/Modal'
 import {MainMenu} from './MainMenu'
 import {TabsSelector} from './TabsSelector'
@@ -159,6 +160,15 @@ export const MobileShell: React.FC = observer(() => {
           <Login />
         </SafeAreaView>
       </LinearGradient>
+    )
+  }
+  if (store.onboard.isOnboarding) {
+    return (
+      <View style={styles.outerContainer}>
+        <View style={styles.innerContainer}>
+          <Onboard />
+        </View>
+      </View>
     )
   }
 

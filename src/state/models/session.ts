@@ -15,17 +15,8 @@ interface SessionData {
   did: string
 }
 
-export enum OnboardingStage {
-  Init = 'init',
-}
-
-interface OnboardingState {
-  stage: OnboardingStage
-}
-
 export class SessionModel {
   data: SessionData | null = null
-  onboardingState: OnboardingState | null = null
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -42,7 +33,6 @@ export class SessionModel {
   serialize(): unknown {
     return {
       data: this.data,
-      onboardingState: this.onboardingState,
     }
   }
 
@@ -85,18 +75,6 @@ export class SessionModel {
           data.did
         ) {
           this.data = data
-        }
-      }
-      if (
-        this.data &&
-        hasProp(v, 'onboardingState') &&
-        isObj(v.onboardingState)
-      ) {
-        if (
-          hasProp(v.onboardingState, 'stage') &&
-          typeof v.onboardingState === 'string'
-        ) {
-          this.onboardingState = v.onboardingState
         }
       }
     }
@@ -212,7 +190,7 @@ export class SessionModel {
         handle: res.data.handle,
         did: res.data.did,
       })
-      this.setOnboardingStage(OnboardingStage.Init)
+      this.rootStore.onboard.start()
       this.configureApi()
       this.rootStore.me.load().catch(e => {
         console.error('Failed to fetch local user information', e)
@@ -227,13 +205,5 @@ export class SessionModel {
       })
     }
     this.rootStore.clearAll()
-  }
-
-  setOnboardingStage(stage: OnboardingStage | null) {
-    if (stage === null) {
-      this.onboardingState = null
-    } else {
-      this.onboardingState = {stage}
-    }
   }
 }

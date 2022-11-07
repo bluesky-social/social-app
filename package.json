@@ -32,6 +32,7 @@
     "react-native-gesture-handler": "^2.5.0",
     "react-native-inappbrowser-reborn": "^3.6.3",
     "react-native-linear-gradient": "^2.6.2",
+    "react-native-pager-view": "^6.0.2",
     "react-native-progress": "^5.0.0",
     "react-native-reanimated": "^2.9.1",
     "react-native-root-siblings": "^4.1.1",
@@ -40,6 +41,7 @@
     "react-native-screens": "^3.13.1",
     "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^12.4.0",
+    "react-native-tab-view": "^3.3.0",
     "react-native-url-polyfill": "^1.3.0",
     "react-native-web": "^0.17.7"
   },

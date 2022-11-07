@@ -10177,6 +10177,11 @@ react-native-linear-gradient@^2.6.2:
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.6.2.tgz#56598a76832724b2afa7889747635b5c80948f38"
   integrity sha512-Z8Xxvupsex+9BBFoSYS87bilNPWcRfRsGC0cpJk72Nxb5p2nEkGSBv73xZbEHnW2mUFvP+huYxrVvjZkr/gRjQ==
 
+react-native-pager-view@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.0.2.tgz#447b85fcb9f35225c4d6885c18689a7d30c181d9"
+  integrity sha512-XL3Qc9k7o0BykclGHtuRUz97FpF6rcKbP8LqszLeS2hKnINYcbUPYqg46EhbwVhFOUJE+XhT3idrSO1e/D6jtQ==
+
 react-native-progress@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/react-native-progress/-/react-native-progress-5.0.0.tgz#f5ac6ceaeee27f184c660b00f29419e82a9d0ab0"
@@ -10236,6 +10241,13 @@ react-native-svg@^12.4.0:
   dependencies:
     css-select "^5.1.0"
     css-tree "^1.1.3"
+
+react-native-tab-view@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-3.3.0.tgz#3d24ae4f4c55cfd54cd1d2d1f8915b0b2c33a5da"
+  integrity sha512-xjAQe657Gp/de2QHb7ptksTg8Jcb+j3fLAdcYryzfavt/pe+HtKLpkCtQsxyIJpRrAO7YPxFsymi2N4MnNfePA==
+  dependencies:
+    use-latest-callback "^0.1.5"
 
 react-native-url-polyfill@^1.3.0:
   version "1.3.0"
@@ -11979,6 +11991,11 @@ url-parse@^1.5.3:
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
+
+use-latest-callback@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/use-latest-callback/-/use-latest-callback-0.1.5.tgz#a4a836c08fa72f6608730b5b8f4bbd9c57c04f51"
+  integrity sha512-HtHatS2U4/h32NlkhupDsPlrbiD27gSH5swBdtXbCAlc6pfOFzaj0FehW/FO12rx8j2Vy4/lJScCiJyM01E+bQ==
 
 "use-subscription@>=1.0.0 <1.6.0":
   version "1.5.1"
