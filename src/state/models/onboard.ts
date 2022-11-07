@@ -9,7 +9,7 @@ export const OnboardStage = {
 export const OnboardStageOrder = [OnboardStage.Explainers, OnboardStage.Follows]
 
 export class OnboardModel {
-  isOnboarding: boolean = true
+  isOnboarding: boolean = false
   stage: string = OnboardStageOrder[0]
 
   constructor() {
