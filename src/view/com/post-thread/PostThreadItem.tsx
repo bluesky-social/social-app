@@ -28,7 +28,8 @@ export const PostThreadItem = observer(function PostThreadItem({
 }) {
   const store = useStores()
   const record = item.record as unknown as PostType.Record
-  const hasEngagement = item.likeCount || item.repostCount
+  const hasEngagement =
+    item.upvoteCount || item.downvoteCount || item.repostCount
 
   const itemHref = useMemo(() => {
     const urip = new AtUri(item.uri)
@@ -37,11 +38,16 @@ export const PostThreadItem = observer(function PostThreadItem({
   const itemTitle = `Post by ${item.author.handle}`
   const authorHref = `/profile/${item.author.handle}`
   const authorTitle = item.author.handle
-  const likesHref = useMemo(() => {
+  const upvotesHref = useMemo(() => {
     const urip = new AtUri(item.uri)
-    return `/profile/${item.author.handle}/post/${urip.rkey}/liked-by`
+    return `/profile/${item.author.handle}/post/${urip.rkey}/upvoted-by`
   }, [item.uri, item.author.handle])
-  const likesTitle = 'Likes on this post'
+  const upvotesTitle = 'Upvotes on this post'
+  const downvotesHref = useMemo(() => {
+    const urip = new AtUri(item.uri)
+    return `/profile/${item.author.handle}/post/${urip.rkey}/downvoted-by`
+  }, [item.uri, item.author.handle])
+  const downvotesTitle = 'Downvotes on this post'
   const repostsHref = useMemo(() => {
     const urip = new AtUri(item.uri)
     return `/profile/${item.author.handle}/post/${urip.rkey}/reposted-by`
@@ -59,10 +65,15 @@ export const PostThreadItem = observer(function PostThreadItem({
       .toggleRepost()
       .catch(e => console.error('Failed to toggle repost', record, e))
   }
-  const onPressToggleLike = () => {
+  const onPressToggleUpvote = () => {
     item
-      .toggleLike()
-      .catch(e => console.error('Failed to toggle like', record, e))
+      .toggleUpvote()
+      .catch(e => console.error('Failed to toggle upvote', record, e))
+  }
+  const onPressToggleDownvote = () => {
+    item
+      .toggleDownvote()
+      .catch(e => console.error('Failed to toggle downvote', record, e))
   }
 
   if (item._isHighlightedPost) {
@@ -135,16 +146,31 @@ export const PostThreadItem = observer(function PostThreadItem({
               ) : (
                 <></>
               )}
-              {item.likeCount ? (
+              {item.upvoteCount ? (
                 <Link
                   style={styles.expandedInfoItem}
-                  href={likesHref}
-                  title={likesTitle}>
+                  href={upvotesHref}
+                  title={upvotesTitle}>
                   <Text style={[s.gray5, s.semiBold, s.f16]}>
                     <Text style={[s.bold, s.black, s.f16]}>
-                      {item.likeCount}
+                      {item.upvoteCount}
                     </Text>{' '}
-                    {pluralize(item.likeCount, 'like')}
+                    {pluralize(item.upvoteCount, 'upvote')}
+                  </Text>
+                </Link>
+              ) : (
+                <></>
+              )}
+              {item.downvoteCount ? (
+                <Link
+                  style={styles.expandedInfoItem}
+                  href={downvotesHref}
+                  title={downvotesTitle}>
+                  <Text style={[s.gray5, s.semiBold, s.f16]}>
+                    <Text style={[s.bold, s.black, s.f16]}>
+                      {item.downvoteCount}
+                    </Text>{' '}
+                    {pluralize(item.downvoteCount, 'downvote')}
                   </Text>
                 </Link>
               ) : (
@@ -158,12 +184,15 @@ export const PostThreadItem = observer(function PostThreadItem({
             <PostCtrls
               replyCount={item.replyCount}
               repostCount={item.repostCount}
-              likeCount={item.likeCount}
+              upvoteCount={item.upvoteCount}
+              downvoteCount={item.downvoteCount}
               isReposted={!!item.myState.repost}
-              isLiked={!!item.myState.like}
+              isUpvoted={!!item.myState.upvote}
+              isDownvoted={!!item.myState.downvote}
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
-              onPressToggleLike={onPressToggleLike}
+              onPressToggleUpvote={onPressToggleUpvote}
+              onPressToggleDownvote={onPressToggleDownvote}
             />
           </View>
         </View>
@@ -260,12 +289,15 @@ export const PostThreadItem = observer(function PostThreadItem({
             <PostCtrls
               replyCount={item.replyCount}
               repostCount={item.repostCount}
-              likeCount={item.likeCount}
+              upvoteCount={item.upvoteCount}
+              downvoteCount={item.downvoteCount}
               isReposted={!!item.myState.repost}
-              isLiked={!!item.myState.like}
+              isUpvoted={!!item.myState.upvote}
+              isDownvoted={!!item.myState.downvote}
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
-              onPressToggleLike={onPressToggleLike}
+              onPressToggleUpvote={onPressToggleUpvote}
+              onPressToggleDownvote={onPressToggleDownvote}
             />
           </View>
         </View>

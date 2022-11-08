@@ -19,12 +19,14 @@ export interface Post {
     parent?: Post;
     replyCount: number;
     replies?: Post[];
-    likeCount: number;
     repostCount: number;
+    upvoteCount: number;
+    downvoteCount: number;
     indexedAt: string;
     myState?: {
         repost?: string;
-        like?: string;
+        upvote?: string;
+        downvote?: string;
     };
 }
 export interface User {

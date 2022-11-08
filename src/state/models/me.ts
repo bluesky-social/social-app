@@ -26,7 +26,7 @@ export class MeModel {
       this.did = sess.data.did || ''
       this.handle = sess.data.handle
       const profile = await this.rootStore.api.app.bsky.actor.getProfile({
-        user: this.did,
+        actor: this.did,
       })
       runInAction(() => {
         if (profile?.data) {

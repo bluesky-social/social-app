@@ -7,7 +7,8 @@ import {Search} from './screens/Search'
 import {Notifications} from './screens/Notifications'
 import {NotFound} from './screens/NotFound'
 import {PostThread} from './screens/PostThread'
-import {PostLikedBy} from './screens/PostLikedBy'
+import {PostUpvotedBy} from './screens/PostUpvotedBy'
+import {PostDownvotedBy} from './screens/PostDownvotedBy'
 import {PostRepostedBy} from './screens/PostRepostedBy'
 import {Profile} from './screens/Profile'
 import {ProfileFollowers} from './screens/ProfileFollowers'
@@ -42,9 +43,14 @@ export const routes: Route[] = [
     r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)'),
   ],
   [
-    PostLikedBy,
+    PostUpvotedBy,
     'heart',
-    r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)/liked-by'),
+    r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)/upvoted-by'),
+  ],
+  [
+    PostDownvotedBy,
+    'heart',
+    r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)/downvoted-by'),
   ],
   [
     PostRepostedBy,

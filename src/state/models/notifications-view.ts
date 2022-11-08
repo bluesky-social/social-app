@@ -57,8 +57,8 @@ export class NotificationsViewItemModel implements GroupedNotification {
     }
   }
 
-  get isLike() {
-    return this.reason === 'like'
+  get isUpvote() {
+    return this.reason === 'vote'
   }
 
   get isRepost() {
