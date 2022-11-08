@@ -42,5 +42,7 @@ Paul's todo list
   - Followers list
   - Follows list
 - Bugs
+  - Follows are broken
+  - Auth token refresh seems broken
   - Check that sub components arent reloading too much
   - Titles are getting screwed up (possibly swipe related)

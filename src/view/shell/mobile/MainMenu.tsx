@@ -16,6 +16,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import _chunk from 'lodash.chunk'
 import {HomeIcon, UserGroupIcon, BellIcon} from '../../lib/icons'
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {useStores} from '../../../state'
@@ -26,6 +27,12 @@ export const MainMenu = observer(
     const store = useStores()
     const initInterp = useSharedValue<number>(0)
 
+    useEffect(() => {
+      if (active) {
+        // trigger a refresh in case memberships have changed recently
+        store.me.refreshMemberships()
+      }
+    }, [active])
     useEffect(() => {
       if (active) {
         initInterp.value = withTiming(1, {duration: 150})
@@ -124,6 +131,29 @@ export const MainMenu = observer(
       return <View />
     }
 
+    const MenuItems = ({
+      children,
+    }: {
+      children: (JSX.Element | JSX.Element[])[]
+    }) => {
+      const groups = _chunk(children.flat(), 4)
+      const lastGroup = groups.at(-1)
+      while (lastGroup && lastGroup.length < 4) {
+        lastGroup.push(<MenuItemBlank />)
+      }
+      return (
+        <>
+          {groups.map((group, i) => (
+            <View key={i} style={[styles.menuItems]}>
+              {group.map((el, j) => (
+                <React.Fragment key={j}>{el}</React.Fragment>
+              ))}
+            </View>
+          ))}
+        </>
+      )
+    }
+
     return (
       <>
         <TouchableWithoutFeedback onPress={onClose}>
@@ -163,7 +193,7 @@ export const MainMenu = observer(
                 styles.menuItemsAnimContainer,
                 menuItemsAnimStyle,
               ]}>
-              <View style={[styles.menuItems]}>
+              <MenuItems>
                 <MenuItem icon="home" label="Home" url="/" />
                 <MenuItem
                   icon="bell"
@@ -171,27 +201,28 @@ export const MainMenu = observer(
                   url="/notifications"
                   count={store.me.notificationCount}
                 />
-                <MenuItemBlank />
-                <MenuItemBlank />
-              </View>
+              </MenuItems>
 
               <Text style={styles.heading}>Scenes</Text>
-              <View style={[styles.menuItems]}>
+              <MenuItems>
                 <MenuItem icon={['far', 'compass']} label="Discover" url="/" />
                 <MenuItem
                   icon={'user-group'}
                   label="Create Scene"
                   url="/contacts"
                 />
-                <MenuItemActor label="Galaxy Brain" url="/" />
-                <MenuItemActor label="Paul's Friends" url="/" />
-              </View>
-              <View style={[styles.menuItems]}>
-                <MenuItemActor label="Cool People Only" url="/" />
-                <MenuItemActor label="Techsky" url="/" />
-                <MenuItemBlank />
-                <MenuItemBlank />
-              </View>
+                {store.me.memberships ? (
+                  store.me.memberships.memberships.map((membership, i) => (
+                    <MenuItemActor
+                      key={i}
+                      label={membership.displayName || membership.handle}
+                      url={`/profile/${membership.handle}`}
+                    />
+                  ))
+                ) : (
+                  <MenuItemBlank />
+                )}
+              </MenuItems>
             </Animated.View>
           </SafeAreaView>
         </Animated.View>
