@@ -57,6 +57,9 @@ export const ProfileHeader = observer(function ProfileHeader({
   const onPressFollows = () => {
     store.nav.navigate(`/profile/${view.handle}/follows`)
   }
+  const onPressMembers = () => {
+    store.nav.navigate(`/profile/${view.handle}/members`)
+  }
 
   // loading
   // =
@@ -173,12 +176,12 @@ export const ProfileHeader = observer(function ProfileHeader({
           {view.isScene ? (
             <TouchableOpacity
               style={[s.flexRow, s.mr10]}
-              onPress={onPressFollows}>
+              onPress={onPressMembers}>
               <Text style={[s.bold, s.mr2, styles.metricsText]}>
-                {view.followsCount}
+                {view.membersCount}
               </Text>
               <Text style={[s.gray5, styles.metricsText]}>
-                {pluralize(view.followsCount, 'member')}
+                {pluralize(view.membersCount, 'member')}
               </Text>
             </TouchableOpacity>
           ) : undefined}

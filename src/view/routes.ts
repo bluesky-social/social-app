@@ -13,6 +13,7 @@ import {PostRepostedBy} from './screens/PostRepostedBy'
 import {Profile} from './screens/Profile'
 import {ProfileFollowers} from './screens/ProfileFollowers'
 import {ProfileFollows} from './screens/ProfileFollows'
+import {ProfileMembers} from './screens/ProfileMembers'
 import {Settings} from './screens/Settings'
 
 export type ScreenParams = {
@@ -37,6 +38,7 @@ export const routes: Route[] = [
   [Profile, ['far', 'user'], r('/profile/(?<name>[^/]+)')],
   [ProfileFollowers, 'users', r('/profile/(?<name>[^/]+)/followers')],
   [ProfileFollows, 'users', r('/profile/(?<name>[^/]+)/follows')],
+  [ProfileMembers, 'users', r('/profile/(?<name>[^/]+)/members')],
   [
     PostThread,
     ['far', 'message'],

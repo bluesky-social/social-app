@@ -7,6 +7,7 @@ import {ProfileUiModel, Sections} from '../../state/models/profile-ui'
 import {useStores} from '../../state'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedItem} from '../com/posts/FeedItem'
+import {ProfileCard} from '../com/profile/ProfileCard'
 import {ErrorScreen} from '../com/util/ErrorScreen'
 import {ErrorMessage} from '../com/util/ErrorMessage'
 import {s, colors} from '../lib/styles'
@@ -76,44 +77,78 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
   let renderItem
   let items: any[] = []
   if (uiState) {
-    if (
-      uiState.selectedView === Sections.Posts ||
-      uiState.selectedView === Sections.Trending
-    ) {
-      if (uiState.isInitialLoading) {
-        items.push(LOADING_ITEM)
-        renderItem = () => <Text style={styles.loading}>Loading...</Text>
-      } else if (uiState.feed.hasError) {
-        items.push({
-          _reactKey: '__error__',
-          error: uiState.feed.error,
-        })
-        renderItem = (item: any) => (
-          <View style={s.p5}>
-            <ErrorMessage
-              message={item.error}
-              onPressTryAgain={onPressTryAgain}
-            />
-          </View>
-        )
-      } else if (uiState.currentView.hasContent) {
-        items = uiState.feed.feed.slice()
-        if (uiState.feed.hasReachedEnd) {
-          items.push(END_ITEM)
-        }
-        renderItem = (item: any) => {
-          if (item === END_ITEM) {
-            return <Text style={styles.endItem}>- end of feed -</Text>
-          }
-          return <FeedItem item={item} />
-        }
-      } else if (uiState.currentView.isEmpty) {
-        items.push(EMPTY_ITEM)
-        renderItem = () => <Text style={styles.loading}>No posts yet!</Text>
-      }
+    if (uiState.isInitialLoading) {
+      items.push(LOADING_ITEM)
+      renderItem = () => <Text style={styles.loading}>Loading...</Text>
+    } else if (uiState.currentView.hasError) {
+      items.push({
+        _reactKey: '__error__',
+        error: uiState.currentView.error,
+      })
+      renderItem = (item: any) => (
+        <View style={s.p5}>
+          <ErrorMessage
+            message={item.error}
+            onPressTryAgain={onPressTryAgain}
+          />
+        </View>
+      )
     } else {
-      items.push(EMPTY_ITEM)
-      renderItem = () => <Text>TODO</Text>
+      if (
+        uiState.selectedView === Sections.Posts ||
+        uiState.selectedView === Sections.Trending
+      ) {
+        if (uiState.feed.hasContent) {
+          items = uiState.feed.feed.slice()
+          if (uiState.feed.hasReachedEnd) {
+            items.push(END_ITEM)
+          }
+          renderItem = (item: any) => {
+            if (item === END_ITEM) {
+              return <Text style={styles.endItem}>- end of feed -</Text>
+            }
+            return <FeedItem item={item} />
+          }
+        } else if (uiState.feed.isEmpty) {
+          items.push(EMPTY_ITEM)
+          renderItem = () => <Text style={styles.loading}>No posts yet!</Text>
+        }
+      } else if (uiState.selectedView === Sections.Scenes) {
+        if (uiState.memberships.hasContent) {
+          items = uiState.memberships.memberships.slice()
+          renderItem = (item: any) => {
+            return (
+              <ProfileCard
+                did={item.did}
+                handle={item.handle}
+                displayName={item.displayName}
+              />
+            )
+          }
+        } else if (uiState.memberships.isEmpty) {
+          items.push(EMPTY_ITEM)
+          renderItem = () => <Text style={styles.loading}>No scenes yet!</Text>
+        }
+      } else if (uiState.selectedView === Sections.Members) {
+        if (uiState.members.hasContent) {
+          items = uiState.members.members.slice()
+          renderItem = (item: any) => {
+            return (
+              <ProfileCard
+                did={item.did}
+                handle={item.handle}
+                displayName={item.displayName}
+              />
+            )
+          }
+        } else if (uiState.members.isEmpty) {
+          items.push(EMPTY_ITEM)
+          renderItem = () => <Text style={styles.loading}>No members yet!</Text>
+        }
+      } else {
+        items.push(EMPTY_ITEM)
+        renderItem = () => <Text>TODO</Text>
+      }
     }
   }
   if (!renderItem) {
@@ -129,7 +164,7 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
           details={uiState.profile.error}
           onPressTryAgain={onPressTryAgain}
         />
-      ) : (
+      ) : uiState.profile.hasLoaded ? (
         <ViewSelector
           sections={uiState.selectorItems}
           items={items}
@@ -140,6 +175,8 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
           onRefresh={onRefresh}
           onEndReached={onEndReached}
         />
+      ) : (
+        renderHeader()
       )}
     </View>
   )
