@@ -1,6 +1,8 @@
 import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from './root-store'
 import {ProfileViewModel} from './profile-view'
+import {MembersViewModel} from './members-view'
+import {MembershipsViewModel} from './memberships-view'
 import {FeedModel} from './feed-view'
 
 export enum Sections {
@@ -21,6 +23,8 @@ export class ProfileUiModel {
   // data
   profile: ProfileViewModel
   feed: FeedModel
+  memberships: MembershipsViewModel
+  members: MembersViewModel
 
   // ui state
   selectedViewIndex = 0
@@ -42,14 +46,22 @@ export class ProfileUiModel {
       author: params.user,
       limit: 10,
     })
+    this.memberships = new MembershipsViewModel(rootStore, {actor: params.user})
+    this.members = new MembersViewModel(rootStore, {actor: params.user})
   }
 
-  get currentView(): FeedModel {
+  get currentView(): FeedModel | MembershipsViewModel | MembersViewModel {
     if (
       this.selectedView === Sections.Posts ||
       this.selectedView === Sections.Trending
     ) {
       return this.feed
+    }
+    if (this.selectedView === Sections.Scenes) {
+      return this.memberships
+    }
+    if (this.selectedView === Sections.Members) {
+      return this.members
     }
     throw new Error(`Invalid selector value: ${this.selectedViewIndex}`)
   }
@@ -101,10 +113,25 @@ export class ProfileUiModel {
         .setup()
         .catch(err => console.error('Failed to fetch feed', err)),
     ])
+    if (this.isUser) {
+      await this.memberships
+        .setup()
+        .catch(err => console.error('Failed to fetch members', err))
+    }
+    if (this.isScene) {
+      await this.members
+        .setup()
+        .catch(err => console.error('Failed to fetch members', err))
+    }
   }
 
   async update() {
-    await this.currentView.update()
+    const view = this.currentView
+    if (view instanceof FeedModel) {
+      await view.update()
+    } else {
+      await view.refresh()
+    }
   }
 
   async refresh() {

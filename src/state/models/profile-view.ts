@@ -31,6 +31,7 @@ export class ProfileViewModel {
   description?: string
   followersCount: number = 0
   followsCount: number = 0
+  membersCount: number = 0
   postsCount: number = 0
   myState = new ProfileViewMyStateModel()
 
@@ -140,12 +141,15 @@ export class ProfileViewModel {
   }
 
   private _replaceAll(res: GetProfile.Response) {
+    console.log(res.data)
     this.did = res.data.did
     this.handle = res.data.handle
+    this.actorType = res.data.actorType
     this.displayName = res.data.displayName
     this.description = res.data.description
     this.followersCount = res.data.followersCount
     this.followsCount = res.data.followsCount
+    this.membersCount = res.data.membersCount
     this.postsCount = res.data.postsCount
     if (res.data.myState) {
       Object.assign(this.myState, res.data.myState)

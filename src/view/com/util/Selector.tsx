@@ -41,7 +41,7 @@ export function Selector({
       width: middle.width,
     }
     return [left, middle, right]
-  }, [selectedIndex, itemLayouts])
+  }, [selectedIndex, items, itemLayouts])
 
   const interp = swipeGestureInterp || DEFAULT_SWIPE_GESTURE_INTERP
   const underlinePos = useAnimatedStyle(() => {
