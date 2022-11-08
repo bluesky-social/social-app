@@ -42,6 +42,8 @@ import * as AppBskyGraphConfirmation from './types/app/bsky/graph/confirmation';
 import * as AppBskyGraphFollow from './types/app/bsky/graph/follow';
 import * as AppBskyGraphGetFollowers from './types/app/bsky/graph/getFollowers';
 import * as AppBskyGraphGetFollows from './types/app/bsky/graph/getFollows';
+import * as AppBskyGraphGetMembers from './types/app/bsky/graph/getMembers';
+import * as AppBskyGraphGetMemberships from './types/app/bsky/graph/getMemberships';
 import * as AppBskyNotificationGetCount from './types/app/bsky/notification/getCount';
 import * as AppBskyNotificationList from './types/app/bsky/notification/list';
 import * as AppBskyNotificationUpdateSeen from './types/app/bsky/notification/updateSeen';
@@ -89,6 +91,8 @@ export * as AppBskyGraphConfirmation from './types/app/bsky/graph/confirmation';
 export * as AppBskyGraphFollow from './types/app/bsky/graph/follow';
 export * as AppBskyGraphGetFollowers from './types/app/bsky/graph/getFollowers';
 export * as AppBskyGraphGetFollows from './types/app/bsky/graph/getFollows';
+export * as AppBskyGraphGetMembers from './types/app/bsky/graph/getMembers';
+export * as AppBskyGraphGetMemberships from './types/app/bsky/graph/getMemberships';
 export * as AppBskyNotificationGetCount from './types/app/bsky/notification/getCount';
 export * as AppBskyNotificationList from './types/app/bsky/notification/list';
 export * as AppBskyNotificationUpdateSeen from './types/app/bsky/notification/updateSeen';
@@ -328,6 +332,8 @@ export declare class GraphNS {
     constructor(service: ServiceClient);
     getFollowers(params?: AppBskyGraphGetFollowers.QueryParams, opts?: AppBskyGraphGetFollowers.CallOptions): Promise<AppBskyGraphGetFollowers.Response>;
     getFollows(params?: AppBskyGraphGetFollows.QueryParams, opts?: AppBskyGraphGetFollows.CallOptions): Promise<AppBskyGraphGetFollows.Response>;
+    getMembers(params?: AppBskyGraphGetMembers.QueryParams, opts?: AppBskyGraphGetMembers.CallOptions): Promise<AppBskyGraphGetMembers.Response>;
+    getMemberships(params?: AppBskyGraphGetMemberships.QueryParams, opts?: AppBskyGraphGetMemberships.CallOptions): Promise<AppBskyGraphGetMemberships.Response>;
 }
 export declare class AssertionRecord {
     _service: ServiceClient;

@@ -1,5 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from './root-store'
+import {MembershipsViewModel} from './memberships-view'
 
 export class MeModel {
   did?: string
@@ -7,6 +8,7 @@ export class MeModel {
   displayName?: string
   description?: string
   notificationCount: number = 0
+  memberships?: MembershipsViewModel
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {rootStore: false}, {autoBind: true})
@@ -18,6 +20,7 @@ export class MeModel {
     this.displayName = undefined
     this.description = undefined
     this.notificationCount = 0
+    this.memberships = undefined
   }
 
   async load() {
@@ -37,6 +40,10 @@ export class MeModel {
           this.description = ''
         }
       })
+      this.memberships = new MembershipsViewModel(this.rootStore, {
+        actor: this.did,
+      })
+      await this.memberships?.setup()
     } else {
       this.clear()
     }
@@ -47,5 +54,9 @@ export class MeModel {
     runInAction(() => {
       this.notificationCount = res.data.count
     })
+  }
+
+  async refreshMemberships() {
+    return this.memberships?.refresh()
   }
 }

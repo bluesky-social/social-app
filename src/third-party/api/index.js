@@ -6960,6 +6960,8 @@ __export(src_exports, {
   AppBskyGraphFollow: () => follow_exports,
   AppBskyGraphGetFollowers: () => getFollowers_exports,
   AppBskyGraphGetFollows: () => getFollows_exports,
+  AppBskyGraphGetMembers: () => getMembers_exports,
+  AppBskyGraphGetMemberships: () => getMemberships_exports,
   AppBskyNotificationGetCount: () => getCount_exports,
   AppBskyNotificationList: () => list_exports,
   AppBskyNotificationUpdateSeen: () => updateSeen_exports,
@@ -10494,7 +10496,7 @@ var methodSchemaDict = {
     lexicon: 1,
     id: "com.atproto.account.requestPasswordReset",
     type: "procedure",
-    description: "Initiate a user account password reset via email",
+    description: "Initiate a user account password reset via email.",
     input: {
       encoding: "application/json",
       schema: {
@@ -10521,7 +10523,7 @@ var methodSchemaDict = {
     lexicon: 1,
     id: "com.atproto.account.resetPassword",
     type: "procedure",
-    description: "Reset a user account password using a token",
+    description: "Reset a user account password using a token.",
     input: {
       encoding: "application/json",
       schema: {
@@ -10694,7 +10696,7 @@ var methodSchemaDict = {
           },
           record: {
             type: "object",
-            description: "The record to create"
+            description: "The record to create."
           }
         },
         $defs: {}
@@ -10931,7 +10933,7 @@ var methodSchemaDict = {
           },
           record: {
             type: "object",
-            description: "The record to create"
+            description: "The record to create."
           }
         },
         $defs: {}
@@ -11100,7 +11102,7 @@ var methodSchemaDict = {
       },
       from: {
         type: "string",
-        description: "A past commit CID"
+        description: "A past commit CID."
       }
     },
     output: {
@@ -11368,7 +11370,7 @@ var methodSchemaDict = {
     lexicon: 1,
     id: "app.bsky.actor.search",
     type: "query",
-    description: "Find users matching search criteria",
+    description: "Find users matching search criteria.",
     parameters: {
       term: {
         type: "string",
@@ -11426,7 +11428,7 @@ var methodSchemaDict = {
     lexicon: 1,
     id: "app.bsky.actor.searchTypeahead",
     type: "query",
-    description: "Find user suggestions for a search term",
+    description: "Find user suggestions for a search term.",
     parameters: {
       term: {
         type: "string",
@@ -11471,7 +11473,7 @@ var methodSchemaDict = {
     lexicon: 1,
     id: "app.bsky.actor.updateProfile",
     type: "procedure",
-    description: "Notify server that the user has seen notifications",
+    description: "Notify server that the user has seen notifications.",
     input: {
       encoding: "application/json",
       schema: {
@@ -11514,7 +11516,7 @@ var methodSchemaDict = {
     lexicon: 1,
     id: "app.bsky.feed.getAuthorFeed",
     type: "query",
-    description: "A view of a user's feed",
+    description: "A view of a user's feed.",
     parameters: {
       author: {
         type: "string",
@@ -12217,7 +12219,7 @@ var methodSchemaDict = {
     lexicon: 1,
     id: "app.bsky.feed.getTimeline",
     type: "query",
-    description: "A view of the user's home timeline",
+    description: "A view of the user's home timeline.",
     parameters: {
       algorithm: {
         type: "string"
@@ -12783,6 +12785,180 @@ var methodSchemaDict = {
       }
     }
   },
+  "app.bsky.graph.getMembers": {
+    lexicon: 1,
+    id: "app.bsky.graph.getMembers",
+    type: "query",
+    description: "Who is a member of the group?",
+    parameters: {
+      actor: {
+        type: "string",
+        required: true
+      },
+      limit: {
+        type: "number",
+        maximum: 100
+      },
+      before: {
+        type: "string"
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["subject", "members"],
+        properties: {
+          subject: {
+            type: "object",
+            required: ["did", "handle"],
+            properties: {
+              did: {
+                type: "string"
+              },
+              handle: {
+                type: "string"
+              },
+              displayName: {
+                type: "string",
+                maxLength: 64
+              }
+            }
+          },
+          cursor: {
+            type: "string"
+          },
+          members: {
+            type: "array",
+            items: {
+              type: "object",
+              required: ["did", "handle", "declaration", "indexedAt"],
+              properties: {
+                did: {
+                  type: "string"
+                },
+                handle: {
+                  type: "string"
+                },
+                displayName: {
+                  type: "string",
+                  maxLength: 64
+                },
+                declaration: {
+                  type: "object",
+                  required: ["cid", "actorType"],
+                  properties: {
+                    cid: {
+                      type: "string"
+                    },
+                    actorType: {
+                      type: "string"
+                    }
+                  }
+                },
+                createdAt: {
+                  type: "string",
+                  format: "date-time"
+                },
+                indexedAt: {
+                  type: "string",
+                  format: "date-time"
+                }
+              }
+            }
+          }
+        },
+        $defs: {}
+      }
+    }
+  },
+  "app.bsky.graph.getMemberships": {
+    lexicon: 1,
+    id: "app.bsky.graph.getMemberships",
+    type: "query",
+    description: "Which groups is the actor a member of?",
+    parameters: {
+      actor: {
+        type: "string",
+        required: true
+      },
+      limit: {
+        type: "number",
+        maximum: 100
+      },
+      before: {
+        type: "string"
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["subject", "memberships"],
+        properties: {
+          subject: {
+            type: "object",
+            required: ["did", "handle"],
+            properties: {
+              did: {
+                type: "string"
+              },
+              handle: {
+                type: "string"
+              },
+              displayName: {
+                type: "string",
+                maxLength: 64
+              }
+            }
+          },
+          cursor: {
+            type: "string"
+          },
+          memberships: {
+            type: "array",
+            items: {
+              type: "object",
+              required: ["did", "handle", "declaration", "indexedAt"],
+              properties: {
+                did: {
+                  type: "string"
+                },
+                handle: {
+                  type: "string"
+                },
+                displayName: {
+                  type: "string",
+                  maxLength: 64
+                },
+                declaration: {
+                  type: "object",
+                  required: ["cid", "actorType"],
+                  properties: {
+                    cid: {
+                      type: "string"
+                    },
+                    actorType: {
+                      type: "string"
+                    }
+                  }
+                },
+                createdAt: {
+                  type: "string",
+                  format: "date-time"
+                },
+                indexedAt: {
+                  type: "string",
+                  format: "date-time"
+                }
+              }
+            }
+          }
+        },
+        $defs: {}
+      }
+    }
+  },
   "app.bsky.notification.getCount": {
     lexicon: 1,
     id: "app.bsky.notification.getCount",
@@ -12950,7 +13126,7 @@ var methodSchemaDict = {
     lexicon: 1,
     id: "app.bsky.notification.updateSeen",
     type: "procedure",
-    description: "Notify server that the user has seen notifications",
+    description: "Notify server that the user has seen notifications.",
     input: {
       encoding: "application/json",
       schema: {
@@ -13374,7 +13550,7 @@ var recordSchemaDict = {
     lexicon: 1,
     id: "app.bsky.graph.follow",
     type: "record",
-    description: "A social follow",
+    description: "A social follow.",
     key: "tid",
     record: {
       type: "object",
@@ -13899,9 +14075,9 @@ function toKnownErr35(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/getCount.ts
-var getCount_exports = {};
-__export(getCount_exports, {
+// src/client/types/app/bsky/graph/getMembers.ts
+var getMembers_exports = {};
+__export(getMembers_exports, {
   toKnownErr: () => toKnownErr36
 });
 function toKnownErr36(e) {
@@ -13910,9 +14086,9 @@ function toKnownErr36(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/list.ts
-var list_exports = {};
-__export(list_exports, {
+// src/client/types/app/bsky/graph/getMemberships.ts
+var getMemberships_exports = {};
+__export(getMemberships_exports, {
   toKnownErr: () => toKnownErr37
 });
 function toKnownErr37(e) {
@@ -13921,12 +14097,34 @@ function toKnownErr37(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/updateSeen.ts
-var updateSeen_exports = {};
-__export(updateSeen_exports, {
+// src/client/types/app/bsky/notification/getCount.ts
+var getCount_exports = {};
+__export(getCount_exports, {
   toKnownErr: () => toKnownErr38
 });
 function toKnownErr38(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/app/bsky/notification/list.ts
+var list_exports = {};
+__export(list_exports, {
+  toKnownErr: () => toKnownErr39
+});
+function toKnownErr39(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/app/bsky/notification/updateSeen.ts
+var updateSeen_exports = {};
+__export(updateSeen_exports, {
+  toKnownErr: () => toKnownErr40
+});
+function toKnownErr40(e) {
   if (e instanceof XRPCError) {
   }
   return e;
@@ -14435,6 +14633,16 @@ var GraphNS = class {
       throw toKnownErr35(e);
     });
   }
+  getMembers(params, opts) {
+    return this._service.xrpc.call("app.bsky.graph.getMembers", params, void 0, opts).catch((e) => {
+      throw toKnownErr36(e);
+    });
+  }
+  getMemberships(params, opts) {
+    return this._service.xrpc.call("app.bsky.graph.getMemberships", params, void 0, opts).catch((e) => {
+      throw toKnownErr37(e);
+    });
+  }
 };
 var AssertionRecord = class {
   constructor(service) {
@@ -14553,17 +14761,17 @@ var NotificationNS = class {
   }
   getCount(params, opts) {
     return this._service.xrpc.call("app.bsky.notification.getCount", params, void 0, opts).catch((e) => {
-      throw toKnownErr36(e);
+      throw toKnownErr38(e);
     });
   }
   list(params, opts) {
     return this._service.xrpc.call("app.bsky.notification.list", params, void 0, opts).catch((e) => {
-      throw toKnownErr37(e);
+      throw toKnownErr39(e);
     });
   }
   updateSeen(data, opts) {
     return this._service.xrpc.call("app.bsky.notification.updateSeen", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr38(e);
+      throw toKnownErr40(e);
     });
   }
 };
@@ -14761,6 +14969,8 @@ var SessionManager = class extends import_events.default {
   AppBskyGraphFollow,
   AppBskyGraphGetFollowers,
   AppBskyGraphGetFollows,
+  AppBskyGraphGetMembers,
+  AppBskyGraphGetMemberships,
   AppBskyNotificationGetCount,
   AppBskyNotificationList,
   AppBskyNotificationUpdateSeen,
