@@ -1,45 +1,41 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
-import * as GetLikedBy from '../../third-party/api/src/client/types/app/bsky/feed/getLikedBy'
+import * as GetVotes from '../../third-party/api/src/client/types/app/bsky/feed/getVotes'
 import {RootStoreModel} from './root-store'
 
-type LikedByItem = GetLikedBy.OutputSchema['likedBy'][number]
+type VoteItem = GetVotes.OutputSchema['votes'][number]
 
-export class LikedByViewItemModel implements LikedByItem {
+export class VotesViewItemModel implements VoteItem {
   // ui state
   _reactKey: string = ''
 
   // data
-  did: string = ''
-  handle: string = ''
-  displayName: string = ''
-  createdAt?: string
+  direction: 'up' | 'down' = 'up'
   indexedAt: string = ''
+  createdAt: string = ''
+  actor: GetVotes.Actor = {did: '', handle: ''}
 
-  constructor(reactKey: string, v: LikedByItem) {
+  constructor(reactKey: string, v: VoteItem) {
     makeAutoObservable(this)
     this._reactKey = reactKey
     Object.assign(this, v)
   }
 }
 
-export class LikedByViewModel {
+export class VotesViewModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
   resolvedUri = ''
-  params: GetLikedBy.QueryParams
+  params: GetVotes.QueryParams
 
   // data
   uri: string = ''
-  likedBy: LikedByViewItemModel[] = []
+  votes: VotesViewItemModel[] = []
 
-  constructor(
-    public rootStore: RootStoreModel,
-    params: GetLikedBy.QueryParams,
-  ) {
+  constructor(public rootStore: RootStoreModel, params: GetVotes.QueryParams) {
     makeAutoObservable(
       this,
       {
@@ -113,7 +109,7 @@ export class LikedByViewModel {
   private async _fetch(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.feed.getLikedBy(
+      const res = await this.rootStore.api.app.bsky.feed.getVotes(
         Object.assign({}, this.params, {uri: this.resolvedUri}),
       )
       this._replaceAll(res)
@@ -123,15 +119,15 @@ export class LikedByViewModel {
     }
   }
 
-  private _replaceAll(res: GetLikedBy.Response) {
-    this.likedBy.length = 0
+  private _replaceAll(res: GetVotes.Response) {
+    this.votes.length = 0
     let counter = 0
-    for (const item of res.data.likedBy) {
+    for (const item of res.data.votes) {
       this._append(counter++, item)
     }
   }
 
-  private _append(keyId: number, item: LikedByItem) {
-    this.likedBy.push(new LikedByViewItemModel(`item-${keyId}`, item))
+  private _append(keyId: number, item: VoteItem) {
+    this.votes.push(new VotesViewItemModel(`item-${keyId}`, item))
   }
 }

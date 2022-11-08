@@ -2,27 +2,33 @@ import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, StyleSheet, Text, View} from 'react-native'
 import {
-  LikedByViewModel,
-  LikedByViewItemModel,
-} from '../../../state/models/liked-by-view'
+  VotesViewModel,
+  VotesViewItemModel,
+} from '../../../state/models/votes-view'
 import {Link} from '../util/Link'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 
-export const PostLikedBy = observer(function PostLikedBy({uri}: {uri: string}) {
+export const PostVotedBy = observer(function PostVotedBy({
+  uri,
+  direction,
+}: {
+  uri: string
+  direction: 'up' | 'down'
+}) {
   const store = useStores()
-  const [view, setView] = useState<LikedByViewModel | undefined>()
+  const [view, setView] = useState<VotesViewModel | undefined>()
 
   useEffect(() => {
     if (view?.params.uri === uri) {
-      console.log('Liked by doing nothing')
+      console.log('Voted by doing nothing')
       return // no change needed? or trigger refresh?
     }
-    console.log('Fetching Liked by', uri)
-    const newView = new LikedByViewModel(store, {uri})
+    console.log('Fetching voted by', uri)
+    const newView = new VotesViewModel(store, {uri, direction})
     setView(newView)
-    newView.setup().catch(err => console.error('Failed to fetch liked by', err))
+    newView.setup().catch(err => console.error('Failed to fetch voted by', err))
   }, [uri, view?.params.uri, store])
 
   // loading
@@ -51,13 +57,13 @@ export const PostLikedBy = observer(function PostLikedBy({uri}: {uri: string}) {
 
   // loaded
   // =
-  const renderItem = ({item}: {item: LikedByViewItemModel}) => (
+  const renderItem = ({item}: {item: VotesViewItemModel}) => (
     <LikedByItem item={item} />
   )
   return (
     <View>
       <FlatList
-        data={view.likedBy}
+        data={view.votes}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
       />
@@ -65,23 +71,23 @@ export const PostLikedBy = observer(function PostLikedBy({uri}: {uri: string}) {
   )
 })
 
-const LikedByItem = ({item}: {item: LikedByViewItemModel}) => {
+const LikedByItem = ({item}: {item: VotesViewItemModel}) => {
   return (
     <Link
       style={styles.outer}
-      href={`/profile/${item.handle}`}
-      title={item.handle}>
+      href={`/profile/${item.actor.handle}`}
+      title={item.actor.handle}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <UserAvatar
             size={40}
-            displayName={item.displayName}
-            handle={item.handle}
+            displayName={item.actor.displayName}
+            handle={item.actor.handle}
           />
         </View>
         <View style={styles.layoutContent}>
-          <Text style={[s.f15, s.bold]}>{item.displayName}</Text>
-          <Text style={[s.f14, s.gray5]}>@{item.handle}</Text>
+          <Text style={[s.f15, s.bold]}>{item.actor.displayName}</Text>
+          <Text style={[s.f14, s.gray5]}>@{item.actor.handle}</Text>
         </View>
       </View>
     </Link>

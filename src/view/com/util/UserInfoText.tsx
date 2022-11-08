@@ -31,7 +31,7 @@ export function UserInfoText({
   useEffect(() => {
     let aborted = false
     // TODO use caching to reduce loads
-    store.api.app.bsky.actor.getProfile({user: did}).then(
+    store.api.app.bsky.actor.getProfile({actor: did}).then(
       v => {
         if (aborted) return
         setProfile(v.data)

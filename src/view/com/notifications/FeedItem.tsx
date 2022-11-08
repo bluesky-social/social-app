@@ -6,6 +6,7 @@ import {FontAwesomeIcon, Props} from '@fortawesome/react-native-fontawesome'
 import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../lib/strings'
+import {UpIconSolid} from '../../lib/icons'
 import {UserAvatar} from '../util/UserAvatar'
 import {PostText} from '../post/PostText'
 import {Post} from '../post/Post'
@@ -19,7 +20,7 @@ export const FeedItem = observer(function FeedItem({
   item: NotificationsViewItemModel
 }) {
   const itemHref = useMemo(() => {
-    if (item.isLike || item.isRepost) {
+    if (item.isUpvote || item.isRepost) {
       const urip = new AtUri(item.subjectUri)
       return `/profile/${urip.host}/post/${urip.rkey}`
     } else if (item.isFollow) {
@@ -31,7 +32,7 @@ export const FeedItem = observer(function FeedItem({
     return ''
   }, [item])
   const itemTitle = useMemo(() => {
-    if (item.isLike || item.isRepost) {
+    if (item.isUpvote || item.isRepost) {
       return 'Post'
     } else if (item.isFollow) {
       return item.author.handle
@@ -55,16 +56,16 @@ export const FeedItem = observer(function FeedItem({
   }
 
   let action = ''
-  let icon: Props['icon']
+  let icon: Props['icon'] | 'UpIconSolid'
   let iconStyle: Props['style'] = []
-  if (item.isLike) {
-    action = 'liked your post'
-    icon = ['fas', 'heart']
-    iconStyle = [s.blue3]
+  if (item.isUpvote) {
+    action = 'upvoted your post'
+    icon = 'UpIconSolid'
+    iconStyle = [s.red3, {position: 'relative', top: -4}]
   } else if (item.isRepost) {
     action = 'reposted your post'
     icon = 'retweet'
-    iconStyle = [s.blue3]
+    iconStyle = [s.green3]
   } else if (item.isReply) {
     action = 'replied to your post'
     icon = ['far', 'comment']
@@ -100,11 +101,15 @@ export const FeedItem = observer(function FeedItem({
       title={itemTitle}>
       <View style={styles.layout}>
         <View style={styles.layoutIcon}>
-          <FontAwesomeIcon
-            icon={icon}
-            size={22}
-            style={[styles.icon, ...iconStyle]}
-          />
+          {icon === 'UpIconSolid' ? (
+            <UpIconSolid size={26} style={[styles.icon, ...iconStyle]} />
+          ) : (
+            <FontAwesomeIcon
+              icon={icon}
+              size={22}
+              style={[styles.icon, ...iconStyle]}
+            />
+          )}
         </View>
         <View style={styles.layoutContent}>
           <View style={styles.avis}>
@@ -150,7 +155,7 @@ export const FeedItem = observer(function FeedItem({
               {ago(item.indexedAt)}
             </Text>
           </View>
-          {item.isLike || item.isRepost ? (
+          {item.isUpvote || item.isRepost ? (
             <PostText uri={item.subjectUri} style={[s.gray5]} />
           ) : (
             <></>

@@ -50,21 +50,45 @@ export async function post(
   )
 }
 
-export async function like(store: RootStoreModel, uri: string, cid: string) {
-  return await store.api.app.bsky.feed.like.create(
+export async function upvote(store: RootStoreModel, uri: string, cid: string) {
+  return await store.api.app.bsky.feed.vote.create(
     {did: store.me.did || ''},
     {
       subject: {uri, cid},
+      direction: 'up',
       createdAt: new Date().toISOString(),
     },
   )
 }
 
-export async function unlike(store: RootStoreModel, likeUri: string) {
-  const likeUrip = new AtUri(likeUri)
-  return await store.api.app.bsky.feed.like.delete({
-    did: likeUrip.hostname,
-    rkey: likeUrip.rkey,
+export async function unupvote(store: RootStoreModel, upvoteUri: string) {
+  const urip = new AtUri(upvoteUri)
+  return await store.api.app.bsky.feed.vote.delete({
+    did: urip.hostname,
+    rkey: urip.rkey,
+  })
+}
+
+export async function downvote(
+  store: RootStoreModel,
+  uri: string,
+  cid: string,
+) {
+  return await store.api.app.bsky.feed.vote.create(
+    {did: store.me.did || ''},
+    {
+      subject: {uri, cid},
+      direction: 'down',
+      createdAt: new Date().toISOString(),
+    },
+  )
+}
+
+export async function undownvote(store: RootStoreModel, downvoteUri: string) {
+  const urip = new AtUri(downvoteUri)
+  return await store.api.app.bsky.feed.vote.delete({
+    did: urip.hostname,
+    rkey: urip.rkey,
   })
 }
 

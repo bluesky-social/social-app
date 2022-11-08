@@ -1,27 +1,30 @@
 import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
-    actor: string;
+    uri: string;
+    cid?: string;
+    direction?: string;
+    limit?: number;
+    before?: string;
 }
 export interface CallOptions {
     headers?: Headers;
 }
 export declare type InputSchema = undefined;
-export declare type ActorKnown = 'app.bsky.system.actorUser' | 'app.bsky.system.actorScene';
-export declare type ActorUnknown = string;
 export interface OutputSchema {
+    uri: string;
+    cid?: string;
+    cursor?: string;
+    votes: {
+        direction: 'up' | 'down';
+        indexedAt: string;
+        createdAt: string;
+        actor: Actor;
+    }[];
+}
+export interface Actor {
     did: string;
     handle: string;
-    actorType: ActorKnown | ActorUnknown;
-    creator: string;
     displayName?: string;
-    description?: string;
-    followersCount: number;
-    followsCount: number;
-    membersCount: number;
-    postsCount: number;
-    myState?: {
-        follow?: string;
-    };
 }
 export interface Response {
     success: boolean;

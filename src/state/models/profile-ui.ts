@@ -37,7 +37,7 @@ export class ProfileUiModel {
       },
       {autoBind: true},
     )
-    this.profile = new ProfileViewModel(rootStore, {user: params.user})
+    this.profile = new ProfileViewModel(rootStore, {actor: params.user})
     this.feed = new FeedModel(rootStore, 'author', {
       author: params.user,
       limit: 10,

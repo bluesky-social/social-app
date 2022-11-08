@@ -6,7 +6,8 @@ import * as apilib from '../lib/api'
 
 export class FeedItemMyStateModel {
   repost?: string
-  like?: string
+  upvote?: string
+  downvote?: string
 
   constructor() {
     makeAutoObservable(this)
@@ -29,7 +30,8 @@ export class FeedItemModel implements GetTimeline.FeedItem {
     | GetTimeline.UnknownEmbed
   replyCount: number = 0
   repostCount: number = 0
-  likeCount: number = 0
+  upvoteCount: number = 0
+  downvoteCount: number = 0
   indexedAt: string = ''
   myState = new FeedItemMyStateModel()
 
@@ -52,26 +54,53 @@ export class FeedItemModel implements GetTimeline.FeedItem {
     this.embed = v.embed
     this.replyCount = v.replyCount
     this.repostCount = v.repostCount
-    this.likeCount = v.likeCount
+    this.upvoteCount = v.upvoteCount
+    this.downvoteCount = v.downvoteCount
     this.indexedAt = v.indexedAt
     if (v.myState) {
-      this.myState.like = v.myState.like
+      this.myState.upvote = v.myState.upvote
+      this.myState.downvote = v.myState.downvote
       this.myState.repost = v.myState.repost
     }
   }
 
-  async toggleLike() {
-    if (this.myState.like) {
-      await apilib.unlike(this.rootStore, this.myState.like)
+  async _clearVotes() {
+    if (this.myState.upvote) {
+      await apilib.unupvote(this.rootStore, this.myState.upvote)
       runInAction(() => {
-        this.likeCount--
-        this.myState.like = undefined
+        this.upvoteCount--
+        this.myState.upvote = undefined
       })
-    } else {
-      const res = await apilib.like(this.rootStore, this.uri, this.cid)
+    }
+    if (this.myState.downvote) {
+      await apilib.undownvote(this.rootStore, this.myState.downvote)
       runInAction(() => {
-        this.likeCount++
-        this.myState.like = res.uri
+        this.downvoteCount--
+        this.myState.downvote = undefined
+      })
+    }
+  }
+
+  async toggleUpvote() {
+    const wasntUpvoted = !this.myState.upvote
+    await this._clearVotes()
+    if (wasntUpvoted) {
+      const res = await apilib.upvote(this.rootStore, this.uri, this.cid)
+      runInAction(() => {
+        this.upvoteCount++
+        this.myState.upvote = res.uri
+      })
+    }
+  }
+
+  async toggleDownvote() {
+    const wasntDownvoted = !this.myState.downvote
+    await this._clearVotes()
+    if (wasntDownvoted) {
+      const res = await apilib.downvote(this.rootStore, this.uri, this.cid)
+      runInAction(() => {
+        this.downvoteCount++
+        this.myState.downvote = res.uri
       })
     }
   }

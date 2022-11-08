@@ -7,12 +7,15 @@ import {s, colors} from '../../lib/styles'
 interface PostCtrlsOpts {
   replyCount: number
   repostCount: number
-  likeCount: number
+  upvoteCount: number
+  downvoteCount: number
   isReposted: boolean
-  isLiked: boolean
+  isUpvoted: boolean
+  isDownvoted: boolean
   onPressReply: () => void
   onPressToggleRepost: () => void
-  onPressToggleLike: () => void
+  onPressToggleUpvote: () => void
+  onPressToggleDownvote: () => void
 }
 
 export function PostCtrls(opts: PostCtrlsOpts) {
@@ -36,22 +39,27 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           {opts.repostCount}
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.ctrl} onPress={opts.onPressToggleLike}>
-        {opts.isLiked ? (
+      <TouchableOpacity style={styles.ctrl} onPress={opts.onPressToggleUpvote}>
+        {opts.isUpvoted ? (
           <UpIconSolid style={styles.ctrlIconUpvoted} size={18} />
         ) : (
           <UpIcon style={styles.ctrlIcon} size={18} />
         )}
-        <Text style={opts.isLiked ? [s.bold, s.blue3, s.f13] : s.f13}>
-          {opts.likeCount}
+        <Text style={opts.isUpvoted ? [s.bold, s.red3, s.f13] : s.f13}>
+          {opts.upvoteCount}
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.ctrl} onPress={opts.onPressToggleLike}>
-        {opts.isLiked ? (
+      <TouchableOpacity
+        style={styles.ctrl}
+        onPress={opts.onPressToggleDownvote}>
+        {opts.isDownvoted ? (
           <DownIconSolid style={styles.ctrlIconDownvoted} size={18} />
         ) : (
           <DownIcon style={styles.ctrlIcon} size={18} />
         )}
+        <Text style={opts.isDownvoted ? [s.bold, s.blue3, s.f13] : s.f13}>
+          {opts.downvoteCount}
+        </Text>
       </TouchableOpacity>
     </View>
   )
@@ -78,10 +86,10 @@ const styles = StyleSheet.create({
   },
   ctrlIconUpvoted: {
     marginRight: 5,
-    color: colors.blue3,
+    color: colors.red3,
   },
   ctrlIconDownvoted: {
     marginRight: 5,
-    color: colors.red3,
+    color: colors.blue3,
   },
 })

@@ -6935,33 +6935,37 @@ var require_dist = __commonJS({
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
+  APP_BSKY_GRAPH: () => APP_BSKY_GRAPH,
   APP_BSKY_SYSTEM: () => APP_BSKY_SYSTEM,
   AccountNS: () => AccountNS,
   ActorNS: () => ActorNS,
+  AppBskyActorCreateScene: () => createScene_exports,
   AppBskyActorGetProfile: () => getProfile_exports,
+  AppBskyActorGetSuggestions: () => getSuggestions_exports,
   AppBskyActorProfile: () => profile_exports,
   AppBskyActorSearch: () => search_exports,
   AppBskyActorSearchTypeahead: () => searchTypeahead_exports,
   AppBskyActorUpdateProfile: () => updateProfile_exports,
   AppBskyFeedGetAuthorFeed: () => getAuthorFeed_exports,
-  AppBskyFeedGetLikedBy: () => getLikedBy_exports,
   AppBskyFeedGetPostThread: () => getPostThread_exports,
   AppBskyFeedGetRepostedBy: () => getRepostedBy_exports,
   AppBskyFeedGetTimeline: () => getTimeline_exports,
-  AppBskyFeedLike: () => like_exports,
+  AppBskyFeedGetVotes: () => getVotes_exports,
   AppBskyFeedMediaEmbed: () => mediaEmbed_exports,
   AppBskyFeedPost: () => post_exports,
   AppBskyFeedRepost: () => repost_exports,
+  AppBskyFeedVote: () => vote_exports,
+  AppBskyGraphAssertion: () => assertion_exports,
+  AppBskyGraphConfirmation: () => confirmation_exports,
   AppBskyGraphFollow: () => follow_exports,
   AppBskyGraphGetFollowers: () => getFollowers_exports,
   AppBskyGraphGetFollows: () => getFollows_exports,
-  AppBskyGraphInvite: () => invite_exports,
-  AppBskyGraphInviteAccept: () => inviteAccept_exports,
   AppBskyNotificationGetCount: () => getCount_exports,
   AppBskyNotificationList: () => list_exports,
   AppBskyNotificationUpdateSeen: () => updateSeen_exports,
   AppBskySystemDeclaration: () => declaration_exports,
   AppNS: () => AppNS,
+  AssertionRecord: () => AssertionRecord,
   AtprotoNS: () => AtprotoNS,
   BskyNS: () => BskyNS,
   Client: () => Client2,
@@ -6988,14 +6992,12 @@ __export(src_exports, {
   ComAtprotoSyncGetRoot: () => getRoot_exports,
   ComAtprotoSyncUpdateRepo: () => updateRepo_exports,
   ComNS: () => ComNS,
+  ConfirmationRecord: () => ConfirmationRecord,
   DeclarationRecord: () => DeclarationRecord,
   FeedNS: () => FeedNS,
   FollowRecord: () => FollowRecord,
   GraphNS: () => GraphNS,
   HandleNS: () => HandleNS,
-  InviteAcceptRecord: () => InviteAcceptRecord,
-  InviteRecord: () => InviteRecord,
-  LikeRecord: () => LikeRecord,
   MediaEmbedRecord: () => MediaEmbedRecord,
   NotificationNS: () => NotificationNS,
   PostRecord: () => PostRecord,
@@ -7011,6 +7013,7 @@ __export(src_exports, {
   SessionXrpcServiceClient: () => SessionXrpcServiceClient,
   SyncNS: () => SyncNS,
   SystemNS: () => SystemNS,
+  VoteRecord: () => VoteRecord,
   default: () => client_default,
   sessionClient: () => session_default
 });
@@ -11146,12 +11149,62 @@ var methodSchemaDict = {
       encoding: "application/cbor"
     }
   },
+  "app.bsky.actor.createScene": {
+    lexicon: 1,
+    id: "app.bsky.actor.createScene",
+    type: "procedure",
+    description: "Create a scene.",
+    parameters: {},
+    input: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["handle"],
+        properties: {
+          handle: {
+            type: "string"
+          },
+          recoveryKey: {
+            type: "string"
+          }
+        },
+        $defs: {}
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["handle", "did", "declarationCid"],
+        properties: {
+          handle: {
+            type: "string"
+          },
+          did: {
+            type: "string"
+          },
+          declarationCid: {
+            type: "string"
+          }
+        },
+        $defs: {}
+      }
+    },
+    errors: [
+      {
+        name: "InvalidHandle"
+      },
+      {
+        name: "HandleNotAvailable"
+      }
+    ]
+  },
   "app.bsky.actor.getProfile": {
     lexicon: 1,
     id: "app.bsky.actor.getProfile",
     type: "query",
     parameters: {
-      user: {
+      actor: {
         type: "string",
         required: true
       }
@@ -11163,8 +11216,11 @@ var methodSchemaDict = {
         required: [
           "did",
           "handle",
+          "actorType",
+          "creator",
           "followersCount",
           "followsCount",
+          "membersCount",
           "postsCount"
         ],
         properties: {
@@ -11172,6 +11228,19 @@ var methodSchemaDict = {
             type: "string"
           },
           handle: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          },
+          creator: {
             type: "string"
           },
           displayName: {
@@ -11188,6 +11257,9 @@ var methodSchemaDict = {
           followsCount: {
             type: "number"
           },
+          membersCount: {
+            type: "number"
+          },
           postsCount: {
             type: "number"
           },
@@ -11196,6 +11268,94 @@ var methodSchemaDict = {
             properties: {
               follow: {
                 type: "string"
+              }
+            }
+          }
+        },
+        $defs: {
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
+      }
+    }
+  },
+  "app.bsky.actor.getSuggestions": {
+    lexicon: 1,
+    id: "app.bsky.actor.getSuggestions",
+    type: "query",
+    description: "Get a list of actors suggested for following. Used in discovery UIs.",
+    parameters: {
+      limit: {
+        type: "number",
+        maximum: 100
+      },
+      cursor: {
+        type: "string"
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["actors"],
+        properties: {
+          cursor: {
+            type: "string"
+          },
+          actors: {
+            type: "array",
+            items: {
+              type: "object",
+              required: ["did", "handle", "actorType"],
+              properties: {
+                did: {
+                  type: "string"
+                },
+                handle: {
+                  type: "string"
+                },
+                actorType: {
+                  type: "string"
+                },
+                displayName: {
+                  type: "string",
+                  maxLength: 64
+                },
+                description: {
+                  type: "string"
+                },
+                indexedAt: {
+                  type: "string",
+                  format: "date-time"
+                },
+                myState: {
+                  type: "object",
+                  properties: {
+                    follow: {
+                      type: "string"
+                    }
+                  }
+                }
               }
             }
           }
@@ -11394,7 +11554,8 @@ var methodSchemaDict = {
               "record",
               "replyCount",
               "repostCount",
-              "likeCount",
+              "upvoteCount",
+              "downvoteCount",
               "indexedAt"
             ],
             properties: {
@@ -11432,7 +11593,10 @@ var methodSchemaDict = {
               repostCount: {
                 type: "number"
               },
-              likeCount: {
+              upvoteCount: {
+                type: "number"
+              },
+              downvoteCount: {
                 type: "number"
               },
               indexedAt: {
@@ -11445,7 +11609,10 @@ var methodSchemaDict = {
                   repost: {
                     type: "string"
                   },
-                  like: {
+                  upvote: {
+                    type: "string"
+                  },
+                  downvote: {
                     type: "string"
                   }
                 }
@@ -11529,7 +11696,8 @@ var methodSchemaDict = {
           "record",
           "replyCount",
           "repostCount",
-          "likeCount",
+          "upvoteCount",
+          "downvoteCount",
           "indexedAt"
         ],
         properties: {
@@ -11567,7 +11735,10 @@ var methodSchemaDict = {
           repostCount: {
             type: "number"
           },
-          likeCount: {
+          upvoteCount: {
+            type: "number"
+          },
+          downvoteCount: {
             type: "number"
           },
           indexedAt: {
@@ -11580,7 +11751,10 @@ var methodSchemaDict = {
               repost: {
                 type: "string"
               },
-              like: {
+              upvote: {
+                type: "string"
+              },
+              downvote: {
                 type: "string"
               }
             }
@@ -11653,74 +11827,6 @@ var methodSchemaDict = {
       }
     }
   },
-  "app.bsky.feed.getLikedBy": {
-    lexicon: 1,
-    id: "app.bsky.feed.getLikedBy",
-    type: "query",
-    parameters: {
-      uri: {
-        type: "string",
-        required: true
-      },
-      cid: {
-        type: "string",
-        required: false
-      },
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
-      }
-    },
-    output: {
-      encoding: "application/json",
-      schema: {
-        type: "object",
-        required: ["uri", "likedBy"],
-        properties: {
-          uri: {
-            type: "string"
-          },
-          cid: {
-            type: "string"
-          },
-          cursor: {
-            type: "string"
-          },
-          likedBy: {
-            type: "array",
-            items: {
-              type: "object",
-              required: ["did", "handle", "indexedAt"],
-              properties: {
-                did: {
-                  type: "string"
-                },
-                handle: {
-                  type: "string"
-                },
-                displayName: {
-                  type: "string",
-                  maxLength: 64
-                },
-                createdAt: {
-                  type: "string",
-                  format: "date-time"
-                },
-                indexedAt: {
-                  type: "string",
-                  format: "date-time"
-                }
-              }
-            }
-          }
-        },
-        $defs: {}
-      }
-    }
-  },
   "app.bsky.feed.getPostThread": {
     lexicon: 1,
     id: "app.bsky.feed.getPostThread",
@@ -11753,8 +11859,9 @@ var methodSchemaDict = {
               "author",
               "record",
               "replyCount",
-              "likeCount",
               "repostCount",
+              "upvoteCount",
+              "downvoteCount",
               "indexedAt"
             ],
             properties: {
@@ -11795,10 +11902,13 @@ var methodSchemaDict = {
                   $ref: "#/$defs/post"
                 }
               },
-              likeCount: {
+              repostCount: {
                 type: "number"
               },
-              repostCount: {
+              upvoteCount: {
+                type: "number"
+              },
+              downvoteCount: {
                 type: "number"
               },
               indexedAt: {
@@ -11811,7 +11921,10 @@ var methodSchemaDict = {
                   repost: {
                     type: "string"
                   },
-                  like: {
+                  upvote: {
+                    type: "string"
+                  },
+                  downvote: {
                     type: "string"
                   }
                 }
@@ -11894,8 +12007,9 @@ var methodSchemaDict = {
           "author",
           "record",
           "replyCount",
-          "likeCount",
           "repostCount",
+          "upvoteCount",
+          "downvoteCount",
           "indexedAt"
         ],
         properties: {
@@ -11936,10 +12050,13 @@ var methodSchemaDict = {
               $ref: "#/$defs/post"
             }
           },
-          likeCount: {
+          repostCount: {
             type: "number"
           },
-          repostCount: {
+          upvoteCount: {
+            type: "number"
+          },
+          downvoteCount: {
             type: "number"
           },
           indexedAt: {
@@ -11952,7 +12069,10 @@ var methodSchemaDict = {
               repost: {
                 type: "string"
               },
-              like: {
+              upvote: {
+                type: "string"
+              },
+              downvote: {
                 type: "string"
               }
             }
@@ -12136,7 +12256,8 @@ var methodSchemaDict = {
               "record",
               "replyCount",
               "repostCount",
-              "likeCount",
+              "upvoteCount",
+              "downvoteCount",
               "indexedAt"
             ],
             properties: {
@@ -12174,7 +12295,10 @@ var methodSchemaDict = {
               repostCount: {
                 type: "number"
               },
-              likeCount: {
+              upvoteCount: {
+                type: "number"
+              },
+              downvoteCount: {
                 type: "number"
               },
               indexedAt: {
@@ -12187,7 +12311,10 @@ var methodSchemaDict = {
                   repost: {
                     type: "string"
                   },
-                  like: {
+                  upvote: {
+                    type: "string"
+                  },
+                  downvote: {
                     type: "string"
                   }
                 }
@@ -12271,7 +12398,8 @@ var methodSchemaDict = {
           "record",
           "replyCount",
           "repostCount",
-          "likeCount",
+          "upvoteCount",
+          "downvoteCount",
           "indexedAt"
         ],
         properties: {
@@ -12309,7 +12437,10 @@ var methodSchemaDict = {
           repostCount: {
             type: "number"
           },
-          likeCount: {
+          upvoteCount: {
+            type: "number"
+          },
+          downvoteCount: {
             type: "number"
           },
           indexedAt: {
@@ -12322,7 +12453,10 @@ var methodSchemaDict = {
               repost: {
                 type: "string"
               },
-              like: {
+              upvote: {
+                type: "string"
+              },
+              downvote: {
                 type: "string"
               }
             }
@@ -12390,6 +12524,110 @@ var methodSchemaDict = {
             not: {
               enum: ["record", "external"]
             }
+          }
+        }
+      }
+    }
+  },
+  "app.bsky.feed.getVotes": {
+    lexicon: 1,
+    id: "app.bsky.feed.getVotes",
+    type: "query",
+    parameters: {
+      uri: {
+        type: "string",
+        required: true
+      },
+      cid: {
+        type: "string",
+        required: false
+      },
+      direction: {
+        type: "string",
+        required: false
+      },
+      limit: {
+        type: "number",
+        maximum: 100
+      },
+      before: {
+        type: "string"
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["uri", "votes"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          },
+          cursor: {
+            type: "string"
+          },
+          votes: {
+            type: "array",
+            items: {
+              type: "object",
+              required: ["direction", "indexedAt", "createdAt", "actor"],
+              properties: {
+                direction: {
+                  type: "string",
+                  enum: ["up", "down"]
+                },
+                indexedAt: {
+                  type: "string",
+                  format: "date-time"
+                },
+                createdAt: {
+                  type: "string",
+                  format: "date-time"
+                },
+                actor: {
+                  $ref: "#/$defs/actor"
+                }
+              }
+            }
+          }
+        },
+        $defs: {
+          actor: {
+            type: "object",
+            required: ["did", "handle"],
+            properties: {
+              did: {
+                type: "string"
+              },
+              handle: {
+                type: "string"
+              },
+              displayName: {
+                type: "string",
+                maxLength: 64
+              }
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      actor: {
+        type: "object",
+        required: ["did", "handle"],
+        properties: {
+          did: {
+            type: "string"
+          },
+          handle: {
+            type: "string"
+          },
+          displayName: {
+            type: "string",
+            maxLength: 64
           }
         }
       }
@@ -12631,7 +12869,7 @@ var methodSchemaDict = {
               },
               reason: {
                 type: "string",
-                $comment: "Expected values are 'like', 'repost', 'follow', 'invite', 'mention' and 'reply'."
+                $comment: "Expected values are 'vote', 'repost', 'follow', 'invite', 'mention' and 'reply'."
               },
               reasonSubject: {
                 type: "string"
@@ -12689,7 +12927,7 @@ var methodSchemaDict = {
           },
           reason: {
             type: "string",
-            $comment: "Expected values are 'like', 'repost', 'follow', 'invite', 'mention' and 'reply'."
+            $comment: "Expected values are 'vote', 'repost', 'follow', 'invite', 'mention' and 'reply'."
           },
           reasonSubject: {
             type: "string"
@@ -12756,53 +12994,6 @@ var recordSchemaDict = {
         }
       },
       $defs: {}
-    }
-  },
-  "app.bsky.feed.like": {
-    lexicon: 1,
-    id: "app.bsky.feed.like",
-    type: "record",
-    key: "tid",
-    record: {
-      type: "object",
-      required: ["subject", "createdAt"],
-      properties: {
-        subject: {
-          $ref: "#/$defs/subject"
-        },
-        createdAt: {
-          type: "string",
-          format: "date-time"
-        }
-      },
-      $defs: {
-        subject: {
-          type: "object",
-          required: ["uri", "cid"],
-          properties: {
-            uri: {
-              type: "string"
-            },
-            cid: {
-              type: "string"
-            }
-          }
-        }
-      }
-    },
-    defs: {
-      subject: {
-        type: "object",
-        required: ["uri", "cid"],
-        properties: {
-          uri: {
-            type: "string"
-          },
-          cid: {
-            type: "string"
-          }
-        }
-      }
     }
   },
   "app.bsky.feed.mediaEmbed": {
@@ -13055,46 +13246,67 @@ var recordSchemaDict = {
       }
     }
   },
-  "app.bsky.graph.follow": {
+  "app.bsky.feed.vote": {
     lexicon: 1,
-    id: "app.bsky.graph.follow",
+    id: "app.bsky.feed.vote",
     type: "record",
-    description: "A social follow",
     key: "tid",
     record: {
       type: "object",
-      required: ["subject", "createdAt"],
+      required: ["subject", "direction", "createdAt"],
       properties: {
         subject: {
-          type: "object",
-          required: ["did", "declarationCid"],
-          properties: {
-            did: {
-              type: "string"
-            },
-            declarationCid: {
-              type: "string"
-            }
-          }
+          $ref: "#/$defs/subject"
+        },
+        direction: {
+          type: "string",
+          enum: ["up", "down"]
         },
         createdAt: {
           type: "string",
           format: "date-time"
         }
       },
-      $defs: {}
+      $defs: {
+        subject: {
+          type: "object",
+          required: ["uri", "cid"],
+          properties: {
+            uri: {
+              type: "string"
+            },
+            cid: {
+              type: "string"
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      subject: {
+        type: "object",
+        required: ["uri", "cid"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          }
+        }
+      }
     }
   },
-  "app.bsky.graph.invite": {
+  "app.bsky.graph.assertion": {
     lexicon: 1,
-    id: "app.bsky.graph.invite",
+    id: "app.bsky.graph.assertion",
     type: "record",
     key: "tid",
     record: {
       type: "object",
-      required: ["group", "subject", "createdAt"],
+      required: ["assertion", "subject", "createdAt"],
       properties: {
-        group: {
+        assertion: {
           type: "string"
         },
         subject: {
@@ -13117,16 +13329,16 @@ var recordSchemaDict = {
       $defs: {}
     }
   },
-  "app.bsky.graph.inviteAccept": {
+  "app.bsky.graph.confirmation": {
     lexicon: 1,
-    id: "app.bsky.graph.inviteAccept",
+    id: "app.bsky.graph.confirmation",
     type: "record",
     key: "tid",
     record: {
       type: "object",
-      required: ["group", "invite", "createdAt"],
+      required: ["originator", "assertion", "createdAt"],
       properties: {
-        group: {
+        originator: {
           type: "object",
           required: ["did", "declarationCid"],
           properties: {
@@ -13138,7 +13350,7 @@ var recordSchemaDict = {
             }
           }
         },
-        invite: {
+        assertion: {
           type: "object",
           required: ["uri", "cid"],
           properties: {
@@ -13146,6 +13358,36 @@ var recordSchemaDict = {
               type: "string"
             },
             cid: {
+              type: "string"
+            }
+          }
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time"
+        }
+      },
+      $defs: {}
+    }
+  },
+  "app.bsky.graph.follow": {
+    lexicon: 1,
+    id: "app.bsky.graph.follow",
+    type: "record",
+    description: "A social follow",
+    key: "tid",
+    record: {
+      type: "object",
+      required: ["subject", "createdAt"],
+      properties: {
+        subject: {
+          type: "object",
+          required: ["did", "declarationCid"],
+          properties: {
+            did: {
+              type: "string"
+            },
+            declarationCid: {
               type: "string"
             }
           }
@@ -13498,20 +13740,36 @@ function toKnownErr22(e) {
   return e;
 }
 
-// src/client/types/app/bsky/actor/getProfile.ts
-var getProfile_exports = {};
-__export(getProfile_exports, {
+// src/client/types/app/bsky/actor/createScene.ts
+var createScene_exports = {};
+__export(createScene_exports, {
+  HandleNotAvailableError: () => HandleNotAvailableError2,
+  InvalidHandleError: () => InvalidHandleError2,
   toKnownErr: () => toKnownErr23
 });
+var InvalidHandleError2 = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
+var HandleNotAvailableError2 = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
 function toKnownErr23(e) {
   if (e instanceof XRPCError) {
+    if (e.error === "InvalidHandle")
+      return new InvalidHandleError2(e);
+    if (e.error === "HandleNotAvailable")
+      return new HandleNotAvailableError2(e);
   }
   return e;
 }
 
-// src/client/types/app/bsky/actor/search.ts
-var search_exports = {};
-__export(search_exports, {
+// src/client/types/app/bsky/actor/getProfile.ts
+var getProfile_exports = {};
+__export(getProfile_exports, {
   toKnownErr: () => toKnownErr24
 });
 function toKnownErr24(e) {
@@ -13520,9 +13778,9 @@ function toKnownErr24(e) {
   return e;
 }
 
-// src/client/types/app/bsky/actor/searchTypeahead.ts
-var searchTypeahead_exports = {};
-__export(searchTypeahead_exports, {
+// src/client/types/app/bsky/actor/getSuggestions.ts
+var getSuggestions_exports = {};
+__export(getSuggestions_exports, {
   toKnownErr: () => toKnownErr25
 });
 function toKnownErr25(e) {
@@ -13531,9 +13789,9 @@ function toKnownErr25(e) {
   return e;
 }
 
-// src/client/types/app/bsky/actor/updateProfile.ts
-var updateProfile_exports = {};
-__export(updateProfile_exports, {
+// src/client/types/app/bsky/actor/search.ts
+var search_exports = {};
+__export(search_exports, {
   toKnownErr: () => toKnownErr26
 });
 function toKnownErr26(e) {
@@ -13542,9 +13800,9 @@ function toKnownErr26(e) {
   return e;
 }
 
-// src/client/types/app/bsky/feed/getAuthorFeed.ts
-var getAuthorFeed_exports = {};
-__export(getAuthorFeed_exports, {
+// src/client/types/app/bsky/actor/searchTypeahead.ts
+var searchTypeahead_exports = {};
+__export(searchTypeahead_exports, {
   toKnownErr: () => toKnownErr27
 });
 function toKnownErr27(e) {
@@ -13553,9 +13811,9 @@ function toKnownErr27(e) {
   return e;
 }
 
-// src/client/types/app/bsky/feed/getLikedBy.ts
-var getLikedBy_exports = {};
-__export(getLikedBy_exports, {
+// src/client/types/app/bsky/actor/updateProfile.ts
+var updateProfile_exports = {};
+__export(updateProfile_exports, {
   toKnownErr: () => toKnownErr28
 });
 function toKnownErr28(e) {
@@ -13564,9 +13822,9 @@ function toKnownErr28(e) {
   return e;
 }
 
-// src/client/types/app/bsky/feed/getPostThread.ts
-var getPostThread_exports = {};
-__export(getPostThread_exports, {
+// src/client/types/app/bsky/feed/getAuthorFeed.ts
+var getAuthorFeed_exports = {};
+__export(getAuthorFeed_exports, {
   toKnownErr: () => toKnownErr29
 });
 function toKnownErr29(e) {
@@ -13575,9 +13833,9 @@ function toKnownErr29(e) {
   return e;
 }
 
-// src/client/types/app/bsky/feed/getRepostedBy.ts
-var getRepostedBy_exports = {};
-__export(getRepostedBy_exports, {
+// src/client/types/app/bsky/feed/getPostThread.ts
+var getPostThread_exports = {};
+__export(getPostThread_exports, {
   toKnownErr: () => toKnownErr30
 });
 function toKnownErr30(e) {
@@ -13586,9 +13844,9 @@ function toKnownErr30(e) {
   return e;
 }
 
-// src/client/types/app/bsky/feed/getTimeline.ts
-var getTimeline_exports = {};
-__export(getTimeline_exports, {
+// src/client/types/app/bsky/feed/getRepostedBy.ts
+var getRepostedBy_exports = {};
+__export(getRepostedBy_exports, {
   toKnownErr: () => toKnownErr31
 });
 function toKnownErr31(e) {
@@ -13597,9 +13855,9 @@ function toKnownErr31(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getFollowers.ts
-var getFollowers_exports = {};
-__export(getFollowers_exports, {
+// src/client/types/app/bsky/feed/getTimeline.ts
+var getTimeline_exports = {};
+__export(getTimeline_exports, {
   toKnownErr: () => toKnownErr32
 });
 function toKnownErr32(e) {
@@ -13608,9 +13866,9 @@ function toKnownErr32(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getFollows.ts
-var getFollows_exports = {};
-__export(getFollows_exports, {
+// src/client/types/app/bsky/feed/getVotes.ts
+var getVotes_exports = {};
+__export(getVotes_exports, {
   toKnownErr: () => toKnownErr33
 });
 function toKnownErr33(e) {
@@ -13619,9 +13877,9 @@ function toKnownErr33(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/getCount.ts
-var getCount_exports = {};
-__export(getCount_exports, {
+// src/client/types/app/bsky/graph/getFollowers.ts
+var getFollowers_exports = {};
+__export(getFollowers_exports, {
   toKnownErr: () => toKnownErr34
 });
 function toKnownErr34(e) {
@@ -13630,9 +13888,9 @@ function toKnownErr34(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/list.ts
-var list_exports = {};
-__export(list_exports, {
+// src/client/types/app/bsky/graph/getFollows.ts
+var getFollows_exports = {};
+__export(getFollows_exports, {
   toKnownErr: () => toKnownErr35
 });
 function toKnownErr35(e) {
@@ -13641,9 +13899,9 @@ function toKnownErr35(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/updateSeen.ts
-var updateSeen_exports = {};
-__export(updateSeen_exports, {
+// src/client/types/app/bsky/notification/getCount.ts
+var getCount_exports = {};
+__export(getCount_exports, {
   toKnownErr: () => toKnownErr36
 });
 function toKnownErr36(e) {
@@ -13652,11 +13910,30 @@ function toKnownErr36(e) {
   return e;
 }
 
+// src/client/types/app/bsky/notification/list.ts
+var list_exports = {};
+__export(list_exports, {
+  toKnownErr: () => toKnownErr37
+});
+function toKnownErr37(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/app/bsky/notification/updateSeen.ts
+var updateSeen_exports = {};
+__export(updateSeen_exports, {
+  toKnownErr: () => toKnownErr38
+});
+function toKnownErr38(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
 // src/client/types/app/bsky/actor/profile.ts
 var profile_exports = {};
-
-// src/client/types/app/bsky/feed/like.ts
-var like_exports = {};
 
 // src/client/types/app/bsky/feed/mediaEmbed.ts
 var mediaEmbed_exports = {};
@@ -13667,19 +13944,26 @@ var post_exports = {};
 // src/client/types/app/bsky/feed/repost.ts
 var repost_exports = {};
 
+// src/client/types/app/bsky/feed/vote.ts
+var vote_exports = {};
+
+// src/client/types/app/bsky/graph/assertion.ts
+var assertion_exports = {};
+
+// src/client/types/app/bsky/graph/confirmation.ts
+var confirmation_exports = {};
+
 // src/client/types/app/bsky/graph/follow.ts
 var follow_exports = {};
-
-// src/client/types/app/bsky/graph/invite.ts
-var invite_exports = {};
-
-// src/client/types/app/bsky/graph/inviteAccept.ts
-var inviteAccept_exports = {};
 
 // src/client/types/app/bsky/system/declaration.ts
 var declaration_exports = {};
 
 // src/client/index.ts
+var APP_BSKY_GRAPH = {
+  AssertCreator: "app.bsky.graph.assertCreator",
+  AssertMember: "app.bsky.graph.assertMember"
+};
 var APP_BSKY_SYSTEM = {
   ActorScene: "app.bsky.system.actorScene",
   ActorUser: "app.bsky.system.actorUser"
@@ -13884,24 +14168,34 @@ var ActorNS = class {
     this._service = service;
     this.profile = new ProfileRecord(service);
   }
+  createScene(data, opts) {
+    return this._service.xrpc.call("app.bsky.actor.createScene", opts?.qp, data, opts).catch((e) => {
+      throw toKnownErr23(e);
+    });
+  }
   getProfile(params, opts) {
     return this._service.xrpc.call("app.bsky.actor.getProfile", params, void 0, opts).catch((e) => {
-      throw toKnownErr23(e);
+      throw toKnownErr24(e);
+    });
+  }
+  getSuggestions(params, opts) {
+    return this._service.xrpc.call("app.bsky.actor.getSuggestions", params, void 0, opts).catch((e) => {
+      throw toKnownErr25(e);
     });
   }
   search(params, opts) {
     return this._service.xrpc.call("app.bsky.actor.search", params, void 0, opts).catch((e) => {
-      throw toKnownErr24(e);
+      throw toKnownErr26(e);
     });
   }
   searchTypeahead(params, opts) {
     return this._service.xrpc.call("app.bsky.actor.searchTypeahead", params, void 0, opts).catch((e) => {
-      throw toKnownErr25(e);
+      throw toKnownErr27(e);
     });
   }
   updateProfile(data, opts) {
     return this._service.xrpc.call("app.bsky.actor.updateProfile", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr26(e);
+      throw toKnownErr28(e);
     });
   }
 };
@@ -13945,72 +14239,35 @@ var ProfileRecord = class {
 var FeedNS = class {
   constructor(service) {
     this._service = service;
-    this.like = new LikeRecord(service);
     this.mediaEmbed = new MediaEmbedRecord(service);
     this.post = new PostRecord(service);
     this.repost = new RepostRecord(service);
+    this.vote = new VoteRecord(service);
   }
   getAuthorFeed(params, opts) {
     return this._service.xrpc.call("app.bsky.feed.getAuthorFeed", params, void 0, opts).catch((e) => {
-      throw toKnownErr27(e);
-    });
-  }
-  getLikedBy(params, opts) {
-    return this._service.xrpc.call("app.bsky.feed.getLikedBy", params, void 0, opts).catch((e) => {
-      throw toKnownErr28(e);
+      throw toKnownErr29(e);
     });
   }
   getPostThread(params, opts) {
     return this._service.xrpc.call("app.bsky.feed.getPostThread", params, void 0, opts).catch((e) => {
-      throw toKnownErr29(e);
+      throw toKnownErr30(e);
     });
   }
   getRepostedBy(params, opts) {
     return this._service.xrpc.call("app.bsky.feed.getRepostedBy", params, void 0, opts).catch((e) => {
-      throw toKnownErr30(e);
+      throw toKnownErr31(e);
     });
   }
   getTimeline(params, opts) {
     return this._service.xrpc.call("app.bsky.feed.getTimeline", params, void 0, opts).catch((e) => {
-      throw toKnownErr31(e);
+      throw toKnownErr32(e);
     });
   }
-};
-var LikeRecord = class {
-  constructor(service) {
-    this._service = service;
-  }
-  async list(params) {
-    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
-      collection: "app.bsky.feed.like",
-      ...params
+  getVotes(params, opts) {
+    return this._service.xrpc.call("app.bsky.feed.getVotes", params, void 0, opts).catch((e) => {
+      throw toKnownErr33(e);
     });
-    return res.data;
-  }
-  async get(params) {
-    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
-      collection: "app.bsky.feed.like",
-      ...params
-    });
-    return res.data;
-  }
-  async create(params, record, headers) {
-    record.$type = "app.bsky.feed.like";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repo.createRecord",
-      void 0,
-      { collection: "app.bsky.feed.like", ...params, record },
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async delete(params, headers) {
-    await this._service.xrpc.call(
-      "com.atproto.repo.deleteRecord",
-      void 0,
-      { collection: "app.bsky.feed.like", ...params },
-      { headers }
-    );
   }
 };
 var MediaEmbedRecord = class {
@@ -14124,22 +14381,133 @@ var RepostRecord = class {
     );
   }
 };
+var VoteRecord = class {
+  constructor(service) {
+    this._service = service;
+  }
+  async list(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
+      collection: "app.bsky.feed.vote",
+      ...params
+    });
+    return res.data;
+  }
+  async get(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
+      collection: "app.bsky.feed.vote",
+      ...params
+    });
+    return res.data;
+  }
+  async create(params, record, headers) {
+    record.$type = "app.bsky.feed.vote";
+    const res = await this._service.xrpc.call(
+      "com.atproto.repo.createRecord",
+      void 0,
+      { collection: "app.bsky.feed.vote", ...params, record },
+      { encoding: "application/json", headers }
+    );
+    return res.data;
+  }
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "com.atproto.repo.deleteRecord",
+      void 0,
+      { collection: "app.bsky.feed.vote", ...params },
+      { headers }
+    );
+  }
+};
 var GraphNS = class {
   constructor(service) {
     this._service = service;
+    this.assertion = new AssertionRecord(service);
+    this.confirmation = new ConfirmationRecord(service);
     this.follow = new FollowRecord(service);
-    this.invite = new InviteRecord(service);
-    this.inviteAccept = new InviteAcceptRecord(service);
   }
   getFollowers(params, opts) {
     return this._service.xrpc.call("app.bsky.graph.getFollowers", params, void 0, opts).catch((e) => {
-      throw toKnownErr32(e);
+      throw toKnownErr34(e);
     });
   }
   getFollows(params, opts) {
     return this._service.xrpc.call("app.bsky.graph.getFollows", params, void 0, opts).catch((e) => {
-      throw toKnownErr33(e);
+      throw toKnownErr35(e);
     });
+  }
+};
+var AssertionRecord = class {
+  constructor(service) {
+    this._service = service;
+  }
+  async list(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
+      collection: "app.bsky.graph.assertion",
+      ...params
+    });
+    return res.data;
+  }
+  async get(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
+      collection: "app.bsky.graph.assertion",
+      ...params
+    });
+    return res.data;
+  }
+  async create(params, record, headers) {
+    record.$type = "app.bsky.graph.assertion";
+    const res = await this._service.xrpc.call(
+      "com.atproto.repo.createRecord",
+      void 0,
+      { collection: "app.bsky.graph.assertion", ...params, record },
+      { encoding: "application/json", headers }
+    );
+    return res.data;
+  }
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "com.atproto.repo.deleteRecord",
+      void 0,
+      { collection: "app.bsky.graph.assertion", ...params },
+      { headers }
+    );
+  }
+};
+var ConfirmationRecord = class {
+  constructor(service) {
+    this._service = service;
+  }
+  async list(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
+      collection: "app.bsky.graph.confirmation",
+      ...params
+    });
+    return res.data;
+  }
+  async get(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
+      collection: "app.bsky.graph.confirmation",
+      ...params
+    });
+    return res.data;
+  }
+  async create(params, record, headers) {
+    record.$type = "app.bsky.graph.confirmation";
+    const res = await this._service.xrpc.call(
+      "com.atproto.repo.createRecord",
+      void 0,
+      { collection: "app.bsky.graph.confirmation", ...params, record },
+      { encoding: "application/json", headers }
+    );
+    return res.data;
+  }
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "com.atproto.repo.deleteRecord",
+      void 0,
+      { collection: "app.bsky.graph.confirmation", ...params },
+      { headers }
+    );
   }
 };
 var FollowRecord = class {
@@ -14179,97 +14547,23 @@ var FollowRecord = class {
     );
   }
 };
-var InviteRecord = class {
-  constructor(service) {
-    this._service = service;
-  }
-  async list(params) {
-    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
-      collection: "app.bsky.graph.invite",
-      ...params
-    });
-    return res.data;
-  }
-  async get(params) {
-    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
-      collection: "app.bsky.graph.invite",
-      ...params
-    });
-    return res.data;
-  }
-  async create(params, record, headers) {
-    record.$type = "app.bsky.graph.invite";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repo.createRecord",
-      void 0,
-      { collection: "app.bsky.graph.invite", ...params, record },
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async delete(params, headers) {
-    await this._service.xrpc.call(
-      "com.atproto.repo.deleteRecord",
-      void 0,
-      { collection: "app.bsky.graph.invite", ...params },
-      { headers }
-    );
-  }
-};
-var InviteAcceptRecord = class {
-  constructor(service) {
-    this._service = service;
-  }
-  async list(params) {
-    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
-      collection: "app.bsky.graph.inviteAccept",
-      ...params
-    });
-    return res.data;
-  }
-  async get(params) {
-    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
-      collection: "app.bsky.graph.inviteAccept",
-      ...params
-    });
-    return res.data;
-  }
-  async create(params, record, headers) {
-    record.$type = "app.bsky.graph.inviteAccept";
-    const res = await this._service.xrpc.call(
-      "com.atproto.repo.createRecord",
-      void 0,
-      { collection: "app.bsky.graph.inviteAccept", ...params, record },
-      { encoding: "application/json", headers }
-    );
-    return res.data;
-  }
-  async delete(params, headers) {
-    await this._service.xrpc.call(
-      "com.atproto.repo.deleteRecord",
-      void 0,
-      { collection: "app.bsky.graph.inviteAccept", ...params },
-      { headers }
-    );
-  }
-};
 var NotificationNS = class {
   constructor(service) {
     this._service = service;
   }
   getCount(params, opts) {
     return this._service.xrpc.call("app.bsky.notification.getCount", params, void 0, opts).catch((e) => {
-      throw toKnownErr34(e);
+      throw toKnownErr36(e);
     });
   }
   list(params, opts) {
     return this._service.xrpc.call("app.bsky.notification.list", params, void 0, opts).catch((e) => {
-      throw toKnownErr35(e);
+      throw toKnownErr37(e);
     });
   }
   updateSeen(data, opts) {
     return this._service.xrpc.call("app.bsky.notification.updateSeen", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr36(e);
+      throw toKnownErr38(e);
     });
   }
 };
@@ -14442,33 +14736,37 @@ var SessionManager = class extends import_events.default {
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  APP_BSKY_GRAPH,
   APP_BSKY_SYSTEM,
   AccountNS,
   ActorNS,
+  AppBskyActorCreateScene,
   AppBskyActorGetProfile,
+  AppBskyActorGetSuggestions,
   AppBskyActorProfile,
   AppBskyActorSearch,
   AppBskyActorSearchTypeahead,
   AppBskyActorUpdateProfile,
   AppBskyFeedGetAuthorFeed,
-  AppBskyFeedGetLikedBy,
   AppBskyFeedGetPostThread,
   AppBskyFeedGetRepostedBy,
   AppBskyFeedGetTimeline,
-  AppBskyFeedLike,
+  AppBskyFeedGetVotes,
   AppBskyFeedMediaEmbed,
   AppBskyFeedPost,
   AppBskyFeedRepost,
+  AppBskyFeedVote,
+  AppBskyGraphAssertion,
+  AppBskyGraphConfirmation,
   AppBskyGraphFollow,
   AppBskyGraphGetFollowers,
   AppBskyGraphGetFollows,
-  AppBskyGraphInvite,
-  AppBskyGraphInviteAccept,
   AppBskyNotificationGetCount,
   AppBskyNotificationList,
   AppBskyNotificationUpdateSeen,
   AppBskySystemDeclaration,
   AppNS,
+  AssertionRecord,
   AtprotoNS,
   BskyNS,
   Client,
@@ -14495,14 +14793,12 @@ var SessionManager = class extends import_events.default {
   ComAtprotoSyncGetRoot,
   ComAtprotoSyncUpdateRepo,
   ComNS,
+  ConfirmationRecord,
   DeclarationRecord,
   FeedNS,
   FollowRecord,
   GraphNS,
   HandleNS,
-  InviteAcceptRecord,
-  InviteRecord,
-  LikeRecord,
   MediaEmbedRecord,
   NotificationNS,
   PostRecord,
@@ -14518,6 +14814,7 @@ var SessionManager = class extends import_events.default {
   SessionXrpcServiceClient,
   SyncNS,
   SystemNS,
+  VoteRecord,
   sessionClient
 });
 /** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */

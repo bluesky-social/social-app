@@ -48,10 +48,15 @@ export const FeedItem = observer(function FeedItem({
       .toggleRepost()
       .catch(e => console.error('Failed to toggle repost', record, e))
   }
-  const onPressToggleLike = () => {
+  const onPressToggleUpvote = () => {
     item
-      .toggleLike()
-      .catch(e => console.error('Failed to toggle like', record, e))
+      .toggleUpvote()
+      .catch(e => console.error('Failed to toggle upvote', record, e))
+  }
+  const onPressToggleDownvote = () => {
+    item
+      .toggleDownvote()
+      .catch(e => console.error('Failed to toggle downvote', record, e))
   }
   const onPressShare = (uri: string) => {
     store.shell.openModal(new SharePostModel(uri))
@@ -129,12 +134,15 @@ export const FeedItem = observer(function FeedItem({
           <PostCtrls
             replyCount={item.replyCount}
             repostCount={item.repostCount}
-            likeCount={item.likeCount}
+            upvoteCount={item.upvoteCount}
+            downvoteCount={item.downvoteCount}
             isReposted={!!item.myState.repost}
-            isLiked={!!item.myState.like}
+            isUpvoted={!!item.myState.upvote}
+            isDownvoted={!!item.myState.downvote}
             onPressReply={onPressReply}
             onPressToggleRepost={onPressToggleRepost}
-            onPressToggleLike={onPressToggleLike}
+            onPressToggleUpvote={onPressToggleUpvote}
+            onPressToggleDownvote={onPressToggleDownvote}
           />
         </View>
       </View>

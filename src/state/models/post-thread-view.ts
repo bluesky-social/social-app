@@ -13,8 +13,9 @@ function* reactKeyGenerator(): Generator<string> {
 }
 
 export class PostThreadViewPostMyStateModel {
-  like?: string
   repost?: string
+  upvote?: string
+  downvote?: string
 
   constructor() {
     makeAutoObservable(this)
@@ -40,7 +41,8 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
   replyCount: number = 0
   replies?: PostThreadViewPostModel[]
   repostCount: number = 0
-  likeCount: number = 0
+  upvoteCount: number = 0
+  downvoteCount: number = 0
   indexedAt: string = ''
   myState = new PostThreadViewPostMyStateModel()
 
@@ -105,18 +107,43 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
     }
   }
 
-  async toggleLike() {
-    if (this.myState.like) {
-      await apilib.unlike(this.rootStore, this.myState.like)
+  async _clearVotes() {
+    if (this.myState.upvote) {
+      await apilib.unupvote(this.rootStore, this.myState.upvote)
       runInAction(() => {
-        this.likeCount--
-        this.myState.like = undefined
+        this.upvoteCount--
+        this.myState.upvote = undefined
       })
-    } else {
-      const res = await apilib.like(this.rootStore, this.uri, this.cid)
+    }
+    if (this.myState.downvote) {
+      await apilib.undownvote(this.rootStore, this.myState.downvote)
       runInAction(() => {
-        this.likeCount++
-        this.myState.like = res.uri
+        this.downvoteCount--
+        this.myState.downvote = undefined
+      })
+    }
+  }
+
+  async toggleUpvote() {
+    const wasntUpvoted = !this.myState.upvote
+    await this._clearVotes()
+    if (wasntUpvoted) {
+      const res = await apilib.upvote(this.rootStore, this.uri, this.cid)
+      runInAction(() => {
+        this.upvoteCount++
+        this.myState.upvote = res.uri
+      })
+    }
+  }
+
+  async toggleDownvote() {
+    const wasntDownvoted = !this.myState.downvote
+    await this._clearVotes()
+    if (wasntDownvoted) {
+      const res = await apilib.downvote(this.rootStore, this.uri, this.cid)
+      runInAction(() => {
+        this.downvoteCount++
+        this.myState.downvote = res.uri
       })
     }
   }

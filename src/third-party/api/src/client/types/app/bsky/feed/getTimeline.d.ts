@@ -21,11 +21,13 @@ export interface FeedItem {
     embed?: RecordEmbed | ExternalEmbed | UnknownEmbed;
     replyCount: number;
     repostCount: number;
-    likeCount: number;
+    upvoteCount: number;
+    downvoteCount: number;
     indexedAt: string;
     myState?: {
         repost?: string;
-        like?: string;
+        upvote?: string;
+        downvote?: string;
     };
 }
 export interface User {
