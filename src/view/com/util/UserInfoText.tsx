@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import * as GetProfile from '../../../third-party/api/src/client/types/app/bsky/actor/getProfile'
 import {StyleProp, Text, TextStyle} from 'react-native'
+import {Link} from './Link'
 import {useStores} from '../../../state'
 
 export function UserInfoText({
@@ -10,6 +11,7 @@ export function UserInfoText({
   failed,
   prefix,
   style,
+  asLink,
 }: {
   did: string
   attr?: keyof GetProfile.OutputSchema
@@ -17,6 +19,7 @@ export function UserInfoText({
   failed?: string
   prefix?: string
   style?: StyleProp<TextStyle>
+  asLink?: boolean
 }) {
   attr = attr || 'handle'
   loading = loading || '...'
@@ -46,9 +49,26 @@ export function UserInfoText({
     }
   }, [did, store.api.app.bsky])
 
+  if (asLink) {
+    const title = profile?.displayName || profile?.handle || 'User'
+    return (
+      <Link
+        href={`/profile/${profile?.handle ? profile.handle : did}`}
+        title={title}>
+        <Text style={style}>
+          {didFail
+            ? failed
+            : profile
+            ? `${prefix || ''}${profile[attr]}`
+            : loading}
+        </Text>
+      </Link>
+    )
+  }
+
   return (
     <Text style={style}>
-      {didFail ? failed : profile ? `${prefix}${profile[attr]}` : loading}
+      {didFail ? failed : profile ? `${prefix || ''}${profile[attr]}` : loading}
     </Text>
   )
 }
