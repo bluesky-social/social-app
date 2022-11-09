@@ -11,6 +11,7 @@ import {ProfileCard} from '../com/profile/ProfileCard'
 import {ErrorScreen} from '../com/util/ErrorScreen'
 import {ErrorMessage} from '../com/util/ErrorMessage'
 import {s, colors} from '../lib/styles'
+import {UserGroupIcon} from '../lib/icons'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const END_ITEM = {_reactKey: '__end__'}
@@ -111,7 +112,28 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
           }
         } else if (uiState.feed.isEmpty) {
           items.push(EMPTY_ITEM)
-          renderItem = () => <Text style={styles.loading}>No posts yet!</Text>
+          if (uiState.profile.isScene) {
+            renderItem = () => (
+              <View style={styles.emptyContainer}>
+                <View style={{flexDirection: 'row'}}>
+                  <UserGroupIcon
+                    size="64"
+                    style={{
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                      color: colors.gray3,
+                    }}
+                  />
+                </View>
+                <Text style={styles.emptyText}>
+                  As members upvote posts, they will trend here. Follow the
+                  scene to see its trending posts in your timeline.
+                </Text>
+              </View>
+            )
+          } else {
+            renderItem = () => <Text style={styles.loading}>No posts yet!</Text>
+          }
         }
       } else if (uiState.selectedView === Sections.Scenes) {
         if (uiState.memberships.hasContent) {
@@ -196,5 +218,15 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     color: colors.gray5,
     textAlign: 'center',
+  },
+  emptyContainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 36,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: colors.gray5,
+    paddingTop: 16,
+    fontSize: 16,
   },
 })

@@ -139,7 +139,11 @@ export class ProfileUiModel {
   }
 
   async loadMore() {
-    if (!this.currentView.isLoading && !this.currentView.hasError) {
+    if (
+      !this.currentView.isLoading &&
+      !this.currentView.hasError &&
+      !this.currentView.isEmpty
+    ) {
       await this.currentView.loadMore()
     }
   }
