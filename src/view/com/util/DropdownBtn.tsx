@@ -13,7 +13,7 @@ import RootSiblings from 'react-native-root-siblings'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from '../../lib/styles'
 import {useStores} from '../../../state'
-import {SharePostModel} from '../../../state/models/shell'
+import {SharePostModel} from '../../../state/models/shell-ui'
 
 export interface DropdownItem {
   icon?: IconProp

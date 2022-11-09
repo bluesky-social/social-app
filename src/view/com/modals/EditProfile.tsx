@@ -68,7 +68,7 @@ export function Component({profileView}: {profileView: ProfileViewModel}) {
           />
         </View>
         <View style={styles.group}>
-          <Text style={styles.label}>Biography</Text>
+          <Text style={styles.label}>Description</Text>
           <TextInput
             style={[styles.textArea]}
             placeholder="e.g. Artist, dog-lover, and memelord."

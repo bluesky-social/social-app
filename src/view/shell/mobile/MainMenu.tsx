@@ -20,6 +20,7 @@ import _chunk from 'lodash.chunk'
 import {HomeIcon, UserGroupIcon, BellIcon} from '../../lib/icons'
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {useStores} from '../../../state'
+import {CreateSceneModel} from '../../../state/models/shell-ui'
 import {s, colors} from '../../lib/styles'
 
 export const MainMenu = observer(
@@ -54,6 +55,10 @@ export const MainMenu = observer(
       store.nav.navigate(url)
       onClose()
     }
+    const onPressCreateScene = () => {
+      store.shell.openModal(new CreateSceneModel())
+      onClose()
+    }
 
     // rendering
     // =
@@ -65,17 +70,19 @@ export const MainMenu = observer(
     const MenuItem = ({
       icon,
       label,
-      url,
       count,
+      url,
+      onPress,
     }: {
       icon: IconProp
       label: string
-      url: string
       count?: number
+      url?: string
+      onPress?: () => void
     }) => (
       <TouchableOpacity
         style={[styles.menuItem, styles.menuItemMargin]}
-        onPress={() => onNavigate(url)}>
+        onPress={onPress ? onPress : () => onNavigate(url || '/')}>
         <View style={[styles.menuItemIconWrapper]}>
           {icon === 'home' ? (
             <HomeIcon style={styles.menuItemIcon} size="32" />
@@ -209,7 +216,7 @@ export const MainMenu = observer(
                 <MenuItem
                   icon={'user-group'}
                   label="Create Scene"
-                  url="/contacts"
+                  onPress={onPressCreateScene}
                 />
                 {store.me.memberships ? (
                   store.me.memberships.memberships.map((membership, i) => (

@@ -9,14 +9,14 @@ import {createContext, useContext} from 'react'
 import {isObj, hasProp} from '../lib/type-guards'
 import {SessionModel} from './session'
 import {NavigationModel} from './navigation'
-import {ShellModel} from './shell'
+import {ShellUiModel} from './shell-ui'
 import {MeModel} from './me'
 import {OnboardModel} from './onboard'
 
 export class RootStoreModel {
   session = new SessionModel(this)
   nav = new NavigationModel()
-  shell = new ShellModel()
+  shell = new ShellUiModel()
   me = new MeModel(this)
   onboard = new OnboardModel()
 

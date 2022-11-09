@@ -19,7 +19,7 @@ import Swipeable from 'react-native-gesture-handler/Swipeable'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {match} from '../../routes'
-import {LinkActionsModel} from '../../../state/models/shell'
+import {LinkActionsModel} from '../../../state/models/shell-ui'
 
 const TAB_HEIGHT = 42
 

@@ -5,9 +5,11 @@ import {colors} from '../../lib/styles'
 
 export function ErrorMessage({
   message,
+  numberOfLines,
   onPressTryAgain,
 }: {
   message: string
+  numberOfLines?: number
   onPressTryAgain?: () => void
 }) {
   return (
@@ -19,7 +21,9 @@ export function ErrorMessage({
           size={16}
         />
       </View>
-      <Text style={styles.message}>{message}</Text>
+      <Text style={styles.message} numberOfLines={numberOfLines}>
+        {message}
+      </Text>
       {onPressTryAgain && (
         <TouchableOpacity style={styles.btn} onPress={onPressTryAgain}>
           <FontAwesomeIcon
