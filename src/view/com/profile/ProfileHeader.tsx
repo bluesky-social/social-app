@@ -143,7 +143,9 @@ export const ProfileHeader = observer(function ProfileHeader({
           </TouchableOpacity>
         </View>
         <View style={styles.displayNameLine}>
-          <Text style={styles.displayName}>{view.displayName}</Text>
+          <Text style={styles.displayName}>
+            {view.displayName || view.handle}
+          </Text>
         </View>
         <View style={styles.handleLine}>
           {view.isScene ? (
@@ -196,17 +198,29 @@ export const ProfileHeader = observer(function ProfileHeader({
           </View>
         </View>
         {view.description ? (
-          <Text style={[s.mb5, s.f16, s['lh16-1.3']]}>{view.description}</Text>
+          <Text style={styles.description} numberOfLines={3}>
+            {view.description}
+          </Text>
         ) : undefined}
         {view.isScene && view.creator ? (
           <View style={styles.relationshipsLine}>
-            <Text style={[s.mr2, s.gray5]}>Created by</Text>
+            <FontAwesomeIcon icon={['far', 'user']} style={[s.gray5, s.mr5]} />
+            <Text style={[s.mr2, s.gray5, s.f15]}>Created by</Text>
             <UserInfoText
-              style={[s.blue3]}
+              style={[s.blue3, s.f15]}
               did={view.creator}
               prefix="@"
               asLink
             />
+          </View>
+        ) : undefined}
+        {view.isScene && view.myState.member ? (
+          <View style={styles.relationshipsLine}>
+            <FontAwesomeIcon
+              icon={['far', 'circle-check']}
+              style={[s.gray5, s.mr5]}
+            />
+            <Text style={[s.mr2, s.gray5, s.f15]}>You are a member</Text>
           </View>
         ) : undefined}
       </View>
@@ -315,9 +329,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 
+  description: {
+    marginBottom: 8,
+    fontSize: 16,
+    lineHeight: 20.8, // 1.3 of 16px
+  },
+
   relationshipsLine: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 5,
   },
 })
