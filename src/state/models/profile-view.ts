@@ -27,6 +27,7 @@ export class ProfileViewModel {
   did: string = ''
   handle: string = ''
   actorType = ACTOR_TYPE_USER
+  creator: string = ''
   displayName?: string
   description?: string
   followersCount: number = 0
@@ -145,6 +146,7 @@ export class ProfileViewModel {
     this.did = res.data.did
     this.handle = res.data.handle
     this.actorType = res.data.actorType
+    this.creator = res.data.creator
     this.displayName = res.data.displayName
     this.description = res.data.description
     this.followersCount = res.data.followersCount

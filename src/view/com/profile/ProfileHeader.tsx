@@ -18,6 +18,7 @@ import {getGradient} from '../../lib/asset-gen'
 import Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
+import {UserInfoText} from '../util/UserInfoText'
 
 export const ProfileHeader = observer(function ProfileHeader({
   view,
@@ -194,19 +195,20 @@ export const ProfileHeader = observer(function ProfileHeader({
             </Text>
           </View>
         </View>
-        {view.description && (
+        {view.description ? (
           <Text style={[s.mb5, s.f16, s['lh16-1.3']]}>{view.description}</Text>
-        )}
-        {
-          undefined /*<View style={styles.badgesLine}>
-          <FontAwesomeIcon icon="shield" style={s.mr5} size={12} />
-          <Link href="/" title="Badge TODO">
-            <Text style={[s.f12, s.bold]}>
-              Employee <Text style={[s.blue3]}>@blueskyweb.xyz</Text>
-            </Text>
-          </Link>
-        </View>*/
-        }
+        ) : undefined}
+        {view.isScene && view.creator ? (
+          <View style={styles.relationshipsLine}>
+            <Text style={[s.mr2, s.gray5]}>Created by</Text>
+            <UserInfoText
+              style={[s.blue3]}
+              did={view.creator}
+              prefix="@"
+              asLink
+            />
+          </View>
+        ) : undefined}
       </View>
     </View>
   )
@@ -313,7 +315,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 
-  badgesLine: {
+  relationshipsLine: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
