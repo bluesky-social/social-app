@@ -5,11 +5,12 @@ import BottomSheet from '@gorhom/bottom-sheet'
 import {useStores} from '../../../state'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 
-import * as models from '../../../state/models/shell'
+import * as models from '../../../state/models/shell-ui'
 
 import * as LinkActionsModal from './LinkActions'
 import * as SharePostModal from './SharePost.native'
 import * as EditProfile from './EditProfile'
+import * as CreateScene from './CreateScene'
 
 const CLOSED_SNAPPOINTS = ['10%']
 
@@ -57,6 +58,9 @@ export const Modal = observer(function Modal() {
         {...(store.shell.activeModal as models.EditProfileModel)}
       />
     )
+  } else if (store.shell.activeModal?.name === 'create-scene') {
+    snapPoints = CreateScene.snapPoints
+    element = <CreateScene.Component />
   } else {
     element = <View />
   }

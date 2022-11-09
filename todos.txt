@@ -9,8 +9,8 @@ Paul's todo list
   - *
 - Avatars
   - SVG generate
-- Create scene view
-  - *
+- Create scene
+  - Set profile during creation
 - Discover scenes view
   - *
 - User profile

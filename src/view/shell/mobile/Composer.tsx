@@ -19,7 +19,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {HomeIcon, UserGroupIcon, BellIcon} from '../../lib/icons'
 import {ComposePost} from '../../com/composer/ComposePost'
 import {useStores} from '../../../state'
-import {ComposerOpts} from '../../../state/models/shell'
+import {ComposerOpts} from '../../../state/models/shell-ui'
 import {s, colors} from '../../lib/styles'
 
 export const Composer = observer(

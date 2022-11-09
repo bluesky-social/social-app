@@ -6,7 +6,7 @@ import {
   PostThreadViewPostModel,
 } from '../../../state/models/post-thread-view'
 import {useStores} from '../../../state'
-import {SharePostModel} from '../../../state/models/shell'
+import {SharePostModel} from '../../../state/models/shell-ui'
 import {PostThreadItem} from './PostThreadItem'
 
 export const PostThread = observer(function PostThread({uri}: {uri: string}) {

@@ -2,7 +2,7 @@ import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleProp, Text, TouchableOpacity, ViewStyle} from 'react-native'
 import {useStores} from '../../../state'
-import {LinkActionsModel} from '../../../state/models/shell'
+import {LinkActionsModel} from '../../../state/models/shell-ui'
 
 export const Link = observer(function Link({
   style,

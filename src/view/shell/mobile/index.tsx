@@ -230,11 +230,11 @@ export const MobileShell: React.FC = observer(() => {
         />
         <Btn icon={['far', 'clone']} onPress={onPressTabs} />
       </View>
-      <Modal />
       <MainMenu
         active={isMainMenuActive}
         onClose={() => setMainMenuActive(false)}
       />
+      <Modal />
       <TabsSelector
         active={isTabsSelectorActive}
         onClose={() => setTabsSelectorActive(false)}

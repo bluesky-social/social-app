@@ -35,14 +35,27 @@ export class EditProfileModel {
   }
 }
 
+export class CreateSceneModel {
+  name = 'create-scene'
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+}
+
 export interface ComposerOpts {
   replyTo?: Post.PostRef
   onPost?: () => void
 }
 
-export class ShellModel {
+export class ShellUiModel {
   isModalActive = false
-  activeModal: LinkActionsModel | SharePostModel | EditProfileModel | undefined
+  activeModal:
+    | LinkActionsModel
+    | SharePostModel
+    | EditProfileModel
+    | CreateSceneModel
+    | undefined
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
 
@@ -50,7 +63,13 @@ export class ShellModel {
     makeAutoObservable(this)
   }
 
-  openModal(modal: LinkActionsModel | SharePostModel | EditProfileModel) {
+  openModal(
+    modal:
+      | LinkActionsModel
+      | SharePostModel
+      | EditProfileModel
+      | CreateSceneModel,
+  ) {
     this.isModalActive = true
     this.activeModal = modal
   }

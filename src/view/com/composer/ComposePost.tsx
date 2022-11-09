@@ -8,7 +8,7 @@ import Toast from '../util/Toast'
 import ProgressCircle from '../util/ProgressCircle'
 import {useStores} from '../../../state'
 import * as apilib from '../../../state/lib/api'
-import {ComposerOpts} from '../../../state/models/shell'
+import {ComposerOpts} from '../../../state/models/shell-ui'
 import {s, colors, gradients} from '../../lib/styles'
 
 const MAX_TEXT_LENGTH = 256
