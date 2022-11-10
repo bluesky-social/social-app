@@ -98,7 +98,11 @@ export class ProfileViewModel {
         this.myState.follow = undefined
       })
     } else {
-      const res = await apilib.follow(this.rootStore, this.did)
+      const res = await apilib.follow(
+        this.rootStore,
+        this.did,
+        this.declaration.cid,
+      )
       runInAction(() => {
         this.followersCount++
         this.myState.follow = res.uri

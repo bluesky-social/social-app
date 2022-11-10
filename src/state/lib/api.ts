@@ -111,12 +111,18 @@ export async function unrepost(store: RootStoreModel, repostUri: string) {
   })
 }
 
-export async function follow(store: RootStoreModel, subject: string) {
-  // TODO NOW needs update
+export async function follow(
+  store: RootStoreModel,
+  subjectDid: string,
+  subjectDeclarationCid: string,
+) {
   return await store.api.app.bsky.graph.follow.create(
     {did: store.me.did || ''},
     {
-      subject,
+      subject: {
+        did: subjectDid,
+        declarationCid: subjectDeclarationCid,
+      },
       createdAt: new Date().toISOString(),
     },
   )
