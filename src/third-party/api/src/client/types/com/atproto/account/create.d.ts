@@ -18,7 +18,6 @@ export interface OutputSchema {
     refreshJwt: string;
     handle: string;
     did: string;
-    declarationCid: string;
 }
 export interface Response {
     success: boolean;

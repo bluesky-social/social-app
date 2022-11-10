@@ -1,5 +1,6 @@
 import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from './root-store'
+import {Declaration} from './_common'
 
 interface Response {
   data: {
@@ -9,6 +10,7 @@ interface Response {
 export type ResponseSuggestedActor = {
   did: string
   handle: string
+  declaration: Declaration
   displayName?: string
   description?: string
   createdAt?: string
@@ -109,7 +111,6 @@ export class SuggestedActorsViewModel {
     for (const item of res.data.suggestions) {
       this._append({
         _reactKey: `item-${counter++}`,
-        description: 'Just another cool person using Bluesky',
         ...item,
       })
     }

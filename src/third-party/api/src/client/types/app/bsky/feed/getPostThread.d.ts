@@ -7,6 +7,8 @@ export interface CallOptions {
     headers?: Headers;
 }
 export declare type InputSchema = undefined;
+export declare type ActorKnown = 'app.bsky.system.actorUser' | 'app.bsky.system.actorScene';
+export declare type ActorUnknown = string;
 export interface OutputSchema {
     thread: Post;
 }
@@ -31,8 +33,13 @@ export interface Post {
 }
 export interface User {
     did: string;
+    declaration: Declaration;
     handle: string;
     displayName?: string;
+}
+export interface Declaration {
+    cid: string;
+    actorType: ActorKnown | ActorUnknown;
 }
 export interface RecordEmbed {
     type: 'record';

@@ -6,24 +6,22 @@ Paul's todo list
   - Cursor behaviors on all views
   - Update swipe behaviors: edge always goes back, leftmost always goes back, main connects to selector if present
 - Onboarding flow
-  - *
-- Avatars
-  - SVG generate
+  - Confirm email
+  - Setup rpfoile?
 - Create scene
   - Set profile during creation
 - Discover scenes view
   - *
+- Invite to scene
+  - User search
+  - Filter out scenes from suggestions
+  - Filter out unconfirmed invites from suggestions
+  - Use pagination to make sure there are suggestions
+  - Unconfirmed invites
 - User profile
-  - User
-    - Invite to scene
-    - Remove from scene
   - Scene
     - Trending
-    - Invite to scene
-    - Remove from scene
     - Edit profile
-- Notifications
-  - Scene invite
 - Reply gating
   - Composer
   - View on post
@@ -37,6 +35,7 @@ Paul's todo list
   - Follows list
   - Members list
 - Bugs
+  - Create account broken
   - Follows are broken
   - Auth token refresh seems broken
   - Check that sub components arent reloading too much

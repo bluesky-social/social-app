@@ -53,7 +53,7 @@ export function Component({}: {}) {
           {
             subject: {
               did: createSceneRes.data.did,
-              declarationCid: createSceneRes.data.declarationCid,
+              declarationCid: createSceneRes.data.declaration.cid,
             },
             createdAt: new Date().toISOString(),
           },

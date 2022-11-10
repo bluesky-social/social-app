@@ -1,7 +1,11 @@
 import {makeAutoObservable} from 'mobx'
 import * as ListNotifications from '../../third-party/api/src/client/types/app/bsky/notification/list'
 import {RootStoreModel} from './root-store'
+import {Declaration} from './_common'
 import {hasProp} from '../lib/type-guards'
+import {APP_BSKY_GRAPH} from '../../third-party/api'
+
+const UNGROUPABLE_REASONS = ['trend', 'assertion']
 
 export interface GroupedNotification extends ListNotifications.Notification {
   additional?: ListNotifications.Notification[]
@@ -18,7 +22,8 @@ export class NotificationsViewItemModel implements GroupedNotification {
     did: string
     handle: string
     displayName?: string
-  } = {did: '', handle: ''}
+    declaration: Declaration
+  } = {did: '', handle: '', declaration: {cid: '', actorType: ''}}
   reason: string = ''
   reasonSubject?: string
   record: any = {}
@@ -65,12 +70,26 @@ export class NotificationsViewItemModel implements GroupedNotification {
     return this.reason === 'repost'
   }
 
+  get isTrend() {
+    return this.reason === 'trend'
+  }
+
   get isReply() {
     return this.reason === 'reply'
   }
 
   get isFollow() {
     return this.reason === 'follow'
+  }
+
+  get isAssertion() {
+    return this.reason === 'assertion'
+  }
+
+  get isInvite() {
+    return (
+      this.isAssertion && this.record.assertion === APP_BSKY_GRAPH.AssertMember
+    )
   }
 
   get subjectUri() {
@@ -316,16 +335,18 @@ function groupNotifications(
   const items2: GroupedNotification[] = []
   for (const item of items) {
     let grouped = false
-    for (const item2 of items2) {
-      if (
-        item.reason === item2.reason &&
-        item.reasonSubject === item2.reasonSubject &&
-        item.author.did !== item2.author.did
-      ) {
-        item2.additional = item2.additional || []
-        item2.additional.push(item)
-        grouped = true
-        break
+    if (!UNGROUPABLE_REASONS.includes(item.reason)) {
+      for (const item2 of items2) {
+        if (
+          item.reason === item2.reason &&
+          item.reasonSubject === item2.reasonSubject &&
+          item.author.did !== item2.author.did
+        ) {
+          item2.additional = item2.additional || []
+          item2.additional.push(item)
+          grouped = true
+          break
+        }
       }
     }
     if (!grouped) {

@@ -1,6 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import * as GetProfile from '../../third-party/api/src/client/types/app/bsky/actor/getProfile'
 import * as Profile from '../../third-party/api/src/client/types/app/bsky/actor/profile'
+import {Declaration} from './_common'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
@@ -9,6 +10,7 @@ export const ACTOR_TYPE_SCENE = 'app.bsky.system.actorScene'
 
 export class ProfileViewMyStateModel {
   follow?: string
+  member?: string
 
   constructor() {
     makeAutoObservable(this)
@@ -26,7 +28,10 @@ export class ProfileViewModel {
   // data
   did: string = ''
   handle: string = ''
-  actorType = ACTOR_TYPE_USER
+  declaration: Declaration = {
+    cid: '',
+    actorType: '',
+  }
   creator: string = ''
   displayName?: string
   description?: string
@@ -64,11 +69,11 @@ export class ProfileViewModel {
   }
 
   get isUser() {
-    return this.actorType === ACTOR_TYPE_USER
+    return this.declaration.actorType === ACTOR_TYPE_USER
   }
 
   get isScene() {
-    return this.actorType === ACTOR_TYPE_SCENE
+    return this.declaration.actorType === ACTOR_TYPE_SCENE
   }
 
   // public api
@@ -145,7 +150,7 @@ export class ProfileViewModel {
     console.log(res.data)
     this.did = res.data.did
     this.handle = res.data.handle
-    this.actorType = res.data.actorType
+    Object.assign(this.declaration, res.data.declaration)
     this.creator = res.data.creator
     this.displayName = res.data.displayName
     this.description = res.data.description

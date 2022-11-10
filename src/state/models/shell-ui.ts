@@ -19,6 +19,18 @@ export class LinkActionsModel {
   }
 }
 
+export class ConfirmModel {
+  name = 'confirm'
+
+  constructor(
+    public title: string,
+    public message: string | (() => JSX.Element),
+    public onPressConfirm: () => void | Promise<void>,
+  ) {
+    makeAutoObservable(this)
+  }
+}
+
 export class SharePostModel {
   name = 'share-post'
 
@@ -43,6 +55,14 @@ export class CreateSceneModel {
   }
 }
 
+export class InviteToSceneModel {
+  name = 'invite-to-scene'
+
+  constructor(public profileView: ProfileViewModel) {
+    makeAutoObservable(this)
+  }
+}
+
 export interface ComposerOpts {
   replyTo?: Post.PostRef
   onPost?: () => void
@@ -52,6 +72,7 @@ export class ShellUiModel {
   isModalActive = false
   activeModal:
     | LinkActionsModel
+    | ConfirmModel
     | SharePostModel
     | EditProfileModel
     | CreateSceneModel
@@ -66,6 +87,7 @@ export class ShellUiModel {
   openModal(
     modal:
       | LinkActionsModel
+      | ConfirmModel
       | SharePostModel
       | EditProfileModel
       | CreateSceneModel,

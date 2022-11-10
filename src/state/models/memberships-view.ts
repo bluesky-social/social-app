@@ -47,6 +47,10 @@ export class MembershipsViewModel {
     return this.hasLoaded && !this.hasContent
   }
 
+  isMemberOf(did: string) {
+    return !!this.memberships.find(m => m.did === did)
+  }
+
   // public api
   // =
 

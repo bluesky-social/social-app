@@ -6,6 +6,7 @@ export declare const ids: {
     AppBskyFeedMediaEmbed: string;
     AppBskyFeedPost: string;
     AppBskyFeedRepost: string;
+    AppBskyFeedTrend: string;
     AppBskyFeedVote: string;
     AppBskyGraphAssertion: string;
     AppBskyGraphConfirmation: string;

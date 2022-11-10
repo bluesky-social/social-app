@@ -21,8 +21,13 @@ export class FeedItemModel implements GetTimeline.FeedItem {
   // data
   uri: string = ''
   cid: string = ''
-  author: GetTimeline.User = {did: '', handle: '', displayName: ''}
-  repostedBy?: GetTimeline.User
+  author: GetTimeline.Actor = {
+    did: '',
+    handle: '',
+    displayName: '',
+    declaration: {cid: '', actorType: ''},
+  }
+  repostedBy?: GetTimeline.Actor
   record: Record<string, unknown> = {}
   embed?:
     | GetTimeline.RecordEmbed

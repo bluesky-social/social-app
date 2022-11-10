@@ -31,7 +31,12 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
   // data
   uri: string = ''
   cid: string = ''
-  author: GetPostThread.User = {did: '', handle: '', displayName: ''}
+  author: GetPostThread.User = {
+    did: '',
+    handle: '',
+    displayName: '',
+    declaration: {cid: '', actorType: ''},
+  }
   record: Record<string, unknown> = {}
   embed?:
     | GetPostThread.RecordEmbed

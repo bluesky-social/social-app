@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
@@ -9,12 +9,18 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {AtUri} from '../../../third-party/uri'
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {useStores} from '../../../state'
-import {EditProfileModel} from '../../../state/models/shell-ui'
+import {
+  ConfirmModel,
+  EditProfileModel,
+  InviteToSceneModel,
+} from '../../../state/models/shell-ui'
 import {pluralize} from '../../lib/strings'
 import {s, colors} from '../../lib/styles'
 import {getGradient} from '../../lib/asset-gen'
+import {DropdownBtn, DropdownItem} from '../util/DropdownBtn'
 import Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
@@ -22,10 +28,16 @@ import {UserInfoText} from '../util/UserInfoText'
 
 export const ProfileHeader = observer(function ProfileHeader({
   view,
+  onRefreshAll,
 }: {
   view: ProfileViewModel
+  onRefreshAll: () => void
 }) {
   const store = useStores()
+  const isMember = useMemo(
+    () => view.isScene && view.myState.member,
+    [view.myState.member],
+  )
 
   const onPressBack = () => {
     store.nav.tab.goBack()
@@ -49,9 +61,6 @@ export const ProfileHeader = observer(function ProfileHeader({
   const onPressEditProfile = () => {
     store.shell.openModal(new EditProfileModel(view))
   }
-  const onPressMenu = () => {
-    // TODO
-  }
   const onPressFollowers = () => {
     store.nav.navigate(`/profile/${view.handle}/followers`)
   }
@@ -60,6 +69,31 @@ export const ProfileHeader = observer(function ProfileHeader({
   }
   const onPressMembers = () => {
     store.nav.navigate(`/profile/${view.handle}/members`)
+  }
+  const onPressInviteMembers = () => {
+    store.shell.openModal(new InviteToSceneModel(view))
+  }
+  const onPressLeaveScene = () => {
+    store.shell.openModal(
+      new ConfirmModel(
+        'Leave this scene?',
+        `You'll be able to come back unless your invite is revoked.`,
+        onPressConfirmLeaveScene,
+      ),
+    )
+  }
+  const onPressConfirmLeaveScene = async () => {
+    if (view.myState.member) {
+      await store.api.app.bsky.graph.confirmation.delete({
+        did: store.me.did || '',
+        rkey: new AtUri(view.myState.member).rkey,
+      })
+      Toast.show(`Scene left`, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.TOP,
+      })
+    }
+    onRefreshAll()
   }
 
   // loading
@@ -86,6 +120,23 @@ export const ProfileHeader = observer(function ProfileHeader({
   // =
   const gradient = getGradient(view.handle)
   const isMe = store.me.did === view.did
+  const isCreator = view.isScene && view.creator === store.me.did
+  let dropdownItems: DropdownItem[] | undefined
+  if (isCreator || isMember) {
+    dropdownItems = []
+    if (isCreator) {
+      dropdownItems.push({
+        label: 'Edit Profile',
+        onPress: () => {}, // TODO
+      })
+    }
+    if (isMember) {
+      dropdownItems.push({
+        label: 'Leave Scene...',
+        onPress: onPressLeaveScene,
+      })
+    }
+  }
   return (
     <View style={styles.outer}>
       <UserBanner handle={view.handle} />
@@ -136,11 +187,14 @@ export const ProfileHeader = observer(function ProfileHeader({
               )}
             </>
           )}
-          <TouchableOpacity
-            onPress={onPressMenu}
-            style={[styles.btn, styles.secondaryBtn]}>
-            <FontAwesomeIcon icon="ellipsis" style={[s.gray5]} />
-          </TouchableOpacity>
+          {view.isScene &&
+          (view.myState.member || view.creator === store.me.did) ? (
+            <DropdownBtn
+              items={dropdownItems}
+              style={[styles.btn, styles.secondaryBtn]}>
+              <FontAwesomeIcon icon="ellipsis" style={[s.gray5]} />
+            </DropdownBtn>
+          ) : undefined}
         </View>
         <View style={styles.displayNameLine}>
           <Text style={styles.displayName}>
@@ -224,6 +278,24 @@ export const ProfileHeader = observer(function ProfileHeader({
           </View>
         ) : undefined}
       </View>
+      {view.isScene && view.creator === store.me.did ? (
+        <View style={styles.sceneAdminContainer}>
+          <TouchableOpacity onPress={onPressInviteMembers}>
+            <LinearGradient
+              colors={[gradient[1], gradient[0]]}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 1}}
+              style={[styles.btn, styles.gradientBtn, styles.sceneAdminBtn]}>
+              <FontAwesomeIcon
+                icon="user-plus"
+                style={[s.mr5, s.white]}
+                size={15}
+              />
+              <Text style={[s.bold, s.f15, s.white]}>Invite Members</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+      ) : undefined}
     </View>
   )
 })
@@ -339,5 +411,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 5,
+  },
+
+  sceneAdminContainer: {
+    borderColor: colors.gray1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+  },
+  sceneAdminBtn: {
+    paddingVertical: 8,
   },
 })

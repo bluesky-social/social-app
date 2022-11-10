@@ -16,7 +16,12 @@ export class UserFollowersViewModel {
   params: GetFollowers.QueryParams
 
   // data
-  subject: Subject = {did: '', handle: '', displayName: ''}
+  subject: Subject = {
+    did: '',
+    handle: '',
+    displayName: '',
+    declaration: {cid: '', actorType: ''},
+  }
   followers: FollowerItem[] = []
 
   constructor(

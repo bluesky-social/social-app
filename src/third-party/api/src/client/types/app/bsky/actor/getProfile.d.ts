@@ -10,8 +10,8 @@ export declare type ActorKnown = 'app.bsky.system.actorUser' | 'app.bsky.system.
 export declare type ActorUnknown = string;
 export interface OutputSchema {
     did: string;
+    declaration: Declaration;
     handle: string;
-    actorType: ActorKnown | ActorUnknown;
     creator: string;
     displayName?: string;
     description?: string;
@@ -21,7 +21,12 @@ export interface OutputSchema {
     postsCount: number;
     myState?: {
         follow?: string;
+        member?: string;
     };
+}
+export interface Declaration {
+    cid: string;
+    actorType: ActorKnown | ActorUnknown;
 }
 export interface Response {
     success: boolean;

@@ -18,6 +18,7 @@ export const Notifications = ({visible}: ScreenParams) => {
     if (!visible) {
       return
     }
+    store.me.refreshMemberships() // needed for the invite notifications
     if (hasSetup) {
       console.log('Updating notifications feed')
       notesView?.update()
