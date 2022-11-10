@@ -55,6 +55,7 @@ export class OnboardModel {
     i++
     if (i >= OnboardStageOrder.length) {
       this.isOnboarding = false
+      this.stage = OnboardStageOrder[0] // in case they make a new account
     } else {
       this.stage = OnboardStageOrder[i]
     }
