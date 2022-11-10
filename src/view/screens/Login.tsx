@@ -15,6 +15,7 @@ import * as EmailValidator from 'email-validator'
 import {observer} from 'mobx-react-lite'
 import {Picker} from '../com/util/Picker'
 import {s, colors} from '../lib/styles'
+import {makeValidHandle, createFullHandle} from '../lib/strings'
 import {useStores, DEFAULT_SERVICE} from '../../state'
 import {ServiceDescription} from '../../state/models/session'
 
@@ -256,7 +257,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
       await store.session.createAccount({
         service: DEFAULT_SERVICE,
         email,
-        handle: `${handle}.${userDomain}`,
+        handle: createFullHandle(handle, userDomain),
         password,
         inviteCode,
       })
@@ -264,15 +265,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
       const errMsg = e.toString()
       console.log(e)
       setIsProcessing(false)
-      // if (errMsg.includes('Authentication Required')) {
-      //   setError('Invalid username or password')
-      // } else if (errMsg.includes('Network request failed')) {
-      //   setError(
-      //     'Unable to contact your service. Please check your Internet connection.',
-      //   )
-      // } else {
       setError(errMsg.replace(/^Error:/, ''))
-      // }
     }
   }
 
@@ -380,7 +373,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                 placeholderTextColor={colors.blue0}
                 autoCapitalize="none"
                 value={handle}
-                onChangeText={v => setHandle(cleanUsername(v))}
+                onChangeText={v => setHandle(makeValidHandle(v))}
                 editable={!isProcessing}
               />
             </View>
@@ -405,7 +398,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
               <Text style={[s.white, s.p10]}>
                 Your full username will be{' '}
                 <Text style={s.bold}>
-                  @{handle}.{userDomain}
+                  @{createFullHandle(handle, userDomain)}
                 </Text>
               </Text>
             </View>
@@ -429,14 +422,6 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
       )}
     </KeyboardAvoidingView>
   )
-}
-
-function cleanUsername(v: string): string {
-  v = v.trim()
-  if (v.length > 63) {
-    v = v.slice(0, 63)
-  }
-  return v.toLowerCase().replace(/[^a-z0-9-]/g, '')
 }
 
 export const Login = observer(

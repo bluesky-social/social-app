@@ -1,22 +1,9 @@
 import {makeAutoObservable} from 'mobx'
+import * as GetSuggestions from '../../third-party/api/src/client/types/app/bsky/actor/getSuggestions'
 import {RootStoreModel} from './root-store'
 import {Declaration} from './_common'
 
-interface Response {
-  data: {
-    suggestions: ResponseSuggestedActor[]
-  }
-}
-export type ResponseSuggestedActor = {
-  did: string
-  handle: string
-  declaration: Declaration
-  displayName?: string
-  description?: string
-  createdAt?: string
-  indexedAt: string
-}
-
+type ResponseSuggestedActor = GetSuggestions.OutputSchema['actors'][number]
 export type SuggestedActor = ResponseSuggestedActor & {
   _reactKey: string
 }
@@ -90,14 +77,7 @@ export class SuggestedActorsViewModel {
   private async _fetch(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const debugRes = await this.rootStore.api.app.bsky.graph.getFollowers({
-        user: 'alice.test',
-      })
-      const res = {
-        data: {
-          suggestions: debugRes.data.followers,
-        },
-      }
+      const res = await this.rootStore.api.app.bsky.actor.getSuggestions()
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -105,10 +85,10 @@ export class SuggestedActorsViewModel {
     }
   }
 
-  private _replaceAll(res: Response) {
+  private _replaceAll(res: GetSuggestions.Response) {
     this.suggestions.length = 0
     let counter = 0
-    for (const item of res.data.suggestions) {
+    for (const item of res.data.actors) {
       this._append({
         _reactKey: `item-${counter++}`,
         ...item,
