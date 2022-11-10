@@ -10,6 +10,8 @@ Paul's todo list
   - Setup profile?
 - Create scene
   > Set profile during creation
+- Onboarding
+  - Finish explainers
 - Discover scenes view
   - *
 - Invite to scene

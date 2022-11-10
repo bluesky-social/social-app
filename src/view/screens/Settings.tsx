@@ -41,7 +41,9 @@ export const Settings = observer(function Settings({visible}: ScreenParams) {
               handle={store.me.handle || ''}
             />
             <View style={[s.ml10]}>
-              <Text style={[s.f18]}>{store.me.displayName}</Text>
+              <Text style={[s.f18]}>
+                {store.me.displayName || store.me.handle}
+              </Text>
               <Text style={[s.gray5]}>@{store.me.handle}</Text>
             </View>
           </View>
