@@ -8,6 +8,7 @@ import {sessionClient as AtpApi} from '../../third-party/api'
 import * as Profile from '../../third-party/api/src/client/types/app/bsky/actor/profile'
 import * as Post from '../../third-party/api/src/client/types/app/bsky/feed/post'
 import {AtUri} from '../../third-party/uri'
+import {APP_BSKY_GRAPH} from '../../third-party/api'
 import {RootStoreModel} from '../models/root-store'
 import {extractEntities} from '../../view/lib/strings'
 
@@ -154,6 +155,54 @@ export async function updateProfile(
       modifyFn(),
     )
   }
+}
+
+export async function inviteToScene(
+  store: RootStoreModel,
+  sceneDid: string,
+  subjectDid: string,
+  subjectDeclarationCid: string,
+): Promise<string> {
+  const res = await store.api.app.bsky.graph.assertion.create(
+    {
+      did: sceneDid,
+    },
+    {
+      subject: {
+        did: subjectDid,
+        declarationCid: subjectDeclarationCid,
+      },
+      assertion: APP_BSKY_GRAPH.AssertMember,
+      createdAt: new Date().toISOString(),
+    },
+  )
+  return res.uri
+}
+
+interface Confirmation {
+  originator: {
+    did: string
+    declarationCid: string
+  }
+  assertion: {
+    uri: string
+    cid: string
+  }
+}
+export async function acceptSceneInvite(
+  store: RootStoreModel,
+  details: Confirmation,
+): Promise<string> {
+  const res = await store.api.app.bsky.graph.confirmation.create(
+    {
+      did: store.me.did || '',
+    },
+    {
+      ...details,
+      createdAt: new Date().toISOString(),
+    },
+  )
+  return res.uri
 }
 
 interface FetchHandlerResponse {

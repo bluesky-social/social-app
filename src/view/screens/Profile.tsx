@@ -73,7 +73,7 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
     if (!uiState) {
       return <View />
     }
-    return <ProfileHeader view={uiState.profile} />
+    return <ProfileHeader view={uiState.profile} onRefreshAll={onRefresh} />
   }
   let renderItem
   let items: any[] = []

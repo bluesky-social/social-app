@@ -9,6 +9,7 @@ import {faArrowRightFromBracket} from '@fortawesome/free-solid-svg-icons'
 import {faArrowUpFromBracket} from '@fortawesome/free-solid-svg-icons/faArrowUpFromBracket'
 import {faArrowUpRightFromSquare} from '@fortawesome/free-solid-svg-icons/faArrowUpRightFromSquare'
 import {faArrowsRotate} from '@fortawesome/free-solid-svg-icons/faArrowsRotate'
+import {faArrowTrendUp} from '@fortawesome/free-solid-svg-icons/faArrowTrendUp'
 import {faAt} from '@fortawesome/free-solid-svg-icons/faAt'
 import {faBars} from '@fortawesome/free-solid-svg-icons/faBars'
 import {faBell} from '@fortawesome/free-solid-svg-icons/faBell'
@@ -47,6 +48,7 @@ import {faUser} from '@fortawesome/free-regular-svg-icons/faUser'
 import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers'
 import {faUserCheck} from '@fortawesome/free-solid-svg-icons/faUserCheck'
 import {faUserPlus} from '@fortawesome/free-solid-svg-icons/faUserPlus'
+import {faUserXmark} from '@fortawesome/free-solid-svg-icons/faUserXmark'
 import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
 import {faX} from '@fortawesome/free-solid-svg-icons/faX'
 
@@ -61,6 +63,7 @@ export function setup() {
     faArrowUpFromBracket,
     faArrowUpRightFromSquare,
     faArrowsRotate,
+    faArrowTrendUp,
     faAt,
     faBars,
     faBell,
@@ -99,6 +102,7 @@ export function setup() {
     faUsers,
     faUserCheck,
     faUserPlus,
+    faUserXmark,
     faTicket,
     faX,
   )

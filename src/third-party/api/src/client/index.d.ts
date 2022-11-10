@@ -36,6 +36,8 @@ import * as AppBskyFeedGetVotes from './types/app/bsky/feed/getVotes';
 import * as AppBskyFeedMediaEmbed from './types/app/bsky/feed/mediaEmbed';
 import * as AppBskyFeedPost from './types/app/bsky/feed/post';
 import * as AppBskyFeedRepost from './types/app/bsky/feed/repost';
+import * as AppBskyFeedSetVote from './types/app/bsky/feed/setVote';
+import * as AppBskyFeedTrend from './types/app/bsky/feed/trend';
 import * as AppBskyFeedVote from './types/app/bsky/feed/vote';
 import * as AppBskyGraphAssertion from './types/app/bsky/graph/assertion';
 import * as AppBskyGraphConfirmation from './types/app/bsky/graph/confirmation';
@@ -85,6 +87,8 @@ export * as AppBskyFeedGetVotes from './types/app/bsky/feed/getVotes';
 export * as AppBskyFeedMediaEmbed from './types/app/bsky/feed/mediaEmbed';
 export * as AppBskyFeedPost from './types/app/bsky/feed/post';
 export * as AppBskyFeedRepost from './types/app/bsky/feed/repost';
+export * as AppBskyFeedSetVote from './types/app/bsky/feed/setVote';
+export * as AppBskyFeedTrend from './types/app/bsky/feed/trend';
 export * as AppBskyFeedVote from './types/app/bsky/feed/vote';
 export * as AppBskyGraphAssertion from './types/app/bsky/graph/assertion';
 export * as AppBskyGraphConfirmation from './types/app/bsky/graph/confirmation';
@@ -225,13 +229,14 @@ export declare class ProfileRecord {
         uri: string;
         cid: string;
     }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class FeedNS {
     _service: ServiceClient;
     mediaEmbed: MediaEmbedRecord;
     post: PostRecord;
     repost: RepostRecord;
+    trend: TrendRecord;
     vote: VoteRecord;
     constructor(service: ServiceClient);
     getAuthorFeed(params?: AppBskyFeedGetAuthorFeed.QueryParams, opts?: AppBskyFeedGetAuthorFeed.CallOptions): Promise<AppBskyFeedGetAuthorFeed.Response>;
@@ -239,6 +244,7 @@ export declare class FeedNS {
     getRepostedBy(params?: AppBskyFeedGetRepostedBy.QueryParams, opts?: AppBskyFeedGetRepostedBy.CallOptions): Promise<AppBskyFeedGetRepostedBy.Response>;
     getTimeline(params?: AppBskyFeedGetTimeline.QueryParams, opts?: AppBskyFeedGetTimeline.CallOptions): Promise<AppBskyFeedGetTimeline.Response>;
     getVotes(params?: AppBskyFeedGetVotes.QueryParams, opts?: AppBskyFeedGetVotes.CallOptions): Promise<AppBskyFeedGetVotes.Response>;
+    setVote(data?: AppBskyFeedSetVote.InputSchema, opts?: AppBskyFeedSetVote.CallOptions): Promise<AppBskyFeedSetVote.Response>;
 }
 export declare class MediaEmbedRecord {
     _service: ServiceClient;
@@ -259,7 +265,7 @@ export declare class MediaEmbedRecord {
         uri: string;
         cid: string;
     }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class PostRecord {
     _service: ServiceClient;
@@ -280,7 +286,7 @@ export declare class PostRecord {
         uri: string;
         cid: string;
     }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class RepostRecord {
     _service: ServiceClient;
@@ -301,7 +307,28 @@ export declare class RepostRecord {
         uri: string;
         cid: string;
     }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>, headers?: Record<string, string>): Promise<void>;
+}
+export declare class TrendRecord {
+    _service: ServiceClient;
+    constructor(service: ServiceClient);
+    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>): Promise<{
+        cursor?: string;
+        records: {
+            uri: string;
+            value: AppBskyFeedTrend.Record;
+        }[];
+    }>;
+    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>): Promise<{
+        uri: string;
+        cid: string;
+        value: AppBskyFeedTrend.Record;
+    }>;
+    create(params: Omit<ComAtprotoRepoCreateRecord.InputSchema, 'collection' | 'record'>, record: AppBskyFeedTrend.Record, headers?: Record<string, string>): Promise<{
+        uri: string;
+        cid: string;
+    }>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class VoteRecord {
     _service: ServiceClient;
@@ -322,7 +349,7 @@ export declare class VoteRecord {
         uri: string;
         cid: string;
     }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class GraphNS {
     _service: ServiceClient;
@@ -354,7 +381,7 @@ export declare class AssertionRecord {
         uri: string;
         cid: string;
     }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class ConfirmationRecord {
     _service: ServiceClient;
@@ -375,7 +402,7 @@ export declare class ConfirmationRecord {
         uri: string;
         cid: string;
     }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class FollowRecord {
     _service: ServiceClient;
@@ -396,7 +423,7 @@ export declare class FollowRecord {
         uri: string;
         cid: string;
     }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class NotificationNS {
     _service: ServiceClient;
@@ -429,5 +456,5 @@ export declare class DeclarationRecord {
         uri: string;
         cid: string;
     }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.QueryParams, 'collection'>, headers?: Record<string, string>): Promise<void>;
+    delete(params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }

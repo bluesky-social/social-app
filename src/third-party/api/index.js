@@ -6954,6 +6954,8 @@ __export(src_exports, {
   AppBskyFeedMediaEmbed: () => mediaEmbed_exports,
   AppBskyFeedPost: () => post_exports,
   AppBskyFeedRepost: () => repost_exports,
+  AppBskyFeedSetVote: () => setVote_exports,
+  AppBskyFeedTrend: () => trend_exports,
   AppBskyFeedVote: () => vote_exports,
   AppBskyGraphAssertion: () => assertion_exports,
   AppBskyGraphConfirmation: () => confirmation_exports,
@@ -7015,6 +7017,7 @@ __export(src_exports, {
   SessionXrpcServiceClient: () => SessionXrpcServiceClient,
   SyncNS: () => SyncNS,
   SystemNS: () => SystemNS,
+  TrendRecord: () => TrendRecord,
   VoteRecord: () => VoteRecord,
   default: () => client_default,
   sessionClient: () => session_default
@@ -10090,15 +10093,13 @@ var methodSchemaBody = mod.object({
   schema: mod.any().optional()
 });
 var methodSchemaParam = mod.object({
-  type: mod.enum(["string", "number", "integer", "boolean"]),
-  description: mod.string().optional(),
-  default: mod.union([mod.string(), mod.number(), mod.boolean()]).optional(),
-  required: mod.boolean().optional(),
-  minLength: mod.number().optional(),
-  maxLength: mod.number().optional(),
-  minimum: mod.number().optional(),
-  maximum: mod.number().optional()
-});
+  type: mod.literal("object"),
+  properties: mod.record(
+    mod.object({
+      type: mod.enum(["string", "number", "integer", "boolean"])
+    }).catchall(mod.any())
+  )
+}).catchall(mod.any());
 var methodSchemaError = mod.object({
   name: mod.string(),
   description: mod.string().optional()
@@ -10108,7 +10109,7 @@ var methodSchema = mod.object({
   id: mod.string(),
   type: mod.enum(["query", "procedure"]),
   description: mod.string().optional(),
-  parameters: mod.record(methodSchemaParam).optional(),
+  parameters: methodSchemaParam.optional(),
   input: methodSchemaBody.optional(),
   output: methodSchemaBody.optional(),
   errors: methodSchemaError.array().optional(),
@@ -10143,19 +10144,9 @@ function getMethodSchemaHTTPMethod(schema) {
 function constructMethodCallUri(schema, serviceUri, params) {
   const uri = new URL(serviceUri);
   uri.pathname = `/xrpc/${schema.id}`;
-  if (schema.parameters) {
-    for (const [key, paramSchema] of Object.entries(schema.parameters)) {
-      if (paramSchema.default) {
-        uri.searchParams.set(
-          key,
-          encodeQueryParam(paramSchema.type, paramSchema.default)
-        );
-      }
-    }
-  }
   if (params) {
     for (const [key, value] of Object.entries(params)) {
-      const paramSchema = schema.parameters?.[key];
+      const paramSchema = schema.parameters?.properties[key];
       if (!paramSchema) {
         throw new Error(`Invalid query parameter: ${key}`);
       }
@@ -10387,13 +10378,7 @@ var methodSchemaDict = {
       encoding: "application/json",
       schema: {
         type: "object",
-        required: [
-          "accessJwt",
-          "refreshJwt",
-          "handle",
-          "did",
-          "declarationCid"
-        ],
+        required: ["accessJwt", "refreshJwt", "handle", "did"],
         properties: {
           accessJwt: {
             type: "string"
@@ -10405,9 +10390,6 @@ var methodSchemaDict = {
             type: "string"
           },
           did: {
-            type: "string"
-          },
-          declarationCid: {
             type: "string"
           }
         },
@@ -10484,7 +10466,6 @@ var methodSchemaDict = {
     id: "com.atproto.account.get",
     type: "query",
     description: "Get information about an account.",
-    parameters: {},
     output: {
       encoding: "",
       schema: {
@@ -10563,9 +10544,12 @@ var methodSchemaDict = {
     type: "query",
     description: "Provides the DID of a repo.",
     parameters: {
-      handle: {
-        type: "string",
-        description: "The handle to resolve. If not supplied, will resolve the host's own handle."
+      type: "object",
+      properties: {
+        handle: {
+          type: "string",
+          description: "The handle to resolve. If not supplied, will resolve the host's own handle."
+        }
       }
     },
     output: {
@@ -10753,10 +10737,13 @@ var methodSchemaDict = {
     type: "query",
     description: "Get information about the repo, including the list of collections.",
     parameters: {
-      user: {
-        type: "string",
-        required: true,
-        description: "The handle or DID of the repo."
+      type: "object",
+      required: ["user"],
+      properties: {
+        user: {
+          type: "string",
+          description: "The handle or DID of the repo."
+        }
       }
     },
     output: {
@@ -10794,25 +10781,25 @@ var methodSchemaDict = {
     type: "query",
     description: "Fetch a record.",
     parameters: {
-      user: {
-        type: "string",
-        required: true,
-        description: "The handle or DID of the repo."
-      },
-      collection: {
-        type: "string",
-        required: true,
-        description: "The NSID of the collection."
-      },
-      rkey: {
-        type: "string",
-        required: true,
-        description: "The key of the record."
-      },
-      cid: {
-        type: "string",
-        required: false,
-        description: "The CID of the version of the record. If not specified, then return the most recent version."
+      type: "object",
+      required: ["user", "collection", "rkey"],
+      properties: {
+        user: {
+          type: "string",
+          description: "The handle or DID of the repo."
+        },
+        collection: {
+          type: "string",
+          description: "The NSID of the collection."
+        },
+        rkey: {
+          type: "string",
+          description: "The key of the record."
+        },
+        cid: {
+          type: "string",
+          description: "The CID of the version of the record. If not specified, then return the most recent version."
+        }
       }
     },
     output: {
@@ -10841,34 +10828,35 @@ var methodSchemaDict = {
     type: "query",
     description: "List a range of records in a collection.",
     parameters: {
-      user: {
-        type: "string",
-        required: true,
-        description: "The handle or DID of the repo."
-      },
-      collection: {
-        type: "string",
-        required: true,
-        description: "The NSID of the record type."
-      },
-      limit: {
-        type: "number",
-        minimum: 1,
-        default: 50,
-        description: "The number of records to return. TODO-max number?"
-      },
-      before: {
-        type: "string",
-        description: "A TID to filter the range of records returned."
-      },
-      after: {
-        type: "string",
-        description: "A TID to filter the range of records returned."
-      },
-      reverse: {
-        type: "boolean",
-        description: "Reverse the order of the returned records?",
-        default: false
+      type: "object",
+      required: ["user", "collection"],
+      properties: {
+        user: {
+          type: "string",
+          description: "The handle or DID of the repo."
+        },
+        collection: {
+          type: "string",
+          description: "The NSID of the record type."
+        },
+        limit: {
+          type: "number",
+          minimum: 1,
+          default: 50,
+          description: "The number of records to return. TODO-max number?"
+        },
+        before: {
+          type: "string",
+          description: "A TID to filter the range of records returned."
+        },
+        after: {
+          type: "string",
+          description: "A TID to filter the range of records returned."
+        },
+        reverse: {
+          type: "boolean",
+          description: "Reverse the order of the returned records?"
+        }
       }
     },
     output: {
@@ -10961,7 +10949,6 @@ var methodSchemaDict = {
     id: "com.atproto.server.getAccountsConfig",
     type: "query",
     description: "Get a document describing the service's accounts configuration.",
-    parameters: {},
     output: {
       encoding: "application/json",
       schema: {
@@ -11043,7 +11030,6 @@ var methodSchemaDict = {
     id: "com.atproto.session.get",
     type: "query",
     description: "Get information about the current session.",
-    parameters: {},
     output: {
       encoding: "application/json",
       schema: {
@@ -11095,14 +11081,17 @@ var methodSchemaDict = {
     type: "query",
     description: "Gets the repo state.",
     parameters: {
-      did: {
-        type: "string",
-        required: true,
-        description: "The DID of the repo."
-      },
-      from: {
-        type: "string",
-        description: "A past commit CID."
+      type: "object",
+      required: ["did"],
+      properties: {
+        did: {
+          type: "string",
+          description: "The DID of the repo."
+        },
+        from: {
+          type: "string",
+          description: "A past commit CID."
+        }
       }
     },
     output: {
@@ -11115,10 +11104,13 @@ var methodSchemaDict = {
     type: "query",
     description: "Gets the current root CID of a repo.",
     parameters: {
-      did: {
-        type: "string",
-        required: true,
-        description: "The DID of the repo."
+      type: "object",
+      required: ["did"],
+      properties: {
+        did: {
+          type: "string",
+          description: "The DID of the repo."
+        }
       }
     },
     output: {
@@ -11141,10 +11133,13 @@ var methodSchemaDict = {
     type: "procedure",
     description: "Writes commits to a repo.",
     parameters: {
-      did: {
-        type: "string",
-        required: true,
-        description: "The DID of the repo."
+      type: "object",
+      required: ["did"],
+      properties: {
+        did: {
+          type: "string",
+          description: "The DID of the repo."
+        }
       }
     },
     input: {
@@ -11156,7 +11151,6 @@ var methodSchemaDict = {
     id: "app.bsky.actor.createScene",
     type: "procedure",
     description: "Create a scene.",
-    parameters: {},
     input: {
       encoding: "application/json",
       schema: {
@@ -11177,7 +11171,7 @@ var methodSchemaDict = {
       encoding: "application/json",
       schema: {
         type: "object",
-        required: ["handle", "did", "declarationCid"],
+        required: ["handle", "did", "declaration"],
         properties: {
           handle: {
             type: "string"
@@ -11185,11 +11179,41 @@ var methodSchemaDict = {
           did: {
             type: "string"
           },
-          declarationCid: {
-            type: "string"
+          declaration: {
+            $ref: "#/$defs/declaration"
           }
         },
-        $defs: {}
+        $defs: {
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+            }
+          }
+        }
       }
     },
     errors: [
@@ -11199,37 +11223,13 @@ var methodSchemaDict = {
       {
         name: "HandleNotAvailable"
       }
-    ]
-  },
-  "app.bsky.actor.getProfile": {
-    lexicon: 1,
-    id: "app.bsky.actor.getProfile",
-    type: "query",
-    parameters: {
-      actor: {
-        type: "string",
-        required: true
-      }
-    },
-    output: {
-      encoding: "application/json",
-      schema: {
+    ],
+    defs: {
+      declaration: {
         type: "object",
-        required: [
-          "did",
-          "handle",
-          "actorType",
-          "creator",
-          "followersCount",
-          "followsCount",
-          "membersCount",
-          "postsCount"
-        ],
+        required: ["cid", "actorType"],
         properties: {
-          did: {
-            type: "string"
-          },
-          handle: {
+          cid: {
             type: "string"
           },
           actorType: {
@@ -11241,6 +11241,57 @@ var methodSchemaDict = {
                 $ref: "#/$defs/actorUnknown"
               }
             ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
+      }
+    }
+  },
+  "app.bsky.actor.getProfile": {
+    lexicon: 1,
+    id: "app.bsky.actor.getProfile",
+    type: "query",
+    parameters: {
+      type: "object",
+      required: ["actor"],
+      properties: {
+        actor: {
+          type: "string"
+        }
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: [
+          "did",
+          "declaration",
+          "handle",
+          "creator",
+          "followersCount",
+          "followsCount",
+          "membersCount",
+          "postsCount"
+        ],
+        properties: {
+          did: {
+            type: "string"
+          },
+          declaration: {
+            $ref: "#/$defs/declaration"
+          },
+          handle: {
+            type: "string"
           },
           creator: {
             type: "string"
@@ -11270,11 +11321,33 @@ var methodSchemaDict = {
             properties: {
               follow: {
                 type: "string"
+              },
+              member: {
+                type: "string"
               }
             }
           }
         },
         $defs: {
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
           actorKnown: {
             type: "string",
             enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
@@ -11289,6 +11362,25 @@ var methodSchemaDict = {
       }
     },
     defs: {
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
       actorKnown: {
         type: "string",
         enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
@@ -11307,12 +11399,15 @@ var methodSchemaDict = {
     type: "query",
     description: "Get a list of actors suggested for following. Used in discovery UIs.",
     parameters: {
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      cursor: {
-        type: "string"
+      type: "object",
+      properties: {
+        limit: {
+          type: "number",
+          maximum: 100
+        },
+        cursor: {
+          type: "string"
+        }
       }
     },
     output: {
@@ -11328,15 +11423,15 @@ var methodSchemaDict = {
             type: "array",
             items: {
               type: "object",
-              required: ["did", "handle", "actorType"],
+              required: ["did", "declaration", "handle"],
               properties: {
                 did: {
                   type: "string"
                 },
-                handle: {
-                  type: "string"
+                declaration: {
+                  $ref: "#/$defs/declaration"
                 },
-                actorType: {
+                handle: {
                   type: "string"
                 },
                 displayName: {
@@ -11362,7 +11457,68 @@ var methodSchemaDict = {
             }
           }
         },
-        $defs: {}
+        $defs: {
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
       }
     }
   },
@@ -11372,16 +11528,19 @@ var methodSchemaDict = {
     type: "query",
     description: "Find users matching search criteria.",
     parameters: {
-      term: {
-        type: "string",
-        required: true
-      },
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
+      type: "object",
+      required: ["term"],
+      properties: {
+        term: {
+          type: "string"
+        },
+        limit: {
+          type: "number",
+          maximum: 100
+        },
+        before: {
+          type: "string"
+        }
       }
     },
     output: {
@@ -11397,10 +11556,13 @@ var methodSchemaDict = {
             type: "array",
             items: {
               type: "object",
-              required: ["did", "handle"],
+              required: ["did", "declaration", "handle"],
               properties: {
                 did: {
                   type: "string"
+                },
+                declaration: {
+                  $ref: "#/$defs/declaration"
                 },
                 handle: {
                   type: "string"
@@ -11420,7 +11582,68 @@ var methodSchemaDict = {
             }
           }
         },
-        $defs: {}
+        $defs: {
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
       }
     }
   },
@@ -11430,13 +11653,16 @@ var methodSchemaDict = {
     type: "query",
     description: "Find user suggestions for a search term.",
     parameters: {
-      term: {
-        type: "string",
-        required: true
-      },
-      limit: {
-        type: "number",
-        maximum: 100
+      type: "object",
+      required: ["term"],
+      properties: {
+        term: {
+          type: "string"
+        },
+        limit: {
+          type: "number",
+          maximum: 100
+        }
       }
     },
     output: {
@@ -11449,10 +11675,13 @@ var methodSchemaDict = {
             type: "array",
             items: {
               type: "object",
-              required: ["did", "handle"],
+              required: ["did", "declaration", "handle"],
               properties: {
                 did: {
                   type: "string"
+                },
+                declaration: {
+                  $ref: "#/$defs/declaration"
                 },
                 handle: {
                   type: "string"
@@ -11465,7 +11694,68 @@ var methodSchemaDict = {
             }
           }
         },
-        $defs: {}
+        $defs: {
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
       }
     }
   },
@@ -11478,7 +11768,6 @@ var methodSchemaDict = {
       encoding: "application/json",
       schema: {
         type: "object",
-        required: [],
         properties: {
           displayName: {
             type: "string",
@@ -11518,16 +11807,19 @@ var methodSchemaDict = {
     type: "query",
     description: "A view of a user's feed.",
     parameters: {
-      author: {
-        type: "string",
-        required: true
-      },
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
+      type: "object",
+      required: ["author"],
+      properties: {
+        author: {
+          type: "string"
+        },
+        limit: {
+          type: "number",
+          maximum: 100
+        },
+        before: {
+          type: "string"
+        }
       }
     },
     output: {
@@ -11568,10 +11860,13 @@ var methodSchemaDict = {
                 type: "string"
               },
               author: {
-                $ref: "#/$defs/user"
+                $ref: "#/$defs/actor"
+              },
+              trendedBy: {
+                $ref: "#/$defs/actor"
               },
               repostedBy: {
-                $ref: "#/$defs/user"
+                $ref: "#/$defs/actor"
               },
               record: {
                 type: "object"
@@ -11621,12 +11916,15 @@ var methodSchemaDict = {
               }
             }
           },
-          user: {
+          actor: {
             type: "object",
-            required: ["did", "handle"],
+            required: ["did", "declaration", "handle"],
             properties: {
               did: {
                 type: "string"
+              },
+              declaration: {
+                $ref: "#/$defs/declaration"
               },
               handle: {
                 type: "string"
@@ -11637,6 +11935,35 @@ var methodSchemaDict = {
               }
             }
           },
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+            }
+          },
           recordEmbed: {
             type: "object",
             required: ["type", "author", "record"],
@@ -11645,7 +11972,7 @@ var methodSchemaDict = {
                 const: "record"
               },
               author: {
-                $ref: "#/$defs/user"
+                $ref: "#/$defs/actor"
               },
               record: {
                 type: "object"
@@ -11710,10 +12037,13 @@ var methodSchemaDict = {
             type: "string"
           },
           author: {
-            $ref: "#/$defs/user"
+            $ref: "#/$defs/actor"
+          },
+          trendedBy: {
+            $ref: "#/$defs/actor"
           },
           repostedBy: {
-            $ref: "#/$defs/user"
+            $ref: "#/$defs/actor"
           },
           record: {
             type: "object"
@@ -11763,12 +12093,15 @@ var methodSchemaDict = {
           }
         }
       },
-      user: {
+      actor: {
         type: "object",
-        required: ["did", "handle"],
+        required: ["did", "declaration", "handle"],
         properties: {
           did: {
             type: "string"
+          },
+          declaration: {
+            $ref: "#/$defs/declaration"
           },
           handle: {
             type: "string"
@@ -11787,7 +12120,7 @@ var methodSchemaDict = {
             const: "record"
           },
           author: {
-            $ref: "#/$defs/user"
+            $ref: "#/$defs/actor"
           },
           record: {
             type: "object"
@@ -11826,6 +12159,35 @@ var methodSchemaDict = {
             }
           }
         }
+      },
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
       }
     }
   },
@@ -11834,12 +12196,15 @@ var methodSchemaDict = {
     id: "app.bsky.feed.getPostThread",
     type: "query",
     parameters: {
-      uri: {
-        type: "string",
-        required: true
-      },
-      depth: {
-        type: "number"
+      type: "object",
+      required: ["uri"],
+      properties: {
+        uri: {
+          type: "string"
+        },
+        depth: {
+          type: "number"
+        }
       }
     },
     output: {
@@ -11935,10 +12300,13 @@ var methodSchemaDict = {
           },
           user: {
             type: "object",
-            required: ["did", "handle"],
+            required: ["did", "declaration", "handle"],
             properties: {
               did: {
                 type: "string"
+              },
+              declaration: {
+                $ref: "#/$defs/declaration"
               },
               handle: {
                 type: "string"
@@ -11947,6 +12315,35 @@ var methodSchemaDict = {
                 type: "string",
                 maxLength: 64
               }
+            }
+          },
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
             }
           },
           recordEmbed: {
@@ -12083,10 +12480,13 @@ var methodSchemaDict = {
       },
       user: {
         type: "object",
-        required: ["did", "handle"],
+        required: ["did", "declaration", "handle"],
         properties: {
           did: {
             type: "string"
+          },
+          declaration: {
+            $ref: "#/$defs/declaration"
           },
           handle: {
             type: "string"
@@ -12144,6 +12544,35 @@ var methodSchemaDict = {
             }
           }
         }
+      },
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
       }
     }
   },
@@ -12152,20 +12581,22 @@ var methodSchemaDict = {
     id: "app.bsky.feed.getRepostedBy",
     type: "query",
     parameters: {
-      uri: {
-        type: "string",
-        required: true
-      },
-      cid: {
-        type: "string",
-        required: false
-      },
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
+      type: "object",
+      required: ["uri"],
+      properties: {
+        uri: {
+          type: "string"
+        },
+        cid: {
+          type: "string"
+        },
+        limit: {
+          type: "number",
+          maximum: 100
+        },
+        before: {
+          type: "string"
+        }
       }
     },
     output: {
@@ -12187,10 +12618,13 @@ var methodSchemaDict = {
             type: "array",
             items: {
               type: "object",
-              required: ["did", "handle", "indexedAt"],
+              required: ["did", "declaration", "handle", "indexedAt"],
               properties: {
                 did: {
                   type: "string"
+                },
+                declaration: {
+                  $ref: "#/$defs/declaration"
                 },
                 handle: {
                   type: "string"
@@ -12211,7 +12645,68 @@ var methodSchemaDict = {
             }
           }
         },
-        $defs: {}
+        $defs: {
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
       }
     }
   },
@@ -12221,15 +12716,18 @@ var methodSchemaDict = {
     type: "query",
     description: "A view of the user's home timeline.",
     parameters: {
-      algorithm: {
-        type: "string"
-      },
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
+      type: "object",
+      properties: {
+        algorithm: {
+          type: "string"
+        },
+        limit: {
+          type: "number",
+          maximum: 100
+        },
+        before: {
+          type: "string"
+        }
       }
     },
     output: {
@@ -12270,10 +12768,13 @@ var methodSchemaDict = {
                 type: "string"
               },
               author: {
-                $ref: "#/$defs/user"
+                $ref: "#/$defs/actor"
+              },
+              trendedBy: {
+                $ref: "#/$defs/actor"
               },
               repostedBy: {
-                $ref: "#/$defs/user"
+                $ref: "#/$defs/actor"
               },
               record: {
                 type: "object"
@@ -12323,20 +12824,55 @@ var methodSchemaDict = {
               }
             }
           },
-          user: {
+          actor: {
             type: "object",
-            required: ["did", "handle"],
+            required: ["did", "declaration", "handle"],
             properties: {
               did: {
                 type: "string"
               },
+              declaration: {
+                $ref: "#/$defs/declaration"
+              },
               handle: {
+                type: "string"
+              },
+              actorType: {
                 type: "string"
               },
               displayName: {
                 type: "string",
                 maxLength: 64
               }
+            }
+          },
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
             }
           },
           recordEmbed: {
@@ -12347,7 +12883,7 @@ var methodSchemaDict = {
                 const: "record"
               },
               author: {
-                $ref: "#/$defs/user"
+                $ref: "#/$defs/actor"
               },
               record: {
                 type: "object"
@@ -12412,10 +12948,13 @@ var methodSchemaDict = {
             type: "string"
           },
           author: {
-            $ref: "#/$defs/user"
+            $ref: "#/$defs/actor"
+          },
+          trendedBy: {
+            $ref: "#/$defs/actor"
           },
           repostedBy: {
-            $ref: "#/$defs/user"
+            $ref: "#/$defs/actor"
           },
           record: {
             type: "object"
@@ -12465,14 +13004,20 @@ var methodSchemaDict = {
           }
         }
       },
-      user: {
+      actor: {
         type: "object",
-        required: ["did", "handle"],
+        required: ["did", "declaration", "handle"],
         properties: {
           did: {
             type: "string"
           },
+          declaration: {
+            $ref: "#/$defs/declaration"
+          },
           handle: {
+            type: "string"
+          },
+          actorType: {
             type: "string"
           },
           displayName: {
@@ -12489,7 +13034,7 @@ var methodSchemaDict = {
             const: "record"
           },
           author: {
-            $ref: "#/$defs/user"
+            $ref: "#/$defs/actor"
           },
           record: {
             type: "object"
@@ -12528,6 +13073,35 @@ var methodSchemaDict = {
             }
           }
         }
+      },
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
       }
     }
   },
@@ -12536,24 +13110,26 @@ var methodSchemaDict = {
     id: "app.bsky.feed.getVotes",
     type: "query",
     parameters: {
-      uri: {
-        type: "string",
-        required: true
-      },
-      cid: {
-        type: "string",
-        required: false
-      },
-      direction: {
-        type: "string",
-        required: false
-      },
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
+      type: "object",
+      required: ["uri"],
+      properties: {
+        uri: {
+          type: "string"
+        },
+        cid: {
+          type: "string"
+        },
+        direction: {
+          type: "string",
+          enum: ["up", "down"]
+        },
+        limit: {
+          type: "number",
+          maximum: 100
+        },
+        before: {
+          type: "string"
+        }
       }
     },
     output: {
@@ -12599,10 +13175,13 @@ var methodSchemaDict = {
         $defs: {
           actor: {
             type: "object",
-            required: ["did", "handle"],
+            required: ["did", "declaration", "handle"],
             properties: {
               did: {
                 type: "string"
+              },
+              declaration: {
+                $ref: "#/$defs/declaration"
               },
               handle: {
                 type: "string"
@@ -12612,6 +13191,35 @@ var methodSchemaDict = {
                 maxLength: 64
               }
             }
+          },
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+            }
           }
         }
       }
@@ -12619,10 +13227,13 @@ var methodSchemaDict = {
     defs: {
       actor: {
         type: "object",
-        required: ["did", "handle"],
+        required: ["did", "declaration", "handle"],
         properties: {
           did: {
             type: "string"
+          },
+          declaration: {
+            $ref: "#/$defs/declaration"
           },
           handle: {
             type: "string"
@@ -12630,6 +13241,100 @@ var methodSchemaDict = {
           displayName: {
             type: "string",
             maxLength: 64
+          }
+        }
+      },
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
+      }
+    }
+  },
+  "app.bsky.feed.setVote": {
+    lexicon: 1,
+    id: "app.bsky.feed.setVote",
+    type: "procedure",
+    description: "Upvote, downvote, or clear the user's vote for a post.",
+    input: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["subject", "direction"],
+        properties: {
+          subject: {
+            $ref: "#/$defs/subject"
+          },
+          direction: {
+            type: "string",
+            enum: ["up", "down", "none"]
+          }
+        },
+        $defs: {
+          subject: {
+            type: "object",
+            required: ["uri", "cid"],
+            properties: {
+              uri: {
+                type: "string"
+              },
+              cid: {
+                type: "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        properties: {
+          upvote: {
+            type: "string"
+          },
+          downvote: {
+            type: "string"
+          }
+        },
+        $defs: {}
+      }
+    },
+    defs: {
+      subject: {
+        type: "object",
+        required: ["uri", "cid"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
           }
         }
       }
@@ -12641,16 +13346,19 @@ var methodSchemaDict = {
     type: "query",
     description: "Who is following a user?",
     parameters: {
-      user: {
-        type: "string",
-        required: true
-      },
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
+      type: "object",
+      required: ["user"],
+      properties: {
+        user: {
+          type: "string"
+        },
+        limit: {
+          type: "number",
+          maximum: 100
+        },
+        before: {
+          type: "string"
+        }
       }
     },
     output: {
@@ -12661,10 +13369,13 @@ var methodSchemaDict = {
         properties: {
           subject: {
             type: "object",
-            required: ["did", "handle"],
+            required: ["did", "declaration", "handle"],
             properties: {
               did: {
                 type: "string"
+              },
+              declaration: {
+                $ref: "#/$defs/declaration"
               },
               handle: {
                 type: "string"
@@ -12682,10 +13393,13 @@ var methodSchemaDict = {
             type: "array",
             items: {
               type: "object",
-              required: ["did", "handle", "indexedAt"],
+              required: ["did", "declaration", "handle", "indexedAt"],
               properties: {
                 did: {
                   type: "string"
+                },
+                declaration: {
+                  $ref: "#/$defs/declaration"
                 },
                 handle: {
                   type: "string"
@@ -12706,7 +13420,68 @@ var methodSchemaDict = {
             }
           }
         },
-        $defs: {}
+        $defs: {
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
       }
     }
   },
@@ -12716,16 +13491,19 @@ var methodSchemaDict = {
     type: "query",
     description: "Who is a user following?",
     parameters: {
-      user: {
-        type: "string",
-        required: true
-      },
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
+      type: "object",
+      required: ["user"],
+      properties: {
+        user: {
+          type: "string"
+        },
+        limit: {
+          type: "number",
+          maximum: 100
+        },
+        before: {
+          type: "string"
+        }
       }
     },
     output: {
@@ -12736,10 +13514,13 @@ var methodSchemaDict = {
         properties: {
           subject: {
             type: "object",
-            required: ["did", "handle"],
+            required: ["did", "declaration", "handle"],
             properties: {
               did: {
                 type: "string"
+              },
+              declaration: {
+                $ref: "#/$defs/declaration"
               },
               handle: {
                 type: "string"
@@ -12757,10 +13538,13 @@ var methodSchemaDict = {
             type: "array",
             items: {
               type: "object",
-              required: ["did", "handle", "indexedAt"],
+              required: ["did", "declaration", "handle", "indexedAt"],
               properties: {
                 did: {
                   type: "string"
+                },
+                declaration: {
+                  $ref: "#/$defs/declaration"
                 },
                 handle: {
                   type: "string"
@@ -12781,7 +13565,68 @@ var methodSchemaDict = {
             }
           }
         },
-        $defs: {}
+        $defs: {
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
       }
     }
   },
@@ -12791,16 +13636,19 @@ var methodSchemaDict = {
     type: "query",
     description: "Who is a member of the group?",
     parameters: {
-      actor: {
-        type: "string",
-        required: true
-      },
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
+      type: "object",
+      required: ["actor"],
+      properties: {
+        actor: {
+          type: "string"
+        },
+        limit: {
+          type: "number",
+          maximum: 100
+        },
+        before: {
+          type: "string"
+        }
       }
     },
     output: {
@@ -12811,10 +13659,13 @@ var methodSchemaDict = {
         properties: {
           subject: {
             type: "object",
-            required: ["did", "handle"],
+            required: ["did", "declaration", "handle"],
             properties: {
               did: {
                 type: "string"
+              },
+              declaration: {
+                $ref: "#/$defs/declaration"
               },
               handle: {
                 type: "string"
@@ -12832,10 +13683,13 @@ var methodSchemaDict = {
             type: "array",
             items: {
               type: "object",
-              required: ["did", "handle", "declaration", "indexedAt"],
+              required: ["did", "declaration", "handle", "indexedAt"],
               properties: {
                 did: {
                   type: "string"
+                },
+                declaration: {
+                  $ref: "#/$defs/declaration"
                 },
                 handle: {
                   type: "string"
@@ -12843,18 +13697,6 @@ var methodSchemaDict = {
                 displayName: {
                   type: "string",
                   maxLength: 64
-                },
-                declaration: {
-                  type: "object",
-                  required: ["cid", "actorType"],
-                  properties: {
-                    cid: {
-                      type: "string"
-                    },
-                    actorType: {
-                      type: "string"
-                    }
-                  }
                 },
                 createdAt: {
                   type: "string",
@@ -12868,7 +13710,68 @@ var methodSchemaDict = {
             }
           }
         },
-        $defs: {}
+        $defs: {
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
       }
     }
   },
@@ -12878,16 +13781,19 @@ var methodSchemaDict = {
     type: "query",
     description: "Which groups is the actor a member of?",
     parameters: {
-      actor: {
-        type: "string",
-        required: true
-      },
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
+      type: "object",
+      required: ["actor"],
+      properties: {
+        actor: {
+          type: "string"
+        },
+        limit: {
+          type: "number",
+          maximum: 100
+        },
+        before: {
+          type: "string"
+        }
       }
     },
     output: {
@@ -12898,10 +13804,13 @@ var methodSchemaDict = {
         properties: {
           subject: {
             type: "object",
-            required: ["did", "handle"],
+            required: ["did", "declaration", "handle"],
             properties: {
               did: {
                 type: "string"
+              },
+              declaration: {
+                $ref: "#/$defs/declaration"
               },
               handle: {
                 type: "string"
@@ -12919,10 +13828,13 @@ var methodSchemaDict = {
             type: "array",
             items: {
               type: "object",
-              required: ["did", "handle", "declaration", "indexedAt"],
+              required: ["did", "declaration", "handle", "indexedAt"],
               properties: {
                 did: {
                   type: "string"
+                },
+                declaration: {
+                  $ref: "#/$defs/declaration"
                 },
                 handle: {
                   type: "string"
@@ -12930,18 +13842,6 @@ var methodSchemaDict = {
                 displayName: {
                   type: "string",
                   maxLength: 64
-                },
-                declaration: {
-                  type: "object",
-                  required: ["cid", "actorType"],
-                  properties: {
-                    cid: {
-                      type: "string"
-                    },
-                    actorType: {
-                      type: "string"
-                    }
-                  }
                 },
                 createdAt: {
                   type: "string",
@@ -12955,7 +13855,68 @@ var methodSchemaDict = {
             }
           }
         },
-        $defs: {}
+        $defs: {
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
       }
     }
   },
@@ -12963,7 +13924,6 @@ var methodSchemaDict = {
     lexicon: 1,
     id: "app.bsky.notification.getCount",
     type: "query",
-    parameters: {},
     output: {
       encoding: "application/json",
       schema: {
@@ -12983,12 +13943,15 @@ var methodSchemaDict = {
     id: "app.bsky.notification.list",
     type: "query",
     parameters: {
-      limit: {
-        type: "number",
-        maximum: 100
-      },
-      before: {
-        type: "string"
+      type: "object",
+      properties: {
+        limit: {
+          type: "number",
+          maximum: 100
+        },
+        before: {
+          type: "string"
+        }
       }
     },
     output: {
@@ -13029,10 +13992,13 @@ var methodSchemaDict = {
               },
               author: {
                 type: "object",
-                required: ["did", "handle"],
+                required: ["did", "declaration", "handle"],
                 properties: {
                   did: {
                     type: "string"
+                  },
+                  declaration: {
+                    $ref: "#/$defs/declaration"
                   },
                   handle: {
                     type: "string"
@@ -13045,7 +14011,7 @@ var methodSchemaDict = {
               },
               reason: {
                 type: "string",
-                $comment: "Expected values are 'vote', 'repost', 'follow', 'invite', 'mention' and 'reply'."
+                $comment: "Expected values are 'vote', 'repost', 'trend', 'follow', 'invite', 'mention' and 'reply'."
               },
               reasonSubject: {
                 type: "string"
@@ -13060,6 +14026,35 @@ var methodSchemaDict = {
                 type: "string",
                 format: "date-time"
               }
+            }
+          },
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
             }
           }
         }
@@ -13087,10 +14082,13 @@ var methodSchemaDict = {
           },
           author: {
             type: "object",
-            required: ["did", "handle"],
+            required: ["did", "declaration", "handle"],
             properties: {
               did: {
                 type: "string"
+              },
+              declaration: {
+                $ref: "#/$defs/declaration"
               },
               handle: {
                 type: "string"
@@ -13103,7 +14101,7 @@ var methodSchemaDict = {
           },
           reason: {
             type: "string",
-            $comment: "Expected values are 'vote', 'repost', 'follow', 'invite', 'mention' and 'reply'."
+            $comment: "Expected values are 'vote', 'repost', 'trend', 'follow', 'invite', 'mention' and 'reply'."
           },
           reasonSubject: {
             type: "string"
@@ -13118,6 +14116,35 @@ var methodSchemaDict = {
             type: "string",
             format: "date-time"
           }
+        }
+      },
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
         }
       }
     }
@@ -13378,6 +14405,53 @@ var recordSchemaDict = {
   "app.bsky.feed.repost": {
     lexicon: 1,
     id: "app.bsky.feed.repost",
+    type: "record",
+    key: "tid",
+    record: {
+      type: "object",
+      required: ["subject", "createdAt"],
+      properties: {
+        subject: {
+          $ref: "#/$defs/subject"
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time"
+        }
+      },
+      $defs: {
+        subject: {
+          type: "object",
+          required: ["uri", "cid"],
+          properties: {
+            uri: {
+              type: "string"
+            },
+            cid: {
+              type: "string"
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      subject: {
+        type: "object",
+        required: ["uri", "cid"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          }
+        }
+      }
+    }
+  },
+  "app.bsky.feed.trend": {
+    lexicon: 1,
+    id: "app.bsky.feed.trend",
     type: "record",
     key: "tid",
     record: {
@@ -14053,9 +15127,9 @@ function toKnownErr33(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getFollowers.ts
-var getFollowers_exports = {};
-__export(getFollowers_exports, {
+// src/client/types/app/bsky/feed/setVote.ts
+var setVote_exports = {};
+__export(setVote_exports, {
   toKnownErr: () => toKnownErr34
 });
 function toKnownErr34(e) {
@@ -14064,9 +15138,9 @@ function toKnownErr34(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getFollows.ts
-var getFollows_exports = {};
-__export(getFollows_exports, {
+// src/client/types/app/bsky/graph/getFollowers.ts
+var getFollowers_exports = {};
+__export(getFollowers_exports, {
   toKnownErr: () => toKnownErr35
 });
 function toKnownErr35(e) {
@@ -14075,9 +15149,9 @@ function toKnownErr35(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getMembers.ts
-var getMembers_exports = {};
-__export(getMembers_exports, {
+// src/client/types/app/bsky/graph/getFollows.ts
+var getFollows_exports = {};
+__export(getFollows_exports, {
   toKnownErr: () => toKnownErr36
 });
 function toKnownErr36(e) {
@@ -14086,9 +15160,9 @@ function toKnownErr36(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getMemberships.ts
-var getMemberships_exports = {};
-__export(getMemberships_exports, {
+// src/client/types/app/bsky/graph/getMembers.ts
+var getMembers_exports = {};
+__export(getMembers_exports, {
   toKnownErr: () => toKnownErr37
 });
 function toKnownErr37(e) {
@@ -14097,9 +15171,9 @@ function toKnownErr37(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/getCount.ts
-var getCount_exports = {};
-__export(getCount_exports, {
+// src/client/types/app/bsky/graph/getMemberships.ts
+var getMemberships_exports = {};
+__export(getMemberships_exports, {
   toKnownErr: () => toKnownErr38
 });
 function toKnownErr38(e) {
@@ -14108,9 +15182,9 @@ function toKnownErr38(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/list.ts
-var list_exports = {};
-__export(list_exports, {
+// src/client/types/app/bsky/notification/getCount.ts
+var getCount_exports = {};
+__export(getCount_exports, {
   toKnownErr: () => toKnownErr39
 });
 function toKnownErr39(e) {
@@ -14119,12 +15193,23 @@ function toKnownErr39(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/updateSeen.ts
-var updateSeen_exports = {};
-__export(updateSeen_exports, {
+// src/client/types/app/bsky/notification/list.ts
+var list_exports = {};
+__export(list_exports, {
   toKnownErr: () => toKnownErr40
 });
 function toKnownErr40(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/app/bsky/notification/updateSeen.ts
+var updateSeen_exports = {};
+__export(updateSeen_exports, {
+  toKnownErr: () => toKnownErr41
+});
+function toKnownErr41(e) {
   if (e instanceof XRPCError) {
   }
   return e;
@@ -14141,6 +15226,9 @@ var post_exports = {};
 
 // src/client/types/app/bsky/feed/repost.ts
 var repost_exports = {};
+
+// src/client/types/app/bsky/feed/trend.ts
+var trend_exports = {};
 
 // src/client/types/app/bsky/feed/vote.ts
 var vote_exports = {};
@@ -14440,6 +15528,7 @@ var FeedNS = class {
     this.mediaEmbed = new MediaEmbedRecord(service);
     this.post = new PostRecord(service);
     this.repost = new RepostRecord(service);
+    this.trend = new TrendRecord(service);
     this.vote = new VoteRecord(service);
   }
   getAuthorFeed(params, opts) {
@@ -14465,6 +15554,11 @@ var FeedNS = class {
   getVotes(params, opts) {
     return this._service.xrpc.call("app.bsky.feed.getVotes", params, void 0, opts).catch((e) => {
       throw toKnownErr33(e);
+    });
+  }
+  setVote(data, opts) {
+    return this._service.xrpc.call("app.bsky.feed.setVote", opts?.qp, data, opts).catch((e) => {
+      throw toKnownErr34(e);
     });
   }
 };
@@ -14579,6 +15673,43 @@ var RepostRecord = class {
     );
   }
 };
+var TrendRecord = class {
+  constructor(service) {
+    this._service = service;
+  }
+  async list(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.listRecords", {
+      collection: "app.bsky.feed.trend",
+      ...params
+    });
+    return res.data;
+  }
+  async get(params) {
+    const res = await this._service.xrpc.call("com.atproto.repo.getRecord", {
+      collection: "app.bsky.feed.trend",
+      ...params
+    });
+    return res.data;
+  }
+  async create(params, record, headers) {
+    record.$type = "app.bsky.feed.trend";
+    const res = await this._service.xrpc.call(
+      "com.atproto.repo.createRecord",
+      void 0,
+      { collection: "app.bsky.feed.trend", ...params, record },
+      { encoding: "application/json", headers }
+    );
+    return res.data;
+  }
+  async delete(params, headers) {
+    await this._service.xrpc.call(
+      "com.atproto.repo.deleteRecord",
+      void 0,
+      { collection: "app.bsky.feed.trend", ...params },
+      { headers }
+    );
+  }
+};
 var VoteRecord = class {
   constructor(service) {
     this._service = service;
@@ -14625,22 +15756,22 @@ var GraphNS = class {
   }
   getFollowers(params, opts) {
     return this._service.xrpc.call("app.bsky.graph.getFollowers", params, void 0, opts).catch((e) => {
-      throw toKnownErr34(e);
+      throw toKnownErr35(e);
     });
   }
   getFollows(params, opts) {
     return this._service.xrpc.call("app.bsky.graph.getFollows", params, void 0, opts).catch((e) => {
-      throw toKnownErr35(e);
+      throw toKnownErr36(e);
     });
   }
   getMembers(params, opts) {
     return this._service.xrpc.call("app.bsky.graph.getMembers", params, void 0, opts).catch((e) => {
-      throw toKnownErr36(e);
+      throw toKnownErr37(e);
     });
   }
   getMemberships(params, opts) {
     return this._service.xrpc.call("app.bsky.graph.getMemberships", params, void 0, opts).catch((e) => {
-      throw toKnownErr37(e);
+      throw toKnownErr38(e);
     });
   }
 };
@@ -14761,17 +15892,17 @@ var NotificationNS = class {
   }
   getCount(params, opts) {
     return this._service.xrpc.call("app.bsky.notification.getCount", params, void 0, opts).catch((e) => {
-      throw toKnownErr38(e);
+      throw toKnownErr39(e);
     });
   }
   list(params, opts) {
     return this._service.xrpc.call("app.bsky.notification.list", params, void 0, opts).catch((e) => {
-      throw toKnownErr39(e);
+      throw toKnownErr40(e);
     });
   }
   updateSeen(data, opts) {
     return this._service.xrpc.call("app.bsky.notification.updateSeen", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr40(e);
+      throw toKnownErr41(e);
     });
   }
 };
@@ -14963,6 +16094,8 @@ var SessionManager = class extends import_events.default {
   AppBskyFeedMediaEmbed,
   AppBskyFeedPost,
   AppBskyFeedRepost,
+  AppBskyFeedSetVote,
+  AppBskyFeedTrend,
   AppBskyFeedVote,
   AppBskyGraphAssertion,
   AppBskyGraphConfirmation,
@@ -15024,6 +16157,7 @@ var SessionManager = class extends import_events.default {
   SessionXrpcServiceClient,
   SyncNS,
   SystemNS,
+  TrendRecord,
   VoteRecord,
   sessionClient
 });

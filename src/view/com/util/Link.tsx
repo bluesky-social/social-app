@@ -16,7 +16,10 @@ export const Link = observer(function Link({
   children?: React.ReactNode
 }) {
   const store = useStores()
-  const onPress = () => store.nav.navigate(href)
+  const onPress = () => {
+    store.shell.closeModal() // close any active modals
+    store.nav.navigate(href)
+  }
   const onLongPress = () => {
     store.shell.openModal(new LinkActionsModel(href, title || href))
   }

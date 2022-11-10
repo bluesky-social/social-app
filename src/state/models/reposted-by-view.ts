@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
 import * as GetRepostedBy from '../../third-party/api/src/client/types/app/bsky/feed/getRepostedBy'
 import {RootStoreModel} from './root-store'
+import {Declaration} from './_common'
 
 type RepostedByItem = GetRepostedBy.OutputSchema['repostedBy'][number]
 
@@ -13,6 +14,7 @@ export class RepostedByViewItemModel implements RepostedByItem {
   did: string = ''
   handle: string = ''
   displayName: string = ''
+  declaration: Declaration = {cid: '', actorType: ''}
   createdAt?: string
   indexedAt: string = ''
 
