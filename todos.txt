@@ -2,26 +2,27 @@ Paul's todo list
 
 - General
   - Update to RN 0.70
-  - Cache some profile/userinfo lookups
+  > Cache some profile/userinfo lookups
   - Cursor behaviors on all views
   - Update swipe behaviors: edge always goes back, leftmost always goes back, main connects to selector if present
 - Onboarding flow
-  - Confirm email
-  - Setup rpfoile?
+  > Confirm email
+  - Setup profile?
 - Create scene
-  - Set profile during creation
+  > Set profile during creation
 - Discover scenes view
   - *
 - Invite to scene
   - User search
-  - Filter out scenes from suggestions
-  - Filter out unconfirmed invites from suggestions
+  > Filter out scenes from suggestions
+  > Filter out unconfirmed invites from suggestions
   - Use pagination to make sure there are suggestions
   - Unconfirmed invites
 - User profile
   - Scene
-    - Trending
-    - Edit profile
+    > Trending
+    > Edit profile
+    > Remove member
 - Reply gating
   - Composer
   - View on post
@@ -35,8 +36,7 @@ Paul's todo list
   - Follows list
   - Members list
 - Bugs
-  - Create account broken
-  - Follows are broken
-  - Auth token refresh seems broken
+  > Create account broken
+  > Auth token refresh seems broken
   - Check that sub components arent reloading too much
   - Titles are getting screwed up (possibly swipe related)
