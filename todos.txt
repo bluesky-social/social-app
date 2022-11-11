@@ -34,3 +34,6 @@ Paul's todo list
   - Auth token refresh seems broken
   - Check that sub components arent reloading too much
   - Titles are getting screwed up (possibly swipe related)
+  > Dont suggest self for follows
+  > Double post on post?
+  > Handle no displayname everywhere
