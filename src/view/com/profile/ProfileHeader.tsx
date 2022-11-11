@@ -127,7 +127,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     if (isCreator) {
       dropdownItems.push({
         label: 'Edit Profile',
-        onPress: () => {}, // TODO
+        onPress: onPressEditProfile,
       })
     }
     if (isMember) {

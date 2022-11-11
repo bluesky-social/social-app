@@ -43,7 +43,13 @@ export function Component({}: {}) {
         handle: fullHandle,
       })
       // set the scene profile
-      // TODO
+      await store.api.app.bsky.actor
+        .updateProfile({
+          did: createSceneRes.data.did,
+          displayName,
+          description,
+        })
+        .catch(e => console.error(e)) // an error here is not critical
       // follow the scene
       await store.api.app.bsky.graph.follow
         .create(

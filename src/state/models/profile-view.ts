@@ -111,10 +111,7 @@ export class ProfileViewModel {
   }
 
   async updateProfile(fn: (existing?: Profile.Record) => Profile.Record) {
-    if (this.did !== this.rootStore.me.did) {
-      throw new Error('Not your profile!')
-    }
-    await apilib.updateProfile(this.rootStore, fn)
+    await apilib.updateProfile(this.rootStore, this.did, fn)
     await this.refresh()
   }
 

@@ -138,29 +138,17 @@ export async function unfollow(store: RootStoreModel, followUri: string) {
 
 export async function updateProfile(
   store: RootStoreModel,
+  did: string,
   modifyFn: (existing?: Profile.Record) => Profile.Record,
 ) {
-  // TODO NOW  replaceme
   const res = await store.api.app.bsky.actor.profile.list({
-    user: store.me.did || '',
+    user: did || '',
   })
   const existing = res.records[0]
-  if (existing) {
-    await store.api.app.bsky.actor.profile.put(
-      {
-        did: store.me.did || '',
-        rkey: new AtUri(existing.uri).rkey,
-      },
-      modifyFn(existing.value),
-    )
-  } else {
-    await store.api.app.bsky.actor.profile.create(
-      {
-        did: store.me.did || '',
-      },
-      modifyFn(),
-    )
-  }
+  await store.api.app.bsky.actor.updateProfile({
+    did: did || '',
+    ...modifyFn(existing?.value),
+  })
 }
 
 export async function inviteToScene(

@@ -7,6 +7,7 @@ export interface CallOptions {
     encoding: 'application/json';
 }
 export interface InputSchema {
+    did?: string;
     displayName?: string;
     description?: string;
 }
