@@ -1,27 +1,30 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from './root-store'
-import {MembersViewModel} from './members-view'
 import {UserFollowsViewModel, FollowItem} from './user-follows-view'
-import {APP_BSKY_SYSTEM} from '../../third-party/api'
+import {GetAssertionsView} from './get-assertions-view'
+import {APP_BSKY_SYSTEM, APP_BSKY_GRAPH} from '../../third-party/api'
 
-export interface SuggestedInvites {
+export interface SuggestedInvitesViewParams {
   sceneDid: string
 }
 
-export class SuggestedInvites {
+export class SuggestedInvitesView {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
-  params: SuggestedInvites
-  sceneMembersView: MembersViewModel
+  params: SuggestedInvitesViewParams
+  sceneAssertionsView: GetAssertionsView
   myFollowsView: UserFollowsViewModel
 
   // data
   suggestions: FollowItem[] = []
 
-  constructor(public rootStore: RootStoreModel, params: SuggestedInvites) {
+  constructor(
+    public rootStore: RootStoreModel,
+    params: SuggestedInvitesViewParams,
+  ) {
     makeAutoObservable(
       this,
       {
@@ -31,8 +34,9 @@ export class SuggestedInvites {
       {autoBind: true},
     )
     this.params = params
-    this.sceneMembersView = new MembersViewModel(rootStore, {
-      actor: params.sceneDid,
+    this.sceneAssertionsView = new GetAssertionsView(rootStore, {
+      author: params.sceneDid,
+      assertion: APP_BSKY_GRAPH.AssertMember,
     })
     this.myFollowsView = new UserFollowsViewModel(rootStore, {
       user: rootStore.me.did || '',
@@ -49,6 +53,10 @@ export class SuggestedInvites {
 
   get isEmpty() {
     return this.hasLoaded && !this.hasContent
+  }
+
+  get unconfirmed() {
+    return this.sceneAssertionsView.unconfirmed
   }
 
   // public api
@@ -88,7 +96,8 @@ export class SuggestedInvites {
   private async _fetch(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      await this.sceneMembersView.setup()
+      // TODO need to fetch all!
+      await this.sceneAssertionsView.setup()
     } catch (e) {
       console.error(e)
       this._xIdle(
@@ -112,9 +121,7 @@ export class SuggestedInvites {
       if (follow.declaration.actorType !== APP_BSKY_SYSTEM.ActorUser) {
         continue
       }
-      if (
-        !this.sceneMembersView.members.find(member => member.did === follow.did)
-      ) {
+      if (!this.sceneAssertionsView.getBySubject(follow.did)) {
         newSuggestions.push(follow)
       }
     }

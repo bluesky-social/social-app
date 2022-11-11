@@ -1,27 +1,26 @@
 import {makeAutoObservable} from 'mobx'
-import * as GetMembers from '../../third-party/api/src/client/types/app/bsky/graph/getMembers'
+import * as GetAssertions from '../../third-party/api/src/client/types/app/bsky/graph/getAssertions'
 import {RootStoreModel} from './root-store'
 
-type Subject = GetMembers.OutputSchema['subject']
-export type MemberItem = GetMembers.OutputSchema['members'][number] & {
+type ResponseAssertion = GetAssertions.OutputSchema['assertions'][number]
+export type Assertion = ResponseAssertion & {
   _reactKey: string
 }
 
-export class MembersViewModel {
+export class GetAssertionsView {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
-  params: GetMembers.QueryParams
+  params: GetAssertions.QueryParams
 
   // data
-  subject: Subject = {did: '', handle: '', displayName: ''}
-  members: MemberItem[] = []
+  assertions: Assertion[] = []
 
   constructor(
     public rootStore: RootStoreModel,
-    params: GetMembers.QueryParams,
+    params: GetAssertions.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -35,7 +34,7 @@ export class MembersViewModel {
   }
 
   get hasContent() {
-    return this.subject.did !== ''
+    return this.assertions.length > 0
   }
 
   get hasError() {
@@ -46,8 +45,16 @@ export class MembersViewModel {
     return this.hasLoaded && !this.hasContent
   }
 
-  isMember(did: string) {
-    return this.members.find(member => member.did === did)
+  getBySubject(did: string) {
+    return this.assertions.find(assertion => assertion.subject.did === did)
+  }
+
+  get confirmed() {
+    return this.assertions.filter(assertion => !!assertion.confirmation)
+  }
+
+  get unconfirmed() {
+    return this.assertions.filter(assertion => !assertion.confirmation)
   }
 
   // public api
@@ -87,28 +94,28 @@ export class MembersViewModel {
   private async _fetch(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.graph.getMembers(
+      const res = await this.rootStore.api.app.bsky.graph.getAssertions(
         this.params,
       )
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load feed: ${e.toString()}`)
+      this._xIdle(e.toString())
     }
   }
 
-  private _replaceAll(res: GetMembers.Response) {
-    this.subject.did = res.data.subject.did
-    this.subject.handle = res.data.subject.handle
-    this.subject.displayName = res.data.subject.displayName
-    this.members.length = 0
+  private _replaceAll(res: GetAssertions.Response) {
+    this.assertions.length = 0
     let counter = 0
-    for (const item of res.data.members) {
-      this._append({_reactKey: `item-${counter++}`, ...item})
+    for (const item of res.data.assertions) {
+      this._append({
+        _reactKey: `item-${counter++}`,
+        ...item,
+      })
     }
   }
 
-  private _append(item: MemberItem) {
-    this.members.push(item)
+  private _append(item: Assertion) {
+    this.assertions.push(item)
   }
 }

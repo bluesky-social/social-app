@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useMemo} from 'react'
+import {observer} from 'mobx-react-lite'
 import Toast from '../util/Toast'
 import {
   ActivityIndicator,
@@ -23,13 +24,18 @@ import {ErrorMessage} from '../util/ErrorMessage'
 import {useStores} from '../../../state'
 import * as apilib from '../../../state/lib/api'
 import {ProfileViewModel} from '../../../state/models/profile-view'
-import {SuggestedInvites} from '../../../state/models/suggested-invites'
+import {SuggestedInvitesView} from '../../../state/models/suggested-invites-view'
+import {Assertion} from '../../../state/models/get-assertions-view'
 import {FollowItem} from '../../../state/models/user-follows-view'
 import {s, colors} from '../../lib/styles'
 
 export const snapPoints = ['70%']
 
-export function Component({profileView}: {profileView: ProfileViewModel}) {
+export const Component = observer(function Component({
+  profileView,
+}: {
+  profileView: ProfileViewModel
+}) {
   const store = useStores()
   const layout = useWindowDimensions()
   const [index, setIndex] = useState(0)
@@ -40,12 +46,18 @@ export function Component({profileView}: {profileView: ProfileViewModel}) {
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const suggestions = useMemo(
-    () => new SuggestedInvites(store, {sceneDid: profileView.did}),
+    () => new SuggestedInvitesView(store, {sceneDid: profileView.did}),
     [profileView.did],
   )
   const [createdInvites, setCreatedInvites] = useState<Record<string, string>>(
     {},
   )
+  // TODO: it would be much better if we just used the suggestions view for the deleted pending invites
+  //       but mobx isnt picking up on the state change in suggestions.unconfirmed and I dont have
+  //       time to debug that right now -prf
+  const [deletedPendingInvites, setDeletedPendingInvites] = useState<
+    Record<string, boolean>
+  >({})
 
   useEffect(() => {
     let aborted = false
@@ -95,6 +107,28 @@ export function Component({profileView}: {profileView: ProfileViewModel}) {
     }
   }
 
+  const onPressDeleteInvite = async (assertion: Assertion) => {
+    setError('')
+    const urip = new AtUri(assertion.uri)
+    try {
+      await store.api.app.bsky.graph.assertion.delete({
+        did: profileView.did,
+        rkey: urip.rkey,
+      })
+      setDeletedPendingInvites({
+        [assertion.uri]: true,
+        ...deletedPendingInvites,
+      })
+      Toast.show('Invite removed', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.TOP,
+      })
+    } catch (e) {
+      setError('There was an issue with the invite. Please try again.')
+      console.error(e)
+    }
+  }
+
   const renderSuggestionItem = ({item}: {item: FollowItem}) => {
     const createdInvite = createdInvites[item.did]
     return (
@@ -120,6 +154,27 @@ export function Component({profileView}: {profileView: ProfileViewModel}) {
             ? onPressInvite(item)
             : onPressUndo(item.did, createdInvite)
         }
+      />
+    )
+  }
+
+  const renderPendingInviteItem = ({item}: {item: Assertion}) => {
+    const wasDeleted = deletedPendingInvites[item.uri]
+    if (wasDeleted) {
+      return <View />
+    }
+    return (
+      <ProfileCard
+        did={item.subject.did}
+        handle={item.subject.handle}
+        displayName={item.subject.displayName}
+        renderButton={() => (
+          <>
+            <FontAwesomeIcon icon="x" style={[s.mr5]} size={14} />
+            <Text style={[s.fw400, s.f14]}>Undo invite</Text>
+          </>
+        )}
+        onPressButton={() => onPressDeleteInvite(item)}
       />
     )
   }
@@ -163,11 +218,30 @@ export function Component({profileView}: {profileView: ProfileViewModel}) {
   )
 
   const PendingInvites = () => (
-    <View>
-      <View style={styles.todoContainer}>
-        <Text style={styles.todoLabel}>
-          Pending invites are still being implemented. Check back soon!
-        </Text>
+    <View style={s.flex1}>
+      {suggestions.sceneAssertionsView.isLoading ? (
+        <ActivityIndicator />
+      ) : undefined}
+      <View style={s.flex1}>
+        {!suggestions.unconfirmed.length ? (
+          <Text
+            style={{
+              textAlign: 'center',
+              paddingTop: 10,
+              paddingHorizontal: 40,
+              fontWeight: 'bold',
+              color: colors.gray5,
+            }}>
+            No pending invites.
+          </Text>
+        ) : (
+          <FlatList
+            data={suggestions.unconfirmed}
+            keyExtractor={item => item._reactKey}
+            renderItem={renderPendingInviteItem}
+            style={s.flex1}
+          />
+        )}
       </View>
     </View>
   )
@@ -207,7 +281,7 @@ export function Component({profileView}: {profileView: ProfileViewModel}) {
       />
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   title: {

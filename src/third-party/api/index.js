@@ -6960,6 +6960,7 @@ __export(src_exports, {
   AppBskyGraphAssertion: () => assertion_exports,
   AppBskyGraphConfirmation: () => confirmation_exports,
   AppBskyGraphFollow: () => follow_exports,
+  AppBskyGraphGetAssertions: () => getAssertions_exports,
   AppBskyGraphGetFollowers: () => getFollowers_exports,
   AppBskyGraphGetFollows: () => getFollows_exports,
   AppBskyGraphGetMembers: () => getMembers_exports,
@@ -13340,6 +13341,231 @@ var methodSchemaDict = {
       }
     }
   },
+  "app.bsky.graph.getAssertions": {
+    lexicon: 1,
+    id: "app.bsky.graph.getAssertions",
+    type: "query",
+    description: "General-purpose query for assertions.",
+    parameters: {
+      type: "object",
+      properties: {
+        author: {
+          type: "string"
+        },
+        subject: {
+          type: "string"
+        },
+        assertion: {
+          type: "string"
+        },
+        confirmed: {
+          type: "boolean"
+        },
+        limit: {
+          type: "number",
+          maximum: 100
+        },
+        before: {
+          type: "string"
+        }
+      }
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        required: ["assertions"],
+        properties: {
+          cursor: {
+            type: "string"
+          },
+          assertions: {
+            type: "array",
+            items: {
+              type: "object",
+              required: [
+                "uri",
+                "cid",
+                "assertion",
+                "author",
+                "subject",
+                "indexedAt",
+                "createdAt"
+              ],
+              properties: {
+                uri: {
+                  type: "string"
+                },
+                cid: {
+                  type: "string"
+                },
+                assertion: {
+                  type: "string"
+                },
+                confirmation: {
+                  $ref: "#/$defs/confirmation"
+                },
+                author: {
+                  $ref: "#/$defs/actor"
+                },
+                subject: {
+                  $ref: "#/$defs/actor"
+                },
+                indexedAt: {
+                  type: "string",
+                  format: "date-time"
+                },
+                createdAt: {
+                  type: "string",
+                  format: "date-time"
+                }
+              }
+            }
+          }
+        },
+        $defs: {
+          confirmation: {
+            type: "object",
+            required: ["uri", "cid", "indexedAt", "createdAt"],
+            properties: {
+              uri: {
+                type: "string"
+              },
+              cid: {
+                type: "string"
+              },
+              indexedAt: {
+                type: "string",
+                format: "date-time"
+              },
+              createdAt: {
+                type: "string",
+                format: "date-time"
+              }
+            }
+          },
+          actor: {
+            type: "object",
+            required: ["did", "declaration", "handle"],
+            properties: {
+              did: {
+                type: "string"
+              },
+              declaration: {
+                $ref: "#/$defs/declaration"
+              },
+              handle: {
+                type: "string"
+              },
+              displayName: {
+                type: "string",
+                maxLength: 64
+              }
+            }
+          },
+          declaration: {
+            type: "object",
+            required: ["cid", "actorType"],
+            properties: {
+              cid: {
+                type: "string"
+              },
+              actorType: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/actorKnown"
+                  },
+                  {
+                    $ref: "#/$defs/actorUnknown"
+                  }
+                ]
+              }
+            }
+          },
+          actorKnown: {
+            type: "string",
+            enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+          },
+          actorUnknown: {
+            type: "string",
+            not: {
+              enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+            }
+          }
+        }
+      }
+    },
+    defs: {
+      confirmation: {
+        type: "object",
+        required: ["uri", "cid", "indexedAt", "createdAt"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          },
+          indexedAt: {
+            type: "string",
+            format: "date-time"
+          },
+          createdAt: {
+            type: "string",
+            format: "date-time"
+          }
+        }
+      },
+      actor: {
+        type: "object",
+        required: ["did", "declaration", "handle"],
+        properties: {
+          did: {
+            type: "string"
+          },
+          declaration: {
+            $ref: "#/$defs/declaration"
+          },
+          handle: {
+            type: "string"
+          },
+          displayName: {
+            type: "string",
+            maxLength: 64
+          }
+        }
+      },
+      declaration: {
+        type: "object",
+        required: ["cid", "actorType"],
+        properties: {
+          cid: {
+            type: "string"
+          },
+          actorType: {
+            oneOf: [
+              {
+                $ref: "#/$defs/actorKnown"
+              },
+              {
+                $ref: "#/$defs/actorUnknown"
+              }
+            ]
+          }
+        }
+      },
+      actorKnown: {
+        type: "string",
+        enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+      },
+      actorUnknown: {
+        type: "string",
+        not: {
+          enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
+        }
+      }
+    }
+  },
   "app.bsky.graph.getFollowers": {
     lexicon: 1,
     id: "app.bsky.graph.getFollowers",
@@ -15138,9 +15364,9 @@ function toKnownErr34(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getFollowers.ts
-var getFollowers_exports = {};
-__export(getFollowers_exports, {
+// src/client/types/app/bsky/graph/getAssertions.ts
+var getAssertions_exports = {};
+__export(getAssertions_exports, {
   toKnownErr: () => toKnownErr35
 });
 function toKnownErr35(e) {
@@ -15149,9 +15375,9 @@ function toKnownErr35(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getFollows.ts
-var getFollows_exports = {};
-__export(getFollows_exports, {
+// src/client/types/app/bsky/graph/getFollowers.ts
+var getFollowers_exports = {};
+__export(getFollowers_exports, {
   toKnownErr: () => toKnownErr36
 });
 function toKnownErr36(e) {
@@ -15160,9 +15386,9 @@ function toKnownErr36(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getMembers.ts
-var getMembers_exports = {};
-__export(getMembers_exports, {
+// src/client/types/app/bsky/graph/getFollows.ts
+var getFollows_exports = {};
+__export(getFollows_exports, {
   toKnownErr: () => toKnownErr37
 });
 function toKnownErr37(e) {
@@ -15171,9 +15397,9 @@ function toKnownErr37(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getMemberships.ts
-var getMemberships_exports = {};
-__export(getMemberships_exports, {
+// src/client/types/app/bsky/graph/getMembers.ts
+var getMembers_exports = {};
+__export(getMembers_exports, {
   toKnownErr: () => toKnownErr38
 });
 function toKnownErr38(e) {
@@ -15182,9 +15408,9 @@ function toKnownErr38(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/getCount.ts
-var getCount_exports = {};
-__export(getCount_exports, {
+// src/client/types/app/bsky/graph/getMemberships.ts
+var getMemberships_exports = {};
+__export(getMemberships_exports, {
   toKnownErr: () => toKnownErr39
 });
 function toKnownErr39(e) {
@@ -15193,9 +15419,9 @@ function toKnownErr39(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/list.ts
-var list_exports = {};
-__export(list_exports, {
+// src/client/types/app/bsky/notification/getCount.ts
+var getCount_exports = {};
+__export(getCount_exports, {
   toKnownErr: () => toKnownErr40
 });
 function toKnownErr40(e) {
@@ -15204,12 +15430,23 @@ function toKnownErr40(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/updateSeen.ts
-var updateSeen_exports = {};
-__export(updateSeen_exports, {
+// src/client/types/app/bsky/notification/list.ts
+var list_exports = {};
+__export(list_exports, {
   toKnownErr: () => toKnownErr41
 });
 function toKnownErr41(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/app/bsky/notification/updateSeen.ts
+var updateSeen_exports = {};
+__export(updateSeen_exports, {
+  toKnownErr: () => toKnownErr42
+});
+function toKnownErr42(e) {
   if (e instanceof XRPCError) {
   }
   return e;
@@ -15754,24 +15991,29 @@ var GraphNS = class {
     this.confirmation = new ConfirmationRecord(service);
     this.follow = new FollowRecord(service);
   }
+  getAssertions(params, opts) {
+    return this._service.xrpc.call("app.bsky.graph.getAssertions", params, void 0, opts).catch((e) => {
+      throw toKnownErr35(e);
+    });
+  }
   getFollowers(params, opts) {
     return this._service.xrpc.call("app.bsky.graph.getFollowers", params, void 0, opts).catch((e) => {
-      throw toKnownErr35(e);
+      throw toKnownErr36(e);
     });
   }
   getFollows(params, opts) {
     return this._service.xrpc.call("app.bsky.graph.getFollows", params, void 0, opts).catch((e) => {
-      throw toKnownErr36(e);
+      throw toKnownErr37(e);
     });
   }
   getMembers(params, opts) {
     return this._service.xrpc.call("app.bsky.graph.getMembers", params, void 0, opts).catch((e) => {
-      throw toKnownErr37(e);
+      throw toKnownErr38(e);
     });
   }
   getMemberships(params, opts) {
     return this._service.xrpc.call("app.bsky.graph.getMemberships", params, void 0, opts).catch((e) => {
-      throw toKnownErr38(e);
+      throw toKnownErr39(e);
     });
   }
 };
@@ -15892,17 +16134,17 @@ var NotificationNS = class {
   }
   getCount(params, opts) {
     return this._service.xrpc.call("app.bsky.notification.getCount", params, void 0, opts).catch((e) => {
-      throw toKnownErr39(e);
+      throw toKnownErr40(e);
     });
   }
   list(params, opts) {
     return this._service.xrpc.call("app.bsky.notification.list", params, void 0, opts).catch((e) => {
-      throw toKnownErr40(e);
+      throw toKnownErr41(e);
     });
   }
   updateSeen(data, opts) {
     return this._service.xrpc.call("app.bsky.notification.updateSeen", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr41(e);
+      throw toKnownErr42(e);
     });
   }
 };
@@ -16100,6 +16342,7 @@ var SessionManager = class extends import_events.default {
   AppBskyGraphAssertion,
   AppBskyGraphConfirmation,
   AppBskyGraphFollow,
+  AppBskyGraphGetAssertions,
   AppBskyGraphGetFollowers,
   AppBskyGraphGetFollows,
   AppBskyGraphGetMembers,
