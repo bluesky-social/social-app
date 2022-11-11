@@ -1,5 +1,7 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import * as GetMembers from '../../third-party/api/src/client/types/app/bsky/graph/getMembers'
+import {APP_BSKY_GRAPH} from '../../third-party/api'
+import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 
 type Subject = GetMembers.OutputSchema['subject']
@@ -16,7 +18,12 @@ export class MembersViewModel {
   params: GetMembers.QueryParams
 
   // data
-  subject: Subject = {did: '', handle: '', displayName: ''}
+  subject: Subject = {
+    did: '',
+    handle: '',
+    displayName: '',
+    declaration: {cid: '', actorType: ''},
+  }
   members: MemberItem[] = []
 
   constructor(
@@ -65,6 +72,26 @@ export class MembersViewModel {
     // TODO
   }
 
+  async removeMember(did: string) {
+    const assertsRes = await this.rootStore.api.app.bsky.graph.getAssertions({
+      author: this.subject.did,
+      subject: did,
+      assertion: APP_BSKY_GRAPH.AssertMember,
+    })
+    if (assertsRes.data.assertions.length < 1) {
+      throw new Error('Could not find membership record')
+    }
+    for (const assert of assertsRes.data.assertions) {
+      await this.rootStore.api.app.bsky.graph.assertion.delete({
+        did: this.subject.did,
+        rkey: new AtUri(assert.uri).rkey,
+      })
+    }
+    runInAction(() => {
+      this.members = this.members.filter(m => m.did !== did)
+    })
+  }
+
   // state transitions
   // =
 
@@ -101,6 +128,7 @@ export class MembersViewModel {
     this.subject.did = res.data.subject.did
     this.subject.handle = res.data.subject.handle
     this.subject.displayName = res.data.subject.displayName
+    this.subject.declaration = res.data.subject.declaration
     this.members.length = 0
     let counter = 0
     for (const item of res.data.members) {

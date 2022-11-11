@@ -18,9 +18,10 @@ Paul's todo list
   - User search
   - Use pagination to make sure there are suggestions
 - User profile
+  - User
+    - Invite to scene
   - Scene
     > Edit profile
-    > Remove member
 - Reply gating
   - Composer
   - View on post
