@@ -1,15 +1,19 @@
 import React, {useEffect, useState, useMemo} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ViewSelector} from '../com/util/ViewSelector'
 import {ScreenParams} from '../routes'
 import {ProfileUiModel, Sections} from '../../state/models/profile-ui'
+import {MembershipItem} from '../../state/models/memberships-view'
 import {useStores} from '../../state'
+import {ConfirmModel} from '../../state/models/shell-ui'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedItem} from '../com/posts/FeedItem'
 import {ProfileCard} from '../com/profile/ProfileCard'
 import {ErrorScreen} from '../com/util/ErrorScreen'
 import {ErrorMessage} from '../com/util/ErrorMessage'
+import Toast from '../com/util/Toast'
 import {s, colors} from '../lib/styles'
 import {UserGroupIcon} from '../lib/icons'
 
@@ -65,9 +69,27 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
   const onPressTryAgain = () => {
     uiState.setup()
   }
+  const onPressRemoveMember = (membership: MembershipItem) => {
+    store.shell.openModal(
+      new ConfirmModel(
+        `Remove ${membership.displayName || membership.handle}?`,
+        `You'll be able to invite them again if you change your mind.`,
+        async () => {
+          await uiState.members.removeMember(membership.did)
+          Toast.show(`User removed`, {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.TOP,
+          })
+        },
+      ),
+    )
+  }
 
   // rendering
   // =
+
+  const isSceneCreator =
+    uiState.isScene && store.me.did === uiState.profile.creator
 
   const renderHeader = () => {
     if (!uiState) {
@@ -155,11 +177,26 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
         if (uiState.members.hasContent) {
           items = uiState.members.members.slice()
           renderItem = (item: any) => {
+            const shouldAdmin = isSceneCreator && item.did !== store.me.did
+            const renderButton = shouldAdmin
+              ? () => (
+                  <>
+                    <FontAwesomeIcon
+                      icon="user-xmark"
+                      style={[s.mr5]}
+                      size={14}
+                    />
+                    <Text style={[s.fw400, s.f14]}>Remove</Text>
+                  </>
+                )
+              : undefined
             return (
               <ProfileCard
                 did={item.did}
                 handle={item.handle}
                 displayName={item.displayName}
+                renderButton={renderButton}
+                onPressButton={() => onPressRemoveMember(item)}
               />
             )
           }
