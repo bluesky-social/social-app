@@ -16,7 +16,6 @@ Paul's todo list
   - *
 - Invite to scene
   - User search
-  > Filter out scenes from suggestions
   > Filter out unconfirmed invites from suggestions
   - Use pagination to make sure there are suggestions
   - Unconfirmed invites

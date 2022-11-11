@@ -2,28 +2,26 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from './root-store'
 import {MembersViewModel} from './members-view'
 import {UserFollowsViewModel, FollowItem} from './user-follows-view'
+import {APP_BSKY_SYSTEM} from '../../third-party/api'
 
-export interface SceneInviteSuggestionsParams {
+export interface SuggestedInvites {
   sceneDid: string
 }
 
-export class SceneInviteSuggestions {
+export class SuggestedInvites {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
-  params: SceneInviteSuggestionsParams
+  params: SuggestedInvites
   sceneMembersView: MembersViewModel
   myFollowsView: UserFollowsViewModel
 
   // data
   suggestions: FollowItem[] = []
 
-  constructor(
-    public rootStore: RootStoreModel,
-    params: SceneInviteSuggestionsParams,
-  ) {
+  constructor(public rootStore: RootStoreModel, params: SuggestedInvites) {
     makeAutoObservable(
       this,
       {
@@ -111,7 +109,9 @@ export class SceneInviteSuggestions {
     // collect all followed users that arent already in the scene
     const newSuggestions: FollowItem[] = []
     for (const follow of this.myFollowsView.follows) {
-      // TODO: filter out scenes
+      if (follow.declaration.actorType !== APP_BSKY_SYSTEM.ActorUser) {
+        continue
+      }
       if (
         !this.sceneMembersView.members.find(member => member.did === follow.did)
       ) {

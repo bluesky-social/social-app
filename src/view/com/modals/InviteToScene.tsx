@@ -23,7 +23,7 @@ import {ErrorMessage} from '../util/ErrorMessage'
 import {useStores} from '../../../state'
 import * as apilib from '../../../state/lib/api'
 import {ProfileViewModel} from '../../../state/models/profile-view'
-import {SceneInviteSuggestions} from '../../../state/models/scene-invite-suggestions'
+import {SuggestedInvites} from '../../../state/models/suggested-invites'
 import {FollowItem} from '../../../state/models/user-follows-view'
 import {s, colors} from '../../lib/styles'
 
@@ -40,7 +40,7 @@ export function Component({profileView}: {profileView: ProfileViewModel}) {
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const suggestions = useMemo(
-    () => new SceneInviteSuggestions(store, {sceneDid: profileView.did}),
+    () => new SuggestedInvites(store, {sceneDid: profileView.did}),
     [profileView.did],
   )
   const [createdInvites, setCreatedInvites] = useState<Record<string, string>>(
