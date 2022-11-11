@@ -6,10 +6,8 @@ Paul's todo list
   - Cursor behaviors on all views
   - Update swipe behaviors: edge always goes back, leftmost always goes back, main connects to selector if present
 - Onboarding flow
-  > Confirm email
+  - Confirm email
   - Setup profile?
-- Create scene
-  > Set profile during creation
 - Onboarding
   - Finish explainers
 - Discover scenes view
@@ -20,8 +18,6 @@ Paul's todo list
 - User profile
   - User
     - Invite to scene
-  - Scene
-    > Edit profile
 - Reply gating
   - Composer
   - View on post
@@ -35,6 +31,6 @@ Paul's todo list
   - Follows list
   - Members list
 - Bugs
-  > Auth token refresh seems broken
+  - Auth token refresh seems broken
   - Check that sub components arent reloading too much
   - Titles are getting screwed up (possibly swipe related)

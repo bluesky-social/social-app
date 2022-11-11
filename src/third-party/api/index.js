@@ -11770,6 +11770,9 @@ var methodSchemaDict = {
       schema: {
         type: "object",
         properties: {
+          did: {
+            type: "string"
+          },
           displayName: {
             type: "string",
             maxLength: 64
