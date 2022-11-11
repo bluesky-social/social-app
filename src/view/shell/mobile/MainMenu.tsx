@@ -161,6 +161,7 @@ export const MainMenu = observer(
       )
     }
 
+    /*TODO <MenuItem icon={['far', 'compass']} label="Discover" url="/" />*/
     return (
       <>
         <TouchableWithoutFeedback onPress={onClose}>
@@ -212,7 +213,6 @@ export const MainMenu = observer(
 
               <Text style={styles.heading}>Scenes</Text>
               <MenuItems>
-                <MenuItem icon={['far', 'compass']} label="Discover" url="/" />
                 <MenuItem
                   icon={'user-group'}
                   label="Create Scene"
