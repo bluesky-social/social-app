@@ -28,6 +28,7 @@ export class FeedItemModel implements GetTimeline.FeedItem {
     declaration: {cid: '', actorType: ''},
   }
   repostedBy?: GetTimeline.Actor
+  trendedBy?: GetTimeline.Actor
   record: Record<string, unknown> = {}
   embed?:
     | GetTimeline.RecordEmbed
@@ -55,6 +56,7 @@ export class FeedItemModel implements GetTimeline.FeedItem {
     this.cid = v.cid
     this.author = v.author
     this.repostedBy = v.repostedBy
+    this.trendedBy = v.trendedBy
     this.record = v.record
     this.embed = v.embed
     this.replyCount = v.replyCount
