@@ -18,6 +18,7 @@ import {s, colors} from '../lib/styles'
 import {makeValidHandle, createFullHandle} from '../lib/strings'
 import {useStores, DEFAULT_SERVICE} from '../../state'
 import {ServiceDescription} from '../../state/models/session'
+import {BUILD} from '../../env'
 
 enum ScreenState {
   SigninOrCreateAccount,
@@ -71,7 +72,9 @@ const SigninOrCreateAccount = ({
       <View style={styles.hero}>
         <Logo />
         <Text style={styles.title}>Bluesky</Text>
-        <Text style={styles.subtitle}>[ private beta ]</Text>
+        <Text style={styles.subtitle}>
+          [ private beta {BUILD !== 'prod' ? `- ${BUILD} ` : ''}]
+        </Text>
       </View>
       <View style={s.flex1}>
         <TouchableOpacity style={styles.btn} onPress={onPressCreateAccount}>

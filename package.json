@@ -7,7 +7,7 @@
     "ios": "react-native run-ios --simulator=\"iPhone 14\"",
     "web": "react-scripts start",
     "start": "react-native start",
-    "dev-env": "dev-env",
+    "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
