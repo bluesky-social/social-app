@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -65,10 +65,21 @@ export const FeedItem = observer(function FeedItem({
   return (
     <Link style={styles.outer} href={itemHref} title={itemTitle}>
       {item.repostedBy && (
-        <View style={styles.repostedBy}>
-          <FontAwesomeIcon icon="retweet" style={styles.repostedByIcon} />
+        <View style={styles.includeReason}>
+          <FontAwesomeIcon icon="retweet" style={styles.includeReasonIcon} />
           <Text style={[s.gray4, s.bold, s.f13]}>
-            Reposted by {item.repostedBy.displayName}
+            Reposted by {item.repostedBy.displayName || item.repostedBy.handle}
+          </Text>
+        </View>
+      )}
+      {item.trendedBy && (
+        <View style={styles.includeReason}>
+          <FontAwesomeIcon
+            icon="arrow-trend-up"
+            style={styles.includeReasonIcon}
+          />
+          <Text style={[s.gray4, s.bold, s.f13]}>
+            Trending with {item.trendedBy.displayName || item.trendedBy.handle}
           </Text>
         </View>
       )}
@@ -158,12 +169,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     padding: 10,
   },
-  repostedBy: {
+  includeReason: {
     flexDirection: 'row',
     paddingLeft: 60,
   },
-  repostedByIcon: {
-    marginRight: 2,
+  includeReasonIcon: {
+    marginRight: 4,
     color: colors.gray4,
   },
   layout: {

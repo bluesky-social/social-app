@@ -70,7 +70,7 @@ export const FeedItem = observer(function FeedItem({
   } else if (item.isTrend) {
     action = 'Your post is trending with'
     icon = 'arrow-trend-up'
-    iconStyle = [s.blue3]
+    iconStyle = [s.red3]
   } else if (item.isReply) {
     action = 'replied to your post'
     icon = ['far', 'comment']
@@ -169,7 +169,7 @@ export const FeedItem = observer(function FeedItem({
               {ago(item.indexedAt)}
             </Text>
           </View>
-          {item.isUpvote || item.isRepost ? (
+          {item.isUpvote || item.isRepost || item.isTrend ? (
             <PostText uri={item.subjectUri} style={[s.gray5]} />
           ) : (
             <></>

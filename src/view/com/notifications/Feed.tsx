@@ -26,7 +26,7 @@ export const Feed = observer(function Feed({
     view.loadMore().catch(err => console.error('Failed to load more', err))
   }
   return (
-    <View>
+    <View style={{flex: 1}}>
       {view.isLoading && !view.isRefreshing && !view.hasContent && (
         <Text>Loading...</Text>
       )}

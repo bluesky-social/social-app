@@ -24,7 +24,6 @@ export const Notifications = ({visible}: ScreenParams) => {
       notesView?.update()
     } else {
       store.nav.setTitle('Notifications')
-      console.log('Fetching notifications feed')
       const newNotesView = new NotificationsViewModel(store, {})
       setNotesView(newNotesView)
       newNotesView.setup().then(() => {
@@ -38,7 +37,7 @@ export const Notifications = ({visible}: ScreenParams) => {
   }, [visible, store])
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <ViewHeader title="Notifications" />
       {notesView && <Feed view={notesView} />}
     </View>

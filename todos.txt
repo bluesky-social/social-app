@@ -19,7 +19,6 @@ Paul's todo list
   - Use pagination to make sure there are suggestions
 - User profile
   - Scene
-    > Trending
     > Edit profile
     > Remove member
 - Reply gating
