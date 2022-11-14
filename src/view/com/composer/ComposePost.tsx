@@ -1,5 +1,12 @@
 import React, {useEffect, useMemo, useState} from 'react'
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as GetFollows from '../../../third-party/api/src/client/types/app/bsky/graph/getFollows'
@@ -25,6 +32,7 @@ export function ComposePost({
   onClose: () => void
 }) {
   const store = useStores()
+  const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState('')
   const [text, setText] = useState('')
   const [followedUsers, setFollowedUsers] = useState<
@@ -70,11 +78,15 @@ export function ComposePost({
     onClose()
   }
   const onPressPublish = async () => {
+    if (isProcessing) {
+      return
+    }
     setError('')
     if (text.trim().length === 0) {
       setError('Did you want to say anything?')
       return false
     }
+    setIsProcessing(true)
     try {
       await apilib.post(store, text, replyTo)
     } catch (e: any) {
@@ -82,6 +94,7 @@ export function ComposePost({
       setError(
         'Post failed to upload. Please check your Internet connection and try again.',
       )
+      setIsProcessing(false)
       return
     }
     onPost?.()
@@ -126,15 +139,21 @@ export function ComposePost({
           <Text style={[s.blue3, s.f16]}>Cancel</Text>
         </TouchableOpacity>
         <View style={s.flex1} />
-        <TouchableOpacity onPress={onPressPublish}>
-          <LinearGradient
-            colors={[gradients.primary.start, gradients.primary.end]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
-            style={styles.postBtn}>
-            <Text style={[s.white, s.f16, s.bold]}>Post</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+        {isProcessing ? (
+          <View style={styles.postBtn}>
+            <ActivityIndicator />
+          </View>
+        ) : (
+          <TouchableOpacity onPress={onPressPublish}>
+            <LinearGradient
+              colors={[gradients.primary.start, gradients.primary.end]}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 1}}
+              style={styles.postBtn}>
+              <Text style={[s.white, s.f16, s.bold]}>Post</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
       </View>
       {error !== '' && (
         <View style={styles.errorLine}>
