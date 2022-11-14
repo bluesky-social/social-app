@@ -123,37 +123,36 @@ export class NavigationTabModel {
   }
 
   hydrate(v: unknown) {
-    this.history = []
-    this.index = 0
-    if (isObj(v)) {
-      if (hasProp(v, 'history') && Array.isArray(v.history)) {
-        for (const item of v.history) {
-          if (
-            isObj(item) &&
-            hasProp(item, 'url') &&
-            typeof item.url === 'string'
-          ) {
-            let copy: HistoryItem = {
-              url: item.url,
-              ts:
-                hasProp(item, 'ts') && typeof item.ts === 'number'
-                  ? item.ts
-                  : Date.now(),
-            }
-            if (hasProp(item, 'title') && typeof item.title === 'string') {
-              copy.title = item.title
-            }
-            this.history.push(copy)
-          }
-        }
-      }
-      if (hasProp(v, 'index') && typeof v.index === 'number') {
-        this.index = v.index
-      }
-      if (this.index >= this.history.length - 1) {
-        this.index = this.history.length - 1
-      }
-    }
+    // TODO fixme
+    // if (isObj(v)) {
+    //   if (hasProp(v, 'history') && Array.isArray(v.history)) {
+    //     for (const item of v.history) {
+    //       if (
+    //         isObj(item) &&
+    //         hasProp(item, 'url') &&
+    //         typeof item.url === 'string'
+    //       ) {
+    //         let copy: HistoryItem = {
+    //           url: item.url,
+    //           ts:
+    //             hasProp(item, 'ts') && typeof item.ts === 'number'
+    //               ? item.ts
+    //               : Date.now(),
+    //         }
+    //         if (hasProp(item, 'title') && typeof item.title === 'string') {
+    //           copy.title = item.title
+    //         }
+    //         this.history.push(copy)
+    //       }
+    //     }
+    //   }
+    //   if (hasProp(v, 'index') && typeof v.index === 'number') {
+    //     this.index = v.index
+    //   }
+    //   if (this.index >= this.history.length - 1) {
+    //     this.index = this.history.length - 1
+    //   }
+    // }
   }
 }
 
@@ -236,7 +235,9 @@ export class NavigationModel {
   }
 
   hydrate(v: unknown) {
-    if (isObj(v)) {
+    // TODO fixme
+    this.clear()
+    /*if (isObj(v)) {
       if (hasProp(v, 'tabs') && Array.isArray(v.tabs)) {
         for (const tab of v.tabs) {
           const copy = new NavigationTabModel()
@@ -249,6 +250,6 @@ export class NavigationModel {
       if (hasProp(v, 'tabIndex') && typeof v.tabIndex === 'number') {
         this.tabIndex = v.tabIndex
       }
-    }
+    }*/
   }
 }
