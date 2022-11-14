@@ -91,6 +91,9 @@ export class SuggestedActorsViewModel {
       if (item.did === this.rootStore.me.did) {
         continue // skip self
       }
+      if (item.myState?.follow) {
+        continue // skip already-followed users
+      }
       this._append({
         _reactKey: `item-${counter++}`,
         ...item,
