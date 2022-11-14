@@ -58,7 +58,12 @@ export const Home = observer(function Home({
         title="Bluesky"
         subtitle={`Private Beta${BUILD !== 'prod' ? ` [${BUILD}]` : ''}`}
       />
-      <Feed key="default" feed={defaultFeedView} scrollElRef={scrollElRef} />
+      <Feed
+        key="default"
+        feed={defaultFeedView}
+        scrollElRef={scrollElRef}
+        style={{flex: 1}}
+      />
       <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
   )
