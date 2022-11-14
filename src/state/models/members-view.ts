@@ -42,7 +42,7 @@ export class MembersViewModel {
   }
 
   get hasContent() {
-    return this.subject.did !== ''
+    return this.members.length !== 0
   }
 
   get hasError() {
