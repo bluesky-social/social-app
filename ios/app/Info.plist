@@ -26,7 +26,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>app.bsky</string>
+			<string>xyz.blueskyweb.app</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>bskyapp</string>
