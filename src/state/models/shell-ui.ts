@@ -42,7 +42,10 @@ export class SharePostModel {
 export class EditProfileModel {
   name = 'edit-profile'
 
-  constructor(public profileView: ProfileViewModel) {
+  constructor(
+    public profileView: ProfileViewModel,
+    public onUpdate?: () => void,
+  ) {
     makeAutoObservable(this)
   }
 }

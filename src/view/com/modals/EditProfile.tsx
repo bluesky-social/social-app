@@ -11,7 +11,13 @@ import * as Profile from '../../../third-party/api/src/client/types/app/bsky/act
 
 export const snapPoints = ['80%']
 
-export function Component({profileView}: {profileView: ProfileViewModel}) {
+export function Component({
+  profileView,
+  onUpdate,
+}: {
+  profileView: ProfileViewModel
+  onUpdate?: () => void
+}) {
   const store = useStores()
   const [error, setError] = useState<string>('')
   const [displayName, setDisplayName] = useState<string>(
@@ -41,6 +47,7 @@ export function Component({profileView}: {profileView: ProfileViewModel}) {
       Toast.show('Profile updated', {
         position: Toast.positions.TOP,
       })
+      onUpdate?.()
       store.shell.closeModal()
     } catch (e: any) {
       console.error(e)

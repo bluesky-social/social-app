@@ -123,7 +123,7 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
       ) {
         if (uiState.feed.hasContent) {
           items = uiState.feed.feed.slice()
-          if (uiState.feed.hasReachedEnd) {
+          if (!uiState.feed.hasMore) {
             items.push(END_ITEM)
           }
           renderItem = (item: any) => {
