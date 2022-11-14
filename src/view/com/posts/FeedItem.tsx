@@ -65,15 +65,21 @@ export const FeedItem = observer(function FeedItem({
   return (
     <Link style={styles.outer} href={itemHref} title={itemTitle}>
       {item.repostedBy && (
-        <View style={styles.includeReason}>
+        <Link
+          style={styles.includeReason}
+          href={`/profile/${item.repostedBy.handle}`}
+          title={item.repostedBy.displayName || item.repostedBy.handle}>
           <FontAwesomeIcon icon="retweet" style={styles.includeReasonIcon} />
           <Text style={[s.gray4, s.bold, s.f13]}>
             Reposted by {item.repostedBy.displayName || item.repostedBy.handle}
           </Text>
-        </View>
+        </Link>
       )}
       {item.trendedBy && (
-        <View style={styles.includeReason}>
+        <Link
+          style={styles.includeReason}
+          href={`/profile/${item.trendedBy.handle}`}
+          title={item.trendedBy.displayName || item.trendedBy.handle}>
           <FontAwesomeIcon
             icon="arrow-trend-up"
             style={styles.includeReasonIcon}
@@ -81,7 +87,7 @@ export const FeedItem = observer(function FeedItem({
           <Text style={[s.gray4, s.bold, s.f13]}>
             Trending with {item.trendedBy.displayName || item.trendedBy.handle}
           </Text>
-        </View>
+        </Link>
       )}
       <View style={styles.layout}>
         <Link
