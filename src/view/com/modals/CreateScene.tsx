@@ -9,13 +9,14 @@ import {
   View,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {ErrorMessage} from '../util/ErrorMessage'
 import {useStores} from '../../../state'
 import {s, colors, gradients} from '../../lib/styles'
 import {makeValidHandle, createFullHandle} from '../../lib/strings'
 import {AppBskyActorCreateScene} from '../../../third-party/api/index'
 
-export const snapPoints = ['70%']
+export const snapPoints = ['60%']
 
 export function Component({}: {}) {
   const store = useStores()
@@ -88,75 +89,82 @@ export function Component({}: {}) {
   }
 
   return (
-    <View style={s.flex1}>
+    <View style={styles.outer}>
       <Text style={styles.title}>Create a scene</Text>
       <Text style={styles.description}>
         Scenes are invite-only groups which aggregate what's popular with
         members.
       </Text>
-      <View style={styles.inner}>
-        <View style={styles.group}>
-          <Text style={styles.label}>Scene Handle</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="e.g. alices-friends"
-            value={handle}
-            onChangeText={str => setHandle(makeValidHandle(str))}
-          />
-        </View>
-        <View style={styles.group}>
-          <Text style={styles.label}>Scene Display Name</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="e.g. Alice's Friends"
-            value={displayName}
-            onChangeText={setDisplayName}
-          />
-        </View>
-        <View style={styles.group}>
-          <Text style={styles.label}>Scene Description</Text>
-          <TextInput
-            style={[styles.textArea]}
-            placeholder="e.g. Artists, dog-lovers, and memelords."
-            multiline
-            value={description}
-            onChangeText={setDescription}
-          />
-        </View>
-        <View style={styles.errorContainer}>
+      <BottomSheetScrollView style={styles.inner}>
+        <View style={{paddingBottom: 50}}>
+          <View style={styles.group}>
+            <Text style={styles.label}>Scene Handle</Text>
+            <BottomSheetTextInput
+              style={styles.textInput}
+              placeholder="e.g. alices-friends"
+              value={handle}
+              onChangeText={str => setHandle(makeValidHandle(str))}
+            />
+          </View>
+          <View style={styles.group}>
+            <Text style={styles.label}>Scene Display Name</Text>
+            <BottomSheetTextInput
+              style={styles.textInput}
+              placeholder="e.g. Alice's Friends"
+              value={displayName}
+              onChangeText={setDisplayName}
+            />
+          </View>
+          <View style={styles.group}>
+            <Text style={styles.label}>Scene Description</Text>
+            <BottomSheetTextInput
+              style={[styles.textArea]}
+              placeholder="e.g. Artists, dog-lovers, and memelords."
+              multiline
+              value={description}
+              onChangeText={setDescription}
+            />
+          </View>
           {error !== '' && (
-            <View style={s.mb10}>
-              <ErrorMessage message={error} numberOfLines={3} />
+            <View style={styles.errorContainer}>
+              <View style={s.mb10}>
+                <ErrorMessage message={error} numberOfLines={3} />
+              </View>
+            </View>
+          )}
+          {handle.length >= 2 && !isProcessing ? (
+            <TouchableOpacity style={s.mt10} onPress={onPressSave}>
+              <LinearGradient
+                colors={[gradients.primary.start, gradients.primary.end]}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                style={[styles.btn]}>
+                <Text style={[s.white, s.bold, s.f18]}>Create Scene</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          ) : (
+            <View style={s.mt10}>
+              <View style={[styles.btn]}>
+                {isProcessing ? (
+                  <ActivityIndicator />
+                ) : (
+                  <Text style={[s.gray4, s.bold, s.f18]}>Create Scene</Text>
+                )}
+              </View>
             </View>
           )}
         </View>
-        {handle.length >= 2 && !isProcessing ? (
-          <TouchableOpacity style={s.mt10} onPress={onPressSave}>
-            <LinearGradient
-              colors={[gradients.primary.start, gradients.primary.end]}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
-              style={[styles.btn]}>
-              <Text style={[s.white, s.bold, s.f18]}>Create Scene</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        ) : (
-          <View style={s.mt10}>
-            <View style={[styles.btn]}>
-              {isProcessing ? (
-                <ActivityIndicator />
-              ) : (
-                <Text style={[s.gray4, s.bold, s.f18]}>Create Scene</Text>
-              )}
-            </View>
-          </View>
-        )}
-      </View>
+      </BottomSheetScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  outer: {
+    flex: 1,
+    paddingTop: 20,
+    paddingBottom: 20,
+  },
   title: {
     textAlign: 'center',
     fontWeight: 'bold',
@@ -172,6 +180,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     padding: 14,
+    height: 350,
   },
   group: {
     marginBottom: 10,
@@ -197,7 +206,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 10,
     fontSize: 16,
-    height: 100,
+    height: 70,
     textAlignVertical: 'top',
   },
   errorContainer: {
