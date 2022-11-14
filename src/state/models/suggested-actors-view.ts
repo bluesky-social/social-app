@@ -88,6 +88,9 @@ export class SuggestedActorsViewModel {
     this.suggestions.length = 0
     let counter = 0
     for (const item of res.data.actors) {
+      if (item.did === this.rootStore.me.did) {
+        continue // skip self
+      }
       this._append({
         _reactKey: `item-${counter++}`,
         ...item,
