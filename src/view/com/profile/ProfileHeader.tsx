@@ -59,7 +59,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     )
   }
   const onPressEditProfile = () => {
-    store.shell.openModal(new EditProfileModel(view))
+    store.shell.openModal(new EditProfileModel(view, onRefreshAll))
   }
   const onPressFollowers = () => {
     store.nav.navigate(`/profile/${view.handle}/followers`)
