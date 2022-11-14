@@ -126,10 +126,8 @@ export function Component({}: {}) {
             />
           </View>
           {error !== '' && (
-            <View style={styles.errorContainer}>
-              <View style={s.mb10}>
-                <ErrorMessage message={error} numberOfLines={3} />
-              </View>
+            <View style={s.mb10}>
+              <ErrorMessage message={error} numberOfLines={3} />
             </View>
           )}
           {handle.length >= 2 && !isProcessing ? (
@@ -208,9 +206,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     height: 70,
     textAlignVertical: 'top',
-  },
-  errorContainer: {
-    height: 80,
   },
   btn: {
     flexDirection: 'row',
