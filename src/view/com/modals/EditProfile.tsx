@@ -6,6 +6,7 @@ import {ErrorMessage} from '../util/ErrorMessage'
 import {useStores} from '../../../state'
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {s, colors, gradients} from '../../lib/styles'
+import {enforceLen, MAX_DISPLAY_NAME, MAX_DESCRIPTION} from '../../lib/strings'
 import * as Profile from '../../../third-party/api/src/client/types/app/bsky/actor/profile'
 
 export const snapPoints = ['80%']
@@ -64,7 +65,7 @@ export function Component({profileView}: {profileView: ProfileViewModel}) {
             style={styles.textInput}
             placeholder="e.g. Alice Roberts"
             value={displayName}
-            onChangeText={setDisplayName}
+            onChangeText={v => setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))}
           />
         </View>
         <View style={styles.group}>
@@ -74,7 +75,7 @@ export function Component({profileView}: {profileView: ProfileViewModel}) {
             placeholder="e.g. Artist, dog-lover, and memelord."
             multiline
             value={description}
-            onChangeText={setDescription}
+            onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
           />
         </View>
         <TouchableOpacity style={s.mt10} onPress={onPressSave}>

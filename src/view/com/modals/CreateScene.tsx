@@ -4,7 +4,6 @@ import {
   ActivityIndicator,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native'
@@ -13,7 +12,13 @@ import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {ErrorMessage} from '../util/ErrorMessage'
 import {useStores} from '../../../state'
 import {s, colors, gradients} from '../../lib/styles'
-import {makeValidHandle, createFullHandle} from '../../lib/strings'
+import {
+  makeValidHandle,
+  createFullHandle,
+  enforceLen,
+  MAX_DISPLAY_NAME,
+  MAX_DESCRIPTION,
+} from '../../lib/strings'
 import {AppBskyActorCreateScene} from '../../../third-party/api/index'
 
 export const snapPoints = ['60%']
@@ -102,6 +107,7 @@ export function Component({}: {}) {
             <BottomSheetTextInput
               style={styles.textInput}
               placeholder="e.g. alices-friends"
+              autoCorrect={false}
               value={handle}
               onChangeText={str => setHandle(makeValidHandle(str))}
             />
@@ -112,7 +118,9 @@ export function Component({}: {}) {
               style={styles.textInput}
               placeholder="e.g. Alice's Friends"
               value={displayName}
-              onChangeText={setDisplayName}
+              onChangeText={v =>
+                setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))
+              }
             />
           </View>
           <View style={styles.group}>
@@ -122,7 +130,7 @@ export function Component({}: {}) {
               placeholder="e.g. Artists, dog-lovers, and memelords."
               multiline
               value={description}
-              onChangeText={setDescription}
+              onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
             />
           </View>
           {error !== '' && (
