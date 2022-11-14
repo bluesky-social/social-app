@@ -21,53 +21,70 @@ export type ScreenParams = {
   visible: boolean
   scrollElRef?: MutableRefObject<FlatList<any> | undefined>
 }
-export type Route = [React.FC<ScreenParams>, IconProp, RegExp]
+export type Route = [React.FC<ScreenParams>, string, IconProp, RegExp]
 export type MatchResult = {
   Com: React.FC<ScreenParams>
+  defaultTitle: string
   icon: IconProp
   params: Record<string, any>
+  isNotFound?: boolean
 }
 
 const r = (pattern: string) => new RegExp('^' + pattern + '([?]|$)', 'i')
 export const routes: Route[] = [
-  [Home, 'house', r('/')],
-  [Contacts, ['far', 'circle-user'], r('/contacts')],
-  [Search, 'magnifying-glass', r('/search')],
-  [Notifications, 'bell', r('/notifications')],
-  [Settings, 'bell', r('/settings')],
-  [Profile, ['far', 'user'], r('/profile/(?<name>[^/]+)')],
-  [ProfileFollowers, 'users', r('/profile/(?<name>[^/]+)/followers')],
-  [ProfileFollows, 'users', r('/profile/(?<name>[^/]+)/follows')],
-  [ProfileMembers, 'users', r('/profile/(?<name>[^/]+)/members')],
+  [Home, 'Home', 'house', r('/')],
+  [Contacts, 'Contacts', ['far', 'circle-user'], r('/contacts')],
+  [Search, 'Search', 'magnifying-glass', r('/search')],
+  [Notifications, 'Notifications', 'bell', r('/notifications')],
+  [Settings, 'Settings', 'bell', r('/settings')],
+  [Profile, 'User', ['far', 'user'], r('/profile/(?<name>[^/]+)')],
+  [
+    ProfileFollowers,
+    'Followers',
+    'users',
+    r('/profile/(?<name>[^/]+)/followers'),
+  ],
+  [ProfileFollows, 'Follows', 'users', r('/profile/(?<name>[^/]+)/follows')],
+  [ProfileMembers, 'Members', 'users', r('/profile/(?<name>[^/]+)/members')],
   [
     PostThread,
+    'Post',
     ['far', 'message'],
     r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)'),
   ],
   [
     PostUpvotedBy,
+    'Upvoted by',
     'heart',
     r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)/upvoted-by'),
   ],
   [
     PostDownvotedBy,
+    'Downvoted by',
     'heart',
     r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)/downvoted-by'),
   ],
   [
     PostRepostedBy,
+    'Reposted by',
     'retweet',
     r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)/reposted-by'),
   ],
 ]
 
 export function match(url: string): MatchResult {
-  for (const [Com, icon, pattern] of routes) {
+  for (const [Com, defaultTitle, icon, pattern] of routes) {
     const res = pattern.exec(url)
     if (res) {
       // TODO: query params
-      return {Com, icon, params: res.groups || {}}
+      return {Com, defaultTitle, icon, params: res.groups || {}}
     }
   }
-  return {Com: NotFound, icon: 'magnifying-glass', params: {}}
+  return {
+    Com: NotFound,
+    defaultTitle: 'Not found',
+    icon: 'magnifying-glass',
+    params: {},
+    isNotFound: true,
+  }
 }
