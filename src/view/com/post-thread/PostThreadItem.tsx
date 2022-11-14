@@ -93,7 +93,9 @@ export const PostThreadItem = observer(function PostThreadItem({
                 style={styles.metaItem}
                 href={authorHref}
                 title={authorTitle}>
-                <Text style={[s.f16, s.bold]}>{item.author.displayName}</Text>
+                <Text style={[s.f16, s.bold]}>
+                  {item.author.displayName || item.author.handle}
+                </Text>
               </Link>
               <Text style={[styles.metaItem, s.f15, s.gray5]}>
                 &middot; {ago(item.indexedAt)}
@@ -243,7 +245,9 @@ export const PostThreadItem = observer(function PostThreadItem({
                 style={styles.metaItem}
                 href={authorHref}
                 title={authorTitle}>
-                <Text style={[s.f17, s.bold]}>{item.author.displayName}</Text>
+                <Text style={[s.f17, s.bold]}>
+                  {item.author.displayName || item.author.handle}
+                </Text>
               </Link>
               <Link
                 style={styles.metaItem}

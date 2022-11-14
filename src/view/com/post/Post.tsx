@@ -102,7 +102,9 @@ export const Post = observer(function Post({uri}: {uri: string}) {
         <View style={styles.layoutContent}>
           <View style={styles.meta}>
             <Link style={styles.metaItem} href={authorHref} title={authorTitle}>
-              <Text style={[s.f16, s.bold]}>{item.author.displayName}</Text>
+              <Text style={[s.f16, s.bold]}>
+                {item.author.displayName || item.author.handle}
+              </Text>
             </Link>
             <Link style={styles.metaItem} href={authorHref} title={authorTitle}>
               <Text style={[s.f15, s.gray5]}>@{item.author.handle}</Text>

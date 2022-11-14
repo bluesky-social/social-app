@@ -106,7 +106,9 @@ export const FeedItem = observer(function FeedItem({
               style={styles.metaItem}
               href={authorHref}
               title={item.author.handle}>
-              <Text style={[s.f17, s.bold]}>{item.author.displayName}</Text>
+              <Text style={[s.f17, s.bold]}>
+                {item.author.displayName || item.author.handle}
+              </Text>
             </Link>
             <Link
               style={styles.metaItem}
