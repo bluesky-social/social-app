@@ -113,6 +113,7 @@ export class NotificationsViewModel {
   hasLoaded = false
   error = ''
   params: ListNotifications.QueryParams
+  hasMore = true
   loadMoreCursor?: string
   _loadPromise: Promise<void> | undefined
   _loadMorePromise: Promise<void> | undefined
@@ -246,6 +247,9 @@ export class NotificationsViewModel {
   }
 
   private async _loadMore() {
+    if (!this.hasMore) {
+      return
+    }
     this._xLoading()
     try {
       const params = Object.assign({}, this.params, {
@@ -291,6 +295,7 @@ export class NotificationsViewModel {
 
   private _appendAll(res: ListNotifications.Response) {
     this.loadMoreCursor = res.data.cursor
+    this.hasMore = !!this.loadMoreCursor
     let counter = this.notifications.length
     for (const item of groupNotifications(res.data.notifications)) {
       this._append(counter++, item)

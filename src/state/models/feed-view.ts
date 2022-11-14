@@ -134,9 +134,9 @@ export class FeedModel {
   isLoading = false
   isRefreshing = false
   hasLoaded = false
-  hasReachedEnd = false
   error = ''
   params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams
+  hasMore = true
   loadMoreCursor: string | undefined
   _loadPromise: Promise<void> | undefined
   _loadMorePromise: Promise<void> | undefined
@@ -298,18 +298,15 @@ export class FeedModel {
   }
 
   private async _loadMore() {
+    if (!this.hasMore) {
+      return
+    }
     this._xLoading()
     try {
       const res = await this._getFeed({
         before: this.loadMoreCursor,
       })
-      if (res.data.feed.length === 0) {
-        runInAction(() => {
-          this.hasReachedEnd = true
-        })
-      } else {
-        this._appendAll(res)
-      }
+      this._appendAll(res)
       this._xIdle()
     } catch (e: any) {
       this._xIdle(`Failed to load feed: ${e.toString()}`)
@@ -342,12 +339,12 @@ export class FeedModel {
 
   private _replaceAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     this.feed.length = 0
-    this.hasReachedEnd = false
     this._appendAll(res)
   }
 
   private _appendAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     this.loadMoreCursor = res.data.cursor
+    this.hasMore = !!this.loadMoreCursor
     let counter = this.feed.length
     for (const item of res.data.feed) {
       this._append(counter++, item)
