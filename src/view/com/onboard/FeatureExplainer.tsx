@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {
   Animated,
+  Image,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -12,6 +13,23 @@ import {TabView, SceneMap, Route, TabBarProps} from 'react-native-tab-view'
 import {UserGroupIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
 import {s} from '../../lib/styles'
+import {SCENE_EXPLAINER} from '../../lib/assets'
+
+const Intro = () => (
+  <View style={styles.explainer}>
+    <Text
+      style={[
+        styles.explainerHeading,
+        s.normal,
+        {lineHeight: 60, paddingTop: 50, paddingBottom: 50},
+      ]}>
+      Welcome to <Text style={[s.bold, s.blue3, {fontSize: 56}]}>Bluesky</Text>
+    </Text>
+    <Text style={[styles.explainerDesc, {fontSize: 24}]}>
+      Let's do a quick tour through the new features.
+    </Text>
+  </View>
+)
 
 const Scenes = () => (
   <View style={styles.explainer}>
@@ -25,11 +43,14 @@ const Scenes = () => (
       Scenes are invite-only groups of users. Follow them to see what's trending
       with the scene's members.
     </Text>
-    <Text style={styles.explainerDesc}>[ TODO screenshot ]</Text>
+    <Text style={styles.explainerDesc}>
+      <Image source={SCENE_EXPLAINER} style={styles.explainerImg} />
+    </Text>
   </View>
 )
 
 const SCENE_MAP = {
+  intro: Intro,
   scenes: Scenes,
 }
 const renderScene = SceneMap(SCENE_MAP)
@@ -38,7 +59,10 @@ export const FeatureExplainer = () => {
   const layout = useWindowDimensions()
   const store = useStores()
   const [index, setIndex] = useState(0)
-  const routes = [{key: 'scenes', title: 'Scenes'}]
+  const routes = [
+    {key: 'intro', title: 'Intro'},
+    {key: 'scenes', title: 'Scenes'},
+  ]
 
   const onPressSkip = () => store.onboard.next()
   const onPressNext = () => {
@@ -122,7 +146,7 @@ const styles = StyleSheet.create({
   explainer: {
     flex: 1,
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingTop: 80,
   },
   explainerIcon: {
     flexDirection: 'row',
@@ -137,6 +161,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginBottom: 16,
+  },
+  explainerImg: {
+    resizeMode: 'contain',
+    maxWidth: '100%',
+    maxHeight: 330,
   },
 
   footer: {
