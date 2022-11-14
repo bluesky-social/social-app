@@ -2,17 +2,12 @@ import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
+import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 import {RichText} from '../util/RichText'
 import {UserAvatar} from '../util/UserAvatar'
@@ -100,19 +95,14 @@ export const Post = observer(function Post({uri}: {uri: string}) {
           />
         </Link>
         <View style={styles.layoutContent}>
-          <View style={styles.meta}>
-            <Link style={styles.metaItem} href={authorHref} title={authorTitle}>
-              <Text style={[s.f16, s.bold]}>
-                {item.author.displayName || item.author.handle}
-              </Text>
-            </Link>
-            <Link style={styles.metaItem} href={authorHref} title={authorTitle}>
-              <Text style={[s.f15, s.gray5]}>@{item.author.handle}</Text>
-            </Link>
-            <Text style={[styles.metaItem, s.f15, s.gray5]}>
-              &middot; {ago(item.indexedAt)}
-            </Text>
-          </View>
+          <PostMeta
+            itemHref={itemHref}
+            itemTitle={itemTitle}
+            authorHref={authorHref}
+            authorHandle={item.author.handle}
+            authorDisplayName={item.author.displayName}
+            timestamp={item.indexedAt}
+          />
           {replyHref !== '' && (
             <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
               <FontAwesomeIcon icon="reply" size={9} style={[s.gray4, s.mr5]} />
@@ -167,14 +157,6 @@ const styles = StyleSheet.create({
   },
   layoutContent: {
     flex: 1,
-  },
-  meta: {
-    flexDirection: 'row',
-    paddingTop: 2,
-    paddingBottom: 2,
-  },
-  metaItem: {
-    paddingRight: 5,
   },
   postTextContainer: {
     flexDirection: 'row',

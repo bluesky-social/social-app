@@ -7,13 +7,12 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedItemModel} from '../../../state/models/feed-view'
 import {SharePostModel} from '../../../state/models/shell-ui'
 import {Link} from '../util/Link'
-import {PostDropdownBtn} from '../util/DropdownBtn'
 import {UserInfoText} from '../util/UserInfoText'
+import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 import {RichText} from '../util/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
-import {ago} from '../../lib/strings'
 import {useStores} from '../../../state'
 
 export const FeedItem = observer(function FeedItem({
@@ -101,36 +100,14 @@ export const FeedItem = observer(function FeedItem({
           />
         </Link>
         <View style={styles.layoutContent}>
-          <View style={styles.meta}>
-            <Link
-              style={styles.metaItem}
-              href={authorHref}
-              title={item.author.handle}>
-              <Text style={[s.f17, s.bold]}>
-                {item.author.displayName || item.author.handle}
-              </Text>
-            </Link>
-            <Link
-              style={styles.metaItem}
-              href={authorHref}
-              title={item.author.handle}>
-              <Text style={[s.f15, s.gray5]}>@{item.author.handle}</Text>
-            </Link>
-            <Text style={[styles.metaItem, s.f15, s.gray5]}>
-              &middot; {ago(item.indexedAt)}
-            </Text>
-            <View style={s.flex1} />
-            <PostDropdownBtn
-              style={styles.metaItem}
-              itemHref={itemHref}
-              itemTitle={itemTitle}>
-              <FontAwesomeIcon
-                icon="ellipsis-h"
-                size={14}
-                style={[s.mt2, s.mr5]}
-              />
-            </PostDropdownBtn>
-          </View>
+          <PostMeta
+            itemHref={itemHref}
+            itemTitle={itemTitle}
+            authorHref={authorHref}
+            authorHandle={item.author.handle}
+            authorDisplayName={item.author.displayName}
+            timestamp={item.indexedAt}
+          />
           {replyHref !== '' && (
             <View style={[s.flexRow, s.mb5, {alignItems: 'center'}]}>
               <Text style={[s.gray5, s.f15, s.mr2]}>Replying to</Text>
@@ -194,14 +171,6 @@ const styles = StyleSheet.create({
   },
   layoutContent: {
     flex: 1,
-  },
-  meta: {
-    flexDirection: 'row',
-    paddingTop: 2,
-    paddingBottom: 2,
-  },
-  metaItem: {
-    paddingRight: 5,
   },
   postTextContainer: {
     flexDirection: 'row',

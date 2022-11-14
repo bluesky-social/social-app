@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 import Svg, {Line} from 'react-native-svg'
 import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
@@ -13,6 +13,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../lib/strings'
 import {useStores} from '../../../state'
+import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 
 const PARENT_REPLY_LINE_LENGTH = 8
@@ -93,7 +94,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 style={styles.metaItem}
                 href={authorHref}
                 title={authorTitle}>
-                <Text style={[s.f16, s.bold]}>
+                <Text style={[s.f16, s.bold]} numberOfLines={1}>
                   {item.author.displayName || item.author.handle}
                 </Text>
               </Link>
@@ -117,7 +118,9 @@ export const PostThreadItem = observer(function PostThreadItem({
                 style={styles.metaItem}
                 href={authorHref}
                 title={authorTitle}>
-                <Text style={[s.f15, s.gray5]}>@{item.author.handle}</Text>
+                <Text style={[s.f15, s.gray5]} numberOfLines={1}>
+                  @{item.author.handle}
+                </Text>
               </Link>
             </View>
           </View>
@@ -240,36 +243,14 @@ export const PostThreadItem = observer(function PostThreadItem({
             />
           </Link>
           <View style={styles.layoutContent}>
-            <View style={styles.meta}>
-              <Link
-                style={styles.metaItem}
-                href={authorHref}
-                title={authorTitle}>
-                <Text style={[s.f17, s.bold]}>
-                  {item.author.displayName || item.author.handle}
-                </Text>
-              </Link>
-              <Link
-                style={styles.metaItem}
-                href={authorHref}
-                title={authorTitle}>
-                <Text style={[s.f15, s.gray5]}>@{item.author.handle}</Text>
-              </Link>
-              <Text style={[styles.metaItem, s.f15, s.gray5]}>
-                &middot; {ago(item.indexedAt)}
-              </Text>
-              <View style={s.flex1} />
-              <PostDropdownBtn
-                style={styles.metaItem}
-                itemHref={itemHref}
-                itemTitle={itemTitle}>
-                <FontAwesomeIcon
-                  icon="ellipsis-h"
-                  size={14}
-                  style={[s.mt2, s.mr5]}
-                />
-              </PostDropdownBtn>
-            </View>
+            <PostMeta
+              itemHref={itemHref}
+              itemTitle={itemTitle}
+              authorHref={authorHref}
+              authorHandle={item.author.handle}
+              authorDisplayName={item.author.displayName}
+              timestamp={item.indexedAt}
+            />
             {item.replyingToAuthor &&
               item.replyingToAuthor !== item.author.handle && (
                 <View style={[s.flexRow, s.mb5, {alignItems: 'center'}]}>
@@ -350,6 +331,7 @@ const styles = StyleSheet.create({
   },
   metaItem: {
     paddingRight: 5,
+    maxWidth: 240,
   },
   postText: {
     fontFamily: 'Helvetica Neue',
