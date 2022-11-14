@@ -25,7 +25,7 @@ export const Search = ({visible, params}: ScreenParams) => {
         </Text>
       </View>
       <Text style={styles.heading}>Suggested follows</Text>
-      <SuggestedFollows />
+      <SuggestedFollows asLinks />
     </View>
   )
 }

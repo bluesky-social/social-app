@@ -12,6 +12,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
 import _omit from 'lodash.omit'
 import {ErrorScreen} from '../util/ErrorScreen'
+import {Link} from '../util/Link'
 import {UserAvatar} from '../util/UserAvatar'
 import Toast from '../util/Toast'
 import {useStores} from '../../../state'
@@ -23,7 +24,13 @@ import {
 import {s, colors, gradients} from '../../lib/styles'
 
 export const SuggestedFollows = observer(
-  ({onNoSuggestions}: {onNoSuggestions?: () => void}) => {
+  ({
+    onNoSuggestions,
+    asLinks,
+  }: {
+    onNoSuggestions?: () => void
+    asLinks?: boolean
+  }) => {
     const store = useStores()
     const [follows, setFollows] = useState<Record<string, string>>({})
 
@@ -75,14 +82,30 @@ export const SuggestedFollows = observer(
       }
     }
 
-    const renderItem = ({item}: {item: SuggestedActor}) => (
-      <User
-        item={item}
-        follow={follows[item.did]}
-        onPressFollow={onPressFollow}
-        onPressUnfollow={onPressUnfollow}
-      />
-    )
+    const renderItem = ({item}: {item: SuggestedActor}) => {
+      if (asLinks) {
+        return (
+          <Link
+            href={`/profile/${item.handle}`}
+            title={item.displayName || item.handle}>
+            <User
+              item={item}
+              follow={follows[item.did]}
+              onPressFollow={onPressFollow}
+              onPressUnfollow={onPressUnfollow}
+            />
+          </Link>
+        )
+      }
+      return (
+        <User
+          item={item}
+          follow={follows[item.did]}
+          onPressFollow={onPressFollow}
+          onPressUnfollow={onPressUnfollow}
+        />
+      )
+    }
     return (
       <View style={styles.container}>
         {view.isLoading ? (
