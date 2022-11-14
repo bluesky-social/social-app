@@ -1,6 +1,9 @@
 import {AtUri} from '../../third-party/uri'
 import {Entity} from '../../third-party/api/src/client/types/app/bsky/feed/post'
 
+export const MAX_DISPLAY_NAME = 64
+export const MAX_DESCRIPTION = 256
+
 export function pluralize(n: number, base: string, plural?: string): string {
   if (n === 1) {
     return base
@@ -84,4 +87,12 @@ export function createFullHandle(name: string, domain: string): string {
   name = name.replace(/[\.]+$/, '')
   domain = domain.replace(/^[\.]+/, '')
   return `${name}.${domain}`
+}
+
+export function enforceLen(str: string, len: number): string {
+  str = str || ''
+  if (str.length > len) {
+    return str.slice(0, len)
+  }
+  return str
 }
