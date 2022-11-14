@@ -168,8 +168,9 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
             placeholderTextColor={colors.blue0}
             autoCapitalize="none"
             autoFocus
+            autoCorrect={false}
             value={handle}
-            onChangeText={setHandle}
+            onChangeText={str => setHandle((str || '').toLowerCase())}
             editable={!isProcessing}
           />
         </View>
@@ -180,6 +181,7 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
             placeholder="Password"
             placeholderTextColor={colors.blue0}
             autoCapitalize="none"
+            autoCorrect={false}
             secureTextEntry
             value={password}
             onChangeText={setPassword}
@@ -328,6 +330,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                   placeholder="Invite code"
                   placeholderTextColor={colors.blue0}
                   autoCapitalize="none"
+                  autoCorrect={false}
                   autoFocus
                   value={inviteCode}
                   onChangeText={setInviteCode}
@@ -345,6 +348,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                 placeholder="Email address"
                 placeholderTextColor={colors.blue0}
                 autoCapitalize="none"
+                autoCorrect={false}
                 value={email}
                 onChangeText={setEmail}
                 editable={!isProcessing}
@@ -357,6 +361,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                 placeholder="Choose your password"
                 placeholderTextColor={colors.blue0}
                 autoCapitalize="none"
+                autoCorrect={false}
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
