@@ -96,6 +96,13 @@ export const SuggestedFollows = observer(
             details={view.error}
             onPressTryAgain={onPressTryAgain}
           />
+        ) : view.isEmpty ? (
+          <View style={styles.emptyContainer}>
+            <Text style={[s.gray5, s.textCenter]}>
+              You already follow everybody we were going to suggest. Check back
+              in the future!
+            </Text>
+          </View>
         ) : (
           <View style={styles.suggestionsContainer}>
             <FlatList
@@ -184,6 +191,14 @@ const styles = StyleSheet.create({
   suggestionsContainer: {
     flex: 1,
     backgroundColor: colors.gray1,
+  },
+
+  emptyContainer: {
+    backgroundColor: colors.gray1,
+    marginHorizontal: 14,
+    paddingHorizontal: 8,
+    paddingVertical: 14,
+    borderRadius: 6,
   },
 
   actor: {
