@@ -137,15 +137,8 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
           if (uiState.profile.isScene) {
             renderItem = () => (
               <View style={styles.emptyContainer}>
-                <View style={{flexDirection: 'row'}}>
-                  <UserGroupIcon
-                    size="64"
-                    style={{
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                      color: colors.gray3,
-                    }}
-                  />
+                <View style={styles.emptyIconContainer}>
+                  <UserGroupIcon size="64" style={styles.emptyIcon} />
                 </View>
                 <Text style={styles.emptyText}>
                   As members upvote posts, they will trend here. Follow the
@@ -171,7 +164,16 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
           }
         } else if (uiState.memberships.isEmpty) {
           items.push(EMPTY_ITEM)
-          renderItem = () => <Text style={styles.loading}>No scenes yet!</Text>
+          renderItem = () => (
+            <View style={styles.emptyContainer}>
+              <View style={styles.emptyIconContainer}>
+                <UserGroupIcon size="64" style={styles.emptyIcon} />
+              </View>
+              <Text style={styles.emptyText}>
+                This user hasn't joined any scenes.
+              </Text>
+            </View>
+          )
         }
       } else if (uiState.selectedView === Sections.Members) {
         if (uiState.members.hasContent) {
@@ -202,7 +204,16 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
           }
         } else if (uiState.members.isEmpty) {
           items.push(EMPTY_ITEM)
-          renderItem = () => <Text style={styles.loading}>No members yet!</Text>
+          renderItem = () => (
+            <View style={styles.emptyContainer}>
+              <View style={styles.emptyIconContainer}>
+                <UserGroupIcon size="64" style={styles.emptyIcon} />
+              </View>
+              <Text style={styles.emptyText}>
+                This scene doesn't have any members.
+              </Text>
+            </View>
+          )
         }
       } else {
         items.push(EMPTY_ITEM)
@@ -259,6 +270,14 @@ const styles = StyleSheet.create({
   emptyContainer: {
     paddingVertical: 20,
     paddingHorizontal: 36,
+  },
+  emptyIconContainer: {
+    flexDirection: 'row',
+  },
+  emptyIcon: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    color: colors.gray3,
   },
   emptyText: {
     textAlign: 'center',

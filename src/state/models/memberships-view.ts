@@ -17,7 +17,12 @@ export class MembershipsViewModel {
   params: GetMemberships.QueryParams
 
   // data
-  subject: Subject = {did: '', handle: '', displayName: ''}
+  subject: Subject = {
+    did: '',
+    handle: '',
+    displayName: '',
+    declaration: {cid: '', actorType: ''},
+  }
   memberships: MembershipItem[] = []
 
   constructor(
@@ -36,7 +41,7 @@ export class MembershipsViewModel {
   }
 
   get hasContent() {
-    return this.subject.did !== ''
+    return this.memberships.length !== 0
   }
 
   get hasError() {
