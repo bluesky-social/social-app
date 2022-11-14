@@ -37,6 +37,8 @@ export function UserAvatar({
 
 function getInitials(str: string): string {
   const tokens = str
+    .toLowerCase()
+    .replace(/[^a-z]/g, '')
     .split(' ')
     .filter(Boolean)
     .map(v => v.trim())
