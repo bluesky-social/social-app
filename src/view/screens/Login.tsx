@@ -112,17 +112,64 @@ const SigninOrCreateAccount = ({
 const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [serviceDescription, setServiceDescription] = useState<
+    ServiceDescription | undefined
+  >(undefined)
   const [error, setError] = useState<string>('')
   const [handle, setHandle] = useState<string>('')
   const [password, setPassword] = useState<string>('')
 
+  useEffect(() => {
+    let aborted = false
+    if (serviceDescription || error) {
+      return
+    }
+    store.session.describeService(DEFAULT_SERVICE).then(
+      desc => {
+        if (aborted) return
+        setServiceDescription(desc)
+      },
+      err => {
+        if (aborted) return
+        console.error(err)
+        setError(
+          'Unable to contact your service. Please check your Internet connection.',
+        )
+      },
+    )
+    return () => {
+      aborted = true
+    }
+  }, [])
+
   const onPressNext = async () => {
     setError('')
     setIsProcessing(true)
+
+    // try to guess the handle if the user just gave their own username
     try {
+      let fullHandle = handle
+      if (
+        serviceDescription &&
+        serviceDescription.availableUserDomains.length > 0
+      ) {
+        let matched = false
+        for (const domain of serviceDescription.availableUserDomains) {
+          if (fullHandle.endsWith(domain)) {
+            matched = true
+          }
+        }
+        if (!matched) {
+          fullHandle = createFullHandle(
+            handle,
+            serviceDescription.availableUserDomains[0],
+          )
+        }
+      }
+
       await store.session.login({
         service: DEFAULT_SERVICE,
-        handle,
+        handle: fullHandle,
         password,
       })
     } catch (e: any) {
@@ -161,10 +208,10 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
           </View>
         ) : undefined}
         <View style={styles.groupContent}>
-          <FontAwesomeIcon icon="envelope" style={styles.groupContentIcon} />
+          <FontAwesomeIcon icon="at" style={styles.groupContentIcon} />
           <TextInput
             style={styles.textInput}
-            placeholder="Email or username"
+            placeholder="Username"
             placeholderTextColor={colors.blue0}
             autoCapitalize="none"
             autoFocus
