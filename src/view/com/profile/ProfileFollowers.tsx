@@ -84,7 +84,7 @@ const User = ({item}: {item: FollowerItem}) => {
           />
         </View>
         <View style={styles.layoutContent}>
-          <Text style={[s.f15, s.bold]}>{item.displayName}</Text>
+          <Text style={[s.f15, s.bold]}>{item.displayName || item.handle}</Text>
           <Text style={[s.f14, s.gray5]}>@{item.handle}</Text>
         </View>
       </View>
