@@ -20,6 +20,7 @@ import {makeValidHandle, createFullHandle, toNiceDomain} from '../lib/strings'
 import {useStores, DEFAULT_SERVICE} from '../../state'
 import {ServiceDescription} from '../../state/models/session'
 import {ServerInputModel} from '../../state/models/shell-ui'
+import {ComAtprotoAccountCreate} from '../../third-party/api/index'
 
 enum ScreenState {
   SigninOrCreateAccount,
@@ -326,7 +327,11 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
         inviteCode,
       })
     } catch (e: any) {
-      const errMsg = e.toString()
+      let errMsg = e.toString()
+      if (e instanceof ComAtprotoAccountCreate.InvalidInviteCodeError) {
+        errMsg =
+          'Invite code not accepted. Check that you input it correctly and try again.'
+      }
       console.log(e)
       setIsProcessing(false)
       setError(errMsg.replace(/^Error:/, ''))
