@@ -51,6 +51,9 @@ export const Home = observer(function Home({
   const onCreatePost = () => {
     defaultFeedView.loadLatest()
   }
+  const onPressTryAgain = () => {
+    defaultFeedView.refresh()
+  }
 
   return (
     <View style={s.flex1}>
@@ -63,6 +66,7 @@ export const Home = observer(function Home({
         feed={defaultFeedView}
         scrollElRef={scrollElRef}
         style={{flex: 1}}
+        onPressTryAgain={onPressTryAgain}
       />
       <FAB icon="pen-nib" onPress={onComposePress} />
     </View>

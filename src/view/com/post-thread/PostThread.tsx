@@ -8,6 +8,7 @@ import {
 import {useStores} from '../../../state'
 import {SharePostModel} from '../../../state/models/shell-ui'
 import {PostThreadItem} from './PostThreadItem'
+import {ErrorMessage} from '../util/ErrorMessage'
 
 export const PostThread = observer(function PostThread({uri}: {uri: string}) {
   const store = useStores()
@@ -50,7 +51,12 @@ export const PostThread = observer(function PostThread({uri}: {uri: string}) {
   if (view.hasError) {
     return (
       <View>
-        <Text>{view.error}</Text>
+        <ErrorMessage
+          dark
+          message={view.error}
+          style={{margin: 6}}
+          onPressTryAgain={onRefresh}
+        />
       </View>
     )
   }

@@ -96,3 +96,10 @@ export function enforceLen(str: string, len: number): string {
   }
   return str
 }
+
+export function cleanError(str: string): string {
+  if (str.startsWith('Error: ')) {
+    return str.slice('Error: '.length)
+  }
+  return str
+}

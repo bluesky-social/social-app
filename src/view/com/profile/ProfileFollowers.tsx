@@ -6,6 +6,7 @@ import {
   FollowerItem,
 } from '../../../state/models/user-followers-view'
 import {Link} from '../util/Link'
+import {ErrorMessage} from '../util/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
@@ -31,6 +32,10 @@ export const ProfileFollowers = observer(function ProfileFollowers({
       .catch(err => console.error('Failed to fetch user followers', err))
   }, [name, view?.params.user, store])
 
+  const onRefresh = () => {
+    view?.refresh()
+  }
+
   // loading
   // =
   if (
@@ -50,7 +55,12 @@ export const ProfileFollowers = observer(function ProfileFollowers({
   if (view.hasError) {
     return (
       <View>
-        <Text>{view.error}</Text>
+        <ErrorMessage
+          dark
+          message={view.error}
+          style={{margin: 6}}
+          onPressTryAgain={onRefresh}
+        />
       </View>
     )
   }

@@ -1,18 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import {ActivityIndicator, FlatList, StyleSheet, Text, View} from 'react-native'
 import {
   RepostedByViewModel,
   RepostedByViewItemModel,
 } from '../../../state/models/reposted-by-view'
 import {UserAvatar} from '../util/UserAvatar'
+import {ErrorMessage} from '../util/ErrorMessage'
 import {Link} from '../util/Link'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
@@ -38,6 +32,10 @@ export const PostRepostedBy = observer(function PostRepostedBy({
       .catch(err => console.error('Failed to fetch reposted by', err))
   }, [uri, view?.params.uri, store])
 
+  const onRefresh = () => {
+    view?.refresh()
+  }
+
   // loading
   // =
   if (
@@ -57,7 +55,12 @@ export const PostRepostedBy = observer(function PostRepostedBy({
   if (view.hasError) {
     return (
       <View>
-        <Text>{view.error}</Text>
+        <ErrorMessage
+          dark
+          message={view.error}
+          style={{margin: 6}}
+          onPressTryAgain={onRefresh}
+        />
       </View>
     )
   }

@@ -7,6 +7,7 @@ import {
 } from '../../../state/models/user-follows-view'
 import {useStores} from '../../../state'
 import {Link} from '../util/Link'
+import {ErrorMessage} from '../util/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 
@@ -31,6 +32,10 @@ export const ProfileFollows = observer(function ProfileFollows({
       .catch(err => console.error('Failed to fetch user follows', err))
   }, [name, view?.params.user, store])
 
+  const onRefresh = () => {
+    view?.refresh()
+  }
+
   // loading
   // =
   if (
@@ -50,7 +55,12 @@ export const ProfileFollows = observer(function ProfileFollows({
   if (view.hasError) {
     return (
       <View>
-        <Text>{view.error}</Text>
+        <ErrorMessage
+          dark
+          message={view.error}
+          style={{margin: 6}}
+          onPressTryAgain={onRefresh}
+        />
       </View>
     )
   }
