@@ -42,6 +42,11 @@ export const ProfileHeader = observer(function ProfileHeader({
   const onPressBack = () => {
     store.nav.tab.goBack()
   }
+  const onPressMyAvatar = () => {
+    if (store.me.handle) {
+      store.nav.navigate(`/profile/${store.me.handle}`)
+    }
+  }
   const onPressToggleFollow = () => {
     view?.toggleFollowing().then(
       () => {
@@ -143,9 +148,18 @@ export const ProfileHeader = observer(function ProfileHeader({
       {store.nav.tab.canGoBack ? (
         <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
           <FontAwesomeIcon
-            size={14}
+            size={18}
             icon="angle-left"
             style={styles.backIcon}
+          />
+        </TouchableOpacity>
+      ) : undefined}
+      {store.me.did ? (
+        <TouchableOpacity style={styles.myAvatar} onPress={onPressMyAvatar}>
+          <UserAvatar
+            size={30}
+            handle={store.me.handle || ''}
+            displayName={store.me.displayName}
           />
         </TouchableOpacity>
       ) : undefined}
@@ -320,6 +334,14 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     color: colors.black,
+  },
+  myAvatar: {
+    position: 'absolute',
+    top: 10,
+    right: 12,
+    backgroundColor: '#ffff',
+    padding: 1,
+    borderRadius: 30,
   },
   avi: {
     position: 'absolute',

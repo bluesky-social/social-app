@@ -115,6 +115,7 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
       renderItem = (item: any) => (
         <View style={s.p5}>
           <ErrorMessage
+            dark
             message={item.error}
             onPressTryAgain={onPressTryAgain}
           />
