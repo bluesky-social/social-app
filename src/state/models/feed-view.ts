@@ -72,45 +72,44 @@ export class FeedItemModel implements GetTimeline.FeedItem {
     }
   }
 
-  async _clearVotes() {
-    if (this.myState.upvote) {
-      await apilib.unupvote(this.rootStore, this.myState.upvote)
-      runInAction(() => {
-        this.upvoteCount--
-        this.myState.upvote = undefined
-      })
-    }
-    if (this.myState.downvote) {
-      await apilib.undownvote(this.rootStore, this.myState.downvote)
-      runInAction(() => {
-        this.downvoteCount--
-        this.myState.downvote = undefined
-      })
-    }
-  }
-
   async toggleUpvote() {
     const wasntUpvoted = !this.myState.upvote
-    await this._clearVotes()
-    if (wasntUpvoted) {
-      const res = await apilib.upvote(this.rootStore, this.uri, this.cid)
-      runInAction(() => {
+    const res = await this.rootStore.api.app.bsky.feed.setVote({
+      subject: {
+        uri: this.uri,
+        cid: this.cid,
+      },
+      direction: wasntUpvoted ? 'up' : 'none',
+    })
+    runInAction(() => {
+      if (wasntUpvoted) {
         this.upvoteCount++
-        this.myState.upvote = res.uri
-      })
-    }
+      } else {
+        this.upvoteCount--
+      }
+      this.myState.upvote = res.data.upvote
+      this.myState.downvote = res.data.downvote
+    })
   }
 
   async toggleDownvote() {
     const wasntDownvoted = !this.myState.downvote
-    await this._clearVotes()
-    if (wasntDownvoted) {
-      const res = await apilib.downvote(this.rootStore, this.uri, this.cid)
-      runInAction(() => {
+    const res = await this.rootStore.api.app.bsky.feed.setVote({
+      subject: {
+        uri: this.uri,
+        cid: this.cid,
+      },
+      direction: wasntDownvoted ? 'down' : 'none',
+    })
+    runInAction(() => {
+      if (wasntDownvoted) {
         this.downvoteCount++
-        this.myState.downvote = res.uri
-      })
-    }
+      } else {
+        this.downvoteCount--
+      }
+      this.myState.upvote = res.data.upvote
+      this.myState.downvote = res.data.downvote
+    })
   }
 
   async toggleRepost() {
