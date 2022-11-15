@@ -51,48 +51,6 @@ export async function post(
   )
 }
 
-export async function upvote(store: RootStoreModel, uri: string, cid: string) {
-  return await store.api.app.bsky.feed.vote.create(
-    {did: store.me.did || ''},
-    {
-      subject: {uri, cid},
-      direction: 'up',
-      createdAt: new Date().toISOString(),
-    },
-  )
-}
-
-export async function unupvote(store: RootStoreModel, upvoteUri: string) {
-  const urip = new AtUri(upvoteUri)
-  return await store.api.app.bsky.feed.vote.delete({
-    did: urip.hostname,
-    rkey: urip.rkey,
-  })
-}
-
-export async function downvote(
-  store: RootStoreModel,
-  uri: string,
-  cid: string,
-) {
-  return await store.api.app.bsky.feed.vote.create(
-    {did: store.me.did || ''},
-    {
-      subject: {uri, cid},
-      direction: 'down',
-      createdAt: new Date().toISOString(),
-    },
-  )
-}
-
-export async function undownvote(store: RootStoreModel, downvoteUri: string) {
-  const urip = new AtUri(downvoteUri)
-  return await store.api.app.bsky.feed.vote.delete({
-    did: urip.hostname,
-    rkey: urip.rkey,
-  })
-}
-
 export async function repost(store: RootStoreModel, uri: string, cid: string) {
   return await store.api.app.bsky.feed.repost.create(
     {did: store.me.did || ''},
