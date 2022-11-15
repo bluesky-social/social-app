@@ -13,6 +13,7 @@ import * as SharePostModal from './SharePost.native'
 import * as EditProfileModal from './EditProfile'
 import * as CreateSceneModal from './CreateScene'
 import * as InviteToSceneModal from './InviteToScene'
+import * as ServerInputModal from './ServerInput'
 
 const CLOSED_SNAPPOINTS = ['10%']
 
@@ -75,6 +76,13 @@ export const Modal = observer(function Modal() {
     element = (
       <InviteToSceneModal.Component
         {...(store.shell.activeModal as models.InviteToSceneModel)}
+      />
+    )
+  } else if (store.shell.activeModal?.name === 'server-input') {
+    snapPoints = ServerInputModal.snapPoints
+    element = (
+      <ServerInputModal.Component
+        {...(store.shell.activeModal as models.ServerInputModel)}
       />
     )
   } else {
