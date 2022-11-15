@@ -1,7 +1,8 @@
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {s, colors} from '../../lib/styles'
+import {UserAvatar} from './UserAvatar'
+import {colors} from '../../lib/styles'
 import {useStores} from '../../../state'
 
 export function ViewHeader({
@@ -15,15 +16,16 @@ export function ViewHeader({
   const onPressBack = () => {
     store.nav.tab.goBack()
   }
+  const onPressAvatar = () => {
+    if (store.me.handle) {
+      store.nav.navigate(`/profile/${store.me.handle}`)
+    }
+  }
   return (
     <View style={styles.header}>
       {store.nav.tab.canGoBack ? (
-        <TouchableOpacity onPress={onPressBack}>
-          <FontAwesomeIcon
-            size={14}
-            icon="angle-left"
-            style={styles.backIcon}
-          />
+        <TouchableOpacity onPress={onPressBack} style={styles.backIcon}>
+          <FontAwesomeIcon size={18} icon="angle-left" style={{marginTop: 3}} />
         </TouchableOpacity>
       ) : (
         <View style={styles.cornerPlaceholder} />
@@ -36,7 +38,17 @@ export function ViewHeader({
           </Text>
         ) : undefined}
       </View>
-      <View style={styles.cornerPlaceholder} />
+      {store.me.did ? (
+        <TouchableOpacity onPress={onPressAvatar}>
+          <UserAvatar
+            size={24}
+            handle={store.me.handle || ''}
+            displayName={store.me.displayName}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.cornerPlaceholder} />
+      )}
     </View>
   )
 }
@@ -47,7 +59,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.white,
     paddingHorizontal: 12,
-    paddingBottom: 6,
+    paddingTop: 2,
+    paddingBottom: 8,
     borderBottomColor: colors.gray1,
     borderBottomWidth: 1,
   },
@@ -70,8 +83,8 @@ const styles = StyleSheet.create({
   },
 
   cornerPlaceholder: {
-    width: 14,
-    height: 14,
+    width: 24,
+    height: 24,
   },
-  backIcon: {width: 14, height: 14},
+  backIcon: {width: 24, height: 24},
 })
