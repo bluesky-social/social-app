@@ -98,6 +98,9 @@ export function enforceLen(str: string, len: number): string {
 }
 
 export function cleanError(str: string): string {
+  if (str.includes('Network request failed')) {
+    return 'Unable to connect. Please check your internet connection and try again.'
+  }
   if (str.startsWith('Error: ')) {
     return str.slice('Error: '.length)
   }
