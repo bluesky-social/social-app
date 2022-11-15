@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
+import {FAB} from '../com/util/FloatingActionButton'
 import {SuggestedFollows} from '../com/discover/SuggestedFollows'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
@@ -15,6 +16,9 @@ export const Search = ({visible, params}: ScreenParams) => {
       store.nav.setTitle(`Search`)
     }
   }, [store, visible, name])
+  const onComposePress = () => {
+    store.shell.openComposer({})
+  }
 
   return (
     <View style={styles.container}>
@@ -26,6 +30,7 @@ export const Search = ({visible, params}: ScreenParams) => {
       </View>
       <Text style={styles.heading}>Suggested follows</Text>
       <SuggestedFollows asLinks />
+      <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
   )
 }

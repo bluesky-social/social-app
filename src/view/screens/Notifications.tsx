@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
+import {FAB} from '../com/util/FloatingActionButton'
 import {Feed} from '../com/notifications/Feed'
 import {useStores} from '../../state'
 import {NotificationsViewModel} from '../../state/models/notifications-view'
@@ -36,6 +37,9 @@ export const Notifications = ({visible}: ScreenParams) => {
     }
   }, [visible, store])
 
+  const onComposePress = () => {
+    store.shell.openComposer({})
+  }
   const onPressTryAgain = () => {
     notesView?.refresh()
   }
@@ -44,6 +48,7 @@ export const Notifications = ({visible}: ScreenParams) => {
     <View style={{flex: 1}}>
       <ViewHeader title="Notifications" />
       {notesView && <Feed view={notesView} onPressTryAgain={onPressTryAgain} />}
+      <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
   )
 }
