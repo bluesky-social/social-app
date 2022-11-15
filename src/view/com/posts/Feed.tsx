@@ -1,6 +1,7 @@
 import React, {MutableRefObject} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Text, View, FlatList, StyleProp, ViewStyle} from 'react-native'
+import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/ErrorMessage'
 import {FeedModel, FeedItemModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
@@ -51,11 +52,7 @@ export const Feed = observer(function Feed({
           onEndReached={onEndReached}
         />
       )}
-      {feed.isEmpty && !feed.hasError && (
-        <View>
-          <Text>This feed is empty!</Text>
-        </View>
-      )}
+      {feed.isEmpty && <EmptyState icon="bars" message="This feed is empty!" />}
     </View>
   )
 })

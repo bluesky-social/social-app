@@ -7,6 +7,7 @@ import {
 } from '../../../state/models/notifications-view'
 import {FeedItem} from './FeedItem'
 import {ErrorMessage} from '../util/ErrorMessage'
+import {EmptyState} from '../util/EmptyState'
 
 export const Feed = observer(function Feed({
   view,
@@ -51,7 +52,9 @@ export const Feed = observer(function Feed({
           onEndReached={onEndReached}
         />
       )}
-      {view.isEmpty && <Text>This feed is empty!</Text>}
+      {view.isEmpty && (
+        <EmptyState icon="bell" message="No notifications yet!" />
+      )}
     </View>
   )
 })

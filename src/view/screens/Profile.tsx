@@ -13,9 +13,9 @@ import {FeedItem} from '../com/posts/FeedItem'
 import {ProfileCard} from '../com/profile/ProfileCard'
 import {ErrorScreen} from '../com/util/ErrorScreen'
 import {ErrorMessage} from '../com/util/ErrorMessage'
+import {EmptyState} from '../com/util/EmptyState'
 import Toast from '../com/util/Toast'
 import {s, colors} from '../lib/styles'
-import {UserGroupIcon} from '../lib/icons'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const END_ITEM = {_reactKey: '__end__'}
@@ -136,15 +136,10 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
           items.push(EMPTY_ITEM)
           if (uiState.profile.isScene) {
             renderItem = () => (
-              <View style={styles.emptyContainer}>
-                <View style={styles.emptyIconContainer}>
-                  <UserGroupIcon size="64" style={styles.emptyIcon} />
-                </View>
-                <Text style={styles.emptyText}>
-                  As members upvote posts, they will trend here. Follow the
-                  scene to see its trending posts in your timeline.
-                </Text>
-              </View>
+              <EmptyState
+                icon="user-group"
+                message="As members upvote posts, they will trend here. Follow the scene to see its trending posts in your timeline."
+              />
             )
           } else {
             renderItem = () => <Text style={styles.loading}>No posts yet!</Text>
@@ -165,14 +160,10 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
         } else if (uiState.memberships.isEmpty) {
           items.push(EMPTY_ITEM)
           renderItem = () => (
-            <View style={styles.emptyContainer}>
-              <View style={styles.emptyIconContainer}>
-                <UserGroupIcon size="64" style={styles.emptyIcon} />
-              </View>
-              <Text style={styles.emptyText}>
-                This user hasn't joined any scenes.
-              </Text>
-            </View>
+            <EmptyState
+              icon="user-group"
+              message="This user hasn't joined any scenes."
+            />
           )
         }
       } else if (uiState.selectedView === Sections.Members) {
@@ -205,14 +196,10 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
         } else if (uiState.members.isEmpty) {
           items.push(EMPTY_ITEM)
           renderItem = () => (
-            <View style={styles.emptyContainer}>
-              <View style={styles.emptyIconContainer}>
-                <UserGroupIcon size="64" style={styles.emptyIcon} />
-              </View>
-              <Text style={styles.emptyText}>
-                This scene doesn't have any members.
-              </Text>
-            </View>
+            <EmptyState
+              icon="user-group"
+              message="This scene doesn't have any members."
+            />
           )
         }
       } else {
@@ -266,23 +253,5 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     color: colors.gray5,
     textAlign: 'center',
-  },
-  emptyContainer: {
-    paddingVertical: 20,
-    paddingHorizontal: 36,
-  },
-  emptyIconContainer: {
-    flexDirection: 'row',
-  },
-  emptyIcon: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    color: colors.gray3,
-  },
-  emptyText: {
-    textAlign: 'center',
-    color: colors.gray5,
-    paddingTop: 16,
-    fontSize: 16,
   },
 })
