@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
+import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {ErrorMessage} from '../util/ErrorMessage'
 import {PostModel} from '../../../state/models/post'
 import {useStores} from '../../../state'
 
@@ -28,7 +30,9 @@ export const PostText = observer(function PostText({
   if (!model || model.isLoading || model.uri !== uri) {
     return (
       <View>
-        <ActivityIndicator />
+        <LoadingPlaceholder width="100%" height={8} style={{marginTop: 6}} />
+        <LoadingPlaceholder width="100%" height={8} style={{marginTop: 6}} />
+        <LoadingPlaceholder width={100} height={8} style={{marginTop: 6}} />
       </View>
     )
   }
@@ -38,7 +42,7 @@ export const PostText = observer(function PostText({
   if (model.hasError) {
     return (
       <View>
-        <Text style={style}>{model.error}</Text>
+        <ErrorMessage style={style} message={model.error} />
       </View>
     )
   }
