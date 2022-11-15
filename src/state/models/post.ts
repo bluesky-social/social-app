@@ -2,6 +2,7 @@ import {makeAutoObservable} from 'mobx'
 import * as Post from '../../third-party/api/src/client/types/app/bsky/feed/post'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
+import {cleanError} from '../../view/lib/strings'
 
 export type PostEntities = Post.Record['entities']
 export type PostReply = Post.Record['reply']
@@ -67,7 +68,7 @@ export class PostModel implements RemoveIndex<Post.Record> {
   private _xIdle(err: string = '') {
     this.isLoading = false
     this.hasLoaded = true
-    this.error = err
+    this.error = cleanError(err)
   }
 
   // loader functions
@@ -88,7 +89,7 @@ export class PostModel implements RemoveIndex<Post.Record> {
       this._replaceAll(res.value)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load post: ${e.toString()}`)
+      this._xIdle(e.toString())
     }
   }
 

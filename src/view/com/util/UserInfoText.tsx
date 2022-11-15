@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import * as GetProfile from '../../../third-party/api/src/client/types/app/bsky/actor/getProfile'
 import {StyleProp, Text, TextStyle} from 'react-native'
 import {Link} from './Link'
+import {LoadingPlaceholder} from './LoadingPlaceholder'
 import {useStores} from '../../../state'
 
 export function UserInfoText({
@@ -48,26 +49,31 @@ export function UserInfoText({
     }
   }, [did, store.api.app.bsky])
 
+  let inner
+  if (didFail) {
+    inner = <Text style={style}>{failed}</Text>
+  } else if (profile) {
+    inner = <Text style={style}>{`${prefix || ''}${profile[attr]}`}</Text>
+  } else {
+    inner = (
+      <LoadingPlaceholder
+        width={80}
+        height={8}
+        style={{position: 'relative', top: 1, left: 2}}
+      />
+    )
+  }
+
   if (asLink) {
     const title = profile?.displayName || profile?.handle || 'User'
     return (
       <Link
         href={`/profile/${profile?.handle ? profile.handle : did}`}
         title={title}>
-        <Text style={style}>
-          {didFail
-            ? failed
-            : profile
-            ? `${prefix || ''}${profile[attr]}`
-            : loading}
-        </Text>
+        {inner}
       </Link>
     )
   }
 
-  return (
-    <Text style={style}>
-      {didFail ? failed : profile ? `${prefix || ''}${profile[attr]}` : loading}
-    </Text>
-  )
+  return inner
 }
