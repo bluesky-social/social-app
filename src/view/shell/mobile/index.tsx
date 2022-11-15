@@ -170,6 +170,7 @@ export const MobileShell: React.FC = observer(() => {
         <SafeAreaView style={styles.innerContainer}>
           <Login />
         </SafeAreaView>
+        <Modal />
       </LinearGradient>
     )
   }
@@ -294,6 +295,7 @@ function constructScreenRenderDesc(nav: NavigationModel): {
 const styles = StyleSheet.create({
   outerContainer: {
     height: '100%',
+    flex: 1,
   },
   innerContainer: {
     flex: 1,

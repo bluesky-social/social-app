@@ -5,6 +5,7 @@ import {faAngleDown} from '@fortawesome/free-solid-svg-icons/faAngleDown'
 import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft'
 import {faAngleRight} from '@fortawesome/free-solid-svg-icons/faAngleRight'
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons/faArrowLeft'
+import {faArrowRight} from '@fortawesome/free-solid-svg-icons/faArrowRight'
 import {faArrowRightFromBracket} from '@fortawesome/free-solid-svg-icons'
 import {faArrowUpFromBracket} from '@fortawesome/free-solid-svg-icons/faArrowUpFromBracket'
 import {faArrowUpRightFromSquare} from '@fortawesome/free-solid-svg-icons/faArrowUpRightFromSquare'
@@ -35,6 +36,7 @@ import {faLock} from '@fortawesome/free-solid-svg-icons/faLock'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
 import {faMessage} from '@fortawesome/free-regular-svg-icons/faMessage'
 import {faNoteSticky} from '@fortawesome/free-solid-svg-icons/faNoteSticky'
+import {faPen} from '@fortawesome/free-solid-svg-icons/faPen'
 import {faPenNib} from '@fortawesome/free-solid-svg-icons/faPenNib'
 import {faPenToSquare} from '@fortawesome/free-solid-svg-icons/faPenToSquare'
 import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus'
@@ -59,6 +61,7 @@ export function setup() {
     faAngleLeft,
     faAngleRight,
     faArrowLeft,
+    faArrowRight,
     faArrowRightFromBracket,
     faArrowUpFromBracket,
     faArrowUpRightFromSquare,
@@ -89,6 +92,7 @@ export function setup() {
     faMagnifyingGlass,
     faMessage,
     faNoteSticky,
+    faPen,
     faPenNib,
     faPenToSquare,
     faPlus,

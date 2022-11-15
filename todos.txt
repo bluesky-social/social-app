@@ -6,6 +6,7 @@ Paul's todo list
   - Cursor behaviors on all views
   - Update swipe behaviors: edge always goes back, leftmost always goes back, main connects to selector if present
 - Onboarding flow
+  > Invite codes
   - Confirm email
   - Setup profile?
 - Onboarding
@@ -23,7 +24,7 @@ Paul's todo list
   - View on post
 - Linking
   - Web linking
-  - App linking
+  > App linking
 - Pagination
   - Liked by
   - Reposted by
@@ -34,6 +35,3 @@ Paul's todo list
   - Auth token refresh seems broken
   - Check that sub components arent reloading too much
   - Titles are getting screwed up (possibly swipe related)
-  > Dont suggest self for follows
-  > Double post on post?
-  > Handle no displayname everywhere

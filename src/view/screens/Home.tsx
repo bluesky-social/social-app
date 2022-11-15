@@ -8,7 +8,6 @@ import {useStores} from '../../state'
 import {FeedModel} from '../../state/models/feed-view'
 import {ScreenParams} from '../routes'
 import {s} from '../lib/styles'
-import {BUILD} from '../../env'
 
 export const Home = observer(function Home({
   visible,
@@ -57,10 +56,7 @@ export const Home = observer(function Home({
 
   return (
     <View style={s.flex1}>
-      <ViewHeader
-        title="Bluesky"
-        subtitle={`Private Beta${BUILD !== 'prod' ? ` [${BUILD}]` : ''}`}
-      />
+      <ViewHeader title="Bluesky" subtitle="Private Beta" />
       <Feed
         key="default"
         feed={defaultFeedView}

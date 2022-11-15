@@ -66,6 +66,17 @@ export class InviteToSceneModel {
   }
 }
 
+export class ServerInputModel {
+  name = 'server-input'
+
+  constructor(
+    public initialService: string,
+    public onSelect: (url: string) => void,
+  ) {
+    makeAutoObservable(this)
+  }
+}
+
 export interface ComposerOpts {
   replyTo?: Post.PostRef
   onPost?: () => void
@@ -79,6 +90,7 @@ export class ShellUiModel {
     | SharePostModel
     | EditProfileModel
     | CreateSceneModel
+    | ServerInputModel
     | undefined
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
@@ -93,7 +105,8 @@ export class ShellUiModel {
       | ConfirmModel
       | SharePostModel
       | EditProfileModel
-      | CreateSceneModel,
+      | CreateSceneModel
+      | ServerInputModel,
   ) {
     this.isModalActive = true
     this.activeModal = modal

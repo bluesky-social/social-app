@@ -1,5 +1,6 @@
 import {AtUri} from '../../third-party/uri'
 import {Entity} from '../../third-party/api/src/client/types/app/bsky/feed/post'
+import {PROD_SERVICE} from '../../state'
 
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
@@ -105,4 +106,16 @@ export function cleanError(str: string): string {
     return str.slice('Error: '.length)
   }
   return str
+}
+
+export function toNiceDomain(url: string): string {
+  try {
+    const urlp = new URL(url)
+    if (`https://${urlp.host}` === PROD_SERVICE) {
+      return 'Bluesky.Social'
+    }
+    return urlp.host
+  } catch (e) {
+    return url
+  }
 }

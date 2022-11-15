@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -15,10 +16,10 @@ import * as EmailValidator from 'email-validator'
 import {observer} from 'mobx-react-lite'
 import {Picker} from '../com/util/Picker'
 import {s, colors} from '../lib/styles'
-import {makeValidHandle, createFullHandle} from '../lib/strings'
+import {makeValidHandle, createFullHandle, toNiceDomain} from '../lib/strings'
 import {useStores, DEFAULT_SERVICE} from '../../state'
 import {ServiceDescription} from '../../state/models/session'
-import {BUILD} from '../../env'
+import {ServerInputModel} from '../../state/models/shell-ui'
 
 enum ScreenState {
   SigninOrCreateAccount,
@@ -72,9 +73,7 @@ const SigninOrCreateAccount = ({
       <View style={styles.hero}>
         <Logo />
         <Text style={styles.title}>Bluesky</Text>
-        <Text style={styles.subtitle}>
-          [ private beta {BUILD !== 'prod' ? `- ${BUILD} ` : ''}]
-        </Text>
+        <Text style={styles.subtitle}>[ private beta ]</Text>
       </View>
       <View style={s.flex1}>
         <TouchableOpacity style={styles.btn} onPress={onPressCreateAccount}>
@@ -112,6 +111,7 @@ const SigninOrCreateAccount = ({
 const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
   const [serviceDescription, setServiceDescription] = useState<
     ServiceDescription | undefined
   >(undefined)
@@ -121,10 +121,9 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
 
   useEffect(() => {
     let aborted = false
-    if (serviceDescription || error) {
-      return
-    }
-    store.session.describeService(DEFAULT_SERVICE).then(
+    setError('')
+    console.log('Fetching service description', serviceUrl)
+    store.session.describeService(serviceUrl).then(
       desc => {
         if (aborted) return
         setServiceDescription(desc)
@@ -140,7 +139,11 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
     return () => {
       aborted = true
     }
-  }, [])
+  }, [serviceUrl])
+
+  const onPressSelectService = () => {
+    store.shell.openModal(new ServerInputModel(serviceUrl, setServiceUrl))
+  }
 
   const onPressNext = async () => {
     setError('')
@@ -168,7 +171,7 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
       }
 
       await store.session.login({
-        service: DEFAULT_SERVICE,
+        service: serviceUrl,
         handle: fullHandle,
         password,
       })
@@ -194,9 +197,14 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
         <Logo />
       </View>
       <View style={styles.group}>
-        <View style={styles.groupTitle}>
-          <Text style={[s.white, s.f18, s.bold]}>Sign in</Text>
-        </View>
+        <TouchableOpacity
+          style={styles.groupTitle}
+          onPress={onPressSelectService}>
+          <Text style={[s.white, s.f18, s.bold]} numberOfLines={1}>
+            Sign in to {toNiceDomain(serviceUrl)}
+          </Text>
+          <FontAwesomeIcon icon="pen" size={10} style={styles.groupTitleIcon} />
+        </TouchableOpacity>
         {error ? (
           <View style={styles.error}>
             <View style={styles.errorIcon}>
@@ -256,6 +264,7 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
 const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
   const [error, setError] = useState<string>('')
   const [serviceDescription, setServiceDescription] = useState<
     ServiceDescription | undefined
@@ -268,10 +277,9 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
 
   useEffect(() => {
     let aborted = false
-    if (serviceDescription || error) {
-      return
-    }
-    store.session.describeService(DEFAULT_SERVICE).then(
+    setError('')
+    console.log('Fetching service description', serviceUrl)
+    store.session.describeService(serviceUrl).then(
       desc => {
         if (aborted) return
         setServiceDescription(desc)
@@ -288,7 +296,11 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     return () => {
       aborted = true
     }
-  }, [])
+  }, [serviceUrl])
+
+  const onPressSelectService = () => {
+    store.shell.openModal(new ServerInputModel(serviceUrl, setServiceUrl))
+  }
 
   const onPressNext = async () => {
     if (!email) {
@@ -307,7 +319,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     setIsProcessing(true)
     try {
       await store.session.createAccount({
-        service: DEFAULT_SERVICE,
+        service: serviceUrl,
         email,
         handle: createFullHandle(handle, userDomain),
         password,
@@ -346,136 +358,164 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   )
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
-      <View style={styles.logoHero}>
-        <Logo />
-      </View>
-      {serviceDescription ? (
-        <>
-          {error ? (
-            <View style={[styles.error, styles.errorFloating]}>
-              <View style={styles.errorIcon}>
-                <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
+    <ScrollView style={{flex: 1}}>
+      <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
+        <View style={styles.logoHero}>
+          <Logo />
+        </View>
+        {serviceDescription ? (
+          <>
+            {error ? (
+              <View style={[styles.error, styles.errorFloating]}>
+                <View style={styles.errorIcon}>
+                  <FontAwesomeIcon
+                    icon="exclamation"
+                    style={s.white}
+                    size={10}
+                  />
+                </View>
+                <View style={s.flex1}>
+                  <Text style={[s.white, s.bold]}>{error}</Text>
+                </View>
               </View>
-              <View style={s.flex1}>
-                <Text style={[s.white, s.bold]}>{error}</Text>
+            ) : undefined}
+            <View style={[styles.group]}>
+              <View style={styles.groupTitle}>
+                <Text style={[s.white, s.f18, s.bold]}>
+                  Create a new account
+                </Text>
               </View>
-            </View>
-          ) : undefined}
-          <View style={styles.group}>
-            <View style={styles.groupTitle}>
-              <Text style={[s.white, s.f18, s.bold]}>Create a new account</Text>
-            </View>
-            {serviceDescription?.inviteCodeRequired ? (
+              <View style={styles.groupContent}>
+                <FontAwesomeIcon icon="globe" style={styles.groupContentIcon} />
+                <TouchableOpacity
+                  style={styles.textBtn}
+                  onPress={onPressSelectService}>
+                  <Text style={styles.textBtnLabel}>
+                    {toNiceDomain(serviceUrl)}
+                  </Text>
+                  <FontAwesomeIcon
+                    icon="pen"
+                    size={12}
+                    style={styles.textBtnIcon}
+                  />
+                </TouchableOpacity>
+              </View>
+              {serviceDescription?.inviteCodeRequired ? (
+                <View style={styles.groupContent}>
+                  <FontAwesomeIcon
+                    icon="ticket"
+                    style={styles.groupContentIcon}
+                  />
+                  <TextInput
+                    style={[styles.textInput]}
+                    placeholder="Invite code"
+                    placeholderTextColor={colors.blue0}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    autoFocus
+                    value={inviteCode}
+                    onChangeText={setInviteCode}
+                    editable={!isProcessing}
+                  />
+                </View>
+              ) : undefined}
               <View style={styles.groupContent}>
                 <FontAwesomeIcon
-                  icon="ticket"
+                  icon="envelope"
                   style={styles.groupContentIcon}
                 />
                 <TextInput
                   style={[styles.textInput]}
-                  placeholder="Invite code"
+                  placeholder="Email address"
                   placeholderTextColor={colors.blue0}
                   autoCapitalize="none"
                   autoCorrect={false}
-                  autoFocus
-                  value={inviteCode}
-                  onChangeText={setInviteCode}
+                  value={email}
+                  onChangeText={setEmail}
                   editable={!isProcessing}
                 />
               </View>
-            ) : undefined}
-            <View style={styles.groupContent}>
-              <FontAwesomeIcon
-                icon="envelope"
-                style={styles.groupContentIcon}
-              />
-              <TextInput
-                style={[styles.textInput]}
-                placeholder="Email address"
-                placeholderTextColor={colors.blue0}
-                autoCapitalize="none"
-                autoCorrect={false}
-                value={email}
-                onChangeText={setEmail}
-                editable={!isProcessing}
-              />
-            </View>
-            <View style={styles.groupContent}>
-              <FontAwesomeIcon icon="lock" style={styles.groupContentIcon} />
-              <TextInput
-                style={[styles.textInput]}
-                placeholder="Choose your password"
-                placeholderTextColor={colors.blue0}
-                autoCapitalize="none"
-                autoCorrect={false}
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-                editable={!isProcessing}
-              />
-            </View>
-          </View>
-          <View style={styles.group}>
-            <View style={styles.groupTitle}>
-              <Text style={[s.white, s.f18, s.bold]}>Choose your username</Text>
-            </View>
-            <View style={styles.groupContent}>
-              <FontAwesomeIcon icon="at" style={styles.groupContentIcon} />
-              <TextInput
-                style={[styles.textInput]}
-                placeholder="eg alice"
-                placeholderTextColor={colors.blue0}
-                autoCapitalize="none"
-                value={handle}
-                onChangeText={v => setHandle(makeValidHandle(v))}
-                editable={!isProcessing}
-              />
-            </View>
-            {serviceDescription.availableUserDomains.length > 1 && (
               <View style={styles.groupContent}>
-                <FontAwesomeIcon icon="globe" style={styles.groupContentIcon} />
-                <Picker
-                  style={styles.picker}
-                  labelStyle={styles.pickerLabel}
-                  iconStyle={styles.pickerIcon}
-                  value={userDomain}
-                  items={serviceDescription.availableUserDomains.map(d => ({
-                    label: `.${d}`,
-                    value: d,
-                  }))}
-                  onChange={itemValue => setUserDomain(itemValue)}
-                  enabled={!isProcessing}
+                <FontAwesomeIcon icon="lock" style={styles.groupContentIcon} />
+                <TextInput
+                  style={[styles.textInput]}
+                  placeholder="Choose your password"
+                  placeholderTextColor={colors.blue0}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  secureTextEntry
+                  value={password}
+                  onChangeText={setPassword}
+                  editable={!isProcessing}
                 />
               </View>
-            )}
-            <View style={styles.groupContent}>
-              <Text style={[s.white, s.p10]}>
-                Your full username will be{' '}
-                <Text style={s.bold}>
-                  @{createFullHandle(handle, userDomain)}
-                </Text>
-              </Text>
             </View>
-          </View>
-          <View style={[s.flexRow, s.pl20, s.pr20]}>
-            <TouchableOpacity onPress={onPressBack}>
-              <Text style={[s.white, s.f18, s.pl5]}>Back</Text>
-            </TouchableOpacity>
-            <View style={s.flex1} />
-            <TouchableOpacity onPress={onPressNext}>
-              {isProcessing ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
+            <View style={styles.group}>
+              <View style={styles.groupTitle}>
+                <Text style={[s.white, s.f18, s.bold]}>
+                  Choose your username
+                </Text>
+              </View>
+              <View style={styles.groupContent}>
+                <FontAwesomeIcon icon="at" style={styles.groupContentIcon} />
+                <TextInput
+                  style={[styles.textInput]}
+                  placeholder="eg alice"
+                  placeholderTextColor={colors.blue0}
+                  autoCapitalize="none"
+                  value={handle}
+                  onChangeText={v => setHandle(makeValidHandle(v))}
+                  editable={!isProcessing}
+                />
+              </View>
+              {serviceDescription.availableUserDomains.length > 1 && (
+                <View style={styles.groupContent}>
+                  <FontAwesomeIcon
+                    icon="globe"
+                    style={styles.groupContentIcon}
+                  />
+                  <Picker
+                    style={styles.picker}
+                    labelStyle={styles.pickerLabel}
+                    iconStyle={styles.pickerIcon}
+                    value={userDomain}
+                    items={serviceDescription.availableUserDomains.map(d => ({
+                      label: `.${d}`,
+                      value: d,
+                    }))}
+                    onChange={itemValue => setUserDomain(itemValue)}
+                    enabled={!isProcessing}
+                  />
+                </View>
               )}
-            </TouchableOpacity>
-          </View>
-        </>
-      ) : (
-        <InitialLoadView />
-      )}
-    </KeyboardAvoidingView>
+              <View style={styles.groupContent}>
+                <Text style={[s.white, s.p10]}>
+                  Your full username will be{' '}
+                  <Text style={s.bold}>
+                    @{createFullHandle(handle, userDomain)}
+                  </Text>
+                </Text>
+              </View>
+            </View>
+            <View style={[s.flexRow, s.pl20, s.pr20, {paddingBottom: 200}]}>
+              <TouchableOpacity onPress={onPressBack}>
+                <Text style={[s.white, s.f18, s.pl5]}>Back</Text>
+              </TouchableOpacity>
+              <View style={s.flex1} />
+              <TouchableOpacity onPress={onPressNext}>
+                {isProcessing ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <InitialLoadView />
+        )}
+      </KeyboardAvoidingView>
+    </ScrollView>
   )
 }
 
@@ -577,8 +617,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blue3,
   },
   groupTitle: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 12,
+  },
+  groupTitleIcon: {
+    color: colors.white,
+    marginHorizontal: 6,
   },
   groupContent: {
     borderTopWidth: 1,
@@ -599,6 +645,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     fontSize: 18,
     borderRadius: 10,
+  },
+  textBtn: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+  },
+  textBtnLabel: {
+    flex: 1,
+    color: colors.white,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    fontSize: 18,
+  },
+  textBtnIcon: {
+    color: colors.white,
+    marginHorizontal: 12,
   },
   picker: {
     flex: 1,
