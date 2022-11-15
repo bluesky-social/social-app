@@ -3,6 +3,7 @@ import * as GetTimeline from '../../third-party/api/src/client/types/app/bsky/fe
 import * as GetAuthorFeed from '../../third-party/api/src/client/types/app/bsky/feed/getAuthorFeed'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
+import {cleanError} from '../../view/lib/strings'
 
 export class FeedItemMyStateModel {
   repost?: string
@@ -254,7 +255,7 @@ export class FeedModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err
+    this.error = cleanError(err)
   }
 
   // loader functions
@@ -282,7 +283,7 @@ export class FeedModel {
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load feed: ${e.toString()}`)
+      this._xIdle(e.toString())
     }
   }
 
@@ -293,7 +294,7 @@ export class FeedModel {
       this._prependAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load feed: ${e.toString()}`)
+      this._xIdle(e.toString())
     }
   }
 

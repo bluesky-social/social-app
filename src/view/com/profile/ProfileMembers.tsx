@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, FlatList, Text, View} from 'react-native'
+import {ActivityIndicator, FlatList, View} from 'react-native'
 import {MembersViewModel, MemberItem} from '../../../state/models/members-view'
 import {ProfileCard} from './ProfileCard'
+import {ErrorMessage} from '../util/ErrorMessage'
 import {useStores} from '../../../state'
 
 export const ProfileMembers = observer(function ProfileMembers({
@@ -24,6 +25,10 @@ export const ProfileMembers = observer(function ProfileMembers({
     newView.setup().catch(err => console.error('Failed to fetch members', err))
   }, [name, view?.params.actor, store])
 
+  const onRefresh = () => {
+    view?.refresh()
+  }
+
   // loading
   // =
   if (
@@ -43,7 +48,12 @@ export const ProfileMembers = observer(function ProfileMembers({
   if (view.hasError) {
     return (
       <View>
-        <Text>{view.error}</Text>
+        <ErrorMessage
+          dark
+          message={view.error}
+          style={{margin: 6}}
+          onPressTryAgain={onRefresh}
+        />
       </View>
     )
   }

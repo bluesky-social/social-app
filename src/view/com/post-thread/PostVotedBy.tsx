@@ -6,6 +6,7 @@ import {
   VotesViewItemModel,
 } from '../../../state/models/votes-view'
 import {Link} from '../util/Link'
+import {ErrorMessage} from '../util/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
@@ -31,6 +32,10 @@ export const PostVotedBy = observer(function PostVotedBy({
     newView.setup().catch(err => console.error('Failed to fetch voted by', err))
   }, [uri, view?.params.uri, store])
 
+  const onRefresh = () => {
+    view?.refresh()
+  }
+
   // loading
   // =
   if (
@@ -50,7 +55,12 @@ export const PostVotedBy = observer(function PostVotedBy({
   if (view.hasError) {
     return (
       <View>
-        <Text>{view.error}</Text>
+        <ErrorMessage
+          dark
+          message={view.error}
+          style={{margin: 6}}
+          onPressTryAgain={onRefresh}
+        />
       </View>
     )
   }

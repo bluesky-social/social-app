@@ -4,6 +4,7 @@ import {RootStoreModel} from './root-store'
 import {Declaration} from './_common'
 import {hasProp} from '../lib/type-guards'
 import {APP_BSKY_GRAPH} from '../../third-party/api'
+import {cleanError} from '../../view/lib/strings'
 
 const UNGROUPABLE_REASONS = ['trend', 'assertion']
 
@@ -215,7 +216,7 @@ export class NotificationsViewModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err
+    this.error = cleanError(err)
   }
 
   // loader functions

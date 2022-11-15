@@ -36,10 +36,14 @@ export const Notifications = ({visible}: ScreenParams) => {
     }
   }, [visible, store])
 
+  const onPressTryAgain = () => {
+    notesView?.refresh()
+  }
+
   return (
     <View style={{flex: 1}}>
       <ViewHeader title="Notifications" />
-      {notesView && <Feed view={notesView} />}
+      {notesView && <Feed view={notesView} onPressTryAgain={onPressTryAgain} />}
     </View>
   )
 }

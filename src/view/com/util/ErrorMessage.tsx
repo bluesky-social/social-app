@@ -1,40 +1,66 @@
 import React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {colors} from '../../lib/styles'
+import LinearGradient from 'react-native-linear-gradient'
+import {colors, gradients} from '../../lib/styles'
 
 export function ErrorMessage({
   message,
   numberOfLines,
+  dark,
+  style,
   onPressTryAgain,
 }: {
   message: string
   numberOfLines?: number
+  dark?: boolean
+  style?: StyleProp<ViewStyle>
   onPressTryAgain?: () => void
 }) {
-  return (
-    <View style={styles.outer}>
-      <View style={styles.errorIcon}>
+  const inner = (
+    <>
+      <View style={[styles.errorIcon, dark ? styles.darkErrorIcon : undefined]}>
         <FontAwesomeIcon
           icon="exclamation"
-          style={{color: colors.white}}
+          style={{color: dark ? colors.red3 : colors.white}}
           size={16}
         />
       </View>
-      <Text style={styles.message} numberOfLines={numberOfLines}>
+      <Text
+        style={[styles.message, dark ? styles.darkMessage : undefined]}
+        numberOfLines={numberOfLines}>
         {message}
       </Text>
       {onPressTryAgain && (
         <TouchableOpacity style={styles.btn} onPress={onPressTryAgain}>
           <FontAwesomeIcon
             icon="arrows-rotate"
-            style={{color: colors.red4}}
+            style={{color: dark ? colors.white : colors.red4}}
             size={16}
           />
         </TouchableOpacity>
       )}
-    </View>
+    </>
   )
+  if (dark) {
+    return (
+      <LinearGradient
+        colors={[gradients.error.start, gradients.error.end]}
+        start={{x: 0.5, y: 0}}
+        end={{x: 1, y: 1}}
+        style={[styles.outer, style]}>
+        {inner}
+      </LinearGradient>
+    )
+  }
+  return <View style={[styles.outer, style]}>{inner}</View>
 }
 
 const styles = StyleSheet.create({
@@ -57,10 +83,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 8,
   },
+  darkErrorIcon: {
+    backgroundColor: colors.white,
+  },
   message: {
     flex: 1,
     color: colors.red4,
     paddingRight: 10,
+  },
+  darkMessage: {
+    color: colors.white,
+    fontWeight: '600',
   },
   btn: {
     paddingHorizontal: 4,

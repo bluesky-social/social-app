@@ -6,11 +6,14 @@ import {
   NotificationsViewItemModel,
 } from '../../../state/models/notifications-view'
 import {FeedItem} from './FeedItem'
+import {ErrorMessage} from '../util/ErrorMessage'
 
 export const Feed = observer(function Feed({
   view,
+  onPressTryAgain,
 }: {
   view: NotificationsViewModel
+  onPressTryAgain?: () => void
 }) {
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your
@@ -30,7 +33,14 @@ export const Feed = observer(function Feed({
       {view.isLoading && !view.isRefreshing && !view.hasContent && (
         <Text>Loading...</Text>
       )}
-      {view.hasError && <Text>{view.error}</Text>}
+      {view.hasError && (
+        <ErrorMessage
+          dark
+          message={view.error}
+          style={{margin: 6}}
+          onPressTryAgain={onPressTryAgain}
+        />
+      )}
       {view.hasContent && (
         <FlatList
           data={view.notifications}
