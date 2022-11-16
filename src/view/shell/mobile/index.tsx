@@ -115,6 +115,7 @@ export const MobileShell: React.FC = observer(() => {
   const scrollElRef = useRef<FlatList | undefined>()
   const winDim = useWindowDimensions()
   const swipeGestureInterp = useSharedValue<number>(0)
+  const tabMenuInterp = useSharedValue<number>(0)
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
 
   const onPressHome = () => {
@@ -127,7 +128,26 @@ export const MobileShell: React.FC = observer(() => {
   const onPressSearch = () => store.nav.navigate('/search')
   const onPressMenu = () => setMainMenuActive(true)
   const onPressNotifications = () => store.nav.navigate('/notifications')
-  const onPressTabs = () => setTabsSelectorActive(true)
+  const onPressTabs = () => toggleTabsMenu(!isTabsSelectorActive)
+
+  const closeTabsSelector = () => setTabsSelectorActive(false)
+  const toggleTabsMenu = (active: boolean) => {
+    if (active) {
+      // will trigger the animation below
+      setTabsSelectorActive(true)
+    } else {
+      tabMenuInterp.value = withTiming(0, {duration: 100}, () => {
+        // hide once the animation has finished
+        runOnJS(closeTabsSelector)()
+      })
+    }
+  }
+  useEffect(() => {
+    if (isTabsSelectorActive) {
+      // trigger the animation once the tabs selector is rendering
+      tabMenuInterp.value = withTiming(1, {duration: 100})
+    }
+  }, [isTabsSelectorActive])
 
   const goBack = () => store.nav.tab.goBack()
   const swipeGesture = Gesture.Pan()
@@ -158,6 +178,9 @@ export const MobileShell: React.FC = observer(() => {
   }))
   const swipeOpacity = useAnimatedStyle(() => ({
     opacity: interpolate(swipeGestureInterp.value, [0, 1.0], [0.6, 0.0]),
+  }))
+  const tabMenuTransform = useAnimatedStyle(() => ({
+    transform: [{translateY: tabMenuInterp.value * -320}],
   }))
 
   if (!store.session.isAuthed) {
@@ -205,7 +228,9 @@ export const MobileShell: React.FC = observer(() => {
                       style={[
                         s.flex1,
                         styles.screen,
-                        current ? swipeTransform : undefined,
+                        current
+                          ? [swipeTransform, tabMenuTransform]
+                          : undefined,
                       ]}>
                       <Com
                         params={params}
@@ -220,6 +245,11 @@ export const MobileShell: React.FC = observer(() => {
           </ScreenContainer>
         </GestureDetector>
       </SafeAreaView>
+      <TabsSelector
+        active={isTabsSelectorActive}
+        tabMenuInterp={tabMenuInterp}
+        onClose={() => toggleTabsMenu(false)}
+      />
       <SafeAreaView style={styles.bottomBar}>
         <Btn icon="house" onPress={onPressHome} />
         <Btn icon="search" onPress={onPressSearch} />
@@ -236,10 +266,6 @@ export const MobileShell: React.FC = observer(() => {
         onClose={() => setMainMenuActive(false)}
       />
       <Modal />
-      <TabsSelector
-        active={isTabsSelectorActive}
-        onClose={() => setTabsSelectorActive(false)}
-      />
       <Composer
         active={store.shell.isComposerActive}
         onClose={() => store.shell.closeComposer()}
