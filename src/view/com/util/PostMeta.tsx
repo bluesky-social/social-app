@@ -1,5 +1,5 @@
-import React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import React, {useMemo} from 'react'
+import {StyleSheet, useWindowDimensions, Text, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Link} from '../util/Link'
 import {PostDropdownBtn} from '../util/DropdownBtn'
@@ -16,11 +16,16 @@ interface PostMetaOpts {
 }
 
 export function PostMeta(opts: PostMetaOpts) {
+  const winDim = useWindowDimensions()
+  const maxWidth = useMemo(
+    () => ({maxWidth: ((winDim.width * 3) / 5) | 0}),
+    [winDim.width],
+  )
   return (
     <View style={styles.meta}>
-      <View style={styles.metaNames}>
+      <View style={[styles.metaNames, maxWidth]}>
         <Link
-          style={styles.metaItem}
+          style={[styles.metaItem, maxWidth]}
           href={opts.authorHref}
           title={opts.authorHandle}>
           <Text style={[s.f17, s.bold]} numberOfLines={1}>
@@ -28,7 +33,7 @@ export function PostMeta(opts: PostMetaOpts) {
           </Text>
         </Link>
         <Link
-          style={styles.metaItem}
+          style={[styles.metaItem, maxWidth]}
           href={opts.authorHref}
           title={opts.authorHandle}>
           <Text style={[s.f15, s.gray5]} numberOfLines={1}>
@@ -37,7 +42,7 @@ export function PostMeta(opts: PostMetaOpts) {
         </Link>
       </View>
       <Text style={[styles.metaItem, s.f15, s.gray5]}>
-        &middot; {ago(opts.timestamp)}
+        {ago(opts.timestamp)}
       </Text>
       <View style={s.flex1} />
       <PostDropdownBtn
@@ -61,11 +66,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    maxWidth: 240,
     overflow: 'hidden',
   },
   metaItem: {
-    maxWidth: 240,
     paddingRight: 5,
   },
 })

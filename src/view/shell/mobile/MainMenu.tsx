@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -27,6 +28,7 @@ export const MainMenu = observer(
   ({active, onClose}: {active: boolean; onClose: () => void}) => {
     const store = useStores()
     const initInterp = useSharedValue<number>(0)
+    const insets = useSafeAreaInsets()
 
     useEffect(() => {
       if (active) {
@@ -167,7 +169,12 @@ export const MainMenu = observer(
         <TouchableWithoutFeedback onPress={onClose}>
           <View style={styles.bg} />
         </TouchableWithoutFeedback>
-        <Animated.View style={[styles.wrapper, wrapperAnimStyle]}>
+        <Animated.View
+          style={[
+            styles.wrapper,
+            {bottom: insets.bottom + 55},
+            wrapperAnimStyle,
+          ]}>
           <SafeAreaView>
             <View style={[styles.topSection]}>
               <TouchableOpacity
@@ -251,7 +258,6 @@ const styles = StyleSheet.create({
   wrapper: {
     position: 'absolute',
     top: 0,
-    bottom: 75,
     width: '100%',
     backgroundColor: '#fff',
   },
