@@ -49,6 +49,10 @@ export class MeModel {
     }
   }
 
+  clearNotificationCount() {
+    this.notificationCount = 0
+  }
+
   async fetchStateUpdate() {
     const res = await this.rootStore.api.app.bsky.notification.getCount()
     runInAction(() => {
