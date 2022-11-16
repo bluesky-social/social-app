@@ -21,13 +21,14 @@ export const Modal = observer(function Modal() {
   const store = useStores()
   const bottomSheetRef = useRef<BottomSheet>(null)
 
-  const onShareBottomSheetChange = (snapPoint: number) => {
+  const onBottomSheetChange = (snapPoint: number) => {
     if (snapPoint === -1) {
       store.shell.closeModal()
     }
   }
   const onClose = () => {
     bottomSheetRef.current?.close()
+    store.shell.closeModal()
   }
 
   useEffect(() => {
@@ -99,7 +100,7 @@ export const Modal = observer(function Modal() {
       backdropComponent={
         store.shell.isModalActive ? createCustomBackdrop(onClose) : undefined
       }
-      onChange={onShareBottomSheetChange}>
+      onChange={onBottomSheetChange}>
       {element}
     </BottomSheet>
   )
