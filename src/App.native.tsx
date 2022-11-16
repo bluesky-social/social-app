@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import SplashScreen from 'react-native-splash-screen'
+import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {whenWebCrypto} from './platform/polyfills.native'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
@@ -35,7 +36,9 @@ function App() {
     <GestureHandlerRootView style={{flex: 1}}>
       <RootSiblingParent>
         <RootStoreProvider value={rootStore}>
-          <MobileShell />
+          <SafeAreaProvider>
+            <MobileShell />
+          </SafeAreaProvider>
         </RootStoreProvider>
       </RootSiblingParent>
     </GestureHandlerRootView>

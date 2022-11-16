@@ -220,7 +220,7 @@ export const MobileShell: React.FC = observer(() => {
           </ScreenContainer>
         </GestureDetector>
       </SafeAreaView>
-      <View style={styles.bottomBar}>
+      <SafeAreaView style={styles.bottomBar}>
         <Btn icon="house" onPress={onPressHome} />
         <Btn icon="search" onPress={onPressSearch} />
         <Btn icon="menu" onPress={onPressMenu} />
@@ -230,7 +230,7 @@ export const MobileShell: React.FC = observer(() => {
           notificationCount={store.me.notificationCount}
         />
         <Btn icon={['far', 'clone']} onPress={onPressTabs} />
-      </View>
+      </SafeAreaView>
       <MainMenu
         active={isMainMenuActive}
         onClose={() => setMainMenuActive(false)}
@@ -373,7 +373,6 @@ const styles = StyleSheet.create({
     borderTopColor: colors.gray2,
     paddingLeft: 5,
     paddingRight: 15,
-    paddingBottom: 20,
   },
   ctrl: {
     flex: 1,
