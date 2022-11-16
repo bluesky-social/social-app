@@ -1,6 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
@@ -20,7 +21,7 @@ import {s, colors, gradients} from '../../lib/styles'
 
 const MAX_TEXT_LENGTH = 256
 const WARNING_TEXT_LENGTH = 200
-const DANGER_TEXT_LENGTH = 255
+const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH
 
 export function ComposePost({
   replyTo,
@@ -56,9 +57,6 @@ export function ComposePost({
   })
 
   const onChangeText = (newText: string) => {
-    if (newText.length > MAX_TEXT_LENGTH) {
-      newText = newText.slice(0, MAX_TEXT_LENGTH)
-    }
     setText(newText)
 
     const prefix = extractTextAutocompletePrefix(newText)
@@ -79,6 +77,9 @@ export function ComposePost({
   }
   const onPressPublish = async () => {
     if (isProcessing) {
+      return
+    }
+    if (text.length > MAX_TEXT_LENGTH) {
       return
     }
     setError('')
@@ -112,6 +113,7 @@ export function ComposePost({
     setAutocompleteOptions([])
   }
 
+  const canPost = text.length <= MAX_TEXT_LENGTH
   const progressColor =
     text.length > DANGER_TEXT_LENGTH
       ? '#e60000'
@@ -133,7 +135,7 @@ export function ComposePost({
   }, [text])
 
   return (
-    <View style={styles.outer}>
+    <KeyboardAvoidingView behavior="padding" style={styles.outer}>
       <View style={styles.topbar}>
         <TouchableOpacity onPress={onPressCancel}>
           <Text style={[s.blue3, s.f16]}>Cancel</Text>
@@ -143,7 +145,7 @@ export function ComposePost({
           <View style={styles.postBtn}>
             <ActivityIndicator />
           </View>
-        ) : (
+        ) : canPost ? (
           <TouchableOpacity onPress={onPressPublish}>
             <LinearGradient
               colors={[gradients.primary.start, gradients.primary.end]}
@@ -153,6 +155,10 @@ export function ComposePost({
               <Text style={[s.white, s.f16, s.bold]}>Post</Text>
             </LinearGradient>
           </TouchableOpacity>
+        ) : (
+          <View style={[styles.postBtn, {backgroundColor: colors.gray1}]}>
+            <Text style={[s.gray5, s.f16, s.bold]}>Post</Text>
+          </View>
         )}
       </View>
       {error !== '' && (
@@ -176,8 +182,11 @@ export function ComposePost({
         style={styles.textInput}>
         {textDecorated}
       </TextInput>
-      <View style={[s.flexRow, s.pt10, s.pb10, s.pr5]}>
+      <View style={[s.flexRow, {alignItems: 'center'}, s.pt10, s.pb10, s.pr5]}>
         <View style={s.flex1} />
+        <Text style={[s.mr10, {color: progressColor}]}>
+          {text.length} / {MAX_TEXT_LENGTH}
+        </Text>
         <View>
           <ProgressCircle
             color={progressColor}
@@ -190,7 +199,7 @@ export function ComposePost({
         items={autocompleteOptions}
         onSelect={onSelectAutocompleteItem}
       />
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -219,6 +228,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 5,
     paddingHorizontal: 5,
+    height: 50,
   },
   postBtn: {
     borderRadius: 20,

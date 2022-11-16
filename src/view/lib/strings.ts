@@ -42,9 +42,7 @@ export function ago(date: number | string | Date): string {
     ts = date
   }
   const diffSeconds = Math.floor((Date.now() - ts) / 1e3)
-  if (diffSeconds === 0) {
-    return 'just now'
-  } else if (diffSeconds < MINUTE) {
+  if (diffSeconds < MINUTE) {
     return `${diffSeconds}s`
   } else if (diffSeconds < HOUR) {
     return `${Math.floor(diffSeconds / MINUTE)}m`
