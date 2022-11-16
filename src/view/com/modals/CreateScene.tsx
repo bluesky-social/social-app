@@ -92,15 +92,18 @@ export function Component({}: {}) {
       setIsProcessing(false)
     }
   }
+  const onPressCancel = () => {
+    store.shell.closeModal()
+  }
 
   return (
     <View style={styles.outer}>
-      <Text style={styles.title}>Create a scene</Text>
-      <Text style={styles.description}>
-        Scenes are invite-only groups which aggregate what's popular with
-        members.
-      </Text>
       <BottomSheetScrollView style={styles.inner}>
+        <Text style={styles.title}>Create a scene</Text>
+        <Text style={styles.description}>
+          Scenes are invite-only groups which aggregate what's popular with
+          members.
+        </Text>
         <View style={{paddingBottom: 50}}>
           <View style={styles.group}>
             <Text style={styles.label}>Scene Handle</Text>
@@ -159,6 +162,11 @@ export function Component({}: {}) {
               </View>
             </View>
           )}
+          <TouchableOpacity style={s.mt10} onPress={onPressCancel}>
+            <View style={[styles.btn, {backgroundColor: colors.white}]}>
+              <Text style={[s.black, s.bold]}>Cancel</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </BottomSheetScrollView>
     </View>
@@ -168,8 +176,7 @@ export function Component({}: {}) {
 const styles = StyleSheet.create({
   outer: {
     flex: 1,
-    paddingTop: 20,
-    paddingBottom: 20,
+    // paddingTop: 20,
   },
   title: {
     textAlign: 'center',
@@ -222,7 +229,6 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 32,
     padding: 14,
-    marginBottom: 10,
     backgroundColor: colors.gray1,
   },
 })

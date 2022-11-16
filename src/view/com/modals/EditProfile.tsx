@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
 import Toast from '../util/Toast'
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {ErrorMessage} from '../util/ErrorMessage'
 import {useStores} from '../../../state'
 import {ProfileViewModel} from '../../../state/models/profile-view'
@@ -9,7 +10,7 @@ import {s, colors, gradients} from '../../lib/styles'
 import {enforceLen, MAX_DISPLAY_NAME, MAX_DESCRIPTION} from '../../lib/strings'
 import * as Profile from '../../../third-party/api/src/client/types/app/bsky/actor/profile'
 
-export const snapPoints = ['80%']
+export const snapPoints = ['60%']
 
 export function Component({
   profileView,
@@ -26,6 +27,9 @@ export function Component({
   const [description, setDescription] = useState<string>(
     profileView.description || '',
   )
+  const onPressCancel = () => {
+    store.shell.closeModal()
+  }
   const onPressSave = async () => {
     if (error) {
       setError('')
@@ -60,7 +64,7 @@ export function Component({
   return (
     <View style={s.flex1}>
       <Text style={[s.textCenter, s.bold, s.f16]}>Edit my profile</Text>
-      <View style={styles.inner}>
+      <BottomSheetScrollView style={styles.inner}>
         {error !== '' && (
           <View style={s.mb10}>
             <ErrorMessage message={error} />
@@ -68,7 +72,7 @@ export function Component({
         )}
         <View style={styles.group}>
           <Text style={styles.label}>Display Name</Text>
-          <TextInput
+          <BottomSheetTextInput
             style={styles.textInput}
             placeholder="e.g. Alice Roberts"
             value={displayName}
@@ -77,7 +81,7 @@ export function Component({
         </View>
         <View style={styles.group}>
           <Text style={styles.label}>Description</Text>
-          <TextInput
+          <BottomSheetTextInput
             style={[styles.textArea]}
             placeholder="e.g. Artist, dog-lover, and memelord."
             multiline
@@ -94,7 +98,12 @@ export function Component({
             <Text style={[s.white, s.bold]}>Save Changes</Text>
           </LinearGradient>
         </TouchableOpacity>
-      </View>
+        <TouchableOpacity style={s.mt5} onPress={onPressCancel}>
+          <View style={[styles.btn]}>
+            <Text style={[s.black, s.bold]}>Cancel</Text>
+          </View>
+        </TouchableOpacity>
+      </BottomSheetScrollView>
     </View>
   )
 }

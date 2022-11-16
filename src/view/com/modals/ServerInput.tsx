@@ -1,13 +1,9 @@
 import React, {useState} from 'react'
-import Toast from '../util/Toast'
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import LinearGradient from 'react-native-linear-gradient'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {useStores} from '../../../state'
-import {ProfileViewModel} from '../../../state/models/profile-view'
-import {s, colors, gradients} from '../../lib/styles'
-import {enforceLen, MAX_DISPLAY_NAME, MAX_DESCRIPTION} from '../../lib/strings'
+import {s, colors} from '../../lib/styles'
 import {
   IS_PROD_BUILD,
   LOCAL_DEV_SERVICE,
@@ -38,7 +34,7 @@ export function Component({
   return (
     <View style={s.flex1}>
       <Text style={[s.textCenter, s.bold, s.f18]}>Choose Service</Text>
-      <View style={styles.inner}>
+      <BottomSheetScrollView style={styles.inner}>
         <View style={styles.group}>
           {!IS_PROD_BUILD ? (
             <>
@@ -66,7 +62,7 @@ export function Component({
         <View style={styles.group}>
           <Text style={styles.label}>Other service</Text>
           <View style={{flexDirection: 'row'}}>
-            <TextInput
+            <BottomSheetTextInput
               style={styles.textInput}
               placeholder="e.g. https://bsky.app"
               autoCapitalize="none"
@@ -86,7 +82,7 @@ export function Component({
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </BottomSheetScrollView>
     </View>
   )
 }
