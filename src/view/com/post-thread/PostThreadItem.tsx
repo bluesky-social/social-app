@@ -123,7 +123,9 @@ export const PostThreadItem = observer(function PostThreadItem({
               <PostDropdownBtn
                 style={styles.metaItem}
                 itemHref={itemHref}
-                itemTitle={itemTitle}>
+                itemTitle={itemTitle}
+                isAuthor={item.author.did === store.me.did}
+                onDeletePost={onDeletePost}>
                 <FontAwesomeIcon
                   icon="ellipsis-h"
                   size={14}
