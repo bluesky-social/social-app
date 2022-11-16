@@ -1,11 +1,12 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {Text, View, FlatList} from 'react-native'
+import {View, FlatList} from 'react-native'
 import {
   NotificationsViewModel,
   NotificationsViewItemModel,
 } from '../../../state/models/notifications-view'
 import {FeedItem} from './FeedItem'
+import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/ErrorMessage'
 import {EmptyState} from '../util/EmptyState'
 
@@ -32,7 +33,7 @@ export const Feed = observer(function Feed({
   return (
     <View style={{flex: 1}}>
       {view.isLoading && !view.isRefreshing && !view.hasContent && (
-        <Text>Loading...</Text>
+        <NotificationFeedLoadingPlaceholder />
       )}
       {view.hasError && (
         <ErrorMessage
