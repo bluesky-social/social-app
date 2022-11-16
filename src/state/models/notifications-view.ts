@@ -160,6 +160,9 @@ export class NotificationsViewModel {
    * Load for first render
    */
   async setup(isRefreshing = false) {
+    if (isRefreshing) {
+      this.isRefreshing = true // set optimistically for UI
+    }
     if (this._loadPromise) {
       return this._loadPromise
     }
