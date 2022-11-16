@@ -7,7 +7,7 @@ import * as storage from './lib/storage'
 export const IS_PROD_BUILD = true
 export const LOCAL_DEV_SERVICE = 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://pds.staging.bsky.dev'
-export const PROD_SERVICE = 'https://plc.bsky.social'
+export const PROD_SERVICE = 'https://bsky.social'
 export const DEFAULT_SERVICE = IS_PROD_BUILD ? PROD_SERVICE : LOCAL_DEV_SERVICE
 const ROOT_STATE_STORAGE_KEY = 'root'
 const STATE_FETCH_INTERVAL = 15e3
