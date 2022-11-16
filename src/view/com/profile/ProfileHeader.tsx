@@ -22,6 +22,7 @@ import {s, colors} from '../../lib/styles'
 import {getGradient} from '../../lib/asset-gen'
 import {DropdownBtn, DropdownItem} from '../util/DropdownBtn'
 import Toast from '../util/Toast'
+import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {UserInfoText} from '../util/UserInfoText'
@@ -103,10 +104,49 @@ export const ProfileHeader = observer(function ProfileHeader({
 
   // loading
   // =
-  if (!view || (view.isLoading && !view.isRefreshing)) {
+  if (!view || !view.hasLoaded) {
     return (
-      <View>
-        <ActivityIndicator />
+      <View style={styles.outer}>
+        <LoadingPlaceholder width="100%" height={120} />
+        {store.nav.tab.canGoBack ? (
+          <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
+            <FontAwesomeIcon
+              size={18}
+              icon="angle-left"
+              style={styles.backIcon}
+            />
+          </TouchableOpacity>
+        ) : undefined}
+        {store.me.did ? (
+          <TouchableOpacity style={styles.myAvatar} onPress={onPressMyAvatar}>
+            <UserAvatar
+              size={30}
+              handle={store.me.handle || ''}
+              displayName={store.me.displayName}
+            />
+          </TouchableOpacity>
+        ) : undefined}
+        <View style={styles.avi}>
+          <LoadingPlaceholder
+            width={80}
+            height={80}
+            style={{borderRadius: 40}}
+          />
+        </View>
+        <View style={styles.content}>
+          <View style={[styles.buttonsLine]}>
+            <LoadingPlaceholder
+              width={100}
+              height={31}
+              style={{borderRadius: 50}}
+            />
+          </View>
+          <View style={styles.displayNameLine}>
+            <Text style={styles.displayName}>
+              {view.displayName || view.handle}
+            </Text>
+          </View>
+        </View>
       </View>
     )
   }
