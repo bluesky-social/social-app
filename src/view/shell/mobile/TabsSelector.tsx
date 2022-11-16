@@ -7,8 +7,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Animated, {
   interpolate,
+  SharedValue,
   useSharedValue,
   useAnimatedStyle,
   withTiming,
@@ -24,12 +26,20 @@ import {LinkActionsModel} from '../../../state/models/shell-ui'
 const TAB_HEIGHT = 42
 
 export const TabsSelector = observer(
-  ({active, onClose}: {active: boolean; onClose: () => void}) => {
+  ({
+    active,
+    tabMenuInterp,
+    onClose,
+  }: {
+    active: boolean
+    tabMenuInterp: SharedValue<number>
+    onClose: () => void
+  }) => {
     const store = useStores()
+    const insets = useSafeAreaInsets()
     const [closingTabIndex, setClosingTabIndex] = useState<number | undefined>(
       undefined,
     )
-    const initInterp = useSharedValue<number>(0)
     const closeInterp = useSharedValue<number>(0)
     const tabsRef = useRef<ScrollView>(null)
     const tabRefs = useMemo(
@@ -40,15 +50,10 @@ export const TabsSelector = observer(
       [store.nav.tabs.length],
     )
 
-    useEffect(() => {
-      if (active) {
-        initInterp.value = withTiming(1, {duration: 150})
-      } else {
-        initInterp.value = 0
-      }
-    }, [initInterp, active])
     const wrapperAnimStyle = useAnimatedStyle(() => ({
-      bottom: interpolate(initInterp.value, [0, 1.0], [50, 75]),
+      transform: [
+        {translateY: interpolate(tabMenuInterp.value, [0, 1.0], [320, 0])},
+      ],
     }))
 
     // events
@@ -118,124 +123,116 @@ export const TabsSelector = observer(
     }
 
     return (
-      <>
-        <TouchableWithoutFeedback onPress={onClose}>
-          <View style={styles.bg} />
-        </TouchableWithoutFeedback>
-        <Animated.View style={[styles.wrapper, wrapperAnimStyle]}>
-          <View onLayout={onLayout}>
-            <View style={[s.p10, styles.section]}>
-              <View style={styles.btns}>
-                <TouchableWithoutFeedback onPress={onPressShareTab}>
-                  <View style={[styles.btn]}>
-                    <View style={styles.btnIcon}>
-                      <FontAwesomeIcon size={16} icon="share" />
-                    </View>
-                    <Text style={styles.btnText}>Share</Text>
+      <Animated.View
+        style={[
+          styles.wrapper,
+          {bottom: insets.bottom + 55},
+          wrapperAnimStyle,
+        ]}>
+        <View onLayout={onLayout}>
+          <View style={[s.p10, styles.section]}>
+            <View style={styles.btns}>
+              <TouchableWithoutFeedback onPress={onPressShareTab}>
+                <View style={[styles.btn]}>
+                  <View style={styles.btnIcon}>
+                    <FontAwesomeIcon size={16} icon="share" />
                   </View>
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback onPress={onPressCloneTab}>
-                  <View style={[styles.btn]}>
-                    <View style={styles.btnIcon}>
-                      <FontAwesomeIcon size={16} icon={['far', 'clone']} />
-                    </View>
-                    <Text style={styles.btnText}>Clone tab</Text>
+                  <Text style={styles.btnText}>Share</Text>
+                </View>
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={onPressCloneTab}>
+                <View style={[styles.btn]}>
+                  <View style={styles.btnIcon}>
+                    <FontAwesomeIcon size={16} icon={['far', 'clone']} />
                   </View>
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback onPress={onPressNewTab}>
-                  <View style={[styles.btn]}>
-                    <View style={styles.btnIcon}>
-                      <FontAwesomeIcon size={16} icon="plus" />
-                    </View>
-                    <Text style={styles.btnText}>New tab</Text>
+                  <Text style={styles.btnText}>Clone tab</Text>
+                </View>
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={onPressNewTab}>
+                <View style={[styles.btn]}>
+                  <View style={styles.btnIcon}>
+                    <FontAwesomeIcon size={16} icon="plus" />
                   </View>
-                </TouchableWithoutFeedback>
-              </View>
-            </View>
-            <View style={[s.p10, styles.section, styles.sectionGrayBg]}>
-              <ScrollView ref={tabsRef} style={styles.tabs}>
-                {store.nav.tabs.map((tab, tabIndex) => {
-                  const {icon} = match(tab.current.url)
-                  const isActive = tabIndex === currentTabIndex
-                  const isClosing = closingTabIndex === tabIndex
-                  return (
-                    <Swipeable
-                      key={tab.id}
-                      renderLeftActions={renderSwipeActions}
-                      renderRightActions={renderSwipeActions}
-                      leftThreshold={100}
-                      rightThreshold={100}
-                      onSwipeableWillOpen={() => onCloseTab(tabIndex)}>
-                      <Animated.View
-                        style={[
-                          styles.tabOuter,
-                          isClosing ? closingTabAnimStyle : undefined,
-                        ]}>
-                        <Animated.View
-                          ref={tabRefs[tabIndex]}
-                          style={[
-                            styles.tab,
-                            styles.existing,
-                            isActive && styles.active,
-                          ]}>
-                          <TouchableWithoutFeedback
-                            onPress={() => onPressChangeTab(tabIndex)}>
-                            <View style={styles.tabInner}>
-                              <View style={styles.tabIcon}>
-                                <FontAwesomeIcon size={20} icon={icon} />
-                              </View>
-                              <Text
-                                ellipsizeMode="tail"
-                                numberOfLines={1}
-                                suppressHighlighting={true}
-                                style={[
-                                  styles.tabText,
-                                  isActive && styles.tabTextActive,
-                                ]}>
-                                {tab.current.title || tab.current.url}
-                              </Text>
-                            </View>
-                          </TouchableWithoutFeedback>
-                          <TouchableWithoutFeedback
-                            onPress={() => onCloseTab(tabIndex)}>
-                            <View style={styles.tabClose}>
-                              <FontAwesomeIcon
-                                size={14}
-                                icon="x"
-                                style={styles.tabCloseIcon}
-                              />
-                            </View>
-                          </TouchableWithoutFeedback>
-                        </Animated.View>
-                      </Animated.View>
-                    </Swipeable>
-                  )
-                })}
-              </ScrollView>
+                  <Text style={styles.btnText}>New tab</Text>
+                </View>
+              </TouchableWithoutFeedback>
             </View>
           </View>
-        </Animated.View>
-      </>
+          <View style={[s.p10, styles.section, styles.sectionGrayBg]}>
+            <ScrollView ref={tabsRef} style={styles.tabs}>
+              {store.nav.tabs.map((tab, tabIndex) => {
+                const {icon} = match(tab.current.url)
+                const isActive = tabIndex === currentTabIndex
+                const isClosing = closingTabIndex === tabIndex
+                return (
+                  <Swipeable
+                    key={tab.id}
+                    renderLeftActions={renderSwipeActions}
+                    renderRightActions={renderSwipeActions}
+                    leftThreshold={100}
+                    rightThreshold={100}
+                    onSwipeableWillOpen={() => onCloseTab(tabIndex)}>
+                    <Animated.View
+                      style={[
+                        styles.tabOuter,
+                        isClosing ? closingTabAnimStyle : undefined,
+                      ]}>
+                      <Animated.View
+                        ref={tabRefs[tabIndex]}
+                        style={[
+                          styles.tab,
+                          styles.existing,
+                          isActive && styles.active,
+                        ]}>
+                        <TouchableWithoutFeedback
+                          onPress={() => onPressChangeTab(tabIndex)}>
+                          <View style={styles.tabInner}>
+                            <View style={styles.tabIcon}>
+                              <FontAwesomeIcon size={20} icon={icon} />
+                            </View>
+                            <Text
+                              ellipsizeMode="tail"
+                              numberOfLines={1}
+                              suppressHighlighting={true}
+                              style={[
+                                styles.tabText,
+                                isActive && styles.tabTextActive,
+                              ]}>
+                              {tab.current.title || tab.current.url}
+                            </Text>
+                          </View>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback
+                          onPress={() => onCloseTab(tabIndex)}>
+                          <View style={styles.tabClose}>
+                            <FontAwesomeIcon
+                              size={14}
+                              icon="x"
+                              style={styles.tabCloseIcon}
+                            />
+                          </View>
+                        </TouchableWithoutFeedback>
+                      </Animated.View>
+                    </Animated.View>
+                  </Swipeable>
+                )
+              })}
+            </ScrollView>
+          </View>
+        </View>
+      </Animated.View>
     )
   },
 )
 
 const styles = StyleSheet.create({
-  bg: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    backgroundColor: '#000',
-    opacity: 0.2,
-  },
   wrapper: {
     position: 'absolute',
-    // bottom: 75,
     width: '100%',
+    height: 320,
+    borderTopColor: colors.gray2,
+    borderTopWidth: 1,
     backgroundColor: '#fff',
-    borderRadius: 8,
     opacity: 1,
   },
   section: {
@@ -244,45 +241,6 @@ const styles = StyleSheet.create({
   },
   sectionGrayBg: {
     backgroundColor: colors.gray1,
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
-  },
-  fatMenuItems: {
-    flexDirection: 'row',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  fatMenuItem: {
-    width: 80,
-    alignItems: 'center',
-    marginRight: 6,
-  },
-  fatMenuItemMargin: {
-    marginRight: 14,
-  },
-  fatMenuItemIconWrapper: {
-    borderRadius: 6,
-    width: 60,
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 5,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: {width: 0, height: 2},
-    shadowRadius: 2,
-  },
-  fatMenuItemIcon: {
-    color: colors.white,
-  },
-  fatMenuImage: {
-    borderRadius: 30,
-    width: 60,
-    height: 60,
-    marginBottom: 5,
-  },
-  fatMenuItemLabel: {
-    fontSize: 13,
   },
   tabs: {
     height: 240,
