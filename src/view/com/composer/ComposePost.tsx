@@ -2,6 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
+  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
@@ -136,69 +137,72 @@ export function ComposePost({
 
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.outer}>
-      <View style={styles.topbar}>
-        <TouchableOpacity onPress={onPressCancel}>
-          <Text style={[s.blue3, s.f16]}>Cancel</Text>
-        </TouchableOpacity>
-        <View style={s.flex1} />
-        {isProcessing ? (
-          <View style={styles.postBtn}>
-            <ActivityIndicator />
-          </View>
-        ) : canPost ? (
-          <TouchableOpacity onPress={onPressPublish}>
-            <LinearGradient
-              colors={[gradients.primary.start, gradients.primary.end]}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
-              style={styles.postBtn}>
-              <Text style={[s.white, s.f16, s.bold]}>Post</Text>
-            </LinearGradient>
+      <SafeAreaView style={s.flex1}>
+        <View style={styles.topbar}>
+          <TouchableOpacity onPress={onPressCancel}>
+            <Text style={[s.blue3, s.f16]}>Cancel</Text>
           </TouchableOpacity>
-        ) : (
-          <View style={[styles.postBtn, {backgroundColor: colors.gray1}]}>
-            <Text style={[s.gray5, s.f16, s.bold]}>Post</Text>
+          <View style={s.flex1} />
+          {isProcessing ? (
+            <View style={styles.postBtn}>
+              <ActivityIndicator />
+            </View>
+          ) : canPost ? (
+            <TouchableOpacity onPress={onPressPublish}>
+              <LinearGradient
+                colors={[gradients.primary.start, gradients.primary.end]}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                style={styles.postBtn}>
+                <Text style={[s.white, s.f16, s.bold]}>Post</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          ) : (
+            <View style={[styles.postBtn, {backgroundColor: colors.gray1}]}>
+              <Text style={[s.gray5, s.f16, s.bold]}>Post</Text>
+            </View>
+          )}
+        </View>
+        {error !== '' && (
+          <View style={styles.errorLine}>
+            <View style={styles.errorIcon}>
+              <FontAwesomeIcon
+                icon="exclamation"
+                style={{color: colors.red4}}
+                size={10}
+              />
+            </View>
+            <Text style={s.red4}>{error}</Text>
           </View>
         )}
-      </View>
-      {error !== '' && (
-        <View style={styles.errorLine}>
-          <View style={styles.errorIcon}>
-            <FontAwesomeIcon
-              icon="exclamation"
-              style={{color: colors.red4}}
-              size={10}
+        <TextInput
+          multiline
+          scrollEnabled
+          autoFocus
+          onChangeText={(text: string) => onChangeText(text)}
+          placeholder={replyTo ? 'Write your reply' : "What's new?"}
+          style={styles.textInput}>
+          {textDecorated}
+        </TextInput>
+        <View
+          style={[s.flexRow, {alignItems: 'center'}, s.pt10, s.pb10, s.pr5]}>
+          <View style={s.flex1} />
+          <Text style={[s.mr10, {color: progressColor}]}>
+            {text.length} / {MAX_TEXT_LENGTH}
+          </Text>
+          <View>
+            <ProgressCircle
+              color={progressColor}
+              progress={text.length / MAX_TEXT_LENGTH}
             />
           </View>
-          <Text style={s.red4}>{error}</Text>
         </View>
-      )}
-      <TextInput
-        multiline
-        scrollEnabled
-        autoFocus
-        onChangeText={(text: string) => onChangeText(text)}
-        placeholder={replyTo ? 'Write your reply' : "What's new?"}
-        style={styles.textInput}>
-        {textDecorated}
-      </TextInput>
-      <View style={[s.flexRow, {alignItems: 'center'}, s.pt10, s.pb10, s.pr5]}>
-        <View style={s.flex1} />
-        <Text style={[s.mr10, {color: progressColor}]}>
-          {text.length} / {MAX_TEXT_LENGTH}
-        </Text>
-        <View>
-          <ProgressCircle
-            color={progressColor}
-            progress={text.length / MAX_TEXT_LENGTH}
-          />
-        </View>
-      </View>
-      <Autocomplete
-        active={autocompleteOptions.length > 0}
-        items={autocompleteOptions}
-        onSelect={onSelectAutocompleteItem}
-      />
+        <Autocomplete
+          active={autocompleteOptions.length > 0}
+          items={autocompleteOptions}
+          onSelect={onSelectAutocompleteItem}
+        />
+      </SafeAreaView>
     </KeyboardAvoidingView>
   )
 }
