@@ -332,6 +332,7 @@ export class NotificationsViewModel {
       await this.rootStore.api.app.bsky.notification.updateSeen({
         seenAt: new Date().toISOString(),
       })
+      this.rootStore.me.clearNotificationCount()
     } catch (e) {
       console.log('Failed to update notifications read state', e)
     }
