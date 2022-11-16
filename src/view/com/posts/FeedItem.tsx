@@ -1,16 +1,16 @@
-import React, {useMemo} from 'react'
+import React, {useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, Text, View} from 'react-native'
 import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedItemModel} from '../../../state/models/feed-view'
-import {SharePostModel} from '../../../state/models/shell-ui'
 import {Link} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 import {RichText} from '../util/RichText'
+import Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {useStores} from '../../../state'
@@ -21,6 +21,7 @@ export const FeedItem = observer(function FeedItem({
   item: FeedItemModel
 }) {
   const store = useStores()
+  const [deleted, setDeleted] = useState(false)
   const record = item.record as unknown as PostType.Record
   const itemHref = useMemo(() => {
     const urip = new AtUri(item.uri)
@@ -57,8 +58,25 @@ export const FeedItem = observer(function FeedItem({
       .toggleDownvote()
       .catch(e => console.error('Failed to toggle downvote', record, e))
   }
-  const onPressShare = (uri: string) => {
-    store.shell.openModal(new SharePostModel(uri))
+  const onDeletePost = () => {
+    item.delete().then(
+      () => {
+        setDeleted(true)
+        Toast.show('Post deleted', {
+          position: Toast.positions.TOP,
+        })
+      },
+      e => {
+        console.error(e)
+        Toast.show('Failed to delete post, please try again', {
+          position: Toast.positions.TOP,
+        })
+      },
+    )
+  }
+
+  if (deleted) {
+    return <View />
   }
 
   return (
@@ -107,6 +125,8 @@ export const FeedItem = observer(function FeedItem({
             authorHandle={item.author.handle}
             authorDisplayName={item.author.displayName}
             timestamp={item.indexedAt}
+            isAuthor={item.author.did === store.me.did}
+            onDeletePost={onDeletePost}
           />
           {replyHref !== '' && (
             <View style={[s.flexRow, s.mb5, {alignItems: 'center'}]}>

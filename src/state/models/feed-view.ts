@@ -1,6 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import * as GetTimeline from '../../third-party/api/src/client/types/app/bsky/feed/getTimeline'
 import * as GetAuthorFeed from '../../third-party/api/src/client/types/app/bsky/feed/getAuthorFeed'
+import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 import {cleanError} from '../../view/lib/strings'
@@ -134,6 +135,13 @@ export class FeedItemModel implements GetTimeline.FeedItem {
         this.myState.repost = res.uri
       })
     }
+  }
+
+  async delete() {
+    await this.rootStore.api.app.bsky.feed.post.delete({
+      did: this.author.did,
+      rkey: new AtUri(this.uri).rkey,
+    })
   }
 }
 

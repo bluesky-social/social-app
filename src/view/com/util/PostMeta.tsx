@@ -13,6 +13,8 @@ interface PostMetaOpts {
   authorHandle: string
   authorDisplayName: string | undefined
   timestamp: string
+  isAuthor: boolean
+  onDeletePost: () => void
 }
 
 export function PostMeta(opts: PostMetaOpts) {
@@ -48,7 +50,9 @@ export function PostMeta(opts: PostMetaOpts) {
       <PostDropdownBtn
         style={styles.metaItem}
         itemHref={opts.itemHref}
-        itemTitle={opts.itemTitle}>
+        itemTitle={opts.itemTitle}
+        isAuthor={opts.isAuthor}
+        onDeletePost={opts.onDeletePost}>
         <FontAwesomeIcon icon="ellipsis-h" size={14} style={[s.mt2, s.mr5]} />
       </PostDropdownBtn>
     </View>

@@ -10,14 +10,15 @@ import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 import {RichText} from '../util/RichText'
+import Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
-import {ago} from '../../lib/strings'
 
 export const Post = observer(function Post({uri}: {uri: string}) {
   const store = useStores()
   const [view, setView] = useState<PostThreadViewModel | undefined>()
+  const [deleted, setDeleted] = useState(false)
 
   useEffect(() => {
     if (view?.params.uri === uri) {
@@ -27,6 +28,12 @@ export const Post = observer(function Post({uri}: {uri: string}) {
     setView(newView)
     newView.setup().catch(err => console.error('Failed to fetch post', err))
   }, [uri, view?.params.uri, store])
+
+  // deleted
+  // =
+  if (deleted) {
+    return <View />
+  }
 
   // loading
   // =
@@ -83,6 +90,22 @@ export const Post = observer(function Post({uri}: {uri: string}) {
       .toggleDownvote()
       .catch(e => console.error('Failed to toggle downvote', record, e))
   }
+  const onDeletePost = () => {
+    item.delete().then(
+      () => {
+        setDeleted(true)
+        Toast.show('Post deleted', {
+          position: Toast.positions.TOP,
+        })
+      },
+      e => {
+        console.error(e)
+        Toast.show('Failed to delete post, please try again', {
+          position: Toast.positions.TOP,
+        })
+      },
+    )
+  }
 
   return (
     <Link style={styles.outer} href={itemHref} title={itemTitle}>
@@ -102,6 +125,8 @@ export const Post = observer(function Post({uri}: {uri: string}) {
             authorHandle={item.author.handle}
             authorDisplayName={item.author.displayName}
             timestamp={item.indexedAt}
+            isAuthor={item.author.did === store.me.did}
+            onDeletePost={onDeletePost}
           />
           {replyHref !== '' && (
             <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
