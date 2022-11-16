@@ -13,7 +13,7 @@ import RootSiblings from 'react-native-root-siblings'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from '../../lib/styles'
 import {useStores} from '../../../state'
-import {SharePostModel} from '../../../state/models/shell-ui'
+import {SharePostModel, ConfirmModel} from '../../../state/models/shell-ui'
 
 export interface DropdownItem {
   icon?: IconProp
@@ -69,11 +69,15 @@ export function PostDropdownBtn({
   children,
   itemHref,
   itemTitle,
+  isAuthor,
+  onDeletePost,
 }: {
   style?: StyleProp<ViewStyle>
   children?: React.ReactNode
   itemHref: string
   itemTitle: string
+  isAuthor: boolean
+  onDeletePost: () => void
 }) {
   const store = useStores()
 
@@ -92,7 +96,22 @@ export function PostDropdownBtn({
         store.shell.openModal(new SharePostModel(itemHref))
       },
     },
-  ]
+    isAuthor
+      ? {
+          icon: ['far', 'trash-can'],
+          label: 'Delete post',
+          onPress() {
+            store.shell.openModal(
+              new ConfirmModel(
+                'Delete this post?',
+                'Are you sure? This can not be undone.',
+                onDeletePost,
+              ),
+            )
+          },
+        }
+      : undefined,
+  ].filter(Boolean) as DropdownItem[]
 
   return (
     <DropdownBtn style={style} items={dropdownItems} menuWidth={200}>

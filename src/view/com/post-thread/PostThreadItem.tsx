@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React, {useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, Text, View} from 'react-native'
 import Svg, {Line} from 'react-native-svg'
@@ -9,6 +9,7 @@ import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
 import {RichText} from '../util/RichText'
 import {PostDropdownBtn} from '../util/DropdownBtn'
+import Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../lib/strings'
@@ -28,6 +29,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   onPostReply: () => void
 }) {
   const store = useStores()
+  const [deleted, setDeleted] = useState(false)
   const record = item.record as unknown as PostType.Record
   const hasEngagement =
     item.upvoteCount || item.downvoteCount || item.repostCount
@@ -75,6 +77,22 @@ export const PostThreadItem = observer(function PostThreadItem({
     item
       .toggleDownvote()
       .catch(e => console.error('Failed to toggle downvote', record, e))
+  }
+  const onDeletePost = () => {
+    item.delete().then(
+      () => {
+        setDeleted(true)
+        Toast.show('Post deleted', {
+          position: Toast.positions.TOP,
+        })
+      },
+      e => {
+        console.error(e)
+        Toast.show('Failed to delete post, please try again', {
+          position: Toast.positions.TOP,
+        })
+      },
+    )
   }
 
   if (item._isHighlightedPost) {
@@ -250,6 +268,8 @@ export const PostThreadItem = observer(function PostThreadItem({
               authorHandle={item.author.handle}
               authorDisplayName={item.author.displayName}
               timestamp={item.indexedAt}
+              isAuthor={item.author.did === store.me.did}
+              onDeletePost={onDeletePost}
             />
             {item.replyingToAuthor &&
               item.replyingToAuthor !== item.author.handle && (

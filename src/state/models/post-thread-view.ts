@@ -175,6 +175,13 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
       })
     }
   }
+
+  async delete() {
+    await this.rootStore.api.app.bsky.feed.post.delete({
+      did: this.author.did,
+      rkey: new AtUri(this.uri).rkey,
+    })
+  }
 }
 
 export class PostThreadViewModel {

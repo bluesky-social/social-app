@@ -52,6 +52,7 @@ import {faUserCheck} from '@fortawesome/free-solid-svg-icons/faUserCheck'
 import {faUserPlus} from '@fortawesome/free-solid-svg-icons/faUserPlus'
 import {faUserXmark} from '@fortawesome/free-solid-svg-icons/faUserXmark'
 import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
+import {faTrashCan} from '@fortawesome/free-regular-svg-icons/faTrashCan'
 import {faX} from '@fortawesome/free-solid-svg-icons/faX'
 
 export function setup() {
@@ -108,6 +109,7 @@ export function setup() {
     faUserPlus,
     faUserXmark,
     faTicket,
+    faTrashCan,
     faX,
   )
 }
