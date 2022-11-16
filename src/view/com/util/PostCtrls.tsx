@@ -77,7 +77,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             icon={['far', 'comment']}
             size={14}
           />
-          <Text style={s.f13}>{opts.replyCount}</Text>
+          <Text style={[s.ml5, s.f13]}>{opts.replyCount}</Text>
         </TouchableOpacity>
       </View>
       <View style={s.flex1}>

@@ -1,6 +1,7 @@
 import React, {MutableRefObject} from 'react'
 import {observer} from 'mobx-react-lite'
-import {Text, View, FlatList, StyleProp, ViewStyle} from 'react-native'
+import {View, FlatList, StyleProp, ViewStyle} from 'react-native'
+import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/ErrorMessage'
 import {FeedModel, FeedItemModel} from '../../../state/models/feed-view'
@@ -31,7 +32,7 @@ export const Feed = observer(function Feed({
   return (
     <View style={style}>
       {feed.isLoading && !feed.isRefreshing && !feed.hasContent && (
-        <Text>Loading...</Text>
+        <PostFeedLoadingPlaceholder />
       )}
       {feed.hasError && (
         <ErrorMessage

@@ -12,6 +12,7 @@ import {ConfirmModel} from '../../state/models/shell-ui'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedItem} from '../com/posts/FeedItem'
 import {ProfileCard} from '../com/profile/ProfileCard'
+import {PostFeedLoadingPlaceholder} from '../com/util/LoadingPlaceholder'
 import {ErrorScreen} from '../com/util/ErrorScreen'
 import {ErrorMessage} from '../com/util/ErrorMessage'
 import {EmptyState} from '../com/util/EmptyState'
@@ -106,7 +107,7 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
   if (uiState) {
     if (uiState.isInitialLoading) {
       items.push(LOADING_ITEM)
-      renderItem = () => <Text style={styles.loading}>Loading...</Text>
+      renderItem = () => <PostFeedLoadingPlaceholder />
     } else if (uiState.currentView.hasError) {
       items.push({
         _reactKey: '__error__',
