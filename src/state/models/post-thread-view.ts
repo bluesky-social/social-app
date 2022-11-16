@@ -113,19 +113,23 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
   }
 
   async toggleUpvote() {
-    const wasntUpvoted = !this.myState.upvote
+    const wasUpvoted = !!this.myState.upvote
+    const wasDownvoted = !!this.myState.downvote
     const res = await this.rootStore.api.app.bsky.feed.setVote({
       subject: {
         uri: this.uri,
         cid: this.cid,
       },
-      direction: wasntUpvoted ? 'up' : 'none',
+      direction: wasUpvoted ? 'none' : 'up',
     })
     runInAction(() => {
-      if (wasntUpvoted) {
-        this.upvoteCount++
-      } else {
+      if (wasDownvoted) {
+        this.downvoteCount--
+      }
+      if (wasUpvoted) {
         this.upvoteCount--
+      } else {
+        this.upvoteCount++
       }
       this.myState.upvote = res.data.upvote
       this.myState.downvote = res.data.downvote
@@ -133,19 +137,23 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
   }
 
   async toggleDownvote() {
-    const wasntDownvoted = !this.myState.downvote
+    const wasUpvoted = !!this.myState.upvote
+    const wasDownvoted = !!this.myState.downvote
     const res = await this.rootStore.api.app.bsky.feed.setVote({
       subject: {
         uri: this.uri,
         cid: this.cid,
       },
-      direction: wasntDownvoted ? 'down' : 'none',
+      direction: wasDownvoted ? 'none' : 'down',
     })
     runInAction(() => {
-      if (wasntDownvoted) {
-        this.downvoteCount++
-      } else {
+      if (wasUpvoted) {
+        this.upvoteCount--
+      }
+      if (wasDownvoted) {
         this.downvoteCount--
+      } else {
+        this.downvoteCount++
       }
       this.myState.upvote = res.data.upvote
       this.myState.downvote = res.data.downvote
