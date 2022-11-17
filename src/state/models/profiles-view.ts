@@ -41,4 +41,10 @@ export class ProfilesViewModel {
       throw e
     }
   }
+
+  overwrite(did: string, res: GetProfile.Response) {
+    if (this.cache.has(did)) {
+      this.cache.set(did, res)
+    }
+  }
 }

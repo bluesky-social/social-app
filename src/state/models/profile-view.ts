@@ -140,6 +140,7 @@ export class ProfileViewModel {
       const res = await this.rootStore.api.app.bsky.actor.getProfile(
         this.params,
       )
+      this.rootStore.profiles.overwrite(this.params.actor, res) // cache invalidation
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
