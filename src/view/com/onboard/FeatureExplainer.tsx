@@ -63,8 +63,7 @@ const Tabs = () => (
     </View>
     <Text style={styles.explainerHeading}>Tabs</Text>
     <Text style={styles.explainerDesc}>
-      Never lose your place! Long-press on posts and links to open them in a new
-      tab.
+      Never lose your place! Long-press to open posts and profiles in a new tab.
     </Text>
     <Text style={styles.explainerDesc}>
       <Image source={TABS_EXPLAINER} style={styles.explainerImg} />
