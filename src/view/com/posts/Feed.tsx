@@ -49,6 +49,7 @@ export const Feed = observer(function Feed({
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
           refreshing={feed.isRefreshing}
+          contentContainerStyle={{paddingBottom: 100}}
           onRefresh={onRefresh}
           onEndReached={onEndReached}
         />
