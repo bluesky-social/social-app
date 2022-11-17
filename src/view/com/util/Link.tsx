@@ -21,7 +21,8 @@ export const Link = observer(function Link({
     store.nav.navigate(href)
   }
   const onLongPress = () => {
-    store.shell.openModal(new LinkActionsModel(href, title || href))
+    store.nav.newTab(href, title)
+    // store.shell.openModal(new LinkActionsModel(href, title || href))
   }
   return (
     <TouchableOpacity
