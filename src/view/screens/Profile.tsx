@@ -23,7 +23,7 @@ const LOADING_ITEM = {_reactKey: '__loading__'}
 const END_ITEM = {_reactKey: '__end__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
 
-export const Profile = observer(({visible, params}: ScreenParams) => {
+export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const uiState = useMemo(
@@ -41,7 +41,7 @@ export const Profile = observer(({visible, params}: ScreenParams) => {
       uiState.update()
     } else {
       console.log('Fetching profile for', params.name)
-      store.nav.setTitle(params.name)
+      store.nav.setTitle(navIdx, params.name)
       uiState.setup().then(() => {
         if (aborted) return
         setHasSetup(true)

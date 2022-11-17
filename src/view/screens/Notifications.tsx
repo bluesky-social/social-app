@@ -7,7 +7,7 @@ import {useStores} from '../../state'
 import {NotificationsViewModel} from '../../state/models/notifications-view'
 import {ScreenParams} from '../routes'
 
-export const Notifications = ({visible}: ScreenParams) => {
+export const Notifications = ({navIdx, visible}: ScreenParams) => {
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const [notesView, setNotesView] = useState<
     NotificationsViewModel | undefined
@@ -24,7 +24,7 @@ export const Notifications = ({visible}: ScreenParams) => {
       console.log('Updating notifications feed')
       notesView?.update()
     } else {
-      store.nav.setTitle('Notifications')
+      store.nav.setTitle(navIdx, 'Notifications')
       const newNotesView = new NotificationsViewModel(store, {})
       setNotesView(newNotesView)
       newNotesView.setup().then(() => {

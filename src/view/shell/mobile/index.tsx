@@ -268,7 +268,7 @@ export const MobileShell: React.FC = observer(() => {
         <GestureDetector gesture={swipeGesture}>
           <ScreenContainer style={styles.screenContainer}>
             {screenRenderDesc.screens.map(
-              ({Com, params, key, current, previous}) => {
+              ({Com, navIdx, params, key, current, previous}) => {
                 return (
                   <Screen
                     key={key}
@@ -293,6 +293,7 @@ export const MobileShell: React.FC = observer(() => {
                       ]}>
                       <Com
                         params={params}
+                        navIdx={navIdx}
                         visible={current}
                         scrollElRef={current ? scrollElRef : undefined}
                       />
@@ -361,6 +362,7 @@ export const MobileShell: React.FC = observer(() => {
  */
 type ScreenRenderDesc = MatchResult & {
   key: string
+  navIdx: [number, number]
   current: boolean
   previous: boolean
   isNewTab: boolean
@@ -388,6 +390,7 @@ function constructScreenRenderDesc(nav: NavigationModel): {
       hasNewTab = hasNewTab || tab.isNewTab
       return Object.assign(matchRes, {
         key: `t${tab.id}-s${screen.index}`,
+        navIdx: [tab.id, screen.id],
         current: isCurrent,
         previous: isPrevious,
         isNewTab: tab.isNewTab,

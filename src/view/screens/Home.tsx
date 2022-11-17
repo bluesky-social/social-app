@@ -12,6 +12,7 @@ import {ScreenParams} from '../routes'
 import {s, colors} from '../lib/styles'
 
 export const Home = observer(function Home({
+  navIdx,
   visible,
   scrollElRef,
 }: ScreenParams) {
@@ -51,7 +52,7 @@ export const Home = observer(function Home({
       console.log('Updating home feed')
       defaultFeedView.update()
     } else {
-      store.nav.setTitle('Home')
+      store.nav.setTitle(navIdx, 'Home')
       console.log('Fetching home feed')
       defaultFeedView.setup().then(() => {
         if (aborted) return

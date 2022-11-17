@@ -5,13 +5,13 @@ import {ProfileMembers as ProfileMembersComponent} from '../com/profile/ProfileM
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 
-export const ProfileMembers = ({visible, params}: ScreenParams) => {
+export const ProfileMembers = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const {name} = params
 
   useEffect(() => {
     if (visible) {
-      store.nav.setTitle(`Members of ${name}`)
+      store.nav.setTitle(navIdx, `Members of ${name}`)
     }
   }, [store, visible, name])
 

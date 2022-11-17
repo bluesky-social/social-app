@@ -5,13 +5,13 @@ import {ProfileFollows as ProfileFollowsComponent} from '../com/profile/ProfileF
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 
-export const ProfileFollows = ({visible, params}: ScreenParams) => {
+export const ProfileFollows = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const {name} = params
 
   useEffect(() => {
     if (visible) {
-      store.nav.setTitle(`Followed by ${name}`)
+      store.nav.setTitle(navIdx, `Followed by ${name}`)
     }
   }, [store, visible, name])
 
