@@ -77,7 +77,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             icon={['far', 'comment']}
             size={14}
           />
-          <Text style={[s.ml5, s.f13]}>{opts.replyCount}</Text>
+          <Text style={[s.gray5, s.ml5, s.f13]}>{opts.replyCount}</Text>
         </TouchableOpacity>
       </View>
       <View style={s.flex1}>
@@ -97,7 +97,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             style={
               opts.isReposted
                 ? [s.bold, s.green3, s.f13, s.ml5]
-                : [s.f13, s.ml5]
+                : [s.gray5, s.f13, s.ml5]
             }>
             {opts.repostCount}
           </Text>
@@ -116,7 +116,9 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           </Animated.View>
           <Text
             style={
-              opts.isUpvoted ? [s.bold, s.red3, s.f13, s.ml5] : [s.f13, s.ml5]
+              opts.isUpvoted
+                ? [s.bold, s.red3, s.f13, s.ml5]
+                : [s.gray5, s.f13, s.ml5]
             }>
             {opts.upvoteCount}
           </Text>
@@ -137,7 +139,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             style={
               opts.isDownvoted
                 ? [s.bold, s.blue3, s.f13, s.ml5]
-                : [s.f13, s.ml5]
+                : [s.gray5, s.f13, s.ml5]
             }>
             {opts.downvoteCount}
           </Text>
@@ -150,6 +152,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
 const styles = StyleSheet.create({
   ctrls: {
     flexDirection: 'row',
+    paddingRight: 20,
   },
   ctrl: {
     flexDirection: 'row',
@@ -158,7 +161,7 @@ const styles = StyleSheet.create({
     paddingRight: 4,
   },
   ctrlIcon: {
-    color: colors.gray5,
+    color: colors.gray4,
   },
   ctrlIconReposted: {
     color: colors.green3,
