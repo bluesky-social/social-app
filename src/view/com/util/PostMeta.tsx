@@ -25,26 +25,19 @@ export function PostMeta(opts: PostMetaOpts) {
   )
   return (
     <View style={styles.meta}>
-      <View style={[styles.metaNames, maxWidth]}>
-        <Link
-          style={[styles.metaItem, maxWidth]}
-          href={opts.authorHref}
-          title={opts.authorHandle}>
-          <Text style={[s.f17, s.bold]} numberOfLines={1}>
-            {opts.authorDisplayName || opts.authorHandle}
+      <Link
+        style={[styles.metaItem, maxWidth]}
+        href={opts.authorHref}
+        title={opts.authorHandle}>
+        <Text style={[s.f17, s.bold]} numberOfLines={1}>
+          {opts.authorDisplayName || opts.authorHandle}
+          <Text style={[s.f15, s.gray5, s.normal]} numberOfLines={1}>
+            &nbsp;{opts.authorHandle}
           </Text>
-        </Link>
-        <Link
-          style={[styles.metaItem, maxWidth]}
-          href={opts.authorHref}
-          title={opts.authorHandle}>
-          <Text style={[s.f15, s.gray5]} numberOfLines={1}>
-            @{opts.authorHandle}
-          </Text>
-        </Link>
-      </View>
+        </Text>
+      </Link>
       <Text style={[styles.metaItem, s.f15, s.gray5]}>
-        {ago(opts.timestamp)}
+        &middot; {ago(opts.timestamp)}
       </Text>
       <View style={s.flex1} />
       <PostDropdownBtn
@@ -65,12 +58,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 2,
     paddingBottom: 2,
-  },
-  metaNames: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    overflow: 'hidden',
   },
   metaItem: {
     paddingRight: 5,
