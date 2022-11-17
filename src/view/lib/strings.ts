@@ -57,11 +57,17 @@ export function ago(date: number | string | Date): string {
   }
 }
 
-export function extractEntities(text: string): Entity[] | undefined {
+export function extractEntities(
+  text: string,
+  knownHandles?: Set<string>,
+): Entity[] | undefined {
   let match
   let ents: Entity[] = []
   const re = /(^|\s)(@)([a-zA-Z0-9\.-]+)(\b)/dg
   while ((match = re.exec(text))) {
+    if (knownHandles && !knownHandles.has(match[3])) {
+      continue // not a known handle
+    }
     ents.push({
       type: 'mention',
       value: match[3],

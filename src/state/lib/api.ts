@@ -20,6 +20,7 @@ export async function post(
   store: RootStoreModel,
   text: string,
   replyTo?: Post.PostRef,
+  knownHandles?: Set<string>,
 ) {
   let reply
   if (replyTo) {
@@ -39,7 +40,7 @@ export async function post(
       }
     }
   }
-  const entities = extractEntities(text)
+  const entities = extractEntities(text, knownHandles)
   return await store.api.app.bsky.feed.post.create(
     {did: store.me.did || ''},
     {

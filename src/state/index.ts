@@ -1,5 +1,6 @@
 import {autorun} from 'mobx'
 import {sessionClient as AtpApi} from '../third-party/api'
+import type {SessionServiceClient} from '../third-party/api/src/index'
 import {RootStoreModel} from './models/root-store'
 import * as libapi from './lib/api'
 import * as storage from './lib/storage'
@@ -8,7 +9,7 @@ export const IS_PROD_BUILD = true
 export const LOCAL_DEV_SERVICE = 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://pds.staging.bsky.dev'
 export const PROD_SERVICE = 'https://bsky.social'
-export const DEFAULT_SERVICE = IS_PROD_BUILD ? PROD_SERVICE : LOCAL_DEV_SERVICE
+export const DEFAULT_SERVICE = PROD_SERVICE
 const ROOT_STATE_STORAGE_KEY = 'root'
 const STATE_FETCH_INTERVAL = 15e3
 

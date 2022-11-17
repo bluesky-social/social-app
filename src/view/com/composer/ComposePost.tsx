@@ -1,4 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react'
+import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -11,7 +12,7 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import * as GetFollows from '../../../third-party/api/src/client/types/app/bsky/graph/getFollows'
+import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete-view'
 import {Autocomplete} from './Autocomplete'
 import Toast from '../util/Toast'
 import ProgressCircle from '../util/ProgressCircle'
@@ -24,7 +25,7 @@ const MAX_TEXT_LENGTH = 256
 const WARNING_TEXT_LENGTH = 200
 const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH
 
-export function ComposePost({
+export const ComposePost = observer(function ComposePost({
   replyTo,
   onPost,
   onClose,
@@ -37,40 +38,24 @@ export function ComposePost({
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState('')
   const [text, setText] = useState('')
-  const [followedUsers, setFollowedUsers] = useState<
-    undefined | GetFollows.OutputSchema['follows']
-  >(undefined)
-  const [autocompleteOptions, setAutocompleteOptions] = useState<string[]>([])
+  const autocompleteView = useMemo<UserAutocompleteViewModel>(
+    () => new UserAutocompleteViewModel(store),
+    [],
+  )
 
   useEffect(() => {
-    let aborted = false
-    store.api.app.bsky.graph
-      .getFollows({
-        user: store.me.did || '',
-      })
-      .then(res => {
-        if (aborted) return
-        setFollowedUsers(res.data.follows)
-      })
-    return () => {
-      aborted = true
-    }
+    autocompleteView.setup()
   })
 
   const onChangeText = (newText: string) => {
     setText(newText)
 
     const prefix = extractTextAutocompletePrefix(newText)
-    if (typeof prefix === 'string' && followedUsers) {
-      setAutocompleteOptions(
-        [prefix].concat(
-          followedUsers
-            .filter(user => user.handle.startsWith(prefix))
-            .map(user => user.handle),
-        ),
-      )
-    } else if (autocompleteOptions) {
-      setAutocompleteOptions([])
+    if (typeof prefix === 'string') {
+      autocompleteView.setActive(true)
+      autocompleteView.setPrefix(prefix)
+    } else {
+      autocompleteView.setActive(false)
     }
   }
   const onPressCancel = () => {
@@ -90,7 +75,7 @@ export function ComposePost({
     }
     setIsProcessing(true)
     try {
-      await apilib.post(store, text, replyTo)
+      await apilib.post(store, text, replyTo, autocompleteView.knownHandles)
     } catch (e: any) {
       console.error(`Failed to create post: ${e.toString()}`)
       setError(
@@ -111,7 +96,7 @@ export function ComposePost({
   }
   const onSelectAutocompleteItem = (item: string) => {
     setText(replaceTextAutocompletePrefix(text, item))
-    setAutocompleteOptions([])
+    autocompleteView.setActive(false)
   }
 
   const canPost = text.length <= MAX_TEXT_LENGTH
@@ -124,7 +109,10 @@ export function ComposePost({
 
   const textDecorated = useMemo(() => {
     return (text || '').split(/(\s)/g).map((item, i) => {
-      if (/^@[a-zA-Z0-9\.-]+$/g.test(item)) {
+      if (
+        /^@[a-zA-Z0-9\.-]+$/g.test(item) &&
+        autocompleteView.knownHandles.has(item.slice(1))
+      ) {
         return (
           <Text key={i} style={{color: colors.blue3}}>
             {item}
@@ -198,14 +186,14 @@ export function ComposePost({
           </View>
         </View>
         <Autocomplete
-          active={autocompleteOptions.length > 0}
-          items={autocompleteOptions}
+          active={autocompleteView.isActive}
+          items={autocompleteView.suggestions}
           onSelect={onSelectAutocompleteItem}
         />
       </SafeAreaView>
     </KeyboardAvoidingView>
   )
-}
+})
 
 const atPrefixRegex = /@([\S]*)$/i
 function extractTextAutocompletePrefix(text: string) {
