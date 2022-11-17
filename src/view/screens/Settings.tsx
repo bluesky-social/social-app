@@ -8,14 +8,17 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {Link} from '../com/util/Link'
 import {UserAvatar} from '../com/util/UserAvatar'
 
-export const Settings = observer(function Settings({visible}: ScreenParams) {
+export const Settings = observer(function Settings({
+  navIdx,
+  visible,
+}: ScreenParams) {
   const store = useStores()
 
   useEffect(() => {
     if (!visible) {
       return
     }
-    store.nav.setTitle('Settings')
+    store.nav.setTitle(navIdx, 'Settings')
   }, [visible, store])
 
   const onPressSignout = () => {

@@ -5,13 +5,13 @@ import {ProfileFollowers as ProfileFollowersComponent} from '../com/profile/Prof
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 
-export const ProfileFollowers = ({visible, params}: ScreenParams) => {
+export const ProfileFollowers = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const {name} = params
 
   useEffect(() => {
     if (visible) {
-      store.nav.setTitle(`Followers of ${name}`)
+      store.nav.setTitle(navIdx, `Followers of ${name}`)
     }
   }, [store, visible, name])
 

@@ -8,13 +8,13 @@ import {colors} from '../lib/styles'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 
-export const Contacts = ({visible, params}: ScreenParams) => {
+export const Contacts = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const selectorInterp = useSharedValue(0)
 
   useEffect(() => {
     if (visible) {
-      store.nav.setTitle(`Contacts`)
+      store.nav.setTitle(navIdx, `Contacts`)
     }
   }, [store, visible])
 

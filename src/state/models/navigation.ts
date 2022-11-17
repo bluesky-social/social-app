@@ -1,20 +1,23 @@
 import {makeAutoObservable} from 'mobx'
 import {isObj, hasProp} from '../lib/type-guards'
 
-let __tabId = 0
-function genTabId() {
-  return ++__tabId
+let __id = 0
+function genId() {
+  return ++__id
 }
 
 interface HistoryItem {
   url: string
   ts: number
   title?: string
+  id: number
 }
 
+export type HistoryPtr = [number, number]
+
 export class NavigationTabModel {
-  id = genTabId()
-  history: HistoryItem[] = [{url: '/', ts: Date.now()}]
+  id = genId()
+  history: HistoryItem[] = [{url: '/', ts: Date.now(), id: genId()}]
   index = 0
   isNewTab = false
 
@@ -47,6 +50,7 @@ export class NavigationTabModel {
       url: item.url,
       title: item.title,
       index: start + i,
+      id: item.id,
     }))
   }
 
@@ -61,6 +65,7 @@ export class NavigationTabModel {
       url: item.url,
       title: item.title,
       index: start + i,
+      id: item.id,
     }))
   }
 
@@ -78,7 +83,7 @@ export class NavigationTabModel {
       if (this.index < this.history.length - 1) {
         this.history.length = this.index + 1
       }
-      this.history.push({url, title, ts: Date.now()})
+      this.history.push({url, title, ts: Date.now(), id: genId()})
       this.index = this.history.length - 1
     }
   }
@@ -86,7 +91,12 @@ export class NavigationTabModel {
   refresh() {
     this.history = [
       ...this.history.slice(0, this.index),
-      {url: this.current.url, title: this.current.title, ts: Date.now()},
+      {
+        url: this.current.url,
+        title: this.current.title,
+        ts: Date.now(),
+        id: this.current.id,
+      },
       ...this.history.slice(this.index + 1),
     ]
   }
@@ -109,8 +119,13 @@ export class NavigationTabModel {
     }
   }
 
-  setTitle(title: string) {
-    this.current.title = title
+  setTitle(id: number, title: string) {
+    this.history = this.history.map(h => {
+      if (h.id === id) {
+        return {...h, title}
+      }
+      return h
+    })
   }
 
   setIsNewTab(v: boolean) {
@@ -203,8 +218,8 @@ export class NavigationModel {
     this.tab.refresh()
   }
 
-  setTitle(title: string) {
-    this.tab.setTitle(title)
+  setTitle(ptr: HistoryPtr, title: string) {
+    this.tabs.find(t => t.id === ptr[0])?.setTitle(ptr[1], title)
   }
 
   // tab management

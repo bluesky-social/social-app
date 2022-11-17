@@ -6,14 +6,14 @@ import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 
-export const PostThread = ({visible, params}: ScreenParams) => {
+export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const {name, rkey} = params
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
 
   useEffect(() => {
     if (visible) {
-      store.nav.setTitle(`Post by ${name}`)
+      store.nav.setTitle(navIdx, `Post by ${name}`)
     }
   }, [visible, store.nav, name])
 

@@ -6,14 +6,14 @@ import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 import {makeRecordUri} from '../lib/strings'
 
-export const PostDownvotedBy = ({visible, params}: ScreenParams) => {
+export const PostDownvotedBy = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const {name, rkey} = params
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
 
   useEffect(() => {
     if (visible) {
-      store.nav.setTitle('Downvoted by')
+      store.nav.setTitle(navIdx, 'Downvoted by')
     }
   }, [store, visible])
 

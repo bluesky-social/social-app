@@ -7,13 +7,13 @@ import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 import {colors} from '../lib/styles'
 
-export const Search = ({visible, params}: ScreenParams) => {
+export const Search = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const {name} = params
 
   useEffect(() => {
     if (visible) {
-      store.nav.setTitle(`Search`)
+      store.nav.setTitle(navIdx, `Search`)
     }
   }, [store, visible, name])
   const onComposePress = () => {
