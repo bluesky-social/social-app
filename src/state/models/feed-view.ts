@@ -405,7 +405,7 @@ export class FeedModel {
     const toPrepend = []
     for (const item of res.data.feed) {
       if (this.feed.find(item2 => item2.uri === item.uri)) {
-        return // stop here - we've hit a post we already have
+        break // stop here - we've hit a post we already have
       }
       toPrepend.unshift(item) // reverse the order
     }

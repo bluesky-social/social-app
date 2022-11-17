@@ -115,7 +115,7 @@ const Btn = ({
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : undefined}
-      {tabCount > 1 ? (
+      {tabCount && tabCount > 1 ? (
         <View style={styles.tabCount}>
           <Text style={styles.tabCountLabel}>{tabCount}</Text>
         </View>
