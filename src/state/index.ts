@@ -18,7 +18,7 @@ export async function setupState() {
 
   libapi.doPolyfill()
 
-  const api = AtpApi.service(DEFAULT_SERVICE)
+  const api = AtpApi.service(DEFAULT_SERVICE) as SessionServiceClient
   rootStore = new RootStoreModel(api)
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
@@ -28,6 +28,13 @@ export async function setupState() {
   }
 
   await rootStore.session.setup()
+  // @ts-ignore .on() is correct -prf
+  api.sessionManager.on('session', () => {
+    if (!api.sessionManager.session && rootStore.session.isAuthed) {
+      // reset session
+      rootStore.session.clear()
+    }
+  })
 
   // track changes & save to storage
   autorun(() => {
