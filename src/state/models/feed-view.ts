@@ -149,6 +149,7 @@ export class FeedModel {
   // state
   isLoading = false
   isRefreshing = false
+  hasNewLatest = false
   hasLoaded = false
   error = ''
   params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams
@@ -195,6 +196,10 @@ export class FeedModel {
     return this.hasLoaded && !this.hasContent
   }
 
+  setHasNewLatest(v: boolean) {
+    this.hasNewLatest = v
+  }
+
   // public api
   // =
 
@@ -209,6 +214,7 @@ export class FeedModel {
       return this._loadPromise
     }
     await this._pendingWork()
+    this.setHasNewLatest(false)
     this._loadPromise = this._initialLoad(isRefreshing)
     await this._loadPromise
     this._loadPromise = undefined
@@ -242,6 +248,7 @@ export class FeedModel {
       return this._loadLatestPromise
     }
     await this._pendingWork()
+    this.setHasNewLatest(false)
     this._loadLatestPromise = this._loadLatest()
     await this._loadLatestPromise
     this._loadLatestPromise = undefined
@@ -258,6 +265,21 @@ export class FeedModel {
     this._updatePromise = this._update()
     await this._updatePromise
     this._updatePromise = undefined
+  }
+
+  /**
+   * Check if new postrs are available
+   */
+  async checkForLatest() {
+    if (this.hasNewLatest) {
+      return
+    }
+    await this._pendingWork()
+    const res = await this._getFeed({limit: 1})
+    this.setHasNewLatest(
+      res.data.feed[0] &&
+        (this.feed.length === 0 || res.data.feed[0].uri !== this.feed[0]?.uri),
+    )
   }
 
   // state transitions
@@ -380,10 +402,14 @@ export class FeedModel {
 
   private _prependAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     let counter = this.feed.length
+    const toPrepend = []
     for (const item of res.data.feed) {
       if (this.feed.find(item2 => item2.uri === item.uri)) {
-        return // stop here - we've hit a post we already ahve
+        return // stop here - we've hit a post we already have
       }
+      toPrepend.unshift(item) // reverse the order
+    }
+    for (const item of toPrepend) {
       this._prepend(counter++, item)
     }
   }

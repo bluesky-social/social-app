@@ -31,6 +31,7 @@
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "17.0.2",
     "react-native": "0.68.2",
+    "react-native-appstate-hook": "^1.0.6",
     "react-native-gesture-handler": "^2.5.0",
     "react-native-inappbrowser-reborn": "^3.6.3",
     "react-native-linear-gradient": "^2.6.2",
