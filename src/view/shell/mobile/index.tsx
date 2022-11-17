@@ -51,8 +51,8 @@ const SWIPE_GESTURE_VEL_TRIGGER = 2500
 
 const Btn = ({
   icon,
-  inactive,
   notificationCount,
+  tabCount,
   onPress,
   onLongPress,
 }: {
@@ -66,8 +66,8 @@ const Btn = ({
     | 'bell-solid'
     | 'search'
     | 'search-solid'
-  inactive?: boolean
   notificationCount?: number
+  tabCount?: number
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }) => {
@@ -104,22 +104,6 @@ const Btn = ({
     IconEl = FontAwesomeIcon
   }
 
-  if (inactive) {
-    return (
-      <View style={styles.ctrl}>
-        {notificationCount ? (
-          <View style={styles.ctrlCount}>
-            <Text style={styles.ctrlCountLabel}>{notificationCount}</Text>
-          </View>
-        ) : undefined}
-        <IconEl
-          size={size}
-          style={[styles.ctrlIcon, styles.inactive, addedStyles]}
-          icon={icon}
-        />
-      </View>
-    )
-  }
   return (
     <TouchableOpacity
       style={styles.ctrl}
@@ -127,8 +111,13 @@ const Btn = ({
       onPressIn={onLongPress ? undefined : onPress}
       onLongPress={onLongPress}>
       {notificationCount ? (
-        <View style={styles.ctrlCount}>
-          <Text style={styles.ctrlCountLabel}>{notificationCount}</Text>
+        <View style={styles.notificationCount}>
+          <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
+        </View>
+      ) : undefined}
+      {tabCount > 1 ? (
+        <View style={styles.tabCount}>
+          <Text style={styles.tabCountLabel}>{tabCount}</Text>
         </View>
       ) : undefined}
       <IconEl size={size} style={[styles.ctrlIcon, addedStyles]} icon={icon} />
@@ -299,8 +288,9 @@ export const MobileShell: React.FC = observer(() => {
           onPress={onPressSearch}
         />
         <Btn
-          icon={isMainMenuActive ? 'menu-solid' : 'menu'}
-          onPress={onPressMenu}
+          icon={isTabsSelectorActive ? 'clone' : ['far', 'clone']}
+          onPress={onPressTabs}
+          tabCount={store.nav.tabCount}
         />
         <Btn
           icon={isAtNotifications ? 'bell-solid' : 'bell'}
@@ -308,8 +298,8 @@ export const MobileShell: React.FC = observer(() => {
           notificationCount={store.me.notificationCount}
         />
         <Btn
-          icon={isTabsSelectorActive ? 'clone' : ['far', 'clone']}
-          onPress={onPressTabs}
+          icon={isMainMenuActive ? 'menu-solid' : 'menu'}
+          onPress={onPressMenu}
         />
       </SafeAreaView>
       <MainMenu
@@ -457,7 +447,7 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
   },
-  ctrlCount: {
+  notificationCount: {
     position: 'absolute',
     left: 46,
     top: 10,
@@ -466,10 +456,20 @@ const styles = StyleSheet.create({
     paddingBottom: 1,
     borderRadius: 8,
   },
-  ctrlCountLabel: {
+  notificationCountLabel: {
     fontSize: 12,
     fontWeight: 'bold',
     color: colors.white,
+  },
+  tabCount: {
+    position: 'absolute',
+    left: 46,
+    top: 30,
+  },
+  tabCountLabel: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: colors.black,
   },
   ctrlIcon: {
     color: colors.black,

@@ -179,6 +179,10 @@ export class NavigationModel {
     return this.tabs[this.tabIndex]
   }
 
+  get tabCount() {
+    return this.tabs.length
+  }
+
   isCurrentScreen(tabId: number, index: number) {
     return this.tab.id === tabId && this.tab.index === index
   }
