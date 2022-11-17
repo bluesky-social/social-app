@@ -13,13 +13,18 @@ import Animated, {
 } from 'react-native-reanimated'
 import {colors} from '../../lib/styles'
 
+interface AutocompleteItem {
+  handle: string
+  displayName?: string
+}
+
 export function Autocomplete({
   active,
   items,
   onSelect,
 }: {
   active: boolean
-  items: string[]
+  items: AutocompleteItem[]
   onSelect: (item: string) => void
 }) {
   const winDim = useWindowDimensions()
@@ -46,8 +51,8 @@ export function Autocomplete({
         <TouchableOpacity
           key={i}
           style={styles.item}
-          onPress={() => onSelect(item)}>
-          <Text style={styles.itemText}>@{item}</Text>
+          onPress={() => onSelect(item.handle)}>
+          <Text style={styles.itemText}>@{item.handle}</Text>
         </TouchableOpacity>
       ))}
     </Animated.View>
