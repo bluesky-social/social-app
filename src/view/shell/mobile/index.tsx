@@ -35,9 +35,13 @@ import {Composer} from './Composer'
 import {s, colors} from '../../lib/styles'
 import {
   GridIcon,
+  GridIconSolid,
   HomeIcon,
+  HomeIconSolid,
   MangifyingGlassIcon,
+  MangifyingGlassIconSolid,
   BellIcon,
+  BellIconSolid,
 } from '../../lib/icons'
 
 const SWIPE_GESTURE_DIST_TRIGGER = 0.4
@@ -50,7 +54,16 @@ const Btn = ({
   onPress,
   onLongPress,
 }: {
-  icon: IconProp | 'menu' | 'house' | 'bell' | 'search'
+  icon:
+    | IconProp
+    | 'menu'
+    | 'menu-solid'
+    | 'home'
+    | 'home-solid'
+    | 'bell'
+    | 'bell-solid'
+    | 'search'
+    | 'search-solid'
   inactive?: boolean
   notificationCount?: number
   onPress?: (event: GestureResponderEvent) => void
@@ -61,15 +74,28 @@ const Btn = ({
   let IconEl
   if (icon === 'menu') {
     IconEl = GridIcon
-  } else if (icon === 'house') {
+  } else if (icon === 'menu-solid') {
+    IconEl = GridIconSolid
+  } else if (icon === 'home') {
     IconEl = HomeIcon
+    size = 24
+  } else if (icon === 'home-solid') {
+    IconEl = HomeIconSolid
     size = 24
   } else if (icon === 'search') {
     IconEl = MangifyingGlassIcon
     size = 24
     addedStyles = {position: 'relative', top: -1} as ViewStyle
+  } else if (icon === 'search-solid') {
+    IconEl = MangifyingGlassIconSolid
+    size = 24
+    addedStyles = {position: 'relative', top: -1} as ViewStyle
   } else if (icon === 'bell') {
     IconEl = BellIcon
+    size = 24
+    addedStyles = {position: 'relative', top: -1} as ViewStyle
+  } else if (icon === 'bell-solid') {
+    IconEl = BellIconSolid
     size = 24
     addedStyles = {position: 'relative', top: -1} as ViewStyle
   } else {
@@ -207,6 +233,9 @@ export const MobileShell: React.FC = observer(() => {
     )
   }
 
+  const isAtHome = store.nav.tab.current.url === '/'
+  const isAtSearch = store.nav.tab.current.url === '/search'
+  const isAtNotifications = store.nav.tab.current.url === '/notifications'
   return (
     <View style={styles.outerContainer}>
       <SafeAreaView style={styles.innerContainer}>
@@ -251,15 +280,24 @@ export const MobileShell: React.FC = observer(() => {
         onClose={() => toggleTabsMenu(false)}
       />
       <SafeAreaView style={styles.bottomBar}>
-        <Btn icon="house" onPress={onPressHome} />
-        <Btn icon="search" onPress={onPressSearch} />
-        <Btn icon="menu" onPress={onPressMenu} />
+        <Btn icon={isAtHome ? 'home-solid' : 'home'} onPress={onPressHome} />
         <Btn
-          icon="bell"
+          icon={isAtSearch ? 'search-solid' : 'search'}
+          onPress={onPressSearch}
+        />
+        <Btn
+          icon={isMainMenuActive ? 'menu-solid' : 'menu'}
+          onPress={onPressMenu}
+        />
+        <Btn
+          icon={isAtNotifications ? 'bell-solid' : 'bell'}
           onPress={onPressNotifications}
           notificationCount={store.me.notificationCount}
         />
-        <Btn icon={['far', 'clone']} onPress={onPressTabs} />
+        <Btn
+          icon={isTabsSelectorActive ? 'clone' : ['far', 'clone']}
+          onPress={onPressTabs}
+        />
       </SafeAreaView>
       <MainMenu
         active={isMainMenuActive}
