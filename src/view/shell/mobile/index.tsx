@@ -256,7 +256,7 @@ export const MobileShell: React.FC = observer(() => {
                       ]}>
                       <Com
                         params={params}
-                        visible={true}
+                        visible={current}
                         scrollElRef={current ? scrollElRef : undefined}
                       />
                     </Animated.View>

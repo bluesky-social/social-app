@@ -45,7 +45,6 @@ export const Home = observer(function Home({
     let aborted = false
     const pollInterval = setInterval(() => doPoll(), 15e3)
     if (!visible) {
-      console.log('hit')
       return
     }
     if (hasSetup) {
