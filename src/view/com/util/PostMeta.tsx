@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {StyleSheet, useWindowDimensions, Text, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Link} from '../util/Link'
 import {PostDropdownBtn} from '../util/DropdownBtn'
@@ -18,15 +18,10 @@ interface PostMetaOpts {
 }
 
 export function PostMeta(opts: PostMetaOpts) {
-  const winDim = useWindowDimensions()
-  const maxWidth = useMemo(
-    () => ({maxWidth: ((winDim.width * 3) / 5) | 0}),
-    [winDim.width],
-  )
   return (
     <View style={styles.meta}>
       <Link
-        style={[styles.metaItem, maxWidth]}
+        style={styles.metaItem}
         href={opts.authorHref}
         title={opts.authorHandle}>
         <Text style={[s.f17, s.bold]} numberOfLines={1}>
@@ -61,5 +56,6 @@ const styles = StyleSheet.create({
   },
   metaItem: {
     paddingRight: 5,
+    maxWidth: '75%',
   },
 })
