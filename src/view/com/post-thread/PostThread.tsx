@@ -10,20 +10,14 @@ import {SharePostModel} from '../../../state/models/shell-ui'
 import {PostThreadItem} from './PostThreadItem'
 import {ErrorMessage} from '../util/ErrorMessage'
 
-export const PostThread = observer(function PostThread({uri}: {uri: string}) {
+export const PostThread = observer(function PostThread({
+  uri,
+  view,
+}: {
+  uri: string
+  view: PostThreadViewModel
+}) {
   const store = useStores()
-  const [view, setView] = useState<PostThreadViewModel | undefined>()
-
-  useEffect(() => {
-    if (view?.params.uri === uri) {
-      console.log('Post thread doing nothing')
-      return // no change needed? or trigger refresh?
-    }
-    console.log('Fetching post thread', uri)
-    const newView = new PostThreadViewModel(store, {uri})
-    setView(newView)
-    newView.setup().catch(err => console.error('Failed to fetch thread', err))
-  }, [uri, view?.params.uri, store])
 
   const onPressShare = (uri: string) => {
     store.shell.openModal(new SharePostModel(uri))
@@ -34,11 +28,7 @@ export const PostThread = observer(function PostThread({uri}: {uri: string}) {
 
   // loading
   // =
-  if (
-    !view ||
-    (view.isLoading && !view.isRefreshing) ||
-    view.params.uri !== uri
-  ) {
+  if ((view.isLoading && !view.isRefreshing) || view.params.uri !== uri) {
     return (
       <View>
         <ActivityIndicator />
