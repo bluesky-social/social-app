@@ -8,12 +8,14 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  useColorScheme,
   View,
   ViewStyle,
 } from 'react-native'
 import {ScreenContainer, Screen} from 'react-native-screens'
 import LinearGradient from 'react-native-linear-gradient'
 import {GestureDetector, Gesture} from 'react-native-gesture-handler'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -142,6 +144,8 @@ export const MobileShell: React.FC = observer(() => {
   const winDim = useWindowDimensions()
   const swipeGestureInterp = useSharedValue<number>(0)
   const tabMenuInterp = useSharedValue<number>(0)
+  const colorScheme = useColorScheme()
+  const safeAreaInsets = useSafeAreaInsets()
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
 
   const onPressHome = () => {
@@ -274,6 +278,15 @@ export const MobileShell: React.FC = observer(() => {
           </ScreenContainer>
         </GestureDetector>
       </SafeAreaView>
+      {isTabsSelectorActive ? (
+        <View
+          style={[
+            styles.topBarProtector,
+            colorScheme === 'dark' ? styles.topBarProtectorDark : undefined,
+            {height: safeAreaInsets.top},
+          ]}
+        />
+      ) : undefined}
       <TabsSelector
         active={isTabsSelectorActive}
         tabMenuInterp={tabMenuInterp}
@@ -379,15 +392,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     opacity: 0.5,
   },
-  topBar: {
-    flexDirection: 'row',
+  topBarProtector: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 50, // will be overwritten by insets
     backgroundColor: colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.gray2,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 40,
-    paddingBottom: 5,
+  },
+  topBarProtectorDark: {
+    backgroundColor: colors.black,
   },
   avi: {
     width: 34,
