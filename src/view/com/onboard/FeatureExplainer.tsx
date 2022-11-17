@@ -10,10 +10,11 @@ import {
   View,
 } from 'react-native'
 import {TabView, SceneMap, Route, TabBarProps} from 'react-native-tab-view'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserGroupIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
 import {s} from '../../lib/styles'
-import {SCENE_EXPLAINER} from '../../lib/assets'
+import {SCENE_EXPLAINER, TABS_EXPLAINER} from '../../lib/assets'
 
 const Intro = () => (
   <View style={styles.explainer}>
@@ -49,9 +50,32 @@ const Scenes = () => (
   </View>
 )
 
+const Tabs = () => (
+  <View style={styles.explainer}>
+    <View style={styles.explainerIcon}>
+      <View style={s.flex1} />
+      <FontAwesomeIcon
+        icon={['far', 'clone']}
+        style={[s.black, s.mb5]}
+        size={36}
+      />
+      <View style={s.flex1} />
+    </View>
+    <Text style={styles.explainerHeading}>Tabs</Text>
+    <Text style={styles.explainerDesc}>
+      Never lose your place! Long-press on posts and links to open them in a new
+      tab.
+    </Text>
+    <Text style={styles.explainerDesc}>
+      <Image source={TABS_EXPLAINER} style={styles.explainerImg} />
+    </Text>
+  </View>
+)
+
 const SCENE_MAP = {
   intro: Intro,
   scenes: Scenes,
+  tabs: Tabs,
 }
 const renderScene = SceneMap(SCENE_MAP)
 
@@ -62,6 +86,7 @@ export const FeatureExplainer = () => {
   const routes = [
     {key: 'intro', title: 'Intro'},
     {key: 'scenes', title: 'Scenes'},
+    {key: 'tabs', title: 'Tabs'},
   ]
 
   const onPressSkip = () => store.onboard.next()
