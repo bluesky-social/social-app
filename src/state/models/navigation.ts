@@ -16,6 +16,7 @@ export class NavigationTabModel {
   id = genTabId()
   history: HistoryItem[] = [{url: '/', ts: Date.now()}]
   index = 0
+  isNewTab = false
 
   constructor() {
     makeAutoObservable(this, {
@@ -110,6 +111,10 @@ export class NavigationTabModel {
 
   setTitle(title: string) {
     this.current.title = title
+  }
+
+  setIsNewTab(v: boolean) {
+    this.isNewTab = v
   }
 
   // persistence
@@ -208,6 +213,7 @@ export class NavigationModel {
   newTab(url: string, title?: string) {
     const tab = new NavigationTabModel()
     tab.navigate(url, title)
+    tab.isNewTab = true
     this.tabs.push(tab)
     this.tabIndex = this.tabs.length - 1
   }

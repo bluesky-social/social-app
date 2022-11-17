@@ -17,6 +17,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {GestureDetector, Gesture} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Animated, {
+  Easing,
   useSharedValue,
   useAnimatedStyle,
   withTiming,
@@ -133,6 +134,8 @@ export const MobileShell: React.FC = observer(() => {
   const winDim = useWindowDimensions()
   const swipeGestureInterp = useSharedValue<number>(0)
   const tabMenuInterp = useSharedValue<number>(0)
+  const newTabInterp = useSharedValue<number>(0)
+  const [isRunningNewTabAnim, setIsRunningNewTabAnim] = useState(false)
   const colorScheme = useColorScheme()
   const safeAreaInsets = useSafeAreaInsets()
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
@@ -149,6 +152,8 @@ export const MobileShell: React.FC = observer(() => {
   const onPressNotifications = () => store.nav.navigate('/notifications')
   const onPressTabs = () => toggleTabsMenu(!isTabsSelectorActive)
 
+  // tab selector animation
+  // =
   const closeTabsSelector = () => setTabsSelectorActive(false)
   const toggleTabsMenu = (active: boolean) => {
     if (active) {
@@ -168,6 +173,31 @@ export const MobileShell: React.FC = observer(() => {
     }
   }, [isTabsSelectorActive])
 
+  // new tab animation
+  // =
+  useEffect(() => {
+    if (screenRenderDesc.hasNewTab && !isRunningNewTabAnim) {
+      setIsRunningNewTabAnim(true)
+    }
+  }, [screenRenderDesc.hasNewTab])
+  useEffect(() => {
+    if (isRunningNewTabAnim) {
+      const reset = () => {
+        store.nav.tab.setIsNewTab(false)
+        setIsRunningNewTabAnim(false)
+      }
+      newTabInterp.value = withTiming(
+        1,
+        {duration: 250, easing: Easing.out(Easing.exp)},
+        () => runOnJS(reset)(),
+      )
+    } else {
+      newTabInterp.value = 0
+    }
+  }, [isRunningNewTabAnim])
+
+  // navigation swipes
+  // =
   const goBack = () => store.nav.tab.goBack()
   const swipeGesture = Gesture.Pan()
     .onUpdate(e => {
@@ -200,6 +230,9 @@ export const MobileShell: React.FC = observer(() => {
   }))
   const tabMenuTransform = useAnimatedStyle(() => ({
     transform: [{translateY: tabMenuInterp.value * -320}],
+  }))
+  const newTabTransform = useAnimatedStyle(() => ({
+    transform: [{scale: newTabInterp.value}],
   }))
 
   if (!store.session.isAuthed) {
@@ -251,7 +284,11 @@ export const MobileShell: React.FC = observer(() => {
                         s.flex1,
                         styles.screen,
                         current
-                          ? [swipeTransform, tabMenuTransform]
+                          ? [
+                              swipeTransform,
+                              tabMenuTransform,
+                              isRunningNewTabAnim ? newTabTransform : undefined,
+                            ]
                           : undefined,
                       ]}>
                       <Com
@@ -326,11 +363,14 @@ type ScreenRenderDesc = MatchResult & {
   key: string
   current: boolean
   previous: boolean
+  isNewTab: boolean
 }
 function constructScreenRenderDesc(nav: NavigationModel): {
   icon: IconProp
+  hasNewTab: boolean
   screens: ScreenRenderDesc[]
 } {
+  let hasNewTab = false
   let icon: IconProp = 'magnifying-glass'
   let screens: ScreenRenderDesc[] = []
   for (const tab of nav.tabs) {
@@ -345,16 +385,19 @@ function constructScreenRenderDesc(nav: NavigationModel): {
       if (isCurrent) {
         icon = matchRes.icon
       }
+      hasNewTab = hasNewTab || tab.isNewTab
       return Object.assign(matchRes, {
         key: `t${tab.id}-s${screen.index}`,
         current: isCurrent,
         previous: isPrevious,
+        isNewTab: tab.isNewTab,
       }) as ScreenRenderDesc
     })
     screens = screens.concat(parsedTabScreens)
   }
   return {
     icon,
+    hasNewTab,
     screens,
   }
 }

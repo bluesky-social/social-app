@@ -1,12 +1,6 @@
 import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -14,13 +8,8 @@ import Animated, {
   interpolate,
   Easing,
 } from 'react-native-reanimated'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {HomeIcon, UserGroupIcon, BellIcon} from '../../lib/icons'
 import {ComposePost} from '../../com/composer/ComposePost'
-import {useStores} from '../../../state'
 import {ComposerOpts} from '../../../state/models/shell-ui'
-import {s, colors} from '../../lib/styles'
 
 export const Composer = observer(
   ({
@@ -36,7 +25,6 @@ export const Composer = observer(
     onPost?: ComposerOpts['onPost']
     onClose: () => void
   }) => {
-    const store = useStores()
     const initInterp = useSharedValue<number>(0)
 
     useEffect(() => {
