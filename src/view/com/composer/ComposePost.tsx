@@ -166,7 +166,6 @@ export const ComposePost = observer(function ComposePost({
         <TextInput
           multiline
           scrollEnabled
-          autoFocus
           onChangeText={(text: string) => onChangeText(text)}
           placeholder={replyTo ? 'Write your reply' : "What's new?"}
           style={styles.textInput}>
