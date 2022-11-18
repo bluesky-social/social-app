@@ -108,19 +108,24 @@ export const ComposePost = observer(function ComposePost({
       : undefined
 
   const textDecorated = useMemo(() => {
-    return (text || '').split(/(\s)/g).map((item, i) => {
-      if (
-        /^@[a-zA-Z0-9\.-]+$/g.test(item) &&
-        autocompleteView.knownHandles.has(item.slice(1))
-      ) {
-        return (
-          <Text key={i} style={{color: colors.blue3}}>
-            {item}
-          </Text>
-        )
-      }
-      return item
-    })
+    const re = /(@[a-z0-9\.]*)/gi
+    const segments = []
+    let match
+    let start = 0
+    let i = 0
+    while ((match = re.exec(text))) {
+      segments.push(text.slice(start, match.index))
+      segments.push(
+        <Text key={i++} style={{color: colors.blue3}}>
+          {match[0]}
+        </Text>,
+      )
+      start = match.index + match[0].length
+    }
+    if (start < text.length) {
+      segments.push(text.slice(start))
+    }
+    return segments
   }, [text])
 
   return (
@@ -194,7 +199,7 @@ export const ComposePost = observer(function ComposePost({
   )
 })
 
-const atPrefixRegex = /@([\S]*)$/i
+const atPrefixRegex = /@([a-z0-9\.]*)$/i
 function extractTextAutocompletePrefix(text: string) {
   const match = atPrefixRegex.exec(text)
   if (match) {
