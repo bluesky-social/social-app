@@ -108,7 +108,7 @@ export const ComposePost = observer(function ComposePost({
       : undefined
 
   const textDecorated = useMemo(() => {
-    const re = /(@[a-z0-9\.]*)/gi
+    const re = /(@[a-z0-9\.]*)|(https?:\/\/[\S]+)/gi
     const segments = []
     let match
     let start = 0

@@ -63,19 +63,36 @@ export function extractEntities(
 ): Entity[] | undefined {
   let match
   let ents: Entity[] = []
-  const re = /(^|\s)(@)([a-zA-Z0-9\.-]+)(\b)/dg
-  while ((match = re.exec(text))) {
-    if (knownHandles && !knownHandles.has(match[3])) {
-      continue // not a known handle
+  {
+    // mentions
+    const re = /(^|\s)(@)([a-zA-Z0-9\.-]+)(\b)/dg
+    while ((match = re.exec(text))) {
+      if (knownHandles && !knownHandles.has(match[3])) {
+        continue // not a known handle
+      }
+      ents.push({
+        type: 'mention',
+        value: match[3],
+        index: {
+          start: match.indices[2][0], // skip the (^|\s) but include the '@'
+          end: match.indices[3][1],
+        },
+      })
     }
-    ents.push({
-      type: 'mention',
-      value: match[3],
-      index: {
-        start: match.indices[2][0], // skip the (^|\s) but include the '@'
-        end: match.indices[3][1],
-      },
-    })
+  }
+  {
+    // links
+    const re = /(^|\s)(https?:\/\/[\S]+)(\b)/dg
+    while ((match = re.exec(text))) {
+      ents.push({
+        type: 'link',
+        value: match[2],
+        index: {
+          start: match.indices[1][0], // skip the (^|\s) but include the '@'
+          end: match.indices[2][1],
+        },
+      })
+    }
   }
   return ents.length > 0 ? ents : undefined
 }

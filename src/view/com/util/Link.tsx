@@ -1,6 +1,7 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {
+  Linking,
   StyleProp,
   Text,
   TouchableOpacity,
@@ -8,6 +9,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import {useStores} from '../../../state'
+import {RootStoreModel} from '../../../state'
 import {LinkActionsModel} from '../../../state/models/shell-ui'
 
 export const Link = observer(function Link({
@@ -23,13 +25,10 @@ export const Link = observer(function Link({
 }) {
   const store = useStores()
   const onPress = () => {
-    store.shell.closeModal() // close any active modals
-    store.nav.navigate(href)
+    handleLink(store, href, false)
   }
   const onLongPress = () => {
-    store.shell.closeModal() // close any active modals
-    store.nav.newTab(href, title)
-    // store.shell.openModal(new LinkActionsModel(href, title || href))
+    handleLink(store, href, true)
   }
   return (
     <TouchableOpacity
@@ -55,12 +54,10 @@ export const TextLink = observer(function Link({
 }) {
   const store = useStores()
   const onPress = () => {
-    store.shell.closeModal() // close any active modals
-    store.nav.navigate(href)
+    handleLink(store, href, false)
   }
   const onLongPress = () => {
-    store.shell.closeModal() // close any active modals
-    store.nav.newTab(href, title)
+    handleLink(store, href, true)
   }
   return (
     <Text style={style} onPress={onPress} onLongPress={onLongPress}>
@@ -68,3 +65,15 @@ export const TextLink = observer(function Link({
     </Text>
   )
 })
+
+function handleLink(store: RootStoreModel, href: string, longPress: boolean) {
+  if (href.startsWith('http')) {
+    Linking.openURL(href)
+  } else if (longPress) {
+    store.shell.closeModal() // close any active modals
+    store.nav.newTab(href)
+  } else {
+    store.shell.closeModal() // close any active modals
+    store.nav.navigate(href)
+  }
+}
