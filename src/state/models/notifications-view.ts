@@ -42,7 +42,7 @@ export class NotificationsViewItemModel implements GroupedNotification {
     this.copy(v)
   }
 
-  copy(v: GroupedNotification) {
+  copy(v: GroupedNotification, preserve = false) {
     this.uri = v.uri
     this.cid = v.cid
     this.author = v.author
@@ -58,7 +58,7 @@ export class NotificationsViewItemModel implements GroupedNotification {
           new NotificationsViewItemModel(this.rootStore, '', add),
         )
       }
-    } else {
+    } else if (!preserve) {
       this.additional = undefined
     }
   }
@@ -322,7 +322,7 @@ export class NotificationsViewModel {
         item2 => item.uri === item2.uri && item.indexedAt === item2.indexedAt,
       )
       if (existingItem) {
-        existingItem.copy(item)
+        existingItem.copy(item, true)
       }
     }
   }
