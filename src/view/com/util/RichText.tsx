@@ -32,14 +32,25 @@ export function RichText({
     if (typeof segment === 'string') {
       els.push(segment)
     } else {
-      els.push(
-        <TextLink
-          key={key}
-          text={segment.text}
-          href={`/profile/${segment.entity.value}`}
-          style={[style, s.blue3]}
-        />,
-      )
+      if (segment.entity.type === 'mention') {
+        els.push(
+          <TextLink
+            key={key}
+            text={segment.text}
+            href={`/profile/${segment.entity.value}`}
+            style={[style, s.blue3]}
+          />,
+        )
+      } else if (segment.entity.type === 'link') {
+        els.push(
+          <TextLink
+            key={key}
+            text={segment.text}
+            href={segment.entity.value}
+            style={[style, s.blue3]}
+          />,
+        )
+      }
     }
     key++
   }
