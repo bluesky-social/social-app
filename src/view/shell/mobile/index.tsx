@@ -151,6 +151,7 @@ export const MobileShell: React.FC = observer(() => {
   const onPressMenu = () => setMainMenuActive(true)
   const onPressNotifications = () => store.nav.navigate('/notifications')
   const onPressTabs = () => toggleTabsMenu(!isTabsSelectorActive)
+  const doNewTab = (url: string) => () => store.nav.newTab(url)
 
   // tab selector animation
   // =
@@ -320,10 +321,15 @@ export const MobileShell: React.FC = observer(() => {
         onClose={() => toggleTabsMenu(false)}
       />
       <SafeAreaView style={styles.bottomBar}>
-        <Btn icon={isAtHome ? 'home-solid' : 'home'} onPress={onPressHome} />
+        <Btn
+          icon={isAtHome ? 'home-solid' : 'home'}
+          onPress={onPressHome}
+          onLongPress={doNewTab('/')}
+        />
         <Btn
           icon={isAtSearch ? 'search-solid' : 'search'}
           onPress={onPressSearch}
+          onLongPress={doNewTab('/search')}
         />
         <Btn
           icon={isTabsSelectorActive ? 'clone' : ['far', 'clone']}
@@ -333,6 +339,7 @@ export const MobileShell: React.FC = observer(() => {
         <Btn
           icon={isAtNotifications ? 'bell-solid' : 'bell'}
           onPress={onPressNotifications}
+          onLongPress={doNewTab('/notifications')}
           notificationCount={store.me.notificationCount}
         />
         <Btn
