@@ -110,13 +110,15 @@ export const Post = observer(function Post({uri}: {uri: string}) {
   return (
     <Link style={styles.outer} href={itemHref} title={itemTitle}>
       <View style={styles.layout}>
-        <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
-          <UserAvatar
-            size={50}
-            displayName={item.author.displayName}
-            handle={item.author.handle}
-          />
-        </Link>
+        <View style={styles.layoutAvi}>
+          <Link href={authorHref} title={authorTitle}>
+            <UserAvatar
+              size={50}
+              displayName={item.author.displayName}
+              handle={item.author.handle}
+            />
+          </Link>
+        </View>
         <View style={styles.layoutContent}>
           <PostMeta
             itemHref={itemHref}
