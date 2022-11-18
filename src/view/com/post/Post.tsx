@@ -147,7 +147,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
             <RichText
               text={record.text}
               entities={record.entities}
-              style={[s.f16, s['lh16-1.3']]}
+              style={styles.postText}
             />
           </View>
           <PostCtrls
@@ -190,5 +190,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 8,
+  },
+  postText: {
+    fontFamily: 'Helvetica Neue',
+    fontSize: 17,
+    lineHeight: 22.1, // 1.3 of 17px
+    minHeight: 28,
   },
 })

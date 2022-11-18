@@ -85,7 +85,7 @@ export const s = StyleSheet.create({
   ['lh16-1']: {lineHeight: 16},
   ['lh16-1.3']: {lineHeight: 20.8}, // 1.3 of 16px
   ['lh17-1']: {lineHeight: 17},
-  ['lh17-1.3']: {lineHeight: 22.1}, // 1.3 of 16px
+  ['lh17-1.3']: {lineHeight: 22.1}, // 1.3 of 17px
   ['lh18-1']: {lineHeight: 18},
   ['lh18-1.3']: {lineHeight: 23.4}, // 1.3 of 18px
 
