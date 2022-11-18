@@ -196,11 +196,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 8,
+    minHeight: 36,
   },
   postText: {
     fontFamily: 'Helvetica Neue',
     fontSize: 17,
     lineHeight: 22.1, // 1.3 of 17px
-    minHeight: 28,
   },
 })

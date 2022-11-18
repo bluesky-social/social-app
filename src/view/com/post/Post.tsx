@@ -189,12 +189,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
+    minHeight: 36,
     paddingBottom: 8,
   },
   postText: {
     fontFamily: 'Helvetica Neue',
     fontSize: 17,
     lineHeight: 22.1, // 1.3 of 17px
-    minHeight: 28,
   },
 })
