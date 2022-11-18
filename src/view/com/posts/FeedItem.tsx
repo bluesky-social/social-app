@@ -143,7 +143,7 @@ export const FeedItem = observer(function FeedItem({
             <RichText
               text={record.text}
               entities={record.entities}
-              style={[s.f17, s['lh17-1.3']]}
+              style={styles.postText}
             />
           </View>
           <PostCtrls
@@ -199,5 +199,8 @@ const styles = StyleSheet.create({
   },
   postText: {
     fontFamily: 'Helvetica Neue',
+    fontSize: 17,
+    lineHeight: 22.1, // 1.3 of 17px
+    minHeight: 28,
   },
 })
