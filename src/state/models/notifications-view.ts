@@ -8,6 +8,8 @@ import {cleanError} from '../../view/lib/strings'
 
 const UNGROUPABLE_REASONS = ['trend', 'assertion']
 
+const MS_60MIN = 1e3 * 60 * 60
+
 export interface GroupedNotification extends ListNotifications.Notification {
   additional?: ListNotifications.Notification[]
 }
@@ -344,10 +346,13 @@ function groupNotifications(
 ): GroupedNotification[] {
   const items2: GroupedNotification[] = []
   for (const item of items) {
+    const ts = +new Date(item.indexedAt)
     let grouped = false
     if (!UNGROUPABLE_REASONS.includes(item.reason)) {
       for (const item2 of items2) {
+        const ts2 = +new Date(item2.indexedAt)
         if (
+          Math.abs(ts2 - ts) < MS_60MIN &&
           item.reason === item2.reason &&
           item.reasonSubject === item2.reasonSubject &&
           item.author.did !== item2.author.did
