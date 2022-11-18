@@ -163,8 +163,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                   style={styles.expandedInfoItem}
                   href={repostsHref}
                   title={repostsTitle}>
-                  <Text style={[s.gray5, s.semiBold, s.f16]}>
-                    <Text style={[s.bold, s.black, s.f16]}>
+                  <Text style={[s.gray5, s.semiBold, s.f18]}>
+                    <Text style={[s.bold, s.black, s.f18]}>
                       {item.repostCount}
                     </Text>{' '}
                     {pluralize(item.repostCount, 'repost')}
@@ -178,8 +178,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                   style={styles.expandedInfoItem}
                   href={upvotesHref}
                   title={upvotesTitle}>
-                  <Text style={[s.gray5, s.semiBold, s.f16]}>
-                    <Text style={[s.bold, s.black, s.f16]}>
+                  <Text style={[s.gray5, s.semiBold, s.f18]}>
+                    <Text style={[s.bold, s.black, s.f18]}>
                       {item.upvoteCount}
                     </Text>{' '}
                     {pluralize(item.upvoteCount, 'upvote')}
@@ -193,8 +193,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                   style={styles.expandedInfoItem}
                   href={downvotesHref}
                   title={downvotesTitle}>
-                  <Text style={[s.gray5, s.semiBold, s.f16]}>
-                    <Text style={[s.bold, s.black, s.f16]}>
+                  <Text style={[s.gray5, s.semiBold, s.f18]}>
+                    <Text style={[s.bold, s.black, s.f18]}>
                       {item.downvoteCount}
                     </Text>{' '}
                     {pluralize(item.downvoteCount, 'downvote')}
@@ -363,13 +363,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Helvetica Neue',
     fontSize: 17,
     lineHeight: 22.1, // 1.3 of 17px
-    minHeight: 28,
   },
   postTextContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 8,
+    minHeight: 36,
   },
   postTextLarge: {
     fontSize: 24,
