@@ -249,6 +249,6 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     padding: 5,
-    fontSize: 18,
+    fontSize: 21,
   },
 })

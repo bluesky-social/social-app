@@ -124,7 +124,7 @@ export const FeedItem = observer(function FeedItem({
           <View style={styles.avis}>
             {authors.slice(0, MAX_AUTHORS).map(author => (
               <Link
-                style={s.mr2}
+                style={{marginRight: 3}}
                 key={author.href}
                 href={author.href}
                 title={`@${author.handle}`}>
