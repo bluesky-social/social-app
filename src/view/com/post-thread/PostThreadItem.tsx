@@ -99,13 +99,15 @@ export const PostThreadItem = observer(function PostThreadItem({
     return (
       <View style={styles.outer}>
         <View style={styles.layout}>
-          <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
-            <UserAvatar
-              size={50}
-              displayName={item.author.displayName}
-              handle={item.author.handle}
-            />
-          </Link>
+          <View style={styles.layoutAvi}>
+            <Link href={authorHref} title={authorTitle}>
+              <UserAvatar
+                size={50}
+                displayName={item.author.displayName}
+                handle={item.author.handle}
+              />
+            </Link>
+          </View>
           <View style={styles.layoutContent}>
             <View style={[styles.meta, {paddingTop: 5, paddingBottom: 0}]}>
               <Link
@@ -255,13 +257,15 @@ export const PostThreadItem = observer(function PostThreadItem({
           </View>
         )}
         <View style={styles.layout}>
-          <Link style={styles.layoutAvi} href={authorHref} title={authorTitle}>
-            <UserAvatar
-              size={50}
-              displayName={item.author.displayName}
-              handle={item.author.handle}
-            />
-          </Link>
+          <View style={styles.layoutAvi}>
+            <Link href={authorHref} title={authorTitle}>
+              <UserAvatar
+                size={50}
+                displayName={item.author.displayName}
+                handle={item.author.handle}
+              />
+            </Link>
+          </View>
           <View style={styles.layoutContent}>
             <PostMeta
               itemHref={itemHref}
