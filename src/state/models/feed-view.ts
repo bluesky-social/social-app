@@ -388,6 +388,16 @@ export class FeedModel {
     this.hasMore = !!this.loadMoreCursor
     let counter = this.feed.length
     for (const item of res.data.feed) {
+      // HACK
+      // deduplicate posts on the home feed
+      // (should be done on the server)
+      // -prf
+      if (this.feedType === 'home') {
+        if (this.feed.find(item2 => item2.uri === item.uri)) {
+          continue
+        }
+      }
+
       this._append(counter++, item)
     }
   }
