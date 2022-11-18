@@ -1,6 +1,6 @@
 import React from 'react'
-import {Text, TextStyle, StyleProp} from 'react-native'
-import {Link} from './Link'
+import {Text, TextStyle, StyleProp, View} from 'react-native'
+import {TextLink} from './Link'
 import {s} from '../../lib/styles'
 
 type TextSlice = {start: number; end: number}
@@ -30,26 +30,20 @@ export function RichText({
   let key = 0
   for (const segment of segments) {
     if (typeof segment === 'string') {
-      els.push(
-        <Text key={key} style={style}>
-          {segment}
-        </Text>,
-      )
+      els.push(segment)
     } else {
       els.push(
-        <Link
+        <TextLink
           key={key}
-          title={segment.text}
-          href={`/profile/${segment.entity.value}`}>
-          <Text key={key} style={[style, s.blue3]}>
-            {segment.text}
-          </Text>
-        </Link>,
+          text={segment.text}
+          href={`/profile/${segment.entity.value}`}
+          style={[style, s.blue3]}
+        />,
       )
     }
     key++
   }
-  return <>{els}</>
+  return <Text style={style}>{els}</Text>
 }
 
 function sortByIndex(a: Entity, b: Entity) {
