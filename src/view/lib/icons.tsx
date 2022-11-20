@@ -221,9 +221,11 @@ export function UserGroupIcon({
 export function UpIcon({
   style,
   size,
+  strokeWidth = 1.3,
 }: {
   style?: StyleProp<ViewStyle>
   size?: string | number
+  strokeWidth: number
 }) {
   return (
     <Svg
@@ -232,7 +234,7 @@ export function UpIcon({
       height={size || 24}
       style={style}>
       <Path
-        strokeWidth={1.3}
+        strokeWidth={strokeWidth}
         stroke="currentColor"
         d="M 7 3 L 2 8 L 4.5 8 L 4.5 11.5 L 9.5 11.5 L 9.5 8 L 12 8 L 7 3 Z"
       />

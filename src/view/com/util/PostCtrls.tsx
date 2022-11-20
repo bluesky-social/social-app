@@ -59,9 +59,9 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           <FontAwesomeIcon
             style={styles.ctrlIcon}
             icon={['far', 'comment']}
-            size={14}
+            size={16}
           />
-          <Text style={[s.gray5, s.ml5, s.f13]}>{opts.replyCount}</Text>
+          <Text style={[s.gray5, s.ml5, s.f16]}>{opts.replyCount}</Text>
         </TouchableOpacity>
       </View>
       <View style={s.flex1}>
@@ -74,14 +74,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                 opts.isReposted ? styles.ctrlIconReposted : styles.ctrlIcon
               }
               icon="retweet"
-              size={18}
+              size={20}
             />
           </Animated.View>
           <Text
             style={
               opts.isReposted
-                ? [s.bold, s.green3, s.f13, s.ml5]
-                : [s.gray5, s.f13, s.ml5]
+                ? [s.bold, s.green3, s.f16, s.ml5]
+                : [s.gray5, s.f16, s.ml5]
             }>
             {opts.repostCount}
           </Text>
@@ -95,14 +95,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             {opts.isUpvoted ? (
               <UpIconSolid style={styles.ctrlIconUpvoted} size={18} />
             ) : (
-              <UpIcon style={styles.ctrlIcon} size={18} />
+              <UpIcon style={styles.ctrlIcon} size={18} strokeWidth={1.7} />
             )}
           </Animated.View>
           <Text
             style={
               opts.isUpvoted
-                ? [s.bold, s.red3, s.f13, s.ml5]
-                : [s.gray5, s.f13, s.ml5]
+                ? [s.bold, s.red3, s.f16, s.ml5]
+                : [s.gray5, s.f16, s.ml5]
             }>
             {opts.upvoteCount}
           </Text>
@@ -116,12 +116,10 @@ export function PostCtrls(opts: PostCtrlsOpts) {
 const styles = StyleSheet.create({
   ctrls: {
     flexDirection: 'row',
-    paddingRight: 20,
   },
   ctrl: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 4,
     paddingRight: 4,
   },
   ctrlIcon: {

@@ -93,14 +93,14 @@ export function PostLoadingPlaceholder({
             <FontAwesomeIcon
               style={s.gray3}
               icon={['far', 'comment']}
-              size={14}
+              size={16}
             />
           </View>
           <View style={s.flex1}>
-            <FontAwesomeIcon style={s.gray3} icon="retweet" size={18} />
+            <FontAwesomeIcon style={s.gray3} icon="retweet" size={20} />
           </View>
           <View style={s.flex1}>
-            <UpIcon style={s.gray3} size={18} />
+            <UpIcon style={s.gray3} size={18} strokeWidth={1.7} />
           </View>
           <View style={s.flex1}></View>
         </View>
