@@ -209,6 +209,8 @@ export function UpIcon({
       <Path
         strokeWidth={strokeWidth}
         stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         d="M 7 3 L 2 8 L 4.5 8 L 4.5 11.5 L 9.5 11.5 L 9.5 8 L 12 8 L 7 3 Z"
       />
     </Svg>
@@ -232,6 +234,8 @@ export function UpIconSolid({
         strokeWidth={1.3}
         stroke="currentColor"
         fill="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         d="M 7 3 L 2 8 L 4.5 8 L 4.5 11.5 L 9.5 11.5 L 9.5 8 L 12 8 L 7 3 Z"
       />
     </Svg>
@@ -254,6 +258,8 @@ export function DownIcon({
       <Path
         strokeWidth={1.3}
         stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         d="M 7 11.5 L 2 6.5 L 4.5 6.5 L 4.5 3 L 9.5 3 L 9.5 6.5 L 12 6.5 L 7 11.5 Z"
       />
     </Svg>
@@ -277,6 +283,8 @@ export function DownIconSolid({
         strokeWidth={1.3}
         stroke="currentColor"
         fill="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         d="M 7 11.5 L 2 6.5 L 4.5 6.5 L 4.5 3 L 9.5 3 L 9.5 6.5 L 12 6.5 L 7 11.5 Z"
       />
     </Svg>
