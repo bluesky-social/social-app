@@ -65,7 +65,7 @@ export const Home = observer(function Home({
     }
   }, [visible, store])
 
-  const onComposePress = () => {
+  const onPressCompose = () => {
     store.shell.openComposer({onPost: onCreatePost})
   }
   const onCreatePost = () => {
@@ -81,12 +81,12 @@ export const Home = observer(function Home({
 
   return (
     <View style={s.flex1}>
-      <ViewHeader title="Bluesky" subtitle="Private Beta" />
       <Feed
         key="default"
         feed={defaultFeedView}
         scrollElRef={scrollElRef}
         style={{flex: 1}}
+        onPressCompose={onPressCompose}
         onPressTryAgain={onPressTryAgain}
       />
       {defaultFeedView.hasNewLatest ? (
@@ -95,7 +95,6 @@ export const Home = observer(function Home({
           <Text style={styles.loadLatestText}>Load new posts</Text>
         </TouchableOpacity>
       ) : undefined}
-      <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
   )
 })
