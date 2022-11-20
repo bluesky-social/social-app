@@ -26,6 +26,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {TABS_ENABLED} from '../../../build-flags'
 import {useStores} from '../../../state'
 import {NavigationModel} from '../../../state/models/navigation'
 import {match, MatchResult} from '../../routes'
@@ -331,11 +332,13 @@ export const MobileShell: React.FC = observer(() => {
           onPress={onPressSearch}
           onLongPress={doNewTab('/search')}
         />
-        <Btn
-          icon={isTabsSelectorActive ? 'clone' : ['far', 'clone']}
-          onPress={onPressTabs}
-          tabCount={store.nav.tabCount}
-        />
+        {TABS_ENABLED ? (
+          <Btn
+            icon={isTabsSelectorActive ? 'clone' : ['far', 'clone']}
+            onPress={onPressTabs}
+            tabCount={store.nav.tabCount}
+          />
+        ) : undefined}
         <Btn
           icon={isAtNotifications ? 'bell-solid' : 'bell'}
           onPress={onPressNotifications}

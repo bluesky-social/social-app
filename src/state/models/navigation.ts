@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx'
-import {isObj, hasProp} from '../lib/type-guards'
+import {TABS_ENABLED} from '../../build-flags'
 
 let __id = 0
 function genId() {
@@ -226,6 +226,9 @@ export class NavigationModel {
   // =
 
   newTab(url: string, title?: string) {
+    if (!TABS_ENABLED) {
+      return this.navigate(url)
+    }
     const tab = new NavigationTabModel()
     tab.navigate(url, title)
     tab.isNewTab = true
@@ -234,10 +237,16 @@ export class NavigationModel {
   }
 
   setActiveTab(tabIndex: number) {
+    if (!TABS_ENABLED) {
+      return
+    }
     this.tabIndex = Math.max(Math.min(tabIndex, this.tabs.length - 1), 0)
   }
 
   closeTab(tabIndex: number) {
+    if (!TABS_ENABLED) {
+      return
+    }
     this.tabs = [
       ...this.tabs.slice(0, tabIndex),
       ...this.tabs.slice(tabIndex + 1),

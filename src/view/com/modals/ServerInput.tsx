@@ -5,11 +5,11 @@ import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {
-  IS_PROD_BUILD,
   LOCAL_DEV_SERVICE,
   STAGING_SERVICE,
   PROD_SERVICE,
 } from '../../../state/index'
+import {LOGIN_INCLUDE_DEV_SERVERS} from '../../../build-flags'
 
 export const snapPoints = ['80%']
 
@@ -36,7 +36,7 @@ export function Component({
       <Text style={[s.textCenter, s.bold, s.f18]}>Choose Service</Text>
       <BottomSheetScrollView style={styles.inner}>
         <View style={styles.group}>
-          {!IS_PROD_BUILD ? (
+          {LOGIN_INCLUDE_DEV_SERVERS ? (
             <>
               <TouchableOpacity
                 style={styles.btn}
