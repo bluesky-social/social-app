@@ -100,7 +100,7 @@ export function PostLoadingPlaceholder({
             <FontAwesomeIcon style={s.gray3} icon="retweet" size={20} />
           </View>
           <View style={s.flex1}>
-            <UpIcon style={s.gray3} size={18} strokeWidth={1.7} />
+            <UpIcon style={s.gray3} size={19} strokeWidth={1.7} />
           </View>
           <View style={s.flex1}></View>
         </View>

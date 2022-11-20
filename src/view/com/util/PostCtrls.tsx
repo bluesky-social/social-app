@@ -61,7 +61,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             icon={['far', 'comment']}
             size={16}
           />
-          <Text style={[s.gray5, s.ml5, s.f16]}>{opts.replyCount}</Text>
+          <Text style={[s.gray5, s.ml5, s.f17]}>{opts.replyCount}</Text>
         </TouchableOpacity>
       </View>
       <View style={s.flex1}>
@@ -80,8 +80,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           <Text
             style={
               opts.isReposted
-                ? [s.bold, s.green3, s.f16, s.ml5]
-                : [s.gray5, s.f16, s.ml5]
+                ? [s.bold, s.green3, s.f17, s.ml5]
+                : [s.gray5, s.f17, s.ml5]
             }>
             {opts.repostCount}
           </Text>
@@ -93,16 +93,16 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           onPress={onPressToggleUpvoteWrapper}>
           <Animated.View style={anim2Style}>
             {opts.isUpvoted ? (
-              <UpIconSolid style={styles.ctrlIconUpvoted} size={18} />
+              <UpIconSolid style={[styles.ctrlIconUpvoted]} size={19} />
             ) : (
-              <UpIcon style={styles.ctrlIcon} size={18} strokeWidth={1.7} />
+              <UpIcon style={[styles.ctrlIcon]} size={20} strokeWidth={1.5} />
             )}
           </Animated.View>
           <Text
             style={
               opts.isUpvoted
-                ? [s.bold, s.red3, s.f16, s.ml5]
-                : [s.gray5, s.f16, s.ml5]
+                ? [s.bold, s.red3, s.f17, s.ml5]
+                : [s.gray5, s.f17, s.ml5]
             }>
             {opts.upvoteCount}
           </Text>
