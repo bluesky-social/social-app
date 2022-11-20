@@ -3,7 +3,6 @@ import {StyleSheet, Text, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ViewSelector} from '../com/util/ViewSelector'
-import {FAB} from '../com/util/FloatingActionButton'
 import {ScreenParams} from '../routes'
 import {ProfileUiModel, Sections} from '../../state/models/profile-ui'
 import {MembershipItem} from '../../state/models/memberships-view'
@@ -85,9 +84,6 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
         },
       ),
     )
-  }
-  const onComposePress = () => {
-    store.shell.openComposer({})
   }
 
   // rendering
@@ -241,7 +237,6 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
       ) : (
         renderHeader()
       )}
-      <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
   )
 })
