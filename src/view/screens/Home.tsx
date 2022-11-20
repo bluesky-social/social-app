@@ -5,7 +5,6 @@ import useAppState from 'react-native-appstate-hook'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
-import {FAB} from '../com/util/FloatingActionButton'
 import {useStores} from '../../state'
 import {FeedModel} from '../../state/models/feed-view'
 import {ScreenParams} from '../routes'
@@ -81,6 +80,7 @@ export const Home = observer(function Home({
 
   return (
     <View style={s.flex1}>
+      <ViewHeader title="Bluesky" subtitle="Private Beta" />
       <Feed
         key="default"
         feed={defaultFeedView}
