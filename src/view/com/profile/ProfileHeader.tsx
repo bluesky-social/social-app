@@ -20,6 +20,7 @@ import {
 import {pluralize} from '../../lib/strings'
 import {s, colors} from '../../lib/styles'
 import {getGradient} from '../../lib/asset-gen'
+import {MagnifyingGlassIcon} from '../../lib/icons'
 import {DropdownBtn, DropdownItem} from '../util/DropdownBtn'
 import Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -43,10 +44,8 @@ export const ProfileHeader = observer(function ProfileHeader({
   const onPressBack = () => {
     store.nav.tab.goBack()
   }
-  const onPressMyAvatar = () => {
-    if (store.me.handle) {
-      store.nav.navigate(`/profile/${store.me.handle}`)
-    }
+  const onPressSearch = () => {
+    store.nav.navigate(`/search`)
   }
   const onPressToggleFollow = () => {
     view?.toggleFollowing().then(
@@ -117,15 +116,9 @@ export const ProfileHeader = observer(function ProfileHeader({
             />
           </TouchableOpacity>
         ) : undefined}
-        {store.me.did ? (
-          <TouchableOpacity style={styles.myAvatar} onPress={onPressMyAvatar}>
-            <UserAvatar
-              size={30}
-              handle={store.me.handle || ''}
-              displayName={store.me.displayName}
-            />
-          </TouchableOpacity>
-        ) : undefined}
+        <TouchableOpacity style={styles.searchBtn} onPress={onPressSearch}>
+          <MagnifyingGlassIcon size={19} style={styles.searchIcon} />
+        </TouchableOpacity>
         <View style={styles.avi}>
           <LoadingPlaceholder
             width={80}
@@ -194,15 +187,9 @@ export const ProfileHeader = observer(function ProfileHeader({
           />
         </TouchableOpacity>
       ) : undefined}
-      {store.me.did ? (
-        <TouchableOpacity style={styles.myAvatar} onPress={onPressMyAvatar}>
-          <UserAvatar
-            size={30}
-            handle={store.me.handle || ''}
-            displayName={store.me.displayName}
-          />
-        </TouchableOpacity>
-      ) : undefined}
+      <TouchableOpacity style={styles.searchBtn} onPress={onPressSearch}>
+        <MagnifyingGlassIcon size={19} style={styles.searchIcon} />
+      </TouchableOpacity>
       <View style={styles.avi}>
         <UserAvatar
           size={80}
@@ -375,13 +362,16 @@ const styles = StyleSheet.create({
     height: 14,
     color: colors.black,
   },
-  myAvatar: {
+  searchBtn: {
     position: 'absolute',
     top: 10,
     right: 12,
     backgroundColor: '#ffff',
-    padding: 1,
+    padding: 5,
     borderRadius: 30,
+  },
+  searchIcon: {
+    color: colors.black,
   },
   avi: {
     position: 'absolute',
