@@ -14,6 +14,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from '../../lib/styles'
 import {useStores} from '../../../state'
 import {SharePostModel, ConfirmModel} from '../../../state/models/shell-ui'
+import {TABS_ENABLED} from '../../../build-flags'
 
 export interface DropdownItem {
   icon?: IconProp
@@ -82,13 +83,15 @@ export function PostDropdownBtn({
   const store = useStores()
 
   const dropdownItems: DropdownItem[] = [
-    {
-      icon: ['far', 'clone'],
-      label: 'Open in new tab',
-      onPress() {
-        store.nav.newTab(itemHref)
-      },
-    },
+    TABS_ENABLED
+      ? {
+          icon: ['far', 'clone'],
+          label: 'Open in new tab',
+          onPress() {
+            store.nav.newTab(itemHref)
+          },
+        }
+      : undefined,
     {
       icon: 'share',
       label: 'Share...',

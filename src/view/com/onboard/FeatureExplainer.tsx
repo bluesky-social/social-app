@@ -15,6 +15,7 @@ import {UserGroupIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
 import {s} from '../../lib/styles'
 import {SCENE_EXPLAINER, TABS_EXPLAINER} from '../../lib/assets'
+import {TABS_ENABLED} from '../../../build-flags'
 
 const Intro = () => (
   <View style={styles.explainer}>
@@ -85,8 +86,8 @@ export const FeatureExplainer = () => {
   const routes = [
     {key: 'intro', title: 'Intro'},
     {key: 'scenes', title: 'Scenes'},
-    {key: 'tabs', title: 'Tabs'},
-  ]
+    TABS_ENABLED ? {key: 'tabs', title: 'Tabs'} : undefined,
+  ].filter(Boolean)
 
   const onPressSkip = () => store.onboard.next()
   const onPressNext = () => {
