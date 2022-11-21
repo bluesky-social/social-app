@@ -34,6 +34,8 @@ export async function setupState() {
     if (!api.sessionManager.session && rootStore.session.isAuthed) {
       // reset session
       rootStore.session.clear()
+    } else if (api.sessionManager.session) {
+      rootStore.session.updateAuthTokens(api.sessionManager.session)
     }
   })
 
