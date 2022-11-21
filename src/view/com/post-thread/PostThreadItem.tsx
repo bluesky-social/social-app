@@ -21,11 +21,9 @@ const PARENT_REPLY_LINE_LENGTH = 8
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
-  onPressShare,
   onPostReply,
 }: {
   item: PostThreadViewPostModel
-  onPressShare: (_uri: string) => void
   onPostReply: () => void
 }) {
   const store = useStores()

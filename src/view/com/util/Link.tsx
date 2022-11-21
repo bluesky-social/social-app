@@ -10,7 +10,6 @@ import {
 } from 'react-native'
 import {useStores} from '../../../state'
 import {RootStoreModel} from '../../../state'
-import {LinkActionsModel} from '../../../state/models/shell-ui'
 
 export const Link = observer(function Link({
   style,

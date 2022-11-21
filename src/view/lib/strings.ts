@@ -140,3 +140,12 @@ export function toNiceDomain(url: string): string {
     return url
   }
 }
+
+export function toShareUrl(url: string) {
+  if (!url.startsWith('https')) {
+    const urlp = new URL('https://bsky.app')
+    urlp.pathname = url
+    url = urlp.toString()
+  }
+  return url
+}

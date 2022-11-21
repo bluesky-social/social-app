@@ -13,6 +13,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		5CEAE7B7A55582F96F1D5952 /* libPods-app.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FCB672808307A6013805A3FE /* libPods-app.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		E4BBD590292C1F5200296224 /* app.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = E4437C9E28581FA7006DA9E7 /* app.entitlements */; };
 		E4BD704B285AD57E00A8FED9 /* AppSecureRandomModule.m in Sources */ = {isa = PBXBuildFile; fileRef = E4BD704A285AD57E00A8FED9 /* AppSecureRandomModule.m */; };
 		E4BD704C285AD57E00A8FED9 /* AppSecureRandomModule.m in Sources */ = {isa = PBXBuildFile; fileRef = E4BD704A285AD57E00A8FED9 /* AppSecureRandomModule.m */; };
 		FEB90D21557517F9279AECA4 /* libPods-app-appTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BAD3BC60FA05CF2D4F6F9BA2 /* libPods-app-appTests.a */; };
@@ -248,6 +249,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4BBD590292C1F5200296224 /* app.entitlements in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);

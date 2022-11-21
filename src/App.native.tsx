@@ -1,5 +1,6 @@
 import 'react-native-url-polyfill/auto'
 import React, {useState, useEffect} from 'react'
+import {Linking} from 'react-native'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import SplashScreen from 'react-native-splash-screen'
@@ -24,6 +25,14 @@ function App() {
       .then(store => {
         setRootStore(store)
         SplashScreen.hide()
+        Linking.getInitialURL().then((url: string | null) => {
+          if (url) {
+            store.nav.handleLink(url)
+          }
+        })
+        Linking.addEventListener('url', ({url}) => {
+          store.nav.handleLink(url)
+        })
       })
   }, [])
 

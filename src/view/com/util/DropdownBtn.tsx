@@ -1,5 +1,6 @@
 import React, {useRef} from 'react'
 import {
+  Share,
   StyleProp,
   StyleSheet,
   Text,
@@ -12,8 +13,9 @@ import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import RootSiblings from 'react-native-root-siblings'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from '../../lib/styles'
+import {toShareUrl} from '../../lib/strings'
 import {useStores} from '../../../state'
-import {SharePostModel, ConfirmModel} from '../../../state/models/shell-ui'
+import {ConfirmModel} from '../../../state/models/shell-ui'
 
 export interface DropdownItem {
   icon?: IconProp
@@ -93,7 +95,7 @@ export function PostDropdownBtn({
       icon: 'share',
       label: 'Share...',
       onPress() {
-        store.shell.openModal(new SharePostModel(itemHref))
+        Share.share({url: toShareUrl(itemHref)})
       },
     },
     isAuthor

@@ -2,6 +2,7 @@ import React, {createRef, useRef, useMemo, useEffect, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -20,8 +21,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
+import {toShareUrl} from '../../lib/strings'
 import {match} from '../../routes'
-import {LinkActionsModel} from '../../../state/models/shell-ui'
 
 const TAB_HEIGHT = 42
 
@@ -69,13 +70,7 @@ export const TabsSelector = observer(
     }
     const onPressShareTab = () => {
       onClose()
-      store.shell.openModal(
-        new LinkActionsModel(
-          store.nav.tab.current.url,
-          store.nav.tab.current.title || 'This Page',
-          {newTab: false},
-        ),
-      )
+      Share.share({url: toShareUrl(store.nav.tab.current.url)})
     }
     const onPressChangeTab = (tabIndex: number) => {
       store.nav.setActiveTab(tabIndex)
