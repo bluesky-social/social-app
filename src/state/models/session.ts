@@ -1,6 +1,9 @@
 import {makeAutoObservable} from 'mobx'
 import {sessionClient as AtpApi} from '../../third-party/api/index'
-import type {SessionServiceClient} from '../../third-party/api/src/index'
+import type {
+  SessionServiceClient,
+  Session,
+} from '../../third-party/api/src/index'
 import type * as GetAccountsConfig from '../../third-party/api/src/client/types/com/atproto/server/getAccountsConfig'
 import {isObj, hasProp} from '../lib/type-guards'
 import {RootStoreModel} from './root-store'
@@ -86,6 +89,16 @@ export class SessionModel {
 
   setState(data: SessionData) {
     this.data = data
+  }
+
+  updateAuthTokens(session: Session) {
+    if (this.data) {
+      this.setState({
+        ...this.data,
+        accessJwt: session.accessJwt,
+        refreshJwt: session.refreshJwt,
+      })
+    }
   }
 
   private configureApi(): boolean {
