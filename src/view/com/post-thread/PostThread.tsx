@@ -6,7 +6,6 @@ import {
   PostThreadViewPostModel,
 } from '../../../state/models/post-thread-view'
 import {useStores} from '../../../state'
-import {SharePostModel} from '../../../state/models/shell-ui'
 import {PostThreadItem} from './PostThreadItem'
 import {ErrorMessage} from '../util/ErrorMessage'
 
@@ -17,11 +16,6 @@ export const PostThread = observer(function PostThread({
   uri: string
   view: PostThreadViewModel
 }) {
-  const store = useStores()
-
-  const onPressShare = (uri: string) => {
-    store.shell.openModal(new SharePostModel(uri))
-  }
   const onRefresh = () => {
     view?.refresh().catch(err => console.error('Failed to refresh', err))
   }
@@ -55,11 +49,7 @@ export const PostThread = observer(function PostThread({
   // =
   const posts = view.thread ? Array.from(flattenThread(view.thread)) : []
   const renderItem = ({item}: {item: PostThreadViewPostModel}) => (
-    <PostThreadItem
-      item={item}
-      onPressShare={onPressShare}
-      onPostReply={onRefresh}
-    />
+    <PostThreadItem item={item} onPostReply={onRefresh} />
   )
   return (
     <FlatList

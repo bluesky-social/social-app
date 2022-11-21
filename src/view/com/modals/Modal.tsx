@@ -7,9 +7,7 @@ import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 
 import * as models from '../../../state/models/shell-ui'
 
-import * as LinkActionsModal from './LinkActions'
 import * as ConfirmModal from './Confirm'
-import * as SharePostModal from './SharePost.native'
 import * as EditProfileModal from './EditProfile'
 import * as CreateSceneModal from './CreateScene'
 import * as InviteToSceneModal from './InviteToScene'
@@ -41,25 +39,11 @@ export const Modal = observer(function Modal() {
 
   let snapPoints: (string | number)[] = CLOSED_SNAPPOINTS
   let element
-  if (store.shell.activeModal?.name === 'link-actions') {
-    snapPoints = LinkActionsModal.snapPoints
-    element = (
-      <LinkActionsModal.Component
-        {...(store.shell.activeModal as models.LinkActionsModel)}
-      />
-    )
-  } else if (store.shell.activeModal?.name === 'confirm') {
+  if (store.shell.activeModal?.name === 'confirm') {
     snapPoints = ConfirmModal.snapPoints
     element = (
       <ConfirmModal.Component
         {...(store.shell.activeModal as models.ConfirmModel)}
-      />
-    )
-  } else if (store.shell.activeModal?.name === 'share-post') {
-    snapPoints = SharePostModal.snapPoints
-    element = (
-      <SharePostModal.Component
-        {...(store.shell.activeModal as models.SharePostModel)}
       />
     )
   } else if (store.shell.activeModal?.name === 'edit-profile') {

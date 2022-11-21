@@ -222,6 +222,24 @@ export class NavigationModel {
     this.tabs.find(t => t.id === ptr[0])?.setTitle(ptr[1], title)
   }
 
+  handleLink(url: string) {
+    let path
+    if (url.startsWith('/')) {
+      path = url
+    } else if (url.startsWith('http')) {
+      try {
+        path = new URL(url).pathname
+      } catch (e) {
+        console.error('Invalid url', url, e)
+        return
+      }
+    } else {
+      console.error('Invalid url', url)
+      return
+    }
+    this.navigate(path)
+  }
+
   // tab management
   // =
 

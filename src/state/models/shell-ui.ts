@@ -2,23 +2,6 @@ import {makeAutoObservable} from 'mobx'
 import {ProfileViewModel} from './profile-view'
 import * as Post from '../../third-party/api/src/client/types/app/bsky/feed/post'
 
-export interface LinkActionsModelOpts {
-  newTab?: boolean
-}
-export class LinkActionsModel {
-  name = 'link-actions'
-  newTab: boolean
-
-  constructor(
-    public href: string,
-    public title: string,
-    opts?: LinkActionsModelOpts,
-  ) {
-    makeAutoObservable(this)
-    this.newTab = typeof opts?.newTab === 'boolean' ? opts.newTab : true
-  }
-}
-
 export class ConfirmModel {
   name = 'confirm'
 
@@ -27,14 +10,6 @@ export class ConfirmModel {
     public message: string | (() => JSX.Element),
     public onPressConfirm: () => void | Promise<void>,
   ) {
-    makeAutoObservable(this)
-  }
-}
-
-export class SharePostModel {
-  name = 'share-post'
-
-  constructor(public href: string) {
     makeAutoObservable(this)
   }
 }
@@ -85,9 +60,7 @@ export interface ComposerOpts {
 export class ShellUiModel {
   isModalActive = false
   activeModal:
-    | LinkActionsModel
     | ConfirmModel
-    | SharePostModel
     | EditProfileModel
     | CreateSceneModel
     | ServerInputModel
@@ -101,9 +74,7 @@ export class ShellUiModel {
 
   openModal(
     modal:
-      | LinkActionsModel
       | ConfirmModel
-      | SharePostModel
       | EditProfileModel
       | CreateSceneModel
       | ServerInputModel,
