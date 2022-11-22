@@ -64,7 +64,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
                 />
                 <View style={[s.ml10]}>
                   <Text style={styles.searchResultDisplayName}>
-                    {item.displayName}
+                    {item.displayName || item.handle}
                   </Text>
                   <Text style={styles.searchResultHandle}>@{item.handle}</Text>
                 </View>
