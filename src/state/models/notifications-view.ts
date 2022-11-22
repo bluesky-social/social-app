@@ -4,7 +4,7 @@ import {RootStoreModel} from './root-store'
 import {Declaration} from './_common'
 import {hasProp} from '../lib/type-guards'
 import {APP_BSKY_GRAPH} from '../../third-party/api'
-import {cleanError} from '../../view/lib/strings'
+import {cleanError} from '../../lib/strings'
 
 const UNGROUPABLE_REASONS = ['trend', 'assertion']
 

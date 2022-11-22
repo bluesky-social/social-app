@@ -18,7 +18,7 @@ import {
   enforceLen,
   MAX_DISPLAY_NAME,
   MAX_DESCRIPTION,
-} from '../../lib/strings'
+} from '../../../lib/strings'
 import {AppBskyActorCreateScene} from '../../../third-party/api/index'
 
 export const snapPoints = ['60%']

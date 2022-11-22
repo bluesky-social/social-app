@@ -2,7 +2,7 @@ import {makeAutoObservable} from 'mobx'
 import * as Post from '../../third-party/api/src/client/types/app/bsky/feed/post'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
-import {cleanError} from '../../view/lib/strings'
+import {cleanError} from '../../lib/strings'
 
 export type PostEntities = Post.Record['entities']
 export type PostReply = Post.Record['reply']

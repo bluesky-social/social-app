@@ -7,7 +7,11 @@ import {ErrorMessage} from '../util/ErrorMessage'
 import {useStores} from '../../../state'
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {s, colors, gradients} from '../../lib/styles'
-import {enforceLen, MAX_DISPLAY_NAME, MAX_DESCRIPTION} from '../../lib/strings'
+import {
+  enforceLen,
+  MAX_DISPLAY_NAME,
+  MAX_DESCRIPTION,
+} from '../../../lib/strings'
 import * as Profile from '../../../third-party/api/src/client/types/app/bsky/actor/profile'
 
 export const snapPoints = ['60%']

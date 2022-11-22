@@ -4,7 +4,7 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {PostRepostedBy as PostRepostedByComponent} from '../com/post-thread/PostRepostedBy'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
-import {makeRecordUri} from '../lib/strings'
+import {makeRecordUri} from '../../lib/strings'
 
 export const PostRepostedBy = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()

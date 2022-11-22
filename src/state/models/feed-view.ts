@@ -4,7 +4,7 @@ import * as GetAuthorFeed from '../../third-party/api/src/client/types/app/bsky/
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
-import {cleanError} from '../../view/lib/strings'
+import {cleanError} from '../../lib/strings'
 
 export class FeedItemMyStateModel {
   repost?: string

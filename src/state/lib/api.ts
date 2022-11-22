@@ -10,7 +10,7 @@ import * as Post from '../../third-party/api/src/client/types/app/bsky/feed/post
 import {AtUri} from '../../third-party/uri'
 import {APP_BSKY_GRAPH} from '../../third-party/api'
 import {RootStoreModel} from '../models/root-store'
-import {extractEntities} from '../../view/lib/strings'
+import {extractEntities} from '../../lib/strings'
 
 export function doPolyfill() {
   AtpApi.xrpc.fetch = fetchHandler
