@@ -1,7 +1,6 @@
 import React, {useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, Text, View} from 'react-native'
-import Svg, {Line} from 'react-native-svg'
 import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -197,34 +196,8 @@ export const PostThreadItem = observer(function PostThreadItem({
   } else {
     return (
       <Link style={styles.outer} href={itemHref} title={itemTitle}>
-        {!!item.replyingToAuthor && (
-          <View style={styles.parentReplyLine}>
-            <Svg width="10" height={PARENT_REPLY_LINE_LENGTH}>
-              <Line
-                x1="5"
-                x2="5"
-                y1="0"
-                y2={PARENT_REPLY_LINE_LENGTH}
-                stroke={colors.gray2}
-                strokeWidth={2}
-              />
-            </Svg>
-          </View>
-        )}
-        {item.replies?.length !== 0 && (
-          <View style={styles.childReplyLine}>
-            <Svg width="10" height={100}>
-              <Line
-                x1="5"
-                x2="5"
-                y1="0"
-                y2={100}
-                stroke={colors.gray2}
-                strokeWidth={2}
-              />
-            </Svg>
-          </View>
-        )}
+        {!!item.replyingToAuthor && <View style={styles.parentReplyLine} />}
+        {item.replies?.length !== 0 && <View style={styles.childReplyLine} />}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
             <Link href={authorHref} title={authorTitle}>
@@ -292,14 +265,19 @@ const styles = StyleSheet.create({
   },
   parentReplyLine: {
     position: 'absolute',
-    left: 30,
+    left: 34,
     top: -1 * PARENT_REPLY_LINE_LENGTH + 6,
+    height: PARENT_REPLY_LINE_LENGTH,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.gray2,
   },
   childReplyLine: {
     position: 'absolute',
-    left: 30,
+    left: 34,
     top: 65,
     bottom: 0,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.gray2,
   },
   layout: {
     flexDirection: 'row',
