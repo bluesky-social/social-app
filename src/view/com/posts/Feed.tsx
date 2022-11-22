@@ -20,7 +20,7 @@ export const Feed = observer(function Feed({
   feed: FeedModel
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onPressCompose?: () => void
+  onPressCompose: () => void
   onPressTryAgain?: () => void
 }) {
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
@@ -65,7 +65,12 @@ export const Feed = observer(function Feed({
           onEndReached={onEndReached}
         />
       )}
-      {feed.isEmpty && <EmptyState icon="bars" message="This feed is empty!" />}
+      {feed.isEmpty && (
+        <View>
+          <ComposePrompt onPressCompose={onPressCompose} />
+          <EmptyState icon="bars" message="This feed is empty!" />
+        </View>
+      )}
     </View>
   )
 })
