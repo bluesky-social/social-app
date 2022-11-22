@@ -50,10 +50,6 @@ export class SuggestedActorsViewModel {
     await this._fetch(true)
   }
 
-  async loadMore() {
-    // TODO
-  }
-
   // state transitions
   // =
 
@@ -74,19 +70,30 @@ export class SuggestedActorsViewModel {
   // =
 
   private async _fetch(isRefreshing = false) {
+    this.suggestions.length = 0
     this._xLoading(isRefreshing)
+    let cursor
+    let res
     try {
-      const res = await this.rootStore.api.app.bsky.actor.getSuggestions()
-      this._replaceAll(res)
+      do {
+        res = await this.rootStore.api.app.bsky.actor.getSuggestions({
+          limit: 20,
+          cursor,
+        })
+        this._appendAll(res)
+        cursor = res.data.cursor
+      } while (
+        cursor &&
+        res.data.actors.length === 20 &&
+        this.suggestions.length < 20
+      )
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e.toString())
     }
   }
 
-  private _replaceAll(res: GetSuggestions.Response) {
-    this.suggestions.length = 0
-    let counter = 0
+  private _appendAll(res: GetSuggestions.Response) {
     for (const item of res.data.actors) {
       if (item.did === this.rootStore.me.did) {
         continue // skip self
@@ -95,7 +102,7 @@ export class SuggestedActorsViewModel {
         continue // skip already-followed users
       }
       this._append({
-        _reactKey: `item-${counter++}`,
+        _reactKey: `item-${this.suggestions.length}`,
         ...item,
       })
     }
