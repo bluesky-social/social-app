@@ -29,8 +29,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   const store = useStores()
   const [deleted, setDeleted] = useState(false)
   const record = item.record as unknown as PostType.Record
-  const hasEngagement =
-    item.upvoteCount || item.downvoteCount || item.repostCount
+  const hasEngagement = item.upvoteCount || item.repostCount
 
   const itemHref = useMemo(() => {
     const urip = new AtUri(item.uri)
@@ -44,11 +43,6 @@ export const PostThreadItem = observer(function PostThreadItem({
     return `/profile/${item.author.handle}/post/${urip.rkey}/upvoted-by`
   }, [item.uri, item.author.handle])
   const upvotesTitle = 'Upvotes on this post'
-  const downvotesHref = useMemo(() => {
-    const urip = new AtUri(item.uri)
-    return `/profile/${item.author.handle}/post/${urip.rkey}/downvoted-by`
-  }, [item.uri, item.author.handle])
-  const downvotesTitle = 'Downvotes on this post'
   const repostsHref = useMemo(() => {
     const urip = new AtUri(item.uri)
     return `/profile/${item.author.handle}/post/${urip.rkey}/reposted-by`
@@ -70,11 +64,6 @@ export const PostThreadItem = observer(function PostThreadItem({
     item
       .toggleUpvote()
       .catch(e => console.error('Failed to toggle upvote', record, e))
-  }
-  const onPressToggleDownvote = () => {
-    item
-      .toggleDownvote()
-      .catch(e => console.error('Failed to toggle downvote', record, e))
   }
   const onDeletePost = () => {
     item.delete().then(
@@ -186,21 +175,6 @@ export const PostThreadItem = observer(function PostThreadItem({
               ) : (
                 <></>
               )}
-              {item.downvoteCount ? (
-                <Link
-                  style={styles.expandedInfoItem}
-                  href={downvotesHref}
-                  title={downvotesTitle}>
-                  <Text style={[s.gray5, s.semiBold, s.f18]}>
-                    <Text style={[s.bold, s.black, s.f18]}>
-                      {item.downvoteCount}
-                    </Text>{' '}
-                    {pluralize(item.downvoteCount, 'downvote')}
-                  </Text>
-                </Link>
-              ) : (
-                <></>
-              )}
             </View>
           ) : (
             <></>
@@ -210,14 +184,11 @@ export const PostThreadItem = observer(function PostThreadItem({
               replyCount={item.replyCount}
               repostCount={item.repostCount}
               upvoteCount={item.upvoteCount}
-              downvoteCount={item.downvoteCount}
               isReposted={!!item.myState.repost}
               isUpvoted={!!item.myState.upvote}
-              isDownvoted={!!item.myState.downvote}
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
               onPressToggleUpvote={onPressToggleUpvote}
-              onPressToggleDownvote={onPressToggleDownvote}
             />
           </View>
         </View>
@@ -299,14 +270,11 @@ export const PostThreadItem = observer(function PostThreadItem({
               replyCount={item.replyCount}
               repostCount={item.repostCount}
               upvoteCount={item.upvoteCount}
-              downvoteCount={item.downvoteCount}
               isReposted={!!item.myState.repost}
               isUpvoted={!!item.myState.upvote}
-              isDownvoted={!!item.myState.downvote}
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
               onPressToggleUpvote={onPressToggleUpvote}
-              onPressToggleDownvote={onPressToggleDownvote}
             />
           </View>
         </View>

@@ -26,6 +26,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {TABS_ENABLED} from '../../../build-flags'
 import {useStores} from '../../../state'
 import {NavigationModel} from '../../../state/models/navigation'
 import {match, MatchResult} from '../../routes'
@@ -41,8 +42,6 @@ import {
   GridIconSolid,
   HomeIcon,
   HomeIconSolid,
-  MangifyingGlassIcon,
-  MangifyingGlassIconSolid,
   BellIcon,
   BellIconSolid,
 } from '../../lib/icons'
@@ -65,8 +64,6 @@ const Btn = ({
     | 'home-solid'
     | 'bell'
     | 'bell-solid'
-    | 'search'
-    | 'search-solid'
   notificationCount?: number
   tabCount?: number
   onPress?: (event: GestureResponderEvent) => void
@@ -85,14 +82,6 @@ const Btn = ({
   } else if (icon === 'home-solid') {
     IconEl = HomeIconSolid
     size = 24
-  } else if (icon === 'search') {
-    IconEl = MangifyingGlassIcon
-    size = 24
-    addedStyles = {position: 'relative', top: -1} as ViewStyle
-  } else if (icon === 'search-solid') {
-    IconEl = MangifyingGlassIconSolid
-    size = 24
-    addedStyles = {position: 'relative', top: -1} as ViewStyle
   } else if (icon === 'bell') {
     IconEl = BellIcon
     size = 24
@@ -147,7 +136,6 @@ export const MobileShell: React.FC = observer(() => {
       store.nav.navigate('/')
     }
   }
-  const onPressSearch = () => store.nav.navigate('/search')
   const onPressMenu = () => setMainMenuActive(true)
   const onPressNotifications = () => store.nav.navigate('/notifications')
   const onPressTabs = () => toggleTabsMenu(!isTabsSelectorActive)
@@ -261,7 +249,6 @@ export const MobileShell: React.FC = observer(() => {
   }
 
   const isAtHome = store.nav.tab.current.url === '/'
-  const isAtSearch = store.nav.tab.current.url === '/search'
   const isAtNotifications = store.nav.tab.current.url === '/notifications'
   return (
     <View style={styles.outerContainer}>
@@ -326,16 +313,13 @@ export const MobileShell: React.FC = observer(() => {
           onPress={onPressHome}
           onLongPress={doNewTab('/')}
         />
-        <Btn
-          icon={isAtSearch ? 'search-solid' : 'search'}
-          onPress={onPressSearch}
-          onLongPress={doNewTab('/search')}
-        />
-        <Btn
-          icon={isTabsSelectorActive ? 'clone' : ['far', 'clone']}
-          onPress={onPressTabs}
-          tabCount={store.nav.tabCount}
-        />
+        {TABS_ENABLED ? (
+          <Btn
+            icon={isTabsSelectorActive ? 'clone' : ['far', 'clone']}
+            onPress={onPressTabs}
+            tabCount={store.nav.tabCount}
+          />
+        ) : undefined}
         <Btn
           icon={isAtNotifications ? 'bell-solid' : 'bell'}
           onPress={onPressNotifications}
