@@ -107,6 +107,12 @@ export class NavigationTabModel {
     }
   }
 
+  goBackToZero() {
+    if (this.canGoBack) {
+      this.index = 0
+    }
+  }
+
   goForward() {
     if (this.canGoForward) {
       this.index++
