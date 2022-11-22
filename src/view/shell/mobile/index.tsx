@@ -134,7 +134,7 @@ export const MobileShell: React.FC = observer(() => {
     if (store.nav.tab.current.url === '/') {
       scrollElRef.current?.scrollToOffset({offset: 0})
     } else {
-      store.nav.navigate('/')
+      store.nav.tab.goBackToZero()
     }
   }
   const onPressMenu = () => setMainMenuActive(true)
