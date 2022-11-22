@@ -141,6 +141,23 @@ export function toNiceDomain(url: string): string {
   }
 }
 
+export function toShortUrl(url: string): string {
+  try {
+    const urlp = new URL(url)
+    const shortened =
+      urlp.host +
+      (urlp.pathname === '/' ? '' : urlp.pathname) +
+      urlp.search +
+      urlp.hash
+    if (shortened.length > 20) {
+      return shortened.slice(0, 17) + '...'
+    }
+    return shortened
+  } catch (e) {
+    return url
+  }
+}
+
 export function toShareUrl(url: string) {
   if (!url.startsWith('https')) {
     const urlp = new URL('https://bsky.app')
