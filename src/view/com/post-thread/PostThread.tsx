@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useRef} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, Text, View} from 'react-native'
 import {
@@ -16,8 +16,30 @@ export const PostThread = observer(function PostThread({
   uri: string
   view: PostThreadViewModel
 }) {
+  const ref = useRef<FlatList>(null)
+  const posts = view.thread ? Array.from(flattenThread(view.thread)) : []
   const onRefresh = () => {
     view?.refresh().catch(err => console.error('Failed to refresh', err))
+  }
+  const onLayout = () => {
+    const index = posts.findIndex(post => post._isHighlightedPost)
+    if (index !== -1) {
+      ref.current?.scrollToIndex({
+        index,
+        animated: false,
+        viewOffset: 40,
+      })
+    }
+  }
+  const onScrollToIndexFailed = (info: {
+    index: number
+    highestMeasuredFrameIndex: number
+    averageItemLength: number
+  }) => {
+    ref.current?.scrollToOffset({
+      animated: false,
+      offset: info.averageItemLength * info.index,
+    })
   }
 
   // loading
@@ -47,17 +69,19 @@ export const PostThread = observer(function PostThread({
 
   // loaded
   // =
-  const posts = view.thread ? Array.from(flattenThread(view.thread)) : []
   const renderItem = ({item}: {item: PostThreadViewPostModel}) => (
     <PostThreadItem item={item} onPostReply={onRefresh} />
   )
   return (
     <FlatList
+      ref={ref}
       data={posts}
       keyExtractor={item => item._reactKey}
       renderItem={renderItem}
       refreshing={view.isRefreshing}
       onRefresh={onRefresh}
+      onLayout={onLayout}
+      onScrollToIndexFailed={onScrollToIndexFailed}
       style={{flex: 1}}
     />
   )
