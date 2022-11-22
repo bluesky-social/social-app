@@ -20,6 +20,7 @@ import {useStores} from '../../../state'
 import * as apilib from '../../../state/lib/api'
 import {ComposerOpts} from '../../../state/models/shell-ui'
 import {s, colors, gradients} from '../../lib/styles'
+import {detectLinkables} from '../../../lib/strings'
 
 const MAX_TEXT_LENGTH = 256
 const WARNING_TEXT_LENGTH = 200
@@ -108,24 +109,18 @@ export const ComposePost = observer(function ComposePost({
       : undefined
 
   const textDecorated = useMemo(() => {
-    const re = /(@[a-z0-9\.]*)|(https?:\/\/[\S]+)/gi
-    const segments = []
-    let match
-    let start = 0
     let i = 0
-    while ((match = re.exec(text))) {
-      segments.push(text.slice(start, match.index))
-      segments.push(
-        <Text key={i++} style={{color: colors.blue3}}>
-          {match[0]}
-        </Text>,
-      )
-      start = match.index + match[0].length
-    }
-    if (start < text.length) {
-      segments.push(text.slice(start))
-    }
-    return segments
+    return detectLinkables(text).map(v => {
+      if (typeof v === 'string') {
+        return v
+      } else {
+        return (
+          <Text key={i++} style={{color: colors.blue3}}>
+            {v.link}
+          </Text>
+        )
+      }
+    })
   }, [text])
 
   return (
