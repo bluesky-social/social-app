@@ -120,12 +120,7 @@ export const SuggestedFollows = observer(
             onPressTryAgain={onPressTryAgain}
           />
         ) : view.isEmpty ? (
-          <View style={styles.emptyContainer}>
-            <Text style={[s.gray5, s.textCenter]}>
-              You already follow everybody we were going to suggest. Check back
-              in the future!
-            </Text>
-          </View>
+          <View />
         ) : (
           <View style={styles.suggestionsContainer}>
             <FlatList
