@@ -22,6 +22,9 @@ interface PostCtrlsOpts {
   onPressToggleUpvote: () => void
 }
 
+const redgray = '#7A6161'
+const sRedgray = {color: redgray}
+
 export function PostCtrls(opts: PostCtrlsOpts) {
   const interp1 = useSharedValue<number>(0)
   const interp2 = useSharedValue<number>(0)
@@ -59,9 +62,9 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           <FontAwesomeIcon
             style={styles.ctrlIcon}
             icon={['far', 'comment']}
-            size={16}
+            size={14}
           />
-          <Text style={[s.gray5, s.ml5, s.f17]}>{opts.replyCount}</Text>
+          <Text style={[sRedgray, s.ml5, s.f16]}>{opts.replyCount}</Text>
         </TouchableOpacity>
       </View>
       <View style={s.flex1}>
@@ -74,14 +77,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                 opts.isReposted ? styles.ctrlIconReposted : styles.ctrlIcon
               }
               icon="retweet"
-              size={20}
+              size={18}
             />
           </Animated.View>
           <Text
             style={
               opts.isReposted
-                ? [s.bold, s.green3, s.f17, s.ml5]
-                : [s.gray5, s.f17, s.ml5]
+                ? [s.bold, s.green3, s.f16, s.ml5]
+                : [sRedgray, s.f16, s.ml5]
             }>
             {opts.repostCount}
           </Text>
@@ -93,16 +96,16 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           onPress={onPressToggleUpvoteWrapper}>
           <Animated.View style={anim2Style}>
             {opts.isUpvoted ? (
-              <UpIconSolid style={[styles.ctrlIconUpvoted]} size={19} />
+              <UpIconSolid style={[styles.ctrlIconUpvoted]} size={18} />
             ) : (
-              <UpIcon style={[styles.ctrlIcon]} size={20} strokeWidth={1.5} />
+              <UpIcon style={[styles.ctrlIcon]} size={18} strokeWidth={1.5} />
             )}
           </Animated.View>
           <Text
             style={
               opts.isUpvoted
-                ? [s.bold, s.red3, s.f17, s.ml5]
-                : [s.gray5, s.f17, s.ml5]
+                ? [s.bold, s.red3, s.f16, s.ml5]
+                : [sRedgray, s.f16, s.ml5]
             }>
             {opts.upvoteCount}
           </Text>
@@ -123,7 +126,7 @@ const styles = StyleSheet.create({
     paddingRight: 4,
   },
   ctrlIcon: {
-    color: colors.gray4,
+    color: redgray,
   },
   ctrlIconReposted: {
     color: colors.green3,
