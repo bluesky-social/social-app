@@ -308,7 +308,11 @@ export const MobileShell: React.FC = observer(() => {
         tabMenuInterp={tabMenuInterp}
         onClose={() => toggleTabsMenu(false)}
       />
-      <SafeAreaView style={styles.bottomBar}>
+      <View
+        style={[
+          styles.bottomBar,
+          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
+        ]}>
         <Btn
           icon={isAtHome ? 'home-solid' : 'home'}
           onPress={onPressHome}
@@ -331,7 +335,7 @@ export const MobileShell: React.FC = observer(() => {
           icon={isMainMenuActive ? 'menu-solid' : 'menu'}
           onPress={onPressMenu}
         />
-      </SafeAreaView>
+      </View>
       <MainMenu
         active={isMainMenuActive}
         onClose={() => setMainMenuActive(false)}
@@ -483,11 +487,11 @@ const styles = StyleSheet.create({
   ctrl: {
     flex: 1,
     paddingTop: 15,
-    paddingBottom: 15,
+    paddingBottom: 5,
   },
   notificationCount: {
     position: 'absolute',
-    left: 46,
+    left: '60%',
     top: 10,
     backgroundColor: colors.red3,
     paddingHorizontal: 4,
