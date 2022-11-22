@@ -83,6 +83,7 @@ export const PostThread = observer(function PostThread({
       onLayout={onLayout}
       onScrollToIndexFailed={onScrollToIndexFailed}
       style={{flex: 1}}
+      contentContainerStyle={{paddingBottom: 200}}
     />
   )
 })
