@@ -82,19 +82,59 @@ export function extractEntities(
   }
   {
     // links
-    const re = /(^|\s)(https?:\/\/[\S]+)(\b)/dg
+    const re =
+      /(^|\s)((https?:\/\/[\S]+)|([a-z][a-z0-9]*\.[a-z0-9\.]+[\S]*))(\b)/dg
     while ((match = re.exec(text))) {
+      let value = match[2]
+      if (!value.startsWith('http')) {
+        value = `https://${value}`
+      }
       ents.push({
         type: 'link',
-        value: match[2],
+        value,
         index: {
-          start: match.indices[1][0], // skip the (^|\s) but include the '@'
+          start: match.indices[2][0], // skip the (^|\s)
           end: match.indices[2][1],
         },
       })
     }
   }
   return ents.length > 0 ? ents : undefined
+}
+
+interface DetectedLink {
+  link: string
+}
+type DetectedLinkable = string | DetectedLink
+export function detectLinkables(text: string): DetectedLinkable[] {
+  const re =
+    /((^|\s)@[a-z0-9\.-]*)|((^|\s)https?:\/\/[\S]+)|((^|\s)[a-z][a-z0-9]*\.[a-z0-9\.]+[\S]*)/gi
+  const segments = []
+  let match
+  let start = 0
+  while ((match = re.exec(text))) {
+    let matchIndex = match.index
+    let matchValue = match[0]
+
+    if (/\s/.test(matchValue)) {
+      // HACK
+      // skip the starting space
+      // we have to do this because RN doesnt support negative lookaheads
+      // -prf
+      matchIndex++
+      matchValue = matchValue.slice(1)
+    }
+
+    if (start !== matchIndex) {
+      segments.push(text.slice(start, matchIndex))
+    }
+    segments.push({link: matchValue})
+    start = matchIndex + matchValue.length
+  }
+  if (start < text.length) {
+    segments.push(text.slice(start))
+  }
+  return segments
 }
 
 export function makeValidHandle(str: string): string {

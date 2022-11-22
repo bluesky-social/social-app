@@ -77,7 +77,9 @@ function* toSegments(text: string, entities: Entity[]) {
       let subtext = text.slice(currEnt.index.start, currEnt.index.end)
       if (
         !subtext.trim() ||
-        stripUsername(subtext) !== stripUsername(currEnt.value)
+        (currEnt.type === 'mention' &&
+          stripUsername(subtext) !== stripUsername(currEnt.value)) ||
+        (currEnt.type === 'link' && !isSameLink(subtext, currEnt.value))
       ) {
         // dont yield links to empty strings or strings that don't match the entity value
         yield subtext
@@ -98,4 +100,10 @@ function* toSegments(text: string, entities: Entity[]) {
 
 function stripUsername(v: string): string {
   return v.trim().replace('@', '')
+}
+
+function isSameLink(a: string, b: string) {
+  a = a.startsWith('http') ? a : `https://${a}`
+  b = b.startsWith('http') ? b : `https://${b}`
+  return a === b
 }
