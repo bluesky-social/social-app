@@ -1,7 +1,8 @@
 import React from 'react'
-import {Text, TextStyle, StyleProp, View} from 'react-native'
+import {Text, TextStyle, StyleProp} from 'react-native'
 import {TextLink} from './Link'
 import {s} from '../../lib/styles'
+import {toShortUrl} from '../../../lib/strings'
 
 type TextSlice = {start: number; end: number}
 type Entity = {
@@ -45,7 +46,7 @@ export function RichText({
         els.push(
           <TextLink
             key={key}
-            text={segment.text}
+            text={toShortUrl(segment.text)}
             href={segment.entity.value}
             style={[style, s.blue3]}
           />,
