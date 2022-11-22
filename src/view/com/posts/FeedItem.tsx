@@ -53,11 +53,6 @@ export const FeedItem = observer(function FeedItem({
       .toggleUpvote()
       .catch(e => console.error('Failed to toggle upvote', record, e))
   }
-  const onPressToggleDownvote = () => {
-    item
-      .toggleDownvote()
-      .catch(e => console.error('Failed to toggle downvote', record, e))
-  }
   const onDeletePost = () => {
     item.delete().then(
       () => {
@@ -150,14 +145,11 @@ export const FeedItem = observer(function FeedItem({
             replyCount={item.replyCount}
             repostCount={item.repostCount}
             upvoteCount={item.upvoteCount}
-            downvoteCount={item.downvoteCount}
             isReposted={!!item.myState.repost}
             isUpvoted={!!item.myState.upvote}
-            isDownvoted={!!item.myState.downvote}
             onPressReply={onPressReply}
             onPressToggleRepost={onPressToggleRepost}
             onPressToggleUpvote={onPressToggleUpvote}
-            onPressToggleDownvote={onPressToggleDownvote}
           />
         </View>
       </View>

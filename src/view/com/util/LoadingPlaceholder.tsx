@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {UpIcon, DownIcon} from '../../lib/icons'
+import {UpIcon} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
 
 export function LoadingPlaceholder({
@@ -93,18 +93,16 @@ export function PostLoadingPlaceholder({
             <FontAwesomeIcon
               style={s.gray3}
               icon={['far', 'comment']}
-              size={14}
+              size={16}
             />
           </View>
           <View style={s.flex1}>
-            <FontAwesomeIcon style={s.gray3} icon="retweet" size={18} />
+            <FontAwesomeIcon style={s.gray3} icon="retweet" size={20} />
           </View>
           <View style={s.flex1}>
-            <UpIcon style={s.gray3} size={18} />
+            <UpIcon style={s.gray3} size={19} strokeWidth={1.7} />
           </View>
-          <View style={s.flex1}>
-            <DownIcon style={s.gray3} size={18} />
-          </View>
+          <View style={s.flex1}></View>
         </View>
       </View>
     </View>

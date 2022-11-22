@@ -5,7 +5,6 @@ import useAppState from 'react-native-appstate-hook'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
-import {FAB} from '../com/util/FloatingActionButton'
 import {useStores} from '../../state'
 import {FeedModel} from '../../state/models/feed-view'
 import {ScreenParams} from '../routes'
@@ -65,7 +64,7 @@ export const Home = observer(function Home({
     }
   }, [visible, store])
 
-  const onComposePress = () => {
+  const onPressCompose = () => {
     store.shell.openComposer({onPost: onCreatePost})
   }
   const onCreatePost = () => {
@@ -87,6 +86,7 @@ export const Home = observer(function Home({
         feed={defaultFeedView}
         scrollElRef={scrollElRef}
         style={{flex: 1}}
+        onPressCompose={onPressCompose}
         onPressTryAgain={onPressTryAgain}
       />
       {defaultFeedView.hasNewLatest ? (
@@ -95,7 +95,6 @@ export const Home = observer(function Home({
           <Text style={styles.loadLatestText}>Load new posts</Text>
         </TouchableOpacity>
       ) : undefined}
-      <FAB icon="pen-nib" onPress={onComposePress} />
     </View>
   )
 })

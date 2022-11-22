@@ -3,6 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserAvatar} from './UserAvatar'
 import {colors} from '../../lib/styles'
+import {MagnifyingGlassIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
 
 export function ViewHeader({
@@ -16,16 +17,14 @@ export function ViewHeader({
   const onPressBack = () => {
     store.nav.tab.goBack()
   }
-  const onPressAvatar = () => {
-    if (store.me.handle) {
-      store.nav.navigate(`/profile/${store.me.handle}`)
-    }
+  const onPressSearch = () => {
+    store.nav.navigate(`/search`)
   }
   return (
     <View style={styles.header}>
       {store.nav.tab.canGoBack ? (
         <TouchableOpacity onPress={onPressBack} style={styles.backIcon}>
-          <FontAwesomeIcon size={18} icon="angle-left" style={{marginTop: 3}} />
+          <FontAwesomeIcon size={18} icon="angle-left" style={{marginTop: 6}} />
         </TouchableOpacity>
       ) : (
         <View style={styles.cornerPlaceholder} />
@@ -38,17 +37,9 @@ export function ViewHeader({
           </Text>
         ) : undefined}
       </View>
-      {store.me.did ? (
-        <TouchableOpacity onPress={onPressAvatar}>
-          <UserAvatar
-            size={24}
-            handle={store.me.handle || ''}
-            displayName={store.me.displayName}
-          />
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.cornerPlaceholder} />
-      )}
+      <TouchableOpacity onPress={onPressSearch} style={styles.searchBtn}>
+        <MagnifyingGlassIcon size={17} style={styles.searchBtnIcon} />
+      </TouchableOpacity>
     </View>
   )
 }
@@ -83,8 +74,22 @@ const styles = StyleSheet.create({
   },
 
   cornerPlaceholder: {
-    width: 24,
-    height: 24,
+    width: 30,
+    height: 30,
   },
-  backIcon: {width: 24, height: 24},
+  backIcon: {width: 30, height: 30},
+  searchBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.gray1,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+  },
+  searchBtnIcon: {
+    color: colors.black,
+    position: 'relative',
+    top: -1,
+  },
 })
