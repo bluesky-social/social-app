@@ -7,12 +7,17 @@ import {FeedModel} from './feed-view'
 
 export enum Sections {
   Posts = 'Posts',
+  PostsWithReplies = 'Posts & replies',
   Scenes = 'Scenes',
   Trending = 'Trending',
   Members = 'Members',
 }
 
-const USER_SELECTOR_ITEMS = [Sections.Posts, Sections.Scenes]
+const USER_SELECTOR_ITEMS = [
+  Sections.Posts,
+  Sections.PostsWithReplies,
+  Sections.Scenes,
+]
 const SCENE_SELECTOR_ITEMS = [Sections.Trending, Sections.Members]
 
 export interface ProfileUiParams {
@@ -53,6 +58,7 @@ export class ProfileUiModel {
   get currentView(): FeedModel | MembershipsViewModel | MembersViewModel {
     if (
       this.selectedView === Sections.Posts ||
+      this.selectedView === Sections.PostsWithReplies ||
       this.selectedView === Sections.Trending
     ) {
       return this.feed

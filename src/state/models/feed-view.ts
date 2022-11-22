@@ -196,6 +196,10 @@ export class FeedModel {
     return this.hasLoaded && !this.hasContent
   }
 
+  get nonReplyFeed() {
+    return this.feed.filter(post => !post.record.reply)
+  }
+
   setHasNewLatest(v: boolean) {
     this.hasNewLatest = v
   }

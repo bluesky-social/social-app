@@ -121,10 +121,15 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
     } else {
       if (
         uiState.selectedView === Sections.Posts ||
+        uiState.selectedView === Sections.PostsWithReplies ||
         uiState.selectedView === Sections.Trending
       ) {
         if (uiState.feed.hasContent) {
-          items = uiState.feed.feed.slice()
+          if (uiState.selectedView === Sections.Posts) {
+            items = uiState.feed.nonReplyFeed
+          } else {
+            items = uiState.feed.feed.slice()
+          }
           if (!uiState.feed.hasMore) {
             items.push(END_ITEM)
           }
