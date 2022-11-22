@@ -20,7 +20,7 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
         />
       </TouchableOpacity>
       <View style={styles.textContainer}>
-        <Text style={styles.text}>What's happening?</Text>
+        <Text style={styles.text}>What's up?</Text>
       </View>
       <View style={styles.btn}>
         <Text style={styles.btnText}>Post</Text>
