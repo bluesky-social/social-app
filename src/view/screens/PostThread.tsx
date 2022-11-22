@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {makeRecordUri} from '../lib/strings'
+import {makeRecordUri} from '../../lib/strings'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {PostThreadViewModel} from '../../state/models/post-thread-view'

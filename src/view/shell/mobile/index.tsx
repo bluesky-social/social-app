@@ -37,6 +37,7 @@ import {MainMenu} from './MainMenu'
 import {TabsSelector} from './TabsSelector'
 import {Composer} from './Composer'
 import {s, colors} from '../../lib/styles'
+import {clamp} from '../../../lib/numbers'
 import {
   GridIcon,
   GridIconSolid,

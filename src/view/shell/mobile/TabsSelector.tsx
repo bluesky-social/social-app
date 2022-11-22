@@ -21,7 +21,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
-import {toShareUrl} from '../../lib/strings'
+import {toShareUrl} from '../../../lib/strings'
 import {match} from '../../routes'
 
 const TAB_HEIGHT = 42

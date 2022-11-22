@@ -17,7 +17,7 @@ import {
   EditProfileModel,
   InviteToSceneModel,
 } from '../../../state/models/shell-ui'
-import {pluralize} from '../../lib/strings'
+import {pluralize} from '../../../lib/strings'
 import {s, colors} from '../../lib/styles'
 import {getGradient} from '../../lib/asset-gen'
 import {MagnifyingGlassIcon} from '../../lib/icons'

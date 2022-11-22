@@ -1,6 +1,6 @@
-import {AtUri} from '../../third-party/uri'
-import {Entity} from '../../third-party/api/src/client/types/app/bsky/feed/post'
-import {PROD_SERVICE} from '../../state'
+import {AtUri} from '../third-party/uri'
+import {Entity} from '../third-party/api/src/client/types/app/bsky/feed/post'
+import {PROD_SERVICE} from '../state'
 
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256

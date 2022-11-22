@@ -4,7 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Link} from '../util/Link'
 import {PostDropdownBtn} from '../util/DropdownBtn'
 import {s} from '../../lib/styles'
-import {ago} from '../../lib/strings'
+import {ago} from '../../../lib/strings'
 
 interface PostMetaOpts {
   itemHref: string

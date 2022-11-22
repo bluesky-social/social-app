@@ -1,4 +1,4 @@
-import {extractEntities} from '../src/view/lib/strings'
+import {extractEntities} from '../src/lib/strings'
 
 describe('extractEntities', () => {
   const inputs = [

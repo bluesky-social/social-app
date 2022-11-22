@@ -16,7 +16,11 @@ import * as EmailValidator from 'email-validator'
 import {observer} from 'mobx-react-lite'
 import {Picker} from '../com/util/Picker'
 import {s, colors} from '../lib/styles'
-import {makeValidHandle, createFullHandle, toNiceDomain} from '../lib/strings'
+import {
+  makeValidHandle,
+  createFullHandle,
+  toNiceDomain,
+} from '../../lib/strings'
 import {useStores, DEFAULT_SERVICE} from '../../state'
 import {ServiceDescription} from '../../state/models/session'
 import {ServerInputModel} from '../../state/models/shell-ui'
