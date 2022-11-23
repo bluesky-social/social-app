@@ -175,7 +175,7 @@ export const ComposePost = observer(function ComposePost({
           style={[s.flexRow, {alignItems: 'center'}, s.pt10, s.pb10, s.pr5]}>
           <View style={s.flex1} />
           <Text style={[s.mr10, {color: progressColor}]}>
-            {text.length} / {MAX_TEXT_LENGTH}
+            {MAX_TEXT_LENGTH - text.length}
           </Text>
           <View>
             <ProgressCircle
