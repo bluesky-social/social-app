@@ -83,7 +83,7 @@ export function extractEntities(
   {
     // links
     const re =
-      /(^|\s)((https?:\/\/[\S]+)|([a-z][a-z0-9]*\.[a-z0-9\.]+[\S]*))(\b)/dg
+      /(^|\s)((https?:\/\/[\S]+)|([a-z][a-z0-9]*(\.[a-z0-9]+)+[\S]*))(\b)/dg
     while ((match = re.exec(text))) {
       let value = match[2]
       if (!value.startsWith('http')) {
@@ -108,7 +108,7 @@ interface DetectedLink {
 type DetectedLinkable = string | DetectedLink
 export function detectLinkables(text: string): DetectedLinkable[] {
   const re =
-    /((^|\s)@[a-z0-9\.-]*)|((^|\s)https?:\/\/[\S]+)|((^|\s)[a-z][a-z0-9]*\.[a-z0-9\.]+[\S]*)/gi
+    /((^|\s)@[a-z0-9\.-]*)|((^|\s)https?:\/\/[\S]+)|((^|\s)[a-z][a-z0-9]*(\.[a-z0-9]+)+[\S]*)/gi
   const segments = []
   let match
   let start = 0
