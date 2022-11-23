@@ -198,11 +198,23 @@ export function toShortUrl(url: string): string {
   }
 }
 
-export function toShareUrl(url: string) {
+export function toShareUrl(url: string): string {
   if (!url.startsWith('https')) {
     const urlp = new URL('https://bsky.app')
     urlp.pathname = url
     url = urlp.toString()
+  }
+  return url
+}
+
+export function convertBskyAppUrlIfNeeded(url: string): string {
+  if (url.startsWith('https://bsky.app/')) {
+    try {
+      const urlp = new URL(url)
+      return urlp.pathname
+    } catch (e) {
+      console.log('Unexpected error in convertBskyAppUrlIfNeeded()', e)
+    }
   }
   return url
 }
