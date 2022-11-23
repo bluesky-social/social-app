@@ -488,7 +488,8 @@ function preprocessFeed(
   for (let i = feed.length - 1; i >= 0; i--) {
     const item = feed[i] as FeedItemWithThreadMeta
 
-    if (dedup) {
+    // dont dedup the first item so that polling works properly
+    if (dedup && i !== 0) {
       if (reorg.find(item2 => item2.uri === item.uri)) {
         continue
       }
