@@ -1,17 +1,21 @@
-import {extractEntities, detectLinkables} from '../src/lib/strings'
+import {
+  extractEntities,
+  detectLinkables,
+  extractHtmlMeta,
+} from '../src/lib/strings'
 
 describe('extractEntities', () => {
-  const knownHandles = new Set(['handle', 'full123.test-of-chars'])
+  const knownHandles = new Set(['handle.com', 'full123.test-of-chars'])
   const inputs = [
     'no mention',
-    '@handle middle end',
-    'start @handle end',
-    'start middle @handle',
-    '@handle @handle @handle',
+    '@handle.com middle end',
+    'start @handle.com end',
+    'start middle @handle.com',
+    '@handle.com @handle.com @handle.com',
     '@full123.test-of-chars',
     'not@right',
-    '@handle!@#$chars',
-    '@handle\n@handle',
+    '@handle.com!@#$chars',
+    '@handle.com\n@handle.com',
     'start https://middle.com end',
     'start https://middle.com/foo/bar end',
     'start https://middle.com/foo/bar?baz=bux end',
@@ -35,13 +39,13 @@ describe('extractEntities', () => {
   }
   const outputs: Output[][] = [
     [],
-    [{type: 'mention', value: 'handle'}],
-    [{type: 'mention', value: 'handle'}],
-    [{type: 'mention', value: 'handle'}],
+    [{type: 'mention', value: 'handle.com'}],
+    [{type: 'mention', value: 'handle.com'}],
+    [{type: 'mention', value: 'handle.com'}],
     [
-      {type: 'mention', value: 'handle'},
-      {type: 'mention', value: 'handle'},
-      {type: 'mention', value: 'handle'},
+      {type: 'mention', value: 'handle.com'},
+      {type: 'mention', value: 'handle.com'},
+      {type: 'mention', value: 'handle.com'},
     ],
     [
       {
@@ -50,10 +54,10 @@ describe('extractEntities', () => {
       },
     ],
     [],
-    [{type: 'mention', value: 'handle'}],
+    [{type: 'mention', value: 'handle.com'}],
     [
-      {type: 'mention', value: 'handle'},
-      {type: 'mention', value: 'handle'},
+      {type: 'mention', value: 'handle.com'},
+      {type: 'mention', value: 'handle.com'},
     ],
     [{type: 'link', value: 'https://middle.com'}],
     [{type: 'link', value: 'https://middle.com/foo/bar'}],
@@ -172,6 +176,48 @@ describe('detectLinkables', () => {
     for (let i = 0; i < inputs.length; i++) {
       const input = inputs[i]
       const output = detectLinkables(input)
+      expect(output).toEqual(outputs[i])
+    }
+  })
+})
+
+describe('extractHtmlMeta', () => {
+  const inputs = [
+    '',
+    'nothing',
+    '<title>title</title>',
+    '<title> aSd!@#AC </title>',
+    '<title>\n  title\n  </title>',
+    '<meta name="title" content="meta title">',
+    '<meta name="description" content="meta description">',
+    '<meta property="og:title" content="og title">',
+    '<meta property="og:description" content="og description">',
+    '<meta property="og:image" content="https://ogimage.com/foo.png">',
+    '<meta property="twitter:title" content="twitter title">',
+    '<meta property="twitter:description" content="twitter description">',
+    '<meta property="twitter:image" content="https://twitterimage.com/foo.png">',
+    '<meta\n  name="title"\n  content="meta title"\n>',
+  ]
+  const outputs = [
+    {},
+    {},
+    {title: 'title'},
+    {title: 'aSd!@#AC'},
+    {title: 'title'},
+    {title: 'meta title'},
+    {description: 'meta description'},
+    {title: 'og title'},
+    {description: 'og description'},
+    {image: 'https://ogimage.com/foo.png'},
+    {title: 'twitter title'},
+    {description: 'twitter description'},
+    {image: 'https://twitterimage.com/foo.png'},
+    {title: 'meta title'},
+  ]
+  it('correctly handles a set of text inputs', () => {
+    for (let i = 0; i < inputs.length; i++) {
+      const input = inputs[i]
+      const output = extractHtmlMeta(input)
       expect(output).toEqual(outputs[i])
     }
   })
