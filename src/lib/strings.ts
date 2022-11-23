@@ -69,6 +69,8 @@ export function extractEntities(
     while ((match = re.exec(text))) {
       if (knownHandles && !knownHandles.has(match[3])) {
         continue // not a known handle
+      } else if (!match[3].includes('.')) {
+        continue // probably not a handle
       }
       ents.push({
         type: 'mention',

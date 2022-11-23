@@ -1,6 +1,8 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import * as GetProfile from '../../third-party/api/src/client/types/app/bsky/actor/getProfile'
 import * as Profile from '../../third-party/api/src/client/types/app/bsky/actor/profile'
+import {Entity} from '../../third-party/api/src/client/types/app/bsky/feed/post'
+import {extractEntities} from '../../lib/strings'
 import {Declaration} from './_common'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
@@ -40,6 +42,9 @@ export class ProfileViewModel {
   membersCount: number = 0
   postsCount: number = 0
   myState = new ProfileViewMyStateModel()
+
+  // added data
+  descriptionEntities?: Entity[]
 
   constructor(
     public rootStore: RootStoreModel,
@@ -163,5 +168,6 @@ export class ProfileViewModel {
     if (res.data.myState) {
       Object.assign(this.myState, res.data.myState)
     }
+    this.descriptionEntities = extractEntities(this.description || '')
   }
 }

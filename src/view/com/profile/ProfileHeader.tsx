@@ -24,6 +24,7 @@ import {MagnifyingGlassIcon} from '../../lib/icons'
 import {DropdownBtn, DropdownItem} from '../util/DropdownBtn'
 import Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {RichText} from '../util/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {UserInfoText} from '../util/UserInfoText'
@@ -293,9 +294,12 @@ export const ProfileHeader = observer(function ProfileHeader({
           </View>
         </View>
         {view.description ? (
-          <Text style={styles.description} numberOfLines={3}>
-            {view.description}
-          </Text>
+          <RichText
+            style={styles.description}
+            numberOfLines={3}
+            text={view.description}
+            entities={view.descriptionEntities}
+          />
         ) : undefined}
         {view.isScene && view.creator ? (
           <View style={styles.relationshipsLine}>
