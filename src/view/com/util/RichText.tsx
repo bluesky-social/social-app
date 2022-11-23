@@ -15,10 +15,12 @@ export function RichText({
   text,
   entities,
   style,
+  numberOfLines,
 }: {
   text: string
   entities?: Entity[]
   style?: StyleProp<TextStyle>
+  numberOfLines?: number
 }) {
   if (!entities?.length) {
     return <Text style={style}>{text}</Text>
@@ -55,7 +57,11 @@ export function RichText({
     }
     key++
   }
-  return <Text style={style}>{els}</Text>
+  return (
+    <Text style={style} numberOfLines={numberOfLines}>
+      {els}
+    </Text>
+  )
 }
 
 function sortByIndex(a: Entity, b: Entity) {
