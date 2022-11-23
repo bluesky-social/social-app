@@ -5,6 +5,13 @@ import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 import {cleanError} from '../../lib/strings'
+import {isObj, hasProp} from '../lib/type-guards'
+
+type FeedItem = GetTimeline.FeedItem | GetAuthorFeed.FeedItem
+type FeedItemWithThreadMeta = FeedItem & {
+  _isThreadParent?: boolean
+  _isThreadChild?: boolean
+}
 
 export class FeedItemMyStateModel {
   repost?: string
@@ -19,6 +26,8 @@ export class FeedItemMyStateModel {
 export class FeedItemModel implements GetTimeline.FeedItem {
   // ui state
   _reactKey: string = ''
+  _isThreadParent: boolean = false
+  _isThreadChild: boolean = false
 
   // data
   uri: string = ''
@@ -46,11 +55,13 @@ export class FeedItemModel implements GetTimeline.FeedItem {
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
-    v: GetTimeline.FeedItem | GetAuthorFeed.FeedItem,
+    v: FeedItemWithThreadMeta,
   ) {
     makeAutoObservable(this, {rootStore: false})
     this._reactKey = reactKey
     this.copy(v)
+    this._isThreadParent = v._isThreadParent || false
+    this._isThreadChild = v._isThreadChild || false
   }
 
   copy(v: GetTimeline.FeedItem | GetAuthorFeed.FeedItem) {
@@ -197,7 +208,9 @@ export class FeedModel {
   }
 
   get nonReplyFeed() {
-    return this.feed.filter(post => !post.record.reply)
+    return this.feed.filter(
+      post => !post.record.reply || post._isThreadParent || post._isThreadChild,
+    )
   }
 
   setHasNewLatest(v: boolean) {
@@ -391,17 +404,18 @@ export class FeedModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     let counter = this.feed.length
-    for (const item of res.data.feed) {
-      // HACK
-      // deduplicate posts on the home feed
-      // (should be done on the server)
-      // -prf
-      if (this.feedType === 'home') {
-        if (this.feed.find(item2 => item2.uri === item.uri)) {
-          continue
-        }
-      }
 
+    // HACK 1
+    // rearrange the posts to represent threads
+    // (should be done on the server)
+    // -prf
+    // HACK 2
+    // deduplicate posts on the home feed
+    // (should be done on the server)
+    // -prf
+    const reorgedFeed = preprocessFeed(res.data.feed, this.feedType === 'home')
+
+    for (const item of reorgedFeed) {
       this._append(counter++, item)
     }
   }
@@ -462,6 +476,53 @@ export class FeedModel {
       return this.rootStore.api.app.bsky.feed.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,
       )
+    }
+  }
+}
+
+function preprocessFeed(
+  feed: FeedItem[],
+  dedup: boolean,
+): FeedItemWithThreadMeta[] {
+  const reorg: FeedItemWithThreadMeta[] = []
+  for (let i = feed.length - 1; i >= 0; i--) {
+    const item = feed[i] as FeedItemWithThreadMeta
+
+    if (dedup) {
+      if (reorg.find(item2 => item2.uri === item.uri)) {
+        continue
+      }
+    }
+
+    const selfReplyUri = getSelfReplyUri(item)
+    if (selfReplyUri) {
+      const parentIndex = reorg.findIndex(item2 => item2.uri === selfReplyUri)
+      if (parentIndex !== -1 && !reorg[parentIndex]._isThreadParent) {
+        reorg[parentIndex]._isThreadParent = true
+        item._isThreadChild = true
+        reorg.splice(parentIndex + 1, 0, item)
+        continue
+      }
+    }
+    reorg.unshift(item)
+  }
+  return reorg
+}
+
+function getSelfReplyUri(
+  item: GetTimeline.FeedItem | GetAuthorFeed.FeedItem,
+): string | undefined {
+  if (
+    isObj(item.record) &&
+    hasProp(item.record, 'reply') &&
+    isObj(item.record.reply) &&
+    hasProp(item.record.reply, 'parent') &&
+    isObj(item.record.reply.parent) &&
+    hasProp(item.record.reply.parent, 'uri') &&
+    typeof item.record.reply.parent.uri === 'string'
+  ) {
+    if (new AtUri(item.record.reply.parent.uri).host === item.author.did) {
+      return item.record.reply.parent.uri
     }
   }
 }
