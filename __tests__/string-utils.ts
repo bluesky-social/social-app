@@ -26,6 +26,7 @@ describe('extractEntities', () => {
     'start.com/foo/bar?baz=bux#hash middle end',
     'start middle end.com/foo/bar?baz=bux#hash',
     'newline1.com\nnewline2.com',
+    'not.. a..url ..here',
   ]
   interface Output {
     type: string
@@ -74,6 +75,7 @@ describe('extractEntities', () => {
       {type: 'link', value: 'newline1.com', noScheme: true},
       {type: 'link', value: 'newline2.com', noScheme: true},
     ],
+    [],
   ]
   it('correctly handles a set of text inputs', () => {
     for (let i = 0; i < inputs.length; i++) {
@@ -138,6 +140,7 @@ describe('detectLinkables', () => {
     'start.com/foo/bar?baz=bux#hash middle end',
     'start middle end.com/foo/bar?baz=bux#hash',
     'newline1.com\nnewline2.com',
+    'not.. a..url ..here',
   ]
   const outputs = [
     ['no linkable'],
@@ -163,6 +166,7 @@ describe('detectLinkables', () => {
     [{link: 'start.com/foo/bar?baz=bux#hash'}, ' middle end'],
     ['start middle ', {link: 'end.com/foo/bar?baz=bux#hash'}],
     [{link: 'newline1.com'}, '\n', {link: 'newline2.com'}],
+    ['not.. a..url ..here'],
   ]
   it('correctly handles a set of text inputs', () => {
     for (let i = 0; i < inputs.length; i++) {
