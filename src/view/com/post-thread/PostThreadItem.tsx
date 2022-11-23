@@ -17,6 +17,7 @@ import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 
 const PARENT_REPLY_LINE_LENGTH = 8
+const REPLYING_TO_LINE_LENGTH = 6
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
@@ -204,8 +205,25 @@ export const PostThreadItem = observer(function PostThreadItem({
   } else {
     return (
       <Link style={styles.outer} href={itemHref} title={itemTitle}>
-        {!!item.replyingToAuthor && <View style={styles.parentReplyLine} />}
+        {!item.replyingTo && item.record.reply && (
+          <View style={styles.parentReplyLine} />
+        )}
         {item.replies?.length !== 0 && <View style={styles.childReplyLine} />}
+        {item.replyingTo ? (
+          <View style={styles.replyingTo}>
+            <View style={styles.replyingToLine} />
+            <View style={styles.replyingToAvatar}>
+              <UserAvatar
+                handle={item.replyingTo.author.handle}
+                displayName={item.replyingTo.author.displayName}
+                size={30}
+              />
+            </View>
+            <Text style={styles.replyingToText} numberOfLines={2}>
+              {item.replyingTo.text}
+            </Text>
+          </View>
+        ) : undefined}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
             <Link href={authorHref} title={authorTitle}>
@@ -227,19 +245,6 @@ export const PostThreadItem = observer(function PostThreadItem({
               isAuthor={item.author.did === store.me.did}
               onDeletePost={onDeletePost}
             />
-            {item.replyingToAuthor &&
-              item.replyingToAuthor !== item.author.handle && (
-                <View style={[s.flexRow, s.mb5, {alignItems: 'center'}]}>
-                  <Text style={[s.gray5, s.f15, s.mr2]}>Replying to</Text>
-                  <Link
-                    href={`/profile/${item.replyingToAuthor}`}
-                    title={`@${item.replyingToAuthor}`}>
-                    <Text style={[s.f14, s.blue3]}>
-                      @{item.replyingToAuthor}
-                    </Text>
-                  </Link>
-                </View>
-              )}
             <View style={styles.postTextContainer}>
               <RichText
                 text={record.text}
@@ -286,6 +291,30 @@ const styles = StyleSheet.create({
     bottom: 0,
     borderLeftWidth: 2,
     borderLeftColor: colors.gray2,
+  },
+  replyingToLine: {
+    position: 'absolute',
+    left: 34,
+    bottom: -1 * REPLYING_TO_LINE_LENGTH,
+    height: REPLYING_TO_LINE_LENGTH,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.gray2,
+  },
+  replyingTo: {
+    flexDirection: 'row',
+    backgroundColor: colors.white,
+    paddingLeft: 8,
+    paddingTop: 12,
+    paddingBottom: 0,
+    paddingRight: 24,
+  },
+  replyingToAvatar: {
+    marginLeft: 12,
+    marginRight: 20,
+  },
+  replyingToText: {
+    flex: 1,
+    color: colors.gray5,
   },
   layout: {
     flexDirection: 'row',
