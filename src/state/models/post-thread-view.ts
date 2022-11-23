@@ -12,6 +12,17 @@ function* reactKeyGenerator(): Generator<string> {
   }
 }
 
+interface ReplyingTo {
+  author: {
+    handle: string
+    displayName?: string
+  }
+  text: string
+}
+interface OriginalRecord {
+  text: string
+}
+
 export class PostThreadViewPostMyStateModel {
   repost?: string
   upvote?: string
@@ -52,7 +63,7 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
   myState = new PostThreadViewPostMyStateModel()
 
   // added data
-  replyingToAuthor?: string
+  replyingTo?: ReplyingTo
 
   constructor(
     public rootStore: RootStoreModel,
@@ -74,6 +85,7 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
     v: GetPostThread.Post,
     includeParent = true,
     includeChildren = true,
+    isFirstChild = true,
   ) {
     // parents
     if (includeParent && v.parent) {
@@ -89,12 +101,19 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
       }
       this.parent = parentModel
     }
-    if (v.parent?.author.handle) {
-      this.replyingToAuthor = v.parent.author.handle
+    if (!includeParent && v.parent?.author.handle && !isFirstChild) {
+      this.replyingTo = {
+        author: {
+          handle: v.parent.author.handle,
+          displayName: v.parent.author.displayName,
+        },
+        text: (v.parent.record as OriginalRecord).text,
+      }
     }
     // replies
     if (includeChildren && v.replies) {
       const replies = []
+      let isChildFirstChild = true
       for (const item of v.replies) {
         // TODO: validate .record
         const itemModel = new PostThreadViewPostModel(
@@ -104,8 +123,15 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
         )
         itemModel._depth = this._depth + 1
         if (item.replies) {
-          itemModel.assignTreeModels(keyGen, item, false, true)
+          itemModel.assignTreeModels(
+            keyGen,
+            item,
+            false,
+            true,
+            isChildFirstChild,
+          )
         }
+        isChildFirstChild = false
         replies.push(itemModel)
       }
       this.replies = replies
