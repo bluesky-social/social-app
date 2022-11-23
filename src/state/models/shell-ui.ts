@@ -1,6 +1,5 @@
 import {makeAutoObservable} from 'mobx'
 import {ProfileViewModel} from './profile-view'
-import * as Post from '../../third-party/api/src/client/types/app/bsky/feed/post'
 
 export class ConfirmModel {
   name = 'confirm'
@@ -52,8 +51,17 @@ export class ServerInputModel {
   }
 }
 
+export interface ComposerOptsPostRef {
+  uri: string
+  cid: string
+  text: string
+  author: {
+    handle: string
+    displayName?: string
+  }
+}
 export interface ComposerOpts {
-  replyTo?: Post.PostRef
+  replyTo?: ComposerOptsPostRef
   onPost?: () => void
 }
 

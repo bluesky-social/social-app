@@ -73,7 +73,17 @@ export const Post = observer(function Post({uri}: {uri: string}) {
     replyHref = `/profile/${urip.hostname}/post/${urip.rkey}`
   }
   const onPressReply = () => {
-    store.shell.openComposer({replyTo: {uri: item.uri, cid: item.cid}})
+    store.shell.openComposer({
+      replyTo: {
+        uri: item.uri,
+        cid: item.cid,
+        text: item.record.text as string,
+        author: {
+          handle: item.author.handle,
+          displayName: item.author.displayName,
+        },
+      },
+    })
   }
   const onPressToggleRepost = () => {
     item

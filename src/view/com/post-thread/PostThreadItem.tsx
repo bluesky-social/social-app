@@ -50,7 +50,15 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   const onPressReply = () => {
     store.shell.openComposer({
-      replyTo: {uri: item.uri, cid: item.cid},
+      replyTo: {
+        uri: item.uri,
+        cid: item.cid,
+        text: item.record.text as string,
+        author: {
+          handle: item.author.handle,
+          displayName: item.author.displayName,
+        },
+      },
       onPost: onPostReply,
     })
   }
