@@ -297,6 +297,7 @@ export class PostThreadViewModel {
 
   private _replaceAll(res: GetPostThread.Response) {
     // TODO: validate .record
+    sortThread(res.data.thread)
     const keyGen = reactKeyGenerator()
     const thread = new PostThreadViewPostModel(
       this.rootStore,
@@ -306,5 +307,23 @@ export class PostThreadViewModel {
     thread._isHighlightedPost = true
     thread.assignTreeModels(keyGen, res.data.thread)
     this.thread = thread
+  }
+}
+
+function sortThread(post: GetPostThread.Post) {
+  if (post.replies) {
+    post.replies.sort((a: GetPostThread.Post, b: GetPostThread.Post) => {
+      const aIsByOp = a.author.did === post.author.did
+      const bIsByOp = b.author.did === post.author.did
+      if (aIsByOp && bIsByOp) {
+        return a.indexedAt.localeCompare(b.indexedAt) // oldest
+      } else if (aIsByOp) {
+        return -1 // op's own reply
+      } else if (bIsByOp) {
+        return 1 // op's own reply
+      }
+      return b.indexedAt.localeCompare(a.indexedAt) // newest
+    })
+    post.replies.forEach(reply => sortThread(reply))
   }
 }
