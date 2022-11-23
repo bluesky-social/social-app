@@ -8,8 +8,8 @@ import {
   TextStyle,
   ViewStyle,
 } from 'react-native'
-import {useStores} from '../../../state'
-import {RootStoreModel} from '../../../state'
+import {useStores, RootStoreModel} from '../../../state'
+import {convertBskyAppUrlIfNeeded} from '../../../lib/strings'
 
 export const Link = observer(function Link({
   style,
@@ -66,6 +66,7 @@ export const TextLink = observer(function Link({
 })
 
 function handleLink(store: RootStoreModel, href: string, longPress: boolean) {
+  href = convertBskyAppUrlIfNeeded(href)
   if (href.startsWith('http')) {
     Linking.openURL(href)
   } else if (longPress) {
