@@ -189,8 +189,8 @@ export function toShortUrl(url: string): string {
       (urlp.pathname === '/' ? '' : urlp.pathname) +
       urlp.search +
       urlp.hash
-    if (shortened.length > 20) {
-      return shortened.slice(0, 17) + '...'
+    if (shortened.length > 30) {
+      return shortened.slice(0, 27) + '...'
     }
     return shortened
   } catch (e) {
