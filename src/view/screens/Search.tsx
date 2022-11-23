@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo} from 'react'
+import React, {useEffect, useState, useMemo, useRef} from 'react'
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {SuggestedFollows} from '../com/discover/SuggestedFollows'
@@ -11,6 +11,7 @@ import {MagnifyingGlassIcon} from '../lib/icons'
 
 export const Search = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
+  const textInput = useRef<TextInput>(null)
   const [query, setQuery] = useState<string>('')
   const autocompleteView = useMemo<UserAutocompleteViewModel>(
     () => new UserAutocompleteViewModel(store),
@@ -21,6 +22,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
   useEffect(() => {
     if (visible) {
       autocompleteView.setup()
+      textInput.current?.focus()
       store.nav.setTitle(navIdx, `Search`)
     }
   }, [store, visible, name])
@@ -35,6 +37,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
     }
   }
   const onSelect = (handle: string) => {
+    textInput.current?.blur()
     store.nav.navigate(`/profile/${handle}`)
   }
 
@@ -44,7 +47,9 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
       <View style={styles.inputContainer}>
         <MagnifyingGlassIcon style={styles.inputIcon} />
         <TextInput
+          ref={textInput}
           placeholder="Type your query here..."
+          selectTextOnFocus
           style={styles.input}
           onChangeText={onChangeQuery}
         />
@@ -97,6 +102,7 @@ const styles = StyleSheet.create({
     color: colors.gray3,
   },
   input: {
+    flex: 1,
     fontSize: 16,
   },
 
