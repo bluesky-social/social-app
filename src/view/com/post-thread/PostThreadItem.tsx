@@ -14,6 +14,7 @@ import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../../lib/strings'
 import {useStores} from '../../../state'
 import {PostMeta} from '../util/PostMeta'
+import {PostEmbeds} from '../util/PostEmbeds'
 import {PostCtrls} from '../util/PostCtrls'
 
 const PARENT_REPLY_LINE_LENGTH = 8
@@ -151,6 +152,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               style={[styles.postText, styles.postTextLarge]}
             />
           </View>
+          <PostEmbeds entities={record.entities} />
           {item._isHighlightedPost && hasEngagement ? (
             <View style={styles.expandedInfo}>
               {item.repostCount ? (
@@ -252,6 +254,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 style={[styles.postText]}
               />
             </View>
+            <PostEmbeds entities={record.entities} style={{marginBottom: 10}} />
             <PostCtrls
               replyCount={item.replyCount}
               repostCount={item.repostCount}

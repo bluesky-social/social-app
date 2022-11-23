@@ -11,6 +11,7 @@ import {SessionModel} from './session'
 import {NavigationModel} from './navigation'
 import {ShellUiModel} from './shell-ui'
 import {ProfilesViewModel} from './profiles-view'
+import {LinkMetasViewModel} from './link-metas-view'
 import {MeModel} from './me'
 import {OnboardModel} from './onboard'
 
@@ -21,6 +22,7 @@ export class RootStoreModel {
   me = new MeModel(this)
   onboard = new OnboardModel()
   profiles = new ProfilesViewModel(this)
+  linkMetas = new LinkMetasViewModel(this)
 
   constructor(public api: SessionServiceClient) {
     makeAutoObservable(this, {
