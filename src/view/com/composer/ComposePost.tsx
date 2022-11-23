@@ -16,6 +16,7 @@ import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete
 import {Autocomplete} from './Autocomplete'
 import Toast from '../util/Toast'
 import ProgressCircle from '../util/ProgressCircle'
+import {TextLink} from '../util/Link'
 import {useStores} from '../../../state'
 import * as apilib from '../../../state/lib/api'
 import {ComposerOpts} from '../../../state/models/shell-ui'
@@ -163,6 +164,21 @@ export const ComposePost = observer(function ComposePost({
             <Text style={s.red4}>{error}</Text>
           </View>
         )}
+        {replyTo ? (
+          <View>
+            <Text style={s.gray4}>
+              Replying to{' '}
+              <TextLink
+                href={`/profile/${replyTo.author.handle}`}
+                text={'@' + replyTo.author.handle}
+                style={[s.bold, s.gray5]}
+              />
+            </Text>
+            <View style={styles.replyToPost}>
+              <Text style={s.gray5}>{replyTo.text}</Text>
+            </View>
+          </View>
+        ) : undefined}
         <TextInput
           multiline
           scrollEnabled
@@ -249,5 +265,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 5,
     fontSize: 21,
+  },
+  replyToPost: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: colors.gray2,
+    borderRadius: 6,
+    marginTop: 5,
+    marginBottom: 10,
   },
 })

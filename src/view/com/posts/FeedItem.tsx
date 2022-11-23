@@ -43,7 +43,17 @@ export const FeedItem = observer(function FeedItem({
   }, [record.reply])
 
   const onPressReply = () => {
-    store.shell.openComposer({replyTo: {uri: item.uri, cid: item.cid}})
+    store.shell.openComposer({
+      replyTo: {
+        uri: item.uri,
+        cid: item.cid,
+        text: item.record.text as string,
+        author: {
+          handle: item.author.handle,
+          displayName: item.author.displayName,
+        },
+      },
+    })
   }
   const onPressToggleRepost = () => {
     item
