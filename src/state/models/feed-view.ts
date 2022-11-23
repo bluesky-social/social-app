@@ -209,7 +209,12 @@ export class FeedModel {
 
   get nonReplyFeed() {
     return this.feed.filter(
-      post => !post.record.reply || post._isThreadParent || post._isThreadChild,
+      post =>
+        !post.record.reply || // not a reply
+        !!post.repostedBy || // or a repost
+        !!post.trendedBy || // or a trend
+        post._isThreadParent || // but allow if it's a thread by the user
+        post._isThreadChild,
     )
   }
 
