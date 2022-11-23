@@ -209,8 +209,12 @@ export function toShareUrl(url: string): string {
   return url
 }
 
+export function isBskyAppUrl(url: string): boolean {
+  return url.startsWith('https://bsky.app/')
+}
+
 export function convertBskyAppUrlIfNeeded(url: string): string {
-  if (url.startsWith('https://bsky.app/')) {
+  if (isBskyAppUrl(url)) {
     try {
       const urlp = new URL(url)
       return urlp.pathname

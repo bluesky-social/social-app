@@ -1,4 +1,9 @@
-import {extractHtmlMeta} from './strings'
+import {
+  extractHtmlMeta,
+  isBskyAppUrl,
+  convertBskyAppUrlIfNeeded,
+} from './strings'
+import {match as matchRoute} from '../view/routes'
 
 export enum LikelyType {
   HTML,
@@ -6,6 +11,7 @@ export enum LikelyType {
   Image,
   Video,
   Audio,
+  AtpData,
   Other,
 }
 
@@ -18,6 +24,18 @@ export interface LinkMeta {
 }
 
 export async function getLinkMeta(url: string): Promise<LinkMeta> {
+  if (isBskyAppUrl(url)) {
+    // TODO this could be better
+    url = convertBskyAppUrlIfNeeded(url)
+    const route = matchRoute(url)
+    return {
+      likelyType: LikelyType.AtpData,
+      url,
+      title: route.defaultTitle,
+      // description: ''
+    }
+  }
+
   let urlp
   try {
     urlp = new URL(url)
@@ -53,7 +71,15 @@ export async function getLinkMeta(url: string): Promise<LinkMeta> {
   return meta
 }
 
-function getLikelyType(url: URL): LikelyType {
+export function getLikelyType(url: URL | string): LikelyType {
+  if (typeof url === 'string') {
+    try {
+      url = new URL(url)
+    } catch (e) {
+      return LikelyType.Other
+    }
+  }
+
   const ext = url.pathname.split('.').pop() || ''
   if (ext === 'html' || ext === 'htm') {
     return LikelyType.HTML

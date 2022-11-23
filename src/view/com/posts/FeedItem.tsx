@@ -9,6 +9,7 @@ import {Link} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
+import {PostEmbeds} from '../util/PostEmbeds'
 import {RichText} from '../util/RichText'
 import Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
@@ -172,6 +173,7 @@ export const FeedItem = observer(function FeedItem({
               style={styles.postText}
             />
           </View>
+          <PostEmbeds entities={record.entities} style={{marginBottom: 10}} />
           <PostCtrls
             replyCount={item.replyCount}
             repostCount={item.repostCount}
