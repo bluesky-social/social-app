@@ -15,6 +15,8 @@ import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {useStores} from '../../../state'
 
+const TOP_REPLY_LINE_LENGTH = 12
+
 export const FeedItem = observer(function FeedItem({
   item,
 }: {
@@ -74,8 +76,22 @@ export const FeedItem = observer(function FeedItem({
     return <View />
   }
 
+  const outerStyles = [
+    styles.outer,
+    item._isThreadChild ? styles.outerNoTop : undefined,
+    item._isThreadParent ? styles.outerNoBottom : undefined,
+  ]
   return (
-    <Link style={styles.outer} href={itemHref} title={itemTitle}>
+    <Link style={outerStyles} href={itemHref} title={itemTitle}>
+      {item._isThreadChild && <View style={styles.topReplyLine} />}
+      {item._isThreadParent && (
+        <View
+          style={[
+            styles.bottomReplyLine,
+            item._isThreadChild ? styles.bottomReplyLineSmallAvi : undefined,
+          ]}
+        />
+      )}
       {item.repostedBy && (
         <Link
           style={styles.includeReason}
@@ -103,26 +119,31 @@ export const FeedItem = observer(function FeedItem({
       )}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <Link href={authorHref} title={item.author.handle}>
+          <Link
+            href={authorHref}
+            title={item.author.handle}
+            style={item._isThreadChild ? {marginLeft: 10} : undefined}>
             <UserAvatar
-              size={50}
+              size={item._isThreadChild ? 30 : 50}
               displayName={item.author.displayName}
               handle={item.author.handle}
             />
           </Link>
         </View>
         <View style={styles.layoutContent}>
-          <PostMeta
-            itemHref={itemHref}
-            itemTitle={itemTitle}
-            authorHref={authorHref}
-            authorHandle={item.author.handle}
-            authorDisplayName={item.author.displayName}
-            timestamp={item.indexedAt}
-            isAuthor={item.author.did === store.me.did}
-            onDeletePost={onDeletePost}
-          />
-          {replyHref !== '' && (
+          {!item._isThreadChild ? (
+            <PostMeta
+              itemHref={itemHref}
+              itemTitle={itemTitle}
+              authorHref={authorHref}
+              authorHandle={item.author.handle}
+              authorDisplayName={item.author.displayName}
+              timestamp={item.indexedAt}
+              isAuthor={item.author.did === store.me.did}
+              onDeletePost={onDeletePost}
+            />
+          ) : undefined}
+          {!item._isThreadChild && replyHref !== '' && (
             <View style={[s.flexRow, s.mb5, {alignItems: 'center'}]}>
               <Text style={[s.gray5, s.f15, s.mr2]}>Replying to</Text>
               <Link href={replyHref} title="Parent post">
@@ -164,6 +185,35 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     backgroundColor: colors.white,
     padding: 10,
+  },
+  outerNoTop: {
+    marginTop: 1,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+  },
+  outerNoBottom: {
+    marginBottom: 0,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  topReplyLine: {
+    position: 'absolute',
+    left: 34,
+    top: -1 * TOP_REPLY_LINE_LENGTH + 10,
+    height: TOP_REPLY_LINE_LENGTH,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.gray2,
+  },
+  bottomReplyLine: {
+    position: 'absolute',
+    left: 34,
+    top: 70,
+    bottom: 0,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.gray2,
+  },
+  bottomReplyLineSmallAvi: {
+    top: 50,
   },
   includeReason: {
     flexDirection: 'row',
