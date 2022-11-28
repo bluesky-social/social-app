@@ -32,7 +32,7 @@ export const Feed = observer(function Feed({
   }
   return (
     <View style={{flex: 1}}>
-      {view.isLoading && !view.isRefreshing && (
+      {view.isLoading && !view.isRefreshing && !view.hasContent && (
         <NotificationFeedLoadingPlaceholder />
       )}
       {view.hasError && (
