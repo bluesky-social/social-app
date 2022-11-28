@@ -31,6 +31,11 @@ describe('extractEntities', () => {
     'start middle end.com/foo/bar?baz=bux#hash',
     'newline1.com\nnewline2.com',
     'not.. a..url ..here',
+    'e.g.',
+    'something-cool.jpg',
+    'website.com.jpg',
+    'e.g./foo',
+    'website.com.jpg/foo',
   ]
   interface Output {
     type: string
@@ -79,6 +84,11 @@ describe('extractEntities', () => {
       {type: 'link', value: 'newline1.com', noScheme: true},
       {type: 'link', value: 'newline2.com', noScheme: true},
     ],
+    [],
+    [],
+    [],
+    [],
+    [],
     [],
   ]
   it('correctly handles a set of text inputs', () => {
@@ -145,6 +155,12 @@ describe('detectLinkables', () => {
     'start middle end.com/foo/bar?baz=bux#hash',
     'newline1.com\nnewline2.com',
     'not.. a..url ..here',
+    'e.g.',
+    'e.g. real.com fake.notreal',
+    'something-cool.jpg',
+    'website.com.jpg',
+    'e.g./foo',
+    'website.com.jpg/foo',
   ]
   const outputs = [
     ['no linkable'],
@@ -171,6 +187,12 @@ describe('detectLinkables', () => {
     ['start middle ', {link: 'end.com/foo/bar?baz=bux#hash'}],
     [{link: 'newline1.com'}, '\n', {link: 'newline2.com'}],
     ['not.. a..url ..here'],
+    ['e.g.'],
+    ['e.g. ', {link: 'real.com'}, ' fake.notreal'],
+    ['something-cool.jpg'],
+    ['website.com.jpg'],
+    ['e.g./foo'],
+    ['website.com.jpg/foo'],
   ]
   it('correctly handles a set of text inputs', () => {
     for (let i = 0; i < inputs.length; i++) {
