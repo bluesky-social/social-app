@@ -1,29 +1,42 @@
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from '../../lib/styles'
 import {useStores} from '../../../state'
 import {UserAvatar} from '../util/UserAvatar'
 
-export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
+export function ComposePrompt({
+  noAvi = false,
+  text = "What's up?",
+  btn = 'Post',
+  onPressCompose,
+}: {
+  noAvi?: boolean
+  text?: string
+  btn?: string
+  onPressCompose: () => void
+}) {
   const store = useStores()
   const onPressAvatar = () => {
     store.nav.navigate(`/profile/${store.me.handle}`)
   }
   return (
-    <TouchableOpacity style={styles.container} onPress={onPressCompose}>
-      <TouchableOpacity style={styles.avatar} onPress={onPressAvatar}>
-        <UserAvatar
-          size={50}
-          handle={store.me.handle || ''}
-          displayName={store.me.displayName}
-        />
-      </TouchableOpacity>
+    <TouchableOpacity
+      style={[styles.container, noAvi ? styles.noAviContainer : undefined]}
+      onPress={onPressCompose}>
+      {!noAvi ? (
+        <TouchableOpacity style={styles.avatar} onPress={onPressAvatar}>
+          <UserAvatar
+            size={50}
+            handle={store.me.handle || ''}
+            displayName={store.me.displayName}
+          />
+        </TouchableOpacity>
+      ) : undefined}
       <View style={styles.textContainer}>
-        <Text style={styles.text}>What's up?</Text>
+        <Text style={styles.text}>{text}</Text>
       </View>
       <View style={styles.btn}>
-        <Text style={styles.btnText}>Post</Text>
+        <Text style={styles.btnText}>{btn}</Text>
       </View>
     </TouchableOpacity>
   )
@@ -39,6 +52,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.white,
+  },
+  noAviContainer: {
+    paddingVertical: 14,
   },
   avatar: {
     width: 50,

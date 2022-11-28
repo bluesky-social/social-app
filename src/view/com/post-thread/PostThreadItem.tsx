@@ -16,6 +16,7 @@ import {useStores} from '../../../state'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/PostEmbeds'
 import {PostCtrls} from '../util/PostCtrls'
+import {ComposePrompt} from '../composer/Prompt'
 
 const PARENT_REPLY_LINE_LENGTH = 8
 const REPLYING_TO_LINE_LENGTH = 6
@@ -93,116 +94,122 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   if (item._isHighlightedPost) {
     return (
-      <View style={styles.outer}>
-        <View style={styles.layout}>
-          <View style={styles.layoutAvi}>
-            <Link href={authorHref} title={authorTitle}>
-              <UserAvatar
-                size={50}
-                displayName={item.author.displayName}
-                handle={item.author.handle}
-              />
-            </Link>
-          </View>
-          <View style={styles.layoutContent}>
-            <View style={[styles.meta, {paddingTop: 5, paddingBottom: 0}]}>
-              <Link
-                style={styles.metaItem}
-                href={authorHref}
-                title={authorTitle}>
-                <Text style={[s.f16, s.bold]} numberOfLines={1}>
-                  {item.author.displayName || item.author.handle}
-                </Text>
-              </Link>
-              <Text style={[styles.metaItem, s.f15, s.gray5]}>
-                &middot; {ago(item.indexedAt)}
-              </Text>
-              <View style={s.flex1} />
-              <PostDropdownBtn
-                style={styles.metaItem}
-                itemHref={itemHref}
-                itemTitle={itemTitle}
-                isAuthor={item.author.did === store.me.did}
-                onDeletePost={onDeletePost}>
-                <FontAwesomeIcon
-                  icon="ellipsis-h"
-                  size={14}
-                  style={[s.mt2, s.mr5]}
+      <>
+        <View style={styles.outer}>
+          <View style={styles.layout}>
+            <View style={styles.layoutAvi}>
+              <Link href={authorHref} title={authorTitle}>
+                <UserAvatar
+                  size={50}
+                  displayName={item.author.displayName}
+                  handle={item.author.handle}
                 />
-              </PostDropdownBtn>
-            </View>
-            <View style={styles.meta}>
-              <Link
-                style={styles.metaItem}
-                href={authorHref}
-                title={authorTitle}>
-                <Text style={[s.f15, s.gray5]} numberOfLines={1}>
-                  @{item.author.handle}
-                </Text>
               </Link>
             </View>
-          </View>
-        </View>
-        <View style={[s.pl10, s.pr10, s.pb10]}>
-          <View
-            style={[styles.postTextContainer, styles.postTextLargeContainer]}>
-            <RichText
-              text={record.text}
-              entities={record.entities}
-              style={[styles.postText, styles.postTextLarge]}
-            />
-          </View>
-          <PostEmbeds entities={record.entities} />
-          {item._isHighlightedPost && hasEngagement ? (
-            <View style={styles.expandedInfo}>
-              {item.repostCount ? (
+            <View style={styles.layoutContent}>
+              <View style={[styles.meta, {paddingTop: 5, paddingBottom: 0}]}>
                 <Link
-                  style={styles.expandedInfoItem}
-                  href={repostsHref}
-                  title={repostsTitle}>
-                  <Text style={[s.gray5, s.semiBold, s.f18]}>
-                    <Text style={[s.bold, s.black, s.f18]}>
-                      {item.repostCount}
-                    </Text>{' '}
-                    {pluralize(item.repostCount, 'repost')}
+                  style={styles.metaItem}
+                  href={authorHref}
+                  title={authorTitle}>
+                  <Text style={[s.f16, s.bold]} numberOfLines={1}>
+                    {item.author.displayName || item.author.handle}
                   </Text>
                 </Link>
-              ) : (
-                <></>
-              )}
-              {item.upvoteCount ? (
+                <Text style={[styles.metaItem, s.f15, s.gray5]}>
+                  &middot; {ago(item.indexedAt)}
+                </Text>
+                <View style={s.flex1} />
+                <PostDropdownBtn
+                  style={styles.metaItem}
+                  itemHref={itemHref}
+                  itemTitle={itemTitle}
+                  isAuthor={item.author.did === store.me.did}
+                  onDeletePost={onDeletePost}>
+                  <FontAwesomeIcon
+                    icon="ellipsis-h"
+                    size={14}
+                    style={[s.mt2, s.mr5]}
+                  />
+                </PostDropdownBtn>
+              </View>
+              <View style={styles.meta}>
                 <Link
-                  style={styles.expandedInfoItem}
-                  href={upvotesHref}
-                  title={upvotesTitle}>
-                  <Text style={[s.gray5, s.semiBold, s.f18]}>
-                    <Text style={[s.bold, s.black, s.f18]}>
-                      {item.upvoteCount}
-                    </Text>{' '}
-                    {pluralize(item.upvoteCount, 'upvote')}
+                  style={styles.metaItem}
+                  href={authorHref}
+                  title={authorTitle}>
+                  <Text style={[s.f15, s.gray5]} numberOfLines={1}>
+                    @{item.author.handle}
                   </Text>
                 </Link>
-              ) : (
-                <></>
-              )}
+              </View>
             </View>
-          ) : (
-            <></>
-          )}
-          <View style={[s.pl10]}>
-            <PostCtrls
-              replyCount={item.replyCount}
-              repostCount={item.repostCount}
-              upvoteCount={item.upvoteCount}
-              isReposted={!!item.myState.repost}
-              isUpvoted={!!item.myState.upvote}
-              onPressReply={onPressReply}
-              onPressToggleRepost={onPressToggleRepost}
-              onPressToggleUpvote={onPressToggleUpvote}
-            />
+          </View>
+          <View style={[s.pl10, s.pr10, s.pb10]}>
+            <View
+              style={[styles.postTextContainer, styles.postTextLargeContainer]}>
+              <RichText
+                text={record.text}
+                entities={record.entities}
+                style={[styles.postText, styles.postTextLarge]}
+              />
+            </View>
+            <PostEmbeds entities={record.entities} style={s.mb10} />
+            {item._isHighlightedPost && hasEngagement ? (
+              <View style={styles.expandedInfo}>
+                {item.repostCount ? (
+                  <Link
+                    style={styles.expandedInfoItem}
+                    href={repostsHref}
+                    title={repostsTitle}>
+                    <Text style={[s.gray5, s.semiBold, s.f17]}>
+                      <Text style={[s.bold, s.black, s.f17]}>
+                        {item.repostCount}
+                      </Text>{' '}
+                      {pluralize(item.repostCount, 'repost')}
+                    </Text>
+                  </Link>
+                ) : (
+                  <></>
+                )}
+                {item.upvoteCount ? (
+                  <Link
+                    style={styles.expandedInfoItem}
+                    href={upvotesHref}
+                    title={upvotesTitle}>
+                    <Text style={[s.gray5, s.semiBold, s.f17]}>
+                      <Text style={[s.bold, s.black, s.f17]}>
+                        {item.upvoteCount}
+                      </Text>{' '}
+                      {pluralize(item.upvoteCount, 'upvote')}
+                    </Text>
+                  </Link>
+                ) : (
+                  <></>
+                )}
+              </View>
+            ) : (
+              <></>
+            )}
+            <View style={[s.pl10, s.pb5]}>
+              <PostCtrls
+                big
+                isReposted={!!item.myState.repost}
+                isUpvoted={!!item.myState.upvote}
+                onPressReply={onPressReply}
+                onPressToggleRepost={onPressToggleRepost}
+                onPressToggleUpvote={onPressToggleUpvote}
+              />
+            </View>
           </View>
         </View>
-      </View>
+        <ComposePrompt
+          noAvi
+          text="Write your reply"
+          btn="Reply"
+          onPressCompose={onPressReply}
+        />
+      </>
     )
   } else {
     return (
@@ -371,7 +378,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     marginTop: 5,
-    marginBottom: 10,
+    marginBottom: 15,
   },
   expandedInfoItem: {
     marginRight: 10,
