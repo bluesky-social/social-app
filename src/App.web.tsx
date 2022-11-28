@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {DesktopWebShell} from './view/shell/desktop-web'
-import Toast from './view/com/util/Toast'
+import Toast from 'react-native-root-toast'
 
 function App() {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(

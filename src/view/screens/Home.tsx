@@ -47,6 +47,7 @@ export const Home = observer(function Home({
     if (!visible) {
       return
     }
+
     if (hasSetup) {
       console.log('Updating home feed')
       defaultFeedView.update()
@@ -80,7 +81,11 @@ export const Home = observer(function Home({
 
   return (
     <View style={s.flex1}>
-      <ViewHeader title="Bluesky" subtitle="Private Beta" />
+      <ViewHeader
+        title="Bluesky"
+        subtitle="Private Beta"
+        onPost={onCreatePost}
+      />
       <Feed
         key="default"
         feed={defaultFeedView}
@@ -106,8 +111,8 @@ const styles = StyleSheet.create({
     left: 10,
     bottom: 15,
     backgroundColor: colors.pink3,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     borderRadius: 30,
     shadowColor: '#000',
     shadowOpacity: 0.3,
@@ -117,5 +122,6 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: 'bold',
     marginLeft: 5,
+    fontSize: 16,
   },
 })

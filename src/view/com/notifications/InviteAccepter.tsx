@@ -7,7 +7,7 @@ import {NotificationsViewItemModel} from '../../../state/models/notifications-vi
 import {ConfirmModel} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
 import {ProfileCard} from '../profile/ProfileCard'
-import Toast from '../util/Toast'
+import * as Toast from '../util/Toast'
 import {s, colors, gradients} from '../../lib/styles'
 
 export function InviteAccepter({item}: {item: NotificationsViewItemModel}) {
@@ -46,10 +46,7 @@ export function InviteAccepter({item}: {item: NotificationsViewItemModel}) {
       },
     })
     store.me.refreshMemberships()
-    Toast.show('Invite accepted', {
-      duration: Toast.durations.LONG,
-      position: Toast.positions.TOP,
-    })
+    Toast.show('Invite accepted')
     setConfirmationUri(uri)
   }
   return (

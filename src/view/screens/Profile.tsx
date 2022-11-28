@@ -15,7 +15,8 @@ import {PostFeedLoadingPlaceholder} from '../com/util/LoadingPlaceholder'
 import {ErrorScreen} from '../com/util/ErrorScreen'
 import {ErrorMessage} from '../com/util/ErrorMessage'
 import {EmptyState} from '../com/util/EmptyState'
-import Toast from '../com/util/Toast'
+import {ViewHeader} from '../com/util/ViewHeader'
+import * as Toast from '../com/util/Toast'
 import {s, colors} from '../lib/styles'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
@@ -77,10 +78,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
         `You'll be able to invite them again if you change your mind.`,
         async () => {
           await uiState.members.removeMember(membership.did)
-          Toast.show(`User removed`, {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.TOP,
-          })
+          Toast.show(`User removed`)
         },
       ),
     )
@@ -219,8 +217,11 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
     renderItem = () => <View />
   }
 
+  const title =
+    uiState.profile.displayName || uiState.profile.handle || params.name
   return (
     <View style={styles.container}>
+      <ViewHeader title={title} />
       {uiState.profile.hasError ? (
         <ErrorScreen
           title="Failed to load profile"

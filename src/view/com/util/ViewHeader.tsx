@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {UserAvatar} from './UserAvatar'
 import {colors} from '../../lib/styles'
 import {MagnifyingGlassIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
@@ -9,13 +8,18 @@ import {useStores} from '../../../state'
 export function ViewHeader({
   title,
   subtitle,
+  onPost,
 }: {
   title: string
   subtitle?: string
+  onPost?: () => void
 }) {
   const store = useStores()
   const onPressBack = () => {
     store.nav.tab.goBack()
+  }
+  const onPressCompose = () => {
+    store.shell.openComposer({onPost})
   }
   const onPressSearch = () => {
     store.nav.navigate(`/search`)
@@ -26,9 +30,7 @@ export function ViewHeader({
         <TouchableOpacity onPress={onPressBack} style={styles.backIcon}>
           <FontAwesomeIcon size={18} icon="angle-left" style={{marginTop: 6}} />
         </TouchableOpacity>
-      ) : (
-        <View style={styles.cornerPlaceholder} />
-      )}
+      ) : undefined}
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{title}</Text>
         {subtitle ? (
@@ -37,8 +39,17 @@ export function ViewHeader({
           </Text>
         ) : undefined}
       </View>
-      <TouchableOpacity onPress={onPressSearch} style={styles.searchBtn}>
-        <MagnifyingGlassIcon size={17} style={styles.searchBtnIcon} />
+      <TouchableOpacity onPress={onPressCompose} style={styles.btn}>
+        <FontAwesomeIcon size={18} icon="plus" />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={onPressSearch}
+        style={[styles.btn, {marginLeft: 8}]}>
+        <MagnifyingGlassIcon
+          size={18}
+          strokeWidth={3}
+          style={styles.searchBtnIcon}
+        />
       </TouchableOpacity>
     </View>
   )
@@ -59,33 +70,28 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    marginLeft: 'auto',
     marginRight: 'auto',
   },
   title: {
-    fontSize: 16,
+    fontSize: 21,
     fontWeight: '600',
   },
   subtitle: {
-    fontSize: 15,
-    marginLeft: 3,
+    fontSize: 18,
+    marginLeft: 6,
     color: colors.gray4,
     maxWidth: 200,
   },
 
-  cornerPlaceholder: {
-    width: 30,
-    height: 30,
-  },
   backIcon: {width: 30, height: 30},
-  searchBtn: {
+  btn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.gray1,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 36,
+    height: 36,
+    borderRadius: 20,
   },
   searchBtnIcon: {
     color: colors.black,

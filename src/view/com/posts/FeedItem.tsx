@@ -11,7 +11,7 @@ import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 import {PostEmbeds} from '../util/PostEmbeds'
 import {RichText} from '../util/RichText'
-import Toast from '../util/Toast'
+import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {useStores} from '../../../state'
@@ -70,15 +70,11 @@ export const FeedItem = observer(function FeedItem({
     item.delete().then(
       () => {
         setDeleted(true)
-        Toast.show('Post deleted', {
-          position: Toast.positions.TOP,
-        })
+        Toast.show('Post deleted')
       },
       e => {
         console.error(e)
-        Toast.show('Failed to delete post, please try again', {
-          position: Toast.positions.TOP,
-        })
+        Toast.show('Failed to delete post, please try again')
       },
     )
   }
@@ -254,7 +250,7 @@ const styles = StyleSheet.create({
   },
   postText: {
     fontFamily: 'Helvetica Neue',
-    fontSize: 17,
-    lineHeight: 22.1, // 1.3 of 17px
+    fontSize: 16,
+    lineHeight: 20.8, // 1.3 of 16px
   },
 })

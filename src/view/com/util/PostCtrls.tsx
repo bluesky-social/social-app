@@ -12,9 +12,10 @@ import {UpIcon, UpIconSolid} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
 
 interface PostCtrlsOpts {
-  replyCount: number
-  repostCount: number
-  upvoteCount: number
+  big?: boolean
+  replyCount?: number
+  repostCount?: number
+  upvoteCount?: number
   isReposted: boolean
   isUpvoted: boolean
   onPressReply: () => void
@@ -30,17 +31,17 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   const interp2 = useSharedValue<number>(0)
 
   const anim1Style = useAnimatedStyle(() => ({
-    transform: [{scale: interpolate(interp1.value, [0, 1.0], [1.0, 3.0])}],
+    transform: [{scale: interpolate(interp1.value, [0, 1.0], [1.0, 4.0])}],
     opacity: interpolate(interp1.value, [0, 1.0], [1.0, 0.0]),
   }))
   const anim2Style = useAnimatedStyle(() => ({
-    transform: [{scale: interpolate(interp2.value, [0, 1.0], [1.0, 3.0])}],
+    transform: [{scale: interpolate(interp2.value, [0, 1.0], [1.0, 4.0])}],
     opacity: interpolate(interp2.value, [0, 1.0], [1.0, 0.0]),
   }))
 
   const onPressToggleRepostWrapper = () => {
     if (!opts.isReposted) {
-      interp1.value = withTiming(1, {duration: 300}, () => {
+      interp1.value = withTiming(1, {duration: 400}, () => {
         interp1.value = withDelay(100, withTiming(0, {duration: 20}))
       })
     }
@@ -48,7 +49,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   }
   const onPressToggleUpvoteWrapper = () => {
     if (!opts.isUpvoted) {
-      interp2.value = withTiming(1, {duration: 300}, () => {
+      interp2.value = withTiming(1, {duration: 400}, () => {
         interp2.value = withDelay(100, withTiming(0, {duration: 20}))
       })
     }
@@ -62,9 +63,11 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           <FontAwesomeIcon
             style={styles.ctrlIcon}
             icon={['far', 'comment']}
-            size={14}
+            size={opts.big ? 20 : 14}
           />
-          <Text style={[sRedgray, s.ml5, s.f16]}>{opts.replyCount}</Text>
+          {typeof opts.replyCount !== 'undefined' ? (
+            <Text style={[sRedgray, s.ml5, s.f16]}>{opts.replyCount}</Text>
+          ) : undefined}
         </TouchableOpacity>
       </View>
       <View style={s.flex1}>
@@ -77,17 +80,19 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                 opts.isReposted ? styles.ctrlIconReposted : styles.ctrlIcon
               }
               icon="retweet"
-              size={18}
+              size={opts.big ? 22 : 18}
             />
           </Animated.View>
-          <Text
-            style={
-              opts.isReposted
-                ? [s.bold, s.green3, s.f16, s.ml5]
-                : [sRedgray, s.f16, s.ml5]
-            }>
-            {opts.repostCount}
-          </Text>
+          {typeof opts.repostCount !== 'undefined' ? (
+            <Text
+              style={
+                opts.isReposted
+                  ? [s.bold, s.green3, s.f16, s.ml5]
+                  : [sRedgray, s.f16, s.ml5]
+              }>
+              {opts.repostCount}
+            </Text>
+          ) : undefined}
         </TouchableOpacity>
       </View>
       <View style={s.flex1}>
@@ -96,19 +101,28 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           onPress={onPressToggleUpvoteWrapper}>
           <Animated.View style={anim2Style}>
             {opts.isUpvoted ? (
-              <UpIconSolid style={[styles.ctrlIconUpvoted]} size={18} />
+              <UpIconSolid
+                style={[styles.ctrlIconUpvoted]}
+                size={opts.big ? 22 : 18}
+              />
             ) : (
-              <UpIcon style={[styles.ctrlIcon]} size={18} strokeWidth={1.5} />
+              <UpIcon
+                style={[styles.ctrlIcon]}
+                size={opts.big ? 22 : 18}
+                strokeWidth={1.5}
+              />
             )}
           </Animated.View>
-          <Text
-            style={
-              opts.isUpvoted
-                ? [s.bold, s.red3, s.f16, s.ml5]
-                : [sRedgray, s.f16, s.ml5]
-            }>
-            {opts.upvoteCount}
-          </Text>
+          {typeof opts.upvoteCount !== 'undefined' ? (
+            <Text
+              style={
+                opts.isUpvoted
+                  ? [s.bold, s.red3, s.f16, s.ml5]
+                  : [sRedgray, s.f16, s.ml5]
+              }>
+              {opts.upvoteCount}
+            </Text>
+          ) : undefined}
         </TouchableOpacity>
       </View>
       <View style={s.flex1}></View>

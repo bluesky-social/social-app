@@ -14,7 +14,7 @@ import _omit from 'lodash.omit'
 import {ErrorScreen} from '../util/ErrorScreen'
 import {Link} from '../util/Link'
 import {UserAvatar} from '../util/UserAvatar'
-import Toast from '../util/Toast'
+import * as Toast from '../util/Toast'
 import {useStores} from '../../../state'
 import * as apilib from '../../../state/lib/api'
 import {
@@ -63,10 +63,7 @@ export const SuggestedFollows = observer(
         setFollows({[item.did]: res.uri, ...follows})
       } catch (e) {
         console.log(e)
-        Toast.show('An issue occurred, please try again.', {
-          duration: Toast.durations.LONG,
-          position: Toast.positions.TOP,
-        })
+        Toast.show('An issue occurred, please try again.')
       }
     }
     const onPressUnfollow = async (item: SuggestedActor) => {
@@ -75,10 +72,7 @@ export const SuggestedFollows = observer(
         setFollows(_omit(follows, [item.did]))
       } catch (e) {
         console.log(e)
-        Toast.show('An issue occurred, please try again.', {
-          duration: Toast.durations.LONG,
-          position: Toast.positions.TOP,
-        })
+        Toast.show('An issue occurred, please try again.')
       }
     }
 
