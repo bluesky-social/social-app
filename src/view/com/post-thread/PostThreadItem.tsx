@@ -8,7 +8,7 @@ import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
 import {RichText} from '../util/RichText'
 import {PostDropdownBtn} from '../util/DropdownBtn'
-import Toast from '../util/Toast'
+import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../../lib/strings'
@@ -79,15 +79,11 @@ export const PostThreadItem = observer(function PostThreadItem({
     item.delete().then(
       () => {
         setDeleted(true)
-        Toast.show('Post deleted', {
-          position: Toast.positions.TOP,
-        })
+        Toast.show('Post deleted')
       },
       e => {
         console.error(e)
-        Toast.show('Failed to delete post, please try again', {
-          position: Toast.positions.TOP,
-        })
+        Toast.show('Failed to delete post, please try again')
       },
     )
   }

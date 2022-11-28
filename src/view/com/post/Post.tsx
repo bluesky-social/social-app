@@ -10,7 +10,7 @@ import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 import {RichText} from '../util/RichText'
-import Toast from '../util/Toast'
+import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
@@ -99,15 +99,11 @@ export const Post = observer(function Post({uri}: {uri: string}) {
     item.delete().then(
       () => {
         setDeleted(true)
-        Toast.show('Post deleted', {
-          position: Toast.positions.TOP,
-        })
+        Toast.show('Post deleted')
       },
       e => {
         console.error(e)
-        Toast.show('Failed to delete post, please try again', {
-          position: Toast.positions.TOP,
-        })
+        Toast.show('Failed to delete post, please try again')
       },
     )
   }

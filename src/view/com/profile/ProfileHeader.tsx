@@ -14,9 +14,8 @@ import {
 import {pluralize} from '../../../lib/strings'
 import {s, colors} from '../../lib/styles'
 import {getGradient} from '../../lib/asset-gen'
-import {MagnifyingGlassIcon} from '../../lib/icons'
 import {DropdownBtn, DropdownItem} from '../util/DropdownBtn'
-import Toast from '../util/Toast'
+import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {RichText} from '../util/RichText'
 import {UserAvatar} from '../util/UserAvatar'
@@ -49,10 +48,6 @@ export const ProfileHeader = observer(function ProfileHeader({
           `${view.myState.follow ? 'Following' : 'No longer following'} ${
             view.displayName || view.handle
           }`,
-          {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.TOP,
-          },
         )
       },
       err => console.error('Failed to toggle follow', err),
@@ -88,10 +83,7 @@ export const ProfileHeader = observer(function ProfileHeader({
         did: store.me.did || '',
         rkey: new AtUri(view.myState.member).rkey,
       })
-      Toast.show(`Scene left`, {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.TOP,
-      })
+      Toast.show(`Scene left`)
     }
     onRefreshAll()
   }

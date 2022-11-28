@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import Toast from '../util/Toast'
+import * as Toast from '../util/Toast'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
@@ -52,9 +52,7 @@ export function Component({
           }
         },
       )
-      Toast.show('Profile updated', {
-        position: Toast.positions.TOP,
-      })
+      Toast.show('Profile updated')
       onUpdate?.()
       store.shell.closeModal()
     } catch (e: any) {

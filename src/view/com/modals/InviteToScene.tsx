@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
-import Toast from '../util/Toast'
+import * as Toast from '../util/Toast'
 import {
   ActivityIndicator,
   FlatList,
@@ -83,10 +83,7 @@ export const Component = observer(function Component({
         follow.declaration.cid,
       )
       setCreatedInvites({[follow.did]: assertionUri, ...createdInvites})
-      Toast.show('Invite sent', {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.TOP,
-      })
+      Toast.show('Invite sent')
     } catch (e) {
       setError('There was an issue with the invite. Please try again.')
       console.error(e)
@@ -119,10 +116,7 @@ export const Component = observer(function Component({
         [assertion.uri]: true,
         ...deletedPendingInvites,
       })
-      Toast.show('Invite removed', {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.TOP,
-      })
+      Toast.show('Invite removed')
     } catch (e) {
       setError('There was an issue with the invite. Please try again.')
       console.error(e)
