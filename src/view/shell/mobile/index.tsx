@@ -321,7 +321,7 @@ export const MobileShell: React.FC = observer(() => {
         <Btn
           icon={isAtHome ? 'home-solid' : 'home'}
           onPress={onPressHome}
-          onLongPress={doNewTab('/')}
+          onLongPress={TABS_ENABLED ? doNewTab('/') : undefined}
         />
         {TABS_ENABLED ? (
           <Btn
@@ -333,7 +333,7 @@ export const MobileShell: React.FC = observer(() => {
         <Btn
           icon={isAtNotifications ? 'bell-solid' : 'bell'}
           onPress={onPressNotifications}
-          onLongPress={doNewTab('/notifications')}
+          onLongPress={TABS_ENABLED ? doNewTab('/notifications') : undefined}
           notificationCount={store.me.notificationCount}
         />
         <Btn

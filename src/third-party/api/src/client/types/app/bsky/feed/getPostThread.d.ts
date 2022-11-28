@@ -1,4 +1,4 @@
-import { Headers } from '@atproto/xrpc';
+import { Headers, XRPCError } from '@atproto/xrpc';
 export interface QueryParams {
     uri: string;
     depth?: number;
@@ -60,5 +60,8 @@ export interface Response {
     success: boolean;
     headers: Headers;
     data: OutputSchema;
+}
+export declare class NotFoundError extends XRPCError {
+    constructor(src: XRPCError);
 }
 export declare function toKnownErr(e: any): any;

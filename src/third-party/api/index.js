@@ -10424,7 +10424,7 @@ var methodSchemaDict = {
         required: ["useCount"],
         properties: {
           useCount: {
-            type: "number"
+            type: "integer"
           }
         },
         $defs: {}
@@ -10841,7 +10841,7 @@ var methodSchemaDict = {
           description: "The NSID of the record type."
         },
         limit: {
-          type: "number",
+          type: "integer",
           minimum: 1,
           default: 50,
           description: "The number of records to return. TODO-max number?"
@@ -11306,16 +11306,16 @@ var methodSchemaDict = {
             maxLength: 256
           },
           followersCount: {
-            type: "number"
+            type: "integer"
           },
           followsCount: {
-            type: "number"
+            type: "integer"
           },
           membersCount: {
-            type: "number"
+            type: "integer"
           },
           postsCount: {
-            type: "number"
+            type: "integer"
           },
           myState: {
             type: "object",
@@ -11403,7 +11403,7 @@ var methodSchemaDict = {
       type: "object",
       properties: {
         limit: {
-          type: "number",
+          type: "integer",
           maximum: 100
         },
         cursor: {
@@ -11536,7 +11536,7 @@ var methodSchemaDict = {
           type: "string"
         },
         limit: {
-          type: "number",
+          type: "integer",
           maximum: 100
         },
         before: {
@@ -11661,7 +11661,7 @@ var methodSchemaDict = {
           type: "string"
         },
         limit: {
-          type: "number",
+          type: "integer",
           maximum: 100
         }
       }
@@ -11818,7 +11818,7 @@ var methodSchemaDict = {
           type: "string"
         },
         limit: {
-          type: "number",
+          type: "integer",
           maximum: 100
         },
         before: {
@@ -11889,16 +11889,16 @@ var methodSchemaDict = {
                 ]
               },
               replyCount: {
-                type: "number"
+                type: "integer"
               },
               repostCount: {
-                type: "number"
+                type: "integer"
               },
               upvoteCount: {
-                type: "number"
+                type: "integer"
               },
               downvoteCount: {
-                type: "number"
+                type: "integer"
               },
               indexedAt: {
                 type: "string",
@@ -12066,16 +12066,16 @@ var methodSchemaDict = {
             ]
           },
           replyCount: {
-            type: "number"
+            type: "integer"
           },
           repostCount: {
-            type: "number"
+            type: "integer"
           },
           upvoteCount: {
-            type: "number"
+            type: "integer"
           },
           downvoteCount: {
-            type: "number"
+            type: "integer"
           },
           indexedAt: {
             type: "string",
@@ -12207,7 +12207,7 @@ var methodSchemaDict = {
           type: "string"
         },
         depth: {
-          type: "number"
+          type: "integer"
         }
       }
     },
@@ -12265,7 +12265,7 @@ var methodSchemaDict = {
                 $ref: "#/$defs/post"
               },
               replyCount: {
-                type: "number"
+                type: "integer"
               },
               replies: {
                 type: "array",
@@ -12274,13 +12274,13 @@ var methodSchemaDict = {
                 }
               },
               repostCount: {
-                type: "number"
+                type: "integer"
               },
               upvoteCount: {
-                type: "number"
+                type: "integer"
               },
               downvoteCount: {
-                type: "number"
+                type: "integer"
               },
               indexedAt: {
                 type: "string",
@@ -12445,7 +12445,7 @@ var methodSchemaDict = {
             $ref: "#/$defs/post"
           },
           replyCount: {
-            type: "number"
+            type: "integer"
           },
           replies: {
             type: "array",
@@ -12454,13 +12454,13 @@ var methodSchemaDict = {
             }
           },
           repostCount: {
-            type: "number"
+            type: "integer"
           },
           upvoteCount: {
-            type: "number"
+            type: "integer"
           },
           downvoteCount: {
-            type: "number"
+            type: "integer"
           },
           indexedAt: {
             type: "string",
@@ -12578,7 +12578,12 @@ var methodSchemaDict = {
           enum: ["app.bsky.system.actorUser", "app.bsky.system.actorScene"]
         }
       }
-    }
+    },
+    errors: [
+      {
+        name: "NotFound"
+      }
+    ]
   },
   "app.bsky.feed.getRepostedBy": {
     lexicon: 1,
@@ -12595,7 +12600,7 @@ var methodSchemaDict = {
           type: "string"
         },
         limit: {
-          type: "number",
+          type: "integer",
           maximum: 100
         },
         before: {
@@ -12726,7 +12731,7 @@ var methodSchemaDict = {
           type: "string"
         },
         limit: {
-          type: "number",
+          type: "integer",
           maximum: 100
         },
         before: {
@@ -12797,16 +12802,16 @@ var methodSchemaDict = {
                 ]
               },
               replyCount: {
-                type: "number"
+                type: "integer"
               },
               repostCount: {
-                type: "number"
+                type: "integer"
               },
               upvoteCount: {
-                type: "number"
+                type: "integer"
               },
               downvoteCount: {
-                type: "number"
+                type: "integer"
               },
               indexedAt: {
                 type: "string",
@@ -12977,16 +12982,16 @@ var methodSchemaDict = {
             ]
           },
           replyCount: {
-            type: "number"
+            type: "integer"
           },
           repostCount: {
-            type: "number"
+            type: "integer"
           },
           upvoteCount: {
-            type: "number"
+            type: "integer"
           },
           downvoteCount: {
-            type: "number"
+            type: "integer"
           },
           indexedAt: {
             type: "string",
@@ -13128,7 +13133,7 @@ var methodSchemaDict = {
           enum: ["up", "down"]
         },
         limit: {
-          type: "number",
+          type: "integer",
           maximum: 100
         },
         before: {
@@ -13365,7 +13370,7 @@ var methodSchemaDict = {
           type: "boolean"
         },
         limit: {
-          type: "number",
+          type: "integer",
           maximum: 100
         },
         before: {
@@ -13582,7 +13587,7 @@ var methodSchemaDict = {
           type: "string"
         },
         limit: {
-          type: "number",
+          type: "integer",
           maximum: 100
         },
         before: {
@@ -13727,7 +13732,7 @@ var methodSchemaDict = {
           type: "string"
         },
         limit: {
-          type: "number",
+          type: "integer",
           maximum: 100
         },
         before: {
@@ -13872,7 +13877,7 @@ var methodSchemaDict = {
           type: "string"
         },
         limit: {
-          type: "number",
+          type: "integer",
           maximum: 100
         },
         before: {
@@ -14017,7 +14022,7 @@ var methodSchemaDict = {
           type: "string"
         },
         limit: {
-          type: "number",
+          type: "integer",
           maximum: 100
         },
         before: {
@@ -14160,7 +14165,7 @@ var methodSchemaDict = {
         required: ["count"],
         properties: {
           count: {
-            type: "number"
+            type: "integer"
           }
         },
         $defs: {}
@@ -14175,7 +14180,7 @@ var methodSchemaDict = {
       type: "object",
       properties: {
         limit: {
-          type: "number",
+          type: "integer",
           maximum: 100
         },
         before: {
@@ -14563,11 +14568,11 @@ var recordSchemaDict = {
           required: ["start", "end"],
           properties: {
             start: {
-              type: "number",
+              type: "integer",
               minimum: 0
             },
             end: {
-              type: "number",
+              type: "integer",
               minimum: 0
             }
           }
@@ -14620,11 +14625,11 @@ var recordSchemaDict = {
         required: ["start", "end"],
         properties: {
           start: {
-            type: "number",
+            type: "integer",
             minimum: 0
           },
           end: {
-            type: "number",
+            type: "integer",
             minimum: 0
           }
         }
@@ -15315,10 +15320,18 @@ function toKnownErr29(e) {
 // src/client/types/app/bsky/feed/getPostThread.ts
 var getPostThread_exports = {};
 __export(getPostThread_exports, {
+  NotFoundError: () => NotFoundError,
   toKnownErr: () => toKnownErr30
 });
+var NotFoundError = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
 function toKnownErr30(e) {
   if (e instanceof XRPCError) {
+    if (e.error === "NotFound")
+      return new NotFoundError(e);
   }
   return e;
 }

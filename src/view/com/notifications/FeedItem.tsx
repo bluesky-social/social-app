@@ -43,6 +43,11 @@ export const FeedItem = observer(function FeedItem({
     }
   }, [item])
 
+  if (item.additionalPost?.notFound) {
+    // don't render anything if the target post was deleted or unfindable
+    return <View />
+  }
+
   if (item.isReply) {
     return (
       <Link href={itemHref} title={itemTitle}>
