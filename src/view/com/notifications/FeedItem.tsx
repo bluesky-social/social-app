@@ -4,11 +4,12 @@ import {StyleSheet, Text, View} from 'react-native'
 import {AtUri} from '../../../third-party/uri'
 import {FontAwesomeIcon, Props} from '@fortawesome/react-native-fontawesome'
 import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
+import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../../lib/strings'
 import {UpIconSolid} from '../../lib/icons'
 import {UserAvatar} from '../util/UserAvatar'
-import {PostText} from '../post/PostText'
+import {ErrorMessage} from '../util/ErrorMessage'
 import {Post} from '../post/Post'
 import {Link} from '../util/Link'
 import {InviteAccepter} from './InviteAccepter'
@@ -51,7 +52,7 @@ export const FeedItem = observer(function FeedItem({
         ]}
         href={itemHref}
         title={itemTitle}>
-        <Post uri={item.uri} />
+        <Post uri={item.uri} initView={item.additionalPost} />
       </Link>
     )
   }
@@ -170,7 +171,7 @@ export const FeedItem = observer(function FeedItem({
             </Text>
           </View>
           {item.isUpvote || item.isRepost || item.isTrend ? (
-            <PostText uri={item.subjectUri} style={[s.gray5]} />
+            <AdditionalPostText additionalPost={item.additionalPost} />
           ) : (
             <></>
           )}
@@ -181,16 +182,23 @@ export const FeedItem = observer(function FeedItem({
           <InviteAccepter item={item} />
         </View>
       )}
-      {item.isReply ? (
-        <View style={s.pt5}>
-          <Post uri={item.uri} />
-        </View>
-      ) : (
-        <></>
-      )}
     </Link>
   )
 })
+
+function AdditionalPostText({
+  additionalPost,
+}: {
+  additionalPost?: PostThreadViewModel
+}) {
+  if (!additionalPost) {
+    return <View />
+  }
+  if (additionalPost.error) {
+    return <ErrorMessage message={additionalPost.error} />
+  }
+  return <Text style={[s.gray5]}>{additionalPost.thread?.record.text}</Text>
+}
 
 const styles = StyleSheet.create({
   outer: {

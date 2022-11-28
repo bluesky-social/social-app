@@ -15,19 +15,25 @@ import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 
-export const Post = observer(function Post({uri}: {uri: string}) {
+export const Post = observer(function Post({
+  uri,
+  initView,
+}: {
+  uri: string
+  initView?: PostThreadViewModel
+}) {
   const store = useStores()
-  const [view, setView] = useState<PostThreadViewModel | undefined>()
+  const [view, setView] = useState<PostThreadViewModel | undefined>(initView)
   const [deleted, setDeleted] = useState(false)
 
   useEffect(() => {
-    if (view?.params.uri === uri) {
+    if (initView || view?.params.uri === uri) {
       return // no change needed? or trigger refresh?
     }
     const newView = new PostThreadViewModel(store, {uri, depth: 0})
     setView(newView)
     newView.setup().catch(err => console.error('Failed to fetch post', err))
-  }, [uri, view?.params.uri, store])
+  }, [initView, uri, view?.params.uri, store])
 
   // deleted
   // =
