@@ -25,7 +25,6 @@ import {s, colors, gradients} from '../../lib/styles'
 import {detectLinkables} from '../../../lib/strings'
 
 const MAX_TEXT_LENGTH = 256
-const WARNING_TEXT_LENGTH = 200
 const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH
 
 export const ComposePost = observer(function ComposePost({
@@ -121,12 +120,7 @@ export const ComposePost = observer(function ComposePost({
   }
 
   const canPost = text.length <= MAX_TEXT_LENGTH
-  const progressColor =
-    text.length > DANGER_TEXT_LENGTH
-      ? '#e60000'
-      : text.length > WARNING_TEXT_LENGTH
-      ? '#f7c600'
-      : undefined
+  const progressColor = text.length > DANGER_TEXT_LENGTH ? '#e60000' : undefined
 
   const textDecorated = useMemo(() => {
     let i = 0
