@@ -80,7 +80,11 @@ export const Home = observer(function Home({
 
   return (
     <View style={s.flex1}>
-      <ViewHeader title="Bluesky" subtitle="Private Beta" />
+      <ViewHeader
+        title="Bluesky"
+        subtitle="Private Beta"
+        onPost={onCreatePost}
+      />
       <Feed
         key="default"
         feed={defaultFeedView}

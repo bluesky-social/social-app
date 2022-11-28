@@ -15,6 +15,7 @@ import {PostFeedLoadingPlaceholder} from '../com/util/LoadingPlaceholder'
 import {ErrorScreen} from '../com/util/ErrorScreen'
 import {ErrorMessage} from '../com/util/ErrorMessage'
 import {EmptyState} from '../com/util/EmptyState'
+import {ViewHeader} from '../com/util/ViewHeader'
 import Toast from '../com/util/Toast'
 import {s, colors} from '../lib/styles'
 
@@ -219,8 +220,11 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
     renderItem = () => <View />
   }
 
+  const title =
+    uiState.profile.displayName || uiState.profile.handle || params.name
   return (
     <View style={styles.container}>
+      <ViewHeader title={title} />
       {uiState.profile.hasError ? (
         <ErrorScreen
           title="Failed to load profile"
