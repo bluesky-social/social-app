@@ -14,7 +14,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete-view'
 import {Autocomplete} from './Autocomplete'
-import Toast from '../util/Toast'
+import * as Toast from '../util/Toast'
 import ProgressCircle from '../util/ProgressCircle'
 import {TextLink} from '../util/Link'
 import {UserAvatar} from '../util/UserAvatar'
@@ -106,13 +106,7 @@ export const ComposePost = observer(function ComposePost({
     }
     onPost?.()
     onClose()
-    Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`, {
-      duration: Toast.durations.LONG,
-      position: Toast.positions.TOP,
-      shadow: true,
-      animation: true,
-      hideOnPress: true,
-    })
+    Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
   }
   const onSelectAutocompleteItem = (item: string) => {
     setText(replaceTextAutocompletePrefix(text, item))

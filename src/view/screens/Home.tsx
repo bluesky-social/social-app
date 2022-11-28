@@ -47,6 +47,7 @@ export const Home = observer(function Home({
     if (!visible) {
       return
     }
+
     if (hasSetup) {
       console.log('Updating home feed')
       defaultFeedView.update()

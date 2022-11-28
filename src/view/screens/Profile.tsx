@@ -16,7 +16,7 @@ import {ErrorScreen} from '../com/util/ErrorScreen'
 import {ErrorMessage} from '../com/util/ErrorMessage'
 import {EmptyState} from '../com/util/EmptyState'
 import {ViewHeader} from '../com/util/ViewHeader'
-import Toast from '../com/util/Toast'
+import * as Toast from '../com/util/Toast'
 import {s, colors} from '../lib/styles'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
@@ -78,10 +78,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
         `You'll be able to invite them again if you change your mind.`,
         async () => {
           await uiState.members.removeMember(membership.did)
-          Toast.show(`User removed`, {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.TOP,
-          })
+          Toast.show(`User removed`)
         },
       ),
     )
