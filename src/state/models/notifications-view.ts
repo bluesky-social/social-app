@@ -7,7 +7,7 @@ import {APP_BSKY_GRAPH} from '../../third-party/api'
 import {cleanError} from '../../lib/strings'
 
 const UNGROUPABLE_REASONS = ['trend', 'assertion']
-
+const PAGE_SIZE = 30
 const MS_60MIN = 1e3 * 60 * 60
 
 export interface GroupedNotification extends ListNotifications.Notification {
@@ -242,9 +242,10 @@ export class NotificationsViewModel {
   private async _initialLoad(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.notification.list(
-        this.params,
-      )
+      const params = Object.assign({}, this.params, {
+        limit: PAGE_SIZE,
+      })
+      const res = await this.rootStore.api.app.bsky.notification.list(params)
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -259,6 +260,7 @@ export class NotificationsViewModel {
     this._xLoading()
     try {
       const params = Object.assign({}, this.params, {
+        limit: PAGE_SIZE,
         before: this.loadMoreCursor,
       })
       const res = await this.rootStore.api.app.bsky.notification.list(params)

@@ -8,7 +8,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -25,10 +24,17 @@ import {CreateSceneModel} from '../../../state/models/shell-ui'
 import {s, colors} from '../../lib/styles'
 
 export const MainMenu = observer(
-  ({active, onClose}: {active: boolean; onClose: () => void}) => {
+  ({
+    active,
+    insetBottom,
+    onClose,
+  }: {
+    active: boolean
+    insetBottom: number
+    onClose: () => void
+  }) => {
     const store = useStores()
     const initInterp = useSharedValue<number>(0)
-    const insets = useSafeAreaInsets()
 
     useEffect(() => {
       if (active) {
@@ -172,7 +178,7 @@ export const MainMenu = observer(
         <Animated.View
           style={[
             styles.wrapper,
-            {bottom: insets.bottom + 55},
+            {bottom: insetBottom + 45},
             wrapperAnimStyle,
           ]}>
           <SafeAreaView>
@@ -267,7 +273,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 40,
     paddingHorizontal: 10,
-    marginBottom: 16,
+    marginTop: 12,
+    marginBottom: 20,
   },
   section: {
     paddingHorizontal: 10,

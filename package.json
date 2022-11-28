@@ -48,7 +48,8 @@
     "react-native-svg": "^12.4.0",
     "react-native-tab-view": "^3.3.0",
     "react-native-url-polyfill": "^1.3.0",
-    "react-native-web": "^0.17.7"
+    "react-native-web": "^0.17.7",
+    "tlds": "^1.234.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

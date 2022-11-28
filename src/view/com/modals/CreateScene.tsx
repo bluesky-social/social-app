@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import Toast from '../util/Toast'
+import * as Toast from '../util/Toast'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -71,9 +71,7 @@ export function Component({}: {}) {
           },
         )
         .catch(e => console.error(e)) // an error here is not critical
-      Toast.show('Scene created', {
-        position: Toast.positions.TOP,
-      })
+      Toast.show('Scene created')
       store.shell.closeModal()
       store.nav.navigate(`/profile/${fullHandle}`)
     } catch (e: any) {

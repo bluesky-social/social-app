@@ -70,7 +70,7 @@ const Btn = ({
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }) => {
-  let size = 21
+  let size = 24
   let addedStyles
   let IconEl
   if (icon === 'menu') {
@@ -79,17 +79,17 @@ const Btn = ({
     IconEl = GridIconSolid
   } else if (icon === 'home') {
     IconEl = HomeIcon
-    size = 24
+    size = 27
   } else if (icon === 'home-solid') {
     IconEl = HomeIconSolid
-    size = 24
+    size = 27
   } else if (icon === 'bell') {
     IconEl = BellIcon
-    size = 24
+    size = 27
     addedStyles = {position: 'relative', top: -1} as ViewStyle
   } else if (icon === 'bell-solid') {
     IconEl = BellIconSolid
-    size = 24
+    size = 27
     addedStyles = {position: 'relative', top: -1} as ViewStyle
   } else {
     IconEl = FontAwesomeIcon
@@ -316,7 +316,7 @@ export const MobileShell: React.FC = observer(() => {
       <View
         style={[
           styles.bottomBar,
-          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
+          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 40)},
         ]}>
         <Btn
           icon={isAtHome ? 'home-solid' : 'home'}
@@ -343,6 +343,7 @@ export const MobileShell: React.FC = observer(() => {
       </View>
       <MainMenu
         active={isMainMenuActive}
+        insetBottom={clamp(safeAreaInsets.bottom, 15, 40)}
         onClose={() => setMainMenuActive(false)}
       />
       <Modal />
@@ -491,7 +492,7 @@ const styles = StyleSheet.create({
   },
   ctrl: {
     flex: 1,
-    paddingTop: 15,
+    paddingTop: 12,
     paddingBottom: 5,
   },
   notificationCount: {

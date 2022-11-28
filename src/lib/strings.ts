@@ -1,6 +1,7 @@
 import {AtUri} from '../third-party/uri'
 import {Entity} from '../third-party/api/src/client/types/app/bsky/feed/post'
 import {PROD_SERVICE} from '../state'
+import TLDs from 'tlds'
 
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
@@ -57,6 +58,14 @@ export function ago(date: number | string | Date): string {
   }
 }
 
+export function isValidDomain(str: string): boolean {
+  return !!TLDs.find(tld => {
+    let i = str.lastIndexOf(tld)
+    if (i === -1) return false
+    return str.charAt(i - 1) === '.' && i === str.length - tld.length
+  })
+}
+
 export function extractEntities(
   text: string,
   knownHandles?: Set<string>,
@@ -85,10 +94,14 @@ export function extractEntities(
   {
     // links
     const re =
-      /(^|\s)((https?:\/\/[\S]+)|([a-z][a-z0-9]*(\.[a-z0-9]+)+[\S]*))(\b)/dg
+      /(^|\s)((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))(\b)/dg
     while ((match = re.exec(text))) {
       let value = match[2]
       if (!value.startsWith('http')) {
+        const domain = match.groups?.domain
+        if (!domain || !isValidDomain(domain)) {
+          continue
+        }
         value = `https://${value}`
       }
       ents.push({
@@ -110,13 +123,17 @@ interface DetectedLink {
 type DetectedLinkable = string | DetectedLink
 export function detectLinkables(text: string): DetectedLinkable[] {
   const re =
-    /((^|\s)@[a-z0-9\.-]*)|((^|\s)https?:\/\/[\S]+)|((^|\s)[a-z][a-z0-9]*(\.[a-z0-9]+)+[\S]*)/gi
+    /((^|\s)@[a-z0-9\.-]*)|((^|\s)https?:\/\/[\S]+)|((^|\s)(?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*)/gi
   const segments = []
   let match
   let start = 0
   while ((match = re.exec(text))) {
     let matchIndex = match.index
     let matchValue = match[0]
+
+    if (match.groups?.domain && !isValidDomain(match.groups?.domain)) {
+      continue
+    }
 
     if (/\s/.test(matchValue)) {
       // HACK
