@@ -1,12 +1,6 @@
 import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AtUri} from '../../../third-party/uri'
@@ -108,18 +102,6 @@ export const ProfileHeader = observer(function ProfileHeader({
     return (
       <View style={styles.outer}>
         <LoadingPlaceholder width="100%" height={120} />
-        {store.nav.tab.canGoBack ? (
-          <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
-            <FontAwesomeIcon
-              size={18}
-              icon="angle-left"
-              style={styles.backIcon}
-            />
-          </TouchableOpacity>
-        ) : undefined}
-        <TouchableOpacity style={styles.searchBtn} onPress={onPressSearch}>
-          <MagnifyingGlassIcon size={19} style={styles.searchIcon} />
-        </TouchableOpacity>
         <View style={styles.avi}>
           <LoadingPlaceholder
             width={80}
@@ -179,18 +161,6 @@ export const ProfileHeader = observer(function ProfileHeader({
   return (
     <View style={styles.outer}>
       <UserBanner handle={view.handle} />
-      {store.nav.tab.canGoBack ? (
-        <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
-          <FontAwesomeIcon
-            size={18}
-            icon="angle-left"
-            style={styles.backIcon}
-          />
-        </TouchableOpacity>
-      ) : undefined}
-      <TouchableOpacity style={styles.searchBtn} onPress={onPressSearch}>
-        <MagnifyingGlassIcon size={19} style={styles.searchIcon} />
-      </TouchableOpacity>
       <View style={styles.avi}>
         <UserAvatar
           size={80}
@@ -352,30 +322,6 @@ const styles = StyleSheet.create({
   banner: {
     width: '100%',
     height: 120,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 10,
-    left: 12,
-    backgroundColor: '#ffff',
-    padding: 6,
-    borderRadius: 30,
-  },
-  backIcon: {
-    width: 14,
-    height: 14,
-    color: colors.black,
-  },
-  searchBtn: {
-    position: 'absolute',
-    top: 10,
-    right: 12,
-    backgroundColor: '#ffff',
-    padding: 5,
-    borderRadius: 30,
-  },
-  searchIcon: {
-    color: colors.black,
   },
   avi: {
     position: 'absolute',

@@ -94,15 +94,17 @@ export function HomeIconSolid({
 export function MagnifyingGlassIcon({
   style,
   size,
+  strokeWidth = 2,
 }: {
   style?: StyleProp<ViewStyle>
   size?: string | number
+  strokeWidth?: number
 }) {
   return (
     <Svg
       fill="none"
       viewBox="0 0 24 24"
-      strokeWidth={2}
+      strokeWidth={strokeWidth}
       stroke="currentColor"
       width={size || 24}
       height={size || 24}
