@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   },
   postText: {
     fontFamily: 'Helvetica Neue',
-    fontSize: 17,
-    lineHeight: 22.1, // 1.3 of 17px
+    fontSize: 16,
+    lineHeight: 20.8, // 1.3 of 16px
   },
 })
