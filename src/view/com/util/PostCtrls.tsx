@@ -31,17 +31,17 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   const interp2 = useSharedValue<number>(0)
 
   const anim1Style = useAnimatedStyle(() => ({
-    transform: [{scale: interpolate(interp1.value, [0, 1.0], [1.0, 3.0])}],
+    transform: [{scale: interpolate(interp1.value, [0, 1.0], [1.0, 4.0])}],
     opacity: interpolate(interp1.value, [0, 1.0], [1.0, 0.0]),
   }))
   const anim2Style = useAnimatedStyle(() => ({
-    transform: [{scale: interpolate(interp2.value, [0, 1.0], [1.0, 3.0])}],
+    transform: [{scale: interpolate(interp2.value, [0, 1.0], [1.0, 4.0])}],
     opacity: interpolate(interp2.value, [0, 1.0], [1.0, 0.0]),
   }))
 
   const onPressToggleRepostWrapper = () => {
     if (!opts.isReposted) {
-      interp1.value = withTiming(1, {duration: 300}, () => {
+      interp1.value = withTiming(1, {duration: 400}, () => {
         interp1.value = withDelay(100, withTiming(0, {duration: 20}))
       })
     }
@@ -49,7 +49,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   }
   const onPressToggleUpvoteWrapper = () => {
     if (!opts.isUpvoted) {
-      interp2.value = withTiming(1, {duration: 300}, () => {
+      interp2.value = withTiming(1, {duration: 400}, () => {
         interp2.value = withDelay(100, withTiming(0, {duration: 20}))
       })
     }
