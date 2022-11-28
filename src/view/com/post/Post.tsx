@@ -1,8 +1,15 @@
 import React, {useState, useEffect} from 'react'
+import {
+  ActivityIndicator,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
@@ -18,9 +25,11 @@ import {s, colors} from '../../lib/styles'
 export const Post = observer(function Post({
   uri,
   initView,
+  style,
 }: {
   uri: string
   initView?: PostThreadViewModel
+  style?: StyleProp<ViewStyle>
 }) {
   const store = useStores()
   const [view, setView] = useState<PostThreadViewModel | undefined>(initView)
@@ -115,7 +124,7 @@ export const Post = observer(function Post({
   }
 
   return (
-    <Link style={styles.outer} href={itemHref} title={itemTitle}>
+    <Link style={[styles.outer, style]} href={itemHref} title={itemTitle}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Link href={authorHref} title={authorTitle}>
