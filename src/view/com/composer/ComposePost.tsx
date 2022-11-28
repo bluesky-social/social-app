@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useMemo, useRef, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
@@ -17,6 +17,7 @@ import {Autocomplete} from './Autocomplete'
 import Toast from '../util/Toast'
 import ProgressCircle from '../util/ProgressCircle'
 import {TextLink} from '../util/Link'
+import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import * as apilib from '../../../state/lib/api'
 import {ComposerOpts} from '../../../state/models/shell-ui'
@@ -37,6 +38,7 @@ export const ComposePost = observer(function ComposePost({
   onClose: () => void
 }) {
   const store = useStores()
+  const textInput = useRef<TextInput>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState('')
   const [text, setText] = useState('')
@@ -48,6 +50,20 @@ export const ComposePost = observer(function ComposePost({
   useEffect(() => {
     autocompleteView.setup()
   })
+  useEffect(() => {
+    // HACK
+    // wait a moment before focusing the input to resolve some layout bugs with the keyboard-avoiding-view
+    // -prf
+    let to: NodeJS.Timeout | undefined
+    if (textInput.current) {
+      to = setTimeout(() => {
+        textInput.current?.focus()
+      }, 250)
+    }
+    return () => {
+      if (to) clearTimeout(to)
+    }
+  }, [textInput.current])
 
   const onChangeText = (newText: string) => {
     setText(newText)
@@ -77,7 +93,10 @@ export const ComposePost = observer(function ComposePost({
     }
     setIsProcessing(true)
     try {
-      await apilib.post(store, text, replyTo, autocompleteView.knownHandles)
+      const replyRef = replyTo
+        ? {uri: replyTo.uri, cid: replyTo.cid}
+        : undefined
+      await apilib.post(store, text, replyRef, autocompleteView.knownHandles)
     } catch (e: any) {
       console.error(`Failed to create post: ${e.toString()}`)
       setError(
@@ -129,7 +148,7 @@ export const ComposePost = observer(function ComposePost({
       <SafeAreaView style={s.flex1}>
         <View style={styles.topbar}>
           <TouchableOpacity onPress={onPressCancel}>
-            <Text style={[s.blue3, s.f16]}>Cancel</Text>
+            <Text style={[s.blue3, s.f18]}>Cancel</Text>
           </TouchableOpacity>
           <View style={s.flex1} />
           {isProcessing ? (
@@ -143,7 +162,9 @@ export const ComposePost = observer(function ComposePost({
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 1}}
                 style={styles.postBtn}>
-                <Text style={[s.white, s.f16, s.bold]}>Post</Text>
+                <Text style={[s.white, s.f16, s.bold]}>
+                  {replyTo ? 'Reply' : 'Post'}
+                </Text>
               </LinearGradient>
             </TouchableOpacity>
           ) : (
@@ -165,28 +186,40 @@ export const ComposePost = observer(function ComposePost({
           </View>
         )}
         {replyTo ? (
-          <View>
-            <Text style={s.gray4}>
-              Replying to{' '}
+          <View style={styles.replyToLayout}>
+            <UserAvatar
+              handle={replyTo.author.handle}
+              displayName={replyTo.author.displayName}
+              size={50}
+            />
+            <View style={styles.replyToPost}>
               <TextLink
                 href={`/profile/${replyTo.author.handle}`}
-                text={'@' + replyTo.author.handle}
-                style={[s.bold, s.gray5]}
+                text={replyTo.author.displayName || replyTo.author.handle}
+                style={[s.f16, s.bold]}
               />
-            </Text>
-            <View style={styles.replyToPost}>
-              <Text style={s.gray5}>{replyTo.text}</Text>
+              <Text style={[s.f16, s['lh16-1.3']]} numberOfLines={6}>
+                {replyTo.text}
+              </Text>
             </View>
           </View>
         ) : undefined}
-        <TextInput
-          multiline
-          scrollEnabled
-          onChangeText={(text: string) => onChangeText(text)}
-          placeholder={replyTo ? 'Write your reply' : "What's up?"}
-          style={styles.textInput}>
-          {textDecorated}
-        </TextInput>
+        <View style={styles.textInputLayout}>
+          <UserAvatar
+            handle={store.me.handle || ''}
+            displayName={store.me.displayName}
+            size={50}
+          />
+          <TextInput
+            ref={textInput}
+            multiline
+            scrollEnabled
+            onChangeText={(text: string) => onChangeText(text)}
+            placeholder={replyTo ? 'Write your reply' : "What's up?"}
+            style={styles.textInput}>
+            {textDecorated}
+          </TextInput>
+        </View>
         <View
           style={[s.flexRow, {alignItems: 'center'}, s.pt10, s.pb10, s.pr5]}>
           <View style={s.flex1} />
@@ -233,9 +266,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: 10,
-    paddingBottom: 5,
+    paddingBottom: 10,
     paddingHorizontal: 5,
-    height: 50,
+    height: 55,
   },
   postBtn: {
     borderRadius: 20,
@@ -261,18 +294,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 5,
   },
+  textInputLayout: {
+    flexDirection: 'row',
+    flex: 1,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray2,
+    paddingTop: 16,
+  },
   textInput: {
     flex: 1,
     padding: 5,
-    fontSize: 21,
+    fontSize: 18,
+    marginLeft: 8,
+  },
+  replyToLayout: {
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    borderTopColor: colors.gray2,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
   replyToPost: {
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    borderWidth: 1,
-    borderColor: colors.gray2,
-    borderRadius: 6,
-    marginTop: 5,
-    marginBottom: 10,
+    flex: 1,
+    paddingLeft: 13,
+    paddingRight: 8,
   },
 })
