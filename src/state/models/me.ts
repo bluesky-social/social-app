@@ -1,6 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from './root-store'
 import {MembershipsViewModel} from './memberships-view'
+import {NotificationsViewModel} from './notifications-view'
 
 export class MeModel {
   did?: string
@@ -9,9 +10,11 @@ export class MeModel {
   description?: string
   notificationCount: number = 0
   memberships?: MembershipsViewModel
+  notifications: NotificationsViewModel
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {rootStore: false}, {autoBind: true})
+    this.notifications = new NotificationsViewModel(this.rootStore, {})
   }
 
   clear() {
@@ -43,7 +46,12 @@ export class MeModel {
       this.memberships = new MembershipsViewModel(this.rootStore, {
         actor: this.did,
       })
-      await this.memberships?.setup()
+      await this.memberships?.setup().catch(e => {
+        console.error('Failed to setup memberships model', e)
+      })
+      await this.notifications.setup().catch(e => {
+        console.error('Failed to setup notifications model', e)
+      })
     } else {
       this.clear()
     }
@@ -56,7 +64,12 @@ export class MeModel {
   async fetchStateUpdate() {
     const res = await this.rootStore.api.app.bsky.notification.getCount()
     runInAction(() => {
+      const newNotifications = this.notificationCount !== res.data.count
       this.notificationCount = res.data.count
+      if (newNotifications) {
+        // trigger pre-emptive fetch on new notifications
+        this.notifications.refresh()
+      }
     })
   }
 

@@ -203,7 +203,6 @@ export class NotificationsViewModel {
     await this._pendingWork()
     this._loadPromise = this._initialLoad(isRefreshing)
     await this._loadPromise
-    this._updateReadState()
     this._loadPromise = undefined
   }
 
@@ -238,6 +237,20 @@ export class NotificationsViewModel {
     this._updatePromise = this._update()
     await this._updatePromise
     this._updatePromise = undefined
+  }
+
+  /**
+   * Update read/unread state
+   */
+  async updateReadState() {
+    try {
+      await this.rootStore.api.app.bsky.notification.updateSeen({
+        seenAt: new Date().toISOString(),
+      })
+      this.rootStore.me.clearNotificationCount()
+    } catch (e) {
+      console.log('Failed to update notifications read state', e)
+    }
   }
 
   // state transitions
@@ -329,11 +342,10 @@ export class NotificationsViewModel {
   }
 
   private async _replaceAll(res: ListNotifications.Response) {
-    this.notifications.length = 0
-    return this._appendAll(res)
+    return this._appendAll(res, true)
   }
 
-  private async _appendAll(res: ListNotifications.Response) {
+  private async _appendAll(res: ListNotifications.Response, replace = false) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     let counter = this.notifications.length
@@ -357,7 +369,11 @@ export class NotificationsViewModel {
       )
     })
     runInAction(() => {
-      this.notifications = this.notifications.concat(itemModels)
+      if (replace) {
+        this.notifications = itemModels
+      } else {
+        this.notifications = this.notifications.concat(itemModels)
+      }
     })
   }
 
@@ -372,17 +388,6 @@ export class NotificationsViewModel {
       if (existingItem) {
         existingItem.copy(item, true)
       }
-    }
-  }
-
-  private async _updateReadState() {
-    try {
-      await this.rootStore.api.app.bsky.notification.updateSeen({
-        seenAt: new Date().toISOString(),
-      })
-      this.rootStore.me.clearNotificationCount()
-    } catch (e) {
-      console.log('Failed to update notifications read state', e)
     }
   }
 }
