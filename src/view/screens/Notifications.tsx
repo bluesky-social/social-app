@@ -7,43 +7,33 @@ import {NotificationsViewModel} from '../../state/models/notifications-view'
 import {ScreenParams} from '../routes'
 
 export const Notifications = ({navIdx, visible}: ScreenParams) => {
-  const [hasSetup, setHasSetup] = useState<boolean>(false)
-  const [notesView, setNotesView] = useState<
-    NotificationsViewModel | undefined
-  >()
   const store = useStores()
 
   useEffect(() => {
-    let aborted = false
     if (!visible) {
       return
     }
+    console.log('Updating notifications feed')
     store.me.refreshMemberships() // needed for the invite notifications
-    if (hasSetup) {
-      console.log('Updating notifications feed')
-      notesView?.update()
-    } else {
-      store.nav.setTitle(navIdx, 'Notifications')
-      const newNotesView = new NotificationsViewModel(store, {})
-      setNotesView(newNotesView)
-      newNotesView.setup().then(() => {
-        if (aborted) return
-        setHasSetup(true)
+    store.me.notifications
+      .update()
+      .catch(e => {
+        console.error('Error while updating notifications feed', e)
       })
-    }
-    return () => {
-      aborted = true
-    }
+      .then(() => {
+        store.me.notifications.updateReadState()
+      })
+    store.nav.setTitle(navIdx, 'Notifications')
   }, [visible, store])
 
   const onPressTryAgain = () => {
-    notesView?.refresh()
+    store.me.notifications.refresh()
   }
 
   return (
     <View style={{flex: 1}}>
       <ViewHeader title="Notifications" />
-      {notesView && <Feed view={notesView} onPressTryAgain={onPressTryAgain} />}
+      <Feed view={store.me.notifications} onPressTryAgain={onPressTryAgain} />
     </View>
   )
 }
