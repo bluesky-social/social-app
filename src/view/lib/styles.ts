@@ -41,6 +41,8 @@ export const colors = {
   green3: '#20bc07',
   green4: '#148203',
   green5: '#082b03',
+
+  unreadNotifBg: '#ebf6ff',
 }
 
 export const gradients = {

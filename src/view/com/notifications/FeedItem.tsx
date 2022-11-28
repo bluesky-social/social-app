@@ -45,14 +45,15 @@ export const FeedItem = observer(function FeedItem({
 
   if (item.isReply) {
     return (
-      <Link
-        style={[
-          styles.outerMinimal,
-          item.isRead ? undefined : styles.outerUnread,
-        ]}
-        href={itemHref}
-        title={itemTitle}>
-        <Post uri={item.uri} initView={item.additionalPost} />
+      <Link href={itemHref} title={itemTitle}>
+        <Post
+          uri={item.uri}
+          initView={item.additionalPost}
+          style={[
+            styles.outerMinimal,
+            item.isRead ? undefined : styles.outerUnread,
+          ]}
+        />
       </Link>
     )
   }
@@ -215,8 +216,9 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   outerUnread: {
+    backgroundColor: colors.unreadNotifBg,
     borderWidth: 1,
-    borderColor: colors.blue2,
+    borderColor: colors.blue1,
   },
   layout: {
     flexDirection: 'row',
