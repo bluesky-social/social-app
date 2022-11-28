@@ -88,6 +88,15 @@ export const PostThreadItem = observer(function PostThreadItem({
     )
   }
 
+  if (deleted) {
+    return (
+      <View style={[styles.outer, s.p20, s.flexRow]}>
+        <FontAwesomeIcon icon={['far', 'trash-can']} style={[s.gray4]} />
+        <Text style={[s.gray5, s.ml10]}>This post has been deleted.</Text>
+      </View>
+    )
+  }
+
   if (item._isHighlightedPost) {
     return (
       <>
