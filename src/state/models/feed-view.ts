@@ -7,6 +7,8 @@ import * as apilib from '../lib/api'
 import {cleanError} from '../../lib/strings'
 import {isObj, hasProp} from '../lib/type-guards'
 
+const PAGE_SIZE = 30
+
 type FeedItem = GetTimeline.FeedItem | GetAuthorFeed.FeedItem
 type FeedItemWithThreadMeta = FeedItem & {
   _isThreadParent?: boolean
@@ -166,6 +168,7 @@ export class FeedModel {
   params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams
   hasMore = true
   loadMoreCursor: string | undefined
+  pollCursor: string | undefined
   _loadPromise: Promise<void> | undefined
   _loadMorePromise: Promise<void> | undefined
   _loadLatestPromise: Promise<void> | undefined
@@ -300,7 +303,7 @@ export class FeedModel {
     const res = await this._getFeed({limit: 1})
     this.setHasNewLatest(
       res.data.feed[0] &&
-        (this.feed.length === 0 || res.data.feed[0].uri !== this.feed[0]?.uri),
+        (this.feed.length === 0 || res.data.feed[0].uri !== this.pollCursor),
     )
   }
 
@@ -341,7 +344,7 @@ export class FeedModel {
   private async _initialLoad(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this._getFeed()
+      const res = await this._getFeed({limit: PAGE_SIZE})
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -352,7 +355,7 @@ export class FeedModel {
   private async _loadLatest() {
     this._xLoading()
     try {
-      const res = await this._getFeed()
+      const res = await this._getFeed({limit: PAGE_SIZE})
       this._prependAll(res)
       this._xIdle()
     } catch (e: any) {
@@ -368,6 +371,7 @@ export class FeedModel {
     try {
       const res = await this._getFeed({
         before: this.loadMoreCursor,
+        limit: PAGE_SIZE,
       })
       this._appendAll(res)
       this._xIdle()
@@ -402,6 +406,7 @@ export class FeedModel {
 
   private _replaceAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     this.feed.length = 0
+    this.pollCursor = res.data.feed[0]?.uri
     this._appendAll(res)
   }
 
@@ -434,6 +439,7 @@ export class FeedModel {
   }
 
   private _prependAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
+    this.pollCursor = res.data.feed[0]?.uri
     let counter = this.feed.length
     const toPrepend = []
     for (const item of res.data.feed) {
@@ -493,8 +499,7 @@ function preprocessFeed(
   for (let i = feed.length - 1; i >= 0; i--) {
     const item = feed[i] as FeedItemWithThreadMeta
 
-    // dont dedup the first item so that polling works properly
-    if (dedup && i !== 0) {
+    if (dedup) {
       if (reorg.find(item2 => item2.uri === item.uri)) {
         continue
       }
