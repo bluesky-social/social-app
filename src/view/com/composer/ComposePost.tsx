@@ -128,10 +128,16 @@ export const ComposePost = observer(function ComposePost({
 
   const canPost = text.length <= MAX_TEXT_LENGTH
   const progressColor = text.length > DANGER_TEXT_LENGTH ? '#e60000' : undefined
+
   const selectTextInputLayout =
     selectedPhotos.length !== 0
       ? styles.textInputLayoutWithPhoto
       : styles.textInputLayoutWithoutPhoto
+  const selectTextInputPlaceholder = replyTo
+    ? 'Write your reply'
+    : selectedPhotos.length !== 0
+    ? 'Write a comment'
+    : "What's up?"
 
   const textDecorated = useMemo(() => {
     let i = 0
@@ -220,13 +226,7 @@ export const ComposePost = observer(function ComposePost({
             multiline
             scrollEnabled
             onChangeText={(text: string) => onChangeText(text)}
-            placeholder={
-              replyTo
-                ? 'Write your reply'
-                : selectedPhotos.length !== 0
-                ? 'Write a comment'
-                : "What's up?"
-            }
+            placeholder={selectTextInputPlaceholder}
             style={styles.textInput}>
             {textDecorated}
           </TextInput>
