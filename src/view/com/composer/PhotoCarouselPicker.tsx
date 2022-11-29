@@ -2,7 +2,11 @@ import React from 'react'
 import {Image, StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from '../../lib/styles'
-import {openPicker, openCamera} from 'react-native-image-crop-picker'
+import {
+  openPicker,
+  openCamera,
+  ImageOrVideo,
+} from 'react-native-image-crop-picker'
 import {observer} from 'mobx-react-lite'
 
 export const PhotoCarouselPicker = observer(function PhotoCarouselPicker({
@@ -22,8 +26,7 @@ export const PhotoCarouselPicker = observer(function PhotoCarouselPicker({
       <TouchableOpacity
         style={[styles.galleryButton, styles.photo]}
         onPress={() => {
-          openCamera({multiple: true, maxFiles: 4}).then(item => {
-            console.log(item)
+          openCamera({mediaType: 'photo'}).then(item => {
             setSelectedPhotos([item.path, ...selectedPhotos])
           })
         }}>
@@ -46,15 +49,17 @@ export const PhotoCarouselPicker = observer(function PhotoCarouselPicker({
       <TouchableOpacity
         style={[styles.galleryButton, styles.photo]}
         onPress={() => {
-          openPicker({multiple: true, maxFiles: 4}).then(items => {
-            setSelectedPhotos([
-              ...items.reduce(
-                (accum, cur) => accum.concat(cur.sourceURL!),
-                [] as string[],
-              ),
-              ...selectedPhotos,
-            ])
-          })
+          openPicker({multiple: true, maxFiles: 4, mediaType: 'photo'}).then(
+            items => {
+              setSelectedPhotos([
+                ...items.reduce(
+                  (accum, cur) => accum.concat(cur.sourceURL!),
+                  [] as string[],
+                ),
+                ...selectedPhotos,
+              ])
+            },
+          )
         }}>
         <FontAwesomeIcon icon="image" style={{color: colors.blue3}} size={24} />
       </TouchableOpacity>
