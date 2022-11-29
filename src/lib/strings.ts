@@ -74,7 +74,7 @@ export function extractEntities(
   let ents: Entity[] = []
   {
     // mentions
-    const re = /(^|\s)(@)([a-zA-Z0-9\.-]+)(\b)/dg
+    const re = /(^|\s|\()(@)([a-zA-Z0-9\.-]+)(\b)/dg
     while ((match = re.exec(text))) {
       if (knownHandles && !knownHandles.has(match[3])) {
         continue // not a known handle
@@ -94,7 +94,7 @@ export function extractEntities(
   {
     // links
     const re =
-      /(^|\s)((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))(\b)/dg
+      /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/dgm
     while ((match = re.exec(text))) {
       let value = match[2]
       if (!value.startsWith('http')) {
@@ -104,13 +104,25 @@ export function extractEntities(
         }
         value = `https://${value}`
       }
+      const index = {
+        start: match.indices[2][0], // skip the (^|\s)
+        end: match.indices[2][1],
+      }
+      {
+        // strip ending puncuation
+        if (/[.,;!?]$/.test(value)) {
+          value = value.slice(0, -1)
+          index.end--
+        }
+        if (/[)]$/.test(value) && !value.includes('(')) {
+          value = value.slice(0, -1)
+          index.end--
+        }
+      }
       ents.push({
         type: 'link',
         value,
-        index: {
-          start: match.indices[2][0], // skip the (^|\s)
-          end: match.indices[2][1],
-        },
+        index,
       })
     }
   }
@@ -123,7 +135,7 @@ interface DetectedLink {
 type DetectedLinkable = string | DetectedLink
 export function detectLinkables(text: string): DetectedLinkable[] {
   const re =
-    /((^|\s)@[a-z0-9\.-]*)|((^|\s)https?:\/\/[\S]+)|((^|\s)(?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*)/gi
+    /((^|\s|\()@[a-z0-9\.-]*)|((^|\s|\()https?:\/\/[\S]+)|((^|\s|\()(?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*)/gi
   const segments = []
   let match
   let start = 0
@@ -135,13 +147,23 @@ export function detectLinkables(text: string): DetectedLinkable[] {
       continue
     }
 
-    if (/\s/.test(matchValue)) {
+    if (/\s|\(/.test(matchValue)) {
       // HACK
       // skip the starting space
       // we have to do this because RN doesnt support negative lookaheads
       // -prf
       matchIndex++
       matchValue = matchValue.slice(1)
+    }
+
+    {
+      // strip ending puncuation
+      if (/[.,;!?]$/.test(matchValue)) {
+        matchValue = matchValue.slice(0, -1)
+      }
+      if (/[)]$/.test(matchValue) && !matchValue.includes('(')) {
+        matchValue = matchValue.slice(0, -1)
+      }
     }
 
     if (start !== matchIndex) {
