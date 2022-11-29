@@ -8,17 +8,13 @@ import {observer} from 'mobx-react-lite'
 export const PhotoCarouselPicker = observer(function PhotoCarouselPicker({
   selectedPhotos,
   setSelectedPhotos,
-  inputText,
   localPhotos,
 }: {
   selectedPhotos: string[]
   setSelectedPhotos: React.Dispatch<React.SetStateAction<string[]>>
-  inputText: string
   localPhotos: any
 }) {
-  return localPhotos.photos != null &&
-    inputText === '' &&
-    selectedPhotos.length === 0 ? (
+  return (
     <ScrollView
       horizontal
       style={styles.photosContainer}
@@ -60,7 +56,7 @@ export const PhotoCarouselPicker = observer(function PhotoCarouselPicker({
         <FontAwesomeIcon icon="image" style={{color: colors.blue3}} size={24} />
       </TouchableOpacity>
     </ScrollView>
-  ) : null
+  )
 })
 
 const styles = StyleSheet.create({

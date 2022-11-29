@@ -2,7 +2,6 @@ import React from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from '../../lib/styles'
-import {observer} from 'mobx-react-lite'
 
 export const SelectedPhoto = ({
   selectedPhotos,
