@@ -23,8 +23,9 @@ import * as apilib from '../../../state/lib/api'
 import {ComposerOpts} from '../../../state/models/shell-ui'
 import {s, colors, gradients} from '../../lib/styles'
 import {detectLinkables} from '../../../lib/strings'
-import {PhotoCarouselPicker} from './PhotoCarouselPicker'
 import {UserLocalPhotosModel} from '../../../state/models/user-local-photos'
+import {PhotoCarouselPicker} from './PhotoCarouselPicker'
+import {SelectedPhoto} from './SelectedPhoto'
 
 const MAX_TEXT_LENGTH = 256
 const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH
@@ -60,7 +61,7 @@ export const ComposePost = observer(function ComposePost({
 
   useEffect(() => {
     localPhotos.setup()
-  }, [])
+  }, [localPhotos])
 
   useEffect(() => {
     // HACK
@@ -130,6 +131,10 @@ export const ComposePost = observer(function ComposePost({
 
   const canPost = text.length <= MAX_TEXT_LENGTH
   const progressColor = text.length > DANGER_TEXT_LENGTH ? '#e60000' : undefined
+  const selectTextInputLayout =
+    selectedPhotos.length !== 0
+      ? styles.textInputLayoutWithPhoto
+      : styles.textInputLayoutWithoutPhoto
 
   const textDecorated = useMemo(() => {
     let i = 0
@@ -207,13 +212,7 @@ export const ComposePost = observer(function ComposePost({
             </View>
           </View>
         ) : undefined}
-        <View
-          style={[
-            styles.textInputLayout,
-            selectedPhotos.length !== 0
-              ? styles.textInputLayoutWithPhoto
-              : styles.textInputLayoutWithoutPhoto,
-          ]}>
+        <View style={[styles.textInputLayout, selectTextInputLayout]}>
           <UserAvatar
             handle={store.me.handle || ''}
             displayName={store.me.displayName}
@@ -229,12 +228,17 @@ export const ComposePost = observer(function ComposePost({
             {textDecorated}
           </TextInput>
         </View>
+        <SelectedPhoto
+          selectedPhotos={selectedPhotos}
+          setSelectedPhotos={setSelectedPhotos}
+        />
         <PhotoCarouselPicker
           selectedPhotos={selectedPhotos}
           setSelectedPhotos={setSelectedPhotos}
           localPhotos={localPhotos}
           inputText={text}
         />
+        <View style={styles.separator} />
         <View style={[s.flexRow, s.pt10, s.pb10, s.pr5, styles.contentCenter]}>
           <View style={s.flex1} />
           <Text style={[s.mr10, {color: progressColor}]}>
@@ -339,4 +343,9 @@ const styles = StyleSheet.create({
     paddingRight: 8,
   },
   contentCenter: {alignItems: 'center'},
+  separator: {
+    borderBottomColor: 'black',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    width: '100%',
+  },
 })
