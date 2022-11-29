@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import * as GetPostThread from '../../third-party/api/src/client/types/app/bsky/feed/getPostThread'
+import {AppBskyFeedGetPostThread as GetPostThread} from '../../third-party/api'
 import {AtUri} from '../../third-party/uri'
 import _omit from 'lodash.omit'
 import {RootStoreModel} from './root-store'
@@ -216,6 +216,7 @@ export class PostThreadViewModel {
   isRefreshing = false
   hasLoaded = false
   error = ''
+  notFound = false
   resolvedUri = ''
   params: GetPostThread.QueryParams
 
@@ -286,13 +287,15 @@ export class PostThreadViewModel {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
+    this.notFound = false
   }
 
-  private _xIdle(err: string = '') {
+  private _xIdle(err: any = undefined) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err
+    this.error = err ? err.toString() : ''
+    this.notFound = err instanceof GetPostThread.NotFoundError
   }
 
   // loader functions
@@ -317,7 +320,7 @@ export class PostThreadViewModel {
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load thread: ${e.toString()}`)
+      this._xIdle(e)
     }
   }
 
