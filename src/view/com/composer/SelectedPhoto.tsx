@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from '../../lib/styles'
@@ -17,6 +17,15 @@ export const SelectedPhoto = ({
       ? styles.image175
       : styles.image85
 
+  const handleRemovePhoto = useCallback(
+    item => {
+      setSelectedPhotos(
+        selectedPhotos.filter(filterItem => filterItem !== item),
+      )
+    },
+    [selectedPhotos, setSelectedPhotos],
+  )
+
   return selectedPhotos.length !== 0 ? (
     <View style={styles.imageContainer}>
       {selectedPhotos.length !== 0 &&
@@ -25,11 +34,7 @@ export const SelectedPhoto = ({
             key={`selected-image-${index}`}
             style={[styles.image, imageStyle]}>
             <TouchableOpacity
-              onPress={() => {
-                setSelectedPhotos(
-                  selectedPhotos.filter(filterItem => filterItem !== item),
-                )
-              }}
+              onPress={() => handleRemovePhoto(item)}
               style={styles.removePhotoButton}>
               <FontAwesomeIcon
                 icon="xmark"
