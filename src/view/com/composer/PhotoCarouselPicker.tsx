@@ -22,7 +22,10 @@ export const PhotoCarouselPicker = observer(function PhotoCarouselPicker({
       <TouchableOpacity
         style={[styles.galleryButton, styles.photo]}
         onPress={() => {
-          openCamera({multiple: true, maxFiles: 4}).then()
+          openCamera({multiple: true, maxFiles: 4}).then(item => {
+            console.log(item)
+            setSelectedPhotos([item.path, ...selectedPhotos])
+          })
         }}>
         <FontAwesomeIcon
           icon="camera"
