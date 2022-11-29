@@ -1,8 +1,15 @@
 import React, {useState, useEffect} from 'react'
+import {
+  ActivityIndicator,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
@@ -15,19 +22,27 @@ import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 
-export const Post = observer(function Post({uri}: {uri: string}) {
+export const Post = observer(function Post({
+  uri,
+  initView,
+  style,
+}: {
+  uri: string
+  initView?: PostThreadViewModel
+  style?: StyleProp<ViewStyle>
+}) {
   const store = useStores()
-  const [view, setView] = useState<PostThreadViewModel | undefined>()
+  const [view, setView] = useState<PostThreadViewModel | undefined>(initView)
   const [deleted, setDeleted] = useState(false)
 
   useEffect(() => {
-    if (view?.params.uri === uri) {
+    if (initView || view?.params.uri === uri) {
       return // no change needed? or trigger refresh?
     }
     const newView = new PostThreadViewModel(store, {uri, depth: 0})
     setView(newView)
     newView.setup().catch(err => console.error('Failed to fetch post', err))
-  }, [uri, view?.params.uri, store])
+  }, [initView, uri, view?.params.uri, store])
 
   // deleted
   // =
@@ -109,7 +124,7 @@ export const Post = observer(function Post({uri}: {uri: string}) {
   }
 
   return (
-    <Link style={styles.outer} href={itemHref} title={itemTitle}>
+    <Link style={[styles.outer, style]} href={itemHref} title={itemTitle}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Link href={authorHref} title={authorTitle}>

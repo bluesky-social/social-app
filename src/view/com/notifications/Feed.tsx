@@ -43,7 +43,7 @@ export const Feed = observer(function Feed({
           onPressTryAgain={onPressTryAgain}
         />
       )}
-      {view.hasContent && (
+      {view.hasLoaded && (
         <FlatList
           data={view.notifications}
           keyExtractor={item => item._reactKey}
@@ -53,7 +53,7 @@ export const Feed = observer(function Feed({
           onEndReached={onEndReached}
         />
       )}
-      {view.isEmpty && (
+      {view.hasLoaded && view.isEmpty && (
         <EmptyState icon="bell" message="No notifications yet!" />
       )}
     </View>

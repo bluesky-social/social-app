@@ -4,11 +4,12 @@ import {StyleSheet, Text, View} from 'react-native'
 import {AtUri} from '../../../third-party/uri'
 import {FontAwesomeIcon, Props} from '@fortawesome/react-native-fontawesome'
 import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
+import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../../lib/strings'
 import {UpIconSolid} from '../../lib/icons'
 import {UserAvatar} from '../util/UserAvatar'
-import {PostText} from '../post/PostText'
+import {ErrorMessage} from '../util/ErrorMessage'
 import {Post} from '../post/Post'
 import {Link} from '../util/Link'
 import {InviteAccepter} from './InviteAccepter'
@@ -42,16 +43,22 @@ export const FeedItem = observer(function FeedItem({
     }
   }, [item])
 
+  if (item.additionalPost?.notFound) {
+    // don't render anything if the target post was deleted or unfindable
+    return <View />
+  }
+
   if (item.isReply) {
     return (
-      <Link
-        style={[
-          styles.outerMinimal,
-          item.isRead ? undefined : styles.outerUnread,
-        ]}
-        href={itemHref}
-        title={itemTitle}>
-        <Post uri={item.uri} />
+      <Link href={itemHref} title={itemTitle}>
+        <Post
+          uri={item.uri}
+          initView={item.additionalPost}
+          style={[
+            styles.outerMinimal,
+            item.isRead ? undefined : styles.outerUnread,
+          ]}
+        />
       </Link>
     )
   }
@@ -170,7 +177,7 @@ export const FeedItem = observer(function FeedItem({
             </Text>
           </View>
           {item.isUpvote || item.isRepost || item.isTrend ? (
-            <PostText uri={item.subjectUri} style={[s.gray5]} />
+            <AdditionalPostText additionalPost={item.additionalPost} />
           ) : (
             <></>
           )}
@@ -181,16 +188,23 @@ export const FeedItem = observer(function FeedItem({
           <InviteAccepter item={item} />
         </View>
       )}
-      {item.isReply ? (
-        <View style={s.pt5}>
-          <Post uri={item.uri} />
-        </View>
-      ) : (
-        <></>
-      )}
     </Link>
   )
 })
+
+function AdditionalPostText({
+  additionalPost,
+}: {
+  additionalPost?: PostThreadViewModel
+}) {
+  if (!additionalPost) {
+    return <View />
+  }
+  if (additionalPost.error) {
+    return <ErrorMessage message={additionalPost.error} />
+  }
+  return <Text style={[s.gray5]}>{additionalPost.thread?.record.text}</Text>
+}
 
 const styles = StyleSheet.create({
   outer: {
@@ -207,8 +221,9 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   outerUnread: {
+    backgroundColor: colors.unreadNotifBg,
     borderWidth: 1,
-    borderColor: colors.blue2,
+    borderColor: colors.blue1,
   },
   layout: {
     flexDirection: 'row',

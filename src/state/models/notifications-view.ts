@@ -1,6 +1,7 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import * as ListNotifications from '../../third-party/api/src/client/types/app/bsky/notification/list'
 import {RootStoreModel} from './root-store'
+import {PostThreadViewModel} from './post-thread-view'
 import {Declaration} from './_common'
 import {hasProp} from '../lib/type-guards'
 import {APP_BSKY_GRAPH} from '../../third-party/api'
@@ -33,6 +34,9 @@ export class NotificationsViewItemModel implements GroupedNotification {
   isRead: boolean = false
   indexedAt: string = ''
   additional?: NotificationsViewItemModel[]
+
+  // additional data
+  additionalPost?: PostThreadViewModel
 
   constructor(
     public rootStore: RootStoreModel,
@@ -89,6 +93,13 @@ export class NotificationsViewItemModel implements GroupedNotification {
     return this.reason === 'assertion'
   }
 
+  get needsAdditionalData() {
+    if (this.isUpvote || this.isRepost || this.isTrend || this.isReply) {
+      return !this.additionalPost
+    }
+    return false
+  }
+
   get isInvite() {
     return (
       this.isAssertion && this.record.assertion === APP_BSKY_GRAPH.AssertMember
@@ -106,6 +117,27 @@ export class NotificationsViewItemModel implements GroupedNotification {
       return this.record.subject
     }
     return ''
+  }
+
+  async fetchAdditionalData() {
+    if (!this.needsAdditionalData) {
+      return
+    }
+    let postUri
+    if (this.isReply) {
+      postUri = this.uri
+    } else if (this.isUpvote || this.isRead || this.isTrend) {
+      postUri = this.subjectUri
+    }
+    if (postUri) {
+      this.additionalPost = new PostThreadViewModel(this.rootStore, {
+        uri: postUri,
+        depth: 0,
+      })
+      await this.additionalPost.setup().catch(e => {
+        console.error('Failed to load post needed by notification', e)
+      })
+    }
   }
 }
 
@@ -171,7 +203,6 @@ export class NotificationsViewModel {
     await this._pendingWork()
     this._loadPromise = this._initialLoad(isRefreshing)
     await this._loadPromise
-    this._updateReadState()
     this._loadPromise = undefined
   }
 
@@ -206,6 +237,20 @@ export class NotificationsViewModel {
     this._updatePromise = this._update()
     await this._updatePromise
     this._updatePromise = undefined
+  }
+
+  /**
+   * Update read/unread state
+   */
+  async updateReadState() {
+    try {
+      await this.rootStore.api.app.bsky.notification.updateSeen({
+        seenAt: new Date().toISOString(),
+      })
+      this.rootStore.me.clearNotificationCount()
+    } catch (e) {
+      console.log('Failed to update notifications read state', e)
+    }
   }
 
   // state transitions
@@ -246,7 +291,7 @@ export class NotificationsViewModel {
         limit: PAGE_SIZE,
       })
       const res = await this.rootStore.api.app.bsky.notification.list(params)
-      this._replaceAll(res)
+      await this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
       this._xIdle(`Failed to load notifications: ${e.toString()}`)
@@ -264,7 +309,7 @@ export class NotificationsViewModel {
         before: this.loadMoreCursor,
       })
       const res = await this.rootStore.api.app.bsky.notification.list(params)
-      this._appendAll(res)
+      await this._appendAll(res)
       this._xIdle()
     } catch (e: any) {
       this._xIdle(`Failed to load notifications: ${e.toString()}`)
@@ -296,25 +341,40 @@ export class NotificationsViewModel {
     }
   }
 
-  private _replaceAll(res: ListNotifications.Response) {
-    this.notifications.length = 0
-    this._appendAll(res)
+  private async _replaceAll(res: ListNotifications.Response) {
+    return this._appendAll(res, true)
   }
 
-  private _appendAll(res: ListNotifications.Response) {
+  private async _appendAll(res: ListNotifications.Response, replace = false) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     let counter = this.notifications.length
+    const promises = []
+    const itemModels: NotificationsViewItemModel[] = []
     for (const item of groupNotifications(res.data.notifications)) {
-      this._append(counter++, item)
+      const itemModel = new NotificationsViewItemModel(
+        this.rootStore,
+        `item-${counter++}`,
+        item,
+      )
+      if (itemModel.needsAdditionalData) {
+        promises.push(itemModel.fetchAdditionalData())
+      }
+      itemModels.push(itemModel)
     }
-  }
-
-  private _append(keyId: number, item: GroupedNotification) {
-    // TODO: validate .record
-    this.notifications.push(
-      new NotificationsViewItemModel(this.rootStore, `item-${keyId}`, item),
-    )
+    await Promise.all(promises).catch(e => {
+      console.error(
+        'Uncaught failure during notifications-view _appendAll()',
+        e,
+      )
+    })
+    runInAction(() => {
+      if (replace) {
+        this.notifications = itemModels
+      } else {
+        this.notifications = this.notifications.concat(itemModels)
+      }
+    })
   }
 
   private _updateAll(res: ListNotifications.Response) {
@@ -328,17 +388,6 @@ export class NotificationsViewModel {
       if (existingItem) {
         existingItem.copy(item, true)
       }
-    }
-  }
-
-  private async _updateReadState() {
-    try {
-      await this.rootStore.api.app.bsky.notification.updateSeen({
-        seenAt: new Date().toISOString(),
-      })
-      this.rootStore.me.clearNotificationCount()
-    } catch (e) {
-      console.log('Failed to update notifications read state', e)
     }
   }
 }

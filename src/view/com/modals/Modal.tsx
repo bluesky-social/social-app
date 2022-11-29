@@ -35,7 +35,7 @@ export const Modal = observer(function Modal() {
     } else {
       bottomSheetRef.current?.close()
     }
-  }, [store.shell.isModalActive, bottomSheetRef])
+  }, [store.shell.isModalActive, bottomSheetRef, store.shell.activeModal?.name])
 
   let snapPoints: (string | number)[] = CLOSED_SNAPPOINTS
   let element

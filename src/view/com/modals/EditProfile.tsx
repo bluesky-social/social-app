@@ -65,8 +65,8 @@ export function Component({
 
   return (
     <View style={s.flex1}>
-      <Text style={[s.textCenter, s.bold, s.f16]}>Edit my profile</Text>
       <BottomSheetScrollView style={styles.inner}>
+        <Text style={styles.title}>Edit my profile</Text>
         {error !== '' && (
           <View style={s.mb10}>
             <ErrorMessage message={error} />
@@ -113,6 +113,12 @@ export function Component({
 const styles = StyleSheet.create({
   inner: {
     padding: 14,
+  },
+  title: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 24,
+    marginBottom: 18,
   },
   group: {
     marginBottom: 10,
