@@ -232,12 +232,15 @@ export const ComposePost = observer(function ComposePost({
           selectedPhotos={selectedPhotos}
           setSelectedPhotos={setSelectedPhotos}
         />
-        <PhotoCarouselPicker
-          selectedPhotos={selectedPhotos}
-          setSelectedPhotos={setSelectedPhotos}
-          localPhotos={localPhotos}
-          inputText={text}
-        />
+        {localPhotos.photos != null &&
+          text === '' &&
+          selectedPhotos.length === 0 && (
+            <PhotoCarouselPicker
+              selectedPhotos={selectedPhotos}
+              setSelectedPhotos={setSelectedPhotos}
+              localPhotos={localPhotos}
+            />
+          )}
         <View style={styles.separator} />
         <View style={[s.flexRow, s.pt10, s.pb10, s.pr5, styles.contentCenter]}>
           <View style={s.flex1} />
