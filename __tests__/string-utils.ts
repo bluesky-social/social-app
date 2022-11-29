@@ -16,6 +16,7 @@ describe('extractEntities', () => {
     'not@right',
     '@handle.com!@#$chars',
     '@handle.com\n@handle.com',
+    'parenthetical (@handle.com)',
     'start https://middle.com end',
     'start https://middle.com/foo/bar end',
     'start https://middle.com/foo/bar?baz=bux end',
@@ -36,6 +37,12 @@ describe('extractEntities', () => {
     'website.com.jpg',
     'e.g./foo',
     'website.com.jpg/foo',
+    'Classic article https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/',
+    'Classic article https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/ ',
+    'https://foo.com https://bar.com/whatever https://baz.com',
+    'punctuation https://foo.com, https://bar.com/whatever; https://baz.com.',
+    'parenthentical (https://foo.com)',
+    'except for https://foo.com/thing_(cool)',
   ]
   interface Output {
     type: string
@@ -64,6 +71,7 @@ describe('extractEntities', () => {
       {type: 'mention', value: 'handle.com'},
       {type: 'mention', value: 'handle.com'},
     ],
+    [{type: 'mention', value: 'handle.com'}],
     [{type: 'link', value: 'https://middle.com'}],
     [{type: 'link', value: 'https://middle.com/foo/bar'}],
     [{type: 'link', value: 'https://middle.com/foo/bar?baz=bux'}],
@@ -90,6 +98,32 @@ describe('extractEntities', () => {
     [],
     [],
     [],
+    [
+      {
+        type: 'link',
+        value:
+          'https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/',
+      },
+    ],
+    [
+      {
+        type: 'link',
+        value:
+          'https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/',
+      },
+    ],
+    [
+      {type: 'link', value: 'https://foo.com'},
+      {type: 'link', value: 'https://bar.com/whatever'},
+      {type: 'link', value: 'https://baz.com'},
+    ],
+    [
+      {type: 'link', value: 'https://foo.com'},
+      {type: 'link', value: 'https://bar.com/whatever'},
+      {type: 'link', value: 'https://baz.com'},
+    ],
+    [{type: 'link', value: 'https://foo.com'}],
+    [{type: 'link', value: 'https://foo.com/thing_(cool)'}],
   ]
   it('correctly handles a set of text inputs', () => {
     for (let i = 0; i < inputs.length; i++) {
@@ -140,6 +174,7 @@ describe('detectLinkables', () => {
     'not@right',
     '@bad!@#$chars',
     '@newline1\n@newline2',
+    'parenthetical (@handle)',
     'start https://middle.com end',
     'start https://middle.com/foo/bar end',
     'start https://middle.com/foo/bar?baz=bux end',
@@ -161,6 +196,12 @@ describe('detectLinkables', () => {
     'website.com.jpg',
     'e.g./foo',
     'website.com.jpg/foo',
+    'Classic article https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/',
+    'Classic article https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/ ',
+    'https://foo.com https://bar.com/whatever https://baz.com',
+    'punctuation https://foo.com, https://bar.com/whatever; https://baz.com.',
+    'parenthentical (https://foo.com)',
+    'except for https://foo.com/thing_(cool)',
   ]
   const outputs = [
     ['no linkable'],
@@ -172,6 +213,7 @@ describe('detectLinkables', () => {
     ['not@right'],
     [{link: '@bad'}, '!@#$chars'],
     [{link: '@newline1'}, '\n', {link: '@newline2'}],
+    ['parenthetical (', {link: '@handle'}, ')'],
     ['start ', {link: 'https://middle.com'}, ' end'],
     ['start ', {link: 'https://middle.com/foo/bar'}, ' end'],
     ['start ', {link: 'https://middle.com/foo/bar?baz=bux'}, ' end'],
@@ -193,6 +235,37 @@ describe('detectLinkables', () => {
     ['website.com.jpg'],
     ['e.g./foo'],
     ['website.com.jpg/foo'],
+    [
+      'Classic article ',
+      {
+        link: 'https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/',
+      },
+    ],
+    [
+      'Classic article ',
+      {
+        link: 'https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/',
+      },
+      ' ',
+    ],
+    [
+      {link: 'https://foo.com'},
+      ' ',
+      {link: 'https://bar.com/whatever'},
+      ' ',
+      {link: 'https://baz.com'},
+    ],
+    [
+      'punctuation ',
+      {link: 'https://foo.com'},
+      ', ',
+      {link: 'https://bar.com/whatever'},
+      '; ',
+      {link: 'https://baz.com'},
+      '.',
+    ],
+    ['parenthentical (', {link: 'https://foo.com'}, ')'],
+    ['except for ', {link: 'https://foo.com/thing_(cool)'}],
   ]
   it('correctly handles a set of text inputs', () => {
     for (let i = 0; i < inputs.length; i++) {
