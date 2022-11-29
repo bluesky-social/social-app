@@ -223,7 +223,13 @@ export const ComposePost = observer(function ComposePost({
             multiline
             scrollEnabled
             onChangeText={(text: string) => onChangeText(text)}
-            placeholder={replyTo ? 'Write your reply' : "What's up?"}
+            placeholder={
+              replyTo
+                ? 'Write your reply'
+                : selectedPhotos.length !== 0
+                ? 'Write a comment'
+                : "What's up?"
+            }
             style={styles.textInput}>
             {textDecorated}
           </TextInput>
