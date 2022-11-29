@@ -48,20 +48,17 @@ export const ComposePost = observer(function ComposePost({
 
   const autocompleteView = useMemo<UserAutocompleteViewModel>(
     () => new UserAutocompleteViewModel(store),
-    [],
+    [store],
   )
   const localPhotos = useMemo<UserLocalPhotosModel>(
     () => new UserLocalPhotosModel(store),
-    [],
+    [store],
   )
 
   useEffect(() => {
     autocompleteView.setup()
-  })
-
-  useEffect(() => {
     localPhotos.setup()
-  }, [localPhotos])
+  }, [autocompleteView, localPhotos])
 
   useEffect(() => {
     // HACK
@@ -78,7 +75,7 @@ export const ComposePost = observer(function ComposePost({
         clearTimeout(to)
       }
     }
-  }, [textInput.current])
+  }, [])
 
   const onChangeText = (newText: string) => {
     setText(newText)
