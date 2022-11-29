@@ -9,12 +9,7 @@ import {
 } from 'react-native'
 import {Entity} from '../../../third-party/api/src/client/types/app/bsky/feed/post'
 import {Link} from '../util/Link'
-import {
-  LinkMeta,
-  getLinkMeta,
-  getLikelyType,
-  LikelyType,
-} from '../../../lib/link-meta'
+import {LinkMeta, getLikelyType, LikelyType} from '../../../lib/link-meta'
 import {colors} from '../../lib/styles'
 import {useStores} from '../../../state'
 
