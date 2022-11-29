@@ -20,7 +20,6 @@ target 'app' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-
   target 'appTests' do
     inherit! :complete
     # Pods for testing
