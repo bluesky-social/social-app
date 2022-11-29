@@ -81,13 +81,8 @@ function* toSegments(text: string, entities: Entity[]) {
     }
     if (currEnt.index.start < currEnt.index.end) {
       let subtext = text.slice(currEnt.index.start, currEnt.index.end)
-      if (
-        !subtext.trim() ||
-        (currEnt.type === 'mention' &&
-          stripUsername(subtext) !== stripUsername(currEnt.value)) ||
-        (currEnt.type === 'link' && !isSameLink(subtext, currEnt.value))
-      ) {
-        // dont yield links to empty strings or strings that don't match the entity value
+      if (!subtext.trim()) {
+        // dont yield links to empty strings
         yield subtext
       } else {
         yield {
