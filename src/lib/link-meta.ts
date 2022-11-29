@@ -1,3 +1,4 @@
+import he from 'he'
 import {
   extractHtmlMeta,
   isBskyAppUrl,
@@ -59,8 +60,10 @@ export async function getLinkMeta(url: string): Promise<LinkMeta> {
     const httpRes = await fetch(url)
     const httpResBody = await httpRes.text()
     const httpResMeta = extractHtmlMeta(httpResBody)
-    meta.title = httpResMeta.title
+    meta.title = httpResMeta.title ? he.decode(httpResMeta.title) : undefined
     meta.description = httpResMeta.description
+      ? he.decode(httpResMeta.description)
+      : undefined
     // TODO meta.image = httpResMeta.image
   } catch (e) {
     // failed
