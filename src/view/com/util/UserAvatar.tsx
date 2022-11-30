@@ -1,19 +1,25 @@
-import React from 'react'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import React, {useCallback} from 'react'
+import {Alert, StyleSheet, View, TouchableOpacity} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {getGradient} from '../../lib/asset-gen'
+import {colors} from '../../lib/styles'
 
 export function UserAvatar({
+  isMe = false,
   size,
-  displayName,
   handle,
+  displayName,
 }: {
+  isMe?: boolean
   size: number
-  displayName: string | undefined
   handle: string
+  displayName: string | undefined
 }) {
   const initials = getInitials(displayName || handle)
   const gradient = getGradient(handle)
-  return (
+
+  const renderSvg = (size: number, initials: string) => (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Defs>
         <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
@@ -33,6 +39,25 @@ export function UserAvatar({
       </Text>
     </Svg>
   )
+
+  const handleEditAvatar = useCallback(() => {
+    Alert.alert('TB Implemented')
+  }, [])
+
+  return isMe ? (
+    <TouchableOpacity onPress={handleEditAvatar}>
+      {renderSvg(size, initials)}
+      <View style={styles.editButtonContainer}>
+        <FontAwesomeIcon
+          icon="camera"
+          size={10}
+          style={{color: colors.gray1}}
+        />
+      </View>
+    </TouchableOpacity>
+  ) : (
+    renderSvg(size, initials)
+  )
 }
 
 function getInitials(str: string): string {
@@ -50,3 +75,17 @@ function getInitials(str: string): string {
   }
   return 'X'
 }
+
+const styles = StyleSheet.create({
+  editButtonContainer: {
+    position: 'absolute',
+    bottom: 6,
+    right: 6,
+    backgroundColor: colors.gray5,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+})

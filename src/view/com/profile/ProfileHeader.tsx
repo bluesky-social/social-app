@@ -156,6 +156,7 @@ export const ProfileHeader = observer(function ProfileHeader({
       <View style={styles.avi}>
         <UserAvatar
           size={80}
+          isMe={isMe}
           displayName={view.displayName}
           handle={view.handle}
         />
