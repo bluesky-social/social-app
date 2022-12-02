@@ -23,6 +23,9 @@ import * as apilib from '../../../state/lib/api'
 import {ComposerOpts} from '../../../state/models/shell-ui'
 import {s, colors, gradients} from '../../lib/styles'
 import {detectLinkables} from '../../../lib/strings'
+import {UserLocalPhotosModel} from '../../../state/models/user-local-photos'
+import {PhotoCarouselPicker} from './PhotoCarouselPicker'
+import {SelectedPhoto} from './SelectedPhoto'
 
 const MAX_TEXT_LENGTH = 256
 const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH
@@ -41,14 +44,22 @@ export const ComposePost = observer(function ComposePost({
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState('')
   const [text, setText] = useState('')
+  const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
+
   const autocompleteView = useMemo<UserAutocompleteViewModel>(
     () => new UserAutocompleteViewModel(store),
-    [],
+    [store],
+  )
+  const localPhotos = useMemo<UserLocalPhotosModel>(
+    () => new UserLocalPhotosModel(store),
+    [store],
   )
 
   useEffect(() => {
     autocompleteView.setup()
-  })
+    localPhotos.setup()
+  }, [autocompleteView, localPhotos])
+
   useEffect(() => {
     // HACK
     // wait a moment before focusing the input to resolve some layout bugs with the keyboard-avoiding-view
@@ -60,9 +71,11 @@ export const ComposePost = observer(function ComposePost({
       }, 250)
     }
     return () => {
-      if (to) clearTimeout(to)
+      if (to) {
+        clearTimeout(to)
+      }
     }
-  }, [textInput.current])
+  }, [])
 
   const onChangeText = (newText: string) => {
     setText(newText)
@@ -115,6 +128,16 @@ export const ComposePost = observer(function ComposePost({
 
   const canPost = text.length <= MAX_TEXT_LENGTH
   const progressColor = text.length > DANGER_TEXT_LENGTH ? '#e60000' : undefined
+
+  const selectTextInputLayout =
+    selectedPhotos.length !== 0
+      ? styles.textInputLayoutWithPhoto
+      : styles.textInputLayoutWithoutPhoto
+  const selectTextInputPlaceholder = replyTo
+    ? 'Write your reply'
+    : selectedPhotos.length !== 0
+    ? 'Write a comment'
+    : "What's up?"
 
   const textDecorated = useMemo(() => {
     let i = 0
@@ -192,7 +215,7 @@ export const ComposePost = observer(function ComposePost({
             </View>
           </View>
         ) : undefined}
-        <View style={styles.textInputLayout}>
+        <View style={[styles.textInputLayout, selectTextInputLayout]}>
           <UserAvatar
             handle={store.me.handle || ''}
             displayName={store.me.displayName}
@@ -203,13 +226,26 @@ export const ComposePost = observer(function ComposePost({
             multiline
             scrollEnabled
             onChangeText={(text: string) => onChangeText(text)}
-            placeholder={replyTo ? 'Write your reply' : "What's up?"}
+            placeholder={selectTextInputPlaceholder}
             style={styles.textInput}>
             {textDecorated}
           </TextInput>
         </View>
-        <View
-          style={[s.flexRow, {alignItems: 'center'}, s.pt10, s.pb10, s.pr5]}>
+        <SelectedPhoto
+          selectedPhotos={selectedPhotos}
+          setSelectedPhotos={setSelectedPhotos}
+        />
+        {localPhotos.photos != null &&
+          text === '' &&
+          selectedPhotos.length === 0 && (
+            <PhotoCarouselPicker
+              selectedPhotos={selectedPhotos}
+              setSelectedPhotos={setSelectedPhotos}
+              localPhotos={localPhotos}
+            />
+          )}
+        <View style={styles.separator} />
+        <View style={[s.flexRow, s.pt10, s.pb10, s.pr5, styles.contentCenter]}>
           <View style={s.flex1} />
           <Text style={[s.mr10, {color: progressColor}]}>
             {MAX_TEXT_LENGTH - text.length}
@@ -282,9 +318,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 5,
   },
+  textInputLayoutWithPhoto: {
+    flexWrap: 'wrap',
+  },
+  textInputLayoutWithoutPhoto: {
+    flex: 1,
+  },
   textInputLayout: {
     flexDirection: 'row',
-    flex: 1,
     borderTopWidth: 1,
     borderTopColor: colors.gray2,
     paddingTop: 16,
@@ -306,5 +347,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 13,
     paddingRight: 8,
+  },
+  contentCenter: {alignItems: 'center'},
+  separator: {
+    borderBottomColor: 'black',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    width: '100%',
   },
 })
