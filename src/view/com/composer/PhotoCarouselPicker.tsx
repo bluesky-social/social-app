@@ -23,9 +23,14 @@ export const PhotoCarouselPicker = ({
       cropping: true,
       width: 1000,
       height: 1000,
-    }).then(item => {
-      setSelectedPhotos([item.path, ...selectedPhotos])
-    })
+    }).then(
+      item => {
+        setSelectedPhotos([item.path, ...selectedPhotos])
+      },
+      _err => {
+        // ignore
+      },
+    )
   }, [selectedPhotos, setSelectedPhotos])
 
   const handleSelectPhoto = useCallback(
@@ -58,14 +63,7 @@ export const PhotoCarouselPicker = ({
         })
         result.push(img.path)
       }
-      setSelectedPhotos([
-        // ...items.reduce(
-        //   (accum, cur) => accum.concat(cur.sourceURL!),
-        //   [] as string[],
-        // ),
-        ...result,
-        ...selectedPhotos,
-      ])
+      setSelectedPhotos([...result, ...selectedPhotos])
     })
   }, [selectedPhotos, setSelectedPhotos])
 
