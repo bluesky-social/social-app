@@ -18,8 +18,8 @@ export class UserLocalPhotosModel {
   }
 
   private async _getPhotos() {
-    runInAction(() => {
-      CameraRoll.getPhotos({first: 20}).then(r => {
+    CameraRoll.getPhotos({first: 20}).then(r => {
+      runInAction(() => {
         this.photos = r.edges
       })
     })

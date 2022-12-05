@@ -1,7 +1,7 @@
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import React, {useCallback} from 'react'
 import {Alert, StyleSheet, View, TouchableOpacity} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {getGradient} from '../../lib/asset-gen'
 import {colors} from '../../lib/styles'
 
