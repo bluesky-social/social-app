@@ -1,6 +1,7 @@
 import React, {useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, Text, View} from 'react-native'
+import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -65,6 +66,10 @@ export const FeedItem = observer(function FeedItem({
     item
       .toggleUpvote()
       .catch(e => console.error('Failed to toggle upvote', record, e))
+  }
+  const onCopyPostText = () => {
+    Clipboard.setString(record.text)
+    Toast.show('Copied to clipboard')
   }
   const onDeletePost = () => {
     item.delete().then(
@@ -147,6 +152,7 @@ export const FeedItem = observer(function FeedItem({
               authorDisplayName={item.author.displayName}
               timestamp={item.indexedAt}
               isAuthor={item.author.did === store.me.did}
+              onCopyPostText={onCopyPostText}
               onDeletePost={onDeletePost}
             />
           ) : undefined}
