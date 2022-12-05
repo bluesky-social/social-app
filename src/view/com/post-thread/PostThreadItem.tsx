@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
     maxWidth: 240,
   },
   postText: {
-    fontFamily: 'Helvetica Neue',
+    fontFamily: 'System',
     fontSize: 16,
     lineHeight: 20.8, // 1.3 of 16px
   },

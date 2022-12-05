@@ -98,13 +98,3 @@ function* toSegments(text: string, entities: Entity[]) {
     yield text.slice(cursor, text.length)
   }
 }
-
-function stripUsername(v: string): string {
-  return v.trim().replace('@', '')
-}
-
-function isSameLink(a: string, b: string) {
-  a = a.startsWith('http') ? a : `https://${a}`
-  b = b.startsWith('http') ? b : `https://${b}`
-  return a === b
-}
