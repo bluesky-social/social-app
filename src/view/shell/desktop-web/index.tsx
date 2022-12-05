@@ -9,7 +9,7 @@ export const DesktopWebShell: React.FC = observer(({children}) => {
   const store = useStores()
   return (
     <View style={styles.outerContainer}>
-      {store.session.isAuthed ? (
+      {store.session.hasSession ? (
         <>
           <DesktopLeftColumn />
           <View style={styles.innerContainer}>{children}</View>

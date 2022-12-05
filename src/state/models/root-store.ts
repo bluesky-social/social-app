@@ -14,6 +14,7 @@ import {ProfilesViewModel} from './profiles-view'
 import {LinkMetasViewModel} from './link-metas-view'
 import {MeModel} from './me'
 import {OnboardModel} from './onboard'
+import {isNetworkError} from '../../lib/errors'
 
 export class RootStoreModel {
   session = new SessionModel(this)
@@ -45,12 +46,18 @@ export class RootStoreModel {
   }
 
   async fetchStateUpdate() {
-    if (!this.session.isAuthed) {
+    if (!this.session.hasSession) {
       return
     }
     try {
+      if (!this.session.online) {
+        await this.session.connect()
+      }
       await this.me.fetchStateUpdate()
-    } catch (e) {
+    } catch (e: unknown) {
+      if (isNetworkError(e)) {
+        this.session.setOnline(false) // connection lost
+      }
       console.error('Failed to fetch latest state', e)
     }
   }
@@ -58,6 +65,7 @@ export class RootStoreModel {
   serialize(): unknown {
     return {
       session: this.session.serialize(),
+      me: this.me.serialize(),
       nav: this.nav.serialize(),
       onboard: this.onboard.serialize(),
     }
@@ -67,6 +75,9 @@ export class RootStoreModel {
     if (isObj(v)) {
       if (hasProp(v, 'session')) {
         this.session.hydrate(v.session)
+      }
+      if (hasProp(v, 'me')) {
+        this.me.hydrate(v.me)
       }
       if (hasProp(v, 'nav')) {
         this.nav.hydrate(v.nav)

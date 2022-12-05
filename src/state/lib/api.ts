@@ -12,6 +12,8 @@ import {APP_BSKY_GRAPH} from '../../third-party/api'
 import {RootStoreModel} from '../models/root-store'
 import {extractEntities} from '../../lib/strings'
 
+const TIMEOUT = 10e3 // 10s
+
 export function doPolyfill() {
   AtpApi.xrpc.fetch = fetchHandler
 }
@@ -175,10 +177,14 @@ async function fetchHandler(
     reqBody = JSON.stringify(reqBody)
   }
 
+  const controller = new AbortController()
+  const to = setTimeout(() => controller.abort(), TIMEOUT)
+
   const res = await fetch(reqUri, {
     method: reqMethod,
     headers: reqHeaders,
     body: reqBody,
+    signal: controller.signal,
   })
 
   const resStatus = res.status
@@ -197,6 +203,9 @@ async function fetchHandler(
       throw new Error('TODO: non-textual response body')
     }
   }
+
+  clearTimeout(to)
+
   return {
     status: resStatus,
     headers: resHeaders,
