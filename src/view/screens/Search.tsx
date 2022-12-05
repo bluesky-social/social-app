@@ -1,5 +1,13 @@
 import React, {useEffect, useState, useMemo, useRef} from 'react'
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {
+  Keyboard,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {SuggestedFollows} from '../com/discover/SuggestedFollows'
 import {UserAvatar} from '../com/util/UserAvatar'
@@ -50,13 +58,14 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
           ref={textInput}
           placeholder="Type your query here..."
           selectTextOnFocus
+          returnKeyType="search"
           style={styles.input}
           onChangeText={onChangeQuery}
         />
       </View>
       <View style={styles.outputContainer}>
         {query ? (
-          <View>
+          <ScrollView onScroll={Keyboard.dismiss}>
             {autocompleteView.searchRes.map((item, i) => (
               <TouchableOpacity
                 key={i}
@@ -75,7 +84,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
                 </View>
               </TouchableOpacity>
             ))}
-          </View>
+          </ScrollView>
         ) : (
           <SuggestedFollows asLinks />
         )}
