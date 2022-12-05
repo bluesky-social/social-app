@@ -10,6 +10,8 @@ import {FeedModel} from '../../state/models/feed-view'
 import {ScreenParams} from '../routes'
 import {s, colors} from '../lib/styles'
 
+const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
+
 export const Home = observer(function Home({
   navIdx,
   visible,
@@ -95,7 +97,10 @@ export const Home = observer(function Home({
         onPressTryAgain={onPressTryAgain}
       />
       {defaultFeedView.hasNewLatest ? (
-        <TouchableOpacity style={styles.loadLatest} onPress={onPressLoadLatest}>
+        <TouchableOpacity
+          style={styles.loadLatest}
+          onPress={onPressLoadLatest}
+          hitSlop={HITSLOP}>
           <FontAwesomeIcon icon="arrow-up" style={{color: colors.white}} />
           <Text style={styles.loadLatestText}>Load new posts</Text>
         </TouchableOpacity>
