@@ -25,6 +25,7 @@ interface PostCtrlsOpts {
 
 const redgray = '#7A6161'
 const sRedgray = {color: redgray}
+const HITSLOP = {top: 10, left: 10, bottom: 10, right: 10}
 
 export function PostCtrls(opts: PostCtrlsOpts) {
   const interp1 = useSharedValue<number>(0)
@@ -59,7 +60,10 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   return (
     <View style={styles.ctrls}>
       <View style={s.flex1}>
-        <TouchableOpacity style={styles.ctrl} onPress={opts.onPressReply}>
+        <TouchableOpacity
+          style={styles.ctrl}
+          hitSlop={HITSLOP}
+          onPress={opts.onPressReply}>
           <FontAwesomeIcon
             style={styles.ctrlIcon}
             icon={['far', 'comment']}
@@ -72,6 +76,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       </View>
       <View style={s.flex1}>
         <TouchableOpacity
+          hitSlop={HITSLOP}
           onPress={onPressToggleRepostWrapper}
           style={styles.ctrl}>
           <Animated.View style={anim1Style}>
@@ -98,6 +103,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       <View style={s.flex1}>
         <TouchableOpacity
           style={styles.ctrl}
+          hitSlop={HITSLOP}
           onPress={onPressToggleUpvoteWrapper}>
           <Animated.View style={anim2Style}>
             {opts.isUpvoted ? (
@@ -137,7 +143,6 @@ const styles = StyleSheet.create({
   ctrl: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: 4,
   },
   ctrlIcon: {
     color: redgray,
