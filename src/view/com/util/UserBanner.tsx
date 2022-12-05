@@ -1,9 +1,10 @@
-import React, {useCallback} from 'react'
-import {Alert, StyleSheet, View, TouchableOpacity} from 'react-native'
+import React, {useCallback, useState} from 'react'
+import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {getGradient} from '../../lib/asset-gen'
 import {colors} from '../../lib/styles'
+import {openCamera, openCropper, openPicker} from 'react-native-image-crop-picker'
 
 export function UserBanner({
   handle,
@@ -12,7 +13,46 @@ export function UserBanner({
   handle: string
   isMe?: boolean
 }) {
+  const [localBannerPicture, setLocalBannerPicture] = useState<string | null>(
+    null,
+  )
+
   const gradient = getGradient(handle)
+
+  const handleEditBanner = useCallback(() => {
+    Alert.alert('', 'Select upload method', [
+      {
+        text: 'Take a new photo',
+        onPress: () => {
+          openCamera({
+            mediaType: 'photo',
+            cropping: true,
+            width: 1000,
+            height: 120,
+          }).then(item => {
+            setLocalBannerPicture(item.path)
+          })
+        },
+      },
+      {
+        text: 'Select from gallery',
+        onPress: () => {
+          openPicker({
+            mediaType: 'photo',
+          }).then(async item => {
+            await openCropper({
+              mediaType: 'photo',
+              path: item.path,
+              width: 1000,
+              height: 120,
+            }).then(croppedItem => {
+              setLocalBannerPicture(croppedItem.path)
+            })
+          })
+        },
+      },
+    ])
+  }, [])
 
   const renderSvg = () => (
     <Svg width="100%" height="120" viewBox="50 0 200 100">
@@ -31,13 +71,13 @@ export function UserBanner({
     </Svg>
   )
 
-  const handleEditBanner = useCallback(() => {
-    Alert.alert('TB Implemented')
-  }, [])
-
   return isMe ? (
     <TouchableOpacity onPress={handleEditBanner}>
-      {renderSvg()}
+      {localBannerPicture != null ? (
+        <Image style={styles.bannerImage} source={{uri: localBannerPicture}} />
+      ) : (
+        renderSvg()
+      )}
       <View style={styles.editButtonContainer}>
         <FontAwesomeIcon
           icon="camera"
@@ -62,5 +102,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  bannerImage: {
+    width: 1000,
+    height: 120,
   },
 })

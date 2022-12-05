@@ -1,7 +1,8 @@
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import React, {useCallback} from 'react'
-import {Alert, StyleSheet, View, TouchableOpacity} from 'react-native'
+import React, {useCallback, useState} from 'react'
+import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {openCamera, openCropper, openPicker} from 'react-native-image-crop-picker'
 import {getGradient} from '../../lib/asset-gen'
 import {colors} from '../../lib/styles'
 
@@ -16,8 +17,48 @@ export function UserAvatar({
   handle: string
   displayName: string | undefined
 }) {
+  const [localAvatarPicture, setLocalAvatarPicture] = useState<string | null>(
+    null,
+  )
   const initials = getInitials(displayName || handle)
   const gradient = getGradient(handle)
+
+  const handleEditAvatar = useCallback(() => {
+    Alert.alert('', 'Select upload method', [
+      {
+        text: 'Take a new photo',
+        onPress: () => {
+          openCamera({
+            mediaType: 'photo',
+            cropping: true,
+            width: 80,
+            height: 80,
+            cropperCircleOverlay: true,
+          }).then(item => {
+            setLocalAvatarPicture(item.path)
+          })
+        },
+      },
+      {
+        text: 'Select from gallery',
+        onPress: () => {
+          openPicker({
+            mediaType: 'photo',
+          }).then(async item => {
+            await openCropper({
+              mediaType: 'photo',
+              path: item.path,
+              width: 80,
+              height: 80,
+              cropperCircleOverlay: true,
+            }).then(croppedItem => {
+              setLocalAvatarPicture(croppedItem.path)
+            })
+          })
+        },
+      },
+    ])
+  }, [])
 
   const renderSvg = (size: number, initials: string) => (
     <Svg width={size} height={size} viewBox="0 0 100 100">
@@ -40,13 +81,13 @@ export function UserAvatar({
     </Svg>
   )
 
-  const handleEditAvatar = useCallback(() => {
-    Alert.alert('TB Implemented')
-  }, [])
-
   return isMe ? (
     <TouchableOpacity onPress={handleEditAvatar}>
-      {renderSvg(size, initials)}
+      {localAvatarPicture != null ? (
+        <Image style={styles.avatarImage} source={{uri: localAvatarPicture}} />
+      ) : (
+        renderSvg(size, initials)
+      )}
       <View style={styles.editButtonContainer}>
         <FontAwesomeIcon
           icon="camera"
@@ -87,5 +128,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  avatarImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
 })
