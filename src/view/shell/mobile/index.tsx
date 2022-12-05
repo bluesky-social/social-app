@@ -47,8 +47,8 @@ import {
   BellIconSolid,
 } from '../../lib/icons'
 
-const SWIPE_GESTURE_DIST_TRIGGER = 0.4
-const SWIPE_GESTURE_VEL_TRIGGER = 2500
+const SWIPE_GESTURE_DIST_TRIGGER = 0.3
+const SWIPE_GESTURE_VEL_TRIGGER = 2000
 
 const Btn = ({
   icon,
