@@ -26,6 +26,7 @@ import {detectLinkables} from '../../../lib/strings'
 import {UserLocalPhotosModel} from '../../../state/models/user-local-photos'
 import {PhotoCarouselPicker} from './PhotoCarouselPicker'
 import {SelectedPhoto} from './SelectedPhoto'
+import {IMAGES_ENABLED} from '../../../build-flags'
 
 const MAX_TEXT_LENGTH = 256
 const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH
@@ -235,7 +236,8 @@ export const ComposePost = observer(function ComposePost({
           selectedPhotos={selectedPhotos}
           setSelectedPhotos={setSelectedPhotos}
         />
-        {localPhotos.photos != null &&
+        {IMAGES_ENABLED &&
+          localPhotos.photos != null &&
           text === '' &&
           selectedPhotos.length === 0 && (
             <PhotoCarouselPicker
@@ -244,8 +246,7 @@ export const ComposePost = observer(function ComposePost({
               localPhotos={localPhotos}
             />
           )}
-        <View style={styles.separator} />
-        <View style={[s.flexRow, s.pt10, s.pb10, s.pr5, styles.contentCenter]}>
+        <View style={styles.bottomBar}>
           <View style={s.flex1} />
           <Text style={[s.mr10, {color: progressColor}]}>
             {MAX_TEXT_LENGTH - text.length}
@@ -348,10 +349,12 @@ const styles = StyleSheet.create({
     paddingLeft: 13,
     paddingRight: 8,
   },
-  contentCenter: {alignItems: 'center'},
-  separator: {
-    borderBottomColor: 'black',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    width: '100%',
+  bottomBar: {
+    flexDirection: 'row',
+    paddingVertical: 10,
+    paddingRight: 5,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: colors.gray2,
   },
 })
