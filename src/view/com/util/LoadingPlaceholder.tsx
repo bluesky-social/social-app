@@ -1,13 +1,5 @@
-import React, {useEffect, useMemo} from 'react'
-import {
-  Animated,
-  StyleSheet,
-  StyleProp,
-  useWindowDimensions,
-  View,
-  ViewStyle,
-} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import React from 'react'
+import {StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UpIcon} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
@@ -21,31 +13,6 @@ export function LoadingPlaceholder({
   height: string | number
   style?: StyleProp<ViewStyle>
 }) {
-  const dim = useWindowDimensions()
-  const elWidth = typeof width === 'string' ? dim.width : width
-  const offset = useMemo(() => new Animated.Value(elWidth * -1), [])
-  useEffect(() => {
-    const anim = Animated.loop(
-      Animated.sequence([
-        Animated.timing(offset, {
-          toValue: elWidth,
-          duration: 1e3,
-          useNativeDriver: true,
-          isInteraction: false,
-        }),
-        Animated.timing(offset, {
-          toValue: elWidth * -1,
-          duration: 0,
-          delay: 500,
-          useNativeDriver: true,
-          isInteraction: false,
-        }),
-      ]),
-    )
-    anim.start()
-    return () => anim.stop()
-  }, [])
-
   return (
     <View
       style={[
@@ -58,19 +25,13 @@ export function LoadingPlaceholder({
         },
         style,
       ]}>
-      <Animated.View
+      <View
         style={{
           width,
           height,
-          transform: [{translateX: offset}],
-        }}>
-        <LinearGradient
-          colors={['#e7e9ea', '#e2e2e2', '#e7e9ea']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={{width: '100%', height: '100%'}}
-        />
-      </Animated.View>
+          backgroundColor: '#e7e9ea',
+        }}
+      />
     </View>
   )
 }
