@@ -23,6 +23,13 @@ export function RichText({
   numberOfLines?: number
 }) {
   if (!entities?.length) {
+    if (/^\p{Extended_Pictographic}+$/u.test(text) && text.length <= 5) {
+      style = {
+        fontSize: 26,
+        lineHeight: 30,
+      }
+      return <Text style={style}>{text}</Text>
+    }
     return <Text style={style}>{text}</Text>
   }
   if (!style) style = []
