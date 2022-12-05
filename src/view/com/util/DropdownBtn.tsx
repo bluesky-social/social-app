@@ -18,6 +18,8 @@ import {useStores} from '../../../state'
 import {ConfirmModel} from '../../../state/models/shell-ui'
 import {TABS_ENABLED} from '../../../build-flags'
 
+const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
+
 export interface DropdownItem {
   icon?: IconProp
   label: string
@@ -61,7 +63,11 @@ export function DropdownBtn({
   }
 
   return (
-    <TouchableOpacity style={style} onPress={onPress} ref={ref}>
+    <TouchableOpacity
+      style={style}
+      onPress={onPress}
+      hitSlop={HITSLOP}
+      ref={ref}>
       {children}
     </TouchableOpacity>
   )
