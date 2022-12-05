@@ -1,26 +1,26 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback} from 'react'
 import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {getGradient} from '../../lib/asset-gen'
 import {colors} from '../../lib/styles'
-import {openCamera, openCropper, openPicker} from 'react-native-image-crop-picker'
+import {
+  openCamera,
+  openCropper,
+  openPicker,
+} from 'react-native-image-crop-picker'
 
 export function UserBanner({
   handle,
-  isMe = false,
+  isEditable = false,
 }: {
   handle: string
-  isMe?: boolean
+  isEditable?: boolean
 }) {
-  const [localBannerPicture, setLocalBannerPicture] = useState<string | null>(
-    null,
-  )
-
   const gradient = getGradient(handle)
 
   const handleEditBanner = useCallback(() => {
-    Alert.alert('', 'Select upload method', [
+    Alert.alert('Select upload method', '', [
       {
         text: 'Take a new photo',
         onPress: () => {
@@ -30,7 +30,8 @@ export function UserBanner({
             width: 1000,
             height: 120,
           }).then(item => {
-            setLocalBannerPicture(item.path)
+            // setLocalBannerPicture(item.path)
+            console.log(item)
           })
         },
       },
@@ -46,7 +47,8 @@ export function UserBanner({
               width: 1000,
               height: 120,
             }).then(croppedItem => {
-              setLocalBannerPicture(croppedItem.path)
+              // setLocalBannerPicture(croppedItem.path)
+              console.log(croppedItem)
             })
           })
         },
@@ -71,13 +73,14 @@ export function UserBanner({
     </Svg>
   )
 
-  return isMe ? (
+  return isEditable ? (
     <TouchableOpacity onPress={handleEditBanner}>
-      {localBannerPicture != null ? (
+      {/* {localBannerPicture != null ? (
         <Image style={styles.bannerImage} source={{uri: localBannerPicture}} />
       ) : (
         renderSvg()
-      )}
+      )} */}
+      {renderSvg()}
       <View style={styles.editButtonContainer}>
         <FontAwesomeIcon
           icon="camera"

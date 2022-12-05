@@ -1,30 +1,31 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback} from 'react'
 import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {openCamera, openCropper, openPicker} from 'react-native-image-crop-picker'
+import {
+  openCamera,
+  openCropper,
+  openPicker,
+} from 'react-native-image-crop-picker'
 import {getGradient} from '../../lib/asset-gen'
 import {colors} from '../../lib/styles'
 
 export function UserAvatar({
-  isMe = false,
+  isEditable = false,
   size,
   handle,
   displayName,
 }: {
-  isMe?: boolean
+  isEditable?: boolean
   size: number
   handle: string
   displayName: string | undefined
 }) {
-  const [localAvatarPicture, setLocalAvatarPicture] = useState<string | null>(
-    null,
-  )
   const initials = getInitials(displayName || handle)
   const gradient = getGradient(handle)
 
   const handleEditAvatar = useCallback(() => {
-    Alert.alert('', 'Select upload method', [
+    Alert.alert('Select upload method', '', [
       {
         text: 'Take a new photo',
         onPress: () => {
@@ -35,7 +36,8 @@ export function UserAvatar({
             height: 80,
             cropperCircleOverlay: true,
           }).then(item => {
-            setLocalAvatarPicture(item.path)
+            // setLocalAvatarPicture(item.path)
+            console.log(item)
           })
         },
       },
@@ -52,7 +54,8 @@ export function UserAvatar({
               height: 80,
               cropperCircleOverlay: true,
             }).then(croppedItem => {
-              setLocalAvatarPicture(croppedItem.path)
+              // setLocalAvatarPicture(croppedItem.path)
+              console.log(croppedItem)
             })
           })
         },
@@ -81,13 +84,14 @@ export function UserAvatar({
     </Svg>
   )
 
-  return isMe ? (
+  return isEditable ? (
     <TouchableOpacity onPress={handleEditAvatar}>
-      {localAvatarPicture != null ? (
+      {/* {localAvatarPicture != null ? (
         <Image style={styles.avatarImage} source={{uri: localAvatarPicture}} />
       ) : (
         renderSvg(size, initials)
-      )}
+      )} */}
+      {renderSvg(size, initials)}
       <View style={styles.editButtonContainer}>
         <FontAwesomeIcon
           icon="camera"

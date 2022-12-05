@@ -152,11 +152,10 @@ export const ProfileHeader = observer(function ProfileHeader({
   }
   return (
     <View style={styles.outer}>
-      <UserBanner isMe={isMe} handle={view.handle} />
+      <UserBanner handle={view.handle} />
       <View style={styles.avi}>
         <UserAvatar
           size={80}
-          isMe={isMe}
           displayName={view.displayName}
           handle={view.handle}
         />

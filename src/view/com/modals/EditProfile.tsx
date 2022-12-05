@@ -13,6 +13,8 @@ import {
   MAX_DESCRIPTION,
 } from '../../../lib/strings'
 import * as Profile from '../../../third-party/api/src/client/types/app/bsky/actor/profile'
+import {UserBanner} from '../util/UserBanner'
+import {UserAvatar} from '../util/UserAvatar'
 
 export const snapPoints = ['60%']
 
@@ -67,6 +69,17 @@ export function Component({
     <View style={s.flex1}>
       <BottomSheetScrollView style={styles.inner}>
         <Text style={styles.title}>Edit my profile</Text>
+        <View style={styles.photos}>
+          <UserBanner isEditable handle={profileView.handle} />
+          <View style={styles.avi}>
+            <UserAvatar
+              isEditable
+              size={80}
+              displayName={profileView.displayName}
+              handle={profileView.handle}
+            />
+          </View>
+        </View>
         {error !== '' && (
           <View style={s.mb10}>
             <ErrorMessage message={error} />
@@ -154,5 +167,19 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     padding: 10,
     marginBottom: 10,
+  },
+  avi: {
+    position: 'absolute',
+    top: 80,
+    left: 10,
+    width: 84,
+    height: 84,
+    borderWidth: 2,
+    borderRadius: 42,
+    borderColor: colors.white,
+    backgroundColor: colors.white,
+  },
+  photos: {
+    marginBottom: 48,
   },
 })
