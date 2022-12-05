@@ -381,6 +381,9 @@ export class FeedModel {
   }
 
   private async _update() {
+    if (!this.feed.length) {
+      return
+    }
     this._xLoading()
     let numToFetch = this.feed.length
     let cursor = undefined
