@@ -9,7 +9,7 @@ import {
   openCropper,
   openPicker,
 } from 'react-native-image-crop-picker'
-import { IMAGES_ENABLED } from '../../../build-flags'
+import {IMAGES_ENABLED} from '../../../build-flags'
 
 export function UserBanner({
   handle,

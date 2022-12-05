@@ -9,7 +9,7 @@ import {
 } from 'react-native-image-crop-picker'
 import {getGradient} from '../../lib/asset-gen'
 import {colors} from '../../lib/styles'
-import { IMAGES_ENABLED } from '../../../build-flags'
+import {IMAGES_ENABLED} from '../../../build-flags'
 
 export function UserAvatar({
   isEditable = false,
