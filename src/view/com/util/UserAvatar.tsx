@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -24,6 +24,8 @@ export function UserAvatar({
   const initials = getInitials(displayName || handle)
   const gradient = getGradient(handle)
 
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+
   const handleEditAvatar = useCallback(() => {
     Alert.alert('Select upload method', '', [
       {
@@ -36,8 +38,7 @@ export function UserAvatar({
             height: 80,
             cropperCircleOverlay: true,
           }).then(item => {
-            // setLocalAvatarPicture(item.path)
-            console.log(item)
+            setUploadedImage(item.path)
           })
         },
       },
@@ -54,7 +55,7 @@ export function UserAvatar({
               height: 80,
               cropperCircleOverlay: true,
             }).then(croppedItem => {
-              // setLocalAvatarPicture(croppedItem.path)
+              setUploadedImage(croppedItem.path)
               console.log(croppedItem)
             })
           })
@@ -86,12 +87,12 @@ export function UserAvatar({
 
   return isEditable ? (
     <TouchableOpacity onPress={handleEditAvatar}>
-      {/* {localAvatarPicture != null ? (
-        <Image style={styles.avatarImage} source={{uri: localAvatarPicture}} />
+      {/* Added a react state temporary photo white the protocol does not support imagery */}
+      {uploadedImage != null ? (
+        <Image style={styles.avatarImage} source={{uri: uploadedImage}} />
       ) : (
         renderSvg(size, initials)
-      )} */}
-      {renderSvg(size, initials)}
+      )}
       <View style={styles.editButtonContainer}>
         <FontAwesomeIcon
           icon="camera"

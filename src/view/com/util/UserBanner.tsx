@@ -1,5 +1,5 @@
-import React, {useCallback} from 'react'
-import {StyleSheet, View, TouchableOpacity, Alert, Image, Dimensions} from 'react-native'
+import React, {useCallback, useState} from 'react'
+import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {getGradient} from '../../lib/asset-gen'
@@ -19,6 +19,8 @@ export function UserBanner({
 }) {
   const gradient = getGradient(handle)
 
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+
   const handleEditBanner = useCallback(() => {
     Alert.alert('Select upload method', '', [
       {
@@ -30,7 +32,7 @@ export function UserBanner({
             width: 1500,
             height: 500,
           }).then(item => {
-            // setLocalBannerPicture(item.path)
+            setUploadedImage(item.path)
             console.log(item)
           })
         },
@@ -47,7 +49,7 @@ export function UserBanner({
               width: 1500,
               height: 500,
             }).then(croppedItem => {
-              // setLocalBannerPicture(croppedItem.path)
+              setUploadedImage(croppedItem.path)
               console.log(croppedItem)
             })
           })
@@ -75,12 +77,16 @@ export function UserBanner({
 
   return isEditable ? (
     <TouchableOpacity onPress={handleEditBanner}>
-      {/* {localBannerPicture != null ? (
-        <Image style={styles.bannerImage} source={{uri: localBannerPicture}} />
+      {/* Added a react state temporary photo white the protocol does not support imagery */}
+      {uploadedImage != null ? (
+        <Image
+          style={styles.bannerImage}
+          resizeMode="stretch"
+          source={{uri: uploadedImage}}
+        />
       ) : (
         renderSvg()
-      )} */}
-      {renderSvg()}
+      )}
       <View style={styles.editButtonContainer}>
         <FontAwesomeIcon
           icon="camera"
@@ -110,6 +116,5 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: 120,
-    resizeMode: 'contain',
   },
 })
