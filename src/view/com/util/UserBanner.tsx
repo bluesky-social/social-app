@@ -9,6 +9,7 @@ import {
   openCropper,
   openPicker,
 } from 'react-native-image-crop-picker'
+import { IMAGES_ENABLED } from '../../../build-flags'
 
 export function UserBanner({
   handle,
@@ -75,7 +76,7 @@ export function UserBanner({
     </Svg>
   )
 
-  return isEditable ? (
+  return isEditable && IMAGES_ENABLED ? (
     <TouchableOpacity onPress={handleEditBanner}>
       {/* Added a react state temporary photo white the protocol does not support imagery */}
       {uploadedImage != null ? (

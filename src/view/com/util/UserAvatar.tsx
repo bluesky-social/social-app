@@ -9,6 +9,7 @@ import {
 } from 'react-native-image-crop-picker'
 import {getGradient} from '../../lib/asset-gen'
 import {colors} from '../../lib/styles'
+import { IMAGES_ENABLED } from '../../../build-flags'
 
 export function UserAvatar({
   isEditable = false,
@@ -85,7 +86,7 @@ export function UserAvatar({
     </Svg>
   )
 
-  return isEditable ? (
+  return isEditable && IMAGES_ENABLED ? (
     <TouchableOpacity onPress={handleEditAvatar}>
       {/* Added a react state temporary photo white the protocol does not support imagery */}
       {uploadedImage != null ? (
