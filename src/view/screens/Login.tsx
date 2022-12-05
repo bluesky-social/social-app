@@ -25,6 +25,7 @@ import {useStores, DEFAULT_SERVICE} from '../../state'
 import {ServiceDescription} from '../../state/models/session'
 import {ServerInputModel} from '../../state/models/shell-ui'
 import {ComAtprotoAccountCreate} from '../../third-party/api/index'
+import {isNetworkError} from '../../lib/errors'
 
 enum ScreenState {
   SigninOrCreateAccount,
@@ -186,7 +187,7 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
       setIsProcessing(false)
       if (errMsg.includes('Authentication Required')) {
         setError('Invalid username or password')
-      } else if (errMsg.includes('Network request failed')) {
+      } else if (isNetworkError(e)) {
         setError(
           'Unable to contact your service. Please check your Internet connection.',
         )
@@ -210,16 +211,6 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
           </Text>
           <FontAwesomeIcon icon="pen" size={10} style={styles.groupTitleIcon} />
         </TouchableOpacity>
-        {error ? (
-          <View style={styles.error}>
-            <View style={styles.errorIcon}>
-              <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
-            </View>
-            <View style={s.flex1}>
-              <Text style={[s.white, s.bold]}>{error}</Text>
-            </View>
-          </View>
-        ) : undefined}
         <View style={styles.groupContent}>
           <FontAwesomeIcon icon="at" style={styles.groupContentIcon} />
           <TextInput
@@ -249,18 +240,31 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
           />
         </View>
       </View>
-      <View style={[s.flexRow, s.pl20, s.pr20]}>
+      {error ? (
+        <View style={styles.error}>
+          <View style={styles.errorIcon}>
+            <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
+          </View>
+          <View style={s.flex1}>
+            <Text style={[s.white, s.bold]}>{error}</Text>
+          </View>
+        </View>
+      ) : undefined}
+      <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
         <TouchableOpacity onPress={onPressBack}>
           <Text style={[s.white, s.f18, s.pl5]}>Back</Text>
         </TouchableOpacity>
         <View style={s.flex1} />
         <TouchableOpacity onPress={onPressNext}>
-          {isProcessing ? (
+          {!serviceDescription || isProcessing ? (
             <ActivityIndicator color="#fff" />
           ) : (
             <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
           )}
         </TouchableOpacity>
+        {!serviceDescription || isProcessing ? (
+          <Text style={[s.white, s.f18, s.pl10]}>Connecting...</Text>
+        ) : undefined}
       </View>
     </KeyboardAvoidingView>
   )
@@ -689,18 +693,19 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   error: {
-    borderTopWidth: 1,
-    borderTopColor: colors.blue1,
+    borderWidth: 1,
+    borderColor: colors.red5,
+    backgroundColor: colors.red4,
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 5,
-    backgroundColor: colors.blue2,
+    marginTop: -5,
+    marginHorizontal: 20,
+    marginBottom: 15,
+    borderRadius: 8,
     paddingHorizontal: 8,
-    paddingVertical: 5,
+    paddingVertical: 8,
   },
   errorFloating: {
-    borderWidth: 1,
-    borderColor: colors.blue1,
     marginBottom: 20,
     marginHorizontal: 20,
     borderRadius: 8,

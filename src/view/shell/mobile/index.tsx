@@ -231,7 +231,7 @@ export const MobileShell: React.FC = observer(() => {
     transform: [{scale: newTabInterp.value}],
   }))
 
-  if (!store.session.isAuthed) {
+  if (!store.session.hasSession) {
     return (
       <LinearGradient
         colors={['#007CFF', '#00BCFF']}

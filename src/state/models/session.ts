@@ -7,6 +7,7 @@ import type {
 import type * as GetAccountsConfig from '../../third-party/api/src/client/types/com/atproto/server/getAccountsConfig'
 import {isObj, hasProp} from '../lib/type-guards'
 import {RootStoreModel} from './root-store'
+import {isNetworkError} from '../../lib/errors'
 
 export type ServiceDescription = GetAccountsConfig.OutputSchema
 
@@ -20,16 +21,20 @@ interface SessionData {
 
 export class SessionModel {
   data: SessionData | null = null
+  online = false
+  attemptingConnect = false
+  private _connectPromise: Promise<void> | undefined
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
       rootStore: false,
       serialize: false,
       hydrate: false,
+      _connectPromise: false,
     })
   }
 
-  get isAuthed() {
+  get hasSession() {
     return this.data !== null
   }
 
@@ -91,6 +96,13 @@ export class SessionModel {
     this.data = data
   }
 
+  setOnline(online: boolean, attemptingConnect?: boolean) {
+    this.online = online
+    if (typeof attemptingConnect === 'boolean') {
+      this.attemptingConnect = attemptingConnect
+    }
+  }
+
   updateAuthTokens(session: Session) {
     if (this.data) {
       this.setState({
@@ -125,7 +137,14 @@ export class SessionModel {
     return true
   }
 
-  async setup(): Promise<void> {
+  async connect(): Promise<void> {
+    this._connectPromise ??= this._connect()
+    await this._connectPromise
+    this._connectPromise = undefined
+  }
+
+  private async _connect(): Promise<void> {
+    this.attemptingConnect = true
     if (!this.configureApi()) {
       return
     }
@@ -133,14 +152,25 @@ export class SessionModel {
     try {
       const sess = await this.rootStore.api.com.atproto.session.get()
       if (sess.success && this.data && this.data.did === sess.data.did) {
+        this.setOnline(true, false)
+        if (this.rootStore.me.did !== sess.data.did) {
+          this.rootStore.me.clear()
+        }
         this.rootStore.me.load().catch(e => {
           console.error('Failed to fetch local user information', e)
         })
         return // success
       }
-    } catch (e: any) {}
+    } catch (e: any) {
+      if (isNetworkError(e)) {
+        this.setOnline(false, false) // connection issue
+        return
+      } else {
+        this.clear() // invalid session cached
+      }
+    }
 
-    this.clear() // invalid session cached
+    this.setOnline(false, false)
   }
 
   async describeService(service: string): Promise<ServiceDescription> {
@@ -212,7 +242,7 @@ export class SessionModel {
   }
 
   async logout() {
-    if (this.isAuthed) {
+    if (this.hasSession) {
       this.rootStore.api.com.atproto.session.delete().catch((e: any) => {
         console.error('(Minor issue) Failed to delete session on the server', e)
       })

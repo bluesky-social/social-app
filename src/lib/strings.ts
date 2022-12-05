@@ -1,6 +1,7 @@
 import {AtUri} from '../third-party/uri'
 import {Entity} from '../third-party/api/src/client/types/app/bsky/feed/post'
 import {PROD_SERVICE} from '../state'
+import {isNetworkError} from './errors'
 import TLDs from 'tlds'
 
 export const MAX_DISPLAY_NAME = 64
@@ -201,7 +202,7 @@ export function enforceLen(str: string, len: number): string {
 }
 
 export function cleanError(str: string): string {
-  if (str.includes('Network request failed')) {
+  if (isNetworkError(str)) {
     return 'Unable to connect. Please check your internet connection and try again.'
   }
   if (str.startsWith('Error: ')) {
