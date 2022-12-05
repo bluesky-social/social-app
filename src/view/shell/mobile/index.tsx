@@ -47,8 +47,8 @@ import {
   BellIconSolid,
 } from '../../lib/icons'
 
-const SWIPE_GESTURE_DIST_TRIGGER = 0.4
-const SWIPE_GESTURE_VEL_TRIGGER = 2500
+const SWIPE_GESTURE_DIST_TRIGGER = 0.3
+const SWIPE_GESTURE_VEL_TRIGGER = 2000
 
 const Btn = ({
   icon,
@@ -195,6 +195,7 @@ export const MobileShell: React.FC = observer(() => {
   // =
   const goBack = () => store.nav.tab.goBack()
   const swipeGesture = Gesture.Pan()
+    .enabled(store.nav.tab.canGoBack)
     .onUpdate(e => {
       if (store.nav.tab.canGoBack) {
         swipeGestureInterp.value = Math.max(e.translationX / winDim.width, 0)

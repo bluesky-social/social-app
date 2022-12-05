@@ -5,6 +5,9 @@ import {colors} from '../../lib/styles'
 import {MagnifyingGlassIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
 
+const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
+const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
+
 export function ViewHeader({
   title,
   subtitle,
@@ -27,11 +30,14 @@ export function ViewHeader({
   return (
     <View style={styles.header}>
       {store.nav.tab.canGoBack ? (
-        <TouchableOpacity onPress={onPressBack} style={styles.backIcon}>
+        <TouchableOpacity
+          onPress={onPressBack}
+          hitSlop={BACK_HITSLOP}
+          style={styles.backIcon}>
           <FontAwesomeIcon size={18} icon="angle-left" style={{marginTop: 6}} />
         </TouchableOpacity>
       ) : undefined}
-      <View style={styles.titleContainer}>
+      <View style={styles.titleContainer} pointerEvents="none">
         <Text style={styles.title}>{title}</Text>
         {subtitle ? (
           <Text style={styles.subtitle} numberOfLines={1}>
@@ -39,11 +45,15 @@ export function ViewHeader({
           </Text>
         ) : undefined}
       </View>
-      <TouchableOpacity onPress={onPressCompose} style={styles.btn}>
+      <TouchableOpacity
+        onPress={onPressCompose}
+        hitSlop={HITSLOP}
+        style={styles.btn}>
         <FontAwesomeIcon size={18} icon="plus" />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={onPressSearch}
+        hitSlop={HITSLOP}
         style={[styles.btn, {marginLeft: 8}]}>
         <MagnifyingGlassIcon
           size={18}
