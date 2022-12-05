@@ -195,6 +195,7 @@ export const MobileShell: React.FC = observer(() => {
   // =
   const goBack = () => store.nav.tab.goBack()
   const swipeGesture = Gesture.Pan()
+    .enabled(store.nav.tab.canGoBack)
     .onUpdate(e => {
       if (store.nav.tab.canGoBack) {
         swipeGestureInterp.value = Math.max(e.translationX / winDim.width, 0)
