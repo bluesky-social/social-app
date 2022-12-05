@@ -95,8 +95,8 @@ export function UserAvatar({
       <View style={styles.editButtonContainer}>
         <FontAwesomeIcon
           icon="camera"
-          size={10}
-          style={{color: colors.gray1}}
+          size={24}
+          style={{color: colors.gray1 + '99'}}
         />
       </View>
     </TouchableOpacity>
@@ -124,14 +124,15 @@ function getInitials(str: string): string {
 const styles = StyleSheet.create({
   editButtonContainer: {
     position: 'absolute',
-    bottom: 6,
-    right: 6,
-    backgroundColor: colors.gray5,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 50,
+    height: 50,
+    top: '50%',
+    left: '50%',
+    borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: colors.gray5 + '99',
+    transform: [{translateX: -25}, {translateY: -25}],
   },
   avatarImage: {
     width: 80,

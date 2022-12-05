@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
+import {StyleSheet, View, TouchableOpacity, Alert, Image, Dimensions} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {getGradient} from '../../lib/asset-gen'
@@ -27,8 +27,8 @@ export function UserBanner({
           openCamera({
             mediaType: 'photo',
             cropping: true,
-            width: 1000,
-            height: 120,
+            width: 1500,
+            height: 500,
           }).then(item => {
             // setLocalBannerPicture(item.path)
             console.log(item)
@@ -44,8 +44,8 @@ export function UserBanner({
             await openCropper({
               mediaType: 'photo',
               path: item.path,
-              width: 1000,
-              height: 120,
+              width: 1500,
+              height: 500,
             }).then(croppedItem => {
               // setLocalBannerPicture(croppedItem.path)
               console.log(croppedItem)
@@ -84,8 +84,8 @@ export function UserBanner({
       <View style={styles.editButtonContainer}>
         <FontAwesomeIcon
           icon="camera"
-          size={10}
-          style={{color: colors.gray1}}
+          size={24}
+          style={{color: colors.gray1 + '99'}}
         />
       </View>
     </TouchableOpacity>
@@ -97,17 +97,19 @@ export function UserBanner({
 const styles = StyleSheet.create({
   editButtonContainer: {
     position: 'absolute',
-    bottom: 6,
-    right: 6,
-    backgroundColor: colors.gray5,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 50,
+    height: 50,
+    top: '50%',
+    left: '50%',
+    borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: colors.gray5 + '99',
+    transform: [{translateX: -25}, {translateY: -25}],
   },
   bannerImage: {
-    width: 1000,
+    width: '100%',
     height: 120,
+    resizeMode: 'contain',
   },
 })
