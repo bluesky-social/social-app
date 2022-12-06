@@ -89,8 +89,8 @@ export function UserBanner({
       <View style={styles.editButtonContainer}>
         <FontAwesomeIcon
           icon="camera"
-          size={24}
-          style={{color: colors.gray1 + '99'}}
+          size={12}
+          style={{color: colors.white}}
         />
       </View>
     </TouchableOpacity>
@@ -108,15 +108,14 @@ export function UserBanner({
 const styles = StyleSheet.create({
   editButtonContainer: {
     position: 'absolute',
-    width: 50,
-    height: 50,
-    top: '50%',
-    left: '50%',
-    borderRadius: 25,
+    width: 24,
+    height: 24,
+    bottom: 8,
+    right: 8,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.gray5 + '99',
-    transform: [{translateX: -25}, {translateY: -25}],
+    backgroundColor: colors.gray5,
   },
   bannerImage: {
     width: '100%',

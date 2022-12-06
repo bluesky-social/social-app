@@ -79,14 +79,12 @@ export function Component({
         <Text style={styles.title}>Edit my profile</Text>
         <View style={styles.photos}>
           <UserBanner
-            isMe
             userBanner={userBanner}
             setUserBanner={setUserBanner}
             handle={profileView.handle}
           />
           <View style={styles.avi}>
             <UserAvatar
-              isMe
               size={80}
               userAvatar={userAvatar}
               handle={profileView.handle}
@@ -155,6 +153,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingHorizontal: 4,
     paddingBottom: 4,
+    marginTop: 20,
   },
   textInput: {
     borderWidth: 1,
