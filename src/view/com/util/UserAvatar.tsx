@@ -16,12 +16,10 @@ export function UserAvatar({
   handle,
   userAvatar,
   displayName,
-  isMe = false,
   setUserAvatar,
 }: {
   size: number
   handle: string
-  isMe?: boolean
   displayName: string | undefined
   userAvatar: string | null
   setUserAvatar?: React.Dispatch<React.SetStateAction<string | null>>
@@ -108,7 +106,7 @@ export function UserAvatar({
         />
       </View>
     </TouchableOpacity>
-  ) : isMe && userAvatar != null ? (
+  ) : userAvatar != null ? (
     <Image
       style={styles.avatarImage}
       resizeMode="stretch"

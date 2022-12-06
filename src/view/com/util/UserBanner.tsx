@@ -14,11 +14,9 @@ import {IMAGES_ENABLED} from '../../../build-flags'
 export function UserBanner({
   handle,
   userBanner,
-  isMe = false,
   setUserBanner,
 }: {
   handle: string
-  isMe?: boolean
   userBanner: string | null
   setUserBanner?: React.Dispatch<React.SetStateAction<string | null>>
 }) {
@@ -35,7 +33,9 @@ export function UserBanner({
             width: 1500,
             height: 500,
           }).then(item => {
-            setUserBanner(item.path)
+            if (setUserBanner != null) {
+              setUserBanner(item.path)
+            }
           })
         },
       },
@@ -51,7 +51,9 @@ export function UserBanner({
               width: 1500,
               height: 500,
             }).then(croppedItem => {
-              setUserBanner(croppedItem.path)
+              if (setUserBanner != null) {
+                setUserBanner(croppedItem.path)
+              }
             })
           })
         },
@@ -93,7 +95,7 @@ export function UserBanner({
         />
       </View>
     </TouchableOpacity>
-  ) : isMe && userBanner != null ? (
+  ) : userBanner != null ? (
     <Image
       style={styles.bannerImage}
       resizeMode="stretch"
