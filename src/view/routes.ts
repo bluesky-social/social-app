@@ -1,6 +1,7 @@
 import React, {MutableRefObject} from 'react'
 import {FlatList} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {Menu} from './screens/Menu'
 import {Home} from './screens/Home'
 import {Contacts} from './screens/Contacts'
 import {Search} from './screens/Search'
@@ -33,6 +34,7 @@ export type MatchResult = {
 
 const r = (pattern: string) => new RegExp('^' + pattern + '([?]|$)', 'i')
 export const routes: Route[] = [
+  [Menu, 'Menu', 'bars', r('/menu')],
   [Home, 'Home', 'house', r('/')],
   [Contacts, 'Contacts', ['far', 'circle-user'], r('/contacts')],
   [Search, 'Search', 'magnifying-glass', r('/search')],
