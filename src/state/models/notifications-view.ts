@@ -81,6 +81,10 @@ export class NotificationsViewItemModel implements GroupedNotification {
     return this.reason === 'trend'
   }
 
+  get isMention() {
+    return this.reason === 'mention'
+  }
+
   get isReply() {
     return this.reason === 'reply'
   }
@@ -94,7 +98,13 @@ export class NotificationsViewItemModel implements GroupedNotification {
   }
 
   get needsAdditionalData() {
-    if (this.isUpvote || this.isRepost || this.isTrend || this.isReply) {
+    if (
+      this.isUpvote ||
+      this.isRepost ||
+      this.isTrend ||
+      this.isReply ||
+      this.isMention
+    ) {
       return !this.additionalPost
     }
     return false
@@ -124,7 +134,7 @@ export class NotificationsViewItemModel implements GroupedNotification {
       return
     }
     let postUri
-    if (this.isReply) {
+    if (this.isReply || this.isMention) {
       postUri = this.uri
     } else if (this.isUpvote || this.isRead || this.isTrend) {
       postUri = this.subjectUri

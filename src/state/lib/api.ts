@@ -21,7 +21,7 @@ export function doPolyfill() {
 export async function post(
   store: RootStoreModel,
   text: string,
-  replyTo?: Post.PostRef,
+  replyTo?: Post.ReplyRef,
   knownHandles?: Set<string>,
 ) {
   let reply
@@ -43,6 +43,14 @@ export async function post(
     }
   }
   const entities = extractEntities(text, knownHandles)
+  if (entities) {
+    for (const ent of entities) {
+      if (ent.type === 'mention') {
+        const prof = await store.profiles.getProfile(ent.value)
+        ent.value = prof.data.did
+      }
+    }
+  }
   return await store.api.app.bsky.feed.post.create(
     {did: store.me.did || ''},
     {
