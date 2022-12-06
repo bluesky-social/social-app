@@ -16,7 +16,7 @@ import * as Profile from '../../../third-party/api/src/client/types/app/bsky/act
 import {UserBanner} from '../util/UserBanner'
 import {UserAvatar} from '../util/UserAvatar'
 
-export const snapPoints = ['60%']
+export const snapPoints = ['80%']
 
 export function Component({
   profileView,
@@ -59,8 +59,8 @@ export function Component({
             description,
           }
         },
-        userAvatar,
-        userBanner,
+        userAvatar, // TEMP
+        userBanner, // TEMP
       )
       Toast.show('Profile updated')
       onUpdate?.()
@@ -79,14 +79,12 @@ export function Component({
         <Text style={styles.title}>Edit my profile</Text>
         <View style={styles.photos}>
           <UserBanner
-            isMe
             userBanner={userBanner}
             setUserBanner={setUserBanner}
             handle={profileView.handle}
           />
           <View style={styles.avi}>
             <UserAvatar
-              isMe
               size={80}
               userAvatar={userAvatar}
               handle={profileView.handle}
@@ -100,7 +98,7 @@ export function Component({
             <ErrorMessage message={error} />
           </View>
         )}
-        <View style={styles.group}>
+        <View>
           <Text style={styles.label}>Display Name</Text>
           <BottomSheetTextInput
             style={styles.textInput}
@@ -109,7 +107,7 @@ export function Component({
             onChangeText={v => setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))}
           />
         </View>
-        <View style={styles.group}>
+        <View style={s.pb10}>
           <Text style={styles.label}>Description</Text>
           <BottomSheetTextInput
             style={[styles.textArea]}
@@ -148,13 +146,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 18,
   },
-  group: {
-    marginBottom: 10,
-  },
   label: {
     fontWeight: 'bold',
     paddingHorizontal: 4,
     paddingBottom: 4,
+    marginTop: 20,
   },
   textInput: {
     borderWidth: 1,
@@ -195,6 +191,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   photos: {
-    marginBottom: 48,
+    marginBottom: 36,
+    marginHorizontal: -14,
   },
 })
