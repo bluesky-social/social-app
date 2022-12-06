@@ -68,6 +68,9 @@ export const s = StyleSheet.create({
   light: {fontWeight: '300'},
   fw200: {fontWeight: '200'},
 
+  // text decoration
+  underline: {textDecorationLine: 'underline'},
+
   // font sizes
   f9: {fontSize: 9},
   f10: {fontSize: 10},
