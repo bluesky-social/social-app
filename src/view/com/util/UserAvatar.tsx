@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -10,22 +10,36 @@ import {
 import {getGradient} from '../../lib/asset-gen'
 import {colors} from '../../lib/styles'
 import {IMAGES_ENABLED} from '../../../build-flags'
+import {loadString, saveString} from '../../../state/lib/storage'
 
 export function UserAvatar({
-  isEditable = false,
   size,
   handle,
   displayName,
+  isMe = false,
+  isEditable = false,
 }: {
-  isEditable?: boolean
   size: number
   handle: string
+  isMe?: boolean
+  isEditable?: boolean
   displayName: string | undefined
 }) {
   const initials = getInitials(displayName || handle)
   const gradient = getGradient(handle)
 
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+  const [userAvatarImage, setUserAvatarImage] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function loadLocalImage() {
+      if (isMe) {
+        await loadString('userAvatarImage').then(uri => {
+          setUserAvatarImage(uri)
+        })
+      }
+    }
+    loadLocalImage()
+  }, [isMe])
 
   const handleEditAvatar = useCallback(() => {
     Alert.alert('Select upload method', '', [
@@ -39,7 +53,7 @@ export function UserAvatar({
             height: 80,
             cropperCircleOverlay: true,
           }).then(item => {
-            setUploadedImage(item.path)
+            saveString('userAvatarImage', item.path)
           })
         },
       },
@@ -56,8 +70,7 @@ export function UserAvatar({
               height: 80,
               cropperCircleOverlay: true,
             }).then(croppedItem => {
-              setUploadedImage(croppedItem.path)
-              console.log(croppedItem)
+              saveString('userAvatarImage', croppedItem.path)
             })
           })
         },
@@ -88,9 +101,9 @@ export function UserAvatar({
 
   return isEditable && IMAGES_ENABLED ? (
     <TouchableOpacity onPress={handleEditAvatar}>
-      {/* Added a react state temporary photo white the protocol does not support imagery */}
-      {uploadedImage != null ? (
-        <Image style={styles.avatarImage} source={{uri: uploadedImage}} />
+      {/* Added a react state temporary photo while the protocol does not support imagery */}
+      {userAvatarImage != null ? (
+        <Image style={styles.avatarImage} source={{uri: userAvatarImage}} />
       ) : (
         renderSvg(size, initials)
       )}
@@ -102,6 +115,12 @@ export function UserAvatar({
         />
       </View>
     </TouchableOpacity>
+  ) : isMe && userAvatarImage != null ? (
+    <Image
+      style={styles.avatarImage}
+      resizeMode="stretch"
+      source={{uri: userAvatarImage}}
+    />
   ) : (
     renderSvg(size, initials)
   )

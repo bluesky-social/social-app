@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -10,17 +10,31 @@ import {
   openPicker,
 } from 'react-native-image-crop-picker'
 import {IMAGES_ENABLED} from '../../../build-flags'
+import {saveString, loadString} from '../../../state/lib/storage'
 
 export function UserBanner({
   handle,
+  isMe = false,
   isEditable = false,
 }: {
   handle: string
+  isMe?: boolean
   isEditable?: boolean
 }) {
   const gradient = getGradient(handle)
 
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+  const [userBannerImage, setUserBannerImage] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function loadLocalImage() {
+      if (isMe) {
+        await loadString('userBannerImage').then(uri => {
+          setUserBannerImage(uri)
+        })
+      }
+    }
+    loadLocalImage()
+  }, [isMe])
 
   const handleEditBanner = useCallback(() => {
     Alert.alert('Select upload method', '', [
@@ -33,8 +47,7 @@ export function UserBanner({
             width: 1500,
             height: 500,
           }).then(item => {
-            setUploadedImage(item.path)
-            console.log(item)
+            saveString('userBannerImage', item.path)
           })
         },
       },
@@ -50,8 +63,7 @@ export function UserBanner({
               width: 1500,
               height: 500,
             }).then(croppedItem => {
-              setUploadedImage(croppedItem.path)
-              console.log(croppedItem)
+              saveString('userBannerImage', croppedItem.path)
             })
           })
         },
@@ -78,12 +90,12 @@ export function UserBanner({
 
   return isEditable && IMAGES_ENABLED ? (
     <TouchableOpacity onPress={handleEditBanner}>
-      {/* Added a react state temporary photo white the protocol does not support imagery */}
-      {uploadedImage != null ? (
+      {/* Added a react state temporary photo while the protocol does not support imagery */}
+      {userBannerImage != null ? (
         <Image
           style={styles.bannerImage}
           resizeMode="stretch"
-          source={{uri: uploadedImage}}
+          source={{uri: userBannerImage}}
         />
       ) : (
         renderSvg()
@@ -96,6 +108,12 @@ export function UserBanner({
         />
       </View>
     </TouchableOpacity>
+  ) : isMe && userBannerImage != null ? (
+    <Image
+      style={styles.bannerImage}
+      resizeMode="stretch"
+      source={{uri: userBannerImage}}
+    />
   ) : (
     renderSvg()
   )

@@ -70,10 +70,11 @@ export function Component({
       <BottomSheetScrollView style={styles.inner}>
         <Text style={styles.title}>Edit my profile</Text>
         <View style={styles.photos}>
-          <UserBanner isEditable handle={profileView.handle} />
+          <UserBanner isEditable isMe handle={profileView.handle} />
           <View style={styles.avi}>
             <UserAvatar
               isEditable
+              isMe
               size={80}
               displayName={profileView.displayName}
               handle={profileView.handle}
