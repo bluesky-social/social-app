@@ -79,6 +79,7 @@ export function PostDropdownBtn({
   itemHref,
   itemTitle,
   isAuthor,
+  onCopyPostText,
   onDeletePost,
 }: {
   style?: StyleProp<ViewStyle>
@@ -86,6 +87,7 @@ export function PostDropdownBtn({
   itemHref: string
   itemTitle: string
   isAuthor: boolean
+  onCopyPostText: () => void
   onDeletePost: () => void
 }) {
   const store = useStores()
@@ -100,6 +102,13 @@ export function PostDropdownBtn({
           },
         }
       : undefined,
+    {
+      icon: ['far', 'paste'],
+      label: 'Copy post text',
+      onPress() {
+        onCopyPostText()
+      },
+    },
     {
       icon: 'share',
       label: 'Share...',

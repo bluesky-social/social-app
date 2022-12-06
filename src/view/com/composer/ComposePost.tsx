@@ -15,7 +15,10 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete-view'
 import {Autocomplete} from './Autocomplete'
 import * as Toast from '../util/Toast'
-import ProgressCircle from '../util/ProgressCircle'
+// @ts-ignore no type definition -prf
+import ProgressCircle from 'react-native-progress/Circle'
+// @ts-ignore no type definition -prf
+import ProgressPie from 'react-native-progress/Pie'
 import {TextLink} from '../util/Link'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
@@ -252,10 +255,26 @@ export const ComposePost = observer(function ComposePost({
             {MAX_TEXT_LENGTH - text.length}
           </Text>
           <View>
-            <ProgressCircle
-              color={progressColor}
-              progress={text.length / MAX_TEXT_LENGTH}
-            />
+            {text.length > DANGER_TEXT_LENGTH ? (
+              <ProgressPie
+                size={30}
+                borderWidth={4}
+                borderColor={progressColor}
+                color={progressColor}
+                progress={Math.min(
+                  (text.length - MAX_TEXT_LENGTH) / MAX_TEXT_LENGTH,
+                  1,
+                )}
+              />
+            ) : (
+              <ProgressCircle
+                size={30}
+                borderWidth={1}
+                borderColor={colors.gray2}
+                color={progressColor}
+                progress={text.length / MAX_TEXT_LENGTH}
+              />
+            )}
           </View>
         </View>
         <Autocomplete

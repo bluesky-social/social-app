@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from './root-store'
 import {MembershipsViewModel} from './memberships-view'
 import {NotificationsViewModel} from './notifications-view'
+import {isObj, hasProp} from '../lib/type-guards'
 
 export class MeModel {
   did?: string
@@ -13,7 +14,11 @@ export class MeModel {
   notifications: NotificationsViewModel
 
   constructor(public rootStore: RootStoreModel) {
-    makeAutoObservable(this, {rootStore: false}, {autoBind: true})
+    makeAutoObservable(
+      this,
+      {rootStore: false, serialize: false, hydrate: false},
+      {autoBind: true},
+    )
     this.notifications = new NotificationsViewModel(this.rootStore, {})
   }
 
@@ -26,9 +31,42 @@ export class MeModel {
     this.memberships = undefined
   }
 
+  serialize(): unknown {
+    return {
+      did: this.did,
+      handle: this.handle,
+      displayName: this.displayName,
+      description: this.description,
+    }
+  }
+
+  hydrate(v: unknown) {
+    if (isObj(v)) {
+      let did, handle, displayName, description
+      if (hasProp(v, 'did') && typeof v.did === 'string') {
+        did = v.did
+      }
+      if (hasProp(v, 'handle') && typeof v.handle === 'string') {
+        handle = v.handle
+      }
+      if (hasProp(v, 'displayName') && typeof v.displayName === 'string') {
+        displayName = v.displayName
+      }
+      if (hasProp(v, 'description') && typeof v.description === 'string') {
+        description = v.description
+      }
+      if (did && handle) {
+        this.did = did
+        this.handle = handle
+        this.displayName = displayName
+        this.description = description
+      }
+    }
+  }
+
   async load() {
     const sess = this.rootStore.session
-    if (sess.isAuthed && sess.data) {
+    if (sess.hasSession && sess.data) {
       this.did = sess.data.did || ''
       this.handle = sess.data.handle
       const profile = await this.rootStore.api.app.bsky.actor.getProfile({

@@ -317,6 +317,9 @@ export class NotificationsViewModel {
   }
 
   private async _update() {
+    if (!this.notifications.length) {
+      return
+    }
     this._xLoading()
     let numToFetch = this.notifications.length
     let cursor = undefined

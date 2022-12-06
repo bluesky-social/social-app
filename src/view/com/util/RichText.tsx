@@ -23,6 +23,13 @@ export function RichText({
   numberOfLines?: number
 }) {
   if (!entities?.length) {
+    if (/^\p{Extended_Pictographic}+$/u.test(text) && text.length <= 5) {
+      style = {
+        fontSize: 26,
+        lineHeight: 30,
+      }
+      return <Text style={style}>{text}</Text>
+    }
     return <Text style={style}>{text}</Text>
   }
   if (!style) style = []
@@ -97,14 +104,4 @@ function* toSegments(text: string, entities: Entity[]) {
   if (cursor < text.length) {
     yield text.slice(cursor, text.length)
   }
-}
-
-function stripUsername(v: string): string {
-  return v.trim().replace('@', '')
-}
-
-function isSameLink(a: string, b: string) {
-  a = a.startsWith('http') ? a : `https://${a}`
-  b = b.startsWith('http') ? b : `https://${b}`
-  return a === b
 }

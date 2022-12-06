@@ -27,10 +27,19 @@ export async function setupState() {
     console.error('Failed to load state from storage', e)
   }
 
-  await rootStore.session.setup()
+  console.log('Initial hydrate', rootStore.me)
+  rootStore.session
+    .connect()
+    .then(() => {
+      console.log('Session connected', rootStore.me)
+      return rootStore.fetchStateUpdate()
+    })
+    .catch(e => {
+      console.log('Failed initial connect', e)
+    })
   // @ts-ignore .on() is correct -prf
   api.sessionManager.on('session', () => {
-    if (!api.sessionManager.session && rootStore.session.isAuthed) {
+    if (!api.sessionManager.session && rootStore.session.hasSession) {
       // reset session
       rootStore.session.clear()
     } else if (api.sessionManager.session) {
@@ -43,9 +52,6 @@ export async function setupState() {
     const snapshot = rootStore.serialize()
     storage.save(ROOT_STATE_STORAGE_KEY, snapshot)
   })
-
-  await rootStore.fetchStateUpdate()
-  console.log(rootStore.me)
 
   // periodic state fetch
   setInterval(() => {

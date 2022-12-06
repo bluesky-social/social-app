@@ -10,6 +10,9 @@ export const colors = {
   gray3: '#c1b9b9',
   gray4: '#968d8d',
   gray5: '#645454',
+  gray6: '#423737',
+  gray7: '#2D2626',
+  gray8: '#131010',
 
   blue0: '#bfe1ff',
   blue1: '#8bc7fd',
@@ -131,6 +134,7 @@ export const s = StyleSheet.create({
   flexRow: {flexDirection: 'row'},
   flexCol: {flexDirection: 'column'},
   flex1: {flex: 1},
+  alignCenter: {alignItems: 'center'},
 
   // position
   absolute: {position: 'absolute'},

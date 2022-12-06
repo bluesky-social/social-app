@@ -38,6 +38,7 @@ import {faLock} from '@fortawesome/free-solid-svg-icons/faLock'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
 import {faMessage} from '@fortawesome/free-regular-svg-icons/faMessage'
 import {faNoteSticky} from '@fortawesome/free-solid-svg-icons/faNoteSticky'
+import {faPaste} from '@fortawesome/free-regular-svg-icons/faPaste'
 import {faPen} from '@fortawesome/free-solid-svg-icons/faPen'
 import {faPenNib} from '@fortawesome/free-solid-svg-icons/faPenNib'
 import {faPenToSquare} from '@fortawesome/free-solid-svg-icons/faPenToSquare'
@@ -45,6 +46,7 @@ import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus'
 import {faShare} from '@fortawesome/free-solid-svg-icons/faShare'
 import {faShareFromSquare} from '@fortawesome/free-solid-svg-icons/faShareFromSquare'
 import {faShield} from '@fortawesome/free-solid-svg-icons/faShield'
+import {faSignal} from '@fortawesome/free-solid-svg-icons/faSignal'
 import {faReply} from '@fortawesome/free-solid-svg-icons/faReply'
 import {faRetweet} from '@fortawesome/free-solid-svg-icons/faRetweet'
 import {faRss} from '@fortawesome/free-solid-svg-icons/faRss'
@@ -100,6 +102,7 @@ export function setup() {
     faMagnifyingGlass,
     faMessage,
     faNoteSticky,
+    faPaste,
     faPen,
     faPenNib,
     faPenToSquare,
@@ -110,6 +113,7 @@ export function setup() {
     faShare,
     faShareFromSquare,
     faShield,
+    faSignal,
     faUser,
     faUsers,
     faUserCheck,
