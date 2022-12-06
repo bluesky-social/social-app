@@ -1,4 +1,5 @@
 import { Headers } from '@atproto/xrpc';
+import * as AppBskyActorRef from '../actor/ref';
 export interface QueryParams {
     author?: string;
     subject?: string;
@@ -7,40 +8,14 @@ export interface QueryParams {
     limit?: number;
     before?: string;
 }
-export interface CallOptions {
-    headers?: Headers;
-}
 export declare type InputSchema = undefined;
-export declare type ActorKnown = 'app.bsky.system.actorUser' | 'app.bsky.system.actorScene';
-export declare type ActorUnknown = string;
 export interface OutputSchema {
     cursor?: string;
-    assertions: {
-        uri: string;
-        cid: string;
-        assertion: string;
-        confirmation?: Confirmation;
-        author: Actor;
-        subject: Actor;
-        indexedAt: string;
-        createdAt: string;
-    }[];
+    assertions: Assertion[];
+    [k: string]: unknown;
 }
-export interface Confirmation {
-    uri: string;
-    cid: string;
-    indexedAt: string;
-    createdAt: string;
-}
-export interface Actor {
-    did: string;
-    declaration: Declaration;
-    handle: string;
-    displayName?: string;
-}
-export interface Declaration {
-    cid: string;
-    actorType: ActorKnown | ActorUnknown;
+export interface CallOptions {
+    headers?: Headers;
 }
 export interface Response {
     success: boolean;
@@ -48,3 +23,21 @@ export interface Response {
     data: OutputSchema;
 }
 export declare function toKnownErr(e: any): any;
+export interface Assertion {
+    uri: string;
+    cid: string;
+    assertion: string;
+    confirmation?: Confirmation;
+    author: AppBskyActorRef.WithInfo;
+    subject: AppBskyActorRef.WithInfo;
+    indexedAt: string;
+    createdAt: string;
+    [k: string]: unknown;
+}
+export interface Confirmation {
+    uri: string;
+    cid: string;
+    indexedAt: string;
+    createdAt: string;
+    [k: string]: unknown;
+}

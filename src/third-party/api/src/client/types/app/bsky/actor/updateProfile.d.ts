@@ -1,20 +1,22 @@
 import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
 }
-export interface CallOptions {
-    headers?: Headers;
-    qp?: QueryParams;
-    encoding: 'application/json';
-}
 export interface InputSchema {
     did?: string;
     displayName?: string;
     description?: string;
+    [k: string]: unknown;
 }
 export interface OutputSchema {
     uri: string;
     cid: string;
     record: {};
+    [k: string]: unknown;
+}
+export interface CallOptions {
+    headers?: Headers;
+    qp?: QueryParams;
+    encoding: 'application/json';
 }
 export interface Response {
     success: boolean;

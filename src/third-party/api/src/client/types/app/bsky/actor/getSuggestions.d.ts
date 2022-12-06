@@ -1,31 +1,17 @@
 import { Headers } from '@atproto/xrpc';
+import * as AppBskySystemDeclRef from '../system/declRef';
 export interface QueryParams {
     limit?: number;
     cursor?: string;
 }
-export interface CallOptions {
-    headers?: Headers;
-}
 export declare type InputSchema = undefined;
-export declare type ActorKnown = 'app.bsky.system.actorUser' | 'app.bsky.system.actorScene';
-export declare type ActorUnknown = string;
 export interface OutputSchema {
     cursor?: string;
-    actors: {
-        did: string;
-        declaration: Declaration;
-        handle: string;
-        displayName?: string;
-        description?: string;
-        indexedAt?: string;
-        myState?: {
-            follow?: string;
-        };
-    }[];
+    actors: Actor[];
+    [k: string]: unknown;
 }
-export interface Declaration {
-    cid: string;
-    actorType: ActorKnown | ActorUnknown;
+export interface CallOptions {
+    headers?: Headers;
 }
 export interface Response {
     success: boolean;
@@ -33,3 +19,17 @@ export interface Response {
     data: OutputSchema;
 }
 export declare function toKnownErr(e: any): any;
+export interface Actor {
+    did: string;
+    declaration: AppBskySystemDeclRef.Main;
+    handle: string;
+    displayName?: string;
+    description?: string;
+    indexedAt?: string;
+    myState?: MyState;
+    [k: string]: unknown;
+}
+export interface MyState {
+    follow?: string;
+    [k: string]: unknown;
+}

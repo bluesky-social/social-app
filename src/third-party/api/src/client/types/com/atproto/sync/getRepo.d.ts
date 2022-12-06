@@ -3,10 +3,10 @@ export interface QueryParams {
     did: string;
     from?: string;
 }
+export declare type InputSchema = undefined;
 export interface CallOptions {
     headers?: Headers;
 }
-export declare type InputSchema = undefined;
 export interface Response {
     success: boolean;
     headers: Headers;

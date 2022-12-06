@@ -33,7 +33,6 @@ import * as AppBskyFeedGetPostThread from './types/app/bsky/feed/getPostThread';
 import * as AppBskyFeedGetRepostedBy from './types/app/bsky/feed/getRepostedBy';
 import * as AppBskyFeedGetTimeline from './types/app/bsky/feed/getTimeline';
 import * as AppBskyFeedGetVotes from './types/app/bsky/feed/getVotes';
-import * as AppBskyFeedMediaEmbed from './types/app/bsky/feed/mediaEmbed';
 import * as AppBskyFeedPost from './types/app/bsky/feed/post';
 import * as AppBskyFeedRepost from './types/app/bsky/feed/repost';
 import * as AppBskyFeedSetVote from './types/app/bsky/feed/setVote';
@@ -65,6 +64,7 @@ export * as ComAtprotoRepoDescribe from './types/com/atproto/repo/describe';
 export * as ComAtprotoRepoGetRecord from './types/com/atproto/repo/getRecord';
 export * as ComAtprotoRepoListRecords from './types/com/atproto/repo/listRecords';
 export * as ComAtprotoRepoPutRecord from './types/com/atproto/repo/putRecord';
+export * as ComAtprotoRepoStrongRef from './types/com/atproto/repo/strongRef';
 export * as ComAtprotoServerGetAccountsConfig from './types/com/atproto/server/getAccountsConfig';
 export * as ComAtprotoSessionCreate from './types/com/atproto/session/create';
 export * as ComAtprotoSessionDelete from './types/com/atproto/session/delete';
@@ -77,20 +77,23 @@ export * as AppBskyActorCreateScene from './types/app/bsky/actor/createScene';
 export * as AppBskyActorGetProfile from './types/app/bsky/actor/getProfile';
 export * as AppBskyActorGetSuggestions from './types/app/bsky/actor/getSuggestions';
 export * as AppBskyActorProfile from './types/app/bsky/actor/profile';
+export * as AppBskyActorRef from './types/app/bsky/actor/ref';
 export * as AppBskyActorSearch from './types/app/bsky/actor/search';
 export * as AppBskyActorSearchTypeahead from './types/app/bsky/actor/searchTypeahead';
 export * as AppBskyActorUpdateProfile from './types/app/bsky/actor/updateProfile';
+export * as AppBskyFeedEmbed from './types/app/bsky/feed/embed';
 export * as AppBskyFeedGetAuthorFeed from './types/app/bsky/feed/getAuthorFeed';
 export * as AppBskyFeedGetPostThread from './types/app/bsky/feed/getPostThread';
 export * as AppBskyFeedGetRepostedBy from './types/app/bsky/feed/getRepostedBy';
 export * as AppBskyFeedGetTimeline from './types/app/bsky/feed/getTimeline';
 export * as AppBskyFeedGetVotes from './types/app/bsky/feed/getVotes';
-export * as AppBskyFeedMediaEmbed from './types/app/bsky/feed/mediaEmbed';
 export * as AppBskyFeedPost from './types/app/bsky/feed/post';
 export * as AppBskyFeedRepost from './types/app/bsky/feed/repost';
 export * as AppBskyFeedSetVote from './types/app/bsky/feed/setVote';
 export * as AppBskyFeedTrend from './types/app/bsky/feed/trend';
 export * as AppBskyFeedVote from './types/app/bsky/feed/vote';
+export * as AppBskyGraphAssertCreator from './types/app/bsky/graph/assertCreator';
+export * as AppBskyGraphAssertMember from './types/app/bsky/graph/assertMember';
 export * as AppBskyGraphAssertion from './types/app/bsky/graph/assertion';
 export * as AppBskyGraphConfirmation from './types/app/bsky/graph/confirmation';
 export * as AppBskyGraphFollow from './types/app/bsky/graph/follow';
@@ -102,6 +105,9 @@ export * as AppBskyGraphGetMemberships from './types/app/bsky/graph/getMembershi
 export * as AppBskyNotificationGetCount from './types/app/bsky/notification/getCount';
 export * as AppBskyNotificationList from './types/app/bsky/notification/list';
 export * as AppBskyNotificationUpdateSeen from './types/app/bsky/notification/updateSeen';
+export * as AppBskySystemActorScene from './types/app/bsky/system/actorScene';
+export * as AppBskySystemActorUser from './types/app/bsky/system/actorUser';
+export * as AppBskySystemDeclRef from './types/app/bsky/system/declRef';
 export * as AppBskySystemDeclaration from './types/app/bsky/system/declaration';
 export declare const APP_BSKY_GRAPH: {
     AssertCreator: string;
@@ -235,7 +241,6 @@ export declare class ProfileRecord {
 }
 export declare class FeedNS {
     _service: ServiceClient;
-    mediaEmbed: MediaEmbedRecord;
     post: PostRecord;
     repost: RepostRecord;
     trend: TrendRecord;
@@ -247,27 +252,6 @@ export declare class FeedNS {
     getTimeline(params?: AppBskyFeedGetTimeline.QueryParams, opts?: AppBskyFeedGetTimeline.CallOptions): Promise<AppBskyFeedGetTimeline.Response>;
     getVotes(params?: AppBskyFeedGetVotes.QueryParams, opts?: AppBskyFeedGetVotes.CallOptions): Promise<AppBskyFeedGetVotes.Response>;
     setVote(data?: AppBskyFeedSetVote.InputSchema, opts?: AppBskyFeedSetVote.CallOptions): Promise<AppBskyFeedSetVote.Response>;
-}
-export declare class MediaEmbedRecord {
-    _service: ServiceClient;
-    constructor(service: ServiceClient);
-    list(params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>): Promise<{
-        cursor?: string;
-        records: {
-            uri: string;
-            value: AppBskyFeedMediaEmbed.Record;
-        }[];
-    }>;
-    get(params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>): Promise<{
-        uri: string;
-        cid: string;
-        value: AppBskyFeedMediaEmbed.Record;
-    }>;
-    create(params: Omit<ComAtprotoRepoCreateRecord.InputSchema, 'collection' | 'record'>, record: AppBskyFeedMediaEmbed.Record, headers?: Record<string, string>): Promise<{
-        uri: string;
-        cid: string;
-    }>;
-    delete(params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>, headers?: Record<string, string>): Promise<void>;
 }
 export declare class PostRecord {
     _service: ServiceClient;

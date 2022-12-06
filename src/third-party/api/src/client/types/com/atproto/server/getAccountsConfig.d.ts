@@ -1,13 +1,15 @@
 import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
 }
-export interface CallOptions {
-    headers?: Headers;
-}
 export declare type InputSchema = undefined;
 export interface OutputSchema {
     inviteCodeRequired?: boolean;
     availableUserDomains: string[];
+    links?: Links;
+    [k: string]: unknown;
+}
+export interface CallOptions {
+    headers?: Headers;
 }
 export interface Response {
     success: boolean;
@@ -15,3 +17,8 @@ export interface Response {
     data: OutputSchema;
 }
 export declare function toKnownErr(e: any): any;
+export interface Links {
+    privacyPolicy?: string;
+    termsOfService?: string;
+    [k: string]: unknown;
+}
