@@ -17,8 +17,11 @@ export type HistoryPtr = [number, number]
 
 export class NavigationTabModel {
   id = genId()
-  history: HistoryItem[] = [{url: '/', ts: Date.now(), id: genId()}]
-  index = 0
+  history: HistoryItem[] = [
+    {url: '/menu', ts: Date.now(), id: genId()},
+    {url: '/', ts: Date.now(), id: genId()},
+  ]
+  index = 1
   isNewTab = false
 
   constructor() {
@@ -107,9 +110,15 @@ export class NavigationTabModel {
     }
   }
 
-  goBackToZero() {
-    if (this.canGoBack) {
-      this.index = 0
+  resetTo(path: string) {
+    if (this.index >= 1 && this.history[1]?.url === path) {
+      // fall back in history to target
+      if (this.index > 1) {
+        this.index = 1
+      }
+    } else {
+      this.history = [this.history[0], {url: path, ts: Date.now(), id: genId()}]
+      this.index = 1
     }
   }
 

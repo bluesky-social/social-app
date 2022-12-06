@@ -138,7 +138,10 @@ export class SessionModel {
   }
 
   async connect(): Promise<void> {
-    this._connectPromise ??= this._connect()
+    if (this._connectPromise) {
+      return this._connectPromise
+    }
+    this._connectPromise = this._connect()
     await this._connectPromise
     this._connectPromise = undefined
   }

@@ -5,10 +5,10 @@ import {NotificationsViewModel} from './notifications-view'
 import {isObj, hasProp} from '../lib/type-guards'
 
 export class MeModel {
-  did?: string
-  handle?: string
-  displayName?: string
-  description?: string
+  did: string = ''
+  handle: string = ''
+  displayName: string = ''
+  description: string = ''
   notificationCount: number = 0
   memberships?: MembershipsViewModel
   notifications: NotificationsViewModel
@@ -23,10 +23,10 @@ export class MeModel {
   }
 
   clear() {
-    this.did = undefined
-    this.handle = undefined
-    this.displayName = undefined
-    this.description = undefined
+    this.did = ''
+    this.handle = ''
+    this.displayName = ''
+    this.description = ''
     this.notificationCount = 0
     this.memberships = undefined
   }
@@ -58,8 +58,8 @@ export class MeModel {
       if (did && handle) {
         this.did = did
         this.handle = handle
-        this.displayName = displayName
-        this.description = description
+        this.displayName = displayName || ''
+        this.description = description || ''
       }
     }
   }
@@ -74,8 +74,8 @@ export class MeModel {
       })
       runInAction(() => {
         if (profile?.data) {
-          this.displayName = profile.data.displayName
-          this.description = profile.data.description
+          this.displayName = profile.data.displayName || ''
+          this.description = profile.data.description || ''
         } else {
           this.displayName = ''
           this.description = ''

@@ -33,7 +33,6 @@ import {match, MatchResult} from '../../routes'
 import {Login} from '../../screens/Login'
 import {Onboard} from '../../screens/Onboard'
 import {Modal} from '../../com/modals/Modal'
-import {MainMenu} from './MainMenu'
 import {TabsSelector} from './TabsSelector'
 import {Composer} from './Composer'
 import {s, colors} from '../../lib/styles'
@@ -118,7 +117,6 @@ const Btn = ({
 
 export const MobileShell: React.FC = observer(() => {
   const store = useStores()
-  const [isMainMenuActive, setMainMenuActive] = useState(false)
   const [isTabsSelectorActive, setTabsSelectorActive] = useState(false)
   const scrollElRef = useRef<FlatList | undefined>()
   const winDim = useWindowDimensions()
@@ -134,16 +132,10 @@ export const MobileShell: React.FC = observer(() => {
     if (store.nav.tab.current.url === '/') {
       scrollElRef.current?.scrollToOffset({offset: 0})
     } else {
-      if (store.nav.tab.canGoBack) {
-        // sanity check
-        store.nav.tab.goBackToZero()
-      } else {
-        store.nav.navigate('/')
-      }
+      store.nav.tab.resetTo('/')
     }
   }
-  const onPressMenu = () => setMainMenuActive(true)
-  const onPressNotifications = () => store.nav.navigate('/notifications')
+  const onPressNotifications = () => store.nav.tab.resetTo('/notifications')
   const onPressTabs = () => toggleTabsMenu(!isTabsSelectorActive)
   const doNewTab = (url: string) => () => store.nav.newTab(url)
 
@@ -337,16 +329,7 @@ export const MobileShell: React.FC = observer(() => {
           onLongPress={TABS_ENABLED ? doNewTab('/notifications') : undefined}
           notificationCount={store.me.notificationCount}
         />
-        <Btn
-          icon={isMainMenuActive ? 'menu-solid' : 'menu'}
-          onPress={onPressMenu}
-        />
       </View>
-      <MainMenu
-        active={isMainMenuActive}
-        insetBottom={clamp(safeAreaInsets.bottom, 15, 40)}
-        onClose={() => setMainMenuActive(false)}
-      />
       <Modal />
       <Composer
         active={store.shell.isComposerActive}
