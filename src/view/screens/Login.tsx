@@ -15,6 +15,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
 import {observer} from 'mobx-react-lite'
 import {Picker} from '../com/util/Picker'
+import {TextLink} from '../com/util/Link'
 import {s, colors} from '../lib/styles'
 import {
   makeValidHandle,
@@ -370,6 +371,55 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     </>
   )
 
+  const Policies = () => {
+    if (!serviceDescription) {
+      return <View />
+    }
+    const tos = validWebLink(serviceDescription.links?.termsOfService)
+    const pp = validWebLink(serviceDescription.links?.privacyPolicy)
+    if (!tos && !pp) {
+      return (
+        <View style={styles.policies}>
+          <View style={[styles.errorIcon, s.mt2]}>
+            <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
+          </View>
+          <Text style={[s.white, s.pl5, s.flex1]}>
+            This service has not provided terms of service or a privacy policy.
+          </Text>
+        </View>
+      )
+    }
+    const els = []
+    if (tos) {
+      els.push(
+        <TextLink
+          href={tos}
+          text="Terms of Service"
+          style={[s.white, s.underline]}
+        />,
+      )
+    }
+    if (pp) {
+      els.push(
+        <TextLink
+          href={pp}
+          text="Privacy Policy"
+          style={[s.white, s.underline]}
+        />,
+      )
+    }
+    if (els.length === 2) {
+      els.splice(1, 0, <Text style={s.white}> and </Text>)
+    }
+    return (
+      <View style={styles.policies}>
+        <Text style={s.white}>
+          By creating an account you agree to the {els}.
+        </Text>
+      </View>
+    )
+  }
+
   return (
     <ScrollView style={{flex: 1}}>
       <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
@@ -510,6 +560,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                 </Text>
               </View>
             </View>
+            <Policies />
             <View style={[s.flexRow, s.pl20, s.pr20, {paddingBottom: 200}]}>
               <TouchableOpacity onPress={onPressBack}>
                 <Text style={[s.white, s.f18, s.pl5]}>Back</Text>
@@ -566,6 +617,12 @@ export const Login = observer(
     )
   },
 )
+
+function validWebLink(url?: string): string | undefined {
+  return url && (url.startsWith('http://') || url.startsWith('https://'))
+    ? url
+    : undefined
+}
 
 const styles = StyleSheet.create({
   outer: {
@@ -691,6 +748,12 @@ const styles = StyleSheet.create({
   },
   pickerIcon: {
     color: colors.white,
+  },
+  policies: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   error: {
     borderWidth: 1,
