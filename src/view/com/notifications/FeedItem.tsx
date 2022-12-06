@@ -48,7 +48,7 @@ export const FeedItem = observer(function FeedItem({
     return <View />
   }
 
-  if (item.isReply) {
+  if (item.isReply || item.isMention) {
     return (
       <Link href={itemHref} title={itemTitle}>
         <Post
