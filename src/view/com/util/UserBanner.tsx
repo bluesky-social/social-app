@@ -17,7 +17,7 @@ export function UserBanner({
   setUserBanner,
 }: {
   handle: string
-  userBanner: string | null
+  userBanner: string | null | undefined
   setUserBanner?: React.Dispatch<React.SetStateAction<string | null>>
 }) {
   const gradient = getGradient(handle)
@@ -81,7 +81,7 @@ export function UserBanner({
   // setUserBanner is only passed as prop on the EditProfile component
   return setUserBanner != null && IMAGES_ENABLED ? (
     <TouchableOpacity onPress={handleEditBanner}>
-      {userBanner != null ? (
+      {userBanner ? (
         <Image style={styles.bannerImage} source={{uri: userBanner}} />
       ) : (
         renderSvg()
@@ -94,7 +94,7 @@ export function UserBanner({
         />
       </View>
     </TouchableOpacity>
-  ) : userBanner != null ? (
+  ) : userBanner ? (
     <Image
       style={styles.bannerImage}
       resizeMode="stretch"

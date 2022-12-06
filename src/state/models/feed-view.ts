@@ -1,6 +1,8 @@
 import {makeAutoObservable, runInAction} from 'mobx'
+import {Record as PostRecord} from '../../third-party/api/src/client/types/app/bsky/feed/post'
 import * as GetTimeline from '../../third-party/api/src/client/types/app/bsky/feed/getTimeline'
 import * as GetAuthorFeed from '../../third-party/api/src/client/types/app/bsky/feed/getAuthorFeed'
+import {PostThreadViewModel} from './post-thread-view'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
@@ -43,16 +45,15 @@ export class FeedItemModel implements GetTimeline.FeedItem {
   repostedBy?: GetTimeline.Actor
   trendedBy?: GetTimeline.Actor
   record: Record<string, unknown> = {}
-  embed?:
-    | GetTimeline.RecordEmbed
-    | GetTimeline.ExternalEmbed
-    | GetTimeline.UnknownEmbed
   replyCount: number = 0
   repostCount: number = 0
   upvoteCount: number = 0
   downvoteCount: number = 0
   indexedAt: string = ''
   myState = new FeedItemMyStateModel()
+
+  // additional data
+  additionalParentPost?: PostThreadViewModel
 
   constructor(
     public rootStore: RootStoreModel,
@@ -73,7 +74,6 @@ export class FeedItemModel implements GetTimeline.FeedItem {
     this.repostedBy = v.repostedBy
     this.trendedBy = v.trendedBy
     this.record = v.record
-    this.embed = v.embed
     this.replyCount = v.replyCount
     this.repostCount = v.repostCount
     this.upvoteCount = v.upvoteCount
@@ -154,6 +154,29 @@ export class FeedItemModel implements GetTimeline.FeedItem {
     await this.rootStore.api.app.bsky.feed.post.delete({
       did: this.author.did,
       rkey: new AtUri(this.uri).rkey,
+    })
+  }
+
+  get needsAdditionalData() {
+    if (
+      (this.record as PostRecord).reply?.parent?.uri &&
+      !this._isThreadChild
+    ) {
+      return !this.additionalParentPost
+    }
+    return false
+  }
+
+  async fetchAdditionalData() {
+    if (!this.needsAdditionalData) {
+      return
+    }
+    this.additionalParentPost = new PostThreadViewModel(this.rootStore, {
+      uri: (this.record as PostRecord).reply?.parent.uri,
+      depth: 0,
+    })
+    await this.additionalParentPost.setup().catch(e => {
+      console.error('Failed to load post needed by notification', e)
     })
   }
 }
@@ -345,7 +368,7 @@ export class FeedModel {
     this._xLoading(isRefreshing)
     try {
       const res = await this._getFeed({limit: PAGE_SIZE})
-      this._replaceAll(res)
+      await this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e.toString())
@@ -356,7 +379,7 @@ export class FeedModel {
     this._xLoading()
     try {
       const res = await this._getFeed({limit: PAGE_SIZE})
-      this._prependAll(res)
+      await this._prependAll(res)
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e.toString())
@@ -373,7 +396,7 @@ export class FeedModel {
         before: this.loadMoreCursor,
         limit: PAGE_SIZE,
       })
-      this._appendAll(res)
+      await this._appendAll(res)
       this._xIdle()
     } catch (e: any) {
       this._xIdle(`Failed to load feed: ${e.toString()}`)
@@ -407,13 +430,17 @@ export class FeedModel {
     }
   }
 
-  private _replaceAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
-    this.feed.length = 0
+  private async _replaceAll(
+    res: GetTimeline.Response | GetAuthorFeed.Response,
+  ) {
     this.pollCursor = res.data.feed[0]?.uri
-    this._appendAll(res)
+    return this._appendAll(res, true)
   }
 
-  private _appendAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
+  private async _appendAll(
+    res: GetTimeline.Response | GetAuthorFeed.Response,
+    replace = false,
+  ) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     let counter = this.feed.length
@@ -428,40 +455,64 @@ export class FeedModel {
     // -prf
     const reorgedFeed = preprocessFeed(res.data.feed, this.feedType === 'home')
 
+    const promises = []
+    const toAppend: FeedItemModel[] = []
     for (const item of reorgedFeed) {
-      this._append(counter++, item)
+      const itemModel = new FeedItemModel(
+        this.rootStore,
+        `item-${counter++}`,
+        item,
+      )
+      if (itemModel.needsAdditionalData) {
+        promises.push(
+          itemModel.fetchAdditionalData().catch(e => {
+            console.error('Failure during feed-view _appendAll()', e)
+          }),
+        )
+      }
+      toAppend.push(itemModel)
     }
+    await Promise.all(promises)
+    runInAction(() => {
+      if (replace) {
+        this.feed = toAppend
+      } else {
+        this.feed = this.feed.concat(toAppend)
+      }
+    })
   }
 
-  private _append(
-    keyId: number,
-    item: GetTimeline.FeedItem | GetAuthorFeed.FeedItem,
+  private async _prependAll(
+    res: GetTimeline.Response | GetAuthorFeed.Response,
   ) {
-    // TODO: validate .record
-    this.feed.push(new FeedItemModel(this.rootStore, `item-${keyId}`, item))
-  }
-
-  private _prependAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     this.pollCursor = res.data.feed[0]?.uri
     let counter = this.feed.length
-    const toPrepend = []
+
+    const promises = []
+    const toPrepend: FeedItemModel[] = []
     for (const item of res.data.feed) {
       if (this.feed.find(item2 => item2.uri === item.uri)) {
         break // stop here - we've hit a post we already have
       }
-      toPrepend.unshift(item) // reverse the order
-    }
-    for (const item of toPrepend) {
-      this._prepend(counter++, item)
-    }
-  }
 
-  private _prepend(
-    keyId: number,
-    item: GetTimeline.FeedItem | GetAuthorFeed.FeedItem,
-  ) {
-    // TODO: validate .record
-    this.feed.unshift(new FeedItemModel(this.rootStore, `item-${keyId}`, item))
+      const itemModel = new FeedItemModel(
+        this.rootStore,
+        `item-${counter++}`,
+        item,
+      )
+      if (itemModel.needsAdditionalData) {
+        promises.push(
+          itemModel.fetchAdditionalData().catch(e => {
+            console.error('Failure during feed-view _prependAll()', e)
+          }),
+        )
+      }
+      toPrepend.push(itemModel)
+    }
+    await Promise.all(promises)
+    runInAction(() => {
+      this.feed = toPrepend.concat(this.feed)
+    })
   }
 
   private _updateAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
