@@ -1,19 +1,74 @@
-import React from 'react'
+import React, {useCallback} from 'react'
+import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  openCamera,
+  openCropper,
+  openPicker,
+} from 'react-native-image-crop-picker'
 import {getGradient} from '../../lib/asset-gen'
+import {colors} from '../../lib/styles'
+import {IMAGES_ENABLED} from '../../../build-flags'
 
 export function UserAvatar({
   size,
-  displayName,
   handle,
+  userAvatar,
+  displayName,
+  setUserAvatar,
 }: {
   size: number
-  displayName: string | undefined
   handle: string
+  displayName: string | undefined
+  userAvatar: string | null
+  setUserAvatar?: React.Dispatch<React.SetStateAction<string | null>>
 }) {
   const initials = getInitials(displayName || handle)
   const gradient = getGradient(handle)
-  return (
+
+  const handleEditAvatar = useCallback(() => {
+    Alert.alert('Select upload method', '', [
+      {
+        text: 'Take a new photo',
+        onPress: () => {
+          openCamera({
+            mediaType: 'photo',
+            cropping: true,
+            width: 80,
+            height: 80,
+            cropperCircleOverlay: true,
+          }).then(item => {
+            if (setUserAvatar != null) {
+              setUserAvatar(item.path)
+            }
+          })
+        },
+      },
+      {
+        text: 'Select from gallery',
+        onPress: () => {
+          openPicker({
+            mediaType: 'photo',
+          }).then(async item => {
+            await openCropper({
+              mediaType: 'photo',
+              path: item.path,
+              width: 80,
+              height: 80,
+              cropperCircleOverlay: true,
+            }).then(croppedItem => {
+              if (setUserAvatar != null) {
+                setUserAvatar(croppedItem.path)
+              }
+            })
+          })
+        },
+      },
+    ])
+  }, [setUserAvatar])
+
+  const renderSvg = (size: number, initials: string) => (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Defs>
         <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
@@ -33,6 +88,32 @@ export function UserAvatar({
       </Text>
     </Svg>
   )
+
+  // setUserAvatar is only passed as prop on the EditProfile component
+  return setUserAvatar != null && IMAGES_ENABLED ? (
+    <TouchableOpacity onPress={handleEditAvatar}>
+      {userAvatar != null ? (
+        <Image style={styles.avatarImage} source={{uri: userAvatar}} />
+      ) : (
+        renderSvg(size, initials)
+      )}
+      <View style={styles.editButtonContainer}>
+        <FontAwesomeIcon
+          icon="camera"
+          size={12}
+          style={{color: colors.white}}
+        />
+      </View>
+    </TouchableOpacity>
+  ) : userAvatar != null ? (
+    <Image
+      style={styles.avatarImage}
+      resizeMode="stretch"
+      source={{uri: userAvatar}}
+    />
+  ) : (
+    renderSvg(size, initials)
+  )
 }
 
 function getInitials(str: string): string {
@@ -50,3 +131,22 @@ function getInitials(str: string): string {
   }
   return 'X'
 }
+
+const styles = StyleSheet.create({
+  editButtonContainer: {
+    position: 'absolute',
+    width: 24,
+    height: 24,
+    bottom: 0,
+    right: 0,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.gray5,
+  },
+  avatarImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
+})
