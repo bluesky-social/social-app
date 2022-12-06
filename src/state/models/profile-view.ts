@@ -43,6 +43,10 @@ export class ProfileViewModel {
   postsCount: number = 0
   myState = new ProfileViewMyStateModel()
 
+  // data to be implemented in the protocol
+  userAvatar: string | null = null
+  userBanner: string | null = null
+
   // added data
   descriptionEntities?: Entity[]
 
@@ -115,8 +119,15 @@ export class ProfileViewModel {
     }
   }
 
-  async updateProfile(fn: (existing?: Profile.Record) => Profile.Record) {
+  async updateProfile(
+    fn: (existing?: Profile.Record) => Profile.Record,
+    userAvatar: string | null,
+    userBanner: string | null,
+  ) {
     await apilib.updateProfile(this.rootStore, this.did, fn)
+    // add userBanner & userAvatar in the protocol when suported
+    this.userAvatar = userAvatar
+    this.userBanner = userBanner
     await this.refresh()
   }
 
