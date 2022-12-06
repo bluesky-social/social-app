@@ -5,14 +5,15 @@ export interface QueryParams {
     rkey: string;
     cid?: string;
 }
-export interface CallOptions {
-    headers?: Headers;
-}
 export declare type InputSchema = undefined;
 export interface OutputSchema {
     uri: string;
     cid?: string;
     value: {};
+    [k: string]: unknown;
+}
+export interface CallOptions {
+    headers?: Headers;
 }
 export interface Response {
     success: boolean;
