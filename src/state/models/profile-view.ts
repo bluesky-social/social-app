@@ -6,7 +6,6 @@ import {extractEntities} from '../../lib/strings'
 import {Declaration} from './_common'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
-import {Image} from 'react-native-image-crop-picker'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
 export const ACTOR_TYPE_SCENE = 'app.bsky.system.actorScene'
@@ -44,12 +43,12 @@ export class ProfileViewModel {
   postsCount: number = 0
   myState = new ProfileViewMyStateModel()
 
+  // data to be implemented in the protocol
+  userAvatar: string | null = null
+  userBanner: string | null = null
+
   // added data
   descriptionEntities?: Entity[]
-
-  // temp state while imagery is not supported by the protocol
-  userAvatar: Image | null = null
-  userBanner: Image | null = null
 
   constructor(
     public rootStore: RootStoreModel,
@@ -120,21 +119,20 @@ export class ProfileViewModel {
     }
   }
 
-  async updateProfile(fn: (existing?: Profile.Record) => Profile.Record) {
+  async updateProfile(
+    fn: (existing?: Profile.Record) => Profile.Record,
+    userAvatar: string | null,
+    userBanner: string | null,
+  ) {
     await apilib.updateProfile(this.rootStore, this.did, fn)
+    // add userBanner & userAvatar in the protocol when suported
+    this.userAvatar = userAvatar
+    this.userBanner = userBanner
     await this.refresh()
   }
 
   // state transitions
   // =
-
-  updateUserAvatar(img: Image) {
-    this.userAvatar = img
-  }
-
-  updateUserBanner(img: Image) {
-    this.userBanner = img
-  }
 
   private _xLoading(isRefreshing = false) {
     this.isLoading = true

@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback} from 'react'
 import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -10,22 +10,19 @@ import {
   openPicker,
 } from 'react-native-image-crop-picker'
 import {IMAGES_ENABLED} from '../../../build-flags'
-import {ProfileViewModel} from '../../../state/models/profile-view'
 
 export function UserBanner({
   handle,
-  profileView,
+  userBanner,
   isMe = false,
-  isEditable = false,
+  setUserBanner,
 }: {
   handle: string
   isMe?: boolean
-  profileView: ProfileViewModel
-  isEditable?: boolean
+  userBanner: string | null
+  setUserBanner?: React.Dispatch<React.SetStateAction<string | null>>
 }) {
   const gradient = getGradient(handle)
-
-  const [tempUserBanner, setTempUserBanner] = useState<string | null>(null)
 
   const handleEditBanner = useCallback(() => {
     Alert.alert('Select upload method', '', [
@@ -38,8 +35,7 @@ export function UserBanner({
             width: 1500,
             height: 500,
           }).then(item => {
-            profileView.updateUserBanner(item)
-            setTempUserBanner(item.path)
+            setUserBanner(item.path)
           })
         },
       },
@@ -55,14 +51,13 @@ export function UserBanner({
               width: 1500,
               height: 500,
             }).then(croppedItem => {
-              profileView.updateUserBanner(croppedItem)
-              setTempUserBanner(croppedItem.path)
+              setUserBanner(croppedItem.path)
             })
           })
         },
       },
     ])
-  }, [profileView])
+  }, [setUserBanner])
 
   const renderSvg = () => (
     <Svg width="100%" height="120" viewBox="50 0 200 100">
@@ -81,15 +76,12 @@ export function UserBanner({
     </Svg>
   )
 
-  return isEditable && IMAGES_ENABLED ? (
+  // setUserBanner is only passed as prop on the EditProfile component
+  return setUserBanner != null && IMAGES_ENABLED ? (
     <TouchableOpacity onPress={handleEditBanner}>
       {/* Added a react state temporary photo while the protocol does not support imagery */}
-      {profileView.userBanner != null || tempUserBanner != null ? (
-        <Image
-          style={styles.bannerImage}
-          resizeMode="stretch"
-          source={{uri: tempUserBanner ?? profileView.userBanner?.path}}
-        />
+      {userBanner != null ? (
+        <Image style={styles.bannerImage} source={{uri: userBanner}} />
       ) : (
         renderSvg()
       )}
@@ -101,11 +93,11 @@ export function UserBanner({
         />
       </View>
     </TouchableOpacity>
-  ) : isMe && profileView.userBanner != null ? (
+  ) : isMe && userBanner != null ? (
     <Image
       style={styles.bannerImage}
       resizeMode="stretch"
-      source={{uri: profileView.userBanner.path}}
+      source={{uri: userBanner}}
     />
   ) : (
     renderSvg()

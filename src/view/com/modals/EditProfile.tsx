@@ -33,6 +33,12 @@ export function Component({
   const [description, setDescription] = useState<string>(
     profileView.description || '',
   )
+  const [userBanner, setUserBanner] = useState<string | null>(
+    profileView.userBanner,
+  )
+  const [userAvatar, setUserAvatar] = useState<string | null>(
+    profileView.userAvatar,
+  )
   const onPressCancel = () => {
     store.shell.closeModal()
   }
@@ -53,6 +59,8 @@ export function Component({
             description,
           }
         },
+        userAvatar,
+        userBanner,
       )
       Toast.show('Profile updated')
       onUpdate?.()
@@ -72,17 +80,17 @@ export function Component({
         <View style={styles.photos}>
           <UserBanner
             isMe
-            isEditable
+            userBanner={userBanner}
+            setUserBanner={setUserBanner}
             handle={profileView.handle}
-            profileView={profileView}
           />
           <View style={styles.avi}>
             <UserAvatar
               isMe
-              isEditable
               size={80}
+              userAvatar={userAvatar}
               handle={profileView.handle}
-              profileView={profileView}
+              setUserAvatar={setUserAvatar}
               displayName={profileView.displayName}
             />
           </View>
