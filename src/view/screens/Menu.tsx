@@ -7,7 +7,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {colors} from '../lib/styles'
+import VersionNumber from 'react-native-version-number'
+import {s, colors} from '../lib/styles'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 import {
@@ -171,6 +172,12 @@ export const Menu = ({navIdx, visible}: ScreenParams) => {
             ))
           : undefined}
       </View>
+      <View style={styles.footer}>
+        <Text style={s.gray4}>
+          Build version {VersionNumber.appVersion} ({VersionNumber.buildVersion}
+          )
+        </Text>
+      </View>
     </View>
   )
 }
@@ -242,5 +249,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     color: colors.white,
+  },
+
+  footer: {
+    paddingHorizontal: 14,
+    paddingVertical: 18,
   },
 })

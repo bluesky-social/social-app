@@ -21,7 +21,7 @@ export function UserAvatar({
   size: number
   handle: string
   displayName: string | undefined
-  userAvatar: string | null | undefined
+  userAvatar?: string | null
   setUserAvatar?: React.Dispatch<React.SetStateAction<string | null>>
 }) {
   const initials = getInitials(displayName || handle)

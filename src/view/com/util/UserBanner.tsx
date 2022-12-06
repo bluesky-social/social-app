@@ -17,7 +17,7 @@ export function UserBanner({
   setUserBanner,
 }: {
   handle: string
-  userBanner: string | null | undefined
+  userBanner?: string | null
   setUserBanner?: React.Dispatch<React.SetStateAction<string | null>>
 }) {
   const gradient = getGradient(handle)

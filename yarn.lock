@@ -10293,6 +10293,11 @@ react-native-url-polyfill@^1.3.0:
   dependencies:
     whatwg-url-without-unicode "8.0.0-3"
 
+react-native-version-number@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/react-native-version-number/-/react-native-version-number-0.3.6.tgz#dd8b1435fc217df0a166d7e4a61fdc993f3e7437"
+  integrity sha512-TdyXiK90NiwmSbmAUlUBOV6WI1QGoqtvZZzI5zQY4fKl67B3ZrZn/h+Wy/OYIKKFMfePSiyfeIs8LtHGOZ/NgA==
+
 react-native-web@^0.17.7:
   version "0.17.7"
   resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.17.7.tgz#038899dbc94467a0ca0be214b88a30e0c117b176"
