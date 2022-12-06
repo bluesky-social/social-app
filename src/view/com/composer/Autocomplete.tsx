@@ -1,16 +1,12 @@
 import React, {useEffect} from 'react'
 import {
-  useWindowDimensions,
+  Animated,
   Text,
   TouchableOpacity,
   StyleSheet,
+  useWindowDimensions,
 } from 'react-native'
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  interpolate,
-} from 'react-native-reanimated'
+import {useAnimatedValue} from '../../lib/useAnimatedValue'
 import {colors} from '../../lib/styles'
 
 interface AutocompleteItem {
@@ -28,23 +24,22 @@ export function Autocomplete({
   onSelect: (item: string) => void
 }) {
   const winDim = useWindowDimensions()
-  const positionInterp = useSharedValue<number>(0)
+  const positionInterp = useAnimatedValue(0)
 
   useEffect(() => {
-    if (active) {
-      positionInterp.value = withTiming(1, {duration: 250})
-    } else {
-      positionInterp.value = withTiming(0, {duration: 250})
-    }
+    Animated.timing(positionInterp, {
+      toValue: active ? 1 : 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start()
   }, [positionInterp, active])
 
-  const topAnimStyle = useAnimatedStyle(() => ({
-    top: interpolate(
-      positionInterp.value,
-      [0, 1.0],
-      [winDim.height, winDim.height / 4],
-    ),
-  }))
+  const topAnimStyle = {
+    top: positionInterp.interpolate({
+      inputRange: [0, 1],
+      outputRange: [winDim.height, winDim.height / 4],
+    }),
+  }
   return (
     <Animated.View style={[styles.outer, topAnimStyle]}>
       {items.map((item, i) => (
