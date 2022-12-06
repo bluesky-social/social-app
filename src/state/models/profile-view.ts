@@ -86,14 +86,6 @@ export class ProfileViewModel {
     return this.declaration.actorType === ACTOR_TYPE_SCENE
   }
 
-  get userAvatarPath() {
-    return this.userAvatar?.path
-  }
-
-  get userBannerPath() {
-    return this.userBanner?.path
-  }
-
   // public api
   // =
 

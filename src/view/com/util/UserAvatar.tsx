@@ -94,7 +94,7 @@ export function UserAvatar({
       {profileView.userAvatar != null ? (
         <Image
           style={styles.avatarImage}
-          source={{uri: profileView.userAvatarPath}}
+          source={{uri: profileView.userAvatar.path}}
         />
       ) : (
         renderSvg(size, initials)
@@ -111,7 +111,7 @@ export function UserAvatar({
     <Image
       style={styles.avatarImage}
       resizeMode="stretch"
-      source={{uri: profileView.userAvatarPath}}
+      source={{uri: profileView.userAvatar.path}}
     />
   ) : (
     renderSvg(size, initials)

@@ -84,7 +84,7 @@ export function UserBanner({
         <Image
           style={styles.bannerImage}
           resizeMode="stretch"
-          source={{uri: profileView.userBannerPath}}
+          source={{uri: profileView.userBanner.path}}
         />
       ) : (
         renderSvg()
@@ -101,7 +101,7 @@ export function UserBanner({
     <Image
       style={styles.bannerImage}
       resizeMode="stretch"
-      source={{uri: profileView.userBannerPath}}
+      source={{uri: profileView.userBanner.path}}
     />
   ) : (
     renderSvg()
