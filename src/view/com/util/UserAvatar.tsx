@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback} from 'react'
 import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -10,11 +10,12 @@ import {
 import {getGradient} from '../../lib/asset-gen'
 import {colors} from '../../lib/styles'
 import {IMAGES_ENABLED} from '../../../build-flags'
-import {loadString, saveString} from '../../../state/lib/storage'
+import {ProfileViewModel} from '../../../state/models/profile-view'
 
 export function UserAvatar({
   size,
   handle,
+  profileView,
   displayName,
   isMe = false,
   isEditable = false,
@@ -24,22 +25,10 @@ export function UserAvatar({
   isMe?: boolean
   isEditable?: boolean
   displayName: string | undefined
+  profileView: ProfileViewModel
 }) {
   const initials = getInitials(displayName || handle)
   const gradient = getGradient(handle)
-
-  const [userAvatarImage, setUserAvatarImage] = useState<string | null>(null)
-
-  useEffect(() => {
-    async function loadLocalImage() {
-      if (isMe) {
-        await loadString('userAvatarImage').then(uri => {
-          setUserAvatarImage(uri)
-        })
-      }
-    }
-    loadLocalImage()
-  }, [isMe])
 
   const handleEditAvatar = useCallback(() => {
     Alert.alert('Select upload method', '', [
@@ -53,7 +42,7 @@ export function UserAvatar({
             height: 80,
             cropperCircleOverlay: true,
           }).then(item => {
-            saveString('userAvatarImage', item.path)
+            profileView.updateUserAvatar(item)
           })
         },
       },
@@ -70,13 +59,13 @@ export function UserAvatar({
               height: 80,
               cropperCircleOverlay: true,
             }).then(croppedItem => {
-              saveString('userAvatarImage', croppedItem.path)
+              profileView.updateUserAvatar(croppedItem)
             })
           })
         },
       },
     ])
-  }, [])
+  }, [profileView])
 
   const renderSvg = (size: number, initials: string) => (
     <Svg width={size} height={size} viewBox="0 0 100 100">
@@ -102,8 +91,11 @@ export function UserAvatar({
   return isEditable && IMAGES_ENABLED ? (
     <TouchableOpacity onPress={handleEditAvatar}>
       {/* Added a react state temporary photo while the protocol does not support imagery */}
-      {userAvatarImage != null ? (
-        <Image style={styles.avatarImage} source={{uri: userAvatarImage}} />
+      {profileView.userAvatar != null ? (
+        <Image
+          style={styles.avatarImage}
+          source={{uri: profileView.userAvatarPath}}
+        />
       ) : (
         renderSvg(size, initials)
       )}
@@ -115,11 +107,11 @@ export function UserAvatar({
         />
       </View>
     </TouchableOpacity>
-  ) : isMe && userAvatarImage != null ? (
+  ) : isMe && profileView.userAvatar != null ? (
     <Image
       style={styles.avatarImage}
       resizeMode="stretch"
-      source={{uri: userAvatarImage}}
+      source={{uri: profileView.userAvatarPath}}
     />
   ) : (
     renderSvg(size, initials)

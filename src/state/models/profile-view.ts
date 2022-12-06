@@ -6,6 +6,7 @@ import {extractEntities} from '../../lib/strings'
 import {Declaration} from './_common'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
+import {Image} from 'react-native-image-crop-picker'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
 export const ACTOR_TYPE_SCENE = 'app.bsky.system.actorScene'
@@ -46,6 +47,10 @@ export class ProfileViewModel {
   // added data
   descriptionEntities?: Entity[]
 
+  // temp state while imagery is not supported by the protocol
+  userAvatar: Image | null = null
+  userBanner: Image | null = null
+
   constructor(
     public rootStore: RootStoreModel,
     params: GetProfile.QueryParams,
@@ -79,6 +84,14 @@ export class ProfileViewModel {
 
   get isScene() {
     return this.declaration.actorType === ACTOR_TYPE_SCENE
+  }
+
+  get userAvatarPath() {
+    return this.userAvatar?.path
+  }
+
+  get userBannerPath() {
+    return this.userBanner?.path
   }
 
   // public api
@@ -122,6 +135,14 @@ export class ProfileViewModel {
 
   // state transitions
   // =
+
+  updateUserAvatar(img: Image) {
+    this.userAvatar = img
+  }
+
+  updateUserBanner(img: Image) {
+    this.userBanner = img
+  }
 
   private _xLoading(isRefreshing = false) {
     this.isLoading = true

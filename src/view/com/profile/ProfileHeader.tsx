@@ -32,15 +32,15 @@ export const ProfileHeader = observer(function ProfileHeader({
   const store = useStores()
   const isMember = useMemo(
     () => view.isScene && view.myState.member,
-    [view.myState.member],
+    [view.isScene, view.myState.member],
   )
 
-  const onPressBack = () => {
-    store.nav.tab.goBack()
-  }
-  const onPressSearch = () => {
-    store.nav.navigate(`/search`)
-  }
+  // const onPressBack = () => {
+  //   store.nav.tab.goBack()
+  // }
+  // const onPressSearch = () => {
+  //   store.nav.navigate('/search')
+  // }
   const onPressToggleFollow = () => {
     view?.toggleFollowing().then(
       () => {
@@ -72,7 +72,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     store.shell.openModal(
       new ConfirmModel(
         'Leave this scene?',
-        `You'll be able to come back unless your invite is revoked.`,
+        "You'll be able to come back unless your invite is revoked.",
         onPressConfirmLeaveScene,
       ),
     )
@@ -83,7 +83,7 @@ export const ProfileHeader = observer(function ProfileHeader({
         did: store.me.did || '',
         rkey: new AtUri(view.myState.member).rkey,
       })
-      Toast.show(`Scene left`)
+      Toast.show('Scene left')
     }
     onRefreshAll()
   }
@@ -152,13 +152,14 @@ export const ProfileHeader = observer(function ProfileHeader({
   }
   return (
     <View style={styles.outer}>
-      <UserBanner isMe={isMe} handle={view.handle} />
+      <UserBanner isMe={isMe} handle={view.handle} profileView={view} />
       <View style={styles.avi}>
         <UserAvatar
-          isMe={isMe}
           size={80}
-          displayName={view.displayName}
+          isMe={isMe}
           handle={view.handle}
+          displayName={view.displayName}
+          profileView={view}
         />
       </View>
       <View style={styles.content}>
