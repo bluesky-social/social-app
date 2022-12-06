@@ -21,7 +21,7 @@ export function UserAvatar({
   size: number
   handle: string
   displayName: string | undefined
-  userAvatar: string | null
+  userAvatar: string | null | undefined
   setUserAvatar?: React.Dispatch<React.SetStateAction<string | null>>
 }) {
   const initials = getInitials(displayName || handle)
@@ -92,7 +92,7 @@ export function UserAvatar({
   // setUserAvatar is only passed as prop on the EditProfile component
   return setUserAvatar != null && IMAGES_ENABLED ? (
     <TouchableOpacity onPress={handleEditAvatar}>
-      {userAvatar != null ? (
+      {userAvatar ? (
         <Image style={styles.avatarImage} source={{uri: userAvatar}} />
       ) : (
         renderSvg(size, initials)
@@ -105,7 +105,7 @@ export function UserAvatar({
         />
       </View>
     </TouchableOpacity>
-  ) : userAvatar != null ? (
+  ) : userAvatar ? (
     <Image
       style={styles.avatarImage}
       resizeMode="stretch"

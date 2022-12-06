@@ -18,6 +18,7 @@ import {s, colors} from '../../lib/styles'
 import {useStores} from '../../../state'
 
 const TOP_REPLY_LINE_LENGTH = 12
+const REPLYING_TO_LINE_LENGTH = 8
 
 export const FeedItem = observer(function FeedItem({
   item,
@@ -129,6 +130,25 @@ export const FeedItem = observer(function FeedItem({
           </Text>
         </Link>
       )}
+      {item.additionalParentPost ? (
+        <View style={styles.replyingTo}>
+          <View style={styles.replyingToLine} />
+          <View style={styles.replyingToAvatar}>
+            <UserAvatar
+              handle={item.additionalParentPost?.thread?.author.handle}
+              displayName={
+                item.additionalParentPost?.thread?.author.displayName
+              }
+              size={32}
+            />
+          </View>
+          <View style={styles.replyingToTextContainer}>
+            <Text style={styles.replyingToText} numberOfLines={2}>
+              {item.additionalParentPost?.thread?.record.text}
+            </Text>
+          </View>
+        </View>
+      ) : undefined}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Link
@@ -236,6 +256,35 @@ const styles = StyleSheet.create({
   includeReasonIcon: {
     marginRight: 4,
     color: colors.gray4,
+  },
+  replyingToLine: {
+    position: 'absolute',
+    left: 24,
+    bottom: -1 * REPLYING_TO_LINE_LENGTH + 6,
+    height: REPLYING_TO_LINE_LENGTH,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.gray2,
+  },
+  replyingTo: {
+    flexDirection: 'row',
+    backgroundColor: colors.white,
+    paddingBottom: 8,
+    paddingRight: 24,
+  },
+  replyingToAvatar: {
+    marginLeft: 9,
+    marginRight: 19,
+    marginTop: 1,
+  },
+  replyingToTextContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 34,
+    alignItems: 'center',
+  },
+  replyingToText: {
+    flex: 1,
+    color: colors.gray5,
   },
   layout: {
     flexDirection: 'row',
