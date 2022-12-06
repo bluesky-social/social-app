@@ -4,11 +4,12 @@ import {View, FlatList, StyleProp, ViewStyle} from 'react-native'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/ErrorMessage'
-import {FeedModel, FeedItemModel} from '../../../state/models/feed-view'
+import {FeedModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
 import {ComposePrompt} from '../composer/Prompt'
 
 const COMPOSE_PROMPT_ITEM = {_reactKey: '__prompt__'}
+const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 
 export const Feed = observer(function Feed({
   feed,
@@ -27,9 +28,17 @@ export const Feed = observer(function Feed({
   //   VirtualizedList: You have a large list that is slow to update - make sure your
   //   renderItem function renders components that follow React performance best practices
   //   like PureComponent, shouldComponentUpdate, etc
-  const renderItem = ({item}: {item: FeedItemModel}) => {
+  const renderItem = ({item}: {item: any}) => {
     if (item === COMPOSE_PROMPT_ITEM) {
       return <ComposePrompt onPressCompose={onPressCompose} />
+    } else if (item === EMPTY_FEED_ITEM) {
+      return (
+        <EmptyState
+          icon="bars"
+          message="This feed is empty!"
+          style={{paddingVertical: 40}}
+        />
+      )
     } else {
       return <FeedItem item={item} />
     }
@@ -40,11 +49,18 @@ export const Feed = observer(function Feed({
   const onEndReached = () => {
     feed.loadMore().catch(err => console.error('Failed to load more', err))
   }
+  let data
+  if (feed.hasLoaded) {
+    if (feed.isEmpty) {
+      data = [COMPOSE_PROMPT_ITEM, EMPTY_FEED_ITEM]
+    } else {
+      data = [COMPOSE_PROMPT_ITEM].concat(feed.feed)
+    }
+  }
   return (
     <View style={style}>
-      {feed.isLoading && !feed.isRefreshing && !feed.hasContent && (
-        <PostFeedLoadingPlaceholder />
-      )}
+      {!data && <ComposePrompt onPressCompose={onPressCompose} />}
+      {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
       {feed.hasError && (
         <ErrorMessage
           dark
@@ -53,10 +69,10 @@ export const Feed = observer(function Feed({
           onPressTryAgain={onPressTryAgain}
         />
       )}
-      {feed.hasContent && (
+      {feed.hasLoaded && data && (
         <FlatList
           ref={scrollElRef}
-          data={[COMPOSE_PROMPT_ITEM].concat(feed.feed.slice())}
+          data={data}
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
           refreshing={feed.isRefreshing}
@@ -64,12 +80,6 @@ export const Feed = observer(function Feed({
           onRefresh={onRefresh}
           onEndReached={onEndReached}
         />
-      )}
-      {feed.isEmpty && (
-        <View>
-          <ComposePrompt onPressCompose={onPressCompose} />
-          <EmptyState icon="bars" message="This feed is empty!" />
-        </View>
       )}
     </View>
   )
