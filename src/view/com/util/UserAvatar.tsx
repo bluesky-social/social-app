@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -30,6 +30,8 @@ export function UserAvatar({
   const initials = getInitials(displayName || handle)
   const gradient = getGradient(handle)
 
+  const [tempUserAvatar, setTempUserAvatar] = useState<string | null>(null)
+
   const handleEditAvatar = useCallback(() => {
     Alert.alert('Select upload method', '', [
       {
@@ -43,6 +45,7 @@ export function UserAvatar({
             cropperCircleOverlay: true,
           }).then(item => {
             profileView.updateUserAvatar(item)
+            setTempUserAvatar(item.path)
           })
         },
       },
@@ -60,6 +63,7 @@ export function UserAvatar({
               cropperCircleOverlay: true,
             }).then(croppedItem => {
               profileView.updateUserAvatar(croppedItem)
+              setTempUserAvatar(croppedItem.path)
             })
           })
         },
@@ -91,10 +95,10 @@ export function UserAvatar({
   return isEditable && IMAGES_ENABLED ? (
     <TouchableOpacity onPress={handleEditAvatar}>
       {/* Added a react state temporary photo while the protocol does not support imagery */}
-      {profileView.userAvatar != null ? (
+      {profileView.userAvatar != null || tempUserAvatar != null ? (
         <Image
           style={styles.avatarImage}
-          source={{uri: profileView.userAvatar.path}}
+          source={{uri: tempUserAvatar ?? profileView.userAvatar?.path}}
         />
       ) : (
         renderSvg(size, initials)

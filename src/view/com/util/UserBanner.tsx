@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -25,6 +25,8 @@ export function UserBanner({
 }) {
   const gradient = getGradient(handle)
 
+  const [tempUserBanner, setTempUserBanner] = useState<string | null>(null)
+
   const handleEditBanner = useCallback(() => {
     Alert.alert('Select upload method', '', [
       {
@@ -37,6 +39,7 @@ export function UserBanner({
             height: 500,
           }).then(item => {
             profileView.updateUserBanner(item)
+            setTempUserBanner(item.path)
           })
         },
       },
@@ -53,6 +56,7 @@ export function UserBanner({
               height: 500,
             }).then(croppedItem => {
               profileView.updateUserBanner(croppedItem)
+              setTempUserBanner(croppedItem.path)
             })
           })
         },
@@ -80,11 +84,11 @@ export function UserBanner({
   return isEditable && IMAGES_ENABLED ? (
     <TouchableOpacity onPress={handleEditBanner}>
       {/* Added a react state temporary photo while the protocol does not support imagery */}
-      {profileView.userBanner != null ? (
+      {profileView.userBanner != null || tempUserBanner != null ? (
         <Image
           style={styles.bannerImage}
           resizeMode="stretch"
-          source={{uri: profileView.userBanner.path}}
+          source={{uri: tempUserBanner ?? profileView.userBanner?.path}}
         />
       ) : (
         renderSvg()

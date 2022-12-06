@@ -32,15 +32,15 @@ export const ProfileHeader = observer(function ProfileHeader({
   const store = useStores()
   const isMember = useMemo(
     () => view.isScene && view.myState.member,
-    [view.isScene, view.myState.member],
+    [view.myState.member],
   )
 
-  // const onPressBack = () => {
-  //   store.nav.tab.goBack()
-  // }
-  // const onPressSearch = () => {
-  //   store.nav.navigate('/search')
-  // }
+  const onPressBack = () => {
+    store.nav.tab.goBack()
+  }
+  const onPressSearch = () => {
+    store.nav.navigate(`/search`)
+  }
   const onPressToggleFollow = () => {
     view?.toggleFollowing().then(
       () => {
@@ -72,7 +72,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     store.shell.openModal(
       new ConfirmModel(
         'Leave this scene?',
-        "You'll be able to come back unless your invite is revoked.",
+        `You'll be able to come back unless your invite is revoked.`,
         onPressConfirmLeaveScene,
       ),
     )
@@ -83,7 +83,7 @@ export const ProfileHeader = observer(function ProfileHeader({
         did: store.me.did || '',
         rkey: new AtUri(view.myState.member).rkey,
       })
-      Toast.show('Scene left')
+      Toast.show(`Scene left`)
     }
     onRefreshAll()
   }
