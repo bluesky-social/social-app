@@ -147,7 +147,13 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
               />
             )
           } else {
-            renderItem = () => <Text style={styles.loading}>No posts yet!</Text>
+            renderItem = () => (
+              <EmptyState
+                icon={['far', 'message']}
+                message="No posts yet!"
+                style={{paddingVertical: 40}}
+              />
+            )
           }
         }
       } else if (uiState.selectedView === Sections.Scenes) {
