@@ -92,7 +92,6 @@ export function UserAvatar({
   // setUserAvatar is only passed as prop on the EditProfile component
   return setUserAvatar != null && IMAGES_ENABLED ? (
     <TouchableOpacity onPress={handleEditAvatar}>
-      {/* Added a react state temporary photo while the protocol does not support imagery */}
       {userAvatar != null ? (
         <Image style={styles.avatarImage} source={{uri: userAvatar}} />
       ) : (

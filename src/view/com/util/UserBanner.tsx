@@ -81,7 +81,6 @@ export function UserBanner({
   // setUserBanner is only passed as prop on the EditProfile component
   return setUserBanner != null && IMAGES_ENABLED ? (
     <TouchableOpacity onPress={handleEditBanner}>
-      {/* Added a react state temporary photo while the protocol does not support imagery */}
       {userBanner != null ? (
         <Image style={styles.bannerImage} source={{uri: userBanner}} />
       ) : (
