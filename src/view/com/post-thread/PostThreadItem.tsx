@@ -377,7 +377,6 @@ const styles = StyleSheet.create({
   postTextLarge: {
     fontSize: 24,
     lineHeight: 32,
-    fontWeight: '300',
   },
   postTextLargeContainer: {
     paddingLeft: 4,
