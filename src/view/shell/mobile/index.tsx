@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
-  useWindowDimensions,
+  Animated as RNAnimated,
   FlatList,
   GestureResponderEvent,
   SafeAreaView,
@@ -9,12 +9,12 @@ import {
   Text,
   TouchableOpacity,
   useColorScheme,
+  useWindowDimensions,
   View,
   ViewStyle,
 } from 'react-native'
 import {ScreenContainer, Screen} from 'react-native-screens'
 import LinearGradient from 'react-native-linear-gradient'
-import {GestureDetector, Gesture} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Animated, {
   Easing,
@@ -32,6 +32,7 @@ import {NavigationModel} from '../../../state/models/navigation'
 import {match, MatchResult} from '../../routes'
 import {Login} from '../../screens/Login'
 import {Onboard} from '../../screens/Onboard'
+import {HorzSwipe} from '../../com/util/gestures/HorzSwipe'
 import {Modal} from '../../com/modals/Modal'
 import {TabsSelector} from './TabsSelector'
 import {Composer} from './Composer'
@@ -45,9 +46,7 @@ import {
   BellIcon,
   BellIconSolid,
 } from '../../lib/icons'
-
-const SWIPE_GESTURE_DIST_TRIGGER = 0.3
-const SWIPE_GESTURE_VEL_TRIGGER = 2000
+import {useAnimatedValue} from '../../lib/useAnimatedValue'
 
 const Btn = ({
   icon,
@@ -120,7 +119,7 @@ export const MobileShell: React.FC = observer(() => {
   const [isTabsSelectorActive, setTabsSelectorActive] = useState(false)
   const scrollElRef = useRef<FlatList | undefined>()
   const winDim = useWindowDimensions()
-  const swipeGestureInterp = useSharedValue<number>(0)
+  const swipeGestureInterp = useAnimatedValue(0)
   const tabMenuInterp = useSharedValue<number>(0)
   const newTabInterp = useSharedValue<number>(0)
   const [isRunningNewTabAnim, setIsRunningNewTabAnim] = useState(false)
@@ -185,37 +184,22 @@ export const MobileShell: React.FC = observer(() => {
 
   // navigation swipes
   // =
-  const goBack = () => store.nav.tab.goBack()
-  const swipeGesture = Gesture.Pan()
-    .enabled(store.nav.tab.canGoBack)
-    .onUpdate(e => {
-      if (store.nav.tab.canGoBack) {
-        swipeGestureInterp.value = Math.max(e.translationX / winDim.width, 0)
-      }
-    })
-    .onEnd(e => {
-      if (
-        swipeGestureInterp.value >= SWIPE_GESTURE_DIST_TRIGGER ||
-        e.velocityX > SWIPE_GESTURE_VEL_TRIGGER
-      ) {
-        swipeGestureInterp.value = withTiming(1, {duration: 100}, () => {
-          runOnJS(goBack)()
-        })
-      } else {
-        swipeGestureInterp.value = withTiming(0, {duration: 100})
-      }
-    })
-  useEffect(() => {
-    // reset the swipe interopolation when the page changes
-    swipeGestureInterp.value = 0
-  }, [swipeGestureInterp, store.nav.tab.current])
-
-  const swipeTransform = useAnimatedStyle(() => ({
-    transform: [{translateX: swipeGestureInterp.value * winDim.width}],
-  }))
-  const swipeOpacity = useAnimatedStyle(() => ({
-    opacity: interpolate(swipeGestureInterp.value, [0, 1.0], [0.6, 0.0]),
-  }))
+  const onNavSwipeEnd = (dx: number) => {
+    if (dx < 0 && store.nav.tab.canGoBack) {
+      store.nav.tab.goBack()
+    }
+  }
+  const swipeTransform = {
+    transform: [
+      {translateX: RNAnimated.multiply(swipeGestureInterp, winDim.width * -1)},
+    ],
+  }
+  const swipeOpacity = {
+    opacity: swipeGestureInterp.interpolate({
+      inputRange: [-1, 0, 1],
+      outputRange: [0, 0.6, 0],
+    }),
+  }
   const tabMenuTransform = useAnimatedStyle(() => ({
     transform: [{translateY: tabMenuInterp.value * -320}],
   }))
@@ -252,7 +236,13 @@ export const MobileShell: React.FC = observer(() => {
   return (
     <View style={styles.outerContainer}>
       <SafeAreaView style={styles.innerContainer}>
-        <GestureDetector gesture={swipeGesture}>
+        <HorzSwipe
+          distThresholdDivisor={1.5}
+          useNativeDriver
+          panX={swipeGestureInterp}
+          swipeEnabled
+          canSwipeLeft={store.nav.tab.canGoBack}
+          onSwipeEnd={onNavSwipeEnd}>
           <ScreenContainer style={styles.screenContainer}>
             {screenRenderDesc.screens.map(
               ({Com, navIdx, params, key, current, previous}) => {
@@ -261,20 +251,20 @@ export const MobileShell: React.FC = observer(() => {
                     key={key}
                     style={[StyleSheet.absoluteFill]}
                     activityState={current ? 2 : previous ? 1 : 0}>
-                    <Animated.View
+                    <RNAnimated.View
                       style={
                         current ? [styles.screenMask, swipeOpacity] : undefined
                       }
                     />
-                    <Animated.View
+                    <RNAnimated.View
                       style={[
                         s.flex1,
                         styles.screen,
                         current
                           ? [
                               swipeTransform,
-                              tabMenuTransform,
-                              isRunningNewTabAnim ? newTabTransform : undefined,
+                              // tabMenuTransform, TODO
+                              // isRunningNewTabAnim ? newTabTransform : undefined, TODO
                             ]
                           : undefined,
                       ]}>
@@ -284,13 +274,13 @@ export const MobileShell: React.FC = observer(() => {
                         visible={current}
                         scrollElRef={current ? scrollElRef : undefined}
                       />
-                    </Animated.View>
+                    </RNAnimated.View>
                   </Screen>
                 )
               },
             )}
           </ScreenContainer>
-        </GestureDetector>
+        </HorzSwipe>
       </SafeAreaView>
       {isTabsSelectorActive ? (
         <View
