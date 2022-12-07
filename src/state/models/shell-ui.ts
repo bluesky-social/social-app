@@ -66,6 +66,7 @@ export interface ComposerOpts {
 }
 
 export class ShellUiModel {
+  isViewControllingSwipes = false
   isModalActive = false
   activeModal:
     | ConfirmModel
@@ -78,6 +79,10 @@ export class ShellUiModel {
 
   constructor() {
     makeAutoObservable(this)
+  }
+
+  setViewControllingSwipes(v: boolean) {
+    this.isViewControllingSwipes = v
   }
 
   openModal(

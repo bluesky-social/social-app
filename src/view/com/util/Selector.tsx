@@ -1,10 +1,11 @@
 import React, {createRef, useState, useMemo} from 'react'
-import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native'
-import Animated, {
-  SharedValue,
-  useAnimatedStyle,
-  interpolate,
-} from 'react-native-reanimated'
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import {colors} from '../../lib/styles'
 
 interface Layout {
@@ -12,17 +13,15 @@ interface Layout {
   width: number
 }
 
-const DEFAULT_SWIPE_GESTURE_INTERP = {value: 0}
-
 export function Selector({
   selectedIndex,
   items,
-  swipeGestureInterp,
+  panX,
   onSelect,
 }: {
   selectedIndex: number
   items: string[]
-  swipeGestureInterp?: SharedValue<number>
+  panX: Animated.Value
   onSelect?: (index: number) => void
 }) {
   const [itemLayouts, setItemLayouts] = useState<undefined | Layout[]>(
@@ -43,27 +42,24 @@ export function Selector({
     return [left, middle, right]
   }, [selectedIndex, items, itemLayouts])
 
-  const interp = swipeGestureInterp || DEFAULT_SWIPE_GESTURE_INTERP
-  const underlinePos = useAnimatedStyle(() => {
-    const other =
-      interp.value === 0
-        ? currentLayouts[1]
-        : interp.value < 0
-        ? currentLayouts[0]
-        : currentLayouts[2]
-    return {
-      left: interpolate(
-        Math.abs(interp.value),
-        [0, 1],
-        [currentLayouts[1].x, other.x],
-      ),
-      width: interpolate(
-        Math.abs(interp.value),
-        [0, 1],
-        [currentLayouts[1].width, other.width],
-      ),
-    }
-  }, [currentLayouts, interp])
+  const underlineStyle = {
+    left: panX.interpolate({
+      inputRange: [-1, 0, 1],
+      outputRange: [
+        currentLayouts[0].x,
+        currentLayouts[1].x,
+        currentLayouts[2].x,
+      ],
+    }),
+    width: panX.interpolate({
+      inputRange: [-1, 0, 1],
+      outputRange: [
+        currentLayouts[0].width,
+        currentLayouts[1].width,
+        currentLayouts[2].width,
+      ],
+    }),
+  }
 
   const onLayout = () => {
     const promises = []
@@ -89,7 +85,7 @@ export function Selector({
 
   return (
     <View style={[styles.outer]} onLayout={onLayout}>
-      <Animated.View style={[styles.underline, underlinePos]} />
+      <Animated.View style={[styles.underline, underlineStyle]} />
       {items.map((item, i) => {
         const selected = i === selectedIndex
         return (

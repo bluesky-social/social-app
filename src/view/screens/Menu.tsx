@@ -140,7 +140,6 @@ export const Menu = ({navIdx, visible}: ScreenParams) => {
           }
           label="Settings"
           url="/settings"
-          count={store.me.notificationCount}
         />
       </View>
       <View style={styles.section}>

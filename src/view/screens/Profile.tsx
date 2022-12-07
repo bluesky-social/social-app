@@ -237,6 +237,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
         />
       ) : uiState.profile.hasLoaded ? (
         <ViewSelector
+          swipeEnabled
           sections={uiState.selectorItems}
           items={items}
           renderHeader={renderHeader}
