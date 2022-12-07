@@ -76,6 +76,7 @@ export function ViewSelector({
   const data = [HEADER_ITEM, SELECTOR_ITEM, ...items]
   return (
     <HorzSwipe
+      hasPriority
       panX={panX}
       swipeEnabled={swipeEnabled || false}
       canSwipeLeft={selectedIndex > 0}

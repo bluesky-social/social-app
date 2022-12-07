@@ -12,9 +12,12 @@ import {clamp} from 'lodash'
 
 interface Props {
   panX: Animated.Value
-  canSwipeLeft: boolean
-  canSwipeRight: boolean
-  swipeEnabled: boolean
+  canSwipeLeft?: boolean
+  canSwipeRight?: boolean
+  swipeEnabled?: boolean
+  hasPriority?: boolean // if has priority, will not release control of the gesture to another gesture
+  distThresholdDivisor?: number
+  useNativeDriver?: boolean
   onSwipeStart?: () => void
   onSwipeEnd?: (dx: number) => void
   children: React.ReactNode
@@ -22,9 +25,12 @@ interface Props {
 
 export function HorzSwipe({
   panX,
-  canSwipeLeft,
-  canSwipeRight,
+  canSwipeLeft = false,
+  canSwipeRight = false,
   swipeEnabled = true,
+  hasPriority = false,
+  distThresholdDivisor = 1.75,
+  useNativeDriver = false,
   onSwipeStart,
   onSwipeEnd,
   children,
@@ -32,7 +38,7 @@ export function HorzSwipe({
   const winDim = useWindowDimensions()
 
   const swipeVelocityThreshold = 35
-  const swipeDistanceThreshold = winDim.width / 1.75
+  const swipeDistanceThreshold = winDim.width / distThresholdDivisor
 
   const isMovingHorizontally = (
     _: GestureResponderEvent,
@@ -53,10 +59,10 @@ export function HorzSwipe({
     }
 
     const diffX = I18nManager.isRTL ? -gestureState.dx : gestureState.dx
-    return (
+    const willHandle =
       isMovingHorizontally(event, gestureState) &&
       ((diffX > 0 && canSwipeLeft) || (diffX < 0 && canSwipeRight))
-    )
+    return willHandle
   }
 
   const startGesture = () => {
@@ -94,28 +100,42 @@ export function HorzSwipe({
     _: GestureResponderEvent,
     gestureState: PanResponderGestureState,
   ) => {
-    panX.flattenOffset()
-    panX.setValue(0)
     if (
       Math.abs(gestureState.dx) > Math.abs(gestureState.dy) &&
       Math.abs(gestureState.vx) > Math.abs(gestureState.vy) &&
       (Math.abs(gestureState.dx) > swipeDistanceThreshold / 3 ||
         Math.abs(gestureState.vx) > swipeVelocityThreshold)
     ) {
-      onSwipeEnd?.(((gestureState.dx / Math.abs(gestureState.dx)) * -1) | 0)
+      const final = ((gestureState.dx / Math.abs(gestureState.dx)) * -1) | 0
+      Animated.timing(panX, {
+        toValue: final,
+        duration: 100,
+        useNativeDriver,
+      }).start(() => {
+        onSwipeEnd?.(final)
+        panX.flattenOffset()
+        panX.setValue(0)
+      })
     } else {
       onSwipeEnd?.(0)
+      Animated.timing(panX, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver,
+      }).start(() => {
+        panX.flattenOffset()
+        panX.setValue(0)
+      })
     }
   }
 
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: canMoveScreen,
-    onMoveShouldSetPanResponderCapture: canMoveScreen,
     onPanResponderGrant: startGesture,
     onPanResponderMove: respondToGesture,
     onPanResponderTerminate: finishGesture,
     onPanResponderRelease: finishGesture,
-    onPanResponderTerminationRequest: () => true,
+    onPanResponderTerminationRequest: () => !hasPriority,
   })
 
   return (
