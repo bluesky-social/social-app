@@ -1,7 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
-  Animated as RNAnimated,
+  Animated,
+  Easing,
   FlatList,
   GestureResponderEvent,
   SafeAreaView,
@@ -16,13 +17,6 @@ import {
 import {ScreenContainer, Screen} from 'react-native-screens'
 import LinearGradient from 'react-native-linear-gradient'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {
-  Easing,
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  runOnJS,
-} from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {TABS_ENABLED} from '../../../build-flags'
@@ -119,8 +113,8 @@ export const MobileShell: React.FC = observer(() => {
   const scrollElRef = useRef<FlatList | undefined>()
   const winDim = useWindowDimensions()
   const swipeGestureInterp = useAnimatedValue(0)
-  const tabMenuInterp = useSharedValue<number>(0)
-  const newTabInterp = useSharedValue<number>(0)
+  const tabMenuInterp = useAnimatedValue(0)
+  const newTabInterp = useAnimatedValue(0)
   const [isRunningNewTabAnim, setIsRunningNewTabAnim] = useState(false)
   const colorScheme = useColorScheme()
   const safeAreaInsets = useSafeAreaInsets()
@@ -139,22 +133,29 @@ export const MobileShell: React.FC = observer(() => {
 
   // tab selector animation
   // =
-  const closeTabsSelector = () => setTabsSelectorActive(false)
   const toggleTabsMenu = (active: boolean) => {
     if (active) {
       // will trigger the animation below
       setTabsSelectorActive(true)
     } else {
-      tabMenuInterp.value = withTiming(0, {duration: 100}, () => {
+      Animated.timing(tabMenuInterp, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: false,
+      }).start(() => {
         // hide once the animation has finished
-        runOnJS(closeTabsSelector)()
+        setTabsSelectorActive(false)
       })
     }
   }
   useEffect(() => {
     if (isTabsSelectorActive) {
       // trigger the animation once the tabs selector is rendering
-      tabMenuInterp.value = withTiming(1, {duration: 100})
+      Animated.timing(tabMenuInterp, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: false,
+      }).start()
     }
   }, [isTabsSelectorActive])
 
@@ -171,13 +172,16 @@ export const MobileShell: React.FC = observer(() => {
         store.nav.tab.setIsNewTab(false)
         setIsRunningNewTabAnim(false)
       }
-      newTabInterp.value = withTiming(
-        1,
-        {duration: 250, easing: Easing.out(Easing.exp)},
-        () => runOnJS(reset)(),
-      )
+      Animated.timing(newTabInterp, {
+        toValue: 1,
+        duration: 250,
+        easing: Easing.out(Easing.exp),
+        useNativeDriver: false,
+      }).start(() => {
+        reset()
+      })
     } else {
-      newTabInterp.value = 0
+      newTabInterp.setValue(0)
     }
   }, [isRunningNewTabAnim])
 
@@ -190,7 +194,7 @@ export const MobileShell: React.FC = observer(() => {
   }
   const swipeTransform = {
     transform: [
-      {translateX: RNAnimated.multiply(swipeGestureInterp, winDim.width * -1)},
+      {translateX: Animated.multiply(swipeGestureInterp, winDim.width * -1)},
     ],
   }
   const swipeOpacity = {
@@ -199,12 +203,12 @@ export const MobileShell: React.FC = observer(() => {
       outputRange: [0, 0.6, 0],
     }),
   }
-  const tabMenuTransform = useAnimatedStyle(() => ({
-    transform: [{translateY: tabMenuInterp.value * -320}],
-  }))
-  const newTabTransform = useAnimatedStyle(() => ({
-    transform: [{scale: newTabInterp.value}],
-  }))
+  const tabMenuTransform = {
+    transform: [{translateY: Animated.multiply(tabMenuInterp.value, -320)}],
+  }
+  const newTabTransform = {
+    transform: [{scale: newTabInterp}],
+  }
 
   if (!store.session.hasSession) {
     return (
@@ -250,12 +254,12 @@ export const MobileShell: React.FC = observer(() => {
                     key={key}
                     style={[StyleSheet.absoluteFill]}
                     activityState={current ? 2 : previous ? 1 : 0}>
-                    <RNAnimated.View
+                    <Animated.View
                       style={
                         current ? [styles.screenMask, swipeOpacity] : undefined
                       }
                     />
-                    <RNAnimated.View
+                    <Animated.View
                       style={[
                         s.flex1,
                         styles.screen,
@@ -273,7 +277,7 @@ export const MobileShell: React.FC = observer(() => {
                         visible={current}
                         scrollElRef={current ? scrollElRef : undefined}
                       />
-                    </RNAnimated.View>
+                    </Animated.View>
                   </Screen>
                 )
               },

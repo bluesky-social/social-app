@@ -1,6 +1,7 @@
-import React, {createRef, useRef, useMemo, useEffect, useState} from 'react'
+import React, {createRef, useRef, useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
+  Animated,
   ScrollView,
   Share,
   StyleSheet,
@@ -9,20 +10,13 @@ import {
   View,
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import Animated, {
-  interpolate,
-  SharedValue,
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  runOnJS,
-} from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {toShareUrl} from '../../../lib/strings'
 import {match} from '../../routes'
+import {useAnimatedValue} from '../../lib/useAnimatedValue'
 
 const TAB_HEIGHT = 42
 
@@ -33,7 +27,7 @@ export const TabsSelector = observer(
     onClose,
   }: {
     active: boolean
-    tabMenuInterp: SharedValue<number>
+    tabMenuInterp: Animated.Value
     onClose: () => void
   }) => {
     const store = useStores()
@@ -41,7 +35,7 @@ export const TabsSelector = observer(
     const [closingTabIndex, setClosingTabIndex] = useState<number | undefined>(
       undefined,
     )
-    const closeInterp = useSharedValue<number>(0)
+    const closeInterp = useAnimatedValue(0)
     const tabsRef = useRef<ScrollView>(null)
     const tabRefs = useMemo(
       () =>
@@ -51,11 +45,16 @@ export const TabsSelector = observer(
       [store.nav.tabs.length],
     )
 
-    const wrapperAnimStyle = useAnimatedStyle(() => ({
+    const wrapperAnimStyle = {
       transform: [
-        {translateY: interpolate(tabMenuInterp.value, [0, 1.0], [320, 0])},
+        {
+          translateY: tabMenuInterp.interpolate({
+            inputRange: [0, 1.0],
+            outputRange: [320, 0],
+          }),
+        },
       ],
-    }))
+    }
 
     // events
     // =
@@ -76,13 +75,16 @@ export const TabsSelector = observer(
       store.nav.setActiveTab(tabIndex)
       onClose()
     }
-    const doCloseTab = (index: number) => store.nav.closeTab(index)
     const onCloseTab = (tabIndex: number) => {
       setClosingTabIndex(tabIndex)
-      closeInterp.value = 0
-      closeInterp.value = withTiming(1, {duration: 300}, () => {
-        runOnJS(setClosingTabIndex)(undefined)
-        runOnJS(doCloseTab)(tabIndex)
+      closeInterp.setValue(0)
+      Animated.timing(closeInterp, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: false,
+      }).start(() => {
+        setClosingTabIndex(undefined)
+        store.nav.closeTab(tabIndex)
       })
     }
     const onLayout = () => {
@@ -107,11 +109,11 @@ export const TabsSelector = observer(
     }
 
     const currentTabIndex = store.nav.tabIndex
-    const closingTabAnimStyle = useAnimatedStyle(() => ({
-      height: TAB_HEIGHT * (1 - closeInterp.value),
-      opacity: 1 - closeInterp.value,
-      marginBottom: 4 * (1 - closeInterp.value),
-    }))
+    const closingTabAnimStyle = {
+      height: Animated.multiply(TAB_HEIGHT, Animated.subtract(1, closeInterp)),
+      opacity: Animated.subtract(1, closeInterp),
+      marginBottom: Animated.multiply(4, Animated.subtract(1, closeInterp)),
+    }
 
     if (!active) {
       return <View />
