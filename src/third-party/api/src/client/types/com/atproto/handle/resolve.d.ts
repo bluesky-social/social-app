@@ -2,12 +2,13 @@ import { Headers } from '@atproto/xrpc';
 export interface QueryParams {
     handle?: string;
 }
-export interface CallOptions {
-    headers?: Headers;
-}
 export declare type InputSchema = undefined;
 export interface OutputSchema {
     did: string;
+    [k: string]: unknown;
+}
+export interface CallOptions {
+    headers?: Headers;
 }
 export interface Response {
     success: boolean;

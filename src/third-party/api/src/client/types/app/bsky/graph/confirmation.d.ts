@@ -1,14 +1,8 @@
+import * as AppBskyActorRef from '../actor/ref';
+import * as ComAtprotoRepoStrongRef from '../../../com/atproto/repo/strongRef';
 export interface Record {
-    originator: {
-        did: string;
-        declarationCid: string;
-        [k: string]: unknown;
-    };
-    assertion: {
-        uri: string;
-        cid: string;
-        [k: string]: unknown;
-    };
+    originator: AppBskyActorRef.Main;
+    assertion: ComAtprotoRepoStrongRef.Main;
     createdAt: string;
     [k: string]: unknown;
 }

@@ -1,15 +1,9 @@
 import React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withDelay,
-  withTiming,
-  interpolate,
-} from 'react-native-reanimated'
+import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UpIcon, UpIconSolid} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
+import {useAnimatedValue} from '../../lib/useAnimatedValue'
 
 interface PostCtrlsOpts {
   big?: boolean
@@ -28,31 +22,71 @@ const sRedgray = {color: redgray}
 const HITSLOP = {top: 10, left: 10, bottom: 10, right: 10}
 
 export function PostCtrls(opts: PostCtrlsOpts) {
-  const interp1 = useSharedValue<number>(0)
-  const interp2 = useSharedValue<number>(0)
+  const interp1 = useAnimatedValue(0)
+  const interp2 = useAnimatedValue(0)
 
-  const anim1Style = useAnimatedStyle(() => ({
-    transform: [{scale: interpolate(interp1.value, [0, 1.0], [1.0, 4.0])}],
-    opacity: interpolate(interp1.value, [0, 1.0], [1.0, 0.0]),
-  }))
-  const anim2Style = useAnimatedStyle(() => ({
-    transform: [{scale: interpolate(interp2.value, [0, 1.0], [1.0, 4.0])}],
-    opacity: interpolate(interp2.value, [0, 1.0], [1.0, 0.0]),
-  }))
+  const anim1Style = {
+    transform: [
+      {
+        scale: interp1.interpolate({
+          inputRange: [0, 1.0],
+          outputRange: [1.0, 4.0],
+        }),
+      },
+    ],
+    opacity: interp1.interpolate({
+      inputRange: [0, 1.0],
+      outputRange: [1.0, 0.0],
+    }),
+  }
+  const anim2Style = {
+    transform: [
+      {
+        scale: interp2.interpolate({
+          inputRange: [0, 1.0],
+          outputRange: [1.0, 4.0],
+        }),
+      },
+    ],
+    opacity: interp2.interpolate({
+      inputRange: [0, 1.0],
+      outputRange: [1.0, 0.0],
+    }),
+  }
 
   const onPressToggleRepostWrapper = () => {
     if (!opts.isReposted) {
-      interp1.value = withTiming(1, {duration: 400}, () => {
-        interp1.value = withDelay(100, withTiming(0, {duration: 20}))
-      })
+      Animated.sequence([
+        Animated.timing(interp1, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.delay(100),
+        Animated.timing(interp1, {
+          toValue: 0,
+          duration: 20,
+          useNativeDriver: true,
+        }),
+      ]).start()
     }
     opts.onPressToggleRepost()
   }
   const onPressToggleUpvoteWrapper = () => {
     if (!opts.isUpvoted) {
-      interp2.value = withTiming(1, {duration: 400}, () => {
-        interp2.value = withDelay(100, withTiming(0, {duration: 20}))
-      })
+      Animated.sequence([
+        Animated.timing(interp2, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.delay(100),
+        Animated.timing(interp2, {
+          toValue: 0,
+          duration: 20,
+          useNativeDriver: true,
+        }),
+      ]).start()
     }
     opts.onPressToggleUpvote()
   }

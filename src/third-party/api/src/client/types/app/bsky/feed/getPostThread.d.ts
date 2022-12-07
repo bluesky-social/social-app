@@ -1,60 +1,20 @@
 import { Headers, XRPCError } from '@atproto/xrpc';
+import * as AppBskyActorRef from '../actor/ref';
+import * as AppBskyFeedEmbed from './embed';
 export interface QueryParams {
     uri: string;
     depth?: number;
 }
+export declare type InputSchema = undefined;
+export interface OutputSchema {
+    thread: Post | NotFoundPost | {
+        $type: string;
+        [k: string]: unknown;
+    };
+    [k: string]: unknown;
+}
 export interface CallOptions {
     headers?: Headers;
-}
-export declare type InputSchema = undefined;
-export declare type ActorKnown = 'app.bsky.system.actorUser' | 'app.bsky.system.actorScene';
-export declare type ActorUnknown = string;
-export interface OutputSchema {
-    thread: Post;
-}
-export interface Post {
-    uri: string;
-    cid: string;
-    author: User;
-    record: {};
-    embed?: RecordEmbed | ExternalEmbed | UnknownEmbed;
-    parent?: Post;
-    replyCount: number;
-    replies?: Post[];
-    repostCount: number;
-    upvoteCount: number;
-    downvoteCount: number;
-    indexedAt: string;
-    myState?: {
-        repost?: string;
-        upvote?: string;
-        downvote?: string;
-    };
-}
-export interface User {
-    did: string;
-    declaration: Declaration;
-    handle: string;
-    displayName?: string;
-}
-export interface Declaration {
-    cid: string;
-    actorType: ActorKnown | ActorUnknown;
-}
-export interface RecordEmbed {
-    type: 'record';
-    author: User;
-    record: {};
-}
-export interface ExternalEmbed {
-    type: 'external';
-    uri: string;
-    title: string;
-    description: string;
-    imageUri: string;
-}
-export interface UnknownEmbed {
-    type: string;
 }
 export interface Response {
     success: boolean;
@@ -65,3 +25,36 @@ export declare class NotFoundError extends XRPCError {
     constructor(src: XRPCError);
 }
 export declare function toKnownErr(e: any): any;
+export interface Post {
+    uri: string;
+    cid: string;
+    author: AppBskyActorRef.WithInfo;
+    record: {};
+    embed?: AppBskyFeedEmbed.Main;
+    parent?: Post | NotFoundPost | {
+        $type: string;
+        [k: string]: unknown;
+    };
+    replyCount: number;
+    replies?: (Post | NotFoundPost | {
+        $type: string;
+        [k: string]: unknown;
+    })[];
+    repostCount: number;
+    upvoteCount: number;
+    downvoteCount: number;
+    indexedAt: string;
+    myState?: MyState;
+    [k: string]: unknown;
+}
+export interface NotFoundPost {
+    uri: string;
+    notFound: true;
+    [k: string]: unknown;
+}
+export interface MyState {
+    repost?: string;
+    upvote?: string;
+    downvote?: string;
+    [k: string]: unknown;
+}
