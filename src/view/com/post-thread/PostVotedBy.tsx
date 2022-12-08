@@ -93,6 +93,7 @@ const LikedByItem = ({item}: {item: VotesViewItemModel}) => {
             size={40}
             displayName={item.actor.displayName}
             handle={item.actor.handle}
+            avatar={item.actor.avatar}
           />
         </View>
         <View style={styles.layoutContent}>

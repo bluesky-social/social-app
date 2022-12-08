@@ -42,6 +42,7 @@ export const Settings = observer(function Settings({
               size={40}
               displayName={store.me.displayName}
               handle={store.me.handle || ''}
+              avatar={store.me.avatar}
             />
             <View style={[s.ml10]}>
               <Text style={[s.f18]}>

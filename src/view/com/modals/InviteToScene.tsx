@@ -130,6 +130,7 @@ export const Component = observer(function Component({
         did={item.did}
         handle={item.handle}
         displayName={item.displayName}
+        avatar={item.avatar}
         renderButton={() =>
           !createdInvite ? (
             <>
@@ -162,6 +163,7 @@ export const Component = observer(function Component({
         did={item.subject.did}
         handle={item.subject.handle}
         displayName={item.subject.displayName}
+        avatar={item.subject.avatar}
         renderButton={() => (
           <>
             <FontAwesomeIcon icon="x" style={[s.mr5]} size={14} />

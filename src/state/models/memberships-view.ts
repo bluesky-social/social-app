@@ -1,12 +1,11 @@
 import {makeAutoObservable} from 'mobx'
 import * as GetMemberships from '../../third-party/api/src/client/types/app/bsky/graph/getMemberships'
+import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
 import {RootStoreModel} from './root-store'
 
-type Subject = GetMemberships.OutputSchema['subject']
-export type MembershipItem =
-  GetMemberships.OutputSchema['memberships'][number] & {
-    _reactKey: string
-  }
+export type MembershipItem = GetMemberships.Membership & {
+  _reactKey: string
+}
 
 export class MembershipsViewModel {
   // state
@@ -17,11 +16,12 @@ export class MembershipsViewModel {
   params: GetMemberships.QueryParams
 
   // data
-  subject: Subject = {
+  subject: ActorRef.WithInfo = {
     did: '',
     handle: '',
     displayName: '',
     declaration: {cid: '', actorType: ''},
+    avatar: undefined,
   }
   memberships: MembershipItem[] = []
 
@@ -107,6 +107,8 @@ export class MembershipsViewModel {
     this.subject.did = res.data.subject.did
     this.subject.handle = res.data.subject.handle
     this.subject.displayName = res.data.subject.displayName
+    this.subject.declaration = res.data.subject.declaration
+    this.subject.avatar = res.data.subject.avatar
     this.memberships.length = 0
     let counter = 0
     for (const item of res.data.memberships) {

@@ -1,9 +1,19 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyFeedGetPostThread as GetPostThread} from '../../third-party/api'
+import * as Embed from '../../third-party/api/src/client/types/app/bsky/feed/embed'
+import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
 import {AtUri} from '../../third-party/uri'
 import _omit from 'lodash.omit'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
+
+type MaybePost =
+  | GetPostThread.Post
+  | GetPostThread.NotFoundPost
+  | {
+      $type: string
+      [k: string]: unknown
+    }
 
 function* reactKeyGenerator(): Generator<string> {
   let counter = 0
@@ -16,6 +26,7 @@ interface ReplyingTo {
   author: {
     handle: string
     displayName?: string
+    avatar?: string
   }
   text: string
 }
@@ -40,19 +51,16 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
   _isHighlightedPost = false
 
   // data
+  $type: string = ''
   uri: string = ''
   cid: string = ''
-  author: GetPostThread.User = {
+  author: ActorRef.WithInfo = {
     did: '',
     handle: '',
-    displayName: '',
     declaration: {cid: '', actorType: ''},
   }
   record: Record<string, unknown> = {}
-  embed?:
-    | GetPostThread.RecordEmbed
-    | GetPostThread.ExternalEmbed
-    | GetPostThread.UnknownEmbed
+  embed?: Embed.Main = undefined
   parent?: PostThreadViewPostModel
   replyCount: number = 0
   replies?: PostThreadViewPostModel[]
@@ -106,6 +114,7 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
         author: {
           handle: v.parent.author.handle,
           displayName: v.parent.author.displayName,
+          avatar: v.parent.author.avatar,
         },
         text: (v.parent.record as OriginalRecord).text,
       }
@@ -331,17 +340,30 @@ export class PostThreadViewModel {
     const thread = new PostThreadViewPostModel(
       this.rootStore,
       keyGen.next().value,
-      res.data.thread,
+      res.data.thread as GetPostThread.Post,
     )
     thread._isHighlightedPost = true
-    thread.assignTreeModels(keyGen, res.data.thread)
+    thread.assignTreeModels(keyGen, res.data.thread as GetPostThread.Post)
     this.thread = thread
   }
 }
 
-function sortThread(post: GetPostThread.Post) {
+function sortThread(post: MaybePost) {
+  if (post.notFound) {
+    return
+  }
+  post = post as GetPostThread.Post
   if (post.replies) {
-    post.replies.sort((a: GetPostThread.Post, b: GetPostThread.Post) => {
+    post.replies.sort((a: MaybePost, b: MaybePost) => {
+      post = post as GetPostThread.Post
+      if (a.notFound) {
+        return 1
+      }
+      if (b.notFound) {
+        return -1
+      }
+      a = a as GetPostThread.Post
+      b = b as GetPostThread.Post
       const aIsByOp = a.author.did === post.author.did
       const bIsByOp = b.author.did === post.author.did
       if (aIsByOp && bIsByOp) {

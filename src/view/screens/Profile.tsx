@@ -165,6 +165,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
                 did={item.did}
                 handle={item.handle}
                 displayName={item.displayName}
+                avatar={item.avatar}
               />
             )
           }
@@ -199,6 +200,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
                 did={item.did}
                 handle={item.handle}
                 displayName={item.displayName}
+                avatar={item.avatar}
                 renderButton={renderButton}
                 onPressButton={() => onPressRemoveMember(item)}
               />

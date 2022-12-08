@@ -139,6 +139,7 @@ export const FeedItem = observer(function FeedItem({
                   size={30}
                   displayName={author.displayName}
                   handle={author.handle}
+                  avatar={author.avatar}
                 />
               </Link>
             ))}

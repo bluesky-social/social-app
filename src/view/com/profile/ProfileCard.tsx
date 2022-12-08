@@ -8,14 +8,14 @@ export function ProfileCard({
   did,
   handle,
   displayName,
-  description,
+  avatar,
   renderButton,
   onPressButton,
 }: {
   did: string
   handle: string
   displayName?: string
-  description?: string
+  avatar?: string
   renderButton?: () => JSX.Element
   onPressButton?: () => void
 }) {
@@ -23,7 +23,12 @@ export function ProfileCard({
     <Link style={styles.outer} href={`/profile/${handle}`} title={handle}>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <UserAvatar size={40} displayName={displayName} handle={handle} />
+          <UserAvatar
+            size={40}
+            displayName={displayName}
+            handle={handle}
+            avatar={avatar}
+          />
         </View>
         <View style={styles.layoutContent}>
           <Text style={[s.f16, s.bold]} numberOfLines={1}>

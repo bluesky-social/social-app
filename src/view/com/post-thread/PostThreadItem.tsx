@@ -61,6 +61,7 @@ export const PostThreadItem = observer(function PostThreadItem({
         author: {
           handle: item.author.handle,
           displayName: item.author.displayName,
+          avatar: item.author.avatar,
         },
       },
       onPost: onPostReply,
@@ -113,6 +114,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   size={50}
                   displayName={item.author.displayName}
                   handle={item.author.handle}
+                  avatar={item.author.avatar}
                 />
               </Link>
             </View>
@@ -236,6 +238,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               <UserAvatar
                 handle={item.replyingTo.author.handle}
                 displayName={item.replyingTo.author.displayName}
+                avatar={item.replyingTo.author.avatar}
                 size={30}
               />
             </View>
@@ -251,6 +254,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 size={50}
                 displayName={item.author.displayName}
                 handle={item.author.handle}
+                avatar={item.author.avatar}
               />
             </Link>
           </View>

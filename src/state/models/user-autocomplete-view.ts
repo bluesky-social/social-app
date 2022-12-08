@@ -11,8 +11,8 @@ export class UserAutocompleteViewModel {
   _searchPromise: Promise<any> | undefined
 
   // data
-  follows: GetFollows.OutputSchema['follows'] = []
-  searchRes: SearchTypeahead.OutputSchema['users'] = []
+  follows: GetFollows.Follow[] = []
+  searchRes: SearchTypeahead.User[] = []
   knownHandles: Set<string> = new Set()
 
   constructor(public rootStore: RootStoreModel) {
@@ -34,11 +34,13 @@ export class UserAutocompleteViewModel {
       return this.searchRes.map(user => ({
         handle: user.handle,
         displayName: user.displayName,
+        avatar: user.avatar,
       }))
     }
     return this.follows.map(follow => ({
       handle: follow.handle,
       displayName: follow.displayName,
+      avatar: follow.avatar,
     }))
   }
 

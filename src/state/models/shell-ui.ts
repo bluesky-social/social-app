@@ -58,6 +58,7 @@ export interface ComposerOptsPostRef {
   author: {
     handle: string
     displayName?: string
+    avatar?: string
   }
 }
 export interface ComposerOpts {

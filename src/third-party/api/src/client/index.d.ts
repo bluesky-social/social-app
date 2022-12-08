@@ -5,6 +5,7 @@ import * as ComAtprotoAccountDelete from './types/com/atproto/account/delete';
 import * as ComAtprotoAccountGet from './types/com/atproto/account/get';
 import * as ComAtprotoAccountRequestPasswordReset from './types/com/atproto/account/requestPasswordReset';
 import * as ComAtprotoAccountResetPassword from './types/com/atproto/account/resetPassword';
+import * as ComAtprotoBlobUpload from './types/com/atproto/blob/upload';
 import * as ComAtprotoHandleResolve from './types/com/atproto/handle/resolve';
 import * as ComAtprotoRepoBatchWrite from './types/com/atproto/repo/batchWrite';
 import * as ComAtprotoRepoCreateRecord from './types/com/atproto/repo/createRecord';
@@ -56,6 +57,7 @@ export * as ComAtprotoAccountDelete from './types/com/atproto/account/delete';
 export * as ComAtprotoAccountGet from './types/com/atproto/account/get';
 export * as ComAtprotoAccountRequestPasswordReset from './types/com/atproto/account/requestPasswordReset';
 export * as ComAtprotoAccountResetPassword from './types/com/atproto/account/resetPassword';
+export * as ComAtprotoBlobUpload from './types/com/atproto/blob/upload';
 export * as ComAtprotoHandleResolve from './types/com/atproto/handle/resolve';
 export * as ComAtprotoRepoBatchWrite from './types/com/atproto/repo/batchWrite';
 export * as ComAtprotoRepoCreateRecord from './types/com/atproto/repo/createRecord';
@@ -140,6 +142,7 @@ export declare class ComNS {
 export declare class AtprotoNS {
     _service: ServiceClient;
     account: AccountNS;
+    blob: BlobNS;
     handle: HandleNS;
     repo: RepoNS;
     server: ServerNS;
@@ -156,6 +159,11 @@ export declare class AccountNS {
     get(params?: ComAtprotoAccountGet.QueryParams, opts?: ComAtprotoAccountGet.CallOptions): Promise<ComAtprotoAccountGet.Response>;
     requestPasswordReset(data?: ComAtprotoAccountRequestPasswordReset.InputSchema, opts?: ComAtprotoAccountRequestPasswordReset.CallOptions): Promise<ComAtprotoAccountRequestPasswordReset.Response>;
     resetPassword(data?: ComAtprotoAccountResetPassword.InputSchema, opts?: ComAtprotoAccountResetPassword.CallOptions): Promise<ComAtprotoAccountResetPassword.Response>;
+}
+export declare class BlobNS {
+    _service: ServiceClient;
+    constructor(service: ServiceClient);
+    upload(data?: ComAtprotoBlobUpload.InputSchema, opts?: ComAtprotoBlobUpload.CallOptions): Promise<ComAtprotoBlobUpload.Response>;
 }
 export declare class HandleNS {
     _service: ServiceClient;

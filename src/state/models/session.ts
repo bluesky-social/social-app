@@ -30,7 +30,6 @@ export class SessionModel {
       rootStore: false,
       serialize: false,
       hydrate: false,
-      _connectPromise: false,
     })
   }
 

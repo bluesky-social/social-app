@@ -7,6 +7,7 @@ export declare const ids: {
     ComAtprotoAccountGet: string;
     ComAtprotoAccountRequestPasswordReset: string;
     ComAtprotoAccountResetPassword: string;
+    ComAtprotoBlobUpload: string;
     ComAtprotoHandleResolve: string;
     ComAtprotoRepoBatchWrite: string;
     ComAtprotoRepoCreateRecord: string;

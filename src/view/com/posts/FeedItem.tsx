@@ -54,6 +54,7 @@ export const FeedItem = observer(function FeedItem({
         author: {
           handle: item.author.handle,
           displayName: item.author.displayName,
+          avatar: item.author.avatar,
         },
       },
     })
@@ -139,6 +140,7 @@ export const FeedItem = observer(function FeedItem({
               displayName={
                 item.additionalParentPost?.thread?.author.displayName
               }
+              avatar={item.additionalParentPost?.thread?.author.avatar}
               size={32}
             />
           </View>
@@ -159,6 +161,7 @@ export const FeedItem = observer(function FeedItem({
               size={item._isThreadChild ? 30 : 50}
               displayName={item.author.displayName}
               handle={item.author.handle}
+              avatar={item.author.avatar}
             />
           </Link>
         </View>

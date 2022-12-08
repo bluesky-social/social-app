@@ -205,6 +205,7 @@ export const ComposePost = observer(function ComposePost({
             <UserAvatar
               handle={replyTo.author.handle}
               displayName={replyTo.author.displayName}
+              avatar={replyTo.author.avatar}
               size={50}
             />
             <View style={styles.replyToPost}>
@@ -223,6 +224,7 @@ export const ComposePost = observer(function ComposePost({
           <UserAvatar
             handle={store.me.handle || ''}
             displayName={store.me.displayName}
+            avatar={store.me.avatar}
             size={50}
           />
           <TextInput

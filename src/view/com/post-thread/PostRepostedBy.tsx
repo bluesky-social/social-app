@@ -93,6 +93,7 @@ const RepostedByItem = ({item}: {item: RepostedByViewItemModel}) => {
             size={40}
             displayName={item.displayName}
             handle={item.handle}
+            avatar={item.avatar}
           />
         </View>
         <View style={styles.layoutContent}>

@@ -1,11 +1,10 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
 import * as GetVotes from '../../third-party/api/src/client/types/app/bsky/feed/getVotes'
+import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
 import {RootStoreModel} from './root-store'
 
-type VoteItem = GetVotes.OutputSchema['votes'][number]
-
-export class VotesViewItemModel implements VoteItem {
+export class VotesViewItemModel implements GetVotes.Vote {
   // ui state
   _reactKey: string = ''
 
@@ -13,9 +12,13 @@ export class VotesViewItemModel implements VoteItem {
   direction: 'up' | 'down' = 'up'
   indexedAt: string = ''
   createdAt: string = ''
-  actor: GetVotes.Actor = {did: '', handle: ''}
+  actor: ActorRef.WithInfo = {
+    did: '',
+    handle: '',
+    declaration: {cid: '', actorType: ''},
+  }
 
-  constructor(reactKey: string, v: VoteItem) {
+  constructor(reactKey: string, v: GetVotes.Vote) {
     makeAutoObservable(this)
     this._reactKey = reactKey
     Object.assign(this, v)
@@ -127,7 +130,7 @@ export class VotesViewModel {
     }
   }
 
-  private _append(keyId: number, item: VoteItem) {
+  private _append(keyId: number, item: GetVotes.Vote) {
     this.votes.push(new VotesViewItemModel(`item-${keyId}`, item))
   }
 }
