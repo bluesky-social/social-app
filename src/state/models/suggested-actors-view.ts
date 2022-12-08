@@ -2,8 +2,7 @@ import {makeAutoObservable} from 'mobx'
 import * as GetSuggestions from '../../third-party/api/src/client/types/app/bsky/actor/getSuggestions'
 import {RootStoreModel} from './root-store'
 
-type ResponseSuggestedActor = GetSuggestions.OutputSchema['actors'][number]
-export type SuggestedActor = ResponseSuggestedActor & {
+export type SuggestedActor = GetSuggestions.Actor & {
   _reactKey: string
 }
 

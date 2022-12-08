@@ -4,8 +4,6 @@ import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import {cleanError} from '../../lib/strings'
 
-export type PostEntities = Post.Record['entities']
-export type PostReply = Post.Record['reply']
 type RemoveIndex<T> = {
   [P in keyof T as string extends P
     ? never
@@ -22,8 +20,8 @@ export class PostModel implements RemoveIndex<Post.Record> {
 
   // data
   text: string = ''
-  entities?: PostEntities
-  reply?: PostReply
+  entities?: Post.Entity[]
+  reply?: Post.ReplyRef
   createdAt: string = ''
 
   constructor(public rootStore: RootStoreModel, uri: string) {

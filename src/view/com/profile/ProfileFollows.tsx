@@ -91,6 +91,7 @@ const User = ({item}: {item: FollowItem}) => {
             size={40}
             displayName={item.displayName}
             handle={item.handle}
+            avatar={item.avatar}
           />
         </View>
         <View style={styles.layoutContent}>

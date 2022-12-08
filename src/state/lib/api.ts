@@ -105,21 +105,6 @@ export async function unfollow(store: RootStoreModel, followUri: string) {
   })
 }
 
-export async function updateProfile(
-  store: RootStoreModel,
-  did: string,
-  modifyFn: (existing?: Profile.Record) => Profile.Record,
-) {
-  const res = await store.api.app.bsky.actor.profile.list({
-    user: did || '',
-  })
-  const existing = res.records[0]
-  await store.api.app.bsky.actor.updateProfile({
-    did: did || '',
-    ...modifyFn(existing?.value),
-  })
-}
-
 export async function inviteToScene(
   store: RootStoreModel,
   sceneDid: string,
@@ -183,6 +168,14 @@ async function fetchHandler(
   const reqMimeType = reqHeaders['Content-Type'] || reqHeaders['content-type']
   if (reqMimeType && reqMimeType.startsWith('application/json')) {
     reqBody = JSON.stringify(reqBody)
+  } else if (
+    typeof reqBody === 'string' &&
+    (reqBody.startsWith('/') || reqBody.startsWith('file:'))
+  ) {
+    // NOTE
+    // React native treats bodies with {uri: string} as file uploads to pull from cache
+    // -prf
+    reqBody = {uri: reqBody}
   }
 
   const controller = new AbortController()
@@ -219,51 +212,4 @@ async function fetchHandler(
     headers: resHeaders,
     body: resBody,
   }
-  // const res = await fetch(httpUri, {
-  //   method: httpMethod,
-  //   headers: httpHeaders,
-  //   body: encodeMethodCallBody(httpHeaders, httpReqBody),
-  // })
-  // const resBody = await res.arrayBuffer()
-  // return {
-  //   status: res.status,
-  //   headers: Object.fromEntries(res.headers.entries()),
-  //   body: httpResponseBodyParse(res.headers.get('content-type'), resBody),
-  // }
 }
-/*type WherePred = (_record: GetRecordResponseValidated) => Boolean
-async function deleteWhere(
-  coll: AdxRepoCollectionClient,
-  schema: SchemaOpt,
-  cond: WherePred,
-) {
-  const toDelete: string[] = []
-  await iterateAll(coll, schema, record => {
-    if (cond(record)) {
-      toDelete.push(record.key)
-    }
-  })
-  for (const key of toDelete) {
-    await coll.del(key)
-  }
-  return toDelete.length
-}
-
-type IterateAllCb = (_record: GetRecordResponseValidated) => void
-async function iterateAll(
-  coll: AdxRepoCollectionClient,
-  schema: SchemaOpt,
-  cb: IterateAllCb,
-) {
-  let cursor
-  let res: ListRecordsResponseValidated
-  do {
-    res = await coll.list(schema, {after: cursor, limit: 100})
-    for (const record of res.records) {
-      if (record.valid) {
-        cb(record)
-        cursor = record.key
-      }
-    }
-  } while (res.records.length === 100)
-}*/

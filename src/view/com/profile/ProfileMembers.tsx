@@ -65,6 +65,7 @@ export const ProfileMembers = observer(function ProfileMembers({
       did={item.did}
       handle={item.handle}
       displayName={item.displayName}
+      avatar={item.avatar}
     />
   )
   return (

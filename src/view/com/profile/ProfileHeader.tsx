@@ -158,7 +158,7 @@ export const ProfileHeader = observer(function ProfileHeader({
           size={80}
           handle={view.handle}
           displayName={view.displayName}
-          userAvatar={view.userAvatar}
+          avatar={view.avatar}
         />
       </View>
       <View style={styles.content}>

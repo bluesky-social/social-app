@@ -1,4 +1,5 @@
 import { Headers } from '@atproto/xrpc';
+import * as AppBskyActorRef from '../actor/ref';
 import * as AppBskySystemDeclRef from '../system/declRef';
 export interface QueryParams {
     user: string;
@@ -7,7 +8,7 @@ export interface QueryParams {
 }
 export declare type InputSchema = undefined;
 export interface OutputSchema {
-    subject: Subject;
+    subject: AppBskyActorRef.WithInfo;
     cursor?: string;
     followers: Follower[];
     [k: string]: unknown;
@@ -21,18 +22,12 @@ export interface Response {
     data: OutputSchema;
 }
 export declare function toKnownErr(e: any): any;
-export interface Subject {
-    did: string;
-    declaration: AppBskySystemDeclRef.Main;
-    handle: string;
-    displayName?: string;
-    [k: string]: unknown;
-}
 export interface Follower {
     did: string;
     declaration: AppBskySystemDeclRef.Main;
     handle: string;
     displayName?: string;
+    avatar?: string;
     createdAt?: string;
     indexedAt: string;
     [k: string]: unknown;

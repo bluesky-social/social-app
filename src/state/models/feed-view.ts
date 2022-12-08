@@ -1,6 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {Record as PostRecord} from '../../third-party/api/src/client/types/app/bsky/feed/post'
 import * as GetTimeline from '../../third-party/api/src/client/types/app/bsky/feed/getTimeline'
+import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
 import * as GetAuthorFeed from '../../third-party/api/src/client/types/app/bsky/feed/getAuthorFeed'
 import {PostThreadViewModel} from './post-thread-view'
 import {AtUri} from '../../third-party/uri'
@@ -36,14 +37,15 @@ export class FeedItemModel implements GetTimeline.FeedItem {
   // data
   uri: string = ''
   cid: string = ''
-  author: GetTimeline.Actor = {
+  author: ActorRef.WithInfo = {
     did: '',
     handle: '',
     displayName: '',
     declaration: {cid: '', actorType: ''},
+    avatar: undefined,
   }
-  repostedBy?: GetTimeline.Actor
-  trendedBy?: GetTimeline.Actor
+  repostedBy?: ActorRef.WithInfo
+  trendedBy?: ActorRef.WithInfo
   record: Record<string, unknown> = {}
   replyCount: number = 0
   repostCount: number = 0

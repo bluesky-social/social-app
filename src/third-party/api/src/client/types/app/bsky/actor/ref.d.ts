@@ -9,5 +9,6 @@ export interface WithInfo {
     declaration: AppBskySystemDeclRef.Main;
     handle: string;
     displayName?: string;
+    avatar?: string;
     [k: string]: unknown;
 }

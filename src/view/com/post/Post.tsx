@@ -97,6 +97,7 @@ export const Post = observer(function Post({
         author: {
           handle: item.author.handle,
           displayName: item.author.displayName,
+          avatar: item.author.avatar,
         },
       },
     })
@@ -137,6 +138,7 @@ export const Post = observer(function Post({
               size={50}
               displayName={item.author.displayName}
               handle={item.author.handle}
+              avatar={item.author.avatar}
             />
           </Link>
         </View>

@@ -9,6 +9,7 @@ export class MeModel {
   handle: string = ''
   displayName: string = ''
   description: string = ''
+  avatar: string = ''
   notificationCount: number = 0
   memberships?: MembershipsViewModel
   notifications: NotificationsViewModel
@@ -27,6 +28,7 @@ export class MeModel {
     this.handle = ''
     this.displayName = ''
     this.description = ''
+    this.avatar = ''
     this.notificationCount = 0
     this.memberships = undefined
   }
@@ -37,12 +39,13 @@ export class MeModel {
       handle: this.handle,
       displayName: this.displayName,
       description: this.description,
+      avatar: this.avatar,
     }
   }
 
   hydrate(v: unknown) {
     if (isObj(v)) {
-      let did, handle, displayName, description
+      let did, handle, displayName, description, avatar
       if (hasProp(v, 'did') && typeof v.did === 'string') {
         did = v.did
       }
@@ -55,11 +58,15 @@ export class MeModel {
       if (hasProp(v, 'description') && typeof v.description === 'string') {
         description = v.description
       }
+      if (hasProp(v, 'avatar') && typeof v.avatar === 'string') {
+        avatar = v.avatar
+      }
       if (did && handle) {
         this.did = did
         this.handle = handle
         this.displayName = displayName || ''
         this.description = description || ''
+        this.avatar = avatar || ''
       }
     }
   }
@@ -76,9 +83,11 @@ export class MeModel {
         if (profile?.data) {
           this.displayName = profile.data.displayName || ''
           this.description = profile.data.description || ''
+          this.avatar = profile.data.avatar || ''
         } else {
           this.displayName = ''
           this.description = ''
+          this.avatar = ''
         }
       })
       this.memberships = new MembershipsViewModel(this.rootStore, {

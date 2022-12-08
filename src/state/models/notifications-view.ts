@@ -1,8 +1,8 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import * as ListNotifications from '../../third-party/api/src/client/types/app/bsky/notification/list'
+import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
 import {RootStoreModel} from './root-store'
 import {PostThreadViewModel} from './post-thread-view'
-import {Declaration} from './_common'
 import {hasProp} from '../lib/type-guards'
 import {APP_BSKY_GRAPH} from '../../third-party/api'
 import {cleanError} from '../../lib/strings'
@@ -22,12 +22,11 @@ export class NotificationsViewItemModel implements GroupedNotification {
   // data
   uri: string = ''
   cid: string = ''
-  author: {
-    did: string
-    handle: string
-    displayName?: string
-    declaration: Declaration
-  } = {did: '', handle: '', declaration: {cid: '', actorType: ''}}
+  author: ActorRef.WithInfo = {
+    did: '',
+    handle: '',
+    declaration: {cid: '', actorType: ''},
+  }
   reason: string = ''
   reasonSubject?: string
   record: any = {}

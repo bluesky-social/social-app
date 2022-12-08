@@ -1,9 +1,10 @@
 import {makeAutoObservable, runInAction} from 'mobx'
+import {Image as PickedImage} from 'react-native-image-crop-picker'
 import * as GetProfile from '../../third-party/api/src/client/types/app/bsky/actor/getProfile'
 import * as Profile from '../../third-party/api/src/client/types/app/bsky/actor/profile'
+import {Main as DeclRef} from '../../third-party/api/src/client/types/app/bsky/system/declRef'
 import {Entity} from '../../third-party/api/src/client/types/app/bsky/feed/post'
 import {extractEntities} from '../../lib/strings'
-import {Declaration} from './_common'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
@@ -30,13 +31,14 @@ export class ProfileViewModel {
   // data
   did: string = ''
   handle: string = ''
-  declaration: Declaration = {
+  declaration: DeclRef = {
     cid: '',
     actorType: '',
   }
   creator: string = ''
   displayName?: string
   description?: string
+  avatar?: string
   followersCount: number = 0
   followsCount: number = 0
   membersCount: number = 0
@@ -44,7 +46,6 @@ export class ProfileViewModel {
   myState = new ProfileViewMyStateModel()
 
   // TODO TEMP data to be implemented in the protocol
-  userAvatar: string | null = null
   userBanner: string | null = null
 
   // added data
@@ -120,15 +121,27 @@ export class ProfileViewModel {
   }
 
   async updateProfile(
-    fn: (existing?: Profile.Record) => Profile.Record,
-    userAvatar: string | null, // TODO TEMP
+    updates: Profile.Record,
+    newUserAvatar: PickedImage | undefined,
     userBanner: string | null, // TODO TEMP
   ) {
-    // TODO TEMP add userBanner & userAvatar in the protocol when suported
-    this.userAvatar = userAvatar
+    // TODO TEMP add userBanner to the protocol when suported
     this.userBanner = userBanner
 
-    await apilib.updateProfile(this.rootStore, this.did, fn)
+    if (newUserAvatar) {
+      const res = await this.rootStore.api.com.atproto.blob.upload(
+        newUserAvatar.path, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
+        {
+          encoding: newUserAvatar.mime,
+        },
+      )
+      updates.avatar = {
+        cid: res.data.cid,
+        mimeType: newUserAvatar.mime,
+      }
+    }
+    await this.rootStore.api.app.bsky.actor.updateProfile(updates)
+    await this.rootStore.me.load()
     await this.refresh()
   }
 
@@ -173,6 +186,7 @@ export class ProfileViewModel {
     this.creator = res.data.creator
     this.displayName = res.data.displayName
     this.description = res.data.description
+    this.avatar = res.data.avatar
     this.followersCount = res.data.followersCount
     this.followsCount = res.data.followsCount
     this.membersCount = res.data.membersCount

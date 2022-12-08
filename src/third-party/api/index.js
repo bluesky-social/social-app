@@ -69,6 +69,7 @@ __export(src_exports, {
   AppNS: () => AppNS,
   AssertionRecord: () => AssertionRecord,
   AtprotoNS: () => AtprotoNS,
+  BlobNS: () => BlobNS,
   BskyNS: () => BskyNS,
   Client: () => Client2,
   ComAtprotoAccountCreate: () => create_exports,
@@ -77,6 +78,7 @@ __export(src_exports, {
   ComAtprotoAccountGet: () => get_exports,
   ComAtprotoAccountRequestPasswordReset: () => requestPasswordReset_exports,
   ComAtprotoAccountResetPassword: () => resetPassword_exports,
+  ComAtprotoBlobUpload: () => upload_exports,
   ComAtprotoHandleResolve: () => resolve_exports,
   ComAtprotoRepoBatchWrite: () => batchWrite_exports,
   ComAtprotoRepoCreateRecord: () => createRecord_exports,
@@ -4377,6 +4379,36 @@ var lexicons = [
   },
   {
     lexicon: 1,
+    id: "com.atproto.blob.upload",
+    defs: {
+      main: {
+        type: "procedure",
+        description: "Upload a new blob to be added to repo in a later request.",
+        input: {
+          encoding: "*/*"
+        },
+        output: {
+          encoding: "application/json",
+          schema: {
+            type: "object",
+            required: ["cid"],
+            properties: {
+              cid: {
+                type: "string"
+              }
+            }
+          }
+        },
+        errors: [
+          {
+            name: "InvalidBlob"
+          }
+        ]
+      }
+    }
+  },
+  {
+    lexicon: 1,
     id: "com.atproto.handle.resolve",
     defs: {
       main: {
@@ -5176,6 +5208,9 @@ var lexicons = [
                 type: "string",
                 maxLength: 256
               },
+              avatar: {
+                type: "string"
+              },
               followersCount: {
                 type: "integer"
               },
@@ -5271,6 +5306,9 @@ var lexicons = [
           description: {
             type: "string"
           },
+          avatar: {
+            type: "string"
+          },
           indexedAt: {
             type: "datetime"
           },
@@ -5308,6 +5346,13 @@ var lexicons = [
             description: {
               type: "string",
               maxLength: 256
+            },
+            avatar: {
+              type: "image",
+              accept: ["image/png", "image/jpeg"],
+              maxWidth: 500,
+              maxHeight: 500,
+              maxSize: 3e5
             }
           }
         }
@@ -5348,6 +5393,9 @@ var lexicons = [
           displayName: {
             type: "string",
             maxLength: 64
+          },
+          avatar: {
+            type: "string"
           }
         }
       }
@@ -5416,6 +5464,9 @@ var lexicons = [
             type: "string",
             maxLength: 64
           },
+          avatar: {
+            type: "string"
+          },
           description: {
             type: "string"
           },
@@ -5482,6 +5533,9 @@ var lexicons = [
           displayName: {
             type: "string",
             maxLength: 64
+          },
+          avatar: {
+            type: "string"
           }
         }
       }
@@ -5509,6 +5563,13 @@ var lexicons = [
               description: {
                 type: "string",
                 maxLength: 256
+              },
+              avatar: {
+                type: "image",
+                accept: ["image/png", "image/jpeg"],
+                maxWidth: 500,
+                maxHeight: 500,
+                maxSize: 1e5
               }
             }
           }
@@ -5942,6 +6003,9 @@ var lexicons = [
           displayName: {
             type: "string",
             maxLength: 64
+          },
+          avatar: {
+            type: "string"
           },
           createdAt: {
             type: "datetime"
@@ -6589,7 +6653,7 @@ var lexicons = [
             properties: {
               subject: {
                 type: "ref",
-                ref: "lex:app.bsky.graph.getFollowers#subject"
+                ref: "lex:app.bsky.actor.ref#withInfo"
               },
               cursor: {
                 type: "string"
@@ -6602,26 +6666,6 @@ var lexicons = [
                 }
               }
             }
-          }
-        }
-      },
-      subject: {
-        type: "object",
-        required: ["did", "declaration", "handle"],
-        properties: {
-          did: {
-            type: "string"
-          },
-          declaration: {
-            type: "ref",
-            ref: "lex:app.bsky.system.declRef"
-          },
-          handle: {
-            type: "string"
-          },
-          displayName: {
-            type: "string",
-            maxLength: 64
           }
         }
       },
@@ -6642,6 +6686,9 @@ var lexicons = [
           displayName: {
             type: "string",
             maxLength: 64
+          },
+          avatar: {
+            type: "string"
           },
           createdAt: {
             type: "datetime"
@@ -7201,20 +7248,28 @@ function toKnownErr6(e) {
   return e;
 }
 
-// src/client/types/com/atproto/handle/resolve.ts
-var resolve_exports = {};
-__export(resolve_exports, {
+// src/client/types/com/atproto/blob/upload.ts
+var upload_exports = {};
+__export(upload_exports, {
+  InvalidBlobError: () => InvalidBlobError,
   toKnownErr: () => toKnownErr7
 });
+var InvalidBlobError = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
 function toKnownErr7(e) {
   if (e instanceof XRPCError) {
+    if (e.error === "InvalidBlob")
+      return new InvalidBlobError(e);
   }
   return e;
 }
 
-// src/client/types/com/atproto/repo/batchWrite.ts
-var batchWrite_exports = {};
-__export(batchWrite_exports, {
+// src/client/types/com/atproto/handle/resolve.ts
+var resolve_exports = {};
+__export(resolve_exports, {
   toKnownErr: () => toKnownErr8
 });
 function toKnownErr8(e) {
@@ -7223,9 +7278,9 @@ function toKnownErr8(e) {
   return e;
 }
 
-// src/client/types/com/atproto/repo/createRecord.ts
-var createRecord_exports = {};
-__export(createRecord_exports, {
+// src/client/types/com/atproto/repo/batchWrite.ts
+var batchWrite_exports = {};
+__export(batchWrite_exports, {
   toKnownErr: () => toKnownErr9
 });
 function toKnownErr9(e) {
@@ -7234,9 +7289,9 @@ function toKnownErr9(e) {
   return e;
 }
 
-// src/client/types/com/atproto/repo/deleteRecord.ts
-var deleteRecord_exports = {};
-__export(deleteRecord_exports, {
+// src/client/types/com/atproto/repo/createRecord.ts
+var createRecord_exports = {};
+__export(createRecord_exports, {
   toKnownErr: () => toKnownErr10
 });
 function toKnownErr10(e) {
@@ -7245,9 +7300,9 @@ function toKnownErr10(e) {
   return e;
 }
 
-// src/client/types/com/atproto/repo/describe.ts
-var describe_exports = {};
-__export(describe_exports, {
+// src/client/types/com/atproto/repo/deleteRecord.ts
+var deleteRecord_exports = {};
+__export(deleteRecord_exports, {
   toKnownErr: () => toKnownErr11
 });
 function toKnownErr11(e) {
@@ -7256,9 +7311,9 @@ function toKnownErr11(e) {
   return e;
 }
 
-// src/client/types/com/atproto/repo/getRecord.ts
-var getRecord_exports = {};
-__export(getRecord_exports, {
+// src/client/types/com/atproto/repo/describe.ts
+var describe_exports = {};
+__export(describe_exports, {
   toKnownErr: () => toKnownErr12
 });
 function toKnownErr12(e) {
@@ -7267,9 +7322,9 @@ function toKnownErr12(e) {
   return e;
 }
 
-// src/client/types/com/atproto/repo/listRecords.ts
-var listRecords_exports = {};
-__export(listRecords_exports, {
+// src/client/types/com/atproto/repo/getRecord.ts
+var getRecord_exports = {};
+__export(getRecord_exports, {
   toKnownErr: () => toKnownErr13
 });
 function toKnownErr13(e) {
@@ -7278,9 +7333,9 @@ function toKnownErr13(e) {
   return e;
 }
 
-// src/client/types/com/atproto/repo/putRecord.ts
-var putRecord_exports = {};
-__export(putRecord_exports, {
+// src/client/types/com/atproto/repo/listRecords.ts
+var listRecords_exports = {};
+__export(listRecords_exports, {
   toKnownErr: () => toKnownErr14
 });
 function toKnownErr14(e) {
@@ -7289,9 +7344,9 @@ function toKnownErr14(e) {
   return e;
 }
 
-// src/client/types/com/atproto/server/getAccountsConfig.ts
-var getAccountsConfig_exports = {};
-__export(getAccountsConfig_exports, {
+// src/client/types/com/atproto/repo/putRecord.ts
+var putRecord_exports = {};
+__export(putRecord_exports, {
   toKnownErr: () => toKnownErr15
 });
 function toKnownErr15(e) {
@@ -7300,9 +7355,9 @@ function toKnownErr15(e) {
   return e;
 }
 
-// src/client/types/com/atproto/session/create.ts
-var create_exports2 = {};
-__export(create_exports2, {
+// src/client/types/com/atproto/server/getAccountsConfig.ts
+var getAccountsConfig_exports = {};
+__export(getAccountsConfig_exports, {
   toKnownErr: () => toKnownErr16
 });
 function toKnownErr16(e) {
@@ -7311,9 +7366,9 @@ function toKnownErr16(e) {
   return e;
 }
 
-// src/client/types/com/atproto/session/delete.ts
-var delete_exports2 = {};
-__export(delete_exports2, {
+// src/client/types/com/atproto/session/create.ts
+var create_exports2 = {};
+__export(create_exports2, {
   toKnownErr: () => toKnownErr17
 });
 function toKnownErr17(e) {
@@ -7322,9 +7377,9 @@ function toKnownErr17(e) {
   return e;
 }
 
-// src/client/types/com/atproto/session/get.ts
-var get_exports2 = {};
-__export(get_exports2, {
+// src/client/types/com/atproto/session/delete.ts
+var delete_exports2 = {};
+__export(delete_exports2, {
   toKnownErr: () => toKnownErr18
 });
 function toKnownErr18(e) {
@@ -7333,9 +7388,9 @@ function toKnownErr18(e) {
   return e;
 }
 
-// src/client/types/com/atproto/session/refresh.ts
-var refresh_exports = {};
-__export(refresh_exports, {
+// src/client/types/com/atproto/session/get.ts
+var get_exports2 = {};
+__export(get_exports2, {
   toKnownErr: () => toKnownErr19
 });
 function toKnownErr19(e) {
@@ -7344,9 +7399,9 @@ function toKnownErr19(e) {
   return e;
 }
 
-// src/client/types/com/atproto/sync/getRepo.ts
-var getRepo_exports = {};
-__export(getRepo_exports, {
+// src/client/types/com/atproto/session/refresh.ts
+var refresh_exports = {};
+__export(refresh_exports, {
   toKnownErr: () => toKnownErr20
 });
 function toKnownErr20(e) {
@@ -7355,9 +7410,9 @@ function toKnownErr20(e) {
   return e;
 }
 
-// src/client/types/com/atproto/sync/getRoot.ts
-var getRoot_exports = {};
-__export(getRoot_exports, {
+// src/client/types/com/atproto/sync/getRepo.ts
+var getRepo_exports = {};
+__export(getRepo_exports, {
   toKnownErr: () => toKnownErr21
 });
 function toKnownErr21(e) {
@@ -7366,12 +7421,23 @@ function toKnownErr21(e) {
   return e;
 }
 
-// src/client/types/com/atproto/sync/updateRepo.ts
-var updateRepo_exports = {};
-__export(updateRepo_exports, {
+// src/client/types/com/atproto/sync/getRoot.ts
+var getRoot_exports = {};
+__export(getRoot_exports, {
   toKnownErr: () => toKnownErr22
 });
 function toKnownErr22(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/com/atproto/sync/updateRepo.ts
+var updateRepo_exports = {};
+__export(updateRepo_exports, {
+  toKnownErr: () => toKnownErr23
+});
+function toKnownErr23(e) {
   if (e instanceof XRPCError) {
   }
   return e;
@@ -7382,7 +7448,7 @@ var createScene_exports = {};
 __export(createScene_exports, {
   HandleNotAvailableError: () => HandleNotAvailableError2,
   InvalidHandleError: () => InvalidHandleError2,
-  toKnownErr: () => toKnownErr23
+  toKnownErr: () => toKnownErr24
 });
 var InvalidHandleError2 = class extends XRPCError {
   constructor(src) {
@@ -7394,7 +7460,7 @@ var HandleNotAvailableError2 = class extends XRPCError {
     super(src.status, src.error, src.message);
   }
 };
-function toKnownErr23(e) {
+function toKnownErr24(e) {
   if (e instanceof XRPCError) {
     if (e.error === "InvalidHandle")
       return new InvalidHandleError2(e);
@@ -7407,17 +7473,6 @@ function toKnownErr23(e) {
 // src/client/types/app/bsky/actor/getProfile.ts
 var getProfile_exports = {};
 __export(getProfile_exports, {
-  toKnownErr: () => toKnownErr24
-});
-function toKnownErr24(e) {
-  if (e instanceof XRPCError) {
-  }
-  return e;
-}
-
-// src/client/types/app/bsky/actor/getSuggestions.ts
-var getSuggestions_exports = {};
-__export(getSuggestions_exports, {
   toKnownErr: () => toKnownErr25
 });
 function toKnownErr25(e) {
@@ -7426,9 +7481,9 @@ function toKnownErr25(e) {
   return e;
 }
 
-// src/client/types/app/bsky/actor/search.ts
-var search_exports = {};
-__export(search_exports, {
+// src/client/types/app/bsky/actor/getSuggestions.ts
+var getSuggestions_exports = {};
+__export(getSuggestions_exports, {
   toKnownErr: () => toKnownErr26
 });
 function toKnownErr26(e) {
@@ -7437,9 +7492,9 @@ function toKnownErr26(e) {
   return e;
 }
 
-// src/client/types/app/bsky/actor/searchTypeahead.ts
-var searchTypeahead_exports = {};
-__export(searchTypeahead_exports, {
+// src/client/types/app/bsky/actor/search.ts
+var search_exports = {};
+__export(search_exports, {
   toKnownErr: () => toKnownErr27
 });
 function toKnownErr27(e) {
@@ -7448,9 +7503,9 @@ function toKnownErr27(e) {
   return e;
 }
 
-// src/client/types/app/bsky/actor/updateProfile.ts
-var updateProfile_exports = {};
-__export(updateProfile_exports, {
+// src/client/types/app/bsky/actor/searchTypeahead.ts
+var searchTypeahead_exports = {};
+__export(searchTypeahead_exports, {
   toKnownErr: () => toKnownErr28
 });
 function toKnownErr28(e) {
@@ -7459,12 +7514,23 @@ function toKnownErr28(e) {
   return e;
 }
 
-// src/client/types/app/bsky/feed/getAuthorFeed.ts
-var getAuthorFeed_exports = {};
-__export(getAuthorFeed_exports, {
+// src/client/types/app/bsky/actor/updateProfile.ts
+var updateProfile_exports = {};
+__export(updateProfile_exports, {
   toKnownErr: () => toKnownErr29
 });
 function toKnownErr29(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/app/bsky/feed/getAuthorFeed.ts
+var getAuthorFeed_exports = {};
+__export(getAuthorFeed_exports, {
+  toKnownErr: () => toKnownErr30
+});
+function toKnownErr30(e) {
   if (e instanceof XRPCError) {
   }
   return e;
@@ -7474,14 +7540,14 @@ function toKnownErr29(e) {
 var getPostThread_exports = {};
 __export(getPostThread_exports, {
   NotFoundError: () => NotFoundError,
-  toKnownErr: () => toKnownErr30
+  toKnownErr: () => toKnownErr31
 });
 var NotFoundError = class extends XRPCError {
   constructor(src) {
     super(src.status, src.error, src.message);
   }
 };
-function toKnownErr30(e) {
+function toKnownErr31(e) {
   if (e instanceof XRPCError) {
     if (e.error === "NotFound")
       return new NotFoundError(e);
@@ -7492,17 +7558,6 @@ function toKnownErr30(e) {
 // src/client/types/app/bsky/feed/getRepostedBy.ts
 var getRepostedBy_exports = {};
 __export(getRepostedBy_exports, {
-  toKnownErr: () => toKnownErr31
-});
-function toKnownErr31(e) {
-  if (e instanceof XRPCError) {
-  }
-  return e;
-}
-
-// src/client/types/app/bsky/feed/getTimeline.ts
-var getTimeline_exports = {};
-__export(getTimeline_exports, {
   toKnownErr: () => toKnownErr32
 });
 function toKnownErr32(e) {
@@ -7511,9 +7566,9 @@ function toKnownErr32(e) {
   return e;
 }
 
-// src/client/types/app/bsky/feed/getVotes.ts
-var getVotes_exports = {};
-__export(getVotes_exports, {
+// src/client/types/app/bsky/feed/getTimeline.ts
+var getTimeline_exports = {};
+__export(getTimeline_exports, {
   toKnownErr: () => toKnownErr33
 });
 function toKnownErr33(e) {
@@ -7522,9 +7577,9 @@ function toKnownErr33(e) {
   return e;
 }
 
-// src/client/types/app/bsky/feed/setVote.ts
-var setVote_exports = {};
-__export(setVote_exports, {
+// src/client/types/app/bsky/feed/getVotes.ts
+var getVotes_exports = {};
+__export(getVotes_exports, {
   toKnownErr: () => toKnownErr34
 });
 function toKnownErr34(e) {
@@ -7533,9 +7588,9 @@ function toKnownErr34(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getAssertions.ts
-var getAssertions_exports = {};
-__export(getAssertions_exports, {
+// src/client/types/app/bsky/feed/setVote.ts
+var setVote_exports = {};
+__export(setVote_exports, {
   toKnownErr: () => toKnownErr35
 });
 function toKnownErr35(e) {
@@ -7544,9 +7599,9 @@ function toKnownErr35(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getFollowers.ts
-var getFollowers_exports = {};
-__export(getFollowers_exports, {
+// src/client/types/app/bsky/graph/getAssertions.ts
+var getAssertions_exports = {};
+__export(getAssertions_exports, {
   toKnownErr: () => toKnownErr36
 });
 function toKnownErr36(e) {
@@ -7555,9 +7610,9 @@ function toKnownErr36(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getFollows.ts
-var getFollows_exports = {};
-__export(getFollows_exports, {
+// src/client/types/app/bsky/graph/getFollowers.ts
+var getFollowers_exports = {};
+__export(getFollowers_exports, {
   toKnownErr: () => toKnownErr37
 });
 function toKnownErr37(e) {
@@ -7566,9 +7621,9 @@ function toKnownErr37(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getMembers.ts
-var getMembers_exports = {};
-__export(getMembers_exports, {
+// src/client/types/app/bsky/graph/getFollows.ts
+var getFollows_exports = {};
+__export(getFollows_exports, {
   toKnownErr: () => toKnownErr38
 });
 function toKnownErr38(e) {
@@ -7577,9 +7632,9 @@ function toKnownErr38(e) {
   return e;
 }
 
-// src/client/types/app/bsky/graph/getMemberships.ts
-var getMemberships_exports = {};
-__export(getMemberships_exports, {
+// src/client/types/app/bsky/graph/getMembers.ts
+var getMembers_exports = {};
+__export(getMembers_exports, {
   toKnownErr: () => toKnownErr39
 });
 function toKnownErr39(e) {
@@ -7588,9 +7643,9 @@ function toKnownErr39(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/getCount.ts
-var getCount_exports = {};
-__export(getCount_exports, {
+// src/client/types/app/bsky/graph/getMemberships.ts
+var getMemberships_exports = {};
+__export(getMemberships_exports, {
   toKnownErr: () => toKnownErr40
 });
 function toKnownErr40(e) {
@@ -7599,9 +7654,9 @@ function toKnownErr40(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/list.ts
-var list_exports = {};
-__export(list_exports, {
+// src/client/types/app/bsky/notification/getCount.ts
+var getCount_exports = {};
+__export(getCount_exports, {
   toKnownErr: () => toKnownErr41
 });
 function toKnownErr41(e) {
@@ -7610,12 +7665,23 @@ function toKnownErr41(e) {
   return e;
 }
 
-// src/client/types/app/bsky/notification/updateSeen.ts
-var updateSeen_exports = {};
-__export(updateSeen_exports, {
+// src/client/types/app/bsky/notification/list.ts
+var list_exports = {};
+__export(list_exports, {
   toKnownErr: () => toKnownErr42
 });
 function toKnownErr42(e) {
+  if (e instanceof XRPCError) {
+  }
+  return e;
+}
+
+// src/client/types/app/bsky/notification/updateSeen.ts
+var updateSeen_exports = {};
+__export(updateSeen_exports, {
+  toKnownErr: () => toKnownErr43
+});
+function toKnownErr43(e) {
   if (e instanceof XRPCError) {
   }
   return e;
@@ -7729,6 +7795,7 @@ var AtprotoNS = class {
   constructor(service) {
     this._service = service;
     this.account = new AccountNS(service);
+    this.blob = new BlobNS(service);
     this.handle = new HandleNS(service);
     this.repo = new RepoNS(service);
     this.server = new ServerNS(service);
@@ -7771,13 +7838,23 @@ var AccountNS = class {
     });
   }
 };
+var BlobNS = class {
+  constructor(service) {
+    this._service = service;
+  }
+  upload(data, opts) {
+    return this._service.xrpc.call("com.atproto.blob.upload", opts?.qp, data, opts).catch((e) => {
+      throw toKnownErr7(e);
+    });
+  }
+};
 var HandleNS = class {
   constructor(service) {
     this._service = service;
   }
   resolve(params2, opts) {
     return this._service.xrpc.call("com.atproto.handle.resolve", params2, void 0, opts).catch((e) => {
-      throw toKnownErr7(e);
+      throw toKnownErr8(e);
     });
   }
 };
@@ -7787,37 +7864,37 @@ var RepoNS = class {
   }
   batchWrite(data, opts) {
     return this._service.xrpc.call("com.atproto.repo.batchWrite", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr8(e);
+      throw toKnownErr9(e);
     });
   }
   createRecord(data, opts) {
     return this._service.xrpc.call("com.atproto.repo.createRecord", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr9(e);
+      throw toKnownErr10(e);
     });
   }
   deleteRecord(data, opts) {
     return this._service.xrpc.call("com.atproto.repo.deleteRecord", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr10(e);
+      throw toKnownErr11(e);
     });
   }
   describe(params2, opts) {
     return this._service.xrpc.call("com.atproto.repo.describe", params2, void 0, opts).catch((e) => {
-      throw toKnownErr11(e);
+      throw toKnownErr12(e);
     });
   }
   getRecord(params2, opts) {
     return this._service.xrpc.call("com.atproto.repo.getRecord", params2, void 0, opts).catch((e) => {
-      throw toKnownErr12(e);
+      throw toKnownErr13(e);
     });
   }
   listRecords(params2, opts) {
     return this._service.xrpc.call("com.atproto.repo.listRecords", params2, void 0, opts).catch((e) => {
-      throw toKnownErr13(e);
+      throw toKnownErr14(e);
     });
   }
   putRecord(data, opts) {
     return this._service.xrpc.call("com.atproto.repo.putRecord", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr14(e);
+      throw toKnownErr15(e);
     });
   }
 };
@@ -7827,7 +7904,7 @@ var ServerNS = class {
   }
   getAccountsConfig(params2, opts) {
     return this._service.xrpc.call("com.atproto.server.getAccountsConfig", params2, void 0, opts).catch((e) => {
-      throw toKnownErr15(e);
+      throw toKnownErr16(e);
     });
   }
 };
@@ -7837,22 +7914,22 @@ var SessionNS = class {
   }
   create(data, opts) {
     return this._service.xrpc.call("com.atproto.session.create", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr16(e);
+      throw toKnownErr17(e);
     });
   }
   delete(data, opts) {
     return this._service.xrpc.call("com.atproto.session.delete", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr17(e);
+      throw toKnownErr18(e);
     });
   }
   get(params2, opts) {
     return this._service.xrpc.call("com.atproto.session.get", params2, void 0, opts).catch((e) => {
-      throw toKnownErr18(e);
+      throw toKnownErr19(e);
     });
   }
   refresh(data, opts) {
     return this._service.xrpc.call("com.atproto.session.refresh", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr19(e);
+      throw toKnownErr20(e);
     });
   }
 };
@@ -7862,17 +7939,17 @@ var SyncNS = class {
   }
   getRepo(params2, opts) {
     return this._service.xrpc.call("com.atproto.sync.getRepo", params2, void 0, opts).catch((e) => {
-      throw toKnownErr20(e);
+      throw toKnownErr21(e);
     });
   }
   getRoot(params2, opts) {
     return this._service.xrpc.call("com.atproto.sync.getRoot", params2, void 0, opts).catch((e) => {
-      throw toKnownErr21(e);
+      throw toKnownErr22(e);
     });
   }
   updateRepo(data, opts) {
     return this._service.xrpc.call("com.atproto.sync.updateRepo", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr22(e);
+      throw toKnownErr23(e);
     });
   }
 };
@@ -7899,32 +7976,32 @@ var ActorNS = class {
   }
   createScene(data, opts) {
     return this._service.xrpc.call("app.bsky.actor.createScene", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr23(e);
+      throw toKnownErr24(e);
     });
   }
   getProfile(params2, opts) {
     return this._service.xrpc.call("app.bsky.actor.getProfile", params2, void 0, opts).catch((e) => {
-      throw toKnownErr24(e);
+      throw toKnownErr25(e);
     });
   }
   getSuggestions(params2, opts) {
     return this._service.xrpc.call("app.bsky.actor.getSuggestions", params2, void 0, opts).catch((e) => {
-      throw toKnownErr25(e);
+      throw toKnownErr26(e);
     });
   }
   search(params2, opts) {
     return this._service.xrpc.call("app.bsky.actor.search", params2, void 0, opts).catch((e) => {
-      throw toKnownErr26(e);
+      throw toKnownErr27(e);
     });
   }
   searchTypeahead(params2, opts) {
     return this._service.xrpc.call("app.bsky.actor.searchTypeahead", params2, void 0, opts).catch((e) => {
-      throw toKnownErr27(e);
+      throw toKnownErr28(e);
     });
   }
   updateProfile(data, opts) {
     return this._service.xrpc.call("app.bsky.actor.updateProfile", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr28(e);
+      throw toKnownErr29(e);
     });
   }
 };
@@ -7975,32 +8052,32 @@ var FeedNS = class {
   }
   getAuthorFeed(params2, opts) {
     return this._service.xrpc.call("app.bsky.feed.getAuthorFeed", params2, void 0, opts).catch((e) => {
-      throw toKnownErr29(e);
+      throw toKnownErr30(e);
     });
   }
   getPostThread(params2, opts) {
     return this._service.xrpc.call("app.bsky.feed.getPostThread", params2, void 0, opts).catch((e) => {
-      throw toKnownErr30(e);
+      throw toKnownErr31(e);
     });
   }
   getRepostedBy(params2, opts) {
     return this._service.xrpc.call("app.bsky.feed.getRepostedBy", params2, void 0, opts).catch((e) => {
-      throw toKnownErr31(e);
+      throw toKnownErr32(e);
     });
   }
   getTimeline(params2, opts) {
     return this._service.xrpc.call("app.bsky.feed.getTimeline", params2, void 0, opts).catch((e) => {
-      throw toKnownErr32(e);
+      throw toKnownErr33(e);
     });
   }
   getVotes(params2, opts) {
     return this._service.xrpc.call("app.bsky.feed.getVotes", params2, void 0, opts).catch((e) => {
-      throw toKnownErr33(e);
+      throw toKnownErr34(e);
     });
   }
   setVote(data, opts) {
     return this._service.xrpc.call("app.bsky.feed.setVote", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr34(e);
+      throw toKnownErr35(e);
     });
   }
 };
@@ -8161,27 +8238,27 @@ var GraphNS = class {
   }
   getAssertions(params2, opts) {
     return this._service.xrpc.call("app.bsky.graph.getAssertions", params2, void 0, opts).catch((e) => {
-      throw toKnownErr35(e);
+      throw toKnownErr36(e);
     });
   }
   getFollowers(params2, opts) {
     return this._service.xrpc.call("app.bsky.graph.getFollowers", params2, void 0, opts).catch((e) => {
-      throw toKnownErr36(e);
+      throw toKnownErr37(e);
     });
   }
   getFollows(params2, opts) {
     return this._service.xrpc.call("app.bsky.graph.getFollows", params2, void 0, opts).catch((e) => {
-      throw toKnownErr37(e);
+      throw toKnownErr38(e);
     });
   }
   getMembers(params2, opts) {
     return this._service.xrpc.call("app.bsky.graph.getMembers", params2, void 0, opts).catch((e) => {
-      throw toKnownErr38(e);
+      throw toKnownErr39(e);
     });
   }
   getMemberships(params2, opts) {
     return this._service.xrpc.call("app.bsky.graph.getMemberships", params2, void 0, opts).catch((e) => {
-      throw toKnownErr39(e);
+      throw toKnownErr40(e);
     });
   }
 };
@@ -8302,17 +8379,17 @@ var NotificationNS = class {
   }
   getCount(params2, opts) {
     return this._service.xrpc.call("app.bsky.notification.getCount", params2, void 0, opts).catch((e) => {
-      throw toKnownErr40(e);
+      throw toKnownErr41(e);
     });
   }
   list(params2, opts) {
     return this._service.xrpc.call("app.bsky.notification.list", params2, void 0, opts).catch((e) => {
-      throw toKnownErr41(e);
+      throw toKnownErr42(e);
     });
   }
   updateSeen(data, opts) {
     return this._service.xrpc.call("app.bsky.notification.updateSeen", opts?.qp, data, opts).catch((e) => {
-      throw toKnownErr42(e);
+      throw toKnownErr43(e);
     });
   }
 };
@@ -8528,6 +8605,7 @@ var SessionManager = class extends import_events.default {
   AppNS,
   AssertionRecord,
   AtprotoNS,
+  BlobNS,
   BskyNS,
   Client,
   ComAtprotoAccountCreate,
@@ -8536,6 +8614,7 @@ var SessionManager = class extends import_events.default {
   ComAtprotoAccountGet,
   ComAtprotoAccountRequestPasswordReset,
   ComAtprotoAccountResetPassword,
+  ComAtprotoBlobUpload,
   ComAtprotoHandleResolve,
   ComAtprotoRepoBatchWrite,
   ComAtprotoRepoCreateRecord,

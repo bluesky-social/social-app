@@ -29,6 +29,7 @@ export function ComposePrompt({
             size={50}
             handle={store.me.handle || ''}
             displayName={store.me.displayName}
+            avatar={store.me.avatar}
           />
         </TouchableOpacity>
       ) : undefined}

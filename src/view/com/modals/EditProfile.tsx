@@ -1,8 +1,10 @@
 import React, {useState} from 'react'
+import {ComAtprotoBlobUpload} from '../../../third-party/api/index'
 import * as Toast from '../util/Toast'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
+import {Image as PickedImage} from 'react-native-image-crop-picker'
 import {ErrorMessage} from '../util/ErrorMessage'
 import {useStores} from '../../../state'
 import {ProfileViewModel} from '../../../state/models/profile-view'
@@ -12,7 +14,6 @@ import {
   MAX_DISPLAY_NAME,
   MAX_DESCRIPTION,
 } from '../../../lib/strings'
-import * as Profile from '../../../third-party/api/src/client/types/app/bsky/actor/profile'
 import {UserBanner} from '../util/UserBanner'
 import {UserAvatar} from '../util/UserAvatar'
 
@@ -36,11 +37,17 @@ export function Component({
   const [userBanner, setUserBanner] = useState<string | null>(
     profileView.userBanner,
   )
-  const [userAvatar, setUserAvatar] = useState<string | null>(
-    profileView.userAvatar,
+  const [userAvatar, setUserAvatar] = useState<string | undefined>(
+    profileView.avatar,
   )
+  const [newUserAvatar, setNewUserAvatar] = useState<PickedImage | undefined>()
   const onPressCancel = () => {
     store.shell.closeModal()
+  }
+  const onSelectNewAvatar = (img: PickedImage) => {
+    console.log(img)
+    setNewUserAvatar(img)
+    setUserAvatar(img.path)
   }
   const onPressSave = async () => {
     if (error) {
@@ -48,28 +55,26 @@ export function Component({
     }
     try {
       await profileView.updateProfile(
-        (existing?: Profile.Record): Profile.Record => {
-          if (existing) {
-            existing.displayName = displayName
-            existing.description = description
-            return existing
-          }
-          return {
-            displayName,
-            description,
-          }
+        {
+          displayName,
+          description,
         },
-        userAvatar, // TEMP
+        newUserAvatar,
         userBanner, // TEMP
       )
       Toast.show('Profile updated')
       onUpdate?.()
       store.shell.closeModal()
     } catch (e: any) {
-      console.error(e)
-      setError(
-        'Failed to save your profile. Check your internet connection and try again.',
-      )
+      if (e instanceof ComAtprotoBlobUpload.InvalidBlobError) {
+        setError(e.message)
+      } else {
+        // TODO replace when error detection is correct
+        setError(e.message)
+        // setError(
+        //   'Failed to save your profile. Check your internet connection and try again.',
+        // )
+      }
     }
   }
 
@@ -86,15 +91,15 @@ export function Component({
           <View style={styles.avi}>
             <UserAvatar
               size={80}
-              userAvatar={userAvatar}
+              avatar={userAvatar}
               handle={profileView.handle}
-              setUserAvatar={setUserAvatar}
+              onSelectNewAvatar={onSelectNewAvatar}
               displayName={profileView.displayName}
             />
           </View>
         </View>
         {error !== '' && (
-          <View style={s.mb10}>
+          <View style={{marginTop: 20}}>
             <ErrorMessage message={error} />
           </View>
         )}

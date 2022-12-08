@@ -74,6 +74,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
                 <UserAvatar
                   handle={item.handle}
                   displayName={item.displayName}
+                  avatar={item.avatar}
                   size={36}
                 />
                 <View style={[s.ml10]}>

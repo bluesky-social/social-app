@@ -6,23 +6,23 @@ import {
   openCamera,
   openCropper,
   openPicker,
+  Image as PickedImage,
 } from 'react-native-image-crop-picker'
 import {getGradient} from '../../lib/asset-gen'
 import {colors} from '../../lib/styles'
-import {IMAGES_ENABLED} from '../../../build-flags'
 
 export function UserAvatar({
   size,
   handle,
-  userAvatar,
+  avatar,
   displayName,
-  setUserAvatar,
+  onSelectNewAvatar,
 }: {
   size: number
   handle: string
   displayName: string | undefined
-  userAvatar?: string | null
-  setUserAvatar?: React.Dispatch<React.SetStateAction<string | null>>
+  avatar?: string | null
+  onSelectNewAvatar?: (img: PickedImage) => void
 }) {
   const initials = getInitials(displayName || handle)
   const gradient = getGradient(handle)
@@ -35,14 +35,12 @@ export function UserAvatar({
           openCamera({
             mediaType: 'photo',
             cropping: true,
-            width: 80,
-            height: 80,
+            width: 400,
+            height: 400,
             cropperCircleOverlay: true,
-          }).then(item => {
-            if (setUserAvatar != null) {
-              setUserAvatar(item.path)
-            }
-          })
+            forceJpg: true, // ios only
+            compressImageQuality: 0.7,
+          }).then(onSelectNewAvatar)
         },
       },
       {
@@ -54,19 +52,17 @@ export function UserAvatar({
             await openCropper({
               mediaType: 'photo',
               path: item.path,
-              width: 80,
-              height: 80,
+              width: 400,
+              height: 400,
               cropperCircleOverlay: true,
-            }).then(croppedItem => {
-              if (setUserAvatar != null) {
-                setUserAvatar(croppedItem.path)
-              }
-            })
+              forceJpg: true, // ios only
+              compressImageQuality: 0.7,
+            }).then(onSelectNewAvatar)
           })
         },
       },
     ])
-  }, [setUserAvatar])
+  }, [onSelectNewAvatar])
 
   const renderSvg = (size: number, initials: string) => (
     <Svg width={size} height={size} viewBox="0 0 100 100">
@@ -89,11 +85,14 @@ export function UserAvatar({
     </Svg>
   )
 
-  // setUserAvatar is only passed as prop on the EditProfile component
-  return setUserAvatar != null && IMAGES_ENABLED ? (
+  // onSelectNewAvatar is only passed as prop on the EditProfile component
+  return onSelectNewAvatar ? (
     <TouchableOpacity onPress={handleEditAvatar}>
-      {userAvatar ? (
-        <Image style={styles.avatarImage} source={{uri: userAvatar}} />
+      {avatar ? (
+        <Image
+          style={{width: size, height: size, borderRadius: (size / 2) | 0}}
+          source={{uri: avatar}}
+        />
       ) : (
         renderSvg(size, initials)
       )}
@@ -105,11 +104,11 @@ export function UserAvatar({
         />
       </View>
     </TouchableOpacity>
-  ) : userAvatar ? (
+  ) : avatar ? (
     <Image
-      style={styles.avatarImage}
+      style={{width: size, height: size, borderRadius: (size / 2) | 0}}
       resizeMode="stretch"
-      source={{uri: userAvatar}}
+      source={{uri: avatar}}
     />
   ) : (
     renderSvg(size, initials)

@@ -1,9 +1,9 @@
 import {makeAutoObservable} from 'mobx'
 import * as GetFollows from '../../third-party/api/src/client/types/app/bsky/graph/getFollows'
+import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
 import {RootStoreModel} from './root-store'
 
-type Subject = GetFollows.OutputSchema['subject']
-export type FollowItem = GetFollows.OutputSchema['follows'][number] & {
+export type FollowItem = GetFollows.Follow & {
   _reactKey: string
 }
 
@@ -16,10 +16,9 @@ export class UserFollowsViewModel {
   params: GetFollows.QueryParams
 
   // data
-  subject: Subject = {
+  subject: ActorRef.WithInfo = {
     did: '',
     handle: '',
-    displayName: '',
     declaration: {cid: '', actorType: ''},
   }
   follows: FollowItem[] = []
@@ -102,6 +101,7 @@ export class UserFollowsViewModel {
     this.subject.did = res.data.subject.did
     this.subject.handle = res.data.subject.handle
     this.subject.displayName = res.data.subject.displayName
+    this.subject.avatar = res.data.subject.avatar
     this.follows.length = 0
     let counter = 0
     for (const item of res.data.follows) {

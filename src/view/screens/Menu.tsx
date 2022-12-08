@@ -103,6 +103,7 @@ export const Menu = ({navIdx, visible}: ScreenParams) => {
               size={24}
               displayName={store.me.displayName}
               handle={store.me.handle}
+              avatar={store.me.avatar}
             />
           }
           label={store.me.displayName || store.me.handle}
@@ -163,6 +164,7 @@ export const Menu = ({navIdx, visible}: ScreenParams) => {
                     size={24}
                     displayName={membership.displayName}
                     handle={membership.handle}
+                    avatar={membership.avatar}
                   />
                 }
                 label={membership.displayName || membership.handle}

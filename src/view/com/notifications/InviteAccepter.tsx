@@ -26,6 +26,7 @@ export function InviteAccepter({item}: {item: NotificationsViewItemModel}) {
                 did={item.author.did}
                 handle={item.author.handle}
                 displayName={item.author.displayName}
+                avatar={item.author.avatar}
               />
             </View>
           </View>
