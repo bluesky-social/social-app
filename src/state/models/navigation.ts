@@ -12,7 +12,7 @@ function genId() {
 // until we're fully sure what that is, the tabs are being repurposed into a fixed topology
 // - Tab 0: The "Default" tab
 // - Tab 1: The "Notifications" tab
-// These tabs always retain the first 2 items in their history.
+// These tabs always retain the first item in their history.
 // The default tab is used for basically everything except notifications.
 // -prf
 export enum TabPurpose {
@@ -32,20 +32,14 @@ export type HistoryPtr = [number, number]
 export class NavigationTabModel {
   id = genId()
   history: HistoryItem[]
-  index = 1
+  index = 0
   isNewTab = false
 
   constructor(public fixedTabPurpose: TabPurpose) {
     if (fixedTabPurpose === TabPurpose.Notifs) {
-      this.history = [
-        {url: '/menu', ts: Date.now(), id: genId()},
-        {url: '/notifications', ts: Date.now(), id: genId()},
-      ]
+      this.history = [{url: '/notifications', ts: Date.now(), id: genId()}]
     } else {
-      this.history = [
-        {url: '/menu', ts: Date.now(), id: genId()},
-        {url: '/', ts: Date.now(), id: genId()},
-      ]
+      this.history = [{url: '/', ts: Date.now(), id: genId()}]
     }
     makeAutoObservable(this, {
       serialize: false,
@@ -85,7 +79,7 @@ export class NavigationTabModel {
 
   getForwardList(n: number) {
     const start = Math.min(this.index + 1, this.history.length)
-    const end = Math.min(this.index + n, this.history.length)
+    const end = Math.min(this.index + n + 1, this.history.length)
     return this.history.slice(start, end).map((item, i) => ({
       url: item.url,
       title: item.title,
@@ -109,7 +103,7 @@ export class NavigationTabModel {
         this.history.length = this.index + 1
       }
       // TEMP ensure the tab has its purpose's main view -prf
-      if (this.history.length < 2) {
+      if (this.history.length < 1) {
         const fixedUrl =
           this.fixedTabPurpose === TabPurpose.Notifs ? '/notifications' : '/'
         this.history.push({url: fixedUrl, ts: Date.now(), id: genId()})
@@ -142,17 +136,7 @@ export class NavigationTabModel {
   // a helper to bring the tab back to its base state
   // -prf
   fixedTabReset() {
-    if (this.index >= 1) {
-      // fall back in history to "main" view
-      if (this.index > 1) {
-        this.index = 1
-      }
-    } else {
-      const url =
-        this.fixedTabPurpose === TabPurpose.Notifs ? '/notifications' : '/'
-      this.history = [this.history[0], {url, ts: Date.now(), id: genId()}]
-      this.index = 1
-    }
+    this.index = 0
   }
 
   goForward() {

@@ -8,26 +8,29 @@ import {
   ViewStyle,
 } from 'react-native'
 import VersionNumber from 'react-native-version-number'
-import {s, colors} from '../lib/styles'
-import {ScreenParams} from '../routes'
-import {useStores} from '../../state'
+import {s, colors} from '../../lib/styles'
+import {useStores} from '../../../state'
 import {
   HomeIcon,
   UserGroupIcon,
   BellIcon,
   CogIcon,
   MagnifyingGlassIcon,
-} from '../lib/icons'
-import {UserAvatar} from '../com/util/UserAvatar'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {CreateSceneModel} from '../../state/models/shell-ui'
+} from '../../lib/icons'
+import {UserAvatar} from '../../com/util/UserAvatar'
+import {CreateSceneModel} from '../../../state/models/shell-ui'
 
-export const Menu = ({navIdx, visible}: ScreenParams) => {
+export const Menu = ({
+  visible,
+  onClose,
+}: {
+  visible: boolean
+  onClose: () => void
+}) => {
   const store = useStores()
 
   useEffect(() => {
     if (visible) {
-      store.nav.setTitle(navIdx, 'Menu')
       // trigger a refresh in case memberships have changed recently
       store.me.refreshMemberships()
     }
@@ -37,14 +40,18 @@ export const Menu = ({navIdx, visible}: ScreenParams) => {
   // =
 
   const onNavigate = (url: string) => {
+    onClose()
     if (url === '/notifications') {
       store.nav.switchTo(1, true)
     } else {
       store.nav.switchTo(0, true)
-      store.nav.navigate(url)
+      if (url !== '/') {
+        store.nav.navigate(url)
+      }
     }
   }
   const onPressCreateScene = () => {
+    onClose()
     store.shell.openModal(new CreateSceneModel())
   }
 
@@ -88,10 +95,8 @@ export const Menu = ({navIdx, visible}: ScreenParams) => {
     </TouchableOpacity>
   )
 
-  /*TODO <MenuItem icon={['far', 'compass']} label="Discover" url="/" />*/
   return (
     <View style={styles.view}>
-      <ViewHeader title="Bluesky" subtitle="Private Beta" />
       <TouchableOpacity
         style={styles.searchBtn}
         onPress={() => onNavigate('/search')}>

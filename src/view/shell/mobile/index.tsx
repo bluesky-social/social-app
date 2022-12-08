@@ -24,6 +24,7 @@ import {useStores} from '../../../state'
 import {NavigationModel} from '../../../state/models/navigation'
 import {match, MatchResult} from '../../routes'
 import {Login} from '../../screens/Login'
+import {Menu} from './Menu'
 import {Onboard} from '../../screens/Onboard'
 import {HorzSwipe} from '../../com/util/gestures/HorzSwipe'
 import {Modal} from '../../com/modals/Modal'
@@ -109,6 +110,7 @@ const Btn = ({
 
 export const MobileShell: React.FC = observer(() => {
   const store = useStores()
+  const [isMenuActive, setMenuActive] = useState(false)
   const [isTabsSelectorActive, setTabsSelectorActive] = useState(false)
   const scrollElRef = useRef<FlatList | undefined>()
   const winDim = useWindowDimensions()
@@ -121,6 +123,9 @@ export const MobileShell: React.FC = observer(() => {
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
 
   const onPressHome = () => {
+    if (isMenuActive) {
+      setMenuActive(false)
+    }
     if (store.nav.tab.fixedTabPurpose === 0) {
       if (store.nav.tab.current.url === '/') {
         scrollElRef.current?.scrollToOffset({offset: 0})
@@ -135,6 +140,9 @@ export const MobileShell: React.FC = observer(() => {
     }
   }
   const onPressNotifications = () => {
+    if (isMenuActive) {
+      setMenuActive(false)
+    }
     if (store.nav.tab.fixedTabPurpose === 1) {
       store.nav.tab.fixedTabReset()
     } else {
@@ -203,15 +211,44 @@ export const MobileShell: React.FC = observer(() => {
 
   // navigation swipes
   // =
+  const canSwipeLeft = store.nav.tab.canGoBack || !isMenuActive
+  const canSwipeRight = isMenuActive
   const onNavSwipeEnd = (dx: number) => {
-    if (dx < 0 && store.nav.tab.canGoBack) {
-      store.nav.tab.goBack()
+    if (dx < 0) {
+      if (store.nav.tab.canGoBack) {
+        store.nav.tab.goBack()
+      } else {
+        setMenuActive(true)
+      }
+    } else if (dx > 0) {
+      if (isMenuActive) {
+        setMenuActive(false)
+      }
     }
   }
-  const swipeTransform = {
-    transform: [
-      {translateX: Animated.multiply(swipeGestureInterp, winDim.width * -1)},
-    ],
+  const swipeTranslateX = Animated.multiply(
+    swipeGestureInterp,
+    winDim.width * -1,
+  )
+  const swipeTransform = store.nav.tab.canGoBack
+    ? {transform: [{translateX: swipeTranslateX}]}
+    : undefined
+  let menuTranslateX
+  if (isMenuActive) {
+    // menu is active, interpret swipes as closes
+    menuTranslateX = Animated.multiply(swipeGestureInterp, winDim.width * -1)
+  } else if (!store.nav.tab.canGoBack) {
+    // at back of history, interpret swipes as opens
+    menuTranslateX = Animated.subtract(
+      winDim.width * -1,
+      Animated.multiply(swipeGestureInterp, winDim.width),
+    )
+  } else {
+    // not at back of history, leave off screen
+    menuTranslateX = winDim.width * -1
+  }
+  const menuSwipeTransform = {
+    transform: [{translateX: menuTranslateX}],
   }
   const swipeOpacity = {
     opacity: swipeGestureInterp.interpolate({
@@ -219,12 +256,13 @@ export const MobileShell: React.FC = observer(() => {
       outputRange: [0, 0.6, 0],
     }),
   }
-  const tabMenuTransform = {
-    transform: [{translateY: Animated.multiply(tabMenuInterp.value, -320)}],
-  }
-  const newTabTransform = {
-    transform: [{scale: newTabInterp}],
-  }
+  // TODO
+  // const tabMenuTransform = {
+  //   transform: [{translateY: Animated.multiply(tabMenuInterp, -320)}],
+  // }
+  // const newTabTransform = {
+  //   transform: [{scale: newTabInterp}],
+  // }
 
   if (!store.session.hasSession) {
     return (
@@ -252,6 +290,7 @@ export const MobileShell: React.FC = observer(() => {
 
   const isAtHome = store.nav.tab.current.url === '/'
   const isAtNotifications = store.nav.tab.current.url === '/notifications'
+
   return (
     <View style={styles.outerContainer}>
       <SafeAreaView style={styles.innerContainer}>
@@ -260,11 +299,21 @@ export const MobileShell: React.FC = observer(() => {
           useNativeDriver
           panX={swipeGestureInterp}
           swipeEnabled
-          canSwipeLeft={store.nav.tab.canGoBack}
+          canSwipeLeft={canSwipeLeft}
+          canSwipeRight={canSwipeRight}
           onSwipeEnd={onNavSwipeEnd}>
           <ScreenContainer style={styles.screenContainer}>
             {screenRenderDesc.screens.map(
               ({Com, navIdx, params, key, current, previous}) => {
+                if (isMenuActive) {
+                  // HACK menu is active, treat current as previous
+                  if (previous) {
+                    previous = false
+                  } else if (current) {
+                    current = false
+                    previous = true
+                  }
+                }
                 return (
                   <Screen
                     key={key}
@@ -299,6 +348,9 @@ export const MobileShell: React.FC = observer(() => {
               },
             )}
           </ScreenContainer>
+          <Animated.View style={[styles.menuDrawer, menuSwipeTransform]}>
+            <Menu visible={isMenuActive} onClose={() => setMenuActive(false)} />
+          </Animated.View>
         </HorzSwipe>
       </SafeAreaView>
       {isTabsSelectorActive ? (
@@ -422,6 +474,17 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: '#000',
     opacity: 0.5,
+  },
+  menuDrawer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray2,
+    borderRightWidth: 1,
+    borderRightColor: colors.gray2,
   },
   topBarProtector: {
     position: 'absolute',
