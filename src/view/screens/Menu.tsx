@@ -37,7 +37,12 @@ export const Menu = ({navIdx, visible}: ScreenParams) => {
   // =
 
   const onNavigate = (url: string) => {
-    store.nav.navigate(url)
+    if (url === '/notifications') {
+      store.nav.switchTo(1, true)
+    } else {
+      store.nav.switchTo(0, true)
+      store.nav.navigate(url)
+    }
   }
   const onPressCreateScene = () => {
     store.shell.openModal(new CreateSceneModel())

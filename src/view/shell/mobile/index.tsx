@@ -121,13 +121,29 @@ export const MobileShell: React.FC = observer(() => {
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
 
   const onPressHome = () => {
-    if (store.nav.tab.current.url === '/') {
-      scrollElRef.current?.scrollToOffset({offset: 0})
+    if (store.nav.tab.fixedTabPurpose === 0) {
+      if (store.nav.tab.current.url === '/') {
+        scrollElRef.current?.scrollToOffset({offset: 0})
+      } else {
+        store.nav.tab.fixedTabReset()
+      }
     } else {
-      store.nav.tab.resetTo('/')
+      store.nav.switchTo(0, false)
+      if (store.nav.tab.index === 0) {
+        store.nav.tab.fixedTabReset()
+      }
     }
   }
-  const onPressNotifications = () => store.nav.tab.resetTo('/notifications')
+  const onPressNotifications = () => {
+    if (store.nav.tab.fixedTabPurpose === 1) {
+      store.nav.tab.fixedTabReset()
+    } else {
+      store.nav.switchTo(1, false)
+      if (store.nav.tab.index === 0) {
+        store.nav.tab.fixedTabReset()
+      }
+    }
+  }
   const onPressTabs = () => toggleTabsMenu(!isTabsSelectorActive)
   const doNewTab = (url: string) => () => store.nav.newTab(url)
 

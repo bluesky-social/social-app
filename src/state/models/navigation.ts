@@ -6,6 +6,20 @@ function genId() {
   return ++__id
 }
 
+// NOTE
+// this model was originally built for a freeform "tabs" concept like a browser
+// we've since decided to pause that idea and do something more traditional
+// until we're fully sure what that is, the tabs are being repurposed into a fixed topology
+// - Tab 0: The "Default" tab
+// - Tab 1: The "Notifications" tab
+// These tabs always retain the first 2 items in their history.
+// The default tab is used for basically everything except notifications.
+// -prf
+export enum TabPurpose {
+  Default = 0,
+  Notifs = 1,
+}
+
 interface HistoryItem {
   url: string
   ts: number
@@ -17,14 +31,22 @@ export type HistoryPtr = [number, number]
 
 export class NavigationTabModel {
   id = genId()
-  history: HistoryItem[] = [
-    {url: '/menu', ts: Date.now(), id: genId()},
-    {url: '/', ts: Date.now(), id: genId()},
-  ]
+  history: HistoryItem[]
   index = 1
   isNewTab = false
 
-  constructor() {
+  constructor(public fixedTabPurpose: TabPurpose) {
+    if (fixedTabPurpose === TabPurpose.Notifs) {
+      this.history = [
+        {url: '/menu', ts: Date.now(), id: genId()},
+        {url: '/notifications', ts: Date.now(), id: genId()},
+      ]
+    } else {
+      this.history = [
+        {url: '/menu', ts: Date.now(), id: genId()},
+        {url: '/', ts: Date.now(), id: genId()},
+      ]
+    }
     makeAutoObservable(this, {
       serialize: false,
       hydrate: false,
@@ -86,6 +108,12 @@ export class NavigationTabModel {
       if (this.index < this.history.length - 1) {
         this.history.length = this.index + 1
       }
+      // TEMP ensure the tab has its purpose's main view -prf
+      if (this.history.length < 2) {
+        const fixedUrl =
+          this.fixedTabPurpose === TabPurpose.Notifs ? '/notifications' : '/'
+        this.history.push({url: fixedUrl, ts: Date.now(), id: genId()})
+      }
       this.history.push({url, title, ts: Date.now(), id: genId()})
       this.index = this.history.length - 1
     }
@@ -110,14 +138,19 @@ export class NavigationTabModel {
     }
   }
 
-  resetTo(path: string) {
-    if (this.index >= 1 && this.history[1]?.url === path) {
-      // fall back in history to target
+  // TEMP
+  // a helper to bring the tab back to its base state
+  // -prf
+  fixedTabReset() {
+    if (this.index >= 1) {
+      // fall back in history to "main" view
       if (this.index > 1) {
         this.index = 1
       }
     } else {
-      this.history = [this.history[0], {url: path, ts: Date.now(), id: genId()}]
+      const url =
+        this.fixedTabPurpose === TabPurpose.Notifs ? '/notifications' : '/'
+      this.history = [this.history[0], {url, ts: Date.now(), id: genId()}]
       this.index = 1
     }
   }
@@ -192,7 +225,10 @@ export class NavigationTabModel {
 }
 
 export class NavigationModel {
-  tabs: NavigationTabModel[] = [new NavigationTabModel()]
+  tabs: NavigationTabModel[] = [
+    new NavigationTabModel(TabPurpose.Default),
+    new NavigationTabModel(TabPurpose.Notifs),
+  ]
   tabIndex = 0
 
   constructor() {
@@ -203,7 +239,10 @@ export class NavigationModel {
   }
 
   clear() {
-    this.tabs = [new NavigationTabModel()]
+    this.tabs = [
+      new NavigationTabModel(TabPurpose.Default),
+      new NavigationTabModel(TabPurpose.Notifs),
+    ]
     this.tabIndex = 0
   }
 
@@ -258,11 +297,25 @@ export class NavigationModel {
   // tab management
   // =
 
+  // TEMP
+  // fixed tab helper function
+  // -prf
+  switchTo(purpose: TabPurpose, reset: boolean) {
+    if (purpose === TabPurpose.Notifs) {
+      this.tabIndex = 1
+    } else {
+      this.tabIndex = 0
+    }
+    if (reset) {
+      this.tab.fixedTabReset()
+    }
+  }
+
   newTab(url: string, title?: string) {
     if (!TABS_ENABLED) {
       return this.navigate(url)
     }
-    const tab = new NavigationTabModel()
+    const tab = new NavigationTabModel(TabPurpose.Default)
     tab.navigate(url, title)
     tab.isNewTab = true
     this.tabs.push(tab)
