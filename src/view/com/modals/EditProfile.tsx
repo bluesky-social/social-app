@@ -1,7 +1,13 @@
 import React, {useState} from 'react'
 import {ComAtprotoBlobUpload} from '../../../third-party/api/index'
 import * as Toast from '../util/Toast'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {Image as PickedImage} from 'react-native-image-crop-picker'
@@ -28,6 +34,7 @@ export function Component({
 }) {
   const store = useStores()
   const [error, setError] = useState<string>('')
+  const [isProcessing, setProcessing] = useState<boolean>(false)
   const [displayName, setDisplayName] = useState<string>(
     profileView.displayName || '',
   )
@@ -50,6 +57,7 @@ export function Component({
     setUserAvatar(img.path)
   }
   const onPressSave = async () => {
+    setProcessing(true)
     if (error) {
       setError('')
     }
@@ -76,6 +84,7 @@ export function Component({
         // )
       }
     }
+    setProcessing(false)
   }
 
   return (
@@ -122,15 +131,21 @@ export function Component({
             onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
           />
         </View>
-        <TouchableOpacity style={s.mt10} onPress={onPressSave}>
-          <LinearGradient
-            colors={[gradients.primary.start, gradients.primary.end]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
-            style={[styles.btn]}>
-            <Text style={[s.white, s.bold]}>Save Changes</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+        {isProcessing ? (
+          <View style={[styles.btn, s.mt10, {backgroundColor: colors.gray2}]}>
+            <ActivityIndicator />
+          </View>
+        ) : (
+          <TouchableOpacity style={s.mt10} onPress={onPressSave}>
+            <LinearGradient
+              colors={[gradients.primary.start, gradients.primary.end]}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 1}}
+              style={[styles.btn]}>
+              <Text style={[s.white, s.bold]}>Save Changes</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity style={s.mt5} onPress={onPressCancel}>
           <View style={[styles.btn]}>
             <Text style={[s.black, s.bold]}>Cancel</Text>
