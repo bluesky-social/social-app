@@ -110,7 +110,6 @@ const Btn = ({
 
 export const MobileShell: React.FC = observer(() => {
   const store = useStores()
-  const [isMenuActive, setMenuActive] = useState(false)
   const [isTabsSelectorActive, setTabsSelectorActive] = useState(false)
   const scrollElRef = useRef<FlatList | undefined>()
   const winDim = useWindowDimensions()
@@ -123,8 +122,8 @@ export const MobileShell: React.FC = observer(() => {
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
 
   const onPressHome = () => {
-    if (isMenuActive) {
-      setMenuActive(false)
+    if (store.shell.isMainMenuOpen) {
+      store.shell.setMainMenuOpen(false)
     }
     if (store.nav.tab.fixedTabPurpose === 0) {
       if (store.nav.tab.current.url === '/') {
@@ -140,8 +139,8 @@ export const MobileShell: React.FC = observer(() => {
     }
   }
   const onPressNotifications = () => {
-    if (isMenuActive) {
-      setMenuActive(false)
+    if (store.shell.isMainMenuOpen) {
+      store.shell.setMainMenuOpen(false)
     }
     if (store.nav.tab.fixedTabPurpose === 1) {
       store.nav.tab.fixedTabReset()
@@ -211,6 +210,7 @@ export const MobileShell: React.FC = observer(() => {
 
   // navigation swipes
   // =
+  const isMenuActive = store.shell.isMainMenuOpen
   const canSwipeLeft = store.nav.tab.canGoBack || !isMenuActive
   const canSwipeRight = isMenuActive
   const onNavSwipeEnd = (dx: number) => {
@@ -218,11 +218,11 @@ export const MobileShell: React.FC = observer(() => {
       if (store.nav.tab.canGoBack) {
         store.nav.tab.goBack()
       } else {
-        setMenuActive(true)
+        store.shell.setMainMenuOpen(true)
       }
     } else if (dx > 0) {
       if (isMenuActive) {
-        setMenuActive(false)
+        store.shell.setMainMenuOpen(false)
       }
     }
   }
@@ -349,7 +349,10 @@ export const MobileShell: React.FC = observer(() => {
             )}
           </ScreenContainer>
           <Animated.View style={[styles.menuDrawer, menuSwipeTransform]}>
-            <Menu visible={isMenuActive} onClose={() => setMenuActive(false)} />
+            <Menu
+              visible={isMenuActive}
+              onClose={() => store.shell.setMainMenuOpen(false)}
+            />
           </Animated.View>
         </HorzSwipe>
       </SafeAreaView>

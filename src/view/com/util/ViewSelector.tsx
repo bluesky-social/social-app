@@ -44,9 +44,6 @@ export function ViewSelector({
   }
   const onPressSelection = (index: number) => setSelectedIndex(index)
   useEffect(() => {
-    store.shell.setViewControllingSwipes(
-      Boolean(swipeEnabled) && selectedIndex > 0,
-    )
     onSelectView?.(selectedIndex)
   }, [selectedIndex])
 
