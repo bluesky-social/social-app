@@ -28,6 +28,9 @@ export const ViewHeader = observer(function ViewHeader({
   const onPressBack = () => {
     store.nav.tab.goBack()
   }
+  const onPressMenu = () => {
+    store.shell.setMainMenuOpen(true)
+  }
   const onPressCompose = () => {
     store.shell.openComposer({onPost})
   }
@@ -40,21 +43,20 @@ export const ViewHeader = observer(function ViewHeader({
       console.log(e)
     })
   }
+  const canGoBack = store.nav.tab.canGoBack
   return (
     <>
       <View style={styles.header}>
-        {store.nav.tab.canGoBack ? (
-          <TouchableOpacity
-            onPress={onPressBack}
-            hitSlop={BACK_HITSLOP}
-            style={styles.backIcon}>
-            <FontAwesomeIcon
-              size={18}
-              icon="angle-left"
-              style={{marginTop: 6}}
-            />
-          </TouchableOpacity>
-        ) : undefined}
+        <TouchableOpacity
+          onPress={canGoBack ? onPressBack : onPressMenu}
+          hitSlop={BACK_HITSLOP}
+          style={styles.backIcon}>
+          <FontAwesomeIcon
+            size={18}
+            icon={canGoBack ? 'angle-left' : 'bars'}
+            style={{marginTop: 6}}
+          />
+        </TouchableOpacity>
         <View style={styles.titleContainer} pointerEvents="none">
           <Text style={styles.title}>{title}</Text>
           {subtitle ? (
