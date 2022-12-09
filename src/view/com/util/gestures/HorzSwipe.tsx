@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
   Animated,
   GestureResponderEvent,
@@ -19,6 +19,7 @@ interface Props {
   distThresholdDivisor?: number
   useNativeDriver?: boolean
   onSwipeStart?: () => void
+  onSwipeStartDirection?: (dx: number) => void
   onSwipeEnd?: (dx: number) => void
   children: React.ReactNode
 }
@@ -32,10 +33,12 @@ export function HorzSwipe({
   distThresholdDivisor = 1.75,
   useNativeDriver = false,
   onSwipeStart,
+  onSwipeStartDirection,
   onSwipeEnd,
   children,
 }: Props) {
   const winDim = useWindowDimensions()
+  const [dir, setDir] = useState<number>(0)
 
   const swipeVelocityThreshold = 35
   const swipeDistanceThreshold = winDim.width / distThresholdDivisor
@@ -66,6 +69,7 @@ export function HorzSwipe({
   }
 
   const startGesture = () => {
+    setDir(0)
     onSwipeStart?.()
 
     // TODO
@@ -94,6 +98,12 @@ export function HorzSwipe({
     }
 
     panX.setValue(clamp(diffX / swipeDistanceThreshold, -1, 1) * -1)
+
+    const newDir = diffX > 0 ? -1 : diffX < 0 ? 1 : 0
+    if (newDir !== dir) {
+      setDir(newDir)
+      onSwipeStartDirection?.(newDir)
+    }
   }
 
   const finishGesture = (

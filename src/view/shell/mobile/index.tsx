@@ -113,6 +113,7 @@ export const MobileShell: React.FC = observer(() => {
   const [isTabsSelectorActive, setTabsSelectorActive] = useState(false)
   const scrollElRef = useRef<FlatList | undefined>()
   const winDim = useWindowDimensions()
+  const [menuSwipingDirection, setMenuSwipingDirection] = useState(0)
   const swipeGestureInterp = useAnimatedValue(0)
   const tabMenuInterp = useAnimatedValue(0)
   const newTabInterp = useAnimatedValue(0)
@@ -213,6 +214,15 @@ export const MobileShell: React.FC = observer(() => {
   const isMenuActive = store.shell.isMainMenuOpen
   const canSwipeLeft = store.nav.tab.canGoBack || !isMenuActive
   const canSwipeRight = isMenuActive
+  const onNavSwipeStartDirection = (dx: number) => {
+    if (dx < 0 && !store.nav.tab.canGoBack) {
+      setMenuSwipingDirection(dx)
+    } else if (dx > 0 && isMenuActive) {
+      setMenuSwipingDirection(dx)
+    } else {
+      setMenuSwipingDirection(0)
+    }
+  }
   const onNavSwipeEnd = (dx: number) => {
     if (dx < 0) {
       if (store.nav.tab.canGoBack) {
@@ -225,6 +235,7 @@ export const MobileShell: React.FC = observer(() => {
         store.shell.setMainMenuOpen(false)
       }
     }
+    setMenuSwipingDirection(0)
   }
   const swipeTranslateX = Animated.multiply(
     swipeGestureInterp,
@@ -256,6 +267,15 @@ export const MobileShell: React.FC = observer(() => {
       outputRange: [0, 0.6, 0],
     }),
   }
+  const menuSwipeOpacity =
+    menuSwipingDirection !== 0
+      ? {
+          opacity: swipeGestureInterp.interpolate({
+            inputRange: menuSwipingDirection > 0 ? [0, 1] : [-1, 0],
+            outputRange: [0.6, 0],
+          }),
+        }
+      : undefined
   // TODO
   // const tabMenuTransform = {
   //   transform: [{translateY: Animated.multiply(tabMenuInterp, -320)}],
@@ -301,6 +321,7 @@ export const MobileShell: React.FC = observer(() => {
           swipeEnabled
           canSwipeLeft={canSwipeLeft}
           canSwipeRight={canSwipeRight}
+          onSwipeStartDirection={onNavSwipeStartDirection}
           onSwipeEnd={onNavSwipeEnd}>
           <ScreenContainer style={styles.screenContainer}>
             {screenRenderDesc.screens.map(
@@ -348,6 +369,9 @@ export const MobileShell: React.FC = observer(() => {
               },
             )}
           </ScreenContainer>
+          {menuSwipingDirection !== 0 ? (
+            <Animated.View style={[styles.screenMask, menuSwipeOpacity]} />
+          ) : undefined}
           <Animated.View style={[styles.menuDrawer, menuSwipeTransform]}>
             <Menu
               visible={isMenuActive}
@@ -484,10 +508,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    borderTopWidth: 1,
-    borderTopColor: colors.gray2,
-    borderRightWidth: 1,
-    borderRightColor: colors.gray2,
   },
   topBarProtector: {
     position: 'absolute',
