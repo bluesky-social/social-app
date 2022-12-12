@@ -100,13 +100,15 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   let items: any[] = []
   if (uiState) {
     if (uiState.isInitialLoading) {
-      items.push(LOADING_ITEM)
+      items = items.concat([LOADING_ITEM])
       renderItem = () => <PostFeedLoadingPlaceholder />
     } else if (uiState.currentView.hasError) {
-      items.push({
-        _reactKey: '__error__',
-        error: uiState.currentView.error,
-      })
+      items = items.concat([
+        {
+          _reactKey: '__error__',
+          error: uiState.currentView.error,
+        },
+      ])
       renderItem = (item: any) => (
         <View style={s.p5}>
           <ErrorMessage
@@ -129,7 +131,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
             items = uiState.feed.feed.slice()
           }
           if (!uiState.feed.hasMore) {
-            items.push(END_ITEM)
+            items = items.concat([END_ITEM])
           }
           renderItem = (item: any) => {
             if (item === END_ITEM) {
@@ -138,7 +140,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
             return <FeedItem item={item} />
           }
         } else if (uiState.feed.isEmpty) {
-          items.push(EMPTY_ITEM)
+          items = items.concat([EMPTY_ITEM])
           if (uiState.profile.isScene) {
             renderItem = () => (
               <EmptyState
@@ -170,7 +172,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
             )
           }
         } else if (uiState.memberships.isEmpty) {
-          items.push(EMPTY_ITEM)
+          items = items.concat([EMPTY_ITEM])
           renderItem = () => (
             <EmptyState
               icon="user-group"
@@ -207,7 +209,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
             )
           }
         } else if (uiState.members.isEmpty) {
-          items.push(EMPTY_ITEM)
+          items = items.concat([EMPTY_ITEM])
           renderItem = () => (
             <EmptyState
               icon="user-group"
@@ -216,7 +218,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
           )
         }
       } else {
-        items.push(EMPTY_ITEM)
+        items = items.concat([EMPTY_ITEM])
         renderItem = () => <Text>TODO</Text>
       }
     }
