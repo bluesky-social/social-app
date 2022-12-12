@@ -48,8 +48,8 @@ export function HorzSwipe({
     gestureState: PanResponderGestureState,
   ) => {
     return (
-      Math.abs(gestureState.dx) > Math.abs(gestureState.dy * 1.5) &&
-      Math.abs(gestureState.vx) > Math.abs(gestureState.vy * 1.5)
+      Math.abs(gestureState.dx) > Math.abs(gestureState.dy * 1.25) &&
+      Math.abs(gestureState.vx) > Math.abs(gestureState.vy * 1.25)
     )
   }
 
@@ -113,7 +113,7 @@ export function HorzSwipe({
     if (
       Math.abs(gestureState.dx) > Math.abs(gestureState.dy) &&
       Math.abs(gestureState.vx) > Math.abs(gestureState.vy) &&
-      (Math.abs(gestureState.dx) > swipeDistanceThreshold / 3 ||
+      (Math.abs(gestureState.dx) > swipeDistanceThreshold / 4 ||
         Math.abs(gestureState.vx) > swipeVelocityThreshold)
     ) {
       const final = ((gestureState.dx / Math.abs(gestureState.dx)) * -1) | 0
