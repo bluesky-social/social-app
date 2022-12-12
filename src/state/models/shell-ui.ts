@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 import {ProfileViewModel} from './profile-view'
 
-export class ConfirmModel {
+export class ConfirmModal {
   name = 'confirm'
 
   constructor(
@@ -13,7 +13,7 @@ export class ConfirmModel {
   }
 }
 
-export class EditProfileModel {
+export class EditProfileModal {
   name = 'edit-profile'
 
   constructor(
@@ -24,7 +24,7 @@ export class EditProfileModel {
   }
 }
 
-export class CreateSceneModel {
+export class CreateSceneModal {
   name = 'create-scene'
 
   constructor() {
@@ -32,7 +32,7 @@ export class CreateSceneModel {
   }
 }
 
-export class InviteToSceneModel {
+export class InviteToSceneModal {
   name = 'invite-to-scene'
 
   constructor(public profileView: ProfileViewModel) {
@@ -40,13 +40,20 @@ export class InviteToSceneModel {
   }
 }
 
-export class ServerInputModel {
+export class ServerInputModal {
   name = 'server-input'
 
   constructor(
     public initialService: string,
     public onSelect: (url: string) => void,
   ) {
+    makeAutoObservable(this)
+  }
+}
+
+export class ProfileImageLightbox {
+  name = 'profile-image'
+  constructor(public profileView: ProfileViewModel) {
     makeAutoObservable(this)
   }
 }
@@ -70,11 +77,13 @@ export class ShellUiModel {
   isMainMenuOpen = false
   isModalActive = false
   activeModal:
-    | ConfirmModel
-    | EditProfileModel
-    | CreateSceneModel
-    | ServerInputModel
+    | ConfirmModal
+    | EditProfileModal
+    | CreateSceneModal
+    | ServerInputModal
     | undefined
+  isLightboxActive = false
+  activeLightbox: ProfileImageLightbox | undefined
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
 
@@ -88,10 +97,10 @@ export class ShellUiModel {
 
   openModal(
     modal:
-      | ConfirmModel
-      | EditProfileModel
-      | CreateSceneModel
-      | ServerInputModel,
+      | ConfirmModal
+      | EditProfileModal
+      | CreateSceneModal
+      | ServerInputModal,
   ) {
     this.isModalActive = true
     this.activeModal = modal
@@ -100,6 +109,16 @@ export class ShellUiModel {
   closeModal() {
     this.isModalActive = false
     this.activeModal = undefined
+  }
+
+  openLightbox(lightbox: ProfileImageLightbox) {
+    this.isLightboxActive = true
+    this.activeLightbox = lightbox
+  }
+
+  closeLightbox() {
+    this.isLightboxActive = false
+    this.activeLightbox = undefined
   }
 
   openComposer(opts: ComposerOpts) {

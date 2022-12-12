@@ -24,7 +24,7 @@ import {
 } from '../../lib/strings'
 import {useStores, DEFAULT_SERVICE} from '../../state'
 import {ServiceDescription} from '../../state/models/session'
-import {ServerInputModel} from '../../state/models/shell-ui'
+import {ServerInputModal} from '../../state/models/shell-ui'
 import {ComAtprotoAccountCreate} from '../../third-party/api/index'
 import {isNetworkError} from '../../lib/errors'
 
@@ -149,7 +149,7 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   }, [serviceUrl])
 
   const onPressSelectService = () => {
-    store.shell.openModal(new ServerInputModel(serviceUrl, setServiceUrl))
+    store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
   }
 
   const onPressNext = async () => {
@@ -309,7 +309,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   }, [serviceUrl])
 
   const onPressSelectService = () => {
-    store.shell.openModal(new ServerInputModel(serviceUrl, setServiceUrl))
+    store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
   }
 
   const onPressNext = async () => {

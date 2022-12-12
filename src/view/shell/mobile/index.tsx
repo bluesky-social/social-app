@@ -28,6 +28,7 @@ import {Menu} from './Menu'
 import {Onboard} from '../../screens/Onboard'
 import {HorzSwipe} from '../../com/util/gestures/HorzSwipe'
 import {Modal} from '../../com/modals/Modal'
+import {Lightbox} from '../../com/lightbox/Lightbox'
 import {TabsSelector} from './TabsSelector'
 import {Composer} from './Composer'
 import {s, colors} from '../../lib/styles'
@@ -420,6 +421,7 @@ export const MobileShell: React.FC = observer(() => {
         />
       </View>
       <Modal />
+      <Lightbox />
       <Composer
         active={store.shell.isComposerActive}
         onClose={() => store.shell.closeComposer()}

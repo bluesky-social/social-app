@@ -7,7 +7,7 @@ import {ScreenParams} from '../routes'
 import {ProfileUiModel, Sections} from '../../state/models/profile-ui'
 import {MembershipItem} from '../../state/models/memberships-view'
 import {useStores} from '../../state'
-import {ConfirmModel} from '../../state/models/shell-ui'
+import {ConfirmModal} from '../../state/models/shell-ui'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedItem} from '../com/posts/FeedItem'
 import {ProfileCard} from '../com/profile/ProfileCard'
@@ -73,7 +73,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   }
   const onPressRemoveMember = (membership: MembershipItem) => {
     store.shell.openModal(
-      new ConfirmModel(
+      new ConfirmModal(
         `Remove ${membership.displayName || membership.handle}?`,
         `You'll be able to invite them again if you change your mind.`,
         async () => {
