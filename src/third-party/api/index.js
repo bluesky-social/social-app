@@ -2161,12 +2161,12 @@ var ZodTuple = class extends ZodType {
     });
   }
 };
-ZodTuple.create = (schemas, params2) => {
-  if (!Array.isArray(schemas)) {
+ZodTuple.create = (schemas2, params2) => {
+  if (!Array.isArray(schemas2)) {
     throw new Error("You must pass an array of schemas to z.tuple([ ... ])");
   }
   return new ZodTuple({
-    items: schemas,
+    items: schemas2,
     typeName: ZodFirstPartyTypeKind.ZodTuple,
     rest: null,
     ...processCreateParams(params2)
@@ -4198,8 +4198,8 @@ function isErrorResponseBody(v) {
 var defaultInst = new Client();
 
 // src/client/lexicons.ts
-var lexicons = [
-  {
+var schemaDict = {
+  ComAtprotoAccountCreate: {
     lexicon: 1,
     id: "com.atproto.account.create",
     defs: {
@@ -4268,7 +4268,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoAccountCreateInviteCode: {
     lexicon: 1,
     id: "com.atproto.account.createInviteCode",
     defs: {
@@ -4302,7 +4302,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoAccountDelete: {
     lexicon: 1,
     id: "com.atproto.account.delete",
     defs: {
@@ -4312,7 +4312,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoAccountGet: {
     lexicon: 1,
     id: "com.atproto.account.get",
     defs: {
@@ -4322,7 +4322,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoAccountRequestPasswordReset: {
     lexicon: 1,
     id: "com.atproto.account.requestPasswordReset",
     defs: {
@@ -4344,7 +4344,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoAccountResetPassword: {
     lexicon: 1,
     id: "com.atproto.account.resetPassword",
     defs: {
@@ -4377,7 +4377,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoBlobUpload: {
     lexicon: 1,
     id: "com.atproto.blob.upload",
     defs: {
@@ -4398,16 +4398,11 @@ var lexicons = [
               }
             }
           }
-        },
-        errors: [
-          {
-            name: "InvalidBlob"
-          }
-        ]
+        }
       }
     }
   },
-  {
+  ComAtprotoHandleResolve: {
     lexicon: 1,
     id: "com.atproto.handle.resolve",
     defs: {
@@ -4438,7 +4433,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoRepoBatchWrite: {
     lexicon: 1,
     id: "com.atproto.repo.batchWrite",
     defs: {
@@ -4532,7 +4527,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoRepoCreateRecord: {
     lexicon: 1,
     id: "com.atproto.repo.createRecord",
     defs: {
@@ -4583,7 +4578,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoRepoDeleteRecord: {
     lexicon: 1,
     id: "com.atproto.repo.deleteRecord",
     defs: {
@@ -4614,7 +4609,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoRepoDescribe: {
     lexicon: 1,
     id: "com.atproto.repo.describe",
     defs: {
@@ -4667,7 +4662,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoRepoGetRecord: {
     lexicon: 1,
     id: "com.atproto.repo.getRecord",
     defs: {
@@ -4717,7 +4712,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoRepoListRecords: {
     lexicon: 1,
     id: "com.atproto.repo.listRecords",
     defs: {
@@ -4794,7 +4789,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoRepoPutRecord: {
     lexicon: 1,
     id: "com.atproto.repo.putRecord",
     defs: {
@@ -4849,7 +4844,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoRepoStrongRef: {
     lexicon: 1,
     id: "com.atproto.repo.strongRef",
     description: "A URI with a content-hash fingerprint.",
@@ -4868,7 +4863,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoServerGetAccountsConfig: {
     lexicon: 1,
     id: "com.atproto.server.getAccountsConfig",
     defs: {
@@ -4911,7 +4906,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoSessionCreate: {
     lexicon: 1,
     id: "com.atproto.session.create",
     defs: {
@@ -4957,7 +4952,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoSessionDelete: {
     lexicon: 1,
     id: "com.atproto.session.delete",
     defs: {
@@ -4967,7 +4962,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoSessionGet: {
     lexicon: 1,
     id: "com.atproto.session.get",
     defs: {
@@ -4992,7 +4987,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoSessionRefresh: {
     lexicon: 1,
     id: "com.atproto.session.refresh",
     defs: {
@@ -5023,7 +5018,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoSyncGetRepo: {
     lexicon: 1,
     id: "com.atproto.sync.getRepo",
     defs: {
@@ -5050,7 +5045,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoSyncGetRoot: {
     lexicon: 1,
     id: "com.atproto.sync.getRoot",
     defs: {
@@ -5082,7 +5077,7 @@ var lexicons = [
       }
     }
   },
-  {
+  ComAtprotoSyncUpdateRepo: {
     lexicon: 1,
     id: "com.atproto.sync.updateRepo",
     defs: {
@@ -5105,7 +5100,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyActorCreateScene: {
     lexicon: 1,
     id: "app.bsky.actor.createScene",
     defs: {
@@ -5157,7 +5152,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyActorGetProfile: {
     lexicon: 1,
     id: "app.bsky.actor.getProfile",
     defs: {
@@ -5211,6 +5206,9 @@ var lexicons = [
               avatar: {
                 type: "string"
               },
+              banner: {
+                type: "string"
+              },
               followersCount: {
                 type: "integer"
               },
@@ -5244,7 +5242,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyActorGetSuggestions: {
     lexicon: 1,
     id: "app.bsky.actor.getSuggestions",
     defs: {
@@ -5328,7 +5326,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyActorProfile: {
     lexicon: 1,
     id: "app.bsky.actor.profile",
     defs: {
@@ -5353,13 +5351,20 @@ var lexicons = [
               maxWidth: 500,
               maxHeight: 500,
               maxSize: 3e5
+            },
+            banner: {
+              type: "image",
+              accept: ["image/png", "image/jpeg"],
+              maxWidth: 1500,
+              maxHeight: 500,
+              maxSize: 5e5
             }
           }
         }
       }
     }
   },
-  {
+  AppBskyActorRef: {
     lexicon: 1,
     id: "app.bsky.actor.ref",
     description: "A reference to an actor in the network.",
@@ -5401,7 +5406,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyActorSearch: {
     lexicon: 1,
     id: "app.bsky.actor.search",
     defs: {
@@ -5477,7 +5482,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyActorSearchTypeahead: {
     lexicon: 1,
     id: "app.bsky.actor.searchTypeahead",
     defs: {
@@ -5541,7 +5546,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyActorUpdateProfile: {
     lexicon: 1,
     id: "app.bsky.actor.updateProfile",
     defs: {
@@ -5570,6 +5575,13 @@ var lexicons = [
                 maxWidth: 500,
                 maxHeight: 500,
                 maxSize: 1e5
+              },
+              banner: {
+                type: "image",
+                accept: ["image/png", "image/jpeg"],
+                maxWidth: 1500,
+                maxHeight: 500,
+                maxSize: 5e5
               }
             }
           }
@@ -5591,11 +5603,25 @@ var lexicons = [
               }
             }
           }
-        }
+        },
+        errors: [
+          {
+            name: "InvalidBlob"
+          },
+          {
+            name: "BlobTooLarge"
+          },
+          {
+            name: "InvalidMimeType"
+          },
+          {
+            name: "InvalidImageDimensions"
+          }
+        ]
       }
     }
   },
-  {
+  AppBskyFeedEmbed: {
     lexicon: 1,
     id: "app.bsky.feed.embed",
     description: "Content embedded in other content, such as an image or link embedded in a post.",
@@ -5674,7 +5700,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyFeedGetAuthorFeed: {
     lexicon: 1,
     id: "app.bsky.feed.getAuthorFeed",
     defs: {
@@ -5795,7 +5821,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyFeedGetPostThread: {
     lexicon: 1,
     id: "app.bsky.feed.getPostThread",
     defs: {
@@ -5933,7 +5959,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyFeedGetRepostedBy: {
     lexicon: 1,
     id: "app.bsky.feed.getRepostedBy",
     defs: {
@@ -6017,7 +6043,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyFeedGetTimeline: {
     lexicon: 1,
     id: "app.bsky.feed.getTimeline",
     defs: {
@@ -6137,7 +6163,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyFeedGetVotes: {
     lexicon: 1,
     id: "app.bsky.feed.getVotes",
     defs: {
@@ -6216,7 +6242,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyFeedPost: {
     lexicon: 1,
     id: "app.bsky.feed.post",
     defs: {
@@ -6295,7 +6321,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyFeedRepost: {
     lexicon: 1,
     id: "app.bsky.feed.repost",
     defs: {
@@ -6318,7 +6344,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyFeedSetVote: {
     lexicon: 1,
     id: "app.bsky.feed.setVote",
     defs: {
@@ -6359,7 +6385,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyFeedTrend: {
     lexicon: 1,
     id: "app.bsky.feed.trend",
     defs: {
@@ -6382,7 +6408,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyFeedVote: {
     lexicon: 1,
     id: "app.bsky.feed.vote",
     defs: {
@@ -6409,7 +6435,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyGraphAssertCreator: {
     lexicon: 1,
     id: "app.bsky.graph.assertCreator",
     defs: {
@@ -6419,7 +6445,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyGraphAssertMember: {
     lexicon: 1,
     id: "app.bsky.graph.assertMember",
     defs: {
@@ -6429,7 +6455,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyGraphAssertion: {
     lexicon: 1,
     id: "app.bsky.graph.assertion",
     defs: {
@@ -6455,7 +6481,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyGraphConfirmation: {
     lexicon: 1,
     id: "app.bsky.graph.confirmation",
     defs: {
@@ -6482,7 +6508,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyGraphFollow: {
     lexicon: 1,
     id: "app.bsky.graph.follow",
     defs: {
@@ -6506,7 +6532,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyGraphGetAssertions: {
     lexicon: 1,
     id: "app.bsky.graph.getAssertions",
     defs: {
@@ -6620,7 +6646,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyGraphGetFollowers: {
     lexicon: 1,
     id: "app.bsky.graph.getFollowers",
     defs: {
@@ -6700,7 +6726,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyGraphGetFollows: {
     lexicon: 1,
     id: "app.bsky.graph.getFollows",
     defs: {
@@ -6777,7 +6803,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyGraphGetMembers: {
     lexicon: 1,
     id: "app.bsky.graph.getMembers",
     defs: {
@@ -6854,7 +6880,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyGraphGetMemberships: {
     lexicon: 1,
     id: "app.bsky.graph.getMemberships",
     defs: {
@@ -6931,7 +6957,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyNotificationGetCount: {
     lexicon: 1,
     id: "app.bsky.notification.getCount",
     defs: {
@@ -6952,7 +6978,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyNotificationList: {
     lexicon: 1,
     id: "app.bsky.notification.list",
     defs: {
@@ -7043,7 +7069,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskyNotificationUpdateSeen: {
     lexicon: 1,
     id: "app.bsky.notification.updateSeen",
     defs: {
@@ -7065,7 +7091,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskySystemActorScene: {
     lexicon: 1,
     id: "app.bsky.system.actorScene",
     defs: {
@@ -7075,7 +7101,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskySystemActorUser: {
     lexicon: 1,
     id: "app.bsky.system.actorUser",
     defs: {
@@ -7085,7 +7111,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskySystemDeclRef: {
     lexicon: 1,
     id: "app.bsky.system.declRef",
     defs: {
@@ -7108,7 +7134,7 @@ var lexicons = [
       }
     }
   },
-  {
+  AppBskySystemDeclaration: {
     lexicon: 1,
     id: "app.bsky.system.declaration",
     defs: {
@@ -7132,7 +7158,9 @@ var lexicons = [
       }
     }
   }
-];
+};
+var schemas = Object.values(schemaDict);
+var lexicons = new Lexicons(schemas);
 
 // src/client/types/com/atproto/account/create.ts
 var create_exports = {};
@@ -7251,18 +7279,10 @@ function toKnownErr6(e) {
 // src/client/types/com/atproto/blob/upload.ts
 var upload_exports = {};
 __export(upload_exports, {
-  InvalidBlobError: () => InvalidBlobError,
   toKnownErr: () => toKnownErr7
 });
-var InvalidBlobError = class extends XRPCError {
-  constructor(src) {
-    super(src.status, src.error, src.message);
-  }
-};
 function toKnownErr7(e) {
   if (e instanceof XRPCError) {
-    if (e.error === "InvalidBlob")
-      return new InvalidBlobError(e);
   }
   return e;
 }
@@ -7517,10 +7537,42 @@ function toKnownErr28(e) {
 // src/client/types/app/bsky/actor/updateProfile.ts
 var updateProfile_exports = {};
 __export(updateProfile_exports, {
+  BlobTooLargeError: () => BlobTooLargeError,
+  InvalidBlobError: () => InvalidBlobError,
+  InvalidImageDimensionsError: () => InvalidImageDimensionsError,
+  InvalidMimeTypeError: () => InvalidMimeTypeError,
   toKnownErr: () => toKnownErr29
 });
+var InvalidBlobError = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
+var BlobTooLargeError = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
+var InvalidMimeTypeError = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
+var InvalidImageDimensionsError = class extends XRPCError {
+  constructor(src) {
+    super(src.status, src.error, src.message);
+  }
+};
 function toKnownErr29(e) {
   if (e instanceof XRPCError) {
+    if (e.error === "InvalidBlob")
+      return new InvalidBlobError(e);
+    if (e.error === "BlobTooLarge")
+      return new BlobTooLargeError(e);
+    if (e.error === "InvalidMimeType")
+      return new InvalidMimeTypeError(e);
+    if (e.error === "InvalidImageDimensions")
+      return new InvalidImageDimensionsError(e);
   }
   return e;
 }
@@ -7766,7 +7818,7 @@ var APP_BSKY_SYSTEM = {
 var Client2 = class {
   constructor() {
     this.xrpc = new Client();
-    this.xrpc.addLexicons(lexicons);
+    this.xrpc.addLexicons(schemas);
   }
   service(serviceUri) {
     return new ServiceClient2(this, this.xrpc.service(serviceUri));

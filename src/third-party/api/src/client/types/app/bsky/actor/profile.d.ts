@@ -6,5 +6,10 @@ export interface Record {
         mimeType: string;
         [k: string]: unknown;
     };
+    banner?: {
+        cid: string;
+        mimeType: string;
+        [k: string]: unknown;
+    };
     [k: string]: unknown;
 }
