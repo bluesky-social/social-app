@@ -41,12 +41,13 @@ export function Component({
   const [description, setDescription] = useState<string>(
     profileView.description || '',
   )
-  const [userBanner, setUserBanner] = useState<string | null>(
-    profileView.userBanner,
+  const [userBanner, setUserBanner] = useState<string | undefined>(
+    profileView.banner,
   )
   const [userAvatar, setUserAvatar] = useState<string | undefined>(
     profileView.avatar,
   )
+  const [newUserBanner, setNewUserBanner] = useState<PickedImage | undefined>()
   const [newUserAvatar, setNewUserAvatar] = useState<PickedImage | undefined>()
   const onPressCancel = () => {
     store.shell.closeModal()
@@ -54,6 +55,10 @@ export function Component({
   const onSelectNewAvatar = (img: PickedImage) => {
     setNewUserAvatar(img)
     setUserAvatar(img.path)
+  }
+  const onSelectNewBanner = (img: PickedImage) => {
+    setNewUserBanner(img)
+    setUserBanner(img.path)
   }
   const onPressSave = async () => {
     setProcessing(true)
@@ -67,7 +72,7 @@ export function Component({
           description,
         },
         newUserAvatar,
-        userBanner, // TEMP
+        newUserBanner,
       )
       Toast.show('Profile updated')
       onUpdate?.()
@@ -90,8 +95,8 @@ export function Component({
         <Text style={styles.title}>Edit my profile</Text>
         <View style={styles.photos}>
           <UserBanner
-            userBanner={userBanner}
-            setUserBanner={setUserBanner}
+            banner={userBanner}
+            onSelectNewBanner={onSelectNewBanner}
             handle={profileView.handle}
           />
           <View style={styles.avi}>
