@@ -13,6 +13,7 @@ import {ErrorMessage} from '../util/ErrorMessage'
 import {FeedModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
 import {ComposePrompt} from '../composer/Prompt'
+import {OnScrollCb} from '../../lib/useOnMainScroll'
 
 const COMPOSE_PROMPT_ITEM = {_reactKey: '__prompt__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -23,12 +24,14 @@ export const Feed = observer(function Feed({
   scrollElRef,
   onPressCompose,
   onPressTryAgain,
+  onScroll,
 }: {
   feed: FeedModel
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressCompose: () => void
   onPressTryAgain?: () => void
+  onScroll?: OnScrollCb
 }) {
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your
@@ -92,6 +95,7 @@ export const Feed = observer(function Feed({
           ListFooterComponent={FeedFooter}
           refreshing={feed.isRefreshing}
           contentContainerStyle={{paddingBottom: 100}}
+          onScroll={onScroll}
           onRefresh={onRefresh}
           onEndReached={onEndReached}
         />

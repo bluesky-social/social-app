@@ -5,9 +5,11 @@ import {Feed} from '../com/notifications/Feed'
 import {useStores} from '../../state'
 import {NotificationsViewModel} from '../../state/models/notifications-view'
 import {ScreenParams} from '../routes'
+import {useOnMainScroll} from '../lib/useOnMainScroll'
 
 export const Notifications = ({navIdx, visible}: ScreenParams) => {
   const store = useStores()
+  const onMainScroll = useOnMainScroll(store)
 
   useEffect(() => {
     if (!visible) {
@@ -33,7 +35,11 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
   return (
     <View style={{flex: 1}}>
       <ViewHeader title="Notifications" />
-      <Feed view={store.me.notifications} onPressTryAgain={onPressTryAgain} />
+      <Feed
+        view={store.me.notifications}
+        onPressTryAgain={onPressTryAgain}
+        onScroll={onMainScroll}
+      />
     </View>
   )
 }

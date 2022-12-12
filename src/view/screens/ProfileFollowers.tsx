@@ -12,6 +12,7 @@ export const ProfileFollowers = ({navIdx, visible, params}: ScreenParams) => {
   useEffect(() => {
     if (visible) {
       store.nav.setTitle(navIdx, `Followers of ${name}`)
+      store.shell.setMinimalShellMode(false)
     }
   }, [store, visible, name])
 

@@ -18,6 +18,7 @@ export const Settings = observer(function Settings({
     if (!visible) {
       return
     }
+    store.shell.setMinimalShellMode(false)
     store.nav.setTitle(navIdx, 'Settings')
   }, [visible, store])
 

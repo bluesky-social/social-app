@@ -14,6 +14,7 @@ export const PostRepostedBy = ({navIdx, visible, params}: ScreenParams) => {
   useEffect(() => {
     if (visible) {
       store.nav.setTitle(navIdx, 'Reposted by')
+      store.shell.setMinimalShellMode(false)
     }
   }, [store, visible])
 
