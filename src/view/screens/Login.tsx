@@ -205,12 +205,19 @@ const Signin = ({onPressBack}: {onPressBack: () => void}) => {
       </View>
       <View style={styles.group}>
         <TouchableOpacity
-          style={styles.groupTitle}
+          style={[styles.groupTitle, {paddingRight: 0, paddingVertical: 6}]}
           onPress={onPressSelectService}>
-          <Text style={[s.white, s.f18, s.bold]} numberOfLines={1}>
+          <Text style={[s.flex1, s.white, s.f18, s.bold]} numberOfLines={1}>
             Sign in to {toNiceDomain(serviceUrl)}
           </Text>
-          <FontAwesomeIcon icon="pen" size={10} style={styles.groupTitleIcon} />
+          <View style={styles.textBtnFakeInnerBtn}>
+            <FontAwesomeIcon
+              icon="pen"
+              size={12}
+              style={styles.textBtnFakeInnerBtnIcon}
+            />
+            <Text style={styles.textBtnFakeInnerBtnLabel}>Change</Text>
+          </View>
         </TouchableOpacity>
         <View style={styles.groupContent}>
           <FontAwesomeIcon icon="at" style={styles.groupContentIcon} />
@@ -288,6 +295,7 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   useEffect(() => {
     let aborted = false
     setError('')
+    setServiceDescription(undefined)
     console.log('Fetching service description', serviceUrl)
     store.session.describeService(serviceUrl).then(
       desc => {
@@ -347,30 +355,6 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     }
   }
 
-  const InitialLoadView = () => (
-    <>
-      {error ? (
-        <>
-          <View style={[styles.error, styles.errorFloating]}>
-            <View style={styles.errorIcon}>
-              <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
-            </View>
-            <View style={s.flex1}>
-              <Text style={[s.white, s.bold]}>{error}</Text>
-            </View>
-          </View>
-          <View style={[s.flexRow, s.pl20, s.pr20]}>
-            <TouchableOpacity onPress={onPressBack}>
-              <Text style={[s.white, s.f18, s.pl5]}>Back</Text>
-            </TouchableOpacity>
-          </View>
-        </>
-      ) : (
-        <ActivityIndicator color="#fff" />
-      )}
-    </>
-  )
-
   const Policies = () => {
     if (!serviceDescription) {
       return <View />
@@ -426,43 +410,40 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
         <View style={styles.logoHero}>
           <Logo />
         </View>
-        {serviceDescription ? (
-          <>
-            {error ? (
-              <View style={[styles.error, styles.errorFloating]}>
-                <View style={styles.errorIcon}>
-                  <FontAwesomeIcon
-                    icon="exclamation"
-                    style={s.white}
-                    size={10}
-                  />
-                </View>
-                <View style={s.flex1}>
-                  <Text style={[s.white, s.bold]}>{error}</Text>
-                </View>
+        {error ? (
+          <View style={[styles.error, styles.errorFloating]}>
+            <View style={styles.errorIcon}>
+              <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
+            </View>
+            <View style={s.flex1}>
+              <Text style={[s.white, s.bold]}>{error}</Text>
+            </View>
+          </View>
+        ) : undefined}
+        <View style={[styles.group]}>
+          <View style={styles.groupTitle}>
+            <Text style={[s.white, s.f18, s.bold]}>Create a new account</Text>
+          </View>
+          <View style={styles.groupContent}>
+            <FontAwesomeIcon icon="globe" style={styles.groupContentIcon} />
+            <TouchableOpacity
+              style={styles.textBtn}
+              onPress={onPressSelectService}>
+              <Text style={styles.textBtnLabel}>
+                {toNiceDomain(serviceUrl)}
+              </Text>
+              <View style={styles.textBtnFakeInnerBtn}>
+                <FontAwesomeIcon
+                  icon="pen"
+                  size={12}
+                  style={styles.textBtnFakeInnerBtnIcon}
+                />
+                <Text style={styles.textBtnFakeInnerBtnLabel}>Change</Text>
               </View>
-            ) : undefined}
-            <View style={[styles.group]}>
-              <View style={styles.groupTitle}>
-                <Text style={[s.white, s.f18, s.bold]}>
-                  Create a new account
-                </Text>
-              </View>
-              <View style={styles.groupContent}>
-                <FontAwesomeIcon icon="globe" style={styles.groupContentIcon} />
-                <TouchableOpacity
-                  style={styles.textBtn}
-                  onPress={onPressSelectService}>
-                  <Text style={styles.textBtnLabel}>
-                    {toNiceDomain(serviceUrl)}
-                  </Text>
-                  <FontAwesomeIcon
-                    icon="pen"
-                    size={12}
-                    style={styles.textBtnIcon}
-                  />
-                </TouchableOpacity>
-              </View>
+            </TouchableOpacity>
+          </View>
+          {serviceDescription ? (
+            <>
               {serviceDescription?.inviteCodeRequired ? (
                 <View style={styles.groupContent}>
                   <FontAwesomeIcon
@@ -512,7 +493,11 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                   editable={!isProcessing}
                 />
               </View>
-            </View>
+            </>
+          ) : undefined}
+        </View>
+        {serviceDescription ? (
+          <>
             <View style={styles.group}>
               <View style={styles.groupTitle}>
                 <Text style={[s.white, s.f18, s.bold]}>
@@ -561,23 +546,23 @@ const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
               </View>
             </View>
             <Policies />
-            <View style={[s.flexRow, s.pl20, s.pr20, {paddingBottom: 200}]}>
-              <TouchableOpacity onPress={onPressBack}>
-                <Text style={[s.white, s.f18, s.pl5]}>Back</Text>
-              </TouchableOpacity>
-              <View style={s.flex1} />
-              <TouchableOpacity onPress={onPressNext}>
-                {isProcessing ? (
-                  <ActivityIndicator color="#fff" />
-                ) : (
-                  <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
-                )}
-              </TouchableOpacity>
-            </View>
           </>
-        ) : (
-          <InitialLoadView />
-        )}
+        ) : undefined}
+        <View style={[s.flexRow, s.pl20, s.pr20, {paddingBottom: 200}]}>
+          <TouchableOpacity onPress={onPressBack}>
+            <Text style={[s.white, s.f18, s.pl5]}>Back</Text>
+          </TouchableOpacity>
+          <View style={s.flex1} />
+          {serviceDescription ? (
+            <TouchableOpacity onPress={onPressNext}>
+              {isProcessing ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
+              )}
+            </TouchableOpacity>
+          ) : undefined}
+        </View>
       </KeyboardAvoidingView>
     </ScrollView>
   )
@@ -731,6 +716,22 @@ const styles = StyleSheet.create({
   textBtnIcon: {
     color: colors.white,
     marginHorizontal: 12,
+  },
+  textBtnFakeInnerBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.blue2,
+    borderRadius: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    marginHorizontal: 6,
+  },
+  textBtnFakeInnerBtnIcon: {
+    color: colors.white,
+    marginRight: 4,
+  },
+  textBtnFakeInnerBtnLabel: {
+    color: colors.white,
   },
   picker: {
     flex: 1,
