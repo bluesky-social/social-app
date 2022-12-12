@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useMemo} from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ViewSelector} from '../com/util/ViewSelector'
@@ -97,6 +97,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
     return <ProfileHeader view={uiState.profile} onRefreshAll={onRefresh} />
   }
   let renderItem
+  let Footer
   let items: any[] = []
   if (uiState) {
     if (uiState.isInitialLoading) {
@@ -132,6 +133,8 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
           }
           if (!uiState.feed.hasMore) {
             items = items.concat([END_ITEM])
+          } else {
+            Footer = LoadingMoreFooter
           }
           renderItem = (item: any) => {
             if (item === END_ITEM) {
@@ -246,6 +249,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
           items={items}
           renderHeader={renderHeader}
           renderItem={renderItem}
+          ListFooterComponent={Footer}
           refreshing={uiState.isRefreshing || false}
           onSelectView={onSelectView}
           onRefresh={onRefresh}
@@ -257,6 +261,14 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
     </View>
   )
 })
+
+function LoadingMoreFooter() {
+  return (
+    <View style={{paddingVertical: 20}}>
+      <ActivityIndicator />
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {

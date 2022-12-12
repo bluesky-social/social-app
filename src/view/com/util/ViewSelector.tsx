@@ -1,9 +1,8 @@
-import React, {useEffect, useState, useMemo} from 'react'
-import {FlatList, StyleSheet, View} from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {FlatList, View} from 'react-native'
 import {Selector} from './Selector'
 import {HorzSwipe} from './gestures/HorzSwipe'
 import {useAnimatedValue} from '../../lib/useAnimatedValue'
-import {useStores} from '../../../state'
 
 const HEADER_ITEM = {_reactKey: '__header__'}
 const SELECTOR_ITEM = {_reactKey: '__selector__'}
@@ -16,6 +15,7 @@ export function ViewSelector({
   swipeEnabled,
   renderHeader,
   renderItem,
+  ListFooterComponent,
   onSelectView,
   onRefresh,
   onEndReached,
@@ -26,11 +26,15 @@ export function ViewSelector({
   swipeEnabled?: boolean
   renderHeader?: () => JSX.Element
   renderItem: (item: any) => JSX.Element
+  ListFooterComponent?:
+    | React.ComponentType<any>
+    | React.ReactElement
+    | null
+    | undefined
   onSelectView?: (viewIndex: number) => void
   onRefresh?: () => void
   onEndReached?: (info: {distanceFromEnd: number}) => void
 }) {
-  const store = useStores()
   const [selectedIndex, setSelectedIndex] = useState<number>(0)
   const panX = useAnimatedValue(0)
 
@@ -83,6 +87,7 @@ export function ViewSelector({
         data={data}
         keyExtractor={item => item._reactKey}
         renderItem={renderItemInternal}
+        ListFooterComponent={ListFooterComponent}
         stickyHeaderIndices={STICKY_HEADER_INDICES}
         refreshing={refreshing}
         onRefresh={onRefresh}
@@ -91,5 +96,3 @@ export function ViewSelector({
     </HorzSwipe>
   )
 }
-
-const styles = StyleSheet.create({})
