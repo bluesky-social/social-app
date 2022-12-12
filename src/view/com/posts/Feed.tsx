@@ -1,6 +1,12 @@
 import React, {MutableRefObject} from 'react'
 import {observer} from 'mobx-react-lite'
-import {View, FlatList, StyleProp, ViewStyle} from 'react-native'
+import {
+  ActivityIndicator,
+  View,
+  FlatList,
+  StyleProp,
+  ViewStyle,
+} from 'react-native'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/ErrorMessage'
@@ -57,6 +63,14 @@ export const Feed = observer(function Feed({
       data = [COMPOSE_PROMPT_ITEM].concat(feed.feed)
     }
   }
+  const FeedFooter = () =>
+    feed.isLoading ? (
+      <View style={{paddingTop: 20}}>
+        <ActivityIndicator />
+      </View>
+    ) : (
+      <View />
+    )
   return (
     <View style={style}>
       {!data && <ComposePrompt onPressCompose={onPressCompose} />}
@@ -75,6 +89,7 @@ export const Feed = observer(function Feed({
           data={data}
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
+          ListFooterComponent={FeedFooter}
           refreshing={feed.isRefreshing}
           contentContainerStyle={{paddingBottom: 100}}
           onRefresh={onRefresh}
