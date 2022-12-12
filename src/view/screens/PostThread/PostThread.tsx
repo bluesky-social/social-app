@@ -1,13 +1,13 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {makeRecordUri} from '../../lib/strings'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
-import {PostThreadViewModel} from '../../state/models/post-thread-view'
-import {ScreenParams} from '../routes'
-import {useStores} from '../../state'
+import {makeRecordUri} from '../../../lib/strings'
+import {ViewHeader} from '../../com/util/ViewHeader'
+import {PostThread as PostThreadComponent} from '../../com/post-thread/PostThread'
+import {PostThreadViewModel} from '../../../state/models/post-thread-view'
+import {ScreenParams} from '../../routes'
+import {useStores} from '../../../state'
 
-export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
+export default ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const {name, rkey} = params
   const [viewSubtitle, setViewSubtitle] = useState<string>(`by ${name}`)

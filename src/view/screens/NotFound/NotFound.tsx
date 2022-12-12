@@ -1,9 +1,9 @@
 import React from 'react'
 import {Text, Button, View} from 'react-native'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {useStores} from '../../state'
+import {ViewHeader} from '../../com/util/ViewHeader'
+import {useStores} from '../../../state'
 
-export const NotFound = () => {
+export default () => {
   const stores = useStores()
   return (
     <View>

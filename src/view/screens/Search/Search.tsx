@@ -8,16 +8,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {SuggestedFollows} from '../com/discover/SuggestedFollows'
-import {UserAvatar} from '../com/util/UserAvatar'
-import {ScreenParams} from '../routes'
-import {useStores} from '../../state'
-import {UserAutocompleteViewModel} from '../../state/models/user-autocomplete-view'
-import {s, colors} from '../lib/styles'
-import {MagnifyingGlassIcon} from '../lib/icons'
+import {ViewHeader} from '../../com/util/ViewHeader'
+import {SuggestedFollows} from '../../com/discover/SuggestedFollows'
+import {UserAvatar} from '../../com/util/UserAvatar'
+import {ScreenParams} from '../../routes'
+import {useStores} from '../../../state'
+import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete-view'
+import {s, colors} from '../../lib/styles'
+import {MagnifyingGlassIcon} from '../../lib/icons'
 
-export const Search = ({navIdx, visible, params}: ScreenParams) => {
+export default ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const textInput = useRef<TextInput>(null)
   const [query, setQuery] = useState<string>('')

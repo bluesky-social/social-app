@@ -3,16 +3,16 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {Feed} from '../com/posts/Feed'
-import {useStores} from '../../state'
-import {FeedModel} from '../../state/models/feed-view'
-import {ScreenParams} from '../routes'
-import {s, colors} from '../lib/styles'
+import {ViewHeader} from '../../com/util/ViewHeader'
+import {Feed} from '../../com/posts/Feed'
+import {useStores} from '../../../state'
+import {FeedModel} from '../../../state/models/feed-view'
+import {ScreenParams} from '../../routes'
+import {s, colors} from '../../lib/styles'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
-export const Home = observer(function Home({
+export default observer(function Home({
   navIdx,
   visible,
   scrollElRef,

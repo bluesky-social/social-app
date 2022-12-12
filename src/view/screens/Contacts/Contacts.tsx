@@ -1,14 +1,14 @@
 import React, {useEffect, useState, useRef} from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {ProfileFollows as ProfileFollowsComponent} from '../com/profile/ProfileFollows'
-import {Selector} from '../com/util/Selector'
-import {colors} from '../lib/styles'
-import {ScreenParams} from '../routes'
-import {useStores} from '../../state'
-import {useAnimatedValue} from '../lib/useAnimatedValue'
+import {ProfileFollows as ProfileFollowsComponent} from '../../com/profile/ProfileFollows'
+import {Selector} from '../../com/util/Selector'
+import {colors} from '../../lib/styles'
+import {ScreenParams} from '../../routes'
+import {useStores} from '../../../state'
+import {useAnimatedValue} from '../../lib/useAnimatedValue'
 
-export const Contacts = ({navIdx, visible, params}: ScreenParams) => {
+export default ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const selectorInterp = useAnimatedValue(0)
 

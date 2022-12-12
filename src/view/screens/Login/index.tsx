@@ -14,19 +14,20 @@ import Svg, {Circle, Line, Text as SvgText} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
 import {observer} from 'mobx-react-lite'
-import {Picker} from '../com/util/Picker'
-import {TextLink} from '../com/util/Link'
-import {s, colors} from '../lib/styles'
+import {Picker} from '../../com/util/Picker'
+import {TextLink} from '../../com/util/Link'
+import {s, colors} from '../../lib/styles'
 import {
   makeValidHandle,
   createFullHandle,
   toNiceDomain,
-} from '../../lib/strings'
-import {useStores, DEFAULT_SERVICE} from '../../state'
-import {ServiceDescription} from '../../state/models/session'
-import {ServerInputModel} from '../../state/models/shell-ui'
-import {ComAtprotoAccountCreate} from '../../third-party/api/index'
-import {isNetworkError} from '../../lib/errors'
+} from '../../../lib/strings'
+import {useStores, DEFAULT_SERVICE} from '../../../state'
+import {ServiceDescription} from '../../../state/models/session'
+import {ServerInputModel} from '../../../state/models/shell-ui'
+import {ComAtprotoAccountCreate} from '../../../third-party/api/index'
+import {isNetworkError} from '../../../lib/errors'
+import {investigate} from 'react-native-bundle-splitter/dist/utils'
 
 enum ScreenState {
   SigninOrCreateAccount,
@@ -587,6 +588,12 @@ export const Login = observer(
   (/*{navigation}: RootTabsScreenProps<'Login'>*/) => {
     const [screenState, setScreenState] = useState<ScreenState>(
       ScreenState.SigninOrCreateAccount,
+    )
+
+    console.log(
+      `Bundle:\nloaded:${investigate().loaded.length}\nwaiting:${
+        investigate().waiting.length
+      }`,
     )
 
     return (

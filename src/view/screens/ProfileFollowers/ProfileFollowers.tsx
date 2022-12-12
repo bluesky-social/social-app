@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react'
 import {View} from 'react-native'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {ProfileFollowers as ProfileFollowersComponent} from '../com/profile/ProfileFollowers'
-import {ScreenParams} from '../routes'
-import {useStores} from '../../state'
+import {ViewHeader} from '../../com/util/ViewHeader'
+import {ProfileFollowers as ProfileFollowersComponent} from '../../com/profile/ProfileFollowers'
+import {ScreenParams} from '../../routes'
+import {useStores} from '../../../state'
 
-export const ProfileFollowers = ({navIdx, visible, params}: ScreenParams) => {
+export default ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const {name} = params
 

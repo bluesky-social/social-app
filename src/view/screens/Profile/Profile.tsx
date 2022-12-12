@@ -2,28 +2,28 @@ import React, {useEffect, useState, useMemo} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {ViewSelector} from '../com/util/ViewSelector'
-import {ScreenParams} from '../routes'
-import {ProfileUiModel, Sections} from '../../state/models/profile-ui'
-import {MembershipItem} from '../../state/models/memberships-view'
-import {useStores} from '../../state'
-import {ConfirmModel} from '../../state/models/shell-ui'
-import {ProfileHeader} from '../com/profile/ProfileHeader'
-import {FeedItem} from '../com/posts/FeedItem'
-import {ProfileCard} from '../com/profile/ProfileCard'
-import {PostFeedLoadingPlaceholder} from '../com/util/LoadingPlaceholder'
-import {ErrorScreen} from '../com/util/ErrorScreen'
-import {ErrorMessage} from '../com/util/ErrorMessage'
-import {EmptyState} from '../com/util/EmptyState'
-import {ViewHeader} from '../com/util/ViewHeader'
-import * as Toast from '../com/util/Toast'
-import {s, colors} from '../lib/styles'
+import {ViewSelector} from '../../com/util/ViewSelector'
+import {ScreenParams} from '../../routes'
+import {ProfileUiModel, Sections} from '../../../state/models/profile-ui'
+import {MembershipItem} from '../../../state/models/memberships-view'
+import {useStores} from '../../../state'
+import {ConfirmModel} from '../../../state/models/shell-ui'
+import {ProfileHeader} from '../../com/profile/ProfileHeader'
+import {FeedItem} from '../../com/posts/FeedItem'
+import {ProfileCard} from '../../com/profile/ProfileCard'
+import {PostFeedLoadingPlaceholder} from '../../com/util/LoadingPlaceholder'
+import {ErrorScreen} from '../../com/util/ErrorScreen'
+import {ErrorMessage} from '../../com/util/ErrorMessage'
+import {EmptyState} from '../../com/util/EmptyState'
+import {ViewHeader} from '../../com/util/ViewHeader'
+import * as Toast from '../../com/util/Toast'
+import {s, colors} from '../../lib/styles'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const END_ITEM = {_reactKey: '__end__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
 
-export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
+export default observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const uiState = useMemo(

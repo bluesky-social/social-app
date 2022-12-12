@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react'
 import {View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {FeatureExplainer} from '../com/onboard/FeatureExplainer'
-import {Follows} from '../com/onboard/Follows'
-import {OnboardStage, OnboardStageOrder} from '../../state/models/onboard'
-import {useStores} from '../../state'
+import {FeatureExplainer} from '../../com/onboard/FeatureExplainer'
+import {Follows} from '../../com/onboard/Follows'
+import {OnboardStage, OnboardStageOrder} from '../../../state/models/onboard'
+import {useStores} from '../../../state'
 
-export const Onboard = observer(() => {
+export default observer(() => {
   const store = useStores()
 
   useEffect(() => {

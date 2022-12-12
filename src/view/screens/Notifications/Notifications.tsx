@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import {View} from 'react-native'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {Feed} from '../com/notifications/Feed'
-import {useStores} from '../../state'
-import {NotificationsViewModel} from '../../state/models/notifications-view'
-import {ScreenParams} from '../routes'
+import {ViewHeader} from '../../com/util/ViewHeader'
+import {Feed} from '../../com/notifications/Feed'
+import {useStores} from '../../../state'
+import {NotificationsViewModel} from '../../../state/models/notifications-view'
+import {ScreenParams} from '../../routes'
 
-export const Notifications = ({navIdx, visible}: ScreenParams) => {
+export default ({navIdx, visible}: ScreenParams) => {
   const store = useStores()
 
   useEffect(() => {
