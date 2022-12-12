@@ -245,18 +245,19 @@ export const MobileShell: React.FC = observer(() => {
     ? {transform: [{translateX: swipeTranslateX}]}
     : undefined
   let menuTranslateX
+  const menuDrawerWidth = winDim.width - 100
   if (isMenuActive) {
     // menu is active, interpret swipes as closes
-    menuTranslateX = Animated.multiply(swipeGestureInterp, winDim.width * -1)
+    menuTranslateX = Animated.multiply(swipeGestureInterp, menuDrawerWidth * -1)
   } else if (!store.nav.tab.canGoBack) {
     // at back of history, interpret swipes as opens
     menuTranslateX = Animated.subtract(
-      winDim.width * -1,
-      Animated.multiply(swipeGestureInterp, winDim.width),
+      menuDrawerWidth * -1,
+      Animated.multiply(swipeGestureInterp, menuDrawerWidth),
     )
   } else {
     // not at back of history, leave off screen
-    menuTranslateX = winDim.width * -1
+    menuTranslateX = menuDrawerWidth * -1
   }
   const menuSwipeTransform = {
     transform: [{translateX: menuTranslateX}],
@@ -369,7 +370,7 @@ export const MobileShell: React.FC = observer(() => {
               },
             )}
           </ScreenContainer>
-          {menuSwipingDirection !== 0 ? (
+          {isMenuActive || menuSwipingDirection !== 0 ? (
             <Animated.View style={[styles.screenMask, menuSwipeOpacity]} />
           ) : undefined}
           <Animated.View style={[styles.menuDrawer, menuSwipeTransform]}>
@@ -500,14 +501,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#000',
-    opacity: 0.5,
+    opacity: 0.6,
   },
   menuDrawer: {
     position: 'absolute',
     top: 0,
     bottom: 0,
     left: 0,
-    right: 0,
+    right: 100,
   },
   topBarProtector: {
     position: 'absolute',

@@ -32,7 +32,8 @@ export const Menu = ({
   useEffect(() => {
     if (visible) {
       // trigger a refresh in case memberships have changed recently
-      store.me.refreshMemberships()
+      // TODO this impacts performance, need to find the right time to do this
+      // store.me.refreshMemberships()
     }
   }, [store, visible])
 
@@ -98,33 +99,36 @@ export const Menu = ({
   return (
     <View style={styles.view}>
       <TouchableOpacity
+        onPress={() => onNavigate(`/profile/${store.me.handle}`)}
+        style={styles.profileCard}>
+        <UserAvatar
+          size={60}
+          displayName={store.me.displayName}
+          handle={store.me.handle}
+          avatar={store.me.avatar}
+        />
+        <View style={s.flex1}>
+          <Text style={styles.profileCardDisplayName}>
+            {store.me.displayName}
+          </Text>
+          <Text style={styles.profileCardHandle}>{store.me.handle}</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity
         style={styles.searchBtn}
         onPress={() => onNavigate('/search')}>
         <MagnifyingGlassIcon
           style={{color: colors.gray5} as StyleProp<ViewStyle>}
-          size={21}
+          size={25}
         />
         <Text style={styles.searchBtnLabel}>Search</Text>
       </TouchableOpacity>
       <View style={styles.section}>
         <MenuItem
           icon={
-            <UserAvatar
-              size={24}
-              displayName={store.me.displayName}
-              handle={store.me.handle}
-              avatar={store.me.avatar}
-            />
-          }
-          label={store.me.displayName || store.me.handle}
-          bold
-          url={`/profile/${store.me.handle}`}
-        />
-        <MenuItem
-          icon={
             <HomeIcon
-              style={{color: colors.gray5} as StyleProp<ViewStyle>}
-              size="24"
+              style={{color: colors.gray6} as StyleProp<ViewStyle>}
+              size="26"
             />
           }
           label="Home"
@@ -133,45 +137,24 @@ export const Menu = ({
         <MenuItem
           icon={
             <BellIcon
-              style={{color: colors.gray5} as StyleProp<ViewStyle>}
-              size="24"
+              style={{color: colors.gray6} as StyleProp<ViewStyle>}
+              size="28"
             />
           }
           label="Notifications"
           url="/notifications"
           count={store.me.notificationCount}
         />
-        <MenuItem
-          icon={
-            <CogIcon
-              style={{color: colors.gray6} as StyleProp<ViewStyle>}
-              size="24"
-              strokeWidth={2}
-            />
-          }
-          label="Settings"
-          url="/settings"
-        />
       </View>
       <View style={styles.section}>
         <Text style={styles.heading}>Scenes</Text>
-        <MenuItem
-          icon={
-            <UserGroupIcon
-              style={{color: colors.gray6} as StyleProp<ViewStyle>}
-              size="24"
-            />
-          }
-          label="Create a scene"
-          onPress={onPressCreateScene}
-        />
         {store.me.memberships
           ? store.me.memberships.memberships.map((membership, i) => (
               <MenuItem
                 key={i}
                 icon={
                   <UserAvatar
-                    size={24}
+                    size={34}
                     displayName={membership.displayName}
                     handle={membership.handle}
                     avatar={membership.avatar}
@@ -182,6 +165,29 @@ export const Menu = ({
               />
             ))
           : undefined}
+      </View>
+      <View style={styles.section}>
+        <MenuItem
+          icon={
+            <UserGroupIcon
+              style={{color: colors.gray6} as StyleProp<ViewStyle>}
+              size="30"
+            />
+          }
+          label="Create a scene"
+          onPress={onPressCreateScene}
+        />
+        <MenuItem
+          icon={
+            <CogIcon
+              style={{color: colors.gray6} as StyleProp<ViewStyle>}
+              size="30"
+              strokeWidth={2}
+            />
+          }
+          label="Settings"
+          url="/settings"
+        />
       </View>
       <View style={styles.footer}>
         <Text style={s.gray4}>
@@ -212,6 +218,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
 
+  profileCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 10,
+    marginBottom: 6,
+  },
+  profileCardDisplayName: {
+    marginLeft: 12,
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: colors.gray7,
+  },
+  profileCardHandle: {
+    marginLeft: 12,
+    fontSize: 18,
+    color: colors.gray6,
+  },
+
   searchBtn: {
     flexDirection: 'row',
     backgroundColor: colors.gray1,
@@ -223,7 +247,7 @@ const styles = StyleSheet.create({
   },
   searchBtnLabel: {
     marginLeft: 8,
-    fontSize: 18,
+    fontSize: 19,
     color: colors.gray6,
   },
 
@@ -231,17 +255,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 8,
-    paddingHorizontal: 2,
+    paddingHorizontal: 6,
   },
   menuItemIconWrapper: {
-    width: 30,
-    height: 30,
+    width: 36,
+    height: 36,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
+    marginRight: 12,
   },
   menuItemLabel: {
-    fontSize: 17,
+    fontSize: 19,
     color: colors.gray7,
   },
   menuItemLabelBold: {
