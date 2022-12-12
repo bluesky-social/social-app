@@ -5,22 +5,25 @@ import {PostRepostedBy as PostRepostedByComponent} from '../com/post-thread/Post
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 import {makeRecordUri} from '../../lib/strings'
+import {register} from 'react-native-bundle-splitter'
 
-export const PostRepostedBy = ({navIdx, visible, params}: ScreenParams) => {
-  const store = useStores()
-  const {name, rkey} = params
-  const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
+export const PostRepostedBy = register(
+  ({navIdx, visible, params}: ScreenParams) => {
+    const store = useStores()
+    const {name, rkey} = params
+    const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
 
-  useEffect(() => {
-    if (visible) {
-      store.nav.setTitle(navIdx, 'Reposted by')
-    }
-  }, [store, visible])
+    useEffect(() => {
+      if (visible) {
+        store.nav.setTitle(navIdx, 'Reposted by')
+      }
+    }, [store, visible])
 
-  return (
-    <View>
-      <ViewHeader title="Reposted by" />
-      <PostRepostedByComponent uri={uri} />
-    </View>
-  )
-}
+    return (
+      <View>
+        <ViewHeader title="Reposted by" />
+        <PostRepostedByComponent uri={uri} />
+      </View>
+    )
+  },
+)

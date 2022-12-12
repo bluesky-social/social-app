@@ -9,8 +9,13 @@ import {useStores} from '../../../state'
 import {ProfileCard} from '../profile/ProfileCard'
 import * as Toast from '../util/Toast'
 import {s, colors, gradients} from '../../lib/styles'
+import {register} from 'react-native-bundle-splitter'
 
-export function InviteAccepter({item}: {item: NotificationsViewItemModel}) {
+export const InviteAccepter = register(function InviteAccepter({
+  item,
+}: {
+  item: NotificationsViewItemModel
+}) {
   const store = useStores()
   const [confirmationUri, setConfirmationUri] = useState<string>('')
   const isMember =
@@ -70,7 +75,7 @@ export function InviteAccepter({item}: {item: NotificationsViewItemModel}) {
       )}
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   container: {

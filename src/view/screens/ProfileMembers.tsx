@@ -4,21 +4,24 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {ProfileMembers as ProfileMembersComponent} from '../com/profile/ProfileMembers'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
+import {register} from 'react-native-bundle-splitter'
 
-export const ProfileMembers = ({navIdx, visible, params}: ScreenParams) => {
-  const store = useStores()
-  const {name} = params
+export const ProfileMembers = register(
+  ({navIdx, visible, params}: ScreenParams) => {
+    const store = useStores()
+    const {name} = params
 
-  useEffect(() => {
-    if (visible) {
-      store.nav.setTitle(navIdx, `Members of ${name}`)
-    }
-  }, [store, visible, name])
+    useEffect(() => {
+      if (visible) {
+        store.nav.setTitle(navIdx, `Members of ${name}`)
+      }
+    }, [store, visible, name])
 
-  return (
-    <View>
-      <ViewHeader title="Members" subtitle={`of ${name}`} />
-      <ProfileMembersComponent name={name} />
-    </View>
-  )
-}
+    return (
+      <View>
+        <ViewHeader title="Members" subtitle={`of ${name}`} />
+        <ProfileMembersComponent name={name} />
+      </View>
+    )
+  },
+)

@@ -12,60 +12,58 @@ import {Link} from '../util/Link'
 import {LinkMeta, getLikelyType, LikelyType} from '../../../lib/link-meta'
 import {colors} from '../../lib/styles'
 import {useStores} from '../../../state'
+import {register} from 'react-native-bundle-splitter'
 
-export function PostEmbeds({
-  entities,
-  style,
-}: {
-  entities?: Entity[]
-  style?: StyleProp<ViewStyle>
-}) {
-  const store = useStores()
-  const [linkMeta, setLinkMeta] = useState<LinkMeta | undefined>(undefined)
-  const link = entities?.find(
-    ent =>
-      ent.type === 'link' && getLikelyType(ent.value || '') === LikelyType.HTML,
-  )
+export const PostEmbeds = register(
+  ({entities, style}: {entities?: Entity[]; style?: StyleProp<ViewStyle>}) => {
+    const store = useStores()
+    const [linkMeta, setLinkMeta] = useState<LinkMeta | undefined>(undefined)
+    const link = entities?.find(
+      ent =>
+        ent.type === 'link' &&
+        getLikelyType(ent.value || '') === LikelyType.HTML,
+    )
 
-  useEffect(() => {
-    let aborted = false
-    store.linkMetas.getLinkMeta(link?.value || '').then(linkMeta => {
-      if (!aborted) {
-        setLinkMeta(linkMeta)
+    useEffect(() => {
+      let aborted = false
+      store.linkMetas.getLinkMeta(link?.value || '').then(linkMeta => {
+        if (!aborted) {
+          setLinkMeta(linkMeta)
+        }
+      })
+
+      return () => {
+        aborted = true
       }
-    })
+    }, [link])
 
-    return () => {
-      aborted = true
+    if (!link) {
+      return <View />
     }
-  }, [link])
 
-  if (!link) {
-    return <View />
-  }
-
-  return (
-    <Link style={[styles.outer, style]} href={link.value}>
-      {linkMeta ? (
-        <>
-          <Text numberOfLines={1} style={styles.title}>
-            {linkMeta.title || linkMeta.url}
-          </Text>
-          <Text numberOfLines={1} style={styles.url}>
-            {linkMeta.url}
-          </Text>
-          {linkMeta.description ? (
-            <Text numberOfLines={2} style={styles.description}>
-              {linkMeta.description}
+    return (
+      <Link style={[styles.outer, style]} href={link.value}>
+        {linkMeta ? (
+          <>
+            <Text numberOfLines={1} style={styles.title}>
+              {linkMeta.title || linkMeta.url}
             </Text>
-          ) : undefined}
-        </>
-      ) : (
-        <ActivityIndicator />
-      )}
-    </Link>
-  )
-}
+            <Text numberOfLines={1} style={styles.url}>
+              {linkMeta.url}
+            </Text>
+            {linkMeta.description ? (
+              <Text numberOfLines={2} style={styles.description}>
+                {linkMeta.description}
+              </Text>
+            ) : undefined}
+          </>
+        ) : (
+          <ActivityIndicator />
+        )}
+      </Link>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   outer: {

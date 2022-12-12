@@ -27,6 +27,7 @@ import {ServiceDescription} from '../../state/models/session'
 import {ServerInputModel} from '../../state/models/shell-ui'
 import {ComAtprotoAccountCreate} from '../../third-party/api/index'
 import {isNetworkError} from '../../lib/errors'
+import {investigate} from 'react-native-bundle-splitter/dist/utils'
 
 enum ScreenState {
   SigninOrCreateAccount,
@@ -587,6 +588,12 @@ export const Login = observer(
   (/*{navigation}: RootTabsScreenProps<'Login'>*/) => {
     const [screenState, setScreenState] = useState<ScreenState>(
       ScreenState.SigninOrCreateAccount,
+    )
+
+    console.log(
+      `loaded: ${investigate().loaded.length} \n waiting: ${
+        investigate().waiting.length
+      }`,
     )
 
     return (

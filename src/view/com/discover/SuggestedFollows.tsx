@@ -22,112 +22,119 @@ import {
   SuggestedActor,
 } from '../../../state/models/suggested-actors-view'
 import {s, colors, gradients} from '../../lib/styles'
+import {register} from 'react-native-bundle-splitter'
 
-export const SuggestedFollows = observer(
-  ({
-    onNoSuggestions,
-    asLinks,
-  }: {
-    onNoSuggestions?: () => void
-    asLinks?: boolean
-  }) => {
-    const store = useStores()
-    const [follows, setFollows] = useState<Record<string, string>>({})
+export const SuggestedFollows = register(
+  observer(
+    ({
+      onNoSuggestions,
+      asLinks,
+    }: {
+      onNoSuggestions?: () => void
+      asLinks?: boolean
+    }) => {
+      const store = useStores()
+      const [follows, setFollows] = useState<Record<string, string>>({})
 
-    const view = useMemo<SuggestedActorsViewModel>(
-      () => new SuggestedActorsViewModel(store),
-      [],
-    )
+      const view = useMemo<SuggestedActorsViewModel>(
+        () => new SuggestedActorsViewModel(store),
+        [],
+      )
 
-    useEffect(() => {
-      console.log('Fetching suggested actors')
-      view
-        .setup()
-        .catch((err: any) => console.error('Failed to fetch suggestions', err))
-    }, [view])
+      useEffect(() => {
+        console.log('Fetching suggested actors')
+        view
+          .setup()
+          .catch((err: any) =>
+            console.error('Failed to fetch suggestions', err),
+          )
+      }, [view])
 
-    useEffect(() => {
-      if (!view.isLoading && !view.hasError && !view.hasContent) {
-        onNoSuggestions?.()
+      useEffect(() => {
+        if (!view.isLoading && !view.hasError && !view.hasContent) {
+          onNoSuggestions?.()
+        }
+      }, [view, view.isLoading, view.hasError, view.hasContent])
+
+      const onPressTryAgain = () =>
+        view
+          .setup()
+          .catch((err: any) =>
+            console.error('Failed to fetch suggestions', err),
+          )
+
+      const onPressFollow = async (item: SuggestedActor) => {
+        try {
+          const res = await apilib.follow(store, item.did, item.declaration.cid)
+          setFollows({[item.did]: res.uri, ...follows})
+        } catch (e) {
+          console.log(e)
+          Toast.show('An issue occurred, please try again.')
+        }
       }
-    }, [view, view.isLoading, view.hasError, view.hasContent])
-
-    const onPressTryAgain = () =>
-      view
-        .setup()
-        .catch((err: any) => console.error('Failed to fetch suggestions', err))
-
-    const onPressFollow = async (item: SuggestedActor) => {
-      try {
-        const res = await apilib.follow(store, item.did, item.declaration.cid)
-        setFollows({[item.did]: res.uri, ...follows})
-      } catch (e) {
-        console.log(e)
-        Toast.show('An issue occurred, please try again.')
+      const onPressUnfollow = async (item: SuggestedActor) => {
+        try {
+          await apilib.unfollow(store, follows[item.did])
+          setFollows(_omit(follows, [item.did]))
+        } catch (e) {
+          console.log(e)
+          Toast.show('An issue occurred, please try again.')
+        }
       }
-    }
-    const onPressUnfollow = async (item: SuggestedActor) => {
-      try {
-        await apilib.unfollow(store, follows[item.did])
-        setFollows(_omit(follows, [item.did]))
-      } catch (e) {
-        console.log(e)
-        Toast.show('An issue occurred, please try again.')
-      }
-    }
 
-    const renderItem = ({item}: {item: SuggestedActor}) => {
-      if (asLinks) {
+      const renderItem = ({item}: {item: SuggestedActor}) => {
+        if (asLinks) {
+          return (
+            <Link
+              href={`/profile/${item.handle}`}
+              title={item.displayName || item.handle}>
+              <User
+                item={item}
+                follow={follows[item.did]}
+                onPressFollow={onPressFollow}
+                onPressUnfollow={onPressUnfollow}
+              />
+            </Link>
+          )
+        }
         return (
-          <Link
-            href={`/profile/${item.handle}`}
-            title={item.displayName || item.handle}>
-            <User
-              item={item}
-              follow={follows[item.did]}
-              onPressFollow={onPressFollow}
-              onPressUnfollow={onPressUnfollow}
-            />
-          </Link>
+          <User
+            item={item}
+            follow={follows[item.did]}
+            onPressFollow={onPressFollow}
+            onPressUnfollow={onPressUnfollow}
+          />
         )
       }
       return (
-        <User
-          item={item}
-          follow={follows[item.did]}
-          onPressFollow={onPressFollow}
-          onPressUnfollow={onPressUnfollow}
-        />
-      )
-    }
-    return (
-      <View style={styles.container}>
-        {view.isLoading ? (
-          <View>
-            <ActivityIndicator />
-          </View>
-        ) : view.hasError ? (
-          <ErrorScreen
-            title="Failed to load suggestions"
-            message="There was an error while trying to load suggested follows."
-            details={view.error}
-            onPressTryAgain={onPressTryAgain}
-          />
-        ) : view.isEmpty ? (
-          <View />
-        ) : (
-          <View style={styles.suggestionsContainer}>
-            <FlatList
-              data={view.suggestions}
-              keyExtractor={item => item._reactKey}
-              renderItem={renderItem}
-              style={s.flex1}
+        <View style={styles.container}>
+          {view.isLoading ? (
+            <View>
+              <ActivityIndicator />
+            </View>
+          ) : view.hasError ? (
+            <ErrorScreen
+              title="Failed to load suggestions"
+              message="There was an error while trying to load suggested follows."
+              details={view.error}
+              onPressTryAgain={onPressTryAgain}
             />
-          </View>
-        )}
-      </View>
-    )
-  },
+          ) : view.isEmpty ? (
+            <View />
+          ) : (
+            <View style={styles.suggestionsContainer}>
+              <FlatList
+                data={view.suggestions}
+                keyExtractor={item => item._reactKey}
+                renderItem={renderItem}
+                style={s.flex1}
+              />
+            </View>
+          )}
+        </View>
+      )
+    },
+  ),
 )
 
 const User = ({

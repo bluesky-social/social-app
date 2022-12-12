@@ -5,22 +5,25 @@ import {PostVotedBy as PostLikedByComponent} from '../com/post-thread/PostVotedB
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 import {makeRecordUri} from '../../lib/strings'
+import {register} from 'react-native-bundle-splitter'
 
-export const PostUpvotedBy = ({navIdx, visible, params}: ScreenParams) => {
-  const store = useStores()
-  const {name, rkey} = params
-  const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
+export const PostUpvotedBy = register(
+  ({navIdx, visible, params}: ScreenParams) => {
+    const store = useStores()
+    const {name, rkey} = params
+    const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
 
-  useEffect(() => {
-    if (visible) {
-      store.nav.setTitle(navIdx, 'Upvoted by')
-    }
-  }, [store, visible])
+    useEffect(() => {
+      if (visible) {
+        store.nav.setTitle(navIdx, 'Upvoted by')
+      }
+    }, [store, visible])
 
-  return (
-    <View>
-      <ViewHeader title="Upvoted by" />
-      <PostLikedByComponent uri={uri} direction="up" />
-    </View>
-  )
-}
+    return (
+      <View>
+        <ViewHeader title="Upvoted by" />
+        <PostLikedByComponent uri={uri} direction="up" />
+      </View>
+    )
+  },
+)

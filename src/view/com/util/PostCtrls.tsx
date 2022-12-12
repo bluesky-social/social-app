@@ -4,6 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UpIcon, UpIconSolid} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
 import {useAnimatedValue} from '../../lib/useAnimatedValue'
+import {register} from 'react-native-bundle-splitter'
 
 interface PostCtrlsOpts {
   big?: boolean
@@ -21,7 +22,7 @@ const redgray = '#7A6161'
 const sRedgray = {color: redgray}
 const HITSLOP = {top: 10, left: 10, bottom: 10, right: 10}
 
-export function PostCtrls(opts: PostCtrlsOpts) {
+export const PostCtrls = register((opts: PostCtrlsOpts) => {
   const interp1 = useAnimatedValue(0)
   const interp2 = useAnimatedValue(0)
 
@@ -168,7 +169,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       <View style={s.flex1}></View>
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   ctrls: {

@@ -3,8 +3,9 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Link} from '../util/Link'
 import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
+import {register} from 'react-native-bundle-splitter'
 
-export function ProfileCard({
+export const ProfileCard = register(function ProfileCard({
   did,
   handle,
   displayName,
@@ -48,7 +49,7 @@ export function ProfileCard({
       </View>
     </Link>
   )
-}
+})
 
 const styles = StyleSheet.create({
   outer: {

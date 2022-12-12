@@ -4,62 +4,65 @@ import {Animated, Easing, StyleSheet, View} from 'react-native'
 import {ComposePost} from '../../com/composer/ComposePost'
 import {ComposerOpts} from '../../../state/models/shell-ui'
 import {useAnimatedValue} from '../../lib/useAnimatedValue'
+import {register} from 'react-native-bundle-splitter'
 
-export const Composer = observer(
-  ({
-    active,
-    winHeight,
-    replyTo,
-    onPost,
-    onClose,
-  }: {
-    active: boolean
-    winHeight: number
-    replyTo?: ComposerOpts['replyTo']
-    onPost?: ComposerOpts['onPost']
-    onClose: () => void
-  }) => {
-    const initInterp = useAnimatedValue(0)
+export const Composer = register(
+  observer(
+    ({
+      active,
+      winHeight,
+      replyTo,
+      onPost,
+      onClose,
+    }: {
+      active: boolean
+      winHeight: number
+      replyTo?: ComposerOpts['replyTo']
+      onPost?: ComposerOpts['onPost']
+      onClose: () => void
+    }) => {
+      const initInterp = useAnimatedValue(0)
 
-    useEffect(() => {
-      if (active) {
-        Animated.timing(initInterp, {
-          toValue: 1,
-          duration: 300,
-          easing: Easing.out(Easing.exp),
-          useNativeDriver: true,
-        }).start()
-      } else {
-        initInterp.setValue(0)
+      useEffect(() => {
+        if (active) {
+          Animated.timing(initInterp, {
+            toValue: 1,
+            duration: 300,
+            easing: Easing.out(Easing.exp),
+            useNativeDriver: true,
+          }).start()
+        } else {
+          initInterp.setValue(0)
+        }
+      }, [initInterp, active])
+      const wrapperAnimStyle = {
+        transform: [
+          {
+            translateY: initInterp.interpolate({
+              inputRange: [0, 1],
+              outputRange: [winHeight, 0],
+            }),
+          },
+        ],
       }
-    }, [initInterp, active])
-    const wrapperAnimStyle = {
-      transform: [
-        {
-          translateY: initInterp.interpolate({
-            inputRange: [0, 1],
-            outputRange: [winHeight, 0],
-          }),
-        },
-      ],
-    }
 
-    // events
-    // =
+      // events
+      // =
 
-    // rendering
-    // =
+      // rendering
+      // =
 
-    if (!active) {
-      return <View />
-    }
+      if (!active) {
+        return <View />
+      }
 
-    return (
-      <Animated.View style={[styles.wrapper, wrapperAnimStyle]}>
-        <ComposePost replyTo={replyTo} onPost={onPost} onClose={onClose} />
-      </Animated.View>
-    )
-  },
+      return (
+        <Animated.View style={[styles.wrapper, wrapperAnimStyle]}>
+          <ComposePost replyTo={replyTo} onPost={onPost} onClose={onClose} />
+        </Animated.View>
+      )
+    },
+  ),
 )
 
 const styles = StyleSheet.create({

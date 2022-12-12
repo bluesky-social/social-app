@@ -10,32 +10,35 @@ import {observer} from 'mobx-react-lite'
 import {SuggestedFollows} from '../discover/SuggestedFollows'
 import {useStores} from '../../../state'
 import {s} from '../../lib/styles'
+import {register} from 'react-native-bundle-splitter'
 
-export const Follows = observer(() => {
-  const store = useStores()
+export const Follows = register(
+  observer(() => {
+    const store = useStores()
 
-  const onNoSuggestions = () => {
-    // no suggestions, bounce from this view
-    store.onboard.next()
-  }
-  const onPressNext = () => store.onboard.next()
+    const onNoSuggestions = () => {
+      // no suggestions, bounce from this view
+      store.onboard.next()
+    }
+    const onPressNext = () => store.onboard.next()
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Suggested follows</Text>
-      <SuggestedFollows onNoSuggestions={onNoSuggestions} />
-      <View style={styles.footer}>
-        <TouchableOpacity onPress={onPressNext}>
-          <Text style={[s.blue3, s.f18]}>Skip</Text>
-        </TouchableOpacity>
-        <View style={s.flex1} />
-        <TouchableOpacity onPress={onPressNext}>
-          <Text style={[s.blue3, s.f18]}>Next</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  )
-})
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}>Suggested follows</Text>
+        <SuggestedFollows onNoSuggestions={onNoSuggestions} />
+        <View style={styles.footer}>
+          <TouchableOpacity onPress={onPressNext}>
+            <Text style={[s.blue3, s.f18]}>Skip</Text>
+          </TouchableOpacity>
+          <View style={s.flex1} />
+          <TouchableOpacity onPress={onPressNext}>
+            <Text style={[s.blue3, s.f18]}>Next</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    )
+  }),
+)
 
 const styles = StyleSheet.create({
   container: {

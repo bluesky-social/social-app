@@ -5,28 +5,30 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserGroupIcon} from '../../lib/icons'
 import {colors} from '../../lib/styles'
 
-export function EmptyState({
-  icon,
-  message,
-  style,
-}: {
-  icon: IconProp | 'user-group'
-  message: string
-  style?: StyleProp<ViewStyle>
-}) {
-  return (
-    <View style={[styles.container, style]}>
-      <View style={styles.iconContainer}>
-        {icon === 'user-group' ? (
-          <UserGroupIcon size="64" style={styles.icon} />
-        ) : (
-          <FontAwesomeIcon icon={icon} size={64} style={styles.icon} />
-        )}
+export const EmptyState = register(
+  ({
+    icon,
+    message,
+    style,
+  }: {
+    icon: IconProp | 'user-group'
+    message: string
+    style?: StyleProp<ViewStyle>
+  }) => {
+    return (
+      <View style={[styles.container, style]}>
+        <View style={styles.iconContainer}>
+          {icon === 'user-group' ? (
+            <UserGroupIcon size="64" style={styles.icon} />
+          ) : (
+            <FontAwesomeIcon icon={icon} size={64} style={styles.icon} />
+          )}
+        </View>
+        <Text style={styles.text}>{message}</Text>
       </View>
-      <Text style={styles.text}>{message}</Text>
-    </View>
-  )
-}
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   container: {

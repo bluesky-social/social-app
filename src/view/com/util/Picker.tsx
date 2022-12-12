@@ -33,45 +33,47 @@ interface PickerOpts {
 
 const MENU_WIDTH = 200
 
-export function Picker({
-  style,
-  labelStyle,
-  iconStyle,
-  items,
-  value,
-  onChange,
-  enabled,
-}: PickerOpts) {
-  const ref = useRef<View>(null)
-  const valueLabel = items.find(item => item.value === value)?.label || value
-  const onPress = () => {
-    if (!enabled) {
-      return
+export const Picker = register(
+  ({
+    style,
+    labelStyle,
+    iconStyle,
+    items,
+    value,
+    onChange,
+    enabled,
+  }: PickerOpts) => {
+    const ref = useRef<View>(null)
+    const valueLabel = items.find(item => item.value === value)?.label || value
+    const onPress = () => {
+      if (!enabled) {
+        return
+      }
+      ref.current?.measure(
+        (
+          _x: number,
+          _y: number,
+          width: number,
+          height: number,
+          pageX: number,
+          pageY: number,
+        ) => {
+          createDropdownMenu(pageX, pageY + height, MENU_WIDTH, items, onChange)
+        },
+      )
     }
-    ref.current?.measure(
-      (
-        _x: number,
-        _y: number,
-        width: number,
-        height: number,
-        pageX: number,
-        pageY: number,
-      ) => {
-        createDropdownMenu(pageX, pageY + height, MENU_WIDTH, items, onChange)
-      },
-    )
-  }
-  return (
-    <TouchableWithoutFeedback onPress={onPress}>
-      <View style={[styles.outer, style]} ref={ref}>
-        <View style={styles.label}>
-          <Text style={labelStyle}>{valueLabel}</Text>
+    return (
+      <TouchableWithoutFeedback onPress={onPress}>
+        <View style={[styles.outer, style]} ref={ref}>
+          <View style={styles.label}>
+            <Text style={labelStyle}>{valueLabel}</Text>
+          </View>
+          <FontAwesomeIcon icon="angle-down" style={[styles.icon, iconStyle]} />
         </View>
-        <FontAwesomeIcon icon="angle-down" style={[styles.icon, iconStyle]} />
-      </View>
-    </TouchableWithoutFeedback>
-  )
-}
+      </TouchableWithoutFeedback>
+    )
+  },
+)
 
 function createDropdownMenu(
   x: number,

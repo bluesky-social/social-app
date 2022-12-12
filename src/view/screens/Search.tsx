@@ -16,8 +16,9 @@ import {useStores} from '../../state'
 import {UserAutocompleteViewModel} from '../../state/models/user-autocomplete-view'
 import {s, colors} from '../lib/styles'
 import {MagnifyingGlassIcon} from '../lib/icons'
+import {register} from 'react-native-bundle-splitter'
 
-export const Search = ({navIdx, visible, params}: ScreenParams) => {
+export const Search = register(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const textInput = useRef<TextInput>(null)
   const [query, setQuery] = useState<string>('')
@@ -92,7 +93,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
       </View>
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   container: {

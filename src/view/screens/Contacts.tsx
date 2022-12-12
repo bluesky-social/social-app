@@ -7,8 +7,9 @@ import {colors} from '../lib/styles'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 import {useAnimatedValue} from '../lib/useAnimatedValue'
+import {register} from 'react-native-bundle-splitter'
 
-export const Contacts = ({navIdx, visible, params}: ScreenParams) => {
+export const Contacts = register(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const selectorInterp = useAnimatedValue(0)
 
@@ -50,7 +51,7 @@ export const Contacts = ({navIdx, visible, params}: ScreenParams) => {
       {!!store.me.handle && <ProfileFollowsComponent name={store.me.handle} />}
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   section: {

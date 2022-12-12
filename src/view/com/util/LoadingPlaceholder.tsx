@@ -4,37 +4,39 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UpIcon} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
 
-export function LoadingPlaceholder({
-  width,
-  height,
-  style,
-}: {
-  width: string | number
-  height: string | number
-  style?: StyleProp<ViewStyle>
-}) {
-  return (
-    <View
-      style={[
-        {
-          width,
-          height,
-          backgroundColor: '#e7e9ea',
-          borderRadius: 6,
-          overflow: 'hidden',
-        },
-        style,
-      ]}>
+export const LoadingPlaceholder = register(
+  ({
+    width,
+    height,
+    style,
+  }: {
+    width: string | number
+    height: string | number
+    style?: StyleProp<ViewStyle>
+  }) => {
+    return (
       <View
-        style={{
-          width,
-          height,
-          backgroundColor: '#e7e9ea',
-        }}
-      />
-    </View>
-  )
-}
+        style={[
+          {
+            width,
+            height,
+            backgroundColor: '#e7e9ea',
+            borderRadius: 6,
+            overflow: 'hidden',
+          },
+          style,
+        ]}>
+        <View
+          style={{
+            width,
+            height,
+            backgroundColor: '#e7e9ea',
+          }}
+        />
+      </View>
+    )
+  },
+)
 
 export function PostLoadingPlaceholder({
   style,
@@ -63,7 +65,7 @@ export function PostLoadingPlaceholder({
           <View style={s.flex1}>
             <UpIcon style={s.gray3} size={17} strokeWidth={1.7} />
           </View>
-          <View style={s.flex1}></View>
+          <View style={s.flex1} />
         </View>
       </View>
     </View>

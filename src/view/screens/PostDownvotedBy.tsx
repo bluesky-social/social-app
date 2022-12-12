@@ -5,22 +5,25 @@ import {PostVotedBy as PostLikedByComponent} from '../com/post-thread/PostVotedB
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 import {makeRecordUri} from '../../lib/strings'
+import {register} from 'react-native-bundle-splitter'
 
-export const PostDownvotedBy = ({navIdx, visible, params}: ScreenParams) => {
-  const store = useStores()
-  const {name, rkey} = params
-  const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
+export const PostDownvotedBy = register(
+  ({navIdx, visible, params}: ScreenParams) => {
+    const store = useStores()
+    const {name, rkey} = params
+    const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
 
-  useEffect(() => {
-    if (visible) {
-      store.nav.setTitle(navIdx, 'Downvoted by')
-    }
-  }, [store, visible])
+    useEffect(() => {
+      if (visible) {
+        store.nav.setTitle(navIdx, 'Downvoted by')
+      }
+    }, [store, visible])
 
-  return (
-    <View>
-      <ViewHeader title="Downvoted by" />
-      <PostLikedByComponent uri={uri} direction="down" />
-    </View>
-  )
-}
+    return (
+      <View>
+        <ViewHeader title="Downvoted by" />
+        <PostLikedByComponent uri={uri} direction="down" />
+      </View>
+    )
+  },
+)

@@ -2,8 +2,9 @@ import React from 'react'
 import {Text, Button, View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {useStores} from '../../state'
+import {register} from 'react-native-bundle-splitter'
 
-export const NotFound = () => {
+export const NotFound = register(() => {
   const stores = useStores()
   return (
     <View>
@@ -19,4 +20,4 @@ export const NotFound = () => {
       </View>
     </View>
   )
-}
+})
