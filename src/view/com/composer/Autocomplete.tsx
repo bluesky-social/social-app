@@ -8,14 +8,13 @@ import {
 } from 'react-native'
 import {useAnimatedValue} from '../../lib/useAnimatedValue'
 import {colors} from '../../lib/styles'
-import {register} from 'react-native-bundle-splitter'
 
 interface AutocompleteItem {
   handle: string
   displayName?: string
 }
 
-export const Autocomplete = register(function Autocomplete({
+export function Autocomplete({
   active,
   items,
   onSelect,
@@ -53,7 +52,7 @@ export const Autocomplete = register(function Autocomplete({
       ))}
     </Animated.View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   outer: {

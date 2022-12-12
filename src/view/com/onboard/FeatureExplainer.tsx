@@ -16,7 +16,6 @@ import {useStores} from '../../../state'
 import {s} from '../../lib/styles'
 import {SCENE_EXPLAINER, TABS_EXPLAINER} from '../../lib/assets'
 import {TABS_ENABLED} from '../../../build-flags'
-import {register} from 'react-native-bundle-splitter'
 
 const Intro = () => (
   <View style={styles.explainer}>
@@ -80,7 +79,7 @@ const SCENE_MAP = {
 }
 const renderScene = SceneMap(SCENE_MAP)
 
-export const FeatureExplainer = register(() => {
+export const FeatureExplainer = () => {
   const layout = useWindowDimensions()
   const store = useStores()
   const [index, setIndex] = useState(0)
@@ -154,7 +153,7 @@ export const FeatureExplainer = register(() => {
       </View>
     </SafeAreaView>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

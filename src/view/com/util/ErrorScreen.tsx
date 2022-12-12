@@ -2,50 +2,47 @@ import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from '../../lib/styles'
-import {register} from 'react-native-bundle-splitter'
 
-export const ErrorScreen = register(
-  ({
-    title,
-    message,
-    details,
-    onPressTryAgain,
-  }: {
-    title: string
-    message: string
-    details?: string
-    onPressTryAgain?: () => void
-  }) => {
-    return (
-      <View style={styles.outer}>
-        <View style={styles.errorIconContainer}>
-          <View style={styles.errorIcon}>
-            <FontAwesomeIcon
-              icon="exclamation"
-              style={{color: colors.white}}
-              size={24}
-            />
-          </View>
+export function ErrorScreen({
+  title,
+  message,
+  details,
+  onPressTryAgain,
+}: {
+  title: string
+  message: string
+  details?: string
+  onPressTryAgain?: () => void
+}) {
+  return (
+    <View style={styles.outer}>
+      <View style={styles.errorIconContainer}>
+        <View style={styles.errorIcon}>
+          <FontAwesomeIcon
+            icon="exclamation"
+            style={{color: colors.white}}
+            size={24}
+          />
         </View>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.message}>{message}</Text>
-        {details && <Text style={styles.details}>{details}</Text>}
-        {onPressTryAgain && (
-          <View style={styles.btnContainer}>
-            <TouchableOpacity style={styles.btn} onPress={onPressTryAgain}>
-              <FontAwesomeIcon
-                icon="arrows-rotate"
-                style={{color: colors.white}}
-                size={16}
-              />
-              <Text style={styles.btnText}>Try again</Text>
-            </TouchableOpacity>
-          </View>
-        )}
       </View>
-    )
-  },
-)
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.message}>{message}</Text>
+      {details && <Text style={styles.details}>{details}</Text>}
+      {onPressTryAgain && (
+        <View style={styles.btnContainer}>
+          <TouchableOpacity style={styles.btn} onPress={onPressTryAgain}>
+            <FontAwesomeIcon
+              icon="arrows-rotate"
+              style={{color: colors.white}}
+              size={16}
+            />
+            <Text style={styles.btnText}>Try again</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   outer: {

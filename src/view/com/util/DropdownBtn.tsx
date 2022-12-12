@@ -17,7 +17,6 @@ import {toShareUrl} from '../../../lib/strings'
 import {useStores} from '../../../state'
 import {ConfirmModel} from '../../../state/models/shell-ui'
 import {TABS_ENABLED} from '../../../build-flags'
-import {register} from 'react-native-bundle-splitter'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
@@ -27,54 +26,52 @@ export interface DropdownItem {
   onPress: () => void
 }
 
-export const DropdownBtn = register(
-  ({
-    style,
-    items,
-    menuWidth,
-    children,
-  }: {
-    style?: StyleProp<ViewStyle>
-    items: DropdownItem[]
-    menuWidth?: number
-    children?: React.ReactNode
-  }) => {
-    const ref = useRef<TouchableOpacity>(null)
+export function DropdownBtn({
+  style,
+  items,
+  menuWidth,
+  children,
+}: {
+  style?: StyleProp<ViewStyle>
+  items: DropdownItem[]
+  menuWidth?: number
+  children?: React.ReactNode
+}) {
+  const ref = useRef<TouchableOpacity>(null)
 
-    const onPress = () => {
-      ref.current?.measure(
-        (
-          _x: number,
-          _y: number,
-          width: number,
-          height: number,
-          pageX: number,
-          pageY: number,
-        ) => {
-          if (!menuWidth) {
-            menuWidth = 200
-          }
-          createDropdownMenu(
-            pageX + width - menuWidth,
-            pageY + height,
-            menuWidth,
-            items,
-          )
-        },
-      )
-    }
-
-    return (
-      <TouchableOpacity
-        style={style}
-        onPress={onPress}
-        hitSlop={HITSLOP}
-        ref={ref}>
-        {children}
-      </TouchableOpacity>
+  const onPress = () => {
+    ref.current?.measure(
+      (
+        _x: number,
+        _y: number,
+        width: number,
+        height: number,
+        pageX: number,
+        pageY: number,
+      ) => {
+        if (!menuWidth) {
+          menuWidth = 200
+        }
+        createDropdownMenu(
+          pageX + width - menuWidth,
+          pageY + height,
+          menuWidth,
+          items,
+        )
+      },
     )
-  },
-)
+  }
+
+  return (
+    <TouchableOpacity
+      style={style}
+      onPress={onPress}
+      hitSlop={HITSLOP}
+      ref={ref}>
+      {children}
+    </TouchableOpacity>
+  )
+}
 
 export function PostDropdownBtn({
   style,

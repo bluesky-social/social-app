@@ -10,62 +10,58 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import LinearGradient from 'react-native-linear-gradient'
 import {colors, gradients} from '../../lib/styles'
-import {register} from 'react-native-bundle-splitter'
 
-export const ErrorMessage = register(
-  ({
-    message,
-    numberOfLines,
-    dark,
-    style,
-    onPressTryAgain,
-  }: {
-    message: string
-    numberOfLines?: number
-    dark?: boolean
-    style?: StyleProp<ViewStyle>
-    onPressTryAgain?: () => void
-  }) => {
-    const inner = (
-      <>
-        <View
-          style={[styles.errorIcon, dark ? styles.darkErrorIcon : undefined]}>
+export function ErrorMessage({
+  message,
+  numberOfLines,
+  dark,
+  style,
+  onPressTryAgain,
+}: {
+  message: string
+  numberOfLines?: number
+  dark?: boolean
+  style?: StyleProp<ViewStyle>
+  onPressTryAgain?: () => void
+}) {
+  const inner = (
+    <>
+      <View style={[styles.errorIcon, dark ? styles.darkErrorIcon : undefined]}>
+        <FontAwesomeIcon
+          icon="exclamation"
+          style={{color: dark ? colors.red3 : colors.white}}
+          size={16}
+        />
+      </View>
+      <Text
+        style={[styles.message, dark ? styles.darkMessage : undefined]}
+        numberOfLines={numberOfLines}>
+        {message}
+      </Text>
+      {onPressTryAgain && (
+        <TouchableOpacity style={styles.btn} onPress={onPressTryAgain}>
           <FontAwesomeIcon
-            icon="exclamation"
-            style={{color: dark ? colors.red3 : colors.white}}
+            icon="arrows-rotate"
+            style={{color: dark ? colors.white : colors.red4}}
             size={16}
           />
-        </View>
-        <Text
-          style={[styles.message, dark ? styles.darkMessage : undefined]}
-          numberOfLines={numberOfLines}>
-          {message}
-        </Text>
-        {onPressTryAgain && (
-          <TouchableOpacity style={styles.btn} onPress={onPressTryAgain}>
-            <FontAwesomeIcon
-              icon="arrows-rotate"
-              style={{color: dark ? colors.white : colors.red4}}
-              size={16}
-            />
-          </TouchableOpacity>
-        )}
-      </>
+        </TouchableOpacity>
+      )}
+    </>
+  )
+  if (dark) {
+    return (
+      <LinearGradient
+        colors={[gradients.error.start, gradients.error.end]}
+        start={{x: 0.5, y: 0}}
+        end={{x: 1, y: 1}}
+        style={[styles.outer, style]}>
+        {inner}
+      </LinearGradient>
     )
-    if (dark) {
-      return (
-        <LinearGradient
-          colors={[gradients.error.start, gradients.error.end]}
-          start={{x: 0.5, y: 0}}
-          end={{x: 1, y: 1}}
-          style={[styles.outer, style]}>
-          {inner}
-        </LinearGradient>
-      )
-    }
-    return <View style={[styles.outer, style]}>{inner}</View>
-  },
-)
+  }
+  return <View style={[styles.outer, style]}>{inner}</View>
+}
 
 const styles = StyleSheet.create({
   outer: {

@@ -9,106 +9,105 @@ import {useStores} from '../../state'
 import {FeedModel} from '../../state/models/feed-view'
 import {ScreenParams} from '../routes'
 import {s, colors} from '../lib/styles'
-import {register} from 'react-native-bundle-splitter'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
-export const Home = register(
-  observer(({navIdx, visible, scrollElRef}: ScreenParams) => {
-    const store = useStores()
-    const [hasSetup, setHasSetup] = useState<boolean>(false)
-    const {appState} = useAppState({
-      onForeground: () => doPoll(true),
-    })
-    const defaultFeedView = useMemo<FeedModel>(
-      () =>
-        new FeedModel(store, 'home', {
-          algorithm: 'reverse-chronological',
-        }),
-      [store],
-    )
+export const Home = observer(function Home({
+  navIdx,
+  visible,
+  scrollElRef,
+}: ScreenParams) {
+  const store = useStores()
+  const [hasSetup, setHasSetup] = useState<boolean>(false)
+  const {appState} = useAppState({
+    onForeground: () => doPoll(true),
+  })
+  const defaultFeedView = useMemo<FeedModel>(
+    () =>
+      new FeedModel(store, 'home', {
+        algorithm: 'reverse-chronological',
+      }),
+    [store],
+  )
 
-    const doPoll = (knownActive = false) => {
-      if ((!knownActive && appState !== 'active') || !visible) {
-        return
-      }
-      if (defaultFeedView.isLoading) {
-        return
-      }
-      console.log('Polling home feed')
-      defaultFeedView.checkForLatest().catch(e => {
-        console.error('Failed to poll feed', e)
+  const doPoll = (knownActive = false) => {
+    if ((!knownActive && appState !== 'active') || !visible) {
+      return
+    }
+    if (defaultFeedView.isLoading) {
+      return
+    }
+    console.log('Polling home feed')
+    defaultFeedView.checkForLatest().catch(e => {
+      console.error('Failed to poll feed', e)
+    })
+  }
+
+  useEffect(() => {
+    let aborted = false
+    const pollInterval = setInterval(() => doPoll(), 15e3)
+    if (!visible) {
+      return
+    }
+
+    if (hasSetup) {
+      console.log('Updating home feed')
+      defaultFeedView.update()
+    } else {
+      store.nav.setTitle(navIdx, 'Home')
+      console.log('Fetching home feed')
+      defaultFeedView.setup().then(() => {
+        if (aborted) return
+        setHasSetup(true)
       })
     }
-
-    useEffect(() => {
-      let aborted = false
-      const pollInterval = setInterval(() => doPoll(), 15e3)
-      if (!visible) {
-        return
-      }
-
-      if (hasSetup) {
-        console.log('Updating home feed')
-        defaultFeedView.update()
-      } else {
-        store.nav.setTitle(navIdx, 'Home')
-        console.log('Fetching home feed')
-        defaultFeedView.setup().then(() => {
-          if (aborted) {
-            return
-          }
-          setHasSetup(true)
-        })
-      }
-      return () => {
-        clearInterval(pollInterval)
-        aborted = true
-      }
-    }, [visible, store])
-
-    const onPressCompose = () => {
-      store.shell.openComposer({onPost: onCreatePost})
+    return () => {
+      clearInterval(pollInterval)
+      aborted = true
     }
-    const onCreatePost = () => {
-      defaultFeedView.loadLatest()
-    }
-    const onPressTryAgain = () => {
-      defaultFeedView.refresh()
-    }
-    const onPressLoadLatest = () => {
-      defaultFeedView.refresh()
-      scrollElRef?.current?.scrollToOffset({offset: 0})
-    }
+  }, [visible, store])
 
-    return (
-      <View style={s.flex1}>
-        <ViewHeader
-          title="Bluesky"
-          subtitle="Private Beta"
-          onPost={onCreatePost}
-        />
-        <Feed
-          key="default"
-          feed={defaultFeedView}
-          scrollElRef={scrollElRef}
-          style={{flex: 1}}
-          onPressCompose={onPressCompose}
-          onPressTryAgain={onPressTryAgain}
-        />
-        {defaultFeedView.hasNewLatest ? (
-          <TouchableOpacity
-            style={styles.loadLatest}
-            onPress={onPressLoadLatest}
-            hitSlop={HITSLOP}>
-            <FontAwesomeIcon icon="arrow-up" style={{color: colors.white}} />
-            <Text style={styles.loadLatestText}>Load new posts</Text>
-          </TouchableOpacity>
-        ) : undefined}
-      </View>
-    )
-  }),
-)
+  const onPressCompose = () => {
+    store.shell.openComposer({onPost: onCreatePost})
+  }
+  const onCreatePost = () => {
+    defaultFeedView.loadLatest()
+  }
+  const onPressTryAgain = () => {
+    defaultFeedView.refresh()
+  }
+  const onPressLoadLatest = () => {
+    defaultFeedView.refresh()
+    scrollElRef?.current?.scrollToOffset({offset: 0})
+  }
+
+  return (
+    <View style={s.flex1}>
+      <ViewHeader
+        title="Bluesky"
+        subtitle="Private Beta"
+        onPost={onCreatePost}
+      />
+      <Feed
+        key="default"
+        feed={defaultFeedView}
+        scrollElRef={scrollElRef}
+        style={{flex: 1}}
+        onPressCompose={onPressCompose}
+        onPressTryAgain={onPressTryAgain}
+      />
+      {defaultFeedView.hasNewLatest ? (
+        <TouchableOpacity
+          style={styles.loadLatest}
+          onPress={onPressLoadLatest}
+          hitSlop={HITSLOP}>
+          <FontAwesomeIcon icon="arrow-up" style={{color: colors.white}} />
+          <Text style={styles.loadLatestText}>Load new posts</Text>
+        </TouchableOpacity>
+      ) : undefined}
+    </View>
+  )
+})
 
 const styles = StyleSheet.create({
   loadLatest: {

@@ -5,7 +5,6 @@ import {Link} from '../util/Link'
 import {PostDropdownBtn} from '../util/DropdownBtn'
 import {s} from '../../lib/styles'
 import {ago} from '../../../lib/strings'
-import {register} from 'react-native-bundle-splitter'
 
 interface PostMetaOpts {
   itemHref: string
@@ -19,7 +18,7 @@ interface PostMetaOpts {
   onDeletePost: () => void
 }
 
-export const PostMeta = register((opts: PostMetaOpts) => {
+export function PostMeta(opts: PostMetaOpts) {
   return (
     <View style={styles.meta}>
       <Link
@@ -48,7 +47,7 @@ export const PostMeta = register((opts: PostMetaOpts) => {
       </PostDropdownBtn>
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   meta: {

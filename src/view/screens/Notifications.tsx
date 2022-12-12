@@ -5,9 +5,8 @@ import {Feed} from '../com/notifications/Feed'
 import {useStores} from '../../state'
 import {NotificationsViewModel} from '../../state/models/notifications-view'
 import {ScreenParams} from '../routes'
-import {register} from 'react-native-bundle-splitter'
 
-export const Notifications = register(({navIdx, visible}: ScreenParams) => {
+export const Notifications = ({navIdx, visible}: ScreenParams) => {
   const store = useStores()
 
   useEffect(() => {
@@ -37,4 +36,4 @@ export const Notifications = register(({navIdx, visible}: ScreenParams) => {
       <Feed view={store.me.notifications} onPressTryAgain={onPressTryAgain} />
     </View>
   )
-})
+}

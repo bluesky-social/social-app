@@ -10,73 +10,74 @@ import {ErrorMessage} from '../util/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
-import {register} from 'react-native-bundle-splitter'
 
-export const ProfileFollowers = register(
-  observer(function ProfileFollowers({name}: {name: string}) {
-    const store = useStores()
-    const [view, setView] = useState<UserFollowersViewModel | undefined>()
+export const ProfileFollowers = observer(function ProfileFollowers({
+  name,
+}: {
+  name: string
+}) {
+  const store = useStores()
+  const [view, setView] = useState<UserFollowersViewModel | undefined>()
 
-    useEffect(() => {
-      if (view?.params.user === name) {
-        console.log('User followers doing nothing')
-        return // no change needed? or trigger refresh?
-      }
-      console.log('Fetching user followers', name)
-      const newView = new UserFollowersViewModel(store, {user: name})
-      setView(newView)
-      newView
-        .setup()
-        .catch(err => console.error('Failed to fetch user followers', err))
-    }, [name, view?.params.user, store])
-
-    const onRefresh = () => {
-      view?.refresh()
+  useEffect(() => {
+    if (view?.params.user === name) {
+      console.log('User followers doing nothing')
+      return // no change needed? or trigger refresh?
     }
+    console.log('Fetching user followers', name)
+    const newView = new UserFollowersViewModel(store, {user: name})
+    setView(newView)
+    newView
+      .setup()
+      .catch(err => console.error('Failed to fetch user followers', err))
+  }, [name, view?.params.user, store])
 
-    // loading
-    // =
-    if (
-      !view ||
-      (view.isLoading && !view.isRefreshing) ||
-      view.params.user !== name
-    ) {
-      return (
-        <View>
-          <ActivityIndicator />
-        </View>
-      )
-    }
+  const onRefresh = () => {
+    view?.refresh()
+  }
 
-    // error
-    // =
-    if (view.hasError) {
-      return (
-        <View>
-          <ErrorMessage
-            dark
-            message={view.error}
-            style={{margin: 6}}
-            onPressTryAgain={onRefresh}
-          />
-        </View>
-      )
-    }
-
-    // loaded
-    // =
-    const renderItem = ({item}: {item: FollowerItem}) => <User item={item} />
+  // loading
+  // =
+  if (
+    !view ||
+    (view.isLoading && !view.isRefreshing) ||
+    view.params.user !== name
+  ) {
     return (
       <View>
-        <FlatList
-          data={view.followers}
-          keyExtractor={item => item._reactKey}
-          renderItem={renderItem}
+        <ActivityIndicator />
+      </View>
+    )
+  }
+
+  // error
+  // =
+  if (view.hasError) {
+    return (
+      <View>
+        <ErrorMessage
+          dark
+          message={view.error}
+          style={{margin: 6}}
+          onPressTryAgain={onRefresh}
         />
       </View>
     )
-  }),
-)
+  }
+
+  // loaded
+  // =
+  const renderItem = ({item}: {item: FollowerItem}) => <User item={item} />
+  return (
+    <View>
+      <FlatList
+        data={view.followers}
+        keyExtractor={item => item._reactKey}
+        renderItem={renderItem}
+      />
+    </View>
+  )
+})
 
 const User = ({item}: {item: FollowerItem}) => {
   return (

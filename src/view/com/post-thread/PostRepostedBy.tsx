@@ -10,75 +10,76 @@ import {ErrorMessage} from '../util/ErrorMessage'
 import {Link} from '../util/Link'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
-import {register} from 'react-native-bundle-splitter'
 
-export const PostRepostedBy = register(
-  observer(function PostRepostedBy({uri}: {uri: string}) {
-    const store = useStores()
-    const [view, setView] = useState<RepostedByViewModel | undefined>()
+export const PostRepostedBy = observer(function PostRepostedBy({
+  uri,
+}: {
+  uri: string
+}) {
+  const store = useStores()
+  const [view, setView] = useState<RepostedByViewModel | undefined>()
 
-    useEffect(() => {
-      if (view?.params.uri === uri) {
-        console.log('Reposted by doing nothing')
-        return // no change needed? or trigger refresh?
-      }
-      console.log('Fetching Reposted by', uri)
-      const newView = new RepostedByViewModel(store, {uri})
-      setView(newView)
-      newView
-        .setup()
-        .catch(err => console.error('Failed to fetch reposted by', err))
-    }, [uri, view?.params.uri, store])
-
-    const onRefresh = () => {
-      view?.refresh()
+  useEffect(() => {
+    if (view?.params.uri === uri) {
+      console.log('Reposted by doing nothing')
+      return // no change needed? or trigger refresh?
     }
+    console.log('Fetching Reposted by', uri)
+    const newView = new RepostedByViewModel(store, {uri})
+    setView(newView)
+    newView
+      .setup()
+      .catch(err => console.error('Failed to fetch reposted by', err))
+  }, [uri, view?.params.uri, store])
 
-    // loading
-    // =
-    if (
-      !view ||
-      (view.isLoading && !view.isRefreshing) ||
-      view.params.uri !== uri
-    ) {
-      return (
-        <View>
-          <ActivityIndicator />
-        </View>
-      )
-    }
+  const onRefresh = () => {
+    view?.refresh()
+  }
 
-    // error
-    // =
-    if (view.hasError) {
-      return (
-        <View>
-          <ErrorMessage
-            dark
-            message={view.error}
-            style={{margin: 6}}
-            onPressTryAgain={onRefresh}
-          />
-        </View>
-      )
-    }
-
-    // loaded
-    // =
-    const renderItem = ({item}: {item: RepostedByViewItemModel}) => (
-      <RepostedByItem item={item} />
-    )
+  // loading
+  // =
+  if (
+    !view ||
+    (view.isLoading && !view.isRefreshing) ||
+    view.params.uri !== uri
+  ) {
     return (
       <View>
-        <FlatList
-          data={view.repostedBy}
-          keyExtractor={item => item._reactKey}
-          renderItem={renderItem}
+        <ActivityIndicator />
+      </View>
+    )
+  }
+
+  // error
+  // =
+  if (view.hasError) {
+    return (
+      <View>
+        <ErrorMessage
+          dark
+          message={view.error}
+          style={{margin: 6}}
+          onPressTryAgain={onRefresh}
         />
       </View>
     )
-  }),
-)
+  }
+
+  // loaded
+  // =
+  const renderItem = ({item}: {item: RepostedByViewItemModel}) => (
+    <RepostedByItem item={item} />
+  )
+  return (
+    <View>
+      <FlatList
+        data={view.repostedBy}
+        keyExtractor={item => item._reactKey}
+        renderItem={renderItem}
+      />
+    </View>
+  )
+})
 
 const RepostedByItem = ({item}: {item: RepostedByViewItemModel}) => {
   return (

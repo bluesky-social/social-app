@@ -2,56 +2,53 @@ import React, {useCallback} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from '../../lib/styles'
-import {register} from 'react-native-bundle-splitter'
 
-export const SelectedPhoto = register(
-  ({
-    selectedPhotos,
-    setSelectedPhotos,
-  }: {
-    selectedPhotos: string[]
-    setSelectedPhotos: React.Dispatch<React.SetStateAction<string[]>>
-  }) => {
-    const imageStyle =
-      selectedPhotos.length === 1
-        ? styles.image250
-        : selectedPhotos.length === 2
-        ? styles.image175
-        : styles.image85
+export const SelectedPhoto = ({
+  selectedPhotos,
+  setSelectedPhotos,
+}: {
+  selectedPhotos: string[]
+  setSelectedPhotos: React.Dispatch<React.SetStateAction<string[]>>
+}) => {
+  const imageStyle =
+    selectedPhotos.length === 1
+      ? styles.image250
+      : selectedPhotos.length === 2
+      ? styles.image175
+      : styles.image85
 
-    const handleRemovePhoto = useCallback(
-      item => {
-        setSelectedPhotos(
-          selectedPhotos.filter(filterItem => filterItem !== item),
-        )
-      },
-      [selectedPhotos, setSelectedPhotos],
-    )
+  const handleRemovePhoto = useCallback(
+    item => {
+      setSelectedPhotos(
+        selectedPhotos.filter(filterItem => filterItem !== item),
+      )
+    },
+    [selectedPhotos, setSelectedPhotos],
+  )
 
-    return selectedPhotos.length !== 0 ? (
-      <View style={styles.imageContainer}>
-        {selectedPhotos.length !== 0 &&
-          selectedPhotos.map((item, index) => (
-            <View
-              key={`selected-image-${index}`}
-              style={[styles.image, imageStyle]}>
-              <TouchableOpacity
-                onPress={() => handleRemovePhoto(item)}
-                style={styles.removePhotoButton}>
-                <FontAwesomeIcon
-                  icon="xmark"
-                  size={16}
-                  style={{color: colors.white}}
-                />
-              </TouchableOpacity>
+  return selectedPhotos.length !== 0 ? (
+    <View style={styles.imageContainer}>
+      {selectedPhotos.length !== 0 &&
+        selectedPhotos.map((item, index) => (
+          <View
+            key={`selected-image-${index}`}
+            style={[styles.image, imageStyle]}>
+            <TouchableOpacity
+              onPress={() => handleRemovePhoto(item)}
+              style={styles.removePhotoButton}>
+              <FontAwesomeIcon
+                icon="xmark"
+                size={16}
+                style={{color: colors.white}}
+              />
+            </TouchableOpacity>
 
-              <Image style={[styles.image, imageStyle]} source={{uri: item}} />
-            </View>
-          ))}
-      </View>
-    ) : null
-  },
-)
+            <Image style={[styles.image, imageStyle]} source={{uri: item}} />
+          </View>
+        ))}
+    </View>
+  ) : null
+}
 
 const styles = StyleSheet.create({
   imageContainer: {

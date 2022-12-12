@@ -3,9 +3,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {colors} from '../../lib/styles'
 import {useStores} from '../../../state'
 import {UserAvatar} from '../util/UserAvatar'
-import {register} from 'react-native-bundle-splitter'
 
-export const ComposePrompt = register(function ComposePrompt({
+export function ComposePrompt({
   noAvi = false,
   text = "What's up?",
   btn = 'Post',
@@ -42,7 +41,7 @@ export const ComposePrompt = register(function ComposePrompt({
       </View>
     </TouchableOpacity>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

@@ -10,38 +10,35 @@ import {
 } from 'react-native'
 import {useStores, RootStoreModel} from '../../../state'
 import {convertBskyAppUrlIfNeeded} from '../../../lib/strings'
-import {register} from 'react-native-bundle-splitter'
 
-export const Link = register(
-  observer(function Link({
-    style,
-    href,
-    title,
-    children,
-  }: {
-    style?: StyleProp<ViewStyle>
-    href: string
-    title?: string
-    children?: React.ReactNode
-  }) {
-    const store = useStores()
-    const onPress = () => {
-      handleLink(store, href, false)
-    }
-    const onLongPress = () => {
-      handleLink(store, href, true)
-    }
-    return (
-      <TouchableOpacity
-        style={style}
-        onPress={onPress}
-        onLongPress={onLongPress}
-        delayPressIn={50}>
-        {children ? children : <Text>{title || 'link'}</Text>}
-      </TouchableOpacity>
-    )
-  }),
-)
+export const Link = observer(function Link({
+  style,
+  href,
+  title,
+  children,
+}: {
+  style?: StyleProp<ViewStyle>
+  href: string
+  title?: string
+  children?: React.ReactNode
+}) {
+  const store = useStores()
+  const onPress = () => {
+    handleLink(store, href, false)
+  }
+  const onLongPress = () => {
+    handleLink(store, href, true)
+  }
+  return (
+    <TouchableOpacity
+      style={style}
+      onPress={onPress}
+      onLongPress={onLongPress}
+      delayPressIn={50}>
+      {children ? children : <Text>{title || 'link'}</Text>}
+    </TouchableOpacity>
+  )
+})
 
 export const TextLink = observer(function Link({
   style,
