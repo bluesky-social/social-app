@@ -29,6 +29,7 @@ export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
       return
     }
     setTitle()
+    store.shell.setMinimalShellMode(false)
     if (!view.hasLoaded && !view.isLoading) {
       console.log('Fetching post thread', uri)
       view.setup().then(

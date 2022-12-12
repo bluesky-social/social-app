@@ -12,6 +12,7 @@ export const ProfileMembers = ({navIdx, visible, params}: ScreenParams) => {
   useEffect(() => {
     if (visible) {
       store.nav.setTitle(navIdx, `Members of ${name}`)
+      store.shell.setMinimalShellMode(false)
     }
   }, [store, visible, name])
 

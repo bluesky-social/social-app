@@ -116,6 +116,7 @@ export const MobileShell: React.FC = observer(() => {
   const winDim = useWindowDimensions()
   const [menuSwipingDirection, setMenuSwipingDirection] = useState(0)
   const swipeGestureInterp = useAnimatedValue(0)
+  const minimalShellInterp = useAnimatedValue(0)
   const tabMenuInterp = useAnimatedValue(0)
   const newTabInterp = useAnimatedValue(0)
   const [isRunningNewTabAnim, setIsRunningNewTabAnim] = useState(false)
@@ -156,6 +157,27 @@ export const MobileShell: React.FC = observer(() => {
   const onPressTabs = () => toggleTabsMenu(!isTabsSelectorActive)
   const doNewTab = (url: string) => () => store.nav.newTab(url)
 
+  // minimal shell animation
+  // =
+  useEffect(() => {
+    if (store.shell.minimalShellMode) {
+      Animated.timing(minimalShellInterp, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }).start()
+    } else {
+      Animated.timing(minimalShellInterp, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: true,
+      }).start()
+    }
+  }, [minimalShellInterp, store.shell.minimalShellMode])
+  const footerMinimalShellTransform = {
+    transform: [{translateY: Animated.multiply(minimalShellInterp, 100)}],
+  }
+
   // tab selector animation
   // =
   const toggleTabsMenu = (active: boolean) => {
@@ -182,7 +204,7 @@ export const MobileShell: React.FC = observer(() => {
         useNativeDriver: false,
       }).start()
     }
-  }, [isTabsSelectorActive])
+  }, [tabMenuInterp, isTabsSelectorActive])
 
   // new tab animation
   // =
@@ -190,7 +212,7 @@ export const MobileShell: React.FC = observer(() => {
     if (screenRenderDesc.hasNewTab && !isRunningNewTabAnim) {
       setIsRunningNewTabAnim(true)
     }
-  }, [screenRenderDesc.hasNewTab])
+  }, [isRunningNewTabAnim, screenRenderDesc.hasNewTab])
   useEffect(() => {
     if (isRunningNewTabAnim) {
       const reset = () => {
@@ -208,7 +230,7 @@ export const MobileShell: React.FC = observer(() => {
     } else {
       newTabInterp.setValue(0)
     }
-  }, [isRunningNewTabAnim])
+  }, [newTabInterp, store.nav.tab, isRunningNewTabAnim])
 
   // navigation swipes
   // =
@@ -396,10 +418,11 @@ export const MobileShell: React.FC = observer(() => {
         tabMenuInterp={tabMenuInterp}
         onClose={() => toggleTabsMenu(false)}
       />
-      <View
+      <Animated.View
         style={[
           styles.bottomBar,
           {paddingBottom: clamp(safeAreaInsets.bottom, 15, 40)},
+          footerMinimalShellTransform,
         ]}>
         <Btn
           icon={isAtHome ? 'home-solid' : 'home'}
@@ -419,7 +442,7 @@ export const MobileShell: React.FC = observer(() => {
           onLongPress={TABS_ENABLED ? doNewTab('/notifications') : undefined}
           notificationCount={store.me.notificationCount}
         />
-      </View>
+      </Animated.View>
       <Modal />
       <Lightbox />
       <Composer
@@ -565,6 +588,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
   bottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     backgroundColor: colors.white,
     borderTopWidth: 1,

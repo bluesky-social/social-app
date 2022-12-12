@@ -9,6 +9,7 @@ import {useStores} from '../../state'
 import {FeedModel} from '../../state/models/feed-view'
 import {ScreenParams} from '../routes'
 import {s, colors} from '../lib/styles'
+import {useOnMainScroll} from '../lib/useOnMainScroll'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
@@ -18,6 +19,7 @@ export const Home = observer(function Home({
   scrollElRef,
 }: ScreenParams) {
   const store = useStores()
+  const onMainScroll = useOnMainScroll(store)
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const {appState} = useAppState({
     onForeground: () => doPoll(true),
@@ -95,6 +97,7 @@ export const Home = observer(function Home({
         style={{flex: 1}}
         onPressCompose={onPressCompose}
         onPressTryAgain={onPressTryAgain}
+        onScroll={onMainScroll}
       />
       {defaultFeedView.hasNewLatest ? (
         <TouchableOpacity

@@ -18,6 +18,7 @@ import {EmptyState} from '../com/util/EmptyState'
 import {ViewHeader} from '../com/util/ViewHeader'
 import * as Toast from '../com/util/Toast'
 import {s, colors} from '../lib/styles'
+import {useOnMainScroll} from '../lib/useOnMainScroll'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const END_ITEM = {_reactKey: '__end__'}
@@ -25,6 +26,7 @@ const EMPTY_ITEM = {_reactKey: '__empty__'}
 
 export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
+  const onMainScroll = useOnMainScroll(store)
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const uiState = useMemo(
     () => new ProfileUiModel(store, {user: params.name}),
@@ -252,6 +254,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
           ListFooterComponent={Footer}
           refreshing={uiState.isRefreshing || false}
           onSelectView={onSelectView}
+          onScroll={onMainScroll}
           onRefresh={onRefresh}
           onEndReached={onEndReached}
         />

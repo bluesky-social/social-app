@@ -74,6 +74,7 @@ export interface ComposerOpts {
 }
 
 export class ShellUiModel {
+  minimalShellMode = false
   isMainMenuOpen = false
   isModalActive = false
   activeModal:
@@ -89,6 +90,10 @@ export class ShellUiModel {
 
   constructor() {
     makeAutoObservable(this)
+  }
+
+  setMinimalShellMode(v: boolean) {
+    this.minimalShellMode = v
   }
 
   setMainMenuOpen(v: boolean) {

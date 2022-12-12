@@ -1,8 +1,14 @@
 import React, {useEffect, useState} from 'react'
-import {FlatList, View} from 'react-native'
+import {
+  FlatList,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  View,
+} from 'react-native'
 import {Selector} from './Selector'
 import {HorzSwipe} from './gestures/HorzSwipe'
 import {useAnimatedValue} from '../../lib/useAnimatedValue'
+import {OnScrollCb} from '../../lib/useOnMainScroll'
 
 const HEADER_ITEM = {_reactKey: '__header__'}
 const SELECTOR_ITEM = {_reactKey: '__selector__'}
@@ -17,6 +23,7 @@ export function ViewSelector({
   renderItem,
   ListFooterComponent,
   onSelectView,
+  onScroll,
   onRefresh,
   onEndReached,
 }: {
@@ -32,6 +39,7 @@ export function ViewSelector({
     | null
     | undefined
   onSelectView?: (viewIndex: number) => void
+  onScroll?: OnScrollCb
   onRefresh?: () => void
   onEndReached?: (info: {distanceFromEnd: number}) => void
 }) {
@@ -90,6 +98,7 @@ export function ViewSelector({
         ListFooterComponent={ListFooterComponent}
         stickyHeaderIndices={STICKY_HEADER_INDICES}
         refreshing={refreshing}
+        onScroll={onScroll}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
       />

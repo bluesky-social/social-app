@@ -6,15 +6,18 @@ import {FeedItem} from './FeedItem'
 import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/ErrorMessage'
 import {EmptyState} from '../util/EmptyState'
+import {OnScrollCb} from '../../lib/useOnMainScroll'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 
 export const Feed = observer(function Feed({
   view,
   onPressTryAgain,
+  onScroll,
 }: {
   view: NotificationsViewModel
   onPressTryAgain?: () => void
+  onScroll?: OnScrollCb
 }) {
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your
@@ -65,6 +68,7 @@ export const Feed = observer(function Feed({
           refreshing={view.isRefreshing}
           onRefresh={onRefresh}
           onEndReached={onEndReached}
+          onScroll={onScroll}
         />
       )}
     </View>
