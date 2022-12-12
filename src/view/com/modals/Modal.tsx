@@ -43,14 +43,14 @@ export const Modal = observer(function Modal() {
     snapPoints = ConfirmModal.snapPoints
     element = (
       <ConfirmModal.Component
-        {...(store.shell.activeModal as models.ConfirmModel)}
+        {...(store.shell.activeModal as models.ConfirmModal)}
       />
     )
   } else if (store.shell.activeModal?.name === 'edit-profile') {
     snapPoints = EditProfileModal.snapPoints
     element = (
       <EditProfileModal.Component
-        {...(store.shell.activeModal as models.EditProfileModel)}
+        {...(store.shell.activeModal as models.EditProfileModal)}
       />
     )
   } else if (store.shell.activeModal?.name === 'create-scene') {
@@ -60,14 +60,14 @@ export const Modal = observer(function Modal() {
     snapPoints = InviteToSceneModal.snapPoints
     element = (
       <InviteToSceneModal.Component
-        {...(store.shell.activeModal as models.InviteToSceneModel)}
+        {...(store.shell.activeModal as models.InviteToSceneModal)}
       />
     )
   } else if (store.shell.activeModal?.name === 'server-input') {
     snapPoints = ServerInputModal.snapPoints
     element = (
       <ServerInputModal.Component
-        {...(store.shell.activeModal as models.ServerInputModel)}
+        {...(store.shell.activeModal as models.ServerInputModal)}
       />
     )
   } else {

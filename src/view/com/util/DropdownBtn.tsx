@@ -15,7 +15,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from '../../lib/styles'
 import {toShareUrl} from '../../../lib/strings'
 import {useStores} from '../../../state'
-import {ConfirmModel} from '../../../state/models/shell-ui'
+import {ConfirmModal} from '../../../state/models/shell-ui'
 import {TABS_ENABLED} from '../../../build-flags'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
@@ -122,7 +122,7 @@ export function PostDropdownBtn({
           label: 'Delete post',
           onPress() {
             store.shell.openModal(
-              new ConfirmModel(
+              new ConfirmModal(
                 'Delete this post?',
                 'Are you sure? This can not be undone.',
                 onDeletePost,

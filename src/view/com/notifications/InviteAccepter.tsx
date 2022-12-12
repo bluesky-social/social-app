@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as apilib from '../../../state/lib/api'
 import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
-import {ConfirmModel} from '../../../state/models/shell-ui'
+import {ConfirmModal} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
 import {ProfileCard} from '../profile/ProfileCard'
 import * as Toast from '../util/Toast'
@@ -17,7 +17,7 @@ export function InviteAccepter({item}: {item: NotificationsViewItemModel}) {
     confirmationUri !== '' || store.me.memberships?.isMemberOf(item.author.did)
   const onPressAccept = async () => {
     store.shell.openModal(
-      new ConfirmModel(
+      new ConfirmModal(
         'Join this scene?',
         () => (
           <View>

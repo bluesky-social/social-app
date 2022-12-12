@@ -7,9 +7,10 @@ import {AtUri} from '../../../third-party/uri'
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {useStores} from '../../../state'
 import {
-  ConfirmModel,
-  EditProfileModel,
-  InviteToSceneModel,
+  ConfirmModal,
+  EditProfileModal,
+  InviteToSceneModal,
+  ProfileImageLightbox,
 } from '../../../state/models/shell-ui'
 import {pluralize} from '../../../lib/strings'
 import {s, colors} from '../../lib/styles'
@@ -35,11 +36,8 @@ export const ProfileHeader = observer(function ProfileHeader({
     [view.myState.member],
   )
 
-  const onPressBack = () => {
-    store.nav.tab.goBack()
-  }
-  const onPressSearch = () => {
-    store.nav.navigate(`/search`)
+  const onPressAvi = () => {
+    store.shell.openLightbox(new ProfileImageLightbox(view))
   }
   const onPressToggleFollow = () => {
     view?.toggleFollowing().then(
@@ -54,7 +52,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     )
   }
   const onPressEditProfile = () => {
-    store.shell.openModal(new EditProfileModel(view, onRefreshAll))
+    store.shell.openModal(new EditProfileModal(view, onRefreshAll))
   }
   const onPressFollowers = () => {
     store.nav.navigate(`/profile/${view.handle}/followers`)
@@ -66,11 +64,11 @@ export const ProfileHeader = observer(function ProfileHeader({
     store.nav.navigate(`/profile/${view.handle}/members`)
   }
   const onPressInviteMembers = () => {
-    store.shell.openModal(new InviteToSceneModel(view))
+    store.shell.openModal(new InviteToSceneModal(view))
   }
   const onPressLeaveScene = () => {
     store.shell.openModal(
-      new ConfirmModel(
+      new ConfirmModal(
         'Leave this scene?',
         `You'll be able to come back unless your invite is revoked.`,
         onPressConfirmLeaveScene,
@@ -153,14 +151,6 @@ export const ProfileHeader = observer(function ProfileHeader({
   return (
     <View style={styles.outer}>
       <UserBanner handle={view.handle} banner={view.banner} />
-      <View style={styles.avi}>
-        <UserAvatar
-          size={80}
-          handle={view.handle}
-          displayName={view.displayName}
-          avatar={view.avatar}
-        />
-      </View>
       <View style={styles.content}>
         <View style={[styles.buttonsLine]}>
           {isMe ? (
@@ -304,6 +294,14 @@ export const ProfileHeader = observer(function ProfileHeader({
           </TouchableOpacity>
         </View>
       ) : undefined}
+      <TouchableOpacity style={styles.avi} onPress={onPressAvi}>
+        <UserAvatar
+          size={80}
+          handle={view.handle}
+          displayName={view.displayName}
+          avatar={view.avatar}
+        />
+      </TouchableOpacity>
     </View>
   )
 })

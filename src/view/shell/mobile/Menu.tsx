@@ -18,7 +18,7 @@ import {
   MagnifyingGlassIcon,
 } from '../../lib/icons'
 import {UserAvatar} from '../../com/util/UserAvatar'
-import {CreateSceneModel} from '../../../state/models/shell-ui'
+import {CreateSceneModal} from '../../../state/models/shell-ui'
 
 export const Menu = ({
   visible,
@@ -53,7 +53,7 @@ export const Menu = ({
   }
   const onPressCreateScene = () => {
     onClose()
-    store.shell.openModal(new CreateSceneModel())
+    store.shell.openModal(new CreateSceneModal())
   }
 
   // rendering
