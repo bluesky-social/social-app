@@ -39,14 +39,12 @@ export class ProfileViewModel {
   displayName?: string
   description?: string
   avatar?: string
+  banner?: string
   followersCount: number = 0
   followsCount: number = 0
   membersCount: number = 0
   postsCount: number = 0
   myState = new ProfileViewMyStateModel()
-
-  // TODO TEMP data to be implemented in the protocol
-  userBanner: string | null = null
 
   // added data
   descriptionEntities?: Entity[]
@@ -123,11 +121,8 @@ export class ProfileViewModel {
   async updateProfile(
     updates: Profile.Record,
     newUserAvatar: PickedImage | undefined,
-    userBanner: string | null, // TODO TEMP
+    newUserBanner: PickedImage | undefined,
   ) {
-    // TODO TEMP add userBanner to the protocol when suported
-    this.userBanner = userBanner
-
     if (newUserAvatar) {
       const res = await this.rootStore.api.com.atproto.blob.upload(
         newUserAvatar.path, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
@@ -138,6 +133,18 @@ export class ProfileViewModel {
       updates.avatar = {
         cid: res.data.cid,
         mimeType: newUserAvatar.mime,
+      }
+    }
+    if (newUserBanner) {
+      const res = await this.rootStore.api.com.atproto.blob.upload(
+        newUserBanner.path, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
+        {
+          encoding: newUserBanner.mime,
+        },
+      )
+      updates.banner = {
+        cid: res.data.cid,
+        mimeType: newUserBanner.mime,
       }
     }
     await this.rootStore.api.app.bsky.actor.updateProfile(updates)
@@ -187,6 +194,7 @@ export class ProfileViewModel {
     this.displayName = res.data.displayName
     this.description = res.data.description
     this.avatar = res.data.avatar
+    this.banner = res.data.banner
     this.followersCount = res.data.followersCount
     this.followsCount = res.data.followsCount
     this.membersCount = res.data.membersCount

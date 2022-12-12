@@ -2,6 +2,7 @@ import React, {useCallback} from 'react'
 import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Image as PickedImage} from 'react-native-image-crop-picker'
 import {getGradient} from '../../lib/asset-gen'
 import {colors} from '../../lib/styles'
 import {
@@ -9,16 +10,15 @@ import {
   openCropper,
   openPicker,
 } from 'react-native-image-crop-picker'
-import {IMAGES_ENABLED} from '../../../build-flags'
 
 export function UserBanner({
   handle,
-  userBanner,
-  setUserBanner,
+  banner,
+  onSelectNewBanner,
 }: {
   handle: string
-  userBanner?: string | null
-  setUserBanner?: React.Dispatch<React.SetStateAction<string | null>>
+  banner?: string | null
+  onSelectNewBanner?: (img: PickedImage) => void
 }) {
   const gradient = getGradient(handle)
 
@@ -30,13 +30,14 @@ export function UserBanner({
           openCamera({
             mediaType: 'photo',
             cropping: true,
+            compressImageMaxWidth: 1500,
             width: 1500,
+            compressImageMaxHeight: 500,
             height: 500,
-          }).then(item => {
-            if (setUserBanner != null) {
-              setUserBanner(item.path)
-            }
-          })
+            forceJpg: true, // ios only
+            compressImageQuality: 0.4,
+            includeExif: true,
+          }).then(onSelectNewBanner)
         },
       },
       {
@@ -48,18 +49,19 @@ export function UserBanner({
             await openCropper({
               mediaType: 'photo',
               path: item.path,
+              compressImageMaxWidth: 1500,
               width: 1500,
+              compressImageMaxHeight: 500,
               height: 500,
-            }).then(croppedItem => {
-              if (setUserBanner != null) {
-                setUserBanner(croppedItem.path)
-              }
-            })
+              forceJpg: true, // ios only
+              compressImageQuality: 0.4,
+              includeExif: true,
+            }).then(onSelectNewBanner)
           })
         },
       },
     ])
-  }, [setUserBanner])
+  }, [onSelectNewBanner])
 
   const renderSvg = () => (
     <Svg width="100%" height="120" viewBox="50 0 200 100">
@@ -79,10 +81,10 @@ export function UserBanner({
   )
 
   // setUserBanner is only passed as prop on the EditProfile component
-  return setUserBanner != null && IMAGES_ENABLED ? (
+  return onSelectNewBanner ? (
     <TouchableOpacity onPress={handleEditBanner}>
-      {userBanner ? (
-        <Image style={styles.bannerImage} source={{uri: userBanner}} />
+      {banner ? (
+        <Image style={styles.bannerImage} source={{uri: banner}} />
       ) : (
         renderSvg()
       )}
@@ -94,11 +96,11 @@ export function UserBanner({
         />
       </View>
     </TouchableOpacity>
-  ) : userBanner ? (
+  ) : banner ? (
     <Image
       style={styles.bannerImage}
-      resizeMode="stretch"
-      source={{uri: userBanner}}
+      resizeMode="cover"
+      source={{uri: banner}}
     />
   ) : (
     renderSvg()
