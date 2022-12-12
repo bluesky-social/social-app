@@ -89,6 +89,7 @@ export class SessionModel {
 
   clear() {
     this.data = null
+    this.setOnline(false)
   }
 
   setState(data: SessionData) {
@@ -201,6 +202,7 @@ export class SessionModel {
         did: res.data.did,
       })
       this.configureApi()
+      this.setOnline(true, false)
       this.rootStore.me.load().catch(e => {
         console.error('Failed to fetch local user information', e)
       })
