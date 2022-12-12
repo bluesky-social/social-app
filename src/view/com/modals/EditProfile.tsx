@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import {ComAtprotoBlobUpload} from '../../../third-party/api/index'
 import * as Toast from '../util/Toast'
 import {
   ActivityIndicator,
@@ -20,6 +19,7 @@ import {
   MAX_DISPLAY_NAME,
   MAX_DESCRIPTION,
 } from '../../../lib/strings'
+import {isNetworkError} from '../../../lib/errors'
 import {UserBanner} from '../util/UserBanner'
 import {UserAvatar} from '../util/UserAvatar'
 
@@ -52,7 +52,6 @@ export function Component({
     store.shell.closeModal()
   }
   const onSelectNewAvatar = (img: PickedImage) => {
-    console.log(img)
     setNewUserAvatar(img)
     setUserAvatar(img.path)
   }
@@ -74,14 +73,12 @@ export function Component({
       onUpdate?.()
       store.shell.closeModal()
     } catch (e: any) {
-      if (e instanceof ComAtprotoBlobUpload.InvalidBlobError) {
-        setError(e.message)
+      if (isNetworkError(e)) {
+        setError(
+          'Failed to save your profile. Check your internet connection and try again.',
+        )
       } else {
-        // TODO replace when error detection is correct
         setError(e.message)
-        // setError(
-        //   'Failed to save your profile. Check your internet connection and try again.',
-        // )
       }
     }
     setProcessing(false)
