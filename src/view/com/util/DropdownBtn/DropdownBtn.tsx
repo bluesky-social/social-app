@@ -11,6 +11,7 @@ import {
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import RootSiblings from 'react-native-root-siblings'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {colors} from '../../../lib/styles'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
