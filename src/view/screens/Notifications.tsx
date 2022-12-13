@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/notifications/Feed'
 import {useStores} from '../../state'
-import {NotificationsViewModel} from '../../state/models/notifications-view'
 import {ScreenParams} from '../routes'
 import {useOnMainScroll} from '../lib/useOnMainScroll'
 
@@ -34,7 +33,7 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
 
   return (
     <View style={{flex: 1}}>
-      <ViewHeader title="Notifications" />
+      <ViewHeader title="Notifications" canGoBack={false} />
       <Feed
         view={store.me.notifications}
         onPressTryAgain={onPressTryAgain}

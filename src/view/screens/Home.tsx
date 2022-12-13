@@ -3,6 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
 import {useStores} from '../../state'
@@ -10,6 +11,7 @@ import {FeedModel} from '../../state/models/feed-view'
 import {ScreenParams} from '../routes'
 import {s, colors} from '../lib/styles'
 import {useOnMainScroll} from '../lib/useOnMainScroll'
+import {clamp} from 'lodash'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
@@ -20,6 +22,7 @@ export const Home = observer(function Home({
 }: ScreenParams) {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
+  const safeAreaInsets = useSafeAreaInsets()
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const {appState} = useAppState({
     onForeground: () => doPoll(true),
@@ -88,6 +91,7 @@ export const Home = observer(function Home({
       <ViewHeader
         title="Bluesky"
         subtitle="Private Beta"
+        canGoBack={false}
         onPost={onCreatePost}
       />
       <Feed
@@ -103,7 +107,9 @@ export const Home = observer(function Home({
         <TouchableOpacity
           style={[
             styles.loadLatest,
-            store.shell.minimalShellMode ? styles.loadLatestLow : undefined,
+            store.shell.minimalShellMode
+              ? {bottom: 50}
+              : {bottom: 60 + clamp(safeAreaInsets.bottom, 15, 30)},
           ]}
           onPress={onPressLoadLatest}
           hitSlop={HITSLOP}>
@@ -120,7 +126,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     left: 10,
-    bottom: 60,
     backgroundColor: colors.pink3,
     paddingHorizontal: 12,
     paddingVertical: 10,
