@@ -11,6 +11,8 @@ const UNGROUPABLE_REASONS = ['trend', 'assertion']
 const PAGE_SIZE = 30
 const MS_60MIN = 1e3 * 60 * 60
 
+let _idCounter = 0
+
 export interface GroupedNotification extends ListNotifications.Notification {
   additional?: ListNotifications.Notification[]
 }
@@ -361,13 +363,12 @@ export class NotificationsViewModel {
   private async _appendAll(res: ListNotifications.Response, replace = false) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    let counter = this.notifications.length
     const promises = []
     const itemModels: NotificationsViewItemModel[] = []
     for (const item of groupNotifications(res.data.notifications)) {
       const itemModel = new NotificationsViewItemModel(
         this.rootStore,
-        `item-${counter++}`,
+        `item-${_idCounter++}`,
         item,
       )
       if (itemModel.needsAdditionalData) {
