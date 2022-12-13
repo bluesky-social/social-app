@@ -337,7 +337,7 @@ export const MobileShell: React.FC = observer(() => {
 
   return (
     <View style={styles.outerContainer}>
-      <SafeAreaView style={styles.innerContainer}>
+      <View style={[styles.innerContainer, {paddingTop: safeAreaInsets.top}]}>
         <HorzSwipe
           distThresholdDivisor={1.5}
           useNativeDriver
@@ -403,7 +403,7 @@ export const MobileShell: React.FC = observer(() => {
             />
           </Animated.View>
         </HorzSwipe>
-      </SafeAreaView>
+      </View>
       {isTabsSelectorActive ? (
         <View
           style={[
@@ -421,7 +421,7 @@ export const MobileShell: React.FC = observer(() => {
       <Animated.View
         style={[
           styles.bottomBar,
-          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 40)},
+          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
           footerMinimalShellTransform,
         ]}>
         <Btn
