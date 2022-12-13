@@ -551,29 +551,34 @@ function preprocessFeed(
   feed: FeedItem[],
   dedup: boolean,
 ): FeedItemWithThreadMeta[] {
-  const reorg: FeedItemWithThreadMeta[] = []
-  for (let i = feed.length - 1; i >= 0; i--) {
-    const item = feed[i] as FeedItemWithThreadMeta
+  // DEBUG
+  // this has been temporarily disabled to see if it's the cause of some bugs
+  // if the issues go away, we know this was the cause
+  // -prf
+  return feed
+  // const reorg: FeedItemWithThreadMeta[] = []
+  // for (let i = feed.length - 1; i >= 0; i--) {
+  //   const item = feed[i] as FeedItemWithThreadMeta
 
-    if (dedup) {
-      if (reorg.find(item2 => item2.uri === item.uri)) {
-        continue
-      }
-    }
+  //   if (dedup) {
+  //     if (reorg.find(item2 => item2.uri === item.uri)) {
+  //       continue
+  //     }
+  //   }
 
-    const selfReplyUri = getSelfReplyUri(item)
-    if (selfReplyUri) {
-      const parentIndex = reorg.findIndex(item2 => item2.uri === selfReplyUri)
-      if (parentIndex !== -1 && !reorg[parentIndex]._isThreadParent) {
-        reorg[parentIndex]._isThreadParent = true
-        item._isThreadChild = true
-        reorg.splice(parentIndex + 1, 0, item)
-        continue
-      }
-    }
-    reorg.unshift(item)
-  }
-  return reorg
+  //   const selfReplyUri = getSelfReplyUri(item)
+  //   if (selfReplyUri) {
+  //     const parentIndex = reorg.findIndex(item2 => item2.uri === selfReplyUri)
+  //     if (parentIndex !== -1 && !reorg[parentIndex]._isThreadParent) {
+  //       reorg[parentIndex]._isThreadParent = true
+  //       item._isThreadChild = true
+  //       reorg.splice(parentIndex + 1, 0, item)
+  //       continue
+  //     }
+  //   }
+  //   reorg.unshift(item)
+  // }
+  // return reorg
 }
 
 function getSelfReplyUri(
