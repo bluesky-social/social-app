@@ -158,7 +158,7 @@ export const FeedItem = observer(function FeedItem({
             title={item.author.handle}
             style={item._isThreadChild ? {marginLeft: 10} : undefined}>
             <UserAvatar
-              size={item._isThreadChild ? 30 : 50}
+              size={item._isThreadChild ? 30 : 52}
               displayName={item.author.displayName}
               handle={item.author.handle}
               avatar={item.author.avatar}
