@@ -10163,6 +10163,11 @@ react-native-appstate-hook@^1.0.6:
   resolved "https://registry.yarnpkg.com/react-native-appstate-hook/-/react-native-appstate-hook-1.0.6.tgz#cbc16e7b89cfaea034cabd999f00e99053cabd06"
   integrity sha512-0hPVyf5yLxCSVrrNEuGqN1ZnSSj3Ye2gZex0NtcK/AHYwMc0rXWFNZjBKOoZSouspqu3hXBbQ6NOUSTzrME1AQ==
 
+react-native-bundle-splitter@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-bundle-splitter/-/react-native-bundle-splitter-2.2.3.tgz#aff144fb1b7c9dbd2da334b318b86032869a7755"
+  integrity sha512-cxKb8/NUKTqAZ+nHp9PoTdRCI6+tWlUUP0Mq0UKgpVbD0KaxRIXnvdSM8Fp9ctiMyB1rk6izZzQkTJ+GcDXQLA==
+
 react-native-codegen@^0.0.17:
   version "0.0.17"
   resolved "https://registry.yarnpkg.com/react-native-codegen/-/react-native-codegen-0.0.17.tgz#83fb814d94061cbd46667f510d2ddba35ffb50ac"
