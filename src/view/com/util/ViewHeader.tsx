@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {UserAvatar} from './UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {MagnifyingGlassIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
@@ -18,10 +19,12 @@ const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 export const ViewHeader = observer(function ViewHeader({
   title,
   subtitle,
+  canGoBack,
   onPost,
 }: {
   title: string
   subtitle?: string
+  canGoBack?: boolean
   onPost?: () => void
 }) {
   const store = useStores()
@@ -43,19 +46,28 @@ export const ViewHeader = observer(function ViewHeader({
       console.log(e)
     })
   }
-  const canGoBack = store.nav.tab.canGoBack
+  canGoBack ??= store.nav.tab.canGoBack
   return (
     <>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={canGoBack ? onPressBack : onPressMenu}
           hitSlop={BACK_HITSLOP}
-          style={styles.backIcon}>
-          <FontAwesomeIcon
-            size={18}
-            icon={canGoBack ? 'angle-left' : 'bars'}
-            style={{marginTop: 6}}
-          />
+          style={canGoBack ? styles.backIcon : styles.backIconWide}>
+          {canGoBack ? (
+            <FontAwesomeIcon
+              size={18}
+              icon="angle-left"
+              style={{marginTop: 6}}
+            />
+          ) : (
+            <UserAvatar
+              size={30}
+              handle={store.me.handle}
+              displayName={store.me.displayName}
+              avatar={store.me.avatar}
+            />
+          )}
         </TouchableOpacity>
         <View style={styles.titleContainer} pointerEvents="none">
           <Text style={styles.title}>{title}</Text>
@@ -151,6 +163,7 @@ const styles = StyleSheet.create({
   },
 
   backIcon: {width: 30, height: 30},
+  backIconWide: {width: 40, height: 30},
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
