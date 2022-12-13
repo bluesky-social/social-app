@@ -12,6 +12,8 @@ import {isObj, hasProp} from '../lib/type-guards'
 
 const PAGE_SIZE = 30
 
+let _idCounter = 0
+
 type FeedItem = GetTimeline.FeedItem | GetAuthorFeed.FeedItem
 type FeedItemWithThreadMeta = FeedItem & {
   _isThreadParent?: boolean
@@ -445,7 +447,6 @@ export class FeedModel {
   ) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    let counter = this.feed.length
 
     // HACK 1
     // rearrange the posts to represent threads
@@ -462,7 +463,7 @@ export class FeedModel {
     for (const item of reorgedFeed) {
       const itemModel = new FeedItemModel(
         this.rootStore,
-        `item-${counter++}`,
+        `item-${_idCounter++}`,
         item,
       )
       if (itemModel.needsAdditionalData) {
@@ -488,7 +489,6 @@ export class FeedModel {
     res: GetTimeline.Response | GetAuthorFeed.Response,
   ) {
     this.pollCursor = res.data.feed[0]?.uri
-    let counter = this.feed.length
 
     const promises = []
     const toPrepend: FeedItemModel[] = []
@@ -499,7 +499,7 @@ export class FeedModel {
 
       const itemModel = new FeedItemModel(
         this.rootStore,
-        `item-${counter++}`,
+        `item-${_idCounter++}`,
         item,
       )
       if (itemModel.needsAdditionalData) {
