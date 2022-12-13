@@ -25,6 +25,7 @@ export class NotificationsViewItemModel implements GroupedNotification {
   author: ActorRef.WithInfo = {
     did: '',
     handle: '',
+    avatar: '',
     declaration: {cid: '', actorType: ''},
   }
   reason: string = ''

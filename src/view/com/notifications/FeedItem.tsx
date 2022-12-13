@@ -93,11 +93,17 @@ export const FeedItem = observer(function FeedItem({
     return <></>
   }
 
-  let authors: {href: string; handle: string; displayName?: string}[] = [
+  let authors: {
+    href: string
+    handle: string
+    displayName?: string
+    avatar?: string
+  }[] = [
     {
       href: `/profile/${item.author.handle}`,
       handle: item.author.handle,
       displayName: item.author.displayName,
+      avatar: item.author.avatar,
     },
   ]
   if (item.additional?.length) {
@@ -106,6 +112,7 @@ export const FeedItem = observer(function FeedItem({
         href: `/profile/${item2.author.handle}`,
         handle: item2.author.handle,
         displayName: item2.author.displayName,
+        avatar: item2.author.avatar,
       })),
     )
   }
