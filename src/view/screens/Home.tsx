@@ -101,7 +101,10 @@ export const Home = observer(function Home({
       />
       {defaultFeedView.hasNewLatest ? (
         <TouchableOpacity
-          style={styles.loadLatest}
+          style={[
+            styles.loadLatest,
+            store.shell.minimalShellMode ? styles.loadLatestLow : undefined,
+          ]}
           onPress={onPressLoadLatest}
           hitSlop={HITSLOP}>
           <FontAwesomeIcon icon="arrow-up" style={{color: colors.white}} />
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     left: 10,
-    bottom: 15,
+    bottom: 60,
     backgroundColor: colors.pink3,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -125,6 +128,9 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.3,
     shadowOffset: {width: 0, height: 1},
+  },
+  loadLatestLow: {
+    bottom: 15,
   },
   loadLatestText: {
     color: colors.white,
