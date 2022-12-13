@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   useColorScheme,
   useWindowDimensions,
   View,
@@ -394,7 +395,10 @@ export const MobileShell: React.FC = observer(() => {
             )}
           </ScreenContainer>
           {isMenuActive || menuSwipingDirection !== 0 ? (
-            <Animated.View style={[styles.screenMask, menuSwipeOpacity]} />
+            <TouchableWithoutFeedback
+              onPress={() => store.shell.setMainMenuOpen(false)}>
+              <Animated.View style={[styles.screenMask, menuSwipeOpacity]} />
+            </TouchableWithoutFeedback>
           ) : undefined}
           <Animated.View style={[styles.menuDrawer, menuSwipeTransform]}>
             <Menu
