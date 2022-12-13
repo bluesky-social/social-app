@@ -520,10 +520,11 @@ export class FeedModel {
   private _updateAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     for (const item of res.data.feed) {
       const existingItem = this.feed.find(
-        // this find function has a key subtley- the indexedAt comparison
-        // the reason for this is reposts: they set the URI of the original post, not of the repost record
-        // the indexedAt time will be for the repost however, so we use that to help us
-        item2 => item.uri === item2.uri && item.indexedAt === item2.indexedAt,
+        // HACK: need to find the reposts and trends item, so we have to check for that -prf
+        item2 =>
+          item.uri === item2.uri &&
+          item.repostedBy?.did === item2.repostedBy?.did &&
+          item.trendedBy?.did === item2.trendedBy?.did,
       )
       if (existingItem) {
         existingItem.copy(item)
