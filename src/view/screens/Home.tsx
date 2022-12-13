@@ -27,23 +27,16 @@ export const Home = observer(function Home({
   const {appState} = useAppState({
     onForeground: () => doPoll(true),
   })
-  const defaultFeedView = useMemo<FeedModel>(
-    () =>
-      new FeedModel(store, 'home', {
-        algorithm: 'reverse-chronological',
-      }),
-    [store],
-  )
 
   const doPoll = (knownActive = false) => {
     if ((!knownActive && appState !== 'active') || !visible) {
       return
     }
-    if (defaultFeedView.isLoading) {
+    if (store.me.mainFeed.isLoading) {
       return
     }
     console.log('Polling home feed')
-    defaultFeedView.checkForLatest().catch(e => {
+    store.me.mainFeed.checkForLatest().catch(e => {
       console.error('Failed to poll feed', e)
     })
   }
@@ -57,11 +50,11 @@ export const Home = observer(function Home({
 
     if (hasSetup) {
       console.log('Updating home feed')
-      defaultFeedView.update()
+      store.me.mainFeed.update()
     } else {
       store.nav.setTitle(navIdx, 'Home')
       console.log('Fetching home feed')
-      defaultFeedView.setup().then(() => {
+      store.me.mainFeed.setup().then(() => {
         if (aborted) return
         setHasSetup(true)
       })
@@ -73,37 +66,29 @@ export const Home = observer(function Home({
   }, [visible, store])
 
   const onPressCompose = () => {
-    store.shell.openComposer({onPost: onCreatePost})
-  }
-  const onCreatePost = () => {
-    defaultFeedView.loadLatest()
+    store.shell.openComposer({})
   }
   const onPressTryAgain = () => {
-    defaultFeedView.refresh()
+    store.me.mainFeed.refresh()
   }
   const onPressLoadLatest = () => {
-    defaultFeedView.refresh()
+    store.me.mainFeed.refresh()
     scrollElRef?.current?.scrollToOffset({offset: 0})
   }
 
   return (
     <View style={s.flex1}>
-      <ViewHeader
-        title="Bluesky"
-        subtitle="Private Beta"
-        canGoBack={false}
-        onPost={onCreatePost}
-      />
+      <ViewHeader title="Bluesky" subtitle="Private Beta" canGoBack={false} />
       <Feed
         key="default"
-        feed={defaultFeedView}
+        feed={store.me.mainFeed}
         scrollElRef={scrollElRef}
         style={{flex: 1}}
         onPressCompose={onPressCompose}
         onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
       />
-      {defaultFeedView.hasNewLatest ? (
+      {store.me.mainFeed.hasNewLatest ? (
         <TouchableOpacity
           style={[
             styles.loadLatest,

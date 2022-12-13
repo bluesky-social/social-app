@@ -1,5 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from './root-store'
+import {FeedModel} from './feed-view'
 import {MembershipsViewModel} from './memberships-view'
 import {NotificationsViewModel} from './notifications-view'
 import {isObj, hasProp} from '../lib/type-guards'
@@ -12,6 +13,7 @@ export class MeModel {
   avatar: string = ''
   notificationCount: number = 0
   memberships?: MembershipsViewModel
+  mainFeed: FeedModel
   notifications: NotificationsViewModel
 
   constructor(public rootStore: RootStoreModel) {
@@ -20,6 +22,9 @@ export class MeModel {
       {rootStore: false, serialize: false, hydrate: false},
       {autoBind: true},
     )
+    this.mainFeed = new FeedModel(this.rootStore, 'home', {
+      algorithm: 'reverse-chronological',
+    })
     this.notifications = new NotificationsViewModel(this.rootStore, {})
   }
 
@@ -93,12 +98,17 @@ export class MeModel {
       this.memberships = new MembershipsViewModel(this.rootStore, {
         actor: this.did,
       })
-      await this.memberships?.setup().catch(e => {
-        console.error('Failed to setup memberships model', e)
-      })
-      await this.notifications.setup().catch(e => {
-        console.error('Failed to setup notifications model', e)
-      })
+      await Promise.all([
+        this.memberships?.setup().catch(e => {
+          console.error('Failed to setup memberships model', e)
+        }),
+        this.mainFeed.setup().catch(e => {
+          console.error('Failed to setup main feed model', e)
+        }),
+        this.notifications.setup().catch(e => {
+          console.error('Failed to setup notifications model', e)
+        }),
+      ])
     } else {
       this.clear()
     }
