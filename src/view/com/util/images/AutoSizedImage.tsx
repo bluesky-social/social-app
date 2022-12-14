@@ -48,15 +48,23 @@ export function AutoSizedImage({
   }, [imgInfo, containerInfo])
 
   useEffect(() => {
+    let aborted = false
     Image.getSize(
       uri,
       (width: number, height: number) => {
-        setImgInfo({width, height})
+        if (!aborted) {
+          setImgInfo({width, height})
+        }
       },
       (error: any) => {
-        setError(String(error))
+        if (!aborted) {
+          setError(String(error))
+        }
       },
     )
+    return () => {
+      aborted = true
+    }
   }, [uri])
 
   const onLayout = (evt: LayoutChangeEvent) => {
