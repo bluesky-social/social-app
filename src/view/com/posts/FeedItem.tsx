@@ -198,7 +198,7 @@ export const FeedItem = observer(function FeedItem({
               style={styles.postText}
             />
           </View>
-          <PostEmbeds entities={record.entities} style={{marginBottom: 10}} />
+          <PostEmbeds embed={item.embed} style={{marginBottom: 10}} />
           <PostCtrls
             replyCount={item.replyCount}
             repostCount={item.repostCount}

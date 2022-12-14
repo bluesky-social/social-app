@@ -49,6 +49,7 @@ export class FeedItemModel implements GetTimeline.FeedItem {
   repostedBy?: ActorRef.WithInfo
   trendedBy?: ActorRef.WithInfo
   record: Record<string, unknown> = {}
+  embed?: GetTimeline.FeedItem['embed']
   replyCount: number = 0
   repostCount: number = 0
   upvoteCount: number = 0
@@ -78,6 +79,7 @@ export class FeedItemModel implements GetTimeline.FeedItem {
     this.repostedBy = v.repostedBy
     this.trendedBy = v.trendedBy
     this.record = v.record
+    this.embed = v.embed
     this.replyCount = v.replyCount
     this.repostCount = v.repostCount
     this.upvoteCount = v.upvoteCount

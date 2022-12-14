@@ -83,7 +83,8 @@ export * as AppBskyActorRef from './types/app/bsky/actor/ref';
 export * as AppBskyActorSearch from './types/app/bsky/actor/search';
 export * as AppBskyActorSearchTypeahead from './types/app/bsky/actor/searchTypeahead';
 export * as AppBskyActorUpdateProfile from './types/app/bsky/actor/updateProfile';
-export * as AppBskyFeedEmbed from './types/app/bsky/feed/embed';
+export * as AppBskyEmbedExternal from './types/app/bsky/embed/external';
+export * as AppBskyEmbedImages from './types/app/bsky/embed/images';
 export * as AppBskyFeedGetAuthorFeed from './types/app/bsky/feed/getAuthorFeed';
 export * as AppBskyFeedGetPostThread from './types/app/bsky/feed/getPostThread';
 export * as AppBskyFeedGetRepostedBy from './types/app/bsky/feed/getRepostedBy';
@@ -209,6 +210,7 @@ export declare class AppNS {
 export declare class BskyNS {
     _service: ServiceClient;
     actor: ActorNS;
+    embed: EmbedNS;
     feed: FeedNS;
     graph: GraphNS;
     notification: NotificationNS;
@@ -246,6 +248,10 @@ export declare class ProfileRecord {
         cid: string;
     }>;
     delete(params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>, headers?: Record<string, string>): Promise<void>;
+}
+export declare class EmbedNS {
+    _service: ServiceClient;
+    constructor(service: ServiceClient);
 }
 export declare class FeedNS {
     _service: ServiceClient;

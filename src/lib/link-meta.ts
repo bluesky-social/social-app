@@ -22,9 +22,13 @@ export interface LinkMeta {
   url: string
   title?: string
   description?: string
+  image?: string
 }
 
-export async function getLinkMeta(url: string): Promise<LinkMeta> {
+export async function getLinkMeta(
+  url: string,
+  timeout = 5e3,
+): Promise<LinkMeta> {
   if (isBskyAppUrl(url)) {
     // TODO this could be better
     url = convertBskyAppUrlIfNeeded(url)
@@ -57,14 +61,20 @@ export async function getLinkMeta(url: string): Promise<LinkMeta> {
   }
 
   try {
-    const httpRes = await fetch(url)
+    const controller = new AbortController()
+    const to = setTimeout(() => controller.abort(), timeout || 5e3)
+    const httpRes = await fetch(url, {
+      headers: {accept: 'text/html'},
+      signal: controller.signal,
+    })
     const httpResBody = await httpRes.text()
+    clearTimeout(to)
     const httpResMeta = extractHtmlMeta(httpResBody)
     meta.title = httpResMeta.title ? he.decode(httpResMeta.title) : undefined
     meta.description = httpResMeta.description
       ? he.decode(httpResMeta.description)
       : undefined
-    // TODO meta.image = httpResMeta.image
+    meta.image = httpResMeta.image
   } catch (e) {
     // failed
     console.log(e)

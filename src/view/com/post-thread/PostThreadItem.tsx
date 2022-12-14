@@ -167,7 +167,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 style={[styles.postText, styles.postTextLarge]}
               />
             </View>
-            <PostEmbeds entities={record.entities} style={s.mb10} />
+            <PostEmbeds embed={item.embed} style={s.mb10} />
             {item._isHighlightedPost && hasEngagement ? (
               <View style={styles.expandedInfo}>
                 {item.repostCount ? (
@@ -277,7 +277,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 style={[styles.postText]}
               />
             </View>
-            <PostEmbeds entities={record.entities} style={{marginBottom: 10}} />
+            <PostEmbeds embed={item.embed} style={{marginBottom: 10}} />
             <PostCtrls
               replyCount={item.replyCount}
               repostCount={item.repostCount}

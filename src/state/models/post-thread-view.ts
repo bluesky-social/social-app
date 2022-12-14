@@ -1,6 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyFeedGetPostThread as GetPostThread} from '../../third-party/api'
-import * as Embed from '../../third-party/api/src/client/types/app/bsky/feed/embed'
 import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
 import {AtUri} from '../../third-party/uri'
 import _omit from 'lodash.omit'
@@ -60,7 +59,7 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
     declaration: {cid: '', actorType: ''},
   }
   record: Record<string, unknown> = {}
-  embed?: Embed.Main = undefined
+  embed?: GetPostThread.Post['embed'] = undefined
   parent?: PostThreadViewPostModel
   replyCount: number = 0
   replies?: PostThreadViewPostModel[]

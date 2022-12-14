@@ -8,48 +8,54 @@ import {
   openCropper,
 } from 'react-native-image-crop-picker'
 
+const IMAGE_PARAMS = {
+  width: 500,
+  height: 500,
+  freeStyleCropEnabled: true,
+  forceJpg: true, // ios only
+  compressImageQuality: 0.7,
+}
+
 export const PhotoCarouselPicker = ({
   selectedPhotos,
-  setSelectedPhotos,
+  onSelectPhotos,
   localPhotos,
 }: {
   selectedPhotos: string[]
-  setSelectedPhotos: React.Dispatch<React.SetStateAction<string[]>>
+  onSelectPhotos: (v: string[]) => void
   localPhotos: any
 }) => {
   const handleOpenCamera = useCallback(() => {
     openCamera({
       mediaType: 'photo',
       cropping: true,
-      width: 1000,
-      height: 1000,
+      ...IMAGE_PARAMS,
     }).then(
       item => {
-        setSelectedPhotos([item.path, ...selectedPhotos])
+        onSelectPhotos([item.path, ...selectedPhotos])
       },
       _err => {
         // ignore
       },
     )
-  }, [selectedPhotos, setSelectedPhotos])
+  }, [selectedPhotos, onSelectPhotos])
 
   const handleSelectPhoto = useCallback(
     async (uri: string) => {
       const img = await openCropper({
         mediaType: 'photo',
         path: uri,
-        width: 1000,
-        height: 1000,
+        ...IMAGE_PARAMS,
       })
-      setSelectedPhotos([img.path, ...selectedPhotos])
+      onSelectPhotos([img.path, ...selectedPhotos])
     },
-    [selectedPhotos, setSelectedPhotos],
+    [selectedPhotos, onSelectPhotos],
   )
 
   const handleOpenGallery = useCallback(() => {
     openPicker({
       multiple: true,
-      maxFiles: 4,
+      maxFiles: 4 - selectedPhotos.length,
       mediaType: 'photo',
     }).then(async items => {
       const result = []
@@ -58,14 +64,13 @@ export const PhotoCarouselPicker = ({
         const img = await openCropper({
           mediaType: 'photo',
           path: image.path,
-          width: 1000,
-          height: 1000,
+          ...IMAGE_PARAMS,
         })
         result.push(img.path)
       }
-      setSelectedPhotos([...result, ...selectedPhotos])
+      onSelectPhotos([...result, ...selectedPhotos])
     })
-  }, [selectedPhotos, setSelectedPhotos])
+  }, [selectedPhotos, onSelectPhotos])
 
   return (
     <ScrollView

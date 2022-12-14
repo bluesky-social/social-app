@@ -7,6 +7,7 @@ import {useStores} from '../../../state'
 import * as models from '../../../state/models/shell-ui'
 
 import * as ProfileImageLightbox from './ProfileImage'
+import * as ImageLightbox from './Image'
 
 export const Lightbox = observer(function Lightbox() {
   const store = useStores()
@@ -24,6 +25,12 @@ export const Lightbox = observer(function Lightbox() {
     element = (
       <ProfileImageLightbox.Component
         {...(store.shell.activeLightbox as models.ProfileImageLightbox)}
+      />
+    )
+  } else if (store.shell.activeLightbox?.name === 'image') {
+    element = (
+      <ImageLightbox.Component
+        {...(store.shell.activeLightbox as models.ImageLightbox)}
       />
     )
   } else {
