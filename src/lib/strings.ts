@@ -75,7 +75,7 @@ export function extractEntities(
   let ents: Entity[] = []
   {
     // mentions
-    const re = /(^|\s|\()(@)([a-zA-Z0-9\.-]+)(\b)/dg
+    const re = /(^|\s|\()(@)([a-zA-Z0-9\.-]+)(\b)/g
     while ((match = re.exec(text))) {
       if (knownHandles && !knownHandles.has(match[3])) {
         continue // not a known handle
@@ -95,7 +95,7 @@ export function extractEntities(
   {
     // links
     const re =
-      /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/dgm
+      /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/gm
     while ((match = re.exec(text))) {
       let value = match[2]
       if (!value.startsWith('http')) {
