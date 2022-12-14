@@ -58,6 +58,13 @@ export class ProfileImageLightbox {
   }
 }
 
+export class ImageLightbox {
+  name = 'image'
+  constructor(public uri: string) {
+    makeAutoObservable(this)
+  }
+}
+
 export interface ComposerOptsPostRef {
   uri: string
   cid: string
@@ -84,7 +91,7 @@ export class ShellUiModel {
     | ServerInputModal
     | undefined
   isLightboxActive = false
-  activeLightbox: ProfileImageLightbox | undefined
+  activeLightbox: ProfileImageLightbox | ImageLightbox | undefined
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
 
@@ -116,7 +123,7 @@ export class ShellUiModel {
     this.activeModal = undefined
   }
 
-  openLightbox(lightbox: ProfileImageLightbox) {
+  openLightbox(lightbox: ProfileImageLightbox | ImageLightbox) {
     this.isLightboxActive = true
     this.activeLightbox = lightbox
   }

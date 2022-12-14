@@ -5,10 +5,10 @@ import {colors} from '../../lib/styles'
 
 export const SelectedPhoto = ({
   selectedPhotos,
-  setSelectedPhotos,
+  onSelectPhotos,
 }: {
   selectedPhotos: string[]
-  setSelectedPhotos: React.Dispatch<React.SetStateAction<string[]>>
+  onSelectPhotos: (v: string[]) => void
 }) => {
   const imageStyle =
     selectedPhotos.length === 1
@@ -19,11 +19,9 @@ export const SelectedPhoto = ({
 
   const handleRemovePhoto = useCallback(
     item => {
-      setSelectedPhotos(
-        selectedPhotos.filter(filterItem => filterItem !== item),
-      )
+      onSelectPhotos(selectedPhotos.filter(filterItem => filterItem !== item))
     },
-    [selectedPhotos, setSelectedPhotos],
+    [selectedPhotos, onSelectPhotos],
   )
 
   return selectedPhotos.length !== 0 ? (
@@ -57,8 +55,10 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   image: {
+    resizeMode: 'contain',
     borderRadius: 8,
     margin: 2,
+    backgroundColor: colors.gray1,
   },
   image250: {
     width: 250,

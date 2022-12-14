@@ -38,7 +38,8 @@ __export(src_exports, {
   AppBskyActorSearch: () => search_exports,
   AppBskyActorSearchTypeahead: () => searchTypeahead_exports,
   AppBskyActorUpdateProfile: () => updateProfile_exports,
-  AppBskyFeedEmbed: () => embed_exports,
+  AppBskyEmbedExternal: () => external_exports,
+  AppBskyEmbedImages: () => images_exports,
   AppBskyFeedGetAuthorFeed: () => getAuthorFeed_exports,
   AppBskyFeedGetPostThread: () => getPostThread_exports,
   AppBskyFeedGetRepostedBy: () => getRepostedBy_exports,
@@ -99,6 +100,7 @@ __export(src_exports, {
   ComNS: () => ComNS,
   ConfirmationRecord: () => ConfirmationRecord,
   DeclarationRecord: () => DeclarationRecord,
+  EmbedNS: () => EmbedNS,
   FeedNS: () => FeedNS,
   FollowRecord: () => FollowRecord,
   GraphNS: () => GraphNS,
@@ -5621,69 +5623,25 @@ var schemaDict = {
       }
     }
   },
-  AppBskyFeedEmbed: {
+  AppBskyEmbedExternal: {
     lexicon: 1,
-    id: "app.bsky.feed.embed",
-    description: "Content embedded in other content, such as an image or link embedded in a post.",
+    id: "app.bsky.embed.external",
+    description: "An representation of some externally linked content, embedded in another form of content",
     defs: {
       main: {
         type: "object",
-        description: "A list embeds in a post or document.",
-        required: ["media"],
+        required: ["external"],
         properties: {
-          items: {
-            type: "array",
-            items: {
-              type: "union",
-              refs: [
-                "lex:app.bsky.feed.embed#media",
-                "lex:app.bsky.feed.embed#record",
-                "lex:app.bsky.feed.embed#external"
-              ]
-            }
-          }
-        }
-      },
-      media: {
-        type: "object",
-        required: ["original"],
-        properties: {
-          alt: {
-            type: "string"
-          },
-          thumb: {
-            type: "image"
-          },
-          original: {
-            type: "blob"
-          }
-        }
-      },
-      record: {
-        type: "object",
-        required: ["type", "author", "record"],
-        properties: {
-          type: {
-            type: "string",
-            const: "record"
-          },
-          author: {
+          external: {
             type: "ref",
-            ref: "lex:app.bsky.actor.ref#withInfo"
-          },
-          record: {
-            type: "unknown"
+            ref: "lex:app.bsky.embed.external#external"
           }
         }
       },
       external: {
         type: "object",
-        required: ["type", "uri", "title", "description", "imageUri"],
+        required: ["uri", "title", "description"],
         properties: {
-          type: {
-            type: "string",
-            const: "external"
-          },
           uri: {
             type: "string"
           },
@@ -5693,7 +5651,105 @@ var schemaDict = {
           description: {
             type: "string"
           },
-          imageUri: {
+          thumb: {
+            type: "image",
+            accept: ["image/*"],
+            maxWidth: 250,
+            maxHeight: 250,
+            maxSize: 1e5
+          }
+        }
+      },
+      presented: {
+        type: "object",
+        required: ["external"],
+        properties: {
+          external: {
+            type: "ref",
+            ref: "lex:app.bsky.embed.external#presentedExternal"
+          }
+        }
+      },
+      presentedExternal: {
+        type: "object",
+        required: ["uri", "title", "description"],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          title: {
+            type: "string"
+          },
+          description: {
+            type: "string"
+          },
+          thumb: {
+            type: "string"
+          }
+        }
+      }
+    }
+  },
+  AppBskyEmbedImages: {
+    lexicon: 1,
+    id: "app.bsky.embed.images",
+    description: "A set of images embedded in some other form of content",
+    defs: {
+      main: {
+        type: "object",
+        required: ["images"],
+        properties: {
+          images: {
+            type: "array",
+            items: {
+              type: "ref",
+              ref: "lex:app.bsky.embed.images#image"
+            },
+            maxLength: 4
+          }
+        }
+      },
+      image: {
+        type: "object",
+        required: ["image", "alt"],
+        properties: {
+          image: {
+            type: "image",
+            accept: ["image/*"],
+            maxWidth: 500,
+            maxHeight: 500,
+            maxSize: 3e5
+          },
+          alt: {
+            type: "string"
+          }
+        }
+      },
+      presented: {
+        type: "object",
+        required: ["images"],
+        properties: {
+          images: {
+            type: "array",
+            items: {
+              type: "ref",
+              ref: "lex:app.bsky.embed.images#presentedImage"
+            },
+            maxLength: 4
+          }
+        }
+      },
+      presentedImage: {
+        type: "object",
+        required: ["thumb", "fullsize", "alt"],
+        properties: {
+          thumb: {
+            type: "string"
+          },
+          fullsize: {
+            type: "string"
+          },
+          alt: {
             type: "string"
           }
         }
@@ -5781,8 +5837,11 @@ var schemaDict = {
             type: "unknown"
           },
           embed: {
-            type: "ref",
-            ref: "lex:app.bsky.feed.embed"
+            type: "union",
+            refs: [
+              "lex:app.bsky.embed.images#presented",
+              "lex:app.bsky.embed.external#presented"
+            ]
           },
           replyCount: {
             type: "integer"
@@ -5889,8 +5948,11 @@ var schemaDict = {
             type: "unknown"
           },
           embed: {
-            type: "ref",
-            ref: "lex:app.bsky.feed.embed"
+            type: "union",
+            refs: [
+              "lex:app.bsky.embed.images#presented",
+              "lex:app.bsky.embed.external#presented"
+            ]
           },
           parent: {
             type: "union",
@@ -6123,8 +6185,11 @@ var schemaDict = {
             type: "unknown"
           },
           embed: {
-            type: "ref",
-            ref: "lex:app.bsky.feed.embed"
+            type: "union",
+            refs: [
+              "lex:app.bsky.embed.images#presented",
+              "lex:app.bsky.embed.external#presented"
+            ]
           },
           replyCount: {
             type: "integer"
@@ -6267,6 +6332,13 @@ var schemaDict = {
             reply: {
               type: "ref",
               ref: "lex:app.bsky.feed.post#replyRef"
+            },
+            embed: {
+              type: "union",
+              refs: [
+                "lex:app.bsky.embed.images",
+                "lex:app.bsky.embed.external"
+              ]
             },
             createdAt: {
               type: "datetime"
@@ -7748,8 +7820,11 @@ var profile_exports = {};
 // src/client/types/app/bsky/actor/ref.ts
 var ref_exports = {};
 
-// src/client/types/app/bsky/feed/embed.ts
-var embed_exports = {};
+// src/client/types/app/bsky/embed/external.ts
+var external_exports = {};
+
+// src/client/types/app/bsky/embed/images.ts
+var images_exports = {};
 
 // src/client/types/app/bsky/feed/post.ts
 var post_exports = {};
@@ -8015,6 +8090,7 @@ var BskyNS = class {
   constructor(service) {
     this._service = service;
     this.actor = new ActorNS(service);
+    this.embed = new EmbedNS(service);
     this.feed = new FeedNS(service);
     this.graph = new GraphNS(service);
     this.notification = new NotificationNS(service);
@@ -8092,6 +8168,11 @@ var ProfileRecord = class {
       { collection: "app.bsky.actor.profile", ...params2 },
       { headers }
     );
+  }
+};
+var EmbedNS = class {
+  constructor(service) {
+    this._service = service;
   }
 };
 var FeedNS = class {
@@ -8626,7 +8707,8 @@ var SessionManager = class extends import_events.default {
   AppBskyActorSearch,
   AppBskyActorSearchTypeahead,
   AppBskyActorUpdateProfile,
-  AppBskyFeedEmbed,
+  AppBskyEmbedExternal,
+  AppBskyEmbedImages,
   AppBskyFeedGetAuthorFeed,
   AppBskyFeedGetPostThread,
   AppBskyFeedGetRepostedBy,
@@ -8687,6 +8769,7 @@ var SessionManager = class extends import_events.default {
   ComNS,
   ConfirmationRecord,
   DeclarationRecord,
+  EmbedNS,
   FeedNS,
   FollowRecord,
   GraphNS,

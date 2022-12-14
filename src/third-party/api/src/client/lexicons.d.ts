@@ -1371,54 +1371,18 @@ export declare const schemaDict: {
             };
         };
     };
-    AppBskyFeedEmbed: {
+    AppBskyEmbedExternal: {
         lexicon: number;
         id: string;
         description: string;
         defs: {
             main: {
                 type: string;
-                description: string;
                 required: string[];
                 properties: {
-                    items: {
-                        type: string;
-                        items: {
-                            type: string;
-                            refs: string[];
-                        };
-                    };
-                };
-            };
-            media: {
-                type: string;
-                required: string[];
-                properties: {
-                    alt: {
-                        type: string;
-                    };
-                    thumb: {
-                        type: string;
-                    };
-                    original: {
-                        type: string;
-                    };
-                };
-            };
-            record: {
-                type: string;
-                required: string[];
-                properties: {
-                    type: {
-                        type: string;
-                        const: string;
-                    };
-                    author: {
+                    external: {
                         type: string;
                         ref: string;
-                    };
-                    record: {
-                        type: string;
                     };
                 };
             };
@@ -1426,10 +1390,6 @@ export declare const schemaDict: {
                 type: string;
                 required: string[];
                 properties: {
-                    type: {
-                        type: string;
-                        const: string;
-                    };
                     uri: {
                         type: string;
                     };
@@ -1439,7 +1399,105 @@ export declare const schemaDict: {
                     description: {
                         type: string;
                     };
-                    imageUri: {
+                    thumb: {
+                        type: string;
+                        accept: string[];
+                        maxWidth: number;
+                        maxHeight: number;
+                        maxSize: number;
+                    };
+                };
+            };
+            presented: {
+                type: string;
+                required: string[];
+                properties: {
+                    external: {
+                        type: string;
+                        ref: string;
+                    };
+                };
+            };
+            presentedExternal: {
+                type: string;
+                required: string[];
+                properties: {
+                    uri: {
+                        type: string;
+                    };
+                    title: {
+                        type: string;
+                    };
+                    description: {
+                        type: string;
+                    };
+                    thumb: {
+                        type: string;
+                    };
+                };
+            };
+        };
+    };
+    AppBskyEmbedImages: {
+        lexicon: number;
+        id: string;
+        description: string;
+        defs: {
+            main: {
+                type: string;
+                required: string[];
+                properties: {
+                    images: {
+                        type: string;
+                        items: {
+                            type: string;
+                            ref: string;
+                        };
+                        maxLength: number;
+                    };
+                };
+            };
+            image: {
+                type: string;
+                required: string[];
+                properties: {
+                    image: {
+                        type: string;
+                        accept: string[];
+                        maxWidth: number;
+                        maxHeight: number;
+                        maxSize: number;
+                    };
+                    alt: {
+                        type: string;
+                    };
+                };
+            };
+            presented: {
+                type: string;
+                required: string[];
+                properties: {
+                    images: {
+                        type: string;
+                        items: {
+                            type: string;
+                            ref: string;
+                        };
+                        maxLength: number;
+                    };
+                };
+            };
+            presentedImage: {
+                type: string;
+                required: string[];
+                properties: {
+                    thumb: {
+                        type: string;
+                    };
+                    fullsize: {
+                        type: string;
+                    };
+                    alt: {
                         type: string;
                     };
                 };
@@ -1518,7 +1576,7 @@ export declare const schemaDict: {
                     };
                     embed: {
                         type: string;
-                        ref: string;
+                        refs: string[];
                     };
                     replyCount: {
                         type: string;
@@ -1611,7 +1669,7 @@ export declare const schemaDict: {
                     };
                     embed: {
                         type: string;
-                        ref: string;
+                        refs: string[];
                     };
                     parent: {
                         type: string;
@@ -1829,7 +1887,7 @@ export declare const schemaDict: {
                     };
                     embed: {
                         type: string;
-                        ref: string;
+                        refs: string[];
                     };
                     replyCount: {
                         type: string;
@@ -1972,6 +2030,10 @@ export declare const schemaDict: {
                         reply: {
                             type: string;
                             ref: string;
+                        };
+                        embed: {
+                            type: string;
+                            refs: string[];
                         };
                         createdAt: {
                             type: string;
@@ -2869,7 +2931,8 @@ export declare const ids: {
     AppBskyActorSearch: string;
     AppBskyActorSearchTypeahead: string;
     AppBskyActorUpdateProfile: string;
-    AppBskyFeedEmbed: string;
+    AppBskyEmbedExternal: string;
+    AppBskyEmbedImages: string;
     AppBskyFeedGetAuthorFeed: string;
     AppBskyFeedGetPostThread: string;
     AppBskyFeedGetRepostedBy: string;

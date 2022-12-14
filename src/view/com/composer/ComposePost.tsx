@@ -29,7 +29,6 @@ import {detectLinkables} from '../../../lib/strings'
 import {UserLocalPhotosModel} from '../../../state/models/user-local-photos'
 import {PhotoCarouselPicker} from './PhotoCarouselPicker'
 import {SelectedPhoto} from './SelectedPhoto'
-import {IMAGES_ENABLED} from '../../../build-flags'
 
 const MAX_TEXT_LENGTH = 256
 const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH
@@ -46,6 +45,7 @@ export const ComposePost = observer(function ComposePost({
   const store = useStores()
   const textInput = useRef<TextInput>(null)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
   const [text, setText] = useState('')
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
@@ -81,6 +81,10 @@ export const ComposePost = observer(function ComposePost({
     }
   }, [])
 
+  const onSelectPhotos = (photos: string[]) => {
+    setSelectedPhotos(photos)
+  }
+
   const onChangeText = (newText: string) => {
     setText(newText)
 
@@ -109,15 +113,16 @@ export const ComposePost = observer(function ComposePost({
     }
     setIsProcessing(true)
     try {
-      const replyRef = replyTo
-        ? {uri: replyTo.uri, cid: replyTo.cid}
-        : undefined
-      await apilib.post(store, text, replyRef, autocompleteView.knownHandles)
-    } catch (e: any) {
-      console.error(`Failed to create post: ${e.toString()}`)
-      setError(
-        'Post failed to upload. Please check your Internet connection and try again.',
+      await apilib.post(
+        store,
+        text,
+        replyTo?.uri,
+        selectedPhotos,
+        autocompleteView.knownHandles,
+        setProcessingState,
       )
+    } catch (e: any) {
+      setError(e.message)
       setIsProcessing(false)
       return
     }
@@ -189,6 +194,11 @@ export const ComposePost = observer(function ComposePost({
             </View>
           )}
         </View>
+        {isProcessing ? (
+          <View style={styles.processingLine}>
+            <Text>{processingState}</Text>
+          </View>
+        ) : undefined}
         {error !== '' && (
           <View style={styles.errorLine}>
             <View style={styles.errorIcon}>
@@ -198,7 +208,7 @@ export const ComposePost = observer(function ComposePost({
                 size={10}
               />
             </View>
-            <Text style={s.red4}>{error}</Text>
+            <Text style={[s.red4, s.flex1]}>{error}</Text>
           </View>
         )}
         {replyTo ? (
@@ -240,18 +250,15 @@ export const ComposePost = observer(function ComposePost({
         </View>
         <SelectedPhoto
           selectedPhotos={selectedPhotos}
-          setSelectedPhotos={setSelectedPhotos}
+          onSelectPhotos={onSelectPhotos}
         />
-        {IMAGES_ENABLED &&
-          localPhotos.photos != null &&
-          text === '' &&
-          selectedPhotos.length === 0 && (
-            <PhotoCarouselPicker
-              selectedPhotos={selectedPhotos}
-              setSelectedPhotos={setSelectedPhotos}
-              localPhotos={localPhotos}
-            />
-          )}
+        {localPhotos.photos != null && selectedPhotos.length < 4 && (
+          <PhotoCarouselPicker
+            selectedPhotos={selectedPhotos}
+            onSelectPhotos={onSelectPhotos}
+            localPhotos={localPhotos}
+          />
+        )}
         <View style={styles.bottomBar}>
           <View style={s.flex1} />
           <Text style={[s.mr10, {color: progressColor}]}>
@@ -321,6 +328,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 6,
+  },
+  processingLine: {
+    backgroundColor: colors.gray1,
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    marginBottom: 6,
   },
   errorLine: {
     flexDirection: 'row',

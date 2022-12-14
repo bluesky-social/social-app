@@ -5,12 +5,15 @@
 
 // import {ReactNativeStore} from './auth'
 import {sessionClient as AtpApi} from '../../third-party/api'
-import * as Profile from '../../third-party/api/src/client/types/app/bsky/actor/profile'
-import * as Post from '../../third-party/api/src/client/types/app/bsky/feed/post'
 import {AtUri} from '../../third-party/uri'
 import {APP_BSKY_GRAPH} from '../../third-party/api'
+import * as AppBskyEmbedImages from '../../third-party/api/src/client/types/app/bsky/embed/images'
+import * as AppBskyEmbedExternal from '../../third-party/api/src/client/types/app/bsky/embed/External'
 import {RootStoreModel} from '../models/root-store'
 import {extractEntities} from '../../lib/strings'
+import {isNetworkError} from '../../lib/errors'
+import {downloadAndResize} from '../../lib/download'
+import {getLikelyType, LikelyType, getLinkMeta} from '../../lib/link-meta'
 
 const TIMEOUT = 10e3 // 10s
 
@@ -21,12 +24,112 @@ export function doPolyfill() {
 export async function post(
   store: RootStoreModel,
   text: string,
-  replyTo?: Post.ReplyRef,
+  replyTo?: string,
+  images?: string[],
   knownHandles?: Set<string>,
+  onStateChange?: (state: string) => void,
 ) {
+  let embed: AppBskyEmbedImages.Main | AppBskyEmbedExternal.Main | undefined
   let reply
+
+  onStateChange?.('Processing...')
+  const entities = extractEntities(text, knownHandles)
+  if (entities) {
+    for (const ent of entities) {
+      if (ent.type === 'mention') {
+        const prof = await store.profiles.getProfile(ent.value)
+        ent.value = prof.data.did
+      }
+    }
+  }
+
+  if (images?.length) {
+    embed = {
+      $type: 'app.bsky.embed.images',
+      images: [],
+    } as AppBskyEmbedImages.Main
+    let i = 1
+    for (const image of images) {
+      onStateChange?.(`Uploading image #${i++}...`)
+      const res = await store.api.com.atproto.blob.upload(
+        image, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
+        {encoding: 'image/jpeg'},
+      )
+      embed.images.push({
+        image: {
+          cid: res.data.cid,
+          mimeType: 'image/jpeg',
+        },
+        alt: '', // TODO supply alt text
+      })
+    }
+  }
+
+  if (!embed && entities) {
+    const link = entities.find(
+      ent =>
+        ent.type === 'link' &&
+        getLikelyType(ent.value || '') === LikelyType.HTML,
+    )
+    if (link) {
+      try {
+        onStateChange?.(`Fetching link metadata...`)
+        let thumb
+        const linkMeta = await getLinkMeta(link.value)
+        if (linkMeta.image) {
+          onStateChange?.(`Downloading link thumbnail...`)
+          const thumbLocal = await downloadAndResize({
+            uri: linkMeta.image,
+            width: 250,
+            height: 250,
+            mode: 'contain',
+            timeout: 15e3,
+          }).catch(() => undefined)
+          if (thumbLocal) {
+            onStateChange?.(`Uploading link thumbnail...`)
+            let encoding
+            if (thumbLocal.uri.endsWith('.png')) {
+              encoding = 'image/png'
+            } else if (
+              thumbLocal.uri.endsWith('.jpeg') ||
+              thumbLocal.uri.endsWith('.jpg')
+            ) {
+              encoding = 'image/jpeg'
+            } else {
+              console.error(
+                'Unexpected image format for thumbnail, skipping',
+                thumbLocal.uri,
+              )
+            }
+            if (encoding) {
+              const thumbUploadRes = await store.api.com.atproto.blob.upload(
+                thumbLocal.uri, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
+                {encoding},
+              )
+              thumb = {
+                cid: thumbUploadRes.data.cid,
+                mimeType: encoding,
+              }
+            }
+          }
+        }
+        embed = {
+          $type: 'app.bsky.embed.external',
+          external: {
+            uri: link.value,
+            title: linkMeta.title || linkMeta.url,
+            description: linkMeta.description || '',
+            thumb,
+          },
+        } as AppBskyEmbedExternal.Main
+      } catch (e: any) {
+        console.error('Failed to fetch link meta', link.value, e)
+      }
+    }
+  }
+
   if (replyTo) {
-    const replyToUrip = new AtUri(replyTo.uri)
+    const replyToUrip = new AtUri(replyTo)
     const parentPost = await store.api.app.bsky.feed.post.get({
       user: replyToUrip.host,
       rkey: replyToUrip.rkey,
@@ -42,24 +145,29 @@ export async function post(
       }
     }
   }
-  const entities = extractEntities(text, knownHandles)
-  if (entities) {
-    for (const ent of entities) {
-      if (ent.type === 'mention') {
-        const prof = await store.profiles.getProfile(ent.value)
-        ent.value = prof.data.did
-      }
+
+  try {
+    onStateChange?.(`Posting...`)
+    return await store.api.app.bsky.feed.post.create(
+      {did: store.me.did || ''},
+      {
+        text,
+        reply,
+        embed,
+        entities,
+        createdAt: new Date().toISOString(),
+      },
+    )
+  } catch (e: any) {
+    console.error(`Failed to create post: ${e.toString()}`)
+    if (isNetworkError(e)) {
+      throw new Error(
+        'Post failed to upload. Please check your Internet connection and try again.',
+      )
+    } else {
+      throw e
     }
   }
-  return await store.api.app.bsky.feed.post.create(
-    {did: store.me.did || ''},
-    {
-      text,
-      reply,
-      entities,
-      createdAt: new Date().toISOString(),
-    },
-  )
 }
 
 export async function repost(store: RootStoreModel, uri: string, cid: string) {
