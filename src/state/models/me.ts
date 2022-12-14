@@ -95,6 +95,10 @@ export class MeModel {
           this.avatar = ''
         }
       })
+      this.mainFeed = new FeedModel(this.rootStore, 'home', {
+        algorithm: 'reverse-chronological',
+      })
+      this.notifications = new NotificationsViewModel(this.rootStore, {})
       this.memberships = new MembershipsViewModel(this.rootStore, {
         actor: this.did,
       })
