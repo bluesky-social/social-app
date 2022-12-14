@@ -320,6 +320,8 @@ PODS:
     - TOCropViewController
   - RNInAppBrowser (3.7.0):
     - React-Core
+  - RNReactNativeHapticFeedback (1.14.0):
+    - React-Core
   - RNReanimated (2.10.0):
     - DoubleConversion
     - FBLazyVector
@@ -401,6 +403,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNInAppBrowser (from `../node_modules/react-native-inappbrowser-reborn`)
+  - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -498,6 +501,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-crop-picker"
   RNInAppBrowser:
     :path: "../node_modules/react-native-inappbrowser-reborn"
+  RNReactNativeHapticFeedback:
+    :path: "../node_modules/react-native-haptic-feedback"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -552,6 +557,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 28ad20bf02257791f7f137b31beef34b9549f54b
   RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
   RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
+  RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
   RNReanimated: 5bdcbcc3a72aedeee7bb099604262403aa75a1e5
   RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
   RNSVG: ecd661f380a07ba690c9c5929c475a44f432d674

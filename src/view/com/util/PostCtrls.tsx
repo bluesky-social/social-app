@@ -1,6 +1,14 @@
 import React from 'react'
-import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Vibration,
+} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
 import {UpIcon, UpIconSolid} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
 import {useAnimatedValue} from '../../lib/useAnimatedValue'
@@ -56,6 +64,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
 
   const onPressToggleRepostWrapper = () => {
     if (!opts.isReposted) {
+      ReactNativeHapticFeedback.trigger('impactMedium')
       Animated.sequence([
         Animated.timing(interp1, {
           toValue: 1,
@@ -74,6 +83,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   }
   const onPressToggleUpvoteWrapper = () => {
     if (!opts.isUpvoted) {
+      ReactNativeHapticFeedback.trigger('impactMedium')
       Animated.sequence([
         Animated.timing(interp2, {
           toValue: 1,
