@@ -36,6 +36,7 @@
     "react-native": "0.68.2",
     "react-native-appstate-hook": "^1.0.6",
     "react-native-gesture-handler": "^2.5.0",
+    "react-native-haptic-feedback": "^1.14.0",
     "react-native-image-crop-picker": "^0.38.1",
     "react-native-inappbrowser-reborn": "^3.6.3",
     "react-native-linear-gradient": "^2.6.2",
