@@ -3,6 +3,7 @@ import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -175,7 +176,9 @@ export const ComposePost = observer(function ComposePost({
   }, [text])
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.outer}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.outer}>
       <SafeAreaView style={s.flex1}>
         <View style={styles.topbar}>
           <TouchableOpacity onPress={onPressCancel}>
@@ -345,7 +348,6 @@ const styles = StyleSheet.create({
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 10,
     paddingBottom: 10,
     paddingHorizontal: 5,
     height: 55,
@@ -398,6 +400,7 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 18,
     marginLeft: 8,
+    alignSelf: 'flex-start',
   },
   replyToLayout: {
     flexDirection: 'row',

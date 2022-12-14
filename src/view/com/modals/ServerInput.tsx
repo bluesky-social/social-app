@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {useStores} from '../../../state'
@@ -76,7 +76,7 @@ export function Component({
               onPress={() => doSelect(customUrl)}>
               <FontAwesomeIcon
                 icon="check"
-                style={[s.black, {position: 'relative', top: 2}]}
+                style={[s.black, styles.checkIcon]}
                 size={18}
               />
             </TouchableOpacity>
@@ -132,5 +132,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
     color: colors.white,
+  },
+  checkIcon: {
+    position: 'relative',
+    ...Platform.select({
+      android: {
+        top: 8,
+      },
+      ios: {
+        top: 2,
+      },
+    }),
   },
 })

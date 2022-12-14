@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {Animated, Easing, StyleSheet, View} from 'react-native'
+import {Animated, Easing, Platform, StyleSheet, View} from 'react-native'
 import {ComposePost} from '../../com/composer/ComposePost'
 import {ComposerOpts} from '../../../state/models/shell-ui'
 import {useAnimatedValue} from '../../lib/useAnimatedValue'
@@ -69,6 +69,10 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     backgroundColor: '#fff',
-    paddingTop: 24,
+    ...Platform.select({
+      ios: {
+        paddingTop: 24,
+      },
+    }),
   },
 })
