@@ -48,89 +48,71 @@ export const ViewHeader = observer(function ViewHeader({
   }
   canGoBack ??= store.nav.tab.canGoBack
   return (
-    <>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={canGoBack ? onPressBack : onPressMenu}
-          hitSlop={BACK_HITSLOP}
-          style={canGoBack ? styles.backIcon : styles.backIconWide}>
-          {canGoBack ? (
-            <FontAwesomeIcon
-              size={18}
-              icon="angle-left"
-              style={{marginTop: 6}}
-            />
-          ) : (
-            <UserAvatar
-              size={30}
-              handle={store.me.handle}
-              displayName={store.me.displayName}
-              avatar={store.me.avatar}
-            />
-          )}
-        </TouchableOpacity>
-        <View style={styles.titleContainer} pointerEvents="none">
-          <Text style={styles.title}>{title}</Text>
-          {subtitle ? (
-            <Text style={styles.subtitle} numberOfLines={1}>
-              {subtitle}
-            </Text>
-          ) : undefined}
-        </View>
-        <TouchableOpacity
-          onPress={onPressCompose}
-          hitSlop={HITSLOP}
-          style={styles.btn}>
-          <FontAwesomeIcon size={18} icon="plus" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={onPressSearch}
-          hitSlop={HITSLOP}
-          style={[styles.btn, {marginLeft: 8}]}>
-          <MagnifyingGlassIcon
-            size={18}
-            strokeWidth={3}
-            style={styles.searchBtnIcon}
+    <View style={styles.header}>
+      <TouchableOpacity
+        onPress={canGoBack ? onPressBack : onPressMenu}
+        hitSlop={BACK_HITSLOP}
+        style={canGoBack ? styles.backIcon : styles.backIconWide}>
+        {canGoBack ? (
+          <FontAwesomeIcon size={18} icon="angle-left" style={{marginTop: 6}} />
+        ) : (
+          <UserAvatar
+            size={30}
+            handle={store.me.handle}
+            displayName={store.me.displayName}
+            avatar={store.me.avatar}
           />
-        </TouchableOpacity>
+        )}
+      </TouchableOpacity>
+      <View style={styles.titleContainer} pointerEvents="none">
+        <Text style={styles.title}>{title}</Text>
+        {subtitle ? (
+          <Text style={styles.subtitle} numberOfLines={1}>
+            {subtitle}
+          </Text>
+        ) : undefined}
       </View>
+      <TouchableOpacity
+        onPress={onPressCompose}
+        hitSlop={HITSLOP}
+        style={styles.btn}>
+        <FontAwesomeIcon size={18} icon="plus" />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={onPressSearch}
+        hitSlop={HITSLOP}
+        style={[styles.btn, {marginLeft: 8}]}>
+        <MagnifyingGlassIcon
+          size={18}
+          strokeWidth={3}
+          style={styles.searchBtnIcon}
+        />
+      </TouchableOpacity>
       {!store.session.online ? (
-        <TouchableOpacity style={styles.offline} onPress={onPressReconnect}>
+        <TouchableOpacity
+          style={[styles.btn, {marginLeft: 8}, styles.offline]}
+          onPress={onPressReconnect}>
           {store.session.attemptingConnect ? (
-            <>
-              <ActivityIndicator />
-              <Text style={[s.gray1, s.bold, s.flex1, s.pl5, s.pt5, s.pb5]}>
-                Connecting...
-              </Text>
-            </>
+            <ActivityIndicator />
           ) : (
             <>
-              <FontAwesomeIcon icon="signal" style={[s.gray2]} size={18} />
+              <FontAwesomeIcon icon="signal" style={[s.black]} size={18} />
               <FontAwesomeIcon
                 icon="x"
-                style={[
-                  s.red4,
-                  {
-                    backgroundColor: colors.gray6,
-                    position: 'relative',
-                    left: -4,
-                    top: 6,
-                  },
-                ]}
-                border
+                style={{
+                  backgroundColor: colors.white,
+                  color: colors.red4,
+                  position: 'relative',
+                  left: -4,
+                  top: 6,
+                }}
                 size={12}
               />
-              <Text style={[s.gray1, s.bold, s.flex1, s.pl2]}>
-                Unable to connect
-              </Text>
-              <View style={styles.offlineBtn}>
-                <Text style={styles.offlineBtnText}>Try again</Text>
-              </View>
             </>
           )}
         </TouchableOpacity>
       ) : undefined}
-    </>
+    </View>
   )
 })
 
@@ -180,24 +162,12 @@ const styles = StyleSheet.create({
   },
 
   offline: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.gray6,
-    paddingLeft: 15,
-    paddingRight: 10,
-    paddingVertical: 8,
-    borderRadius: 8,
-    marginHorizontal: 4,
-    marginTop: 4,
+    backgroundColor: colors.white,
   },
   offlineBtn: {
-    backgroundColor: colors.gray5,
+    backgroundColor: colors.white,
     borderRadius: 5,
     paddingVertical: 5,
     paddingHorizontal: 10,
-  },
-  offlineBtnText: {
-    color: colors.white,
-    fontWeight: 'bold',
   },
 })

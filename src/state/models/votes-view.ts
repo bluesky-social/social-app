@@ -102,7 +102,11 @@ export class VotesViewModel {
   private async _resolveUri() {
     const urip = new AtUri(this.params.uri)
     if (!urip.host.startsWith('did:')) {
-      urip.host = await this.rootStore.resolveName(urip.host)
+      try {
+        urip.host = await this.rootStore.resolveName(urip.host)
+      } catch (e: any) {
+        this.error = e.toString()
+      }
     }
     runInAction(() => {
       this.resolvedUri = urip.toString()

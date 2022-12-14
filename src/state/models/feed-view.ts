@@ -393,7 +393,7 @@ export class FeedModel {
   }
 
   private async _loadMore() {
-    if (!this.hasMore) {
+    if (!this.hasMore || this.hasError) {
       return
     }
     this._xLoading()
