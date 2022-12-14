@@ -168,7 +168,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             <TouchableOpacity
               onPress={onPressEditProfile}
               style={[styles.btn, styles.mainBtn]}>
-              <Text style={[s.fw400, s.f14]}>Edit Profile</Text>
+              <Text style={[s.fw400, s.f14, s.black]}>Edit Profile</Text>
             </TouchableOpacity>
           ) : (
             <>
@@ -177,7 +177,7 @@ export const ProfileHeader = observer(function ProfileHeader({
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.mainBtn]}>
                   <FontAwesomeIcon icon="check" style={[s.mr5]} size={14} />
-                  <Text style={[s.fw400, s.f14]}>Following</Text>
+                  <Text style={[s.fw400, s.f14, s.black]}>Following</Text>
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity onPress={onPressToggleFollow}>
@@ -202,7 +202,7 @@ export const ProfileHeader = observer(function ProfileHeader({
           ) : undefined}
         </View>
         <View style={styles.displayNameLine}>
-          <Text style={styles.displayName}>
+          <Text style={[styles.displayName, s.black]}>
             {view.displayName || view.handle}
           </Text>
         </View>
@@ -218,7 +218,7 @@ export const ProfileHeader = observer(function ProfileHeader({
           <TouchableOpacity
             style={[s.flexRow, s.mr10]}
             onPress={onPressFollowers}>
-            <Text style={[s.bold, s.mr2, styles.metricsText]}>
+            <Text style={[s.bold, s.mr2, styles.metricsText, s.black]}>
               {view.followersCount}
             </Text>
             <Text style={[s.gray5, styles.metricsText]}>
@@ -229,7 +229,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             <TouchableOpacity
               style={[s.flexRow, s.mr10]}
               onPress={onPressFollows}>
-              <Text style={[s.bold, s.mr2, styles.metricsText]}>
+              <Text style={[s.bold, s.mr2, styles.metricsText, s.black]}>
                 {view.followsCount}
               </Text>
               <Text style={[s.gray5, styles.metricsText]}>following</Text>
@@ -239,7 +239,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             <TouchableOpacity
               style={[s.flexRow, s.mr10]}
               onPress={onPressMembers}>
-              <Text style={[s.bold, s.mr2, styles.metricsText]}>
+              <Text style={[s.bold, s.mr2, styles.metricsText, s.black]}>
                 {view.membersCount}
               </Text>
               <Text style={[s.gray5, styles.metricsText]}>
@@ -248,7 +248,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             </TouchableOpacity>
           ) : undefined}
           <View style={[s.flexRow, s.mr10]}>
-            <Text style={[s.bold, s.mr2, styles.metricsText]}>
+            <Text style={[s.bold, s.mr2, styles.metricsText, s.black]}>
               {view.postsCount}
             </Text>
             <Text style={[s.gray5, styles.metricsText]}>

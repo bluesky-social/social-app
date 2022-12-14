@@ -25,9 +25,9 @@ export function PostMeta(opts: PostMetaOpts) {
         style={styles.metaItem}
         href={opts.authorHref}
         title={opts.authorHandle}>
-        <Text style={[s.f17, s.bold]} numberOfLines={1}>
+        <Text style={[s.f17, s.bold, s.black]} numberOfLines={1}>
           {opts.authorDisplayName || opts.authorHandle}
-          <Text style={[s.f15, s.gray5, s.normal]} numberOfLines={1}>
+          <Text style={[s.f15, s.gray5, s.normal, s.black]} numberOfLines={1}>
             &nbsp;{opts.authorHandle}
           </Text>
         </Text>

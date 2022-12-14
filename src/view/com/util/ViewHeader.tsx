@@ -56,7 +56,11 @@ export const ViewHeader = observer(function ViewHeader({
         hitSlop={BACK_HITSLOP}
         style={canGoBack ? styles.backIcon : styles.backIconWide}>
         {canGoBack ? (
-          <FontAwesomeIcon size={18} icon="angle-left" style={{marginTop: 6}} />
+          <FontAwesomeIcon
+            size={18}
+            icon="angle-left"
+            style={{marginTop: 6, color: colors.black}}
+          />
         ) : (
           <UserAvatar
             size={30}
@@ -138,6 +142,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 21,
     fontWeight: '600',
+    color: colors.black,
   },
   subtitle: {
     fontSize: 18,
