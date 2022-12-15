@@ -28,9 +28,9 @@ export function RichText({
         fontSize: 26,
         lineHeight: 30,
       }
-      return <Text style={[style]}>{text}</Text>
+      return <Text style={style}>{text}</Text>
     }
-    return <Text style={[style]}>{text}</Text>
+    return <Text style={style}>{text}</Text>
   }
   if (!style) style = []
   else if (!Array.isArray(style)) style = [style]
@@ -65,7 +65,7 @@ export function RichText({
     key++
   }
   return (
-    <Text style={[style]} numberOfLines={numberOfLines}>
+    <Text style={style} numberOfLines={numberOfLines}>
       {els}
     </Text>
   )
