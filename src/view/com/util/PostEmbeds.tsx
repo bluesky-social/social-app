@@ -121,7 +121,7 @@ export function PostEmbeds({
 
 const styles = StyleSheet.create({
   imagesContainer: {
-    marginBottom: 20,
+    marginBottom: 10,
   },
   imagesWidthSpacer: {
     width: 5,

@@ -16,6 +16,7 @@ import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
+import {PostEmbeds} from '../util/PostEmbeds'
 import {PostCtrls} from '../util/PostCtrls'
 import {RichText} from '../util/RichText'
 import * as Toast from '../util/Toast'
@@ -26,10 +27,12 @@ import {s, colors} from '../../lib/styles'
 export const Post = observer(function Post({
   uri,
   initView,
+  showReplyLine,
   style,
 }: {
   uri: string
   initView?: PostThreadViewModel
+  showReplyLine?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const store = useStores()
@@ -131,11 +134,12 @@ export const Post = observer(function Post({
 
   return (
     <Link style={[styles.outer, style]} href={itemHref} title={itemTitle}>
+      {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Link href={authorHref} title={authorTitle}>
             <UserAvatar
-              size={50}
+              size={52}
               displayName={item.author.displayName}
               handle={item.author.handle}
               avatar={item.author.avatar}
@@ -174,6 +178,7 @@ export const Post = observer(function Post({
               style={styles.postText}
             />
           </View>
+          <PostEmbeds embed={item.embed} style={{marginBottom: 10}} />
           <PostCtrls
             replyCount={item.replyCount}
             repostCount={item.repostCount}
@@ -217,5 +222,13 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
     fontSize: 16,
     lineHeight: 20.8, // 1.3 of 16px
+  },
+  replyLine: {
+    position: 'absolute',
+    left: 36,
+    top: 70,
+    bottom: 0,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.gray2,
   },
 })
