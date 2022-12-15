@@ -31,7 +31,7 @@ export const Settings = observer(function Settings({
       <ViewHeader title="Settings" />
       <View style={[s.mt10, s.pl10, s.pr10]}>
         <View style={[s.flexRow]}>
-          <Text>Signed in as</Text>
+          <Text style={s.black}>Signed in as</Text>
           <View style={s.flex1} />
           <TouchableOpacity onPress={onPressSignout}>
             <Text style={[s.blue3, s.bold]}>Sign out</Text>
@@ -49,7 +49,7 @@ export const Settings = observer(function Settings({
               avatar={store.me.avatar}
             />
             <View style={[s.ml10]}>
-              <Text style={[s.f18]}>
+              <Text style={[s.f18, s.black]}>
                 {store.me.displayName || store.me.handle}
               </Text>
               <Text style={[s.gray5]}>@{store.me.handle}</Text>
