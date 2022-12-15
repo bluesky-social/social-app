@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {
   ActivityIndicator,
+  Keyboard,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
@@ -134,6 +135,7 @@ const LoginForm = ({
 
   const onPressSelectService = () => {
     store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
+    Keyboard.dismiss()
   }
 
   const onPressNext = async () => {

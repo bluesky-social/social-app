@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {
   ActivityIndicator,
+  Keyboard,
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
@@ -65,6 +66,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
 
   const onPressSelectService = () => {
     store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
+    Keyboard.dismiss()
   }
 
   const onPressNext = async () => {
