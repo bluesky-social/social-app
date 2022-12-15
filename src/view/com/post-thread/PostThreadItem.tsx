@@ -124,7 +124,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   style={styles.metaItem}
                   href={authorHref}
                   title={authorTitle}>
-                  <Text style={[s.f16, s.bold]} numberOfLines={1}>
+                  <Text style={[s.f16, s.bold, s.black]} numberOfLines={1}>
                     {item.author.displayName || item.author.handle}
                   </Text>
                 </Link>
@@ -390,6 +390,7 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
     fontSize: 16,
     lineHeight: 20.8, // 1.3 of 16px
+    color: 'black',
   },
   postTextContainer: {
     flexDirection: 'row',

@@ -237,9 +237,9 @@ export const ComposePost = observer(function ComposePost({
                 <TextLink
                   href={`/profile/${replyTo.author.handle}`}
                   text={replyTo.author.displayName || replyTo.author.handle}
-                  style={[s.f16, s.bold]}
+                  style={[s.f16, s.bold, s.black]}
                 />
-                <Text style={[s.f16, s['lh16-1.3']]} numberOfLines={6}>
+                <Text style={[s.f16, s['lh16-1.3'], s.black]} numberOfLines={6}>
                   {replyTo.text}
                 </Text>
               </View>

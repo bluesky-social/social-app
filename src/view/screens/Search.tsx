@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
   inputIcon: {
     marginRight: 10,
     color: colors.gray3,
+    alignSelf: 'center',
   },
   input: {
     flex: 1,

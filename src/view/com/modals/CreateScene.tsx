@@ -97,14 +97,14 @@ export function Component({}: {}) {
   return (
     <View style={styles.outer}>
       <BottomSheetScrollView style={styles.inner}>
-        <Text style={styles.title}>Create a scene</Text>
+        <Text style={[styles.title, s.black]}>Create a scene</Text>
         <Text style={styles.description}>
           Scenes are invite-only groups which aggregate what's popular with
           members.
         </Text>
         <View style={{paddingBottom: 50}}>
           <View style={styles.group}>
-            <Text style={styles.label}>Scene Handle</Text>
+            <Text style={[styles.label, s.black]}>Scene Handle</Text>
             <BottomSheetTextInput
               style={styles.textInput}
               placeholder="e.g. alices-friends"
@@ -114,7 +114,7 @@ export function Component({}: {}) {
             />
           </View>
           <View style={styles.group}>
-            <Text style={styles.label}>Scene Display Name</Text>
+            <Text style={[styles.label, s.black]}>Scene Display Name</Text>
             <BottomSheetTextInput
               style={styles.textInput}
               placeholder="e.g. Alice's Friends"
@@ -125,7 +125,7 @@ export function Component({}: {}) {
             />
           </View>
           <View style={styles.group}>
-            <Text style={styles.label}>Scene Description</Text>
+            <Text style={[styles.label, s.black]}>Scene Description</Text>
             <BottomSheetTextInput
               style={[styles.textArea]}
               placeholder="e.g. Artists, dog-lovers, and memelords."
