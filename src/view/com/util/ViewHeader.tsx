@@ -46,7 +46,9 @@ export const ViewHeader = observer(function ViewHeader({
       console.log(e)
     })
   }
-  canGoBack ??= store.nav.tab.canGoBack
+  if (typeof canGoBack === 'undefined') {
+    canGoBack = store.nav.tab.canGoBack
+  }
   return (
     <View style={styles.header}>
       <TouchableOpacity
