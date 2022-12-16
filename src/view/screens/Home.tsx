@@ -51,6 +51,7 @@ export const Home = observer(function Home({
     if (hasSetup) {
       console.log('Updating home feed')
       store.me.mainFeed.update()
+      doPoll()
     } else {
       store.nav.setTitle(navIdx, 'Home')
       console.log('Fetching home feed')
@@ -88,7 +89,7 @@ export const Home = observer(function Home({
         onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
       />
-      {store.me.mainFeed.hasNewLatest ? (
+      {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing ? (
         <TouchableOpacity
           style={[
             styles.loadLatest,

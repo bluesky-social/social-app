@@ -202,6 +202,7 @@ export class FeedModel {
   _loadMorePromise: Promise<void> | undefined
   _loadLatestPromise: Promise<void> | undefined
   _updatePromise: Promise<void> | undefined
+  _prefetchedRefresh: GetTimeline.Response | GetAuthorFeed.Response | undefined
 
   // data
   feed: FeedItemModel[] = []
@@ -221,6 +222,7 @@ export class FeedModel {
         _loadMorePromise: false,
         _loadLatestPromise: false,
         _updatePromise: false,
+        _prefetchedRefresh: false,
       },
       {autoBind: true},
     )
@@ -278,7 +280,15 @@ export class FeedModel {
    * Reset and load
    */
   async refresh() {
-    return this.setup(true)
+    if (this._prefetchedRefresh) {
+      await this._pendingWork()
+      this._replaceAll(this._prefetchedRefresh)
+      this.setHasNewLatest(false)
+      this._xIdle()
+    } else {
+      await this.setup(true)
+    }
+    this._prefetchedRefresh = undefined
   }
 
   /**
@@ -330,10 +340,19 @@ export class FeedModel {
     }
     await this._pendingWork()
     const res = await this._getFeed({limit: 1})
-    this.setHasNewLatest(
-      res.data.feed[0] &&
-        (this.feed.length === 0 || res.data.feed[0].uri !== this.pollCursor),
+    const prefetchedLatestUri = this._prefetchedRefresh?.data.feed[0]?.uri
+    const currentLatestUri = prefetchedLatestUri || this.pollCursor
+    const receivedLatestUri = res.data.feed[0]
+      ? res.data.feed[0].uri
+      : undefined
+    const hasNewLatest = Boolean(
+      receivedLatestUri &&
+        (this.feed.length === 0 || receivedLatestUri !== currentLatestUri),
     )
+    this.setHasNewLatest(hasNewLatest)
+    if (hasNewLatest && prefetchedLatestUri !== receivedLatestUri) {
+      this._prefetchedRefresh = await this._getFeed({limit: PAGE_SIZE})
+    }
   }
 
   // state transitions
