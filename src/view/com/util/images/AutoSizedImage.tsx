@@ -9,8 +9,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import {ImageLightbox} from '../../../../state/models/shell-ui'
-import {useStores} from '../../../../state'
 import {colors} from '../../../lib/styles'
 
 const MAX_HEIGHT = 300
@@ -22,14 +20,13 @@ interface Dim {
 
 export function AutoSizedImage({
   uri,
-  fullSizeUri,
+  onPress,
   style,
 }: {
   uri: string
-  fullSizeUri?: string
+  onPress?: () => void
   style: StyleProp<ImageStyle>
 }) {
-  const store = useStores()
   const [error, setError] = useState<string | undefined>()
   const [imgInfo, setImgInfo] = useState<Dim | undefined>()
   const [containerInfo, setContainerInfo] = useState<Dim | undefined>()
@@ -74,15 +71,9 @@ export function AutoSizedImage({
     })
   }
 
-  const onPressImage = () => {
-    if (fullSizeUri) {
-      store.shell.openLightbox(new ImageLightbox(fullSizeUri))
-    }
-  }
-
   return (
     <View style={style}>
-      <TouchableWithoutFeedback onPress={onPressImage}>
+      <TouchableWithoutFeedback onPress={onPress}>
         {error ? (
           <View style={[styles.container, styles.errorContainer]}>
             <Text style={styles.error}>{error}</Text>

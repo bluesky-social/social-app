@@ -51,17 +51,55 @@ export class ServerInputModal {
   }
 }
 
-export class ProfileImageLightbox {
+interface LightboxModel {
+  canSwipeLeft: boolean
+  canSwipeRight: boolean
+  onSwipeLeft: () => void
+  onSwipeRight: () => void
+}
+
+export class ProfileImageLightbox implements LightboxModel {
   name = 'profile-image'
+  canSwipeLeft = false
+  canSwipeRight = false
   constructor(public profileView: ProfileViewModel) {
     makeAutoObservable(this)
   }
+  onSwipeLeft() {}
+  onSwipeRight() {}
 }
 
-export class ImageLightbox {
+export class ImageLightbox implements LightboxModel {
   name = 'image'
+  canSwipeLeft = true
+  canSwipeRight = true
   constructor(public uri: string) {
     makeAutoObservable(this)
+  }
+  onSwipeLeft() {}
+  onSwipeRight() {}
+}
+
+export class ImagesLightbox implements LightboxModel {
+  name = 'images'
+  get canSwipeLeft() {
+    return this.index > 0
+  }
+  get canSwipeRight() {
+    return this.index < this.uris.length - 1
+  }
+  constructor(public uris: string[], public index: number) {
+    makeAutoObservable(this)
+  }
+  onSwipeLeft() {
+    if (this.canSwipeLeft) {
+      this.index = this.index - 1
+    }
+  }
+  onSwipeRight() {
+    if (this.canSwipeRight) {
+      this.index = this.index + 1
+    }
   }
 }
 
@@ -91,7 +129,11 @@ export class ShellUiModel {
     | ServerInputModal
     | undefined
   isLightboxActive = false
-  activeLightbox: ProfileImageLightbox | ImageLightbox | undefined
+  activeLightbox:
+    | ProfileImageLightbox
+    | ImageLightbox
+    | ImagesLightbox
+    | undefined
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
 
@@ -123,7 +165,9 @@ export class ShellUiModel {
     this.activeModal = undefined
   }
 
-  openLightbox(lightbox: ProfileImageLightbox | ImageLightbox) {
+  openLightbox(
+    lightbox: ProfileImageLightbox | ImageLightbox | ImagesLightbox,
+  ) {
     this.isLightboxActive = true
     this.activeLightbox = lightbox
   }
