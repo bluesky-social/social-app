@@ -1,7 +1,15 @@
 import React from 'react'
 import {Image, StyleSheet, useWindowDimensions, View} from 'react-native'
 
-export function Component({uris, index}: {uris: string[]; index: number}) {
+export function Component({
+  uris,
+  index,
+  isZooming,
+}: {
+  uris: string[]
+  index: number
+  isZooming: boolean
+}) {
   const winDim = useWindowDimensions()
   const left = index * winDim.width * -1
   return (
@@ -9,7 +17,11 @@ export function Component({uris, index}: {uris: string[]; index: number}) {
       {uris.map((uri, i) => (
         <Image
           key={i}
-          style={[styles.image, {left: i * winDim.width}]}
+          style={[
+            styles.image,
+            {left: i * winDim.width},
+            isZooming && i !== index ? {opacity: 0} : undefined,
+          ]}
           source={{uri}}
         />
       ))}
