@@ -38,7 +38,6 @@ export function AutoSizedImage({
       Image.getSize(
         uri,
         (width: number, height: number) => {
-          console.log('gotSize')
           if (!aborted) {
             setImgInfo({width, height})
           }
