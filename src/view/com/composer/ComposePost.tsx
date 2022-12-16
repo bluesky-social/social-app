@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -32,6 +33,7 @@ import {SelectedPhoto} from './SelectedPhoto'
 
 const MAX_TEXT_LENGTH = 256
 const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH
+const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
 export const ComposePost = observer(function ComposePost({
   replyTo,
@@ -48,6 +50,7 @@ export const ComposePost = observer(function ComposePost({
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
   const [text, setText] = useState('')
+  const [isSelectingPhotos, setIsSelectingPhotos] = useState(false)
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
 
   const autocompleteView = useMemo<UserAutocompleteViewModel>(
@@ -81,10 +84,17 @@ export const ComposePost = observer(function ComposePost({
     }
   }, [])
 
+  const onPressSelectPhotos = () => {
+    if (isSelectingPhotos) {
+      setIsSelectingPhotos(false)
+    } else if (selectedPhotos.length < 4) {
+      setIsSelectingPhotos(true)
+    }
+  }
   const onSelectPhotos = (photos: string[]) => {
     setSelectedPhotos(photos)
+    setIsSelectingPhotos(false)
   }
-
   const onChangeText = (newText: string) => {
     setText(newText)
 
@@ -211,55 +221,71 @@ export const ComposePost = observer(function ComposePost({
             <Text style={[s.red4, s.flex1]}>{error}</Text>
           </View>
         )}
-        {replyTo ? (
-          <View style={styles.replyToLayout}>
+        <ScrollView style={s.flex1}>
+          {replyTo ? (
+            <View style={styles.replyToLayout}>
+              <UserAvatar
+                handle={replyTo.author.handle}
+                displayName={replyTo.author.displayName}
+                avatar={replyTo.author.avatar}
+                size={50}
+              />
+              <View style={styles.replyToPost}>
+                <TextLink
+                  href={`/profile/${replyTo.author.handle}`}
+                  text={replyTo.author.displayName || replyTo.author.handle}
+                  style={[s.f16, s.bold]}
+                />
+                <Text style={[s.f16, s['lh16-1.3']]} numberOfLines={6}>
+                  {replyTo.text}
+                </Text>
+              </View>
+            </View>
+          ) : undefined}
+          <View style={[styles.textInputLayout, selectTextInputLayout]}>
             <UserAvatar
-              handle={replyTo.author.handle}
-              displayName={replyTo.author.displayName}
-              avatar={replyTo.author.avatar}
+              handle={store.me.handle || ''}
+              displayName={store.me.displayName}
+              avatar={store.me.avatar}
               size={50}
             />
-            <View style={styles.replyToPost}>
-              <TextLink
-                href={`/profile/${replyTo.author.handle}`}
-                text={replyTo.author.displayName || replyTo.author.handle}
-                style={[s.f16, s.bold]}
-              />
-              <Text style={[s.f16, s['lh16-1.3']]} numberOfLines={6}>
-                {replyTo.text}
-              </Text>
-            </View>
+            <TextInput
+              ref={textInput}
+              multiline
+              scrollEnabled
+              onChangeText={(text: string) => onChangeText(text)}
+              placeholder={selectTextInputPlaceholder}
+              style={styles.textInput}>
+              {textDecorated}
+            </TextInput>
           </View>
-        ) : undefined}
-        <View style={[styles.textInputLayout, selectTextInputLayout]}>
-          <UserAvatar
-            handle={store.me.handle || ''}
-            displayName={store.me.displayName}
-            avatar={store.me.avatar}
-            size={50}
-          />
-          <TextInput
-            ref={textInput}
-            multiline
-            scrollEnabled
-            onChangeText={(text: string) => onChangeText(text)}
-            placeholder={selectTextInputPlaceholder}
-            style={styles.textInput}>
-            {textDecorated}
-          </TextInput>
-        </View>
-        <SelectedPhoto
-          selectedPhotos={selectedPhotos}
-          onSelectPhotos={onSelectPhotos}
-        />
-        {localPhotos.photos != null && selectedPhotos.length < 4 && (
-          <PhotoCarouselPicker
+          <SelectedPhoto
             selectedPhotos={selectedPhotos}
             onSelectPhotos={onSelectPhotos}
-            localPhotos={localPhotos}
           />
-        )}
+        </ScrollView>
+        {isSelectingPhotos &&
+          localPhotos.photos != null &&
+          selectedPhotos.length < 4 && (
+            <PhotoCarouselPicker
+              selectedPhotos={selectedPhotos}
+              onSelectPhotos={onSelectPhotos}
+              localPhotos={localPhotos}
+            />
+          )}
         <View style={styles.bottomBar}>
+          <TouchableOpacity
+            onPress={onPressSelectPhotos}
+            style={[s.pl5]}
+            hitSlop={HITSLOP}>
+            <FontAwesomeIcon
+              icon={['far', 'image']}
+              style={{
+                color: selectedPhotos.length < 4 ? colors.blue3 : colors.gray3,
+              }}
+              size={24}
+            />
+          </TouchableOpacity>
           <View style={s.flex1} />
           <Text style={[s.mr10, {color: progressColor}]}>
             {MAX_TEXT_LENGTH - text.length}
@@ -392,5 +418,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopWidth: 1,
     borderTopColor: colors.gray2,
+    backgroundColor: colors.white,
   },
 })

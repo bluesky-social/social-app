@@ -18,6 +18,7 @@ import {faBell} from '@fortawesome/free-solid-svg-icons/faBell'
 import {faBell as farBell} from '@fortawesome/free-regular-svg-icons/faBell'
 import {faBookmark} from '@fortawesome/free-solid-svg-icons/faBookmark'
 import {faBookmark as farBookmark} from '@fortawesome/free-regular-svg-icons/faBookmark'
+import {faCamera} from '@fortawesome/free-solid-svg-icons/faCamera'
 import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck'
 import {faCircleCheck} from '@fortawesome/free-regular-svg-icons/faCircleCheck'
 import {faCircleUser} from '@fortawesome/free-regular-svg-icons/faCircleUser'
@@ -33,6 +34,8 @@ import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
 import {faHeart} from '@fortawesome/free-regular-svg-icons/faHeart'
 import {faHeart as fasHeart} from '@fortawesome/free-solid-svg-icons/faHeart'
 import {faHouse} from '@fortawesome/free-solid-svg-icons/faHouse'
+import {faImage as farImage} from '@fortawesome/free-regular-svg-icons/faImage'
+import {faImage} from '@fortawesome/free-solid-svg-icons/faImage'
 import {faLink} from '@fortawesome/free-solid-svg-icons/faLink'
 import {faLock} from '@fortawesome/free-solid-svg-icons/faLock'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
@@ -58,8 +61,6 @@ import {faUserXmark} from '@fortawesome/free-solid-svg-icons/faUserXmark'
 import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
 import {faTrashCan} from '@fortawesome/free-regular-svg-icons/faTrashCan'
 import {faX} from '@fortawesome/free-solid-svg-icons/faX'
-import {faCamera} from '@fortawesome/free-solid-svg-icons/faCamera'
-import {faImage} from '@fortawesome/free-solid-svg-icons/faImage'
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark'
 
 export function setup() {
@@ -82,6 +83,7 @@ export function setup() {
     farBell,
     faBookmark,
     farBookmark,
+    faCamera,
     faCheck,
     faCircleCheck,
     faCircleUser,
@@ -97,6 +99,8 @@ export function setup() {
     faHeart,
     fasHeart,
     faHouse,
+    faImage,
+    farImage,
     faLink,
     faLock,
     faMagnifyingGlass,
@@ -122,8 +126,6 @@ export function setup() {
     faTicket,
     faTrashCan,
     faX,
-    faCamera,
-    faImage,
     faXmark,
   )
 }
