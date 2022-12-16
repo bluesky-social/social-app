@@ -72,11 +72,6 @@ export function HorzSwipe({
     setDir(0)
     onSwipeStart?.()
 
-    // TODO
-    // if (keyboardDismissMode === 'on-drag') {
-    //   Keyboard.dismiss()
-    // }
-
     panX.stopAnimation()
     // @ts-expect-error: _value is private, but docs use it as well
     panX.setOffset(panX._value)

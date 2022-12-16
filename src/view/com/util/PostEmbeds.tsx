@@ -1,25 +1,19 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {
-  ActivityIndicator,
-  Image,
   ImageStyle,
   StyleSheet,
   StyleProp,
   Text,
-  TouchableWithoutFeedback,
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  Record as PostRecord,
-  Entity,
-} from '../../../third-party/api/src/client/types/app/bsky/feed/post'
 import * as AppBskyEmbedImages from '../../../third-party/api/src/client/types/app/bsky/embed/images'
 import * as AppBskyEmbedExternal from '../../../third-party/api/src/client/types/app/bsky/embed/external'
 import {Link} from '../util/Link'
-import {LinkMeta, getLikelyType, LikelyType} from '../../../lib/link-meta'
 import {colors} from '../../lib/styles'
 import {AutoSizedImage} from './images/AutoSizedImage'
+import {ImagesLightbox} from '../../../state/models/shell-ui'
+import {useStores} from '../../../state'
 
 type Embed =
   | AppBskyEmbedImages.Presented
@@ -33,14 +27,19 @@ export function PostEmbeds({
   embed?: Embed
   style?: StyleProp<ViewStyle>
 }) {
+  const store = useStores()
   if (embed?.$type === 'app.bsky.embed.images#presented') {
     const imgEmbed = embed as AppBskyEmbedImages.Presented
     if (imgEmbed.images.length > 0) {
+      const uris = imgEmbed.images.map(img => img.fullsize)
+      const openLightbox = (index: number) => {
+        store.shell.openLightbox(new ImagesLightbox(uris, index))
+      }
       const Thumb = ({i, style}: {i: number; style: StyleProp<ImageStyle>}) => (
         <AutoSizedImage
           style={style}
           uri={imgEmbed.images[i].thumb}
-          fullSizeUri={imgEmbed.images[i].fullsize}
+          onPress={() => openLightbox(i)}
         />
       )
       if (imgEmbed.images.length === 4) {

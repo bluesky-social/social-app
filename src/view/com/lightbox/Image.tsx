@@ -4,7 +4,6 @@ import {Image, StyleSheet, useWindowDimensions, View} from 'react-native'
 export function Component({uri}: {uri: string}) {
   const winDim = useWindowDimensions()
   const top = winDim.height / 2 - (winDim.width - 40) / 2 - 100
-  console.log(uri)
   return (
     <View style={[styles.container, {top}]}>
       <Image style={styles.image} source={{uri}} />
