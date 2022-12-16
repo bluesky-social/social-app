@@ -193,7 +193,7 @@ export const FeedItem = observer(function FeedItem({
                 style={styles.postText}
               />
             </View>
-            <PostEmbeds embed={item.embed} style={{marginBottom: 10}} />
+            <PostEmbeds embed={item.embed} style={styles.postEmbeds} />
             <PostCtrls
               replyCount={item.replyCount}
               repostCount={item.repostCount}
@@ -277,5 +277,8 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
     fontSize: 16,
     lineHeight: 20.8, // 1.3 of 16px
+  },
+  postEmbeds: {
+    marginBottom: 10,
   },
 })

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react'
+import React, {useState, useEffect} from 'react'
 import {
   Image,
   ImageStyle,
@@ -8,6 +8,7 @@ import {
   Text,
   TouchableWithoutFeedback,
   View,
+  ViewStyle,
 } from 'react-native'
 import {colors} from '../../../lib/styles'
 
@@ -30,45 +31,47 @@ export function AutoSizedImage({
   const [error, setError] = useState<string | undefined>()
   const [imgInfo, setImgInfo] = useState<Dim | undefined>()
   const [containerInfo, setContainerInfo] = useState<Dim | undefined>()
-  const calculatedStyle = useMemo(() => {
-    if (imgInfo && containerInfo) {
-      // imgInfo.height / imgInfo.width = x / containerInfo.width
-      // x = imgInfo.height / imgInfo.width * containerInfo.width
-      return {
-        height: Math.min(
-          MAX_HEIGHT,
-          (imgInfo.height / imgInfo.width) * containerInfo.width,
-        ),
-      }
-    }
-    return undefined
-  }, [imgInfo, containerInfo])
 
   useEffect(() => {
     let aborted = false
-    Image.getSize(
-      uri,
-      (width: number, height: number) => {
-        if (!aborted) {
-          setImgInfo({width, height})
-        }
-      },
-      (error: any) => {
-        if (!aborted) {
-          setError(String(error))
-        }
-      },
-    )
+    if (!imgInfo) {
+      Image.getSize(
+        uri,
+        (width: number, height: number) => {
+          console.log('gotSize')
+          if (!aborted) {
+            setImgInfo({width, height})
+          }
+        },
+        (error: any) => {
+          if (!aborted) {
+            setError(String(error))
+          }
+        },
+      )
+    }
     return () => {
       aborted = true
     }
-  }, [uri])
+  }, [uri, imgInfo])
 
   const onLayout = (evt: LayoutChangeEvent) => {
     setContainerInfo({
       width: evt.nativeEvent.layout.width,
       height: evt.nativeEvent.layout.height,
     })
+  }
+
+  let calculatedStyle: StyleProp<ViewStyle> | undefined
+  if (imgInfo && containerInfo) {
+    // imgInfo.height / imgInfo.width = x / containerInfo.width
+    // x = imgInfo.height / imgInfo.width * containerInfo.width
+    calculatedStyle = {
+      height: Math.min(
+        MAX_HEIGHT,
+        (imgInfo.height / imgInfo.width) * containerInfo.width,
+      ),
+    }
   }
 
   return (

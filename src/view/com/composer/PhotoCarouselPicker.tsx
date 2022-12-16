@@ -86,6 +86,11 @@ export const PhotoCarouselPicker = ({
           style={{color: colors.blue3}}
         />
       </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.galleryButton, styles.photo]}
+        onPress={handleOpenGallery}>
+        <FontAwesomeIcon icon="image" style={{color: colors.blue3}} size={24} />
+      </TouchableOpacity>
       {localPhotos.photos.map((item: any, index: number) => (
         <TouchableOpacity
           key={`local-image-${index}`}
@@ -94,11 +99,6 @@ export const PhotoCarouselPicker = ({
           <Image style={styles.photo} source={{uri: item.node.image.uri}} />
         </TouchableOpacity>
       ))}
-      <TouchableOpacity
-        style={[styles.galleryButton, styles.photo]}
-        onPress={handleOpenGallery}>
-        <FontAwesomeIcon icon="image" style={{color: colors.blue3}} size={24} />
-      </TouchableOpacity>
     </ScrollView>
   )
 }
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     maxHeight: 96,
     padding: 8,
     overflow: 'hidden',
+    backgroundColor: colors.white,
   },
   galleryButton: {
     borderWidth: 1,
