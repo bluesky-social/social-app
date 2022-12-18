@@ -133,7 +133,11 @@ export const Post = observer(function Post({
   }
 
   return (
-    <Link style={[styles.outer, style]} href={itemHref} title={itemTitle}>
+    <Link
+      style={[styles.outer, style]}
+      href={itemHref}
+      title={itemTitle}
+      noFeedback>
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>

@@ -86,7 +86,8 @@ const LikedByItem = ({item}: {item: VotesViewItemModel}) => {
     <Link
       style={styles.outer}
       href={`/profile/${item.actor.handle}`}
-      title={item.actor.handle}>
+      title={item.actor.handle}
+      noFeedback>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <UserAvatar
