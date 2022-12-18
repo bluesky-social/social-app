@@ -97,7 +97,7 @@ export function PostEmbeds({
     const externalEmbed = embed as AppBskyEmbedExternal.Presented
     const link = externalEmbed.external
     return (
-      <Link style={[styles.extOuter, style]} href={link.uri}>
+      <Link style={[styles.extOuter, style]} href={link.uri} noFeedback>
         {link.thumb ? (
           <AutoSizedImage style={style} uri={link.thumb} />
         ) : undefined}

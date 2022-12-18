@@ -84,7 +84,8 @@ const User = ({item}: {item: FollowerItem}) => {
     <Link
       style={styles.outer}
       href={`/profile/${item.handle}`}
-      title={item.handle}>
+      title={item.handle}
+      noFeedback>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <UserAvatar

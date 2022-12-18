@@ -4,8 +4,10 @@ import {
   Linking,
   StyleProp,
   Text,
+  TouchableWithoutFeedback,
   TouchableOpacity,
   TextStyle,
+  View,
   ViewStyle,
 } from 'react-native'
 import {useStores, RootStoreModel} from '../../../state'
@@ -16,11 +18,13 @@ export const Link = observer(function Link({
   href,
   title,
   children,
+  noFeedback,
 }: {
   style?: StyleProp<ViewStyle>
   href: string
   title?: string
   children?: React.ReactNode
+  noFeedback?: boolean
 }) {
   const store = useStores()
   const onPress = () => {
@@ -29,12 +33,24 @@ export const Link = observer(function Link({
   const onLongPress = () => {
     handleLink(store, href, true)
   }
+  if (noFeedback) {
+    return (
+      <TouchableWithoutFeedback
+        onPress={onPress}
+        onLongPress={onLongPress}
+        delayPressIn={50}>
+        <View style={style}>
+          {children ? children : <Text>{title || 'link'}</Text>}
+        </View>
+      </TouchableWithoutFeedback>
+    )
+  }
   return (
     <TouchableOpacity
-      style={style}
       onPress={onPress}
       onLongPress={onLongPress}
-      delayPressIn={50}>
+      delayPressIn={50}
+      style={style}>
       {children ? children : <Text>{title || 'link'}</Text>}
     </TouchableOpacity>
   )

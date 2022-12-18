@@ -226,7 +226,7 @@ export const PostThreadItem = observer(function PostThreadItem({
     )
   } else {
     return (
-      <Link style={styles.outer} href={itemHref} title={itemTitle}>
+      <Link style={styles.outer} href={itemHref} title={itemTitle} noFeedback>
         {!item.replyingTo && item.record.reply && (
           <View style={styles.parentReplyLine} />
         )}

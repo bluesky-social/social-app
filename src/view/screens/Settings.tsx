@@ -37,7 +37,10 @@ export const Settings = observer(function Settings({
             <Text style={[s.blue3, s.bold]}>Sign out</Text>
           </TouchableOpacity>
         </View>
-        <Link href={`/profile/${store.me.handle}`} title="Your profile">
+        <Link
+          href={`/profile/${store.me.handle}`}
+          title="Your profile"
+          noFeedback>
           <View style={styles.profile}>
             <UserAvatar
               size={40}

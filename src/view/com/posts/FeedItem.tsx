@@ -109,7 +109,7 @@ export const FeedItem = observer(function FeedItem({
           style={{marginTop: 2}}
         />
       ) : undefined}
-      <Link style={outerStyles} href={itemHref} title={itemTitle}>
+      <Link style={outerStyles} href={itemHref} title={itemTitle} noFeedback>
         {isChild && <View style={styles.topReplyLine} />}
         {item._isThreadParent && (
           <View

@@ -50,7 +50,7 @@ export const FeedItem = observer(function FeedItem({
 
   if (item.isReply || item.isMention) {
     return (
-      <Link href={itemHref} title={itemTitle}>
+      <Link href={itemHref} title={itemTitle} noFeedback>
         <Post
           uri={item.uri}
           initView={item.additionalPost}
@@ -121,7 +121,8 @@ export const FeedItem = observer(function FeedItem({
     <Link
       style={[styles.outer, item.isRead ? undefined : styles.outerUnread]}
       href={itemHref}
-      title={itemTitle}>
+      title={itemTitle}
+      noFeedback>
       <View style={styles.layout}>
         <View style={styles.layoutIcon}>
           {icon === 'UpIconSolid' ? (

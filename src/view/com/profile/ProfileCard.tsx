@@ -20,7 +20,11 @@ export function ProfileCard({
   onPressButton?: () => void
 }) {
   return (
-    <Link style={styles.outer} href={`/profile/${handle}`} title={handle}>
+    <Link
+      style={styles.outer}
+      href={`/profile/${handle}`}
+      title={handle}
+      noFeedback>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <UserAvatar
