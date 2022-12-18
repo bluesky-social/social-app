@@ -10,6 +10,7 @@ import {
   ConfirmModal,
   EditProfileModal,
   InviteToSceneModal,
+  ReportAccountModal,
   ProfileImageLightbox,
 } from '../../../state/models/shell-ui'
 import {pluralize} from '../../../lib/strings'
@@ -85,6 +86,9 @@ export const ProfileHeader = observer(function ProfileHeader({
     }
     onRefreshAll()
   }
+  const onPressReportAccount = () => {
+    store.shell.openModal(new ReportAccountModal(view.did))
+  }
 
   // loading
   // =
@@ -133,8 +137,15 @@ export const ProfileHeader = observer(function ProfileHeader({
   const isMe = store.me.did === view.did
   const isCreator = view.isScene && view.creator === store.me.did
   let dropdownItems: DropdownItem[] | undefined
+  if (!isMe) {
+    dropdownItems = dropdownItems || []
+    dropdownItems.push({
+      label: 'Report Account',
+      onPress: onPressReportAccount,
+    })
+  }
   if (isCreator || isMember) {
-    dropdownItems = []
+    dropdownItems = dropdownItems || []
     if (isCreator) {
       dropdownItems.push({
         label: 'Edit Profile',
@@ -182,8 +193,7 @@ export const ProfileHeader = observer(function ProfileHeader({
               )}
             </>
           )}
-          {view.isScene &&
-          (view.myState.member || view.creator === store.me.did) ? (
+          {dropdownItems?.length ? (
             <DropdownBtn
               items={dropdownItems}
               style={[styles.btn, styles.secondaryBtn]}>

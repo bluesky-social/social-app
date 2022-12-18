@@ -59,6 +59,14 @@ export class ReportPostModal {
   }
 }
 
+export class ReportAccountModal {
+  name = 'report-account'
+
+  constructor(public did: string) {
+    makeAutoObservable(this)
+  }
+}
+
 interface LightboxModel {
   canSwipeLeft: boolean
   canSwipeRight: boolean
@@ -136,6 +144,7 @@ export class ShellUiModel {
     | CreateSceneModal
     | ServerInputModal
     | ReportPostModal
+    | ReportAccountModal
     | undefined
   isLightboxActive = false
   activeLightbox:
@@ -164,7 +173,8 @@ export class ShellUiModel {
       | EditProfileModal
       | CreateSceneModal
       | ServerInputModal
-      | ReportPostModal,
+      | ReportPostModal
+      | ReportAccountModal,
   ) {
     this.isModalActive = true
     this.activeModal = modal

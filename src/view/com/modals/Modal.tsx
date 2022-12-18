@@ -13,6 +13,7 @@ import * as CreateSceneModal from './CreateScene'
 import * as InviteToSceneModal from './InviteToScene'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
+import * as ReportAccountModal from './ReportAccount'
 
 const CLOSED_SNAPPOINTS = ['10%']
 
@@ -76,6 +77,13 @@ export const Modal = observer(function Modal() {
     element = (
       <ReportPostModal.Component
         {...(store.shell.activeModal as models.ReportPostModal)}
+      />
+    )
+  } else if (store.shell.activeModal?.name === 'report-account') {
+    snapPoints = ReportAccountModal.snapPoints
+    element = (
+      <ReportAccountModal.Component
+        {...(store.shell.activeModal as models.ReportAccountModal)}
       />
     )
   } else {
