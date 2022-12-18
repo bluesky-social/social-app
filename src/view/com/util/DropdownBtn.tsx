@@ -15,7 +15,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from '../../lib/styles'
 import {toShareUrl} from '../../../lib/strings'
 import {useStores} from '../../../state'
-import {ConfirmModal} from '../../../state/models/shell-ui'
+import {ReportPostModal, ConfirmModal} from '../../../state/models/shell-ui'
 import {TABS_ENABLED} from '../../../build-flags'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
@@ -114,6 +114,13 @@ export function PostDropdownBtn({
       label: 'Share...',
       onPress() {
         Share.share({url: toShareUrl(itemHref)})
+      },
+    },
+    {
+      icon: 'circle-exclamation',
+      label: 'Report post',
+      onPress() {
+        store.shell.openModal(new ReportPostModal(itemHref))
       },
     },
     isAuthor
