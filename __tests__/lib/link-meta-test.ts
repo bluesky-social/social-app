@@ -1,4 +1,4 @@
-import {LikelyType, getLinkMeta} from '../src/lib/link-meta'
+import {LikelyType, getLinkMeta} from '../../src/lib/link-meta'
 
 const exampleComHtml = `<!doctype html>
 <html>
@@ -102,7 +102,7 @@ describe('getLinkMeta', () => {
   it('correctly handles a set of text inputs', async () => {
     for (let i = 0; i < inputs.length; i++) {
       global.fetch = jest.fn().mockImplementationOnce(() => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, _reject) => {
           resolve({
             ok: true,
             status: 200,

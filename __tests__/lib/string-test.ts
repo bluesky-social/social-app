@@ -2,7 +2,7 @@ import {
   extractEntities,
   detectLinkables,
   extractHtmlMeta,
-} from '../src/lib/strings'
+} from '../../src/lib/strings'
 
 describe('extractEntities', () => {
   const knownHandles = new Set(['handle.com', 'full123.test-of-chars'])
