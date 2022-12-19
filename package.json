@@ -8,7 +8,7 @@
     "web": "react-scripts start",
     "start": "react-native start",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
-    "test": "jest -u --coverage",
+    "test": "jest --coverage",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
@@ -100,7 +100,12 @@
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|rollbar-react-native|@fortawesome|@react-native|@react-navigation)"
-    ]
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/src/platform",
+      "<rootDir>/src/third-party"
+  ]
   },
   "browserslist": {
     "production": [
