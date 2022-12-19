@@ -10,3 +10,8 @@ it('renders correctly', () => {
     renderer.create(<App />)
   })
 })
+
+it('matches snapshot', () => {
+  const tree = renderer.create(<App />)
+  expect(tree).toMatchSnapshot()
+})
