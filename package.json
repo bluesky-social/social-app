@@ -87,7 +87,7 @@
   "jest": {
     "preset": "react-native",
     "setupFiles": [
-      "./jest.js"
+      "./jestSetup.js"
     ],
     "setupFilesAfterEnv": ["@testing-library/jest-native/extend-expect"],
     "moduleFileExtensions": [
