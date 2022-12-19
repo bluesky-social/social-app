@@ -601,7 +601,11 @@ function preprocessFeed(feed: FeedItem[]): FeedItemWithThreadMeta[] {
     } else {
       if (!item._isThreadChild) {
         threadSlices.push({index: activeSlice, length: i - activeSlice})
-        activeSlice = -1
+        if (item._isThreadParent) {
+          activeSlice = i
+        } else {
+          activeSlice = -1
+        }
       }
     }
   }
@@ -630,7 +634,6 @@ function preprocessFeed(feed: FeedItem[]): FeedItemWithThreadMeta[] {
     if (slice.length > 3) {
       reorg.splice(slice.index - removedCount + 1, slice.length - 3)
       reorg[slice.index - removedCount]._isThreadChildElided = true
-      console.log(reorg[slice.index - removedCount])
       removedCount += slice.length - 3
     }
   }
