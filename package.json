@@ -8,7 +8,7 @@
     "web": "react-scripts start",
     "start": "react-native start",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
-    "test": "jest",
+    "test": "jest -u --coverage",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {

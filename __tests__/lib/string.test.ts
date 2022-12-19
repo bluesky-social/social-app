@@ -2,6 +2,7 @@ import {
   extractEntities,
   detectLinkables,
   extractHtmlMeta,
+  pluralize,
 } from '../../src/lib/strings'
 
 describe('extractEntities', () => {
@@ -313,6 +314,35 @@ describe('extractHtmlMeta', () => {
     for (let i = 0; i < inputs.length; i++) {
       const input = inputs[i]
       const output = extractHtmlMeta(input)
+      expect(output).toEqual(outputs[i])
+    }
+  })
+})
+
+describe('pluralize', () => {
+  const inputs: [number, string, string?][] = [
+    [1, 'follower'],
+    [1, 'member'],
+    [100, 'post'],
+    [1000, 'repost'],
+    [10000, 'upvote'],
+    [100000, 'other'],
+    [2, 'man', 'men'],
+  ]
+  const outputs = [
+    'follower',
+    'member',
+    'posts',
+    'reposts',
+    'upvotes',
+    'others',
+    'men',
+  ]
+
+  it('correctly pluralizes a set of words', () => {
+    for (let i = 0; i < inputs.length; i++) {
+      const input = inputs[i]
+      const output = pluralize(...input)
       expect(output).toEqual(outputs[i])
     }
   })
