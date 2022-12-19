@@ -18,7 +18,7 @@ describe('clamp', () => {
     for (let i = 0; i < inputs.length; i++) {
       const input = inputs[i]
       const result = clamp(...input)
-      expect(result).toBe(outputs[i])
+      expect(result).toEqual(outputs[i])
     }
   })
 })
