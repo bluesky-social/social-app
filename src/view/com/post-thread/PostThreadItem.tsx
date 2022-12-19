@@ -226,71 +226,82 @@ export const PostThreadItem = observer(function PostThreadItem({
     )
   } else {
     return (
-      <Link style={styles.outer} href={itemHref} title={itemTitle} noFeedback>
-        {!item.replyingTo && item.record.reply && (
-          <View style={styles.parentReplyLine} />
-        )}
-        {item.replies?.length !== 0 && <View style={styles.childReplyLine} />}
-        {item.replyingTo ? (
-          <View style={styles.replyingTo}>
-            <View style={styles.replyingToLine} />
-            <View style={styles.replyingToAvatar}>
-              <UserAvatar
-                handle={item.replyingTo.author.handle}
-                displayName={item.replyingTo.author.displayName}
-                avatar={item.replyingTo.author.avatar}
-                size={30}
+      <>
+        <Link style={styles.outer} href={itemHref} title={itemTitle} noFeedback>
+          {!item.replyingTo && item.record.reply && (
+            <View style={styles.parentReplyLine} />
+          )}
+          {item.replies?.length !== 0 && <View style={styles.childReplyLine} />}
+          {item.replyingTo ? (
+            <View style={styles.replyingTo}>
+              <View style={styles.replyingToLine} />
+              <View style={styles.replyingToAvatar}>
+                <UserAvatar
+                  handle={item.replyingTo.author.handle}
+                  displayName={item.replyingTo.author.displayName}
+                  avatar={item.replyingTo.author.avatar}
+                  size={30}
+                />
+              </View>
+              <Text style={styles.replyingToText} numberOfLines={2}>
+                {item.replyingTo.text}
+              </Text>
+            </View>
+          ) : undefined}
+          <View style={styles.layout}>
+            <View style={styles.layoutAvi}>
+              <Link href={authorHref} title={authorTitle}>
+                <UserAvatar
+                  size={50}
+                  displayName={item.author.displayName}
+                  handle={item.author.handle}
+                  avatar={item.author.avatar}
+                />
+              </Link>
+            </View>
+            <View style={styles.layoutContent}>
+              <PostMeta
+                itemHref={itemHref}
+                itemTitle={itemTitle}
+                authorHref={authorHref}
+                authorHandle={item.author.handle}
+                authorDisplayName={item.author.displayName}
+                timestamp={item.indexedAt}
+                isAuthor={item.author.did === store.me.did}
+                onCopyPostText={onCopyPostText}
+                onDeletePost={onDeletePost}
+              />
+              <View style={styles.postTextContainer}>
+                <RichText
+                  text={record.text}
+                  entities={record.entities}
+                  style={[styles.postText]}
+                />
+              </View>
+              <PostEmbeds embed={item.embed} style={{marginBottom: 10}} />
+              <PostCtrls
+                replyCount={item.replyCount}
+                repostCount={item.repostCount}
+                upvoteCount={item.upvoteCount}
+                isReposted={!!item.myState.repost}
+                isUpvoted={!!item.myState.upvote}
+                onPressReply={onPressReply}
+                onPressToggleRepost={onPressToggleRepost}
+                onPressToggleUpvote={onPressToggleUpvote}
               />
             </View>
-            <Text style={styles.replyingToText} numberOfLines={2}>
-              {item.replyingTo.text}
-            </Text>
           </View>
+        </Link>
+        {item._hasMore ? (
+          <Link
+            style={styles.loadMore}
+            href={itemHref}
+            title={itemTitle}
+            noFeedback>
+            <Text style={styles.loadMoreText}>Load more</Text>
+          </Link>
         ) : undefined}
-        <View style={styles.layout}>
-          <View style={styles.layoutAvi}>
-            <Link href={authorHref} title={authorTitle}>
-              <UserAvatar
-                size={50}
-                displayName={item.author.displayName}
-                handle={item.author.handle}
-                avatar={item.author.avatar}
-              />
-            </Link>
-          </View>
-          <View style={styles.layoutContent}>
-            <PostMeta
-              itemHref={itemHref}
-              itemTitle={itemTitle}
-              authorHref={authorHref}
-              authorHandle={item.author.handle}
-              authorDisplayName={item.author.displayName}
-              timestamp={item.indexedAt}
-              isAuthor={item.author.did === store.me.did}
-              onCopyPostText={onCopyPostText}
-              onDeletePost={onDeletePost}
-            />
-            <View style={styles.postTextContainer}>
-              <RichText
-                text={record.text}
-                entities={record.entities}
-                style={[styles.postText]}
-              />
-            </View>
-            <PostEmbeds embed={item.embed} style={{marginBottom: 10}} />
-            <PostCtrls
-              replyCount={item.replyCount}
-              repostCount={item.repostCount}
-              upvoteCount={item.upvoteCount}
-              isReposted={!!item.myState.repost}
-              isUpvoted={!!item.myState.upvote}
-              onPressReply={onPressReply}
-              onPressToggleRepost={onPressToggleRepost}
-              onPressToggleUpvote={onPressToggleUpvote}
-            />
-          </View>
-        </View>
-      </Link>
+      </>
     )
   }
 })
@@ -397,5 +408,17 @@ const styles = StyleSheet.create({
   },
   expandedInfoItem: {
     marginRight: 10,
+  },
+  loadMore: {
+    paddingLeft: 28,
+    paddingVertical: 10,
+    backgroundColor: colors.white,
+    borderRadius: 6,
+    margin: 2,
+    marginBottom: 0,
+  },
+  loadMoreText: {
+    fontSize: 17,
+    color: colors.blue3,
   },
 })

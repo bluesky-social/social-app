@@ -2,6 +2,7 @@ import React, {useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, Text, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
+import Svg, {Circle} from 'react-native-svg'
 import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -207,6 +208,22 @@ export const FeedItem = observer(function FeedItem({
           </View>
         </View>
       </Link>
+      {item._isThreadChildElided ? (
+        <Link
+          style={styles.viewFullThread}
+          href={itemHref}
+          title={itemTitle}
+          noFeedback>
+          <View style={styles.viewFullThreadDots}>
+            <Svg width="4" height="30">
+              <Circle x="2" y="5" r="1.5" fill={colors.gray3} />
+              <Circle x="2" y="11" r="1.5" fill={colors.gray3} />
+              <Circle x="2" y="17" r="1.5" fill={colors.gray3} />
+            </Svg>
+          </View>
+          <Text style={styles.viewFullThreadText}>View full thread</Text>
+        </Link>
+      ) : undefined}
     </>
   )
 })
@@ -280,5 +297,19 @@ const styles = StyleSheet.create({
   },
   postEmbeds: {
     marginBottom: 10,
+  },
+  viewFullThread: {
+    backgroundColor: colors.white,
+    paddingTop: 4,
+    paddingLeft: 72,
+  },
+  viewFullThreadDots: {
+    position: 'absolute',
+    left: 35,
+    top: 0,
+  },
+  viewFullThreadText: {
+    color: colors.blue3,
+    fontSize: 16,
   },
 })
