@@ -90,14 +90,17 @@ export const PostThread = observer(function PostThread({
 
 function* flattenThread(
   post: PostThreadViewPostModel,
+  isAscending = false,
 ): Generator<PostThreadViewPostModel, void> {
   if (post.parent) {
-    yield* flattenThread(post.parent)
+    yield* flattenThread(post.parent, true)
   }
   yield post
   if (post.replies?.length) {
     for (const reply of post.replies) {
       yield* flattenThread(reply)
     }
+  } else if (!isAscending && !post.parent && post.replyCount > 0) {
+    post._hasMore = true
   }
 }

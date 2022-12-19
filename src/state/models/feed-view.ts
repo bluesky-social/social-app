@@ -17,6 +17,7 @@ let _idCounter = 0
 type FeedItem = GetTimeline.FeedItem | GetAuthorFeed.FeedItem
 type FeedItemWithThreadMeta = FeedItem & {
   _isThreadParent?: boolean
+  _isThreadChildElided?: boolean
   _isThreadChild?: boolean
 }
 
@@ -34,6 +35,7 @@ export class FeedItemModel implements GetTimeline.FeedItem {
   // ui state
   _reactKey: string = ''
   _isThreadParent: boolean = false
+  _isThreadChildElided: boolean = false
   _isThreadChild: boolean = false
 
   // data
@@ -70,6 +72,7 @@ export class FeedItemModel implements GetTimeline.FeedItem {
     this.copy(v)
     this._isThreadParent = v._isThreadParent || false
     this._isThreadChild = v._isThreadChild || false
+    this._isThreadChildElided = v._isThreadChildElided || false
   }
 
   copy(v: GetTimeline.FeedItem | GetAuthorFeed.FeedItem) {
@@ -469,15 +472,7 @@ export class FeedModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
 
-    // HACK 1
-    // rearrange the posts to represent threads
-    // (should be done on the server)
-    // -prf
-    // HACK 2
-    // deduplicate posts on the home feed
-    // (should be done on the server)
-    // -prf
-    const reorgedFeed = preprocessFeed(res.data.feed, this.feedType === 'home')
+    const reorgedFeed = preprocessFeed(res.data.feed)
 
     const promises = []
     const toAppend: FeedItemModel[] = []
@@ -569,38 +564,78 @@ export class FeedModel {
   }
 }
 
-function preprocessFeed(
-  feed: FeedItem[],
-  dedup: boolean,
-): FeedItemWithThreadMeta[] {
-  // DEBUG
-  // this has been temporarily disabled to see if it's the cause of some bugs
-  // if the issues go away, we know this was the cause
-  // -prf
-  return feed
-  // const reorg: FeedItemWithThreadMeta[] = []
-  // for (let i = feed.length - 1; i >= 0; i--) {
-  //   const item = feed[i] as FeedItemWithThreadMeta
+interface Slice {
+  index: number
+  length: number
+}
+function preprocessFeed(feed: FeedItem[]): FeedItemWithThreadMeta[] {
+  const reorg: FeedItemWithThreadMeta[] = []
 
-  //   if (dedup) {
-  //     if (reorg.find(item2 => item2.uri === item.uri)) {
-  //       continue
-  //     }
-  //   }
+  // phase one: identify threads and reorganize them into the feed so
+  // that they are in order and marked as part of a thread
+  for (let i = feed.length - 1; i >= 0; i--) {
+    const item = feed[i] as FeedItemWithThreadMeta
 
-  //   const selfReplyUri = getSelfReplyUri(item)
-  //   if (selfReplyUri) {
-  //     const parentIndex = reorg.findIndex(item2 => item2.uri === selfReplyUri)
-  //     if (parentIndex !== -1 && !reorg[parentIndex]._isThreadParent) {
-  //       reorg[parentIndex]._isThreadParent = true
-  //       item._isThreadChild = true
-  //       reorg.splice(parentIndex + 1, 0, item)
-  //       continue
-  //     }
-  //   }
-  //   reorg.unshift(item)
-  // }
-  // return reorg
+    const selfReplyUri = getSelfReplyUri(item)
+    if (selfReplyUri) {
+      const parentIndex = reorg.findIndex(item2 => item2.uri === selfReplyUri)
+      if (parentIndex !== -1 && !reorg[parentIndex]._isThreadParent) {
+        reorg[parentIndex]._isThreadParent = true
+        item._isThreadChild = true
+        reorg.splice(parentIndex + 1, 0, item)
+        continue
+      }
+    }
+    reorg.unshift(item)
+  }
+
+  // phase two: identify the positions of the threads
+  let activeSlice = -1
+  let threadSlices: Slice[] = []
+  for (let i = 0; i < reorg.length; i++) {
+    const item = reorg[i] as FeedItemWithThreadMeta
+    if (activeSlice === -1) {
+      if (item._isThreadParent) {
+        activeSlice = i
+      }
+    } else {
+      if (!item._isThreadChild) {
+        threadSlices.push({index: activeSlice, length: i - activeSlice})
+        activeSlice = -1
+      }
+    }
+  }
+  if (activeSlice !== -1) {
+    threadSlices.push({index: activeSlice, length: reorg.length - activeSlice})
+  }
+
+  // phase three: reorder the feed so that the timestamp of the
+  // last post in a thread establishes its ordering
+  for (const slice of threadSlices) {
+    const removed: FeedItemWithThreadMeta[] = reorg.splice(
+      slice.index,
+      slice.length,
+    )
+    const targetDate = new Date(removed[removed.length - 1].indexedAt)
+    const newIndex = reorg.findIndex(
+      item => new Date(item.indexedAt) < targetDate,
+    )
+    reorg.splice(newIndex, 0, ...removed)
+    slice.index = newIndex
+  }
+
+  // phase four: compress any threads that are longer than 3 posts
+  let removedCount = 0
+  for (const slice of threadSlices) {
+    if (slice.length > 3) {
+      reorg.splice(slice.index - removedCount + 1, slice.length - 3)
+      reorg[slice.index - removedCount]._isThreadChildElided = true
+      console.log(reorg[slice.index - removedCount])
+      removedCount += slice.length - 3
+    }
+  }
+
+  return reorg
 }
 
 function getSelfReplyUri(

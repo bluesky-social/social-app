@@ -48,6 +48,7 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
   _reactKey: string = ''
   _depth = 0
   _isHighlightedPost = false
+  _hasMore = false
 
   // data
   $type: string = ''
