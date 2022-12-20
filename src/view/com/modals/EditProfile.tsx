@@ -119,6 +119,7 @@ export function Component({
           <BottomSheetTextInput
             style={styles.textInput}
             placeholder="e.g. Alice Roberts"
+            placeholderTextColor={colors.gray4}
             value={displayName}
             onChangeText={v => setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))}
           />
@@ -128,6 +129,7 @@ export function Component({
           <BottomSheetTextInput
             style={[styles.textArea]}
             placeholder="e.g. Artist, dog-lover, and memelord."
+            placeholderTextColor={colors.gray4}
             multiline
             value={description}
             onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
@@ -181,6 +183,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: 16,
+    color: colors.black,
   },
   textArea: {
     borderWidth: 1,
@@ -189,6 +192,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 10,
     fontSize: 16,
+    color: colors.black,
     height: 100,
     textAlignVertical: 'top',
   },
