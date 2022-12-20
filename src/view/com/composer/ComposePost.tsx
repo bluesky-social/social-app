@@ -258,6 +258,7 @@ export const ComposePost = observer(function ComposePost({
               scrollEnabled
               onChangeText={(text: string) => onChangeText(text)}
               placeholder={selectTextInputPlaceholder}
+              placeholderTextColor={colors.gray4}
               style={styles.textInput}>
               {textDecorated}
             </TextInput>

@@ -39,6 +39,7 @@ export const Contacts = ({navIdx, visible, params}: ScreenParams) => {
             value={searchText}
             style={styles.searchInput}
             placeholder="Search"
+            placeholderTextColor={colors.gray4}
             onChangeText={onChangeSearchText}
           />
         </View>
@@ -79,5 +80,6 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
+    color: colors.black,
   },
 })

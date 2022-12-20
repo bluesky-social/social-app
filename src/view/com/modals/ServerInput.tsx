@@ -66,6 +66,7 @@ export function Component({
             <BottomSheetTextInput
               style={styles.textInput}
               placeholder="e.g. https://bsky.app"
+              placeholderTextColor={colors.gray4}
               autoCapitalize="none"
               autoComplete="off"
               autoCorrect={false}
@@ -109,6 +110,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
+    color: colors.black,
   },
   textInputBtn: {
     borderWidth: 1,

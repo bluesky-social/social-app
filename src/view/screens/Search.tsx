@@ -58,6 +58,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
         <TextInput
           ref={textInput}
           placeholder="Type your query here..."
+          placeholderTextColor={colors.gray4}
           selectTextOnFocus
           returnKeyType="search"
           style={styles.input}
@@ -116,6 +117,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
+    color: colors.black,
   },
 
   outputContainer: {

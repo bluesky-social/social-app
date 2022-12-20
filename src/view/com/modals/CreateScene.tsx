@@ -108,6 +108,7 @@ export function Component({}: {}) {
             <BottomSheetTextInput
               style={styles.textInput}
               placeholder="e.g. alices-friends"
+              placeholderTextColor={colors.gray4}
               autoCorrect={false}
               value={handle}
               onChangeText={str => setHandle(makeValidHandle(str))}
@@ -118,6 +119,7 @@ export function Component({}: {}) {
             <BottomSheetTextInput
               style={styles.textInput}
               placeholder="e.g. Alice's Friends"
+              placeholderTextColor={colors.gray4}
               value={displayName}
               onChangeText={v =>
                 setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))
@@ -129,6 +131,7 @@ export function Component({}: {}) {
             <BottomSheetTextInput
               style={[styles.textArea]}
               placeholder="e.g. Artists, dog-lovers, and memelords."
+              placeholderTextColor={colors.gray4}
               multiline
               value={description}
               onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
@@ -209,6 +212,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: 16,
+    color: colors.black,
   },
   textArea: {
     borderWidth: 1,
@@ -217,6 +221,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 10,
     fontSize: 16,
+    color: colors.black,
     height: 70,
     textAlignVertical: 'top',
   },
