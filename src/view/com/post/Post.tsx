@@ -229,6 +229,7 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
     fontSize: 16,
     lineHeight: 20.8, // 1.3 of 16px
+    color: colors.black,
   },
   replyLine: {
     position: 'absolute',

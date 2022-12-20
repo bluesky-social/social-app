@@ -1,11 +1,13 @@
 import {autorun} from 'mobx'
+import {Platform} from 'react-native'
 import {sessionClient as AtpApi} from '../third-party/api'
 import type {SessionServiceClient} from '../third-party/api/src/index'
 import {RootStoreModel} from './models/root-store'
 import * as libapi from './lib/api'
 import * as storage from './lib/storage'
 
-export const LOCAL_DEV_SERVICE = 'http://localhost:2583'
+export const LOCAL_DEV_SERVICE =
+  Platform.OS === 'ios' ? 'http://localhost:2583' : 'http://10.0.2.2:2583'
 export const STAGING_SERVICE = 'https://pds.staging.bsky.dev'
 export const PROD_SERVICE = 'https://bsky.social'
 export const DEFAULT_SERVICE = PROD_SERVICE
