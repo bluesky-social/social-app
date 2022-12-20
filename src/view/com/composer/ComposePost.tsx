@@ -342,8 +342,10 @@ function replaceTextAutocompletePrefix(text: string, item: string) {
 const styles = StyleSheet.create({
   outer: {
     flexDirection: 'column',
+    flex: 1,
     backgroundColor: '#fff',
     padding: 15,
+    paddingBottom: Platform.OS === 'ios' ? 0 : 50,
     height: '100%',
   },
   topbar: {
