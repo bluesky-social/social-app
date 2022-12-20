@@ -159,14 +159,19 @@ export const PostThreadItem = observer(function PostThreadItem({
             </View>
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
-            <View
-              style={[styles.postTextContainer, styles.postTextLargeContainer]}>
-              <RichText
-                text={record.text}
-                entities={record.entities}
-                style={[styles.postText, styles.postTextLarge]}
-              />
-            </View>
+            {record.text ? (
+              <View
+                style={[
+                  styles.postTextContainer,
+                  styles.postTextLargeContainer,
+                ]}>
+                <RichText
+                  text={record.text}
+                  entities={record.entities}
+                  style={[styles.postText, styles.postTextLarge]}
+                />
+              </View>
+            ) : undefined}
             <PostEmbeds embed={item.embed} style={s.mb10} />
             {item._isHighlightedPost && hasEngagement ? (
               <View style={styles.expandedInfo}>
@@ -271,13 +276,17 @@ export const PostThreadItem = observer(function PostThreadItem({
                 onCopyPostText={onCopyPostText}
                 onDeletePost={onDeletePost}
               />
-              <View style={styles.postTextContainer}>
-                <RichText
-                  text={record.text}
-                  entities={record.entities}
-                  style={[styles.postText]}
-                />
-              </View>
+              {record.text ? (
+                <View style={styles.postTextContainer}>
+                  <RichText
+                    text={record.text}
+                    entities={record.entities}
+                    style={[styles.postText]}
+                  />
+                </View>
+              ) : (
+                <View style={{height: 5}} />
+              )}
               <PostEmbeds embed={item.embed} style={{marginBottom: 10}} />
               <PostCtrls
                 replyCount={item.replyCount}

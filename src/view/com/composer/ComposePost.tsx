@@ -117,7 +117,7 @@ export const ComposePost = observer(function ComposePost({
       return
     }
     setError('')
-    if (text.trim().length === 0) {
+    if (text.trim().length === 0 && selectedPhotos.length === 0) {
       setError('Did you want to say anything?')
       return false
     }
