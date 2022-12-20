@@ -114,22 +114,8 @@ export const FeedItem = observer(function FeedItem({
         />
       ) : undefined}
       <Link style={outerStyles} href={itemHref} title={itemTitle} noFeedback>
-        {isChild && (
-          <View
-            style={[
-              styles.topReplyLine,
-              item._isThreadChild ? styles.topReplyLineSmallAvi : undefined,
-            ]}
-          />
-        )}
-        {item._isThreadParent && (
-          <View
-            style={[
-              styles.bottomReplyLine,
-              item._isThreadChild ? styles.bottomReplyLineSmallAvi : undefined,
-            ]}
-          />
-        )}
+        {isChild && <View style={[styles.topReplyLine]} />}
+        {item._isThreadParent && <View style={[styles.bottomReplyLine]} />}
         {item.repostedBy && (
           <Link
             style={styles.includeReason}
@@ -159,12 +145,9 @@ export const FeedItem = observer(function FeedItem({
         )}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
-            <Link
-              href={authorHref}
-              title={item.author.handle}
-              style={item._isThreadChild ? {marginLeft: 10} : undefined}>
+            <Link href={authorHref} title={item.author.handle}>
               <UserAvatar
-                size={item._isThreadChild ? 30 : 52}
+                size={52}
                 displayName={item.author.displayName}
                 handle={item.author.handle}
                 avatar={item.author.avatar}
@@ -172,19 +155,17 @@ export const FeedItem = observer(function FeedItem({
             </Link>
           </View>
           <View style={styles.layoutContent}>
-            {!item._isThreadChild ? (
-              <PostMeta
-                itemHref={itemHref}
-                itemTitle={itemTitle}
-                authorHref={authorHref}
-                authorHandle={item.author.handle}
-                authorDisplayName={item.author.displayName}
-                timestamp={item.indexedAt}
-                isAuthor={item.author.did === store.me.did}
-                onCopyPostText={onCopyPostText}
-                onDeletePost={onDeletePost}
-              />
-            ) : undefined}
+            <PostMeta
+              itemHref={itemHref}
+              itemTitle={itemTitle}
+              authorHref={authorHref}
+              authorHandle={item.author.handle}
+              authorDisplayName={item.author.displayName}
+              timestamp={item.indexedAt}
+              isAuthor={item.author.did === store.me.did}
+              onCopyPostText={onCopyPostText}
+              onDeletePost={onDeletePost}
+            />
             {!isChild && replyHref !== '' && (
               <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
                 <FontAwesomeIcon
@@ -289,9 +270,6 @@ const styles = StyleSheet.create({
     borderLeftWidth: 2,
     borderLeftColor: colors.gray2,
   },
-  topReplyLineSmallAvi: {
-    height: TOP_REPLY_LINE_LENGTH + 10,
-  },
   bottomReplyLine: {
     position: 'absolute',
     left: 34,
@@ -299,9 +277,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     borderLeftWidth: 2,
     borderLeftColor: colors.gray2,
-  },
-  bottomReplyLineSmallAvi: {
-    top: 50,
   },
   includeReason: {
     flexDirection: 'row',
