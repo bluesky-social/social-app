@@ -166,7 +166,7 @@ export const FeedItem = observer(function FeedItem({
               style={styles.metaItem}
               href={authors[0].href}
               title={`@${authors[0].handle}`}>
-              <Text style={[s.f15, s.bold]}>
+              <Text style={[s.f15, s.bold, s.black]}>
                 {authors[0].displayName || authors[0].handle}
               </Text>
             </Link>
@@ -265,9 +265,11 @@ const styles = StyleSheet.create({
   },
   metaItem: {
     paddingRight: 3,
+    color: colors.black,
   },
   postText: {
     paddingBottom: 5,
+    color: colors.black,
   },
 
   addedContainer: {
