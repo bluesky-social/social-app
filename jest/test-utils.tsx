@@ -1,4 +1,5 @@
 import React from 'react'
+import RN from 'react-native'
 import {render} from '@testing-library/react-native'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {RootSiblingParent} from 'react-native-root-siblings'
@@ -29,3 +30,7 @@ export * from '@testing-library/react-native'
 
 // override render method
 export {customRender as render}
+
+// test-setup.js
+
+jest.spyOn(RN.Animated, 'FlatList', 'get').mockImplementation(() => RN.FlatList)

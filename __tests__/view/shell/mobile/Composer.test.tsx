@@ -1,15 +1,9 @@
 import React from 'react'
 import {Composer} from '../../../../src/view/shell/mobile/Composer'
-import {render} from '../../../../jest/test-utils'
+import renderer from 'react-test-renderer'
+// import {render} from '../../../../jest/test-utils'
 
-it('Composer renders correctly', () => {
-  // const mockedProps = {
-  //   active: true,
-  //   winHeight: 844,
-  //   replyTo: undefined,
-  //   onPost: undefined,
-  //   onClose: jest.fn(),
-  // }
+describe('Composer', () => {
   const mockedProps = {
     active: true,
     winHeight: 844,
@@ -22,6 +16,8 @@ it('Composer renders correctly', () => {
     onPost: jest.fn(),
     onClose: jest.fn(),
   }
-  const tree = render(<Composer {...mockedProps} />)
-  expect(tree).toMatchSnapshot()
+  it('renders correctly', () => {
+    const tree = renderer.create(<Composer {...mockedProps} />).toJSON()
+    expect(tree).toMatchSnapshot()
+  })
 })
