@@ -2,7 +2,6 @@ import React, {useRef} from 'react'
 import {
   StyleProp,
   StyleSheet,
-  Text,
   TextStyle,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -14,6 +13,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import RootSiblings from 'react-native-root-siblings'
+import {Text} from './Text'
 import {colors} from '../../lib/styles'
 
 interface PickerItem {

@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {Text, View} from 'react-native'
+import {View} from 'react-native'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/ErrorMessage'
+import {Text} from '../util/Text'
 import {PostModel} from '../../../state/models/post'
 import {useStores} from '../../../state'
 

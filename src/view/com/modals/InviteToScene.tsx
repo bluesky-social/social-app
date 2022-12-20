@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   FlatList,
   StyleSheet,
-  Text,
   useWindowDimensions,
   View,
 } from 'react-native'
@@ -21,6 +20,7 @@ import _omit from 'lodash.omit'
 import {AtUri} from '../../../third-party/uri'
 import {ProfileCard} from '../profile/ProfileCard'
 import {ErrorMessage} from '../util/ErrorMessage'
+import {Text} from '../util/Text'
 import {useStores} from '../../../state'
 import * as apilib from '../../../state/lib/api'
 import {ProfileViewModel} from '../../../state/models/profile-view'

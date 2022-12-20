@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   StyleProp,
   View,
@@ -9,6 +8,7 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import LinearGradient from 'react-native-linear-gradient'
+import {Text} from './Text'
 import {colors, gradients} from '../../lib/styles'
 
 export function ErrorMessage({

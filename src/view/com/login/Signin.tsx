@@ -4,7 +4,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -12,6 +11,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
 import {Logo} from './Logo'
+import {Text} from '../util/Text'
 import {s, colors} from '../../lib/styles'
 import {createFullHandle, toNiceDomain} from '../../../lib/strings'
 import {useStores, RootStoreModel, DEFAULT_SERVICE} from '../../../state'

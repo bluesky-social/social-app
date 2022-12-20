@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
+import {Alert, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {

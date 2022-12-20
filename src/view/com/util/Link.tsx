@@ -3,13 +3,13 @@ import {observer} from 'mobx-react-lite'
 import {
   Linking,
   StyleProp,
-  Text,
   TouchableWithoutFeedback,
   TouchableOpacity,
   TextStyle,
   View,
   ViewStyle,
 } from 'react-native'
+import {Text} from './Text'
 import {useStores, RootStoreModel} from '../../../state'
 import {convertBskyAppUrlIfNeeded} from '../../../lib/strings'
 

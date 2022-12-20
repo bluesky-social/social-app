@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AtUri} from '../../../third-party/uri'
@@ -19,6 +19,7 @@ import {getGradient} from '../../lib/asset-gen'
 import {DropdownBtn, DropdownItem} from '../util/DropdownBtn'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {Text} from '../util/Text'
 import {RichText} from '../util/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
@@ -408,6 +409,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontSize: 16,
     lineHeight: 20.8, // 1.3 of 16px
+    color: colors.black,
   },
 
   relationshipsLine: {

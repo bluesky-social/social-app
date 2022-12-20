@@ -1,7 +1,8 @@
 import React from 'react'
-import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Text} from './Text'
 import {UserGroupIcon} from '../../lib/icons'
 import {colors} from '../../lib/styles'
 

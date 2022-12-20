@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react'
 import {
   Animated,
-  Text,
   TouchableOpacity,
   StyleSheet,
   useWindowDimensions,
 } from 'react-native'
 import {useAnimatedValue} from '../../lib/useAnimatedValue'
+import {Text} from '../util/Text'
 import {colors} from '../../lib/styles'
 
 interface AutocompleteItem {

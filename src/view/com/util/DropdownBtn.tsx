@@ -3,7 +3,6 @@ import {
   Share,
   StyleProp,
   StyleSheet,
-  Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -12,6 +11,7 @@ import {
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import RootSiblings from 'react-native-root-siblings'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Text} from './Text'
 import {colors} from '../../lib/styles'
 import {toShareUrl} from '../../../lib/strings'
 import {useStores} from '../../../state'

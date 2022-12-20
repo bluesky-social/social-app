@@ -1,6 +1,7 @@
 import React from 'react'
-import {Text, TextStyle, StyleProp} from 'react-native'
+import {TextStyle, StyleProp} from 'react-native'
 import {TextLink} from './Link'
+import {Text} from './Text'
 import {s} from '../../lib/styles'
 import {toShortUrl} from '../../../lib/strings'
 

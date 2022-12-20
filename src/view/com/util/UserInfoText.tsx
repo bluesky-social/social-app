@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import * as GetProfile from '../../../third-party/api/src/client/types/app/bsky/actor/getProfile'
-import {StyleProp, Text, TextStyle} from 'react-native'
+import {StyleProp, TextStyle} from 'react-native'
 import {Link} from './Link'
+import {Text} from './Text'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
 import {useStores} from '../../../state'
 

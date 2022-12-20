@@ -7,7 +7,6 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -16,6 +15,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete-view'
 import {Autocomplete} from './Autocomplete'
+import {Text} from '../util/Text'
 import * as Toast from '../util/Toast'
 // @ts-ignore no type definition -prf
 import ProgressCircle from 'react-native-progress/Circle'
@@ -209,7 +209,7 @@ export const ComposePost = observer(function ComposePost({
         </View>
         {isProcessing ? (
           <View style={styles.processingLine}>
-            <Text>{processingState}</Text>
+            <Text style={s.black}>{processingState}</Text>
           </View>
         ) : undefined}
         {error !== '' && (
@@ -401,6 +401,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 8,
     alignSelf: 'flex-start',
+    color: colors.black,
   },
   replyToLayout: {
     flexDirection: 'row',

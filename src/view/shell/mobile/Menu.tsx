@@ -2,7 +2,6 @@ import React, {useEffect} from 'react'
 import {
   StyleProp,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -18,6 +17,7 @@ import {
   MagnifyingGlassIcon,
 } from '../../lib/icons'
 import {UserAvatar} from '../../com/util/UserAvatar'
+import {Text} from '../../com/util/Text'
 import {CreateSceneModal} from '../../../state/models/shell-ui'
 
 export const Menu = ({

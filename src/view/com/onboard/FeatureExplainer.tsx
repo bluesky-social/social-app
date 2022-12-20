@@ -4,13 +4,13 @@ import {
   Image,
   SafeAreaView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native'
 import {TabView, SceneMap, Route, TabBarProps} from 'react-native-tab-view'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Text} from '../util/Text'
 import {UserGroupIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
 import {s} from '../../lib/styles'

@@ -2,10 +2,10 @@ import React, {createRef, useState, useMemo} from 'react'
 import {
   Animated,
   StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import {Text} from './Text'
 import {colors} from '../../lib/styles'
 
 interface Layout {
@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
   labelSelected: {
     fontWeight: '600',
     fontSize: 16,
+    color: colors.black,
   },
   underline: {
     position: 'absolute',

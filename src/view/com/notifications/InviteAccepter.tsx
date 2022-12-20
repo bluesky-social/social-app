@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as apilib from '../../../state/lib/api'
@@ -8,6 +8,7 @@ import {ConfirmModal} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
 import {ProfileCard} from '../profile/ProfileCard'
 import * as Toast from '../util/Toast'
+import {Text} from '../util/Text'
 import {s, colors, gradients} from '../../lib/styles'
 
 export function InviteAccepter({item}: {item: NotificationsViewItemModel}) {

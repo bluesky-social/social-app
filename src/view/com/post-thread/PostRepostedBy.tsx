@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, FlatList, StyleSheet, Text, View} from 'react-native'
+import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {
   RepostedByViewModel,
   RepostedByViewItemModel,
@@ -8,6 +8,7 @@ import {
 import {UserAvatar} from '../util/UserAvatar'
 import {ErrorMessage} from '../util/ErrorMessage'
 import {Link} from '../util/Link'
+import {Text} from '../util/Text'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 

@@ -7,7 +7,6 @@ import {
   GestureResponderEvent,
   SafeAreaView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   useColorScheme,
@@ -30,6 +29,7 @@ import {Onboard} from '../../screens/Onboard'
 import {HorzSwipe} from '../../com/util/gestures/HorzSwipe'
 import {Modal} from '../../com/modals/Modal'
 import {Lightbox} from '../../com/lightbox/Lightbox'
+import {Text} from '../../com/util/Text'
 import {TabsSelector} from './TabsSelector'
 import {Composer} from './Composer'
 import {s, colors} from '../../lib/styles'

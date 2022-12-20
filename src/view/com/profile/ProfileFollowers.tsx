@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, FlatList, StyleSheet, Text, View} from 'react-native'
+import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {
   UserFollowersViewModel,
   FollowerItem,
 } from '../../../state/models/user-followers-view'
 import {Link} from '../util/Link'
+import {Text} from '../util/Text'
 import {ErrorMessage} from '../util/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
@@ -96,7 +97,9 @@ const User = ({item}: {item: FollowerItem}) => {
           />
         </View>
         <View style={styles.layoutContent}>
-          <Text style={[s.f15, s.bold]}>{item.displayName || item.handle}</Text>
+          <Text style={[s.f15, s.bold, s.black]}>
+            {item.displayName || item.handle}
+          </Text>
           <Text style={[s.f14, s.gray5]}>@{item.handle}</Text>
         </View>
       </View>

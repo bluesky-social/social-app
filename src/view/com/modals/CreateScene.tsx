@@ -3,13 +3,13 @@ import * as Toast from '../util/Toast'
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {ErrorMessage} from '../util/ErrorMessage'
+import {Text} from '../util/Text'
 import {useStores} from '../../../state'
 import {s, colors, gradients} from '../../lib/styles'
 import {
