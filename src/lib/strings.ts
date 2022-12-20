@@ -1,3 +1,4 @@
+import {Platform} from 'react-native'
 import {AtUri} from '../third-party/uri'
 import {AppBskyFeedPost} from '@atproto/api'
 type Entity = AppBskyFeedPost.Entity
@@ -23,7 +24,7 @@ export function makeRecordUri(
   collection: string,
   rkey: string,
 ) {
-  const urip = new AtUri(`at://host/`)
+  const urip = new AtUri('at://host/')
   urip.host = didOrName
   urip.collection = collection
   urip.rkey = rkey
@@ -63,7 +64,9 @@ export function ago(date: number | string | Date): string {
 export function isValidDomain(str: string): boolean {
   return !!TLDs.find(tld => {
     let i = str.lastIndexOf(tld)
-    if (i === -1) return false
+    if (i === -1) {
+      return false
+    }
     return str.charAt(i - 1) === '.' && i === str.length - tld.length
   })
 }
@@ -76,7 +79,10 @@ export function extractEntities(
   let ents: Entity[] = []
   {
     // mentions
-    const re = /(^|\s|\()(@)([a-zA-Z0-9\.-]+)(\b)/g
+    const re =
+      Platform.OS !== 'android'
+        ? /(^|\s|\()(@)([a-zA-Z0-9\.-]+)(\b)/dg
+        : /(^|\s|\()(@)([a-zA-Z0-9\.-]+)(\b)/g
     while ((match = re.exec(text))) {
       if (knownHandles && !knownHandles.has(match[3])) {
         continue // not a known handle
@@ -94,7 +100,9 @@ export function extractEntities(
   {
     // links
     const re =
-      /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/gm
+      Platform.OS !== 'android'
+        ? /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/dgm
+        : /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/gm
     while ((match = re.exec(text))) {
       let value = match[2]
       if (!value.startsWith('http')) {
