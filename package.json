@@ -87,7 +87,8 @@
   "jest": {
     "preset": "react-native",
     "setupFiles": [
-      "./jestSetup.js"
+      "./jest/jestSetup.js",
+      "./node_modules/react-native-gesture-handler/jestSetup.js"
     ],
     "setupFilesAfterEnv": ["@testing-library/jest-native/extend-expect"],
     "moduleFileExtensions": [
@@ -104,8 +105,9 @@
     "coveragePathIgnorePatterns": [
       "<rootDir>/node_modules/",
       "<rootDir>/src/platform",
-      "<rootDir>/src/third-party"
-  ]
+      "<rootDir>/src/third-party",
+      "<rootDir>/__tests__/test-utils.js"
+    ]
   },
   "browserslist": {
     "production": [
