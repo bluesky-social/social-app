@@ -82,13 +82,11 @@ export function extractEntities(
       } else if (!match[3].includes('.')) {
         continue // probably not a handle
       }
+      const start = text.indexOf(match[3], match.index) - 1
       ents.push({
         type: 'mention',
         value: match[3],
-        index: {
-          start: match.indices[2][0], // skip the (^|\s) but include the '@'
-          end: match.indices[3][1],
-        },
+        index: {start, end: start + match[3].length + 1},
       })
     }
   }
@@ -105,20 +103,16 @@ export function extractEntities(
         }
         value = `https://${value}`
       }
-      const index = {
-        start: match.indices[2][0], // skip the (^|\s)
-        end: match.indices[2][1],
+      const start = text.indexOf(match[2], match.index)
+      const index = {start, end: start + match[2].length}
+      // strip ending puncuation
+      if (/[.,;!?]$/.test(value)) {
+        value = value.slice(0, -1)
+        index.end--
       }
-      {
-        // strip ending puncuation
-        if (/[.,;!?]$/.test(value)) {
-          value = value.slice(0, -1)
-          index.end--
-        }
-        if (/[)]$/.test(value) && !value.includes('(')) {
-          value = value.slice(0, -1)
-          index.end--
-        }
+      if (/[)]$/.test(value) && !value.includes('(')) {
+        value = value.slice(0, -1)
+        index.end--
       }
       ents.push({
         type: 'link',
