@@ -2,7 +2,7 @@ import React, {useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, Text, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
-import Svg, {Circle} from 'react-native-svg'
+import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '../../../third-party/uri'
 import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -19,8 +19,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {useStores} from '../../../state'
 
-const TOP_REPLY_LINE_LENGTH = 12
-const REPLYING_TO_LINE_LENGTH = 8
+const TOP_REPLY_LINE_LENGTH = 8
 
 export const FeedItem = observer(function FeedItem({
   item,
@@ -97,7 +96,11 @@ export const FeedItem = observer(function FeedItem({
     (!item.repostedBy && !item.trendedBy && item.additionalParentPost?.thread)
   const outerStyles = [
     styles.outer,
-    isChild ? styles.outerNoTop : undefined,
+    isChild
+      ? item._isThreadChild
+        ? styles.outerSmallTop
+        : styles.outerNoTop
+      : undefined,
     item._isThreadParent ? styles.outerNoBottom : undefined,
   ]
   return (
@@ -111,7 +114,14 @@ export const FeedItem = observer(function FeedItem({
         />
       ) : undefined}
       <Link style={outerStyles} href={itemHref} title={itemTitle} noFeedback>
-        {isChild && <View style={styles.topReplyLine} />}
+        {isChild && (
+          <View
+            style={[
+              styles.topReplyLine,
+              item._isThreadChild ? styles.topReplyLineSmallAvi : undefined,
+            ]}
+          />
+        )}
         {item._isThreadParent && (
           <View
             style={[
@@ -175,13 +185,18 @@ export const FeedItem = observer(function FeedItem({
                 onDeletePost={onDeletePost}
               />
             ) : undefined}
-            {!item._isThreadChild && replyHref !== '' && (
-              <View style={[s.flexRow, s.mb5, {alignItems: 'center'}]}>
-                <Text style={[s.gray5, s.f15, s.mr2]}>Replying to</Text>
+            {!isChild && replyHref !== '' && (
+              <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
+                <FontAwesomeIcon
+                  icon="reply"
+                  size={9}
+                  style={[s.gray4, s.mr5]}
+                />
+                <Text style={[s.gray4, s.f12, s.mr2]}>Reply to</Text>
                 <Link href={replyHref} title="Parent post">
                   <UserInfoText
                     did={replyAuthorDid}
-                    style={[s.f15, s.blue3]}
+                    style={[s.f12, s.gray5]}
                     prefix="@"
                   />
                 </Link>
@@ -220,9 +235,17 @@ export const FeedItem = observer(function FeedItem({
           noFeedback>
           <View style={styles.viewFullThreadDots}>
             <Svg width="4" height="30">
-              <Circle x="2" y="5" r="1.5" fill={colors.gray3} />
-              <Circle x="2" y="11" r="1.5" fill={colors.gray3} />
-              <Circle x="2" y="17" r="1.5" fill={colors.gray3} />
+              <Line
+                x1="2"
+                y1="0"
+                x2="2"
+                y2="5"
+                stroke={colors.gray2}
+                strokeWidth="2"
+              />
+              <Circle x="2" y="10" r="1.5" fill={colors.gray3} />
+              <Circle x="2" y="16" r="1.5" fill={colors.gray3} />
+              <Circle x="2" y="22" r="1.5" fill={colors.gray3} />
             </Svg>
           </View>
           <Text style={styles.viewFullThreadText}>View full thread</Text>
@@ -242,26 +265,37 @@ const styles = StyleSheet.create({
   },
   outerNoTop: {
     marginTop: 0,
+    paddingTop: 0,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+  },
+  outerSmallTop: {
+    marginTop: 0,
+    paddingTop: 8,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
   },
   outerNoBottom: {
     marginBottom: 0,
+    paddingBottom: 0,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
   },
   topReplyLine: {
     position: 'absolute',
     left: 34,
-    top: -1 * TOP_REPLY_LINE_LENGTH + 10,
+    top: -1 * TOP_REPLY_LINE_LENGTH,
     height: TOP_REPLY_LINE_LENGTH,
     borderLeftWidth: 2,
     borderLeftColor: colors.gray2,
   },
+  topReplyLineSmallAvi: {
+    height: TOP_REPLY_LINE_LENGTH + 10,
+  },
   bottomReplyLine: {
     position: 'absolute',
     left: 34,
-    top: 70,
+    top: 60,
     bottom: 0,
     borderLeftWidth: 2,
     borderLeftColor: colors.gray2,
@@ -292,7 +326,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 8,
-    minHeight: 36,
   },
   postText: {
     fontFamily: 'System',
@@ -304,7 +337,8 @@ const styles = StyleSheet.create({
   },
   viewFullThread: {
     backgroundColor: colors.white,
-    paddingTop: 4,
+    paddingTop: 12,
+    paddingBottom: 4,
     paddingLeft: 72,
   },
   viewFullThreadDots: {
