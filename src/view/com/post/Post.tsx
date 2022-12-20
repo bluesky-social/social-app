@@ -175,13 +175,17 @@ export const Post = observer(function Post({
               </Link>
             </View>
           )}
-          <View style={styles.postTextContainer}>
-            <RichText
-              text={record.text}
-              entities={record.entities}
-              style={styles.postText}
-            />
-          </View>
+          {record.text ? (
+            <View style={styles.postTextContainer}>
+              <RichText
+                text={record.text}
+                entities={record.entities}
+                style={styles.postText}
+              />
+            </View>
+          ) : (
+            <View style={{height: 5}} />
+          )}
           <PostEmbeds embed={item.embed} style={{marginBottom: 10}} />
           <PostCtrls
             replyCount={item.replyCount}
