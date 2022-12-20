@@ -27,7 +27,7 @@ interface PostCtrlsOpts {
 
 const redgray = '#7A6161'
 const sRedgray = {color: redgray}
-const HITSLOP = {top: 10, left: 10, bottom: 10, right: 10}
+const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
 
 export function PostCtrls(opts: PostCtrlsOpts) {
   const interp1 = useAnimatedValue(0)
