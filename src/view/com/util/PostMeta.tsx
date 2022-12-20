@@ -20,6 +20,24 @@ interface PostMetaOpts {
 }
 
 export function PostMeta(opts: PostMetaOpts) {
+  let displayName = opts.authorDisplayName || opts.authorHandle
+  let handle = opts.authorHandle
+
+  // HACK
+  // Android simply cannot handle the truncation case we need
+  // so we have to do it manually here
+  // -prf
+  if (displayName.length + handle.length > 26) {
+    if (displayName.length > 26) {
+      displayName = displayName.slice(0, 23) + '...'
+    } else {
+      handle = handle.slice(0, 23 - displayName.length) + '...'
+      if (handle.endsWith('....')) {
+        handle = handle.slice(0, -4) + '...'
+      }
+    }
+  }
+
   return (
     <View style={styles.meta}>
       <Link
@@ -27,10 +45,12 @@ export function PostMeta(opts: PostMetaOpts) {
         href={opts.authorHref}
         title={opts.authorHandle}>
         <Text style={[s.f17, s.bold, s.black]} numberOfLines={1}>
-          {opts.authorDisplayName || opts.authorHandle}
-          <Text style={[s.f15, s.gray5, s.normal, s.black]} numberOfLines={1}>
-            &nbsp;{opts.authorHandle}
-          </Text>
+          {displayName}
+          {handle ? (
+            <Text style={[s.f15, s.gray5, s.normal, s.black]}>
+              &nbsp;{handle}
+            </Text>
+          ) : undefined}
         </Text>
       </Link>
       <Text style={[styles.metaItem, s.f15, s.gray5]}>
@@ -38,7 +58,7 @@ export function PostMeta(opts: PostMetaOpts) {
       </Text>
       <View style={s.flex1} />
       <PostDropdownBtn
-        style={styles.metaItem}
+        style={[styles.metaItem, s.pl5]}
         itemHref={opts.itemHref}
         itemTitle={opts.itemTitle}
         isAuthor={opts.isAuthor}
@@ -59,6 +79,5 @@ const styles = StyleSheet.create({
   },
   metaItem: {
     paddingRight: 5,
-    maxWidth: '75%',
   },
 })
