@@ -223,7 +223,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    minHeight: 36,
     paddingBottom: 8,
   },
   postText: {
