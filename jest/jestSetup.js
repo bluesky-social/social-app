@@ -15,6 +15,35 @@ jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 jest.mock('@fortawesome/react-native-fontawesome', () => ({
   FontAwesomeIcon: '',
 }))
+
 require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests()
+
+// Silence the warning: Animated: `useNativeDriver` is not supported
+jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
+
+jest.mock('@gorhom/bottom-sheet', () => {
+  const react = require('react-native')
+  return {
+    __esModule: true,
+    default: react.View,
+    namedExport: {
+      ...require('react-native-reanimated/mock'),
+      ...jest.requireActual('@gorhom/bottom-sheet'),
+      BottomSheetFlatList: react.FlatList,
+    },
+  }
+})
+
+// jest.mock('react-native-tab-view', () =>
+//   jest.requireActual('react-native-tab-view'),
+// )
+// jest.mock('react-native-pager-view', () =>
+//   jest.requireActual('react-native-pager-view'),
+// )
+
+// jest.spyOn(RN.Animated, 'FlatList', 'get').mockImplementation(() => RN.FlatList)
+// jest
+//   .spyOn(RN.Animated, 'ScrollView', 'get')
+//   .mockImplementation(() => RN.ScrollView)
 
 jest.useFakeTimers()

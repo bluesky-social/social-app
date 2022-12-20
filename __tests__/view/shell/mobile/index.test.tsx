@@ -6,13 +6,13 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 
 describe('MobileShell', () => {
   it('renders correctly', () => {
-    // const tree = renderer
-    //   .create(
-    //     <SafeAreaProvider>
-    //       <MobileShell />
-    //     </SafeAreaProvider>,
-    //   )
-    //   .toJSON()
-    // expect(tree).toMatchSnapshot()
+    const tree = renderer
+      .create(
+        <SafeAreaProvider>
+          <MobileShell />
+        </SafeAreaProvider>,
+      )
+      .toJSON()
+    expect(tree).toMatchSnapshot()
   })
 })

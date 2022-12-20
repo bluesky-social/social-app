@@ -30,7 +30,3 @@ export * from '@testing-library/react-native'
 
 // override render method
 export {customRender as render}
-
-// test-setup.js
-
-jest.spyOn(RN.Animated, 'FlatList', 'get').mockImplementation(() => RN.FlatList)
