@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   useWindowDimensions,
@@ -11,6 +10,7 @@ import {observer} from 'mobx-react-lite'
 import {Signin} from '../com/login/Signin'
 import {Logo} from '../com/login/Logo'
 import {CreateAccount} from '../com/login/CreateAccount'
+import {Text} from '../com/util/Text'
 import {s, colors} from '../lib/styles'
 
 enum ScreenState {

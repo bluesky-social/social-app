@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, FlatList, StyleSheet, Text, View} from 'react-native'
+import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {
   VotesViewModel,
   VotesViewItemModel,
 } from '../../../state/models/votes-view'
 import {Link} from '../util/Link'
+import {Text} from '../util/Text'
 import {ErrorMessage} from '../util/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'

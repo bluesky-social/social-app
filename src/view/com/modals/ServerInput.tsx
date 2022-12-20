@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
-import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
+import {Text} from '../util/Text'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {

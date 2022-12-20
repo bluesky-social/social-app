@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   StyleProp,
   StyleSheet,
-  Text,
   View,
   ViewStyle,
 } from 'react-native'
@@ -18,6 +17,7 @@ import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/PostEmbeds'
 import {PostCtrls} from '../util/PostCtrls'
+import {Text} from '../util/Text'
 import {RichText} from '../util/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'

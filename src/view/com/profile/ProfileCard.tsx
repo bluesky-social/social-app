@@ -1,6 +1,7 @@
 import React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Link} from '../util/Link'
+import {Text} from '../util/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 
@@ -35,7 +36,7 @@ export function ProfileCard({
           />
         </View>
         <View style={styles.layoutContent}>
-          <Text style={[s.f16, s.bold]} numberOfLines={1}>
+          <Text style={[s.f16, s.bold, s.black]} numberOfLines={1}>
             {displayName || handle}
           </Text>
           <Text style={[s.f15, s.gray5]} numberOfLines={1}>

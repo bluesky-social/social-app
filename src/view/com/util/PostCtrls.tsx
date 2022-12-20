@@ -1,14 +1,8 @@
 import React from 'react'
-import {
-  Animated,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Vibration,
-} from 'react-native'
+import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
+import {Text} from './Text'
 import {UpIcon, UpIconSolid} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
 import {useAnimatedValue} from '../../lib/useAnimatedValue'

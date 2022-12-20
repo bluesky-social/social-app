@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   FlatList,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native'
@@ -13,6 +12,7 @@ import {observer} from 'mobx-react-lite'
 import _omit from 'lodash.omit'
 import {ErrorScreen} from '../util/ErrorScreen'
 import {Link} from '../util/Link'
+import {Text} from '../util/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import * as Toast from '../util/Toast'
 import {useStores} from '../../../state'

@@ -5,12 +5,12 @@ import {
   ScrollView,
   Share,
   StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Text} from '../../com/util/Text'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'

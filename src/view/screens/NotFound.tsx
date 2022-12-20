@@ -1,6 +1,7 @@
 import React from 'react'
-import {Text, Button, View} from 'react-native'
+import {Button, View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
+import {Text} from '../com/util/Text'
 import {useStores} from '../../state'
 
 export const NotFound = () => {

@@ -1,6 +1,7 @@
 import React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Text} from './Text'
 import {colors} from '../../lib/styles'
 
 export function ErrorScreen({

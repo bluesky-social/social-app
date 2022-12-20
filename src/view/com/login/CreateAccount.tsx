@@ -5,7 +5,6 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -15,6 +14,7 @@ import * as EmailValidator from 'email-validator'
 import {Logo} from './Logo'
 import {Picker} from '../util/Picker'
 import {TextLink} from '../util/Link'
+import {Text} from '../util/Text'
 import {s, colors} from '../../lib/styles'
 import {
   makeValidHandle,
