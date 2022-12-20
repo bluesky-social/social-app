@@ -610,7 +610,9 @@ function preprocessFeed(feed: FeedItem[]): FeedItemWithThreadMeta[] {
     let newIndex = reorg.findIndex(
       item => new Date(item.indexedAt) < targetDate,
     )
-    if (newIndex === -1) newIndex = 0
+    if (newIndex === -1) {
+      newIndex = reorg.length
+    }
     reorg.splice(newIndex, 0, ...removed)
     slice.index = newIndex
   }
