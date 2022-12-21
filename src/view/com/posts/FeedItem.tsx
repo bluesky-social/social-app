@@ -19,7 +19,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {useStores} from '../../../state'
 
-export const FeedItem = observer(function FeedItem({
+export const FeedItem = observer(function ({
   item,
   showReplyLine,
 }: {
