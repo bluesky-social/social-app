@@ -1504,6 +1504,70 @@ export declare const schemaDict: {
             };
         };
     };
+    AppBskyFeedFeedViewPost: {
+        lexicon: number;
+        id: string;
+        defs: {
+            main: {
+                type: string;
+                required: string[];
+                properties: {
+                    post: {
+                        type: string;
+                        ref: string;
+                    };
+                    reply: {
+                        type: string;
+                        ref: string;
+                    };
+                    reason: {
+                        type: string;
+                        refs: string[];
+                    };
+                };
+            };
+            replyRef: {
+                type: string;
+                required: string[];
+                properties: {
+                    root: {
+                        type: string;
+                        ref: string;
+                    };
+                    parent: {
+                        type: string;
+                        ref: string;
+                    };
+                };
+            };
+            reasonTrend: {
+                type: string;
+                required: string[];
+                properties: {
+                    by: {
+                        type: string;
+                        ref: string;
+                    };
+                    indexedAt: {
+                        type: string;
+                    };
+                };
+            };
+            reasonRepost: {
+                type: string;
+                required: string[];
+                properties: {
+                    by: {
+                        type: string;
+                        ref: string;
+                    };
+                    indexedAt: {
+                        type: string;
+                    };
+                };
+            };
+        };
+    };
     AppBskyFeedGetAuthorFeed: {
         lexicon: number;
         id: string;
@@ -1549,70 +1613,6 @@ export declare const schemaDict: {
                     };
                 };
             };
-            feedItem: {
-                type: string;
-                required: string[];
-                properties: {
-                    uri: {
-                        type: string;
-                    };
-                    cid: {
-                        type: string;
-                    };
-                    author: {
-                        type: string;
-                        ref: string;
-                    };
-                    trendedBy: {
-                        type: string;
-                        ref: string;
-                    };
-                    repostedBy: {
-                        type: string;
-                        ref: string;
-                    };
-                    record: {
-                        type: string;
-                    };
-                    embed: {
-                        type: string;
-                        refs: string[];
-                    };
-                    replyCount: {
-                        type: string;
-                    };
-                    repostCount: {
-                        type: string;
-                    };
-                    upvoteCount: {
-                        type: string;
-                    };
-                    downvoteCount: {
-                        type: string;
-                    };
-                    indexedAt: {
-                        type: string;
-                    };
-                    myState: {
-                        type: string;
-                        ref: string;
-                    };
-                };
-            };
-            myState: {
-                type: string;
-                properties: {
-                    repost: {
-                        type: string;
-                    };
-                    upvote: {
-                        type: string;
-                    };
-                    downvote: {
-                        type: string;
-                    };
-                };
-            };
         };
     };
     AppBskyFeedGetPostThread: {
@@ -1650,33 +1650,17 @@ export declare const schemaDict: {
                     name: string;
                 }[];
             };
-            post: {
+            threadViewPost: {
                 type: string;
                 required: string[];
                 properties: {
-                    uri: {
-                        type: string;
-                    };
-                    cid: {
-                        type: string;
-                    };
-                    author: {
+                    post: {
                         type: string;
                         ref: string;
-                    };
-                    record: {
-                        type: string;
-                    };
-                    embed: {
-                        type: string;
-                        refs: string[];
                     };
                     parent: {
                         type: string;
                         refs: string[];
-                    };
-                    replyCount: {
-                        type: string;
                     };
                     replies: {
                         type: string;
@@ -1684,22 +1668,6 @@ export declare const schemaDict: {
                             type: string;
                             refs: string[];
                         };
-                    };
-                    repostCount: {
-                        type: string;
-                    };
-                    upvoteCount: {
-                        type: string;
-                    };
-                    downvoteCount: {
-                        type: string;
-                    };
-                    indexedAt: {
-                        type: string;
-                    };
-                    myState: {
-                        type: string;
-                        ref: string;
                     };
                 };
             };
@@ -1713,20 +1681,6 @@ export declare const schemaDict: {
                     notFound: {
                         type: string;
                         const: boolean;
-                    };
-                };
-            };
-            myState: {
-                type: string;
-                properties: {
-                    repost: {
-                        type: string;
-                    };
-                    upvote: {
-                        type: string;
-                    };
-                    downvote: {
-                        type: string;
                     };
                 };
             };
@@ -1857,70 +1811,6 @@ export declare const schemaDict: {
                                 };
                             };
                         };
-                    };
-                };
-            };
-            feedItem: {
-                type: string;
-                required: string[];
-                properties: {
-                    uri: {
-                        type: string;
-                    };
-                    cid: {
-                        type: string;
-                    };
-                    author: {
-                        type: string;
-                        ref: string;
-                    };
-                    trendedBy: {
-                        type: string;
-                        ref: string;
-                    };
-                    repostedBy: {
-                        type: string;
-                        ref: string;
-                    };
-                    record: {
-                        type: string;
-                    };
-                    embed: {
-                        type: string;
-                        refs: string[];
-                    };
-                    replyCount: {
-                        type: string;
-                    };
-                    repostCount: {
-                        type: string;
-                    };
-                    upvoteCount: {
-                        type: string;
-                    };
-                    downvoteCount: {
-                        type: string;
-                    };
-                    indexedAt: {
-                        type: string;
-                    };
-                    myState: {
-                        type: string;
-                        ref: string;
-                    };
-                };
-            };
-            myState: {
-                type: string;
-                properties: {
-                    repost: {
-                        type: string;
-                    };
-                    upvote: {
-                        type: string;
-                    };
-                    downvote: {
-                        type: string;
                     };
                 };
             };
@@ -2083,6 +1973,62 @@ export declare const schemaDict: {
                     end: {
                         type: string;
                         minimum: number;
+                    };
+                };
+            };
+            view: {
+                type: string;
+                required: string[];
+                properties: {
+                    uri: {
+                        type: string;
+                    };
+                    cid: {
+                        type: string;
+                    };
+                    author: {
+                        type: string;
+                        ref: string;
+                    };
+                    record: {
+                        type: string;
+                    };
+                    embed: {
+                        type: string;
+                        refs: string[];
+                    };
+                    replyCount: {
+                        type: string;
+                    };
+                    repostCount: {
+                        type: string;
+                    };
+                    upvoteCount: {
+                        type: string;
+                    };
+                    downvoteCount: {
+                        type: string;
+                    };
+                    indexedAt: {
+                        type: string;
+                    };
+                    viewer: {
+                        type: string;
+                        ref: string;
+                    };
+                };
+            };
+            viewerState: {
+                type: string;
+                properties: {
+                    repost: {
+                        type: string;
+                    };
+                    upvote: {
+                        type: string;
+                    };
+                    downvote: {
+                        type: string;
                     };
                 };
             };
@@ -2933,6 +2879,7 @@ export declare const ids: {
     AppBskyActorUpdateProfile: string;
     AppBskyEmbedExternal: string;
     AppBskyEmbedImages: string;
+    AppBskyFeedFeedViewPost: string;
     AppBskyFeedGetAuthorFeed: string;
     AppBskyFeedGetPostThread: string;
     AppBskyFeedGetRepostedBy: string;

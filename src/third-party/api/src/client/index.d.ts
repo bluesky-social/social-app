@@ -85,6 +85,7 @@ export * as AppBskyActorSearchTypeahead from './types/app/bsky/actor/searchTypea
 export * as AppBskyActorUpdateProfile from './types/app/bsky/actor/updateProfile';
 export * as AppBskyEmbedExternal from './types/app/bsky/embed/external';
 export * as AppBskyEmbedImages from './types/app/bsky/embed/images';
+export * as AppBskyFeedFeedViewPost from './types/app/bsky/feed/feedViewPost';
 export * as AppBskyFeedGetAuthorFeed from './types/app/bsky/feed/getAuthorFeed';
 export * as AppBskyFeedGetPostThread from './types/app/bsky/feed/getPostThread';
 export * as AppBskyFeedGetRepostedBy from './types/app/bsky/feed/getRepostedBy';

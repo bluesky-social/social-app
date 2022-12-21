@@ -1,37 +1,28 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {Record as PostRecord} from '../../third-party/api/src/client/types/app/bsky/feed/post'
 import * as GetTimeline from '../../third-party/api/src/client/types/app/bsky/feed/getTimeline'
-import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
+import {
+  Main as FeedViewPost,
+  ReasonTrend,
+  ReasonRepost,
+} from '../../third-party/api/src/client/types/app/bsky/feed/feedViewPost'
+import {View as PostView} from '../../third-party/api/src/client/types/app/bsky/feed/post'
 import * as GetAuthorFeed from '../../third-party/api/src/client/types/app/bsky/feed/getAuthorFeed'
-import {PostThreadViewModel} from './post-thread-view'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 import {cleanError} from '../../lib/strings'
-import {isObj, hasProp} from '../lib/type-guards'
 
 const PAGE_SIZE = 30
 
 let _idCounter = 0
 
-type FeedItem = GetTimeline.FeedItem | GetAuthorFeed.FeedItem
-type FeedItemWithThreadMeta = FeedItem & {
+type FeedViewPostWithThreadMeta = FeedViewPost & {
   _isThreadParent?: boolean
   _isThreadChildElided?: boolean
   _isThreadChild?: boolean
 }
 
-export class FeedItemMyStateModel {
-  repost?: string
-  upvote?: string
-  downvote?: string
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-}
-
-export class FeedItemModel implements GetTimeline.FeedItem {
+export class FeedItemModel {
   // ui state
   _reactKey: string = ''
   _isThreadParent: boolean = false
@@ -39,153 +30,128 @@ export class FeedItemModel implements GetTimeline.FeedItem {
   _isThreadChild: boolean = false
 
   // data
-  uri: string = ''
-  cid: string = ''
-  author: ActorRef.WithInfo = {
-    did: '',
-    handle: '',
-    displayName: '',
-    declaration: {cid: '', actorType: ''},
-    avatar: undefined,
-  }
-  repostedBy?: ActorRef.WithInfo
-  trendedBy?: ActorRef.WithInfo
-  record: Record<string, unknown> = {}
-  embed?: GetTimeline.FeedItem['embed']
-  replyCount: number = 0
-  repostCount: number = 0
-  upvoteCount: number = 0
-  downvoteCount: number = 0
-  indexedAt: string = ''
-  myState = new FeedItemMyStateModel()
-
-  // additional data
-  additionalParentPost?: PostThreadViewModel
+  post: PostView
+  reply?: FeedViewPost['reply']
+  replyParent?: FeedItemModel
+  reason?: FeedViewPost['reason']
 
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
-    v: FeedItemWithThreadMeta,
+    v: FeedViewPostWithThreadMeta,
   ) {
-    makeAutoObservable(this, {rootStore: false})
     this._reactKey = reactKey
-    this.copy(v)
+    this.post = v.post
+    this.reply = v.reply
+    if (v.reply?.parent) {
+      this.replyParent = new FeedItemModel(rootStore, '', {
+        post: v.reply.parent,
+      })
+    }
+    this.reason = v.reason
     this._isThreadParent = v._isThreadParent || false
     this._isThreadChild = v._isThreadChild || false
     this._isThreadChildElided = v._isThreadChildElided || false
+    makeAutoObservable(this, {rootStore: false})
   }
 
-  copy(v: GetTimeline.FeedItem | GetAuthorFeed.FeedItem) {
-    this.uri = v.uri
-    this.cid = v.cid
-    this.author = v.author
-    this.repostedBy = v.repostedBy
-    this.trendedBy = v.trendedBy
-    this.record = v.record
-    this.embed = v.embed
-    this.replyCount = v.replyCount
-    this.repostCount = v.repostCount
-    this.upvoteCount = v.upvoteCount
-    this.downvoteCount = v.downvoteCount
-    this.indexedAt = v.indexedAt
-    if (v.myState) {
-      this.myState.upvote = v.myState.upvote
-      this.myState.downvote = v.myState.downvote
-      this.myState.repost = v.myState.repost
+  copy(v: FeedViewPost) {
+    this.post = v.post
+    this.reply = v.reply
+    if (v.reply?.parent) {
+      this.replyParent = new FeedItemModel(this.rootStore, '', {
+        post: v.reply.parent,
+      })
+    } else {
+      this.replyParent = undefined
+    }
+    this.reason = v.reason
+  }
+
+  get reasonRepost(): ReasonRepost | undefined {
+    if (this.reason?.$type === 'app.bsky.feed.feedViewPost#reasonRepost') {
+      return this.reason as ReasonRepost
+    }
+  }
+
+  get reasonTrend(): ReasonTrend | undefined {
+    if (this.reason?.$type === 'app.bsky.feed.feedViewPost#reasonTrend') {
+      return this.reason as ReasonTrend
     }
   }
 
   async toggleUpvote() {
-    const wasUpvoted = !!this.myState.upvote
-    const wasDownvoted = !!this.myState.downvote
+    const wasUpvoted = !!this.post.viewer.upvote
+    const wasDownvoted = !!this.post.viewer.downvote
     const res = await this.rootStore.api.app.bsky.feed.setVote({
       subject: {
-        uri: this.uri,
-        cid: this.cid,
+        uri: this.post.uri,
+        cid: this.post.cid,
       },
       direction: wasUpvoted ? 'none' : 'up',
     })
     runInAction(() => {
       if (wasDownvoted) {
-        this.downvoteCount--
+        this.post.downvoteCount--
       }
       if (wasUpvoted) {
-        this.upvoteCount--
+        this.post.upvoteCount--
       } else {
-        this.upvoteCount++
+        this.post.upvoteCount++
       }
-      this.myState.upvote = res.data.upvote
-      this.myState.downvote = res.data.downvote
+      this.post.viewer.upvote = res.data.upvote
+      this.post.viewer.downvote = res.data.downvote
     })
   }
 
   async toggleDownvote() {
-    const wasUpvoted = !!this.myState.upvote
-    const wasDownvoted = !!this.myState.downvote
+    const wasUpvoted = !!this.post.viewer.upvote
+    const wasDownvoted = !!this.post.viewer.downvote
     const res = await this.rootStore.api.app.bsky.feed.setVote({
       subject: {
-        uri: this.uri,
-        cid: this.cid,
+        uri: this.post.uri,
+        cid: this.post.cid,
       },
       direction: wasDownvoted ? 'none' : 'down',
     })
     runInAction(() => {
       if (wasUpvoted) {
-        this.upvoteCount--
+        this.post.upvoteCount--
       }
       if (wasDownvoted) {
-        this.downvoteCount--
+        this.post.downvoteCount--
       } else {
-        this.downvoteCount++
+        this.post.downvoteCount++
       }
-      this.myState.upvote = res.data.upvote
-      this.myState.downvote = res.data.downvote
+      this.post.viewer.upvote = res.data.upvote
+      this.post.viewer.downvote = res.data.downvote
     })
   }
 
   async toggleRepost() {
-    if (this.myState.repost) {
-      await apilib.unrepost(this.rootStore, this.myState.repost)
+    if (this.post.viewer.repost) {
+      await apilib.unrepost(this.rootStore, this.post.viewer.repost)
       runInAction(() => {
-        this.repostCount--
-        this.myState.repost = undefined
+        this.post.repostCount--
+        this.post.viewer.repost = undefined
       })
     } else {
-      const res = await apilib.repost(this.rootStore, this.uri, this.cid)
+      const res = await apilib.repost(
+        this.rootStore,
+        this.post.uri,
+        this.post.cid,
+      )
       runInAction(() => {
-        this.repostCount++
-        this.myState.repost = res.uri
+        this.post.repostCount++
+        this.post.viewer.repost = res.uri
       })
     }
   }
 
   async delete() {
     await this.rootStore.api.app.bsky.feed.post.delete({
-      did: this.author.did,
-      rkey: new AtUri(this.uri).rkey,
-    })
-  }
-
-  get needsAdditionalData() {
-    if (
-      (this.record as PostRecord).reply?.parent?.uri &&
-      !this._isThreadChild
-    ) {
-      return !this.additionalParentPost
-    }
-    return false
-  }
-
-  async fetchAdditionalData() {
-    if (!this.needsAdditionalData) {
-      return
-    }
-    this.additionalParentPost = new PostThreadViewModel(this.rootStore, {
-      uri: (this.record as PostRecord).reply?.parent.uri,
-      depth: 0,
-    })
-    await this.additionalParentPost.setup().catch(e => {
-      console.error('Failed to load post needed by notification', e)
+      did: this.post.author.did,
+      rkey: new AtUri(this.post.uri).rkey,
     })
   }
 }
@@ -244,12 +210,11 @@ export class FeedModel {
 
   get nonReplyFeed() {
     return this.feed.filter(
-      post =>
-        !post.record.reply || // not a reply
-        !!post.repostedBy || // or a repost
-        !!post.trendedBy || // or a trend
-        post._isThreadParent || // but allow if it's a thread by the user
-        post._isThreadChild,
+      item =>
+        !item.reply || // not a reply
+        ((item._isThreadParent || // but allow if it's a thread by the user
+          item._isThreadChild) &&
+          item.reply?.root.author.did === item.post.author.did),
     )
   }
 
@@ -335,7 +300,7 @@ export class FeedModel {
     const res = await this._getFeed({limit: 1})
     const currentLatestUri = this.pollCursor
     const receivedLatestUri = res.data.feed[0]
-      ? res.data.feed[0].uri
+      ? res.data.feed[0].post.uri
       : undefined
     const hasNewLatest = Boolean(
       receivedLatestUri &&
@@ -435,7 +400,9 @@ export class FeedModel {
         }
         this._updateAll(res)
         numToFetch -= res.data.feed.length
-        cursor = this.feed[res.data.feed.length - 1].indexedAt
+        cursor = this.feed[res.data.feed.length - 1]
+          ? ts(this.feed[res.data.feed.length - 1])
+          : undefined
         console.log(numToFetch, cursor, res.data.feed.length)
       } while (numToFetch > 0)
       this._xIdle()
@@ -447,7 +414,7 @@ export class FeedModel {
   private async _replaceAll(
     res: GetTimeline.Response | GetAuthorFeed.Response,
   ) {
-    this.pollCursor = res.data.feed[0]?.uri
+    this.pollCursor = res.data.feed[0]?.post.uri
     return this._appendAll(res, true)
   }
 
@@ -460,7 +427,6 @@ export class FeedModel {
 
     const reorgedFeed = preprocessFeed(res.data.feed)
 
-    const promises = []
     const toAppend: FeedItemModel[] = []
     for (const item of reorgedFeed) {
       const itemModel = new FeedItemModel(
@@ -468,16 +434,8 @@ export class FeedModel {
         `item-${_idCounter++}`,
         item,
       )
-      if (itemModel.needsAdditionalData) {
-        promises.push(
-          itemModel.fetchAdditionalData().catch(e => {
-            console.error('Failure during feed-view _appendAll()', e)
-          }),
-        )
-      }
       toAppend.push(itemModel)
     }
-    await Promise.all(promises)
     runInAction(() => {
       if (replace) {
         this.feed = toAppend
@@ -490,12 +448,11 @@ export class FeedModel {
   private async _prependAll(
     res: GetTimeline.Response | GetAuthorFeed.Response,
   ) {
-    this.pollCursor = res.data.feed[0]?.uri
+    this.pollCursor = res.data.feed[0]?.post.uri
 
-    const promises = []
     const toPrepend: FeedItemModel[] = []
     for (const item of res.data.feed) {
-      if (this.feed.find(item2 => item2.uri === item.uri)) {
+      if (this.feed.find(item2 => item2.post.uri === item.post.uri)) {
         break // stop here - we've hit a post we already have
       }
 
@@ -504,16 +461,8 @@ export class FeedModel {
         `item-${_idCounter++}`,
         item,
       )
-      if (itemModel.needsAdditionalData) {
-        promises.push(
-          itemModel.fetchAdditionalData().catch(e => {
-            console.error('Failure during feed-view _prependAll()', e)
-          }),
-        )
-      }
       toPrepend.push(itemModel)
     }
-    await Promise.all(promises)
     runInAction(() => {
       this.feed = toPrepend.concat(this.feed)
     })
@@ -524,9 +473,10 @@ export class FeedModel {
       const existingItem = this.feed.find(
         // HACK: need to find the reposts and trends item, so we have to check for that -prf
         item2 =>
-          item.uri === item2.uri &&
-          item.repostedBy?.did === item2.repostedBy?.did &&
-          item.trendedBy?.did === item2.trendedBy?.did,
+          item.uri === item2.post.uri &&
+          item.reason?.$trend === item2.reason?.$trend &&
+          // @ts-ignore todo
+          item.reason?.by?.did === item2.reason?.by?.did,
       )
       if (existingItem) {
         existingItem.copy(item)
@@ -554,17 +504,19 @@ interface Slice {
   index: number
   length: number
 }
-function preprocessFeed(feed: FeedItem[]): FeedItemWithThreadMeta[] {
-  const reorg: FeedItemWithThreadMeta[] = []
+function preprocessFeed(feed: FeedViewPost[]): FeedViewPostWithThreadMeta[] {
+  const reorg: FeedViewPostWithThreadMeta[] = []
 
   // phase one: identify threads and reorganize them into the feed so
   // that they are in order and marked as part of a thread
   for (let i = feed.length - 1; i >= 0; i--) {
-    const item = feed[i] as FeedItemWithThreadMeta
+    const item = feed[i] as FeedViewPostWithThreadMeta
 
     const selfReplyUri = getSelfReplyUri(item)
     if (selfReplyUri) {
-      const parentIndex = reorg.findIndex(item2 => item2.uri === selfReplyUri)
+      const parentIndex = reorg.findIndex(
+        item2 => item2.post.uri === selfReplyUri,
+      )
       if (parentIndex !== -1 && !reorg[parentIndex]._isThreadParent) {
         reorg[parentIndex]._isThreadParent = true
         item._isThreadChild = true
@@ -579,7 +531,7 @@ function preprocessFeed(feed: FeedItem[]): FeedItemWithThreadMeta[] {
   let activeSlice = -1
   let threadSlices: Slice[] = []
   for (let i = 0; i < reorg.length; i++) {
-    const item = reorg[i] as FeedItemWithThreadMeta
+    const item = reorg[i] as FeedViewPostWithThreadMeta
     if (activeSlice === -1) {
       if (item._isThreadParent) {
         activeSlice = i
@@ -602,14 +554,12 @@ function preprocessFeed(feed: FeedItem[]): FeedItemWithThreadMeta[] {
   // phase three: reorder the feed so that the timestamp of the
   // last post in a thread establishes its ordering
   for (const slice of threadSlices) {
-    const removed: FeedItemWithThreadMeta[] = reorg.splice(
+    const removed: FeedViewPostWithThreadMeta[] = reorg.splice(
       slice.index,
       slice.length,
     )
-    const targetDate = new Date(removed[removed.length - 1].indexedAt)
-    let newIndex = reorg.findIndex(
-      item => new Date(item.indexedAt) < targetDate,
-    )
+    const targetDate = new Date(ts(removed[removed.length - 1]))
+    let newIndex = reorg.findIndex(item => new Date(ts(item)) < targetDate)
     if (newIndex === -1) {
       newIndex = reorg.length
     }
@@ -630,20 +580,17 @@ function preprocessFeed(feed: FeedItem[]): FeedItemWithThreadMeta[] {
   return reorg
 }
 
-function getSelfReplyUri(
-  item: GetTimeline.FeedItem | GetAuthorFeed.FeedItem,
-): string | undefined {
-  if (
-    isObj(item.record) &&
-    hasProp(item.record, 'reply') &&
-    isObj(item.record.reply) &&
-    hasProp(item.record.reply, 'parent') &&
-    isObj(item.record.reply.parent) &&
-    hasProp(item.record.reply.parent, 'uri') &&
-    typeof item.record.reply.parent.uri === 'string'
-  ) {
-    if (new AtUri(item.record.reply.parent.uri).host === item.author.did) {
-      return item.record.reply.parent.uri
-    }
+function getSelfReplyUri(item: FeedViewPost): string | undefined {
+  return item.reply?.parent.author.did === item.post.author.did
+    ? item.reply?.parent.uri
+    : undefined
+}
+
+function ts(item: FeedViewPost | FeedItemModel): string {
+  if (item.reason?.indexedAt) {
+    // @ts-ignore need better type checks
+    return item.reason.indexedAt
   }
+  console.log(item)
+  return item.post.indexedAt
 }

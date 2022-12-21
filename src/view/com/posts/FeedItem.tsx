@@ -10,7 +10,6 @@ import {FeedItemModel} from '../../../state/models/feed-view'
 import {Link} from '../util/Link'
 import {Text} from '../util/Text'
 import {UserInfoText} from '../util/UserInfoText'
-import {Post} from '../post/Post'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 import {PostEmbeds} from '../util/PostEmbeds'
@@ -20,22 +19,22 @@ import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {useStores} from '../../../state'
 
-const TOP_REPLY_LINE_LENGTH = 8
-
 export const FeedItem = observer(function FeedItem({
   item,
+  showReplyLine,
 }: {
   item: FeedItemModel
+  showReplyLine?: boolean
 }) {
   const store = useStores()
   const [deleted, setDeleted] = useState(false)
-  const record = item.record as unknown as PostType.Record
+  const record = item.post.record as unknown as PostType.Record
   const itemHref = useMemo(() => {
-    const urip = new AtUri(item.uri)
-    return `/profile/${item.author.handle}/post/${urip.rkey}`
-  }, [item.uri, item.author.handle])
-  const itemTitle = `Post by ${item.author.handle}`
-  const authorHref = `/profile/${item.author.handle}`
+    const urip = new AtUri(item.post.uri)
+    return `/profile/${item.post.author.handle}/post/${urip.rkey}`
+  }, [item.post.uri, item.post.author.handle])
+  const itemTitle = `Post by ${item.post.author.handle}`
+  const authorHref = `/profile/${item.post.author.handle}`
   const replyAuthorDid = useMemo(() => {
     if (!record.reply) return ''
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
@@ -50,13 +49,13 @@ export const FeedItem = observer(function FeedItem({
   const onPressReply = () => {
     store.shell.openComposer({
       replyTo: {
-        uri: item.uri,
-        cid: item.cid,
-        text: item.record.text as string,
+        uri: item.post.uri,
+        cid: item.post.cid,
+        text: record.text as string,
         author: {
-          handle: item.author.handle,
-          displayName: item.author.displayName,
-          avatar: item.author.avatar,
+          handle: item.post.author.handle,
+          displayName: item.post.author.displayName,
+          avatar: item.post.author.avatar,
         },
       },
     })
@@ -92,66 +91,68 @@ export const FeedItem = observer(function FeedItem({
     return <View />
   }
 
-  const isChild =
-    item._isThreadChild ||
-    (!item.repostedBy && !item.trendedBy && item.additionalParentPost?.thread)
+  const isChild = item._isThreadChild || (!item.reason && item.reply)
+  const isSmallTop = isChild && item._isThreadChild
+  const isNoTop = isChild && !item._isThreadChild
   const outerStyles = [
     styles.outer,
-    isChild
-      ? item._isThreadChild
-        ? styles.outerSmallTop
-        : styles.outerNoTop
-      : undefined,
+    isSmallTop ? styles.outerSmallTop : undefined,
+    isNoTop ? styles.outerNoTop : undefined,
     item._isThreadParent ? styles.outerNoBottom : undefined,
   ]
   return (
     <>
-      {isChild && item.additionalParentPost?.thread ? (
-        <Post
-          uri={item.additionalParentPost.thread.uri}
-          initView={item.additionalParentPost}
-          showReplyLine
-          style={{marginTop: 2}}
-        />
+      {isChild && !item._isThreadChild && item.replyParent ? (
+        <View style={{marginTop: 2}}>
+          <FeedItem item={item.replyParent} showReplyLine />
+        </View>
       ) : undefined}
       <Link style={outerStyles} href={itemHref} title={itemTitle} noFeedback>
-        {isChild && <View style={[styles.topReplyLine]} />}
-        {item._isThreadParent && <View style={[styles.bottomReplyLine]} />}
-        {item.repostedBy && (
+        {item._isThreadChild && <View style={[styles.topReplyLine]} />}
+        {(showReplyLine || item._isThreadParent) && (
+          <View
+            style={[styles.bottomReplyLine, isNoTop ? {top: 64} : undefined]}
+          />
+        )}
+        {item.reasonRepost && (
           <Link
             style={styles.includeReason}
-            href={`/profile/${item.repostedBy.handle}`}
-            title={item.repostedBy.displayName || item.repostedBy.handle}>
+            href={`/profile/${item.reasonRepost.by.handle}`}
+            title={
+              item.reasonRepost.by.displayName || item.reasonRepost.by.handle
+            }>
             <FontAwesomeIcon icon="retweet" style={styles.includeReasonIcon} />
             <Text style={[s.gray4, s.bold, s.f13]}>
               Reposted by{' '}
-              {item.repostedBy.displayName || item.repostedBy.handle}
+              {item.reasonRepost.by.displayName || item.reasonRepost.by.handle}
             </Text>
           </Link>
         )}
-        {item.trendedBy && (
+        {item.reasonTrend && (
           <Link
             style={styles.includeReason}
-            href={`/profile/${item.trendedBy.handle}`}
-            title={item.trendedBy.displayName || item.trendedBy.handle}>
+            href={`/profile/${item.reasonTrend.by.handle}`}
+            title={
+              item.reasonTrend.by.displayName || item.reasonTrend.by.handle
+            }>
             <FontAwesomeIcon
               icon="arrow-trend-up"
               style={styles.includeReasonIcon}
             />
             <Text style={[s.gray4, s.bold, s.f13]}>
               Trending with{' '}
-              {item.trendedBy.displayName || item.trendedBy.handle}
+              {item.reasonTrend.by.displayName || item.reasonTrend.by.handle}
             </Text>
           </Link>
         )}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
-            <Link href={authorHref} title={item.author.handle}>
+            <Link href={authorHref} title={item.post.author.handle}>
               <UserAvatar
                 size={52}
-                displayName={item.author.displayName}
-                handle={item.author.handle}
-                avatar={item.author.avatar}
+                displayName={item.post.author.displayName}
+                handle={item.post.author.handle}
+                avatar={item.post.author.avatar}
               />
             </Link>
           </View>
@@ -160,10 +161,10 @@ export const FeedItem = observer(function FeedItem({
               itemHref={itemHref}
               itemTitle={itemTitle}
               authorHref={authorHref}
-              authorHandle={item.author.handle}
-              authorDisplayName={item.author.displayName}
-              timestamp={item.indexedAt}
-              isAuthor={item.author.did === store.me.did}
+              authorHandle={item.post.author.handle}
+              authorDisplayName={item.post.author.displayName}
+              timestamp={item.post.indexedAt}
+              isAuthor={item.post.author.did === store.me.did}
               onCopyPostText={onCopyPostText}
               onDeletePost={onDeletePost}
             />
@@ -195,13 +196,13 @@ export const FeedItem = observer(function FeedItem({
             ) : (
               <View style={{height: 5}} />
             )}
-            <PostEmbeds embed={item.embed} style={styles.postEmbeds} />
+            <PostEmbeds embed={item.post.embed} style={styles.postEmbeds} />
             <PostCtrls
-              replyCount={item.replyCount}
-              repostCount={item.repostCount}
-              upvoteCount={item.upvoteCount}
-              isReposted={!!item.myState.repost}
-              isUpvoted={!!item.myState.upvote}
+              replyCount={item.post.replyCount}
+              repostCount={item.post.repostCount}
+              upvoteCount={item.post.upvoteCount}
+              isReposted={!!item.post.viewer.repost}
+              isUpvoted={!!item.post.viewer.upvote}
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
               onPressToggleUpvote={onPressToggleUpvote}
@@ -266,15 +267,15 @@ const styles = StyleSheet.create({
   topReplyLine: {
     position: 'absolute',
     left: 34,
-    top: -1 * TOP_REPLY_LINE_LENGTH,
-    height: TOP_REPLY_LINE_LENGTH,
+    top: 0,
+    height: 6,
     borderLeftWidth: 2,
     borderLeftColor: colors.gray2,
   },
   bottomReplyLine: {
     position: 'absolute',
     left: 34,
-    top: 60,
+    top: 72,
     bottom: 0,
     borderLeftWidth: 2,
     borderLeftColor: colors.gray2,

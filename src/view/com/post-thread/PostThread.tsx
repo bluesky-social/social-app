@@ -1,11 +1,10 @@
 import React, {useRef} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, FlatList, Text, View} from 'react-native'
+import {ActivityIndicator, FlatList, View} from 'react-native'
 import {
   PostThreadViewModel,
   PostThreadViewPostModel,
 } from '../../../state/models/post-thread-view'
-import {useStores} from '../../../state'
 import {PostThreadItem} from './PostThreadItem'
 import {ErrorMessage} from '../util/ErrorMessage'
 
@@ -93,14 +92,22 @@ function* flattenThread(
   isAscending = false,
 ): Generator<PostThreadViewPostModel, void> {
   if (post.parent) {
-    yield* flattenThread(post.parent, true)
+    if ('notFound' in post.parent && post.parent.notFound) {
+      // TODO render not found
+    } else {
+      yield* flattenThread(post.parent as PostThreadViewPostModel, true)
+    }
   }
   yield post
   if (post.replies?.length) {
     for (const reply of post.replies) {
-      yield* flattenThread(reply)
+      if ('notFound' in reply && reply.notFound) {
+        // TODO render not found
+      } else {
+        yield* flattenThread(reply as PostThreadViewPostModel)
+      }
     }
-  } else if (!isAscending && !post.parent && post.replyCount > 0) {
+  } else if (!isAscending && !post.parent && post.post.replyCount > 0) {
     post._hasMore = true
   }
 }
