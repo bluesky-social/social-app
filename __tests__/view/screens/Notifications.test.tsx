@@ -5,8 +5,8 @@ import renderer from 'react-test-renderer'
 
 describe('Notifications', () => {
   const mockedProps = {
-    navIdx: [0, 0],
-    params: null,
+    navIdx: [0, 0] as [number, number],
+    params: {},
     visible: true,
   }
   it('renders correctly', () => {

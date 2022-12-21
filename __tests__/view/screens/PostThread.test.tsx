@@ -5,7 +5,7 @@ import renderer from 'react-test-renderer'
 
 describe('PostThread', () => {
   const mockedProps = {
-    navIdx: [0, 0],
+    navIdx: [0, 0] as [number, number],
     params: {
       name: 'test name',
       rkey: '123123123',
