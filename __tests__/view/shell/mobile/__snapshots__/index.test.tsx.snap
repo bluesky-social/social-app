@@ -199,23 +199,33 @@ exports[`MobileShell renders correctly 1`] = `
         </View>
         <Text
           style={
-            Object {
-              "color": "#ffffff",
-              "fontSize": 68,
-              "fontWeight": "bold",
-              "textAlign": "center",
-            }
+            Array [
+              Object {
+                "color": "#000000",
+              },
+              Object {
+                "color": "#ffffff",
+                "fontSize": 68,
+                "fontWeight": "bold",
+                "textAlign": "center",
+              },
+            ]
           }
         >
           Bluesky
         </Text>
         <Text
           style={
-            Object {
-              "color": "#ffffff",
-              "fontSize": 18,
-              "textAlign": "center",
-            }
+            Array [
+              Object {
+                "color": "#000000",
+              },
+              Object {
+                "color": "#ffffff",
+                "fontSize": 18,
+                "textAlign": "center",
+              },
+            ]
           }
         >
           [ private beta ]
@@ -254,12 +264,17 @@ exports[`MobileShell renders correctly 1`] = `
         >
           <Text
             style={
-              Object {
-                "color": "#ffffff",
-                "fontSize": 18,
-                "fontWeight": "bold",
-                "textAlign": "center",
-              }
+              Array [
+                Object {
+                  "color": "#000000",
+                },
+                Object {
+                  "color": "#ffffff",
+                  "fontSize": 18,
+                  "fontWeight": "bold",
+                  "textAlign": "center",
+                },
+              ]
             }
           >
             Create a new account
@@ -329,11 +344,16 @@ exports[`MobileShell renders correctly 1`] = `
           </RNSVGSvgView>
           <Text
             style={
-              Object {
-                "color": "#ffffff",
-                "fontSize": 16,
-                "textAlign": "center",
-              }
+              Array [
+                Object {
+                  "color": "#000000",
+                },
+                Object {
+                  "color": "#ffffff",
+                  "fontSize": 16,
+                  "textAlign": "center",
+                },
+              ]
             }
           >
             or
@@ -365,12 +385,17 @@ exports[`MobileShell renders correctly 1`] = `
         >
           <Text
             style={
-              Object {
-                "color": "#ffffff",
-                "fontSize": 18,
-                "fontWeight": "bold",
-                "textAlign": "center",
-              }
+              Array [
+                Object {
+                  "color": "#000000",
+                },
+                Object {
+                  "color": "#ffffff",
+                  "fontSize": 18,
+                  "fontWeight": "bold",
+                  "textAlign": "center",
+                },
+              ]
             }
           >
             Sign in

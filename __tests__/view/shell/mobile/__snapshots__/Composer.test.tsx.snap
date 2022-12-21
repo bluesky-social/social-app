@@ -25,9 +25,11 @@ exports[`Composer renders correctly 1`] = `
       Array [
         Object {
           "backgroundColor": "#fff",
+          "flex": 1,
           "flexDirection": "column",
           "height": "100%",
           "padding": 15,
+          "paddingBottom": 0,
         },
         Object {
           "paddingBottom": 0,
@@ -75,11 +77,16 @@ exports[`Composer renders correctly 1`] = `
             style={
               Array [
                 Object {
-                  "color": "#0085ff",
+                  "color": "#000000",
                 },
-                Object {
-                  "fontSize": 18,
-                },
+                Array [
+                  Object {
+                    "color": "#0085ff",
+                  },
+                  Object {
+                    "fontSize": 18,
+                  },
+                ],
               ]
             }
           >
@@ -142,14 +149,19 @@ exports[`Composer renders correctly 1`] = `
               style={
                 Array [
                   Object {
-                    "color": "#ffffff",
+                    "color": "#000000",
                   },
-                  Object {
-                    "fontSize": 16,
-                  },
-                  Object {
-                    "fontWeight": "bold",
-                  },
+                  Array [
+                    Object {
+                      "color": "#ffffff",
+                    },
+                    Object {
+                      "fontSize": 16,
+                    },
+                    Object {
+                      "fontWeight": "bold",
+                    },
+                  ],
                 ]
               }
             >
@@ -295,14 +307,19 @@ exports[`Composer renders correctly 1`] = `
                 style={
                   Array [
                     Object {
-                      "fontSize": 16,
-                    },
-                    Object {
-                      "fontWeight": "bold",
-                    },
-                    Object {
                       "color": "#000000",
                     },
+                    Array [
+                      Object {
+                        "fontSize": 16,
+                      },
+                      Object {
+                        "fontWeight": "bold",
+                      },
+                      Object {
+                        "color": "#000000",
+                      },
+                    ],
                   ]
                 }
               >
@@ -313,14 +330,19 @@ exports[`Composer renders correctly 1`] = `
                 style={
                   Array [
                     Object {
-                      "fontSize": 16,
-                    },
-                    Object {
-                      "lineHeight": 20.8,
-                    },
-                    Object {
                       "color": "#000000",
                     },
+                    Array [
+                      Object {
+                        "fontSize": 16,
+                      },
+                      Object {
+                        "lineHeight": 20.8,
+                      },
+                      Object {
+                        "color": "#000000",
+                      },
+                    ],
                   ]
                 }
               >
@@ -450,10 +472,12 @@ exports[`Composer renders correctly 1`] = `
               multiline={true}
               onChangeText={[Function]}
               placeholder="Write your reply"
+              placeholderTextColor="#968d8d"
               scrollEnabled={true}
               style={
                 Object {
                   "alignSelf": "flex-start",
+                  "color": "#000000",
                   "flex": 1,
                   "fontSize": 18,
                   "marginLeft": 8,
@@ -529,11 +553,16 @@ exports[`Composer renders correctly 1`] = `
           style={
             Array [
               Object {
-                "marginRight": 10,
+                "color": "#000000",
               },
-              Object {
-                "color": undefined,
-              },
+              Array [
+                Object {
+                  "marginRight": 10,
+                },
+                Object {
+                  "color": undefined,
+                },
+              ],
             ]
           }
         >

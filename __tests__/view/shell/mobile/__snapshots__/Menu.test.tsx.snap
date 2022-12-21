@@ -142,23 +142,33 @@ exports[`Menu renders correctly 1`] = `
     >
       <Text
         style={
-          Object {
-            "color": "#2D2626",
-            "fontSize": 24,
-            "fontWeight": "bold",
-            "marginLeft": 12,
-          }
+          Array [
+            Object {
+              "color": "#000000",
+            },
+            Object {
+              "color": "#2D2626",
+              "fontSize": 24,
+              "fontWeight": "bold",
+              "marginLeft": 12,
+            },
+          ]
         }
       >
         
       </Text>
       <Text
         style={
-          Object {
-            "color": "#423737",
-            "fontSize": 18,
-            "marginLeft": 12,
-          }
+          Array [
+            Object {
+              "color": "#000000",
+            },
+            Object {
+              "color": "#423737",
+              "fontSize": 18,
+              "marginLeft": 12,
+            },
+          ]
         }
       >
         
@@ -254,11 +264,16 @@ exports[`Menu renders correctly 1`] = `
     </RNSVGSvgView>
     <Text
       style={
-        Object {
-          "color": "#423737",
-          "fontSize": 19,
-          "marginLeft": 8,
-        }
+        Array [
+          Object {
+            "color": "#000000",
+          },
+          Object {
+            "color": "#423737",
+            "fontSize": 19,
+            "marginLeft": 8,
+          },
+        ]
       }
     >
       Search
@@ -370,10 +385,15 @@ exports[`Menu renders correctly 1`] = `
         style={
           Array [
             Object {
-              "color": "#2D2626",
-              "fontSize": 19,
+              "color": "#000000",
             },
-            undefined,
+            Array [
+              Object {
+                "color": "#2D2626",
+                "fontSize": 19,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -484,10 +504,15 @@ exports[`Menu renders correctly 1`] = `
         style={
           Array [
             Object {
-              "color": "#2D2626",
-              "fontSize": 19,
+              "color": "#000000",
             },
-            undefined,
+            Array [
+              Object {
+                "color": "#2D2626",
+                "fontSize": 19,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -508,12 +533,17 @@ exports[`Menu renders correctly 1`] = `
   >
     <Text
       style={
-        Object {
-          "fontSize": 16,
-          "fontWeight": "bold",
-          "paddingHorizontal": 4,
-          "paddingVertical": 8,
-        }
+        Array [
+          Object {
+            "color": "#000000",
+          },
+          Object {
+            "fontSize": 16,
+            "fontWeight": "bold",
+            "paddingHorizontal": 4,
+            "paddingVertical": 8,
+          },
+        ]
       }
     >
       Scenes
@@ -633,10 +663,15 @@ exports[`Menu renders correctly 1`] = `
         style={
           Array [
             Object {
-              "color": "#2D2626",
-              "fontSize": 19,
+              "color": "#000000",
             },
-            undefined,
+            Array [
+              Object {
+                "color": "#2D2626",
+                "fontSize": 19,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -757,10 +792,15 @@ exports[`Menu renders correctly 1`] = `
         style={
           Array [
             Object {
-              "color": "#2D2626",
-              "fontSize": 19,
+              "color": "#000000",
             },
-            undefined,
+            Array [
+              Object {
+                "color": "#2D2626",
+                "fontSize": 19,
+              },
+              undefined,
+            ],
           ]
         }
       >
@@ -778,9 +818,14 @@ exports[`Menu renders correctly 1`] = `
   >
     <Text
       style={
-        Object {
-          "color": "#968d8d",
-        }
+        Array [
+          Object {
+            "color": "#000000",
+          },
+          Object {
+            "color": "#968d8d",
+          },
+        ]
       }
     >
       Build version 

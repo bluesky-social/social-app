@@ -1,0 +1,205 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Contacts renders correctly 1`] = `
+<View>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#ffffff",
+      }
+    }
+  >
+    <Text
+      style={
+        Array [
+          Object {
+            "color": "#000000",
+          },
+          Object {
+            "fontSize": 30,
+            "fontWeight": "bold",
+            "paddingHorizontal": 12,
+            "paddingVertical": 6,
+          },
+        ]
+      }
+    >
+      Contacts
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#ffffff",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "backgroundColor": "#f8f3f3",
+          "borderRadius": 4,
+          "flexDirection": "row",
+          "marginBottom": 6,
+          "marginHorizontal": 10,
+          "paddingHorizontal": 8,
+          "paddingVertical": 8,
+        }
+      }
+    >
+      <
+        icon="magnifying-glass"
+        size={16}
+        style={
+          Object {
+            "color": "#645454",
+            "marginRight": 8,
+          }
+        }
+      />
+      <TextInput
+        onChangeText={[Function]}
+        placeholder="Search"
+        placeholderTextColor="#968d8d"
+        style={
+          Object {
+            "color": "#000000",
+            "flex": 1,
+          }
+        }
+        value=""
+      />
+    </View>
+  </View>
+  <View
+    onLayout={[Function]}
+    style={
+      Array [
+        Object {
+          "backgroundColor": "#ffffff",
+          "flexDirection": "row",
+          "paddingBottom": 12,
+          "paddingHorizontal": 14,
+          "paddingTop": 8,
+        },
+      ]
+    }
+  >
+    <View
+      collapsable={false}
+      style={
+        Object {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "height": 4,
+          "left": 0,
+          "position": "absolute",
+          "width": 0,
+        }
+      }
+    />
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "marginRight": 14,
+          "paddingHorizontal": 10,
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#000000",
+            },
+            Object {
+              "color": "#000000",
+              "fontSize": 16,
+              "fontWeight": "600",
+            },
+          ]
+        }
+      >
+        All
+      </Text>
+    </View>
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "marginRight": 14,
+          "paddingHorizontal": 10,
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#000000",
+            },
+            Object {
+              "color": "#645454",
+              "fontSize": 16,
+              "fontWeight": "600",
+            },
+          ]
+        }
+      >
+        Following
+      </Text>
+    </View>
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "marginRight": 14,
+          "paddingHorizontal": 10,
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#000000",
+            },
+            Object {
+              "color": "#645454",
+              "fontSize": 16,
+              "fontWeight": "600",
+            },
+          ]
+        }
+      >
+        Scenes
+      </Text>
+    </View>
+  </View>
+</View>
+`;
