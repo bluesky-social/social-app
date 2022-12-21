@@ -1,18 +1,14 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AppBskyFeedGetPostThread as GetPostThread} from '../../third-party/api'
-import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
+import {AppBskyFeedGetPostThread as GPT} from '../../third-party/api'
+import type * as GetPostThread from '../../third-party/api/src/client/types/app/bsky/feed/getPostThread'
 import {AtUri} from '../../third-party/uri'
-import _omit from 'lodash.omit'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
-type MaybePost =
-  | GetPostThread.Post
-  | GetPostThread.NotFoundPost
-  | {
-      $type: string
-      [k: string]: unknown
-    }
+interface UnknownPost {
+  $type: string
+  [k: string]: unknown
+}
 
 function* reactKeyGenerator(): Generator<string> {
   let counter = 0
@@ -33,17 +29,18 @@ interface OriginalRecord {
   text: string
 }
 
-export class PostThreadViewPostMyStateModel {
-  repost?: string
-  upvote?: string
-  downvote?: string
-
-  constructor() {
-    makeAutoObservable(this)
-  }
+function isThreadViewPost(
+  v: GetPostThread.ThreadViewPost | GetPostThread.NotFoundPost | UnknownPost,
+): v is GetPostThread.ThreadViewPost {
+  return v.$type === 'app.bksy.feed.getPostThread#threadViewPost'
+}
+function isNotFoundPost(
+  v: GetPostThread.ThreadViewPost | GetPostThread.NotFoundPost | UnknownPost,
+): v is GetPostThread.NotFoundPost {
+  return v.$type === 'app.bsky.feed.getPostThread#notFoundPost'
 }
 
-export class PostThreadViewPostModel implements GetPostThread.Post {
+export class PostThreadViewPostModel {
   // ui state
   _reactKey: string = ''
   _depth = 0
@@ -51,24 +48,9 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
   _hasMore = false
 
   // data
-  $type: string = ''
-  uri: string = ''
-  cid: string = ''
-  author: ActorRef.WithInfo = {
-    did: '',
-    handle: '',
-    declaration: {cid: '', actorType: ''},
-  }
-  record: Record<string, unknown> = {}
-  embed?: GetPostThread.Post['embed'] = undefined
-  parent?: PostThreadViewPostModel
-  replyCount: number = 0
-  replies?: PostThreadViewPostModel[]
-  repostCount: number = 0
-  upvoteCount: number = 0
-  downvoteCount: number = 0
-  indexedAt: string = ''
-  myState = new PostThreadViewPostMyStateModel()
+  post: GetPostThread.ThreadViewPost['post']
+  parent?: PostThreadViewPostModel | GetPostThread.NotFoundPost
+  replies?: (PostThreadViewPostModel | GetPostThread.NotFoundPost)[]
 
   // added data
   replyingTo?: ReplyingTo
@@ -76,45 +58,49 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
-    v?: GetPostThread.Post,
+    v: GetPostThread.ThreadViewPost,
   ) {
-    makeAutoObservable(this, {rootStore: false})
     this._reactKey = reactKey
-    if (v) {
-      Object.assign(this, _omit(v, 'parent', 'replies', 'myState')) // replies and parent are handled via assignTreeModels
-      if (v.myState) {
-        Object.assign(this.myState, v.myState)
-      }
-    }
+    this.post = v.post
+    // replies and parent are handled via assignTreeModels
+    makeAutoObservable(this, {rootStore: false})
   }
 
   assignTreeModels(
     keyGen: Generator<string>,
-    v: GetPostThread.Post,
+    v: GetPostThread.ThreadViewPost,
     includeParent = true,
     includeChildren = true,
     isFirstChild = true,
   ) {
     // parents
     if (includeParent && v.parent) {
-      // TODO: validate .record
-      const parentModel = new PostThreadViewPostModel(
-        this.rootStore,
-        keyGen.next().value,
-        v.parent,
-      )
-      parentModel._depth = this._depth - 1
-      if (v.parent.parent) {
-        parentModel.assignTreeModels(keyGen, v.parent, true, false)
+      if (isThreadViewPost(v.parent)) {
+        const parentModel = new PostThreadViewPostModel(
+          this.rootStore,
+          keyGen.next().value,
+          v.parent,
+        )
+        parentModel._depth = this._depth - 1
+        if (v.parent.parent) {
+          parentModel.assignTreeModels(keyGen, v.parent, true, false)
+        }
+        this.parent = parentModel
+      } else if (isNotFoundPost(v.parent)) {
+        this.parent = v.parent
       }
-      this.parent = parentModel
     }
-    if (!includeParent && v.parent?.author.handle && !isFirstChild) {
+    if (
+      !includeParent &&
+      v.parent &&
+      isThreadViewPost(v.parent) &&
+      !isFirstChild
+    ) {
       this.replyingTo = {
         author: {
-          handle: v.parent.author.handle,
-          displayName: v.parent.author.displayName,
-          avatar: v.parent.author.avatar,
+          handle: v.parent.post.author.handle,
+          displayName: v.parent.post.author.displayName,
+          avatar: v.parent.post.author.avatar,
         },
         text: (v.parent.record as OriginalRecord).text,
       }
@@ -124,97 +110,104 @@ export class PostThreadViewPostModel implements GetPostThread.Post {
       const replies = []
       let isChildFirstChild = true
       for (const item of v.replies) {
-        // TODO: validate .record
-        const itemModel = new PostThreadViewPostModel(
-          this.rootStore,
-          keyGen.next().value,
-          item,
-        )
-        itemModel._depth = this._depth + 1
-        if (item.replies) {
-          itemModel.assignTreeModels(
-            keyGen,
+        if (isThreadViewPost(item)) {
+          const itemModel = new PostThreadViewPostModel(
+            this.rootStore,
+            keyGen.next().value,
             item,
-            false,
-            true,
-            isChildFirstChild,
           )
+          itemModel._depth = this._depth + 1
+          if (item.replies) {
+            itemModel.assignTreeModels(
+              keyGen,
+              item,
+              false,
+              true,
+              isChildFirstChild,
+            )
+          }
+          isChildFirstChild = false
+          replies.push(itemModel)
+        } else if (isNotFoundPost(item)) {
+          replies.push(item)
         }
-        isChildFirstChild = false
-        replies.push(itemModel)
       }
       this.replies = replies
     }
   }
 
   async toggleUpvote() {
-    const wasUpvoted = !!this.myState.upvote
-    const wasDownvoted = !!this.myState.downvote
+    const wasUpvoted = !!this.post.viewer.upvote
+    const wasDownvoted = !!this.post.viewer.downvote
     const res = await this.rootStore.api.app.bsky.feed.setVote({
       subject: {
-        uri: this.uri,
-        cid: this.cid,
+        uri: this.post.uri,
+        cid: this.post.cid,
       },
       direction: wasUpvoted ? 'none' : 'up',
     })
     runInAction(() => {
       if (wasDownvoted) {
-        this.downvoteCount--
+        this.post.downvoteCount--
       }
       if (wasUpvoted) {
-        this.upvoteCount--
+        this.post.upvoteCount--
       } else {
-        this.upvoteCount++
+        this.post.upvoteCount++
       }
-      this.myState.upvote = res.data.upvote
-      this.myState.downvote = res.data.downvote
+      this.post.viewer.upvote = res.data.upvote
+      this.post.viewer.downvote = res.data.downvote
     })
   }
 
   async toggleDownvote() {
-    const wasUpvoted = !!this.myState.upvote
-    const wasDownvoted = !!this.myState.downvote
+    const wasUpvoted = !!this.post.viewer.upvote
+    const wasDownvoted = !!this.post.viewer.downvote
     const res = await this.rootStore.api.app.bsky.feed.setVote({
       subject: {
-        uri: this.uri,
-        cid: this.cid,
+        uri: this.post.uri,
+        cid: this.post.cid,
       },
       direction: wasDownvoted ? 'none' : 'down',
     })
     runInAction(() => {
       if (wasUpvoted) {
-        this.upvoteCount--
+        this.post.upvoteCount--
       }
       if (wasDownvoted) {
-        this.downvoteCount--
+        this.post.downvoteCount--
       } else {
-        this.downvoteCount++
+        this.post.downvoteCount++
       }
-      this.myState.upvote = res.data.upvote
-      this.myState.downvote = res.data.downvote
+      this.post.viewer.upvote = res.data.upvote
+      this.post.viewer.downvote = res.data.downvote
     })
   }
 
   async toggleRepost() {
-    if (this.myState.repost) {
-      await apilib.unrepost(this.rootStore, this.myState.repost)
+    if (this.post.viewer.repost) {
+      await apilib.unrepost(this.rootStore, this.post.viewer.repost)
       runInAction(() => {
-        this.repostCount--
-        this.myState.repost = undefined
+        this.post.repostCount--
+        this.post.viewer.repost = undefined
       })
     } else {
-      const res = await apilib.repost(this.rootStore, this.uri, this.cid)
+      const res = await apilib.repost(
+        this.rootStore,
+        this.post.uri,
+        this.post.cid,
+      )
       runInAction(() => {
-        this.repostCount++
-        this.myState.repost = res.uri
+        this.post.repostCount++
+        this.post.viewer.repost = res.uri
       })
     }
   }
 
   async delete() {
     await this.rootStore.api.app.bsky.feed.post.delete({
-      did: this.author.did,
-      rkey: new AtUri(this.uri).rkey,
+      did: this.post.author.did,
+      rkey: new AtUri(this.post.uri).rkey,
     })
   }
 }
@@ -304,7 +297,7 @@ export class PostThreadViewModel {
     this.isRefreshing = false
     this.hasLoaded = true
     this.error = err ? err.toString() : ''
-    this.notFound = err instanceof GetPostThread.NotFoundError
+    this.notFound = err instanceof GPT.NotFoundError
   }
 
   // loader functions
@@ -339,19 +332,24 @@ export class PostThreadViewModel {
 
   private _replaceAll(res: GetPostThread.Response) {
     // TODO: validate .record
-    sortThread(res.data.thread)
+    // sortThread(res.data.thread) TODO needed?
     const keyGen = reactKeyGenerator()
     const thread = new PostThreadViewPostModel(
       this.rootStore,
       keyGen.next().value,
-      res.data.thread as GetPostThread.Post,
+      res.data.thread as GetPostThread.ThreadViewPost,
     )
     thread._isHighlightedPost = true
-    thread.assignTreeModels(keyGen, res.data.thread as GetPostThread.Post)
+    thread.assignTreeModels(
+      keyGen,
+      res.data.thread as GetPostThread.ThreadViewPost,
+    )
     this.thread = thread
   }
 }
 
+/*
+TODO needed?
 function sortThread(post: MaybePost) {
   if (post.notFound) {
     return
@@ -382,3 +380,4 @@ function sortThread(post: MaybePost) {
     post.replies.forEach(reply => sortThread(reply))
   }
 }
+*/

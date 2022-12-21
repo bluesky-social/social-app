@@ -77,13 +77,13 @@ export const Post = observer(function Post({
   // loaded
   // =
   const item = view.thread
-  const record = view.thread?.record as unknown as PostType.Record
+  const record = view.thread?.post.record as unknown as PostType.Record
 
-  const itemUrip = new AtUri(item.uri)
-  const itemHref = `/profile/${item.author.handle}/post/${itemUrip.rkey}`
-  const itemTitle = `Post by ${item.author.handle}`
-  const authorHref = `/profile/${item.author.handle}`
-  const authorTitle = item.author.handle
+  const itemUrip = new AtUri(item.post.uri)
+  const itemHref = `/profile/${item.post.author.handle}/post/${itemUrip.rkey}`
+  const itemTitle = `Post by ${item.post.author.handle}`
+  const authorHref = `/profile/${item.post.author.handle}`
+  const authorTitle = item.post.author.handle
   let replyAuthorDid = ''
   let replyHref = ''
   if (record.reply) {
@@ -94,13 +94,13 @@ export const Post = observer(function Post({
   const onPressReply = () => {
     store.shell.openComposer({
       replyTo: {
-        uri: item.uri,
-        cid: item.cid,
-        text: item.record.text as string,
+        uri: item.post.uri,
+        cid: item.post.cid,
+        text: record.text as string,
         author: {
-          handle: item.author.handle,
-          displayName: item.author.displayName,
-          avatar: item.author.avatar,
+          handle: item.post.author.handle,
+          displayName: item.post.author.displayName,
+          avatar: item.post.author.avatar,
         },
       },
     })
@@ -144,9 +144,9 @@ export const Post = observer(function Post({
           <Link href={authorHref} title={authorTitle}>
             <UserAvatar
               size={52}
-              displayName={item.author.displayName}
-              handle={item.author.handle}
-              avatar={item.author.avatar}
+              displayName={item.post.author.displayName}
+              handle={item.post.author.handle}
+              avatar={item.post.author.avatar}
             />
           </Link>
         </View>
@@ -155,10 +155,10 @@ export const Post = observer(function Post({
             itemHref={itemHref}
             itemTitle={itemTitle}
             authorHref={authorHref}
-            authorHandle={item.author.handle}
-            authorDisplayName={item.author.displayName}
-            timestamp={item.indexedAt}
-            isAuthor={item.author.did === store.me.did}
+            authorHandle={item.post.author.handle}
+            authorDisplayName={item.post.author.displayName}
+            timestamp={item.post.indexedAt}
+            isAuthor={item.post.author.did === store.me.did}
             onCopyPostText={onCopyPostText}
             onDeletePost={onDeletePost}
           />
@@ -186,13 +186,13 @@ export const Post = observer(function Post({
           ) : (
             <View style={{height: 5}} />
           )}
-          <PostEmbeds embed={item.embed} style={{marginBottom: 10}} />
+          <PostEmbeds embed={item.post.embed} style={{marginBottom: 10}} />
           <PostCtrls
-            replyCount={item.replyCount}
-            repostCount={item.repostCount}
-            upvoteCount={item.upvoteCount}
-            isReposted={!!item.myState.repost}
-            isUpvoted={!!item.myState.upvote}
+            replyCount={item.post.replyCount}
+            repostCount={item.post.repostCount}
+            upvoteCount={item.post.upvoteCount}
+            isReposted={!!item.post.viewer.repost}
+            isUpvoted={!!item.post.viewer.upvote}
             onPressReply={onPressReply}
             onPressToggleRepost={onPressToggleRepost}
             onPressToggleUpvote={onPressToggleUpvote}

@@ -1,14 +1,12 @@
 import { Headers, XRPCError } from '@atproto/xrpc';
-import * as AppBskyActorRef from '../actor/ref';
-import * as AppBskyEmbedImages from '../embed/images';
-import * as AppBskyEmbedExternal from '../embed/external';
+import * as AppBskyFeedPost from './post';
 export interface QueryParams {
     uri: string;
     depth?: number;
 }
 export declare type InputSchema = undefined;
 export interface OutputSchema {
-    thread: Post | NotFoundPost | {
+    thread: ThreadViewPost | NotFoundPost | {
         $type: string;
         [k: string]: unknown;
     };
@@ -26,39 +24,20 @@ export declare class NotFoundError extends XRPCError {
     constructor(src: XRPCError);
 }
 export declare function toKnownErr(e: any): any;
-export interface Post {
-    uri: string;
-    cid: string;
-    author: AppBskyActorRef.WithInfo;
-    record: {};
-    embed?: AppBskyEmbedImages.Presented | AppBskyEmbedExternal.Presented | {
+export interface ThreadViewPost {
+    post: AppBskyFeedPost.View;
+    parent?: ThreadViewPost | NotFoundPost | {
         $type: string;
         [k: string]: unknown;
     };
-    parent?: Post | NotFoundPost | {
-        $type: string;
-        [k: string]: unknown;
-    };
-    replyCount: number;
-    replies?: (Post | NotFoundPost | {
+    replies?: (ThreadViewPost | NotFoundPost | {
         $type: string;
         [k: string]: unknown;
     })[];
-    repostCount: number;
-    upvoteCount: number;
-    downvoteCount: number;
-    indexedAt: string;
-    myState?: MyState;
     [k: string]: unknown;
 }
 export interface NotFoundPost {
     uri: string;
     notFound: true;
-    [k: string]: unknown;
-}
-export interface MyState {
-    repost?: string;
-    upvote?: string;
-    downvote?: string;
     [k: string]: unknown;
 }

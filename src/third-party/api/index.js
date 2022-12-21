@@ -40,6 +40,7 @@ __export(src_exports, {
   AppBskyActorUpdateProfile: () => updateProfile_exports,
   AppBskyEmbedExternal: () => external_exports,
   AppBskyEmbedImages: () => images_exports,
+  AppBskyFeedFeedViewPost: () => feedViewPost_exports,
   AppBskyFeedGetAuthorFeed: () => getAuthorFeed_exports,
   AppBskyFeedGetPostThread: () => getPostThread_exports,
   AppBskyFeedGetRepostedBy: () => getRepostedBy_exports,
@@ -5756,6 +5757,73 @@ var schemaDict = {
       }
     }
   },
+  AppBskyFeedFeedViewPost: {
+    lexicon: 1,
+    id: "app.bsky.feed.feedViewPost",
+    defs: {
+      main: {
+        type: "object",
+        required: ["post"],
+        properties: {
+          post: {
+            type: "ref",
+            ref: "lex:app.bsky.feed.post#view"
+          },
+          reply: {
+            type: "ref",
+            ref: "lex:app.bsky.feed.feedViewPost#replyRef"
+          },
+          reason: {
+            type: "union",
+            refs: [
+              "lex:app.bsky.feed.feedViewPost#reasonTrend",
+              "lex:app.bsky.feed.feedViewPost#reasonRepost"
+            ]
+          }
+        }
+      },
+      replyRef: {
+        type: "object",
+        required: ["root", "parent"],
+        properties: {
+          root: {
+            type: "ref",
+            ref: "lex:app.bsky.feed.post#view"
+          },
+          parent: {
+            type: "ref",
+            ref: "lex:app.bsky.feed.post#view"
+          }
+        }
+      },
+      reasonTrend: {
+        type: "object",
+        required: ["by", "indexedAt"],
+        properties: {
+          by: {
+            type: "ref",
+            ref: "lex:app.bsky.actor.ref#withInfo"
+          },
+          indexedAt: {
+            type: "datetime"
+          }
+        }
+      },
+      reasonRepost: {
+        type: "object",
+        required: ["by", "indexedAt"],
+        properties: {
+          by: {
+            type: "ref",
+            ref: "lex:app.bsky.actor.ref#withInfo"
+          },
+          indexedAt: {
+            type: "datetime"
+          }
+        }
+      }
+    }
+  },
   AppBskyFeedGetAuthorFeed: {
     lexicon: 1,
     id: "app.bsky.feed.getAuthorFeed",
@@ -5794,87 +5862,10 @@ var schemaDict = {
                 type: "array",
                 items: {
                   type: "ref",
-                  ref: "lex:app.bsky.feed.getAuthorFeed#feedItem"
+                  ref: "lex:app.bsky.feed.feedViewPost"
                 }
               }
             }
-          }
-        }
-      },
-      feedItem: {
-        type: "object",
-        required: [
-          "uri",
-          "cid",
-          "author",
-          "record",
-          "replyCount",
-          "repostCount",
-          "upvoteCount",
-          "downvoteCount",
-          "indexedAt"
-        ],
-        properties: {
-          uri: {
-            type: "string"
-          },
-          cid: {
-            type: "string"
-          },
-          author: {
-            type: "ref",
-            ref: "lex:app.bsky.actor.ref#withInfo"
-          },
-          trendedBy: {
-            type: "ref",
-            ref: "lex:app.bsky.actor.ref#withInfo"
-          },
-          repostedBy: {
-            type: "ref",
-            ref: "lex:app.bsky.actor.ref#withInfo"
-          },
-          record: {
-            type: "unknown"
-          },
-          embed: {
-            type: "union",
-            refs: [
-              "lex:app.bsky.embed.images#presented",
-              "lex:app.bsky.embed.external#presented"
-            ]
-          },
-          replyCount: {
-            type: "integer"
-          },
-          repostCount: {
-            type: "integer"
-          },
-          upvoteCount: {
-            type: "integer"
-          },
-          downvoteCount: {
-            type: "integer"
-          },
-          indexedAt: {
-            type: "datetime"
-          },
-          myState: {
-            type: "ref",
-            ref: "lex:app.bsky.feed.getAuthorFeed#myState"
-          }
-        }
-      },
-      myState: {
-        type: "object",
-        properties: {
-          repost: {
-            type: "string"
-          },
-          upvote: {
-            type: "string"
-          },
-          downvote: {
-            type: "string"
           }
         }
       }
@@ -5907,7 +5898,7 @@ var schemaDict = {
               thread: {
                 type: "union",
                 refs: [
-                  "lex:app.bsky.feed.getPostThread#post",
+                  "lex:app.bsky.feed.getPostThread#threadViewPost",
                   "lex:app.bsky.feed.getPostThread#notFoundPost"
                 ]
               }
@@ -5920,75 +5911,30 @@ var schemaDict = {
           }
         ]
       },
-      post: {
+      threadViewPost: {
         type: "object",
-        required: [
-          "uri",
-          "cid",
-          "author",
-          "record",
-          "replyCount",
-          "repostCount",
-          "upvoteCount",
-          "downvoteCount",
-          "indexedAt"
-        ],
+        required: ["post"],
         properties: {
-          uri: {
-            type: "string"
-          },
-          cid: {
-            type: "string"
-          },
-          author: {
+          post: {
             type: "ref",
-            ref: "lex:app.bsky.actor.ref#withInfo"
-          },
-          record: {
-            type: "unknown"
-          },
-          embed: {
-            type: "union",
-            refs: [
-              "lex:app.bsky.embed.images#presented",
-              "lex:app.bsky.embed.external#presented"
-            ]
+            ref: "lex:app.bsky.feed.post#view"
           },
           parent: {
             type: "union",
             refs: [
-              "lex:app.bsky.feed.getPostThread#post",
+              "lex:app.bsky.feed.getPostThread#threadViewPost",
               "lex:app.bsky.feed.getPostThread#notFoundPost"
             ]
-          },
-          replyCount: {
-            type: "integer"
           },
           replies: {
             type: "array",
             items: {
               type: "union",
               refs: [
-                "lex:app.bsky.feed.getPostThread#post",
+                "lex:app.bsky.feed.getPostThread#threadViewPost",
                 "lex:app.bsky.feed.getPostThread#notFoundPost"
               ]
             }
-          },
-          repostCount: {
-            type: "integer"
-          },
-          upvoteCount: {
-            type: "integer"
-          },
-          downvoteCount: {
-            type: "integer"
-          },
-          indexedAt: {
-            type: "datetime"
-          },
-          myState: {
-            type: "ref",
-            ref: "lex:app.bsky.feed.getPostThread#myState"
           }
         }
       },
@@ -6002,20 +5948,6 @@ var schemaDict = {
           notFound: {
             type: "boolean",
             const: true
-          }
-        }
-      },
-      myState: {
-        type: "object",
-        properties: {
-          repost: {
-            type: "string"
-          },
-          upvote: {
-            type: "string"
-          },
-          downvote: {
-            type: "string"
           }
         }
       }
@@ -6142,87 +6074,10 @@ var schemaDict = {
                 type: "array",
                 items: {
                   type: "ref",
-                  ref: "lex:app.bsky.feed.getTimeline#feedItem"
+                  ref: "lex:app.bsky.feed.feedViewPost"
                 }
               }
             }
-          }
-        }
-      },
-      feedItem: {
-        type: "object",
-        required: [
-          "uri",
-          "cid",
-          "author",
-          "record",
-          "replyCount",
-          "repostCount",
-          "upvoteCount",
-          "downvoteCount",
-          "indexedAt"
-        ],
-        properties: {
-          uri: {
-            type: "string"
-          },
-          cid: {
-            type: "string"
-          },
-          author: {
-            type: "ref",
-            ref: "lex:app.bsky.actor.ref#withInfo"
-          },
-          trendedBy: {
-            type: "ref",
-            ref: "lex:app.bsky.actor.ref#withInfo"
-          },
-          repostedBy: {
-            type: "ref",
-            ref: "lex:app.bsky.actor.ref#withInfo"
-          },
-          record: {
-            type: "unknown"
-          },
-          embed: {
-            type: "union",
-            refs: [
-              "lex:app.bsky.embed.images#presented",
-              "lex:app.bsky.embed.external#presented"
-            ]
-          },
-          replyCount: {
-            type: "integer"
-          },
-          repostCount: {
-            type: "integer"
-          },
-          upvoteCount: {
-            type: "integer"
-          },
-          downvoteCount: {
-            type: "integer"
-          },
-          indexedAt: {
-            type: "datetime"
-          },
-          myState: {
-            type: "ref",
-            ref: "lex:app.bsky.feed.getTimeline#myState"
-          }
-        }
-      },
-      myState: {
-        type: "object",
-        properties: {
-          repost: {
-            type: "string"
-          },
-          upvote: {
-            type: "string"
-          },
-          downvote: {
-            type: "string"
           }
         }
       }
@@ -6388,6 +6243,76 @@ var schemaDict = {
           end: {
             type: "integer",
             minimum: 0
+          }
+        }
+      },
+      view: {
+        type: "object",
+        required: [
+          "uri",
+          "cid",
+          "author",
+          "record",
+          "replyCount",
+          "repostCount",
+          "upvoteCount",
+          "downvoteCount",
+          "indexedAt",
+          "viewer"
+        ],
+        properties: {
+          uri: {
+            type: "string"
+          },
+          cid: {
+            type: "string"
+          },
+          author: {
+            type: "ref",
+            ref: "lex:app.bsky.actor.ref#withInfo"
+          },
+          record: {
+            type: "unknown"
+          },
+          embed: {
+            type: "union",
+            refs: [
+              "lex:app.bsky.embed.images#presented",
+              "lex:app.bsky.embed.external#presented"
+            ]
+          },
+          replyCount: {
+            type: "integer"
+          },
+          repostCount: {
+            type: "integer"
+          },
+          upvoteCount: {
+            type: "integer"
+          },
+          downvoteCount: {
+            type: "integer"
+          },
+          indexedAt: {
+            type: "datetime"
+          },
+          viewer: {
+            type: "ref",
+            ref: "lex:app.bsky.feed.post#viewerState"
+          }
+        }
+      },
+      viewerState: {
+        type: "object",
+        properties: {
+          repost: {
+            type: "string"
+          },
+          upvote: {
+            type: "string"
+          },
+          downvote: {
+            type: "string"
           }
         }
       }
@@ -7826,6 +7751,9 @@ var external_exports = {};
 // src/client/types/app/bsky/embed/images.ts
 var images_exports = {};
 
+// src/client/types/app/bsky/feed/feedViewPost.ts
+var feedViewPost_exports = {};
+
 // src/client/types/app/bsky/feed/post.ts
 var post_exports = {};
 
@@ -8709,6 +8637,7 @@ var SessionManager = class extends import_events.default {
   AppBskyActorUpdateProfile,
   AppBskyEmbedExternal,
   AppBskyEmbedImages,
+  AppBskyFeedFeedViewPost,
   AppBskyFeedGetAuthorFeed,
   AppBskyFeedGetPostThread,
   AppBskyFeedGetRepostedBy,

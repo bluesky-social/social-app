@@ -32,37 +32,37 @@ export const PostThreadItem = observer(function PostThreadItem({
 }) {
   const store = useStores()
   const [deleted, setDeleted] = useState(false)
-  const record = item.record as unknown as PostType.Record
-  const hasEngagement = item.upvoteCount || item.repostCount
+  const record = item.post.record as unknown as PostType.Record
+  const hasEngagement = item.post.upvoteCount || item.post.repostCount
 
   const itemHref = useMemo(() => {
-    const urip = new AtUri(item.uri)
-    return `/profile/${item.author.handle}/post/${urip.rkey}`
-  }, [item.uri, item.author.handle])
-  const itemTitle = `Post by ${item.author.handle}`
-  const authorHref = `/profile/${item.author.handle}`
-  const authorTitle = item.author.handle
+    const urip = new AtUri(item.post.uri)
+    return `/profile/${item.post.author.handle}/post/${urip.rkey}`
+  }, [item.post.uri, item.post.author.handle])
+  const itemTitle = `Post by ${item.post.author.handle}`
+  const authorHref = `/profile/${item.post.author.handle}`
+  const authorTitle = item.post.author.handle
   const upvotesHref = useMemo(() => {
-    const urip = new AtUri(item.uri)
-    return `/profile/${item.author.handle}/post/${urip.rkey}/upvoted-by`
-  }, [item.uri, item.author.handle])
+    const urip = new AtUri(item.post.uri)
+    return `/profile/${item.post.author.handle}/post/${urip.rkey}/upvoted-by`
+  }, [item.post.uri, item.post.author.handle])
   const upvotesTitle = 'Upvotes on this post'
   const repostsHref = useMemo(() => {
-    const urip = new AtUri(item.uri)
-    return `/profile/${item.author.handle}/post/${urip.rkey}/reposted-by`
-  }, [item.uri, item.author.handle])
+    const urip = new AtUri(item.post.uri)
+    return `/profile/${item.post.author.handle}/post/${urip.rkey}/reposted-by`
+  }, [item.post.uri, item.post.author.handle])
   const repostsTitle = 'Reposts of this post'
 
   const onPressReply = () => {
     store.shell.openComposer({
       replyTo: {
-        uri: item.uri,
-        cid: item.cid,
-        text: item.record.text as string,
+        uri: item.post.uri,
+        cid: item.post.cid,
+        text: record.text as string,
         author: {
-          handle: item.author.handle,
-          displayName: item.author.displayName,
-          avatar: item.author.avatar,
+          handle: item.post.author.handle,
+          displayName: item.post.author.displayName,
+          avatar: item.post.author.avatar,
         },
       },
       onPost: onPostReply,
@@ -113,9 +113,9 @@ export const PostThreadItem = observer(function PostThreadItem({
               <Link href={authorHref} title={authorTitle}>
                 <UserAvatar
                   size={50}
-                  displayName={item.author.displayName}
-                  handle={item.author.handle}
-                  avatar={item.author.avatar}
+                  displayName={item.post.author.displayName}
+                  handle={item.post.author.handle}
+                  avatar={item.post.author.avatar}
                 />
               </Link>
             </View>
@@ -126,18 +126,18 @@ export const PostThreadItem = observer(function PostThreadItem({
                   href={authorHref}
                   title={authorTitle}>
                   <Text style={[s.f16, s.bold, s.black]} numberOfLines={1}>
-                    {item.author.displayName || item.author.handle}
+                    {item.post.author.displayName || item.post.author.handle}
                   </Text>
                 </Link>
                 <Text style={[styles.metaItem, s.f15, s.gray5]}>
-                  &middot; {ago(item.indexedAt)}
+                  &middot; {ago(item.post.indexedAt)}
                 </Text>
                 <View style={s.flex1} />
                 <PostDropdownBtn
                   style={styles.metaItem}
                   itemHref={itemHref}
                   itemTitle={itemTitle}
-                  isAuthor={item.author.did === store.me.did}
+                  isAuthor={item.post.author.did === store.me.did}
                   onCopyPostText={onCopyPostText}
                   onDeletePost={onDeletePost}>
                   <FontAwesomeIcon
@@ -153,7 +153,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   href={authorHref}
                   title={authorTitle}>
                   <Text style={[s.f15, s.gray5]} numberOfLines={1}>
-                    @{item.author.handle}
+                    @{item.post.author.handle}
                   </Text>
                 </Link>
               </View>
@@ -173,34 +173,34 @@ export const PostThreadItem = observer(function PostThreadItem({
                 />
               </View>
             ) : undefined}
-            <PostEmbeds embed={item.embed} style={s.mb10} />
+            <PostEmbeds embed={item.post.embed} style={s.mb10} />
             {item._isHighlightedPost && hasEngagement ? (
               <View style={styles.expandedInfo}>
-                {item.repostCount ? (
+                {item.post.repostCount ? (
                   <Link
                     style={styles.expandedInfoItem}
                     href={repostsHref}
                     title={repostsTitle}>
                     <Text style={[s.gray5, s.semiBold, s.f17]}>
                       <Text style={[s.bold, s.black, s.f17]}>
-                        {item.repostCount}
+                        {item.post.repostCount}
                       </Text>{' '}
-                      {pluralize(item.repostCount, 'repost')}
+                      {pluralize(item.post.repostCount, 'repost')}
                     </Text>
                   </Link>
                 ) : (
                   <></>
                 )}
-                {item.upvoteCount ? (
+                {item.post.upvoteCount ? (
                   <Link
                     style={styles.expandedInfoItem}
                     href={upvotesHref}
                     title={upvotesTitle}>
                     <Text style={[s.gray5, s.semiBold, s.f17]}>
                       <Text style={[s.bold, s.black, s.f17]}>
-                        {item.upvoteCount}
+                        {item.post.upvoteCount}
                       </Text>{' '}
-                      {pluralize(item.upvoteCount, 'upvote')}
+                      {pluralize(item.post.upvoteCount, 'upvote')}
                     </Text>
                   </Link>
                 ) : (
@@ -213,8 +213,8 @@ export const PostThreadItem = observer(function PostThreadItem({
             <View style={[s.pl10, s.pb5]}>
               <PostCtrls
                 big
-                isReposted={!!item.myState.repost}
-                isUpvoted={!!item.myState.upvote}
+                isReposted={!!item.post.viewer.repost}
+                isUpvoted={!!item.post.viewer.upvote}
                 onPressReply={onPressReply}
                 onPressToggleRepost={onPressToggleRepost}
                 onPressToggleUpvote={onPressToggleUpvote}
@@ -234,7 +234,7 @@ export const PostThreadItem = observer(function PostThreadItem({
     return (
       <>
         <Link style={styles.outer} href={itemHref} title={itemTitle} noFeedback>
-          {!item.replyingTo && item.record.reply && (
+          {!item.replyingTo && record.reply && (
             <View style={styles.parentReplyLine} />
           )}
           {item.replies?.length !== 0 && <View style={styles.childReplyLine} />}
@@ -259,9 +259,9 @@ export const PostThreadItem = observer(function PostThreadItem({
               <Link href={authorHref} title={authorTitle}>
                 <UserAvatar
                   size={50}
-                  displayName={item.author.displayName}
-                  handle={item.author.handle}
-                  avatar={item.author.avatar}
+                  displayName={item.post.author.displayName}
+                  handle={item.post.author.handle}
+                  avatar={item.post.author.avatar}
                 />
               </Link>
             </View>
@@ -270,10 +270,10 @@ export const PostThreadItem = observer(function PostThreadItem({
                 itemHref={itemHref}
                 itemTitle={itemTitle}
                 authorHref={authorHref}
-                authorHandle={item.author.handle}
-                authorDisplayName={item.author.displayName}
-                timestamp={item.indexedAt}
-                isAuthor={item.author.did === store.me.did}
+                authorHandle={item.post.author.handle}
+                authorDisplayName={item.post.author.displayName}
+                timestamp={item.post.indexedAt}
+                isAuthor={item.post.author.did === store.me.did}
                 onCopyPostText={onCopyPostText}
                 onDeletePost={onDeletePost}
               />
@@ -288,13 +288,13 @@ export const PostThreadItem = observer(function PostThreadItem({
               ) : (
                 <View style={{height: 5}} />
               )}
-              <PostEmbeds embed={item.embed} style={{marginBottom: 10}} />
+              <PostEmbeds embed={item.post.embed} style={{marginBottom: 10}} />
               <PostCtrls
-                replyCount={item.replyCount}
-                repostCount={item.repostCount}
-                upvoteCount={item.upvoteCount}
-                isReposted={!!item.myState.repost}
-                isUpvoted={!!item.myState.upvote}
+                replyCount={item.post.replyCount}
+                repostCount={item.post.repostCount}
+                upvoteCount={item.post.upvoteCount}
+                isReposted={!!item.post.viewer.repost}
+                isUpvoted={!!item.post.viewer.upvote}
                 onPressReply={onPressReply}
                 onPressToggleRepost={onPressToggleRepost}
                 onPressToggleUpvote={onPressToggleUpvote}

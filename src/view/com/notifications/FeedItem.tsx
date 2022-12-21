@@ -213,7 +213,9 @@ function AdditionalPostText({
   if (additionalPost.error) {
     return <ErrorMessage message={additionalPost.error} />
   }
-  return <Text style={[s.gray5]}>{additionalPost.thread?.record.text}</Text>
+  return (
+    <Text style={[s.gray5]}>{additionalPost.thread?.post.record.text}</Text>
+  )
 }
 
 const styles = StyleSheet.create({
