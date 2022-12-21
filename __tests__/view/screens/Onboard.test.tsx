@@ -5,7 +5,7 @@ import renderer from 'react-test-renderer'
 
 describe('Onboard', () => {
   it('renders correctly', () => {
-    // const tree = renderer.create(<Onboard />).toJSON()
-    // expect(tree).toMatchSnapshot()
+    const tree = renderer.create(<Onboard />).toJSON()
+    expect(tree).toMatchSnapshot()
   })
 })

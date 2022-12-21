@@ -1,0 +1,388 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Onboard renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#fff",
+      "flex": 1,
+    }
+  }
+>
+  <RCTSafeAreaView
+    emulateUnlessSupported={true}
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  >
+    <View
+      onLayout={[Function]}
+      style={
+        Array [
+          Object {
+            "flex": 1,
+            "overflow": "hidden",
+          },
+          undefined,
+        ]
+      }
+    >
+      <RNCViewPager
+        collapsable={false}
+        initialPage={0}
+        keyboardDismissMode="on-drag"
+        layout={
+          Object {
+            "height": 0,
+            "width": 750,
+          }
+        }
+        layoutDirection="ltr"
+        onMoveShouldSetResponderCapture={[Function]}
+        onPageScroll={[Function]}
+        onPageScrollStateChanged={[Function]}
+        onPageSelected={[Function]}
+        scrollEnabled={true}
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      >
+        <View
+          collapsable={false}
+          style={
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        >
+          <View
+            accessibilityElementsHidden={false}
+            importantForAccessibility="auto"
+            style={
+              Array [
+                Object {
+                  "flex": 1,
+                  "overflow": "hidden",
+                },
+                Object {
+                  "width": 750,
+                },
+                Array [
+                  undefined,
+                  Object {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  },
+                ],
+              ]
+            }
+          >
+            <View
+              style={
+                Object {
+                  "flex": 1,
+                  "paddingHorizontal": 16,
+                  "paddingTop": 80,
+                }
+              }
+            >
+              <Text
+                style={
+                  Array [
+                    Object {
+                      "color": "#000000",
+                    },
+                    Array [
+                      Object {
+                        "fontSize": 42,
+                        "fontWeight": "bold",
+                        "marginBottom": 16,
+                        "textAlign": "center",
+                      },
+                      Object {
+                        "fontWeight": "400",
+                      },
+                      Object {
+                        "lineHeight": 60,
+                        "paddingBottom": 50,
+                        "paddingTop": 50,
+                      },
+                    ],
+                  ]
+                }
+              >
+                Welcome to 
+                <Text
+                  style={
+                    Array [
+                      Object {
+                        "color": "#000000",
+                      },
+                      Array [
+                        Object {
+                          "fontWeight": "bold",
+                        },
+                        Object {
+                          "color": "#0085ff",
+                        },
+                        Object {
+                          "fontSize": 56,
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  Bluesky
+                </Text>
+              </Text>
+              <Text
+                style={
+                  Array [
+                    Object {
+                      "color": "#000000",
+                    },
+                    Array [
+                      Object {
+                        "fontSize": 18,
+                        "marginBottom": 16,
+                        "textAlign": "center",
+                      },
+                      Object {
+                        "fontSize": 24,
+                      },
+                    ],
+                  ]
+                }
+              >
+                Let's do a quick tour through the new features.
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View
+          collapsable={false}
+          style={
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        >
+          <View
+            accessibilityElementsHidden={true}
+            importantForAccessibility="no-hide-descendants"
+            style={
+              Array [
+                Object {
+                  "flex": 1,
+                  "overflow": "hidden",
+                },
+                Object {
+                  "width": 750,
+                },
+                Array [
+                  undefined,
+                  Object {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  },
+                ],
+              ]
+            }
+          />
+        </View>
+      </RNCViewPager>
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "flex": 1,
+            }
+          }
+        />
+        <View
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "opacity": 1,
+              "padding": 16,
+            }
+          }
+        >
+          <Text
+            collapsable={false}
+            style={
+              Object {
+                "opacity": 1,
+              }
+            }
+          >
+            °
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "opacity": 1,
+              "padding": 16,
+            }
+          }
+        >
+          <Text
+            collapsable={false}
+            style={
+              Object {
+                "opacity": 0.5,
+              }
+            }
+          >
+            °
+          </Text>
+        </View>
+        <View
+          style={
+            Object {
+              "flex": 1,
+            }
+          }
+        />
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+          "paddingBottom": 24,
+          "paddingHorizontal": 32,
+        }
+      }
+    >
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <Text
+          style={
+            Array [
+              Object {
+                "color": "#000000",
+              },
+              Array [
+                Object {
+                  "color": "#0085ff",
+                },
+                Object {
+                  "fontSize": 18,
+                },
+              ],
+            ]
+          }
+        >
+          Skip
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      />
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <Text
+          style={
+            Array [
+              Object {
+                "color": "#000000",
+              },
+              Array [
+                Object {
+                  "color": "#0085ff",
+                },
+                Object {
+                  "fontSize": 18,
+                },
+              ],
+            ]
+          }
+        >
+          Next
+        </Text>
+      </View>
+    </View>
+  </RCTSafeAreaView>
+</View>
+`;
