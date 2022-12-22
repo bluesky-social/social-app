@@ -1,4 +1,4 @@
-import {LikelyType, getLinkMeta} from '../src/lib/link-meta'
+import {LikelyType, getLinkMeta, getLikelyType} from '../../src/lib/link-meta'
 
 const exampleComHtml = `<!doctype html>
 <html>
@@ -57,7 +57,9 @@ describe('getLinkMeta', () => {
     'https://example.com/image.png',
     'https://example.com/video.avi',
     'https://example.com/audio.ogg',
+    'https://example.com/text.txt',
     'https://example.com/javascript.js',
+    'https://bsky.app/index.html',
   ]
   const outputs = [
     {
@@ -95,14 +97,28 @@ describe('getLinkMeta', () => {
       url: 'https://example.com/audio.ogg',
     },
     {
+      likelyType: LikelyType.Text,
+      url: 'https://example.com/text.txt',
+    },
+    {
       likelyType: LikelyType.Other,
       url: 'https://example.com/javascript.js',
+    },
+    {
+      likelyType: LikelyType.AtpData,
+      url: '/index.html',
+      title: 'Not found',
+    },
+    {
+      likelyType: LikelyType.Other,
+      url: '',
+      title: '',
     },
   ]
   it('correctly handles a set of text inputs', async () => {
     for (let i = 0; i < inputs.length; i++) {
       global.fetch = jest.fn().mockImplementationOnce(() => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, _reject) => {
           resolve({
             ok: true,
             status: 200,
@@ -114,5 +130,17 @@ describe('getLinkMeta', () => {
       const output = await getLinkMeta(input)
       expect(output).toEqual(outputs[i])
     }
+  })
+})
+
+describe('getLikelyType', () => {
+  it('correctly handles non-parsed url', async () => {
+    const output = await getLikelyType('https://example.com')
+    expect(output).toEqual(LikelyType.HTML)
+  })
+
+  it('handles non-string urls without crashing', async () => {
+    const output = await getLikelyType('123')
+    expect(output).toEqual(LikelyType.Other)
   })
 })

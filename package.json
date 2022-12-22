@@ -8,8 +8,9 @@
     "web": "react-scripts start",
     "start": "react-native start",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
-    "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "test": "jest --coverage",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@atproto/api": "^0.0.2",
@@ -31,6 +32,7 @@
     "lru_map": "^0.4.1",
     "mobx": "^6.6.1",
     "mobx-react-lite": "^3.4.0",
+    "patch-package": "^6.5.0",
     "react": "17.0.2",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "17.0.2",
@@ -61,6 +63,8 @@
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
+    "@testing-library/jest-native": "^5.3.3",
+    "@testing-library/react-native": "^11.5.0",
     "@types/he": "^1.1.2",
     "@types/jest": "^26.0.23",
     "@types/lodash.chunk": "^4.2.7",
@@ -85,8 +89,10 @@
   "jest": {
     "preset": "react-native",
     "setupFiles": [
-      "./jest.js"
+      "./jest/jestSetup.js",
+      "./node_modules/react-native-gesture-handler/jestSetup.js"
     ],
+    "setupFilesAfterEnv": ["@testing-library/jest-native/extend-expect"],
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -97,6 +103,12 @@
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|rollbar-react-native|@fortawesome|@react-native|@react-navigation)"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/src/platform",
+      "<rootDir>/src/third-party",
+      "<rootDir>/__tests__/test-utils.js"
     ]
   },
   "browserslist": {
