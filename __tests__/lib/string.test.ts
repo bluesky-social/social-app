@@ -382,7 +382,15 @@ describe('ago', () => {
     new Date().setDate(new Date().getDate() - 1),
     new Date().setMonth(new Date().getMonth() - 1),
   ]
-  const outputs = ['20/01/1970', '04/12/1995', '0s', '10m', '1h', '1d', '1mo']
+  const outputs = [
+    new Date(1671461038).toLocaleDateString(),
+    new Date('04 Dec 1995 00:12:00 GMT').toLocaleDateString(),
+    '0s',
+    '10m',
+    '1h',
+    '1d',
+    '1mo',
+  ]
 
   it('correctly calculates how much time passed, in a string', () => {
     for (let i = 0; i < inputs.length; i++) {
