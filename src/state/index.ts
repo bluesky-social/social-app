@@ -1,7 +1,6 @@
 import {autorun} from 'mobx'
 import {Platform} from 'react-native'
-import {sessionClient as AtpApi} from '../third-party/api'
-import type {SessionServiceClient} from '../third-party/api/src/index'
+import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
 import {RootStoreModel} from './models/root-store'
 import * as libapi from './lib/api'
 import * as storage from './lib/storage'

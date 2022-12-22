@@ -1,6 +1,8 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import * as GetFollows from '../../third-party/api/src/client/types/app/bsky/graph/getFollows'
-import * as SearchTypeahead from '../../third-party/api/src/client/types/app/bsky/actor/searchTypeahead'
+import {
+  AppBskyGraphGetFollows as GetFollows,
+  AppBskyActorSearchTypeahead as SearchTypeahead,
+} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 
 export class UserAutocompleteViewModel {

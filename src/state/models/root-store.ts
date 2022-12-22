@@ -3,8 +3,7 @@
  */
 
 import {makeAutoObservable} from 'mobx'
-import {sessionClient as AtpApi} from '../../third-party/api'
-import type {SessionServiceClient} from '../../third-party/api/src/index'
+import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
 import {createContext, useContext} from 'react'
 import {isObj, hasProp} from '../lib/type-guards'
 import {SessionModel} from './session'

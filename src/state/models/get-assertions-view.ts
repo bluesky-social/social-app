@@ -1,9 +1,8 @@
 import {makeAutoObservable} from 'mobx'
-import * as GetAssertions from '../../third-party/api/src/client/types/app/bsky/graph/getAssertions'
+import {AppBskyGraphGetAssertions as GetAssertions} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 
-type ResponseAssertion = GetAssertions.OutputSchema['assertions'][number]
-export type Assertion = ResponseAssertion & {
+export type Assertion = GetAssertions.Assertion & {
   _reactKey: string
 }
 

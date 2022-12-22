@@ -1,6 +1,8 @@
 import {makeAutoObservable} from 'mobx'
-import * as GetFollowers from '../../third-party/api/src/client/types/app/bsky/graph/getFollowers'
-import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
+import {
+  AppBskyGraphGetFollowers as GetFollowers,
+  AppBskyActorRef as ActorRef,
+} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 
 export type FollowerItem = GetFollowers.Follower & {

@@ -1,10 +1,12 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import * as ListNotifications from '../../third-party/api/src/client/types/app/bsky/notification/list'
-import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
+import {
+  AppBskyNotificationList as ListNotifications,
+  AppBskyActorRef as ActorRef,
+  APP_BSKY_GRAPH,
+} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {PostThreadViewModel} from './post-thread-view'
 import {hasProp} from '../lib/type-guards'
-import {APP_BSKY_GRAPH} from '../../third-party/api'
 import {cleanError} from '../../lib/strings'
 
 const UNGROUPABLE_REASONS = ['trend', 'assertion']

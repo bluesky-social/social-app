@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
+import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
 import {Logo} from './Logo'
 import {Text} from '../util/Text'
 import {s, colors} from '../../lib/styles'
@@ -18,8 +19,6 @@ import {useStores, RootStoreModel, DEFAULT_SERVICE} from '../../../state'
 import {ServiceDescription} from '../../../state/models/session'
 import {ServerInputModal} from '../../../state/models/shell-ui'
 import {isNetworkError} from '../../../lib/errors'
-import {sessionClient as AtpApi} from '../../../third-party/api/index'
-import type {SessionServiceClient} from '../../../third-party/api/src/index'
 
 enum Forms {
   Login,

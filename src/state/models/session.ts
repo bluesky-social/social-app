@@ -1,10 +1,10 @@
 import {makeAutoObservable} from 'mobx'
-import {sessionClient as AtpApi} from '../../third-party/api/index'
-import type {
-  SessionServiceClient,
+import {
+  sessionClient as AtpApi,
   Session,
-} from '../../third-party/api/src/index'
-import type * as GetAccountsConfig from '../../third-party/api/src/client/types/com/atproto/server/getAccountsConfig'
+  SessionServiceClient,
+  ComAtprotoServerGetAccountsConfig as GetAccountsConfig,
+} from '@atproto/api'
 import {isObj, hasProp} from '../lib/type-guards'
 import {RootStoreModel} from './root-store'
 import {isNetworkError} from '../../lib/errors'

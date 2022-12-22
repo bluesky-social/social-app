@@ -1,6 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AppBskyFeedGetPostThread as GPT} from '../../third-party/api'
-import type * as GetPostThread from '../../third-party/api/src/client/types/app/bsky/feed/getPostThread'
+import {AppBskyFeedGetPostThread as GetPostThread} from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
@@ -297,7 +296,7 @@ export class PostThreadViewModel {
     this.isRefreshing = false
     this.hasLoaded = true
     this.error = err ? err.toString() : ''
-    this.notFound = err instanceof GPT.NotFoundError
+    this.notFound = err instanceof GetPostThread.NotFoundError
   }
 
   // loader functions

@@ -1,7 +1,10 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
-import * as GetRepostedBy from '../../third-party/api/src/client/types/app/bsky/feed/getRepostedBy'
-import {Main as DeclRef} from '../../third-party/api/src/client/types/app/bsky/system/declRef'
+import {
+  AppBskyFeedGetRepostedBy as GetRepostedBy,
+  AppBskySystemDeclRef,
+} from '@atproto/api'
+type DeclRef = AppBskySystemDeclRef.Main
 import {RootStoreModel} from './root-store'
 
 export class RepostedByViewItemModel implements GetRepostedBy.RepostedBy {

@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '../../../third-party/uri'
-import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
+import {AppBskyFeedPost} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedItemModel} from '../../../state/models/feed-view'
 import {Link} from '../util/Link'
@@ -28,7 +28,7 @@ export const FeedItem = observer(function ({
 }) {
   const store = useStores()
   const [deleted, setDeleted] = useState(false)
-  const record = item.post.record as unknown as PostType.Record
+  const record = item.post.record as unknown as AppBskyFeedPost.Record
   const itemHref = useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}`

@@ -1,5 +1,6 @@
 import {AtUri} from '../third-party/uri'
-import {Entity} from '../third-party/api/src/client/types/app/bsky/feed/post'
+import {AppBskyFeedPost} from '@atproto/api'
+type Entity = AppBskyFeedPost.Entity
 import {PROD_SERVICE} from '../state'
 import {isNetworkError} from './errors'
 import TLDs from 'tlds'

@@ -1,12 +1,14 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import * as GetTimeline from '../../third-party/api/src/client/types/app/bsky/feed/getTimeline'
 import {
-  Main as FeedViewPost,
-  ReasonTrend,
-  ReasonRepost,
-} from '../../third-party/api/src/client/types/app/bsky/feed/feedViewPost'
-import {View as PostView} from '../../third-party/api/src/client/types/app/bsky/feed/post'
-import * as GetAuthorFeed from '../../third-party/api/src/client/types/app/bsky/feed/getAuthorFeed'
+  AppBskyFeedGetTimeline as GetTimeline,
+  AppBskyFeedFeedViewPost,
+  AppBskyFeedPost,
+  AppBskyFeedGetAuthorFeed as GetAuthorFeed,
+} from '@atproto/api'
+type FeedViewPost = AppBskyFeedFeedViewPost.Main
+type ReasonTrend = AppBskyFeedFeedViewPost.ReasonTrend
+type ReasonRepost = AppBskyFeedFeedViewPost.ReasonRepost
+type PostView = AppBskyFeedPost.View
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'

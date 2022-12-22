@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {ComAtprotoAccountCreate} from '@atproto/api'
 import * as EmailValidator from 'email-validator'
 import {Logo} from './Logo'
 import {Picker} from '../util/Picker'
@@ -24,7 +25,6 @@ import {
 import {useStores, DEFAULT_SERVICE} from '../../../state'
 import {ServiceDescription} from '../../../state/models/session'
 import {ServerInputModal} from '../../../state/models/shell-ui'
-import {ComAtprotoAccountCreate} from '../../../third-party/api/index'
 
 export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const store = useStores()
