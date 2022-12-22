@@ -9,7 +9,7 @@ import {
 import {observer} from 'mobx-react-lite'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '../../../third-party/uri'
-import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
+import {AppBskyFeedPost} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
@@ -77,7 +77,7 @@ export const Post = observer(function Post({
   // loaded
   // =
   const item = view.thread
-  const record = view.thread?.post.record as unknown as PostType.Record
+  const record = view.thread?.post.record as unknown as AppBskyFeedPost.Record
 
   const itemUrip = new AtUri(item.post.uri)
   const itemHref = `/profile/${item.post.author.handle}/post/${itemUrip.rkey}`

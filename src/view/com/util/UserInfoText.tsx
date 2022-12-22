@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import * as GetProfile from '../../../third-party/api/src/client/types/app/bsky/actor/getProfile'
+import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
 import {StyleProp, TextStyle} from 'react-native'
 import {Link} from './Link'
 import {Text} from './Text'

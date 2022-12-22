@@ -3,7 +3,7 @@ import {observer} from 'mobx-react-lite'
 import {StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '../../../third-party/uri'
-import * as PostType from '../../../third-party/api/src/client/types/app/bsky/feed/post'
+import {AppBskyFeedPost} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
@@ -32,7 +32,7 @@ export const PostThreadItem = observer(function PostThreadItem({
 }) {
   const store = useStores()
   const [deleted, setDeleted] = useState(false)
-  const record = item.post.record as unknown as PostType.Record
+  const record = item.post.record as unknown as AppBskyFeedPost.Record
   const hasEngagement = item.post.upvoteCount || item.post.repostCount
 
   const itemHref = useMemo(() => {

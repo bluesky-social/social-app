@@ -1,7 +1,9 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
-import * as GetVotes from '../../third-party/api/src/client/types/app/bsky/feed/getVotes'
-import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
+import {
+  AppBskyFeedGetVotes as GetVotes,
+  AppBskyActorRef as ActorRef,
+} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 
 export class VotesViewItemModel implements GetVotes.Vote {

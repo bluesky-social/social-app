@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx'
-import * as Post from '../../third-party/api/src/client/types/app/bsky/feed/post'
+import {AppBskyFeedPost as Post} from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import {cleanError} from '../../lib/strings'

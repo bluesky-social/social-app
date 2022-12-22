@@ -1,6 +1,8 @@
 import {makeAutoObservable} from 'mobx'
-import * as GetMemberships from '../../third-party/api/src/client/types/app/bsky/graph/getMemberships'
-import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
+import {
+  AppBskyGraphGetMemberships as GetMemberships,
+  AppBskyActorRef as ActorRef,
+} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 
 export type MembershipItem = GetMemberships.Membership & {

@@ -2,7 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from './root-store'
 import {UserFollowsViewModel, FollowItem} from './user-follows-view'
 import {GetAssertionsView} from './get-assertions-view'
-import {APP_BSKY_SYSTEM, APP_BSKY_GRAPH} from '../../third-party/api'
+import {APP_BSKY_SYSTEM, APP_BSKY_GRAPH} from '@atproto/api'
 
 export interface SuggestedInvitesViewParams {
   sceneDid: string

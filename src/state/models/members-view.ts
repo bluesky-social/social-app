@@ -1,7 +1,9 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import * as GetMembers from '../../third-party/api/src/client/types/app/bsky/graph/getMembers'
-import * as ActorRef from '../../third-party/api/src/client/types/app/bsky/actor/ref'
-import {APP_BSKY_GRAPH} from '../../third-party/api'
+import {
+  AppBskyGraphGetMembers as GetMembers,
+  AppBskyActorRef as ActorRef,
+  APP_BSKY_GRAPH,
+} from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 

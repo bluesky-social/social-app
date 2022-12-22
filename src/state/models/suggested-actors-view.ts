@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx'
-import * as GetSuggestions from '../../third-party/api/src/client/types/app/bsky/actor/getSuggestions'
+import {AppBskyActorGetSuggestions as GetSuggestions} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 
 export type SuggestedActor = GetSuggestions.Actor & {

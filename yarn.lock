@@ -19,6 +19,35 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
+"@atproto/api@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.0.2.tgz#b6c4f5b670a04e5e79889da792518c8fb84c95bf"
+  integrity sha512-0ryu3M8kXCmVnRO9eb/PJ8dtwahP28tlMt0SetFQVcjUHZXkZwJGnscJOAznVP7OU1TlyUkjeDXRkUYx9hi4Lg==
+  dependencies:
+    "@atproto/xrpc" "*"
+    typed-emitter "^2.1.0"
+
+"@atproto/lexicon@*":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.0.1.tgz#4ce8985c2c790933200201aab0993bac953ec470"
+  integrity sha512-PDZfvn+qshocjPzQhyvPVfeGIZY7OJh53i7Wd1tSeGF7q4y1GU7CESxrPkhNZ8aMfA59LtInBtLVnM4Dlza86w==
+  dependencies:
+    "@atproto/nsid" "*"
+    zod "^3.14.2"
+
+"@atproto/nsid@*":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@atproto/nsid/-/nsid-0.0.1.tgz#0cdc00cefe8f0b1385f352b9f57b3ad37fff09a4"
+  integrity sha512-t5M6/CzWBVYoBbIvfKDpqPj/+ZmyoK9ydZSStcTXosJ27XXwOPhz0VDUGKK2SM9G5Y7TPes8S5KTAU0UdVYFCw==
+
+"@atproto/xrpc@*":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.0.1.tgz#451918148dfea534577e8da620aea739173fd187"
+  integrity sha512-l4FrsQ0TGdOU8CbwwA/OY2n0Hvi54fJEfi3zkmr86mwYn2/M2dB1DpQaZhONOIdVVouPZSgW6pCH7ApEXW4dKw==
+  dependencies:
+    "@atproto/lexicon" "*"
+    zod "^3.14.2"
+
 "@babel/code-frame@7.12.11":
   version "7.12.11"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.12.11.tgz#f4ad435aa263db935b8f10f2c552d23fb716a63f"
@@ -10833,6 +10862,13 @@ run-parallel@^1.1.9:
   dependencies:
     queue-microtask "^1.2.2"
 
+rxjs@^7.5.2:
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.8.0.tgz#90a938862a82888ff4c7359811a595e14e1e09a4"
+  integrity sha512-F2+gxDshqmIub1KdvZkaEfGDwLNpPvk9Fs6LD/MyQxNgMds/WH9OdDDXOmxUZpME+iSK3rQCctkL0DYyytUqMg==
+  dependencies:
+    tslib "^2.1.0"
+
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
@@ -11869,6 +11905,11 @@ tslib@^2.0.1, tslib@^2.0.3:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
 
+tslib@^2.1.0:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.1.tgz#0d0bfbaac2880b91e22df0768e55be9753a5b17e"
+  integrity sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==
+
 tsutils@^3.17.1, tsutils@^3.21.0:
   version "3.21.0"
   resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.21.0.tgz#b48717d394cea6c1e096983eed58e9d61715b623"
@@ -11932,6 +11973,13 @@ type-is@~1.6.18:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.24"
+
+typed-emitter@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/typed-emitter/-/typed-emitter-2.1.0.tgz#ca78e3d8ef1476f228f548d62e04e3d4d3fd77fb"
+  integrity sha512-g/KzbYKbH5C2vPkaXGu8DJlHrGKHLsM25Zg9WuC9pMGfuvT+X25tZQWo5fK1BjBm8+UrVE9LDCvaY0CQk+fXDA==
+  optionalDependencies:
+    rxjs "^7.5.2"
 
 typedarray-to-buffer@^3.1.5:
   version "3.1.5"
@@ -12771,3 +12819,8 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zod@^3.14.2:
+  version "3.20.2"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.20.2.tgz#068606642c8f51b3333981f91c0a8ab37dfc2807"
+  integrity sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==

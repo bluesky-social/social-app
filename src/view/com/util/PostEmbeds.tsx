@@ -1,7 +1,6 @@
 import React from 'react'
 import {ImageStyle, StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
-import * as AppBskyEmbedImages from '../../../third-party/api/src/client/types/app/bsky/embed/images'
-import * as AppBskyEmbedExternal from '../../../third-party/api/src/client/types/app/bsky/embed/external'
+import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/Text'
 import {colors} from '../../lib/styles'

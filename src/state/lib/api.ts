@@ -4,11 +4,13 @@
  */
 
 // import {ReactNativeStore} from './auth'
-import {sessionClient as AtpApi} from '../../third-party/api'
+import {
+  sessionClient as AtpApi,
+  APP_BSKY_GRAPH,
+  AppBskyEmbedImages,
+  AppBskyEmbedExternal,
+} from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
-import {APP_BSKY_GRAPH} from '../../third-party/api'
-import * as AppBskyEmbedImages from '../../third-party/api/src/client/types/app/bsky/embed/images'
-import * as AppBskyEmbedExternal from '../../third-party/api/src/client/types/app/bsky/embed/External'
 import {RootStoreModel} from '../models/root-store'
 import {extractEntities} from '../../lib/strings'
 import {isNetworkError} from '../../lib/errors'

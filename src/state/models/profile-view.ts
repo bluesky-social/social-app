@@ -1,9 +1,13 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {Image as PickedImage} from 'react-native-image-crop-picker'
-import * as GetProfile from '../../third-party/api/src/client/types/app/bsky/actor/getProfile'
-import * as Profile from '../../third-party/api/src/client/types/app/bsky/actor/profile'
-import {Main as DeclRef} from '../../third-party/api/src/client/types/app/bsky/system/declRef'
-import {Entity} from '../../third-party/api/src/client/types/app/bsky/feed/post'
+import {
+  AppBskyActorGetProfile as GetProfile,
+  AppBskyActorProfile as Profile,
+  AppBskySystemDeclRef,
+  AppBskyFeedPost,
+} from '@atproto/api'
+type DeclRef = AppBskySystemDeclRef.Main
+type Entity = AppBskyFeedPost.Entity
 import {extractEntities} from '../../lib/strings'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'

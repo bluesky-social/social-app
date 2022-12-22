@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 import {LRUMap} from 'lru_map'
 import {RootStoreModel} from './root-store'
-import * as GetProfile from '../../third-party/api/src/client/types/app/bsky/actor/getProfile'
+import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
 
 type CacheValue = Promise<GetProfile.Response> | GetProfile.Response
 export class ProfilesViewModel {

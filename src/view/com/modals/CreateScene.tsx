@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
+import {AppBskyActorCreateScene} from '@atproto/api'
 import {ErrorMessage} from '../util/ErrorMessage'
 import {Text} from '../util/Text'
 import {useStores} from '../../../state'
@@ -19,7 +20,6 @@ import {
   MAX_DISPLAY_NAME,
   MAX_DESCRIPTION,
 } from '../../../lib/strings'
-import {AppBskyActorCreateScene} from '../../../third-party/api/index'
 
 export const snapPoints = ['60%']
 
