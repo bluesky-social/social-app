@@ -1,7 +1,7 @@
 import RNFetchBlob from 'rn-fetch-blob'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
 
-interface DownloadAndResizeOpts {
+export interface DownloadAndResizeOpts {
   uri: string
   width: number
   height: number

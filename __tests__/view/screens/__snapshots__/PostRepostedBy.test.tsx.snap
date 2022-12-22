@@ -1,0 +1,368 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PostRepostedBy renders correctly 1`] = `
+<View>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#ffffff",
+        "borderBottomColor": "#f8f3f3",
+        "borderBottomWidth": 1,
+        "flexDirection": "row",
+        "paddingBottom": 6,
+        "paddingHorizontal": 12,
+        "paddingTop": 6,
+      }
+    }
+  >
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      hitSlop={
+        Object {
+          "bottom": 10,
+          "left": 10,
+          "right": 30,
+          "top": 10,
+        }
+      }
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "height": 30,
+          "opacity": 1,
+          "width": 40,
+        }
+      }
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={30}
+        bbWidth={30}
+        focusable={false}
+        height={30}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        style={
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            Object {
+              "flex": 0,
+              "height": 30,
+              "width": 30,
+            },
+          ]
+        }
+        vbHeight={100}
+        vbWidth={100}
+        width={30}
+      >
+        <RNSVGGroup>
+          <RNSVGDefs>
+            <RNSVGLinearGradient
+              gradient={
+                Array [
+                  0,
+                  -1292135,
+                  1,
+                  -2424577,
+                ]
+              }
+              gradientTransform={null}
+              gradientUnits={0}
+              name="grad"
+              x1="0"
+              x2="1"
+              y1="0"
+              y2="1"
+            />
+          </RNSVGDefs>
+          <RNSVGCircle
+            cx="50"
+            cy="50"
+            fill={
+              Array [
+                1,
+                "grad",
+              ]
+            }
+            propList={
+              Array [
+                "fill",
+              ]
+            }
+            r="50"
+          />
+          <RNSVGText
+            content={null}
+            dx={Array []}
+            dy={Array []}
+            fill={4294967295}
+            font={
+              Object {
+                "fontSize": "50",
+                "fontWeight": "bold",
+                "textAnchor": "middle",
+              }
+            }
+            propList={
+              Array [
+                "fill",
+              ]
+            }
+            rotate={Array []}
+            x={
+              Array [
+                "50",
+              ]
+            }
+            y={
+              Array [
+                "67",
+              ]
+            }
+          >
+            <RNSVGTSpan
+              content="X"
+              dx={Array []}
+              dy={Array []}
+              font={Object {}}
+              rotate={Array []}
+              x={Array []}
+              y={Array []}
+            />
+          </RNSVGText>
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+    <View
+      pointerEvents="none"
+      style={
+        Object {
+          "alignItems": "baseline",
+          "flexDirection": "row",
+          "marginRight": "auto",
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#000000",
+            },
+            Object {
+              "color": "#000000",
+              "fontSize": 21,
+              "fontWeight": "600",
+            },
+          ]
+        }
+      >
+        Reposted by
+      </Text>
+    </View>
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      hitSlop={
+        Object {
+          "bottom": 10,
+          "left": 10,
+          "right": 10,
+          "top": 10,
+        }
+      }
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "#f8f3f3",
+          "borderRadius": 20,
+          "flexDirection": "row",
+          "height": 36,
+          "justifyContent": "center",
+          "opacity": 1,
+          "width": 36,
+        }
+      }
+    >
+      <
+        icon="plus"
+        size={18}
+      />
+    </View>
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      hitSlop={
+        Object {
+          "bottom": 10,
+          "left": 10,
+          "right": 10,
+          "top": 10,
+        }
+      }
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "#f8f3f3",
+          "borderRadius": 20,
+          "flexDirection": "row",
+          "height": 36,
+          "justifyContent": "center",
+          "marginLeft": 8,
+          "opacity": 1,
+          "width": 36,
+        }
+      }
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={18}
+        bbWidth={18}
+        color={4278190080}
+        fill="none"
+        focusable={false}
+        height={18}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        stroke="currentColor"
+        strokeWidth={3}
+        style={
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            Object {
+              "color": "#000000",
+              "position": "relative",
+              "top": -1,
+            },
+            Object {
+              "flex": 0,
+              "height": 18,
+              "width": 18,
+            },
+          ]
+        }
+        tintColor={4278190080}
+        vbHeight={24}
+        vbWidth={24}
+        width={18}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            Array [
+              "fill",
+              "stroke",
+              "strokeWidth",
+            ]
+          }
+          stroke={
+            Array [
+              2,
+            ]
+          }
+          strokeWidth={3}
+        >
+          <RNSVGPath
+            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+            propList={
+              Array [
+                "strokeLinecap",
+                "strokeLinejoin",
+              ]
+            }
+            strokeLinecap={1}
+            strokeLinejoin={1}
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "#ffffff",
+          "borderRadius": 20,
+          "flexDirection": "row",
+          "height": 36,
+          "justifyContent": "center",
+          "marginLeft": 8,
+          "opacity": 1,
+          "width": 36,
+        }
+      }
+    >
+      <
+        icon="signal"
+        size={18}
+        style={
+          Array [
+            Object {
+              "color": "#000000",
+            },
+          ]
+        }
+      />
+      <
+        icon="x"
+        size={12}
+        style={
+          Object {
+            "backgroundColor": "#ffffff",
+            "color": "#d1106f",
+            "left": -4,
+            "position": "relative",
+            "top": 6,
+          }
+        }
+      />
+    </View>
+  </View>
+  <View>
+    <ActivityIndicator />
+  </View>
+</View>
+`;

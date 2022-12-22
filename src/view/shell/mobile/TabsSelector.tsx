@@ -175,7 +175,10 @@ export const TabsSelector = observer(
                         isClosing ? closingTabAnimStyle : undefined,
                       ]}>
                       <Animated.View
-                        ref={tabRefs[tabIndex]}
+                        // HOTFIX
+                        // TabsSelector.test.tsx snapshot fails if the
+                        // ref was set like this: ref={tabRefs[tabIndex]}
+                        ref={(ref: any) => (tabRefs[tabIndex] = ref)}
                         style={[
                           styles.tab,
                           styles.existing,

@@ -23,7 +23,7 @@ export function makeRecordUri(
   collection: string,
   rkey: string,
 ) {
-  const urip = new AtUri(`at://host/`)
+  const urip = new AtUri('at://host/')
   urip.host = didOrName
   urip.collection = collection
   urip.rkey = rkey
@@ -63,7 +63,9 @@ export function ago(date: number | string | Date): string {
 export function isValidDomain(str: string): boolean {
   return !!TLDs.find(tld => {
     let i = str.lastIndexOf(tld)
-    if (i === -1) return false
+    if (i === -1) {
+      return false
+    }
     return str.charAt(i - 1) === '.' && i === str.length - tld.length
   })
 }

@@ -1,0 +1,651 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TabsSelector renders correctly 1`] = `
+<View
+  collapsable={false}
+  style={
+    Object {
+      "backgroundColor": "#fff",
+      "borderTopColor": "#e4e2e2",
+      "borderTopWidth": 1,
+      "bottom": 55,
+      "height": 320,
+      "opacity": 1,
+      "position": "absolute",
+      "transform": Array [
+        Object {
+          "translateY": 320,
+        },
+      ],
+      "width": "100%",
+    }
+  }
+>
+  <View
+    onLayout={[Function]}
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "padding": 10,
+          },
+          Object {
+            "borderBottomColor": "#e4e2e2",
+            "borderBottomWidth": 1,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+            "paddingTop": 2,
+          }
+        }
+      >
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "#f8f3f3",
+                "borderRadius": 4,
+                "flex": 1,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "marginRight": 5,
+                "paddingLeft": 12,
+                "paddingRight": 16,
+                "paddingVertical": 10,
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Object {
+                "marginRight": 8,
+              }
+            }
+          >
+            <
+              icon="share"
+              size={16}
+            />
+          </View>
+          <Text
+            style={
+              Array [
+                Object {
+                  "color": "#000000",
+                },
+                Object {
+                  "fontSize": 16,
+                  "fontWeight": "500",
+                },
+              ]
+            }
+          >
+            Share
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "#f8f3f3",
+                "borderRadius": 4,
+                "flex": 1,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "marginRight": 5,
+                "paddingLeft": 12,
+                "paddingRight": 16,
+                "paddingVertical": 10,
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Object {
+                "marginRight": 8,
+              }
+            }
+          >
+            <
+              icon={
+                Array [
+                  "far",
+                  "clone",
+                ]
+              }
+              size={16}
+            />
+          </View>
+          <Text
+            style={
+              Array [
+                Object {
+                  "color": "#000000",
+                },
+                Object {
+                  "fontSize": 16,
+                  "fontWeight": "500",
+                },
+              ]
+            }
+          >
+            Clone tab
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "#f8f3f3",
+                "borderRadius": 4,
+                "flex": 1,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "marginRight": 5,
+                "paddingLeft": 12,
+                "paddingRight": 16,
+                "paddingVertical": 10,
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              Object {
+                "marginRight": 8,
+              }
+            }
+          >
+            <
+              icon="plus"
+              size={16}
+            />
+          </View>
+          <Text
+            style={
+              Array [
+                Object {
+                  "color": "#000000",
+                },
+                Object {
+                  "fontSize": 16,
+                  "fontWeight": "500",
+                },
+              ]
+            }
+          >
+            New tab
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "padding": 10,
+          },
+          Object {
+            "borderBottomColor": "#e4e2e2",
+            "borderBottomWidth": 1,
+          },
+          Object {
+            "backgroundColor": "#f8f3f3",
+          },
+        ]
+      }
+    >
+      <RCTScrollView
+        style={
+          Object {
+            "height": 240,
+          }
+        }
+      >
+        <View>
+          <View
+            collapsable={false}
+            forwardedRef={[Function]}
+            handlerTag={1}
+            handlerType="PanGestureHandler"
+            onGestureHandlerEvent={[Function]}
+            onGestureHandlerStateChange={[Function]}
+            onLayout={[Function]}
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <View
+              collapsable={false}
+              style={
+                Object {
+                  "bottom": 0,
+                  "flexDirection": "row",
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                  "transform": Array [
+                    Object {
+                      "translateX": -10000,
+                    },
+                  ],
+                }
+              }
+            >
+              <View
+                style={
+                  Array [
+                    Object {
+                      "padding": 2,
+                    },
+                  ]
+                }
+              />
+              <View
+                onLayout={[Function]}
+              />
+            </View>
+            <View
+              collapsable={false}
+              style={
+                Object {
+                  "bottom": 0,
+                  "flexDirection": "row-reverse",
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                  "transform": Array [
+                    Object {
+                      "translateX": -10000,
+                    },
+                  ],
+                }
+              }
+            >
+              <View
+                style={
+                  Array [
+                    Object {
+                      "padding": 2,
+                    },
+                  ]
+                }
+              />
+              <View
+                onLayout={[Function]}
+              />
+            </View>
+            <View
+              collapsable={false}
+              forwardedRef={[Function]}
+              handlerTag={2}
+              handlerType="TapGestureHandler"
+              onGestureHandlerEvent={[Function]}
+              onGestureHandlerStateChange={[Function]}
+              pointerEvents="auto"
+              style={
+                Object {
+                  "transform": Array [
+                    Object {
+                      "translateX": -0,
+                    },
+                  ],
+                }
+              }
+            >
+              <View
+                collapsable={false}
+                style={
+                  Object {
+                    "height": 46,
+                    "overflow": "hidden",
+                  }
+                }
+              >
+                <View
+                  collapsable={false}
+                  forwardedRef={[Function]}
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "backgroundColor": "#ffffff",
+                      "borderColor": "#000000",
+                      "borderRadius": 4,
+                      "borderWidth": 1,
+                      "flexDirection": "row",
+                      "height": 42,
+                    }
+                  }
+                >
+                  <View
+                    accessible={true}
+                    focusable={true}
+                    onClick={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "flex": 1,
+                        "flexDirection": "row",
+                        "paddingLeft": 12,
+                        "paddingVertical": 12,
+                      }
+                    }
+                  >
+                    <View
+                      style={Object {}}
+                    >
+                      <
+                        icon="house"
+                        size={20}
+                      />
+                    </View>
+                    <Text
+                      ellipsizeMode="tail"
+                      numberOfLines={1}
+                      style={
+                        Array [
+                          Object {
+                            "color": "#000000",
+                          },
+                          Array [
+                            Object {
+                              "flex": 1,
+                              "fontSize": 16,
+                              "paddingHorizontal": 10,
+                            },
+                            Object {
+                              "fontWeight": "500",
+                            },
+                          ],
+                        ]
+                      }
+                      suppressHighlighting={true}
+                    >
+                      /
+                    </Text>
+                  </View>
+                  <View
+                    accessible={true}
+                    focusable={true}
+                    onClick={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
+                    style={
+                      Object {
+                        "paddingRight": 16,
+                        "paddingVertical": 16,
+                      }
+                    }
+                  >
+                    <
+                      icon="x"
+                      size={14}
+                      style={
+                        Object {
+                          "color": "#655",
+                        }
+                      }
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            collapsable={false}
+            forwardedRef={[Function]}
+            handlerTag={3}
+            handlerType="PanGestureHandler"
+            onGestureHandlerEvent={[Function]}
+            onGestureHandlerStateChange={[Function]}
+            onLayout={[Function]}
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <View
+              collapsable={false}
+              style={
+                Object {
+                  "bottom": 0,
+                  "flexDirection": "row",
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                  "transform": Array [
+                    Object {
+                      "translateX": -10000,
+                    },
+                  ],
+                }
+              }
+            >
+              <View
+                style={
+                  Array [
+                    Object {
+                      "padding": 2,
+                    },
+                  ]
+                }
+              />
+              <View
+                onLayout={[Function]}
+              />
+            </View>
+            <View
+              collapsable={false}
+              style={
+                Object {
+                  "bottom": 0,
+                  "flexDirection": "row-reverse",
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                  "transform": Array [
+                    Object {
+                      "translateX": -10000,
+                    },
+                  ],
+                }
+              }
+            >
+              <View
+                style={
+                  Array [
+                    Object {
+                      "padding": 2,
+                    },
+                  ]
+                }
+              />
+              <View
+                onLayout={[Function]}
+              />
+            </View>
+            <View
+              collapsable={false}
+              forwardedRef={[Function]}
+              handlerTag={4}
+              handlerType="TapGestureHandler"
+              onGestureHandlerEvent={[Function]}
+              onGestureHandlerStateChange={[Function]}
+              pointerEvents="auto"
+              style={
+                Object {
+                  "transform": Array [
+                    Object {
+                      "translateX": -0,
+                    },
+                  ],
+                }
+              }
+            >
+              <View
+                collapsable={false}
+                style={
+                  Object {
+                    "height": 46,
+                    "overflow": "hidden",
+                  }
+                }
+              >
+                <View
+                  collapsable={false}
+                  forwardedRef={[Function]}
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "backgroundColor": "#f8f3f3",
+                      "borderColor": "#968d8d",
+                      "borderRadius": 4,
+                      "borderWidth": 1,
+                      "flexDirection": "row",
+                      "height": 42,
+                    }
+                  }
+                >
+                  <View
+                    accessible={true}
+                    focusable={true}
+                    onClick={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "flex": 1,
+                        "flexDirection": "row",
+                        "paddingLeft": 12,
+                        "paddingVertical": 12,
+                      }
+                    }
+                  >
+                    <View
+                      style={Object {}}
+                    >
+                      <
+                        icon="bell"
+                        size={20}
+                      />
+                    </View>
+                    <Text
+                      ellipsizeMode="tail"
+                      numberOfLines={1}
+                      style={
+                        Array [
+                          Object {
+                            "color": "#000000",
+                          },
+                          Array [
+                            Object {
+                              "flex": 1,
+                              "fontSize": 16,
+                              "paddingHorizontal": 10,
+                            },
+                            false,
+                          ],
+                        ]
+                      }
+                      suppressHighlighting={true}
+                    >
+                      /notifications
+                    </Text>
+                  </View>
+                  <View
+                    accessible={true}
+                    focusable={true}
+                    onClick={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
+                    style={
+                      Object {
+                        "paddingRight": 16,
+                        "paddingVertical": 16,
+                      }
+                    }
+                  >
+                    <
+                      icon="x"
+                      size={14}
+                      style={
+                        Object {
+                          "color": "#655",
+                        }
+                      }
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </RCTScrollView>
+    </View>
+  </View>
+</View>
+`;
