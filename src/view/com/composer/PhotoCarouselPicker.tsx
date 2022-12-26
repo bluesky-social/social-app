@@ -10,8 +10,8 @@ import {
 import {compressIfNeeded} from '../../../lib/images'
 
 const IMAGE_PARAMS = {
-  width: 500,
-  height: 500,
+  width: 1000,
+  height: 1000,
   freeStyleCropEnabled: true,
   forceJpg: true, // ios only
   compressImageQuality: 1.0,
