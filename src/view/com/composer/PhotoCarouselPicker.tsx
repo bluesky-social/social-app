@@ -7,13 +7,14 @@ import {
   openCamera,
   openCropper,
 } from 'react-native-image-crop-picker'
+import {compressIfNeeded} from '../../../lib/images'
 
 const IMAGE_PARAMS = {
   width: 500,
   height: 500,
   freeStyleCropEnabled: true,
   forceJpg: true, // ios only
-  compressImageQuality: 0.7,
+  compressImageQuality: 1.0,
 }
 
 export const PhotoCarouselPicker = ({
@@ -25,29 +26,35 @@ export const PhotoCarouselPicker = ({
   onSelectPhotos: (v: string[]) => void
   localPhotos: any
 }) => {
-  const handleOpenCamera = useCallback(() => {
-    openCamera({
-      mediaType: 'photo',
-      cropping: true,
-      ...IMAGE_PARAMS,
-    }).then(
-      item => {
-        onSelectPhotos([item.path, ...selectedPhotos])
-      },
-      _err => {
-        // ignore
-      },
-    )
+  const handleOpenCamera = useCallback(async () => {
+    try {
+      const cameraRes = await openCamera({
+        mediaType: 'photo',
+        cropping: true,
+        ...IMAGE_PARAMS,
+      })
+      const uri = await compressIfNeeded(cameraRes, 300000)
+      onSelectPhotos([uri, ...selectedPhotos])
+    } catch (err) {
+      // ignore
+      console.log('Error using camera', err)
+    }
   }, [selectedPhotos, onSelectPhotos])
 
   const handleSelectPhoto = useCallback(
     async (uri: string) => {
-      const img = await openCropper({
-        mediaType: 'photo',
-        path: uri,
-        ...IMAGE_PARAMS,
-      })
-      onSelectPhotos([img.path, ...selectedPhotos])
+      try {
+        const cropperRes = await openCropper({
+          mediaType: 'photo',
+          path: uri,
+          ...IMAGE_PARAMS,
+        })
+        const finalUri = await compressIfNeeded(cropperRes, 300000)
+        onSelectPhotos([finalUri, ...selectedPhotos])
+      } catch (err) {
+        // ignore
+        console.log('Error selecting photo', err)
+      }
     },
     [selectedPhotos, onSelectPhotos],
   )
@@ -60,13 +67,14 @@ export const PhotoCarouselPicker = ({
     }).then(async items => {
       const result = []
 
-      for await (const image of items) {
-        const img = await openCropper({
+      for (const image of items) {
+        const cropperRes = await openCropper({
           mediaType: 'photo',
           path: image.path,
           ...IMAGE_PARAMS,
         })
-        result.push(img.path)
+        const finalUri = await compressIfNeeded(cropperRes, 300000)
+        result.push(finalUri)
       }
       onSelectPhotos([...result, ...selectedPhotos])
     })

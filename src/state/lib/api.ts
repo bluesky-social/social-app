@@ -14,7 +14,7 @@ import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from '../models/root-store'
 import {extractEntities} from '../../lib/strings'
 import {isNetworkError} from '../../lib/errors'
-import {downloadAndResize} from '../../lib/download'
+import {downloadAndResize} from '../../lib/images'
 import {getLikelyType, LikelyType, getLinkMeta} from '../../lib/link-meta'
 
 const TIMEOUT = 10e3 // 10s
@@ -85,6 +85,7 @@ export async function post(
             width: 250,
             height: 250,
             mode: 'contain',
+            maxSize: 100000,
             timeout: 15e3,
           }).catch(() => undefined)
           if (thumbLocal) {

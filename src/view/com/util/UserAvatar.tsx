@@ -39,7 +39,7 @@ export function UserAvatar({
             height: 400,
             cropperCircleOverlay: true,
             forceJpg: true, // ios only
-            compressImageQuality: 0.7,
+            compressImageQuality: 1,
           }).then(onSelectNewAvatar)
         },
       },
@@ -56,7 +56,7 @@ export function UserAvatar({
               height: 400,
               cropperCircleOverlay: true,
               forceJpg: true, // ios only
-              compressImageQuality: 0.7,
+              compressImageQuality: 1,
             }).then(onSelectNewAvatar)
           })
         },
