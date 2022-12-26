@@ -20,6 +20,7 @@ import {
   MAX_DESCRIPTION,
 } from '../../../lib/strings'
 import {isNetworkError} from '../../../lib/errors'
+import {compressIfNeeded} from '../../../lib/images'
 import {UserBanner} from '../util/UserBanner'
 import {UserAvatar} from '../util/UserAvatar'
 
@@ -52,13 +53,23 @@ export function Component({
   const onPressCancel = () => {
     store.shell.closeModal()
   }
-  const onSelectNewAvatar = (img: PickedImage) => {
-    setNewUserAvatar(img)
-    setUserAvatar(img.path)
+  const onSelectNewAvatar = async (img: PickedImage) => {
+    try {
+      setNewUserAvatar(img)
+      const uri = await compressIfNeeded(img, 300000)
+      setUserAvatar(uri)
+    } catch (e: any) {
+      setError(e.message || e.toString())
+    }
   }
-  const onSelectNewBanner = (img: PickedImage) => {
-    setNewUserBanner(img)
-    setUserBanner(img.path)
+  const onSelectNewBanner = async (img: PickedImage) => {
+    try {
+      setNewUserBanner(img)
+      const uri = await compressIfNeeded(img, 500000)
+      setUserBanner(uri)
+    } catch (e: any) {
+      setError(e.message || e.toString())
+    }
   }
   const onPressSave = async () => {
     setProcessing(true)
