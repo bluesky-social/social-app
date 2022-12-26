@@ -5,6 +5,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 // import {render} from '../../../../jest/test-utils'
 
 describe('MobileShell', () => {
+  jest.useFakeTimers()
   it('renders correctly', () => {
     const tree = renderer
       .create(

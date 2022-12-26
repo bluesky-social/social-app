@@ -1,9 +1,10 @@
 import React from 'react'
 import {PostDownvotedBy} from '../../../src/view/screens/PostDownvotedBy'
 import renderer from 'react-test-renderer'
-// import {render} from '../../../../jest/test-utils'
+import {render} from '../../../jest/test-utils'
 
 describe('PostDownvotedBy', () => {
+  jest.useFakeTimers()
   const mockedProps = {
     navIdx: [0, 0] as [number, number],
     params: {
@@ -15,5 +16,9 @@ describe('PostDownvotedBy', () => {
   it('renders correctly', () => {
     const tree = renderer.create(<PostDownvotedBy {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
+  })
+
+  it('tests', () => {
+    render(<PostDownvotedBy {...mockedProps} />)
   })
 })

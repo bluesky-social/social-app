@@ -1,7 +1,7 @@
 import React from 'react'
 import {Menu} from '../../../../src/view/shell/mobile/Menu'
 import renderer from 'react-test-renderer'
-// import {render} from '../../../../jest/test-utils'
+import {render} from '../../../../jest/test-utils'
 
 describe('Menu', () => {
   const mockedProps = {
@@ -11,5 +11,9 @@ describe('Menu', () => {
   it('renders correctly', () => {
     const tree = renderer.create(<Menu {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
+  })
+
+  it('tests', () => {
+    render(<Menu {...mockedProps} />)
   })
 })

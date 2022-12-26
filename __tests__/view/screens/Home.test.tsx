@@ -1,9 +1,10 @@
 import React from 'react'
 import {Home} from '../../../src/view/screens/Home'
 import renderer from 'react-test-renderer'
-// import {render} from '../../../../jest/test-utils'
+import {render} from '../../../jest/test-utils'
 
 describe('Home', () => {
+  jest.useFakeTimers()
   const mockedProps = {
     navIdx: [0, 0] as [number, number],
     params: {},
@@ -12,5 +13,9 @@ describe('Home', () => {
   it('renders correctly', () => {
     const tree = renderer.create(<Home {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
+  })
+
+  it('tests', () => {
+    render(<Home {...mockedProps} />)
   })
 })

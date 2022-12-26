@@ -1,7 +1,7 @@
 import React from 'react'
 import {Settings} from '../../../src/view/screens/Settings'
 import renderer from 'react-test-renderer'
-// import {render} from '../../../../jest/test-utils'
+import {render} from '../../../jest/test-utils'
 
 describe('Settings', () => {
   const mockedProps = {
@@ -12,5 +12,9 @@ describe('Settings', () => {
   it('renders correctly', () => {
     const tree = renderer.create(<Settings {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
+  })
+
+  it('tests', () => {
+    render(<Settings {...mockedProps} />)
   })
 })

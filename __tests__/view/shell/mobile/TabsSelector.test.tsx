@@ -2,7 +2,7 @@ import React from 'react'
 import {Animated} from 'react-native'
 import renderer from 'react-test-renderer'
 import {TabsSelector} from '../../../../src/view/shell/mobile/TabsSelector'
-// import {render} from '../../../../jest/test-utils'
+import {render} from '../../../../jest/test-utils'
 
 describe('TabsSelector', () => {
   const mockedProps = {
@@ -13,5 +13,9 @@ describe('TabsSelector', () => {
   it('renders correctly', () => {
     const tree = renderer.create(<TabsSelector {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
+  })
+
+  it('tests', () => {
+    render(<TabsSelector {...mockedProps} />)
   })
 })

@@ -1,9 +1,10 @@
 import React from 'react'
 import {Composer} from '../../../../src/view/shell/mobile/Composer'
 import renderer from 'react-test-renderer'
-// import {render} from '../../../../jest/test-utils'
+import {render} from '../../../../jest/test-utils'
 
 describe('Composer', () => {
+  jest.useFakeTimers()
   const mockedProps = {
     active: true,
     winHeight: 844,
@@ -19,5 +20,8 @@ describe('Composer', () => {
   it('renders correctly', () => {
     const tree = renderer.create(<Composer {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
+  })
+  it('tests', () => {
+    render(<Composer {...mockedProps} />)
   })
 })

@@ -1,7 +1,7 @@
 import React from 'react'
 import {PostThread} from '../../../src/view/screens/PostThread'
 import renderer from 'react-test-renderer'
-// import {render} from '../../../../jest/test-utils'
+import {render} from '../../../jest/test-utils'
 
 describe('PostThread', () => {
   const mockedProps = {
@@ -15,5 +15,9 @@ describe('PostThread', () => {
   it('renders correctly', () => {
     const tree = renderer.create(<PostThread {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
+  })
+
+  it('tests', () => {
+    render(<PostThread {...mockedProps} />)
   })
 })

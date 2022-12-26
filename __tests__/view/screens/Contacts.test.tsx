@@ -1,7 +1,7 @@
 import React from 'react'
 import {Contacts} from '../../../src/view/screens/Contacts'
 import renderer from 'react-test-renderer'
-// import {render} from '../../../../jest/test-utils'
+import {render} from '../../../jest/test-utils'
 
 describe('Contacts', () => {
   const mockedProps = {
@@ -12,5 +12,9 @@ describe('Contacts', () => {
   it('renders correctly', () => {
     const tree = renderer.create(<Contacts {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
+  })
+
+  it('tests', () => {
+    render(<Contacts {...mockedProps} />)
   })
 })

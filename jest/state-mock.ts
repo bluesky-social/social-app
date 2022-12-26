@@ -199,7 +199,7 @@ const mockedMeStore = {
     isEmpty: jest.fn(),
     nonReplyFeed: jest.fn(),
     setHasNewLatest: jest.fn(),
-    setup: jest.fn(),
+    setup: jest.fn().mockResolvedValue({aborted: false}),
     refresh: jest.fn(),
     loadMore: jest.fn(),
     loadLatest: jest.fn(),
@@ -226,7 +226,7 @@ const mockedMeStore = {
     setup: jest.fn(),
     refresh: jest.fn(),
     loadMore: jest.fn(),
-    update: jest.fn(),
+    update: jest.fn().mockResolvedValue({}),
     updateReadState: jest.fn(),
     // unknown added because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadMore, _update, _replaceAll, _appendAll, _updateAll, loadMoreCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
   } as unknown as NotificationsViewModel,

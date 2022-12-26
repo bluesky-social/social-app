@@ -36,4 +36,4 @@ jest.mock('@gorhom/bottom-sheet', () => {
   }
 })
 
-jest.useFakeTimers()
+import 'react-native-gesture-handler/jestSetup'
