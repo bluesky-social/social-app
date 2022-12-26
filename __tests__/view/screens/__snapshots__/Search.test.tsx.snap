@@ -8,6 +8,7 @@ exports[`Search matches snapshot 1`] = `
       "flex": 1,
     }
   }
+  testID="searchScreen"
 >
   <View
     style={
@@ -457,6 +458,7 @@ exports[`Search matches snapshot 1`] = `
           "fontSize": 16,
         }
       }
+      testID="searchTextInput"
     />
   </View>
   <View

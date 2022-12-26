@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`NotFound matches snapshot 1`] = `
-<View>
+<View
+  testID="notFound"
+>
   <View
     style={
       Object {
@@ -402,6 +404,7 @@ exports[`NotFound matches snapshot 1`] = `
           "opacity": 1,
         }
       }
+      testID="navigateHomeButton"
     >
       <View
         style={

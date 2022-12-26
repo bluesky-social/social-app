@@ -202,6 +202,7 @@ exports[`Login matches snapshot 1`] = `
         "flex": 1,
       }
     }
+    testID="signinOrCreateAccount"
   >
     <View
       accessible={true}
@@ -226,6 +227,7 @@ exports[`Login matches snapshot 1`] = `
           "paddingVertical": 16,
         }
       }
+      testID="createAccountButton"
     >
       <Text
         style={
@@ -347,6 +349,7 @@ exports[`Login matches snapshot 1`] = `
           "paddingVertical": 16,
         }
       }
+      testID="signInButton"
     >
       <Text
         style={

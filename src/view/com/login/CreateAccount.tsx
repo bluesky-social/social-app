@@ -154,7 +154,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   }
 
   return (
-    <ScrollView style={{flex: 1}}>
+    <ScrollView testID="createAccount" style={{flex: 1}}>
       <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
         <View style={styles.logoHero}>
           <Logo />

@@ -237,6 +237,7 @@ exports[`MobileShell matches snapshot 1`] = `
             "flex": 1,
           }
         }
+        testID="signinOrCreateAccount"
       >
         <View
           accessible={true}
@@ -261,6 +262,7 @@ exports[`MobileShell matches snapshot 1`] = `
               "paddingVertical": 16,
             }
           }
+          testID="createAccountButton"
         >
           <Text
             style={
@@ -382,6 +384,7 @@ exports[`MobileShell matches snapshot 1`] = `
               "paddingVertical": 16,
             }
           }
+          testID="signInButton"
         >
           <Text
             style={

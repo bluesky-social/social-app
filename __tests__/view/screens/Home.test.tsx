@@ -1,7 +1,7 @@
 import React from 'react'
 import {Home} from '../../../src/view/screens/Home'
 import renderer, {act} from 'react-test-renderer'
-import {render} from '../../../jest/test-utils'
+import {render, waitFor} from '../../../jest/test-utils'
 import {mockedMeStore, mockedRootStore} from '../../../__mocks__/state-mock'
 import {AppState} from 'react-native'
 
@@ -12,25 +12,6 @@ describe('Home', () => {
     params: {},
     visible: true,
   }
-
-  it('polls feed', async () => {
-    const appStateSpy = jest.spyOn(AppState, 'addEventListener')
-    const consoleErrorSpy = jest.spyOn(console, 'error')
-
-    render(<Home {...mockedProps} />)
-
-    // Changes AppState to active
-    act(() => {
-      appStateSpy.mock.calls[0][1]('active')
-    })
-    await jest.runOnlyPendingTimers()
-
-    expect(mockedMeStore.mainFeed.checkForLatest).toHaveBeenCalled()
-    expect(consoleErrorSpy).toHaveBeenLastCalledWith(
-      'Failed to poll feed',
-      'Error checking for latest',
-    )
-  })
 
   it('renders feed', async () => {
     const {findByTestId} = render(<Home {...mockedProps} />)
@@ -54,6 +35,25 @@ describe('Home', () => {
 
     const button = await findByTestId('loadLatestButton')
     expect(button).toBeTruthy()
+  })
+
+  it('triggers polls feed', async () => {
+    const appStateSpy = jest.spyOn(AppState, 'addEventListener')
+    const consoleErrorSpy = jest.spyOn(console, 'error')
+
+    render(<Home {...mockedProps} />)
+
+    // Changes AppState to active
+    await waitFor(() => {
+      appStateSpy.mock.calls[0][1]('active')
+    })
+    await jest.runOnlyPendingTimers()
+
+    expect(mockedMeStore.mainFeed.checkForLatest).toHaveBeenCalled()
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(
+      'Failed to poll feed',
+      'Error checking for latest',
+    )
   })
 
   it('matches snapshot', () => {

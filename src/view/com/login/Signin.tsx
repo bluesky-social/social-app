@@ -64,7 +64,7 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   }, [store.session, serviceUrl])
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
+    <KeyboardAvoidingView testID="signIn" behavior="padding" style={{flex: 1}}>
       <View style={styles.logoHero}>
         <Logo />
       </View>

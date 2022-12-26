@@ -35,8 +35,11 @@ const SigninOrCreateAccount = ({
         <Text style={styles.title}>Bluesky</Text>
         <Text style={styles.subtitle}>[ private beta ]</Text>
       </View>
-      <View style={s.flex1}>
-        <TouchableOpacity style={styles.btn} onPress={onPressCreateAccount}>
+      <View testID="signinOrCreateAccount" style={s.flex1}>
+        <TouchableOpacity
+          testID="createAccountButton"
+          style={styles.btn}
+          onPress={onPressCreateAccount}>
           <Text style={styles.btnLabel}>Create a new account</Text>
         </TouchableOpacity>
         <View style={styles.or}>
@@ -60,7 +63,10 @@ const SigninOrCreateAccount = ({
           </Svg>
           <Text style={styles.orLabel}>or</Text>
         </View>
-        <TouchableOpacity style={styles.btn} onPress={onPressSignin}>
+        <TouchableOpacity
+          testID="signInButton"
+          style={styles.btn}
+          onPress={onPressSignin}>
           <Text style={styles.btnLabel}>Sign in</Text>
         </TouchableOpacity>
       </View>

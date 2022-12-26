@@ -51,11 +51,12 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View testID="searchScreen" style={styles.container}>
       <ViewHeader title="Search" />
       <View style={styles.inputContainer}>
         <MagnifyingGlassIcon style={styles.inputIcon} />
         <TextInput
+          testID="searchTextInput"
           ref={textInput}
           placeholder="Type your query here..."
           placeholderTextColor={colors.gray4}
@@ -67,7 +68,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
       </View>
       <View style={styles.outputContainer}>
         {query ? (
-          <ScrollView onScroll={Keyboard.dismiss}>
+          <ScrollView testID="searchScrollView" onScroll={Keyboard.dismiss}>
             {autocompleteView.searchRes.map((item, i) => (
               <TouchableOpacity
                 key={i}

@@ -31,7 +31,9 @@ export const mockedSessionStore = {
   setOnline: jest.fn(),
   updateAuthTokens: jest.fn(),
   connect: jest.fn(),
-  describeService: jest.fn(),
+  describeService: jest
+    .fn()
+    .mockResolvedValue({availableUserDomains: ['test']}),
   login: jest.fn(),
   createAccount: jest.fn(),
   logout: jest.fn(),
@@ -226,7 +228,7 @@ export const mockedMeStore = {
     setup: jest.fn(),
     refresh: jest.fn(),
     loadMore: jest.fn(),
-    update: jest.fn().mockResolvedValue({}),
+    update: jest.fn().mockResolvedValue(null),
     updateReadState: jest.fn(),
     // unknown added because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadMore, _update, _replaceAll, _appendAll, _updateAll, loadMoreCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
   } as unknown as NotificationsViewModel,
