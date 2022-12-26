@@ -5,7 +5,7 @@ import {render} from '../../../jest/test-utils'
 
 describe('Onboard', () => {
   jest.useFakeTimers()
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const tree = renderer.create(<Onboard />).toJSON()
     expect(tree).toMatchSnapshot()
   })

@@ -12,7 +12,7 @@ describe('Search', () => {
     },
     visible: true,
   }
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const tree = renderer.create(<Search {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
   })

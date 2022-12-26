@@ -12,7 +12,7 @@ import {FeedModel} from '../src/state/models/feed-view'
 import {NotificationsViewModel} from '../src/state/models/notifications-view'
 import {LRUMap} from 'lru_map'
 
-const mockedSessionStore = {
+export const mockedSessionStore = {
   serialize: jest.fn(),
   hydrate: jest.fn(),
   data: {
@@ -39,7 +39,7 @@ const mockedSessionStore = {
   // unknown added because of the missing private methods: _connectPromise, configureApi & _connect
 } as unknown as SessionModel
 
-const mockedNavigationTabStore = {
+export const mockedNavigationTabStore = {
   serialize: jest.fn(),
   hydrate: jest.fn(),
   id: 0,
@@ -90,7 +90,7 @@ const mockedNavigationTabStore = {
   getForwardList: jest.fn(),
 } as NavigationTabModel
 
-const mockedNavigationStore = {
+export const mockedNavigationStore = {
   serialize: jest.fn(),
   hydrate: jest.fn(),
   tabs: [],
@@ -109,7 +109,7 @@ const mockedNavigationStore = {
   newTab: jest.fn(),
 } as NavigationModel
 
-const mockedShellStore = {
+export const mockedShellStore = {
   minimalShellMode: false,
   isMainMenuOpen: false,
   isModalActive: false,
@@ -128,13 +128,13 @@ const mockedShellStore = {
   openLightbox: jest.fn(),
 } as ShellUiModel
 
-const mockedMeStore = {
+export const mockedMeStore = {
   serialize: jest.fn(),
   hydrate: jest.fn(),
-  did: '',
-  handle: '',
-  displayName: '',
-  description: '',
+  did: '123',
+  handle: 'test',
+  displayName: 'test',
+  description: 'test',
   avatar: '',
   notificationCount: 0,
   rootStore: {} as RootStoreModel,
@@ -204,7 +204,7 @@ const mockedMeStore = {
     loadMore: jest.fn(),
     loadLatest: jest.fn(),
     update: jest.fn(),
-    checkForLatest: jest.fn(),
+    checkForLatest: jest.fn().mockRejectedValue('Error checking for latest'),
     // unknown added because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadLatest, _loadMore, _update, _replaceAll, _appendAll, _prependAll, _updateAll, _getFeed, loadMoreCursor, pollCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
   } as unknown as FeedModel,
   // TODO: mock this model
@@ -237,7 +237,7 @@ const mockedMeStore = {
   refreshMemberships: jest.fn(),
 } as MeModel
 
-const mockedOnboardStore = {
+export const mockedOnboardStore = {
   serialize: jest.fn(),
   hydrate: jest.fn(),
   isOnboarding: false,
@@ -247,7 +247,7 @@ const mockedOnboardStore = {
   next: jest.fn(),
 } as OnboardModel
 
-const mockedProfileStore = {
+export const mockedProfileStore = {
   hydrate: jest.fn(),
   serialize: jest.fn(),
   cache: new LRUMap(100),
@@ -256,7 +256,7 @@ const mockedProfileStore = {
   overwrite: jest.fn(),
 } as ProfilesViewModel
 
-const mockedLinkMetasStore = {
+export const mockedLinkMetasStore = {
   hydrate: jest.fn(),
   serialize: jest.fn(),
   cache: new LRUMap(100),

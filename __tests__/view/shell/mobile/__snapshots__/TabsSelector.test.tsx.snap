@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TabsSelector renders correctly 1`] = `
+exports[`TabsSelector matches snapshot 1`] = `
 <View
   collapsable={false}
   style={

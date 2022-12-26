@@ -17,7 +17,7 @@ describe('Composer', () => {
     onPost: jest.fn(),
     onClose: jest.fn(),
   }
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const tree = renderer.create(<Composer {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
   })

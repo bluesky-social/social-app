@@ -8,7 +8,7 @@ describe('Menu', () => {
     visible: true,
     onClose: jest.fn(),
   }
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const tree = renderer.create(<Menu {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
   })

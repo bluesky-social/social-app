@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ProfileMembers renders correctly 1`] = `
+exports[`ProfileMembers matches snapshot 1`] = `
 <View>
   <View
     style={

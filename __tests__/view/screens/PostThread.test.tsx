@@ -12,7 +12,7 @@ describe('PostThread', () => {
     },
     visible: true,
   }
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const tree = renderer.create(<PostThread {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
   })

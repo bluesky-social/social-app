@@ -81,6 +81,7 @@ export const Home = observer(function Home({
     <View style={s.flex1}>
       <ViewHeader title="Bluesky" subtitle="Private Beta" canGoBack={false} />
       <Feed
+        testID="homeFeed"
         key="default"
         feed={store.me.mainFeed}
         scrollElRef={scrollElRef}
@@ -91,6 +92,7 @@ export const Home = observer(function Home({
       />
       {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing ? (
         <TouchableOpacity
+          testID="loadLatestButton"
           style={[
             styles.loadLatest,
             store.shell.minimalShellMode

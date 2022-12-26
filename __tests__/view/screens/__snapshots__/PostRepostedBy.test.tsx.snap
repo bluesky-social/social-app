@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PostRepostedBy renders correctly 1`] = `
+exports[`PostRepostedBy matches snapshot 1`] = `
 <View>
   <View
     style={

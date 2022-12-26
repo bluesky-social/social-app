@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Contacts renders correctly 1`] = `
+exports[`Contacts matches snapshot 1`] = `
 <View>
   <View
     style={
@@ -23,6 +23,7 @@ exports[`Contacts renders correctly 1`] = `
           },
         ]
       }
+      testID="contactsTitle"
     >
       Contacts
     </Text>
@@ -67,6 +68,7 @@ exports[`Contacts renders correctly 1`] = `
             "flex": 1,
           }
         }
+        testID="contactsTextInput"
         value=""
       />
     </View>

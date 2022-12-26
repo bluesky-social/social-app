@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MobileShell renders correctly 1`] = `
+exports[`MobileShell matches snapshot 1`] = `
 <BVLinearGradient
   colors={
     Array [

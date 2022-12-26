@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Home renders correctly 1`] = `
+exports[`Home matches snapshot 1`] = `
 <View
   style={
     Object {
@@ -391,6 +391,7 @@ exports[`Home renders correctly 1`] = `
         "flex": 1,
       }
     }
+    testID="homeFeed"
   >
     <View
       accessible={true}

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Notifications renders correctly 1`] = `
+exports[`Notifications matches snapshot 1`] = `
 <View
   style={
     Object {

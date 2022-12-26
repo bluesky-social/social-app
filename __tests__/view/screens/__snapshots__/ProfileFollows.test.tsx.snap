@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ProfileFollows renders correctly 1`] = `
+exports[`ProfileFollows matches snapshot 1`] = `
 <View>
   <View
     style={
@@ -379,7 +379,9 @@ exports[`ProfileFollows renders correctly 1`] = `
       />
     </View>
   </View>
-  <View>
+  <View
+    testID="followList"
+  >
     <ActivityIndicator />
   </View>
 </View>

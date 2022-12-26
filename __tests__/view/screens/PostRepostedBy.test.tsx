@@ -13,7 +13,7 @@ describe('PostRepostedBy', () => {
     },
     visible: true,
   }
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const tree = renderer.create(<PostRepostedBy {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
   })

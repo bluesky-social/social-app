@@ -6,7 +6,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 
 describe('MobileShell', () => {
   jest.useFakeTimers()
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const tree = renderer
       .create(
         <SafeAreaProvider>

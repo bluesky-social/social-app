@@ -14,8 +14,10 @@ import {s, colors} from '../../lib/styles'
 
 export const ProfileFollows = observer(function ProfileFollows({
   name,
+  testID,
 }: {
   name: string
+  testID?: string
 }) {
   const store = useStores()
   const [view, setView] = useState<UserFollowsViewModel | undefined>()
@@ -45,7 +47,7 @@ export const ProfileFollows = observer(function ProfileFollows({
     view.params.user !== name
   ) {
     return (
-      <View>
+      <View testID="followList">
         <ActivityIndicator />
       </View>
     )
@@ -55,7 +57,7 @@ export const ProfileFollows = observer(function ProfileFollows({
   // =
   if (view.hasError) {
     return (
-      <View>
+      <View testID="followList">
         <ErrorMessage
           dark
           message={view.error}
@@ -70,7 +72,7 @@ export const ProfileFollows = observer(function ProfileFollows({
   // =
   const renderItem = ({item}: {item: FollowItem}) => <User item={item} />
   return (
-    <View>
+    <View testID="followList">
       <FlatList
         data={view.follows}
         keyExtractor={item => item._reactKey}

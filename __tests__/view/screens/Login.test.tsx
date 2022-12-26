@@ -4,7 +4,7 @@ import renderer from 'react-test-renderer'
 import {render} from '../../../jest/test-utils'
 
 describe('Login', () => {
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const tree = renderer.create(<Login />).toJSON()
     expect(tree).toMatchSnapshot()
   })

@@ -10,7 +10,7 @@ describe('TabsSelector', () => {
     tabMenuInterp: new Animated.Value(0),
     onClose: jest.fn(),
   }
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const tree = renderer.create(<TabsSelector {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
   })

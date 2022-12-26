@@ -9,7 +9,7 @@ describe('Notifications', () => {
     params: {},
     visible: true,
   }
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const tree = renderer.create(<Notifications {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
   })

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`NotFound renders correctly 1`] = `
+exports[`NotFound matches snapshot 1`] = `
 <View>
   <View
     style={

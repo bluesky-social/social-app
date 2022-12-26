@@ -4,23 +4,24 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {RootStoreModel, RootStoreProvider} from '../src/state'
-import {mockedRootStore} from './state-mock'
+import {mockedRootStore} from '../__mocks__/state-mock'
 
-const WrappedComponent = ({children}: any) => {
-  return (
+const customRender = (ui: any, storeMock?: any) =>
+  render(
     // eslint-disable-next-line react-native/no-inline-styles
     <GestureHandlerRootView style={{flex: 1}}>
       <RootSiblingParent>
-        <RootStoreProvider value={mockedRootStore as RootStoreModel}>
-          <SafeAreaProvider>{children}</SafeAreaProvider>
+        <RootStoreProvider
+          value={
+            storeMock != null
+              ? ({...mockedRootStore, ...storeMock} as RootStoreModel)
+              : (mockedRootStore as RootStoreModel)
+          }>
+          <SafeAreaProvider>{ui}</SafeAreaProvider>
         </RootStoreProvider>
       </RootSiblingParent>
-    </GestureHandlerRootView>
+    </GestureHandlerRootView>,
   )
-}
-
-const customRender = (ui: any, options?: any) =>
-  render(ui, {wrapper: WrappedComponent, ...options})
 
 // re-export everything
 export * from '@testing-library/react-native'

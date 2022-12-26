@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Composer renders correctly 1`] = `
+exports[`Composer matches snapshot 1`] = `
 <View
   collapsable={false}
   style={

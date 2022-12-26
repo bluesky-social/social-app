@@ -12,7 +12,7 @@ describe('ProfileFollows', () => {
     },
     visible: true,
   }
-  it('renders correctly', () => {
+  it('matches snapshot', () => {
     const tree = renderer.create(<ProfileFollows {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
   })
