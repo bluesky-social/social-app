@@ -35,7 +35,7 @@ export function UserBanner({
             compressImageMaxHeight: 500,
             height: 500,
             forceJpg: true, // ios only
-            compressImageQuality: 0.4,
+            compressImageQuality: 1,
             includeExif: true,
           }).then(onSelectNewBanner)
         },
@@ -54,7 +54,7 @@ export function UserBanner({
               compressImageMaxHeight: 500,
               height: 500,
               forceJpg: true, // ios only
-              compressImageQuality: 0.4,
+              compressImageQuality: 1,
               includeExif: true,
             }).then(onSelectNewBanner)
           })
