@@ -3,7 +3,7 @@ import {render} from '@testing-library/react-native'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {RootStoreModel, RootStoreProvider} from '../src/state'
+import {RootStoreProvider} from '../src/state'
 import {mockedRootStore} from '../__mocks__/state-mock'
 
 const customRender = (ui: any, storeMock?: any) =>
@@ -14,8 +14,8 @@ const customRender = (ui: any, storeMock?: any) =>
         <RootStoreProvider
           value={
             storeMock != null
-              ? ({...mockedRootStore, ...storeMock} as RootStoreModel)
-              : (mockedRootStore as RootStoreModel)
+              ? {...mockedRootStore, ...storeMock}
+              : mockedRootStore
           }>
           <SafeAreaProvider>{ui}</SafeAreaProvider>
         </RootStoreProvider>

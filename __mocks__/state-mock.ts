@@ -1,3 +1,4 @@
+import {LRUMap} from 'lru_map'
 import {RootStoreModel} from './../src/state/models/root-store'
 import {NavigationTabModel} from './../src/state/models/navigation'
 import {SessionModel} from '../src/state/models/session'
@@ -10,7 +11,107 @@ import {LinkMetasViewModel} from '../src/state/models/link-metas-view'
 import {MembershipsViewModel} from '../src/state/models/memberships-view'
 import {FeedModel} from '../src/state/models/feed-view'
 import {NotificationsViewModel} from '../src/state/models/notifications-view'
-import {LRUMap} from 'lru_map'
+import {ProfileViewModel} from '../src/state/models/profile-view'
+import {MembersViewModel} from '../src/state/models/members-view'
+import {ProfileUiModel, Sections} from '../src/state/models/profile-ui'
+
+// TODO: mock these
+export const mockedProfileStore = {} as ProfileViewModel
+export const mockedMembersStore = {} as MembersViewModel
+
+export const mockedMembershipsModel = {
+  isLoading: false,
+  isRefreshing: false,
+  hasLoaded: false,
+  error: '',
+  params: {
+    actor: '',
+    limit: 1,
+    before: '',
+  },
+  subject: {
+    did: '',
+    handle: '',
+    displayName: '',
+    declaration: {cid: '', actorType: ''},
+    avatar: undefined,
+  },
+  memberships: [
+    {
+      did: '',
+      declaration: {
+        cid: '',
+        actorType: 'app.bsky.system.actorUser',
+      },
+      handle: ',',
+      displayName: '',
+      createdAt: '',
+      indexedAt: '',
+      _reactKey: '',
+    },
+  ],
+  rootStore: {} as RootStoreModel,
+  hasContent: jest.fn(),
+  hasError: jest.fn(),
+  isEmpty: jest.fn(),
+  isMemberOf: jest.fn(),
+  setup: jest.fn(),
+  refresh: jest.fn(),
+  loadMore: jest.fn(),
+  // unknown added because of the missing private methods: _xLoading, _xIdle, _fetch, _replaceAll, _append
+} as unknown as MembershipsViewModel
+
+export const mockedFeedModel = {
+  isLoading: false,
+  isRefreshing: false,
+  hasNewLatest: false,
+  hasLoaded: false,
+  error: '',
+  hasMore: true,
+  params: {
+    actor: '',
+    limit: 1,
+    before: '',
+  },
+  feed: [],
+  rootStore: {} as RootStoreModel,
+  feedType: 'home',
+  hasContent: jest.fn(),
+  hasError: jest.fn(),
+  isEmpty: jest.fn(),
+  nonReplyFeed: jest.fn(),
+  setHasNewLatest: jest.fn(),
+  setup: jest.fn().mockResolvedValue({aborted: false}),
+  refresh: jest.fn(),
+  loadMore: jest.fn(),
+  loadLatest: jest.fn(),
+  update: jest.fn(),
+  checkForLatest: jest.fn().mockRejectedValue('Error checking for latest'),
+  // unknown added because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadLatest, _loadMore, _update, _replaceAll, _appendAll, _prependAll, _updateAll, _getFeed, loadMoreCursor, pollCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
+} as unknown as FeedModel
+
+export const mockedNotificationsModel = {
+  isLoading: false,
+  isRefreshing: false,
+  hasLoaded: false,
+  error: '',
+  params: {
+    limit: 1,
+    before: '',
+  },
+  hasMore: true,
+  notifications: [],
+  rootStore: {} as RootStoreModel,
+  hasContent: jest.fn(),
+  hasError: jest.fn(),
+  isEmpty: jest.fn(),
+  setup: jest.fn(),
+  refresh: jest.fn(),
+  loadMore: jest.fn(),
+  update: jest.fn().mockResolvedValue(null),
+  updateReadState: jest.fn(),
+  // unknown added because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadMore, _update, _replaceAll, _appendAll, _updateAll, loadMoreCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
+} as unknown as NotificationsViewModel
 
 export const mockedSessionStore = {
   serialize: jest.fn(),
@@ -140,98 +241,9 @@ export const mockedMeStore = {
   avatar: '',
   notificationCount: 0,
   rootStore: {} as RootStoreModel,
-  memberships: {
-    isLoading: false,
-    isRefreshing: false,
-    hasLoaded: false,
-    error: '',
-    params: {
-      actor: '',
-      limit: 1,
-      before: '',
-    },
-    subject: {
-      did: '',
-      handle: '',
-      displayName: '',
-      declaration: {cid: '', actorType: ''},
-      avatar: undefined,
-    },
-    memberships: [
-      {
-        did: '',
-        declaration: {
-          cid: '',
-          actorType: 'app.bsky.system.actorUser',
-        },
-        handle: ',',
-        displayName: '',
-        createdAt: '',
-        indexedAt: '',
-        _reactKey: '',
-      },
-    ],
-    rootStore: {} as RootStoreModel,
-    hasContent: jest.fn(),
-    hasError: jest.fn(),
-    isEmpty: jest.fn(),
-    isMemberOf: jest.fn(),
-    setup: jest.fn(),
-    refresh: jest.fn(),
-    loadMore: jest.fn(),
-    // unknown added because of the missing private methods: _xLoading, _xIdle, _fetch, _replaceAll, _append
-  } as unknown as MembershipsViewModel,
-  mainFeed: {
-    isLoading: false,
-    isRefreshing: false,
-    hasNewLatest: false,
-    hasLoaded: false,
-    error: '',
-    hasMore: true,
-    params: {
-      actor: '',
-      limit: 1,
-      before: '',
-    },
-    feed: [],
-    rootStore: {} as RootStoreModel,
-    feedType: 'home',
-    hasContent: jest.fn(),
-    hasError: jest.fn(),
-    isEmpty: jest.fn(),
-    nonReplyFeed: jest.fn(),
-    setHasNewLatest: jest.fn(),
-    setup: jest.fn().mockResolvedValue({aborted: false}),
-    refresh: jest.fn(),
-    loadMore: jest.fn(),
-    loadLatest: jest.fn(),
-    update: jest.fn(),
-    checkForLatest: jest.fn().mockRejectedValue('Error checking for latest'),
-    // unknown added because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadLatest, _loadMore, _update, _replaceAll, _appendAll, _prependAll, _updateAll, _getFeed, loadMoreCursor, pollCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
-  } as unknown as FeedModel,
-  // TODO: mock this model
-  notifications: {
-    isLoading: false,
-    isRefreshing: false,
-    hasLoaded: false,
-    error: '',
-    params: {
-      limit: 1,
-      before: '',
-    },
-    hasMore: true,
-    notifications: [],
-    rootStore: {} as RootStoreModel,
-    hasContent: jest.fn(),
-    hasError: jest.fn(),
-    isEmpty: jest.fn(),
-    setup: jest.fn(),
-    refresh: jest.fn(),
-    loadMore: jest.fn(),
-    update: jest.fn().mockResolvedValue(null),
-    updateReadState: jest.fn(),
-    // unknown added because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadMore, _update, _replaceAll, _appendAll, _updateAll, loadMoreCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
-  } as unknown as NotificationsViewModel,
+  memberships: mockedMembershipsModel,
+  mainFeed: mockedFeedModel,
+  notifications: mockedNotificationsModel,
   clear: jest.fn(),
   load: jest.fn(),
   clearNotificationCount: jest.fn(),
@@ -249,7 +261,7 @@ export const mockedOnboardStore = {
   next: jest.fn(),
 } as OnboardModel
 
-export const mockedProfileStore = {
+export const mockedProfilesStore = {
   hydrate: jest.fn(),
   serialize: jest.fn(),
   cache: new LRUMap(100),
@@ -278,6 +290,30 @@ export const mockedRootStore = {
   shell: mockedShellStore,
   me: mockedMeStore,
   onboard: mockedOnboardStore,
-  profiles: mockedProfileStore,
+  profiles: mockedProfilesStore,
   linkMetas: mockedLinkMetasStore,
-}
+} as RootStoreModel
+
+export const mockedProfileUiStore = {
+  profile: mockedProfileStore,
+  feed: mockedFeedModel,
+  memberships: mockedMembershipsModel,
+  members: mockedMembersStore,
+  selectedViewIndex: 0,
+  rootStore: mockedRootStore,
+  params: {
+    user: 'test user',
+  },
+  currentView: mockedFeedModel,
+  isInitialLoading: false,
+  isRefreshing: false,
+  isUser: true,
+  isScene: false,
+  selectorItems: [Sections.Posts, Sections.PostsWithReplies, Sections.Scenes],
+  selectedView: Sections.Posts,
+  setSelectedViewIndex: jest.fn(),
+  setup: jest.fn(),
+  update: jest.fn(),
+  refresh: jest.fn(),
+  loadMore: jest.fn(),
+} as ProfileUiModel
