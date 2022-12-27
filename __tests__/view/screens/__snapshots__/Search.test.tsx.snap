@@ -178,6 +178,7 @@ exports[`Search matches snapshot 1`] = `
             },
           ]
         }
+        testID="headerTitle"
       >
         Search
       </Text>

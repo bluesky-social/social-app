@@ -9,12 +9,19 @@ describe('Notifications', () => {
     params: {},
     visible: true,
   }
+
+  it('renders notifications screen', async () => {
+    const {findByTestId} = render(<Notifications {...mockedProps} />)
+    const notificationsView = await findByTestId('notificationsView')
+
+    expect(notificationsView).toBeTruthy()
+
+    const headerTitle = await findByTestId('headerTitle')
+    expect(headerTitle.props.children).toBe('Notifications')
+  })
+
   it('matches snapshot', () => {
     const tree = renderer.create(<Notifications {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
-  })
-
-  it('tests', () => {
-    render(<Notifications {...mockedProps} />)
   })
 })

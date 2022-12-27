@@ -7,7 +7,7 @@ import {useStores} from '../../state'
 export const NotFound = () => {
   const stores = useStores()
   return (
-    <View testID="notFound">
+    <View testID="notFoundView">
       <ViewHeader title="Page not found" />
       <View
         style={{

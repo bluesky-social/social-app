@@ -17,7 +17,7 @@ export const ProfileMembers = ({navIdx, visible, params}: ScreenParams) => {
   }, [store, visible, name])
 
   return (
-    <View>
+    <View testID="profileMembersView">
       <ViewHeader title="Members" subtitle={`of ${name}`} />
       <ProfileMembersComponent name={name} />
     </View>

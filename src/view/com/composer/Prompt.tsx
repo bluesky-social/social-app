@@ -22,6 +22,7 @@ export function ComposePrompt({
   }
   return (
     <TouchableOpacity
+      testID="composePromptButton"
       style={[styles.container, noAvi ? styles.noAviContainer : undefined]}
       onPress={onPressCompose}>
       {!noAvi ? (

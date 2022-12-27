@@ -9,6 +9,7 @@ exports[`Settings matches snapshot 1`] = `
       },
     ]
   }
+  testID="settingsView"
 >
   <View
     style={
@@ -178,6 +179,7 @@ exports[`Settings matches snapshot 1`] = `
             },
           ]
         }
+        testID="headerTitle"
       >
         Settings
       </Text>

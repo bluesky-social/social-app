@@ -39,7 +39,10 @@ export function ErrorMessage({
         {message}
       </Text>
       {onPressTryAgain && (
-        <TouchableOpacity style={styles.btn} onPress={onPressTryAgain}>
+        <TouchableOpacity
+          testID="tryAgainButton"
+          style={styles.btn}
+          onPress={onPressTryAgain}>
           <FontAwesomeIcon
             icon="arrows-rotate"
             style={{color: dark ? colors.white : colors.red4}}

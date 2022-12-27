@@ -13,12 +13,19 @@ describe('PostUpvotedBy', () => {
     },
     visible: true,
   }
+
+  it('renders upvoted by screen', async () => {
+    const {findByTestId} = render(<PostUpvotedBy {...mockedProps} />)
+    const postUpvotedByView = await findByTestId('postUpvotedByView')
+
+    expect(postUpvotedByView).toBeTruthy()
+
+    const headerTitle = await findByTestId('headerTitle')
+    expect(headerTitle.props.children).toBe('Upvoted by')
+  })
+
   it('matches snapshot', () => {
     const tree = renderer.create(<PostUpvotedBy {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
-  })
-
-  it('tests', () => {
-    render(<PostUpvotedBy {...mockedProps} />)
   })
 })

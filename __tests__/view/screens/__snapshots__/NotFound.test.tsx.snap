@@ -2,7 +2,7 @@
 
 exports[`NotFound matches snapshot 1`] = `
 <View
-  testID="notFound"
+  testID="notFoundView"
 >
   <View
     style={
@@ -172,6 +172,7 @@ exports[`NotFound matches snapshot 1`] = `
             },
           ]
         }
+        testID="headerTitle"
       >
         Page not found
       </Text>

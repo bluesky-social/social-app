@@ -18,7 +18,7 @@ export const PostUpvotedBy = ({navIdx, visible, params}: ScreenParams) => {
   }, [store, visible])
 
   return (
-    <View>
+    <View testID="postUpvotedByView">
       <ViewHeader title="Upvoted by" />
       <PostLikedByComponent uri={uri} direction="up" />
     </View>

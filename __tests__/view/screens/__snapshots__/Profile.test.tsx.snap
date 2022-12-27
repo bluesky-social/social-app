@@ -8,6 +8,7 @@ exports[`Profile matches snapshot 1`] = `
       "height": "100%",
     }
   }
+  testID="profileView"
 >
   <View
     style={
@@ -177,6 +178,7 @@ exports[`Profile matches snapshot 1`] = `
             },
           ]
         }
+        testID="headerTitle"
       >
         test name
       </Text>

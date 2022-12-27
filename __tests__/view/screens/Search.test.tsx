@@ -18,6 +18,9 @@ describe('Search', () => {
     const searchScreen = await findByTestId('searchScreen')
 
     expect(searchScreen).toBeTruthy()
+
+    const headerTitle = await findByTestId('headerTitle')
+    expect(headerTitle.props.children).toBe('Search')
   })
 
   it('renders with query', async () => {

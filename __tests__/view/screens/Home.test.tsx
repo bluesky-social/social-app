@@ -1,8 +1,12 @@
 import React from 'react'
 import {Home} from '../../../src/view/screens/Home'
-import renderer, {act} from 'react-test-renderer'
-import {render, waitFor} from '../../../jest/test-utils'
-import {mockedMeStore, mockedRootStore} from '../../../__mocks__/state-mock'
+import renderer from 'react-test-renderer'
+import {fireEvent, render, waitFor} from '../../../jest/test-utils'
+import {
+  mockedMeStore,
+  mockedRootStore,
+  mockedShellStore,
+} from '../../../__mocks__/state-mock'
 import {AppState} from 'react-native'
 
 describe('Home', () => {
@@ -18,23 +22,9 @@ describe('Home', () => {
     const feed = await findByTestId('homeFeed')
 
     expect(feed).toBeTruthy()
-  })
 
-  it('renders button when hasNewLatest', async () => {
-    const {findByTestId} = render(<Home {...mockedProps} />, {
-      ...mockedRootStore,
-      me: {
-        ...mockedMeStore,
-        mainFeed: {
-          ...mockedMeStore.mainFeed,
-          hasNewLatest: true,
-          isRefreshing: false,
-        },
-      },
-    })
-
-    const button = await findByTestId('loadLatestButton')
-    expect(button).toBeTruthy()
+    const headerTitle = await findByTestId('headerTitle')
+    expect(headerTitle.props.children).toBe('Bluesky')
   })
 
   it('triggers polls feed', async () => {
@@ -54,6 +44,46 @@ describe('Home', () => {
       'Failed to poll feed',
       'Error checking for latest',
     )
+  })
+
+  it('renders and clicks button when hasNewLatest', async () => {
+    const {findByTestId} = render(<Home {...mockedProps} />, {
+      ...mockedRootStore,
+      me: {
+        ...mockedMeStore,
+        mainFeed: {
+          ...mockedMeStore.mainFeed,
+          hasNewLatest: true,
+          isRefreshing: false,
+        },
+      },
+    })
+
+    const loadLatestButton = await findByTestId('loadLatestButton')
+    expect(loadLatestButton).toBeTruthy()
+
+    fireEvent.press(loadLatestButton)
+    expect(mockedMeStore.mainFeed.refresh).toHaveBeenCalled()
+  })
+
+  it('renders and clicks try again button', async () => {
+    const {findByTestId} = render(<Home {...mockedProps} />)
+
+    const tryAgainButton = await findByTestId('tryAgainButton')
+    expect(tryAgainButton).toBeTruthy()
+
+    fireEvent.press(tryAgainButton)
+    expect(mockedMeStore.mainFeed.refresh).toHaveBeenCalled()
+  })
+
+  it('renders and clicks open composer button', async () => {
+    const {findByTestId} = render(<Home {...mockedProps} />)
+
+    const composePromptButton = await findByTestId('composePromptButton')
+    expect(composePromptButton).toBeTruthy()
+
+    fireEvent.press(composePromptButton)
+    expect(mockedShellStore.openComposer).toHaveBeenCalledWith({})
   })
 
   it('matches snapshot', () => {

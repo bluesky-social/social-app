@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PostRepostedBy matches snapshot 1`] = `
-<View>
+<View
+  testID="postRepostedByView"
+>
   <View
     style={
       Object {
@@ -170,6 +172,7 @@ exports[`PostRepostedBy matches snapshot 1`] = `
             },
           ]
         }
+        testID="headerTitle"
       >
         Reposted by
       </Text>

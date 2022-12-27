@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ProfileFollows matches snapshot 1`] = `
-<View>
+<View
+  testID="profileFollowsView"
+>
   <View
     style={
       Object {
@@ -170,6 +172,7 @@ exports[`ProfileFollows matches snapshot 1`] = `
             },
           ]
         }
+        testID="headerTitle"
       >
         Followed
       </Text>

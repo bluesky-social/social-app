@@ -12,12 +12,19 @@ describe('PostThread', () => {
     },
     visible: true,
   }
+
+  it('renders post screen', async () => {
+    const {findByTestId} = render(<PostThread {...mockedProps} />)
+    const postThreadView = await findByTestId('postThreadView')
+
+    expect(postThreadView).toBeTruthy()
+
+    const headerTitle = await findByTestId('headerTitle')
+    expect(headerTitle.props.children).toBe('Post')
+  })
+
   it('matches snapshot', () => {
     const tree = renderer.create(<PostThread {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
-  })
-
-  it('tests', () => {
-    render(<PostThread {...mockedProps} />)
   })
 })

@@ -9,12 +9,19 @@ describe('Settings', () => {
     params: {},
     visible: true,
   }
+
+  it('renders settings screen', async () => {
+    const {findByTestId} = render(<Settings {...mockedProps} />)
+    const settingsView = await findByTestId('settingsView')
+
+    expect(settingsView).toBeTruthy()
+
+    const headerTitle = await findByTestId('headerTitle')
+    expect(headerTitle.props.children).toBe('Settings')
+  })
+
   it('matches snapshot', () => {
     const tree = renderer.create(<Settings {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
-  })
-
-  it('tests', () => {
-    render(<Settings {...mockedProps} />)
   })
 })

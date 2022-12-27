@@ -19,7 +19,7 @@ export const PostDownvotedBy = ({navIdx, visible, params}: ScreenParams) => {
   }, [store, visible])
 
   return (
-    <View>
+    <View testID="postDownvotedByView">
       <ViewHeader title="Downvoted by" />
       <PostLikedByComponent uri={uri} direction="down" />
     </View>

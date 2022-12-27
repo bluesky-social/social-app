@@ -95,7 +95,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
 
   const renderHeader = () => {
     if (!uiState) {
-      return <View />
+      return <View testID="emptyProfileView" />
     }
     return <ProfileHeader view={uiState.profile} onRefreshAll={onRefresh} />
   }
@@ -236,7 +236,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const title =
     uiState.profile.displayName || uiState.profile.handle || params.name
   return (
-    <View style={styles.container}>
+    <View testID="profileView" style={styles.container}>
       <ViewHeader title={title} />
       {uiState.profile.hasError ? (
         <ErrorScreen

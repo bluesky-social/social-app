@@ -12,12 +12,19 @@ describe('ProfileFollows', () => {
     },
     visible: true,
   }
+
+  it('renders followed screen', async () => {
+    const {findByTestId} = render(<ProfileFollows {...mockedProps} />)
+    const profileFollowsView = await findByTestId('profileFollowsView')
+
+    expect(profileFollowsView).toBeTruthy()
+
+    const headerTitle = await findByTestId('headerTitle')
+    expect(headerTitle.props.children).toBe('Followed')
+  })
+
   it('matches snapshot', () => {
     const tree = renderer.create(<ProfileFollows {...mockedProps} />).toJSON()
     expect(tree).toMatchSnapshot()
-  })
-
-  it('tests', () => {
-    render(<ProfileFollows {...mockedProps} />)
   })
 })

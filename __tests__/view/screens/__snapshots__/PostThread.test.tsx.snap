@@ -7,6 +7,7 @@ exports[`PostThread matches snapshot 1`] = `
       "flex": 1,
     }
   }
+  testID="postThreadView"
 >
   <View
     style={
@@ -176,6 +177,7 @@ exports[`PostThread matches snapshot 1`] = `
             },
           ]
         }
+        testID="headerTitle"
       >
         Post
       </Text>

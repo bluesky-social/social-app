@@ -7,9 +7,9 @@ import {mockedNavigationStore} from '../../../__mocks__/state-mock'
 describe('NotFound', () => {
   it('renders not found screen', async () => {
     const {findByTestId} = render(<NotFound />)
-    const notFoundScreen = await findByTestId('notFound')
+    const notFoundView = await findByTestId('notFoundView')
 
-    expect(notFoundScreen).toBeTruthy()
+    expect(notFoundView).toBeTruthy()
   })
 
   it('navigates home', async () => {

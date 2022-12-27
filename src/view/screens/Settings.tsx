@@ -28,7 +28,7 @@ export const Settings = observer(function Settings({
   }
 
   return (
-    <View style={[s.flex1]}>
+    <View testID="settingsView" style={[s.flex1]}>
       <ViewHeader title="Settings" />
       <View style={[s.mt10, s.pl10, s.pr10]}>
         <View style={[s.flexRow]}>

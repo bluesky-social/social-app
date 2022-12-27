@@ -19,11 +19,13 @@ describe('downloadAndResize', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
-
     const mockedCreateResizedImage =
       ImageResizer.createResizedImage as jest.Mock
     mockedCreateResizedImage.mockResolvedValue(mockResizedImage)
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 
   it('should return resized image for valid URI and options', async () => {

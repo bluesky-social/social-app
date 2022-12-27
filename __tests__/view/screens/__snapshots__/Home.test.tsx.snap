@@ -176,6 +176,7 @@ exports[`Home matches snapshot 1`] = `
             },
           ]
         }
+        testID="headerTitle"
       >
         Bluesky
       </Text>
@@ -417,6 +418,7 @@ exports[`Home matches snapshot 1`] = `
           "paddingVertical": 10,
         }
       }
+      testID="composePromptButton"
     >
       <View
         accessible={true}

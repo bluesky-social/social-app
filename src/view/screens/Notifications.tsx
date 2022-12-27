@@ -32,7 +32,7 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
   }
 
   return (
-    <View style={{flex: 1}}>
+    <View testID="notificationsView" style={{flex: 1}}>
       <ViewHeader title="Notifications" canGoBack={false} />
       <Feed
         view={store.me.notifications}
