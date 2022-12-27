@@ -1,4 +1,4 @@
-import {downloadAndResize, DownloadAndResizeOpts} from '../../src/lib/download'
+import {downloadAndResize, DownloadAndResizeOpts} from '../../src/lib/images'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
 import RNFetchBlob from 'rn-fetch-blob'
 
@@ -16,6 +16,7 @@ describe('downloadAndResize', () => {
 
   const mockResizedImage = {
     path: jest.fn().mockReturnValue('file://resized-image.jpg'),
+    size: 100,
   }
 
   beforeEach(() => {
@@ -39,6 +40,7 @@ describe('downloadAndResize', () => {
       uri: 'https://example.com/image.jpg',
       width: 100,
       height: 100,
+      maxSize: 500000,
       mode: 'cover',
       timeout: 10000,
     }
@@ -58,7 +60,7 @@ describe('downloadAndResize', () => {
       100,
       100,
       'JPEG',
-      0.7,
+      1,
       undefined,
       undefined,
       undefined,
@@ -71,6 +73,7 @@ describe('downloadAndResize', () => {
       uri: 'invalid-uri',
       width: 100,
       height: 100,
+      maxSize: 500000,
       mode: 'cover',
       timeout: 10000,
     }
@@ -85,6 +88,7 @@ describe('downloadAndResize', () => {
       uri: 'https://example.com/image.bmp',
       width: 100,
       height: 100,
+      maxSize: 500000,
       mode: 'cover',
       timeout: 10000,
     }

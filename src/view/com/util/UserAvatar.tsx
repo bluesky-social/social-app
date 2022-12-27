@@ -35,11 +35,11 @@ export function UserAvatar({
           openCamera({
             mediaType: 'photo',
             cropping: true,
-            width: 400,
-            height: 400,
+            width: 1000,
+            height: 1000,
             cropperCircleOverlay: true,
             forceJpg: true, // ios only
-            compressImageQuality: 0.7,
+            compressImageQuality: 1,
           }).then(onSelectNewAvatar)
         },
       },
@@ -52,11 +52,11 @@ export function UserAvatar({
             await openCropper({
               mediaType: 'photo',
               path: item.path,
-              width: 400,
-              height: 400,
+              width: 1000,
+              height: 1000,
               cropperCircleOverlay: true,
               forceJpg: true, // ios only
-              compressImageQuality: 0.7,
+              compressImageQuality: 1,
             }).then(onSelectNewAvatar)
           })
         },
