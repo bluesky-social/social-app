@@ -34,15 +34,15 @@ export function ErrorScreen({
           />
         </View>
       </View>
-      <Text style={[styles.title, theme.typography.h3, pal.text]}>{title}</Text>
-      <Text style={[styles.message, theme.typography.body1, pal.textLight]}>
-        {message}
+      <Text type="h3" style={[styles.title, pal.text]}>
+        {title}
       </Text>
+      <Text style={[styles.message, pal.textLight]}>{message}</Text>
       {details && (
         <Text
+          type="body2"
           style={[
             styles.details,
-            theme.typography.body2,
             pal.textInverted,
             {backgroundColor: theme.palette.default.background},
           ]}>
@@ -55,7 +55,7 @@ export function ErrorScreen({
             style={[styles.btn, {backgroundColor: theme.palette.error.icon}]}
             onPress={onPressTryAgain}>
             <FontAwesomeIcon icon="arrows-rotate" style={pal.text} size={16} />
-            <Text style={[styles.btnText, theme.typography.button, pal.text]}>
+            <Text type="button" style={[styles.btnText, pal.text]}>
               Try again
             </Text>
           </TouchableOpacity>

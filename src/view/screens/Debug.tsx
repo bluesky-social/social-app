@@ -1,11 +1,11 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
-import {Text} from '../com/util/Text'
 import {ThemeProvider, useTheme} from '../lib/ThemeContext'
 import {PaletteColorName} from '../lib/ThemeContext'
 import {usePalette} from '../lib/hooks/usePalette'
 
+import {Text} from '../com/util/Text'
 import {ViewSelector} from '../com/util/ViewSelector'
 import {Button} from '../com/util/forms/Button'
 import {ToggleButton} from '../com/util/forms/ToggleButton'
@@ -65,10 +65,9 @@ export const Debug = () => {
 }
 
 function Heading({label}: {label: string}) {
-  const theme = useTheme()
   return (
     <View style={{paddingTop: 10, paddingBottom: 5}}>
-      <Text style={theme.typography.h3}>{label}</Text>
+      <Text type="h3">{label}</Text>
     </View>
   )
 }
@@ -153,14 +152,12 @@ function PaletteView({palette}: {palette: PaletteColorName}) {
           marginBottom: 5,
         },
       ]}>
-      <Text style={[theme.typography.body1, pal.text]}>{palette} colors</Text>
-      <Text style={[theme.typography.body1, pal.textLight]}>Light text</Text>
-      <Text style={[theme.typography.body1, pal.link]}>Link text</Text>
+      <Text style={[pal.text]}>{palette} colors</Text>
+      <Text style={[pal.textLight]}>Light text</Text>
+      <Text style={[pal.link]}>Link text</Text>
       {palette !== 'default' && (
         <View style={[defaultPal.view]}>
-          <Text style={[theme.typography.body1, pal.textInverted]}>
-            Inverted text
-          </Text>
+          <Text style={[pal.textInverted]}>Inverted text</Text>
         </View>
       )}
     </View>
@@ -168,7 +165,6 @@ function PaletteView({palette}: {palette: PaletteColorName}) {
 }
 
 function TypographyView() {
-  const theme = useTheme()
   const pal = usePalette('default')
   return (
     <View
@@ -180,17 +176,39 @@ function TypographyView() {
           padding: 5,
         },
       ]}>
-      <Text style={[pal.text, theme.typography.h1]}>Heading 1</Text>
-      <Text style={[pal.text, theme.typography.h2]}>Heading 2</Text>
-      <Text style={[pal.text, theme.typography.h3]}>Heading 3</Text>
-      <Text style={[pal.text, theme.typography.h4]}>Heading 4</Text>
-      <Text style={[pal.text, theme.typography.subtitle1]}>Subtitle 1</Text>
-      <Text style={[pal.text, theme.typography.subtitle2]}>Subtitle 2</Text>
-      <Text style={[pal.text, theme.typography.body1]}>Body 1</Text>
-      <Text style={[pal.text, theme.typography.body2]}>Body 2</Text>
-      <Text style={[pal.text, theme.typography.button]}>Button</Text>
-      <Text style={[pal.text, theme.typography.caption]}>Caption</Text>
-      <Text style={[pal.text, theme.typography.overline]}>Overline</Text>
+      <Text type="h1" style={[pal.text]}>
+        Heading 1
+      </Text>
+      <Text type="h2" style={[pal.text]}>
+        Heading 2
+      </Text>
+      <Text type="h3" style={[pal.text]}>
+        Heading 3
+      </Text>
+      <Text type="h4" style={[pal.text]}>
+        Heading 4
+      </Text>
+      <Text type="subtitle1" style={[pal.text]}>
+        Subtitle 1
+      </Text>
+      <Text type="subtitle2" style={[pal.text]}>
+        Subtitle 2
+      </Text>
+      <Text type="body1" style={[pal.text]}>
+        Body 1
+      </Text>
+      <Text type="body2" style={[pal.text]}>
+        Body 2
+      </Text>
+      <Text type="button" style={[pal.text]}>
+        Button
+      </Text>
+      <Text type="caption" style={[pal.text]}>
+        Caption
+      </Text>
+      <Text type="overline" style={[pal.text]}>
+        Overline
+      </Text>
     </View>
   )
 }

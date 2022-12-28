@@ -25,7 +25,6 @@ export function ErrorMessage({
 }) {
   const theme = useTheme()
   const pal = usePalette('error')
-  const inner = <></>
   return (
     <View style={[styles.outer, pal.view, style]}>
       <View
@@ -33,7 +32,8 @@ export function ErrorMessage({
         <FontAwesomeIcon icon="exclamation" style={pal.text} size={16} />
       </View>
       <Text
-        style={[styles.message, theme.typography.body2, pal.text]}
+        type="body2"
+        style={[styles.message, pal.text]}
         numberOfLines={numberOfLines}>
         {message}
       </Text>

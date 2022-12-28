@@ -106,7 +106,7 @@ export function RadioButton({
             <View style={[circleFillStyle, styles.circleFill]} />
           ) : undefined}
         </View>
-        <Text style={[theme.typography.button, labelStyle, styles.label]}>
+        <Text type="button" style={[labelStyle, styles.label]}>
           {label}
         </Text>
       </View>

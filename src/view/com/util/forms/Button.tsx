@@ -88,7 +88,9 @@ export function Button({
       style={[outerStyle, styles.outer, style]}
       onPress={onPress}>
       {label ? (
-        <Text style={[labelStyle, styles.label]}>{label}</Text>
+        <Text type="button" style={[labelStyle]}>
+          {label}
+        </Text>
       ) : (
         children
       )}
@@ -100,8 +102,5 @@ const styles = StyleSheet.create({
   outer: {
     paddingHorizontal: 10,
     paddingVertical: 8,
-  },
-  label: {
-    fontSize: 17,
   },
 })
