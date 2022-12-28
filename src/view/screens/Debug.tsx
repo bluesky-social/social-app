@@ -6,42 +6,90 @@ import {ThemeProvider, useTheme} from '../lib/ThemeContext'
 import {PaletteColorName} from '../lib/ThemeContext'
 import {usePalette} from '../lib/hooks/usePalette'
 
+import {ViewSelector} from '../com/util/ViewSelector'
 import {Button} from '../com/util/forms/Button'
 import {RadioGroup} from '../com/util/forms/RadioGroup'
+
+const MAIN_VIEWS = ['Base', 'Controls']
 
 export const Debug = () => {
   const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
     'light',
   )
+  const [currentView, setCurrentView] = React.useState<number>(0)
   const onToggleColorScheme = () => {
     setColorScheme(colorScheme === 'light' ? 'dark' : 'light')
   }
-  const theme = useTheme()
-  return (
-    <ThemeProvider theme={colorScheme}>
-      <View style={{flex: 1}}>
-        <ViewHeader title="Debug panel" />
-        <ScrollView style={{flex: 1, paddingHorizontal: 10}}>
+
+  const renderItem = item => {
+    return (
+      <View>
+        <View style={{paddingTop: 10, paddingHorizontal: 10}}>
           <Button
             type="primary-outline"
             onPress={onToggleColorScheme}
             label={colorScheme}
           />
-          <Text style={theme.typography.h1}>Radio Buttons</Text>
-          <RadioButtonsView />
-          <Text style={theme.typography.h1}>Buttons</Text>
-          <ButtonsView />
-          <Text style={theme.typography.h1}>Palettes</Text>
-          <PaletteView palette="default" />
-          <PaletteView palette="primary" />
-          <PaletteView palette="secondary" />
-          <PaletteView palette="error" />
-          <Text style={theme.typography.h1}>Typography</Text>
-          <TypographyView />
-          <View style={{height: 200}} />
-        </ScrollView>
+        </View>
+        {item.currentView === 1 ? (
+          <ControlsView key="controls" />
+        ) : (
+          <BaseView key="base" />
+        )}
+        <View style={{height: 200}} />
+      </View>
+    )
+  }
+
+  const items = [{currentView}]
+
+  return (
+    <ThemeProvider theme={colorScheme}>
+      <View style={{flex: 1}}>
+        <ViewHeader title="Debug panel" />
+        <ViewSelector
+          swipeEnabled
+          sections={MAIN_VIEWS}
+          items={items}
+          renderItem={renderItem}
+          onSelectView={setCurrentView}
+        />
       </View>
     </ThemeProvider>
+  )
+}
+
+function Heading({label}: {label: string}) {
+  const theme = useTheme()
+  return (
+    <View style={{paddingTop: 10, paddingBottom: 5}}>
+      <Text style={theme.typography.h2}>{label}</Text>
+    </View>
+  )
+}
+
+function BaseView() {
+  return (
+    <View style={{paddingHorizontal: 10}}>
+      <Heading label="Palettes" />
+      <PaletteView palette="default" />
+      <PaletteView palette="primary" />
+      <PaletteView palette="secondary" />
+      <PaletteView palette="error" />
+      <Heading label="Typography" />
+      <TypographyView />
+    </View>
+  )
+}
+
+function ControlsView() {
+  return (
+    <ScrollView style={{paddingHorizontal: 10}}>
+      <Heading label="Buttons" />
+      <ButtonsView />
+      <Heading label="Radio Buttons" />
+      <RadioButtonsView />
+    </ScrollView>
   )
 }
 
