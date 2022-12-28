@@ -11,7 +11,7 @@ import {
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import RootSiblings from 'react-native-root-siblings'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from '../Text'
+import {Text} from '../text/Text'
 import {Button, ButtonType} from './Button'
 import {colors} from '../../../lib/styles'
 import {toShareUrl} from '../../../../lib/strings'

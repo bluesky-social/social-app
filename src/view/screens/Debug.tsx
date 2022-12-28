@@ -5,7 +5,7 @@ import {ThemeProvider} from '../lib/ThemeContext'
 import {PaletteColorName} from '../lib/ThemeContext'
 import {usePalette} from '../lib/hooks/usePalette'
 
-import {Text} from '../com/util/Text'
+import {Text} from '../com/util/text/Text'
 import {ViewSelector} from '../com/util/ViewSelector'
 import {Button} from '../com/util/forms/Button'
 import {DropdownButton, DropdownItem} from '../com/util/forms/DropdownButton'

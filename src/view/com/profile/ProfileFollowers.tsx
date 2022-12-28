@@ -6,7 +6,7 @@ import {
   FollowerItem,
 } from '../../../state/models/user-followers-view'
 import {Link} from '../util/Link'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'

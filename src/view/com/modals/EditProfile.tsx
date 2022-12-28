@@ -9,7 +9,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {Image as PickedImage} from 'react-native-image-crop-picker'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from '../../../state'
 import {ProfileViewModel} from '../../../state/models/profile-view'

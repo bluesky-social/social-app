@@ -17,7 +17,7 @@ import {
   MagnifyingGlassIcon,
 } from '../../lib/icons'
 import {UserAvatar} from '../../com/util/UserAvatar'
-import {Text} from '../../com/util/Text'
+import {Text} from '../../com/util/text/Text'
 import {CreateSceneModal} from '../../../state/models/shell-ui'
 
 export const Menu = ({

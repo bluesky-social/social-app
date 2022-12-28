@@ -3,7 +3,7 @@ import {observer} from 'mobx-react-lite'
 import {View} from 'react-native'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import {PostModel} from '../../../state/models/post'
 import {useStores} from '../../../state'
 

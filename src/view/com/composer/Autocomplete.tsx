@@ -6,7 +6,7 @@ import {
   useWindowDimensions,
 } from 'react-native'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import {colors} from '../../lib/styles'
 
 interface AutocompleteItem {

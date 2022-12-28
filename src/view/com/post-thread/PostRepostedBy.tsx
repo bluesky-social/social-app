@@ -8,7 +8,7 @@ import {
 import {UserAvatar} from '../util/UserAvatar'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Link} from '../util/Link'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 

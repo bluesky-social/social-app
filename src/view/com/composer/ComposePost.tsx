@@ -15,7 +15,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete-view'
 import {Autocomplete} from './Autocomplete'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
 // @ts-ignore no type definition -prf
 import ProgressCircle from 'react-native-progress/Circle'

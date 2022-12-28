@@ -9,7 +9,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from '../../../state'
 import {s, colors, gradients} from '../../lib/styles'
 import {RadioGroup, RadioGroupItem} from '../util/forms/RadioGroup'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 
 const ITEMS: RadioGroupItem[] = [

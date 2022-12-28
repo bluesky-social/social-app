@@ -15,7 +15,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import RootSiblings from 'react-native-root-siblings'
-import {Text} from './Text'
+import {Text} from './text/Text'
 import {colors} from '../../lib/styles'
 
 interface PickerItem {

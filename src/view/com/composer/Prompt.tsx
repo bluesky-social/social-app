@@ -3,7 +3,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {colors} from '../../lib/styles'
 import {useStores} from '../../../state'
 import {UserAvatar} from '../util/UserAvatar'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 
 export function ComposePrompt({
   noAvi = false,

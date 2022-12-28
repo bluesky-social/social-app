@@ -1,9 +1,11 @@
 import React from 'react'
 import {TextStyle, StyleProp} from 'react-native'
-import {TextLink} from './Link'
+import {TextLink} from '../Link'
 import {Text} from './Text'
-import {s} from '../../lib/styles'
-import {toShortUrl} from '../../../lib/strings'
+import {s} from '../../../lib/styles'
+import {toShortUrl} from '../../../../lib/strings'
+import {TypographyVariant} from '../../../lib/ThemeContext'
+import {usePalette} from '../../../lib/hooks/usePalette'
 
 type TextSlice = {start: number; end: number}
 type Entity = {
@@ -13,16 +15,19 @@ type Entity = {
 }
 
 export function RichText({
+  type = 'body1',
   text,
   entities,
   style,
   numberOfLines,
 }: {
+  type: TypographyVariant
   text: string
   entities?: Entity[]
   style?: StyleProp<TextStyle>
   numberOfLines?: number
 }) {
+  const pal = usePalette('default')
   if (!entities?.length) {
     if (/^\p{Extended_Pictographic}+$/u.test(text) && text.length <= 5) {
       style = {
@@ -47,18 +52,20 @@ export function RichText({
         els.push(
           <TextLink
             key={key}
+            type={type}
             text={segment.text}
             href={`/profile/${segment.entity.value}`}
-            style={[style, s.blue3]}
+            style={[style, pal.link]}
           />,
         )
       } else if (segment.entity.type === 'link') {
         els.push(
           <TextLink
             key={key}
+            type={type}
             text={toShortUrl(segment.text)}
             href={segment.entity.value}
-            style={[style, s.blue3]}
+            style={[style, pal.link]}
           />,
         )
       }
@@ -66,7 +73,7 @@ export function RichText({
     key++
   }
   return (
-    <Text style={style} numberOfLines={numberOfLines}>
+    <Text type={type} style={[pal.text, style]} numberOfLines={numberOfLines}>
       {els}
     </Text>
   )

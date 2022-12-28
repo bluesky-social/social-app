@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from '../Text'
+import {Text} from '../text/Text'
 import {colors} from '../../../lib/styles'
 import {useTheme} from '../../../lib/ThemeContext'
 import {usePalette} from '../../../lib/hooks/usePalette'
