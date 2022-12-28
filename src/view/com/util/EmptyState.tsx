@@ -2,9 +2,9 @@ import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from './Text'
+import {Text} from './text/Text'
 import {UserGroupIcon} from '../../lib/icons'
-import {colors} from '../../lib/styles'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export function EmptyState({
   icon,
@@ -15,16 +15,23 @@ export function EmptyState({
   message: string
   style?: StyleProp<ViewStyle>
 }) {
+  const pal = usePalette('default')
   return (
     <View style={[styles.container, style]}>
       <View style={styles.iconContainer}>
         {icon === 'user-group' ? (
           <UserGroupIcon size="64" style={styles.icon} />
         ) : (
-          <FontAwesomeIcon icon={icon} size={64} style={styles.icon} />
+          <FontAwesomeIcon
+            icon={icon}
+            size={64}
+            style={[styles.icon, pal.textLight]}
+          />
         )}
       </View>
-      <Text style={styles.text}>{message}</Text>
+      <Text type="body1" style={[pal.textLight, styles.text]}>
+        {message}
+      </Text>
     </View>
   )
 }
@@ -40,12 +47,9 @@ const styles = StyleSheet.create({
   icon: {
     marginLeft: 'auto',
     marginRight: 'auto',
-    color: colors.gray3,
   },
   text: {
     textAlign: 'center',
-    color: colors.gray5,
     paddingTop: 16,
-    fontSize: 16,
   },
 })

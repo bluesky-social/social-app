@@ -29,7 +29,7 @@ import {Onboard} from '../../screens/Onboard'
 import {HorzSwipe} from '../../com/util/gestures/HorzSwipe'
 import {Modal} from '../../com/modals/Modal'
 import {Lightbox} from '../../com/lightbox/Lightbox'
-import {Text} from '../../com/util/Text'
+import {Text} from '../../com/util/text/Text'
 import {TabsSelector} from './TabsSelector'
 import {Composer} from './Composer'
 import {s, colors} from '../../lib/styles'
@@ -42,7 +42,7 @@ import {
   BellIcon,
   BellIconSolid,
 } from '../../lib/icons'
-import {useAnimatedValue} from '../../lib/useAnimatedValue'
+import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 
 const Btn = ({
   icon,

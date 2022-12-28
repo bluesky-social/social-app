@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserAvatar} from './UserAvatar'
-import {Text} from './Text'
+import {Text} from './text/Text'
 import {s, colors} from '../../lib/styles'
 import {MagnifyingGlassIcon} from '../../lib/icons'
 import {useStores} from '../../../state'

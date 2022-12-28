@@ -12,14 +12,14 @@ import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedItem} from '../com/posts/FeedItem'
 import {ProfileCard} from '../com/profile/ProfileCard'
 import {PostFeedLoadingPlaceholder} from '../com/util/LoadingPlaceholder'
-import {ErrorScreen} from '../com/util/ErrorScreen'
-import {ErrorMessage} from '../com/util/ErrorMessage'
+import {ErrorScreen} from '../com/util/error/ErrorScreen'
+import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {EmptyState} from '../com/util/EmptyState'
-import {Text} from '../com/util/Text'
+import {Text} from '../com/util/text/Text'
 import {ViewHeader} from '../com/util/ViewHeader'
 import * as Toast from '../com/util/Toast'
 import {s, colors} from '../lib/styles'
-import {useOnMainScroll} from '../lib/useOnMainScroll'
+import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const END_ITEM = {_reactKey: '__end__'}
@@ -116,7 +116,6 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
       renderItem = (item: any) => (
         <View style={s.p5}>
           <ErrorMessage
-            dark
             message={item.error}
             onPressTryAgain={onPressTryAgain}
           />

@@ -9,7 +9,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {Text} from '../Text'
+import {Text} from '../text/Text'
 import {colors} from '../../../lib/styles'
 
 const MAX_HEIGHT = 300

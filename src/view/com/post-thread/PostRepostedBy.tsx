@@ -6,9 +6,9 @@ import {
   RepostedByViewItemModel,
 } from '../../../state/models/reposted-by-view'
 import {UserAvatar} from '../util/UserAvatar'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Link} from '../util/Link'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 
@@ -57,7 +57,6 @@ export const PostRepostedBy = observer(function PostRepostedBy({
     return (
       <View>
         <ErrorMessage
-          dark
           message={view.error}
           style={{margin: 6}}
           onPressTryAgain={onRefresh}

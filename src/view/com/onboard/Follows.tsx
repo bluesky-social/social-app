@@ -2,7 +2,7 @@ import React from 'react'
 import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {SuggestedFollows} from '../discover/SuggestedFollows'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import {useStores} from '../../../state'
 import {s} from '../../lib/styles'
 

@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native'
-import {RootStoreModel} from '../../state'
+import {RootStoreModel} from '../../../state'
 
 export type OnScrollCb = (
   event: NativeSyntheticEvent<NativeScrollEvent>,

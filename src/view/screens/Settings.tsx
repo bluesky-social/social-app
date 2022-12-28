@@ -6,7 +6,7 @@ import {ScreenParams} from '../routes'
 import {s, colors} from '../lib/styles'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Link} from '../com/util/Link'
-import {Text} from '../com/util/Text'
+import {Text} from '../com/util/text/Text'
 import {UserAvatar} from '../com/util/UserAvatar'
 
 export const Settings = observer(function Settings({
@@ -56,6 +56,9 @@ export const Settings = observer(function Settings({
               <Text style={[s.gray5]}>@{store.me.handle}</Text>
             </View>
           </View>
+        </Link>
+        <Link href="/debug" title="Debug tools">
+          <Text style={s.blue3}>Debug tools</Text>
         </Link>
       </View>
     </View>

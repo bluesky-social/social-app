@@ -5,7 +5,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import {Text} from './Text'
+import {Text} from './text/Text'
 import {colors} from '../../lib/styles'
 
 interface Layout {
