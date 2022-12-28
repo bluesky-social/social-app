@@ -10,7 +10,7 @@ import {Text} from '../com/util/Text'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
 import {s, colors} from '../lib/styles'
-import {useOnMainScroll} from '../lib/useOnMainScroll'
+import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
 import {clamp} from 'lodash'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}

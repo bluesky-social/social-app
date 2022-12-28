@@ -5,7 +5,7 @@ import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
 import {Text} from './Text'
 import {UpIcon, UpIconSolid} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
-import {useAnimatedValue} from '../../lib/useAnimatedValue'
+import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 
 interface PostCtrlsOpts {
   big?: boolean

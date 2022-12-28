@@ -5,6 +5,7 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import SplashScreen from 'react-native-splash-screen'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {ThemeProvider} from './view/lib/ThemeContext'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {MobileShell} from './view/shell/mobile'
@@ -40,9 +41,11 @@ function App() {
     <GestureHandlerRootView style={{flex: 1}}>
       <RootSiblingParent>
         <RootStoreProvider value={rootStore}>
-          <SafeAreaProvider>
-            <MobileShell />
-          </SafeAreaProvider>
+          <ThemeProvider>
+            <SafeAreaProvider>
+              <MobileShell />
+            </SafeAreaProvider>
+          </ThemeProvider>
         </RootStoreProvider>
       </RootSiblingParent>
     </GestureHandlerRootView>

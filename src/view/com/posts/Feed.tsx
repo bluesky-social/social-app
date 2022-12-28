@@ -13,7 +13,7 @@ import {ErrorMessage} from '../util/ErrorMessage'
 import {FeedModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
 import {ComposePrompt} from '../composer/Prompt'
-import {OnScrollCb} from '../../lib/useOnMainScroll'
+import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
 
 const COMPOSE_PROMPT_ITEM = {_reactKey: '__prompt__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}

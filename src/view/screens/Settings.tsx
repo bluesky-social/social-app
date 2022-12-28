@@ -57,6 +57,9 @@ export const Settings = observer(function Settings({
             </View>
           </View>
         </Link>
+        <Link href="/debug" title="Debug tools">
+          <Text style={s.blue3}>Debug tools</Text>
+        </Link>
       </View>
     </View>
   )

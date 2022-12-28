@@ -19,7 +19,7 @@ import {Text} from '../com/util/Text'
 import {ViewHeader} from '../com/util/ViewHeader'
 import * as Toast from '../com/util/Toast'
 import {s, colors} from '../lib/styles'
-import {useOnMainScroll} from '../lib/useOnMainScroll'
+import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const END_ITEM = {_reactKey: '__end__'}

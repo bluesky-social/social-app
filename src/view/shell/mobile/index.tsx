@@ -42,7 +42,7 @@ import {
   BellIcon,
   BellIconSolid,
 } from '../../lib/icons'
-import {useAnimatedValue} from '../../lib/useAnimatedValue'
+import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 
 const Btn = ({
   icon,

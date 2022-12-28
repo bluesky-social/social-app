@@ -7,7 +7,7 @@ import {Text} from '../com/util/Text'
 import {colors} from '../lib/styles'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
-import {useAnimatedValue} from '../lib/useAnimatedValue'
+import {useAnimatedValue} from '../lib/hooks/useAnimatedValue'
 
 export const Contacts = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()

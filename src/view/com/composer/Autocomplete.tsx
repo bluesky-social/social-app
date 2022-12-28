@@ -5,7 +5,7 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native'
-import {useAnimatedValue} from '../../lib/useAnimatedValue'
+import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 import {Text} from '../util/Text'
 import {colors} from '../../lib/styles'
 

@@ -10,7 +10,7 @@ import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {SwipeAndZoom, Dir} from '../util/gestures/SwipeAndZoom'
 import {useStores} from '../../../state'
-import {useAnimatedValue} from '../../lib/useAnimatedValue'
+import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 
 import * as models from '../../../state/models/shell-ui'
 
