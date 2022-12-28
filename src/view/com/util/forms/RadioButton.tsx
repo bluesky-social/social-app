@@ -106,7 +106,9 @@ export function RadioButton({
             <View style={[circleFillStyle, styles.circleFill]} />
           ) : undefined}
         </View>
-        <Text style={[labelStyle, styles.label]}>{label}</Text>
+        <Text style={[theme.typography.button, labelStyle, styles.label]}>
+          {label}
+        </Text>
       </View>
     </Button>
   )
@@ -118,20 +120,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   circle: {
-    width: 30,
-    height: 30,
+    width: 26,
+    height: 26,
     borderRadius: 15,
     padding: 4,
     borderWidth: 1,
     marginRight: 10,
   },
   circleFill: {
-    width: 20,
-    height: 20,
+    width: 16,
+    height: 16,
     borderRadius: 10,
   },
   label: {
     flex: 1,
-    fontSize: 17,
   },
 })
