@@ -57,7 +57,6 @@ export const PostThread = observer(function PostThread({
     return (
       <View>
         <ErrorMessage
-          dark
           message={view.error}
           style={{margin: 6}}
           onPressTryAgain={onRefresh}

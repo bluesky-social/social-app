@@ -27,6 +27,9 @@ export function ToggleButton({
     secondary: {
       borderColor: theme.palette.secondary.text,
     },
+    inverted: {
+      borderColor: theme.palette.inverted.text,
+    },
     'primary-outline': {
       borderColor: theme.palette.primary.border,
     },
@@ -52,6 +55,10 @@ export function ToggleButton({
       },
       secondary: {
         backgroundColor: theme.palette.secondary.text,
+        opacity: isSelected ? 1 : 0.33,
+      },
+      inverted: {
+        backgroundColor: theme.palette.inverted.text,
         opacity: isSelected ? 1 : 0.33,
       },
       'primary-outline': {
@@ -85,6 +92,10 @@ export function ToggleButton({
     secondary: {
       color: theme.palette.secondary.text,
       fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
+    },
+    inverted: {
+      color: theme.palette.inverted.text,
+      fontWeight: theme.palette.inverted.isLowContrast ? '500' : undefined,
     },
     'primary-outline': {
       color: theme.palette.primary.textInverted,

@@ -34,6 +34,16 @@ export const defaultTheme: Theme = {
       border: colors.green4,
       icon: colors.green4,
     },
+    inverted: {
+      isLowContrast: true,
+      background: colors.black,
+      text: colors.white,
+      textLight: colors.gray3,
+      textInverted: colors.black,
+      link: colors.blue2,
+      border: colors.gray3,
+      icon: colors.gray5,
+    },
     error: {
       isLowContrast: true,
       background: colors.red3,
@@ -131,6 +141,16 @@ export const darkTheme: Theme = {
     secondary: {
       ...defaultTheme.palette.secondary,
       textInverted: colors.green2,
+    },
+    inverted: {
+      isLowContrast: false,
+      background: colors.white,
+      text: colors.black,
+      textLight: colors.gray5,
+      textInverted: colors.white,
+      link: colors.blue3,
+      border: colors.gray3,
+      icon: colors.gray1,
     },
   },
 }

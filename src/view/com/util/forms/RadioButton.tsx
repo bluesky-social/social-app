@@ -26,6 +26,9 @@ export function RadioButton({
     secondary: {
       borderColor: theme.palette.secondary.text,
     },
+    inverted: {
+      borderColor: theme.palette.inverted.text,
+    },
     'primary-outline': {
       borderColor: theme.palette.primary.border,
     },
@@ -50,6 +53,9 @@ export function RadioButton({
       },
       secondary: {
         backgroundColor: theme.palette.secondary.text,
+      },
+      inverted: {
+        backgroundColor: theme.palette.inverted.text,
       },
       'primary-outline': {
         backgroundColor: theme.palette.primary.background,
@@ -76,6 +82,10 @@ export function RadioButton({
     secondary: {
       color: theme.palette.secondary.text,
       fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
+    },
+    inverted: {
+      color: theme.palette.inverted.text,
+      fontWeight: theme.palette.inverted.isLowContrast ? '500' : undefined,
     },
     'primary-outline': {
       color: theme.palette.primary.textInverted,

@@ -80,7 +80,6 @@ export const Feed = observer(function Feed({
       {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
       {feed.hasError && (
         <ErrorMessage
-          dark
           message={feed.error}
           style={{margin: 6}}
           onPressTryAgain={onPressTryAgain}

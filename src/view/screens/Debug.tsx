@@ -7,6 +7,7 @@ import {usePalette} from '../lib/hooks/usePalette'
 
 import {Text} from '../com/util/text/Text'
 import {ViewSelector} from '../com/util/ViewSelector'
+import {EmptyState} from '../com/util/EmptyState'
 import {Button} from '../com/util/forms/Button'
 import {DropdownButton, DropdownItem} from '../com/util/forms/DropdownButton'
 import {ToggleButton} from '../com/util/forms/ToggleButton'
@@ -20,10 +21,28 @@ export const Debug = () => {
   const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
     'light',
   )
-  const [currentView, setCurrentView] = React.useState<number>(0)
   const onToggleColorScheme = () => {
     setColorScheme(colorScheme === 'light' ? 'dark' : 'light')
   }
+  return (
+    <ThemeProvider theme={colorScheme}>
+      <DebugInner
+        colorScheme={colorScheme}
+        onToggleColorScheme={onToggleColorScheme}
+      />
+    </ThemeProvider>
+  )
+}
+
+function DebugInner({
+  colorScheme,
+  onToggleColorScheme,
+}: {
+  colorScheme: 'light' | 'dark'
+  onToggleColorScheme: () => void
+}) {
+  const [currentView, setCurrentView] = React.useState<number>(0)
+  const pal = usePalette('default')
 
   const renderItem = item => {
     return (
@@ -50,25 +69,26 @@ export const Debug = () => {
   const items = [{currentView}]
 
   return (
-    <ThemeProvider theme={colorScheme}>
-      <View style={{flex: 1}}>
-        <ViewHeader title="Debug panel" />
-        <ViewSelector
-          swipeEnabled
-          sections={MAIN_VIEWS}
-          items={items}
-          renderItem={renderItem}
-          onSelectView={setCurrentView}
-        />
-      </View>
-    </ThemeProvider>
+    <View style={[{flex: 1}, pal.view]}>
+      <ViewHeader title="Debug panel" />
+      <ViewSelector
+        swipeEnabled
+        sections={MAIN_VIEWS}
+        items={items}
+        renderItem={renderItem}
+        onSelectView={setCurrentView}
+      />
+    </View>
   )
 }
 
 function Heading({label}: {label: string}) {
+  const pal = usePalette('default')
   return (
     <View style={{paddingTop: 10, paddingBottom: 5}}>
-      <Text type="h3">{label}</Text>
+      <Text type="h3" style={pal.text}>
+        {label}
+      </Text>
     </View>
   )
 }
@@ -80,9 +100,12 @@ function BaseView() {
       <PaletteView palette="default" />
       <PaletteView palette="primary" />
       <PaletteView palette="secondary" />
+      <PaletteView palette="inverted" />
       <PaletteView palette="error" />
       <Heading label="Typography" />
       <TypographyView />
+      <Heading label="Empty state" />
+      <EmptyStateView />
       <View style={{height: 200}} />
     </View>
   )
@@ -169,15 +192,7 @@ function PaletteView({palette}: {palette: PaletteColorName}) {
 function TypographyView() {
   const pal = usePalette('default')
   return (
-    <View
-      style={[
-        pal.view,
-        pal.border,
-        {
-          marginBottom: 5,
-          padding: 5,
-        },
-      ]}>
+    <View style={[pal.view]}>
       <Text type="h1" style={[pal.text]}>
         Heading 1
       </Text>
@@ -215,19 +230,15 @@ function TypographyView() {
   )
 }
 
+function EmptyStateView() {
+  return <EmptyState icon="bars" message="This is an empty state" />
+}
+
 function ButtonsView() {
   const defaultPal = usePalette('default')
   const buttonStyles = {marginRight: 5}
   return (
-    <View
-      style={[
-        defaultPal.view,
-        defaultPal.border,
-        {
-          marginBottom: 5,
-          padding: 5,
-        },
-      ]}>
+    <View style={[defaultPal.view]}>
       <View
         style={{
           flexDirection: 'row',
@@ -235,6 +246,7 @@ function ButtonsView() {
         }}>
         <Button type="primary" label="Primary solid" style={buttonStyles} />
         <Button type="secondary" label="Secondary solid" style={buttonStyles} />
+        <Button type="inverted" label="Inverted solid" style={buttonStyles} />
       </View>
       <View style={{flexDirection: 'row'}}>
         <Button
@@ -291,15 +303,7 @@ const DROPDOWN_ITEMS: DropdownItem[] = [
 function DropdownButtonsView() {
   const defaultPal = usePalette('default')
   return (
-    <View
-      style={[
-        defaultPal.view,
-        defaultPal.border,
-        {
-          marginBottom: 5,
-          padding: 5,
-        },
-      ]}>
+    <View style={[defaultPal.view]}>
       <View
         style={{
           marginBottom: 5,
@@ -329,15 +333,7 @@ function ToggleButtonsView() {
   const [isSelected, setIsSelected] = React.useState(false)
   const onToggle = () => setIsSelected(!isSelected)
   return (
-    <View
-      style={[
-        defaultPal.view,
-        defaultPal.border,
-        {
-          marginBottom: 5,
-          padding: 5,
-        },
-      ]}>
+    <View style={[defaultPal.view]}>
       <ToggleButton
         type="primary"
         label="Primary solid"
@@ -348,6 +344,13 @@ function ToggleButtonsView() {
       <ToggleButton
         type="secondary"
         label="Secondary solid"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="inverted"
+        label="Inverted solid"
         style={buttonStyles}
         isSelected={isSelected}
         onPress={onToggle}
@@ -395,6 +398,7 @@ const RADIO_BUTTON_ITEMS = [
   {key: 'default-light', label: 'Default Light'},
   {key: 'primary', label: 'Primary'},
   {key: 'secondary', label: 'Secondary'},
+  {key: 'inverted', label: 'Inverted'},
   {key: 'primary-outline', label: 'Primary Outline'},
   {key: 'secondary-outline', label: 'Secondary Outline'},
   {key: 'primary-light', label: 'Primary Light'},
@@ -404,15 +408,7 @@ function RadioButtonsView() {
   const defaultPal = usePalette('default')
   const [rgType, setRgType] = React.useState('default-light')
   return (
-    <View
-      style={[
-        defaultPal.view,
-        defaultPal.border,
-        {
-          marginBottom: 5,
-          padding: 5,
-        },
-      ]}>
+    <View style={[defaultPal.view]}>
       <RadioGroup
         type={rgType}
         items={RADIO_BUTTON_ITEMS}

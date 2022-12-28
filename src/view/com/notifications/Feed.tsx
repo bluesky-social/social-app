@@ -54,7 +54,6 @@ export const Feed = observer(function Feed({
       {view.isLoading && !data && <NotificationFeedLoadingPlaceholder />}
       {view.hasError && (
         <ErrorMessage
-          dark
           message={view.error}
           style={{margin: 6}}
           onPressTryAgain={onPressTryAgain}

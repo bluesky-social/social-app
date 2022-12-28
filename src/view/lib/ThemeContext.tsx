@@ -4,7 +4,12 @@ import {darkTheme, defaultTheme} from './themes'
 
 export type ColorScheme = 'light' | 'dark'
 
-export type PaletteColorName = 'default' | 'primary' | 'secondary' | 'error'
+export type PaletteColorName =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'inverted'
+  | 'error'
 export type PaletteColor = {
   isLowContrast: boolean
   background: string

@@ -57,7 +57,6 @@ export const PostRepostedBy = observer(function PostRepostedBy({
     return (
       <View>
         <ErrorMessage
-          dark
           message={view.error}
           style={{margin: 6}}
           onPressTryAgain={onRefresh}

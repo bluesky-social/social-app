@@ -57,7 +57,6 @@ export const PostVotedBy = observer(function PostVotedBy({
     return (
       <View>
         <ErrorMessage
-          dark
           message={view.error}
           style={{margin: 6}}
           onPressTryAgain={onRefresh}

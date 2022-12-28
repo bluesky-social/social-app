@@ -49,7 +49,6 @@ export const ProfileMembers = observer(function ProfileMembers({
     return (
       <View>
         <ErrorMessage
-          dark
           message={view.error}
           style={{margin: 6}}
           onPressTryAgain={onRefresh}

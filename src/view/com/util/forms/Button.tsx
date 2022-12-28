@@ -13,6 +13,7 @@ import {choose} from '../../../../lib/functions'
 export type ButtonType =
   | 'primary'
   | 'secondary'
+  | 'inverted'
   | 'primary-outline'
   | 'secondary-outline'
   | 'primary-light'
@@ -38,6 +39,9 @@ export function Button({
     },
     secondary: {
       backgroundColor: theme.palette.secondary.background,
+    },
+    inverted: {
+      backgroundColor: theme.palette.inverted.background,
     },
     'primary-outline': {
       backgroundColor: theme.palette.default.background,
@@ -67,6 +71,10 @@ export function Button({
     secondary: {
       color: theme.palette.secondary.text,
       fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
+    },
+    inverted: {
+      color: theme.palette.inverted.text,
+      fontWeight: theme.palette.inverted.isLowContrast ? '500' : undefined,
     },
     'primary-outline': {
       color: theme.palette.primary.textInverted,
