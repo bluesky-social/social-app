@@ -44,6 +44,7 @@ export function Autocomplete({
     <Animated.View style={[styles.outer, topAnimStyle]}>
       {items.map((item, i) => (
         <TouchableOpacity
+          testID="autocompleteButton"
           key={i}
           style={styles.item}
           onPress={() => onSelect(item.handle)}>

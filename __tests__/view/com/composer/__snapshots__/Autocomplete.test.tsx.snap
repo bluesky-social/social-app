@@ -1,0 +1,104 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Autocomplete matches snapshot 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    collapsable={false}
+    style={
+      Object {
+        "backgroundColor": "#ffffff",
+        "borderTopColor": "#e4e2e2",
+        "borderTopWidth": 1,
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 1334,
+      }
+    }
+  >
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "borderBottomColor": "#f8f3f3",
+          "borderBottomWidth": 1,
+          "opacity": 1,
+          "paddingHorizontal": 16,
+          "paddingVertical": 16,
+        }
+      }
+      testID="autocompleteButton"
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#000000",
+            },
+            Object {
+              "fontSize": 16,
+            },
+          ]
+        }
+      >
+        @
+        handle.test
+      </Text>
+    </View>
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "borderBottomColor": "#f8f3f3",
+          "borderBottomWidth": 1,
+          "opacity": 1,
+          "paddingHorizontal": 16,
+          "paddingVertical": 16,
+        }
+      }
+      testID="autocompleteButton"
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#000000",
+            },
+            Object {
+              "fontSize": 16,
+            },
+          ]
+        }
+      >
+        @
+        handle2.test
+      </Text>
+    </View>
+  </View>
+</View>
+`;

@@ -26,7 +26,10 @@ export function ComposePrompt({
       style={[styles.container, noAvi ? styles.noAviContainer : undefined]}
       onPress={onPressCompose}>
       {!noAvi ? (
-        <TouchableOpacity style={styles.avatar} onPress={onPressAvatar}>
+        <TouchableOpacity
+          testID="composePromptAvatarButton"
+          style={styles.avatar}
+          onPress={onPressAvatar}>
           <UserAvatar
             size={50}
             handle={store.me.handle || ''}

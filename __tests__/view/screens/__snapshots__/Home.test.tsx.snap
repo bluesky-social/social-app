@@ -444,6 +444,7 @@ exports[`Home matches snapshot 1`] = `
               "width": 50,
             }
           }
+          testID="composePromptAvatarButton"
         >
           <RNSVGSvgView
             align="xMidYMid"
