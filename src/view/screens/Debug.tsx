@@ -8,6 +8,7 @@ import {usePalette} from '../lib/hooks/usePalette'
 import {Text} from '../com/util/text/Text'
 import {ViewSelector} from '../com/util/ViewSelector'
 import {EmptyState} from '../com/util/EmptyState'
+import * as LoadingPlaceholder from '../com/util/LoadingPlaceholder'
 import {Button} from '../com/util/forms/Button'
 import {DropdownButton, DropdownItem} from '../com/util/forms/DropdownButton'
 import {ToggleButton} from '../com/util/forms/ToggleButton'
@@ -106,6 +107,8 @@ function BaseView() {
       <TypographyView />
       <Heading label="Empty state" />
       <EmptyStateView />
+      <Heading label="Loading placeholders" />
+      <LoadingPlaceholderView />
       <View style={{height: 200}} />
     </View>
   )
@@ -232,6 +235,15 @@ function TypographyView() {
 
 function EmptyStateView() {
   return <EmptyState icon="bars" message="This is an empty state" />
+}
+
+function LoadingPlaceholderView() {
+  return (
+    <>
+      <LoadingPlaceholder.PostLoadingPlaceholder />
+      <LoadingPlaceholder.NotificationLoadingPlaceholder />
+    </>
+  )
 }
 
 function ButtonsView() {

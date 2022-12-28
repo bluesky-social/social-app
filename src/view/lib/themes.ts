@@ -7,16 +7,18 @@ export const defaultTheme: Theme = {
     default: {
       isLowContrast: false,
       background: colors.white,
+      backgroundLight: colors.gray2,
       text: colors.black,
       textLight: colors.gray5,
       textInverted: colors.white,
       link: colors.blue3,
       border: colors.gray3,
-      icon: colors.gray1,
+      icon: colors.gray2,
     },
     primary: {
       isLowContrast: true,
       background: colors.blue3,
+      backgroundLight: colors.blue2,
       text: colors.white,
       textLight: colors.blue0,
       textInverted: colors.blue3,
@@ -27,6 +29,7 @@ export const defaultTheme: Theme = {
     secondary: {
       isLowContrast: true,
       background: colors.green3,
+      backgroundLight: colors.green2,
       text: colors.white,
       textLight: colors.green1,
       textInverted: colors.green4,
@@ -37,6 +40,7 @@ export const defaultTheme: Theme = {
     inverted: {
       isLowContrast: true,
       background: colors.black,
+      backgroundLight: colors.gray6,
       text: colors.white,
       textLight: colors.gray3,
       textInverted: colors.black,
@@ -47,6 +51,7 @@ export const defaultTheme: Theme = {
     error: {
       isLowContrast: true,
       background: colors.red3,
+      backgroundLight: colors.red2,
       text: colors.white,
       textLight: colors.red1,
       textInverted: colors.red3,
@@ -127,6 +132,7 @@ export const darkTheme: Theme = {
     default: {
       isLowContrast: true,
       background: colors.black,
+      backgroundLight: colors.gray6,
       text: colors.white,
       textLight: colors.gray3,
       textInverted: colors.black,
@@ -145,6 +151,7 @@ export const darkTheme: Theme = {
     inverted: {
       isLowContrast: false,
       background: colors.white,
+      backgroundLight: colors.gray2,
       text: colors.black,
       textLight: colors.gray5,
       textInverted: colors.white,

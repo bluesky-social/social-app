@@ -13,6 +13,7 @@ export type PaletteColorName =
 export type PaletteColor = {
   isLowContrast: boolean
   background: string
+  backgroundLight: string
   text: string
   textLight: string
   textInverted: string
