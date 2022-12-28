@@ -27,7 +27,7 @@ export const defaultTheme: Theme = {
       background: colors.green3,
       text: colors.white,
       textLight: colors.green1,
-      textInverted: colors.green3,
+      textInverted: colors.green4,
       link: colors.green1,
       border: colors.green4,
     },
@@ -122,6 +122,10 @@ export const darkTheme: Theme = {
     primary: {
       ...defaultTheme.palette.primary,
       textInverted: colors.blue2,
+    },
+    secondary: {
+      ...defaultTheme.palette.secondary,
+      textInverted: colors.green2,
     },
   },
 }

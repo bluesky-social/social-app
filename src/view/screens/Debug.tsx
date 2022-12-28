@@ -1,10 +1,13 @@
 import React from 'react'
-import {Button, ScrollView, TouchableOpacity, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Text} from '../com/util/Text'
 import {ThemeProvider, useTheme} from '../lib/ThemeContext'
 import {PaletteColorName} from '../lib/ThemeContext'
 import {usePalette} from '../lib/hooks/usePalette'
+
+import {Button} from '../com/util/forms/Button'
+import {RadioGroup} from '../com/util/forms/RadioGroup'
 
 export const Debug = () => {
   const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
@@ -19,7 +22,13 @@ export const Debug = () => {
       <View style={{flex: 1}}>
         <ViewHeader title="Debug panel" />
         <ScrollView style={{flex: 1, paddingHorizontal: 10}}>
-          <Button onPress={onToggleColorScheme} title={colorScheme} />
+          <Button
+            type="primary-outline"
+            onPress={onToggleColorScheme}
+            label={colorScheme}
+          />
+          <Text style={theme.typography.h1}>Radio Buttons</Text>
+          <RadioButtonsView />
           <Text style={theme.typography.h1}>Buttons</Text>
           <ButtonsView />
           <Text style={theme.typography.h1}>Palettes</Text>
@@ -77,27 +86,24 @@ function TypographyView() {
           padding: 5,
         },
       ]}>
-      <Text style={[theme.typography.h1, pal.text]}>Heading 1</Text>
-      <Text style={[theme.typography.h2, pal.text]}>Heading 2</Text>
-      <Text style={[theme.typography.h3, pal.text]}>Heading 3</Text>
-      <Text style={[theme.typography.h4, pal.text]}>Heading 4</Text>
-      <Text style={[theme.typography.subtitle1, pal.text]}>Subtitle 1</Text>
-      <Text style={[theme.typography.subtitle2, pal.text]}>Subtitle 2</Text>
-      <Text style={[theme.typography.body1, pal.text]}>Body 1</Text>
-      <Text style={[theme.typography.body2, pal.text]}>Body 2</Text>
-      <Text style={[theme.typography.button, pal.text]}>Button</Text>
-      <Text style={[theme.typography.caption, pal.text]}>Caption</Text>
-      <Text style={[theme.typography.overline, pal.text]}>Overline</Text>
+      <Text style={[pal.text, theme.typography.h1]}>Heading 1</Text>
+      <Text style={[pal.text, theme.typography.h2]}>Heading 2</Text>
+      <Text style={[pal.text, theme.typography.h3]}>Heading 3</Text>
+      <Text style={[pal.text, theme.typography.h4]}>Heading 4</Text>
+      <Text style={[pal.text, theme.typography.subtitle1]}>Subtitle 1</Text>
+      <Text style={[pal.text, theme.typography.subtitle2]}>Subtitle 2</Text>
+      <Text style={[pal.text, theme.typography.body1]}>Body 1</Text>
+      <Text style={[pal.text, theme.typography.body2]}>Body 2</Text>
+      <Text style={[pal.text, theme.typography.button]}>Button</Text>
+      <Text style={[pal.text, theme.typography.caption]}>Caption</Text>
+      <Text style={[pal.text, theme.typography.overline]}>Overline</Text>
     </View>
   )
 }
 
 function ButtonsView() {
-  const theme = useTheme()
   const defaultPal = usePalette('default')
-  const primaryPal = usePalette('primary')
-  const secondaryPal = usePalette('secondary')
-  const buttonStyles = {padding: 10, marginRight: 5}
+  const buttonStyles = {marginRight: 5}
   return (
     <View
       style={[
@@ -113,44 +119,72 @@ function ButtonsView() {
           flexDirection: 'row',
           marginBottom: 5,
         }}>
-        <TouchableOpacity
-          style={[theme.typography.button, primaryPal.view, buttonStyles]}>
-          <Text style={[theme.typography.button, primaryPal.text]}>
-            Primary solid
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[theme.typography.button, secondaryPal.view, buttonStyles]}>
-          <Text style={[theme.typography.button, secondaryPal.text]}>
-            Secondary solid
-          </Text>
-        </TouchableOpacity>
+        <Button type="primary" label="Primary solid" style={buttonStyles} />
+        <Button type="secondary" label="Secondary solid" style={buttonStyles} />
       </View>
-      <View
-        style={{
-          flexDirection: 'row',
-        }}>
-        <TouchableOpacity
-          style={[
-            theme.typography.button,
-            {borderWidth: 1, borderColor: primaryPal.colors.background},
-            buttonStyles,
-          ]}>
-          <Text style={[theme.typography.button, primaryPal.textInverted]}>
-            Primary outline
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            theme.typography.button,
-            {borderWidth: 1, borderColor: secondaryPal.colors.background},
-            buttonStyles,
-          ]}>
-          <Text style={[theme.typography.button, secondaryPal.textInverted]}>
-            Primary outline
-          </Text>
-        </TouchableOpacity>
+      <View style={{flexDirection: 'row'}}>
+        <Button
+          type="primary-outline"
+          label="Primary outline"
+          style={buttonStyles}
+        />
+        <Button
+          type="secondary-outline"
+          label="Secondary outline"
+          style={buttonStyles}
+        />
       </View>
+      <View style={{flexDirection: 'row'}}>
+        <Button
+          type="primary-light"
+          label="Primary light"
+          style={buttonStyles}
+        />
+        <Button
+          type="secondary-light"
+          label="Secondary light"
+          style={buttonStyles}
+        />
+      </View>
+      <View style={{flexDirection: 'row'}}>
+        <Button
+          type="default-light"
+          label="Default light"
+          style={buttonStyles}
+        />
+      </View>
+    </View>
+  )
+}
+
+const RADIO_BUTTON_ITEMS = [
+  {key: 'default-light', label: 'Default Light'},
+  {key: 'primary', label: 'Primary'},
+  {key: 'secondary', label: 'Secondary'},
+  {key: 'primary-outline', label: 'Primary Outline'},
+  {key: 'secondary-outline', label: 'Secondary Outline'},
+  {key: 'primary-light', label: 'Primary Light'},
+  {key: 'secondary-light', label: 'Secondary Light'},
+]
+function RadioButtonsView() {
+  const defaultPal = usePalette('default')
+  const [rgType, setRgType] = React.useState('default-light')
+  return (
+    <View
+      style={[
+        defaultPal.view,
+        defaultPal.border,
+        {
+          marginBottom: 5,
+          padding: 5,
+        },
+      ]}>
+      <RadioGroup
+        type={rgType}
+        items={RADIO_BUTTON_ITEMS}
+        initialSelection="default-light"
+        onSelect={setRgType}
+      />
     </View>
   )
 }
