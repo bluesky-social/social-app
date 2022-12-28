@@ -19,7 +19,7 @@ import {
 import _omit from 'lodash.omit'
 import {AtUri} from '../../../third-party/uri'
 import {ProfileCard} from '../profile/ProfileCard'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/Text'
 import {useStores} from '../../../state'
 import * as apilib from '../../../state/lib/api'

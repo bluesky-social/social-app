@@ -10,7 +10,7 @@ import {useStores} from '../../../state'
 import {s, colors, gradients} from '../../lib/styles'
 import {RadioGroup, RadioGroupItem} from '../util/forms/RadioGroup'
 import {Text} from '../util/Text'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 
 const ITEMS: RadioGroupItem[] = [
   {key: 'spam', label: 'Spam or excessive repeat posts'},

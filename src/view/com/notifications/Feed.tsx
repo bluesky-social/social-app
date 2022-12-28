@@ -4,7 +4,7 @@ import {View, FlatList} from 'react-native'
 import {NotificationsViewModel} from '../../../state/models/notifications-view'
 import {FeedItem} from './FeedItem'
 import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {EmptyState} from '../util/EmptyState'
 import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
 

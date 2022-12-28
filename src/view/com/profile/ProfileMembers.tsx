@@ -3,7 +3,7 @@ import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, View} from 'react-native'
 import {MembersViewModel, MemberItem} from '../../../state/models/members-view'
 import {ProfileCard} from './ProfileCard'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from '../../../state'
 
 export const ProfileMembers = observer(function ProfileMembers({

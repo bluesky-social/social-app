@@ -6,7 +6,7 @@ import {
   PostThreadViewPostModel,
 } from '../../../state/models/post-thread-view'
 import {PostThreadItem} from './PostThreadItem'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 
 export const PostThread = observer(function PostThread({
   uri,

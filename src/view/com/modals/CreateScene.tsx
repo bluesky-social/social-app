@@ -9,7 +9,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {AppBskyActorCreateScene} from '@atproto/api'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/Text'
 import {useStores} from '../../../state'
 import {s, colors, gradients} from '../../lib/styles'

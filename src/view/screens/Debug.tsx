@@ -10,8 +10,10 @@ import {ViewSelector} from '../com/util/ViewSelector'
 import {Button} from '../com/util/forms/Button'
 import {ToggleButton} from '../com/util/forms/ToggleButton'
 import {RadioGroup} from '../com/util/forms/RadioGroup'
+import {ErrorScreen} from '../com/util/error/ErrorScreen'
+import {ErrorMessage} from '../com/util/error/ErrorMessage'
 
-const MAIN_VIEWS = ['Base', 'Controls']
+const MAIN_VIEWS = ['Base', 'Controls', 'Error']
 
 export const Debug = () => {
   const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
@@ -33,12 +35,13 @@ export const Debug = () => {
             label="Dark mode"
           />
         </View>
-        {item.currentView === 1 ? (
+        {item.currentView === 2 ? (
+          <ErrorView key="error" />
+        ) : item.currentView === 1 ? (
           <ControlsView key="controls" />
         ) : (
           <BaseView key="base" />
         )}
-        <View style={{height: 200}} />
       </View>
     )
   }
@@ -80,6 +83,7 @@ function BaseView() {
       <PaletteView palette="error" />
       <Heading label="Typography" />
       <TypographyView />
+      <View style={{height: 200}} />
     </View>
   )
 }
@@ -93,7 +97,45 @@ function ControlsView() {
       <ToggleButtonsView />
       <Heading label="Radio Buttons" />
       <RadioButtonsView />
+      <View style={{height: 200}} />
     </ScrollView>
+  )
+}
+
+function ErrorView() {
+  return (
+    <View style={{padding: 10}}>
+      <View style={{marginBottom: 5}}>
+        <ErrorScreen
+          title="Error screen"
+          message="A major error occurred that led the entire screen to fail"
+          details="Here are some details"
+          onPressTryAgain={() => {}}
+        />
+      </View>
+      <View style={{marginBottom: 5}}>
+        <ErrorMessage message="This is an error that occurred while things were being done" />
+      </View>
+      <View style={{marginBottom: 5}}>
+        <ErrorMessage
+          message="This is an error that occurred while things were being done"
+          numberOfLines={1}
+        />
+      </View>
+      <View style={{marginBottom: 5}}>
+        <ErrorMessage
+          message="This is an error that occurred while things were being done"
+          onPressTryAgain={() => {}}
+        />
+      </View>
+      <View style={{marginBottom: 5}}>
+        <ErrorMessage
+          message="This is an error that occurred while things were being done"
+          onPressTryAgain={() => {}}
+          numberOfLines={1}
+        />
+      </View>
+    </View>
   )
 }
 

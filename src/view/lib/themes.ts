@@ -12,6 +12,7 @@ export const defaultTheme: Theme = {
       textInverted: colors.white,
       link: colors.blue3,
       border: colors.gray3,
+      icon: colors.gray1,
     },
     primary: {
       isLowContrast: true,
@@ -21,6 +22,7 @@ export const defaultTheme: Theme = {
       textInverted: colors.blue3,
       link: colors.blue0,
       border: colors.blue4,
+      icon: colors.blue4,
     },
     secondary: {
       isLowContrast: true,
@@ -30,6 +32,7 @@ export const defaultTheme: Theme = {
       textInverted: colors.green4,
       link: colors.green1,
       border: colors.green4,
+      icon: colors.green4,
     },
     error: {
       isLowContrast: true,
@@ -39,6 +42,7 @@ export const defaultTheme: Theme = {
       textInverted: colors.red3,
       link: colors.red1,
       border: colors.red4,
+      icon: colors.red4,
     },
   },
   shapes: {
@@ -118,6 +122,7 @@ export const darkTheme: Theme = {
       textInverted: colors.black,
       link: colors.blue2,
       border: colors.gray3,
+      icon: colors.gray5,
     },
     primary: {
       ...defaultTheme.palette.primary,

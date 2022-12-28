@@ -6,7 +6,7 @@ import {
   RepostedByViewItemModel,
 } from '../../../state/models/reposted-by-view'
 import {UserAvatar} from '../util/UserAvatar'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Link} from '../util/Link'
 import {Text} from '../util/Text'
 import {useStores} from '../../../state'

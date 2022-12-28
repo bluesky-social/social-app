@@ -13,6 +13,7 @@ export type PaletteColor = {
   textInverted: string
   link: string
   border: string
+  icon: string
 }
 export type Palette = Record<PaletteColorName, PaletteColor>
 
