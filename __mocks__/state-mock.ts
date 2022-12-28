@@ -196,7 +196,7 @@ export const mockedNavigationTabStore = {
 export const mockedNavigationStore = {
   serialize: jest.fn(),
   hydrate: jest.fn(),
-  tabs: [],
+  tabs: [mockedNavigationTabStore],
   tabIndex: 0,
   clear: jest.fn(),
   tab: mockedNavigationTabStore,

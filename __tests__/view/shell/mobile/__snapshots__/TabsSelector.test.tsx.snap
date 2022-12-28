@@ -20,6 +20,7 @@ exports[`TabsSelector matches snapshot 1`] = `
       "width": "100%",
     }
   }
+  testID="tabsSelectorView"
 >
   <View
     onLayout={[Function]}
@@ -71,6 +72,7 @@ exports[`TabsSelector matches snapshot 1`] = `
               },
             ]
           }
+          testID="shareButton"
         >
           <View
             style={
@@ -126,6 +128,7 @@ exports[`TabsSelector matches snapshot 1`] = `
               },
             ]
           }
+          testID="cloneButton"
         >
           <View
             style={
@@ -186,6 +189,7 @@ exports[`TabsSelector matches snapshot 1`] = `
               },
             ]
           }
+          testID="newTabButton"
         >
           <View
             style={
@@ -244,7 +248,7 @@ exports[`TabsSelector matches snapshot 1`] = `
           <View
             collapsable={false}
             forwardedRef={[Function]}
-            handlerTag={1}
+            handlerTag={15}
             handlerType="PanGestureHandler"
             onGestureHandlerEvent={[Function]}
             onGestureHandlerStateChange={[Function]}
@@ -254,6 +258,7 @@ exports[`TabsSelector matches snapshot 1`] = `
                 "overflow": "hidden",
               }
             }
+            testID="tabsSwipable"
           >
             <View
               collapsable={false}
@@ -320,7 +325,7 @@ exports[`TabsSelector matches snapshot 1`] = `
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={2}
+              handlerTag={16}
               handlerType="TapGestureHandler"
               onGestureHandlerEvent={[Function]}
               onGestureHandlerStateChange={[Function]}
@@ -378,6 +383,7 @@ exports[`TabsSelector matches snapshot 1`] = `
                         "paddingVertical": 12,
                       }
                     }
+                    testID="changeTabButton"
                   >
                     <View
                       style={Object {}}
@@ -428,6 +434,7 @@ exports[`TabsSelector matches snapshot 1`] = `
                         "paddingVertical": 16,
                       }
                     }
+                    testID="closeTabButton"
                   >
                     <
                       icon="x"
@@ -446,7 +453,7 @@ exports[`TabsSelector matches snapshot 1`] = `
           <View
             collapsable={false}
             forwardedRef={[Function]}
-            handlerTag={3}
+            handlerTag={17}
             handlerType="PanGestureHandler"
             onGestureHandlerEvent={[Function]}
             onGestureHandlerStateChange={[Function]}
@@ -456,6 +463,7 @@ exports[`TabsSelector matches snapshot 1`] = `
                 "overflow": "hidden",
               }
             }
+            testID="tabsSwipable"
           >
             <View
               collapsable={false}
@@ -522,7 +530,7 @@ exports[`TabsSelector matches snapshot 1`] = `
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={4}
+              handlerTag={18}
               handlerType="TapGestureHandler"
               onGestureHandlerEvent={[Function]}
               onGestureHandlerStateChange={[Function]}
@@ -580,6 +588,7 @@ exports[`TabsSelector matches snapshot 1`] = `
                         "paddingVertical": 12,
                       }
                     }
+                    testID="changeTabButton"
                   >
                     <View
                       style={Object {}}
@@ -628,6 +637,7 @@ exports[`TabsSelector matches snapshot 1`] = `
                         "paddingVertical": 16,
                       }
                     }
+                    testID="closeTabButton"
                   >
                     <
                       icon="x"

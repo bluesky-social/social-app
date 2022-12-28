@@ -75,6 +75,7 @@ export const Menu = ({
     onPress?: () => void
   }) => (
     <TouchableOpacity
+      testID="menuItemButton"
       style={styles.menuItem}
       onPress={onPress ? onPress : () => onNavigate(url || '/')}>
       <View style={[styles.menuItemIconWrapper]}>
@@ -97,8 +98,9 @@ export const Menu = ({
   )
 
   return (
-    <View style={styles.view}>
+    <View testID="menuView" style={styles.view}>
       <TouchableOpacity
+        testID="profileCardButton"
         onPress={() => onNavigate(`/profile/${store.me.handle}`)}
         style={styles.profileCard}>
         <UserAvatar
@@ -115,6 +117,7 @@ export const Menu = ({
         </View>
       </TouchableOpacity>
       <TouchableOpacity
+        testID="searchBtn"
         style={styles.searchBtn}
         onPress={() => onNavigate('/search')}>
         <MagnifyingGlassIcon

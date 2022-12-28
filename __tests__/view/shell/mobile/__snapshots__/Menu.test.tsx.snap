@@ -8,6 +8,7 @@ exports[`Menu matches snapshot 1`] = `
       "flex": 1,
     }
   }
+  testID="menuView"
 >
   <View
     accessible={true}
@@ -29,6 +30,7 @@ exports[`Menu matches snapshot 1`] = `
         "opacity": 1,
       }
     }
+    testID="profileCardButton"
   >
     <RNSVGSvgView
       align="xMidYMid"
@@ -198,6 +200,7 @@ exports[`Menu matches snapshot 1`] = `
         "paddingVertical": 10,
       }
     }
+    testID="searchBtn"
   >
     <RNSVGSvgView
       align="xMidYMid"
@@ -310,6 +313,7 @@ exports[`Menu matches snapshot 1`] = `
           "paddingVertical": 8,
         }
       }
+      testID="menuItemButton"
     >
       <View
         style={
@@ -420,6 +424,7 @@ exports[`Menu matches snapshot 1`] = `
           "paddingVertical": 8,
         }
       }
+      testID="menuItemButton"
     >
       <View
         style={
@@ -580,6 +585,7 @@ exports[`Menu matches snapshot 1`] = `
           "paddingVertical": 8,
         }
       }
+      testID="menuItemButton"
     >
       <View
         style={
@@ -698,6 +704,7 @@ exports[`Menu matches snapshot 1`] = `
           "paddingVertical": 8,
         }
       }
+      testID="menuItemButton"
     >
       <View
         style={
