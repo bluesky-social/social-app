@@ -8,6 +8,7 @@ import {usePalette} from '../lib/hooks/usePalette'
 
 import {ViewSelector} from '../com/util/ViewSelector'
 import {Button} from '../com/util/forms/Button'
+import {ToggleButton} from '../com/util/forms/ToggleButton'
 import {RadioGroup} from '../com/util/forms/RadioGroup'
 
 const MAIN_VIEWS = ['Base', 'Controls']
@@ -25,10 +26,11 @@ export const Debug = () => {
     return (
       <View>
         <View style={{paddingTop: 10, paddingHorizontal: 10}}>
-          <Button
-            type="primary-outline"
+          <ToggleButton
+            type="default-light"
             onPress={onToggleColorScheme}
-            label={colorScheme}
+            isSelected={colorScheme === 'dark'}
+            label="Dark mode"
           />
         </View>
         {item.currentView === 1 ? (
@@ -63,7 +65,7 @@ function Heading({label}: {label: string}) {
   const theme = useTheme()
   return (
     <View style={{paddingTop: 10, paddingBottom: 5}}>
-      <Text style={theme.typography.h2}>{label}</Text>
+      <Text style={theme.typography.h3}>{label}</Text>
     </View>
   )
 }
@@ -87,6 +89,8 @@ function ControlsView() {
     <ScrollView style={{paddingHorizontal: 10}}>
       <Heading label="Buttons" />
       <ButtonsView />
+      <Heading label="Toggle Buttons" />
+      <ToggleButtonsView />
       <Heading label="Radio Buttons" />
       <RadioButtonsView />
     </ScrollView>
@@ -201,6 +205,74 @@ function ButtonsView() {
           style={buttonStyles}
         />
       </View>
+    </View>
+  )
+}
+
+function ToggleButtonsView() {
+  const defaultPal = usePalette('default')
+  const buttonStyles = {marginBottom: 5}
+  const [isSelected, setIsSelected] = React.useState(false)
+  const onToggle = () => setIsSelected(!isSelected)
+  return (
+    <View
+      style={[
+        defaultPal.view,
+        defaultPal.border,
+        {
+          marginBottom: 5,
+          padding: 5,
+        },
+      ]}>
+      <ToggleButton
+        type="primary"
+        label="Primary solid"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="secondary"
+        label="Secondary solid"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="primary-outline"
+        label="Primary outline"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="secondary-outline"
+        label="Secondary outline"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="primary-light"
+        label="Primary light"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="secondary-light"
+        label="Secondary light"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="default-light"
+        label="Default light"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
     </View>
   )
 }
