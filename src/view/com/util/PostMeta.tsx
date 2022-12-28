@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Link} from '../util/Link'
 import {Text} from '../util/Text'
-import {PostDropdownBtn} from '../util/DropdownBtn'
+import {PostDropdownBtn} from './forms/DropdownButton'
 import {s} from '../../lib/styles'
 import {ago} from '../../../lib/strings'
 

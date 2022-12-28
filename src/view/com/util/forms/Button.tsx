@@ -1,5 +1,11 @@
 import React from 'react'
-import {StyleSheet, TextStyle, TouchableOpacity, ViewStyle} from 'react-native'
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native'
 import {Text} from '../Text'
 import {useTheme} from '../../../lib/ThemeContext'
 import {choose} from '../../../../lib/functions'
@@ -22,7 +28,7 @@ export function Button({
 }: React.PropsWithChildren<{
   type?: ButtonType
   label?: string
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
   onPress?: () => void
 }>) {
   const theme = useTheme()

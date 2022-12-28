@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
+import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {Text} from '../Text'
 import {Button, ButtonType} from './Button'
 import {useTheme} from '../../../lib/ThemeContext'
@@ -16,7 +16,7 @@ export function ToggleButton({
   type?: ButtonType
   label: string
   isSelected: boolean
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
   onPress: () => void
 }) {
   const theme = useTheme()

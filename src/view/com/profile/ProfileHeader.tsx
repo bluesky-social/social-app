@@ -16,7 +16,7 @@ import {
 import {pluralize} from '../../../lib/strings'
 import {s, colors} from '../../lib/styles'
 import {getGradient} from '../../lib/asset-gen'
-import {DropdownBtn, DropdownItem} from '../util/DropdownBtn'
+import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/Text'
@@ -195,11 +195,11 @@ export const ProfileHeader = observer(function ProfileHeader({
             </>
           )}
           {dropdownItems?.length ? (
-            <DropdownBtn
+            <DropdownButton
               items={dropdownItems}
               style={[styles.btn, styles.secondaryBtn]}>
               <FontAwesomeIcon icon="ellipsis" style={[s.gray5]} />
-            </DropdownBtn>
+            </DropdownButton>
           ) : undefined}
         </View>
         <View style={styles.displayNameLine}>
