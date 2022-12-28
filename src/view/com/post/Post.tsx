@@ -205,10 +205,10 @@ export const Post = observer(function Post({
 
 const styles = StyleSheet.create({
   outer: {
-    marginTop: 1,
-    borderRadius: 6,
     backgroundColor: colors.white,
     padding: 10,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray2,
   },
   layout: {
     flexDirection: 'row',

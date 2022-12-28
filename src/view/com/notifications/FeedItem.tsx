@@ -55,10 +55,7 @@ export const FeedItem = observer(function FeedItem({
         <Post
           uri={item.uri}
           initView={item.additionalPost}
-          style={[
-            styles.outerMinimal,
-            item.isRead ? undefined : styles.outerUnread,
-          ]}
+          style={[item.isRead ? undefined : styles.outerUnread]}
         />
       </Link>
     )
@@ -222,15 +219,8 @@ const styles = StyleSheet.create({
   outer: {
     backgroundColor: colors.white,
     padding: 10,
-    borderRadius: 6,
-    margin: 2,
-    marginBottom: 0,
-  },
-  outerMinimal: {
-    backgroundColor: colors.white,
-    borderRadius: 6,
-    margin: 2,
-    marginBottom: 0,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray2,
   },
   outerUnread: {
     backgroundColor: colors.unreadNotifBg,
