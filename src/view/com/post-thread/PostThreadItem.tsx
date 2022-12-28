@@ -319,9 +319,8 @@ export const PostThreadItem = observer(function PostThreadItem({
 const styles = StyleSheet.create({
   outer: {
     backgroundColor: colors.white,
-    borderRadius: 6,
-    margin: 2,
-    marginBottom: 0,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray2,
   },
   parentReplyLine: {
     position: 'absolute',
