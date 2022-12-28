@@ -29,6 +29,8 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
   const [hasSetup, setHasSetup] = useState<boolean>(false)
+  // Must use React.useMemo (instead of named export useMemo)
+  // to mock state in jest testing
   const uiState = React.useMemo(
     () => new ProfileUiModel(store, {user: params.name}),
     [params.user],
@@ -95,7 +97,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
 
   const renderHeader = () => {
     if (!uiState) {
-      return <View testID="emptyProfileView" />
+      return <View />
     }
     return <ProfileHeader view={uiState.profile} onRefreshAll={onRefresh} />
   }
@@ -240,6 +242,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
       <ViewHeader title={title} />
       {uiState.profile.hasError ? (
         <ErrorScreen
+          testID="profileErrorScreen"
           title="Failed to load profile"
           message={`There was an issue when attempting to load ${params.name}`}
           details={uiState.profile.error}

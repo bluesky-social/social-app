@@ -15,9 +15,87 @@ import {ProfileViewModel} from '../src/state/models/profile-view'
 import {MembersViewModel} from '../src/state/models/members-view'
 import {ProfileUiModel, Sections} from '../src/state/models/profile-ui'
 
-// TODO: mock these
-export const mockedProfileStore = {} as ProfileViewModel
-export const mockedMembersStore = {} as MembersViewModel
+export const mockedProfileStore = {
+  isLoading: false,
+  isRefreshing: false,
+  hasLoaded: true,
+  error: '',
+  params: {
+    actor: '',
+  },
+  did: '',
+  handle: '',
+  declaration: {
+    cid: '',
+    actorType: '',
+  },
+  creator: '',
+  displayName: '',
+  description: '',
+  avatar: '',
+  banner: '',
+  followersCount: 0,
+  followsCount: 0,
+  membersCount: 0,
+  postsCount: 0,
+  myState: {
+    follow: '',
+    member: '',
+  },
+  rootStore: {} as RootStoreModel,
+  hasContent: jest.fn(),
+  hasError: false,
+  isEmpty: jest.fn(),
+  isUser: jest.fn(),
+  isScene: jest.fn(),
+  setup: jest.fn().mockResolvedValue({aborted: false}),
+  refresh: jest.fn(),
+  toggleFollowing: jest.fn(),
+  updateProfile: jest.fn(),
+  // unknown required because of the missing private methods: _xLoading, _xIdle, _load, _replaceAll
+} as unknown as ProfileViewModel
+
+export const mockedMembersStore = {
+  isLoading: false,
+  isRefreshing: false,
+  hasLoaded: false,
+  error: '',
+  params: {
+    actor: '',
+  },
+  subject: {
+    did: '',
+    handle: '',
+    displayName: '',
+    declaration: {
+      cid: '',
+      actorType: '',
+    },
+    avatar: undefined,
+  },
+  members: [
+    {
+      did: '',
+      declaration: {
+        cid: '',
+        actorType: '',
+      },
+      handle: '',
+      displayName: '',
+      indexedAt: '',
+    },
+  ],
+  rootStore: {} as RootStoreModel,
+  hasContent: jest.fn(),
+  hasError: false,
+  isEmpty: jest.fn(),
+  isMember: jest.fn(),
+  setup: jest.fn().mockResolvedValue({aborted: false}),
+  refresh: jest.fn(),
+  loadMore: jest.fn(),
+  removeMember: jest.fn(),
+  // unknown required because of the missing private methods: _xLoading, _xIdle, _fetch, _replaceAll, _append
+} as unknown as MembersViewModel
 
 export const mockedMembershipsModel = {
   isLoading: false,
@@ -52,13 +130,13 @@ export const mockedMembershipsModel = {
   ],
   rootStore: {} as RootStoreModel,
   hasContent: jest.fn(),
-  hasError: jest.fn(),
+  hasError: false,
   isEmpty: jest.fn(),
   isMemberOf: jest.fn(),
-  setup: jest.fn(),
+  setup: jest.fn().mockResolvedValue({aborted: false}),
   refresh: jest.fn(),
   loadMore: jest.fn(),
-  // unknown added because of the missing private methods: _xLoading, _xIdle, _fetch, _replaceAll, _append
+  // unknown required because of the missing private methods: _xLoading, _xIdle, _fetch, _replaceAll, _append
 } as unknown as MembershipsViewModel
 
 export const mockedFeedModel = {
@@ -76,10 +154,10 @@ export const mockedFeedModel = {
   feed: [],
   rootStore: {} as RootStoreModel,
   feedType: 'home',
-  hasContent: jest.fn(),
-  hasError: jest.fn(),
+  hasContent: jest.fn().mockReturnValue(true),
+  hasError: true,
   isEmpty: jest.fn(),
-  nonReplyFeed: jest.fn(),
+  nonReplyFeed: [],
   setHasNewLatest: jest.fn(),
   setup: jest.fn().mockResolvedValue({aborted: false}),
   refresh: jest.fn(),
@@ -87,7 +165,7 @@ export const mockedFeedModel = {
   loadLatest: jest.fn(),
   update: jest.fn(),
   checkForLatest: jest.fn().mockRejectedValue('Error checking for latest'),
-  // unknown added because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadLatest, _loadMore, _update, _replaceAll, _appendAll, _prependAll, _updateAll, _getFeed, loadMoreCursor, pollCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
+  // unknown required because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadLatest, _loadMore, _update, _replaceAll, _appendAll, _prependAll, _updateAll, _getFeed, loadMoreCursor, pollCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
 } as unknown as FeedModel
 
 export const mockedNotificationsModel = {
@@ -103,14 +181,14 @@ export const mockedNotificationsModel = {
   notifications: [],
   rootStore: {} as RootStoreModel,
   hasContent: jest.fn(),
-  hasError: jest.fn(),
+  hasError: false,
   isEmpty: jest.fn(),
-  setup: jest.fn(),
+  setup: jest.fn().mockResolvedValue({aborted: false}),
   refresh: jest.fn(),
   loadMore: jest.fn(),
   update: jest.fn().mockResolvedValue(null),
   updateReadState: jest.fn(),
-  // unknown added because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadMore, _update, _replaceAll, _appendAll, _updateAll, loadMoreCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
+  // unknown required because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadMore, _update, _replaceAll, _appendAll, _updateAll, loadMoreCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
 } as unknown as NotificationsViewModel
 
 export const mockedSessionStore = {
@@ -139,7 +217,7 @@ export const mockedSessionStore = {
   createAccount: jest.fn(),
   logout: jest.fn(),
 
-  // unknown added because of the missing private methods: _connectPromise, configureApi & _connect
+  // unknown required because of the missing private methods: _connectPromise, configureApi & _connect
 } as unknown as SessionModel
 
 export const mockedNavigationTabStore = {
@@ -319,7 +397,7 @@ export const mockedProfileUiStore = {
   selectorItems: [Sections.Posts, Sections.PostsWithReplies, Sections.Scenes],
   selectedView: Sections.Posts,
   setSelectedViewIndex: jest.fn(),
-  setup: jest.fn(),
+  setup: jest.fn().mockResolvedValue({aborted: false}),
   update: jest.fn(),
   refresh: jest.fn(),
   loadMore: jest.fn(),

@@ -9,14 +9,16 @@ export function ErrorScreen({
   message,
   details,
   onPressTryAgain,
+  testID,
 }: {
   title: string
   message: string
   details?: string
   onPressTryAgain?: () => void
+  testID?: string
 }) {
   return (
-    <View style={styles.outer}>
+    <View testID={testID} style={styles.outer}>
       <View style={styles.errorIconContainer}>
         <View style={styles.errorIcon}>
           <FontAwesomeIcon
@@ -28,7 +30,11 @@ export function ErrorScreen({
       </View>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.message}>{message}</Text>
-      {details && <Text style={styles.details}>{details}</Text>}
+      {details && (
+        <Text testID={`${testID}-details`} style={styles.details}>
+          {details}
+        </Text>
+      )}
       {onPressTryAgain && (
         <View style={styles.btnContainer}>
           <TouchableOpacity style={styles.btn} onPress={onPressTryAgain}>

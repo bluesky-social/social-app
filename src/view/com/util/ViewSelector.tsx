@@ -92,6 +92,7 @@ export function ViewSelector({
       canSwipeRight={selectedIndex < sections.length - 1}
       onSwipeEnd={onSwipeEnd}>
       <FlatList
+        testID="viewSelectorFlatList"
         data={data}
         keyExtractor={item => item._reactKey}
         renderItem={renderItemInternal}
