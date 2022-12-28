@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   meta: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 2,
+    paddingTop: 0,
     paddingBottom: 2,
   },
   metaItem: {

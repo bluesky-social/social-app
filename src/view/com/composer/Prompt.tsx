@@ -46,14 +46,13 @@ export function ComposePrompt({
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 6,
-    margin: 2,
-    marginBottom: 0,
     paddingHorizontal: 10,
     paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.white,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray2,
   },
   noAviContainer: {
     paddingVertical: 14,

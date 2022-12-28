@@ -103,9 +103,7 @@ export const FeedItem = observer(function ({
   return (
     <>
       {isChild && !item._isThreadChild && item.replyParent ? (
-        <View style={{marginTop: 2}}>
-          <FeedItem item={item.replyParent} showReplyLine />
-        </View>
+        <FeedItem item={item.replyParent} showReplyLine />
       ) : undefined}
       <Link style={outerStyles} href={itemHref} title={itemTitle} noFeedback>
         {item._isThreadChild && <View style={[styles.topReplyLine]} />}
@@ -240,29 +238,23 @@ export const FeedItem = observer(function ({
 
 const styles = StyleSheet.create({
   outer: {
-    borderRadius: 6,
-    margin: 2,
-    marginBottom: 0,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray2,
     backgroundColor: colors.white,
     padding: 10,
   },
   outerNoTop: {
-    marginTop: 0,
+    borderTopWidth: 0,
     paddingTop: 0,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
   },
   outerSmallTop: {
-    marginTop: 0,
+    borderTopWidth: 0,
     paddingTop: 8,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
   },
   outerNoBottom: {
-    marginBottom: 0,
-    paddingBottom: 0,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
+    paddingBottom: 2,
   },
   topReplyLine: {
     position: 'absolute',
@@ -293,7 +285,7 @@ const styles = StyleSheet.create({
   },
   layoutAvi: {
     width: 60,
-    paddingTop: 5,
+    paddingTop: 0,
   },
   layoutContent: {
     flex: 1,
@@ -316,12 +308,12 @@ const styles = StyleSheet.create({
   viewFullThread: {
     backgroundColor: colors.white,
     paddingTop: 12,
-    paddingBottom: 4,
-    paddingLeft: 72,
+    paddingBottom: 2,
+    paddingLeft: 70,
   },
   viewFullThreadDots: {
     position: 'absolute',
-    left: 35,
+    left: 33,
     top: 0,
   },
   viewFullThreadText: {
