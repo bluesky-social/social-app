@@ -9,7 +9,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {Text} from './Text'
+import {Text} from './text/Text'
+import {TypographyVariant} from '../../lib/ThemeContext'
 import {useStores, RootStoreModel} from '../../../state'
 import {convertBskyAppUrlIfNeeded} from '../../../lib/strings'
 
@@ -57,14 +58,14 @@ export const Link = observer(function Link({
 })
 
 export const TextLink = observer(function Link({
+  type = 'body1',
   style,
   href,
-  title,
   text,
 }: {
+  type: TypographyVariant
   style?: StyleProp<TextStyle>
   href: string
-  title?: string
   text: string
 }) {
   const store = useStores()
@@ -75,7 +76,7 @@ export const TextLink = observer(function Link({
     handleLink(store, href, true)
   }
   return (
-    <Text style={style} onPress={onPress} onLongPress={onLongPress}>
+    <Text type={type} style={style} onPress={onPress} onLongPress={onLongPress}>
       {text}
     </Text>
   )

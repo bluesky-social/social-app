@@ -2,10 +2,10 @@ import React from 'react'
 import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
-import {Text} from './Text'
+import {Text} from './text/Text'
 import {UpIcon, UpIconSolid} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
-import {useAnimatedValue} from '../../lib/useAnimatedValue'
+import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 
 interface PostCtrlsOpts {
   big?: boolean

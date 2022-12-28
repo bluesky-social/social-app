@@ -4,8 +4,9 @@ import {Text} from '../text/Text'
 import {Button, ButtonType} from './Button'
 import {useTheme} from '../../../lib/ThemeContext'
 import {choose} from '../../../../lib/functions'
+import {colors} from '../../../lib/styles'
 
-export function RadioButton({
+export function ToggleButton({
   type = 'default-light',
   label,
   isSelected,
@@ -50,27 +51,36 @@ export function RadioButton({
     {
       primary: {
         backgroundColor: theme.palette.primary.text,
+        opacity: isSelected ? 1 : 0.33,
       },
       secondary: {
         backgroundColor: theme.palette.secondary.text,
+        opacity: isSelected ? 1 : 0.33,
       },
       inverted: {
         backgroundColor: theme.palette.inverted.text,
+        opacity: isSelected ? 1 : 0.33,
       },
       'primary-outline': {
         backgroundColor: theme.palette.primary.background,
+        opacity: isSelected ? 1 : 0.5,
       },
       'secondary-outline': {
         backgroundColor: theme.palette.secondary.background,
+        opacity: isSelected ? 1 : 0.5,
       },
       'primary-light': {
         backgroundColor: theme.palette.primary.background,
+        opacity: isSelected ? 1 : 0.5,
       },
       'secondary-light': {
         backgroundColor: theme.palette.secondary.background,
+        opacity: isSelected ? 1 : 0.5,
       },
       'default-light': {
-        backgroundColor: theme.palette.primary.background,
+        backgroundColor: isSelected
+          ? theme.palette.primary.background
+          : colors.gray3,
       },
     },
   )
@@ -112,9 +122,13 @@ export function RadioButton({
     <Button type={type} onPress={onPress} style={style}>
       <View style={styles.outer}>
         <View style={[circleStyle, styles.circle]}>
-          {isSelected ? (
-            <View style={[circleFillStyle, styles.circleFill]} />
-          ) : undefined}
+          <View
+            style={[
+              circleFillStyle,
+              styles.circleFill,
+              isSelected ? styles.circleFillSelected : undefined,
+            ]}
+          />
         </View>
         <Text type="button" style={[labelStyle, styles.label]}>
           {label}
@@ -130,7 +144,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   circle: {
-    width: 26,
+    width: 42,
     height: 26,
     borderRadius: 15,
     padding: 4,
@@ -141,6 +155,9 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 10,
+  },
+  circleFillSelected: {
+    marginLeft: 16,
   },
   label: {
     flex: 1,

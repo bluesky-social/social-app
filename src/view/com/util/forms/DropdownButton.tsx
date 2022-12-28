@@ -11,12 +11,13 @@ import {
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import RootSiblings from 'react-native-root-siblings'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from './Text'
-import {colors} from '../../lib/styles'
-import {toShareUrl} from '../../../lib/strings'
-import {useStores} from '../../../state'
-import {ReportPostModal, ConfirmModal} from '../../../state/models/shell-ui'
-import {TABS_ENABLED} from '../../../build-flags'
+import {Text} from '../text/Text'
+import {Button, ButtonType} from './Button'
+import {colors} from '../../../lib/styles'
+import {toShareUrl} from '../../../../lib/strings'
+import {useStores} from '../../../../state'
+import {ReportPostModal, ConfirmModal} from '../../../../state/models/shell-ui'
+import {TABS_ENABLED} from '../../../../build-flags'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
@@ -26,14 +27,20 @@ export interface DropdownItem {
   onPress: () => void
 }
 
-export function DropdownBtn({
+export type DropdownButtonType = ButtonType | 'bare'
+
+export function DropdownButton({
+  type = 'bare',
   style,
   items,
+  label,
   menuWidth,
   children,
 }: {
+  type: DropdownButtonType
   style?: StyleProp<ViewStyle>
   items: DropdownItem[]
+  label?: string
   menuWidth?: number
   children?: React.ReactNode
 }) {
@@ -62,14 +69,23 @@ export function DropdownBtn({
     )
   }
 
+  if (type === 'bare') {
+    return (
+      <TouchableOpacity
+        style={style}
+        onPress={onPress}
+        hitSlop={HITSLOP}
+        ref={ref}>
+        {children}
+      </TouchableOpacity>
+    )
+  }
   return (
-    <TouchableOpacity
-      style={style}
-      onPress={onPress}
-      hitSlop={HITSLOP}
-      ref={ref}>
-      {children}
-    </TouchableOpacity>
+    <View ref={ref}>
+      <Button onPress={onPress} style={style} label={label}>
+        {children}
+      </Button>
+    </View>
   )
 }
 
@@ -77,7 +93,6 @@ export function PostDropdownBtn({
   style,
   children,
   itemHref,
-  itemTitle,
   isAuthor,
   onCopyPostText,
   onDeletePost,
@@ -141,9 +156,9 @@ export function PostDropdownBtn({
   ].filter(Boolean) as DropdownItem[]
 
   return (
-    <DropdownBtn style={style} items={dropdownItems} menuWidth={200}>
+    <DropdownButton style={style} items={dropdownItems} menuWidth={200}>
       {children}
-    </DropdownBtn>
+    </DropdownButton>
   )
 }
 

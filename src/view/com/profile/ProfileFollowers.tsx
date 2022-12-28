@@ -6,8 +6,8 @@ import {
   FollowerItem,
 } from '../../../state/models/user-followers-view'
 import {Link} from '../util/Link'
-import {Text} from '../util/Text'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {Text} from '../util/text/Text'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
@@ -57,7 +57,6 @@ export const ProfileFollowers = observer(function ProfileFollowers({
     return (
       <View>
         <ErrorMessage
-          dark
           message={view.error}
           style={{margin: 6}}
           onPressTryAgain={onRefresh}

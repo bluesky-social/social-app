@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
 import {StyleProp, TextStyle} from 'react-native'
 import {Link} from './Link'
-import {Text} from './Text'
+import {Text} from './text/Text'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
 import {useStores} from '../../../state'
 

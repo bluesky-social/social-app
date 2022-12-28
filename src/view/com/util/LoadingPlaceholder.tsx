@@ -3,6 +3,7 @@ import {StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UpIcon} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
+import {useTheme} from '../../lib/ThemeContext'
 
 export function LoadingPlaceholder({
   width,
@@ -13,13 +14,14 @@ export function LoadingPlaceholder({
   height: string | number
   style?: StyleProp<ViewStyle>
 }) {
+  const theme = useTheme()
   return (
     <View
       style={[
         {
           width,
           height,
-          backgroundColor: '#e7e9ea',
+          backgroundColor: theme.palette.default.backgroundLight,
           borderRadius: 6,
           overflow: 'hidden',
         },
@@ -29,7 +31,7 @@ export function LoadingPlaceholder({
         style={{
           width,
           height,
-          backgroundColor: '#e7e9ea',
+          backgroundColor: theme.palette.default.backgroundLight,
         }}
       />
     </View>
@@ -41,6 +43,7 @@ export function PostLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
+  const theme = useTheme()
   return (
     <View style={[styles.post, style]}>
       <LoadingPlaceholder width={50} height={50} style={styles.avatar} />
@@ -52,16 +55,24 @@ export function PostLoadingPlaceholder({
         <View style={s.flexRow}>
           <View style={s.flex1}>
             <FontAwesomeIcon
-              style={s.gray3}
+              style={{color: theme.palette.default.icon}}
               icon={['far', 'comment']}
               size={14}
             />
           </View>
           <View style={s.flex1}>
-            <FontAwesomeIcon style={s.gray3} icon="retweet" size={18} />
+            <FontAwesomeIcon
+              style={{color: theme.palette.default.icon}}
+              icon="retweet"
+              size={18}
+            />
           </View>
           <View style={s.flex1}>
-            <UpIcon style={s.gray3} size={17} strokeWidth={1.7} />
+            <UpIcon
+              style={{color: theme.palette.default.icon}}
+              size={17}
+              strokeWidth={1.7}
+            />
           </View>
           <View style={s.flex1}></View>
         </View>
@@ -125,8 +136,6 @@ export function NotificationFeedLoadingPlaceholder() {
 const styles = StyleSheet.create({
   post: {
     flexDirection: 'row',
-    backgroundColor: colors.white,
-    borderRadius: 6,
     padding: 10,
     margin: 1,
   },
@@ -135,8 +144,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   notification: {
-    backgroundColor: colors.white,
-    borderRadius: 6,
     padding: 10,
     paddingLeft: 46,
     margin: 1,

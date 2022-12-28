@@ -9,11 +9,11 @@ import {
 } from 'react-native'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {EmptyState} from '../util/EmptyState'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {FeedModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
 import {ComposePrompt} from '../composer/Prompt'
-import {OnScrollCb} from '../../lib/useOnMainScroll'
+import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
 
 const COMPOSE_PROMPT_ITEM = {_reactKey: '__prompt__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -80,7 +80,6 @@ export const Feed = observer(function Feed({
       {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
       {feed.hasError && (
         <ErrorMessage
-          dark
           message={feed.error}
           style={{margin: 6}}
           onPressTryAgain={onPressTryAgain}

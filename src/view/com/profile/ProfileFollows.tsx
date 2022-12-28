@@ -7,8 +7,8 @@ import {
 } from '../../../state/models/user-follows-view'
 import {useStores} from '../../../state'
 import {Link} from '../util/Link'
-import {Text} from '../util/Text'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {Text} from '../util/text/Text'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 
@@ -57,7 +57,6 @@ export const ProfileFollows = observer(function ProfileFollows({
     return (
       <View>
         <ErrorMessage
-          dark
           message={view.error}
           style={{margin: 6}}
           onPressTryAgain={onRefresh}

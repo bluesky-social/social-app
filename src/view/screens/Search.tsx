@@ -10,7 +10,7 @@ import {
 import {ViewHeader} from '../com/util/ViewHeader'
 import {SuggestedFollows} from '../com/discover/SuggestedFollows'
 import {UserAvatar} from '../com/util/UserAvatar'
-import {Text} from '../com/util/Text'
+import {Text} from '../com/util/text/Text'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 import {UserAutocompleteViewModel} from '../../state/models/user-autocomplete-view'

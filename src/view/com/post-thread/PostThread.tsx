@@ -6,7 +6,7 @@ import {
   PostThreadViewPostModel,
 } from '../../../state/models/post-thread-view'
 import {PostThreadItem} from './PostThreadItem'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 
 export const PostThread = observer(function PostThread({
   uri,
@@ -57,7 +57,6 @@ export const PostThread = observer(function PostThread({
     return (
       <View>
         <ErrorMessage
-          dark
           message={view.error}
           style={{margin: 6}}
           onPressTryAgain={onRefresh}
