@@ -1,6 +1,5 @@
 import React from 'react'
 import {Search} from '../../../src/view/screens/Search'
-import renderer from 'react-test-renderer'
 import {fireEvent, render} from '../../../jest/test-utils'
 
 describe('Search', () => {
@@ -35,7 +34,7 @@ describe('Search', () => {
   })
 
   it('matches snapshot', () => {
-    const tree = renderer.create(<Search {...mockedProps} />).toJSON()
-    expect(tree).toMatchSnapshot()
+    const page = render(<Search {...mockedProps} />)
+    expect(page).toMatchSnapshot()
   })
 })

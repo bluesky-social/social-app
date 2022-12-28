@@ -1,6 +1,5 @@
 import React from 'react'
 import {Menu} from '../../../../src/view/shell/mobile/Menu'
-import renderer from 'react-test-renderer'
 import {fireEvent, render} from '../../../../jest/test-utils'
 import {
   mockedNavigationStore,
@@ -65,7 +64,7 @@ describe('Menu', () => {
   })
 
   it('matches snapshot', () => {
-    const tree = renderer.create(<Menu {...mockedProps} />).toJSON()
-    expect(tree).toMatchSnapshot()
+    const page = render(<Menu {...mockedProps} />)
+    expect(page).toMatchSnapshot()
   })
 })

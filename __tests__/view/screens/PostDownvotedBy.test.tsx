@@ -1,6 +1,5 @@
 import React from 'react'
 import {PostDownvotedBy} from '../../../src/view/screens/PostDownvotedBy'
-import renderer from 'react-test-renderer'
 import {render} from '../../../jest/test-utils'
 
 describe('PostDownvotedBy', () => {
@@ -25,7 +24,7 @@ describe('PostDownvotedBy', () => {
   })
 
   it('matches snapshot', () => {
-    const tree = renderer.create(<PostDownvotedBy {...mockedProps} />).toJSON()
-    expect(tree).toMatchSnapshot()
+    const page = render(<PostDownvotedBy {...mockedProps} />)
+    expect(page).toMatchSnapshot()
   })
 })

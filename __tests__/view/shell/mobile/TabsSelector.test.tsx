@@ -1,6 +1,5 @@
 import React from 'react'
 import {Animated, Share} from 'react-native'
-import renderer from 'react-test-renderer'
 import {TabsSelector} from '../../../../src/view/shell/mobile/TabsSelector'
 import {fireEvent, render} from '../../../../jest/test-utils'
 import {mockedNavigationStore} from '../../../../__mocks__/state-mock'
@@ -94,7 +93,7 @@ describe('TabsSelector', () => {
   })
 
   it('matches snapshot', () => {
-    const tree = renderer.create(<TabsSelector {...mockedProps} />).toJSON()
-    expect(tree).toMatchSnapshot()
+    const page = render(<TabsSelector {...mockedProps} />)
+    expect(page).toMatchSnapshot()
   })
 })

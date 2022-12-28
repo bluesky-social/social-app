@@ -1,6 +1,5 @@
 import React from 'react'
 import {ProfileFollowers} from '../../../src/view/screens/ProfileFollowers'
-import renderer from 'react-test-renderer'
 import {render} from '../../../jest/test-utils'
 
 describe('ProfileFollowers', () => {
@@ -24,7 +23,7 @@ describe('ProfileFollowers', () => {
   })
 
   it('matches snapshot', () => {
-    const tree = renderer.create(<ProfileFollowers {...mockedProps} />).toJSON()
-    expect(tree).toMatchSnapshot()
+    const page = render(<ProfileFollowers {...mockedProps} />)
+    expect(page).toMatchSnapshot()
   })
 })

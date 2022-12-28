@@ -1,6 +1,5 @@
 import React from 'react'
 import {Contacts} from '../../../src/view/screens/Contacts'
-import renderer from 'react-test-renderer'
 import {render} from '../../../jest/test-utils'
 import {mockedMeStore, mockedRootStore} from '../../../__mocks__/state-mock'
 
@@ -33,7 +32,7 @@ describe('Contacts', () => {
   })
 
   it('matches snapshot', () => {
-    const tree = renderer.create(<Contacts {...mockedProps} />).toJSON()
-    expect(tree).toMatchSnapshot()
+    const page = render(<Contacts {...mockedProps} />)
+    expect(page).toMatchSnapshot()
   })
 })

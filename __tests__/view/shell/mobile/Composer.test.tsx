@@ -1,6 +1,5 @@
 import React from 'react'
 import {Composer} from '../../../../src/view/shell/mobile/Composer'
-import renderer from 'react-test-renderer'
 import {render} from '../../../../jest/test-utils'
 
 describe('Composer', () => {
@@ -17,11 +16,13 @@ describe('Composer', () => {
     onPost: jest.fn(),
     onClose: jest.fn(),
   }
-  it('matches snapshot', () => {
-    const tree = renderer.create(<Composer {...mockedProps} />).toJSON()
-    expect(tree).toMatchSnapshot()
-  })
+
   it('tests', () => {
     render(<Composer {...mockedProps} />)
+  })
+
+  it('matches snapshot', () => {
+    const page = render(<Composer {...mockedProps} />)
+    expect(page).toMatchSnapshot()
   })
 })

@@ -1,6 +1,5 @@
 import React from 'react'
 import {Onboard} from '../../../src/view/screens/Onboard'
-import renderer from 'react-test-renderer'
 import {render} from '../../../jest/test-utils'
 
 describe('Onboard', () => {
@@ -14,7 +13,7 @@ describe('Onboard', () => {
   })
 
   it('matches snapshot', () => {
-    const tree = renderer.create(<Onboard />).toJSON()
-    expect(tree).toMatchSnapshot()
+    const page = render(<Onboard />)
+    expect(page).toMatchSnapshot()
   })
 })

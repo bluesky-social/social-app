@@ -1,6 +1,5 @@
 import React from 'react'
 import {Home} from '../../../src/view/screens/Home'
-import renderer from 'react-test-renderer'
 import {fireEvent, render, waitFor} from '../../../jest/test-utils'
 import {
   mockedMeStore,
@@ -87,7 +86,7 @@ describe('Home', () => {
   })
 
   it('matches snapshot', () => {
-    const tree = renderer.create(<Home {...mockedProps} />).toJSON()
-    expect(tree).toMatchSnapshot()
+    const page = render(<Home {...mockedProps} />)
+    expect(page).toMatchSnapshot()
   })
 })

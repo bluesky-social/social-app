@@ -2,659 +2,464 @@
 
 exports[`TabsSelector matches snapshot 1`] = `
 <View
-  collapsable={false}
   style={
     Object {
-      "backgroundColor": "#fff",
-      "borderTopColor": "#e4e2e2",
-      "borderTopWidth": 1,
-      "bottom": 55,
-      "height": 320,
-      "opacity": 1,
-      "position": "absolute",
-      "transform": Array [
-        Object {
-          "translateY": 320,
-        },
-      ],
-      "width": "100%",
+      "flex": 1,
     }
   }
-  testID="tabsSelectorView"
 >
   <View
-    onLayout={[Function]}
+    collapsable={false}
+    style={
+      Object {
+        "backgroundColor": "#fff",
+        "borderTopColor": "#e4e2e2",
+        "borderTopWidth": 1,
+        "bottom": 55,
+        "height": 320,
+        "opacity": 1,
+        "position": "absolute",
+        "transform": Array [
+          Object {
+            "translateY": 320,
+          },
+        ],
+        "width": "100%",
+      }
+    }
+    testID="tabsSelectorView"
   >
     <View
-      style={
-        Array [
-          Object {
-            "padding": 10,
-          },
-          Object {
-            "borderBottomColor": "#e4e2e2",
-            "borderBottomWidth": 1,
-          },
-        ]
-      }
+      onLayout={[Function]}
     >
       <View
         style={
-          Object {
-            "flexDirection": "row",
-            "paddingTop": 2,
-          }
+          Array [
+            Object {
+              "padding": 10,
+            },
+            Object {
+              "borderBottomColor": "#e4e2e2",
+              "borderBottomWidth": 1,
+            },
+          ]
         }
       >
         <View
-          accessible={true}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
           style={
-            Array [
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "#f8f3f3",
-                "borderRadius": 4,
-                "flex": 1,
-                "flexDirection": "row",
-                "justifyContent": "center",
-                "marginRight": 5,
-                "paddingLeft": 12,
-                "paddingRight": 16,
-                "paddingVertical": 10,
-              },
-            ]
+            Object {
+              "flexDirection": "row",
+              "paddingTop": 2,
+            }
           }
-          testID="shareButton"
         >
           <View
-            style={
-              Object {
-                "marginRight": 8,
-              }
-            }
-          >
-            <
-              icon="share"
-              size={16}
-            />
-          </View>
-          <Text
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
               Array [
                 Object {
-                  "color": "#000000",
-                },
-                Object {
-                  "fontSize": 16,
-                  "fontWeight": "500",
+                  "alignItems": "center",
+                  "backgroundColor": "#f8f3f3",
+                  "borderRadius": 4,
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "marginRight": 5,
+                  "paddingLeft": 12,
+                  "paddingRight": 16,
+                  "paddingVertical": 10,
                 },
               ]
             }
+            testID="shareButton"
           >
-            Share
-          </Text>
-        </View>
-        <View
-          accessible={true}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            Array [
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "#f8f3f3",
-                "borderRadius": 4,
-                "flex": 1,
-                "flexDirection": "row",
-                "justifyContent": "center",
-                "marginRight": 5,
-                "paddingLeft": 12,
-                "paddingRight": 16,
-                "paddingVertical": 10,
-              },
-            ]
-          }
-          testID="cloneButton"
-        >
-          <View
-            style={
-              Object {
-                "marginRight": 8,
+            <View
+              style={
+                Object {
+                  "marginRight": 8,
+                }
               }
-            }
-          >
-            <
-              icon={
+            >
+              <
+                icon="share"
+                size={16}
+              />
+            </View>
+            <Text
+              style={
                 Array [
-                  "far",
-                  "clone",
+                  Object {
+                    "color": "#000000",
+                  },
+                  Object {
+                    "fontSize": 16,
+                    "fontWeight": "500",
+                  },
                 ]
               }
-              size={16}
-            />
+            >
+              Share
+            </Text>
           </View>
-          <Text
-            style={
-              Array [
-                Object {
-                  "color": "#000000",
-                },
-                Object {
-                  "fontSize": 16,
-                  "fontWeight": "500",
-                },
-              ]
-            }
-          >
-            Clone tab
-          </Text>
-        </View>
-        <View
-          accessible={true}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            Array [
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "#f8f3f3",
-                "borderRadius": 4,
-                "flex": 1,
-                "flexDirection": "row",
-                "justifyContent": "center",
-                "marginRight": 5,
-                "paddingLeft": 12,
-                "paddingRight": 16,
-                "paddingVertical": 10,
-              },
-            ]
-          }
-          testID="newTabButton"
-        >
           <View
-            style={
-              Object {
-                "marginRight": 8,
-              }
-            }
-          >
-            <
-              icon="plus"
-              size={16}
-            />
-          </View>
-          <Text
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
               Array [
                 Object {
-                  "color": "#000000",
-                },
-                Object {
-                  "fontSize": 16,
-                  "fontWeight": "500",
+                  "alignItems": "center",
+                  "backgroundColor": "#f8f3f3",
+                  "borderRadius": 4,
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "marginRight": 5,
+                  "paddingLeft": 12,
+                  "paddingRight": 16,
+                  "paddingVertical": 10,
                 },
               ]
             }
+            testID="cloneButton"
           >
-            New tab
-          </Text>
+            <View
+              style={
+                Object {
+                  "marginRight": 8,
+                }
+              }
+            >
+              <
+                icon={
+                  Array [
+                    "far",
+                    "clone",
+                  ]
+                }
+                size={16}
+              />
+            </View>
+            <Text
+              style={
+                Array [
+                  Object {
+                    "color": "#000000",
+                  },
+                  Object {
+                    "fontSize": 16,
+                    "fontWeight": "500",
+                  },
+                ]
+              }
+            >
+              Clone tab
+            </Text>
+          </View>
+          <View
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "backgroundColor": "#f8f3f3",
+                  "borderRadius": 4,
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "marginRight": 5,
+                  "paddingLeft": 12,
+                  "paddingRight": 16,
+                  "paddingVertical": 10,
+                },
+              ]
+            }
+            testID="newTabButton"
+          >
+            <View
+              style={
+                Object {
+                  "marginRight": 8,
+                }
+              }
+            >
+              <
+                icon="plus"
+                size={16}
+              />
+            </View>
+            <Text
+              style={
+                Array [
+                  Object {
+                    "color": "#000000",
+                  },
+                  Object {
+                    "fontSize": 16,
+                    "fontWeight": "500",
+                  },
+                ]
+              }
+            >
+              New tab
+            </Text>
+          </View>
         </View>
       </View>
-    </View>
-    <View
-      style={
-        Array [
-          Object {
-            "padding": 10,
-          },
-          Object {
-            "borderBottomColor": "#e4e2e2",
-            "borderBottomWidth": 1,
-          },
-          Object {
-            "backgroundColor": "#f8f3f3",
-          },
-        ]
-      }
-    >
-      <RCTScrollView
+      <View
         style={
-          Object {
-            "height": 240,
-          }
+          Array [
+            Object {
+              "padding": 10,
+            },
+            Object {
+              "borderBottomColor": "#e4e2e2",
+              "borderBottomWidth": 1,
+            },
+            Object {
+              "backgroundColor": "#f8f3f3",
+            },
+          ]
         }
       >
-        <View>
-          <View
-            collapsable={false}
-            forwardedRef={[Function]}
-            handlerTag={15}
-            handlerType="PanGestureHandler"
-            onGestureHandlerEvent={[Function]}
-            onGestureHandlerStateChange={[Function]}
-            onLayout={[Function]}
-            style={
-              Object {
-                "overflow": "hidden",
-              }
+        <RCTScrollView
+          style={
+            Object {
+              "height": 240,
             }
-            testID="tabsSwipable"
-          >
-            <View
-              collapsable={false}
-              style={
-                Object {
-                  "bottom": 0,
-                  "flexDirection": "row",
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                  "transform": Array [
-                    Object {
-                      "translateX": -10000,
-                    },
-                  ],
-                }
-              }
-            >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "padding": 2,
-                    },
-                  ]
-                }
-              />
-              <View
-                onLayout={[Function]}
-              />
-            </View>
-            <View
-              collapsable={false}
-              style={
-                Object {
-                  "bottom": 0,
-                  "flexDirection": "row-reverse",
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                  "transform": Array [
-                    Object {
-                      "translateX": -10000,
-                    },
-                  ],
-                }
-              }
-            >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "padding": 2,
-                    },
-                  ]
-                }
-              />
-              <View
-                onLayout={[Function]}
-              />
-            </View>
+          }
+        >
+          <View>
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              handlerTag={16}
-              handlerType="TapGestureHandler"
+              handlerTag={15}
+              handlerType="PanGestureHandler"
               onGestureHandlerEvent={[Function]}
               onGestureHandlerStateChange={[Function]}
-              pointerEvents="auto"
+              onLayout={[Function]}
               style={
                 Object {
-                  "transform": Array [
-                    Object {
-                      "translateX": -0,
-                    },
-                  ],
+                  "overflow": "hidden",
                 }
               }
+              testID="tabsSwipable"
             >
               <View
                 collapsable={false}
                 style={
                   Object {
-                    "height": 46,
-                    "overflow": "hidden",
+                    "bottom": 0,
+                    "flexDirection": "row",
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                    "transform": Array [
+                      Object {
+                        "translateX": -10000,
+                      },
+                    ],
                   }
                 }
               >
                 <View
-                  collapsable={false}
-                  forwardedRef={[Function]}
                   style={
-                    Object {
-                      "alignItems": "center",
-                      "backgroundColor": "#ffffff",
-                      "borderColor": "#000000",
-                      "borderRadius": 4,
-                      "borderWidth": 1,
-                      "flexDirection": "row",
-                      "height": 42,
-                    }
+                    Array [
+                      Object {
+                        "padding": 2,
+                      },
+                    ]
                   }
-                >
-                  <View
-                    accessible={true}
-                    focusable={true}
-                    onClick={[Function]}
-                    onResponderGrant={[Function]}
-                    onResponderMove={[Function]}
-                    onResponderRelease={[Function]}
-                    onResponderTerminate={[Function]}
-                    onResponderTerminationRequest={[Function]}
-                    onStartShouldSetResponder={[Function]}
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "flex": 1,
-                        "flexDirection": "row",
-                        "paddingLeft": 12,
-                        "paddingVertical": 12,
-                      }
-                    }
-                    testID="changeTabButton"
-                  >
-                    <View
-                      style={Object {}}
-                    >
-                      <
-                        icon="house"
-                        size={20}
-                      />
-                    </View>
-                    <Text
-                      ellipsizeMode="tail"
-                      numberOfLines={1}
-                      style={
-                        Array [
-                          Object {
-                            "color": "#000000",
-                          },
-                          Array [
-                            Object {
-                              "flex": 1,
-                              "fontSize": 16,
-                              "paddingHorizontal": 10,
-                            },
-                            Object {
-                              "fontWeight": "500",
-                            },
-                          ],
-                        ]
-                      }
-                      suppressHighlighting={true}
-                    >
-                      /
-                    </Text>
-                  </View>
-                  <View
-                    accessible={true}
-                    focusable={true}
-                    onClick={[Function]}
-                    onResponderGrant={[Function]}
-                    onResponderMove={[Function]}
-                    onResponderRelease={[Function]}
-                    onResponderTerminate={[Function]}
-                    onResponderTerminationRequest={[Function]}
-                    onStartShouldSetResponder={[Function]}
-                    style={
-                      Object {
-                        "paddingRight": 16,
-                        "paddingVertical": 16,
-                      }
-                    }
-                    testID="closeTabButton"
-                  >
-                    <
-                      icon="x"
-                      size={14}
-                      style={
-                        Object {
-                          "color": "#655",
-                        }
-                      }
-                    />
-                  </View>
-                </View>
+                />
+                <View
+                  onLayout={[Function]}
+                />
               </View>
-            </View>
-          </View>
-          <View
-            collapsable={false}
-            forwardedRef={[Function]}
-            handlerTag={17}
-            handlerType="PanGestureHandler"
-            onGestureHandlerEvent={[Function]}
-            onGestureHandlerStateChange={[Function]}
-            onLayout={[Function]}
-            style={
-              Object {
-                "overflow": "hidden",
-              }
-            }
-            testID="tabsSwipable"
-          >
-            <View
-              collapsable={false}
-              style={
-                Object {
-                  "bottom": 0,
-                  "flexDirection": "row",
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                  "transform": Array [
-                    Object {
-                      "translateX": -10000,
-                    },
-                  ],
-                }
-              }
-            >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "padding": 2,
-                    },
-                  ]
-                }
-              />
-              <View
-                onLayout={[Function]}
-              />
-            </View>
-            <View
-              collapsable={false}
-              style={
-                Object {
-                  "bottom": 0,
-                  "flexDirection": "row-reverse",
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                  "transform": Array [
-                    Object {
-                      "translateX": -10000,
-                    },
-                  ],
-                }
-              }
-            >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "padding": 2,
-                    },
-                  ]
-                }
-              />
-              <View
-                onLayout={[Function]}
-              />
-            </View>
-            <View
-              collapsable={false}
-              forwardedRef={[Function]}
-              handlerTag={18}
-              handlerType="TapGestureHandler"
-              onGestureHandlerEvent={[Function]}
-              onGestureHandlerStateChange={[Function]}
-              pointerEvents="auto"
-              style={
-                Object {
-                  "transform": Array [
-                    Object {
-                      "translateX": -0,
-                    },
-                  ],
-                }
-              }
-            >
               <View
                 collapsable={false}
                 style={
                   Object {
-                    "height": 46,
-                    "overflow": "hidden",
+                    "bottom": 0,
+                    "flexDirection": "row-reverse",
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                    "transform": Array [
+                      Object {
+                        "translateX": -10000,
+                      },
+                    ],
+                  }
+                }
+              >
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "padding": 2,
+                      },
+                    ]
+                  }
+                />
+                <View
+                  onLayout={[Function]}
+                />
+              </View>
+              <View
+                collapsable={false}
+                forwardedRef={[Function]}
+                handlerTag={16}
+                handlerType="TapGestureHandler"
+                onGestureHandlerEvent={[Function]}
+                onGestureHandlerStateChange={[Function]}
+                pointerEvents="auto"
+                style={
+                  Object {
+                    "transform": Array [
+                      Object {
+                        "translateX": -0,
+                      },
+                    ],
                   }
                 }
               >
                 <View
                   collapsable={false}
-                  forwardedRef={[Function]}
                   style={
                     Object {
-                      "alignItems": "center",
-                      "backgroundColor": "#f8f3f3",
-                      "borderColor": "#968d8d",
-                      "borderRadius": 4,
-                      "borderWidth": 1,
-                      "flexDirection": "row",
-                      "height": 42,
+                      "height": 46,
+                      "overflow": "hidden",
                     }
                   }
                 >
                   <View
-                    accessible={true}
-                    focusable={true}
-                    onClick={[Function]}
-                    onResponderGrant={[Function]}
-                    onResponderMove={[Function]}
-                    onResponderRelease={[Function]}
-                    onResponderTerminate={[Function]}
-                    onResponderTerminationRequest={[Function]}
-                    onStartShouldSetResponder={[Function]}
+                    collapsable={false}
+                    forwardedRef={[Function]}
                     style={
                       Object {
                         "alignItems": "center",
-                        "flex": 1,
+                        "backgroundColor": "#ffffff",
+                        "borderColor": "#000000",
+                        "borderRadius": 4,
+                        "borderWidth": 1,
                         "flexDirection": "row",
-                        "paddingLeft": 12,
-                        "paddingVertical": 12,
+                        "height": 42,
                       }
                     }
-                    testID="changeTabButton"
                   >
                     <View
-                      style={Object {}}
-                    >
-                      <
-                        icon="bell"
-                        size={20}
-                      />
-                    </View>
-                    <Text
-                      ellipsizeMode="tail"
-                      numberOfLines={1}
-                      style={
-                        Array [
-                          Object {
-                            "color": "#000000",
-                          },
-                          Array [
-                            Object {
-                              "flex": 1,
-                              "fontSize": 16,
-                              "paddingHorizontal": 10,
-                            },
-                            false,
-                          ],
-                        ]
-                      }
-                      suppressHighlighting={true}
-                    >
-                      /notifications
-                    </Text>
-                  </View>
-                  <View
-                    accessible={true}
-                    focusable={true}
-                    onClick={[Function]}
-                    onResponderGrant={[Function]}
-                    onResponderMove={[Function]}
-                    onResponderRelease={[Function]}
-                    onResponderTerminate={[Function]}
-                    onResponderTerminationRequest={[Function]}
-                    onStartShouldSetResponder={[Function]}
-                    style={
-                      Object {
-                        "paddingRight": 16,
-                        "paddingVertical": 16,
-                      }
-                    }
-                    testID="closeTabButton"
-                  >
-                    <
-                      icon="x"
-                      size={14}
+                      accessible={true}
+                      focusable={true}
+                      onClick={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
                       style={
                         Object {
-                          "color": "#655",
+                          "alignItems": "center",
+                          "flex": 1,
+                          "flexDirection": "row",
+                          "paddingLeft": 12,
+                          "paddingVertical": 12,
                         }
                       }
-                    />
+                      testID="changeTabButton"
+                    >
+                      <View
+                        style={Object {}}
+                      >
+                        <
+                          icon="magnifying-glass"
+                          size={20}
+                        />
+                      </View>
+                      <Text
+                        ellipsizeMode="tail"
+                        numberOfLines={1}
+                        style={
+                          Array [
+                            Object {
+                              "color": "#000000",
+                            },
+                            Array [
+                              Object {
+                                "flex": 1,
+                                "fontSize": 16,
+                                "paddingHorizontal": 10,
+                              },
+                              Object {
+                                "fontWeight": "500",
+                              },
+                            ],
+                          ]
+                        }
+                        suppressHighlighting={true}
+                      >
+                        
+                      </Text>
+                    </View>
+                    <View
+                      accessible={true}
+                      focusable={true}
+                      onClick={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        Object {
+                          "paddingRight": 16,
+                          "paddingVertical": 16,
+                        }
+                      }
+                      testID="closeTabButton"
+                    >
+                      <
+                        icon="x"
+                        size={14}
+                        style={
+                          Object {
+                            "color": "#655",
+                          }
+                        }
+                      />
+                    </View>
                   </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
-      </RCTScrollView>
+        </RCTScrollView>
+      </View>
     </View>
   </View>
 </View>

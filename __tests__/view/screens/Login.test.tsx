@@ -1,6 +1,5 @@
 import React from 'react'
 import {Login} from '../../../src/view/screens/Login'
-import renderer from 'react-test-renderer'
 import {fireEvent, render} from '../../../jest/test-utils'
 
 describe('Login', () => {
@@ -33,7 +32,7 @@ describe('Login', () => {
   })
 
   it('matches snapshot', () => {
-    const tree = renderer.create(<Login />).toJSON()
-    expect(tree).toMatchSnapshot()
+    const page = render(<Login />)
+    expect(page).toMatchSnapshot()
   })
 })

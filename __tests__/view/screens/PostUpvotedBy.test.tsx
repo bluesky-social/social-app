@@ -1,6 +1,5 @@
 import React from 'react'
 import {PostUpvotedBy} from '../../../src/view/screens/PostUpvotedBy'
-import renderer from 'react-test-renderer'
 import {render} from '../../../jest/test-utils'
 
 describe('PostUpvotedBy', () => {
@@ -25,7 +24,7 @@ describe('PostUpvotedBy', () => {
   })
 
   it('matches snapshot', () => {
-    const tree = renderer.create(<PostUpvotedBy {...mockedProps} />).toJSON()
-    expect(tree).toMatchSnapshot()
+    const page = render(<PostUpvotedBy {...mockedProps} />)
+    expect(page).toMatchSnapshot()
   })
 })

@@ -1,6 +1,5 @@
 import React from 'react'
 import {NotFound} from '../../../src/view/screens/NotFound'
-import renderer from 'react-test-renderer'
 import {fireEvent, render} from '../../../jest/test-utils'
 import {mockedNavigationStore} from '../../../__mocks__/state-mock'
 
@@ -23,7 +22,7 @@ describe('NotFound', () => {
   })
 
   it('matches snapshot', () => {
-    const tree = renderer.create(<NotFound />).toJSON()
-    expect(tree).toMatchSnapshot()
+    const page = render(<NotFound />)
+    expect(page).toMatchSnapshot()
   })
 })

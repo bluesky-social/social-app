@@ -1,6 +1,5 @@
 import React from 'react'
 import {Notifications} from '../../../src/view/screens/Notifications'
-import renderer from 'react-test-renderer'
 import {render} from '../../../jest/test-utils'
 
 describe('Notifications', () => {
@@ -21,7 +20,7 @@ describe('Notifications', () => {
   })
 
   it('matches snapshot', () => {
-    const tree = renderer.create(<Notifications {...mockedProps} />).toJSON()
-    expect(tree).toMatchSnapshot()
+    const page = render(<Notifications {...mockedProps} />)
+    expect(page).toMatchSnapshot()
   })
 })
