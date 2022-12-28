@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo} from 'react'
+import React, {useEffect, useState} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -29,10 +29,12 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
   const [hasSetup, setHasSetup] = useState<boolean>(false)
-  const uiState = useMemo(
+  const uiState = React.useMemo(
     () => new ProfileUiModel(store, {user: params.name}),
     [params.user],
   )
+
+  console.log(uiState)
 
   useEffect(() => {
     let aborted = false
