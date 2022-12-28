@@ -34,8 +34,6 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
     [params.user],
   )
 
-  console.log(uiState)
-
   useEffect(() => {
     let aborted = false
     if (!visible) {
