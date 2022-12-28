@@ -189,7 +189,14 @@ export const mockedNavigationTabStore = {
   setTitle: jest.fn(),
   setIsNewTab: jest.fn(),
   fixedTabPurpose: 0,
-  getBackList: jest.fn(),
+  getBackList: () => [
+    {
+      url: '/',
+      title: '',
+      index: 1,
+      id: 1,
+    },
+  ],
   getForwardList: jest.fn(),
 } as NavigationTabModel
 

@@ -316,7 +316,7 @@ export const MobileShell: React.FC = observer(() => {
         start={{x: 0, y: 0.8}}
         end={{x: 0, y: 1}}
         style={styles.outerContainer}>
-        <SafeAreaView style={styles.innerContainer}>
+        <SafeAreaView testID="noSessionView" style={styles.innerContainer}>
           <Login />
         </SafeAreaView>
         <Modal />
@@ -325,7 +325,7 @@ export const MobileShell: React.FC = observer(() => {
   }
   if (store.onboard.isOnboarding) {
     return (
-      <View style={styles.outerContainer}>
+      <View testID="onboardOuterView" style={styles.outerContainer}>
         <View style={styles.innerContainer}>
           <Onboard />
         </View>
@@ -337,7 +337,7 @@ export const MobileShell: React.FC = observer(() => {
   const isAtNotifications = store.nav.tab.current.url === '/notifications'
 
   return (
-    <View style={styles.outerContainer}>
+    <View testID="mobileShellView" style={styles.outerContainer}>
       <View style={[styles.innerContainer, {paddingTop: safeAreaInsets.top}]}>
         <HorzSwipe
           distThresholdDivisor={1.5}
