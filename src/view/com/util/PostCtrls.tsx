@@ -3,7 +3,7 @@ import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
 import {Text} from './text/Text'
-import {UpIcon, UpIconSolid} from '../../lib/icons'
+import {UpIcon, UpIconSolid, CommentBottomArrow} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 
@@ -102,13 +102,13 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           style={styles.ctrl}
           hitSlop={HITSLOP}
           onPress={opts.onPressReply}>
-          <FontAwesomeIcon
+          <CommentBottomArrow
             style={styles.ctrlIcon}
-            icon={['far', 'comment']}
-            size={opts.big ? 20 : 14}
+            strokeWidth={3}
+            size={opts.big ? 20 : 15}
           />
           {typeof opts.replyCount !== 'undefined' ? (
-            <Text style={[sRedgray, s.ml5, s.f16]}>{opts.replyCount}</Text>
+            <Text style={[sRedgray, s.ml5, s.f15]}>{opts.replyCount}</Text>
           ) : undefined}
         </TouchableOpacity>
       </View>
@@ -123,15 +123,15 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                 opts.isReposted ? styles.ctrlIconReposted : styles.ctrlIcon
               }
               icon="retweet"
-              size={opts.big ? 22 : 18}
+              size={opts.big ? 22 : 17}
             />
           </Animated.View>
           {typeof opts.repostCount !== 'undefined' ? (
             <Text
               style={
                 opts.isReposted
-                  ? [s.bold, s.green3, s.f16, s.ml5]
-                  : [sRedgray, s.f16, s.ml5]
+                  ? [s.bold, s.green3, s.f15, s.ml5]
+                  : [sRedgray, s.f15, s.ml5]
               }>
               {opts.repostCount}
             </Text>
@@ -147,12 +147,12 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             {opts.isUpvoted ? (
               <UpIconSolid
                 style={[styles.ctrlIconUpvoted]}
-                size={opts.big ? 22 : 18}
+                size={opts.big ? 22 : 17}
               />
             ) : (
               <UpIcon
                 style={[styles.ctrlIcon]}
-                size={opts.big ? 22 : 18}
+                size={opts.big ? 22 : 17}
                 strokeWidth={1.5}
               />
             )}
@@ -161,8 +161,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             <Text
               style={
                 opts.isUpvoted
-                  ? [s.bold, s.red3, s.f16, s.ml5]
-                  : [sRedgray, s.f16, s.ml5]
+                  ? [s.bold, s.red3, s.f15, s.ml5]
+                  : [sRedgray, s.f15, s.ml5]
               }>
               {opts.upvoteCount}
             </Text>
