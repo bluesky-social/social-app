@@ -70,7 +70,16 @@ describe('Home', () => {
   })
 
   it('renders and clicks try again button', async () => {
-    const {findByTestId} = render(<Home {...mockedProps} />)
+    const {findByTestId} = render(<Home {...mockedProps} />, {
+      ...mockedRootStore,
+      me: {
+        ...mockedMeStore,
+        mainFeed: {
+          ...mockedMeStore.mainFeed,
+          hasError: true,
+        },
+      },
+    })
 
     const tryAgainButton = await findByTestId('tryAgainButton')
     expect(tryAgainButton).toBeTruthy()
