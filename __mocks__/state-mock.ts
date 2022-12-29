@@ -14,6 +14,7 @@ import {NotificationsViewModel} from '../src/state/models/notifications-view'
 import {ProfileViewModel} from '../src/state/models/profile-view'
 import {MembersViewModel} from '../src/state/models/members-view'
 import {ProfileUiModel, Sections} from '../src/state/models/profile-ui'
+import {SessionServiceClient} from '@atproto/api'
 
 export const mockedProfileStore = {
   isLoading: false,
@@ -364,7 +365,7 @@ export const mockedLinkMetasStore = {
 } as LinkMetasViewModel
 
 export const mockedRootStore = {
-  api: false,
+  api: {} as SessionServiceClient,
   resolveName: jest.fn(),
   serialize: jest.fn(),
   hydrate: jest.fn(),
