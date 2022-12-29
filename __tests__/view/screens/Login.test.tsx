@@ -8,7 +8,6 @@ describe('Login', () => {
     const signUpScreen = getByTestId('signinOrCreateAccount')
 
     expect(signUpScreen).toBeTruthy()
-    // testID =
   })
 
   it('renders Signin screen', () => {
