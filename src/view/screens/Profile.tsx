@@ -143,7 +143,11 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
           }
           renderItem = (item: any) => {
             if (item === END_ITEM) {
-              return <Text style={styles.endItem}>- end of feed -</Text>
+              return (
+                <Text testID="endOfFeed" style={styles.endItem}>
+                  - end of feed -
+                </Text>
+              )
             }
             return <FeedItem item={item} />
           }
@@ -192,11 +196,14 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
         if (uiState.members.hasContent) {
           items = uiState.members.members.slice()
           renderItem = (item: any) => {
+            console.log('isSceneCreator', isSceneCreator)
             const shouldAdmin = isSceneCreator && item.did !== store.me.did
+            console.log('shouldAdmin', shouldAdmin)
             const renderButton = shouldAdmin
               ? () => (
                   <>
                     <FontAwesomeIcon
+                      testID="shouldAdminButton"
                       icon="user-xmark"
                       style={[s.mr5]}
                       size={14}

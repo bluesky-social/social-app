@@ -382,7 +382,38 @@ exports[`Notifications matches snapshot 1`] = `
           "flex": 1,
         }
       }
-    />
+    >
+      <RCTScrollView
+        data={Array []}
+        getItem={[Function]}
+        getItemCount={[Function]}
+        keyExtractor={[Function]}
+        onContentSizeChange={[Function]}
+        onEndReached={[Function]}
+        onLayout={[Function]}
+        onMomentumScrollBegin={[Function]}
+        onMomentumScrollEnd={[Function]}
+        onRefresh={[Function]}
+        onScroll={[Function]}
+        onScrollBeginDrag={[Function]}
+        onScrollEndDrag={[Function]}
+        refreshControl={
+          <RefreshControlMock
+            onRefresh={[Function]}
+            refreshing={false}
+          />
+        }
+        refreshing={false}
+        removeClippedSubviews={false}
+        renderItem={[Function]}
+        scrollEventThrottle={50}
+        stickyHeaderIndices={Array []}
+        viewabilityConfigCallbackPairs={Array []}
+      >
+        <RCTRefreshControl />
+        <View />
+      </RCTScrollView>
+    </View>
   </View>
 </View>
 `;

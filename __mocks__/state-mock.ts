@@ -59,7 +59,7 @@ export const mockedProfileStore = {
 export const mockedMembersStore = {
   isLoading: false,
   isRefreshing: false,
-  hasLoaded: false,
+  hasLoaded: true,
   error: '',
   params: {
     actor: '',
@@ -76,7 +76,7 @@ export const mockedMembersStore = {
   },
   members: [
     {
-      did: '',
+      did: '321',
       declaration: {
         cid: '',
         actorType: '',
@@ -101,7 +101,7 @@ export const mockedMembersStore = {
 export const mockedMembershipsModel = {
   isLoading: false,
   isRefreshing: false,
-  hasLoaded: false,
+  hasLoaded: true,
   error: '',
   params: {
     actor: '',
@@ -144,7 +144,7 @@ export const mockedFeedModel = {
   isLoading: false,
   isRefreshing: false,
   hasNewLatest: false,
-  hasLoaded: false,
+  hasLoaded: true,
   error: '',
   hasMore: true,
   params: {
@@ -158,7 +158,37 @@ export const mockedFeedModel = {
   hasContent: true,
   hasError: false,
   isEmpty: false,
-  nonReplyFeed: [],
+  nonReplyFeed: [
+    {
+      _reactKey: 'item-1',
+      post: {
+        author: {
+          handle: 'handle.test',
+          displayName: 'test name',
+          avatar: '',
+        },
+        cid: 'bafyreihkwjoy2vbfqld2lp3tv4ce6yfr354sqgp32qoplrudso4gyyjiwe',
+        downvoteCount: 0,
+        indexedAt: '2022-12-29T16:35:55.270Z',
+        record: {
+          $type: 'app.bsky.feed.post',
+          createdAt: '2022-12-29T16:39:57.919Z',
+          text: 'Sup',
+        },
+        replyCount: 0,
+        repostCount: 0,
+        upvoteCount: 0,
+        uri: 'at://did:plc:wcizmlgv3rdslk64t6q4silu/app.bsky.feed.post/3jkzce5kfvn2h',
+        viewer: {
+          handle: 'handle.test',
+          displayName: 'test name',
+          avatar: '',
+        },
+      },
+      reason: undefined,
+      reply: undefined,
+    },
+  ],
   setHasNewLatest: jest.fn(),
   setup: jest.fn().mockResolvedValue({aborted: false}),
   refresh: jest.fn(),
@@ -172,7 +202,7 @@ export const mockedFeedModel = {
 export const mockedNotificationsModel = {
   isLoading: false,
   isRefreshing: false,
-  hasLoaded: false,
+  hasLoaded: true,
   error: '',
   params: {
     limit: 1,
