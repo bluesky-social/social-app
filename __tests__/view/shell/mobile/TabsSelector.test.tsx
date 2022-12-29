@@ -13,6 +13,10 @@ describe('TabsSelector', () => {
     onClose: onCloseMock,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders tabs selector', () => {
     const {getByTestId} = render(<TabsSelector {...mockedProps} />)
 

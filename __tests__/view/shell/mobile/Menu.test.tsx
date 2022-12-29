@@ -14,6 +14,10 @@ describe('Menu', () => {
     onClose: onCloseMock,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders menu', () => {
     const {getByTestId} = render(<Menu {...mockedProps} />)
 

@@ -12,6 +12,10 @@ describe('ProfileMembers', () => {
     visible: true,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders members screen', async () => {
     const {findByTestId} = render(<ProfileMembers {...mockedProps} />)
     const profileMembersView = await findByTestId('profileMembersView')

@@ -16,6 +16,10 @@ describe('Home', () => {
     visible: true,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders feed', async () => {
     const {findByTestId} = render(<Home {...mockedProps} />)
     const feed = await findByTestId('homeFeed')

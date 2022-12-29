@@ -12,6 +12,10 @@ describe('Prompt', () => {
     onPressCompose: onPressMock,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('triggers onPressCompose by pressing the button', async () => {
     const {findByTestId} = render(<ComposePrompt {...mockedProps} />)
     const composePromptButton = await findByTestId('composePromptButton')

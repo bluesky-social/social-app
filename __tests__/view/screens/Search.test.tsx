@@ -12,6 +12,10 @@ describe('Search', () => {
     visible: true,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders search screen', async () => {
     const {findByTestId} = render(<Search {...mockedProps} />)
     const searchScreen = await findByTestId('searchScreen')

@@ -19,6 +19,10 @@ describe('Autocomplete', () => {
     onSelect: onSelectMock,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it("renders a button for each users'", async () => {
     const {findAllByTestId} = render(<Autocomplete {...mockedProps} />)
     const autocompleteButton = await findAllByTestId('autocompleteButton')

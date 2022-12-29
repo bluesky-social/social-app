@@ -4,6 +4,10 @@ import {fireEvent, render} from '../../../jest/test-utils'
 import {mockedNavigationStore} from '../../../__mocks__/state-mock'
 
 describe('NotFound', () => {
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders not found screen', async () => {
     const {findByTestId} = render(<NotFound />)
     const notFoundView = await findByTestId('notFoundView')

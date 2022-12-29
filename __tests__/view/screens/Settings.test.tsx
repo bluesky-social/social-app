@@ -9,6 +9,10 @@ describe('Settings', () => {
     visible: true,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders settings screen', async () => {
     const {findByTestId} = render(<Settings {...mockedProps} />)
     const settingsView = await findByTestId('settingsView')

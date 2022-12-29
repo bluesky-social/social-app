@@ -13,6 +13,10 @@ describe('PostDownvotedBy', () => {
     visible: true,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders downvoted by screen', async () => {
     const {findByTestId} = render(<PostDownvotedBy {...mockedProps} />)
     const postDownvotedByView = await findByTestId('postDownvotedByView')

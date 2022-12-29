@@ -12,6 +12,10 @@ describe('ProfileFollows', () => {
     visible: true,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders followed screen', async () => {
     const {findByTestId} = render(<ProfileFollows {...mockedProps} />)
     const profileFollowsView = await findByTestId('profileFollowsView')

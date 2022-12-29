@@ -5,6 +5,10 @@ import {render} from '../../../jest/test-utils'
 describe('Onboard', () => {
   jest.useFakeTimers()
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders onboard screen', async () => {
     const {findByTestId} = render(<Onboard />)
     const onboardView = await findByTestId('onboardView')

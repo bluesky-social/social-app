@@ -12,6 +12,10 @@ describe('PostThread', () => {
     visible: true,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders post screen', async () => {
     const {findByTestId} = render(<PostThread {...mockedProps} />)
     const postThreadView = await findByTestId('postThreadView')

@@ -17,7 +17,11 @@ describe('Composer', () => {
     onClose: jest.fn(),
   }
 
-  it('tests', () => {
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
+  it('renders', () => {
     render(<Composer {...mockedProps} />)
   })
 

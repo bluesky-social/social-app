@@ -3,6 +3,10 @@ import {Login} from '../../../src/view/screens/Login'
 import {fireEvent, render} from '../../../jest/test-utils'
 
 describe('Login', () => {
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders initial screen', () => {
     const {getByTestId} = render(<Login />)
     const signUpScreen = getByTestId('signinOrCreateAccount')

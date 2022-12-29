@@ -9,6 +9,10 @@ describe('Notifications', () => {
     visible: true,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders notifications screen', async () => {
     const {findByTestId} = render(<Notifications {...mockedProps} />)
     const notificationsView = await findByTestId('notificationsView')

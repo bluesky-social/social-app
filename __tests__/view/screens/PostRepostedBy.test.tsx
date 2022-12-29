@@ -13,6 +13,10 @@ describe('PostRepostedBy', () => {
     visible: true,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders reposted by screen', async () => {
     const {findByTestId} = render(<PostRepostedBy {...mockedProps} />)
     const postRepostedByView = await findByTestId('postRepostedByView')

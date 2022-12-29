@@ -10,6 +10,10 @@ describe('Contacts', () => {
     visible: true,
   }
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders contacts page', () => {
     const {getByTestId} = render(<Contacts {...mockedProps} />)
 
