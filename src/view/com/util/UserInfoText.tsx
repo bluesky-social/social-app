@@ -5,8 +5,10 @@ import {Link} from './Link'
 import {Text} from './text/Text'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
 import {useStores} from '../../../state'
+import {TypographyVariant} from '../../lib/ThemeContext'
 
 export function UserInfoText({
+  type = 'body1',
   did,
   attr,
   loading,
@@ -15,6 +17,7 @@ export function UserInfoText({
   style,
   asLink,
 }: {
+  type?: TypographyVariant
   did: string
   attr?: keyof GetProfile.OutputSchema
   loading?: string
@@ -52,9 +55,15 @@ export function UserInfoText({
 
   let inner
   if (didFail) {
-    inner = <Text style={style}>{failed}</Text>
+    inner = (
+      <Text type={type} style={style}>
+        {failed}
+      </Text>
+    )
   } else if (profile) {
-    inner = <Text style={style}>{`${prefix || ''}${profile[attr]}`}</Text>
+    inner = (
+      <Text type={type} style={style}>{`${prefix || ''}${profile[attr]}`}</Text>
+    )
   } else {
     inner = (
       <LoadingPlaceholder

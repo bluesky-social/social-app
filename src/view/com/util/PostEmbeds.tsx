@@ -7,6 +7,8 @@ import {colors} from '../../lib/styles'
 import {AutoSizedImage} from './images/AutoSizedImage'
 import {ImagesLightbox} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
+import {useTheme} from '../../lib/ThemeContext'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 type Embed =
   | AppBskyEmbedImages.Presented
@@ -20,6 +22,8 @@ export function PostEmbeds({
   embed?: Embed
   style?: StyleProp<ViewStyle>
 }) {
+  const theme = useTheme()
+  const pal = usePalette('default')
   const store = useStores()
   if (embed?.$type === 'app.bsky.embed.images#presented') {
     const imgEmbed = embed as AppBskyEmbedImages.Presented
@@ -90,18 +94,24 @@ export function PostEmbeds({
     const externalEmbed = embed as AppBskyEmbedExternal.Presented
     const link = externalEmbed.external
     return (
-      <Link style={[styles.extOuter, style]} href={link.uri} noFeedback>
+      <Link
+        style={[styles.extOuter, pal.view, pal.border, style]}
+        href={link.uri}
+        noFeedback>
         {link.thumb ? (
           <AutoSizedImage style={style} uri={link.thumb} />
         ) : undefined}
-        <Text numberOfLines={1} style={styles.extTitle}>
+        <Text type="h5" numberOfLines={1} style={pal.text}>
           {link.title || link.uri}
         </Text>
-        <Text numberOfLines={1} style={styles.extUrl}>
+        <Text type="body2" numberOfLines={1} style={pal.textLight}>
           {link.uri}
         </Text>
         {link.description ? (
-          <Text numberOfLines={2} style={styles.extDescription}>
+          <Text
+            type="body1"
+            numberOfLines={2}
+            style={[pal.text, styles.extDescription]}>
             {link.description}
           </Text>
         ) : undefined}
@@ -140,23 +150,10 @@ const styles = StyleSheet.create({
   },
 
   extOuter: {
-    borderWidth: 1,
-    borderColor: colors.gray2,
     borderRadius: 8,
     padding: 10,
   },
-  extImage: {},
-  extTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: colors.black,
-  },
   extDescription: {
     marginTop: 4,
-    fontSize: 15,
-    color: colors.black,
-  },
-  extUrl: {
-    color: colors.gray4,
   },
 })

@@ -5,18 +5,21 @@ export const defaultTheme: Theme = {
   colorScheme: 'light',
   palette: {
     default: {
-      isLowContrast: false,
       background: colors.white,
       backgroundLight: colors.gray2,
       text: colors.black,
       textLight: colors.gray5,
       textInverted: colors.white,
       link: colors.blue3,
-      border: colors.gray3,
+      border: colors.gray2,
       icon: colors.gray2,
+
+      // non-standard
+      actionLabel: colors.gray4,
+      replyLine: colors.gray2,
+      replyLineDot: colors.gray3,
     },
     primary: {
-      isLowContrast: true,
       background: colors.blue3,
       backgroundLight: colors.blue2,
       text: colors.white,
@@ -27,7 +30,6 @@ export const defaultTheme: Theme = {
       icon: colors.blue4,
     },
     secondary: {
-      isLowContrast: true,
       background: colors.green3,
       backgroundLight: colors.green2,
       text: colors.white,
@@ -38,7 +40,6 @@ export const defaultTheme: Theme = {
       icon: colors.green4,
     },
     inverted: {
-      isLowContrast: true,
       background: colors.black,
       backgroundLight: colors.gray6,
       text: colors.white,
@@ -49,7 +50,6 @@ export const defaultTheme: Theme = {
       icon: colors.gray5,
     },
     error: {
-      isLowContrast: true,
       background: colors.red3,
       backgroundLight: colors.red2,
       text: colors.white,
@@ -90,6 +90,16 @@ export const defaultTheme: Theme = {
       fontSize: 20,
       letterSpacing: 0.15,
     },
+    h5: {
+      fontWeight: 'bold',
+      fontSize: 17,
+      letterSpacing: 0.15,
+    },
+    h6: {
+      fontWeight: '400',
+      fontSize: 15,
+      letterSpacing: 0.15,
+    },
     subtitle1: {
       fontSize: 16,
       letterSpacing: 0.15,
@@ -116,10 +126,14 @@ export const defaultTheme: Theme = {
       fontSize: 12,
       letterSpacing: 0.4,
     },
-    overline: {
+    overline1: {
       fontSize: 10,
       letterSpacing: 1.5,
       textTransform: 'uppercase',
+    },
+    overline2: {
+      fontSize: 14,
+      fontWeight: '600',
     },
   },
 }
@@ -130,15 +144,19 @@ export const darkTheme: Theme = {
   palette: {
     ...defaultTheme.palette,
     default: {
-      isLowContrast: true,
-      background: colors.black,
+      background: colors.gray8,
       backgroundLight: colors.gray6,
       text: colors.white,
       textLight: colors.gray3,
       textInverted: colors.black,
-      link: colors.blue2,
-      border: colors.gray3,
+      link: colors.blue3,
+      border: colors.gray6,
       icon: colors.gray5,
+
+      // non-standard
+      actionLabel: colors.gray3,
+      replyLine: colors.gray5,
+      replyLineDot: colors.gray6,
     },
     primary: {
       ...defaultTheme.palette.primary,
@@ -149,7 +167,6 @@ export const darkTheme: Theme = {
       textInverted: colors.green2,
     },
     inverted: {
-      isLowContrast: false,
       background: colors.white,
       backgroundLight: colors.gray2,
       text: colors.black,

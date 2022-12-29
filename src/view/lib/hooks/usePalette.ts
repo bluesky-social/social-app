@@ -23,19 +23,15 @@ export function usePalette(color: PaletteColorName): UsePaletteValue {
     },
     text: {
       color: palette.text,
-      fontWeight: palette.isLowContrast ? '500' : undefined,
     },
     textLight: {
       color: palette.textLight,
-      fontWeight: palette.isLowContrast ? '500' : undefined,
     },
     textInverted: {
       color: palette.textInverted,
-      fontWeight: palette.isLowContrast ? '500' : undefined,
     },
     link: {
       color: palette.link,
-      fontWeight: palette.isLowContrast ? '500' : undefined,
     },
   }
 }
