@@ -11,7 +11,6 @@ export type PaletteColorName =
   | 'inverted'
   | 'error'
 export type PaletteColor = {
-  isLowContrast: boolean
   background: string
   backgroundLight: string
   text: string
@@ -20,6 +19,7 @@ export type PaletteColor = {
   link: string
   border: string
   icon: string
+  [k: string]: string
 }
 export type Palette = Record<PaletteColorName, PaletteColor>
 
@@ -31,13 +31,16 @@ export type TypographyVariant =
   | 'h2'
   | 'h3'
   | 'h4'
+  | 'h5'
+  | 'h6'
   | 'subtitle1'
   | 'subtitle2'
   | 'body1'
   | 'body2'
   | 'button'
   | 'caption'
-  | 'overline'
+  | 'overline1'
+  | 'overline2'
 export type Typography = Record<TypographyVariant, TextStyle>
 
 export interface Theme {
