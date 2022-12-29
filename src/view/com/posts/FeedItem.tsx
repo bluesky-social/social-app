@@ -310,10 +310,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    paddingBottom: 8,
+    paddingBottom: 4,
   },
   postEmbeds: {
-    marginBottom: 10,
+    marginBottom: 0,
   },
   viewFullThread: {
     paddingTop: 12,
