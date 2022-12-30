@@ -3,11 +3,10 @@ import {ImageStyle, StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from './text/Text'
-import {colors} from '../../lib/styles'
 import {AutoSizedImage} from './images/AutoSizedImage'
+import {ImageLayoutGrid} from './images/ImageLayoutGrid'
 import {ImagesLightbox} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
-import {useTheme} from '../../lib/ThemeContext'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 type Embed =
@@ -22,7 +21,6 @@ export function PostEmbeds({
   embed?: Embed
   style?: StyleProp<ViewStyle>
 }) {
-  const theme = useTheme()
   const pal = usePalette('default')
   const store = useStores()
   if (embed?.$type === 'app.bsky.embed.images#presented') {
@@ -32,59 +30,44 @@ export function PostEmbeds({
       const openLightbox = (index: number) => {
         store.shell.openLightbox(new ImagesLightbox(uris, index))
       }
-      const Thumb = ({i, style}: {i: number; style: StyleProp<ImageStyle>}) => (
-        <AutoSizedImage
-          style={style}
-          uri={imgEmbed.images[i].thumb}
-          onPress={() => openLightbox(i)}
-        />
-      )
       if (imgEmbed.images.length === 4) {
         return (
           <View style={styles.imagesContainer}>
-            <View style={styles.imagePair}>
-              <Thumb i={0} style={styles.imagePairItem} />
-              <View style={styles.imagesWidthSpacer} />
-              <Thumb i={1} style={styles.imagePairItem} />
-            </View>
-            <View style={styles.imagesHeightSpacer} />
-            <View style={styles.imagePair}>
-              <Thumb i={2} style={styles.imagePairItem} />
-              <View style={styles.imagesWidthSpacer} />
-              <Thumb i={3} style={styles.imagePairItem} />
-            </View>
+            <ImageLayoutGrid
+              type="four"
+              uris={imgEmbed.images.map(img => img.thumb)}
+              onPress={openLightbox}
+            />
           </View>
         )
       } else if (imgEmbed.images.length === 3) {
         return (
           <View style={styles.imagesContainer}>
-            <View style={styles.imageWide}>
-              <Thumb i={0} style={styles.imageWideItem} />
-            </View>
-            <View style={styles.imagesHeightSpacer} />
-            <View style={styles.imagePair}>
-              <Thumb i={1} style={styles.imagePairItem} />
-              <View style={styles.imagesWidthSpacer} />
-              <Thumb i={2} style={styles.imagePairItem} />
-            </View>
+            <ImageLayoutGrid
+              type="three"
+              uris={imgEmbed.images.map(img => img.thumb)}
+              onPress={openLightbox}
+            />
           </View>
         )
       } else if (imgEmbed.images.length === 2) {
         return (
           <View style={styles.imagesContainer}>
-            <View style={styles.imagePair}>
-              <Thumb i={0} style={styles.imagePairItem} />
-              <View style={styles.imagesWidthSpacer} />
-              <Thumb i={1} style={styles.imagePairItem} />
-            </View>
+            <ImageLayoutGrid
+              type="two"
+              uris={imgEmbed.images.map(img => img.thumb)}
+              onPress={openLightbox}
+            />
           </View>
         )
       } else {
         return (
           <View style={styles.imagesContainer}>
-            <View style={styles.imageBig}>
-              <Thumb i={0} style={styles.imageBigItem} />
-            </View>
+            <AutoSizedImage
+              uri={imgEmbed.images[0].thumb}
+              onPress={() => openLightbox(0)}
+              containerStyle={{borderRadius: 4}}
+            />
           </View>
         )
       }
@@ -99,7 +82,7 @@ export function PostEmbeds({
         href={link.uri}
         noFeedback>
         {link.thumb ? (
-          <AutoSizedImage style={style} uri={link.thumb} />
+          <AutoSizedImage uri={link.thumb} containerStyle={{borderRadius: 4}} />
         ) : undefined}
         <Text type="h5" numberOfLines={1} style={pal.text}>
           {link.title || link.uri}
@@ -123,34 +106,10 @@ export function PostEmbeds({
 
 const styles = StyleSheet.create({
   imagesContainer: {
+    marginTop: 4,
     marginBottom: 6,
   },
-  imagesWidthSpacer: {
-    width: 5,
-  },
-  imagesHeightSpacer: {
-    height: 5,
-  },
-  imagePair: {
-    flexDirection: 'row',
-  },
-  imagePairItem: {
-    resizeMode: 'contain',
-    flex: 1,
-    borderRadius: 4,
-  },
-  imageWide: {},
-  imageWideItem: {
-    resizeMode: 'contain',
-    borderRadius: 4,
-  },
-  imageBig: {},
-  imageBigItem: {
-    borderRadius: 4,
-  },
-
   extOuter: {
-    borderRadius: 8,
     padding: 10,
   },
   extDescription: {
