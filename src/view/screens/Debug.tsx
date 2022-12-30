@@ -176,6 +176,7 @@ function PaletteView({palette}: {palette: PaletteColorName}) {
         pal.view,
         pal.border,
         {
+          borderWidth: 1,
           padding: 10,
           marginBottom: 5,
         },

@@ -18,7 +18,6 @@ export function usePalette(color: PaletteColorName): UsePaletteValue {
       backgroundColor: palette.background,
     },
     border: {
-      borderWidth: 1,
       borderColor: palette.border,
     },
     text: {

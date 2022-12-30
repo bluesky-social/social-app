@@ -180,8 +180,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             ) : undefined}
             <PostEmbeds embed={item.post.embed} style={s.mb10} />
             {item._isHighlightedPost && hasEngagement ? (
-              <View
-                style={[styles.expandedInfo, {borderColor: pal.colors.border}]}>
+              <View style={[styles.expandedInfo, pal.border]}>
                 {item.post.repostCount ? (
                   <Link
                     style={styles.expandedInfoItem}
