@@ -19,6 +19,7 @@ import {
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {Text} from '../../com/util/text/Text'
 import {CreateSceneModal} from '../../../state/models/shell-ui'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export const Menu = ({
   visible,
@@ -27,6 +28,7 @@ export const Menu = ({
   visible: boolean
   onClose: () => void
 }) => {
+  const pal = usePalette('default')
   const store = useStores()
 
   useEffect(() => {
@@ -86,9 +88,10 @@ export const Menu = ({
         ) : undefined}
       </View>
       <Text
+        type="h4"
         style={[
-          styles.menuItemLabel,
-          bold ? styles.menuItemLabelBold : undefined,
+          pal.text,
+          bold ? styles.menuItemLabelBold : styles.menuItemLabel,
         ]}
         numberOfLines={1}>
         {label}
@@ -97,7 +100,7 @@ export const Menu = ({
   )
 
   return (
-    <View style={styles.view}>
+    <View style={[styles.view, pal.view]}>
       <TouchableOpacity
         onPress={() => onNavigate(`/profile/${store.me.handle}`)}
         style={styles.profileCard}>
@@ -108,46 +111,47 @@ export const Menu = ({
           avatar={store.me.avatar}
         />
         <View style={s.flex1}>
-          <Text style={styles.profileCardDisplayName}>
+          <Text
+            type="h3"
+            style={[pal.text, styles.profileCardDisplayName]}
+            numberOfLines={1}>
             {store.me.displayName}
           </Text>
-          <Text style={styles.profileCardHandle}>{store.me.handle}</Text>
+          <Text
+            style={[pal.textLight, styles.profileCardHandle]}
+            numberOfLines={1}>
+            @{store.me.handle}
+          </Text>
         </View>
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.searchBtn}
+        style={[styles.searchBtn, pal.btn]}
         onPress={() => onNavigate('/search')}>
         <MagnifyingGlassIcon
-          style={{color: colors.gray5} as StyleProp<ViewStyle>}
+          style={pal.text as StyleProp<ViewStyle>}
           size={25}
         />
-        <Text style={styles.searchBtnLabel}>Search</Text>
+        <Text type="h4" style={[pal.text, styles.searchBtnLabel]}>
+          Search
+        </Text>
       </TouchableOpacity>
-      <View style={styles.section}>
+      <View style={[styles.section, pal.border]}>
         <MenuItem
-          icon={
-            <HomeIcon
-              style={{color: colors.gray6} as StyleProp<ViewStyle>}
-              size="26"
-            />
-          }
+          icon={<HomeIcon style={pal.text as StyleProp<ViewStyle>} size="26" />}
           label="Home"
           url="/"
         />
         <MenuItem
-          icon={
-            <BellIcon
-              style={{color: colors.gray6} as StyleProp<ViewStyle>}
-              size="28"
-            />
-          }
+          icon={<BellIcon style={pal.text as StyleProp<ViewStyle>} size="28" />}
           label="Notifications"
           url="/notifications"
-          count={store.me.notificationCount}
+          count={store.me.notificationCount || 10}
         />
       </View>
-      <View style={styles.section}>
-        <Text style={styles.heading}>Scenes</Text>
+      <View style={[styles.section, pal.border]}>
+        <Text type="h5" style={[pal.text, styles.heading]}>
+          Scenes
+        </Text>
         {store.me.memberships
           ? store.me.memberships.memberships.map((membership, i) => (
               <MenuItem
@@ -166,13 +170,10 @@ export const Menu = ({
             ))
           : undefined}
       </View>
-      <View style={styles.section}>
+      <View style={[styles.section, pal.border]}>
         <MenuItem
           icon={
-            <UserGroupIcon
-              style={{color: colors.gray6} as StyleProp<ViewStyle>}
-              size="30"
-            />
+            <UserGroupIcon style={pal.text as StyleProp<ViewStyle>} size="30" />
           }
           label="Create a scene"
           onPress={onPressCreateScene}
@@ -180,7 +181,7 @@ export const Menu = ({
         <MenuItem
           icon={
             <CogIcon
-              style={{color: colors.gray6} as StyleProp<ViewStyle>}
+              style={pal.text as StyleProp<ViewStyle>}
               size="30"
               strokeWidth={2}
             />
@@ -190,7 +191,7 @@ export const Menu = ({
         />
       </View>
       <View style={styles.footer}>
-        <Text style={s.gray4}>
+        <Text style={[pal.textLight]}>
           Build version {VersionNumber.appVersion} ({VersionNumber.buildVersion}
           )
         </Text>
@@ -202,18 +203,14 @@ export const Menu = ({
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    backgroundColor: colors.white,
   },
   section: {
     paddingHorizontal: 10,
     paddingTop: 10,
     paddingBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: colors.gray1,
   },
   heading: {
-    fontSize: 16,
-    fontWeight: 'bold',
     paddingVertical: 8,
     paddingHorizontal: 4,
   },
@@ -226,19 +223,13 @@ const styles = StyleSheet.create({
   },
   profileCardDisplayName: {
     marginLeft: 12,
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.gray7,
   },
   profileCardHandle: {
     marginLeft: 12,
-    fontSize: 18,
-    color: colors.gray6,
   },
 
   searchBtn: {
     flexDirection: 'row',
-    backgroundColor: colors.gray1,
     borderRadius: 8,
     margin: 10,
     marginBottom: 0,
@@ -246,16 +237,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   searchBtnLabel: {
-    marginLeft: 8,
-    fontSize: 19,
-    color: colors.gray6,
+    marginLeft: 14,
+    fontWeight: 'normal',
   },
 
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 8,
-    paddingHorizontal: 6,
+    paddingLeft: 6,
+    paddingRight: 10,
   },
   menuItemIconWrapper: {
     width: 36,
@@ -265,10 +256,11 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   menuItemLabel: {
-    fontSize: 19,
-    color: colors.gray7,
+    flex: 1,
+    fontWeight: 'normal',
   },
   menuItemLabelBold: {
+    flex: 1,
     fontWeight: 'bold',
   },
   menuItemCount: {
