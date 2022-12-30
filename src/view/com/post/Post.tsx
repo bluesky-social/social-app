@@ -23,6 +23,7 @@ import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export const Post = observer(function Post({
   uri,
@@ -35,6 +36,7 @@ export const Post = observer(function Post({
   showReplyLine?: boolean
   style?: StyleProp<ViewStyle>
 }) {
+  const pal = usePalette('default')
   const store = useStores()
   const [view, setView] = useState<PostThreadViewModel | undefined>(initView)
   const [deleted, setDeleted] = useState(false)
@@ -58,7 +60,7 @@ export const Post = observer(function Post({
   // =
   if (!view || view.isLoading || view.params.uri !== uri) {
     return (
-      <View>
+      <View style={pal.view}>
         <ActivityIndicator />
       </View>
     )
@@ -68,7 +70,7 @@ export const Post = observer(function Post({
   // =
   if (view.hasError || !view.thread) {
     return (
-      <View>
+      <View style={pal.view}>
         <Text>{view.error || 'Thread not found'}</Text>
       </View>
     )
@@ -134,7 +136,7 @@ export const Post = observer(function Post({
 
   return (
     <Link
-      style={[styles.outer, style]}
+      style={[styles.outer, pal.view, pal.border, style]}
       href={itemHref}
       title={itemTitle}
       noFeedback>
@@ -164,12 +166,19 @@ export const Post = observer(function Post({
           />
           {replyHref !== '' && (
             <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
-              <FontAwesomeIcon icon="reply" size={9} style={[s.gray4, s.mr5]} />
-              <Text style={[s.gray4, s.f12, s.mr2]}>Reply to</Text>
+              <FontAwesomeIcon
+                icon="reply"
+                size={9}
+                style={[pal.textLight, s.mr5]}
+              />
+              <Text type="body2" style={[pal.textLight, s.mr2]}>
+                Reply to
+              </Text>
               <Link href={replyHref} title="Parent post">
                 <UserInfoText
+                  type="body2"
                   did={replyAuthorDid}
-                  style={[s.f12, s.gray5]}
+                  style={[pal.textLight]}
                   prefix="@"
                 />
               </Link>
@@ -177,11 +186,7 @@ export const Post = observer(function Post({
           )}
           {record.text ? (
             <View style={styles.postTextContainer}>
-              <RichText
-                text={record.text}
-                entities={record.entities}
-                style={styles.postText}
-              />
+              <RichText text={record.text} entities={record.entities} />
             </View>
           ) : (
             <View style={{height: 5}} />
@@ -205,10 +210,8 @@ export const Post = observer(function Post({
 
 const styles = StyleSheet.create({
   outer: {
-    backgroundColor: colors.white,
     padding: 10,
     borderTopWidth: 1,
-    borderTopColor: colors.gray2,
   },
   layout: {
     flexDirection: 'row',
@@ -224,12 +227,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 8,
-  },
-  postText: {
-    fontFamily: 'System',
-    fontSize: 16,
-    lineHeight: 20.8, // 1.3 of 16px
-    color: colors.black,
   },
   replyLine: {
     position: 'absolute',

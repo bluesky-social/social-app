@@ -18,6 +18,7 @@ export const defaultTheme: Theme = {
       actionLabel: colors.gray4,
       replyLine: colors.gray2,
       replyLineDot: colors.gray3,
+      unreadNotifBg: '#ebf6ff',
     },
     primary: {
       background: colors.blue3,
@@ -157,6 +158,7 @@ export const darkTheme: Theme = {
       actionLabel: colors.gray3,
       replyLine: colors.gray5,
       replyLineDot: colors.gray6,
+      unreadNotifBg: colors.blue5,
     },
     primary: {
       ...defaultTheme.palette.primary,
