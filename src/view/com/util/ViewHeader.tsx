@@ -9,9 +9,10 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserAvatar} from './UserAvatar'
 import {Text} from './text/Text'
-import {s, colors} from '../../lib/styles'
 import {MagnifyingGlassIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
+import {useTheme} from '../../lib/ThemeContext'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
@@ -27,6 +28,8 @@ export const ViewHeader = observer(function ViewHeader({
   canGoBack?: boolean
   onPost?: () => void
 }) {
+  const theme = useTheme()
+  const pal = usePalette('default')
   const store = useStores()
   const onPressBack = () => {
     store.nav.tab.goBack()
@@ -50,7 +53,7 @@ export const ViewHeader = observer(function ViewHeader({
     canGoBack = store.nav.tab.canGoBack
   }
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, pal.view]}>
       <TouchableOpacity
         onPress={canGoBack ? onPressBack : onPressMenu}
         hitSlop={BACK_HITSLOP}
@@ -59,7 +62,7 @@ export const ViewHeader = observer(function ViewHeader({
           <FontAwesomeIcon
             size={18}
             icon="angle-left"
-            style={{marginTop: 6, color: colors.black}}
+            style={[{marginTop: 6}, pal.text]}
           />
         ) : (
           <UserAvatar
@@ -71,9 +74,14 @@ export const ViewHeader = observer(function ViewHeader({
         )}
       </TouchableOpacity>
       <View style={styles.titleContainer} pointerEvents="none">
-        <Text style={styles.title}>{title}</Text>
+        <Text type="h3" style={pal.text}>
+          {title}
+        </Text>
         {subtitle ? (
-          <Text style={styles.subtitle} numberOfLines={1}>
+          <Text
+            type="h4"
+            style={[styles.subtitle, pal.textLight]}
+            numberOfLines={1}>
             {subtitle}
           </Text>
         ) : undefined}
@@ -81,38 +89,40 @@ export const ViewHeader = observer(function ViewHeader({
       <TouchableOpacity
         onPress={onPressCompose}
         hitSlop={HITSLOP}
-        style={styles.btn}>
-        <FontAwesomeIcon size={18} icon="plus" />
+        style={[styles.btn, {backgroundColor: pal.colors.backgroundLight}]}>
+        <FontAwesomeIcon size={18} icon="plus" style={pal.text} />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={onPressSearch}
         hitSlop={HITSLOP}
-        style={[styles.btn, {marginLeft: 8}]}>
-        <MagnifyingGlassIcon
-          size={18}
-          strokeWidth={3}
-          style={styles.searchBtnIcon}
-        />
+        style={[
+          styles.btn,
+          {backgroundColor: pal.colors.backgroundLight, marginLeft: 4},
+        ]}>
+        <MagnifyingGlassIcon size={18} strokeWidth={3} style={pal.text} />
       </TouchableOpacity>
       {!store.session.online ? (
         <TouchableOpacity
-          style={[styles.btn, {marginLeft: 8}, styles.offline]}
+          style={[
+            styles.btn,
+            {backgroundColor: pal.colors.backgroundLight, marginLeft: 4},
+          ]}
           onPress={onPressReconnect}>
           {store.session.attemptingConnect ? (
             <ActivityIndicator />
           ) : (
             <>
-              <FontAwesomeIcon icon="signal" style={[s.black]} size={18} />
+              <FontAwesomeIcon icon="signal" style={pal.text} size={16} />
               <FontAwesomeIcon
                 icon="x"
                 style={{
-                  backgroundColor: colors.white,
-                  color: colors.red4,
-                  position: 'relative',
-                  left: -4,
-                  top: 6,
+                  backgroundColor: pal.colors.backgroundLight,
+                  color: theme.palette.error.background,
+                  position: 'absolute',
+                  right: 7,
+                  bottom: 7,
                 }}
-                size={12}
+                size={8}
               />
             </>
           )}
@@ -126,12 +136,9 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.white,
     paddingHorizontal: 12,
     paddingTop: 6,
     paddingBottom: 6,
-    borderBottomColor: colors.gray1,
-    borderBottomWidth: 1,
   },
 
   titleContainer: {
@@ -139,15 +146,8 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     marginRight: 'auto',
   },
-  title: {
-    fontSize: 21,
-    fontWeight: '600',
-    color: colors.black,
-  },
   subtitle: {
-    fontSize: 18,
     marginLeft: 6,
-    color: colors.gray4,
     maxWidth: 200,
   },
 
@@ -157,24 +157,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.gray1,
     width: 36,
     height: 36,
     borderRadius: 20,
-  },
-  searchBtnIcon: {
-    color: colors.black,
-    position: 'relative',
-    top: -1,
-  },
-
-  offline: {
-    backgroundColor: colors.white,
-  },
-  offlineBtn: {
-    backgroundColor: colors.white,
-    borderRadius: 5,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
   },
 })
