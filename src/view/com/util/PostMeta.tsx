@@ -48,16 +48,16 @@ export function PostMeta(opts: PostMetaOpts) {
         style={styles.metaItem}
         href={opts.authorHref}
         title={opts.authorHandle}>
-        <Text style={[pal.text, theme.typography.h5]} numberOfLines={1}>
+        <Text type="h5" style={[pal.text]} numberOfLines={1}>
           {displayName}
           {handle ? (
-            <Text style={[pal.textLight, theme.typography.h6]}>
+            <Text type="h6" style={[pal.textLight]}>
               &nbsp;{handle}
             </Text>
           ) : undefined}
         </Text>
       </Link>
-      <Text style={[styles.metaItem, pal.textLight, theme.typography.h6]}>
+      <Text type="h6" style={[styles.metaItem, pal.textLight]}>
         &middot; {ago(opts.timestamp)}
       </Text>
       <View style={s.flex1} />

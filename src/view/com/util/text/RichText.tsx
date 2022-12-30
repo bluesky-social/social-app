@@ -29,7 +29,7 @@ export function RichText({
 }) {
   const theme = useTheme()
   const pal = usePalette('default')
-  const lineHeightStyle = lh(theme, 'body1', 1.2)
+  const lineHeightStyle = lh(theme, type, 1.2)
   if (!entities?.length) {
     if (/^\p{Extended_Pictographic}+$/u.test(text) && text.length <= 5) {
       style = {
@@ -38,7 +38,11 @@ export function RichText({
       }
       return <Text style={[style, pal.text]}>{text}</Text>
     }
-    return <Text style={[style, pal.text, lineHeightStyle]}>{text}</Text>
+    return (
+      <Text type={type} style={[style, pal.text, lineHeightStyle]}>
+        {text}
+      </Text>
+    )
   }
   if (!style) style = []
   else if (!Array.isArray(style)) style = [style]

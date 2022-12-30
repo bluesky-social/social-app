@@ -16,7 +16,7 @@ import {PostEmbeds} from '../util/PostEmbeds'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import {s, colors, lh} from '../../lib/styles'
+import {s, colors} from '../../lib/styles'
 import {useStores} from '../../../state'
 import {useTheme} from '../../lib/ThemeContext'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -114,17 +114,14 @@ export const FeedItem = observer(function ({
       <Link style={outerStyles} href={itemHref} title={itemTitle} noFeedback>
         {item._isThreadChild && (
           <View
-            style={[
-              styles.topReplyLine,
-              {borderLeftColor: pal.colors.replyLine},
-            ]}
+            style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
           />
         )}
         {(showReplyLine || item._isThreadParent) && (
           <View
             style={[
               styles.bottomReplyLine,
-              {borderLeftColor: pal.colors.replyLine},
+              {borderColor: pal.colors.replyLine},
               isNoTop ? {top: 64} : undefined,
             ]}
           />

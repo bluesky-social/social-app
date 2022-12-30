@@ -199,6 +199,6 @@ export function lh(
   height: number,
 ): TextStyle {
   return {
-    lineHeight: (theme.typography[type].lineHeight || 16) * height,
+    lineHeight: (theme.typography[type].fontSize || 16) * height,
   }
 }
