@@ -31,7 +31,6 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
     if (visible) {
       store.shell.setMinimalShellMode(false)
       autocompleteView.setup()
-      textInput.current?.focus()
       store.nav.setTitle(navIdx, `Search`)
     }
   }, [store, visible, name])
