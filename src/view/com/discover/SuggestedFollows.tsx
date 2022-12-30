@@ -167,7 +167,9 @@ const User = ({
           {follow ? (
             <TouchableOpacity onPress={() => onPressUnfollow(item)}>
               <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
-                <Text style={[s.gray5, s.fw600, s.f15]}>Unfollow</Text>
+                <Text type="button" style={pal.text}>
+                  Unfollow
+                </Text>
               </View>
             </TouchableOpacity>
           ) : (

@@ -115,7 +115,7 @@ export const Menu = ({
             type="h3"
             style={[pal.text, styles.profileCardDisplayName]}
             numberOfLines={1}>
-            {store.me.displayName}
+            {store.me.displayName || store.me.handle}
           </Text>
           <Text
             style={[pal.textLight, styles.profileCardHandle]}
