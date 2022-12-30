@@ -11,6 +11,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export const ProfileFollowers = observer(function ProfileFollowers({
   name,
@@ -80,9 +81,10 @@ export const ProfileFollowers = observer(function ProfileFollowers({
 })
 
 const User = ({item}: {item: FollowerItem}) => {
+  const pal = usePalette('default')
   return (
     <Link
-      style={styles.outer}
+      style={[styles.outer, pal.view, pal.border]}
       href={`/profile/${item.handle}`}
       title={item.handle}
       noFeedback>
@@ -96,10 +98,12 @@ const User = ({item}: {item: FollowerItem}) => {
           />
         </View>
         <View style={styles.layoutContent}>
-          <Text style={[s.f15, s.bold, s.black]}>
+          <Text style={[s.bold, pal.text]}>
             {item.displayName || item.handle}
           </Text>
-          <Text style={[s.f14, s.gray5]}>@{item.handle}</Text>
+          <Text type="body2" style={[pal.textLight]}>
+            @{item.handle}
+          </Text>
         </View>
       </View>
     </Link>
@@ -108,8 +112,7 @@ const User = ({item}: {item: FollowerItem}) => {
 
 const styles = StyleSheet.create({
   outer: {
-    marginTop: 1,
-    backgroundColor: colors.white,
+    borderTopWidth: 1,
   },
   layout: {
     flexDirection: 'row',
