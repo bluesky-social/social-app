@@ -59,7 +59,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
         <TextInput
           ref={textInput}
           placeholder="Type your query here..."
-          placeholderTextColor={pal.textLight}
+          placeholderTextColor={pal.colors.textLight}
           selectTextOnFocus
           returnKeyType="search"
           style={[pal.text, styles.input]}

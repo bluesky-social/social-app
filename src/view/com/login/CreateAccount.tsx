@@ -288,7 +288,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
               <View style={styles.groupContent}>
                 <Text style={[s.white, s.p10]}>
                   Your full username will be{' '}
-                  <Text style={s.bold}>
+                  <Text style={[s.white, s.bold]}>
                     @{createFullHandle(handle, userDomain)}
                   </Text>
                 </Text>

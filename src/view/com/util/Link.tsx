@@ -63,7 +63,7 @@ export const TextLink = observer(function Link({
   href,
   text,
 }: {
-  type: TypographyVariant
+  type?: TypographyVariant
   style?: StyleProp<TextStyle>
   href: string
   text: string
