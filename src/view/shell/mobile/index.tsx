@@ -6,6 +6,7 @@ import {
   FlatList,
   GestureResponderEvent,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -349,7 +350,12 @@ export const MobileShell: React.FC = observer(() => {
     backgroundColor: theme.colorScheme === 'dark' ? colors.gray7 : colors.gray1,
   }
   return (
-    <View style={styles.outerContainer}>
+    <View style={[styles.outerContainer, pal.view]}>
+      <StatusBar
+        barStyle={
+          theme.colorScheme === 'dark' ? 'light-content' : 'dark-content'
+        }
+      />
       <View style={[styles.innerContainer, {paddingTop: safeAreaInsets.top}]}>
         <HorzSwipe
           distThresholdDivisor={1.5}
