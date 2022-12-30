@@ -1,10 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {
-  FlatList,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  View,
-} from 'react-native'
+import {FlatList, View} from 'react-native'
 import {Selector} from './Selector'
 import {HorzSwipe} from './gestures/HorzSwipe'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
