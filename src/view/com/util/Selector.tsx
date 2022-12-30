@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native'
 import {Text} from './text/Text'
-import {colors} from '../../lib/styles'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 interface Layout {
   x: number
@@ -24,6 +24,7 @@ export function Selector({
   panX: Animated.Value
   onSelect?: (index: number) => void
 }) {
+  const pal = usePalette('default')
   const [itemLayouts, setItemLayouts] = useState<undefined | Layout[]>(
     undefined,
   )
@@ -43,6 +44,7 @@ export function Selector({
   }, [selectedIndex, items, itemLayouts])
 
   const underlineStyle = {
+    backgroundColor: pal.colors.text,
     left: panX.interpolate({
       inputRange: [-1, 0, 1],
       outputRange: [
@@ -84,14 +86,19 @@ export function Selector({
   }
 
   return (
-    <View style={[styles.outer]} onLayout={onLayout}>
+    <View style={[pal.view, styles.outer]} onLayout={onLayout}>
       <Animated.View style={[styles.underline, underlineStyle]} />
       {items.map((item, i) => {
         const selected = i === selectedIndex
         return (
           <TouchableWithoutFeedback key={i} onPress={() => onPressItem(i)}>
             <View style={styles.item} ref={itemRefs[i]}>
-              <Text style={selected ? styles.labelSelected : styles.itemLabel}>
+              <Text
+                style={
+                  selected
+                    ? [styles.labelSelected, pal.text]
+                    : [styles.label, pal.textLight]
+                }>
                 {item}
               </Text>
             </View>
@@ -108,26 +115,20 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 12,
     paddingHorizontal: 14,
-    backgroundColor: colors.white,
   },
   item: {
     marginRight: 14,
     paddingHorizontal: 10,
   },
-  itemLabel: {
+  label: {
     fontWeight: '600',
-    fontSize: 16,
-    color: colors.gray5,
   },
   labelSelected: {
     fontWeight: '600',
-    fontSize: 16,
-    color: colors.black,
   },
   underline: {
     position: 'absolute',
     height: 4,
-    backgroundColor: colors.black,
     bottom: 0,
   },
 })
