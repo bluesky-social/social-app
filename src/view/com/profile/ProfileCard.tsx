@@ -3,26 +3,26 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
-import {s, colors} from '../../lib/styles'
+import {s} from '../../lib/styles'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export function ProfileCard({
-  did,
   handle,
   displayName,
   avatar,
   renderButton,
   onPressButton,
 }: {
-  did: string
   handle: string
   displayName?: string
   avatar?: string
   renderButton?: () => JSX.Element
   onPressButton?: () => void
 }) {
+  const pal = usePalette('default')
   return (
     <Link
-      style={styles.outer}
+      style={[styles.outer, pal.view, pal.border]}
       href={`/profile/${handle}`}
       title={handle}
       noFeedback>
@@ -36,16 +36,18 @@ export function ProfileCard({
           />
         </View>
         <View style={styles.layoutContent}>
-          <Text style={[s.f16, s.bold, s.black]} numberOfLines={1}>
+          <Text style={[s.bold, pal.text]} numberOfLines={1}>
             {displayName || handle}
           </Text>
-          <Text style={[s.f15, s.gray5]} numberOfLines={1}>
+          <Text type="body2" style={[pal.textLight]} numberOfLines={1}>
             @{handle}
           </Text>
         </View>
         {renderButton ? (
           <View style={styles.layoutButton}>
-            <TouchableOpacity onPress={onPressButton} style={styles.btn}>
+            <TouchableOpacity
+              onPress={onPressButton}
+              style={[styles.btn, pal.btn]}>
               {renderButton()}
             </TouchableOpacity>
           </View>
@@ -57,9 +59,7 @@ export function ProfileCard({
 
 const styles = StyleSheet.create({
   outer: {
-    marginTop: 1,
-    backgroundColor: colors.white,
-    borderRadius: 6,
+    borderTopWidth: 1,
   },
   layout: {
     flexDirection: 'row',
@@ -93,7 +93,6 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     paddingHorizontal: 14,
     borderRadius: 50,
-    backgroundColor: colors.gray1,
     marginLeft: 6,
   },
 })

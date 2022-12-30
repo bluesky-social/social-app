@@ -74,13 +74,13 @@ export const ViewHeader = observer(function ViewHeader({
         )}
       </TouchableOpacity>
       <View style={styles.titleContainer} pointerEvents="none">
-        <Text type="h3" style={pal.text}>
+        <Text type="h4" style={pal.text}>
           {title}
         </Text>
         {subtitle ? (
           <Text
-            type="h4"
-            style={[styles.subtitle, pal.textLight]}
+            type="h5"
+            style={[styles.subtitle, pal.textLight, {fontWeight: 'normal'}]}
             numberOfLines={1}>
             {subtitle}
           </Text>
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   subtitle: {
-    marginLeft: 6,
+    marginLeft: 4,
     maxWidth: 200,
   },
 
