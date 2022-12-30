@@ -14,7 +14,7 @@ import {
   ProfileImageLightbox,
 } from '../../../state/models/shell-ui'
 import {pluralize} from '../../../lib/strings'
-import {s, colors} from '../../lib/styles'
+import {s} from '../../lib/styles'
 import {getGradient} from '../../lib/asset-gen'
 import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
@@ -24,6 +24,7 @@ import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {UserInfoText} from '../util/UserInfoText'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export const ProfileHeader = observer(function ProfileHeader({
   view,
@@ -32,6 +33,7 @@ export const ProfileHeader = observer(function ProfileHeader({
   view: ProfileViewModel
   onRefreshAll: () => void
 }) {
+  const pal = usePalette('default')
   const store = useStores()
   const isMember = useMemo(
     () => view.isScene && view.myState.member,
@@ -95,9 +97,10 @@ export const ProfileHeader = observer(function ProfileHeader({
   // =
   if (!view || !view.hasLoaded) {
     return (
-      <View style={styles.outer}>
+      <View style={pal.view}>
         <LoadingPlaceholder width="100%" height={120} />
-        <View style={styles.avi}>
+        <View
+          style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
           <LoadingPlaceholder
             width={80}
             height={80}
@@ -113,7 +116,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             />
           </View>
           <View style={styles.displayNameLine}>
-            <Text style={styles.displayName}>
+            <Text type="h2" style={[pal.text, {lineHeight: 38}]}>
               {view.displayName || view.handle}
             </Text>
           </View>
@@ -161,24 +164,32 @@ export const ProfileHeader = observer(function ProfileHeader({
     }
   }
   return (
-    <View style={styles.outer}>
+    <View style={pal.view}>
       <UserBanner handle={view.handle} banner={view.banner} />
       <View style={styles.content}>
         <View style={[styles.buttonsLine]}>
           {isMe ? (
             <TouchableOpacity
               onPress={onPressEditProfile}
-              style={[styles.btn, styles.mainBtn]}>
-              <Text style={[s.fw400, s.f14, s.black]}>Edit Profile</Text>
+              style={[styles.btn, styles.mainBtn, pal.btn]}>
+              <Text type="button" style={pal.text}>
+                Edit Profile
+              </Text>
             </TouchableOpacity>
           ) : (
             <>
               {view.myState.follow ? (
                 <TouchableOpacity
                   onPress={onPressToggleFollow}
-                  style={[styles.btn, styles.mainBtn]}>
-                  <FontAwesomeIcon icon="check" style={[s.mr5]} size={14} />
-                  <Text style={[s.fw400, s.f14, s.black]}>Following</Text>
+                  style={[styles.btn, styles.mainBtn, pal.btn]}>
+                  <FontAwesomeIcon
+                    icon="check"
+                    style={[pal.text, s.mr5]}
+                    size={14}
+                  />
+                  <Text type="button" style={pal.text}>
+                    Following
+                  </Text>
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity onPress={onPressToggleFollow}>
@@ -188,7 +199,9 @@ export const ProfileHeader = observer(function ProfileHeader({
                     end={{x: 1, y: 1}}
                     style={[styles.btn, styles.gradientBtn]}>
                     <FontAwesomeIcon icon="plus" style={[s.white, s.mr5]} />
-                    <Text style={[s.white, s.fw600, s.f16]}>Follow</Text>
+                    <Text type="button" style={[s.white, s.bold]}>
+                      Follow
+                    </Text>
                   </LinearGradient>
                 </TouchableOpacity>
               )}
@@ -196,33 +209,38 @@ export const ProfileHeader = observer(function ProfileHeader({
           )}
           {dropdownItems?.length ? (
             <DropdownButton
+              type="bare"
               items={dropdownItems}
-              style={[styles.btn, styles.secondaryBtn]}>
-              <FontAwesomeIcon icon="ellipsis" style={[s.gray5]} />
+              style={[styles.btn, styles.secondaryBtn, pal.btn]}>
+              <FontAwesomeIcon icon="ellipsis" style={[pal.text]} />
             </DropdownButton>
           ) : undefined}
         </View>
         <View style={styles.displayNameLine}>
-          <Text style={[styles.displayName, s.black]}>
+          <Text type="h2" style={[pal.text, {lineHeight: 38}]}>
             {view.displayName || view.handle}
           </Text>
         </View>
         <View style={styles.handleLine}>
           {view.isScene ? (
-            <View style={styles.typeLabelWrapper}>
-              <Text style={styles.typeLabel}>Scene</Text>
+            <View
+              style={[
+                styles.typeLabelWrapper,
+                {backgroundColor: pal.colors.backgroundLight},
+              ]}>
+              <Text style={[styles.typeLabel, pal.textLight]}>Scene</Text>
             </View>
           ) : undefined}
-          <Text style={styles.handle}>@{view.handle}</Text>
+          <Text style={pal.textLight}>@{view.handle}</Text>
         </View>
         <View style={styles.metricsLine}>
           <TouchableOpacity
             style={[s.flexRow, s.mr10]}
             onPress={onPressFollowers}>
-            <Text style={[s.bold, s.mr2, styles.metricsText, s.black]}>
+            <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
               {view.followersCount}
             </Text>
-            <Text style={[s.gray5, styles.metricsText]}>
+            <Text type="body2" style={[pal.textLight]}>
               {pluralize(view.followersCount, 'follower')}
             </Text>
           </TouchableOpacity>
@@ -230,36 +248,38 @@ export const ProfileHeader = observer(function ProfileHeader({
             <TouchableOpacity
               style={[s.flexRow, s.mr10]}
               onPress={onPressFollows}>
-              <Text style={[s.bold, s.mr2, styles.metricsText, s.black]}>
+              <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
                 {view.followsCount}
               </Text>
-              <Text style={[s.gray5, styles.metricsText]}>following</Text>
+              <Text type="body2" style={[pal.textLight]}>
+                following
+              </Text>
             </TouchableOpacity>
           ) : undefined}
           {view.isScene ? (
             <TouchableOpacity
               style={[s.flexRow, s.mr10]}
               onPress={onPressMembers}>
-              <Text style={[s.bold, s.mr2, styles.metricsText, s.black]}>
+              <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
                 {view.membersCount}
               </Text>
-              <Text style={[s.gray5, styles.metricsText]}>
+              <Text type="body2" style={[pal.textLight]}>
                 {pluralize(view.membersCount, 'member')}
               </Text>
             </TouchableOpacity>
           ) : undefined}
           <View style={[s.flexRow, s.mr10]}>
-            <Text style={[s.bold, s.mr2, styles.metricsText, s.black]}>
+            <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
               {view.postsCount}
             </Text>
-            <Text style={[s.gray5, styles.metricsText]}>
+            <Text type="body2" style={[pal.textLight]}>
               {pluralize(view.postsCount, 'post')}
             </Text>
           </View>
         </View>
         {view.description ? (
           <RichText
-            style={styles.description}
+            style={[styles.description, pal.text]}
             numberOfLines={3}
             text={view.description}
             entities={view.descriptionEntities}
@@ -267,10 +287,16 @@ export const ProfileHeader = observer(function ProfileHeader({
         ) : undefined}
         {view.isScene && view.creator ? (
           <View style={styles.relationshipsLine}>
-            <FontAwesomeIcon icon={['far', 'user']} style={[s.gray5, s.mr5]} />
-            <Text style={[s.mr2, s.gray5, s.f15]}>Created by</Text>
+            <FontAwesomeIcon
+              icon={['far', 'user']}
+              style={[pal.textLight, s.mr5]}
+            />
+            <Text type="body2" style={[s.mr2, pal.textLight]}>
+              Created by
+            </Text>
             <UserInfoText
-              style={[s.blue3, s.f15]}
+              type="body2"
+              style={[pal.link]}
               did={view.creator}
               prefix="@"
               asLink
@@ -281,14 +307,16 @@ export const ProfileHeader = observer(function ProfileHeader({
           <View style={styles.relationshipsLine}>
             <FontAwesomeIcon
               icon={['far', 'circle-check']}
-              style={[s.gray5, s.mr5]}
+              style={[pal.textLight, s.mr5]}
             />
-            <Text style={[s.mr2, s.gray5, s.f15]}>You are a member</Text>
+            <Text type="body2" style={[s.mr2, pal.textLight]}>
+              You are a member
+            </Text>
           </View>
         ) : undefined}
       </View>
       {view.isScene && view.creator === store.me.did ? (
-        <View style={styles.sceneAdminContainer}>
+        <View style={[styles.sceneAdminContainer, pal.border]}>
           <TouchableOpacity onPress={onPressInviteMembers}>
             <LinearGradient
               colors={[gradient[1], gradient[0]]}
@@ -300,12 +328,16 @@ export const ProfileHeader = observer(function ProfileHeader({
                 style={[s.mr5, s.white]}
                 size={15}
               />
-              <Text style={[s.bold, s.f15, s.white]}>Invite Members</Text>
+              <Text type="button" style={[s.bold, s.white]}>
+                Invite Members
+              </Text>
             </LinearGradient>
           </TouchableOpacity>
         </View>
       ) : undefined}
-      <TouchableOpacity style={styles.avi} onPress={onPressAvi}>
+      <TouchableOpacity
+        style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}
+        onPress={onPressAvi}>
         <UserAvatar
           size={80}
           handle={view.handle}
@@ -318,9 +350,6 @@ export const ProfileHeader = observer(function ProfileHeader({
 })
 
 const styles = StyleSheet.create({
-  outer: {
-    backgroundColor: colors.white,
-  },
   banner: {
     width: '100%',
     height: 120,
@@ -333,8 +362,6 @@ const styles = StyleSheet.create({
     height: 84,
     borderRadius: 42,
     borderWidth: 2,
-    borderColor: colors.white,
-    backgroundColor: colors.white,
   },
   content: {
     paddingTop: 8,
@@ -363,7 +390,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 7,
     borderRadius: 50,
-    backgroundColor: colors.gray1,
     marginLeft: 6,
   },
 
@@ -371,22 +397,12 @@ const styles = StyleSheet.create({
     // paddingLeft: 86,
     // marginBottom: 14,
   },
-  displayName: {
-    fontSize: 28,
-    fontWeight: 'bold',
-  },
 
   handleLine: {
     flexDirection: 'row',
     marginBottom: 8,
   },
-  handle: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: colors.gray5,
-  },
   typeLabelWrapper: {
-    backgroundColor: colors.gray1,
     paddingHorizontal: 4,
     borderRadius: 4,
     marginRight: 5,
@@ -394,22 +410,15 @@ const styles = StyleSheet.create({
   typeLabel: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: colors.gray5,
   },
 
   metricsLine: {
     flexDirection: 'row',
     marginBottom: 8,
   },
-  metricsText: {
-    fontSize: 15,
-  },
 
   description: {
     marginBottom: 8,
-    fontSize: 16,
-    lineHeight: 20.8, // 1.3 of 16px
-    color: colors.black,
   },
 
   relationshipsLine: {
@@ -419,7 +428,6 @@ const styles = StyleSheet.create({
   },
 
   sceneAdminContainer: {
-    borderColor: colors.gray1,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     paddingVertical: 12,
