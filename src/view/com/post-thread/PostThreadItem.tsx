@@ -12,16 +12,16 @@ import {Text} from '../util/text/Text'
 import {PostDropdownBtn} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import {s, colors} from '../../lib/styles'
+import {s} from '../../lib/styles'
 import {ago, pluralize} from '../../../lib/strings'
 import {useStores} from '../../../state'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/PostEmbeds'
 import {PostCtrls} from '../util/PostCtrls'
 import {ComposePrompt} from '../composer/Prompt'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 const PARENT_REPLY_LINE_LENGTH = 8
-const REPLYING_TO_LINE_LENGTH = 6
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
@@ -30,6 +30,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   item: PostThreadViewPostModel
   onPostReply: () => void
 }) {
+  const pal = usePalette('default')
   const store = useStores()
   const [deleted, setDeleted] = useState(false)
   const record = item.post.record as unknown as AppBskyFeedPost.Record
@@ -97,9 +98,12 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   if (deleted) {
     return (
-      <View style={[styles.outer, s.p20, s.flexRow]}>
-        <FontAwesomeIcon icon={['far', 'trash-can']} style={[s.gray4]} />
-        <Text style={[s.gray5, s.ml10]}>This post has been deleted.</Text>
+      <View style={[styles.outer, pal.view, s.p20, s.flexRow]}>
+        <FontAwesomeIcon
+          icon={['far', 'trash-can']}
+          style={{color: pal.colors.icon}}
+        />
+        <Text style={[pal.textLight, s.ml10]}>This post has been deleted.</Text>
       </View>
     )
   }
@@ -107,7 +111,8 @@ export const PostThreadItem = observer(function PostThreadItem({
   if (item._isHighlightedPost) {
     return (
       <>
-        <View style={styles.outer}>
+        <View
+          style={[styles.outer, {borderTopColor: pal.colors.border}, pal.view]}>
           <View style={styles.layout}>
             <View style={styles.layoutAvi}>
               <Link href={authorHref} title={authorTitle}>
@@ -125,11 +130,11 @@ export const PostThreadItem = observer(function PostThreadItem({
                   style={styles.metaItem}
                   href={authorHref}
                   title={authorTitle}>
-                  <Text style={[s.f16, s.bold, s.black]} numberOfLines={1}>
+                  <Text type="h5" style={[pal.text]} numberOfLines={1}>
                     {item.post.author.displayName || item.post.author.handle}
                   </Text>
                 </Link>
-                <Text style={[styles.metaItem, s.f15, s.gray5]}>
+                <Text type="h6" style={[styles.metaItem, pal.textLight]}>
                   &middot; {ago(item.post.indexedAt)}
                 </Text>
                 <View style={s.flex1} />
@@ -152,7 +157,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   style={styles.metaItem}
                   href={authorHref}
                   title={authorTitle}>
-                  <Text style={[s.f15, s.gray5]} numberOfLines={1}>
+                  <Text type="h6" style={[pal.textLight]} numberOfLines={1}>
                     @{item.post.author.handle}
                   </Text>
                 </Link>
@@ -167,22 +172,23 @@ export const PostThreadItem = observer(function PostThreadItem({
                   styles.postTextLargeContainer,
                 ]}>
                 <RichText
+                  type="h3"
                   text={record.text}
                   entities={record.entities}
-                  style={[styles.postText, styles.postTextLarge]}
                 />
               </View>
             ) : undefined}
             <PostEmbeds embed={item.post.embed} style={s.mb10} />
             {item._isHighlightedPost && hasEngagement ? (
-              <View style={styles.expandedInfo}>
+              <View
+                style={[styles.expandedInfo, {borderColor: pal.colors.border}]}>
                 {item.post.repostCount ? (
                   <Link
                     style={styles.expandedInfoItem}
                     href={repostsHref}
                     title={repostsTitle}>
-                    <Text style={[s.gray5, s.semiBold, s.f17]}>
-                      <Text style={[s.bold, s.black, s.f17]}>
+                    <Text type="h6" style={pal.textLight}>
+                      <Text type="h5" style={pal.text}>
                         {item.post.repostCount}
                       </Text>{' '}
                       {pluralize(item.post.repostCount, 'repost')}
@@ -196,8 +202,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                     style={styles.expandedInfoItem}
                     href={upvotesHref}
                     title={upvotesTitle}>
-                    <Text style={[s.gray5, s.semiBold, s.f17]}>
-                      <Text style={[s.bold, s.black, s.f17]}>
+                    <Text type="h6" style={pal.textLight}>
+                      <Text type="h5" style={pal.text}>
                         {item.post.upvoteCount}
                       </Text>{' '}
                       {pluralize(item.post.upvoteCount, 'upvote')}
@@ -233,27 +239,27 @@ export const PostThreadItem = observer(function PostThreadItem({
   } else {
     return (
       <>
-        <Link style={styles.outer} href={itemHref} title={itemTitle} noFeedback>
-          {!item.replyingTo && record.reply && (
-            <View style={styles.parentReplyLine} />
+        <Link
+          style={[styles.outer, {borderTopColor: pal.colors.border}, pal.view]}
+          href={itemHref}
+          title={itemTitle}
+          noFeedback>
+          {record.reply && (
+            <View
+              style={[
+                styles.parentReplyLine,
+                {borderColor: pal.colors.replyLine},
+              ]}
+            />
           )}
-          {item.replies?.length !== 0 && <View style={styles.childReplyLine} />}
-          {item.replyingTo ? (
-            <View style={styles.replyingTo}>
-              <View style={styles.replyingToLine} />
-              <View style={styles.replyingToAvatar}>
-                <UserAvatar
-                  handle={item.replyingTo.author.handle}
-                  displayName={item.replyingTo.author.displayName}
-                  avatar={item.replyingTo.author.avatar}
-                  size={30}
-                />
-              </View>
-              <Text style={styles.replyingToText} numberOfLines={2}>
-                {item.replyingTo.text}
-              </Text>
-            </View>
-          ) : undefined}
+          {item.replies?.length !== 0 && (
+            <View
+              style={[
+                styles.childReplyLine,
+                {borderColor: pal.colors.replyLine},
+              ]}
+            />
+          )}
           <View style={styles.layout}>
             <View style={styles.layoutAvi}>
               <Link href={authorHref} title={authorTitle}>
@@ -282,7 +288,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   <RichText
                     text={record.text}
                     entities={record.entities}
-                    style={[styles.postText]}
+                    style={pal.text}
                   />
                 </View>
               ) : (
@@ -304,11 +310,15 @@ export const PostThreadItem = observer(function PostThreadItem({
         </Link>
         {item._hasMore ? (
           <Link
-            style={styles.loadMore}
+            style={[
+              styles.loadMore,
+              {borderTopColor: pal.colors.border},
+              pal.view,
+            ]}
             href={itemHref}
             title={itemTitle}
             noFeedback>
-            <Text style={styles.loadMoreText}>Load more</Text>
+            <Text style={pal.link}>Load more</Text>
           </Link>
         ) : undefined}
       </>
@@ -318,9 +328,7 @@ export const PostThreadItem = observer(function PostThreadItem({
 
 const styles = StyleSheet.create({
   outer: {
-    backgroundColor: colors.white,
     borderTopWidth: 1,
-    borderTopColor: colors.gray2,
   },
   parentReplyLine: {
     position: 'absolute',
@@ -328,7 +336,6 @@ const styles = StyleSheet.create({
     top: -1 * PARENT_REPLY_LINE_LENGTH + 6,
     height: PARENT_REPLY_LINE_LENGTH,
     borderLeftWidth: 2,
-    borderLeftColor: colors.gray2,
   },
   childReplyLine: {
     position: 'absolute',
@@ -336,31 +343,6 @@ const styles = StyleSheet.create({
     top: 65,
     bottom: 0,
     borderLeftWidth: 2,
-    borderLeftColor: colors.gray2,
-  },
-  replyingToLine: {
-    position: 'absolute',
-    left: 34,
-    bottom: -1 * REPLYING_TO_LINE_LENGTH,
-    height: REPLYING_TO_LINE_LENGTH,
-    borderLeftWidth: 2,
-    borderLeftColor: colors.gray2,
-  },
-  replyingTo: {
-    flexDirection: 'row',
-    backgroundColor: colors.white,
-    paddingLeft: 8,
-    paddingTop: 12,
-    paddingBottom: 0,
-    paddingRight: 24,
-  },
-  replyingToAvatar: {
-    marginLeft: 12,
-    marginRight: 20,
-  },
-  replyingToText: {
-    flex: 1,
-    color: colors.gray5,
   },
   layout: {
     flexDirection: 'row',
@@ -386,22 +368,12 @@ const styles = StyleSheet.create({
     paddingRight: 5,
     maxWidth: 240,
   },
-  postText: {
-    fontFamily: 'System',
-    fontSize: 16,
-    lineHeight: 20.8, // 1.3 of 16px
-    color: 'black',
-  },
   postTextContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 8,
     minHeight: 36,
-  },
-  postTextLarge: {
-    fontSize: 24,
-    lineHeight: 32,
   },
   postTextLargeContainer: {
     paddingLeft: 4,
@@ -410,7 +382,6 @@ const styles = StyleSheet.create({
   expandedInfo: {
     flexDirection: 'row',
     padding: 10,
-    borderColor: colors.gray2,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     marginTop: 5,
@@ -420,15 +391,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   loadMore: {
+    borderTopWidth: 1,
     paddingLeft: 28,
     paddingVertical: 10,
-    backgroundColor: colors.white,
-    borderRadius: 6,
-    margin: 2,
-    marginBottom: 0,
-  },
-  loadMoreText: {
-    fontSize: 17,
-    color: colors.blue3,
   },
 })
