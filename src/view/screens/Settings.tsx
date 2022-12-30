@@ -8,11 +8,13 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {Link} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
 import {UserAvatar} from '../com/util/UserAvatar'
+import {usePalette} from '../lib/hooks/usePalette'
 
 export const Settings = observer(function Settings({
   navIdx,
   visible,
 }: ScreenParams) {
+  const pal = usePalette('default')
   const store = useStores()
 
   useEffect(() => {
@@ -32,17 +34,19 @@ export const Settings = observer(function Settings({
       <ViewHeader title="Settings" />
       <View style={[s.mt10, s.pl10, s.pr10]}>
         <View style={[s.flexRow]}>
-          <Text style={s.black}>Signed in as</Text>
+          <Text style={pal.text}>Signed in as</Text>
           <View style={s.flex1} />
           <TouchableOpacity onPress={onPressSignout}>
-            <Text style={[s.blue3, s.bold]}>Sign out</Text>
+            <Text type="h5" style={pal.link}>
+              Sign out
+            </Text>
           </TouchableOpacity>
         </View>
         <Link
           href={`/profile/${store.me.handle}`}
           title="Your profile"
           noFeedback>
-          <View style={styles.profile}>
+          <View style={[pal.view, styles.profile]}>
             <UserAvatar
               size={40}
               displayName={store.me.displayName}
@@ -50,15 +54,15 @@ export const Settings = observer(function Settings({
               avatar={store.me.avatar}
             />
             <View style={[s.ml10]}>
-              <Text style={[s.f18, s.black]}>
+              <Text type="h5" style={pal.text}>
                 {store.me.displayName || store.me.handle}
               </Text>
-              <Text style={[s.gray5]}>@{store.me.handle}</Text>
+              <Text style={pal.textLight}>@{store.me.handle}</Text>
             </View>
           </View>
         </Link>
         <Link href="/debug" title="Debug tools">
-          <Text style={s.blue3}>Debug tools</Text>
+          <Text style={pal.link}>Debug tools</Text>
         </Link>
       </View>
     </View>
@@ -75,7 +79,6 @@ const styles = StyleSheet.create({
   profile: {
     flexDirection: 'row',
     marginVertical: 6,
-    backgroundColor: colors.white,
     borderRadius: 4,
     paddingVertical: 10,
     paddingHorizontal: 10,

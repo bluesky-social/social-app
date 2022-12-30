@@ -145,7 +145,7 @@ export const Menu = ({
           icon={<BellIcon style={pal.text as StyleProp<ViewStyle>} size="28" />}
           label="Notifications"
           url="/notifications"
-          count={store.me.notificationCount || 10}
+          count={store.me.notificationCount}
         />
       </View>
       <View style={[styles.section, pal.border]}>
