@@ -8,6 +8,7 @@ import {
   openCropper,
 } from 'react-native-image-crop-picker'
 import {compressIfNeeded} from '../../../lib/images'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 const IMAGE_PARAMS = {
   width: 1000,
@@ -26,6 +27,7 @@ export const PhotoCarouselPicker = ({
   onSelectPhotos: (v: string[]) => void
   localPhotos: any
 }) => {
+  const pal = usePalette('default')
   const handleOpenCamera = useCallback(async () => {
     try {
       const cameraRes = await openCamera({
@@ -83,26 +85,22 @@ export const PhotoCarouselPicker = ({
   return (
     <ScrollView
       horizontal
-      style={styles.photosContainer}
+      style={[pal.view, styles.photosContainer]}
       showsHorizontalScrollIndicator={false}>
       <TouchableOpacity
-        style={[styles.galleryButton, styles.photo]}
+        style={[styles.galleryButton, pal.border, styles.photo]}
         onPress={handleOpenCamera}>
-        <FontAwesomeIcon
-          icon="camera"
-          size={24}
-          style={{color: colors.blue3}}
-        />
+        <FontAwesomeIcon icon="camera" size={24} style={pal.link} />
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.galleryButton, styles.photo]}
+        style={[styles.galleryButton, pal.border, styles.photo]}
         onPress={handleOpenGallery}>
-        <FontAwesomeIcon icon="image" style={{color: colors.blue3}} size={24} />
+        <FontAwesomeIcon icon="image" style={pal.link} size={24} />
       </TouchableOpacity>
       {localPhotos.photos.map((item: any, index: number) => (
         <TouchableOpacity
           key={`local-image-${index}`}
-          style={styles.photoButton}
+          style={[pal.border, styles.photoButton]}
           onPress={() => handleSelectPhoto(item.node.image.uri)}>
           <Image style={styles.photo} source={{uri: item.node.image.uri}} />
         </TouchableOpacity>
@@ -117,11 +115,9 @@ const styles = StyleSheet.create({
     maxHeight: 96,
     padding: 8,
     overflow: 'hidden',
-    backgroundColor: colors.white,
   },
   galleryButton: {
     borderWidth: 1,
-    borderColor: colors.gray3,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -131,7 +127,6 @@ const styles = StyleSheet.create({
     marginRight: 8,
     borderWidth: 1,
     borderRadius: 16,
-    borderColor: colors.gray3,
   },
   photo: {
     width: 75,
