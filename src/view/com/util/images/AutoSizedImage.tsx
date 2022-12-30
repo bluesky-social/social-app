@@ -10,7 +10,8 @@ import {
   ViewStyle,
 } from 'react-native'
 import {Text} from '../text/Text'
-import {colors} from '../../../lib/styles'
+import {useTheme} from '../../../lib/ThemeContext'
+import {usePalette} from '../../../lib/hooks/usePalette'
 
 const MAX_HEIGHT = 300
 
@@ -23,12 +24,16 @@ export function AutoSizedImage({
   uri,
   onPress,
   style,
+  containerStyle,
 }: {
   uri: string
   onPress?: () => void
-  style: StyleProp<ImageStyle>
+  style?: StyleProp<ImageStyle>
+  containerStyle?: StyleProp<ViewStyle>
 }) {
-  const [error, setError] = useState<string | undefined>()
+  const theme = useTheme()
+  const errPal = usePalette('error')
+  const [error, setError] = useState<string | undefined>('')
   const [imgInfo, setImgInfo] = useState<Dim | undefined>()
   const [containerInfo, setContainerInfo] = useState<Dim | undefined>()
 
@@ -77,15 +82,22 @@ export function AutoSizedImage({
     <View style={style}>
       <TouchableWithoutFeedback onPress={onPress}>
         {error ? (
-          <View style={[styles.container, styles.errorContainer]}>
-            <Text style={styles.error}>{error}</Text>
+          <View style={[styles.errorContainer, errPal.view, containerStyle]}>
+            <Text style={errPal.text}>{error}</Text>
           </View>
         ) : calculatedStyle ? (
-          <View style={styles.container}>
+          <View style={[styles.container, containerStyle]}>
             <Image style={calculatedStyle} source={{uri}} />
           </View>
         ) : (
-          <View style={[style, styles.placeholder]} onLayout={onLayout} />
+          <View
+            style={[
+              style,
+              styles.placeholder,
+              {backgroundColor: theme.palette.default.backgroundLight},
+            ]}
+            onLayout={onLayout}
+          />
         )}
       </TouchableWithoutFeedback>
     </View>
@@ -96,18 +108,12 @@ const styles = StyleSheet.create({
   placeholder: {
     width: '100%',
     aspectRatio: 1,
-    backgroundColor: colors.gray1,
   },
   errorContainer: {
-    backgroundColor: colors.red1,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   container: {
-    borderRadius: 8,
     overflow: 'hidden',
-  },
-  error: {
-    color: colors.red5,
   },
 })
