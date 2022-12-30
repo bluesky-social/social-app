@@ -43,6 +43,8 @@ import {
   BellIconSolid,
 } from '../../lib/icons'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
+import {useTheme} from '../../lib/ThemeContext'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 const Btn = ({
   icon,
@@ -64,6 +66,7 @@ const Btn = ({
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }) => {
+  const pal = usePalette('default')
   let size = 24
   let addedStyles
   let IconEl
@@ -105,12 +108,18 @@ const Btn = ({
           <Text style={styles.tabCountLabel}>{tabCount}</Text>
         </View>
       ) : undefined}
-      <IconEl size={size} style={[styles.ctrlIcon, addedStyles]} icon={icon} />
+      <IconEl
+        size={size}
+        style={[styles.ctrlIcon, pal.text, addedStyles]}
+        icon={icon}
+      />
     </TouchableOpacity>
   )
 }
 
 export const MobileShell: React.FC = observer(() => {
+  const theme = useTheme()
+  const pal = usePalette('default')
   const store = useStores()
   const [isTabsSelectorActive, setTabsSelectorActive] = useState(false)
   const scrollElRef = useRef<FlatList | undefined>()
@@ -336,6 +345,9 @@ export const MobileShell: React.FC = observer(() => {
   const isAtHome = store.nav.tab.current.url === '/'
   const isAtNotifications = store.nav.tab.current.url === '/notifications'
 
+  const screenBg = {
+    backgroundColor: theme.colorScheme === 'dark' ? colors.black : colors.gray1,
+  }
   return (
     <View style={styles.outerContainer}>
       <View style={[styles.innerContainer, {paddingTop: safeAreaInsets.top}]}>
@@ -373,7 +385,7 @@ export const MobileShell: React.FC = observer(() => {
                     <Animated.View
                       style={[
                         s.flex1,
-                        styles.screen,
+                        screenBg,
                         current
                           ? [
                               swipeTransform,
@@ -425,6 +437,8 @@ export const MobileShell: React.FC = observer(() => {
       <Animated.View
         style={[
           styles.bottomBar,
+          pal.view,
+          pal.border,
           {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
           footerMinimalShellTransform,
         ]}>
@@ -520,9 +534,6 @@ const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
   },
-  screen: {
-    backgroundColor: colors.gray1,
-  },
   screenMask: {
     position: 'absolute',
     top: 0,
@@ -550,56 +561,13 @@ const styles = StyleSheet.create({
   topBarProtectorDark: {
     backgroundColor: colors.black,
   },
-  avi: {
-    width: 34,
-    height: 34,
-    marginRight: 8,
-    borderRadius: 17,
-  },
-  location: {
-    flex: 1,
-    flexDirection: 'row',
-    borderRadius: 6,
-    paddingLeft: 12,
-    paddingRight: 6,
-    paddingTop: 9,
-    paddingBottom: 9,
-    backgroundColor: colors.gray1,
-  },
-  locationIcon: {
-    color: colors.gray5,
-    marginTop: 3,
-    marginRight: 6,
-  },
-  locationIconNudgeUp: {
-    marginTop: 2,
-  },
-  locationIconLight: {
-    color: colors.gray5,
-    marginTop: 2,
-    marginRight: 8,
-  },
-  locationText: {
-    color: colors.black,
-  },
-  locationTextLight: {
-    color: colors.gray4,
-  },
-  topBarBtn: {
-    marginLeft: 8,
-    justifyContent: 'center',
-    borderRadius: 6,
-    paddingHorizontal: 6,
-  },
   bottomBar: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     flexDirection: 'row',
-    backgroundColor: colors.white,
     borderTopWidth: 1,
-    borderTopColor: colors.gray2,
     paddingLeft: 5,
     paddingRight: 15,
   },
@@ -633,7 +601,6 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   ctrlIcon: {
-    color: colors.black,
     marginLeft: 'auto',
     marginRight: 'auto',
   },
