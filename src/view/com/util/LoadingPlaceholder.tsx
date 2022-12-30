@@ -2,8 +2,9 @@ import React from 'react'
 import {StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UpIcon} from '../../lib/icons'
-import {s, colors} from '../../lib/styles'
+import {s} from '../../lib/styles'
 import {useTheme} from '../../lib/ThemeContext'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export function LoadingPlaceholder({
   width,
@@ -44,8 +45,9 @@ export function PostLoadingPlaceholder({
   style?: StyleProp<ViewStyle>
 }) {
   const theme = useTheme()
+  const pal = usePalette('default')
   return (
-    <View style={[styles.post, style]}>
+    <View style={[styles.post, pal.view, style]}>
       <LoadingPlaceholder width={50} height={50} style={styles.avatar} />
       <View style={[s.flex1]}>
         <LoadingPlaceholder width={100} height={8} style={[s.mb10]} />
@@ -104,8 +106,9 @@ export function NotificationLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
+  const pal = usePalette('default')
   return (
-    <View style={[styles.notification, style]}>
+    <View style={[styles.notification, pal.view, style]}>
       <View style={[s.flexRow, s.mb10]}>
         <LoadingPlaceholder width={30} height={30} style={styles.smallAvatar} />
       </View>
