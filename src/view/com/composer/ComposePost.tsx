@@ -31,6 +31,7 @@ import {detectLinkables} from '../../../lib/strings'
 import {UserLocalPhotosModel} from '../../../state/models/user-local-photos'
 import {PhotoCarouselPicker} from './PhotoCarouselPicker'
 import {SelectedPhoto} from './SelectedPhoto'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 const MAX_TEXT_LENGTH = 256
 const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH
@@ -45,6 +46,7 @@ export const ComposePost = observer(function ComposePost({
   onPost?: ComposerOpts['onPost']
   onClose: () => void
 }) {
+  const pal = usePalette('default')
   const store = useStores()
   const textInput = useRef<TextInput>(null)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -167,7 +169,7 @@ export const ComposePost = observer(function ComposePost({
         return v
       } else {
         return (
-          <Text key={i++} style={{color: colors.blue3}}>
+          <Text key={i++} style={pal.link}>
             {v.link}
           </Text>
         )
@@ -178,11 +180,11 @@ export const ComposePost = observer(function ComposePost({
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.outer}>
+      style={[pal.view, styles.outer]}>
       <SafeAreaView style={s.flex1}>
         <View style={styles.topbar}>
           <TouchableOpacity onPress={onPressCancel}>
-            <Text style={[s.blue3, s.f18]}>Cancel</Text>
+            <Text style={[pal.link, s.f18]}>Cancel</Text>
           </TouchableOpacity>
           <View style={s.flex1} />
           {isProcessing ? (
@@ -202,13 +204,13 @@ export const ComposePost = observer(function ComposePost({
               </LinearGradient>
             </TouchableOpacity>
           ) : (
-            <View style={[styles.postBtn, {backgroundColor: colors.gray1}]}>
-              <Text style={[s.gray5, s.f16, s.bold]}>Post</Text>
+            <View style={[styles.postBtn, pal.btn]}>
+              <Text style={[pal.textLight, s.f16, s.bold]}>Post</Text>
             </View>
           )}
         </View>
         {isProcessing ? (
-          <View style={styles.processingLine}>
+          <View style={[pal.btn, styles.processingLine]}>
             <Text style={s.black}>{processingState}</Text>
           </View>
         ) : undefined}
@@ -226,7 +228,7 @@ export const ComposePost = observer(function ComposePost({
         )}
         <ScrollView style={s.flex1}>
           {replyTo ? (
-            <View style={styles.replyToLayout}>
+            <View style={[pal.border, styles.replyToLayout]}>
               <UserAvatar
                 handle={replyTo.author.handle}
                 displayName={replyTo.author.displayName}
@@ -235,17 +237,19 @@ export const ComposePost = observer(function ComposePost({
               />
               <View style={styles.replyToPost}>
                 <TextLink
+                  type="h5"
                   href={`/profile/${replyTo.author.handle}`}
                   text={replyTo.author.displayName || replyTo.author.handle}
-                  style={[s.f16, s.bold, s.black]}
+                  style={[pal.text]}
                 />
-                <Text style={[s.f16, s['lh16-1.3'], s.black]} numberOfLines={6}>
+                <Text style={pal.text} numberOfLines={6}>
                   {replyTo.text}
                 </Text>
               </View>
             </View>
           ) : undefined}
-          <View style={[styles.textInputLayout, selectTextInputLayout]}>
+          <View
+            style={[pal.border, styles.textInputLayout, selectTextInputLayout]}>
             <UserAvatar
               handle={store.me.handle || ''}
               displayName={store.me.displayName}
@@ -258,8 +262,8 @@ export const ComposePost = observer(function ComposePost({
               scrollEnabled
               onChangeText={(text: string) => onChangeText(text)}
               placeholder={selectTextInputPlaceholder}
-              placeholderTextColor={colors.gray4}
-              style={styles.textInput}>
+              placeholderTextColor={pal.colors.textLight}
+              style={[pal.text, styles.textInput]}>
               {textDecorated}
             </TextInput>
           </View>
@@ -277,16 +281,14 @@ export const ComposePost = observer(function ComposePost({
               localPhotos={localPhotos}
             />
           )}
-        <View style={styles.bottomBar}>
+        <View style={[pal.border, styles.bottomBar]}>
           <TouchableOpacity
             onPress={onPressSelectPhotos}
             style={[s.pl5]}
             hitSlop={HITSLOP}>
             <FontAwesomeIcon
               icon={['far', 'image']}
-              style={{
-                color: selectedPhotos.length < 4 ? colors.blue3 : colors.gray3,
-              }}
+              style={selectedPhotos.length < 4 ? pal.link : pal.textLight}
               size={24}
             />
           </TouchableOpacity>
@@ -343,7 +345,6 @@ const styles = StyleSheet.create({
   outer: {
     flexDirection: 'column',
     flex: 1,
-    backgroundColor: '#fff',
     padding: 15,
     paddingBottom: Platform.OS === 'ios' ? 0 : 50,
     height: '100%',
@@ -361,7 +362,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   processingLine: {
-    backgroundColor: colors.gray1,
     borderRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 6,
@@ -395,7 +395,6 @@ const styles = StyleSheet.create({
   textInputLayout: {
     flexDirection: 'row',
     borderTopWidth: 1,
-    borderTopColor: colors.gray2,
     paddingTop: 16,
   },
   textInput: {
@@ -404,12 +403,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 8,
     alignSelf: 'flex-start',
-    color: colors.black,
   },
   replyToLayout: {
     flexDirection: 'row',
     borderTopWidth: 1,
-    borderTopColor: colors.gray2,
     paddingTop: 16,
     paddingBottom: 16,
   },
@@ -424,7 +421,5 @@ const styles = StyleSheet.create({
     paddingRight: 5,
     alignItems: 'center',
     borderTopWidth: 1,
-    borderTopColor: colors.gray2,
-    backgroundColor: colors.white,
   },
 })
