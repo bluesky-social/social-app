@@ -6,7 +6,7 @@ export const defaultTheme: Theme = {
   palette: {
     default: {
       background: colors.white,
-      backgroundLight: colors.gray2,
+      backgroundLight: colors.gray1,
       text: colors.black,
       textLight: colors.gray5,
       textInverted: colors.white,

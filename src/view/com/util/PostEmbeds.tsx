@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
   },
   extOuter: {
     padding: 10,
+    borderWidth: 1,
   },
   extDescription: {
     marginTop: 4,
