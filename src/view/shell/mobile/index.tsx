@@ -346,7 +346,7 @@ export const MobileShell: React.FC = observer(() => {
   const isAtNotifications = store.nav.tab.current.url === '/notifications'
 
   const screenBg = {
-    backgroundColor: theme.colorScheme === 'dark' ? colors.black : colors.gray1,
+    backgroundColor: theme.colorScheme === 'dark' ? colors.gray7 : colors.gray1,
   }
   return (
     <View style={styles.outerContainer}>
