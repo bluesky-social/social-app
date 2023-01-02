@@ -30,6 +30,7 @@ import {faCompass} from '@fortawesome/free-regular-svg-icons/faCompass'
 import {faEllipsis} from '@fortawesome/free-solid-svg-icons/faEllipsis'
 import {faEnvelope} from '@fortawesome/free-solid-svg-icons/faEnvelope'
 import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation'
+import {faEyeSlash as farEyeSlash} from '@fortawesome/free-regular-svg-icons/faEyeSlash'
 import {faGear} from '@fortawesome/free-solid-svg-icons/faGear'
 import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
 import {faHeart} from '@fortawesome/free-regular-svg-icons/faHeart'
@@ -96,6 +97,7 @@ export function setup() {
     faEllipsis,
     faEnvelope,
     faExclamation,
+    farEyeSlash,
     faGear,
     faGlobe,
     faHeart,

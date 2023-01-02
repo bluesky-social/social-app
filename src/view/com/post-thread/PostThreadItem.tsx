@@ -282,7 +282,12 @@ export const PostThreadItem = observer(function PostThreadItem({
                 onCopyPostText={onCopyPostText}
                 onDeletePost={onDeletePost}
               />
-              {record.text ? (
+              {item.post.author.viewer?.muted ? (
+                <View style={[styles.mutedWarning, pal.btn]}>
+                  <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
+                  <Text type="body2">This post is by a muted account.</Text>
+                </View>
+              ) : record.text ? (
                 <View style={styles.postTextContainer}>
                   <RichText
                     text={record.text}
@@ -366,6 +371,14 @@ const styles = StyleSheet.create({
   metaItem: {
     paddingRight: 5,
     maxWidth: 240,
+  },
+  mutedWarning: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    marginTop: 2,
+    marginBottom: 6,
+    borderRadius: 2,
   },
   postTextContainer: {
     flexDirection: 'row',
