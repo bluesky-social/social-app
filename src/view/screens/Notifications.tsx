@@ -4,7 +4,7 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/notifications/Feed'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
-import {useOnMainScroll} from '../lib/useOnMainScroll'
+import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
 
 export const Notifications = ({navIdx, visible}: ScreenParams) => {
   const store = useStores()

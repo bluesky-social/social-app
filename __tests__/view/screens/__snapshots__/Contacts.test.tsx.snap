@@ -23,6 +23,10 @@ exports[`Contacts matches snapshot 1`] = `
               "color": "#000000",
             },
             Object {
+              "fontSize": 16,
+              "letterSpacing": 0.25,
+            },
+            Object {
               "fontSize": 30,
               "fontWeight": "bold",
               "paddingHorizontal": 12,
@@ -86,6 +90,8 @@ exports[`Contacts matches snapshot 1`] = `
         Array [
           Object {
             "backgroundColor": "#ffffff",
+          },
+          Object {
             "flexDirection": "row",
             "paddingBottom": 12,
             "paddingHorizontal": 14,
@@ -131,10 +137,17 @@ exports[`Contacts matches snapshot 1`] = `
                 "color": "#000000",
               },
               Object {
-                "color": "#000000",
                 "fontSize": 16,
-                "fontWeight": "600",
+                "letterSpacing": 0.25,
               },
+              Array [
+                Object {
+                  "fontWeight": "600",
+                },
+                Object {
+                  "color": "#000000",
+                },
+              ],
             ]
           }
         >
@@ -165,10 +178,17 @@ exports[`Contacts matches snapshot 1`] = `
                 "color": "#000000",
               },
               Object {
-                "color": "#645454",
                 "fontSize": 16,
-                "fontWeight": "600",
+                "letterSpacing": 0.25,
               },
+              Array [
+                Object {
+                  "fontWeight": "600",
+                },
+                Object {
+                  "color": "#645454",
+                },
+              ],
             ]
           }
         >
@@ -199,10 +219,17 @@ exports[`Contacts matches snapshot 1`] = `
                 "color": "#000000",
               },
               Object {
-                "color": "#645454",
                 "fontSize": 16,
-                "fontWeight": "600",
+                "letterSpacing": 0.25,
               },
+              Array [
+                Object {
+                  "fontWeight": "600",
+                },
+                Object {
+                  "color": "#645454",
+                },
+              ],
             ]
           }
         >
@@ -213,37 +240,17 @@ exports[`Contacts matches snapshot 1`] = `
     <View
       testID="followList"
     >
-      <BVLinearGradient
-        colors={
-          Array [
-            4294901882,
-            4293725560,
-          ]
-        }
-        endPoint={
-          Object {
-            "x": 1,
-            "y": 1,
-          }
-        }
-        locations={null}
-        startPoint={
-          Object {
-            "x": 0.5,
-            "y": 0,
-          }
-        }
+      <View
         style={
           Array [
             Object {
               "alignItems": "center",
-              "backgroundColor": "#ffe6f2",
-              "borderColor": "#ec4899",
-              "borderRadius": 6,
-              "borderWidth": 1,
               "flexDirection": "row",
               "paddingHorizontal": 8,
               "paddingVertical": 8,
+            },
+            Object {
+              "backgroundColor": "#ec4899",
             },
             Object {
               "margin": 6,
@@ -256,7 +263,6 @@ exports[`Contacts matches snapshot 1`] = `
             Array [
               Object {
                 "alignItems": "center",
-                "backgroundColor": "#d1106f",
                 "borderRadius": 12,
                 "height": 24,
                 "justifyContent": "center",
@@ -264,7 +270,7 @@ exports[`Contacts matches snapshot 1`] = `
                 "width": 24,
               },
               Object {
-                "backgroundColor": "#ffffff",
+                "backgroundColor": "#d1106f",
               },
             ]
           }
@@ -274,7 +280,7 @@ exports[`Contacts matches snapshot 1`] = `
             size={16}
             style={
               Object {
-                "color": "#ec4899",
+                "color": "#ffffff",
               }
             }
           />
@@ -285,15 +291,17 @@ exports[`Contacts matches snapshot 1`] = `
               Object {
                 "color": "#000000",
               },
+              Object {
+                "fontSize": 14,
+                "letterSpacing": 0.25,
+              },
               Array [
                 Object {
-                  "color": "#d1106f",
                   "flex": 1,
                   "paddingRight": 10,
                 },
                 Object {
                   "color": "#ffffff",
-                  "fontWeight": "600",
                 },
               ],
             ]
@@ -323,15 +331,15 @@ exports[`Contacts matches snapshot 1`] = `
         >
           <
             icon="arrows-rotate"
-            size={16}
+            size={18}
             style={
               Object {
-                "color": "#ffffff",
+                "color": "#d1106f",
               }
             }
           />
         </View>
-      </BVLinearGradient>
+      </View>
     </View>
   </View>
 </View>

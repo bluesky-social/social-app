@@ -8,7 +8,7 @@ import {ConfirmModal} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
 import {ProfileCard} from '../profile/ProfileCard'
 import * as Toast from '../util/Toast'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import {s, colors, gradients} from '../../lib/styles'
 
 export function InviteAccepter({item}: {item: NotificationsViewItemModel}) {

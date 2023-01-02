@@ -5,9 +5,10 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native'
-import {useAnimatedValue} from '../../lib/useAnimatedValue'
-import {Text} from '../util/Text'
+import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
+import {Text} from '../util/text/Text'
 import {colors} from '../../lib/styles'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 interface AutocompleteItem {
   handle: string
@@ -23,6 +24,7 @@ export function Autocomplete({
   items: AutocompleteItem[]
   onSelect: (item: string) => void
 }) {
+  const pal = usePalette('default')
   const winDim = useWindowDimensions()
   const positionInterp = useAnimatedValue(0)
 
@@ -41,14 +43,19 @@ export function Autocomplete({
     }),
   }
   return (
-    <Animated.View style={[styles.outer, topAnimStyle]}>
+    <Animated.View style={[styles.outer, pal.view, pal.border, topAnimStyle]}>
       {items.map((item, i) => (
         <TouchableOpacity
           testID="autocompleteButton"
           key={i}
-          style={styles.item}
+          style={[pal.border, styles.item]}
           onPress={() => onSelect(item.handle)}>
-          <Text style={styles.itemText}>@{item.handle}</Text>
+          <Text style={pal.text}>
+            {item.displayName || item.handle}
+            <Text type="body2" style={pal.textLight}>
+              &nbsp;@{item.handle}
+            </Text>
+          </Text>
         </TouchableOpacity>
       ))}
     </Animated.View>
@@ -61,17 +68,11 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: colors.white,
     borderTopWidth: 1,
-    borderTopColor: colors.gray2,
   },
   item: {
     borderBottomWidth: 1,
-    borderBottomColor: colors.gray1,
     paddingVertical: 16,
     paddingHorizontal: 16,
-  },
-  itemText: {
-    fontSize: 16,
   },
 })

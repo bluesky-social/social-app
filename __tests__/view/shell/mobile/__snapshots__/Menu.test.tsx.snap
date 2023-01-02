@@ -10,10 +10,14 @@ exports[`Menu matches snapshot 1`] = `
 >
   <View
     style={
-      Object {
-        "backgroundColor": "#ffffff",
-        "flex": 1,
-      }
+      Array [
+        Object {
+          "flex": 1,
+        },
+        Object {
+          "backgroundColor": "#ffffff",
+        },
+      ]
     }
     testID="menuView"
   >
@@ -150,36 +154,52 @@ exports[`Menu matches snapshot 1`] = `
         }
       >
         <Text
+          numberOfLines={1}
           style={
             Array [
               Object {
                 "color": "#000000",
               },
               Object {
-                "color": "#2D2626",
                 "fontSize": 24,
-                "fontWeight": "bold",
-                "marginLeft": 12,
+                "fontWeight": "500",
               },
+              Array [
+                Object {
+                  "color": "#000000",
+                },
+                Object {
+                  "marginLeft": 12,
+                },
+              ],
             ]
           }
         >
           test
         </Text>
         <Text
+          numberOfLines={1}
           style={
             Array [
               Object {
                 "color": "#000000",
               },
               Object {
-                "color": "#423737",
-                "fontSize": 18,
-                "marginLeft": 12,
+                "fontSize": 16,
+                "letterSpacing": 0.25,
               },
+              Array [
+                Object {
+                  "color": "#645454",
+                },
+                Object {
+                  "marginLeft": 12,
+                },
+              ],
             ]
           }
         >
+          @
           test
         </Text>
       </View>
@@ -213,7 +233,7 @@ exports[`Menu matches snapshot 1`] = `
         align="xMidYMid"
         bbHeight={25}
         bbWidth={25}
-        color={4284765268}
+        color={4278190080}
         fill="none"
         focusable={false}
         height={25}
@@ -229,7 +249,7 @@ exports[`Menu matches snapshot 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "color": "#645454",
+              "color": "#000000",
             },
             Object {
               "flex": 0,
@@ -238,7 +258,7 @@ exports[`Menu matches snapshot 1`] = `
             },
           ]
         }
-        tintColor={4284765268}
+        tintColor={4278190080}
         vbHeight={24}
         vbWidth={24}
         width={25}
@@ -279,10 +299,19 @@ exports[`Menu matches snapshot 1`] = `
               "color": "#000000",
             },
             Object {
-              "color": "#423737",
-              "fontSize": 19,
-              "marginLeft": 8,
+              "fontSize": 20,
+              "fontWeight": "500",
+              "letterSpacing": 0.15,
             },
+            Array [
+              Object {
+                "color": "#000000",
+              },
+              Object {
+                "fontWeight": "normal",
+                "marginLeft": 14,
+              },
+            ],
           ]
         }
       >
@@ -291,13 +320,17 @@ exports[`Menu matches snapshot 1`] = `
     </View>
     <View
       style={
-        Object {
-          "borderBottomColor": "#f8f3f3",
-          "borderBottomWidth": 1,
-          "paddingBottom": 10,
-          "paddingHorizontal": 10,
-          "paddingTop": 10,
-        }
+        Array [
+          Object {
+            "borderBottomWidth": 1,
+            "paddingBottom": 10,
+            "paddingHorizontal": 10,
+            "paddingTop": 10,
+          },
+          Object {
+            "borderColor": "#e4e2e2",
+          },
+        ]
       }
     >
       <View
@@ -316,7 +349,8 @@ exports[`Menu matches snapshot 1`] = `
             "alignItems": "center",
             "flexDirection": "row",
             "opacity": 1,
-            "paddingHorizontal": 6,
+            "paddingLeft": 6,
+            "paddingRight": 10,
             "paddingVertical": 8,
           }
         }
@@ -339,7 +373,7 @@ exports[`Menu matches snapshot 1`] = `
             align="xMidYMid"
             bbHeight="26"
             bbWidth="26"
-            color={4282529591}
+            color={4278190080}
             focusable={false}
             height="26"
             meetOrSlice={0}
@@ -353,7 +387,7 @@ exports[`Menu matches snapshot 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "color": "#423737",
+                  "color": "#000000",
                 },
                 Object {
                   "flex": 0,
@@ -362,7 +396,7 @@ exports[`Menu matches snapshot 1`] = `
                 },
               ]
             }
-            tintColor={4282529591}
+            tintColor={4278190080}
             vbHeight={48}
             vbWidth={48}
             width="26"
@@ -398,12 +432,19 @@ exports[`Menu matches snapshot 1`] = `
               Object {
                 "color": "#000000",
               },
+              Object {
+                "fontSize": 20,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+              },
               Array [
                 Object {
-                  "color": "#2D2626",
-                  "fontSize": 19,
+                  "color": "#000000",
                 },
-                undefined,
+                Object {
+                  "flex": 1,
+                  "fontWeight": "normal",
+                },
               ],
             ]
           }
@@ -427,7 +468,8 @@ exports[`Menu matches snapshot 1`] = `
             "alignItems": "center",
             "flexDirection": "row",
             "opacity": 1,
-            "paddingHorizontal": 6,
+            "paddingLeft": 6,
+            "paddingRight": 10,
             "paddingVertical": 8,
           }
         }
@@ -450,7 +492,7 @@ exports[`Menu matches snapshot 1`] = `
             align="xMidYMid"
             bbHeight="28"
             bbWidth="28"
-            color={4282529591}
+            color={4278190080}
             fill="none"
             focusable={false}
             height="28"
@@ -464,7 +506,7 @@ exports[`Menu matches snapshot 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "color": "#423737",
+                  "color": "#000000",
                 },
                 Object {
                   "flex": 0,
@@ -473,7 +515,7 @@ exports[`Menu matches snapshot 1`] = `
                 },
               ]
             }
-            tintColor={4282529591}
+            tintColor={4278190080}
             vbHeight={24}
             vbWidth={24}
             width="28"
@@ -518,12 +560,19 @@ exports[`Menu matches snapshot 1`] = `
               Object {
                 "color": "#000000",
               },
+              Object {
+                "fontSize": 20,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+              },
               Array [
                 Object {
-                  "color": "#2D2626",
-                  "fontSize": 19,
+                  "color": "#000000",
                 },
-                undefined,
+                Object {
+                  "flex": 1,
+                  "fontWeight": "normal",
+                },
               ],
             ]
           }
@@ -534,13 +583,17 @@ exports[`Menu matches snapshot 1`] = `
     </View>
     <View
       style={
-        Object {
-          "borderBottomColor": "#f8f3f3",
-          "borderBottomWidth": 1,
-          "paddingBottom": 10,
-          "paddingHorizontal": 10,
-          "paddingTop": 10,
-        }
+        Array [
+          Object {
+            "borderBottomWidth": 1,
+            "paddingBottom": 10,
+            "paddingHorizontal": 10,
+            "paddingTop": 10,
+          },
+          Object {
+            "borderColor": "#e4e2e2",
+          },
+        ]
       }
     >
       <Text
@@ -550,11 +603,19 @@ exports[`Menu matches snapshot 1`] = `
               "color": "#000000",
             },
             Object {
-              "fontSize": 16,
+              "fontSize": 17,
               "fontWeight": "bold",
-              "paddingHorizontal": 4,
-              "paddingVertical": 8,
+              "letterSpacing": 0.15,
             },
+            Array [
+              Object {
+                "color": "#000000",
+              },
+              Object {
+                "paddingHorizontal": 4,
+                "paddingVertical": 8,
+              },
+            ],
           ]
         }
       >
@@ -576,7 +637,8 @@ exports[`Menu matches snapshot 1`] = `
             "alignItems": "center",
             "flexDirection": "row",
             "opacity": 1,
-            "paddingHorizontal": 6,
+            "paddingLeft": 6,
+            "paddingRight": 10,
             "paddingVertical": 8,
           }
         }
@@ -706,12 +768,19 @@ exports[`Menu matches snapshot 1`] = `
               Object {
                 "color": "#000000",
               },
+              Object {
+                "fontSize": 20,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+              },
               Array [
                 Object {
-                  "color": "#2D2626",
-                  "fontSize": 19,
+                  "color": "#000000",
                 },
-                undefined,
+                Object {
+                  "flex": 1,
+                  "fontWeight": "normal",
+                },
               ],
             ]
           }
@@ -722,13 +791,17 @@ exports[`Menu matches snapshot 1`] = `
     </View>
     <View
       style={
-        Object {
-          "borderBottomColor": "#f8f3f3",
-          "borderBottomWidth": 1,
-          "paddingBottom": 10,
-          "paddingHorizontal": 10,
-          "paddingTop": 10,
-        }
+        Array [
+          Object {
+            "borderBottomWidth": 1,
+            "paddingBottom": 10,
+            "paddingHorizontal": 10,
+            "paddingTop": 10,
+          },
+          Object {
+            "borderColor": "#e4e2e2",
+          },
+        ]
       }
     >
       <View
@@ -747,7 +820,8 @@ exports[`Menu matches snapshot 1`] = `
             "alignItems": "center",
             "flexDirection": "row",
             "opacity": 1,
-            "paddingHorizontal": 6,
+            "paddingLeft": 6,
+            "paddingRight": 10,
             "paddingVertical": 8,
           }
         }
@@ -770,7 +844,7 @@ exports[`Menu matches snapshot 1`] = `
             align="xMidYMid"
             bbHeight="30"
             bbWidth="30"
-            color={4282529591}
+            color={4278190080}
             fill="none"
             focusable={false}
             height="30"
@@ -786,7 +860,7 @@ exports[`Menu matches snapshot 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "color": "#423737",
+                  "color": "#000000",
                 },
                 Object {
                   "flex": 0,
@@ -795,7 +869,7 @@ exports[`Menu matches snapshot 1`] = `
                 },
               ]
             }
-            tintColor={4282529591}
+            tintColor={4278190080}
             vbHeight={24}
             vbWidth={24}
             width="30"
@@ -837,12 +911,19 @@ exports[`Menu matches snapshot 1`] = `
               Object {
                 "color": "#000000",
               },
+              Object {
+                "fontSize": 20,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+              },
               Array [
                 Object {
-                  "color": "#2D2626",
-                  "fontSize": 19,
+                  "color": "#000000",
                 },
-                undefined,
+                Object {
+                  "flex": 1,
+                  "fontWeight": "normal",
+                },
               ],
             ]
           }
@@ -866,7 +947,8 @@ exports[`Menu matches snapshot 1`] = `
             "alignItems": "center",
             "flexDirection": "row",
             "opacity": 1,
-            "paddingHorizontal": 6,
+            "paddingLeft": 6,
+            "paddingRight": 10,
             "paddingVertical": 8,
           }
         }
@@ -889,7 +971,7 @@ exports[`Menu matches snapshot 1`] = `
             align="xMidYMid"
             bbHeight="30"
             bbWidth="30"
-            color={4282529591}
+            color={4278190080}
             fill="none"
             focusable={false}
             height="30"
@@ -905,7 +987,7 @@ exports[`Menu matches snapshot 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "color": "#423737",
+                  "color": "#000000",
                 },
                 Object {
                   "flex": 0,
@@ -914,7 +996,7 @@ exports[`Menu matches snapshot 1`] = `
                 },
               ]
             }
-            tintColor={4282529591}
+            tintColor={4278190080}
             vbHeight={24}
             vbWidth={24}
             width="30"
@@ -967,18 +1049,129 @@ exports[`Menu matches snapshot 1`] = `
               Object {
                 "color": "#000000",
               },
+              Object {
+                "fontSize": 20,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+              },
               Array [
                 Object {
-                  "color": "#2D2626",
-                  "fontSize": 19,
+                  "color": "#000000",
                 },
-                undefined,
+                Object {
+                  "flex": 1,
+                  "fontWeight": "normal",
+                },
               ],
             ]
           }
         >
           Settings
         </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "borderBottomWidth": 1,
+            "paddingBottom": 10,
+            "paddingHorizontal": 10,
+            "paddingTop": 10,
+          },
+          Object {
+            "borderColor": "#e4e2e2",
+          },
+        ]
+      }
+    >
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "backgroundColor": "#ffffff",
+            "opacity": 1,
+            "paddingHorizontal": 10,
+            "paddingVertical": 8,
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+            }
+          }
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "borderColor": "#e4e2e2",
+                },
+                Object {
+                  "borderRadius": 15,
+                  "borderWidth": 1,
+                  "height": 26,
+                  "marginRight": 10,
+                  "padding": 4,
+                  "width": 42,
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "backgroundColor": "#c1b9b9",
+                  },
+                  Object {
+                    "borderRadius": 10,
+                    "height": 16,
+                    "width": 16,
+                  },
+                  undefined,
+                ]
+              }
+            />
+          </View>
+          <Text
+            style={
+              Array [
+                Object {
+                  "color": "#000000",
+                },
+                Object {
+                  "fontSize": 14,
+                  "fontWeight": "500",
+                  "letterSpacing": 0.5,
+                },
+                Array [
+                  Object {
+                    "color": "#000000",
+                    "fontWeight": undefined,
+                  },
+                  Object {
+                    "flex": 1,
+                  },
+                ],
+              ]
+            }
+          >
+            Dark mode
+          </Text>
+        </View>
       </View>
     </View>
     <View
@@ -996,8 +1189,14 @@ exports[`Menu matches snapshot 1`] = `
               "color": "#000000",
             },
             Object {
-              "color": "#968d8d",
+              "fontSize": 16,
+              "letterSpacing": 0.25,
             },
+            Array [
+              Object {
+                "color": "#645454",
+              },
+            ],
           ]
         }
       >

@@ -1,24 +1,126 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {Text} from '../Text'
-import {colors} from '../../../lib/styles'
+import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
+import {Text} from '../text/Text'
+import {Button, ButtonType} from './Button'
+import {useTheme} from '../../../lib/ThemeContext'
+import {choose} from '../../../../lib/functions'
 
 export function RadioButton({
+  type = 'default-light',
   label,
   isSelected,
+  style,
   onPress,
 }: {
+  type?: ButtonType
   label: string
   isSelected: boolean
+  style?: StyleProp<ViewStyle>
   onPress: () => void
 }) {
+  const theme = useTheme()
+  const circleStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(type, {
+    primary: {
+      borderColor: theme.palette.primary.text,
+    },
+    secondary: {
+      borderColor: theme.palette.secondary.text,
+    },
+    inverted: {
+      borderColor: theme.palette.inverted.text,
+    },
+    'primary-outline': {
+      borderColor: theme.palette.primary.border,
+    },
+    'secondary-outline': {
+      borderColor: theme.palette.secondary.border,
+    },
+    'primary-light': {
+      borderColor: theme.palette.primary.border,
+    },
+    'secondary-light': {
+      borderColor: theme.palette.secondary.border,
+    },
+    'default-light': {
+      borderColor: theme.palette.default.border,
+    },
+  })
+  const circleFillStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(
+    type,
+    {
+      primary: {
+        backgroundColor: theme.palette.primary.text,
+      },
+      secondary: {
+        backgroundColor: theme.palette.secondary.text,
+      },
+      inverted: {
+        backgroundColor: theme.palette.inverted.text,
+      },
+      'primary-outline': {
+        backgroundColor: theme.palette.primary.background,
+      },
+      'secondary-outline': {
+        backgroundColor: theme.palette.secondary.background,
+      },
+      'primary-light': {
+        backgroundColor: theme.palette.primary.background,
+      },
+      'secondary-light': {
+        backgroundColor: theme.palette.secondary.background,
+      },
+      'default-light': {
+        backgroundColor: theme.palette.primary.background,
+      },
+    },
+  )
+  const labelStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(type, {
+    primary: {
+      color: theme.palette.primary.text,
+      fontWeight: theme.palette.primary.isLowContrast ? '500' : undefined,
+    },
+    secondary: {
+      color: theme.palette.secondary.text,
+      fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
+    },
+    inverted: {
+      color: theme.palette.inverted.text,
+      fontWeight: theme.palette.inverted.isLowContrast ? '500' : undefined,
+    },
+    'primary-outline': {
+      color: theme.palette.primary.textInverted,
+      fontWeight: theme.palette.primary.isLowContrast ? '500' : undefined,
+    },
+    'secondary-outline': {
+      color: theme.palette.secondary.textInverted,
+      fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
+    },
+    'primary-light': {
+      color: theme.palette.primary.textInverted,
+      fontWeight: theme.palette.primary.isLowContrast ? '500' : undefined,
+    },
+    'secondary-light': {
+      color: theme.palette.secondary.textInverted,
+      fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
+    },
+    'default-light': {
+      color: theme.palette.default.text,
+      fontWeight: theme.palette.default.isLowContrast ? '500' : undefined,
+    },
+  })
   return (
-    <TouchableOpacity style={styles.outer} onPress={onPress}>
-      <View style={styles.circle}>
-        {isSelected ? <View style={styles.circleFill} /> : undefined}
+    <Button type={type} onPress={onPress} style={style}>
+      <View style={styles.outer}>
+        <View style={[circleStyle, styles.circle]}>
+          {isSelected ? (
+            <View style={[circleFillStyle, styles.circleFill]} />
+          ) : undefined}
+        </View>
+        <Text type="button" style={[labelStyle, styles.label]}>
+          {label}
+        </Text>
       </View>
-      <Text style={styles.label}>{label}</Text>
-    </TouchableOpacity>
+    </Button>
   )
 }
 
@@ -26,30 +128,21 @@ const styles = StyleSheet.create({
   outer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.gray2,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
   },
   circle: {
-    width: 30,
-    height: 30,
+    width: 26,
+    height: 26,
     borderRadius: 15,
     padding: 4,
     borderWidth: 1,
-    borderColor: colors.gray3,
     marginRight: 10,
   },
   circleFill: {
-    width: 20,
-    height: 20,
+    width: 16,
+    height: 16,
     borderRadius: 10,
-    backgroundColor: colors.blue3,
   },
   label: {
     flex: 1,
-    fontSize: 17,
   },
 })

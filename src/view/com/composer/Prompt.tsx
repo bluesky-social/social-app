@@ -1,9 +1,9 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {colors} from '../../lib/styles'
 import {useStores} from '../../../state'
 import {UserAvatar} from '../util/UserAvatar'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export function ComposePrompt({
   noAvi = false,
@@ -16,6 +16,7 @@ export function ComposePrompt({
   btn?: string
   onPressCompose: () => void
 }) {
+  const pal = usePalette('default')
   const store = useStores()
   const onPressAvatar = () => {
     store.nav.navigate(`/profile/${store.me.handle}`)
@@ -23,7 +24,12 @@ export function ComposePrompt({
   return (
     <TouchableOpacity
       testID="composePromptButton"
-      style={[styles.container, noAvi ? styles.noAviContainer : undefined]}
+      style={[
+        pal.view,
+        pal.border,
+        styles.container,
+        noAvi ? styles.noAviContainer : undefined,
+      ]}
       onPress={onPressCompose}>
       {!noAvi ? (
         <TouchableOpacity
@@ -39,10 +45,14 @@ export function ComposePrompt({
         </TouchableOpacity>
       ) : undefined}
       <View style={styles.textContainer}>
-        <Text style={styles.text}>{text}</Text>
+        <Text type="h5" style={[pal.textLight, {fontWeight: 'normal'}]}>
+          {text}
+        </Text>
       </View>
-      <View style={styles.btn}>
-        <Text style={styles.btnText}>{btn}</Text>
+      <View style={[styles.btn, {backgroundColor: pal.colors.backgroundLight}]}>
+        <Text type="button" style={pal.textLight}>
+          {btn}
+        </Text>
       </View>
     </TouchableOpacity>
   )
@@ -50,14 +60,11 @@ export function ComposePrompt({
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 6,
-    margin: 2,
-    marginBottom: 0,
     paddingHorizontal: 10,
     paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.white,
+    borderTopWidth: 1,
   },
   noAviContainer: {
     paddingVertical: 14,
@@ -69,17 +76,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     flex: 1,
   },
-  text: {
-    color: colors.gray4,
-    fontSize: 17,
-  },
   btn: {
-    backgroundColor: colors.gray1,
     paddingVertical: 6,
     paddingHorizontal: 14,
     borderRadius: 30,
-  },
-  btnText: {
-    color: colors.gray5,
   },
 })

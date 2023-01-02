@@ -1,14 +1,9 @@
 import React, {useEffect, useState} from 'react'
-import {
-  FlatList,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  View,
-} from 'react-native'
+import {FlatList, View} from 'react-native'
 import {Selector} from './Selector'
 import {HorzSwipe} from './gestures/HorzSwipe'
-import {useAnimatedValue} from '../../lib/useAnimatedValue'
-import {OnScrollCb} from '../../lib/useOnMainScroll'
+import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
+import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
 
 const HEADER_ITEM = {_reactKey: '__header__'}
 const SELECTOR_ITEM = {_reactKey: '__selector__'}

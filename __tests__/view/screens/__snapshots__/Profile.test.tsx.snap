@@ -19,16 +19,18 @@ exports[`Profile matches snapshot 1`] = `
   >
     <View
       style={
-        Object {
-          "alignItems": "center",
-          "backgroundColor": "#ffffff",
-          "borderBottomColor": "#f8f3f3",
-          "borderBottomWidth": 1,
-          "flexDirection": "row",
-          "paddingBottom": 6,
-          "paddingHorizontal": 12,
-          "paddingTop": 6,
-        }
+        Array [
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "paddingBottom": 6,
+            "paddingHorizontal": 12,
+            "paddingTop": 6,
+          },
+          Object {
+            "backgroundColor": "#ffffff",
+          },
+        ]
       }
     >
       <View
@@ -179,9 +181,12 @@ exports[`Profile matches snapshot 1`] = `
                 "color": "#000000",
               },
               Object {
+                "fontSize": 20,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+              },
+              Object {
                 "color": "#000000",
-                "fontSize": 21,
-                "fontWeight": "600",
               },
             ]
           }
@@ -225,6 +230,11 @@ exports[`Profile matches snapshot 1`] = `
         <
           icon="plus"
           size={18}
+          style={
+            Object {
+              "color": "#000000",
+            }
+          }
         />
       </View>
       <View
@@ -254,7 +264,7 @@ exports[`Profile matches snapshot 1`] = `
             "flexDirection": "row",
             "height": 36,
             "justifyContent": "center",
-            "marginLeft": 8,
+            "marginLeft": 4,
             "opacity": 1,
             "width": 36,
           }
@@ -281,8 +291,6 @@ exports[`Profile matches snapshot 1`] = `
               },
               Object {
                 "color": "#000000",
-                "position": "relative",
-                "top": -1,
               },
               Object {
                 "flex": 0,
@@ -340,12 +348,12 @@ exports[`Profile matches snapshot 1`] = `
         style={
           Object {
             "alignItems": "center",
-            "backgroundColor": "#ffffff",
+            "backgroundColor": "#f8f3f3",
             "borderRadius": 20,
             "flexDirection": "row",
             "height": 36,
             "justifyContent": "center",
-            "marginLeft": 8,
+            "marginLeft": 4,
             "opacity": 1,
             "width": 36,
           }
@@ -353,25 +361,23 @@ exports[`Profile matches snapshot 1`] = `
       >
         <
           icon="signal"
-          size={18}
+          size={16}
           style={
-            Array [
-              Object {
-                "color": "#000000",
-              },
-            ]
+            Object {
+              "color": "#000000",
+            }
           }
         />
         <
           icon="x"
-          size={12}
+          size={8}
           style={
             Object {
-              "backgroundColor": "#ffffff",
-              "color": "#d1106f",
-              "left": -4,
-              "position": "relative",
-              "top": 6,
+              "backgroundColor": "#f8f3f3",
+              "bottom": 7,
+              "color": "#ec4899",
+              "position": "absolute",
+              "right": 7,
             }
           }
         />
@@ -379,16 +385,16 @@ exports[`Profile matches snapshot 1`] = `
     </View>
     <View
       style={
-        Object {
-          "backgroundColor": "#ffe6f2",
-          "borderColor": "#ec4899",
-          "borderRadius": 6,
-          "borderWidth": 1,
-          "flex": 1,
-          "margin": 10,
-          "paddingHorizontal": 14,
-          "paddingVertical": 30,
-        }
+        Array [
+          Object {
+            "flex": 1,
+            "paddingHorizontal": 14,
+            "paddingVertical": 30,
+          },
+          Object {
+            "backgroundColor": "#ec4899",
+          },
+        ]
       }
       testID="profileErrorScreen"
     >
@@ -402,15 +408,19 @@ exports[`Profile matches snapshot 1`] = `
       >
         <View
           style={
-            Object {
-              "alignItems": "center",
-              "backgroundColor": "#d1106f",
-              "borderRadius": 30,
-              "height": 50,
-              "justifyContent": "center",
-              "marginRight": 5,
-              "width": 50,
-            }
+            Array [
+              Object {
+                "alignItems": "center",
+                "borderRadius": 30,
+                "height": 50,
+                "justifyContent": "center",
+                "marginRight": 5,
+                "width": 50,
+              },
+              Object {
+                "backgroundColor": "#d1106f",
+              },
+            ]
           }
         >
           <
@@ -431,11 +441,18 @@ exports[`Profile matches snapshot 1`] = `
               "color": "#000000",
             },
             Object {
-              "color": "#d1106f",
               "fontSize": 24,
-              "marginBottom": 10,
-              "textAlign": "center",
+              "fontWeight": "500",
             },
+            Array [
+              Object {
+                "marginBottom": 10,
+                "textAlign": "center",
+              },
+              Object {
+                "color": "#ffffff",
+              },
+            ],
           ]
         }
       >
@@ -448,10 +465,18 @@ exports[`Profile matches snapshot 1`] = `
               "color": "#000000",
             },
             Object {
-              "color": "#d1106f",
-              "marginBottom": 20,
-              "textAlign": "center",
+              "fontSize": 16,
+              "letterSpacing": 0.25,
             },
+            Array [
+              Object {
+                "marginBottom": 20,
+                "textAlign": "center",
+              },
+              Object {
+                "color": "#ffe6f2",
+              },
+            ],
           ]
         }
       >
@@ -464,17 +489,24 @@ exports[`Profile matches snapshot 1`] = `
               "color": "#000000",
             },
             Object {
-              "backgroundColor": "#ffffff",
-              "borderColor": "#645454",
-              "borderRadius": 6,
-              "borderWidth": 1,
-              "color": "#000000",
-              "marginBottom": 20,
-              "overflow": "hidden",
-              "paddingHorizontal": 14,
-              "paddingVertical": 10,
-              "textAlign": "center",
+              "fontSize": 14,
+              "letterSpacing": 0.25,
             },
+            Array [
+              Object {
+                "marginBottom": 20,
+                "overflow": "hidden",
+                "paddingHorizontal": 14,
+                "paddingVertical": 10,
+                "textAlign": "center",
+              },
+              Object {
+                "color": "#ec4899",
+              },
+              Object {
+                "backgroundColor": "#ffffff",
+              },
+            ],
           ]
         }
         testID="profileErrorScreen-details"
@@ -503,7 +535,6 @@ exports[`Profile matches snapshot 1`] = `
             Object {
               "alignItems": "center",
               "backgroundColor": "#d1106f",
-              "borderRadius": 6,
               "flexDirection": "row",
               "opacity": 1,
               "paddingHorizontal": 16,
@@ -527,11 +558,18 @@ exports[`Profile matches snapshot 1`] = `
                   "color": "#000000",
                 },
                 Object {
-                  "color": "#ffffff",
-                  "fontSize": 16,
-                  "fontWeight": "bold",
-                  "marginLeft": 5,
+                  "fontSize": 14,
+                  "fontWeight": "500",
+                  "letterSpacing": 0.5,
                 },
+                Array [
+                  Object {
+                    "marginLeft": 5,
+                  },
+                  Object {
+                    "color": "#ffffff",
+                  },
+                ],
               ]
             }
           >

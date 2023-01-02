@@ -10,25 +10,31 @@ exports[`Search matches snapshot 1`] = `
 >
   <View
     style={
-      Object {
-        "backgroundColor": "#ffffff",
-        "flex": 1,
-      }
+      Array [
+        Object {
+          "backgroundColor": "#ffffff",
+        },
+        Object {
+          "flex": 1,
+        },
+      ]
     }
     testID="searchScreen"
   >
     <View
       style={
-        Object {
-          "alignItems": "center",
-          "backgroundColor": "#ffffff",
-          "borderBottomColor": "#f8f3f3",
-          "borderBottomWidth": 1,
-          "flexDirection": "row",
-          "paddingBottom": 6,
-          "paddingHorizontal": 12,
-          "paddingTop": 6,
-        }
+        Array [
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "paddingBottom": 6,
+            "paddingHorizontal": 12,
+            "paddingTop": 6,
+          },
+          Object {
+            "backgroundColor": "#ffffff",
+          },
+        ]
       }
     >
       <View
@@ -179,9 +185,12 @@ exports[`Search matches snapshot 1`] = `
                 "color": "#000000",
               },
               Object {
+                "fontSize": 20,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+              },
+              Object {
                 "color": "#000000",
-                "fontSize": 21,
-                "fontWeight": "600",
               },
             ]
           }
@@ -225,6 +234,11 @@ exports[`Search matches snapshot 1`] = `
         <
           icon="plus"
           size={18}
+          style={
+            Object {
+              "color": "#000000",
+            }
+          }
         />
       </View>
       <View
@@ -254,7 +268,7 @@ exports[`Search matches snapshot 1`] = `
             "flexDirection": "row",
             "height": 36,
             "justifyContent": "center",
-            "marginLeft": 8,
+            "marginLeft": 4,
             "opacity": 1,
             "width": 36,
           }
@@ -281,8 +295,6 @@ exports[`Search matches snapshot 1`] = `
               },
               Object {
                 "color": "#000000",
-                "position": "relative",
-                "top": -1,
               },
               Object {
                 "flex": 0,
@@ -340,12 +352,12 @@ exports[`Search matches snapshot 1`] = `
         style={
           Object {
             "alignItems": "center",
-            "backgroundColor": "#ffffff",
+            "backgroundColor": "#f8f3f3",
             "borderRadius": 20,
             "flexDirection": "row",
             "height": 36,
             "justifyContent": "center",
-            "marginLeft": 8,
+            "marginLeft": 4,
             "opacity": 1,
             "width": 36,
           }
@@ -353,25 +365,23 @@ exports[`Search matches snapshot 1`] = `
       >
         <
           icon="signal"
-          size={18}
+          size={16}
           style={
-            Array [
-              Object {
-                "color": "#000000",
-              },
-            ]
+            Object {
+              "color": "#000000",
+            }
           }
         />
         <
           icon="x"
-          size={12}
+          size={8}
           style={
             Object {
-              "backgroundColor": "#ffffff",
-              "color": "#d1106f",
-              "left": -4,
-              "position": "relative",
-              "top": 6,
+              "backgroundColor": "#f8f3f3",
+              "bottom": 7,
+              "color": "#ec4899",
+              "position": "absolute",
+              "right": 7,
             }
           }
         />
@@ -379,20 +389,27 @@ exports[`Search matches snapshot 1`] = `
     </View>
     <View
       style={
-        Object {
-          "borderBottomColor": "#f8f3f3",
-          "borderBottomWidth": 1,
-          "flexDirection": "row",
-          "paddingHorizontal": 16,
-          "paddingVertical": 16,
-        }
+        Array [
+          Object {
+            "backgroundColor": "#ffffff",
+          },
+          Object {
+            "borderColor": "#e4e2e2",
+          },
+          Object {
+            "borderTopWidth": 1,
+            "flexDirection": "row",
+            "paddingHorizontal": 16,
+            "paddingVertical": 16,
+          },
+        ]
       }
     >
       <RNSVGSvgView
         align="xMidYMid"
         bbHeight={24}
         bbWidth={24}
-        color={4290886073}
+        color={4278190080}
         fill="none"
         focusable={false}
         height={24}
@@ -407,11 +424,15 @@ exports[`Search matches snapshot 1`] = `
               "backgroundColor": "transparent",
               "borderWidth": 0,
             },
-            Object {
-              "alignSelf": "center",
-              "color": "#c1b9b9",
-              "marginRight": 10,
-            },
+            Array [
+              Object {
+                "color": "#000000",
+              },
+              Object {
+                "alignSelf": "center",
+                "marginRight": 10,
+              },
+            ],
             Object {
               "flex": 0,
               "height": 24,
@@ -419,7 +440,7 @@ exports[`Search matches snapshot 1`] = `
             },
           ]
         }
-        tintColor={4290886073}
+        tintColor={4278190080}
         vbHeight={24}
         vbWidth={24}
         width={24}
@@ -456,15 +477,19 @@ exports[`Search matches snapshot 1`] = `
       <TextInput
         onChangeText={[Function]}
         placeholder="Type your query here..."
-        placeholderTextColor="#968d8d"
+        placeholderTextColor="#645454"
         returnKeyType="search"
         selectTextOnFocus={true}
         style={
-          Object {
-            "color": "#000000",
-            "flex": 1,
-            "fontSize": 16,
-          }
+          Array [
+            Object {
+              "color": "#000000",
+            },
+            Object {
+              "flex": 1,
+              "fontSize": 16,
+            },
+          ]
         }
         testID="searchTextInput"
       />
@@ -472,7 +497,6 @@ exports[`Search matches snapshot 1`] = `
     <View
       style={
         Object {
-          "backgroundColor": "#f8f3f3",
           "flex": 1,
         }
       }
@@ -486,16 +510,16 @@ exports[`Search matches snapshot 1`] = `
       >
         <View
           style={
-            Object {
-              "backgroundColor": "#ffe6f2",
-              "borderColor": "#ec4899",
-              "borderRadius": 6,
-              "borderWidth": 1,
-              "flex": 1,
-              "margin": 10,
-              "paddingHorizontal": 14,
-              "paddingVertical": 30,
-            }
+            Array [
+              Object {
+                "flex": 1,
+                "paddingHorizontal": 14,
+                "paddingVertical": 30,
+              },
+              Object {
+                "backgroundColor": "#ec4899",
+              },
+            ]
           }
         >
           <View
@@ -508,15 +532,19 @@ exports[`Search matches snapshot 1`] = `
           >
             <View
               style={
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "#d1106f",
-                  "borderRadius": 30,
-                  "height": 50,
-                  "justifyContent": "center",
-                  "marginRight": 5,
-                  "width": 50,
-                }
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "borderRadius": 30,
+                    "height": 50,
+                    "justifyContent": "center",
+                    "marginRight": 5,
+                    "width": 50,
+                  },
+                  Object {
+                    "backgroundColor": "#d1106f",
+                  },
+                ]
               }
             >
               <
@@ -537,11 +565,18 @@ exports[`Search matches snapshot 1`] = `
                   "color": "#000000",
                 },
                 Object {
-                  "color": "#d1106f",
                   "fontSize": 24,
-                  "marginBottom": 10,
-                  "textAlign": "center",
+                  "fontWeight": "500",
                 },
+                Array [
+                  Object {
+                    "marginBottom": 10,
+                    "textAlign": "center",
+                  },
+                  Object {
+                    "color": "#ffffff",
+                  },
+                ],
               ]
             }
           >
@@ -554,10 +589,18 @@ exports[`Search matches snapshot 1`] = `
                   "color": "#000000",
                 },
                 Object {
-                  "color": "#d1106f",
-                  "marginBottom": 20,
-                  "textAlign": "center",
+                  "fontSize": 16,
+                  "letterSpacing": 0.25,
                 },
+                Array [
+                  Object {
+                    "marginBottom": 20,
+                    "textAlign": "center",
+                  },
+                  Object {
+                    "color": "#ffe6f2",
+                  },
+                ],
               ]
             }
           >
@@ -570,17 +613,24 @@ exports[`Search matches snapshot 1`] = `
                   "color": "#000000",
                 },
                 Object {
-                  "backgroundColor": "#ffffff",
-                  "borderColor": "#645454",
-                  "borderRadius": 6,
-                  "borderWidth": 1,
-                  "color": "#000000",
-                  "marginBottom": 20,
-                  "overflow": "hidden",
-                  "paddingHorizontal": 14,
-                  "paddingVertical": 10,
-                  "textAlign": "center",
+                  "fontSize": 14,
+                  "letterSpacing": 0.25,
                 },
+                Array [
+                  Object {
+                    "marginBottom": 20,
+                    "overflow": "hidden",
+                    "paddingHorizontal": 14,
+                    "paddingVertical": 10,
+                    "textAlign": "center",
+                  },
+                  Object {
+                    "color": "#ec4899",
+                  },
+                  Object {
+                    "backgroundColor": "#ffffff",
+                  },
+                ],
               ]
             }
             testID="undefined-details"
@@ -609,7 +659,6 @@ exports[`Search matches snapshot 1`] = `
                 Object {
                   "alignItems": "center",
                   "backgroundColor": "#d1106f",
-                  "borderRadius": 6,
                   "flexDirection": "row",
                   "opacity": 1,
                   "paddingHorizontal": 16,
@@ -633,11 +682,18 @@ exports[`Search matches snapshot 1`] = `
                       "color": "#000000",
                     },
                     Object {
-                      "color": "#ffffff",
-                      "fontSize": 16,
-                      "fontWeight": "bold",
-                      "marginLeft": 5,
+                      "fontSize": 14,
+                      "fontWeight": "500",
+                      "letterSpacing": 0.5,
                     },
+                    Array [
+                      Object {
+                        "marginLeft": 5,
+                      },
+                      Object {
+                        "color": "#ffffff",
+                      },
+                    ],
                   ]
                 }
               >

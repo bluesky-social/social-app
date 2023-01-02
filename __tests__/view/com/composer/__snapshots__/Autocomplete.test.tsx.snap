@@ -13,7 +13,7 @@ exports[`Autocomplete matches snapshot 1`] = `
     style={
       Object {
         "backgroundColor": "#ffffff",
-        "borderTopColor": "#e4e2e2",
+        "borderColor": "#e4e2e2",
         "borderTopWidth": 1,
         "bottom": 0,
         "left": 0,
@@ -36,8 +36,8 @@ exports[`Autocomplete matches snapshot 1`] = `
       onStartShouldSetResponder={[Function]}
       style={
         Object {
-          "borderBottomColor": "#f8f3f3",
           "borderBottomWidth": 1,
+          "borderColor": "#e4e2e2",
           "opacity": 1,
           "paddingHorizontal": 16,
           "paddingVertical": 16,
@@ -53,12 +53,34 @@ exports[`Autocomplete matches snapshot 1`] = `
             },
             Object {
               "fontSize": 16,
+              "letterSpacing": 0.25,
+            },
+            Object {
+              "color": "#000000",
             },
           ]
         }
       >
-        @
-        handle.test
+        Test Display
+        <Text
+          style={
+            Array [
+              Object {
+                "color": "#000000",
+              },
+              Object {
+                "fontSize": 14,
+                "letterSpacing": 0.25,
+              },
+              Object {
+                "color": "#645454",
+              },
+            ]
+          }
+        >
+           @
+          handle.test
+        </Text>
       </Text>
     </View>
     <View
@@ -74,8 +96,8 @@ exports[`Autocomplete matches snapshot 1`] = `
       onStartShouldSetResponder={[Function]}
       style={
         Object {
-          "borderBottomColor": "#f8f3f3",
           "borderBottomWidth": 1,
+          "borderColor": "#e4e2e2",
           "opacity": 1,
           "paddingHorizontal": 16,
           "paddingVertical": 16,
@@ -91,12 +113,34 @@ exports[`Autocomplete matches snapshot 1`] = `
             },
             Object {
               "fontSize": 16,
+              "letterSpacing": 0.25,
+            },
+            Object {
+              "color": "#000000",
             },
           ]
         }
       >
-        @
-        handle2.test
+        Test Display 2
+        <Text
+          style={
+            Array [
+              Object {
+                "color": "#000000",
+              },
+              Object {
+                "fontSize": 14,
+                "letterSpacing": 0.25,
+              },
+              Object {
+                "color": "#645454",
+              },
+            ]
+          }
+        >
+           @
+          handle2.test
+        </Text>
       </Text>
     </View>
   </View>

@@ -3,11 +3,11 @@ import {StyleSheet, TextInput, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ProfileFollows as ProfileFollowsComponent} from '../com/profile/ProfileFollows'
 import {Selector} from '../com/util/Selector'
-import {Text} from '../com/util/Text'
+import {Text} from '../com/util/text/Text'
 import {colors} from '../lib/styles'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
-import {useAnimatedValue} from '../lib/useAnimatedValue'
+import {useAnimatedValue} from '../lib/hooks/useAnimatedValue'
 
 export const Contacts = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()

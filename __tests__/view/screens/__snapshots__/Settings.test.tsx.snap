@@ -20,16 +20,18 @@ exports[`Settings matches snapshot 1`] = `
   >
     <View
       style={
-        Object {
-          "alignItems": "center",
-          "backgroundColor": "#ffffff",
-          "borderBottomColor": "#f8f3f3",
-          "borderBottomWidth": 1,
-          "flexDirection": "row",
-          "paddingBottom": 6,
-          "paddingHorizontal": 12,
-          "paddingTop": 6,
-        }
+        Array [
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "paddingBottom": 6,
+            "paddingHorizontal": 12,
+            "paddingTop": 6,
+          },
+          Object {
+            "backgroundColor": "#ffffff",
+          },
+        ]
       }
     >
       <View
@@ -180,9 +182,12 @@ exports[`Settings matches snapshot 1`] = `
                 "color": "#000000",
               },
               Object {
+                "fontSize": 20,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+              },
+              Object {
                 "color": "#000000",
-                "fontSize": 21,
-                "fontWeight": "600",
               },
             ]
           }
@@ -226,6 +231,11 @@ exports[`Settings matches snapshot 1`] = `
         <
           icon="plus"
           size={18}
+          style={
+            Object {
+              "color": "#000000",
+            }
+          }
         />
       </View>
       <View
@@ -255,7 +265,7 @@ exports[`Settings matches snapshot 1`] = `
             "flexDirection": "row",
             "height": 36,
             "justifyContent": "center",
-            "marginLeft": 8,
+            "marginLeft": 4,
             "opacity": 1,
             "width": 36,
           }
@@ -282,8 +292,6 @@ exports[`Settings matches snapshot 1`] = `
               },
               Object {
                 "color": "#000000",
-                "position": "relative",
-                "top": -1,
               },
               Object {
                 "flex": 0,
@@ -341,12 +349,12 @@ exports[`Settings matches snapshot 1`] = `
         style={
           Object {
             "alignItems": "center",
-            "backgroundColor": "#ffffff",
+            "backgroundColor": "#f8f3f3",
             "borderRadius": 20,
             "flexDirection": "row",
             "height": 36,
             "justifyContent": "center",
-            "marginLeft": 8,
+            "marginLeft": 4,
             "opacity": 1,
             "width": 36,
           }
@@ -354,25 +362,23 @@ exports[`Settings matches snapshot 1`] = `
       >
         <
           icon="signal"
-          size={18}
+          size={16}
           style={
-            Array [
-              Object {
-                "color": "#000000",
-              },
-            ]
+            Object {
+              "color": "#000000",
+            }
           }
         />
         <
           icon="x"
-          size={12}
+          size={8}
           style={
             Object {
-              "backgroundColor": "#ffffff",
-              "color": "#d1106f",
-              "left": -4,
-              "position": "relative",
-              "top": 6,
+              "backgroundColor": "#f8f3f3",
+              "bottom": 7,
+              "color": "#ec4899",
+              "position": "absolute",
+              "right": 7,
             }
           }
         />
@@ -407,6 +413,10 @@ exports[`Settings matches snapshot 1`] = `
             Array [
               Object {
                 "color": "#000000",
+              },
+              Object {
+                "fontSize": 16,
+                "letterSpacing": 0.25,
               },
               Object {
                 "color": "#000000",
@@ -446,14 +456,14 @@ exports[`Settings matches snapshot 1`] = `
                 Object {
                   "color": "#000000",
                 },
-                Array [
-                  Object {
-                    "color": "#0085ff",
-                  },
-                  Object {
-                    "fontWeight": "bold",
-                  },
-                ],
+                Object {
+                  "fontSize": 17,
+                  "fontWeight": "bold",
+                  "letterSpacing": 0.15,
+                },
+                Object {
+                  "color": "#0085ff",
+                },
               ]
             }
           >
@@ -474,14 +484,18 @@ exports[`Settings matches snapshot 1`] = `
       >
         <View
           style={
-            Object {
-              "backgroundColor": "#ffffff",
-              "borderRadius": 4,
-              "flexDirection": "row",
-              "marginVertical": 6,
-              "paddingHorizontal": 10,
-              "paddingVertical": 10,
-            }
+            Array [
+              Object {
+                "backgroundColor": "#ffffff",
+              },
+              Object {
+                "borderRadius": 4,
+                "flexDirection": "row",
+                "marginVertical": 6,
+                "paddingHorizontal": 10,
+                "paddingVertical": 10,
+              },
+            ]
           }
         >
           <RNSVGSvgView
@@ -602,14 +616,14 @@ exports[`Settings matches snapshot 1`] = `
                   Object {
                     "color": "#000000",
                   },
-                  Array [
-                    Object {
-                      "fontSize": 18,
-                    },
-                    Object {
-                      "color": "#000000",
-                    },
-                  ],
+                  Object {
+                    "fontSize": 17,
+                    "fontWeight": "bold",
+                    "letterSpacing": 0.15,
+                  },
+                  Object {
+                    "color": "#000000",
+                  },
                 ]
               }
             >
@@ -621,11 +635,13 @@ exports[`Settings matches snapshot 1`] = `
                   Object {
                     "color": "#000000",
                   },
-                  Array [
-                    Object {
-                      "color": "#645454",
-                    },
-                  ],
+                  Object {
+                    "fontSize": 16,
+                    "letterSpacing": 0.25,
+                  },
+                  Object {
+                    "color": "#645454",
+                  },
                 ]
               }
             >
@@ -634,6 +650,42 @@ exports[`Settings matches snapshot 1`] = `
             </Text>
           </View>
         </View>
+      </View>
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <Text
+          style={
+            Array [
+              Object {
+                "color": "#000000",
+              },
+              Object {
+                "fontSize": 16,
+                "letterSpacing": 0.25,
+              },
+              Object {
+                "color": "#0085ff",
+              },
+            ]
+          }
+        >
+          Debug tools
+        </Text>
       </View>
     </View>
   </View>

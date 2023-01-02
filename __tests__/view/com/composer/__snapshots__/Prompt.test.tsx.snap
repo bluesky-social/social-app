@@ -23,10 +23,9 @@ exports[`Prompt matches snapshot 1`] = `
       Object {
         "alignItems": "center",
         "backgroundColor": "#ffffff",
-        "borderRadius": 6,
+        "borderColor": "#e4e2e2",
+        "borderTopWidth": 1,
         "flexDirection": "row",
-        "margin": 2,
-        "marginBottom": 0,
         "opacity": 1,
         "paddingHorizontal": 10,
         "paddingVertical": 10,
@@ -172,9 +171,18 @@ exports[`Prompt matches snapshot 1`] = `
               "color": "#000000",
             },
             Object {
-              "color": "#968d8d",
               "fontSize": 17,
+              "fontWeight": "bold",
+              "letterSpacing": 0.15,
             },
+            Array [
+              Object {
+                "color": "#645454",
+              },
+              Object {
+                "fontWeight": "normal",
+              },
+            ],
           ]
         }
       >
@@ -183,12 +191,16 @@ exports[`Prompt matches snapshot 1`] = `
     </View>
     <View
       style={
-        Object {
-          "backgroundColor": "#f8f3f3",
-          "borderRadius": 30,
-          "paddingHorizontal": 14,
-          "paddingVertical": 6,
-        }
+        Array [
+          Object {
+            "borderRadius": 30,
+            "paddingHorizontal": 14,
+            "paddingVertical": 6,
+          },
+          Object {
+            "backgroundColor": "#f8f3f3",
+          },
+        ]
       }
     >
       <Text
@@ -196,6 +208,11 @@ exports[`Prompt matches snapshot 1`] = `
           Array [
             Object {
               "color": "#000000",
+            },
+            Object {
+              "fontSize": 14,
+              "fontWeight": "500",
+              "letterSpacing": 0.5,
             },
             Object {
               "color": "#645454",

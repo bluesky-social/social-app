@@ -16,18 +16,6 @@ function* reactKeyGenerator(): Generator<string> {
   }
 }
 
-interface ReplyingTo {
-  author: {
-    handle: string
-    displayName?: string
-    avatar?: string
-  }
-  text: string
-}
-interface OriginalRecord {
-  text: string
-}
-
 function isThreadViewPost(
   v: GetPostThread.ThreadViewPost | GetPostThread.NotFoundPost | UnknownPost,
 ): v is GetPostThread.ThreadViewPost {
@@ -51,9 +39,6 @@ export class PostThreadViewPostModel {
   parent?: PostThreadViewPostModel | GetPostThread.NotFoundPost
   replies?: (PostThreadViewPostModel | GetPostThread.NotFoundPost)[]
 
-  // added data
-  replyingTo?: ReplyingTo
-
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
@@ -70,7 +55,6 @@ export class PostThreadViewPostModel {
     v: GetPostThread.ThreadViewPost,
     includeParent = true,
     includeChildren = true,
-    isFirstChild = true,
   ) {
     // parents
     if (includeParent && v.parent) {
@@ -89,25 +73,9 @@ export class PostThreadViewPostModel {
         this.parent = v.parent
       }
     }
-    if (
-      !includeParent &&
-      v.parent &&
-      isThreadViewPost(v.parent) &&
-      !isFirstChild
-    ) {
-      this.replyingTo = {
-        author: {
-          handle: v.parent.post.author.handle,
-          displayName: v.parent.post.author.displayName,
-          avatar: v.parent.post.author.avatar,
-        },
-        text: (v.parent.record as OriginalRecord).text,
-      }
-    }
     // replies
     if (includeChildren && v.replies) {
       const replies = []
-      let isChildFirstChild = true
       for (const item of v.replies) {
         if (isThreadViewPost(item)) {
           const itemModel = new PostThreadViewPostModel(
@@ -117,15 +85,8 @@ export class PostThreadViewPostModel {
           )
           itemModel._depth = this._depth + 1
           if (item.replies) {
-            itemModel.assignTreeModels(
-              keyGen,
-              item,
-              false,
-              true,
-              isChildFirstChild,
-            )
+            itemModel.assignTreeModels(keyGen, item, false, true)
           }
-          isChildFirstChild = false
           replies.push(itemModel)
         } else if (isNotFoundPost(item)) {
           replies.push(item)

@@ -10,9 +10,9 @@ import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
 import _omit from 'lodash.omit'
-import {ErrorScreen} from '../util/ErrorScreen'
+import {ErrorScreen} from '../util/error/ErrorScreen'
 import {Link} from '../util/Link'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import * as Toast from '../util/Toast'
 import {useStores} from '../../../state'
@@ -21,7 +21,8 @@ import {
   SuggestedActorsViewModel,
   SuggestedActor,
 } from '../../../state/models/suggested-actors-view'
-import {s, colors, gradients} from '../../lib/styles'
+import {s, gradients} from '../../lib/styles'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export const SuggestedFollows = observer(
   ({
@@ -31,6 +32,7 @@ export const SuggestedFollows = observer(
     onNoSuggestions?: () => void
     asLinks?: boolean
   }) => {
+    const pal = usePalette('default')
     const store = useStores()
     const [follows, setFollows] = useState<Record<string, string>>({})
 
@@ -116,7 +118,7 @@ export const SuggestedFollows = observer(
         ) : view.isEmpty ? (
           <View />
         ) : (
-          <View style={styles.suggestionsContainer}>
+          <View style={[styles.suggestionsContainer, pal.view]}>
             <FlatList
               data={view.suggestions}
               keyExtractor={item => item._reactKey}
@@ -141,8 +143,9 @@ const User = ({
   onPressFollow: (item: SuggestedActor) => void
   onPressUnfollow: (item: SuggestedActor) => void
 }) => {
+  const pal = usePalette('default')
   return (
-    <View style={styles.actor}>
+    <View style={[styles.actor, pal.view, pal.border]}>
       <View style={styles.actorMeta}>
         <View style={styles.actorAvi}>
           <UserAvatar
@@ -153,18 +156,20 @@ const User = ({
           />
         </View>
         <View style={styles.actorContent}>
-          <Text style={[s.f17, s.bold]} numberOfLines={1}>
+          <Text type="h5" style={pal.text} numberOfLines={1}>
             {item.displayName || item.handle}
           </Text>
-          <Text style={[s.f14, s.gray5]} numberOfLines={1}>
+          <Text style={pal.textLight} numberOfLines={1}>
             @{item.handle}
           </Text>
         </View>
         <View style={styles.actorBtn}>
           {follow ? (
             <TouchableOpacity onPress={() => onPressUnfollow(item)}>
-              <View style={[styles.btn, styles.secondaryBtn]}>
-                <Text style={[s.gray5, s.fw600, s.f15]}>Unfollow</Text>
+              <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
+                <Text type="button" style={pal.text}>
+                  Unfollow
+                </Text>
               </View>
             </TouchableOpacity>
           ) : (
@@ -187,7 +192,7 @@ const User = ({
       </View>
       {item.description ? (
         <View style={styles.actorDetails}>
-          <Text style={[s.f15]} numberOfLines={4}>
+          <Text style={pal.text} numberOfLines={4}>
             {item.description}
           </Text>
         </View>
@@ -203,22 +208,10 @@ const styles = StyleSheet.create({
 
   suggestionsContainer: {
     flex: 1,
-    backgroundColor: colors.gray1,
-  },
-
-  emptyContainer: {
-    backgroundColor: colors.gray1,
-    marginHorizontal: 14,
-    paddingHorizontal: 8,
-    paddingVertical: 14,
-    borderRadius: 6,
   },
 
   actor: {
-    backgroundColor: colors.white,
-    borderRadius: 6,
-    margin: 2,
-    marginBottom: 0,
+    borderTopWidth: 1,
   },
   actorMeta: {
     flexDirection: 'row',
@@ -257,7 +250,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 7,
     borderRadius: 50,
-    backgroundColor: colors.gray1,
     marginLeft: 6,
   },
 })

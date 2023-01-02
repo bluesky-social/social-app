@@ -13,16 +13,18 @@ exports[`ProfileFollows matches snapshot 1`] = `
   >
     <View
       style={
-        Object {
-          "alignItems": "center",
-          "backgroundColor": "#ffffff",
-          "borderBottomColor": "#f8f3f3",
-          "borderBottomWidth": 1,
-          "flexDirection": "row",
-          "paddingBottom": 6,
-          "paddingHorizontal": 12,
-          "paddingTop": 6,
-        }
+        Array [
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "paddingBottom": 6,
+            "paddingHorizontal": 12,
+            "paddingTop": 6,
+          },
+          Object {
+            "backgroundColor": "#ffffff",
+          },
+        ]
       }
     >
       <View
@@ -173,9 +175,12 @@ exports[`ProfileFollows matches snapshot 1`] = `
                 "color": "#000000",
               },
               Object {
+                "fontSize": 20,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+              },
+              Object {
                 "color": "#000000",
-                "fontSize": 21,
-                "fontWeight": "600",
               },
             ]
           }
@@ -191,11 +196,22 @@ exports[`ProfileFollows matches snapshot 1`] = `
                 "color": "#000000",
               },
               Object {
-                "color": "#968d8d",
-                "fontSize": 18,
-                "marginLeft": 6,
-                "maxWidth": 200,
+                "fontSize": 17,
+                "fontWeight": "bold",
+                "letterSpacing": 0.15,
               },
+              Array [
+                Object {
+                  "marginLeft": 4,
+                  "maxWidth": 200,
+                },
+                Object {
+                  "color": "#645454",
+                },
+                Object {
+                  "fontWeight": "normal",
+                },
+              ],
             ]
           }
         >
@@ -237,6 +253,11 @@ exports[`ProfileFollows matches snapshot 1`] = `
         <
           icon="plus"
           size={18}
+          style={
+            Object {
+              "color": "#000000",
+            }
+          }
         />
       </View>
       <View
@@ -266,7 +287,7 @@ exports[`ProfileFollows matches snapshot 1`] = `
             "flexDirection": "row",
             "height": 36,
             "justifyContent": "center",
-            "marginLeft": 8,
+            "marginLeft": 4,
             "opacity": 1,
             "width": 36,
           }
@@ -293,8 +314,6 @@ exports[`ProfileFollows matches snapshot 1`] = `
               },
               Object {
                 "color": "#000000",
-                "position": "relative",
-                "top": -1,
               },
               Object {
                 "flex": 0,
@@ -352,12 +371,12 @@ exports[`ProfileFollows matches snapshot 1`] = `
         style={
           Object {
             "alignItems": "center",
-            "backgroundColor": "#ffffff",
+            "backgroundColor": "#f8f3f3",
             "borderRadius": 20,
             "flexDirection": "row",
             "height": 36,
             "justifyContent": "center",
-            "marginLeft": 8,
+            "marginLeft": 4,
             "opacity": 1,
             "width": 36,
           }
@@ -365,25 +384,23 @@ exports[`ProfileFollows matches snapshot 1`] = `
       >
         <
           icon="signal"
-          size={18}
+          size={16}
           style={
-            Array [
-              Object {
-                "color": "#000000",
-              },
-            ]
+            Object {
+              "color": "#000000",
+            }
           }
         />
         <
           icon="x"
-          size={12}
+          size={8}
           style={
             Object {
-              "backgroundColor": "#ffffff",
-              "color": "#d1106f",
-              "left": -4,
-              "position": "relative",
-              "top": 6,
+              "backgroundColor": "#f8f3f3",
+              "bottom": 7,
+              "color": "#ec4899",
+              "position": "absolute",
+              "right": 7,
             }
           }
         />
@@ -392,37 +409,17 @@ exports[`ProfileFollows matches snapshot 1`] = `
     <View
       testID="followList"
     >
-      <BVLinearGradient
-        colors={
-          Array [
-            4294901882,
-            4293725560,
-          ]
-        }
-        endPoint={
-          Object {
-            "x": 1,
-            "y": 1,
-          }
-        }
-        locations={null}
-        startPoint={
-          Object {
-            "x": 0.5,
-            "y": 0,
-          }
-        }
+      <View
         style={
           Array [
             Object {
               "alignItems": "center",
-              "backgroundColor": "#ffe6f2",
-              "borderColor": "#ec4899",
-              "borderRadius": 6,
-              "borderWidth": 1,
               "flexDirection": "row",
               "paddingHorizontal": 8,
               "paddingVertical": 8,
+            },
+            Object {
+              "backgroundColor": "#ec4899",
             },
             Object {
               "margin": 6,
@@ -435,7 +432,6 @@ exports[`ProfileFollows matches snapshot 1`] = `
             Array [
               Object {
                 "alignItems": "center",
-                "backgroundColor": "#d1106f",
                 "borderRadius": 12,
                 "height": 24,
                 "justifyContent": "center",
@@ -443,7 +439,7 @@ exports[`ProfileFollows matches snapshot 1`] = `
                 "width": 24,
               },
               Object {
-                "backgroundColor": "#ffffff",
+                "backgroundColor": "#d1106f",
               },
             ]
           }
@@ -453,7 +449,7 @@ exports[`ProfileFollows matches snapshot 1`] = `
             size={16}
             style={
               Object {
-                "color": "#ec4899",
+                "color": "#ffffff",
               }
             }
           />
@@ -464,15 +460,17 @@ exports[`ProfileFollows matches snapshot 1`] = `
               Object {
                 "color": "#000000",
               },
+              Object {
+                "fontSize": 14,
+                "letterSpacing": 0.25,
+              },
               Array [
                 Object {
-                  "color": "#d1106f",
                   "flex": 1,
                   "paddingRight": 10,
                 },
                 Object {
                   "color": "#ffffff",
-                  "fontWeight": "600",
                 },
               ],
             ]
@@ -502,15 +500,15 @@ exports[`ProfileFollows matches snapshot 1`] = `
         >
           <
             icon="arrows-rotate"
-            size={16}
+            size={18}
             style={
               Object {
-                "color": "#ffffff",
+                "color": "#d1106f",
               }
             }
           />
         </View>
-      </BVLinearGradient>
+      </View>
     </View>
   </View>
 </View>

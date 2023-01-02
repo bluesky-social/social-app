@@ -2,10 +2,12 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Link} from '../util/Link'
-import {Text} from '../util/Text'
-import {PostDropdownBtn} from '../util/DropdownBtn'
+import {Text} from './text/Text'
+import {PostDropdownBtn} from './forms/DropdownButton'
 import {s} from '../../lib/styles'
 import {ago} from '../../../lib/strings'
+import {useTheme} from '../../lib/ThemeContext'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 interface PostMetaOpts {
   itemHref: string
@@ -20,6 +22,8 @@ interface PostMetaOpts {
 }
 
 export function PostMeta(opts: PostMetaOpts) {
+  const theme = useTheme()
+  const pal = usePalette('default')
   let displayName = opts.authorDisplayName || opts.authorHandle
   let handle = opts.authorHandle
 
@@ -44,16 +48,16 @@ export function PostMeta(opts: PostMetaOpts) {
         style={styles.metaItem}
         href={opts.authorHref}
         title={opts.authorHandle}>
-        <Text style={[s.f17, s.bold, s.black]} numberOfLines={1}>
+        <Text type="h5" style={[pal.text]} numberOfLines={1}>
           {displayName}
           {handle ? (
-            <Text style={[s.f15, s.gray5, s.normal, s.black]}>
+            <Text type="h6" style={[pal.textLight]}>
               &nbsp;{handle}
             </Text>
           ) : undefined}
         </Text>
       </Link>
-      <Text style={[styles.metaItem, s.f15, s.gray5]}>
+      <Text type="h6" style={[styles.metaItem, pal.textLight]}>
         &middot; {ago(opts.timestamp)}
       </Text>
       <View style={s.flex1} />
@@ -64,7 +68,11 @@ export function PostMeta(opts: PostMetaOpts) {
         isAuthor={opts.isAuthor}
         onCopyPostText={opts.onCopyPostText}
         onDeletePost={opts.onDeletePost}>
-        <FontAwesomeIcon icon="ellipsis-h" size={14} style={[s.mt2, s.mr5]} />
+        <FontAwesomeIcon
+          icon="ellipsis-h"
+          size={14}
+          style={[s.mt2, s.mr5, pal.text]}
+        />
       </PostDropdownBtn>
     </View>
   )
@@ -74,7 +82,7 @@ const styles = StyleSheet.create({
   meta: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 2,
+    paddingTop: 0,
     paddingBottom: 2,
   },
   metaItem: {

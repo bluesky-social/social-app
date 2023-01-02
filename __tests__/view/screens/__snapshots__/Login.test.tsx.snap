@@ -176,6 +176,10 @@ exports[`Login matches snapshot 1`] = `
               "color": "#000000",
             },
             Object {
+              "fontSize": 16,
+              "letterSpacing": 0.25,
+            },
+            Object {
               "color": "#ffffff",
               "fontSize": 68,
               "fontWeight": "bold",
@@ -191,6 +195,10 @@ exports[`Login matches snapshot 1`] = `
           Array [
             Object {
               "color": "#000000",
+            },
+            Object {
+              "fontSize": 16,
+              "letterSpacing": 0.25,
             },
             Object {
               "color": "#ffffff",
@@ -241,6 +249,10 @@ exports[`Login matches snapshot 1`] = `
             Array [
               Object {
                 "color": "#000000",
+              },
+              Object {
+                "fontSize": 16,
+                "letterSpacing": 0.25,
               },
               Object {
                 "color": "#ffffff",
@@ -323,6 +335,10 @@ exports[`Login matches snapshot 1`] = `
                 "color": "#000000",
               },
               Object {
+                "fontSize": 16,
+                "letterSpacing": 0.25,
+              },
+              Object {
                 "color": "#ffffff",
                 "fontSize": 16,
                 "textAlign": "center",
@@ -363,6 +379,10 @@ exports[`Login matches snapshot 1`] = `
             Array [
               Object {
                 "color": "#000000",
+              },
+              Object {
+                "fontSize": 16,
+                "letterSpacing": 0.25,
               },
               Object {
                 "color": "#ffffff",

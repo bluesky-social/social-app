@@ -101,6 +101,10 @@ exports[`TabsSelector matches snapshot 1`] = `
                   },
                   Object {
                     "fontSize": 16,
+                    "letterSpacing": 0.25,
+                  },
+                  Object {
+                    "fontSize": 16,
                     "fontWeight": "500",
                   },
                 ]
@@ -162,6 +166,10 @@ exports[`TabsSelector matches snapshot 1`] = `
                   },
                   Object {
                     "fontSize": 16,
+                    "letterSpacing": 0.25,
+                  },
+                  Object {
+                    "fontSize": 16,
                     "fontWeight": "500",
                   },
                 ]
@@ -215,6 +223,10 @@ exports[`TabsSelector matches snapshot 1`] = `
                 Array [
                   Object {
                     "color": "#000000",
+                  },
+                  Object {
+                    "fontSize": 16,
+                    "letterSpacing": 0.25,
                   },
                   Object {
                     "fontSize": 16,
@@ -407,6 +419,10 @@ exports[`TabsSelector matches snapshot 1`] = `
                           Array [
                             Object {
                               "color": "#000000",
+                            },
+                            Object {
+                              "fontSize": 16,
+                              "letterSpacing": 0.25,
                             },
                             Array [
                               Object {

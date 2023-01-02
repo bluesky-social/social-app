@@ -8,16 +8,18 @@ import {AppBskyFeedPost} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedItemModel} from '../../../state/models/feed-view'
 import {Link} from '../util/Link'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 import {PostEmbeds} from '../util/PostEmbeds'
-import {RichText} from '../util/RichText'
+import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {useStores} from '../../../state'
+import {useTheme} from '../../lib/ThemeContext'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export const FeedItem = observer(function ({
   item,
@@ -27,6 +29,8 @@ export const FeedItem = observer(function ({
   showReplyLine?: boolean
 }) {
   const store = useStores()
+  const theme = useTheme()
+  const pal = usePalette('default')
   const [deleted, setDeleted] = useState(false)
   const record = item.post.record as unknown as AppBskyFeedPost.Record
   const itemHref = useMemo(() => {
@@ -96,6 +100,8 @@ export const FeedItem = observer(function ({
   const isNoTop = isChild && !item._isThreadChild
   const outerStyles = [
     styles.outer,
+    pal.view,
+    {borderTopColor: pal.colors.border},
     isSmallTop ? styles.outerSmallTop : undefined,
     isNoTop ? styles.outerNoTop : undefined,
     item._isThreadParent ? styles.outerNoBottom : undefined,
@@ -103,15 +109,21 @@ export const FeedItem = observer(function ({
   return (
     <>
       {isChild && !item._isThreadChild && item.replyParent ? (
-        <View style={{marginTop: 2}}>
-          <FeedItem item={item.replyParent} showReplyLine />
-        </View>
+        <FeedItem item={item.replyParent} showReplyLine />
       ) : undefined}
       <Link style={outerStyles} href={itemHref} title={itemTitle} noFeedback>
-        {item._isThreadChild && <View style={[styles.topReplyLine]} />}
+        {item._isThreadChild && (
+          <View
+            style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
+          />
+        )}
         {(showReplyLine || item._isThreadParent) && (
           <View
-            style={[styles.bottomReplyLine, isNoTop ? {top: 64} : undefined]}
+            style={[
+              styles.bottomReplyLine,
+              {borderColor: pal.colors.replyLine},
+              isNoTop ? {top: 64} : undefined,
+            ]}
           />
         )}
         {item.reasonRepost && (
@@ -122,7 +134,7 @@ export const FeedItem = observer(function ({
               item.reasonRepost.by.displayName || item.reasonRepost.by.handle
             }>
             <FontAwesomeIcon icon="retweet" style={styles.includeReasonIcon} />
-            <Text style={[s.gray4, s.bold, s.f13]}>
+            <Text type="overline2" style={{color: pal.colors.actionLabel}}>
               Reposted by{' '}
               {item.reasonRepost.by.displayName || item.reasonRepost.by.handle}
             </Text>
@@ -139,7 +151,7 @@ export const FeedItem = observer(function ({
               icon="arrow-trend-up"
               style={styles.includeReasonIcon}
             />
-            <Text style={[s.gray4, s.bold, s.f13]}>
+            <Text type="overline2" style={{color: pal.colors.actionLabel}}>
               Trending with{' '}
               {item.reasonTrend.by.displayName || item.reasonTrend.by.handle}
             </Text>
@@ -173,13 +185,16 @@ export const FeedItem = observer(function ({
                 <FontAwesomeIcon
                   icon="reply"
                   size={9}
-                  style={[s.gray4, s.mr5]}
+                  style={[{color: pal.colors.text}, s.mr5]}
                 />
-                <Text style={[s.gray4, s.f12, s.mr2]}>Reply to</Text>
+                <Text type="caption" style={[pal.textLight, s.mr2]}>
+                  Reply to
+                </Text>
                 <Link href={replyHref} title="Parent post">
                   <UserInfoText
+                    type="caption"
                     did={replyAuthorDid}
-                    style={[s.f12, s.gray5]}
+                    style={[pal.textLight]}
                     prefix="@"
                   />
                 </Link>
@@ -188,9 +203,9 @@ export const FeedItem = observer(function ({
             {record.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
+                  type="body1"
                   text={record.text}
                   entities={record.entities}
-                  style={styles.postText}
                 />
               </View>
             ) : (
@@ -212,7 +227,7 @@ export const FeedItem = observer(function ({
       </Link>
       {item._isThreadChildElided ? (
         <Link
-          style={styles.viewFullThread}
+          style={[pal.view, styles.viewFullThread]}
           href={itemHref}
           title={itemTitle}
           noFeedback>
@@ -223,15 +238,17 @@ export const FeedItem = observer(function ({
                 y1="0"
                 x2="2"
                 y2="5"
-                stroke={colors.gray2}
+                stroke={pal.colors.replyLine}
                 strokeWidth="2"
               />
-              <Circle x="2" y="10" r="1.5" fill={colors.gray3} />
-              <Circle x="2" y="16" r="1.5" fill={colors.gray3} />
-              <Circle x="2" y="22" r="1.5" fill={colors.gray3} />
+              <Circle x="2" y="10" r="1.5" fill={pal.colors.replyLineDot} />
+              <Circle x="2" y="16" r="1.5" fill={pal.colors.replyLineDot} />
+              <Circle x="2" y="22" r="1.5" fill={pal.colors.replyLineDot} />
             </Svg>
           </View>
-          <Text style={styles.viewFullThreadText}>View full thread</Text>
+          <Text style={[pal.link, theme.typography.body2]}>
+            View full thread
+          </Text>
         </Link>
       ) : undefined}
     </>
@@ -240,29 +257,19 @@ export const FeedItem = observer(function ({
 
 const styles = StyleSheet.create({
   outer: {
-    borderRadius: 6,
-    margin: 2,
-    marginBottom: 0,
-    backgroundColor: colors.white,
+    borderTopWidth: 1,
     padding: 10,
   },
   outerNoTop: {
-    marginTop: 0,
+    borderTopWidth: 0,
     paddingTop: 0,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
   },
   outerSmallTop: {
-    marginTop: 0,
+    borderTopWidth: 0,
     paddingTop: 8,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
   },
   outerNoBottom: {
-    marginBottom: 0,
-    paddingBottom: 0,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
+    paddingBottom: 2,
   },
   topReplyLine: {
     position: 'absolute',
@@ -270,7 +277,6 @@ const styles = StyleSheet.create({
     top: 0,
     height: 6,
     borderLeftWidth: 2,
-    borderLeftColor: colors.gray2,
   },
   bottomReplyLine: {
     position: 'absolute',
@@ -278,7 +284,6 @@ const styles = StyleSheet.create({
     top: 72,
     bottom: 0,
     borderLeftWidth: 2,
-    borderLeftColor: colors.gray2,
   },
   includeReason: {
     flexDirection: 'row',
@@ -293,7 +298,7 @@ const styles = StyleSheet.create({
   },
   layoutAvi: {
     width: 60,
-    paddingTop: 5,
+    paddingTop: 0,
   },
   layoutContent: {
     flex: 1,
@@ -302,30 +307,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    paddingBottom: 8,
-  },
-  postText: {
-    fontFamily: 'System',
-    fontSize: 16,
-    lineHeight: 20.8, // 1.3 of 16px
-    color: colors.black,
+    paddingBottom: 4,
   },
   postEmbeds: {
-    marginBottom: 10,
+    marginBottom: 0,
   },
   viewFullThread: {
-    backgroundColor: colors.white,
     paddingTop: 12,
-    paddingBottom: 4,
-    paddingLeft: 72,
+    paddingBottom: 2,
+    paddingLeft: 70,
   },
   viewFullThreadDots: {
     position: 'absolute',
-    left: 35,
+    left: 33,
     top: 0,
-  },
-  viewFullThreadText: {
-    color: colors.blue3,
-    fontSize: 16,
   },
 })

@@ -10,14 +10,16 @@ import {
 import {ViewHeader} from '../com/util/ViewHeader'
 import {SuggestedFollows} from '../com/discover/SuggestedFollows'
 import {UserAvatar} from '../com/util/UserAvatar'
-import {Text} from '../com/util/Text'
+import {Text} from '../com/util/text/Text'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 import {UserAutocompleteViewModel} from '../../state/models/user-autocomplete-view'
-import {s, colors} from '../lib/styles'
+import {s} from '../lib/styles'
 import {MagnifyingGlassIcon} from '../lib/icons'
+import {usePalette} from '../lib/hooks/usePalette'
 
 export const Search = ({navIdx, visible, params}: ScreenParams) => {
+  const pal = usePalette('default')
   const store = useStores()
   const textInput = useRef<TextInput>(null)
   const [query, setQuery] = useState<string>('')
@@ -31,7 +33,6 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
     if (visible) {
       store.shell.setMinimalShellMode(false)
       autocompleteView.setup()
-      textInput.current?.focus()
       store.nav.setTitle(navIdx, `Search`)
     }
   }, [store, visible, name])
@@ -51,18 +52,18 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
   }
 
   return (
-    <View testID="searchScreen" style={styles.container}>
+    <View testID="searchScreen" style={[pal.view, styles.container]}>
       <ViewHeader title="Search" />
-      <View style={styles.inputContainer}>
-        <MagnifyingGlassIcon style={styles.inputIcon} />
+      <View style={[pal.view, pal.border, styles.inputContainer]}>
+        <MagnifyingGlassIcon style={[pal.text, styles.inputIcon]} />
         <TextInput
           testID="searchTextInput"
           ref={textInput}
           placeholder="Type your query here..."
-          placeholderTextColor={colors.gray4}
+          placeholderTextColor={pal.colors.textLight}
           selectTextOnFocus
           returnKeyType="search"
-          style={styles.input}
+          style={[pal.text, styles.input]}
           onChangeText={onChangeQuery}
         />
       </View>
@@ -72,7 +73,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
             {autocompleteView.searchRes.map((item, i) => (
               <TouchableOpacity
                 key={i}
-                style={styles.searchResult}
+                style={[pal.view, pal.border, styles.searchResult]}
                 onPress={() => onSelect(item.handle)}>
                 <UserAvatar
                   handle={item.handle}
@@ -81,10 +82,10 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
                   size={36}
                 />
                 <View style={[s.ml10]}>
-                  <Text style={styles.searchResultDisplayName}>
+                  <Text type="h5" style={pal.text}>
                     {item.displayName || item.handle}
                   </Text>
-                  <Text style={styles.searchResultHandle}>@{item.handle}</Text>
+                  <Text style={pal.textLight}>@{item.handle}</Text>
                 </View>
               </TouchableOpacity>
             ))}
@@ -100,46 +101,31 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
   },
 
   inputContainer: {
     flexDirection: 'row',
     paddingVertical: 16,
     paddingHorizontal: 16,
-    borderBottomColor: colors.gray1,
-    borderBottomWidth: 1,
+    borderTopWidth: 1,
   },
   inputIcon: {
     marginRight: 10,
-    color: colors.gray3,
     alignSelf: 'center',
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: colors.black,
   },
 
   outputContainer: {
     flex: 1,
-    backgroundColor: colors.gray1,
   },
 
   searchResult: {
     flexDirection: 'row',
-    backgroundColor: colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.gray1,
-    paddingVertical: 16,
+    borderTopWidth: 1,
+    paddingVertical: 12,
     paddingHorizontal: 16,
-  },
-  searchResultDisplayName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  searchResultHandle: {
-    fontSize: 14,
-    color: colors.gray5,
   },
 })

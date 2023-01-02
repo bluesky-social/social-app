@@ -1,9 +1,11 @@
 import React from 'react'
 import {TextStyle, StyleProp} from 'react-native'
-import {TextLink} from './Link'
+import {TextLink} from '../Link'
 import {Text} from './Text'
-import {s} from '../../lib/styles'
-import {toShortUrl} from '../../../lib/strings'
+import {lh} from '../../../lib/styles'
+import {toShortUrl} from '../../../../lib/strings'
+import {useTheme, TypographyVariant} from '../../../lib/ThemeContext'
+import {usePalette} from '../../../lib/hooks/usePalette'
 
 type TextSlice = {start: number; end: number}
 type Entity = {
@@ -13,25 +15,34 @@ type Entity = {
 }
 
 export function RichText({
+  type = 'body1',
   text,
   entities,
   style,
   numberOfLines,
 }: {
+  type?: TypographyVariant
   text: string
   entities?: Entity[]
   style?: StyleProp<TextStyle>
   numberOfLines?: number
 }) {
+  const theme = useTheme()
+  const pal = usePalette('default')
+  const lineHeightStyle = lh(theme, type, 1.2)
   if (!entities?.length) {
     if (/^\p{Extended_Pictographic}+$/u.test(text) && text.length <= 5) {
       style = {
         fontSize: 26,
         lineHeight: 30,
       }
-      return <Text style={style}>{text}</Text>
+      return <Text style={[style, pal.text]}>{text}</Text>
     }
-    return <Text style={style}>{text}</Text>
+    return (
+      <Text type={type} style={[style, pal.text, lineHeightStyle]}>
+        {text}
+      </Text>
+    )
   }
   if (!style) style = []
   else if (!Array.isArray(style)) style = [style]
@@ -47,18 +58,20 @@ export function RichText({
         els.push(
           <TextLink
             key={key}
+            type={type}
             text={segment.text}
             href={`/profile/${segment.entity.value}`}
-            style={[style, s.blue3]}
+            style={[style, lineHeightStyle, pal.link]}
           />,
         )
       } else if (segment.entity.type === 'link') {
         els.push(
           <TextLink
             key={key}
+            type={type}
             text={toShortUrl(segment.text)}
             href={segment.entity.value}
-            style={[style, s.blue3]}
+            style={[style, lineHeightStyle, pal.link]}
           />,
         )
       }
@@ -66,7 +79,10 @@ export function RichText({
     key++
   }
   return (
-    <Text style={style} numberOfLines={numberOfLines}>
+    <Text
+      type={type}
+      style={[style, pal.text, lineHeightStyle]}
+      numberOfLines={numberOfLines}>
       {els}
     </Text>
   )

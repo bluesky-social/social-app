@@ -1,5 +1,6 @@
 import {makeAutoObservable} from 'mobx'
 import {ProfileViewModel} from './profile-view'
+import {isObj, hasProp} from '../lib/type-guards'
 
 export class ConfirmModal {
   name = 'confirm'
@@ -135,6 +136,7 @@ export interface ComposerOpts {
 }
 
 export class ShellUiModel {
+  darkMode = false
   minimalShellMode = false
   isMainMenuOpen = false
   isModalActive = false
@@ -156,7 +158,25 @@ export class ShellUiModel {
   composerOpts: ComposerOpts | undefined
 
   constructor() {
-    makeAutoObservable(this)
+    makeAutoObservable(this, {serialize: false, hydrate: false})
+  }
+
+  serialize(): unknown {
+    return {
+      darkMode: this.darkMode,
+    }
+  }
+
+  hydrate(v: unknown) {
+    if (isObj(v)) {
+      if (hasProp(v, 'darkMode') && typeof v.darkMode === 'boolean') {
+        this.darkMode = v.darkMode
+      }
+    }
+  }
+
+  setDarkMode(v: boolean) {
+    this.darkMode = v
   }
 
   setMinimalShellMode(v: boolean) {

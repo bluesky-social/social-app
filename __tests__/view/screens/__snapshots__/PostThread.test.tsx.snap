@@ -18,16 +18,18 @@ exports[`PostThread matches snapshot 1`] = `
   >
     <View
       style={
-        Object {
-          "alignItems": "center",
-          "backgroundColor": "#ffffff",
-          "borderBottomColor": "#f8f3f3",
-          "borderBottomWidth": 1,
-          "flexDirection": "row",
-          "paddingBottom": 6,
-          "paddingHorizontal": 12,
-          "paddingTop": 6,
-        }
+        Array [
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "paddingBottom": 6,
+            "paddingHorizontal": 12,
+            "paddingTop": 6,
+          },
+          Object {
+            "backgroundColor": "#ffffff",
+          },
+        ]
       }
     >
       <View
@@ -178,9 +180,12 @@ exports[`PostThread matches snapshot 1`] = `
                 "color": "#000000",
               },
               Object {
+                "fontSize": 20,
+                "fontWeight": "500",
+                "letterSpacing": 0.15,
+              },
+              Object {
                 "color": "#000000",
-                "fontSize": 21,
-                "fontWeight": "600",
               },
             ]
           }
@@ -196,11 +201,22 @@ exports[`PostThread matches snapshot 1`] = `
                 "color": "#000000",
               },
               Object {
-                "color": "#968d8d",
-                "fontSize": 18,
-                "marginLeft": 6,
-                "maxWidth": 200,
+                "fontSize": 17,
+                "fontWeight": "bold",
+                "letterSpacing": 0.15,
               },
+              Array [
+                Object {
+                  "marginLeft": 4,
+                  "maxWidth": 200,
+                },
+                Object {
+                  "color": "#645454",
+                },
+                Object {
+                  "fontWeight": "normal",
+                },
+              ],
             ]
           }
         >
@@ -242,6 +258,11 @@ exports[`PostThread matches snapshot 1`] = `
         <
           icon="plus"
           size={18}
+          style={
+            Object {
+              "color": "#000000",
+            }
+          }
         />
       </View>
       <View
@@ -271,7 +292,7 @@ exports[`PostThread matches snapshot 1`] = `
             "flexDirection": "row",
             "height": 36,
             "justifyContent": "center",
-            "marginLeft": 8,
+            "marginLeft": 4,
             "opacity": 1,
             "width": 36,
           }
@@ -298,8 +319,6 @@ exports[`PostThread matches snapshot 1`] = `
               },
               Object {
                 "color": "#000000",
-                "position": "relative",
-                "top": -1,
               },
               Object {
                 "flex": 0,
@@ -357,12 +376,12 @@ exports[`PostThread matches snapshot 1`] = `
         style={
           Object {
             "alignItems": "center",
-            "backgroundColor": "#ffffff",
+            "backgroundColor": "#f8f3f3",
             "borderRadius": 20,
             "flexDirection": "row",
             "height": 36,
             "justifyContent": "center",
-            "marginLeft": 8,
+            "marginLeft": 4,
             "opacity": 1,
             "width": 36,
           }
@@ -370,25 +389,23 @@ exports[`PostThread matches snapshot 1`] = `
       >
         <
           icon="signal"
-          size={18}
+          size={16}
           style={
-            Array [
-              Object {
-                "color": "#000000",
-              },
-            ]
+            Object {
+              "color": "#000000",
+            }
           }
         />
         <
           icon="x"
-          size={12}
+          size={8}
           style={
             Object {
-              "backgroundColor": "#ffffff",
-              "color": "#d1106f",
-              "left": -4,
-              "position": "relative",
-              "top": 6,
+              "backgroundColor": "#f8f3f3",
+              "bottom": 7,
+              "color": "#ec4899",
+              "position": "absolute",
+              "right": 7,
             }
           }
         />

@@ -30,14 +30,18 @@ exports[`Composer matches snapshot 1`] = `
       onLayout={[Function]}
       style={
         Array [
-          Object {
-            "backgroundColor": "#fff",
-            "flex": 1,
-            "flexDirection": "column",
-            "height": "100%",
-            "padding": 15,
-            "paddingBottom": 0,
-          },
+          Array [
+            Object {
+              "backgroundColor": "#ffffff",
+            },
+            Object {
+              "flex": 1,
+              "flexDirection": "column",
+              "height": "100%",
+              "padding": 15,
+              "paddingBottom": 0,
+            },
+          ],
           Object {
             "paddingBottom": 0,
           },
@@ -85,6 +89,10 @@ exports[`Composer matches snapshot 1`] = `
                 Array [
                   Object {
                     "color": "#000000",
+                  },
+                  Object {
+                    "fontSize": 16,
+                    "letterSpacing": 0.25,
                   },
                   Array [
                     Object {
@@ -158,6 +166,10 @@ exports[`Composer matches snapshot 1`] = `
                     Object {
                       "color": "#000000",
                     },
+                    Object {
+                      "fontSize": 16,
+                      "letterSpacing": 0.25,
+                    },
                     Array [
                       Object {
                         "color": "#ffffff",
@@ -187,13 +199,17 @@ exports[`Composer matches snapshot 1`] = `
           <View>
             <View
               style={
-                Object {
-                  "borderTopColor": "#e4e2e2",
-                  "borderTopWidth": 1,
-                  "flexDirection": "row",
-                  "paddingBottom": 16,
-                  "paddingTop": 16,
-                }
+                Array [
+                  Object {
+                    "borderColor": "#e4e2e2",
+                  },
+                  Object {
+                    "borderTopWidth": 1,
+                    "flexDirection": "row",
+                    "paddingBottom": 16,
+                    "paddingTop": 16,
+                  },
+                ]
               }
             >
               <RNSVGSvgView
@@ -316,13 +332,12 @@ exports[`Composer matches snapshot 1`] = `
                       Object {
                         "color": "#000000",
                       },
+                      Object {
+                        "fontSize": 17,
+                        "fontWeight": "bold",
+                        "letterSpacing": 0.15,
+                      },
                       Array [
-                        Object {
-                          "fontSize": 16,
-                        },
-                        Object {
-                          "fontWeight": "bold",
-                        },
                         Object {
                           "color": "#000000",
                         },
@@ -339,17 +354,13 @@ exports[`Composer matches snapshot 1`] = `
                       Object {
                         "color": "#000000",
                       },
-                      Array [
-                        Object {
-                          "fontSize": 16,
-                        },
-                        Object {
-                          "lineHeight": 20.8,
-                        },
-                        Object {
-                          "color": "#000000",
-                        },
-                      ],
+                      Object {
+                        "fontSize": 16,
+                        "letterSpacing": 0.25,
+                      },
+                      Object {
+                        "color": "#000000",
+                      },
                     ]
                   }
                 >
@@ -361,7 +372,9 @@ exports[`Composer matches snapshot 1`] = `
               style={
                 Array [
                   Object {
-                    "borderTopColor": "#e4e2e2",
+                    "borderColor": "#e4e2e2",
+                  },
+                  Object {
                     "borderTopWidth": 1,
                     "flexDirection": "row",
                     "paddingTop": 16,
@@ -479,17 +492,21 @@ exports[`Composer matches snapshot 1`] = `
                 multiline={true}
                 onChangeText={[Function]}
                 placeholder="Write your reply"
-                placeholderTextColor="#968d8d"
+                placeholderTextColor="#645454"
                 scrollEnabled={true}
                 style={
-                  Object {
-                    "alignSelf": "flex-start",
-                    "color": "#000000",
-                    "flex": 1,
-                    "fontSize": 18,
-                    "marginLeft": 8,
-                    "padding": 5,
-                  }
+                  Array [
+                    Object {
+                      "color": "#000000",
+                    },
+                    Object {
+                      "alignSelf": "flex-start",
+                      "flex": 1,
+                      "fontSize": 18,
+                      "marginLeft": 8,
+                      "padding": 5,
+                    },
+                  ]
                 }
               />
             </View>
@@ -497,15 +514,18 @@ exports[`Composer matches snapshot 1`] = `
         </RCTScrollView>
         <View
           style={
-            Object {
-              "alignItems": "center",
-              "backgroundColor": "#ffffff",
-              "borderTopColor": "#e4e2e2",
-              "borderTopWidth": 1,
-              "flexDirection": "row",
-              "paddingRight": 5,
-              "paddingVertical": 10,
-            }
+            Array [
+              Object {
+                "borderColor": "#e4e2e2",
+              },
+              Object {
+                "alignItems": "center",
+                "borderTopWidth": 1,
+                "flexDirection": "row",
+                "paddingRight": 5,
+                "paddingVertical": 10,
+              },
+            ]
           }
         >
           <View
@@ -561,6 +581,10 @@ exports[`Composer matches snapshot 1`] = `
               Array [
                 Object {
                   "color": "#000000",
+                },
+                Object {
+                  "fontSize": 16,
+                  "letterSpacing": 0.25,
                 },
                 Array [
                   Object {
@@ -650,7 +674,7 @@ exports[`Composer matches snapshot 1`] = `
           style={
             Object {
               "backgroundColor": "#ffffff",
-              "borderTopColor": "#e4e2e2",
+              "borderColor": "#e4e2e2",
               "borderTopWidth": 1,
               "bottom": 0,
               "left": 0,

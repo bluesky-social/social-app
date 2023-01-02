@@ -8,12 +8,13 @@ import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../../lib/strings'
 import {UpIconSolid} from '../../lib/icons'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Post} from '../post/Post'
 import {Link} from '../util/Link'
 import {InviteAccepter} from './InviteAccepter'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 const MAX_AUTHORS = 8
 
@@ -22,6 +23,7 @@ export const FeedItem = observer(function FeedItem({
 }: {
   item: NotificationsViewItemModel
 }) {
+  const pal = usePalette('default')
   const itemHref = useMemo(() => {
     if (item.isUpvote || item.isRepost || item.isTrend) {
       const urip = new AtUri(item.subjectUri)
@@ -55,10 +57,14 @@ export const FeedItem = observer(function FeedItem({
         <Post
           uri={item.uri}
           initView={item.additionalPost}
-          style={[
-            styles.outerMinimal,
-            item.isRead ? undefined : styles.outerUnread,
-          ]}
+          style={
+            item.isRead
+              ? undefined
+              : [
+                  styles.outerUnread,
+                  {backgroundColor: pal.colors.unreadNotifBg},
+                ]
+          }
         />
       </Link>
     )
@@ -120,7 +126,14 @@ export const FeedItem = observer(function FeedItem({
 
   return (
     <Link
-      style={[styles.outer, item.isRead ? undefined : styles.outerUnread]}
+      style={[
+        styles.outer,
+        pal.view,
+        pal.border,
+        item.isRead
+          ? undefined
+          : [styles.outerUnread, {backgroundColor: pal.colors.unreadNotifBg}],
+      ]}
       href={itemHref}
       title={itemTitle}
       noFeedback>
@@ -153,36 +166,36 @@ export const FeedItem = observer(function FeedItem({
               </Link>
             ))}
             {authors.length > MAX_AUTHORS ? (
-              <Text style={styles.aviExtraCount}>
+              <Text style={[styles.aviExtraCount, pal.textLight]}>
                 +{authors.length - MAX_AUTHORS}
               </Text>
             ) : undefined}
           </View>
           <View style={styles.meta}>
             {item.isTrend && (
-              <Text style={[styles.metaItem, s.f15]}>{action}</Text>
+              <Text style={[styles.metaItem, pal.text]}>{action}</Text>
             )}
             <Link
               key={authors[0].href}
               style={styles.metaItem}
               href={authors[0].href}
               title={`@${authors[0].handle}`}>
-              <Text style={[s.f15, s.bold, s.black]}>
+              <Text style={[pal.text, s.bold]}>
                 {authors[0].displayName || authors[0].handle}
               </Text>
             </Link>
             {authors.length > 1 ? (
               <>
-                <Text style={[styles.metaItem, s.f15]}>and</Text>
-                <Text style={[styles.metaItem, s.f15, s.bold]}>
+                <Text style={[styles.metaItem, pal.text]}>and</Text>
+                <Text style={[styles.metaItem, pal.text, s.bold]}>
                   {authors.length - 1} {pluralize(authors.length - 1, 'other')}
                 </Text>
               </>
             ) : undefined}
             {!item.isTrend && (
-              <Text style={[styles.metaItem, s.f15]}>{action}</Text>
+              <Text style={[styles.metaItem, pal.text]}>{action}</Text>
             )}
-            <Text style={[styles.metaItem, s.f15, s.gray5]}>
+            <Text style={[styles.metaItem, pal.textLight]}>
               {ago(item.indexedAt)}
             </Text>
           </View>
@@ -207,6 +220,7 @@ function AdditionalPostText({
 }: {
   additionalPost?: PostThreadViewModel
 }) {
+  const pal = usePalette('default')
   if (!additionalPost) {
     return <View />
   }
@@ -214,27 +228,16 @@ function AdditionalPostText({
     return <ErrorMessage message={additionalPost.error} />
   }
   return (
-    <Text style={[s.gray5]}>{additionalPost.thread?.post.record.text}</Text>
+    <Text style={pal.textLight}>{additionalPost.thread?.post.record.text}</Text>
   )
 }
 
 const styles = StyleSheet.create({
   outer: {
-    backgroundColor: colors.white,
     padding: 10,
-    borderRadius: 6,
-    margin: 2,
-    marginBottom: 0,
-  },
-  outerMinimal: {
-    backgroundColor: colors.white,
-    borderRadius: 6,
-    margin: 2,
-    marginBottom: 0,
+    borderTopWidth: 1,
   },
   outerUnread: {
-    backgroundColor: colors.unreadNotifBg,
-    borderWidth: 1,
     borderColor: colors.blue1,
   },
   layout: {
@@ -255,7 +258,6 @@ const styles = StyleSheet.create({
   aviExtraCount: {
     fontWeight: 'bold',
     paddingLeft: 6,
-    color: colors.gray5,
   },
   layoutContent: {
     flex: 1,
@@ -268,7 +270,6 @@ const styles = StyleSheet.create({
   },
   metaItem: {
     paddingRight: 3,
-    color: colors.black,
   },
   postText: {
     paddingBottom: 5,

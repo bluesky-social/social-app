@@ -15,7 +15,7 @@ import * as EmailValidator from 'email-validator'
 import {Logo} from './Logo'
 import {Picker} from '../util/Picker'
 import {TextLink} from '../util/Link'
-import {Text} from '../util/Text'
+import {Text} from '../util/text/Text'
 import {s, colors} from '../../lib/styles'
 import {
   makeValidHandle,
@@ -288,7 +288,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
               <View style={styles.groupContent}>
                 <Text style={[s.white, s.p10]}>
                   Your full username will be{' '}
-                  <Text style={s.bold}>
+                  <Text style={[s.white, s.bold]}>
                     @{createFullHandle(handle, userDomain)}
                   </Text>
                 </Text>

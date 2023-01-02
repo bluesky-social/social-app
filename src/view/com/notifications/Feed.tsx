@@ -4,9 +4,9 @@ import {View, FlatList} from 'react-native'
 import {NotificationsViewModel} from '../../../state/models/notifications-view'
 import {FeedItem} from './FeedItem'
 import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {ErrorMessage} from '../util/ErrorMessage'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {EmptyState} from '../util/EmptyState'
-import {OnScrollCb} from '../../lib/useOnMainScroll'
+import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 
@@ -54,7 +54,6 @@ export const Feed = observer(function Feed({
       {view.isLoading && !data && <NotificationFeedLoadingPlaceholder />}
       {view.hasError && (
         <ErrorMessage
-          dark
           message={view.error}
           style={{margin: 6}}
           onPressTryAgain={onPressTryAgain}
