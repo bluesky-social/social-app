@@ -329,6 +329,8 @@ export const mockedNavigationStore = {
 } as NavigationModel
 
 export const mockedShellStore = {
+  serialize: jest.fn(),
+  hydrate: jest.fn(),
   minimalShellMode: false,
   isMainMenuOpen: false,
   isModalActive: false,
@@ -337,6 +339,8 @@ export const mockedShellStore = {
   activeLightbox: undefined,
   isComposerActive: false,
   composerOpts: undefined,
+  darkMode: false,
+  setDarkMode: jest.fn(),
   setMainMenuOpen: jest.fn(),
   setMinimalShellMode: jest.fn(),
   openModal: jest.fn(),
