@@ -18,7 +18,14 @@ export const PostThread = observer(function PostThread({
   const ref = useRef<FlatList>(null)
   const posts = view.thread ? Array.from(flattenThread(view.thread)) : []
   const onRefresh = () => {
-    view?.refresh().catch(err => console.error('Failed to refresh', err))
+    view
+      ?.refresh()
+      .catch(err =>
+        view.rootStore.log.error(
+          'Failed to refresh posts thread',
+          err.toString(),
+        ),
+      )
   }
   const onLayout = () => {
     const index = posts.findIndex(post => post._isHighlightedPost)

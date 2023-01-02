@@ -104,13 +104,22 @@ export class MeModel {
       })
       await Promise.all([
         this.memberships?.setup().catch(e => {
-          console.error('Failed to setup memberships model', e)
+          this.rootStore.log.error(
+            'Failed to setup memberships model',
+            e.toString(),
+          )
         }),
         this.mainFeed.setup().catch(e => {
-          console.error('Failed to setup main feed model', e)
+          this.rootStore.log.error(
+            'Failed to setup main feed model',
+            e.toString(),
+          )
         }),
         this.notifications.setup().catch(e => {
-          console.error('Failed to setup notifications model', e)
+          this.rootStore.log.error(
+            'Failed to setup notifications model',
+            e.toString(),
+          )
         }),
       ])
     } else {

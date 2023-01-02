@@ -44,7 +44,6 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   useEffect(() => {
     let aborted = false
     setError('')
-    console.log('Fetching service description', serviceUrl)
     store.session.describeService(serviceUrl).then(
       desc => {
         if (aborted) return
@@ -52,7 +51,10 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
       },
       err => {
         if (aborted) return
-        console.error(err)
+        store.log.warn(
+          `Failed to fetch service description for ${serviceUrl}`,
+          err.toString(),
+        )
         setError(
           'Unable to contact your service. Please check your Internet connection.',
         )
@@ -61,7 +63,7 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
     return () => {
       aborted = true
     }
-  }, [store.session, serviceUrl])
+  }, [store.session, store.log, serviceUrl])
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
@@ -169,7 +171,7 @@ const LoginForm = ({
       })
     } catch (e: any) {
       const errMsg = e.toString()
-      console.log(e)
+      store.log.warn('Failed to login', e.toString())
       setIsProcessing(false)
       if (errMsg.includes('Authentication Required')) {
         setError('Invalid username or password')
@@ -305,7 +307,7 @@ const ForgotPasswordForm = ({
       onEmailSent()
     } catch (e: any) {
       const errMsg = e.toString()
-      console.log(e)
+      store.log.warn('Failed to request password reset', e.toString())
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(
@@ -417,7 +419,7 @@ const SetNewPasswordForm = ({
       onPasswordSet()
     } catch (e: any) {
       const errMsg = e.toString()
-      console.log(e)
+      store.log.warn('Failed to set new password', e.toString())
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(

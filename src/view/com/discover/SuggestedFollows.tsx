@@ -42,11 +42,12 @@ export const SuggestedFollows = observer(
     )
 
     useEffect(() => {
-      console.log('Fetching suggested actors')
       view
         .setup()
-        .catch((err: any) => console.error('Failed to fetch suggestions', err))
-    }, [view])
+        .catch((err: any) =>
+          store.log.error('Failed to fetch suggestions', err.toString()),
+        )
+    }, [view, store.log])
 
     useEffect(() => {
       if (!view.isLoading && !view.hasError && !view.hasContent) {
@@ -57,14 +58,16 @@ export const SuggestedFollows = observer(
     const onPressTryAgain = () =>
       view
         .setup()
-        .catch((err: any) => console.error('Failed to fetch suggestions', err))
+        .catch((err: any) =>
+          store.log.error('Failed to fetch suggestions', err.toString()),
+        )
 
     const onPressFollow = async (item: SuggestedActor) => {
       try {
         const res = await apilib.follow(store, item.did, item.declaration.cid)
         setFollows({[item.did]: res.uri, ...follows})
-      } catch (e) {
-        console.log(e)
+      } catch (e: any) {
+        store.log.error('Failed fo create follow', {error: e.toString(), item})
         Toast.show('An issue occurred, please try again.')
       }
     }
@@ -72,8 +75,8 @@ export const SuggestedFollows = observer(
       try {
         await apilib.unfollow(store, follows[item.did])
         setFollows(_omit(follows, [item.did]))
-      } catch (e) {
-        console.log(e)
+      } catch (e: any) {
+        store.log.error('Failed fo delete follow', {error: e.toString(), item})
         Toast.show('An issue occurred, please try again.')
       }
     }

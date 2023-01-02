@@ -3,7 +3,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
-import {s, colors} from '../lib/styles'
+import {s} from '../lib/styles'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Link} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
@@ -32,7 +32,7 @@ export const Settings = observer(function Settings({
   return (
     <View style={[s.flex1]}>
       <ViewHeader title="Settings" />
-      <View style={[s.mt10, s.pl10, s.pr10]}>
+      <View style={[s.mt10, s.pl10, s.pr10, s.flex1]}>
         <View style={[s.flexRow]}>
           <Text style={pal.text}>Signed in as</Text>
           <View style={s.flex1} />
@@ -61,9 +61,23 @@ export const Settings = observer(function Settings({
             </View>
           </View>
         </Link>
-        <Link href="/debug" title="Debug tools">
+        <View style={s.flex1} />
+        <Text type="overline1" style={[s.mb5]}>
+          Advanced
+        </Text>
+        <Link
+          style={[pal.view, s.p10, s.mb2]}
+          href="/sys/log"
+          title="System log">
+          <Text style={pal.link}>System log</Text>
+        </Link>
+        <Link
+          style={[pal.view, s.p10, s.mb2]}
+          href="/sys/debug"
+          title="Debug tools">
           <Text style={pal.link}>Debug tools</Text>
         </Link>
+        <View style={{height: 100}} />
       </View>
     </View>
   )

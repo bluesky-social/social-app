@@ -23,15 +23,15 @@ export const ProfileFollowers = observer(function ProfileFollowers({
 
   useEffect(() => {
     if (view?.params.user === name) {
-      console.log('User followers doing nothing')
       return // no change needed? or trigger refresh?
     }
-    console.log('Fetching user followers', name)
     const newView = new UserFollowersViewModel(store, {user: name})
     setView(newView)
     newView
       .setup()
-      .catch(err => console.error('Failed to fetch user followers', err))
+      .catch(err =>
+        store.log.error('Failed to fetch user followers', err.toString()),
+      )
   }, [name, view?.params.user, store])
 
   const onRefresh = () => {

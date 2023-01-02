@@ -1,7 +1,6 @@
 import React, {useCallback} from 'react'
 import {Image, StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {colors} from '../../lib/styles'
 import {
   openPicker,
   openCamera,
@@ -9,6 +8,7 @@ import {
 } from 'react-native-image-crop-picker'
 import {compressIfNeeded} from '../../../lib/images'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {useStores} from '../../../state'
 
 const IMAGE_PARAMS = {
   width: 1000,
@@ -28,6 +28,7 @@ export const PhotoCarouselPicker = ({
   localPhotos: any
 }) => {
   const pal = usePalette('default')
+  const store = useStores()
   const handleOpenCamera = useCallback(async () => {
     try {
       const cameraRes = await openCamera({
@@ -37,11 +38,11 @@ export const PhotoCarouselPicker = ({
       })
       const uri = await compressIfNeeded(cameraRes, 300000)
       onSelectPhotos([uri, ...selectedPhotos])
-    } catch (err) {
+    } catch (err: any) {
       // ignore
-      console.log('Error using camera', err)
+      store.log.warn('Error using camera', err.toString())
     }
-  }, [selectedPhotos, onSelectPhotos])
+  }, [store.log, selectedPhotos, onSelectPhotos])
 
   const handleSelectPhoto = useCallback(
     async (uri: string) => {
@@ -53,12 +54,12 @@ export const PhotoCarouselPicker = ({
         })
         const finalUri = await compressIfNeeded(cropperRes, 300000)
         onSelectPhotos([finalUri, ...selectedPhotos])
-      } catch (err) {
+      } catch (err: any) {
         // ignore
-        console.log('Error selecting photo', err)
+        store.log.warn('Error selecting photo', err.toString())
       }
     },
-    [selectedPhotos, onSelectPhotos],
+    [store.log, selectedPhotos, onSelectPhotos],
   )
 
   const handleOpenGallery = useCallback(() => {

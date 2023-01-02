@@ -16,13 +16,13 @@ export const ProfileMembers = observer(function ProfileMembers({
 
   useEffect(() => {
     if (view?.params.actor === name) {
-      console.log('Members doing nothing')
       return // no change needed? or trigger refresh?
     }
-    console.log('Fetching members', name)
     const newView = new MembersViewModel(store, {actor: name})
     setView(newView)
-    newView.setup().catch(err => console.error('Failed to fetch members', err))
+    newView
+      .setup()
+      .catch(err => store.log.error('Failed to fetch members', err.toString()))
   }, [name, view?.params.actor, store])
 
   const onRefresh = () => {

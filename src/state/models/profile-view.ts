@@ -203,7 +203,6 @@ export class ProfileViewModel {
   }
 
   private _replaceAll(res: GetProfile.Response) {
-    console.log(res.data)
     this.did = res.data.did
     this.handle = res.data.handle
     Object.assign(this.declaration, res.data.declaration)

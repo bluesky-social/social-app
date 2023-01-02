@@ -149,7 +149,10 @@ export class NotificationsViewItemModel implements GroupedNotification {
         depth: 0,
       })
       await this.additionalPost.setup().catch(e => {
-        console.error('Failed to load post needed by notification', e)
+        this.rootStore.log.error(
+          'Failed to load post needed by notification',
+          e.toString(),
+        )
       })
     }
   }
@@ -262,8 +265,11 @@ export class NotificationsViewModel {
         seenAt: new Date().toISOString(),
       })
       this.rootStore.me.clearNotificationCount()
-    } catch (e) {
-      console.log('Failed to update notifications read state', e)
+    } catch (e: any) {
+      this.rootStore.log.warn(
+        'Failed to update notifications read state',
+        e.toString(),
+      )
     }
   }
 
@@ -350,7 +356,6 @@ export class NotificationsViewModel {
         this._updateAll(res)
         numToFetch -= res.data.notifications.length
         cursor = this.notifications[res.data.notifications.length - 1].indexedAt
-        console.log(numToFetch, cursor, res.data.notifications.length)
       } while (numToFetch > 0)
       this._xIdle()
     } catch (e: any) {
@@ -379,9 +384,9 @@ export class NotificationsViewModel {
       itemModels.push(itemModel)
     }
     await Promise.all(promises).catch(e => {
-      console.error(
+      this.rootStore.log.error(
         'Uncaught failure during notifications-view _appendAll()',
-        e,
+        e.toString(),
       )
     })
     runInAction(() => {

@@ -35,9 +35,9 @@ export const Home = observer(function Home({
     if (store.me.mainFeed.isLoading) {
       return
     }
-    console.log('Polling home feed')
+    store.log.debug('Polling home feed')
     store.me.mainFeed.checkForLatest().catch(e => {
-      console.error('Failed to poll feed', e)
+      store.log.error('Failed to poll feed', e.toString())
     })
   }
 
@@ -49,12 +49,12 @@ export const Home = observer(function Home({
     }
 
     if (hasSetup) {
-      console.log('Updating home feed')
+      store.log.debug('Updating home feed')
       store.me.mainFeed.update()
       doPoll()
     } else {
       store.nav.setTitle(navIdx, 'Home')
-      console.log('Fetching home feed')
+      store.log.debug('Fetching home feed')
       store.me.mainFeed.setup().then(() => {
         if (aborted) return
         setHasSetup(true)

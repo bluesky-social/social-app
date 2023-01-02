@@ -99,7 +99,7 @@ export async function post(
             ) {
               encoding = 'image/jpeg'
             } else {
-              console.error(
+              store.log.warn(
                 'Unexpected image format for thumbnail, skipping',
                 thumbLocal.uri,
               )
@@ -126,7 +126,10 @@ export async function post(
           },
         } as AppBskyEmbedExternal.Main
       } catch (e: any) {
-        console.error('Failed to fetch link meta', link.value, e)
+        store.log.warn(
+          `Failed to fetch link meta for ${link.value}`,
+          e.toString(),
+        )
       }
     }
   }

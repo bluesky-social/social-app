@@ -405,7 +405,6 @@ export class FeedModel {
         cursor = this.feed[res.data.feed.length - 1]
           ? ts(this.feed[res.data.feed.length - 1])
           : undefined
-        console.log(numToFetch, cursor, res.data.feed.length)
       } while (numToFetch > 0)
       this._xIdle()
     } catch (e: any) {

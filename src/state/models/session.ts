@@ -121,11 +121,11 @@ export class SessionModel {
     try {
       const serviceUri = new URL(this.data.service)
       this.rootStore.api.xrpc.uri = serviceUri
-    } catch (e) {
-      console.error(
+    } catch (e: any) {
+      this.rootStore.log.error(
         `Invalid service URL: ${this.data.service}. Resetting session.`,
+        e.toString(),
       )
-      console.error(e)
       this.clear()
       return false
     }
@@ -160,7 +160,10 @@ export class SessionModel {
           this.rootStore.me.clear()
         }
         this.rootStore.me.load().catch(e => {
-          console.error('Failed to fetch local user information', e)
+          this.rootStore.log.error(
+            'Failed to fetch local user information',
+            e.toString(),
+          )
         })
         return // success
       }
@@ -204,7 +207,10 @@ export class SessionModel {
       this.configureApi()
       this.setOnline(true, false)
       this.rootStore.me.load().catch(e => {
-        console.error('Failed to fetch local user information', e)
+        this.rootStore.log.error(
+          'Failed to fetch local user information',
+          e.toString(),
+        )
       })
     }
   }
@@ -240,7 +246,10 @@ export class SessionModel {
       this.rootStore.onboard.start()
       this.configureApi()
       this.rootStore.me.load().catch(e => {
-        console.error('Failed to fetch local user information', e)
+        this.rootStore.log.error(
+          'Failed to fetch local user information',
+          e.toString(),
+        )
       })
     }
   }
@@ -248,7 +257,10 @@ export class SessionModel {
   async logout() {
     if (this.hasSession) {
       this.rootStore.api.com.atproto.session.delete().catch((e: any) => {
-        console.error('(Minor issue) Failed to delete session on the server', e)
+        this.rootStore.log.warn(
+          '(Minor issue) Failed to delete session on the server',
+          e,
+        )
       })
     }
     this.rootStore.clearAll()

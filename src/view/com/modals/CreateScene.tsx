@@ -55,7 +55,13 @@ export function Component({}: {}) {
           displayName,
           description,
         })
-        .catch(e => console.error(e)) // an error here is not critical
+        .catch(e =>
+          // an error here is not critical
+          store.log.error(
+            'Failed to update scene profile during creation',
+            e.toString(),
+          ),
+        )
       // follow the scene
       await store.api.app.bsky.graph.follow
         .create(
@@ -70,7 +76,13 @@ export function Component({}: {}) {
             createdAt: new Date().toISOString(),
           },
         )
-        .catch(e => console.error(e)) // an error here is not critical
+        .catch(e =>
+          // an error here is not critical
+          store.log.error(
+            'Failed to follow scene after creation',
+            e.toString(),
+          ),
+        )
       Toast.show('Scene created')
       store.shell.closeModal()
       store.nav.navigate(`/profile/${fullHandle}`)
@@ -82,7 +94,7 @@ export function Component({}: {}) {
       } else if (e instanceof AppBskyActorCreateScene.HandleNotAvailableError) {
         setError(`The handle "${handle}" is not available.`)
       } else {
-        console.error(e)
+        store.log.error('Failed to create scene', e.toString())
         setError(
           'Failed to create the scene. Check your internet connection and try again.',
         )

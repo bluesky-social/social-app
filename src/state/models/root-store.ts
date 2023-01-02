@@ -6,6 +6,7 @@ import {makeAutoObservable} from 'mobx'
 import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
 import {createContext, useContext} from 'react'
 import {isObj, hasProp} from '../lib/type-guards'
+import {LogModel} from './log'
 import {SessionModel} from './session'
 import {NavigationModel} from './navigation'
 import {ShellUiModel} from './shell-ui'
@@ -16,6 +17,7 @@ import {OnboardModel} from './onboard'
 import {isNetworkError} from '../../lib/errors'
 
 export class RootStoreModel {
+  log = new LogModel()
   session = new SessionModel(this)
   nav = new NavigationModel()
   shell = new ShellUiModel()
@@ -53,16 +55,17 @@ export class RootStoreModel {
         await this.session.connect()
       }
       await this.me.fetchStateUpdate()
-    } catch (e: unknown) {
+    } catch (e: any) {
       if (isNetworkError(e)) {
         this.session.setOnline(false) // connection lost
       }
-      console.error('Failed to fetch latest state', e)
+      this.log.error('Failed to fetch latest state', e.toString())
     }
   }
 
   serialize(): unknown {
     return {
+      log: this.log.serialize(),
       session: this.session.serialize(),
       me: this.me.serialize(),
       nav: this.nav.serialize(),
@@ -73,8 +76,8 @@ export class RootStoreModel {
 
   hydrate(v: unknown) {
     if (isObj(v)) {
-      if (hasProp(v, 'session')) {
-        this.session.hydrate(v.session)
+      if (hasProp(v, 'log')) {
+        this.log.hydrate(v.log)
       }
       if (hasProp(v, 'me')) {
         this.me.hydrate(v.me)
