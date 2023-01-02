@@ -24,13 +24,13 @@ export const PostVotedBy = observer(function PostVotedBy({
 
   useEffect(() => {
     if (view?.params.uri === uri) {
-      console.log('Voted by doing nothing')
       return // no change needed? or trigger refresh?
     }
-    console.log('Fetching voted by', uri)
     const newView = new VotesViewModel(store, {uri, direction})
     setView(newView)
-    newView.setup().catch(err => console.error('Failed to fetch voted by', err))
+    newView
+      .setup()
+      .catch(err => store.log.error('Failed to fetch voted by', err.toString()))
   }, [uri, view?.params.uri, store])
 
   const onRefresh = () => {

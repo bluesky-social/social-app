@@ -72,12 +72,12 @@ export const PostThreadItem = observer(function PostThreadItem({
   const onPressToggleRepost = () => {
     item
       .toggleRepost()
-      .catch(e => console.error('Failed to toggle repost', record, e))
+      .catch(e => store.log.error('Failed to toggle repost', e.toString()))
   }
   const onPressToggleUpvote = () => {
     item
       .toggleUpvote()
-      .catch(e => console.error('Failed to toggle upvote', record, e))
+      .catch(e => store.log.error('Failed to toggle upvote', e.toString()))
   }
   const onCopyPostText = () => {
     Clipboard.setString(record.text)
@@ -90,7 +90,7 @@ export const PostThreadItem = observer(function PostThreadItem({
         Toast.show('Post deleted')
       },
       e => {
-        console.error(e)
+        store.log.error('Failed to delete post', e.toString())
         Toast.show('Failed to delete post, please try again')
       },
     )

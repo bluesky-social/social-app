@@ -22,15 +22,15 @@ export const PostRepostedBy = observer(function PostRepostedBy({
 
   useEffect(() => {
     if (view?.params.uri === uri) {
-      console.log('Reposted by doing nothing')
       return // no change needed? or trigger refresh?
     }
-    console.log('Fetching Reposted by', uri)
     const newView = new RepostedByViewModel(store, {uri})
     setView(newView)
     newView
       .setup()
-      .catch(err => console.error('Failed to fetch reposted by', err))
+      .catch(err =>
+        store.log.error('Failed to fetch reposted by', err.toString()),
+      )
   }, [uri, view?.params.uri, store])
 
   const onRefresh = () => {

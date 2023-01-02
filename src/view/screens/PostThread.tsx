@@ -31,7 +31,6 @@ export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
     setTitle()
     store.shell.setMinimalShellMode(false)
     if (!view.hasLoaded && !view.isLoading) {
-      console.log('Fetching post thread', uri)
       view.setup().then(
         () => {
           if (!aborted) {
@@ -39,14 +38,14 @@ export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
           }
         },
         err => {
-          console.error('Failed to fetch thread', err)
+          store.log.error('Failed to fetch thread', err.toString())
         },
       )
     }
     return () => {
       aborted = true
     }
-  }, [visible, store.nav, name])
+  }, [visible, store.nav, store.log, name])
 
   return (
     <View style={{flex: 1}}>

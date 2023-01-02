@@ -84,9 +84,9 @@ export const Component = observer(function Component({
       )
       setCreatedInvites({[follow.did]: assertionUri, ...createdInvites})
       Toast.show('Invite sent')
-    } catch (e) {
+    } catch (e: any) {
       setError('There was an issue with the invite. Please try again.')
-      console.error(e)
+      store.log.error('Failed to invite user to scene', e.toString())
     }
   }
   const onPressUndo = async (subjectDid: string, assertionUri: string) => {
@@ -98,9 +98,9 @@ export const Component = observer(function Component({
         rkey: urip.rkey,
       })
       setCreatedInvites(_omit(createdInvites, [subjectDid]))
-    } catch (e) {
+    } catch (e: any) {
       setError('There was an issue with the invite. Please try again.')
-      console.error(e)
+      store.log.error('Failed to delete a scene invite', e.toString())
     }
   }
 
@@ -117,9 +117,9 @@ export const Component = observer(function Component({
         ...deletedPendingInvites,
       })
       Toast.show('Invite removed')
-    } catch (e) {
+    } catch (e: any) {
       setError('There was an issue with the invite. Please try again.')
-      console.error(e)
+      store.log.error('Failed to delete an invite', e.toString())
     }
   }
 

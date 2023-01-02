@@ -44,7 +44,6 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     let aborted = false
     setError('')
     setServiceDescription(undefined)
-    console.log('Fetching service description', serviceUrl)
     store.session.describeService(serviceUrl).then(
       desc => {
         if (aborted) return
@@ -53,7 +52,10 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
       },
       err => {
         if (aborted) return
-        console.error(err)
+        store.log.warn(
+          `Failed to fetch service description for ${serviceUrl}`,
+          err.toString(),
+        )
         setError(
           'Unable to contact your service. Please check your Internet connection.',
         )
@@ -62,7 +64,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     return () => {
       aborted = true
     }
-  }, [serviceUrl, store.session])
+  }, [serviceUrl, store.session, store.log])
 
   const onPressSelectService = () => {
     store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
@@ -98,7 +100,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
         errMsg =
           'Invite code not accepted. Check that you input it correctly and try again.'
       }
-      console.log(e)
+      store.log.warn('Failed to create account', e.toString())
       setIsProcessing(false)
       setError(errMsg.replace(/^Error:/, ''))
     }

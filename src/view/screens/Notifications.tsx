@@ -14,12 +14,12 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
     if (!visible) {
       return
     }
-    console.log('Updating notifications feed')
+    store.log.debug('Updating notifications feed')
     store.me.refreshMemberships() // needed for the invite notifications
     store.me.notifications
       .update()
       .catch(e => {
-        console.error('Error while updating notifications feed', e)
+        store.log.error('Error while updating notifications feed', e.toString())
       })
       .then(() => {
         store.me.notifications.updateReadState()

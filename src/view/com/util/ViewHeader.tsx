@@ -45,8 +45,7 @@ export const ViewHeader = observer(function ViewHeader({
   }
   const onPressReconnect = () => {
     store.session.connect().catch(e => {
-      // log for debugging but ignore otherwise
-      console.log(e)
+      store.log.warn('Failed to reconnect to server', e)
     })
   }
   if (typeof canGoBack === 'undefined') {

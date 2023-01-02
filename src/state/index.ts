@@ -24,19 +24,19 @@ export async function setupState() {
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
     rootStore.hydrate(data)
-  } catch (e) {
-    console.error('Failed to load state from storage', e)
+  } catch (e: any) {
+    rootStore.log.error('Failed to load state from storage', e.toString())
   }
 
-  console.log('Initial hydrate', rootStore.me)
+  rootStore.log.debug('Initial hydrate')
   rootStore.session
     .connect()
     .then(() => {
-      console.log('Session connected', rootStore.me)
+      rootStore.log.debug('Session connected')
       return rootStore.fetchStateUpdate()
     })
-    .catch(e => {
-      console.log('Failed initial connect', e)
+    .catch((e: any) => {
+      rootStore.log.warn('Failed initial connect', e.toString())
     })
   // @ts-ignore .on() is correct -prf
   api.sessionManager.on('session', () => {
