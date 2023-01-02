@@ -24,9 +24,11 @@ import {usePalette} from '../../lib/hooks/usePalette'
 export const FeedItem = observer(function ({
   item,
   showReplyLine,
+  ignoreMuteFor,
 }: {
   item: FeedItemModel
   showReplyLine?: boolean
+  ignoreMuteFor?: string
 }) {
   const store = useStores()
   const theme = useTheme()
@@ -110,7 +112,11 @@ export const FeedItem = observer(function ({
   return (
     <>
       {isChild && !item._isThreadChild && item.replyParent ? (
-        <FeedItem item={item.replyParent} showReplyLine />
+        <FeedItem
+          item={item.replyParent}
+          showReplyLine
+          ignoreMuteFor={ignoreMuteFor}
+        />
       ) : undefined}
       <Link style={outerStyles} href={itemHref} title={itemTitle} noFeedback>
         {item._isThreadChild && (
@@ -201,7 +207,8 @@ export const FeedItem = observer(function ({
                 </Link>
               </View>
             )}
-            {item.post.author.viewer?.muted ? (
+            {item.post.author.viewer?.muted &&
+            ignoreMuteFor !== item.post.author.did ? (
               <View style={[styles.mutedWarning, pal.btn]}>
                 <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
                 <Text type="body2">This post is by a muted account.</Text>
