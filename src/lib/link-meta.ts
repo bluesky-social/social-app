@@ -77,7 +77,7 @@ export async function getLinkMeta(
     meta.image = httpResMeta.image
   } catch (e) {
     // failed
-    console.log(e)
+    console.error(e)
     meta.error = 'Failed to fetch link'
   }
 

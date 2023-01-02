@@ -256,7 +256,7 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
       const urlp = new URL(url)
       return urlp.pathname
     } catch (e) {
-      console.log('Unexpected error in convertBskyAppUrlIfNeeded()', e)
+      console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
     }
   }
   return url

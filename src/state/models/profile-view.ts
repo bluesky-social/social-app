@@ -18,6 +18,7 @@ export const ACTOR_TYPE_SCENE = 'app.bsky.system.actorScene'
 export class ProfileViewMyStateModel {
   follow?: string
   member?: string
+  muted?: boolean
 
   constructor() {
     makeAutoObservable(this)
@@ -153,6 +154,18 @@ export class ProfileViewModel {
     }
     await this.rootStore.api.app.bsky.actor.updateProfile(updates)
     await this.rootStore.me.load()
+    await this.refresh()
+  }
+
+  async muteAccount() {
+    await this.rootStore.api.app.bsky.graph.mute({user: this.did})
+    this.myState.muted = true
+    await this.refresh()
+  }
+
+  async unmuteAccount() {
+    await this.rootStore.api.app.bsky.graph.unmute({user: this.did})
+    this.myState.muted = false
     await this.refresh()
   }
 

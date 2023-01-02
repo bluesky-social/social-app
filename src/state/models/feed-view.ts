@@ -593,6 +593,5 @@ function ts(item: FeedViewPost | FeedItemModel): string {
     // @ts-ignore need better type checks
     return item.reason.indexedAt
   }
-  console.log(item)
   return item.post.indexedAt
 }

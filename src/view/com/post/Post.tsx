@@ -184,7 +184,12 @@ export const Post = observer(function Post({
               </Link>
             </View>
           )}
-          {record.text ? (
+          {item.post.author.viewer?.muted ? (
+            <View style={[styles.mutedWarning, pal.btn]}>
+              <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
+              <Text type="body2">This post is by a muted account.</Text>
+            </View>
+          ) : record.text ? (
             <View style={styles.postTextContainer}>
               <RichText text={record.text} entities={record.entities} />
             </View>
@@ -221,6 +226,14 @@ const styles = StyleSheet.create({
   },
   layoutContent: {
     flex: 1,
+  },
+  mutedWarning: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    marginTop: 2,
+    marginBottom: 6,
+    borderRadius: 2,
   },
   postTextContainer: {
     flexDirection: 'row',

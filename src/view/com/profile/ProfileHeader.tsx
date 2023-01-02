@@ -89,6 +89,24 @@ export const ProfileHeader = observer(function ProfileHeader({
     }
     onRefreshAll()
   }
+  const onPressMuteAccount = async () => {
+    try {
+      await view.muteAccount()
+      Toast.show('Account muted')
+    } catch (e: any) {
+      console.error(e)
+      Toast.show(`There was an issue! ${e.toString()}`)
+    }
+  }
+  const onPressUnmuteAccount = async () => {
+    try {
+      await view.unmuteAccount()
+      Toast.show('Account unmuted')
+    } catch (e: any) {
+      console.error(e)
+      Toast.show(`There was an issue! ${e.toString()}`)
+    }
+  }
   const onPressReportAccount = () => {
     store.shell.openModal(new ReportAccountModal(view.did))
   }
@@ -143,6 +161,10 @@ export const ProfileHeader = observer(function ProfileHeader({
   let dropdownItems: DropdownItem[] | undefined
   if (!isMe) {
     dropdownItems = dropdownItems || []
+    dropdownItems.push({
+      label: view.myState.muted ? 'Unmute Account' : 'Mute Account',
+      onPress: view.myState.muted ? onPressUnmuteAccount : onPressMuteAccount,
+    })
     dropdownItems.push({
       label: 'Report Account',
       onPress: onPressReportAccount,
@@ -286,7 +308,7 @@ export const ProfileHeader = observer(function ProfileHeader({
           />
         ) : undefined}
         {view.isScene && view.creator ? (
-          <View style={styles.relationshipsLine}>
+          <View style={styles.detailLine}>
             <FontAwesomeIcon
               icon={['far', 'user']}
               style={[pal.textLight, s.mr5]}
@@ -304,13 +326,24 @@ export const ProfileHeader = observer(function ProfileHeader({
           </View>
         ) : undefined}
         {view.isScene && view.myState.member ? (
-          <View style={styles.relationshipsLine}>
+          <View style={styles.detailLine}>
             <FontAwesomeIcon
               icon={['far', 'circle-check']}
               style={[pal.textLight, s.mr5]}
             />
             <Text type="body2" style={[s.mr2, pal.textLight]}>
               You are a member
+            </Text>
+          </View>
+        ) : undefined}
+        {view.myState.muted ? (
+          <View style={[styles.detailLine, pal.btn, s.p5]}>
+            <FontAwesomeIcon
+              icon={['far', 'eye-slash']}
+              style={[pal.text, s.mr5]}
+            />
+            <Text type="body2" style={[s.mr2, pal.text]}>
+              Account muted.
             </Text>
           </View>
         ) : undefined}
@@ -421,7 +454,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 
-  relationshipsLine: {
+  detailLine: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 5,
