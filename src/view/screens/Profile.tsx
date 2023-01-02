@@ -142,7 +142,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
             if (item === END_ITEM) {
               return <Text style={styles.endItem}>- end of feed -</Text>
             }
-            return <FeedItem item={item} />
+            return <FeedItem item={item} ignoreMuteFor={uiState.profile.did} />
           }
         } else if (uiState.feed.isEmpty) {
           items = items.concat([EMPTY_ITEM])
