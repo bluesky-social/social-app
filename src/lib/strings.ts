@@ -198,7 +198,11 @@ export function enforceLen(str: string, len: number): string {
   return str
 }
 
-export function cleanError(str: string): string {
+export function cleanError(str: any): string {
+  if (!str) return str
+  if (typeof str !== 'string') {
+    str = str.toString()
+  }
   if (isNetworkError(str)) {
     return 'Unable to connect. Please check your internet connection and try again.'
   }
