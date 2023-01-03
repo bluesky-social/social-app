@@ -23,12 +23,12 @@ export async function setupState() {
   rootStore = new RootStoreModel(api)
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
+    rootStore.log.debug('Initial hydrate', {hasSession: !!data.session})
     rootStore.hydrate(data)
   } catch (e: any) {
     rootStore.log.error('Failed to load state from storage', e)
   }
 
-  rootStore.log.debug('Initial hydrate')
   rootStore.session
     .connect()
     .then(() => {
