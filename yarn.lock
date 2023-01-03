@@ -35,6 +35,14 @@
     "@atproto/nsid" "*"
     zod "^3.14.2"
 
+"@atproto/lexicon@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.0.2.tgz#9fc2fd573d8507a6186494d939824a422a8e18b6"
+  integrity sha512-lWxXGW/EPU2dXqlM+UoNdJfVpQ3bQ57TCmurqb/wFj1IjrWKdZbMqnQfwf3bzQ+UzVt+ZTKGxsJkw1vvk7/gmA==
+  dependencies:
+    "@atproto/nsid" "*"
+    zod "^3.14.2"
+
 "@atproto/nsid@*":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@atproto/nsid/-/nsid-0.0.1.tgz#0cdc00cefe8f0b1385f352b9f57b3ad37fff09a4"
@@ -44,6 +52,14 @@
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.0.1.tgz#451918148dfea534577e8da620aea739173fd187"
   integrity sha512-l4FrsQ0TGdOU8CbwwA/OY2n0Hvi54fJEfi3zkmr86mwYn2/M2dB1DpQaZhONOIdVVouPZSgW6pCH7ApEXW4dKw==
+  dependencies:
+    "@atproto/lexicon" "*"
+    zod "^3.14.2"
+
+"@atproto/xrpc@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.0.2.tgz#d76defd91fd4e2b806bee5e2dfaa42c849275e49"
+  integrity sha512-/v4/WlxczDJOh+/M4UzWVgYjJ9DzbIZxGTTWxzvKHz4dvJKnO1ZTXtXIqXjAI9kPEh5BDm9cpQ6ik6M1k9YLZg==
   dependencies:
     "@atproto/lexicon" "*"
     zod "^3.14.2"

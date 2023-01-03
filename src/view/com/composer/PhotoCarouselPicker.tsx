@@ -40,7 +40,7 @@ export const PhotoCarouselPicker = ({
       onSelectPhotos([uri, ...selectedPhotos])
     } catch (err: any) {
       // ignore
-      store.log.warn('Error using camera', err.toString())
+      store.log.warn('Error using camera', err)
     }
   }, [store.log, selectedPhotos, onSelectPhotos])
 
@@ -56,7 +56,7 @@ export const PhotoCarouselPicker = ({
         onSelectPhotos([finalUri, ...selectedPhotos])
       } catch (err: any) {
         // ignore
-        store.log.warn('Error selecting photo', err.toString())
+        store.log.warn('Error selecting photo', err)
       }
     },
     [store.log, selectedPhotos, onSelectPhotos],

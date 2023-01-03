@@ -29,9 +29,7 @@ export const ProfileFollowers = observer(function ProfileFollowers({
     setView(newView)
     newView
       .setup()
-      .catch(err =>
-        store.log.error('Failed to fetch user followers', err.toString()),
-      )
+      .catch(err => store.log.error('Failed to fetch user followers', err))
   }, [name, view?.params.user, store])
 
   const onRefresh = () => {

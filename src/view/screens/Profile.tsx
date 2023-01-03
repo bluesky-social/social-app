@@ -63,17 +63,14 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
     uiState
       .refresh()
       .catch((err: any) =>
-        store.log.error('Failed to refresh user profile', err.toString()),
+        store.log.error('Failed to refresh user profile', err),
       )
   }
   const onEndReached = () => {
     uiState
       .loadMore()
       .catch((err: any) =>
-        store.log.error(
-          'Failed to load more entries in user profile',
-          err.toString(),
-        ),
+        store.log.error('Failed to load more entries in user profile', err),
       )
   }
   const onPressTryAgain = () => {

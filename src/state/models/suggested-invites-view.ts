@@ -83,11 +83,14 @@ export class SuggestedInvitesView {
     this.error = ''
   }
 
-  private _xIdle(err: string = '') {
+  private _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err
+    this.error = err ? err.toString() : ''
+    if (err) {
+      this.rootStore.log.error('Failed to fetch suggested invites', err)
+    }
   }
 
   // loader functions
@@ -101,7 +104,7 @@ export class SuggestedInvitesView {
     } catch (e: any) {
       this.rootStore.log.error(
         'Failed to fetch current scene members in suggested invites',
-        e.toString(),
+        e,
       )
       this._xIdle(
         'Failed to fetch the current scene members. Check your internet connection and try again.',
@@ -113,7 +116,7 @@ export class SuggestedInvitesView {
     } catch (e: any) {
       this.rootStore.log.error(
         'Failed to fetch current followers in suggested invites',
-        e.toString(),
+        e,
       )
       this._xIdle(
         'Failed to fetch the your current followers. Check your internet connection and try again.',

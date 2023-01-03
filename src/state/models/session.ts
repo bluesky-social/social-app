@@ -124,7 +124,7 @@ export class SessionModel {
     } catch (e: any) {
       this.rootStore.log.error(
         `Invalid service URL: ${this.data.service}. Resetting session.`,
-        e.toString(),
+        e,
       )
       this.clear()
       return false
@@ -160,10 +160,7 @@ export class SessionModel {
           this.rootStore.me.clear()
         }
         this.rootStore.me.load().catch(e => {
-          this.rootStore.log.error(
-            'Failed to fetch local user information',
-            e.toString(),
-          )
+          this.rootStore.log.error('Failed to fetch local user information', e)
         })
         return // success
       }
@@ -207,10 +204,7 @@ export class SessionModel {
       this.configureApi()
       this.setOnline(true, false)
       this.rootStore.me.load().catch(e => {
-        this.rootStore.log.error(
-          'Failed to fetch local user information',
-          e.toString(),
-        )
+        this.rootStore.log.error('Failed to fetch local user information', e)
       })
     }
   }
@@ -246,10 +240,7 @@ export class SessionModel {
       this.rootStore.onboard.start()
       this.configureApi()
       this.rootStore.me.load().catch(e => {
-        this.rootStore.log.error(
-          'Failed to fetch local user information',
-          e.toString(),
-        )
+        this.rootStore.log.error('Failed to fetch local user information', e)
       })
     }
   }

@@ -104,11 +104,14 @@ export class MembersViewModel {
     this.error = ''
   }
 
-  private _xIdle(err: string = '') {
+  private _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err
+    this.error = err ? err.toString() : ''
+    if (err) {
+      this.rootStore.log.error('Failed to fetch members', err)
+    }
   }
 
   // loader functions
@@ -123,7 +126,7 @@ export class MembersViewModel {
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load feed: ${e.toString()}`)
+      this._xIdle(e)
     }
   }
 

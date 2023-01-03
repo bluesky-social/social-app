@@ -54,7 +54,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
         if (aborted) return
         store.log.warn(
           `Failed to fetch service description for ${serviceUrl}`,
-          err.toString(),
+          err,
         )
         setError(
           'Unable to contact your service. Please check your Internet connection.',
@@ -100,7 +100,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
         errMsg =
           'Invite code not accepted. Check that you input it correctly and try again.'
       }
-      store.log.warn('Failed to create account', e.toString())
+      store.log.error('Failed to create account', e)
       setIsProcessing(false)
       setError(errMsg.replace(/^Error:/, ''))
     }

@@ -1,3 +1,4 @@
+import {Platform} from 'react-native'
 import type {Theme} from './ThemeContext'
 import {colors} from './styles'
 
@@ -135,6 +136,10 @@ export const defaultTheme: Theme = {
     overline2: {
       fontSize: 14,
       fontWeight: '600',
+    },
+    mono1: {
+      fontSize: 14,
+      fontFamily: Platform.OS === 'android' ? 'monospace' : 'Courier New',
     },
   },
 }

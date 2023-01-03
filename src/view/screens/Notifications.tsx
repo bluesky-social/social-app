@@ -19,7 +19,7 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
     store.me.notifications
       .update()
       .catch(e => {
-        store.log.error('Error while updating notifications feed', e.toString())
+        store.log.error('Error while updating notifications feed', e)
       })
       .then(() => {
         store.me.notifications.updateReadState()

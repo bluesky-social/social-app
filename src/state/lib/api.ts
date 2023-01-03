@@ -126,10 +126,7 @@ export async function post(
           },
         } as AppBskyEmbedExternal.Main
       } catch (e: any) {
-        store.log.warn(
-          `Failed to fetch link meta for ${link.value}`,
-          e.toString(),
-        )
+        store.log.warn(`Failed to fetch link meta for ${link.value}`, e)
       }
     }
   }

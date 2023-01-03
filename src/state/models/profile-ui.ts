@@ -114,28 +114,20 @@ export class ProfileUiModel {
     await Promise.all([
       this.profile
         .setup()
-        .catch(err =>
-          this.rootStore.log.error('Failed to fetch profile', err.toString()),
-        ),
+        .catch(err => this.rootStore.log.error('Failed to fetch profile', err)),
       this.feed
         .setup()
-        .catch(err =>
-          this.rootStore.log.error('Failed to fetch feed', err.toString()),
-        ),
+        .catch(err => this.rootStore.log.error('Failed to fetch feed', err)),
     ])
     if (this.isUser) {
       await this.memberships
         .setup()
-        .catch(err =>
-          this.rootStore.log.error('Failed to fetch members', err.toString()),
-        )
+        .catch(err => this.rootStore.log.error('Failed to fetch members', err))
     }
     if (this.isScene) {
       await this.members
         .setup()
-        .catch(err =>
-          this.rootStore.log.error('Failed to fetch members', err.toString()),
-        )
+        .catch(err => this.rootStore.log.error('Failed to fetch members', err))
     }
   }
 

@@ -76,11 +76,14 @@ export class UserFollowersViewModel {
     this.error = ''
   }
 
-  private _xIdle(err: string = '') {
+  private _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err
+    this.error = err ? err.toString() : ''
+    if (err) {
+      this.rootStore.log.error('Failed to fetch user followers', err)
+    }
   }
 
   // loader functions

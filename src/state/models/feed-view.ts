@@ -320,11 +320,14 @@ export class FeedModel {
     this.error = ''
   }
 
-  private _xIdle(err: string = '') {
+  private _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = cleanError(err)
+    this.error = err ? cleanError(err.toString()) : ''
+    if (err) {
+      this.rootStore.log.error('Posts feed request failed', err)
+    }
   }
 
   // loader functions
@@ -352,7 +355,7 @@ export class FeedModel {
       await this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(e.toString())
+      this._xIdle(e)
     }
   }
 
@@ -363,7 +366,7 @@ export class FeedModel {
       await this._prependAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(e.toString())
+      this._xIdle(e)
     }
   }
 
@@ -380,7 +383,7 @@ export class FeedModel {
       await this._appendAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load feed: ${e.toString()}`)
+      this._xIdle(e)
     }
   }
 
@@ -408,7 +411,7 @@ export class FeedModel {
       } while (numToFetch > 0)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to update feed: ${e.toString()}`)
+      this._xIdle(e)
     }
   }
 

@@ -58,11 +58,14 @@ export class SuggestedActorsViewModel {
     this.error = ''
   }
 
-  private _xIdle(err: string = '') {
+  private _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err
+    this.error = err ? err.toString() : ''
+    if (err) {
+      this.rootStore.log.error('Failed to fetch suggested actors', err)
+    }
   }
 
   // loader functions
@@ -88,7 +91,7 @@ export class SuggestedActorsViewModel {
       )
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(e.toString())
+      this._xIdle(e)
     }
   }
 

@@ -236,11 +236,14 @@ export class PostThreadViewModel {
     this.notFound = false
   }
 
-  private _xIdle(err: any = undefined) {
+  private _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
     this.error = err ? err.toString() : ''
+    if (err) {
+      this.rootStore.log.error('Failed to fetch assertions', err)
+    }
     this.notFound = err instanceof GetPostThread.NotFoundError
   }
 

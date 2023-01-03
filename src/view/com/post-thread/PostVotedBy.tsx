@@ -30,7 +30,7 @@ export const PostVotedBy = observer(function PostVotedBy({
     setView(newView)
     newView
       .setup()
-      .catch(err => store.log.error('Failed to fetch voted by', err.toString()))
+      .catch(err => store.log.error('Failed to fetch voted by', err))
   }, [uri, view?.params.uri, store])
 
   const onRefresh = () => {

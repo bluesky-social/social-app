@@ -69,12 +69,12 @@ export const FeedItem = observer(function ({
   const onPressToggleRepost = () => {
     item
       .toggleRepost()
-      .catch(e => store.log.error('Failed to toggle repost', e.toString()))
+      .catch(e => store.log.error('Failed to toggle repost', e))
   }
   const onPressToggleUpvote = () => {
     item
       .toggleUpvote()
-      .catch(e => store.log.error('Failed to toggle upvote', e.toString()))
+      .catch(e => store.log.error('Failed to toggle upvote', e))
   }
   const onCopyPostText = () => {
     Clipboard.setString(record.text)
@@ -87,7 +87,7 @@ export const FeedItem = observer(function ({
         Toast.show('Post deleted')
       },
       e => {
-        store.log.error('Failed to delete post', e.toString())
+        store.log.error('Failed to delete post', e)
         Toast.show('Failed to delete post, please try again')
       },
     )

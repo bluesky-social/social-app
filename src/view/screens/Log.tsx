@@ -65,10 +65,12 @@ export const Log = observer(function Log({navIdx, visible}: ScreenParams) {
                   </Text>
                 </TouchableOpacity>
                 {expanded.includes(entry.id) ? (
-                  <View style={[pal.btn, styles.details]}>
-                    <Text type="body1" style={pal.text}>
-                      {entry.details}
-                    </Text>
+                  <View style={[pal.view, s.pl10, s.pr10, s.pb10]}>
+                    <View style={[pal.btn, styles.details]}>
+                      <Text type="mono1" style={pal.text}>
+                        {entry.details}
+                      </Text>
+                    </View>
                   </View>
                 ) : undefined}
               </View>
