@@ -262,7 +262,7 @@ export class PostThreadViewModel {
     this.hasLoaded = true
     this.error = err ? err.toString() : ''
     if (err) {
-      this.rootStore.log.error('Failed to fetch assertions', err)
+      this.rootStore.log.error('Failed to fetch post thread', err)
     }
     this.notFound = err instanceof GetPostThread.NotFoundError
   }
