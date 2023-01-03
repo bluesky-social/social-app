@@ -33,6 +33,7 @@ export class FeedItemModel {
 
   // data
   post: PostView
+  postRecord?: AppBskyFeedPost.Record
   reply?: FeedViewPost['reply']
   replyParent?: FeedItemModel
   reason?: FeedViewPost['reason']
@@ -44,6 +45,22 @@ export class FeedItemModel {
   ) {
     this._reactKey = reactKey
     this.post = v.post
+    if (AppBskyFeedPost.isRecord(this.post.record)) {
+      const valid = AppBskyFeedPost.validateRecord(this.post.record)
+      if (valid.success) {
+        this.postRecord = this.post.record
+      } else {
+        rootStore.log.warn(
+          'Received an invalid app.bsky.feed.post record',
+          valid.error,
+        )
+      }
+    } else {
+      rootStore.log.warn(
+        'app.bsky.feed.getTimeline or app.bsky.feed.getAuthorFeed served an unexpected record type',
+        this.post.record,
+      )
+    }
     this.reply = v.reply
     if (v.reply?.parent) {
       this.replyParent = new FeedItemModel(rootStore, '', {

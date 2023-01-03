@@ -4,7 +4,6 @@ import {StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '../../../third-party/uri'
-import {AppBskyFeedPost} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedItemModel} from '../../../state/models/feed-view'
 import {Link} from '../util/Link'
@@ -34,7 +33,7 @@ export const FeedItem = observer(function ({
   const theme = useTheme()
   const pal = usePalette('default')
   const [deleted, setDeleted] = useState(false)
-  const record = item.post.record as unknown as AppBskyFeedPost.Record
+  const record = item.postRecord
   const itemHref = useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}`
@@ -42,22 +41,22 @@ export const FeedItem = observer(function ({
   const itemTitle = `Post by ${item.post.author.handle}`
   const authorHref = `/profile/${item.post.author.handle}`
   const replyAuthorDid = useMemo(() => {
-    if (!record.reply) return ''
+    if (!record?.reply) return ''
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     return urip.hostname
-  }, [record.reply])
+  }, [record?.reply])
   const replyHref = useMemo(() => {
-    if (!record.reply) return ''
-    const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
+    if (!record?.reply) return ''
+    const urip = new AtUri(record?.reply.parent?.uri || record?.reply.root.uri)
     return `/profile/${urip.hostname}/post/${urip.rkey}`
-  }, [record.reply])
+  }, [record?.reply])
 
   const onPressReply = () => {
     store.shell.openComposer({
       replyTo: {
         uri: item.post.uri,
         cid: item.post.cid,
-        text: record.text as string,
+        text: record?.text || '',
         author: {
           handle: item.post.author.handle,
           displayName: item.post.author.displayName,
@@ -77,7 +76,7 @@ export const FeedItem = observer(function ({
       .catch(e => store.log.error('Failed to toggle upvote', e))
   }
   const onCopyPostText = () => {
-    Clipboard.setString(record.text)
+    Clipboard.setString(record?.text || '')
     Toast.show('Copied to clipboard')
   }
   const onDeletePost = () => {
@@ -93,7 +92,7 @@ export const FeedItem = observer(function ({
     )
   }
 
-  if (deleted) {
+  if (!record || deleted) {
     return <View />
   }
 

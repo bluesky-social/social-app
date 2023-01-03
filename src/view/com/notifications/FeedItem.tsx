@@ -221,14 +221,14 @@ function AdditionalPostText({
   additionalPost?: PostThreadViewModel
 }) {
   const pal = usePalette('default')
-  if (!additionalPost) {
+  if (!additionalPost || !additionalPost.thread?.postRecord) {
     return <View />
   }
   if (additionalPost.error) {
     return <ErrorMessage message={additionalPost.error} />
   }
   return (
-    <Text style={pal.textLight}>{additionalPost.thread?.post.record.text}</Text>
+    <Text style={pal.textLight}>{additionalPost.thread?.postRecord.text}</Text>
   )
 }
 
