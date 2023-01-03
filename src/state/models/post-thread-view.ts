@@ -1,5 +1,8 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AppBskyFeedGetPostThread as GetPostThread} from '@atproto/api'
+import {
+  AppBskyFeedGetPostThread as GetPostThread,
+  AppBskyFeedPost as FeedPost,
+} from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
@@ -19,7 +22,8 @@ export class PostThreadViewPostModel {
   _hasMore = false
 
   // data
-  post: GetPostThread.ThreadViewPost['post']
+  post: FeedPost.View
+  postRecord?: FeedPost.Record
   parent?: PostThreadViewPostModel | GetPostThread.NotFoundPost
   replies?: (PostThreadViewPostModel | GetPostThread.NotFoundPost)[]
 
@@ -30,6 +34,22 @@ export class PostThreadViewPostModel {
   ) {
     this._reactKey = reactKey
     this.post = v.post
+    if (FeedPost.isRecord(this.post.record)) {
+      const valid = FeedPost.validateRecord(this.post.record)
+      if (valid.success) {
+        this.postRecord = this.post.record
+      } else {
+        rootStore.log.warn(
+          'Received an invalid app.bsky.feed.post record',
+          valid.error,
+        )
+      }
+    } else {
+      rootStore.log.warn(
+        'app.bsky.feed.getPostThread served an unexpected record type',
+        this.post.record,
+      )
+    }
     // replies and parent are handled via assignTreeModels
     makeAutoObservable(this, {rootStore: false})
   }
@@ -278,7 +298,6 @@ export class PostThreadViewModel {
   }
 
   private _replaceAll(res: GetPostThread.Response) {
-    // TODO: validate .record
     // sortThread(res.data.thread) TODO needed?
     const keyGen = reactKeyGenerator()
     const thread = new PostThreadViewPostModel(

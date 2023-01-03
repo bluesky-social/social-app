@@ -3,7 +3,6 @@ import {observer} from 'mobx-react-lite'
 import {StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '../../../third-party/uri'
-import {AppBskyFeedPost} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
@@ -18,6 +17,7 @@ import {useStores} from '../../../state'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/PostEmbeds'
 import {PostCtrls} from '../util/PostCtrls'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ComposePrompt} from '../composer/Prompt'
 import {usePalette} from '../../lib/hooks/usePalette'
 
@@ -33,7 +33,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   const pal = usePalette('default')
   const store = useStores()
   const [deleted, setDeleted] = useState(false)
-  const record = item.post.record as unknown as AppBskyFeedPost.Record
+  const record = item.postRecord
   const hasEngagement = item.post.upvoteCount || item.post.repostCount
 
   const itemHref = useMemo(() => {
@@ -94,6 +94,10 @@ export const PostThreadItem = observer(function PostThreadItem({
         Toast.show('Failed to delete post, please try again')
       },
     )
+  }
+
+  if (!record) {
+    return <ErrorMessage message="Invalid or unsupported post record" />
   }
 
   if (deleted) {

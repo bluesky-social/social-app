@@ -9,7 +9,6 @@ import {
 import {observer} from 'mobx-react-lite'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '../../../third-party/uri'
-import {AppBskyFeedPost} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
@@ -21,6 +20,7 @@ import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -68,7 +68,7 @@ export const Post = observer(function Post({
 
   // error
   // =
-  if (view.hasError || !view.thread) {
+  if (view.hasError || !view.thread || !view.thread?.postRecord) {
     return (
       <View style={pal.view}>
         <Text>{view.error || 'Thread not found'}</Text>
@@ -79,7 +79,7 @@ export const Post = observer(function Post({
   // loaded
   // =
   const item = view.thread
-  const record = view.thread?.post.record as unknown as AppBskyFeedPost.Record
+  const record = view.thread.postRecord
 
   const itemUrip = new AtUri(item.post.uri)
   const itemHref = `/profile/${item.post.author.handle}/post/${itemUrip.rkey}`

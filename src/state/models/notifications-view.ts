@@ -2,11 +2,16 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AppBskyNotificationList as ListNotifications,
   AppBskyActorRef as ActorRef,
+  AppBskyFeedPost,
+  AppBskyFeedRepost,
+  AppBskyFeedTrend,
+  AppBskyFeedVote,
+  AppBskyGraphAssertion,
+  AppBskyGraphFollow,
   APP_BSKY_GRAPH,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {PostThreadViewModel} from './post-thread-view'
-import {hasProp} from '../lib/type-guards'
 import {cleanError} from '../../lib/strings'
 
 const UNGROUPABLE_REASONS = ['trend', 'assertion']
@@ -19,7 +24,15 @@ export interface GroupedNotification extends ListNotifications.Notification {
   additional?: ListNotifications.Notification[]
 }
 
-export class NotificationsViewItemModel implements GroupedNotification {
+type SupportedRecord =
+  | AppBskyFeedPost.Record
+  | AppBskyFeedRepost.Record
+  | AppBskyFeedTrend.Record
+  | AppBskyFeedVote.Record
+  | AppBskyGraphAssertion.Record
+  | AppBskyGraphFollow.Record
+
+export class NotificationsViewItemModel {
   // ui state
   _reactKey: string = ''
 
@@ -34,7 +47,7 @@ export class NotificationsViewItemModel implements GroupedNotification {
   }
   reason: string = ''
   reasonSubject?: string
-  record: any = {}
+  record?: SupportedRecord
   isRead: boolean = false
   indexedAt: string = ''
   additional?: NotificationsViewItemModel[]
@@ -58,7 +71,7 @@ export class NotificationsViewItemModel implements GroupedNotification {
     this.author = v.author
     this.reason = v.reason
     this.reasonSubject = v.reasonSubject
-    this.record = v.record
+    this.record = this.toSupportedRecord(v.record)
     this.isRead = v.isRead
     this.indexedAt = v.indexedAt
     if (v.additional?.length) {
@@ -116,21 +129,53 @@ export class NotificationsViewItemModel implements GroupedNotification {
 
   get isInvite() {
     return (
-      this.isAssertion && this.record.assertion === APP_BSKY_GRAPH.AssertMember
+      this.isAssertion &&
+      AppBskyGraphAssertion.isRecord(this.record) &&
+      this.record.assertion === APP_BSKY_GRAPH.AssertMember
     )
   }
 
-  get subjectUri() {
+  get subjectUri(): string {
     if (this.reasonSubject) {
       return this.reasonSubject
     }
+    const record = this.record
     if (
-      hasProp(this.record, 'subject') &&
-      typeof this.record.subject === 'string'
+      AppBskyFeedRepost.isRecord(record) ||
+      AppBskyFeedTrend.isRecord(record) ||
+      AppBskyFeedVote.isRecord(record)
     ) {
-      return this.record.subject
+      return record.subject.uri
     }
     return ''
+  }
+
+  toSupportedRecord(v: unknown): SupportedRecord | undefined {
+    for (const ns of [
+      AppBskyFeedPost,
+      AppBskyFeedRepost,
+      AppBskyFeedTrend,
+      AppBskyFeedVote,
+      AppBskyGraphAssertion,
+      AppBskyGraphFollow,
+    ]) {
+      if (ns.isRecord(v)) {
+        const valid = ns.validateRecord(v)
+        if (valid.success) {
+          return v
+        } else {
+          this.rootStore.log.warn('Received an invalid record', {
+            record: v,
+            error: valid.error,
+          })
+          return
+        }
+      }
+    }
+    this.rootStore.log.warn(
+      'app.bsky.notifications.list served an unsupported record type',
+      v,
+    )
   }
 
   async fetchAdditionalData() {
@@ -140,7 +185,7 @@ export class NotificationsViewItemModel implements GroupedNotification {
     let postUri
     if (this.isReply || this.isMention) {
       postUri = this.uri
-    } else if (this.isUpvote || this.isRead || this.isTrend) {
+    } else if (this.isUpvote || this.isRepost || this.isTrend) {
       postUri = this.subjectUri
     }
     if (postUri) {
