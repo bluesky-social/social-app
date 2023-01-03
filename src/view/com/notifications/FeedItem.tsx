@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, View} from 'react-native'
+import {AppBskyEmbedImages} from '@atproto/api'
 import {AtUri} from '../../../third-party/uri'
 import {FontAwesomeIcon, Props} from '@fortawesome/react-native-fontawesome'
 import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
@@ -227,9 +228,17 @@ function AdditionalPostText({
   if (additionalPost.error) {
     return <ErrorMessage message={additionalPost.error} />
   }
-  return (
-    <Text style={pal.textLight}>{additionalPost.thread?.postRecord.text}</Text>
-  )
+  const record = additionalPost.thread?.postRecord
+  let text = record.text
+  if (
+    AppBskyEmbedImages.isMain(record.embed) &&
+    AppBskyEmbedImages.validateMain(record.embed).success
+  ) {
+    for (let i = 0; i < record.embed.images.length; i++) {
+      text += ` [${record.embed.images[i].alt || `image${i + 1}`}]`
+    }
+  }
+  return <Text style={pal.textLight}>{text}</Text>
 }
 
 const styles = StyleSheet.create({
