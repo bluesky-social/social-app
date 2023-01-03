@@ -13,9 +13,9 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@atproto/api": "^0.0.5",
-    "@atproto/lexicon": "^0.0.2",
-    "@atproto/xrpc": "^0.0.2",
+    "@atproto/api": "^0.0.6",
+    "@atproto/lexicon": "^0.0.4",
+    "@atproto/xrpc": "^0.0.3",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
