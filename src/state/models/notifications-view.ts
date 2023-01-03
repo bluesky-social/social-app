@@ -151,7 +151,7 @@ export class NotificationsViewItemModel implements GroupedNotification {
       await this.additionalPost.setup().catch(e => {
         this.rootStore.log.error(
           'Failed to load post needed by notification',
-          e.toString(),
+          e,
         )
       })
     }
@@ -266,10 +266,7 @@ export class NotificationsViewModel {
       })
       this.rootStore.me.clearNotificationCount()
     } catch (e: any) {
-      this.rootStore.log.warn(
-        'Failed to update notifications read state',
-        e.toString(),
-      )
+      this.rootStore.log.warn('Failed to update notifications read state', e)
     }
   }
 
@@ -282,11 +279,15 @@ export class NotificationsViewModel {
     this.error = ''
   }
 
-  private _xIdle(err: string = '') {
+  private _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
     this.error = cleanError(err)
+    this.error = err ? cleanError(err) : ''
+    if (err) {
+      this.rootStore.log.error('Failed to fetch notifications', err)
+    }
   }
 
   // loader functions
@@ -314,7 +315,7 @@ export class NotificationsViewModel {
       await this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load notifications: ${e.toString()}`)
+      this._xIdle(e)
     }
   }
 
@@ -332,7 +333,7 @@ export class NotificationsViewModel {
       await this._appendAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load notifications: ${e.toString()}`)
+      this._xIdle(e)
     }
   }
 
@@ -359,7 +360,7 @@ export class NotificationsViewModel {
       } while (numToFetch > 0)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to update notifications: ${e.toString()}`)
+      this._xIdle(e)
     }
   }
 
@@ -386,7 +387,7 @@ export class NotificationsViewModel {
     await Promise.all(promises).catch(e => {
       this.rootStore.log.error(
         'Uncaught failure during notifications-view _appendAll()',
-        e.toString(),
+        e,
       )
     })
     runInAction(() => {

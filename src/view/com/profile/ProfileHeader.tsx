@@ -52,7 +52,7 @@ export const ProfileHeader = observer(function ProfileHeader({
           }`,
         )
       },
-      err => store.log.error('Failed to toggle follow', err.toString()),
+      err => store.log.error('Failed to toggle follow', err),
     )
   }
   const onPressEditProfile = () => {
@@ -94,7 +94,7 @@ export const ProfileHeader = observer(function ProfileHeader({
       await view.muteAccount()
       Toast.show('Account muted')
     } catch (e: any) {
-      store.log.error('Failed to mute account', e.toString())
+      store.log.error('Failed to mute account', e)
       Toast.show(`There was an issue! ${e.toString()}`)
     }
   }
@@ -103,7 +103,7 @@ export const ProfileHeader = observer(function ProfileHeader({
       await view.unmuteAccount()
       Toast.show('Account unmuted')
     } catch (e: any) {
-      store.log.error('Failed to unmute account', e.toString())
+      store.log.error('Failed to unmute account', e)
       Toast.show(`There was an issue! ${e.toString()}`)
     }
   }

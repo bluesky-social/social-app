@@ -38,7 +38,7 @@ export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
           }
         },
         err => {
-          store.log.error('Failed to fetch thread', err.toString())
+          store.log.error('Failed to fetch thread', err)
         },
       )
     }

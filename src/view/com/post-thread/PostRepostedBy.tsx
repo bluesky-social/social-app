@@ -28,9 +28,7 @@ export const PostRepostedBy = observer(function PostRepostedBy({
     setView(newView)
     newView
       .setup()
-      .catch(err =>
-        store.log.error('Failed to fetch reposted by', err.toString()),
-      )
+      .catch(err => store.log.error('Failed to fetch reposted by', err))
   }, [uri, view?.params.uri, store])
 
   const onRefresh = () => {

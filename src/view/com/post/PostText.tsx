@@ -23,9 +23,7 @@ export const PostText = observer(function PostText({
     }
     const newModel = new PostModel(store, uri)
     setModel(newModel)
-    newModel
-      .setup()
-      .catch(err => store.log.error('Failed to fetch post', err.toString()))
+    newModel.setup().catch(err => store.log.error('Failed to fetch post', err))
   }, [uri, model?.uri, store])
 
   // loading

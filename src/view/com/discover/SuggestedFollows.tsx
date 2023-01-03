@@ -45,7 +45,7 @@ export const SuggestedFollows = observer(
       view
         .setup()
         .catch((err: any) =>
-          store.log.error('Failed to fetch suggestions', err.toString()),
+          store.log.error('Failed to fetch suggestions', err),
         )
     }, [view, store.log])
 
@@ -59,7 +59,7 @@ export const SuggestedFollows = observer(
       view
         .setup()
         .catch((err: any) =>
-          store.log.error('Failed to fetch suggestions', err.toString()),
+          store.log.error('Failed to fetch suggestions', err),
         )
 
     const onPressFollow = async (item: SuggestedActor) => {
@@ -67,7 +67,7 @@ export const SuggestedFollows = observer(
         const res = await apilib.follow(store, item.did, item.declaration.cid)
         setFollows({[item.did]: res.uri, ...follows})
       } catch (e: any) {
-        store.log.error('Failed fo create follow', {error: e.toString(), item})
+        store.log.error('Failed fo create follow', e)
         Toast.show('An issue occurred, please try again.')
       }
     }
@@ -76,7 +76,7 @@ export const SuggestedFollows = observer(
         await apilib.unfollow(store, follows[item.did])
         setFollows(_omit(follows, [item.did]))
       } catch (e: any) {
-        store.log.error('Failed fo delete follow', {error: e.toString(), item})
+        store.log.error('Failed fo delete follow', e)
         Toast.show('An issue occurred, please try again.')
       }
     }

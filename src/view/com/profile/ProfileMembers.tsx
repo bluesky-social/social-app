@@ -22,7 +22,7 @@ export const ProfileMembers = observer(function ProfileMembers({
     setView(newView)
     newView
       .setup()
-      .catch(err => store.log.error('Failed to fetch members', err.toString()))
+      .catch(err => store.log.error('Failed to fetch members', err))
   }, [name, view?.params.actor, store])
 
   const onRefresh = () => {

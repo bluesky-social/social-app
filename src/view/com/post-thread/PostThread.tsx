@@ -21,10 +21,7 @@ export const PostThread = observer(function PostThread({
     view
       ?.refresh()
       .catch(err =>
-        view.rootStore.log.error(
-          'Failed to refresh posts thread',
-          err.toString(),
-        ),
+        view.rootStore.log.error('Failed to refresh posts thread', err),
       )
   }
   const onLayout = () => {

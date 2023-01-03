@@ -56,18 +56,13 @@ export const Feed = observer(function Feed({
     feed
       .refresh()
       .catch(err =>
-        feed.rootStore.log.error(
-          'Failed to refresh posts feed',
-          err.toString(),
-        ),
+        feed.rootStore.log.error('Failed to refresh posts feed', err),
       )
   }
   const onEndReached = () => {
     feed
       .loadMore()
-      .catch(err =>
-        feed.rootStore.log.error('Failed to load more posts', err.toString()),
-      )
+      .catch(err => feed.rootStore.log.error('Failed to load more posts', err))
   }
   let data
   if (feed.hasLoaded) {

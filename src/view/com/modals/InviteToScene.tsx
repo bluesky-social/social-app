@@ -86,7 +86,7 @@ export const Component = observer(function Component({
       Toast.show('Invite sent')
     } catch (e: any) {
       setError('There was an issue with the invite. Please try again.')
-      store.log.error('Failed to invite user to scene', e.toString())
+      store.log.error('Failed to invite user to scene', e)
     }
   }
   const onPressUndo = async (subjectDid: string, assertionUri: string) => {
@@ -100,7 +100,7 @@ export const Component = observer(function Component({
       setCreatedInvites(_omit(createdInvites, [subjectDid]))
     } catch (e: any) {
       setError('There was an issue with the invite. Please try again.')
-      store.log.error('Failed to delete a scene invite', e.toString())
+      store.log.error('Failed to delete a scene invite', e)
     }
   }
 
@@ -119,7 +119,7 @@ export const Component = observer(function Component({
       Toast.show('Invite removed')
     } catch (e: any) {
       setError('There was an issue with the invite. Please try again.')
-      store.log.error('Failed to delete an invite', e.toString())
+      store.log.error('Failed to delete an invite', e)
     }
   }
 

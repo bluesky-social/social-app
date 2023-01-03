@@ -1,4 +1,5 @@
 import {makeAutoObservable} from 'mobx'
+import {XRPCError, XRPCInvalidResponseError} from '@atproto/xrpc'
 import {isObj, hasProp} from '../lib/type-guards'
 
 interface LogEntry {
@@ -51,9 +52,7 @@ export class LogModel {
   }
 
   debug(summary: string, details?: any) {
-    if (details && typeof details !== 'string') {
-      details = JSON.stringify(details, null, 2)
-    }
+    details = detailsToStr(details)
     console.debug(summary, details || '')
     this.add({
       id: genId(),
@@ -65,10 +64,8 @@ export class LogModel {
   }
 
   warn(summary: string, details?: any) {
-    if (details && typeof details !== 'string') {
-      details = JSON.stringify(details, null, 2)
-    }
-    console.warn(summary, details || '')
+    details = detailsToStr(details)
+    console.debug(summary, details || '')
     this.add({
       id: genId(),
       type: 'warn',
@@ -79,10 +76,8 @@ export class LogModel {
   }
 
   error(summary: string, details?: any) {
-    if (details && typeof details !== 'string') {
-      details = JSON.stringify(details, null, 2)
-    }
-    console.error(summary, details || '')
+    details = detailsToStr(details)
+    console.debug(summary, details || '')
     this.add({
       id: genId(),
       type: 'error',
@@ -91,4 +86,26 @@ export class LogModel {
       ts: Date.now(),
     })
   }
+}
+
+function detailsToStr(details?: any) {
+  if (details && typeof details !== 'string') {
+    if (
+      details instanceof XRPCInvalidResponseError ||
+      details.constructor.name === 'XRPCInvalidResponseError'
+    ) {
+      return `The server gave an ill-formatted response.\nMethod: ${
+        details.lexiconNsid
+      }.\nError: ${details.validationError.toString()}`
+    } else if (
+      details instanceof XRPCError ||
+      details.constructor.name === 'XRPCError'
+    ) {
+      return `An XRPC error occurred.\nStatus: ${details.status}\nError: ${details.error}\nMessage: ${details.message}`
+    } else if (details instanceof Error) {
+      return details.toString()
+    }
+    return JSON.stringify(details, null, 2)
+  }
+  return details
 }

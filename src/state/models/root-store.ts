@@ -59,7 +59,7 @@ export class RootStoreModel {
       if (isNetworkError(e)) {
         this.session.setOnline(false) // connection lost
       }
-      this.log.error('Failed to fetch latest state', e.toString())
+      this.log.error('Failed to fetch latest state', e)
     }
   }
 

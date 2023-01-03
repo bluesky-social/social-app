@@ -47,9 +47,7 @@ export const Post = observer(function Post({
     }
     const newView = new PostThreadViewModel(store, {uri, depth: 0})
     setView(newView)
-    newView
-      .setup()
-      .catch(err => store.log.error('Failed to fetch post', err.toString()))
+    newView.setup().catch(err => store.log.error('Failed to fetch post', err))
   }, [initView, uri, view?.params.uri, store])
 
   // deleted
@@ -112,12 +110,12 @@ export const Post = observer(function Post({
   const onPressToggleRepost = () => {
     item
       .toggleRepost()
-      .catch(e => store.log.error('Failed to toggle repost', e.toString()))
+      .catch(e => store.log.error('Failed to toggle repost', e))
   }
   const onPressToggleUpvote = () => {
     item
       .toggleUpvote()
-      .catch(e => store.log.error('Failed to toggle upvote', e.toString()))
+      .catch(e => store.log.error('Failed to toggle upvote', e))
   }
   const onCopyPostText = () => {
     Clipboard.setString(record.text)
@@ -130,7 +128,7 @@ export const Post = observer(function Post({
         Toast.show('Post deleted')
       },
       e => {
-        store.log.error('Failed to delete post', e.toString())
+        store.log.error('Failed to delete post', e)
         Toast.show('Failed to delete post, please try again')
       },
     )

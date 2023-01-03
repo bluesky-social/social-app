@@ -41,6 +41,7 @@ export type TypographyVariant =
   | 'caption'
   | 'overline1'
   | 'overline2'
+  | 'mono1'
 export type Typography = Record<TypographyVariant, TextStyle>
 
 export interface Theme {

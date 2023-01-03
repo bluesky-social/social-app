@@ -37,7 +37,7 @@ export const Home = observer(function Home({
     }
     store.log.debug('Polling home feed')
     store.me.mainFeed.checkForLatest().catch(e => {
-      store.log.error('Failed to poll feed', e.toString())
+      store.log.error('Failed to poll feed', e)
     })
   }
 
