@@ -1,5 +1,5 @@
 import React from 'react'
-import {ImageStyle, StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
+import {StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from './text/Text'
@@ -23,39 +23,38 @@ export function PostEmbeds({
 }) {
   const pal = usePalette('default')
   const store = useStores()
-  if (embed?.$type === 'app.bsky.embed.images#presented') {
-    const imgEmbed = embed as AppBskyEmbedImages.Presented
-    if (imgEmbed.images.length > 0) {
-      const uris = imgEmbed.images.map(img => img.fullsize)
+  if (AppBskyEmbedImages.isPresented(embed)) {
+    if (embed.images.length > 0) {
+      const uris = embed.images.map(img => img.fullsize)
       const openLightbox = (index: number) => {
         store.shell.openLightbox(new ImagesLightbox(uris, index))
       }
-      if (imgEmbed.images.length === 4) {
+      if (embed.images.length === 4) {
         return (
           <View style={styles.imagesContainer}>
             <ImageLayoutGrid
               type="four"
-              uris={imgEmbed.images.map(img => img.thumb)}
+              uris={embed.images.map(img => img.thumb)}
               onPress={openLightbox}
             />
           </View>
         )
-      } else if (imgEmbed.images.length === 3) {
+      } else if (embed.images.length === 3) {
         return (
           <View style={styles.imagesContainer}>
             <ImageLayoutGrid
               type="three"
-              uris={imgEmbed.images.map(img => img.thumb)}
+              uris={embed.images.map(img => img.thumb)}
               onPress={openLightbox}
             />
           </View>
         )
-      } else if (imgEmbed.images.length === 2) {
+      } else if (embed.images.length === 2) {
         return (
           <View style={styles.imagesContainer}>
             <ImageLayoutGrid
               type="two"
-              uris={imgEmbed.images.map(img => img.thumb)}
+              uris={embed.images.map(img => img.thumb)}
               onPress={openLightbox}
             />
           </View>
@@ -64,7 +63,7 @@ export function PostEmbeds({
         return (
           <View style={styles.imagesContainer}>
             <AutoSizedImage
-              uri={imgEmbed.images[0].thumb}
+              uri={embed.images[0].thumb}
               onPress={() => openLightbox(0)}
               containerStyle={{borderRadius: 4}}
             />
@@ -73,9 +72,8 @@ export function PostEmbeds({
       }
     }
   }
-  if (embed?.$type === 'app.bsky.embed.external#presented') {
-    const externalEmbed = embed as AppBskyEmbedExternal.Presented
-    const link = externalEmbed.external
+  if (AppBskyEmbedExternal.isPresented(embed)) {
+    const link = embed.external
     return (
       <Link
         style={[styles.extOuter, pal.view, pal.border, style]}

@@ -4,27 +4,11 @@ import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
-interface UnknownPost {
-  $type: string
-  [k: string]: unknown
-}
-
 function* reactKeyGenerator(): Generator<string> {
   let counter = 0
   while (true) {
     yield `item-${counter++}`
   }
-}
-
-function isThreadViewPost(
-  v: GetPostThread.ThreadViewPost | GetPostThread.NotFoundPost | UnknownPost,
-): v is GetPostThread.ThreadViewPost {
-  return v.$type === 'app.bksy.feed.getPostThread#threadViewPost'
-}
-function isNotFoundPost(
-  v: GetPostThread.ThreadViewPost | GetPostThread.NotFoundPost | UnknownPost,
-): v is GetPostThread.NotFoundPost {
-  return v.$type === 'app.bsky.feed.getPostThread#notFoundPost'
 }
 
 export class PostThreadViewPostModel {
@@ -58,7 +42,7 @@ export class PostThreadViewPostModel {
   ) {
     // parents
     if (includeParent && v.parent) {
-      if (isThreadViewPost(v.parent)) {
+      if (GetPostThread.isThreadViewPost(v.parent)) {
         const parentModel = new PostThreadViewPostModel(
           this.rootStore,
           keyGen.next().value,
@@ -69,7 +53,7 @@ export class PostThreadViewPostModel {
           parentModel.assignTreeModels(keyGen, v.parent, true, false)
         }
         this.parent = parentModel
-      } else if (isNotFoundPost(v.parent)) {
+      } else if (GetPostThread.isNotFoundPost(v.parent)) {
         this.parent = v.parent
       }
     }
@@ -77,7 +61,7 @@ export class PostThreadViewPostModel {
     if (includeChildren && v.replies) {
       const replies = []
       for (const item of v.replies) {
-        if (isThreadViewPost(item)) {
+        if (GetPostThread.isThreadViewPost(item)) {
           const itemModel = new PostThreadViewPostModel(
             this.rootStore,
             keyGen.next().value,
@@ -88,7 +72,7 @@ export class PostThreadViewPostModel {
             itemModel.assignTreeModels(keyGen, item, false, true)
           }
           replies.push(itemModel)
-        } else if (isNotFoundPost(item)) {
+        } else if (GetPostThread.isNotFoundPost(item)) {
           replies.push(item)
         }
       }
