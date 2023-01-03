@@ -1,0 +1,145 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PhotoCarouselPicker matches snapshot 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <RCTScrollView
+    horizontal={true}
+    showsHorizontalScrollIndicator={false}
+    style={
+      Array [
+        Object {
+          "backgroundColor": "#ffffff",
+        },
+        Object {
+          "maxHeight": 96,
+          "overflow": "hidden",
+          "padding": 8,
+          "width": "100%",
+        },
+      ]
+    }
+    testID="photoCarouselPickerView"
+  >
+    <View>
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "borderColor": "#e4e2e2",
+            "borderRadius": 16,
+            "borderWidth": 1,
+            "height": 75,
+            "justifyContent": "center",
+            "marginRight": 8,
+            "opacity": 1,
+            "width": 75,
+          }
+        }
+        testID="openCameraButton"
+      >
+        <
+          icon="camera"
+          size={24}
+          style={
+            Object {
+              "color": "#0085ff",
+            }
+          }
+        />
+      </View>
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "borderColor": "#e4e2e2",
+            "borderRadius": 16,
+            "borderWidth": 1,
+            "height": 75,
+            "justifyContent": "center",
+            "marginRight": 8,
+            "opacity": 1,
+            "width": 75,
+          }
+        }
+        testID="openGalleryButton"
+      >
+        <
+          icon="image"
+          size={24}
+          style={
+            Object {
+              "color": "#0085ff",
+            }
+          }
+        />
+      </View>
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "borderColor": "#e4e2e2",
+            "borderRadius": 16,
+            "borderWidth": 1,
+            "height": 75,
+            "marginRight": 8,
+            "opacity": 1,
+            "width": 75,
+          }
+        }
+        testID="openSelectPhotoButton"
+      >
+        <Image
+          source={
+            Object {
+              "uri": "mock-uri",
+            }
+          }
+          style={
+            Object {
+              "borderRadius": 16,
+              "height": 75,
+              "marginRight": 8,
+              "width": 75,
+            }
+          }
+        />
+      </View>
+    </View>
+  </RCTScrollView>
+</View>
+`;

@@ -2,15 +2,6 @@ import {downloadAndResize, DownloadAndResizeOpts} from '../../src/lib/images'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
 import RNFetchBlob from 'rn-fetch-blob'
 
-jest.mock('rn-fetch-blob', () => ({
-  config: jest.fn().mockReturnThis(),
-  cancel: jest.fn(),
-  fetch: jest.fn(),
-}))
-jest.mock('@bam.tech/react-native-image-resizer', () => ({
-  createResizedImage: jest.fn(),
-}))
-
 describe('downloadAndResize', () => {
   const errorSpy = jest.spyOn(global.console, 'error')
 

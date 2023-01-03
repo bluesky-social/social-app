@@ -179,11 +179,14 @@ export const ComposePost = observer(function ComposePost({
 
   return (
     <KeyboardAvoidingView
+      testID="composePostView"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[pal.view, styles.outer]}>
       <SafeAreaView style={s.flex1}>
         <View style={styles.topbar}>
-          <TouchableOpacity onPress={onPressCancel}>
+          <TouchableOpacity
+            testID="composerCancelButton"
+            onPress={onPressCancel}>
             <Text style={[pal.link, s.f18]}>Cancel</Text>
           </TouchableOpacity>
           <View style={s.flex1} />
@@ -192,7 +195,9 @@ export const ComposePost = observer(function ComposePost({
               <ActivityIndicator />
             </View>
           ) : canPost ? (
-            <TouchableOpacity onPress={onPressPublish}>
+            <TouchableOpacity
+              testID="composerPublishButton"
+              onPress={onPressPublish}>
               <LinearGradient
                 colors={[gradients.primary.start, gradients.primary.end]}
                 start={{x: 0, y: 0}}
@@ -257,6 +262,7 @@ export const ComposePost = observer(function ComposePost({
               size={50}
             />
             <TextInput
+              testID="composerTextInput"
               ref={textInput}
               multiline
               scrollEnabled
@@ -283,6 +289,7 @@ export const ComposePost = observer(function ComposePost({
           )}
         <View style={[pal.border, styles.bottomBar]}>
           <TouchableOpacity
+            testID="composerSelectPhotosButton"
             onPress={onPressSelectPhotos}
             style={[s.pl5]}
             hitSlop={HITSLOP}>

@@ -47,6 +47,7 @@ exports[`Composer matches snapshot 1`] = `
           },
         ]
       }
+      testID="composePostView"
     >
       <RCTSafeAreaView
         emulateUnlessSupported={true}
@@ -83,6 +84,7 @@ exports[`Composer matches snapshot 1`] = `
                 "opacity": 1,
               }
             }
+            testID="composerCancelButton"
           >
             <Text
               style={
@@ -131,6 +133,7 @@ exports[`Composer matches snapshot 1`] = `
                 "opacity": 1,
               }
             }
+            testID="composerPublishButton"
           >
             <BVLinearGradient
               colors={
@@ -508,6 +511,7 @@ exports[`Composer matches snapshot 1`] = `
                     },
                   ]
                 }
+                testID="composerTextInput"
               />
             </View>
           </View>
@@ -553,6 +557,7 @@ exports[`Composer matches snapshot 1`] = `
                 "paddingLeft": 5,
               }
             }
+            testID="composerSelectPhotosButton"
           >
             <
               icon={

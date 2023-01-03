@@ -36,4 +36,14 @@ jest.mock('@gorhom/bottom-sheet', () => {
   }
 })
 
+jest.mock('rn-fetch-blob', () => ({
+  config: jest.fn().mockReturnThis(),
+  cancel: jest.fn(),
+  fetch: jest.fn(),
+}))
+
+jest.mock('@bam.tech/react-native-image-resizer', () => ({
+  createResizedImage: jest.fn(),
+}))
+
 import 'react-native-gesture-handler/jestSetup'
