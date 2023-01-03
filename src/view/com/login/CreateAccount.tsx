@@ -32,6 +32,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
   const [error, setError] = useState<string>('')
+  const [retryDescribeTrigger, setRetryDescribeTrigger] = useState<any>({})
   const [serviceDescription, setServiceDescription] = useState<
     ServiceDescription | undefined
   >(undefined)
@@ -66,7 +67,9 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     return () => {
       aborted = true
     }
-  }, [serviceUrl, store.session, store.log])
+  }, [serviceUrl, store.session, store.log, retryDescribeTrigger])
+
+  const onPressRetryConnect = () => setRetryDescribeTrigger({})
 
   const onPressSelectService = () => {
     store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
@@ -342,6 +345,10 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
               ) : (
                 <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
               )}
+            </TouchableOpacity>
+          ) : !serviceDescription && error ? (
+            <TouchableOpacity onPress={onPressRetryConnect}>
+              <Text style={[s.white, s.f18, s.bold, s.pr5]}>Retry</Text>
             </TouchableOpacity>
           ) : !serviceDescription ? (
             <>
