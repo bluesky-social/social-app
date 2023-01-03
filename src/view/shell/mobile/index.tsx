@@ -31,6 +31,7 @@ import {HorzSwipe} from '../../com/util/gestures/HorzSwipe'
 import {Modal} from '../../com/modals/Modal'
 import {Lightbox} from '../../com/lightbox/Lightbox'
 import {Text} from '../../com/util/text/Text'
+import {ErrorBoundary} from '../../com/util/ErrorBoundary'
 import {TabsSelector} from './TabsSelector'
 import {Composer} from './Composer'
 import {s, colors} from '../../lib/styles'
@@ -327,7 +328,9 @@ export const MobileShell: React.FC = observer(() => {
         end={{x: 0, y: 1}}
         style={styles.outerContainer}>
         <SafeAreaView style={styles.innerContainer}>
-          <Login />
+          <ErrorBoundary>
+            <Login />
+          </ErrorBoundary>
         </SafeAreaView>
         <Modal />
       </LinearGradient>
@@ -337,7 +340,9 @@ export const MobileShell: React.FC = observer(() => {
     return (
       <View style={styles.outerContainer}>
         <View style={styles.innerContainer}>
-          <Onboard />
+          <ErrorBoundary>
+            <Onboard />
+          </ErrorBoundary>
         </View>
       </View>
     )
@@ -400,12 +405,14 @@ export const MobileShell: React.FC = observer(() => {
                             ]
                           : undefined,
                       ]}>
-                      <Com
-                        params={params}
-                        navIdx={navIdx}
-                        visible={current}
-                        scrollElRef={current ? scrollElRef : undefined}
-                      />
+                      <ErrorBoundary>
+                        <Com
+                          params={params}
+                          navIdx={navIdx}
+                          visible={current}
+                          scrollElRef={current ? scrollElRef : undefined}
+                        />
+                      </ErrorBoundary>
                     </Animated.View>
                   </Screen>
                 )
