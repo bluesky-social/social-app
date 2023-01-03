@@ -477,7 +477,7 @@ export class FeedModel {
       const existingItem = this.feed.find(
         // HACK: need to find the reposts and trends item, so we have to check for that -prf
         item2 =>
-          item.uri === item2.post.uri &&
+          item.post.uri === item2.post.uri &&
           item.reason?.$trend === item2.reason?.$trend &&
           // @ts-ignore todo
           item.reason?.by?.did === item2.reason?.by?.did,
