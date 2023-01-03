@@ -88,6 +88,9 @@ export class RootStoreModel {
       if (hasProp(v, 'onboard')) {
         this.onboard.hydrate(v.onboard)
       }
+      if (hasProp(v, 'session')) {
+        this.session.hydrate(v.session)
+      }
       if (hasProp(v, 'shell')) {
         this.shell.hydrate(v.shell)
       }
