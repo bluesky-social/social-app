@@ -15,6 +15,7 @@ import * as EmailValidator from 'email-validator'
 import {Logo} from './Logo'
 import {Picker} from '../util/Picker'
 import {TextLink} from '../util/Link'
+import {ToggleButton} from '../util/forms/ToggleButton'
 import {Text} from '../util/text/Text'
 import {s, colors} from '../../lib/styles'
 import {
@@ -31,6 +32,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
   const [error, setError] = useState<string>('')
+  const [retryDescribeTrigger, setRetryDescribeTrigger] = useState<any>({})
   const [serviceDescription, setServiceDescription] = useState<
     ServiceDescription | undefined
   >(undefined)
@@ -39,12 +41,12 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [handle, setHandle] = useState<string>('')
+  const [is13, setIs13] = useState<boolean>(false)
 
   useEffect(() => {
     let aborted = false
     setError('')
     setServiceDescription(undefined)
-    console.log('Fetching service description', serviceUrl)
     store.session.describeService(serviceUrl).then(
       desc => {
         if (aborted) return
@@ -53,7 +55,10 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
       },
       err => {
         if (aborted) return
-        console.error(err)
+        store.log.warn(
+          `Failed to fetch service description for ${serviceUrl}`,
+          err,
+        )
         setError(
           'Unable to contact your service. Please check your Internet connection.',
         )
@@ -62,7 +67,9 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     return () => {
       aborted = true
     }
-  }, [serviceUrl, store.session])
+  }, [serviceUrl, store.session, store.log, retryDescribeTrigger])
+
+  const onPressRetryConnect = () => setRetryDescribeTrigger({})
 
   const onPressSelectService = () => {
     store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
@@ -98,7 +105,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
         errMsg =
           'Invite code not accepted. Check that you input it correctly and try again.'
       }
-      console.log(e)
+      store.log.error('Failed to create account', e)
       setIsProcessing(false)
       setError(errMsg.replace(/^Error:/, ''))
     }
@@ -126,6 +133,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     if (tos) {
       els.push(
         <TextLink
+          key="tos"
           href={tos}
           text="Terms of Service"
           style={[s.white, s.underline]}
@@ -135,6 +143,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     if (pp) {
       els.push(
         <TextLink
+          key="pp"
           href={pp}
           text="Privacy Policy"
           style={[s.white, s.underline]}
@@ -142,7 +151,14 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
       )
     }
     if (els.length === 2) {
-      els.splice(1, 0, <Text style={s.white}> and </Text>)
+      els.splice(
+        1,
+        0,
+        <Text key="and" style={s.white}>
+          {' '}
+          and{' '}
+        </Text>,
+      )
     }
     return (
       <View style={styles.policies}>
@@ -153,6 +169,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     )
   }
 
+  const isReady = !!email && !!password && !!handle && is13
   return (
     <ScrollView testID="createAccount" style={{flex: 1}}>
       <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
@@ -294,15 +311,34 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                 </Text>
               </View>
             </View>
+            <View style={[styles.group]}>
+              <View style={styles.groupTitle}>
+                <Text style={[s.white, s.f18, s.bold]}>Legal</Text>
+              </View>
+              <View style={styles.groupContent}>
+                <TouchableOpacity
+                  style={styles.textBtn}
+                  onPress={() => setIs13(!is13)}>
+                  <View style={is13 ? styles.checkboxFilled : styles.checkbox}>
+                    {is13 && (
+                      <FontAwesomeIcon icon="check" style={s.blue3} size={14} />
+                    )}
+                  </View>
+                  <Text style={[styles.textBtnLabel, s.f16]}>
+                    I am 13 years old or older
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
             <Policies />
           </>
         ) : undefined}
-        <View style={[s.flexRow, s.pl20, s.pr20, {paddingBottom: 200}]}>
+        <View style={[s.flexRow, s.pl20, s.pr20]}>
           <TouchableOpacity onPress={onPressBack}>
             <Text style={[s.white, s.f18, s.pl5]}>Back</Text>
           </TouchableOpacity>
           <View style={s.flex1} />
-          {serviceDescription ? (
+          {isReady ? (
             <TouchableOpacity onPress={onPressNext}>
               {isProcessing ? (
                 <ActivityIndicator color="#fff" />
@@ -310,8 +346,18 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                 <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
               )}
             </TouchableOpacity>
+          ) : !serviceDescription && error ? (
+            <TouchableOpacity onPress={onPressRetryConnect}>
+              <Text style={[s.white, s.f18, s.bold, s.pr5]}>Retry</Text>
+            </TouchableOpacity>
+          ) : !serviceDescription ? (
+            <>
+              <ActivityIndicator color="#fff" />
+              <Text style={[s.white, s.f18, s.pl5, s.pr5]}>Connecting...</Text>
+            </>
           ) : undefined}
         </View>
+        <View style={{height: 100}} />
       </KeyboardAvoidingView>
     </ScrollView>
   )
@@ -406,6 +452,23 @@ const styles = StyleSheet.create({
   },
   pickerIcon: {
     color: colors.white,
+  },
+  checkbox: {
+    borderWidth: 1,
+    borderColor: colors.white,
+    borderRadius: 2,
+    width: 16,
+    height: 16,
+    marginLeft: 16,
+  },
+  checkboxFilled: {
+    borderWidth: 1,
+    borderColor: colors.white,
+    backgroundColor: colors.white,
+    borderRadius: 2,
+    width: 16,
+    height: 16,
+    marginLeft: 16,
   },
   policies: {
     flexDirection: 'row',

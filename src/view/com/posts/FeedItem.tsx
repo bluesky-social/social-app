@@ -4,7 +4,6 @@ import {StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '../../../third-party/uri'
-import {AppBskyFeedPost} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FeedItemModel} from '../../../state/models/feed-view'
 import {Link} from '../util/Link'
@@ -24,15 +23,17 @@ import {usePalette} from '../../lib/hooks/usePalette'
 export const FeedItem = observer(function ({
   item,
   showReplyLine,
+  ignoreMuteFor,
 }: {
   item: FeedItemModel
   showReplyLine?: boolean
+  ignoreMuteFor?: string
 }) {
   const store = useStores()
   const theme = useTheme()
   const pal = usePalette('default')
   const [deleted, setDeleted] = useState(false)
-  const record = item.post.record as unknown as AppBskyFeedPost.Record
+  const record = item.postRecord
   const itemHref = useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}`
@@ -40,22 +41,22 @@ export const FeedItem = observer(function ({
   const itemTitle = `Post by ${item.post.author.handle}`
   const authorHref = `/profile/${item.post.author.handle}`
   const replyAuthorDid = useMemo(() => {
-    if (!record.reply) return ''
+    if (!record?.reply) return ''
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     return urip.hostname
-  }, [record.reply])
+  }, [record?.reply])
   const replyHref = useMemo(() => {
-    if (!record.reply) return ''
-    const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
+    if (!record?.reply) return ''
+    const urip = new AtUri(record?.reply.parent?.uri || record?.reply.root.uri)
     return `/profile/${urip.hostname}/post/${urip.rkey}`
-  }, [record.reply])
+  }, [record?.reply])
 
   const onPressReply = () => {
     store.shell.openComposer({
       replyTo: {
         uri: item.post.uri,
         cid: item.post.cid,
-        text: record.text as string,
+        text: record?.text || '',
         author: {
           handle: item.post.author.handle,
           displayName: item.post.author.displayName,
@@ -67,15 +68,15 @@ export const FeedItem = observer(function ({
   const onPressToggleRepost = () => {
     item
       .toggleRepost()
-      .catch(e => console.error('Failed to toggle repost', record, e))
+      .catch(e => store.log.error('Failed to toggle repost', e))
   }
   const onPressToggleUpvote = () => {
     item
       .toggleUpvote()
-      .catch(e => console.error('Failed to toggle upvote', record, e))
+      .catch(e => store.log.error('Failed to toggle upvote', e))
   }
   const onCopyPostText = () => {
-    Clipboard.setString(record.text)
+    Clipboard.setString(record?.text || '')
     Toast.show('Copied to clipboard')
   }
   const onDeletePost = () => {
@@ -85,13 +86,13 @@ export const FeedItem = observer(function ({
         Toast.show('Post deleted')
       },
       e => {
-        console.error(e)
+        store.log.error('Failed to delete post', e)
         Toast.show('Failed to delete post, please try again')
       },
     )
   }
 
-  if (deleted) {
+  if (!record || deleted) {
     return <View />
   }
 
@@ -106,10 +107,15 @@ export const FeedItem = observer(function ({
     isNoTop ? styles.outerNoTop : undefined,
     item._isThreadParent ? styles.outerNoBottom : undefined,
   ]
+
   return (
     <>
       {isChild && !item._isThreadChild && item.replyParent ? (
-        <FeedItem item={item.replyParent} showReplyLine />
+        <FeedItem
+          item={item.replyParent}
+          showReplyLine
+          ignoreMuteFor={ignoreMuteFor}
+        />
       ) : undefined}
       <Link style={outerStyles} href={itemHref} title={itemTitle} noFeedback>
         {item._isThreadChild && (
@@ -200,7 +206,13 @@ export const FeedItem = observer(function ({
                 </Link>
               </View>
             )}
-            {record.text ? (
+            {item.post.author.viewer?.muted &&
+            ignoreMuteFor !== item.post.author.did ? (
+              <View style={[styles.mutedWarning, pal.btn]}>
+                <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
+                <Text type="body2">This post is by a muted account.</Text>
+              </View>
+            ) : record.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
                   type="body1"
@@ -302,6 +314,14 @@ const styles = StyleSheet.create({
   },
   layoutContent: {
     flex: 1,
+  },
+  mutedWarning: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    marginTop: 2,
+    marginBottom: 6,
+    borderRadius: 2,
   },
   postTextContainer: {
     flexDirection: 'row',

@@ -2,11 +2,16 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AppBskyNotificationList as ListNotifications,
   AppBskyActorRef as ActorRef,
+  AppBskyFeedPost,
+  AppBskyFeedRepost,
+  AppBskyFeedTrend,
+  AppBskyFeedVote,
+  AppBskyGraphAssertion,
+  AppBskyGraphFollow,
   APP_BSKY_GRAPH,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {PostThreadViewModel} from './post-thread-view'
-import {hasProp} from '../lib/type-guards'
 import {cleanError} from '../../lib/strings'
 
 const UNGROUPABLE_REASONS = ['trend', 'assertion']
@@ -19,7 +24,15 @@ export interface GroupedNotification extends ListNotifications.Notification {
   additional?: ListNotifications.Notification[]
 }
 
-export class NotificationsViewItemModel implements GroupedNotification {
+type SupportedRecord =
+  | AppBskyFeedPost.Record
+  | AppBskyFeedRepost.Record
+  | AppBskyFeedTrend.Record
+  | AppBskyFeedVote.Record
+  | AppBskyGraphAssertion.Record
+  | AppBskyGraphFollow.Record
+
+export class NotificationsViewItemModel {
   // ui state
   _reactKey: string = ''
 
@@ -34,7 +47,7 @@ export class NotificationsViewItemModel implements GroupedNotification {
   }
   reason: string = ''
   reasonSubject?: string
-  record: any = {}
+  record?: SupportedRecord
   isRead: boolean = false
   indexedAt: string = ''
   additional?: NotificationsViewItemModel[]
@@ -58,7 +71,7 @@ export class NotificationsViewItemModel implements GroupedNotification {
     this.author = v.author
     this.reason = v.reason
     this.reasonSubject = v.reasonSubject
-    this.record = v.record
+    this.record = this.toSupportedRecord(v.record)
     this.isRead = v.isRead
     this.indexedAt = v.indexedAt
     if (v.additional?.length) {
@@ -116,21 +129,53 @@ export class NotificationsViewItemModel implements GroupedNotification {
 
   get isInvite() {
     return (
-      this.isAssertion && this.record.assertion === APP_BSKY_GRAPH.AssertMember
+      this.isAssertion &&
+      AppBskyGraphAssertion.isRecord(this.record) &&
+      this.record.assertion === APP_BSKY_GRAPH.AssertMember
     )
   }
 
-  get subjectUri() {
+  get subjectUri(): string {
     if (this.reasonSubject) {
       return this.reasonSubject
     }
+    const record = this.record
     if (
-      hasProp(this.record, 'subject') &&
-      typeof this.record.subject === 'string'
+      AppBskyFeedRepost.isRecord(record) ||
+      AppBskyFeedTrend.isRecord(record) ||
+      AppBskyFeedVote.isRecord(record)
     ) {
-      return this.record.subject
+      return record.subject.uri
     }
     return ''
+  }
+
+  toSupportedRecord(v: unknown): SupportedRecord | undefined {
+    for (const ns of [
+      AppBskyFeedPost,
+      AppBskyFeedRepost,
+      AppBskyFeedTrend,
+      AppBskyFeedVote,
+      AppBskyGraphAssertion,
+      AppBskyGraphFollow,
+    ]) {
+      if (ns.isRecord(v)) {
+        const valid = ns.validateRecord(v)
+        if (valid.success) {
+          return v
+        } else {
+          this.rootStore.log.warn('Received an invalid record', {
+            record: v,
+            error: valid.error,
+          })
+          return
+        }
+      }
+    }
+    this.rootStore.log.warn(
+      'app.bsky.notifications.list served an unsupported record type',
+      v,
+    )
   }
 
   async fetchAdditionalData() {
@@ -140,7 +185,7 @@ export class NotificationsViewItemModel implements GroupedNotification {
     let postUri
     if (this.isReply || this.isMention) {
       postUri = this.uri
-    } else if (this.isUpvote || this.isRead || this.isTrend) {
+    } else if (this.isUpvote || this.isRepost || this.isTrend) {
       postUri = this.subjectUri
     }
     if (postUri) {
@@ -149,7 +194,10 @@ export class NotificationsViewItemModel implements GroupedNotification {
         depth: 0,
       })
       await this.additionalPost.setup().catch(e => {
-        console.error('Failed to load post needed by notification', e)
+        this.rootStore.log.error(
+          'Failed to load post needed by notification',
+          e,
+        )
       })
     }
   }
@@ -262,8 +310,8 @@ export class NotificationsViewModel {
         seenAt: new Date().toISOString(),
       })
       this.rootStore.me.clearNotificationCount()
-    } catch (e) {
-      console.log('Failed to update notifications read state', e)
+    } catch (e: any) {
+      this.rootStore.log.warn('Failed to update notifications read state', e)
     }
   }
 
@@ -276,11 +324,15 @@ export class NotificationsViewModel {
     this.error = ''
   }
 
-  private _xIdle(err: string = '') {
+  private _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
     this.error = cleanError(err)
+    this.error = err ? cleanError(err) : ''
+    if (err) {
+      this.rootStore.log.error('Failed to fetch notifications', err)
+    }
   }
 
   // loader functions
@@ -308,7 +360,7 @@ export class NotificationsViewModel {
       await this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load notifications: ${e.toString()}`)
+      this._xIdle(e)
     }
   }
 
@@ -326,7 +378,7 @@ export class NotificationsViewModel {
       await this._appendAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load notifications: ${e.toString()}`)
+      this._xIdle(e)
     }
   }
 
@@ -350,11 +402,10 @@ export class NotificationsViewModel {
         this._updateAll(res)
         numToFetch -= res.data.notifications.length
         cursor = this.notifications[res.data.notifications.length - 1].indexedAt
-        console.log(numToFetch, cursor, res.data.notifications.length)
       } while (numToFetch > 0)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to update notifications: ${e.toString()}`)
+      this._xIdle(e)
     }
   }
 
@@ -379,7 +430,7 @@ export class NotificationsViewModel {
       itemModels.push(itemModel)
     }
     await Promise.all(promises).catch(e => {
-      console.error(
+      this.rootStore.log.error(
         'Uncaught failure during notifications-view _appendAll()',
         e,
       )

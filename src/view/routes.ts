@@ -16,6 +16,7 @@ import {ProfileFollows} from './screens/ProfileFollows'
 import {ProfileMembers} from './screens/ProfileMembers'
 import {Settings} from './screens/Settings'
 import {Debug} from './screens/Debug'
+import {Log} from './screens/Log'
 
 export type ScreenParams = {
   navIdx: [number, number]
@@ -72,7 +73,8 @@ export const routes: Route[] = [
     'retweet',
     r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)/reposted-by'),
   ],
-  [Debug, 'Debug', 'house', r('/debug')],
+  [Debug, 'Debug', 'house', r('/sys/debug')],
+  [Log, 'Log', 'house', r('/sys/log')],
 ]
 
 export function match(url: string): MatchResult {

@@ -42,10 +42,8 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
       return
     }
     if (hasSetup) {
-      console.log('Updating profile for', params.name)
       uiState.update()
     } else {
-      console.log('Fetching profile for', params.name)
       store.nav.setTitle(navIdx, params.name)
       uiState.setup().then(() => {
         if (aborted) return
@@ -66,12 +64,16 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const onRefresh = () => {
     uiState
       .refresh()
-      .catch((err: any) => console.error('Failed to refresh', err))
+      .catch((err: any) =>
+        store.log.error('Failed to refresh user profile', err),
+      )
   }
   const onEndReached = () => {
     uiState
       .loadMore()
-      .catch((err: any) => console.error('Failed to load more', err))
+      .catch((err: any) =>
+        store.log.error('Failed to load more entries in user profile', err),
+      )
   }
   const onPressTryAgain = () => {
     uiState.setup()
@@ -148,7 +150,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
                 </Text>
               )
             }
-            return <FeedItem item={item} />
+            return <FeedItem item={item} ignoreMuteFor={uiState.profile.did} />
           }
         } else if (uiState.feed.isEmpty) {
           items = items.concat([EMPTY_ITEM])

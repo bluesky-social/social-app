@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react'
 import {
+  ScrollView,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -98,7 +99,7 @@ export const Menu = observer(
     )
 
     return (
-      <View testID="menuView" style={[styles.view, pal.view]}>
+      <ScrollView testID="menuView" style={[styles.view, pal.view]}>
         <TouchableOpacity
           testID="profileCardButton"
           onPress={() => onNavigate(`/profile/${store.me.handle}`)}
@@ -210,7 +211,8 @@ export const Menu = observer(
             {VersionNumber.buildVersion})
           </Text>
         </View>
-      </View>
+        <View style={{height: 100}} />
+      </ScrollView>
     )
   },
 )

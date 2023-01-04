@@ -36,10 +36,18 @@ export const Feed = observer(function Feed({
     return <FeedItem item={item} />
   }
   const onRefresh = () => {
-    view.refresh().catch(err => console.error('Failed to refresh', err))
+    view
+      .refresh()
+      .catch(err =>
+        view.rootStore.log.error('Failed to refresh notifications feed', err),
+      )
   }
   const onEndReached = () => {
-    view.loadMore().catch(err => console.error('Failed to load more', err))
+    view
+      .loadMore()
+      .catch(err =>
+        view.rootStore.log.error('Failed to load more notifications', err),
+      )
   }
   let data
   if (view.hasLoaded) {

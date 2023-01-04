@@ -3,7 +3,6 @@ import {observer} from 'mobx-react-lite'
 import {StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '../../../third-party/uri'
-import {AppBskyFeedPost} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
@@ -18,6 +17,7 @@ import {useStores} from '../../../state'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/PostEmbeds'
 import {PostCtrls} from '../util/PostCtrls'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ComposePrompt} from '../composer/Prompt'
 import {usePalette} from '../../lib/hooks/usePalette'
 
@@ -33,7 +33,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   const pal = usePalette('default')
   const store = useStores()
   const [deleted, setDeleted] = useState(false)
-  const record = item.post.record as unknown as AppBskyFeedPost.Record
+  const record = item.postRecord
   const hasEngagement = item.post.upvoteCount || item.post.repostCount
 
   const itemHref = useMemo(() => {
@@ -72,12 +72,12 @@ export const PostThreadItem = observer(function PostThreadItem({
   const onPressToggleRepost = () => {
     item
       .toggleRepost()
-      .catch(e => console.error('Failed to toggle repost', record, e))
+      .catch(e => store.log.error('Failed to toggle repost', e))
   }
   const onPressToggleUpvote = () => {
     item
       .toggleUpvote()
-      .catch(e => console.error('Failed to toggle upvote', record, e))
+      .catch(e => store.log.error('Failed to toggle upvote', e))
   }
   const onCopyPostText = () => {
     Clipboard.setString(record.text)
@@ -90,10 +90,14 @@ export const PostThreadItem = observer(function PostThreadItem({
         Toast.show('Post deleted')
       },
       e => {
-        console.error(e)
+        store.log.error('Failed to delete post', e)
         Toast.show('Failed to delete post, please try again')
       },
     )
+  }
+
+  if (!record) {
+    return <ErrorMessage message="Invalid or unsupported post record" />
   }
 
   if (deleted) {
@@ -282,7 +286,12 @@ export const PostThreadItem = observer(function PostThreadItem({
                 onCopyPostText={onCopyPostText}
                 onDeletePost={onDeletePost}
               />
-              {record.text ? (
+              {item.post.author.viewer?.muted ? (
+                <View style={[styles.mutedWarning, pal.btn]}>
+                  <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
+                  <Text type="body2">This post is by a muted account.</Text>
+                </View>
+              ) : record.text ? (
                 <View style={styles.postTextContainer}>
                   <RichText
                     text={record.text}
@@ -366,6 +375,14 @@ const styles = StyleSheet.create({
   metaItem: {
     paddingRight: 5,
     maxWidth: 240,
+  },
+  mutedWarning: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    marginTop: 2,
+    marginBottom: 6,
+    borderRadius: 2,
   },
   postTextContainer: {
     flexDirection: 'row',

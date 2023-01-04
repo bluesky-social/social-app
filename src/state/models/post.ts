@@ -63,10 +63,14 @@ export class PostModel implements RemoveIndex<Post.Record> {
     this.error = ''
   }
 
-  private _xIdle(err: string = '') {
+  private _xIdle(err?: any) {
     this.isLoading = false
     this.hasLoaded = true
     this.error = cleanError(err)
+    this.error = err ? cleanError(err) : ''
+    if (err) {
+      this.rootStore.log.error('Failed to fetch post', err)
+    }
   }
 
   // loader functions
@@ -87,7 +91,7 @@ export class PostModel implements RemoveIndex<Post.Record> {
       this._replaceAll(res.value)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(e.toString())
+      this._xIdle(e)
     }
   }
 

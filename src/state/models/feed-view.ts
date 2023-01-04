@@ -33,6 +33,7 @@ export class FeedItemModel {
 
   // data
   post: PostView
+  postRecord?: AppBskyFeedPost.Record
   reply?: FeedViewPost['reply']
   replyParent?: FeedItemModel
   reason?: FeedViewPost['reason']
@@ -44,6 +45,22 @@ export class FeedItemModel {
   ) {
     this._reactKey = reactKey
     this.post = v.post
+    if (AppBskyFeedPost.isRecord(this.post.record)) {
+      const valid = AppBskyFeedPost.validateRecord(this.post.record)
+      if (valid.success) {
+        this.postRecord = this.post.record
+      } else {
+        rootStore.log.warn(
+          'Received an invalid app.bsky.feed.post record',
+          valid.error,
+        )
+      }
+    } else {
+      rootStore.log.warn(
+        'app.bsky.feed.getTimeline or app.bsky.feed.getAuthorFeed served an unexpected record type',
+        this.post.record,
+      )
+    }
     this.reply = v.reply
     if (v.reply?.parent) {
       this.replyParent = new FeedItemModel(rootStore, '', {
@@ -320,11 +337,14 @@ export class FeedModel {
     this.error = ''
   }
 
-  private _xIdle(err: string = '') {
+  private _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = cleanError(err)
+    this.error = err ? cleanError(err.toString()) : ''
+    if (err) {
+      this.rootStore.log.error('Posts feed request failed', err)
+    }
   }
 
   // loader functions
@@ -352,7 +372,7 @@ export class FeedModel {
       await this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(e.toString())
+      this._xIdle(e)
     }
   }
 
@@ -363,7 +383,7 @@ export class FeedModel {
       await this._prependAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(e.toString())
+      this._xIdle(e)
     }
   }
 
@@ -380,7 +400,7 @@ export class FeedModel {
       await this._appendAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load feed: ${e.toString()}`)
+      this._xIdle(e)
     }
   }
 
@@ -405,11 +425,10 @@ export class FeedModel {
         cursor = this.feed[res.data.feed.length - 1]
           ? ts(this.feed[res.data.feed.length - 1])
           : undefined
-        console.log(numToFetch, cursor, res.data.feed.length)
       } while (numToFetch > 0)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to update feed: ${e.toString()}`)
+      this._xIdle(e)
     }
   }
 
@@ -475,7 +494,7 @@ export class FeedModel {
       const existingItem = this.feed.find(
         // HACK: need to find the reposts and trends item, so we have to check for that -prf
         item2 =>
-          item.uri === item2.post.uri &&
+          item.post.uri === item2.post.uri &&
           item.reason?.$trend === item2.reason?.$trend &&
           // @ts-ignore todo
           item.reason?.by?.did === item2.reason?.by?.did,
@@ -593,6 +612,5 @@ function ts(item: FeedViewPost | FeedItemModel): string {
     // @ts-ignore need better type checks
     return item.reason.indexedAt
   }
-  console.log(item)
   return item.post.indexedAt
 }

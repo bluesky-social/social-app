@@ -9,7 +9,6 @@ import {
 import {observer} from 'mobx-react-lite'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '../../../third-party/uri'
-import {AppBskyFeedPost} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
@@ -21,6 +20,7 @@ import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -47,7 +47,7 @@ export const Post = observer(function Post({
     }
     const newView = new PostThreadViewModel(store, {uri, depth: 0})
     setView(newView)
-    newView.setup().catch(err => console.error('Failed to fetch post', err))
+    newView.setup().catch(err => store.log.error('Failed to fetch post', err))
   }, [initView, uri, view?.params.uri, store])
 
   // deleted
@@ -68,7 +68,7 @@ export const Post = observer(function Post({
 
   // error
   // =
-  if (view.hasError || !view.thread) {
+  if (view.hasError || !view.thread || !view.thread?.postRecord) {
     return (
       <View style={pal.view}>
         <Text>{view.error || 'Thread not found'}</Text>
@@ -79,7 +79,7 @@ export const Post = observer(function Post({
   // loaded
   // =
   const item = view.thread
-  const record = view.thread?.post.record as unknown as AppBskyFeedPost.Record
+  const record = view.thread.postRecord
 
   const itemUrip = new AtUri(item.post.uri)
   const itemHref = `/profile/${item.post.author.handle}/post/${itemUrip.rkey}`
@@ -110,12 +110,12 @@ export const Post = observer(function Post({
   const onPressToggleRepost = () => {
     item
       .toggleRepost()
-      .catch(e => console.error('Failed to toggle repost', record, e))
+      .catch(e => store.log.error('Failed to toggle repost', e))
   }
   const onPressToggleUpvote = () => {
     item
       .toggleUpvote()
-      .catch(e => console.error('Failed to toggle upvote', record, e))
+      .catch(e => store.log.error('Failed to toggle upvote', e))
   }
   const onCopyPostText = () => {
     Clipboard.setString(record.text)
@@ -128,7 +128,7 @@ export const Post = observer(function Post({
         Toast.show('Post deleted')
       },
       e => {
-        console.error(e)
+        store.log.error('Failed to delete post', e)
         Toast.show('Failed to delete post, please try again')
       },
     )
@@ -184,7 +184,12 @@ export const Post = observer(function Post({
               </Link>
             </View>
           )}
-          {record.text ? (
+          {item.post.author.viewer?.muted ? (
+            <View style={[styles.mutedWarning, pal.btn]}>
+              <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
+              <Text type="body2">This post is by a muted account.</Text>
+            </View>
+          ) : record.text ? (
             <View style={styles.postTextContainer}>
               <RichText text={record.text} entities={record.entities} />
             </View>
@@ -221,6 +226,14 @@ const styles = StyleSheet.create({
   },
   layoutContent: {
     flex: 1,
+  },
+  mutedWarning: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    marginTop: 2,
+    marginBottom: 6,
+    borderRadius: 2,
   },
   postTextContainer: {
     flexDirection: 'row',

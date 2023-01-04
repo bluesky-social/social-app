@@ -72,7 +72,6 @@ export async function resize(localUri: string, opts: ResizeOpts) {
       undefined,
       {mode: opts.mode},
     )
-    console.log(quality, resizeRes)
     if (resizeRes.size < opts.maxSize) {
       return resizeRes
     }

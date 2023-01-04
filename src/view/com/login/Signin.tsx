@@ -30,6 +30,7 @@ enum Forms {
 export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   const store = useStores()
   const [error, setError] = useState<string>('')
+  const [retryDescribeTrigger, setRetryDescribeTrigger] = useState<any>({})
   const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
   const [serviceDescription, setServiceDescription] = useState<
     ServiceDescription | undefined
@@ -44,7 +45,6 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   useEffect(() => {
     let aborted = false
     setError('')
-    console.log('Fetching service description', serviceUrl)
     store.session.describeService(serviceUrl).then(
       desc => {
         if (aborted) return
@@ -52,7 +52,10 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
       },
       err => {
         if (aborted) return
-        console.error(err)
+        store.log.warn(
+          `Failed to fetch service description for ${serviceUrl}`,
+          err,
+        )
         setError(
           'Unable to contact your service. Please check your Internet connection.',
         )
@@ -61,7 +64,9 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
     return () => {
       aborted = true
     }
-  }, [store.session, serviceUrl])
+  }, [store.session, store.log, serviceUrl, retryDescribeTrigger])
+
+  const onPressRetryConnect = () => setRetryDescribeTrigger({})
 
   return (
     <KeyboardAvoidingView testID="signIn" behavior="padding" style={{flex: 1}}>
@@ -78,6 +83,7 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
           setServiceUrl={setServiceUrl}
           onPressBack={onPressBack}
           onPressForgotPassword={gotoForm(Forms.ForgotPassword)}
+          onPressRetryConnect={onPressRetryConnect}
         />
       ) : undefined}
       {currentForm === Forms.ForgotPassword ? (
@@ -116,6 +122,7 @@ const LoginForm = ({
   serviceDescription,
   setError,
   setServiceUrl,
+  onPressRetryConnect,
   onPressBack,
   onPressForgotPassword,
 }: {
@@ -125,6 +132,7 @@ const LoginForm = ({
   serviceDescription: ServiceDescription | undefined
   setError: (v: string) => void
   setServiceUrl: (v: string) => void
+  onPressRetryConnect: () => void
   onPressBack: () => void
   onPressForgotPassword: () => void
 }) => {
@@ -169,7 +177,7 @@ const LoginForm = ({
       })
     } catch (e: any) {
       const errMsg = e.toString()
-      console.log(e)
+      store.log.warn('Failed to login', e)
       setIsProcessing(false)
       if (errMsg.includes('Authentication Required')) {
         setError('Invalid username or password')
@@ -183,6 +191,7 @@ const LoginForm = ({
     }
   }
 
+  const isReady = !!serviceDescription && !!handle && !!password
   return (
     <>
       <View style={styles.group}>
@@ -250,15 +259,21 @@ const LoginForm = ({
           <Text style={[s.white, s.f18, s.pl5]}>Back</Text>
         </TouchableOpacity>
         <View style={s.flex1} />
-        <TouchableOpacity onPress={onPressNext}>
-          {!serviceDescription || isProcessing ? (
+        {!serviceDescription && error ? (
+          <TouchableOpacity onPress={onPressRetryConnect}>
+            <Text style={[s.white, s.f18, s.bold, s.pr5]}>Retry</Text>
+          </TouchableOpacity>
+        ) : !serviceDescription ? (
+          <>
             <ActivityIndicator color="#fff" />
-          ) : (
+            <Text style={[s.white, s.f18, s.pl10]}>Connecting...</Text>
+          </>
+        ) : isProcessing ? (
+          <ActivityIndicator color="#fff" />
+        ) : isReady ? (
+          <TouchableOpacity onPress={onPressNext}>
             <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
-          )}
-        </TouchableOpacity>
-        {!serviceDescription || isProcessing ? (
-          <Text style={[s.white, s.f18, s.pl10]}>Connecting...</Text>
+          </TouchableOpacity>
         ) : undefined}
       </View>
     </>
@@ -305,7 +320,7 @@ const ForgotPasswordForm = ({
       onEmailSent()
     } catch (e: any) {
       const errMsg = e.toString()
-      console.log(e)
+      store.log.warn('Failed to request password reset', e)
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(
@@ -417,7 +432,7 @@ const SetNewPasswordForm = ({
       onPasswordSet()
     } catch (e: any) {
       const errMsg = e.toString()
-      console.log(e)
+      store.log.warn('Failed to set new password', e)
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(
