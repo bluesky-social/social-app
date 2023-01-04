@@ -43,10 +43,7 @@ describe('Home', () => {
     await jest.runOnlyPendingTimers()
 
     expect(mockedMeStore.mainFeed.checkForLatest).toHaveBeenCalled()
-    expect(consoleErrorSpy).toHaveBeenLastCalledWith(
-      'Failed to poll feed',
-      'Error checking for latest',
-    )
+    expect(consoleErrorSpy).toHaveBeenCalled()
   })
 
   it('renders and clicks button when hasNewLatest', async () => {

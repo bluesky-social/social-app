@@ -396,6 +396,9 @@ exports[`Settings matches snapshot 1`] = `
           Object {
             "paddingRight": 10,
           },
+          Object {
+            "flex": 1,
+          },
         ]
       }
     >
@@ -652,6 +655,34 @@ exports[`Settings matches snapshot 1`] = `
         </View>
       </View>
       <View
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      />
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#000000",
+            },
+            Object {
+              "fontSize": 10,
+              "letterSpacing": 1.5,
+              "textTransform": "uppercase",
+            },
+            Array [
+              Object {
+                "marginBottom": 5,
+              },
+            ],
+          ]
+        }
+      >
+        Advanced
+      </Text>
+      <View
         accessible={true}
         collapsable={false}
         focusable={true}
@@ -664,7 +695,49 @@ exports[`Settings matches snapshot 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           Object {
+            "backgroundColor": "#ffffff",
+            "marginBottom": 2,
             "opacity": 1,
+            "padding": 10,
+          }
+        }
+      >
+        <Text
+          style={
+            Array [
+              Object {
+                "color": "#000000",
+              },
+              Object {
+                "fontSize": 16,
+                "letterSpacing": 0.25,
+              },
+              Object {
+                "color": "#0085ff",
+              },
+            ]
+          }
+        >
+          System log
+        </Text>
+      </View>
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "backgroundColor": "#ffffff",
+            "marginBottom": 2,
+            "opacity": 1,
+            "padding": 10,
           }
         }
       >
@@ -687,6 +760,13 @@ exports[`Settings matches snapshot 1`] = `
           Debug tools
         </Text>
       </View>
+      <View
+        style={
+          Object {
+            "height": 100,
+          }
+        }
+      />
     </View>
   </View>
 </View>

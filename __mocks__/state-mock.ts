@@ -1,3 +1,4 @@
+import { LogModel } from './../src/state/models/log';
 import {LRUMap} from 'lru_map'
 import {RootStoreModel} from './../src/state/models/root-store'
 import {NavigationTabModel} from './../src/state/models/navigation'
@@ -398,6 +399,16 @@ export const mockedLinkMetasStore = {
   getLinkMeta: jest.fn(),
 } as LinkMetasViewModel
 
+export const mockedLogStore = {
+  entries: [],
+  serialize: jest.fn(),
+  hydrate: jest.fn(),
+  debug: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+  // unknown required because of the missing private methods: add
+} as unknown as LogModel
+
 export const mockedRootStore = {
   api: {} as SessionServiceClient,
   resolveName: jest.fn(),
@@ -412,6 +423,7 @@ export const mockedRootStore = {
   onboard: mockedOnboardStore,
   profiles: mockedProfilesStore,
   linkMetas: mockedLinkMetasStore,
+  log: mockedLogStore,
 } as RootStoreModel
 
 export const mockedProfileUiStore = {

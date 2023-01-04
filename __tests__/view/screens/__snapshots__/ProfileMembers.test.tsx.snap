@@ -474,7 +474,7 @@ exports[`ProfileMembers matches snapshot 1`] = `
             ]
           }
         >
-          Failed to load feed: TypeError: Cannot read properties of undefined (reading 'bsky')
+          TypeError: Cannot read properties of undefined (reading 'bsky')
         </Text>
         <View
           accessible={true}
