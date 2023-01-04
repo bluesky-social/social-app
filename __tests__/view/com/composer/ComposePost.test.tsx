@@ -1,8 +1,11 @@
 import React from 'react'
 import {ComposePost} from '../../../../src/view/com/composer/ComposePost'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {fireEvent, render, waitFor} from '../../../../jest/test-utils'
 import * as apilib from '../../../../src/state/lib/api'
-import {mockedRootStore} from '../../../../__mocks__/state-mock'
+import {
+  mockedAutocompleteViewStore,
+  mockedRootStore,
+} from '../../../../__mocks__/state-mock'
 import Toast from 'react-native-root-toast'
 
 describe('ComposePost', () => {
@@ -38,44 +41,83 @@ describe('ComposePost', () => {
     expect(mockedProps.onClose).toHaveBeenCalled()
   })
 
-  // WIP
-  // it('changes text and publishes post', async () => {
-  //   const spyOnPost = jest.spyOn(apilib, 'post').mockResolvedValue({
-  //     uri: '',
-  //     cid: '',
-  //   })
-  //   const spyOnToast = jest.spyOn(Toast, 'show')
+  it('changes text and publishes post', async () => {
+    const spyOnPost = jest.spyOn(apilib, 'post').mockResolvedValue({
+      uri: '',
+      cid: '',
+    })
+    const spyOnToast = jest.spyOn(Toast, 'show')
 
-  //   const wrapper = render(<ComposePost {...mockedProps} />)
+    const wrapper = render(<ComposePost {...mockedProps} />)
 
-  //   const composerTextInput = await wrapper.findByTestId('composerTextInput')
-  //   fireEvent.changeText(composerTextInput, 'testing publish')
+    const composerTextInput = await wrapper.findByTestId('composerTextInput')
+    fireEvent.changeText(composerTextInput, 'testing publish')
 
-  //   const composerPublishButton = await wrapper.findByTestId(
-  //     'composerPublishButton',
-  //   )
-  //   fireEvent.press(composerPublishButton)
+    const composerPublishButton = await wrapper.findByTestId(
+      'composerPublishButton',
+    )
+    fireEvent.press(composerPublishButton)
 
-  //   expect(spyOnPost).toHaveBeenCalledWith(
-  //     mockedRootStore,
-  //     'testing publish',
-  //     'testUri',
-  //     [],
-  //     new Set<string>(),
-  //     expect.anything(),
-  //   )
-  //   expect(mockedRootStore.me.mainFeed.checkForLatest).toHaveBeenCalled()
-  //   expect(mockedProps.onPost).toHaveBeenCalled()
-  //   expect(mockedProps.onClose).toHaveBeenCalled()
-  //   expect(spyOnToast).toHaveBeenCalledWith('Your reply has been published')
-  // })
+    expect(spyOnPost).toHaveBeenCalledWith(
+      mockedRootStore,
+      'testing publish',
+      'testUri',
+      [],
+      new Set<string>(),
+      expect.anything(),
+    )
+
+    await waitFor(() => {
+      expect(mockedProps.onPost).toHaveBeenCalled()
+      expect(mockedProps.onClose).toHaveBeenCalled()
+      expect(spyOnToast).toHaveBeenCalledWith('Your reply has been published', {
+        animation: true,
+        duration: 3500,
+        hideOnPress: true,
+        position: 50,
+        shadow: true,
+      })
+    })
+  })
+
+  it('selects autocomplete item', async () => {
+    jest
+      .spyOn(React, 'useMemo')
+      .mockReturnValueOnce(mockedAutocompleteViewStore)
+
+    const {findAllByTestId} = render(<ComposePost {...mockedProps} />)
+    const autocompleteButton = await findAllByTestId('autocompleteButton')
+
+    fireEvent.press(autocompleteButton[0])
+    expect(mockedAutocompleteViewStore.setActive).toHaveBeenCalledWith(false)
+  })
+
+  it('selects photos', async () => {
+    const {findByTestId, queryByTestId} = render(
+      <ComposePost {...mockedProps} />,
+    )
+    let photoCarouselPickerView = await queryByTestId('photoCarouselPickerView')
+    expect(photoCarouselPickerView).toBeFalsy()
+
+    const composerSelectPhotosButton = await findByTestId(
+      'composerSelectPhotosButton',
+    )
+    fireEvent.press(composerSelectPhotosButton)
+
+    photoCarouselPickerView = await findByTestId('photoCarouselPickerView')
+    expect(photoCarouselPickerView).toBeTruthy()
+
+    fireEvent.press(composerSelectPhotosButton)
+
+    photoCarouselPickerView = await queryByTestId('photoCarouselPickerView')
+    expect(photoCarouselPickerView).toBeFalsy()
+  })
 
   it('matches snapshot', () => {
     const page = render(<ComposePost {...mockedProps} />)
     expect(page).toMatchSnapshot()
   })
 
-  // composerSelectPhotosButton - onPressSelectPhotos
   // onSelectPhotos
   // onChangeText
 })

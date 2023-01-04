@@ -56,11 +56,11 @@ export const ComposePost = observer(function ComposePost({
   const [isSelectingPhotos, setIsSelectingPhotos] = useState(false)
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
 
-  const autocompleteView = useMemo<UserAutocompleteViewModel>(
+  const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
     () => new UserAutocompleteViewModel(store),
     [store],
   )
-  const localPhotos = useMemo<UserLocalPhotosModel>(
+  const localPhotos = React.useMemo<UserLocalPhotosModel>(
     () => new UserLocalPhotosModel(store),
     [store],
   )

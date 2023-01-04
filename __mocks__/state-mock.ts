@@ -1,4 +1,4 @@
-import { LogModel } from './../src/state/models/log';
+import {LogModel} from './../src/state/models/log'
 import {LRUMap} from 'lru_map'
 import {RootStoreModel} from './../src/state/models/root-store'
 import {NavigationTabModel} from './../src/state/models/navigation'
@@ -16,6 +16,8 @@ import {ProfileViewModel} from '../src/state/models/profile-view'
 import {MembersViewModel} from '../src/state/models/members-view'
 import {ProfileUiModel, Sections} from '../src/state/models/profile-ui'
 import {SessionServiceClient} from '@atproto/api'
+import {UserAutocompleteViewModel} from '../src/state/models/user-autocomplete-view'
+import { UserLocalPhotosModel } from '../src/state/models/user-local-photos'
 
 export const mockedProfileStore = {
   isLoading: false,
@@ -449,3 +451,72 @@ export const mockedProfileUiStore = {
   refresh: jest.fn(),
   loadMore: jest.fn(),
 } as ProfileUiModel
+
+export const mockedAutocompleteViewStore = {
+  isLoading: false,
+  isActive: true,
+  prefix: '',
+  follows: [
+    {
+      did: '',
+      declaration: {
+        cid: '',
+        actorType: 'app.bsky.system.actorUser',
+      },
+      handle: '',
+      displayName: '',
+      createdAt: '',
+      indexedAt: '',
+    },
+  ],
+  searchRes: [
+    {
+      did: '',
+      declaration: {
+        cid: '',
+        actorType: 'app.bsky.system.actorUser',
+      },
+      handle: '',
+      displayName: '',
+    },
+  ],
+  knownHandles: new Set<string>(),
+  suggestions: [
+    {
+      handle: 'handle.test',
+      displayName: 'Test Display',
+    },
+    {
+      handle: 'handle2.test',
+      displayName: 'Test Display 2',
+    },
+  ],
+  // rootStore: {} as RootStoreModel,
+  setup: jest.fn(),
+  setActive: jest.fn(),
+  setPrefix: jest.fn(),
+  // unknown required because of the missing private methods: _searchPromise, _getFollows , _search
+} as unknown as UserAutocompleteViewModel
+
+export const mockedLocalPhotos = {
+  photos: {
+    node: {
+      type: '',
+      group_name: '',
+      image: {
+        filename: '',
+        extension: '',
+        uri: '',
+        height: 1000,
+        width: 1000,
+        fileSize: null,
+        playableDuration: 0,
+      },
+      timestamp: 1672847197,
+      location: null,
+    },
+  },
+  rootStore: {} as RootStoreModel,
+  setup: jest.fn(),
+  // unknown required because of the missing private methods: _getPhotos
+} as unknown as UserLocalPhotosModel
