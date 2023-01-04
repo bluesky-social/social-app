@@ -1,4 +1,4 @@
-import React, {useMemo, useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import {
   ActivityIndicator,
   FlatList,
@@ -34,9 +34,9 @@ export const SuggestedFollows = observer(
   }) => {
     const pal = usePalette('default')
     const store = useStores()
-    const [follows, setFollows] = useState<Record<string, string>>({})
+    const [follows, setFollows] = React.useState<Record<string, string>>({})
 
-    const view = useMemo<SuggestedActorsViewModel>(
+    const view = React.useMemo<SuggestedActorsViewModel>(
       () => new SuggestedActorsViewModel(store),
       [],
     )
@@ -168,7 +168,9 @@ const User = ({
         </View>
         <View style={styles.actorBtn}>
           {follow ? (
-            <TouchableOpacity onPress={() => onPressUnfollow(item)}>
+            <TouchableOpacity
+              testID="unfollowButton"
+              onPress={() => onPressUnfollow(item)}>
               <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
                 <Text type="button" style={pal.text}>
                   Unfollow
@@ -176,7 +178,9 @@ const User = ({
               </View>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={() => onPressFollow(item)}>
+            <TouchableOpacity
+              testID="followButton"
+              onPress={() => onPressFollow(item)}>
               <LinearGradient
                 colors={[gradients.primary.start, gradients.primary.end]}
                 start={{x: 0, y: 0}}

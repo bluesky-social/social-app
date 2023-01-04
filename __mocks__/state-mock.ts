@@ -17,7 +17,8 @@ import {MembersViewModel} from '../src/state/models/members-view'
 import {ProfileUiModel, Sections} from '../src/state/models/profile-ui'
 import {SessionServiceClient} from '@atproto/api'
 import {UserAutocompleteViewModel} from '../src/state/models/user-autocomplete-view'
-import { UserLocalPhotosModel } from '../src/state/models/user-local-photos'
+import {UserLocalPhotosModel} from '../src/state/models/user-local-photos'
+import {SuggestedActorsViewModel} from '../src/state/models/suggested-actors-view'
 
 export const mockedProfileStore = {
   isLoading: false,
@@ -498,7 +499,7 @@ export const mockedAutocompleteViewStore = {
   // unknown required because of the missing private methods: _searchPromise, _getFollows , _search
 } as unknown as UserAutocompleteViewModel
 
-export const mockedLocalPhotos = {
+export const mockedLocalPhotosStore = {
   photos: {
     node: {
       type: '',
@@ -520,3 +521,43 @@ export const mockedLocalPhotos = {
   setup: jest.fn(),
   // unknown required because of the missing private methods: _getPhotos
 } as unknown as UserLocalPhotosModel
+
+export const mockedSuggestedActorsStore = {
+  isLoading: false,
+  isRefreshing: false,
+  hasLoaded: false,
+  error: '',
+  suggestions: [
+    {
+      did: '1',
+      declaration: {
+        cid: '',
+        actorType: 'app.bsky.system.actorUser',
+      },
+      handle: 'handle1.test',
+      displayName: 'test name 1',
+      description: 'desc',
+      indexedAt: '',
+      _reactKey: '1',
+    },
+    {
+      did: '2',
+      declaration: {
+        cid: '',
+        actorType: 'app.bsky.system.actorUser',
+      },
+      handle: '',
+      displayName: 'handle2.test',
+      description: 'desc',
+      indexedAt: '',
+      _reactKey: '2',
+    },
+  ],
+  rootStore: {} as RootStoreModel,
+  hasContent: true,
+  hasError: false,
+  isEmpty: false,
+  setup: jest.fn().mockResolvedValue(null),
+  refresh: jest.fn(),
+  // unknown required because of the missing private methods: _xLoading, _xIdle, _fetch, _appendAll, _append
+} as unknown as SuggestedActorsViewModel

@@ -96,7 +96,7 @@ describe('ComposePost', () => {
     const {findByTestId, queryByTestId} = render(
       <ComposePost {...mockedProps} />,
     )
-    let photoCarouselPickerView = await queryByTestId('photoCarouselPickerView')
+    let photoCarouselPickerView = queryByTestId('photoCarouselPickerView')
     expect(photoCarouselPickerView).toBeFalsy()
 
     const composerSelectPhotosButton = await findByTestId(
@@ -109,7 +109,7 @@ describe('ComposePost', () => {
 
     fireEvent.press(composerSelectPhotosButton)
 
-    photoCarouselPickerView = await queryByTestId('photoCarouselPickerView')
+    photoCarouselPickerView = queryByTestId('photoCarouselPickerView')
     expect(photoCarouselPickerView).toBeFalsy()
   })
 
