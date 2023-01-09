@@ -67,6 +67,7 @@ describe('ComposePost', () => {
       expect.anything(),
     )
 
+    // Waits for request to be resolved
     await waitFor(() => {
       expect(mockedProps.onPost).toHaveBeenCalled()
       expect(mockedProps.onClose).toHaveBeenCalled()

@@ -245,9 +245,13 @@ export const mockedSessionStore = {
   setOnline: jest.fn(),
   updateAuthTokens: jest.fn(),
   connect: jest.fn(),
-  describeService: jest
-    .fn()
-    .mockResolvedValue({availableUserDomains: ['test']}),
+  describeService: jest.fn().mockResolvedValue({
+    availableUserDomains: ['test'],
+    links: {
+      termsOfService: 'https://testTermsOfService',
+      privacyPolicy: 'https://testPrivacyPolicy',
+    },
+  }),
   login: jest.fn(),
   createAccount: jest.fn(),
   logout: jest.fn(),

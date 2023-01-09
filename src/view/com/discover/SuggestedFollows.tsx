@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {
   ActivityIndicator,
   FlatList,
@@ -34,7 +34,9 @@ export const SuggestedFollows = observer(
   }) => {
     const pal = usePalette('default')
     const store = useStores()
-    const [follows, setFollows] = React.useState<Record<string, string>>({})
+    const [follows, setFollows] = useState<Record<string, string>>({})
+
+    console.log(follows)
 
     const view = React.useMemo<SuggestedActorsViewModel>(
       () => new SuggestedActorsViewModel(store),

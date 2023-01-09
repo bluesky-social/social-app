@@ -13,8 +13,8 @@ describe('SuggestedFollows', () => {
     jest.clearAllMocks()
   })
 
-  it('renders follow/unfollow buttons', async () => {
-    jest.spyOn(React, 'useMemo').mockReturnValueOnce(mockedSuggestedActorsStore)
+  it('renders follow button', async () => {
+    jest.spyOn(React, 'useMemo').mockReturnValue(mockedSuggestedActorsStore)
     const spyOnFollow = jest.spyOn(apilib, 'follow').mockResolvedValue({
       uri: '',
       cid: '',
@@ -33,18 +33,25 @@ describe('SuggestedFollows', () => {
     fireEvent.press(followButton[0])
     expect(spyOnFollow).toHaveBeenCalled()
   })
-  // WIP
-  // it('renders and uses unfollow button', async () => {
-  //   jest.spyOn(React, 'useMemo').mockReturnValueOnce(mockedSuggestedActorsStore)
-  //   jest.spyOn(React, 'useState').mockReturnValueOnce([{'1': true}, jest.fn()])
+
+  // it('renders unfollow button', async () => {
+  //   jest.spyOn(React, 'useMemo').mockReturnValue(mockedSuggestedActorsStore)
   //   const spyOnUnfollow = jest.spyOn(apilib, 'unfollow').mockResolvedValue()
 
-  //   const {findAllByTestId} = render(<SuggestedFollows {...mockedProps} />)
+  //   const {findAllByTestId, findByTestId} = render(
+  //     <SuggestedFollows {...mockedProps} />,
+  //   )
 
-  //   const unfollowButton = await findAllByTestId('unfollowButton')
+  //   const followButton = await findAllByTestId('followButton')
+  //   expect(followButton).toBeTruthy()
+
+  //   act(() => {
+  //     fireEvent.press(followButton[0])
+  //   })
+
+  //   const unfollowButton = await findByTestId('unfollowButton')
   //   expect(unfollowButton).toBeTruthy()
-
-  //   fireEvent.press(unfollowButton[0])
+  //   fireEvent.press(unfollowButton)
   //   expect(spyOnUnfollow).toHaveBeenCalled()
   // })
 

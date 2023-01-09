@@ -36,7 +36,7 @@ describe('Home', () => {
 
     render(<Home {...mockedProps} />)
 
-    // Changes AppState to active
+    // Waits for AppState to change to active
     await waitFor(() => {
       appStateSpy.mock.calls[0][1]('active')
     })
