@@ -2,7 +2,11 @@ import React from 'react'
 import {fireEvent, render} from '../../../../jest/test-utils'
 import {ProfileViewModel} from '../../../../src/state/models/profile-view'
 import {ProfileHeader} from '../../../../src/view/com/profile/ProfileHeader'
-import {mockedNavigationStore, mockedProfileStore, mockedShellStore} from '../../../../__mocks__/state-mock'
+import {
+  mockedNavigationStore,
+  mockedProfileStore,
+  mockedShellStore,
+} from '../../../../__mocks__/state-mock'
 
 describe('ProfileHeader', () => {
   const mockedProps = {

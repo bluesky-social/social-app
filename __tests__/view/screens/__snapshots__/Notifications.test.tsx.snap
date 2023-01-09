@@ -390,7 +390,27 @@ exports[`Notifications matches snapshot 1`] = `
       }
     >
       <RCTScrollView
-        data={Array []}
+        data={
+          Array [
+            Object {
+              "_reactKey": "",
+              "author": Object {
+                "avatar": "",
+                "declaration": Object {
+                  "actorType": "",
+                  "cid": "",
+                },
+                "did": "",
+                "handle": "",
+              },
+              "cid": "",
+              "indexedAt": "",
+              "isRead": false,
+              "reason": "",
+              "uri": "",
+            },
+          ]
+        }
         getItem={[Function]}
         getItemCount={[Function]}
         keyExtractor={[Function]}
@@ -414,10 +434,16 @@ exports[`Notifications matches snapshot 1`] = `
         renderItem={[Function]}
         scrollEventThrottle={50}
         stickyHeaderIndices={Array []}
+        testID="feedFlatList"
         viewabilityConfigCallbackPairs={Array []}
       >
         <RCTRefreshControl />
-        <View />
+        <View>
+          <View
+            onLayout={[Function]}
+            style={null}
+          />
+        </View>
       </RCTScrollView>
     </View>
   </View>

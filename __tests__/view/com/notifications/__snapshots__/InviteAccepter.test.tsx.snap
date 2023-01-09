@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InviteAccepter matches snapshot 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+        }
+      }
+      testID="inviteAccepted"
+    >
+      <
+        icon="check"
+        size={14}
+        style={
+          Object {
+            "marginRight": 5,
+          }
+        }
+      />
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#000000",
+            },
+            Object {
+              "fontSize": 16,
+              "letterSpacing": 0.25,
+            },
+            Array [
+              Object {
+                "color": "#645454",
+              },
+              Object {
+                "fontSize": 15,
+              },
+            ],
+          ]
+        }
+      >
+        Invite accepted
+      </Text>
+    </View>
+  </View>
+</View>
+`;

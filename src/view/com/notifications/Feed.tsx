@@ -69,6 +69,7 @@ export const Feed = observer(function Feed({
       )}
       {data && (
         <FlatList
+          testID="feedFlatList"
           data={data}
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}

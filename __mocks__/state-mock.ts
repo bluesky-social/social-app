@@ -21,6 +21,7 @@ import {UserLocalPhotosModel} from '../src/state/models/user-local-photos'
 import {SuggestedActorsViewModel} from '../src/state/models/suggested-actors-view'
 import {UserFollowersViewModel} from '../src/state/models/user-followers-view'
 import {UserFollowsViewModel} from '../src/state/models/user-follows-view'
+import {NotificationsViewItemModel} from './../src/state/models/notifications-view'
 
 export const mockedProfileStore = {
   isLoading: false,
@@ -205,6 +206,21 @@ export const mockedFeedModel = {
   // unknown required because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadLatest, _loadMore, _update, _replaceAll, _appendAll, _prependAll, _updateAll, _getFeed, loadMoreCursor, pollCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
 } as unknown as FeedModel
 
+export const mockedNotificationsViewItemModel = {
+  _reactKey: '',
+  uri: '',
+  cid: '',
+  author: {
+    did: '',
+    handle: '',
+    avatar: '',
+    declaration: {cid: '', actorType: ''},
+  },
+  reason: '',
+  isRead: false,
+  indexedAt: '',
+} as NotificationsViewItemModel
+
 export const mockedNotificationsModel = {
   isLoading: false,
   isRefreshing: false,
@@ -215,14 +231,14 @@ export const mockedNotificationsModel = {
     before: '',
   },
   hasMore: true,
-  notifications: [],
+  notifications: [mockedNotificationsViewItemModel],
   rootStore: {} as RootStoreModel,
   hasContent: true,
   hasError: false,
   isEmpty: false,
   setup: jest.fn().mockResolvedValue({aborted: false}),
-  refresh: jest.fn(),
-  loadMore: jest.fn(),
+  refresh: jest.fn().mockResolvedValue({}),
+  loadMore: jest.fn().mockResolvedValue({}),
   update: jest.fn().mockResolvedValue(null),
   updateReadState: jest.fn(),
   // unknown required because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadMore, _update, _replaceAll, _appendAll, _updateAll, loadMoreCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
