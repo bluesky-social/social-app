@@ -36,6 +36,7 @@ export const SuggestedFollows = observer(
     const store = useStores()
     const [follows, setFollows] = useState<Record<string, string>>({})
 
+    // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
     const view = React.useMemo<SuggestedActorsViewModel>(
       () => new SuggestedActorsViewModel(store),
       [],

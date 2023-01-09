@@ -56,6 +56,7 @@ export const ComposePost = observer(function ComposePost({
   const [isSelectingPhotos, setIsSelectingPhotos] = useState(false)
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
 
+  // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
   const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
     () => new UserAutocompleteViewModel(store),
     [store],

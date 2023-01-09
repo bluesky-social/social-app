@@ -19,6 +19,8 @@ import {SessionServiceClient} from '@atproto/api'
 import {UserAutocompleteViewModel} from '../src/state/models/user-autocomplete-view'
 import {UserLocalPhotosModel} from '../src/state/models/user-local-photos'
 import {SuggestedActorsViewModel} from '../src/state/models/suggested-actors-view'
+import {UserFollowersViewModel} from '../src/state/models/user-followers-view'
+import {UserFollowsViewModel} from '../src/state/models/user-follows-view'
 
 export const mockedProfileStore = {
   isLoading: false,
@@ -28,13 +30,13 @@ export const mockedProfileStore = {
   params: {
     actor: '',
   },
-  did: '',
-  handle: '',
+  did: 'test did',
+  handle: 'testhandle',
   declaration: {
     cid: '',
     actorType: '',
   },
-  creator: '',
+  creator: 'test did',
   displayName: '',
   description: '',
   avatar: '',
@@ -55,7 +57,7 @@ export const mockedProfileStore = {
   isScene: false,
   setup: jest.fn().mockResolvedValue({aborted: false}),
   refresh: jest.fn(),
-  toggleFollowing: jest.fn(),
+  toggleFollowing: jest.fn().mockResolvedValue({}),
   updateProfile: jest.fn(),
   // unknown required because of the missing private methods: _xLoading, _xIdle, _load, _replaceAll
 } as unknown as ProfileViewModel
@@ -66,10 +68,10 @@ export const mockedMembersStore = {
   hasLoaded: true,
   error: '',
   params: {
-    actor: '',
+    actor: 'test actor',
   },
   subject: {
-    did: '',
+    did: 'test did',
     handle: '',
     displayName: '',
     declaration: {
@@ -80,13 +82,13 @@ export const mockedMembersStore = {
   },
   members: [
     {
-      did: '321',
+      did: 'test did2',
       declaration: {
         cid: '',
         actorType: '',
       },
-      handle: '',
-      displayName: '',
+      handle: 'testhandle',
+      displayName: 'test name',
       indexedAt: '',
     },
   ],
@@ -113,7 +115,7 @@ export const mockedMembershipsModel = {
     before: '',
   },
   subject: {
-    did: '',
+    did: 'test did',
     handle: '',
     displayName: '',
     declaration: {cid: '', actorType: ''},
@@ -121,7 +123,7 @@ export const mockedMembershipsModel = {
   },
   memberships: [
     {
-      did: '',
+      did: 'test did',
       declaration: {
         cid: '',
         actorType: 'app.bsky.system.actorUser',
@@ -234,7 +236,7 @@ export const mockedSessionStore = {
     refreshJwt: '',
     accessJwt: '',
     handle: '',
-    did: '',
+    did: 'test did',
   },
   online: false,
   attemptingConnect: false,
@@ -362,7 +364,7 @@ export const mockedShellStore = {
 export const mockedMeStore = {
   serialize: jest.fn(),
   hydrate: jest.fn(),
-  did: '123',
+  did: 'test did',
   handle: 'test',
   displayName: 'test',
   description: 'test',
@@ -394,7 +396,7 @@ export const mockedProfilesStore = {
   serialize: jest.fn(),
   cache: new LRUMap(100),
   rootStore: {} as RootStoreModel,
-  getProfile: jest.fn(),
+  getProfile: jest.fn().mockResolvedValue({data: {}}),
   overwrite: jest.fn(),
 } as ProfilesViewModel
 
@@ -417,7 +419,20 @@ export const mockedLogStore = {
 } as unknown as LogModel
 
 export const mockedRootStore = {
-  api: {} as SessionServiceClient,
+  api: {
+    com: {},
+    app: {
+      bsky: {
+        graph: {
+          confirmation: {
+            delete: jest.fn().mockResolvedValue({}),
+          },
+          getFollowers: jest.fn().mockResolvedValue({}),
+          getMembers: jest.fn().mockResolvedValue({}),
+        },
+      },
+    },
+  } as unknown as SessionServiceClient,
   resolveName: jest.fn(),
   serialize: jest.fn(),
   hydrate: jest.fn(),
@@ -463,7 +478,7 @@ export const mockedAutocompleteViewStore = {
   prefix: '',
   follows: [
     {
-      did: '',
+      did: 'test did',
       declaration: {
         cid: '',
         actorType: 'app.bsky.system.actorUser',
@@ -476,7 +491,7 @@ export const mockedAutocompleteViewStore = {
   ],
   searchRes: [
     {
-      did: '',
+      did: 'test did',
       declaration: {
         cid: '',
         actorType: 'app.bsky.system.actorUser',
@@ -565,3 +580,85 @@ export const mockedSuggestedActorsStore = {
   refresh: jest.fn(),
   // unknown required because of the missing private methods: _xLoading, _xIdle, _fetch, _appendAll, _append
 } as unknown as SuggestedActorsViewModel
+
+export const mockedUserFollowersStore = {
+  isLoading: false,
+  isRefreshing: false,
+  hasLoaded: false,
+  error: '',
+  params: {
+    user: 'test user',
+  },
+  subject: {
+    did: 'test did',
+    handle: '',
+    declaration: {cid: '', actorType: ''},
+  },
+  followers: [
+    {
+      did: 'test did',
+      declaration: {cid: '', actorType: ''},
+      handle: 'testhandle',
+      displayName: 'test name',
+      indexedAt: '',
+      _reactKey: '1',
+    },
+    {
+      did: 'test did2',
+      declaration: {cid: '', actorType: ''},
+      handle: 'testhandle2',
+      displayName: 'test name 2',
+      indexedAt: '',
+      _reactKey: '2',
+    },
+  ],
+  rootStore: {} as RootStoreModel,
+  hasContent: true,
+  hasError: false,
+  isEmpty: false,
+  setup: jest.fn(),
+  refresh: jest.fn(),
+  loadMore: jest.fn(),
+  // unknown required because of the missing private methods: _xIdle, _xLoading, _fetch, _replaceAll, _append
+} as unknown as UserFollowersViewModel
+
+export const mockedUserFollowsStore = {
+  isLoading: false,
+  isRefreshing: false,
+  hasLoaded: false,
+  error: '',
+  params: {
+    user: 'test user',
+  },
+  subject: {
+    did: 'test did',
+    handle: '',
+    declaration: {cid: '', actorType: ''},
+  },
+  follows: [
+    {
+      did: 'test did',
+      declaration: {cid: '', actorType: ''},
+      handle: 'testhandle',
+      displayName: 'test name',
+      indexedAt: '',
+      _reactKey: '1',
+    },
+    {
+      did: 'test did2',
+      declaration: {cid: '', actorType: ''},
+      handle: 'testhandle2',
+      displayName: 'test name 2',
+      indexedAt: '',
+      _reactKey: '2',
+    },
+  ],
+  rootStore: {} as RootStoreModel,
+  hasContent: true,
+  hasError: false,
+  isEmpty: false,
+  setup: jest.fn(),
+  refresh: jest.fn(),
+  loadMore: jest.fn(),
+  // unknown required because of the missing private methods: _xIdle, _xLoading, _fetch, _replaceAll, _append
+} as unknown as UserFollowsViewModel

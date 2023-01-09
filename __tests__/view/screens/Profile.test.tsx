@@ -5,7 +5,6 @@ import {
   mockedFeedModel,
   mockedMembershipsModel,
   mockedMembersStore,
-  mockedMeStore,
   mockedProfileStore,
   mockedProfileUiStore,
 } from '../../../__mocks__/state-mock'
@@ -38,7 +37,7 @@ describe('Profile', () => {
     expect(profileView).toBeTruthy()
 
     const headerTitle = await findByTestId('headerTitle')
-    expect(headerTitle.props.children).toBe('test name')
+    expect(headerTitle.props.children).toBe('testhandle')
   })
 
   it('renders error screen on error', async () => {
@@ -211,7 +210,6 @@ describe('Profile', () => {
       isScene: true,
       profile: {
         ...mockedProfileStore,
-        creator: '123',
       },
     })
 

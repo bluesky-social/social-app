@@ -29,8 +29,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
   const [hasSetup, setHasSetup] = useState<boolean>(false)
-  // Must use React.useMemo (instead of named export useMemo)
-  // to mock state in jest testing
+  // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
   const uiState = React.useMemo(
     () => new ProfileUiModel(store, {user: params.name}),
     [params.user],
@@ -199,6 +198,9 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
           renderItem = (item: any) => {
             console.log('isSceneCreator', isSceneCreator)
             const shouldAdmin = isSceneCreator && item.did !== store.me.did
+            console.log('isSceneCreator', isSceneCreator)
+            console.log('item.did', item.did)
+            console.log('store.me.did', store.me.did)
             console.log('shouldAdmin', shouldAdmin)
             const renderButton = shouldAdmin
               ? () => (

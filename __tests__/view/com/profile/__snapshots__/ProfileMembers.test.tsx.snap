@@ -1,0 +1,260 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProfileMembers matches snapshot 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    testID="profileMembersFlatList"
+  >
+    <RCTScrollView
+      data={
+        Array [
+          Object {
+            "declaration": Object {
+              "actorType": "",
+              "cid": "",
+            },
+            "did": "test did2",
+            "displayName": "test name",
+            "handle": "testhandle",
+            "indexedAt": "",
+          },
+        ]
+      }
+      getItem={[Function]}
+      getItemCount={[Function]}
+      keyExtractor={[Function]}
+      onContentSizeChange={[Function]}
+      onLayout={[Function]}
+      onMomentumScrollBegin={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      removeClippedSubviews={false}
+      renderItem={[Function]}
+      scrollEventThrottle={50}
+      stickyHeaderIndices={Array []}
+      viewabilityConfigCallbackPairs={Array []}
+    >
+      <View>
+        <View
+          onLayout={[Function]}
+          style={null}
+        >
+          <View
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Array [
+                Object {
+                  "borderTopWidth": 1,
+                },
+                Object {
+                  "backgroundColor": "#ffffff",
+                },
+                Object {
+                  "borderColor": "#e4e2e2",
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "paddingBottom": 10,
+                    "paddingLeft": 10,
+                    "paddingTop": 10,
+                    "width": 60,
+                  }
+                }
+              >
+                <RNSVGSvgView
+                  align="xMidYMid"
+                  bbHeight={40}
+                  bbWidth={40}
+                  focusable={false}
+                  height={40}
+                  meetOrSlice={0}
+                  minX={0}
+                  minY={0}
+                  style={
+                    Array [
+                      Object {
+                        "backgroundColor": "transparent",
+                        "borderWidth": 0,
+                      },
+                      Object {
+                        "flex": 0,
+                        "height": 40,
+                        "width": 40,
+                      },
+                    ]
+                  }
+                  vbHeight={100}
+                  vbWidth={100}
+                  width={40}
+                >
+                  <RNSVGGroup>
+                    <RNSVGDefs>
+                      <RNSVGLinearGradient
+                        gradient={
+                          Array [
+                            0,
+                            -16742913,
+                            1,
+                            -14631929,
+                          ]
+                        }
+                        gradientTransform={null}
+                        gradientUnits={0}
+                        name="grad"
+                        x1="0"
+                        x2="1"
+                        y1="0"
+                        y2="1"
+                      />
+                    </RNSVGDefs>
+                    <RNSVGCircle
+                      cx="50"
+                      cy="50"
+                      fill={
+                        Array [
+                          1,
+                          "grad",
+                        ]
+                      }
+                      propList={
+                        Array [
+                          "fill",
+                        ]
+                      }
+                      r="50"
+                    />
+                    <RNSVGText
+                      content={null}
+                      dx={Array []}
+                      dy={Array []}
+                      fill={4294967295}
+                      font={
+                        Object {
+                          "fontSize": "50",
+                          "fontWeight": "bold",
+                          "textAnchor": "middle",
+                        }
+                      }
+                      propList={
+                        Array [
+                          "fill",
+                        ]
+                      }
+                      rotate={Array []}
+                      x={
+                        Array [
+                          "50",
+                        ]
+                      }
+                      y={
+                        Array [
+                          "67",
+                        ]
+                      }
+                    >
+                      <RNSVGTSpan
+                        content="T"
+                        dx={Array []}
+                        dy={Array []}
+                        font={Object {}}
+                        rotate={Array []}
+                        x={Array []}
+                        y={Array []}
+                      />
+                    </RNSVGText>
+                  </RNSVGGroup>
+                </RNSVGSvgView>
+              </View>
+              <View
+                style={
+                  Object {
+                    "flex": 1,
+                    "paddingBottom": 10,
+                    "paddingRight": 10,
+                    "paddingTop": 12,
+                  }
+                }
+              >
+                <Text
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#000000",
+                      },
+                      Object {
+                        "fontSize": 16,
+                        "letterSpacing": 0.25,
+                      },
+                      Array [
+                        Object {
+                          "fontWeight": "bold",
+                        },
+                        Object {
+                          "color": "#000000",
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  test name
+                </Text>
+                <Text
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#000000",
+                      },
+                      Object {
+                        "fontSize": 14,
+                        "letterSpacing": 0.25,
+                      },
+                      Array [
+                        Object {
+                          "color": "#645454",
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  @
+                  testhandle
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </RCTScrollView>
+  </View>
+</View>
+`;

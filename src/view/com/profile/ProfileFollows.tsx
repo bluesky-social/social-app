@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {
@@ -15,13 +15,12 @@ import {usePalette} from '../../lib/hooks/usePalette'
 
 export const ProfileFollows = observer(function ProfileFollows({
   name,
-  testID,
 }: {
   name: string
-  testID?: string
 }) {
   const store = useStores()
-  const [view, setView] = useState<UserFollowsViewModel | undefined>()
+  // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
+  const [view, setView] = React.useState<UserFollowsViewModel | undefined>()
 
   useEffect(() => {
     if (view?.params.user === name) {
@@ -46,7 +45,7 @@ export const ProfileFollows = observer(function ProfileFollows({
     view.params.user !== name
   ) {
     return (
-      <View testID="followList">
+      <View testID="profileFollowsActivityIndicatorView">
         <ActivityIndicator />
       </View>
     )
@@ -70,7 +69,7 @@ export const ProfileFollows = observer(function ProfileFollows({
   // =
   const renderItem = ({item}: {item: FollowItem}) => <User item={item} />
   return (
-    <View testID="followList">
+    <View testID="profileFollowsFlatList">
       <FlatList
         data={view.follows}
         keyExtractor={item => item._reactKey}

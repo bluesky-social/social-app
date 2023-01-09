@@ -476,7 +476,7 @@ exports[`ProfileFollows matches snapshot 1`] = `
             ]
           }
         >
-          Failed to load feed: TypeError: Cannot read properties of undefined (reading 'bsky')
+          Failed to load feed: TypeError: this.rootStore.api.app.bsky.graph.getFollows is not a function
         </Text>
         <View
           accessible={true}

@@ -52,9 +52,7 @@ export const Contacts = ({navIdx, visible, params}: ScreenParams) => {
         selectedIndex={0}
         panX={selectorInterp}
       />
-      {!!store.me.handle && (
-        <ProfileFollowsComponent testID="followList" name={store.me.handle} />
-      )}
+      {!!store.me.handle && <ProfileFollowsComponent name={store.me.handle} />}
     </View>
   )
 }

@@ -182,6 +182,7 @@ function createDropdownMenu(
         <View style={[styles.menu, {left: x, top: y, width}]}>
           {items.map((item, index) => (
             <TouchableOpacity
+              testID={`dropdownItem-${index}`}
               key={index}
               style={[styles.menuItem]}
               onPress={() => onPressItem(index)}>

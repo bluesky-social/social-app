@@ -635,7 +635,7 @@ exports[`Search matches snapshot 1`] = `
             }
             testID="undefined-details"
           >
-            TypeError: Cannot read properties of undefined (reading 'bsky')
+            TypeError: Cannot read properties of undefined (reading 'getSuggestions')
           </Text>
           <View
             style={

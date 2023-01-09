@@ -511,7 +511,7 @@ exports[`Profile matches snapshot 1`] = `
         }
         testID="profileErrorScreen-details"
       >
-        TypeError: Cannot read properties of undefined (reading 'bsky')
+        TypeError: Cannot read properties of undefined (reading 'getProfile')
       </Text>
       <View
         style={
