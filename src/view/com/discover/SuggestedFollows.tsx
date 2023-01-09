@@ -36,8 +36,6 @@ export const SuggestedFollows = observer(
     const store = useStores()
     const [follows, setFollows] = useState<Record<string, string>>({})
 
-    console.log(follows)
-
     const view = React.useMemo<SuggestedActorsViewModel>(
       () => new SuggestedActorsViewModel(store),
       [],
