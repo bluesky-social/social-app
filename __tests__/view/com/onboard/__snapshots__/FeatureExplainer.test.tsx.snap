@@ -17,6 +17,32 @@ exports[`FeatureExplainer matches snapshot 1`] = `
     }
   >
     <View
+      initialLayout={
+        Object {
+          "width": 750,
+        }
+      }
+      navigationState={
+        Object {
+          "index": 0,
+          "routes": Array [
+            Object {
+              "key": "intro",
+              "title": "Intro",
+            },
+            Object {
+              "key": "scenes",
+              "title": "Scenes",
+            },
+          ],
+        }
+      }
+      onIndexChange={[Function]}
+      renderScene={[Function]}
+      renderTabBar={[Function]}
+      tabBarPosition="bottom"
+    />
+    <View
       style={
         Object {
           "flexDirection": "row",
