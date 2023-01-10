@@ -23,6 +23,7 @@ import {UserFollowersViewModel} from '../src/state/models/user-followers-view'
 import {UserFollowsViewModel} from '../src/state/models/user-follows-view'
 import {NotificationsViewItemModel} from './../src/state/models/notifications-view'
 import {PostThreadViewModel} from '../src/state/models/post-thread-view'
+import {FeedItemModel} from '../src/state/models/feed-view'
 
 export const mockedProfileStore = {
   isLoading: false,
@@ -134,7 +135,7 @@ export const mockedMembershipsModel = {
       displayName: '',
       createdAt: '',
       indexedAt: '',
-      _reactKey: '',
+      _reactKey: 'item-1',
     },
   ],
   rootStore: {} as RootStoreModel,
@@ -147,6 +148,107 @@ export const mockedMembershipsModel = {
   loadMore: jest.fn(),
   // unknown required because of the missing private methods: _xLoading, _xIdle, _fetch, _replaceAll, _append
 } as unknown as MembershipsViewModel
+
+export const mockedFeedItemModel = {
+  _reactKey: 'item-1',
+  _isThreadParent: false,
+  _isThreadChildElided: false,
+  _isThreadChild: false,
+  post: {
+    uri: 'testuri',
+    cid: 'test cid',
+    author: {
+      did: 'test did',
+      handle: 'test.handle',
+      displayName: 'test name',
+      declaration: {cid: '', actorType: ''},
+    },
+    record: {
+      $type: 'app.bsky.feed.post',
+      createdAt: '2022-12-29T16:39:57.919Z',
+      text: 'Sup',
+    },
+    replyCount: 0,
+    repostCount: 0,
+    upvoteCount: 0,
+    downvoteCount: 0,
+    indexedAt: '2022-12-29T16:39:57.919Z',
+    viewer: {},
+  },
+  postRecord: {
+    $type: 'app.bsky.feed.post',
+    text: 'test text',
+    createdAt: '1',
+    reply: {
+      root: {
+        uri: 'testuri',
+        cid: 'tes cid',
+      },
+      parent: {
+        uri: 'testuri',
+        cid: 'tes cid',
+      },
+    },
+  },
+  rootStore: {} as RootStoreModel,
+  copy: jest.fn(),
+  toggleUpvote: jest.fn().mockResolvedValue({}),
+  toggleDownvote: jest.fn(),
+  toggleRepost: jest.fn().mockResolvedValue({}),
+  delete: jest.fn(),
+  reasonRepost: {
+    by: {
+      did: 'test did',
+      handle: 'test.handle',
+      declaration: {cid: '', actorType: ''},
+    },
+    indexedAt: '',
+  },
+  reasonTrend: {
+    by: {
+      did: 'test did',
+      handle: 'test.handle',
+      declaration: {cid: '', actorType: ''},
+    },
+    indexedAt: '',
+  },
+  reply: {
+    parent: {
+      author: {
+        did: 'test did',
+        handle: 'test.handle',
+        displayName: 'test name',
+        declaration: {cid: '', actorType: ''},
+      },
+      cid: '',
+      downvoteCount: 0,
+      indexedAt: '2023-01-10T11:17:46.945Z',
+      record: {},
+      replyCount: 1,
+      repostCount: 0,
+      upvoteCount: 0,
+      uri: 'testuri',
+      viewer: {},
+    },
+    root: {
+      author: {
+        did: 'test did',
+        handle: 'test.handle',
+        displayName: 'test name',
+        declaration: {cid: '', actorType: ''},
+      },
+      cid: '',
+      downvoteCount: 0,
+      indexedAt: '2023-01-10T11:17:46.739Z',
+      record: {},
+      replyCount: 1,
+      repostCount: 0,
+      upvoteCount: 1,
+      uri: 'testuri',
+      viewer: {},
+    },
+  },
+} as FeedItemModel
 
 export const mockedFeedModel = {
   isLoading: false,
@@ -198,9 +300,9 @@ export const mockedFeedModel = {
     },
   ],
   setHasNewLatest: jest.fn(),
-  setup: jest.fn().mockResolvedValue({aborted: false}),
-  refresh: jest.fn(),
-  loadMore: jest.fn(),
+  setup: jest.fn().mockResolvedValue({}),
+  refresh: jest.fn().mockResolvedValue({}),
+  loadMore: jest.fn().mockResolvedValue({}),
   loadLatest: jest.fn(),
   update: jest.fn(),
   checkForLatest: jest.fn().mockRejectedValue('Error checking for latest'),
@@ -218,7 +320,7 @@ export const mockedPostThreadViewModel = {
     uri: 'testuri',
   },
   thread: {
-    _reactKey: '',
+    _reactKey: 'item-1',
     _depth: 0,
     _isHighlightedPost: false,
     _hasMore: false,
@@ -249,7 +351,7 @@ export const mockedPostThreadViewModel = {
 } as PostThreadViewModel
 
 export const mockedNotificationsViewItemModel = {
-  _reactKey: '',
+  _reactKey: 'item-1',
   uri: 'testuri',
   cid: '',
   author: {

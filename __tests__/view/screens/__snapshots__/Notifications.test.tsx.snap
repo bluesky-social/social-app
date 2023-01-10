@@ -393,7 +393,7 @@ exports[`Notifications matches snapshot 1`] = `
         data={
           Array [
             Object {
-              "_reactKey": "",
+              "_reactKey": "item-1",
               "author": Object {
                 "declaration": Object {
                   "actorType": "",

@@ -455,6 +455,7 @@ exports[`Home matches snapshot 1`] = `
         renderItem={[Function]}
         scrollEventThrottle={50}
         stickyHeaderIndices={Array []}
+        testID="feedFlatList"
         viewabilityConfigCallbackPairs={Array []}
       >
         <RCTRefreshControl />

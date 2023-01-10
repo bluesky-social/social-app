@@ -33,7 +33,7 @@ export const Feed = observer(function Feed({
   onPressCompose: () => void
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
-  testID: string
+  testID?: string
 }) {
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your
@@ -76,7 +76,7 @@ export const Feed = observer(function Feed({
   }
   const FeedFooter = () =>
     feed.isLoading ? (
-      <View style={{paddingTop: 20}}>
+      <View testID="isLoadingFooter" style={{paddingTop: 20}}>
         <ActivityIndicator />
       </View>
     ) : (
@@ -95,6 +95,7 @@ export const Feed = observer(function Feed({
       )}
       {feed.hasLoaded && data && (
         <FlatList
+          testID="feedFlatList"
           ref={scrollElRef}
           data={data}
           keyExtractor={item => item._reactKey}
