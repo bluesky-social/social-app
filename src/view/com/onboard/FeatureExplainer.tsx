@@ -143,11 +143,15 @@ export const FeatureExplainer = () => {
         <View />
       )}
       <View style={styles.footer}>
-        <TouchableOpacity onPress={onPressSkip}>
+        <TouchableOpacity
+          testID="featureExplainerSkipButton"
+          onPress={onPressSkip}>
           <Text style={[s.blue3, s.f18]}>Skip</Text>
         </TouchableOpacity>
         <View style={s.flex1} />
-        <TouchableOpacity onPress={onPressNext}>
+        <TouchableOpacity
+          testID="featureExplainerNextButton"
+          onPress={onPressNext}>
           <Text style={[s.blue3, s.f18]}>Next</Text>
         </TouchableOpacity>
       </View>

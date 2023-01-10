@@ -1,0 +1,122 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FeatureExplainer matches snapshot 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <RCTSafeAreaView
+    emulateUnlessSupported={true}
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+          "paddingBottom": 24,
+          "paddingHorizontal": 32,
+        }
+      }
+    >
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+        testID="featureExplainerSkipButton"
+      >
+        <Text
+          style={
+            Array [
+              Object {
+                "color": "#000000",
+              },
+              Object {
+                "fontSize": 16,
+                "letterSpacing": 0.25,
+              },
+              Array [
+                Object {
+                  "color": "#0085ff",
+                },
+                Object {
+                  "fontSize": 18,
+                },
+              ],
+            ]
+          }
+        >
+          Skip
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      />
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+        testID="featureExplainerNextButton"
+      >
+        <Text
+          style={
+            Array [
+              Object {
+                "color": "#000000",
+              },
+              Object {
+                "fontSize": 16,
+                "letterSpacing": 0.25,
+              },
+              Array [
+                Object {
+                  "color": "#0085ff",
+                },
+                Object {
+                  "fontSize": 18,
+                },
+              ],
+            ]
+          }
+        >
+          Next
+        </Text>
+      </View>
+    </View>
+  </RCTSafeAreaView>
+</View>
+`;

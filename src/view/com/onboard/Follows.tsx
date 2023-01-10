@@ -20,11 +20,11 @@ export const Follows = observer(() => {
       <Text style={styles.title}>Suggested follows</Text>
       <SuggestedFollows onNoSuggestions={onNoSuggestions} />
       <View style={styles.footer}>
-        <TouchableOpacity onPress={onPressNext}>
+        <TouchableOpacity testID="followsSkipButton" onPress={onPressNext}>
           <Text style={[s.blue3, s.f18]}>Skip</Text>
         </TouchableOpacity>
         <View style={s.flex1} />
-        <TouchableOpacity onPress={onPressNext}>
+        <TouchableOpacity testID="followsNextButton" onPress={onPressNext}>
           <Text style={[s.blue3, s.f18]}>Next</Text>
         </TouchableOpacity>
       </View>
