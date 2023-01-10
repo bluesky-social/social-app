@@ -328,7 +328,7 @@ exports[`Contacts matches snapshot 1`] = `
               "paddingVertical": 4,
             }
           }
-          testID="tryAgainButton"
+          testID="errorMessageTryAgainButton"
         >
           <
             icon="arrows-rotate"

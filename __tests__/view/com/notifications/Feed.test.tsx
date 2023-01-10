@@ -50,10 +50,12 @@ describe('Feed', () => {
       />,
     )
 
-    const tryAgainButton = await findByTestId('tryAgainButton')
-    expect(tryAgainButton).toBeTruthy()
+    const errorMessageTryAgainButton = await findByTestId(
+      'errorMessageTryAgainButton',
+    )
+    expect(errorMessageTryAgainButton).toBeTruthy()
 
-    fireEvent.press(tryAgainButton)
+    fireEvent.press(errorMessageTryAgainButton)
     expect(tryAgainMock).toHaveBeenCalled()
   })
 

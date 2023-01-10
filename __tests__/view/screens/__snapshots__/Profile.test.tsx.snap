@@ -541,6 +541,7 @@ exports[`Profile matches snapshot 1`] = `
               "paddingVertical": 10,
             }
           }
+          testID="errorScreenTryAgainButton"
         >
           <
             icon="arrows-rotate"

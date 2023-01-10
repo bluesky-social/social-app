@@ -40,6 +40,34 @@ describe('SuggestedFollows', () => {
     expect(spyOnUnfollow).toHaveBeenCalled()
   })
 
+  it('renders error message', async () => {
+    const setupMock = jest.fn().mockResolvedValue({})
+    jest.spyOn(React, 'useMemo').mockReturnValue({
+      ...mockedSuggestedActorsStore,
+      hasError: true,
+      setup: setupMock,
+    })
+
+    const {findByTestId} = render(<SuggestedFollows {...mockedProps} />)
+    const errorScreenTryAgainButton = await findByTestId(
+      'errorScreenTryAgainButton',
+    )
+    expect(errorScreenTryAgainButton).toBeTruthy()
+
+    fireEvent.press(errorScreenTryAgainButton)
+    expect(setupMock).toHaveBeenCalled()
+  })
+
+  it('renders no suggestions', async () => {
+    jest.spyOn(React, 'useMemo').mockReturnValue({
+      ...mockedSuggestedActorsStore,
+      hasContent: false,
+    })
+
+    render(<SuggestedFollows {...mockedProps} />)
+    expect(mockedProps.onNoSuggestions).toHaveBeenCalled()
+  })
+
   it('matches snapshot', () => {
     const page = render(<SuggestedFollows {...mockedProps} />)
     expect(page).toMatchSnapshot()

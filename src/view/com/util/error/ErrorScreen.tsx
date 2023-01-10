@@ -55,6 +55,7 @@ export function ErrorScreen({
       {onPressTryAgain && (
         <View style={styles.btnContainer}>
           <TouchableOpacity
+            testID="errorScreenTryAgainButton"
             style={[styles.btn, {backgroundColor: theme.palette.error.icon}]}
             onPress={onPressTryAgain}>
             <FontAwesomeIcon icon="arrows-rotate" style={pal.text} size={16} />

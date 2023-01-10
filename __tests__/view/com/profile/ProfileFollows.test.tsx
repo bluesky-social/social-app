@@ -39,9 +39,11 @@ describe('ProfileFollows', () => {
     const {findByTestId} = render(<ProfileFollows {...mockedProps} />)
     expect(mockedLogStore.error).toHaveBeenCalled()
 
-    const tryAgainButton = await findByTestId('tryAgainButton')
-    expect(tryAgainButton).toBeTruthy()
-    fireEvent.press(tryAgainButton)
+    const errorMessageTryAgainButton = await findByTestId(
+      'errorMessageTryAgainButton',
+    )
+    expect(errorMessageTryAgainButton).toBeTruthy()
+    fireEvent.press(errorMessageTryAgainButton)
 
     expect(mockedUserFollowsStore.refresh).toHaveBeenCalled()
   })
