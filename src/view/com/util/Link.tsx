@@ -37,6 +37,7 @@ export const Link = observer(function Link({
   if (noFeedback) {
     return (
       <TouchableWithoutFeedback
+        testID={`linkButton-${href}`}
         onPress={onPress}
         onLongPress={onLongPress}
         delayPressIn={50}>
@@ -48,6 +49,7 @@ export const Link = observer(function Link({
   }
   return (
     <TouchableOpacity
+      testID={`linkButton-${href}`}
       onPress={onPress}
       onLongPress={onLongPress}
       delayPressIn={50}

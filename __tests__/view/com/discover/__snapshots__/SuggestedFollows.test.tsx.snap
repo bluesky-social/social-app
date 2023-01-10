@@ -98,6 +98,7 @@ exports[`SuggestedFollows matches snapshot 1`] = `
                   "opacity": 1,
                 }
               }
+              testID="linkButton-/profile/handle1.test"
             >
               <View
                 style={
@@ -444,6 +445,7 @@ exports[`SuggestedFollows matches snapshot 1`] = `
                   "opacity": 1,
                 }
               }
+              testID="linkButton-/profile/"
             >
               <View
                 style={

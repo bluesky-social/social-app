@@ -15,16 +15,18 @@ describe('Feed', () => {
   })
 
   it("doesn't render on missing data", async () => {
-    const localMockedProps = {
-      view: {
-        ...mockedNotificationsModel,
-        isEmpty: true,
-      } as NotificationsViewModel,
-      onPressTryAgain: jest.fn(),
-      onScroll: jest.fn(),
-    }
-
-    const {findByTestId} = render(<Feed {...localMockedProps} />)
+    const {findByTestId} = render(
+      <Feed
+        {...{
+          view: {
+            ...mockedNotificationsModel,
+            isEmpty: true,
+          } as NotificationsViewModel,
+          onPressTryAgain: jest.fn(),
+          onScroll: jest.fn(),
+        }}
+      />,
+    )
 
     const feedFlatList = await findByTestId('feedFlatList')
     expect(feedFlatList).toBeTruthy()
@@ -34,22 +36,25 @@ describe('Feed', () => {
   })
 
   it('renders button and retries on error', async () => {
-    const localMockedProps = {
-      view: {
-        ...mockedNotificationsModel,
-        hasError: true,
-      } as NotificationsViewModel,
-      onPressTryAgain: jest.fn(),
-      onScroll: jest.fn(),
-    }
-
-    const {findByTestId} = render(<Feed {...localMockedProps} />)
+    const tryAgainMock = jest.fn()
+    const {findByTestId} = render(
+      <Feed
+        {...{
+          view: {
+            ...mockedNotificationsModel,
+            hasError: true,
+          } as NotificationsViewModel,
+          onPressTryAgain: tryAgainMock,
+          onScroll: jest.fn(),
+        }}
+      />,
+    )
 
     const tryAgainButton = await findByTestId('tryAgainButton')
     expect(tryAgainButton).toBeTruthy()
 
     fireEvent.press(tryAgainButton)
-    expect(localMockedProps.onPressTryAgain).toHaveBeenCalled()
+    expect(tryAgainMock).toHaveBeenCalled()
   })
 
   it("triggers loadMore on reaching flatlist' bottom", async () => {

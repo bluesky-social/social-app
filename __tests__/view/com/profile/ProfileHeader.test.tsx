@@ -18,14 +18,17 @@ describe('ProfileHeader', () => {
   })
 
   it('renders error text on error', async () => {
-    const localMockedProps = {
-      view: {
-        ...mockedProfileStore,
-        hasError: true,
-      } as ProfileViewModel,
-      onRefreshAll: jest.fn(),
-    }
-    const {findByTestId} = render(<ProfileHeader {...localMockedProps} />)
+    const {findByTestId} = render(
+      <ProfileHeader
+        {...{
+          view: {
+            ...mockedProfileStore,
+            hasError: true,
+          } as ProfileViewModel,
+          onRefreshAll: jest.fn(),
+        }}
+      />,
+    )
 
     const profileHeaderHasError = await findByTestId('profileHeaderHasError')
     expect(profileHeaderHasError).toBeTruthy()
@@ -68,14 +71,17 @@ describe('ProfileHeader', () => {
   })
 
   it('presses and invite members modal', async () => {
-    const localMockedProps = {
-      view: {
-        ...mockedProfileStore,
-        isScene: true,
-      } as ProfileViewModel,
-      onRefreshAll: jest.fn(),
-    }
-    const {findByTestId} = render(<ProfileHeader {...localMockedProps} />)
+    const {findByTestId} = render(
+      <ProfileHeader
+        {...{
+          view: {
+            ...mockedProfileStore,
+            isScene: true,
+          } as ProfileViewModel,
+          onRefreshAll: jest.fn(),
+        }}
+      />,
+    )
 
     const profileHeaderInviteMembersButton = await findByTestId(
       'profileHeaderInviteMembersButton',
@@ -101,14 +107,17 @@ describe('ProfileHeader', () => {
   })
 
   it('presses and opens members page', async () => {
-    const localMockedProps = {
-      view: {
-        ...mockedProfileStore,
-        isScene: true,
-      } as ProfileViewModel,
-      onRefreshAll: jest.fn(),
-    }
-    const {findByTestId} = render(<ProfileHeader {...localMockedProps} />)
+    const {findByTestId} = render(
+      <ProfileHeader
+        {...{
+          view: {
+            ...mockedProfileStore,
+            isScene: true,
+          } as ProfileViewModel,
+          onRefreshAll: jest.fn(),
+        }}
+      />,
+    )
 
     const profileHeaderMembersButton = await findByTestId(
       'profileHeaderMembersButton',
@@ -122,14 +131,17 @@ describe('ProfileHeader', () => {
   })
 
   it('presses and opens follow modal', async () => {
-    const localMockedProps = {
-      view: {
-        ...mockedProfileStore,
-        did: 'test did 2',
-      } as ProfileViewModel,
-      onRefreshAll: jest.fn(),
-    }
-    const {findByTestId} = render(<ProfileHeader {...localMockedProps} />)
+    const {findByTestId} = render(
+      <ProfileHeader
+        {...{
+          view: {
+            ...mockedProfileStore,
+            did: 'test did 2',
+          } as ProfileViewModel,
+          onRefreshAll: jest.fn(),
+        }}
+      />,
+    )
 
     const profileHeaderToggleFollowButton = await findByTestId(
       'profileHeaderToggleFollowButton',
@@ -139,13 +151,6 @@ describe('ProfileHeader', () => {
 
     expect(mockedProps.view.toggleFollowing).toHaveBeenCalled()
   })
-
-  // it('leaves scene', async () => {
-  //   const {queryByTestId} = render(<ProfileHeader {...mockedProps} />)
-
-  //   const dropdownItems = queryByTestId('dropdownItem-1')
-  //   console.log(dropdownItems)
-  // })
 
   it('matches snapshot', () => {
     const page = render(<ProfileHeader {...mockedProps} />)

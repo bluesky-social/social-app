@@ -22,6 +22,7 @@ import {SuggestedActorsViewModel} from '../src/state/models/suggested-actors-vie
 import {UserFollowersViewModel} from '../src/state/models/user-followers-view'
 import {UserFollowsViewModel} from '../src/state/models/user-follows-view'
 import {NotificationsViewItemModel} from './../src/state/models/notifications-view'
+import {PostThreadViewModel} from '../src/state/models/post-thread-view'
 
 export const mockedProfileStore = {
   isLoading: false,
@@ -206,19 +207,76 @@ export const mockedFeedModel = {
   // unknown required because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadLatest, _loadMore, _update, _replaceAll, _appendAll, _prependAll, _updateAll, _getFeed, loadMoreCursor, pollCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
 } as unknown as FeedModel
 
+export const mockedPostThreadViewModel = {
+  isLoading: false,
+  isRefreshing: false,
+  hasLoaded: false,
+  error: '',
+  notFound: false,
+  resolvedUri: 'testuri',
+  params: {
+    uri: 'testuri',
+  },
+  thread: {
+    _reactKey: '',
+    _depth: 0,
+    _isHighlightedPost: false,
+    _hasMore: false,
+    postRecord: {
+      text: 'test text',
+      createdAt: '',
+    },
+    post: {
+      uri: 'testuri',
+      cid: 'testcid',
+      author: {
+        did: 'test did',
+        handle: 'test.handle',
+        declaration: {cid: '', actorType: ''},
+      },
+      replyCount: 0,
+      repostCount: 0,
+      upvoteCount: 0,
+      downvoteCount: 0,
+      indexedAt: '',
+      viewer: {
+        repost: '',
+        upvote: '',
+        downvote: '',
+      },
+    },
+  },
+} as PostThreadViewModel
+
 export const mockedNotificationsViewItemModel = {
   _reactKey: '',
-  uri: '',
+  uri: 'testuri',
   cid: '',
   author: {
-    did: '',
-    handle: '',
-    avatar: '',
+    did: 'test did',
+    handle: 'test.handle',
     declaration: {cid: '', actorType: ''},
   },
-  reason: '',
-  isRead: false,
+  rootStore: {} as RootStoreModel,
+  copy: jest.fn(),
+  reason: 'test reason',
+  isRead: true,
   indexedAt: '',
+  isUpvote: true,
+  isRepost: false,
+  isTrend: false,
+  isMention: false,
+  isReply: false,
+  isFollow: false,
+  isAssertion: false,
+  needsAdditionalData: false,
+  isInvite: false,
+  subjectUri: 'testuri',
+  toSupportedRecord: jest.fn().mockReturnValue({
+    text: 'test text',
+    createdAt: '',
+  }),
+  fetchAdditionalData: jest.fn(),
 } as NotificationsViewItemModel
 
 export const mockedNotificationsModel = {

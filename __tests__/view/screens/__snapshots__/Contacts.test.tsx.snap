@@ -257,6 +257,7 @@ exports[`Contacts matches snapshot 1`] = `
             },
           ]
         }
+        testID="errorMessageView"
       >
         <View
           style={

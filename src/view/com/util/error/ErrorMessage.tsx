@@ -25,7 +25,7 @@ export function ErrorMessage({
   const theme = useTheme()
   const pal = usePalette('error')
   return (
-    <View style={[styles.outer, pal.view, style]}>
+    <View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
       <View
         style={[styles.errorIcon, {backgroundColor: theme.palette.error.icon}]}>
         <FontAwesomeIcon icon="exclamation" style={pal.text} size={16} />

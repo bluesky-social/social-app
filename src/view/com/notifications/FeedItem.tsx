@@ -223,7 +223,7 @@ function AdditionalPostText({
 }) {
   const pal = usePalette('default')
   if (!additionalPost || !additionalPost.thread?.postRecord) {
-    return <View />
+    return <View testID="emptyAdditionalPost" />
   }
   if (additionalPost.error) {
     return <ErrorMessage message={additionalPost.error} />
@@ -238,7 +238,11 @@ function AdditionalPostText({
       text += ` [${record.embed.images[i].alt || `image${i + 1}`}]`
     }
   }
-  return <Text style={pal.textLight}>{text}</Text>
+  return (
+    <Text testID="additionalPostContent" style={pal.textLight}>
+      {text}
+    </Text>
+  )
 }
 
 const styles = StyleSheet.create({

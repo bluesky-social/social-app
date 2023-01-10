@@ -82,6 +82,7 @@ exports[`ProfileFollows matches snapshot 1`] = `
                 },
               ]
             }
+            testID="linkButton-/profile/testhandle"
           >
             <View
               style={
@@ -287,6 +288,7 @@ exports[`ProfileFollows matches snapshot 1`] = `
                 },
               ]
             }
+            testID="linkButton-/profile/testhandle2"
           >
             <View
               style={

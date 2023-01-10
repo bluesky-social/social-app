@@ -484,6 +484,7 @@ exports[`Settings matches snapshot 1`] = `
         onResponderTerminate={[Function]}
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
+        testID="linkButton-/profile/test"
       >
         <View
           style={
@@ -701,6 +702,7 @@ exports[`Settings matches snapshot 1`] = `
             "padding": 10,
           }
         }
+        testID="linkButton-/sys/log"
       >
         <Text
           style={
@@ -740,6 +742,7 @@ exports[`Settings matches snapshot 1`] = `
             "padding": 10,
           }
         }
+        testID="linkButton-/sys/debug"
       >
         <Text
           style={
