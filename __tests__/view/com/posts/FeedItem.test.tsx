@@ -47,7 +47,7 @@ describe('FeedItem', () => {
     expect(postCtrlsToggleUpvoteButton).toBeTruthy()
 
     fireEvent.press(postCtrlsToggleUpvoteButton)
-    expect(mockedFeedItemModel.toggleRepost).toHaveBeenCalled()
+    expect(mockedFeedItemModel.toggleUpvote).toHaveBeenCalled()
   })
 
   it('matches snapshot', () => {

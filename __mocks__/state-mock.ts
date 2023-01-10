@@ -22,7 +22,10 @@ import {SuggestedActorsViewModel} from '../src/state/models/suggested-actors-vie
 import {UserFollowersViewModel} from '../src/state/models/user-followers-view'
 import {UserFollowsViewModel} from '../src/state/models/user-follows-view'
 import {NotificationsViewItemModel} from './../src/state/models/notifications-view'
-import {PostThreadViewModel} from '../src/state/models/post-thread-view'
+import {
+  PostThreadViewModel,
+  PostThreadViewPostModel,
+} from '../src/state/models/post-thread-view'
 import {FeedItemModel} from '../src/state/models/feed-view'
 
 export const mockedProfileStore = {
@@ -195,7 +198,7 @@ export const mockedFeedItemModel = {
   toggleUpvote: jest.fn().mockResolvedValue({}),
   toggleDownvote: jest.fn(),
   toggleRepost: jest.fn().mockResolvedValue({}),
-  delete: jest.fn(),
+  delete: jest.fn().mockResolvedValue({}),
   reasonRepost: {
     by: {
       did: 'test did',
@@ -309,6 +312,56 @@ export const mockedFeedModel = {
   // unknown required because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadLatest, _loadMore, _update, _replaceAll, _appendAll, _prependAll, _updateAll, _getFeed, loadMoreCursor, pollCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
 } as unknown as FeedModel
 
+export const mockedPostThreadViewPostModel = {
+  _reactKey: 'item-1',
+  _depth: 0,
+  _isHighlightedPost: false,
+  _hasMore: false,
+  postRecord: {
+    text: 'test text',
+    createdAt: '',
+    reply: {
+      root: {
+        uri: 'testuri',
+        cid: 'tes cid',
+      },
+      parent: {
+        uri: 'testuri',
+        cid: 'tes cid',
+      },
+    },
+  },
+  post: {
+    uri: 'testuri',
+    cid: 'testcid',
+    record: {},
+    author: {
+      did: 'test did',
+      handle: 'test.handle',
+      declaration: {cid: '', actorType: ''},
+      viewer: {
+        muted: true,
+      },
+    },
+    replyCount: 0,
+    repostCount: 0,
+    upvoteCount: 0,
+    downvoteCount: 0,
+    indexedAt: '',
+    viewer: {
+      repost: '',
+      upvote: '',
+      downvote: '',
+    },
+  },
+  rootStore: {} as RootStoreModel,
+  assignTreeModels: jest.fn(),
+  toggleRepost: jest.fn().mockResolvedValue({}),
+  toggleUpvote: jest.fn().mockResolvedValue({}),
+  toggleDownvote: jest.fn(),
+  delete: jest.fn(),
+} as PostThreadViewPostModel
+
 export const mockedPostThreadViewModel = {
   isLoading: false,
   isRefreshing: false,
@@ -319,35 +372,7 @@ export const mockedPostThreadViewModel = {
   params: {
     uri: 'testuri',
   },
-  thread: {
-    _reactKey: 'item-1',
-    _depth: 0,
-    _isHighlightedPost: false,
-    _hasMore: false,
-    postRecord: {
-      text: 'test text',
-      createdAt: '',
-    },
-    post: {
-      uri: 'testuri',
-      cid: 'testcid',
-      author: {
-        did: 'test did',
-        handle: 'test.handle',
-        declaration: {cid: '', actorType: ''},
-      },
-      replyCount: 0,
-      repostCount: 0,
-      upvoteCount: 0,
-      downvoteCount: 0,
-      indexedAt: '',
-      viewer: {
-        repost: '',
-        upvote: '',
-        downvote: '',
-      },
-    },
-  },
+  thread: mockedPostThreadViewPostModel,
 } as PostThreadViewModel
 
 export const mockedNotificationsViewItemModel = {

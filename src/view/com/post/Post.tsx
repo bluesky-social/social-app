@@ -60,7 +60,7 @@ export const Post = observer(function Post({
   // =
   if (!view || view.isLoading || view.params.uri !== uri) {
     return (
-      <View style={pal.view}>
+      <View testID="postLoading" style={pal.view}>
         <ActivityIndicator />
       </View>
     )
@@ -70,7 +70,7 @@ export const Post = observer(function Post({
   // =
   if (view.hasError || !view.thread || !view.thread?.postRecord) {
     return (
-      <View style={pal.view}>
+      <View testID="postError" style={pal.view}>
         <Text>{view.error || 'Thread not found'}</Text>
       </View>
     )
@@ -140,7 +140,9 @@ export const Post = observer(function Post({
       href={itemHref}
       title={itemTitle}
       noFeedback>
-      {showReplyLine && <View style={styles.replyLine} />}
+      {showReplyLine && (
+        <View testID="postShowReplyLineView" style={styles.replyLine} />
+      )}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Link href={authorHref} title={authorTitle}>
@@ -185,7 +187,7 @@ export const Post = observer(function Post({
             </View>
           )}
           {item.post.author.viewer?.muted ? (
-            <View style={[styles.mutedWarning, pal.btn]}>
+            <View testID="mutedPostView" style={[styles.mutedWarning, pal.btn]}>
               <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
               <Text type="body2">This post is by a muted account.</Text>
             </View>
