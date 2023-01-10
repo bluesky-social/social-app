@@ -111,7 +111,6 @@
       "<rootDir>/src/platform",
       "<rootDir>/src/third-party",
       "<rootDir>/src/view/com/util",
-      "<rootDir>/src/view/lib",
       "<rootDir>/src/state/lib",
       "<rootDir>/__tests__/test-utils.js"
     ]

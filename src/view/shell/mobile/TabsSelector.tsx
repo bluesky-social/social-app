@@ -121,7 +121,7 @@ export const TabsSelector = observer(
 
     return (
       <Animated.View
-        testID={'tabsSelectorView'}
+        testID="tabsSelectorView"
         style={[
           styles.wrapper,
           {bottom: insets.bottom + 55},
