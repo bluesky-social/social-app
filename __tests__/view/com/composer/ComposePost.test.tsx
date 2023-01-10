@@ -118,7 +118,4 @@ describe('ComposePost', () => {
     const page = render(<ComposePost {...mockedProps} />)
     expect(page).toMatchSnapshot()
   })
-
-  // onSelectPhotos
-  // onChangeText
 })

@@ -6,7 +6,7 @@ import {mockedVotesViewStore} from '../../../../__mocks__/state-mock'
 describe('PostVotedtedBy', () => {
   const mockedProps = {
     uri: 'testuri',
-    direction: 'up' as 'up' | 'down', // | 'down'
+    direction: 'up' as 'up' | 'down',
   }
   afterAll(() => {
     jest.clearAllMocks()

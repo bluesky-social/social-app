@@ -720,7 +720,7 @@ export const mockedAutocompleteViewStore = {
       displayName: 'Test Display 2',
     },
   ],
-  // rootStore: {} as RootStoreModel,
+  rootStore: {} as RootStoreModel,
   setup: jest.fn(),
   setActive: jest.fn(),
   setPrefix: jest.fn(),
