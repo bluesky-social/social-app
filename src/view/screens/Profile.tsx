@@ -196,12 +196,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
         if (uiState.members.hasContent) {
           items = uiState.members.members.slice()
           renderItem = (item: any) => {
-            console.log('isSceneCreator', isSceneCreator)
             const shouldAdmin = isSceneCreator && item.did !== store.me.did
-            console.log('isSceneCreator', isSceneCreator)
-            console.log('item.did', item.did)
-            console.log('store.me.did', store.me.did)
-            console.log('shouldAdmin', shouldAdmin)
             const renderButton = shouldAdmin
               ? () => (
                   <>
