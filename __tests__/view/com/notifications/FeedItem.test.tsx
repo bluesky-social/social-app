@@ -3,13 +3,13 @@ import {render} from '../../../../jest/test-utils'
 import {NotificationsViewItemModel} from '../../../../src/state/models/notifications-view'
 import {FeedItem} from '../../../../src/view/com/notifications/FeedItem'
 import {
-  mockedNotificationsViewItemModel,
-  mockedPostThreadViewModel,
+  mockedNotificationsViewItemStore,
+  mockedPostThreadViewStore,
 } from '../../../../__mocks__/state-mock'
 
 describe('FeedItem', () => {
   const mockedProps = {
-    item: mockedNotificationsViewItemModel as NotificationsViewItemModel,
+    item: mockedNotificationsViewItemStore as NotificationsViewItemModel,
   }
 
   afterAll(() => {
@@ -30,7 +30,7 @@ describe('FeedItem', () => {
       <FeedItem
         {...{
           item: {
-            ...mockedNotificationsViewItemModel,
+            ...mockedNotificationsViewItemStore,
             isUpvote: false,
             isRepost: true,
           } as NotificationsViewItemModel,
@@ -49,7 +49,7 @@ describe('FeedItem', () => {
       <FeedItem
         {...{
           item: {
-            ...mockedNotificationsViewItemModel,
+            ...mockedNotificationsViewItemStore,
             isUpvote: false,
             isTrend: true,
           } as NotificationsViewItemModel,
@@ -68,7 +68,7 @@ describe('FeedItem', () => {
       <FeedItem
         {...{
           item: {
-            ...mockedNotificationsViewItemModel,
+            ...mockedNotificationsViewItemStore,
             isUpvote: false,
             isFollow: true,
           } as NotificationsViewItemModel,
@@ -87,7 +87,7 @@ describe('FeedItem', () => {
       <FeedItem
         {...{
           item: {
-            ...mockedNotificationsViewItemModel,
+            ...mockedNotificationsViewItemStore,
             isUpvote: false,
             isReply: true,
           } as NotificationsViewItemModel,
@@ -106,7 +106,7 @@ describe('FeedItem', () => {
       <FeedItem
         {...{
           item: {
-            ...mockedNotificationsViewItemModel,
+            ...mockedNotificationsViewItemStore,
             isUpvote: false,
             isMention: true,
           } as NotificationsViewItemModel,
@@ -123,7 +123,7 @@ describe('FeedItem', () => {
       <FeedItem
         {...{
           item: {
-            ...mockedNotificationsViewItemModel,
+            ...mockedNotificationsViewItemStore,
             isUpvote: false,
             isInvite: true,
           } as NotificationsViewItemModel,
@@ -135,17 +135,17 @@ describe('FeedItem', () => {
     expect(noFeedbackLinkButton).toBeTruthy()
   })
 
-  it('renders error additional post', async () => {
+  it('renders ErrorMessage on error', async () => {
     const {findByTestId} = render(
       <FeedItem
         {...{
           item: {
-            ...mockedNotificationsViewItemModel,
+            ...mockedNotificationsViewItemStore,
             additionalPost: {
-              ...mockedPostThreadViewModel,
+              ...mockedPostThreadViewStore,
               error: 'testerrorr',
               thread: {
-                ...mockedPostThreadViewModel.thread,
+                ...mockedPostThreadViewStore.thread,
                 postRecord: {
                   text: 'test text',
                   createdAt: '',
@@ -166,11 +166,11 @@ describe('FeedItem', () => {
       <FeedItem
         {...{
           item: {
-            ...mockedNotificationsViewItemModel,
+            ...mockedNotificationsViewItemStore,
             additionalPost: {
-              ...mockedPostThreadViewModel,
+              ...mockedPostThreadViewStore,
               thread: {
-                ...mockedPostThreadViewModel.thread,
+                ...mockedPostThreadViewStore.thread,
                 postRecord: {
                   text: 'test text',
                   createdAt: '',

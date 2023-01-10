@@ -377,7 +377,9 @@ exports[`PostDownvotedBy matches snapshot 1`] = `
         />
       </View>
     </View>
-    <View>
+    <View
+      testID="postVotedByView"
+    >
       <RCTScrollView
         data={Array []}
         getItem={[Function]}

@@ -116,6 +116,7 @@ export const PostThreadItem = observer(function PostThreadItem({
     return (
       <>
         <View
+          testID="isHighlightedPostView"
           style={[styles.outer, {borderTopColor: pal.colors.border}, pal.view]}>
           <View style={styles.layout}>
             <View style={styles.layoutAvi}>
@@ -263,7 +264,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               ]}
             />
           )}
-          <View style={styles.layout}>
+          <View testID="isNotHighlightedPostView" style={styles.layout}>
             <View style={styles.layoutAvi}>
               <Link href={authorHref} title={authorTitle}>
                 <UserAvatar

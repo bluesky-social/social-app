@@ -3,9 +3,9 @@ import {fireEvent, render, waitFor} from '../../../../jest/test-utils'
 import {ConfirmModal} from '../../../../src/state/models/shell-ui'
 import {InviteAccepter} from '../../../../src/view/com/notifications/InviteAccepter'
 import {
-  mockedMembershipsModel,
+  mockedMembershipsStore,
   mockedMeStore,
-  mockedNotificationsViewItemModel,
+  mockedNotificationsViewItemStore,
   mockedRootStore,
   mockedShellStore,
 } from '../../../../__mocks__/state-mock'
@@ -14,7 +14,7 @@ import * as Toast from '../../../../src/view/com/util/Toast'
 
 describe('InviteAccepter', () => {
   const mockedProps = {
-    item: mockedNotificationsViewItemModel,
+    item: mockedNotificationsViewItemStore,
   }
   afterAll(() => {
     jest.clearAllMocks()
@@ -56,7 +56,7 @@ describe('InviteAccepter', () => {
       me: {
         ...mockedMeStore,
         memberships: {
-          ...mockedMembershipsModel,
+          ...mockedMembershipsStore,
           isMemberOf: jest.fn().mockReturnValue(true),
         },
       },

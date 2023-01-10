@@ -2,11 +2,11 @@ import React from 'react'
 import {act, fireEvent, render} from '../../../../jest/test-utils'
 import {FeedModel} from '../../../../src/state/models/feed-view'
 import {Feed} from '../../../../src/view/com/posts/Feed'
-import {mockedFeedModel} from '../../../../__mocks__/state-mock'
+import {mockedFeedStore} from '../../../../__mocks__/state-mock'
 
 describe('Feed', () => {
   const mockedProps = {
-    feed: mockedFeedModel,
+    feed: mockedFeedStore,
     onPressCompose: jest.fn(),
     onPressTryAgain: jest.fn(),
     onScroll: jest.fn(),
@@ -15,12 +15,12 @@ describe('Feed', () => {
     jest.clearAllMocks()
   })
 
-  it('renders error message', async () => {
+  it('renders ErrorMessage on error', async () => {
     const {findByTestId} = render(
       <Feed
         {...{
           ...mockedProps,
-          feed: {...mockedFeedModel, hasError: true} as FeedModel,
+          feed: {...mockedFeedStore, hasError: true} as FeedModel,
         }}
       />,
     )
@@ -38,7 +38,7 @@ describe('Feed', () => {
       <Feed
         {...{
           ...mockedProps,
-          feed: {...mockedFeedModel, hasLoaded: false} as FeedModel,
+          feed: {...mockedFeedStore, hasLoaded: false} as FeedModel,
         }}
       />,
     )
@@ -55,7 +55,7 @@ describe('Feed', () => {
       <Feed
         {...{
           ...mockedProps,
-          feed: {...mockedFeedModel, isLoading: true} as FeedModel,
+          feed: {...mockedFeedStore, isLoading: true} as FeedModel,
         }}
       />,
     )
@@ -97,7 +97,7 @@ describe('Feed', () => {
       <Feed
         {...{
           ...mockedProps,
-          feed: {...mockedFeedModel, isEmpty: true} as FeedModel,
+          feed: {...mockedFeedStore, isEmpty: true} as FeedModel,
         }}
       />,
     )

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {
@@ -20,7 +20,8 @@ export const PostVotedBy = observer(function PostVotedBy({
   direction: 'up' | 'down'
 }) {
   const store = useStores()
-  const [view, setView] = useState<VotesViewModel | undefined>()
+  // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
+  const [view, setView] = React.useState<VotesViewModel | undefined>()
 
   useEffect(() => {
     if (view?.params.uri === uri) {
@@ -45,7 +46,7 @@ export const PostVotedBy = observer(function PostVotedBy({
     view.params.uri !== uri
   ) {
     return (
-      <View>
+      <View testID="postVotedByLoadingView">
         <ActivityIndicator />
       </View>
     )
@@ -71,7 +72,7 @@ export const PostVotedBy = observer(function PostVotedBy({
     <LikedByItem item={item} />
   )
   return (
-    <View>
+    <View testID="postVotedByView">
       <FlatList
         data={view.votes}
         keyExtractor={item => item._reactKey}

@@ -17,7 +17,7 @@ describe('ProfileHeader', () => {
     jest.clearAllMocks()
   })
 
-  it('renders error text on error', async () => {
+  it('renders ErrorMessage on error', async () => {
     const {findByTestId} = render(
       <ProfileHeader
         {...{

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`FeedItem matches snapshot 1`] = `
+exports[`PostThreadItem matches snapshot 1`] = `
 <View
   style={
     Object {
@@ -22,136 +22,64 @@ exports[`FeedItem matches snapshot 1`] = `
       Array [
         Object {
           "borderTopWidth": 1,
-          "padding": 10,
-        },
-        Object {
-          "backgroundColor": "#ffffff",
         },
         Object {
           "borderTopColor": "#e4e2e2",
         },
-        undefined,
         Object {
-          "borderTopWidth": 0,
-          "paddingTop": 0,
+          "backgroundColor": "#ffffff",
         },
-        undefined,
       ]
     }
     testID="linkButton-/profile/test.handle/post/"
   >
     <View
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
       style={
-        Object {
-          "flexDirection": "row",
-          "opacity": 1,
-          "paddingLeft": 60,
-        }
-      }
-      testID="linkButton-/profile/test.handle"
-    >
-      <
-        icon="retweet"
-        style={
+        Array [
           Object {
-            "color": "#968d8d",
-            "marginRight": 4,
-          }
-        }
-      />
-      <Text
-        style={
-          Array [
-            Object {
-              "color": "#000000",
-            },
-            Object {
-              "fontSize": 14,
-              "fontWeight": "600",
-            },
-            Object {
-              "color": "#968d8d",
-            },
-          ]
-        }
-      >
-        Reposted by
-         
-        test.handle
-      </Text>
-    </View>
+            "borderLeftWidth": 2,
+            "height": 8,
+            "left": 34,
+            "position": "absolute",
+            "top": -2,
+          },
+          Object {
+            "borderColor": "#e4e2e2",
+          },
+        ]
+      }
+    />
     <View
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
       style={
-        Object {
-          "flexDirection": "row",
-          "opacity": 1,
-          "paddingLeft": 60,
-        }
-      }
-      testID="linkButton-/profile/test.handle"
-    >
-      <
-        icon="arrow-trend-up"
-        style={
+        Array [
           Object {
-            "color": "#968d8d",
-            "marginRight": 4,
-          }
-        }
-      />
-      <Text
-        style={
-          Array [
-            Object {
-              "color": "#000000",
-            },
-            Object {
-              "fontSize": 14,
-              "fontWeight": "600",
-            },
-            Object {
-              "color": "#968d8d",
-            },
-          ]
-        }
-      >
-        Trending with
-         
-        test.handle
-      </Text>
-    </View>
+            "borderLeftWidth": 2,
+            "bottom": 0,
+            "left": 34,
+            "position": "absolute",
+            "top": 65,
+          },
+          Object {
+            "borderColor": "#e4e2e2",
+          },
+        ]
+      }
+    />
     <View
       style={
         Object {
           "flexDirection": "row",
         }
       }
+      testID="isNotHighlightedPostView"
     >
       <View
         style={
           Object {
-            "paddingTop": 0,
-            "width": 60,
+            "paddingBottom": 10,
+            "paddingLeft": 10,
+            "paddingTop": 10,
+            "width": 70,
           }
         }
       >
@@ -175,10 +103,10 @@ exports[`FeedItem matches snapshot 1`] = `
         >
           <RNSVGSvgView
             align="xMidYMid"
-            bbHeight={52}
-            bbWidth={52}
+            bbHeight={50}
+            bbWidth={50}
             focusable={false}
-            height={52}
+            height={50}
             meetOrSlice={0}
             minX={0}
             minY={0}
@@ -190,14 +118,14 @@ exports[`FeedItem matches snapshot 1`] = `
                 },
                 Object {
                   "flex": 0,
-                  "height": 52,
-                  "width": 52,
+                  "height": 50,
+                  "width": 50,
                 },
               ]
             }
             vbHeight={100}
             vbWidth={100}
-            width={52}
+            width={50}
           >
             <RNSVGGroup>
               <RNSVGDefs>
@@ -282,6 +210,9 @@ exports[`FeedItem matches snapshot 1`] = `
         style={
           Object {
             "flex": 1,
+            "paddingBottom": 10,
+            "paddingRight": 10,
+            "paddingTop": 10,
           }
         }
       >
@@ -334,7 +265,7 @@ exports[`FeedItem matches snapshot 1`] = `
                 ]
               }
             >
-              test name
+              test.handle
               <Text
                 style={
                   Array [
@@ -382,7 +313,7 @@ exports[`FeedItem matches snapshot 1`] = `
             }
           >
             · 
-            12d
+            Invalid Date
           </Text>
           <View
             style={
@@ -439,14 +370,34 @@ exports[`FeedItem matches snapshot 1`] = `
         </View>
         <View
           style={
-            Object {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "flexWrap": "wrap",
-              "paddingBottom": 4,
-            }
+            Array [
+              Object {
+                "alignItems": "center",
+                "borderRadius": 2,
+                "flexDirection": "row",
+                "marginBottom": 6,
+                "marginTop": 2,
+                "padding": 10,
+              },
+              Object {
+                "backgroundColor": "#f8f3f3",
+              },
+            ]
           }
         >
+          <
+            icon={
+              Array [
+                "far",
+                "eye-slash",
+              ]
+            }
+            style={
+              Object {
+                "marginRight": 2,
+              }
+            }
+          />
           <Text
             style={
               Array [
@@ -454,22 +405,14 @@ exports[`FeedItem matches snapshot 1`] = `
                   "color": "#000000",
                 },
                 Object {
-                  "fontSize": 16,
+                  "fontSize": 14,
                   "letterSpacing": 0.25,
                 },
-                Array [
-                  undefined,
-                  Object {
-                    "color": "#000000",
-                  },
-                  Object {
-                    "lineHeight": 19.2,
-                  },
-                ],
+                undefined,
               ]
             }
           >
-            test text
+            This post is by a muted account.
           </Text>
         </View>
         <View />

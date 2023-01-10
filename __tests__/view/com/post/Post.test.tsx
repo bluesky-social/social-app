@@ -3,14 +3,14 @@ import {fireEvent, render} from '../../../../jest/test-utils'
 import {PostThreadViewModel} from '../../../../src/state/models/post-thread-view'
 import {Post} from '../../../../src/view/com/post/Post'
 import {
-  mockedPostThreadViewModel,
+  mockedPostThreadViewStore,
   mockedShellStore,
 } from '../../../../__mocks__/state-mock'
 
 describe('Post', () => {
   const mockedProps = {
     uri: 'testuri',
-    initView: mockedPostThreadViewModel,
+    initView: mockedPostThreadViewStore,
     showReplyLine: false,
   }
   afterAll(() => {
@@ -23,7 +23,7 @@ describe('Post', () => {
         {...{
           ...mockedProps,
           initView: {
-            ...mockedPostThreadViewModel,
+            ...mockedPostThreadViewStore,
             isLoading: true,
           } as PostThreadViewModel,
         }}
@@ -34,13 +34,13 @@ describe('Post', () => {
     expect(postLoading).toBeTruthy()
   })
 
-  it('renders error message when it has an error', async () => {
+  it('renders ErrorMessage on error', async () => {
     const {findByTestId} = render(
       <Post
         {...{
           ...mockedProps,
           initView: {
-            ...mockedPostThreadViewModel,
+            ...mockedPostThreadViewStore,
             hasError: true,
           } as PostThreadViewModel,
         }}
@@ -69,7 +69,7 @@ describe('Post', () => {
     expect(postCtrlsToggleRepostButton).toBeTruthy()
 
     fireEvent.press(postCtrlsToggleRepostButton)
-    expect(mockedPostThreadViewModel.thread!.toggleRepost).toHaveBeenCalled()
+    expect(mockedPostThreadViewStore.thread!.toggleRepost).toHaveBeenCalled()
   })
 
   it('renders and presses upvote button', async () => {
@@ -81,7 +81,7 @@ describe('Post', () => {
     expect(postCtrlsToggleUpvoteButton).toBeTruthy()
 
     fireEvent.press(postCtrlsToggleUpvoteButton)
-    expect(mockedPostThreadViewModel.thread!.toggleUpvote).toHaveBeenCalled()
+    expect(mockedPostThreadViewStore.thread!.toggleUpvote).toHaveBeenCalled()
   })
 
   it('renders muted view', async () => {

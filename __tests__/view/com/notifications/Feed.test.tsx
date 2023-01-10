@@ -2,11 +2,11 @@ import React from 'react'
 import {act, fireEvent, render} from '../../../../jest/test-utils'
 import {NotificationsViewModel} from '../../../../src/state/models/notifications-view'
 import {Feed} from '../../../../src/view/com/notifications/Feed'
-import {mockedNotificationsModel} from '../../../../__mocks__/state-mock'
+import {mockedNotificationsStore} from '../../../../__mocks__/state-mock'
 
 describe('Feed', () => {
   const mockedProps = {
-    view: mockedNotificationsModel,
+    view: mockedNotificationsStore,
     onPressTryAgain: jest.fn(),
     onScroll: jest.fn(),
   }
@@ -19,7 +19,7 @@ describe('Feed', () => {
       <Feed
         {...{
           view: {
-            ...mockedNotificationsModel,
+            ...mockedNotificationsStore,
             isEmpty: true,
           } as NotificationsViewModel,
           onPressTryAgain: jest.fn(),
@@ -41,7 +41,7 @@ describe('Feed', () => {
       <Feed
         {...{
           view: {
-            ...mockedNotificationsModel,
+            ...mockedNotificationsStore,
             hasError: true,
           } as NotificationsViewModel,
           onPressTryAgain: tryAgainMock,

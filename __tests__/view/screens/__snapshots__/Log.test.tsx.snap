@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PostUpvotedBy matches snapshot 1`] = `
+exports[`Log matches snapshot 1`] = `
 <View
   style={
     Object {
@@ -9,7 +9,13 @@ exports[`PostUpvotedBy matches snapshot 1`] = `
   }
 >
   <View
-    testID="postUpvotedByView"
+    style={
+      Array [
+        Object {
+          "flex": 1,
+        },
+      ]
+    }
   >
     <View
       style={
@@ -186,7 +192,7 @@ exports[`PostUpvotedBy matches snapshot 1`] = `
           }
           testID="headerTitle"
         >
-          Upvoted by
+          Log
         </Text>
       </View>
       <View
@@ -377,30 +383,23 @@ exports[`PostUpvotedBy matches snapshot 1`] = `
         />
       </View>
     </View>
-    <View
-      testID="postVotedByView"
+    <RCTScrollView
+      style={
+        Object {
+          "flex": 1,
+        }
+      }
     >
-      <RCTScrollView
-        data={Array []}
-        getItem={[Function]}
-        getItemCount={[Function]}
-        keyExtractor={[Function]}
-        onContentSizeChange={[Function]}
-        onLayout={[Function]}
-        onMomentumScrollBegin={[Function]}
-        onMomentumScrollEnd={[Function]}
-        onScroll={[Function]}
-        onScrollBeginDrag={[Function]}
-        onScrollEndDrag={[Function]}
-        removeClippedSubviews={false}
-        renderItem={[Function]}
-        scrollEventThrottle={50}
-        stickyHeaderIndices={Array []}
-        viewabilityConfigCallbackPairs={Array []}
-      >
-        <View />
-      </RCTScrollView>
-    </View>
+      <View>
+        <View
+          style={
+            Object {
+              "height": 100,
+            }
+          }
+        />
+      </View>
+    </RCTScrollView>
   </View>
 </View>
 `;

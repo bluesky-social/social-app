@@ -2,13 +2,13 @@ import React from 'react'
 import {fireEvent, render} from '../../../../jest/test-utils'
 import {FeedItem} from '../../../../src/view/com/posts/FeedItem'
 import {
-  mockedFeedItemModel,
+  mockedFeedItemStore,
   mockedShellStore,
 } from '../../../../__mocks__/state-mock'
 
 describe('FeedItem', () => {
   const mockedProps = {
-    item: mockedFeedItemModel,
+    item: mockedFeedItemStore,
     showReplyLine: false,
     ignoreMuteFor: '',
   }
@@ -35,7 +35,7 @@ describe('FeedItem', () => {
     expect(postCtrlsToggleRepostButton).toBeTruthy()
 
     fireEvent.press(postCtrlsToggleRepostButton)
-    expect(mockedFeedItemModel.toggleRepost).toHaveBeenCalled()
+    expect(mockedFeedItemStore.toggleRepost).toHaveBeenCalled()
   })
 
   it('renders and presses upvote button', async () => {
@@ -47,7 +47,7 @@ describe('FeedItem', () => {
     expect(postCtrlsToggleUpvoteButton).toBeTruthy()
 
     fireEvent.press(postCtrlsToggleUpvoteButton)
-    expect(mockedFeedItemModel.toggleUpvote).toHaveBeenCalled()
+    expect(mockedFeedItemStore.toggleUpvote).toHaveBeenCalled()
   })
 
   it('matches snapshot', () => {

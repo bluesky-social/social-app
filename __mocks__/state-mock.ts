@@ -27,6 +27,8 @@ import {
   PostThreadViewPostModel,
 } from '../src/state/models/post-thread-view'
 import {FeedItemModel} from '../src/state/models/feed-view'
+import {RepostedByViewModel} from '../src/state/models/reposted-by-view'
+import {VotesViewModel} from '../src/state/models/votes-view'
 
 export const mockedProfileStore = {
   isLoading: false,
@@ -110,7 +112,7 @@ export const mockedMembersStore = {
   // unknown required because of the missing private methods: _xLoading, _xIdle, _fetch, _replaceAll, _append
 } as unknown as MembersViewModel
 
-export const mockedMembershipsModel = {
+export const mockedMembershipsStore = {
   isLoading: false,
   isRefreshing: false,
   hasLoaded: true,
@@ -152,7 +154,7 @@ export const mockedMembershipsModel = {
   // unknown required because of the missing private methods: _xLoading, _xIdle, _fetch, _replaceAll, _append
 } as unknown as MembershipsViewModel
 
-export const mockedFeedItemModel = {
+export const mockedFeedItemStore = {
   _reactKey: 'item-1',
   _isThreadParent: false,
   _isThreadChildElided: false,
@@ -253,7 +255,7 @@ export const mockedFeedItemModel = {
   },
 } as FeedItemModel
 
-export const mockedFeedModel = {
+export const mockedFeedStore = {
   isLoading: false,
   isRefreshing: false,
   hasNewLatest: false,
@@ -312,7 +314,7 @@ export const mockedFeedModel = {
   // unknown required because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadLatest, _loadMore, _update, _replaceAll, _appendAll, _prependAll, _updateAll, _getFeed, loadMoreCursor, pollCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
 } as unknown as FeedModel
 
-export const mockedPostThreadViewPostModel = {
+export const mockedPostThreadViewPostStore = {
   _reactKey: 'item-1',
   _depth: 0,
   _isHighlightedPost: false,
@@ -356,13 +358,13 @@ export const mockedPostThreadViewPostModel = {
   },
   rootStore: {} as RootStoreModel,
   assignTreeModels: jest.fn(),
-  toggleRepost: jest.fn().mockResolvedValue({}),
-  toggleUpvote: jest.fn().mockResolvedValue({}),
+  toggleRepost: jest.fn().mockRejectedValue({}),
+  toggleUpvote: jest.fn().mockRejectedValue({}),
   toggleDownvote: jest.fn(),
   delete: jest.fn(),
 } as PostThreadViewPostModel
 
-export const mockedPostThreadViewModel = {
+export const mockedPostThreadViewStore = {
   isLoading: false,
   isRefreshing: false,
   hasLoaded: false,
@@ -372,10 +374,16 @@ export const mockedPostThreadViewModel = {
   params: {
     uri: 'testuri',
   },
-  thread: mockedPostThreadViewPostModel,
-} as PostThreadViewModel
+  thread: mockedPostThreadViewPostStore,
+  hasContent: true,
+  hasError: false,
+  setup: jest.fn(),
+  refresh: jest.fn().mockResolvedValue({}),
+  update: jest.fn(),
+  // unknown required because of the missing private methods: _xLoading, _xIdle, _resolveUri, _load, _replaceAll
+} as unknown as PostThreadViewModel
 
-export const mockedNotificationsViewItemModel = {
+export const mockedNotificationsViewItemStore = {
   _reactKey: 'item-1',
   uri: 'testuri',
   cid: '',
@@ -406,7 +414,7 @@ export const mockedNotificationsViewItemModel = {
   fetchAdditionalData: jest.fn(),
 } as NotificationsViewItemModel
 
-export const mockedNotificationsModel = {
+export const mockedNotificationsStore = {
   isLoading: false,
   isRefreshing: false,
   hasLoaded: true,
@@ -416,7 +424,7 @@ export const mockedNotificationsModel = {
     before: '',
   },
   hasMore: true,
-  notifications: [mockedNotificationsViewItemModel],
+  notifications: [mockedNotificationsViewItemStore],
   rootStore: {} as RootStoreModel,
   hasContent: true,
   hasError: false,
@@ -572,9 +580,9 @@ export const mockedMeStore = {
   avatar: '',
   notificationCount: 0,
   rootStore: {} as RootStoreModel,
-  memberships: mockedMembershipsModel,
-  mainFeed: mockedFeedModel,
-  notifications: mockedNotificationsModel,
+  memberships: mockedMembershipsStore,
+  mainFeed: mockedFeedStore,
+  notifications: mockedNotificationsStore,
   clear: jest.fn(),
   load: jest.fn(),
   clearNotificationCount: jest.fn(),
@@ -651,15 +659,15 @@ export const mockedRootStore = {
 
 export const mockedProfileUiStore = {
   profile: mockedProfileStore,
-  feed: mockedFeedModel,
-  memberships: mockedMembershipsModel,
+  feed: mockedFeedStore,
+  memberships: mockedMembershipsStore,
   members: mockedMembersStore,
   selectedViewIndex: 0,
   rootStore: mockedRootStore,
   params: {
     user: 'test user',
   },
-  currentView: mockedFeedModel,
+  currentView: mockedFeedStore,
   isInitialLoading: false,
   isRefreshing: false,
   isUser: true,
@@ -863,3 +871,64 @@ export const mockedUserFollowsStore = {
   loadMore: jest.fn(),
   // unknown required because of the missing private methods: _xIdle, _xLoading, _fetch, _replaceAll, _append
 } as unknown as UserFollowsViewModel
+
+export const mockedRepostedByViewStore = {
+  isLoading: false,
+  isRefreshing: false,
+  hasLoaded: false,
+  error: '',
+  resolvedUri: '',
+  params: {
+    uri: 'testuri',
+  },
+  uri: '',
+  repostedBy: [
+    {
+      _reactKey: '',
+      did: '',
+      handle: '',
+      displayName: '',
+      declaration: {cid: '', actorType: ''},
+      indexedAt: '',
+    },
+  ],
+  hasContent: false,
+  hasError: false,
+  isEmpty: false,
+  setup: jest.fn().mockResolvedValue({}),
+  refresh: jest.fn().mockResolvedValue({}),
+  loadMore: jest.fn().mockResolvedValue({}),
+  // unknown required because of the missing private methods: _xIdle, _xLoading, _resolveUri, _fetch, _refresh, _replaceAll, _append
+} as unknown as RepostedByViewModel
+
+export const mockedVotesViewStore = {
+  isLoading: false,
+  isRefreshing: false,
+  hasLoaded: false,
+  error: '',
+  resolvedUri: '',
+  params: {
+    uri: 'testuri',
+  },
+  uri: '',
+  votes: [
+    {
+      _reactKey: '',
+      direction: 'up',
+      indexedAt: '',
+      createdAt: '',
+      actor: {
+        did: '',
+        handle: '',
+        declaration: {cid: '', actorType: ''},
+      },
+    },
+  ],
+  hasContent: false,
+  hasError: false,
+  isEmpty: false,
+  setup: jest.fn(),
+  refresh: jest.fn().mockResolvedValue({}),
+  loadMore: jest.fn().mockResolvedValue({}),
+  // unknown required because of the missing private methods: _xIdle, _xLoading, _resolveUri, _fetch, _replaceAll, _append
+} as unknown as VotesViewModel

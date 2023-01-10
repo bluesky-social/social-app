@@ -1,0 +1,879 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PostThread matches snapshot 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <RCTScrollView
+    contentContainerStyle={
+      Object {
+        "paddingBottom": 200,
+      }
+    }
+    data={
+      Array [
+        Object {
+          "_depth": 0,
+          "_hasMore": false,
+          "_isHighlightedPost": false,
+          "_reactKey": "item-1",
+          "assignTreeModels": [MockFunction],
+          "delete": [MockFunction],
+          "post": Object {
+            "author": Object {
+              "declaration": Object {
+                "actorType": "",
+                "cid": "",
+              },
+              "did": "test did",
+              "handle": "test.handle",
+              "viewer": Object {
+                "muted": true,
+              },
+            },
+            "cid": "testcid",
+            "downvoteCount": 0,
+            "indexedAt": "",
+            "record": Object {},
+            "replyCount": 0,
+            "repostCount": 0,
+            "upvoteCount": 0,
+            "uri": "testuri",
+            "viewer": Object {
+              "downvote": "",
+              "repost": "",
+              "upvote": "",
+            },
+          },
+          "postRecord": Object {
+            "createdAt": "",
+            "reply": Object {
+              "parent": Object {
+                "cid": "tes cid",
+                "uri": "testuri",
+              },
+              "root": Object {
+                "cid": "tes cid",
+                "uri": "testuri",
+              },
+            },
+            "text": "test text",
+          },
+          "rootStore": Object {},
+          "toggleDownvote": [MockFunction],
+          "toggleRepost": [MockFunction],
+          "toggleUpvote": [MockFunction],
+        },
+      ]
+    }
+    getItem={[Function]}
+    getItemCount={[Function]}
+    keyExtractor={[Function]}
+    onContentSizeChange={[Function]}
+    onLayout={[Function]}
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
+    onRefresh={[Function]}
+    onScroll={[Function]}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    onScrollToIndexFailed={[Function]}
+    refreshControl={
+      <RefreshControlMock
+        onRefresh={[Function]}
+        refreshing={false}
+      />
+    }
+    refreshing={false}
+    removeClippedSubviews={false}
+    renderItem={[Function]}
+    scrollEventThrottle={50}
+    stickyHeaderIndices={Array []}
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+    viewabilityConfigCallbackPairs={Array []}
+  >
+    <RCTRefreshControl />
+    <View>
+      <View
+        onLayout={[Function]}
+        style={null}
+      >
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Array [
+              Object {
+                "borderTopWidth": 1,
+              },
+              Object {
+                "borderTopColor": "#e4e2e2",
+              },
+              Object {
+                "backgroundColor": "#ffffff",
+              },
+            ]
+          }
+          testID="linkButton-/profile/test.handle/post/"
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "borderLeftWidth": 2,
+                  "height": 8,
+                  "left": 34,
+                  "position": "absolute",
+                  "top": -2,
+                },
+                Object {
+                  "borderColor": "#e4e2e2",
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
+                Object {
+                  "borderLeftWidth": 2,
+                  "bottom": 0,
+                  "left": 34,
+                  "position": "absolute",
+                  "top": 65,
+                },
+                Object {
+                  "borderColor": "#e4e2e2",
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Object {
+                "flexDirection": "row",
+              }
+            }
+            testID="isNotHighlightedPostView"
+          >
+            <View
+              style={
+                Object {
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingTop": 10,
+                  "width": 70,
+                }
+              }
+            >
+              <View
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  Object {
+                    "opacity": 1,
+                  }
+                }
+                testID="linkButton-/profile/test.handle"
+              >
+                <RNSVGSvgView
+                  align="xMidYMid"
+                  bbHeight={50}
+                  bbWidth={50}
+                  focusable={false}
+                  height={50}
+                  meetOrSlice={0}
+                  minX={0}
+                  minY={0}
+                  style={
+                    Array [
+                      Object {
+                        "backgroundColor": "transparent",
+                        "borderWidth": 0,
+                      },
+                      Object {
+                        "flex": 0,
+                        "height": 50,
+                        "width": 50,
+                      },
+                    ]
+                  }
+                  vbHeight={100}
+                  vbWidth={100}
+                  width={50}
+                >
+                  <RNSVGGroup>
+                    <RNSVGDefs>
+                      <RNSVGLinearGradient
+                        gradient={
+                          Array [
+                            0,
+                            -2424577,
+                            1,
+                            -6862849,
+                          ]
+                        }
+                        gradientTransform={null}
+                        gradientUnits={0}
+                        name="grad"
+                        x1="0"
+                        x2="1"
+                        y1="0"
+                        y2="1"
+                      />
+                    </RNSVGDefs>
+                    <RNSVGCircle
+                      cx="50"
+                      cy="50"
+                      fill={
+                        Array [
+                          1,
+                          "grad",
+                        ]
+                      }
+                      propList={
+                        Array [
+                          "fill",
+                        ]
+                      }
+                      r="50"
+                    />
+                    <RNSVGText
+                      content={null}
+                      dx={Array []}
+                      dy={Array []}
+                      fill={4294967295}
+                      font={
+                        Object {
+                          "fontSize": "50",
+                          "fontWeight": "bold",
+                          "textAnchor": "middle",
+                        }
+                      }
+                      propList={
+                        Array [
+                          "fill",
+                        ]
+                      }
+                      rotate={Array []}
+                      x={
+                        Array [
+                          "50",
+                        ]
+                      }
+                      y={
+                        Array [
+                          "67",
+                        ]
+                      }
+                    >
+                      <RNSVGTSpan
+                        content="T"
+                        dx={Array []}
+                        dy={Array []}
+                        font={Object {}}
+                        rotate={Array []}
+                        x={Array []}
+                        y={Array []}
+                      />
+                    </RNSVGText>
+                  </RNSVGGroup>
+                </RNSVGSvgView>
+              </View>
+            </View>
+            <View
+              style={
+                Object {
+                  "flex": 1,
+                  "paddingBottom": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "paddingBottom": 2,
+                    "paddingTop": 0,
+                  }
+                }
+              >
+                <View
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    Object {
+                      "opacity": 1,
+                      "paddingRight": 5,
+                    }
+                  }
+                  testID="linkButton-/profile/test.handle"
+                >
+                  <Text
+                    numberOfLines={1}
+                    style={
+                      Array [
+                        Object {
+                          "color": "#000000",
+                        },
+                        Object {
+                          "fontSize": 17,
+                          "fontWeight": "bold",
+                          "letterSpacing": 0.15,
+                        },
+                        Array [
+                          Object {
+                            "color": "#000000",
+                          },
+                        ],
+                      ]
+                    }
+                  >
+                    test.handle
+                    <Text
+                      style={
+                        Array [
+                          Object {
+                            "color": "#000000",
+                          },
+                          Object {
+                            "fontSize": 15,
+                            "fontWeight": "400",
+                            "letterSpacing": 0.15,
+                          },
+                          Array [
+                            Object {
+                              "color": "#645454",
+                            },
+                          ],
+                        ]
+                      }
+                    >
+                       
+                      test.handle
+                    </Text>
+                  </Text>
+                </View>
+                <Text
+                  style={
+                    Array [
+                      Object {
+                        "color": "#000000",
+                      },
+                      Object {
+                        "fontSize": 15,
+                        "fontWeight": "400",
+                        "letterSpacing": 0.15,
+                      },
+                      Array [
+                        Object {
+                          "paddingRight": 5,
+                        },
+                        Object {
+                          "color": "#645454",
+                        },
+                      ],
+                    ]
+                  }
+                >
+                  · 
+                  Invalid Date
+                </Text>
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                    }
+                  }
+                />
+                <View
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  hitSlop={
+                    Object {
+                      "bottom": 10,
+                      "left": 10,
+                      "right": 10,
+                      "top": 10,
+                    }
+                  }
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    Object {
+                      "opacity": 1,
+                      "paddingLeft": 5,
+                      "paddingRight": 5,
+                    }
+                  }
+                >
+                  <
+                    icon="ellipsis-h"
+                    size={14}
+                    style={
+                      Array [
+                        Object {
+                          "marginTop": 2,
+                        },
+                        Object {
+                          "marginRight": 5,
+                        },
+                        Object {
+                          "color": "#000000",
+                        },
+                      ]
+                    }
+                  />
+                </View>
+              </View>
+              <View
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "center",
+                      "borderRadius": 2,
+                      "flexDirection": "row",
+                      "marginBottom": 6,
+                      "marginTop": 2,
+                      "padding": 10,
+                    },
+                    Object {
+                      "backgroundColor": "#f8f3f3",
+                    },
+                  ]
+                }
+              >
+                <
+                  icon={
+                    Array [
+                      "far",
+                      "eye-slash",
+                    ]
+                  }
+                  style={
+                    Object {
+                      "marginRight": 2,
+                    }
+                  }
+                />
+                <Text
+                  style={
+                    Array [
+                      Object {
+                        "color": "#000000",
+                      },
+                      Object {
+                        "fontSize": 14,
+                        "letterSpacing": 0.25,
+                      },
+                      undefined,
+                    ]
+                  }
+                >
+                  This post is by a muted account.
+                </Text>
+              </View>
+              <View />
+              <View
+                style={
+                  Object {
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                    }
+                  }
+                >
+                  <View
+                    accessible={true}
+                    collapsable={false}
+                    focusable={true}
+                    hitSlop={
+                      Object {
+                        "bottom": 5,
+                        "left": 5,
+                        "right": 5,
+                        "top": 5,
+                      }
+                    }
+                    onClick={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                        "opacity": 1,
+                      }
+                    }
+                    testID="postCtrlsReplyButton"
+                  >
+                    <RNSVGSvgView
+                      align="xMidYMid"
+                      bbHeight={15}
+                      bbWidth={15}
+                      color={4286210401}
+                      fill="none"
+                      focusable={false}
+                      height={15}
+                      meetOrSlice={0}
+                      minX={0}
+                      minY={0}
+                      stroke="#7A6161"
+                      strokeWidth={3}
+                      style={
+                        Array [
+                          Object {
+                            "backgroundColor": "transparent",
+                            "borderWidth": 0,
+                          },
+                          Object {
+                            "color": "#7A6161",
+                          },
+                          Object {
+                            "flex": 0,
+                            "height": 15,
+                            "width": 15,
+                          },
+                        ]
+                      }
+                      tintColor={4286210401}
+                      vbHeight={24}
+                      vbWidth={24}
+                      width={15}
+                    >
+                      <RNSVGGroup
+                        fill={null}
+                        propList={
+                          Array [
+                            "fill",
+                            "stroke",
+                            "strokeWidth",
+                          ]
+                        }
+                        stroke={4286210401}
+                        strokeWidth={3}
+                      >
+                        <RNSVGPath
+                          d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"
+                          propList={
+                            Array [
+                              "strokeLinecap",
+                              "strokeLinejoin",
+                            ]
+                          }
+                          strokeLinecap={1}
+                          strokeLinejoin={1}
+                        />
+                      </RNSVGGroup>
+                    </RNSVGSvgView>
+                    <Text
+                      style={
+                        Array [
+                          Object {
+                            "color": "#000000",
+                          },
+                          Object {
+                            "fontSize": 16,
+                            "letterSpacing": 0.25,
+                          },
+                          Array [
+                            Object {
+                              "color": "#7A6161",
+                            },
+                            Object {
+                              "marginLeft": 5,
+                            },
+                            Object {
+                              "fontSize": 15,
+                            },
+                          ],
+                        ]
+                      }
+                    >
+                      0
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                    }
+                  }
+                >
+                  <View
+                    accessible={true}
+                    collapsable={false}
+                    focusable={true}
+                    hitSlop={
+                      Object {
+                        "bottom": 5,
+                        "left": 5,
+                        "right": 5,
+                        "top": 5,
+                      }
+                    }
+                    onClick={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                        "opacity": 1,
+                      }
+                    }
+                    testID="postCtrlsToggleRepostButton"
+                  >
+                    <View
+                      collapsable={false}
+                      style={
+                        Object {
+                          "opacity": 1,
+                          "transform": Array [
+                            Object {
+                              "scale": 1,
+                            },
+                          ],
+                        }
+                      }
+                    >
+                      <
+                        icon="retweet"
+                        size={17}
+                        style={
+                          Object {
+                            "color": "#7A6161",
+                          }
+                        }
+                      />
+                    </View>
+                    <Text
+                      style={
+                        Array [
+                          Object {
+                            "color": "#000000",
+                          },
+                          Object {
+                            "fontSize": 16,
+                            "letterSpacing": 0.25,
+                          },
+                          Array [
+                            Object {
+                              "color": "#7A6161",
+                            },
+                            Object {
+                              "fontSize": 15,
+                            },
+                            Object {
+                              "marginLeft": 5,
+                            },
+                          ],
+                        ]
+                      }
+                    >
+                      0
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                    }
+                  }
+                >
+                  <View
+                    accessible={true}
+                    collapsable={false}
+                    focusable={true}
+                    hitSlop={
+                      Object {
+                        "bottom": 5,
+                        "left": 5,
+                        "right": 5,
+                        "top": 5,
+                      }
+                    }
+                    onClick={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                        "opacity": 1,
+                      }
+                    }
+                    testID="postCtrlsToggleUpvoteButton"
+                  >
+                    <View
+                      collapsable={false}
+                      style={
+                        Object {
+                          "opacity": 1,
+                          "transform": Array [
+                            Object {
+                              "scale": 1,
+                            },
+                          ],
+                        }
+                      }
+                    >
+                      <RNSVGSvgView
+                        align="xMidYMid"
+                        bbHeight={17}
+                        bbWidth={17}
+                        color={4286210401}
+                        focusable={false}
+                        height={17}
+                        meetOrSlice={0}
+                        minX={0}
+                        minY={0}
+                        style={
+                          Array [
+                            Object {
+                              "backgroundColor": "transparent",
+                              "borderWidth": 0,
+                            },
+                            Array [
+                              Object {
+                                "color": "#7A6161",
+                              },
+                            ],
+                            Object {
+                              "flex": 0,
+                              "height": 17,
+                              "width": 17,
+                            },
+                          ]
+                        }
+                        tintColor={4286210401}
+                        vbHeight={14}
+                        vbWidth={14}
+                        width={17}
+                      >
+                        <RNSVGGroup>
+                          <RNSVGPath
+                            d="M 7 3 L 2 8 L 4.5 8 L 4.5 11.5 L 9.5 11.5 L 9.5 8 L 12 8 L 7 3 Z"
+                            propList={
+                              Array [
+                                "stroke",
+                                "strokeWidth",
+                                "strokeLinecap",
+                                "strokeLinejoin",
+                              ]
+                            }
+                            stroke={
+                              Array [
+                                2,
+                              ]
+                            }
+                            strokeLinecap={1}
+                            strokeLinejoin={1}
+                            strokeWidth={1.5}
+                          />
+                        </RNSVGGroup>
+                      </RNSVGSvgView>
+                    </View>
+                    <Text
+                      style={
+                        Array [
+                          Object {
+                            "color": "#000000",
+                          },
+                          Object {
+                            "fontSize": 16,
+                            "letterSpacing": 0.25,
+                          },
+                          Array [
+                            Object {
+                              "color": "#7A6161",
+                            },
+                            Object {
+                              "fontSize": 15,
+                            },
+                            Object {
+                              "marginLeft": 5,
+                            },
+                          ],
+                        ]
+                      }
+                    >
+                      0
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                    }
+                  }
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+</View>
+`;

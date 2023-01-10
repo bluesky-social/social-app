@@ -2,8 +2,8 @@ import React from 'react'
 import {Profile} from '../../../src/view/screens/Profile'
 import {render} from '../../../jest/test-utils'
 import {
-  mockedFeedModel,
-  mockedMembershipsModel,
+  mockedFeedStore,
+  mockedMembershipsStore,
   mockedMembersStore,
   mockedProfileStore,
   mockedProfileUiStore,
@@ -79,7 +79,7 @@ describe('Profile', () => {
 
     expect(viewSelectorFlatList).toBeTruthy()
     expect(viewSelectorFlatList.props.data[2]).toBe(
-      mockedFeedModel.nonReplyFeed[0],
+      mockedFeedStore.nonReplyFeed[0],
     )
   })
 
@@ -89,7 +89,7 @@ describe('Profile', () => {
       selectedView: Sections.Trending,
     })
     // @ts-expect-error
-    const sliceSpy = jest.spyOn(mockedFeedModel.feed, 'slice')
+    const sliceSpy = jest.spyOn(mockedFeedStore.feed, 'slice')
 
     render(<Profile {...mockedProps} />)
 
@@ -100,7 +100,7 @@ describe('Profile', () => {
     jest.spyOn(React, 'useMemo').mockReturnValue({
       ...mockedProfileUiStore,
       feed: {
-        ...mockedFeedModel,
+        ...mockedFeedStore,
         hasMore: false,
       },
     })
@@ -119,7 +119,7 @@ describe('Profile', () => {
     jest.spyOn(React, 'useMemo').mockReturnValue({
       ...mockedProfileUiStore,
       feed: {
-        ...mockedFeedModel,
+        ...mockedFeedStore,
         hasContent: false,
         isEmpty: true,
       },
@@ -141,7 +141,7 @@ describe('Profile', () => {
       selectedView: Sections.Scenes,
     })
     // @ts-expect-error
-    const sliceSpy = jest.spyOn(mockedMembershipsModel.memberships, 'slice')
+    const sliceSpy = jest.spyOn(mockedMembershipsStore.memberships, 'slice')
 
     render(<Profile {...mockedProps} />)
 
@@ -153,7 +153,7 @@ describe('Profile', () => {
       ...mockedProfileUiStore,
       selectedView: Sections.Scenes,
       memberships: {
-        ...mockedMembershipsModel,
+        ...mockedMembershipsStore,
         hasContent: false,
         isEmpty: true,
       },

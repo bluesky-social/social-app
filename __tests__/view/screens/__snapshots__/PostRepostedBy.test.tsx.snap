@@ -9,7 +9,7 @@ exports[`PostRepostedBy matches snapshot 1`] = `
   }
 >
   <View
-    testID="postRepostedByView"
+    testID="postRepostedByMainView"
   >
     <View
       style={
@@ -377,7 +377,9 @@ exports[`PostRepostedBy matches snapshot 1`] = `
         />
       </View>
     </View>
-    <View>
+    <View
+      testID="postRepostedByView"
+    >
       <RCTScrollView
         data={Array []}
         getItem={[Function]}

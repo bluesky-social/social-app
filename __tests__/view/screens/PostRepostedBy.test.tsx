@@ -19,9 +19,9 @@ describe('PostRepostedBy', () => {
 
   it('renders reposted by screen', async () => {
     const {findByTestId} = render(<PostRepostedBy {...mockedProps} />)
-    const postRepostedByView = await findByTestId('postRepostedByView')
+    const postRepostedByMainView = await findByTestId('postRepostedByMainView')
 
-    expect(postRepostedByView).toBeTruthy()
+    expect(postRepostedByMainView).toBeTruthy()
 
     const headerTitle = await findByTestId('headerTitle')
     expect(headerTitle.props.children).toBe('Reposted by')
