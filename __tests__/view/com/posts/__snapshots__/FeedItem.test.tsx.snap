@@ -382,7 +382,7 @@ exports[`FeedItem matches snapshot 1`] = `
             }
           >
             · 
-            12d
+            13d
           </Text>
           <View
             style={
