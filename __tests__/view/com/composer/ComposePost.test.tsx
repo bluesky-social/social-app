@@ -1,6 +1,6 @@
 import React from 'react'
 import {ComposePost} from '../../../../src/view/com/composer/ComposePost'
-import {fireEvent, render, waitFor} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render, waitFor} from '../../../../jest/test-utils'
 import * as apilib from '../../../../src/state/lib/api'
 import {
   mockedAutocompleteViewStore,
@@ -26,6 +26,7 @@ describe('ComposePost', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders post composer', async () => {

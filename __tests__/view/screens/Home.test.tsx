@@ -1,6 +1,6 @@
 import React from 'react'
 import {Home} from '../../../src/view/screens/Home'
-import {fireEvent, render, waitFor} from '../../../jest/test-utils'
+import {cleanup, fireEvent, render, waitFor} from '../../../jest/test-utils'
 import {
   mockedMeStore,
   mockedRootStore,
@@ -18,6 +18,7 @@ describe('Home', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders feed', async () => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {FeedItem} from '../../../../src/view/com/posts/FeedItem'
 import {
   mockedFeedItemStore,
@@ -14,6 +14,7 @@ describe('FeedItem', () => {
   }
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders and presses reply button', async () => {

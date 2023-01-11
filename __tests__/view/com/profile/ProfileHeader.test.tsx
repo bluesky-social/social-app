@@ -1,5 +1,5 @@
 import React from 'react'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {ProfileViewModel} from '../../../../src/state/models/profile-view'
 import {ProfileHeader} from '../../../../src/view/com/profile/ProfileHeader'
 import {
@@ -15,6 +15,7 @@ describe('ProfileHeader', () => {
   }
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders ErrorMessage on error', async () => {

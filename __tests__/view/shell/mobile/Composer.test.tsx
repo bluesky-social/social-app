@@ -1,6 +1,6 @@
 import React from 'react'
 import {Composer} from '../../../../src/view/shell/mobile/Composer'
-import {render} from '../../../../jest/test-utils'
+import {cleanup, render} from '../../../../jest/test-utils'
 
 describe('Composer', () => {
   jest.useFakeTimers()
@@ -19,6 +19,7 @@ describe('Composer', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders', () => {

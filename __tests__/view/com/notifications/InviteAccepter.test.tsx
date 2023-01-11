@@ -1,5 +1,5 @@
 import React from 'react'
-import {fireEvent, render, waitFor} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render, waitFor} from '../../../../jest/test-utils'
 import {ConfirmModal} from '../../../../src/state/models/shell-ui'
 import {InviteAccepter} from '../../../../src/view/com/notifications/InviteAccepter'
 import {
@@ -18,6 +18,7 @@ describe('InviteAccepter', () => {
   }
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('presses accept invite button', async () => {

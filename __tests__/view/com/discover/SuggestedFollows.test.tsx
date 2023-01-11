@@ -1,6 +1,6 @@
 import React from 'react'
 import {SuggestedFollows} from '../../../../src/view/com/discover/SuggestedFollows'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {mockedSuggestedActorsStore} from '../../../../__mocks__/state-mock'
 import * as apilib from '../../../../src/state/lib/api'
 
@@ -11,6 +11,7 @@ describe('SuggestedFollows', () => {
   }
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders follow/unfollow buttons', async () => {

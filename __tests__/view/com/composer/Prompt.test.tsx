@@ -1,6 +1,6 @@
 import React from 'react'
 import {ComposePrompt} from '../../../../src/view/com/composer/Prompt'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {
   mockedMeStore,
   mockedNavigationStore,
@@ -14,6 +14,7 @@ describe('Prompt', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('triggers onPressCompose by pressing the button', async () => {

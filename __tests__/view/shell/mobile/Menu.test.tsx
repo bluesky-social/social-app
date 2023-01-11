@@ -1,6 +1,6 @@
 import React from 'react'
 import {Menu} from '../../../../src/view/shell/mobile/Menu'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {
   mockedNavigationStore,
   mockedShellStore,
@@ -16,6 +16,7 @@ describe('Menu', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders menu', () => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {ProfileFollowers} from '../../../../src/view/com/profile/ProfileFollowers'
 import {
   mockedLogStore,
@@ -12,6 +12,7 @@ describe('ProfileFollowers', () => {
   }
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders activity indicator', async () => {

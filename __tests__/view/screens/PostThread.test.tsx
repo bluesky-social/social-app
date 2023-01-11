@@ -1,6 +1,6 @@
 import React from 'react'
 import {PostThread} from '../../../src/view/screens/PostThread'
-import {render} from '../../../jest/test-utils'
+import {cleanup, render} from '../../../jest/test-utils'
 
 describe('PostThread', () => {
   const mockedProps = {
@@ -14,6 +14,7 @@ describe('PostThread', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders post screen', async () => {

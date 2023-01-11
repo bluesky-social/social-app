@@ -1,6 +1,6 @@
 import React from 'react'
 import {Notifications} from '../../../src/view/screens/Notifications'
-import {render} from '../../../jest/test-utils'
+import {cleanup, render} from '../../../jest/test-utils'
 
 describe('Notifications', () => {
   const mockedProps = {
@@ -11,6 +11,7 @@ describe('Notifications', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders notifications screen', async () => {

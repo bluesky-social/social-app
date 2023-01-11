@@ -1,6 +1,6 @@
 import React from 'react'
 import {Contacts} from '../../../src/view/screens/Contacts'
-import {render} from '../../../jest/test-utils'
+import {cleanup, render} from '../../../jest/test-utils'
 import {mockedMeStore, mockedRootStore} from '../../../__mocks__/state-mock'
 
 describe('Contacts', () => {
@@ -12,6 +12,7 @@ describe('Contacts', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders contacts page', () => {

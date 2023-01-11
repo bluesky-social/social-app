@@ -1,6 +1,6 @@
 import React from 'react'
 import {ProfileMembers} from '../../../src/view/screens/ProfileMembers'
-import {render} from '../../../jest/test-utils'
+import {cleanup, render} from '../../../jest/test-utils'
 
 describe('ProfileMembers', () => {
   jest.useFakeTimers()
@@ -14,6 +14,7 @@ describe('ProfileMembers', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders members screen', async () => {

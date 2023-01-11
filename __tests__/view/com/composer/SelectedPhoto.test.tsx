@@ -1,6 +1,6 @@
 import React from 'react'
 import {SelectedPhoto} from '../../../../src/view/com/composer/SelectedPhoto'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 
 describe('SelectedPhoto', () => {
   const mockedProps = {
@@ -10,6 +10,7 @@ describe('SelectedPhoto', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('has no photos to render', () => {

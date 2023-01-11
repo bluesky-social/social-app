@@ -1,5 +1,5 @@
 import React from 'react'
-import {act, fireEvent, render} from '../../../../jest/test-utils'
+import {act, cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {FeedModel} from '../../../../src/state/models/feed-view'
 import {Feed} from '../../../../src/view/com/posts/Feed'
 import {mockedFeedStore} from '../../../../__mocks__/state-mock'
@@ -13,6 +13,7 @@ describe('Feed', () => {
   }
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders ErrorMessage on error', async () => {

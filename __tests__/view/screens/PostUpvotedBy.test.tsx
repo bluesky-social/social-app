@@ -1,6 +1,6 @@
 import React from 'react'
 import {PostUpvotedBy} from '../../../src/view/screens/PostUpvotedBy'
-import {render} from '../../../jest/test-utils'
+import {cleanup, render} from '../../../jest/test-utils'
 
 describe('PostUpvotedBy', () => {
   jest.useFakeTimers()
@@ -15,6 +15,7 @@ describe('PostUpvotedBy', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders upvoted by screen', async () => {

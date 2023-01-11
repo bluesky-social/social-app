@@ -1,10 +1,11 @@
 import React from 'react'
 import {Debug} from '../../../src/view/screens/Debug'
-import {render} from '../../../jest/test-utils'
+import {cleanup, render} from '../../../jest/test-utils'
 
 describe('Debug', () => {
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('matches snapshot', () => {

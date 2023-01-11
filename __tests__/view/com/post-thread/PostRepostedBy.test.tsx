@@ -1,5 +1,5 @@
 import React from 'react'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {PostRepostedBy} from '../../../../src/view/com/post-thread/PostRepostedBy'
 import {mockedRepostedByViewStore} from '../../../../__mocks__/state-mock'
 
@@ -9,6 +9,7 @@ describe('PostRepostedBy', () => {
   }
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders ActivityIndicator on loading', async () => {

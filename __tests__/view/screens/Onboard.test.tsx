@@ -1,12 +1,13 @@
 import React from 'react'
 import {Onboard} from '../../../src/view/screens/Onboard'
-import {render} from '../../../jest/test-utils'
+import {cleanup, render} from '../../../jest/test-utils'
 
 describe('Onboard', () => {
   jest.useFakeTimers()
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders onboard screen', async () => {

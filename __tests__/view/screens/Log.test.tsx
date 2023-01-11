@@ -1,6 +1,6 @@
 import React from 'react'
 import {Log} from '../../../src/view/screens/Log'
-import {render} from '../../../jest/test-utils'
+import {cleanup, render} from '../../../jest/test-utils'
 
 describe('Log', () => {
   const mockedProps = {
@@ -11,6 +11,7 @@ describe('Log', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('matches snapshot', () => {

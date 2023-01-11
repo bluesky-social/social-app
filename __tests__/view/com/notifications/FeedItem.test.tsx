@@ -1,5 +1,5 @@
 import React from 'react'
-import {render} from '../../../../jest/test-utils'
+import {cleanup, render} from '../../../../jest/test-utils'
 import {NotificationsViewItemModel} from '../../../../src/state/models/notifications-view'
 import {FeedItem} from '../../../../src/view/com/notifications/FeedItem'
 import {
@@ -14,6 +14,7 @@ describe('FeedItem', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders upvote', () => {

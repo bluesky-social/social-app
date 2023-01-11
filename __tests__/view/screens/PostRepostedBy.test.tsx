@@ -1,6 +1,6 @@
 import React from 'react'
 import {PostRepostedBy} from '../../../src/view/screens/PostRepostedBy'
-import {render} from '../../../jest/test-utils'
+import {cleanup, render} from '../../../jest/test-utils'
 
 describe('PostRepostedBy', () => {
   jest.useFakeTimers()
@@ -15,6 +15,7 @@ describe('PostRepostedBy', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders reposted by screen', async () => {

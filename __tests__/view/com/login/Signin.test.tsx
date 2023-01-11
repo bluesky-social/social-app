@@ -1,6 +1,6 @@
 import React from 'react'
 import {Signin} from '../../../../src/view/com/login/Signin'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {SessionServiceClient, sessionClient as AtpApi} from '@atproto/api'
 import {
   mockedLogStore,
@@ -28,6 +28,7 @@ describe('Signin', () => {
   }
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders logs in form', async () => {

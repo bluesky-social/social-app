@@ -1,6 +1,6 @@
 import React from 'react'
 import {Autocomplete} from '../../../../src/view/com/composer/Autocomplete'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 
 describe('Autocomplete', () => {
   const onSelectMock = jest.fn()
@@ -21,6 +21,7 @@ describe('Autocomplete', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders a button for each user', async () => {

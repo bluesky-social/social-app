@@ -1,8 +1,11 @@
 import React from 'react'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {PostThreadViewPostModel} from '../../../../src/state/models/post-thread-view'
 import {PostThreadItem} from '../../../../src/view/com/post-thread/PostThreadItem'
-import {mockedPostThreadViewPostStore, mockedShellStore} from '../../../../__mocks__/state-mock'
+import {
+  mockedPostThreadViewPostStore,
+  mockedShellStore,
+} from '../../../../__mocks__/state-mock'
 
 describe('PostThreadItem', () => {
   const mockedProps = {
@@ -11,6 +14,7 @@ describe('PostThreadItem', () => {
   }
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders ErrorMessage on lack of post record', async () => {

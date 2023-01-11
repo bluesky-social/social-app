@@ -1,12 +1,12 @@
 import React from 'react'
-import RN from 'react-native'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {FeatureExplainer} from '../../../../src/view/com/onboard/FeatureExplainer'
 import {mockedOnboardStore} from '../../../../__mocks__/state-mock'
 
 describe('FeatureExplainer', () => {
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders and clicks skip button', async () => {

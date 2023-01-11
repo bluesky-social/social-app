@@ -1,6 +1,6 @@
 import React from 'react'
 import {Settings} from '../../../src/view/screens/Settings'
-import {render} from '../../../jest/test-utils'
+import {cleanup, render} from '../../../jest/test-utils'
 
 describe('Settings', () => {
   const mockedProps = {
@@ -11,6 +11,7 @@ describe('Settings', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders settings screen', async () => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {PostThreadViewModel} from '../../../../src/state/models/post-thread-view'
 import {Post} from '../../../../src/view/com/post/Post'
 import {
@@ -15,6 +15,7 @@ describe('Post', () => {
   }
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders ActivityIndicator when loading', async () => {

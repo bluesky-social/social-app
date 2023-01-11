@@ -1,6 +1,6 @@
 import React from 'react'
 import {Search} from '../../../src/view/screens/Search'
-import {fireEvent, render} from '../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../jest/test-utils'
 
 describe('Search', () => {
   jest.useFakeTimers()
@@ -14,6 +14,7 @@ describe('Search', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders search screen', async () => {

@@ -1,11 +1,12 @@
 import React from 'react'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {Follows} from '../../../../src/view/com/onboard/Follows'
 import {mockedOnboardStore} from '../../../../__mocks__/state-mock'
 
 describe('Follows', () => {
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders and clicks skip button', async () => {

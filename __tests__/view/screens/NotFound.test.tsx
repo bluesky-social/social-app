@@ -1,11 +1,12 @@
 import React from 'react'
 import {NotFound} from '../../../src/view/screens/NotFound'
-import {fireEvent, render} from '../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../jest/test-utils'
 import {mockedNavigationStore} from '../../../__mocks__/state-mock'
 
 describe('NotFound', () => {
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders not found screen', async () => {

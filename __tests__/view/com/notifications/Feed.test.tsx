@@ -1,5 +1,5 @@
 import React from 'react'
-import {act, fireEvent, render} from '../../../../jest/test-utils'
+import {act, cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {NotificationsViewModel} from '../../../../src/state/models/notifications-view'
 import {Feed} from '../../../../src/view/com/notifications/Feed'
 import {mockedNotificationsStore} from '../../../../__mocks__/state-mock'
@@ -12,6 +12,7 @@ describe('Feed', () => {
   }
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it("doesn't render on missing data", async () => {

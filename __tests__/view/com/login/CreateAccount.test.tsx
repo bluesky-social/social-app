@@ -1,7 +1,7 @@
 import React from 'react'
 import {Keyboard} from 'react-native'
 import {CreateAccount} from '../../../../src/view/com/login/CreateAccount'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {
   mockedLogStore,
   mockedRootStore,
@@ -15,6 +15,7 @@ describe('CreateAccount', () => {
   }
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders form and creates new account', async () => {

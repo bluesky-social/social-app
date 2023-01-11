@@ -1,7 +1,7 @@
 import React from 'react'
 import {Animated, Share} from 'react-native'
 import {TabsSelector} from '../../../../src/view/shell/mobile/TabsSelector'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {mockedNavigationStore} from '../../../../__mocks__/state-mock'
 
 describe('TabsSelector', () => {
@@ -15,6 +15,7 @@ describe('TabsSelector', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders tabs selector', () => {

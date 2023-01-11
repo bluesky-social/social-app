@@ -1,6 +1,6 @@
 import React from 'react'
 import {PhotoCarouselPicker} from '../../../../src/view/com/composer/PhotoCarouselPicker'
-import {fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {
   openCamera,
   openCropper,
@@ -26,6 +26,7 @@ describe('PhotoCarouselPicker', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders carousel picker', async () => {

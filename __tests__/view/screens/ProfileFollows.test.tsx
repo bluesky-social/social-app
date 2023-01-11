@@ -1,6 +1,6 @@
 import React from 'react'
 import {ProfileFollows} from '../../../src/view/screens/ProfileFollows'
-import {render} from '../../../jest/test-utils'
+import {cleanup, render} from '../../../jest/test-utils'
 
 describe('ProfileFollows', () => {
   jest.useFakeTimers()
@@ -14,6 +14,7 @@ describe('ProfileFollows', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders followed screen', async () => {

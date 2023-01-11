@@ -1,10 +1,11 @@
 import React from 'react'
 import {Login} from '../../../src/view/screens/Login'
-import {fireEvent, render} from '../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../jest/test-utils'
 
 describe('Login', () => {
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('renders initial screen', () => {

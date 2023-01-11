@@ -1,6 +1,6 @@
 import React from 'react'
 import {Profile} from '../../../src/view/screens/Profile'
-import {render} from '../../../jest/test-utils'
+import {cleanup, render} from '../../../jest/test-utils'
 import {
   mockedFeedStore,
   mockedMembershipsStore,
@@ -22,6 +22,7 @@ describe('Profile', () => {
 
   afterAll(() => {
     jest.clearAllMocks()
+    cleanup()
   })
 
   it('matches snapshot', () => {
