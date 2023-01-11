@@ -15,11 +15,11 @@ describe('SuggestedFollows', () => {
 
   it('renders follow/unfollow buttons', async () => {
     jest.spyOn(React, 'useMemo').mockReturnValue(mockedSuggestedActorsStore)
-    const spyOnFollow = jest.spyOn(apilib, 'follow').mockResolvedValue({
+    const followSpy = jest.spyOn(apilib, 'follow').mockResolvedValue({
       uri: 'test uri',
       cid: '',
     })
-    const spyOnUnfollow = jest.spyOn(apilib, 'unfollow').mockResolvedValue()
+    const unfollowSpy = jest.spyOn(apilib, 'unfollow').mockResolvedValue()
 
     const {findAllByTestId, queryByTestId, findByTestId} = render(
       <SuggestedFollows {...mockedProps} />,
@@ -32,12 +32,12 @@ describe('SuggestedFollows', () => {
     expect(unfollowButton).toBeFalsy()
 
     fireEvent.press(followButton[0])
-    expect(spyOnFollow).toHaveBeenCalled()
+    expect(followSpy).toHaveBeenCalled()
 
     unfollowButton = await findByTestId('unfollowButton')
     expect(unfollowButton).toBeTruthy()
     fireEvent.press(unfollowButton)
-    expect(spyOnUnfollow).toHaveBeenCalled()
+    expect(unfollowSpy).toHaveBeenCalled()
   })
 
   it('renders error message', async () => {

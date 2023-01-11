@@ -24,8 +24,8 @@ describe('InviteAccepter', () => {
     const openModalMock = jest
       .fn()
       .mockImplementation((item: ConfirmModal) => item.onPressConfirm())
-    const spyOnToast = jest.spyOn(Toast, 'show')
-    const spyOnAcceptSceneInvite = jest
+    const toastSpy = jest.spyOn(Toast, 'show')
+    const onAcceptSceneInviteSpy = jest
       .spyOn(apilib, 'acceptSceneInvite')
       .mockResolvedValue('test ok')
     const {findByTestId} = render(<InviteAccepter {...mockedProps} />, {
@@ -41,11 +41,11 @@ describe('InviteAccepter', () => {
     fireEvent.press(acceptInviteButton)
 
     expect(openModalMock).toHaveBeenCalled()
-    expect(spyOnAcceptSceneInvite).toHaveBeenCalled()
+    expect(onAcceptSceneInviteSpy).toHaveBeenCalled()
 
     await waitFor(() => {
       expect(mockedMeStore.refreshMemberships).toHaveBeenCalled()
-      expect(spyOnToast).toHaveBeenCalled()
+      expect(toastSpy).toHaveBeenCalled()
     })
   })
 

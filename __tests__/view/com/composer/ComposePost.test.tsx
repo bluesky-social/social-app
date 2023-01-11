@@ -42,11 +42,11 @@ describe('ComposePost', () => {
   })
 
   it('changes text and publishes post', async () => {
-    const spyOnPost = jest.spyOn(apilib, 'post').mockResolvedValue({
+    const postSpy = jest.spyOn(apilib, 'post').mockResolvedValue({
       uri: '',
       cid: '',
     })
-    const spyOnToast = jest.spyOn(Toast, 'show')
+    const toastSpy = jest.spyOn(Toast, 'show')
 
     const wrapper = render(<ComposePost {...mockedProps} />)
 
@@ -58,7 +58,7 @@ describe('ComposePost', () => {
     )
     fireEvent.press(composerPublishButton)
 
-    expect(spyOnPost).toHaveBeenCalledWith(
+    expect(postSpy).toHaveBeenCalledWith(
       mockedRootStore,
       'testing publish',
       'testUri',
@@ -71,7 +71,7 @@ describe('ComposePost', () => {
     await waitFor(() => {
       expect(mockedProps.onPost).toHaveBeenCalled()
       expect(mockedProps.onClose).toHaveBeenCalled()
-      expect(spyOnToast).toHaveBeenCalledWith('Your reply has been published', {
+      expect(toastSpy).toHaveBeenCalledWith('Your reply has been published', {
         animation: true,
         duration: 3500,
         hideOnPress: true,
