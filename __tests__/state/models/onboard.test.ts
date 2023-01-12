@@ -10,6 +10,10 @@ describe('OnboardModel', () => {
     onboardModel = new OnboardModel()
   })
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('should call the start method', () => {
     onboardModel.start()
     expect(onboardModel.isOnboarding).toBe(true)

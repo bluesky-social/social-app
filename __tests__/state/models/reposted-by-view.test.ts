@@ -67,6 +67,10 @@ describe('RepostedByViewModel', () => {
     model = new RepostedByViewModel(rootStore, params)
   })
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('should call the setup method', async () => {
     await model.setup()
     expect(requestSpy).toHaveBeenCalled()

@@ -17,6 +17,10 @@ describe('MembershipsViewModel', () => {
     store = new MembershipsViewModel(rootStore, params)
   })
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('should call the setup method', async () => {
     const getMembershipsSpy = jest.spyOn(api.app.bsky.graph, 'getMemberships')
     getMembershipsSpy.mockResolvedValueOnce({

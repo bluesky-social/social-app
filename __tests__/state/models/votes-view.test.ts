@@ -56,6 +56,10 @@ describe('VotesViewModel', () => {
     model = new VotesViewModel(rootStore, params)
   })
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('should call the setup method', async () => {
     await model.setup()
     expect(requestSpy).toHaveBeenCalled()

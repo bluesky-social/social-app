@@ -60,7 +60,7 @@ describe('UserFollowsViewModel', () => {
     model = new UserFollowsViewModel(rootStore, params)
   })
 
-  afterEach(() => {
+  afterAll(() => {
     jest.clearAllMocks()
   })
 

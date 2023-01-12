@@ -29,6 +29,10 @@ describe('ProfilesViewModel', () => {
     model = new ProfilesViewModel(rootStore)
   })
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('should call the getProfile & overwrite method', async () => {
     await model.getProfile('test did')
     expect(model.cache.get('test did')).toEqual({

@@ -8,7 +8,7 @@ describe('LogModel', () => {
     jest.spyOn(console, 'debug')
   })
 
-  afterEach(() => {
+  afterAll(() => {
     jest.clearAllMocks()
   })
 

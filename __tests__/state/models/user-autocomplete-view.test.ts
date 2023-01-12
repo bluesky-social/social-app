@@ -74,6 +74,10 @@ describe('UserAutocompleteViewModel', () => {
     model = new UserAutocompleteViewModel(rootStore)
   })
 
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
+
   it('should call the setup method', async () => {
     await model.setup()
     expect(requestSpy).toHaveBeenCalled()

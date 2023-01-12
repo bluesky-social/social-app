@@ -19,7 +19,7 @@ describe('UserLocalPhotosModel', () => {
     model = new UserLocalPhotosModel(rootStore)
   })
 
-  afterEach(() => {
+  afterAll(() => {
     jest.clearAllMocks()
   })
 
