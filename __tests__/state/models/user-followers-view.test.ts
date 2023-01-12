@@ -14,6 +14,7 @@ describe('UserFollowersViewModel', () => {
   let model: UserFollowersViewModel
   let rootStore: RootStoreModel
   let api: SessionServiceClient
+  let requestSpy: jest.SpyInstance
   const params: GetFollowers.QueryParams = {
     user: 'did:example:123',
   }
@@ -46,7 +47,7 @@ describe('UserFollowersViewModel', () => {
   beforeEach(() => {
     api = sessionClient.service(DEFAULT_SERVICE) as SessionServiceClient
     rootStore = new RootStoreModel(api)
-    jest
+    requestSpy = jest
       .spyOn(rootStore.api.app.bsky.graph, 'getFollowers')
       .mockImplementation((): Promise<any> => {
         return Promise.resolve({
@@ -65,6 +66,7 @@ describe('UserFollowersViewModel', () => {
 
   it('should call the setup method', async () => {
     await model.setup()
+    expect(requestSpy).toHaveBeenCalled()
     expect(model.subject).toEqual(subject)
     expect(model.followers).toEqual(followers)
     expect(model.hasLoaded).toEqual(true)
@@ -72,6 +74,7 @@ describe('UserFollowersViewModel', () => {
 
   it('should call the refresh method', async () => {
     await model.refresh()
+    expect(requestSpy).toHaveBeenCalled()
     expect(model.subject).toEqual(subject)
     expect(model.followers).toEqual(followers)
     expect(model.hasLoaded).toEqual(true)

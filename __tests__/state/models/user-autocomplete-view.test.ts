@@ -12,6 +12,7 @@ describe('UserAutocompleteViewModel', () => {
   let model: UserAutocompleteViewModel
   let rootStore: RootStoreModel
   let api: SessionServiceClient
+  let requestSpy: jest.SpyInstance
   const follows: GetFollows.Follow[] = [
     {
       did: 'did:example:456',
@@ -52,7 +53,7 @@ describe('UserAutocompleteViewModel', () => {
   beforeEach(() => {
     api = sessionClient.service(DEFAULT_SERVICE) as SessionServiceClient
     rootStore = new RootStoreModel(api)
-    jest
+    requestSpy = jest
       .spyOn(rootStore.api.app.bsky.graph, 'getFollows')
       .mockImplementation((): Promise<any> => {
         return Promise.resolve({
@@ -75,6 +76,7 @@ describe('UserAutocompleteViewModel', () => {
 
   it('should call the setup method', async () => {
     await model.setup()
+    expect(requestSpy).toHaveBeenCalled()
     expect(model.follows).toEqual(follows)
   })
 

@@ -1,35 +1,42 @@
-import {SuggestedActorsViewModel} from '../../../src/state/models/suggested-actors-view'
+import {VotesViewModel} from './../../../src/state/models/votes-view'
 import {RootStoreModel} from '../../../src/state/models/root-store'
 import {
-  AppBskyActorGetSuggestions as GetSuggestions,
   sessionClient,
   SessionServiceClient,
+  AppBskyFeedGetVotes as GetVotes,
 } from '@atproto/api'
 import {DEFAULT_SERVICE} from '../../../src/state'
 
-describe('SuggestedActorsViewModel', () => {
-  let model: SuggestedActorsViewModel
+describe('VotesViewModel', () => {
+  let model: VotesViewModel
   let rootStore: RootStoreModel
   let api: SessionServiceClient
   let requestSpy: jest.SpyInstance
-  const actors: GetSuggestions.Actor[] = [
+  const params: GetVotes.QueryParams = {
+    uri: 'testuri',
+  }
+  const votes = [
     {
       _reactKey: 'item-0',
-      did: 'did:example:456',
-      handle: 'handle',
-      displayName: 'Example User 1',
-      declaration: {cid: '', actorType: ''},
+      direction: 'up',
       indexedAt: '',
       createdAt: '',
+      actor: {
+        did: '',
+        handle: '',
+        declaration: {cid: '', actorType: ''},
+      },
     },
     {
       _reactKey: 'item-1',
-      did: 'did:example:789',
-      handle: 'handle',
-      displayName: 'Example User 2',
-      declaration: {cid: '', actorType: ''},
+      direction: 'down',
       indexedAt: '',
       createdAt: '',
+      actor: {
+        did: '',
+        handle: '',
+        declaration: {cid: '', actorType: ''},
+      },
     },
   ]
 
@@ -37,28 +44,29 @@ describe('SuggestedActorsViewModel', () => {
     api = sessionClient.service(DEFAULT_SERVICE) as SessionServiceClient
     rootStore = new RootStoreModel(api)
     requestSpy = jest
-      .spyOn(rootStore.api.app.bsky.actor, 'getSuggestions')
+      .spyOn(rootStore.api.app.bsky.feed, 'getVotes')
       .mockImplementation((): Promise<any> => {
         return Promise.resolve({
           data: {
-            actors,
+            uri: '',
+            votes,
           },
         })
       })
-    model = new SuggestedActorsViewModel(rootStore)
+    model = new VotesViewModel(rootStore, params)
   })
 
   it('should call the setup method', async () => {
     await model.setup()
     expect(requestSpy).toHaveBeenCalled()
-    expect(model.suggestions).toEqual(actors)
+    expect(model.votes).toEqual(votes)
     expect(model.hasLoaded).toEqual(true)
   })
 
   it('should call the refresh method', async () => {
     await model.refresh()
     expect(requestSpy).toHaveBeenCalled()
-    expect(model.suggestions).toEqual(actors)
+    expect(model.votes).toEqual(votes)
     expect(model.hasLoaded).toEqual(true)
   })
 

@@ -1,35 +1,54 @@
-import {SuggestedActorsViewModel} from '../../../src/state/models/suggested-actors-view'
+import {RepostedByViewModel} from '../../../src/state/models/reposted-by-view'
 import {RootStoreModel} from '../../../src/state/models/root-store'
 import {
-  AppBskyActorGetSuggestions as GetSuggestions,
   sessionClient,
   SessionServiceClient,
+  AppBskyFeedGetRepostedBy as GetRepostedBy,
 } from '@atproto/api'
 import {DEFAULT_SERVICE} from '../../../src/state'
 
-describe('SuggestedActorsViewModel', () => {
-  let model: SuggestedActorsViewModel
+describe('RepostedByViewModel', () => {
+  let model: RepostedByViewModel
   let rootStore: RootStoreModel
   let api: SessionServiceClient
   let requestSpy: jest.SpyInstance
-  const actors: GetSuggestions.Actor[] = [
+  const params: GetRepostedBy.QueryParams = {
+    uri: 'testuri',
+  }
+  const repostedBy = [
     {
       _reactKey: 'item-0',
-      did: 'did:example:456',
-      handle: 'handle',
-      displayName: 'Example User 1',
-      declaration: {cid: '', actorType: ''},
+      declaration: {
+        actorType: '',
+        cid: '',
+      },
+      did: '',
+      displayName: '',
+      handle: '',
       indexedAt: '',
-      createdAt: '',
-    },
-    {
-      _reactKey: 'item-1',
-      did: 'did:example:789',
-      handle: 'handle',
-      displayName: 'Example User 2',
-      declaration: {cid: '', actorType: ''},
-      indexedAt: '',
-      createdAt: '',
+      post: {
+        uri: '',
+        cid: '',
+        author: {
+          did: 'did:example:456',
+          handle: 'handle',
+          displayName: 'Example User 1',
+          declaration: {cid: '', actorType: ''},
+          indexedAt: '',
+          createdAt: '',
+        },
+        record: {},
+        replyCount: 0,
+        repostCount: 0,
+        upvoteCount: 0,
+        downvoteCount: 0,
+        indexedAt: '',
+        viewer: {
+          repost: '',
+          upvote: '',
+          downvote: '',
+        },
+      },
     },
   ]
 
@@ -37,28 +56,28 @@ describe('SuggestedActorsViewModel', () => {
     api = sessionClient.service(DEFAULT_SERVICE) as SessionServiceClient
     rootStore = new RootStoreModel(api)
     requestSpy = jest
-      .spyOn(rootStore.api.app.bsky.actor, 'getSuggestions')
+      .spyOn(rootStore.api.app.bsky.feed, 'getRepostedBy')
       .mockImplementation((): Promise<any> => {
         return Promise.resolve({
           data: {
-            actors,
+            repostedBy,
           },
         })
       })
-    model = new SuggestedActorsViewModel(rootStore)
+    model = new RepostedByViewModel(rootStore, params)
   })
 
   it('should call the setup method', async () => {
     await model.setup()
     expect(requestSpy).toHaveBeenCalled()
-    expect(model.suggestions).toEqual(actors)
+    expect(model.repostedBy).toEqual(repostedBy)
     expect(model.hasLoaded).toEqual(true)
   })
 
   it('should call the refresh method', async () => {
     await model.refresh()
     expect(requestSpy).toHaveBeenCalled()
-    expect(model.suggestions).toEqual(actors)
+    expect(model.repostedBy).toEqual(repostedBy)
     expect(model.hasLoaded).toEqual(true)
   })
 
