@@ -55,18 +55,18 @@ export function Component({
   }
   const onSelectNewAvatar = async (img: PickedImage) => {
     try {
-      setNewUserAvatar(img)
-      const uri = await compressIfNeeded(img, 300000)
-      setUserAvatar(uri)
+      const finalImg = await compressIfNeeded(img, 300000)
+      setNewUserAvatar(finalImg)
+      setUserAvatar(finalImg.path)
     } catch (e: any) {
       setError(e.message || e.toString())
     }
   }
   const onSelectNewBanner = async (img: PickedImage) => {
     try {
-      setNewUserBanner(img)
-      const uri = await compressIfNeeded(img, 500000)
-      setUserBanner(uri)
+      const finalImg = await compressIfNeeded(img, 500000)
+      setNewUserBanner(finalImg)
+      setUserBanner(finalImg.path)
     } catch (e: any) {
       setError(e.message || e.toString())
     }
