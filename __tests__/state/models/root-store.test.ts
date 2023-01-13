@@ -94,4 +94,9 @@ describe('rootStore', () => {
     expect(rootStore.me.notificationCount).toEqual(0)
     expect(rootStore.me.memberships).toBeUndefined()
   })
+
+  it('tests setInterval', () => {
+    jest.runTimersToTime(16000)
+    expect(rootStore.fetchStateUpdate()).resolves.toReturnWith({})
+  })
 })
