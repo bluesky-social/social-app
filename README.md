@@ -16,8 +16,10 @@ Uses:
 - After initial setup:
   - `cd ios ; pod install`
 - Start the dev servers
-  - `yarn dev-pds`
-  - `yarn dev-wallet`
+  - `git clone git@github.com:bluesky-social/atproto.git`
+  - `cd atproto`
+  - `yarn`
+  - `cd packages/dev-env && yarn start`
 - Run the dev app
   - iOS: `yarn ios`
   - Android: `yarn android`
