@@ -173,8 +173,8 @@ export const Post = observer(function Post({
                 <UserInfoText
                   type="body2"
                   did={replyAuthorDid}
+                  attr="displayName"
                   style={[pal.textLight]}
-                  prefix="@"
                 />
               </Link>
             </View>

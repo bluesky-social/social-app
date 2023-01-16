@@ -187,17 +187,17 @@ export const FeedItem = observer(function ({
                 <FontAwesomeIcon
                   icon="reply"
                   size={9}
-                  style={[{color: pal.colors.text}, s.mr5]}
+                  style={[{color: pal.colors.textLight}, s.mr5]}
                 />
-                <Text type="caption" style={[pal.textLight, s.mr2]}>
+                <Text type="body2" style={[pal.textLight, s.mr2]}>
                   Reply to
                 </Text>
                 <Link href={replyHref} title="Parent post">
                   <UserInfoText
-                    type="caption"
+                    type="body2"
                     did={replyAuthorDid}
+                    attr="displayName"
                     style={[pal.textLight]}
-                    prefix="@"
                   />
                 </Link>
               </View>
