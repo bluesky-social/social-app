@@ -13,7 +13,6 @@ import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
-export const ACTOR_TYPE_SCENE = 'app.bsky.system.actorScene'
 
 export class ProfileViewMyStateModel {
   follow?: string
@@ -83,10 +82,6 @@ export class ProfileViewModel {
 
   get isUser() {
     return this.declaration.actorType === ACTOR_TYPE_USER
-  }
-
-  get isScene() {
-    return this.declaration.actorType === ACTOR_TYPE_SCENE
   }
 
   // public api
