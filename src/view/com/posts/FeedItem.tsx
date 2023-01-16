@@ -140,8 +140,11 @@ export const FeedItem = observer(function ({
             title={
               item.reasonRepost.by.displayName || item.reasonRepost.by.handle
             }>
-            <FontAwesomeIcon icon="retweet" style={styles.includeReasonIcon} />
-            <Text type="overline2" style={{color: pal.colors.actionLabel}}>
+            <FontAwesomeIcon
+              icon="retweet"
+              style={[styles.includeReasonIcon, s.gray4]}
+            />
+            <Text type="body2" style={{color: pal.colors.textLight}}>
               Reposted by{' '}
               {item.reasonRepost.by.displayName || item.reasonRepost.by.handle}
             </Text>
@@ -183,7 +186,7 @@ export const FeedItem = observer(function ({
               timestamp={item.post.indexedAt}
             />
             {!isChild && replyHref !== '' && (
-              <View style={[s.flexRow, s.mb5, {alignItems: 'center'}]}>
+              <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
                 <FontAwesomeIcon
                   icon="reply"
                   size={9}
@@ -301,11 +304,11 @@ const styles = StyleSheet.create({
   },
   includeReason: {
     flexDirection: 'row',
-    paddingLeft: 60,
+    paddingLeft: 40,
+    marginBottom: 2,
   },
   includeReasonIcon: {
     marginRight: 4,
-    color: colors.gray4,
   },
   layout: {
     flexDirection: 'row',
