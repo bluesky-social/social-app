@@ -7,6 +7,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
 import {Text} from '../com/util/text/Text'
+import {FAB} from '../com/util/FAB'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
 import {s, colors} from '../lib/styles'
@@ -103,6 +104,7 @@ export const Home = observer(function Home({
           <Text style={styles.loadLatestText}>Load new posts</Text>
         </TouchableOpacity>
       ) : undefined}
+      <FAB icon="pen-nib" onPress={onPressCompose} />
     </View>
   )
 })
