@@ -222,11 +222,16 @@ export const PostThreadItem = observer(function PostThreadItem({
             <View style={[s.pl10, s.pb5]}>
               <PostCtrls
                 big
+                itemHref={itemHref}
+                itemTitle={itemTitle}
+                isAuthor={item.post.author.did === store.me.did}
                 isReposted={!!item.post.viewer.repost}
                 isUpvoted={!!item.post.viewer.upvote}
                 onPressReply={onPressReply}
                 onPressToggleRepost={onPressToggleRepost}
                 onPressToggleUpvote={onPressToggleUpvote}
+                onCopyPostText={onCopyPostText}
+                onDeletePost={onDeletePost}
               />
             </View>
           </View>
@@ -276,15 +281,10 @@ export const PostThreadItem = observer(function PostThreadItem({
             </View>
             <View style={styles.layoutContent}>
               <PostMeta
-                itemHref={itemHref}
-                itemTitle={itemTitle}
                 authorHref={authorHref}
                 authorHandle={item.post.author.handle}
                 authorDisplayName={item.post.author.displayName}
                 timestamp={item.post.indexedAt}
-                isAuthor={item.post.author.did === store.me.did}
-                onCopyPostText={onCopyPostText}
-                onDeletePost={onDeletePost}
               />
               {item.post.author.viewer?.muted ? (
                 <View style={[styles.mutedWarning, pal.btn]}>
@@ -304,14 +304,16 @@ export const PostThreadItem = observer(function PostThreadItem({
               )}
               <PostEmbeds embed={item.post.embed} style={{marginBottom: 10}} />
               <PostCtrls
-                replyCount={item.post.replyCount}
-                repostCount={item.post.repostCount}
-                upvoteCount={item.post.upvoteCount}
+                itemHref={itemHref}
+                itemTitle={itemTitle}
+                isAuthor={item.post.author.did === store.me.did}
                 isReposted={!!item.post.viewer.repost}
                 isUpvoted={!!item.post.viewer.upvote}
                 onPressReply={onPressReply}
                 onPressToggleRepost={onPressToggleRepost}
                 onPressToggleUpvote={onPressToggleUpvote}
+                onCopyPostText={onCopyPostText}
+                onDeletePost={onDeletePost}
               />
             </View>
           </View>
