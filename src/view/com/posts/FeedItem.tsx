@@ -96,7 +96,8 @@ export const FeedItem = observer(function ({
     return <View />
   }
 
-  const isChild = item._isThreadChild || (!item.reason && item.reply)
+  const isChild =
+    item._isThreadChild || (!item.reason && !item._hideParent && item.reply)
   const isSmallTop = isChild && item._isThreadChild
   const isNoTop = isChild && !item._isThreadChild
   const outerStyles = [
