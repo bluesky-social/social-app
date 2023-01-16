@@ -92,9 +92,6 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   // rendering
   // =
 
-  const isSceneCreator =
-    uiState.isScene && store.me.did === uiState.profile.creator
-
   const renderHeader = () => {
     if (!uiState) {
       return <View />
@@ -126,8 +123,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
     } else {
       if (
         uiState.selectedView === Sections.Posts ||
-        uiState.selectedView === Sections.PostsWithReplies ||
-        uiState.selectedView === Sections.Trending
+        uiState.selectedView === Sections.PostsWithReplies
       ) {
         if (uiState.feed.hasContent) {
           if (uiState.selectedView === Sections.Posts) {
@@ -148,79 +144,11 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
           }
         } else if (uiState.feed.isEmpty) {
           items = items.concat([EMPTY_ITEM])
-          if (uiState.profile.isScene) {
-            renderItem = () => (
-              <EmptyState
-                icon="user-group"
-                message="As members upvote posts, they will trend here. Follow the scene to see its trending posts in your timeline."
-              />
-            )
-          } else {
-            renderItem = () => (
-              <EmptyState
-                icon={['far', 'message']}
-                message="No posts yet!"
-                style={{paddingVertical: 40}}
-              />
-            )
-          }
-        }
-      } else if (uiState.selectedView === Sections.Scenes) {
-        if (uiState.memberships.hasContent) {
-          items = uiState.memberships.memberships.slice()
-          renderItem = (item: any) => {
-            return (
-              <ProfileCard
-                did={item.did}
-                handle={item.handle}
-                displayName={item.displayName}
-                avatar={item.avatar}
-              />
-            )
-          }
-        } else if (uiState.memberships.isEmpty) {
-          items = items.concat([EMPTY_ITEM])
           renderItem = () => (
             <EmptyState
-              icon="user-group"
-              message="This user hasn't joined any scenes."
-            />
-          )
-        }
-      } else if (uiState.selectedView === Sections.Members) {
-        if (uiState.members.hasContent) {
-          items = uiState.members.members.slice()
-          renderItem = (item: any) => {
-            const shouldAdmin = isSceneCreator && item.did !== store.me.did
-            const renderButton = shouldAdmin
-              ? () => (
-                  <>
-                    <FontAwesomeIcon
-                      icon="user-xmark"
-                      style={[s.mr5]}
-                      size={14}
-                    />
-                    <Text style={[s.fw400, s.f14]}>Remove</Text>
-                  </>
-                )
-              : undefined
-            return (
-              <ProfileCard
-                did={item.did}
-                handle={item.handle}
-                displayName={item.displayName}
-                avatar={item.avatar}
-                renderButton={renderButton}
-                onPressButton={() => onPressRemoveMember(item)}
-              />
-            )
-          }
-        } else if (uiState.members.isEmpty) {
-          items = items.concat([EMPTY_ITEM])
-          renderItem = () => (
-            <EmptyState
-              icon="user-group"
-              message="This scene doesn't have any members."
+              icon={['far', 'message']}
+              message="No posts yet!"
+              style={{paddingVertical: 40}}
             />
           )
         }

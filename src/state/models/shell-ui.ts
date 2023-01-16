@@ -25,22 +25,6 @@ export class EditProfileModal {
   }
 }
 
-export class CreateSceneModal {
-  name = 'create-scene'
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-}
-
-export class InviteToSceneModal {
-  name = 'invite-to-scene'
-
-  constructor(public profileView: ProfileViewModel) {
-    makeAutoObservable(this)
-  }
-}
-
 export class ServerInputModal {
   name = 'server-input'
 
@@ -143,7 +127,6 @@ export class ShellUiModel {
   activeModal:
     | ConfirmModal
     | EditProfileModal
-    | CreateSceneModal
     | ServerInputModal
     | ReportPostModal
     | ReportAccountModal
@@ -191,7 +174,6 @@ export class ShellUiModel {
     modal:
       | ConfirmModal
       | EditProfileModal
-      | CreateSceneModal
       | ServerInputModal
       | ReportPostModal
       | ReportAccountModal,
