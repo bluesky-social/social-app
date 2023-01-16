@@ -19,7 +19,7 @@ Uses:
   - `git clone git@github.com:bluesky-social/atproto.git`
   - `cd atproto`
   - `yarn`
-  - `yarn start`
+  - `cd packages/dev-env && yarn start`
 - Run the dev app
   - iOS: `yarn ios`
   - Android: `yarn android`
