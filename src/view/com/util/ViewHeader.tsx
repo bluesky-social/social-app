@@ -54,13 +54,13 @@ export const ViewHeader = observer(function ViewHeader({
         style={canGoBack ? styles.backIcon : styles.backIconWide}>
         {canGoBack ? (
           <FontAwesomeIcon
-            size={18}
+            size={24}
             icon="angle-left"
-            style={[{marginTop: 6}, pal.text]}
+            style={[{marginTop: 8}, pal.text]}
           />
         ) : (
           <UserAvatar
-            size={30}
+            size={40}
             handle={store.me.handle}
             displayName={store.me.displayName}
             avatar={store.me.avatar}
@@ -68,12 +68,12 @@ export const ViewHeader = observer(function ViewHeader({
         )}
       </TouchableOpacity>
       <View style={styles.titleContainer} pointerEvents="none">
-        <Text type="h4" style={pal.text}>
+        <Text type="h3" style={pal.text}>
           {title}
         </Text>
         {subtitle ? (
           <Text
-            type="h5"
+            type="h4"
             style={[styles.subtitle, pal.textLight, {fontWeight: 'normal'}]}
             numberOfLines={1}>
             {subtitle}
@@ -83,34 +83,28 @@ export const ViewHeader = observer(function ViewHeader({
       <TouchableOpacity
         onPress={onPressSearch}
         hitSlop={HITSLOP}
-        style={[
-          styles.btn,
-          {backgroundColor: pal.colors.backgroundLight, marginLeft: 4},
-        ]}>
-        <MagnifyingGlassIcon size={18} strokeWidth={3} style={pal.text} />
+        style={[styles.btn, {marginLeft: 4}]}>
+        <MagnifyingGlassIcon size={26} strokeWidth={3} style={pal.text} />
       </TouchableOpacity>
       {!store.session.online ? (
         <TouchableOpacity
-          style={[
-            styles.btn,
-            {backgroundColor: pal.colors.backgroundLight, marginLeft: 4},
-          ]}
+          style={[styles.btn, {marginLeft: 4}]}
           onPress={onPressReconnect}>
           {store.session.attemptingConnect ? (
             <ActivityIndicator />
           ) : (
             <>
-              <FontAwesomeIcon icon="signal" style={pal.text} size={16} />
+              <FontAwesomeIcon icon="signal" style={pal.text} size={23} />
               <FontAwesomeIcon
                 icon="x"
                 style={{
-                  backgroundColor: pal.colors.backgroundLight,
+                  backgroundColor: pal.colors.background,
                   color: theme.palette.error.background,
                   position: 'absolute',
-                  right: 7,
+                  right: 0,
                   bottom: 7,
                 }}
-                size={8}
+                size={10}
               />
             </>
           )}
@@ -139,8 +133,8 @@ const styles = StyleSheet.create({
     maxWidth: 200,
   },
 
-  backIcon: {width: 30, height: 30},
-  backIconWide: {width: 40, height: 30},
+  backIcon: {width: 40, height: 40},
+  backIconWide: {width: 50, height: 40},
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
