@@ -1,16 +1,13 @@
 import React, {useEffect, useState, useMemo} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ViewSelector} from '../com/util/ViewSelector'
 import {ScreenParams} from '../routes'
 import {ProfileUiModel, Sections} from '../../state/models/profile-ui'
-import {MembershipItem} from '../../state/models/memberships-view'
 import {useStores} from '../../state'
 import {ConfirmModal} from '../../state/models/shell-ui'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedItem} from '../com/posts/FeedItem'
-import {ProfileCard} from '../com/profile/ProfileCard'
 import {PostFeedLoadingPlaceholder} from '../com/util/LoadingPlaceholder'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
@@ -75,18 +72,6 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   }
   const onPressTryAgain = () => {
     uiState.setup()
-  }
-  const onPressRemoveMember = (membership: MembershipItem) => {
-    store.shell.openModal(
-      new ConfirmModal(
-        `Remove ${membership.displayName || membership.handle}?`,
-        `You'll be able to invite them again if you change your mind.`,
-        async () => {
-          await uiState.members.removeMember(membership.did)
-          Toast.show(`User removed`)
-        },
-      ),
-    )
   }
 
   // rendering

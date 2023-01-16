@@ -13,7 +13,6 @@ import {PostRepostedBy} from './screens/PostRepostedBy'
 import {Profile} from './screens/Profile'
 import {ProfileFollowers} from './screens/ProfileFollowers'
 import {ProfileFollows} from './screens/ProfileFollows'
-import {ProfileMembers} from './screens/ProfileMembers'
 import {Settings} from './screens/Settings'
 import {Debug} from './screens/Debug'
 import {Log} from './screens/Log'
@@ -48,7 +47,6 @@ export const routes: Route[] = [
     r('/profile/(?<name>[^/]+)/followers'),
   ],
   [ProfileFollows, 'Follows', 'users', r('/profile/(?<name>[^/]+)/follows')],
-  [ProfileMembers, 'Members', 'users', r('/profile/(?<name>[^/]+)/members')],
   [
     PostThread,
     'Post',

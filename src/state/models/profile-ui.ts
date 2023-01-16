@@ -1,8 +1,6 @@
 import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from './root-store'
 import {ProfileViewModel} from './profile-view'
-import {MembersViewModel} from './members-view'
-import {MembershipsViewModel} from './memberships-view'
 import {FeedModel} from './feed-view'
 
 export enum Sections {
@@ -43,7 +41,7 @@ export class ProfileUiModel {
     })
   }
 
-  get currentView(): FeedModel | MembershipsViewModel | MembersViewModel {
+  get currentView(): FeedModel {
     if (
       this.selectedView === Sections.Posts ||
       this.selectedView === Sections.PostsWithReplies
