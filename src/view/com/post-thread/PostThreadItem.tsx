@@ -237,7 +237,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           </View>
         </View>
         <ComposePrompt
-          noAvi
+          isReply
           text="Write your reply"
           btn="Reply"
           onPressCompose={onPressReply}

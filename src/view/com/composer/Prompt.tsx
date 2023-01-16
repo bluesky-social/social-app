@@ -1,46 +1,29 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {colors} from '../../lib/styles'
-import {useStores} from '../../../state'
-import {UserAvatar} from '../util/UserAvatar'
 import {Text} from '../util/text/Text'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 export function ComposePrompt({
-  noAvi = false,
   text = "What's up?",
   btn = 'Post',
+  isReply = false,
   onPressCompose,
 }: {
-  noAvi?: boolean
   text?: string
   btn?: string
+  isReply?: boolean
   onPressCompose: () => void
 }) {
   const pal = usePalette('default')
-  const store = useStores()
-  const onPressAvatar = () => {
-    store.nav.navigate(`/profile/${store.me.handle}`)
-  }
   return (
     <TouchableOpacity
       style={[
         pal.view,
         pal.border,
         styles.container,
-        noAvi ? styles.noAviContainer : undefined,
+        isReply ? styles.containerReply : undefined,
       ]}
       onPress={onPressCompose}>
-      {!noAvi ? (
-        <TouchableOpacity style={styles.avatar} onPress={onPressAvatar}>
-          <UserAvatar
-            size={50}
-            handle={store.me.handle || ''}
-            displayName={store.me.displayName}
-            avatar={store.me.avatar}
-          />
-        </TouchableOpacity>
-      ) : undefined}
       <View style={styles.textContainer}>
         <Text type="h5" style={[pal.textLight, {fontWeight: 'normal'}]}>
           {text}
@@ -57,14 +40,15 @@ export function ComposePrompt({
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
+    paddingLeft: 4,
+    paddingRight: 10,
+    paddingVertical: 14,
     flexDirection: 'row',
     alignItems: 'center',
     borderTopWidth: 1,
   },
-  noAviContainer: {
-    paddingVertical: 14,
+  containerReply: {
+    paddingHorizontal: 10,
   },
   avatar: {
     width: 50,
