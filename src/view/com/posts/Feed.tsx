@@ -39,7 +39,9 @@ export const Feed = observer(function Feed({
   //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = ({item}: {item: any}) => {
     if (item === COMPOSE_PROMPT_ITEM) {
-      return <ComposePrompt onPressCompose={onPressCompose} />
+      return (
+        <ComposePrompt onPressCompose={onPressCompose} text="New message" />
+      )
     } else if (item === EMPTY_FEED_ITEM) {
       return (
         <EmptyState
