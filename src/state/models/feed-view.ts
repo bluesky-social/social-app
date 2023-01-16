@@ -30,6 +30,7 @@ export class FeedItemModel {
   _isThreadParent: boolean = false
   _isThreadChildElided: boolean = false
   _isThreadChild: boolean = false
+  _hideParent: boolean = true // used to avoid dup post rendering while showing some parents
 
   // data
   post: PostView
@@ -463,6 +464,7 @@ export class FeedModel {
       } else {
         this.feed = this.feed.concat(toAppend)
       }
+      dedupParents(this.feed)
     })
   }
 
@@ -599,6 +601,29 @@ function preprocessFeed(feed: FeedViewPost[]): FeedViewPostWithThreadMeta[] {
   }
 
   return reorg
+}
+
+function dedupParents(feed: FeedItemModel[]) {
+  // only show parents that aren't already in the feed
+  // NOTE if a parent post arrives in a followup loadmore, it'll show when we otherwise wish it wouldnt -prf
+  for (let i = 0; i < feed.length; i++) {
+    const item1 = feed[i]
+    if (!item1.replyParent || item1._isThreadChild) {
+      continue
+    }
+    let hideParent = false
+    for (let j = 0; j < feed.length; j++) {
+      const item2 = feed[j]
+      if (
+        item1.replyParent.post.uri === item2.post.uri || // the post itself is there
+        (j < i && item1.replyParent.post.uri === item2.replyParent?.post.uri) // another reply already showed it
+      ) {
+        hideParent = true
+        break
+      }
+    }
+    item1._hideParent = hideParent
+  }
 }
 
 function getSelfReplyUri(item: FeedViewPost): string | undefined {
