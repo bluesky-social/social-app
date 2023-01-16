@@ -65,7 +65,7 @@ export function PostEmbeds({
             <AutoSizedImage
               uri={embed.images[0].thumb}
               onPress={() => openLightbox(0)}
-              containerStyle={{borderRadius: 4}}
+              containerStyle={{borderRadius: 8}}
             />
           </View>
         )
