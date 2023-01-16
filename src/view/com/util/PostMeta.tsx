@@ -67,6 +67,6 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   maxWidth: {
-    maxWidth: '70%',
+    maxWidth: '80%',
   },
 })

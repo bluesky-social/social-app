@@ -1,5 +1,12 @@
 import React from 'react'
-import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  Animated,
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
 import {Text} from './text/Text'
@@ -13,6 +20,7 @@ interface PostCtrlsOpts {
   itemTitle: string
   isAuthor: boolean
   big?: boolean
+  style?: StyleProp<ViewStyle>
   replyCount?: number
   repostCount?: number
   upvoteCount?: number
@@ -102,7 +110,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   }
 
   return (
-    <View style={styles.ctrls}>
+    <View style={[styles.ctrls, opts.style]}>
       <View style={s.flex1}>
         <TouchableOpacity
           style={styles.ctrl}
@@ -187,7 +195,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             <FontAwesomeIcon
               icon="ellipsis-h"
               size={16}
-              style={[s.mt2, s.mr5, sRedgray]}
+              style={[s.mt2, s.mr5, {color: colors.gray3}]}
             />
           </PostDropdownBtn>
         )}
