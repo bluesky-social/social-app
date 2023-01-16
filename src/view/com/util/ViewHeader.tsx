@@ -21,12 +21,10 @@ export const ViewHeader = observer(function ViewHeader({
   title,
   subtitle,
   canGoBack,
-  onPost,
 }: {
   title: string
   subtitle?: string
   canGoBack?: boolean
-  onPost?: () => void
 }) {
   const theme = useTheme()
   const pal = usePalette('default')
@@ -36,9 +34,6 @@ export const ViewHeader = observer(function ViewHeader({
   }
   const onPressMenu = () => {
     store.shell.setMainMenuOpen(true)
-  }
-  const onPressCompose = () => {
-    store.shell.openComposer({onPost})
   }
   const onPressSearch = () => {
     store.nav.navigate(`/search`)
@@ -85,12 +80,6 @@ export const ViewHeader = observer(function ViewHeader({
           </Text>
         ) : undefined}
       </View>
-      <TouchableOpacity
-        onPress={onPressCompose}
-        hitSlop={HITSLOP}
-        style={[styles.btn, {backgroundColor: pal.colors.backgroundLight}]}>
-        <FontAwesomeIcon size={18} icon="plus" style={pal.text} />
-      </TouchableOpacity>
       <TouchableOpacity
         onPress={onPressSearch}
         hitSlop={HITSLOP}

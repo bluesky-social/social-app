@@ -18,6 +18,7 @@ import {EmptyState} from '../com/util/EmptyState'
 import {Text} from '../com/util/text/Text'
 import {ViewHeader} from '../com/util/ViewHeader'
 import * as Toast from '../com/util/Toast'
+import {FAB} from '../com/util/FAB'
 import {s, colors} from '../lib/styles'
 import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
 
@@ -87,6 +88,10 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
         },
       ),
     )
+  }
+
+  const onPressCompose = () => {
+    store.shell.openComposer({})
   }
 
   // rendering
@@ -263,6 +268,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
       ) : (
         renderHeader()
       )}
+      <FAB icon="pen-nib" onPress={onPressCompose} />
     </View>
   )
 })
