@@ -35,7 +35,7 @@ interface PostCtrlsOpts {
 
 const redgray = '#7A6161'
 const sRedgray = {color: redgray}
-const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
+const HITSLOP = {top: 2, left: 2, bottom: 2, right: 2}
 
 export function PostCtrls(opts: PostCtrlsOpts) {
   const interp1 = useAnimatedValue(0)
@@ -137,7 +137,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                 opts.isReposted ? styles.ctrlIconReposted : styles.ctrlIcon
               }
               icon="retweet"
-              size={opts.big ? 22 : 17}
+              size={opts.big ? 22 : 19}
             />
           </Animated.View>
           {typeof opts.repostCount !== 'undefined' ? (
@@ -161,12 +161,12 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             {opts.isUpvoted ? (
               <UpIconSolid
                 style={[styles.ctrlIconUpvoted]}
-                size={opts.big ? 22 : 17}
+                size={opts.big ? 22 : 19}
               />
             ) : (
               <UpIcon
                 style={[styles.ctrlIcon]}
-                size={opts.big ? 22 : 17}
+                size={opts.big ? 22 : 19}
                 strokeWidth={1.5}
               />
             )}
@@ -194,7 +194,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             onDeletePost={opts.onDeletePost}>
             <FontAwesomeIcon
               icon="ellipsis-h"
-              size={16}
+              size={18}
               style={[s.mt2, s.mr5, {color: colors.gray3}]}
             />
           </PostDropdownBtn>

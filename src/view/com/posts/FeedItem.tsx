@@ -142,9 +142,14 @@ export const FeedItem = observer(function ({
             }>
             <FontAwesomeIcon
               icon="retweet"
-              style={[styles.includeReasonIcon, s.gray4]}
+              style={[styles.includeReasonIcon, s.gray5]}
             />
-            <Text type="body2" style={{color: pal.colors.textLight}}>
+            <Text
+              type="body2"
+              style={{
+                fontWeight: '600',
+                color: pal.colors.textLight,
+              }}>
               Reposted by{' '}
               {item.reasonRepost.by.displayName || item.reasonRepost.by.handle}
             </Text>
@@ -283,7 +288,6 @@ const styles = StyleSheet.create({
   },
   outerSmallTop: {
     borderTopWidth: 0,
-    paddingTop: 8,
   },
   outerNoBottom: {
     paddingBottom: 2,
@@ -305,6 +309,7 @@ const styles = StyleSheet.create({
   includeReason: {
     flexDirection: 'row',
     paddingLeft: 40,
+    marginTop: 2,
     marginBottom: 2,
   },
   includeReasonIcon: {
@@ -312,6 +317,7 @@ const styles = StyleSheet.create({
   },
   layout: {
     flexDirection: 'row',
+    marginTop: 1,
   },
   layoutAvi: {
     width: 60,
@@ -338,7 +344,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   ctrls: {
-    marginTop: 2,
+    marginTop: 4,
   },
   viewFullThread: {
     paddingTop: 12,
