@@ -3,11 +3,15 @@ import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
 import {Text} from './text/Text'
+import {PostDropdownBtn} from './forms/DropdownButton'
 import {UpIcon, UpIconSolid, CommentBottomArrow} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 
 interface PostCtrlsOpts {
+  itemHref: string
+  itemTitle: string
+  isAuthor: boolean
   big?: boolean
   replyCount?: number
   repostCount?: number
@@ -17,6 +21,8 @@ interface PostCtrlsOpts {
   onPressReply: () => void
   onPressToggleRepost: () => void
   onPressToggleUpvote: () => void
+  onCopyPostText: () => void
+  onDeletePost: () => void
 }
 
 const redgray = '#7A6161'
@@ -169,7 +175,23 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           ) : undefined}
         </TouchableOpacity>
       </View>
-      <View style={s.flex1}></View>
+      <View style={s.flex1}>
+        {opts.big ? undefined : (
+          <PostDropdownBtn
+            style={styles.ctrl}
+            itemHref={opts.itemHref}
+            itemTitle={opts.itemTitle}
+            isAuthor={opts.isAuthor}
+            onCopyPostText={opts.onCopyPostText}
+            onDeletePost={opts.onDeletePost}>
+            <FontAwesomeIcon
+              icon="ellipsis-h"
+              size={16}
+              style={[s.mt2, s.mr5, sRedgray]}
+            />
+          </PostDropdownBtn>
+        )}
+      </View>
     </View>
   )
 }
