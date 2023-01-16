@@ -160,7 +160,7 @@ export const Post = observer(function Post({
             timestamp={item.post.indexedAt}
           />
           {replyHref !== '' && (
-            <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
+            <View style={[s.flexRow, s.mb5, {alignItems: 'center'}]}>
               <FontAwesomeIcon
                 icon="reply"
                 size={9}

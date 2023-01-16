@@ -183,7 +183,7 @@ export const FeedItem = observer(function ({
               timestamp={item.post.indexedAt}
             />
             {!isChild && replyHref !== '' && (
-              <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
+              <View style={[s.flexRow, s.mb5, {alignItems: 'center'}]}>
                 <FontAwesomeIcon
                   icon="reply"
                   size={9}
@@ -219,8 +219,9 @@ export const FeedItem = observer(function ({
             ) : (
               <View style={{height: 5}} />
             )}
-            <PostEmbeds embed={item.post.embed} style={styles.postEmbeds} />
+            <PostEmbeds embed={item.post.embed} style={styles.embed} />
             <PostCtrls
+              style={styles.ctrls}
               itemHref={itemHref}
               itemTitle={itemTitle}
               isAuthor={item.post.author.did === store.me.did}
@@ -330,8 +331,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingBottom: 4,
   },
-  postEmbeds: {
-    marginBottom: 0,
+  embed: {
+    marginBottom: 6,
+  },
+  ctrls: {
+    marginTop: 2,
   },
   viewFullThread: {
     paddingTop: 12,

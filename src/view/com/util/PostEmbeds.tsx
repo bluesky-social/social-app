@@ -31,7 +31,7 @@ export function PostEmbeds({
       }
       if (embed.images.length === 4) {
         return (
-          <View style={styles.imagesContainer}>
+          <View style={[styles.imagesContainer, style]}>
             <ImageLayoutGrid
               type="four"
               uris={embed.images.map(img => img.thumb)}
@@ -41,7 +41,7 @@ export function PostEmbeds({
         )
       } else if (embed.images.length === 3) {
         return (
-          <View style={styles.imagesContainer}>
+          <View style={[styles.imagesContainer, style]}>
             <ImageLayoutGrid
               type="three"
               uris={embed.images.map(img => img.thumb)}
@@ -51,7 +51,7 @@ export function PostEmbeds({
         )
       } else if (embed.images.length === 2) {
         return (
-          <View style={styles.imagesContainer}>
+          <View style={[styles.imagesContainer, style]}>
             <ImageLayoutGrid
               type="two"
               uris={embed.images.map(img => img.thumb)}
@@ -61,7 +61,7 @@ export function PostEmbeds({
         )
       } else {
         return (
-          <View style={styles.imagesContainer}>
+          <View style={[styles.imagesContainer, style]}>
             <AutoSizedImage
               uri={embed.images[0].thumb}
               onPress={() => openLightbox(0)}
@@ -82,7 +82,7 @@ export function PostEmbeds({
         {link.thumb ? (
           <AutoSizedImage uri={link.thumb} containerStyle={{borderRadius: 4}} />
         ) : undefined}
-        <Text type="h5" numberOfLines={1} style={pal.text}>
+        <Text type="h5" numberOfLines={2} style={pal.text}>
           {link.title || link.uri}
         </Text>
         <Text type="body2" numberOfLines={1} style={pal.textLight}>
@@ -105,11 +105,12 @@ export function PostEmbeds({
 const styles = StyleSheet.create({
   imagesContainer: {
     marginTop: 4,
-    marginBottom: 6,
   },
   extOuter: {
     padding: 10,
     borderWidth: 1,
+    borderRadius: 4,
+    marginTop: 4,
   },
   extDescription: {
     marginTop: 4,

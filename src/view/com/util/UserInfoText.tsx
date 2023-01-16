@@ -62,7 +62,9 @@ export function UserInfoText({
     )
   } else if (profile) {
     inner = (
-      <Text type={type} style={style}>{`${prefix || ''}${profile[attr]}`}</Text>
+      <Text type={type} style={style}>{`${prefix || ''}${
+        profile[attr] || profile.handle
+      }`}</Text>
     )
   } else {
     inner = (
