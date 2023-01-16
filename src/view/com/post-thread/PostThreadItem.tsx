@@ -307,6 +307,9 @@ export const PostThreadItem = observer(function PostThreadItem({
                 itemHref={itemHref}
                 itemTitle={itemTitle}
                 isAuthor={item.post.author.did === store.me.did}
+                replyCount={item.post.replyCount}
+                repostCount={item.post.repostCount}
+                upvoteCount={item.post.upvoteCount}
                 isReposted={!!item.post.viewer.repost}
                 isUpvoted={!!item.post.viewer.upvote}
                 onPressReply={onPressReply}
