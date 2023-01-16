@@ -112,8 +112,8 @@ export const defaultTheme: Theme = {
       letterSpacing: 0.1,
     },
     body1: {
-      fontSize: 16,
-      letterSpacing: 0.25,
+      fontSize: 17,
+      letterSpacing: 0.2,
     },
     body2: {
       fontSize: 14,
