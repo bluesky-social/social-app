@@ -142,7 +142,7 @@ export const FeedItem = observer(function ({
             }>
             <FontAwesomeIcon
               icon="retweet"
-              style={[styles.includeReasonIcon, s.gray5]}
+              style={[styles.includeReasonIcon, {color: pal.colors.textLight}]}
             />
             <Text
               type="body2"
