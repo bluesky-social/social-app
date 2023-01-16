@@ -13,6 +13,7 @@ import {Text} from './text/Text'
 import {PostDropdownBtn} from './forms/DropdownButton'
 import {UpIcon, UpIconSolid, CommentBottomArrow} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
+import {useTheme} from '../../lib/ThemeContext'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 
 interface PostCtrlsOpts {
@@ -38,6 +39,7 @@ const sRedgray = {color: redgray}
 const HITSLOP = {top: 2, left: 2, bottom: 2, right: 2}
 
 export function PostCtrls(opts: PostCtrlsOpts) {
+  const theme = useTheme()
   const interp1 = useAnimatedValue(0)
   const interp2 = useAnimatedValue(0)
 
@@ -195,7 +197,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             <FontAwesomeIcon
               icon="ellipsis-h"
               size={18}
-              style={[s.mt2, s.mr5, {color: colors.gray3}]}
+              style={[
+                s.mt2,
+                s.mr5,
+                {
+                  color:
+                    theme.colorScheme === 'light' ? colors.gray3 : colors.gray5,
+                },
+              ]}
             />
           </PostDropdownBtn>
         )}
