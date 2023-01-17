@@ -24,7 +24,7 @@ export function ImageLayoutGrid({
   style,
 }: {
   type: ImageLayoutGridType
-  uris: string
+  uris: string[]
   onPress?: (index: number) => void
   style?: StyleProp<ViewStyle>
 }) {
@@ -58,7 +58,7 @@ function ImageLayoutGridInner({
   containerInfo,
 }: {
   type: ImageLayoutGridType
-  uris: string
+  uris: string[]
   onPress?: (index: number) => void
   containerInfo: Dim
 }) {
