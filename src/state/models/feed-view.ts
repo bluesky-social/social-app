@@ -457,6 +457,7 @@ export class FeedModel {
       } else {
         this.feed = this.feed.concat(toAppend)
       }
+      dedupReposts(this.feed)
       dedupParents(this.feed)
     })
   }
@@ -595,9 +596,24 @@ function preprocessFeed(feed: FeedViewPost[]): FeedViewPostWithThreadMeta[] {
   return reorg
 }
 
+// WARNING: mutates `feed`
+function dedupReposts(feed: FeedItemModel[]) {
+  // remove duplicates caused by reposts
+  for (let i = 0; i < feed.length; i++) {
+    const item1 = feed[i]
+    for (let j = i + 1; j < feed.length; j++) {
+      const item2 = feed[j]
+      if (item1.post.uri === item2.post.uri) {
+        feed.splice(j, 1)
+        j--
+      }
+    }
+  }
+}
+
+// WARNING: mutates `feed`
 function dedupParents(feed: FeedItemModel[]) {
   // only show parents that aren't already in the feed
-  // NOTE if a parent post arrives in a followup loadmore, it'll show when we otherwise wish it wouldnt -prf
   for (let i = 0; i < feed.length; i++) {
     const item1 = feed[i]
     if (!item1.replyParent || item1._isThreadChild) {
