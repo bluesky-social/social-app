@@ -1,24 +1,14 @@
 import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from './root-store'
 import {ProfileViewModel} from './profile-view'
-import {MembersViewModel} from './members-view'
-import {MembershipsViewModel} from './memberships-view'
 import {FeedModel} from './feed-view'
 
 export enum Sections {
   Posts = 'Posts',
   PostsWithReplies = 'Posts & replies',
-  Scenes = 'Scenes',
-  Trending = 'Trending',
-  Members = 'Members',
 }
 
-const USER_SELECTOR_ITEMS = [
-  Sections.Posts,
-  Sections.PostsWithReplies,
-  Sections.Scenes,
-]
-const SCENE_SELECTOR_ITEMS = [Sections.Trending, Sections.Members]
+const USER_SELECTOR_ITEMS = [Sections.Posts, Sections.PostsWithReplies]
 
 export interface ProfileUiParams {
   user: string
@@ -28,8 +18,6 @@ export class ProfileUiModel {
   // data
   profile: ProfileViewModel
   feed: FeedModel
-  memberships: MembershipsViewModel
-  members: MembersViewModel
 
   // ui state
   selectedViewIndex = 0
@@ -51,23 +39,14 @@ export class ProfileUiModel {
       author: params.user,
       limit: 10,
     })
-    this.memberships = new MembershipsViewModel(rootStore, {actor: params.user})
-    this.members = new MembersViewModel(rootStore, {actor: params.user})
   }
 
-  get currentView(): FeedModel | MembershipsViewModel | MembersViewModel {
+  get currentView(): FeedModel {
     if (
       this.selectedView === Sections.Posts ||
-      this.selectedView === Sections.PostsWithReplies ||
-      this.selectedView === Sections.Trending
+      this.selectedView === Sections.PostsWithReplies
     ) {
       return this.feed
-    }
-    if (this.selectedView === Sections.Scenes) {
-      return this.memberships
-    }
-    if (this.selectedView === Sections.Members) {
-      return this.members
     }
     throw new Error(`Invalid selector value: ${this.selectedViewIndex}`)
   }
@@ -85,15 +64,9 @@ export class ProfileUiModel {
     return this.profile.isUser
   }
 
-  get isScene() {
-    return this.profile.isScene
-  }
-
   get selectorItems() {
     if (this.isUser) {
       return USER_SELECTOR_ITEMS
-    } else if (this.isScene) {
-      return SCENE_SELECTOR_ITEMS
     } else {
       return USER_SELECTOR_ITEMS
     }
@@ -119,16 +92,6 @@ export class ProfileUiModel {
         .setup()
         .catch(err => this.rootStore.log.error('Failed to fetch feed', err)),
     ])
-    if (this.isUser) {
-      await this.memberships
-        .setup()
-        .catch(err => this.rootStore.log.error('Failed to fetch members', err))
-    }
-    if (this.isScene) {
-      await this.members
-        .setup()
-        .catch(err => this.rootStore.log.error('Failed to fetch members', err))
-    }
   }
 
   async update() {

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {
   ScrollView,
   StyleProp,
@@ -11,31 +11,16 @@ import {observer} from 'mobx-react-lite'
 import VersionNumber from 'react-native-version-number'
 import {s, colors} from '../../lib/styles'
 import {useStores} from '../../../state'
-import {
-  HomeIcon,
-  UserGroupIcon,
-  BellIcon,
-  CogIcon,
-  MagnifyingGlassIcon,
-} from '../../lib/icons'
+import {HomeIcon, BellIcon, CogIcon, MagnifyingGlassIcon} from '../../lib/icons'
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {Text} from '../../com/util/text/Text'
 import {ToggleButton} from '../../com/util/forms/ToggleButton'
-import {CreateSceneModal} from '../../../state/models/shell-ui'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 export const Menu = observer(
   ({visible, onClose}: {visible: boolean; onClose: () => void}) => {
     const pal = usePalette('default')
     const store = useStores()
-
-    useEffect(() => {
-      if (visible) {
-        // trigger a refresh in case memberships have changed recently
-        // TODO this impacts performance, need to find the right time to do this
-        // store.me.refreshMemberships()
-      }
-    }, [store, visible])
 
     // events
     // =
@@ -50,10 +35,6 @@ export const Menu = observer(
           store.nav.navigate(url)
         }
       }
-    }
-    const onPressCreateScene = () => {
-      onClose()
-      store.shell.openModal(new CreateSceneModal())
     }
 
     // rendering
@@ -151,40 +132,6 @@ export const Menu = observer(
             label="Notifications"
             url="/notifications"
             count={store.me.notificationCount}
-          />
-        </View>
-        <View style={[styles.section, pal.border]}>
-          <Text type="h5" style={[pal.text, styles.heading]}>
-            Scenes
-          </Text>
-          {store.me.memberships
-            ? store.me.memberships.memberships.map((membership, i) => (
-                <MenuItem
-                  key={i}
-                  icon={
-                    <UserAvatar
-                      size={34}
-                      displayName={membership.displayName}
-                      handle={membership.handle}
-                      avatar={membership.avatar}
-                    />
-                  }
-                  label={membership.displayName || membership.handle}
-                  url={`/profile/${membership.handle}`}
-                />
-              ))
-            : undefined}
-        </View>
-        <View style={[styles.section, pal.border]}>
-          <MenuItem
-            icon={
-              <UserGroupIcon
-                style={pal.text as StyleProp<ViewStyle>}
-                size="30"
-              />
-            }
-            label="Create a scene"
-            onPress={onPressCreateScene}
           />
           <MenuItem
             icon={
