@@ -13,13 +13,13 @@ export const PostUpvotedBy = ({navIdx, visible, params}: ScreenParams) => {
 
   useEffect(() => {
     if (visible) {
-      store.nav.setTitle(navIdx, 'Upvoted by')
+      store.nav.setTitle(navIdx, 'Liked by')
     }
   }, [store, visible])
 
   return (
     <View>
-      <ViewHeader title="Upvoted by" />
+      <ViewHeader title="Liked by" />
       <PostLikedByComponent uri={uri} direction="up" />
     </View>
   )

@@ -55,7 +55,7 @@ export const routes: Route[] = [
   ],
   [
     PostUpvotedBy,
-    'Upvoted by',
+    'Liked by',
     'heart',
     r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)/upvoted-by'),
   ],

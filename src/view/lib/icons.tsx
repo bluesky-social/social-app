@@ -225,6 +225,48 @@ export function UserGroupIcon({
   )
 }
 
+// Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc.
+export function HeartIcon({
+  style,
+  size = 24,
+  strokeWidth = 1.5,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+  strokeWidth: number
+}) {
+  return (
+    <Svg viewBox="0 0 24 24" width={size} height={size} style={style}>
+      <Path
+        strokeWidth={strokeWidth}
+        stroke="currentColor"
+        fill="none"
+        d="M 3.859 13.537 L 10.918 20.127 C 11.211 20.4 11.598 20.552 12 20.552 C 12.402 20.552 12.789 20.4 13.082 20.127 L 20.141 13.537 C 21.328 12.431 22 10.88 22 9.259 L 22 9.033 C 22 6.302 20.027 3.974 17.336 3.525 C 15.555 3.228 13.742 3.81 12.469 5.084 L 12 5.552 L 11.531 5.084 C 10.258 3.81 8.445 3.228 6.664 3.525 C 3.973 3.974 2 6.302 2 9.033 L 2 9.259 C 2 10.88 2.672 12.431 3.859 13.537 Z"
+      />
+    </Svg>
+  )
+}
+
+// Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc.
+export function HeartIconSolid({
+  style,
+  size = 24,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+}) {
+  return (
+    <Svg viewBox="0 0 24 24" width={size} height={size} style={style}>
+      <Path
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth={1}
+        d="M 3.859 13.537 L 10.918 20.127 C 11.211 20.4 11.598 20.552 12 20.552 C 12.402 20.552 12.789 20.4 13.082 20.127 L 20.141 13.537 C 21.328 12.431 22 10.88 22 9.259 L 22 9.033 C 22 6.302 20.027 3.974 17.336 3.525 C 15.555 3.228 13.742 3.81 12.469 5.084 L 12 5.552 L 11.531 5.084 C 10.258 3.81 8.445 3.228 6.664 3.525 C 3.973 3.974 2 6.302 2 9.033 L 2 9.259 C 2 10.88 2.672 12.431 3.859 13.537 Z"
+      />
+    </Svg>
+  )
+}
+
 export function UpIcon({
   style,
   size,

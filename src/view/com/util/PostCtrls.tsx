@@ -11,7 +11,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
 import {Text} from './text/Text'
 import {PostDropdownBtn} from './forms/DropdownButton'
-import {UpIcon, UpIconSolid, CommentBottomArrow} from '../../lib/icons'
+import {HeartIcon, HeartIconSolid, CommentBottomArrow} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
 import {useTheme} from '../../lib/ThemeContext'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
@@ -123,7 +123,10 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           hitSlop={HITSLOP}
           onPress={opts.onPressReply}>
           <CommentBottomArrow
-            style={defaultCtrlColor}
+            style={[
+              defaultCtrlColor,
+              opts.big ? {marginTop: 2} : {marginTop: 1},
+            ]}
             strokeWidth={3}
             size={opts.big ? 20 : 15}
           />
@@ -167,15 +170,18 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           onPress={onPressToggleUpvoteWrapper}>
           <Animated.View style={anim2Style}>
             {opts.isUpvoted ? (
-              <UpIconSolid
+              <HeartIconSolid
                 style={[styles.ctrlIconUpvoted]}
-                size={opts.big ? 22 : 19}
+                size={opts.big ? 22 : 16}
               />
             ) : (
-              <UpIcon
-                style={defaultCtrlColor}
-                size={opts.big ? 22 : 19}
-                strokeWidth={1.5}
+              <HeartIcon
+                style={[
+                  defaultCtrlColor,
+                  opts.big ? {marginTop: 1} : undefined,
+                ]}
+                strokeWidth={3}
+                size={opts.big ? 20 : 16}
               />
             )}
           </Animated.View>

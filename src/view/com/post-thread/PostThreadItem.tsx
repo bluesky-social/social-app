@@ -47,7 +47,7 @@ export const PostThreadItem = observer(function PostThreadItem({
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}/upvoted-by`
   }, [item.post.uri, item.post.author.handle])
-  const upvotesTitle = 'Upvotes on this post'
+  const upvotesTitle = 'Likes on this post'
   const repostsHref = useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}/reposted-by`
@@ -209,7 +209,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                       <Text type="h5" style={pal.text}>
                         {item.post.upvoteCount}
                       </Text>{' '}
-                      {pluralize(item.post.upvoteCount, 'upvote')}
+                      {pluralize(item.post.upvoteCount, 'like')}
                     </Text>
                   </Link>
                 ) : (
