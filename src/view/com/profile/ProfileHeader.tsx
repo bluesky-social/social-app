@@ -237,7 +237,7 @@ export const ProfileHeader = observer(function ProfileHeader({
         {view.description ? (
           <RichText
             style={[styles.description, pal.text]}
-            numberOfLines={3}
+            numberOfLines={15}
             text={view.description}
             entities={view.descriptionEntities}
           />
