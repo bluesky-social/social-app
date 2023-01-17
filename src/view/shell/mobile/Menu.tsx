@@ -11,7 +11,13 @@ import {observer} from 'mobx-react-lite'
 import VersionNumber from 'react-native-version-number'
 import {s, colors} from '../../lib/styles'
 import {useStores} from '../../../state'
-import {HomeIcon, BellIcon, CogIcon, MagnifyingGlassIcon} from '../../lib/icons'
+import {
+  HomeIcon,
+  BellIcon,
+  UserIcon,
+  CogIcon,
+  MagnifyingGlassIcon,
+} from '../../lib/icons'
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {Text} from '../../com/util/text/Text'
 import {ToggleButton} from '../../com/util/forms/ToggleButton'
@@ -117,7 +123,7 @@ export const Menu = observer(
             Search
           </Text>
         </TouchableOpacity>
-        <View style={[styles.section, pal.border]}>
+        <View style={[styles.section, pal.border, {paddingTop: 5}]}>
           <MenuItem
             icon={
               <HomeIcon style={pal.text as StyleProp<ViewStyle>} size="26" />
@@ -132,6 +138,17 @@ export const Menu = observer(
             label="Notifications"
             url="/notifications"
             count={store.me.notificationCount}
+          />
+          <MenuItem
+            icon={
+              <UserIcon
+                style={pal.text as StyleProp<ViewStyle>}
+                size="30"
+                strokeWidth={2}
+              />
+            }
+            label="Profile"
+            url={`/profile/${store.me.handle}`}
           />
           <MenuItem
             icon={
@@ -208,7 +225,7 @@ const styles = StyleSheet.create({
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 6,
     paddingLeft: 6,
     paddingRight: 10,
   },

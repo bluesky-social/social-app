@@ -200,6 +200,35 @@ export function CogIcon({
 
 // Copyright (c) 2020 Refactoring UI Inc.
 // https://github.com/tailwindlabs/heroicons/blob/master/LICENSE
+export function UserIcon({
+  style,
+  size,
+  strokeWidth = 1.5,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+  strokeWidth?: number
+}) {
+  return (
+    <Svg
+      fill="none"
+      viewBox="0 0 24 24"
+      width={size || 32}
+      height={size || 32}
+      strokeWidth={strokeWidth}
+      stroke="currentColor"
+      style={style}>
+      <Path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+      />
+    </Svg>
+  )
+}
+
+// Copyright (c) 2020 Refactoring UI Inc.
+// https://github.com/tailwindlabs/heroicons/blob/master/LICENSE
 export function UserGroupIcon({
   style,
   size,
