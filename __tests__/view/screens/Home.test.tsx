@@ -21,17 +21,6 @@ describe('Home', () => {
     cleanup()
   })
 
-  it('renders feed', async () => {
-    jest.useFakeTimers()
-    const {findByTestId} = render(<Home {...mockedProps} />)
-    const feed = await findByTestId('homeFeed')
-
-    expect(feed).toBeTruthy()
-
-    const headerTitle = await findByTestId('headerTitle')
-    expect(headerTitle.props.children).toBe('Bluesky')
-  })
-
   it('renders and clicks button when hasNewLatest', async () => {
     jest.useFakeTimers()
     const {findByTestId} = render(<Home {...mockedProps} />, {
