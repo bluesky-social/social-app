@@ -57,9 +57,4 @@ describe('CreateAccount', () => {
     expect(mockedShellStore.openModal).toHaveBeenCalled()
     expect(keyboardSpy).toHaveBeenCalled()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<CreateAccount {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

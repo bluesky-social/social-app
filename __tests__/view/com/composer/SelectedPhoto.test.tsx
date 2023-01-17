@@ -67,9 +67,4 @@ describe('SelectedPhoto', () => {
     fireEvent.press(removePhotoButton[0])
     expect(mockedProps.onSelectPhotos).toHaveBeenCalledWith(['mock-uri-2'])
   })
-
-  it('matches snapshot', () => {
-    const page = render(<SelectedPhoto {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

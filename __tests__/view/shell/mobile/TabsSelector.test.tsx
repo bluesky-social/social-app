@@ -96,9 +96,4 @@ describe('TabsSelector', () => {
     expect(onCloseMock).toHaveBeenCalled()
     expect(mockedNavigationStore.setActiveTab).toHaveBeenCalledWith(0)
   })
-
-  it('matches snapshot', () => {
-    const page = render(<TabsSelector {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

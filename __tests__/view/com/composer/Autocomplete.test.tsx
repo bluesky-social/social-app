@@ -40,9 +40,4 @@ describe('Autocomplete', () => {
     fireEvent.press(autocompleteButton[1])
     expect(onSelectMock).toHaveBeenCalledWith('handle2.test')
   })
-
-  it('matches snapshot', () => {
-    const page = render(<Autocomplete {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

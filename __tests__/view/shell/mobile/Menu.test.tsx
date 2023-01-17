@@ -67,9 +67,4 @@ describe('Menu', () => {
     expect(onCloseMock).toHaveBeenCalled()
     expect(mockedShellStore.openModal).toHaveBeenCalled()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<Menu {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

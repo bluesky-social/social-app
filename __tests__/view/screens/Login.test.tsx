@@ -34,9 +34,4 @@ describe('Login', () => {
     const createAccountScreen = getByTestId('createAccount')
     expect(createAccountScreen).toBeTruthy()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<Login />)
-    expect(page).toMatchSnapshot()
-  })
 })

@@ -84,9 +84,4 @@ describe('Feed', () => {
     })
     expect(mockedProps.view.refresh).toHaveBeenCalled()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<Feed {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

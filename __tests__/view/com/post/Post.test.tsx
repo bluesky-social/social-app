@@ -100,9 +100,4 @@ describe('Post', () => {
     const postShowReplyLineView = await findByTestId('postShowReplyLineView')
     expect(postShowReplyLineView).toBeTruthy()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<Post {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

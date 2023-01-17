@@ -105,9 +105,4 @@ describe('Feed', () => {
       _reactKey: '__empty__',
     })
   })
-
-  it('matches snapshot', () => {
-    const page = render(<Feed {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

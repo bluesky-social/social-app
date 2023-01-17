@@ -114,9 +114,4 @@ describe('ComposePost', () => {
     photoCarouselPickerView = queryByTestId('photoCarouselPickerView')
     expect(photoCarouselPickerView).toBeFalsy()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<ComposePost {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

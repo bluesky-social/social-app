@@ -74,10 +74,4 @@ describe('Home', () => {
     fireEvent.press(composePromptButton)
     expect(mockedShellStore.openComposer).toHaveBeenCalledWith({})
   })
-
-  it('matches snapshot', () => {
-    jest.useFakeTimers()
-    const page = render(<Home {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

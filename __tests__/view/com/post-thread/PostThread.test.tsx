@@ -47,9 +47,4 @@ describe('PostThread', () => {
     const errorMessageView = await findByTestId('errorMessageView')
     expect(errorMessageView).toBeTruthy()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<PostThread {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

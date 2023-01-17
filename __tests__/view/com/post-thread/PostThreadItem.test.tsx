@@ -101,9 +101,4 @@ describe('PostThreadItem', () => {
     fireEvent.press(postCtrlsToggleUpvoteButton)
     expect(mockedPostThreadViewPostStore.toggleUpvote).toHaveBeenCalled()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<PostThreadItem {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

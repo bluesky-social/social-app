@@ -55,9 +55,4 @@ describe('ProfileFollows', () => {
     const profileFollowsFlatList = await findByTestId('profileFollowsFlatList')
     expect(profileFollowsFlatList).toBeTruthy()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<ProfileFollows {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

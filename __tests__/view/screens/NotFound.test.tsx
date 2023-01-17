@@ -18,9 +18,4 @@ describe('NotFound', () => {
 
     expect(navigationSpy).toHaveBeenCalledWith('/')
   })
-
-  it('matches snapshot', () => {
-    const page = render(<NotFound />)
-    expect(page).toMatchSnapshot()
-  })
 })

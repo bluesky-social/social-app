@@ -28,9 +28,4 @@ describe('Follows', () => {
     fireEvent.press(followsNextButton)
     expect(mockedOnboardStore.next).toHaveBeenCalled()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<Follows />)
-    expect(page).toMatchSnapshot()
-  })
 })

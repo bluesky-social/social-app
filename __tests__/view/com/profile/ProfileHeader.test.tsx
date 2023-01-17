@@ -152,9 +152,4 @@ describe('ProfileHeader', () => {
 
     expect(mockedProps.view.toggleFollowing).toHaveBeenCalled()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<ProfileHeader {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

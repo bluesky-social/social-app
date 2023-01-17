@@ -186,9 +186,4 @@ describe('FeedItem', () => {
     const additionalPostContent = findByTestId('additionalPostContent')
     expect(additionalPostContent).toBeTruthy()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<FeedItem {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

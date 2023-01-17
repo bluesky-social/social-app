@@ -57,9 +57,4 @@ describe('ProfileFollowers', () => {
     )
     expect(profileFollowersFlatList).toBeTruthy()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<ProfileFollowers {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

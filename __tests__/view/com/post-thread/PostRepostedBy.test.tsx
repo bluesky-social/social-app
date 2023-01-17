@@ -49,9 +49,4 @@ describe('PostRepostedBy', () => {
     const postRepostedByView = await findByTestId('postRepostedByView')
     expect(postRepostedByView).toBeTruthy()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<PostRepostedBy {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

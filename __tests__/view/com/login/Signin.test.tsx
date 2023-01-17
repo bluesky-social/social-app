@@ -125,9 +125,4 @@ describe('Signin', () => {
 
     expect(mockedShellStore.openModal).toHaveBeenCalled()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<Signin {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

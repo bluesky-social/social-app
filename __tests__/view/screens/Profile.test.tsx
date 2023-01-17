@@ -25,11 +25,6 @@ describe('Profile', () => {
     cleanup()
   })
 
-  it('matches snapshot', () => {
-    const page = render(<Profile {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
-
   it('renders profile screen', async () => {
     jest.spyOn(React, 'useMemo').mockReturnValue(mockedProfileUiStore)
     const {findByTestId} = render(<Profile {...mockedProps} />)

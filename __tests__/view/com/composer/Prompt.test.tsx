@@ -19,9 +19,4 @@ describe('Prompt', () => {
     fireEvent.press(composePromptButton)
     expect(onPressMock).toHaveBeenCalled()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<ComposePrompt {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

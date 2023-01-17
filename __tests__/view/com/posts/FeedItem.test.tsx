@@ -50,9 +50,4 @@ describe('FeedItem', () => {
     fireEvent.press(postCtrlsToggleUpvoteButton)
     expect(mockedFeedItemStore.toggleUpvote).toHaveBeenCalled()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<FeedItem {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

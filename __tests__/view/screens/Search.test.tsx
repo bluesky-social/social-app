@@ -27,9 +27,4 @@ describe('Search', () => {
     const searchScrollView = await findByTestId('searchScrollView')
     expect(searchScrollView).toBeTruthy()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<Search {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

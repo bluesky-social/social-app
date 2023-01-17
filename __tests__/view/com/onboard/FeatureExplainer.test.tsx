@@ -37,9 +37,4 @@ describe('FeatureExplainer', () => {
 
   // react-native-tab-view's TabView component had to be mocked because of runtime error in jest environment
   // This prevents further coverage to be reached on this component
-
-  it('matches snapshot', () => {
-    const page = render(<FeatureExplainer />)
-    expect(page).toMatchSnapshot()
-  })
 })

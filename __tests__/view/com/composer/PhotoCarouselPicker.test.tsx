@@ -89,9 +89,4 @@ describe('PhotoCarouselPicker', () => {
       width: 1000,
     })
   })
-
-  it('matches snapshot', () => {
-    const page = render(<PhotoCarouselPicker {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

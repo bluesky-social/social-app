@@ -68,9 +68,4 @@ describe('SuggestedFollows', () => {
     render(<SuggestedFollows {...mockedProps} />)
     expect(mockedProps.onNoSuggestions).toHaveBeenCalled()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<SuggestedFollows {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })

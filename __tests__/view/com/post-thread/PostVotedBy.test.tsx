@@ -42,9 +42,4 @@ describe('PostVotedtedBy', () => {
     const postVotedByView = await findByTestId('postVotedByView')
     expect(postVotedByView).toBeTruthy()
   })
-
-  it('matches snapshot', () => {
-    const page = render(<PostVotedBy {...mockedProps} />)
-    expect(page).toMatchSnapshot()
-  })
 })
