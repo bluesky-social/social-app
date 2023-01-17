@@ -225,6 +225,27 @@ export function UserGroupIcon({
   )
 }
 
+export function RepostIcon({
+  style,
+  size = 24,
+  strokeWidth = 1.5,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+  strokeWidth: number
+}) {
+  return (
+    <Svg viewBox="0 0 24 24" width={size} height={size} style={style}>
+      <Path
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        strokeLinejoin="round"
+        d="M 14.437 17.362 L 5.475 17.376 C 4.7 17.376 4.072 16.748 4.072 15.973 L 4.082 5.65 L 1.375 9.315 M 4.082 5.65 L 6.749 9.315 M 9.859 5.65 L 18.625 5.654 C 19.4 5.654 20.028 6.282 20.028 7.057 L 20.031 17.362 L 17.238 13.409 M 20.031 17.362 L 22.763 13.409"
+      />
+    </Svg>
+  )
+}
+
 // Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc.
 export function HeartIcon({
   style,

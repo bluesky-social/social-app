@@ -11,7 +11,12 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
 import {Text} from './text/Text'
 import {PostDropdownBtn} from './forms/DropdownButton'
-import {HeartIcon, HeartIconSolid, CommentBottomArrow} from '../../lib/icons'
+import {
+  HeartIcon,
+  HeartIconSolid,
+  RepostIcon,
+  CommentBottomArrow,
+} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
 import {useTheme} from '../../lib/ThemeContext'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
@@ -143,12 +148,12 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           onPress={onPressToggleRepostWrapper}
           style={styles.ctrl}>
           <Animated.View style={anim1Style}>
-            <FontAwesomeIcon
+            <RepostIcon
               style={
                 opts.isReposted ? styles.ctrlIconReposted : defaultCtrlColor
               }
-              icon="retweet"
-              size={opts.big ? 22 : 19}
+              strokeWidth={2.4}
+              size={opts.big ? 24 : 20}
             />
           </Animated.View>
           {typeof opts.repostCount !== 'undefined' ? (
