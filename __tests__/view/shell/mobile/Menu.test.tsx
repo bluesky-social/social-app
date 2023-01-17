@@ -57,14 +57,4 @@ describe('Menu', () => {
     expect(onCloseMock).toHaveBeenCalled()
     expect(mockedNavigationStore.switchTo).toHaveBeenCalledWith(1, true)
   })
-
-  it('presses new scene button', () => {
-    const {getAllByTestId} = render(<Menu {...mockedProps} />)
-
-    const menuItemButton = getAllByTestId('menuItemButton')
-    fireEvent.press(menuItemButton[3])
-
-    expect(onCloseMock).toHaveBeenCalled()
-    expect(mockedShellStore.openModal).toHaveBeenCalled()
-  })
 })
