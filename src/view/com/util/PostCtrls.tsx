@@ -115,7 +115,6 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     <View style={[styles.ctrls, opts.style]}>
       <View style={s.flex1}>
         <TouchableOpacity
-          testID="postCtrlsReplyButton"
           style={styles.ctrl}
           hitSlop={HITSLOP}
           onPress={opts.onPressReply}>
@@ -131,7 +130,6 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       </View>
       <View style={s.flex1}>
         <TouchableOpacity
-          testID="postCtrlsToggleRepostButton"
           hitSlop={HITSLOP}
           onPress={onPressToggleRepostWrapper}
           style={styles.ctrl}>
@@ -158,7 +156,6 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       </View>
       <View style={s.flex1}>
         <TouchableOpacity
-          testID="postCtrlsToggleUpvoteButton"
           style={styles.ctrl}
           hitSlop={HITSLOP}
           onPress={onPressToggleUpvoteWrapper}>
