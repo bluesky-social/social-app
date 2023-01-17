@@ -439,6 +439,7 @@ export class FeedModel {
   ) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
+    const orgLen = this.feed.length
 
     const reorgedFeed = preprocessFeed(res.data.feed)
 
@@ -458,7 +459,7 @@ export class FeedModel {
         this.feed = this.feed.concat(toAppend)
       }
       dedupReposts(this.feed)
-      dedupParents(this.feed)
+      dedupParents(this.feed.slice(orgLen)) // we slice to avoid modifying rendering of already-shown posts
     })
   }
 
