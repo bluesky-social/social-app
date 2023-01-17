@@ -10,7 +10,7 @@ import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
-import {s, colors} from '../../lib/styles'
+import {s} from '../../lib/styles'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 export const ProfileFollows = observer(function ProfileFollows({
@@ -19,7 +19,6 @@ export const ProfileFollows = observer(function ProfileFollows({
   name: string
 }) {
   const store = useStores()
-  // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
   const [view, setView] = React.useState<UserFollowsViewModel | undefined>()
 
   useEffect(() => {

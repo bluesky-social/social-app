@@ -19,7 +19,6 @@ export const ProfileFollowers = observer(function ProfileFollowers({
   name: string
 }) {
   const store = useStores()
-  // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
   const [view, setView] = React.useState<UserFollowersViewModel | undefined>()
 
   useEffect(() => {

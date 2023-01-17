@@ -20,7 +20,6 @@ export const PostVotedBy = observer(function PostVotedBy({
   direction: 'up' | 'down'
 }) {
   const store = useStores()
-  // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
   const [view, setView] = React.useState<VotesViewModel | undefined>()
 
   useEffect(() => {

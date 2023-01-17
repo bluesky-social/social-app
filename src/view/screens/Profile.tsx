@@ -30,7 +30,6 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
   const [hasSetup, setHasSetup] = useState<boolean>(false)
-  // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
   const uiState = React.useMemo(
     () => new ProfileUiModel(store, {user: params.name}),
     [params.user],
