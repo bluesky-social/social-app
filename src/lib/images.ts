@@ -1,6 +1,5 @@
 import RNFetchBlob from 'rn-fetch-blob'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
-import {Image as PickedImage} from 'react-native-image-crop-picker'
 
 export interface DownloadAndResizeOpts {
   uri: string
@@ -9,6 +8,14 @@ export interface DownloadAndResizeOpts {
   mode: 'contain' | 'cover' | 'stretch'
   maxSize: number
   timeout: number
+}
+
+export interface Image {
+  path: string
+  mime: string
+  size: number
+  width: number
+  height: number
 }
 
 export async function downloadAndResize(opts: DownloadAndResizeOpts) {
@@ -58,7 +65,10 @@ export interface ResizeOpts {
   maxSize: number
 }
 
-export async function resize(localUri: string, opts: ResizeOpts) {
+export async function resize(
+  localUri: string,
+  opts: ResizeOpts,
+): Promise<Image> {
   for (let i = 0; i < 9; i++) {
     const quality = 1.0 - i / 10
     const resizeRes = await ImageResizer.createResizedImage(
@@ -73,7 +83,13 @@ export async function resize(localUri: string, opts: ResizeOpts) {
       {mode: opts.mode},
     )
     if (resizeRes.size < opts.maxSize) {
-      return resizeRes
+      return {
+        path: resizeRes.path,
+        mime: 'image/jpeg',
+        size: resizeRes.size,
+        width: resizeRes.width,
+        height: resizeRes.height,
+      }
     }
   }
   throw new Error(
@@ -81,16 +97,18 @@ export async function resize(localUri: string, opts: ResizeOpts) {
   )
 }
 
-export async function compressIfNeeded(img: PickedImage, maxSize: number) {
+export async function compressIfNeeded(
+  img: Image,
+  maxSize: number,
+): Promise<Image> {
   const origUri = `file://${img.path}`
   if (img.size < maxSize) {
-    return origUri
+    return img
   }
-  const resizeRez = await resize(origUri, {
+  return await resize(origUri, {
     width: img.width,
     height: img.height,
     mode: 'stretch',
     maxSize,
   })
-  return resizeRez.uri
 }

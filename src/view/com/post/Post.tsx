@@ -156,15 +156,10 @@ export const Post = observer(function Post({
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
-            itemHref={itemHref}
-            itemTitle={itemTitle}
             authorHref={authorHref}
             authorHandle={item.post.author.handle}
             authorDisplayName={item.post.author.displayName}
             timestamp={item.post.indexedAt}
-            isAuthor={item.post.author.did === store.me.did}
-            onCopyPostText={onCopyPostText}
-            onDeletePost={onDeletePost}
           />
           {replyHref !== '' && (
             <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
@@ -180,8 +175,8 @@ export const Post = observer(function Post({
                 <UserInfoText
                   type="body2"
                   did={replyAuthorDid}
+                  attr="displayName"
                   style={[pal.textLight]}
-                  prefix="@"
                 />
               </Link>
             </View>
@@ -200,6 +195,9 @@ export const Post = observer(function Post({
           )}
           <PostEmbeds embed={item.post.embed} style={{marginBottom: 10}} />
           <PostCtrls
+            itemHref={itemHref}
+            itemTitle={itemTitle}
+            isAuthor={item.post.author.did === store.me.did}
             replyCount={item.post.replyCount}
             repostCount={item.post.repostCount}
             upvoteCount={item.post.upvoteCount}
@@ -208,6 +206,8 @@ export const Post = observer(function Post({
             onPressReply={onPressReply}
             onPressToggleRepost={onPressToggleRepost}
             onPressToggleUpvote={onPressToggleUpvote}
+            onCopyPostText={onCopyPostText}
+            onDeletePost={onDeletePost}
           />
         </View>
       </View>

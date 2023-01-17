@@ -36,8 +36,8 @@ export const PhotoCarouselPicker = ({
         cropping: true,
         ...IMAGE_PARAMS,
       })
-      const uri = await compressIfNeeded(cameraRes, 300000)
-      onSelectPhotos([uri, ...selectedPhotos])
+      const img = await compressIfNeeded(cameraRes, 300000)
+      onSelectPhotos([img.path, ...selectedPhotos])
     } catch (err: any) {
       // ignore
       store.log.warn('Error using camera', err)
@@ -52,8 +52,8 @@ export const PhotoCarouselPicker = ({
           path: uri,
           ...IMAGE_PARAMS,
         })
-        const finalUri = await compressIfNeeded(cropperRes, 300000)
-        onSelectPhotos([finalUri, ...selectedPhotos])
+        const img = await compressIfNeeded(cropperRes, 300000)
+        onSelectPhotos([img.path, ...selectedPhotos])
       } catch (err: any) {
         // ignore
         store.log.warn('Error selecting photo', err)
@@ -76,8 +76,8 @@ export const PhotoCarouselPicker = ({
           path: image.path,
           ...IMAGE_PARAMS,
         })
-        const finalUri = await compressIfNeeded(cropperRes, 300000)
-        result.push(finalUri)
+        const finalImg = await compressIfNeeded(cropperRes, 300000)
+        result.push(finalImg.path)
       }
       onSelectPhotos([...result, ...selectedPhotos])
     })
