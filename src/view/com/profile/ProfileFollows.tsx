@@ -45,7 +45,7 @@ export const ProfileFollows = observer(function ProfileFollows({
     view.params.user !== name
   ) {
     return (
-      <View testID="profileFollowsActivityIndicatorView">
+      <View>
         <ActivityIndicator />
       </View>
     )
@@ -55,7 +55,7 @@ export const ProfileFollows = observer(function ProfileFollows({
   // =
   if (view.hasError) {
     return (
-      <View testID="followList">
+      <View>
         <ErrorMessage
           message={view.error}
           style={{margin: 6}}
@@ -69,7 +69,7 @@ export const ProfileFollows = observer(function ProfileFollows({
   // =
   const renderItem = ({item}: {item: FollowItem}) => <User item={item} />
   return (
-    <View testID="profileFollowsFlatList">
+    <View>
       <FlatList
         data={view.follows}
         keyExtractor={item => item._reactKey}

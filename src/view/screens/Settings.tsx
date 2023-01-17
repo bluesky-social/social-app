@@ -30,7 +30,7 @@ export const Settings = observer(function Settings({
   }
 
   return (
-    <View testID="settingsView" style={[s.flex1]}>
+    <View style={[s.flex1]}>
       <ViewHeader title="Settings" />
       <View style={[s.mt10, s.pl10, s.pr10, s.flex1]}>
         <View style={[s.flexRow]}>

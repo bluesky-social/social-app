@@ -78,7 +78,7 @@ export const Feed = observer(function Feed({
   }
   const FeedFooter = () =>
     feed.isLoading ? (
-      <View testID="isLoadingFooter" style={{paddingTop: 20}}>
+      <View style={{paddingTop: 20}}>
         <ActivityIndicator />
       </View>
     ) : (
@@ -97,7 +97,6 @@ export const Feed = observer(function Feed({
       )}
       {feed.hasLoaded && data && (
         <FlatList
-          testID="feedFlatList"
           ref={scrollElRef}
           data={data}
           keyExtractor={item => item._reactKey}

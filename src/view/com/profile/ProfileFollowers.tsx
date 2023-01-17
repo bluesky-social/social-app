@@ -45,7 +45,7 @@ export const ProfileFollowers = observer(function ProfileFollowers({
     view.params.user !== name
   ) {
     return (
-      <View testID="profileFollowersActivityIndicatorView">
+      <View>
         <ActivityIndicator />
       </View>
     )
@@ -69,7 +69,7 @@ export const ProfileFollowers = observer(function ProfileFollowers({
   // =
   const renderItem = ({item}: {item: FollowerItem}) => <User item={item} />
   return (
-    <View testID="profileFollowersFlatList">
+    <View>
       <FlatList
         data={view.followers}
         keyExtractor={item => item._reactKey}

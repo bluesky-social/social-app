@@ -26,7 +26,7 @@ export const Onboard = observer(() => {
   }
 
   return (
-    <View testID="onboardView" style={{flex: 1, backgroundColor: '#fff'}}>
+    <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Com />
     </View>
   )

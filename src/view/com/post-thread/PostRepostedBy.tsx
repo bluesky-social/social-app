@@ -44,7 +44,7 @@ export const PostRepostedBy = observer(function PostRepostedBy({
     view.params.uri !== uri
   ) {
     return (
-      <View testID="postRepostedByLoadingView">
+      <View>
         <ActivityIndicator />
       </View>
     )
@@ -70,7 +70,7 @@ export const PostRepostedBy = observer(function PostRepostedBy({
     <RepostedByItem item={item} />
   )
   return (
-    <View testID="postRepostedByView">
+    <View>
       <FlatList
         data={view.repostedBy}
         keyExtractor={item => item._reactKey}

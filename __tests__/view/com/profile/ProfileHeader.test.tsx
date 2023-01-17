@@ -71,28 +71,6 @@ describe('ProfileHeader', () => {
     expect(mockedShellStore.openLightbox).toHaveBeenCalled()
   })
 
-  it('presses and invite members modal', async () => {
-    const {findByTestId} = render(
-      <ProfileHeader
-        {...{
-          view: {
-            ...mockedProfileStore,
-            isScene: true,
-          } as ProfileViewModel,
-          onRefreshAll: jest.fn(),
-        }}
-      />,
-    )
-
-    const profileHeaderInviteMembersButton = await findByTestId(
-      'profileHeaderInviteMembersButton',
-    )
-    expect(profileHeaderInviteMembersButton).toBeTruthy()
-    fireEvent.press(profileHeaderInviteMembersButton)
-
-    expect(mockedShellStore.openModal).toHaveBeenCalled()
-  })
-
   it('presses and opens follows page', async () => {
     const {findByTestId} = render(<ProfileHeader {...mockedProps} />)
 
@@ -107,31 +85,7 @@ describe('ProfileHeader', () => {
     )
   })
 
-  it('presses and opens members page', async () => {
-    const {findByTestId} = render(
-      <ProfileHeader
-        {...{
-          view: {
-            ...mockedProfileStore,
-            isScene: true,
-          } as ProfileViewModel,
-          onRefreshAll: jest.fn(),
-        }}
-      />,
-    )
-
-    const profileHeaderMembersButton = await findByTestId(
-      'profileHeaderMembersButton',
-    )
-    expect(profileHeaderMembersButton).toBeTruthy()
-    fireEvent.press(profileHeaderMembersButton)
-
-    expect(mockedNavigationStore.navigate).toHaveBeenCalledWith(
-      '/profile/testhandle/members',
-    )
-  })
-
-  it('presses and opens follow modal', async () => {
+  it('toggles following', async () => {
     const {findByTestId} = render(
       <ProfileHeader
         {...{

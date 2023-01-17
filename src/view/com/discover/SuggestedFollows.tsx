@@ -169,9 +169,7 @@ const User = ({
         </View>
         <View style={styles.actorBtn}>
           {follow ? (
-            <TouchableOpacity
-              testID="unfollowButton"
-              onPress={() => onPressUnfollow(item)}>
+            <TouchableOpacity onPress={() => onPressUnfollow(item)}>
               <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
                 <Text type="button" style={pal.text}>
                   Unfollow
@@ -179,9 +177,7 @@ const User = ({
               </View>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity
-              testID="followButton"
-              onPress={() => onPressFollow(item)}>
+            <TouchableOpacity onPress={() => onPressFollow(item)}>
               <LinearGradient
                 colors={[gradients.primary.start, gradients.primary.end]}
                 start={{x: 0, y: 0}}

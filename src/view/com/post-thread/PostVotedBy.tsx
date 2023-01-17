@@ -46,7 +46,7 @@ export const PostVotedBy = observer(function PostVotedBy({
     view.params.uri !== uri
   ) {
     return (
-      <View testID="postVotedByLoadingView">
+      <View>
         <ActivityIndicator />
       </View>
     )
@@ -72,7 +72,7 @@ export const PostVotedBy = observer(function PostVotedBy({
     <LikedByItem item={item} />
   )
   return (
-    <View testID="postVotedByView">
+    <View>
       <FlatList
         data={view.votes}
         keyExtractor={item => item._reactKey}

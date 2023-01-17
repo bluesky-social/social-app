@@ -19,7 +19,7 @@ export const PostRepostedBy = ({navIdx, visible, params}: ScreenParams) => {
   }, [store, visible])
 
   return (
-    <View testID="postRepostedByMainView">
+    <View>
       <ViewHeader title="Reposted by" />
       <PostRepostedByComponent uri={uri} />
     </View>

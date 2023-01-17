@@ -17,7 +17,7 @@ export function EmptyState({
 }) {
   const pal = usePalette('default')
   return (
-    <View testID="emptyStateView" style={[styles.container, style]}>
+    <View style={[styles.container, style]}>
       <View style={styles.iconContainer}>
         {icon === 'user-group' ? (
           <UserGroupIcon size="64" style={styles.icon} />

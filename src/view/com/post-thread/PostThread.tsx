@@ -49,7 +49,7 @@ export const PostThread = observer(function PostThread({
   // =
   if ((view.isLoading && !view.isRefreshing) || view.params.uri !== uri) {
     return (
-      <View testID="postThreadLoadingView">
+      <View>
         <ActivityIndicator />
       </View>
     )

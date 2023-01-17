@@ -52,7 +52,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
   }
 
   return (
-    <View testID="searchScreen" style={[pal.view, styles.container]}>
+    <View style={[pal.view, styles.container]}>
       <ViewHeader title="Search" />
       <View style={[pal.view, pal.border, styles.inputContainer]}>
         <MagnifyingGlassIcon style={[pal.text, styles.inputIcon]} />

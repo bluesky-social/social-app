@@ -93,7 +93,6 @@ export const Home = observer(function Home({
       />
       {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing ? (
         <TouchableOpacity
-          testID="loadLatestButton"
           style={[
             styles.loadLatest,
             store.shell.minimalShellMode
