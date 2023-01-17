@@ -15,7 +15,6 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
       return
     }
     store.log.debug('Updating notifications feed')
-    store.me.refreshMemberships() // needed for the invite notifications
     store.me.notifications
       .update()
       .catch(e => {

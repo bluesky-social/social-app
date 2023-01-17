@@ -1,15 +1,12 @@
-import React, {useMemo} from 'react'
+import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {AtUri} from '../../../third-party/uri'
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {useStores} from '../../../state'
 import {
-  ConfirmModal,
   EditProfileModal,
-  InviteToSceneModal,
   ReportAccountModal,
   ProfileImageLightbox,
 } from '../../../state/models/shell-ui'
@@ -23,7 +20,6 @@ import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
-import {UserInfoText} from '../util/UserInfoText'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 export const ProfileHeader = observer(function ProfileHeader({
@@ -35,10 +31,6 @@ export const ProfileHeader = observer(function ProfileHeader({
 }) {
   const pal = usePalette('default')
   const store = useStores()
-  const isMember = useMemo(
-    () => view.isScene && view.myState.member,
-    [view.myState.member],
-  )
 
   const onPressAvi = () => {
     store.shell.openLightbox(new ProfileImageLightbox(view))
@@ -63,31 +55,6 @@ export const ProfileHeader = observer(function ProfileHeader({
   }
   const onPressFollows = () => {
     store.nav.navigate(`/profile/${view.handle}/follows`)
-  }
-  const onPressMembers = () => {
-    store.nav.navigate(`/profile/${view.handle}/members`)
-  }
-  const onPressInviteMembers = () => {
-    store.shell.openModal(new InviteToSceneModal(view))
-  }
-  const onPressLeaveScene = () => {
-    store.shell.openModal(
-      new ConfirmModal(
-        'Leave this scene?',
-        `You'll be able to come back unless your invite is revoked.`,
-        onPressConfirmLeaveScene,
-      ),
-    )
-  }
-  const onPressConfirmLeaveScene = async () => {
-    if (view.myState.member) {
-      await store.api.app.bsky.graph.confirmation.delete({
-        did: store.me.did || '',
-        rkey: new AtUri(view.myState.member).rkey,
-      })
-      Toast.show(`Scene left`)
-    }
-    onRefreshAll()
   }
   const onPressMuteAccount = async () => {
     try {
@@ -157,7 +124,6 @@ export const ProfileHeader = observer(function ProfileHeader({
   // =
   const gradient = getGradient(view.handle)
   const isMe = store.me.did === view.did
-  const isCreator = view.isScene && view.creator === store.me.did
   let dropdownItems: DropdownItem[] | undefined
   if (!isMe) {
     dropdownItems = dropdownItems || []
@@ -169,21 +135,6 @@ export const ProfileHeader = observer(function ProfileHeader({
       label: 'Report Account',
       onPress: onPressReportAccount,
     })
-  }
-  if (isCreator || isMember) {
-    dropdownItems = dropdownItems || []
-    if (isCreator) {
-      dropdownItems.push({
-        label: 'Edit Profile',
-        onPress: onPressEditProfile,
-      })
-    }
-    if (isMember) {
-      dropdownItems.push({
-        label: 'Leave Scene...',
-        onPress: onPressLeaveScene,
-      })
-    }
   }
   return (
     <View style={pal.view}>
@@ -247,15 +198,6 @@ export const ProfileHeader = observer(function ProfileHeader({
           </Text>
         </View>
         <View style={styles.handleLine}>
-          {view.isScene ? (
-            <View
-              style={[
-                styles.typeLabelWrapper,
-                {backgroundColor: pal.colors.backgroundLight},
-              ]}>
-              <Text style={[styles.typeLabel, pal.textLight]}>Scene</Text>
-            </View>
-          ) : undefined}
           <Text style={pal.textLight}>@{view.handle}</Text>
         </View>
         <View style={styles.metricsLine}>
@@ -283,19 +225,6 @@ export const ProfileHeader = observer(function ProfileHeader({
               </Text>
             </TouchableOpacity>
           ) : undefined}
-          {view.isScene ? (
-            <TouchableOpacity
-              testID="profileHeaderMembersButton"
-              style={[s.flexRow, s.mr10]}
-              onPress={onPressMembers}>
-              <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
-                {view.membersCount}
-              </Text>
-              <Text type="body2" style={[pal.textLight]}>
-                {pluralize(view.membersCount, 'member')}
-              </Text>
-            </TouchableOpacity>
-          ) : undefined}
           <View style={[s.flexRow, s.mr10]}>
             <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
               {view.postsCount}
@@ -313,35 +242,6 @@ export const ProfileHeader = observer(function ProfileHeader({
             entities={view.descriptionEntities}
           />
         ) : undefined}
-        {view.isScene && view.creator ? (
-          <View style={styles.detailLine}>
-            <FontAwesomeIcon
-              icon={['far', 'user']}
-              style={[pal.textLight, s.mr5]}
-            />
-            <Text type="body2" style={[s.mr2, pal.textLight]}>
-              Created by
-            </Text>
-            <UserInfoText
-              type="body2"
-              style={[pal.link]}
-              did={view.creator}
-              prefix="@"
-              asLink
-            />
-          </View>
-        ) : undefined}
-        {view.isScene && view.myState.member ? (
-          <View style={styles.detailLine}>
-            <FontAwesomeIcon
-              icon={['far', 'circle-check']}
-              style={[pal.textLight, s.mr5]}
-            />
-            <Text type="body2" style={[s.mr2, pal.textLight]}>
-              You are a member
-            </Text>
-          </View>
-        ) : undefined}
         {view.myState.muted ? (
           <View style={[styles.detailLine, pal.btn, s.p5]}>
             <FontAwesomeIcon
@@ -354,28 +254,6 @@ export const ProfileHeader = observer(function ProfileHeader({
           </View>
         ) : undefined}
       </View>
-      {view.isScene && view.creator === store.me.did ? (
-        <View style={[styles.sceneAdminContainer, pal.border]}>
-          <TouchableOpacity
-            testID="profileHeaderInviteMembersButton"
-            onPress={onPressInviteMembers}>
-            <LinearGradient
-              colors={[gradient[1], gradient[0]]}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
-              style={[styles.btn, styles.gradientBtn, styles.sceneAdminBtn]}>
-              <FontAwesomeIcon
-                icon="user-plus"
-                style={[s.mr5, s.white]}
-                size={15}
-              />
-              <Text type="button" style={[s.bold, s.white]}>
-                Invite Members
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
-      ) : undefined}
       <TouchableOpacity
         testID="profileHeaderAviButton"
         style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}
@@ -444,15 +322,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 8,
   },
-  typeLabelWrapper: {
-    paddingHorizontal: 4,
-    borderRadius: 4,
-    marginRight: 5,
-  },
-  typeLabel: {
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
 
   metricsLine: {
     flexDirection: 'row',
@@ -467,15 +336,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 5,
-  },
-
-  sceneAdminContainer: {
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-  },
-  sceneAdminBtn: {
-    paddingVertical: 8,
   },
 })

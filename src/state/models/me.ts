@@ -1,7 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from './root-store'
 import {FeedModel} from './feed-view'
-import {MembershipsViewModel} from './memberships-view'
 import {NotificationsViewModel} from './notifications-view'
 import {isObj, hasProp} from '../lib/type-guards'
 
@@ -12,7 +11,6 @@ export class MeModel {
   description: string = ''
   avatar: string = ''
   notificationCount: number = 0
-  memberships?: MembershipsViewModel
   mainFeed: FeedModel
   notifications: NotificationsViewModel
 
@@ -35,7 +33,6 @@ export class MeModel {
     this.description = ''
     this.avatar = ''
     this.notificationCount = 0
-    this.memberships = undefined
   }
 
   serialize(): unknown {
@@ -99,13 +96,7 @@ export class MeModel {
         algorithm: 'reverse-chronological',
       })
       this.notifications = new NotificationsViewModel(this.rootStore, {})
-      this.memberships = new MembershipsViewModel(this.rootStore, {
-        actor: this.did,
-      })
       await Promise.all([
-        this.memberships?.setup().catch(e => {
-          this.rootStore.log.error('Failed to setup memberships model', e)
-        }),
         this.mainFeed.setup().catch(e => {
           this.rootStore.log.error('Failed to setup main feed model', e)
         }),
@@ -132,9 +123,5 @@ export class MeModel {
         this.notifications.refresh()
       }
     })
-  }
-
-  async refreshMemberships() {
-    return this.memberships?.refresh()
   }
 }

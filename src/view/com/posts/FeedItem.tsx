@@ -155,23 +155,6 @@ export const FeedItem = observer(function ({
             </Text>
           </Link>
         )}
-        {item.reasonTrend && (
-          <Link
-            style={styles.includeReason}
-            href={`/profile/${item.reasonTrend.by.handle}`}
-            title={
-              item.reasonTrend.by.displayName || item.reasonTrend.by.handle
-            }>
-            <FontAwesomeIcon
-              icon="arrow-trend-up"
-              style={styles.includeReasonIcon}
-            />
-            <Text type="overline2" style={{color: pal.colors.actionLabel}}>
-              Trending with{' '}
-              {item.reasonTrend.by.displayName || item.reasonTrend.by.handle}
-            </Text>
-          </Link>
-        )}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
             <Link href={authorHref} title={item.post.author.handle}>

@@ -13,11 +13,9 @@ import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
-export const ACTOR_TYPE_SCENE = 'app.bsky.system.actorScene'
 
 export class ProfileViewMyStateModel {
   follow?: string
-  member?: string
   muted?: boolean
 
   constructor() {
@@ -47,7 +45,6 @@ export class ProfileViewModel {
   banner?: string
   followersCount: number = 0
   followsCount: number = 0
-  membersCount: number = 0
   postsCount: number = 0
   myState = new ProfileViewMyStateModel()
 
@@ -83,10 +80,6 @@ export class ProfileViewModel {
 
   get isUser() {
     return this.declaration.actorType === ACTOR_TYPE_USER
-  }
-
-  get isScene() {
-    return this.declaration.actorType === ACTOR_TYPE_SCENE
   }
 
   // public api
@@ -216,7 +209,6 @@ export class ProfileViewModel {
     this.banner = res.data.banner
     this.followersCount = res.data.followersCount
     this.followsCount = res.data.followsCount
-    this.membersCount = res.data.membersCount
     this.postsCount = res.data.postsCount
     if (res.data.myState) {
       Object.assign(this.myState, res.data.myState)

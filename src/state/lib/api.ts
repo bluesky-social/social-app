@@ -216,54 +216,6 @@ export async function unfollow(store: RootStoreModel, followUri: string) {
   })
 }
 
-export async function inviteToScene(
-  store: RootStoreModel,
-  sceneDid: string,
-  subjectDid: string,
-  subjectDeclarationCid: string,
-): Promise<string> {
-  const res = await store.api.app.bsky.graph.assertion.create(
-    {
-      did: sceneDid,
-    },
-    {
-      subject: {
-        did: subjectDid,
-        declarationCid: subjectDeclarationCid,
-      },
-      assertion: APP_BSKY_GRAPH.AssertMember,
-      createdAt: new Date().toISOString(),
-    },
-  )
-  return res.uri
-}
-
-interface Confirmation {
-  originator: {
-    did: string
-    declarationCid: string
-  }
-  assertion: {
-    uri: string
-    cid: string
-  }
-}
-export async function acceptSceneInvite(
-  store: RootStoreModel,
-  details: Confirmation,
-): Promise<string> {
-  const res = await store.api.app.bsky.graph.confirmation.create(
-    {
-      did: store.me.did || '',
-    },
-    {
-      ...details,
-      createdAt: new Date().toISOString(),
-    },
-  )
-  return res.uri
-}
-
 interface FetchHandlerResponse {
   status: number
   headers: Record<string, string>

@@ -4,17 +4,15 @@ import {
   AppBskyActorRef as ActorRef,
   AppBskyFeedPost,
   AppBskyFeedRepost,
-  AppBskyFeedTrend,
   AppBskyFeedVote,
   AppBskyGraphAssertion,
   AppBskyGraphFollow,
-  APP_BSKY_GRAPH,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {PostThreadViewModel} from './post-thread-view'
 import {cleanError} from '../../lib/strings'
 
-const UNGROUPABLE_REASONS = ['trend', 'assertion']
+const UNGROUPABLE_REASONS = ['assertion']
 const PAGE_SIZE = 30
 const MS_60MIN = 1e3 * 60 * 60
 
@@ -27,7 +25,6 @@ export interface GroupedNotification extends ListNotifications.Notification {
 type SupportedRecord =
   | AppBskyFeedPost.Record
   | AppBskyFeedRepost.Record
-  | AppBskyFeedTrend.Record
   | AppBskyFeedVote.Record
   | AppBskyGraphAssertion.Record
   | AppBskyGraphFollow.Record
@@ -94,10 +91,6 @@ export class NotificationsViewItemModel {
     return this.reason === 'repost'
   }
 
-  get isTrend() {
-    return this.reason === 'trend'
-  }
-
   get isMention() {
     return this.reason === 'mention'
   }
@@ -115,24 +108,10 @@ export class NotificationsViewItemModel {
   }
 
   get needsAdditionalData() {
-    if (
-      this.isUpvote ||
-      this.isRepost ||
-      this.isTrend ||
-      this.isReply ||
-      this.isMention
-    ) {
+    if (this.isUpvote || this.isRepost || this.isReply || this.isMention) {
       return !this.additionalPost
     }
     return false
-  }
-
-  get isInvite() {
-    return (
-      this.isAssertion &&
-      AppBskyGraphAssertion.isRecord(this.record) &&
-      this.record.assertion === APP_BSKY_GRAPH.AssertMember
-    )
   }
 
   get subjectUri(): string {
@@ -142,7 +121,6 @@ export class NotificationsViewItemModel {
     const record = this.record
     if (
       AppBskyFeedRepost.isRecord(record) ||
-      AppBskyFeedTrend.isRecord(record) ||
       AppBskyFeedVote.isRecord(record)
     ) {
       return record.subject.uri
@@ -154,7 +132,6 @@ export class NotificationsViewItemModel {
     for (const ns of [
       AppBskyFeedPost,
       AppBskyFeedRepost,
-      AppBskyFeedTrend,
       AppBskyFeedVote,
       AppBskyGraphAssertion,
       AppBskyGraphFollow,
@@ -185,7 +162,7 @@ export class NotificationsViewItemModel {
     let postUri
     if (this.isReply || this.isMention) {
       postUri = this.uri
-    } else if (this.isUpvote || this.isRepost || this.isTrend) {
+    } else if (this.isUpvote || this.isRepost) {
       postUri = this.subjectUri
     }
     if (postUri) {

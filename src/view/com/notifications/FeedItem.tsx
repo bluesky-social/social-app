@@ -14,7 +14,6 @@ import {UserAvatar} from '../util/UserAvatar'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Post} from '../post/Post'
 import {Link} from '../util/Link'
-import {InviteAccepter} from './InviteAccepter'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 const MAX_AUTHORS = 8
@@ -26,7 +25,7 @@ export const FeedItem = observer(function FeedItem({
 }) {
   const pal = usePalette('default')
   const itemHref = useMemo(() => {
-    if (item.isUpvote || item.isRepost || item.isTrend) {
+    if (item.isUpvote || item.isRepost) {
       const urip = new AtUri(item.subjectUri)
       return `/profile/${urip.host}/post/${urip.rkey}`
     } else if (item.isFollow || item.isAssertion) {
@@ -82,10 +81,6 @@ export const FeedItem = observer(function FeedItem({
     action = 'reposted your post'
     icon = 'retweet'
     iconStyle = [s.green3]
-  } else if (item.isTrend) {
-    action = 'Your post is trending with'
-    icon = 'arrow-trend-up'
-    iconStyle = [s.red3]
   } else if (item.isReply) {
     action = 'replied to your post'
     icon = ['far', 'comment']
@@ -93,10 +88,6 @@ export const FeedItem = observer(function FeedItem({
     action = 'followed you'
     icon = 'user-plus'
     iconStyle = [s.blue3]
-  } else if (item.isInvite) {
-    icon = 'users'
-    iconStyle = [s.blue3]
-    action = 'invited you to join their scene'
   } else {
     return <></>
   }
@@ -173,9 +164,6 @@ export const FeedItem = observer(function FeedItem({
             ) : undefined}
           </View>
           <View style={styles.meta}>
-            {item.isTrend && (
-              <Text style={[styles.metaItem, pal.text]}>{action}</Text>
-            )}
             <Link
               key={authors[0].href}
               style={styles.metaItem}
@@ -193,25 +181,17 @@ export const FeedItem = observer(function FeedItem({
                 </Text>
               </>
             ) : undefined}
-            {!item.isTrend && (
-              <Text style={[styles.metaItem, pal.text]}>{action}</Text>
-            )}
             <Text style={[styles.metaItem, pal.textLight]}>
               {ago(item.indexedAt)}
             </Text>
           </View>
-          {item.isUpvote || item.isRepost || item.isTrend ? (
+          {item.isUpvote || item.isRepost ? (
             <AdditionalPostText additionalPost={item.additionalPost} />
           ) : (
             <></>
           )}
         </View>
       </View>
-      {item.isInvite && (
-        <View style={styles.addedContainer}>
-          <InviteAccepter item={item} />
-        </View>
-      )}
     </Link>
   )
 })

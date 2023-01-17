@@ -6,7 +6,6 @@ import {
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
 } from '@atproto/api'
 type FeedViewPost = AppBskyFeedFeedViewPost.Main
-type ReasonTrend = AppBskyFeedFeedViewPost.ReasonTrend
 type ReasonRepost = AppBskyFeedFeedViewPost.ReasonRepost
 type PostView = AppBskyFeedPost.View
 import {AtUri} from '../../third-party/uri'
@@ -91,12 +90,6 @@ export class FeedItemModel {
   get reasonRepost(): ReasonRepost | undefined {
     if (this.reason?.$type === 'app.bsky.feed.feedViewPost#reasonRepost') {
       return this.reason as ReasonRepost
-    }
-  }
-
-  get reasonTrend(): ReasonTrend | undefined {
-    if (this.reason?.$type === 'app.bsky.feed.feedViewPost#reasonTrend') {
-      return this.reason as ReasonTrend
     }
   }
 
@@ -494,10 +487,9 @@ export class FeedModel {
   private _updateAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     for (const item of res.data.feed) {
       const existingItem = this.feed.find(
-        // HACK: need to find the reposts and trends item, so we have to check for that -prf
+        // HACK: need to find the reposts' item, so we have to check for that -prf
         item2 =>
           item.post.uri === item2.post.uri &&
-          item.reason?.$trend === item2.reason?.$trend &&
           // @ts-ignore todo
           item.reason?.by?.did === item2.reason?.by?.did,
       )

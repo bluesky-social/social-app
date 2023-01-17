@@ -9,8 +9,6 @@ import * as models from '../../../state/models/shell-ui'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
-import * as CreateSceneModal from './CreateScene'
-import * as InviteToSceneModal from './InviteToScene'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
 import * as ReportAccountModal from './ReportAccount'
@@ -53,16 +51,6 @@ export const Modal = observer(function Modal() {
     element = (
       <EditProfileModal.Component
         {...(store.shell.activeModal as models.EditProfileModal)}
-      />
-    )
-  } else if (store.shell.activeModal?.name === 'create-scene') {
-    snapPoints = CreateSceneModal.snapPoints
-    element = <CreateSceneModal.Component />
-  } else if (store.shell.activeModal?.name === 'invite-to-scene') {
-    snapPoints = InviteToSceneModal.snapPoints
-    element = (
-      <InviteToSceneModal.Component
-        {...(store.shell.activeModal as models.InviteToSceneModal)}
       />
     )
   } else if (store.shell.activeModal?.name === 'server-input') {
