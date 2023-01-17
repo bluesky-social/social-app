@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   layoutIcon: {
-    width: 35,
+    width: 60,
     alignItems: 'flex-end',
   },
   icon: {
