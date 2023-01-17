@@ -47,11 +47,15 @@ export const Home = observer(function Home({
 
   useEffect(() => {
     const pollInterval = setInterval(() => doPoll(), 15e3)
+    const cleanup = () => {
+      clearInterval(pollInterval)
+    }
+
     if (!visible) {
       setWasVisible(false)
-      return
+      return cleanup
     } else if (wasVisible) {
-      return
+      return cleanup
     }
     setWasVisible(true)
 
@@ -62,9 +66,7 @@ export const Home = observer(function Home({
     } else {
       store.me.mainFeed.setup()
     }
-    return () => {
-      clearInterval(pollInterval)
-    }
+    return cleanup
   }, [visible, store, navIdx, doPoll, wasVisible])
 
   const onPressCompose = () => {
