@@ -1,11 +1,21 @@
 import React from 'react'
 import {NotFound} from '../../../src/view/screens/NotFound'
-import renderer from 'react-test-renderer'
-// import {render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../jest/test-utils'
+import {mockedNavigationStore} from '../../../__mocks__/state-mock'
 
 describe('NotFound', () => {
-  it('renders correctly', () => {
-    const tree = renderer.create(<NotFound />).toJSON()
-    expect(tree).toMatchSnapshot()
+  afterAll(() => {
+    jest.clearAllMocks()
+    cleanup()
+  })
+
+  it('navigates home', async () => {
+    const navigationSpy = jest.spyOn(mockedNavigationStore, 'navigate')
+    const {getByTestId} = render(<NotFound />)
+    const navigateHomeButton = getByTestId('navigateHomeButton')
+
+    fireEvent.press(navigateHomeButton)
+
+    expect(navigationSpy).toHaveBeenCalledWith('/')
   })
 })

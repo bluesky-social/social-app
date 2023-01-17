@@ -1,14 +1,27 @@
 import React from 'react'
-import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  Animated,
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
 import {Text} from './text/Text'
+import {PostDropdownBtn} from './forms/DropdownButton'
 import {UpIcon, UpIconSolid, CommentBottomArrow} from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
+import {useTheme} from '../../lib/ThemeContext'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 
 interface PostCtrlsOpts {
+  itemHref: string
+  itemTitle: string
+  isAuthor: boolean
   big?: boolean
+  style?: StyleProp<ViewStyle>
   replyCount?: number
   repostCount?: number
   upvoteCount?: number
@@ -17,13 +30,16 @@ interface PostCtrlsOpts {
   onPressReply: () => void
   onPressToggleRepost: () => void
   onPressToggleUpvote: () => void
+  onCopyPostText: () => void
+  onDeletePost: () => void
 }
 
 const redgray = '#7A6161'
 const sRedgray = {color: redgray}
-const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
+const HITSLOP = {top: 2, left: 2, bottom: 2, right: 2}
 
 export function PostCtrls(opts: PostCtrlsOpts) {
+  const theme = useTheme()
   const interp1 = useAnimatedValue(0)
   const interp2 = useAnimatedValue(0)
 
@@ -96,9 +112,10 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   }
 
   return (
-    <View style={styles.ctrls}>
+    <View style={[styles.ctrls, opts.style]}>
       <View style={s.flex1}>
         <TouchableOpacity
+          testID="postCtrlsReplyButton"
           style={styles.ctrl}
           hitSlop={HITSLOP}
           onPress={opts.onPressReply}>
@@ -114,6 +131,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       </View>
       <View style={s.flex1}>
         <TouchableOpacity
+          testID="postCtrlsToggleRepostButton"
           hitSlop={HITSLOP}
           onPress={onPressToggleRepostWrapper}
           style={styles.ctrl}>
@@ -123,7 +141,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                 opts.isReposted ? styles.ctrlIconReposted : styles.ctrlIcon
               }
               icon="retweet"
-              size={opts.big ? 22 : 17}
+              size={opts.big ? 22 : 19}
             />
           </Animated.View>
           {typeof opts.repostCount !== 'undefined' ? (
@@ -140,6 +158,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       </View>
       <View style={s.flex1}>
         <TouchableOpacity
+          testID="postCtrlsToggleUpvoteButton"
           style={styles.ctrl}
           hitSlop={HITSLOP}
           onPress={onPressToggleUpvoteWrapper}>
@@ -147,12 +166,12 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             {opts.isUpvoted ? (
               <UpIconSolid
                 style={[styles.ctrlIconUpvoted]}
-                size={opts.big ? 22 : 17}
+                size={opts.big ? 22 : 19}
               />
             ) : (
               <UpIcon
                 style={[styles.ctrlIcon]}
-                size={opts.big ? 22 : 17}
+                size={opts.big ? 22 : 19}
                 strokeWidth={1.5}
               />
             )}
@@ -169,7 +188,30 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           ) : undefined}
         </TouchableOpacity>
       </View>
-      <View style={s.flex1}></View>
+      <View style={s.flex1}>
+        {opts.big ? undefined : (
+          <PostDropdownBtn
+            style={styles.ctrl}
+            itemHref={opts.itemHref}
+            itemTitle={opts.itemTitle}
+            isAuthor={opts.isAuthor}
+            onCopyPostText={opts.onCopyPostText}
+            onDeletePost={opts.onDeletePost}>
+            <FontAwesomeIcon
+              icon="ellipsis-h"
+              size={18}
+              style={[
+                s.mt2,
+                s.mr5,
+                {
+                  color:
+                    theme.colorScheme === 'light' ? colors.gray3 : colors.gray5,
+                },
+              ]}
+            />
+          </PostDropdownBtn>
+        )}
+      </View>
     </View>
   )
 }

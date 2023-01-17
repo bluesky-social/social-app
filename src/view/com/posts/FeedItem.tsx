@@ -96,7 +96,8 @@ export const FeedItem = observer(function ({
     return <View />
   }
 
-  const isChild = item._isThreadChild || (!item.reason && item.reply)
+  const isChild =
+    item._isThreadChild || (!item.reason && !item._hideParent && item.reply)
   const isSmallTop = isChild && item._isThreadChild
   const isNoTop = isChild && !item._isThreadChild
   const outerStyles = [
@@ -139,8 +140,16 @@ export const FeedItem = observer(function ({
             title={
               item.reasonRepost.by.displayName || item.reasonRepost.by.handle
             }>
-            <FontAwesomeIcon icon="retweet" style={styles.includeReasonIcon} />
-            <Text type="overline2" style={{color: pal.colors.actionLabel}}>
+            <FontAwesomeIcon
+              icon="retweet"
+              style={[styles.includeReasonIcon, {color: pal.colors.textLight}]}
+            />
+            <Text
+              type="body2"
+              style={{
+                fontWeight: '600',
+                color: pal.colors.textLight,
+              }}>
               Reposted by{' '}
               {item.reasonRepost.by.displayName || item.reasonRepost.by.handle}
             </Text>
@@ -159,32 +168,27 @@ export const FeedItem = observer(function ({
           </View>
           <View style={styles.layoutContent}>
             <PostMeta
-              itemHref={itemHref}
-              itemTitle={itemTitle}
               authorHref={authorHref}
               authorHandle={item.post.author.handle}
               authorDisplayName={item.post.author.displayName}
               timestamp={item.post.indexedAt}
-              isAuthor={item.post.author.did === store.me.did}
-              onCopyPostText={onCopyPostText}
-              onDeletePost={onDeletePost}
             />
             {!isChild && replyHref !== '' && (
               <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
                 <FontAwesomeIcon
                   icon="reply"
                   size={9}
-                  style={[{color: pal.colors.text}, s.mr5]}
+                  style={[{color: pal.colors.textLight}, s.mr5]}
                 />
-                <Text type="caption" style={[pal.textLight, s.mr2]}>
+                <Text type="body2" style={[pal.textLight, s.mr2]}>
                   Reply to
                 </Text>
                 <Link href={replyHref} title="Parent post">
                   <UserInfoText
-                    type="caption"
+                    type="body2"
                     did={replyAuthorDid}
+                    attr="displayName"
                     style={[pal.textLight]}
-                    prefix="@"
                   />
                 </Link>
               </View>
@@ -206,8 +210,12 @@ export const FeedItem = observer(function ({
             ) : (
               <View style={{height: 5}} />
             )}
-            <PostEmbeds embed={item.post.embed} style={styles.postEmbeds} />
+            <PostEmbeds embed={item.post.embed} style={styles.embed} />
             <PostCtrls
+              style={styles.ctrls}
+              itemHref={itemHref}
+              itemTitle={itemTitle}
+              isAuthor={item.post.author.did === store.me.did}
               replyCount={item.post.replyCount}
               repostCount={item.post.repostCount}
               upvoteCount={item.post.upvoteCount}
@@ -216,6 +224,8 @@ export const FeedItem = observer(function ({
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
               onPressToggleUpvote={onPressToggleUpvote}
+              onCopyPostText={onCopyPostText}
+              onDeletePost={onDeletePost}
             />
           </View>
         </View>
@@ -261,7 +271,6 @@ const styles = StyleSheet.create({
   },
   outerSmallTop: {
     borderTopWidth: 0,
-    paddingTop: 8,
   },
   outerNoBottom: {
     paddingBottom: 2,
@@ -282,14 +291,16 @@ const styles = StyleSheet.create({
   },
   includeReason: {
     flexDirection: 'row',
-    paddingLeft: 60,
+    paddingLeft: 40,
+    marginTop: 2,
+    marginBottom: 2,
   },
   includeReasonIcon: {
     marginRight: 4,
-    color: colors.gray4,
   },
   layout: {
     flexDirection: 'row',
+    marginTop: 1,
   },
   layoutAvi: {
     width: 60,
@@ -312,8 +323,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingBottom: 4,
   },
-  postEmbeds: {
-    marginBottom: 0,
+  embed: {
+    marginBottom: 6,
+  },
+  ctrls: {
+    marginTop: 4,
   },
   viewFullThread: {
     paddingTop: 12,

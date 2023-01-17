@@ -56,6 +56,7 @@ export const Menu = observer(
       onPress?: () => void
     }) => (
       <TouchableOpacity
+        testID="menuItemButton"
         style={styles.menuItem}
         onPress={onPress ? onPress : () => onNavigate(url || '/')}>
         <View style={[styles.menuItemIconWrapper]}>
@@ -79,8 +80,9 @@ export const Menu = observer(
     )
 
     return (
-      <ScrollView style={[styles.view, pal.view]}>
+      <ScrollView testID="menuView" style={[styles.view, pal.view]}>
         <TouchableOpacity
+          testID="profileCardButton"
           onPress={() => onNavigate(`/profile/${store.me.handle}`)}
           style={styles.profileCard}>
           <UserAvatar
@@ -104,6 +106,7 @@ export const Menu = observer(
           </View>
         </TouchableOpacity>
         <TouchableOpacity
+          testID="searchBtn"
           style={[styles.searchBtn, pal.btn]}
           onPress={() => onNavigate('/search')}>
           <MagnifyingGlassIcon

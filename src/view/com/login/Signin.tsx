@@ -69,7 +69,7 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   const onPressRetryConnect = () => setRetryDescribeTrigger({})
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
+    <KeyboardAvoidingView testID="signIn" behavior="padding" style={{flex: 1}}>
       <View style={styles.logoHero}>
         <Logo />
       </View>
@@ -194,8 +194,9 @@ const LoginForm = ({
   const isReady = !!serviceDescription && !!handle && !!password
   return (
     <>
-      <View style={styles.group}>
+      <View testID="loginFormView" style={styles.group}>
         <TouchableOpacity
+          testID="loginSelectServiceButton"
           style={[styles.groupTitle, {paddingRight: 0, paddingVertical: 6}]}
           onPress={onPressSelectService}>
           <Text style={[s.flex1, s.white, s.f18, s.bold]} numberOfLines={1}>
@@ -213,6 +214,7 @@ const LoginForm = ({
         <View style={styles.groupContent}>
           <FontAwesomeIcon icon="at" style={styles.groupContentIcon} />
           <TextInput
+            testID="loginUsernameInput"
             style={styles.textInput}
             placeholder="Username"
             placeholderTextColor={colors.blue0}
@@ -227,6 +229,7 @@ const LoginForm = ({
         <View style={styles.groupContent}>
           <FontAwesomeIcon icon="lock" style={styles.groupContentIcon} />
           <TextInput
+            testID="loginPasswordInput"
             style={styles.textInput}
             placeholder="Password"
             placeholderTextColor={colors.blue0}
@@ -238,6 +241,7 @@ const LoginForm = ({
             editable={!isProcessing}
           />
           <TouchableOpacity
+            testID="forgotPasswordButton"
             style={styles.textInputInnerBtn}
             onPress={onPressForgotPassword}>
             <Text style={styles.textInputInnerBtnLabel}>Forgot</Text>
@@ -260,7 +264,9 @@ const LoginForm = ({
         </TouchableOpacity>
         <View style={s.flex1} />
         {!serviceDescription && error ? (
-          <TouchableOpacity onPress={onPressRetryConnect}>
+          <TouchableOpacity
+            testID="loginRetryButton"
+            onPress={onPressRetryConnect}>
             <Text style={[s.white, s.f18, s.bold, s.pr5]}>Retry</Text>
           </TouchableOpacity>
         ) : !serviceDescription ? (
@@ -271,7 +277,7 @@ const LoginForm = ({
         ) : isProcessing ? (
           <ActivityIndicator color="#fff" />
         ) : isReady ? (
-          <TouchableOpacity onPress={onPressNext}>
+          <TouchableOpacity testID="loginNextButton" onPress={onPressNext}>
             <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
           </TouchableOpacity>
         ) : undefined}
@@ -339,8 +345,9 @@ const ForgotPasswordForm = ({
         Enter the email you used to create your account. We'll send you a "reset
         code" so you can set a new password.
       </Text>
-      <View style={styles.group}>
+      <View testID="forgotPasswordView" style={styles.group}>
         <TouchableOpacity
+          testID="forgotPasswordSelectServiceButton"
           style={[styles.groupContent, {borderTopWidth: 0}]}
           onPress={onPressSelectService}>
           <FontAwesomeIcon icon="globe" style={styles.groupContentIcon} />
@@ -359,6 +366,7 @@ const ForgotPasswordForm = ({
         <View style={styles.groupContent}>
           <FontAwesomeIcon icon="envelope" style={styles.groupContentIcon} />
           <TextInput
+            testID="forgotPasswordEmail"
             style={styles.textInput}
             placeholder="Email address"
             placeholderTextColor={colors.blue0}
@@ -391,7 +399,7 @@ const ForgotPasswordForm = ({
         ) : !email ? (
           <Text style={[s.blue1, s.f18, s.bold, s.pr5]}>Next</Text>
         ) : (
-          <TouchableOpacity onPress={onPressNext}>
+          <TouchableOpacity testID="newPasswordButton" onPress={onPressNext}>
             <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
           </TouchableOpacity>
         )}
@@ -451,10 +459,11 @@ const SetNewPasswordForm = ({
         You will receive an email with a "reset code." Enter that code here,
         then enter your new password.
       </Text>
-      <View style={styles.group}>
+      <View testID="newPasswordView" style={styles.group}>
         <View style={[styles.groupContent, {borderTopWidth: 0}]}>
           <FontAwesomeIcon icon="ticket" style={styles.groupContentIcon} />
           <TextInput
+            testID="resetCodeInput"
             style={[styles.textInput]}
             placeholder="Reset code"
             placeholderTextColor={colors.blue0}
@@ -469,6 +478,7 @@ const SetNewPasswordForm = ({
         <View style={styles.groupContent}>
           <FontAwesomeIcon icon="lock" style={styles.groupContentIcon} />
           <TextInput
+            testID="newPasswordInput"
             style={styles.textInput}
             placeholder="New password"
             placeholderTextColor={colors.blue0}
@@ -501,7 +511,7 @@ const SetNewPasswordForm = ({
         ) : !resetCode || !password ? (
           <Text style={[s.blue1, s.f18, s.bold, s.pr5]}>Next</Text>
         ) : (
-          <TouchableOpacity onPress={onPressNext}>
+          <TouchableOpacity testID="setNewPasswordButton" onPress={onPressNext}>
             <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
           </TouchableOpacity>
         )}

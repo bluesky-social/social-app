@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo} from 'react'
+import React, {useEffect, useState} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {ViewSelector} from '../com/util/ViewSelector'
@@ -15,6 +15,7 @@ import {EmptyState} from '../com/util/EmptyState'
 import {Text} from '../com/util/text/Text'
 import {ViewHeader} from '../com/util/ViewHeader'
 import * as Toast from '../com/util/Toast'
+import {FAB} from '../com/util/FAB'
 import {s, colors} from '../lib/styles'
 import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
 
@@ -26,7 +27,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
   const [hasSetup, setHasSetup] = useState<boolean>(false)
-  const uiState = useMemo(
+  const uiState = React.useMemo(
     () => new ProfileUiModel(store, {user: params.name}),
     [params.user],
   )
@@ -72,6 +73,10 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   }
   const onPressTryAgain = () => {
     uiState.setup()
+  }
+
+  const onPressCompose = () => {
+    store.shell.openComposer({})
   }
 
   // rendering
@@ -150,10 +155,11 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const title =
     uiState.profile.displayName || uiState.profile.handle || params.name
   return (
-    <View style={styles.container}>
+    <View testID="profileView" style={styles.container}>
       <ViewHeader title={title} />
       {uiState.profile.hasError ? (
         <ErrorScreen
+          testID="profileErrorScreen"
           title="Failed to load profile"
           message={`There was an issue when attempting to load ${params.name}`}
           details={uiState.profile.error}
@@ -176,6 +182,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
       ) : (
         renderHeader()
       )}
+      <FAB icon="pen-nib" onPress={onPressCompose} />
     </View>
   )
 })

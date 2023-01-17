@@ -7,7 +7,7 @@ import {useStores} from '../../state'
 export const NotFound = () => {
   const stores = useStores()
   return (
-    <View>
+    <View testID="notFoundView">
       <ViewHeader title="Page not found" />
       <View
         style={{
@@ -16,7 +16,11 @@ export const NotFound = () => {
           paddingTop: 100,
         }}>
         <Text style={{fontSize: 40, fontWeight: 'bold'}}>Page not found</Text>
-        <Button title="Home" onPress={() => stores.nav.navigate('/')} />
+        <Button
+          testID="navigateHomeButton"
+          title="Home"
+          onPress={() => stores.nav.navigate('/')}
+        />
       </View>
     </View>
   )

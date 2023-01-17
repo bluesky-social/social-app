@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
@@ -7,6 +7,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
 import {Text} from '../com/util/text/Text'
+import {FAB} from '../com/util/FAB'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
 import {s, colors} from '../lib/styles'
@@ -23,48 +24,48 @@ export const Home = observer(function Home({
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
   const safeAreaInsets = useSafeAreaInsets()
-  const [hasSetup, setHasSetup] = useState<boolean>(false)
+  const [wasVisible, setWasVisible] = React.useState<boolean>(false)
   const {appState} = useAppState({
     onForeground: () => doPoll(true),
   })
 
-  const doPoll = (knownActive = false) => {
-    if ((!knownActive && appState !== 'active') || !visible) {
-      return
-    }
-    if (store.me.mainFeed.isLoading) {
-      return
-    }
-    store.log.debug('Polling home feed')
-    store.me.mainFeed.checkForLatest().catch(e => {
-      store.log.error('Failed to poll feed', e)
-    })
-  }
+  const doPoll = React.useCallback(
+    (knownActive = false) => {
+      if ((!knownActive && appState !== 'active') || !visible) {
+        return
+      }
+      if (store.me.mainFeed.isLoading) {
+        return
+      }
+      store.log.debug('Polling home feed')
+      store.me.mainFeed.checkForLatest().catch(e => {
+        store.log.error('Failed to poll feed', e)
+      })
+    },
+    [appState, visible, store],
+  )
 
   useEffect(() => {
-    let aborted = false
     const pollInterval = setInterval(() => doPoll(), 15e3)
     if (!visible) {
+      setWasVisible(false)
+      return
+    } else if (wasVisible) {
       return
     }
+    setWasVisible(true)
 
-    if (hasSetup) {
-      store.log.debug('Updating home feed')
+    store.nav.setTitle(navIdx, 'Home')
+    store.log.debug('Updating home feed')
+    if (store.me.mainFeed.hasContent) {
       store.me.mainFeed.update()
-      doPoll()
     } else {
-      store.nav.setTitle(navIdx, 'Home')
-      store.log.debug('Fetching home feed')
-      store.me.mainFeed.setup().then(() => {
-        if (aborted) return
-        setHasSetup(true)
-      })
+      store.me.mainFeed.setup()
     }
     return () => {
       clearInterval(pollInterval)
-      aborted = true
     }
-  }, [visible, store])
+  }, [visible, store, navIdx, doPoll, wasVisible])
 
   const onPressCompose = () => {
     store.shell.openComposer({})
@@ -81,6 +82,7 @@ export const Home = observer(function Home({
     <View style={s.flex1}>
       <ViewHeader title="Bluesky" subtitle="Private Beta" canGoBack={false} />
       <Feed
+        testID="homeFeed"
         key="default"
         feed={store.me.mainFeed}
         scrollElRef={scrollElRef}
@@ -103,6 +105,7 @@ export const Home = observer(function Home({
           <Text style={styles.loadLatestText}>Load new posts</Text>
         </TouchableOpacity>
       ) : undefined}
+      <FAB icon="pen-nib" onPress={onPressCompose} />
     </View>
   )
 })

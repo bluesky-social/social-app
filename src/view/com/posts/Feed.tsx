@@ -25,6 +25,7 @@ export const Feed = observer(function Feed({
   onPressCompose,
   onPressTryAgain,
   onScroll,
+  testID,
 }: {
   feed: FeedModel
   style?: StyleProp<ViewStyle>
@@ -32,6 +33,7 @@ export const Feed = observer(function Feed({
   onPressCompose: () => void
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
+  testID?: string
 }) {
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your
@@ -39,7 +41,9 @@ export const Feed = observer(function Feed({
   //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = ({item}: {item: any}) => {
     if (item === COMPOSE_PROMPT_ITEM) {
-      return <ComposePrompt onPressCompose={onPressCompose} />
+      return (
+        <ComposePrompt onPressCompose={onPressCompose} text="New message" />
+      )
     } else if (item === EMPTY_FEED_ITEM) {
       return (
         <EmptyState
@@ -81,7 +85,7 @@ export const Feed = observer(function Feed({
       <View />
     )
   return (
-    <View style={style}>
+    <View testID={testID} style={style}>
       {!data && <ComposePrompt onPressCompose={onPressCompose} />}
       {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
       {feed.hasError && (

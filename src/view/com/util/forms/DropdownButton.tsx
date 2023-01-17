@@ -75,7 +75,8 @@ export function DropdownButton({
         style={style}
         onPress={onPress}
         hitSlop={HITSLOP}
-        ref={ref}>
+        // Fix an issue where specific references cause runtime error in jest environment
+        ref={process.env.JEST_WORKER_ID != null ? null : ref}>
         {children}
       </TouchableOpacity>
     )
