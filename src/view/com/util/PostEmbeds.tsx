@@ -1,5 +1,5 @@
 import React from 'react'
-import {Image, StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
+import {StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import LinearGradient from 'react-native-linear-gradient'
 import {Link} from '../util/Link'
@@ -10,7 +10,6 @@ import {ImagesLightbox} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {gradients} from '../../lib/styles'
-import {DEF_AVATAR} from '../../lib/assets'
 
 type Embed =
   | AppBskyEmbedImages.Presented
