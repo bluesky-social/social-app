@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {UpIcon} from '../../lib/icons'
+import {HeartIcon} from '../../lib/icons'
 import {s} from '../../lib/styles'
 import {useTheme} from '../../lib/ThemeContext'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -70,7 +70,7 @@ export function PostLoadingPlaceholder({
             />
           </View>
           <View style={s.flex1}>
-            <UpIcon
+            <HeartIcon
               style={{color: theme.palette.default.icon}}
               size={17}
               strokeWidth={1.7}

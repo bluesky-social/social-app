@@ -8,7 +8,7 @@ import {NotificationsViewItemModel} from '../../../state/models/notifications-vi
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../../lib/strings'
-import {UpIconSolid} from '../../lib/icons'
+import {HeartIconSolid} from '../../lib/icons'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import {ImageHorzList} from '../util/images/ImageHorzList'
@@ -72,11 +72,11 @@ export const FeedItem = observer(function FeedItem({
   }
 
   let action = ''
-  let icon: Props['icon'] | 'UpIconSolid'
+  let icon: Props['icon'] | 'HeartIconSolid'
   let iconStyle: Props['style'] = []
   if (item.isUpvote) {
-    action = 'upvoted your post'
-    icon = 'UpIconSolid'
+    action = 'liked your post'
+    icon = 'HeartIconSolid'
     iconStyle = [s.red3, {position: 'relative', top: -4}]
   } else if (item.isRepost) {
     action = 'reposted your post'
@@ -132,8 +132,8 @@ export const FeedItem = observer(function FeedItem({
       noFeedback>
       <View style={styles.layout}>
         <View style={styles.layoutIcon}>
-          {icon === 'UpIconSolid' ? (
-            <UpIconSolid size={26} style={[styles.icon, ...iconStyle]} />
+          {icon === 'HeartIconSolid' ? (
+            <HeartIconSolid size={26} style={[styles.icon, ...iconStyle]} />
           ) : (
             <FontAwesomeIcon
               icon={icon}
