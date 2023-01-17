@@ -171,7 +171,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
 
   const isReady = !!email && !!password && !!handle && is13
   return (
-    <ScrollView style={{flex: 1}}>
+    <ScrollView testID="createAccount" style={{flex: 1}}>
       <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
         <View style={styles.logoHero}>
           <Logo />
@@ -193,6 +193,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
           <View style={styles.groupContent}>
             <FontAwesomeIcon icon="globe" style={styles.groupContentIcon} />
             <TouchableOpacity
+              testID="registerSelectServiceButton"
               style={styles.textBtn}
               onPress={onPressSelectService}>
               <Text style={styles.textBtnLabel}>
@@ -235,6 +236,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                   style={styles.groupContentIcon}
                 />
                 <TextInput
+                  testID="registerEmailInput"
                   style={[styles.textInput]}
                   placeholder="Email address"
                   placeholderTextColor={colors.blue0}
@@ -248,6 +250,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
               <View style={styles.groupContent}>
                 <FontAwesomeIcon icon="lock" style={styles.groupContentIcon} />
                 <TextInput
+                  testID="registerPasswordInput"
                   style={[styles.textInput]}
                   placeholder="Choose your password"
                   placeholderTextColor={colors.blue0}
@@ -273,6 +276,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
               <View style={styles.groupContent}>
                 <FontAwesomeIcon icon="at" style={styles.groupContentIcon} />
                 <TextInput
+                  testID="registerHandleInput"
                   style={[styles.textInput]}
                   placeholder="eg alice"
                   placeholderTextColor={colors.blue0}
@@ -317,6 +321,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
               </View>
               <View style={styles.groupContent}>
                 <TouchableOpacity
+                  testID="registerIs13Input"
                   style={styles.textBtn}
                   onPress={() => setIs13(!is13)}>
                   <View style={is13 ? styles.checkboxFilled : styles.checkbox}>
@@ -339,7 +344,9 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
           </TouchableOpacity>
           <View style={s.flex1} />
           {isReady ? (
-            <TouchableOpacity onPress={onPressNext}>
+            <TouchableOpacity
+              testID="createAccountButton"
+              onPress={onPressNext}>
               {isProcessing ? (
                 <ActivityIndicator color="#fff" />
               ) : (
@@ -347,7 +354,9 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
               )}
             </TouchableOpacity>
           ) : !serviceDescription && error ? (
-            <TouchableOpacity onPress={onPressRetryConnect}>
+            <TouchableOpacity
+              testID="registerRetryButton"
+              onPress={onPressRetryConnect}>
               <Text style={[s.white, s.f18, s.bold, s.pr5]}>Retry</Text>
             </TouchableOpacity>
           ) : !serviceDescription ? (

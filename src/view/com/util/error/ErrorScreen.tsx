@@ -11,16 +11,18 @@ export function ErrorScreen({
   message,
   details,
   onPressTryAgain,
+  testID,
 }: {
   title: string
   message: string
   details?: string
   onPressTryAgain?: () => void
+  testID?: string
 }) {
   const theme = useTheme()
   const pal = usePalette('error')
   return (
-    <View style={[styles.outer, pal.view]}>
+    <View testID={testID} style={[styles.outer, pal.view]}>
       <View style={styles.errorIconContainer}>
         <View
           style={[
@@ -40,6 +42,7 @@ export function ErrorScreen({
       <Text style={[styles.message, pal.textLight]}>{message}</Text>
       {details && (
         <Text
+          testID={`${testID}-details`}
           type="body2"
           style={[
             styles.details,
@@ -52,6 +55,7 @@ export function ErrorScreen({
       {onPressTryAgain && (
         <View style={styles.btnContainer}>
           <TouchableOpacity
+            testID="errorScreenTryAgainButton"
             style={[styles.btn, {backgroundColor: theme.palette.error.icon}]}
             onPress={onPressTryAgain}>
             <FontAwesomeIcon icon="arrows-rotate" style={pal.text} size={16} />

@@ -1,9 +1,9 @@
 import React from 'react'
 import {Search} from '../../../src/view/screens/Search'
-import renderer from 'react-test-renderer'
-// import {render} from '../../../../jest/test-utils'
+import {cleanup, fireEvent, render} from '../../../jest/test-utils'
 
 describe('Search', () => {
+  jest.useFakeTimers()
   const mockedProps = {
     navIdx: [0, 0] as [number, number],
     params: {
@@ -11,8 +11,20 @@ describe('Search', () => {
     },
     visible: true,
   }
-  it('renders correctly', () => {
-    const tree = renderer.create(<Search {...mockedProps} />).toJSON()
-    expect(tree).toMatchSnapshot()
+
+  afterAll(() => {
+    jest.clearAllMocks()
+    cleanup()
+  })
+
+  it('renders with query', async () => {
+    const {findByTestId} = render(<Search {...mockedProps} />)
+    const searchTextInput = await findByTestId('searchTextInput')
+
+    expect(searchTextInput).toBeTruthy()
+    fireEvent.changeText(searchTextInput, 'test')
+
+    const searchScrollView = await findByTestId('searchScrollView')
+    expect(searchScrollView).toBeTruthy()
   })
 })

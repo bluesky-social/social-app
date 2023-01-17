@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {
@@ -20,7 +20,7 @@ export const PostVotedBy = observer(function PostVotedBy({
   direction: 'up' | 'down'
 }) {
   const store = useStores()
-  const [view, setView] = useState<VotesViewModel | undefined>()
+  const [view, setView] = React.useState<VotesViewModel | undefined>()
 
   useEffect(() => {
     if (view?.params.uri === uri) {

@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
-import {colors} from '../../../lib/styles'
 import {useTheme} from '../../../lib/ThemeContext'
 import {usePalette} from '../../../lib/hooks/usePalette'
 
@@ -26,7 +25,7 @@ export function ErrorMessage({
   const theme = useTheme()
   const pal = usePalette('error')
   return (
-    <View style={[styles.outer, pal.view, style]}>
+    <View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
       <View
         style={[styles.errorIcon, {backgroundColor: theme.palette.error.icon}]}>
         <FontAwesomeIcon icon="exclamation" style={pal.text} size={16} />
@@ -38,7 +37,10 @@ export function ErrorMessage({
         {message}
       </Text>
       {onPressTryAgain && (
-        <TouchableOpacity style={styles.btn} onPress={onPressTryAgain}>
+        <TouchableOpacity
+          testID="errorMessageTryAgainButton"
+          style={styles.btn}
+          onPress={onPressTryAgain}>
           <FontAwesomeIcon
             icon="arrows-rotate"
             style={{color: theme.palette.error.icon}}

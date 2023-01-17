@@ -147,7 +147,7 @@ export const ProfileHeader = observer(function ProfileHeader({
   // =
   if (view.hasError) {
     return (
-      <View>
+      <View testID="profileHeaderHasError">
         <Text>{view.error}</Text>
       </View>
     )
@@ -192,6 +192,7 @@ export const ProfileHeader = observer(function ProfileHeader({
         <View style={[styles.buttonsLine]}>
           {isMe ? (
             <TouchableOpacity
+              testID="profileHeaderEditProfileButton"
               onPress={onPressEditProfile}
               style={[styles.btn, styles.mainBtn, pal.btn]}>
               <Text type="button" style={pal.text}>
@@ -214,7 +215,9 @@ export const ProfileHeader = observer(function ProfileHeader({
                   </Text>
                 </TouchableOpacity>
               ) : (
-                <TouchableOpacity onPress={onPressToggleFollow}>
+                <TouchableOpacity
+                  testID="profileHeaderToggleFollowButton"
+                  onPress={onPressToggleFollow}>
                   <LinearGradient
                     colors={[gradient[1], gradient[0]]}
                     start={{x: 0, y: 0}}
@@ -257,6 +260,7 @@ export const ProfileHeader = observer(function ProfileHeader({
         </View>
         <View style={styles.metricsLine}>
           <TouchableOpacity
+            testID="profileHeaderFollowersButton"
             style={[s.flexRow, s.mr10]}
             onPress={onPressFollowers}>
             <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
@@ -268,6 +272,7 @@ export const ProfileHeader = observer(function ProfileHeader({
           </TouchableOpacity>
           {view.isUser ? (
             <TouchableOpacity
+              testID="profileHeaderFollowsButton"
               style={[s.flexRow, s.mr10]}
               onPress={onPressFollows}>
               <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
@@ -280,6 +285,7 @@ export const ProfileHeader = observer(function ProfileHeader({
           ) : undefined}
           {view.isScene ? (
             <TouchableOpacity
+              testID="profileHeaderMembersButton"
               style={[s.flexRow, s.mr10]}
               onPress={onPressMembers}>
               <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
@@ -350,7 +356,9 @@ export const ProfileHeader = observer(function ProfileHeader({
       </View>
       {view.isScene && view.creator === store.me.did ? (
         <View style={[styles.sceneAdminContainer, pal.border]}>
-          <TouchableOpacity onPress={onPressInviteMembers}>
+          <TouchableOpacity
+            testID="profileHeaderInviteMembersButton"
+            onPress={onPressInviteMembers}>
             <LinearGradient
               colors={[gradient[1], gradient[0]]}
               start={{x: 0, y: 0}}
@@ -369,6 +377,7 @@ export const ProfileHeader = observer(function ProfileHeader({
         </View>
       ) : undefined}
       <TouchableOpacity
+        testID="profileHeaderAviButton"
         style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}
         onPress={onPressAvi}>
         <UserAvatar

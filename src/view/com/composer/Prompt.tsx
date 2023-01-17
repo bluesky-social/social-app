@@ -17,6 +17,7 @@ export function ComposePrompt({
   const pal = usePalette('default')
   return (
     <TouchableOpacity
+      testID="composePromptButton"
       style={[
         pal.view,
         pal.border,

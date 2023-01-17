@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {
@@ -18,7 +18,8 @@ export const PostRepostedBy = observer(function PostRepostedBy({
   uri: string
 }) {
   const store = useStores()
-  const [view, setView] = useState<RepostedByViewModel | undefined>()
+  // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
+  const [view, setView] = React.useState<RepostedByViewModel | undefined>()
 
   useEffect(() => {
     if (view?.params.uri === uri) {

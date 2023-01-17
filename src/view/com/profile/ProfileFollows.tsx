@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {
@@ -10,7 +10,7 @@ import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
-import {s, colors} from '../../lib/styles'
+import {s} from '../../lib/styles'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 export const ProfileFollows = observer(function ProfileFollows({
@@ -19,7 +19,7 @@ export const ProfileFollows = observer(function ProfileFollows({
   name: string
 }) {
   const store = useStores()
-  const [view, setView] = useState<UserFollowsViewModel | undefined>()
+  const [view, setView] = React.useState<UserFollowsViewModel | undefined>()
 
   useEffect(() => {
     if (view?.params.user === name) {

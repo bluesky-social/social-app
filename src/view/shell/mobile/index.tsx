@@ -327,7 +327,7 @@ export const MobileShell: React.FC = observer(() => {
         start={{x: 0, y: 0.8}}
         end={{x: 0, y: 1}}
         style={styles.outerContainer}>
-        <SafeAreaView style={styles.innerContainer}>
+        <SafeAreaView testID="noSessionView" style={styles.innerContainer}>
           <ErrorBoundary>
             <Login />
           </ErrorBoundary>
@@ -338,7 +338,7 @@ export const MobileShell: React.FC = observer(() => {
   }
   if (store.onboard.isOnboarding) {
     return (
-      <View style={styles.outerContainer}>
+      <View testID="onboardOuterView" style={styles.outerContainer}>
         <View style={styles.innerContainer}>
           <ErrorBoundary>
             <Onboard />
@@ -355,7 +355,7 @@ export const MobileShell: React.FC = observer(() => {
     backgroundColor: theme.colorScheme === 'dark' ? colors.gray7 : colors.gray1,
   }
   return (
-    <View style={[styles.outerContainer, pal.view]}>
+    <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
       <StatusBar
         barStyle={
           theme.colorScheme === 'dark' ? 'light-content' : 'dark-content'

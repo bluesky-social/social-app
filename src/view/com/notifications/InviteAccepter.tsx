@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -13,7 +13,8 @@ import {s, colors, gradients} from '../../lib/styles'
 
 export function InviteAccepter({item}: {item: NotificationsViewItemModel}) {
   const store = useStores()
-  const [confirmationUri, setConfirmationUri] = useState<string>('')
+  // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
+  const [confirmationUri, setConfirmationUri] = React.useState<string>('')
   const isMember =
     confirmationUri !== '' || store.me.memberships?.isMemberOf(item.author.did)
   const onPressAccept = async () => {
@@ -54,7 +55,7 @@ export function InviteAccepter({item}: {item: NotificationsViewItemModel}) {
   return (
     <View style={styles.container}>
       {!isMember ? (
-        <TouchableOpacity onPress={onPressAccept}>
+        <TouchableOpacity testID="acceptInviteButton" onPress={onPressAccept}>
           <LinearGradient
             colors={[gradients.primary.start, gradients.primary.end]}
             start={{x: 0, y: 0}}
@@ -64,7 +65,7 @@ export function InviteAccepter({item}: {item: NotificationsViewItemModel}) {
           </LinearGradient>
         </TouchableOpacity>
       ) : (
-        <View style={styles.inviteAccepted}>
+        <View testID="inviteAccepted" style={styles.inviteAccepted}>
           <FontAwesomeIcon icon="check" size={14} style={s.mr5} />
           <Text style={[s.gray5, s.f15]}>Invite accepted</Text>
         </View>
