@@ -11,6 +11,7 @@ describe('useOnMainScroll', () => {
   }
 
   it('toggles minimalShellMode to true', () => {
+    jest.useFakeTimers()
     const {getByTestId} = render(<Home {...mockedProps} />)
 
     fireEvent.scroll(getByTestId('homeFeed'), {
@@ -25,6 +26,7 @@ describe('useOnMainScroll', () => {
   })
 
   it('toggles minimalShellMode to false', () => {
+    jest.useFakeTimers()
     const {getByTestId} = render(<Home {...mockedProps} />, {
       ...mockedRootStore,
       shell: {

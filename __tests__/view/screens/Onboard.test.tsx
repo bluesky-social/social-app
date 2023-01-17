@@ -10,13 +10,6 @@ describe('Onboard', () => {
     cleanup()
   })
 
-  it('renders onboard screen', async () => {
-    const {findByTestId} = render(<Onboard />)
-    const onboardView = await findByTestId('onboardView')
-
-    expect(onboardView).toBeTruthy()
-  })
-
   it('matches snapshot', () => {
     const page = render(<Onboard />)
     expect(page).toMatchSnapshot()

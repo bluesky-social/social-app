@@ -54,8 +54,10 @@ exports[`FeedItem matches snapshot 1`] = `
       style={
         Object {
           "flexDirection": "row",
+          "marginBottom": 2,
+          "marginTop": 2,
           "opacity": 1,
-          "paddingLeft": 60,
+          "paddingLeft": 40,
         }
       }
       testID="linkButton-/profile/test.handle"
@@ -63,10 +65,14 @@ exports[`FeedItem matches snapshot 1`] = `
       <
         icon="retweet"
         style={
-          Object {
-            "color": "#968d8d",
-            "marginRight": 4,
-          }
+          Array [
+            Object {
+              "marginRight": 4,
+            },
+            Object {
+              "color": "#645454",
+            },
+          ]
         }
       />
       <Text
@@ -77,10 +83,11 @@ exports[`FeedItem matches snapshot 1`] = `
             },
             Object {
               "fontSize": 14,
-              "fontWeight": "600",
+              "letterSpacing": 0.25,
             },
             Object {
-              "color": "#968d8d",
+              "color": "#645454",
+              "fontWeight": "600",
             },
           ]
         }
@@ -104,8 +111,10 @@ exports[`FeedItem matches snapshot 1`] = `
       style={
         Object {
           "flexDirection": "row",
+          "marginBottom": 2,
+          "marginTop": 2,
           "opacity": 1,
-          "paddingLeft": 60,
+          "paddingLeft": 40,
         }
       }
       testID="linkButton-/profile/test.handle"
@@ -114,7 +123,6 @@ exports[`FeedItem matches snapshot 1`] = `
         icon="arrow-trend-up"
         style={
           Object {
-            "color": "#968d8d",
             "marginRight": 4,
           }
         }
@@ -144,6 +152,7 @@ exports[`FeedItem matches snapshot 1`] = `
       style={
         Object {
           "flexDirection": "row",
+          "marginTop": 1,
         }
       }
     >
@@ -288,7 +297,7 @@ exports[`FeedItem matches snapshot 1`] = `
         <View
           style={
             Object {
-              "alignItems": "center",
+              "alignItems": "baseline",
               "flexDirection": "row",
               "paddingBottom": 2,
               "paddingTop": 0,
@@ -308,6 +317,7 @@ exports[`FeedItem matches snapshot 1`] = `
             onStartShouldSetResponder={[Function]}
             style={
               Object {
+                "maxWidth": "80%",
                 "opacity": 1,
                 "paddingRight": 5,
               }
@@ -382,60 +392,8 @@ exports[`FeedItem matches snapshot 1`] = `
             }
           >
             · 
-            14d
+            18d
           </Text>
-          <View
-            style={
-              Object {
-                "flex": 1,
-              }
-            }
-          />
-          <View
-            accessible={true}
-            collapsable={false}
-            focusable={true}
-            hitSlop={
-              Object {
-                "bottom": 10,
-                "left": 10,
-                "right": 10,
-                "top": 10,
-              }
-            }
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              Object {
-                "opacity": 1,
-                "paddingLeft": 5,
-                "paddingRight": 5,
-              }
-            }
-          >
-            <
-              icon="ellipsis-h"
-              size={14}
-              style={
-                Array [
-                  Object {
-                    "marginTop": 2,
-                  },
-                  Object {
-                    "marginRight": 5,
-                  },
-                  Object {
-                    "color": "#000000",
-                  },
-                ]
-              }
-            />
-          </View>
         </View>
         <View
           style={
@@ -454,8 +412,8 @@ exports[`FeedItem matches snapshot 1`] = `
                   "color": "#000000",
                 },
                 Object {
-                  "fontSize": 16,
-                  "letterSpacing": 0.25,
+                  "fontSize": 17,
+                  "letterSpacing": 0.2,
                 },
                 Array [
                   undefined,
@@ -463,7 +421,7 @@ exports[`FeedItem matches snapshot 1`] = `
                     "color": "#000000",
                   },
                   Object {
-                    "lineHeight": 19.2,
+                    "lineHeight": 20.4,
                   },
                 ],
               ]
@@ -475,9 +433,14 @@ exports[`FeedItem matches snapshot 1`] = `
         <View />
         <View
           style={
-            Object {
-              "flexDirection": "row",
-            }
+            Array [
+              Object {
+                "flexDirection": "row",
+              },
+              Object {
+                "marginTop": 4,
+              },
+            ]
           }
         >
           <View
@@ -493,10 +456,10 @@ exports[`FeedItem matches snapshot 1`] = `
               focusable={true}
               hitSlop={
                 Object {
-                  "bottom": 5,
-                  "left": 5,
-                  "right": 5,
-                  "top": 5,
+                  "bottom": 2,
+                  "left": 2,
+                  "right": 2,
+                  "top": 2,
                 }
               }
               onClick={[Function]}
@@ -581,8 +544,8 @@ exports[`FeedItem matches snapshot 1`] = `
                       "color": "#000000",
                     },
                     Object {
-                      "fontSize": 16,
-                      "letterSpacing": 0.25,
+                      "fontSize": 17,
+                      "letterSpacing": 0.2,
                     },
                     Array [
                       Object {
@@ -615,10 +578,10 @@ exports[`FeedItem matches snapshot 1`] = `
               focusable={true}
               hitSlop={
                 Object {
-                  "bottom": 5,
-                  "left": 5,
-                  "right": 5,
-                  "top": 5,
+                  "bottom": 2,
+                  "left": 2,
+                  "right": 2,
+                  "top": 2,
                 }
               }
               onClick={[Function]}
@@ -652,7 +615,7 @@ exports[`FeedItem matches snapshot 1`] = `
               >
                 <
                   icon="retweet"
-                  size={17}
+                  size={19}
                   style={
                     Object {
                       "color": "#7A6161",
@@ -667,8 +630,8 @@ exports[`FeedItem matches snapshot 1`] = `
                       "color": "#000000",
                     },
                     Object {
-                      "fontSize": 16,
-                      "letterSpacing": 0.25,
+                      "fontSize": 17,
+                      "letterSpacing": 0.2,
                     },
                     Array [
                       Object {
@@ -701,10 +664,10 @@ exports[`FeedItem matches snapshot 1`] = `
               focusable={true}
               hitSlop={
                 Object {
-                  "bottom": 5,
-                  "left": 5,
-                  "right": 5,
-                  "top": 5,
+                  "bottom": 2,
+                  "left": 2,
+                  "right": 2,
+                  "top": 2,
                 }
               }
               onClick={[Function]}
@@ -738,11 +701,11 @@ exports[`FeedItem matches snapshot 1`] = `
               >
                 <RNSVGSvgView
                   align="xMidYMid"
-                  bbHeight={17}
-                  bbWidth={17}
+                  bbHeight={19}
+                  bbWidth={19}
                   color={4286210401}
                   focusable={false}
-                  height={17}
+                  height={19}
                   meetOrSlice={0}
                   minX={0}
                   minY={0}
@@ -759,15 +722,15 @@ exports[`FeedItem matches snapshot 1`] = `
                       ],
                       Object {
                         "flex": 0,
-                        "height": 17,
-                        "width": 17,
+                        "height": 19,
+                        "width": 19,
                       },
                     ]
                   }
                   tintColor={4286210401}
                   vbHeight={14}
                   vbWidth={14}
-                  width={17}
+                  width={19}
                 >
                   <RNSVGGroup>
                     <RNSVGPath
@@ -799,8 +762,8 @@ exports[`FeedItem matches snapshot 1`] = `
                       "color": "#000000",
                     },
                     Object {
-                      "fontSize": 16,
-                      "letterSpacing": 0.25,
+                      "fontSize": 17,
+                      "letterSpacing": 0.2,
                     },
                     Array [
                       Object {
@@ -826,7 +789,53 @@ exports[`FeedItem matches snapshot 1`] = `
                 "flex": 1,
               }
             }
-          />
+          >
+            <View
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                Object {
+                  "bottom": 10,
+                  "left": 10,
+                  "right": 10,
+                  "top": 10,
+                }
+              }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "opacity": 1,
+                }
+              }
+            >
+              <
+                icon="ellipsis-h"
+                size={18}
+                style={
+                  Array [
+                    Object {
+                      "marginTop": 2,
+                    },
+                    Object {
+                      "marginRight": 5,
+                    },
+                    Object {
+                      "color": "#c1b9b9",
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
         </View>
       </View>
     </View>

@@ -93,8 +93,8 @@ exports[`Composer matches snapshot 1`] = `
                     "color": "#000000",
                   },
                   Object {
-                    "fontSize": 16,
-                    "letterSpacing": 0.25,
+                    "fontSize": 17,
+                    "letterSpacing": 0.2,
                   },
                   Array [
                     Object {
@@ -170,8 +170,8 @@ exports[`Composer matches snapshot 1`] = `
                       "color": "#000000",
                     },
                     Object {
-                      "fontSize": 16,
-                      "letterSpacing": 0.25,
+                      "fontSize": 17,
+                      "letterSpacing": 0.2,
                     },
                     Array [
                       Object {
@@ -358,8 +358,8 @@ exports[`Composer matches snapshot 1`] = `
                         "color": "#000000",
                       },
                       Object {
-                        "fontSize": 16,
-                        "letterSpacing": 0.25,
+                        "fontSize": 17,
+                        "letterSpacing": 0.2,
                       },
                       Object {
                         "color": "#000000",
@@ -588,8 +588,8 @@ exports[`Composer matches snapshot 1`] = `
                   "color": "#000000",
                 },
                 Object {
-                  "fontSize": 16,
-                  "letterSpacing": 0.25,
+                  "fontSize": 17,
+                  "letterSpacing": 0.2,
                 },
                 Array [
                   Object {

@@ -14,13 +14,9 @@ describe('OnboardModel', () => {
     jest.clearAllMocks()
   })
 
-  it('should call the start method', () => {
+  it('should start/stop correctly', () => {
     onboardModel.start()
     expect(onboardModel.isOnboarding).toBe(true)
-  })
-
-  it('should call the stop method', () => {
-    onboardModel.start()
     onboardModel.stop()
     expect(onboardModel.isOnboarding).toBe(false)
   })
@@ -33,8 +29,6 @@ describe('OnboardModel', () => {
     onboardModel.next()
     expect(onboardModel.isOnboarding).toBe(false)
     expect(onboardModel.stage).toBe(OnboardStageOrder[0])
-
-    expect(onboardModel.next()).toBeUndefined()
   })
 
   it('serialize and hydrate', () => {

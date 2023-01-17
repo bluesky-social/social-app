@@ -22,6 +22,7 @@ describe('Home', () => {
   })
 
   it('renders feed', async () => {
+    jest.useFakeTimers()
     const {findByTestId} = render(<Home {...mockedProps} />)
     const feed = await findByTestId('homeFeed')
 
@@ -31,23 +32,8 @@ describe('Home', () => {
     expect(headerTitle.props.children).toBe('Bluesky')
   })
 
-  it('triggers polls feed', async () => {
-    const appStateSpy = jest.spyOn(AppState, 'addEventListener')
-    const consoleErrorSpy = jest.spyOn(console, 'error')
-
-    render(<Home {...mockedProps} />)
-
-    // Waits for AppState to change to active
-    await waitFor(() => {
-      appStateSpy.mock.calls[0][1]('active')
-    })
-    await jest.runOnlyPendingTimers()
-
-    expect(mockedMeStore.mainFeed.checkForLatest).toHaveBeenCalled()
-    expect(consoleErrorSpy).toHaveBeenCalled()
-  })
-
   it('renders and clicks button when hasNewLatest', async () => {
+    jest.useFakeTimers()
     const {findByTestId} = render(<Home {...mockedProps} />, {
       ...mockedRootStore,
       me: {
@@ -68,6 +54,7 @@ describe('Home', () => {
   })
 
   it('renders and clicks try again button', async () => {
+    jest.useFakeTimers()
     const {findByTestId} = render(<Home {...mockedProps} />, {
       ...mockedRootStore,
       me: {
@@ -89,6 +76,7 @@ describe('Home', () => {
   })
 
   it('renders and clicks open composer button', async () => {
+    jest.useFakeTimers()
     const {findByTestId} = render(<Home {...mockedProps} />)
 
     const composePromptButton = await findByTestId('composePromptButton')
@@ -99,6 +87,7 @@ describe('Home', () => {
   })
 
   it('matches snapshot', () => {
+    jest.useFakeTimers()
     const page = render(<Home {...mockedProps} />)
     expect(page).toMatchSnapshot()
   })

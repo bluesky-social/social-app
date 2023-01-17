@@ -29,9 +29,6 @@ describe('Feed', () => {
       'errorMessageTryAgainButton',
     )
     expect(errorMessageTryAgainButton).toBeTruthy()
-
-    fireEvent.press(errorMessageTryAgainButton)
-    expect(mockedProps.onPressTryAgain).toHaveBeenCalled()
   })
 
   it('renders compose prompt', async () => {

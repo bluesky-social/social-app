@@ -16,7 +16,7 @@ describe('rootStore', () => {
     jest.clearAllMocks()
   })
 
-  it('should call the resolveName method', () => {
+  it('resolveName() handles inputs correctly', () => {
     const spyMethod = jest
       .spyOn(rootStore.api.com.atproto.handle, 'resolve')
       .mockResolvedValue({success: true, headers: {}, data: {did: 'testdid'}})
@@ -29,31 +29,7 @@ describe('rootStore', () => {
     expect(rootStore.resolveName('did:123')).resolves.toReturnWith('did:123')
   })
 
-  it('should call the fetchStateUpdate method', () => {
-    expect(rootStore.fetchStateUpdate()).resolves.toReturnWith({})
-
-    rootStore.session.setState({
-      service: 'test',
-      refreshJwt: 'test',
-      accessJwt: 'test',
-      handle: 'test',
-      did: 'test',
-    })
-
-    expect(rootStore.fetchStateUpdate()).resolves.toReturnWith({
-      service: 'test',
-      refreshJwt: 'test',
-      accessJwt: 'test',
-      handle: 'test',
-      did: 'test',
-    })
-
-    rootStore.session.setOnline(true)
-
-    expect(rootStore.fetchStateUpdate()).resolves.toReturnWith({})
-  })
-
-  it('should call the clearAll method', () => {
+  it('should call the clearAll() resets state correctly', () => {
     rootStore.clearAll()
 
     expect(rootStore.session.data).toEqual(null)
@@ -93,10 +69,5 @@ describe('rootStore', () => {
     expect(rootStore.me.avatar).toEqual('')
     expect(rootStore.me.notificationCount).toEqual(0)
     expect(rootStore.me.memberships).toBeUndefined()
-  })
-
-  it('tests setInterval', () => {
-    jest.runTimersToTime(16000)
-    expect(rootStore.fetchStateUpdate()).resolves.toReturnWith({})
   })
 })

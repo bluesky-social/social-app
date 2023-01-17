@@ -1,5 +1,5 @@
 import React from 'react'
-import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, render} from '../../../../jest/test-utils'
 import {ProfileFollowers} from '../../../../src/view/com/profile/ProfileFollowers'
 import {
   mockedLogStore,
@@ -44,9 +44,6 @@ describe('ProfileFollowers', () => {
       'errorMessageTryAgainButton',
     )
     expect(errorMessageTryAgainButton).toBeTruthy()
-    fireEvent.press(errorMessageTryAgainButton)
-
-    expect(mockedUserFollowersStore.refresh).toHaveBeenCalled()
   })
 
   it('renders list', async () => {

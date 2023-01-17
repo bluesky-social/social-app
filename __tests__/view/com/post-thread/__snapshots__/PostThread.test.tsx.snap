@@ -317,7 +317,7 @@ exports[`PostThread matches snapshot 1`] = `
               <View
                 style={
                   Object {
-                    "alignItems": "center",
+                    "alignItems": "baseline",
                     "flexDirection": "row",
                     "paddingBottom": 2,
                     "paddingTop": 0,
@@ -337,6 +337,7 @@ exports[`PostThread matches snapshot 1`] = `
                   onStartShouldSetResponder={[Function]}
                   style={
                     Object {
+                      "maxWidth": "80%",
                       "opacity": 1,
                       "paddingRight": 5,
                     }
@@ -413,58 +414,6 @@ exports[`PostThread matches snapshot 1`] = `
                   · 
                   Invalid Date
                 </Text>
-                <View
-                  style={
-                    Object {
-                      "flex": 1,
-                    }
-                  }
-                />
-                <View
-                  accessible={true}
-                  collapsable={false}
-                  focusable={true}
-                  hitSlop={
-                    Object {
-                      "bottom": 10,
-                      "left": 10,
-                      "right": 10,
-                      "top": 10,
-                    }
-                  }
-                  onClick={[Function]}
-                  onResponderGrant={[Function]}
-                  onResponderMove={[Function]}
-                  onResponderRelease={[Function]}
-                  onResponderTerminate={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  style={
-                    Object {
-                      "opacity": 1,
-                      "paddingLeft": 5,
-                      "paddingRight": 5,
-                    }
-                  }
-                >
-                  <
-                    icon="ellipsis-h"
-                    size={14}
-                    style={
-                      Array [
-                        Object {
-                          "marginTop": 2,
-                        },
-                        Object {
-                          "marginRight": 5,
-                        },
-                        Object {
-                          "color": "#000000",
-                        },
-                      ]
-                    }
-                  />
-                </View>
               </View>
               <View
                 style={
@@ -516,9 +465,12 @@ exports[`PostThread matches snapshot 1`] = `
               <View />
               <View
                 style={
-                  Object {
-                    "flexDirection": "row",
-                  }
+                  Array [
+                    Object {
+                      "flexDirection": "row",
+                    },
+                    undefined,
+                  ]
                 }
               >
                 <View
@@ -534,10 +486,10 @@ exports[`PostThread matches snapshot 1`] = `
                     focusable={true}
                     hitSlop={
                       Object {
-                        "bottom": 5,
-                        "left": 5,
-                        "right": 5,
-                        "top": 5,
+                        "bottom": 2,
+                        "left": 2,
+                        "right": 2,
+                        "top": 2,
                       }
                     }
                     onClick={[Function]}
@@ -622,8 +574,8 @@ exports[`PostThread matches snapshot 1`] = `
                             "color": "#000000",
                           },
                           Object {
-                            "fontSize": 16,
-                            "letterSpacing": 0.25,
+                            "fontSize": 17,
+                            "letterSpacing": 0.2,
                           },
                           Array [
                             Object {
@@ -656,10 +608,10 @@ exports[`PostThread matches snapshot 1`] = `
                     focusable={true}
                     hitSlop={
                       Object {
-                        "bottom": 5,
-                        "left": 5,
-                        "right": 5,
-                        "top": 5,
+                        "bottom": 2,
+                        "left": 2,
+                        "right": 2,
+                        "top": 2,
                       }
                     }
                     onClick={[Function]}
@@ -693,7 +645,7 @@ exports[`PostThread matches snapshot 1`] = `
                     >
                       <
                         icon="retweet"
-                        size={17}
+                        size={19}
                         style={
                           Object {
                             "color": "#7A6161",
@@ -708,8 +660,8 @@ exports[`PostThread matches snapshot 1`] = `
                             "color": "#000000",
                           },
                           Object {
-                            "fontSize": 16,
-                            "letterSpacing": 0.25,
+                            "fontSize": 17,
+                            "letterSpacing": 0.2,
                           },
                           Array [
                             Object {
@@ -742,10 +694,10 @@ exports[`PostThread matches snapshot 1`] = `
                     focusable={true}
                     hitSlop={
                       Object {
-                        "bottom": 5,
-                        "left": 5,
-                        "right": 5,
-                        "top": 5,
+                        "bottom": 2,
+                        "left": 2,
+                        "right": 2,
+                        "top": 2,
                       }
                     }
                     onClick={[Function]}
@@ -779,11 +731,11 @@ exports[`PostThread matches snapshot 1`] = `
                     >
                       <RNSVGSvgView
                         align="xMidYMid"
-                        bbHeight={17}
-                        bbWidth={17}
+                        bbHeight={19}
+                        bbWidth={19}
                         color={4286210401}
                         focusable={false}
-                        height={17}
+                        height={19}
                         meetOrSlice={0}
                         minX={0}
                         minY={0}
@@ -800,15 +752,15 @@ exports[`PostThread matches snapshot 1`] = `
                             ],
                             Object {
                               "flex": 0,
-                              "height": 17,
-                              "width": 17,
+                              "height": 19,
+                              "width": 19,
                             },
                           ]
                         }
                         tintColor={4286210401}
                         vbHeight={14}
                         vbWidth={14}
-                        width={17}
+                        width={19}
                       >
                         <RNSVGGroup>
                           <RNSVGPath
@@ -840,8 +792,8 @@ exports[`PostThread matches snapshot 1`] = `
                             "color": "#000000",
                           },
                           Object {
-                            "fontSize": 16,
-                            "letterSpacing": 0.25,
+                            "fontSize": 17,
+                            "letterSpacing": 0.2,
                           },
                           Array [
                             Object {
@@ -867,7 +819,53 @@ exports[`PostThread matches snapshot 1`] = `
                       "flex": 1,
                     }
                   }
-                />
+                >
+                  <View
+                    accessible={true}
+                    collapsable={false}
+                    focusable={true}
+                    hitSlop={
+                      Object {
+                        "bottom": 10,
+                        "left": 10,
+                        "right": 10,
+                        "top": 10,
+                      }
+                    }
+                    onClick={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                        "opacity": 1,
+                      }
+                    }
+                  >
+                    <
+                      icon="ellipsis-h"
+                      size={18}
+                      style={
+                        Array [
+                          Object {
+                            "marginTop": 2,
+                          },
+                          Object {
+                            "marginRight": 5,
+                          },
+                          Object {
+                            "color": "#c1b9b9",
+                          },
+                        ]
+                      }
+                    />
+                  </View>
+                </View>
               </View>
             </View>
           </View>

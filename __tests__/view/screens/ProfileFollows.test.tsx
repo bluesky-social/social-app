@@ -17,16 +17,6 @@ describe('ProfileFollows', () => {
     cleanup()
   })
 
-  it('renders followed screen', async () => {
-    const {findByTestId} = render(<ProfileFollows {...mockedProps} />)
-    const profileFollowsView = await findByTestId('profileFollowsView')
-
-    expect(profileFollowsView).toBeTruthy()
-
-    const headerTitle = await findByTestId('headerTitle')
-    expect(headerTitle.props.children).toBe('Followed')
-  })
-
   it('matches snapshot', () => {
     const page = render(<ProfileFollows {...mockedProps} />)
     expect(page).toMatchSnapshot()

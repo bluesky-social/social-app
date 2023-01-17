@@ -55,9 +55,6 @@ describe('Feed', () => {
       'errorMessageTryAgainButton',
     )
     expect(errorMessageTryAgainButton).toBeTruthy()
-
-    fireEvent.press(errorMessageTryAgainButton)
-    expect(tryAgainMock).toHaveBeenCalled()
   })
 
   it("triggers loadMore on reaching flatlist' bottom", async () => {

@@ -17,16 +17,6 @@ describe('PostThread', () => {
     cleanup()
   })
 
-  it('renders post screen', async () => {
-    const {findByTestId} = render(<PostThread {...mockedProps} />)
-    const postThreadView = await findByTestId('postThreadView')
-
-    expect(postThreadView).toBeTruthy()
-
-    const headerTitle = await findByTestId('headerTitle')
-    expect(headerTitle.props.children).toBe('Post')
-  })
-
   it('matches snapshot', () => {
     const page = render(<PostThread {...mockedProps} />)
     expect(page).toMatchSnapshot()

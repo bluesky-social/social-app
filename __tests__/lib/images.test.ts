@@ -8,6 +8,9 @@ describe('downloadAndResize', () => {
   const mockResizedImage = {
     path: jest.fn().mockReturnValue('file://resized-image.jpg'),
     size: 100,
+    width: 50,
+    height: 50,
+    mime: 'image/jpeg',
   }
 
   beforeEach(() => {

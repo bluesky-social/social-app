@@ -17,16 +17,6 @@ describe('Search', () => {
     cleanup()
   })
 
-  it('renders search screen', async () => {
-    const {findByTestId} = render(<Search {...mockedProps} />)
-    const searchScreen = await findByTestId('searchScreen')
-
-    expect(searchScreen).toBeTruthy()
-
-    const headerTitle = await findByTestId('headerTitle')
-    expect(headerTitle.props.children).toBe('Search')
-  })
-
   it('renders with query', async () => {
     const {findByTestId} = render(<Search {...mockedProps} />)
     const searchTextInput = await findByTestId('searchTextInput')

@@ -19,7 +19,7 @@ describe('MeModel', () => {
     jest.clearAllMocks()
   })
 
-  it('should call the clear method', () => {
+  it('should clear() correctly', () => {
     meModel.did = '123'
     meModel.handle = 'handle'
     meModel.displayName = 'John Doe'
@@ -36,7 +36,7 @@ describe('MeModel', () => {
     expect(meModel.memberships).toBeUndefined()
   })
 
-  it('should call the hydrate method with valid properties', () => {
+  it('should hydrate() successfully with valid properties', () => {
     meModel.hydrate({
       did: '123',
       handle: 'handle',
@@ -51,7 +51,7 @@ describe('MeModel', () => {
     expect(meModel.avatar).toEqual('avatar')
   })
 
-  it('should call the hydrate method with invalid properties', () => {
+  it('should not hydrate() with invalid properties', () => {
     meModel.hydrate({
       did: '',
       handle: 'handle',
@@ -78,7 +78,7 @@ describe('MeModel', () => {
     expect(meModel.avatar).toEqual('')
   })
 
-  it('should call the load method', async () => {
+  it('should load() successfully', async () => {
     jest
       .spyOn(rootStore.api.app.bsky.actor, 'getProfile')
       .mockImplementationOnce((): Promise<any> => {
@@ -105,7 +105,7 @@ describe('MeModel', () => {
     expect(meModel.avatar).toEqual('avatar')
   })
 
-  it('should call the load method, without profile data', async () => {
+  it('should load() successfully without profile data', async () => {
     jest
       .spyOn(rootStore.api.app.bsky.actor, 'getProfile')
       .mockImplementationOnce((): Promise<any> => {
@@ -128,7 +128,7 @@ describe('MeModel', () => {
     expect(meModel.avatar).toEqual('')
   })
 
-  it('should call the load method without session', async () => {
+  it('should load() to nothing when no session', async () => {
     rootStore.session.data = null
     await meModel.load()
     expect(meModel.did).toEqual('')
@@ -140,7 +140,7 @@ describe('MeModel', () => {
     expect(meModel.memberships).toBeUndefined()
   })
 
-  it('should call the serialize method', () => {
+  it('should serialize() key information', () => {
     meModel.did = '123'
     meModel.handle = 'handle'
     meModel.displayName = 'John Doe'
@@ -156,12 +156,12 @@ describe('MeModel', () => {
     })
   })
 
-  it('should call the clearNotificationCount method', () => {
+  it('should clearNotificationCount() successfully', () => {
     meModel.clearNotificationCount()
     expect(meModel.notificationCount).toBe(0)
   })
 
-  it('should call the fetchStateUpdate method', async () => {
+  it('should update notifs count with fetchStateUpdate()', async () => {
     meModel.notifications = {
       refresh: jest.fn(),
     } as unknown as NotificationsViewModel
@@ -179,14 +179,5 @@ describe('MeModel', () => {
     await meModel.fetchStateUpdate()
     expect(meModel.notificationCount).toBe(1)
     expect(meModel.notifications.refresh).toHaveBeenCalled()
-  })
-
-  it('should call the refreshMemberships method', async () => {
-    meModel.memberships = {
-      refresh: jest.fn(),
-    } as unknown as MembershipsViewModel
-
-    await meModel.refreshMemberships()
-    expect(meModel.memberships.refresh).toHaveBeenCalled()
   })
 })

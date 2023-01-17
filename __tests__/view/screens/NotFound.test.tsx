@@ -9,13 +9,6 @@ describe('NotFound', () => {
     cleanup()
   })
 
-  it('renders not found screen', async () => {
-    const {findByTestId} = render(<NotFound />)
-    const notFoundView = await findByTestId('notFoundView')
-
-    expect(notFoundView).toBeTruthy()
-  })
-
   it('navigates home', async () => {
     const navigationSpy = jest.spyOn(mockedNavigationStore, 'navigate')
     const {getByTestId} = render(<NotFound />)

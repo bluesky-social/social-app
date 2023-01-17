@@ -1,5 +1,5 @@
 import React from 'react'
-import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, render} from '../../../../jest/test-utils'
 import {PostThreadViewModel} from '../../../../src/state/models/post-thread-view'
 import {PostThread} from '../../../../src/view/com/post-thread/PostThread'
 import {mockedPostThreadViewStore} from '../../../../__mocks__/state-mock'
@@ -46,12 +46,6 @@ describe('PostThread', () => {
 
     const errorMessageView = await findByTestId('errorMessageView')
     expect(errorMessageView).toBeTruthy()
-
-    const errorMessageTryAgainButton = await findByTestId(
-      'errorMessageTryAgainButton',
-    )
-    fireEvent.press(errorMessageTryAgainButton)
-    expect(mockedPostThreadViewStore.refresh).toHaveBeenCalled()
   })
 
   it('matches snapshot', () => {

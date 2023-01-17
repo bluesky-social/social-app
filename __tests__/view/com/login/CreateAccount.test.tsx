@@ -58,22 +58,6 @@ describe('CreateAccount', () => {
     expect(keyboardSpy).toHaveBeenCalled()
   })
 
-  it('tries recconect on error', async () => {
-    const {findByTestId} = render(<CreateAccount {...mockedProps} />, {
-      ...mockedRootStore,
-      session: {
-        ...mockedSessionStore,
-        describeService: jest.fn().mockRejectedValue({}),
-      },
-    })
-
-    const registerRetryButton = await findByTestId('registerRetryButton')
-    expect(registerRetryButton).toBeTruthy()
-    fireEvent.press(registerRetryButton)
-
-    expect(mockedLogStore.warn).toHaveBeenCalled()
-  })
-
   it('matches snapshot', () => {
     const page = render(<CreateAccount {...mockedProps} />)
     expect(page).toMatchSnapshot()

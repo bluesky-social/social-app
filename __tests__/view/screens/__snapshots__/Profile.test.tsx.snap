@@ -54,18 +54,18 @@ exports[`Profile matches snapshot 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           Object {
-            "height": 30,
+            "height": 40,
             "opacity": 1,
-            "width": 40,
+            "width": 50,
           }
         }
       >
         <RNSVGSvgView
           align="xMidYMid"
-          bbHeight={30}
-          bbWidth={30}
+          bbHeight={40}
+          bbWidth={40}
           focusable={false}
-          height={30}
+          height={40}
           meetOrSlice={0}
           minX={0}
           minY={0}
@@ -77,14 +77,14 @@ exports[`Profile matches snapshot 1`] = `
               },
               Object {
                 "flex": 0,
-                "height": 30,
-                "width": 30,
+                "height": 40,
+                "width": 40,
               },
             ]
           }
           vbHeight={100}
           vbWidth={100}
-          width={30}
+          width={40}
         >
           <RNSVGGroup>
             <RNSVGDefs>
@@ -181,9 +181,8 @@ exports[`Profile matches snapshot 1`] = `
                 "color": "#000000",
               },
               Object {
-                "fontSize": 20,
+                "fontSize": 24,
                 "fontWeight": "500",
-                "letterSpacing": 0.15,
               },
               Object {
                 "color": "#000000",
@@ -217,49 +216,6 @@ exports[`Profile matches snapshot 1`] = `
         style={
           Object {
             "alignItems": "center",
-            "backgroundColor": "#f8f3f3",
-            "borderRadius": 20,
-            "flexDirection": "row",
-            "height": 36,
-            "justifyContent": "center",
-            "opacity": 1,
-            "width": 36,
-          }
-        }
-      >
-        <
-          icon="plus"
-          size={18}
-          style={
-            Object {
-              "color": "#000000",
-            }
-          }
-        />
-      </View>
-      <View
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        hitSlop={
-          Object {
-            "bottom": 10,
-            "left": 10,
-            "right": 10,
-            "top": 10,
-          }
-        }
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          Object {
-            "alignItems": "center",
-            "backgroundColor": "#f8f3f3",
             "borderRadius": 20,
             "flexDirection": "row",
             "height": 36,
@@ -272,12 +228,12 @@ exports[`Profile matches snapshot 1`] = `
       >
         <RNSVGSvgView
           align="xMidYMid"
-          bbHeight={18}
-          bbWidth={18}
+          bbHeight={26}
+          bbWidth={26}
           color={4278190080}
           fill="none"
           focusable={false}
-          height={18}
+          height={26}
           meetOrSlice={0}
           minX={0}
           minY={0}
@@ -294,15 +250,15 @@ exports[`Profile matches snapshot 1`] = `
               },
               Object {
                 "flex": 0,
-                "height": 18,
-                "width": 18,
+                "height": 26,
+                "width": 26,
               },
             ]
           }
           tintColor={4278190080}
           vbHeight={24}
           vbWidth={24}
-          width={18}
+          width={26}
         >
           <RNSVGGroup
             fill={null}
@@ -348,7 +304,6 @@ exports[`Profile matches snapshot 1`] = `
         style={
           Object {
             "alignItems": "center",
-            "backgroundColor": "#f8f3f3",
             "borderRadius": 20,
             "flexDirection": "row",
             "height": 36,
@@ -361,7 +316,7 @@ exports[`Profile matches snapshot 1`] = `
       >
         <
           icon="signal"
-          size={16}
+          size={23}
           style={
             Object {
               "color": "#000000",
@@ -370,14 +325,14 @@ exports[`Profile matches snapshot 1`] = `
         />
         <
           icon="x"
-          size={8}
+          size={10}
           style={
             Object {
-              "backgroundColor": "#f8f3f3",
+              "backgroundColor": "#ffffff",
               "bottom": 7,
               "color": "#ec4899",
               "position": "absolute",
-              "right": 7,
+              "right": 0,
             }
           }
         />
@@ -465,8 +420,8 @@ exports[`Profile matches snapshot 1`] = `
               "color": "#000000",
             },
             Object {
-              "fontSize": 16,
-              "letterSpacing": 0.25,
+              "fontSize": 17,
+              "letterSpacing": 0.2,
             },
             Array [
               Object {
@@ -578,6 +533,75 @@ exports[`Profile matches snapshot 1`] = `
           </Text>
         </View>
       </View>
+    </View>
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Array [
+          Object {
+            "borderRadius": 30,
+            "bottom": 84,
+            "height": 60,
+            "position": "absolute",
+            "right": 22,
+            "shadowColor": "#000",
+            "shadowOffset": Object {
+              "height": 1,
+              "width": 0,
+            },
+            "shadowOpacity": 0.3,
+            "width": 60,
+            "zIndex": 1,
+          },
+          undefined,
+        ]
+      }
+    >
+      <BVLinearGradient
+        colors={
+          Array [
+            4292542719,
+            4288104447,
+          ]
+        }
+        endPoint={
+          Object {
+            "x": 1,
+            "y": 1,
+          }
+        }
+        locations={null}
+        startPoint={
+          Object {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          Object {
+            "alignItems": "center",
+            "borderRadius": 30,
+            "height": 60,
+            "justifyContent": "center",
+            "width": 60,
+          }
+        }
+      >
+        <
+          color="#ffffff"
+          icon="pen-nib"
+          size={24}
+          style={Object {}}
+        />
+      </BVLinearGradient>
     </View>
   </View>
 </View>

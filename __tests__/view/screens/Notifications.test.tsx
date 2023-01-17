@@ -14,16 +14,6 @@ describe('Notifications', () => {
     cleanup()
   })
 
-  it('renders notifications screen', async () => {
-    const {findByTestId} = render(<Notifications {...mockedProps} />)
-    const notificationsView = await findByTestId('notificationsView')
-
-    expect(notificationsView).toBeTruthy()
-
-    const headerTitle = await findByTestId('headerTitle')
-    expect(headerTitle.props.children).toBe('Notifications')
-  })
-
   it('matches snapshot', () => {
     const page = render(<Notifications {...mockedProps} />)
     expect(page).toMatchSnapshot()

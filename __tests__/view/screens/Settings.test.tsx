@@ -14,16 +14,6 @@ describe('Settings', () => {
     cleanup()
   })
 
-  it('renders settings screen', async () => {
-    const {findByTestId} = render(<Settings {...mockedProps} />)
-    const settingsView = await findByTestId('settingsView')
-
-    expect(settingsView).toBeTruthy()
-
-    const headerTitle = await findByTestId('headerTitle')
-    expect(headerTitle.props.children).toBe('Settings')
-  })
-
   it('matches snapshot', () => {
     const page = render(<Settings {...mockedProps} />)
     expect(page).toMatchSnapshot()

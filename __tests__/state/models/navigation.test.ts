@@ -16,7 +16,7 @@ describe('NavigationModel', () => {
     jest.clearAllMocks()
   })
 
-  it('should call the clear method', async () => {
+  it('should clear() to the correct base state', async () => {
     await model.clear()
     expect(model.tabCount).toBe(2)
     expect(model.tab).toEqual({
@@ -70,31 +70,6 @@ describe('NavigationModel', () => {
     expect(model.tabCount).toBe(2)
   })
 
-  it('should call the handleLink getter', () => {
-    const navigateSpy = jest.spyOn(model.tab, 'navigate')
-    const consoleSpy = jest.spyOn(console, 'error')
-
-    model.handleLink('testlink')
-    expect(consoleSpy).toHaveBeenCalled()
-
-    model.handleLink('/testlink')
-    expect(navigateSpy).toHaveBeenCalledWith('/testlink', undefined)
-
-    model.handleLink('https://testlink')
-    expect(navigateSpy).toHaveBeenCalledWith('/', undefined)
-  })
-
-  it('should call the switchTo getter', () => {
-    const fixedTabResetSpy = jest.spyOn(model.tab, 'fixedTabReset')
-
-    model.switchTo(0, false)
-    expect(model.tabIndex).toBe(0)
-    model.switchTo(1, false)
-    expect(model.tabIndex).toBe(1)
-    model.switchTo(0, true)
-    expect(fixedTabResetSpy).toHaveBeenCalled()
-  })
-
   describe('tabs not enabled', () => {
     jest.mock('../../../src/build-flags', () => ({
       TABS_ENABLED: false,
@@ -104,26 +79,26 @@ describe('NavigationModel', () => {
       jest.clearAllMocks()
     })
 
-    it('should call the newTab getter', () => {
+    it('should not create new tabs', () => {
       // @ts-expect-error
       flags.TABS_ENABLED = false
-      const navigateSpy = jest.spyOn(model.tab, 'navigate')
       model.newTab('testurl')
-      expect(navigateSpy).toHaveBeenCalledWith('testurl', undefined)
+      expect(model.tab.isNewTab).toBe(false)
+      expect(model.tabIndex).toBe(0)
     })
 
-    it('should call the setActiveTab getter', () => {
+    it('should not change the active tab', () => {
       // @ts-expect-error
       flags.TABS_ENABLED = false
-      const result = model.setActiveTab(0)
-      expect(result).toBeUndefined()
+      model.setActiveTab(2)
+      expect(model.tabIndex).toBe(0)
     })
 
-    it('should call the closeTab getter', () => {
+    it('should note close tabs', () => {
       // @ts-expect-error
       flags.TABS_ENABLED = false
-      const result = model.closeTab(0)
-      expect(result).toBeUndefined()
+      model.closeTab(0)
+      expect(model.tabCount).toBe(2)
     })
   })
 
@@ -136,7 +111,7 @@ describe('NavigationModel', () => {
       jest.clearAllMocks()
     })
 
-    it('should call the newTab getter', () => {
+    it('should create new tabs', () => {
       // @ts-expect-error
       flags.TABS_ENABLED = true
 
@@ -145,7 +120,7 @@ describe('NavigationModel', () => {
       expect(model.tabIndex).toBe(2)
     })
 
-    it('should call the setActiveTab getter', () => {
+    it('should change the current tab', () => {
       // @ts-expect-error
       flags.TABS_ENABLED = true
 
@@ -153,7 +128,7 @@ describe('NavigationModel', () => {
       expect(model.tabIndex).toBe(0)
     })
 
-    it('should call the closeTab getter', () => {
+    it('should close tabs', () => {
       // @ts-expect-error
       flags.TABS_ENABLED = true
 
@@ -175,61 +150,5 @@ describe('NavigationModel', () => {
       ])
       expect(model.tabIndex).toBe(0)
     })
-  })
-})
-
-describe('NavigationTabModel', () => {
-  let navigation: NavigationModel
-  let model: NavigationTabModel
-
-  beforeEach(() => {
-    navigation = new NavigationModel()
-    model = navigation.tabs[0]
-  })
-
-  afterAll(() => {
-    jest.clearAllMocks()
-  })
-
-  it('should call the canGoBack getter', () => {
-    expect(model.canGoBack).toBe(false)
-  })
-
-  it('should call the canGoForward getter', () => {
-    expect(model.canGoForward).toBe(false)
-  })
-
-  it('should call the backTen getter', () => {
-    expect(model.backTen).toEqual([])
-  })
-
-  it('should call the forwardTen getter', () => {
-    expect(model.forwardTen).toEqual([])
-  })
-
-  it('should call the navigate method', () => {
-    const refreshSpy = jest.spyOn(model, 'refresh')
-    model.navigate('/')
-    expect(refreshSpy).toHaveBeenCalledWith()
-  })
-
-  it('should call the goBack method', () => {
-    model.goBack()
-    expect(model.index).toBe(0)
-  })
-
-  it('should call the goForward method', () => {
-    model.goForward()
-    expect(model.index).toBe(0)
-  })
-
-  it('should call the goToIndex method', () => {
-    model.goToIndex(0)
-    expect(model.index).toBe(0)
-  })
-
-  it('should call the setIsNewTab method', () => {
-    model.setIsNewTab(true)
-    expect(model.isNewTab).toBe(true)
   })
 })

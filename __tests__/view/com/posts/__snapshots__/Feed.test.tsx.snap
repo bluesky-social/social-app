@@ -74,135 +74,13 @@ exports[`Feed matches snapshot 1`] = `
                 "borderTopWidth": 1,
                 "flexDirection": "row",
                 "opacity": 1,
-                "paddingHorizontal": 10,
-                "paddingVertical": 10,
+                "paddingLeft": 4,
+                "paddingRight": 10,
+                "paddingVertical": 14,
               }
             }
             testID="composePromptButton"
           >
-            <View
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                Object {
-                  "opacity": 1,
-                  "width": 50,
-                }
-              }
-              testID="composePromptAvatarButton"
-            >
-              <RNSVGSvgView
-                align="xMidYMid"
-                bbHeight={50}
-                bbWidth={50}
-                focusable={false}
-                height={50}
-                meetOrSlice={0}
-                minX={0}
-                minY={0}
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "transparent",
-                      "borderWidth": 0,
-                    },
-                    Object {
-                      "flex": 0,
-                      "height": 50,
-                      "width": 50,
-                    },
-                  ]
-                }
-                vbHeight={100}
-                vbWidth={100}
-                width={50}
-              >
-                <RNSVGGroup>
-                  <RNSVGDefs>
-                    <RNSVGLinearGradient
-                      gradient={
-                        Array [
-                          0,
-                          -6862849,
-                          1,
-                          -16742913,
-                        ]
-                      }
-                      gradientTransform={null}
-                      gradientUnits={0}
-                      name="grad"
-                      x1="0"
-                      x2="1"
-                      y1="0"
-                      y2="1"
-                    />
-                  </RNSVGDefs>
-                  <RNSVGCircle
-                    cx="50"
-                    cy="50"
-                    fill={
-                      Array [
-                        1,
-                        "grad",
-                      ]
-                    }
-                    propList={
-                      Array [
-                        "fill",
-                      ]
-                    }
-                    r="50"
-                  />
-                  <RNSVGText
-                    content={null}
-                    dx={Array []}
-                    dy={Array []}
-                    fill={4294967295}
-                    font={
-                      Object {
-                        "fontSize": "50",
-                        "fontWeight": "bold",
-                        "textAnchor": "middle",
-                      }
-                    }
-                    propList={
-                      Array [
-                        "fill",
-                      ]
-                    }
-                    rotate={Array []}
-                    x={
-                      Array [
-                        "50",
-                      ]
-                    }
-                    y={
-                      Array [
-                        "67",
-                      ]
-                    }
-                  >
-                    <RNSVGTSpan
-                      content="T"
-                      dx={Array []}
-                      dy={Array []}
-                      font={Object {}}
-                      rotate={Array []}
-                      x={Array []}
-                      y={Array []}
-                    />
-                  </RNSVGText>
-                </RNSVGGroup>
-              </RNSVGSvgView>
-            </View>
             <View
               style={
                 Object {
@@ -233,7 +111,7 @@ exports[`Feed matches snapshot 1`] = `
                   ]
                 }
               >
-                What's up?
+                New message
               </Text>
             </View>
             <View

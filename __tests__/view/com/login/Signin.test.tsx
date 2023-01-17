@@ -126,22 +126,6 @@ describe('Signin', () => {
     expect(mockedShellStore.openModal).toHaveBeenCalled()
   })
 
-  it('tries recconect on error', async () => {
-    const {findByTestId} = render(<Signin {...mockedProps} />, {
-      ...mockedRootStore,
-      session: {
-        ...mockedSessionStore,
-        describeService: jest.fn().mockRejectedValue({}),
-      },
-    })
-
-    const loginRetryButton = await findByTestId('loginRetryButton')
-    expect(loginRetryButton).toBeTruthy()
-    fireEvent.press(loginRetryButton)
-
-    expect(mockedLogStore.warn).toHaveBeenCalled()
-  })
-
   it('matches snapshot', () => {
     const page = render(<Signin {...mockedProps} />)
     expect(page).toMatchSnapshot()

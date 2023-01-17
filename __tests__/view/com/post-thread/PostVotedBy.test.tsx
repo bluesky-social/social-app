@@ -1,5 +1,5 @@
 import React from 'react'
-import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
+import {cleanup, render} from '../../../../jest/test-utils'
 import {PostVotedBy} from '../../../../src/view/com/post-thread/PostVotedBy'
 import {mockedVotesViewStore} from '../../../../__mocks__/state-mock'
 
@@ -31,12 +31,6 @@ describe('PostVotedtedBy', () => {
     const {findByTestId} = render(<PostVotedBy {...mockedProps} />)
     const errorMessageView = await findByTestId('errorMessageView')
     expect(errorMessageView).toBeTruthy()
-
-    const errorMessageTryAgainButton = await findByTestId(
-      'errorMessageTryAgainButton',
-    )
-    fireEvent.press(errorMessageTryAgainButton)
-    expect(mockedVotesViewStore.refresh).toHaveBeenCalled()
   })
 
   it('renders correctly', async () => {

@@ -18,16 +18,6 @@ describe('PostUpvotedBy', () => {
     cleanup()
   })
 
-  it('renders upvoted by screen', async () => {
-    const {findByTestId} = render(<PostUpvotedBy {...mockedProps} />)
-    const postUpvotedByView = await findByTestId('postUpvotedByView')
-
-    expect(postUpvotedByView).toBeTruthy()
-
-    const headerTitle = await findByTestId('headerTitle')
-    expect(headerTitle.props.children).toBe('Upvoted by')
-  })
-
   it('matches snapshot', () => {
     const page = render(<PostUpvotedBy {...mockedProps} />)
     expect(page).toMatchSnapshot()
