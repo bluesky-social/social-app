@@ -1,5 +1,11 @@
 import React from 'react'
-import {Image, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 
 export function Component({
   uris,
@@ -12,8 +18,16 @@ export function Component({
 }) {
   const winDim = useWindowDimensions()
   const left = index * winDim.width * -1
+  const spinnerStyle = React.useMemo(
+    () => ({
+      left: winDim.width / 2 - 20,
+      top: winDim.height / 2 - 50,
+    }),
+    [winDim.width, winDim.height],
+  )
   return (
     <View style={[styles.container, {left}]}>
+      <ActivityIndicator style={[styles.loading, spinnerStyle]} size="large" />
       {uris.map((uri, i) => (
         <Image
           key={i}
@@ -35,6 +49,9 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     width: '100%',
+  },
+  loading: {
+    position: 'absolute',
   },
   image: {
     position: 'absolute',
