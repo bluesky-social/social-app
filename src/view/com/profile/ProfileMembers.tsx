@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, View} from 'react-native'
 import {MembersViewModel, MemberItem} from '../../../state/models/members-view'
@@ -12,7 +12,8 @@ export const ProfileMembers = observer(function ProfileMembers({
   name: string
 }) {
   const store = useStores()
-  const [view, setView] = useState<MembersViewModel | undefined>()
+  // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
+  const [view, setView] = React.useState<MembersViewModel | undefined>()
 
   useEffect(() => {
     if (view?.params.actor === name) {
@@ -37,7 +38,7 @@ export const ProfileMembers = observer(function ProfileMembers({
     view.params.actor !== name
   ) {
     return (
-      <View>
+      <View testID="profileMembersActivityIndicatorView">
         <ActivityIndicator />
       </View>
     )
@@ -68,7 +69,7 @@ export const ProfileMembers = observer(function ProfileMembers({
     />
   )
   return (
-    <View>
+    <View testID="profileMembersFlatList">
       <FlatList
         data={view.members}
         keyExtractor={item => item._reactKey}

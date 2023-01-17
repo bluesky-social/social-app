@@ -116,11 +116,12 @@ export const TabsSelector = observer(
     }
 
     if (!active) {
-      return <View />
+      return <View testID="emptyView" />
     }
 
     return (
       <Animated.View
+        testID="tabsSelectorView"
         style={[
           styles.wrapper,
           {bottom: insets.bottom + 55},
@@ -129,7 +130,9 @@ export const TabsSelector = observer(
         <View onLayout={onLayout}>
           <View style={[s.p10, styles.section]}>
             <View style={styles.btns}>
-              <TouchableWithoutFeedback onPress={onPressShareTab}>
+              <TouchableWithoutFeedback
+                testID="shareButton"
+                onPress={onPressShareTab}>
                 <View style={[styles.btn]}>
                   <View style={styles.btnIcon}>
                     <FontAwesomeIcon size={16} icon="share" />
@@ -137,7 +140,9 @@ export const TabsSelector = observer(
                   <Text style={styles.btnText}>Share</Text>
                 </View>
               </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback onPress={onPressCloneTab}>
+              <TouchableWithoutFeedback
+                testID="cloneButton"
+                onPress={onPressCloneTab}>
                 <View style={[styles.btn]}>
                   <View style={styles.btnIcon}>
                     <FontAwesomeIcon size={16} icon={['far', 'clone']} />
@@ -145,7 +150,9 @@ export const TabsSelector = observer(
                   <Text style={styles.btnText}>Clone tab</Text>
                 </View>
               </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback onPress={onPressNewTab}>
+              <TouchableWithoutFeedback
+                testID="newTabButton"
+                onPress={onPressNewTab}>
                 <View style={[styles.btn]}>
                   <View style={styles.btnIcon}>
                     <FontAwesomeIcon size={16} icon="plus" />
@@ -164,6 +171,7 @@ export const TabsSelector = observer(
                 return (
                   <Swipeable
                     key={tab.id}
+                    testID="tabsSwipable"
                     renderLeftActions={renderSwipeActions}
                     renderRightActions={renderSwipeActions}
                     leftThreshold={100}
@@ -185,6 +193,7 @@ export const TabsSelector = observer(
                           isActive && styles.active,
                         ]}>
                         <TouchableWithoutFeedback
+                          testID="changeTabButton"
                           onPress={() => onPressChangeTab(tabIndex)}>
                           <View style={styles.tabInner}>
                             <View style={styles.tabIcon}>
@@ -203,6 +212,7 @@ export const TabsSelector = observer(
                           </View>
                         </TouchableWithoutFeedback>
                         <TouchableWithoutFeedback
+                          testID="closeTabButton"
                           onPress={() => onCloseTab(tabIndex)}>
                           <View style={styles.tabClose}>
                             <FontAwesomeIcon

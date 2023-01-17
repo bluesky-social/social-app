@@ -25,7 +25,9 @@ export const Contacts = ({navIdx, visible, params}: ScreenParams) => {
   return (
     <View>
       <View style={styles.section}>
-        <Text style={styles.title}>Contacts</Text>
+        <Text testID="contactsTitle" style={styles.title}>
+          Contacts
+        </Text>
       </View>
       <View style={styles.section}>
         <View style={styles.searchContainer}>
@@ -35,6 +37,7 @@ export const Contacts = ({navIdx, visible, params}: ScreenParams) => {
             style={styles.searchIcon}
           />
           <TextInput
+            testID="contactsTextInput"
             ref={inputRef}
             value={searchText}
             style={styles.searchInput}

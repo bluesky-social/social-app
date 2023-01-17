@@ -9,8 +9,7 @@
     "start": "react-native start",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
     "test": "jest --coverage",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "postinstall": "patch-package"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "@atproto/api": "^0.0.6",
@@ -34,7 +33,6 @@
     "lru_map": "^0.4.1",
     "mobx": "^6.6.1",
     "mobx-react-lite": "^3.4.0",
-    "patch-package": "^6.5.0",
     "react": "17.0.2",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "17.0.2",
@@ -112,6 +110,8 @@
       "<rootDir>/node_modules/",
       "<rootDir>/src/platform",
       "<rootDir>/src/third-party",
+      "<rootDir>/src/view/com/util",
+      "<rootDir>/src/state/lib",
       "<rootDir>/__tests__/test-utils.js"
     ]
   },

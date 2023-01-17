@@ -85,21 +85,25 @@ export const PhotoCarouselPicker = ({
 
   return (
     <ScrollView
+      testID="photoCarouselPickerView"
       horizontal
       style={[pal.view, styles.photosContainer]}
       showsHorizontalScrollIndicator={false}>
       <TouchableOpacity
+        testID="openCameraButton"
         style={[styles.galleryButton, pal.border, styles.photo]}
         onPress={handleOpenCamera}>
         <FontAwesomeIcon icon="camera" size={24} style={pal.link} />
       </TouchableOpacity>
       <TouchableOpacity
+        testID="openGalleryButton"
         style={[styles.galleryButton, pal.border, styles.photo]}
         onPress={handleOpenGallery}>
         <FontAwesomeIcon icon="image" style={pal.link} size={24} />
       </TouchableOpacity>
       {localPhotos.photos.map((item: any, index: number) => (
         <TouchableOpacity
+          testID="openSelectPhotoButton"
           key={`local-image-${index}`}
           style={[pal.border, styles.photoButton]}
           onPress={() => handleSelectPhoto(item.node.image.uri)}>

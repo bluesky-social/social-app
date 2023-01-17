@@ -25,13 +25,14 @@ export const SelectedPhoto = ({
   )
 
   return selectedPhotos.length !== 0 ? (
-    <View style={styles.imageContainer}>
+    <View testID="selectedPhotosView" style={styles.imageContainer}>
       {selectedPhotos.length !== 0 &&
         selectedPhotos.map((item, index) => (
           <View
             key={`selected-image-${index}`}
             style={[styles.image, imageStyle]}>
             <TouchableOpacity
+              testID="removePhotoButton"
               onPress={() => handleRemovePhoto(item)}
               style={styles.removePhotoButton}>
               <FontAwesomeIcon
@@ -41,7 +42,11 @@ export const SelectedPhoto = ({
               />
             </TouchableOpacity>
 
-            <Image style={[styles.image, imageStyle]} source={{uri: item}} />
+            <Image
+              testID="selectedPhotoImage"
+              style={[styles.image, imageStyle]}
+              source={{uri: item}}
+            />
           </View>
         ))}
     </View>
