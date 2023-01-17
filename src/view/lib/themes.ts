@@ -20,6 +20,7 @@ export const defaultTheme: Theme = {
       replyLine: colors.gray2,
       replyLineDot: colors.gray3,
       unreadNotifBg: '#ebf6ff',
+      postCtrl: '#8A7171',
     },
     primary: {
       background: colors.blue3,
@@ -164,6 +165,7 @@ export const darkTheme: Theme = {
       replyLine: colors.gray5,
       replyLineDot: colors.gray6,
       unreadNotifBg: colors.blue5,
+      postCtrl: '#7A6161',
     },
     primary: {
       ...defaultTheme.palette.primary,

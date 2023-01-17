@@ -34,12 +34,16 @@ interface PostCtrlsOpts {
   onDeletePost: () => void
 }
 
-const redgray = '#7A6161'
-const sRedgray = {color: redgray}
 const HITSLOP = {top: 2, left: 2, bottom: 2, right: 2}
 
 export function PostCtrls(opts: PostCtrlsOpts) {
   const theme = useTheme()
+  const defaultCtrlColor = React.useMemo(
+    () => ({
+      color: theme.palette.default.postCtrl,
+    }),
+    [theme],
+  )
   const interp1 = useAnimatedValue(0)
   const interp2 = useAnimatedValue(0)
 
@@ -119,12 +123,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           hitSlop={HITSLOP}
           onPress={opts.onPressReply}>
           <CommentBottomArrow
-            style={styles.ctrlIcon}
+            style={defaultCtrlColor}
             strokeWidth={3}
             size={opts.big ? 20 : 15}
           />
           {typeof opts.replyCount !== 'undefined' ? (
-            <Text style={[sRedgray, s.ml5, s.f15]}>{opts.replyCount}</Text>
+            <Text style={[defaultCtrlColor, s.ml5, s.f15]}>
+              {opts.replyCount}
+            </Text>
           ) : undefined}
         </TouchableOpacity>
       </View>
@@ -136,7 +142,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           <Animated.View style={anim1Style}>
             <FontAwesomeIcon
               style={
-                opts.isReposted ? styles.ctrlIconReposted : styles.ctrlIcon
+                opts.isReposted ? styles.ctrlIconReposted : defaultCtrlColor
               }
               icon="retweet"
               size={opts.big ? 22 : 19}
@@ -147,7 +153,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
               style={
                 opts.isReposted
                   ? [s.bold, s.green3, s.f15, s.ml5]
-                  : [sRedgray, s.f15, s.ml5]
+                  : [defaultCtrlColor, s.f15, s.ml5]
               }>
               {opts.repostCount}
             </Text>
@@ -167,7 +173,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
               />
             ) : (
               <UpIcon
-                style={[styles.ctrlIcon]}
+                style={defaultCtrlColor}
                 size={opts.big ? 22 : 19}
                 strokeWidth={1.5}
               />
@@ -178,7 +184,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
               style={
                 opts.isUpvoted
                   ? [s.bold, s.red3, s.f15, s.ml5]
-                  : [sRedgray, s.f15, s.ml5]
+                  : [defaultCtrlColor, s.f15, s.ml5]
               }>
               {opts.upvoteCount}
             </Text>
@@ -202,7 +208,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                 s.mr5,
                 {
                   color:
-                    theme.colorScheme === 'light' ? colors.gray3 : colors.gray5,
+                    theme.colorScheme === 'light' ? colors.gray4 : colors.gray5,
                 },
               ]}
             />
@@ -220,9 +226,6 @@ const styles = StyleSheet.create({
   ctrl: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  ctrlIcon: {
-    color: redgray,
   },
   ctrlIconReposted: {
     color: colors.green3,
