@@ -86,11 +86,9 @@ export const Post = observer(function Post({
   const authorHref = `/profile/${item.post.author.handle}`
   const authorTitle = item.post.author.handle
   let replyAuthorDid = ''
-  let replyHref = ''
   if (record.reply) {
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     replyAuthorDid = urip.hostname
-    replyHref = `/profile/${urip.hostname}/post/${urip.rkey}`
   }
   const onPressReply = () => {
     store.shell.openComposer({
@@ -153,12 +151,11 @@ export const Post = observer(function Post({
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
-            authorHref={authorHref}
             authorHandle={item.post.author.handle}
             authorDisplayName={item.post.author.displayName}
             timestamp={item.post.indexedAt}
           />
-          {replyHref !== '' && (
+          {replyAuthorDid !== '' && (
             <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
               <FontAwesomeIcon
                 icon="reply"
@@ -168,14 +165,12 @@ export const Post = observer(function Post({
               <Text type="sm" style={[pal.textLight, s.mr2]}>
                 Reply to
               </Text>
-              <Link href={replyHref} title="Parent post">
-                <UserInfoText
-                  type="sm"
-                  did={replyAuthorDid}
-                  attr="displayName"
-                  style={[pal.textLight]}
-                />
-              </Link>
+              <UserInfoText
+                type="sm"
+                did={replyAuthorDid}
+                attr="displayName"
+                style={[pal.textLight]}
+              />
             </View>
           )}
           {item.post.author.viewer?.muted ? (

@@ -44,11 +44,6 @@ export const FeedItem = observer(function ({
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     return urip.hostname
   }, [record?.reply])
-  const replyHref = useMemo(() => {
-    if (!record?.reply) return ''
-    const urip = new AtUri(record?.reply.parent?.uri || record?.reply.root.uri)
-    return `/profile/${urip.hostname}/post/${urip.rkey}`
-  }, [record?.reply])
 
   const onPressReply = () => {
     store.shell.openComposer({
@@ -162,12 +157,11 @@ export const FeedItem = observer(function ({
           </View>
           <View style={styles.layoutContent}>
             <PostMeta
-              authorHref={authorHref}
               authorHandle={item.post.author.handle}
               authorDisplayName={item.post.author.displayName}
               timestamp={item.post.indexedAt}
             />
-            {!isChild && replyHref !== '' && (
+            {!isChild && replyAuthorDid !== '' && (
               <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
                 <FontAwesomeIcon
                   icon="reply"
@@ -177,14 +171,12 @@ export const FeedItem = observer(function ({
                 <Text type="md" style={[pal.textLight, s.mr2]}>
                   Reply to
                 </Text>
-                <Link href={replyHref} title="Parent post">
-                  <UserInfoText
-                    type="md"
-                    did={replyAuthorDid}
-                    attr="displayName"
-                    style={[pal.textLight, s.ml2]}
-                  />
-                </Link>
+                <UserInfoText
+                  type="md"
+                  did={replyAuthorDid}
+                  attr="displayName"
+                  style={[pal.textLight, s.ml2]}
+                />
               </View>
             )}
             {item.post.author.viewer?.muted &&
