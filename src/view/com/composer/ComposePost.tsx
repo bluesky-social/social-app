@@ -174,7 +174,7 @@ export const ComposePost = observer(function ComposePost({
         return v
       } else {
         return (
-          <Text key={i++} style={pal.link}>
+          <Text key={i++} style={[pal.link, styles.textInputFormatting]}>
             {v.link}
           </Text>
         )
@@ -279,7 +279,11 @@ export const ComposePost = observer(function ComposePost({
                 onChangeText={(text: string) => onChangeText(text)}
                 placeholder={selectTextInputPlaceholder}
                 placeholderTextColor={pal.colors.textLight}
-                style={[pal.text, styles.textInput]}>
+                style={[
+                  pal.text,
+                  styles.textInput,
+                  styles.textInputFormatting,
+                ]}>
                 {textDecorated}
               </TextInput>
             </View>
@@ -420,6 +424,8 @@ const styles = StyleSheet.create({
     padding: 5,
     marginLeft: 8,
     alignSelf: 'flex-start',
+  },
+  textInputFormatting: {
     fontSize: 18,
     letterSpacing: 0.2,
     fontWeight: '400',
