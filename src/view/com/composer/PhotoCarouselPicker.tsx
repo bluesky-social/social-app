@@ -6,9 +6,16 @@ import {
   openCamera,
   openCropper,
 } from 'react-native-image-crop-picker'
-import {compressIfNeeded} from '../../../lib/images'
+import {
+  UserLocalPhotosModel,
+  PhotoIdentifier,
+} from '../../../state/models/user-local-photos'
+import {compressIfNeeded, scaleDownDimensions} from '../../../lib/images'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {useStores} from '../../../state'
+
+const MAX_WIDTH = 1000
+const MAX_HEIGHT = 1000
 
 const IMAGE_PARAMS = {
   width: 1000,
@@ -25,7 +32,7 @@ export const PhotoCarouselPicker = ({
 }: {
   selectedPhotos: string[]
   onSelectPhotos: (v: string[]) => void
-  localPhotos: any
+  localPhotos: UserLocalPhotosModel
 }) => {
   const pal = usePalette('default')
   const store = useStores()
@@ -45,12 +52,20 @@ export const PhotoCarouselPicker = ({
   }, [store.log, selectedPhotos, onSelectPhotos])
 
   const handleSelectPhoto = useCallback(
-    async (uri: string) => {
+    async (item: PhotoIdentifier) => {
       try {
+        // choose target dimensions based on the original
+        // this causes the photo cropper to start with the full image "selected"
+        const {width, height} = scaleDownDimensions(
+          {width: item.node.image.width, height: item.node.image.height},
+          {width: MAX_WIDTH, height: MAX_HEIGHT},
+        )
         const cropperRes = await openCropper({
           mediaType: 'photo',
-          path: uri,
+          path: item.node.image.uri,
           ...IMAGE_PARAMS,
+          width,
+          height,
         })
         const img = await compressIfNeeded(cropperRes, 300000)
         onSelectPhotos([img.path, ...selectedPhotos])
@@ -71,10 +86,18 @@ export const PhotoCarouselPicker = ({
       const result = []
 
       for (const image of items) {
+        // choose target dimensions based on the original
+        // this causes the photo cropper to start with the full image "selected"
+        const {width, height} = scaleDownDimensions(
+          {width: image.width, height: image.height},
+          {width: MAX_WIDTH, height: MAX_HEIGHT},
+        )
         const cropperRes = await openCropper({
           mediaType: 'photo',
           path: image.path,
           ...IMAGE_PARAMS,
+          width,
+          height,
         })
         const finalImg = await compressIfNeeded(cropperRes, 300000)
         result.push(finalImg.path)
@@ -101,12 +124,12 @@ export const PhotoCarouselPicker = ({
         onPress={handleOpenGallery}>
         <FontAwesomeIcon icon="image" style={pal.link} size={24} />
       </TouchableOpacity>
-      {localPhotos.photos.map((item: any, index: number) => (
+      {localPhotos.photos.map((item: PhotoIdentifier, index: number) => (
         <TouchableOpacity
           testID="openSelectPhotoButton"
           key={`local-image-${index}`}
           style={[pal.border, styles.photoButton]}
-          onPress={() => handleSelectPhoto(item.node.image.uri)}>
+          onPress={() => handleSelectPhoto(item)}>
           <Image style={styles.photo} source={{uri: item.node.image.uri}} />
         </TouchableOpacity>
       ))}
