@@ -6,10 +6,10 @@
 // import {ReactNativeStore} from './auth'
 import {
   sessionClient as AtpApi,
-  APP_BSKY_GRAPH,
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
 } from '@atproto/api'
+import RNFS from 'react-native-fs'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from '../models/root-store'
 import {extractEntities} from '../../lib/strings'
@@ -235,6 +235,16 @@ async function fetchHandler(
     typeof reqBody === 'string' &&
     (reqBody.startsWith('/') || reqBody.startsWith('file:'))
   ) {
+    if (reqBody.endsWith('.jpeg') || reqBody.endsWith('.jpg')) {
+      // HACK
+      // React native has a bug that inflates the size of jpegs on upload
+      // we get around that by renaming the file ext to .bin
+      // see https://github.com/facebook/react-native/issues/27099
+      // -prf
+      const newPath = reqBody.replace(/\.jpe?g$/, '.bin')
+      await RNFS.moveFile(reqBody, newPath)
+      reqBody = newPath
+    }
     // NOTE
     // React native treats bodies with {uri: string} as file uploads to pull from cache
     // -prf
