@@ -39,6 +39,7 @@
     "react-dom": "17.0.2",
     "react-native": "0.71.0",
     "react-native-appstate-hook": "^1.0.6",
+    "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.5.0",
     "react-native-haptic-feedback": "^1.14.0",
     "react-native-image-crop-picker": "^0.38.1",
