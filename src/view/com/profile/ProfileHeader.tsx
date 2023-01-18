@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {BlurView} from '@react-native-community/blur'
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {useStores} from '../../../state'
 import {
@@ -36,6 +37,9 @@ export const ProfileHeader = observer(function ProfileHeader({
   const pal = usePalette('default')
   const store = useStores()
 
+  const onPressBack = () => {
+    store.nav.tab.goBack()
+  }
   const onPressAvi = () => {
     if (view.avatar) {
       store.shell.openLightbox(new ProfileImageLightbox(view))
@@ -262,6 +266,11 @@ export const ProfileHeader = observer(function ProfileHeader({
           </View>
         ) : undefined}
       </View>
+      <TouchableWithoutFeedback onPress={onPressBack}>
+        <BlurView style={styles.backBtn} blurType="dark">
+          <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
+        </BlurView>
+      </TouchableWithoutFeedback>
       <TouchableWithoutFeedback
         testID="profileHeaderAviButton"
         onPress={onPressAvi}>
@@ -284,9 +293,19 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 120,
   },
+  backBtn: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   avi: {
     position: 'absolute',
-    top: 80,
+    top: 110,
     left: 10,
     width: 84,
     height: 84,

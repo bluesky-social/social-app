@@ -61,7 +61,7 @@ export function UserBanner({
   }, [onSelectNewBanner])
 
   const renderSvg = () => (
-    <Svg width="100%" height="120" viewBox="50 0 200 100">
+    <Svg width="100%" height="150" viewBox="50 0 200 100">
       <Defs>
         <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
           <Stop
@@ -118,6 +118,6 @@ const styles = StyleSheet.create({
   },
   bannerImage: {
     width: '100%',
-    height: 120,
+    height: 150,
   },
 })
