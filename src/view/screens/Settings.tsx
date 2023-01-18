@@ -37,7 +37,7 @@ export const Settings = observer(function Settings({
           <Text style={pal.text}>Signed in as</Text>
           <View style={s.flex1} />
           <TouchableOpacity onPress={onPressSignout}>
-            <Text type="h5" style={pal.link}>
+            <Text type="xl-heavy" style={pal.link}>
               Sign out
             </Text>
           </TouchableOpacity>
@@ -54,7 +54,7 @@ export const Settings = observer(function Settings({
               avatar={store.me.avatar}
             />
             <View style={[s.ml10]}>
-              <Text type="h5" style={pal.text}>
+              <Text type="xl-bold" style={pal.text}>
                 {store.me.displayName || store.me.handle}
               </Text>
               <Text style={pal.textLight}>@{store.me.handle}</Text>
@@ -62,7 +62,7 @@ export const Settings = observer(function Settings({
           </View>
         </Link>
         <View style={s.flex1} />
-        <Text type="overline1" style={[s.mb5]}>
+        <Text type="sm-medium" style={[s.mb5]}>
           Advanced
         </Text>
         <Link

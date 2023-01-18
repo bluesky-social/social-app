@@ -26,7 +26,7 @@ export function ComposePrompt({
       ]}
       onPress={onPressCompose}>
       <View style={styles.textContainer}>
-        <Text type="h5" style={[pal.textLight, {fontWeight: 'normal'}]}>
+        <Text type="lg" style={[pal.textLight]}>
           {text}
         </Text>
       </View>

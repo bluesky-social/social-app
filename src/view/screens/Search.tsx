@@ -82,7 +82,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
                   size={36}
                 />
                 <View style={[s.ml10]}>
-                  <Text type="h5" style={pal.text}>
+                  <Text type="title-sm" style={pal.text}>
                     {item.displayName || item.handle}
                   </Text>
                   <Text style={pal.textLight}>@{item.handle}</Text>

@@ -92,21 +92,18 @@ export function PostEmbeds({
           />
         )}
         <View style={styles.extInner}>
-          <Text
-            type="body2"
-            numberOfLines={2}
-            style={[pal.text, styles.extTitle]}>
+          <Text type="sm-bold" numberOfLines={2} style={[pal.text]}>
             {link.title || link.uri}
           </Text>
           <Text
-            type="body2"
+            type="sm"
             numberOfLines={1}
             style={[pal.textLight, styles.extUri]}>
             {link.uri}
           </Text>
           {link.description ? (
             <Text
-              type="body2"
+              type="sm"
               numberOfLines={2}
               style={[pal.text, styles.extDescription]}>
               {link.description}
@@ -139,9 +136,6 @@ const styles = StyleSheet.create({
   },
   extImageFallback: {
     height: 160,
-  },
-  extTitle: {
-    fontWeight: '600',
   },
   extUri: {
     marginTop: 2,

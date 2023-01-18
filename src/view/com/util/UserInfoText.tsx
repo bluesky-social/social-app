@@ -8,7 +8,7 @@ import {useStores} from '../../../state'
 import {TypographyVariant} from '../../lib/ThemeContext'
 
 export function UserInfoText({
-  type = 'body1',
+  type = 'md',
   did,
   attr,
   loading,

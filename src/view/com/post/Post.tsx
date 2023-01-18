@@ -20,7 +20,6 @@ import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -166,12 +165,12 @@ export const Post = observer(function Post({
                 size={9}
                 style={[pal.textLight, s.mr5]}
               />
-              <Text type="body2" style={[pal.textLight, s.mr2]}>
+              <Text type="sm" style={[pal.textLight, s.mr2]}>
                 Reply to
               </Text>
               <Link href={replyHref} title="Parent post">
                 <UserInfoText
-                  type="body2"
+                  type="sm"
                   did={replyAuthorDid}
                   attr="displayName"
                   style={[pal.textLight]}
@@ -182,11 +181,16 @@ export const Post = observer(function Post({
           {item.post.author.viewer?.muted ? (
             <View style={[styles.mutedWarning, pal.btn]}>
               <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
-              <Text type="body2">This post is by a muted account.</Text>
+              <Text type="sm">This post is by a muted account.</Text>
             </View>
           ) : record.text ? (
             <View style={styles.postTextContainer}>
-              <RichText text={record.text} entities={record.entities} />
+              <RichText
+                type="post-text"
+                text={record.text}
+                entities={record.entities}
+                lineHeight={1.3}
+              />
             </View>
           ) : (
             <View style={{height: 5}} />

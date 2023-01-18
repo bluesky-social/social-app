@@ -15,7 +15,7 @@ import {PostEmbeds} from '../util/PostEmbeds'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import {s, colors} from '../../lib/styles'
+import {s} from '../../lib/styles'
 import {useStores} from '../../../state'
 import {useTheme} from '../../lib/ThemeContext'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -30,7 +30,6 @@ export const FeedItem = observer(function ({
   ignoreMuteFor?: string
 }) {
   const store = useStores()
-  const theme = useTheme()
   const pal = usePalette('default')
   const [deleted, setDeleted] = useState(false)
   const record = item.postRecord
@@ -144,12 +143,7 @@ export const FeedItem = observer(function ({
               icon="retweet"
               style={[styles.includeReasonIcon, {color: pal.colors.textLight}]}
             />
-            <Text
-              type="body2"
-              style={{
-                fontWeight: '600',
-                color: pal.colors.textLight,
-              }}>
+            <Text type="sm-bold" style={pal.textLight}>
               Reposted by{' '}
               {item.reasonRepost.by.displayName || item.reasonRepost.by.handle}
             </Text>
@@ -180,15 +174,15 @@ export const FeedItem = observer(function ({
                   size={9}
                   style={[{color: pal.colors.textLight}, s.mr5]}
                 />
-                <Text type="body2" style={[pal.textLight, s.mr2]}>
+                <Text type="md" style={[pal.textLight, s.mr2]}>
                   Reply to
                 </Text>
                 <Link href={replyHref} title="Parent post">
                   <UserInfoText
-                    type="body2"
+                    type="md"
                     did={replyAuthorDid}
                     attr="displayName"
-                    style={[pal.textLight]}
+                    style={[pal.textLight, s.ml2]}
                   />
                 </Link>
               </View>
@@ -197,14 +191,15 @@ export const FeedItem = observer(function ({
             ignoreMuteFor !== item.post.author.did ? (
               <View style={[styles.mutedWarning, pal.btn]}>
                 <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
-                <Text type="body2">This post is by a muted account.</Text>
+                <Text type="sm">This post is by a muted account.</Text>
               </View>
             ) : record.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
-                  type="body1"
+                  type="post-text"
                   text={record.text}
                   entities={record.entities}
+                  lineHeight={1.3}
                 />
               </View>
             ) : (
@@ -251,7 +246,7 @@ export const FeedItem = observer(function ({
               <Circle x="2" y="22" r="1.5" fill={pal.colors.replyLineDot} />
             </Svg>
           </View>
-          <Text style={[pal.link, theme.typography.body2]}>
+          <Text type="md" style={pal.link}>
             View full thread
           </Text>
         </Link>
@@ -322,6 +317,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 4,
+    paddingRight: 20,
   },
   embed: {
     marginBottom: 6,

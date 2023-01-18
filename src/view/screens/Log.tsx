@@ -49,7 +49,7 @@ export const Log = observer(function Log({navIdx, visible}: ScreenParams) {
                   ) : (
                     <FontAwesomeIcon icon="exclamation" style={s.red3} />
                   )}
-                  <Text type="body2" style={[styles.summary, pal.text]}>
+                  <Text type="sm" style={[styles.summary, pal.text]}>
                     {entry.summary}
                   </Text>
                   {!!entry.details ? (
@@ -60,14 +60,14 @@ export const Log = observer(function Log({navIdx, visible}: ScreenParams) {
                       style={s.mr5}
                     />
                   ) : undefined}
-                  <Text type="body2" style={[styles.ts, pal.textLight]}>
+                  <Text type="sm" style={[styles.ts, pal.textLight]}>
                     {entry.ts ? ago(entry.ts) : ''}
                   </Text>
                 </TouchableOpacity>
                 {expanded.includes(entry.id) ? (
                   <View style={[pal.view, s.pl10, s.pr10, s.pb10]}>
                     <View style={[pal.btn, styles.details]}>
-                      <Text type="mono1" style={pal.text}>
+                      <Text type="mono" style={pal.text}>
                         {entry.details}
                       </Text>
                     </View>

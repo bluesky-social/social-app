@@ -74,7 +74,7 @@ export const Menu = observer(
           ) : undefined}
         </View>
         <Text
-          type="h4"
+          type="title"
           style={[
             pal.text,
             bold ? styles.menuItemLabelBold : styles.menuItemLabel,
@@ -99,7 +99,7 @@ export const Menu = observer(
           />
           <View style={s.flex1}>
             <Text
-              type="h3"
+              type="title-lg"
               style={[pal.text, styles.profileCardDisplayName]}
               numberOfLines={1}>
               {store.me.displayName || store.me.handle}
@@ -119,7 +119,7 @@ export const Menu = observer(
             style={pal.text as StyleProp<ViewStyle>}
             size={25}
           />
-          <Text type="h4" style={[pal.text, styles.searchBtnLabel]}>
+          <Text type="title" style={[pal.text, styles.searchBtnLabel]}>
             Search
           </Text>
         </TouchableOpacity>

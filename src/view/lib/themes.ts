@@ -75,70 +75,167 @@ export const defaultTheme: Theme = {
     },
   },
   typography: {
-    h1: {
-      fontSize: 48,
+    'xl-thin': {
+      fontSize: 17,
+      letterSpacing: 0.25,
+      fontWeight: '300',
+    },
+    xl: {
+      fontSize: 17,
+      letterSpacing: 0.25,
+      fontWeight: '400',
+    },
+    'xl-medium': {
+      fontSize: 17,
+      letterSpacing: 0.25,
       fontWeight: '500',
     },
-    h2: {
+    'xl-bold': {
+      fontSize: 17,
+      letterSpacing: 0.25,
+      fontWeight: '700',
+    },
+    'xl-heavy': {
+      fontSize: 17,
+      letterSpacing: 0.25,
+      fontWeight: '800',
+    },
+    'lg-thin': {
+      fontSize: 16,
+      letterSpacing: 0.25,
+      fontWeight: '300',
+    },
+    lg: {
+      fontSize: 16,
+      letterSpacing: 0.25,
+      fontWeight: '400',
+    },
+    'lg-medium': {
+      fontSize: 16,
+      letterSpacing: 0.25,
+      fontWeight: '500',
+    },
+    'lg-bold': {
+      fontSize: 16,
+      letterSpacing: 0.25,
+      fontWeight: '700',
+    },
+    'lg-heavy': {
+      fontSize: 16,
+      letterSpacing: 0.25,
+      fontWeight: '800',
+    },
+    'md-thin': {
+      fontSize: 15,
+      letterSpacing: 0.25,
+      fontWeight: '300',
+    },
+    md: {
+      fontSize: 15,
+      letterSpacing: 0.25,
+      fontWeight: '400',
+    },
+    'md-medium': {
+      fontSize: 15,
+      letterSpacing: 0.25,
+      fontWeight: '500',
+    },
+    'md-bold': {
+      fontSize: 15,
+      letterSpacing: 0.25,
+      fontWeight: '700',
+    },
+    'md-heavy': {
+      fontSize: 15,
+      letterSpacing: 0.25,
+      fontWeight: '800',
+    },
+    'sm-thin': {
+      fontSize: 14,
+      letterSpacing: 0.25,
+      fontWeight: '300',
+    },
+    sm: {
+      fontSize: 14,
+      letterSpacing: 0.25,
+      fontWeight: '400',
+    },
+    'sm-medium': {
+      fontSize: 14,
+      letterSpacing: 0.25,
+      fontWeight: '500',
+    },
+    'sm-bold': {
+      fontSize: 14,
+      letterSpacing: 0.25,
+      fontWeight: '700',
+    },
+    'sm-heavy': {
+      fontSize: 14,
+      letterSpacing: 0.25,
+      fontWeight: '800',
+    },
+    'xs-thin': {
+      fontSize: 13,
+      letterSpacing: 0.25,
+      fontWeight: '300',
+    },
+    xs: {
+      fontSize: 13,
+      letterSpacing: 0.25,
+      fontWeight: '400',
+    },
+    'xs-medium': {
+      fontSize: 13,
+      letterSpacing: 0.25,
+      fontWeight: '500',
+    },
+    'xs-bold': {
+      fontSize: 13,
+      letterSpacing: 0.25,
+      fontWeight: '700',
+    },
+    'xs-heavy': {
+      fontSize: 13,
+      letterSpacing: 0.25,
+      fontWeight: '800',
+    },
+
+    'title-xl': {
       fontSize: 34,
       letterSpacing: 0.25,
       fontWeight: '500',
     },
-    h3: {
+    'title-lg': {
       fontSize: 24,
       fontWeight: '500',
     },
-    h4: {
+    title: {
       fontWeight: '500',
       fontSize: 20,
       letterSpacing: 0.15,
     },
-    h5: {
+    'title-sm': {
       fontWeight: 'bold',
       fontSize: 17,
       letterSpacing: 0.15,
     },
-    h6: {
-      fontWeight: '400',
-      fontSize: 15,
-      letterSpacing: 0.15,
-    },
-    subtitle1: {
+    'post-text': {
       fontSize: 16,
-      letterSpacing: 0.15,
-    },
-    subtitle2: {
-      fontWeight: '500',
-      fontSize: 14,
-      letterSpacing: 0.1,
-    },
-    body1: {
-      fontSize: 17,
       letterSpacing: 0.2,
+      fontWeight: '400',
     },
-    body2: {
-      fontSize: 14,
-      letterSpacing: 0.25,
+    'post-text-lg': {
+      fontSize: 24,
+      letterSpacing: 0.4,
+      fontWeight: '400',
     },
     button: {
       fontWeight: '500',
       fontSize: 14,
       letterSpacing: 0.5,
     },
-    caption: {
-      fontSize: 12,
-      letterSpacing: 0.4,
-    },
-    overline1: {
-      fontSize: 10,
-      letterSpacing: 1.5,
-      textTransform: 'uppercase',
-    },
-    overline2: {
-      fontSize: 14,
-      fontWeight: '600',
-    },
-    mono1: {
+    mono: {
       fontSize: 14,
       fontFamily: Platform.OS === 'android' ? 'monospace' : 'Courier New',
     },
