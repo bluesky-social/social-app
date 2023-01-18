@@ -50,7 +50,7 @@ export const colors = {
 }
 
 export const gradients = {
-  blueLight: {start: '#555FFB', end: colors.blue3}, // buttons
+  blueLight: {start: '#5A71FA', end: colors.blue3}, // buttons
   blue: {start: '#5E55FB', end: colors.blue3}, // fab
   blueDark: {start: '#5F45E0', end: colors.blue3}, // avis, banner
 }
