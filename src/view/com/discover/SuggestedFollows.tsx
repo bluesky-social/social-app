@@ -160,7 +160,7 @@ const User = ({
           />
         </View>
         <View style={styles.actorContent}>
-          <Text type="h5" style={pal.text} numberOfLines={1}>
+          <Text type="title-sm" style={pal.text} numberOfLines={1}>
             {item.displayName || item.handle}
           </Text>
           <Text style={pal.textLight} numberOfLines={1}>

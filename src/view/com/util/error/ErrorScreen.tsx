@@ -36,14 +36,14 @@ export function ErrorScreen({
           />
         </View>
       </View>
-      <Text type="h3" style={[styles.title, pal.text]}>
+      <Text type="title-lg" style={[styles.title, pal.text]}>
         {title}
       </Text>
       <Text style={[styles.message, pal.textLight]}>{message}</Text>
       {details && (
         <Text
           testID={`${testID}-details`}
-          type="body2"
+          type="sm"
           style={[
             styles.details,
             pal.textInverted,

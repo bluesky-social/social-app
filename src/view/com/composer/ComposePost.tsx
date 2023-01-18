@@ -243,12 +243,12 @@ export const ComposePost = observer(function ComposePost({
               />
               <View style={styles.replyToPost}>
                 <TextLink
-                  type="h5"
+                  type="xl-medium"
                   href={`/profile/${replyTo.author.handle}`}
                   text={replyTo.author.displayName || replyTo.author.handle}
                   style={[pal.text]}
                 />
-                <Text style={pal.text} numberOfLines={6}>
+                <Text type="post-text" style={pal.text} numberOfLines={6}>
                   {replyTo.text}
                 </Text>
               </View>
@@ -408,9 +408,12 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     padding: 5,
-    fontSize: 18,
     marginLeft: 8,
     alignSelf: 'flex-start',
+    fontSize: 18,
+    letterSpacing: 0.2,
+    fontWeight: '400',
+    lineHeight: 23.4, // 1.3*16
   },
   replyToLayout: {
     flexDirection: 'row',

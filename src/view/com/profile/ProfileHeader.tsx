@@ -108,7 +108,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             />
           </View>
           <View style={styles.displayNameLine}>
-            <Text type="h2" style={[pal.text, {lineHeight: 38}]}>
+            <Text type="title-xl" style={[pal.text, {lineHeight: 38}]}>
               {view.displayName || view.handle}
             </Text>
           </View>
@@ -200,7 +200,7 @@ export const ProfileHeader = observer(function ProfileHeader({
           ) : undefined}
         </View>
         <View style={styles.displayNameLine}>
-          <Text type="h2" style={[pal.text, {lineHeight: 38}]}>
+          <Text type="title-xl" style={[pal.text, {lineHeight: 38}]}>
             {view.displayName || view.handle}
           </Text>
         </View>
@@ -212,10 +212,10 @@ export const ProfileHeader = observer(function ProfileHeader({
             testID="profileHeaderFollowersButton"
             style={[s.flexRow, s.mr10]}
             onPress={onPressFollowers}>
-            <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
+            <Text type="md" style={[s.bold, s.mr2, pal.text]}>
               {view.followersCount}
             </Text>
-            <Text type="body2" style={[pal.textLight]}>
+            <Text type="md" style={[pal.textLight]}>
               {pluralize(view.followersCount, 'follower')}
             </Text>
           </TouchableOpacity>
@@ -224,19 +224,19 @@ export const ProfileHeader = observer(function ProfileHeader({
               testID="profileHeaderFollowsButton"
               style={[s.flexRow, s.mr10]}
               onPress={onPressFollows}>
-              <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
+              <Text type="md" style={[s.bold, s.mr2, pal.text]}>
                 {view.followsCount}
               </Text>
-              <Text type="body2" style={[pal.textLight]}>
+              <Text type="md" style={[pal.textLight]}>
                 following
               </Text>
             </TouchableOpacity>
           ) : undefined}
           <View style={[s.flexRow, s.mr10]}>
-            <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
+            <Text type="md" style={[s.bold, s.mr2, pal.text]}>
               {view.postsCount}
             </Text>
-            <Text type="body2" style={[pal.textLight]}>
+            <Text type="md" style={[pal.textLight]}>
               {pluralize(view.postsCount, 'post')}
             </Text>
           </View>
@@ -255,7 +255,7 @@ export const ProfileHeader = observer(function ProfileHeader({
               icon={['far', 'eye-slash']}
               style={[pal.text, s.mr5]}
             />
-            <Text type="body2" style={[s.mr2, pal.text]}>
+            <Text type="md" style={[s.mr2, pal.text]}>
               Account muted.
             </Text>
           </View>
