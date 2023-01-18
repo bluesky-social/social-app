@@ -105,7 +105,9 @@ export const ComposePost = observer(function ComposePost({
   }
   const onSelectPhotos = (photos: string[]) => {
     setSelectedPhotos(photos)
-    setIsSelectingPhotos(false)
+    if (photos.length >= 4) {
+      setIsSelectingPhotos(false)
+    }
   }
   const onChangeText = (newText: string) => {
     setText(newText)
