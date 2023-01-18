@@ -127,6 +127,7 @@ export const MobileShell: React.FC = observer(() => {
   const scrollElRef = useRef<FlatList | undefined>()
   const winDim = useWindowDimensions()
   const [menuSwipingDirection, setMenuSwipingDirection] = useState(0)
+  const constZeroInterp = useAnimatedValue(0)
   const swipeGestureInterp = useAnimatedValue(0)
   const minimalShellInterp = useAnimatedValue(0)
   const tabMenuInterp = useAnimatedValue(0)
@@ -279,20 +280,20 @@ export const MobileShell: React.FC = observer(() => {
   const swipeTransform = store.nav.tab.canGoBack
     ? {transform: [{translateX: swipeTranslateX}]}
     : undefined
+  let shouldRenderMenu = false
   let menuTranslateX
   const menuDrawerWidth = winDim.width - 100
   if (isMenuActive) {
     // menu is active, interpret swipes as closes
     menuTranslateX = Animated.multiply(swipeGestureInterp, menuDrawerWidth * -1)
+    shouldRenderMenu = true
   } else if (!store.nav.tab.canGoBack) {
     // at back of history, interpret swipes as opens
     menuTranslateX = Animated.subtract(
       menuDrawerWidth * -1,
       Animated.multiply(swipeGestureInterp, menuDrawerWidth),
     )
-  } else {
-    // not at back of history, leave off screen
-    menuTranslateX = menuDrawerWidth * -1
+    shouldRenderMenu = true
   }
   const menuSwipeTransform = {
     transform: [{translateX: menuTranslateX}],
@@ -425,12 +426,14 @@ export const MobileShell: React.FC = observer(() => {
               <Animated.View style={[styles.screenMask, menuSwipeOpacity]} />
             </TouchableWithoutFeedback>
           ) : undefined}
-          <Animated.View style={[styles.menuDrawer, menuSwipeTransform]}>
-            <Menu
-              visible={isMenuActive}
-              onClose={() => store.shell.setMainMenuOpen(false)}
-            />
-          </Animated.View>
+          {shouldRenderMenu && (
+            <Animated.View style={[styles.menuDrawer, menuSwipeTransform]}>
+              <Menu
+                visible={isMenuActive}
+                onClose={() => store.shell.setMainMenuOpen(false)}
+              />
+            </Animated.View>
+          )}
         </HorzSwipe>
       </View>
       {isTabsSelectorActive ? (
