@@ -16,6 +16,7 @@ import {useStores} from '../../../state'
 
 const MAX_WIDTH = 1000
 const MAX_HEIGHT = 1000
+const MAX_SIZE = 300000
 
 const IMAGE_PARAMS = {
   width: 1000,
@@ -43,7 +44,7 @@ export const PhotoCarouselPicker = ({
         cropping: true,
         ...IMAGE_PARAMS,
       })
-      const img = await compressIfNeeded(cameraRes, 300000)
+      const img = await compressIfNeeded(cameraRes, MAX_SIZE)
       onSelectPhotos([...selectedPhotos, img.path])
     } catch (err: any) {
       // ignore
@@ -67,7 +68,7 @@ export const PhotoCarouselPicker = ({
           width,
           height,
         })
-        const img = await compressIfNeeded(cropperRes, 300000)
+        const img = await compressIfNeeded(cropperRes, MAX_SIZE)
         onSelectPhotos([...selectedPhotos, img.path])
       } catch (err: any) {
         // ignore
@@ -99,7 +100,7 @@ export const PhotoCarouselPicker = ({
           width,
           height,
         })
-        const finalImg = await compressIfNeeded(cropperRes, 300000)
+        const finalImg = await compressIfNeeded(cropperRes, MAX_SIZE)
         result.push(finalImg.path)
       }
       onSelectPhotos([...selectedPhotos, ...result])

@@ -1,6 +1,6 @@
 import {
   ConfirmModal,
-  ImageLightbox,
+  ImagesLightbox,
   ShellUiModel,
 } from './../../../src/state/models/shell-ui'
 
@@ -16,9 +16,10 @@ describe('ShellUiModel', () => {
   })
 
   it('should call the openModal & closeModal method', () => {
-    model.openModal(ConfirmModal)
+    const m = new ConfirmModal('Test Modal', 'Look good?', () => {})
+    model.openModal(m)
     expect(model.isModalActive).toEqual(true)
-    expect(model.activeModal).toEqual(ConfirmModal)
+    expect(model.activeModal).toEqual(m)
 
     model.closeModal()
     expect(model.isModalActive).toEqual(false)
@@ -26,9 +27,10 @@ describe('ShellUiModel', () => {
   })
 
   it('should call the openLightbox & closeLightbox method', () => {
-    model.openLightbox(new ImageLightbox('uri'))
+    const lt = new ImagesLightbox(['uri'], 0)
+    model.openLightbox(lt)
     expect(model.isLightboxActive).toEqual(true)
-    expect(model.activeLightbox).toEqual(new ImageLightbox('uri'))
+    expect(model.activeLightbox).toEqual(lt)
 
     model.closeLightbox()
     expect(model.isLightboxActive).toEqual(false)

@@ -1,6 +1,11 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ProfileViewModel} from '../../../state/models/profile-view'
@@ -33,7 +38,9 @@ export const ProfileHeader = observer(function ProfileHeader({
   const store = useStores()
 
   const onPressAvi = () => {
-    store.shell.openLightbox(new ProfileImageLightbox(view))
+    if (view.avatar) {
+      store.shell.openLightbox(new ProfileImageLightbox(view))
+    }
   }
   const onPressToggleFollow = () => {
     view?.toggleFollowing().then(
@@ -254,17 +261,19 @@ export const ProfileHeader = observer(function ProfileHeader({
           </View>
         ) : undefined}
       </View>
-      <TouchableOpacity
+      <TouchableWithoutFeedback
         testID="profileHeaderAviButton"
-        style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}
         onPress={onPressAvi}>
-        <UserAvatar
-          size={80}
-          handle={view.handle}
-          displayName={view.displayName}
-          avatar={view.avatar}
-        />
-      </TouchableOpacity>
+        <View
+          style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
+          <UserAvatar
+            size={80}
+            handle={view.handle}
+            displayName={view.displayName}
+            avatar={view.avatar}
+          />
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   )
 })
