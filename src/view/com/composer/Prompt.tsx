@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {usePalette} from '../../lib/hooks/usePalette'
 
@@ -12,7 +13,7 @@ export function ComposePrompt({
   text?: string
   btn?: string
   isReply?: boolean
-  onPressCompose: () => void
+  onPressCompose: (imagesOpen?: boolean) => void
 }) {
   const pal = usePalette('default')
   return (
@@ -24,25 +25,50 @@ export function ComposePrompt({
         styles.container,
         isReply ? styles.containerReply : undefined,
       ]}
-      onPress={onPressCompose}>
+      onPress={() => onPressCompose()}>
+      {!isReply && (
+        <FontAwesomeIcon
+          icon={['fas', 'pen-nib']}
+          size={18}
+          style={[pal.textLight, styles.iconLeft]}
+        />
+      )}
       <View style={styles.textContainer}>
-        <Text type="lg" style={[pal.textLight]}>
+        <Text type={isReply ? 'lg' : 'lg-medium'} style={pal.textLight}>
           {text}
         </Text>
       </View>
-      <View style={[styles.btn, {backgroundColor: pal.colors.backgroundLight}]}>
-        <Text type="button" style={pal.textLight}>
-          {btn}
-        </Text>
-      </View>
+      {isReply ? (
+        <View
+          style={[styles.btn, {backgroundColor: pal.colors.backgroundLight}]}>
+          <Text type="button" style={pal.textLight}>
+            {btn}
+          </Text>
+        </View>
+      ) : (
+        <TouchableOpacity onPress={() => onPressCompose(true)}>
+          <FontAwesomeIcon
+            icon={['far', 'image']}
+            size={18}
+            style={[pal.textLight, styles.iconRight]}
+          />
+        </TouchableOpacity>
+      )}
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
+  iconLeft: {
+    marginLeft: 22,
+    marginRight: 2,
+    // marginLeft: 28,
+    // marginRight: 14,
+  },
+  iconRight: {
+    marginRight: 20,
+  },
   container: {
-    paddingLeft: 4,
-    paddingRight: 10,
     paddingVertical: 14,
     flexDirection: 'row',
     alignItems: 'center',

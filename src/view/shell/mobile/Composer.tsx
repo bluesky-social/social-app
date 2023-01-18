@@ -10,12 +10,14 @@ export const Composer = observer(
     active,
     winHeight,
     replyTo,
+    imagesOpen,
     onPost,
     onClose,
   }: {
     active: boolean
     winHeight: number
     replyTo?: ComposerOpts['replyTo']
+    imagesOpen?: ComposerOpts['imagesOpen']
     onPost?: ComposerOpts['onPost']
     onClose: () => void
   }) => {
@@ -56,7 +58,12 @@ export const Composer = observer(
 
     return (
       <Animated.View style={[styles.wrapper, wrapperAnimStyle]}>
-        <ComposePost replyTo={replyTo} onPost={onPost} onClose={onClose} />
+        <ComposePost
+          replyTo={replyTo}
+          imagesOpen={imagesOpen}
+          onPost={onPost}
+          onClose={onClose}
+        />
       </Animated.View>
     )
   },

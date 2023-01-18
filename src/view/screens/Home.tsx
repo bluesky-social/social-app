@@ -69,8 +69,8 @@ export const Home = observer(function Home({
     return cleanup
   }, [visible, store, navIdx, doPoll, wasVisible])
 
-  const onPressCompose = () => {
-    store.shell.openComposer({})
+  const onPressCompose = (imagesOpen?: boolean) => {
+    store.shell.openComposer({imagesOpen})
   }
   const onPressTryAgain = () => {
     store.me.mainFeed.refresh()
@@ -107,7 +107,7 @@ export const Home = observer(function Home({
           <Text style={styles.loadLatestText}>Load new posts</Text>
         </TouchableOpacity>
       ) : undefined}
-      <FAB icon="pen-nib" onPress={onPressCompose} />
+      <FAB icon="pen-nib" onPress={() => onPressCompose(false)} />
     </View>
   )
 })

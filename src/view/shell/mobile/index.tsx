@@ -484,6 +484,7 @@ export const MobileShell: React.FC = observer(() => {
         onClose={() => store.shell.closeComposer()}
         winHeight={winDim.height}
         replyTo={store.shell.composerOpts?.replyTo}
+        imagesOpen={store.shell.composerOpts?.imagesOpen}
         onPost={store.shell.composerOpts?.onPost}
       />
     </View>

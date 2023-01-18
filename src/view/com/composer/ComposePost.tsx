@@ -40,10 +40,12 @@ const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
 export const ComposePost = observer(function ComposePost({
   replyTo,
+  imagesOpen,
   onPost,
   onClose,
 }: {
   replyTo?: ComposerOpts['replyTo']
+  imagesOpen?: ComposerOpts['imagesOpen']
   onPost?: ComposerOpts['onPost']
   onClose: () => void
 }) {
@@ -54,7 +56,9 @@ export const ComposePost = observer(function ComposePost({
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
   const [text, setText] = useState('')
-  const [isSelectingPhotos, setIsSelectingPhotos] = useState(false)
+  const [isSelectingPhotos, setIsSelectingPhotos] = useState(
+    imagesOpen || false,
+  )
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
 
   // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
