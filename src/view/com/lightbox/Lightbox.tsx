@@ -9,7 +9,6 @@ import * as models from '../../../state/models/shell-ui'
 export const Lightbox = observer(function Lightbox() {
   const store = useStores()
   const onClose = () => {
-    console.log('hit')
     store.shell.closeLightbox()
   }
 
