@@ -284,7 +284,6 @@ export const PostThreadItem = observer(function PostThreadItem({
             </View>
             <View style={styles.layoutContent}>
               <PostMeta
-                authorHref={authorHref}
                 authorHandle={item.post.author.handle}
                 authorDisplayName={item.post.author.displayName}
                 timestamp={item.post.indexedAt}
