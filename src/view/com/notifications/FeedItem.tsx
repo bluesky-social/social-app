@@ -133,11 +133,11 @@ export const FeedItem = observer(function FeedItem({
       <View style={styles.layout}>
         <View style={styles.layoutIcon}>
           {icon === 'HeartIconSolid' ? (
-            <HeartIconSolid size={26} style={[styles.icon, ...iconStyle]} />
+            <HeartIconSolid size={28} style={[styles.icon, ...iconStyle]} />
           ) : (
             <FontAwesomeIcon
               icon={icon}
-              size={22}
+              size={24}
               style={[styles.icon, ...iconStyle]}
             />
           )}
@@ -146,12 +146,12 @@ export const FeedItem = observer(function FeedItem({
           <View style={styles.avis}>
             {authors.slice(0, MAX_AUTHORS).map(author => (
               <Link
-                style={{marginRight: 3}}
+                style={{marginRight: 5}}
                 key={author.href}
                 href={author.href}
                 title={`@${author.handle}`}>
                 <UserAvatar
-                  size={30}
+                  size={35}
                   displayName={author.displayName}
                   handle={author.handle}
                   avatar={author.avatar}
@@ -241,6 +241,7 @@ const styles = StyleSheet.create({
   layoutIcon: {
     width: 60,
     alignItems: 'flex-end',
+    paddingTop: 2,
   },
   icon: {
     marginRight: 10,
