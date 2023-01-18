@@ -1,6 +1,5 @@
 import {RootStoreModel} from '../../../src/state/models/root-store'
 import {MeModel} from '../../../src/state/models/me'
-import {MembershipsViewModel} from './../../../src/state/models/memberships-view'
 import {NotificationsViewModel} from './../../../src/state/models/notifications-view'
 import {sessionClient, SessionServiceClient} from '@atproto/api'
 import {DEFAULT_SERVICE} from './../../../src/state/index'
@@ -33,7 +32,6 @@ describe('MeModel', () => {
     expect(meModel.description).toEqual('')
     expect(meModel.avatar).toEqual('')
     expect(meModel.notificationCount).toEqual(0)
-    expect(meModel.memberships).toBeUndefined()
   })
 
   it('should hydrate() successfully with valid properties', () => {
@@ -137,7 +135,6 @@ describe('MeModel', () => {
     expect(meModel.description).toEqual('')
     expect(meModel.avatar).toEqual('')
     expect(meModel.notificationCount).toEqual(0)
-    expect(meModel.memberships).toBeUndefined()
   })
 
   it('should serialize() key information', () => {
