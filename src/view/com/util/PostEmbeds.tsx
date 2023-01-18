@@ -1,6 +1,7 @@
 import React from 'react'
 import {StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
+import LinearGradient from 'react-native-linear-gradient'
 import {Link} from '../util/Link'
 import {Text} from './text/Text'
 import {AutoSizedImage} from './images/AutoSizedImage'
@@ -8,6 +9,7 @@ import {ImageLayoutGrid} from './images/ImageLayoutGrid'
 import {ImagesLightbox} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {gradients} from '../../lib/styles'
 
 type Embed =
   | AppBskyEmbedImages.Presented
@@ -80,22 +82,34 @@ export function PostEmbeds({
         href={link.uri}
         noFeedback>
         {link.thumb ? (
-          <AutoSizedImage uri={link.thumb} containerStyle={{borderRadius: 4}} />
-        ) : undefined}
-        <Text type="h5" numberOfLines={2} style={pal.text}>
-          {link.title || link.uri}
-        </Text>
-        <Text type="body2" numberOfLines={1} style={pal.textLight}>
-          {link.uri}
-        </Text>
-        {link.description ? (
-          <Text
-            type="body1"
-            numberOfLines={2}
-            style={[pal.text, styles.extDescription]}>
-            {link.description}
+          <AutoSizedImage uri={link.thumb} containerStyle={styles.extImage} />
+        ) : (
+          <LinearGradient
+            colors={[gradients.blueDark.start, gradients.blueDark.end]}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={[styles.extImage, styles.extImageFallback]}
+          />
+        )}
+        <View style={styles.extInner}>
+          <Text type="sm-bold" numberOfLines={2} style={[pal.text]}>
+            {link.title || link.uri}
           </Text>
-        ) : undefined}
+          <Text
+            type="sm"
+            numberOfLines={1}
+            style={[pal.textLight, styles.extUri]}>
+            {link.uri}
+          </Text>
+          {link.description ? (
+            <Text
+              type="sm"
+              numberOfLines={2}
+              style={[pal.text, styles.extDescription]}>
+              {link.description}
+            </Text>
+          ) : undefined}
+        </View>
       </Link>
     )
   }
@@ -107,10 +121,24 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   extOuter: {
-    padding: 10,
     borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: 8,
     marginTop: 4,
+  },
+  extInner: {
+    padding: 10,
+  },
+  extImage: {
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+    width: '100%',
+    height: 200,
+  },
+  extImageFallback: {
+    height: 160,
+  },
+  extUri: {
+    marginTop: 2,
   },
   extDescription: {
     marginTop: 4,

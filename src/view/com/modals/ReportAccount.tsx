@@ -57,7 +57,7 @@ export function Component({did}: {did: string}) {
       ) : issue ? (
         <TouchableOpacity style={s.mt10} onPress={onPress}>
           <LinearGradient
-            colors={[gradients.primary.start, gradients.primary.end]}
+            colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={[styles.btn]}>

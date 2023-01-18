@@ -99,7 +99,7 @@ const User = ({item}: {item: FollowItem}) => {
           <Text style={[s.bold, pal.text]}>
             {item.displayName || item.handle}
           </Text>
-          <Text type="body2" style={pal.textLight}>
+          <Text type="sm" style={pal.textLight}>
             @{item.handle}
           </Text>
         </View>

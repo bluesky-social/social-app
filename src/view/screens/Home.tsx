@@ -47,11 +47,15 @@ export const Home = observer(function Home({
 
   useEffect(() => {
     const pollInterval = setInterval(() => doPoll(), 15e3)
+    const cleanup = () => {
+      clearInterval(pollInterval)
+    }
+
     if (!visible) {
       setWasVisible(false)
-      return
+      return cleanup
     } else if (wasVisible) {
-      return
+      return cleanup
     }
     setWasVisible(true)
 
@@ -62,13 +66,11 @@ export const Home = observer(function Home({
     } else {
       store.me.mainFeed.setup()
     }
-    return () => {
-      clearInterval(pollInterval)
-    }
+    return cleanup
   }, [visible, store, navIdx, doPoll, wasVisible])
 
-  const onPressCompose = () => {
-    store.shell.openComposer({})
+  const onPressCompose = (imagesOpen?: boolean) => {
+    store.shell.openComposer({imagesOpen})
   }
   const onPressTryAgain = () => {
     store.me.mainFeed.refresh()
@@ -105,7 +107,7 @@ export const Home = observer(function Home({
           <Text style={styles.loadLatestText}>Load new posts</Text>
         </TouchableOpacity>
       ) : undefined}
-      <FAB icon="pen-nib" onPress={onPressCompose} />
+      <FAB icon="pen-nib" onPress={() => onPressCompose(false)} />
     </View>
   )
 })
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     left: 10,
-    backgroundColor: colors.pink3,
+    backgroundColor: colors.blue3,
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderRadius: 30,

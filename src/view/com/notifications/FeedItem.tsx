@@ -8,9 +8,10 @@ import {NotificationsViewItemModel} from '../../../state/models/notifications-vi
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {s, colors} from '../../lib/styles'
 import {ago, pluralize} from '../../../lib/strings'
-import {UpIconSolid} from '../../lib/icons'
+import {HeartIconSolid} from '../../lib/icons'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
+import {ImageHorzList} from '../util/images/ImageHorzList'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Post} from '../post/Post'
 import {Link} from '../util/Link'
@@ -71,11 +72,11 @@ export const FeedItem = observer(function FeedItem({
   }
 
   let action = ''
-  let icon: Props['icon'] | 'UpIconSolid'
+  let icon: Props['icon'] | 'HeartIconSolid'
   let iconStyle: Props['style'] = []
   if (item.isUpvote) {
-    action = 'upvoted your post'
-    icon = 'UpIconSolid'
+    action = 'liked your post'
+    icon = 'HeartIconSolid'
     iconStyle = [s.red3, {position: 'relative', top: -4}]
   } else if (item.isRepost) {
     action = 'reposted your post'
@@ -131,8 +132,8 @@ export const FeedItem = observer(function FeedItem({
       noFeedback>
       <View style={styles.layout}>
         <View style={styles.layoutIcon}>
-          {icon === 'UpIconSolid' ? (
-            <UpIconSolid size={26} style={[styles.icon, ...iconStyle]} />
+          {icon === 'HeartIconSolid' ? (
+            <HeartIconSolid size={26} style={[styles.icon, ...iconStyle]} />
           ) : (
             <FontAwesomeIcon
               icon={icon}
@@ -181,6 +182,7 @@ export const FeedItem = observer(function FeedItem({
                 </Text>
               </>
             ) : undefined}
+            <Text style={[styles.metaItem, pal.text]}>{action}</Text>
             <Text style={[styles.metaItem, pal.textLight]}>
               {ago(item.indexedAt)}
             </Text>
@@ -208,17 +210,21 @@ function AdditionalPostText({
   if (additionalPost.error) {
     return <ErrorMessage message={additionalPost.error} />
   }
-  const record = additionalPost.thread?.postRecord
-  let text = record.text
-  if (
-    AppBskyEmbedImages.isMain(record.embed) &&
-    AppBskyEmbedImages.validateMain(record.embed).success
-  ) {
-    for (let i = 0; i < record.embed.images.length; i++) {
-      text += ` [${record.embed.images[i].alt || `image${i + 1}`}]`
-    }
-  }
-  return <Text style={pal.textLight}>{text}</Text>
+  const text = additionalPost.thread?.postRecord.text
+  const images = (
+    additionalPost.thread.post.embed as AppBskyEmbedImages.Presented
+  )?.images
+  return (
+    <>
+      {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
+      {images && images?.length > 0 && (
+        <ImageHorzList
+          uris={images?.map(img => img.thumb)}
+          style={styles.additionalPostImages}
+        />
+      )}
+    </>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -233,7 +239,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   layoutIcon: {
-    width: 35,
+    width: 60,
     alignItems: 'flex-end',
   },
   icon: {
@@ -263,6 +269,11 @@ const styles = StyleSheet.create({
   postText: {
     paddingBottom: 5,
     color: colors.black,
+  },
+  additionalPostImages: {
+    marginTop: 5,
+    marginLeft: 2,
+    opacity: 0.8,
   },
 
   addedContainer: {

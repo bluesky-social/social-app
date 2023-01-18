@@ -1,12 +1,10 @@
 import React from 'react'
 import {Platform, StyleSheet, View} from 'react-native'
-import {Link} from '../util/Link'
 import {Text} from './text/Text'
 import {ago} from '../../../lib/strings'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 interface PostMetaOpts {
-  authorHref: string
   authorHandle: string
   authorDisplayName: string | undefined
   timestamp: string
@@ -36,20 +34,17 @@ export function PostMeta(opts: PostMetaOpts) {
 
   return (
     <View style={styles.meta}>
-      <Link
-        style={[styles.metaItem, styles.maxWidth]}
-        href={opts.authorHref}
-        title={opts.authorHandle}>
-        <Text type="h5" style={[pal.text]} numberOfLines={1}>
+      <View style={[styles.metaItem, styles.maxWidth]}>
+        <Text type="lg-bold" style={[pal.text]} numberOfLines={1}>
           {displayName}
           {handle ? (
-            <Text type="h6" style={[pal.textLight]}>
+            <Text type="md" style={[pal.textLight]}>
               &nbsp;{handle}
             </Text>
           ) : undefined}
         </Text>
-      </Link>
-      <Text type="h6" style={[styles.metaItem, pal.textLight]}>
+      </View>
+      <Text type="md" style={[styles.metaItem, pal.textLight]}>
         &middot; {ago(opts.timestamp)}
       </Text>
     </View>

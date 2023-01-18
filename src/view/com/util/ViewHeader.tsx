@@ -68,12 +68,12 @@ export const ViewHeader = observer(function ViewHeader({
         )}
       </TouchableOpacity>
       <View style={styles.titleContainer} pointerEvents="none">
-        <Text type="h4" style={[pal.text, styles.title]}>
+        <Text type="title" style={[pal.text, styles.title]}>
           {title}
         </Text>
         {subtitle ? (
           <Text
-            type="h5"
+            type="title-sm"
             style={[styles.subtitle, pal.textLight]}
             numberOfLines={1}>
             {subtitle}

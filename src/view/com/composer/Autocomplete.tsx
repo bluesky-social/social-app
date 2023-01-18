@@ -50,9 +50,9 @@ export function Autocomplete({
           key={i}
           style={[pal.border, styles.item]}
           onPress={() => onSelect(item.handle)}>
-          <Text style={pal.text}>
+          <Text type="md-medium" style={pal.text}>
             {item.displayName || item.handle}
-            <Text type="body2" style={pal.textLight}>
+            <Text type="sm" style={pal.textLight}>
               &nbsp;@{item.handle}
             </Text>
           </Text>

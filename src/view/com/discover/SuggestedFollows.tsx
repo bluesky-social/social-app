@@ -160,7 +160,7 @@ const User = ({
           />
         </View>
         <View style={styles.actorContent}>
-          <Text type="h5" style={pal.text} numberOfLines={1}>
+          <Text type="title-sm" style={pal.text} numberOfLines={1}>
             {item.displayName || item.handle}
           </Text>
           <Text style={pal.textLight} numberOfLines={1}>
@@ -179,7 +179,7 @@ const User = ({
           ) : (
             <TouchableOpacity onPress={() => onPressFollow(item)}>
               <LinearGradient
-                colors={[gradients.primary.start, gradients.primary.end]}
+                colors={[gradients.blueLight.start, gradients.blueLight.end]}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 1}}
                 style={[styles.btn, styles.gradientBtn]}>

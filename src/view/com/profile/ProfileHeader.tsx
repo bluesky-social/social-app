@@ -1,8 +1,14 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {BlurView} from '@react-native-community/blur'
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {useStores} from '../../../state'
 import {
@@ -11,8 +17,7 @@ import {
   ProfileImageLightbox,
 } from '../../../state/models/shell-ui'
 import {pluralize} from '../../../lib/strings'
-import {s} from '../../lib/styles'
-import {getGradient} from '../../lib/asset-gen'
+import {s, gradients} from '../../lib/styles'
 import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -32,8 +37,13 @@ export const ProfileHeader = observer(function ProfileHeader({
   const pal = usePalette('default')
   const store = useStores()
 
+  const onPressBack = () => {
+    store.nav.tab.goBack()
+  }
   const onPressAvi = () => {
-    store.shell.openLightbox(new ProfileImageLightbox(view))
+    if (view.avatar) {
+      store.shell.openLightbox(new ProfileImageLightbox(view))
+    }
   }
   const onPressToggleFollow = () => {
     view?.toggleFollowing().then(
@@ -101,7 +111,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             />
           </View>
           <View style={styles.displayNameLine}>
-            <Text type="h2" style={[pal.text, {lineHeight: 38}]}>
+            <Text type="title-xl" style={[pal.text, {lineHeight: 38}]}>
               {view.displayName || view.handle}
             </Text>
           </View>
@@ -122,7 +132,6 @@ export const ProfileHeader = observer(function ProfileHeader({
 
   // loaded
   // =
-  const gradient = getGradient(view.handle)
   const isMe = store.me.did === view.did
   let dropdownItems: DropdownItem[] | undefined
   if (!isMe) {
@@ -170,7 +179,10 @@ export const ProfileHeader = observer(function ProfileHeader({
                   testID="profileHeaderToggleFollowButton"
                   onPress={onPressToggleFollow}>
                   <LinearGradient
-                    colors={[gradient[1], gradient[0]]}
+                    colors={[
+                      gradients.blueLight.start,
+                      gradients.blueLight.end,
+                    ]}
                     start={{x: 0, y: 0}}
                     end={{x: 1, y: 1}}
                     style={[styles.btn, styles.gradientBtn]}>
@@ -193,7 +205,7 @@ export const ProfileHeader = observer(function ProfileHeader({
           ) : undefined}
         </View>
         <View style={styles.displayNameLine}>
-          <Text type="h2" style={[pal.text, {lineHeight: 38}]}>
+          <Text type="title-xl" style={[pal.text, {lineHeight: 38}]}>
             {view.displayName || view.handle}
           </Text>
         </View>
@@ -205,10 +217,10 @@ export const ProfileHeader = observer(function ProfileHeader({
             testID="profileHeaderFollowersButton"
             style={[s.flexRow, s.mr10]}
             onPress={onPressFollowers}>
-            <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
+            <Text type="md" style={[s.bold, s.mr2, pal.text]}>
               {view.followersCount}
             </Text>
-            <Text type="body2" style={[pal.textLight]}>
+            <Text type="md" style={[pal.textLight]}>
               {pluralize(view.followersCount, 'follower')}
             </Text>
           </TouchableOpacity>
@@ -217,19 +229,19 @@ export const ProfileHeader = observer(function ProfileHeader({
               testID="profileHeaderFollowsButton"
               style={[s.flexRow, s.mr10]}
               onPress={onPressFollows}>
-              <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
+              <Text type="md" style={[s.bold, s.mr2, pal.text]}>
                 {view.followsCount}
               </Text>
-              <Text type="body2" style={[pal.textLight]}>
+              <Text type="md" style={[pal.textLight]}>
                 following
               </Text>
             </TouchableOpacity>
           ) : undefined}
           <View style={[s.flexRow, s.mr10]}>
-            <Text type="body2" style={[s.bold, s.mr2, pal.text]}>
+            <Text type="md" style={[s.bold, s.mr2, pal.text]}>
               {view.postsCount}
             </Text>
-            <Text type="body2" style={[pal.textLight]}>
+            <Text type="md" style={[pal.textLight]}>
               {pluralize(view.postsCount, 'post')}
             </Text>
           </View>
@@ -237,7 +249,7 @@ export const ProfileHeader = observer(function ProfileHeader({
         {view.description ? (
           <RichText
             style={[styles.description, pal.text]}
-            numberOfLines={3}
+            numberOfLines={15}
             text={view.description}
             entities={view.descriptionEntities}
           />
@@ -248,23 +260,30 @@ export const ProfileHeader = observer(function ProfileHeader({
               icon={['far', 'eye-slash']}
               style={[pal.text, s.mr5]}
             />
-            <Text type="body2" style={[s.mr2, pal.text]}>
+            <Text type="md" style={[s.mr2, pal.text]}>
               Account muted.
             </Text>
           </View>
         ) : undefined}
       </View>
-      <TouchableOpacity
+      <TouchableWithoutFeedback onPress={onPressBack}>
+        <BlurView style={styles.backBtn} blurType="dark">
+          <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
+        </BlurView>
+      </TouchableWithoutFeedback>
+      <TouchableWithoutFeedback
         testID="profileHeaderAviButton"
-        style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}
         onPress={onPressAvi}>
-        <UserAvatar
-          size={80}
-          handle={view.handle}
-          displayName={view.displayName}
-          avatar={view.avatar}
-        />
-      </TouchableOpacity>
+        <View
+          style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
+          <UserAvatar
+            size={80}
+            handle={view.handle}
+            displayName={view.displayName}
+            avatar={view.avatar}
+          />
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   )
 })
@@ -274,9 +293,19 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 120,
   },
+  backBtn: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   avi: {
     position: 'absolute',
-    top: 80,
+    top: 110,
     left: 10,
     width: 84,
     height: 84,

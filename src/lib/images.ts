@@ -70,7 +70,7 @@ export async function resize(
   opts: ResizeOpts,
 ): Promise<Image> {
   for (let i = 0; i < 9; i++) {
-    const quality = 1.0 - i / 10
+    const quality = 100 - i * 10
     const resizeRes = await ImageResizer.createResizedImage(
       localUri,
       opts.width,
@@ -111,4 +111,20 @@ export async function compressIfNeeded(
     mode: 'stretch',
     maxSize,
   })
+}
+
+export interface Dim {
+  width: number
+  height: number
+}
+export function scaleDownDimensions(dim: Dim, max: Dim): Dim {
+  if (dim.width < max.width && dim.height < max.height) {
+    return dim
+  }
+  let wScale = dim.width > max.width ? max.width / dim.width : 1
+  let hScale = dim.height > max.height ? max.height / dim.height : 1
+  if (wScale < hScale) {
+    return {width: dim.width * wScale, height: dim.height * wScale}
+  }
+  return {width: dim.width * hScale, height: dim.height * hScale}
 }

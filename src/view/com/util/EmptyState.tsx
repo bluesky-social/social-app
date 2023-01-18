@@ -29,7 +29,7 @@ export function EmptyState({
           />
         )}
       </View>
-      <Text type="body1" style={[pal.textLight, styles.text]}>
+      <Text type="xl" style={[pal.textLight, styles.text]}>
         {message}
       </Text>
     </View>

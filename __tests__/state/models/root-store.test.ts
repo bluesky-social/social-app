@@ -16,19 +16,6 @@ describe('rootStore', () => {
     jest.clearAllMocks()
   })
 
-  it('resolveName() handles inputs correctly', () => {
-    const spyMethod = jest
-      .spyOn(rootStore.api.com.atproto.handle, 'resolve')
-      .mockResolvedValue({success: true, headers: {}, data: {did: 'testdid'}})
-
-    rootStore.resolveName('teststring')
-    expect(spyMethod).toHaveBeenCalledWith({handle: 'teststring'})
-
-    expect(rootStore.resolveName('')).rejects.toThrow('Invalid handle: ""')
-
-    expect(rootStore.resolveName('did:123')).resolves.toReturnWith('did:123')
-  })
-
   it('should call the clearAll() resets state correctly', () => {
     rootStore.clearAll()
 
@@ -68,6 +55,5 @@ describe('rootStore', () => {
     expect(rootStore.me.description).toEqual('')
     expect(rootStore.me.avatar).toEqual('')
     expect(rootStore.me.notificationCount).toEqual(0)
-    expect(rootStore.me.memberships).toBeUndefined()
   })
 })

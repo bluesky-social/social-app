@@ -200,6 +200,35 @@ export function CogIcon({
 
 // Copyright (c) 2020 Refactoring UI Inc.
 // https://github.com/tailwindlabs/heroicons/blob/master/LICENSE
+export function UserIcon({
+  style,
+  size,
+  strokeWidth = 1.5,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+  strokeWidth?: number
+}) {
+  return (
+    <Svg
+      fill="none"
+      viewBox="0 0 24 24"
+      width={size || 32}
+      height={size || 32}
+      strokeWidth={strokeWidth}
+      stroke="currentColor"
+      style={style}>
+      <Path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+      />
+    </Svg>
+  )
+}
+
+// Copyright (c) 2020 Refactoring UI Inc.
+// https://github.com/tailwindlabs/heroicons/blob/master/LICENSE
 export function UserGroupIcon({
   style,
   size,
@@ -220,6 +249,69 @@ export function UserGroupIcon({
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+      />
+    </Svg>
+  )
+}
+
+export function RepostIcon({
+  style,
+  size = 24,
+  strokeWidth = 1.5,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+  strokeWidth: number
+}) {
+  return (
+    <Svg viewBox="0 0 24 24" width={size} height={size} style={style}>
+      <Path
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        strokeLinejoin="round"
+        d="M 14.437 17.081 L 5.475 17.095 C 4.7 17.095 4.072 16.467 4.072 15.692 L 4.082 5.65 L 1.22 9.854 M 4.082 5.65 L 7.006 9.854 M 9.859 5.65 L 18.625 5.654 C 19.4 5.654 20.028 6.282 20.028 7.057 L 20.031 17.081 L 17.167 12.646 M 20.031 17.081 L 22.866 12.646"
+      />
+    </Svg>
+  )
+}
+
+// Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc.
+export function HeartIcon({
+  style,
+  size = 24,
+  strokeWidth = 1.5,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+  strokeWidth: number
+}) {
+  return (
+    <Svg viewBox="0 0 24 24" width={size} height={size} style={style}>
+      <Path
+        strokeWidth={strokeWidth}
+        stroke="currentColor"
+        fill="none"
+        d="M 3.859 13.537 L 10.918 20.127 C 11.211 20.4 11.598 20.552 12 20.552 C 12.402 20.552 12.789 20.4 13.082 20.127 L 20.141 13.537 C 21.328 12.431 22 10.88 22 9.259 L 22 9.033 C 22 6.302 20.027 3.974 17.336 3.525 C 15.555 3.228 13.742 3.81 12.469 5.084 L 12 5.552 L 11.531 5.084 C 10.258 3.81 8.445 3.228 6.664 3.525 C 3.973 3.974 2 6.302 2 9.033 L 2 9.259 C 2 10.88 2.672 12.431 3.859 13.537 Z"
+      />
+    </Svg>
+  )
+}
+
+// Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc.
+export function HeartIconSolid({
+  style,
+  size = 24,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+}) {
+  return (
+    <Svg viewBox="0 0 24 24" width={size} height={size} style={style}>
+      <Path
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth={1}
+        d="M 3.859 13.537 L 10.918 20.127 C 11.211 20.4 11.598 20.552 12 20.552 C 12.402 20.552 12.789 20.4 13.082 20.127 L 20.141 13.537 C 21.328 12.431 22 10.88 22 9.259 L 22 9.033 C 22 6.302 20.027 3.974 17.336 3.525 C 15.555 3.228 13.742 3.81 12.469 5.084 L 12 5.552 L 11.531 5.084 C 10.258 3.81 8.445 3.228 6.664 3.525 C 3.973 3.974 2 6.302 2 9.033 L 2 9.259 C 2 10.88 2.672 12.431 3.859 13.537 Z"
       />
     </Svg>
   )

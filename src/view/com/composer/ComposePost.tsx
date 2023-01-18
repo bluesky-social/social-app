@@ -9,6 +9,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -39,10 +40,12 @@ const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
 export const ComposePost = observer(function ComposePost({
   replyTo,
+  imagesOpen,
   onPost,
   onClose,
 }: {
   replyTo?: ComposerOpts['replyTo']
+  imagesOpen?: ComposerOpts['imagesOpen']
   onPost?: ComposerOpts['onPost']
   onClose: () => void
 }) {
@@ -53,7 +56,9 @@ export const ComposePost = observer(function ComposePost({
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
   const [text, setText] = useState('')
-  const [isSelectingPhotos, setIsSelectingPhotos] = useState(false)
+  const [isSelectingPhotos, setIsSelectingPhotos] = useState(
+    imagesOpen || false,
+  )
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
 
   // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
@@ -88,6 +93,9 @@ export const ComposePost = observer(function ComposePost({
     }
   }, [])
 
+  const onPressContainer = () => {
+    textInput.current?.focus()
+  }
   const onPressSelectPhotos = () => {
     if (isSelectingPhotos) {
       setIsSelectingPhotos(false)
@@ -97,7 +105,9 @@ export const ComposePost = observer(function ComposePost({
   }
   const onSelectPhotos = (photos: string[]) => {
     setSelectedPhotos(photos)
-    setIsSelectingPhotos(false)
+    if (photos.length >= 4) {
+      setIsSelectingPhotos(false)
+    }
   }
   const onChangeText = (newText: string) => {
     setText(newText)
@@ -170,7 +180,7 @@ export const ComposePost = observer(function ComposePost({
         return v
       } else {
         return (
-          <Text key={i++} style={pal.link}>
+          <Text key={i++} style={[pal.link, styles.textInputFormatting]}>
             {v.link}
           </Text>
         )
@@ -183,156 +193,166 @@ export const ComposePost = observer(function ComposePost({
       testID="composePostView"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[pal.view, styles.outer]}>
-      <SafeAreaView style={s.flex1}>
-        <View style={styles.topbar}>
-          <TouchableOpacity
-            testID="composerCancelButton"
-            onPress={onPressCancel}>
-            <Text style={[pal.link, s.f18]}>Cancel</Text>
-          </TouchableOpacity>
-          <View style={s.flex1} />
-          {isProcessing ? (
-            <View style={styles.postBtn}>
-              <ActivityIndicator />
-            </View>
-          ) : canPost ? (
+      <TouchableWithoutFeedback onPressIn={onPressContainer}>
+        <SafeAreaView style={s.flex1}>
+          <View style={styles.topbar}>
             <TouchableOpacity
-              testID="composerPublishButton"
-              onPress={onPressPublish}>
-              <LinearGradient
-                colors={[gradients.primary.start, gradients.primary.end]}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 1}}
-                style={styles.postBtn}>
-                <Text style={[s.white, s.f16, s.bold]}>
-                  {replyTo ? 'Reply' : 'Post'}
-                </Text>
-              </LinearGradient>
+              testID="composerCancelButton"
+              onPress={onPressCancel}>
+              <Text style={[pal.link, s.f18]}>Cancel</Text>
             </TouchableOpacity>
-          ) : (
-            <View style={[styles.postBtn, pal.btn]}>
-              <Text style={[pal.textLight, s.f16, s.bold]}>Post</Text>
-            </View>
-          )}
-        </View>
-        {isProcessing ? (
-          <View style={[pal.btn, styles.processingLine]}>
-            <Text style={s.black}>{processingState}</Text>
-          </View>
-        ) : undefined}
-        {error !== '' && (
-          <View style={styles.errorLine}>
-            <View style={styles.errorIcon}>
-              <FontAwesomeIcon
-                icon="exclamation"
-                style={{color: colors.red4}}
-                size={10}
-              />
-            </View>
-            <Text style={[s.red4, s.flex1]}>{error}</Text>
-          </View>
-        )}
-        <ScrollView style={s.flex1}>
-          {replyTo ? (
-            <View style={[pal.border, styles.replyToLayout]}>
-              <UserAvatar
-                handle={replyTo.author.handle}
-                displayName={replyTo.author.displayName}
-                avatar={replyTo.author.avatar}
-                size={50}
-              />
-              <View style={styles.replyToPost}>
-                <TextLink
-                  type="h5"
-                  href={`/profile/${replyTo.author.handle}`}
-                  text={replyTo.author.displayName || replyTo.author.handle}
-                  style={[pal.text]}
-                />
-                <Text style={pal.text} numberOfLines={6}>
-                  {replyTo.text}
-                </Text>
+            <View style={s.flex1} />
+            {isProcessing ? (
+              <View style={styles.postBtn}>
+                <ActivityIndicator />
               </View>
-            </View>
-          ) : undefined}
-          <View
-            style={[pal.border, styles.textInputLayout, selectTextInputLayout]}>
-            <UserAvatar
-              handle={store.me.handle || ''}
-              displayName={store.me.displayName}
-              avatar={store.me.avatar}
-              size={50}
-            />
-            <TextInput
-              testID="composerTextInput"
-              ref={textInput}
-              multiline
-              scrollEnabled
-              onChangeText={(text: string) => onChangeText(text)}
-              placeholder={selectTextInputPlaceholder}
-              placeholderTextColor={pal.colors.textLight}
-              style={[pal.text, styles.textInput]}>
-              {textDecorated}
-            </TextInput>
-          </View>
-          <SelectedPhoto
-            selectedPhotos={selectedPhotos}
-            onSelectPhotos={onSelectPhotos}
-          />
-        </ScrollView>
-        {isSelectingPhotos &&
-          localPhotos.photos != null &&
-          selectedPhotos.length < 4 && (
-            <PhotoCarouselPicker
-              selectedPhotos={selectedPhotos}
-              onSelectPhotos={onSelectPhotos}
-              localPhotos={localPhotos}
-            />
-          )}
-        <View style={[pal.border, styles.bottomBar]}>
-          <TouchableOpacity
-            testID="composerSelectPhotosButton"
-            onPress={onPressSelectPhotos}
-            style={[s.pl5]}
-            hitSlop={HITSLOP}>
-            <FontAwesomeIcon
-              icon={['far', 'image']}
-              style={selectedPhotos.length < 4 ? pal.link : pal.textLight}
-              size={24}
-            />
-          </TouchableOpacity>
-          <View style={s.flex1} />
-          <Text style={[s.mr10, {color: progressColor}]}>
-            {MAX_TEXT_LENGTH - text.length}
-          </Text>
-          <View>
-            {text.length > DANGER_TEXT_LENGTH ? (
-              <ProgressPie
-                size={30}
-                borderWidth={4}
-                borderColor={progressColor}
-                color={progressColor}
-                progress={Math.min(
-                  (text.length - MAX_TEXT_LENGTH) / MAX_TEXT_LENGTH,
-                  1,
-                )}
-              />
+            ) : canPost ? (
+              <TouchableOpacity
+                testID="composerPublishButton"
+                onPress={onPressPublish}>
+                <LinearGradient
+                  colors={[gradients.blueLight.start, gradients.blueLight.end]}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 1}}
+                  style={styles.postBtn}>
+                  <Text style={[s.white, s.f16, s.bold]}>
+                    {replyTo ? 'Reply' : 'Post'}
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
             ) : (
-              <ProgressCircle
-                size={30}
-                borderWidth={1}
-                borderColor={colors.gray2}
-                color={progressColor}
-                progress={text.length / MAX_TEXT_LENGTH}
-              />
+              <View style={[styles.postBtn, pal.btn]}>
+                <Text style={[pal.textLight, s.f16, s.bold]}>Post</Text>
+              </View>
             )}
           </View>
-        </View>
-        <Autocomplete
-          active={autocompleteView.isActive}
-          items={autocompleteView.suggestions}
-          onSelect={onSelectAutocompleteItem}
-        />
-      </SafeAreaView>
+          {isProcessing ? (
+            <View style={[pal.btn, styles.processingLine]}>
+              <Text style={s.black}>{processingState}</Text>
+            </View>
+          ) : undefined}
+          {error !== '' && (
+            <View style={styles.errorLine}>
+              <View style={styles.errorIcon}>
+                <FontAwesomeIcon
+                  icon="exclamation"
+                  style={{color: colors.red4}}
+                  size={10}
+                />
+              </View>
+              <Text style={[s.red4, s.flex1]}>{error}</Text>
+            </View>
+          )}
+          <ScrollView style={s.flex1}>
+            {replyTo ? (
+              <View style={[pal.border, styles.replyToLayout]}>
+                <UserAvatar
+                  handle={replyTo.author.handle}
+                  displayName={replyTo.author.displayName}
+                  avatar={replyTo.author.avatar}
+                  size={50}
+                />
+                <View style={styles.replyToPost}>
+                  <TextLink
+                    type="xl-medium"
+                    href={`/profile/${replyTo.author.handle}`}
+                    text={replyTo.author.displayName || replyTo.author.handle}
+                    style={[pal.text]}
+                  />
+                  <Text type="post-text" style={pal.text} numberOfLines={6}>
+                    {replyTo.text}
+                  </Text>
+                </View>
+              </View>
+            ) : undefined}
+            <View
+              style={[
+                pal.border,
+                styles.textInputLayout,
+                selectTextInputLayout,
+              ]}>
+              <UserAvatar
+                handle={store.me.handle || ''}
+                displayName={store.me.displayName}
+                avatar={store.me.avatar}
+                size={50}
+              />
+              <TextInput
+                testID="composerTextInput"
+                ref={textInput}
+                multiline
+                scrollEnabled
+                onChangeText={(text: string) => onChangeText(text)}
+                placeholder={selectTextInputPlaceholder}
+                placeholderTextColor={pal.colors.textLight}
+                style={[
+                  pal.text,
+                  styles.textInput,
+                  styles.textInputFormatting,
+                ]}>
+                {textDecorated}
+              </TextInput>
+            </View>
+            <SelectedPhoto
+              selectedPhotos={selectedPhotos}
+              onSelectPhotos={onSelectPhotos}
+            />
+          </ScrollView>
+          {isSelectingPhotos &&
+            localPhotos.photos != null &&
+            selectedPhotos.length < 4 && (
+              <PhotoCarouselPicker
+                selectedPhotos={selectedPhotos}
+                onSelectPhotos={onSelectPhotos}
+                localPhotos={localPhotos}
+              />
+            )}
+          <View style={[pal.border, styles.bottomBar]}>
+            <TouchableOpacity
+              testID="composerSelectPhotosButton"
+              onPress={onPressSelectPhotos}
+              style={[s.pl5]}
+              hitSlop={HITSLOP}>
+              <FontAwesomeIcon
+                icon={['far', 'image']}
+                style={selectedPhotos.length < 4 ? pal.link : pal.textLight}
+                size={24}
+              />
+            </TouchableOpacity>
+            <View style={s.flex1} />
+            <Text style={[s.mr10, {color: progressColor}]}>
+              {MAX_TEXT_LENGTH - text.length}
+            </Text>
+            <View>
+              {text.length > DANGER_TEXT_LENGTH ? (
+                <ProgressPie
+                  size={30}
+                  borderWidth={4}
+                  borderColor={progressColor}
+                  color={progressColor}
+                  progress={Math.min(
+                    (text.length - MAX_TEXT_LENGTH) / MAX_TEXT_LENGTH,
+                    1,
+                  )}
+                />
+              ) : (
+                <ProgressCircle
+                  size={30}
+                  borderWidth={1}
+                  borderColor={colors.gray2}
+                  color={progressColor}
+                  progress={text.length / MAX_TEXT_LENGTH}
+                />
+              )}
+            </View>
+          </View>
+          <Autocomplete
+            active={autocompleteView.isActive}
+            items={autocompleteView.suggestions}
+            onSelect={onSelectAutocompleteItem}
+          />
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   )
 })
@@ -408,9 +428,14 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     padding: 5,
-    fontSize: 18,
     marginLeft: 8,
     alignSelf: 'flex-start',
+  },
+  textInputFormatting: {
+    fontSize: 18,
+    letterSpacing: 0.2,
+    fontWeight: '400',
+    lineHeight: 23.4, // 1.3*16
   },
   replyToLayout: {
     flexDirection: 'row',

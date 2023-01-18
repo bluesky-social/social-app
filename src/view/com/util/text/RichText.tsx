@@ -15,21 +15,23 @@ type Entity = {
 }
 
 export function RichText({
-  type = 'body1',
+  type = 'md',
   text,
   entities,
+  lineHeight = 1.2,
   style,
   numberOfLines,
 }: {
   type?: TypographyVariant
   text: string
   entities?: Entity[]
+  lineHeight?: number
   style?: StyleProp<TextStyle>
   numberOfLines?: number
 }) {
   const theme = useTheme()
   const pal = usePalette('default')
-  const lineHeightStyle = lh(theme, type, 1.2)
+  const lineHeightStyle = lh(theme, type, lineHeight)
   if (!entities?.length) {
     if (/^\p{Extended_Pictographic}+$/u.test(text) && text.length <= 5) {
       style = {

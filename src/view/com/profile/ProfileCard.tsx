@@ -39,7 +39,7 @@ export function ProfileCard({
           <Text style={[s.bold, pal.text]} numberOfLines={1}>
             {displayName || handle}
           </Text>
-          <Text type="body2" style={[pal.textLight]} numberOfLines={1}>
+          <Text type="sm" style={[pal.textLight]} numberOfLines={1}>
             @{handle}
           </Text>
         </View>

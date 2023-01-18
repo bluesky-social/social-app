@@ -31,7 +31,7 @@ export function ErrorMessage({
         <FontAwesomeIcon icon="exclamation" style={pal.text} size={16} />
       </View>
       <Text
-        type="body2"
+        type="sm"
         style={[styles.message, pal.text]}
         numberOfLines={numberOfLines}>
         {message}
