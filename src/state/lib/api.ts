@@ -87,26 +87,29 @@ export async function post(
             mode: 'contain',
             maxSize: 100000,
             timeout: 15e3,
-          }).catch(() => undefined)
+          }).catch(e => {
+            store.log.warn('Failed to download thumbnail', e)
+          })
           if (thumbLocal) {
             onStateChange?.(`Uploading link thumbnail...`)
             let encoding
-            if (thumbLocal.uri.endsWith('.png')) {
+            const {path: thumbnailPath} = thumbLocal
+            if (thumbnailPath.endsWith('.png')) {
               encoding = 'image/png'
             } else if (
-              thumbLocal.uri.endsWith('.jpeg') ||
-              thumbLocal.uri.endsWith('.jpg')
+              thumbnailPath.endsWith('.jpeg') ||
+              thumbnailPath.endsWith('.jpg')
             ) {
               encoding = 'image/jpeg'
             } else {
               store.log.warn(
                 'Unexpected image format for thumbnail, skipping',
-                thumbLocal.uri,
+                thumbnailPath,
               )
             }
             if (encoding) {
               const thumbUploadRes = await store.api.com.atproto.blob.upload(
-                thumbLocal.uri, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
+                thumbnailPath, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
                 {encoding},
               )
               thumb = {

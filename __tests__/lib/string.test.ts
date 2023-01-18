@@ -1,7 +1,6 @@
 import {
   extractEntities,
   detectLinkables,
-  extractHtmlMeta,
   pluralize,
   makeRecordUri,
   ago,
@@ -13,6 +12,9 @@ import {
   toShortUrl,
   toShareUrl,
 } from '../../src/lib/strings'
+import {extractHtmlMeta} from '../../src/lib/extractHtmlMeta'
+import {exampleComHtml} from './__mocks__/exampleComHtml'
+import {youtubeHTML} from './__mocks__/youtubeHtml'
 
 describe('extractEntities', () => {
   const knownHandles = new Set(['handle.com', 'full123.test-of-chars'])
@@ -325,6 +327,29 @@ describe('extractHtmlMeta', () => {
       const output = extractHtmlMeta(input)
       expect(output).toEqual(outputs[i])
     }
+  })
+
+  // TODO: This file is too large. Split it up.
+  it('extracts title and description from a generic HTML page', () => {
+    const input = exampleComHtml
+    const expectedOutput = {
+      title: 'Example Domain',
+      description: 'An example website',
+    }
+    const output = extractHtmlMeta(input)
+    expect(output).toEqual(expectedOutput)
+  })
+
+  it('extracts title and description from a generic youtube page', () => {
+    const input = youtubeHTML
+    const expectedOutput = {
+      title: 'HD Video (1080p) with Relaxing Music of Native American Shamans',
+      description:
+        'Stunning HD Video ( 1080p ) of Patagonian Nature with Relaxing Native American Shamanic Music. HD footage used from ',
+      image: 'https://i.ytimg.com/vi/x6UITRjhijI/sddefault.jpg',
+    }
+    const output = extractHtmlMeta(input)
+    expect(output).toEqual(expectedOutput)
   })
 })
 

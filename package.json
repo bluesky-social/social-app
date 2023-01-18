@@ -9,6 +9,7 @@
     "start": "react-native start",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
     "test": "jest --coverage",
+    "test-watch": "jest --watchAll",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
@@ -106,6 +107,7 @@
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|rollbar-react-native|@fortawesome|@react-native|@react-navigation)"
     ],
+    "modulePathIgnorePatterns": ["__tests__\/.*\/__mocks__"],
     "coveragePathIgnorePatterns": [
       "<rootDir>/node_modules/",
       "<rootDir>/src/platform",

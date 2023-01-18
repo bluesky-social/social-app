@@ -1,9 +1,6 @@
 import he from 'he'
-import {
-  extractHtmlMeta,
-  isBskyAppUrl,
-  convertBskyAppUrlIfNeeded,
-} from './strings'
+import {isBskyAppUrl, convertBskyAppUrlIfNeeded} from './strings'
+import {extractHtmlMeta} from './extractHtmlMeta'
 import {match as matchRoute} from '../view/routes'
 
 export enum LikelyType {

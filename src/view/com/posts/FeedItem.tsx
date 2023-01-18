@@ -15,7 +15,7 @@ import {PostEmbeds} from '../util/PostEmbeds'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import {s, colors} from '../../lib/styles'
+import {s} from '../../lib/styles'
 import {useStores} from '../../../state'
 import {useTheme} from '../../lib/ThemeContext'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -41,12 +41,16 @@ export const FeedItem = observer(function ({
   const itemTitle = `Post by ${item.post.author.handle}`
   const authorHref = `/profile/${item.post.author.handle}`
   const replyAuthorDid = useMemo(() => {
-    if (!record?.reply) return ''
+    if (!record?.reply) {
+      return ''
+    }
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     return urip.hostname
   }, [record?.reply])
   const replyHref = useMemo(() => {
-    if (!record?.reply) return ''
+    if (!record?.reply) {
+      return ''
+    }
     const urip = new AtUri(record?.reply.parent?.uri || record?.reply.root.uri)
     return `/profile/${urip.hostname}/post/${urip.rkey}`
   }, [record?.reply])
@@ -210,7 +214,9 @@ export const FeedItem = observer(function ({
             ) : (
               <View style={{height: 5}} />
             )}
-            <PostEmbeds embed={item.post.embed} style={styles.embed} />
+            {item.post.embed ? (
+              <PostEmbeds embed={item.post.embed} style={styles.embed} />
+            ) : null}
             <PostCtrls
               style={styles.ctrls}
               itemHref={itemHref}
