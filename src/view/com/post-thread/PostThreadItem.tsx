@@ -47,7 +47,7 @@ export const PostThreadItem = observer(function PostThreadItem({
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}/upvoted-by`
   }, [item.post.uri, item.post.author.handle])
-  const upvotesTitle = 'Upvotes on this post'
+  const upvotesTitle = 'Likes on this post'
   const repostsHref = useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}/reposted-by`
@@ -130,17 +130,19 @@ export const PostThreadItem = observer(function PostThreadItem({
             </View>
             <View style={styles.layoutContent}>
               <View style={[styles.meta, {paddingTop: 5, paddingBottom: 0}]}>
-                <Link
-                  style={styles.metaItem}
-                  href={authorHref}
-                  title={authorTitle}>
-                  <Text type="h5" style={[pal.text]} numberOfLines={1}>
-                    {item.post.author.displayName || item.post.author.handle}
+                <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
+                  <Link
+                    style={styles.metaItem}
+                    href={authorHref}
+                    title={authorTitle}>
+                    <Text type="xl-bold" style={[pal.text]} numberOfLines={1}>
+                      {item.post.author.displayName || item.post.author.handle}
+                    </Text>
+                  </Link>
+                  <Text type="md" style={[styles.metaItem, pal.textLight]}>
+                    &middot; {ago(item.post.indexedAt)}
                   </Text>
-                </Link>
-                <Text type="h6" style={[styles.metaItem, pal.textLight]}>
-                  &middot; {ago(item.post.indexedAt)}
-                </Text>
+                </View>
                 <View style={s.flex1} />
                 <PostDropdownBtn
                   style={styles.metaItem}
@@ -161,7 +163,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   style={styles.metaItem}
                   href={authorHref}
                   title={authorTitle}>
-                  <Text type="h6" style={[pal.textLight]} numberOfLines={1}>
+                  <Text type="md" style={[pal.textLight]} numberOfLines={1}>
                     @{item.post.author.handle}
                   </Text>
                 </Link>
@@ -176,9 +178,10 @@ export const PostThreadItem = observer(function PostThreadItem({
                   styles.postTextLargeContainer,
                 ]}>
                 <RichText
-                  type="h3"
+                  type="post-text-lg"
                   text={record.text}
                   entities={record.entities}
+                  lineHeight={1.3}
                 />
               </View>
             ) : undefined}
@@ -190,8 +193,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                     style={styles.expandedInfoItem}
                     href={repostsHref}
                     title={repostsTitle}>
-                    <Text type="h6" style={pal.textLight}>
-                      <Text type="h5" style={pal.text}>
+                    <Text type="lg" style={pal.textLight}>
+                      <Text type="xl-bold" style={pal.text}>
                         {item.post.repostCount}
                       </Text>{' '}
                       {pluralize(item.post.repostCount, 'repost')}
@@ -205,11 +208,11 @@ export const PostThreadItem = observer(function PostThreadItem({
                     style={styles.expandedInfoItem}
                     href={upvotesHref}
                     title={upvotesTitle}>
-                    <Text type="h6" style={pal.textLight}>
-                      <Text type="h5" style={pal.text}>
+                    <Text type="lg" style={pal.textLight}>
+                      <Text type="xl-bold" style={pal.text}>
                         {item.post.upvoteCount}
                       </Text>{' '}
-                      {pluralize(item.post.upvoteCount, 'upvote')}
+                      {pluralize(item.post.upvoteCount, 'like')}
                     </Text>
                   </Link>
                 ) : (
@@ -281,7 +284,6 @@ export const PostThreadItem = observer(function PostThreadItem({
             </View>
             <View style={styles.layoutContent}>
               <PostMeta
-                authorHref={authorHref}
                 authorHandle={item.post.author.handle}
                 authorDisplayName={item.post.author.displayName}
                 timestamp={item.post.indexedAt}
@@ -289,14 +291,16 @@ export const PostThreadItem = observer(function PostThreadItem({
               {item.post.author.viewer?.muted ? (
                 <View style={[styles.mutedWarning, pal.btn]}>
                   <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
-                  <Text type="body2">This post is by a muted account.</Text>
+                  <Text type="sm">This post is by a muted account.</Text>
                 </View>
               ) : record.text ? (
                 <View style={styles.postTextContainer}>
                   <RichText
+                    type="post-text"
                     text={record.text}
                     entities={record.entities}
                     style={pal.text}
+                    lineHeight={1.3}
                   />
                 </View>
               ) : (
@@ -394,6 +398,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 8,
+    paddingRight: 20,
     minHeight: 36,
   },
   postTextLargeContainer: {

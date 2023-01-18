@@ -8,7 +8,7 @@ export type CustomTextProps = TextProps & {
 }
 
 export function Text({
-  type = 'body1',
+  type = 'md',
   children,
   style,
   ...props

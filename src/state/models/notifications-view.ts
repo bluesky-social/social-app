@@ -14,7 +14,8 @@ import {cleanError} from '../../lib/strings'
 
 const UNGROUPABLE_REASONS = ['assertion']
 const PAGE_SIZE = 30
-const MS_60MIN = 1e3 * 60 * 60
+const MS_1HR = 1e3 * 60 * 60
+const MS_2DAY = MS_1HR * 48
 
 let _idCounter = 0
 
@@ -447,7 +448,7 @@ function groupNotifications(
       for (const item2 of items2) {
         const ts2 = +new Date(item2.indexedAt)
         if (
-          Math.abs(ts2 - ts) < MS_60MIN &&
+          Math.abs(ts2 - ts) < MS_2DAY &&
           item.reason === item2.reason &&
           item.reasonSubject === item2.reasonSubject &&
           item.author.did !== item2.author.did

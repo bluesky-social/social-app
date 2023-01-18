@@ -52,55 +52,22 @@ export class ReportAccountModal {
   }
 }
 
-interface LightboxModel {
-  canSwipeLeft: boolean
-  canSwipeRight: boolean
-  onSwipeLeft: () => void
-  onSwipeRight: () => void
-}
+interface LightboxModel {}
 
 export class ProfileImageLightbox implements LightboxModel {
   name = 'profile-image'
-  canSwipeLeft = false
-  canSwipeRight = false
   constructor(public profileView: ProfileViewModel) {
     makeAutoObservable(this)
   }
-  onSwipeLeft() {}
-  onSwipeRight() {}
-}
-
-export class ImageLightbox implements LightboxModel {
-  name = 'image'
-  canSwipeLeft = true
-  canSwipeRight = true
-  constructor(public uri: string) {
-    makeAutoObservable(this)
-  }
-  onSwipeLeft() {}
-  onSwipeRight() {}
 }
 
 export class ImagesLightbox implements LightboxModel {
   name = 'images'
-  get canSwipeLeft() {
-    return this.index > 0
-  }
-  get canSwipeRight() {
-    return this.index < this.uris.length - 1
-  }
   constructor(public uris: string[], public index: number) {
     makeAutoObservable(this)
   }
-  onSwipeLeft() {
-    if (this.canSwipeLeft) {
-      this.index = this.index - 1
-    }
-  }
-  onSwipeRight() {
-    if (this.canSwipeRight) {
-      this.index = this.index + 1
-    }
+  setIndex(index: number) {
+    this.index = index
   }
 }
 
@@ -115,6 +82,7 @@ export interface ComposerOptsPostRef {
   }
 }
 export interface ComposerOpts {
+  imagesOpen?: boolean
   replyTo?: ComposerOptsPostRef
   onPost?: () => void
 }
@@ -132,11 +100,7 @@ export class ShellUiModel {
     | ReportAccountModal
     | undefined
   isLightboxActive = false
-  activeLightbox:
-    | ProfileImageLightbox
-    | ImageLightbox
-    | ImagesLightbox
-    | undefined
+  activeLightbox: ProfileImageLightbox | ImagesLightbox | undefined
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
 
@@ -187,9 +151,7 @@ export class ShellUiModel {
     this.activeModal = undefined
   }
 
-  openLightbox(
-    lightbox: ProfileImageLightbox | ImageLightbox | ImagesLightbox,
-  ) {
+  openLightbox(lightbox: ProfileImageLightbox | ImagesLightbox) {
     this.isLightboxActive = true
     this.activeLightbox = lightbox
   }

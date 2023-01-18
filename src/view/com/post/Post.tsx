@@ -20,7 +20,6 @@ import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -87,11 +86,9 @@ export const Post = observer(function Post({
   const authorHref = `/profile/${item.post.author.handle}`
   const authorTitle = item.post.author.handle
   let replyAuthorDid = ''
-  let replyHref = ''
   if (record.reply) {
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     replyAuthorDid = urip.hostname
-    replyHref = `/profile/${urip.hostname}/post/${urip.rkey}`
   }
   const onPressReply = () => {
     store.shell.openComposer({
@@ -154,39 +151,41 @@ export const Post = observer(function Post({
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
-            authorHref={authorHref}
             authorHandle={item.post.author.handle}
             authorDisplayName={item.post.author.displayName}
             timestamp={item.post.indexedAt}
           />
-          {replyHref !== '' && (
+          {replyAuthorDid !== '' && (
             <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
               <FontAwesomeIcon
                 icon="reply"
                 size={9}
                 style={[pal.textLight, s.mr5]}
               />
-              <Text type="body2" style={[pal.textLight, s.mr2]}>
+              <Text type="sm" style={[pal.textLight, s.mr2]}>
                 Reply to
               </Text>
-              <Link href={replyHref} title="Parent post">
-                <UserInfoText
-                  type="body2"
-                  did={replyAuthorDid}
-                  attr="displayName"
-                  style={[pal.textLight]}
-                />
-              </Link>
+              <UserInfoText
+                type="sm"
+                did={replyAuthorDid}
+                attr="displayName"
+                style={[pal.textLight]}
+              />
             </View>
           )}
           {item.post.author.viewer?.muted ? (
             <View style={[styles.mutedWarning, pal.btn]}>
               <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
-              <Text type="body2">This post is by a muted account.</Text>
+              <Text type="sm">This post is by a muted account.</Text>
             </View>
           ) : record.text ? (
             <View style={styles.postTextContainer}>
-              <RichText text={record.text} entities={record.entities} />
+              <RichText
+                type="post-text"
+                text={record.text}
+                entities={record.entities}
+                lineHeight={1.3}
+              />
             </View>
           ) : (
             <View style={{height: 5}} />

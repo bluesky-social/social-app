@@ -87,7 +87,7 @@ function Heading({label}: {label: string}) {
   const pal = usePalette('default')
   return (
     <View style={{paddingTop: 10, paddingBottom: 5}}>
-      <Text type="h3" style={pal.text}>
+      <Text type="title-lg" style={pal.text}>
         {label}
       </Text>
     </View>
@@ -97,14 +97,14 @@ function Heading({label}: {label: string}) {
 function BaseView() {
   return (
     <View style={{paddingHorizontal: 10}}>
+      <Heading label="Typography" />
+      <TypographyView />
       <Heading label="Palettes" />
       <PaletteView palette="default" />
       <PaletteView palette="primary" />
       <PaletteView palette="secondary" />
       <PaletteView palette="inverted" />
       <PaletteView palette="error" />
-      <Heading label="Typography" />
-      <TypographyView />
       <Heading label="Empty state" />
       <EmptyStateView />
       <Heading label="Loading placeholders" />
@@ -197,35 +197,108 @@ function TypographyView() {
   const pal = usePalette('default')
   return (
     <View style={[pal.view]}>
-      <Text type="h1" style={[pal.text]}>
-        Heading 1
+      <Text type="xxl-thin" style={[pal.text]}>
+        'xxl-thin' lorem ipsum dolor
       </Text>
-      <Text type="h2" style={[pal.text]}>
-        Heading 2
+      <Text type="xxl" style={[pal.text]}>
+        'xxl' lorem ipsum dolor
       </Text>
-      <Text type="h3" style={[pal.text]}>
-        Heading 3
+      <Text type="xxl-medium" style={[pal.text]}>
+        'xxl-medium' lorem ipsum dolor
       </Text>
-      <Text type="h4" style={[pal.text]}>
-        Heading 4
+      <Text type="xxl-bold" style={[pal.text]}>
+        'xxl-bold' lorem ipsum dolor
       </Text>
-      <Text type="subtitle1" style={[pal.text]}>
-        Subtitle 1
+      <Text type="xxl-heavy" style={[pal.text]}>
+        'xxl-heavy' lorem ipsum dolor
       </Text>
-      <Text type="subtitle2" style={[pal.text]}>
-        Subtitle 2
+      <Text type="xl-thin" style={[pal.text]}>
+        'xl-thin' lorem ipsum dolor
       </Text>
-      <Text type="body1" style={[pal.text]}>
-        Body 1
+      <Text type="xl" style={[pal.text]}>
+        'xl' lorem ipsum dolor
       </Text>
-      <Text type="body2" style={[pal.text]}>
-        Body 2
+      <Text type="xl-medium" style={[pal.text]}>
+        'xl-medium' lorem ipsum dolor
+      </Text>
+      <Text type="xl-bold" style={[pal.text]}>
+        'xl-bold' lorem ipsum dolor
+      </Text>
+      <Text type="xl-heavy" style={[pal.text]}>
+        'xl-heavy' lorem ipsum dolor
+      </Text>
+      <Text type="lg-thin" style={[pal.text]}>
+        'lg-thin' lorem ipsum dolor
+      </Text>
+      <Text type="lg" style={[pal.text]}>
+        'lg' lorem ipsum dolor
+      </Text>
+      <Text type="lg-medium" style={[pal.text]}>
+        'lg-medium' lorem ipsum dolor
+      </Text>
+      <Text type="lg-bold" style={[pal.text]}>
+        'lg-bold' lorem ipsum dolor
+      </Text>
+      <Text type="lg-heavy" style={[pal.text]}>
+        'lg-heavy' lorem ipsum dolor
+      </Text>
+      <Text type="md-thin" style={[pal.text]}>
+        'md-thin' lorem ipsum dolor
+      </Text>
+      <Text type="md" style={[pal.text]}>
+        'md' lorem ipsum dolor
+      </Text>
+      <Text type="md-medium" style={[pal.text]}>
+        'md-medium' lorem ipsum dolor
+      </Text>
+      <Text type="md-bold" style={[pal.text]}>
+        'md-bold' lorem ipsum dolor
+      </Text>
+      <Text type="md-heavy" style={[pal.text]}>
+        'md-heavy' lorem ipsum dolor
+      </Text>
+      <Text type="sm-thin" style={[pal.text]}>
+        'sm-thin' lorem ipsum dolor
+      </Text>
+      <Text type="sm" style={[pal.text]}>
+        'sm' lorem ipsum dolor
+      </Text>
+      <Text type="sm-medium" style={[pal.text]}>
+        'sm-medium' lorem ipsum dolor
+      </Text>
+      <Text type="sm-bold" style={[pal.text]}>
+        'sm-bold' lorem ipsum dolor
+      </Text>
+      <Text type="sm-heavy" style={[pal.text]}>
+        'sm-heavy' lorem ipsum dolor
+      </Text>
+      <Text type="xs-thin" style={[pal.text]}>
+        'xs-thin' lorem ipsum dolor
+      </Text>
+      <Text type="xs" style={[pal.text]}>
+        'xs' lorem ipsum dolor
+      </Text>
+      <Text type="xs-medium" style={[pal.text]}>
+        'xs-medium' lorem ipsum dolor
+      </Text>
+      <Text type="xs-bold" style={[pal.text]}>
+        'xs-bold' lorem ipsum dolor
+      </Text>
+      <Text type="xs-heavy" style={[pal.text]}>
+        'xs-heavy' lorem ipsum dolor
+      </Text>
+
+      <Text type="title-xl" style={[pal.text]}>
+        'title-xl' lorem ipsum dolor
+      </Text>
+      <Text type="title-lg" style={[pal.text]}>
+        'title-lg' lorem ipsum dolor
+      </Text>
+      <Text type="title" style={[pal.text]}>
+        'title' lorem ipsum dolor
       </Text>
       <Text type="button" style={[pal.text]}>
         Button
-      </Text>
-      <Text type="caption" style={[pal.text]}>
-        Caption
       </Text>
       <Text type="overline" style={[pal.text]}>
         Overline

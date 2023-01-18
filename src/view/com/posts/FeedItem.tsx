@@ -30,7 +30,6 @@ export const FeedItem = observer(function ({
   ignoreMuteFor?: string
 }) {
   const store = useStores()
-  const theme = useTheme()
   const pal = usePalette('default')
   const [deleted, setDeleted] = useState(false)
   const record = item.postRecord
@@ -47,6 +46,7 @@ export const FeedItem = observer(function ({
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     return urip.hostname
   }, [record?.reply])
+
   const replyHref = useMemo(() => {
     if (!record?.reply) {
       return ''
@@ -148,12 +148,7 @@ export const FeedItem = observer(function ({
               icon="retweet"
               style={[styles.includeReasonIcon, {color: pal.colors.textLight}]}
             />
-            <Text
-              type="body2"
-              style={{
-                fontWeight: '600',
-                color: pal.colors.textLight,
-              }}>
+            <Text type="sm-bold" style={pal.textLight}>
               Reposted by{' '}
               {item.reasonRepost.by.displayName || item.reasonRepost.by.handle}
             </Text>
@@ -172,43 +167,41 @@ export const FeedItem = observer(function ({
           </View>
           <View style={styles.layoutContent}>
             <PostMeta
-              authorHref={authorHref}
               authorHandle={item.post.author.handle}
               authorDisplayName={item.post.author.displayName}
               timestamp={item.post.indexedAt}
             />
-            {!isChild && replyHref !== '' && (
+            {!isChild && replyAuthorDid !== '' && (
               <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
                 <FontAwesomeIcon
                   icon="reply"
                   size={9}
                   style={[{color: pal.colors.textLight}, s.mr5]}
                 />
-                <Text type="body2" style={[pal.textLight, s.mr2]}>
+                <Text type="md" style={[pal.textLight, s.mr2]}>
                   Reply to
                 </Text>
-                <Link href={replyHref} title="Parent post">
-                  <UserInfoText
-                    type="body2"
-                    did={replyAuthorDid}
-                    attr="displayName"
-                    style={[pal.textLight]}
-                  />
-                </Link>
+                <UserInfoText
+                  type="md"
+                  did={replyAuthorDid}
+                  attr="displayName"
+                  style={[pal.textLight, s.ml2]}
+                />
               </View>
             )}
             {item.post.author.viewer?.muted &&
             ignoreMuteFor !== item.post.author.did ? (
               <View style={[styles.mutedWarning, pal.btn]}>
                 <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
-                <Text type="body2">This post is by a muted account.</Text>
+                <Text type="sm">This post is by a muted account.</Text>
               </View>
             ) : record.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
-                  type="body1"
+                  type="post-text"
                   text={record.text}
                   entities={record.entities}
+                  lineHeight={1.3}
                 />
               </View>
             ) : (
@@ -257,7 +250,7 @@ export const FeedItem = observer(function ({
               <Circle x="2" y="22" r="1.5" fill={pal.colors.replyLineDot} />
             </Svg>
           </View>
-          <Text style={[pal.link, theme.typography.body2]}>
+          <Text type="md" style={pal.link}>
             View full thread
           </Text>
         </Link>
@@ -328,6 +321,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 4,
+    paddingRight: 20,
   },
   embed: {
     marginBottom: 6,

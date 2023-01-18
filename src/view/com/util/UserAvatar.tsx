@@ -8,8 +8,7 @@ import {
   openPicker,
   Image as PickedImage,
 } from 'react-native-image-crop-picker'
-import {getGradient} from '../../lib/asset-gen'
-import {colors} from '../../lib/styles'
+import {colors, gradients} from '../../lib/styles'
 
 export function UserAvatar({
   size,
@@ -25,7 +24,6 @@ export function UserAvatar({
   onSelectNewAvatar?: (img: PickedImage) => void
 }) {
   const initials = getInitials(displayName || handle)
-  const gradient = getGradient(handle)
 
   const handleEditAvatar = useCallback(() => {
     Alert.alert('Select upload method', '', [
@@ -68,8 +66,8 @@ export function UserAvatar({
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Defs>
         <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-          <Stop offset="0" stopColor={gradient[0]} stopOpacity="1" />
-          <Stop offset="1" stopColor={gradient[1]} stopOpacity="1" />
+          <Stop offset="0" stopColor={gradients.blue.start} stopOpacity="1" />
+          <Stop offset="1" stopColor={gradients.blue.end} stopOpacity="1" />
         </LinearGradient>
       </Defs>
       <Circle cx="50" cy="50" r="50" fill="url(#grad)" />

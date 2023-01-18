@@ -3,6 +3,8 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {CameraRoll} from '@react-native-camera-roll/camera-roll'
 import {RootStoreModel} from './root-store'
 
+export type {PhotoIdentifier} from './../../../node_modules/@react-native-camera-roll/camera-roll/src/CameraRoll'
+
 export class UserLocalPhotosModel {
   // state
   photos: PhotoIdentifier[] = []

@@ -30,7 +30,7 @@ export const Feed = observer(function Feed({
   feed: FeedModel
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onPressCompose: () => void
+  onPressCompose: (imagesOpen?: boolean) => void
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
   testID?: string
@@ -41,9 +41,7 @@ export const Feed = observer(function Feed({
   //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = ({item}: {item: any}) => {
     if (item === COMPOSE_PROMPT_ITEM) {
-      return (
-        <ComposePrompt onPressCompose={onPressCompose} text="New message" />
-      )
+      return <ComposePrompt onPressCompose={onPressCompose} />
     } else if (item === EMPTY_FEED_ITEM) {
       return (
         <EmptyState
