@@ -16,3 +16,6 @@ jobs:
         run: yarn
       - name: Lint
         run: yarn lint
+      - name: Lint Action
+        uses: wearerequired/lint-action@v2.2.0
+
