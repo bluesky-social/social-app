@@ -99,11 +99,7 @@ export class ShellUiModel {
     | ReportAccountModal
     | undefined
   isLightboxActive = false
-  activeLightbox:
-    | ProfileImageLightbox
-    | ImageLightbox
-    | ImagesLightbox
-    | undefined
+  activeLightbox: ProfileImageLightbox | ImagesLightbox | undefined
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
 
