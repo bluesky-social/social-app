@@ -632,10 +632,11 @@ export const mockedRootStore = {
     com: {},
     app: {
       bsky: {
+        actor: {
+          searchTypeahead: jest.fn().mockResolvedValue({data: {users: []}}),
+        },
         graph: {
-          confirmation: {
-            delete: jest.fn().mockResolvedValue({}),
-          },
+          getFollows: jest.fn().mockResolvedValue({data: {follows: []}}),
           getFollowers: jest.fn().mockResolvedValue({}),
           getMembers: jest.fn().mockResolvedValue({}),
         },
