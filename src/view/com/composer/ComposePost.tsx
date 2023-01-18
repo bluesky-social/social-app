@@ -200,7 +200,7 @@ export const ComposePost = observer(function ComposePost({
               testID="composerPublishButton"
               onPress={onPressPublish}>
               <LinearGradient
-                colors={[gradients.primary.start, gradients.primary.end]}
+                colors={[gradients.blueLight.start, gradients.blueLight.end]}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 1}}
                 style={styles.postBtn}>

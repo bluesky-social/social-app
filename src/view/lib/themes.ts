@@ -21,6 +21,7 @@ export const defaultTheme: Theme = {
       replyLineDot: colors.gray3,
       unreadNotifBg: '#ebf6ff',
       postCtrl: '#8A7171',
+      brandText: '#0066FF',
     },
     primary: {
       background: colors.blue3,
@@ -207,7 +208,7 @@ export const defaultTheme: Theme = {
       fontWeight: '500',
     },
     'title-lg': {
-      fontSize: 24,
+      fontSize: 22,
       fontWeight: '500',
     },
     title: {
@@ -263,6 +264,7 @@ export const darkTheme: Theme = {
       replyLineDot: colors.gray6,
       unreadNotifBg: colors.blue5,
       postCtrl: '#7A6161',
+      brandText: '#0085ff',
     },
     primary: {
       ...defaultTheme.palette.primary,

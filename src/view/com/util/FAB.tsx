@@ -24,7 +24,7 @@ export const FAB = observer(
             store.shell.minimalShellMode ? styles.lower : undefined,
           ]}>
           <LinearGradient
-            colors={[gradients.purple.start, gradients.purple.end]}
+            colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={styles.inner}>

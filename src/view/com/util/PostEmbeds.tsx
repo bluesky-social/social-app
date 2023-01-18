@@ -85,7 +85,7 @@ export function PostEmbeds({
           <AutoSizedImage uri={link.thumb} containerStyle={styles.extImage} />
         ) : (
           <LinearGradient
-            colors={[gradients.blue.start, gradients.blue.end]}
+            colors={[gradients.blueDark.start, gradients.blueDark.end]}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={[styles.extImage, styles.extImageFallback]}

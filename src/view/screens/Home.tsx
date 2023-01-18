@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     left: 10,
-    backgroundColor: colors.pink3,
+    backgroundColor: colors.blue3,
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderRadius: 30,
