@@ -16,8 +16,7 @@ import {
   ProfileImageLightbox,
 } from '../../../state/models/shell-ui'
 import {pluralize} from '../../../lib/strings'
-import {s} from '../../lib/styles'
-import {getGradient} from '../../lib/asset-gen'
+import {s, gradients} from '../../lib/styles'
 import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -129,7 +128,6 @@ export const ProfileHeader = observer(function ProfileHeader({
 
   // loaded
   // =
-  const gradient = getGradient(view.handle)
   const isMe = store.me.did === view.did
   let dropdownItems: DropdownItem[] | undefined
   if (!isMe) {
@@ -177,7 +175,10 @@ export const ProfileHeader = observer(function ProfileHeader({
                   testID="profileHeaderToggleFollowButton"
                   onPress={onPressToggleFollow}>
                   <LinearGradient
-                    colors={[gradient[1], gradient[0]]}
+                    colors={[
+                      gradients.blueLight.start,
+                      gradients.blueLight.end,
+                    ]}
                     start={{x: 0, y: 0}}
                     end={{x: 1, y: 1}}
                     style={[styles.btn, styles.gradientBtn]}>

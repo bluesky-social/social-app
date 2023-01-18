@@ -50,11 +50,9 @@ export const colors = {
 }
 
 export const gradients = {
-  primary: {start: '#db00ff', end: '#ff007a'},
-  error: {start: '#ff007a', end: '#ed0d78'},
-  purple: {start: colors.pink3, end: colors.purple3},
-  blue: {start: colors.purple3, end: colors.blue3},
-  green: {start: colors.blue3, end: colors.green3},
+  blueLight: {start: '#555FFB', end: colors.blue3}, // buttons
+  blue: {start: '#5E55FB', end: colors.blue3}, // fab
+  blueDark: {start: '#5F45E0', end: colors.blue3}, // avis, banner
 }
 
 export const s = StyleSheet.create({
