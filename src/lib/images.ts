@@ -70,7 +70,7 @@ export async function resize(
   opts: ResizeOpts,
 ): Promise<Image> {
   for (let i = 0; i < 9; i++) {
-    const quality = 1.0 - i / 10
+    const quality = 100 - i * 10
     const resizeRes = await ImageResizer.createResizedImage(
       localUri,
       opts.width,
