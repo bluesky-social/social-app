@@ -20,7 +20,7 @@ export const defaultTheme: Theme = {
       replyLine: colors.gray2,
       replyLineDot: colors.gray3,
       unreadNotifBg: '#ebf6ff',
-      postCtrl: '#8A7171',
+      postCtrl: '#71768A',
       brandText: '#0066FF',
     },
     primary: {
@@ -263,7 +263,7 @@ export const darkTheme: Theme = {
       replyLine: colors.gray5,
       replyLineDot: colors.gray6,
       unreadNotifBg: colors.blue5,
-      postCtrl: '#7A6161',
+      postCtrl: '#61657A',
       brandText: '#0085ff',
     },
     primary: {
