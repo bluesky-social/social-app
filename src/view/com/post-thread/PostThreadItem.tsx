@@ -102,7 +102,7 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   if (deleted) {
     return (
-      <View style={[styles.outer, pal.view, s.p20, s.flexRow]}>
+      <View style={[styles.outer, pal.border, pal.view, s.p20, s.flexRow]}>
         <FontAwesomeIcon
           icon={['far', 'trash-can']}
           style={{color: pal.colors.icon}}

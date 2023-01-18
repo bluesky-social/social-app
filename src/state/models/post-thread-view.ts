@@ -173,6 +173,7 @@ export class PostThreadViewPostModel {
       did: this.post.author.did,
       rkey: new AtUri(this.post.uri).rkey,
     })
+    this.rootStore.emitPostDeleted(this.post.uri)
   }
 }
 
@@ -230,6 +231,14 @@ export class PostThreadViewModel {
   }
 
   /**
+   * Register any event listeners. Returns a cleanup function.
+   */
+  registerListeners() {
+    const sub = this.rootStore.onPostDeleted(this.onPostDeleted.bind(this))
+    return () => sub.remove()
+  }
+
+  /**
    * Reset and load
    */
   async refresh() {
@@ -244,6 +253,13 @@ export class PostThreadViewModel {
     //       if the UI loses its place or has jarring re-arrangements, replace this
     //       with a more in-place update
     this._load()
+  }
+
+  /**
+   * Refreshes when posts are deleted
+   */
+  onPostDeleted(_uri: string) {
+    this.refresh()
   }
 
   // state transitions

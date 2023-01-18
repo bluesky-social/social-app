@@ -46,9 +46,11 @@ export const Home = observer(function Home({
   )
 
   useEffect(() => {
+    const feedCleanup = store.me.mainFeed.registerListeners()
     const pollInterval = setInterval(() => doPoll(), 15e3)
     const cleanup = () => {
       clearInterval(pollInterval)
+      feedCleanup()
     }
 
     if (!visible) {

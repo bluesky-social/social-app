@@ -166,6 +166,7 @@ export class FeedItemModel {
       did: this.post.author.did,
       rkey: new AtUri(this.post.uri).rkey,
     })
+    this.rootStore.emitPostDeleted(this.post.uri)
   }
 }
 
@@ -256,6 +257,14 @@ export class FeedModel {
   }
 
   /**
+   * Register any event listeners. Returns a cleanup function.
+   */
+  registerListeners() {
+    const sub = this.rootStore.onPostDeleted(this.onPostDeleted.bind(this))
+    return () => sub.remove()
+  }
+
+  /**
    * Reset and load
    */
   async refresh() {
@@ -303,7 +312,7 @@ export class FeedModel {
   }
 
   /**
-   * Check if new postrs are available
+   * Check if new posts are available
    */
   async checkForLatest() {
     if (this.hasNewLatest) {
@@ -320,6 +329,20 @@ export class FeedModel {
         (this.feed.length === 0 || receivedLatestUri !== currentLatestUri),
     )
     this.setHasNewLatest(hasNewLatest)
+  }
+
+  /**
+   * Removes posts from the feed upon deletion.
+   */
+  onPostDeleted(uri: string) {
+    console.log('hit', uri)
+    let i
+    do {
+      i = this.feed.findIndex(item => item.post.uri === uri)
+      if (i !== -1) {
+        this.feed.splice(i, 1)
+      }
+    } while (i !== -1)
   }
 
   // state transitions
