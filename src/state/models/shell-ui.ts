@@ -82,6 +82,7 @@ export interface ComposerOptsPostRef {
   }
 }
 export interface ComposerOpts {
+  imagesOpen?: boolean
   replyTo?: ComposerOptsPostRef
   onPost?: () => void
 }
