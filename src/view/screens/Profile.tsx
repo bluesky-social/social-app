@@ -5,7 +5,6 @@ import {ViewSelector} from '../com/util/ViewSelector'
 import {ScreenParams} from '../routes'
 import {ProfileUiModel, Sections} from '../../state/models/profile-ui'
 import {useStores} from '../../state'
-import {ConfirmModal} from '../../state/models/shell-ui'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedItem} from '../com/posts/FeedItem'
 import {PostFeedLoadingPlaceholder} from '../com/util/LoadingPlaceholder'
@@ -13,8 +12,6 @@ import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {EmptyState} from '../com/util/EmptyState'
 import {Text} from '../com/util/text/Text'
-import {ViewHeader} from '../com/util/ViewHeader'
-import * as Toast from '../com/util/Toast'
 import {FAB} from '../com/util/FAB'
 import {s, colors} from '../lib/styles'
 import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
@@ -152,11 +149,8 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
     renderItem = () => <View />
   }
 
-  const title =
-    uiState.profile.displayName || uiState.profile.handle || params.name
   return (
     <View testID="profileView" style={styles.container}>
-      <ViewHeader title={title} />
       {uiState.profile.hasError ? (
         <ErrorScreen
           testID="profileErrorScreen"
