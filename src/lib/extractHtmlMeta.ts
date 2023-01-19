@@ -56,7 +56,7 @@ export const extractHtmlMeta = ({
 
   const isYoutubeUrl =
     hostname?.includes('youtube.') || hostname?.includes('youtu.be')
-  if (res.title === 'YouTube' && isYoutubeUrl) {
+  if (isYoutubeUrl) {
     // Workaround for Youtube not having a title in the meta tags
     res = {...res, ...extractYoutubeMeta(html)}
   }
