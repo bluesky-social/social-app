@@ -103,10 +103,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   if (deleted) {
     return (
       <View style={[styles.outer, pal.border, pal.view, s.p20, s.flexRow]}>
-        <FontAwesomeIcon
-          icon={['far', 'trash-can']}
-          style={{color: pal.colors.icon}}
-        />
+        <FontAwesomeIcon icon={['far', 'trash-can']} style={pal.icon} />
         <Text style={[pal.textLight, s.ml10]}>This post has been deleted.</Text>
       </View>
     )

@@ -1,6 +1,12 @@
-import React, {useMemo} from 'react'
+import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {StyleSheet, View} from 'react-native'
+import {
+  Animated,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {AtUri} from '../../../third-party/uri'
 import {FontAwesomeIcon, Props} from '@fortawesome/react-native-fontawesome'
@@ -16,8 +22,19 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Post} from '../post/Post'
 import {Link} from '../util/Link'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 
 const MAX_AUTHORS = 8
+
+const EXPANDED_AUTHOR_EL_HEIGHT = 35
+const EXPANDED_AUTHORS_CLOSE_EL_HEIGHT = 26
+
+interface Author {
+  href: string
+  handle: string
+  displayName?: string
+  avatar?: string
+}
 
 export const FeedItem = observer(function FeedItem({
   item,
@@ -25,7 +42,8 @@ export const FeedItem = observer(function FeedItem({
   item: NotificationsViewItemModel
 }) {
   const pal = usePalette('default')
-  const itemHref = useMemo(() => {
+  const [isAuthorsExpanded, setAuthorsExpanded] = React.useState<boolean>(false)
+  const itemHref = React.useMemo(() => {
     if (item.isUpvote || item.isRepost) {
       const urip = new AtUri(item.subjectUri)
       return `/profile/${urip.host}/post/${urip.rkey}`
@@ -37,7 +55,7 @@ export const FeedItem = observer(function FeedItem({
     }
     return ''
   }, [item])
-  const itemTitle = useMemo(() => {
+  const itemTitle = React.useMemo(() => {
     if (item.isUpvote || item.isRepost) {
       return 'Post'
     } else if (item.isFollow || item.isAssertion) {
@@ -46,6 +64,10 @@ export const FeedItem = observer(function FeedItem({
       return 'Post'
     }
   }, [item])
+
+  const onToggleAuthorsExpanded = () => {
+    setAuthorsExpanded(!isAuthorsExpanded)
+  }
 
   if (item.additionalPost?.notFound) {
     // don't render anything if the target post was deleted or unfindable
@@ -93,12 +115,7 @@ export const FeedItem = observer(function FeedItem({
     return <></>
   }
 
-  let authors: {
-    href: string
-    handle: string
-    displayName?: string
-    avatar?: string
-  }[] = [
+  let authors: Author[] = [
     {
       href: `/profile/${item.author.handle}`,
       handle: item.author.handle,
@@ -143,50 +160,45 @@ export const FeedItem = observer(function FeedItem({
           )}
         </View>
         <View style={styles.layoutContent}>
-          <View style={styles.avis}>
-            {authors.slice(0, MAX_AUTHORS).map(author => (
-              <Link
-                style={{marginRight: 5}}
-                key={author.href}
-                href={author.href}
-                title={`@${author.handle}`}>
-                <UserAvatar
-                  size={35}
-                  displayName={author.displayName}
-                  handle={author.handle}
-                  avatar={author.avatar}
-                />
-              </Link>
-            ))}
-            {authors.length > MAX_AUTHORS ? (
-              <Text style={[styles.aviExtraCount, pal.textLight]}>
-                +{authors.length - MAX_AUTHORS}
-              </Text>
-            ) : undefined}
-          </View>
-          <View style={styles.meta}>
-            <Link
-              key={authors[0].href}
-              style={styles.metaItem}
-              href={authors[0].href}
-              title={`@${authors[0].handle}`}>
-              <Text style={[pal.text, s.bold]}>
-                {authors[0].displayName || authors[0].handle}
-              </Text>
-            </Link>
-            {authors.length > 1 ? (
-              <>
-                <Text style={[styles.metaItem, pal.text]}>and</Text>
-                <Text style={[styles.metaItem, pal.text, s.bold]}>
-                  {authors.length - 1} {pluralize(authors.length - 1, 'other')}
+          <TouchableWithoutFeedback
+            onPress={authors.length > 1 ? onToggleAuthorsExpanded : () => {}}>
+            <View>
+              <ExpandedAuthorsList
+                visible={isAuthorsExpanded}
+                authors={authors}
+                onToggleAuthorsExpanded={onToggleAuthorsExpanded}
+              />
+              {isAuthorsExpanded ? (
+                <></>
+              ) : (
+                <CondensedAuthorsList authors={authors} />
+              )}
+              <View style={styles.meta}>
+                <Link
+                  key={authors[0].href}
+                  style={styles.metaItem}
+                  href={authors[0].href}
+                  title={`@${authors[0].handle}`}>
+                  <Text style={[pal.text, s.bold]}>
+                    {authors[0].displayName || authors[0].handle}
+                  </Text>
+                </Link>
+                {authors.length > 1 ? (
+                  <>
+                    <Text style={[styles.metaItem, pal.text]}>and</Text>
+                    <Text style={[styles.metaItem, pal.text, s.bold]}>
+                      {authors.length - 1}{' '}
+                      {pluralize(authors.length - 1, 'other')}
+                    </Text>
+                  </>
+                ) : undefined}
+                <Text style={[styles.metaItem, pal.text]}>{action}</Text>
+                <Text style={[styles.metaItem, pal.textLight]}>
+                  {ago(item.indexedAt)}
                 </Text>
-              </>
-            ) : undefined}
-            <Text style={[styles.metaItem, pal.text]}>{action}</Text>
-            <Text style={[styles.metaItem, pal.textLight]}>
-              {ago(item.indexedAt)}
-            </Text>
-          </View>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
           {item.isUpvote || item.isRepost ? (
             <AdditionalPostText additionalPost={item.additionalPost} />
           ) : (
@@ -197,6 +209,116 @@ export const FeedItem = observer(function FeedItem({
     </Link>
   )
 })
+
+function CondensedAuthorsList({authors}: {authors: Author[]}) {
+  const pal = usePalette('default')
+  if (authors.length === 1) {
+    return (
+      <View style={styles.avis}>
+        <Link
+          style={s.mr5}
+          href={authors[0].href}
+          title={`@${authors[0].handle}`}>
+          <UserAvatar
+            size={35}
+            displayName={authors[0].displayName}
+            handle={authors[0].handle}
+            avatar={authors[0].avatar}
+          />
+        </Link>
+      </View>
+    )
+  }
+  return (
+    <View style={styles.avis}>
+      {authors.slice(0, MAX_AUTHORS).map(author => (
+        <View key={author.href} style={s.mr5}>
+          <UserAvatar
+            size={35}
+            displayName={author.displayName}
+            handle={author.handle}
+            avatar={author.avatar}
+          />
+        </View>
+      ))}
+      {authors.length > MAX_AUTHORS ? (
+        <Text style={[styles.aviExtraCount, pal.textLight]}>
+          +{authors.length - MAX_AUTHORS}
+        </Text>
+      ) : undefined}
+      <FontAwesomeIcon
+        icon="angle-down"
+        size={18}
+        style={[styles.expandedAuthorsCloseBtnIcon, pal.icon]}
+      />
+    </View>
+  )
+}
+
+function ExpandedAuthorsList({
+  visible,
+  authors,
+  onToggleAuthorsExpanded,
+}: {
+  visible: boolean
+  authors: Author[]
+  onToggleAuthorsExpanded: () => void
+}) {
+  const pal = usePalette('default')
+  const heightInterp = useAnimatedValue(visible ? 1 : 0)
+  const targetHeight =
+    authors.length * (EXPANDED_AUTHOR_EL_HEIGHT + 10) /*10=margin*/ +
+    EXPANDED_AUTHORS_CLOSE_EL_HEIGHT
+  const heightStyle = {
+    height: Animated.multiply(heightInterp, targetHeight),
+    overflow: 'hidden',
+  }
+  React.useEffect(() => {
+    Animated.timing(heightInterp, {
+      toValue: visible ? 1 : 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start()
+  }, [heightInterp, visible])
+  return (
+    <Animated.View style={(s.mb5, heightStyle)}>
+      <TouchableOpacity
+        style={styles.expandedAuthorsCloseBtn}
+        onPress={onToggleAuthorsExpanded}>
+        <FontAwesomeIcon
+          icon="angle-up"
+          size={18}
+          style={[styles.expandedAuthorsCloseBtnIcon, pal.text]}
+        />
+        <Text type="sm-medium" style={pal.text}>
+          Hide
+        </Text>
+      </TouchableOpacity>
+      {authors.map(author => (
+        <Link
+          href={author.href}
+          title={author.displayName || author.handle}
+          style={styles.expandedAuthor}>
+          <View style={styles.expandedAuthorAvi}>
+            <UserAvatar
+              size={35}
+              displayName={author.displayName}
+              handle={author.handle}
+              avatar={author.avatar}
+            />
+          </View>
+          <View style={s.flex1}>
+            <Text type="lg-bold" numberOfLines={1}>
+              {author.displayName || author.handle}
+              &nbsp;
+              <Text style={[pal.textLight]}>{author.handle}</Text>
+            </Text>
+          </View>
+        </Link>
+      ))}
+    </Animated.View>
+  )
+}
 
 function AdditionalPostText({
   additionalPost,
@@ -281,5 +403,26 @@ const styles = StyleSheet.create({
   addedContainer: {
     paddingTop: 4,
     paddingLeft: 36,
+  },
+
+  expandedAuthorsCloseBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 8,
+    height: EXPANDED_AUTHORS_CLOSE_EL_HEIGHT,
+    overflow: 'hidden',
+  },
+  expandedAuthorsCloseBtnIcon: {
+    marginLeft: 4,
+    marginRight: 4,
+  },
+  expandedAuthor: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    height: EXPANDED_AUTHOR_EL_HEIGHT,
+  },
+  expandedAuthorAvi: {
+    marginRight: 5,
   },
 })
