@@ -41,7 +41,7 @@ describe('extractHtmlMeta', () => {
   it.each(cases)(
     'given the html tag %p, returns %p',
     (input, expectedResult) => {
-      const output = extractHtmlMeta(input)
+      const output = extractHtmlMeta({html: input as string, hostname: ''})
       expect(output).toEqual(expectedResult)
     },
   )
@@ -52,7 +52,7 @@ describe('extractHtmlMeta', () => {
       title: 'Example Domain',
       description: 'An example website',
     }
-    const output = extractHtmlMeta(input)
+    const output = extractHtmlMeta({html: input, hostname: 'example.com'})
     expect(output).toEqual(expectedOutput)
   })
 
@@ -64,7 +64,7 @@ describe('extractHtmlMeta', () => {
         'Stunning HD Video ( 1080p ) of Patagonian Nature with Relaxing Native American Shamanic Music. HD footage used from ',
       image: 'https://i.ytimg.com/vi/x6UITRjhijI/sddefault.jpg',
     }
-    const output = extractHtmlMeta(input)
+    const output = extractHtmlMeta({html: input, hostname: 'youtube.com'})
     expect(output).toEqual(expectedOutput)
   })
 })
