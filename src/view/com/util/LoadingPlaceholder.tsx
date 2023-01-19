@@ -48,7 +48,7 @@ export function PostLoadingPlaceholder({
   const pal = usePalette('default')
   return (
     <View style={[styles.post, pal.view, style]}>
-      <LoadingPlaceholder width={50} height={50} style={styles.avatar} />
+      <LoadingPlaceholder width={52} height={52} style={styles.avatar} />
       <View style={[s.flex1]}>
         <LoadingPlaceholder width={100} height={8} style={[s.mb10]} />
         <LoadingPlaceholder width={200} height={8} style={[s.mb5]} />
@@ -143,8 +143,9 @@ const styles = StyleSheet.create({
     margin: 1,
   },
   avatar: {
-    borderRadius: 25,
+    borderRadius: 26,
     marginRight: 10,
+    marginLeft: 6,
   },
   notification: {
     padding: 10,
