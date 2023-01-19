@@ -296,6 +296,7 @@ function ExpandedAuthorsList({
       </TouchableOpacity>
       {authors.map(author => (
         <Link
+          key={author.href}
           href={author.href}
           title={author.displayName || author.handle}
           style={styles.expandedAuthor}>
