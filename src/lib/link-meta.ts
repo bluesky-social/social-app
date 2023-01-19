@@ -1,10 +1,7 @@
 import he from 'he'
-import {
-  extractHtmlMeta,
-  isBskyAppUrl,
-  convertBskyAppUrlIfNeeded,
-} from './strings'
-import {match as matchRoute} from '../view/routes'
+import {extractHtmlMeta, isBskyAppUrl} from './strings'
+import {RootStoreModel} from '../state'
+import {extractBskyMeta} from './extractBskyMeta'
 
 export enum LikelyType {
   HTML,
@@ -26,19 +23,12 @@ export interface LinkMeta {
 }
 
 export async function getLinkMeta(
+  store: RootStoreModel,
   url: string,
   timeout = 5e3,
 ): Promise<LinkMeta> {
   if (isBskyAppUrl(url)) {
-    // TODO this could be better
-    url = convertBskyAppUrlIfNeeded(url)
-    const route = matchRoute(url)
-    return {
-      likelyType: LikelyType.AtpData,
-      url,
-      title: route.defaultTitle,
-      // description: ''
-    }
+    return extractBskyMeta(store, url)
   }
 
   let urlp

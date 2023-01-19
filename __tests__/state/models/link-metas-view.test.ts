@@ -43,7 +43,7 @@ describe('LinkMetasViewModel', () => {
 
       const result = await viewModel.getLinkMeta(mockedMeta.url)
 
-      expect(getLinkMetaMockSpy).toHaveBeenCalledWith(mockedMeta.url)
+      expect(getLinkMetaMockSpy).toHaveBeenCalledWith(rootStore, mockedMeta.url)
       expect(result).toEqual(mockedMeta)
     })
 
