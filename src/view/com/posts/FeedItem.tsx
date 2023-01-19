@@ -148,7 +148,7 @@ export const FeedItem = observer(function ({
           <View style={styles.layoutAvi}>
             <Link href={authorHref} title={item.post.author.handle}>
               <UserAvatar
-                size={54}
+                size={52}
                 displayName={item.post.author.displayName}
                 handle={item.post.author.handle}
                 avatar={item.post.author.avatar}
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   outer: {
     borderTopWidth: 1,
     padding: 10,
-    paddingRight: 20,
+    paddingRight: 15,
   },
   outerNoTop: {
     borderTopWidth: 0,
@@ -265,21 +265,21 @@ const styles = StyleSheet.create({
   },
   topReplyLine: {
     position: 'absolute',
-    left: 45,
+    left: 42,
     top: 0,
     height: 6,
     borderLeftWidth: 2,
   },
   bottomReplyLine: {
     position: 'absolute',
-    left: 45,
+    left: 42,
     top: 72,
     bottom: 0,
     borderLeftWidth: 2,
   },
   includeReason: {
     flexDirection: 'row',
-    paddingLeft: 55,
+    paddingLeft: 50,
     marginTop: 2,
     marginBottom: 2,
   },
@@ -291,8 +291,8 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   layoutAvi: {
-    width: 75,
-    paddingLeft: 10,
+    width: 70,
+    paddingLeft: 8,
   },
   layoutContent: {
     flex: 1,
