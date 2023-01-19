@@ -229,13 +229,13 @@ export const FeedItem = observer(function ({
                 x1="2"
                 y1="0"
                 x2="2"
-                y2="5"
+                y2="8"
                 stroke={pal.colors.replyLine}
                 strokeWidth="2"
               />
-              <Circle x="2" y="10" r="1.5" fill={pal.colors.replyLineDot} />
-              <Circle x="2" y="16" r="1.5" fill={pal.colors.replyLineDot} />
-              <Circle x="2" y="22" r="1.5" fill={pal.colors.replyLineDot} />
+              <Circle x="2" y="14" r="1.5" fill={pal.colors.replyLineDot} />
+              <Circle x="2" y="20" r="1.5" fill={pal.colors.replyLineDot} />
+              <Circle x="2" y="26" r="1.5" fill={pal.colors.replyLineDot} />
             </Svg>
           </View>
           <Text type="md" style={pal.link}>
@@ -322,11 +322,11 @@ const styles = StyleSheet.create({
   viewFullThread: {
     paddingTop: 12,
     paddingBottom: 2,
-    paddingLeft: 70,
+    paddingLeft: 80,
   },
   viewFullThreadDots: {
     position: 'absolute',
-    left: 33,
+    left: 41,
     top: 0,
   },
 })
