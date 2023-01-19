@@ -1,5 +1,14 @@
 import {extractYoutubeMeta} from './extractYoutubeMeta'
-export const extractHtmlMeta = (html: string): Record<string, string> => {
+
+interface ExtractHtmlMetaInput {
+  html: string
+  url?: string
+}
+
+export const extractHtmlMeta = ({
+  html,
+  url,
+}: ExtractHtmlMetaInput): Record<string, string> => {
   const htmlTitleRegex = /<title>([^<]+)<\/title>/i
 
   let res: Record<string, string> = {}
@@ -45,7 +54,8 @@ export const extractHtmlMeta = (html: string): Record<string, string> => {
     }
   }
 
-  if (res.title === 'YouTube') {
+  const isYoutubeUrl = url?.includes('youtube.') || url?.includes('youtu.be')
+  if (res.title === 'YouTube' && isYoutubeUrl) {
     // Workaround for Youtube not having a title in the meta tags
     res = {...res, ...extractYoutubeMeta(html)}
   }

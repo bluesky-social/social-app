@@ -66,7 +66,7 @@ export async function getLinkMeta(
     })
     const httpResBody = await httpRes.text()
     clearTimeout(to)
-    const httpResMeta = extractHtmlMeta(httpResBody)
+    const httpResMeta = extractHtmlMeta({html: httpResBody, url})
     meta.title = httpResMeta.title ? he.decode(httpResMeta.title) : undefined
     meta.description = httpResMeta.description
       ? he.decode(httpResMeta.description)
