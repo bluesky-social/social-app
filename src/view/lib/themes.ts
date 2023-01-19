@@ -13,7 +13,7 @@ export const defaultTheme: Theme = {
       textInverted: colors.white,
       link: colors.blue3,
       border: '#f0e9e9',
-      icon: colors.gray2,
+      icon: colors.gray3,
 
       // non-standard
       textVeryLight: colors.gray4,
