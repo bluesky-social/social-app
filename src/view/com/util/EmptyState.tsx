@@ -25,11 +25,13 @@ export function EmptyState({
           <FontAwesomeIcon
             icon={icon}
             size={64}
-            style={[styles.icon, pal.textLight]}
+            style={[styles.icon, {color: pal.colors.emptyStateIcon}]}
           />
         )}
       </View>
-      <Text type="xl" style={[pal.textLight, styles.text]}>
+      <Text
+        type="xl-medium"
+        style={[{color: pal.colors.textVeryLight}, styles.text]}>
         {message}
       </Text>
     </View>
@@ -50,6 +52,6 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    paddingTop: 16,
+    paddingTop: 20,
   },
 })

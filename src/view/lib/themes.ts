@@ -16,12 +16,13 @@ export const defaultTheme: Theme = {
       icon: colors.gray2,
 
       // non-standard
-      actionLabel: colors.gray4,
+      textVeryLight: colors.gray4,
       replyLine: colors.gray2,
       replyLineDot: colors.gray3,
       unreadNotifBg: '#ebf6ff',
       postCtrl: '#71768A',
       brandText: '#0066FF',
+      emptyStateIcon: '#B6B6C9',
     },
     primary: {
       background: colors.blue3,
@@ -259,12 +260,13 @@ export const darkTheme: Theme = {
       icon: colors.gray5,
 
       // non-standard
-      actionLabel: colors.gray3,
+      textVeryLight: colors.gray4,
       replyLine: colors.gray5,
       replyLineDot: colors.gray6,
       unreadNotifBg: colors.blue5,
       postCtrl: '#61657A',
       brandText: '#0085ff',
+      emptyStateIcon: colors.gray4,
     },
     primary: {
       ...defaultTheme.palette.primary,
