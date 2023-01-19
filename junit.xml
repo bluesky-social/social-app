@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="30" failures="1" errors="0" time="9.519">
-  <testsuite name="isNetworkError" errors="0" failures="0" skipped="0" timestamp="2023-01-19T00:45:52" time="1.341" tests="1">
+<testsuites name="jest tests" tests="30" failures="1" errors="0" time="8.901">
+  <testsuite name="isNetworkError" errors="0" failures="0" skipped="0" timestamp="2023-01-19T00:56:06" time="1.178" tests="1">
     <testcase classname="isNetworkError correctly distinguishes network errors" name="isNetworkError correctly distinguishes network errors" time="0.004">
     </testcase>
   </testsuite>
-  <testsuite name="clamp" errors="0" failures="0" skipped="0" timestamp="2023-01-19T00:45:52" time="1.341" tests="1">
+  <testsuite name="clamp" errors="0" failures="0" skipped="0" timestamp="2023-01-19T00:56:06" time="1.18" tests="1">
     <testcase classname="clamp correctly clamps any given number and range" name="clamp correctly clamps any given number and range" time="0.005">
     </testcase>
   </testsuite>
-  <testsuite name="OnboardModel" errors="0" failures="0" skipped="0" timestamp="2023-01-19T00:45:52" time="1.349" tests="3">
-    <testcase classname="OnboardModel should start/stop correctly" name="OnboardModel should start/stop correctly" time="0.01">
+  <testsuite name="OnboardModel" errors="0" failures="0" skipped="0" timestamp="2023-01-19T00:56:06" time="1.208" tests="3">
+    <testcase classname="OnboardModel should start/stop correctly" name="OnboardModel should start/stop correctly" time="0.006">
     </testcase>
     <testcase classname="OnboardModel should call the next method until it has no more stages" name="OnboardModel should call the next method until it has no more stages" time="0.002">
     </testcase>
-    <testcase classname="OnboardModel serialize and hydrate" name="OnboardModel serialize and hydrate" time="0.004">
+    <testcase classname="OnboardModel serialize and hydrate" name="OnboardModel serialize and hydrate" time="0.003">
     </testcase>
   </testsuite>
-  <testsuite name="ShellUiModel" errors="0" failures="0" skipped="0" timestamp="2023-01-19T00:45:52" time="1.352" tests="3">
-    <testcase classname="ShellUiModel should call the openModal &amp; closeModal method" name="ShellUiModel should call the openModal &amp; closeModal method" time="0.009">
+  <testsuite name="ShellUiModel" errors="0" failures="0" skipped="0" timestamp="2023-01-19T00:56:06" time="1.205" tests="3">
+    <testcase classname="ShellUiModel should call the openModal &amp; closeModal method" name="ShellUiModel should call the openModal &amp; closeModal method" time="0.015">
     </testcase>
-    <testcase classname="ShellUiModel should call the openLightbox &amp; closeLightbox method" name="ShellUiModel should call the openLightbox &amp; closeLightbox method" time="0.002">
+    <testcase classname="ShellUiModel should call the openLightbox &amp; closeLightbox method" name="ShellUiModel should call the openLightbox &amp; closeLightbox method" time="0.003">
     </testcase>
     <testcase classname="ShellUiModel should call the openComposer &amp; closeComposer method" name="ShellUiModel should call the openComposer &amp; closeComposer method" time="0.002">
     </testcase>
   </testsuite>
-  <testsuite name="NavigationModel" errors="0" failures="0" skipped="0" timestamp="2023-01-19T00:45:52" time="1.406" tests="12">
-    <testcase classname="NavigationModel should clear() to the correct base state" name="NavigationModel should clear() to the correct base state" time="0.019">
+  <testsuite name="NavigationModel" errors="0" failures="0" skipped="0" timestamp="2023-01-19T00:56:06" time="1.249" tests="12">
+    <testcase classname="NavigationModel should clear() to the correct base state" name="NavigationModel should clear() to the correct base state" time="0.022">
     </testcase>
     <testcase classname="NavigationModel should call the navigate method" name="NavigationModel should call the navigate method" time="0.004">
     </testcase>
-    <testcase classname="NavigationModel should call the refresh method" name="NavigationModel should call the refresh method" time="0.002">
+    <testcase classname="NavigationModel should call the refresh method" name="NavigationModel should call the refresh method" time="0.003">
     </testcase>
-    <testcase classname="NavigationModel should call the isCurrentScreen method" name="NavigationModel should call the isCurrentScreen method" time="0.001">
+    <testcase classname="NavigationModel should call the isCurrentScreen method" name="NavigationModel should call the isCurrentScreen method" time="0.002">
     </testcase>
     <testcase classname="NavigationModel should call the tab getter" name="NavigationModel should call the tab getter" time="0.002">
     </testcase>
-    <testcase classname="NavigationModel should call the tabCount getter" name="NavigationModel should call the tabCount getter" time="0.005">
+    <testcase classname="NavigationModel should call the tabCount getter" name="NavigationModel should call the tabCount getter" time="0.001">
     </testcase>
     <testcase classname="NavigationModel tabs not enabled should not create new tabs" name="NavigationModel tabs not enabled should not create new tabs" time="0.002">
     </testcase>
     <testcase classname="NavigationModel tabs not enabled should not change the active tab" name="NavigationModel tabs not enabled should not change the active tab" time="0.001">
     </testcase>
-    <testcase classname="NavigationModel tabs not enabled should note close tabs" name="NavigationModel tabs not enabled should note close tabs" time="0.001">
+    <testcase classname="NavigationModel tabs not enabled should note close tabs" name="NavigationModel tabs not enabled should note close tabs" time="0.009">
     </testcase>
-    <testcase classname="NavigationModel tabs enabled should create new tabs" name="NavigationModel tabs enabled should create new tabs" time="0.01">
+    <testcase classname="NavigationModel tabs enabled should create new tabs" name="NavigationModel tabs enabled should create new tabs" time="0.002">
     </testcase>
     <testcase classname="NavigationModel tabs enabled should change the current tab" name="NavigationModel tabs enabled should change the current tab" time="0.001">
     </testcase>
     <testcase classname="NavigationModel tabs enabled should close tabs" name="NavigationModel tabs enabled should close tabs" time="0.002">
     </testcase>
   </testsuite>
-  <testsuite name="downloadAndResize" errors="0" failures="1" skipped="0" timestamp="2023-01-19T00:45:52" time="1.422" tests="3">
-    <testcase classname="downloadAndResize should return resized image for valid URI and options" name="downloadAndResize should return resized image for valid URI and options" time="0.01">
+  <testsuite name="downloadAndResize" errors="0" failures="1" skipped="0" timestamp="2023-01-19T00:56:06" time="1.276" tests="3">
+    <testcase classname="downloadAndResize should return resized image for valid URI and options" name="downloadAndResize should return resized image for valid URI and options" time="0.009">
       <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
 
 - Expected
@@ -75,17 +75,17 @@ Number of calls: 1
     at _next (/Users/aryan/dev/social-app/node_modules/@babel/runtime/helpers/asyncToGenerator.js:22:9)
     at processTicksAndRejections (node:internal/process/task_queues:96:5)</failure>
     </testcase>
-    <testcase classname="downloadAndResize should return undefined for invalid URI" name="downloadAndResize should return undefined for invalid URI" time="0.031">
+    <testcase classname="downloadAndResize should return undefined for invalid URI" name="downloadAndResize should return undefined for invalid URI" time="0.03">
     </testcase>
     <testcase classname="downloadAndResize should return undefined for unsupported file type" name="downloadAndResize should return undefined for unsupported file type" time="0.001">
     </testcase>
   </testsuite>
-  <testsuite name="LogModel" errors="0" failures="0" skipped="0" timestamp="2023-01-19T00:45:52" time="1.622" tests="7">
-    <testcase classname="LogModel should call a log method and add a log entry to the entries array" name="LogModel should call a log method and add a log entry to the entries array" time="0.168">
+  <testsuite name="LogModel" errors="0" failures="0" skipped="0" timestamp="2023-01-19T00:56:06" time="1.431" tests="7">
+    <testcase classname="LogModel should call a log method and add a log entry to the entries array" name="LogModel should call a log method and add a log entry to the entries array" time="0.18">
     </testcase>
     <testcase classname="LogModel should call the console.debug after calling the debug method" name="LogModel should call the console.debug after calling the debug method" time="0.002">
     </testcase>
-    <testcase classname="LogModel should call the serialize method" name="LogModel should call the serialize method" time="0.009">
+    <testcase classname="LogModel should call the serialize method" name="LogModel should call the serialize method" time="0.005">
     </testcase>
     <testcase classname="LogModel should call the hydrate method with valid properties" name="LogModel should call the hydrate method with valid properties" time="0.002">
     </testcase>
@@ -93,7 +93,7 @@ Number of calls: 1
     </testcase>
     <testcase classname="LogModel should stringify the details if it is not a string" name="LogModel should stringify the details if it is not a string" time="0.002">
     </testcase>
-    <testcase classname="LogModel should stringify the details object if it is of a specific error" name="LogModel should stringify the details object if it is of a specific error" time="0.063">
+    <testcase classname="LogModel should stringify the details object if it is of a specific error" name="LogModel should stringify the details object if it is of a specific error" time="0.012">
     </testcase>
   </testsuite>
 </testsuites>
