@@ -1,5 +1,6 @@
 import {LikelyType, getLinkMeta, getLikelyType} from '../../src/lib/link-meta'
 import {exampleComHtml} from './__mocks__/exampleComHtml'
+import {mockedRootStore} from '../../__mocks__/state-mock'
 
 describe('getLinkMeta', () => {
   const inputs = [
@@ -12,6 +13,7 @@ describe('getLinkMeta', () => {
     'https://example.com/audio.ogg',
     'https://example.com/text.txt',
     'https://example.com/javascript.js',
+    'https://bsky.app/',
     'https://bsky.app/index.html',
   ]
   const outputs = [
@@ -59,6 +61,12 @@ describe('getLinkMeta', () => {
     },
     {
       likelyType: LikelyType.AtpData,
+      url: '/',
+      title: 'Bluesky',
+      description: 'A new kind of social network',
+    },
+    {
+      likelyType: LikelyType.AtpData,
       url: '/index.html',
       title: 'Not found',
     },
@@ -80,7 +88,7 @@ describe('getLinkMeta', () => {
         })
       })
       const input = inputs[i]
-      const output = await getLinkMeta(input)
+      const output = await getLinkMeta(mockedRootStore, input)
       expect(output).toEqual(outputs[i])
     }
   })

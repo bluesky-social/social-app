@@ -31,7 +31,7 @@ export class LinkMetasViewModel {
       }
     }
     try {
-      const promise = getLinkMeta(url)
+      const promise = getLinkMeta(this.rootStore, url)
       this.cache.set(url, promise)
       const res = await promise
       this.cache.set(url, res)

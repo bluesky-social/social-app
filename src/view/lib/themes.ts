@@ -13,15 +13,16 @@ export const defaultTheme: Theme = {
       textInverted: colors.white,
       link: colors.blue3,
       border: '#f0e9e9',
-      icon: colors.gray2,
+      icon: colors.gray3,
 
       // non-standard
-      actionLabel: colors.gray4,
+      textVeryLight: colors.gray4,
       replyLine: colors.gray2,
       replyLineDot: colors.gray3,
       unreadNotifBg: '#ebf6ff',
       postCtrl: '#71768A',
       brandText: '#0066FF',
+      emptyStateIcon: '#B6B6C9',
     },
     primary: {
       background: colors.blue3,
@@ -227,7 +228,7 @@ export const defaultTheme: Theme = {
       fontWeight: '400',
     },
     'post-text-lg': {
-      fontSize: 24,
+      fontSize: 22,
       letterSpacing: 0.4,
       fontWeight: '400',
     },
@@ -259,12 +260,13 @@ export const darkTheme: Theme = {
       icon: colors.gray5,
 
       // non-standard
-      actionLabel: colors.gray3,
+      textVeryLight: colors.gray4,
       replyLine: colors.gray5,
       replyLineDot: colors.gray6,
       unreadNotifBg: colors.blue5,
       postCtrl: '#61657A',
       brandText: '#0085ff',
+      emptyStateIcon: colors.gray4,
     },
     primary: {
       ...defaultTheme.palette.primary,
