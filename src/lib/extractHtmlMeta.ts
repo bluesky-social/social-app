@@ -2,12 +2,12 @@ import {extractYoutubeMeta} from './extractYoutubeMeta'
 
 interface ExtractHtmlMetaInput {
   html: string
-  url?: string
+  hostname?: string
 }
 
 export const extractHtmlMeta = ({
   html,
-  url,
+  hostname,
 }: ExtractHtmlMetaInput): Record<string, string> => {
   const htmlTitleRegex = /<title>([^<]+)<\/title>/i
 
@@ -54,7 +54,8 @@ export const extractHtmlMeta = ({
     }
   }
 
-  const isYoutubeUrl = url?.includes('youtube.') || url?.includes('youtu.be')
+  const isYoutubeUrl =
+    hostname?.includes('youtube.') || hostname?.includes('youtu.be')
   if (res.title === 'YouTube' && isYoutubeUrl) {
     // Workaround for Youtube not having a title in the meta tags
     res = {...res, ...extractYoutubeMeta(html)}
