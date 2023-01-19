@@ -135,8 +135,15 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
   },
 
-  backIcon: {width: 30, height: 30},
-  backIconWide: {width: 40, height: 30},
+  backIcon: {
+    width: 30,
+    height: 30,
+  },
+  backIconWide: {
+    width: 40,
+    height: 30,
+    marginLeft: 6,
+  },
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
