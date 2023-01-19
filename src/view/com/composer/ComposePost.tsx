@@ -7,11 +7,14 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import PasteInput, {
+  PastedFile,
+  PasteInputRef,
+} from '@mattermost/react-native-paste-input'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete-view'
@@ -33,7 +36,7 @@ import {detectLinkables, extractEntities} from '../../../lib/strings'
 import {getLinkMeta} from '../../../lib/link-meta'
 import {downloadAndResize} from '../../../lib/images'
 import {UserLocalPhotosModel} from '../../../state/models/user-local-photos'
-import {PhotoCarouselPicker} from './PhotoCarouselPicker'
+import {PhotoCarouselPicker, cropPhoto} from './PhotoCarouselPicker'
 import {SelectedPhoto} from './SelectedPhoto'
 import {usePalette} from '../../lib/hooks/usePalette'
 
@@ -54,7 +57,7 @@ export const ComposePost = observer(function ComposePost({
 }) {
   const pal = usePalette('default')
   const store = useStores()
-  const textInput = useRef<TextInput>(null)
+  const textInput = useRef<PasteInputRef>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
@@ -77,6 +80,16 @@ export const ComposePost = observer(function ComposePost({
     () => new UserLocalPhotosModel(store),
     [store],
   )
+
+  // HACK
+  // there's a bug with @mattermost/react-native-paste-input where if the input
+  // is focused during unmount, an exception will throw (seems that a blur method isnt implemented)
+  // manually blurring before closing gets around that
+  // -prf
+  const hackfixOnClose = () => {
+    textInput.current?.blur()
+    onClose()
+  }
 
   // initial setup
   useEffect(() => {
@@ -134,7 +147,8 @@ export const ComposePost = observer(function ComposePost({
         isLoading: false, // done
       })
     }
-  }, [extLink])
+    return cleanup
+  }, [store, extLink])
 
   useEffect(() => {
     // HACK
@@ -196,9 +210,21 @@ export const ComposePost = observer(function ComposePost({
       }
     }
   }
-  const onPressCancel = () => {
-    onClose()
+  const onPaste = async (err: string | undefined, files: PastedFile[]) => {
+    if (err) {
+      return setError(err)
+    }
+    if (selectedPhotos.length >= 4) {
+      return
+    }
+    const imgFile = files.find(file => /\.(jpe?g|png)$/.test(file.fileName))
+    if (!imgFile) {
+      return
+    }
+    const finalImgPath = await cropPhoto(imgFile.uri)
+    onSelectPhotos([...selectedPhotos, finalImgPath])
   }
+  const onPressCancel = () => hackfixOnClose()
   const onPressPublish = async () => {
     if (isProcessing) {
       return
@@ -229,7 +255,7 @@ export const ComposePost = observer(function ComposePost({
     }
     store.me.mainFeed.loadLatest()
     onPost?.()
-    onClose()
+    hackfixOnClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
   }
   const onSelectAutocompleteItem = (item: string) => {
@@ -254,7 +280,11 @@ export const ComposePost = observer(function ComposePost({
     let i = 0
     return detectLinkables(text).map(v => {
       if (typeof v === 'string') {
-        return v
+        return (
+          <Text key={i++} style={styles.textInputFormatting}>
+            {v}
+          </Text>
+        )
       } else {
         return (
           <Text key={i++} style={[pal.link, styles.textInputFormatting]}>
@@ -263,7 +293,7 @@ export const ComposePost = observer(function ComposePost({
         )
       }
     })
-  }, [text])
+  }, [text, pal.link])
 
   return (
     <KeyboardAvoidingView
@@ -354,12 +384,13 @@ export const ComposePost = observer(function ComposePost({
                 avatar={store.me.avatar}
                 size={50}
               />
-              <TextInput
+              <PasteInput
                 testID="composerTextInput"
                 ref={textInput}
                 multiline
                 scrollEnabled
                 onChangeText={(text: string) => onChangeText(text)}
+                onPaste={onPaste}
                 placeholder={selectTextInputPlaceholder}
                 placeholderTextColor={pal.colors.textLight}
                 style={[
@@ -368,7 +399,7 @@ export const ComposePost = observer(function ComposePost({
                   styles.textInputFormatting,
                 ]}>
                 {textDecorated}
-              </TextInput>
+              </PasteInput>
             </View>
             <SelectedPhoto
               selectedPhotos={selectedPhotos}
