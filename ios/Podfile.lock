@@ -565,13 +565,13 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  boost: 57d2868c099736d80fcd648bf211b4431e51a558
+  boost: a7c83b31436843459a1961bfd74b96033dc77234
   BVLinearGradient: 34a999fda29036898a09c6a6b728b0b4189e1a44
-  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   FBLazyVector: 61839cba7a48c570b7ac3e1cd8a4d0948382202f
   FBReactNativeSpec: 5a14398ccf5e27c1ca2d7109eb920594ce93c10d
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
+  glog: 476ee3e89abb49e07f822b48323c51c57124b572
   hermes-engine: f6e715aa6c8bd38de6c13bc85e07b0a337edaa89
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
