@@ -1,13 +1,13 @@
 import {makeAutoObservable} from 'mobx'
 import {
-  AppBskyGraphGetFollows as GetFollows,
+  AppBskyGraphGetFollowers as GetFollows,
   AppBskyActorRef as ActorRef,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
 
-export type FollowItem = GetFollows.Follow & {
-  _reactKey: string
-}
+const PAGE_SIZE = 30
+
+export type FollowItem = GetFollows.Follow
 
 export class UserFollowsViewModel {
   // state
@@ -16,6 +16,9 @@ export class UserFollowsViewModel {
   hasLoaded = false
   error = ''
   params: GetFollows.QueryParams
+  hasMore = true
+  loadMoreCursor?: string
+  private _loadMorePromise: Promise<void> | undefined
 
   // data
   subject: ActorRef.WithInfo = {
@@ -55,16 +58,17 @@ export class UserFollowsViewModel {
   // public api
   // =
 
-  async setup() {
-    await this._fetch()
-  }
-
   async refresh() {
-    await this._fetch(true)
+    return this.loadMore(true)
   }
 
-  async loadMore() {
-    // TODO
+  async loadMore(isRefreshing = false) {
+    if (this._loadMorePromise) {
+      return this._loadMorePromise
+    }
+    this._loadMorePromise = this._loadMore(isRefreshing)
+    await this._loadMorePromise
+    this._loadMorePromise = undefined
   }
 
   // state transitions
@@ -89,32 +93,30 @@ export class UserFollowsViewModel {
   // loader functions
   // =
 
-  private async _fetch(isRefreshing = false) {
+  private async _loadMore(isRefreshing = false) {
+    if (!this.hasMore) {
+      return
+    }
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.graph.getFollows(
-        this.params,
-      )
-      this._replaceAll(res)
+      const params = Object.assign({}, this.params, {
+        limit: PAGE_SIZE,
+        before: this.loadMoreCursor,
+      })
+      if (this.isRefreshing) {
+        this.follows = []
+      }
+      const res = await this.rootStore.api.app.bsky.graph.getFollows(params)
+      await this._appendAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(`Failed to load feed: ${e.toString()}`)
+      this._xIdle(e)
     }
   }
 
-  private _replaceAll(res: GetFollows.Response) {
-    this.subject.did = res.data.subject.did
-    this.subject.handle = res.data.subject.handle
-    this.subject.displayName = res.data.subject.displayName
-    this.subject.avatar = res.data.subject.avatar
-    this.follows.length = 0
-    let counter = 0
-    for (const item of res.data.follows) {
-      this._append({_reactKey: `item-${counter++}`, ...item})
-    }
-  }
-
-  private _append(item: FollowItem) {
-    this.follows.push(item)
+  private async _appendAll(res: GetFollows.Response) {
+    this.loadMoreCursor = res.data.cursor
+    this.hasMore = !!this.loadMoreCursor
+    this.follows = this.follows.concat(res.data.follows)
   }
 }
