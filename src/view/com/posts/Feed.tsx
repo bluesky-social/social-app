@@ -12,7 +12,7 @@ import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {FeedModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
-import {ComposePrompt} from '../composer/Prompt'
+import {PromptButtons} from './PromptButtons'
 import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
 
 const COMPOSE_PROMPT_ITEM = {_reactKey: '__prompt__'}
@@ -41,7 +41,7 @@ export const Feed = observer(function Feed({
   //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = ({item}: {item: any}) => {
     if (item === COMPOSE_PROMPT_ITEM) {
-      return <ComposePrompt onPressCompose={onPressCompose} />
+      return <PromptButtons onPressCompose={onPressCompose} />
     } else if (item === EMPTY_FEED_ITEM) {
       return (
         <EmptyState
