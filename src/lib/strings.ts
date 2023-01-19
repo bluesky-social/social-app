@@ -96,7 +96,7 @@ export function extractEntities(
   {
     // links
     const re =
-      /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/gm
+      /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/gim
     while ((match = re.exec(text))) {
       let value = match[2]
       if (!value.startsWith('http')) {
