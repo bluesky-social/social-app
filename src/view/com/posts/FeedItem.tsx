@@ -252,6 +252,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     padding: 10,
     paddingRight: 15,
+    paddingBottom: 8,
   },
   outerNoTop: {
     borderTopWidth: 0,
