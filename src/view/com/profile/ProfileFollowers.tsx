@@ -10,7 +10,7 @@ import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
-import {s, colors} from '../../lib/styles'
+import {s} from '../../lib/styles'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 export const ProfileFollowers = observer(function ProfileFollowers({
@@ -19,30 +19,29 @@ export const ProfileFollowers = observer(function ProfileFollowers({
   name: string
 }) {
   const store = useStores()
-  const [view, setView] = React.useState<UserFollowersViewModel | undefined>()
+  const view = React.useMemo(
+    () => new UserFollowersViewModel(store, {user: name}),
+    [store, name],
+  )
 
   useEffect(() => {
-    if (view?.params.user === name) {
-      return // no change needed? or trigger refresh?
-    }
-    const newView = new UserFollowersViewModel(store, {user: name})
-    setView(newView)
-    newView
-      .setup()
+    view
+      .loadMore()
       .catch(err => store.log.error('Failed to fetch user followers', err))
-  }, [name, view?.params.user, store])
+  }, [view, store.log])
 
   const onRefresh = () => {
-    view?.refresh()
+    view.refresh()
+  }
+  const onEndReached = () => {
+    view
+      .loadMore()
+      .catch(err =>
+        view?.rootStore.log.error('Failed to load more followers', err),
+      )
   }
 
-  // loading
-  // =
-  if (
-    !view ||
-    (view.isLoading && !view.isRefreshing) ||
-    view.params.user !== name
-  ) {
+  if (!view.hasLoaded) {
     return (
       <View>
         <ActivityIndicator />
@@ -66,16 +65,25 @@ export const ProfileFollowers = observer(function ProfileFollowers({
 
   // loaded
   // =
-  const renderItem = ({item}: {item: FollowerItem}) => <User item={item} />
+  const renderItem = ({item}: {item: FollowerItem}) => (
+    <User key={item.did} item={item} />
+  )
   return (
-    <View>
-      <FlatList
-        data={view.followers}
-        keyExtractor={item => item._reactKey}
-        renderItem={renderItem}
-        contentContainerStyle={{paddingBottom: 200}}
-      />
-    </View>
+    <FlatList
+      data={view.followers}
+      keyExtractor={item => item.did}
+      refreshing={view.isRefreshing}
+      onRefresh={onRefresh}
+      onEndReached={onEndReached}
+      renderItem={renderItem}
+      initialNumToRender={15}
+      ListFooterComponent={() => (
+        <View style={styles.footer}>
+          {view.isLoading && <ActivityIndicator />}
+        </View>
+      )}
+      extraData={view.isLoading}
+    />
   )
 })
 
@@ -127,5 +135,9 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingTop: 10,
     paddingBottom: 10,
+  },
+  footer: {
+    height: 200,
+    paddingTop: 20,
   },
 })

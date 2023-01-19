@@ -396,7 +396,7 @@ export const MobileShell: React.FC = observer(() => {
                     />
                     <Animated.View
                       style={[
-                        s.flex1,
+                        {height: '100%'},
                         screenBg,
                         current
                           ? [
@@ -543,13 +543,12 @@ function constructScreenRenderDesc(nav: NavigationModel): {
 const styles = StyleSheet.create({
   outerContainer: {
     height: '100%',
-    flex: 1,
   },
   innerContainer: {
-    flex: 1,
+    height: '100%',
   },
   screenContainer: {
-    flex: 1,
+    height: '100%',
   },
   screenMask: {
     position: 'absolute',
