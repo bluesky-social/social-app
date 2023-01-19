@@ -1,31 +1,11 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
-import {
-  AppBskyFeedGetRepostedBy as GetRepostedBy,
-  AppBskySystemDeclRef,
-} from '@atproto/api'
-type DeclRef = AppBskySystemDeclRef.Main
+import {AppBskyFeedGetRepostedBy as GetRepostedBy} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 
-export class RepostedByViewItemModel implements GetRepostedBy.RepostedBy {
-  // ui state
-  _reactKey: string = ''
+const PAGE_SIZE = 30
 
-  // data
-  did: string = ''
-  handle: string = ''
-  displayName: string = ''
-  avatar?: string
-  declaration: DeclRef = {cid: '', actorType: ''}
-  createdAt?: string
-  indexedAt: string = ''
-
-  constructor(reactKey: string, v: RepostedByItem) {
-    makeAutoObservable(this)
-    this._reactKey = reactKey
-    Object.assign(this, v)
-  }
-}
+export type RepostedByItem = GetRepostedBy.RepostedBy
 
 export class RepostedByViewModel {
   // state
@@ -35,10 +15,13 @@ export class RepostedByViewModel {
   error = ''
   resolvedUri = ''
   params: GetRepostedBy.QueryParams
+  hasMore = true
+  loadMoreCursor?: string
+  private _loadMorePromise: Promise<void> | undefined
 
   // data
   uri: string = ''
-  repostedBy: RepostedByViewItemModel[] = []
+  repostedBy: RepostedByItem[] = []
 
   constructor(
     public rootStore: RootStoreModel,
@@ -70,19 +53,20 @@ export class RepostedByViewModel {
   // public api
   // =
 
-  async setup() {
+  async refresh() {
+    return this.loadMore(true)
+  }
+
+  async loadMore(isRefreshing = false) {
+    if (this._loadMorePromise) {
+      return this._loadMorePromise
+    }
     if (!this.resolvedUri) {
       await this._resolveUri()
     }
-    await this._fetch()
-  }
-
-  async refresh() {
-    await this._fetch(true)
-  }
-
-  async loadMore() {
-    // TODO
+    this._loadMorePromise = this._loadMore(isRefreshing)
+    await this._loadMorePromise
+    this._loadMorePromise = undefined
   }
 
   // state transitions
@@ -121,34 +105,28 @@ export class RepostedByViewModel {
     })
   }
 
-  private async _fetch(isRefreshing = false) {
+  private async _loadMore(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.feed.getRepostedBy(
-        Object.assign({}, this.params, {uri: this.resolvedUri}),
-      )
-      this._replaceAll(res)
+      const params = Object.assign({}, this.params, {
+        uri: this.resolvedUri,
+        limit: PAGE_SIZE,
+        before: this.loadMoreCursor,
+      })
+      if (this.isRefreshing) {
+        this.repostedBy = []
+      }
+      const res = await this.rootStore.api.app.bsky.feed.getRepostedBy(params)
+      await this._appendAll(res)
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e)
     }
   }
 
-  private async _refresh() {
-    this._xLoading(true)
-    // TODO: refetch and update items
-    this._xIdle()
-  }
-
-  private _replaceAll(res: GetRepostedBy.Response) {
-    this.repostedBy.length = 0
-    let counter = 0
-    for (const item of res.data.repostedBy) {
-      this._append(counter++, item)
-    }
-  }
-
-  private _append(keyId: number, item: RepostedByItem) {
-    this.repostedBy.push(new RepostedByViewItemModel(`item-${keyId}`, item))
+  private _appendAll(res: GetRepostedBy.Response) {
+    this.loadMoreCursor = res.data.cursor
+    this.hasMore = !!this.loadMoreCursor
+    this.repostedBy = this.repostedBy.concat(res.data.repostedBy)
   }
 }

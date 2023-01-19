@@ -3,7 +3,7 @@ import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {
   RepostedByViewModel,
-  RepostedByViewItemModel,
+  RepostedByItem,
 } from '../../../state/models/reposted-by-view'
 import {UserAvatar} from '../util/UserAvatar'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -18,31 +18,29 @@ export const PostRepostedBy = observer(function PostRepostedBy({
   uri: string
 }) {
   const store = useStores()
-  // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
-  const [view, setView] = React.useState<RepostedByViewModel | undefined>()
+  const view = React.useMemo(
+    () => new RepostedByViewModel(store, {uri}),
+    [store, uri],
+  )
 
   useEffect(() => {
-    if (view?.params.uri === uri) {
-      return // no change needed? or trigger refresh?
-    }
-    const newView = new RepostedByViewModel(store, {uri})
-    setView(newView)
-    newView
-      .setup()
-      .catch(err => store.log.error('Failed to fetch reposted by', err))
-  }, [uri, view?.params.uri, store])
+    view
+      .loadMore()
+      .catch(err => store.log.error('Failed to fetch user followers', err))
+  }, [view, store.log])
 
   const onRefresh = () => {
-    view?.refresh()
+    view.refresh()
+  }
+  const onEndReached = () => {
+    view
+      .loadMore()
+      .catch(err =>
+        view?.rootStore.log.error('Failed to load more followers', err),
+      )
   }
 
-  // loading
-  // =
-  if (
-    !view ||
-    (view.isLoading && !view.isRefreshing) ||
-    view.params.uri !== uri
-  ) {
+  if (!view.hasLoaded) {
     return (
       <View>
         <ActivityIndicator />
@@ -66,22 +64,29 @@ export const PostRepostedBy = observer(function PostRepostedBy({
 
   // loaded
   // =
-  const renderItem = ({item}: {item: RepostedByViewItemModel}) => (
-    <RepostedByItem item={item} />
+  const renderItem = ({item}: {item: RepostedByItem}) => (
+    <RepostedByItemCom item={item} />
   )
   return (
-    <View>
-      <FlatList
-        data={view.repostedBy}
-        keyExtractor={item => item._reactKey}
-        renderItem={renderItem}
-        contentContainerStyle={{paddingBottom: 200}}
-      />
-    </View>
+    <FlatList
+      data={view.repostedBy}
+      keyExtractor={item => item.did}
+      refreshing={view.isRefreshing}
+      onRefresh={onRefresh}
+      onEndReached={onEndReached}
+      renderItem={renderItem}
+      initialNumToRender={15}
+      ListFooterComponent={() => (
+        <View style={styles.footer}>
+          {view.isLoading && <ActivityIndicator />}
+        </View>
+      )}
+      extraData={view.isLoading}
+    />
   )
 })
 
-const RepostedByItem = ({item}: {item: RepostedByViewItemModel}) => {
+const RepostedByItemCom = ({item}: {item: RepostedByItem}) => {
   return (
     <Link
       style={styles.outer}
@@ -131,5 +136,9 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingTop: 10,
     paddingBottom: 10,
+  },
+  footer: {
+    height: 200,
+    paddingTop: 20,
   },
 })
