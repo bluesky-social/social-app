@@ -311,6 +311,7 @@ export const mockedFeedStore = {
   loadLatest: jest.fn(),
   update: jest.fn(),
   checkForLatest: jest.fn().mockRejectedValue('Error checking for latest'),
+  registerListeners: jest.fn().mockReturnValue(jest.fn()),
   // unknown required because of the missing private methods: _xLoading, _xIdle, _pendingWork, _initialLoad, _loadLatest, _loadMore, _update, _replaceAll, _appendAll, _prependAll, _updateAll, _getFeed, loadMoreCursor, pollCursor, _loadPromise, _updatePromise, _loadLatestPromise, _loadMorePromise
 } as unknown as FeedModel
 
