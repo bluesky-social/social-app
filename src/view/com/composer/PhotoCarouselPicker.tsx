@@ -125,6 +125,7 @@ export const PhotoCarouselPicker = ({
       testID="photoCarouselPickerView"
       horizontal
       style={[pal.view, styles.photosContainer]}
+      keyboardShouldPersistTaps="always"
       showsHorizontalScrollIndicator={false}>
       <TouchableOpacity
         testID="openCameraButton"
