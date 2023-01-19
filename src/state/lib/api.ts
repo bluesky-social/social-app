@@ -15,7 +15,13 @@ import {RootStoreModel} from '../models/root-store'
 import {extractEntities} from '../../lib/strings'
 import {isNetworkError} from '../../lib/errors'
 import {downloadAndResize} from '../../lib/images'
-import {getLikelyType, LikelyType, getLinkMeta} from '../../lib/link-meta'
+import {
+  getLikelyType,
+  LikelyType,
+  getLinkMeta,
+  LinkMeta,
+} from '../../lib/link-meta'
+import {Image} from '../../lib/images'
 
 const TIMEOUT = 10e3 // 10s
 
@@ -23,10 +29,18 @@ export function doPolyfill() {
   AtpApi.xrpc.fetch = fetchHandler
 }
 
+export interface ExternalEmbedDraft {
+  uri: string
+  isLoading: boolean
+  meta?: LinkMeta
+  localThumb?: Image
+}
+
 export async function post(
   store: RootStoreModel,
   text: string,
   replyTo?: string,
+  extLink?: ExternalEmbedDraft,
   images?: string[],
   knownHandles?: Set<string>,
   onStateChange?: (state: string) => void,
@@ -67,68 +81,44 @@ export async function post(
     }
   }
 
-  if (!embed && entities) {
-    const link = entities.find(
-      ent =>
-        ent.type === 'link' &&
-        getLikelyType(ent.value || '') === LikelyType.HTML,
-    )
-    if (link) {
-      try {
-        onStateChange?.(`Fetching link metadata...`)
-        let thumb
-        const linkMeta = await getLinkMeta(link.value)
-        if (linkMeta.image) {
-          onStateChange?.(`Downloading link thumbnail...`)
-          const thumbLocal = await downloadAndResize({
-            uri: linkMeta.image,
-            width: 250,
-            height: 250,
-            mode: 'contain',
-            maxSize: 100000,
-            timeout: 15e3,
-          }).catch(() => undefined)
-          if (thumbLocal) {
-            onStateChange?.(`Uploading link thumbnail...`)
-            let encoding
-            if (thumbLocal.uri.endsWith('.png')) {
-              encoding = 'image/png'
-            } else if (
-              thumbLocal.uri.endsWith('.jpeg') ||
-              thumbLocal.uri.endsWith('.jpg')
-            ) {
-              encoding = 'image/jpeg'
-            } else {
-              store.log.warn(
-                'Unexpected image format for thumbnail, skipping',
-                thumbLocal.uri,
-              )
-            }
-            if (encoding) {
-              const thumbUploadRes = await store.api.com.atproto.blob.upload(
-                thumbLocal.uri, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
-                {encoding},
-              )
-              thumb = {
-                cid: thumbUploadRes.data.cid,
-                mimeType: encoding,
-              }
-            }
-          }
+  if (!embed && extLink) {
+    let thumb
+    if (extLink.localThumb) {
+      onStateChange?.(`Uploading link thumbnail...`)
+      let encoding
+      if (extLink.localThumb.path.endsWith('.png')) {
+        encoding = 'image/png'
+      } else if (
+        extLink.localThumb.path.endsWith('.jpeg') ||
+        extLink.localThumb.path.endsWith('.jpg')
+      ) {
+        encoding = 'image/jpeg'
+      } else {
+        store.log.warn(
+          'Unexpected image format for thumbnail, skipping',
+          extLink.localThumb.path,
+        )
+      }
+      if (encoding) {
+        const thumbUploadRes = await store.api.com.atproto.blob.upload(
+          extLink.localThumb.path, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
+          {encoding},
+        )
+        thumb = {
+          cid: thumbUploadRes.data.cid,
+          mimeType: encoding,
         }
-        embed = {
-          $type: 'app.bsky.embed.external',
-          external: {
-            uri: link.value,
-            title: linkMeta.title || linkMeta.url,
-            description: linkMeta.description || '',
-            thumb,
-          },
-        } as AppBskyEmbedExternal.Main
-      } catch (e: any) {
-        store.log.warn(`Failed to fetch link meta for ${link.value}`, e)
       }
     }
+    embed = {
+      $type: 'app.bsky.embed.external',
+      external: {
+        uri: extLink.uri,
+        title: extLink.meta?.title || '',
+        description: extLink.meta?.description || '',
+        thumb,
+      },
+    } as AppBskyEmbedExternal.Main
   }
 
   if (replyTo) {
