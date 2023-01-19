@@ -92,7 +92,7 @@ export function PostEmbeds({
           />
         )}
         <View style={styles.extInner}>
-          <Text type="sm-bold" numberOfLines={2} style={[pal.text]}>
+          <Text type="md-bold" numberOfLines={2} style={[pal.text]}>
             {link.title || link.uri}
           </Text>
           <Text
