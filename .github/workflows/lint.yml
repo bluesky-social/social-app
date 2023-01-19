@@ -22,10 +22,13 @@ jobs:
       # - name: Lint
       #   run: yarn lint
       - name: Run tests
-        run: yarn test  
-      - name: Test report
-        uses: willcaul/jest-github-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
+        run: | 
+          yarn test-ci
+          ls
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: JEST Tests            # Name of the check run which will be created
+          path: junit.xml    # Path to test results
+          reporter: jest-junit        # Format of test results
