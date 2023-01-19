@@ -116,12 +116,17 @@ export const PostThreadItem = observer(function PostThreadItem({
     return (
       <>
         <View
-          style={[styles.outer, {borderTopColor: pal.colors.border}, pal.view]}>
+          style={[
+            styles.outer,
+            styles.outerHighlighted,
+            {borderTopColor: pal.colors.border},
+            pal.view,
+          ]}>
           <View style={styles.layout}>
             <View style={styles.layoutAvi}>
               <Link href={authorHref} title={authorTitle}>
                 <UserAvatar
-                  size={50}
+                  size={52}
                   displayName={item.post.author.displayName}
                   handle={item.post.author.handle}
                   avatar={item.post.author.avatar}
@@ -275,7 +280,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             <View style={styles.layoutAvi}>
               <Link href={authorHref} title={authorTitle}>
                 <UserAvatar
-                  size={50}
+                  size={52}
                   displayName={item.post.author.displayName}
                   handle={item.post.author.handle}
                   avatar={item.post.author.avatar}
@@ -346,17 +351,23 @@ export const PostThreadItem = observer(function PostThreadItem({
 const styles = StyleSheet.create({
   outer: {
     borderTopWidth: 1,
+    paddingLeft: 10,
+  },
+  outerHighlighted: {
+    paddingTop: 2,
+    paddingLeft: 6,
+    paddingRight: 6,
   },
   parentReplyLine: {
     position: 'absolute',
-    left: 34,
+    left: 44,
     top: -1 * PARENT_REPLY_LINE_LENGTH + 6,
     height: PARENT_REPLY_LINE_LENGTH,
     borderLeftWidth: 2,
   },
   childReplyLine: {
     position: 'absolute',
-    left: 34,
+    left: 44,
     top: 65,
     bottom: 0,
     borderLeftWidth: 2,
@@ -398,12 +409,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 8,
-    paddingRight: 20,
+    paddingRight: 10,
     minHeight: 36,
   },
   postTextLargeContainer: {
-    paddingLeft: 4,
-    paddingBottom: 20,
+    paddingHorizontal: 0,
+    paddingBottom: 10,
   },
   expandedInfo: {
     flexDirection: 'row',

@@ -17,7 +17,6 @@ import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s} from '../../lib/styles'
 import {useStores} from '../../../state'
-import {useTheme} from '../../lib/ThemeContext'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 export const FeedItem = observer(function ({
@@ -311,7 +310,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 4,
-    // paddingRight: 10,
   },
   embed: {
     marginBottom: 6,
