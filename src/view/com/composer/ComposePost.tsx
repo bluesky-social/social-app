@@ -16,6 +16,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete-view'
 import {Autocomplete} from './Autocomplete'
+import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
 // @ts-ignore no type definition -prf
@@ -28,7 +29,9 @@ import {useStores} from '../../../state'
 import * as apilib from '../../../state/lib/api'
 import {ComposerOpts} from '../../../state/models/shell-ui'
 import {s, colors, gradients} from '../../lib/styles'
-import {detectLinkables} from '../../../lib/strings'
+import {detectLinkables, extractEntities} from '../../../lib/strings'
+import {getLinkMeta} from '../../../lib/link-meta'
+import {downloadAndResize} from '../../../lib/images'
 import {UserLocalPhotosModel} from '../../../state/models/user-local-photos'
 import {PhotoCarouselPicker} from './PhotoCarouselPicker'
 import {SelectedPhoto} from './SelectedPhoto'
@@ -56,6 +59,10 @@ export const ComposePost = observer(function ComposePost({
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
   const [text, setText] = useState('')
+  const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
+    undefined,
+  )
+  const [attemptedExtLinks, setAttemptedExtLinks] = useState<string[]>([])
   const [isSelectingPhotos, setIsSelectingPhotos] = useState(
     imagesOpen || false,
   )
@@ -71,10 +78,60 @@ export const ComposePost = observer(function ComposePost({
     [store],
   )
 
+  // initial setup
   useEffect(() => {
     autocompleteView.setup()
     localPhotos.setup()
   }, [autocompleteView, localPhotos])
+
+  // external link metadata-fetch flow
+  useEffect(() => {
+    let aborted = false
+    const cleanup = () => {
+      aborted = true
+    }
+    if (!extLink) {
+      return cleanup
+    }
+    if (!extLink.meta) {
+      getLinkMeta(extLink.uri).then(meta => {
+        if (aborted) {
+          return
+        }
+        setExtLink({
+          uri: extLink.uri,
+          isLoading: !!meta.image,
+          meta,
+        })
+      })
+      return cleanup
+    }
+    if (extLink.isLoading && extLink.meta?.image && !extLink.localThumb) {
+      downloadAndResize({
+        uri: extLink.meta.image,
+        width: 250,
+        height: 250,
+        mode: 'contain',
+        maxSize: 100000,
+        timeout: 15e3,
+      })
+        .catch(() => undefined)
+        .then(localThumb => {
+          setExtLink({
+            ...extLink,
+            isLoading: false, // done
+            localThumb,
+          })
+        })
+      return cleanup
+    }
+    if (extLink.isLoading) {
+      setExtLink({
+        ...extLink,
+        isLoading: false, // done
+      })
+    }
+  }, [extLink])
 
   useEffect(() => {
     // HACK
@@ -119,6 +176,22 @@ export const ComposePost = observer(function ComposePost({
     } else {
       autocompleteView.setActive(false)
     }
+
+    if (!extLink && /\s$/.test(newText)) {
+      const ents = extractEntities(newText)
+      const entLink = ents
+        ?.filter(
+          ent => ent.type === 'link' && !attemptedExtLinks.includes(ent.value),
+        )
+        .pop() // use last
+      if (entLink) {
+        setExtLink({
+          uri: entLink.value,
+          isLoading: true,
+        })
+        setAttemptedExtLinks([...attemptedExtLinks, entLink.value])
+      }
+    }
   }
   const onPressCancel = () => {
     onClose()
@@ -141,6 +214,7 @@ export const ComposePost = observer(function ComposePost({
         store,
         text,
         replyTo?.uri,
+        extLink,
         selectedPhotos,
         autocompleteView.knownHandles,
         setProcessingState,
@@ -297,6 +371,12 @@ export const ComposePost = observer(function ComposePost({
               selectedPhotos={selectedPhotos}
               onSelectPhotos={onSelectPhotos}
             />
+            {!selectedPhotos.length && extLink && (
+              <ExternalEmbed
+                link={extLink}
+                onRemove={() => setExtLink(undefined)}
+              />
+            )}
           </ScrollView>
           {isSelectingPhotos &&
             localPhotos.photos != null &&

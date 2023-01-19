@@ -25,8 +25,9 @@ export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
   }
   useEffect(() => {
     let aborted = false
+    const threadCleanup = view.registerListeners()
     if (!visible) {
-      return
+      return threadCleanup
     }
     setTitle()
     store.shell.setMinimalShellMode(false)
@@ -44,6 +45,7 @@ export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
     }
     return () => {
       aborted = true
+      threadCleanup()
     }
   }, [visible, store.nav, store.log, name])
 

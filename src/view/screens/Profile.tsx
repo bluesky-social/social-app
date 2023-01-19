@@ -31,8 +31,9 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
 
   useEffect(() => {
     let aborted = false
+    const feedCleanup = uiState.feed.registerListeners()
     if (!visible) {
-      return
+      return feedCleanup
     }
     if (hasSetup) {
       uiState.update()
@@ -45,6 +46,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
     }
     return () => {
       aborted = true
+      feedCleanup()
     }
   }, [visible, params.name, store])
 

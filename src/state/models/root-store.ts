@@ -5,6 +5,7 @@
 import {makeAutoObservable} from 'mobx'
 import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
 import {createContext, useContext} from 'react'
+import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
 import {isObj, hasProp} from '../lib/type-guards'
 import {LogModel} from './log'
 import {SessionModel} from './session'
@@ -101,6 +102,15 @@ export class RootStoreModel {
     this.session.clear()
     this.nav.clear()
     this.me.clear()
+  }
+
+  onPostDeleted(handler: (uri: string) => void): EmitterSubscription {
+    return DeviceEventEmitter.addListener('post-deleted', handler)
+  }
+
+  emitPostDeleted(uri: string) {
+    console.log('emit')
+    DeviceEventEmitter.emit('post-deleted', uri)
   }
 }
 

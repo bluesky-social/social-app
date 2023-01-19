@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
     width: '100%',
-    height: 200,
+    maxHeight: 200,
   },
   extImageFallback: {
     height: 160,
