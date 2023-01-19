@@ -9,7 +9,7 @@
     "start": "react-native start",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
     "test": "jest",
-    "test-ci": "jest --ci --reporters=default --reporters=jest-junit",
+    "test-ci": "jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "jest --coverage",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
