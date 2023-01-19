@@ -22,7 +22,7 @@ jobs:
           eslint: true
           prettier: true
       - name: Run tests
-        run: yarn test --detectOpenHandles
+        run: yarn test --forceExit
       - name: Test report
         uses: willcaul/jest-github-action@v2
         env:
