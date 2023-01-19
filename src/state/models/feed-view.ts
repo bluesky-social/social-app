@@ -335,7 +335,6 @@ export class FeedModel {
    * Removes posts from the feed upon deletion.
    */
   onPostDeleted(uri: string) {
-    console.log('hit', uri)
     let i
     do {
       i = this.feed.findIndex(item => item.post.uri === uri)
