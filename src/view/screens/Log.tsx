@@ -76,7 +76,7 @@ export const Log = observer(function Log({navIdx, visible}: ScreenParams) {
               </View>
             )
           })}
-        <View style={{height: 100}} />
+        <View style={s.footerSpacer} />
       </ScrollView>
     </View>
   )

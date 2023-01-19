@@ -56,6 +56,9 @@ export const gradients = {
 }
 
 export const s = StyleSheet.create({
+  // helpers
+  footerSpacer: {height: 100},
+
   // font weights
   fw600: {fontWeight: '600'},
   bold: {fontWeight: 'bold'},

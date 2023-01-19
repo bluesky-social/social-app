@@ -89,6 +89,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
                 </View>
               </TouchableOpacity>
             ))}
+            <View style={s.footerSpacer} />
           </ScrollView>
         ) : (
           <SuggestedFollows asLinks />

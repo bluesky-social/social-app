@@ -76,6 +76,7 @@ export const Feed = observer(function Feed({
           onRefresh={onRefresh}
           onEndReached={onEndReached}
           onScroll={onScroll}
+          contentContainerStyle={{paddingBottom: 200}}
         />
       )}
     </View>

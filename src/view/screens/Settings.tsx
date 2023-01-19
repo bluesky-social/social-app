@@ -79,7 +79,7 @@ export const Settings = observer(function Settings({
           title="Debug tools">
           <Text style={pal.link}>Storybook</Text>
         </Link>
-        <View style={{height: 100}} />
+        <View style={s.footerSpacer} />
       </View>
     </View>
   )

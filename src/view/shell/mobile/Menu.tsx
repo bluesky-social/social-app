@@ -175,7 +175,7 @@ export const Menu = observer(
             {VersionNumber.buildVersion})
           </Text>
         </View>
-        <View style={{height: 100}} />
+        <View style={s.footerSpacer} />
       </ScrollView>
     )
   },

@@ -73,6 +73,7 @@ export const ProfileFollowers = observer(function ProfileFollowers({
         data={view.followers}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
+        contentContainerStyle={{paddingBottom: 200}}
       />
     </View>
   )
