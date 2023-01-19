@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import LinearGradient from 'react-native-linear-gradient'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
@@ -10,7 +10,7 @@ import {Text} from '../com/util/text/Text'
 import {FAB} from '../com/util/FAB'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
-import {s, colors} from '../lib/styles'
+import {s, colors, gradients} from '../lib/styles'
 import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
 import {clamp} from 'lodash'
 
@@ -100,13 +100,20 @@ export const Home = observer(function Home({
           style={[
             styles.loadLatest,
             store.shell.minimalShellMode
-              ? {bottom: 50}
+              ? {bottom: 35}
               : {bottom: 60 + clamp(safeAreaInsets.bottom, 15, 30)},
           ]}
           onPress={onPressLoadLatest}
           hitSlop={HITSLOP}>
-          <FontAwesomeIcon icon="arrow-up" style={{color: colors.white}} />
-          <Text style={styles.loadLatestText}>Load new posts</Text>
+          <LinearGradient
+            colors={[gradients.blueLight.start, gradients.blueLight.end]}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={styles.loadLatestInner}>
+            <Text type="md-bold" style={styles.loadLatestText}>
+              Load new posts
+            </Text>
+          </LinearGradient>
         </TouchableOpacity>
       ) : undefined}
       <FAB icon="pen-nib" onPress={() => onPressCompose(false)} />
@@ -116,24 +123,19 @@ export const Home = observer(function Home({
 
 const styles = StyleSheet.create({
   loadLatest: {
-    flexDirection: 'row',
     position: 'absolute',
-    left: 10,
-    backgroundColor: colors.blue3,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 30,
+    left: 20,
     shadowColor: '#000',
     shadowOpacity: 0.3,
     shadowOffset: {width: 0, height: 1},
   },
-  loadLatestLow: {
-    bottom: 15,
+  loadLatestInner: {
+    flexDirection: 'row',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 30,
   },
   loadLatestText: {
     color: colors.white,
-    fontWeight: 'bold',
-    marginLeft: 5,
-    fontSize: 16,
   },
 })
