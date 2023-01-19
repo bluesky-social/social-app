@@ -4,6 +4,7 @@ import {Animated, Easing, Platform, StyleSheet, View} from 'react-native'
 import {ComposePost} from '../../com/composer/ComposePost'
 import {ComposerOpts} from '../../../state/models/shell-ui'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export const Composer = observer(
   ({
@@ -21,6 +22,7 @@ export const Composer = observer(
     onPost?: ComposerOpts['onPost']
     onClose: () => void
   }) => {
+    const pal = usePalette('default')
     const initInterp = useAnimatedValue(0)
 
     useEffect(() => {
@@ -57,7 +59,7 @@ export const Composer = observer(
     }
 
     return (
-      <Animated.View style={[styles.wrapper, wrapperAnimStyle]}>
+      <Animated.View style={[styles.wrapper, pal.view, wrapperAnimStyle]}>
         <ComposePost
           replyTo={replyTo}
           imagesOpen={imagesOpen}
@@ -75,7 +77,6 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: '100%',
-    backgroundColor: '#fff',
     ...Platform.select({
       ios: {
         paddingTop: 24,
