@@ -1,6 +1,7 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {
+  Share,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -16,7 +17,7 @@ import {
   ReportAccountModal,
   ProfileImageLightbox,
 } from '../../../state/models/shell-ui'
-import {pluralize} from '../../../lib/strings'
+import {pluralize, toShareUrl} from '../../../lib/strings'
 import {s, gradients} from '../../lib/styles'
 import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
@@ -65,6 +66,9 @@ export const ProfileHeader = observer(function ProfileHeader({
   }
   const onPressFollows = () => {
     store.nav.navigate(`/profile/${view.handle}/follows`)
+  }
+  const onPressShare = () => {
+    Share.share({url: toShareUrl(`/profile/${view.handle}`)})
   }
   const onPressMuteAccount = async () => {
     try {
@@ -133,9 +137,8 @@ export const ProfileHeader = observer(function ProfileHeader({
   // loaded
   // =
   const isMe = store.me.did === view.did
-  let dropdownItems: DropdownItem[] | undefined
+  let dropdownItems: DropdownItem[] = [{label: 'Share', onPress: onPressShare}]
   if (!isMe) {
-    dropdownItems = dropdownItems || []
     dropdownItems.push({
       label: view.myState.muted ? 'Unmute Account' : 'Mute Account',
       onPress: view.myState.muted ? onPressUnmuteAccount : onPressMuteAccount,

@@ -94,7 +94,7 @@ export const ComposePost = observer(function ComposePost({
       return cleanup
     }
     if (!extLink.meta) {
-      getLinkMeta(extLink.uri).then(meta => {
+      getLinkMeta(store, extLink.uri).then(meta => {
         if (aborted) {
           return
         }
