@@ -1,10 +1,7 @@
 import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
-import {
-  VotesViewModel,
-  VotesViewItemModel,
-} from '../../../state/models/votes-view'
+import {VotesViewModel, VotesItem} from '../../../state/models/votes-view'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -20,30 +17,25 @@ export const PostVotedBy = observer(function PostVotedBy({
   direction: 'up' | 'down'
 }) {
   const store = useStores()
-  const [view, setView] = React.useState<VotesViewModel | undefined>()
+  const view = React.useMemo(
+    () => new VotesViewModel(store, {uri, direction}),
+    [store, uri, direction],
+  )
 
   useEffect(() => {
-    if (view?.params.uri === uri) {
-      return // no change needed? or trigger refresh?
-    }
-    const newView = new VotesViewModel(store, {uri, direction})
-    setView(newView)
-    newView
-      .setup()
-      .catch(err => store.log.error('Failed to fetch voted by', err))
-  }, [uri, view?.params.uri, store])
+    view.loadMore().catch(err => store.log.error('Failed to fetch votes', err))
+  }, [view, store.log])
 
   const onRefresh = () => {
-    view?.refresh()
+    view.refresh()
+  }
+  const onEndReached = () => {
+    view
+      .loadMore()
+      .catch(err => view?.rootStore.log.error('Failed to load more votes', err))
   }
 
-  // loading
-  // =
-  if (
-    !view ||
-    (view.isLoading && !view.isRefreshing) ||
-    view.params.uri !== uri
-  ) {
+  if (!view.hasLoaded) {
     return (
       <View>
         <ActivityIndicator />
@@ -67,22 +59,27 @@ export const PostVotedBy = observer(function PostVotedBy({
 
   // loaded
   // =
-  const renderItem = ({item}: {item: VotesViewItemModel}) => (
-    <LikedByItem item={item} />
-  )
+  const renderItem = ({item}: {item: VotesItem}) => <LikedByItem item={item} />
   return (
-    <View>
-      <FlatList
-        data={view.votes}
-        keyExtractor={item => item._reactKey}
-        renderItem={renderItem}
-        contentContainerStyle={{paddingBottom: 200}}
-      />
-    </View>
+    <FlatList
+      data={view.votes}
+      keyExtractor={item => item.actor.did}
+      refreshing={view.isRefreshing}
+      onRefresh={onRefresh}
+      onEndReached={onEndReached}
+      renderItem={renderItem}
+      initialNumToRender={15}
+      ListFooterComponent={() => (
+        <View style={styles.footer}>
+          {view.isLoading && <ActivityIndicator />}
+        </View>
+      )}
+      extraData={view.isLoading}
+    />
   )
 })
 
-const LikedByItem = ({item}: {item: VotesViewItemModel}) => {
+const LikedByItem = ({item}: {item: VotesItem}) => {
   return (
     <Link
       style={styles.outer}
@@ -134,5 +131,9 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingTop: 10,
     paddingBottom: 10,
+  },
+  footer: {
+    height: 200,
+    paddingTop: 20,
   },
 })
