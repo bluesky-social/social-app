@@ -13,7 +13,7 @@ export function PromptButtons({
     <View style={[pal.view, pal.border, styles.container]}>
       <TouchableOpacity
         testID="composePromptButton"
-        onPress={() => onPressCompose(true)}
+        onPress={() => onPressCompose(false)}
         style={[styles.btn, {backgroundColor: pal.colors.backgroundLight}]}>
         <Text type="button" style={pal.text}>
           New post
