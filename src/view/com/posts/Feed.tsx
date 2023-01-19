@@ -84,7 +84,7 @@ export const Feed = observer(function Feed({
     )
   return (
     <View testID={testID} style={style}>
-      {!data && <ComposePrompt onPressCompose={onPressCompose} />}
+      {!data && <PromptButtons onPressCompose={onPressCompose} />}
       {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
       {feed.hasError && (
         <ErrorMessage
