@@ -22,7 +22,7 @@ jobs:
       # - name: Lint
       #   run: yarn lint
       - name: Run tests
-        run: yarn test --forceExit      
+        run: yarn test  
       - name: Test report
         uses: willcaul/jest-github-action@v2
         env:
