@@ -1,7 +1,8 @@
 import he from 'he'
-import {extractHtmlMeta, isBskyAppUrl} from './strings'
+import {isBskyAppUrl} from './strings'
 import {RootStoreModel} from '../state'
 import {extractBskyMeta} from './extractBskyMeta'
+import {extractHtmlMeta} from './extractHtmlMeta'
 
 export enum LikelyType {
   HTML,
@@ -59,7 +60,10 @@ export async function getLinkMeta(
     })
     const httpResBody = await httpRes.text()
     clearTimeout(to)
-    const httpResMeta = extractHtmlMeta(httpResBody)
+    const httpResMeta = extractHtmlMeta({
+      html: httpResBody,
+      hostname: urlp?.hostname,
+    })
     meta.title = httpResMeta.title ? he.decode(httpResMeta.title) : undefined
     meta.description = httpResMeta.description
       ? he.decode(httpResMeta.description)
