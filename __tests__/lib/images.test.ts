@@ -54,7 +54,7 @@ describe('downloadAndResize', () => {
       100,
       100,
       'JPEG',
-      1,
+      100,
       undefined,
       undefined,
       undefined,

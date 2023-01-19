@@ -63,6 +63,7 @@ describe('ComposePost', () => {
       mockedRootStore,
       'testing publish',
       'testUri',
+      undefined,
       [],
       new Set<string>(),
       expect.anything(),
