@@ -21,9 +21,10 @@ jobs:
         with:
           eslint: true
           prettier: true
-      - name: Run tests
-        run: yarn test --forceExit
       - name: Test report
         uses: willcaul/jest-github-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run tests
+        run: yarn test --forceExit
+
