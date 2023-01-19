@@ -14,12 +14,12 @@ jobs:
         uses: actions/checkout@v2
       - name: Yarn install
         run: yarn
-      - name: Lint Action
+      - name: Lint Reporter
         uses: wearerequired/lint-action@v2.2.0
         with:
           eslint: true
           prettier: true
-      - name: Lint
+      - name: Typescript & Lint check
         run: yarn lint
   testing:
     name: Run tests
@@ -29,16 +29,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Yarn install
         run: yarn
-      - name: Run tests
-        run: | 
-          yarn test-ci
-      - name: Test Report
-        uses: dorny/test-reporter@v1
-        if: success() || failure()    # run this step even if previous step failed
-        with:
-          name: JEST Tests            # Name of the check run which will be created
-          path: junit.xml    # Path to test results
-          reporter: jest-junit        # Format of test results
       - name: Run tests
         run: | 
           yarn test --forceExit
