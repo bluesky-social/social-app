@@ -26,6 +26,28 @@ const IMAGE_PARAMS = {
   compressImageQuality: 1.0,
 }
 
+export async function cropPhoto(
+  path: string,
+  imgWidth = MAX_WIDTH,
+  imgHeight = MAX_HEIGHT,
+) {
+  // choose target dimensions based on the original
+  // this causes the photo cropper to start with the full image "selected"
+  const {width, height} = scaleDownDimensions(
+    {width: imgWidth, height: imgHeight},
+    {width: MAX_WIDTH, height: MAX_HEIGHT},
+  )
+  const cropperRes = await openCropper({
+    mediaType: 'photo',
+    path,
+    ...IMAGE_PARAMS,
+    width,
+    height,
+  })
+  const img = await compressIfNeeded(cropperRes, MAX_SIZE)
+  return img.path
+}
+
 export const PhotoCarouselPicker = ({
   selectedPhotos,
   onSelectPhotos,
@@ -55,21 +77,12 @@ export const PhotoCarouselPicker = ({
   const handleSelectPhoto = useCallback(
     async (item: PhotoIdentifier) => {
       try {
-        // choose target dimensions based on the original
-        // this causes the photo cropper to start with the full image "selected"
-        const {width, height} = scaleDownDimensions(
-          {width: item.node.image.width, height: item.node.image.height},
-          {width: MAX_WIDTH, height: MAX_HEIGHT},
+        const imgPath = await cropPhoto(
+          item.node.image.uri,
+          item.node.image.width,
+          item.node.image.height,
         )
-        const cropperRes = await openCropper({
-          mediaType: 'photo',
-          path: item.node.image.uri,
-          ...IMAGE_PARAMS,
-          width,
-          height,
-        })
-        const img = await compressIfNeeded(cropperRes, MAX_SIZE)
-        onSelectPhotos([...selectedPhotos, img.path])
+        onSelectPhotos([...selectedPhotos, imgPath])
       } catch (err: any) {
         // ignore
         store.log.warn('Error selecting photo', err)

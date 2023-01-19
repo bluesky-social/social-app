@@ -244,6 +244,9 @@ PODS:
     - React-Core
   - react-native-pager-view (6.1.2):
     - React-Core
+  - react-native-paste-input (0.6.0):
+    - React-Core
+    - Swime (= 3.0.6)
   - react-native-safe-area-context (4.4.1):
     - RCT-Folly
     - RCTRequired
@@ -390,6 +393,7 @@ PODS:
     - React-RCTImage
   - RNSVG (12.5.0):
     - React-Core
+  - Swime (3.0.6)
   - TOCropViewController (2.6.1)
   - Yoga (1.14.0)
 
@@ -421,6 +425,7 @@ DEPENDENCIES:
   - "react-native-cameraroll (from `../node_modules/@react-native-camera-roll/camera-roll`)"
   - "react-native-image-resizer (from `../node_modules/@bam.tech/react-native-image-resizer`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
+  - "react-native-paste-input (from `../node_modules/@mattermost/react-native-paste-input`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-version-number (from `../node_modules/react-native-version-number`)
@@ -454,6 +459,7 @@ SPEC REPOS:
   trunk:
     - fmt
     - libevent
+    - Swime
     - TOCropViewController
 
 EXTERNAL SOURCES:
@@ -507,6 +513,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@bam.tech/react-native-image-resizer"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
+  react-native-paste-input:
+    :path: "../node_modules/@mattermost/react-native-paste-input"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
@@ -592,6 +600,7 @@ SPEC CHECKSUMS:
   react-native-cameraroll: 0ff04cc4e0ff5f19a94ff4313e5c8bc4503cd86d
   react-native-image-resizer: 794abf75ec13ed1f0dbb1f134e27504ea65e9e66
   react-native-pager-view: 54bed894cecebe28cede54c01038d9d1e122de43
+  react-native-paste-input: 5182843692fd2ec72be50f241a38a49796e225d7
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-version-number: b415bbec6a13f2df62bf978e85bc0d699462f37f
@@ -619,6 +628,7 @@ SPEC CHECKSUMS:
   RNReanimated: d8d9d3d3801bda5e35e85cdffc871577d044dc2e
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: 6adc5c52d2488a476248413064b7f2832e639057
+  Swime: d7b2c277503b6cea317774aedc2dce05613f8b0b
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: c618b544ff8bd8865cdca602f00cbcdb92fd6d31
 
