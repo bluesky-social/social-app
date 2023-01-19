@@ -27,7 +27,6 @@ import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 const MAX_AUTHORS = 8
 
 const EXPANDED_AUTHOR_EL_HEIGHT = 35
-const EXPANDED_AUTHORS_CLOSE_EL_HEIGHT = 26
 
 interface Author {
   href: string
@@ -163,16 +162,15 @@ export const FeedItem = observer(function FeedItem({
           <TouchableWithoutFeedback
             onPress={authors.length > 1 ? onToggleAuthorsExpanded : () => {}}>
             <View>
-              <ExpandedAuthorsList
-                visible={isAuthorsExpanded}
+              <CondensedAuthorsList
+                visible={!isAuthorsExpanded}
                 authors={authors}
                 onToggleAuthorsExpanded={onToggleAuthorsExpanded}
               />
-              {isAuthorsExpanded ? (
-                <></>
-              ) : (
-                <CondensedAuthorsList authors={authors} />
-              )}
+              <ExpandedAuthorsList
+                visible={isAuthorsExpanded}
+                authors={authors}
+              />
               <View style={styles.meta}>
                 <Link
                   key={authors[0].href}
@@ -210,8 +208,34 @@ export const FeedItem = observer(function FeedItem({
   )
 })
 
-function CondensedAuthorsList({authors}: {authors: Author[]}) {
+function CondensedAuthorsList({
+  visible,
+  authors,
+  onToggleAuthorsExpanded,
+}: {
+  visible: boolean
+  authors: Author[]
+  onToggleAuthorsExpanded: () => void
+}) {
   const pal = usePalette('default')
+  if (!visible) {
+    return (
+      <View style={styles.avis}>
+        <TouchableOpacity
+          style={styles.expandedAuthorsCloseBtn}
+          onPress={onToggleAuthorsExpanded}>
+          <FontAwesomeIcon
+            icon="angle-up"
+            size={18}
+            style={[styles.expandedAuthorsCloseBtnIcon, pal.text]}
+          />
+          <Text type="sm-medium" style={pal.text}>
+            Hide
+          </Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
   if (authors.length === 1) {
     return (
       <View style={styles.avis}>
@@ -258,17 +282,14 @@ function CondensedAuthorsList({authors}: {authors: Author[]}) {
 function ExpandedAuthorsList({
   visible,
   authors,
-  onToggleAuthorsExpanded,
 }: {
   visible: boolean
   authors: Author[]
-  onToggleAuthorsExpanded: () => void
 }) {
   const pal = usePalette('default')
   const heightInterp = useAnimatedValue(visible ? 1 : 0)
   const targetHeight =
-    authors.length * (EXPANDED_AUTHOR_EL_HEIGHT + 10) /*10=margin*/ +
-    EXPANDED_AUTHORS_CLOSE_EL_HEIGHT
+    authors.length * (EXPANDED_AUTHOR_EL_HEIGHT + 10) /*10=margin*/
   const heightStyle = {
     height: Animated.multiply(heightInterp, targetHeight),
     overflow: 'hidden',
@@ -282,18 +303,6 @@ function ExpandedAuthorsList({
   }, [heightInterp, visible])
   return (
     <Animated.View style={(s.mb5, heightStyle)}>
-      <TouchableOpacity
-        style={styles.expandedAuthorsCloseBtn}
-        onPress={onToggleAuthorsExpanded}>
-        <FontAwesomeIcon
-          icon="angle-up"
-          size={18}
-          style={[styles.expandedAuthorsCloseBtnIcon, pal.text]}
-        />
-        <Text type="sm-medium" style={pal.text}>
-          Hide
-        </Text>
-      </TouchableOpacity>
       {authors.map(author => (
         <Link
           key={author.href}
@@ -409,9 +418,8 @@ const styles = StyleSheet.create({
   expandedAuthorsCloseBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 8,
-    height: EXPANDED_AUTHORS_CLOSE_EL_HEIGHT,
-    overflow: 'hidden',
+    paddingTop: 10,
+    paddingBottom: 6,
   },
   expandedAuthorsCloseBtnIcon: {
     marginLeft: 4,
