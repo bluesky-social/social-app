@@ -23,3 +23,7 @@ jobs:
           prettier: true
       - name: Run tests
         run: yarn test
+      - name: Test report
+        uses: willcaul/jest-github-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
