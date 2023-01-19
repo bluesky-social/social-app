@@ -17,7 +17,6 @@ import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s} from '../../lib/styles'
 import {useStores} from '../../../state'
-import {useTheme} from '../../lib/ThemeContext'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 export const FeedItem = observer(function ({
@@ -229,13 +228,13 @@ export const FeedItem = observer(function ({
                 x1="2"
                 y1="0"
                 x2="2"
-                y2="5"
+                y2="8"
                 stroke={pal.colors.replyLine}
                 strokeWidth="2"
               />
-              <Circle x="2" y="10" r="1.5" fill={pal.colors.replyLineDot} />
-              <Circle x="2" y="16" r="1.5" fill={pal.colors.replyLineDot} />
-              <Circle x="2" y="22" r="1.5" fill={pal.colors.replyLineDot} />
+              <Circle x="2" y="14" r="1.5" fill={pal.colors.replyLineDot} />
+              <Circle x="2" y="20" r="1.5" fill={pal.colors.replyLineDot} />
+              <Circle x="2" y="26" r="1.5" fill={pal.colors.replyLineDot} />
             </Svg>
           </View>
           <Text type="md" style={pal.link}>
@@ -251,6 +250,8 @@ const styles = StyleSheet.create({
   outer: {
     borderTopWidth: 1,
     padding: 10,
+    paddingRight: 15,
+    paddingBottom: 8,
   },
   outerNoTop: {
     borderTopWidth: 0,
@@ -264,21 +265,21 @@ const styles = StyleSheet.create({
   },
   topReplyLine: {
     position: 'absolute',
-    left: 34,
+    left: 42,
     top: 0,
     height: 6,
     borderLeftWidth: 2,
   },
   bottomReplyLine: {
     position: 'absolute',
-    left: 34,
+    left: 42,
     top: 72,
     bottom: 0,
     borderLeftWidth: 2,
   },
   includeReason: {
     flexDirection: 'row',
-    paddingLeft: 40,
+    paddingLeft: 50,
     marginTop: 2,
     marginBottom: 2,
   },
@@ -290,8 +291,8 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   layoutAvi: {
-    width: 60,
-    paddingTop: 0,
+    width: 70,
+    paddingLeft: 8,
   },
   layoutContent: {
     flex: 1,
@@ -309,7 +310,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 4,
-    paddingRight: 20,
   },
   embed: {
     marginBottom: 6,
@@ -320,11 +320,11 @@ const styles = StyleSheet.create({
   viewFullThread: {
     paddingTop: 12,
     paddingBottom: 2,
-    paddingLeft: 70,
+    paddingLeft: 80,
   },
   viewFullThreadDots: {
     position: 'absolute',
-    left: 33,
+    left: 41,
     top: 0,
   },
 })

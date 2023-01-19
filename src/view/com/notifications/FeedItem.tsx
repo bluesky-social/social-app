@@ -230,6 +230,7 @@ function AdditionalPostText({
 const styles = StyleSheet.create({
   outer: {
     padding: 10,
+    paddingRight: 15,
     borderTopWidth: 1,
   },
   outerUnread: {
@@ -239,7 +240,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   layoutIcon: {
-    width: 60,
+    width: 70,
     alignItems: 'flex-end',
     paddingTop: 2,
   },

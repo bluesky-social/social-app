@@ -215,13 +215,15 @@ export const Post = observer(function Post({
 const styles = StyleSheet.create({
   outer: {
     padding: 10,
+    paddingRight: 15,
     borderTopWidth: 1,
   },
   layout: {
     flexDirection: 'row',
   },
   layoutAvi: {
-    width: 60,
+    width: 70,
+    paddingLeft: 8,
   },
   layoutContent: {
     flex: 1,
