@@ -32,7 +32,11 @@ import {useStores} from '../../../state'
 import * as apilib from '../../../state/lib/api'
 import {ComposerOpts} from '../../../state/models/shell-ui'
 import {s, colors, gradients} from '../../lib/styles'
-import {detectLinkables, extractEntities} from '../../../lib/strings'
+import {
+  detectLinkables,
+  extractEntities,
+  cleanError,
+} from '../../../lib/strings'
 import {getLinkMeta} from '../../../lib/link-meta'
 import {downloadAndResize} from '../../../lib/images'
 import {UserLocalPhotosModel} from '../../../state/models/user-local-photos'
@@ -212,7 +216,7 @@ export const ComposePost = observer(function ComposePost({
   }
   const onPaste = async (err: string | undefined, files: PastedFile[]) => {
     if (err) {
-      return setError(err)
+      return setError(cleanError(err))
     }
     if (selectedPhotos.length >= 4) {
       return
@@ -249,7 +253,7 @@ export const ComposePost = observer(function ComposePost({
         setProcessingState,
       )
     } catch (e: any) {
-      setError(e.message)
+      setError(cleanError(e.message))
       setIsProcessing(false)
       return
     }
