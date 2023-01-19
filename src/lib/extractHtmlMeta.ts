@@ -47,7 +47,7 @@ export const extractHtmlMeta = (html: string): Record<string, string> => {
 
   if (res.title === 'YouTube') {
     // Workaround for Youtube not having a title in the meta tags
-    res = extractYoutubeMeta(html)
+    res = {...res, ...extractYoutubeMeta(html)}
   }
 
   return res
