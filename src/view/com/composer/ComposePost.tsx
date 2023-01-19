@@ -117,6 +117,9 @@ export const ComposePost = observer(function ComposePost({
       })
         .catch(() => undefined)
         .then(localThumb => {
+          if (aborted) {
+            return
+          }
           setExtLink({
             ...extLink,
             isLoading: false, // done
