@@ -76,6 +76,7 @@ export const PostVotedBy = observer(function PostVotedBy({
         data={view.votes}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
+        contentContainerStyle={{paddingBottom: 200}}
       />
     </View>
   )

@@ -75,6 +75,7 @@ export const PostRepostedBy = observer(function PostRepostedBy({
         data={view.repostedBy}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
+        contentContainerStyle={{paddingBottom: 200}}
       />
     </View>
   )

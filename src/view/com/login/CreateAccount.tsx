@@ -15,7 +15,6 @@ import * as EmailValidator from 'email-validator'
 import {Logo} from './Logo'
 import {Picker} from '../util/Picker'
 import {TextLink} from '../util/Link'
-import {ToggleButton} from '../util/forms/ToggleButton'
 import {Text} from '../util/text/Text'
 import {s, colors} from '../../lib/styles'
 import {
@@ -366,7 +365,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
             </>
           ) : undefined}
         </View>
-        <View style={{height: 100}} />
+        <View style={s.footerSpacer} />
       </KeyboardAvoidingView>
     </ScrollView>
   )

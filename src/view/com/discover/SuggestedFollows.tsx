@@ -128,6 +128,7 @@ export const SuggestedFollows = observer(
               keyExtractor={item => item._reactKey}
               renderItem={renderItem}
               style={s.flex1}
+              contentContainerStyle={{paddingBottom: 200}}
             />
           </View>
         )}

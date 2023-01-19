@@ -96,6 +96,7 @@ export function ViewSelector({
         onScroll={onScroll}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
+        contentContainerStyle={{paddingBottom: 200}}
       />
     </HorzSwipe>
   )
