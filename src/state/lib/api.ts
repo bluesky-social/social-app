@@ -83,7 +83,6 @@ export async function post(
 
   if (!embed && extLink) {
     let thumb
-    console.log('---thumb', thumb)
     if (extLink.localThumb) {
       onStateChange?.(`Uploading link thumbnail...`)
       let encoding

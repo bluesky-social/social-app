@@ -47,14 +47,6 @@ export const FeedItem = observer(function ({
     return urip.hostname
   }, [record?.reply])
 
-  const replyHref = useMemo(() => {
-    if (!record?.reply) {
-      return ''
-    }
-    const urip = new AtUri(record?.reply.parent?.uri || record?.reply.root.uri)
-    return `/profile/${urip.hostname}/post/${urip.rkey}`
-  }, [record?.reply])
-
   const onPressReply = () => {
     store.shell.openComposer({
       replyTo: {
