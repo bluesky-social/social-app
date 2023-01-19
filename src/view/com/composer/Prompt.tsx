@@ -62,19 +62,18 @@ const styles = StyleSheet.create({
   iconLeft: {
     marginLeft: 22,
     marginRight: 2,
-    // marginLeft: 28,
-    // marginRight: 14,
   },
   iconRight: {
     marginRight: 20,
   },
   container: {
-    paddingVertical: 14,
+    paddingVertical: 16,
     flexDirection: 'row',
     alignItems: 'center',
     borderTopWidth: 1,
   },
   containerReply: {
+    paddingVertical: 14,
     paddingHorizontal: 10,
   },
   avatar: {
