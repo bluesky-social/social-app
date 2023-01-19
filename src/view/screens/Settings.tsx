@@ -34,10 +34,12 @@ export const Settings = observer(function Settings({
       <ViewHeader title="Settings" />
       <View style={[s.mt10, s.pl10, s.pr10, s.flex1]}>
         <View style={[s.flexRow]}>
-          <Text style={pal.text}>Signed in as</Text>
+          <Text type="xl" style={pal.text}>
+            Signed in as
+          </Text>
           <View style={s.flex1} />
           <TouchableOpacity onPress={onPressSignout}>
-            <Text type="xl-heavy" style={pal.link}>
+            <Text type="xl-medium" style={pal.link}>
               Sign out
             </Text>
           </TouchableOpacity>
@@ -63,7 +65,7 @@ export const Settings = observer(function Settings({
         </Link>
         <View style={s.flex1} />
         <Text type="sm-medium" style={[s.mb5]}>
-          Advanced
+          Developer tools
         </Text>
         <Link
           style={[pal.view, s.p10, s.mb2]}
@@ -75,7 +77,7 @@ export const Settings = observer(function Settings({
           style={[pal.view, s.p10, s.mb2]}
           href="/sys/debug"
           title="Debug tools">
-          <Text style={pal.link}>Debug tools</Text>
+          <Text style={pal.link}>Storybook</Text>
         </Link>
         <View style={{height: 100}} />
       </View>
