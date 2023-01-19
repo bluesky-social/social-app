@@ -1,7 +1,6 @@
 import {
   extractEntities,
   detectLinkables,
-  extractHtmlMeta,
   pluralize,
   makeRecordUri,
   ago,
@@ -281,48 +280,6 @@ describe('detectLinkables', () => {
     for (let i = 0; i < inputs.length; i++) {
       const input = inputs[i]
       const output = detectLinkables(input)
-      expect(output).toEqual(outputs[i])
-    }
-  })
-})
-
-describe('extractHtmlMeta', () => {
-  const inputs = [
-    '',
-    'nothing',
-    '<title>title</title>',
-    '<title> aSd!@#AC </title>',
-    '<title>\n  title\n  </title>',
-    '<meta name="title" content="meta title">',
-    '<meta name="description" content="meta description">',
-    '<meta property="og:title" content="og title">',
-    '<meta property="og:description" content="og description">',
-    '<meta property="og:image" content="https://ogimage.com/foo.png">',
-    '<meta property="twitter:title" content="twitter title">',
-    '<meta property="twitter:description" content="twitter description">',
-    '<meta property="twitter:image" content="https://twitterimage.com/foo.png">',
-    '<meta\n  name="title"\n  content="meta title"\n>',
-  ]
-  const outputs = [
-    {},
-    {},
-    {title: 'title'},
-    {title: 'aSd!@#AC'},
-    {title: 'title'},
-    {title: 'meta title'},
-    {description: 'meta description'},
-    {title: 'og title'},
-    {description: 'og description'},
-    {image: 'https://ogimage.com/foo.png'},
-    {title: 'twitter title'},
-    {description: 'twitter description'},
-    {image: 'https://twitterimage.com/foo.png'},
-    {title: 'meta title'},
-  ]
-  it('correctly handles a set of text inputs', () => {
-    for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i]
-      const output = extractHtmlMeta(input)
       expect(output).toEqual(outputs[i])
     }
   })
