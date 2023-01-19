@@ -13,16 +13,16 @@ export function PromptButtons({
     <View style={[pal.view, pal.border, styles.container]}>
       <TouchableOpacity
         testID="composePromptButton"
-        style={[styles.btn, {backgroundColor: pal.colors.backgroundLight}]}
-        onPress={() => onPressCompose(false)}>
-        <Text type="button" style={pal.textLight}>
+        onPress={() => onPressCompose(true)}
+        style={[styles.btn, {backgroundColor: pal.colors.backgroundLight}]}>
+        <Text type="button" style={pal.text}>
           New post
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.btn, {backgroundColor: pal.colors.backgroundLight}]}
-        onPress={() => onPressCompose(true)}>
-        <Text type="button" style={pal.textLight}>
+        onPress={() => onPressCompose(true)}
+        style={[styles.btn, {backgroundColor: pal.colors.backgroundLight}]}>
+        <Text type="button" style={pal.text}>
           Share photo
         </Text>
       </TouchableOpacity>
@@ -33,7 +33,6 @@ export function PromptButtons({
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 12,
-    paddingBottom: 10,
     paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
