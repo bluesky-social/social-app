@@ -4,6 +4,7 @@ import {Selector} from './Selector'
 import {HorzSwipe} from './gestures/HorzSwipe'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
+import {clamp} from '../../../lib/numbers'
 
 const HEADER_ITEM = {_reactKey: '__header__'}
 const SELECTOR_ITEM = {_reactKey: '__selector__'}
@@ -46,10 +47,11 @@ export function ViewSelector({
 
   const onSwipeEnd = (dx: number) => {
     if (dx !== 0) {
-      setSelectedIndex(selectedIndex + dx)
+      setSelectedIndex(clamp(selectedIndex + dx, 0, sections.length))
     }
   }
-  const onPressSelection = (index: number) => setSelectedIndex(index)
+  const onPressSelection = (index: number) =>
+    setSelectedIndex(clamp(index, 0, sections.length))
   useEffect(() => {
     onSelectView?.(selectedIndex)
   }, [selectedIndex])
