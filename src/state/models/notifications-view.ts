@@ -379,8 +379,8 @@ export class NotificationsViewModel {
         }
         this._updateAll(res)
         numToFetch -= res.data.notifications.length
-        cursor = this.notifications[res.data.notifications.length - 1].indexedAt
-      } while (numToFetch > 0)
+        cursor = res.data.cursor
+      } while (cursor && numToFetch > 0)
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e)

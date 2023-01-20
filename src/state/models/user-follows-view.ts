@@ -1,6 +1,6 @@
 import {makeAutoObservable} from 'mobx'
 import {
-  AppBskyGraphGetFollowers as GetFollows,
+  AppBskyGraphGetFollows as GetFollows,
   AppBskyActorRef as ActorRef,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
