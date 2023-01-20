@@ -1,15 +1,18 @@
+import {extractTwitterMeta} from './extractTwitterMeta'
 import {extractYoutubeMeta} from './extractYoutubeMeta'
 
 interface ExtractHtmlMetaInput {
   html: string
   hostname?: string
+  pathname?: string
 }
 
 export const extractHtmlMeta = ({
   html,
   hostname,
+  pathname,
 }: ExtractHtmlMetaInput): Record<string, string> => {
-  const htmlTitleRegex = /<title>([^<]+)<\/title>/i
+  const htmlTitleRegex = /<title.*>([^<]+)<\/title>/i
 
   let res: Record<string, string> = {}
 
@@ -56,9 +59,12 @@ export const extractHtmlMeta = ({
 
   const isYoutubeUrl =
     hostname?.includes('youtube.') || hostname?.includes('youtu.be')
+  const isTwitterUrl = hostname?.includes('twitter.')
+  // Workaround for some websites not having a title or description in the meta tags in the initial serve
   if (isYoutubeUrl) {
-    // Workaround for Youtube not having a title in the meta tags
     res = {...res, ...extractYoutubeMeta(html)}
+  } else if (isTwitterUrl) {
+    res = {...extractTwitterMeta({pathname})}
   }
 
   return res

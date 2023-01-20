@@ -63,6 +63,7 @@ export async function getLinkMeta(
     const httpResMeta = extractHtmlMeta({
       html: httpResBody,
       hostname: urlp?.hostname,
+      pathname: urlp?.pathname,
     })
     meta.title = httpResMeta.title ? he.decode(httpResMeta.title) : undefined
     meta.description = httpResMeta.description
