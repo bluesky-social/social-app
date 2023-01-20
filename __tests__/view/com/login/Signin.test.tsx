@@ -3,8 +3,6 @@ import {Signin} from '../../../../src/view/com/login/Signin'
 import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {SessionServiceClient, sessionClient as AtpApi} from '@atproto/api'
 import {
-  mockedLogStore,
-  mockedRootStore,
   mockedSessionStore,
   mockedShellStore,
 } from '../../../../__mocks__/state-mock'

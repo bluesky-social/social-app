@@ -50,7 +50,9 @@ export class OnboardModel {
   }
 
   next() {
-    if (!this.isOnboarding) return
+    if (!this.isOnboarding) {
+      return
+    }
     let i = OnboardStageOrder.indexOf(this.stage)
     i++
     if (i >= OnboardStageOrder.length) {
