@@ -40,11 +40,15 @@ export function UserInfoText({
     let aborted = false
     store.profiles.getProfile(did).then(
       v => {
-        if (aborted) return
+        if (aborted) {
+          return
+        }
         setProfile(v.data)
       },
       _err => {
-        if (aborted) return
+        if (aborted) {
+          return
+        }
         setFailed(true)
       },
     )

@@ -47,11 +47,15 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
     setError('')
     store.session.describeService(serviceUrl).then(
       desc => {
-        if (aborted) return
+        if (aborted) {
+          return
+        }
         setServiceDescription(desc)
       },
       err => {
-        if (aborted) return
+        if (aborted) {
+          return
+        }
         store.log.warn(
           `Failed to fetch service description for ${serviceUrl}`,
           err,

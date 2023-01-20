@@ -76,7 +76,7 @@ export function PostLoadingPlaceholder({
               strokeWidth={1.7}
             />
           </View>
-          <View style={s.flex1}></View>
+          <View style={s.flex1} />
         </View>
       </View>
     </View>

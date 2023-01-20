@@ -40,7 +40,9 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
     } else {
       store.nav.setTitle(navIdx, params.name)
       uiState.setup().then(() => {
-        if (aborted) return
+        if (aborted) {
+          return
+        }
         setHasSetup(true)
       })
     }

@@ -3,8 +3,6 @@ import {Keyboard} from 'react-native'
 import {CreateAccount} from '../../../../src/view/com/login/CreateAccount'
 import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {
-  mockedLogStore,
-  mockedRootStore,
   mockedSessionStore,
   mockedShellStore,
 } from '../../../../__mocks__/state-mock'
