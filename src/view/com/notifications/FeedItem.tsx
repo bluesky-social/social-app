@@ -318,7 +318,7 @@ function ExpandedAuthorsList({
             />
           </View>
           <View style={s.flex1}>
-            <Text type="lg-bold" numberOfLines={1}>
+            <Text type="lg-bold" numberOfLines={1} style={pal.text}>
               {author.displayName || author.handle}
               &nbsp;
               <Text style={[pal.textLight]}>{author.handle}</Text>
