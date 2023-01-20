@@ -24,7 +24,7 @@ import {Link} from '../util/Link'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 
-const MAX_AUTHORS = 8
+const MAX_AUTHORS = 5
 
 const EXPANDED_AUTHOR_EL_HEIGHT = 35
 
@@ -273,7 +273,7 @@ function CondensedAuthorsList({
       <FontAwesomeIcon
         icon="angle-down"
         size={18}
-        style={[styles.expandedAuthorsCloseBtnIcon, pal.icon]}
+        style={[styles.expandedAuthorsCloseBtnIcon, pal.textLight]}
       />
     </View>
   )
@@ -302,7 +302,7 @@ function ExpandedAuthorsList({
     }).start()
   }, [heightInterp, visible])
   return (
-    <Animated.View style={[s.mb10, heightStyle]}>
+    <Animated.View style={[heightStyle, visible ? s.mb10 : undefined]}>
       {authors.map(author => (
         <Link
           key={author.href}
