@@ -426,7 +426,7 @@ export class FeedModel {
     }
     this._xLoading()
     let numToFetch = this.feed.length
-    let cursor = undefined
+    let cursor
     try {
       do {
         const res: GetTimeline.Response = await this._getFeed({

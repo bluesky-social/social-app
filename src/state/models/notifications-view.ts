@@ -366,7 +366,7 @@ export class NotificationsViewModel {
     }
     this._xLoading()
     let numToFetch = this.notifications.length
-    let cursor = undefined
+    let cursor
     try {
       do {
         const res: ListNotifications.Response =

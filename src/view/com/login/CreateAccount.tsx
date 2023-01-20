@@ -48,12 +48,16 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     setServiceDescription(undefined)
     store.session.describeService(serviceUrl).then(
       desc => {
-        if (aborted) return
+        if (aborted) {
+          return
+        }
         setServiceDescription(desc)
         setUserDomain(desc.availableUserDomains[0])
       },
       err => {
-        if (aborted) return
+        if (aborted) {
+          return
+        }
         store.log.warn(
           `Failed to fetch service description for ${serviceUrl}`,
           err,

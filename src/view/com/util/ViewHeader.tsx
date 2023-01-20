@@ -36,7 +36,7 @@ export const ViewHeader = observer(function ViewHeader({
     store.shell.setMainMenuOpen(true)
   }
   const onPressSearch = () => {
-    store.nav.navigate(`/search`)
+    store.nav.navigate('/search')
   }
   const onPressReconnect = () => {
     store.session.connect().catch(e => {
