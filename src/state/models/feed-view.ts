@@ -438,10 +438,8 @@ export class FeedModel {
         }
         this._updateAll(res)
         numToFetch -= res.data.feed.length
-        cursor = this.feed[res.data.feed.length - 1]
-          ? ts(this.feed[res.data.feed.length - 1])
-          : undefined
-      } while (numToFetch > 0)
+        cursor = res.data.cursor
+      } while (cursor && numToFetch > 0)
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e)
