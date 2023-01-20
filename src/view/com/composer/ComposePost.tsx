@@ -285,7 +285,7 @@ export const ComposePost = observer(function ComposePost({
     return detectLinkables(text).map(v => {
       if (typeof v === 'string') {
         return (
-          <Text key={i++} style={styles.textInputFormatting}>
+          <Text key={i++} style={[pal.text, styles.textInputFormatting]}>
             {v}
           </Text>
         )
