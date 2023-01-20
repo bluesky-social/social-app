@@ -302,7 +302,7 @@ function ExpandedAuthorsList({
     }).start()
   }, [heightInterp, visible])
   return (
-    <Animated.View style={(s.mb5, heightStyle)}>
+    <Animated.View style={[s.mb10, heightStyle]}>
       {authors.map(author => (
         <Link
           key={author.href}
