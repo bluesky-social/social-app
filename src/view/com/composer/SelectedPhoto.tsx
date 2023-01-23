@@ -89,5 +89,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: colors.black,
     zIndex: 1,
+    borderColor: colors.gray4,
+    borderWidth: 0.5,
   },
 })
