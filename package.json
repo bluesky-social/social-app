@@ -64,7 +64,8 @@
     "react-native-version-number": "^0.3.6",
     "react-native-web": "^0.17.7",
     "rn-fetch-blob": "^0.12.0",
-    "tlds": "^1.234.0"
+    "tlds": "^1.234.0",
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

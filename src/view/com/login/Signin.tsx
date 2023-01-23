@@ -19,6 +19,7 @@ import {createFullHandle, toNiceDomain} from '../../../lib/strings'
 import {useStores, RootStoreModel, DEFAULT_SERVICE} from '../../../state'
 import {ServiceDescription} from '../../../state/models/session'
 import {ServerInputModal} from '../../../state/models/shell-ui'
+import {AccountData} from '../../../state/models/session'
 import {isNetworkError} from '../../../lib/errors'
 import {usePalette} from '../../lib/hooks/usePalette'
 
@@ -39,7 +40,18 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   const [serviceDescription, setServiceDescription] = useState<
     ServiceDescription | undefined
   >(undefined)
-  const [currentForm, setCurrentForm] = useState<Forms>(Forms.Login)
+  const [initialHandle, setInitialHandle] = useState<string>('')
+  const [currentForm, setCurrentForm] = useState<Forms>(
+    store.session.hasAccounts ? Forms.ChooseAccount : Forms.Login,
+  )
+
+  const onSelectAccount = (account?: AccountData) => {
+    if (account?.service) {
+      setServiceUrl(account.service)
+    }
+    setInitialHandle(account?.handle || '')
+    setCurrentForm(Forms.Login)
+  }
 
   const gotoForm = (form: Forms) => () => {
     setError('')
@@ -80,6 +92,7 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
           error={error}
           serviceUrl={serviceUrl}
           serviceDescription={serviceDescription}
+          initialHandle={initialHandle}
           setError={setError}
           setServiceUrl={setServiceUrl}
           onPressBack={onPressBack}
@@ -88,10 +101,9 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
         />
       ) : undefined}
       {currentForm === Forms.ChooseAccount ? (
-        <ChooseAccount
+        <ChooseAccountForm
           store={store}
-          error={error}
-          setError={setError}
+          onSelectAccount={onSelectAccount}
           onPressBack={onPressBack}
         />
       ) : undefined}
@@ -124,71 +136,79 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   )
 }
 
-const ChooseAccount = ({
+const ChooseAccountForm = ({
   store,
-  error,
-  setError,
+  onSelectAccount,
   onPressBack,
 }: {
   store: RootStoreModel
-  error: string
-  setError: (v: string) => void
+  onSelectAccount: (account?: AccountData) => void
   onPressBack: () => void
 }) => {
   const pal = usePalette('default')
-  const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [isProcessing, setIsProcessing] = React.useState(false)
 
-  // const onPressNext = async () => {
-  //   setError('')
-  //   setIsProcessing(true)
+  const onTryAccount = async (account: AccountData) => {
+    if (account.accessJwt && account.refreshJwt) {
+      setIsProcessing(true)
+      if (await store.session.resumeSession(account)) {
+        setIsProcessing(false)
+        return
+      }
+      setIsProcessing(false)
+    }
+    onSelectAccount(account)
+  }
 
-  //   try {
-  //     await store.session.login({
-  //       service: serviceUrl,
-  //       handle: fullHandle,
-  //       password,
-  //     })
-  //   } catch (e: any) {
-  //     const errMsg = e.toString()
-  //     store.log.warn('Failed to login', e)
-  //     setIsProcessing(false)
-  //     if (errMsg.includes('Authentication Required')) {
-  //       setError('Invalid username or password')
-  //     } else if (isNetworkError(e)) {
-  //       setError(
-  //         'Unable to contact your service. Please check your Internet connection.',
-  //       )
-  //     } else {
-  //       setError(errMsg.replace(/^Error:/, ''))
-  //     }
-  //   }
-  // }
   return (
     <>
       <LogoTextHero />
-      <View
-        testID="chooseAccountView"
-        style={[pal.view, pal.borderDark, styles.group]}>
+      <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
+        Sign in as...
+      </Text>
+      {store.session.accounts.map(account => (
+        <TouchableOpacity
+          key={account.did}
+          style={[pal.borderDark, styles.group, s.mb5]}
+          onPress={() => onTryAccount(account)}>
+          <View
+            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+            <View style={s.p10}>
+              <UserAvatar
+                displayName={account.displayName}
+                handle={account.handle}
+                avatar={account.aviUrl}
+                size={30}
+              />
+            </View>
+            <Text style={styles.accountText}>
+              <Text type="lg-bold" style={pal.text}>
+                {account.displayName || account.handle}{' '}
+              </Text>
+              <Text type="lg" style={[pal.textLight]}>
+                {account.handle}
+              </Text>
+            </Text>
+            <FontAwesomeIcon
+              icon="angle-right"
+              size={16}
+              style={[pal.text, s.mr10]}
+            />
+          </View>
+        </TouchableOpacity>
+      ))}
+      <TouchableOpacity
+        style={[pal.borderDark, styles.group]}
+        onPress={() => onSelectAccount(undefined)}>
         <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
           <View style={s.p10}>
-            <UserAvatar
-              displayName="Paul Frazee"
-              handle="paul.bsky.social"
-              size={40}
+            <View
+              style={[pal.btn, {width: 30, height: 30, borderRadius: 15}]}
             />
           </View>
-          <Text
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              alignItems: 'baseline',
-              paddingVertical: 10,
-            }}>
-            <Text type="xl-bold" style={pal.text}>
-              Paul Frazee ✌️&nbsp;
-            </Text>
-            <Text type="xl" style={[pal.textLight]}>
-              paul.bsky.social
+          <Text style={styles.accountText}>
+            <Text type="lg" style={pal.text}>
+              Other account
             </Text>
           </Text>
           <FontAwesomeIcon
@@ -197,45 +217,7 @@ const ChooseAccount = ({
             style={[pal.text, s.mr10]}
           />
         </View>
-        <View style={[pal.borderDark, styles.groupContent]}>
-          <View style={s.p10}>
-            <UserAvatar
-              displayName="Paul Frazee"
-              handle="paul.bsky.social"
-              size={40}
-            />
-          </View>
-          <Text
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              alignItems: 'baseline',
-              paddingVertical: 10,
-            }}>
-            <Text type="xl-bold" style={pal.text}>
-              Paul Frazee ✌️&nbsp;
-            </Text>
-            <Text type="xl" style={[pal.textLight]}>
-              paul.staging.bsky.social
-            </Text>
-          </Text>
-          <FontAwesomeIcon
-            icon="angle-right"
-            size={16}
-            style={[pal.text, s.mr10]}
-          />
-        </View>
-      </View>
-      {error ? (
-        <View style={styles.error}>
-          <View style={styles.errorIcon}>
-            <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
-          </View>
-          <View style={s.flex1}>
-            <Text style={[s.white, s.bold]}>{error}</Text>
-          </View>
-        </View>
-      ) : undefined}
+      </TouchableOpacity>
       <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
         <TouchableOpacity onPress={onPressBack}>
           <Text type="xl" style={[pal.link, s.pl5]}>
@@ -243,17 +225,7 @@ const ChooseAccount = ({
           </Text>
         </TouchableOpacity>
         <View style={s.flex1} />
-        {isProcessing ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <TouchableOpacity
-            testID="loginNextButton"
-            onPress={undefined /*TODOonPressNext*/}>
-            <Text type="xl-bold" style={[pal.link, s.pr5]}>
-              Next
-            </Text>
-          </TouchableOpacity>
-        )}
+        {isProcessing && <ActivityIndicator />}
       </View>
     </>
   )
@@ -264,6 +236,7 @@ const LoginForm = ({
   error,
   serviceUrl,
   serviceDescription,
+  initialHandle,
   setError,
   setServiceUrl,
   onPressRetryConnect,
@@ -274,6 +247,7 @@ const LoginForm = ({
   error: string
   serviceUrl: string
   serviceDescription: ServiceDescription | undefined
+  initialHandle: string
   setError: (v: string) => void
   setServiceUrl: (v: string) => void
   onPressRetryConnect: () => void
@@ -282,7 +256,7 @@ const LoginForm = ({
 }) => {
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [handle, setHandle] = useState<string>('')
+  const [handle, setHandle] = useState<string>(initialHandle)
   const [password, setPassword] = useState<string>('')
 
   const onPressSelectService = () => {
@@ -823,6 +797,12 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 8,
     marginHorizontal: 6,
+  },
+  accountText: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    paddingVertical: 10,
   },
   error: {
     backgroundColor: colors.red4,
