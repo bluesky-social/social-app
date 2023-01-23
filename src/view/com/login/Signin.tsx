@@ -11,23 +11,27 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
 import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
-import {Logo} from './Logo'
+import {LogoTextHero} from './Logo'
 import {Text} from '../util/text/Text'
+import {UserAvatar} from '../util/UserAvatar'
 import {s, colors} from '../../lib/styles'
 import {createFullHandle, toNiceDomain} from '../../../lib/strings'
 import {useStores, RootStoreModel, DEFAULT_SERVICE} from '../../../state'
 import {ServiceDescription} from '../../../state/models/session'
 import {ServerInputModal} from '../../../state/models/shell-ui'
 import {isNetworkError} from '../../../lib/errors'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 enum Forms {
   Login,
+  ChooseAccount,
   ForgotPassword,
   SetNewPassword,
   PasswordUpdated,
 }
 
 export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
+  const pal = usePalette('default')
   const store = useStores()
   const [error, setError] = useState<string>('')
   const [retryDescribeTrigger, setRetryDescribeTrigger] = useState<any>({})
@@ -69,10 +73,7 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   const onPressRetryConnect = () => setRetryDescribeTrigger({})
 
   return (
-    <KeyboardAvoidingView testID="signIn" behavior="padding" style={{flex: 1}}>
-      <View style={styles.logoHero}>
-        <Logo />
-      </View>
+    <KeyboardAvoidingView testID="signIn" behavior="padding" style={[pal.view]}>
       {currentForm === Forms.Login ? (
         <LoginForm
           store={store}
@@ -84,6 +85,14 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
           onPressBack={onPressBack}
           onPressForgotPassword={gotoForm(Forms.ForgotPassword)}
           onPressRetryConnect={onPressRetryConnect}
+        />
+      ) : undefined}
+      {currentForm === Forms.ChooseAccount ? (
+        <ChooseAccount
+          store={store}
+          error={error}
+          setError={setError}
+          onPressBack={onPressBack}
         />
       ) : undefined}
       {currentForm === Forms.ForgotPassword ? (
@@ -115,6 +124,141 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   )
 }
 
+const ChooseAccount = ({
+  store,
+  error,
+  setError,
+  onPressBack,
+}: {
+  store: RootStoreModel
+  error: string
+  setError: (v: string) => void
+  onPressBack: () => void
+}) => {
+  const pal = usePalette('default')
+  const [isProcessing, setIsProcessing] = useState<boolean>(false)
+
+  // const onPressNext = async () => {
+  //   setError('')
+  //   setIsProcessing(true)
+
+  //   try {
+  //     await store.session.login({
+  //       service: serviceUrl,
+  //       handle: fullHandle,
+  //       password,
+  //     })
+  //   } catch (e: any) {
+  //     const errMsg = e.toString()
+  //     store.log.warn('Failed to login', e)
+  //     setIsProcessing(false)
+  //     if (errMsg.includes('Authentication Required')) {
+  //       setError('Invalid username or password')
+  //     } else if (isNetworkError(e)) {
+  //       setError(
+  //         'Unable to contact your service. Please check your Internet connection.',
+  //       )
+  //     } else {
+  //       setError(errMsg.replace(/^Error:/, ''))
+  //     }
+  //   }
+  // }
+  return (
+    <>
+      <LogoTextHero />
+      <View
+        testID="chooseAccountView"
+        style={[pal.view, pal.borderDark, styles.group]}>
+        <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+          <View style={s.p10}>
+            <UserAvatar
+              displayName="Paul Frazee"
+              handle="paul.bsky.social"
+              size={40}
+            />
+          </View>
+          <Text
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              alignItems: 'baseline',
+              paddingVertical: 10,
+            }}>
+            <Text type="xl-bold" style={pal.text}>
+              Paul Frazee ✌️&nbsp;
+            </Text>
+            <Text type="xl" style={[pal.textLight]}>
+              paul.bsky.social
+            </Text>
+          </Text>
+          <FontAwesomeIcon
+            icon="angle-right"
+            size={16}
+            style={[pal.text, s.mr10]}
+          />
+        </View>
+        <View style={[pal.borderDark, styles.groupContent]}>
+          <View style={s.p10}>
+            <UserAvatar
+              displayName="Paul Frazee"
+              handle="paul.bsky.social"
+              size={40}
+            />
+          </View>
+          <Text
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              alignItems: 'baseline',
+              paddingVertical: 10,
+            }}>
+            <Text type="xl-bold" style={pal.text}>
+              Paul Frazee ✌️&nbsp;
+            </Text>
+            <Text type="xl" style={[pal.textLight]}>
+              paul.staging.bsky.social
+            </Text>
+          </Text>
+          <FontAwesomeIcon
+            icon="angle-right"
+            size={16}
+            style={[pal.text, s.mr10]}
+          />
+        </View>
+      </View>
+      {error ? (
+        <View style={styles.error}>
+          <View style={styles.errorIcon}>
+            <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
+          </View>
+          <View style={s.flex1}>
+            <Text style={[s.white, s.bold]}>{error}</Text>
+          </View>
+        </View>
+      ) : undefined}
+      <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
+        <TouchableOpacity onPress={onPressBack}>
+          <Text type="xl" style={[pal.link, s.pl5]}>
+            Back
+          </Text>
+        </TouchableOpacity>
+        <View style={s.flex1} />
+        {isProcessing ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <TouchableOpacity
+            testID="loginNextButton"
+            onPress={undefined /*TODOonPressNext*/}>
+            <Text type="xl-bold" style={[pal.link, s.pr5]}>
+              Next
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </>
+  )
+}
+
 const LoginForm = ({
   store,
   error,
@@ -136,6 +280,7 @@ const LoginForm = ({
   onPressBack: () => void
   onPressForgotPassword: () => void
 }) => {
+  const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [handle, setHandle] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -193,31 +338,44 @@ const LoginForm = ({
 
   const isReady = !!serviceDescription && !!handle && !!password
   return (
-    <>
-      <View testID="loginFormView" style={styles.group}>
-        <TouchableOpacity
-          testID="loginSelectServiceButton"
-          style={[styles.groupTitle, {paddingRight: 0, paddingVertical: 6}]}
-          onPress={onPressSelectService}>
-          <Text style={[s.flex1, s.white, s.f18, s.bold]} numberOfLines={1}>
-            Sign in to {toNiceDomain(serviceUrl)}
-          </Text>
-          <View style={styles.textBtnFakeInnerBtn}>
-            <FontAwesomeIcon
-              icon="pen"
-              size={12}
-              style={styles.textBtnFakeInnerBtnIcon}
-            />
-            <Text style={styles.textBtnFakeInnerBtnLabel}>Change</Text>
-          </View>
-        </TouchableOpacity>
-        <View style={styles.groupContent}>
-          <FontAwesomeIcon icon="at" style={styles.groupContentIcon} />
+    <View testId="loginFormView">
+      <LogoTextHero />
+      <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
+        Sign into
+      </Text>
+      <View style={[pal.borderDark, styles.group]}>
+        <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+          <FontAwesomeIcon
+            icon="globe"
+            style={[pal.textLight, styles.groupContentIcon]}
+          />
+          <TouchableOpacity
+            testID="registerSelectServiceButton"
+            style={styles.textBtn}
+            onPress={onPressSelectService}>
+            <Text type="xl" style={[pal.text, styles.textBtnLabel]}>
+              {toNiceDomain(serviceUrl)}
+            </Text>
+            <View style={[pal.btn, styles.textBtnFakeInnerBtn]}>
+              <FontAwesomeIcon icon="pen" size={12} style={pal.textLight} />
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
+        Account
+      </Text>
+      <View style={[pal.borderDark, styles.group]}>
+        <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+          <FontAwesomeIcon
+            icon="at"
+            style={[pal.textLight, styles.groupContentIcon]}
+          />
           <TextInput
             testID="loginUsernameInput"
-            style={styles.textInput}
+            style={[pal.text, styles.textInput]}
             placeholder="Username"
-            placeholderTextColor={colors.blue0}
+            placeholderTextColor={pal.colors.textLight}
             autoCapitalize="none"
             autoFocus
             autoCorrect={false}
@@ -226,13 +384,16 @@ const LoginForm = ({
             editable={!isProcessing}
           />
         </View>
-        <View style={styles.groupContent}>
-          <FontAwesomeIcon icon="lock" style={styles.groupContentIcon} />
+        <View style={[pal.borderDark, styles.groupContent]}>
+          <FontAwesomeIcon
+            icon="lock"
+            style={[pal.textLight, styles.groupContentIcon]}
+          />
           <TextInput
             testID="loginPasswordInput"
             style={styles.textInput}
             placeholder="Password"
-            placeholderTextColor={colors.blue0}
+            placeholderTextColor={pal.colors.textLight}
             autoCapitalize="none"
             autoCorrect={false}
             secureTextEntry
@@ -244,7 +405,7 @@ const LoginForm = ({
             testID="forgotPasswordButton"
             style={styles.textInputInnerBtn}
             onPress={onPressForgotPassword}>
-            <Text style={styles.textInputInnerBtnLabel}>Forgot</Text>
+            <Text style={pal.link}>Forgot</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -260,29 +421,37 @@ const LoginForm = ({
       ) : undefined}
       <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
         <TouchableOpacity onPress={onPressBack}>
-          <Text style={[s.white, s.f18, s.pl5]}>Back</Text>
+          <Text type="xl" style={[pal.link, s.pl5]}>
+            Back
+          </Text>
         </TouchableOpacity>
         <View style={s.flex1} />
         {!serviceDescription && error ? (
           <TouchableOpacity
             testID="loginRetryButton"
             onPress={onPressRetryConnect}>
-            <Text style={[s.white, s.f18, s.bold, s.pr5]}>Retry</Text>
+            <Text type="xl-bold" style={[pal.link, s.pr5]}>
+              Retry
+            </Text>
           </TouchableOpacity>
         ) : !serviceDescription ? (
           <>
-            <ActivityIndicator color="#fff" />
-            <Text style={[s.white, s.f18, s.pl10]}>Connecting...</Text>
+            <ActivityIndicator />
+            <Text type="xl" style={[pal.textLight, s.pl10]}>
+              Connecting...
+            </Text>
           </>
         ) : isProcessing ? (
-          <ActivityIndicator color="#fff" />
+          <ActivityIndicator />
         ) : isReady ? (
           <TouchableOpacity testID="loginNextButton" onPress={onPressNext}>
-            <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
+            <Text type="xl-bold" style={[pal.link, s.pr5]}>
+              Next
+            </Text>
           </TouchableOpacity>
         ) : undefined}
       </View>
-    </>
+    </View>
   )
 }
 
@@ -305,6 +474,7 @@ const ForgotPasswordForm = ({
   onPressBack: () => void
   onEmailSent: () => void
 }) => {
+  const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
 
@@ -340,72 +510,88 @@ const ForgotPasswordForm = ({
 
   return (
     <>
-      <Text style={styles.screenTitle}>Reset password</Text>
-      <Text style={styles.instructions}>
-        Enter the email you used to create your account. We'll send you a "reset
-        code" so you can set a new password.
-      </Text>
-      <View testID="forgotPasswordView" style={styles.group}>
-        <TouchableOpacity
-          testID="forgotPasswordSelectServiceButton"
-          style={[styles.groupContent, {borderTopWidth: 0}]}
-          onPress={onPressSelectService}>
-          <FontAwesomeIcon icon="globe" style={styles.groupContentIcon} />
-          <Text style={styles.textInput} numberOfLines={1}>
-            {toNiceDomain(serviceUrl)}
-          </Text>
-          <View style={styles.textBtnFakeInnerBtn}>
+      <LogoTextHero />
+      <View>
+        <Text type="title-lg" style={[pal.text, styles.screenTitle]}>
+          Reset password
+        </Text>
+        <Text type="md" style={[pal.text, styles.instructions]}>
+          Enter the email you used to create your account. We'll send you a
+          "reset code" so you can set a new password.
+        </Text>
+        <View
+          testID="forgotPasswordView"
+          style={[pal.borderDark, pal.view, styles.group]}>
+          <TouchableOpacity
+            testID="forgotPasswordSelectServiceButton"
+            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}
+            onPress={onPressSelectService}>
             <FontAwesomeIcon
-              icon="pen"
-              size={12}
-              style={styles.textBtnFakeInnerBtnIcon}
+              icon="globe"
+              style={[pal.textLight, styles.groupContentIcon]}
             />
-            <Text style={styles.textBtnFakeInnerBtnLabel}>Change</Text>
-          </View>
-        </TouchableOpacity>
-        <View style={styles.groupContent}>
-          <FontAwesomeIcon icon="envelope" style={styles.groupContentIcon} />
-          <TextInput
-            testID="forgotPasswordEmail"
-            style={styles.textInput}
-            placeholder="Email address"
-            placeholderTextColor={colors.blue0}
-            autoCapitalize="none"
-            autoFocus
-            autoCorrect={false}
-            value={email}
-            onChangeText={setEmail}
-            editable={!isProcessing}
-          />
-        </View>
-      </View>
-      {error ? (
-        <View style={styles.error}>
-          <View style={styles.errorIcon}>
-            <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
-          </View>
-          <View style={s.flex1}>
-            <Text style={[s.white, s.bold]}>{error}</Text>
-          </View>
-        </View>
-      ) : undefined}
-      <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-        <TouchableOpacity onPress={onPressBack}>
-          <Text style={[s.white, s.f18, s.pl5]}>Back</Text>
-        </TouchableOpacity>
-        <View style={s.flex1} />
-        {!serviceDescription || isProcessing ? (
-          <ActivityIndicator color="#fff" />
-        ) : !email ? (
-          <Text style={[s.blue1, s.f18, s.bold, s.pr5]}>Next</Text>
-        ) : (
-          <TouchableOpacity testID="newPasswordButton" onPress={onPressNext}>
-            <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
+            <Text style={styles.textInput} numberOfLines={1}>
+              {toNiceDomain(serviceUrl)}
+            </Text>
+            <View style={[pal.btn, styles.textBtnFakeInnerBtn]}>
+              <FontAwesomeIcon icon="pen" size={12} style={pal.text} />
+            </View>
           </TouchableOpacity>
-        )}
-        {!serviceDescription || isProcessing ? (
-          <Text style={[s.white, s.f18, s.pl10]}>Processing...</Text>
+          <View style={[pal.borderDark, styles.groupContent]}>
+            <FontAwesomeIcon
+              icon="envelope"
+              style={[pal.textLight, styles.groupContentIcon]}
+            />
+            <TextInput
+              testID="forgotPasswordEmail"
+              style={styles.textInput}
+              placeholder="Email address"
+              placeholderTextColor={pal.colors.textLight}
+              autoCapitalize="none"
+              autoFocus
+              autoCorrect={false}
+              value={email}
+              onChangeText={setEmail}
+              editable={!isProcessing}
+            />
+          </View>
+        </View>
+        {error ? (
+          <View style={styles.error}>
+            <View style={styles.errorIcon}>
+              <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
+            </View>
+            <View style={s.flex1}>
+              <Text style={[s.white, s.bold]}>{error}</Text>
+            </View>
+          </View>
         ) : undefined}
+        <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
+          <TouchableOpacity onPress={onPressBack}>
+            <Text type="xl" style={[pal.link, s.pl5]}>
+              Back
+            </Text>
+          </TouchableOpacity>
+          <View style={s.flex1} />
+          {!serviceDescription || isProcessing ? (
+            <ActivityIndicator />
+          ) : !email ? (
+            <Text type="xl-bold" style={[pal.link, s.pr5, {opacity: 0.5}]}>
+              Next
+            </Text>
+          ) : (
+            <TouchableOpacity testID="newPasswordButton" onPress={onPressNext}>
+              <Text type="xl-bold" style={[pal.link, s.pr5]}>
+                Next
+              </Text>
+            </TouchableOpacity>
+          )}
+          {!serviceDescription || isProcessing ? (
+            <Text type="xl" style={[pal.textLight, s.pl10]}>
+              Processing...
+            </Text>
+          ) : undefined}
+        </View>
       </View>
     </>
   )
@@ -426,6 +612,7 @@ const SetNewPasswordForm = ({
   onPressBack: () => void
   onPasswordSet: () => void
 }) => {
+  const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [resetCode, setResetCode] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -454,87 +641,119 @@ const SetNewPasswordForm = ({
 
   return (
     <>
-      <Text style={styles.screenTitle}>Set new password</Text>
-      <Text style={styles.instructions}>
-        You will receive an email with a "reset code." Enter that code here,
-        then enter your new password.
-      </Text>
-      <View testID="newPasswordView" style={styles.group}>
-        <View style={[styles.groupContent, {borderTopWidth: 0}]}>
-          <FontAwesomeIcon icon="ticket" style={styles.groupContentIcon} />
-          <TextInput
-            testID="resetCodeInput"
-            style={[styles.textInput]}
-            placeholder="Reset code"
-            placeholderTextColor={colors.blue0}
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoFocus
-            value={resetCode}
-            onChangeText={setResetCode}
-            editable={!isProcessing}
-          />
-        </View>
-        <View style={styles.groupContent}>
-          <FontAwesomeIcon icon="lock" style={styles.groupContentIcon} />
-          <TextInput
-            testID="newPasswordInput"
-            style={styles.textInput}
-            placeholder="New password"
-            placeholderTextColor={colors.blue0}
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-            editable={!isProcessing}
-          />
-        </View>
-      </View>
-      {error ? (
-        <View style={styles.error}>
-          <View style={styles.errorIcon}>
-            <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
+      <LogoTextHero />
+      <View>
+        <Text type="title-lg" style={[pal.text, styles.screenTitle]}>
+          Set new password
+        </Text>
+        <Text type="lg" style={[pal.text, styles.instructions]}>
+          You will receive an email with a "reset code." Enter that code here,
+          then enter your new password.
+        </Text>
+        <View
+          testID="newPasswordView"
+          style={[pal.view, pal.borderDark, styles.group]}>
+          <View
+            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+            <FontAwesomeIcon
+              icon="ticket"
+              style={[pal.textLight, styles.groupContentIcon]}
+            />
+            <TextInput
+              testID="resetCodeInput"
+              style={[styles.textInput]}
+              placeholder="Reset code"
+              placeholderTextColor={pal.colors.textLight}
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoFocus
+              value={resetCode}
+              onChangeText={setResetCode}
+              editable={!isProcessing}
+            />
           </View>
-          <View style={s.flex1}>
-            <Text style={[s.white, s.bold]}>{error}</Text>
+          <View style={[pal.borderDark, styles.groupContent]}>
+            <FontAwesomeIcon
+              icon="lock"
+              style={[pal.textLight, styles.groupContentIcon]}
+            />
+            <TextInput
+              testID="newPasswordInput"
+              style={styles.textInput}
+              placeholder="New password"
+              placeholderTextColor={pal.colors.textLight}
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+              editable={!isProcessing}
+            />
           </View>
         </View>
-      ) : undefined}
-      <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-        <TouchableOpacity onPress={onPressBack}>
-          <Text style={[s.white, s.f18, s.pl5]}>Back</Text>
-        </TouchableOpacity>
-        <View style={s.flex1} />
-        {isProcessing ? (
-          <ActivityIndicator color="#fff" />
-        ) : !resetCode || !password ? (
-          <Text style={[s.blue1, s.f18, s.bold, s.pr5]}>Next</Text>
-        ) : (
-          <TouchableOpacity testID="setNewPasswordButton" onPress={onPressNext}>
-            <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
-          </TouchableOpacity>
-        )}
-        {isProcessing ? (
-          <Text style={[s.white, s.f18, s.pl10]}>Updating...</Text>
+        {error ? (
+          <View style={styles.error}>
+            <View style={styles.errorIcon}>
+              <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
+            </View>
+            <View style={s.flex1}>
+              <Text style={[s.white, s.bold]}>{error}</Text>
+            </View>
+          </View>
         ) : undefined}
+        <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
+          <TouchableOpacity onPress={onPressBack}>
+            <Text type="xl" style={[pal.link, s.pl5]}>
+              Back
+            </Text>
+          </TouchableOpacity>
+          <View style={s.flex1} />
+          {isProcessing ? (
+            <ActivityIndicator />
+          ) : !resetCode || !password ? (
+            <Text type="xl-bold" style={[pal.link, s.pr5, {opacity: 0.5}]}>
+              Next
+            </Text>
+          ) : (
+            <TouchableOpacity
+              testID="setNewPasswordButton"
+              onPress={onPressNext}>
+              <Text type="xl-bold" style={[pal.link, s.pr5]}>
+                Next
+              </Text>
+            </TouchableOpacity>
+          )}
+          {isProcessing ? (
+            <Text type="xl" style={[pal.textLight, s.pl10]}>
+              Updating...
+            </Text>
+          ) : undefined}
+        </View>
       </View>
     </>
   )
 }
 
 const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
+  const pal = usePalette('default')
   return (
     <>
-      <Text style={styles.screenTitle}>Password updated!</Text>
-      <Text style={styles.instructions}>
-        You can now sign in with your new password.
-      </Text>
-      <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-        <View style={s.flex1} />
-        <TouchableOpacity onPress={onPressNext}>
-          <Text style={[s.white, s.f18, s.bold, s.pr5]}>Okay</Text>
-        </TouchableOpacity>
+      <LogoTextHero />
+      <View>
+        <Text type="title-lg" style={[pal.text, styles.screenTitle]}>
+          Password updated!
+        </Text>
+        <Text type="lg" style={[pal.text, styles.instructions]}>
+          You can now sign in with your new password.
+        </Text>
+        <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
+          <View style={s.flex1} />
+          <TouchableOpacity onPress={onPressNext}>
+            <Text type="xl-bold" style={[pal.link, s.pr5]}>
+              Okay
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </>
   )
@@ -542,53 +761,42 @@ const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
 
 const styles = StyleSheet.create({
   screenTitle: {
-    color: colors.white,
-    fontSize: 26,
     marginBottom: 10,
     marginHorizontal: 20,
   },
   instructions: {
-    color: colors.white,
-    fontSize: 16,
     marginBottom: 20,
     marginHorizontal: 20,
-  },
-  logoHero: {
-    paddingTop: 30,
-    paddingBottom: 40,
   },
   group: {
     borderWidth: 1,
-    borderColor: colors.white,
     borderRadius: 10,
     marginBottom: 20,
     marginHorizontal: 20,
-    backgroundColor: colors.blue3,
   },
-  groupTitle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+  groupLabel: {
+    paddingHorizontal: 20,
+    paddingBottom: 5,
   },
   groupContent: {
     borderTopWidth: 1,
-    borderTopColor: colors.blue1,
     flexDirection: 'row',
     alignItems: 'center',
   },
+  noTopBorder: {
+    borderTopWidth: 0,
+  },
   groupContentIcon: {
-    color: 'white',
     marginLeft: 10,
   },
   textInput: {
     flex: 1,
     width: '100%',
-    backgroundColor: colors.blue3,
-    color: colors.white,
     paddingVertical: 10,
     paddingHorizontal: 12,
-    fontSize: 18,
+    fontSize: 17,
+    letterSpacing: 0.25,
+    fontWeight: '400',
     borderRadius: 10,
   },
   textInputInnerBtn: {
@@ -598,28 +806,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     marginHorizontal: 6,
   },
-  textInputInnerBtnLabel: {
-    color: colors.white,
+  textBtn: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+  },
+  textBtnLabel: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
   },
   textBtnFakeInnerBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.blue2,
     borderRadius: 6,
     paddingVertical: 6,
     paddingHorizontal: 8,
     marginHorizontal: 6,
   },
-  textBtnFakeInnerBtnIcon: {
-    color: colors.white,
-    marginRight: 4,
-  },
-  textBtnFakeInnerBtnLabel: {
-    color: colors.white,
-  },
   error: {
-    borderWidth: 1,
-    borderColor: colors.red5,
     backgroundColor: colors.red4,
     flexDirection: 'row',
     alignItems: 'center',

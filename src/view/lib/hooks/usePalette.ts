@@ -6,6 +6,7 @@ export interface UsePaletteValue {
   view: ViewStyle
   btn: ViewStyle
   border: ViewStyle
+  borderDark: ViewStyle
   text: TextStyle
   textLight: TextStyle
   textInverted: TextStyle
@@ -24,6 +25,9 @@ export function usePalette(color: PaletteColorName): UsePaletteValue {
     },
     border: {
       borderColor: palette.border,
+    },
+    borderDark: {
+      borderColor: palette.borderDark,
     },
     text: {
       color: palette.text,
