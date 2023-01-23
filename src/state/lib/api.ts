@@ -14,13 +14,7 @@ import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from '../models/root-store'
 import {extractEntities} from '../../lib/strings'
 import {isNetworkError} from '../../lib/errors'
-import {downloadAndResize} from '../../lib/images'
-import {
-  getLikelyType,
-  LikelyType,
-  getLinkMeta,
-  LinkMeta,
-} from '../../lib/link-meta'
+import {LinkMeta} from '../../lib/link-meta'
 import {Image} from '../../lib/images'
 
 const TIMEOUT = 10e3 // 10s

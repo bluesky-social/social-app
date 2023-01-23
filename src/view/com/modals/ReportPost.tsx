@@ -21,7 +21,8 @@ const ITEMS: RadioGroupItem[] = [
 
 export const snapPoints = ['50%']
 
-export function Component({postUrl}: {postUrl: string}) {
+// TODO: Use less generic naming for this component
+export function Component() {
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [error, setError] = useState<string>('')

@@ -11,11 +11,9 @@ import {
 } from 'react-native-image-crop-picker'
 
 export function UserBanner({
-  handle,
   banner,
   onSelectNewBanner,
 }: {
-  handle: string
   banner?: string | null
   onSelectNewBanner?: (img: PickedImage) => void
 }) {
