@@ -1,16 +1,30 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Alert, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import ImageView from 'react-native-image-viewing'
 import {useStores} from '../../../state'
 
 import * as models from '../../../state/models/shell-ui'
+import {downloadImageToGallery} from '../../../lib/images'
 
 export const Lightbox = observer(function Lightbox() {
   const store = useStores()
   const onClose = () => {
-    console.log('hit')
     store.shell.closeLightbox()
+  }
+  const onLongPress = ({uri}: {uri: string}) => {
+    Alert.alert('Save Image', 'Save this image to your device?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Save',
+        onPress: () => {
+          downloadImageToGallery(uri)
+        },
+      },
+    ])
   }
 
   if (!store.shell.isLightboxActive) {
@@ -25,6 +39,7 @@ export const Lightbox = observer(function Lightbox() {
         imageIndex={0}
         visible
         onRequestClose={onClose}
+        presentationStyle="pageSheet"
       />
     )
   } else if (store.shell.activeLightbox?.name === 'images') {
@@ -35,6 +50,7 @@ export const Lightbox = observer(function Lightbox() {
         imageIndex={opts.index}
         visible
         onRequestClose={onClose}
+        onLongPress={onLongPress}
       />
     )
   } else {

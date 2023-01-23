@@ -26,7 +26,7 @@
     "@gorhom/bottom-sheet": "^4",
     "@mattermost/react-native-paste-input": "^0.6.0",
     "@react-native-async-storage/async-storage": "^1.17.6",
-    "@react-native-camera-roll/camera-roll": "^5.1.0",
+    "@react-native-camera-roll/camera-roll": "^5.2.2",
     "@react-native-clipboard/clipboard": "^1.10.0",
     "@react-native-community/blur": "^4.3.0",
     "@zxing/text-encoding": "^0.9.0",
