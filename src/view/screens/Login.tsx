@@ -15,6 +15,7 @@ import {CreateAccount} from '../com/login/CreateAccount'
 import {Text} from '../com/util/text/Text'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
 import {s, colors} from '../lib/styles'
+import {usePalette} from '../lib/hooks/usePalette'
 
 enum ScreenState {
   SigninOrCreateAccount,
@@ -79,6 +80,7 @@ const SigninOrCreateAccount = ({
 
 export const Login = observer(
   (/*{navigation}: RootTabsScreenProps<'Login'>*/) => {
+    const pal = usePalette('default')
     const [screenState, setScreenState] = useState<ScreenState>(
       ScreenState.SigninOrCreateAccount,
     )
@@ -105,7 +107,7 @@ export const Login = observer(
     }
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, pal.view]}>
         <SafeAreaView testID="noSessionView" style={styles.container}>
           <ErrorBoundary>
             {screenState === ScreenState.Signin ? (

@@ -391,7 +391,7 @@ const LoginForm = ({
           />
           <TextInput
             testID="loginPasswordInput"
-            style={styles.textInput}
+            style={[pal.text, styles.textInput]}
             placeholder="Password"
             placeholderTextColor={pal.colors.textLight}
             autoCapitalize="none"
@@ -530,7 +530,7 @@ const ForgotPasswordForm = ({
               icon="globe"
               style={[pal.textLight, styles.groupContentIcon]}
             />
-            <Text style={styles.textInput} numberOfLines={1}>
+            <Text style={[pal.text, styles.textInput]} numberOfLines={1}>
               {toNiceDomain(serviceUrl)}
             </Text>
             <View style={[pal.btn, styles.textBtnFakeInnerBtn]}>
@@ -544,7 +544,7 @@ const ForgotPasswordForm = ({
             />
             <TextInput
               testID="forgotPasswordEmail"
-              style={styles.textInput}
+              style={[pal.text, styles.textInput]}
               placeholder="Email address"
               placeholderTextColor={pal.colors.textLight}
               autoCapitalize="none"
@@ -661,7 +661,7 @@ const SetNewPasswordForm = ({
             />
             <TextInput
               testID="resetCodeInput"
-              style={[styles.textInput]}
+              style={[pal.text, styles.textInput]}
               placeholder="Reset code"
               placeholderTextColor={pal.colors.textLight}
               autoCapitalize="none"
@@ -679,7 +679,7 @@ const SetNewPasswordForm = ({
             />
             <TextInput
               testID="newPasswordInput"
-              style={styles.textInput}
+              style={[pal.text, styles.textInput]}
               placeholder="New password"
               placeholderTextColor={pal.colors.textLight}
               autoCapitalize="none"

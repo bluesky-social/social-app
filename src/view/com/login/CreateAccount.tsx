@@ -143,7 +143,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
               testID="registerSelectServiceButton"
               style={styles.textBtn}
               onPress={onPressSelectService}>
-              <Text type="xl" style={styles.textBtnLabel}>
+              <Text type="xl" style={[pal.text, styles.textBtnLabel]}>
                 {toNiceDomain(serviceUrl)}
               </Text>
               <View style={[pal.btn, styles.textBtnFakeInnerBtn]}>
@@ -298,7 +298,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                       <FontAwesomeIcon icon="check" style={s.blue3} size={14} />
                     )}
                   </View>
-                  <Text style={[styles.textBtnLabel, s.f16]}>
+                  <Text style={[pal.text, styles.textBtnLabel]}>
                     I am 13 years old or older
                   </Text>
                 </TouchableOpacity>
