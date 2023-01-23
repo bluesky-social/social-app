@@ -11,7 +11,6 @@ export function UserInfoText({
   type = 'md',
   did,
   attr,
-  loading,
   failed,
   prefix,
   style,
@@ -27,7 +26,6 @@ export function UserInfoText({
   asLink?: boolean
 }) {
   attr = attr || 'handle'
-  loading = loading || '...'
   failed = failed || 'user'
 
   const store = useStores()

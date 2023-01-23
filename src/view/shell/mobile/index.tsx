@@ -34,7 +34,7 @@ import {Text} from '../../com/util/text/Text'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
 import {TabsSelector} from './TabsSelector'
 import {Composer} from './Composer'
-import {s, colors} from '../../lib/styles'
+import {colors} from '../../lib/styles'
 import {clamp} from '../../../lib/numbers'
 import {
   GridIcon,
@@ -127,7 +127,6 @@ export const MobileShell: React.FC = observer(() => {
   const scrollElRef = useRef<FlatList | undefined>()
   const winDim = useWindowDimensions()
   const [menuSwipingDirection, setMenuSwipingDirection] = useState(0)
-  const constZeroInterp = useAnimatedValue(0)
   const swipeGestureInterp = useAnimatedValue(0)
   const minimalShellInterp = useAnimatedValue(0)
   const tabMenuInterp = useAnimatedValue(0)
