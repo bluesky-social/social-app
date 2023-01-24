@@ -1,4 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
+import notifee from '@notifee/react-native'
 import {RootStoreModel} from './root-store'
 import {FeedModel} from './feed-view'
 import {NotificationsViewModel} from './notifications-view'
@@ -104,6 +105,9 @@ export class MeModel {
           this.rootStore.log.error('Failed to setup notifications model', e)
         }),
       ])
+
+      // request notifications permission once the user has logged in
+      notifee.requestPermission()
     } else {
       this.clear()
     }
