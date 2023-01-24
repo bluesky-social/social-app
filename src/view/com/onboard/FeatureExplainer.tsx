@@ -19,14 +19,13 @@ import {TABS_ENABLED} from '../../../build-flags'
 const Intro = () => (
   <View style={styles.explainer}>
     <Text
-      style={[
-        styles.explainerHeading,
-        s.normal,
-        {lineHeight: 60, paddingTop: 50, paddingBottom: 50},
-      ]}>
-      Welcome to <Text style={[s.bold, s.blue3, {fontSize: 56}]}>Bluesky</Text>
+      style={[styles.explainerHeading, s.normal, styles.explainerHeadingIntro]}>
+      Welcome to{' '}
+      <Text style={[s.bold, s.blue3, styles.explainerHeadingBrand]}>
+        Bluesky
+      </Text>
     </Text>
-    <Text style={[styles.explainerDesc, {fontSize: 24}]}>
+    <Text style={[styles.explainerDesc, styles.explainerDescIntro]}>
       This is an early beta. Your feedback is appreciated!
     </Text>
   </View>
@@ -161,11 +160,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 16,
   },
+  explainerHeadingIntro: {
+    lineHeight: 60,
+    paddingTop: 50,
+    paddingBottom: 50,
+  },
+  explainerHeadingBrand: {fontSize: 56},
   explainerDesc: {
     fontSize: 18,
     textAlign: 'center',
     marginBottom: 16,
   },
+  explainerDescIntro: {fontSize: 24},
   explainerImg: {
     resizeMode: 'contain',
     maxWidth: '100%',

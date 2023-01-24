@@ -297,7 +297,7 @@ export const ComposePost = observer(function ComposePost({
         )
       }
     })
-  }, [text, pal.link])
+  }, [text, pal.link, pal.text])
 
   return (
     <KeyboardAvoidingView
@@ -393,7 +393,7 @@ export const ComposePost = observer(function ComposePost({
                 ref={textInput}
                 multiline
                 scrollEnabled
-                onChangeText={(text: string) => onChangeText(text)}
+                onChangeText={(str: string) => onChangeText(str)}
                 onPaste={onPaste}
                 placeholder={selectTextInputPlaceholder}
                 placeholderTextColor={pal.colors.textLight}
@@ -475,7 +475,7 @@ export const ComposePost = observer(function ComposePost({
   )
 })
 
-const atPrefixRegex = /@([a-z0-9\.]*)$/i
+const atPrefixRegex = /@([a-z0-9.]*)$/i
 function extractTextAutocompletePrefix(text: string) {
   const match = atPrefixRegex.exec(text)
   if (match) {

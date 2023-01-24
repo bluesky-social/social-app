@@ -121,7 +121,7 @@ export function Component({
           </View>
         </View>
         {error !== '' && (
-          <View style={{marginTop: 20}}>
+          <View style={styles.errorContainer}>
             <ErrorMessage message={error} />
           </View>
         )}
@@ -231,4 +231,5 @@ const styles = StyleSheet.create({
     marginBottom: 36,
     marginHorizontal: -14,
   },
+  errorContainer: {marginTop: 20},
 })

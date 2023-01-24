@@ -41,7 +41,7 @@ export function Selector({
       width: middle.width,
     }
     return [left, middle, right]
-  }, [selectedIndex, items, itemLayouts])
+  }, [selectedIndex, itemLayouts])
 
   const underlineStyle = {
     backgroundColor: pal.colors.text,

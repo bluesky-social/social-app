@@ -15,7 +15,7 @@ export const PostUpvotedBy = ({navIdx, visible, params}: ScreenParams) => {
     if (visible) {
       store.nav.setTitle(navIdx, 'Liked by')
     }
-  }, [store, visible])
+  }, [store, visible, navIdx])
 
   return (
     <View>

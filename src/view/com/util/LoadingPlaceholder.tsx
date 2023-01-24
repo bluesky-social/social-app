@@ -19,23 +19,15 @@ export function LoadingPlaceholder({
   return (
     <View
       style={[
+        styles.loadingPlaceholder,
         {
           width,
           height,
           backgroundColor: theme.palette.default.backgroundLight,
-          borderRadius: 6,
-          overflow: 'hidden',
         },
         style,
-      ]}>
-      <View
-        style={{
-          width,
-          height,
-          backgroundColor: theme.palette.default.backgroundLight,
-        }}
-      />
-    </View>
+      ]}
+    />
   )
 }
 
@@ -137,6 +129,9 @@ export function NotificationFeedLoadingPlaceholder() {
 }
 
 const styles = StyleSheet.create({
+  loadingPlaceholder: {
+    borderRadius: 6,
+  },
   post: {
     flexDirection: 'row',
     padding: 10,

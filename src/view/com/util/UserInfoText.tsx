@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
-import {StyleProp, TextStyle} from 'react-native'
+import {StyleProp, StyleSheet, TextStyle} from 'react-native'
 import {Link} from './Link'
 import {Text} from './text/Text'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
@@ -53,7 +53,7 @@ export function UserInfoText({
     return () => {
       aborted = true
     }
-  }, [did, store.api.app.bsky])
+  }, [did, store.profiles])
 
   let inner
   if (didFail) {
@@ -73,7 +73,7 @@ export function UserInfoText({
       <LoadingPlaceholder
         width={80}
         height={8}
-        style={{position: 'relative', top: 1, left: 2}}
+        style={styles.loadingPlaceholder}
       />
     )
   }
@@ -91,3 +91,7 @@ export function UserInfoText({
 
   return inner
 }
+
+const styles = StyleSheet.create({
+  loadingPlaceholder: {position: 'relative', top: 1, left: 2},
+})

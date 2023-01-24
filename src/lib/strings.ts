@@ -78,7 +78,7 @@ export function extractEntities(
   let ents: Entity[] = []
   {
     // mentions
-    const re = /(^|\s|\()(@)([a-zA-Z0-9\.-]+)(\b)/g
+    const re = /(^|\s|\()(@)([a-zA-Z0-9.-]+)(\b)/g
     while ((match = re.exec(text))) {
       if (knownHandles && !knownHandles.has(match[3])) {
         continue // not a known handle
@@ -133,7 +133,7 @@ interface DetectedLink {
 type DetectedLinkable = string | DetectedLink
 export function detectLinkables(text: string): DetectedLinkable[] {
   const re =
-    /((^|\s|\()@[a-z0-9\.-]*)|((^|\s|\()https?:\/\/[\S]+)|((^|\s|\()(?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*)/gi
+    /((^|\s|\()@[a-z0-9.-]*)|((^|\s|\()https?:\/\/[\S]+)|((^|\s|\()(?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*)/gi
   const segments = []
   let match
   let start = 0
@@ -154,14 +154,12 @@ export function detectLinkables(text: string): DetectedLinkable[] {
       matchValue = matchValue.slice(1)
     }
 
-    {
-      // strip ending puncuation
-      if (/[.,;!?]$/.test(matchValue)) {
-        matchValue = matchValue.slice(0, -1)
-      }
-      if (/[)]$/.test(matchValue) && !matchValue.includes('(')) {
-        matchValue = matchValue.slice(0, -1)
-      }
+    // strip ending puncuation
+    if (/[.,;!?]$/.test(matchValue)) {
+      matchValue = matchValue.slice(0, -1)
+    }
+    if (/[)]$/.test(matchValue) && !matchValue.includes('(')) {
+      matchValue = matchValue.slice(0, -1)
     }
 
     if (start !== matchIndex) {
@@ -185,8 +183,8 @@ export function makeValidHandle(str: string): string {
 }
 
 export function createFullHandle(name: string, domain: string): string {
-  name = (name || '').replace(/[\.]+$/, '')
-  domain = (domain || '').replace(/^[\.]+/, '')
+  name = (name || '').replace(/[.]+$/, '')
+  domain = (domain || '').replace(/^[.]+/, '')
   return `${name}.${domain}`
 }
 

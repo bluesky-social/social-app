@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native'
 import {clamp} from 'lodash'
+import {s} from '../../../lib/styles'
 
 export enum Dir {
   None,
@@ -294,7 +295,7 @@ export function SwipeAndZoom({
   })
 
   return (
-    <View {...panResponder.panHandlers} style={{flex: 1}}>
+    <View {...panResponder.panHandlers} style={s.h100pct}>
       {children}
     </View>
   )

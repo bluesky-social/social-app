@@ -67,7 +67,7 @@ export function PostEmbeds({
             <AutoSizedImage
               uri={embed.images[0].thumb}
               onPress={() => openLightbox(0)}
-              containerStyle={{borderRadius: 8}}
+              containerStyle={styles.singleImage}
             />
           </View>
         )
@@ -119,6 +119,9 @@ export function PostEmbeds({
 const styles = StyleSheet.create({
   imagesContainer: {
     marginTop: 4,
+  },
+  singleImage: {
+    borderRadius: 8,
   },
   extOuter: {
     borderWidth: 1,

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, View} from 'react-native'
+import {Button, StyleSheet, View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Text} from '../com/util/text/Text'
 import {useStores} from '../../state'
@@ -9,13 +9,8 @@ export const NotFound = () => {
   return (
     <View testID="notFoundView">
       <ViewHeader title="Page not found" />
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          paddingTop: 100,
-        }}>
-        <Text style={{fontSize: 40, fontWeight: 'bold'}}>Page not found</Text>
+      <View style={styles.container}>
+        <Text style={styles.title}>Page not found</Text>
         <Button
           testID="navigateHomeButton"
           title="Home"
@@ -25,3 +20,15 @@ export const NotFound = () => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 100,
+  },
+  title: {
+    fontSize: 40,
+    fontWeight: 'bold',
+  },
+})

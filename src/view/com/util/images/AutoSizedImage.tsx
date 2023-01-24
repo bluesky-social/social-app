@@ -47,9 +47,9 @@ export function AutoSizedImage({
             setImgInfo({width, height})
           }
         },
-        (error: any) => {
+        (err: any) => {
           if (!aborted) {
-            setError(String(error))
+            setError(String(err))
           }
         },
       )

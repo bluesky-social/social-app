@@ -14,7 +14,7 @@ export const ProfileFollows = ({navIdx, visible, params}: ScreenParams) => {
       store.nav.setTitle(navIdx, `Followed by ${name}`)
       store.shell.setMinimalShellMode(false)
     }
-  }, [store, visible, name])
+  }, [store, visible, name, navIdx])
 
   return (
     <View>
