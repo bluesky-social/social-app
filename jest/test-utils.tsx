@@ -6,17 +6,13 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {RootStoreProvider} from '../src/state'
 import {mockedRootStore} from '../__mocks__/state-mock'
 
-const customRender = (ui: any, storeMock?: any) =>
+const customRender = (ui: any, rootStore?: any) =>
   render(
     // eslint-disable-next-line react-native/no-inline-styles
     <GestureHandlerRootView style={{flex: 1}}>
       <RootSiblingParent>
         <RootStoreProvider
-          value={
-            storeMock != null
-              ? {...mockedRootStore, ...storeMock}
-              : mockedRootStore
-          }>
+          value={rootStore != null ? rootStore : mockedRootStore}>
           <SafeAreaProvider>{ui}</SafeAreaProvider>
         </RootStoreProvider>
       </RootSiblingParent>

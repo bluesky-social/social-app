@@ -68,6 +68,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@atproto/pds": "^0.0.1",
     "@babel/core": "^7.12.9",
     "@babel/preset-env": "^7.14.0",
     "@babel/runtime": "^7.12.5",
