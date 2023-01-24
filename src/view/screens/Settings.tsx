@@ -1,5 +1,12 @@
 import React, {useEffect} from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
@@ -7,8 +14,10 @@ import {s} from '../lib/styles'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Link} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
+import * as Toast from '../com/util/Toast'
 import {UserAvatar} from '../com/util/UserAvatar'
 import {usePalette} from '../lib/hooks/usePalette'
+import {AccountData} from '../../state/models/session'
 
 export const Settings = observer(function Settings({
   navIdx,
@@ -16,6 +25,7 @@ export const Settings = observer(function Settings({
 }: ScreenParams) {
   const pal = usePalette('default')
   const store = useStores()
+  const [isSwitching, setIsSwitching] = React.useState(false)
 
   useEffect(() => {
     if (!visible) {
@@ -25,45 +35,114 @@ export const Settings = observer(function Settings({
     store.nav.setTitle(navIdx, 'Settings')
   }, [visible, store])
 
+  const onPressSwitchAccount = async (acct: AccountData) => {
+    setIsSwitching(true)
+    if (await store.session.resumeSession(acct)) {
+      setIsSwitching(false)
+      Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
+      return
+    }
+    setIsSwitching(false)
+    Toast.show('Sorry! We need you to enter your password.')
+    store.session.clear()
+  }
+  const onPressAddAccount = () => {
+    store.session.clear()
+  }
   const onPressSignout = () => {
     store.session.logout()
   }
 
   return (
-    <View style={[s.flex1]}>
+    <View style={[s.h100pct]} testID="settingsScreen">
       <ViewHeader title="Settings" />
-      <View style={[s.mt10, s.pl10, s.pr10, s.flex1]}>
+      <ScrollView style={[s.mt10, s.pl10, s.pr10, s.h100pct]}>
         <View style={[s.flexRow]}>
-          <Text type="xl" style={pal.text}>
+          <Text type="xl-bold" style={pal.text}>
             Signed in as
           </Text>
           <View style={s.flex1} />
-          <TouchableOpacity onPress={onPressSignout}>
+          <TouchableOpacity
+            testID="signOutBtn"
+            onPress={isSwitching ? undefined : onPressSignout}>
             <Text type="xl-medium" style={pal.link}>
               Sign out
             </Text>
           </TouchableOpacity>
         </View>
-        <Link
-          href={`/profile/${store.me.handle}`}
-          title="Your profile"
-          noFeedback>
+        {isSwitching ? (
           <View style={[pal.view, styles.profile]}>
+            <ActivityIndicator />
+          </View>
+        ) : (
+          <Link
+            href={`/profile/${store.me.handle}`}
+            title="Your profile"
+            noFeedback>
+            <View style={[pal.view, styles.profile]}>
+              <UserAvatar
+                size={40}
+                displayName={store.me.displayName}
+                handle={store.me.handle || ''}
+                avatar={store.me.avatar}
+              />
+              <View style={[s.ml10]}>
+                <Text type="xl-bold" style={pal.text}>
+                  {store.me.displayName || store.me.handle}
+                </Text>
+                <Text style={pal.textLight}>@{store.me.handle}</Text>
+              </View>
+            </View>
+          </Link>
+        )}
+        <Text type="sm-medium" style={pal.text}>
+          Switch to:
+        </Text>
+        {store.session.switchableAccounts.map(account => (
+          <TouchableOpacity
+            testID={`switchToAccountBtn-${account.handle}`}
+            key={account.did}
+            style={[
+              pal.view,
+              styles.profile,
+              s.mb2,
+              isSwitching && styles.dimmed,
+            ]}
+            onPress={
+              isSwitching ? undefined : () => onPressSwitchAccount(account)
+            }>
             <UserAvatar
               size={40}
-              displayName={store.me.displayName}
-              handle={store.me.handle || ''}
-              avatar={store.me.avatar}
+              displayName={account.displayName}
+              handle={account.handle || ''}
+              avatar={account.aviUrl}
             />
             <View style={[s.ml10]}>
               <Text type="xl-bold" style={pal.text}>
-                {store.me.displayName || store.me.handle}
+                {account.displayName || account.handle}
               </Text>
-              <Text style={pal.textLight}>@{store.me.handle}</Text>
+              <Text style={pal.textLight}>@{account.handle}</Text>
             </View>
+          </TouchableOpacity>
+        ))}
+        <TouchableOpacity
+          testID="switchToNewAccountBtn"
+          style={[
+            pal.view,
+            styles.profile,
+            s.mb2,
+            {alignItems: 'center'},
+            isSwitching && styles.dimmed,
+          ]}
+          onPress={isSwitching ? undefined : onPressAddAccount}>
+          <FontAwesomeIcon icon="plus" />
+          <View style={[s.ml5]}>
+            <Text type="md-medium" style={pal.text}>
+              Add account
+            </Text>
           </View>
-        </Link>
-        <View style={s.flex1} />
+        </TouchableOpacity>
+        <View style={{height: 50}} />
         <Text type="sm-medium" style={[s.mb5]}>
           Developer tools
         </Text>
@@ -80,12 +159,15 @@ export const Settings = observer(function Settings({
           <Text style={pal.link}>Storybook</Text>
         </Link>
         <View style={s.footerSpacer} />
-      </View>
+      </ScrollView>
     </View>
   )
 })
 
 const styles = StyleSheet.create({
+  dimmed: {
+    opacity: 0.5,
+  },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
