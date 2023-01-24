@@ -25,7 +25,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
   const [query, setQuery] = useState<string>('')
   const autocompleteView = useMemo<UserAutocompleteViewModel>(
     () => new UserAutocompleteViewModel(store),
-    [],
+    [store],
   )
   const {name} = params
 
@@ -35,7 +35,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
       autocompleteView.setup()
       store.nav.setTitle(navIdx, 'Search')
     }
-  }, [store, visible, name])
+  }, [store, visible, name, navIdx, autocompleteView])
 
   const onChangeQuery = (text: string) => {
     setQuery(text)

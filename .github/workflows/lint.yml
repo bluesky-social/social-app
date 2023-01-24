@@ -25,6 +25,10 @@ jobs:
     name: Run tests
     runs-on: ubuntu-latest
     steps:
+      - name: Install node 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
       - name: Check out Git repository
         uses: actions/checkout@v2
       - name: Yarn install

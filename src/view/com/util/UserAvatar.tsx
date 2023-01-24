@@ -62,8 +62,8 @@ export function UserAvatar({
     ])
   }, [onSelectNewAvatar])
 
-  const renderSvg = (size: number, initials: string) => (
-    <Svg width={size} height={size} viewBox="0 0 100 100">
+  const renderSvg = (svgSize: number, svgInitials: string) => (
+    <Svg width={svgSize} height={svgSize} viewBox="0 0 100 100">
       <Defs>
         <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
           <Stop offset="0" stopColor={gradients.blue.start} stopOpacity="1" />
@@ -78,7 +78,7 @@ export function UserAvatar({
         x="50"
         y="67"
         textAnchor="middle">
-        {initials}
+        {svgInitials}
       </Text>
     </Svg>
   )
@@ -88,7 +88,11 @@ export function UserAvatar({
     <TouchableOpacity onPress={handleEditAvatar}>
       {avatar ? (
         <Image
-          style={{width: size, height: size, borderRadius: (size / 2) | 0}}
+          style={{
+            width: size,
+            height: size,
+            borderRadius: Math.floor(size / 2),
+          }}
           source={{uri: avatar}}
         />
       ) : (
@@ -104,7 +108,7 @@ export function UserAvatar({
     </TouchableOpacity>
   ) : avatar ? (
     <Image
-      style={{width: size, height: size, borderRadius: (size / 2) | 0}}
+      style={{width: size, height: size, borderRadius: Math.floor(size / 2)}}
       resizeMode="stretch"
       source={{uri: avatar}}
     />

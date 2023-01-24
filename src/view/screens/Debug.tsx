@@ -4,6 +4,7 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {ThemeProvider} from '../lib/ThemeContext'
 import {PaletteColorName} from '../lib/ThemeContext'
 import {usePalette} from '../lib/hooks/usePalette'
+import {s} from '../lib/styles'
 
 import {Text} from '../com/util/text/Text'
 import {ViewSelector} from '../com/util/ViewSelector'
@@ -48,7 +49,7 @@ function DebugInner({
   const renderItem = item => {
     return (
       <View>
-        <View style={{paddingTop: 10, paddingHorizontal: 10}}>
+        <View style={[s.pt10, s.pl10, s.pr10]}>
           <ToggleButton
             type="default-light"
             onPress={onToggleColorScheme}
@@ -70,7 +71,7 @@ function DebugInner({
   const items = [{currentView}]
 
   return (
-    <View style={[{flex: 1}, pal.view]}>
+    <View style={[s.h100pct, pal.view]}>
       <ViewHeader title="Debug panel" />
       <ViewSelector
         swipeEnabled
@@ -86,7 +87,7 @@ function DebugInner({
 function Heading({label}: {label: string}) {
   const pal = usePalette('default')
   return (
-    <View style={{paddingTop: 10, paddingBottom: 5}}>
+    <View style={[s.pt10, s.pb5]}>
       <Text type="title-lg" style={pal.text}>
         {label}
       </Text>
@@ -96,7 +97,7 @@ function Heading({label}: {label: string}) {
 
 function BaseView() {
   return (
-    <View style={{paddingHorizontal: 10}}>
+    <View style={[s.pl10, s.pr10]}>
       <Heading label="Typography" />
       <TypographyView />
       <Heading label="Palettes" />
@@ -109,14 +110,14 @@ function BaseView() {
       <EmptyStateView />
       <Heading label="Loading placeholders" />
       <LoadingPlaceholderView />
-      <View style={{height: 200}} />
+      <View style={s.footerSpacer} />
     </View>
   )
 }
 
 function ControlsView() {
   return (
-    <ScrollView style={{paddingHorizontal: 10}}>
+    <ScrollView style={[s.pl10, s.pr10]}>
       <Heading label="Buttons" />
       <ButtonsView />
       <Heading label="Dropdown Buttons" />
@@ -125,15 +126,15 @@ function ControlsView() {
       <ToggleButtonsView />
       <Heading label="Radio Buttons" />
       <RadioButtonsView />
-      <View style={{height: 200}} />
+      <View style={s.footerSpacer} />
     </ScrollView>
   )
 }
 
 function ErrorView() {
   return (
-    <View style={{padding: 10}}>
-      <View style={{marginBottom: 5}}>
+    <View style={s.p10}>
+      <View style={s.mb5}>
         <ErrorScreen
           title="Error screen"
           message="A major error occurred that led the entire screen to fail"
@@ -141,22 +142,22 @@ function ErrorView() {
           onPressTryAgain={() => {}}
         />
       </View>
-      <View style={{marginBottom: 5}}>
+      <View style={s.mb5}>
         <ErrorMessage message="This is an error that occurred while things were being done" />
       </View>
-      <View style={{marginBottom: 5}}>
+      <View style={s.mb5}>
         <ErrorMessage
           message="This is an error that occurred while things were being done"
           numberOfLines={1}
         />
       </View>
-      <View style={{marginBottom: 5}}>
+      <View style={s.mb5}>
         <ErrorMessage
           message="This is an error that occurred while things were being done"
           onPressTryAgain={() => {}}
         />
       </View>
-      <View style={{marginBottom: 5}}>
+      <View style={s.mb5}>
         <ErrorMessage
           message="This is an error that occurred while things were being done"
           onPressTryAgain={() => {}}
@@ -171,16 +172,7 @@ function PaletteView({palette}: {palette: PaletteColorName}) {
   const defaultPal = usePalette('default')
   const pal = usePalette(palette)
   return (
-    <View
-      style={[
-        pal.view,
-        pal.border,
-        {
-          borderWidth: 1,
-          padding: 10,
-          marginBottom: 5,
-        },
-      ]}>
+    <View style={[pal.view, pal.border, s.p10, s.mb5, s.border1]}>
       <Text style={[pal.text]}>{palette} colors</Text>
       <Text style={[pal.textLight]}>Light text</Text>
       <Text style={[pal.link]}>Link text</Text>
@@ -197,21 +189,6 @@ function TypographyView() {
   const pal = usePalette('default')
   return (
     <View style={[pal.view]}>
-      <Text type="xxl-thin" style={[pal.text]}>
-        'xxl-thin' lorem ipsum dolor
-      </Text>
-      <Text type="xxl" style={[pal.text]}>
-        'xxl' lorem ipsum dolor
-      </Text>
-      <Text type="xxl-medium" style={[pal.text]}>
-        'xxl-medium' lorem ipsum dolor
-      </Text>
-      <Text type="xxl-bold" style={[pal.text]}>
-        'xxl-bold' lorem ipsum dolor
-      </Text>
-      <Text type="xxl-heavy" style={[pal.text]}>
-        'xxl-heavy' lorem ipsum dolor
-      </Text>
       <Text type="xl-thin" style={[pal.text]}>
         'xl-thin' lorem ipsum dolor
       </Text>
@@ -300,9 +277,6 @@ function TypographyView() {
       <Text type="button" style={[pal.text]}>
         Button
       </Text>
-      <Text type="overline" style={[pal.text]}>
-        Overline
-      </Text>
     </View>
   )
 }
@@ -325,16 +299,12 @@ function ButtonsView() {
   const buttonStyles = {marginRight: 5}
   return (
     <View style={[defaultPal.view]}>
-      <View
-        style={{
-          flexDirection: 'row',
-          marginBottom: 5,
-        }}>
+      <View style={[s.flexRow, s.mb5]}>
         <Button type="primary" label="Primary solid" style={buttonStyles} />
         <Button type="secondary" label="Secondary solid" style={buttonStyles} />
         <Button type="inverted" label="Inverted solid" style={buttonStyles} />
       </View>
-      <View style={{flexDirection: 'row'}}>
+      <View style={s.flexRow}>
         <Button
           type="primary-outline"
           label="Primary outline"
@@ -346,7 +316,7 @@ function ButtonsView() {
           style={buttonStyles}
         />
       </View>
-      <View style={{flexDirection: 'row'}}>
+      <View style={s.flexRow}>
         <Button
           type="primary-light"
           label="Primary light"
@@ -358,7 +328,7 @@ function ButtonsView() {
           style={buttonStyles}
         />
       </View>
-      <View style={{flexDirection: 'row'}}>
+      <View style={s.flexRow}>
         <Button
           type="default-light"
           label="Default light"
@@ -390,10 +360,7 @@ function DropdownButtonsView() {
   const defaultPal = usePalette('default')
   return (
     <View style={[defaultPal.view]}>
-      <View
-        style={{
-          marginBottom: 5,
-        }}>
+      <View style={s.mb5}>
         <DropdownButton
           type="primary"
           items={DROPDOWN_ITEMS}
@@ -401,10 +368,7 @@ function DropdownButtonsView() {
           label="Primary button"
         />
       </View>
-      <View
-        style={{
-          marginBottom: 5,
-        }}>
+      <View style={s.mb5}>
         <DropdownButton type="bare" items={DROPDOWN_ITEMS} menuWidth={200}>
           <Text>Bare</Text>
         </DropdownButton>
@@ -415,7 +379,7 @@ function DropdownButtonsView() {
 
 function ToggleButtonsView() {
   const defaultPal = usePalette('default')
-  const buttonStyles = {marginBottom: 5}
+  const buttonStyles = s.mb5
   const [isSelected, setIsSelected] = React.useState(false)
   const onToggle = () => setIsSelected(!isSelected)
   return (

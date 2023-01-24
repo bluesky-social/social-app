@@ -10,6 +10,7 @@ import {ThemeProvider} from './view/lib/ThemeContext'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {MobileShell} from './view/shell/mobile'
+import {s} from './view/lib/styles'
 
 const App = observer(() => {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -39,7 +40,7 @@ const App = observer(() => {
   }
 
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
+    <GestureHandlerRootView style={s.h100pct}>
       <RootSiblingParent>
         <RootStoreProvider value={rootStore}>
           <ThemeProvider theme={rootStore.shell.darkMode ? 'dark' : 'light'}>

@@ -1,12 +1,13 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {View, FlatList} from 'react-native'
+import {FlatList, StyleSheet, View} from 'react-native'
 import {NotificationsViewModel} from '../../../state/models/notifications-view'
 import {FeedItem} from './FeedItem'
 import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {EmptyState} from '../util/EmptyState'
 import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
+import {s} from '../../lib/styles'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 
@@ -29,7 +30,7 @@ export const Feed = observer(function Feed({
         <EmptyState
           icon="bell"
           message="No notifications yet!"
-          style={{paddingVertical: 40}}
+          style={styles.emptyState}
         />
       )
     }
@@ -58,14 +59,10 @@ export const Feed = observer(function Feed({
     }
   }
   return (
-    <View style={{flex: 1}}>
+    <View style={s.h100pct}>
       {view.isLoading && !data && <NotificationFeedLoadingPlaceholder />}
       {view.hasError && (
-        <ErrorMessage
-          message={view.error}
-          style={{margin: 6}}
-          onPressTryAgain={onPressTryAgain}
-        />
+        <ErrorMessage message={view.error} onPressTryAgain={onPressTryAgain} />
       )}
       {data && (
         <FlatList
@@ -76,9 +73,13 @@ export const Feed = observer(function Feed({
           onRefresh={onRefresh}
           onEndReached={onEndReached}
           onScroll={onScroll}
-          contentContainerStyle={{paddingBottom: 200}}
+          contentContainerStyle={s.contentContainer}
         />
       )}
     </View>
   )
+})
+
+const styles = StyleSheet.create({
+  emptyState: {paddingVertical: 40},
 })

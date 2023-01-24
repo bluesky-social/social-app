@@ -6,7 +6,7 @@ describe('NavigationModel', () => {
 
   beforeEach(() => {
     model = new NavigationModel()
-    model.setTitle([0, 0], 'title')
+    model.setTitle('0-0', 'title')
   })
 
   afterAll(() => {
@@ -44,7 +44,7 @@ describe('NavigationModel', () => {
   })
 
   it('should call the isCurrentScreen method', () => {
-    expect(model.isCurrentScreen(11, 0)).toEqual(false)
+    expect(model.isCurrentScreen('11', 0)).toEqual(false)
   })
 
   it('should call the tab getter', () => {

@@ -207,12 +207,7 @@ const ChooseAccountForm = ({
         style={[pal.borderDark, styles.group]}
         onPress={() => onSelectAccount(undefined)}>
         <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
-          <View style={s.p10}>
-            <View
-              style={[pal.btn, {width: 30, height: 30, borderRadius: 15}]}
-            />
-          </View>
-          <Text style={styles.accountText}>
+          <Text style={[styles.accountText, styles.accountTextOther]}>
             <Text type="lg" style={pal.text}>
               Other account
             </Text>
@@ -556,7 +551,7 @@ const ForgotPasswordForm = ({
           {!serviceDescription || isProcessing ? (
             <ActivityIndicator />
           ) : !email ? (
-            <Text type="xl-bold" style={[pal.link, s.pr5, {opacity: 0.5}]}>
+            <Text type="xl-bold" style={[pal.link, s.pr5, styles.dimmed]}>
               Next
             </Text>
           ) : (
@@ -691,7 +686,7 @@ const SetNewPasswordForm = ({
           {isProcessing ? (
             <ActivityIndicator />
           ) : !resetCode || !password ? (
-            <Text type="xl-bold" style={[pal.link, s.pr5, {opacity: 0.5}]}>
+            <Text type="xl-bold" style={[pal.link, s.pr5, styles.dimmed]}>
               Next
             </Text>
           ) : (
@@ -810,6 +805,9 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     paddingVertical: 10,
   },
+  accountTextOther: {
+    paddingLeft: 12,
+  },
   error: {
     backgroundColor: colors.red4,
     flexDirection: 'row',
@@ -832,4 +830,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 5,
   },
+  dimmed: {opacity: 0.5},
 })

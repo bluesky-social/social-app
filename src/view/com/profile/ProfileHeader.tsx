@@ -100,22 +100,14 @@ export const ProfileHeader = observer(function ProfileHeader({
         <LoadingPlaceholder width="100%" height={120} />
         <View
           style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
-          <LoadingPlaceholder
-            width={80}
-            height={80}
-            style={{borderRadius: 40}}
-          />
+          <LoadingPlaceholder width={80} height={80} style={styles.br40} />
         </View>
         <View style={styles.content}>
           <View style={[styles.buttonsLine]}>
-            <LoadingPlaceholder
-              width={100}
-              height={31}
-              style={{borderRadius: 50}}
-            />
+            <LoadingPlaceholder width={100} height={31} style={styles.br50} />
           </View>
           <View style={styles.displayNameLine}>
-            <Text type="title-xl" style={[pal.text, {lineHeight: 38}]}>
+            <Text type="title-xl" style={[pal.text, styles.title]}>
               {view.displayName || view.handle}
             </Text>
           </View>
@@ -208,7 +200,7 @@ export const ProfileHeader = observer(function ProfileHeader({
           ) : undefined}
         </View>
         <View style={styles.displayNameLine}>
-          <Text type="title-xl" style={[pal.text, {lineHeight: 38}]}>
+          <Text type="title-xl" style={[pal.text, styles.title]}>
             {view.displayName || view.handle}
           </Text>
         </View>
@@ -349,6 +341,7 @@ const styles = StyleSheet.create({
     // paddingLeft: 86,
     // marginBottom: 14,
   },
+  title: {lineHeight: 38},
 
   handleLine: {
     flexDirection: 'row',
@@ -369,4 +362,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 5,
   },
+
+  br40: {borderRadius: 40},
+  br50: {borderRadius: 50},
 })

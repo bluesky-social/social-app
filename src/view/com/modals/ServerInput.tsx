@@ -56,7 +56,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
         </View>
         <View style={styles.group}>
           <Text style={styles.label}>Other service</Text>
-          <View style={{flexDirection: 'row'}}>
+          <View style={s.flexRow}>
             <BottomSheetTextInput
               testID="customServerTextInput"
               style={styles.textInput}

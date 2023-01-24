@@ -124,7 +124,7 @@ export const FeedItem = observer(function ({
             style={[
               styles.bottomReplyLine,
               {borderColor: pal.colors.replyLine},
-              isNoTop ? {top: 64} : undefined,
+              isNoTop ? styles.bottomReplyLineNoTop : undefined,
             ]}
           />
         )}
@@ -163,7 +163,7 @@ export const FeedItem = observer(function ({
               timestamp={item.post.indexedAt}
             />
             {!isChild && replyAuthorDid !== '' && (
-              <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
+              <View style={[s.flexRow, s.mb2, s.alignCenter]}>
                 <FontAwesomeIcon
                   icon="reply"
                   size={9}
@@ -195,9 +195,7 @@ export const FeedItem = observer(function ({
                   lineHeight={1.3}
                 />
               </View>
-            ) : (
-              <View style={{height: 5}} />
-            )}
+            ) : undefined}
             {item.post.embed ? (
               <PostEmbeds embed={item.post.embed} style={styles.embed} />
             ) : null}
@@ -281,6 +279,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     borderLeftWidth: 2,
   },
+  bottomReplyLineNoTop: {top: 64},
   includeReason: {
     flexDirection: 'row',
     paddingLeft: 50,
