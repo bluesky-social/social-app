@@ -3,7 +3,7 @@ import {TABS_ENABLED} from '../../build-flags'
 
 let __id = 0
 function genId() {
-  return ++__id
+  return String(++__id)
 }
 
 // NOTE
@@ -24,10 +24,10 @@ interface HistoryItem {
   url: string
   ts: number
   title?: string
-  id: number
+  id: string
 }
 
-export type HistoryPtr = [number, number]
+export type HistoryPtr = string // `{tabId}-{historyId}`
 
 export class NavigationTabModel {
   id = genId()
@@ -151,7 +151,7 @@ export class NavigationTabModel {
     }
   }
 
-  setTitle(id: number, title: string) {
+  setTitle(id: string, title: string) {
     this.history = this.history.map(h => {
       if (h.id === id) {
         return {...h, title}
@@ -241,7 +241,7 @@ export class NavigationModel {
     return this.tabs.length
   }
 
-  isCurrentScreen(tabId: number, index: number) {
+  isCurrentScreen(tabId: string, index: number) {
     return this.tab.id === tabId && this.tab.index === index
   }
 
@@ -257,7 +257,8 @@ export class NavigationModel {
   }
 
   setTitle(ptr: HistoryPtr, title: string) {
-    this.tabs.find(t => t.id === ptr[0])?.setTitle(ptr[1], title)
+    const [tid, hid] = ptr.split('-')
+    this.tabs.find(t => t.id === tid)?.setTitle(hid, title)
   }
 
   handleLink(url: string) {

@@ -486,7 +486,7 @@ export const MobileShell: React.FC = observer(() => {
  */
 type ScreenRenderDesc = MatchResult & {
   key: string
-  navIdx: [number, number]
+  navIdx: string
   current: boolean
   previous: boolean
   isNewTab: boolean
@@ -514,7 +514,7 @@ function constructScreenRenderDesc(nav: NavigationModel): {
       hasNewTab = hasNewTab || tab.isNewTab
       return Object.assign(matchRes, {
         key: `t${tab.id}-s${screen.index}`,
-        navIdx: [tab.id, screen.id],
+        navIdx: `${tab.id}-${screen.id}`,
         current: isCurrent,
         previous: isPrevious,
         isNewTab: tab.isNewTab,

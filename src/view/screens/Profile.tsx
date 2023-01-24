@@ -26,8 +26,12 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const uiState = React.useMemo(
     () => new ProfileUiModel(store, {user: params.name}),
-    [params.user],
+    [params.name, store],
   )
+
+  useEffect(() => {
+    store.nav.setTitle(navIdx, params.name)
+  }, [store, navIdx, params.name])
 
   useEffect(() => {
     let aborted = false
@@ -38,7 +42,6 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
     if (hasSetup) {
       uiState.update()
     } else {
-      store.nav.setTitle(navIdx, params.name)
       uiState.setup().then(() => {
         if (aborted) {
           return
@@ -50,7 +53,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
       aborted = true
       feedCleanup()
     }
-  }, [visible, params.name, store])
+  }, [visible, store, hasSetup, uiState])
 
   // events
   // =
