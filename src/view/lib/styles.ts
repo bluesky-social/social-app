@@ -58,6 +58,8 @@ export const gradients = {
 export const s = StyleSheet.create({
   // helpers
   footerSpacer: {height: 100},
+  contentContainer: {paddingBottom: 200},
+  border1: {borderWidth: 1},
 
   // font weights
   fw600: {fontWeight: '600'},
@@ -140,6 +142,7 @@ export const s = StyleSheet.create({
   flexCol: {flexDirection: 'column'},
   flex1: {flex: 1},
   alignCenter: {alignItems: 'center'},
+  alignBaseline: {alignItems: 'baseline'},
 
   // position
   absolute: {position: 'absolute'},

@@ -6,19 +6,32 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import SplashScreen from 'react-native-splash-screen'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
+import {
+  createClient,
+  SegmentClient,
+  AnalyticsProvider,
+} from '@segment/analytics-react-native'
 import {ThemeProvider} from './view/lib/ThemeContext'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {MobileShell} from './view/shell/mobile'
+import {s} from './view/lib/styles'
 
 const App = observer(() => {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
+  const [segment, setSegment] = useState<SegmentClient | undefined>(undefined)
 
   // init
   useEffect(() => {
     view.setup()
+    setSegment(
+      createClient({
+        writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
+        trackAppLifecycleEvents: true,
+      }),
+    )
     setupState().then(store => {
       setRootStore(store)
       SplashScreen.hide()
@@ -39,15 +52,17 @@ const App = observer(() => {
   }
 
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
+    <GestureHandlerRootView style={s.h100pct}>
       <RootSiblingParent>
-        <RootStoreProvider value={rootStore}>
-          <ThemeProvider theme={rootStore.shell.darkMode ? 'dark' : 'light'}>
-            <SafeAreaProvider>
-              <MobileShell />
-            </SafeAreaProvider>
-          </ThemeProvider>
-        </RootStoreProvider>
+        <AnalyticsProvider client={segment}>
+          <RootStoreProvider value={rootStore}>
+            <ThemeProvider theme={rootStore.shell.darkMode ? 'dark' : 'light'}>
+              <SafeAreaProvider>
+                <MobileShell />
+              </SafeAreaProvider>
+            </ThemeProvider>
+          </RootStoreProvider>
+        </AnalyticsProvider>
       </RootSiblingParent>
     </GestureHandlerRootView>
   )

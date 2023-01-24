@@ -5,6 +5,7 @@ import {Feed} from '../com/notifications/Feed'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
 import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
+import {s} from '../lib/styles'
 
 export const Notifications = ({navIdx, visible}: ScreenParams) => {
   const store = useStores()
@@ -24,14 +25,14 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
         store.me.notifications.updateReadState()
       })
     store.nav.setTitle(navIdx, 'Notifications')
-  }, [visible, store])
+  }, [visible, store, navIdx])
 
   const onPressTryAgain = () => {
     store.me.notifications.refresh()
   }
 
   return (
-    <View style={{flex: 1}}>
+    <View style={s.h100pct}>
       <ViewHeader title="Notifications" canGoBack={false} />
       <Feed
         view={store.me.notifications}

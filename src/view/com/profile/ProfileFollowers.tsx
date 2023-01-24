@@ -54,11 +54,7 @@ export const ProfileFollowers = observer(function ProfileFollowers({
   if (view.hasError) {
     return (
       <View>
-        <ErrorMessage
-          message={view.error}
-          style={{margin: 6}}
-          onPressTryAgain={onRefresh}
-        />
+        <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
       </View>
     )
   }

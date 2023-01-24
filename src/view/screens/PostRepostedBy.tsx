@@ -16,7 +16,7 @@ export const PostRepostedBy = ({navIdx, visible, params}: ScreenParams) => {
       store.nav.setTitle(navIdx, 'Reposted by')
       store.shell.setMinimalShellMode(false)
     }
-  }, [store, visible])
+  }, [store, visible, navIdx])
 
   return (
     <View>

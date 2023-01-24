@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native'
 import {clamp} from 'lodash'
+import {s} from '../../../lib/styles'
 
 interface Props {
   panX: Animated.Value
@@ -111,7 +112,9 @@ export function HorzSwipe({
       (Math.abs(gestureState.dx) > swipeDistanceThreshold / 4 ||
         Math.abs(gestureState.vx) > swipeVelocityThreshold)
     ) {
-      const final = ((gestureState.dx / Math.abs(gestureState.dx)) * -1) | 0
+      const final = Math.floor(
+        (gestureState.dx / Math.abs(gestureState.dx)) * -1,
+      )
       Animated.timing(panX, {
         toValue: final,
         duration: 100,
@@ -144,7 +147,7 @@ export function HorzSwipe({
   })
 
   return (
-    <View {...panResponder.panHandlers} style={{flex: 1}}>
+    <View {...panResponder.panHandlers} style={s.h100pct}>
       {children}
     </View>
   )

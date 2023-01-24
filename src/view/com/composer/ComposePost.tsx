@@ -17,6 +17,7 @@ import PasteInput, {
 } from '@mattermost/react-native-paste-input'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useAnalytics} from '@segment/analytics-react-native'
 import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete-view'
 import {Autocomplete} from './Autocomplete'
 import {ExternalEmbed} from './ExternalEmbed'
@@ -59,6 +60,7 @@ export const ComposePost = observer(function ComposePost({
   onPost?: ComposerOpts['onPost']
   onClose: () => void
 }) {
+  const {track} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const textInput = useRef<PasteInputRef>(null)
@@ -252,6 +254,9 @@ export const ComposePost = observer(function ComposePost({
         autocompleteView.knownHandles,
         setProcessingState,
       )
+      track('Create Post', {
+        imageCount: selectedPhotos.length,
+      })
     } catch (e: any) {
       setError(cleanError(e.message))
       setIsProcessing(false)
@@ -297,7 +302,7 @@ export const ComposePost = observer(function ComposePost({
         )
       }
     })
-  }, [text, pal.link])
+  }, [text, pal.link, pal.text])
 
   return (
     <KeyboardAvoidingView
@@ -393,7 +398,7 @@ export const ComposePost = observer(function ComposePost({
                 ref={textInput}
                 multiline
                 scrollEnabled
-                onChangeText={(text: string) => onChangeText(text)}
+                onChangeText={(str: string) => onChangeText(str)}
                 onPaste={onPaste}
                 placeholder={selectTextInputPlaceholder}
                 placeholderTextColor={pal.colors.textLight}
@@ -475,7 +480,7 @@ export const ComposePost = observer(function ComposePost({
   )
 })
 
-const atPrefixRegex = /@([a-z0-9\.]*)$/i
+const atPrefixRegex = /@([a-z0-9.]*)$/i
 function extractTextAutocompletePrefix(text: string) {
   const match = atPrefixRegex.exec(text)
   if (match) {

@@ -393,6 +393,11 @@ PODS:
     - React-RCTImage
   - RNSVG (12.5.0):
     - React-Core
+  - segment-analytics-react-native (2.10.1):
+    - React-Core
+    - sovran-react-native
+  - sovran-react-native (0.4.5):
+    - React-Core
   - Swime (3.0.6)
   - TOCropViewController (2.6.1)
   - Yoga (1.14.0)
@@ -453,6 +458,8 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
+  - "segment-analytics-react-native (from `../node_modules/@segment/analytics-react-native`)"
+  - "sovran-react-native (from `../node_modules/@segment/sovran-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -569,6 +576,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
+  segment-analytics-react-native:
+    :path: "../node_modules/@segment/analytics-react-native"
+  sovran-react-native:
+    :path: "../node_modules/@segment/sovran-react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -628,6 +639,8 @@ SPEC CHECKSUMS:
   RNReanimated: d8d9d3d3801bda5e35e85cdffc871577d044dc2e
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: 6adc5c52d2488a476248413064b7f2832e639057
+  segment-analytics-react-native: cb097e393c3560a0d4cfd877044293e37b0050d9
+  sovran-react-native: fd3dc8f1a4b14acdc4ad25fc6b4ac4f52a2a2a15
   Swime: d7b2c277503b6cea317774aedc2dce05613f8b0b
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: c618b544ff8bd8865cdca602f00cbcdb92fd6d31

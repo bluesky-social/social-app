@@ -116,7 +116,7 @@ function ImageLayoutGridInner({
             onLongPress={() => onLongPress(1)}>
             <Image source={{uri: uris[1]}} style={size1} />
           </TouchableWithoutFeedback>
-          <View style={{height: 5}} />
+          <View style={styles.hSpace} />
           <TouchableWithoutFeedback
             onPress={() => onPress?.(2)}
             onLongPress={() => onLongPress(2)}>

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FeatureExplainer} from '../com/onboard/FeatureExplainer'
 import {Follows} from '../com/onboard/Follows'
@@ -14,7 +14,7 @@ export const Onboard = observer(() => {
     if (!OnboardStageOrder.includes(store.onboard.stage)) {
       store.onboard.stop()
     }
-  }, [store.onboard.stage])
+  }, [store.onboard])
 
   let Com
   if (store.onboard.stage === OnboardStage.Explainers) {
@@ -26,8 +26,15 @@ export const Onboard = observer(() => {
   }
 
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <View style={styles.container}>
       <Com />
     </View>
   )
+})
+
+const styles = StyleSheet.create({
+  container: {
+    height: '100%',
+    backgroundColor: '#fff',
+  },
 })

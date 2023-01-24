@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
@@ -31,9 +31,9 @@ export const PostText = observer(function PostText({
   if (!model || model.isLoading || model.uri !== uri) {
     return (
       <View>
-        <LoadingPlaceholder width="100%" height={8} style={{marginTop: 6}} />
-        <LoadingPlaceholder width="100%" height={8} style={{marginTop: 6}} />
-        <LoadingPlaceholder width={100} height={8} style={{marginTop: 6}} />
+        <LoadingPlaceholder width="100%" height={8} style={styles.mt6} />
+        <LoadingPlaceholder width="100%" height={8} style={styles.mt6} />
+        <LoadingPlaceholder width={100} height={8} style={styles.mt6} />
       </View>
     )
   }
@@ -55,4 +55,8 @@ export const PostText = observer(function PostText({
       <Text style={style}>{model.text}</Text>
     </View>
   )
+})
+
+const styles = StyleSheet.create({
+  mt6: {marginTop: 6},
 })

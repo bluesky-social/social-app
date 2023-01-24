@@ -16,7 +16,7 @@ export const PostDownvotedBy = ({navIdx, visible, params}: ScreenParams) => {
       store.nav.setTitle(navIdx, 'Downvoted by')
       store.shell.setMinimalShellMode(false)
     }
-  }, [store, visible])
+  }, [store, visible, navIdx])
 
   return (
     <View>

@@ -11,6 +11,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
 import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
+import {useAnalytics} from '@segment/analytics-react-native'
 import {LogoTextHero} from './Logo'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
@@ -149,6 +150,7 @@ const ChooseAccountForm = ({
   onSelectAccount: (account?: AccountData) => void
   onPressBack: () => void
 }) => {
+  const {track} = useAnalytics()
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = React.useState(false)
 
@@ -156,6 +158,7 @@ const ChooseAccountForm = ({
     if (account.accessJwt && account.refreshJwt) {
       setIsProcessing(true)
       if (await store.session.resumeSession(account)) {
+        track('Sign In', {resumedSession: true})
         setIsProcessing(false)
         return
       }
@@ -207,12 +210,7 @@ const ChooseAccountForm = ({
         style={[pal.borderDark, styles.group]}
         onPress={() => onSelectAccount(undefined)}>
         <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
-          <View style={s.p10}>
-            <View
-              style={[pal.btn, {width: 30, height: 30, borderRadius: 15}]}
-            />
-          </View>
-          <Text style={styles.accountText}>
+          <Text style={[styles.accountText, styles.accountTextOther]}>
             <Text type="lg" style={pal.text}>
               Other account
             </Text>
@@ -260,6 +258,7 @@ const LoginForm = ({
   onPressBack: () => void
   onPressForgotPassword: () => void
 }) => {
+  const {track} = useAnalytics()
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [handle, setHandle] = useState<string>(initialHandle)
@@ -300,6 +299,7 @@ const LoginForm = ({
         handle: fullHandle,
         password,
       })
+      track('Sign In', {resumedSession: false})
     } catch (e: any) {
       const errMsg = e.toString()
       store.log.warn('Failed to login', e)
@@ -556,7 +556,7 @@ const ForgotPasswordForm = ({
           {!serviceDescription || isProcessing ? (
             <ActivityIndicator />
           ) : !email ? (
-            <Text type="xl-bold" style={[pal.link, s.pr5, {opacity: 0.5}]}>
+            <Text type="xl-bold" style={[pal.link, s.pr5, styles.dimmed]}>
               Next
             </Text>
           ) : (
@@ -691,7 +691,7 @@ const SetNewPasswordForm = ({
           {isProcessing ? (
             <ActivityIndicator />
           ) : !resetCode || !password ? (
-            <Text type="xl-bold" style={[pal.link, s.pr5, {opacity: 0.5}]}>
+            <Text type="xl-bold" style={[pal.link, s.pr5, styles.dimmed]}>
               Next
             </Text>
           ) : (
@@ -810,6 +810,9 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     paddingVertical: 10,
   },
+  accountTextOther: {
+    paddingLeft: 12,
+  },
   error: {
     backgroundColor: colors.red4,
     flexDirection: 'row',
@@ -832,4 +835,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 5,
   },
+  dimmed: {opacity: 0.5},
 })

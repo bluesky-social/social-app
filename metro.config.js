@@ -4,8 +4,6 @@
  *
  * @format
  */
-const metroResolver = require('metro-resolver')
-const path = require('path')
 
 module.exports = {
   transformer: {

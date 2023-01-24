@@ -156,7 +156,7 @@ export const Post = observer(function Post({
             timestamp={item.post.indexedAt}
           />
           {replyAuthorDid !== '' && (
-            <View style={[s.flexRow, s.mb2, {alignItems: 'center'}]}>
+            <View style={[s.flexRow, s.mb2, s.alignCenter]}>
               <FontAwesomeIcon
                 icon="reply"
                 size={9}
@@ -187,10 +187,8 @@ export const Post = observer(function Post({
                 lineHeight={1.3}
               />
             </View>
-          ) : (
-            <View style={{height: 5}} />
-          )}
-          <PostEmbeds embed={item.post.embed} style={{marginBottom: 10}} />
+          ) : undefined}
+          <PostEmbeds embed={item.post.embed} style={s.mb10} />
           <PostCtrls
             itemHref={itemHref}
             itemTitle={itemTitle}

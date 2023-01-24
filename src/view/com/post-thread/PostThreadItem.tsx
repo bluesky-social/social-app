@@ -80,7 +80,7 @@ export const PostThreadItem = observer(function PostThreadItem({
       .catch(e => store.log.error('Failed to toggle upvote', e))
   }
   const onCopyPostText = () => {
-    Clipboard.setString(record.text)
+    Clipboard.setString(record?.text || '')
     Toast.show('Copied to clipboard')
   }
   const onDeletePost = () => {
@@ -131,8 +131,8 @@ export const PostThreadItem = observer(function PostThreadItem({
               </Link>
             </View>
             <View style={styles.layoutContent}>
-              <View style={[styles.meta, {paddingTop: 5, paddingBottom: 0}]}>
-                <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
+              <View style={[styles.meta, styles.metaExpandedLine1]}>
+                <View style={[s.flexRow, s.alignBaseline]}>
                   <Link
                     style={styles.metaItem}
                     href={authorHref}
@@ -305,10 +305,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                     lineHeight={1.3}
                   />
                 </View>
-              ) : (
-                <View style={{height: 5}} />
-              )}
-              <PostEmbeds embed={item.post.embed} style={{marginBottom: 10}} />
+              ) : undefined}
+              <PostEmbeds embed={item.post.embed} style={s.mb10} />
               <PostCtrls
                 itemHref={itemHref}
                 itemTitle={itemTitle}
@@ -388,6 +386,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingTop: 2,
     paddingBottom: 2,
+  },
+  metaExpandedLine1: {
+    paddingTop: 5,
+    paddingBottom: 0,
   },
   metaItem: {
     paddingRight: 5,

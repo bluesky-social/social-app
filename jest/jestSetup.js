@@ -40,3 +40,18 @@ jest.mock('react-native-tab-view', () => ({
   ...jest.requireActual('react-native-tab-view'),
   TabView: mockedView,
 }))
+
+jest.mock('@segment/analytics-react-native', () => ({
+  createClient: () => ({
+    add: jest.fn(),
+  }),
+  useAnalytics: () => ({
+    track: jest.fn(),
+    identify: jest.fn(),
+    reset: jest.fn(),
+    group: jest.fn(),
+    screen: jest.fn(),
+    alias: jest.fn(),
+    flush: jest.fn(),
+  }),
+}))

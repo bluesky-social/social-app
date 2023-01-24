@@ -18,7 +18,7 @@ import {Debug} from './screens/Debug'
 import {Log} from './screens/Log'
 
 export type ScreenParams = {
-  navIdx: [number, number]
+  navIdx: string
   params: Record<string, any>
   visible: boolean
   scrollElRef?: MutableRefObject<FlatList<any> | undefined>
