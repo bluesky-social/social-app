@@ -17,7 +17,6 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   TouchableWithoutFeedback,
-  GestureResponderEvent,
 } from 'react-native'
 
 import useDoubleTapToZoom from '../../hooks/useDoubleTapToZoom'
@@ -78,20 +77,20 @@ const ImageItem = ({
   const onScrollEndDrag = useCallback(
     ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
       const velocityY = nativeEvent?.velocity?.y ?? 0
-      const scaled = nativeEvent?.zoomScale > 1
+      const currentScaled = nativeEvent?.zoomScale > 1
 
-      onZoom(scaled)
-      setScaled(scaled)
+      onZoom(currentScaled)
+      setScaled(currentScaled)
 
       if (
-        !scaled &&
+        !currentScaled &&
         swipeToCloseEnabled &&
         Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY
       ) {
         onRequestClose()
       }
     },
-    [scaled],
+    [onRequestClose, onZoom, swipeToCloseEnabled],
   )
 
   const onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -104,12 +103,9 @@ const ImageItem = ({
     scrollValueY.setValue(offsetY)
   }
 
-  const onLongPressHandler = useCallback(
-    (event: GestureResponderEvent) => {
-      onLongPress(imageSrc)
-    },
-    [imageSrc, onLongPress],
-  )
+  const onLongPressHandler = useCallback(() => {
+    onLongPress(imageSrc)
+  }, [imageSrc, onLongPress])
 
   return (
     <View>

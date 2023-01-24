@@ -6,80 +6,82 @@
  *
  */
 
-import { useEffect, useState } from "react";
-import { Image, ImageURISource } from "react-native";
+import {useEffect, useState} from 'react'
+import {Image, ImageURISource} from 'react-native'
 
-import { createCache } from "../utils";
-import { Dimensions, ImageSource } from "../@types";
+import {createCache} from '../utils'
+import {Dimensions, ImageSource} from '../@types'
 
-const CACHE_SIZE = 50;
-const imageDimensionsCache = createCache(CACHE_SIZE);
+const CACHE_SIZE = 50
+const imageDimensionsCache = createCache(CACHE_SIZE)
 
 const useImageDimensions = (image: ImageSource): Dimensions | null => {
-  const [dimensions, setDimensions] = useState<Dimensions | null>(null);
+  const [dimensions, setDimensions] = useState<Dimensions | null>(null)
 
   const getImageDimensions = (image: ImageSource): Promise<Dimensions> => {
-    return new Promise((resolve) => {
-      if (typeof image == "number") {
-        const cacheKey = `${image}`;
-        let imageDimensions = imageDimensionsCache.get(cacheKey);
+    return new Promise(resolve => {
+      if (typeof image === 'number') {
+        const cacheKey = `${image}`
+        let imageDimensions = imageDimensionsCache.get(cacheKey)
 
         if (!imageDimensions) {
-          const { width, height } = Image.resolveAssetSource(image);
-          imageDimensions = { width, height };
-          imageDimensionsCache.set(cacheKey, imageDimensions);
+          const {width, height} = Image.resolveAssetSource(image)
+          imageDimensions = {width, height}
+          imageDimensionsCache.set(cacheKey, imageDimensions)
         }
 
-        resolve(imageDimensions);
+        resolve(imageDimensions)
 
-        return;
+        return
       }
 
       // @ts-ignore
       if (image.uri) {
-        const source = image as ImageURISource;
+        const source = image as ImageURISource
 
-        const cacheKey = source.uri as string;
+        const cacheKey = source.uri as string
 
-        const imageDimensions = imageDimensionsCache.get(cacheKey);
+        const imageDimensions = imageDimensionsCache.get(cacheKey)
 
         if (imageDimensions) {
-          resolve(imageDimensions);
+          resolve(imageDimensions)
         } else {
           // @ts-ignore
           Image.getSizeWithHeaders(
             source.uri,
             source.headers,
             (width: number, height: number) => {
-              imageDimensionsCache.set(cacheKey, { width, height });
-              resolve({ width, height });
+              imageDimensionsCache.set(cacheKey, {width, height})
+              resolve({width, height})
             },
             () => {
-              resolve({ width: 0, height: 0 });
-            }
-          );
+              resolve({width: 0, height: 0})
+            },
+          )
         }
       } else {
-        resolve({ width: 0, height: 0 });
+        resolve({width: 0, height: 0})
       }
-    });
-  };
+    })
+  }
 
-  let isImageUnmounted = false;
+  let isImageUnmounted = false
 
   useEffect(() => {
-    getImageDimensions(image).then((dimensions) => {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    getImageDimensions(image).then(dimensions => {
       if (!isImageUnmounted) {
-        setDimensions(dimensions);
+        setDimensions(dimensions)
       }
-    });
+    })
 
     return () => {
-      isImageUnmounted = true;
-    };
-  }, [image]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      isImageUnmounted = true
+    }
+  }, [image])
 
-  return dimensions;
-};
+  return dimensions
+}
 
-export default useImageDimensions;
+export default useImageDimensions

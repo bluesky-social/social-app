@@ -6,20 +6,20 @@
  *
  */
 
-import { useEffect } from "react";
-import { Image } from "react-native";
-import { ImageSource } from "../@types";
+import {useEffect} from 'react'
+import {Image} from 'react-native'
+import {ImageSource} from '../@types'
 
 const useImagePrefetch = (images: ImageSource[]) => {
   useEffect(() => {
-    images.forEach((image) => {
+    images.forEach(image => {
       //@ts-ignore
       if (image.uri) {
         //@ts-ignore
-        return Image.prefetch(image.uri);
+        return Image.prefetch(image.uri)
       }
-    });
-  }, []);
-};
+    })
+  }, [images])
+}
 
-export default useImagePrefetch;
+export default useImagePrefetch

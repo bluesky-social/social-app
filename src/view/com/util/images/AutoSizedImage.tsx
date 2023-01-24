@@ -5,7 +5,7 @@ import {
   LayoutChangeEvent,
   StyleProp,
   StyleSheet,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native'
@@ -81,7 +81,7 @@ export function AutoSizedImage({
 
   return (
     <View style={style}>
-      <TouchableWithoutFeedback onPress={onPress} onLongPress={onLongPress}>
+      <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
         {error ? (
           <View style={[styles.errorContainer, errPal.view, containerStyle]}>
             <Text style={errPal.text}>{error}</Text>
@@ -100,7 +100,7 @@ export function AutoSizedImage({
             onLayout={onLayout}
           />
         )}
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     </View>
   )
 }

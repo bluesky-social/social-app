@@ -10,8 +10,6 @@ import {ImagesLightbox} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {gradients} from '../../lib/styles'
-import {downloadImageToGallery} from '../../../lib/images'
-import {ConfirmModal} from '../../../state/models/shell-ui'
 import {saveImageModal} from './images/saveImageModal'
 
 type Embed =

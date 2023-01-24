@@ -66,7 +66,7 @@ const ImageItem = ({
         })
       }
     },
-    [imageContainer],
+    [onZoom],
   )
 
   const onLongPressHandler = useCallback(() => {

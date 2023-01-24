@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+// Original code copied from:  https://github.com/jobtoday/react-native-image-viewing
 
 import React, {ComponentType, useCallback, useRef, useEffect} from 'react'
 import {
@@ -44,7 +45,6 @@ type Props = {
   FooterComponent?: ComponentType<{imageIndex: number}>
 }
 
-const DEFAULT_ANIMATION_TYPE = 'fade'
 const DEFAULT_BG_COLOR = '#000'
 const DEFAULT_DELAY_LONG_PRESS = 800
 const SCREEN = Dimensions.get('screen')
@@ -58,7 +58,6 @@ function ImageViewing({
   onRequestClose,
   onLongPress = () => {},
   onImageIndexChange,
-  animationType = DEFAULT_ANIMATION_TYPE,
   backgroundColor = DEFAULT_BG_COLOR,
   presentationStyle,
   swipeToCloseEnabled,
