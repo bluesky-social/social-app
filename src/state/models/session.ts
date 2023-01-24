@@ -361,14 +361,14 @@ export class SessionModel {
    * Close all sessions across all accounts.
    */
   async logout() {
-    if (this.hasSession) {
+    /*if (this.hasSession) {
       this.rootStore.api.com.atproto.session.delete().catch((e: any) => {
         this.rootStore.log.warn(
           '(Minor issue) Failed to delete session on the server',
           e,
         )
       })
-    }
+    }*/
     this.clearSessionTokensFromAccounts()
     this.rootStore.clearAll()
   }
