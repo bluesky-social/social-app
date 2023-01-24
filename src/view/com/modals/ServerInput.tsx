@@ -33,7 +33,7 @@ export function Component({
   }
 
   return (
-    <View style={s.flex1}>
+    <View style={s.flex1} testID="serverInputModal">
       <Text style={[s.textCenter, s.bold, s.f18]}>Choose Service</Text>
       <BottomSheetScrollView style={styles.inner}>
         <View style={styles.group}>
@@ -64,6 +64,7 @@ export function Component({
           <Text style={styles.label}>Other service</Text>
           <View style={{flexDirection: 'row'}}>
             <BottomSheetTextInput
+              testID="customServerTextInput"
               style={styles.textInput}
               placeholder="e.g. https://bsky.app"
               placeholderTextColor={colors.gray4}
@@ -74,6 +75,7 @@ export function Component({
               onChangeText={setCustomUrl}
             />
             <TouchableOpacity
+              testID="customServerSelectBtn"
               style={styles.textInputBtn}
               onPress={() => doSelect(customUrl)}>
               <FontAwesomeIcon
