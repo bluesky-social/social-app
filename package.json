@@ -29,6 +29,8 @@
     "@react-native-camera-roll/camera-roll": "^5.1.0",
     "@react-native-clipboard/clipboard": "^1.10.0",
     "@react-native-community/blur": "^4.3.0",
+    "@segment/analytics-react-native": "^2.10.1",
+    "@segment/sovran-react-native": "^0.4.5",
     "@zxing/text-encoding": "^0.9.0",
     "base64-js": "^1.5.1",
     "email-validator": "^2.0.4",
