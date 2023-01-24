@@ -12,7 +12,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ComAtprotoAccountCreate} from '@atproto/api'
 import * as EmailValidator from 'email-validator'
-import {Logo} from './Logo'
+import {LogoTextHero} from './Logo'
 import {Picker} from '../util/Picker'
 import {TextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -25,8 +25,10 @@ import {
 import {useStores, DEFAULT_SERVICE} from '../../../state'
 import {ServiceDescription} from '../../../state/models/session'
 import {ServerInputModal} from '../../../state/models/shell-ui'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
+  const pal = usePalette('default')
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
@@ -114,74 +116,14 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     }
   }
 
-  const Policies = () => {
-    if (!serviceDescription) {
-      return <View />
-    }
-    const tos = validWebLink(serviceDescription.links?.termsOfService)
-    const pp = validWebLink(serviceDescription.links?.privacyPolicy)
-    if (!tos && !pp) {
-      return (
-        <View style={styles.policies}>
-          <View style={[styles.errorIcon, s.mt2]}>
-            <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
-          </View>
-          <Text style={[s.white, s.pl5, s.flex1]}>
-            This service has not provided terms of service or a privacy policy.
-          </Text>
-        </View>
-      )
-    }
-    const els = []
-    if (tos) {
-      els.push(
-        <TextLink
-          key="tos"
-          href={tos}
-          text="Terms of Service"
-          style={[s.white, s.underline]}
-        />,
-      )
-    }
-    if (pp) {
-      els.push(
-        <TextLink
-          key="pp"
-          href={pp}
-          text="Privacy Policy"
-          style={[s.white, s.underline]}
-        />,
-      )
-    }
-    if (els.length === 2) {
-      els.splice(
-        1,
-        0,
-        <Text key="and" style={s.white}>
-          {' '}
-          and{' '}
-        </Text>,
-      )
-    }
-    return (
-      <View style={styles.policies}>
-        <Text style={s.white}>
-          By creating an account you agree to the {els}.
-        </Text>
-      </View>
-    )
-  }
-
   const isReady = !!email && !!password && !!handle && is13
   return (
-    <ScrollView testID="createAccount" style={{flex: 1}}>
-      <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
-        <View style={styles.logoHero}>
-          <Logo />
-        </View>
+    <ScrollView testID="createAccount" style={pal.view}>
+      <KeyboardAvoidingView behavior="padding">
+        <LogoTextHero />
         {error ? (
           <View style={[styles.error, styles.errorFloating]}>
-            <View style={styles.errorIcon}>
+            <View style={[styles.errorIcon]}>
               <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
             </View>
             <View style={s.flex1}>
@@ -189,41 +131,55 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
             </View>
           </View>
         ) : undefined}
-        <View style={[styles.group]}>
-          <View style={styles.groupTitle}>
-            <Text style={[s.white, s.f18, s.bold]}>Create a new account</Text>
-          </View>
-          <View style={styles.groupContent}>
-            <FontAwesomeIcon icon="globe" style={styles.groupContentIcon} />
+        <View style={styles.groupLabel}>
+          <Text type="sm-bold" style={pal.text}>
+            Service provider
+          </Text>
+        </View>
+        <View style={[pal.borderDark, styles.group]}>
+          <View
+            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+            <FontAwesomeIcon
+              icon="globe"
+              style={[pal.textLight, styles.groupContentIcon]}
+            />
             <TouchableOpacity
               testID="registerSelectServiceButton"
               style={styles.textBtn}
               onPress={onPressSelectService}>
-              <Text style={styles.textBtnLabel}>
+              <Text type="xl" style={[pal.text, styles.textBtnLabel]}>
                 {toNiceDomain(serviceUrl)}
               </Text>
-              <View style={styles.textBtnFakeInnerBtn}>
+              <View style={[pal.btn, styles.textBtnFakeInnerBtn]}>
                 <FontAwesomeIcon
                   icon="pen"
                   size={12}
-                  style={styles.textBtnFakeInnerBtnIcon}
+                  style={[pal.textLight, styles.textBtnFakeInnerBtnIcon]}
                 />
-                <Text style={styles.textBtnFakeInnerBtnLabel}>Change</Text>
+                <Text style={[pal.textLight]}>Change</Text>
               </View>
             </TouchableOpacity>
           </View>
-          {serviceDescription ? (
-            <>
+        </View>
+        {serviceDescription ? (
+          <>
+            <View style={styles.groupLabel}>
+              <Text type="sm-bold" style={pal.text}>
+                Account details
+              </Text>
+            </View>
+            <View style={[pal.borderDark, styles.group]}>
               {serviceDescription?.inviteCodeRequired ? (
-                <View style={styles.groupContent}>
+                <View
+                  style={[pal.border, styles.groupContent, styles.noTopBorder]}>
                   <FontAwesomeIcon
                     icon="ticket"
-                    style={styles.groupContentIcon}
+                    style={[pal.textLight, styles.groupContentIcon]}
                   />
                   <TextInput
-                    style={[styles.textInput]}
+                    style={[pal.text, styles.textInput]}
                     placeholder="Invite code"
-                    placeholderTextColor={colors.blue0}
+                    placeholderTextColor={pal.colors.textLight}
                     autoCapitalize="none"
                     autoCorrect={false}
                     autoFocus
@@ -233,16 +189,16 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                   />
                 </View>
               ) : undefined}
-              <View style={styles.groupContent}>
+              <View style={[pal.border, styles.groupContent]}>
                 <FontAwesomeIcon
                   icon="envelope"
-                  style={styles.groupContentIcon}
+                  style={[pal.textLight, styles.groupContentIcon]}
                 />
                 <TextInput
                   testID="registerEmailInput"
-                  style={[styles.textInput]}
+                  style={[pal.text, styles.textInput]}
                   placeholder="Email address"
-                  placeholderTextColor={colors.blue0}
+                  placeholderTextColor={pal.colors.textLight}
                   autoCapitalize="none"
                   autoCorrect={false}
                   value={email}
@@ -250,13 +206,16 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                   editable={!isProcessing}
                 />
               </View>
-              <View style={styles.groupContent}>
-                <FontAwesomeIcon icon="lock" style={styles.groupContentIcon} />
+              <View style={[pal.border, styles.groupContent]}>
+                <FontAwesomeIcon
+                  icon="lock"
+                  style={[pal.textLight, styles.groupContentIcon]}
+                />
                 <TextInput
                   testID="registerPasswordInput"
-                  style={[styles.textInput]}
+                  style={[pal.text, styles.textInput]}
                   placeholder="Choose your password"
-                  placeholderTextColor={colors.blue0}
+                  placeholderTextColor={pal.colors.textLight}
                   autoCapitalize="none"
                   autoCorrect={false}
                   secureTextEntry
@@ -265,24 +224,28 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                   editable={!isProcessing}
                 />
               </View>
-            </>
-          ) : undefined}
-        </View>
+            </View>
+          </>
+        ) : undefined}
         {serviceDescription ? (
           <>
-            <View style={styles.group}>
-              <View style={styles.groupTitle}>
-                <Text style={[s.white, s.f18, s.bold]}>
-                  Choose your username
-                </Text>
-              </View>
-              <View style={styles.groupContent}>
-                <FontAwesomeIcon icon="at" style={styles.groupContentIcon} />
+            <View style={styles.groupLabel}>
+              <Text type="sm-bold" style={pal.text}>
+                Choose your username
+              </Text>
+            </View>
+            <View style={[pal.border, styles.group]}>
+              <View
+                style={[pal.border, styles.groupContent, styles.noTopBorder]}>
+                <FontAwesomeIcon
+                  icon="at"
+                  style={[pal.textLight, styles.groupContentIcon]}
+                />
                 <TextInput
                   testID="registerHandleInput"
-                  style={[styles.textInput]}
+                  style={[pal.text, styles.textInput]}
                   placeholder="eg alice"
-                  placeholderTextColor={colors.blue0}
+                  placeholderTextColor={pal.colors.textLight}
                   autoCapitalize="none"
                   value={handle}
                   onChangeText={v => setHandle(makeValidHandle(v))}
@@ -290,15 +253,15 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                 />
               </View>
               {serviceDescription.availableUserDomains.length > 1 && (
-                <View style={styles.groupContent}>
+                <View style={[pal.border, styles.groupContent]}>
                   <FontAwesomeIcon
                     icon="globe"
                     style={styles.groupContentIcon}
                   />
                   <Picker
-                    style={styles.picker}
+                    style={[pal.text, styles.picker]}
                     labelStyle={styles.pickerLabel}
-                    iconStyle={styles.pickerIcon}
+                    iconStyle={pal.textLight}
                     value={userDomain}
                     items={serviceDescription.availableUserDomains.map(d => ({
                       label: `.${d}`,
@@ -309,41 +272,50 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                   />
                 </View>
               )}
-              <View style={styles.groupContent}>
-                <Text style={[s.white, s.p10]}>
+              <View style={[pal.border, styles.groupContent]}>
+                <Text style={[pal.textLight, s.p10]}>
                   Your full username will be{' '}
-                  <Text style={[s.white, s.bold]}>
+                  <Text type="md-bold" style={pal.textLight}>
                     @{createFullHandle(handle, userDomain)}
                   </Text>
                 </Text>
               </View>
             </View>
-            <View style={[styles.group]}>
-              <View style={styles.groupTitle}>
-                <Text style={[s.white, s.f18, s.bold]}>Legal</Text>
-              </View>
-              <View style={styles.groupContent}>
+            <View style={styles.groupLabel}>
+              <Text type="sm-bold" style={pal.text}>
+                Legal
+              </Text>
+            </View>
+            <View style={[pal.border, styles.group]}>
+              <View
+                style={[pal.border, styles.groupContent, styles.noTopBorder]}>
                 <TouchableOpacity
                   testID="registerIs13Input"
                   style={styles.textBtn}
                   onPress={() => setIs13(!is13)}>
-                  <View style={is13 ? styles.checkboxFilled : styles.checkbox}>
+                  <View
+                    style={[
+                      pal.border,
+                      is13 ? styles.checkboxFilled : styles.checkbox,
+                    ]}>
                     {is13 && (
                       <FontAwesomeIcon icon="check" style={s.blue3} size={14} />
                     )}
                   </View>
-                  <Text style={[styles.textBtnLabel, s.f16]}>
+                  <Text style={[pal.text, styles.textBtnLabel]}>
                     I am 13 years old or older
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
-            <Policies />
+            <Policies serviceDescription={serviceDescription} />
           </>
         ) : undefined}
         <View style={[s.flexRow, s.pl20, s.pr20]}>
           <TouchableOpacity onPress={onPressBack}>
-            <Text style={[s.white, s.f18, s.pl5]}>Back</Text>
+            <Text type="xl" style={pal.link}>
+              Back
+            </Text>
           </TouchableOpacity>
           <View style={s.flex1} />
           {isReady ? (
@@ -351,27 +323,96 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
               testID="createAccountButton"
               onPress={onPressNext}>
               {isProcessing ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator />
               ) : (
-                <Text style={[s.white, s.f18, s.bold, s.pr5]}>Next</Text>
+                <Text type="xl-bold" style={[pal.link, s.pr5]}>
+                  Next
+                </Text>
               )}
             </TouchableOpacity>
           ) : !serviceDescription && error ? (
             <TouchableOpacity
               testID="registerRetryButton"
               onPress={onPressRetryConnect}>
-              <Text style={[s.white, s.f18, s.bold, s.pr5]}>Retry</Text>
+              <Text type="xl-bold" style={[pal.link, s.pr5]}>
+                Retry
+              </Text>
             </TouchableOpacity>
           ) : !serviceDescription ? (
             <>
               <ActivityIndicator color="#fff" />
-              <Text style={[s.white, s.f18, s.pl5, s.pr5]}>Connecting...</Text>
+              <Text type="xl-bold" style={[pal.link, s.pr5]}>
+                Connecting...
+              </Text>
             </>
           ) : undefined}
         </View>
         <View style={s.footerSpacer} />
       </KeyboardAvoidingView>
     </ScrollView>
+  )
+}
+
+const Policies = ({
+  serviceDescription,
+}: {
+  serviceDescription: ServiceDescription
+}) => {
+  const pal = usePalette('default')
+  if (!serviceDescription) {
+    return <View />
+  }
+  const tos = validWebLink(serviceDescription.links?.termsOfService)
+  const pp = validWebLink(serviceDescription.links?.privacyPolicy)
+  if (!tos && !pp) {
+    return (
+      <View style={styles.policies}>
+        <View style={[styles.errorIcon, {borderColor: pal.colors.text}, s.mt2]}>
+          <FontAwesomeIcon icon="exclamation" style={pal.textLight} size={10} />
+        </View>
+        <Text style={[pal.textLight, s.pl5, s.flex1]}>
+          This service has not provided terms of service or a privacy policy.
+        </Text>
+      </View>
+    )
+  }
+  const els = []
+  if (tos) {
+    els.push(
+      <TextLink
+        key="tos"
+        href={tos}
+        text="Terms of Service"
+        style={[pal.link, s.underline]}
+      />,
+    )
+  }
+  if (pp) {
+    els.push(
+      <TextLink
+        key="pp"
+        href={pp}
+        text="Privacy Policy"
+        style={[pal.link, s.underline]}
+      />,
+    )
+  }
+  if (els.length === 2) {
+    els.splice(
+      1,
+      0,
+      <Text key="and" style={pal.textLight}>
+        {' '}
+        and{' '}
+      </Text>,
+    )
+  }
+  return (
+    <View style={styles.policies}>
+      <Text style={pal.textLight}>
+        By creating an account you agree to the {els}.
+      </Text>
+    </View>
   )
 }
 
@@ -382,42 +423,39 @@ function validWebLink(url?: string): string | undefined {
 }
 
 const styles = StyleSheet.create({
+  noTopBorder: {
+    borderTopWidth: 0,
+  },
   logoHero: {
     paddingTop: 30,
     paddingBottom: 40,
   },
   group: {
     borderWidth: 1,
-    borderColor: colors.white,
     borderRadius: 10,
     marginBottom: 20,
     marginHorizontal: 20,
-    backgroundColor: colors.blue3,
   },
-  groupTitle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+  groupLabel: {
+    paddingHorizontal: 20,
+    paddingBottom: 5,
   },
   groupContent: {
     borderTopWidth: 1,
-    borderTopColor: colors.blue1,
     flexDirection: 'row',
     alignItems: 'center',
   },
   groupContentIcon: {
-    color: 'white',
     marginLeft: 10,
   },
   textInput: {
     flex: 1,
     width: '100%',
-    backgroundColor: colors.blue3,
-    color: colors.white,
     paddingVertical: 10,
     paddingHorizontal: 12,
-    fontSize: 18,
+    fontSize: 17,
+    letterSpacing: 0.25,
+    fontWeight: '400',
     borderRadius: 10,
   },
   textBtn: {
@@ -427,47 +465,33 @@ const styles = StyleSheet.create({
   },
   textBtnLabel: {
     flex: 1,
-    color: colors.white,
     paddingVertical: 10,
     paddingHorizontal: 12,
-    fontSize: 18,
   },
   textBtnFakeInnerBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.blue2,
     borderRadius: 6,
     paddingVertical: 6,
     paddingHorizontal: 8,
     marginHorizontal: 6,
   },
   textBtnFakeInnerBtnIcon: {
-    color: colors.white,
     marginRight: 4,
-  },
-  textBtnFakeInnerBtnLabel: {
-    color: colors.white,
   },
   picker: {
     flex: 1,
     width: '100%',
-    backgroundColor: colors.blue3,
-    color: colors.white,
     paddingVertical: 10,
     paddingHorizontal: 12,
-    fontSize: 18,
+    fontSize: 17,
     borderRadius: 10,
   },
   pickerLabel: {
-    color: colors.white,
-    fontSize: 18,
-  },
-  pickerIcon: {
-    color: colors.white,
+    fontSize: 17,
   },
   checkbox: {
     borderWidth: 1,
-    borderColor: colors.white,
     borderRadius: 2,
     width: 16,
     height: 16,
@@ -475,8 +499,6 @@ const styles = StyleSheet.create({
   },
   checkboxFilled: {
     borderWidth: 1,
-    borderColor: colors.white,
-    backgroundColor: colors.white,
     borderRadius: 2,
     width: 16,
     height: 16,
@@ -489,8 +511,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   error: {
-    borderWidth: 1,
-    borderColor: colors.red5,
     backgroundColor: colors.red4,
     flexDirection: 'row',
     alignItems: 'center',
@@ -509,7 +529,6 @@ const styles = StyleSheet.create({
   errorIcon: {
     borderWidth: 1,
     borderColor: colors.white,
-    color: colors.white,
     borderRadius: 30,
     width: 16,
     height: 16,

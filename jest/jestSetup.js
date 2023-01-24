@@ -25,19 +25,6 @@ jest.mock('react-native-safe-area-context', () => {
   }
 })
 
-jest.mock('@gorhom/bottom-sheet', () => {
-  const react = require('react-native')
-  return {
-    __esModule: true,
-    default: react.View,
-    namedExport: {
-      ...require('react-native-reanimated/mock'),
-      ...jest.requireActual('@gorhom/bottom-sheet'),
-      BottomSheetFlatList: react.FlatList,
-    },
-  }
-})
-
 jest.mock('rn-fetch-blob', () => ({
   config: jest.fn().mockReturnThis(),
   cancel: jest.fn(),
