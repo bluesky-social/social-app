@@ -15,7 +15,7 @@ export const Contacts = ({navIdx, visible, params}: ScreenParams) => {
 
   useEffect(() => {
     if (visible) {
-      store.nav.setTitle(navIdx, `Contacts`)
+      store.nav.setTitle(navIdx, 'Contacts')
     }
   }, [store, visible])
 

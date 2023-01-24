@@ -46,8 +46,11 @@ export function RichText({
       </Text>
     )
   }
-  if (!style) style = []
-  else if (!Array.isArray(style)) style = [style]
+  if (!style) {
+    style = []
+  } else if (!Array.isArray(style)) {
+    style = [style]
+  }
   entities.sort(sortByIndex)
   const segments = Array.from(toSegments(text, entities))
   const els = []

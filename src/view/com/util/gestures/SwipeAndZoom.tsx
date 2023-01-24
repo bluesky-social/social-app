@@ -88,11 +88,21 @@ export function SwipeAndZoom({
   }
 
   const canDir = (d: Dir) => {
-    if (d === Dir.Left) return canSwipeLeft
-    if (d === Dir.Right) return canSwipeRight
-    if (d === Dir.Up) return canSwipeUp
-    if (d === Dir.Down) return canSwipeDown
-    if (d === Dir.Zoom) return zoomEnabled
+    if (d === Dir.Left) {
+      return canSwipeLeft
+    }
+    if (d === Dir.Right) {
+      return canSwipeRight
+    }
+    if (d === Dir.Up) {
+      return canSwipeUp
+    }
+    if (d === Dir.Down) {
+      return canSwipeDown
+    }
+    if (d === Dir.Zoom) {
+      return zoomEnabled
+    }
     return false
   }
   const isHorz = (d: Dir) => d === Dir.Left || d === Dir.Right

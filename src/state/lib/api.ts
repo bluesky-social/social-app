@@ -84,7 +84,7 @@ export async function post(
   if (!embed && extLink) {
     let thumb
     if (extLink.localThumb) {
-      onStateChange?.(`Uploading link thumbnail...`)
+      onStateChange?.('Uploading link thumbnail...')
       let encoding
       if (extLink.localThumb.path.endsWith('.png')) {
         encoding = 'image/png'
@@ -140,7 +140,7 @@ export async function post(
   }
 
   try {
-    onStateChange?.(`Posting...`)
+    onStateChange?.('Posting...')
     return await store.api.app.bsky.feed.post.create(
       {did: store.me.did || ''},
       {

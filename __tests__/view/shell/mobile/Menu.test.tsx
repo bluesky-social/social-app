@@ -1,10 +1,7 @@
 import React from 'react'
 import {Menu} from '../../../../src/view/shell/mobile/Menu'
 import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
-import {
-  mockedNavigationStore,
-  mockedShellStore,
-} from '../../../../__mocks__/state-mock'
+import {mockedNavigationStore} from '../../../../__mocks__/state-mock'
 
 describe('Menu', () => {
   const onCloseMock = jest.fn()

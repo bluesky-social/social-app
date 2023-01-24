@@ -199,7 +199,9 @@ export function enforceLen(str: string, len: number): string {
 }
 
 export function cleanError(str: any): string {
-  if (!str) return str
+  if (!str) {
+    return str
+  }
   if (typeof str !== 'string') {
     str = str.toString()
   }

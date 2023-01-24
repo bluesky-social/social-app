@@ -1,6 +1,7 @@
 import {extractHtmlMeta} from '../../src/lib/extractHtmlMeta'
 import {exampleComHtml} from './__mocks__/exampleComHtml'
 import {youtubeHTML} from './__mocks__/youtubeHtml'
+import {tiktokHtml} from './__mocks__/tiktokHtml'
 
 describe('extractHtmlMeta', () => {
   const cases = [
@@ -56,6 +57,18 @@ describe('extractHtmlMeta', () => {
     expect(output).toEqual(expectedOutput)
   })
 
+  it('extracts title and description from a Tiktok HTML page', () => {
+    const input = tiktokHtml
+    const expectedOutput = {
+      title:
+        'Coca-Cola and Mentos! Super Reaction! #cocacola #mentos #reaction #bal... | TikTok',
+      description:
+        '5.5M Likes, 20.8K Comments. TikTok video from Power Vision Tests (@_powervision_): &quot;Coca-Cola and Mentos! Super Reaction! #cocacola #mentos #reaction #balloon #sciencemoment #scienceexperiment #experiment #test #amazing #pvexp&quot;.  оригинальный звук - Power Vision Tests.',
+    }
+    const output = extractHtmlMeta({html: input, hostname: 'tiktok.com'})
+    expect(output).toEqual(expectedOutput)
+  })
+
   it('extracts title and description from a generic youtube page', () => {
     const input = youtubeHTML
     const expectedOutput = {
@@ -65,6 +78,39 @@ describe('extractHtmlMeta', () => {
       image: 'https://i.ytimg.com/vi/x6UITRjhijI/sddefault.jpg',
     }
     const output = extractHtmlMeta({html: input, hostname: 'youtube.com'})
+    expect(output).toEqual(expectedOutput)
+  })
+
+  it('extracts username from the url a twitter profile page', () => {
+    const expectedOutput = {
+      title: '@bluesky on Twitter',
+    }
+    const output = extractHtmlMeta({
+      hostname: 'twitter.com',
+      pathname: '/bluesky',
+    })
+    expect(output).toEqual(expectedOutput)
+  })
+
+  it('extracts username from the url a tweet', () => {
+    const expectedOutput = {
+      title: 'Tweet by @bluesky',
+    }
+    const output = extractHtmlMeta({
+      hostname: 'twitter.com',
+      pathname: '/bluesky/status/1582437529969917953',
+    })
+    expect(output).toEqual(expectedOutput)
+  })
+
+  it("does not extract username from the url when it's not a tweet or profile page", () => {
+    const expectedOutput = {
+      title: 'Twitter',
+    }
+    const output = extractHtmlMeta({
+      hostname: 'twitter.com',
+      pathname: '/i/articles/follows/-1675653703?time_window=24',
+    })
     expect(output).toEqual(expectedOutput)
   })
 })

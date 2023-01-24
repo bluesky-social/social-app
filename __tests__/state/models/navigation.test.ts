@@ -1,7 +1,4 @@
-import {
-  NavigationModel,
-  NavigationTabModel,
-} from './../../../src/state/models/navigation'
+import {NavigationModel} from './../../../src/state/models/navigation'
 import * as flags from '../../../src/build-flags'
 
 describe('NavigationModel', () => {

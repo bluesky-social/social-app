@@ -1,5 +1,5 @@
 import React from 'react'
-import {Animated, Share} from 'react-native'
+import {Animated} from 'react-native'
 import {TabsSelector} from '../../../../src/view/shell/mobile/TabsSelector'
 import {cleanup, fireEvent, render} from '../../../../jest/test-utils'
 import {mockedNavigationStore} from '../../../../__mocks__/state-mock'
