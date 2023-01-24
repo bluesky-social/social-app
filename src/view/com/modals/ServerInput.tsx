@@ -14,7 +14,6 @@ import {LOGIN_INCLUDE_DEV_SERVERS} from '../../../build-flags'
 
 export const snapPoints = ['80%']
 
-// TODO: Use less generic naming for this component
 export function Component({onSelect}: {onSelect: (url: string) => void}) {
   const store = useStores()
   const [customUrl, setCustomUrl] = useState<string>('')

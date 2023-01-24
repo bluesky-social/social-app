@@ -21,7 +21,6 @@ const ITEMS: RadioGroupItem[] = [
 
 export const snapPoints = ['50%']
 
-// TODO: Use less generic naming for this component
 export function Component() {
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
