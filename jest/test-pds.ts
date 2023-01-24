@@ -1,5 +1,6 @@
 import {AddressInfo} from 'net'
-import {randomBytes} from 'crypto'
+import os from 'os'
+import path from 'path'
 import * as crypto from '@atproto/crypto'
 import PDSServer, {
   Database as PDSDatabase,
@@ -44,7 +45,9 @@ function* dateGen() {
 }
 
 export async function createServer(): Promise<TestPDS> {
-  // create plc server
+  const keypair = await crypto.EcdsaKeypair.create()
+
+  // run plc server
   const plcDb = plc.Database.memory()
   await plcDb.migrateToLatestOrThrow()
   const plcServer = plc.PlcServer.create({db: plcDb})
@@ -52,44 +55,46 @@ export async function createServer(): Promise<TestPDS> {
   const plcPort = (plcListener.address() as AddressInfo).port
   const plcUrl = `http://localhost:${plcPort}`
 
-  // create pds
-  const db = await PDSDatabase.memory()
-  await db.migrateToLatestOrThrow()
-  const keypair = await crypto.EcdsaKeypair.create()
-  const blobstore = new MemoryBlobStore()
+  const recoveryKey = (await crypto.EcdsaKeypair.create()).did()
+
   const plcClient = new plc.PlcClient(plcUrl)
   const serverDid = await plcClient.createDid(
     keypair,
-    keypair.did(),
+    recoveryKey,
     'localhost',
     'https://pds.public.url',
   )
-  const pds = PDSServer.create({
-    db,
-    blobstore,
-    keypair,
-    config: new PDSServerConfig({
-      debugMode: true,
-      version: '0.0.0',
-      scheme: 'http',
-      hostname: 'localhost',
-      didPlcUrl: plcUrl,
-      serverDid,
-      recoveryKey: keypair.did(),
-      jwtSecret: randomBytes(8).toString('base64'),
-      availableUserDomains: ['.test'],
-      appUrlPasswordReset: 'app://password-reset',
-      // @TODO setup ethereal.email creds and set emailSmtpUrl here
-      emailNoReplyAddress: 'noreply@blueskyweb.xyz',
-      adminPassword: 'password',
-      inviteRequired: false,
-      imgUriSalt: '9dd04221f5755bce5f55f47464c27e1e',
-      imgUriKey:
-        'f23ecd142835025f42c3db2cf25dd813956c178392760256211f9d315f8ab4d8',
-      privacyPolicyUrl: 'https://example.com/privacy',
-      termsOfServiceUrl: 'https://example.com/tos',
-    }),
+
+  const blobstoreLoc = path.join(os.tmpdir(), crypto.randomStr(5, 'base32'))
+
+  const cfg = new PDSServerConfig({
+    debugMode: true,
+    version: '0.0.0',
+    scheme: 'http',
+    hostname: 'localhost',
+    serverDid,
+    recoveryKey,
+    adminPassword: 'admin-pass',
+    inviteRequired: false,
+    didPlcUrl: plcUrl,
+    jwtSecret: 'jwt-secret',
+    availableUserDomains: ['.test'],
+    appUrlPasswordReset: 'app://forgot-password',
+    emailNoReplyAddress: 'noreply@blueskyweb.xyz',
+    publicUrl: 'https://pds.public.url',
+    imgUriSalt: '9dd04221f5755bce5f55f47464c27e1e',
+    imgUriKey:
+      'f23ecd142835025f42c3db2cf25dd813956c178392760256211f9d315f8ab4d8',
+    dbPostgresUrl: process.env.DB_POSTGRES_URL,
+    blobstoreLocation: `${blobstoreLoc}/blobs`,
+    blobstoreTmp: `${blobstoreLoc}/tmp`,
   })
+
+  const db = PDSDatabase.memory()
+  await db.migrateToLatestOrThrow()
+  const blobstore = new MemoryBlobStore()
+
+  const pds = PDSServer.create({db, blobstore, keypair, config: cfg})
   const pdsServer = await pds.start()
   const pdsPort = (pdsServer.address() as AddressInfo).port
   const pdsUrl = `http://localhost:${pdsPort}`

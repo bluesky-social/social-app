@@ -49,6 +49,7 @@ export const ViewHeader = observer(function ViewHeader({
   return (
     <View style={[styles.header, pal.view]}>
       <TouchableOpacity
+        testID="viewHeaderBackOrMenuBtn"
         onPress={canGoBack ? onPressBack : onPressMenu}
         hitSlop={BACK_HITSLOP}
         style={canGoBack ? styles.backIcon : styles.backIconWide}>

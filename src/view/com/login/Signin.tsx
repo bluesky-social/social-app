@@ -161,13 +161,14 @@ const ChooseAccountForm = ({
   }
 
   return (
-    <>
+    <View testID="chooseAccountForm">
       <LogoTextHero />
       <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
         Sign in as...
       </Text>
       {store.session.accounts.map(account => (
         <TouchableOpacity
+          testID={`chooseAccountBtn-${account.handle}`}
           key={account.did}
           style={[pal.borderDark, styles.group, s.mb5]}
           onPress={() => onTryAccount(account)}>
@@ -198,6 +199,7 @@ const ChooseAccountForm = ({
         </TouchableOpacity>
       ))}
       <TouchableOpacity
+        testID="chooseNewAccountBtn"
         style={[pal.borderDark, styles.group]}
         onPress={() => onSelectAccount(undefined)}>
         <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
@@ -227,7 +229,7 @@ const ChooseAccountForm = ({
         <View style={s.flex1} />
         {isProcessing && <ActivityIndicator />}
       </View>
-    </>
+    </View>
   )
 }
 
@@ -312,7 +314,7 @@ const LoginForm = ({
 
   const isReady = !!serviceDescription && !!handle && !!password
   return (
-    <View testId="loginFormView">
+    <View testID="loginForm">
       <LogoTextHero />
       <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
         Sign into
@@ -324,7 +326,7 @@ const LoginForm = ({
             style={[pal.textLight, styles.groupContentIcon]}
           />
           <TouchableOpacity
-            testID="registerSelectServiceButton"
+            testID="loginSelectServiceButton"
             style={styles.textBtn}
             onPress={onPressSelectService}>
             <Text type="xl" style={[pal.text, styles.textBtnLabel]}>

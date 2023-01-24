@@ -62,7 +62,7 @@ export const Menu = observer(
       onPress?: () => void
     }) => (
       <TouchableOpacity
-        testID="menuItemButton"
+        testID={`menuItemButton-${label}`}
         style={styles.menuItem}
         onPress={onPress ? onPress : () => onNavigate(url || '/')}>
         <View style={[styles.menuItemIconWrapper]}>

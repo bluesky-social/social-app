@@ -54,7 +54,7 @@ export const Settings = observer(function Settings({
   }
 
   return (
-    <View style={[s.h100pct]}>
+    <View style={[s.h100pct]} testID="settingsScreen">
       <ViewHeader title="Settings" />
       <ScrollView style={[s.mt10, s.pl10, s.pr10, s.h100pct]}>
         <View style={[s.flexRow]}>
@@ -62,7 +62,9 @@ export const Settings = observer(function Settings({
             Signed in as
           </Text>
           <View style={s.flex1} />
-          <TouchableOpacity onPress={isSwitching ? undefined : onPressSignout}>
+          <TouchableOpacity
+            testID="signOutBtn"
+            onPress={isSwitching ? undefined : onPressSignout}>
             <Text type="xl-medium" style={pal.link}>
               Sign out
             </Text>
@@ -98,6 +100,7 @@ export const Settings = observer(function Settings({
         </Text>
         {store.session.switchableAccounts.map(account => (
           <TouchableOpacity
+            testID={`switchToAccountBtn-${account.handle}`}
             key={account.did}
             style={[
               pal.view,
@@ -123,6 +126,7 @@ export const Settings = observer(function Settings({
           </TouchableOpacity>
         ))}
         <TouchableOpacity
+          testID="switchToNewAccountBtn"
           style={[
             pal.view,
             styles.profile,
