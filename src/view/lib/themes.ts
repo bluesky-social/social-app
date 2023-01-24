@@ -13,6 +13,7 @@ export const defaultTheme: Theme = {
       textInverted: colors.white,
       link: colors.blue3,
       border: '#f0e9e9',
+      borderDark: '#e0d9d9',
       icon: colors.gray3,
 
       // non-standard
@@ -32,6 +33,7 @@ export const defaultTheme: Theme = {
       textInverted: colors.blue3,
       link: colors.blue0,
       border: colors.blue4,
+      borderDark: colors.blue5,
       icon: colors.blue4,
     },
     secondary: {
@@ -42,6 +44,7 @@ export const defaultTheme: Theme = {
       textInverted: colors.green4,
       link: colors.green1,
       border: colors.green4,
+      borderDark: colors.green5,
       icon: colors.green4,
     },
     inverted: {
@@ -52,6 +55,7 @@ export const defaultTheme: Theme = {
       textInverted: colors.black,
       link: colors.blue2,
       border: colors.gray3,
+      borderDark: colors.gray2,
       icon: colors.gray5,
     },
     error: {
@@ -62,6 +66,7 @@ export const defaultTheme: Theme = {
       textInverted: colors.red3,
       link: colors.red1,
       border: colors.red4,
+      borderDark: colors.red5,
       icon: colors.red4,
     },
   },
@@ -257,6 +262,7 @@ export const darkTheme: Theme = {
       textInverted: colors.black,
       link: colors.blue3,
       border: colors.gray6,
+      borderDark: colors.gray5,
       icon: colors.gray5,
 
       // non-standard
@@ -284,6 +290,7 @@ export const darkTheme: Theme = {
       textInverted: colors.white,
       link: colors.blue3,
       border: colors.gray3,
+      borderDark: colors.gray4,
       icon: colors.gray1,
     },
   },

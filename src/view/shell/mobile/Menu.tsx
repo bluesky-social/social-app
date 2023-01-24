@@ -45,30 +45,69 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
   // rendering
   // =
 
-  const MenuItem = ({
-    icon,
-    label,
-    count,
-    url,
-    bold,
-    onPress,
-  }: {
-    icon: JSX.Element
-    label: string
-    count?: number
-    url?: string
-    bold?: boolean
-    onPress?: () => void
-  }) => (
-    <TouchableOpacity
-      testID="menuItemButton"
-      style={styles.menuItem}
-      onPress={onPress ? onPress : () => onNavigate(url || '/')}>
-      <View style={[styles.menuItemIconWrapper]}>
-        {icon}
-        {count ? (
-          <View style={styles.menuItemCount}>
-            <Text style={styles.menuItemCountLabel}>{count}</Text>
+    const MenuItem = ({
+      icon,
+      label,
+      count,
+      url,
+      bold,
+      onPress,
+    }: {
+      icon: JSX.Element
+      label: string
+      count?: number
+      url?: string
+      bold?: boolean
+      onPress?: () => void
+    }) => (
+      <TouchableOpacity
+        testID={`menuItemButton-${label}`}
+        style={styles.menuItem}
+        onPress={onPress ? onPress : () => onNavigate(url || '/')}>
+        <View style={[styles.menuItemIconWrapper]}>
+          {icon}
+          {count ? (
+            <View style={styles.menuItemCount}>
+              <Text style={styles.menuItemCountLabel}>{count}</Text>
+            </View>
+          ) : undefined}
+        </View>
+        <Text
+          type="title"
+          style={[
+            pal.text,
+            bold ? styles.menuItemLabelBold : styles.menuItemLabel,
+          ]}
+          numberOfLines={1}>
+          {label}
+        </Text>
+      </TouchableOpacity>
+    )
+
+    return (
+      <ScrollView testID="menuView" style={[styles.view, pal.view]}>
+        <TouchableOpacity
+          testID="profileCardButton"
+          onPress={() => onNavigate(`/profile/${store.me.handle}`)}
+          style={styles.profileCard}>
+          <UserAvatar
+            size={60}
+            displayName={store.me.displayName}
+            handle={store.me.handle}
+            avatar={store.me.avatar}
+          />
+          <View style={s.flex1}>
+            <Text
+              type="title-lg"
+              style={[pal.text, styles.profileCardDisplayName]}
+              numberOfLines={1}>
+              {store.me.displayName || store.me.handle}
+            </Text>
+            <Text
+              style={[pal.textLight, styles.profileCardHandle]}
+              numberOfLines={1}>
+              @{store.me.handle}
+            </Text>
           </View>
         ) : undefined}
       </View>

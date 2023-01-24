@@ -46,10 +46,10 @@ describe('Menu', () => {
   })
 
   it("presses notifications menu item' button", () => {
-    const {getAllByTestId} = render(<Menu {...mockedProps} />)
+    const {getByTestId} = render(<Menu {...mockedProps} />)
 
-    const menuItemButton = getAllByTestId('menuItemButton')
-    fireEvent.press(menuItemButton[1])
+    const menuItemButton = getByTestId('menuItemButton-Notifications')
+    fireEvent.press(menuItemButton)
 
     expect(onCloseMock).toHaveBeenCalled()
     expect(mockedNavigationStore.switchTo).toHaveBeenCalledWith(1, true)

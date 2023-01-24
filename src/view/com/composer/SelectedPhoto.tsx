@@ -25,12 +25,12 @@ export const SelectedPhoto = ({
   )
 
   return selectedPhotos.length !== 0 ? (
-    <View testID="selectedPhotosView" style={styles.imageContainer}>
+    <View testID="selectedPhotosView" style={styles.gallery}>
       {selectedPhotos.length !== 0 &&
         selectedPhotos.map((item, index) => (
           <View
             key={`selected-image-${index}`}
-            style={[styles.image, imageStyle]}>
+            style={[styles.imageContainer, imageStyle]}>
             <TouchableOpacity
               testID="removePhotoButton"
               onPress={() => handleRemovePhoto(item)}
@@ -54,16 +54,17 @@ export const SelectedPhoto = ({
 }
 
 const styles = StyleSheet.create({
-  imageContainer: {
+  gallery: {
     flex: 1,
     flexDirection: 'row',
     marginTop: 16,
   },
-  image: {
-    resizeMode: 'contain',
-    borderRadius: 8,
+  imageContainer: {
     margin: 2,
-    backgroundColor: colors.gray1,
+  },
+  image: {
+    resizeMode: 'cover',
+    borderRadius: 8,
   },
   image250: {
     width: 250,
@@ -88,5 +89,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: colors.black,
     zIndex: 1,
+    borderColor: colors.gray4,
+    borderWidth: 0.5,
   },
 })

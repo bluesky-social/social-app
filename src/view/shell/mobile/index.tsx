@@ -5,7 +5,6 @@ import {
   Easing,
   FlatList,
   GestureResponderEvent,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   TouchableOpacity,
@@ -16,7 +15,6 @@ import {
   ViewStyle,
 } from 'react-native'
 import {ScreenContainer, Screen} from 'react-native-screens'
-import LinearGradient from 'react-native-linear-gradient'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
@@ -322,18 +320,10 @@ export const MobileShell: React.FC = observer(() => {
 
   if (!store.session.hasSession) {
     return (
-      <LinearGradient
-        colors={['#007CFF', '#00BCFF']}
-        start={{x: 0, y: 0.8}}
-        end={{x: 0, y: 1}}
-        style={styles.outerContainer}>
-        <SafeAreaView testID="noSessionView" style={styles.innerContainer}>
-          <ErrorBoundary>
-            <Login />
-          </ErrorBoundary>
-        </SafeAreaView>
+      <View style={styles.outerContainer}>
+        <Login />
         <Modal />
-      </LinearGradient>
+      </View>
     )
   }
   if (store.onboard.isOnboarding) {

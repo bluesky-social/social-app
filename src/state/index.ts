@@ -13,13 +13,13 @@ export const DEFAULT_SERVICE = PROD_SERVICE
 const ROOT_STATE_STORAGE_KEY = 'root'
 const STATE_FETCH_INTERVAL = 15e3
 
-export async function setupState() {
+export async function setupState(serviceUri = DEFAULT_SERVICE) {
   let rootStore: RootStoreModel
   let data: any
 
   libapi.doPolyfill()
 
-  const api = AtpApi.service(DEFAULT_SERVICE) as SessionServiceClient
+  const api = AtpApi.service(serviceUri) as SessionServiceClient
   rootStore = new RootStoreModel(api)
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
