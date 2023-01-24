@@ -115,6 +115,7 @@ export class MeModel {
 
   clearNotificationCount() {
     this.notificationCount = 0
+    notifee.setBadgeCount(0)
   }
 
   async fetchStateUpdate() {
@@ -122,6 +123,7 @@ export class MeModel {
     runInAction(() => {
       const newNotifications = this.notificationCount !== res.data.count
       this.notificationCount = res.data.count
+      notifee.setBadgeCount(this.notificationCount)
       if (newNotifications) {
         // trigger pre-emptive fetch on new notifications
         this.notifications.refresh()
