@@ -23,27 +23,28 @@ import {Text} from '../../com/util/text/Text'
 import {ToggleButton} from '../../com/util/forms/ToggleButton'
 import {usePalette} from '../../lib/hooks/usePalette'
 
-export const Menu = observer(({onClose}: {onClose: () => void}) => {
-  const pal = usePalette('default')
-  const store = useStores()
+export const Menu = observer(
+  ({visible, onClose}: {visible: boolean; onClose: () => void}) => {
+    const pal = usePalette('default')
+    const store = useStores()
 
-  // events
-  // =
+    // events
+    // =
 
-  const onNavigate = (url: string) => {
-    onClose()
-    if (url === '/notifications') {
-      store.nav.switchTo(1, true)
-    } else {
-      store.nav.switchTo(0, true)
-      if (url !== '/') {
-        store.nav.navigate(url)
+    const onNavigate = (url: string) => {
+      onClose()
+      if (url === '/notifications') {
+        store.nav.switchTo(1, true)
+      } else {
+        store.nav.switchTo(0, true)
+        if (url !== '/') {
+          store.nav.navigate(url)
+        }
       }
     }
-  }
 
-  // rendering
-  // =
+    // rendering
+    // =
 
     const MenuItem = ({
       icon,
@@ -109,110 +110,76 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
               @{store.me.handle}
             </Text>
           </View>
-        ) : undefined}
-      </View>
-      <Text
-        type="title"
-        style={[
-          pal.text,
-          bold ? styles.menuItemLabelBold : styles.menuItemLabel,
-        ]}
-        numberOfLines={1}>
-        {label}
-      </Text>
-    </TouchableOpacity>
-  )
-
-  return (
-    <ScrollView testID="menuView" style={[styles.view, pal.view]}>
-      <TouchableOpacity
-        testID="profileCardButton"
-        onPress={() => onNavigate(`/profile/${store.me.handle}`)}
-        style={styles.profileCard}>
-        <UserAvatar
-          size={60}
-          displayName={store.me.displayName}
-          handle={store.me.handle}
-          avatar={store.me.avatar}
-        />
-        <View style={s.flex1}>
-          <Text
-            type="title-lg"
-            style={[pal.text, styles.profileCardDisplayName]}
-            numberOfLines={1}>
-            {store.me.displayName || store.me.handle}
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="searchBtn"
+          style={[styles.searchBtn, pal.btn]}
+          onPress={() => onNavigate('/search')}>
+          <MagnifyingGlassIcon
+            style={pal.text as StyleProp<ViewStyle>}
+            size={25}
+          />
+          <Text type="title" style={[pal.text, styles.searchBtnLabel]}>
+            Search
           </Text>
-          <Text
-            style={[pal.textLight, styles.profileCardHandle]}
-            numberOfLines={1}>
-            @{store.me.handle}
+        </TouchableOpacity>
+        <View style={[styles.section, pal.border, {paddingTop: 5}]}>
+          <MenuItem
+            icon={
+              <HomeIcon style={pal.text as StyleProp<ViewStyle>} size="26" />
+            }
+            label="Home"
+            url="/"
+          />
+          <MenuItem
+            icon={
+              <BellIcon style={pal.text as StyleProp<ViewStyle>} size="28" />
+            }
+            label="Notifications"
+            url="/notifications"
+            count={store.me.notificationCount}
+          />
+          <MenuItem
+            icon={
+              <UserIcon
+                style={pal.text as StyleProp<ViewStyle>}
+                size="30"
+                strokeWidth={2}
+              />
+            }
+            label="Profile"
+            url={`/profile/${store.me.handle}`}
+          />
+          <MenuItem
+            icon={
+              <CogIcon
+                style={pal.text as StyleProp<ViewStyle>}
+                size="30"
+                strokeWidth={2}
+              />
+            }
+            label="Settings"
+            url="/settings"
+          />
+        </View>
+        <View style={[styles.section, pal.border]}>
+          <ToggleButton
+            label="Dark mode"
+            isSelected={store.shell.darkMode}
+            onPress={() => store.shell.setDarkMode(!store.shell.darkMode)}
+          />
+        </View>
+        <View style={styles.footer}>
+          <Text style={[pal.textLight]}>
+            Build version {VersionNumber.appVersion} (
+            {VersionNumber.buildVersion})
           </Text>
         </View>
-      </TouchableOpacity>
-      <TouchableOpacity
-        testID="searchBtn"
-        style={[styles.searchBtn, pal.btn]}
-        onPress={() => onNavigate('/search')}>
-        <MagnifyingGlassIcon
-          style={pal.text as StyleProp<ViewStyle>}
-          size={25}
-        />
-        <Text type="title" style={[pal.text, styles.searchBtnLabel]}>
-          Search
-        </Text>
-      </TouchableOpacity>
-      <View style={[styles.section, pal.border, {paddingTop: 5}]}>
-        <MenuItem
-          icon={<HomeIcon style={pal.text as StyleProp<ViewStyle>} size="26" />}
-          label="Home"
-          url="/"
-        />
-        <MenuItem
-          icon={<BellIcon style={pal.text as StyleProp<ViewStyle>} size="28" />}
-          label="Notifications"
-          url="/notifications"
-          count={store.me.notificationCount}
-        />
-        <MenuItem
-          icon={
-            <UserIcon
-              style={pal.text as StyleProp<ViewStyle>}
-              size="30"
-              strokeWidth={2}
-            />
-          }
-          label="Profile"
-          url={`/profile/${store.me.handle}`}
-        />
-        <MenuItem
-          icon={
-            <CogIcon
-              style={pal.text as StyleProp<ViewStyle>}
-              size="30"
-              strokeWidth={2}
-            />
-          }
-          label="Settings"
-          url="/settings"
-        />
-      </View>
-      <View style={[styles.section, pal.border]}>
-        <ToggleButton
-          label="Dark mode"
-          isSelected={store.shell.darkMode}
-          onPress={() => store.shell.setDarkMode(!store.shell.darkMode)}
-        />
-      </View>
-      <View style={styles.footer}>
-        <Text style={[pal.textLight]}>
-          Build version {VersionNumber.appVersion} ({VersionNumber.buildVersion}
-          )
-        </Text>
-      </View>
-      <View style={s.footerSpacer} />
-    </ScrollView>
-  )
-})
+        <View style={s.footerSpacer} />
+      </ScrollView>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   view: {
