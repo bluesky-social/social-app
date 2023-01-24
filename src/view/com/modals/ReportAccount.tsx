@@ -20,7 +20,7 @@ const ITEMS: RadioGroupItem[] = [
 
 export const snapPoints = ['50%']
 
-export function Component({did}: {did: string}) {
+export function Component() {
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [error, setError] = useState<string>('')

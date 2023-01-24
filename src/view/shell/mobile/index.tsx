@@ -125,7 +125,6 @@ export const MobileShell: React.FC = observer(() => {
   const scrollElRef = useRef<FlatList | undefined>()
   const winDim = useWindowDimensions()
   const [menuSwipingDirection, setMenuSwipingDirection] = useState(0)
-  const constZeroInterp = useAnimatedValue(0)
   const swipeGestureInterp = useAnimatedValue(0)
   const minimalShellInterp = useAnimatedValue(0)
   const tabMenuInterp = useAnimatedValue(0)

@@ -9,7 +9,7 @@ import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
 import {useAnimatedValue} from '../lib/hooks/useAnimatedValue'
 
-export const Contacts = ({navIdx, visible, params}: ScreenParams) => {
+export const Contacts = ({navIdx, visible}: ScreenParams) => {
   const store = useStores()
   const selectorInterp = useAnimatedValue(0)
 
