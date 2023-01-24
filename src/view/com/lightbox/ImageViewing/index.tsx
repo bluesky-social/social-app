@@ -20,7 +20,6 @@ import {Modal} from '../../modals/Modal'
 
 import ImageItem from './components/ImageItem/ImageItem'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
-import StatusBarManager from './components/StatusBarManager'
 
 import useAnimatedComponents from './hooks/useAnimatedComponents'
 import useImageIndexChange from './hooks/useImageIndexChange'
@@ -94,7 +93,6 @@ function ImageViewing({
   return (
     <View style={styles.screen}>
       <Modal />
-      <StatusBarManager presentationStyle={presentationStyle} />
       <View style={[styles.container, {opacity, backgroundColor}]}>
         <Animated.View style={[styles.header, {transform: headerTransform}]}>
           {typeof HeaderComponent !== 'undefined' ? (

@@ -18,6 +18,7 @@ const imageDimensionsCache = createCache(CACHE_SIZE)
 const useImageDimensions = (image: ImageSource): Dimensions | null => {
   const [dimensions, setDimensions] = useState<Dimensions | null>(null)
 
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const getImageDimensions = (image: ImageSource): Promise<Dimensions> => {
     return new Promise(resolve => {
       if (typeof image === 'number') {
