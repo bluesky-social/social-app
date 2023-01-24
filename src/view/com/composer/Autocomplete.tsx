@@ -7,7 +7,6 @@ import {
 } from 'react-native'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 import {Text} from '../util/text/Text'
-import {colors} from '../../lib/styles'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 interface AutocompleteItem {

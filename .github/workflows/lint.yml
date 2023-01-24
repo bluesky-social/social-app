@@ -30,5 +30,5 @@ jobs:
       - name: Yarn install
         run: yarn
       - name: Run tests
-        run: | 
+        run: |
           yarn test --forceExit
