@@ -12,6 +12,7 @@ import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
 import * as ReportAccountModal from './ReportAccount'
+import {StyleSheet} from 'react-native'
 
 const CLOSED_SNAPPOINTS = ['10%']
 
@@ -79,17 +80,33 @@ export const Modal = observer(function Modal() {
   }
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      snapPoints={snapPoints}
-      index={store.shell.isModalActive ? 0 : -1}
-      enablePanDownToClose
-      keyboardBehavior="fillParent"
-      backdropComponent={
-        store.shell.isModalActive ? createCustomBackdrop(onClose) : undefined
-      }
-      onChange={onBottomSheetChange}>
-      {element}
-    </BottomSheet>
+    store.shell.isModalActive && (
+      <View style={styles.container}>
+        <BottomSheet
+          ref={bottomSheetRef}
+          snapPoints={snapPoints}
+          index={store.shell.isModalActive ? 0 : -1}
+          enablePanDownToClose
+          keyboardBehavior="fillParent"
+          backdropComponent={
+            store.shell.isModalActive
+              ? createCustomBackdrop(onClose)
+              : undefined
+          }
+          onChange={onBottomSheetChange}>
+          {element}
+        </BottomSheet>
+      </View>
+    )
   )
+})
+
+const styles = StyleSheet.create({
+  container: {
+    zIndex: 1,
+    backgroundColor: 'transparent',
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  },
 })

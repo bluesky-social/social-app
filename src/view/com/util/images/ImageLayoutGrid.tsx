@@ -21,6 +21,7 @@ export function ImageLayoutGrid({
   type,
   uris,
   onPress,
+  onLongPress,
   style,
 }: {
   type: ImageLayoutGridType
@@ -44,6 +45,7 @@ export function ImageLayoutGrid({
           type={type}
           uris={uris}
           onPress={onPress}
+          onLongPress={onLongPress}
           containerInfo={containerInfo}
         />
       ) : undefined}
@@ -55,6 +57,7 @@ function ImageLayoutGridInner({
   type,
   uris,
   onPress,
+  onLongPress,
   containerInfo,
 }: {
   type: ImageLayoutGridType
@@ -84,11 +87,15 @@ function ImageLayoutGridInner({
   if (type === 'two') {
     return (
       <View style={styles.flexRow}>
-        <TouchableWithoutFeedback onPress={() => onPress?.(0)}>
+        <TouchableWithoutFeedback
+          onPress={() => onPress?.(0)}
+          onLongPress={() => onLongPress(0)}>
           <Image source={{uri: uris[0]}} style={size1} />
         </TouchableWithoutFeedback>
         <View style={styles.wSpace} />
-        <TouchableWithoutFeedback onPress={() => onPress?.(1)}>
+        <TouchableWithoutFeedback
+          onPress={() => onPress?.(1)}
+          onLongPress={() => onLongPress(1)}>
           <Image source={{uri: uris[1]}} style={size1} />
         </TouchableWithoutFeedback>
       </View>
@@ -97,16 +104,22 @@ function ImageLayoutGridInner({
   if (type === 'three') {
     return (
       <View style={styles.flexRow}>
-        <TouchableWithoutFeedback onPress={() => onPress?.(0)}>
+        <TouchableWithoutFeedback
+          onPress={() => onPress?.(0)}
+          onLongPress={() => onLongPress(0)}>
           <Image source={{uri: uris[0]}} style={size2} />
         </TouchableWithoutFeedback>
         <View style={styles.wSpace} />
         <View>
-          <TouchableWithoutFeedback onPress={() => onPress?.(1)}>
+          <TouchableWithoutFeedback
+            onPress={() => onPress?.(1)}
+            onLongPress={() => onLongPress(1)}>
             <Image source={{uri: uris[1]}} style={size1} />
           </TouchableWithoutFeedback>
           <View style={{height: 5}} />
-          <TouchableWithoutFeedback onPress={() => onPress?.(2)}>
+          <TouchableWithoutFeedback
+            onPress={() => onPress?.(2)}
+            onLongPress={() => onLongPress(2)}>
             <Image source={{uri: uris[2]}} style={size1} />
           </TouchableWithoutFeedback>
         </View>
@@ -117,21 +130,29 @@ function ImageLayoutGridInner({
     return (
       <View style={styles.flexRow}>
         <View>
-          <TouchableWithoutFeedback onPress={() => onPress?.(0)}>
+          <TouchableWithoutFeedback
+            onPress={() => onPress?.(0)}
+            onLongPress={() => onLongPress(0)}>
             <Image source={{uri: uris[0]}} style={size1} />
           </TouchableWithoutFeedback>
           <View style={styles.hSpace} />
-          <TouchableWithoutFeedback onPress={() => onPress?.(1)}>
+          <TouchableWithoutFeedback
+            onPress={() => onPress?.(1)}
+            onLongPress={() => onLongPress(1)}>
             <Image source={{uri: uris[1]}} style={size1} />
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.wSpace} />
         <View>
-          <TouchableWithoutFeedback onPress={() => onPress?.(2)}>
+          <TouchableWithoutFeedback
+            onPress={() => onPress?.(2)}
+            onLongPress={() => onLongPress(2)}>
             <Image source={{uri: uris[2]}} style={size1} />
           </TouchableWithoutFeedback>
           <View style={styles.hSpace} />
-          <TouchableWithoutFeedback onPress={() => onPress?.(3)}>
+          <TouchableWithoutFeedback
+            onPress={() => onPress?.(3)}
+            onLongPress={() => onLongPress(3)}>
             <Image source={{uri: uris[3]}} style={size1} />
           </TouchableWithoutFeedback>
         </View>

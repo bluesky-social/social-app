@@ -10,6 +10,9 @@ import {ImagesLightbox} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {gradients} from '../../lib/styles'
+import {downloadImageToGallery} from '../../../lib/images'
+import {ConfirmModal} from '../../../state/models/shell-ui'
+import {saveImageModal} from './images/saveImageModal'
 
 type Embed =
   | AppBskyEmbedImages.Presented
@@ -31,6 +34,10 @@ export function PostEmbeds({
       const openLightbox = (index: number) => {
         store.shell.openLightbox(new ImagesLightbox(uris, index))
       }
+      const onLongPress = (index: number) => {
+        store.shell.openModal(saveImageModal({uri: uris[index]}))
+      }
+
       if (embed.images.length === 4) {
         return (
           <View style={[styles.imagesContainer, style]}>
@@ -38,6 +45,7 @@ export function PostEmbeds({
               type="four"
               uris={embed.images.map(img => img.thumb)}
               onPress={openLightbox}
+              onLongPress={onLongPress}
             />
           </View>
         )
@@ -48,6 +56,7 @@ export function PostEmbeds({
               type="three"
               uris={embed.images.map(img => img.thumb)}
               onPress={openLightbox}
+              onLongPress={onLongPress}
             />
           </View>
         )
@@ -58,6 +67,7 @@ export function PostEmbeds({
               type="two"
               uris={embed.images.map(img => img.thumb)}
               onPress={openLightbox}
+              onLongPress={onLongPress}
             />
           </View>
         )
@@ -67,6 +77,7 @@ export function PostEmbeds({
             <AutoSizedImage
               uri={embed.images[0].thumb}
               onPress={() => openLightbox(0)}
+              onLongPress={() => onLongPress(0)}
               containerStyle={{borderRadius: 8}}
             />
           </View>

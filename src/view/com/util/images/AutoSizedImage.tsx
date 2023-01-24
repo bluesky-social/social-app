@@ -23,6 +23,7 @@ interface Dim {
 export function AutoSizedImage({
   uri,
   onPress,
+  onLongPress,
   style,
   containerStyle,
 }: {
@@ -80,7 +81,7 @@ export function AutoSizedImage({
 
   return (
     <View style={style}>
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableWithoutFeedback onPress={onPress} onLongPress={onLongPress}>
         {error ? (
           <View style={[styles.errorContainer, errPal.view, containerStyle]}>
             <Text style={errPal.text}>{error}</Text>

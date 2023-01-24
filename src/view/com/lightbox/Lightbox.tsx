@@ -1,57 +1,49 @@
 import React from 'react'
 import {Alert, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import ImageView from 'react-native-image-viewing'
+import ImageView from './ImageViewing'
 import {useStores} from '../../../state'
-
 import * as models from '../../../state/models/shell-ui'
-import {downloadImageToGallery} from '../../../lib/images'
+import {saveImageModal} from '../util/images/saveImageModal'
 
 export const Lightbox = observer(function Lightbox() {
   const store = useStores()
+  if (!store.shell.isLightboxActive) {
+    return null
+  }
+
   const onClose = () => {
     store.shell.closeLightbox()
   }
   const onLongPress = ({uri}: {uri: string}) => {
-    Alert.alert('Save Image', 'Save this image to your device?', [
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
-      {
-        text: 'Save',
-        onPress: () => {
-          downloadImageToGallery(uri)
-        },
-      },
-    ])
-  }
-
-  if (!store.shell.isLightboxActive) {
-    return <View />
+    store.shell.openModal(saveImageModal({uri}))
   }
 
   if (store.shell.activeLightbox?.name === 'profile-image') {
     const opts = store.shell.activeLightbox as models.ProfileImageLightbox
     return (
-      <ImageView
-        images={[{uri: opts.profileView.avatar}]}
-        imageIndex={0}
-        visible
-        onRequestClose={onClose}
-        presentationStyle="pageSheet"
-      />
+      <>
+        <ImageView
+          images={[{uri: opts.profileView.avatar}]}
+          imageIndex={0}
+          visible
+          onRequestClose={onClose}
+          presentationStyle="formSheet"
+        />
+      </>
     )
   } else if (store.shell.activeLightbox?.name === 'images') {
     const opts = store.shell.activeLightbox as models.ImagesLightbox
     return (
-      <ImageView
-        images={opts.uris.map(uri => ({uri}))}
-        imageIndex={opts.index}
-        visible
-        onRequestClose={onClose}
-        onLongPress={onLongPress}
-      />
+      <>
+        <ImageView
+          images={opts.uris.map(uri => ({uri}))}
+          imageIndex={opts.index}
+          visible
+          onRequestClose={onClose}
+          onLongPress={onLongPress}
+        />
+      </>
     )
   } else {
     return <View />
