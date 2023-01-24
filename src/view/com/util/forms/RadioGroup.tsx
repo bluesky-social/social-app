@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {View} from 'react-native'
 import {RadioButton} from './RadioButton'
 import {ButtonType} from './Button'
+import {s} from '../../../lib/styles'
 
 export interface RadioGroupItem {
   label: string
@@ -29,7 +30,7 @@ export function RadioGroup({
       {items.map((item, i) => (
         <RadioButton
           key={item.key}
-          style={i !== 0 ? {marginTop: 2} : undefined}
+          style={i !== 0 ? s.mt2 : undefined}
           type={type}
           label={item.label}
           isSelected={item.key === selection}

@@ -41,7 +41,6 @@ function* dateGen() {
     yield new Date(start).toISOString()
     start += 1e3
   }
-  return ''
 }
 
 export async function createServer(): Promise<TestPDS> {

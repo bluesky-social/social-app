@@ -39,7 +39,7 @@ export const SuggestedFollows = observer(
     // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
     const view = React.useMemo<SuggestedActorsViewModel>(
       () => new SuggestedActorsViewModel(store),
-      [],
+      [store],
     )
 
     useEffect(() => {
@@ -54,7 +54,7 @@ export const SuggestedFollows = observer(
       if (!view.isLoading && !view.hasError && !view.hasContent) {
         onNoSuggestions?.()
       }
-    }, [view, view.isLoading, view.hasError, view.hasContent])
+    }, [view, view.isLoading, view.hasError, view.hasContent, onNoSuggestions])
 
     const onPressTryAgain = () =>
       view
@@ -128,7 +128,7 @@ export const SuggestedFollows = observer(
               keyExtractor={item => item._reactKey}
               renderItem={renderItem}
               style={s.flex1}
-              contentContainerStyle={{paddingBottom: 200}}
+              contentContainerStyle={s.contentContainer}
             />
           </View>
         )}

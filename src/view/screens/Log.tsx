@@ -21,7 +21,7 @@ export const Log = observer(function Log({navIdx, visible}: ScreenParams) {
     }
     store.shell.setMinimalShellMode(false)
     store.nav.setTitle(navIdx, 'Log')
-  }, [visible, store])
+  }, [visible, store, navIdx])
 
   const toggler = (id: string) => () => {
     if (expanded.includes(id)) {
@@ -52,7 +52,7 @@ export const Log = observer(function Log({navIdx, visible}: ScreenParams) {
                   <Text type="sm" style={[styles.summary, pal.text]}>
                     {entry.summary}
                   </Text>
-                  {!!entry.details ? (
+                  {entry.details ? (
                     <FontAwesomeIcon
                       icon={
                         expanded.includes(entry.id) ? 'angle-up' : 'angle-down'

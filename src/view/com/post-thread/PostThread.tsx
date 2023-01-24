@@ -7,6 +7,7 @@ import {
 } from '../../../state/models/post-thread-view'
 import {PostThreadItem} from './PostThreadItem'
 import {ErrorMessage} from '../util/error/ErrorMessage'
+import {s} from '../../lib/styles'
 
 export const PostThread = observer(function PostThread({
   uri,
@@ -60,11 +61,7 @@ export const PostThread = observer(function PostThread({
   if (view.hasError) {
     return (
       <View>
-        <ErrorMessage
-          message={view.error}
-          style={{margin: 6}}
-          onPressTryAgain={onRefresh}
-        />
+        <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
       </View>
     )
   }
@@ -84,8 +81,8 @@ export const PostThread = observer(function PostThread({
       onRefresh={onRefresh}
       onLayout={onLayout}
       onScrollToIndexFailed={onScrollToIndexFailed}
-      style={{flex: 1}}
-      contentContainerStyle={{paddingBottom: 200}}
+      style={s.h100pct}
+      contentContainerStyle={s.contentContainer}
     />
   )
 })

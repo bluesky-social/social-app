@@ -33,7 +33,7 @@ export const Settings = observer(function Settings({
     }
     store.shell.setMinimalShellMode(false)
     store.nav.setTitle(navIdx, 'Settings')
-  }, [visible, store])
+  }, [visible, store, navIdx])
 
   const onPressSwitchAccount = async (acct: AccountData) => {
     setIsSwitching(true)
@@ -130,8 +130,8 @@ export const Settings = observer(function Settings({
           style={[
             pal.view,
             styles.profile,
+            styles.alignCenter,
             s.mb2,
-            {alignItems: 'center'},
             isSwitching && styles.dimmed,
           ]}
           onPress={isSwitching ? undefined : onPressAddAccount}>
@@ -142,7 +142,7 @@ export const Settings = observer(function Settings({
             </Text>
           </View>
         </TouchableOpacity>
-        <View style={{height: 50}} />
+        <View style={styles.spacer} />
         <Text type="sm-medium" style={[s.mb5]}>
           Developer tools
         </Text>
@@ -167,6 +167,12 @@ export const Settings = observer(function Settings({
 const styles = StyleSheet.create({
   dimmed: {
     opacity: 0.5,
+  },
+  spacer: {
+    height: 50,
+  },
+  alignCenter: {
+    alignItems: 'center',
   },
   title: {
     fontSize: 32,

@@ -18,9 +18,9 @@ import {s, colors} from '../lib/styles'
 import {usePalette} from '../lib/hooks/usePalette'
 
 enum ScreenState {
-  SigninOrCreateAccount,
-  Signin,
-  CreateAccount,
+  S_SigninOrCreateAccount,
+  S_Signin,
+  S_CreateAccount,
 }
 
 const SigninOrCreateAccount = ({
@@ -78,58 +78,56 @@ const SigninOrCreateAccount = ({
   )
 }
 
-export const Login = observer(
-  (/*{navigation}: RootTabsScreenProps<'Login'>*/) => {
-    const pal = usePalette('default')
-    const [screenState, setScreenState] = useState<ScreenState>(
-      ScreenState.SigninOrCreateAccount,
-    )
+export const Login = observer(() => {
+  const pal = usePalette('default')
+  const [screenState, setScreenState] = useState<ScreenState>(
+    ScreenState.S_SigninOrCreateAccount,
+  )
 
-    if (screenState === ScreenState.SigninOrCreateAccount) {
-      return (
-        <LinearGradient
-          colors={['#007CFF', '#00BCFF']}
-          start={{x: 0, y: 0.8}}
-          end={{x: 0, y: 1}}
-          style={styles.container}>
-          <SafeAreaView testID="noSessionView" style={styles.container}>
-            <ErrorBoundary>
-              <SigninOrCreateAccount
-                onPressSignin={() => setScreenState(ScreenState.Signin)}
-                onPressCreateAccount={() =>
-                  setScreenState(ScreenState.CreateAccount)
-                }
-              />
-            </ErrorBoundary>
-          </SafeAreaView>
-        </LinearGradient>
-      )
-    }
-
+  if (screenState === ScreenState.S_SigninOrCreateAccount) {
     return (
-      <View style={[styles.container, pal.view]}>
+      <LinearGradient
+        colors={['#007CFF', '#00BCFF']}
+        start={{x: 0, y: 0.8}}
+        end={{x: 0, y: 1}}
+        style={styles.container}>
         <SafeAreaView testID="noSessionView" style={styles.container}>
           <ErrorBoundary>
-            {screenState === ScreenState.Signin ? (
-              <Signin
-                onPressBack={() =>
-                  setScreenState(ScreenState.SigninOrCreateAccount)
-                }
-              />
-            ) : undefined}
-            {screenState === ScreenState.CreateAccount ? (
-              <CreateAccount
-                onPressBack={() =>
-                  setScreenState(ScreenState.SigninOrCreateAccount)
-                }
-              />
-            ) : undefined}
+            <SigninOrCreateAccount
+              onPressSignin={() => setScreenState(ScreenState.S_Signin)}
+              onPressCreateAccount={() =>
+                setScreenState(ScreenState.S_CreateAccount)
+              }
+            />
           </ErrorBoundary>
         </SafeAreaView>
-      </View>
+      </LinearGradient>
     )
-  },
-)
+  }
+
+  return (
+    <View style={[styles.container, pal.view]}>
+      <SafeAreaView testID="noSessionView" style={styles.container}>
+        <ErrorBoundary>
+          {screenState === ScreenState.S_Signin ? (
+            <Signin
+              onPressBack={() =>
+                setScreenState(ScreenState.S_SigninOrCreateAccount)
+              }
+            />
+          ) : undefined}
+          {screenState === ScreenState.S_CreateAccount ? (
+            <CreateAccount
+              onPressBack={() =>
+                setScreenState(ScreenState.S_SigninOrCreateAccount)
+              }
+            />
+          ) : undefined}
+        </ErrorBoundary>
+      </SafeAreaView>
+    </View>
+  )
+})
 
 const styles = StyleSheet.create({
   container: {

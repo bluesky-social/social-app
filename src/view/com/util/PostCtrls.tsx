@@ -128,10 +128,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           hitSlop={HITSLOP}
           onPress={opts.onPressReply}>
           <CommentBottomArrow
-            style={[
-              defaultCtrlColor,
-              opts.big ? {marginTop: 2} : {marginTop: 1},
-            ]}
+            style={[defaultCtrlColor, opts.big ? s.mt2 : styles.mt1]}
             strokeWidth={3}
             size={opts.big ? 20 : 15}
           />
@@ -181,10 +178,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
               />
             ) : (
               <HeartIcon
-                style={[
-                  defaultCtrlColor,
-                  opts.big ? {marginTop: 1} : undefined,
-                ]}
+                style={[defaultCtrlColor, opts.big ? styles.mt1 : undefined]}
                 strokeWidth={3}
                 size={opts.big ? 20 : 16}
               />
@@ -243,5 +237,8 @@ const styles = StyleSheet.create({
   },
   ctrlIconUpvoted: {
     color: colors.red3,
+  },
+  mt1: {
+    marginTop: 1,
   },
 })

@@ -5,6 +5,7 @@ import {
   View,
   FlatList,
   StyleProp,
+  StyleSheet,
   ViewStyle,
 } from 'react-native'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -14,6 +15,7 @@ import {FeedModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
 import {PromptButtons} from './PromptButtons'
 import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
+import {s} from '../../lib/styles'
 
 const COMPOSE_PROMPT_ITEM = {_reactKey: '__prompt__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -47,7 +49,7 @@ export const Feed = observer(function Feed({
         <EmptyState
           icon="bars"
           message="This feed is empty!"
-          style={{paddingVertical: 40}}
+          style={styles.emptyState}
         />
       )
     } else {
@@ -76,7 +78,7 @@ export const Feed = observer(function Feed({
   }
   const FeedFooter = () =>
     feed.isLoading ? (
-      <View style={{paddingTop: 20}}>
+      <View style={styles.feedFooter}>
         <ActivityIndicator />
       </View>
     ) : (
@@ -87,11 +89,7 @@ export const Feed = observer(function Feed({
       {!data && <PromptButtons onPressCompose={onPressCompose} />}
       {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
       {feed.hasError && (
-        <ErrorMessage
-          message={feed.error}
-          style={{margin: 6}}
-          onPressTryAgain={onPressTryAgain}
-        />
+        <ErrorMessage message={feed.error} onPressTryAgain={onPressTryAgain} />
       )}
       {feed.hasLoaded && data && (
         <FlatList
@@ -101,7 +99,7 @@ export const Feed = observer(function Feed({
           renderItem={renderItem}
           ListFooterComponent={FeedFooter}
           refreshing={feed.isRefreshing}
-          contentContainerStyle={{paddingBottom: 100}}
+          contentContainerStyle={s.contentContainer}
           onScroll={onScroll}
           onRefresh={onRefresh}
           onEndReached={onEndReached}
@@ -109,4 +107,9 @@ export const Feed = observer(function Feed({
       )}
     </View>
   )
+})
+
+const styles = StyleSheet.create({
+  feedFooter: {paddingTop: 20},
+  emptyState: {paddingVertical: 40},
 })

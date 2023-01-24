@@ -11,8 +11,8 @@ import {UserAvatar} from './UserAvatar'
 import {Text} from './text/Text'
 import {MagnifyingGlassIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
-import {useTheme} from '../../lib/ThemeContext'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {colors} from '../../lib/styles'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
@@ -26,7 +26,6 @@ export const ViewHeader = observer(function ViewHeader({
   subtitle?: string
   canGoBack?: boolean
 }) {
-  const theme = useTheme()
   const pal = usePalette('default')
   const store = useStores()
   const onPressBack = () => {
@@ -52,12 +51,12 @@ export const ViewHeader = observer(function ViewHeader({
         testID="viewHeaderBackOrMenuBtn"
         onPress={canGoBack ? onPressBack : onPressMenu}
         hitSlop={BACK_HITSLOP}
-        style={canGoBack ? styles.backIcon : styles.backIconWide}>
+        style={canGoBack ? styles.backBtn : styles.backBtnWide}>
         {canGoBack ? (
           <FontAwesomeIcon
             size={18}
             icon="angle-left"
-            style={[{marginTop: 6}, pal.text]}
+            style={[styles.backIcon, pal.text]}
           />
         ) : (
           <UserAvatar
@@ -96,13 +95,10 @@ export const ViewHeader = observer(function ViewHeader({
               <FontAwesomeIcon icon="signal" style={pal.text} size={16} />
               <FontAwesomeIcon
                 icon="x"
-                style={{
-                  backgroundColor: pal.colors.background,
-                  color: theme.palette.error.background,
-                  position: 'absolute',
-                  right: 7,
-                  bottom: 7,
-                }}
+                style={[
+                  styles.littleXIcon,
+                  {backgroundColor: pal.colors.background},
+                ]}
                 size={8}
               />
             </>
@@ -136,14 +132,17 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
   },
 
-  backIcon: {
+  backBtn: {
     width: 30,
     height: 30,
   },
-  backIconWide: {
+  backBtnWide: {
     width: 40,
     height: 30,
     marginLeft: 6,
+  },
+  backIcon: {
+    marginTop: 6,
   },
   btn: {
     flexDirection: 'row',
@@ -153,5 +152,11 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 20,
     marginLeft: 4,
+  },
+  littleXIcon: {
+    color: colors.red3,
+    position: 'absolute',
+    right: 7,
+    bottom: 7,
   },
 })

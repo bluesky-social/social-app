@@ -83,14 +83,14 @@ export const Home = observer(function Home({
   }
 
   return (
-    <View style={s.flex1}>
+    <View style={s.h100pct}>
       <ViewHeader title="Bluesky" subtitle="Private Beta" canGoBack={false} />
       <Feed
         testID="homeFeed"
         key="default"
         feed={store.me.mainFeed}
         scrollElRef={scrollElRef}
-        style={{flex: 1}}
+        style={s.h100pct}
         onPressCompose={onPressCompose}
         onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
@@ -99,9 +99,9 @@ export const Home = observer(function Home({
         <TouchableOpacity
           style={[
             styles.loadLatest,
-            store.shell.minimalShellMode
-              ? {bottom: 35}
-              : {bottom: 60 + clamp(safeAreaInsets.bottom, 15, 30)},
+            !store.shell.minimalShellMode && {
+              bottom: 60 + clamp(safeAreaInsets.bottom, 15, 30),
+            },
           ]}
           onPress={onPressLoadLatest}
           hitSlop={HITSLOP}>
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
   loadLatest: {
     position: 'absolute',
     left: 20,
+    bottom: 35,
     shadowColor: '#000',
     shadowOpacity: 0.3,
     shadowOffset: {width: 0, height: 1},

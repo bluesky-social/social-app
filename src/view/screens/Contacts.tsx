@@ -17,7 +17,7 @@ export const Contacts = ({navIdx, visible}: ScreenParams) => {
     if (visible) {
       store.nav.setTitle(navIdx, 'Contacts')
     }
-  }, [store, visible])
+  }, [store, visible, navIdx])
 
   const [searchText, onChangeSearchText] = useState('')
   const inputRef = useRef<TextInput | null>(null)

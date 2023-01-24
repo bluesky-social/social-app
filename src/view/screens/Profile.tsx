@@ -142,7 +142,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
             <EmptyState
               icon={['far', 'message']}
               message="No posts yet!"
-              style={{paddingVertical: 40}}
+              style={styles.emptyState}
             />
           )
         }
@@ -190,7 +190,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
 
 function LoadingMoreFooter() {
   return (
-    <View style={{paddingVertical: 20}}>
+    <View style={styles.loadingMoreFooter}>
       <ActivityIndicator />
     </View>
   )
@@ -204,6 +204,12 @@ const styles = StyleSheet.create({
   loading: {
     paddingVertical: 10,
     paddingHorizontal: 14,
+  },
+  emptyState: {
+    paddingVertical: 40,
+  },
+  loadingMoreFooter: {
+    paddingVertical: 20,
   },
   endItem: {
     paddingTop: 20,

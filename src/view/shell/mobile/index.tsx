@@ -32,7 +32,7 @@ import {Text} from '../../com/util/text/Text'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
 import {TabsSelector} from './TabsSelector'
 import {Composer} from './Composer'
-import {colors} from '../../lib/styles'
+import {s, colors} from '../../lib/styles'
 import {clamp} from '../../../lib/numbers'
 import {
   GridIcon,
@@ -385,7 +385,7 @@ export const MobileShell: React.FC = observer(() => {
                     />
                     <Animated.View
                       style={[
-                        {height: '100%'},
+                        s.h100pct,
                         screenBg,
                         current
                           ? [

@@ -174,7 +174,7 @@ export class NavigationTabModel {
     }
   }
 
-  hydrate(v: unknown) {
+  hydrate(_v: unknown) {
     // TODO fixme
     // if (isObj(v)) {
     //   if (hasProp(v, 'history') && Array.isArray(v.history)) {
@@ -339,7 +339,7 @@ export class NavigationModel {
     }
   }
 
-  hydrate(v: unknown) {
+  hydrate(_v: unknown) {
     // TODO fixme
     this.clear()
     /*if (isObj(v)) {

@@ -48,11 +48,7 @@ export const PostVotedBy = observer(function PostVotedBy({
   if (view.hasError) {
     return (
       <View>
-        <ErrorMessage
-          message={view.error}
-          style={{margin: 6}}
-          onPressTryAgain={onRefresh}
-        />
+        <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
       </View>
     )
   }

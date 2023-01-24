@@ -5,6 +5,7 @@ import {HorzSwipe} from './gestures/HorzSwipe'
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
 import {clamp} from '../../../lib/numbers'
+import {s} from '../../lib/styles'
 
 const HEADER_ITEM = {_reactKey: '__header__'}
 const SELECTOR_ITEM = {_reactKey: '__selector__'}
@@ -54,7 +55,7 @@ export function ViewSelector({
     setSelectedIndex(clamp(index, 0, sections.length))
   useEffect(() => {
     onSelectView?.(selectedIndex)
-  }, [selectedIndex])
+  }, [selectedIndex, onSelectView])
 
   // rendering
   // =
@@ -98,7 +99,7 @@ export function ViewSelector({
         onScroll={onScroll}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
-        contentContainerStyle={{paddingBottom: 200}}
+        contentContainerStyle={s.contentContainer}
       />
     </HorzSwipe>
   )

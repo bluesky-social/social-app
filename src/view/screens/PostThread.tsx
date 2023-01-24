@@ -6,6 +6,7 @@ import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {PostThreadViewModel} from '../../state/models/post-thread-view'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
+import {s} from '../lib/styles'
 
 export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
@@ -14,18 +15,18 @@ export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
   const view = useMemo<PostThreadViewModel>(
     () => new PostThreadViewModel(store, {uri}),
-    [uri],
+    [store, uri],
   )
 
-  const setTitle = () => {
-    const author = view.thread?.author
-    const niceName = author?.handle || name
-    setViewSubtitle(`by ${niceName}`)
-    store.nav.setTitle(navIdx, `Post by ${niceName}`)
-  }
   useEffect(() => {
     let aborted = false
     const threadCleanup = view.registerListeners()
+    const setTitle = () => {
+      const author = view.thread?.post.author
+      const niceName = author?.handle || name
+      setViewSubtitle(`by ${niceName}`)
+      store.nav.setTitle(navIdx, `Post by ${niceName}`)
+    }
     if (!visible) {
       return threadCleanup
     }
@@ -47,12 +48,12 @@ export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
       aborted = true
       threadCleanup()
     }
-  }, [visible, store.nav, store.log, name])
+  }, [visible, store.nav, store.log, store.shell, name, navIdx, view])
 
   return (
-    <View style={{flex: 1}}>
+    <View style={s.h100pct}>
       <ViewHeader title="Post" subtitle={viewSubtitle} />
-      <View style={{flex: 1}}>
+      <View style={s.h100pct}>
         <PostThreadComponent uri={uri} view={view} />
       </View>
     </View>

@@ -57,7 +57,7 @@ export const Link = observer(function Link({
   )
 })
 
-export const TextLink = observer(function Link({
+export const TextLink = observer(function TextLink({
   type = 'md',
   style,
   href,
