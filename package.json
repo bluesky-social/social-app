@@ -8,7 +8,7 @@
     "web": "react-scripts start",
     "start": "react-native start",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
-    "test": "jest",
+    "test": "jest --forceExit",
     "test-watch": "jest --watchAll",
     "test-ci": "jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "jest --coverage",
@@ -64,9 +64,11 @@
     "react-native-version-number": "^0.3.6",
     "react-native-web": "^0.17.7",
     "rn-fetch-blob": "^0.12.0",
-    "tlds": "^1.234.0"
+    "tlds": "^1.234.0",
+    "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@atproto/pds": "^0.0.1",
     "@babel/core": "^7.12.9",
     "@babel/preset-env": "^7.14.0",
     "@babel/runtime": "^7.12.5",

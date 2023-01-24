@@ -6,24 +6,44 @@ import {
   ComAtprotoServerGetAccountsConfig as GetAccountsConfig,
 } from '@atproto/api'
 import {isObj, hasProp} from '../lib/type-guards'
+import {z} from 'zod'
 import {RootStoreModel} from './root-store'
 import {isNetworkError} from '../../lib/errors'
 
 export type ServiceDescription = GetAccountsConfig.OutputSchema
 
-interface SessionData {
-  service: string
-  refreshJwt: string
-  accessJwt: string
-  handle: string
-  did: string
-}
+export const sessionData = z.object({
+  service: z.string(),
+  refreshJwt: z.string(),
+  accessJwt: z.string(),
+  handle: z.string(),
+  did: z.string(),
+})
+export type SessionData = z.infer<typeof sessionData>
+
+export const accountData = z.object({
+  service: z.string(),
+  refreshJwt: z.string().optional(),
+  accessJwt: z.string().optional(),
+  handle: z.string(),
+  did: z.string(),
+  displayName: z.string().optional(),
+  aviUrl: z.string().optional(),
+})
+export type AccountData = z.infer<typeof accountData>
 
 export class SessionModel {
+  /**
+   * Current session data
+   */
   data: SessionData | null = null
+  /**
+   * A listing of the currently & previous sessions, used for account switching
+   */
+  accounts: AccountData[] = []
   online = false
   attemptingConnect = false
-  private _connectPromise: Promise<void> | undefined
+  private _connectPromise: Promise<boolean> | undefined
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -37,51 +57,32 @@ export class SessionModel {
     return this.data !== null
   }
 
+  get hasAccounts() {
+    return this.accounts.length >= 1
+  }
+
+  get switchableAccounts() {
+    return this.accounts.filter(acct => acct.did !== this.data?.did)
+  }
+
   serialize(): unknown {
     return {
       data: this.data,
+      accounts: this.accounts,
     }
   }
 
   hydrate(v: unknown) {
+    this.accounts = []
     if (isObj(v)) {
-      if (hasProp(v, 'data') && isObj(v.data)) {
-        const data: SessionData = {
-          service: '',
-          refreshJwt: '',
-          accessJwt: '',
-          handle: '',
-          did: '',
-        }
-        if (hasProp(v.data, 'service') && typeof v.data.service === 'string') {
-          data.service = v.data.service
-        }
-        if (
-          hasProp(v.data, 'refreshJwt') &&
-          typeof v.data.refreshJwt === 'string'
-        ) {
-          data.refreshJwt = v.data.refreshJwt
-        }
-        if (
-          hasProp(v.data, 'accessJwt') &&
-          typeof v.data.accessJwt === 'string'
-        ) {
-          data.accessJwt = v.data.accessJwt
-        }
-        if (hasProp(v.data, 'handle') && typeof v.data.handle === 'string') {
-          data.handle = v.data.handle
-        }
-        if (hasProp(v.data, 'did') && typeof v.data.did === 'string') {
-          data.did = v.data.did
-        }
-        if (
-          data.service &&
-          data.refreshJwt &&
-          data.accessJwt &&
-          data.handle &&
-          data.did
-        ) {
-          this.data = data
+      if (hasProp(v, 'data') && sessionData.safeParse(v.data)) {
+        this.data = v.data as SessionData
+      }
+      if (hasProp(v, 'accounts') && Array.isArray(v.accounts)) {
+        for (const account of v.accounts) {
+          if (accountData.safeParse(account)) {
+            this.accounts.push(account as AccountData)
+          }
         }
       }
     }
@@ -113,6 +114,9 @@ export class SessionModel {
     }
   }
 
+  /**
+   * Sets up the XRPC API, must be called before connecting to a service
+   */
   private configureApi(): boolean {
     if (!this.data) {
       return false
@@ -137,19 +141,68 @@ export class SessionModel {
     return true
   }
 
-  async connect(): Promise<void> {
+  /**
+   * Upserts the current session into the accounts
+   */
+  private addSessionToAccounts() {
+    if (!this.data) {
+      return
+    }
+    const existingAccount = this.accounts.find(
+      acc => acc.service === this.data?.service && acc.did === this.data.did,
+    )
+    const newAccount = {
+      service: this.data.service,
+      refreshJwt: this.data.refreshJwt,
+      accessJwt: this.data.accessJwt,
+      handle: this.data.handle,
+      did: this.data.did,
+      displayName: this.rootStore.me.displayName,
+      aviUrl: this.rootStore.me.avatar,
+    }
+    if (!existingAccount) {
+      this.accounts.push(newAccount)
+    } else {
+      this.accounts = this.accounts
+        .filter(
+          acc =>
+            !(acc.service === this.data?.service && acc.did === this.data.did),
+        )
+        .concat([newAccount])
+    }
+  }
+
+  /**
+   * Clears any session tokens from the accounts; used on logout.
+   */
+  private clearSessionTokensFromAccounts() {
+    this.accounts = this.accounts.map(acct => ({
+      service: acct.service,
+      handle: acct.handle,
+      did: acct.did,
+      displayName: acct.displayName,
+      aviUrl: acct.aviUrl,
+    }))
+  }
+
+  /**
+   * Fetches the current session from the service, if possible.
+   * Requires an existing session (.data) to be populated with access tokens.
+   */
+  async connect(): Promise<boolean> {
     if (this._connectPromise) {
       return this._connectPromise
     }
     this._connectPromise = this._connect()
-    await this._connectPromise
+    const res = await this._connectPromise
     this._connectPromise = undefined
+    return res
   }
 
-  private async _connect(): Promise<void> {
+  private async _connect(): Promise<boolean> {
     this.attemptingConnect = true
     if (!this.configureApi()) {
-      return
+      return false
     }
 
     try {
@@ -159,29 +212,44 @@ export class SessionModel {
         if (this.rootStore.me.did !== sess.data.did) {
           this.rootStore.me.clear()
         }
-        this.rootStore.me.load().catch(e => {
-          this.rootStore.log.error('Failed to fetch local user information', e)
-        })
-        return // success
+        this.rootStore.me
+          .load()
+          .catch(e => {
+            this.rootStore.log.error(
+              'Failed to fetch local user information',
+              e,
+            )
+          })
+          .then(() => {
+            this.addSessionToAccounts()
+          })
+        return true // success
       }
     } catch (e: any) {
       if (isNetworkError(e)) {
         this.setOnline(false, false) // connection issue
-        return
+        return false
       } else {
         this.clear() // invalid session cached
       }
     }
 
     this.setOnline(false, false)
+    return false
   }
 
+  /**
+   * Helper to fetch the accounts config settings from an account.
+   */
   async describeService(service: string): Promise<ServiceDescription> {
     const api = AtpApi.service(service) as SessionServiceClient
     const res = await api.com.atproto.server.getAccountsConfig({})
     return res.data
   }
 
+  /**
+   * Create a new session.
+   */
   async login({
     service,
     handle,
@@ -203,10 +271,33 @@ export class SessionModel {
       })
       this.configureApi()
       this.setOnline(true, false)
-      this.rootStore.me.load().catch(e => {
-        this.rootStore.log.error('Failed to fetch local user information', e)
-      })
+      this.rootStore.me
+        .load()
+        .catch(e => {
+          this.rootStore.log.error('Failed to fetch local user information', e)
+        })
+        .then(() => {
+          this.addSessionToAccounts()
+        })
     }
+  }
+
+  /**
+   * Attempt to resume a session that we still have access tokens for.
+   */
+  async resumeSession(account: AccountData): Promise<boolean> {
+    if (account.accessJwt && account.refreshJwt) {
+      this.setState({
+        service: account.service,
+        accessJwt: account.accessJwt,
+        refreshJwt: account.refreshJwt,
+        handle: account.handle,
+        did: account.did,
+      })
+    } else {
+      return false
+    }
+    return this.connect()
   }
 
   async createAccount({
@@ -239,12 +330,20 @@ export class SessionModel {
       })
       this.rootStore.onboard.start()
       this.configureApi()
-      this.rootStore.me.load().catch(e => {
-        this.rootStore.log.error('Failed to fetch local user information', e)
-      })
+      this.rootStore.me
+        .load()
+        .catch(e => {
+          this.rootStore.log.error('Failed to fetch local user information', e)
+        })
+        .then(() => {
+          this.addSessionToAccounts()
+        })
     }
   }
 
+  /**
+   * Close all sessions across all accounts.
+   */
   async logout() {
     if (this.hasSession) {
       this.rootStore.api.com.atproto.session.delete().catch((e: any) => {
@@ -254,6 +353,7 @@ export class SessionModel {
         )
       })
     }
+    this.clearSessionTokensFromAccounts()
     this.rootStore.clearAll()
   }
 }
