@@ -12,6 +12,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ComAtprotoAccountCreate} from '@atproto/api'
 import * as EmailValidator from 'email-validator'
+import {useAnalytics} from '@segment/analytics-react-native'
 import {LogoTextHero} from './Logo'
 import {Picker} from '../util/Picker'
 import {TextLink} from '../util/Link'
@@ -28,6 +29,7 @@ import {ServerInputModal} from '../../../state/models/shell-ui'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
+  const {track} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -104,6 +106,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
         password,
         inviteCode,
       })
+      track('Create Account')
     } catch (e: any) {
       let errMsg = e.toString()
       if (e instanceof ComAtprotoAccountCreate.InvalidInviteCodeError) {
