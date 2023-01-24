@@ -58,7 +58,6 @@ function ImageViewing({
   onLongPress = () => {},
   onImageIndexChange,
   backgroundColor = DEFAULT_BG_COLOR,
-  presentationStyle,
   swipeToCloseEnabled,
   doubleTapToZoomEnabled,
   delayLongPress = DEFAULT_DELAY_LONG_PRESS,
