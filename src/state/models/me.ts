@@ -1,4 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
+import notifee from '@notifee/react-native'
 import {RootStoreModel} from './root-store'
 import {FeedModel} from './feed-view'
 import {NotificationsViewModel} from './notifications-view'
@@ -104,6 +105,9 @@ export class MeModel {
           this.rootStore.log.error('Failed to setup notifications model', e)
         }),
       ])
+
+      // request notifications permission once the user has logged in
+      notifee.requestPermission()
     } else {
       this.clear()
     }
@@ -111,16 +115,28 @@ export class MeModel {
 
   clearNotificationCount() {
     this.notificationCount = 0
+    notifee.setBadgeCount(0)
   }
 
-  async fetchStateUpdate() {
+  async fetchNotifications() {
     const res = await this.rootStore.api.app.bsky.notification.getCount()
     runInAction(() => {
       const newNotifications = this.notificationCount !== res.data.count
       this.notificationCount = res.data.count
+      notifee.setBadgeCount(this.notificationCount)
       if (newNotifications) {
         // trigger pre-emptive fetch on new notifications
-        this.notifications.refresh()
+        let oldMostRecent = this.notifications.mostRecentNotification
+        this.notifications.refresh().then(() => {
+          // if a new most recent notification is found, trigger a notification card
+          const mostRecent = this.notifications.mostRecentNotification
+          if (mostRecent && oldMostRecent?.uri !== mostRecent?.uri) {
+            const notifeeOpts = mostRecent.toNotifeeOpts()
+            if (notifeeOpts) {
+              notifee.displayNotification(notifeeOpts)
+            }
+          }
+        })
       }
     })
   }

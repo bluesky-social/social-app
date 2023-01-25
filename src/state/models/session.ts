@@ -286,17 +286,33 @@ export class SessionModel {
    * Attempt to resume a session that we still have access tokens for.
    */
   async resumeSession(account: AccountData): Promise<boolean> {
-    if (account.accessJwt && account.refreshJwt) {
-      this.setState({
-        service: account.service,
-        accessJwt: account.accessJwt,
-        refreshJwt: account.refreshJwt,
-        handle: account.handle,
-        did: account.did,
-      })
-    } else {
+    if (!(account.accessJwt && account.refreshJwt && account.service)) {
       return false
     }
+
+    // test that the session is good
+    const api = AtpApi.service(account.service)
+    api.sessionManager.set({
+      refreshJwt: account.refreshJwt,
+      accessJwt: account.accessJwt,
+    })
+    try {
+      const sess = await api.com.atproto.session.get()
+      if (!sess.success || sess.data.did !== account.did) {
+        return false
+      }
+    } catch (_e) {
+      return false
+    }
+
+    // session is good, connect
+    this.setState({
+      service: account.service,
+      accessJwt: account.accessJwt,
+      refreshJwt: account.refreshJwt,
+      handle: account.handle,
+      did: account.did,
+    })
     return this.connect()
   }
 
@@ -345,14 +361,14 @@ export class SessionModel {
    * Close all sessions across all accounts.
    */
   async logout() {
-    if (this.hasSession) {
+    /*if (this.hasSession) {
       this.rootStore.api.com.atproto.session.delete().catch((e: any) => {
         this.rootStore.log.warn(
           '(Minor issue) Failed to delete session on the server',
           e,
         )
       })
-    }
+    }*/
     this.clearSessionTokensFromAccounts()
     this.rootStore.clearAll()
   }
