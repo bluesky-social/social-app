@@ -22,28 +22,23 @@ export const Lightbox = observer(function Lightbox() {
   if (store.shell.activeLightbox?.name === 'profile-image') {
     const opts = store.shell.activeLightbox as models.ProfileImageLightbox
     return (
-      <>
-        <ImageView
-          images={[{uri: opts.profileView.avatar}]}
-          imageIndex={0}
-          visible
-          onRequestClose={onClose}
-          presentationStyle="formSheet"
-        />
-      </>
+      <ImageView
+        images={[{uri: opts.profileView.avatar}]}
+        imageIndex={0}
+        visible
+        onRequestClose={onClose}
+      />
     )
   } else if (store.shell.activeLightbox?.name === 'images') {
     const opts = store.shell.activeLightbox as models.ImagesLightbox
     return (
-      <>
-        <ImageView
-          images={opts.uris.map(uri => ({uri}))}
-          imageIndex={opts.index}
-          visible
-          onRequestClose={onClose}
-          onLongPress={onLongPress}
-        />
-      </>
+      <ImageView
+        images={opts.uris.map(uri => ({uri}))}
+        imageIndex={opts.index}
+        visible
+        onRequestClose={onClose}
+        onLongPress={onLongPress}
+      />
     )
   } else {
     return <View />

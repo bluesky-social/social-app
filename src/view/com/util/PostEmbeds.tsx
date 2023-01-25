@@ -36,6 +36,7 @@ export function PostEmbeds({
         saveImageModal({uri: uris[index]})
       }
 
+      // TODO: Abstract the code below, the repeated code here can lead to bugs
       if (embed.images.length === 4) {
         return (
           <View style={[styles.imagesContainer, style]}>

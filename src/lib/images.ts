@@ -1,6 +1,5 @@
 import RNFetchBlob from 'rn-fetch-blob'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
-import {CameraRoll} from '@react-native-camera-roll/camera-roll'
 
 export interface DownloadAndResizeOpts {
   uri: string
@@ -128,9 +127,4 @@ export function scaleDownDimensions(dim: Dim, max: Dim): Dim {
     return {width: dim.width * wScale, height: dim.height * wScale}
   }
   return {width: dim.width * hScale, height: dim.height * hScale}
-}
-
-export function downloadImageToGallery(uri: string) {
-  const image = CameraRoll.save(uri, 'photo')
-  return image
 }
