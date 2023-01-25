@@ -12,7 +12,6 @@ import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
 import * as ReportAccountModal from './ReportAccount'
-import {StyleSheet} from 'react-native'
 
 const CLOSED_SNAPPOINTS = ['10%']
 
@@ -40,16 +39,12 @@ export const Modal = observer(function Modal() {
 
   let snapPoints: (string | number)[] = CLOSED_SNAPPOINTS
   let element
-  let wrapper
   if (store.shell.activeModal?.name === 'confirm') {
     snapPoints = ConfirmModal.snapPoints
     element = (
       <ConfirmModal.Component
         {...(store.shell.activeModal as models.ConfirmModal)}
       />
-    )
-    wrapper = (children: React.ReactNode) => (
-      <View style={styles.container}>{children}</View>
     )
   } else if (store.shell.activeModal?.name === 'edit-profile') {
     snapPoints = EditProfileModal.snapPoints
@@ -83,9 +78,8 @@ export const Modal = observer(function Modal() {
     element = <View />
   }
 
-  const bottomSheet = (
+  return (
     <BottomSheet
-      containerStyle={styles.container}
       ref={bottomSheetRef}
       snapPoints={snapPoints}
       index={store.shell.isModalActive ? 0 : -1}
@@ -98,16 +92,4 @@ export const Modal = observer(function Modal() {
       {element}
     </BottomSheet>
   )
-
-  return wrapper ? wrapper(bottomSheet) : bottomSheet
-})
-
-const styles = StyleSheet.create({
-  container: {
-    zIndex: 1,
-    backgroundColor: 'transparent',
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-  },
 })

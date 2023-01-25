@@ -33,7 +33,7 @@ export function PostEmbeds({
         store.shell.openLightbox(new ImagesLightbox(uris, index))
       }
       const onLongPress = (index: number) => {
-        store.shell.openModal(saveImageModal({uri: uris[index]}))
+        saveImageModal({uri: uris[index]})
       }
 
       if (embed.images.length === 4) {

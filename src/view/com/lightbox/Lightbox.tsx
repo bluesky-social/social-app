@@ -16,7 +16,7 @@ export const Lightbox = observer(function Lightbox() {
     store.shell.closeLightbox()
   }
   const onLongPress = ({uri}: {uri: string}) => {
-    store.shell.openModal(saveImageModal({uri}))
+    saveImageModal({uri})
   }
 
   if (store.shell.activeLightbox?.name === 'profile-image') {
