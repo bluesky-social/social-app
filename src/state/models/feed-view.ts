@@ -87,6 +87,12 @@ export class FeedItemModel {
     this.reason = v.reason
   }
 
+  get _isRenderingAsThread() {
+    return (
+      this._isThreadParent || this._isThreadChild || this._isThreadChildElided
+    )
+  }
+
   get reasonRepost(): ReasonRepost | undefined {
     if (this.reason?.$type === 'app.bsky.feed.feedViewPost#reasonRepost') {
       return this.reason as ReasonRepost
@@ -627,6 +633,10 @@ function dedupReposts(feed: FeedItemModel[]) {
     const item1 = feed[i]
     for (let j = i + 1; j < feed.length; j++) {
       const item2 = feed[j]
+      if (item2._isRenderingAsThread) {
+        // dont dedup items that are rendering in a thread as this can cause rendering errors
+        continue
+      }
       if (item1.post.uri === item2.post.uri) {
         feed.splice(j, 1)
         j--
