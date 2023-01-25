@@ -197,7 +197,7 @@ export class NotificationsViewModel {
   // data
   notifications: NotificationsViewItemModel[] = []
 
-  // this is used to trigger push notifications
+  // this is used to help trigger push notifications
   mostRecentNotification: NotificationsViewItemModel | undefined
 
   constructor(
@@ -209,6 +209,7 @@ export class NotificationsViewModel {
       {
         rootStore: false,
         params: false,
+        mostRecentNotification: false,
         _loadPromise: false,
         _loadMorePromise: false,
         _updatePromise: false,
@@ -294,6 +295,24 @@ export class NotificationsViewModel {
     } catch (e: any) {
       this.rootStore.log.warn('Failed to update notifications read state', e)
     }
+  }
+
+  async getNewMostRecent(): Promise<NotificationsViewItemModel | undefined> {
+    let old = this.mostRecentNotification
+    const res = await this.rootStore.api.app.bsky.notification.list({limit: 1})
+    if (
+      !res.data.notifications[0] ||
+      old?.uri === res.data.notifications[0].uri
+    ) {
+      return
+    }
+    this.mostRecentNotification = new NotificationsViewItemModel(
+      this.rootStore,
+      'mostRecent',
+      res.data.notifications[0],
+    )
+    await this.mostRecentNotification.fetchAdditionalData()
+    return this.mostRecentNotification
   }
 
   // state transitions
@@ -397,9 +416,6 @@ export class NotificationsViewModel {
         'mostRecent',
         res.data.notifications[0],
       )
-      await this.mostRecentNotification.fetchAdditionalData()
-    } else {
-      this.mostRecentNotification = undefined
     }
     return this._appendAll(res, true)
   }

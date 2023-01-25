@@ -136,8 +136,7 @@ export class RootStoreModel {
   async onBgFetch(taskId: string) {
     this.log.debug(`Background fetch fired for task ${taskId}`)
     if (this.session.hasSession) {
-      // grab notifications
-      await this.me.fetchNotifications()
+      await this.me.bgFetchNotifications()
     }
     BackgroundFetch.finish(taskId)
   }

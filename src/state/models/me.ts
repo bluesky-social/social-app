@@ -126,16 +126,26 @@ export class MeModel {
       this.notificationCount = res.data.count
       notifee.setBadgeCount(this.notificationCount)
       if (newNotifications) {
-        // trigger pre-emptive fetch on new notifications
-        let oldMostRecent = this.notifications.mostRecentNotification
-        this.notifications.refresh().then(() => {
-          // if a new most recent notification is found, trigger a notification card
-          const mostRecent = this.notifications.mostRecentNotification
-          if (mostRecent && oldMostRecent?.uri !== mostRecent?.uri) {
-            displayNotificationFromModel(mostRecent)
-          }
-        })
+        this.notifications.refresh()
       }
     })
+  }
+
+  async bgFetchNotifications() {
+    const res = await this.rootStore.api.app.bsky.notification.getCount()
+    const newNotifications = this.notificationCount !== res.data.count
+    notifee.setBadgeCount(res.data.count)
+    this.rootStore.log.debug(
+      `Background fetch received unread count = ${res.data.count}`,
+    )
+    if (newNotifications) {
+      this.rootStore.log.debug('Background fetch detected a new notification')
+      this.notifications.getNewMostRecent().then(mostRecent => {
+        if (mostRecent) {
+          this.rootStore.log.debug('Got the notification, triggering a push')
+          displayNotificationFromModel(mostRecent)
+        }
+      })
+    }
   }
 }
