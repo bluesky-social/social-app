@@ -133,19 +133,23 @@ export class MeModel {
 
   async bgFetchNotifications() {
     const res = await this.rootStore.api.app.bsky.notification.getCount()
+    // NOTE we don't update this.notificationCount to avoid repaints during bg
+    //      this means `newNotifications` may not be accurate, so we rely on
+    //      `mostRecent` to determine if there really is a new notif to show -prf
     const newNotifications = this.notificationCount !== res.data.count
     notifee.setBadgeCount(res.data.count)
     this.rootStore.log.debug(
       `Background fetch received unread count = ${res.data.count}`,
     )
     if (newNotifications) {
-      this.rootStore.log.debug('Background fetch detected a new notification')
-      this.notifications.getNewMostRecent().then(mostRecent => {
-        if (mostRecent) {
-          this.rootStore.log.debug('Got the notification, triggering a push')
-          displayNotificationFromModel(mostRecent)
-        }
-      })
+      this.rootStore.log.debug(
+        'Background fetch detected potentially a new notification',
+      )
+      const mostRecent = await this.notifications.getNewMostRecent()
+      if (mostRecent) {
+        this.rootStore.log.debug('Got the notification, triggering a push')
+        displayNotificationFromModel(mostRecent)
+      }
     }
   }
 }
