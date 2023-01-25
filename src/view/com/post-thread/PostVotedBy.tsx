@@ -77,11 +77,11 @@ export const PostVotedBy = observer(function PostVotedBy({
 })
 
 const LikedByItem = ({item}: {item: VotesItem}) => {
-  const palette = usePalette('default')
+  const pal = usePalette('default')
 
   return (
     <Link
-      style={[styles.outer, palette.view]}
+      style={[styles.outer, pal.view]}
       href={`/profile/${item.actor.handle}`}
       title={item.actor.handle}
       noFeedback>
@@ -95,10 +95,10 @@ const LikedByItem = ({item}: {item: VotesItem}) => {
           />
         </View>
         <View style={styles.layoutContent}>
-          <Text style={[s.f15, s.bold, palette.text]}>
+          <Text style={[s.f15, s.bold, pal.text]}>
             {item.actor.displayName || item.actor.handle}
           </Text>
-          <Text style={[s.f14, s.gray5, palette.textLight]}>
+          <Text style={[s.f14, s.gray5, pal.textLight]}>
             @{item.actor.handle}
           </Text>
         </View>
