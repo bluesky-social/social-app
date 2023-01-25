@@ -64,7 +64,7 @@ export const mockedProfileStore = {
   isUser: true,
   isScene: false,
   setup: jest.fn().mockResolvedValue({aborted: false}),
-  refresh: jest.fn(),
+  refresh: jest.fn().mockResolvedValue({}),
   toggleFollowing: jest.fn().mockResolvedValue({}),
   updateProfile: jest.fn(),
   // unknown required because of the missing private methods: _xLoading, _xIdle, _load, _replaceAll
@@ -106,7 +106,7 @@ export const mockedMembersStore = {
   isEmpty: false,
   isMember: jest.fn(),
   setup: jest.fn().mockResolvedValue({aborted: false}),
-  refresh: jest.fn(),
+  refresh: jest.fn().mockResolvedValue({}),
   loadMore: jest.fn(),
   removeMember: jest.fn(),
   // unknown required because of the missing private methods: _xLoading, _xIdle, _fetch, _replaceAll, _append
@@ -149,7 +149,7 @@ export const mockedMembershipsStore = {
   isEmpty: false,
   isMemberOf: jest.fn(),
   setup: jest.fn().mockResolvedValue({aborted: false}),
-  refresh: jest.fn(),
+  refresh: jest.fn().mockResolvedValue({}),
   loadMore: jest.fn(),
   // unknown required because of the missing private methods: _xLoading, _xIdle, _fetch, _replaceAll, _append
 } as unknown as MembershipsViewModel
@@ -413,6 +413,7 @@ export const mockedNotificationsViewItemStore = {
     createdAt: '',
   }),
   fetchAdditionalData: jest.fn(),
+  toNotifeeOpts: jest.fn(),
 } as NotificationsViewItemModel
 
 export const mockedNotificationsStore = {
@@ -510,7 +511,7 @@ export const mockedNavigationTabStore = {
     },
   ],
   navigate: jest.fn(),
-  refresh: jest.fn(),
+  refresh: jest.fn().mockResolvedValue({}),
   goBack: jest.fn(),
   fixedTabReset: jest.fn(),
   goForward: jest.fn(),
@@ -539,7 +540,7 @@ export const mockedNavigationStore = {
   tabCount: 1,
   isCurrentScreen: jest.fn(),
   navigate: jest.fn(),
-  refresh: jest.fn(),
+  refresh: jest.fn().mockResolvedValue({}),
   setTitle: jest.fn(),
   handleLink: jest.fn(),
   switchTo: jest.fn(),
@@ -587,7 +588,7 @@ export const mockedMeStore = {
   clear: jest.fn(),
   load: jest.fn(),
   clearNotificationCount: jest.fn(),
-  fetchStateUpdate: jest.fn(),
+  fetchNotifications: jest.fn(),
   refreshMemberships: jest.fn(),
 } as MeModel
 
@@ -679,7 +680,7 @@ export const mockedProfileUiStore = {
   setSelectedViewIndex: jest.fn(),
   setup: jest.fn().mockResolvedValue({aborted: false}),
   update: jest.fn(),
-  refresh: jest.fn(),
+  refresh: jest.fn().mockResolvedValue({}),
   loadMore: jest.fn(),
 } as ProfileUiModel
 
@@ -788,7 +789,7 @@ export const mockedSuggestedActorsStore = {
   hasError: false,
   isEmpty: false,
   setup: jest.fn().mockResolvedValue(null),
-  refresh: jest.fn(),
+  refresh: jest.fn().mockResolvedValue({}),
   // unknown required because of the missing private methods: _xLoading, _xIdle, _fetch, _appendAll, _append
 } as unknown as SuggestedActorsViewModel
 
@@ -828,7 +829,7 @@ export const mockedUserFollowersStore = {
   hasError: false,
   isEmpty: false,
   setup: jest.fn(),
-  refresh: jest.fn(),
+  refresh: jest.fn().mockResolvedValue({}),
   loadMore: jest.fn(),
   // unknown required because of the missing private methods: _xIdle, _xLoading, _fetch, _replaceAll, _append
 } as unknown as UserFollowersViewModel
@@ -869,7 +870,7 @@ export const mockedUserFollowsStore = {
   hasError: false,
   isEmpty: false,
   setup: jest.fn(),
-  refresh: jest.fn(),
+  refresh: jest.fn().mockResolvedValue({}),
   loadMore: jest.fn(),
   // unknown required because of the missing private methods: _xIdle, _xLoading, _fetch, _replaceAll, _append
 } as unknown as UserFollowsViewModel

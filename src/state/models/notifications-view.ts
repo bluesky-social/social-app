@@ -7,6 +7,7 @@ import {
   AppBskyFeedVote,
   AppBskyGraphAssertion,
   AppBskyGraphFollow,
+  AppBskyEmbedImages,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {PostThreadViewModel} from './post-thread-view'
@@ -179,6 +180,42 @@ export class NotificationsViewItemModel {
       })
     }
   }
+
+  toNotifeeOpts() {
+    let author = this.author.displayName || this.author.handle
+    let title: string
+    let body: string = ''
+    if (this.isUpvote) {
+      title = `${author} liked your post`
+      body = this.additionalPost?.thread?.postRecord?.text || ''
+    } else if (this.isRepost) {
+      title = `${author} reposted your post`
+      body = this.additionalPost?.thread?.postRecord?.text || ''
+    } else if (this.isReply) {
+      title = `${author} replied to your post`
+      body = this.additionalPost?.thread?.postRecord?.text || ''
+    } else if (this.isFollow) {
+      title = `${author} followed you`
+    } else {
+      return undefined
+    }
+    let ios
+    if (
+      AppBskyEmbedImages.isPresented(this.additionalPost?.thread?.post.embed) &&
+      this.additionalPost?.thread?.post.embed.images[0]?.thumb
+    ) {
+      ios = {
+        attachments: [
+          {url: this.additionalPost.thread.post.embed.images[0].thumb},
+        ],
+      }
+    }
+    return {
+      title,
+      body,
+      ios,
+    }
+  }
 }
 
 export class NotificationsViewModel {
@@ -196,6 +233,9 @@ export class NotificationsViewModel {
 
   // data
   notifications: NotificationsViewItemModel[] = []
+
+  // this is used to trigger push notifications
+  mostRecentNotification: NotificationsViewItemModel | undefined
 
   constructor(
     public rootStore: RootStoreModel,
@@ -388,6 +428,16 @@ export class NotificationsViewModel {
   }
 
   private async _replaceAll(res: ListNotifications.Response) {
+    if (res.data.notifications[0]) {
+      this.mostRecentNotification = new NotificationsViewItemModel(
+        this.rootStore,
+        'mostRecent',
+        res.data.notifications[0],
+      )
+      await this.mostRecentNotification.fetchAdditionalData()
+    } else {
+      this.mostRecentNotification = undefined
+    }
     return this._appendAll(res, true)
   }
 
