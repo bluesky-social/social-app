@@ -188,10 +188,10 @@ export function createFullHandle(name: string, domain: string): string {
   return `${name}.${domain}`
 }
 
-export function enforceLen(str: string, len: number): string {
+export function enforceLen(str: string, len: number, ellipsis = false): string {
   str = str || ''
   if (str.length > len) {
-    return str.slice(0, len)
+    return str.slice(0, len) + (ellipsis ? '...' : '')
   }
   return str
 }

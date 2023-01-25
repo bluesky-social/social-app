@@ -4,6 +4,7 @@ import {RootStoreModel} from './root-store'
 import {FeedModel} from './feed-view'
 import {NotificationsViewModel} from './notifications-view'
 import {isObj, hasProp} from '../lib/type-guards'
+import {displayNotificationFromModel} from '../../view/lib/notifee'
 
 export class MeModel {
   did: string = ''
@@ -131,10 +132,7 @@ export class MeModel {
           // if a new most recent notification is found, trigger a notification card
           const mostRecent = this.notifications.mostRecentNotification
           if (mostRecent && oldMostRecent?.uri !== mostRecent?.uri) {
-            const notifeeOpts = mostRecent.toNotifeeOpts()
-            if (notifeeOpts) {
-              notifee.displayNotification(notifeeOpts)
-            }
+            displayNotificationFromModel(mostRecent)
           }
         })
       }
