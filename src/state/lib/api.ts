@@ -238,6 +238,13 @@ async function fetchHandler(
   const controller = new AbortController()
   const to = setTimeout(() => controller.abort(), TIMEOUT)
 
+  const DEBUG_IS_SESS =
+    reqUri.includes('com.atproto.session.get') ||
+    reqUri.includes('com.atproto.session.refresh')
+  if (DEBUG_IS_SESS) {
+    console.log('->', reqMethod, reqUri, reqHeaders, reqBody)
+  }
+
   const res = await fetch(reqUri, {
     method: reqMethod,
     headers: reqHeaders,
@@ -260,6 +267,19 @@ async function fetchHandler(
     } else {
       throw new Error('TODO: non-textual response body')
     }
+  }
+
+  if (DEBUG_IS_SESS) {
+    console.log(
+      '<-',
+      resStatus,
+      resHeaders,
+      resBody,
+      '(',
+      reqMethod,
+      reqUri,
+      ')',
+    )
   }
 
   clearTimeout(to)
