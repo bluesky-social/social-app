@@ -1,10 +1,9 @@
 import RNFetchBlob from 'rn-fetch-blob'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
-import RNFetchBlob from 'rn-fetch-blob'
 import {Share} from 'react-native'
 import RNFS from 'react-native-fs'
 
-import * as Toast from '../Toast'
+import * as Toast from '../view/com/util/Toast'
 
 export interface DownloadAndResizeOpts {
   uri: string
