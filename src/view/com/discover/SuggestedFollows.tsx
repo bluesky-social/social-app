@@ -44,7 +44,7 @@ export const SuggestedFollows = observer(
 
     useEffect(() => {
       view
-        .setup()
+        .loadMore()
         .catch((err: any) =>
           store.log.error('Failed to fetch suggestions', err),
         )
@@ -56,12 +56,20 @@ export const SuggestedFollows = observer(
       }
     }, [view, view.isLoading, view.hasError, view.hasContent, onNoSuggestions])
 
-    const onPressTryAgain = () =>
+    const onRefresh = () => {
       view
-        .setup()
+        .refresh()
         .catch((err: any) =>
           store.log.error('Failed to fetch suggestions', err),
         )
+    }
+    const onEndReached = () => {
+      view
+        .loadMore()
+        .catch(err =>
+          view?.rootStore.log.error('Failed to load more suggestions', err),
+        )
+    }
 
     const onPressFollow = async (item: SuggestedActor) => {
       try {
@@ -108,16 +116,12 @@ export const SuggestedFollows = observer(
     }
     return (
       <View style={styles.container}>
-        {view.isLoading ? (
-          <View>
-            <ActivityIndicator />
-          </View>
-        ) : view.hasError ? (
+        {view.hasError ? (
           <ErrorScreen
             title="Failed to load suggestions"
             message="There was an error while trying to load suggested follows."
             details={view.error}
-            onPressTryAgain={onPressTryAgain}
+            onPressTryAgain={onRefresh}
           />
         ) : view.isEmpty ? (
           <View />
@@ -125,10 +129,19 @@ export const SuggestedFollows = observer(
           <View style={[styles.suggestionsContainer, pal.view]}>
             <FlatList
               data={view.suggestions}
-              keyExtractor={item => item._reactKey}
+              keyExtractor={item => item.did}
+              refreshing={view.isRefreshing}
+              onRefresh={onRefresh}
+              onEndReached={onEndReached}
               renderItem={renderItem}
-              style={s.flex1}
+              initialNumToRender={15}
+              ListFooterComponent={() => (
+                <View style={styles.footer}>
+                  {view.isLoading && <ActivityIndicator />}
+                </View>
+              )}
               contentContainerStyle={s.contentContainer}
+              style={s.flex1}
             />
           </View>
         )}
@@ -213,6 +226,10 @@ const styles = StyleSheet.create({
 
   suggestionsContainer: {
     flex: 1,
+  },
+  footer: {
+    height: 200,
+    paddingTop: 20,
   },
 
   actor: {

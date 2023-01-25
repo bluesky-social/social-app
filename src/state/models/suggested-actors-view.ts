@@ -2,9 +2,9 @@ import {makeAutoObservable} from 'mobx'
 import {AppBskyActorGetSuggestions as GetSuggestions} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 
-export type SuggestedActor = GetSuggestions.Actor & {
-  _reactKey: string
-}
+const PAGE_SIZE = 30
+
+export type SuggestedActor = GetSuggestions.Actor
 
 export class SuggestedActorsViewModel {
   // state
@@ -12,6 +12,9 @@ export class SuggestedActorsViewModel {
   isRefreshing = false
   hasLoaded = false
   error = ''
+  hasMore = true
+  loadMoreCursor?: string
+  private _loadMorePromise: Promise<void> | undefined
 
   // data
   suggestions: SuggestedActor[] = []
@@ -41,12 +44,17 @@ export class SuggestedActorsViewModel {
   // public api
   // =
 
-  async setup() {
-    await this._fetch()
+  async refresh() {
+    return this.loadMore(true)
   }
 
-  async refresh() {
-    await this._fetch(true)
+  async loadMore(isRefreshing = false) {
+    if (this._loadMorePromise) {
+      return this._loadMorePromise
+    }
+    this._loadMorePromise = this._loadMore(isRefreshing)
+    await this._loadMorePromise
+    this._loadMorePromise = undefined
   }
 
   // state transitions
@@ -71,46 +79,43 @@ export class SuggestedActorsViewModel {
   // loader functions
   // =
 
-  private async _fetch(isRefreshing = false) {
-    this.suggestions.length = 0
+  private async _loadMore(isRefreshing = false) {
+    if (!this.hasMore) {
+      return
+    }
     this._xLoading(isRefreshing)
-    let cursor
-    let res
     try {
+      if (this.isRefreshing) {
+        this.suggestions = []
+      }
+      let res
+      let totalAdded = 0
       do {
         res = await this.rootStore.api.app.bsky.actor.getSuggestions({
-          limit: 20,
-          cursor,
+          limit: PAGE_SIZE,
+          cursor: this.loadMoreCursor,
         })
-        this._appendAll(res)
-        cursor = res.data.cursor
-      } while (
-        cursor &&
-        res.data.actors.length === 20 &&
-        this.suggestions.length < 20
-      )
+        totalAdded += await this._appendAll(res)
+      } while (totalAdded < PAGE_SIZE && this.hasMore)
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e)
     }
   }
 
-  private _appendAll(res: GetSuggestions.Response) {
-    for (const item of res.data.actors) {
-      if (item.did === this.rootStore.me.did) {
-        continue // skip self
+  private async _appendAll(res: GetSuggestions.Response) {
+    this.loadMoreCursor = res.data.cursor
+    this.hasMore = !!this.loadMoreCursor
+    const newSuggestions = res.data.actors.filter(actor => {
+      if (actor.did === this.rootStore.me.did) {
+        return false // skip self
       }
-      if (item.myState?.follow) {
-        continue // skip already-followed users
+      if (actor.myState?.follow) {
+        return false // skip already-followed users
       }
-      this._append({
-        _reactKey: `item-${this.suggestions.length}`,
-        ...item,
-      })
-    }
-  }
-
-  private _append(item: SuggestedActor) {
-    this.suggestions.push(item)
+      return true
+    })
+    this.suggestions = this.suggestions.concat(newSuggestions)
+    return newSuggestions.length
   }
 }
