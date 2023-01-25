@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-// Original code copied from:  https://github.com/jobtoday/react-native-image-viewing
+// Original code copied and simplified from:  https://github.com/jobtoday/react-native-image-viewing
 
 import React, {ComponentType, useCallback, useRef, useEffect} from 'react'
 import {
