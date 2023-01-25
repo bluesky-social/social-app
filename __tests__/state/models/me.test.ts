@@ -160,7 +160,7 @@ describe('MeModel', () => {
 
   it('should update notifs count with fetchStateUpdate()', async () => {
     meModel.notifications = {
-      refresh: jest.fn(),
+      refresh: jest.fn().mockResolvedValue({}),
     } as unknown as NotificationsViewModel
 
     jest
