@@ -609,7 +609,10 @@ function preprocessFeed(feed: FeedViewPost[]): FeedViewPostWithThreadMeta[] {
   for (const slice of threadSlices) {
     if (slice.length > 3) {
       reorg.splice(slice.index - removedCount + 1, slice.length - 3)
-      reorg[slice.index - removedCount]._isThreadChildElided = true
+      if (reorg[slice.index - removedCount]) {
+        // ^ sanity check
+        reorg[slice.index - removedCount]._isThreadChildElided = true
+      }
       removedCount += slice.length - 3
     }
   }
