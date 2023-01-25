@@ -10,7 +10,7 @@ import {ImagesLightbox} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {gradients} from '../../lib/styles'
-import {saveImageModal} from './images/saveImageModal'
+import {saveImageModal} from '../../../lib/images'
 
 type Embed =
   | AppBskyEmbedImages.Presented
@@ -36,7 +36,6 @@ export function PostEmbeds({
         saveImageModal({uri: uris[index]})
       }
 
-      // TODO: Abstract the code below, the repeated code here can lead to bugs
       if (embed.images.length === 4) {
         return (
           <View style={[styles.imagesContainer, style]}>

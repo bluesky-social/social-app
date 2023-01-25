@@ -4,7 +4,7 @@ import {observer} from 'mobx-react-lite'
 import ImageView from './ImageViewing'
 import {useStores} from '../../../state'
 import * as models from '../../../state/models/shell-ui'
-import {saveImageModal} from '../util/images/saveImageModal'
+import {saveImageModal} from '../../../lib/images'
 
 export const Lightbox = observer(function Lightbox() {
   const store = useStores()

@@ -84,7 +84,6 @@ function ImageLayoutGridInner({
     }
   }, [type, containerInfo])
 
-  // TODO: Abstract the code below, the repeated code here can lead to bugs
   if (type === 'two') {
     return (
       <View style={styles.flexRow}>
