@@ -297,7 +297,7 @@ export class SessionModel {
       accessJwt: account.accessJwt,
     })
     try {
-      const sess = await this.rootStore.api.com.atproto.session.get()
+      const sess = await api.com.atproto.session.get()
       if (!sess.success || sess.data.did !== account.did) {
         return false
       }
