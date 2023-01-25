@@ -1,4 +1,4 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {
   sessionClient as AtpApi,
   Session,
@@ -298,9 +298,19 @@ export class SessionModel {
     })
     try {
       const sess = await api.com.atproto.session.get()
-      if (!sess.success || sess.data.did !== account.did) {
+      if (
+        !sess.success ||
+        sess.data.did !== account.did ||
+        !api.sessionManager.session
+      ) {
         return false
       }
+
+      // copy over the access tokens, as they may have refreshed during the .get() above
+      runInAction(() => {
+        account.refreshJwt = api.sessionManager.session?.refreshJwt
+        account.accessJwt = api.sessionManager.session?.accessJwt
+      })
     } catch (_e) {
       return false
     }

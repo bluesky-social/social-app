@@ -5,6 +5,8 @@ import {ThemeProvider} from '../lib/ThemeContext'
 import {PaletteColorName} from '../lib/ThemeContext'
 import {usePalette} from '../lib/hooks/usePalette'
 import {s} from '../lib/styles'
+import {DEF_AVATAR} from '../lib/assets'
+import {displayNotification} from '../lib/notifee'
 
 import {Text} from '../com/util/text/Text'
 import {ViewSelector} from '../com/util/ViewSelector'
@@ -17,7 +19,7 @@ import {RadioGroup} from '../com/util/forms/RadioGroup'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
 
-const MAIN_VIEWS = ['Base', 'Controls', 'Error']
+const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
 
 export const Debug = () => {
   const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
@@ -46,9 +48,9 @@ function DebugInner({
   const [currentView, setCurrentView] = React.useState<number>(0)
   const pal = usePalette('default')
 
-  const renderItem = item => {
+  const renderItem = (item, i) => {
     return (
-      <View>
+      <View key={`view-${i}`}>
         <View style={[s.pt10, s.pl10, s.pr10]}>
           <ToggleButton
             type="default-light"
@@ -57,12 +59,14 @@ function DebugInner({
             label="Dark mode"
           />
         </View>
-        {item.currentView === 2 ? (
-          <ErrorView key="error" />
+        {item.currentView === 3 ? (
+          <NotifsView />
+        ) : item.currentView === 2 ? (
+          <ErrorView />
         ) : item.currentView === 1 ? (
-          <ControlsView key="controls" />
+          <ControlsView />
         ) : (
-          <BaseView key="base" />
+          <BaseView />
         )}
       </View>
     )
@@ -163,6 +167,30 @@ function ErrorView() {
           onPressTryAgain={() => {}}
           numberOfLines={1}
         />
+      </View>
+    </View>
+  )
+}
+
+function NotifsView() {
+  const trigger = () => {
+    displayNotification(
+      'Paul Frazee liked your post',
+      "Hello world! This is a test of the notifications card. The text is long to see how that's handled.",
+    )
+  }
+  const triggerImg = () => {
+    displayNotification(
+      'Paul Frazee liked your post',
+      "Hello world! This is a test of the notifications card. The text is long to see how that's handled.",
+      DEF_AVATAR,
+    )
+  }
+  return (
+    <View style={s.p10}>
+      <View style={s.flexRow}>
+        <Button onPress={trigger} label="Trigger" />
+        <Button onPress={triggerImg} label="Trigger w/image" style={s.ml5} />
       </View>
     </View>
   )

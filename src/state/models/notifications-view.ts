@@ -7,7 +7,6 @@ import {
   AppBskyFeedVote,
   AppBskyGraphAssertion,
   AppBskyGraphFollow,
-  AppBskyEmbedImages,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {PostThreadViewModel} from './post-thread-view'
@@ -180,42 +179,6 @@ export class NotificationsViewItemModel {
       })
     }
   }
-
-  toNotifeeOpts() {
-    let author = this.author.displayName || this.author.handle
-    let title: string
-    let body: string = ''
-    if (this.isUpvote) {
-      title = `${author} liked your post`
-      body = this.additionalPost?.thread?.postRecord?.text || ''
-    } else if (this.isRepost) {
-      title = `${author} reposted your post`
-      body = this.additionalPost?.thread?.postRecord?.text || ''
-    } else if (this.isReply) {
-      title = `${author} replied to your post`
-      body = this.additionalPost?.thread?.postRecord?.text || ''
-    } else if (this.isFollow) {
-      title = `${author} followed you`
-    } else {
-      return undefined
-    }
-    let ios
-    if (
-      AppBskyEmbedImages.isPresented(this.additionalPost?.thread?.post.embed) &&
-      this.additionalPost?.thread?.post.embed.images[0]?.thumb
-    ) {
-      ios = {
-        attachments: [
-          {url: this.additionalPost.thread.post.embed.images[0].thumb},
-        ],
-      }
-    }
-    return {
-      title,
-      body,
-      ios,
-    }
-  }
 }
 
 export class NotificationsViewModel {
@@ -234,7 +197,7 @@ export class NotificationsViewModel {
   // data
   notifications: NotificationsViewItemModel[] = []
 
-  // this is used to trigger push notifications
+  // this is used to help trigger push notifications
   mostRecentNotification: NotificationsViewItemModel | undefined
 
   constructor(
@@ -246,6 +209,7 @@ export class NotificationsViewModel {
       {
         rootStore: false,
         params: false,
+        mostRecentNotification: false,
         _loadPromise: false,
         _loadMorePromise: false,
         _updatePromise: false,
@@ -331,6 +295,24 @@ export class NotificationsViewModel {
     } catch (e: any) {
       this.rootStore.log.warn('Failed to update notifications read state', e)
     }
+  }
+
+  async getNewMostRecent(): Promise<NotificationsViewItemModel | undefined> {
+    let old = this.mostRecentNotification
+    const res = await this.rootStore.api.app.bsky.notification.list({limit: 1})
+    if (
+      !res.data.notifications[0] ||
+      old?.uri === res.data.notifications[0].uri
+    ) {
+      return
+    }
+    this.mostRecentNotification = new NotificationsViewItemModel(
+      this.rootStore,
+      'mostRecent',
+      res.data.notifications[0],
+    )
+    await this.mostRecentNotification.fetchAdditionalData()
+    return this.mostRecentNotification
   }
 
   // state transitions
@@ -434,9 +416,6 @@ export class NotificationsViewModel {
         'mostRecent',
         res.data.notifications[0],
       )
-      await this.mostRecentNotification.fetchAdditionalData()
-    } else {
-      this.mostRecentNotification = undefined
     }
     return this._appendAll(res, true)
   }
