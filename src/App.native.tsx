@@ -16,6 +16,7 @@ import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {MobileShell} from './view/shell/mobile'
 import {s} from './view/lib/styles'
+import notifee, {EventType} from '@notifee/react-native'
 
 const App = observer(() => {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -42,6 +43,13 @@ const App = observer(() => {
       })
       Linking.addEventListener('url', ({url}) => {
         store.nav.handleLink(url)
+      })
+      notifee.onForegroundEvent(async ({type}: {type: EventType}) => {
+        store.log.debug('Notifee foreground event', {type})
+        if (type === EventType.PRESS) {
+          store.log.debug('User pressed a notifee, opening notifications')
+          store.nav.switchTo(1, true)
+        }
       })
     })
   }, [])

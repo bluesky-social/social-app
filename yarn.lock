@@ -2109,6 +2109,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@notifee/react-native@^7.4.0":
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/@notifee/react-native/-/react-native-7.4.0.tgz#0f20744307bf3b800f7b56eb2d0bbdd474748d09"
+  integrity sha512-c8pkxDQFRbw0JlUmTb07OTG/4LQHRj8MBodMLwEcO+SvqIxK8ya8zSUEzfdcdWsSVqdoym0v3zpSNroR3Quj/w==
+
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
   version "0.5.10"
   resolved "https://registry.yarnpkg.com/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.5.10.tgz#2eba163b8e7dbabb4ce3609ab5e32ab63dda3ef8"
@@ -11163,6 +11168,11 @@ react-native-appstate-hook@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/react-native-appstate-hook/-/react-native-appstate-hook-1.0.6.tgz#cbc16e7b89cfaea034cabd999f00e99053cabd06"
   integrity sha512-0hPVyf5yLxCSVrrNEuGqN1ZnSSj3Ye2gZex0NtcK/AHYwMc0rXWFNZjBKOoZSouspqu3hXBbQ6NOUSTzrME1AQ==
+
+react-native-background-fetch@^4.1.8:
+  version "4.1.8"
+  resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-4.1.8.tgz#a21858e5d876de8d9d15a37f40714b244f73713c"
+  integrity sha512-/qe86laa0n4AbD6mrLL8SCGR+K5693URX95e02/bTJh3UkdS3+sU1Jyc/XTlz4MQwlquI929/lm5EZh8AOUqzQ==
 
 react-native-codegen@^0.71.3:
   version "0.71.3"

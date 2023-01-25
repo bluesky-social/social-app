@@ -6,6 +6,7 @@ import {makeAutoObservable} from 'mobx'
 import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
 import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
+import BackgroundFetch from 'react-native-background-fetch'
 import {isObj, hasProp} from '../lib/type-guards'
 import {LogModel} from './log'
 import {SessionModel} from './session'
@@ -34,6 +35,7 @@ export class RootStoreModel {
       serialize: false,
       hydrate: false,
     })
+    this.initBgFetch()
   }
 
   async resolveName(didOrHandle: string) {
@@ -55,7 +57,7 @@ export class RootStoreModel {
       if (!this.session.online) {
         await this.session.connect()
       }
-      await this.me.fetchStateUpdate()
+      await this.me.fetchNotifications()
     } catch (e: any) {
       if (isNetworkError(e)) {
         this.session.setOnline(false) // connection lost
@@ -109,8 +111,40 @@ export class RootStoreModel {
   }
 
   emitPostDeleted(uri: string) {
-    console.log('emit')
     DeviceEventEmitter.emit('post-deleted', uri)
+  }
+
+  // background fetch
+  // =
+  // - we use this to poll for unread notifications, which is not "ideal" behavior but
+  //   gives us a solution for push-notifications that work against any pds
+
+  initBgFetch() {
+    // NOTE
+    // background fetch runs every 15 minutes *at most* and will get slowed down
+    // based on some heuristics run by iOS, meaning it is not a reliable form of delivery
+    // -prf
+    BackgroundFetch.configure(
+      {minimumFetchInterval: 15},
+      this.onBgFetch.bind(this),
+      this.onBgFetchTimeout.bind(this),
+    ).then(status => {
+      this.log.debug(`Background fetch initiated, status: ${status}`)
+    })
+  }
+
+  async onBgFetch(taskId: string) {
+    this.log.debug(`Background fetch fired for task ${taskId}`)
+    if (this.session.hasSession) {
+      // grab notifications
+      await this.me.fetchNotifications()
+    }
+    BackgroundFetch.finish(taskId)
+  }
+
+  onBgFetchTimeout(taskId: string) {
+    this.log.debug(`Background fetch timed out for task ${taskId}`)
+    BackgroundFetch.finish(taskId)
   }
 }
 

@@ -8,12 +8,17 @@
 // splash screen
 #import "RNSplashScreen.h"
 
+#import <TSBackgroundFetch/TSBackgroundFetch.h>
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   // Show the splash screen
   // [RNSplashScreen show]; 
+  
+  // Register BackgroundFetch
+  [[TSBackgroundFetch sharedInstance] didFinishLaunching];
 
   self.moduleName = @"xyz.blueskyweb.app";
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
