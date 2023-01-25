@@ -11169,6 +11169,11 @@ react-native-appstate-hook@^1.0.6:
   resolved "https://registry.yarnpkg.com/react-native-appstate-hook/-/react-native-appstate-hook-1.0.6.tgz#cbc16e7b89cfaea034cabd999f00e99053cabd06"
   integrity sha512-0hPVyf5yLxCSVrrNEuGqN1ZnSSj3Ye2gZex0NtcK/AHYwMc0rXWFNZjBKOoZSouspqu3hXBbQ6NOUSTzrME1AQ==
 
+react-native-background-fetch@^4.1.8:
+  version "4.1.8"
+  resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-4.1.8.tgz#a21858e5d876de8d9d15a37f40714b244f73713c"
+  integrity sha512-/qe86laa0n4AbD6mrLL8SCGR+K5693URX95e02/bTJh3UkdS3+sU1Jyc/XTlz4MQwlquI929/lm5EZh8AOUqzQ==
+
 react-native-codegen@^0.71.3:
   version "0.71.3"
   resolved "https://registry.yarnpkg.com/react-native-codegen/-/react-native-codegen-0.71.3.tgz#75fbc591819050791319ebdb9fe341ee4df5c288"
