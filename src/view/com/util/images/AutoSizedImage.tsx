@@ -5,13 +5,14 @@ import {
   LayoutChangeEvent,
   StyleProp,
   StyleSheet,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native'
 import {Text} from '../text/Text'
 import {useTheme} from '../../../lib/ThemeContext'
 import {usePalette} from '../../../lib/hooks/usePalette'
+import {DELAY_PRESS_IN} from './constants'
 
 const MAX_HEIGHT = 300
 
@@ -23,6 +24,7 @@ interface Dim {
 export function AutoSizedImage({
   uri,
   onPress,
+  onLongPress,
   style,
   containerStyle,
 }: {
@@ -80,7 +82,10 @@ export function AutoSizedImage({
 
   return (
     <View style={style}>
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableOpacity
+        onPress={onPress}
+        onLongPress={onLongPress}
+        delayPressIn={DELAY_PRESS_IN}>
         {error ? (
           <View style={[styles.errorContainer, errPal.view, containerStyle]}>
             <Text style={errPal.text}>{error}</Text>
@@ -99,7 +104,7 @@ export function AutoSizedImage({
             onLayout={onLayout}
           />
         )}
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     </View>
   )
 }

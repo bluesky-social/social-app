@@ -1,20 +1,22 @@
 import React from 'react'
 import {View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import ImageView from 'react-native-image-viewing'
+import ImageView from './ImageViewing'
 import {useStores} from '../../../state'
-
 import * as models from '../../../state/models/shell-ui'
+import {saveImageModal} from '../../../lib/images'
 
 export const Lightbox = observer(function Lightbox() {
   const store = useStores()
-  const onClose = () => {
-    console.log('hit')
-    store.shell.closeLightbox()
+  if (!store.shell.isLightboxActive) {
+    return null
   }
 
-  if (!store.shell.isLightboxActive) {
-    return <View />
+  const onClose = () => {
+    store.shell.closeLightbox()
+  }
+  const onLongPress = ({uri}: {uri: string}) => {
+    saveImageModal({uri})
   }
 
   if (store.shell.activeLightbox?.name === 'profile-image') {
@@ -35,6 +37,7 @@ export const Lightbox = observer(function Lightbox() {
         imageIndex={opts.index}
         visible
         onRequestClose={onClose}
+        onLongPress={onLongPress}
       />
     )
   } else {

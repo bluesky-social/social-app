@@ -238,7 +238,7 @@ PODS:
     - glog
   - react-native-blur (4.3.0):
     - React-Core
-  - react-native-cameraroll (5.2.0):
+  - react-native-cameraroll (5.2.2):
     - React-Core
   - react-native-image-resizer (3.0.4):
     - React-Core
@@ -597,13 +597,13 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  boost: a7c83b31436843459a1961bfd74b96033dc77234
+  boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BVLinearGradient: 34a999fda29036898a09c6a6b728b0b4189e1a44
-  DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
+  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: 61839cba7a48c570b7ac3e1cd8a4d0948382202f
   FBReactNativeSpec: 5a14398ccf5e27c1ca2d7109eb920594ce93c10d
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 476ee3e89abb49e07f822b48323c51c57124b572
+  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: f6e715aa6c8bd38de6c13bc85e07b0a337edaa89
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
@@ -621,7 +621,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 5061fcbec93fd672183dfb39cc2f65e55a0835db
   React-logger: a6c0b3a807a8e81f6d7fea2e72660766f55daa50
   react-native-blur: 50c9feabacbc5f49b61337ebc32192c6be7ec3c3
-  react-native-cameraroll: 0ff04cc4e0ff5f19a94ff4313e5c8bc4503cd86d
+  react-native-cameraroll: 71d68167beb6fc7216aa564abb6d86f1d666a2c6
   react-native-image-resizer: 794abf75ec13ed1f0dbb1f134e27504ea65e9e66
   react-native-pager-view: 54bed894cecebe28cede54c01038d9d1e122de43
   react-native-paste-input: 5182843692fd2ec72be50f241a38a49796e225d7

@@ -5,14 +5,15 @@ import {
   LayoutChangeEvent,
   StyleProp,
   StyleSheet,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native'
+import {DELAY_PRESS_IN} from './constants'
 
 interface Dim {
   width: number
-  height: number
+  height: numberPressIn
 }
 
 export type ImageLayoutGridType = 'two' | 'three' | 'four'
@@ -21,6 +22,7 @@ export function ImageLayoutGrid({
   type,
   uris,
   onPress,
+  onLongPress,
   style,
 }: {
   type: ImageLayoutGridType
@@ -44,6 +46,7 @@ export function ImageLayoutGrid({
           type={type}
           uris={uris}
           onPress={onPress}
+          onLongPress={onLongPress}
           containerInfo={containerInfo}
         />
       ) : undefined}
@@ -55,6 +58,7 @@ function ImageLayoutGridInner({
   type,
   uris,
   onPress,
+  onLongPress,
   containerInfo,
 }: {
   type: ImageLayoutGridType
@@ -84,31 +88,46 @@ function ImageLayoutGridInner({
   if (type === 'two') {
     return (
       <View style={styles.flexRow}>
-        <TouchableWithoutFeedback onPress={() => onPress?.(0)}>
+        <TouchableOpacity
+          delayPressIn={DELAY_PRESS_IN}
+          onPress={() => onPress?.(0)}
+          onLongPress={() => onLongPress(0)}>
           <Image source={{uri: uris[0]}} style={size1} />
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
         <View style={styles.wSpace} />
-        <TouchableWithoutFeedback onPress={() => onPress?.(1)}>
+        <TouchableOpacity
+          delayPressIn={DELAY_PRESS_IN}
+          onPress={() => onPress?.(1)}
+          onLongPress={() => onLongPress(1)}>
           <Image source={{uri: uris[1]}} style={size1} />
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       </View>
     )
   }
   if (type === 'three') {
     return (
       <View style={styles.flexRow}>
-        <TouchableWithoutFeedback onPress={() => onPress?.(0)}>
+        <TouchableOpacity
+          delayPressIn={DELAY_PRESS_IN}
+          onPress={() => onPress?.(0)}
+          onLongPress={() => onLongPress(0)}>
           <Image source={{uri: uris[0]}} style={size2} />
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
         <View style={styles.wSpace} />
         <View>
-          <TouchableWithoutFeedback onPress={() => onPress?.(1)}>
+          <TouchableOpacity
+            delayPressIn={DELAY_PRESS_IN}
+            onPress={() => onPress?.(1)}
+            onLongPress={() => onLongPress(1)}>
             <Image source={{uri: uris[1]}} style={size1} />
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
           <View style={styles.hSpace} />
-          <TouchableWithoutFeedback onPress={() => onPress?.(2)}>
+          <TouchableOpacity
+            delayPressIn={DELAY_PRESS_IN}
+            onPress={() => onPress?.(2)}
+            onLongPress={() => onLongPress(2)}>
             <Image source={{uri: uris[2]}} style={size1} />
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         </View>
       </View>
     )
@@ -117,23 +136,35 @@ function ImageLayoutGridInner({
     return (
       <View style={styles.flexRow}>
         <View>
-          <TouchableWithoutFeedback onPress={() => onPress?.(0)}>
+          <TouchableOpacity
+            delayPressIn={DELAY_PRESS_IN}
+            onPress={() => onPress?.(0)}
+            onLongPress={() => onLongPress(0)}>
             <Image source={{uri: uris[0]}} style={size1} />
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
           <View style={styles.hSpace} />
-          <TouchableWithoutFeedback onPress={() => onPress?.(1)}>
+          <TouchableOpacity
+            delayPressIn={DELAY_PRESS_IN}
+            onPress={() => onPress?.(1)}
+            onLongPress={() => onLongPress(1)}>
             <Image source={{uri: uris[1]}} style={size1} />
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         </View>
         <View style={styles.wSpace} />
         <View>
-          <TouchableWithoutFeedback onPress={() => onPress?.(2)}>
+          <TouchableOpacity
+            delayPressIn={DELAY_PRESS_IN}
+            onPress={() => onPress?.(2)}
+            onLongPress={() => onLongPress(2)}>
             <Image source={{uri: uris[2]}} style={size1} />
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
           <View style={styles.hSpace} />
-          <TouchableWithoutFeedback onPress={() => onPress?.(3)}>
+          <TouchableOpacity
+            delayPressIn={DELAY_PRESS_IN}
+            onPress={() => onPress?.(3)}
+            onLongPress={() => onLongPress(3)}>
             <Image source={{uri: uris[3]}} style={size1} />
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         </View>
       </View>
     )
