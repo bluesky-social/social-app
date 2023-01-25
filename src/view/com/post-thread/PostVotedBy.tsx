@@ -7,7 +7,8 @@ import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
-import {s, colors} from '../../lib/styles'
+import {s} from '../../lib/styles'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export const PostVotedBy = observer(function PostVotedBy({
   uri,
@@ -76,9 +77,11 @@ export const PostVotedBy = observer(function PostVotedBy({
 })
 
 const LikedByItem = ({item}: {item: VotesItem}) => {
+  const pal = usePalette('default')
+
   return (
     <Link
-      style={styles.outer}
+      style={[styles.outer, pal.view]}
       href={`/profile/${item.actor.handle}`}
       title={item.actor.handle}
       noFeedback>
@@ -92,10 +95,12 @@ const LikedByItem = ({item}: {item: VotesItem}) => {
           />
         </View>
         <View style={styles.layoutContent}>
-          <Text style={[s.f15, s.bold]}>
+          <Text style={[s.f15, s.bold, pal.text]}>
             {item.actor.displayName || item.actor.handle}
           </Text>
-          <Text style={[s.f14, s.gray5]}>@{item.actor.handle}</Text>
+          <Text style={[s.f14, s.gray5, pal.textLight]}>
+            @{item.actor.handle}
+          </Text>
         </View>
       </View>
     </Link>
@@ -105,7 +110,6 @@ const LikedByItem = ({item}: {item: VotesItem}) => {
 const styles = StyleSheet.create({
   outer: {
     marginTop: 1,
-    backgroundColor: colors.white,
   },
   layout: {
     flexDirection: 'row',
