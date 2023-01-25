@@ -7,7 +7,7 @@ import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
-import {s, colors} from '../../lib/styles'
+import {s} from '../../lib/styles'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 export const PostVotedBy = observer(function PostVotedBy({
@@ -81,7 +81,7 @@ const LikedByItem = ({item}: {item: VotesItem}) => {
 
   return (
     <Link
-      style={[styles.outer, {backgroundColor: palette.view.backgroundColor}]}
+      style={[styles.outer, palette.view]}
       href={`/profile/${item.actor.handle}`}
       title={item.actor.handle}
       noFeedback>
@@ -95,10 +95,10 @@ const LikedByItem = ({item}: {item: VotesItem}) => {
           />
         </View>
         <View style={styles.layoutContent}>
-          <Text style={[s.f15, s.bold, {color: palette.text.color}]}>
+          <Text style={[s.f15, s.bold, palette.text]}>
             {item.actor.displayName || item.actor.handle}
           </Text>
-          <Text style={[s.f14, s.gray5, {color: palette.textLight.color}]}>
+          <Text style={[s.f14, s.gray5, palette.textLight]}>
             @{item.actor.handle}
           </Text>
         </View>
