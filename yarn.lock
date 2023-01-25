@@ -2136,10 +2136,10 @@
   dependencies:
     merge-options "^3.0.4"
 
-"@react-native-camera-roll/camera-roll@^5.1.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@react-native-camera-roll/camera-roll/-/camera-roll-5.2.0.tgz#a30dca7c486379650c03fb8cc6fe35b7de6eeb82"
-  integrity sha512-CIFkEqWeMtFo3fG/0nULrmLs8xikbOUuEty8wWxpyBWq7OM9Hi13pXJ1FWrIrxDcFuL7d0bxIqpqNrt59lAPrQ==
+"@react-native-camera-roll/camera-roll@^5.2.2":
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/@react-native-camera-roll/camera-roll/-/camera-roll-5.2.2.tgz#dbdfa4ffb126b4d7efa01f3c5fc030ce3bfcdf2d"
+  integrity sha512-LVzUX1KdKvOXJGiV/9tlkDyDSOEjvAzuiV8OkSUD13TXN/Tk5u2KVHTYRYJz5pmXanLN2dmEamctJcqKCeXYxg==
 
 "@react-native-clipboard/clipboard@^1.10.0":
   version "1.11.1"
@@ -11224,11 +11224,6 @@ react-native-image-crop-picker@^0.38.1:
   version "0.38.1"
   resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.38.1.tgz#5973b4a8b55835b987e6be2064de411e849ac005"
   integrity sha512-cF5UQnWplzHCeiCO+aiGS/0VomWaLmFf3nSsgTMPfY+8+99h8N/eHQvVdSF7RsGw50B8394wGeGyqHjjp8YRWw==
-
-react-native-image-viewing@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/react-native-image-viewing/-/react-native-image-viewing-0.2.2.tgz#fb26e57d7d3d9ce4559a3af3d244387c0367242b"
-  integrity sha512-osWieG+p/d2NPbAyonOMubttajtYEYiRGQaJA54slFxZ69j1V4/dCmcrVQry47ktVKy8/qpFwCpW1eT6MH5T2Q==
 
 react-native-inappbrowser-reborn@^3.6.3:
   version "3.7.0"
