@@ -55,7 +55,7 @@ export class RootStoreModel {
       if (!this.session.online) {
         await this.session.connect()
       }
-      await this.me.fetchStateUpdate()
+      await this.me.fetchNotifications()
     } catch (e: any) {
       if (isNetworkError(e)) {
         this.session.setOnline(false) // connection lost

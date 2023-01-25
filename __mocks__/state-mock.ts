@@ -587,7 +587,7 @@ export const mockedMeStore = {
   clear: jest.fn(),
   load: jest.fn(),
   clearNotificationCount: jest.fn(),
-  fetchStateUpdate: jest.fn(),
+  fetchNotifications: jest.fn(),
   refreshMemberships: jest.fn(),
 } as MeModel
 

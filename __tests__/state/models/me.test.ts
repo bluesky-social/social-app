@@ -173,7 +173,7 @@ describe('MeModel', () => {
         })
       })
 
-    await meModel.fetchStateUpdate()
+    await meModel.fetchNotifications()
     expect(meModel.notificationCount).toBe(1)
     expect(meModel.notifications.refresh).toHaveBeenCalled()
   })
