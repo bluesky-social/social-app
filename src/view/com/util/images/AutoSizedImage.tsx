@@ -12,6 +12,7 @@ import {
 import {Text} from '../text/Text'
 import {useTheme} from '../../../lib/ThemeContext'
 import {usePalette} from '../../../lib/hooks/usePalette'
+import {DELAY_PRESS_IN} from './constants'
 
 const MAX_HEIGHT = 300
 
@@ -81,7 +82,10 @@ export function AutoSizedImage({
 
   return (
     <View style={style}>
-      <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
+      <TouchableOpacity
+        onPress={onPress}
+        onLongPress={onLongPress}
+        delayPressIn={DELAY_PRESS_IN}>
         {error ? (
           <View style={[styles.errorContainer, errPal.view, containerStyle]}>
             <Text style={errPal.text}>{error}</Text>
