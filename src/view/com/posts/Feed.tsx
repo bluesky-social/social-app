@@ -3,11 +3,11 @@ import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
   View,
-  FlatList,
   StyleProp,
   StyleSheet,
   ViewStyle,
 } from 'react-native'
+import {CenteredView, FlatList} from '../util/Views'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -86,11 +86,16 @@ export const Feed = observer(function Feed({
     )
   return (
     <View testID={testID} style={style}>
-      {!data && <PromptButtons onPressCompose={onPressCompose} />}
-      {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
-      {feed.hasError && (
-        <ErrorMessage message={feed.error} onPressTryAgain={onPressTryAgain} />
-      )}
+      <CenteredView>
+        {!data && <PromptButtons onPressCompose={onPressCompose} />}
+        {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
+        {feed.hasError && (
+          <ErrorMessage
+            message={feed.error}
+            onPressTryAgain={onPressTryAgain}
+          />
+        )}
+      </CenteredView>
       {feed.hasLoaded && data && (
         <FlatList
           ref={scrollElRef}

@@ -18,26 +18,22 @@ export const WebShell: React.FC = observer(() => {
   if (!store.session.hasSession) {
     return (
       <View style={styles.outerContainer}>
-        <View style={styles.innerContainer}>
-          <Login />
-        </View>
+        <Login />
       </View>
     )
   }
 
   return (
     <View style={[styles.outerContainer, pal.view]}>
-      <View style={styles.innerContainer}>
-        {screenRenderDesc.screens.map(({Com, navIdx, params, key, current}) => (
-          <View
-            key={key}
-            style={[s.h100pct, current ? styles.visible : styles.hidden]}>
-            <ErrorBoundary>
-              <Com params={params} navIdx={navIdx} visible={current} />
-            </ErrorBoundary>
-          </View>
-        ))}
-      </View>
+      {screenRenderDesc.screens.map(({Com, navIdx, params, key, current}) => (
+        <View
+          key={key}
+          style={[s.h100pct, current ? styles.visible : styles.hidden]}>
+          <ErrorBoundary>
+            <Com params={params} navIdx={navIdx} visible={current} />
+          </ErrorBoundary>
+        </View>
+      ))}
     </View>
   )
   // TODO

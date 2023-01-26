@@ -1,6 +1,7 @@
 import React, {useRef} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, FlatList, View} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
+import {CenteredView, FlatList} from '../util/Views'
 import {
   PostThreadViewModel,
   PostThreadViewPostModel,
@@ -50,9 +51,9 @@ export const PostThread = observer(function PostThread({
   // =
   if ((view.isLoading && !view.isRefreshing) || view.params.uri !== uri) {
     return (
-      <View>
+      <CenteredView>
         <ActivityIndicator />
-      </View>
+      </CenteredView>
     )
   }
 
@@ -60,9 +61,9 @@ export const PostThread = observer(function PostThread({
   // =
   if (view.hasError) {
     return (
-      <View>
+      <CenteredView>
         <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
-      </View>
+      </CenteredView>
     )
   }
 
