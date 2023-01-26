@@ -12,7 +12,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {BlurView} from '@react-native-community/blur'
+import {BlurView} from '../util/BlurView'
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {useStores} from '../../../state'
 import {

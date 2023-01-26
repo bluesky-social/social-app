@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {BlurView} from '@react-native-community/blur'
+import {BlurView} from '../util/BlurView'
 import LinearGradient from 'react-native-linear-gradient'
 import {AutoSizedImage} from '../util/images/AutoSizedImage'
 import {Text} from '../util/text/Text'
