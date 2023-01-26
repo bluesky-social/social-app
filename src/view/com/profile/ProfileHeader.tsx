@@ -8,7 +8,10 @@ import {
   View,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {BlurView} from '@react-native-community/blur'
 import {ProfileViewModel} from '../../../state/models/profile-view'
 import {useStores} from '../../../state'
@@ -142,7 +145,7 @@ export const ProfileHeader = observer(function ProfileHeader({
   }
   return (
     <View style={pal.view}>
-      <UserBanner handle={view.handle} banner={view.banner} />
+      <UserBanner banner={view.banner} />
       <View style={styles.content}>
         <View style={[styles.buttonsLine]}>
           {isMe ? (
@@ -181,7 +184,10 @@ export const ProfileHeader = observer(function ProfileHeader({
                     start={{x: 0, y: 0}}
                     end={{x: 1, y: 1}}
                     style={[styles.btn, styles.gradientBtn]}>
-                    <FontAwesomeIcon icon="plus" style={[s.white, s.mr5]} />
+                    <FontAwesomeIcon
+                      icon="plus"
+                      style={[s.white as FontAwesomeIconStyle, s.mr5]}
+                    />
                     <Text type="button" style={[s.white, s.bold]}>
                       Follow
                     </Text>

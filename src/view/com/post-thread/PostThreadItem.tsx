@@ -3,7 +3,10 @@ import {observer} from 'mobx-react-lite'
 import {StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '../../../third-party/uri'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
 import {Link} from '../util/Link'
 import {RichText} from '../util/text/RichText'
@@ -59,7 +62,7 @@ export const PostThreadItem = observer(function PostThreadItem({
       replyTo: {
         uri: item.post.uri,
         cid: item.post.cid,
-        text: record.text as string,
+        text: record?.text as string,
         author: {
           handle: item.post.author.handle,
           displayName: item.post.author.displayName,
@@ -103,7 +106,10 @@ export const PostThreadItem = observer(function PostThreadItem({
   if (deleted) {
     return (
       <View style={[styles.outer, pal.border, pal.view, s.p20, s.flexRow]}>
-        <FontAwesomeIcon icon={['far', 'trash-can']} style={pal.icon} />
+        <FontAwesomeIcon
+          icon={['far', 'trash-can']}
+          style={pal.icon as FontAwesomeIconStyle}
+        />
         <Text style={[pal.textLight, s.ml10]}>This post has been deleted.</Text>
       </View>
     )

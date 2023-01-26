@@ -5,7 +5,7 @@ import {mockedRootStore, mockedShellStore} from '../../../__mocks__/state-mock'
 
 describe('useOnMainScroll', () => {
   const mockedProps = {
-    navIdx: [0, 0] as [number, number],
+    navIdx: '0-0',
     params: {},
     visible: true,
   }

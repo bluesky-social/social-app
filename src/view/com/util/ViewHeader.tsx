@@ -6,7 +6,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {UserAvatar} from './UserAvatar'
 import {Text} from './text/Text'
 import {MagnifyingGlassIcon} from '../../lib/icons'
@@ -92,7 +95,11 @@ export const ViewHeader = observer(function ViewHeader({
             <ActivityIndicator />
           ) : (
             <>
-              <FontAwesomeIcon icon="signal" style={pal.text} size={16} />
+              <FontAwesomeIcon
+                icon="signal"
+                style={pal.text as FontAwesomeIconStyle}
+                size={16}
+              />
               <FontAwesomeIcon
                 icon="x"
                 style={[

@@ -1,6 +1,9 @@
 import React, {useState} from 'react'
 import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {Text} from '../util/text/Text'
 import {useStores} from '../../../state'
@@ -37,13 +40,19 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
                 style={styles.btn}
                 onPress={() => doSelect(LOCAL_DEV_SERVICE)}>
                 <Text style={styles.btnText}>Local dev server</Text>
-                <FontAwesomeIcon icon="arrow-right" style={s.white} />
+                <FontAwesomeIcon
+                  icon="arrow-right"
+                  style={s.white as FontAwesomeIconStyle}
+                />
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.btn}
                 onPress={() => doSelect(STAGING_SERVICE)}>
                 <Text style={styles.btnText}>Staging</Text>
-                <FontAwesomeIcon icon="arrow-right" style={s.white} />
+                <FontAwesomeIcon
+                  icon="arrow-right"
+                  style={s.white as FontAwesomeIconStyle}
+                />
               </TouchableOpacity>
             </>
           ) : undefined}
@@ -51,7 +60,10 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             style={styles.btn}
             onPress={() => doSelect(PROD_SERVICE)}>
             <Text style={styles.btnText}>Bluesky.Social</Text>
-            <FontAwesomeIcon icon="arrow-right" style={s.white} />
+            <FontAwesomeIcon
+              icon="arrow-right"
+              style={s.white as FontAwesomeIconStyle}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.group}>
@@ -74,7 +86,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               onPress={() => doSelect(customUrl)}>
               <FontAwesomeIcon
                 icon="check"
-                style={[s.black, styles.checkIcon]}
+                style={[s.black as FontAwesomeIconStyle, styles.checkIcon]}
                 size={18}
               />
             </TouchableOpacity>

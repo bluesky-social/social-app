@@ -21,7 +21,7 @@ export type ScreenParams = {
   navIdx: string
   params: Record<string, any>
   visible: boolean
-  scrollElRef?: MutableRefObject<FlatList<any> | undefined>
+  scrollElRef?: MutableRefObject<FlatList<any> | null>
 }
 export type Route = [React.FC<ScreenParams>, string, IconProp, RegExp]
 export type MatchResult = {

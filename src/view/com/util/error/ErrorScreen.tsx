@@ -1,6 +1,9 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
 import {colors} from '../../../lib/styles'
 import {useTheme} from '../../../lib/ThemeContext'
@@ -58,7 +61,11 @@ export function ErrorScreen({
             testID="errorScreenTryAgainButton"
             style={[styles.btn, {backgroundColor: theme.palette.error.icon}]}
             onPress={onPressTryAgain}>
-            <FontAwesomeIcon icon="arrows-rotate" style={pal.text} size={16} />
+            <FontAwesomeIcon
+              icon="arrows-rotate"
+              style={pal.text as FontAwesomeIconStyle}
+              size={16}
+            />
             <Text type="button" style={[styles.btnText, pal.text]}>
               Try again
             </Text>

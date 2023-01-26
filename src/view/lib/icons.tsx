@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleProp, ViewStyle} from 'react-native'
+import {StyleProp, TextStyle, ViewStyle} from 'react-native'
 import Svg, {Path} from 'react-native-svg'
 
 export function GridIcon({
@@ -428,12 +428,21 @@ export function CommentBottomArrow({
   size?: string | number
   strokeWidth?: number
 }) {
+  let color = 'currentColor'
+  if (
+    style &&
+    typeof style === 'object' &&
+    'color' in style &&
+    typeof style.color === 'string'
+  ) {
+    color = style.color
+  }
   return (
     <Svg
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={strokeWidth || 2.5}
-      stroke={style?.color || 'currentColor'}
+      stroke={color}
       width={size || 24}
       height={size || 24}
       style={style}>

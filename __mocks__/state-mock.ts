@@ -9,11 +9,9 @@ import {MeModel} from '../src/state/models/me'
 import {OnboardModel} from '../src/state/models/onboard'
 import {ProfilesViewModel} from '../src/state/models/profiles-view'
 import {LinkMetasViewModel} from '../src/state/models/link-metas-view'
-import {MembershipsViewModel} from '../src/state/models/memberships-view'
 import {FeedModel} from '../src/state/models/feed-view'
 import {NotificationsViewModel} from '../src/state/models/notifications-view'
 import {ProfileViewModel} from '../src/state/models/profile-view'
-import {MembersViewModel} from '../src/state/models/members-view'
 import {ProfileUiModel, Sections} from '../src/state/models/profile-ui'
 import {SessionServiceClient} from '@atproto/api'
 import {UserAutocompleteViewModel} from '../src/state/models/user-autocomplete-view'
@@ -70,95 +68,13 @@ export const mockedProfileStore = {
   // unknown required because of the missing private methods: _xLoading, _xIdle, _load, _replaceAll
 } as unknown as ProfileViewModel
 
-export const mockedMembersStore = {
-  isLoading: false,
-  isRefreshing: false,
-  hasLoaded: true,
-  error: '',
-  params: {
-    actor: 'test actor',
-  },
-  subject: {
-    did: 'test did',
-    handle: '',
-    displayName: '',
-    declaration: {
-      cid: '',
-      actorType: '',
-    },
-    avatar: undefined,
-  },
-  members: [
-    {
-      did: 'test did2',
-      declaration: {
-        cid: '',
-        actorType: '',
-      },
-      handle: 'testhandle',
-      displayName: 'test name',
-      indexedAt: '',
-    },
-  ],
-  rootStore: {} as RootStoreModel,
-  hasContent: true,
-  hasError: false,
-  isEmpty: false,
-  isMember: jest.fn(),
-  setup: jest.fn().mockResolvedValue({aborted: false}),
-  refresh: jest.fn().mockResolvedValue({}),
-  loadMore: jest.fn(),
-  removeMember: jest.fn(),
-  // unknown required because of the missing private methods: _xLoading, _xIdle, _fetch, _replaceAll, _append
-} as unknown as MembersViewModel
-
-export const mockedMembershipsStore = {
-  isLoading: false,
-  isRefreshing: false,
-  hasLoaded: true,
-  error: '',
-  params: {
-    actor: '',
-    limit: 1,
-    before: '',
-  },
-  subject: {
-    did: 'test did',
-    handle: '',
-    displayName: '',
-    declaration: {cid: '', actorType: ''},
-    avatar: undefined,
-  },
-  memberships: [
-    {
-      did: 'test did',
-      declaration: {
-        cid: '',
-        actorType: 'app.bsky.system.actorUser',
-      },
-      handle: ',',
-      displayName: '',
-      createdAt: '',
-      indexedAt: '',
-      _reactKey: 'item-1',
-    },
-  ],
-  rootStore: {} as RootStoreModel,
-  hasContent: true,
-  hasError: false,
-  isEmpty: false,
-  isMemberOf: jest.fn(),
-  setup: jest.fn().mockResolvedValue({aborted: false}),
-  refresh: jest.fn().mockResolvedValue({}),
-  loadMore: jest.fn(),
-  // unknown required because of the missing private methods: _xLoading, _xIdle, _fetch, _replaceAll, _append
-} as unknown as MembershipsViewModel
-
 export const mockedFeedItemStore = {
   _reactKey: 'item-1',
   _isThreadParent: false,
   _isThreadChildElided: false,
   _isThreadChild: false,
+  _hideParent: false,
+  _isRenderingAsThread: false,
   post: {
     uri: 'testuri',
     cid: 'test cid',
@@ -475,13 +391,13 @@ export const mockedSessionStore = {
 export const mockedNavigationTabStore = {
   serialize: jest.fn(),
   hydrate: jest.fn(),
-  id: 0,
+  id: '0',
   history: [
     {
       url: '',
       ts: 0,
       title: '',
-      id: 0,
+      id: '0',
     },
   ],
   index: 0,
@@ -490,7 +406,7 @@ export const mockedNavigationTabStore = {
     url: '',
     ts: 0,
     title: '',
-    id: 0,
+    id: '0',
   },
   canGoBack: false,
   canGoForward: false,
@@ -499,7 +415,7 @@ export const mockedNavigationTabStore = {
       url: '',
       title: '',
       index: 0,
-      id: 0,
+      id: '0',
     },
   ],
   forwardTen: [
@@ -507,7 +423,7 @@ export const mockedNavigationTabStore = {
       url: '',
       title: '',
       index: 0,
-      id: 0,
+      id: '0',
     },
   ],
   navigate: jest.fn(),
@@ -524,7 +440,7 @@ export const mockedNavigationTabStore = {
       url: '/',
       title: '',
       index: 1,
-      id: 1,
+      id: '1',
     },
   ],
   getForwardList: jest.fn(),
@@ -582,13 +498,13 @@ export const mockedMeStore = {
   avatar: '',
   notificationCount: 0,
   rootStore: {} as RootStoreModel,
-  memberships: mockedMembershipsStore,
   mainFeed: mockedFeedStore,
   notifications: mockedNotificationsStore,
   clear: jest.fn(),
   load: jest.fn(),
   clearNotificationCount: jest.fn(),
   fetchNotifications: jest.fn(),
+  bgFetchNotifications: jest.fn(),
   refreshMemberships: jest.fn(),
 } as MeModel
 
@@ -650,6 +566,11 @@ export const mockedRootStore = {
   hydrate: jest.fn(),
   fetchStateUpdate: jest.fn(),
   clearAll: jest.fn(),
+  onPostDeleted: jest.fn(),
+  emitPostDeleted: jest.fn(),
+  initBgFetch: jest.fn(),
+  onBgFetch: jest.fn(),
+  onBgFetchTimeout: jest.fn(),
   session: mockedSessionStore,
   nav: mockedNavigationStore,
   shell: mockedShellStore,
@@ -663,8 +584,6 @@ export const mockedRootStore = {
 export const mockedProfileUiStore = {
   profile: mockedProfileStore,
   feed: mockedFeedStore,
-  memberships: mockedMembershipsStore,
-  members: mockedMembersStore,
   selectedViewIndex: 0,
   rootStore: mockedRootStore,
   params: {
@@ -675,7 +594,7 @@ export const mockedProfileUiStore = {
   isRefreshing: false,
   isUser: true,
   isScene: false,
-  selectorItems: [Sections.Posts, Sections.PostsWithReplies, Sections.Scenes],
+  selectorItems: [Sections.Posts, Sections.PostsWithReplies],
   selectedView: Sections.Posts,
   setSelectedViewIndex: jest.fn(),
   setup: jest.fn().mockResolvedValue({aborted: false}),

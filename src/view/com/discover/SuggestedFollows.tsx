@@ -7,7 +7,10 @@ import {
   View,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
 import _omit from 'lodash.omit'
 import {ErrorScreen} from '../util/error/ErrorScreen'
@@ -199,7 +202,7 @@ const User = ({
                 style={[styles.btn, styles.gradientBtn]}>
                 <FontAwesomeIcon
                   icon="plus"
-                  style={[s.white, s.mr5]}
+                  style={[s.white as FontAwesomeIconStyle, s.mr5]}
                   size={15}
                 />
                 <Text style={[s.white, s.fw600, s.f15]}>Follow</Text>

@@ -37,7 +37,7 @@ export function DropdownButton({
   menuWidth,
   children,
 }: {
-  type: DropdownButtonType
+  type?: DropdownButtonType
   style?: StyleProp<ViewStyle>
   items: DropdownItem[]
   label?: string

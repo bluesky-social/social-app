@@ -9,12 +9,22 @@ import {
   View,
 } from 'react-native'
 import {TabView, SceneMap, Route, TabBarProps} from 'react-native-tab-view'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {useStores} from '../../../state'
 import {s} from '../../lib/styles'
 import {TABS_EXPLAINER} from '../../lib/assets'
 import {TABS_ENABLED} from '../../../build-flags'
+
+const ROUTES = TABS_ENABLED
+  ? [
+      {key: 'intro', title: 'Intro'},
+      {key: 'tabs', title: 'Tabs'},
+    ]
+  : [{key: 'intro', title: 'Intro'}]
 
 const Intro = () => (
   <View style={styles.explainer}>
@@ -37,7 +47,7 @@ const Tabs = () => (
       <View style={s.flex1} />
       <FontAwesomeIcon
         icon={['far', 'clone']}
-        style={[s.black, s.mb5]}
+        style={[s.black as FontAwesomeIconStyle, s.mb5]}
         size={36}
       />
       <View style={s.flex1} />
@@ -62,14 +72,10 @@ export const FeatureExplainer = () => {
   const layout = useWindowDimensions()
   const store = useStores()
   const [index, setIndex] = useState(0)
-  const routes = [
-    {key: 'intro', title: 'Intro'},
-    TABS_ENABLED ? {key: 'tabs', title: 'Tabs'} : undefined,
-  ].filter(Boolean)
 
   const onPressSkip = () => store.onboard.next()
   const onPressNext = () => {
-    if (index >= routes.length - 1) {
+    if (index >= ROUTES.length - 1) {
       store.onboard.next()
     } else {
       setIndex(index + 1)
@@ -103,12 +109,12 @@ export const FeatureExplainer = () => {
     )
   }
 
-  const FirstExplainer = SCENE_MAP[routes[0]?.key as keyof typeof SCENE_MAP]
+  const FirstExplainer = SCENE_MAP[ROUTES[0]?.key as keyof typeof SCENE_MAP]
   return (
     <SafeAreaView style={styles.container}>
-      {routes.length > 1 ? (
+      {ROUTES.length > 1 ? (
         <TabView
-          navigationState={{index, routes}}
+          navigationState={{index, routes: ROUTES}}
           renderScene={renderScene}
           renderTabBar={renderTabBar}
           onIndexChange={setIndex}

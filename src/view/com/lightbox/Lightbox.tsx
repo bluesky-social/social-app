@@ -5,6 +5,7 @@ import ImageView from './ImageViewing'
 import {useStores} from '../../../state'
 import * as models from '../../../state/models/shell-ui'
 import {saveImageModal} from '../../../lib/images'
+import {ImageSource} from './ImageViewing/@types'
 
 export const Lightbox = observer(function Lightbox() {
   const store = useStores()
@@ -15,8 +16,14 @@ export const Lightbox = observer(function Lightbox() {
   const onClose = () => {
     store.shell.closeLightbox()
   }
-  const onLongPress = ({uri}: {uri: string}) => {
-    saveImageModal({uri})
+  const onLongPress = (image: ImageSource) => {
+    if (
+      typeof image === 'object' &&
+      'uri' in image &&
+      typeof image.uri === 'string'
+    ) {
+      saveImageModal({uri: image.uri})
+    }
   }
 
   if (store.shell.activeLightbox?.name === 'profile-image') {

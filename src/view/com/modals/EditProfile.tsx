@@ -108,7 +108,6 @@ export function Component({
           <UserBanner
             banner={userBanner}
             onSelectNewBanner={onSelectNewBanner}
-            handle={profileView.handle}
           />
           <View style={styles.avi}>
             <UserAvatar

@@ -36,11 +36,12 @@ export const TabsSelector = observer(
       undefined,
     )
     const closeInterp = useAnimatedValue(0)
+    const tabsContainerRef = useRef<View>(null)
     const tabsRef = useRef<ScrollView>(null)
     const tabRefs = useMemo(
       () =>
         Array.from({length: store.nav.tabs.length}).map(() =>
-          createRef<Animated.View>(),
+          createRef<View>(),
         ),
       [store.nav.tabs.length],
     )
@@ -90,9 +91,9 @@ export const TabsSelector = observer(
     const onLayout = () => {
       // focus the current tab
       const targetTab = tabRefs[store.nav.tabIndex]
-      if (tabsRef.current && targetTab.current) {
+      if (tabsContainerRef.current && tabsRef.current && targetTab.current) {
         targetTab.current.measureLayout?.(
-          tabsRef.current,
+          tabsContainerRef.current,
           (_left: number, top: number) => {
             tabsRef.current?.scrollTo({y: top, animated: false})
           },
@@ -162,7 +163,9 @@ export const TabsSelector = observer(
               </TouchableWithoutFeedback>
             </View>
           </View>
-          <View style={[s.p10, styles.section, styles.sectionGrayBg]}>
+          <View
+            ref={tabsContainerRef}
+            style={[s.p10, styles.section, styles.sectionGrayBg]}>
             <ScrollView ref={tabsRef} style={styles.tabs}>
               {store.nav.tabs.map((tab, tabIndex) => {
                 const {icon} = match(tab.current.url)

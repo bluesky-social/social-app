@@ -9,7 +9,11 @@ import {
 } from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {AtUri} from '../../../third-party/uri'
-import {FontAwesomeIcon, Props} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+  Props,
+} from '@fortawesome/react-native-fontawesome'
 import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
 import {s, colors} from '../../lib/styles'
@@ -98,18 +102,21 @@ export const FeedItem = observer(function FeedItem({
   if (item.isUpvote) {
     action = 'liked your post'
     icon = 'HeartIconSolid'
-    iconStyle = [s.red3, {position: 'relative', top: -4}]
+    iconStyle = [
+      s.red3 as FontAwesomeIconStyle,
+      {position: 'relative', top: -4},
+    ]
   } else if (item.isRepost) {
     action = 'reposted your post'
     icon = 'retweet'
-    iconStyle = [s.green3]
+    iconStyle = [s.green3 as FontAwesomeIconStyle]
   } else if (item.isReply) {
     action = 'replied to your post'
     icon = ['far', 'comment']
   } else if (item.isFollow) {
     action = 'followed you'
     icon = 'user-plus'
-    iconStyle = [s.blue3]
+    iconStyle = [s.blue3 as FontAwesomeIconStyle]
   } else {
     return <></>
   }
@@ -292,7 +299,6 @@ function ExpandedAuthorsList({
     authors.length * (EXPANDED_AUTHOR_EL_HEIGHT + 10) /*10=margin*/
   const heightStyle = {
     height: Animated.multiply(heightInterp, targetHeight),
-    overflow: 'hidden',
   }
   React.useEffect(() => {
     Animated.timing(heightInterp, {
@@ -302,7 +308,12 @@ function ExpandedAuthorsList({
     }).start()
   }, [heightInterp, visible])
   return (
-    <Animated.View style={[heightStyle, visible ? s.mb10 : undefined]}>
+    <Animated.View
+      style={[
+        heightStyle,
+        styles.overflowHidden,
+        visible ? s.mb10 : undefined,
+      ]}>
       {authors.map(author => (
         <Link
           key={author.href}
@@ -360,6 +371,10 @@ function AdditionalPostText({
 }
 
 const styles = StyleSheet.create({
+  overflowHidden: {
+    overflow: 'hidden',
+  },
+
   outer: {
     padding: 10,
     paddingRight: 15,

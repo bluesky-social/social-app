@@ -41,6 +41,7 @@ describe('extractHtmlMeta', () => {
 
   it.each(cases)(
     'given the html tag %p, returns %p',
+    // @ts-ignore not worth fixing -prf
     (input, expectedResult) => {
       const output = extractHtmlMeta({html: input as string, hostname: ''})
       expect(output).toEqual(expectedResult)
@@ -86,6 +87,7 @@ describe('extractHtmlMeta', () => {
       title: '@bluesky on Twitter',
     }
     const output = extractHtmlMeta({
+      html: '',
       hostname: 'twitter.com',
       pathname: '/bluesky',
     })
@@ -97,6 +99,7 @@ describe('extractHtmlMeta', () => {
       title: 'Tweet by @bluesky',
     }
     const output = extractHtmlMeta({
+      html: '',
       hostname: 'twitter.com',
       pathname: '/bluesky/status/1582437529969917953',
     })
@@ -108,6 +111,7 @@ describe('extractHtmlMeta', () => {
       title: 'Twitter',
     }
     const output = extractHtmlMeta({
+      html: '',
       hostname: 'twitter.com',
       pathname: '/i/articles/follows/-1675653703?time_window=24',
     })

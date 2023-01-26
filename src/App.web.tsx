@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {DesktopWebShell} from './view/shell/desktop-web'
-import Toast from 'react-native-root-toast'
+// import Toast from 'react-native-root-toast' TODO
 
 function App() {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -23,9 +23,9 @@ function App() {
   return (
     <RootStoreProvider value={rootStore}>
       <DesktopWebShell />
-      <Toast.ToastContainer />
     </RootStoreProvider>
   )
+  // <Toast.ToastContainer /> TODO
 }
 
 export default App

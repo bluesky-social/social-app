@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {StyleSheet, View} from 'react-native'
+import {StyleProp, StyleSheet, TextStyle, View} from 'react-native'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
@@ -12,7 +12,7 @@ export const PostText = observer(function PostText({
   style,
 }: {
   uri: string
-  style?: StyleProp
+  style?: StyleProp<TextStyle>
 }) {
   const store = useStores()
   const [model, setModel] = useState<PostModel | undefined>()

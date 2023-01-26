@@ -77,6 +77,7 @@ export const getImageStyles = (
   const transform = translate.getTranslateTransform()
 
   if (scale) {
+    // @ts-ignore TODO - is scale incorrect? might need to remove -prf
     transform.push({scale}, {perspective: new Animated.Value(1000)})
   }
 

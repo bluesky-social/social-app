@@ -1,7 +1,10 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {Text} from './text/Text'
 import {UserGroupIcon} from '../../lib/icons'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -25,7 +28,10 @@ export function EmptyState({
           <FontAwesomeIcon
             icon={icon}
             size={64}
-            style={[styles.icon, {color: pal.colors.emptyStateIcon}]}
+            style={[
+              styles.icon,
+              {color: pal.colors.emptyStateIcon} as FontAwesomeIconStyle,
+            ]}
           />
         )}
       </View>

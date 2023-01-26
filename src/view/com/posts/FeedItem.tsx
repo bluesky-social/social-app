@@ -4,7 +4,10 @@ import {StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '../../../third-party/uri'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {FeedItemModel} from '../../../state/models/feed-view'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -137,7 +140,10 @@ export const FeedItem = observer(function ({
             }>
             <FontAwesomeIcon
               icon="retweet"
-              style={[styles.includeReasonIcon, {color: pal.colors.textLight}]}
+              style={[
+                styles.includeReasonIcon,
+                {color: pal.colors.textLight} as FontAwesomeIconStyle,
+              ]}
             />
             <Text type="sm-bold" style={pal.textLight}>
               Reposted by{' '}
@@ -167,7 +173,10 @@ export const FeedItem = observer(function ({
                 <FontAwesomeIcon
                   icon="reply"
                   size={9}
-                  style={[{color: pal.colors.textLight}, s.mr5]}
+                  style={[
+                    {color: pal.colors.textLight} as FontAwesomeIconStyle,
+                    s.mr5,
+                  ]}
                 />
                 <Text type="md" style={[pal.textLight, s.mr2]}>
                   Reply to
