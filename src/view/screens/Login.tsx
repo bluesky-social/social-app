@@ -1,21 +1,19 @@
 import React, {useState} from 'react'
 import {
+  Image,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
   View,
-  useWindowDimensions,
 } from 'react-native'
-import Svg, {Line} from 'react-native-svg'
-import LinearGradient from 'react-native-linear-gradient'
 import {observer} from 'mobx-react-lite'
 import {Signin} from '../com/login/Signin'
-import {Logo} from '../com/login/Logo'
 import {CreateAccount} from '../com/login/CreateAccount'
 import {Text} from '../com/util/text/Text'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
-import {s, colors} from '../lib/styles'
+import {colors} from '../lib/styles'
 import {usePalette} from '../lib/hooks/usePalette'
+import {CLOUD_SPLASH} from '../lib/assets'
 
 enum ScreenState {
   S_SigninOrCreateAccount,
@@ -30,48 +28,27 @@ const SigninOrCreateAccount = ({
   onPressSignin: () => void
   onPressCreateAccount: () => void
 }) => {
-  const winDim = useWindowDimensions()
-  const halfWidth = winDim.width / 2
+  const pal = usePalette('default')
   return (
     <>
       <View style={styles.hero}>
-        <Logo color="white" />
-        <Text style={styles.title}>Bluesky</Text>
-        <Text style={styles.subtitle}>[ private beta ]</Text>
+        <View style={styles.heroText}>
+          <Text style={styles.title}>Bluesky</Text>
+          <Text style={styles.subtitle}>[ private beta ]</Text>
+        </View>
       </View>
-      <View testID="signinOrCreateAccount" style={s.flex1}>
+      <View testID="signinOrCreateAccount" style={styles.btns}>
         <TouchableOpacity
           testID="createAccountButton"
-          style={styles.btn}
+          style={[pal.view, styles.btn]}
           onPress={onPressCreateAccount}>
-          <Text style={styles.btnLabel}>Create a new account</Text>
+          <Text style={[pal.link, styles.btnLabel]}>Create a new account</Text>
         </TouchableOpacity>
-        <View style={styles.or}>
-          <Svg height="1" width={winDim.width} style={styles.orLine}>
-            <Line
-              x1="30"
-              y1="0"
-              x2={halfWidth - 20}
-              y2="0"
-              stroke="white"
-              strokeWidth="1"
-            />
-            <Line
-              x1={halfWidth + 20}
-              y1="0"
-              x2={winDim.width - 30}
-              y2="0"
-              stroke="white"
-              strokeWidth="1"
-            />
-          </Svg>
-          <Text style={styles.orLabel}>or</Text>
-        </View>
         <TouchableOpacity
           testID="signInButton"
-          style={styles.btn}
+          style={[pal.view, styles.btn]}
           onPress={onPressSignin}>
-          <Text style={styles.btnLabel}>Sign in</Text>
+          <Text style={[pal.link, styles.btnLabel]}>Sign in</Text>
         </TouchableOpacity>
       </View>
     </>
@@ -86,11 +63,8 @@ export const Login = observer(() => {
 
   if (screenState === ScreenState.S_SigninOrCreateAccount) {
     return (
-      <LinearGradient
-        colors={['#007CFF', '#00BCFF']}
-        start={{x: 0, y: 0.8}}
-        end={{x: 0, y: 1}}
-        style={styles.container}>
+      <View style={styles.container}>
+        <Image source={CLOUD_SPLASH} style={styles.bgImg} />
         <SafeAreaView testID="noSessionView" style={styles.container}>
           <ErrorBoundary>
             <SigninOrCreateAccount
@@ -101,7 +75,7 @@ export const Login = observer(() => {
             />
           </ErrorBoundary>
         </SafeAreaView>
-      </LinearGradient>
+      </View>
     )
   }
 
@@ -140,21 +114,34 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
   },
+  bgImg: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+  },
+  heroText: {
+    backgroundColor: colors.white,
+    paddingTop: 10,
+    paddingBottom: 20,
+  },
+  btns: {
+    paddingBottom: 40,
+  },
   title: {
     textAlign: 'center',
-    color: colors.white,
+    color: colors.blue3,
     fontSize: 68,
     fontWeight: 'bold',
   },
   subtitle: {
     textAlign: 'center',
-    color: colors.white,
+    color: colors.blue3,
     fontSize: 18,
   },
   btn: {
-    borderWidth: 1,
-    borderColor: colors.white,
-    borderRadius: 10,
+    borderRadius: 4,
     paddingVertical: 16,
     marginBottom: 20,
     marginHorizontal: 20,
@@ -162,20 +149,8 @@ const styles = StyleSheet.create({
   },
   btnLabel: {
     textAlign: 'center',
+    fontSize: 21,
+    // fontWeight: '500',
     color: colors.white,
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  or: {
-    marginBottom: 20,
-  },
-  orLine: {
-    position: 'absolute',
-    top: 10,
-  },
-  orLabel: {
-    textAlign: 'center',
-    color: colors.white,
-    fontSize: 16,
   },
 })

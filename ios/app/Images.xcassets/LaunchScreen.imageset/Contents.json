@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "splash.jpg",
+      "filename" : "bsky-app-splash.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "splash@2x.jpg",
+      "filename" : "bsky-app-splash@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "splash@3x.jpg",
+      "filename" : "bsky-app-splash@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
