@@ -1,6 +1,9 @@
 import React, {useCallback} from 'react'
 import {Image, StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {
   openPicker,
   openCamera,
@@ -131,13 +134,21 @@ export const PhotoCarouselPicker = ({
         testID="openCameraButton"
         style={[styles.galleryButton, pal.border, styles.photo]}
         onPress={handleOpenCamera}>
-        <FontAwesomeIcon icon="camera" size={24} style={pal.link} />
+        <FontAwesomeIcon
+          icon="camera"
+          size={24}
+          style={pal.link as FontAwesomeIconStyle}
+        />
       </TouchableOpacity>
       <TouchableOpacity
         testID="openGalleryButton"
         style={[styles.galleryButton, pal.border, styles.photo]}
         onPress={handleOpenGallery}>
-        <FontAwesomeIcon icon="image" style={pal.link} size={24} />
+        <FontAwesomeIcon
+          icon="image"
+          style={pal.link as FontAwesomeIconStyle}
+          size={24}
+        />
       </TouchableOpacity>
       {localPhotos.photos.map((item: PhotoIdentifier, index: number) => (
         <TouchableOpacity

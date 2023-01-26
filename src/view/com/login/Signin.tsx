@@ -8,7 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
 import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
 import {useAnalytics} from '@segment/analytics-react-native'
@@ -337,7 +340,11 @@ const LoginForm = ({
               {toNiceDomain(serviceUrl)}
             </Text>
             <View style={[pal.btn, styles.textBtnFakeInnerBtn]}>
-              <FontAwesomeIcon icon="pen" size={12} style={pal.textLight} />
+              <FontAwesomeIcon
+                icon="pen"
+                size={12}
+                style={pal.textLight as FontAwesomeIconStyle}
+              />
             </View>
           </TouchableOpacity>
         </View>
@@ -514,7 +521,11 @@ const ForgotPasswordForm = ({
               {toNiceDomain(serviceUrl)}
             </Text>
             <View style={[pal.btn, styles.textBtnFakeInnerBtn]}>
-              <FontAwesomeIcon icon="pen" size={12} style={pal.text} />
+              <FontAwesomeIcon
+                icon="pen"
+                size={12}
+                style={pal.text as FontAwesomeIconStyle}
+              />
             </View>
           </TouchableOpacity>
           <View style={[pal.borderDark, styles.groupContent]}>

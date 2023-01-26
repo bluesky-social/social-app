@@ -97,7 +97,11 @@ const User = ({item}: {item: FollowItem}) => {
             size={40}
             displayName={item.displayName}
             handle={item.handle}
-            avatar={item.avatar}
+            avatar={
+              item.avatar as
+                | string
+                | undefined /* HACK: type signature is wrong in the api */
+            }
           />
         </View>
         <View style={styles.layoutContent}>

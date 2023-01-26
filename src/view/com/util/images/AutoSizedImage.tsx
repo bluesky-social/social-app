@@ -30,6 +30,7 @@ export function AutoSizedImage({
 }: {
   uri: string
   onPress?: () => void
+  onLongPress?: () => void
   style?: StyleProp<ImageStyle>
   containerStyle?: StyleProp<ViewStyle>
 }) {
@@ -68,7 +69,7 @@ export function AutoSizedImage({
     })
   }
 
-  let calculatedStyle: StyleProp<ViewStyle> | undefined
+  let calculatedStyle: StyleProp<ImageStyle> | undefined
   if (imgInfo && containerInfo) {
     // imgInfo.height / imgInfo.width = x / containerInfo.width
     // x = imgInfo.height / imgInfo.width * containerInfo.width

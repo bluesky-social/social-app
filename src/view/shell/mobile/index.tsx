@@ -67,29 +67,36 @@ const Btn = ({
   onLongPress?: (event: GestureResponderEvent) => void
 }) => {
   const pal = usePalette('default')
-  let size = 24
-  let addedStyles
-  let IconEl
+  let iconEl
   if (icon === 'menu') {
-    IconEl = GridIcon
+    iconEl = <GridIcon style={[styles.ctrlIcon, pal.text]} />
   } else if (icon === 'menu-solid') {
-    IconEl = GridIconSolid
+    iconEl = <GridIconSolid style={[styles.ctrlIcon, pal.text]} />
   } else if (icon === 'home') {
-    IconEl = HomeIcon
-    size = 27
+    iconEl = <HomeIcon size={27} style={[styles.ctrlIcon, pal.text]} />
   } else if (icon === 'home-solid') {
-    IconEl = HomeIconSolid
-    size = 27
+    iconEl = <HomeIconSolid size={27} style={[styles.ctrlIcon, pal.text]} />
   } else if (icon === 'bell') {
-    IconEl = BellIcon
-    size = 27
-    addedStyles = {position: 'relative', top: -1} as ViewStyle
+    const addedStyles = {position: 'relative', top: -1} as ViewStyle
+    iconEl = (
+      <BellIcon size={27} style={[styles.ctrlIcon, pal.text, addedStyles]} />
+    )
   } else if (icon === 'bell-solid') {
-    IconEl = BellIconSolid
-    size = 27
-    addedStyles = {position: 'relative', top: -1} as ViewStyle
+    const addedStyles = {position: 'relative', top: -1} as ViewStyle
+    iconEl = (
+      <BellIconSolid
+        size={27}
+        style={[styles.ctrlIcon, pal.text, addedStyles]}
+      />
+    )
   } else {
-    IconEl = FontAwesomeIcon
+    iconEl = (
+      <FontAwesomeIcon
+        size={24}
+        icon={icon}
+        style={[styles.ctrlIcon, pal.text]}
+      />
+    )
   }
 
   return (
@@ -108,11 +115,7 @@ const Btn = ({
           <Text style={styles.tabCountLabel}>{tabCount}</Text>
         </View>
       ) : undefined}
-      <IconEl
-        size={size}
-        style={[styles.ctrlIcon, pal.text, addedStyles]}
-        icon={icon}
-      />
+      {iconEl}
     </TouchableOpacity>
   )
 }
@@ -122,7 +125,7 @@ export const MobileShell: React.FC = observer(() => {
   const pal = usePalette('default')
   const store = useStores()
   const [isTabsSelectorActive, setTabsSelectorActive] = useState(false)
-  const scrollElRef = useRef<FlatList | undefined>()
+  const scrollElRef = useRef<FlatList>(null)
   const winDim = useWindowDimensions()
   const [menuSwipingDirection, setMenuSwipingDirection] = useState(0)
   const swipeGestureInterp = useAnimatedValue(0)
@@ -292,9 +295,11 @@ export const MobileShell: React.FC = observer(() => {
     )
     shouldRenderMenu = true
   }
-  const menuSwipeTransform = {
-    transform: [{translateX: menuTranslateX}],
-  }
+  const menuSwipeTransform = menuTranslateX
+    ? {
+        transform: [{translateX: menuTranslateX}],
+      }
+    : undefined
   const swipeOpacity = {
     opacity: swipeGestureInterp.interpolate({
       inputRange: [-1, 0, 1],
@@ -417,10 +422,7 @@ export const MobileShell: React.FC = observer(() => {
           ) : undefined}
           {shouldRenderMenu && (
             <Animated.View style={[styles.menuDrawer, menuSwipeTransform]}>
-              <Menu
-                visible={isMenuActive}
-                onClose={() => store.shell.setMainMenuOpen(false)}
-              />
+              <Menu onClose={() => store.shell.setMainMenuOpen(false)} />
             </Animated.View>
           )}
         </HorzSwipe>

@@ -6,7 +6,10 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
 import {useTheme} from '../../../lib/ThemeContext'
 import {usePalette} from '../../../lib/hooks/usePalette'
@@ -28,7 +31,11 @@ export function ErrorMessage({
     <View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
       <View
         style={[styles.errorIcon, {backgroundColor: theme.palette.error.icon}]}>
-        <FontAwesomeIcon icon="exclamation" style={pal.text} size={16} />
+        <FontAwesomeIcon
+          icon="exclamation"
+          style={pal.text as FontAwesomeIconStyle}
+          size={16}
+        />
       </View>
       <Text
         type="sm"

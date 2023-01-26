@@ -16,7 +16,10 @@ import PasteInput, {
   PasteInputRef,
 } from '@mattermost/react-native-paste-input'
 import LinearGradient from 'react-native-linear-gradient'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {useAnalytics} from '@segment/analytics-react-native'
 import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete-view'
 import {Autocomplete} from './Autocomplete'
@@ -438,7 +441,11 @@ export const ComposePost = observer(function ComposePost({
               hitSlop={HITSLOP}>
               <FontAwesomeIcon
                 icon={['far', 'image']}
-                style={selectedPhotos.length < 4 ? pal.link : pal.textLight}
+                style={
+                  (selectedPhotos.length < 4
+                    ? pal.link
+                    : pal.textLight) as FontAwesomeIconStyle
+                }
                 size={24}
               />
             </TouchableOpacity>

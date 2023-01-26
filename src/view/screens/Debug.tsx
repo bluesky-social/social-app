@@ -5,14 +5,13 @@ import {ThemeProvider} from '../lib/ThemeContext'
 import {PaletteColorName} from '../lib/ThemeContext'
 import {usePalette} from '../lib/hooks/usePalette'
 import {s} from '../lib/styles'
-import {DEF_AVATAR} from '../lib/assets'
 import {displayNotification} from '../lib/notifee'
 
 import {Text} from '../com/util/text/Text'
 import {ViewSelector} from '../com/util/ViewSelector'
 import {EmptyState} from '../com/util/EmptyState'
 import * as LoadingPlaceholder from '../com/util/LoadingPlaceholder'
-import {Button} from '../com/util/forms/Button'
+import {Button, ButtonType} from '../com/util/forms/Button'
 import {DropdownButton, DropdownItem} from '../com/util/forms/DropdownButton'
 import {ToggleButton} from '../com/util/forms/ToggleButton'
 import {RadioGroup} from '../com/util/forms/RadioGroup'
@@ -48,9 +47,9 @@ function DebugInner({
   const [currentView, setCurrentView] = React.useState<number>(0)
   const pal = usePalette('default')
 
-  const renderItem = (item, i) => {
+  const renderItem = (item: any) => {
     return (
-      <View key={`view-${i}`}>
+      <View key={`view-${item.currentView}`}>
         <View style={[s.pt10, s.pl10, s.pr10]}>
           <ToggleButton
             type="default-light"
@@ -179,18 +178,10 @@ function NotifsView() {
       "Hello world! This is a test of the notifications card. The text is long to see how that's handled.",
     )
   }
-  const triggerImg = () => {
-    displayNotification(
-      'Paul Frazee liked your post',
-      "Hello world! This is a test of the notifications card. The text is long to see how that's handled.",
-      DEF_AVATAR,
-    )
-  }
   return (
     <View style={s.p10}>
       <View style={s.flexRow}>
         <Button onPress={trigger} label="Trigger" />
-        <Button onPress={triggerImg} label="Trigger w/image" style={s.ml5} />
       </View>
     </View>
   )
@@ -484,14 +475,14 @@ const RADIO_BUTTON_ITEMS = [
 ]
 function RadioButtonsView() {
   const defaultPal = usePalette('default')
-  const [rgType, setRgType] = React.useState('default-light')
+  const [rgType, setRgType] = React.useState<ButtonType>('default-light')
   return (
     <View style={[defaultPal.view]}>
       <RadioGroup
         type={rgType}
         items={RADIO_BUTTON_ITEMS}
         initialSelection="default-light"
-        onSelect={setRgType}
+        onSelect={v => setRgType(v as ButtonType)}
       />
     </View>
   )

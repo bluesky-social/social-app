@@ -9,7 +9,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {ComAtprotoAccountCreate} from '@atproto/api'
 import * as EmailValidator from 'email-validator'
 import {useAnalytics} from '@segment/analytics-react-native'
@@ -264,7 +267,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                   <Picker
                     style={[pal.text, styles.picker]}
                     labelStyle={styles.pickerLabel}
-                    iconStyle={pal.textLight}
+                    iconStyle={pal.textLight as FontAwesomeIconStyle}
                     value={userDomain}
                     items={serviceDescription.availableUserDomains.map(d => ({
                       label: `.${d}`,
@@ -371,7 +374,11 @@ const Policies = ({
     return (
       <View style={styles.policies}>
         <View style={[styles.errorIcon, {borderColor: pal.colors.text}, s.mt2]}>
-          <FontAwesomeIcon icon="exclamation" style={pal.textLight} size={10} />
+          <FontAwesomeIcon
+            icon="exclamation"
+            style={pal.textLight as FontAwesomeIconStyle}
+            size={10}
+          />
         </View>
         <Text style={[pal.textLight, s.pl5, s.flex1]}>
           This service has not provided terms of service or a privacy policy.

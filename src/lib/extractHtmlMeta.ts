@@ -63,7 +63,7 @@ export const extractHtmlMeta = ({
   // Workaround for some websites not having a title or description in the meta tags in the initial serve
   if (isYoutubeUrl) {
     res = {...res, ...extractYoutubeMeta(html)}
-  } else if (isTwitterUrl) {
+  } else if (isTwitterUrl && pathname) {
     res = {...extractTwitterMeta({pathname})}
   }
 

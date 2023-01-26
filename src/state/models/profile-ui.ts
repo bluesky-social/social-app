@@ -98,8 +98,6 @@ export class ProfileUiModel {
     const view = this.currentView
     if (view instanceof FeedModel) {
       await view.update()
-    } else {
-      await view.refresh()
     }
   }
 

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
-import {VotesViewModel, VotesItem} from '../../../state/models/votes-view'
+import {VotesViewModel, VoteItem} from '../../../state/models/votes-view'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -56,7 +56,7 @@ export const PostVotedBy = observer(function PostVotedBy({
 
   // loaded
   // =
-  const renderItem = ({item}: {item: VotesItem}) => <LikedByItem item={item} />
+  const renderItem = ({item}: {item: VoteItem}) => <LikedByItem item={item} />
   return (
     <FlatList
       data={view.votes}
@@ -76,7 +76,7 @@ export const PostVotedBy = observer(function PostVotedBy({
   )
 })
 
-const LikedByItem = ({item}: {item: VotesItem}) => {
+const LikedByItem = ({item}: {item: VoteItem}) => {
   const pal = usePalette('default')
 
   return (

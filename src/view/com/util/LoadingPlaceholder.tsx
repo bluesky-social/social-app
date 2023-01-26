@@ -63,7 +63,7 @@ export function PostLoadingPlaceholder({
           </View>
           <View style={s.flex1}>
             <HeartIcon
-              style={{color: theme.palette.default.icon}}
+              style={{color: theme.palette.default.icon} as ViewStyle}
               size={17}
               strokeWidth={1.7}
             />

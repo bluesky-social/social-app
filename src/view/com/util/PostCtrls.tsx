@@ -7,7 +7,10 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
 import {Text} from './text/Text'
 import {PostDropdownBtn} from './forms/DropdownButton'
@@ -147,7 +150,9 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           <Animated.View style={anim1Style}>
             <RepostIcon
               style={
-                opts.isReposted ? styles.ctrlIconReposted : defaultCtrlColor
+                (opts.isReposted
+                  ? styles.ctrlIconReposted
+                  : defaultCtrlColor) as ViewStyle
               }
               strokeWidth={2.4}
               size={opts.big ? 24 : 20}
@@ -173,12 +178,15 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           <Animated.View style={anim2Style}>
             {opts.isUpvoted ? (
               <HeartIconSolid
-                style={[styles.ctrlIconUpvoted]}
+                style={styles.ctrlIconUpvoted as ViewStyle}
                 size={opts.big ? 22 : 16}
               />
             ) : (
               <HeartIcon
-                style={[defaultCtrlColor, opts.big ? styles.mt1 : undefined]}
+                style={[
+                  defaultCtrlColor as ViewStyle,
+                  opts.big ? styles.mt1 : undefined,
+                ]}
                 strokeWidth={3}
                 size={opts.big ? 20 : 16}
               />
@@ -214,7 +222,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                 {
                   color:
                     theme.colorScheme === 'light' ? colors.gray4 : colors.gray5,
-                },
+                } as FontAwesomeIconStyle,
               ]}
             />
           </PostDropdownBtn>

@@ -5,7 +5,7 @@ import {cleanup, fireEvent, render} from '../../../jest/test-utils'
 describe('Search', () => {
   jest.useFakeTimers()
   const mockedProps = {
-    navIdx: [0, 0] as [number, number],
+    navIdx: '0-0',
     params: {
       name: 'test name',
     },

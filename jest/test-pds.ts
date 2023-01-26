@@ -179,7 +179,7 @@ async function genMockData(pdsUrl: string): Promise<TestUsers> {
           did: subject.did,
           declarationCid: subject.declarationCid,
         },
-        createdAt: date.next().value,
+        createdAt: date.next().value || '',
       },
     )
   }

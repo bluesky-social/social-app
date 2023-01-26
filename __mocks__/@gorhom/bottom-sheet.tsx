@@ -6,7 +6,7 @@ const BottomSheetModalContext = React.createContext(null)
 const BottomSheetModalProvider = (props: any) => {
   return <BottomSheetModalContext.Provider {...props} value={{}} />
 }
-class BottomSheet extends React.Component {
+class BottomSheet extends React.Component<{onClose?: () => void}> {
   snapToIndex() {}
   snapToPosition() {}
   expand() {}
