@@ -70,6 +70,7 @@ module.exports = {
   resolve: {
     alias: {
       'react-native$': 'react-native-web',
+      'react-native-linear-gradient': 'react-native-web-linear-gradient',
     },
     extensions: [
       '.web.tsx',

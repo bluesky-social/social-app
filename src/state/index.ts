@@ -2,7 +2,7 @@ import {autorun} from 'mobx'
 import {Platform} from 'react-native'
 import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
 import {RootStoreModel} from './models/root-store'
-import * as libapi from './lib/api'
+import * as apiPolyfill from './lib/api-polyfill'
 import * as storage from './lib/storage'
 
 export const LOCAL_DEV_SERVICE =
@@ -17,7 +17,7 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
   let rootStore: RootStoreModel
   let data: any
 
-  libapi.doPolyfill()
+  apiPolyfill.doPolyfill()
 
   const api = AtpApi.service(serviceUri) as SessionServiceClient
   rootStore = new RootStoreModel(api)

@@ -7,7 +7,7 @@ import {
   openCropper,
   openPicker,
   Image as PickedImage,
-} from 'react-native-image-crop-picker'
+} from './images/ImageCropPicker'
 import {colors, gradients} from '../../lib/styles'
 
 export function UserAvatar({

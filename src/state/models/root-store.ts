@@ -6,7 +6,7 @@ import {makeAutoObservable} from 'mobx'
 import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
 import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
-import BackgroundFetch from 'react-native-background-fetch'
+import * as BgScheduler from '../lib/bg-scheduler'
 import {isObj, hasProp} from '../lib/type-guards'
 import {LogModel} from './log'
 import {SessionModel} from './session'
@@ -124,8 +124,7 @@ export class RootStoreModel {
     // background fetch runs every 15 minutes *at most* and will get slowed down
     // based on some heuristics run by iOS, meaning it is not a reliable form of delivery
     // -prf
-    BackgroundFetch.configure(
-      {minimumFetchInterval: 15},
+    BgScheduler.configure(
       this.onBgFetch.bind(this),
       this.onBgFetchTimeout.bind(this),
     ).then(status => {
@@ -138,12 +137,12 @@ export class RootStoreModel {
     if (this.session.hasSession) {
       await this.me.bgFetchNotifications()
     }
-    BackgroundFetch.finish(taskId)
+    BgScheduler.finish(taskId)
   }
 
   onBgFetchTimeout(taskId: string) {
     this.log.debug(`Background fetch timed out for task ${taskId}`)
-    BackgroundFetch.finish(taskId)
+    BgScheduler.finish(taskId)
   }
 }
 

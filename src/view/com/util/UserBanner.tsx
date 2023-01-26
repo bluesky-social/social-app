@@ -2,13 +2,9 @@ import React, {useCallback} from 'react'
 import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Image as PickedImage} from 'react-native-image-crop-picker'
+import {Image as PickedImage} from './images/ImageCropPicker'
 import {colors, gradients} from '../../lib/styles'
-import {
-  openCamera,
-  openCropper,
-  openPicker,
-} from 'react-native-image-crop-picker'
+import {openCamera, openCropper, openPicker} from './images/ImageCropPicker'
 
 export function UserBanner({
   banner,
