@@ -8,7 +8,7 @@ import {
   openPicker,
   openCamera,
   openCropper,
-} from 'react-native-image-crop-picker'
+} from '../util/images/ImageCropPicker'
 import {
   UserLocalPhotosModel,
   PhotoIdentifier,
