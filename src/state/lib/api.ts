@@ -4,20 +4,13 @@
  */
 
 // import {ReactNativeStore} from './auth'
-import {
-  sessionClient as AtpApi,
-  AppBskyEmbedImages,
-  AppBskyEmbedExternal,
-} from '@atproto/api'
-import RNFS from 'react-native-fs'
+import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from '../models/root-store'
 import {extractEntities} from '../../lib/strings'
 import {isNetworkError} from '../../lib/errors'
 import {LinkMeta} from '../../lib/link-meta'
 import {Image} from '../../lib/images'
-
-const TIMEOUT = 10e3 // 10s
 
 export interface ExternalEmbedDraft {
   uri: string
