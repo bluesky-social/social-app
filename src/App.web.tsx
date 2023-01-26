@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react'
+import {SafeAreaProvider} from 'react-native-safe-area-context'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
-import {DesktopWebShell} from './view/shell/desktop-web'
+import {WebShell} from './view/shell/web'
 // import Toast from 'react-native-root-toast' TODO
 
 function App() {
@@ -22,7 +23,9 @@ function App() {
 
   return (
     <RootStoreProvider value={rootStore}>
-      <DesktopWebShell />
+      <SafeAreaProvider>
+        <WebShell />
+      </SafeAreaProvider>
     </RootStoreProvider>
   )
   // <Toast.ToastContainer /> TODO

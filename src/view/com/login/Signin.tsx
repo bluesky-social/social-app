@@ -14,7 +14,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
 import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
-import {useAnalytics} from '@segment/analytics-react-native'
+// import {useAnalytics} from '@segment/analytics-react-native' TODO
 import {LogoTextHero} from './Logo'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
@@ -153,7 +153,7 @@ const ChooseAccountForm = ({
   onSelectAccount: (account?: AccountData) => void
   onPressBack: () => void
 }) => {
-  const {track} = useAnalytics()
+  // const {track} = useAnalytics() TODO
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = React.useState(false)
 
@@ -161,7 +161,7 @@ const ChooseAccountForm = ({
     if (account.accessJwt && account.refreshJwt) {
       setIsProcessing(true)
       if (await store.session.resumeSession(account)) {
-        track('Sign In', {resumedSession: true})
+        // track('Sign In', {resumedSession: true}) TODO
         setIsProcessing(false)
         return
       }
@@ -261,7 +261,7 @@ const LoginForm = ({
   onPressBack: () => void
   onPressForgotPassword: () => void
 }) => {
-  const {track} = useAnalytics()
+  // const {track} = useAnalytics() TODO
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [handle, setHandle] = useState<string>(initialHandle)
@@ -302,7 +302,7 @@ const LoginForm = ({
         handle: fullHandle,
         password,
       })
-      track('Sign In', {resumedSession: false})
+      // track('Sign In', {resumedSession: false}) TODO
     } catch (e: any) {
       const errMsg = e.toString()
       store.log.warn('Failed to login', e)
