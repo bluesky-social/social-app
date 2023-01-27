@@ -1,13 +1,13 @@
 import React, {useEffect, useState, useMemo, useRef} from 'react'
 import {
   Keyboard,
-  ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
+import {CenteredView, ScrollView} from '../com/util/Views'
 import {SuggestedFollows} from '../com/discover/SuggestedFollows'
 import {UserAvatar} from '../com/util/UserAvatar'
 import {Text} from '../com/util/text/Text'
@@ -54,7 +54,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
   return (
     <View style={[pal.view, styles.container]}>
       <ViewHeader title="Search" />
-      <View style={[pal.view, pal.border, styles.inputContainer]}>
+      <CenteredView style={[pal.view, pal.border, styles.inputContainer]}>
         <MagnifyingGlassIcon style={[pal.text, styles.inputIcon]} />
         <TextInput
           testID="searchTextInput"
@@ -66,7 +66,7 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
           style={[pal.text, styles.input]}
           onChangeText={onChangeQuery}
         />
-      </View>
+      </CenteredView>
       <View style={styles.outputContainer}>
         {query ? (
           <ScrollView testID="searchScrollView" onScroll={Keyboard.dismiss}>

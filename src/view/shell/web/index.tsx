@@ -3,7 +3,7 @@ import {observer} from 'mobx-react-lite'
 import {View, StyleSheet, Text} from 'react-native'
 import {useStores} from '../../../state'
 import {match, MatchResult} from '../../routes'
-// import {DesktopLeftColumn} from './left-column'
+import {DesktopLeftColumn} from './left-column'
 // import {DesktopRightColumn} from './right-column'
 import {Login} from '../../screens/Login'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
@@ -34,6 +34,7 @@ export const WebShell: React.FC = observer(() => {
           </ErrorBoundary>
         </View>
       ))}
+      <DesktopLeftColumn />
     </View>
   )
   // TODO
