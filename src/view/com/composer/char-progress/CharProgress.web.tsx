@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
-import {Text} from '../util/text/Text'
-import {s} from '../../lib/styles'
+import {Text} from '../../util/text/Text'
+import {s} from '../../../lib/styles'
 
 const MAX_TEXT_LENGTH = 256
 const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH
