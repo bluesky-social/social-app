@@ -1,10 +1,11 @@
 import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {
   UserFollowersViewModel,
   FollowerItem,
 } from '../../../state/models/user-followers-view'
+import {CenteredView, FlatList} from '../util/Views'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -43,9 +44,9 @@ export const ProfileFollowers = observer(function ProfileFollowers({
 
   if (!view.hasLoaded) {
     return (
-      <View>
+      <CenteredView>
         <ActivityIndicator />
-      </View>
+      </CenteredView>
     )
   }
 
@@ -53,9 +54,9 @@ export const ProfileFollowers = observer(function ProfileFollowers({
   // =
   if (view.hasError) {
     return (
-      <View>
+      <CenteredView>
         <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
-      </View>
+      </CenteredView>
     )
   }
 

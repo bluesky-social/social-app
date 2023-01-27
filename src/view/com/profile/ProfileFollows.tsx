@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {CenteredView, FlatList} from '../util/Views'
 import {
   UserFollowsViewModel,
   FollowItem,
@@ -43,9 +44,9 @@ export const ProfileFollows = observer(function ProfileFollows({
 
   if (!view.hasLoaded) {
     return (
-      <View>
+      <CenteredView>
         <ActivityIndicator />
-      </View>
+      </CenteredView>
     )
   }
 
@@ -53,9 +54,9 @@ export const ProfileFollows = observer(function ProfileFollows({
   // =
   if (view.hasError) {
     return (
-      <View>
+      <CenteredView>
         <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
-      </View>
+      </CenteredView>
     )
   }
 

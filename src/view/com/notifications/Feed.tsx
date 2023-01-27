@@ -1,6 +1,7 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {FlatList, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
+import {CenteredView, FlatList} from '../util/Views'
 import {NotificationsViewModel} from '../../../state/models/notifications-view'
 import {FeedItem} from './FeedItem'
 import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -60,10 +61,15 @@ export const Feed = observer(function Feed({
   }
   return (
     <View style={s.h100pct}>
-      {view.isLoading && !data && <NotificationFeedLoadingPlaceholder />}
-      {view.hasError && (
-        <ErrorMessage message={view.error} onPressTryAgain={onPressTryAgain} />
-      )}
+      <CenteredView>
+        {view.isLoading && !data && <NotificationFeedLoadingPlaceholder />}
+        {view.hasError && (
+          <ErrorMessage
+            message={view.error}
+            onPressTryAgain={onPressTryAgain}
+          />
+        )}
+      </CenteredView>
       {data && (
         <FlatList
           data={data}
