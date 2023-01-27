@@ -3,7 +3,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {WebShell} from './view/shell/web'
-// import Toast from 'react-native-root-toast' TODO
+import {ToastContainer} from './view/com/util/Toast.web'
 
 function App() {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -26,9 +26,9 @@ function App() {
       <SafeAreaProvider>
         <WebShell />
       </SafeAreaProvider>
+      <ToastContainer />
     </RootStoreProvider>
   )
-  // <Toast.ToastContainer /> TODO
 }
 
 export default App
