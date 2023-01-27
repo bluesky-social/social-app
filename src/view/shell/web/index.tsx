@@ -3,13 +3,14 @@ import {observer} from 'mobx-react-lite'
 import {View, StyleSheet} from 'react-native'
 import {useStores} from '../../../state'
 import {match, MatchResult} from '../../routes'
-import {DesktopLeftColumn} from './left-column'
-import {DesktopRightColumn} from './right-column'
+import {DesktopLeftColumn} from './DesktopLeftColumn'
+import {DesktopRightColumn} from './DesktopRightColumn'
 import {Onboard} from '../../screens/Onboard'
 import {Login} from '../../screens/Login'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
 import {Lightbox} from '../../com/lightbox/Lightbox'
 import {Modal} from '../../com/modals/Modal'
+import {Composer} from './Composer'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {s} from '../../lib/styles'
 
@@ -49,6 +50,14 @@ export const WebShell: React.FC = observer(() => {
       ))}
       <DesktopLeftColumn />
       <DesktopRightColumn />
+      <Composer
+        active={store.shell.isComposerActive}
+        onClose={() => store.shell.closeComposer()}
+        winHeight={0}
+        replyTo={store.shell.composerOpts?.replyTo}
+        imagesOpen={store.shell.composerOpts?.imagesOpen}
+        onPost={store.shell.composerOpts?.onPost}
+      />
       <Modal />
       <Lightbox />
     </View>
