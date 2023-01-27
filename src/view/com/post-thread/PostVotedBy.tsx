@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {CenteredView, FlatList} from '../util/Views'
 import {VotesViewModel, VoteItem} from '../../../state/models/votes-view'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -38,9 +39,9 @@ export const PostVotedBy = observer(function PostVotedBy({
 
   if (!view.hasLoaded) {
     return (
-      <View>
+      <CenteredView>
         <ActivityIndicator />
-      </View>
+      </CenteredView>
     )
   }
 
@@ -48,9 +49,9 @@ export const PostVotedBy = observer(function PostVotedBy({
   // =
   if (view.hasError) {
     return (
-      <View>
+      <CenteredView>
         <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
-      </View>
+      </CenteredView>
     )
   }
 
