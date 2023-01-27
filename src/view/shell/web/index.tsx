@@ -9,6 +9,7 @@ import {Onboard} from '../../screens/Onboard'
 import {Login} from '../../screens/Login'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
 import {Lightbox} from '../../com/lightbox/Lightbox'
+import {Modal} from '../../com/modals/Modal'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {s} from '../../lib/styles'
 
@@ -21,6 +22,7 @@ export const WebShell: React.FC = observer(() => {
     return (
       <View style={styles.outerContainer}>
         <Login />
+        <Modal />
       </View>
     )
   }
@@ -47,6 +49,7 @@ export const WebShell: React.FC = observer(() => {
       ))}
       <DesktopLeftColumn />
       <DesktopRightColumn />
+      <Modal />
       <Lightbox />
     </View>
   )

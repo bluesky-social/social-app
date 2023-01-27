@@ -4,7 +4,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
+import {ScrollView, TextInput} from './util'
 import {Text} from '../util/text/Text'
 import {useStores} from '../../../state'
 import {s, colors} from '../../lib/styles'
@@ -32,7 +32,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
   return (
     <View style={s.flex1} testID="serverInputModal">
       <Text style={[s.textCenter, s.bold, s.f18]}>Choose Service</Text>
-      <BottomSheetScrollView style={styles.inner}>
+      <ScrollView style={styles.inner}>
         <View style={styles.group}>
           {LOGIN_INCLUDE_DEV_SERVERS ? (
             <>
@@ -69,7 +69,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
         <View style={styles.group}>
           <Text style={styles.label}>Other service</Text>
           <View style={s.flexRow}>
-            <BottomSheetTextInput
+            <TextInput
               testID="customServerTextInput"
               style={styles.textInput}
               placeholder="e.g. https://bsky.app"
@@ -92,7 +92,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             </TouchableOpacity>
           </View>
         </View>
-      </BottomSheetScrollView>
+      </ScrollView>
     </View>
   )
 }

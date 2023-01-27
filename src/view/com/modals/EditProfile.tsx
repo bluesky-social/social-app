@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
+import {ScrollView, TextInput} from './util'
 import {Image as PickedImage} from '../util/images/ImageCropPicker'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -102,7 +102,7 @@ export function Component({
 
   return (
     <View style={s.flex1}>
-      <BottomSheetScrollView style={styles.inner}>
+      <ScrollView style={styles.inner}>
         <Text style={styles.title}>Edit my profile</Text>
         <View style={styles.photos}>
           <UserBanner
@@ -126,7 +126,7 @@ export function Component({
         )}
         <View>
           <Text style={styles.label}>Display Name</Text>
-          <BottomSheetTextInput
+          <TextInput
             style={styles.textInput}
             placeholder="e.g. Alice Roberts"
             placeholderTextColor={colors.gray4}
@@ -136,7 +136,7 @@ export function Component({
         </View>
         <View style={s.pb10}>
           <Text style={styles.label}>Description</Text>
-          <BottomSheetTextInput
+          <TextInput
             style={[styles.textArea]}
             placeholder="e.g. Artist, dog-lover, and memelord."
             placeholderTextColor={colors.gray4}
@@ -165,7 +165,7 @@ export function Component({
             <Text style={[s.black, s.bold]}>Cancel</Text>
           </View>
         </TouchableOpacity>
-      </BottomSheetScrollView>
+      </ScrollView>
     </View>
   )
 }
