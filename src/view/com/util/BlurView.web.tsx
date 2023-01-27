@@ -1,4 +1,37 @@
-import {View} from 'react-native'
+import React from 'react'
+import {StyleSheet, View, ViewProps} from 'react-native'
+import {addStyle} from '../../lib/addStyle'
 
-// TODO can actually support this, see https://github.com/Kureev/react-native-blur/issues/417
-export const BlurBiew = View
+type BlurViewProps = ViewProps & {
+  blurType?: 'dark' | 'light'
+  blurAmount?: number
+}
+
+export const BlurView = ({
+  style,
+  blurType,
+  blurAmount,
+  ...props
+}: React.PropsWithChildren<BlurViewProps>) => {
+  // @ts-ignore using an RNW-specific attribute here -prf
+  style = addStyle(style, {backdropFilter: `blur(${blurAmount || 10}px`})
+  if (blurType === 'dark') {
+    style = addStyle(style, styles.dark)
+  } else {
+    style = addStyle(style, styles.light)
+  }
+  return <View style={style} {...props} />
+}
+
+const styles = StyleSheet.create({
+  blur: {
+    // @ts-ignore using an RNW-specific attribute here -prf
+    backdropFilter: 'blur(5px)',
+  },
+  dark: {
+    backgroundColor: '#0008',
+  },
+  light: {
+    backgroundColor: '#fff8',
+  },
+})

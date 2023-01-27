@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {ViewSelector} from '../com/util/ViewSelector'
+import {CenteredView} from '../com/util/Views'
 import {ScreenParams} from '../routes'
 import {ProfileUiModel, Sections} from '../../state/models/profile-ui'
 import {useStores} from '../../state'
@@ -181,7 +182,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
           onEndReached={onEndReached}
         />
       ) : (
-        renderHeader()
+        <CenteredView>{renderHeader()}</CenteredView>
       )}
       <FAB icon="pen-nib" onPress={onPressCompose} />
     </View>
