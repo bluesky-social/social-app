@@ -5,8 +5,8 @@ import {
   TextInput as RNTextInput,
   TextStyle,
 } from 'react-native'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {addStyle} from '../../lib/addStyle'
+import {usePalette} from '../../../lib/hooks/usePalette'
+import {addStyle} from '../../../lib/addStyle'
 
 export type TextInputRef = RNTextInput
 
