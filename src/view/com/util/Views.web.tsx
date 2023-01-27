@@ -19,10 +19,10 @@ import {
   ScrollView as RNScrollView,
   ScrollViewProps,
   StyleSheet,
-  StyleProp,
   View,
   ViewProps,
 } from 'react-native'
+import {addStyle} from '../../lib/addStyle'
 
 export function CenteredView({
   style,
@@ -48,16 +48,6 @@ export function ScrollView({
   return (
     <RNScrollView contentContainerStyle={contentContainerStyle} {...props} />
   )
-}
-
-function addStyle<T>(
-  base: StyleProp<T>,
-  addedStyle: StyleProp<T>,
-): StyleProp<T> {
-  if (Array.isArray(base)) {
-    return base.concat([addedStyle])
-  }
-  return [base, addedStyle]
 }
 
 const styles = StyleSheet.create({

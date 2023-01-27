@@ -10,6 +10,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {CenteredView} from './Views'
 import {UserAvatar} from './UserAvatar'
 import {Text} from './text/Text'
 import {MagnifyingGlassIcon} from '../../lib/icons'
@@ -49,7 +50,7 @@ export const ViewHeader = observer(function ViewHeader({
     canGoBack = store.nav.tab.canGoBack
   }
   return (
-    <View style={[styles.header, pal.view]}>
+    <CenteredView style={[styles.header, pal.view]}>
       <TouchableOpacity
         testID="viewHeaderBackOrMenuBtn"
         onPress={canGoBack ? onPressBack : onPressMenu}
@@ -112,7 +113,7 @@ export const ViewHeader = observer(function ViewHeader({
           )}
         </TouchableOpacity>
       ) : undefined}
-    </View>
+    </CenteredView>
   )
 })
 
