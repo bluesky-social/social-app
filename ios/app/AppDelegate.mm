@@ -21,6 +21,7 @@
   [[TSBackgroundFetch sharedInstance] didFinishLaunching];
 
   self.moduleName = @"xyz.blueskyweb.app";
+  self.initialProps = @{};
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
