@@ -12,6 +12,11 @@
       /* These styles make the root element full-height */
       #app-root { display:flex; height:100%; }
 
+      /* Remove focus state on inputs */
+      input:focus {
+        outline: 0;
+      }
+
       /* These styles are for src/view/com/modals/WebModal */
       div[data-modal-overlay] {
         position: fixed;
