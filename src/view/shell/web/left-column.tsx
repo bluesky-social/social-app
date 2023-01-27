@@ -1,10 +1,11 @@
 import React from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
+import LinearGradient from 'react-native-linear-gradient'
 import {Link} from '../../com/util/Link'
 import {Text} from '../../com/util/text/Text'
 import {UserAvatar} from '../../com/util/UserAvatar'
-import {colors} from '../../lib/styles'
+import {s, colors, gradients} from '../../lib/styles'
 import {useStores} from '../../../state'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {
@@ -63,6 +64,7 @@ export const NavItem = observer(
 export const DesktopLeftColumn = observer(() => {
   const store = useStores()
   const pal = usePalette('default')
+  const onPressCompose = () => store.shell.openComposer({})
   const avi = (
     <UserAvatar
       handle={store.me.handle}
@@ -105,6 +107,17 @@ export const DesktopLeftColumn = observer(() => {
         icon={<CogIcon strokeWidth={1.5} />}
         iconFilled={<CogIcon strokeWidth={2} />}
       />
+      <TouchableOpacity onPress={onPressCompose}>
+        <LinearGradient
+          colors={[gradients.blueLight.start, gradients.blueLight.end]}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={styles.composeBtn}>
+          <Text type="xl-medium" style={[s.white, s.textCenter]}>
+            New Post
+          </Text>
+        </LinearGradient>
+      </TouchableOpacity>
     </View>
   )
 })
@@ -147,5 +160,14 @@ const styles = StyleSheet.create({
   },
   navItemLabel: {
     fontSize: 19,
+  },
+  composeBtn: {
+    marginTop: 20,
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 20,
+    borderRadius: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
   },
 })

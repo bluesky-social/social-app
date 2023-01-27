@@ -3,7 +3,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Text} from '../util/text/Text'
 import {usePalette} from '../../lib/hooks/usePalette'
 
-export function PromptButtons({
+export function ComposerPrompt({
   onPressCompose,
 }: {
   onPressCompose: (imagesOpen?: boolean) => void
