@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react'
 import {
   ActivityIndicator,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -11,6 +10,7 @@ import {observer} from 'mobx-react-lite'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
 import {s} from '../lib/styles'
+import {ScrollView} from '../com/util/Views'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Link} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
@@ -56,109 +56,111 @@ export const Settings = observer(function Settings({
   return (
     <View style={[s.h100pct]} testID="settingsScreen">
       <ViewHeader title="Settings" />
-      <ScrollView style={[s.mt10, s.pl10, s.pr10, s.h100pct]}>
-        <View style={[s.flexRow]}>
-          <Text type="xl-bold" style={pal.text}>
-            Signed in as
-          </Text>
-          <View style={s.flex1} />
-          <TouchableOpacity
-            testID="signOutBtn"
-            onPress={isSwitching ? undefined : onPressSignout}>
-            <Text type="xl-medium" style={pal.link}>
-              Sign out
+      <ScrollView style={s.h100pct}>
+        <View style={[s.mt10, s.pl10, s.pr10]}>
+          <View style={[s.flexRow]}>
+            <Text type="xl-bold" style={pal.text}>
+              Signed in as
             </Text>
-          </TouchableOpacity>
-        </View>
-        {isSwitching ? (
-          <View style={[pal.view, styles.profile]}>
-            <ActivityIndicator />
+            <View style={s.flex1} />
+            <TouchableOpacity
+              testID="signOutBtn"
+              onPress={isSwitching ? undefined : onPressSignout}>
+              <Text type="xl-medium" style={pal.link}>
+                Sign out
+              </Text>
+            </TouchableOpacity>
           </View>
-        ) : (
-          <Link
-            href={`/profile/${store.me.handle}`}
-            title="Your profile"
-            noFeedback>
+          {isSwitching ? (
             <View style={[pal.view, styles.profile]}>
+              <ActivityIndicator />
+            </View>
+          ) : (
+            <Link
+              href={`/profile/${store.me.handle}`}
+              title="Your profile"
+              noFeedback>
+              <View style={[pal.view, styles.profile]}>
+                <UserAvatar
+                  size={40}
+                  displayName={store.me.displayName}
+                  handle={store.me.handle || ''}
+                  avatar={store.me.avatar}
+                />
+                <View style={[s.ml10]}>
+                  <Text type="xl-bold" style={pal.text}>
+                    {store.me.displayName || store.me.handle}
+                  </Text>
+                  <Text style={pal.textLight}>@{store.me.handle}</Text>
+                </View>
+              </View>
+            </Link>
+          )}
+          <Text type="sm-medium" style={pal.text}>
+            Switch to:
+          </Text>
+          {store.session.switchableAccounts.map(account => (
+            <TouchableOpacity
+              testID={`switchToAccountBtn-${account.handle}`}
+              key={account.did}
+              style={[
+                pal.view,
+                styles.profile,
+                s.mb2,
+                isSwitching && styles.dimmed,
+              ]}
+              onPress={
+                isSwitching ? undefined : () => onPressSwitchAccount(account)
+              }>
               <UserAvatar
                 size={40}
-                displayName={store.me.displayName}
-                handle={store.me.handle || ''}
-                avatar={store.me.avatar}
+                displayName={account.displayName}
+                handle={account.handle || ''}
+                avatar={account.aviUrl}
               />
               <View style={[s.ml10]}>
                 <Text type="xl-bold" style={pal.text}>
-                  {store.me.displayName || store.me.handle}
+                  {account.displayName || account.handle}
                 </Text>
-                <Text style={pal.textLight}>@{store.me.handle}</Text>
+                <Text style={pal.textLight}>@{account.handle}</Text>
               </View>
-            </View>
-          </Link>
-        )}
-        <Text type="sm-medium" style={pal.text}>
-          Switch to:
-        </Text>
-        {store.session.switchableAccounts.map(account => (
+            </TouchableOpacity>
+          ))}
           <TouchableOpacity
-            testID={`switchToAccountBtn-${account.handle}`}
-            key={account.did}
+            testID="switchToNewAccountBtn"
             style={[
               pal.view,
               styles.profile,
+              styles.alignCenter,
               s.mb2,
               isSwitching && styles.dimmed,
             ]}
-            onPress={
-              isSwitching ? undefined : () => onPressSwitchAccount(account)
-            }>
-            <UserAvatar
-              size={40}
-              displayName={account.displayName}
-              handle={account.handle || ''}
-              avatar={account.aviUrl}
-            />
-            <View style={[s.ml10]}>
-              <Text type="xl-bold" style={pal.text}>
-                {account.displayName || account.handle}
+            onPress={isSwitching ? undefined : onPressAddAccount}>
+            <FontAwesomeIcon icon="plus" />
+            <View style={[s.ml5]}>
+              <Text type="md-medium" style={pal.text}>
+                Add account
               </Text>
-              <Text style={pal.textLight}>@{account.handle}</Text>
             </View>
           </TouchableOpacity>
-        ))}
-        <TouchableOpacity
-          testID="switchToNewAccountBtn"
-          style={[
-            pal.view,
-            styles.profile,
-            styles.alignCenter,
-            s.mb2,
-            isSwitching && styles.dimmed,
-          ]}
-          onPress={isSwitching ? undefined : onPressAddAccount}>
-          <FontAwesomeIcon icon="plus" />
-          <View style={[s.ml5]}>
-            <Text type="md-medium" style={pal.text}>
-              Add account
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <View style={styles.spacer} />
-        <Text type="sm-medium" style={[s.mb5]}>
-          Developer tools
-        </Text>
-        <Link
-          style={[pal.view, s.p10, s.mb2]}
-          href="/sys/log"
-          title="System log">
-          <Text style={pal.link}>System log</Text>
-        </Link>
-        <Link
-          style={[pal.view, s.p10, s.mb2]}
-          href="/sys/debug"
-          title="Debug tools">
-          <Text style={pal.link}>Storybook</Text>
-        </Link>
-        <View style={s.footerSpacer} />
+          <View style={styles.spacer} />
+          <Text type="sm-medium" style={[s.mb5]}>
+            Developer tools
+          </Text>
+          <Link
+            style={[pal.view, s.p10, s.mb2]}
+            href="/sys/log"
+            title="System log">
+            <Text style={pal.link}>System log</Text>
+          </Link>
+          <Link
+            style={[pal.view, s.p10, s.mb2]}
+            href="/sys/debug"
+            title="Debug tools">
+            <Text style={pal.link}>Storybook</Text>
+          </Link>
+          <View style={s.footerSpacer} />
+        </View>
       </ScrollView>
     </View>
   )

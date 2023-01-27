@@ -22,7 +22,9 @@ import {
   View,
   ViewProps,
 } from 'react-native'
+import {useTheme} from '../../lib/ThemeContext'
 import {addStyle} from '../../lib/addStyle'
+import {colors} from '../../lib/styles'
 
 export function CenteredView({
   style,
@@ -36,7 +38,15 @@ export function FlatList<ItemT>({
   contentContainerStyle,
   ...props
 }: React.PropsWithChildren<FlatListProps<ItemT>>) {
-  contentContainerStyle = addStyle(contentContainerStyle, styles.container)
+  const theme = useTheme()
+  contentContainerStyle = addStyle(
+    contentContainerStyle,
+    styles.containerScroll,
+  )
+  contentContainerStyle = addStyle(
+    contentContainerStyle,
+    theme.colorScheme === 'dark' ? styles.containerDark : styles.containerLight,
+  )
   return <RNFlatList contentContainerStyle={contentContainerStyle} {...props} />
 }
 
@@ -44,7 +54,15 @@ export function ScrollView({
   contentContainerStyle,
   ...props
 }: React.PropsWithChildren<ScrollViewProps>) {
-  contentContainerStyle = addStyle(contentContainerStyle, styles.container)
+  const theme = useTheme()
+  contentContainerStyle = addStyle(
+    contentContainerStyle,
+    styles.containerScroll,
+  )
+  contentContainerStyle = addStyle(
+    contentContainerStyle,
+    theme.colorScheme === 'dark' ? styles.containerDark : styles.containerLight,
+  )
   return (
     <RNScrollView contentContainerStyle={contentContainerStyle} {...props} />
   )
@@ -56,5 +74,18 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     marginLeft: 'auto',
     marginRight: 'auto',
+  },
+  containerScroll: {
+    width: '100%',
+    height: '100%',
+    maxWidth: 600,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  containerLight: {
+    backgroundColor: colors.gray1,
+  },
+  containerDark: {
+    backgroundColor: colors.gray7,
   },
 })
