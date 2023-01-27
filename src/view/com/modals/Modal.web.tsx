@@ -11,6 +11,7 @@ import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
 import * as ReportAccountModal from './ReportAccount'
+import * as CropImageModal from './crop-image/CropImage.web'
 
 export const Modal = observer(function Modal() {
   const store = useStores()
@@ -50,6 +51,12 @@ export const Modal = observer(function Modal() {
     element = <ReportPostModal.Component />
   } else if (store.shell.activeModal?.name === 'report-account') {
     element = <ReportAccountModal.Component />
+  } else if (store.shell.activeModal?.name === 'crop-image') {
+    element = (
+      <CropImageModal.Component
+        {...(store.shell.activeModal as models.CropImageModal)}
+      />
+    )
   } else {
     return null
   }

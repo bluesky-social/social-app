@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {ScrollView, TextInput} from './util'
-import {Image as PickedImage} from '../util/images/ImageCropPicker'
+import {PickedMedia} from '../util/images/image-crop-picker/ImageCropPicker'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from '../../../state'
@@ -48,12 +48,12 @@ export function Component({
   const [userAvatar, setUserAvatar] = useState<string | undefined>(
     profileView.avatar,
   )
-  const [newUserBanner, setNewUserBanner] = useState<PickedImage | undefined>()
-  const [newUserAvatar, setNewUserAvatar] = useState<PickedImage | undefined>()
+  const [newUserBanner, setNewUserBanner] = useState<PickedMedia | undefined>()
+  const [newUserAvatar, setNewUserAvatar] = useState<PickedMedia | undefined>()
   const onPressCancel = () => {
     store.shell.closeModal()
   }
-  const onSelectNewAvatar = async (img: PickedImage) => {
+  const onSelectNewAvatar = async (img: PickedMedia) => {
     try {
       const finalImg = await compressIfNeeded(img, 300000)
       setNewUserAvatar(finalImg)
@@ -62,7 +62,7 @@ export function Component({
       setError(e.message || e.toString())
     }
   }
-  const onSelectNewBanner = async (img: PickedImage) => {
+  const onSelectNewBanner = async (img: PickedMedia) => {
     try {
       const finalImg = await compressIfNeeded(img, 500000)
       setNewUserBanner(finalImg)

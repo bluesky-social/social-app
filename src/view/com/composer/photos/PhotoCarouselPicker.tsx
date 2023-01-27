@@ -8,14 +8,14 @@ import {
   openPicker,
   openCamera,
   openCropper,
-} from '../util/images/ImageCropPicker'
+} from '../../util/images/image-crop-picker/ImageCropPicker'
 import {
   UserLocalPhotosModel,
   PhotoIdentifier,
-} from '../../../state/models/user-local-photos'
-import {compressIfNeeded, scaleDownDimensions} from '../../../lib/images'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {useStores} from '../../../state'
+} from '../../../../state/models/user-local-photos'
+import {compressIfNeeded, scaleDownDimensions} from '../../../../lib/images'
+import {usePalette} from '../../../lib/hooks/usePalette'
+import {useStores, RootStoreModel} from '../../../../state'
 
 const MAX_WIDTH = 1000
 const MAX_HEIGHT = 1000
@@ -25,11 +25,10 @@ const IMAGE_PARAMS = {
   width: 1000,
   height: 1000,
   freeStyleCropEnabled: true,
-  forceJpg: true, // ios only
-  compressImageQuality: 1.0,
 }
 
 export async function cropPhoto(
+  store: RootStoreModel,
   path: string,
   imgWidth = MAX_WIDTH,
   imgHeight = MAX_HEIGHT,
@@ -40,10 +39,10 @@ export async function cropPhoto(
     {width: imgWidth, height: imgHeight},
     {width: MAX_WIDTH, height: MAX_HEIGHT},
   )
-  const cropperRes = await openCropper({
+  const cropperRes = await openCropper(store, {
     mediaType: 'photo',
     path,
-    ...IMAGE_PARAMS,
+    freeStyleCropEnabled: true,
     width,
     height,
   })
@@ -54,19 +53,30 @@ export async function cropPhoto(
 export const PhotoCarouselPicker = ({
   selectedPhotos,
   onSelectPhotos,
-  localPhotos,
 }: {
   selectedPhotos: string[]
   onSelectPhotos: (v: string[]) => void
-  localPhotos: UserLocalPhotosModel
 }) => {
   const pal = usePalette('default')
   const store = useStores()
+  const [localPhotos, setLocalPhotos] = React.useState<
+    UserLocalPhotosModel | undefined
+  >(undefined)
+
+  // initial setup
+  React.useEffect(() => {
+    const photos = new UserLocalPhotosModel(store)
+    photos.setup().then(() => {
+      if (photos.photos) {
+        setLocalPhotos(photos)
+      }
+    })
+  }, [store])
+
   const handleOpenCamera = useCallback(async () => {
     try {
-      const cameraRes = await openCamera({
+      const cameraRes = await openCamera(store, {
         mediaType: 'photo',
-        cropping: true,
         ...IMAGE_PARAMS,
       })
       const img = await compressIfNeeded(cameraRes, MAX_SIZE)
@@ -75,12 +85,13 @@ export const PhotoCarouselPicker = ({
       // ignore
       store.log.warn('Error using camera', err)
     }
-  }, [store.log, selectedPhotos, onSelectPhotos])
+  }, [store, selectedPhotos, onSelectPhotos])
 
   const handleSelectPhoto = useCallback(
     async (item: PhotoIdentifier) => {
       try {
         const imgPath = await cropPhoto(
+          store,
           item.node.image.uri,
           item.node.image.width,
           item.node.image.height,
@@ -91,11 +102,11 @@ export const PhotoCarouselPicker = ({
         store.log.warn('Error selecting photo', err)
       }
     },
-    [store.log, selectedPhotos, onSelectPhotos],
+    [store, selectedPhotos, onSelectPhotos],
   )
 
   const handleOpenGallery = useCallback(() => {
-    openPicker({
+    openPicker(store, {
       multiple: true,
       maxFiles: 4 - selectedPhotos.length,
       mediaType: 'photo',
@@ -109,10 +120,10 @@ export const PhotoCarouselPicker = ({
           {width: image.width, height: image.height},
           {width: MAX_WIDTH, height: MAX_HEIGHT},
         )
-        const cropperRes = await openCropper({
+        const cropperRes = await openCropper(store, {
           mediaType: 'photo',
           path: image.path,
-          ...IMAGE_PARAMS,
+          freeStyleCropEnabled: true,
           width,
           height,
         })
@@ -121,7 +132,7 @@ export const PhotoCarouselPicker = ({
       }
       onSelectPhotos([...selectedPhotos, ...result])
     })
-  }, [selectedPhotos, onSelectPhotos])
+  }, [store, selectedPhotos, onSelectPhotos])
 
   return (
     <ScrollView
@@ -150,15 +161,16 @@ export const PhotoCarouselPicker = ({
           size={24}
         />
       </TouchableOpacity>
-      {localPhotos.photos.map((item: PhotoIdentifier, index: number) => (
-        <TouchableOpacity
-          testID="openSelectPhotoButton"
-          key={`local-image-${index}`}
-          style={[pal.border, styles.photoButton]}
-          onPress={() => handleSelectPhoto(item)}>
-          <Image style={styles.photo} source={{uri: item.node.image.uri}} />
-        </TouchableOpacity>
-      ))}
+      {localPhotos != null &&
+        localPhotos.photos.map((item: PhotoIdentifier, index: number) => (
+          <TouchableOpacity
+            testID="openSelectPhotoButton"
+            key={`local-image-${index}`}
+            style={[pal.border, styles.photoButton]}
+            onPress={() => handleSelectPhoto(item)}>
+            <Image style={styles.photo} source={{uri: item.node.image.uri}} />
+          </TouchableOpacity>
+        ))}
     </ScrollView>
   )
 }
