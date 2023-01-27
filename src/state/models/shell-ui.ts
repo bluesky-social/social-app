@@ -1,6 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 import {ProfileViewModel} from './profile-view'
 import {isObj, hasProp} from '../lib/type-guards'
+import {PickedMedia} from '../../view/com/util/images/image-crop-picker/types'
 
 export class ConfirmModal {
   name = 'confirm'
@@ -52,6 +53,17 @@ export class ReportAccountModal {
   }
 }
 
+export class CropImageModal {
+  name = 'crop-image'
+
+  constructor(
+    public uri: string,
+    public onSelect: (img?: PickedMedia) => void,
+  ) {
+    makeAutoObservable(this)
+  }
+}
+
 interface LightboxModel {}
 
 export class ProfileImageLightbox implements LightboxModel {
@@ -98,6 +110,7 @@ export class ShellUiModel {
     | ServerInputModal
     | ReportPostModal
     | ReportAccountModal
+    | CropImageModal
     | undefined
   isLightboxActive = false
   activeLightbox: ProfileImageLightbox | ImagesLightbox | undefined
@@ -140,7 +153,8 @@ export class ShellUiModel {
       | EditProfileModal
       | ServerInputModal
       | ReportPostModal
-      | ReportAccountModal,
+      | ReportAccountModal
+      | CropImageModal,
   ) {
     this.isModalActive = true
     this.activeModal = modal

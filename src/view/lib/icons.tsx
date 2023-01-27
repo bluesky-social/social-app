@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleProp, TextStyle, ViewStyle} from 'react-native'
-import Svg, {Path} from 'react-native-svg'
+import Svg, {Path, Rect} from 'react-native-svg'
 
 export function GridIcon({
   style,
@@ -455,6 +455,75 @@ export function CommentBottomArrow({
         strokeLinejoin="round"
         d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"
       />
+    </Svg>
+  )
+}
+
+export function SquareIcon({
+  style,
+  size,
+  strokeWidth = 1.3,
+}: {
+  style?: StyleProp<TextStyle>
+  size?: string | number
+  strokeWidth?: number
+}) {
+  return (
+    <Svg
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={strokeWidth || 1}
+      stroke="currentColor"
+      width={size || 24}
+      height={size || 24}
+      style={style}>
+      <Rect x="6" y="6" width="12" height="12" strokeLinejoin="round" />
+    </Svg>
+  )
+}
+
+export function RectWideIcon({
+  style,
+  size,
+  strokeWidth = 1.3,
+}: {
+  style?: StyleProp<TextStyle>
+  size?: string | number
+  strokeWidth?: number
+}) {
+  return (
+    <Svg
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={strokeWidth || 1}
+      stroke="currentColor"
+      width={size || 24}
+      height={size || 24}
+      style={style}>
+      <Rect x="4" y="6" width="16" height="12" strokeLinejoin="round" />
+    </Svg>
+  )
+}
+
+export function RectTallIcon({
+  style,
+  size,
+  strokeWidth = 1.3,
+}: {
+  style?: StyleProp<TextStyle>
+  size?: string | number
+  strokeWidth?: number
+}) {
+  return (
+    <Svg
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={strokeWidth || 1}
+      stroke="currentColor"
+      width={size || 24}
+      height={size || 24}
+      style={style}>
+      <Rect x="6" y="4" width="12" height="16" strokeLinejoin="round" />
     </Svg>
   )
 }

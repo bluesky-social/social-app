@@ -16,14 +16,9 @@ export class UserLocalPhotosModel {
   }
 
   async setup() {
-    await this._getPhotos()
-  }
-
-  private async _getPhotos() {
-    CameraRoll.getPhotos({first: 20}).then(r => {
-      runInAction(() => {
-        this.photos = r.edges
-      })
+    const r = await CameraRoll.getPhotos({first: 20})
+    runInAction(() => {
+      this.photos = r.edges
     })
   }
 }

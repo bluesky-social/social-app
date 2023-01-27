@@ -6,8 +6,9 @@ import {
   openCamera,
   openCropper,
   openPicker,
-  Image as PickedImage,
-} from './images/ImageCropPicker'
+  PickedMedia,
+} from './images/image-crop-picker/ImageCropPicker'
+import {useStores} from '../../../state'
 import {colors, gradients} from '../../lib/styles'
 
 export function UserAvatar({
@@ -21,8 +22,9 @@ export function UserAvatar({
   handle: string
   displayName: string | undefined
   avatar?: string | null
-  onSelectNewAvatar?: (img: PickedImage) => void
+  onSelectNewAvatar?: (img: PickedMedia) => void
 }) {
+  const store = useStores()
   const initials = getInitials(displayName || handle)
 
   const handleEditAvatar = useCallback(() => {
@@ -30,37 +32,32 @@ export function UserAvatar({
       {
         text: 'Take a new photo',
         onPress: () => {
-          openCamera({
+          openCamera(store, {
             mediaType: 'photo',
-            cropping: true,
             width: 1000,
             height: 1000,
             cropperCircleOverlay: true,
-            forceJpg: true, // ios only
-            compressImageQuality: 1,
           }).then(onSelectNewAvatar)
         },
       },
       {
         text: 'Select from gallery',
         onPress: () => {
-          openPicker({
+          openPicker(store, {
             mediaType: 'photo',
-          }).then(async item => {
-            await openCropper({
+          }).then(async items => {
+            await openCropper(store, {
               mediaType: 'photo',
-              path: item.path,
+              path: items[0].path,
               width: 1000,
               height: 1000,
               cropperCircleOverlay: true,
-              forceJpg: true, // ios only
-              compressImageQuality: 1,
             }).then(onSelectNewAvatar)
           })
         },
       },
     ])
-  }, [onSelectNewAvatar])
+  }, [store, onSelectNewAvatar])
 
   const renderSvg = (svgSize: number, svgInitials: string) => (
     <Svg width={svgSize} height={svgSize} viewBox="0 0 100 100">

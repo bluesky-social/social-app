@@ -37,8 +37,7 @@ import {
 } from '../../../lib/strings'
 import {getLinkMeta} from '../../../lib/link-meta'
 import {downloadAndResize} from '../../../lib/images'
-import {UserLocalPhotosModel} from '../../../state/models/user-local-photos'
-import {PhotoCarouselPicker, cropPhoto} from './PhotoCarouselPicker'
+import {PhotoCarouselPicker, cropPhoto} from './photos/PhotoCarouselPicker'
 import {SelectedPhoto} from './SelectedPhoto'
 import {usePalette} from '../../lib/hooks/usePalette'
 
@@ -77,10 +76,6 @@ export const ComposePost = observer(function ComposePost({
     () => new UserAutocompleteViewModel(store),
     [store],
   )
-  const localPhotos = React.useMemo<UserLocalPhotosModel>(
-    () => new UserLocalPhotosModel(store),
-    [store],
-  )
 
   // HACK
   // there's a bug with @mattermost/react-native-paste-input where if the input
@@ -95,8 +90,7 @@ export const ComposePost = observer(function ComposePost({
   // initial setup
   useEffect(() => {
     autocompleteView.setup()
-    localPhotos.setup()
-  }, [autocompleteView, localPhotos])
+  }, [autocompleteView])
 
   // external link metadata-fetch flow
   useEffect(() => {
@@ -220,7 +214,7 @@ export const ComposePost = observer(function ComposePost({
     }
     const imgUri = uris.find(uri => /\.(jpe?g|png)$/.test(uri))
     if (imgUri) {
-      const finalImgPath = await cropPhoto(imgUri)
+      const finalImgPath = await cropPhoto(store, imgUri)
       onSelectPhotos([...selectedPhotos, finalImgPath])
     }
   }
@@ -412,15 +406,12 @@ export const ComposePost = observer(function ComposePost({
               />
             )}
           </ScrollView>
-          {isSelectingPhotos &&
-            localPhotos.photos != null &&
-            selectedPhotos.length < 4 && (
-              <PhotoCarouselPicker
-                selectedPhotos={selectedPhotos}
-                onSelectPhotos={onSelectPhotos}
-                localPhotos={localPhotos}
-              />
-            )}
+          {isSelectingPhotos && selectedPhotos.length < 4 && (
+            <PhotoCarouselPicker
+              selectedPhotos={selectedPhotos}
+              onSelectPhotos={onSelectPhotos}
+            />
+          )}
           <View style={[pal.border, styles.bottomBar]}>
             <TouchableOpacity
               testID="composerSelectPhotosButton"

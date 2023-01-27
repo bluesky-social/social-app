@@ -2,57 +2,56 @@ import React, {useCallback} from 'react'
 import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Image as PickedImage} from './images/ImageCropPicker'
 import {colors, gradients} from '../../lib/styles'
-import {openCamera, openCropper, openPicker} from './images/ImageCropPicker'
+import {
+  openCamera,
+  openCropper,
+  openPicker,
+  PickedMedia,
+} from './images/image-crop-picker/ImageCropPicker'
+import {useStores} from '../../../state'
 
 export function UserBanner({
   banner,
   onSelectNewBanner,
 }: {
   banner?: string | null
-  onSelectNewBanner?: (img: PickedImage) => void
+  onSelectNewBanner?: (img: PickedMedia) => void
 }) {
+  const store = useStores()
   const handleEditBanner = useCallback(() => {
     Alert.alert('Select upload method', '', [
       {
         text: 'Take a new photo',
         onPress: () => {
-          openCamera({
+          openCamera(store, {
             mediaType: 'photo',
-            cropping: true,
-            compressImageMaxWidth: 3000,
+            // compressImageMaxWidth: 3000, TODO needed?
             width: 3000,
-            compressImageMaxHeight: 1000,
+            // compressImageMaxHeight: 1000, TODO needed?
             height: 1000,
-            forceJpg: true, // ios only
-            compressImageQuality: 1,
-            includeExif: true,
           }).then(onSelectNewBanner)
         },
       },
       {
         text: 'Select from gallery',
         onPress: () => {
-          openPicker({
+          openPicker(store, {
             mediaType: 'photo',
-          }).then(async item => {
-            await openCropper({
+          }).then(async items => {
+            await openCropper(store, {
               mediaType: 'photo',
-              path: item.path,
-              compressImageMaxWidth: 3000,
+              path: items[0].path,
+              // compressImageMaxWidth: 3000, TODO needed?
               width: 3000,
-              compressImageMaxHeight: 1000,
+              // compressImageMaxHeight: 1000, TODO needed?
               height: 1000,
-              forceJpg: true, // ios only
-              compressImageQuality: 1,
-              includeExif: true,
             }).then(onSelectNewBanner)
           })
         },
       },
     ])
-  }, [onSelectNewBanner])
+  }, [store, onSelectNewBanner])
 
   const renderSvg = () => (
     <Svg width="100%" height="150" viewBox="50 0 200 100">
