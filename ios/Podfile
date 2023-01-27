@@ -50,6 +50,17 @@ target 'app' do
   end
 
   post_install do |installer|
+    # Temporary fix until CocoaPods 1.12.0 is released.
+    # https://github.com/CocoaPods/CocoaPods/issues/11402#issuecomment-1201464693
+    installer.pods_project.targets.each do |target|
+      if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
+        target.build_configurations.each do |config|
+            config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+        end
+      end
+    end  
+
+
     react_native_post_install(
       installer,
       # Set `mac_catalyst_enabled` to `true` in order to apply patches
