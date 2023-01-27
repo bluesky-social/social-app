@@ -1,20 +1,15 @@
 import React, {useEffect} from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
-import LinearGradient from 'react-native-linear-gradient'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
-import {Text} from '../com/util/text/Text'
 import {FAB} from '../com/util/FAB'
+import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
-import {s, colors, gradients} from '../lib/styles'
+import {s} from '../lib/styles'
 import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
-import {clamp} from 'lodash'
-
-const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
 export const Home = observer(function Home({
   navIdx,
@@ -23,7 +18,6 @@ export const Home = observer(function Home({
 }: ScreenParams) {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
-  const safeAreaInsets = useSafeAreaInsets()
   const [wasVisible, setWasVisible] = React.useState<boolean>(false)
   const {appState} = useAppState({
     onForeground: () => doPoll(true),
@@ -95,48 +89,10 @@ export const Home = observer(function Home({
         onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
       />
-      {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing ? (
-        <TouchableOpacity
-          style={[
-            styles.loadLatest,
-            !store.shell.minimalShellMode && {
-              bottom: 60 + clamp(safeAreaInsets.bottom, 15, 30),
-            },
-          ]}
-          onPress={onPressLoadLatest}
-          hitSlop={HITSLOP}>
-          <LinearGradient
-            colors={[gradients.blueLight.start, gradients.blueLight.end]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
-            style={styles.loadLatestInner}>
-            <Text type="md-bold" style={styles.loadLatestText}>
-              Load new posts
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      ) : undefined}
+      {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing && (
+        <LoadLatestBtn onPress={onPressLoadLatest} />
+      )}
       <FAB icon="pen-nib" onPress={() => onPressCompose(false)} />
     </View>
   )
-})
-
-const styles = StyleSheet.create({
-  loadLatest: {
-    position: 'absolute',
-    left: 20,
-    bottom: 35,
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowOffset: {width: 0, height: 1},
-  },
-  loadLatestInner: {
-    flexDirection: 'row',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 30,
-  },
-  loadLatestText: {
-    color: colors.white,
-  },
 })
