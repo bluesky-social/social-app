@@ -24,10 +24,6 @@ export const BlurView = ({
 }
 
 const styles = StyleSheet.create({
-  blur: {
-    // @ts-ignore using an RNW-specific attribute here -prf
-    backdropFilter: 'blur(5px)',
-  },
   dark: {
     backgroundColor: '#0008',
   },

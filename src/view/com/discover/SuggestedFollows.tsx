@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {
   ActivityIndicator,
-  FlatList,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -13,6 +12,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
 import _omit from 'lodash.omit'
+import {CenteredView, FlatList} from '../util/Views'
 import {ErrorScreen} from '../util/error/ErrorScreen'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -120,12 +120,14 @@ export const SuggestedFollows = observer(
     return (
       <View style={styles.container}>
         {view.hasError ? (
-          <ErrorScreen
-            title="Failed to load suggestions"
-            message="There was an error while trying to load suggested follows."
-            details={view.error}
-            onPressTryAgain={onRefresh}
-          />
+          <CenteredView>
+            <ErrorScreen
+              title="Failed to load suggestions"
+              message="There was an error while trying to load suggested follows."
+              details={view.error}
+              onPressTryAgain={onRefresh}
+            />
+          </CenteredView>
         ) : view.isEmpty ? (
           <View />
         ) : (

@@ -47,9 +47,11 @@ export function GridIconSolid({style}: {style?: StyleProp<ViewStyle>}) {
 export function HomeIcon({
   style,
   size,
+  strokeWidth = 4,
 }: {
   style?: StyleProp<ViewStyle>
   size?: string | number
+  strokeWidth?: number
 }) {
   return (
     <Svg
@@ -57,9 +59,10 @@ export function HomeIcon({
       width={size || 24}
       height={size || 24}
       stroke="currentColor"
+      fill="none"
       style={style}>
       <Path
-        strokeWidth={4}
+        strokeWidth={strokeWidth}
         d="M 23.951 2 C 23.631 2.011 23.323 2.124 23.072 2.322 L 8.859 13.52 C 7.055 14.941 6 17.114 6 19.41 L 6 38.5 C 6 39.864 7.136 41 8.5 41 L 18.5 41 C 19.864 41 21 39.864 21 38.5 L 21 28.5 C 21 28.205 21.205 28 21.5 28 L 26.5 28 C 26.795 28 27 28.205 27 28.5 L 27 38.5 C 27 39.864 28.136 41 29.5 41 L 39.5 41 C 40.864 41 42 39.864 42 38.5 L 42 19.41 C 42 17.114 40.945 14.941 39.141 13.52 L 24.928 2.322 C 24.65 2.103 24.304 1.989 23.951 2 Z"
       />
     </Svg>
