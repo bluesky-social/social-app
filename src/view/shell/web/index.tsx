@@ -5,6 +5,7 @@ import {useStores} from '../../../state'
 import {match, MatchResult} from '../../routes'
 import {DesktopLeftColumn} from './left-column'
 import {DesktopRightColumn} from './right-column'
+import {Onboard} from '../../screens/Onboard'
 import {Login} from '../../screens/Login'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -19,6 +20,15 @@ export const WebShell: React.FC = observer(() => {
     return (
       <View style={styles.outerContainer}>
         <Login />
+      </View>
+    )
+  }
+  if (store.onboard.isOnboarding) {
+    return (
+      <View style={styles.outerContainer}>
+        <ErrorBoundary>
+          <Onboard />
+        </ErrorBoundary>
       </View>
     )
   }
@@ -102,12 +112,6 @@ function constructScreenRenderDesc(nav: NavigationModel): {
 
 const styles = StyleSheet.create({
   outerContainer: {
-    height: '100%',
-  },
-  innerContainer: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: '600px',
     height: '100%',
   },
   visible: {
