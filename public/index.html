@@ -13,28 +13,9 @@
       #app-root { display:flex; height:100%; }
 
       /* Remove focus state on inputs */
-      input:focus {
+      input:focus,
+      textarea:focus {
         outline: 0;
-      }
-
-      /* These styles are for src/view/com/modals/WebModal */
-      div[data-modal-overlay] {
-        position: fixed;
-        top: 0;
-        left: 0;
-        background: #0004;
-        width: 100vw;
-        height: 100vh;
-      }
-      div[data-modal-container] {
-        position: fixed;
-        top: 20vh;
-        left: calc(50vw - 300px);
-        width: 600px;
-        padding: 20px;
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 5px 10px #0005;
       }
     </style>
   </head>

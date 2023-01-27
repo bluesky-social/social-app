@@ -11,25 +11,19 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import PasteInput, {
-  PastedFile,
-  PasteInputRef,
-} from '@mattermost/react-native-paste-input'
 import LinearGradient from 'react-native-linear-gradient'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {useAnalytics} from '@segment/analytics-react-native'
+// import {useAnalytics} from '@segment/analytics-react-native' TODO
 import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete-view'
 import {Autocomplete} from './Autocomplete'
 import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
-// @ts-ignore no type definition -prf
-import ProgressCircle from 'react-native-progress/Circle'
-// @ts-ignore no type definition -prf
-import ProgressPie from 'react-native-progress/Pie'
+import {TextInput, TextInputRef} from './text-input/TextInput'
+import {CharProgress} from './char-progress/CharProgress'
 import {TextLink} from '../util/Link'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
@@ -49,7 +43,6 @@ import {SelectedPhoto} from './SelectedPhoto'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 const MAX_TEXT_LENGTH = 256
-const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
 export const ComposePost = observer(function ComposePost({
@@ -63,10 +56,10 @@ export const ComposePost = observer(function ComposePost({
   onPost?: ComposerOpts['onPost']
   onClose: () => void
 }) {
-  const {track} = useAnalytics()
+  // const {track} = useAnalytics() TODO
   const pal = usePalette('default')
   const store = useStores()
-  const textInput = useRef<PasteInputRef>(null)
+  const textInput = useRef<TextInputRef>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
@@ -80,7 +73,6 @@ export const ComposePost = observer(function ComposePost({
   )
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
 
-  // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
   const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
     () => new UserAutocompleteViewModel(store),
     [store],
@@ -219,19 +211,18 @@ export const ComposePost = observer(function ComposePost({
       }
     }
   }
-  const onPaste = async (err: string | undefined, files: PastedFile[]) => {
+  const onPaste = async (err: string | undefined, uris: string[]) => {
     if (err) {
       return setError(cleanError(err))
     }
     if (selectedPhotos.length >= 4) {
       return
     }
-    const imgFile = files.find(file => /\.(jpe?g|png)$/.test(file.fileName))
-    if (!imgFile) {
-      return
+    const imgUri = uris.find(uri => /\.(jpe?g|png)$/.test(uri))
+    if (imgUri) {
+      const finalImgPath = await cropPhoto(imgUri)
+      onSelectPhotos([...selectedPhotos, finalImgPath])
     }
-    const finalImgPath = await cropPhoto(imgFile.uri)
-    onSelectPhotos([...selectedPhotos, finalImgPath])
   }
   const onPressCancel = () => hackfixOnClose()
   const onPressPublish = async () => {
@@ -257,9 +248,10 @@ export const ComposePost = observer(function ComposePost({
         autocompleteView.knownHandles,
         setProcessingState,
       )
-      track('Create Post', {
-        imageCount: selectedPhotos.length,
-      })
+      // TODO
+      // track('Create Post', {
+      //   imageCount: selectedPhotos.length,
+      // })
     } catch (e: any) {
       setError(cleanError(e.message))
       setIsProcessing(false)
@@ -276,7 +268,6 @@ export const ComposePost = observer(function ComposePost({
   }
 
   const canPost = text.length <= MAX_TEXT_LENGTH
-  const progressColor = text.length > DANGER_TEXT_LENGTH ? '#e60000' : undefined
 
   const selectTextInputLayout =
     selectedPhotos.length !== 0
@@ -311,7 +302,7 @@ export const ComposePost = observer(function ComposePost({
     <KeyboardAvoidingView
       testID="composePostView"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={[pal.view, styles.outer]}>
+      style={styles.outer}>
       <TouchableWithoutFeedback onPressIn={onPressContainer}>
         <SafeAreaView style={s.flex1}>
           <View style={styles.topbar}>
@@ -396,22 +387,19 @@ export const ComposePost = observer(function ComposePost({
                 avatar={store.me.avatar}
                 size={50}
               />
-              <PasteInput
+              <TextInput
                 testID="composerTextInput"
-                ref={textInput}
-                multiline
-                scrollEnabled
+                innerRef={textInput}
                 onChangeText={(str: string) => onChangeText(str)}
                 onPaste={onPaste}
                 placeholder={selectTextInputPlaceholder}
-                placeholderTextColor={pal.colors.textLight}
                 style={[
                   pal.text,
                   styles.textInput,
                   styles.textInputFormatting,
                 ]}>
                 {textDecorated}
-              </PasteInput>
+              </TextInput>
             </View>
             <SelectedPhoto
               selectedPhotos={selectedPhotos}
@@ -450,31 +438,7 @@ export const ComposePost = observer(function ComposePost({
               />
             </TouchableOpacity>
             <View style={s.flex1} />
-            <Text style={[s.mr10, {color: progressColor}]}>
-              {MAX_TEXT_LENGTH - text.length}
-            </Text>
-            <View>
-              {text.length > DANGER_TEXT_LENGTH ? (
-                <ProgressPie
-                  size={30}
-                  borderWidth={4}
-                  borderColor={progressColor}
-                  color={progressColor}
-                  progress={Math.min(
-                    (text.length - MAX_TEXT_LENGTH) / MAX_TEXT_LENGTH,
-                    1,
-                  )}
-                />
-              ) : (
-                <ProgressCircle
-                  size={30}
-                  borderWidth={1}
-                  borderColor={colors.gray2}
-                  color={progressColor}
-                  progress={text.length / MAX_TEXT_LENGTH}
-                />
-              )}
-            </View>
+            <CharProgress count={text.length} />
           </View>
           <Autocomplete
             active={autocompleteView.isActive}
@@ -504,7 +468,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     padding: 15,
-    paddingBottom: Platform.OS === 'ios' ? 0 : 50,
     height: '100%',
   },
   topbar: {

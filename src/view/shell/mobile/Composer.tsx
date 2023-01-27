@@ -48,9 +48,6 @@ export const Composer = observer(
       ],
     }
 
-    // events
-    // =
-
     // rendering
     // =
 
