@@ -42,7 +42,9 @@ export const NavItem = observer(
               </Text>
             )}
           </View>
-          <Text type={isCurrent ? 'xl-bold' : 'xl-medium'}>{label}</Text>
+          <Text type={isCurrent ? 'xl-bold' : 'xl'} style={styles.navItemLabel}>
+            {label}
+          </Text>
         </Link>
       </Pressable>
     )
@@ -86,10 +88,11 @@ export const DesktopLeftColumn = observer(() => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    left: 'calc(50vw - 500px)',
-    width: '200px',
+    left: 'calc(50vw - 530px)',
+    width: '230px',
     height: '100%',
     borderRightWidth: 1,
+    paddingTop: 20,
   },
   navItem: {
     padding: '1rem',
@@ -109,7 +112,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.red3,
     color: colors.white,
     fontSize: 12,
+    fontWeight: 'bold',
     paddingHorizontal: 4,
-    borderRadius: 4,
+    borderRadius: 6,
+  },
+  navItemLabel: {
+    fontSize: 19,
   },
 })

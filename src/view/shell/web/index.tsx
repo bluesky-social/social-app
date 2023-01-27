@@ -1,10 +1,10 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {View, StyleSheet, Text} from 'react-native'
+import {View, StyleSheet} from 'react-native'
 import {useStores} from '../../../state'
 import {match, MatchResult} from '../../routes'
 import {DesktopLeftColumn} from './left-column'
-// import {DesktopRightColumn} from './right-column'
+import {DesktopRightColumn} from './right-column'
 import {Login} from '../../screens/Login'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -35,6 +35,7 @@ export const WebShell: React.FC = observer(() => {
         </View>
       ))}
       <DesktopLeftColumn />
+      <DesktopRightColumn />
     </View>
   )
   // TODO
@@ -48,25 +49,6 @@ export const WebShell: React.FC = observer(() => {
   //   imagesOpen={store.shell.composerOpts?.imagesOpen}
   //   onPost={store.shell.composerOpts?.onPost}
   // />
-  // return (
-  //   <View style={styles.outerContainer}>
-  //     {store.session.hasSession ? (
-  //       <>
-  //         <DesktopLeftColumn />
-  //         <View style={styles.innerContainer}>
-  //           <Text>Hello, world! (Logged in)</Text>
-  //           {children}
-  //         </View>
-  //         <DesktopRightColumn />
-  //       </>
-  //     ) : (
-  //       <View style={styles.innerContainer}>
-  //         <Text>Hello, world! (Logged out)</Text>
-  //         {children}
-  //       </View>
-  //     )}
-  //   </View>
-  // )
 })
 
 /**
