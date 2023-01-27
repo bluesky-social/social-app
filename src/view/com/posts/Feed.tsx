@@ -13,7 +13,7 @@ import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {FeedModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
-import {PromptButtons} from './PromptButtons'
+import {ComposerPrompt} from './ComposerPrompt'
 import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
 import {s} from '../../lib/styles'
 
@@ -43,7 +43,7 @@ export const Feed = observer(function Feed({
   //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = ({item}: {item: any}) => {
     if (item === COMPOSE_PROMPT_ITEM) {
-      return <PromptButtons onPressCompose={onPressCompose} />
+      return <ComposerPrompt onPressCompose={onPressCompose} />
     } else if (item === EMPTY_FEED_ITEM) {
       return (
         <EmptyState
@@ -87,7 +87,7 @@ export const Feed = observer(function Feed({
   return (
     <View testID={testID} style={style}>
       <CenteredView>
-        {!data && <PromptButtons onPressCompose={onPressCompose} />}
+        {!data && <ComposerPrompt onPressCompose={onPressCompose} />}
         {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
         {feed.hasError && (
           <ErrorMessage
