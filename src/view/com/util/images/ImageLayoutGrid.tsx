@@ -98,7 +98,7 @@ function ImageLayoutGridInner({
         <TouchableOpacity
           delayPressIn={DELAY_PRESS_IN}
           onPress={() => onPress?.(0)}
-          onPressIn={onPressIn}
+          onPressIn={() => onPressIn?.(0)}
           onLongPress={() => onLongPress(0)}>
           <Image source={{uri: uris[0]}} style={size1} />
         </TouchableOpacity>
@@ -106,7 +106,7 @@ function ImageLayoutGridInner({
         <TouchableOpacity
           delayPressIn={DELAY_PRESS_IN}
           onPress={() => onPress?.(1)}
-          onPressIn={onPressIn}
+          onPressIn={() => onPressIn?.(1)}
           onLongPress={() => onLongPress(1)}>
           <Image source={{uri: uris[1]}} style={size1} />
         </TouchableOpacity>
@@ -119,7 +119,7 @@ function ImageLayoutGridInner({
         <TouchableOpacity
           delayPressIn={DELAY_PRESS_IN}
           onPress={() => onPress?.(0)}
-          onPressIn={onPressIn}
+          onPressIn={() => onPressIn?.(0)}
           onLongPress={() => onLongPress(0)}>
           <Image source={{uri: uris[0]}} style={size2} />
         </TouchableOpacity>
@@ -128,7 +128,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(1)}
-            onPressIn={onPressIn}
+            onPressIn={() => onPressIn?.(1)}
             onLongPress={() => onLongPress(1)}>
             <Image source={{uri: uris[1]}} style={size1} />
           </TouchableOpacity>
@@ -136,7 +136,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(2)}
-            onPressIn={onPressIn}
+            onPressIn={() => onPressIn?.(2)}
             onLongPress={() => onLongPress(2)}>
             <Image source={{uri: uris[2]}} style={size1} />
           </TouchableOpacity>
@@ -151,7 +151,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(0)}
-            onPressIn={onPressIn}
+            onPressIn={() => onPressIn?.(0)}
             onLongPress={() => onLongPress(0)}>
             <Image source={{uri: uris[0]}} style={size1} />
           </TouchableOpacity>
@@ -159,7 +159,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(1)}
-            onPressIn={onPressIn}
+            onPressIn={() => onPressIn?.(1)}
             onLongPress={() => onLongPress(1)}>
             <Image source={{uri: uris[1]}} style={size1} />
           </TouchableOpacity>
@@ -169,7 +169,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(2)}
-            onPressIn={onPressIn}
+            onPressIn={() => onPressIn?.(2)}
             onLongPress={() => onLongPress(2)}>
             <Image source={{uri: uris[2]}} style={size1} />
           </TouchableOpacity>
@@ -177,7 +177,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(3)}
-            onPressIn={onPressIn}
+            onPressIn={() => onPressIn?.(3)}
             onLongPress={() => onLongPress(3)}>
             <Image source={{uri: uris[3]}} style={size1} />
           </TouchableOpacity>
