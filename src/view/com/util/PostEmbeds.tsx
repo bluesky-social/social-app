@@ -40,7 +40,7 @@ export function PostEmbeds({
         Image.prefetch(firstImageToShow)
         uris.forEach(uri => {
           if (firstImageToShow !== uri) {
-            // First image already prefteched above
+            // First image already prefeched above
             Image.prefetch(uri)
           }
         })
