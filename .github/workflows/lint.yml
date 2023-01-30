@@ -21,7 +21,7 @@ jobs:
           prettier: true
       - name: Lint check
         run: yarn lint
-      - name: Typecheck
+      - name: Type check
         uses: andoshin11/typescript-error-reporter-action@v1.0.2
   testing:
     name: Run tests
