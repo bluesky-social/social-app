@@ -19,8 +19,10 @@ jobs:
         with:
           eslint: true
           prettier: true
-      - name: Typescript & Lint check
+      - name: Lint check
         run: yarn lint
+      - name: Typecheck
+        uses: andoshin11/typescript-error-reporter-action@v1.0.2
   testing:
     name: Run tests
     runs-on: ubuntu-latest
