@@ -36,9 +36,11 @@ export function PostEmbeds({
         saveImageModal({uri: uris[index]})
       }
       const onPressIn = (index: number) => {
-        Image.prefetch(uris[index])
+        const firstImageToShow = uris[index]
+        Image.prefetch(firstImageToShow)
         uris.forEach(uri => {
-          if (uris[i] !== uri) {
+          if (firstImageToShow !== uri) {
+            // First image already prefteched above
             Image.prefetch(uri)
           }
         })
@@ -87,7 +89,7 @@ export function PostEmbeds({
               uri={embed.images[0].thumb}
               onPress={() => openLightbox(0)}
               onLongPress={() => onLongPress(0)}
-              onPressIn={onPressIn}
+              onPressIn={() => onPressIn(0)}
               containerStyle={styles.singleImage}
             />
           </View>
