@@ -7,7 +7,7 @@ on:
 
 jobs:
   linting:
-    name: Run linters
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
@@ -21,10 +21,18 @@ jobs:
           prettier: true
       - name: Lint check
         run: yarn lint
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+      - name: Yarn install
+        run: yarn
       - name: Type check
         run: yarn tsc
   testing:
-    name: Run tests
+    name: Tests
     runs-on: ubuntu-latest
     steps:
       - name: Install node 18
