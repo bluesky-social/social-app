@@ -22,7 +22,7 @@ jobs:
       - name: Lint check
         run: yarn lint
       - name: Type check
-        uses: yarn tsc
+        run: yarn tsc
   testing:
     name: Run tests
     runs-on: ubuntu-latest
