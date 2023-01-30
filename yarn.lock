@@ -19,10 +19,10 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@atproto/api@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.0.6.tgz#4b4f0d46549e75ef8425bf3fdfb2b5f742395b5e"
-  integrity sha512-yG5S+Mz+Z6K7qUTRVc3oAFWaoW92IeiB8yDT5rIxkrON/r3gez1LVnBOAU0dgeLFZ1mdRsF5pycX+zcleTYInQ==
+"@atproto/api@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.0.7.tgz#2cec239dd252a67a768a715e385fa835e834c280"
+  integrity sha512-2iQ5fd8YG4H5MzcWYtlvemOoXqzhRaxkNblecw1+iopTQjPrrDntJwKIg7+qLW0Mr93w+RSLmmekWUkiIJf1ew==
   dependencies:
     "@atproto/xrpc" "*"
     typed-emitter "^2.1.0"
