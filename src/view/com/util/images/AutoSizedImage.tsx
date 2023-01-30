@@ -25,6 +25,7 @@ export function AutoSizedImage({
   uri,
   onPress,
   onLongPress,
+  onPressIn,
   style,
   containerStyle,
 }: {
@@ -85,6 +86,7 @@ export function AutoSizedImage({
       <TouchableOpacity
         onPress={onPress}
         onLongPress={onLongPress}
+        onPressIn={onPressIn}
         delayPressIn={DELAY_PRESS_IN}>
         {error ? (
           <View style={[styles.errorContainer, errPal.view, containerStyle]}>
