@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
+import {StyleSheet, StyleProp, View, ViewStyle, Image} from 'react-native'
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import LinearGradient from 'react-native-linear-gradient'
 import {Link} from '../util/Link'
@@ -35,6 +35,16 @@ export function PostEmbeds({
       const onLongPress = (index: number) => {
         saveImageModal({uri: uris[index]})
       }
+      const onPressIn = (index: number) => {
+        const firstImageToShow = uris[index]
+        Image.prefetch(firstImageToShow)
+        uris.forEach(uri => {
+          if (firstImageToShow !== uri) {
+            // First image already prefeched above
+            Image.prefetch(uri)
+          }
+        })
+      }
 
       if (embed.images.length === 4) {
         return (
@@ -44,6 +54,7 @@ export function PostEmbeds({
               uris={embed.images.map(img => img.thumb)}
               onPress={openLightbox}
               onLongPress={onLongPress}
+              onPressIn={onPressIn}
             />
           </View>
         )
@@ -55,6 +66,7 @@ export function PostEmbeds({
               uris={embed.images.map(img => img.thumb)}
               onPress={openLightbox}
               onLongPress={onLongPress}
+              onPressIn={onPressIn}
             />
           </View>
         )
@@ -66,6 +78,7 @@ export function PostEmbeds({
               uris={embed.images.map(img => img.thumb)}
               onPress={openLightbox}
               onLongPress={onLongPress}
+              onPressIn={onPressIn}
             />
           </View>
         )
@@ -76,6 +89,7 @@ export function PostEmbeds({
               uri={embed.images[0].thumb}
               onPress={() => openLightbox(0)}
               onLongPress={() => onLongPress(0)}
+              onPressIn={() => onPressIn(0)}
               containerStyle={styles.singleImage}
             />
           </View>

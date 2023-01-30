@@ -23,11 +23,14 @@ export function ImageLayoutGrid({
   uris,
   onPress,
   onLongPress,
+  onPressIn,
   style,
 }: {
   type: ImageLayoutGridType
   uris: string[]
   onPress?: (index: number) => void
+  onLongPress?: (index: number) => void
+  onPressIn?: (index: number) => void
   style?: StyleProp<ViewStyle>
 }) {
   const [containerInfo, setContainerInfo] = React.useState<Dim | undefined>()
@@ -46,6 +49,7 @@ export function ImageLayoutGrid({
           type={type}
           uris={uris}
           onPress={onPress}
+          onPressIn={onPressIn}
           onLongPress={onLongPress}
           containerInfo={containerInfo}
         />
@@ -59,11 +63,14 @@ function ImageLayoutGridInner({
   uris,
   onPress,
   onLongPress,
+  onPressIn,
   containerInfo,
 }: {
   type: ImageLayoutGridType
   uris: string[]
   onPress?: (index: number) => void
+  onLongPress?: (index: number) => void
+  onPressIn?: (index: number) => void
   containerInfo: Dim
 }) {
   const size1 = React.useMemo<ImageStyle>(() => {
@@ -91,6 +98,7 @@ function ImageLayoutGridInner({
         <TouchableOpacity
           delayPressIn={DELAY_PRESS_IN}
           onPress={() => onPress?.(0)}
+          onPressIn={() => onPressIn?.(0)}
           onLongPress={() => onLongPress(0)}>
           <Image source={{uri: uris[0]}} style={size1} />
         </TouchableOpacity>
@@ -98,6 +106,7 @@ function ImageLayoutGridInner({
         <TouchableOpacity
           delayPressIn={DELAY_PRESS_IN}
           onPress={() => onPress?.(1)}
+          onPressIn={() => onPressIn?.(1)}
           onLongPress={() => onLongPress(1)}>
           <Image source={{uri: uris[1]}} style={size1} />
         </TouchableOpacity>
@@ -110,6 +119,7 @@ function ImageLayoutGridInner({
         <TouchableOpacity
           delayPressIn={DELAY_PRESS_IN}
           onPress={() => onPress?.(0)}
+          onPressIn={() => onPressIn?.(0)}
           onLongPress={() => onLongPress(0)}>
           <Image source={{uri: uris[0]}} style={size2} />
         </TouchableOpacity>
@@ -118,6 +128,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(1)}
+            onPressIn={() => onPressIn?.(1)}
             onLongPress={() => onLongPress(1)}>
             <Image source={{uri: uris[1]}} style={size1} />
           </TouchableOpacity>
@@ -125,6 +136,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(2)}
+            onPressIn={() => onPressIn?.(2)}
             onLongPress={() => onLongPress(2)}>
             <Image source={{uri: uris[2]}} style={size1} />
           </TouchableOpacity>
@@ -139,6 +151,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(0)}
+            onPressIn={() => onPressIn?.(0)}
             onLongPress={() => onLongPress(0)}>
             <Image source={{uri: uris[0]}} style={size1} />
           </TouchableOpacity>
@@ -146,6 +159,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(1)}
+            onPressIn={() => onPressIn?.(1)}
             onLongPress={() => onLongPress(1)}>
             <Image source={{uri: uris[1]}} style={size1} />
           </TouchableOpacity>
@@ -155,6 +169,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(2)}
+            onPressIn={() => onPressIn?.(2)}
             onLongPress={() => onLongPress(2)}>
             <Image source={{uri: uris[2]}} style={size1} />
           </TouchableOpacity>
@@ -162,6 +177,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(3)}
+            onPressIn={() => onPressIn?.(3)}
             onLongPress={() => onLongPress(3)}>
             <Image source={{uri: uris[3]}} style={size1} />
           </TouchableOpacity>
