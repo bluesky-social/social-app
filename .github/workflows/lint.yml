@@ -22,7 +22,7 @@ jobs:
       - name: Lint check
         run: yarn lint
       - name: Type check
-        uses: andoshin11/typescript-error-reporter-action@v1.0.2
+        uses: yarn tsc
   testing:
     name: Run tests
     runs-on: ubuntu-latest
