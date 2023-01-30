@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
-import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
+import AtpApi from '@atproto/api'
 import {useAnalytics} from '@segment/analytics-react-native'
 import {LogoTextHero} from './Logo'
 import {Text} from '../util/text/Text'
@@ -471,7 +471,7 @@ const ForgotPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const api = AtpApi.service(serviceUrl) as SessionServiceClient
+      const api = AtpApi.service(serviceUrl)
       await api.com.atproto.account.requestPasswordReset({email})
       onEmailSent()
     } catch (e: any) {
@@ -602,7 +602,7 @@ const SetNewPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const api = AtpApi.service(serviceUrl) as SessionServiceClient
+      const api = AtpApi.service(serviceUrl)
       await api.com.atproto.account.resetPassword({token: resetCode, password})
       onPasswordSet()
     } catch (e: any) {
