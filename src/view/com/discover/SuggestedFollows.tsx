@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   },
 
   suggestionsContainer: {
-    flex: 1,
+    height: '100%',
   },
   footer: {
     height: 200,
