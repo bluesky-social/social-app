@@ -60,9 +60,7 @@ export async function cropPhoto(
   })
 
   const img = await compressIfNeeded(cropperRes, MAX_SIZE)
-
   const permanentPath = await moveToPremanantPath(img.path)
-
   return permanentPath
 }
 
@@ -132,9 +130,7 @@ export const PhotoCarouselPicker = ({
           height,
         })
         const finalImg = await compressIfNeeded(cropperRes, MAX_SIZE)
-
         const permanentPath = await moveToPremanantPath(finalImg.path)
-
         result.push(permanentPath)
       }
       onSelectPhotos([...selectedPhotos, ...result])
