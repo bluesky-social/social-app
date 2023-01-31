@@ -1,5 +1,5 @@
-import React, {useCallback} from 'react'
-import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
+import React from 'react'
+import {StyleSheet, View, Image} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Image as PickedImage} from 'react-native-image-crop-picker'
@@ -9,6 +9,7 @@ import {
   openCropper,
   openPicker,
 } from 'react-native-image-crop-picker'
+import {DropdownButton} from './forms/DropdownButton'
 
 export function UserBanner({
   banner,
@@ -17,14 +18,35 @@ export function UserBanner({
   banner?: string | null
   onSelectNewBanner?: (img: PickedImage) => void
 }) {
-  const handleEditBanner = useCallback(() => {
-    Alert.alert('Select upload method', '', [
-      {
-        text: 'Take a new photo',
-        onPress: () => {
-          openCamera({
+  const dropdownItems = [
+    {
+      label: 'Camera',
+      icon: 'camera',
+      // TODO: Add darkmode support https://github.com/bluesky-social/social-app/issues/78
+      onPress: () => {
+        openCamera({
+          mediaType: 'photo',
+          cropping: true,
+          compressImageMaxWidth: 6000,
+          width: 6000,
+          compressImageMaxHeight: 2000,
+          height: 2000,
+          forceJpg: true, // ios only
+          compressImageQuality: 1,
+          includeExif: true,
+        }).then(onSelectNewBanner)
+      },
+    },
+    {
+      label: 'Library',
+      icon: 'image',
+      onPress: () => {
+        openPicker({
+          mediaType: 'photo',
+        }).then(async item => {
+          await openCropper({
             mediaType: 'photo',
-            cropping: true,
+            path: item.path,
             compressImageMaxWidth: 6000,
             width: 6000,
             compressImageMaxHeight: 2000,
@@ -33,30 +55,18 @@ export function UserBanner({
             compressImageQuality: 1,
             includeExif: true,
           }).then(onSelectNewBanner)
-        },
+        })
       },
-      {
-        text: 'Select from gallery',
-        onPress: () => {
-          openPicker({
-            mediaType: 'photo',
-          }).then(async item => {
-            await openCropper({
-              mediaType: 'photo',
-              path: item.path,
-              compressImageMaxWidth: 6000,
-              width: 6000,
-              compressImageMaxHeight: 2000,
-              height: 2000,
-              forceJpg: true, // ios only
-              compressImageQuality: 1,
-              includeExif: true,
-            }).then(onSelectNewBanner)
-          })
-        },
-      },
-    ])
-  }, [onSelectNewBanner])
+    },
+    // TODO: Remove banner https://github.com/bluesky-social/social-app/issues/122
+    // {
+    //   label: 'Remove',
+    //   icon: ['far', 'trash-can'],
+    //   onPress: () => {
+    //     // Remove banner api call
+    //   },
+    // },
+  ]
 
   const renderSvg = () => (
     <Svg width="100%" height="150" viewBox="50 0 200 100">
@@ -77,7 +87,13 @@ export function UserBanner({
 
   // setUserBanner is only passed as prop on the EditProfile component
   return onSelectNewBanner ? (
-    <TouchableOpacity onPress={handleEditBanner}>
+    <DropdownButton
+      type="bare"
+      items={dropdownItems}
+      openToRight
+      rightOffset={-200}
+      bottomOffset={-10}
+      menuWidth={170}>
       {banner ? (
         <Image style={styles.bannerImage} source={{uri: banner}} />
       ) : (
@@ -90,7 +106,7 @@ export function UserBanner({
           style={{color: colors.white}}
         />
       </View>
-    </TouchableOpacity>
+    </DropdownButton>
   ) : banner ? (
     <Image
       style={styles.bannerImage}

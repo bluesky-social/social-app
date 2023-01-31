@@ -36,6 +36,9 @@ export function DropdownButton({
   label,
   menuWidth,
   children,
+  openToRight = false,
+  rightOffset = 0,
+  bottomOffset = 0,
 }: {
   type: DropdownButtonType
   style?: StyleProp<ViewStyle>
@@ -43,6 +46,9 @@ export function DropdownButton({
   label?: string
   menuWidth?: number
   children?: React.ReactNode
+  openToRight?: boolean
+  rightOffset?: number
+  bottomOffset?: number
 }) {
   const ref = useRef<TouchableOpacity>(null)
 
@@ -59,12 +65,11 @@ export function DropdownButton({
         if (!menuWidth) {
           menuWidth = 200
         }
-        createDropdownMenu(
-          pageX + width - menuWidth,
-          pageY + height,
-          menuWidth,
-          items,
-        )
+        const newX = openToRight
+          ? pageX + width + rightOffset
+          : pageX + width - menuWidth
+        const newY = pageY + height + bottomOffset
+        createDropdownMenu(newX, newY, menuWidth, items)
       },
     )
   }
@@ -184,7 +189,7 @@ function createDropdownMenu(
           {items.map((item, index) => (
             <TouchableOpacity
               key={index}
-              style={[styles.menuItem]}
+              style={styles.menuItem}
               onPress={() => onPressItem(index)}>
               {item.icon && (
                 <FontAwesomeIcon style={styles.icon} icon={item.icon} />
