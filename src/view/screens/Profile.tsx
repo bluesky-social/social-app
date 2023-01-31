@@ -127,7 +127,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
           }
           if (!uiState.feed.hasMore) {
             items = items.concat([END_ITEM])
-          } else {
+          } else if (uiState.feed.isLoading) {
             Footer = LoadingMoreFooter
           }
           renderItem = (item: any) => {
