@@ -1,4 +1,4 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyActorGetSuggestions as GetSuggestions} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 
@@ -89,33 +89,32 @@ export class SuggestedActorsViewModel {
         this.suggestions = []
       }
       let res
-      let totalAdded = 0
+      let items: SuggestedActor[] = []
       do {
         res = await this.rootStore.api.app.bsky.actor.getSuggestions({
           limit: PAGE_SIZE,
           cursor: this.loadMoreCursor,
         })
-        totalAdded += await this._appendAll(res)
-      } while (totalAdded < PAGE_SIZE && this.hasMore)
+        this.loadMoreCursor = res.data.cursor
+        this.hasMore = !!this.loadMoreCursor
+        items = items.concat(
+          res.data.actors.filter(actor => {
+            if (actor.did === this.rootStore.me.did) {
+              return false // skip self
+            }
+            if (actor.myState?.follow) {
+              return false // skip already-followed users
+            }
+            return true
+          }),
+        )
+      } while (items.length < PAGE_SIZE && this.hasMore)
+      runInAction(() => {
+        this.suggestions = this.suggestions.concat(items)
+      })
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e)
     }
-  }
-
-  private async _appendAll(res: GetSuggestions.Response) {
-    this.loadMoreCursor = res.data.cursor
-    this.hasMore = !!this.loadMoreCursor
-    const newSuggestions = res.data.actors.filter(actor => {
-      if (actor.did === this.rootStore.me.did) {
-        return false // skip self
-      }
-      if (actor.myState?.follow) {
-        return false // skip already-followed users
-      }
-      return true
-    })
-    this.suggestions = this.suggestions.concat(newSuggestions)
-    return newSuggestions.length
   }
 }
