@@ -7,6 +7,7 @@ import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 
 import * as models from '../../../state/models/shell-ui'
 
+import * as MenuModal from './Menu'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
@@ -45,6 +46,11 @@ export const Modal = observer(function Modal() {
       <ConfirmModal.Component
         {...(store.shell.activeModal as models.ConfirmModal)}
       />
+    )
+  } else if (store.shell.activeModal?.name === 'menu') {
+    snapPoints = MenuModal.snapPoints
+    element = (
+      <MenuModal.Component {...(store.shell.activeModal as models.MenuModal)} />
     )
   } else if (store.shell.activeModal?.name === 'edit-profile') {
     snapPoints = EditProfileModal.snapPoints

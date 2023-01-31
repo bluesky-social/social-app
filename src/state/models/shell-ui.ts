@@ -14,6 +14,18 @@ export class ConfirmModal {
   }
 }
 
+export class MenuModal {
+  name = 'menu'
+
+  constructor(
+    public title: string,
+    public options: any, // TODO: Before commit string | (() => JSX.Element),
+    public onPressConfirm: () => void | Promise<void>,
+  ) {
+    makeAutoObservable(this)
+  }
+}
+
 export class EditProfileModal {
   name = 'edit-profile'
 
@@ -98,6 +110,7 @@ export class ShellUiModel {
     | ServerInputModal
     | ReportPostModal
     | ReportAccountModal
+    | MenuModal
     | undefined
   isLightboxActive = false
   activeLightbox: ProfileImageLightbox | ImagesLightbox | undefined
@@ -140,7 +153,9 @@ export class ShellUiModel {
       | EditProfileModal
       | ServerInputModal
       | ReportPostModal
-      | ReportAccountModal,
+      | ReportAccountModal
+      | MenuModal,
+    // TODO: Create a MODALS interface, don't repeat
   ) {
     this.isModalActive = true
     this.activeModal = modal
