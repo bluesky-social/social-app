@@ -1,7 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
-  Alert,
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
@@ -230,7 +229,7 @@ export const ComposePost = observer(function ComposePost({
     onSelectPhotos([...selectedPhotos, finalImgPath])
   }
   const onPressCancel = () => hackfixOnClose()
-  const onPressPublish = () => {
+  const onPressPublish = async () => {
     if (isProcessing) {
       return
     }
@@ -242,28 +241,6 @@ export const ComposePost = observer(function ComposePost({
       setError('Did you want to say anything?')
       return false
     }
-    if (!extLink && !selectedPhotos.length && suggestedExtLinks.size > 0) {
-      Alert.alert(
-        'Post without a link card?',
-        "You have a link in your post but didn't add the link card.",
-        [
-          {
-            text: 'Post Anyway',
-            onPress: doPublish,
-            style: 'destructive',
-          },
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-        ],
-      )
-    } else {
-      doPublish()
-    }
-  }
-  const doPublish = async () => {
-    setError('')
     setIsProcessing(true)
     try {
       await apilib.post(
