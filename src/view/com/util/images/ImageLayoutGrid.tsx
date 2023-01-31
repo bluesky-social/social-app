@@ -158,20 +158,20 @@ function ImageLayoutGridInner({
           <View style={styles.hSpace} />
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
-            onPress={() => onPress?.(1)}
-            onPressIn={() => onPressIn?.(1)}
-            onLongPress={() => onLongPress(1)}>
-            <Image source={{uri: uris[1]}} style={size1} />
+            onPress={() => onPress?.(2)}
+            onPressIn={() => onPressIn?.(2)}
+            onLongPress={() => onLongPress(2)}>
+            <Image source={{uri: uris[2]}} style={size1} />
           </TouchableOpacity>
         </View>
         <View style={styles.wSpace} />
         <View>
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
-            onPress={() => onPress?.(2)}
-            onPressIn={() => onPressIn?.(2)}
-            onLongPress={() => onLongPress(2)}>
-            <Image source={{uri: uris[2]}} style={size1} />
+            onPress={() => onPress?.(1)}
+            onPressIn={() => onPressIn?.(1)}
+            onLongPress={() => onLongPress(1)}>
+            <Image source={{uri: uris[1]}} style={size1} />
           </TouchableOpacity>
           <View style={styles.hSpace} />
           <TouchableOpacity
