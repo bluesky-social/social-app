@@ -1,6 +1,7 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
+  Alert,
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
@@ -18,6 +19,7 @@ import PasteInput, {
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useAnalytics} from '@segment/analytics-react-native'
+import _isEqual from 'lodash.isequal'
 import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete-view'
 import {Autocomplete} from './Autocomplete'
 import {ExternalEmbed} from './ExternalEmbed'
@@ -71,7 +73,9 @@ export const ComposePost = observer(function ComposePost({
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
   )
-  const [attemptedExtLinks, setAttemptedExtLinks] = useState<string[]>([])
+  const [suggestedExtLinks, setSuggestedExtLinks] = useState<Set<string>>(
+    new Set(),
+  )
   const [isSelectingPhotos, setIsSelectingPhotos] = useState(
     imagesOpen || false,
   )
@@ -189,6 +193,9 @@ export const ComposePost = observer(function ComposePost({
       setIsSelectingPhotos(false)
     }
   }
+  const onPressAddLinkCard = (uri: string) => {
+    setExtLink({uri, isLoading: true})
+  }
   const onChangeText = (newText: string) => {
     setText(newText)
 
@@ -200,19 +207,11 @@ export const ComposePost = observer(function ComposePost({
       autocompleteView.setActive(false)
     }
 
-    if (!extLink && /\s$/.test(newText)) {
-      const ents = extractEntities(newText)
-      const entLink = ents
-        ?.filter(
-          ent => ent.type === 'link' && !attemptedExtLinks.includes(ent.value),
-        )
-        .pop() // use last
-      if (entLink) {
-        setExtLink({
-          uri: entLink.value,
-          isLoading: true,
-        })
-        setAttemptedExtLinks([...attemptedExtLinks, entLink.value])
+    if (!extLink) {
+      const ents = extractEntities(newText)?.filter(ent => ent.type === 'link')
+      const set = new Set(ents ? ents.map(e => e.value) : [])
+      if (!_isEqual(set, suggestedExtLinks)) {
+        setSuggestedExtLinks(set)
       }
     }
   }
@@ -231,7 +230,7 @@ export const ComposePost = observer(function ComposePost({
     onSelectPhotos([...selectedPhotos, finalImgPath])
   }
   const onPressCancel = () => hackfixOnClose()
-  const onPressPublish = async () => {
+  const onPressPublish = () => {
     if (isProcessing) {
       return
     }
@@ -243,6 +242,28 @@ export const ComposePost = observer(function ComposePost({
       setError('Did you want to say anything?')
       return false
     }
+    if (!extLink && !selectedPhotos.length && suggestedExtLinks.size > 0) {
+      Alert.alert(
+        'Post without a link card?',
+        "You have a link in your post but didn't add the link card.",
+        [
+          {
+            text: 'Post Anyway',
+            onPress: doPublish,
+            style: 'destructive',
+          },
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+        ],
+      )
+    } else {
+      doPublish()
+    }
+  }
+  const doPublish = async () => {
+    setError('')
     setIsProcessing(true)
     try {
       await apilib.post(
@@ -422,14 +443,29 @@ export const ComposePost = observer(function ComposePost({
             )}
           </ScrollView>
           {isSelectingPhotos &&
-            localPhotos.photos != null &&
-            selectedPhotos.length < 4 && (
-              <PhotoCarouselPicker
-                selectedPhotos={selectedPhotos}
-                onSelectPhotos={onSelectPhotos}
-                localPhotos={localPhotos}
-              />
-            )}
+          localPhotos.photos != null &&
+          selectedPhotos.length < 4 ? (
+            <PhotoCarouselPicker
+              selectedPhotos={selectedPhotos}
+              onSelectPhotos={onSelectPhotos}
+              localPhotos={localPhotos}
+            />
+          ) : !extLink &&
+            selectedPhotos.length === 0 &&
+            suggestedExtLinks.size > 0 ? (
+            <View style={s.mb5}>
+              {Array.from(suggestedExtLinks).map(url => (
+                <TouchableOpacity
+                  key={`suggested-${url}`}
+                  style={[pal.borderDark, styles.addExtLinkBtn]}
+                  onPress={() => onPressAddLinkCard(url)}>
+                  <Text>
+                    Add link card: <Text style={pal.link}>{url}</Text>
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          ) : null}
           <View style={[pal.border, styles.bottomBar]}>
             <TouchableOpacity
               testID="composerSelectPhotosButton"
@@ -570,6 +606,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 13,
     paddingRight: 8,
+  },
+  addExtLinkBtn: {
+    borderWidth: 1,
+    borderRadius: 24,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 4,
   },
   bottomBar: {
     flexDirection: 'row',
