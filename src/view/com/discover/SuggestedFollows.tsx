@@ -94,6 +94,7 @@ export const SuggestedFollows = observer(
       if (asLinks) {
         return (
           <Link
+            key={item.did}
             href={`/profile/${item.handle}`}
             title={item.displayName || item.handle}>
             <User
@@ -107,6 +108,7 @@ export const SuggestedFollows = observer(
       }
       return (
         <User
+          key={item.did}
           item={item}
           follow={follows[item.did]}
           onPressFollow={onPressFollow}
@@ -141,7 +143,6 @@ export const SuggestedFollows = observer(
                 </View>
               )}
               contentContainerStyle={s.contentContainer}
-              style={s.flex1}
             />
           </View>
         )}
@@ -221,7 +222,7 @@ const User = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: '100%',
   },
 
   suggestionsContainer: {
