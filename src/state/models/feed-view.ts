@@ -246,6 +246,21 @@ export class FeedModel {
   // =
 
   /**
+   * Nuke all data
+   */
+  clear() {
+    this.isLoading = false
+    this.isRefreshing = false
+    this.hasNewLatest = false
+    this.hasLoaded = false
+    this.error = ''
+    this.hasMore = true
+    this.loadMoreCursor = undefined
+    this.pollCursor = undefined
+    this.feed = []
+  }
+
+  /**
    * Load for first render
    */
   async setup(isRefreshing = false) {

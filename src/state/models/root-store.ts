@@ -3,7 +3,10 @@
  */
 
 import {makeAutoObservable} from 'mobx'
-import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
+import {
+  sessionClient as SessionAtpApi,
+  SessionServiceClient,
+} from '@atproto/api'
 import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
 import BackgroundFetch from 'react-native-background-fetch'
@@ -19,6 +22,7 @@ import {OnboardModel} from './onboard'
 import {isNetworkError} from '../../lib/errors'
 
 export class RootStoreModel {
+  api: SessionServiceClient
   log = new LogModel()
   session = new SessionModel(this)
   nav = new NavigationModel()
@@ -28,7 +32,9 @@ export class RootStoreModel {
   profiles = new ProfilesViewModel(this)
   linkMetas = new LinkMetasViewModel(this)
 
-  constructor(public api: SessionServiceClient) {
+  constructor(api: SessionServiceClient) {
+    this.api = api // to keep typescript from whining
+    this.setAPI(api)
     makeAutoObservable(this, {
       api: false,
       resolveName: false,
@@ -36,6 +42,24 @@ export class RootStoreModel {
       hydrate: false,
     })
     this.initBgFetch()
+  }
+
+  setAPI(api: SessionServiceClient) {
+    if (this.api) {
+      this.api.sessionManager.removeAllListeners('session')
+    }
+    this.api = api
+    this.api.sessionManager.on('session', this.onSessionChange.bind(this))
+  }
+
+  onSessionChange() {
+    if (!this.api.sessionManager.session && this.session.hasSession) {
+      this.log.debug('Session invalidated, logging the user out')
+      this.session.clear()
+    } else if (this.api.sessionManager.session) {
+      this.log.debug('Session refreshed, updating auth tokens')
+      this.session.updateAuthTokens(this.api.sessionManager.session)
+    }
   }
 
   async resolveName(didOrHandle: string) {
@@ -147,7 +171,9 @@ export class RootStoreModel {
   }
 }
 
-const throwawayInst = new RootStoreModel(AtpApi.service('http://localhost')) // this will be replaced by the loader, we just need to supply a value at init
+const throwawayInst = new RootStoreModel(
+  SessionAtpApi.service('http://localhost'),
+) // this will be replaced by the loader, we just need to supply a value at init
 const RootStoreContext = createContext<RootStoreModel>(throwawayInst)
 export const RootStoreProvider = RootStoreContext.Provider
 export const useStores = () => useContext(RootStoreContext)

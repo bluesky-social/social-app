@@ -94,6 +94,7 @@ export class MeModel {
           this.avatar = ''
         }
       })
+      this.mainFeed.clear()
       this.mainFeed = new FeedModel(this.rootStore, 'home', {
         algorithm: 'reverse-chronological',
       })

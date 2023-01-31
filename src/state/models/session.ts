@@ -1,8 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {
-  sessionClient as AtpApi,
+import AtpApi, {
+  sessionClient as SessionAtpApi,
   Session,
-  SessionServiceClient,
   ComAtprotoServerGetAccountsConfig as GetAccountsConfig,
 } from '@atproto/api'
 import {isObj, hasProp} from '../lib/type-guards'
@@ -95,6 +94,7 @@ export class SessionModel {
 
   setState(data: SessionData) {
     this.data = data
+    this.addSessionToAccounts()
   }
 
   setOnline(online: boolean, attemptingConnect?: boolean) {
@@ -124,7 +124,12 @@ export class SessionModel {
 
     try {
       const serviceUri = new URL(this.data.service)
-      this.rootStore.api.xrpc.uri = serviceUri
+      const api = SessionAtpApi.service(serviceUri)
+      api.sessionManager.set({
+        refreshJwt: this.data.refreshJwt,
+        accessJwt: this.data.accessJwt,
+      })
+      this.rootStore.setAPI(api)
     } catch (e: any) {
       this.rootStore.log.error(
         `Invalid service URL: ${this.data.service}. Resetting session.`,
@@ -133,11 +138,6 @@ export class SessionModel {
       this.clear()
       return false
     }
-
-    this.rootStore.api.sessionManager.set({
-      refreshJwt: this.data.refreshJwt,
-      accessJwt: this.data.accessJwt,
-    })
     return true
   }
 
@@ -212,17 +212,9 @@ export class SessionModel {
         if (this.rootStore.me.did !== sess.data.did) {
           this.rootStore.me.clear()
         }
-        this.rootStore.me
-          .load()
-          .catch(e => {
-            this.rootStore.log.error(
-              'Failed to fetch local user information',
-              e,
-            )
-          })
-          .then(() => {
-            this.addSessionToAccounts()
-          })
+        this.rootStore.me.load().then(() => {
+          this.addSessionToAccounts()
+        })
         return true // success
       }
     } catch (e: any) {
@@ -242,7 +234,7 @@ export class SessionModel {
    * Helper to fetch the accounts config settings from an account.
    */
   async describeService(service: string): Promise<ServiceDescription> {
-    const api = AtpApi.service(service) as SessionServiceClient
+    const api = AtpApi.service(service)
     const res = await api.com.atproto.server.getAccountsConfig({})
     return res.data
   }
@@ -259,7 +251,7 @@ export class SessionModel {
     handle: string
     password: string
   }) {
-    const api = AtpApi.service(service) as SessionServiceClient
+    const api = AtpApi.service(service)
     const res = await api.com.atproto.session.create({handle, password})
     if (res.data.accessJwt && res.data.refreshJwt) {
       this.setState({
@@ -271,14 +263,9 @@ export class SessionModel {
       })
       this.configureApi()
       this.setOnline(true, false)
-      this.rootStore.me
-        .load()
-        .catch(e => {
-          this.rootStore.log.error('Failed to fetch local user information', e)
-        })
-        .then(() => {
-          this.addSessionToAccounts()
-        })
+      this.rootStore.me.load().then(() => {
+        this.addSessionToAccounts()
+      })
     }
   }
 
@@ -291,7 +278,7 @@ export class SessionModel {
     }
 
     // test that the session is good
-    const api = AtpApi.service(account.service)
+    const api = SessionAtpApi.service(account.service)
     api.sessionManager.set({
       refreshJwt: account.refreshJwt,
       accessJwt: account.accessJwt,
@@ -339,7 +326,7 @@ export class SessionModel {
     handle: string
     inviteCode?: string
   }) {
-    const api = AtpApi.service(service) as SessionServiceClient
+    const api = AtpApi.service(service)
     const res = await api.com.atproto.account.create({
       handle,
       password,
@@ -356,14 +343,9 @@ export class SessionModel {
       })
       this.rootStore.onboard.start()
       this.configureApi()
-      this.rootStore.me
-        .load()
-        .catch(e => {
-          this.rootStore.log.error('Failed to fetch local user information', e)
-        })
-        .then(() => {
-          this.addSessionToAccounts()
-        })
+      this.rootStore.me.load().then(() => {
+        this.addSessionToAccounts()
+      })
     }
   }
 

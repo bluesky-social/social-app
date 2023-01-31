@@ -39,11 +39,13 @@ export const Settings = observer(function Settings({
     setIsSwitching(true)
     if (await store.session.resumeSession(acct)) {
       setIsSwitching(false)
+      store.nav.tab.fixedTabReset()
       Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
       return
     }
     setIsSwitching(false)
     Toast.show('Sorry! We need you to enter your password.')
+    store.nav.tab.fixedTabReset()
     store.session.clear()
   }
   const onPressAddAccount = () => {

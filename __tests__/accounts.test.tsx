@@ -180,7 +180,7 @@ describe('Account flows', () => {
 
     // signed in
     await waitFor(() => {
-      expect(getByTestId('settingsScreen')).toBeTruthy() // we go back to settings in this situation
+      expect(getByTestId('homeFeed')).toBeTruthy() // we go back to settings in this situation
       expect(rootStore?.me?.displayName).toBe('Bob')
       expect(rootStore?.me?.handle).toBe('bob.test')
       expect(rootStore?.session.accounts.length).toBe(2)
@@ -191,7 +191,15 @@ describe('Account flows', () => {
   })
 
   it('can instantly switch between accounts', async () => {
-    const {getByTestId} = render(<MobileShell />, rootStore)
+    const {getAllByTestId, getByTestId} = render(<MobileShell />, rootStore)
+    await waitFor(() => expect(getByTestId('homeFeed')).toBeTruthy(), WAIT_OPTS)
+
+    // open side menu
+    fireEvent.press(getAllByTestId('viewHeaderBackOrMenuBtn')[0])
+    await waitFor(() => expect(getByTestId('menuView')).toBeTruthy(), WAIT_OPTS)
+
+    // nav to settings
+    fireEvent.press(getByTestId('menuItemButton-Settings'))
     await waitFor(
       () => expect(getByTestId('settingsScreen')).toBeTruthy(),
       WAIT_OPTS,
@@ -212,7 +220,15 @@ describe('Account flows', () => {
   })
 
   it('will prompt for a password if you sign out', async () => {
-    const {getByTestId} = render(<MobileShell />, rootStore)
+    const {getAllByTestId, getByTestId} = render(<MobileShell />, rootStore)
+    await waitFor(() => expect(getByTestId('homeFeed')).toBeTruthy(), WAIT_OPTS)
+
+    // open side menu
+    fireEvent.press(getAllByTestId('viewHeaderBackOrMenuBtn')[0])
+    await waitFor(() => expect(getByTestId('menuView')).toBeTruthy(), WAIT_OPTS)
+
+    // nav to settings
+    fireEvent.press(getByTestId('menuItemButton-Settings'))
     await waitFor(
       () => expect(getByTestId('settingsScreen')).toBeTruthy(),
       WAIT_OPTS,
