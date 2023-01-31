@@ -8,7 +8,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {BlurView} from '@react-native-community/blur'
 import LinearGradient from 'react-native-linear-gradient'
-import {AutoSizedImage} from '../util/images/AutoSizedImage'
+import {Image} from '../util/images/Image'
 import {Text} from '../util/text/Text'
 import {s, gradients} from '../../lib/styles'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -38,10 +38,7 @@ export const ExternalEmbed = ({
           <ActivityIndicator size="large" style={styles.spinner} />
         </View>
       ) : link.localThumb ? (
-        <AutoSizedImage
-          uri={link.localThumb.path}
-          containerStyle={styles.image}
-        />
+        <Image uri={link.localThumb.path} style={styles.image} />
       ) : (
         <LinearGradient
           colors={[gradients.blueDark.start, gradients.blueDark.end]}
@@ -98,7 +95,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
     width: '100%',
-    height: 200,
+    maxHeight: 200,
   },
   imageFallback: {
     height: 160,

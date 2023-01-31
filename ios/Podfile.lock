@@ -17,6 +17,15 @@ PODS:
     - hermes-engine/Pre-built (= 0.71.0)
   - hermes-engine/Pre-built (0.71.0)
   - libevent (2.1.12)
+  - libwebp (1.2.4):
+    - libwebp/demux (= 1.2.4)
+    - libwebp/mux (= 1.2.4)
+    - libwebp/webp (= 1.2.4)
+  - libwebp/demux (1.2.4):
+    - libwebp/webp
+  - libwebp/mux (1.2.4):
+    - libwebp/demux
+  - libwebp/webp (1.2.4)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -346,6 +355,10 @@ PODS:
     - React-Core
   - RNCClipboard (1.11.1):
     - React-Core
+  - RNFastImage (8.6.3):
+    - React-Core
+    - SDWebImage (~> 5.11.1)
+    - SDWebImageWebPCoder (~> 0.8.4)
   - RNFS (2.20.0):
     - React-Core
   - RNGestureHandler (2.8.0):
@@ -400,6 +413,12 @@ PODS:
     - React-RCTImage
   - RNSVG (12.5.0):
     - React-Core
+  - SDWebImage (5.11.1):
+    - SDWebImage/Core (= 5.11.1)
+  - SDWebImage/Core (5.11.1)
+  - SDWebImageWebPCoder (0.8.5):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.10)
   - segment-analytics-react-native (2.10.1):
     - React-Core
     - sovran-react-native
@@ -458,6 +477,7 @@ DEPENDENCIES:
   - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
+  - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
@@ -475,6 +495,9 @@ SPEC REPOS:
   trunk:
     - fmt
     - libevent
+    - libwebp
+    - SDWebImage
+    - SDWebImageWebPCoder
     - Swime
     - TOCropViewController
 
@@ -571,6 +594,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
     :path: "../node_modules/@react-native-clipboard/clipboard"
+  RNFastImage:
+    :path: "../node_modules/react-native-fast-image"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -606,6 +631,7 @@ SPEC CHECKSUMS:
   glog: 476ee3e89abb49e07f822b48323c51c57124b572
   hermes-engine: f6e715aa6c8bd38de6c13bc85e07b0a337edaa89
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  libwebp: f62cb61d0a484ba548448a4bd52aabf150ff6eef
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: fd4d923b964658aa0c4091a32c8b2004c6d9e3a6
   RCTTypeSafety: c276d85975bde3d8448907235c70bf0da257adfd
@@ -645,6 +671,7 @@ SPEC CHECKSUMS:
   RNBackgroundFetch: 8e16176ff415daac743a6eb57afc8e9e14dbe623
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
+  RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
   RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
@@ -654,6 +681,8 @@ SPEC CHECKSUMS:
   RNReanimated: d8d9d3d3801bda5e35e85cdffc871577d044dc2e
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: 6adc5c52d2488a476248413064b7f2832e639057
+  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
+  SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   segment-analytics-react-native: cb097e393c3560a0d4cfd877044293e37b0050d9
   sovran-react-native: fd3dc8f1a4b14acdc4ad25fc6b4ac4f52a2a2a15
   Swime: d7b2c277503b6cea317774aedc2dce05613f8b0b

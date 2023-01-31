@@ -1,5 +1,6 @@
-import {ImageSourcePropType} from 'react-native'
+import {ImageRequireSource} from 'react-native'
 
-export const DEF_AVATAR: ImageSourcePropType = require('../../../public/img/default-avatar.jpg')
-export const TABS_EXPLAINER: ImageSourcePropType = require('../../../public/img/tabs-explainer.jpg')
-export const CLOUD_SPLASH: ImageSourcePropType = require('../../../public/img/cloud-splash.png')
+export const DEF_AVATAR: ImageRequireSource = require('../../../public/img/default-avatar.jpg')
+export const TABS_EXPLAINER: ImageRequireSource = require('../../../public/img/tabs-explainer.jpg')
+export const CLOUD_SPLASH: ImageRequireSource = require('../../../public/img/cloud-splash.png')
+export const LOADING: ImageRequireSource = require('../../../public/img/loading.png')

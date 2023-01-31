@@ -1,8 +1,9 @@
 import React from 'react'
-import {StyleSheet, View, Image} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Image as PickedImage} from 'react-native-image-crop-picker'
+import FastImage from 'react-native-fast-image'
 import {colors, gradients} from '../../lib/styles'
 import {
   openCamera,
@@ -95,7 +96,7 @@ export function UserBanner({
       bottomOffset={-10}
       menuWidth={170}>
       {banner ? (
-        <Image style={styles.bannerImage} source={{uri: banner}} />
+        <FastImage style={styles.bannerImage} source={{uri: banner}} />
       ) : (
         renderSvg()
       )}
@@ -108,7 +109,7 @@ export function UserBanner({
       </View>
     </DropdownButton>
   ) : banner ? (
-    <Image
+    <FastImage
       style={styles.bannerImage}
       resizeMode="cover"
       source={{uri: banner}}
