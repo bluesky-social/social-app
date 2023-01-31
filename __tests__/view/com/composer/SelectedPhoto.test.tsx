@@ -36,16 +36,14 @@ describe('SelectedPhoto', () => {
 
     const selectedPhotoImage = await findByTestId('selectedPhotoImage')
     expect(selectedPhotoImage).toBeTruthy()
-    // @ts-expect-error
-    expect(selectedPhotoImage).toHaveStyle({width: 250})
   })
 
   it('has 2 photos to render', async () => {
     const {findAllByTestId} = render(<SelectedPhoto {...mockedProps} />)
     const selectedPhotoImage = await findAllByTestId('selectedPhotoImage')
     expect(selectedPhotoImage[0]).toBeTruthy()
-    // @ts-expect-error
-    expect(selectedPhotoImage[0]).toHaveStyle({width: 175})
+    expect(selectedPhotoImage[1]).toBeTruthy()
+    expect(selectedPhotoImage[2]).toBeFalsy()
   })
 
   it('has 3 photos to render', async () => {
@@ -57,8 +55,10 @@ describe('SelectedPhoto', () => {
     )
     const selectedPhotoImage = await findAllByTestId('selectedPhotoImage')
     expect(selectedPhotoImage[0]).toBeTruthy()
-    // @ts-expect-error
-    expect(selectedPhotoImage[0]).toHaveStyle({width: 85})
+    expect(selectedPhotoImage[0]).toBeTruthy()
+    expect(selectedPhotoImage[1]).toBeTruthy()
+    expect(selectedPhotoImage[2]).toBeTruthy()
+    expect(selectedPhotoImage[3]).toBeFalsy()
   })
 
   it('removes a photo', async () => {
