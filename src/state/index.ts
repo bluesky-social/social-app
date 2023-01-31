@@ -1,6 +1,6 @@
 import {autorun} from 'mobx'
 import {Platform} from 'react-native'
-import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
+import {sessionClient as SessionAtpApi} from '@atproto/api'
 import {RootStoreModel} from './models/root-store'
 import * as libapi from './lib/api'
 import * as storage from './lib/storage'
@@ -19,7 +19,7 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
 
   libapi.doPolyfill()
 
-  const api = AtpApi.service(serviceUri) as SessionServiceClient
+  const api = SessionAtpApi.service(serviceUri)
   rootStore = new RootStoreModel(api)
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
@@ -38,15 +38,6 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
     .catch((e: any) => {
       rootStore.log.warn('Failed initial connect', e)
     })
-  // @ts-ignore .on() is correct -prf
-  api.sessionManager.on('session', () => {
-    if (!api.sessionManager.session && rootStore.session.hasSession) {
-      // reset session
-      rootStore.session.clear()
-    } else if (api.sessionManager.session) {
-      rootStore.session.updateAuthTokens(api.sessionManager.session)
-    }
-  })
 
   // track changes & save to storage
   autorun(() => {

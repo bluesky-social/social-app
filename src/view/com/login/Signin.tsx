@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
-import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
+import AtpApi from '@atproto/api'
 import {useAnalytics} from '@segment/analytics-react-native'
 import {LogoTextHero} from './Logo'
 import {Text} from '../util/text/Text'
@@ -261,7 +261,7 @@ const LoginForm = ({
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [handle, setHandle] = useState<string>(initialHandle)
+  const [identifier, setIdentifier] = useState<string>(initialHandle)
   const [password, setPassword] = useState<string>('')
 
   const onPressSelectService = () => {
@@ -275,20 +275,21 @@ const LoginForm = ({
 
     try {
       // try to guess the handle if the user just gave their own username
-      let fullHandle = handle
+      let fullIdent = identifier
       if (
+        !identifier.includes('@') && // not an email
         serviceDescription &&
         serviceDescription.availableUserDomains.length > 0
       ) {
         let matched = false
         for (const domain of serviceDescription.availableUserDomains) {
-          if (fullHandle.endsWith(domain)) {
+          if (fullIdent.endsWith(domain)) {
             matched = true
           }
         }
         if (!matched) {
-          fullHandle = createFullHandle(
-            handle,
+          fullIdent = createFullHandle(
+            identifier,
             serviceDescription.availableUserDomains[0],
           )
         }
@@ -296,7 +297,7 @@ const LoginForm = ({
 
       await store.session.login({
         service: serviceUrl,
-        handle: fullHandle,
+        identifier: fullIdent,
         password,
       })
       track('Sign In', {resumedSession: false})
@@ -316,7 +317,7 @@ const LoginForm = ({
     }
   }
 
-  const isReady = !!serviceDescription && !!handle && !!password
+  const isReady = !!serviceDescription && !!identifier && !!password
   return (
     <View testID="loginForm">
       <LogoTextHero />
@@ -354,13 +355,13 @@ const LoginForm = ({
           <TextInput
             testID="loginUsernameInput"
             style={[pal.text, styles.textInput]}
-            placeholder="Username"
+            placeholder="Username or email address"
             placeholderTextColor={pal.colors.textLight}
             autoCapitalize="none"
             autoFocus
             autoCorrect={false}
-            value={handle}
-            onChangeText={str => setHandle((str || '').toLowerCase())}
+            value={identifier}
+            onChangeText={str => setIdentifier((str || '').toLowerCase())}
             editable={!isProcessing}
           />
         </View>
@@ -471,7 +472,7 @@ const ForgotPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const api = AtpApi.service(serviceUrl) as SessionServiceClient
+      const api = AtpApi.service(serviceUrl)
       await api.com.atproto.account.requestPasswordReset({email})
       onEmailSent()
     } catch (e: any) {
@@ -602,7 +603,7 @@ const SetNewPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const api = AtpApi.service(serviceUrl) as SessionServiceClient
+      const api = AtpApi.service(serviceUrl)
       await api.com.atproto.account.resetPassword({token: resetCode, password})
       onPasswordSet()
     } catch (e: any) {

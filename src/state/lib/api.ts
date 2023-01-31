@@ -4,8 +4,8 @@
  */
 
 // import {ReactNativeStore} from './auth'
-import {
-  sessionClient as AtpApi,
+import AtpApi, {
+  sessionClient as SessionAtpApi,
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
 } from '@atproto/api'
@@ -21,6 +21,7 @@ const TIMEOUT = 10e3 // 10s
 
 export function doPolyfill() {
   AtpApi.xrpc.fetch = fetchHandler
+  SessionAtpApi.xrpc.fetch = fetchHandler
 }
 
 export interface ExternalEmbedDraft {

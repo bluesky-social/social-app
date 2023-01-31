@@ -273,7 +273,8 @@ export const ComposePost = observer(function ComposePost({
   }
 
   const canPost = text.length <= MAX_TEXT_LENGTH
-  const progressColor = text.length > DANGER_TEXT_LENGTH ? '#e60000' : undefined
+  const progressColor =
+    text.length > DANGER_TEXT_LENGTH ? '#e60000' : pal.colors.text
 
   const selectTextInputLayout =
     selectedPhotos.length !== 0

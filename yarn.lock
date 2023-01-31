@@ -90,12 +90,11 @@
   resolved "https://registry.yarnpkg.com/@atproto/nsid/-/nsid-0.0.1.tgz#0cdc00cefe8f0b1385f352b9f57b3ad37fff09a4"
   integrity sha512-t5M6/CzWBVYoBbIvfKDpqPj/+ZmyoK9ydZSStcTXosJ27XXwOPhz0VDUGKK2SM9G5Y7TPes8S5KTAU0UdVYFCw==
 
-"@atproto/pds@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.0.1.tgz#4492595cd0796a3dc4c10836cd121bb3b132f858"
-  integrity sha512-8CaAIBzri05CN2gkMtXnUlNxCdUwaWp1qz4b9RXpMQ83Pk1+j3nw09fsml0kjlMCPcWokTF+iGJXrrTL3XVjOw==
+"@atproto/pds@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.0.2.tgz#3665a24ce1f3a5696e46fea5448c5f849e38b7e0"
+  integrity sha512-TCTVKJWaUxF6EQJ6hobhO19bLaoW2Nk8xn/mySnQMN7ZHlYD9Hv+eRVY+PWLpnAuGetCkTbZAspg84eG2lKGTA==
   dependencies:
-    "@atproto/auth" "*"
     "@atproto/common" "*"
     "@atproto/crypto" "*"
     "@atproto/did-resolver" "*"
@@ -12813,10 +12812,15 @@ tslib@^1.8.1:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2.0.1, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.4.0:
+tslib@^2.0.1, tslib@^2.0.3, tslib@^2.4.0:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.1.tgz#0d0bfbaac2880b91e22df0768e55be9753a5b17e"
   integrity sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==
+
+tslib@^2.1.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.5.0.tgz#42bfed86f5787aeb41d031866c8f402429e0fddf"
+  integrity sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==
 
 tsutils@^3.21.0:
   version "3.21.0"
