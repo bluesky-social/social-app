@@ -212,17 +212,9 @@ export class SessionModel {
         if (this.rootStore.me.did !== sess.data.did) {
           this.rootStore.me.clear()
         }
-        this.rootStore.me
-          .load()
-          .catch(e => {
-            this.rootStore.log.error(
-              'Failed to fetch local user information',
-              e,
-            )
-          })
-          .then(() => {
-            this.addSessionToAccounts()
-          })
+        this.rootStore.me.load().then(() => {
+          this.addSessionToAccounts()
+        })
         return true // success
       }
     } catch (e: any) {
@@ -271,14 +263,9 @@ export class SessionModel {
       })
       this.configureApi()
       this.setOnline(true, false)
-      this.rootStore.me
-        .load()
-        .catch(e => {
-          this.rootStore.log.error('Failed to fetch local user information', e)
-        })
-        .then(() => {
-          this.addSessionToAccounts()
-        })
+      this.rootStore.me.load().then(() => {
+        this.addSessionToAccounts()
+      })
     }
   }
 
@@ -356,14 +343,9 @@ export class SessionModel {
       })
       this.rootStore.onboard.start()
       this.configureApi()
-      this.rootStore.me
-        .load()
-        .catch(e => {
-          this.rootStore.log.error('Failed to fetch local user information', e)
-        })
-        .then(() => {
-          this.addSessionToAccounts()
-        })
+      this.rootStore.me.load().then(() => {
+        this.addSessionToAccounts()
+      })
     }
   }
 

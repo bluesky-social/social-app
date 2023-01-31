@@ -69,7 +69,7 @@ export const Home = observer(function Home({
       store.me.mainFeed.setup()
     }
     return cleanup
-  }, [visible, store, navIdx, doPoll, wasVisible])
+  }, [visible, store, store.me.mainFeed, navIdx, doPoll, wasVisible])
 
   const onPressCompose = (imagesOpen?: boolean) => {
     store.shell.openComposer({imagesOpen})
