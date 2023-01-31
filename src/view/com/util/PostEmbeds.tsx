@@ -1,10 +1,16 @@
 import React from 'react'
-import {StyleSheet, StyleProp, View, ViewStyle, Image} from 'react-native'
+import {
+  StyleSheet,
+  StyleProp,
+  View,
+  ViewStyle,
+  Image as RNImage,
+} from 'react-native'
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import LinearGradient from 'react-native-linear-gradient'
 import {Link} from '../util/Link'
 import {Text} from './text/Text'
-import {AutoSizedImage} from './images/AutoSizedImage'
+import {Image} from './images/Image'
 import {ImageLayoutGrid} from './images/ImageLayoutGrid'
 import {ImagesLightbox} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
@@ -37,11 +43,11 @@ export function PostEmbeds({
       }
       const onPressIn = (index: number) => {
         const firstImageToShow = uris[index]
-        Image.prefetch(firstImageToShow)
+        RNImage.prefetch(firstImageToShow)
         uris.forEach(uri => {
           if (firstImageToShow !== uri) {
             // First image already prefeched above
-            Image.prefetch(uri)
+            RNImage.prefetch(uri)
           }
         })
       }
@@ -85,12 +91,12 @@ export function PostEmbeds({
       } else {
         return (
           <View style={[styles.imagesContainer, style]}>
-            <AutoSizedImage
+            <Image
               uri={embed.images[0].thumb}
               onPress={() => openLightbox(0)}
               onLongPress={() => onLongPress(0)}
               onPressIn={() => onPressIn(0)}
-              containerStyle={styles.singleImage}
+              style={styles.singleImage}
             />
           </View>
         )
@@ -105,7 +111,7 @@ export function PostEmbeds({
         href={link.uri}
         noFeedback>
         {link.thumb ? (
-          <AutoSizedImage uri={link.thumb} containerStyle={styles.extImage} />
+          <Image uri={link.thumb} style={styles.extImage} />
         ) : (
           <LinearGradient
             colors={[gradients.blueDark.start, gradients.blueDark.end]}
@@ -145,6 +151,7 @@ const styles = StyleSheet.create({
   },
   singleImage: {
     borderRadius: 8,
+    maxHeight: 500,
   },
   extOuter: {
     borderWidth: 1,

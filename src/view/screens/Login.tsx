@@ -1,11 +1,6 @@
 import React, {useState} from 'react'
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import FastImage, {Source as FISource} from 'react-native-fast-image'
 import {observer} from 'mobx-react-lite'
 import {Signin} from '../com/login/Signin'
 import {CreateAccount} from '../com/login/CreateAccount'
@@ -64,7 +59,7 @@ export const Login = observer(() => {
   if (screenState === ScreenState.S_SigninOrCreateAccount) {
     return (
       <View style={styles.container}>
-        <Image source={CLOUD_SPLASH} style={styles.bgImg} />
+        <FastImage source={CLOUD_SPLASH as FISource} style={styles.bgImg} />
         <SafeAreaView testID="noSessionView" style={styles.container}>
           <ErrorBoundary>
             <SigninOrCreateAccount

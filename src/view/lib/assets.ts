@@ -1,7 +1,7 @@
-import {ImageSourcePropType} from 'react-native'
+import {ImageURISource} from 'react-native'
 
-export const DEF_AVATAR: ImageSourcePropType = {uri: '/img/default-avatar.jpg'}
-export const TABS_EXPLAINER: ImageSourcePropType = {
+export const DEF_AVATAR: ImageURISource = {uri: '/img/default-avatar.jpg'}
+export const TABS_EXPLAINER: ImageURISource = {
   uri: '/img/tabs-explainer.jpg',
 }
-export const CLOUD_SPLASH: ImageSourcePropType = {uri: '/img/cloud-splash.png'}
+export const CLOUD_SPLASH: ImageURISource = {uri: '/img/cloud-splash.png'}

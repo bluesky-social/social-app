@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  Image,
   ImageStyle,
   LayoutChangeEvent,
   StyleProp,
@@ -9,6 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import {DELAY_PRESS_IN} from './constants'
 
 interface Dim {
@@ -73,7 +73,7 @@ function ImageLayoutGridInner({
   onPressIn?: (index: number) => void
   containerInfo: Dim
 }) {
-  const size1 = React.useMemo<ImageStyle>(() => {
+  const size1 = React.useMemo<StyleProp<ImageStyle>>(() => {
     if (type === 'three') {
       const size = (containerInfo.width - 10) / 3
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
@@ -82,7 +82,7 @@ function ImageLayoutGridInner({
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     }
   }, [type, containerInfo])
-  const size2 = React.useMemo<ImageStyle>(() => {
+  const size2 = React.useMemo<StyleProp<ImageStyle>>(() => {
     if (type === 'three') {
       const size = ((containerInfo.width - 10) / 3) * 2 + 5
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
@@ -100,7 +100,7 @@ function ImageLayoutGridInner({
           onPress={() => onPress?.(0)}
           onPressIn={() => onPressIn?.(0)}
           onLongPress={() => onLongPress(0)}>
-          <Image source={{uri: uris[0]}} style={size1} />
+          <FastImage source={{uri: uris[0]}} style={size1} />
         </TouchableOpacity>
         <View style={styles.wSpace} />
         <TouchableOpacity
@@ -108,7 +108,7 @@ function ImageLayoutGridInner({
           onPress={() => onPress?.(1)}
           onPressIn={() => onPressIn?.(1)}
           onLongPress={() => onLongPress(1)}>
-          <Image source={{uri: uris[1]}} style={size1} />
+          <FastImage source={{uri: uris[1]}} style={size1} />
         </TouchableOpacity>
       </View>
     )
@@ -121,7 +121,7 @@ function ImageLayoutGridInner({
           onPress={() => onPress?.(0)}
           onPressIn={() => onPressIn?.(0)}
           onLongPress={() => onLongPress(0)}>
-          <Image source={{uri: uris[0]}} style={size2} />
+          <FastImage source={{uri: uris[0]}} style={size2} />
         </TouchableOpacity>
         <View style={styles.wSpace} />
         <View>
@@ -130,7 +130,7 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(1)}
             onPressIn={() => onPressIn?.(1)}
             onLongPress={() => onLongPress(1)}>
-            <Image source={{uri: uris[1]}} style={size1} />
+            <FastImage source={{uri: uris[1]}} style={size1} />
           </TouchableOpacity>
           <View style={styles.hSpace} />
           <TouchableOpacity
@@ -138,7 +138,7 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(2)}
             onPressIn={() => onPressIn?.(2)}
             onLongPress={() => onLongPress(2)}>
-            <Image source={{uri: uris[2]}} style={size1} />
+            <FastImage source={{uri: uris[2]}} style={size1} />
           </TouchableOpacity>
         </View>
       </View>
@@ -153,7 +153,7 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(0)}
             onPressIn={() => onPressIn?.(0)}
             onLongPress={() => onLongPress(0)}>
-            <Image source={{uri: uris[0]}} style={size1} />
+            <FastImage source={{uri: uris[0]}} style={size1} />
           </TouchableOpacity>
           <View style={styles.hSpace} />
           <TouchableOpacity
@@ -161,7 +161,7 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(2)}
             onPressIn={() => onPressIn?.(2)}
             onLongPress={() => onLongPress(2)}>
-            <Image source={{uri: uris[2]}} style={size1} />
+            <FastImage source={{uri: uris[2]}} style={size1} />
           </TouchableOpacity>
         </View>
         <View style={styles.wSpace} />
@@ -171,7 +171,7 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(1)}
             onPressIn={() => onPressIn?.(1)}
             onLongPress={() => onLongPress(1)}>
-            <Image source={{uri: uris[1]}} style={size1} />
+            <FastImage source={{uri: uris[1]}} style={size1} />
           </TouchableOpacity>
           <View style={styles.hSpace} />
           <TouchableOpacity
@@ -179,7 +179,7 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(3)}
             onPressIn={() => onPressIn?.(3)}
             onLongPress={() => onLongPress(3)}>
-            <Image source={{uri: uris[3]}} style={size1} />
+            <FastImage source={{uri: uris[3]}} style={size1} />
           </TouchableOpacity>
         </View>
       </View>
