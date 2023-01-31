@@ -35,7 +35,7 @@ const moveToPremanantPath = async (path: string) => {
   https://github.com/ivpusic/react-native-image-crop-picker/issues/1199 
   */
   const filename = uuid.v4()
-  const destinationPath = `${RNFS.DocumentDirectoryPath}/${filename}`
+  const destinationPath = `${RNFS.TemporaryDirectoryPath}/${filename}`
   RNFS.moveFile(path, destinationPath)
   return destinationPath
 }
