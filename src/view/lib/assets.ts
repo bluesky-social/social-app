@@ -1,7 +1,12 @@
-import {ImageURISource} from 'react-native'
+import {ImageRequireSource} from 'react-native'
 
-export const DEF_AVATAR: ImageURISource = {uri: '/img/default-avatar.jpg'}
-export const TABS_EXPLAINER: ImageURISource = {
+// @ts-ignore we need to pretend -prf
+export const DEF_AVATAR: ImageRequireSource = {uri: '/img/default-avatar.jpg'}
+// @ts-ignore we need to pretend -prf
+export const TABS_EXPLAINER: ImageRequireSource = {
   uri: '/img/tabs-explainer.jpg',
 }
-export const CLOUD_SPLASH: ImageURISource = {uri: '/img/cloud-splash.png'}
+// @ts-ignore we need to pretend -prf
+export const CLOUD_SPLASH: ImageRequireSource = {uri: '/img/cloud-splash.png'}
+// @ts-ignore we need to pretend -prf
+export const LOADING: ImageRequireSource = {uri: '/img/loading.png'}

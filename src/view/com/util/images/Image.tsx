@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native'
 import FastImage from 'react-native-fast-image'
 import {DELAY_PRESS_IN} from './constants'
+import {LOADING} from '../../../lib/assets'
 
 export function Image({
   uri,
@@ -23,7 +24,7 @@ export function Image({
       onPressIn={onPressIn}
       delayPressIn={DELAY_PRESS_IN}
       style={[styles.container, style]}>
-      <FastImage style={styles.image} source={{uri}} />
+      <FastImage style={styles.image} source={{uri}} defaultSource={LOADING} />
     </TouchableOpacity>
   )
 }
