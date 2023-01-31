@@ -1,11 +1,13 @@
 import React, {useCallback} from 'react'
 import {Image, StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import uuid from 'react-native-uuid'
 import {
   openPicker,
   openCamera,
   openCropper,
 } from 'react-native-image-crop-picker'
+import RNFS from 'react-native-fs'
 import {
   UserLocalPhotosModel,
   PhotoIdentifier,
@@ -26,6 +28,18 @@ const IMAGE_PARAMS = {
   compressImageQuality: 1.0,
 }
 
+const moveToPremanantPath = async (path: string) => {
+  /*
+  Since this package stores images in a temp directory, we need to move the file to a permanent location.
+  Relevant: IOS bug when trying to open a second time:
+  https://github.com/ivpusic/react-native-image-crop-picker/issues/1199 
+  */
+  const filename = uuid.v4()
+  const destinationPath = `${RNFS.TemporaryDirectoryPath}/${filename}`
+  RNFS.moveFile(path, destinationPath)
+  return destinationPath
+}
+
 export async function cropPhoto(
   path: string,
   imgWidth = MAX_WIDTH,
@@ -44,8 +58,10 @@ export async function cropPhoto(
     width,
     height,
   })
+
   const img = await compressIfNeeded(cropperRes, MAX_SIZE)
-  return img.path
+  const permanentPath = await moveToPremanantPath(img.path)
+  return permanentPath
 }
 
 export const PhotoCarouselPicker = ({
@@ -114,7 +130,8 @@ export const PhotoCarouselPicker = ({
           height,
         })
         const finalImg = await compressIfNeeded(cropperRes, MAX_SIZE)
-        result.push(finalImg.path)
+        const permanentPath = await moveToPremanantPath(finalImg.path)
+        result.push(permanentPath)
       }
       onSelectPhotos([...selectedPhotos, ...result])
     })
