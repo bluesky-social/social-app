@@ -1,5 +1,5 @@
-import React, {useCallback} from 'react'
-import {Alert, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import React from 'react'
+import {Image, StyleSheet, View} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {
@@ -9,8 +9,6 @@ import {
   Image as PickedImage,
 } from 'react-native-image-crop-picker'
 import {colors, gradients} from '../../lib/styles'
-import {useStores} from '../../../state'
-import {MenuModal} from '../../../state/models/shell-ui'
 import {DropdownButton} from './forms/DropdownButton'
 
 export function UserAvatar({
@@ -102,7 +100,7 @@ export function UserAvatar({
       openToRight
       rightOffset={-10}
       bottomOffset={-10}
-      menuWidth={130}>
+      menuWidth={170}>
       {avatar ? (
         <Image
           style={{

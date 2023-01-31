@@ -1,5 +1,5 @@
-import React, {useCallback} from 'react'
-import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
+import React from 'react'
+import {StyleSheet, View, Image} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Image as PickedImage} from 'react-native-image-crop-picker'
@@ -91,9 +91,9 @@ export function UserBanner({
       type="bare"
       items={dropdownItems}
       openToRight
-      rightOffset={-170}
+      rightOffset={-200}
       bottomOffset={-10}
-      menuWidth={130}>
+      menuWidth={170}>
       {banner ? (
         <Image style={styles.bannerImage} source={{uri: banner}} />
       ) : (
