@@ -9,6 +9,9 @@ import {
   Image as PickedImage,
 } from 'react-native-image-crop-picker'
 import {colors, gradients} from '../../lib/styles'
+import {useStores} from '../../../state'
+import {MenuModal} from '../../../state/models/shell-ui'
+import {DropdownButton} from './forms/DropdownButton'
 
 export function UserAvatar({
   size,
@@ -24,43 +27,6 @@ export function UserAvatar({
   onSelectNewAvatar?: (img: PickedImage) => void
 }) {
   const initials = getInitials(displayName || handle)
-
-  const handleEditAvatar = useCallback(() => {
-    Alert.alert('Select upload method', '', [
-      {
-        text: 'Take a new photo',
-        onPress: () => {
-          openCamera({
-            mediaType: 'photo',
-            cropping: true,
-            width: 1000,
-            height: 1000,
-            cropperCircleOverlay: true,
-            forceJpg: true, // ios only
-            compressImageQuality: 1,
-          }).then(onSelectNewAvatar)
-        },
-      },
-      {
-        text: 'Select from gallery',
-        onPress: () => {
-          openPicker({
-            mediaType: 'photo',
-          }).then(async item => {
-            await openCropper({
-              mediaType: 'photo',
-              path: item.path,
-              width: 1000,
-              height: 1000,
-              cropperCircleOverlay: true,
-              forceJpg: true, // ios only
-              compressImageQuality: 1,
-            }).then(onSelectNewAvatar)
-          })
-        },
-      },
-    ])
-  }, [onSelectNewAvatar])
 
   const renderSvg = (svgSize: number, svgInitials: string) => (
     <Svg width={svgSize} height={svgSize} viewBox="0 0 100 100">
@@ -83,9 +49,60 @@ export function UserAvatar({
     </Svg>
   )
 
+  const dropdownItems = [
+    {
+      label: 'Camera',
+      icon: 'camera',
+      // TODO: dark mode icon
+      onPress: () => {
+        openCamera({
+          mediaType: 'photo',
+          cropping: true,
+          width: 1000,
+          height: 1000,
+          cropperCircleOverlay: true,
+          forceJpg: true, // ios only
+          compressImageQuality: 1,
+        }).then(onSelectNewAvatar)
+      },
+    },
+    {
+      label: 'Library',
+      icon: 'image',
+      onPress: () => {
+        openPicker({
+          mediaType: 'photo',
+        }).then(async item => {
+          await openCropper({
+            mediaType: 'photo',
+            path: item.path,
+            width: 1000,
+            height: 1000,
+            cropperCircleOverlay: true,
+            forceJpg: true, // ios only
+            compressImageQuality: 1,
+          }).then(onSelectNewAvatar)
+        })
+      },
+    },
+    // TODO: Remove avatar https://github.com/bluesky-social/social-app/issues/122
+    // {
+    //   label: 'Remove',
+    //   icon: ['far', 'trash-can'],
+    //   onPress: () => {
+    //   // Remove avatar API call
+    //   },
+    // },
+  ]
   // onSelectNewAvatar is only passed as prop on the EditProfile component
   return onSelectNewAvatar ? (
-    <TouchableOpacity onPress={handleEditAvatar}>
+    <DropdownButton
+      type="bare"
+      items={dropdownItems}
+      openToRight
+      rightOffset={-10}
+      bottomOffset={-10}
+      menuWidth={130}>
       {avatar ? (
         <Image
           style={{
@@ -105,7 +122,7 @@ export function UserAvatar({
           style={{color: colors.white}}
         />
       </View>
-    </TouchableOpacity>
+    </DropdownButton>
   ) : avatar ? (
     <Image
       style={{width: size, height: size, borderRadius: Math.floor(size / 2)}}
