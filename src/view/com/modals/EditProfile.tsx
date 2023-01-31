@@ -55,7 +55,7 @@ export function Component({
   }
   const onSelectNewAvatar = async (img: PickedImage) => {
     try {
-      const finalImg = await compressIfNeeded(img, 300000)
+      const finalImg = await compressIfNeeded(img, 1000000)
       setNewUserAvatar(finalImg)
       setUserAvatar(finalImg.path)
     } catch (e: any) {
@@ -64,7 +64,7 @@ export function Component({
   }
   const onSelectNewBanner = async (img: PickedImage) => {
     try {
-      const finalImg = await compressIfNeeded(img, 500000)
+      const finalImg = await compressIfNeeded(img, 1000000)
       setNewUserBanner(finalImg)
       setUserBanner(finalImg.path)
     } catch (e: any) {

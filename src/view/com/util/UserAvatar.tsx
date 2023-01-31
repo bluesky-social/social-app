@@ -33,8 +33,8 @@ export function UserAvatar({
           openCamera({
             mediaType: 'photo',
             cropping: true,
-            width: 1000,
-            height: 1000,
+            width: 2000,
+            height: 2000,
             cropperCircleOverlay: true,
             forceJpg: true, // ios only
             compressImageQuality: 1,
@@ -50,8 +50,8 @@ export function UserAvatar({
             await openCropper({
               mediaType: 'photo',
               path: item.path,
-              width: 1000,
-              height: 1000,
+              width: 2000,
+              height: 2000,
               cropperCircleOverlay: true,
               forceJpg: true, // ios only
               compressImageQuality: 1,
