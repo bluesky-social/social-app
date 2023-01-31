@@ -132,10 +132,10 @@ export const ComposePost = observer(function ComposePost({
     if (extLink.isLoading && extLink.meta?.image && !extLink.localThumb) {
       downloadAndResize({
         uri: extLink.meta.image,
-        width: 250,
-        height: 250,
+        width: 2000,
+        height: 2000,
         mode: 'contain',
-        maxSize: 100000,
+        maxSize: 1000000,
         timeout: 15e3,
       })
         .catch(() => undefined)
