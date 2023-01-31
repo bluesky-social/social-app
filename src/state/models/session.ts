@@ -244,15 +244,15 @@ export class SessionModel {
    */
   async login({
     service,
-    handle,
+    identifier,
     password,
   }: {
     service: string
-    handle: string
+    identifier: string
     password: string
   }) {
     const api = AtpApi.service(service)
-    const res = await api.com.atproto.session.create({handle, password})
+    const res = await api.com.atproto.session.create({identifier, password})
     if (res.data.accessJwt && res.data.refreshJwt) {
       this.setState({
         service: service,
