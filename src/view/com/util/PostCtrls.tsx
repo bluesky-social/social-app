@@ -39,7 +39,7 @@ interface PostCtrlsOpts {
   onDeletePost: () => void
 }
 
-const HITSLOP = {top: 2, left: 2, bottom: 2, right: 2}
+const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
 
 export function PostCtrls(opts: PostCtrlsOpts) {
   const theme = useTheme()
