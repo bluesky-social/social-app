@@ -14,13 +14,13 @@ import {compressIfNeeded, scaleDownDimensions} from '../../../lib/images'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {useStores} from '../../../state'
 
-const MAX_WIDTH = 1000
-const MAX_HEIGHT = 1000
-const MAX_SIZE = 300000
+const MAX_WIDTH = 2000
+const MAX_HEIGHT = 2000
+const MAX_SIZE = 1000000
 
 const IMAGE_PARAMS = {
-  width: 1000,
-  height: 1000,
+  width: 2000,
+  height: 2000,
   freeStyleCropEnabled: true,
   forceJpg: true, // ios only
   compressImageQuality: 1.0,

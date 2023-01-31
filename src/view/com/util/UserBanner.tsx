@@ -25,10 +25,10 @@ export function UserBanner({
           openCamera({
             mediaType: 'photo',
             cropping: true,
-            compressImageMaxWidth: 3000,
-            width: 3000,
-            compressImageMaxHeight: 1000,
-            height: 1000,
+            compressImageMaxWidth: 6000,
+            width: 6000,
+            compressImageMaxHeight: 2000,
+            height: 2000,
             forceJpg: true, // ios only
             compressImageQuality: 1,
             includeExif: true,
@@ -44,10 +44,10 @@ export function UserBanner({
             await openCropper({
               mediaType: 'photo',
               path: item.path,
-              compressImageMaxWidth: 3000,
-              width: 3000,
-              compressImageMaxHeight: 1000,
-              height: 1000,
+              compressImageMaxWidth: 6000,
+              width: 6000,
+              compressImageMaxHeight: 2000,
+              height: 2000,
               forceJpg: true, // ios only
               compressImageQuality: 1,
               includeExif: true,
