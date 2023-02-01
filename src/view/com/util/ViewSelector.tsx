@@ -100,6 +100,7 @@ export function ViewSelector({
         onRefresh={onRefresh}
         onEndReached={onEndReached}
         contentContainerStyle={s.contentContainer}
+        removeClippedSubviews={true}
       />
     </HorzSwipe>
   )

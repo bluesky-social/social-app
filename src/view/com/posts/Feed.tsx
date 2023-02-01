@@ -103,6 +103,7 @@ export const Feed = observer(function Feed({
           onScroll={onScroll}
           onRefresh={onRefresh}
           onEndReached={onEndReached}
+          removeClippedSubviews={true}
         />
       )}
     </View>
