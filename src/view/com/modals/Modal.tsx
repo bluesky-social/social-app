@@ -13,7 +13,7 @@ import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
 import * as ReportAccountModal from './ReportAccount'
 import {usePalette} from '../../lib/hooks/usePalette'
-import {text} from '@fortawesome/fontawesome-svg-core'
+import {StyleSheet} from 'react-native'
 
 const CLOSED_SNAPPOINTS = ['10%']
 
@@ -91,15 +91,16 @@ export const Modal = observer(function Modal() {
         store.shell.isModalActive ? createCustomBackdrop(onClose) : undefined
       }
       handleIndicatorStyle={{backgroundColor: pal.text.color}}
-      handleStyle={[
-        {
-          borderTopLeftRadius: 10,
-          borderTopRightRadius: 10,
-        },
-        pal.view,
-      ]}
+      handleStyle={[styles.handle, pal.view]}
       onChange={onBottomSheetChange}>
       {element}
     </BottomSheet>
   )
+})
+
+const styles = StyleSheet.create({
+  handle: {
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
 })

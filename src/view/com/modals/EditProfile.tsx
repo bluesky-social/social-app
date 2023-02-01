@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useState} from 'react'
 import * as Toast from '../util/Toast'
 import {
   ActivityIndicator,
@@ -7,10 +7,7 @@ import {
   View,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import BottomSheet, {
-  BottomSheetScrollView,
-  BottomSheetTextInput,
-} from '@gorhom/bottom-sheet'
+import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {Image as PickedImage} from 'react-native-image-crop-picker'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
