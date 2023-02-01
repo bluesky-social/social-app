@@ -105,13 +105,6 @@ export function Component({
 
   return (
     <View style={[s.flex1]}>
-      {/* <BottomSheet
-        ref={sheetRef}
-        // index={0}
-        snapPoints={snapPoints}
-        handleIndicatorStyle={{backgroundColor: 'blue'}}
-        handleStyle={{backgroundColor: 'red'}}
-        onChange={() => {}}> */}
       <BottomSheetScrollView style={[styles.inner, pal.view]}>
         <Text style={[styles.title, pal.text]}>Edit my profile</Text>
         <View style={styles.photos}>
@@ -177,7 +170,6 @@ export function Component({
           </View>
         </TouchableOpacity>
       </BottomSheetScrollView>
-      {/* </BottomSheet> */}
     </View>
   )
 }
