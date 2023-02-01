@@ -104,7 +104,7 @@ export function Component({
   }
 
   return (
-    <View style={[s.flex1]}>
+    <View style={s.flex1}>
       <BottomSheetScrollView style={[styles.inner, pal.view]}>
         <Text style={[styles.title, pal.text]}>Edit my profile</Text>
         <View style={styles.photos}>
