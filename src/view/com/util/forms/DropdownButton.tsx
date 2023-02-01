@@ -19,6 +19,7 @@ import {useStores} from '../../../../state'
 import {ReportPostModal, ConfirmModal} from '../../../../state/models/shell-ui'
 import {TABS_ENABLED} from '../../../../build-flags'
 import {usePalette, UsePaletteValue} from '../../../lib/hooks/usePalette'
+import {useTheme} from '../../../lib/ThemeContext'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
@@ -251,15 +252,21 @@ const DropdownItems = ({
   onPressItem,
 }: DropDownItemProps): React.ReactNode => {
   const pal = usePalette('default')
-
-  console.log(pal)
+  const theme = useTheme()
+  const dropDownBackgroundColor =
+    theme.colorScheme === 'dark' ? pal.btn : pal.view
 
   return (
     <>
       <TouchableWithoutFeedback onPress={onOuterPress}>
         <View style={[styles.bg]} />
       </TouchableWithoutFeedback>
-      <View style={[styles.menu, {left: x, top: y, width}, pal.btn]}>
+      <View
+        style={[
+          styles.menu,
+          {left: x, top: y, width},
+          dropDownBackgroundColor,
+        ]}>
         {items.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -269,7 +276,7 @@ const DropdownItems = ({
               <FontAwesomeIcon
                 style={styles.icon}
                 icon={item.icon}
-                color={pal.text.color}
+                color={pal.text.color as text}
               />
             )}
             <Text style={[styles.label, pal.text]}>{item.label}</Text>
