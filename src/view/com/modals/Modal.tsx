@@ -12,13 +12,15 @@ import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
 import * as ReportAccountModal from './ReportAccount'
+import {usePalette} from '../../lib/hooks/usePalette'
+import {StyleSheet} from 'react-native'
 
 const CLOSED_SNAPPOINTS = ['10%']
 
 export const Modal = observer(function Modal() {
   const store = useStores()
   const bottomSheetRef = useRef<BottomSheet>(null)
-
+  const pal = usePalette('default')
   const onBottomSheetChange = (snapPoint: number) => {
     if (snapPoint === -1) {
       store.shell.closeModal()
@@ -88,8 +90,17 @@ export const Modal = observer(function Modal() {
       backdropComponent={
         store.shell.isModalActive ? createCustomBackdrop(onClose) : undefined
       }
+      handleIndicatorStyle={{backgroundColor: pal.text.color}}
+      handleStyle={[styles.handle, pal.view]}
       onChange={onBottomSheetChange}>
       {element}
     </BottomSheet>
   )
+})
+
+const styles = StyleSheet.create({
+  handle: {
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
 })
