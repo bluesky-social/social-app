@@ -18,7 +18,9 @@ export const Follows = observer(() => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Suggested follows</Text>
-      <SuggestedFollows onNoSuggestions={onNoSuggestions} />
+      <View style={s.flex1}>
+        <SuggestedFollows onNoSuggestions={onNoSuggestions} />
+      </View>
       <View style={styles.footer}>
         <TouchableOpacity onPress={onPressNext}>
           <Text style={[s.blue3, s.f18]}>Skip</Text>
