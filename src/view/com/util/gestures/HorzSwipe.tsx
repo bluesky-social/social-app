@@ -120,6 +120,7 @@ export function HorzSwipe({
         toValue: final,
         duration: 100,
         useNativeDriver,
+        isInteraction: false,
       }).start(() => {
         onSwipeEnd?.(final)
         panX.flattenOffset()
@@ -131,6 +132,7 @@ export function HorzSwipe({
         toValue: 0,
         duration: 100,
         useNativeDriver,
+        isInteraction: false,
       }).start(() => {
         panX.flattenOffset()
         panX.setValue(0)
