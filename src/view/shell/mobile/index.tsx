@@ -175,12 +175,14 @@ export const MobileShell: React.FC = observer(() => {
         toValue: 1,
         duration: 100,
         useNativeDriver: true,
+        isInteraction: false,
       }).start()
     } else {
       Animated.timing(minimalShellInterp, {
         toValue: 0,
         duration: 100,
         useNativeDriver: true,
+        isInteraction: false,
       }).start()
     }
   }, [minimalShellInterp, store.shell.minimalShellMode])

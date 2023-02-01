@@ -105,12 +105,12 @@ export const Post = observer(function Post({
     })
   }
   const onPressToggleRepost = () => {
-    item
+    return item
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
   }
   const onPressToggleUpvote = () => {
-    item
+    return item
       .toggleUpvote()
       .catch(e => store.log.error('Failed to toggle upvote', e))
   }

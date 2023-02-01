@@ -9,6 +9,10 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
+import {
+  TriggerableAnimated,
+  TriggerableAnimatedRef,
+} from './anim/TriggerableAnimated'
 import {Text} from './text/Text'
 import {PostDropdownBtn} from './forms/DropdownButton'
 import {
@@ -19,7 +23,6 @@ import {
 } from '../../lib/icons'
 import {s, colors} from '../../lib/styles'
 import {useTheme} from '../../lib/ThemeContext'
-import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 
 interface PostCtrlsOpts {
   itemHref: string
@@ -33,13 +36,46 @@ interface PostCtrlsOpts {
   isReposted: boolean
   isUpvoted: boolean
   onPressReply: () => void
-  onPressToggleRepost: () => void
-  onPressToggleUpvote: () => void
+  onPressToggleRepost: () => Promise<void>
+  onPressToggleUpvote: () => Promise<void>
   onCopyPostText: () => void
   onDeletePost: () => void
 }
 
 const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
+
+function ctrlAnimStart(interp: Animated.Value) {
+  return Animated.sequence([
+    Animated.timing(interp, {
+      toValue: 1,
+      duration: 250,
+      useNativeDriver: true,
+    }),
+    Animated.delay(50),
+    Animated.timing(interp, {
+      toValue: 0,
+      duration: 20,
+      useNativeDriver: true,
+    }),
+  ])
+}
+
+function ctrlAnimStyle(interp: Animated.Value) {
+  return {
+    transform: [
+      {
+        scale: interp.interpolate({
+          inputRange: [0, 1.0],
+          outputRange: [1.0, 4.0],
+        }),
+      },
+    ],
+    opacity: interp.interpolate({
+      inputRange: [0, 1.0],
+      outputRange: [1.0, 0.0],
+    }),
+  }
+}
 
 export function PostCtrls(opts: PostCtrlsOpts) {
   const theme = useTheme()
@@ -49,75 +85,47 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     }),
     [theme],
   )
-  const interp1 = useAnimatedValue(0)
-  const interp2 = useAnimatedValue(0)
-
-  const anim1Style = {
-    transform: [
-      {
-        scale: interp1.interpolate({
-          inputRange: [0, 1.0],
-          outputRange: [1.0, 4.0],
-        }),
-      },
-    ],
-    opacity: interp1.interpolate({
-      inputRange: [0, 1.0],
-      outputRange: [1.0, 0.0],
-    }),
-  }
-  const anim2Style = {
-    transform: [
-      {
-        scale: interp2.interpolate({
-          inputRange: [0, 1.0],
-          outputRange: [1.0, 4.0],
-        }),
-      },
-    ],
-    opacity: interp2.interpolate({
-      inputRange: [0, 1.0],
-      outputRange: [1.0, 0.0],
-    }),
-  }
-
+  const [repostMod, setRepostMod] = React.useState<number>(0)
+  const [likeMod, setLikeMod] = React.useState<number>(0)
+  const repostRef = React.useRef<TriggerableAnimatedRef | null>(null)
+  const likeRef = React.useRef<TriggerableAnimatedRef | null>(null)
   const onPressToggleRepostWrapper = () => {
     if (!opts.isReposted) {
       ReactNativeHapticFeedback.trigger('impactMedium')
-      Animated.sequence([
-        Animated.timing(interp1, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-        Animated.delay(100),
-        Animated.timing(interp1, {
-          toValue: 0,
-          duration: 20,
-          useNativeDriver: true,
-        }),
-      ]).start()
+      setRepostMod(1)
+      repostRef.current?.trigger(
+        {start: ctrlAnimStart, style: ctrlAnimStyle},
+        async () => {
+          await opts.onPressToggleRepost().catch(_e => undefined)
+          setRepostMod(0)
+        },
+      )
+    } else {
+      setRepostMod(-1)
+      opts
+        .onPressToggleRepost()
+        .catch(_e => undefined)
+        .then(() => setRepostMod(0))
     }
-    opts.onPressToggleRepost()
   }
   const onPressToggleUpvoteWrapper = () => {
     if (!opts.isUpvoted) {
       ReactNativeHapticFeedback.trigger('impactMedium')
-      Animated.sequence([
-        Animated.timing(interp2, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-        Animated.delay(100),
-        Animated.timing(interp2, {
-          toValue: 0,
-          duration: 20,
-          useNativeDriver: true,
-        }),
-      ]).start()
+      setLikeMod(1)
+      likeRef.current?.trigger(
+        {start: ctrlAnimStart, style: ctrlAnimStyle},
+        async () => {
+          await opts.onPressToggleUpvote().catch(_e => undefined)
+          setLikeMod(0)
+        },
+      )
+    } else {
+      setLikeMod(-1)
+      opts
+        .onPressToggleUpvote()
+        .catch(_e => undefined)
+        .then(() => setLikeMod(0))
     }
-    opts.onPressToggleUpvote()
   }
 
   return (
@@ -144,23 +152,26 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           hitSlop={HITSLOP}
           onPress={onPressToggleRepostWrapper}
           style={styles.ctrl}>
-          <Animated.View style={anim1Style}>
+          <TriggerableAnimated ref={repostRef}>
             <RepostIcon
               style={
-                opts.isReposted ? styles.ctrlIconReposted : defaultCtrlColor
+                opts.isReposted || repostMod > 0
+                  ? styles.ctrlIconReposted
+                  : defaultCtrlColor
               }
               strokeWidth={2.4}
               size={opts.big ? 24 : 20}
             />
-          </Animated.View>
+          </TriggerableAnimated>
+
           {typeof opts.repostCount !== 'undefined' ? (
             <Text
               style={
-                opts.isReposted
+                opts.isReposted || repostMod > 0
                   ? [s.bold, s.green3, s.f15, s.ml5]
                   : [defaultCtrlColor, s.f15, s.ml5]
               }>
-              {opts.repostCount}
+              {opts.repostCount + repostMod}
             </Text>
           ) : undefined}
         </TouchableOpacity>
@@ -170,8 +181,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           style={styles.ctrl}
           hitSlop={HITSLOP}
           onPress={onPressToggleUpvoteWrapper}>
-          <Animated.View style={anim2Style}>
-            {opts.isUpvoted ? (
+          <TriggerableAnimated ref={likeRef}>
+            {opts.isUpvoted || likeMod > 0 ? (
               <HeartIconSolid
                 style={[styles.ctrlIconUpvoted]}
                 size={opts.big ? 22 : 16}
@@ -183,15 +194,15 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                 size={opts.big ? 20 : 16}
               />
             )}
-          </Animated.View>
+          </TriggerableAnimated>
           {typeof opts.upvoteCount !== 'undefined' ? (
             <Text
               style={
-                opts.isUpvoted
+                opts.isUpvoted || likeMod > 0
                   ? [s.bold, s.red3, s.f15, s.ml5]
                   : [defaultCtrlColor, s.f15, s.ml5]
               }>
-              {opts.upvoteCount}
+              {opts.upvoteCount + likeMod}
             </Text>
           ) : undefined}
         </TouchableOpacity>
