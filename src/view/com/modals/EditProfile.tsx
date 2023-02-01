@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 import * as Toast from '../util/Toast'
 import {
   ActivityIndicator,
@@ -7,7 +7,10 @@ import {
   View,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
+import BottomSheet, {
+  BottomSheetScrollView,
+  BottomSheetTextInput,
+} from '@gorhom/bottom-sheet'
 import {Image as PickedImage} from 'react-native-image-crop-picker'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -23,6 +26,7 @@ import {isNetworkError} from '../../../lib/errors'
 import {compressIfNeeded} from '../../../lib/images'
 import {UserBanner} from '../util/UserBanner'
 import {UserAvatar} from '../util/UserAvatar'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export const snapPoints = ['80%']
 
@@ -35,6 +39,8 @@ export function Component({
 }) {
   const store = useStores()
   const [error, setError] = useState<string>('')
+  const pal = usePalette('default')
+
   const [isProcessing, setProcessing] = useState<boolean>(false)
   const [displayName, setDisplayName] = useState<string>(
     profileView.displayName || '',
@@ -101,16 +107,23 @@ export function Component({
   }
 
   return (
-    <View style={s.flex1}>
-      <BottomSheetScrollView style={styles.inner}>
-        <Text style={styles.title}>Edit my profile</Text>
+    <View style={[s.flex1]}>
+      {/* <BottomSheet
+        ref={sheetRef}
+        // index={0}
+        snapPoints={snapPoints}
+        handleIndicatorStyle={{backgroundColor: 'blue'}}
+        handleStyle={{backgroundColor: 'red'}}
+        onChange={() => {}}> */}
+      <BottomSheetScrollView style={[styles.inner, pal.view]}>
+        <Text style={[styles.title, pal.text]}>Edit my profile</Text>
         <View style={styles.photos}>
           <UserBanner
             banner={userBanner}
             onSelectNewBanner={onSelectNewBanner}
             handle={profileView.handle}
           />
-          <View style={styles.avi}>
+          <View style={[styles.avi, {borderColor: pal.colors.background}]}>
             <UserAvatar
               size={80}
               avatar={userAvatar}
@@ -126,17 +139,17 @@ export function Component({
           </View>
         )}
         <View>
-          <Text style={styles.label}>Display Name</Text>
+          <Text style={[styles.label, pal.text]}>Display Name</Text>
           <BottomSheetTextInput
-            style={styles.textInput}
+            style={[styles.textInput, pal.text]}
             placeholder="e.g. Alice Roberts"
-            placeholderTextColor={colors.gray4}
+            placeholderTextColor={pal.textLight}
             value={displayName}
             onChangeText={v => setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))}
           />
         </View>
         <View style={s.pb10}>
-          <Text style={styles.label}>Description</Text>
+          <Text style={[styles.label, pal.text]}>Description</Text>
           <BottomSheetTextInput
             style={[styles.textArea]}
             placeholder="e.g. Artist, dog-lover, and memelord."
@@ -163,10 +176,11 @@ export function Component({
         )}
         <TouchableOpacity style={s.mt5} onPress={onPressCancel}>
           <View style={[styles.btn]}>
-            <Text style={[s.black, s.bold]}>Cancel</Text>
+            <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>
           </View>
         </TouchableOpacity>
       </BottomSheetScrollView>
+      {/* </BottomSheet> */}
     </View>
   )
 }

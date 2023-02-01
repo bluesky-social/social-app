@@ -11,6 +11,7 @@ import {
 } from 'react-native-image-crop-picker'
 import {colors, gradients} from '../../lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export function UserAvatar({
   size,
@@ -26,7 +27,7 @@ export function UserAvatar({
   onSelectNewAvatar?: (img: PickedImage) => void
 }) {
   const initials = getInitials(displayName || handle)
-
+  const pal = usePalette('default')
   const renderSvg = (svgSize: number, svgInitials: string) => (
     <Svg width={svgSize} height={svgSize} viewBox="0 0 100 100">
       <Defs>
@@ -117,11 +118,11 @@ export function UserAvatar({
       ) : (
         renderSvg(size, initials)
       )}
-      <View style={styles.editButtonContainer}>
+      <View style={[styles.editButtonContainer, pal.btn]}>
         <FontAwesomeIcon
           icon="camera"
           size={12}
-          style={{color: colors.white}}
+          color={pal.text.color as string}
         />
       </View>
     </DropdownButton>
