@@ -64,9 +64,7 @@ function AnimatingView({
 }: React.PropsWithChildren<PropsInner>) {
   const interp = useAnimatedValue(0)
   React.useEffect(() => {
-    console.log('inner start', !!anim)
     anim?.start(interp).start(() => {
-      console.log('inner finish')
       onFinish()
     })
   })
