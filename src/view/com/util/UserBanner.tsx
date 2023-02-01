@@ -11,6 +11,7 @@ import {
   openPicker,
 } from 'react-native-image-crop-picker'
 import {DropdownButton} from './forms/DropdownButton'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export function UserBanner({
   banner,
@@ -19,6 +20,7 @@ export function UserBanner({
   banner?: string | null
   onSelectNewBanner?: (img: PickedImage) => void
 }) {
+  const pal = usePalette('default')
   const dropdownItems = [
     {
       label: 'Camera',
@@ -100,11 +102,12 @@ export function UserBanner({
       ) : (
         renderSvg()
       )}
-      <View style={styles.editButtonContainer}>
+      <View style={[styles.editButtonContainer, pal.btn]}>
         <FontAwesomeIcon
           icon="camera"
           size={12}
           style={{color: colors.white}}
+          color={pal.text.color as string}
         />
       </View>
     </DropdownButton>
