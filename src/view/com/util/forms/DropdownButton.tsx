@@ -18,6 +18,7 @@ import {toShareUrl} from '../../../../lib/strings'
 import {useStores} from '../../../../state'
 import {ReportPostModal, ConfirmModal} from '../../../../state/models/shell-ui'
 import {TABS_ENABLED} from '../../../../build-flags'
+import {usePalette, UsePaletteValue} from '../../../lib/hooks/usePalette'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
@@ -181,24 +182,14 @@ function createDropdownMenu(
   const onOuterPress = () => sibling.destroy()
   const sibling = new RootSiblings(
     (
-      <>
-        <TouchableWithoutFeedback onPress={onOuterPress}>
-          <View style={styles.bg} />
-        </TouchableWithoutFeedback>
-        <View style={[styles.menu, {left: x, top: y, width}]}>
-          {items.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.menuItem}
-              onPress={() => onPressItem(index)}>
-              {item.icon && (
-                <FontAwesomeIcon style={styles.icon} icon={item.icon} />
-              )}
-              <Text style={styles.label}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </>
+      <DropdownItems
+        onOuterPress={onOuterPress}
+        x={x}
+        y={y}
+        width={width}
+        items={items}
+        onPressItem={onPressItem}
+      />
     ),
   )
   return sibling
@@ -242,3 +233,49 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 })
+type DropDownItemProps = {
+  onOuterPress: () => void
+  x: number
+  y: number
+  width: number
+  items: DropdownItem[]
+  onPressItem: (index: number) => void
+}
+
+const DropdownItems = ({
+  onOuterPress,
+  x,
+  y,
+  width,
+  items,
+  onPressItem,
+}: DropDownItemProps): React.ReactNode => {
+  const pal = usePalette('default')
+
+  console.log(pal)
+
+  return (
+    <>
+      <TouchableWithoutFeedback onPress={onOuterPress}>
+        <View style={[styles.bg]} />
+      </TouchableWithoutFeedback>
+      <View style={[styles.menu, {left: x, top: y, width}, pal.btn]}>
+        {items.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[styles.menuItem]}
+            onPress={() => onPressItem(index)}>
+            {item.icon && (
+              <FontAwesomeIcon
+                style={styles.icon}
+                icon={item.icon}
+                color={pal.text.color}
+              />
+            )}
+            <Text style={[styles.label, pal.text]}>{item.label}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </>
+  )
+}

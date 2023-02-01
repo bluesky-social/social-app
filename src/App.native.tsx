@@ -61,17 +61,17 @@ const App = observer(() => {
 
   return (
     <GestureHandlerRootView style={s.h100pct}>
-      <RootSiblingParent>
-        <AnalyticsProvider client={segment}>
-          <RootStoreProvider value={rootStore}>
-            <ThemeProvider theme={rootStore.shell.darkMode ? 'dark' : 'light'}>
+      <ThemeProvider theme={rootStore.shell.darkMode ? 'dark' : 'light'}>
+        <RootSiblingParent>
+          <AnalyticsProvider client={segment}>
+            <RootStoreProvider value={rootStore}>
               <SafeAreaProvider>
                 <MobileShell />
               </SafeAreaProvider>
-            </ThemeProvider>
-          </RootStoreProvider>
-        </AnalyticsProvider>
-      </RootSiblingParent>
+            </RootStoreProvider>
+          </AnalyticsProvider>
+        </RootSiblingParent>
+      </ThemeProvider>
     </GestureHandlerRootView>
   )
 })
