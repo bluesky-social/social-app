@@ -18,7 +18,7 @@ import {toShareUrl} from '../../../../lib/strings'
 import {useStores} from '../../../../state'
 import {ReportPostModal, ConfirmModal} from '../../../../state/models/shell-ui'
 import {TABS_ENABLED} from '../../../../build-flags'
-import {usePalette, UsePaletteValue} from '../../../lib/hooks/usePalette'
+import {usePalette} from '../../../lib/hooks/usePalette'
 import {useTheme} from '../../../lib/ThemeContext'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
