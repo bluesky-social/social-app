@@ -90,6 +90,7 @@ export function HorzSwipe({
       // swiping right
       (diffX < 0 && !canSwipeRight)
     ) {
+      panX.setValue(0)
       return
     }
 
