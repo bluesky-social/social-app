@@ -353,7 +353,7 @@ export const MobileShell: React.FC = observer(() => {
       />
       <View style={[styles.innerContainer, {paddingTop: safeAreaInsets.top}]}>
         <HorzSwipe
-          distThresholdDivisor={1.5}
+          distThresholdDivisor={2.5}
           useNativeDriver
           panX={swipeGestureInterp}
           swipeEnabled
