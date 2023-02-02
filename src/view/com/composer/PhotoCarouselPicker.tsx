@@ -94,7 +94,7 @@ export const PhotoCarouselPicker = ({
         setIsSetup(true)
       })
     })
-  })
+  }, [localPhotos])
 
   const handleOpenCamera = useCallback(async () => {
     try {
