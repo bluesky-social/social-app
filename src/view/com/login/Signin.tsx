@@ -1,18 +1,3 @@
-import {isNetworkError} from '../../../lib/errors'
-import {createFullHandle, toNiceDomain} from '../../../lib/strings'
-import {useStores, RootStoreModel, DEFAULT_SERVICE} from '../../../state'
-import {ServiceDescription} from '../../../state/models/session'
-import {AccountData} from '../../../state/models/session'
-import {ServerInputModal} from '../../../state/models/shell-ui'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {s, colors} from '../../lib/styles'
-import {UserAvatar} from '../util/UserAvatar'
-import {Text} from '../util/text/Text'
-import {LogoTextHero} from './Logo'
-import AtpApi from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useAnalytics} from '@segment/analytics-react-native'
-import * as EmailValidator from 'email-validator'
 import React, {useState, useEffect} from 'react'
 import {
   ActivityIndicator,
@@ -23,6 +8,21 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import * as EmailValidator from 'email-validator'
+import AtpApi from '@atproto/api'
+import {useAnalytics} from '@segment/analytics-react-native'
+import {LogoTextHero} from './Logo'
+import {Text} from '../util/text/Text'
+import {UserAvatar} from '../util/UserAvatar'
+import {s, colors} from '../../lib/styles'
+import {createFullHandle, toNiceDomain} from '../../../lib/strings'
+import {useStores, RootStoreModel, DEFAULT_SERVICE} from '../../../state'
+import {ServiceDescription} from '../../../state/models/session'
+import {ServerInputModal} from '../../../state/models/shell-ui'
+import {AccountData} from '../../../state/models/session'
+import {isNetworkError} from '../../../lib/errors'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 enum Forms {
   Login,
