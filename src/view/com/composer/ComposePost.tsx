@@ -43,7 +43,6 @@ import {
 } from '../../../lib/strings'
 import {getLinkMeta} from '../../../lib/link-meta'
 import {downloadAndResize} from '../../../lib/images'
-import {UserLocalPhotosModel} from '../../../state/models/user-local-photos'
 import {getMentionAt, insertMentionAt} from '../../../lib/strings/mention-manip'
 import {PhotoCarouselPicker, cropPhoto} from './PhotoCarouselPicker'
 import {SelectedPhoto} from './SelectedPhoto'
