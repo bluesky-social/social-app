@@ -12,6 +12,10 @@ import {
   UserLocalPhotosModel,
   PhotoIdentifier,
 } from '../../../state/models/user-local-photos'
+import {
+  requestPhotoAccessIfNeeded,
+  requestCameraAccessIfNeeded,
+} from '../../../lib/permissions'
 import {compressIfNeeded, scaleDownDimensions} from '../../../lib/images'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {useStores} from '../../../state'
@@ -67,16 +71,36 @@ export async function cropPhoto(
 export const PhotoCarouselPicker = ({
   selectedPhotos,
   onSelectPhotos,
-  localPhotos,
 }: {
   selectedPhotos: string[]
   onSelectPhotos: (v: string[]) => void
-  localPhotos: UserLocalPhotosModel
 }) => {
   const pal = usePalette('default')
   const store = useStores()
+  const [isSetup, setIsSetup] = React.useState<boolean>(false)
+
+  const localPhotos = React.useMemo<UserLocalPhotosModel>(
+    () => new UserLocalPhotosModel(store),
+    [store],
+  )
+
+  React.useEffect(() => {
+    // initial setup
+    requestPhotoAccessIfNeeded().then(v => {
+      if (!v) {
+        return
+      }
+      localPhotos.setup().then(() => {
+        setIsSetup(true)
+      })
+    })
+  })
+
   const handleOpenCamera = useCallback(async () => {
     try {
+      if (!(await requestCameraAccessIfNeeded())) {
+        return
+      }
       const cameraRes = await openCamera({
         mediaType: 'photo',
         cropping: true,
@@ -156,15 +180,16 @@ export const PhotoCarouselPicker = ({
         onPress={handleOpenGallery}>
         <FontAwesomeIcon icon="image" style={pal.link} size={24} />
       </TouchableOpacity>
-      {localPhotos.photos.map((item: PhotoIdentifier, index: number) => (
-        <TouchableOpacity
-          testID="openSelectPhotoButton"
-          key={`local-image-${index}`}
-          style={[pal.border, styles.photoButton]}
-          onPress={() => handleSelectPhoto(item)}>
-          <Image style={styles.photo} source={{uri: item.node.image.uri}} />
-        </TouchableOpacity>
-      ))}
+      {isSetup &&
+        localPhotos.photos.map((item: PhotoIdentifier, index: number) => (
+          <TouchableOpacity
+            testID="openSelectPhotoButton"
+            key={`local-image-${index}`}
+            style={[pal.border, styles.photoButton]}
+            onPress={() => handleSelectPhoto(item)}>
+            <Image style={styles.photo} source={{uri: item.node.image.uri}} />
+          </TouchableOpacity>
+        ))}
     </ScrollView>
   )
 }

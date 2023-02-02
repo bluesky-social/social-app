@@ -10,6 +10,10 @@ import {
   openCropper,
   openPicker,
 } from 'react-native-image-crop-picker'
+import {
+  requestPhotoAccessIfNeeded,
+  requestCameraAccessIfNeeded,
+} from '../../../lib/permissions'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from '../../lib/hooks/usePalette'
 
@@ -25,28 +29,36 @@ export function UserBanner({
     {
       label: 'Camera',
       icon: 'camera',
-      // TODO: Add darkmode support https://github.com/bluesky-social/social-app/issues/78
-      onPress: () => {
-        openCamera({
-          mediaType: 'photo',
-          cropping: true,
-          compressImageMaxWidth: 6000,
-          width: 6000,
-          compressImageMaxHeight: 2000,
-          height: 2000,
-          forceJpg: true, // ios only
-          compressImageQuality: 1,
-          includeExif: true,
-        }).then(onSelectNewBanner)
+      onPress: async () => {
+        if (!(await requestCameraAccessIfNeeded())) {
+          return
+        }
+        onSelectNewBanner?.(
+          await openCamera({
+            mediaType: 'photo',
+            cropping: true,
+            compressImageMaxWidth: 6000,
+            width: 6000,
+            compressImageMaxHeight: 2000,
+            height: 2000,
+            forceJpg: true, // ios only
+            compressImageQuality: 1,
+            includeExif: true,
+          }),
+        )
       },
     },
     {
       label: 'Library',
       icon: 'image',
-      onPress: () => {
-        openPicker({
+      onPress: async () => {
+        if (!(await requestPhotoAccessIfNeeded())) {
+          return
+        }
+        const item = await openPicker({
           mediaType: 'photo',
-        }).then(async item => {
+        })
+        onSelectNewBanner?.(
           await openCropper({
             mediaType: 'photo',
             path: item.path,
@@ -57,8 +69,8 @@ export function UserBanner({
             forceJpg: true, // ios only
             compressImageQuality: 1,
             includeExif: true,
-          }).then(onSelectNewBanner)
-        })
+          }),
+        )
       },
     },
     // TODO: Remove banner https://github.com/bluesky-social/social-app/issues/122
