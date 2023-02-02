@@ -23,21 +23,20 @@ export async function hasAccess(perm: Permission): Promise<boolean> {
 export async function requestAccessIfNeeded(
   perm: Permission,
 ): Promise<boolean> {
-  const has = await hasAccess(perm)
-  if (has) {
+  if (await hasAccess(perm)) {
     return true
   }
-  let desc
+  let permDescription
   if (perm === PHOTO_LIBRARY) {
-    desc = 'photo library'
+    permDescription = 'photo library'
   } else if (perm === CAMERA) {
-    desc = 'camera'
+    permDescription = 'camera'
   } else {
     return false
   }
   Alert.alert(
     'Permission needed',
-    `Bluesky does not have permission to access your ${desc}.`,
+    `Bluesky does not have permission to access your ${permDescription}.`,
     [
       {
         text: 'Cancel',

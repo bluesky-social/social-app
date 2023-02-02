@@ -86,8 +86,8 @@ export const PhotoCarouselPicker = ({
 
   React.useEffect(() => {
     // initial setup
-    requestPhotoAccessIfNeeded().then(v => {
-      if (!v) {
+    requestPhotoAccessIfNeeded().then(hasPhotoAccess => {
+      if (!hasPhotoAccess) {
         return
       }
       localPhotos.setup().then(() => {
