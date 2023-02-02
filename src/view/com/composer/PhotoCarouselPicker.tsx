@@ -15,6 +15,7 @@ import {
 import {compressIfNeeded, scaleDownDimensions} from '../../../lib/images'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {useStores} from '../../../state'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 const MAX_WIDTH = 2000
 const MAX_HEIGHT = 2000
@@ -73,6 +74,7 @@ export const PhotoCarouselPicker = ({
   onSelectPhotos: (v: string[]) => void
   localPhotos: UserLocalPhotosModel
 }) => {
+  const {track} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const handleOpenCamera = useCallback(async () => {
@@ -92,6 +94,7 @@ export const PhotoCarouselPicker = ({
 
   const handleSelectPhoto = useCallback(
     async (item: PhotoIdentifier) => {
+      track('Carousel Photo Selected')
       try {
         const imgPath = await cropPhoto(
           item.node.image.uri,
@@ -104,10 +107,11 @@ export const PhotoCarouselPicker = ({
         store.log.warn('Error selecting photo', err)
       }
     },
-    [store.log, selectedPhotos, onSelectPhotos],
+    [track, onSelectPhotos, selectedPhotos, store.log],
   )
 
   const handleOpenGallery = useCallback(() => {
+    track('Carousel Photo Gallery Opened')
     openPicker({
       multiple: true,
       maxFiles: 4 - selectedPhotos.length,
@@ -135,7 +139,7 @@ export const PhotoCarouselPicker = ({
       }
       onSelectPhotos([...selectedPhotos, ...result])
     })
-  }, [selectedPhotos, onSelectPhotos])
+  }, [track, selectedPhotos, onSelectPhotos])
 
   return (
     <ScrollView

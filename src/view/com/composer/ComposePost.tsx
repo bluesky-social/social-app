@@ -184,6 +184,7 @@ export const ComposePost = observer(function ComposePost({
     textInput.current?.focus()
   }
   const onPressSelectPhotos = () => {
+    track('ComposePost:SelectPhotos')
     if (isSelectingPhotos) {
       setIsSelectingPhotos(false)
     } else if (selectedPhotos.length < 4) {
@@ -191,6 +192,7 @@ export const ComposePost = observer(function ComposePost({
     }
   }
   const onSelectPhotos = (photos: string[]) => {
+    track('ComposePost:SelectPhotos:Done')
     setSelectedPhotos(photos)
     if (photos.length >= 4) {
       setIsSelectingPhotos(false)
