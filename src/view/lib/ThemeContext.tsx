@@ -53,6 +53,7 @@ export type TypographyVariant =
   | 'xs-medium'
   | 'xs-bold'
   | 'xs-heavy'
+  | 'title-2xl'
   | 'title-xl'
   | 'title-lg'
   | 'title'
@@ -60,6 +61,7 @@ export type TypographyVariant =
   | 'post-text-lg'
   | 'post-text'
   | 'button'
+  | 'button-lg'
   | 'mono'
 export type Typography = Record<TypographyVariant, TextStyle>
 

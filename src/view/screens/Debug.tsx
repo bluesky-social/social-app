@@ -293,6 +293,9 @@ function TypographyView() {
         'xs-heavy' lorem ipsum dolor
       </Text>
 
+      <Text type="title-2xl" style={[pal.text]}>
+        'title-2xl' lorem ipsum dolor
+      </Text>
       <Text type="title-xl" style={[pal.text]}>
         'title-xl' lorem ipsum dolor
       </Text>
@@ -304,6 +307,9 @@ function TypographyView() {
       </Text>
       <Text type="button" style={[pal.text]}>
         Button
+      </Text>
+      <Text type="button-lg" style={[pal.text]}>
+        Button-lg
       </Text>
     </View>
   )

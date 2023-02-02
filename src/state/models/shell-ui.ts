@@ -52,6 +52,14 @@ export class ReportAccountModal {
   }
 }
 
+export class DeleteAccountModal {
+  name = 'delete-account'
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+}
+
 interface LightboxModel {}
 
 export class ProfileImageLightbox implements LightboxModel {
@@ -98,6 +106,7 @@ export class ShellUiModel {
     | ServerInputModal
     | ReportPostModal
     | ReportAccountModal
+    | DeleteAccountModal
     | undefined
   isLightboxActive = false
   activeLightbox: ProfileImageLightbox | ImagesLightbox | undefined
@@ -140,7 +149,8 @@ export class ShellUiModel {
       | EditProfileModal
       | ServerInputModal
       | ReportPostModal
-      | ReportAccountModal,
+      | ReportAccountModal
+      | DeleteAccountModal,
   ) {
     this.isModalActive = true
     this.activeModal = modal
