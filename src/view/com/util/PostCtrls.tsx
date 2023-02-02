@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  Animated,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -9,10 +8,11 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
-import {
-  TriggerableAnimated,
-  TriggerableAnimatedRef,
-} from './anim/TriggerableAnimated'
+// DISABLED see #135
+// import {
+//   TriggerableAnimated,
+//   TriggerableAnimatedRef,
+// } from './anim/TriggerableAnimated'
 import {Text} from './text/Text'
 import {PostDropdownBtn} from './forms/DropdownButton'
 import {
@@ -44,6 +44,8 @@ interface PostCtrlsOpts {
 
 const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
 
+// DISABLED see #135
+/*
 function ctrlAnimStart(interp: Animated.Value) {
   return Animated.sequence([
     Animated.timing(interp, {
@@ -76,6 +78,7 @@ function ctrlAnimStyle(interp: Animated.Value) {
     }),
   }
 }
+*/
 
 export function PostCtrls(opts: PostCtrlsOpts) {
   const theme = useTheme()
@@ -87,19 +90,25 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   )
   const [repostMod, setRepostMod] = React.useState<number>(0)
   const [likeMod, setLikeMod] = React.useState<number>(0)
-  const repostRef = React.useRef<TriggerableAnimatedRef | null>(null)
-  const likeRef = React.useRef<TriggerableAnimatedRef | null>(null)
+  // DISABLED see #135
+  // const repostRef = React.useRef<TriggerableAnimatedRef | null>(null)
+  // const likeRef = React.useRef<TriggerableAnimatedRef | null>(null)
   const onPressToggleRepostWrapper = () => {
     if (!opts.isReposted) {
       ReactNativeHapticFeedback.trigger('impactMedium')
       setRepostMod(1)
-      repostRef.current?.trigger(
-        {start: ctrlAnimStart, style: ctrlAnimStyle},
-        async () => {
-          await opts.onPressToggleRepost().catch(_e => undefined)
-          setRepostMod(0)
-        },
-      )
+      opts
+        .onPressToggleRepost()
+        .catch(_e => undefined)
+        .then(() => setRepostMod(0))
+      // DISABLED see #135
+      // repostRef.current?.trigger(
+      //   {start: ctrlAnimStart, style: ctrlAnimStyle},
+      //   async () => {
+      //     await opts.onPressToggleRepost().catch(_e => undefined)
+      //     setRepostMod(0)
+      //   },
+      // )
     } else {
       setRepostMod(-1)
       opts
@@ -112,13 +121,18 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     if (!opts.isUpvoted) {
       ReactNativeHapticFeedback.trigger('impactMedium')
       setLikeMod(1)
-      likeRef.current?.trigger(
-        {start: ctrlAnimStart, style: ctrlAnimStyle},
-        async () => {
-          await opts.onPressToggleUpvote().catch(_e => undefined)
-          setLikeMod(0)
-        },
-      )
+      opts
+        .onPressToggleUpvote()
+        .catch(_e => undefined)
+        .then(() => setLikeMod(0))
+      // DISABLED see #135
+      // likeRef.current?.trigger(
+      //   {start: ctrlAnimStart, style: ctrlAnimStyle},
+      //   async () => {
+      //     await opts.onPressToggleUpvote().catch(_e => undefined)
+      //     setLikeMod(0)
+      //   },
+      // )
     } else {
       setLikeMod(-1)
       opts
@@ -152,7 +166,17 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           hitSlop={HITSLOP}
           onPress={onPressToggleRepostWrapper}
           style={styles.ctrl}>
-          <TriggerableAnimated ref={repostRef}>
+          <RepostIcon
+            style={
+              opts.isReposted || repostMod > 0
+                ? styles.ctrlIconReposted
+                : defaultCtrlColor
+            }
+            strokeWidth={2.4}
+            size={opts.big ? 24 : 20}
+          />
+          {
+            undefined /*DISABLED see #135 <TriggerableAnimated ref={repostRef}>
             <RepostIcon
               style={
                 opts.isReposted || repostMod > 0
@@ -162,8 +186,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
               strokeWidth={2.4}
               size={opts.big ? 24 : 20}
             />
-          </TriggerableAnimated>
-
+            </TriggerableAnimated>*/
+          }
           {typeof opts.repostCount !== 'undefined' ? (
             <Text
               style={
@@ -181,7 +205,20 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           style={styles.ctrl}
           hitSlop={HITSLOP}
           onPress={onPressToggleUpvoteWrapper}>
-          <TriggerableAnimated ref={likeRef}>
+          {opts.isUpvoted || likeMod > 0 ? (
+            <HeartIconSolid
+              style={[styles.ctrlIconUpvoted]}
+              size={opts.big ? 22 : 16}
+            />
+          ) : (
+            <HeartIcon
+              style={[defaultCtrlColor, opts.big ? styles.mt1 : undefined]}
+              strokeWidth={3}
+              size={opts.big ? 20 : 16}
+            />
+          )}
+          {
+            undefined /*DISABLED see #135 <TriggerableAnimated ref={likeRef}>
             {opts.isUpvoted || likeMod > 0 ? (
               <HeartIconSolid
                 style={[styles.ctrlIconUpvoted]}
@@ -194,7 +231,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                 size={opts.big ? 20 : 16}
               />
             )}
-          </TriggerableAnimated>
+            </TriggerableAnimated>*/
+          }
           {typeof opts.upvoteCount !== 'undefined' ? (
             <Text
               style={
