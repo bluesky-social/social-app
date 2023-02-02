@@ -61,7 +61,7 @@ export const ComposePost = observer(function ComposePost({
   onPost?: ComposerOpts['onPost']
   onClose: () => void
 }) {
-  const {track} = useAnalytics()
+  const {track, screen} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const textInput = useRef<PasteInputRef>(null)
@@ -79,6 +79,10 @@ export const ComposePost = observer(function ComposePost({
     imagesOpen || false,
   )
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
+
+  useEffect(() => {
+    screen('ComposePost')
+  }, [screen])
 
   // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
   const autocompleteView = React.useMemo<UserAutocompleteViewModel>(

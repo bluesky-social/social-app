@@ -6,10 +6,16 @@ import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
 import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
 import {s} from '../lib/styles'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 export const Notifications = ({navIdx, visible}: ScreenParams) => {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
+  const {screen} = useAnalytics()
+
+  useEffect(() => {
+    screen('Notifications')
+  }, [screen])
 
   useEffect(() => {
     if (!visible) {

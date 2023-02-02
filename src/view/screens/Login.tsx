@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import FastImage, {Source as FISource} from 'react-native-fast-image'
 import {observer} from 'mobx-react-lite'
@@ -9,6 +9,7 @@ import {ErrorBoundary} from '../com/util/ErrorBoundary'
 import {colors} from '../lib/styles'
 import {usePalette} from '../lib/hooks/usePalette'
 import {CLOUD_SPLASH} from '../lib/assets'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 enum ScreenState {
   S_SigninOrCreateAccount,
@@ -23,6 +24,12 @@ const SigninOrCreateAccount = ({
   onPressSignin: () => void
   onPressCreateAccount: () => void
 }) => {
+  const {screen} = useAnalytics()
+
+  useEffect(() => {
+    screen('Login')
+  }, [screen])
+
   const pal = usePalette('default')
   return (
     <>

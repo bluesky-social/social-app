@@ -1,3 +1,18 @@
+import {isNetworkError} from '../../../lib/errors'
+import {createFullHandle, toNiceDomain} from '../../../lib/strings'
+import {useStores, RootStoreModel, DEFAULT_SERVICE} from '../../../state'
+import {ServiceDescription} from '../../../state/models/session'
+import {AccountData} from '../../../state/models/session'
+import {ServerInputModal} from '../../../state/models/shell-ui'
+import {usePalette} from '../../lib/hooks/usePalette'
+import {s, colors} from '../../lib/styles'
+import {UserAvatar} from '../util/UserAvatar'
+import {Text} from '../util/text/Text'
+import {LogoTextHero} from './Logo'
+import AtpApi from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useAnalytics} from '@segment/analytics-react-native'
+import * as EmailValidator from 'email-validator'
 import React, {useState, useEffect} from 'react'
 import {
   ActivityIndicator,
@@ -8,21 +23,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import * as EmailValidator from 'email-validator'
-import AtpApi from '@atproto/api'
-import {useAnalytics} from '@segment/analytics-react-native'
-import {LogoTextHero} from './Logo'
-import {Text} from '../util/text/Text'
-import {UserAvatar} from '../util/UserAvatar'
-import {s, colors} from '../../lib/styles'
-import {createFullHandle, toNiceDomain} from '../../../lib/strings'
-import {useStores, RootStoreModel, DEFAULT_SERVICE} from '../../../state'
-import {ServiceDescription} from '../../../state/models/session'
-import {ServerInputModal} from '../../../state/models/shell-ui'
-import {AccountData} from '../../../state/models/session'
-import {isNetworkError} from '../../../lib/errors'
-import {usePalette} from '../../lib/hooks/usePalette'
 
 enum Forms {
   Login,
@@ -35,6 +35,7 @@ enum Forms {
 export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   const pal = usePalette('default')
   const store = useStores()
+  const {track} = useAnalytics()
   const [error, setError] = useState<string>('')
   const [retryDescribeTrigger, setRetryDescribeTrigger] = useState<any>({})
   const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
@@ -88,6 +89,10 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   }, [store.session, store.log, serviceUrl, retryDescribeTrigger])
 
   const onPressRetryConnect = () => setRetryDescribeTrigger({})
+  const onPressForgotPassword = () => {
+    track('Forgot Password')
+    setCurrentForm(Forms.ForgotPassword)
+  }
 
   return (
     <KeyboardAvoidingView testID="signIn" behavior="padding" style={[pal.view]}>
@@ -101,7 +106,7 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
           setError={setError}
           setServiceUrl={setServiceUrl}
           onPressBack={onPressBack}
-          onPressForgotPassword={gotoForm(Forms.ForgotPassword)}
+          onPressForgotPassword={onPressForgotPassword}
           onPressRetryConnect={onPressRetryConnect}
         />
       ) : undefined}
@@ -150,9 +155,13 @@ const ChooseAccountForm = ({
   onSelectAccount: (account?: AccountData) => void
   onPressBack: () => void
 }) => {
-  const {track} = useAnalytics()
+  const {track, screen} = useAnalytics()
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = React.useState(false)
+
+  React.useEffect(() => {
+    screen('Choose Account')
+  }, [screen])
 
   const onTryAccount = async (account: AccountData) => {
     if (account.accessJwt && account.refreshJwt) {
@@ -267,6 +276,7 @@ const LoginForm = ({
   const onPressSelectService = () => {
     store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
     Keyboard.dismiss()
+    track('Select Service')
   }
 
   const onPressNext = async () => {
@@ -458,6 +468,11 @@ const ForgotPasswordForm = ({
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
+  const {screen} = useAnalytics()
+
+  useEffect(() => {
+    screen('Forgot Password Form')
+  }, [screen])
 
   const onPressSelectService = () => {
     store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
@@ -594,6 +609,12 @@ const SetNewPasswordForm = ({
   onPasswordSet: () => void
 }) => {
   const pal = usePalette('default')
+  const {screen} = useAnalytics()
+
+  useEffect(() => {
+    screen('Set New Password Form')
+  }, [screen])
+
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [resetCode, setResetCode] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -716,6 +737,12 @@ const SetNewPasswordForm = ({
 }
 
 const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
+  const {screen} = useAnalytics()
+
+  useEffect(() => {
+    screen('Password Updated Form')
+  }, [screen])
+
   const pal = usePalette('default')
   return (
     <>

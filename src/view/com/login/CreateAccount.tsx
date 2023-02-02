@@ -29,7 +29,7 @@ import {ServerInputModal} from '../../../state/models/shell-ui'
 import {usePalette} from '../../lib/hooks/usePalette'
 
 export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
-  const {track} = useAnalytics()
+  const {track, screen} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -45,6 +45,10 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const [password, setPassword] = useState<string>('')
   const [handle, setHandle] = useState<string>('')
   const [is13, setIs13] = useState<boolean>(false)
+
+  useEffect(() => {
+    screen('CreateAccount')
+  }, [screen])
 
   useEffect(() => {
     let aborted = false
