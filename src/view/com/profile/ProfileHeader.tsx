@@ -27,6 +27,7 @@ import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 export const ProfileHeader = observer(function ProfileHeader({
   view,
@@ -37,7 +38,7 @@ export const ProfileHeader = observer(function ProfileHeader({
 }) {
   const pal = usePalette('default')
   const store = useStores()
-
+  const {track} = useAnalytics()
   const onPressBack = () => {
     store.nav.tab.goBack()
   }
@@ -59,18 +60,23 @@ export const ProfileHeader = observer(function ProfileHeader({
     )
   }
   const onPressEditProfile = () => {
+    track('ProfileHeader:EditProfileButtonClicked')
     store.shell.openModal(new EditProfileModal(view, onRefreshAll))
   }
   const onPressFollowers = () => {
+    track('ProfileHeader:FollowersButtonClicked')
     store.nav.navigate(`/profile/${view.handle}/followers`)
   }
   const onPressFollows = () => {
+    track('ProfileHeader:FollowsButtonClicked')
     store.nav.navigate(`/profile/${view.handle}/follows`)
   }
   const onPressShare = () => {
+    track('ProfileHeader:ShareButtonClicked')
     Share.share({url: toShareUrl(`/profile/${view.handle}`)})
   }
   const onPressMuteAccount = async () => {
+    track('ProfileHeader:MuteAccountButtonClicked')
     try {
       await view.muteAccount()
       Toast.show('Account muted')
@@ -80,6 +86,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     }
   }
   const onPressUnmuteAccount = async () => {
+    track('ProfileHeader:UnmuteAccountButtonClicked')
     try {
       await view.unmuteAccount()
       Toast.show('Account unmuted')
@@ -89,6 +96,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     }
   }
   const onPressReportAccount = () => {
+    track('ProfileHeader:ReportAccountButtonClicked')
     store.shell.openModal(new ReportAccountModal(view.did))
   }
 

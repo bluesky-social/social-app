@@ -22,15 +22,19 @@ import {UserAvatar} from '../../com/util/UserAvatar'
 import {Text} from '../../com/util/text/Text'
 import {ToggleButton} from '../../com/util/forms/ToggleButton'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 export const Menu = observer(({onClose}: {onClose: () => void}) => {
   const pal = usePalette('default')
   const store = useStores()
+  const {track} = useAnalytics()
 
   // events
   // =
 
   const onNavigate = (url: string) => {
+    track('Menu:ItemClicked', {url})
+
     onClose()
     if (url === '/notifications') {
       store.nav.switchTo(1, true)
@@ -83,6 +87,11 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
       </Text>
     </TouchableOpacity>
   )
+
+  const onDarkmodePress = () => {
+    track('Menu:ItemClicked', {url: '/darkmode'})
+    store.shell.setDarkMode(!store.shell.darkMode)
+  }
 
   return (
     <ScrollView testID="menuView" style={[styles.view, pal.view]}>
@@ -161,7 +170,7 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
         <ToggleButton
           label="Dark mode"
           isSelected={store.shell.darkMode}
-          onPress={() => store.shell.setDarkMode(!store.shell.darkMode)}
+          onPress={onDarkmodePress}
         />
       </View>
       <View style={styles.footer}>

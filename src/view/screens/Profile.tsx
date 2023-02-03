@@ -15,6 +15,7 @@ import {Text} from '../com/util/text/Text'
 import {FAB} from '../com/util/FAB'
 import {s, colors} from '../lib/styles'
 import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const END_ITEM = {_reactKey: '__end__'}
@@ -22,6 +23,12 @@ const EMPTY_ITEM = {_reactKey: '__empty__'}
 
 export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
+  const {screen} = useAnalytics()
+
+  useEffect(() => {
+    screen('Profile')
+  }, [screen])
+
   const onMainScroll = useOnMainScroll(store)
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const uiState = React.useMemo(

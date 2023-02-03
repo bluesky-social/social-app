@@ -6,17 +6,14 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import SplashScreen from 'react-native-splash-screen'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
-import {
-  createClient,
-  SegmentClient,
-  AnalyticsProvider,
-} from '@segment/analytics-react-native'
+import {SegmentClient, AnalyticsProvider} from '@segment/analytics-react-native'
 import {ThemeProvider} from './view/lib/ThemeContext'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {MobileShell} from './view/shell/mobile'
 import {s} from './view/lib/styles'
 import notifee, {EventType} from '@notifee/react-native'
+import {segmentClient} from './lib/segmentClient'
 
 const App = observer(() => {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -27,12 +24,7 @@ const App = observer(() => {
   // init
   useEffect(() => {
     view.setup()
-    setSegment(
-      createClient({
-        writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
-        trackAppLifecycleEvents: true,
-      }),
-    )
+    setSegment(segmentClient)
     setupState().then(store => {
       setRootStore(store)
       SplashScreen.hide()
@@ -58,7 +50,6 @@ const App = observer(() => {
   if (!rootStore) {
     return null
   }
-
   return (
     <GestureHandlerRootView style={s.h100pct}>
       <ThemeProvider theme={rootStore.shell.darkMode ? 'dark' : 'light'}>

@@ -18,6 +18,7 @@ import * as Toast from '../com/util/Toast'
 import {UserAvatar} from '../com/util/UserAvatar'
 import {usePalette} from '../lib/hooks/usePalette'
 import {AccountData} from '../../state/models/session'
+import {useAnalytics} from '@segment/analytics-react-native'
 import {DeleteAccountModal} from '../../state/models/shell-ui'
 
 export const Settings = observer(function Settings({
@@ -26,7 +27,12 @@ export const Settings = observer(function Settings({
 }: ScreenParams) {
   const pal = usePalette('default')
   const store = useStores()
+  const {screen, track} = useAnalytics()
   const [isSwitching, setIsSwitching] = React.useState(false)
+
+  useEffect(() => {
+    screen('Settings')
+  }, [screen])
 
   useEffect(() => {
     if (!visible) {
@@ -37,6 +43,7 @@ export const Settings = observer(function Settings({
   }, [visible, store, navIdx])
 
   const onPressSwitchAccount = async (acct: AccountData) => {
+    track('Settings:SwitchAccountButtonClicked')
     setIsSwitching(true)
     if (await store.session.resumeSession(acct)) {
       setIsSwitching(false)
@@ -50,9 +57,11 @@ export const Settings = observer(function Settings({
     store.session.clear()
   }
   const onPressAddAccount = () => {
+    track('Settings:AddAccountButtonClicked')
     store.session.clear()
   }
   const onPressSignout = () => {
+    track('Settings:SignOutButtonClicked')
     store.session.logout()
   }
   const onPressDeleteAccount = () => {

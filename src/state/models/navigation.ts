@@ -1,5 +1,6 @@
 import {makeAutoObservable} from 'mobx'
 import {TABS_ENABLED} from '../../build-flags'
+import {segmentClient} from '../../lib/segmentClient'
 
 let __id = 0
 function genId() {
@@ -96,6 +97,13 @@ export class NavigationTabModel {
   // =
 
   navigate(url: string, title?: string) {
+    try {
+      const path = url.split('/')[1]
+      segmentClient.track('Navigation', {
+        path,
+      })
+    } catch (error) {}
+
     if (this.current?.url === url) {
       this.refresh()
     } else {

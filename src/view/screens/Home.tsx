@@ -13,6 +13,7 @@ import {ScreenParams} from '../routes'
 import {s, colors, gradients} from '../lib/styles'
 import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
 import {clamp} from 'lodash'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
@@ -23,6 +24,7 @@ export const Home = observer(function Home({
 }: ScreenParams) {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
+  const {track} = useAnalytics()
   const safeAreaInsets = useSafeAreaInsets()
   const [wasVisible, setWasVisible] = React.useState<boolean>(false)
   const {appState} = useAppState({
@@ -72,6 +74,7 @@ export const Home = observer(function Home({
   }, [visible, store, store.me.mainFeed, navIdx, doPoll, wasVisible])
 
   const onPressCompose = (imagesOpen?: boolean) => {
+    track('Home:ComposeButtonPressed')
     store.shell.openComposer({imagesOpen})
   }
   const onPressTryAgain = () => {

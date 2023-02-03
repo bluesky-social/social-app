@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Text} from '../util/text/Text'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 export function PromptButtons({
   onPressCompose,
@@ -9,18 +10,29 @@ export function PromptButtons({
   onPressCompose: (imagesOpen?: boolean) => void
 }) {
   const pal = usePalette('default')
+  const {track} = useAnalytics()
+
+  const onPressNewPost = () => {
+    track('PromptButtons:NewPost')
+    onPressCompose(false)
+  }
+
+  const onPressSharePhoto = () => {
+    track('PromptButtons:SharePhoto')
+    onPressCompose(true)
+  }
   return (
     <View style={[pal.view, pal.border, styles.container]}>
       <TouchableOpacity
         testID="composePromptButton"
-        onPress={() => onPressCompose(false)}
+        onPress={onPressNewPost}
         style={[styles.btn, {backgroundColor: pal.colors.backgroundLight}]}>
         <Text type="button" style={pal.text}>
           New post
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => onPressCompose(true)}
+        onPress={onPressSharePhoto}
         style={[styles.btn, {backgroundColor: pal.colors.backgroundLight}]}>
         <Text type="button" style={pal.text}>
           Share photo

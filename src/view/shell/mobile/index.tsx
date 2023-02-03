@@ -45,6 +45,7 @@ import {
 import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 import {useTheme} from '../../lib/ThemeContext'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 const Btn = ({
   icon,
@@ -133,8 +134,10 @@ export const MobileShell: React.FC = observer(() => {
   const colorScheme = useColorScheme()
   const safeAreaInsets = useSafeAreaInsets()
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
+  const {track} = useAnalytics()
 
   const onPressHome = () => {
+    track('MobileShell:HomeButtonPressed')
     if (store.shell.isMainMenuOpen) {
       store.shell.setMainMenuOpen(false)
     }
@@ -152,6 +155,7 @@ export const MobileShell: React.FC = observer(() => {
     }
   }
   const onPressNotifications = () => {
+    track('MobileShell:NotificationsButtonPressed')
     if (store.shell.isMainMenuOpen) {
       store.shell.setMainMenuOpen(false)
     }

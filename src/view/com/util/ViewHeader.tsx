@@ -13,6 +13,7 @@ import {MagnifyingGlassIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {colors} from '../../lib/styles'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
@@ -28,10 +29,12 @@ export const ViewHeader = observer(function ViewHeader({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const {track} = useAnalytics()
   const onPressBack = () => {
     store.nav.tab.goBack()
   }
   const onPressMenu = () => {
+    track('ViewHeader:MenuButtonClicked')
     store.shell.setMainMenuOpen(true)
   }
   const onPressSearch = () => {

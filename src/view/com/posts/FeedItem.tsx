@@ -18,6 +18,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {s} from '../../lib/styles'
 import {useStores} from '../../../state'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 export const FeedItem = observer(function ({
   item,
@@ -30,6 +31,7 @@ export const FeedItem = observer(function ({
 }) {
   const store = useStores()
   const pal = usePalette('default')
+  const {track} = useAnalytics()
   const [deleted, setDeleted] = useState(false)
   const record = item.postRecord
   const itemHref = useMemo(() => {
@@ -47,6 +49,7 @@ export const FeedItem = observer(function ({
   }, [record?.reply])
 
   const onPressReply = () => {
+    track('FeedItem:PostReply')
     store.shell.openComposer({
       replyTo: {
         uri: item.post.uri,
@@ -61,11 +64,13 @@ export const FeedItem = observer(function ({
     })
   }
   const onPressToggleRepost = () => {
+    track('FeedItem:PostRepost')
     return item
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
   }
   const onPressToggleUpvote = () => {
+    track('FeedItem:PostLike')
     return item
       .toggleUpvote()
       .catch(e => store.log.error('Failed to toggle upvote', e))
@@ -75,6 +80,7 @@ export const FeedItem = observer(function ({
     Toast.show('Copied to clipboard')
   }
   const onDeletePost = () => {
+    track('FeedItem:PostDelete')
     item.delete().then(
       () => {
         setDeleted(true)

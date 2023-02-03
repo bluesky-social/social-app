@@ -1,4 +1,4 @@
-import React, {MutableRefObject} from 'react'
+import React, {MutableRefObject, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
@@ -16,6 +16,7 @@ import {FeedItem} from './FeedItem'
 import {PromptButtons} from './PromptButtons'
 import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
 import {s} from '../../lib/styles'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 const COMPOSE_PROMPT_ITEM = {_reactKey: '__prompt__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -37,6 +38,12 @@ export const Feed = observer(function Feed({
   onScroll?: OnScrollCb
   testID?: string
 }) {
+  const {screen, track} = useAnalytics()
+
+  useEffect(() => {
+    screen('Feed')
+  }, [screen])
+
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your
   //   renderItem function renders components that follow React performance best practices
@@ -57,6 +64,7 @@ export const Feed = observer(function Feed({
     }
   }
   const onRefresh = () => {
+    track('Feed:onRefresh')
     feed
       .refresh()
       .catch(err =>
@@ -64,6 +72,7 @@ export const Feed = observer(function Feed({
       )
   }
   const onEndReached = () => {
+    track('Feed:onEndReached')
     feed
       .loadMore()
       .catch(err => feed.rootStore.log.error('Failed to load more posts', err))
