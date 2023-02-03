@@ -471,7 +471,7 @@ const ForgotPasswordForm = ({
   const {screen} = useAnalytics()
 
   useEffect(() => {
-    screen('Singin:ForgotPassword')
+    screen('Signin:ForgotPassword')
   }, [screen])
 
   const onPressSelectService = () => {

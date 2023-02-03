@@ -60,7 +60,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     )
   }
   const onPressEditProfile = () => {
-    track('ProfileHeader:EditProfileButton Clicked')
+    track('ProfileHeader:EditProfileButtonClicked')
     store.shell.openModal(new EditProfileModal(view, onRefreshAll))
   }
   const onPressFollowers = () => {

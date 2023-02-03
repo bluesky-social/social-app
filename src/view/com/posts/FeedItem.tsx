@@ -70,7 +70,7 @@ export const FeedItem = observer(function ({
       .catch(e => store.log.error('Failed to toggle repost', e))
   }
   const onPressToggleUpvote = () => {
-    track('FeedItem:PostUpvote')
+    track('FeedItem:PostLike')
     return item
       .toggleUpvote()
       .catch(e => store.log.error('Failed to toggle upvote', e))
