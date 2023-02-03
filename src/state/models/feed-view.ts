@@ -420,7 +420,11 @@ export class FeedModel {
       await this._prependAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(e)
+      this._xIdle() // don't bubble the error to the user
+      this.rootStore.log.error('FeedView: Failed to load latest', {
+        params: this.params,
+        e,
+      })
     }
   }
 
@@ -437,7 +441,11 @@ export class FeedModel {
       await this._appendAll(res)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(e)
+      this._xIdle() // don't bubble the error to the user
+      this.rootStore.log.error('FeedView: Failed to load more', {
+        params: this.params,
+        e,
+      })
     }
   }
 
@@ -463,7 +471,11 @@ export class FeedModel {
       } while (cursor && numToFetch > 0)
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(e)
+      this._xIdle() // don't bubble the error to the user
+      this.rootStore.log.error('FeedView: Failed to update', {
+        params: this.params,
+        e,
+      })
     }
   }
 
