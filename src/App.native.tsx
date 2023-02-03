@@ -13,7 +13,7 @@ import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {MobileShell} from './view/shell/mobile'
 import {s} from './view/lib/styles'
 import notifee, {EventType} from '@notifee/react-native'
-import {segmentClinet} from './lib/segmentClient'
+import {segmentClient} from './lib/segmentClient'
 
 const App = observer(() => {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -24,7 +24,7 @@ const App = observer(() => {
   // init
   useEffect(() => {
     view.setup()
-    setSegment(segmentClinet)
+    setSegment(segmentClient)
     setupState().then(store => {
       setRootStore(store)
       SplashScreen.hide()
