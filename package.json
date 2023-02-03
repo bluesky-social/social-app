@@ -56,6 +56,7 @@
     "react-native-inappbrowser-reborn": "^3.6.3",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-pager-view": "^6.0.2",
+    "react-native-permissions": "^3.6.1",
     "react-native-progress": "^5.0.0",
     "react-native-reanimated": "^2.9.1",
     "react-native-root-siblings": "^4.1.1",

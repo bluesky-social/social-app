@@ -12,6 +12,10 @@ import {
   UserLocalPhotosModel,
   PhotoIdentifier,
 } from '../../../state/models/user-local-photos'
+import {
+  requestPhotoAccessIfNeeded,
+  requestCameraAccessIfNeeded,
+} from '../../../lib/permissions'
 import {compressIfNeeded, scaleDownDimensions} from '../../../lib/images'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {useStores} from '../../../state'
@@ -67,16 +71,31 @@ export async function cropPhoto(
 export const PhotoCarouselPicker = ({
   selectedPhotos,
   onSelectPhotos,
-  localPhotos,
 }: {
   selectedPhotos: string[]
   onSelectPhotos: (v: string[]) => void
-  localPhotos: UserLocalPhotosModel
 }) => {
   const pal = usePalette('default')
   const store = useStores()
+  const [isSetup, setIsSetup] = React.useState<boolean>(false)
+
+  const localPhotos = React.useMemo<UserLocalPhotosModel>(
+    () => new UserLocalPhotosModel(store),
+    [store],
+  )
+
+  React.useEffect(() => {
+    // initial setup
+    localPhotos.setup().then(() => {
+      setIsSetup(true)
+    })
+  }, [localPhotos])
+
   const handleOpenCamera = useCallback(async () => {
     try {
+      if (!(await requestCameraAccessIfNeeded())) {
+        return
+      }
       const cameraRes = await openCamera({
         mediaType: 'photo',
         cropping: true,
@@ -107,34 +126,36 @@ export const PhotoCarouselPicker = ({
     [store.log, selectedPhotos, onSelectPhotos],
   )
 
-  const handleOpenGallery = useCallback(() => {
-    openPicker({
+  const handleOpenGallery = useCallback(async () => {
+    if (!(await requestPhotoAccessIfNeeded())) {
+      return
+    }
+    const items = await openPicker({
       multiple: true,
       maxFiles: 4 - selectedPhotos.length,
       mediaType: 'photo',
-    }).then(async items => {
-      const result = []
-
-      for (const image of items) {
-        // choose target dimensions based on the original
-        // this causes the photo cropper to start with the full image "selected"
-        const {width, height} = scaleDownDimensions(
-          {width: image.width, height: image.height},
-          {width: MAX_WIDTH, height: MAX_HEIGHT},
-        )
-        const cropperRes = await openCropper({
-          mediaType: 'photo',
-          path: image.path,
-          ...IMAGE_PARAMS,
-          width,
-          height,
-        })
-        const finalImg = await compressIfNeeded(cropperRes, MAX_SIZE)
-        const permanentPath = await moveToPremanantPath(finalImg.path)
-        result.push(permanentPath)
-      }
-      onSelectPhotos([...selectedPhotos, ...result])
     })
+    const result = []
+
+    for (const image of items) {
+      // choose target dimensions based on the original
+      // this causes the photo cropper to start with the full image "selected"
+      const {width, height} = scaleDownDimensions(
+        {width: image.width, height: image.height},
+        {width: MAX_WIDTH, height: MAX_HEIGHT},
+      )
+      const cropperRes = await openCropper({
+        mediaType: 'photo',
+        path: image.path,
+        ...IMAGE_PARAMS,
+        width,
+        height,
+      })
+      const finalImg = await compressIfNeeded(cropperRes, MAX_SIZE)
+      const permanentPath = await moveToPremanantPath(finalImg.path)
+      result.push(permanentPath)
+    }
+    onSelectPhotos([...selectedPhotos, ...result])
   }, [selectedPhotos, onSelectPhotos])
 
   return (
@@ -156,15 +177,16 @@ export const PhotoCarouselPicker = ({
         onPress={handleOpenGallery}>
         <FontAwesomeIcon icon="image" style={pal.link} size={24} />
       </TouchableOpacity>
-      {localPhotos.photos.map((item: PhotoIdentifier, index: number) => (
-        <TouchableOpacity
-          testID="openSelectPhotoButton"
-          key={`local-image-${index}`}
-          style={[pal.border, styles.photoButton]}
-          onPress={() => handleSelectPhoto(item)}>
-          <Image style={styles.photo} source={{uri: item.node.image.uri}} />
-        </TouchableOpacity>
-      ))}
+      {isSetup &&
+        localPhotos.photos.map((item: PhotoIdentifier, index: number) => (
+          <TouchableOpacity
+            testID="openSelectPhotoButton"
+            key={`local-image-${index}`}
+            style={[pal.border, styles.photoButton]}
+            onPress={() => handleSelectPhoto(item)}>
+            <Image style={styles.photo} source={{uri: item.node.image.uri}} />
+          </TouchableOpacity>
+        ))}
     </ScrollView>
   )
 }

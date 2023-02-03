@@ -43,7 +43,6 @@ import {
 } from '../../../lib/strings'
 import {getLinkMeta} from '../../../lib/link-meta'
 import {downloadAndResize} from '../../../lib/images'
-import {UserLocalPhotosModel} from '../../../state/models/user-local-photos'
 import {getMentionAt, insertMentionAt} from '../../../lib/strings/mention-manip'
 import {PhotoCarouselPicker, cropPhoto} from './PhotoCarouselPicker'
 import {SelectedPhoto} from './SelectedPhoto'
@@ -94,10 +93,6 @@ export const ComposePost = observer(function ComposePost({
     () => new UserAutocompleteViewModel(store),
     [store],
   )
-  const localPhotos = React.useMemo<UserLocalPhotosModel>(
-    () => new UserLocalPhotosModel(store),
-    [store],
-  )
 
   // HACK
   // there's a bug with @mattermost/react-native-paste-input where if the input
@@ -112,8 +107,7 @@ export const ComposePost = observer(function ComposePost({
   // initial setup
   useEffect(() => {
     autocompleteView.setup()
-    localPhotos.setup()
-  }, [autocompleteView, localPhotos])
+  }, [autocompleteView])
 
   // external link metadata-fetch flow
   useEffect(() => {
@@ -436,13 +430,10 @@ export const ComposePost = observer(function ComposePost({
               />
             )}
           </ScrollView>
-          {isSelectingPhotos &&
-          localPhotos.photos != null &&
-          selectedPhotos.length < 4 ? (
+          {isSelectingPhotos && selectedPhotos.length < 4 ? (
             <PhotoCarouselPicker
               selectedPhotos={selectedPhotos}
               onSelectPhotos={onSelectPhotos}
-              localPhotos={localPhotos}
             />
           ) : !extLink &&
             selectedPhotos.length === 0 &&
