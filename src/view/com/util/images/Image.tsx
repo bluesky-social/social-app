@@ -5,6 +5,9 @@ import {DELAY_PRESS_IN} from './constants'
 import {LOADING} from '../../../lib/assets'
 import {clamp} from '../../../../lib/numbers'
 
+const MIN_ASPECT_RATIO = 0.33 // 1/3
+const MAX_ASPECT_RATIO = 5 // 5/1
+
 export function Image({
   uri,
   onPress,
@@ -20,7 +23,13 @@ export function Image({
 }) {
   const [aspectRatio, setAspectRatio] = React.useState<number>(1)
   const onLoad = (e: OnLoadEvent) => {
-    setAspectRatio(clamp(e.nativeEvent.width / e.nativeEvent.height, 0.33, 5))
+    setAspectRatio(
+      clamp(
+        e.nativeEvent.width / e.nativeEvent.height,
+        MIN_ASPECT_RATIO,
+        MAX_ASPECT_RATIO,
+      ),
+    )
   }
   return (
     <TouchableOpacity
