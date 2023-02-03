@@ -22,14 +22,9 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
       return
     }
     store.log.debug('Updating notifications feed')
-    store.me.notifications
-      .update()
-      .catch(e => {
-        store.log.error('Error while updating notifications feed', e)
-      })
-      .then(() => {
-        store.me.notifications.updateReadState()
-      })
+    store.me.notifications.update().then(() => {
+      store.me.notifications.updateReadState()
+    })
     store.nav.setTitle(navIdx, 'Notifications')
   }, [visible, store, navIdx])
 

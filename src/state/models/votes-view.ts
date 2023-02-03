@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
 import {AppBskyFeedGetVotes as GetVotes} from '@atproto/api'
 import {RootStoreModel} from './root-store'
+import {cleanError} from '../../lib/strings'
 
 const PAGE_SIZE = 30
 
@@ -79,7 +80,7 @@ export class VotesViewModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err ? err.toString() : ''
+    this.error = cleanError(err)
     if (err) {
       this.rootStore.log.error('Failed to fetch votes', err)
     }

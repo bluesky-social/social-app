@@ -11,6 +11,7 @@ import {s, colors, gradients} from '../../lib/styles'
 import {RadioGroup, RadioGroupItem} from '../util/forms/RadioGroup'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
+import {cleanError} from '../../../lib/strings'
 
 const ITEMS: RadioGroupItem[] = [
   {key: 'spam', label: 'Spam or excessive repeat posts'},
@@ -35,7 +36,7 @@ export function Component() {
       store.shell.closeModal()
       return
     } catch (e: any) {
-      setError(e.toString())
+      setError(cleanError(e))
       setIsProcessing(false)
     }
   }

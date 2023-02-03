@@ -198,13 +198,16 @@ export function enforceLen(str: string, len: number, ellipsis = false): string {
 
 export function cleanError(str: any): string {
   if (!str) {
-    return str
+    return ''
   }
   if (typeof str !== 'string') {
     str = str.toString()
   }
   if (isNetworkError(str)) {
     return 'Unable to connect. Please check your internet connection and try again.'
+  }
+  if (str.includes('Upstream Failure')) {
+    return 'The server appears to be experiencing issues. Please try again in a few moments.'
   }
   if (str.startsWith('Error: ')) {
     return str.slice('Error: '.length)

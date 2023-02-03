@@ -67,7 +67,6 @@ export class PostModel implements RemoveIndex<Post.Record> {
     this.isLoading = false
     this.hasLoaded = true
     this.error = cleanError(err)
-    this.error = err ? cleanError(err) : ''
     if (err) {
       this.rootStore.log.error('Failed to fetch post', err)
     }

@@ -25,6 +25,7 @@ import {UserBanner} from '../util/UserBanner'
 import {UserAvatar} from '../util/UserAvatar'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {useAnalytics} from '@segment/analytics-react-native'
+import {cleanError} from '../../../lib/strings'
 
 export const snapPoints = ['80%']
 
@@ -65,7 +66,7 @@ export function Component({
       setNewUserAvatar(finalImg)
       setUserAvatar(finalImg.path)
     } catch (e: any) {
-      setError(e.message || e.toString())
+      setError(cleanError(e))
     }
   }
   const onSelectNewBanner = async (img: PickedImage) => {
@@ -75,7 +76,7 @@ export function Component({
       setNewUserBanner(finalImg)
       setUserBanner(finalImg.path)
     } catch (e: any) {
-      setError(e.message || e.toString())
+      setError(cleanError(e))
     }
   }
   const onPressSave = async () => {
@@ -102,7 +103,7 @@ export function Component({
           'Failed to save your profile. Check your internet connection and try again.',
         )
       } else {
-        setError(e.message)
+        setError(cleanError(e))
       }
     }
     setProcessing(false)

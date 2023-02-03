@@ -6,6 +6,7 @@ import {
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
+import {cleanError} from '../../lib/strings'
 
 function* reactKeyGenerator(): Generator<string> {
   let counter = 0
@@ -276,7 +277,7 @@ export class PostThreadViewModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err ? err.toString() : ''
+    this.error = cleanError(err)
     if (err) {
       this.rootStore.log.error('Failed to fetch post thread', err)
     }

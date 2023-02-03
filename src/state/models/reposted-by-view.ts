@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
 import {AppBskyFeedGetRepostedBy as GetRepostedBy} from '@atproto/api'
 import {RootStoreModel} from './root-store'
+import {cleanError} from '../../lib/strings'
 
 const PAGE_SIZE = 30
 
@@ -82,7 +83,7 @@ export class RepostedByViewModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err ? err.toString() : ''
+    this.error = cleanError(err)
     if (err) {
       this.rootStore.log.error('Failed to fetch reposted by view', err)
     }

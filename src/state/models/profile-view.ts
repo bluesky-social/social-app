@@ -11,6 +11,7 @@ type Entity = AppBskyFeedPost.Entity
 import {extractEntities} from '../../lib/strings'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
+import {cleanError} from '../../lib/strings'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
 
@@ -175,7 +176,7 @@ export class ProfileViewModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err ? err.toString() : ''
+    this.error = cleanError(err)
     if (err) {
       this.rootStore.log.error('Failed to fetch profile', err)
     }
