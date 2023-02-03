@@ -86,13 +86,8 @@ export const PhotoCarouselPicker = ({
 
   React.useEffect(() => {
     // initial setup
-    requestPhotoAccessIfNeeded().then(hasPhotoAccess => {
-      if (!hasPhotoAccess) {
-        return
-      }
-      localPhotos.setup().then(() => {
-        setIsSetup(true)
-      })
+    localPhotos.setup().then(() => {
+      setIsSetup(true)
     })
   }, [localPhotos])
 
@@ -131,34 +126,36 @@ export const PhotoCarouselPicker = ({
     [store.log, selectedPhotos, onSelectPhotos],
   )
 
-  const handleOpenGallery = useCallback(() => {
-    openPicker({
+  const handleOpenGallery = useCallback(async () => {
+    if (!(await requestPhotoAccessIfNeeded())) {
+      return
+    }
+    const items = await openPicker({
       multiple: true,
       maxFiles: 4 - selectedPhotos.length,
       mediaType: 'photo',
-    }).then(async items => {
-      const result = []
-
-      for (const image of items) {
-        // choose target dimensions based on the original
-        // this causes the photo cropper to start with the full image "selected"
-        const {width, height} = scaleDownDimensions(
-          {width: image.width, height: image.height},
-          {width: MAX_WIDTH, height: MAX_HEIGHT},
-        )
-        const cropperRes = await openCropper({
-          mediaType: 'photo',
-          path: image.path,
-          ...IMAGE_PARAMS,
-          width,
-          height,
-        })
-        const finalImg = await compressIfNeeded(cropperRes, MAX_SIZE)
-        const permanentPath = await moveToPremanantPath(finalImg.path)
-        result.push(permanentPath)
-      }
-      onSelectPhotos([...selectedPhotos, ...result])
     })
+    const result = []
+
+    for (const image of items) {
+      // choose target dimensions based on the original
+      // this causes the photo cropper to start with the full image "selected"
+      const {width, height} = scaleDownDimensions(
+        {width: image.width, height: image.height},
+        {width: MAX_WIDTH, height: MAX_HEIGHT},
+      )
+      const cropperRes = await openCropper({
+        mediaType: 'photo',
+        path: image.path,
+        ...IMAGE_PARAMS,
+        width,
+        height,
+      })
+      const finalImg = await compressIfNeeded(cropperRes, MAX_SIZE)
+      const permanentPath = await moveToPremanantPath(finalImg.path)
+      result.push(permanentPath)
+    }
+    onSelectPhotos([...selectedPhotos, ...result])
   }, [selectedPhotos, onSelectPhotos])
 
   return (
