@@ -378,7 +378,7 @@ export class FeedModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err ? cleanError(err.toString()) : ''
+    this.error = cleanError(err)
     if (err) {
       this.rootStore.log.error('Posts feed request failed', err)
     }

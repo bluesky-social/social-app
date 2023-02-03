@@ -1,6 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyActorGetSuggestions as GetSuggestions} from '@atproto/api'
 import {RootStoreModel} from './root-store'
+import {cleanError} from '../../lib/strings'
 
 const PAGE_SIZE = 30
 
@@ -70,7 +71,7 @@ export class SuggestedActorsViewModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err ? err.toString() : ''
+    this.error = cleanError(err)
     if (err) {
       this.rootStore.log.error('Failed to fetch suggested actors', err)
     }

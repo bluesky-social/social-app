@@ -27,6 +27,7 @@ import {useStores, DEFAULT_SERVICE} from '../../../state'
 import {ServiceDescription} from '../../../state/models/session'
 import {ServerInputModal} from '../../../state/models/shell-ui'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {cleanError} from '../../../lib/strings'
 
 export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const {track, screen} = useAnalytics()
@@ -119,7 +120,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
       }
       store.log.error('Failed to create account', e)
       setIsProcessing(false)
-      setError(errMsg.replace(/^Error:/, ''))
+      setError(cleanError(errMsg))
     }
   }
 

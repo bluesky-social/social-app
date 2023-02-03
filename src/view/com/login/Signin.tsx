@@ -23,6 +23,7 @@ import {ServerInputModal} from '../../../state/models/shell-ui'
 import {AccountData} from '../../../state/models/session'
 import {isNetworkError} from '../../../lib/errors'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {cleanError} from '../../../lib/strings'
 
 enum Forms {
   Login,
@@ -322,7 +323,7 @@ const LoginForm = ({
           'Unable to contact your service. Please check your Internet connection.',
         )
       } else {
-        setError(errMsg.replace(/^Error:/, ''))
+        setError(cleanError(errMsg))
       }
     }
   }
@@ -499,7 +500,7 @@ const ForgotPasswordForm = ({
           'Unable to contact your service. Please check your Internet connection.',
         )
       } else {
-        setError(errMsg.replace(/^Error:/, ''))
+        setError(cleanError(errMsg))
       }
     }
   }
@@ -636,7 +637,7 @@ const SetNewPasswordForm = ({
           'Unable to contact your service. Please check your Internet connection.',
         )
       } else {
-        setError(errMsg.replace(/^Error:/, ''))
+        setError(cleanError(errMsg))
       }
     }
   }
