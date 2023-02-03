@@ -34,6 +34,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
           {LOGIN_INCLUDE_DEV_SERVERS ? (
             <>
               <TouchableOpacity
+                testID="localDevServerButton"
                 style={styles.btn}
                 onPress={() => doSelect(LOCAL_DEV_SERVICE)}>
                 <Text style={styles.btnText}>Local dev server</Text>
