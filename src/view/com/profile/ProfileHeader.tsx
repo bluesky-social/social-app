@@ -107,7 +107,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             <LoadingPlaceholder width={100} height={31} style={styles.br50} />
           </View>
           <View style={styles.displayNameLine}>
-            <Text type="title-xl" style={[pal.text, styles.title]}>
+            <Text type="title-2xl" style={[pal.text, styles.title]}>
               {view.displayName || view.handle}
             </Text>
           </View>
@@ -200,7 +200,7 @@ export const ProfileHeader = observer(function ProfileHeader({
           ) : undefined}
         </View>
         <View style={styles.displayNameLine}>
-          <Text type="title-xl" style={[pal.text, styles.title]}>
+          <Text type="title-2xl" style={[pal.text, styles.title]}>
             {view.displayName || view.handle}
           </Text>
         </View>

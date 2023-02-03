@@ -15,7 +15,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@atproto/api": "^0.0.7",
+    "@atproto/api": "^0.0.8",
     "@atproto/lexicon": "^0.0.4",
     "@atproto/xrpc": "^0.0.3",
     "@bam.tech/react-native-image-resizer": "^3.0.4",

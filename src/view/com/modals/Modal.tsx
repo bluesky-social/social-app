@@ -12,6 +12,7 @@ import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
 import * as ReportAccountModal from './ReportAccount'
+import * as DeleteAccountModal from './DeleteAccount'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {StyleSheet} from 'react-native'
 
@@ -76,6 +77,9 @@ export const Modal = observer(function Modal() {
         {...(store.shell.activeModal as models.ReportAccountModal)}
       />
     )
+  } else if (store.shell.activeModal?.name === 'delete-account') {
+    snapPoints = DeleteAccountModal.snapPoints
+    element = <DeleteAccountModal.Component />
   } else {
     element = <View />
   }

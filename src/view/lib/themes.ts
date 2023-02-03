@@ -208,8 +208,13 @@ export const defaultTheme: Theme = {
       fontWeight: '800',
     },
 
-    'title-xl': {
+    'title-2xl': {
       fontSize: 34,
+      letterSpacing: 0.25,
+      fontWeight: '500',
+    },
+    'title-xl': {
+      fontSize: 28,
       letterSpacing: 0.25,
       fontWeight: '500',
     },
@@ -236,6 +241,11 @@ export const defaultTheme: Theme = {
       fontSize: 22,
       letterSpacing: 0.4,
       fontWeight: '400',
+    },
+    'button-lg': {
+      fontWeight: '500',
+      fontSize: 18,
+      letterSpacing: 0.5,
     },
     button: {
       fontWeight: '500',
