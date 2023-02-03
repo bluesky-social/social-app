@@ -137,7 +137,7 @@ export const MobileShell: React.FC = observer(() => {
   const {track} = useAnalytics()
 
   const onPressHome = () => {
-    track('MobileShell: Home Button Pressed')
+    track('MobileShell:HomeButtonPressed')
     if (store.shell.isMainMenuOpen) {
       store.shell.setMainMenuOpen(false)
     }
@@ -155,7 +155,7 @@ export const MobileShell: React.FC = observer(() => {
     }
   }
   const onPressNotifications = () => {
-    track('MobileShell: Notifications Button Pressed')
+    track('MobileShell:NotificationsButtonPressed')
     if (store.shell.isMainMenuOpen) {
       store.shell.setMainMenuOpen(false)
     }

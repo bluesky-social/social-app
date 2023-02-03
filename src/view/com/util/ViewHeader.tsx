@@ -34,7 +34,7 @@ export const ViewHeader = observer(function ViewHeader({
     store.nav.tab.goBack()
   }
   const onPressMenu = () => {
-    track('Menu Button Clicked')
+    track('ViewHeader:MenuButtonClicked')
     store.shell.setMainMenuOpen(true)
   }
   const onPressSearch = () => {

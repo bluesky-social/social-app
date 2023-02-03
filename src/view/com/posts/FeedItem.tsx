@@ -49,7 +49,7 @@ export const FeedItem = observer(function ({
   }, [record?.reply])
 
   const onPressReply = () => {
-    track('Post Reply')
+    track('FeedItem:PostReply')
     store.shell.openComposer({
       replyTo: {
         uri: item.post.uri,
@@ -64,13 +64,13 @@ export const FeedItem = observer(function ({
     })
   }
   const onPressToggleRepost = () => {
-    track('Post Repost')
+    track('FeedItem:PostRepost')
     return item
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
   }
   const onPressToggleUpvote = () => {
-    track('Post Upvote')
+    track('FeedItem:PostUpvote')
     return item
       .toggleUpvote()
       .catch(e => store.log.error('Failed to toggle upvote', e))
@@ -80,7 +80,7 @@ export const FeedItem = observer(function ({
     Toast.show('Copied to clipboard')
   }
   const onDeletePost = () => {
-    track('Post Delete')
+    track('FeedItem:PostDelete')
     item.delete().then(
       () => {
         setDeleted(true)

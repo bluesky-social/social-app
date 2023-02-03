@@ -59,7 +59,7 @@ export function Component({
     store.shell.closeModal()
   }
   const onSelectNewAvatar = async (img: PickedImage) => {
-    track('Edit Profile Avatar Selected')
+    track('EditProfile:AvatarSelected')
     try {
       const finalImg = await compressIfNeeded(img, 1000000)
       setNewUserAvatar(finalImg)
@@ -69,7 +69,7 @@ export function Component({
     }
   }
   const onSelectNewBanner = async (img: PickedImage) => {
-    track('Edit Profile Banner Selected')
+    track('EditProfile:BannerSelected')
     try {
       const finalImg = await compressIfNeeded(img, 1000000)
       setNewUserBanner(finalImg)
@@ -79,7 +79,7 @@ export function Component({
     }
   }
   const onPressSave = async () => {
-    track('Edit Profile Save')
+    track('EditProfile:Save')
     setProcessing(true)
     if (error) {
       setError('')

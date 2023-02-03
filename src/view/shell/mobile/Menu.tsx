@@ -33,7 +33,7 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
   // =
 
   const onNavigate = (url: string) => {
-    track('Menu Item Clicked', {url})
+    track('Menu:ItemClicked', {url})
 
     onClose()
     if (url === '/notifications') {
@@ -89,7 +89,7 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
   )
 
   const onDarkmodePress = () => {
-    track('Menu Item Clicked', {url: '/darkmode'})
+    track('Menu:ItemClicked', {url: '/darkmode'})
     store.shell.setDarkMode(!store.shell.darkMode)
   }
 

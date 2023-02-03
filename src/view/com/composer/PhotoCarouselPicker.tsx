@@ -94,7 +94,7 @@ export const PhotoCarouselPicker = ({
 
   const handleSelectPhoto = useCallback(
     async (item: PhotoIdentifier) => {
-      track('Carousel Photo Selected')
+      track('PhotoCarouselPicker:PhotoSelected')
       try {
         const imgPath = await cropPhoto(
           item.node.image.uri,
@@ -111,7 +111,7 @@ export const PhotoCarouselPicker = ({
   )
 
   const handleOpenGallery = useCallback(() => {
-    track('Carousel Photo Gallery Opened')
+    track('PhotoCarouselPicker:GalleryOpened')
     openPicker({
       multiple: true,
       maxFiles: 4 - selectedPhotos.length,

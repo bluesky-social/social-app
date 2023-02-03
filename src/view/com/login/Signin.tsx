@@ -90,7 +90,7 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
 
   const onPressRetryConnect = () => setRetryDescribeTrigger({})
   const onPressForgotPassword = () => {
-    track('Forgot Password')
+    track('Signin:PressedForgotPassword')
     setCurrentForm(Forms.ForgotPassword)
   }
 
@@ -276,7 +276,7 @@ const LoginForm = ({
   const onPressSelectService = () => {
     store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
     Keyboard.dismiss()
-    track('Select Service')
+    track('Signin:PressedSelectService')
   }
 
   const onPressNext = async () => {
@@ -471,7 +471,7 @@ const ForgotPasswordForm = ({
   const {screen} = useAnalytics()
 
   useEffect(() => {
-    screen('Forgot Password Form')
+    screen('Singin:ForgotPassword')
   }, [screen])
 
   const onPressSelectService = () => {
@@ -612,7 +612,7 @@ const SetNewPasswordForm = ({
   const {screen} = useAnalytics()
 
   useEffect(() => {
-    screen('Set New Password Form')
+    screen('Signin:SetNewPasswordForm')
   }, [screen])
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -740,7 +740,7 @@ const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
   const {screen} = useAnalytics()
 
   useEffect(() => {
-    screen('Password Updated Form')
+    screen('Signin:PasswordUpdatedForm')
   }, [screen])
 
   const pal = usePalette('default')

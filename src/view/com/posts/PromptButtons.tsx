@@ -13,12 +13,12 @@ export function PromptButtons({
   const {track} = useAnalytics()
 
   const onPressNewPost = () => {
-    track('Compose New Post')
+    track('PromptButtons:NewPost')
     onPressCompose(false)
   }
 
   const onPressSharePhoto = () => {
-    track('Compose Share Photo')
+    track('PromptButtons:SharePhoto')
     onPressCompose(true)
   }
   return (

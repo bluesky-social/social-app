@@ -42,7 +42,7 @@ export const Settings = observer(function Settings({
   }, [visible, store, navIdx])
 
   const onPressSwitchAccount = async (acct: AccountData) => {
-    track('Switch Account Button Clicked')
+    track('Settings:SwitchAccountButtonClicked')
     setIsSwitching(true)
     if (await store.session.resumeSession(acct)) {
       setIsSwitching(false)
@@ -56,11 +56,11 @@ export const Settings = observer(function Settings({
     store.session.clear()
   }
   const onPressAddAccount = () => {
-    track('Add Account Button Clicked')
+    track('Settings:AddAccountButtonClicked')
     store.session.clear()
   }
   const onPressSignout = () => {
-    track('Sign Out Button Clicked')
+    track('Settings:SignOutButtonClicked')
     store.session.logout()
   }
 

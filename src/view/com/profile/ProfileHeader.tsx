@@ -60,23 +60,23 @@ export const ProfileHeader = observer(function ProfileHeader({
     )
   }
   const onPressEditProfile = () => {
-    track('Edit Profile Button Clicked')
+    track('ProfileHeader:EditProfileButton Clicked')
     store.shell.openModal(new EditProfileModal(view, onRefreshAll))
   }
   const onPressFollowers = () => {
-    track('Followers Button Clicked')
+    track('ProfileHeader:FollowersButtonClicked')
     store.nav.navigate(`/profile/${view.handle}/followers`)
   }
   const onPressFollows = () => {
-    track('Follows Button Clicked')
+    track('ProfileHeader:FollowsButtonClicked')
     store.nav.navigate(`/profile/${view.handle}/follows`)
   }
   const onPressShare = () => {
-    track('Share Button Clicked')
+    track('ProfileHeader:ShareButtonClicked')
     Share.share({url: toShareUrl(`/profile/${view.handle}`)})
   }
   const onPressMuteAccount = async () => {
-    track('Mute Account Button Clicked')
+    track('ProfileHeader:MuteAccountButtonClicked')
     try {
       await view.muteAccount()
       Toast.show('Account muted')
@@ -86,7 +86,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     }
   }
   const onPressUnmuteAccount = async () => {
-    track('Unmute Account Button Clicked')
+    track('ProfileHeader:UnmuteAccountButtonClicked')
     try {
       await view.unmuteAccount()
       Toast.show('Account unmuted')
@@ -96,7 +96,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     }
   }
   const onPressReportAccount = () => {
-    track('Report Account Button Clicked')
+    track('ProfileHeader:ReportAccountButtonClicked')
     store.shell.openModal(new ReportAccountModal(view.did))
   }
 

@@ -74,7 +74,7 @@ export const Home = observer(function Home({
   }, [visible, store, store.me.mainFeed, navIdx, doPoll, wasVisible])
 
   const onPressCompose = (imagesOpen?: boolean) => {
-    track('Home Screen Compose Button Pressed')
+    track('Home:ComposeButtonPressed')
     store.shell.openComposer({imagesOpen})
   }
   const onPressTryAgain = () => {

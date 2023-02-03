@@ -64,7 +64,7 @@ export const Feed = observer(function Feed({
     }
   }
   const onRefresh = () => {
-    track('Feed Refresh')
+    track('Feed:onRefresh')
     feed
       .refresh()
       .catch(err =>
@@ -72,7 +72,7 @@ export const Feed = observer(function Feed({
       )
   }
   const onEndReached = () => {
-    track('Feed Load More')
+    track('Feed:onEndReached')
     feed
       .loadMore()
       .catch(err => feed.rootStore.log.error('Failed to load more posts', err))
