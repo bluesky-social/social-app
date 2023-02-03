@@ -9,6 +9,10 @@ import {
   openPicker,
   Image as PickedImage,
 } from 'react-native-image-crop-picker'
+import {
+  requestPhotoAccessIfNeeded,
+  requestCameraAccessIfNeeded,
+} from '../../../lib/permissions'
 import {colors, gradients} from '../../lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -53,26 +57,34 @@ export function UserAvatar({
     {
       label: 'Camera',
       icon: 'camera',
-      // TODO: dark mode icon
-      onPress: () => {
-        openCamera({
-          mediaType: 'photo',
-          cropping: true,
-          width: 2000,
-          height: 2000,
-          cropperCircleOverlay: true,
-          forceJpg: true, // ios only
-          compressImageQuality: 1,
-        }).then(onSelectNewAvatar)
+      onPress: async () => {
+        if (!(await requestCameraAccessIfNeeded())) {
+          return
+        }
+        onSelectNewAvatar?.(
+          await openCamera({
+            mediaType: 'photo',
+            cropping: true,
+            width: 2000,
+            height: 2000,
+            cropperCircleOverlay: true,
+            forceJpg: true, // ios only
+            compressImageQuality: 1,
+          }),
+        )
       },
     },
     {
       label: 'Library',
       icon: 'image',
-      onPress: () => {
-        openPicker({
+      onPress: async () => {
+        if (!(await requestPhotoAccessIfNeeded())) {
+          return
+        }
+        const item = await openPicker({
           mediaType: 'photo',
-        }).then(async item => {
+        })
+        onSelectNewAvatar?.(
           await openCropper({
             mediaType: 'photo',
             path: item.path,
@@ -81,8 +93,8 @@ export function UserAvatar({
             cropperCircleOverlay: true,
             forceJpg: true, // ios only
             compressImageQuality: 1,
-          }).then(onSelectNewAvatar)
-        })
+          }),
+        )
       },
     },
     // TODO: Remove avatar https://github.com/bluesky-social/social-app/issues/122

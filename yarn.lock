@@ -19,10 +19,10 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@atproto/api@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.0.7.tgz#2cec239dd252a67a768a715e385fa835e834c280"
-  integrity sha512-2iQ5fd8YG4H5MzcWYtlvemOoXqzhRaxkNblecw1+iopTQjPrrDntJwKIg7+qLW0Mr93w+RSLmmekWUkiIJf1ew==
+"@atproto/api@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.0.8.tgz#ff01bb193cd1dad422916572ff595a625fa3cc06"
+  integrity sha512-qEnrzy8vKnt3yEjRCmKUnTvW6GKPB9pB5PP1+qIfUnQ7Sqrb793LtaSXPk9ZnrvtL3fsxYnfUY+7KB2X4osSyA==
   dependencies:
     "@atproto/xrpc" "*"
     typed-emitter "^2.1.0"
@@ -11132,6 +11132,11 @@ react-native-pager-view@^6.0.2:
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.1.2.tgz#3522079b9a9d6634ca5e8d153bc0b4d660254552"
   integrity sha512-qs2KSFc+7N7B+UZ6SG2sTvCkppagm5fVyRclv1KFKc7lDtrhXLzN59tXJw575LDP/dRJoXsNwqUAhZJdws6ABQ==
+
+react-native-permissions@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.6.1.tgz#73adcc1cef8cd57a9ef167b4507405f4ff5749c4"
+  integrity sha512-fzPpPQXeD34inUccqtoResSwYubfrwUguP4qrVUUv8+KSMjYSaHGoS5HaIJLZHlN9gO+TvLJZ2L5ZljTsb6qnQ==
 
 react-native-progress@^5.0.0:
   version "5.0.0"

@@ -3,10 +3,12 @@ import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
+  NativeSyntheticEvent,
   Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  TextInputSelectionChangeEventData,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -41,7 +43,7 @@ import {
 } from '../../../lib/strings'
 import {getLinkMeta} from '../../../lib/link-meta'
 import {downloadAndResize} from '../../../lib/images'
-import {UserLocalPhotosModel} from '../../../state/models/user-local-photos'
+import {getMentionAt, insertMentionAt} from '../../../lib/strings/mention-manip'
 import {PhotoCarouselPicker, cropPhoto} from './PhotoCarouselPicker'
 import {SelectedPhoto} from './SelectedPhoto'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -49,6 +51,11 @@ import {usePalette} from '../../lib/hooks/usePalette'
 const MAX_TEXT_LENGTH = 256
 const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
+
+interface Selection {
+  start: number
+  end: number
+}
 
 export const ComposePost = observer(function ComposePost({
   replyTo,
@@ -65,6 +72,7 @@ export const ComposePost = observer(function ComposePost({
   const pal = usePalette('default')
   const store = useStores()
   const textInput = useRef<PasteInputRef>(null)
+  const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
@@ -89,10 +97,6 @@ export const ComposePost = observer(function ComposePost({
     () => new UserAutocompleteViewModel(store),
     [store],
   )
-  const localPhotos = React.useMemo<UserLocalPhotosModel>(
-    () => new UserLocalPhotosModel(store),
-    [store],
-  )
 
   // HACK
   // there's a bug with @mattermost/react-native-paste-input where if the input
@@ -107,8 +111,7 @@ export const ComposePost = observer(function ComposePost({
   // initial setup
   useEffect(() => {
     autocompleteView.setup()
-    localPhotos.setup()
-  }, [autocompleteView, localPhotos])
+  }, [autocompleteView])
 
   // external link metadata-fetch flow
   useEffect(() => {
@@ -204,10 +207,10 @@ export const ComposePost = observer(function ComposePost({
   const onChangeText = (newText: string) => {
     setText(newText)
 
-    const prefix = extractTextAutocompletePrefix(newText)
-    if (typeof prefix === 'string') {
+    const prefix = getMentionAt(newText, textInputSelection.current?.start || 0)
+    if (prefix) {
       autocompleteView.setActive(true)
-      autocompleteView.setPrefix(prefix)
+      autocompleteView.setPrefix(prefix.value)
     } else {
       autocompleteView.setActive(false)
     }
@@ -233,6 +236,16 @@ export const ComposePost = observer(function ComposePost({
     }
     const finalImgPath = await cropPhoto(imgFile.uri)
     onSelectPhotos([...selectedPhotos, finalImgPath])
+  }
+  const onSelectionChange = (
+    evt: NativeSyntheticEvent<TextInputSelectionChangeEventData>,
+  ) => {
+    // NOTE we track the input selection using a ref to avoid excessive renders -prf
+    textInputSelection.current = evt.nativeEvent.selection
+  }
+  const onSelectAutocompleteItem = (item: string) => {
+    setText(insertMentionAt(text, textInputSelection.current?.start || 0, item))
+    autocompleteView.setActive(false)
   }
   const onPressCancel = () => hackfixOnClose()
   const onPressPublish = async () => {
@@ -270,10 +283,6 @@ export const ComposePost = observer(function ComposePost({
     onPost?.()
     hackfixOnClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
-  }
-  const onSelectAutocompleteItem = (item: string) => {
-    setText(replaceTextAutocompletePrefix(text, item))
-    autocompleteView.setActive(false)
   }
 
   const canPost = text.length <= MAX_TEXT_LENGTH
@@ -405,6 +414,7 @@ export const ComposePost = observer(function ComposePost({
                 scrollEnabled
                 onChangeText={(str: string) => onChangeText(str)}
                 onPaste={onPaste}
+                onSelectionChange={onSelectionChange}
                 placeholder={selectTextInputPlaceholder}
                 placeholderTextColor={pal.colors.textLight}
                 style={[
@@ -426,13 +436,10 @@ export const ComposePost = observer(function ComposePost({
               />
             )}
           </ScrollView>
-          {isSelectingPhotos &&
-          localPhotos.photos != null &&
-          selectedPhotos.length < 4 ? (
+          {isSelectingPhotos && selectedPhotos.length < 4 ? (
             <PhotoCarouselPicker
               selectedPhotos={selectedPhotos}
               onSelectPhotos={onSelectPhotos}
-              localPhotos={localPhotos}
             />
           ) : !extLink &&
             selectedPhotos.length === 0 &&
@@ -499,18 +506,6 @@ export const ComposePost = observer(function ComposePost({
     </KeyboardAvoidingView>
   )
 })
-
-const atPrefixRegex = /@([a-z0-9.]*)$/i
-function extractTextAutocompletePrefix(text: string) {
-  const match = atPrefixRegex.exec(text)
-  if (match) {
-    return match[1]
-  }
-  return undefined
-}
-function replaceTextAutocompletePrefix(text: string, item: string) {
-  return text.replace(atPrefixRegex, `@${item} `)
-}
 
 const styles = StyleSheet.create({
   outer: {
