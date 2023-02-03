@@ -13,8 +13,7 @@
     "test-ci": "jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "jest --coverage",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "e2e": "detox test --configuration ios.sim.debug --take-screenshots all",
-    "e2e-fast": "detox test --configuration ios.sim.release"
+    "e2e": "detox test --configuration ios.sim.debug --take-screenshots all"
   },
   "dependencies": {
     "@atproto/api": "^0.0.8",
