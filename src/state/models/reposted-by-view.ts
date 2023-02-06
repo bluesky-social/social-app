@@ -112,7 +112,7 @@ export class RepostedByViewModel {
       const params = Object.assign({}, this.params, {
         uri: this.resolvedUri,
         limit: PAGE_SIZE,
-        before: this.loadMoreCursor,
+        before: replace ? undefined : this.loadMoreCursor,
       })
       const res = await this.rootStore.api.app.bsky.feed.getRepostedBy(params)
       if (replace) {
