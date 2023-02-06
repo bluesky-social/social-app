@@ -61,12 +61,12 @@ export function Component({}: {}) {
     <View
       style={[styles.container, {backgroundColor: pal.colors.backgroundLight}]}>
       <View style={[styles.innerContainer, pal.view]}>
-        <Text type="title-xl" style={styles.title}>
+        <Text type="title-xl" style={[styles.title, pal.text]}>
           Delete account
         </Text>
         {!isEmailSent ? (
           <>
-            <Text type="lg" style={styles.description}>
+            <Text type="lg" style={[styles.description, pal.text]}>
               For security reasons, we'll need to send a confirmation code to
               your email.
             </Text>
