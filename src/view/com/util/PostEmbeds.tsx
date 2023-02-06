@@ -7,7 +7,6 @@ import {
   Image as RNImage,
 } from 'react-native'
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
-import LinearGradient from 'react-native-linear-gradient'
 import {Link} from '../util/Link'
 import {Text} from './text/Text'
 import {Image} from './images/Image'
@@ -15,7 +14,6 @@ import {ImageLayoutGrid} from './images/ImageLayoutGrid'
 import {ImagesLightbox} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
 import {usePalette} from '../../lib/hooks/usePalette'
-import {gradients} from '../../lib/styles'
 import {saveImageModal} from '../../../lib/images'
 
 type Embed =
@@ -112,14 +110,7 @@ export function PostEmbeds({
         noFeedback>
         {link.thumb ? (
           <Image uri={link.thumb} style={styles.extImage} />
-        ) : (
-          <LinearGradient
-            colors={[gradients.blueDark.start, gradients.blueDark.end]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
-            style={[styles.extImage, styles.extImageFallback]}
-          />
-        )}
+        ) : undefined}
         <View style={styles.extInner}>
           <Text type="md-bold" numberOfLines={2} style={[pal.text]}>
             {link.title || link.uri}
@@ -166,9 +157,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 6,
     width: '100%',
     maxHeight: 200,
-  },
-  extImageFallback: {
-    height: 160,
   },
   extUri: {
     marginTop: 2,
