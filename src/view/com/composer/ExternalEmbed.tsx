@@ -7,10 +7,9 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {BlurView} from '@react-native-community/blur'
-import LinearGradient from 'react-native-linear-gradient'
 import {Image} from '../util/images/Image'
 import {Text} from '../util/text/Text'
-import {s, gradients} from '../../lib/styles'
+import {s} from '../../lib/styles'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {ExternalEmbedDraft} from '../../../state/lib/api'
 
@@ -39,19 +38,7 @@ export const ExternalEmbed = ({
         </View>
       ) : link.localThumb ? (
         <Image uri={link.localThumb.path} style={styles.image} />
-      ) : (
-        <LinearGradient
-          colors={[gradients.blueDark.start, gradients.blueDark.end]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={[styles.image, styles.imageFallback]}
-        />
-      )}
-      <TouchableWithoutFeedback onPress={onRemove}>
-        <BlurView style={styles.removeBtn} blurType="dark">
-          <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
-        </BlurView>
-      </TouchableWithoutFeedback>
+      ) : undefined}
       <View style={styles.inner}>
         {!!link.meta?.title && (
           <Text type="sm-bold" numberOfLines={2} style={[pal.text]}>
@@ -78,6 +65,11 @@ export const ExternalEmbed = ({
           </Text>
         )}
       </View>
+      <TouchableWithoutFeedback onPress={onRemove}>
+        <BlurView style={styles.removeBtn} blurType="dark">
+          <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
+        </BlurView>
+      </TouchableWithoutFeedback>
     </View>
   )
 }
@@ -96,9 +88,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 6,
     width: '100%',
     maxHeight: 200,
-  },
-  imageFallback: {
-    height: 160,
   },
   removeBtn: {
     position: 'absolute',
