@@ -147,7 +147,7 @@ export function Component({
         <View style={s.pb10}>
           <Text style={[styles.label, pal.text]}>Description</Text>
           <BottomSheetTextInput
-            style={[styles.textArea]}
+            style={[styles.textArea, pal.text]}
             placeholder="e.g. Artist, dog-lover, and memelord."
             placeholderTextColor={colors.gray4}
             multiline
