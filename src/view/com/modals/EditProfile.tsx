@@ -139,7 +139,7 @@ export function Component({
           <BottomSheetTextInput
             style={[styles.textInput, pal.text]}
             placeholder="e.g. Alice Roberts"
-            placeholderTextColor={pal.textLight}
+            placeholderTextColor={colors.gray4}
             value={displayName}
             onChangeText={v => setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))}
           />
