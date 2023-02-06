@@ -229,13 +229,22 @@ export class FeedModel {
   }
 
   get nonReplyFeed() {
-    return this.feed.filter(
-      item =>
+    const nonReplyFeed = this.feed.filter(item => {
+      const params = this.params as GetAuthorFeed.QueryParams
+      const isRepost =
+        item.reply &&
+        (item?.reasonRepost?.by?.handle === params.author ||
+          item?.reasonRepost?.by?.did === params.author)
+
+      return (
         !item.reply || // not a reply
+        isRepost ||
         ((item._isThreadParent || // but allow if it's a thread by the user
           item._isThreadChild) &&
-          item.reply?.root.author.did === item.post.author.did),
-    )
+          item.reply?.root.author.did === item.post.author.did)
+      )
+    })
+    return nonReplyFeed
   }
 
   setHasNewLatest(v: boolean) {

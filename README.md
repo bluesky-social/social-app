@@ -28,6 +28,10 @@
 
 ## Various notes
 
+### Debugging
+
+- Note that since 0.70, debugging using the old debugger (which shows up using CMD+D) doesn't work anymore. Follow the instructions below to debug the code: https://reactnative.dev/docs/next/hermes#debugging-js-on-hermes-using-google-chromes-devtools
+
 ### Running E2E Tests
 
 - Make sure you've setup your environment following above
