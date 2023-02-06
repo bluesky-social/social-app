@@ -62,10 +62,7 @@ export class RepostedByViewModel {
     if (this._loadMorePromise) {
       return this._loadMorePromise
     }
-    if (!this.resolvedUri) {
-      await this._resolveUri()
-    }
-    this._loadMorePromise = this._loadMore(isRefreshing)
+    this._loadMorePromise = this._load(isRefreshing)
     await this._loadMorePromise
     this._loadMorePromise = undefined
   }
@@ -106,23 +103,32 @@ export class RepostedByViewModel {
     })
   }
 
-  private async _loadMore(isRefreshing = false) {
-    this._xLoading(isRefreshing)
+  private async _load(replace = false) {
+    this._xLoading(replace)
     try {
+      if (!this.resolvedUri) {
+        await this._resolveUri()
+      }
       const params = Object.assign({}, this.params, {
         uri: this.resolvedUri,
         limit: PAGE_SIZE,
-        before: this.loadMoreCursor,
+        before: replace ? undefined : this.loadMoreCursor,
       })
-      if (this.isRefreshing) {
-        this.repostedBy = []
-      }
       const res = await this.rootStore.api.app.bsky.feed.getRepostedBy(params)
-      await this._appendAll(res)
+      if (replace) {
+        this._replaceAll(res)
+      } else {
+        this._appendAll(res)
+      }
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e)
     }
+  }
+
+  private _replaceAll(res: GetRepostedBy.Response) {
+    this.repostedBy = []
+    this._appendAll(res)
   }
 
   private _appendAll(res: GetRepostedBy.Response) {
