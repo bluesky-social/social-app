@@ -121,11 +121,15 @@ export const FeatureExplainer = () => {
         <View />
       )}
       <View style={styles.footer}>
-        <TouchableOpacity onPress={onPressSkip}>
+        <TouchableOpacity
+          onPress={onPressSkip}
+          testID="onboardFeatureExplainerSkipBtn">
           <Text style={[s.blue3, s.f18]}>Skip</Text>
         </TouchableOpacity>
         <View style={s.flex1} />
-        <TouchableOpacity onPress={onPressNext}>
+        <TouchableOpacity
+          onPress={onPressNext}
+          testID="onboardFeatureExplainerNextBtn">
           <Text style={[s.blue3, s.f18]}>Next</Text>
         </TouchableOpacity>
       </View>
