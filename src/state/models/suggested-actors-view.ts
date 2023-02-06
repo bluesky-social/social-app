@@ -53,7 +53,7 @@ export class SuggestedActorsViewModel {
     if (this._loadMorePromise) {
       return this._loadMorePromise
     }
-    this._loadMorePromise = this._loadMore(isRefreshing)
+    this._loadMorePromise = this._load(isRefreshing)
     await this._loadMorePromise
     this._loadMorePromise = undefined
   }
@@ -80,17 +80,18 @@ export class SuggestedActorsViewModel {
   // loader functions
   // =
 
-  private async _loadMore(isRefreshing = false) {
-    if (!this.hasMore) {
+  private async _load(replace = false) {
+    if (!replace && !this.hasMore) {
       return
     }
-    this._xLoading(isRefreshing)
+    this._xLoading(replace)
     try {
-      if (this.isRefreshing) {
-        this.suggestions = []
+      let items: SuggestedActor[] = this.suggestions
+      if (replace) {
+        items = []
+        this.loadMoreCursor = undefined
       }
       let res
-      let items: SuggestedActor[] = []
       do {
         res = await this.rootStore.api.app.bsky.actor.getSuggestions({
           limit: PAGE_SIZE,
@@ -111,7 +112,7 @@ export class SuggestedActorsViewModel {
         )
       } while (items.length < PAGE_SIZE && this.hasMore)
       runInAction(() => {
-        this.suggestions = this.suggestions.concat(items)
+        this.suggestions = items
       })
       this._xIdle()
     } catch (e: any) {

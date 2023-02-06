@@ -67,7 +67,7 @@ export class UserFollowersViewModel {
     if (this._loadMorePromise) {
       return this._loadMorePromise
     }
-    this._loadMorePromise = this._loadMore(isRefreshing)
+    this._loadMorePromise = this._load(isRefreshing)
     await this._loadMorePromise
     this._loadMorePromise = undefined
   }
@@ -94,28 +94,34 @@ export class UserFollowersViewModel {
   // loader functions
   // =
 
-  private async _loadMore(isRefreshing = false) {
-    if (!this.hasMore) {
+  private async _load(replace = false) {
+    if (!replace && !this.hasMore) {
       return
     }
-    this._xLoading(isRefreshing)
+    this._xLoading(replace)
     try {
       const params = Object.assign({}, this.params, {
         limit: PAGE_SIZE,
-        before: this.loadMoreCursor,
+        before: replace ? undefined : this.loadMoreCursor,
       })
-      if (this.isRefreshing) {
-        this.followers = []
-      }
       const res = await this.rootStore.api.app.bsky.graph.getFollowers(params)
-      await this._appendAll(res)
+      if (replace) {
+        this._replaceAll(res)
+      } else {
+        this._appendAll(res)
+      }
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e)
     }
   }
 
-  private async _appendAll(res: GetFollowers.Response) {
+  private _replaceAll(res: GetFollowers.Response) {
+    this.followers = []
+    this._appendAll(res)
+  }
+
+  private _appendAll(res: GetFollowers.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     this.followers = this.followers.concat(res.data.followers)
