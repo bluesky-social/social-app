@@ -139,7 +139,7 @@ export function Component({
           <BottomSheetTextInput
             style={[styles.textInput, pal.text]}
             placeholder="e.g. Alice Roberts"
-            placeholderTextColor={pal.textLight}
+            placeholderTextColor={colors.gray4}
             value={displayName}
             onChangeText={v => setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))}
           />
@@ -147,7 +147,7 @@ export function Component({
         <View style={s.pb10}>
           <Text style={[styles.label, pal.text]}>Description</Text>
           <BottomSheetTextInput
-            style={[styles.textArea]}
+            style={[styles.textArea, pal.text]}
             placeholder="e.g. Artist, dog-lover, and memelord."
             placeholderTextColor={colors.gray4}
             multiline
