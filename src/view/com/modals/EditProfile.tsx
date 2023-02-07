@@ -63,7 +63,6 @@ export function Component({
     track('EditProfile:AvatarSelected')
     try {
       const finalImg = await compressIfNeeded(img, 1000000)
-
       setNewUserAvatar(finalImg)
       setUserAvatar(finalImg.path)
     } catch (e: any) {
