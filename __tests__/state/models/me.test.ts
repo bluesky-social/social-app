@@ -1,106 +1,110 @@
-import {RootStoreModel} from '../../../src/state/models/root-store'
-import {MeModel} from '../../../src/state/models/me'
-import {NotificationsViewModel} from './../../../src/state/models/notifications-view'
-import {sessionClient, SessionServiceClient} from '@atproto/api'
-import {DEFAULT_SERVICE} from './../../../src/state/index'
+import {createServer, TestPDS} from '../../../jest/test-pds'
+import {RootStoreModel, setupState} from '../../../src/state'
+import {NotificationsViewModel} from '../../../src/state/models/notifications-view'
 
 describe('MeModel', () => {
+  let pds: TestPDS | undefined
   let rootStore: RootStoreModel
-  let meModel: MeModel
-
-  beforeEach(() => {
-    const api = sessionClient.service(DEFAULT_SERVICE) as SessionServiceClient
-    rootStore = new RootStoreModel(api)
-    meModel = new MeModel(rootStore)
+  beforeAll(async () => {
+    jest.useFakeTimers()
+    pds = await createServer()
+    rootStore = await setupState(pds.pdsUrl)
   })
 
-  afterAll(() => {
+  afterAll(async () => {
     jest.clearAllMocks()
+    await pds?.close()
   })
 
   it('should clear() correctly', () => {
-    meModel.did = '123'
-    meModel.handle = 'handle'
-    meModel.displayName = 'John Doe'
-    meModel.description = 'description'
-    meModel.avatar = 'avatar'
-    meModel.notificationCount = 1
-    meModel.clear()
-    expect(meModel.did).toEqual('')
-    expect(meModel.handle).toEqual('')
-    expect(meModel.displayName).toEqual('')
-    expect(meModel.description).toEqual('')
-    expect(meModel.avatar).toEqual('')
-    expect(meModel.notificationCount).toEqual(0)
+    rootStore.me.did = '123'
+    rootStore.me.handle = 'handle'
+    rootStore.me.displayName = 'John Doe'
+    rootStore.me.description = 'description'
+    rootStore.me.avatar = 'avatar'
+    rootStore.me.notificationCount = 1
+    rootStore.me.clear()
+    expect(rootStore.me.did).toEqual('')
+    expect(rootStore.me.handle).toEqual('')
+    expect(rootStore.me.displayName).toEqual('')
+    expect(rootStore.me.description).toEqual('')
+    expect(rootStore.me.avatar).toEqual('')
+    expect(rootStore.me.notificationCount).toEqual(0)
   })
 
   it('should hydrate() successfully with valid properties', () => {
-    meModel.hydrate({
+    rootStore.me.clear()
+    rootStore.me.hydrate({
       did: '123',
       handle: 'handle',
       displayName: 'John Doe',
       description: 'description',
       avatar: 'avatar',
     })
-    expect(meModel.did).toEqual('123')
-    expect(meModel.handle).toEqual('handle')
-    expect(meModel.displayName).toEqual('John Doe')
-    expect(meModel.description).toEqual('description')
-    expect(meModel.avatar).toEqual('avatar')
+    expect(rootStore.me.did).toEqual('123')
+    expect(rootStore.me.handle).toEqual('handle')
+    expect(rootStore.me.displayName).toEqual('John Doe')
+    expect(rootStore.me.description).toEqual('description')
+    expect(rootStore.me.avatar).toEqual('avatar')
   })
 
   it('should not hydrate() with invalid properties', () => {
-    meModel.hydrate({
+    rootStore.me.clear()
+    rootStore.me.hydrate({
       did: '',
       handle: 'handle',
       displayName: 'John Doe',
       description: 'description',
       avatar: 'avatar',
     })
-    expect(meModel.did).toEqual('')
-    expect(meModel.handle).toEqual('')
-    expect(meModel.displayName).toEqual('')
-    expect(meModel.description).toEqual('')
-    expect(meModel.avatar).toEqual('')
+    expect(rootStore.me.did).toEqual('')
+    expect(rootStore.me.handle).toEqual('')
+    expect(rootStore.me.displayName).toEqual('')
+    expect(rootStore.me.description).toEqual('')
+    expect(rootStore.me.avatar).toEqual('')
 
-    meModel.hydrate({
+    rootStore.me.hydrate({
       did: '123',
       displayName: 'John Doe',
       description: 'description',
       avatar: 'avatar',
     })
-    expect(meModel.did).toEqual('')
-    expect(meModel.handle).toEqual('')
-    expect(meModel.displayName).toEqual('')
-    expect(meModel.description).toEqual('')
-    expect(meModel.avatar).toEqual('')
+    expect(rootStore.me.did).toEqual('')
+    expect(rootStore.me.handle).toEqual('')
+    expect(rootStore.me.displayName).toEqual('')
+    expect(rootStore.me.description).toEqual('')
+    expect(rootStore.me.avatar).toEqual('')
+  })
+
+  it('should serialize() key information', () => {
+    rootStore.me.did = '123'
+    rootStore.me.handle = 'handle'
+    rootStore.me.displayName = 'John Doe'
+    rootStore.me.description = 'description'
+    rootStore.me.avatar = 'avatar'
+
+    expect(rootStore.me.serialize()).toEqual({
+      did: '123',
+      handle: 'handle',
+      displayName: 'John Doe',
+      description: 'description',
+      avatar: 'avatar',
+    })
   })
 
   it('should load() successfully', async () => {
-    jest
-      .spyOn(rootStore.api.app.bsky.actor, 'getProfile')
-      .mockImplementationOnce((): Promise<any> => {
-        return Promise.resolve({
-          data: {
-            displayName: 'John Doe',
-            description: 'description',
-            avatar: 'avatar',
-          },
-        })
-      })
-    rootStore.session.data = {
-      did: '123',
-      handle: 'handle',
-      service: 'test service',
-      accessJwt: 'test token',
-      refreshJwt: 'test token',
-    }
-    await meModel.load()
-    expect(meModel.did).toEqual('123')
-    expect(meModel.handle).toEqual('handle')
-    expect(meModel.displayName).toEqual('John Doe')
-    expect(meModel.description).toEqual('description')
-    expect(meModel.avatar).toEqual('avatar')
+    await rootStore.session.login({
+      service: pds?.pdsUrl || '',
+      identifier: 'alice.test',
+      password: 'hunter2',
+    })
+
+    await rootStore.me.load()
+    expect(typeof rootStore.me.did).toEqual('string')
+    expect(rootStore.me.handle).toEqual('alice.test')
+    expect(rootStore.me.displayName).toEqual('Alice')
+    expect(rootStore.me.description).toEqual('Test user 1')
+    expect(rootStore.me.avatar).toEqual('')
   })
 
   it('should load() successfully without profile data', async () => {
@@ -111,55 +115,32 @@ describe('MeModel', () => {
           data: null,
         })
       })
-    rootStore.session.data = {
-      did: '123',
-      handle: 'handle',
-      service: 'test service',
-      accessJwt: 'test token',
-      refreshJwt: 'test token',
-    }
-    await meModel.load()
-    expect(meModel.did).toEqual('123')
-    expect(meModel.handle).toEqual('handle')
-    expect(meModel.displayName).toEqual('')
-    expect(meModel.description).toEqual('')
-    expect(meModel.avatar).toEqual('')
+    await rootStore.me.load()
+    expect(typeof rootStore.me.did).toEqual('string')
+    expect(rootStore.me.handle).toEqual('alice.test')
+    expect(rootStore.me.displayName).toEqual('')
+    expect(rootStore.me.description).toEqual('')
+    expect(rootStore.me.avatar).toEqual('')
   })
 
   it('should load() to nothing when no session', async () => {
-    rootStore.session.data = null
-    await meModel.load()
-    expect(meModel.did).toEqual('')
-    expect(meModel.handle).toEqual('')
-    expect(meModel.displayName).toEqual('')
-    expect(meModel.description).toEqual('')
-    expect(meModel.avatar).toEqual('')
-    expect(meModel.notificationCount).toEqual(0)
-  })
-
-  it('should serialize() key information', () => {
-    meModel.did = '123'
-    meModel.handle = 'handle'
-    meModel.displayName = 'John Doe'
-    meModel.description = 'description'
-    meModel.avatar = 'avatar'
-
-    expect(meModel.serialize()).toEqual({
-      did: '123',
-      handle: 'handle',
-      displayName: 'John Doe',
-      description: 'description',
-      avatar: 'avatar',
-    })
+    await rootStore.session.logout()
+    await rootStore.me.load()
+    expect(rootStore.me.did).toEqual('')
+    expect(rootStore.me.handle).toEqual('')
+    expect(rootStore.me.displayName).toEqual('')
+    expect(rootStore.me.description).toEqual('')
+    expect(rootStore.me.avatar).toEqual('')
+    expect(rootStore.me.notificationCount).toEqual(0)
   })
 
   it('should clearNotificationCount() successfully', () => {
-    meModel.clearNotificationCount()
-    expect(meModel.notificationCount).toBe(0)
+    rootStore.me.clearNotificationCount()
+    expect(rootStore.me.notificationCount).toBe(0)
   })
 
   it('should update notifs count with fetchStateUpdate()', async () => {
-    meModel.notifications = {
+    rootStore.me.notifications = {
       refresh: jest.fn().mockResolvedValue({}),
     } as unknown as NotificationsViewModel
 
@@ -173,8 +154,8 @@ describe('MeModel', () => {
         })
       })
 
-    await meModel.fetchNotifications()
-    expect(meModel.notificationCount).toBe(1)
-    expect(meModel.notifications.refresh).toHaveBeenCalled()
+    await rootStore.me.fetchNotifications()
+    expect(rootStore.me.notificationCount).toBe(1)
+    expect(rootStore.me.notifications.refresh).toHaveBeenCalled()
   })
 })
