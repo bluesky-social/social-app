@@ -88,7 +88,6 @@ export function Component({
       setError('')
     }
     try {
-      // throw new Error('test')
       await profileView.updateProfile(
         {
           displayName,
@@ -97,10 +96,8 @@ export function Component({
         newUserAvatar,
         newUserBanner,
       )
-
       Toast.show('Profile updated')
       onUpdate?.()
-
       store.shell.closeModal()
     } catch (e: any) {
       if (isNetworkError(e)) {
