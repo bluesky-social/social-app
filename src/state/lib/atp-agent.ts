@@ -14,6 +14,8 @@ const REFRESH_SESSION = 'com.atproto.session.refresh'
  * (These will be moved to the types.ts file in the api package)
  */
 
+export type SessionEvent = 'create' | 'create-failed' | 'update' | 'expired'
+
 export interface SessionData {
   refreshJwt: string
   accessJwt: string
@@ -51,6 +53,7 @@ export interface AtpAgentGlobalOpts {
 }
 
 type PersistSessionHandler = (
+  evt: SessionEvent,
   session: SessionData | undefined,
 ) => void | Promise<void>
 
@@ -131,7 +134,11 @@ export class AtpAgent {
       }
       return res
     } finally {
-      this._persistSession?.(this.session)
+      if (this.session) {
+        this._persistSession?.('create', this.session)
+      } else {
+        this._persistSession?.('create-failed', undefined)
+      }
     }
   }
 
@@ -153,7 +160,11 @@ export class AtpAgent {
       }
       return res
     } finally {
-      this._persistSession?.(this.session)
+      if (this.session) {
+        this._persistSession?.('create', this.session)
+      } else {
+        this._persistSession?.('create-failed', undefined)
+      }
     }
   }
 
@@ -174,7 +185,11 @@ export class AtpAgent {
       this.session = undefined
       throw e
     } finally {
-      this._persistSession?.(this.session)
+      if (this.session) {
+        this._persistSession?.('create', this.session)
+      } else {
+        this._persistSession?.('create-failed', undefined)
+      }
     }
   }
 
@@ -272,7 +287,7 @@ export class AtpAgent {
     if (isResError(res, ['ExpiredToken', 'InvalidToken'])) {
       // failed due to a bad refresh token
       this.session = undefined
-      this._persistSession?.(this.session)
+      this._persistSession?.('expired', undefined)
     } else if (isNewSessionObject(res.body)) {
       // succeeded, update the session
       this.session = {
@@ -281,7 +296,7 @@ export class AtpAgent {
         handle: res.body.handle,
         did: res.body.did,
       }
-      this._persistSession?.(this.session)
+      this._persistSession?.('update', this.session)
     }
     // else: other failures should be ignored - the issue will
     // propagate in the _fetch() handler's second attempt to run

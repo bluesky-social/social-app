@@ -95,12 +95,22 @@ export class RootStoreModel {
   /**
    * Called by the session model. Refreshes session-oriented state.
    */
-  async onSessionChanged(agent: AtpAgent) {
-    this.log.debug('RootStoreModel:onSessionChanged')
+  async handleSessionChange(agent: AtpAgent) {
+    this.log.debug('RootStoreModel:handleSessionChange')
     this.agent = agent
     this.nav.clear()
     this.me.clear()
     await this.me.load()
+  }
+
+  /**
+   * Called by the session model. Handles session drops by informing the user.
+   */
+  async handleSessionDrop() {
+    this.log.debug('RootStoreModel:handleSessionDrop')
+    this.nav.clear()
+    this.me.clear()
+    this.emitSessionDropped()
   }
 
   /**
@@ -138,6 +148,14 @@ export class RootStoreModel {
 
   emitPostDeleted(uri: string) {
     DeviceEventEmitter.emit('post-deleted', uri)
+  }
+
+  onSessionDropped(handler: () => void): EmitterSubscription {
+    return DeviceEventEmitter.addListener('session-dropped', handler)
+  }
+
+  emitSessionDropped() {
+    DeviceEventEmitter.emit('session-dropped')
   }
 
   // background fetch

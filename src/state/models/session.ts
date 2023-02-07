@@ -1,7 +1,11 @@
 import {makeAutoObservable} from 'mobx'
 import {ComAtprotoServerGetAccountsConfig as GetAccountsConfig} from '@atproto/api'
 import normalizeUrl from 'normalize-url'
-import {AtpAgent, SessionData as AtpSessionData} from '../lib/atp-agent'
+import {
+  AtpAgent,
+  SessionEvent as AtpSessionEvent,
+  SessionData as AtpSessionData,
+} from '../lib/atp-agent'
 import {isObj, hasProp} from '../lib/type-guards'
 import {z} from 'zod'
 import {RootStoreModel} from './root-store'
@@ -127,7 +131,7 @@ export class SessionModel {
       service: agent.service.toString(),
       did,
     }
-    this.rootStore.onSessionChanged(agent)
+    this.rootStore.handleSessionChange(agent)
   }
 
   /**
@@ -136,14 +140,18 @@ export class SessionModel {
   private persistSession(
     service: string,
     did: string,
+    event: AtpSessionEvent,
     session?: AtpSessionData,
     addedInfo?: AdditionalAccountData,
   ) {
     this.rootStore.log.debug('SessionModel:persistSession', {
       service,
       did,
+      event,
       hasSession: !!session,
     })
+
+    // upsert the account in our listing
     const existingAccount = this.accounts.find(
       account => account.service === service && account.did === did,
     )
@@ -167,6 +175,11 @@ export class SessionModel {
           account => !(account.service === service && account.did === did),
         ),
       ]
+    }
+
+    // if the session expired, fire an event to let the user know
+    if (event === 'expired') {
+      this.rootStore.handleSessionDrop()
     }
   }
 
@@ -222,8 +235,8 @@ export class SessionModel {
 
     const agent = new AtpAgent({
       service: account.service,
-      persistSession: (sess?: AtpSessionData) => {
-        this.persistSession(account.service, account.did, sess)
+      persistSession: (evt: AtpSessionEvent, sess?: AtpSessionData) => {
+        this.persistSession(account.service, account.did, evt, sess)
       },
     })
     try {
@@ -237,6 +250,7 @@ export class SessionModel {
       this.persistSession(
         account.service,
         account.did,
+        'create',
         agent.session,
         addedInfo,
       )
@@ -271,10 +285,12 @@ export class SessionModel {
     }
     const did = agent.session.did
     const addedInfo = await this.loadAccountInfo(agent, did)
-    this.persistSession(service, did, agent.session, addedInfo)
-    agent.setPersistSessionHandler((sess?: AtpSessionData) => {
-      this.persistSession(service, did, sess)
-    })
+    this.persistSession(service, did, 'create', agent.session, addedInfo)
+    agent.setPersistSessionHandler(
+      (evt: AtpSessionEvent, sess?: AtpSessionData) => {
+        this.persistSession(service, did, evt, sess)
+      },
+    )
     this.setActiveSession(agent, did)
     this.rootStore.log.debug('SessionModel:login succeeded')
   }
@@ -305,10 +321,12 @@ export class SessionModel {
     }
     const did = agent.session.did
     const addedInfo = await this.loadAccountInfo(agent, did)
-    this.persistSession(service, did, agent.session, addedInfo)
-    agent.setPersistSessionHandler((sess?: AtpSessionData) => {
-      this.persistSession(service, did, sess)
-    })
+    this.persistSession(service, did, 'create', agent.session, addedInfo)
+    agent.setPersistSessionHandler(
+      (evt: AtpSessionEvent, sess?: AtpSessionData) => {
+        this.persistSession(service, did, evt, sess)
+      },
+    )
     this.setActiveSession(agent, did)
     this.rootStore.onboard.start()
     this.rootStore.log.debug('SessionModel:createAccount succeeded')
