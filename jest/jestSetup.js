@@ -1,6 +1,9 @@
 /* global jest */
-
+import {configure} from '@testing-library/react-native'
 import 'react-native-gesture-handler/jestSetup'
+
+configure({asyncUtilTimeout: 5000})
+
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 )
