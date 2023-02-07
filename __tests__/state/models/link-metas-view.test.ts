@@ -2,7 +2,7 @@ import {RootStoreModel} from '../../../src/state/models/root-store'
 import {LinkMetasViewModel} from '../../../src/state/models/link-metas-view'
 import * as LinkMetaLib from '../../../src/lib/link-meta'
 import {LikelyType} from './../../../src/lib/link-meta'
-import {sessionClient, SessionServiceClient} from '@atproto/api'
+import AtpAgent from '@atproto/api'
 import {DEFAULT_SERVICE} from '../../../src/state'
 
 describe('LinkMetasViewModel', () => {
@@ -17,8 +17,7 @@ describe('LinkMetasViewModel', () => {
   }
 
   beforeEach(() => {
-    const api = sessionClient.service(DEFAULT_SERVICE) as SessionServiceClient
-    rootStore = new RootStoreModel(api)
+    rootStore = new RootStoreModel(new AtpAgent({service: DEFAULT_SERVICE}))
     viewModel = new LinkMetasViewModel(rootStore)
   })
 

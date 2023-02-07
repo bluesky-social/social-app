@@ -3,7 +3,7 @@
  */
 
 import {makeAutoObservable} from 'mobx'
-import {AtpAgent} from '../lib/atp-agent'
+import {AtpAgent} from '@atproto/api'
 import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
 import BackgroundFetch from 'react-native-background-fetch'

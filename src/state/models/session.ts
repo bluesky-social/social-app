@@ -1,11 +1,11 @@
 import {makeAutoObservable} from 'mobx'
-import {ComAtprotoServerGetAccountsConfig as GetAccountsConfig} from '@atproto/api'
-import normalizeUrl from 'normalize-url'
 import {
   AtpAgent,
-  SessionEvent as AtpSessionEvent,
-  SessionData as AtpSessionData,
-} from '../lib/atp-agent'
+  AtpSessionEvent,
+  AtpSessionData,
+  ComAtprotoServerGetAccountsConfig as GetAccountsConfig,
+} from '@atproto/api'
+import normalizeUrl from 'normalize-url'
 import {isObj, hasProp} from '../lib/type-guards'
 import {z} from 'zod'
 import {RootStoreModel} from './root-store'

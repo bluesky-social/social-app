@@ -1,5 +1,4 @@
-import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
-import {AtpAgent} from './atp-agent'
+import AtpAgent, {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import RNFS from 'react-native-fs'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from '../models/root-store'

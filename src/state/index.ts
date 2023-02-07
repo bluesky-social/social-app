@@ -1,6 +1,6 @@
 import {autorun} from 'mobx'
 import {Platform} from 'react-native'
-import {AtpAgent} from './lib/atp-agent'
+import {AtpAgent} from '@atproto/api'
 import {RootStoreModel} from './models/root-store'
 import * as libapi from './lib/api'
 import * as storage from './lib/storage'
