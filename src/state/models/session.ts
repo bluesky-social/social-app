@@ -239,6 +239,7 @@ export class SessionModel {
         this.persistSession(account.service, account.did, evt, sess)
       },
     })
+
     try {
       await agent.resumeSession({
         accessJwt: account.accessJwt,
@@ -261,6 +262,7 @@ export class SessionModel {
       })
       return false
     }
+
     this.setActiveSession(agent, account.did)
     return true
   }
@@ -283,14 +285,17 @@ export class SessionModel {
     if (!agent.session) {
       throw new Error('Failed to establish session')
     }
+
     const did = agent.session.did
     const addedInfo = await this.loadAccountInfo(agent, did)
+
     this.persistSession(service, did, 'create', agent.session, addedInfo)
     agent.setPersistSessionHandler(
       (evt: AtpSessionEvent, sess?: AtpSessionData) => {
         this.persistSession(service, did, evt, sess)
       },
     )
+
     this.setActiveSession(agent, did)
     this.rootStore.log.debug('SessionModel:login succeeded')
   }
@@ -319,14 +324,17 @@ export class SessionModel {
     if (!agent.session) {
       throw new Error('Failed to establish session')
     }
+
     const did = agent.session.did
     const addedInfo = await this.loadAccountInfo(agent, did)
+
     this.persistSession(service, did, 'create', agent.session, addedInfo)
     agent.setPersistSessionHandler(
       (evt: AtpSessionEvent, sess?: AtpSessionData) => {
         this.persistSession(service, did, evt, sess)
       },
     )
+
     this.setActiveSession(agent, did)
     this.rootStore.onboard.start()
     this.rootStore.log.debug('SessionModel:createAccount succeeded')
