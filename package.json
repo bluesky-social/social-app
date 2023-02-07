@@ -16,9 +16,9 @@
     "e2e": "detox test --configuration ios.sim.debug --take-screenshots all"
   },
   "dependencies": {
-    "@atproto/api": "^0.0.8",
+    "@atproto/api": "^0.1.0",
     "@atproto/lexicon": "^0.0.4",
-    "@atproto/xrpc": "^0.0.3",
+    "@atproto/xrpc": "^0.0.4",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
@@ -43,6 +43,7 @@
     "lru_map": "^0.4.1",
     "mobx": "^6.6.1",
     "mobx-react-lite": "^3.4.0",
+    "normalize-url": "^8.0.0",
     "react": "18.2.0",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "17.0.2",
@@ -128,7 +129,7 @@
       "node"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|rollbar-react-native|@fortawesome|@react-native|@react-navigation)"
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|rollbar-react-native|@fortawesome|@react-native|@react-navigation|normalize-url)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",

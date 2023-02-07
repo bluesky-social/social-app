@@ -3,6 +3,7 @@ import {AtUri} from '../../third-party/uri'
 import {AppBskyFeedGetVotes as GetVotes} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {cleanError} from '../../lib/strings'
+import * as apilib from '../lib/api'
 
 const PAGE_SIZE = 30
 
@@ -90,7 +91,7 @@ export class VotesViewModel {
     const urip = new AtUri(this.params.uri)
     if (!urip.host.startsWith('did:')) {
       try {
-        urip.host = await this.rootStore.resolveName(urip.host)
+        urip.host = await apilib.resolveName(this.rootStore, urip.host)
       } catch (e: any) {
         this.error = e.toString()
       }

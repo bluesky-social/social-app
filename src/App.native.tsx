@@ -14,6 +14,7 @@ import {MobileShell} from './view/shell/mobile'
 import {s} from './view/lib/styles'
 import notifee, {EventType} from '@notifee/react-native'
 import {segmentClient} from './lib/segmentClient'
+import * as Toast from './view/com/util/Toast'
 
 const App = observer(() => {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -35,6 +36,9 @@ const App = observer(() => {
       })
       Linking.addEventListener('url', ({url}) => {
         store.nav.handleLink(url)
+      })
+      store.onSessionDropped(() => {
+        Toast.show('Sorry! Your session expired. Please log in again.')
       })
       notifee.onForegroundEvent(async ({type}: {type: EventType}) => {
         store.log.debug('Notifee foreground event', {type})

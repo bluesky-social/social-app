@@ -1,14 +1,4 @@
-/**
- * The environment is a place where services and shared dependencies between
- * models live. They are made available to every model via dependency injection.
- */
-
-// import {ReactNativeStore} from './auth'
-import AtpApi, {
-  sessionClient as SessionAtpApi,
-  AppBskyEmbedImages,
-  AppBskyEmbedExternal,
-} from '@atproto/api'
+import AtpAgent, {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import RNFS from 'react-native-fs'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from '../models/root-store'
@@ -20,8 +10,7 @@ import {Image} from '../../lib/images'
 const TIMEOUT = 10e3 // 10s
 
 export function doPolyfill() {
-  AtpApi.xrpc.fetch = fetchHandler
-  SessionAtpApi.xrpc.fetch = fetchHandler
+  AtpAgent.configure({fetch: fetchHandler})
 }
 
 export interface ExternalEmbedDraft {
@@ -29,6 +18,19 @@ export interface ExternalEmbedDraft {
   isLoading: boolean
   meta?: LinkMeta
   localThumb?: Image
+}
+
+export async function resolveName(store: RootStoreModel, didOrHandle: string) {
+  if (!didOrHandle) {
+    throw new Error('Invalid handle: ""')
+  }
+  if (didOrHandle.startsWith('did:')) {
+    return didOrHandle
+  }
+  const res = await store.api.com.atproto.handle.resolve({
+    handle: didOrHandle,
+  })
+  return res.data.did
 }
 
 export async function post(

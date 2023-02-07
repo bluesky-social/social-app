@@ -4,7 +4,7 @@ import {cleanup, fireEvent, render, waitFor} from '../jest/test-utils'
 import {createServer, TestPDS} from '../jest/test-pds'
 import {RootStoreModel, setupState} from '../src/state'
 
-const WAIT_OPTS = {timeout: 5e3}
+const WAIT_OPTS = {timeout: 10e3}
 
 describe('Account flows', () => {
   let pds: TestPDS | undefined

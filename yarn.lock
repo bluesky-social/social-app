@@ -19,10 +19,10 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@atproto/api@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.0.8.tgz#ff01bb193cd1dad422916572ff595a625fa3cc06"
-  integrity sha512-qEnrzy8vKnt3yEjRCmKUnTvW6GKPB9pB5PP1+qIfUnQ7Sqrb793LtaSXPk9ZnrvtL3fsxYnfUY+7KB2X4osSyA==
+"@atproto/api@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.1.0.tgz#0677cdde0a8b943b904dbc3f7f7357b329eca48a"
+  integrity sha512-+vKAEEgh3GgLfK/QZGAoQKesmhYcCsuiiEzr1miCQAuf7zfTsbX27zHERIuEVT+TqTH98MNbd3uyzF/NAbYMwQ==
   dependencies:
     "@atproto/xrpc" "*"
     typed-emitter "^2.1.0"
@@ -180,10 +180,18 @@
     mime-types "^2.1.35"
     zod "^3.14.2"
 
-"@atproto/xrpc@*", "@atproto/xrpc@^0.0.3":
+"@atproto/xrpc@*":
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.0.3.tgz#510028753d51dffd754ee4f96897b74bcba50bda"
   integrity sha512-dOxtUqUfXOalPhtc1jyIvzCasd+iXwt/Sp+QIAy5qOTCxF9IvXuJ9bNFY49NUPEWlagaRtL8glQhbR307GHcuA==
+  dependencies:
+    "@atproto/lexicon" "*"
+    zod "^3.14.2"
+
+"@atproto/xrpc@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.0.4.tgz#d7dd45cdb21e29b9715ca30eb18320548f293413"
+  integrity sha512-Hxh+GgZx21Zvlb2RMlSlJDd3r3GR0vAS6OOZPW2xzWiVHsetb9ZlFB6D0AeAPj2R+U2UUkmdUR8G3U/nkgnQFA==
   dependencies:
     "@atproto/lexicon" "*"
     zod "^3.14.2"
@@ -9777,6 +9785,11 @@ normalize-url@^6.0.1:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-6.1.0.tgz#40d0885b535deffe3f3147bec877d05fe4c5668a"
   integrity sha512-DlL+XwOy3NxAQ8xuC0okPgK46iuVNAK01YN7RueYBqqFeGsBjV9XmCAzAdgt+667bCl5kPh9EqKKDwnaPG1I7A==
+
+normalize-url@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-8.0.0.tgz#593dbd284f743e8dcf6a5ddf8fadff149c82701a"
+  integrity sha512-uVFpKhj5MheNBJRTiMZ9pE/7hD1QTeEvugSJW/OmLzAp78PB5O6adfMNTvmfKhXBkvCzC+rqifWcVYpGFwTjnw==
 
 npm-run-path@^2.0.0:
   version "2.0.2"

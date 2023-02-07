@@ -235,9 +235,25 @@ export class NotificationsViewModel {
   // =
 
   /**
+   * Nuke all data
+   */
+  clear() {
+    this.rootStore.log.debug('NotificationsModel:clear')
+    this.isLoading = false
+    this.isRefreshing = false
+    this.hasLoaded = false
+    this.error = ''
+    this.hasMore = true
+    this.loadMoreCursor = undefined
+    this.notifications = []
+    this.mostRecentNotification = undefined
+  }
+
+  /**
    * Load for first render
    */
   async setup(isRefreshing = false) {
+    this.rootStore.log.debug('NotificationsModel:setup', {isRefreshing})
     if (isRefreshing) {
       this.isRefreshing = true // set optimistically for UI
     }
@@ -299,7 +315,9 @@ export class NotificationsViewModel {
 
   async getNewMostRecent(): Promise<NotificationsViewItemModel | undefined> {
     let old = this.mostRecentNotification
-    const res = await this.rootStore.api.app.bsky.notification.list({limit: 1})
+    const res = await this.rootStore.api.app.bsky.notification.list({
+      limit: 1,
+    })
     if (
       !res.data.notifications[0] ||
       old?.uri === res.data.notifications[0].uri

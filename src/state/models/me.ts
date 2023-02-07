@@ -29,6 +29,8 @@ export class MeModel {
   }
 
   clear() {
+    this.mainFeed.clear()
+    this.notifications.clear()
     this.did = ''
     this.handle = ''
     this.displayName = ''
@@ -77,9 +79,10 @@ export class MeModel {
 
   async load() {
     const sess = this.rootStore.session
-    if (sess.hasSession && sess.data) {
-      this.did = sess.data.did || ''
-      this.handle = sess.data.handle
+    this.rootStore.log.debug('MeModel:load', {hasSession: sess.hasSession})
+    if (sess.hasSession) {
+      this.did = sess.currentSession?.did || ''
+      this.handle = sess.currentSession?.handle || ''
       const profile = await this.rootStore.api.app.bsky.actor.getProfile({
         actor: this.did,
       })
@@ -94,11 +97,6 @@ export class MeModel {
           this.avatar = ''
         }
       })
-      this.mainFeed.clear()
-      this.mainFeed = new FeedModel(this.rootStore, 'home', {
-        algorithm: 'reverse-chronological',
-      })
-      this.notifications = new NotificationsViewModel(this.rootStore, {})
       await Promise.all([
         this.mainFeed.setup().catch(e => {
           this.rootStore.log.error('Failed to setup main feed model', e)

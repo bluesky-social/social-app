@@ -8,7 +8,7 @@ import PDSServer, {
   ServerConfig as PDSServerConfig,
 } from '@atproto/pds'
 import * as plc from '@atproto/plc'
-import AtpApi, {ServiceClient} from '@atproto/api'
+import AtpAgent from '@atproto/api'
 
 export interface TestUser {
   email: string
@@ -16,7 +16,7 @@ export interface TestUser {
   declarationCid: string
   handle: string
   password: string
-  api: ServiceClient
+  agent: AtpAgent
 }
 
 export interface TestUsers {
@@ -112,11 +112,11 @@ export async function createServer(): Promise<TestPDS> {
 async function genMockData(pdsUrl: string): Promise<TestUsers> {
   const date = dateGen()
 
-  const clients = {
-    loggedout: AtpApi.service(pdsUrl),
-    alice: AtpApi.service(pdsUrl),
-    bob: AtpApi.service(pdsUrl),
-    carla: AtpApi.service(pdsUrl),
+  const agents = {
+    loggedout: new AtpAgent({service: pdsUrl}),
+    alice: new AtpAgent({service: pdsUrl}),
+    bob: new AtpAgent({service: pdsUrl}),
+    carla: new AtpAgent({service: pdsUrl}),
   }
   const users: TestUser[] = [
     {
@@ -125,7 +125,7 @@ async function genMockData(pdsUrl: string): Promise<TestUsers> {
       declarationCid: '',
       handle: 'alice.test',
       password: 'hunter2',
-      api: clients.alice,
+      agent: agents.alice,
     },
     {
       email: 'bob@test.com',
@@ -133,7 +133,7 @@ async function genMockData(pdsUrl: string): Promise<TestUsers> {
       declarationCid: '',
       handle: 'bob.test',
       password: 'hunter2',
-      api: clients.bob,
+      agent: agents.bob,
     },
     {
       email: 'carla@test.com',
@@ -141,7 +141,7 @@ async function genMockData(pdsUrl: string): Promise<TestUsers> {
       declarationCid: '',
       handle: 'carla.test',
       password: 'hunter2',
-      api: clients.carla,
+      agent: agents.carla,
     },
   ]
   const alice = users[0]
@@ -150,18 +150,18 @@ async function genMockData(pdsUrl: string): Promise<TestUsers> {
 
   let _i = 1
   for (const user of users) {
-    const res = await clients.loggedout.com.atproto.account.create({
+    const res = await agents.loggedout.api.com.atproto.account.create({
       email: user.email,
       handle: user.handle,
       password: user.password,
     })
-    user.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
-    const {data: profile} = await user.api.app.bsky.actor.getProfile({
+    user.agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
+    const {data: profile} = await user.agent.api.app.bsky.actor.getProfile({
       actor: user.handle,
     })
     user.did = res.data.did
     user.declarationCid = profile.declaration.cid
-    await user.api.app.bsky.actor.profile.create(
+    await user.agent.api.app.bsky.actor.profile.create(
       {did: user.did},
       {
         displayName: ucfirst(user.handle).slice(0, -5),
@@ -172,7 +172,7 @@ async function genMockData(pdsUrl: string): Promise<TestUsers> {
 
   // everybody follows everybody
   const follow = async (author: TestUser, subject: TestUser) => {
-    await author.api.app.bsky.graph.follow.create(
+    await author.agent.api.app.bsky.graph.follow.create(
       {did: author.did},
       {
         subject: {

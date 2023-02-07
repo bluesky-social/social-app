@@ -1,11 +1,6 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserAvatar} from './UserAvatar'
 import {Text} from './text/Text'
@@ -39,11 +34,6 @@ export const ViewHeader = observer(function ViewHeader({
   }
   const onPressSearch = () => {
     store.nav.navigate('/search')
-  }
-  const onPressReconnect = () => {
-    store.session.connect().catch(e => {
-      store.log.warn('Failed to reconnect to server', e)
-    })
   }
   if (typeof canGoBack === 'undefined') {
     canGoBack = store.nav.tab.canGoBack
@@ -89,25 +79,6 @@ export const ViewHeader = observer(function ViewHeader({
         style={styles.btn}>
         <MagnifyingGlassIcon size={21} strokeWidth={3} style={pal.text} />
       </TouchableOpacity>
-      {!store.session.online ? (
-        <TouchableOpacity style={styles.btn} onPress={onPressReconnect}>
-          {store.session.attemptingConnect ? (
-            <ActivityIndicator />
-          ) : (
-            <>
-              <FontAwesomeIcon icon="signal" style={pal.text} size={16} />
-              <FontAwesomeIcon
-                icon="x"
-                style={[
-                  styles.littleXIcon,
-                  {backgroundColor: pal.colors.background},
-                ]}
-                size={8}
-              />
-            </>
-          )}
-        </TouchableOpacity>
-      ) : undefined}
     </View>
   )
 })

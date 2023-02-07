@@ -1,6 +1,6 @@
 import {autorun} from 'mobx'
 import {Platform} from 'react-native'
-import {sessionClient as SessionAtpApi} from '@atproto/api'
+import {AtpAgent} from '@atproto/api'
 import {RootStoreModel} from './models/root-store'
 import * as libapi from './lib/api'
 import * as storage from './lib/storage'
@@ -19,8 +19,7 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
 
   libapi.doPolyfill()
 
-  const api = SessionAtpApi.service(serviceUri)
-  rootStore = new RootStoreModel(api)
+  rootStore = new RootStoreModel(new AtpAgent({service: serviceUri}))
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
     rootStore.log.debug('Initial hydrate', {hasSession: !!data.session})
@@ -28,16 +27,7 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
   } catch (e: any) {
     rootStore.log.error('Failed to load state from storage', e)
   }
-
-  rootStore.session
-    .connect()
-    .then(() => {
-      rootStore.log.debug('Session connected')
-      return rootStore.fetchStateUpdate()
-    })
-    .catch((e: any) => {
-      rootStore.log.warn('Failed initial connect', e)
-    })
+  rootStore.attemptSessionResumption()
 
   // track changes & save to storage
   autorun(() => {
@@ -47,7 +37,7 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
 
   // periodic state fetch
   setInterval(() => {
-    rootStore.fetchStateUpdate()
+    rootStore.updateSessionState()
   }, STATE_FETCH_INTERVAL)
 
   return rootStore
