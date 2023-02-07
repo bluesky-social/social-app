@@ -29,11 +29,9 @@ export class RootStoreModel {
   linkMetas = new LinkMetasViewModel(this)
 
   constructor(agent: AtpAgent) {
-    this.agent = agent // to keep typescript from whining
-    this.setAgent(agent)
+    this.agent = agent
     makeAutoObservable(this, {
       api: false,
-      resolveName: false,
       serialize: false,
       hydrate: false,
     })
@@ -42,34 +40,6 @@ export class RootStoreModel {
 
   get api() {
     return this.agent.api
-  }
-
-  setAgent(agent: AtpAgent) {
-    this.agent = agent
-  }
-
-  async resolveName(didOrHandle: string) {
-    if (!didOrHandle) {
-      throw new Error('Invalid handle: ""')
-    }
-    if (didOrHandle.startsWith('did:')) {
-      return didOrHandle
-    }
-    const res = await this.api.com.atproto.handle.resolve({
-      handle: didOrHandle,
-    })
-    return res.data.did
-  }
-
-  async fetchStateUpdate() {
-    if (!this.session.hasSession) {
-      return
-    }
-    try {
-      await this.me.fetchNotifications()
-    } catch (e: any) {
-      this.log.error('Failed to fetch latest state', e)
-    }
   }
 
   serialize(): unknown {
@@ -106,11 +76,61 @@ export class RootStoreModel {
     }
   }
 
-  clearAll() {
+  /**
+   * Called during init to resume any stored session.
+   */
+  async attemptSessionResumption() {
+    this.log.debug('RootStoreModel:attemptSessionResumption')
+    try {
+      await this.session.attemptSessionResumption()
+      this.log.debug('Session initialized', {
+        hasSession: this.session.hasSession,
+      })
+      this.updateSessionState()
+    } catch (e: any) {
+      this.log.warn('Failed to initialize session', e)
+    }
+  }
+
+  /**
+   * Called by the session model. Refreshes session-oriented state.
+   */
+  async onSessionChanged(agent: AtpAgent) {
+    this.log.debug('RootStoreModel:onSessionChanged')
+    this.agent = agent
+    this.nav.clear()
+    this.me.clear()
+    await this.me.load()
+  }
+
+  /**
+   * Clears all session-oriented state.
+   */
+  clearAllSessionState() {
+    this.log.debug('RootStoreModel:clearAllSessionState')
     this.session.clear()
     this.nav.clear()
     this.me.clear()
   }
+
+  /**
+   * Periodic poll for new session state.
+   */
+  async updateSessionState() {
+    if (!this.session.hasSession) {
+      return
+    }
+    try {
+      await this.me.fetchNotifications()
+    } catch (e: any) {
+      this.log.error('Failed to fetch latest state', e)
+    }
+  }
+
+  // global event bus
+  // =
+  // - some events need to be passed around between views and models
+  //   in order to keep state in sync; these methods are for that
 
   onPostDeleted(handler: (uri: string) => void): EmitterSubscription {
     return DeviceEventEmitter.addListener('post-deleted', handler)

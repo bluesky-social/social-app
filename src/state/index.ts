@@ -27,18 +27,7 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
   } catch (e: any) {
     rootStore.log.error('Failed to load state from storage', e)
   }
-
-  rootStore.session
-    .setup()
-    .then(() => {
-      rootStore.log.debug('Session connected')
-      if (rootStore.session.hasSession) {
-        return rootStore.fetchStateUpdate()
-      }
-    })
-    .catch((e: any) => {
-      rootStore.log.warn('Failed initial connect', e)
-    })
+  rootStore.attemptSessionResumption()
 
   // track changes & save to storage
   autorun(() => {
@@ -48,7 +37,7 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
 
   // periodic state fetch
   setInterval(() => {
-    rootStore.fetchStateUpdate()
+    rootStore.updateSessionState()
   }, STATE_FETCH_INTERVAL)
 
   return rootStore

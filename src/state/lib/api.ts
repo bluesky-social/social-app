@@ -21,6 +21,19 @@ export interface ExternalEmbedDraft {
   localThumb?: Image
 }
 
+export async function resolveName(store: RootStoreModel, didOrHandle: string) {
+  if (!didOrHandle) {
+    throw new Error('Invalid handle: ""')
+  }
+  if (didOrHandle.startsWith('did:')) {
+    return didOrHandle
+  }
+  const res = await store.api.com.atproto.handle.resolve({
+    handle: didOrHandle,
+  })
+  return res.data.did
+}
+
 export async function post(
   store: RootStoreModel,
   text: string,

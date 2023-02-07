@@ -17,7 +17,7 @@ describe('rootStore', () => {
   })
 
   it('should call the clearAll() resets state correctly', () => {
-    rootStore.clearAll()
+    rootStore.clearAllSessionState()
 
     expect(rootStore.session.data).toEqual(null)
     expect(rootStore.nav.tabs).toEqual([

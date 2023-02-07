@@ -29,6 +29,8 @@ export class MeModel {
   }
 
   clear() {
+    this.mainFeed.clear()
+    this.notifications.clear()
     this.did = ''
     this.handle = ''
     this.displayName = ''
@@ -77,6 +79,7 @@ export class MeModel {
 
   async load() {
     const sess = this.rootStore.session
+    this.rootStore.log.debug('MeModel:load', {hasSession: sess.hasSession})
     if (sess.hasSession) {
       this.did = sess.currentSession?.did || ''
       this.handle = sess.currentSession?.handle || ''
@@ -94,11 +97,6 @@ export class MeModel {
           this.avatar = ''
         }
       })
-      this.mainFeed.clear()
-      this.mainFeed = new FeedModel(this.rootStore, 'home', {
-        algorithm: 'reverse-chronological',
-      })
-      this.notifications = new NotificationsViewModel(this.rootStore, {})
       await Promise.all([
         this.mainFeed.setup().catch(e => {
           this.rootStore.log.error('Failed to setup main feed model', e)

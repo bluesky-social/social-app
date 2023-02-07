@@ -291,7 +291,7 @@ export class PostThreadViewModel {
     const urip = new AtUri(this.params.uri)
     if (!urip.host.startsWith('did:')) {
       try {
-        urip.host = await this.rootStore.resolveName(urip.host)
+        urip.host = await apilib.resolveName(this.rootStore, urip.host)
       } catch (e: any) {
         this.error = e.toString()
       }

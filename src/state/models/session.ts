@@ -104,23 +104,30 @@ export class SessionModel {
   /**
    * Attempts to resume the previous session loaded from storage
    */
-  async setup() {
+  async attemptSessionResumption() {
     const sess = this.currentSession
     if (sess) {
+      this.rootStore.log.debug(
+        'SessionModel:attemptSessionResumption found stored session',
+      )
       return this.resumeSession(sess)
+    } else {
+      this.rootStore.log.debug(
+        'SessionModel:attemptSessionResumption has no session to resume',
+      )
     }
   }
 
   /**
    * Sets the active session
    */
-  switchActiveSession(agent: AtpAgent, did: string) {
+  setActiveSession(agent: AtpAgent, did: string) {
+    this.rootStore.log.debug('SessionModel:setActiveSession')
     this.data = {
       service: agent.service.toString(),
       did,
     }
-    this.rootStore.setAgent(agent)
-    this.rootStore.me.load()
+    this.rootStore.onSessionChanged(agent)
   }
 
   /**
@@ -132,6 +139,11 @@ export class SessionModel {
     session?: AtpSessionData,
     addedInfo?: AdditionalAccountData,
   ) {
+    this.rootStore.log.debug('SessionModel:persistSession', {
+      service,
+      did,
+      hasSession: !!session,
+    })
     const existingAccount = this.accounts.find(
       account => account.service === service && account.did === did,
     )
@@ -162,6 +174,7 @@ export class SessionModel {
    * Clears any session tokens from the accounts; used on logout.
    */
   private clearSessionTokens() {
+    this.rootStore.log.debug('SessionModel:clearSessionTokens')
     this.accounts = this.accounts.map(acct => ({
       service: acct.service,
       handle: acct.handle,
@@ -199,7 +212,11 @@ export class SessionModel {
    * Attempt to resume a session that we still have access tokens for.
    */
   async resumeSession(account: AccountData): Promise<boolean> {
+    this.rootStore.log.debug('SessionModel:resumeSession')
     if (!(account.accessJwt && account.refreshJwt && account.service)) {
+      this.rootStore.log.debug(
+        'SessionModel:resumeSession aborted due to lack of access tokens',
+      )
       return false
     }
 
@@ -223,10 +240,14 @@ export class SessionModel {
         agent.session,
         addedInfo,
       )
-    } catch {
+      this.rootStore.log.debug('SessionModel:resumeSession succeeded')
+    } catch (e: any) {
+      this.rootStore.log.debug('SessionModel:resumeSession failed', {
+        error: e.toString(),
+      })
       return false
     }
-    this.switchActiveSession(agent, account.did)
+    this.setActiveSession(agent, account.did)
     return true
   }
 
@@ -242,6 +263,7 @@ export class SessionModel {
     identifier: string
     password: string
   }) {
+    this.rootStore.log.debug('SessionModel:login')
     const agent = new AtpAgent({service})
     await agent.login({identifier, password})
     if (!agent.session) {
@@ -253,7 +275,8 @@ export class SessionModel {
     agent.setPersistSessionHandler((sess?: AtpSessionData) => {
       this.persistSession(service, did, sess)
     })
-    this.switchActiveSession(agent, did)
+    this.setActiveSession(agent, did)
+    this.rootStore.log.debug('SessionModel:login succeeded')
   }
 
   async createAccount({
@@ -269,6 +292,7 @@ export class SessionModel {
     handle: string
     inviteCode?: string
   }) {
+    this.rootStore.log.debug('SessionModel:createAccount')
     const agent = new AtpAgent({service})
     await agent.createAccount({
       handle,
@@ -285,14 +309,16 @@ export class SessionModel {
     agent.setPersistSessionHandler((sess?: AtpSessionData) => {
       this.persistSession(service, did, sess)
     })
-    this.switchActiveSession(agent, did)
+    this.setActiveSession(agent, did)
     this.rootStore.onboard.start()
+    this.rootStore.log.debug('SessionModel:createAccount succeeded')
   }
 
   /**
    * Close all sessions across all accounts.
    */
   async logout() {
+    this.rootStore.log.debug('SessionModel:logout')
     // TODO
     // need to evaluate why deleting the session has caused errors at times
     // -prf
@@ -305,6 +331,6 @@ export class SessionModel {
       })
     }*/
     this.clearSessionTokens()
-    this.rootStore.clearAll()
+    this.rootStore.clearAllSessionState()
   }
 }

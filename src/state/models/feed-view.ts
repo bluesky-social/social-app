@@ -258,6 +258,7 @@ export class FeedModel {
    * Nuke all data
    */
   clear() {
+    this.rootStore.log.debug('FeedModel:clear')
     this.isLoading = false
     this.isRefreshing = false
     this.hasNewLatest = false
@@ -273,6 +274,7 @@ export class FeedModel {
    * Load for first render
    */
   async setup(isRefreshing = false) {
+    this.rootStore.log.debug('FeedModel:setup', {isRefreshing})
     if (isRefreshing) {
       this.isRefreshing = true // set optimistically for UI
     }
