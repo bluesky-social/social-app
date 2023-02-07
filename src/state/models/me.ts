@@ -77,9 +77,9 @@ export class MeModel {
 
   async load() {
     const sess = this.rootStore.session
-    if (sess.hasSession && sess.data) {
-      this.did = sess.data.did || ''
-      this.handle = sess.data.handle
+    if (sess.hasSession) {
+      this.did = sess.currentSession?.did || ''
+      this.handle = sess.currentSession?.handle || ''
       const profile = await this.rootStore.api.app.bsky.actor.getProfile({
         actor: this.did,
       })

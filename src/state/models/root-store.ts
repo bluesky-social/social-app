@@ -3,10 +3,7 @@
  */
 
 import {makeAutoObservable} from 'mobx'
-import {
-  sessionClient as SessionAtpApi,
-  SessionServiceClient,
-} from '@atproto/api'
+import {AtpAgent} from '../lib/atp-agent'
 import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
 import BackgroundFetch from 'react-native-background-fetch'
@@ -19,10 +16,9 @@ import {ProfilesViewModel} from './profiles-view'
 import {LinkMetasViewModel} from './link-metas-view'
 import {MeModel} from './me'
 import {OnboardModel} from './onboard'
-import {isNetworkError} from '../../lib/errors'
 
 export class RootStoreModel {
-  api: SessionServiceClient
+  agent: AtpAgent
   log = new LogModel()
   session = new SessionModel(this)
   nav = new NavigationModel()
@@ -32,9 +28,9 @@ export class RootStoreModel {
   profiles = new ProfilesViewModel(this)
   linkMetas = new LinkMetasViewModel(this)
 
-  constructor(api: SessionServiceClient) {
-    this.api = api // to keep typescript from whining
-    this.setAPI(api)
+  constructor(agent: AtpAgent) {
+    this.agent = agent // to keep typescript from whining
+    this.setAgent(agent)
     makeAutoObservable(this, {
       api: false,
       resolveName: false,
@@ -44,22 +40,12 @@ export class RootStoreModel {
     this.initBgFetch()
   }
 
-  setAPI(api: SessionServiceClient) {
-    if (this.api) {
-      this.api.sessionManager.removeAllListeners('session')
-    }
-    this.api = api
-    this.api.sessionManager.on('session', this.onSessionChange.bind(this))
+  get api() {
+    return this.agent.api
   }
 
-  onSessionChange() {
-    if (!this.api.sessionManager.session && this.session.hasSession) {
-      this.log.debug('Session invalidated, logging the user out')
-      this.session.clear()
-    } else if (this.api.sessionManager.session) {
-      this.log.debug('Session refreshed, updating auth tokens')
-      this.session.updateAuthTokens(this.api.sessionManager.session)
-    }
+  setAgent(agent: AtpAgent) {
+    this.agent = agent
   }
 
   async resolveName(didOrHandle: string) {
@@ -69,7 +55,9 @@ export class RootStoreModel {
     if (didOrHandle.startsWith('did:')) {
       return didOrHandle
     }
-    const res = await this.api.com.atproto.handle.resolve({handle: didOrHandle})
+    const res = await this.api.com.atproto.handle.resolve({
+      handle: didOrHandle,
+    })
     return res.data.did
   }
 
@@ -78,14 +66,8 @@ export class RootStoreModel {
       return
     }
     try {
-      if (!this.session.online) {
-        await this.session.connect()
-      }
       await this.me.fetchNotifications()
     } catch (e: any) {
-      if (isNetworkError(e)) {
-        this.session.setOnline(false) // connection lost
-      }
       this.log.error('Failed to fetch latest state', e)
     }
   }
@@ -172,7 +154,7 @@ export class RootStoreModel {
 }
 
 const throwawayInst = new RootStoreModel(
-  SessionAtpApi.service('http://localhost'),
+  new AtpAgent({service: 'http://localhost'}),
 ) // this will be replaced by the loader, we just need to supply a value at init
 const RootStoreContext = createContext<RootStoreModel>(throwawayInst)
 export const RootStoreProvider = RootStoreContext.Provider

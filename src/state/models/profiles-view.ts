@@ -31,7 +31,9 @@ export class ProfilesViewModel {
       }
     }
     try {
-      const promise = this.rootStore.api.app.bsky.actor.getProfile({actor: did})
+      const promise = this.rootStore.api.app.bsky.actor.getProfile({
+        actor: did,
+      })
       this.cache.set(did, promise)
       const res = await promise
       this.cache.set(did, res)

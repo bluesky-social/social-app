@@ -30,7 +30,7 @@ export function UserAvatar({
   avatar?: string | null
   onSelectNewAvatar?: (img: PickedImage) => void
 }) {
-  const initials = getInitials(displayName || handle)
+  const initials = getInitials(displayName || handle || '')
   const pal = usePalette('default')
   const renderSvg = (svgSize: number, svgInitials: string) => (
     <Svg width={svgSize} height={svgSize} viewBox="0 0 100 100">

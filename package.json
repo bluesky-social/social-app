@@ -43,6 +43,7 @@
     "lru_map": "^0.4.1",
     "mobx": "^6.6.1",
     "mobx-react-lite": "^3.4.0",
+    "normalize-url": "^8.0.0",
     "react": "18.2.0",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "17.0.2",
@@ -128,7 +129,7 @@
       "node"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|rollbar-react-native|@fortawesome|@react-native|@react-navigation)"
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|rollbar-react-native|@fortawesome|@react-native|@react-navigation|normalize-url)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",

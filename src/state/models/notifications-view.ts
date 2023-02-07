@@ -299,7 +299,9 @@ export class NotificationsViewModel {
 
   async getNewMostRecent(): Promise<NotificationsViewItemModel | undefined> {
     let old = this.mostRecentNotification
-    const res = await this.rootStore.api.app.bsky.notification.list({limit: 1})
+    const res = await this.rootStore.api.app.bsky.notification.list({
+      limit: 1,
+    })
     if (
       !res.data.notifications[0] ||
       old?.uri === res.data.notifications[0].uri
