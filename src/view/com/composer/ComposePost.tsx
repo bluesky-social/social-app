@@ -275,6 +275,11 @@ export const ComposePost = observer(function ComposePost({
         imageCount: selectedPhotos.length,
       })
     } catch (e: any) {
+      setExtLink({
+        ...extLink,
+        isLoading: true,
+        localThumb: undefined,
+      } as apilib.ExternalEmbedDraft)
       setError(cleanError(e.message))
       setIsProcessing(false)
       return
