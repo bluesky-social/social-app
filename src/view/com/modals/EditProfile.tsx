@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import RNFS, {CachesDirectoryPath} from 'react-native-fs'
 import LinearGradient from 'react-native-linear-gradient'
 import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {Image as PickedImage} from 'react-native-image-crop-picker'
@@ -20,7 +21,7 @@ import {
   MAX_DESCRIPTION,
 } from '../../../lib/strings'
 import {isNetworkError} from '../../../lib/errors'
-import {compressIfNeeded} from '../../../lib/images'
+import {compressIfNeeded, moveToPremanantPath} from '../../../lib/images'
 import {UserBanner} from '../util/UserBanner'
 import {UserAvatar} from '../util/UserAvatar'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -63,6 +64,7 @@ export function Component({
     track('EditProfile:AvatarSelected')
     try {
       const finalImg = await compressIfNeeded(img, 1000000)
+
       setNewUserAvatar(finalImg)
       setUserAvatar(finalImg.path)
     } catch (e: any) {
@@ -86,6 +88,7 @@ export function Component({
       setError('')
     }
     try {
+      // throw new Error('test')
       await profileView.updateProfile(
         {
           displayName,
@@ -94,8 +97,10 @@ export function Component({
         newUserAvatar,
         newUserBanner,
       )
+
       Toast.show('Profile updated')
       onUpdate?.()
+
       store.shell.closeModal()
     } catch (e: any) {
       if (isNetworkError(e)) {
