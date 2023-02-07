@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import RNFS, {CachesDirectoryPath} from 'react-native-fs'
 import LinearGradient from 'react-native-linear-gradient'
 import {BottomSheetScrollView, BottomSheetTextInput} from '@gorhom/bottom-sheet'
 import {Image as PickedImage} from 'react-native-image-crop-picker'
@@ -21,7 +20,7 @@ import {
   MAX_DESCRIPTION,
 } from '../../../lib/strings'
 import {isNetworkError} from '../../../lib/errors'
-import {compressIfNeeded, moveToPremanantPath} from '../../../lib/images'
+import {compressIfNeeded} from '../../../lib/images'
 import {UserBanner} from '../util/UserBanner'
 import {UserAvatar} from '../util/UserAvatar'
 import {usePalette} from '../../lib/hooks/usePalette'
