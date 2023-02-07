@@ -36,6 +36,8 @@ export const PostThreadItem = observer(function PostThreadItem({
   const record = item.postRecord
   const hasEngagement = item.post.upvoteCount || item.post.repostCount
 
+  const itemUri = item.post.uri
+  const itemCid = item.post.cid
   const itemHref = useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}`
@@ -148,6 +150,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                 <View style={s.flex1} />
                 <PostDropdownBtn
                   style={styles.metaItem}
+                  itemUri={itemUri}
+                  itemCid={itemCid}
                   itemHref={itemHref}
                   itemTitle={itemTitle}
                   isAuthor={item.post.author.did === store.me.did}
@@ -227,6 +231,8 @@ export const PostThreadItem = observer(function PostThreadItem({
             <View style={[s.pl10, s.pb5]}>
               <PostCtrls
                 big
+                itemUri={itemUri}
+                itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
                 isAuthor={item.post.author.did === store.me.did}
@@ -308,6 +314,8 @@ export const PostThreadItem = observer(function PostThreadItem({
               ) : undefined}
               <PostEmbeds embed={item.post.embed} style={s.mb10} />
               <PostCtrls
+                itemUri={itemUri}
+                itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
                 isAuthor={item.post.author.did === store.me.did}

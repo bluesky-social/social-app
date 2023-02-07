@@ -39,7 +39,7 @@ export class ServerInputModal {
 export class ReportPostModal {
   name = 'report-post'
 
-  constructor(public postUrl: string) {
+  constructor(public postUri: string, public postCid: string) {
     makeAutoObservable(this)
   }
 }

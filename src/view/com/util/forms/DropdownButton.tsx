@@ -100,6 +100,8 @@ export function DropdownButton({
 export function PostDropdownBtn({
   style,
   children,
+  itemUri,
+  itemCid,
   itemHref,
   isAuthor,
   onCopyPostText,
@@ -107,6 +109,8 @@ export function PostDropdownBtn({
 }: {
   style?: StyleProp<ViewStyle>
   children?: React.ReactNode
+  itemUri: string
+  itemCid: string
   itemHref: string
   itemTitle: string
   isAuthor: boolean
@@ -143,7 +147,7 @@ export function PostDropdownBtn({
       icon: 'circle-exclamation',
       label: 'Report post',
       onPress() {
-        store.shell.openModal(new ReportPostModal(itemHref))
+        store.shell.openModal(new ReportPostModal(itemUri, itemCid))
       },
     },
     isAuthor
