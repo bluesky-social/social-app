@@ -274,7 +274,6 @@ export const ComposePost = observer(function ComposePost({
       track('Create Post', {
         imageCount: selectedPhotos.length,
       })
-      // Uncomment to debug retries on failed posts
       // throw new Error('DEBUG: failed post')
     } catch (e: any) {
       setExtLink({
