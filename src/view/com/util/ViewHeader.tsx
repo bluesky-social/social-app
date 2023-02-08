@@ -4,7 +4,6 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserAvatar} from './UserAvatar'
 import {Text} from './text/Text'
-import {MagnifyingGlassIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {colors} from '../../lib/styles'
@@ -31,9 +30,6 @@ export const ViewHeader = observer(function ViewHeader({
   const onPressMenu = () => {
     track('ViewHeader:MenuButtonClicked')
     store.shell.setMainMenuOpen(true)
-  }
-  const onPressSearch = () => {
-    store.nav.navigate('/search')
   }
   if (typeof canGoBack === 'undefined') {
     canGoBack = store.nav.tab.canGoBack
@@ -73,12 +69,6 @@ export const ViewHeader = observer(function ViewHeader({
           </Text>
         ) : undefined}
       </View>
-      <TouchableOpacity
-        onPress={onPressSearch}
-        hitSlop={HITSLOP}
-        style={styles.btn}>
-        <MagnifyingGlassIcon size={21} strokeWidth={3} style={pal.text} />
-      </TouchableOpacity>
     </View>
   )
 })
