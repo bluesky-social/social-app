@@ -9,16 +9,13 @@ import {usePalette} from '../../lib/hooks/usePalette'
 import {colors} from '../../lib/styles'
 import {useAnalytics} from '@segment/analytics-react-native'
 
-const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 
 export const ViewHeader = observer(function ViewHeader({
   title,
-  subtitle,
   canGoBack,
 }: {
   title: string
-  subtitle?: string
   canGoBack?: boolean
 }) {
   const pal = usePalette('default')
@@ -60,14 +57,6 @@ export const ViewHeader = observer(function ViewHeader({
         <Text type="title" style={[pal.text, styles.title]}>
           {title}
         </Text>
-        {subtitle ? (
-          <Text
-            type="title-sm"
-            style={[styles.subtitle, pal.textLight]}
-            numberOfLines={1}>
-            {subtitle}
-          </Text>
-        ) : undefined}
       </View>
     </View>
   )
@@ -89,11 +78,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-  },
-  subtitle: {
-    marginLeft: 4,
-    maxWidth: 200,
-    fontWeight: 'normal',
   },
 
   backBtn: {
