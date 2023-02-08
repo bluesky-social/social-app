@@ -78,8 +78,14 @@ describe('downloadAndResize', () => {
   })
 
   it('should return undefined for unsupported file type', async () => {
+    const mockedFetch = RNFetchBlob.fetch as jest.Mock
+    mockedFetch.mockResolvedValueOnce({
+      path: jest.fn().mockReturnValue('file://downloaded-image'),
+      flush: jest.fn(),
+    })
+
     const opts: DownloadAndResizeOpts = {
-      uri: 'https://example.com/image.bmp',
+      uri: 'https://example.com/image',
       width: 100,
       height: 100,
       maxSize: 500000,
@@ -88,6 +94,25 @@ describe('downloadAndResize', () => {
     }
 
     const result = await downloadAndResize(opts)
-    expect(result).toBeUndefined()
+    expect(result).toEqual(mockResizedImage)
+    expect(RNFetchBlob.config).toHaveBeenCalledWith({
+      fileCache: true,
+      appendExt: 'jpeg',
+    })
+    expect(RNFetchBlob.fetch).toHaveBeenCalledWith(
+      'GET',
+      'https://example.com/image',
+    )
+    expect(ImageResizer.createResizedImage).toHaveBeenCalledWith(
+      'file://downloaded-image',
+      100,
+      100,
+      'JPEG',
+      100,
+      undefined,
+      undefined,
+      undefined,
+      {mode: 'cover'},
+    )
   })
 })
