@@ -82,7 +82,7 @@ describe('extractHtmlMeta', () => {
     expect(output).toEqual(expectedOutput)
   })
 
-  it.only('extracts avatar from a youtube channel', () => {
+  it('extracts avatar from a youtube channel', () => {
     const input = youtubeChannelHtml
     const expectedOutput = {
       title: 'penguinz0',
