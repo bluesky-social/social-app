@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
-import _omit from 'lodash.omit'
 import {UserAvatar} from '../com/util/UserAvatar'
 import {Text} from '../com/util/text/Text'
 import {ScreenParams} from '../routes'
@@ -50,7 +49,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
       autocompleteView.setup()
       store.nav.setTitle(navIdx, 'Search')
     }
-  }, [store, visible, name, navIdx, autocompleteView])
+  }, [store, visible, name, navIdx, autocompleteView, lastRenderTime])
 
   const onPressMenu = () => {
     track('ViewHeader:MenuButtonClicked')
@@ -121,7 +120,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
         <View style={styles.outputContainer}>
           {query && autocompleteView.searchRes.length ? (
             <ScrollView testID="searchScrollView" onScroll={Keyboard.dismiss}>
-              {autocompleteView.searchRes.map((item, i) => (
+              {autocompleteView.searchRes.map(item => (
                 <ProfileCard
                   key={item.did}
                   handle={item.handle}

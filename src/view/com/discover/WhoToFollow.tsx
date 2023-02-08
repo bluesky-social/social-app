@@ -66,7 +66,7 @@ export const WhoToFollow = observer(() => {
       {suggestedActorsView.hasContent && (
         <>
           <View style={[pal.border, styles.bottomBorder]}>
-            {suggestedActorsView.suggestions.map((item, i) => (
+            {suggestedActorsView.suggestions.map(item => (
               <ProfileCard
                 key={item.did}
                 handle={item.handle}

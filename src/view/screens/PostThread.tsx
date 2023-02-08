@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useMemo} from 'react'
 import {View} from 'react-native'
 import {makeRecordUri} from '../../lib/strings'
 import {ViewHeader} from '../com/util/ViewHeader'
