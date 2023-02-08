@@ -569,11 +569,46 @@ function preprocessFeed(feed: FeedViewPost[]): FeedViewPostWithThreadMeta[] {
     reorg.unshift(item)
   }
 
-  // phase two: identify the positions of the threads
+  // phase two: reorder the feed so that the timestamp of the
+  // last post in a thread establishes its ordering
+  let threadSlices: Slice[] = identifyThreadSlices(reorg)
+  for (const slice of threadSlices) {
+    const removed: FeedViewPostWithThreadMeta[] = reorg.splice(
+      slice.index,
+      slice.length,
+    )
+    const targetDate = new Date(ts(removed[removed.length - 1]))
+    let newIndex = reorg.findIndex(item => new Date(ts(item)) < targetDate)
+    if (newIndex === -1) {
+      newIndex = reorg.length
+    }
+    reorg.splice(newIndex, 0, ...removed)
+    slice.index = newIndex
+  }
+
+  // phase three: compress any threads that are longer than 3 posts
+  let removedCount = 0
+  // phase 2 moved posts around, so we need to re-identify the slice indices
+  threadSlices = identifyThreadSlices(reorg)
+  for (const slice of threadSlices) {
+    if (slice.length > 3) {
+      reorg.splice(slice.index - removedCount + 1, slice.length - 3)
+      if (reorg[slice.index - removedCount]) {
+        // ^ sanity check
+        reorg[slice.index - removedCount]._isThreadChildElided = true
+      }
+      removedCount += slice.length - 3
+    }
+  }
+
+  return reorg
+}
+
+function identifyThreadSlices(feed: FeedViewPost[]): Slice[] {
   let activeSlice = -1
   let threadSlices: Slice[] = []
-  for (let i = 0; i < reorg.length; i++) {
-    const item = reorg[i] as FeedViewPostWithThreadMeta
+  for (let i = 0; i < feed.length; i++) {
+    const item = feed[i] as FeedViewPostWithThreadMeta
     if (activeSlice === -1) {
       if (item._isThreadParent) {
         activeSlice = i
@@ -590,39 +625,9 @@ function preprocessFeed(feed: FeedViewPost[]): FeedViewPostWithThreadMeta[] {
     }
   }
   if (activeSlice !== -1) {
-    threadSlices.push({index: activeSlice, length: reorg.length - activeSlice})
+    threadSlices.push({index: activeSlice, length: feed.length - activeSlice})
   }
-
-  // phase three: reorder the feed so that the timestamp of the
-  // last post in a thread establishes its ordering
-  for (const slice of threadSlices) {
-    const removed: FeedViewPostWithThreadMeta[] = reorg.splice(
-      slice.index,
-      slice.length,
-    )
-    const targetDate = new Date(ts(removed[removed.length - 1]))
-    let newIndex = reorg.findIndex(item => new Date(ts(item)) < targetDate)
-    if (newIndex === -1) {
-      newIndex = reorg.length
-    }
-    reorg.splice(newIndex, 0, ...removed)
-    slice.index = newIndex
-  }
-
-  // phase four: compress any threads that are longer than 3 posts
-  let removedCount = 0
-  for (const slice of threadSlices) {
-    if (slice.length > 3) {
-      reorg.splice(slice.index - removedCount + 1, slice.length - 3)
-      if (reorg[slice.index - removedCount]) {
-        // ^ sanity check
-        reorg[slice.index - removedCount]._isThreadChildElided = true
-      }
-      removedCount += slice.length - 3
-    }
-  }
-
-  return reorg
+  return threadSlices
 }
 
 // WARNING: mutates `feed`
