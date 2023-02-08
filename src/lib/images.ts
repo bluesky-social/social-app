@@ -23,16 +23,12 @@ export interface Image {
 }
 
 export async function downloadAndResize(opts: DownloadAndResizeOpts) {
-  let appendExt
+  let appendExt = 'jpeg'
   try {
     const urip = new URL(opts.uri)
     const ext = urip.pathname.split('.').pop()
-    if (ext === 'jpg' || ext === 'jpeg') {
-      appendExt = 'jpeg'
-    } else if (ext === 'png') {
+    if (ext === 'png') {
       appendExt = 'png'
-    } else {
-      return
     }
   } catch (e: any) {
     console.error('Invalid URI', opts.uri, e)
