@@ -187,10 +187,11 @@ export class FeedModel {
   hasMore = true
   loadMoreCursor: string | undefined
   pollCursor: string | undefined
-  _loadPromise: Promise<void> | undefined
-  _loadMorePromise: Promise<void> | undefined
-  _loadLatestPromise: Promise<void> | undefined
-  _updatePromise: Promise<void> | undefined
+
+  private _loadPromise: Promise<void> | undefined
+  private _loadMorePromise: Promise<void> | undefined
+  private _loadLatestPromise: Promise<void> | undefined
+  private _updatePromise: Promise<void> | undefined
 
   // data
   feed: FeedItemModel[] = []
@@ -206,10 +207,6 @@ export class FeedModel {
         rootStore: false,
         params: false,
         loadMoreCursor: false,
-        _loadPromise: false,
-        _loadMorePromise: false,
-        _loadLatestPromise: false,
-        _updatePromise: false,
       },
       {autoBind: true},
     )
@@ -284,8 +281,11 @@ export class FeedModel {
     await this._pendingWork()
     this.setHasNewLatest(false)
     this._loadPromise = this._initialLoad(isRefreshing)
-    await this._loadPromise
-    this._loadPromise = undefined
+    try {
+      await this._loadPromise
+    } finally {
+      this._loadPromise = undefined
+    }
   }
 
   /**
@@ -312,8 +312,11 @@ export class FeedModel {
     }
     await this._pendingWork()
     this._loadMorePromise = this._loadMore()
-    await this._loadMorePromise
-    this._loadMorePromise = undefined
+    try {
+      await this._loadMorePromise
+    } finally {
+      this._loadMorePromise = undefined
+    }
   }
 
   /**
@@ -326,8 +329,11 @@ export class FeedModel {
     await this._pendingWork()
     this.setHasNewLatest(false)
     this._loadLatestPromise = this._loadLatest()
-    await this._loadLatestPromise
-    this._loadLatestPromise = undefined
+    try {
+      await this._loadLatestPromise
+    } finally {
+      this._loadLatestPromise = undefined
+    }
   }
 
   /**
@@ -339,8 +345,11 @@ export class FeedModel {
     }
     await this._pendingWork()
     this._updatePromise = this._update()
-    await this._updatePromise
-    this._updatePromise = undefined
+    try {
+      await this._updatePromise
+    } finally {
+      this._updatePromise = undefined
+    }
   }
 
   /**

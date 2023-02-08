@@ -68,8 +68,11 @@ export class UserFollowsViewModel {
       return this._loadMorePromise
     }
     this._loadMorePromise = this._load(isRefreshing)
-    await this._loadMorePromise
-    this._loadMorePromise = undefined
+    try {
+      await this._loadMorePromise
+    } finally {
+      this._loadMorePromise = undefined
+    }
   }
 
   // state transitions
