@@ -5,6 +5,7 @@ import {
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {cleanError} from '../../lib/strings'
+import {bundleAsync} from '../../lib/async/bundle'
 
 const PAGE_SIZE = 30
 
@@ -19,7 +20,6 @@ export class UserFollowsViewModel {
   params: GetFollows.QueryParams
   hasMore = true
   loadMoreCursor?: string
-  private _loadMorePromise: Promise<void> | undefined
 
   // data
   subject: ActorRef.WithInfo = {
@@ -63,17 +63,27 @@ export class UserFollowsViewModel {
     return this.loadMore(true)
   }
 
-  async loadMore(isRefreshing = false) {
-    if (this._loadMorePromise) {
-      return this._loadMorePromise
+  loadMore = bundleAsync(async (replace: boolean = false) => {
+    if (!replace && !this.hasMore) {
+      return
     }
-    this._loadMorePromise = this._load(isRefreshing)
+    this._xLoading(replace)
     try {
-      await this._loadMorePromise
-    } finally {
-      this._loadMorePromise = undefined
+      const params = Object.assign({}, this.params, {
+        limit: PAGE_SIZE,
+        before: replace ? undefined : this.loadMoreCursor,
+      })
+      const res = await this.rootStore.api.app.bsky.graph.getFollows(params)
+      if (replace) {
+        this._replaceAll(res)
+      } else {
+        this._appendAll(res)
+      }
+      this._xIdle()
+    } catch (e: any) {
+      this._xIdle(e)
     }
-  }
+  })
 
   // state transitions
   // =
@@ -94,30 +104,8 @@ export class UserFollowsViewModel {
     }
   }
 
-  // loader functions
+  // helper functions
   // =
-
-  private async _load(replace = false) {
-    if (!replace && !this.hasMore) {
-      return
-    }
-    this._xLoading(replace)
-    try {
-      const params = Object.assign({}, this.params, {
-        limit: PAGE_SIZE,
-        before: replace ? undefined : this.loadMoreCursor,
-      })
-      const res = await this.rootStore.api.app.bsky.graph.getFollows(params)
-      if (replace) {
-        this._replaceAll(res)
-      } else {
-        this._appendAll(res)
-      }
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
-    }
-  }
 
   private _replaceAll(res: GetFollows.Response) {
     this.follows = []

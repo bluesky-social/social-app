@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
 import {AppBskyFeedGetRepostedBy as GetRepostedBy} from '@atproto/api'
 import {RootStoreModel} from './root-store'
+import {bundleAsync} from '../../lib/async/bundle'
 import {cleanError} from '../../lib/strings'
 import * as apilib from '../lib/api'
 
@@ -19,7 +20,6 @@ export class RepostedByViewModel {
   params: GetRepostedBy.QueryParams
   hasMore = true
   loadMoreCursor?: string
-  private _loadMorePromise: Promise<void> | undefined
 
   // data
   uri: string = ''
@@ -59,55 +59,7 @@ export class RepostedByViewModel {
     return this.loadMore(true)
   }
 
-  async loadMore(isRefreshing = false) {
-    if (this._loadMorePromise) {
-      return this._loadMorePromise
-    }
-    this._loadMorePromise = this._load(isRefreshing)
-    try {
-      await this._loadMorePromise
-    } finally {
-      this._loadMorePromise = undefined
-    }
-  }
-
-  // state transitions
-  // =
-
-  private _xLoading(isRefreshing = false) {
-    this.isLoading = true
-    this.isRefreshing = isRefreshing
-    this.error = ''
-  }
-
-  private _xIdle(err?: any) {
-    this.isLoading = false
-    this.isRefreshing = false
-    this.hasLoaded = true
-    this.error = cleanError(err)
-    if (err) {
-      this.rootStore.log.error('Failed to fetch reposted by view', err)
-    }
-  }
-
-  // loader functions
-  // =
-
-  private async _resolveUri() {
-    const urip = new AtUri(this.params.uri)
-    if (!urip.host.startsWith('did:')) {
-      try {
-        urip.host = await apilib.resolveName(this.rootStore, urip.host)
-      } catch (e: any) {
-        this.error = e.toString()
-      }
-    }
-    runInAction(() => {
-      this.resolvedUri = urip.toString()
-    })
-  }
-
-  private async _load(replace = false) {
+  loadMore = bundleAsync(async (replace: boolean = false) => {
     this._xLoading(replace)
     try {
       if (!this.resolvedUri) {
@@ -128,6 +80,42 @@ export class RepostedByViewModel {
     } catch (e: any) {
       this._xIdle(e)
     }
+  })
+
+  // state transitions
+  // =
+
+  private _xLoading(isRefreshing = false) {
+    this.isLoading = true
+    this.isRefreshing = isRefreshing
+    this.error = ''
+  }
+
+  private _xIdle(err?: any) {
+    this.isLoading = false
+    this.isRefreshing = false
+    this.hasLoaded = true
+    this.error = cleanError(err)
+    if (err) {
+      this.rootStore.log.error('Failed to fetch reposted by view', err)
+    }
+  }
+
+  // helper functions
+  // =
+
+  private async _resolveUri() {
+    const urip = new AtUri(this.params.uri)
+    if (!urip.host.startsWith('did:')) {
+      try {
+        urip.host = await apilib.resolveName(this.rootStore, urip.host)
+      } catch (e: any) {
+        this.error = e.toString()
+      }
+    }
+    runInAction(() => {
+      this.resolvedUri = urip.toString()
+    })
   }
 
   private _replaceAll(res: GetRepostedBy.Response) {
