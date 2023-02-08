@@ -235,6 +235,7 @@ const styles = StyleSheet.create({
 
   actor: {
     borderTopWidth: 1,
+    paddingHorizontal: 6,
   },
   actorMeta: {
     flexDirection: 'row',

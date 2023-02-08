@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {ViewHeader} from '../com/util/ViewHeader'
 import {SuggestedFollows} from '../com/discover/SuggestedFollows'
 import {UserAvatar} from '../com/util/UserAvatar'
 import {Text} from '../com/util/text/Text'
@@ -17,10 +16,14 @@ import {UserAutocompleteViewModel} from '../../state/models/user-autocomplete-vi
 import {s} from '../lib/styles'
 import {MagnifyingGlassIcon} from '../lib/icons'
 import {usePalette} from '../lib/hooks/usePalette'
+import {useAnalytics} from '@segment/analytics-react-native'
+
+const MENU_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 
 export const Search = ({navIdx, visible, params}: ScreenParams) => {
   const pal = usePalette('default')
   const store = useStores()
+  const {track} = useAnalytics()
   const textInput = useRef<TextInput>(null)
   const [query, setQuery] = useState<string>('')
   const autocompleteView = useMemo<UserAutocompleteViewModel>(
@@ -36,6 +39,11 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
       store.nav.setTitle(navIdx, 'Search')
     }
   }, [store, visible, name, navIdx, autocompleteView])
+
+  const onPressMenu = () => {
+    track('ViewHeader:MenuButtonClicked')
+    store.shell.setMainMenuOpen(true)
+  }
 
   const onChangeQuery = (text: string) => {
     setQuery(text)
@@ -53,19 +61,36 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
 
   return (
     <View style={[pal.view, styles.container]}>
-      <ViewHeader title="Search" />
-      <View style={[pal.view, pal.border, styles.inputContainer]}>
-        <MagnifyingGlassIcon style={[pal.text, styles.inputIcon]} />
-        <TextInput
-          testID="searchTextInput"
-          ref={textInput}
-          placeholder="Type your query here..."
-          placeholderTextColor={pal.colors.textLight}
-          selectTextOnFocus
-          returnKeyType="search"
-          style={[pal.text, styles.input]}
-          onChangeText={onChangeQuery}
-        />
+      <View style={[pal.view, pal.border, styles.header]}>
+        <TouchableOpacity
+          testID="viewHeaderBackOrMenuBtn"
+          onPress={onPressMenu}
+          hitSlop={MENU_HITSLOP}
+          style={styles.headerMenuBtn}>
+          <UserAvatar
+            size={30}
+            handle={store.me.handle}
+            displayName={store.me.displayName}
+            avatar={store.me.avatar}
+          />
+        </TouchableOpacity>
+        <View
+          style={[
+            {backgroundColor: pal.colors.backgroundLight},
+            styles.headerSearchContainer,
+          ]}>
+          <MagnifyingGlassIcon style={[pal.icon, styles.inputIcon]} size={21} />
+          <TextInput
+            testID="searchTextInput"
+            ref={textInput}
+            placeholder="Search"
+            placeholderTextColor={pal.colors.textLight}
+            selectTextOnFocus
+            returnKeyType="search"
+            style={[pal.text, styles.input]}
+            onChangeText={onChangeQuery}
+          />
+        </View>
       </View>
       <View style={styles.outputContainer}>
         {query ? (
@@ -81,11 +106,13 @@ export const Search = ({navIdx, visible, params}: ScreenParams) => {
                   avatar={item.avatar}
                   size={36}
                 />
-                <View style={[s.ml10]}>
-                  <Text type="title-sm" style={pal.text}>
+                <View style={[s.ml10, s.flex1]}>
+                  <Text type="title-sm" style={pal.text} numberOfLines={1}>
                     {item.displayName || item.handle}
                   </Text>
-                  <Text style={pal.textLight}>@{item.handle}</Text>
+                  <Text style={pal.textLight} numberOfLines={1}>
+                    @{item.handle}
+                  </Text>
                 </View>
               </TouchableOpacity>
             ))}
@@ -104,14 +131,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  inputContainer: {
+  header: {
     flexDirection: 'row',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderTopWidth: 1,
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingTop: 4,
+    paddingBottom: 5,
+  },
+  headerMenuBtn: {
+    width: 40,
+    height: 30,
+    marginLeft: 6,
+  },
+  headerSearchContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 30,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
   },
   inputIcon: {
-    marginRight: 10,
+    marginRight: 6,
     alignSelf: 'center',
   },
   input: {
