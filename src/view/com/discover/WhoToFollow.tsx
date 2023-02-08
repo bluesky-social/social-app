@@ -138,7 +138,7 @@ function FollowBtn({
 const styles = StyleSheet.create({
   heading: {
     paddingHorizontal: 12,
-    paddingTop: 12,
+    paddingTop: 16,
     paddingBottom: 8,
   },
 

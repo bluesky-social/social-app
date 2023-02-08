@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  ActivityIndicator,
   Keyboard,
   ScrollView,
   StyleSheet,
@@ -19,6 +18,7 @@ import {UserAutocompleteViewModel} from '../../state/models/user-autocomplete-vi
 import {s} from '../lib/styles'
 import {MagnifyingGlassIcon} from '../lib/icons'
 import {WhoToFollow} from '../com/discover/WhoToFollow'
+import {SuggestedPosts} from '../com/discover/SuggestedPosts'
 import {ProfileCard} from '../com/profile/ProfileCard'
 import {usePalette} from '../lib/hooks/usePalette'
 import {useAnalytics} from '@segment/analytics-react-native'
@@ -140,6 +140,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
           ) : (
             <ScrollView onScroll={Keyboard.dismiss}>
               <WhoToFollow />
+              <SuggestedPosts />
               <View style={s.footerSpacer} />
             </ScrollView>
           )}
