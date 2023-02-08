@@ -1,5 +1,6 @@
-import React, {useEffect, useState, useMemo, useRef} from 'react'
+import React from 'react'
 import {
+  ActivityIndicator,
   Keyboard,
   ScrollView,
   StyleSheet,
@@ -9,7 +10,7 @@ import {
   View,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {SuggestedFollows} from '../com/discover/SuggestedFollows'
+import _omit from 'lodash.omit'
 import {UserAvatar} from '../com/util/UserAvatar'
 import {Text} from '../com/util/text/Text'
 import {ScreenParams} from '../routes'
@@ -17,6 +18,8 @@ import {useStores} from '../../state'
 import {UserAutocompleteViewModel} from '../../state/models/user-autocomplete-view'
 import {s} from '../lib/styles'
 import {MagnifyingGlassIcon} from '../lib/icons'
+import {WhoToFollow} from '../com/discover/WhoToFollow'
+import {ProfileCard} from '../com/profile/ProfileCard'
 import {usePalette} from '../lib/hooks/usePalette'
 import {useAnalytics} from '@segment/analytics-react-native'
 
@@ -26,16 +29,16 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
   const pal = usePalette('default')
   const store = useStores()
   const {track} = useAnalytics()
-  const textInput = useRef<TextInput>(null)
-  const [isInputFocused, setIsInputFocused] = useState<boolean>(false)
-  const [query, setQuery] = useState<string>('')
-  const autocompleteView = useMemo<UserAutocompleteViewModel>(
+  const textInput = React.useRef<TextInput>(null)
+  const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
+  const [query, setQuery] = React.useState<string>('')
+  const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
     () => new UserAutocompleteViewModel(store),
     [store],
   )
   const {name} = params
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (visible) {
       store.shell.setMinimalShellMode(false)
       autocompleteView.setup()
@@ -61,16 +64,9 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
     setQuery('')
     autocompleteView.setActive(false)
   }
-  const onSelect = (handle: string) => {
-    textInput.current?.blur()
-    store.nav.navigate(`/profile/${handle}`)
-  }
-  const onPressContainer = () => {
-    textInput.current?.blur()
-  }
 
   return (
-    <TouchableWithoutFeedback onPress={onPressContainer}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={[pal.view, styles.container]}>
         <View style={[pal.view, pal.border, styles.header]}>
           <TouchableOpacity
@@ -120,25 +116,12 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
           {query && autocompleteView.searchRes.length ? (
             <ScrollView testID="searchScrollView" onScroll={Keyboard.dismiss}>
               {autocompleteView.searchRes.map((item, i) => (
-                <TouchableOpacity
-                  key={i}
-                  style={[pal.view, pal.border, styles.searchResult]}
-                  onPress={() => onSelect(item.handle)}>
-                  <UserAvatar
-                    handle={item.handle}
-                    displayName={item.displayName}
-                    avatar={item.avatar}
-                    size={36}
-                  />
-                  <View style={[s.ml10, s.flex1]}>
-                    <Text type="title-sm" style={pal.text} numberOfLines={1}>
-                      {item.displayName || item.handle}
-                    </Text>
-                    <Text style={pal.textLight} numberOfLines={1}>
-                      @{item.handle}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                <ProfileCard
+                  key={item.did}
+                  handle={item.handle}
+                  displayName={item.displayName}
+                  avatar={item.avatar}
+                />
               ))}
               <View style={s.footerSpacer} />
             </ScrollView>
@@ -155,7 +138,10 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
               </Text>
             </View>
           ) : (
-            <SuggestedFollows asLinks />
+            <ScrollView onScroll={Keyboard.dismiss}>
+              <WhoToFollow />
+              <View style={s.footerSpacer} />
+            </ScrollView>
           )}
         </View>
       </View>
@@ -208,11 +194,5 @@ const styles = StyleSheet.create({
 
   outputContainer: {
     flex: 1,
-  },
-  searchResult: {
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
   },
 })

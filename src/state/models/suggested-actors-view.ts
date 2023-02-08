@@ -10,6 +10,7 @@ export type SuggestedActor = GetSuggestions.Actor
 
 export class SuggestedActorsViewModel {
   // state
+  pageSize = PAGE_SIZE
   isLoading = false
   isRefreshing = false
   hasLoaded = false
@@ -20,7 +21,10 @@ export class SuggestedActorsViewModel {
   // data
   suggestions: SuggestedActor[] = []
 
-  constructor(public rootStore: RootStoreModel) {
+  constructor(public rootStore: RootStoreModel, opts?: {pageSize?: number}) {
+    if (opts?.pageSize) {
+      this.pageSize = opts.pageSize
+    }
     makeAutoObservable(
       this,
       {
@@ -63,23 +67,13 @@ export class SuggestedActorsViewModel {
       let res
       do {
         res = await this.rootStore.api.app.bsky.actor.getSuggestions({
-          limit: PAGE_SIZE,
+          limit: this.pageSize,
           cursor: this.loadMoreCursor,
         })
         this.loadMoreCursor = res.data.cursor
         this.hasMore = !!this.loadMoreCursor
-        items = items.concat(
-          res.data.actors.filter(actor => {
-            if (actor.did === this.rootStore.me.did) {
-              return false // skip self
-            }
-            if (actor.myState?.follow) {
-              return false // skip already-followed users
-            }
-            return true
-          }),
-        )
-      } while (items.length < PAGE_SIZE && this.hasMore)
+        items = items.concat(res.data.actors)
+      } while (items.length < this.pageSize && this.hasMore)
       runInAction(() => {
         this.suggestions = items
       })

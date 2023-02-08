@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
@@ -10,14 +10,14 @@ export function ProfileCard({
   handle,
   displayName,
   avatar,
+  description,
   renderButton,
-  onPressButton,
 }: {
   handle: string
   displayName?: string
   avatar?: string
+  description?: string
   renderButton?: () => JSX.Element
-  onPressButton?: () => void
 }) {
   const pal = usePalette('default')
   return (
@@ -44,15 +44,16 @@ export function ProfileCard({
           </Text>
         </View>
         {renderButton ? (
-          <View style={styles.layoutButton}>
-            <TouchableOpacity
-              onPress={onPressButton}
-              style={[styles.btn, pal.btn]}>
-              {renderButton()}
-            </TouchableOpacity>
-          </View>
+          <View style={styles.layoutButton}>{renderButton()}</View>
         ) : undefined}
       </View>
+      {description ? (
+        <View style={styles.details}>
+          <Text style={pal.text} numberOfLines={4}>
+            {description}
+          </Text>
+        </View>
+      ) : undefined}
     </Link>
   )
 }
@@ -60,6 +61,7 @@ export function ProfileCard({
 const styles = StyleSheet.create({
   outer: {
     borderTopWidth: 1,
+    paddingHorizontal: 6,
   },
   layout: {
     flexDirection: 'row',
@@ -68,7 +70,7 @@ const styles = StyleSheet.create({
   layoutAvi: {
     width: 60,
     paddingLeft: 10,
-    paddingTop: 10,
+    paddingTop: 8,
     paddingBottom: 10,
   },
   avi: {
@@ -80,19 +82,15 @@ const styles = StyleSheet.create({
   layoutContent: {
     flex: 1,
     paddingRight: 10,
-    paddingTop: 12,
+    paddingTop: 10,
     paddingBottom: 10,
   },
   layoutButton: {
     paddingRight: 10,
   },
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 7,
-    paddingHorizontal: 14,
-    borderRadius: 50,
-    marginLeft: 6,
+  details: {
+    paddingLeft: 60,
+    paddingRight: 10,
+    paddingBottom: 10,
   },
 })
