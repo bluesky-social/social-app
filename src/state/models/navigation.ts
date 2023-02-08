@@ -223,6 +223,7 @@ export class NavigationTabModel {
 export class NavigationModel {
   tabs: NavigationTabModel[] = [
     new NavigationTabModel(TabPurpose.Default),
+    new NavigationTabModel(TabPurpose.Search),
     new NavigationTabModel(TabPurpose.Notifs),
   ]
   tabIndex = 0

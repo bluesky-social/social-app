@@ -41,8 +41,7 @@ describe('Menu', () => {
     fireEvent.press(searchBtn)
 
     expect(onCloseMock).toHaveBeenCalled()
-    expect(mockedNavigationStore.switchTo).toHaveBeenCalledWith(0, true)
-    expect(mockedNavigationStore.navigate).toHaveBeenCalledWith('/search')
+    expect(mockedNavigationStore.switchTo).toHaveBeenCalledWith(1, true)
   })
 
   it("presses notifications menu item' button", () => {
@@ -52,6 +51,6 @@ describe('Menu', () => {
     fireEvent.press(menuItemButton)
 
     expect(onCloseMock).toHaveBeenCalled()
-    expect(mockedNavigationStore.switchTo).toHaveBeenCalledWith(1, true)
+    expect(mockedNavigationStore.switchTo).toHaveBeenCalledWith(2, true)
   })
 })

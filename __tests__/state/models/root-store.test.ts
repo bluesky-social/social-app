@@ -40,6 +40,19 @@ describe('rootStore', () => {
           {
             id: expect.anything(),
             ts: expect.anything(),
+            url: '/search',
+          },
+        ],
+        id: expect.anything(),
+        index: 0,
+        isNewTab: false,
+      },
+      {
+        fixedTabPurpose: 2,
+        history: [
+          {
+            id: expect.anything(),
+            ts: expect.anything(),
             url: '/notifications',
           },
         ],
