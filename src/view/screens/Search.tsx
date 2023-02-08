@@ -30,6 +30,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const {track} = useAnalytics()
   const textInput = React.useRef<TextInput>(null)
+  const [renderNudge, setRenderNudge] = React.useState<number>(0) // used to trigger reloads
   const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
   const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
@@ -40,6 +41,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
 
   React.useEffect(() => {
     if (visible) {
+      setRenderNudge(Date.now()) // trigger reload of suggestions
       store.shell.setMinimalShellMode(false)
       autocompleteView.setup()
       store.nav.setTitle(navIdx, 'Search')
@@ -139,8 +141,8 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
             </View>
           ) : (
             <ScrollView onScroll={Keyboard.dismiss}>
-              <WhoToFollow />
-              <SuggestedPosts />
+              <WhoToFollow key={`wtf-${renderNudge}`} />
+              <SuggestedPosts key={`sp-${renderNudge}`} />
               <View style={s.footerSpacer} />
             </ScrollView>
           )}
