@@ -190,9 +190,10 @@ export class NotificationsViewModel {
   params: ListNotifications.QueryParams
   hasMore = true
   loadMoreCursor?: string
-  _loadPromise: Promise<void> | undefined
-  _loadMorePromise: Promise<void> | undefined
-  _updatePromise: Promise<void> | undefined
+
+  private _loadPromise: Promise<void> | undefined
+  private _loadMorePromise: Promise<void> | undefined
+  private _updatePromise: Promise<void> | undefined
 
   // data
   notifications: NotificationsViewItemModel[] = []
@@ -210,9 +211,6 @@ export class NotificationsViewModel {
         rootStore: false,
         params: false,
         mostRecentNotification: false,
-        _loadPromise: false,
-        _loadMorePromise: false,
-        _updatePromise: false,
       },
       {autoBind: true},
     )
@@ -282,8 +280,11 @@ export class NotificationsViewModel {
     }
     await this._pendingWork()
     this._loadMorePromise = this._loadMore()
-    await this._loadMorePromise
-    this._loadMorePromise = undefined
+    try {
+      await this._loadMorePromise
+    } finally {
+      this._loadMorePromise = undefined
+    }
   }
 
   /**
@@ -295,8 +296,11 @@ export class NotificationsViewModel {
     }
     await this._pendingWork()
     this._updatePromise = this._update()
-    await this._updatePromise
-    this._updatePromise = undefined
+    try {
+      await this._updatePromise
+    } finally {
+      this._updatePromise = undefined
+    }
   }
 
   /**
