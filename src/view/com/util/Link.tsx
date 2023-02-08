@@ -29,10 +29,10 @@ export const Link = observer(function Link({
 }) {
   const store = useStores()
   const onPress = () => {
-    handleLink(store, href, false)
+    // handleLink(store, href, false)
   }
   const onLongPress = () => {
-    handleLink(store, href, true)
+    // handleLink(store, href, true)
   }
   if (noFeedback) {
     return (

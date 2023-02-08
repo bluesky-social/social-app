@@ -228,7 +228,7 @@ export const FeedItem = observer(function ({
           </View>
         </View>
       </Link>
-      {item._isThreadChildElided ? (
+      {/* {item._isThreadChildElided ? (
         <Link
           style={[pal.view, styles.viewFullThread]}
           href={itemHref}
@@ -253,7 +253,7 @@ export const FeedItem = observer(function ({
             View full thread
           </Text>
         </Link>
-      ) : undefined}
+      ) : undefined} */}
     </>
   )
 })

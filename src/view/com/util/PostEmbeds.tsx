@@ -15,11 +15,36 @@ import {ImagesLightbox} from '../../../state/models/shell-ui'
 import {useStores} from '../../../state'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {saveImageModal} from '../../../lib/images'
+import YoutubeEmbed from './YoutubeEmbed'
 
 type Embed =
   | AppBskyEmbedImages.Presented
   | AppBskyEmbedExternal.Presented
   | {$type: string; [k: string]: unknown}
+
+// TODO Move this and tests to a new place
+const getYoutubeVideoId = (link: string): string | undefined => {
+  const url = new URL(link)
+  if (
+    url.hostname !== 'www.youtube.com' &&
+    url.hostname !== 'youtube.com' &&
+    url.hostname !== 'youtu.be'
+  ) {
+    return undefined
+  }
+  if (url.hostname === 'youtu.be') {
+    const videoId = url.pathname.split('/')[1]
+    if (!videoId) {
+      return undefined
+    }
+    return videoId
+  }
+  const videoId = url.searchParams.get('v') as string
+  if (!videoId) {
+    return undefined
+  }
+  return videoId
+}
 
 export function PostEmbeds({
   embed,
@@ -103,10 +128,19 @@ export function PostEmbeds({
   }
   if (AppBskyEmbedExternal.isPresented(embed)) {
     const link = embed.external
+    const youtubeVideoId = getYoutubeVideoId(link.uri)
+
+    if (youtubeVideoId) {
+      return <YoutubeEmbed videoId={youtubeVideoId} link={link} />
+    }
+
     return (
       <Link
         style={[styles.extOuter, pal.view, pal.border, style]}
         href={link.uri}
+        onLayout={() => {
+          console.log('----')
+        }}
         noFeedback>
         {link.thumb ? (
           <Image uri={link.thumb} style={styles.extImage} />
