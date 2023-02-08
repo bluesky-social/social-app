@@ -69,12 +69,24 @@ describe('extractHtmlMeta', () => {
     expect(output).toEqual(expectedOutput)
   })
 
-  it('extracts title and description from a generic youtube page', () => {
+  it.only('extracts title and description from a generic youtube page', () => {
     const input = youtubeHTML
     const expectedOutput = {
       title: 'HD Video (1080p) with Relaxing Music of Native American Shamans',
       description:
         'Stunning HD Video ( 1080p ) of Patagonian Nature with Relaxing Native American Shamanic Music. HD footage used from ',
+      image: 'https://i.ytimg.com/vi/x6UITRjhijI/sddefault.jpg',
+    }
+    const output = extractHtmlMeta({html: input, hostname: 'youtube.com'})
+    expect(output).toEqual(expectedOutput)
+  })
+
+  it.only('extracts avatar from a youtube channel', () => {
+    const input = youtubeHTML
+    const expectedOutput = {
+      title: 'penguinz0',
+      description:
+        "Clips channel: https://www.youtube.com/channel/UC4EQHfzIbkL_Skit_iKt1aA\n\nTwitter:     https://twitter.com/MoistCr1TiKaL\n\nInstagram:    https://www.instagram.com/bigmoistcr1tikal/?hl=en\n\nTwitch: https://www.twitch.tv/moistcr1tikal\n\nSnapchat: Hugecharles\n\nTik Tok: Hugecharles\n\nI don't have any other public accounts.",
       image: 'https://i.ytimg.com/vi/x6UITRjhijI/sddefault.jpg',
     }
     const output = extractHtmlMeta({html: input, hostname: 'youtube.com'})
