@@ -24,13 +24,14 @@ import {usePalette} from '../lib/hooks/usePalette'
 import {useAnalytics} from '@segment/analytics-react-native'
 
 const MENU_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
+const FIVE_MIN = 5 * 60 * 1e3
 
 export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
   const pal = usePalette('default')
   const store = useStores()
   const {track} = useAnalytics()
   const textInput = React.useRef<TextInput>(null)
-  const [renderNudge, setRenderNudge] = React.useState<number>(0) // used to trigger reloads
+  const [lastRenderTime, setRenderTime] = React.useState<number>(0) // used to trigger reloads
   const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
   const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
@@ -41,7 +42,10 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
 
   React.useEffect(() => {
     if (visible) {
-      setRenderNudge(Date.now()) // trigger reload of suggestions
+      const now = Date.now()
+      if (lastRenderTime - now > FIVE_MIN) {
+        setRenderTime(Date.now()) // trigger reload of suggestions
+      }
       store.shell.setMinimalShellMode(false)
       autocompleteView.setup()
       store.nav.setTitle(navIdx, 'Search')
@@ -141,8 +145,8 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
             </View>
           ) : (
             <ScrollView onScroll={Keyboard.dismiss}>
-              <WhoToFollow key={`wtf-${renderNudge}`} />
-              <SuggestedPosts key={`sp-${renderNudge}`} />
+              <WhoToFollow key={`wtf-${lastRenderTime}`} />
+              <SuggestedPosts key={`sp-${lastRenderTime}`} />
               <View style={s.footerSpacer} />
             </ScrollView>
           )}
