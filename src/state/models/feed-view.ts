@@ -5,6 +5,8 @@ import {
   AppBskyFeedPost,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
 } from '@atproto/api'
+import AwaitLock from 'await-lock'
+import {bundleAsync} from '../../lib/async/bundle'
 type FeedViewPost = AppBskyFeedFeedViewPost.Main
 type ReasonRepost = AppBskyFeedFeedViewPost.ReasonRepost
 type PostView = AppBskyFeedPost.View
@@ -188,10 +190,8 @@ export class FeedModel {
   loadMoreCursor: string | undefined
   pollCursor: string | undefined
 
-  private _loadPromise: Promise<void> | undefined
-  private _loadMorePromise: Promise<void> | undefined
-  private _loadLatestPromise: Promise<void> | undefined
-  private _updatePromise: Promise<void> | undefined
+  // used to linearize async modifications to state
+  private lock = new AwaitLock()
 
   // data
   feed: FeedItemModel[] = []
@@ -270,23 +270,26 @@ export class FeedModel {
   /**
    * Load for first render
    */
-  async setup(isRefreshing = false) {
+  setup = bundleAsync(async (isRefreshing: boolean = false) => {
     this.rootStore.log.debug('FeedModel:setup', {isRefreshing})
     if (isRefreshing) {
       this.isRefreshing = true // set optimistically for UI
     }
-    if (this._loadPromise) {
-      return this._loadPromise
-    }
-    await this._pendingWork()
-    this.setHasNewLatest(false)
-    this._loadPromise = this._initialLoad(isRefreshing)
+    await this.lock.acquireAsync()
     try {
-      await this._loadPromise
+      this.setHasNewLatest(false)
+      this._xLoading(isRefreshing)
+      try {
+        const res = await this._getFeed({limit: PAGE_SIZE})
+        await this._replaceAll(res)
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle(e)
+      }
     } finally {
-      this._loadPromise = undefined
+      this.lock.release()
     }
-  }
+  })
 
   /**
    * Register any event listeners. Returns a cleanup function.
@@ -306,51 +309,93 @@ export class FeedModel {
   /**
    * Load more posts to the end of the feed
    */
-  async loadMore() {
-    if (this._loadMorePromise) {
-      return this._loadMorePromise
-    }
-    await this._pendingWork()
-    this._loadMorePromise = this._loadMore()
+  loadMore = bundleAsync(async () => {
+    await this.lock.acquireAsync()
     try {
-      await this._loadMorePromise
+      if (!this.hasMore || this.hasError) {
+        return
+      }
+      this._xLoading()
+      try {
+        const res = await this._getFeed({
+          before: this.loadMoreCursor,
+          limit: PAGE_SIZE,
+        })
+        await this._appendAll(res)
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle() // don't bubble the error to the user
+        this.rootStore.log.error('FeedView: Failed to load more', {
+          params: this.params,
+          e,
+        })
+      }
     } finally {
-      this._loadMorePromise = undefined
+      this.lock.release()
     }
-  }
+  })
 
   /**
    * Load more posts to the start of the feed
    */
-  async loadLatest() {
-    if (this._loadLatestPromise) {
-      return this._loadLatestPromise
-    }
-    await this._pendingWork()
-    this.setHasNewLatest(false)
-    this._loadLatestPromise = this._loadLatest()
+  loadLatest = bundleAsync(async () => {
+    await this.lock.acquireAsync()
     try {
-      await this._loadLatestPromise
+      this.setHasNewLatest(false)
+      this._xLoading()
+      try {
+        const res = await this._getFeed({limit: PAGE_SIZE})
+        await this._prependAll(res)
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle() // don't bubble the error to the user
+        this.rootStore.log.error('FeedView: Failed to load latest', {
+          params: this.params,
+          e,
+        })
+      }
     } finally {
-      this._loadLatestPromise = undefined
+      this.lock.release()
     }
-  }
+  })
 
   /**
    * Update content in-place
    */
-  async update() {
-    if (this._updatePromise) {
-      return this._updatePromise
-    }
-    await this._pendingWork()
-    this._updatePromise = this._update()
+  update = bundleAsync(async () => {
+    await this.lock.acquireAsync()
     try {
-      await this._updatePromise
+      if (!this.feed.length) {
+        return
+      }
+      this._xLoading()
+      let numToFetch = this.feed.length
+      let cursor
+      try {
+        do {
+          const res: GetTimeline.Response = await this._getFeed({
+            before: cursor,
+            limit: Math.min(numToFetch, 100),
+          })
+          if (res.data.feed.length === 0) {
+            break // sanity check
+          }
+          this._updateAll(res)
+          numToFetch -= res.data.feed.length
+          cursor = res.data.cursor
+        } while (cursor && numToFetch > 0)
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle() // don't bubble the error to the user
+        this.rootStore.log.error('FeedView: Failed to update', {
+          params: this.params,
+          e,
+        })
+      }
     } finally {
-      this._updatePromise = undefined
+      this.lock.release()
     }
-  }
+  })
 
   /**
    * Check if new posts are available
@@ -359,7 +404,6 @@ export class FeedModel {
     if (this.hasNewLatest) {
       return
     }
-    await this._pendingWork()
     const res = await this._getFeed({limit: 1})
     const currentLatestUri = this.pollCursor
     const receivedLatestUri = res.data.feed[0]
@@ -404,100 +448,8 @@ export class FeedModel {
     }
   }
 
-  // loader functions
+  // helper functions
   // =
-
-  private async _pendingWork() {
-    if (this._loadPromise) {
-      await this._loadPromise
-    }
-    if (this._loadMorePromise) {
-      await this._loadMorePromise
-    }
-    if (this._loadLatestPromise) {
-      await this._loadLatestPromise
-    }
-    if (this._updatePromise) {
-      await this._updatePromise
-    }
-  }
-
-  private async _initialLoad(isRefreshing = false) {
-    this._xLoading(isRefreshing)
-    try {
-      const res = await this._getFeed({limit: PAGE_SIZE})
-      await this._replaceAll(res)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
-    }
-  }
-
-  private async _loadLatest() {
-    this._xLoading()
-    try {
-      const res = await this._getFeed({limit: PAGE_SIZE})
-      await this._prependAll(res)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle() // don't bubble the error to the user
-      this.rootStore.log.error('FeedView: Failed to load latest', {
-        params: this.params,
-        e,
-      })
-    }
-  }
-
-  private async _loadMore() {
-    if (!this.hasMore || this.hasError) {
-      return
-    }
-    this._xLoading()
-    try {
-      const res = await this._getFeed({
-        before: this.loadMoreCursor,
-        limit: PAGE_SIZE,
-      })
-      await this._appendAll(res)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle() // don't bubble the error to the user
-      this.rootStore.log.error('FeedView: Failed to load more', {
-        params: this.params,
-        e,
-      })
-    }
-  }
-
-  private async _update() {
-    if (!this.feed.length) {
-      return
-    }
-    this._xLoading()
-    let numToFetch = this.feed.length
-    let cursor
-    try {
-      do {
-        const res: GetTimeline.Response = await this._getFeed({
-          before: cursor,
-          limit: Math.min(numToFetch, 100),
-        })
-        if (res.data.feed.length === 0) {
-          break // sanity check
-        }
-        this._updateAll(res)
-        numToFetch -= res.data.feed.length
-        cursor = res.data.cursor
-      } while (cursor && numToFetch > 0)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle() // don't bubble the error to the user
-      this.rootStore.log.error('FeedView: Failed to update', {
-        params: this.params,
-        e,
-      })
-    }
-  }
 
   private async _replaceAll(
     res: GetTimeline.Response | GetAuthorFeed.Response,

@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyActorGetSuggestions as GetSuggestions} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {cleanError} from '../../lib/strings'
+import {bundleAsync} from '../../lib/async/bundle'
 
 const PAGE_SIZE = 30
 
@@ -15,7 +16,6 @@ export class SuggestedActorsViewModel {
   error = ''
   hasMore = true
   loadMoreCursor?: string
-  private _loadMorePromise: Promise<void> | undefined
 
   // data
   suggestions: SuggestedActor[] = []
@@ -49,41 +49,7 @@ export class SuggestedActorsViewModel {
     return this.loadMore(true)
   }
 
-  async loadMore(isRefreshing = false) {
-    if (this._loadMorePromise) {
-      return this._loadMorePromise
-    }
-    this._loadMorePromise = this._load(isRefreshing)
-    try {
-      await this._loadMorePromise
-    } finally {
-      this._loadMorePromise = undefined
-    }
-  }
-
-  // state transitions
-  // =
-
-  private _xLoading(isRefreshing = false) {
-    this.isLoading = true
-    this.isRefreshing = isRefreshing
-    this.error = ''
-  }
-
-  private _xIdle(err?: any) {
-    this.isLoading = false
-    this.isRefreshing = false
-    this.hasLoaded = true
-    this.error = cleanError(err)
-    if (err) {
-      this.rootStore.log.error('Failed to fetch suggested actors', err)
-    }
-  }
-
-  // loader functions
-  // =
-
-  private async _load(replace = false) {
+  loadMore = bundleAsync(async (replace: boolean = false) => {
     if (!replace && !this.hasMore) {
       return
     }
@@ -120,6 +86,25 @@ export class SuggestedActorsViewModel {
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e)
+    }
+  })
+
+  // state transitions
+  // =
+
+  private _xLoading(isRefreshing = false) {
+    this.isLoading = true
+    this.isRefreshing = isRefreshing
+    this.error = ''
+  }
+
+  private _xIdle(err?: any) {
+    this.isLoading = false
+    this.isRefreshing = false
+    this.hasLoaded = true
+    this.error = cleanError(err)
+    if (err) {
+      this.rootStore.log.error('Failed to fetch suggested actors', err)
     }
   }
 }

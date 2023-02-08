@@ -34,6 +34,7 @@
     "@segment/analytics-react-native": "^2.10.1",
     "@segment/sovran-react-native": "^0.4.5",
     "@zxing/text-encoding": "^0.9.0",
+    "await-lock": "^2.2.2",
     "base64-js": "^1.5.1",
     "email-validator": "^2.0.4",
     "he": "^1.2.0",
