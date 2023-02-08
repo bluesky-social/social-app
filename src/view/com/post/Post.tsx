@@ -80,6 +80,8 @@ export const Post = observer(function Post({
   const item = view.thread
   const record = view.thread.postRecord
 
+  const itemUri = item.post.uri
+  const itemCid = item.post.cid
   const itemUrip = new AtUri(item.post.uri)
   const itemHref = `/profile/${item.post.author.handle}/post/${itemUrip.rkey}`
   const itemTitle = `Post by ${item.post.author.handle}`
@@ -190,6 +192,8 @@ export const Post = observer(function Post({
           ) : undefined}
           <PostEmbeds embed={item.post.embed} style={s.mb10} />
           <PostCtrls
+            itemUri={itemUri}
+            itemCid={itemCid}
             itemHref={itemHref}
             itemTitle={itemTitle}
             isAuthor={item.post.author.did === store.me.did}

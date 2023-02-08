@@ -25,6 +25,8 @@ import {s, colors} from '../../lib/styles'
 import {useTheme} from '../../lib/ThemeContext'
 
 interface PostCtrlsOpts {
+  itemUri: string
+  itemCid: string
   itemHref: string
   itemTitle: string
   isAuthor: boolean
@@ -249,6 +251,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         {opts.big ? undefined : (
           <PostDropdownBtn
             style={styles.ctrl}
+            itemUri={opts.itemUri}
+            itemCid={opts.itemCid}
             itemHref={opts.itemHref}
             itemTitle={opts.itemTitle}
             isAuthor={opts.isAuthor}

@@ -34,6 +34,8 @@ export const FeedItem = observer(function ({
   const {track} = useAnalytics()
   const [deleted, setDeleted] = useState(false)
   const record = item.postRecord
+  const itemUri = item.post.uri
+  const itemCid = item.post.cid
   const itemHref = useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}`
@@ -207,6 +209,8 @@ export const FeedItem = observer(function ({
             ) : null}
             <PostCtrls
               style={styles.ctrls}
+              itemUri={itemUri}
+              itemCid={itemCid}
               itemHref={itemHref}
               itemTitle={itemTitle}
               isAuthor={item.post.author.did === store.me.did}
