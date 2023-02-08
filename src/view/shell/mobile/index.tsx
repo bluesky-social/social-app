@@ -94,7 +94,7 @@ const Btn = ({
     iconEl = (
       <MagnifyingGlassIcon
         size={28}
-        strokeWidth={4}
+        strokeWidth={3}
         style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
       />
     )
