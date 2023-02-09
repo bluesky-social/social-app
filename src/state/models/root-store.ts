@@ -21,8 +21,8 @@ export class RootStoreModel {
   agent: AtpAgent
   log = new LogModel()
   session = new SessionModel(this)
-  nav = new NavigationModel()
-  shell = new ShellUiModel()
+  nav = new NavigationModel(this)
+  shell = new ShellUiModel(this)
   me = new MeModel(this)
   onboard = new OnboardModel()
   profiles = new ProfilesViewModel(this)
@@ -156,6 +156,14 @@ export class RootStoreModel {
 
   emitSessionDropped() {
     DeviceEventEmitter.emit('session-dropped')
+  }
+
+  onNavigation(handler: () => void): EmitterSubscription {
+    return DeviceEventEmitter.addListener('navigation', handler)
+  }
+
+  emitNavigation() {
+    DeviceEventEmitter.emit('navigation')
   }
 
   // background fetch

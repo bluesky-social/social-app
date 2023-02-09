@@ -22,17 +22,21 @@ export const Link = observer(function Link({
   noFeedback,
 }: {
   style?: StyleProp<ViewStyle>
-  href: string
+  href?: string
   title?: string
   children?: React.ReactNode
   noFeedback?: boolean
 }) {
   const store = useStores()
   const onPress = () => {
-    handleLink(store, href, false)
+    if (href) {
+      handleLink(store, href, false)
+    }
   }
   const onLongPress = () => {
-    handleLink(store, href, true)
+    if (href) {
+      handleLink(store, href, true)
+    }
   }
   if (noFeedback) {
     return (

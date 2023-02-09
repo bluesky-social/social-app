@@ -1,3 +1,4 @@
+import {RootStoreModel} from './root-store'
 import {makeAutoObservable} from 'mobx'
 import {ProfileViewModel} from './profile-view'
 import {isObj, hasProp} from '../lib/type-guards'
@@ -113,8 +114,12 @@ export class ShellUiModel {
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
 
-  constructor() {
-    makeAutoObservable(this, {serialize: false, hydrate: false})
+  constructor(public rootStore: RootStoreModel) {
+    makeAutoObservable(this, {
+      serialize: false,
+      rootStore: false,
+      hydrate: false,
+    })
   }
 
   serialize(): unknown {
@@ -152,6 +157,7 @@ export class ShellUiModel {
       | ReportAccountModal
       | DeleteAccountModal,
   ) {
+    this.rootStore.emitNavigation()
     this.isModalActive = true
     this.activeModal = modal
   }
@@ -162,6 +168,7 @@ export class ShellUiModel {
   }
 
   openLightbox(lightbox: ProfileImageLightbox | ImagesLightbox) {
+    this.rootStore.emitNavigation()
     this.isLightboxActive = true
     this.activeLightbox = lightbox
   }
@@ -172,6 +179,7 @@ export class ShellUiModel {
   }
 
   openComposer(opts: ComposerOpts) {
+    this.rootStore.emitNavigation()
     this.isComposerActive = true
     this.composerOpts = opts
   }

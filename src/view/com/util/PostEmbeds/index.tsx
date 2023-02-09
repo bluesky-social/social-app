@@ -7,14 +7,16 @@ import {
   Image as RNImage,
 } from 'react-native'
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
-import {Link} from '../util/Link'
-import {Text} from './text/Text'
-import {Image} from './images/Image'
-import {ImageLayoutGrid} from './images/ImageLayoutGrid'
-import {ImagesLightbox} from '../../../state/models/shell-ui'
-import {useStores} from '../../../state'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {saveImageModal} from '../../../lib/images'
+import {Link} from '../Link'
+import {Image} from '../images/Image'
+import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
+import {ImagesLightbox} from '../../../../state/models/shell-ui'
+import {useStores} from '../../../../state'
+import {usePalette} from '../../../lib/hooks/usePalette'
+import {saveImageModal} from '../../../../lib/images'
+import YoutubeEmbed from './YoutubeEmbed'
+import ExternalLinkEmbed from './ExternalLinkEmbed'
+import {getYoutubeVideoId} from '../../../../lib/strings'
 
 type Embed =
   | AppBskyEmbedImages.Presented
@@ -103,33 +105,18 @@ export function PostEmbeds({
   }
   if (AppBskyEmbedExternal.isPresented(embed)) {
     const link = embed.external
+    const youtubeVideoId = getYoutubeVideoId(link.uri)
+
+    if (youtubeVideoId) {
+      return <YoutubeEmbed videoId={youtubeVideoId} link={link} />
+    }
+
     return (
       <Link
         style={[styles.extOuter, pal.view, pal.border, style]}
         href={link.uri}
         noFeedback>
-        {link.thumb ? (
-          <Image uri={link.thumb} style={styles.extImage} />
-        ) : undefined}
-        <View style={styles.extInner}>
-          <Text type="md-bold" numberOfLines={2} style={[pal.text]}>
-            {link.title || link.uri}
-          </Text>
-          <Text
-            type="sm"
-            numberOfLines={1}
-            style={[pal.textLight, styles.extUri]}>
-            {link.uri}
-          </Text>
-          {link.description ? (
-            <Text
-              type="sm"
-              numberOfLines={2}
-              style={[pal.text, styles.extDescription]}>
-              {link.description}
-            </Text>
-          ) : undefined}
-        </View>
+        <ExternalLinkEmbed link={link} />
       </Link>
     )
   }
@@ -147,21 +134,6 @@ const styles = StyleSheet.create({
   extOuter: {
     borderWidth: 1,
     borderRadius: 8,
-    marginTop: 4,
-  },
-  extInner: {
-    padding: 10,
-  },
-  extImage: {
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
-    width: '100%',
-    maxHeight: 200,
-  },
-  extUri: {
-    marginTop: 2,
-  },
-  extDescription: {
     marginTop: 4,
   },
 })

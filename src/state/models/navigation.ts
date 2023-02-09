@@ -1,3 +1,4 @@
+import {RootStoreModel} from './root-store'
 import {makeAutoObservable} from 'mobx'
 import {TABS_ENABLED} from '../../build-flags'
 import {segmentClient} from '../../lib/segmentClient'
@@ -228,8 +229,9 @@ export class NavigationModel {
   ]
   tabIndex = 0
 
-  constructor() {
+  constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
+      rootStore: false,
       serialize: false,
       hydrate: false,
     })
@@ -263,6 +265,7 @@ export class NavigationModel {
   // =
 
   navigate(url: string, title?: string) {
+    this.rootStore.emitNavigation()
     this.tab.navigate(url, title)
   }
 
@@ -300,6 +303,7 @@ export class NavigationModel {
   // fixed tab helper function
   // -prf
   switchTo(purpose: TabPurpose, reset: boolean) {
+    this.rootStore.emitNavigation()
     switch (purpose) {
       case TabPurpose.Notifs:
         this.tabIndex = 2
