@@ -49,15 +49,22 @@ const YoutubeEmbed = ({
     return () => sub && sub.remove()
   }, [displayVideoPlayer, store])
 
+  const imageChild = (
+    <Pressable onPress={handlePlayButtonPressed} style={styles.playButton}>
+      <FontAwesomeIcon icon="play" size={24} color="white" />
+    </Pressable>
+  )
+
   if (!displayVideoPlayer) {
     return (
       <View
         style={[styles.extOuter, pal.view, pal.border]}
         onLayout={handleOnLayout}>
-        <ExternalLinkEmbed link={link} onImagePress={handlePlayButtonPressed} />
-        <Pressable onPress={handlePlayButtonPressed} style={styles.playButton}>
-          <FontAwesomeIcon icon="play" size={24} color="white" />
-        </Pressable>
+        <ExternalLinkEmbed
+          link={link}
+          onImagePress={handlePlayButtonPressed}
+          imageChild={imageChild}
+        />
       </View>
     )
   }
@@ -93,9 +100,9 @@ const styles = StyleSheet.create({
   },
   playButton: {
     position: 'absolute',
-    top: '20%',
     alignSelf: 'center',
     alignItems: 'center',
+    top: '44%',
     justifyContent: 'center',
     backgroundColor: 'black',
     padding: 10,

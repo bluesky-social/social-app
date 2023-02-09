@@ -14,12 +14,14 @@ export function Image({
   onLongPress,
   onPressIn,
   style,
+  children = null,
 }: {
   uri: string
   onPress?: () => void
   onLongPress?: () => void
   onPressIn?: () => void
   style?: StyleProp<ViewStyle>
+  children?: React.ReactNode
 }) {
   const [aspectRatio, setAspectRatio] = React.useState<number>(1)
   const onLoad = (e: OnLoadEvent) => {
@@ -44,6 +46,7 @@ export function Image({
         defaultSource={LOADING}
         onLoad={onLoad}
       />
+      {children}
     </TouchableOpacity>
   )
 }
