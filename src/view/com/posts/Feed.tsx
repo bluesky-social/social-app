@@ -13,12 +13,10 @@ import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {FeedModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
-import {PromptButtons} from './PromptButtons'
 import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
 import {s} from '../../lib/styles'
 import {useAnalytics} from '@segment/analytics-react-native'
 
-const COMPOSE_PROMPT_ITEM = {_reactKey: '__prompt__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 
 export const Feed = observer(function Feed({
@@ -49,9 +47,7 @@ export const Feed = observer(function Feed({
   //   renderItem function renders components that follow React performance best practices
   //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = ({item}: {item: any}) => {
-    if (item === COMPOSE_PROMPT_ITEM) {
-      return <PromptButtons onPressCompose={onPressCompose} />
-    } else if (item === EMPTY_FEED_ITEM) {
+    if (item === EMPTY_FEED_ITEM) {
       return (
         <EmptyState
           icon="bars"
@@ -80,9 +76,9 @@ export const Feed = observer(function Feed({
   let data
   if (feed.hasLoaded) {
     if (feed.isEmpty) {
-      data = [COMPOSE_PROMPT_ITEM, EMPTY_FEED_ITEM]
+      data = [EMPTY_FEED_ITEM]
     } else {
-      data = [COMPOSE_PROMPT_ITEM].concat(feed.feed)
+      data = feed.feed.slice()
     }
   }
   const FeedFooter = () =>
@@ -95,7 +91,6 @@ export const Feed = observer(function Feed({
     )
   return (
     <View testID={testID} style={style}>
-      {!data && <PromptButtons onPressCompose={onPressCompose} />}
       {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
       {feed.hasError && (
         <ErrorMessage message={feed.error} onPressTryAgain={onPressTryAgain} />
