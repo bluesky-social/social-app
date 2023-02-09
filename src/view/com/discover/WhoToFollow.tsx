@@ -57,7 +57,7 @@ export const WhoToFollow = observer(() => {
   return (
     <>
       {(suggestedActorsView.hasContent || suggestedActorsView.isLoading) && (
-        <Text type="xl-heavy" style={[styles.heading, pal.text]}>
+        <Text type="title" style={[styles.heading, pal.text]}>
           Who to follow
         </Text>
       )}
@@ -121,6 +121,7 @@ function FollowBtn({
 
 const styles = StyleSheet.create({
   heading: {
+    fontWeight: 'bold',
     paddingHorizontal: 12,
     paddingTop: 16,
     paddingBottom: 12,

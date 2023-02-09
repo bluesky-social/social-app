@@ -130,38 +130,36 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
             </View>
           ) : undefined}
         </View>
-        <View style={styles.outputContainer}>
-          {query && autocompleteView.searchRes.length ? (
-            <>
-              {autocompleteView.searchRes.map(item => (
-                <ProfileCard
-                  key={item.did}
-                  handle={item.handle}
-                  displayName={item.displayName}
-                  avatar={item.avatar}
-                />
-              ))}
-            </>
-          ) : query && !autocompleteView.searchRes.length ? (
-            <View>
-              <Text style={[pal.textLight, styles.searchPrompt]}>
-                No results found for {autocompleteView.prefix}
-              </Text>
-            </View>
-          ) : isInputFocused ? (
-            <View>
-              <Text style={[pal.textLight, styles.searchPrompt]}>
-                Search for users on the network
-              </Text>
-            </View>
-          ) : (
-            <ScrollView onScroll={Keyboard.dismiss} ref={scrollElRef}>
-              <WhoToFollow key={`wtf-${lastRenderTime}`} />
-              <SuggestedPosts key={`sp-${lastRenderTime}`} />
-              <View style={s.footerSpacer} />
-            </ScrollView>
-          )}
-        </View>
+        {query && autocompleteView.searchRes.length ? (
+          <>
+            {autocompleteView.searchRes.map(item => (
+              <ProfileCard
+                key={item.did}
+                handle={item.handle}
+                displayName={item.displayName}
+                avatar={item.avatar}
+              />
+            ))}
+          </>
+        ) : query && !autocompleteView.searchRes.length ? (
+          <View>
+            <Text style={[pal.textLight, styles.searchPrompt]}>
+              No results found for {autocompleteView.prefix}
+            </Text>
+          </View>
+        ) : isInputFocused ? (
+          <View>
+            <Text style={[pal.textLight, styles.searchPrompt]}>
+              Search for users on the network
+            </Text>
+          </View>
+        ) : (
+          <ScrollView onScroll={Keyboard.dismiss}>
+            <WhoToFollow key={`wtf-${lastRenderTime}`} />
+            <SuggestedPosts key={`sp-${lastRenderTime}`} />
+            <View style={s.footerSpacer} />
+          </ScrollView>
+        )}
         <View style={s.footerSpacer} />
       </ScrollView>
     </TouchableWithoutFeedback>
@@ -199,7 +197,7 @@ const styles = StyleSheet.create({
   },
   headerSearchInput: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 17,
   },
   headerCancelBtn: {
     width: 60,
