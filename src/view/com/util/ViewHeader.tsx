@@ -57,6 +57,7 @@ export const ViewHeader = observer(function ViewHeader({
           {title}
         </Text>
       </View>
+      <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
     </View>
   )
 })
@@ -71,9 +72,9 @@ const styles = StyleSheet.create({
   },
 
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
+    marginLeft: 'auto',
     marginRight: 'auto',
+    paddingRight: 10,
   },
   title: {
     fontWeight: 'bold',

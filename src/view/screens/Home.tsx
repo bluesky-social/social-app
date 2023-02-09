@@ -95,7 +95,6 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
         feed={store.me.mainFeed}
         scrollElRef={scrollElRef}
         style={s.h100pct}
-        onPressCompose={onPressCompose}
         onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
       />

@@ -23,7 +23,6 @@ export const Feed = observer(function Feed({
   feed,
   style,
   scrollElRef,
-  onPressCompose,
   onPressTryAgain,
   onScroll,
   testID,
@@ -31,7 +30,6 @@ export const Feed = observer(function Feed({
   feed: FeedModel
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onPressCompose: (imagesOpen?: boolean) => void
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
   testID?: string
