@@ -4,22 +4,17 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserAvatar} from './UserAvatar'
 import {Text} from './text/Text'
-import {MagnifyingGlassIcon} from '../../lib/icons'
 import {useStores} from '../../../state'
 import {usePalette} from '../../lib/hooks/usePalette'
-import {colors} from '../../lib/styles'
 import {useAnalytics} from '@segment/analytics-react-native'
 
-const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 
 export const ViewHeader = observer(function ViewHeader({
   title,
-  subtitle,
   canGoBack,
 }: {
   title: string
-  subtitle?: string
   canGoBack?: boolean
 }) {
   const pal = usePalette('default')
@@ -31,9 +26,6 @@ export const ViewHeader = observer(function ViewHeader({
   const onPressMenu = () => {
     track('ViewHeader:MenuButtonClicked')
     store.shell.setMainMenuOpen(true)
-  }
-  const onPressSearch = () => {
-    store.nav.navigate('/search')
   }
   if (typeof canGoBack === 'undefined') {
     canGoBack = store.nav.tab.canGoBack
@@ -64,21 +56,7 @@ export const ViewHeader = observer(function ViewHeader({
         <Text type="title" style={[pal.text, styles.title]}>
           {title}
         </Text>
-        {subtitle ? (
-          <Text
-            type="title-sm"
-            style={[styles.subtitle, pal.textLight]}
-            numberOfLines={1}>
-            {subtitle}
-          </Text>
-        ) : undefined}
       </View>
-      <TouchableOpacity
-        onPress={onPressSearch}
-        hitSlop={HITSLOP}
-        style={styles.btn}>
-        <MagnifyingGlassIcon size={21} strokeWidth={3} style={pal.text} />
-      </TouchableOpacity>
     </View>
   )
 })
@@ -100,11 +78,6 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
   },
-  subtitle: {
-    marginLeft: 4,
-    maxWidth: 200,
-    fontWeight: 'normal',
-  },
 
   backBtn: {
     width: 30,
@@ -117,20 +90,5 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     marginTop: 6,
-  },
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 36,
-    height: 36,
-    borderRadius: 20,
-    marginLeft: 4,
-  },
-  littleXIcon: {
-    color: colors.red3,
-    position: 'absolute',
-    right: 7,
-    bottom: 7,
   },
 })

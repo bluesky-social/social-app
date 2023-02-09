@@ -12,7 +12,6 @@ import {
   useColorScheme,
   useWindowDimensions,
   View,
-  ViewStyle,
 } from 'react-native'
 import {ScreenContainer, Screen} from 'react-native-screens'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -20,7 +19,11 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {TABS_ENABLED} from '../../../build-flags'
 import {useStores} from '../../../state'
-import {NavigationModel} from '../../../state/models/navigation'
+import {
+  NavigationModel,
+  TabPurpose,
+  TabPurposeMainPath,
+} from '../../../state/models/navigation'
 import {match, MatchResult} from '../../routes'
 import {Login} from '../../screens/Login'
 import {Menu} from './Menu'
@@ -39,6 +42,7 @@ import {
   GridIconSolid,
   HomeIcon,
   HomeIconSolid,
+  MagnifyingGlassIcon,
   BellIcon,
   BellIconSolid,
 } from '../../lib/icons'
@@ -60,6 +64,8 @@ const Btn = ({
     | 'menu-solid'
     | 'home'
     | 'home-solid'
+    | 'search'
+    | 'search-solid'
     | 'bell'
     | 'bell-solid'
   notificationCount?: number
@@ -68,29 +74,52 @@ const Btn = ({
   onLongPress?: (event: GestureResponderEvent) => void
 }) => {
   const pal = usePalette('default')
-  let size = 24
-  let addedStyles
-  let IconEl
+  let iconEl
   if (icon === 'menu') {
-    IconEl = GridIcon
+    iconEl = <GridIcon style={[styles.ctrlIcon, pal.text]} />
   } else if (icon === 'menu-solid') {
-    IconEl = GridIconSolid
+    iconEl = <GridIconSolid style={[styles.ctrlIcon, pal.text]} />
   } else if (icon === 'home') {
-    IconEl = HomeIcon
-    size = 27
+    iconEl = <HomeIcon size={27} style={[styles.ctrlIcon, pal.text]} />
   } else if (icon === 'home-solid') {
-    IconEl = HomeIconSolid
-    size = 27
+    iconEl = <HomeIconSolid size={27} style={[styles.ctrlIcon, pal.text]} />
+  } else if (icon === 'search') {
+    iconEl = (
+      <MagnifyingGlassIcon
+        size={28}
+        style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
+      />
+    )
+  } else if (icon === 'search-solid') {
+    iconEl = (
+      <MagnifyingGlassIcon
+        size={28}
+        strokeWidth={3}
+        style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
+      />
+    )
   } else if (icon === 'bell') {
-    IconEl = BellIcon
-    size = 27
-    addedStyles = {position: 'relative', top: -1} as ViewStyle
+    iconEl = (
+      <BellIcon
+        size={27}
+        style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
+      />
+    )
   } else if (icon === 'bell-solid') {
-    IconEl = BellIconSolid
-    size = 27
-    addedStyles = {position: 'relative', top: -1} as ViewStyle
+    iconEl = (
+      <BellIconSolid
+        size={27}
+        style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
+      />
+    )
   } else {
-    IconEl = FontAwesomeIcon
+    iconEl = (
+      <FontAwesomeIcon
+        icon={icon}
+        size={24}
+        style={[styles.ctrlIcon, pal.text]}
+      />
+    )
   }
 
   return (
@@ -109,11 +138,7 @@ const Btn = ({
           <Text style={styles.tabCountLabel}>{tabCount}</Text>
         </View>
       ) : undefined}
-      <IconEl
-        size={size}
-        style={[styles.ctrlIcon, pal.text, addedStyles]}
-        icon={icon}
-      />
+      {iconEl}
     </TouchableOpacity>
   )
 }
@@ -138,17 +163,29 @@ export const MobileShell: React.FC = observer(() => {
 
   const onPressHome = () => {
     track('MobileShell:HomeButtonPressed')
-    if (store.shell.isMainMenuOpen) {
-      store.shell.setMainMenuOpen(false)
-    }
-    if (store.nav.tab.fixedTabPurpose === 0) {
+    if (store.nav.tab.fixedTabPurpose === TabPurpose.Default) {
       if (store.nav.tab.current.url === '/') {
         scrollElRef.current?.scrollToOffset({offset: 0})
       } else {
         store.nav.tab.fixedTabReset()
       }
     } else {
-      store.nav.switchTo(0, false)
+      store.nav.switchTo(TabPurpose.Default, false)
+      if (store.nav.tab.index === 0) {
+        store.nav.tab.fixedTabReset()
+      }
+    }
+  }
+  const onPressSearch = () => {
+    track('MobileShell:SearchButtonPressed')
+    if (store.nav.tab.fixedTabPurpose === TabPurpose.Search) {
+      if (store.nav.tab.current.url === '/') {
+        scrollElRef.current?.scrollToOffset({offset: 0})
+      } else {
+        store.nav.tab.fixedTabReset()
+      }
+    } else {
+      store.nav.switchTo(TabPurpose.Search, false)
       if (store.nav.tab.index === 0) {
         store.nav.tab.fixedTabReset()
       }
@@ -156,13 +193,10 @@ export const MobileShell: React.FC = observer(() => {
   }
   const onPressNotifications = () => {
     track('MobileShell:NotificationsButtonPressed')
-    if (store.shell.isMainMenuOpen) {
-      store.shell.setMainMenuOpen(false)
-    }
-    if (store.nav.tab.fixedTabPurpose === 1) {
+    if (store.nav.tab.fixedTabPurpose === TabPurpose.Notifs) {
       store.nav.tab.fixedTabReset()
     } else {
-      store.nav.switchTo(1, false)
+      store.nav.switchTo(TabPurpose.Notifs, false)
       if (store.nav.tab.index === 0) {
         store.nav.tab.fixedTabReset()
       }
@@ -344,8 +378,12 @@ export const MobileShell: React.FC = observer(() => {
     )
   }
 
-  const isAtHome = store.nav.tab.current.url === '/'
-  const isAtNotifications = store.nav.tab.current.url === '/notifications'
+  const isAtHome =
+    store.nav.tab.current.url === TabPurposeMainPath[TabPurpose.Default]
+  const isAtSearch =
+    store.nav.tab.current.url === TabPurposeMainPath[TabPurpose.Search]
+  const isAtNotifications =
+    store.nav.tab.current.url === TabPurposeMainPath[TabPurpose.Notifs]
 
   const screenBg = {
     backgroundColor: theme.colorScheme === 'dark' ? colors.gray7 : colors.gray1,
@@ -456,6 +494,11 @@ export const MobileShell: React.FC = observer(() => {
         <Btn
           icon={isAtHome ? 'home-solid' : 'home'}
           onPress={onPressHome}
+          onLongPress={TABS_ENABLED ? doNewTab('/') : undefined}
+        />
+        <Btn
+          icon={isAtSearch ? 'search-solid' : 'search'}
+          onPress={onPressSearch}
           onLongPress={TABS_ENABLED ? doNewTab('/') : undefined}
         />
         {TABS_ENABLED ? (
@@ -580,7 +623,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderTopWidth: 1,
     paddingLeft: 5,
-    paddingRight: 15,
+    paddingRight: 25,
   },
   ctrl: {
     flex: 1,
@@ -617,5 +660,9 @@ const styles = StyleSheet.create({
   },
   inactive: {
     color: colors.gray3,
+  },
+  bumpUpOnePixel: {
+    position: 'relative',
+    top: -1,
   },
 })

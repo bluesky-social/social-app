@@ -14,7 +14,7 @@ export const defaultTheme: Theme = {
       link: colors.blue3,
       border: '#f0e9e9',
       borderDark: '#e0d9d9',
-      icon: colors.gray3,
+      icon: colors.gray4,
 
       // non-standard
       textVeryLight: colors.gray4,
@@ -273,7 +273,7 @@ export const darkTheme: Theme = {
       link: colors.blue3,
       border: colors.gray6,
       borderDark: colors.gray5,
-      icon: colors.gray5,
+      icon: colors.gray4,
 
       // non-standard
       textVeryLight: colors.gray4,

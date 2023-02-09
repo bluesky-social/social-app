@@ -85,7 +85,7 @@ export const Home = observer(function Home({
 
   return (
     <View style={s.h100pct}>
-      <ViewHeader title="Bluesky" subtitle="Private Beta" canGoBack={false} />
+      <ViewHeader title="Bluesky" canGoBack={false} />
       <Feed
         testID="homeFeed"
         key="default"

@@ -7,6 +7,7 @@ import SplashScreen from 'react-native-splash-screen'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
 import {SegmentClient, AnalyticsProvider} from '@segment/analytics-react-native'
+import {TabPurpose} from './state/models/navigation'
 import {ThemeProvider} from './view/lib/ThemeContext'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
@@ -44,7 +45,7 @@ const App = observer(() => {
         store.log.debug('Notifee foreground event', {type})
         if (type === EventType.PRESS) {
           store.log.debug('User pressed a notifee, opening notifications')
-          store.nav.switchTo(1, true)
+          store.nav.switchTo(TabPurpose.Notifs, true)
         }
       })
     })

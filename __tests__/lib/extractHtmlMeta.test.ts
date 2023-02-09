@@ -2,6 +2,7 @@ import {extractHtmlMeta} from '../../src/lib/extractHtmlMeta'
 import {exampleComHtml} from './__mocks__/exampleComHtml'
 import {youtubeHTML} from './__mocks__/youtubeHtml'
 import {tiktokHtml} from './__mocks__/tiktokHtml'
+import {youtubeChannelHtml} from './__mocks__/youtubeChannelHtml'
 
 describe('extractHtmlMeta', () => {
   const cases = [
@@ -76,6 +77,19 @@ describe('extractHtmlMeta', () => {
       description:
         'Stunning HD Video ( 1080p ) of Patagonian Nature with Relaxing Native American Shamanic Music. HD footage used from ',
       image: 'https://i.ytimg.com/vi/x6UITRjhijI/sddefault.jpg',
+    }
+    const output = extractHtmlMeta({html: input, hostname: 'youtube.com'})
+    expect(output).toEqual(expectedOutput)
+  })
+
+  it('extracts avatar from a youtube channel', () => {
+    const input = youtubeChannelHtml
+    const expectedOutput = {
+      title: 'penguinz0',
+      description:
+        'Clips channel: https://www.youtube.com/channel/UC4EQHfzIbkL_Skit_iKt1aA\n\nTwitter:     https://twitter.com/MoistCr1TiKaL\n\nInstagram:    https://www.instagram.com/bigmoistcr1tikal/?hl=en\n\nTwitch: https://www.twitch.tv/moistcr1tikal\n\nSnapchat: Hugecharles\n\nTik Tok: Hugecharles\n\nI don&#39;t have any other public accounts.',
+      image:
+        'https://yt3.googleusercontent.com/ytc/AL5GRJWOhJOuUC6C2b7gP-5D2q6ypXbcOOckyAE1En4RUQ=s176-c-k-c0x00ffffff-no-rj',
     }
     const output = extractHtmlMeta({html: input, hostname: 'youtube.com'})
     expect(output).toEqual(expectedOutput)

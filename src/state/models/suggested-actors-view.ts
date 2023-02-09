@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyActorGetSuggestions as GetSuggestions} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {cleanError} from '../../lib/strings'
+import {bundleAsync} from '../../lib/async/bundle'
 
 const PAGE_SIZE = 30
 
@@ -9,18 +10,21 @@ export type SuggestedActor = GetSuggestions.Actor
 
 export class SuggestedActorsViewModel {
   // state
+  pageSize = PAGE_SIZE
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
   hasMore = true
   loadMoreCursor?: string
-  private _loadMorePromise: Promise<void> | undefined
 
   // data
   suggestions: SuggestedActor[] = []
 
-  constructor(public rootStore: RootStoreModel) {
+  constructor(public rootStore: RootStoreModel, opts?: {pageSize?: number}) {
+    if (opts?.pageSize) {
+      this.pageSize = opts.pageSize
+    }
     makeAutoObservable(
       this,
       {
@@ -49,14 +53,35 @@ export class SuggestedActorsViewModel {
     return this.loadMore(true)
   }
 
-  async loadMore(isRefreshing = false) {
-    if (this._loadMorePromise) {
-      return this._loadMorePromise
+  loadMore = bundleAsync(async (replace: boolean = false) => {
+    if (!replace && !this.hasMore) {
+      return
     }
-    this._loadMorePromise = this._load(isRefreshing)
-    await this._loadMorePromise
-    this._loadMorePromise = undefined
-  }
+    this._xLoading(replace)
+    try {
+      let items: SuggestedActor[] = this.suggestions
+      if (replace) {
+        items = []
+        this.loadMoreCursor = undefined
+      }
+      let res
+      do {
+        res = await this.rootStore.api.app.bsky.actor.getSuggestions({
+          limit: this.pageSize,
+          cursor: this.loadMoreCursor,
+        })
+        this.loadMoreCursor = res.data.cursor
+        this.hasMore = !!this.loadMoreCursor
+        items = items.concat(res.data.actors)
+      } while (items.length < this.pageSize && this.hasMore)
+      runInAction(() => {
+        this.suggestions = items
+      })
+      this._xIdle()
+    } catch (e: any) {
+      this._xIdle(e)
+    }
+  })
 
   // state transitions
   // =
@@ -74,49 +99,6 @@ export class SuggestedActorsViewModel {
     this.error = cleanError(err)
     if (err) {
       this.rootStore.log.error('Failed to fetch suggested actors', err)
-    }
-  }
-
-  // loader functions
-  // =
-
-  private async _load(replace = false) {
-    if (!replace && !this.hasMore) {
-      return
-    }
-    this._xLoading(replace)
-    try {
-      let items: SuggestedActor[] = this.suggestions
-      if (replace) {
-        items = []
-        this.loadMoreCursor = undefined
-      }
-      let res
-      do {
-        res = await this.rootStore.api.app.bsky.actor.getSuggestions({
-          limit: PAGE_SIZE,
-          cursor: this.loadMoreCursor,
-        })
-        this.loadMoreCursor = res.data.cursor
-        this.hasMore = !!this.loadMoreCursor
-        items = items.concat(
-          res.data.actors.filter(actor => {
-            if (actor.did === this.rootStore.me.did) {
-              return false // skip self
-            }
-            if (actor.myState?.follow) {
-              return false // skip already-followed users
-            }
-            return true
-          }),
-        )
-      } while (items.length < PAGE_SIZE && this.hasMore)
-      runInAction(() => {
-        this.suggestions = items
-      })
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
     }
   }
 }
