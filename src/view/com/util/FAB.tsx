@@ -14,10 +14,18 @@ import {useStores} from '../../../state'
 
 type OnPress = ((event: GestureResponderEvent) => void) | undefined
 export const FAB = observer(
-  ({icon, onPress}: {icon: IconProp; onPress: OnPress}) => {
+  ({
+    testID,
+    icon,
+    onPress,
+  }: {
+    testID: string
+    icon: IconProp
+    onPress: OnPress
+  }) => {
     const store = useStores()
     return (
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableWithoutFeedback testID={testID} onPress={onPress}>
         <View
           style={[
             styles.outer,

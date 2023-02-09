@@ -120,7 +120,11 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
           </LinearGradient>
         </TouchableOpacity>
       ) : undefined}
-      <FAB icon="pen-nib" onPress={() => onPressCompose(false)} />
+      <FAB
+        testID="composeFAB"
+        icon="pen-nib"
+        onPress={() => onPressCompose(false)}
+      />
     </View>
   )
 })

@@ -41,7 +41,7 @@ describe('Example', () => {
 
   it('As Alice, I can login, and post a text', async () => {
     await grantAccessToUserWithValidCredentials('alice')
-    await element(by.id('composePromptButton')).tap()
+    await element(by.id('composeFAB')).tap()
     await device.takeScreenshot('1- opened composer')
     await element(by.id('composerTextInput')).typeText(
       'Greetings earthlings, I come in peace... and to run some tests.',
@@ -49,7 +49,7 @@ describe('Example', () => {
     await device.takeScreenshot('2- entered text')
     await element(by.id('composerPublishButton')).tap()
     await device.takeScreenshot('3- opened general section')
-    await expect(element(by.id('composePromptButton'))).toBeVisible()
+    await expect(element(by.id('composeFAB'))).toBeVisible()
   })
 
   it('I can create a new account', async () => {
