@@ -83,7 +83,9 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[pal.view, styles.container]}>
+      <ScrollView
+        testID="searchScrollView"
+        style={[pal.view, styles.container]}>
         <View style={[pal.view, pal.border, styles.header]}>
           <TouchableOpacity
             testID="viewHeaderBackOrMenuBtn"
@@ -130,7 +132,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
         </View>
         <View style={styles.outputContainer}>
           {query && autocompleteView.searchRes.length ? (
-            <ScrollView testID="searchScrollView" onScroll={Keyboard.dismiss}>
+            <>
               {autocompleteView.searchRes.map(item => (
                 <ProfileCard
                   key={item.did}
@@ -139,8 +141,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
                   avatar={item.avatar}
                 />
               ))}
-              <View style={s.footerSpacer} />
-            </ScrollView>
+            </>
           ) : query && !autocompleteView.searchRes.length ? (
             <View>
               <Text style={[pal.textLight, styles.searchPrompt]}>
@@ -161,7 +162,8 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
             </ScrollView>
           )}
         </View>
-      </View>
+        <View style={s.footerSpacer} />
+      </ScrollView>
     </TouchableWithoutFeedback>
   )
 })
@@ -176,7 +178,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingTop: 4,
-    paddingBottom: 5,
+    marginBottom: 14,
   },
   headerMenuBtn: {
     width: 40,
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 30,
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 8,
   },
   headerSearchIcon: {
     marginRight: 6,
@@ -207,9 +209,5 @@ const styles = StyleSheet.create({
   searchPrompt: {
     textAlign: 'center',
     paddingTop: 10,
-  },
-
-  outputContainer: {
-    flex: 1,
   },
 })
