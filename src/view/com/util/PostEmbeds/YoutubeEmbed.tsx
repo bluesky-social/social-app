@@ -1,16 +1,18 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {useState} from 'react'
 import {
   View,
   StyleSheet,
   Pressable,
   TouchableWithoutFeedback,
+  EmitterSubscription,
 } from 'react-native'
 import YoutubePlayer from 'react-native-youtube-iframe'
 import {usePalette} from '../../../lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ExternalLinkEmbed from './ExternalLinkEmbed'
 import {PresentedExternal} from '@atproto/api/dist/client/types/app/bsky/embed/external'
+import {useStores} from '../../../../state'
 
 const YoutubeEmbed = ({
   link,
@@ -19,6 +21,7 @@ const YoutubeEmbed = ({
   videoId: string
   link: PresentedExternal
 }) => {
+  const store = useStores()
   const [displayVideoPlayer, setDisplayVideoPlayer] = useState(false)
   const [playerDimensions, setPlayerDimensions] = useState({
     width: 0,
@@ -36,6 +39,15 @@ const YoutubeEmbed = ({
       height: event.nativeEvent.layout.height,
     })
   }
+  useEffect(() => {
+    let sub: EmitterSubscription
+    if (displayVideoPlayer) {
+      sub = store.onNavigation(() => {
+        setDisplayVideoPlayer(false)
+      })
+    }
+    return () => sub && sub.remove()
+  }, [displayVideoPlayer, store])
 
   if (!displayVideoPlayer) {
     return (
