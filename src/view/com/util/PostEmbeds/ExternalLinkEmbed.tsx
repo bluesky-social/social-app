@@ -8,19 +8,19 @@ import {PresentedExternal} from '@atproto/api/dist/client/types/app/bsky/embed/e
 const ExternalLinkEmbed = ({
   link,
   onImagePress,
+  imageChild,
 }: {
   link: PresentedExternal
   onImagePress: () => void
+  imageChild: React.ReactNode
 }) => {
   const pal = usePalette('default')
   return (
     <>
       {link.thumb ? (
-        <Image
-          uri={link.thumb}
-          style={styles.extImage}
-          onPress={onImagePress}
-        />
+        <Image uri={link.thumb} style={styles.extImage} onPress={onImagePress}>
+          {imageChild}
+        </Image>
       ) : undefined}
       <View style={styles.extInner}>
         <Text type="md-bold" numberOfLines={2} style={[pal.text]}>
