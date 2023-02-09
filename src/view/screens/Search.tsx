@@ -20,6 +20,7 @@ import {WhoToFollow} from '../com/discover/WhoToFollow'
 import {SuggestedPosts} from '../com/discover/SuggestedPosts'
 import {ProfileCard} from '../com/profile/ProfileCard'
 import {usePalette} from '../lib/hooks/usePalette'
+import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
 import {useAnalytics} from '@segment/analytics-react-native'
 
 const MENU_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
@@ -30,6 +31,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const {track} = useAnalytics()
   const scrollElRef = React.useRef<ScrollView>(null)
+  const onMainScroll = useOnMainScroll(store)
   const textInput = React.useRef<TextInput>(null)
   const [lastRenderTime, setRenderTime] = React.useState<number>(Date.now()) // used to trigger reloads
   const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
@@ -84,8 +86,11 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ScrollView
+        ref={scrollElRef}
         testID="searchScrollView"
-        style={[pal.view, styles.container]}>
+        style={[pal.view, styles.container]}
+        onScroll={onMainScroll}
+        scrollEventThrottle={100}>
         <View style={[pal.view, pal.border, styles.header]}>
           <TouchableOpacity
             testID="viewHeaderBackOrMenuBtn"
