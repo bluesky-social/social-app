@@ -51,14 +51,18 @@ const YoutubeEmbed = ({
   }
 
   const height = (playerDimensions.width / 16) * 9
+  const noop = () => {}
 
   return (
-    <TouchableWithoutFeedback>
-      <YoutubePlayer
-        height={height}
-        videoId={videoId}
-        webViewStyle={styles.webView}
-      />
+    <TouchableWithoutFeedback onPress={noop}>
+      <View>
+        {/* Removing the outter View will make tap events propagate to parents */}
+        <YoutubePlayer
+          height={height}
+          videoId={videoId}
+          webViewStyle={styles.webView}
+        />
+      </View>
     </TouchableWithoutFeedback>
   )
 }
