@@ -18,6 +18,7 @@ import {
   CogIcon,
   MagnifyingGlassIcon,
 } from '../../lib/icons'
+import {TabPurpose, TabPurposeMainPath} from '../../../state/models/navigation'
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {Text} from '../../com/util/text/Text'
 import {ToggleButton} from '../../com/util/forms/ToggleButton'
@@ -36,10 +37,12 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
     track('Menu:ItemClicked', {url})
 
     onClose()
-    if (url === '/notifications') {
-      store.nav.switchTo(1, true)
+    if (url === TabPurposeMainPath[TabPurpose.Notifs]) {
+      store.nav.switchTo(TabPurpose.Notifs, true)
+    } else if (url === TabPurposeMainPath[TabPurpose.Search]) {
+      store.nav.switchTo(TabPurpose.Search, true)
     } else {
-      store.nav.switchTo(0, true)
+      store.nav.switchTo(TabPurpose.Default, true)
       if (url !== '/') {
         store.nav.navigate(url)
       }

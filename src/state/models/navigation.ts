@@ -12,13 +12,20 @@ function genId() {
 // we've since decided to pause that idea and do something more traditional
 // until we're fully sure what that is, the tabs are being repurposed into a fixed topology
 // - Tab 0: The "Default" tab
-// - Tab 1: The "Notifications" tab
+// - Tab 1: The "Search" tab
+// - Tab 2: The "Notifications" tab
 // These tabs always retain the first item in their history.
-// The default tab is used for basically everything except notifications.
 // -prf
 export enum TabPurpose {
   Default = 0,
-  Notifs = 1,
+  Search = 1,
+  Notifs = 2,
+}
+
+export const TabPurposeMainPath: Record<TabPurpose, string> = {
+  [TabPurpose.Default]: '/',
+  [TabPurpose.Search]: '/search',
+  [TabPurpose.Notifs]: '/notifications',
 }
 
 interface HistoryItem {
@@ -37,11 +44,9 @@ export class NavigationTabModel {
   isNewTab = false
 
   constructor(public fixedTabPurpose: TabPurpose) {
-    if (fixedTabPurpose === TabPurpose.Notifs) {
-      this.history = [{url: '/notifications', ts: Date.now(), id: genId()}]
-    } else {
-      this.history = [{url: '/', ts: Date.now(), id: genId()}]
-    }
+    this.history = [
+      {url: TabPurposeMainPath[fixedTabPurpose], ts: Date.now(), id: genId()},
+    ]
     makeAutoObservable(this, {
       serialize: false,
       hydrate: false,
@@ -112,8 +117,7 @@ export class NavigationTabModel {
       }
       // TEMP ensure the tab has its purpose's main view -prf
       if (this.history.length < 1) {
-        const fixedUrl =
-          this.fixedTabPurpose === TabPurpose.Notifs ? '/notifications' : '/'
+        const fixedUrl = TabPurposeMainPath[this.fixedTabPurpose]
         this.history.push({url: fixedUrl, ts: Date.now(), id: genId()})
       }
       this.history.push({url, title, ts: Date.now(), id: genId()})
@@ -219,6 +223,7 @@ export class NavigationTabModel {
 export class NavigationModel {
   tabs: NavigationTabModel[] = [
     new NavigationTabModel(TabPurpose.Default),
+    new NavigationTabModel(TabPurpose.Search),
     new NavigationTabModel(TabPurpose.Notifs),
   ]
   tabIndex = 0
@@ -233,6 +238,7 @@ export class NavigationModel {
   clear() {
     this.tabs = [
       new NavigationTabModel(TabPurpose.Default),
+      new NavigationTabModel(TabPurpose.Search),
       new NavigationTabModel(TabPurpose.Notifs),
     ]
     this.tabIndex = 0
@@ -294,10 +300,15 @@ export class NavigationModel {
   // fixed tab helper function
   // -prf
   switchTo(purpose: TabPurpose, reset: boolean) {
-    if (purpose === TabPurpose.Notifs) {
-      this.tabIndex = 1
-    } else {
-      this.tabIndex = 0
+    switch (purpose) {
+      case TabPurpose.Notifs:
+        this.tabIndex = 2
+        break
+      case TabPurpose.Search:
+        this.tabIndex = 1
+        break
+      default:
+        this.tabIndex = 0
     }
     if (reset) {
       this.tab.fixedTabReset()
