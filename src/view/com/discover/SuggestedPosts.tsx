@@ -25,7 +25,7 @@ export const SuggestedPosts = observer(() => {
   return (
     <>
       {(suggestedPostsView.hasContent || suggestedPostsView.isLoading) && (
-        <Text type="lg-heavy" style={[styles.heading, pal.text]}>
+        <Text type="xl-heavy" style={[styles.heading, pal.text]}>
           Recently, on Bluesky...
         </Text>
       )}
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   heading: {
     paddingHorizontal: 12,
     paddingTop: 16,
-    paddingBottom: 8,
+    paddingBottom: 12,
   },
 
   bottomBorder: {

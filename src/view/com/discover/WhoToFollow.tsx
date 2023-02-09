@@ -6,8 +6,6 @@ import {
   View,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
-import LinearGradient from 'react-native-linear-gradient'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import _omit from 'lodash.omit'
 import {useStores} from '../../../state'
 import {
@@ -15,7 +13,7 @@ import {
   SuggestedActor,
 } from '../../../state/models/suggested-actors-view'
 import * as apilib from '../../../state/lib/api'
-import {s, gradients} from '../../lib/styles'
+import {s} from '../../lib/styles'
 import {ProfileCard} from '../profile/ProfileCard'
 import * as Toast from '../util/Toast'
 import {Text} from '../util/text/Text'
@@ -59,7 +57,7 @@ export const WhoToFollow = observer(() => {
   return (
     <>
       {(suggestedActorsView.hasContent || suggestedActorsView.isLoading) && (
-        <Text type="lg-heavy" style={[styles.heading, pal.text]}>
+        <Text type="xl-heavy" style={[styles.heading, pal.text]}>
           Who to follow
         </Text>
       )}
@@ -110,27 +108,13 @@ function FollowBtn({
   onPress: () => void
 }) {
   const pal = usePalette('default')
-  if (isFollowing) {
-    return (
-      <TouchableOpacity onPress={onPress}>
-        <View style={[styles.btn, pal.btn]}>
-          <Text type="button" style={pal.text}>
-            Unfollow
-          </Text>
-        </View>
-      </TouchableOpacity>
-    )
-  }
   return (
     <TouchableOpacity onPress={onPress}>
-      <LinearGradient
-        colors={[gradients.blueLight.start, gradients.blueLight.end]}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}
-        style={[styles.btn, styles.gradientBtn]}>
-        <FontAwesomeIcon icon="plus" style={[s.white, s.mr5]} size={15} />
-        <Text style={[s.white, s.fw600, s.f15]}>Follow</Text>
-      </LinearGradient>
+      <View style={[styles.btn, pal.btn]}>
+        <Text type="button" style={[pal.text]}>
+          {isFollowing ? 'Unfollow' : 'Follow'}
+        </Text>
+      </View>
     </TouchableOpacity>
   )
 }
@@ -139,7 +123,7 @@ const styles = StyleSheet.create({
   heading: {
     paddingHorizontal: 12,
     paddingTop: 16,
-    paddingBottom: 8,
+    paddingBottom: 12,
   },
 
   bottomBorder: {
@@ -159,9 +143,5 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginLeft: 6,
     paddingHorizontal: 14,
-  },
-  gradientBtn: {
-    paddingHorizontal: 24,
-    paddingVertical: 6,
   },
 })
