@@ -10,7 +10,7 @@ const ExternalLinkEmbed = ({
   onImagePress,
 }: {
   link: PresentedExternal
-  onImagePress: () => {}
+  onImagePress: () => void
 }) => {
   const pal = usePalette('default')
   return (
