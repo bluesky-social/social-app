@@ -88,7 +88,6 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
 
   return (
     <View style={s.h100pct}>
-      <ViewHeader title="Bluesky" canGoBack={false} />
       <Feed
         testID="homeFeed"
         key="default"
@@ -97,7 +96,9 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
         style={s.h100pct}
         onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
+        headerSpacer
       />
+      <ViewHeader title="Bluesky" canGoBack={false} hideOnScroll />
       {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing ? (
         <TouchableOpacity
           style={[
