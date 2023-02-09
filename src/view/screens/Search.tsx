@@ -31,7 +31,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
   const {track} = useAnalytics()
   const scrollElRef = React.useRef<ScrollView>(null)
   const textInput = React.useRef<TextInput>(null)
-  const [lastRenderTime, setRenderTime] = React.useState<number>(0) // used to trigger reloads
+  const [lastRenderTime, setRenderTime] = React.useState<number>(Date.now()) // used to trigger reloads
   const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
   const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
@@ -52,7 +52,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
 
     if (visible) {
       const now = Date.now()
-      if (lastRenderTime - now > FIVE_MIN) {
+      if (now - lastRenderTime > FIVE_MIN) {
         setRenderTime(Date.now()) // trigger reload of suggestions
       }
       store.shell.setMinimalShellMode(false)
