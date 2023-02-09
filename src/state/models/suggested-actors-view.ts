@@ -35,7 +35,8 @@ export class SuggestedActorsViewModel {
   error = ''
   hasMore = true
   loadMoreCursor?: string
-  haveUsedHardcodedSuggestions = false
+
+  private hardCodedSuggestions: SuggestedActor[] | undefined
 
   // data
   suggestions: SuggestedActor[] = []
@@ -76,6 +77,9 @@ export class SuggestedActorsViewModel {
     if (!replace && !this.hasMore) {
       return
     }
+    if (replace) {
+      this.hardCodedSuggestions = undefined
+    }
     this._xLoading(replace)
     try {
       let items: SuggestedActor[] = this.suggestions
@@ -85,21 +89,15 @@ export class SuggestedActorsViewModel {
       }
       let res
       do {
-        if (!this.haveUsedHardcodedSuggestions) {
-          this.haveUsedHardcodedSuggestions = true
-          const suggestionsList = getSuggestionList({
-            serviceUrl: this.rootStore.session.currentSession?.service || '',
-          })
-          res = await this.rootStore.api.app.bsky.actor.getProfiles({
-            actors: suggestionsList,
-          })
-          const profiles = res.data.profiles
-          items = items.concat(
-            profiles.filter(profile => !profile.myState?.follow),
-          )
+        await this.fetchHardcodedSuggestions()
+        if (this.hardCodedSuggestions && this.hardCodedSuggestions.length > 0) {
+          // pull from the hard-coded suggestions
+          const newItems = this.hardCodedSuggestions.splice(0, this.pageSize)
+          items = items.concat(newItems)
           this.hasMore = true
           this.loadMoreCursor = undefined
         } else {
+          // pull from the PDS' algo
           res = await this.rootStore.api.app.bsky.actor.getSuggestions({
             limit: this.pageSize,
             cursor: this.loadMoreCursor,
@@ -122,6 +120,32 @@ export class SuggestedActorsViewModel {
     }
   })
 
+  private async fetchHardcodedSuggestions() {
+    if (!this.hardCodedSuggestions) {
+      try {
+        const suggestionsList = getSuggestionList({
+          serviceUrl: this.rootStore.session.currentSession?.service || '',
+        })
+        const res = await this.rootStore.api.app.bsky.actor.getProfiles({
+          actors: suggestionsList,
+        })
+        runInAction(() => {
+          this.hardCodedSuggestions = res.data.profiles.filter(
+            profile => !profile.myState?.follow,
+          )
+        })
+      } catch (e) {
+        this.rootStore.log.error(
+          'Failed to getProfiles() for suggested follows',
+          {e},
+        )
+        runInAction(() => {
+          this.hardCodedSuggestions = []
+        })
+      }
+    }
+  }
+
   // state transitions
   // =
 
@@ -129,10 +153,6 @@ export class SuggestedActorsViewModel {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
-
-    if (isRefreshing) {
-      this.haveUsedHardcodedSuggestions = false
-    }
   }
 
   private _xIdle(err?: any) {

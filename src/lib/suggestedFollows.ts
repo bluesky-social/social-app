@@ -50,11 +50,9 @@ const productionSuggestedFollows = [
   'paul',
 ].map(handle => `${handle}.bsky.social`)
 
-const stagingSuggestedFollows = [
-  // TODO:
-  'jay',
-  'paul',
-].map(handle => `${handle}.staging.bsky.dev`)
+const stagingSuggestedFollows = ['arcalinea', 'paul', 'paul2'].map(
+  handle => `${handle}.staging.bsky.dev`,
+)
 
 const devSuggestedFollows = ['alice', 'bob', 'carla'].map(
   handle => `${handle}.test`,
