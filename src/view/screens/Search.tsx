@@ -20,6 +20,7 @@ import {WhoToFollow} from '../com/discover/WhoToFollow'
 import {SuggestedPosts} from '../com/discover/SuggestedPosts'
 import {ProfileCard} from '../com/profile/ProfileCard'
 import {usePalette} from '../lib/hooks/usePalette'
+import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
 import {useAnalytics} from '@segment/analytics-react-native'
 
 const MENU_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
@@ -30,8 +31,9 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const {track} = useAnalytics()
   const scrollElRef = React.useRef<ScrollView>(null)
+  const onMainScroll = useOnMainScroll(store)
   const textInput = React.useRef<TextInput>(null)
-  const [lastRenderTime, setRenderTime] = React.useState<number>(0) // used to trigger reloads
+  const [lastRenderTime, setRenderTime] = React.useState<number>(Date.now()) // used to trigger reloads
   const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
   const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
@@ -52,7 +54,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
 
     if (visible) {
       const now = Date.now()
-      if (lastRenderTime - now > FIVE_MIN) {
+      if (now - lastRenderTime > FIVE_MIN) {
         setRenderTime(Date.now()) // trigger reload of suggestions
       }
       store.shell.setMinimalShellMode(false)
@@ -83,7 +85,12 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[pal.view, styles.container]}>
+      <ScrollView
+        ref={scrollElRef}
+        testID="searchScrollView"
+        style={[pal.view, styles.container]}
+        onScroll={onMainScroll}
+        scrollEventThrottle={100}>
         <View style={[pal.view, pal.border, styles.header]}>
           <TouchableOpacity
             testID="viewHeaderBackOrMenuBtn"
@@ -128,40 +135,38 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
             </View>
           ) : undefined}
         </View>
-        <View style={styles.outputContainer}>
-          {query && autocompleteView.searchRes.length ? (
-            <ScrollView testID="searchScrollView" onScroll={Keyboard.dismiss}>
-              {autocompleteView.searchRes.map(item => (
-                <ProfileCard
-                  key={item.did}
-                  handle={item.handle}
-                  displayName={item.displayName}
-                  avatar={item.avatar}
-                />
-              ))}
-              <View style={s.footerSpacer} />
-            </ScrollView>
-          ) : query && !autocompleteView.searchRes.length ? (
-            <View>
-              <Text style={[pal.textLight, styles.searchPrompt]}>
-                No results found for {autocompleteView.prefix}
-              </Text>
-            </View>
-          ) : isInputFocused ? (
-            <View>
-              <Text style={[pal.textLight, styles.searchPrompt]}>
-                Search for users on the network
-              </Text>
-            </View>
-          ) : (
-            <ScrollView onScroll={Keyboard.dismiss} ref={scrollElRef}>
-              <WhoToFollow key={`wtf-${lastRenderTime}`} />
-              <SuggestedPosts key={`sp-${lastRenderTime}`} />
-              <View style={s.footerSpacer} />
-            </ScrollView>
-          )}
-        </View>
-      </View>
+        {query && autocompleteView.searchRes.length ? (
+          <>
+            {autocompleteView.searchRes.map(item => (
+              <ProfileCard
+                key={item.did}
+                handle={item.handle}
+                displayName={item.displayName}
+                avatar={item.avatar}
+              />
+            ))}
+          </>
+        ) : query && !autocompleteView.searchRes.length ? (
+          <View>
+            <Text style={[pal.textLight, styles.searchPrompt]}>
+              No results found for {autocompleteView.prefix}
+            </Text>
+          </View>
+        ) : isInputFocused ? (
+          <View>
+            <Text style={[pal.textLight, styles.searchPrompt]}>
+              Search for users on the network
+            </Text>
+          </View>
+        ) : (
+          <ScrollView onScroll={Keyboard.dismiss}>
+            <WhoToFollow key={`wtf-${lastRenderTime}`} />
+            <SuggestedPosts key={`sp-${lastRenderTime}`} />
+            <View style={s.footerSpacer} />
+          </ScrollView>
+        )}
+        <View style={s.footerSpacer} />
+      </ScrollView>
     </TouchableWithoutFeedback>
   )
 })
@@ -176,7 +181,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingTop: 4,
-    paddingBottom: 5,
+    marginBottom: 14,
   },
   headerMenuBtn: {
     width: 40,
@@ -189,7 +194,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 30,
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 8,
   },
   headerSearchIcon: {
     marginRight: 6,
@@ -197,7 +202,7 @@ const styles = StyleSheet.create({
   },
   headerSearchInput: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 17,
   },
   headerCancelBtn: {
     width: 60,
@@ -207,9 +212,5 @@ const styles = StyleSheet.create({
   searchPrompt: {
     textAlign: 'center',
     paddingTop: 10,
-  },
-
-  outputContainer: {
-    flex: 1,
   },
 })

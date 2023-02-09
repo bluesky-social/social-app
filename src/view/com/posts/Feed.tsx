@@ -13,30 +13,29 @@ import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {FeedModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
-import {PromptButtons} from './PromptButtons'
 import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
 import {s} from '../../lib/styles'
 import {useAnalytics} from '@segment/analytics-react-native'
 
-const COMPOSE_PROMPT_ITEM = {_reactKey: '__prompt__'}
+const HEADER_SPACER_ITEM = {_reactKey: '__spacer__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 
 export const Feed = observer(function Feed({
   feed,
   style,
   scrollElRef,
-  onPressCompose,
   onPressTryAgain,
   onScroll,
   testID,
+  headerSpacer,
 }: {
   feed: FeedModel
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onPressCompose: (imagesOpen?: boolean) => void
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
   testID?: string
+  headerSpacer?: boolean
 }) {
   const {screen, track} = useAnalytics()
 
@@ -49,9 +48,7 @@ export const Feed = observer(function Feed({
   //   renderItem function renders components that follow React performance best practices
   //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = ({item}: {item: any}) => {
-    if (item === COMPOSE_PROMPT_ITEM) {
-      return <PromptButtons onPressCompose={onPressCompose} />
-    } else if (item === EMPTY_FEED_ITEM) {
+    if (item === EMPTY_FEED_ITEM) {
       return (
         <EmptyState
           icon="bars"
@@ -59,6 +56,9 @@ export const Feed = observer(function Feed({
           style={styles.emptyState}
         />
       )
+    }
+    if (item === HEADER_SPACER_ITEM) {
+      return <View style={styles.headerSpacer} />
     } else {
       return <FeedItem item={item} />
     }
@@ -77,12 +77,15 @@ export const Feed = observer(function Feed({
       .loadMore()
       .catch(err => feed.rootStore.log.error('Failed to load more posts', err))
   }
-  let data
+  let data = []
+  if (headerSpacer) {
+    data.push(HEADER_SPACER_ITEM)
+  }
   if (feed.hasLoaded) {
     if (feed.isEmpty) {
-      data = [COMPOSE_PROMPT_ITEM, EMPTY_FEED_ITEM]
+      data.push(EMPTY_FEED_ITEM)
     } else {
-      data = [COMPOSE_PROMPT_ITEM].concat(feed.feed)
+      data = data.concat(feed.feed)
     }
   }
   const FeedFooter = () =>
@@ -95,7 +98,6 @@ export const Feed = observer(function Feed({
     )
   return (
     <View testID={testID} style={style}>
-      {!data && <PromptButtons onPressCompose={onPressCompose} />}
       {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
       {feed.hasError && (
         <ErrorMessage message={feed.error} onPressTryAgain={onPressTryAgain} />
@@ -120,6 +122,7 @@ export const Feed = observer(function Feed({
 })
 
 const styles = StyleSheet.create({
+  headerSpacer: {height: 42},
   feedFooter: {paddingTop: 20},
   emptyState: {paddingVertical: 40},
 })

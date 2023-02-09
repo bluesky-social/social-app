@@ -88,17 +88,17 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
 
   return (
     <View style={s.h100pct}>
-      <ViewHeader title="Bluesky" canGoBack={false} />
       <Feed
         testID="homeFeed"
         key="default"
         feed={store.me.mainFeed}
         scrollElRef={scrollElRef}
         style={s.h100pct}
-        onPressCompose={onPressCompose}
         onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
+        headerSpacer
       />
+      <ViewHeader title="Bluesky" canGoBack={false} hideOnScroll />
       {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing ? (
         <TouchableOpacity
           style={[
