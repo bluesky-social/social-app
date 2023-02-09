@@ -1,5 +1,4 @@
 import React from 'react'
-import {Link} from '../Link'
 import {Text} from '../text/Text'
 import {Image} from '../images/Image'
 import {StyleSheet, View} from 'react-native'
@@ -40,18 +39,6 @@ const ExternalLinkEmbed = ({link, onImagePress}) => {
 }
 
 const styles = StyleSheet.create({
-  imagesContainer: {
-    marginTop: 4,
-  },
-  singleImage: {
-    borderRadius: 8,
-    maxHeight: 500,
-  },
-  extOuter: {
-    borderWidth: 1,
-    borderRadius: 8,
-    marginTop: 4,
-  },
   extInner: {
     padding: 10,
   },

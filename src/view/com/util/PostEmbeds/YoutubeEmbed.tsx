@@ -10,8 +10,15 @@ import YoutubePlayer from 'react-native-youtube-iframe'
 import {usePalette} from '../../../lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ExternalLinkEmbed from './ExternalLinkEmbed'
+import {PresentedExternal} from '@atproto/api/dist/client/types/app/bsky/embed/external'
 
-const YoutubeEmbed = ({link, videoId}: {videoId: string}) => {
+const YoutubeEmbed = ({
+  link,
+  videoId,
+}: {
+  videoId: string
+  link: PresentedExternal
+}) => {
   const [displayVideoPlayer, setDisplayVideoPlayer] = useState(false)
   const [playerDimensions, setPlayerDimensions] = useState({
     width: 0,
@@ -21,22 +28,20 @@ const YoutubeEmbed = ({link, videoId}: {videoId: string}) => {
   const handlePlayButtonPressed = () => {
     setDisplayVideoPlayer(true)
   }
-  const handleOnLayout = event => {
+  const handleOnLayout = (event: {
+    nativeEvent: {layout: {width: any; height: any}}
+  }) => {
     setPlayerDimensions({
       width: event.nativeEvent.layout.width,
       height: event.nativeEvent.layout.height,
     })
   }
 
-  console.log('videoId', videoId)
-
   if (!displayVideoPlayer) {
     return (
       <View
         style={[styles.extOuter, pal.view, pal.border]}
-        href={link.uri}
-        onLayout={handleOnLayout}
-        noFeedback>
+        onLayout={handleOnLayout}>
         <ExternalLinkEmbed link={link} onImagePress={handlePlayButtonPressed} />
         <Pressable onPress={handlePlayButtonPressed} style={styles.playButton}>
           <FontAwesomeIcon icon="play" size={24} color="white" />
@@ -58,7 +63,6 @@ const YoutubeEmbed = ({link, videoId}: {videoId: string}) => {
   )
 }
 
-// TODO: move this out
 const styles = StyleSheet.create({
   extOuter: {
     borderWidth: 1,

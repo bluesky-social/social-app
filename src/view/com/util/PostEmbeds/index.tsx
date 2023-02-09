@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import {Link} from '../Link'
-import {Text} from '../text/Text'
 import {Image} from '../images/Image'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ImagesLightbox} from '../../../../state/models/shell-ui'
@@ -17,35 +16,12 @@ import {usePalette} from '../../../lib/hooks/usePalette'
 import {saveImageModal} from '../../../../lib/images'
 import YoutubeEmbed from './YoutubeEmbed'
 import ExternalLinkEmbed from './ExternalLinkEmbed'
+import {getYoutubeVideoId} from './getYoutubeVideoId'
 
 type Embed =
   | AppBskyEmbedImages.Presented
   | AppBskyEmbedExternal.Presented
   | {$type: string; [k: string]: unknown}
-
-// TODO Move this and tests to a new place
-const getYoutubeVideoId = (link: string): string | undefined => {
-  const url = new URL(link)
-  if (
-    url.hostname !== 'www.youtube.com' &&
-    url.hostname !== 'youtube.com' &&
-    url.hostname !== 'youtu.be'
-  ) {
-    return undefined
-  }
-  if (url.hostname === 'youtu.be') {
-    const videoId = url.pathname.split('/')[1]
-    if (!videoId) {
-      return undefined
-    }
-    return videoId
-  }
-  const videoId = url.searchParams.get('v') as string
-  if (!videoId) {
-    return undefined
-  }
-  return videoId
-}
 
 export function PostEmbeds({
   embed,
@@ -140,7 +116,7 @@ export function PostEmbeds({
         style={[styles.extOuter, pal.view, pal.border, style]}
         href={link.uri}
         noFeedback>
-        <ExternalLinkEmbed link={link} style={style} />
+        <ExternalLinkEmbed link={link} />
       </Link>
     )
   }
@@ -158,21 +134,6 @@ const styles = StyleSheet.create({
   extOuter: {
     borderWidth: 1,
     borderRadius: 8,
-    marginTop: 4,
-  },
-  extInner: {
-    padding: 10,
-  },
-  extImage: {
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
-    width: '100%',
-    maxHeight: 200,
-  },
-  extUri: {
-    marginTop: 2,
-  },
-  extDescription: {
     marginTop: 4,
   },
 })
