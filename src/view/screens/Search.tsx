@@ -29,6 +29,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
   const pal = usePalette('default')
   const store = useStores()
   const {track} = useAnalytics()
+  const scrollElRef = React.useRef<ScrollView>(null)
   const textInput = React.useRef<TextInput>(null)
   const [lastRenderTime, setRenderTime] = React.useState<number>(0) // used to trigger reloads
   const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
@@ -39,7 +40,16 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
   )
   const {name} = params
 
+  const onSoftReset = () => {
+    scrollElRef.current?.scrollTo({x: 0, y: 0})
+  }
+
   React.useEffect(() => {
+    const softResetSub = store.onScreenSoftReset(onSoftReset)
+    const cleanup = () => {
+      softResetSub.remove()
+    }
+
     if (visible) {
       const now = Date.now()
       if (lastRenderTime - now > FIVE_MIN) {
@@ -49,6 +59,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
       autocompleteView.setup()
       store.nav.setTitle(navIdx, 'Search')
     }
+    return cleanup
   }, [store, visible, name, navIdx, autocompleteView, lastRenderTime])
 
   const onPressMenu = () => {
@@ -143,7 +154,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
               </Text>
             </View>
           ) : (
-            <ScrollView onScroll={Keyboard.dismiss}>
+            <ScrollView onScroll={Keyboard.dismiss} ref={scrollElRef}>
               <WhoToFollow key={`wtf-${lastRenderTime}`} />
               <SuggestedPosts key={`sp-${lastRenderTime}`} />
               <View style={s.footerSpacer} />

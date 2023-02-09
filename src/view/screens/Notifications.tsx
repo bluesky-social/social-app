@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {View} from 'react-native'
+import {FlatList, View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/notifications/Feed'
 import {useStores} from '../../state'
@@ -11,21 +11,31 @@ import {useAnalytics} from '@segment/analytics-react-native'
 export const Notifications = ({navIdx, visible}: ScreenParams) => {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
+  const scrollElRef = React.useRef<FlatList>(null)
   const {screen} = useAnalytics()
 
   useEffect(() => {
     screen('Notifications')
   }, [screen])
 
+  const onSoftReset = () => {
+    scrollElRef.current?.scrollToOffset({offset: 0})
+  }
+
   useEffect(() => {
+    const softResetSub = store.onScreenSoftReset(onSoftReset)
+    const cleanup = () => {
+      softResetSub.remove()
+    }
     if (!visible) {
-      return
+      return cleanup
     }
     store.log.debug('Updating notifications feed')
     store.me.notifications.update().then(() => {
       store.me.notifications.updateReadState()
     })
     store.nav.setTitle(navIdx, 'Notifications')
+    return cleanup
   }, [visible, store, navIdx])
 
   const onPressTryAgain = () => {
@@ -39,6 +49,7 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
         view={store.me.notifications}
         onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
+        scrollElRef={scrollElRef}
       />
     </View>
   )
