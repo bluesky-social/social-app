@@ -7,15 +7,16 @@ import {
   Image as RNImage,
 } from 'react-native'
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
-import {Link} from '../util/Link'
-import {Text} from './text/Text'
-import {Image} from './images/Image'
-import {ImageLayoutGrid} from './images/ImageLayoutGrid'
-import {ImagesLightbox} from '../../../state/models/shell-ui'
-import {useStores} from '../../../state'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {saveImageModal} from '../../../lib/images'
+import {Link} from '../Link'
+import {Text} from '../text/Text'
+import {Image} from '../images/Image'
+import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
+import {ImagesLightbox} from '../../../../state/models/shell-ui'
+import {useStores} from '../../../../state'
+import {usePalette} from '../../../lib/hooks/usePalette'
+import {saveImageModal} from '../../../../lib/images'
 import YoutubeEmbed from './YoutubeEmbed'
+import ExternalLinkEmbed from './ExternalLinkEmbed'
 
 type Embed =
   | AppBskyEmbedImages.Presented
@@ -138,32 +139,8 @@ export function PostEmbeds({
       <Link
         style={[styles.extOuter, pal.view, pal.border, style]}
         href={link.uri}
-        onLayout={() => {
-          console.log('----')
-        }}
         noFeedback>
-        {link.thumb ? (
-          <Image uri={link.thumb} style={styles.extImage} />
-        ) : undefined}
-        <View style={styles.extInner}>
-          <Text type="md-bold" numberOfLines={2} style={[pal.text]}>
-            {link.title || link.uri}
-          </Text>
-          <Text
-            type="sm"
-            numberOfLines={1}
-            style={[pal.textLight, styles.extUri]}>
-            {link.uri}
-          </Text>
-          {link.description ? (
-            <Text
-              type="sm"
-              numberOfLines={2}
-              style={[pal.text, styles.extDescription]}>
-              {link.description}
-            </Text>
-          ) : undefined}
-        </View>
+        <ExternalLinkEmbed link={link} style={style} />
       </Link>
     )
   }
