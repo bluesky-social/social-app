@@ -16,7 +16,7 @@ import {usePalette} from '../../../lib/hooks/usePalette'
 import {saveImageModal} from '../../../../lib/images'
 import YoutubeEmbed from './YoutubeEmbed'
 import ExternalLinkEmbed from './ExternalLinkEmbed'
-import {getYoutubeVideoId} from './getYoutubeVideoId'
+import {getYoutubeVideoId} from '../../../../lib/strings'
 
 type Embed =
   | AppBskyEmbedImages.Presented

@@ -1,11 +1,16 @@
+import {RootStoreModel} from './../../../src/state/models/root-store'
 import {NavigationModel} from './../../../src/state/models/navigation'
 import * as flags from '../../../src/build-flags'
+import AtpAgent from '@atproto/api'
+import {DEFAULT_SERVICE} from '../../../src/state'
 
 describe('NavigationModel', () => {
   let model: NavigationModel
+  let rootStore: RootStoreModel
 
   beforeEach(() => {
-    model = new NavigationModel()
+    rootStore = new RootStoreModel(new AtpAgent({service: DEFAULT_SERVICE}))
+    model = new NavigationModel(rootStore)
     model.setTitle('0-0', 'title')
   })
 

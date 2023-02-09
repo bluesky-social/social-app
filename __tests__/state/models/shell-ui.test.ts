@@ -3,12 +3,17 @@ import {
   ImagesLightbox,
   ShellUiModel,
 } from './../../../src/state/models/shell-ui'
+import {RootStoreModel} from '../../../src/state'
+import AtpAgent from '@atproto/api'
+import {DEFAULT_SERVICE} from '../../../src/state'
 
 describe('ShellUiModel', () => {
   let model: ShellUiModel
+  let rootStore: RootStoreModel
 
   beforeEach(() => {
-    model = new ShellUiModel()
+    rootStore = new RootStoreModel(new AtpAgent({service: DEFAULT_SERVICE}))
+    model = new ShellUiModel(rootStore)
   })
 
   afterAll(() => {
