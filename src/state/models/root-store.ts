@@ -22,7 +22,7 @@ export class RootStoreModel {
   log = new LogModel()
   session = new SessionModel(this)
   nav = new NavigationModel(this)
-  shell = new ShellUiModel()
+  shell = new ShellUiModel(this)
   me = new MeModel(this)
   onboard = new OnboardModel()
   profiles = new ProfilesViewModel(this)

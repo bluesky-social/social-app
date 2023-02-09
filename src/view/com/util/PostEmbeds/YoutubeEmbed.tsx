@@ -73,6 +73,9 @@ const YoutubeEmbed = ({
           initialPlayerParams={{
             modestbranding: true,
           }}
+          webViewProps={{
+            startInLoadingState: true,
+          }}
           height={height}
           videoId={videoId}
           webViewStyle={styles.webView}
