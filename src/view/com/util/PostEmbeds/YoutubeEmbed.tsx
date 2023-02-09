@@ -58,6 +58,9 @@ const YoutubeEmbed = ({
       <View>
         {/* Removing the outter View will make tap events propagate to parents */}
         <YoutubePlayer
+          initialPlayerParams={{
+            modestbranding: true,
+          }}
           height={height}
           videoId={videoId}
           webViewStyle={styles.webView}
