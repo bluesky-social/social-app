@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
 import LinearGradient from 'react-native-linear-gradient'
@@ -17,15 +17,12 @@ import {useAnalytics} from '@segment/analytics-react-native'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
-export const Home = observer(function Home({
-  navIdx,
-  visible,
-  scrollElRef,
-}: ScreenParams) {
+export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
   const {track} = useAnalytics()
   const safeAreaInsets = useSafeAreaInsets()
+  const scrollElRef = React.useRef<FlatList>(null)
   const [wasVisible, setWasVisible] = React.useState<boolean>(false)
   const {appState} = useAppState({
     onForeground: () => doPoll(true),
@@ -45,11 +42,17 @@ export const Home = observer(function Home({
     [appState, visible, store],
   )
 
+  const onSoftReset = () => {
+    scrollElRef.current?.scrollToOffset({offset: 0})
+  }
+
   useEffect(() => {
+    const softResetSub = store.onScreenSoftReset(onSoftReset)
     const feedCleanup = store.me.mainFeed.registerListeners()
     const pollInterval = setInterval(() => doPoll(), 15e3)
     const cleanup = () => {
       clearInterval(pollInterval)
+      softResetSub.remove()
       feedCleanup()
     }
 

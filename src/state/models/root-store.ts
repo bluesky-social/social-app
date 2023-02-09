@@ -166,6 +166,16 @@ export class RootStoreModel {
     DeviceEventEmitter.emit('navigation')
   }
 
+  // a "soft reset" typically means scrolling to top and loading latest
+  // but it can depend on the screen
+  onScreenSoftReset(handler: () => void): EmitterSubscription {
+    return DeviceEventEmitter.addListener('screen-soft-reset', handler)
+  }
+
+  emitScreenSoftReset() {
+    DeviceEventEmitter.emit('screen-soft-reset')
+  }
+
   // background fetch
   // =
   // - we use this to poll for unread notifications, which is not "ideal" behavior but

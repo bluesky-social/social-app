@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {MutableRefObject} from 'react'
 import {observer} from 'mobx-react-lite'
 import {FlatList, StyleSheet, View} from 'react-native'
 import {NotificationsViewModel} from '../../../state/models/notifications-view'
@@ -13,10 +13,12 @@ const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 
 export const Feed = observer(function Feed({
   view,
+  scrollElRef,
   onPressTryAgain,
   onScroll,
 }: {
   view: NotificationsViewModel
+  scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
 }) {
@@ -66,6 +68,7 @@ export const Feed = observer(function Feed({
       )}
       {data && (
         <FlatList
+          ref={scrollElRef}
           data={data}
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}

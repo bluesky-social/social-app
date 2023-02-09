@@ -1,9 +1,8 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   Animated,
   Easing,
-  FlatList,
   GestureResponderEvent,
   StatusBar,
   StyleSheet,
@@ -148,7 +147,6 @@ export const MobileShell: React.FC = observer(() => {
   const pal = usePalette('default')
   const store = useStores()
   const [isTabsSelectorActive, setTabsSelectorActive] = useState(false)
-  const scrollElRef = useRef<FlatList | undefined>()
   const winDim = useWindowDimensions()
   const [menuSwipingDirection, setMenuSwipingDirection] = useState(0)
   const swipeGestureInterp = useAnimatedValue(0)
@@ -164,8 +162,8 @@ export const MobileShell: React.FC = observer(() => {
   const onPressHome = () => {
     track('MobileShell:HomeButtonPressed')
     if (store.nav.tab.fixedTabPurpose === TabPurpose.Default) {
-      if (store.nav.tab.current.url === '/') {
-        scrollElRef.current?.scrollToOffset({offset: 0})
+      if (!store.nav.tab.canGoBack) {
+        store.emitScreenSoftReset()
       } else {
         store.nav.tab.fixedTabReset()
       }
@@ -179,8 +177,8 @@ export const MobileShell: React.FC = observer(() => {
   const onPressSearch = () => {
     track('MobileShell:SearchButtonPressed')
     if (store.nav.tab.fixedTabPurpose === TabPurpose.Search) {
-      if (store.nav.tab.current.url === '/') {
-        scrollElRef.current?.scrollToOffset({offset: 0})
+      if (!store.nav.tab.canGoBack) {
+        store.emitScreenSoftReset()
       } else {
         store.nav.tab.fixedTabReset()
       }
@@ -194,7 +192,11 @@ export const MobileShell: React.FC = observer(() => {
   const onPressNotifications = () => {
     track('MobileShell:NotificationsButtonPressed')
     if (store.nav.tab.fixedTabPurpose === TabPurpose.Notifs) {
-      store.nav.tab.fixedTabReset()
+      if (!store.nav.tab.canGoBack) {
+        store.emitScreenSoftReset()
+      } else {
+        store.nav.tab.fixedTabReset()
+      }
     } else {
       store.nav.switchTo(TabPurpose.Notifs, false)
       if (store.nav.tab.index === 0) {
@@ -444,7 +446,6 @@ export const MobileShell: React.FC = observer(() => {
                           params={params}
                           navIdx={navIdx}
                           visible={current}
-                          scrollElRef={current ? scrollElRef : undefined}
                         />
                       </ErrorBoundary>
                     </Animated.View>

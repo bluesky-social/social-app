@@ -658,6 +658,7 @@ export const mockedRootStore = {
   profiles: mockedProfilesStore,
   linkMetas: mockedLinkMetasStore,
   log: mockedLogStore,
+  onScreenSoftReset: jest.fn().mockReturnValue({remove: jest.fn()}),
 } as RootStoreModel
 
 export const mockedProfileUiStore = {
