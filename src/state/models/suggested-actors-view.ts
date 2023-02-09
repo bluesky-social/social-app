@@ -1,12 +1,30 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AppBskyActorGetSuggestions as GetSuggestions} from '@atproto/api'
+import {
+  AppBskyActorGetSuggestions as GetSuggestions,
+  AppBskyActorProfile as Profile,
+} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {cleanError} from '../../lib/strings'
 import {bundleAsync} from '../../lib/async/bundle'
+import {
+  devSuggestedFollows,
+  productionSuggestedFollows,
+  stagingSuggestedFollows,
+} from '../../lib/suggestedFollows'
 
 const PAGE_SIZE = 30
 
-export type SuggestedActor = GetSuggestions.Actor
+export type SuggestedActor = GetSuggestions.Actor | Profile.View
+
+const getSuggestionList = ({serviceUrl}: {serviceUrl: string}) => {
+  if (serviceUrl.includes('localhost')) {
+    return devSuggestedFollows
+  } else if (serviceUrl.includes('staging')) {
+    return stagingSuggestedFollows
+  } else {
+    return productionSuggestedFollows
+  }
+}
 
 export class SuggestedActorsViewModel {
   // state
@@ -17,6 +35,7 @@ export class SuggestedActorsViewModel {
   error = ''
   hasMore = true
   loadMoreCursor?: string
+  haveUsedHardcodedSuggestions = false
 
   // data
   suggestions: SuggestedActor[] = []
@@ -66,13 +85,33 @@ export class SuggestedActorsViewModel {
       }
       let res
       do {
-        res = await this.rootStore.api.app.bsky.actor.getSuggestions({
-          limit: this.pageSize,
-          cursor: this.loadMoreCursor,
-        })
-        this.loadMoreCursor = res.data.cursor
-        this.hasMore = !!this.loadMoreCursor
-        items = items.concat(res.data.actors)
+        if (!this.haveUsedHardcodedSuggestions) {
+          this.haveUsedHardcodedSuggestions = true
+          const suggestionsList = getSuggestionList({
+            serviceUrl: this.rootStore.session.currentSession?.service || '',
+          })
+          res = await this.rootStore.api.app.bsky.actor.getProfiles({
+            actors: suggestionsList,
+          })
+          const profiles = res.data.profiles
+          items = items.concat(
+            profiles.filter(profile => !profile.myState?.follow),
+          )
+          this.hasMore = true
+          this.loadMoreCursor = undefined
+        } else {
+          res = await this.rootStore.api.app.bsky.actor.getSuggestions({
+            limit: this.pageSize,
+            cursor: this.loadMoreCursor,
+          })
+          this.loadMoreCursor = res.data.cursor
+          this.hasMore = !!this.loadMoreCursor
+          items = items.concat(
+            res.data.actors.filter(
+              actor => !items.find(i => i.did === actor.did),
+            ),
+          )
+        }
       } while (items.length < this.pageSize && this.hasMore)
       runInAction(() => {
         this.suggestions = items
@@ -90,6 +129,10 @@ export class SuggestedActorsViewModel {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
+
+    if (isRefreshing) {
+      this.haveUsedHardcodedSuggestions = false
+    }
   }
 
   private _xIdle(err?: any) {
