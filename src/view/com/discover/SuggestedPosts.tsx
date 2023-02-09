@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingHorizontal: 12,
     paddingTop: 16,
-    paddingBottom: 12,
+    paddingBottom: 8,
   },
 
   bottomBorder: {

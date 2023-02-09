@@ -84,7 +84,7 @@ export const WhoToFollow = observer(() => {
             <TouchableOpacity
               onPress={onPressLoadMoreSuggestedActors}
               style={styles.loadMore}>
-              <Text type="md-medium" style={pal.link}>
+              <Text type="lg" style={pal.link}>
                 Show more
               </Text>
             </TouchableOpacity>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingHorizontal: 12,
     paddingTop: 16,
-    paddingBottom: 12,
+    paddingBottom: 8,
   },
 
   bottomBorder: {
@@ -132,8 +132,8 @@ const styles = StyleSheet.create({
   },
 
   loadMore: {
-    paddingLeft: 12,
-    paddingVertical: 10,
+    paddingLeft: 16,
+    paddingVertical: 12,
   },
 
   btn: {
