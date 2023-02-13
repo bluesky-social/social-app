@@ -9,10 +9,10 @@ import {
   openPicker,
   Image as PickedImage,
 } from 'react-native-image-crop-picker'
-import {
-  requestPhotoAccessIfNeeded,
-  requestCameraAccessIfNeeded,
-} from '../../../lib/permissions'
+// import {
+//   requestPhotoAccessIfNeeded,
+//   requestCameraAccessIfNeeded,
+// } from '../../../lib/permissions'
 import {colors, gradients} from '../../lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -58,9 +58,10 @@ export function UserAvatar({
       label: 'Camera',
       icon: 'camera',
       onPress: async () => {
-        if (!(await requestCameraAccessIfNeeded())) {
-          return
-        }
+        // TODO: expo
+        // if (!(await requestCameraAccessIfNeeded())) {
+        //   return
+        // }
         onSelectNewAvatar?.(
           await openCamera({
             mediaType: 'photo',
@@ -78,9 +79,10 @@ export function UserAvatar({
       label: 'Library',
       icon: 'image',
       onPress: async () => {
-        if (!(await requestPhotoAccessIfNeeded())) {
-          return
-        }
+        // TODO: expo
+        // if (!(await requestPhotoAccessIfNeeded())) {
+        //   return
+        // }
         const item = await openPicker({
           mediaType: 'photo',
         })

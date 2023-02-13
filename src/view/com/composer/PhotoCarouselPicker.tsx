@@ -11,10 +11,10 @@ import {
   UserLocalPhotosModel,
   PhotoIdentifier,
 } from '../../../state/models/user-local-photos'
-import {
-  requestPhotoAccessIfNeeded,
-  requestCameraAccessIfNeeded,
-} from '../../../lib/permissions'
+// import {
+//   requestPhotoAccessIfNeeded,
+//   requestCameraAccessIfNeeded,
+// } from '../../../lib/permissions'
 import {
   compressIfNeeded,
   moveToPremanantPath,
@@ -85,9 +85,10 @@ export const PhotoCarouselPicker = ({
 
   const handleOpenCamera = useCallback(async () => {
     try {
-      if (!(await requestCameraAccessIfNeeded())) {
-        return
-      }
+      // TODO: expo
+      // if (!(await requestCameraAccessIfNeeded())) {
+      //   return
+      // }
       const cameraRes = await openCamera({
         mediaType: 'photo',
         cropping: true,
@@ -121,9 +122,10 @@ export const PhotoCarouselPicker = ({
 
   const handleOpenGallery = useCallback(async () => {
     track('PhotoCarouselPicker:GalleryOpened')
-    if (!(await requestPhotoAccessIfNeeded())) {
-      return
-    }
+    // TODO: expo
+    // if (!(await requestPhotoAccessIfNeeded())) {
+    //   return
+    // }
     const items = await openPicker({
       multiple: true,
       maxFiles: 4 - selectedPhotos.length,
