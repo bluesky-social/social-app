@@ -58,3 +58,15 @@ jest.mock('@segment/analytics-react-native', () => ({
     flush: jest.fn(),
   }),
 }))
+
+jest.mock('expo-camera', () => ({
+  Camera: {
+    useCameraPermissions: jest.fn(() => [true]),
+  },
+}))
+
+jest.mock('expo-media-library', () => ({
+  __esModule: true, // this property makes it work
+  default: jest.fn(),
+  usePermissions: jest.fn(() => [true]),
+}))
