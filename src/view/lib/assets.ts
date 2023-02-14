@@ -8,5 +8,3 @@ export const TABS_EXPLAINER: ImageRequireSource = {
 }
 // @ts-ignore we need to pretend -prf
 export const CLOUD_SPLASH: ImageRequireSource = {uri: '/img/cloud-splash.png'}
-// @ts-ignore we need to pretend -prf
-export const LOADING: ImageRequireSource = {uri: '/img/loading.png'}

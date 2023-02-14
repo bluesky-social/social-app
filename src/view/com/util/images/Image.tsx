@@ -43,7 +43,6 @@ export function Image({
       <FastImage
         style={[styles.image, {aspectRatio}]}
         source={{uri}}
-        defaultSource={LOADING}
         onLoad={onLoad}
       />
       {children}

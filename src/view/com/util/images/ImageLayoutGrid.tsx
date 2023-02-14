@@ -100,11 +100,7 @@ function ImageLayoutGridInner({
           onPress={() => onPress?.(0)}
           onPressIn={() => onPressIn?.(0)}
           onLongPress={() => onLongPress(0)}>
-          <FastImage
-            source={{uri: uris[0]}}
-            style={size1}
-            defaultSource={LOADING}
-          />
+          <FastImage source={{uri: uris[0]}} style={size1} />
         </TouchableOpacity>
         <View style={styles.wSpace} />
         <TouchableOpacity
@@ -112,11 +108,7 @@ function ImageLayoutGridInner({
           onPress={() => onPress?.(1)}
           onPressIn={() => onPressIn?.(1)}
           onLongPress={() => onLongPress(1)}>
-          <FastImage
-            source={{uri: uris[1]}}
-            style={size1}
-            defaultSource={LOADING}
-          />
+          <FastImage source={{uri: uris[1]}} style={size1} />
         </TouchableOpacity>
       </View>
     )
@@ -129,11 +121,7 @@ function ImageLayoutGridInner({
           onPress={() => onPress?.(0)}
           onPressIn={() => onPressIn?.(0)}
           onLongPress={() => onLongPress(0)}>
-          <FastImage
-            source={{uri: uris[0]}}
-            style={size2}
-            defaultSource={LOADING}
-          />
+          <FastImage source={{uri: uris[0]}} style={size2} />
         </TouchableOpacity>
         <View style={styles.wSpace} />
         <View>
@@ -142,11 +130,7 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(1)}
             onPressIn={() => onPressIn?.(1)}
             onLongPress={() => onLongPress(1)}>
-            <FastImage
-              source={{uri: uris[1]}}
-              style={size1}
-              defaultSource={LOADING}
-            />
+            <FastImage source={{uri: uris[1]}} style={size1} />
           </TouchableOpacity>
           <View style={styles.hSpace} />
           <TouchableOpacity
@@ -154,11 +138,7 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(2)}
             onPressIn={() => onPressIn?.(2)}
             onLongPress={() => onLongPress(2)}>
-            <FastImage
-              source={{uri: uris[2]}}
-              style={size1}
-              defaultSource={LOADING}
-            />
+            <FastImage source={{uri: uris[2]}} style={size1} />
           </TouchableOpacity>
         </View>
       </View>
@@ -173,11 +153,7 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(0)}
             onPressIn={() => onPressIn?.(0)}
             onLongPress={() => onLongPress(0)}>
-            <FastImage
-              source={{uri: uris[0]}}
-              style={size1}
-              defaultSource={LOADING}
-            />
+            <FastImage source={{uri: uris[0]}} style={size1} />
           </TouchableOpacity>
           <View style={styles.hSpace} />
           <TouchableOpacity
@@ -185,11 +161,7 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(2)}
             onPressIn={() => onPressIn?.(2)}
             onLongPress={() => onLongPress(2)}>
-            <FastImage
-              source={{uri: uris[2]}}
-              style={size1}
-              defaultSource={LOADING}
-            />
+            <FastImage source={{uri: uris[2]}} style={size1} />
           </TouchableOpacity>
         </View>
         <View style={styles.wSpace} />
@@ -199,11 +171,7 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(1)}
             onPressIn={() => onPressIn?.(1)}
             onLongPress={() => onLongPress(1)}>
-            <FastImage
-              source={{uri: uris[1]}}
-              style={size1}
-              defaultSource={LOADING}
-            />
+            <FastImage source={{uri: uris[1]}} style={size1} />
           </TouchableOpacity>
           <View style={styles.hSpace} />
           <TouchableOpacity
@@ -211,11 +179,7 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(3)}
             onPressIn={() => onPressIn?.(3)}
             onLongPress={() => onLongPress(3)}>
-            <FastImage
-              source={{uri: uris[3]}}
-              style={size1}
-              defaultSource={LOADING}
-            />
+            <FastImage source={{uri: uris[3]}} style={size1} />
           </TouchableOpacity>
         </View>
       </View>
