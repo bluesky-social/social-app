@@ -17,7 +17,6 @@ import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
 import {s} from '../../lib/styles'
 import {useAnalytics} from '@segment/analytics-react-native'
 
-const HEADER_SPACER_ITEM = {_reactKey: '__spacer__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 
 export const Feed = observer(function Feed({
@@ -27,7 +26,7 @@ export const Feed = observer(function Feed({
   onPressTryAgain,
   onScroll,
   testID,
-  headerSpacer,
+  headerOffset = 0,
 }: {
   feed: FeedModel
   style?: StyleProp<ViewStyle>
@@ -35,7 +34,7 @@ export const Feed = observer(function Feed({
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
   testID?: string
-  headerSpacer?: boolean
+  headerOffset?: number
 }) {
   const {screen, track} = useAnalytics()
 
@@ -57,11 +56,7 @@ export const Feed = observer(function Feed({
         />
       )
     }
-    if (item === HEADER_SPACER_ITEM) {
-      return <View style={styles.headerSpacer} />
-    } else {
-      return <FeedItem item={item} />
-    }
+    return <FeedItem item={item} />
   }
   const onRefresh = () => {
     track('Feed:onRefresh')
@@ -77,15 +72,12 @@ export const Feed = observer(function Feed({
       .loadMore()
       .catch(err => feed.rootStore.log.error('Failed to load more posts', err))
   }
-  let data = []
-  if (headerSpacer) {
-    data.push(HEADER_SPACER_ITEM)
-  }
+  let data
   if (feed.hasLoaded) {
     if (feed.isEmpty) {
-      data.push(EMPTY_FEED_ITEM)
+      data = [EMPTY_FEED_ITEM]
     } else {
-      data = data.concat(feed.feed)
+      data = feed.feed
     }
   }
   const FeedFooter = () =>
@@ -115,6 +107,9 @@ export const Feed = observer(function Feed({
           onRefresh={onRefresh}
           onEndReached={onEndReached}
           removeClippedSubviews={true}
+          contentInset={{top: headerOffset}}
+          contentOffset={{x: 0, y: headerOffset * -1}}
+          progressViewOffset={headerOffset}
         />
       )}
     </View>
