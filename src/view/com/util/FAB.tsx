@@ -19,7 +19,7 @@ export const FAB = observer(
     icon,
     onPress,
   }: {
-    testID: string
+    testID?: string
     icon: IconProp
     onPress: OnPress
   }) => {
@@ -58,9 +58,6 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowOffset: {width: 0, height: 1},
   },
   lower: {
     bottom: 34,
