@@ -121,28 +121,40 @@ export class SuggestedActorsViewModel {
   })
 
   private async fetchHardcodedSuggestions() {
-    if (!this.hardCodedSuggestions) {
-      try {
-        const suggestionsList = getSuggestionList({
+    if (this.hardCodedSuggestions) {
+      return
+    }
+    try {
+      // clone the array so we can mutate it
+      const actors = [
+        ...getSuggestionList({
           serviceUrl: this.rootStore.session.currentSession?.service || '',
-        })
+        }),
+      ]
+
+      // fetch the profiles in chunks of 25 (the limit allowed by `getProfiles`)
+      let profiles: Profile.View[] = []
+      do {
         const res = await this.rootStore.api.app.bsky.actor.getProfiles({
-          actors: suggestionsList,
+          actors: actors.splice(0, 25),
         })
-        runInAction(() => {
-          this.hardCodedSuggestions = res.data.profiles.filter(
-            profile => !profile.myState?.follow,
-          )
-        })
-      } catch (e) {
-        this.rootStore.log.error(
-          'Failed to getProfiles() for suggested follows',
-          {e},
+        profiles = profiles.concat(res.data.profiles)
+      } while (actors.length)
+
+      runInAction(() => {
+        this.hardCodedSuggestions = profiles.filter(
+          profile =>
+            !profile.myState?.follow && profile.did !== this.rootStore.me.did,
         )
-        runInAction(() => {
-          this.hardCodedSuggestions = []
-        })
-      }
+      })
+    } catch (e) {
+      this.rootStore.log.error(
+        'Failed to getProfiles() for suggested follows',
+        {e},
+      )
+      runInAction(() => {
+        this.hardCodedSuggestions = []
+      })
     }
   }
 
