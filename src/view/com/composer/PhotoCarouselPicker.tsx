@@ -153,7 +153,7 @@ export const PhotoCarouselPicker = ({
       result.push(permanentPath)
     }
     onSelectPhotos([...selectedPhotos, ...result])
-  }, [track, selectedPhotos, onSelectPhotos])
+  }, [track, requestPhotoAccessIfNeeded, selectedPhotos, onSelectPhotos])
 
   return (
     <ScrollView

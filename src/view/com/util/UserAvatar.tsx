@@ -9,10 +9,6 @@ import {
   openPicker,
   Image as PickedImage,
 } from 'react-native-image-crop-picker'
-// import {
-//   requestPhotoAccessIfNeeded,
-//   requestCameraAccessIfNeeded,
-// } from '../../../lib/permissions'
 import {colors, gradients} from '../../lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from '../../lib/hooks/usePalette'
