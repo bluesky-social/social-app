@@ -18,6 +18,7 @@ import {s} from '../../lib/styles'
 import {useAnalytics} from '@segment/analytics-react-native'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
+const ERROR_FEED_ITEM = {_reactKey: '__error__'}
 
 export const Feed = observer(function Feed({
   feed,
@@ -55,6 +56,10 @@ export const Feed = observer(function Feed({
           style={styles.emptyState}
         />
       )
+    } else if (item === ERROR_FEED_ITEM) {
+      return (
+        <ErrorMessage message={feed.error} onPressTryAgain={onPressTryAgain} />
+      )
     }
     return <FeedItem item={item} />
   }
@@ -72,12 +77,15 @@ export const Feed = observer(function Feed({
       .loadMore()
       .catch(err => feed.rootStore.log.error('Failed to load more posts', err))
   }
-  let data
+  let data: any[] = []
+  if (feed.hasError) {
+    data = data.concat([ERROR_FEED_ITEM])
+  }
   if (feed.hasLoaded) {
     if (feed.isEmpty) {
-      data = [EMPTY_FEED_ITEM]
+      data = data.concat([EMPTY_FEED_ITEM])
     } else {
-      data = feed.feed
+      data = data.concat(feed.feed)
     }
   }
   const FeedFooter = () =>
@@ -91,10 +99,7 @@ export const Feed = observer(function Feed({
   return (
     <View testID={testID} style={style}>
       {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
-      {feed.hasError && (
-        <ErrorMessage message={feed.error} onPressTryAgain={onPressTryAgain} />
-      )}
-      {feed.hasLoaded && data && (
+      {data && (
         <FlatList
           ref={scrollElRef}
           data={data}
@@ -117,7 +122,6 @@ export const Feed = observer(function Feed({
 })
 
 const styles = StyleSheet.create({
-  headerSpacer: {height: 42},
   feedFooter: {paddingTop: 20},
   emptyState: {paddingVertical: 40},
 })
