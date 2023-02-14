@@ -43,6 +43,10 @@ export class SessionModel {
    * A listing of the currently & previous sessions
    */
   accounts: AccountData[] = []
+  /**
+   * Flag to indicate if we're doing our initial-load session resumption
+   */
+  isResumingSession = false
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -114,7 +118,12 @@ export class SessionModel {
       this.rootStore.log.debug(
         'SessionModel:attemptSessionResumption found stored session',
       )
-      return this.resumeSession(sess)
+      this.isResumingSession = true
+      try {
+        return await this.resumeSession(sess)
+      } finally {
+        this.isResumingSession = false
+      }
     } else {
       this.rootStore.log.debug(
         'SessionModel:attemptSessionResumption has no session to resume',

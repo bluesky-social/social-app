@@ -190,7 +190,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
       ) : (
         renderHeader()
       )}
-      <FAB icon="pen-nib" onPress={onPressCompose} />
+      <FAB icon="plus" onPress={onPressCompose} />
     </View>
   )
 })

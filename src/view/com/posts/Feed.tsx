@@ -17,8 +17,8 @@ import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
 import {s} from '../../lib/styles'
 import {useAnalytics} from '@segment/analytics-react-native'
 
-const HEADER_SPACER_ITEM = {_reactKey: '__spacer__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
+const ERROR_FEED_ITEM = {_reactKey: '__error__'}
 
 export const Feed = observer(function Feed({
   feed,
@@ -27,7 +27,7 @@ export const Feed = observer(function Feed({
   onPressTryAgain,
   onScroll,
   testID,
-  headerSpacer,
+  headerOffset = 0,
 }: {
   feed: FeedModel
   style?: StyleProp<ViewStyle>
@@ -35,7 +35,7 @@ export const Feed = observer(function Feed({
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
   testID?: string
-  headerSpacer?: boolean
+  headerOffset?: number
 }) {
   const {screen, track} = useAnalytics()
 
@@ -56,12 +56,12 @@ export const Feed = observer(function Feed({
           style={styles.emptyState}
         />
       )
+    } else if (item === ERROR_FEED_ITEM) {
+      return (
+        <ErrorMessage message={feed.error} onPressTryAgain={onPressTryAgain} />
+      )
     }
-    if (item === HEADER_SPACER_ITEM) {
-      return <View style={styles.headerSpacer} />
-    } else {
-      return <FeedItem item={item} />
-    }
+    return <FeedItem item={item} />
   }
   const onRefresh = () => {
     track('Feed:onRefresh')
@@ -77,13 +77,13 @@ export const Feed = observer(function Feed({
       .loadMore()
       .catch(err => feed.rootStore.log.error('Failed to load more posts', err))
   }
-  let data = []
-  if (headerSpacer) {
-    data.push(HEADER_SPACER_ITEM)
+  let data: any[] = []
+  if (feed.hasError) {
+    data = data.concat([ERROR_FEED_ITEM])
   }
   if (feed.hasLoaded) {
     if (feed.isEmpty) {
-      data.push(EMPTY_FEED_ITEM)
+      data = data.concat([EMPTY_FEED_ITEM])
     } else {
       data = data.concat(feed.feed)
     }
@@ -99,10 +99,7 @@ export const Feed = observer(function Feed({
   return (
     <View testID={testID} style={style}>
       {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
-      {feed.hasError && (
-        <ErrorMessage message={feed.error} onPressTryAgain={onPressTryAgain} />
-      )}
-      {feed.hasLoaded && data && (
+      {data && (
         <FlatList
           ref={scrollElRef}
           data={data}
@@ -115,6 +112,9 @@ export const Feed = observer(function Feed({
           onRefresh={onRefresh}
           onEndReached={onEndReached}
           removeClippedSubviews={true}
+          contentInset={{top: headerOffset}}
+          contentOffset={{x: 0, y: headerOffset * -1}}
+          progressViewOffset={headerOffset}
         />
       )}
     </View>
@@ -122,7 +122,6 @@ export const Feed = observer(function Feed({
 })
 
 const styles = StyleSheet.create({
-  headerSpacer: {height: 42},
   feedFooter: {paddingTop: 20},
   emptyState: {paddingVertical: 40},
 })
