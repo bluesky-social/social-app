@@ -10,10 +10,10 @@ import {
   openCropper,
   openPicker,
 } from 'react-native-image-crop-picker'
-// import {`
-//   requestPhotoAccessIfNeeded,
-//   requestCameraAccessIfNeeded,
-// } from '../../../lib/permissions'
+import {
+  useCameraPermission,
+  usePhotoLibraryPermission,
+} from '../../../lib/usePermissions'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from '../../lib/hooks/usePalette'
 
@@ -24,16 +24,18 @@ export function UserBanner({
   banner?: string | null
   onSelectNewBanner?: (img: PickedImage) => void
 }) {
+  const {requestCameraAccessIfNeeded} = useCameraPermission()
+  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+
   const pal = usePalette('default')
   const dropdownItems = [
     {
       label: 'Camera',
       icon: 'camera',
       onPress: async () => {
-        // TODO: expo
-        // if (!(await requestCameraAccessIfNeeded())) {
-        //   return
-        // }
+        if (!(await requestCameraAccessIfNeeded())) {
+          return
+        }
         onSelectNewBanner?.(
           await openCamera({
             mediaType: 'photo',
@@ -53,10 +55,9 @@ export function UserBanner({
       label: 'Library',
       icon: 'image',
       onPress: async () => {
-        // TODO: expo
-        // if (!(await requestPhotoAccessIfNeeded())) {
-        //   return
-        // }
+        if (!(await requestPhotoAccessIfNeeded())) {
+          return
+        }
         const item = await openPicker({
           mediaType: 'photo',
         })

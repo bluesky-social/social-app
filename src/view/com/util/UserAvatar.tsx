@@ -16,6 +16,10 @@ import {
 import {colors, gradients} from '../../lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {
+  useCameraPermission,
+  usePhotoLibraryPermission,
+} from '../../../lib/usePermissions'
 
 export function UserAvatar({
   size,
@@ -30,6 +34,8 @@ export function UserAvatar({
   avatar?: string | null
   onSelectNewAvatar?: (img: PickedImage) => void
 }) {
+  const {requestCameraAccessIfNeeded} = useCameraPermission()
+  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const initials = getInitials(displayName || handle || '')
   const pal = usePalette('default')
   const renderSvg = (svgSize: number, svgInitials: string) => (
@@ -58,10 +64,9 @@ export function UserAvatar({
       label: 'Camera',
       icon: 'camera',
       onPress: async () => {
-        // TODO: expo
-        // if (!(await requestCameraAccessIfNeeded())) {
-        //   return
-        // }
+        if (!(await requestCameraAccessIfNeeded())) {
+          return
+        }
         onSelectNewAvatar?.(
           await openCamera({
             mediaType: 'photo',
@@ -79,10 +84,9 @@ export function UserAvatar({
       label: 'Library',
       icon: 'image',
       onPress: async () => {
-        // TODO: expo
-        // if (!(await requestPhotoAccessIfNeeded())) {
-        //   return
-        // }
+        if (!(await requestPhotoAccessIfNeeded())) {
+          return
+        }
         const item = await openPicker({
           mediaType: 'photo',
         })

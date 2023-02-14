@@ -58,7 +58,3 @@ jest.mock('@segment/analytics-react-native', () => ({
     flush: jest.fn(),
   }),
 }))
-
-jest.mock('react-native-permissions', () =>
-  require('react-native-permissions/mock'),
-)
