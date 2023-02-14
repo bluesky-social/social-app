@@ -406,14 +406,16 @@ export class FeedModel {
     }
     const res = await this._getFeed({limit: 1})
     const currentLatestUri = this.pollCursor
-    const receivedLatestUri = res.data.feed[0]
-      ? res.data.feed[0].post.uri
-      : undefined
-    const hasNewLatest = Boolean(
-      receivedLatestUri &&
-        (this.feed.length === 0 || receivedLatestUri !== currentLatestUri),
-    )
-    this.setHasNewLatest(hasNewLatest)
+    const item = res.data.feed[0]
+    if (!item) {
+      return
+    }
+    if (AppBskyFeedFeedViewPost.isReasonRepost(item.reason)) {
+      if (item.reason.by.did === this.rootStore.me.did) {
+        return // ignore reposts by the user
+      }
+    }
+    this.setHasNewLatest(item.post.uri !== currentLatestUri)
   }
 
   /**
