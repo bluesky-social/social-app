@@ -5,11 +5,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Image as PickedImage} from 'react-native-image-crop-picker'
 import FastImage from 'react-native-fast-image'
 import {colors, gradients} from '../../lib/styles'
-import {
-  openCamera,
-  openCropper,
-  openPicker,
-} from 'react-native-image-crop-picker'
+import {openCropper} from 'react-native-image-crop-picker'
+import * as ImagePicker from 'expo-image-picker'
 import {
   useCameraPermission,
   usePhotoLibraryPermission,
@@ -36,19 +33,24 @@ export function UserBanner({
         if (!(await requestCameraAccessIfNeeded())) {
           return
         }
-        onSelectNewBanner?.(
-          await openCamera({
-            mediaType: 'photo',
-            cropping: true,
-            compressImageMaxWidth: 6000,
-            width: 6000,
-            compressImageMaxHeight: 2000,
-            height: 2000,
-            forceJpg: true, // ios only
-            compressImageQuality: 1,
-            includeExif: true,
-          }),
-        )
+        const cameraRes = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        })
+        const item = cameraRes.assets[0]
+        const cropperRes = await openCropper({
+          path: item.uri,
+          mediaType: 'photo',
+          cropping: true,
+          compressImageMaxWidth: 6000,
+          width: 6000,
+          compressImageMaxHeight: 2000,
+          height: 2000,
+          forceJpg: true, // ios only
+          compressImageQuality: 1,
+          includeExif: true,
+        })
+
+        onSelectNewBanner?.(cropperRes)
       },
     },
     {
@@ -58,13 +60,16 @@ export function UserBanner({
         if (!(await requestPhotoAccessIfNeeded())) {
           return
         }
-        const item = await openPicker({
-          mediaType: 'photo',
+        const pickedImage = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsMultipleSelection: false,
+          quality: 1,
         })
+        const item = pickedImage.assets[0]
         onSelectNewBanner?.(
           await openCropper({
             mediaType: 'photo',
-            path: item.path,
+            path: item.uri,
             compressImageMaxWidth: 6000,
             width: 6000,
             compressImageMaxHeight: 2000,

@@ -2,11 +2,8 @@ import React, {useCallback} from 'react'
 import {Image, StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useAnalytics} from '@segment/analytics-react-native'
-import {
-  openPicker,
-  openCamera,
-  openCropper,
-} from 'react-native-image-crop-picker'
+import {openCropper} from 'react-native-image-crop-picker'
+import * as ImagePicker from 'expo-image-picker'
 import {
   UserLocalPhotosModel,
   PhotoIdentifier,
@@ -91,12 +88,16 @@ export const PhotoCarouselPicker = ({
       if (!(await requestCameraAccessIfNeeded())) {
         return
       }
-      const cameraRes = await openCamera({
+      const cameraRes = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      })
+      const item = cameraRes.assets[0]
+      const cropperRes = await openCropper({
         mediaType: 'photo',
-        cropping: true,
+        path: item.uri,
         ...IMAGE_PARAMS,
       })
-      const img = await compressIfNeeded(cameraRes, MAX_SIZE)
+      const img = await compressIfNeeded(cropperRes, MAX_SIZE)
       onSelectPhotos([...selectedPhotos, img.path])
     } catch (err: any) {
       // ignore
@@ -127,11 +128,14 @@ export const PhotoCarouselPicker = ({
     if (!(await requestPhotoAccessIfNeeded())) {
       return
     }
-    const items = await openPicker({
-      multiple: true,
-      maxFiles: 4 - selectedPhotos.length,
-      mediaType: 'photo',
+    const pickedImage = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      quality: 1,
+      selectionLimit: 4 - selectedPhotos.length,
     })
+    const items = pickedImage.assets
+
     const result = []
 
     for (const image of items) {
@@ -143,7 +147,7 @@ export const PhotoCarouselPicker = ({
       )
       const cropperRes = await openCropper({
         mediaType: 'photo',
-        path: image.path,
+        path: image.uri,
         ...IMAGE_PARAMS,
         width,
         height,

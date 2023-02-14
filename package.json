@@ -40,6 +40,7 @@
     "expo": "~48.0.0-beta.2",
     "expo-camera": "~13.2.1",
     "expo-dev-client": "~2.1.1",
+    "expo-image-picker": "~14.1.1",
     "expo-media-library": "~15.2.1",
     "expo-splash-screen": "~0.18.1",
     "expo-status-bar": "~1.4.4",

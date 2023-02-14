@@ -3,12 +3,9 @@ import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import FastImage from 'react-native-fast-image'
-import {
-  openCamera,
-  openCropper,
-  openPicker,
-  Image as PickedImage,
-} from 'react-native-image-crop-picker'
+import {openCropper, Image as PickedImage} from 'react-native-image-crop-picker'
+import * as ImagePicker from 'expo-image-picker'
+
 import {colors, gradients} from '../../lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from '../../lib/hooks/usePalette'
@@ -63,17 +60,22 @@ export function UserAvatar({
         if (!(await requestCameraAccessIfNeeded())) {
           return
         }
-        onSelectNewAvatar?.(
-          await openCamera({
-            mediaType: 'photo',
-            cropping: true,
-            width: 2000,
-            height: 2000,
-            cropperCircleOverlay: true,
-            forceJpg: true, // ios only
-            compressImageQuality: 1,
-          }),
-        )
+        const cameraRes = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        })
+        const item = cameraRes.assets[0]
+        const cropperRes = await openCropper({
+          mediaType: 'photo',
+          path: item.uri,
+          cropping: true,
+          width: 2000,
+          height: 2000,
+          cropperCircleOverlay: true,
+          forceJpg: true, // ios only
+          compressImageQuality: 1,
+        })
+
+        onSelectNewAvatar?.(cropperRes)
       },
     },
     {
@@ -83,13 +85,17 @@ export function UserAvatar({
         if (!(await requestPhotoAccessIfNeeded())) {
           return
         }
-        const item = await openPicker({
-          mediaType: 'photo',
+        const pickedImage = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsMultipleSelection: false,
+          quality: 1,
         })
+
+        const item = pickedImage.assets[0]
         onSelectNewAvatar?.(
           await openCropper({
             mediaType: 'photo',
-            path: item.path,
+            path: item.uri,
             width: 2000,
             height: 2000,
             cropperCircleOverlay: true,

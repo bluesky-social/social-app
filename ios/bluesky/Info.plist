@@ -58,6 +58,8 @@
     </dict>
     <key>NSCameraUsageDescription</key>
     <string>Used to take pictures and videos when composing posts, choosing avatars, and so on.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Used to take videos when composing posts, choosing avatars, and so on.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string></string>
     <key>NSPhotoLibraryUsageDescription</key>
