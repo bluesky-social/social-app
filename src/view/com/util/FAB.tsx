@@ -1,15 +1,16 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {
+  Animated,
   GestureResponderEvent,
   StyleSheet,
   TouchableWithoutFeedback,
-  View,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {colors, gradients} from '../../lib/styles'
+import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
 import {useStores} from '../../../state'
 
 type OnPress = ((event: GestureResponderEvent) => void) | undefined
@@ -24,26 +25,29 @@ export const FAB = observer(
     onPress: OnPress
   }) => {
     const store = useStores()
+    const interp = useAnimatedValue(0)
+    React.useEffect(() => {
+      Animated.timing(interp, {
+        toValue: store.shell.minimalShellMode ? 1 : 0,
+        duration: 100,
+        useNativeDriver: true,
+        isInteraction: false,
+      }).start()
+    }, [interp, store.shell.minimalShellMode])
+    const transform = {
+      transform: [{translateY: Animated.multiply(interp, 60)}],
+    }
     return (
       <TouchableWithoutFeedback testID={testID} onPress={onPress}>
-        <View
-          style={[
-            styles.outer,
-            store.shell.minimalShellMode ? styles.lower : undefined,
-          ]}>
+        <Animated.View style={[styles.outer, transform]}>
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={styles.inner}>
-            <FontAwesomeIcon
-              size={24}
-              icon={icon}
-              color={colors.white}
-              style={styles.icon}
-            />
+            <FontAwesomeIcon size={24} icon={icon} color={colors.white} />
           </LinearGradient>
-        </View>
+        </Animated.View>
       </TouchableWithoutFeedback>
     )
   },
@@ -59,9 +63,6 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
   },
-  lower: {
-    bottom: 34,
-  },
   inner: {
     width: 60,
     height: 60,
@@ -69,5 +70,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  icon: {},
 })
