@@ -8,7 +8,6 @@ import {
   ViewStyle,
 } from 'react-native'
 import FastImage, {ImageStyle as FastImageStyle} from 'react-native-fast-image'
-import {LOADING} from '../../../lib/assets'
 import {DELAY_PRESS_IN} from './constants'
 
 interface Dim {
