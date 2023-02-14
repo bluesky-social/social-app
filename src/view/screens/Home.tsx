@@ -15,6 +15,7 @@ import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
 import {clamp} from 'lodash'
 import {useAnalytics} from '@segment/analytics-react-native'
 
+const HEADER_HEIGHT = 42
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
 export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
@@ -42,12 +43,14 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
     [appState, visible, store],
   )
 
-  const onSoftReset = () => {
-    scrollElRef.current?.scrollToOffset({offset: 0})
-  }
+  const scrollToTop = React.useCallback(() => {
+    // NOTE: the feed is offset by the height of the collapsing header,
+    //       so we scroll to the negative of that height -prf
+    scrollElRef.current?.scrollToOffset({offset: -HEADER_HEIGHT})
+  }, [scrollElRef])
 
   useEffect(() => {
-    const softResetSub = store.onScreenSoftReset(onSoftReset)
+    const softResetSub = store.onScreenSoftReset(scrollToTop)
     const feedCleanup = store.me.mainFeed.registerListeners()
     const pollInterval = setInterval(() => doPoll(), 15e3)
     const cleanup = () => {
@@ -72,7 +75,7 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
       store.me.mainFeed.setup()
     }
     return cleanup
-  }, [visible, store, store.me.mainFeed, navIdx, doPoll, wasVisible])
+  }, [visible, store, store.me.mainFeed, navIdx, doPoll, wasVisible, scrollToTop])
 
   const onPressCompose = (imagesOpen?: boolean) => {
     track('Home:ComposeButtonPressed')
@@ -83,7 +86,7 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
   }
   const onPressLoadLatest = () => {
     store.me.mainFeed.refresh()
-    scrollElRef?.current?.scrollToOffset({offset: 0})
+    scrollToTop()
   }
 
   return (
@@ -96,7 +99,7 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
         style={s.h100pct}
         onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
-        headerSpacer
+        headerOffset={HEADER_HEIGHT}
       />
       <ViewHeader title="Bluesky" canGoBack={false} hideOnScroll />
       {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing ? (
