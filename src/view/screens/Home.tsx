@@ -125,7 +125,7 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
       ) : undefined}
       <FAB
         testID="composeFAB"
-        icon="pen-nib"
+        icon="plus"
         onPress={() => onPressCompose(false)}
       />
     </View>
