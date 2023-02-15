@@ -200,7 +200,7 @@ export class NotificationsViewModel {
   notifications: NotificationsViewItemModel[] = []
 
   // this is used to help trigger push notifications
-  mostRecentNotification: NotificationsViewItemModel | undefined
+  mostRecentNotificationUri: string | undefined
 
   constructor(
     public rootStore: RootStoreModel,
@@ -211,7 +211,7 @@ export class NotificationsViewModel {
       {
         rootStore: false,
         params: false,
-        mostRecentNotification: false,
+        mostRecentNotificationUri: false,
       },
       {autoBind: true},
     )
@@ -245,7 +245,7 @@ export class NotificationsViewModel {
     this.hasMore = true
     this.loadMoreCursor = undefined
     this.notifications = []
-    this.mostRecentNotification = undefined
+    this.mostRecentNotificationUri = undefined
   }
 
   /**
@@ -365,23 +365,21 @@ export class NotificationsViewModel {
   }
 
   async getNewMostRecent(): Promise<NotificationsViewItemModel | undefined> {
-    let old = this.mostRecentNotification
+    let old = this.mostRecentNotificationUri
     const res = await this.rootStore.api.app.bsky.notification.list({
       limit: 1,
     })
-    if (
-      !res.data.notifications[0] ||
-      old?.uri === res.data.notifications[0].uri
-    ) {
+    if (!res.data.notifications[0] || old === res.data.notifications[0].uri) {
       return
     }
-    this.mostRecentNotification = new NotificationsViewItemModel(
+    this.mostRecentNotificationUri = res.data.notifications[0].uri
+    const notif = new NotificationsViewItemModel(
       this.rootStore,
       'mostRecent',
       res.data.notifications[0],
     )
-    await this.mostRecentNotification.fetchAdditionalData()
-    return this.mostRecentNotification
+    await notif.fetchAdditionalData()
+    return notif
   }
 
   // state transitions
@@ -408,11 +406,7 @@ export class NotificationsViewModel {
 
   private async _replaceAll(res: ListNotifications.Response) {
     if (res.data.notifications[0]) {
-      this.mostRecentNotification = new NotificationsViewItemModel(
-        this.rootStore,
-        'mostRecent',
-        res.data.notifications[0],
-      )
+      this.mostRecentNotificationUri = res.data.notifications[0].uri
     }
     return this._appendAll(res, true)
   }
