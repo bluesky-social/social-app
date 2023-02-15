@@ -21,7 +21,7 @@ const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
-  const {track} = useAnalytics()
+  const {screen, track} = useAnalytics()
   const safeAreaInsets = useSafeAreaInsets()
   const scrollElRef = React.useRef<FlatList>(null)
   const [wasVisible, setWasVisible] = React.useState<boolean>(false)
@@ -59,6 +59,9 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
       feedCleanup()
     }
 
+    // guard to only continue when transitioning from !visible -> visible
+    // TODO is this 100% needed? depends on if useEffect() is getting refired
+    //      for reasons other than `visible` changing -prf
     if (!visible) {
       setWasVisible(false)
       return cleanup
@@ -67,6 +70,8 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
     }
     setWasVisible(true)
 
+    // just became visible
+    screen('Feed')
     store.nav.setTitle(navIdx, 'Home')
     store.log.debug('Updating home feed')
     if (store.me.mainFeed.hasContent) {
@@ -75,7 +80,7 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
       store.me.mainFeed.setup()
     }
     return cleanup
-  }, [visible, store, store.me.mainFeed, navIdx, doPoll, wasVisible, scrollToTop])
+  }, [visible, store, store.me.mainFeed, navIdx, doPoll, wasVisible, scrollToTop, screen])
 
   const onPressCompose = (imagesOpen?: boolean) => {
     track('Home:ComposeButtonPressed')
