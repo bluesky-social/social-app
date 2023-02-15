@@ -98,8 +98,12 @@ export const Feed = observer(function Feed({
     )
   return (
     <View testID={testID} style={style}>
-      {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
-      {data && (
+      {feed.isLoading && data.length === 0 && (
+        <View style={{paddingTop: headerOffset}}>
+          <PostFeedLoadingPlaceholder />
+        </View>
+      )}
+      {data.length > 0 && (
         <FlatList
           ref={scrollElRef}
           data={data}
