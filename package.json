@@ -45,7 +45,7 @@
     "expo-splash-screen": "~0.18.1",
     "expo-status-bar": "~1.4.4",
     "he": "^1.2.0",
-    "jest-expo": "^47.0.1",
+    "jest-expo": "^48.0.0-beta.2",
     "lodash.chunk": "^4.2.0",
     "lodash.isequal": "^4.5.0",
     "lodash.omit": "^4.5.0",
