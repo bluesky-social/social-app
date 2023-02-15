@@ -14,10 +14,6 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
   const scrollElRef = React.useRef<FlatList>(null)
   const {screen} = useAnalytics()
 
-  useEffect(() => {
-    screen('Notifications')
-  }, [screen])
-
   const onSoftReset = () => {
     scrollElRef.current?.scrollToOffset({offset: 0})
   }
@@ -34,9 +30,10 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
     store.me.notifications.update().then(() => {
       store.me.notifications.updateReadState()
     })
+    screen('Notifications')
     store.nav.setTitle(navIdx, 'Notifications')
     return cleanup
-  }, [visible, store, navIdx])
+  }, [visible, store, navIdx, screen])
 
   const onPressTryAgain = () => {
     store.me.notifications.refresh()

@@ -37,12 +37,8 @@ export const Feed = observer(function Feed({
   testID?: string
   headerOffset?: number
 }) {
-  const {screen, track} = useAnalytics()
+  const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
-
-  React.useEffect(() => {
-    screen('Feed')
-  }, [screen])
 
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your

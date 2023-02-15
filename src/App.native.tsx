@@ -49,6 +49,7 @@ const App = observer(() => {
           store.nav.switchTo(TabPurpose.Notifs, true)
         }
       })
+      notifee.onBackgroundEvent(async _e => {}) // notifee requires this but we handle it with onForegroundEvent
     })
   }, [])
 
