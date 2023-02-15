@@ -1,5 +1,5 @@
 import {autorun} from 'mobx'
-import {Platform} from 'react-native'
+import {AppState, Platform} from 'react-native'
 import {AtpAgent} from '@atproto/api'
 import {RootStoreModel} from './models/root-store'
 import * as libapi from './lib/api'
@@ -37,7 +37,14 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
 
   // periodic state fetch
   setInterval(() => {
-    rootStore.updateSessionState()
+    // NOTE
+    // this must ONLY occur when the app is active, as the bg-fetch handler
+    // will wake up the thread and cause this interval to fire, which in
+    // turn schedules a bunch of work at a poor time
+    // -prf
+    if (AppState.currentState === 'active') {
+      rootStore.updateSessionState()
+    }
   }, STATE_FETCH_INTERVAL)
 
   return rootStore
