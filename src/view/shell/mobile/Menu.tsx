@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  ScrollView,
+  Linking,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -8,8 +8,12 @@ import {
   ViewStyle,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
-import VersionNumber from 'react-native-version-number'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {s, colors} from '../../lib/styles'
+import {FEEDBACK_FORM_URL} from '../../../lib/constants'
 import {useStores} from '../../../state'
 import {
   HomeIcon,
@@ -47,6 +51,11 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
         store.nav.navigate(url)
       }
     }
+  }
+
+  const onPressFeedback = () => {
+    track('Menu:FeedbackClicked')
+    Linking.openURL(FEEDBACK_FORM_URL)
   }
 
   // rendering
@@ -97,7 +106,13 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
   }
 
   return (
-    <ScrollView testID="menuView" style={[styles.view, pal.view]}>
+    <View
+      testID="menuView"
+      style={[
+        styles.view,
+        pal.view,
+        store.shell.minimalShellMode && styles.viewMinimalShell,
+      ]}>
       <TouchableOpacity
         testID="profileCardButton"
         onPress={() => onNavigate(`/profile/${store.me.handle}`)}
@@ -176,20 +191,31 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
           onPress={onDarkmodePress}
         />
       </View>
+      <View style={s.flex1} />
       <View style={styles.footer}>
-        <Text style={[pal.textLight]}>
-          Build version {VersionNumber.appVersion} ({VersionNumber.buildVersion}
-          )
-        </Text>
+        <MenuItem
+          icon={
+            <FontAwesomeIcon
+              style={pal.text as FontAwesomeIconStyle}
+              size={24}
+              icon={['far', 'message']}
+            />
+          }
+          label="Feedback"
+          onPress={onPressFeedback}
+        />
       </View>
-      <View style={s.footerSpacer} />
-    </ScrollView>
+    </View>
   )
 })
 
 const styles = StyleSheet.create({
   view: {
     flex: 1,
+    paddingBottom: 90,
+  },
+  viewMinimalShell: {
+    paddingBottom: 50,
   },
   section: {
     paddingHorizontal: 10,
@@ -266,7 +292,6 @@ const styles = StyleSheet.create({
   },
 
   footer: {
-    paddingHorizontal: 14,
-    paddingVertical: 18,
+    paddingHorizontal: 10,
   },
 })

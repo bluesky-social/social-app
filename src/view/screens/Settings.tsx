@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
+import VersionNumber from 'react-native-version-number'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
 import {s} from '../lib/styles'
@@ -181,6 +182,10 @@ export const Settings = observer(function Settings({
           title="Debug tools">
           <Text style={pal.textLight}>Storybook</Text>
         </Link>
+        <Text type="sm" style={[s.mt10, pal.textLight]}>
+          Build version {VersionNumber.appVersion} ({VersionNumber.buildVersion}
+          )
+        </Text>
         <View style={s.footerSpacer} />
       </ScrollView>
     </View>
