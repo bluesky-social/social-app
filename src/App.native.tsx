@@ -14,7 +14,7 @@ import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {MobileShell} from './view/shell/mobile'
 import {s} from './view/lib/styles'
 import notifee, {EventType} from '@notifee/react-native'
-import {segmentClient} from './lib/segmentClient'
+import * as analytics from './lib/analytics'
 import * as Toast from './view/com/util/Toast'
 
 const App = observer(() => {
@@ -26,9 +26,10 @@ const App = observer(() => {
   // init
   useEffect(() => {
     view.setup()
-    setSegment(segmentClient)
+    setSegment(analytics.segmentClient)
     setupState().then(store => {
       setRootStore(store)
+      analytics.init(store)
       SplashScreen.hide()
       Linking.getInitialURL().then((url: string | null) => {
         if (url) {

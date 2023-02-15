@@ -1,7 +1,7 @@
 import {RootStoreModel} from './root-store'
 import {makeAutoObservable} from 'mobx'
 import {TABS_ENABLED} from '../../build-flags'
-import {segmentClient} from '../../lib/segmentClient'
+import {segmentClient} from '../../lib/analytics'
 
 let __id = 0
 function genId() {
