@@ -40,7 +40,7 @@ import {
   detectLinkables,
   extractEntities,
   cleanError,
-  sanatizePost,
+  sanitizePost,
 } from '../../../lib/strings'
 import {getLinkMeta} from '../../../lib/link-meta'
 import {downloadAndResize} from '../../../lib/images'
@@ -273,7 +273,7 @@ export const ComposePost = observer(function ComposePost({
     }
     setIsProcessing(true)
     try {
-      const cleanedText = sanatizePost(text)
+      const cleanedText = sanitizePost(text)
       const textWasDirty = cleanedText !== text
       if (textWasDirty) {
         await onChangeText(cleanedText)

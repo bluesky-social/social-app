@@ -106,6 +106,7 @@ export class MeModel {
         }),
       ])
 
+      // request notifications permission once the user has logged in
       notifee.requestPermission()
     } else {
       this.clear()

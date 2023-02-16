@@ -13,7 +13,7 @@ type PostView = AppBskyFeedPost.View
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
-import {cleanError, extractEntities, sanatizePost} from '../../lib/strings'
+import {cleanError, extractEntities, sanitizePost} from '../../lib/strings'
 
 const PAGE_SIZE = 30
 
@@ -51,7 +51,7 @@ export class FeedItemModel {
       const valid = AppBskyFeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
-        const sanitizedText = sanatizePost(this.postRecord.text)
+        const sanitizedText = sanitizePost(this.postRecord.text)
         const textWasDirty = sanitizedText !== this.postRecord.text
         this.postRecord.text = textWasDirty
           ? sanitizedText
