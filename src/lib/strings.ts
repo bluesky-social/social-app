@@ -334,9 +334,9 @@ export const sanitizePost = (postRecord?: AppBskyFeedPost.Record): any => {
 
     const entities = postRecord.entities
     const removedStringLength = endIndex - startIndex
+
     // Remove entities that are completely within the removed range
     // Adjust the start and end index of entities that are after the removed range
-
     postRecord.entities = entities
       ?.filter(entity => {
         return !(
