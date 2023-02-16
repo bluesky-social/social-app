@@ -102,7 +102,7 @@ export class MyFollowsModel {
   hydrateProfiles(profiles: Profile[]) {
     for (const profile of profiles) {
       if (profile.viewer) {
-        this.rootStore.me.follows.hydrate(profile.did, profile.viewer.following)
+        this.hydrate(profile.did, profile.viewer.following)
       }
     }
   }
