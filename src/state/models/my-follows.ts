@@ -45,7 +45,7 @@ export class MyFollowsModel {
 
   fetch = bundleAsync(async () => {
     this.rootStore.log.debug('MyFollowsModel:fetch running full fetch')
-    let after = undefined
+    let after
     let records: FollowsListResponseRecord[] = []
     do {
       const res: FollowsListResponse =
@@ -55,7 +55,7 @@ export class MyFollowsModel {
         })
       records = records.concat(res.records)
       after = res.cursor
-    } while (!!after)
+    } while (typeof after !== 'undefined')
     runInAction(() => {
       this.followDidToRecordMap = {}
       for (const record of records) {

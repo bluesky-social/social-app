@@ -1,7 +1,6 @@
 import React from 'react'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import _omit from 'lodash.omit'
 import {ErrorScreen} from '../util/error/ErrorScreen'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {useStores} from '../../../state'

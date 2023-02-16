@@ -6,7 +6,6 @@ import {
   View,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
-import _omit from 'lodash.omit'
 import {useStores} from '../../../state'
 import {SuggestedActorsViewModel} from '../../../state/models/suggested-actors-view'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
