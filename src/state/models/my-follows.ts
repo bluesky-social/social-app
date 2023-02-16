@@ -45,17 +45,17 @@ export class MyFollowsModel {
 
   fetch = bundleAsync(async () => {
     this.rootStore.log.debug('MyFollowsModel:fetch running full fetch')
-    let after
+    let before
     let records: FollowsListResponseRecord[] = []
     do {
       const res: FollowsListResponse =
         await this.rootStore.api.app.bsky.graph.follow.list({
           user: this.rootStore.me.did,
-          after,
+          before,
         })
       records = records.concat(res.records)
-      after = res.cursor
-    } while (typeof after !== 'undefined')
+      before = res.cursor
+    } while (typeof before !== 'undefined')
     runInAction(() => {
       this.followDidToRecordMap = {}
       for (const record of records) {
