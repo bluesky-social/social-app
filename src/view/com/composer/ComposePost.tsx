@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
@@ -40,6 +40,7 @@ import {
   detectLinkables,
   extractEntities,
   cleanError,
+  sanatizePost,
 } from '../../../lib/strings'
 import {getLinkMeta} from '../../../lib/link-meta'
 import {downloadAndResize} from '../../../lib/images'
@@ -55,6 +56,10 @@ const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 interface Selection {
   start: number
   end: number
+}
+
+function removeExtraNewLines(str: string): string {
+  return str.replace(/[\r\n](\s*[\r\n]){2,}/g, '\n\n')
 }
 
 export const ComposePost = observer(function ComposePost({
@@ -87,10 +92,20 @@ export const ComposePost = observer(function ComposePost({
     imagesOpen || false,
   )
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
+  const [shouldSubmitAfterCleaning, setShouldSubmitAfterCleaning] =
+    useState(false)
 
   useEffect(() => {
     screen('ComposePost')
   }, [screen])
+
+  useEffect(() => {
+    // This needs to happen in a useEffect because recursively calling onPressPublish does not pick up new values of text:
+    // https://stackoverflow.com/questions/65788812/react-updated-state-not-reflecting-in-recursive-usecallback
+    if (shouldSubmitAfterCleaning) {
+      onPressPublish()
+    }
+  }, [onPressPublish, shouldSubmitAfterCleaning])
 
   // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
   const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
@@ -204,25 +219,33 @@ export const ComposePost = observer(function ComposePost({
   const onPressAddLinkCard = (uri: string) => {
     setExtLink({uri, isLoading: true})
   }
-  const onChangeText = (newText: string) => {
-    setText(newText)
+  const onChangeText = useCallback(
+    async (newText: string) => {
+      await setText(newText)
 
-    const prefix = getMentionAt(newText, textInputSelection.current?.start || 0)
-    if (prefix) {
-      autocompleteView.setActive(true)
-      autocompleteView.setPrefix(prefix.value)
-    } else {
-      autocompleteView.setActive(false)
-    }
-
-    if (!extLink) {
-      const ents = extractEntities(newText)?.filter(ent => ent.type === 'link')
-      const set = new Set(ents ? ents.map(e => e.value) : [])
-      if (!_isEqual(set, suggestedExtLinks)) {
-        setSuggestedExtLinks(set)
+      const prefix = getMentionAt(
+        newText,
+        textInputSelection.current?.start || 0,
+      )
+      if (prefix) {
+        autocompleteView.setActive(true)
+        autocompleteView.setPrefix(prefix.value)
+      } else {
+        autocompleteView.setActive(false)
       }
-    }
-  }
+
+      if (!extLink) {
+        const ents = extractEntities(newText)?.filter(
+          ent => ent.type === 'link',
+        )
+        const set = new Set(ents ? ents.map(e => e.value) : [])
+        if (!_isEqual(set, suggestedExtLinks)) {
+          setSuggestedExtLinks(set)
+        }
+      }
+    },
+    [autocompleteView, extLink, suggestedExtLinks],
+  )
   const onPaste = async (err: string | undefined, files: PastedFile[]) => {
     if (err) {
       return setError(cleanError(err))
@@ -248,7 +271,8 @@ export const ComposePost = observer(function ComposePost({
     autocompleteView.setActive(false)
   }
   const onPressCancel = () => hackfixOnClose()
-  const onPressPublish = async () => {
+  const onPressPublish = useCallback(async () => {
+    console.log('---Calling onPressPublish with text:\n', text, '\n')
     if (isProcessing) {
       return
     }
@@ -262,6 +286,14 @@ export const ComposePost = observer(function ComposePost({
     }
     setIsProcessing(true)
     try {
+      const cleanedPost = sanatizePost(text)
+      if (cleanedPost !== text) {
+        await onChangeText(cleanedPost)
+        await setIsProcessing(false)
+        setShouldSubmitAfterCleaning(true)
+        return
+      }
+
       await apilib.post(
         store,
         text,
@@ -288,7 +320,19 @@ export const ComposePost = observer(function ComposePost({
     onPost?.()
     hackfixOnClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
-  }
+  }, [
+    autocompleteView.knownHandles,
+    extLink,
+    hackfixOnClose,
+    isProcessing,
+    onChangeText,
+    onPost,
+    replyTo,
+    selectedPhotos,
+    store,
+    text,
+    track,
+  ])
 
   const canPost = text.length <= MAX_TEXT_LENGTH
   const progressColor =

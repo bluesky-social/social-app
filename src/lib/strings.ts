@@ -297,3 +297,10 @@ export const getYoutubeVideoId = (link: string): string | undefined => {
   }
   return videoId
 }
+
+export const sanatizePost = (str: string): string => {
+  return str.replace(
+    /[\r\n]([\u00AD\u2060\u200D\u200C\u200B\s]*[\r\n]){2,}/g,
+    '\n\n',
+  )
+}
