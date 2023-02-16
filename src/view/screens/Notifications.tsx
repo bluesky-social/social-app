@@ -27,7 +27,7 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
       return cleanup
     }
     store.log.debug('Updating notifications feed')
-    store.me.notifications.update().then(() => {
+    store.me.notifications.refresh().then(() => {
       store.me.notifications.updateReadState()
     })
     screen('Notifications')
