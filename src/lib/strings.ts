@@ -300,13 +300,14 @@ export const getYoutubeVideoId = (link: string): string | undefined => {
 
 const excessSpacePattern =
   /[\r\n]([\u00AD\u2060\u200D\u200C\u200B\s]*[\r\n]){2,}/
+const excessSpacePatternGlobal = new RegExp(excessSpacePattern, 'g')
 const replacement = '\n\n'
 export const hasExcessSpace = (inputStr: string): RegExpMatchArray | null => {
   return inputStr.match(excessSpacePattern)
 }
 
 export const sanitizeText = (inputStr: string): string => {
-  return inputStr.replace(excessSpacePattern, replacement).trim()
+  return inputStr.replace(excessSpacePatternGlobal, replacement).trim()
 }
 
 export const sanitizePost = (postRecord: AppBskyFeedPost.Record): any => {
