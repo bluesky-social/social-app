@@ -19,10 +19,10 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@atproto/api@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.1.1.tgz#0215dd80b98b8698f9e08932d4cdaf52676cb56c"
-  integrity sha512-OMKLXuWxsdaHmmZ8XzwZ1uzWpq1sr9cuzZJLAbWJz0HRDQ3a0tg1uI80XvDYHFep0qgVoT2OKJNtB23Wp7nKoQ==
+"@atproto/api@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.1.2.tgz#66102f9203ba499432bc5aeb30cd19313ab2e4fc"
+  integrity sha512-lDcFGkrk0J7rkIPSie18xS7sO3IL6DsosX8GgoeqCNeVaDuphBRaFCcpBUWf0q4fHrpmdgghGo4ulefyKHTIFQ==
   dependencies:
     "@atproto/xrpc" "*"
     typed-emitter "^2.1.0"
@@ -90,10 +90,10 @@
   resolved "https://registry.yarnpkg.com/@atproto/nsid/-/nsid-0.0.1.tgz#0cdc00cefe8f0b1385f352b9f57b3ad37fff09a4"
   integrity sha512-t5M6/CzWBVYoBbIvfKDpqPj/+ZmyoK9ydZSStcTXosJ27XXwOPhz0VDUGKK2SM9G5Y7TPes8S5KTAU0UdVYFCw==
 
-"@atproto/pds@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.0.2.tgz#3665a24ce1f3a5696e46fea5448c5f849e38b7e0"
-  integrity sha512-TCTVKJWaUxF6EQJ6hobhO19bLaoW2Nk8xn/mySnQMN7ZHlYD9Hv+eRVY+PWLpnAuGetCkTbZAspg84eG2lKGTA==
+"@atproto/pds@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.0.3.tgz#118a1d51687664f085f8e1c19ae3ac1646dc69b2"
+  integrity sha512-l5iGJNyQs73V/mQWkcg4NXNGbnfXfv+Yg3g8nqwtun409iAAeYZimA1Tt0JV/hyq+Oz3antG0VvLQQEtNVUpVQ==
   dependencies:
     "@atproto/common" "*"
     "@atproto/crypto" "*"
@@ -124,6 +124,7 @@
     pino "^8.6.1"
     pino-http "^8.2.1"
     sharp "^0.31.2"
+    typed-emitter "^2.1.0"
     uint8arrays "3.0.0"
 
 "@atproto/plc@*":

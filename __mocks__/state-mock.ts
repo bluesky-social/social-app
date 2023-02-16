@@ -6,6 +6,7 @@ import {SessionModel} from '../src/state/models/session'
 import {NavigationModel} from '../src/state/models/navigation'
 import {ShellUiModel} from '../src/state/models/shell-ui'
 import {MeModel} from '../src/state/models/me'
+import {MyFollowsModel} from '../src/state/models/my-follows'
 import {OnboardModel} from '../src/state/models/onboard'
 import {ProfilesViewModel} from '../src/state/models/profiles-view'
 import {LinkMetasViewModel} from '../src/state/models/link-metas-view'
@@ -53,9 +54,8 @@ export const mockedProfileStore = {
   followsCount: 0,
   membersCount: 0,
   postsCount: 0,
-  myState: {
-    follow: '',
-    member: '',
+  viewer: {
+    following: '',
   },
   rootStore: {} as RootStoreModel,
   hasContent: true,
@@ -572,6 +572,10 @@ export const mockedShellStore = {
   openLightbox: jest.fn(),
 } as ShellUiModel
 
+export const mockedFollowsStore = {
+  isFollowing: jest.fn().mockReturnValue(false),
+} as MyFollowsModel
+
 export const mockedMeStore = {
   serialize: jest.fn(),
   hydrate: jest.fn(),
@@ -585,6 +589,7 @@ export const mockedMeStore = {
   memberships: mockedMembershipsStore,
   mainFeed: mockedFeedStore,
   notifications: mockedNotificationsStore,
+  follows: mockedFollowsStore,
   clear: jest.fn(),
   load: jest.fn(),
   clearNotificationCount: jest.fn(),
