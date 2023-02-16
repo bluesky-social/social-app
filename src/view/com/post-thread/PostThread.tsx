@@ -17,13 +17,16 @@ export const PostThread = observer(function PostThread({
   view: PostThreadViewModel
 }) {
   const ref = useRef<FlatList>(null)
+  const [isRefreshing, setIsRefreshing] = React.useState(false)
   const posts = view.thread ? Array.from(flattenThread(view.thread)) : []
-  const onRefresh = () => {
-    view
-      ?.refresh()
-      .catch(err =>
-        view.rootStore.log.error('Failed to refresh posts thread', err),
-      )
+  const onRefresh = async () => {
+    setIsRefreshing(true)
+    try {
+      view?.refresh()
+    } catch (err) {
+      view.rootStore.log.error('Failed to refresh posts thread', err)
+    }
+    setIsRefreshing(false)
   }
   const onLayout = () => {
     const index = posts.findIndex(post => post._isHighlightedPost)
@@ -77,7 +80,7 @@ export const PostThread = observer(function PostThread({
       data={posts}
       keyExtractor={item => item._reactKey}
       renderItem={renderItem}
-      refreshing={view.isRefreshing}
+      refreshing={isRefreshing}
       onRefresh={onRefresh}
       onLayout={onLayout}
       onScrollToIndexFailed={onScrollToIndexFailed}
