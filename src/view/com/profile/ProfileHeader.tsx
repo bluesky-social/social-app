@@ -213,6 +213,13 @@ export const ProfileHeader = observer(function ProfileHeader({
           </Text>
         </View>
         <View style={styles.handleLine}>
+          {view.viewer.followedBy ? (
+            <View style={[styles.pill, pal.btn, s.mr5]}>
+              <Text type="xs" style={[pal.text]}>
+                Follows you
+              </Text>
+            </View>
+          ) : undefined}
           <Text style={pal.textLight}>@{view.handle}</Text>
         </View>
         <View style={styles.metricsLine}>
@@ -264,7 +271,7 @@ export const ProfileHeader = observer(function ProfileHeader({
               style={[pal.text, s.mr5]}
             />
             <Text type="md" style={[s.mr2, pal.text]}>
-              Account muted.
+              Account muted
             </Text>
           </View>
         ) : undefined}
@@ -369,6 +376,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 5,
+  },
+
+  pill: {
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
   },
 
   br40: {borderRadius: 40},
