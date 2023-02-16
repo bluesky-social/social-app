@@ -58,10 +58,6 @@ interface Selection {
   end: number
 }
 
-function removeExtraNewLines(str: string): string {
-  return str.replace(/[\r\n](\s*[\r\n]){2,}/g, '\n\n')
-}
-
 export const ComposePost = observer(function ComposePost({
   replyTo,
   imagesOpen,
@@ -99,14 +95,6 @@ export const ComposePost = observer(function ComposePost({
     screen('ComposePost')
   }, [screen])
 
-  useEffect(() => {
-    // This needs to happen in a useEffect because recursively calling onPressPublish does not pick up new values of text:
-    // https://stackoverflow.com/questions/65788812/react-updated-state-not-reflecting-in-recursive-usecallback
-    if (shouldSubmitAfterCleaning) {
-      onPressPublish()
-    }
-  }, [onPressPublish, shouldSubmitAfterCleaning])
-
   // Using default import (React.use...) instead of named import (use...) to be able to mock store's data in jest environment
   const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
     () => new UserAutocompleteViewModel(store),
@@ -118,10 +106,10 @@ export const ComposePost = observer(function ComposePost({
   // is focused during unmount, an exception will throw (seems that a blur method isnt implemented)
   // manually blurring before closing gets around that
   // -prf
-  const hackfixOnClose = () => {
+  const hackfixOnClose = useCallback(() => {
     textInput.current?.blur()
     onClose()
-  }
+  }, [onClose])
 
   // initial setup
   useEffect(() => {
@@ -272,7 +260,6 @@ export const ComposePost = observer(function ComposePost({
   }
   const onPressCancel = () => hackfixOnClose()
   const onPressPublish = useCallback(async () => {
-    console.log('---Calling onPressPublish with text:\n', text, '\n')
     if (isProcessing) {
       return
     }
@@ -286,9 +273,10 @@ export const ComposePost = observer(function ComposePost({
     }
     setIsProcessing(true)
     try {
-      const cleanedPost = sanatizePost(text)
-      if (cleanedPost !== text) {
-        await onChangeText(cleanedPost)
+      const cleanedText = sanatizePost(text)
+      const textWasDirty = cleanedText !== text
+      if (textWasDirty) {
+        await onChangeText(cleanedText)
         await setIsProcessing(false)
         setShouldSubmitAfterCleaning(true)
         return
@@ -333,6 +321,14 @@ export const ComposePost = observer(function ComposePost({
     text,
     track,
   ])
+
+  useEffect(() => {
+    // This needs to happen in a useEffect because recursively calling onPressPublish does not pick up new values of text:
+    // https://stackoverflow.com/questions/65788812/react-updated-state-not-reflecting-in-recursive-usecallback
+    if (shouldSubmitAfterCleaning) {
+      onPressPublish()
+    }
+  }, [onPressPublish, shouldSubmitAfterCleaning])
 
   const canPost = text.length <= MAX_TEXT_LENGTH
   const progressColor =

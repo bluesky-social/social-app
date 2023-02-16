@@ -5,8 +5,6 @@ import {FeedModel} from './feed-view'
 import {NotificationsViewModel} from './notifications-view'
 import {isObj, hasProp} from '../lib/type-guards'
 import {displayNotificationFromModel} from '../../view/lib/notifee'
-import {extractEntities, sanatizePost} from '../../lib/strings'
-import {FeedItemModel} from './feed-view'
 
 export class MeModel {
   did: string = ''
@@ -107,28 +105,7 @@ export class MeModel {
           this.rootStore.log.error('Failed to setup notifications model', e)
         }),
       ])
-      const cleanedFeed = this.mainFeed.feed.map(item => {
-        const cleanedText = sanatizePost(item.postRecord?.text || '')
-        const textWasDirty = cleanedText !== item.postRecord?.text
-        let text = textWasDirty ? cleanedText : item.postRecord?.text
-        let entities = textWasDirty
-          ? extractEntities(cleanedText)
-          : item.postRecord?.entities
-        return {
-          ...item,
-          postRecord: {
-            ...item.postRecord,
-            text,
-            entities,
-          },
-          post: {
-            ...item.post,
-          },
-        }
-      })
-      runInAction(() => {
-        this.mainFeed.feed = cleanedFeed as FeedItemModel[]
-      })
+
       notifee.requestPermission()
     } else {
       this.clear()
