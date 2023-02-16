@@ -116,5 +116,6 @@ export class UserFollowsViewModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     this.follows = this.follows.concat(res.data.follows)
+    this.rootStore.me.follows.hydrateProfiles(res.data.follows)
   }
 }

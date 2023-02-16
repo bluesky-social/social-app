@@ -216,6 +216,7 @@ export class ProfileViewModel {
     this.postsCount = res.data.postsCount
     if (res.data.viewer) {
       Object.assign(this.viewer, res.data.viewer)
+      this.rootStore.me.follows.hydrate(this.did, res.data.viewer.following)
     }
     this.descriptionEntities = extractEntities(this.description || '')
   }

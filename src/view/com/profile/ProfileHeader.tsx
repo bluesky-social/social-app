@@ -164,10 +164,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             </TouchableOpacity>
           ) : (
             <>
-              {store.me.follows.isFollowing(
-                view.did,
-                !!view.viewer.following,
-              ) ? (
+              {store.me.follows.isFollowing(view.did) ? (
                 <TouchableOpacity
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.mainBtn, pal.btn]}>

@@ -130,5 +130,6 @@ export class RepostedByViewModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     this.repostedBy = this.repostedBy.concat(res.data.repostedBy)
+    this.rootStore.me.follows.hydrateProfiles(res.data.repostedBy)
   }
 }

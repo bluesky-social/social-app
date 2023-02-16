@@ -1,11 +1,15 @@
-import {makeAutoObservable, runInAction, computed} from 'mobx'
-import {FollowRecord} from '@atproto/api'
+import {makeAutoObservable, runInAction} from 'mobx'
+import {FollowRecord, AppBskyActorProfile, AppBskyActorRef} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {bundleAsync} from '../../lib/async/bundle'
 
 const CACHE_TTL = 1000 * 60 * 60 // hourly
 type FollowsListResponse = Awaited<ReturnType<FollowRecord['list']>>
 type FollowsListResponseRecord = FollowsListResponse['records'][0]
+type Profile =
+  | AppBskyActorProfile.ViewBasic
+  | AppBskyActorProfile.View
+  | AppBskyActorRef.WithInfo
 
 /**
  * This model is used to maintain a synced local cache of the user's
@@ -14,7 +18,6 @@ type FollowsListResponseRecord = FollowsListResponse['records'][0]
  */
 export class MyFollowsModel {
   // data
-  hasValidData = false
   followDidToRecordMap: Record<string, string> = {}
   lastSync = 0
 
@@ -44,41 +47,25 @@ export class MyFollowsModel {
     this.rootStore.log.debug('MyFollowsModel:fetch running full fetch')
     let after = undefined
     let records: FollowsListResponseRecord[] = []
-    try {
-      do {
-        const res: FollowsListResponse =
-          await this.rootStore.api.app.bsky.graph.follow.list({
-            user: this.rootStore.me.did,
-            after,
-          })
-        records = records.concat(res.records)
-        after = res.cursor
-      } while (!!after)
-      runInAction(() => {
-        this.followDidToRecordMap = {}
-        for (const record of records) {
-          this.followDidToRecordMap[record.value.subject.did] = record.uri
-        }
-        this.lastSync = Date.now()
-        this.hasValidData = true
-      })
-    } catch (e) {
-      runInAction(() => {
-        this.hasValidData = false
-      })
-      throw e
-    }
+    do {
+      const res: FollowsListResponse =
+        await this.rootStore.api.app.bsky.graph.follow.list({
+          user: this.rootStore.me.did,
+          after,
+        })
+      records = records.concat(res.records)
+      after = res.cursor
+    } while (!!after)
+    runInAction(() => {
+      this.followDidToRecordMap = {}
+      for (const record of records) {
+        this.followDidToRecordMap[record.value.subject.did] = record.uri
+      }
+      this.lastSync = Date.now()
+    })
   })
 
-  /**
-   * Checks the local cache if it's got good data
-   * If it doesn't, uses the fallback given (which should
-   * be provided by the view)
-   */
-  isFollowing(did: string, fallback?: boolean) {
-    if (!this.hasValidData) {
-      return fallback || false
-    }
+  isFollowing(did: string) {
     return !!this.followDidToRecordMap[did]
   }
 
@@ -96,5 +83,27 @@ export class MyFollowsModel {
 
   removeFollow(did: string) {
     delete this.followDidToRecordMap[did]
+  }
+
+  /**
+   * Use this to incrementally update the cache as views provide information
+   */
+  hydrate(did: string, recordUri: string | undefined) {
+    if (recordUri) {
+      this.followDidToRecordMap[did] = recordUri
+    } else {
+      delete this.followDidToRecordMap[did]
+    }
+  }
+
+  /**
+   * Use this to incrementally update the cache as views provide information
+   */
+  hydrateProfiles(profiles: Profile[]) {
+    for (const profile of profiles) {
+      if (profile.viewer) {
+        this.rootStore.me.follows.hydrate(profile.did, profile.viewer.following)
+      }
+    }
   }
 }
