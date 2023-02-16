@@ -310,19 +310,27 @@ export const sanitizeText = (inputStr: string): string => {
   return inputStr.replace(excessSpacePatternGlobal, replacement).trim()
 }
 
-export const sanitizePost = (postRecord: AppBskyFeedPost.Record): any => {
-  // NOTE: Mutates
-  const str = postRecord.text
-  let sanitizedStr = str
-  let match = hasExcessSpace(sanitizedStr)
+export const sanitizePost = (postRecord?: AppBskyFeedPost.Record): any => {
+  // Mutates postRecord
+  if (!postRecord) {
+    return
+  }
+  const postText = postRecord.text
+  let match = hasExcessSpace(postText)
 
   while (match && typeof match.index !== 'undefined') {
     const startIndex = match.index
     const endIndex = startIndex + match[0].length
-    sanitizedStr =
-      sanitizedStr.slice(0, startIndex) +
+    const newRecordText =
+      postRecord.text.slice(0, startIndex) +
       replacement +
-      sanitizedStr.slice(endIndex)
+      postRecord.text.slice(endIndex)
+    if (newRecordText === postRecord.text) {
+      // To ensure we never run into an infinite loop
+      break
+    } else {
+      postRecord.text = newRecordText
+    }
 
     const entities = postRecord.entities
     const removedStringLength = endIndex - startIndex
@@ -350,8 +358,8 @@ export const sanitizePost = (postRecord: AppBskyFeedPost.Record): any => {
         }
       })
 
-    match = hasExcessSpace(sanitizedStr)
+    match = hasExcessSpace(postRecord.text)
   }
 
-  return sanitizedStr
+  return postText
 }

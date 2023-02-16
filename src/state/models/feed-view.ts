@@ -51,11 +51,9 @@ export class FeedItemModel {
       const valid = AppBskyFeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
-        const sanitizedText = sanitizePost(this.postRecord)
 
-        if (sanitizedText !== this.postRecord.text) {
-          this.postRecord.text = sanitizedText
-        }
+        // Mutates this.postRecord
+        sanitizePost(this.postRecord)
 
         rootStore.log.warn(
           'Received an invalid app.bsky.feed.post record',

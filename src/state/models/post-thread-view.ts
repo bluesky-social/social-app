@@ -40,14 +40,8 @@ export class PostThreadViewPostModel {
       const valid = FeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
-        const sanitizedText = sanitizePost(this.postRecord)
-        const textWasDirty = sanitizedText !== this.postRecord.text
-        this.postRecord.text = textWasDirty
-          ? sanitizedText
-          : this.postRecord.text
-        this.postRecord.entities = textWasDirty
-          ? extractEntities(this.postRecord.text)
-          : this.postRecord.entities
+        // Mutates this.postRecord
+        sanitizePost(this.postRecord)
       } else {
         rootStore.log.warn(
           'Received an invalid app.bsky.feed.post record',
