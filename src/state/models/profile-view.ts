@@ -99,8 +99,20 @@ export class ProfileViewModel {
     if (!this.rootStore.me.did) {
       throw new Error('Not logged in')
     }
-    if (this.viewer.following) {
-      await apilib.unfollow(this.rootStore, this.viewer.following)
+
+    const follows = this.rootStore.me.follows
+    const followUri = follows.isFollowing(this.did)
+      ? follows.getFollowUri(this.did)
+      : undefined
+
+    // guard against this view getting out of sync with the follows cache
+    if (followUri !== this.viewer.following) {
+      this.viewer.following = followUri
+      return
+    }
+
+    if (followUri) {
+      await apilib.unfollow(this.rootStore, followUri)
       runInAction(() => {
         this.followersCount--
         this.viewer.following = undefined
