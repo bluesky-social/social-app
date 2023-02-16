@@ -1,4 +1,4 @@
-import React, {MutableRefObject, useEffect} from 'react'
+import React, {MutableRefObject} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
@@ -37,11 +37,8 @@ export const Feed = observer(function Feed({
   testID?: string
   headerOffset?: number
 }) {
-  const {screen, track} = useAnalytics()
-
-  useEffect(() => {
-    screen('Feed')
-  }, [screen])
+  const {track} = useAnalytics()
+  const [isRefreshing, setIsRefreshing] = React.useState(false)
 
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your
@@ -63,19 +60,23 @@ export const Feed = observer(function Feed({
     }
     return <FeedItem item={item} />
   }
-  const onRefresh = () => {
+  const onRefresh = async () => {
     track('Feed:onRefresh')
-    feed
-      .refresh()
-      .catch(err =>
-        feed.rootStore.log.error('Failed to refresh posts feed', err),
-      )
+    setIsRefreshing(true)
+    try {
+      await feed.refresh()
+    } catch (err) {
+      feed.rootStore.log.error('Failed to refresh posts feed', err)
+    }
+    setIsRefreshing(false)
   }
-  const onEndReached = () => {
+  const onEndReached = async () => {
     track('Feed:onEndReached')
-    feed
-      .loadMore()
-      .catch(err => feed.rootStore.log.error('Failed to load more posts', err))
+    try {
+      await feed.loadMore()
+    } catch (err) {
+      feed.rootStore.log.error('Failed to load more posts', err)
+    }
   }
   let data: any[] = []
   if (feed.hasError) {
@@ -98,15 +99,19 @@ export const Feed = observer(function Feed({
     )
   return (
     <View testID={testID} style={style}>
-      {feed.isLoading && !data && <PostFeedLoadingPlaceholder />}
-      {data && (
+      {feed.isLoading && data.length === 0 && (
+        <View style={{paddingTop: headerOffset}}>
+          <PostFeedLoadingPlaceholder />
+        </View>
+      )}
+      {data.length > 0 && (
         <FlatList
           ref={scrollElRef}
           data={data}
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
           ListFooterComponent={FeedFooter}
-          refreshing={feed.isRefreshing}
+          refreshing={isRefreshing}
           contentContainerStyle={s.contentContainer}
           onScroll={onScroll}
           onRefresh={onRefresh}

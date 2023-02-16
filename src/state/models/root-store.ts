@@ -7,6 +7,7 @@ import {AtpAgent} from '@atproto/api'
 import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
 import BackgroundFetch from 'react-native-background-fetch'
+import {z} from 'zod'
 import {isObj, hasProp} from '../lib/type-guards'
 import {LogModel} from './log'
 import {SessionModel} from './session'
@@ -17,8 +18,17 @@ import {LinkMetasViewModel} from './link-metas-view'
 import {MeModel} from './me'
 import {OnboardModel} from './onboard'
 
+export const appInfo = z.object({
+  build: z.string(),
+  name: z.string(),
+  namespace: z.string(),
+  version: z.string(),
+})
+export type AppInfo = z.infer<typeof appInfo>
+
 export class RootStoreModel {
   agent: AtpAgent
+  appInfo?: AppInfo
   log = new LogModel()
   session = new SessionModel(this)
   nav = new NavigationModel(this)
@@ -42,8 +52,13 @@ export class RootStoreModel {
     return this.agent.api
   }
 
+  setAppInfo(info: AppInfo) {
+    this.appInfo = info
+  }
+
   serialize(): unknown {
     return {
+      appInfo: this.appInfo,
       log: this.log.serialize(),
       session: this.session.serialize(),
       me: this.me.serialize(),
@@ -55,6 +70,12 @@ export class RootStoreModel {
 
   hydrate(v: unknown) {
     if (isObj(v)) {
+      if (hasProp(v, 'appInfo')) {
+        const appInfoParsed = appInfo.safeParse(v.appInfo)
+        if (appInfoParsed.success) {
+          this.setAppInfo(appInfoParsed.data)
+        }
+      }
       if (hasProp(v, 'log')) {
         this.log.hydrate(v.log)
       }
