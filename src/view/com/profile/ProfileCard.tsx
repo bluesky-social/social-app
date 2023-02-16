@@ -1,11 +1,14 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {observer} from 'mobx-react-lite'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
+import * as Toast from '../util/Toast'
 import {s} from '../../lib/styles'
 import {usePalette} from '../../lib/hooks/usePalette'
 import {useStores} from '../../../state'
+import * as apilib from '../../../state/lib/api'
 
 export function ProfileCard({
   handle,
@@ -68,40 +71,64 @@ export function ProfileCard({
   )
 }
 
-export function ProfileCardWithFollowBtn({
-  handle,
-  displayName,
-  avatar,
-  description,
-  isFollowedBy,
-}: {
-  handle: string
-  displayName?: string
-  avatar?: string
-  description?: string
-  isFollowedBy?: boolean
-}) {
-  const store = useStores()
-  const isMe = store.me.handle === handle
-  const isFollowing = false // TODO
-  const onToggleFollow = () => {} // TODO
-  return (
-    <ProfileCard
-      handle={handle}
-      displayName={displayName}
-      avatar={avatar}
-      description={description}
-      isFollowedBy={isFollowedBy}
-      renderButton={
-        isMe
-          ? undefined
-          : () => (
-              <FollowBtn isFollowing={isFollowing} onPress={onToggleFollow} />
-            )
+export const ProfileCardWithFollowBtn = observer(
+  ({
+    did,
+    declarationCid,
+    handle,
+    displayName,
+    avatar,
+    description,
+    isFollowedBy,
+  }: {
+    did: string
+    declarationCid: string
+    handle: string
+    displayName?: string
+    avatar?: string
+    description?: string
+    isFollowedBy?: boolean
+  }) => {
+    const store = useStores()
+    const isMe = store.me.handle === handle
+    const isFollowing = store.me.follows.isFollowing(did)
+    const onToggleFollow = async () => {
+      if (store.me.follows.isFollowing(did)) {
+        try {
+          await apilib.unfollow(store, store.me.follows.getFollowUri(did))
+          store.me.follows.removeFollow(did)
+        } catch (e: any) {
+          store.log.error('Failed fo delete follow', e)
+          Toast.show('An issue occurred, please try again.')
+        }
+      } else {
+        try {
+          const res = await apilib.follow(store, did, declarationCid)
+          store.me.follows.addFollow(did, res.uri)
+        } catch (e: any) {
+          store.log.error('Failed fo create follow', e)
+          Toast.show('An issue occurred, please try again.')
+        }
       }
-    />
-  )
-}
+    }
+    return (
+      <ProfileCard
+        handle={handle}
+        displayName={displayName}
+        avatar={avatar}
+        description={description}
+        isFollowedBy={isFollowedBy}
+        renderButton={
+          isMe
+            ? undefined
+            : () => (
+                <FollowBtn isFollowing={isFollowing} onPress={onToggleFollow} />
+              )
+        }
+      />
+    )
+  },
+)
 
 function FollowBtn({
   isFollowing,

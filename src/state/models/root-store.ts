@@ -153,6 +153,7 @@ export class RootStoreModel {
     }
     try {
       await this.me.fetchNotifications()
+      await this.me.follows.fetchIfNeeded()
     } catch (e: any) {
       this.log.error('Failed to fetch latest state', e)
     }

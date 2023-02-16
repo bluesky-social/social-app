@@ -3,6 +3,7 @@ import notifee from '@notifee/react-native'
 import {RootStoreModel} from './root-store'
 import {FeedModel} from './feed-view'
 import {NotificationsViewModel} from './notifications-view'
+import {MyFollowsModel} from './my-follows'
 import {isObj, hasProp} from '../lib/type-guards'
 import {displayNotificationFromModel} from '../../view/lib/notifee'
 
@@ -15,6 +16,7 @@ export class MeModel {
   notificationCount: number = 0
   mainFeed: FeedModel
   notifications: NotificationsViewModel
+  follows: MyFollowsModel
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -26,6 +28,7 @@ export class MeModel {
       algorithm: 'reverse-chronological',
     })
     this.notifications = new NotificationsViewModel(this.rootStore, {})
+    this.follows = new MyFollowsModel(this.rootStore)
   }
 
   clear() {
@@ -103,6 +106,9 @@ export class MeModel {
         }),
         this.notifications.setup().catch(e => {
           this.rootStore.log.error('Failed to setup notifications model', e)
+        }),
+        this.follows.fetch().catch(e => {
+          this.rootStore.log.error('Failed to load my follows', e)
         }),
       ])
 

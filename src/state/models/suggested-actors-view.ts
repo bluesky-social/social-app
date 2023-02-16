@@ -14,7 +14,7 @@ import {
 
 const PAGE_SIZE = 30
 
-export type SuggestedActor = GetSuggestions.Actor | Profile.View
+export type SuggestedActor = Profile.ViewBasic | Profile.View
 
 const getSuggestionList = ({serviceUrl}: {serviceUrl: string}) => {
   if (serviceUrl.includes('localhost')) {
@@ -142,10 +142,20 @@ export class SuggestedActorsViewModel {
       } while (actors.length)
 
       runInAction(() => {
-        this.hardCodedSuggestions = profiles.filter(
-          profile =>
-            !profile.viewer?.following && profile.did !== this.rootStore.me.did,
-        )
+        this.hardCodedSuggestions = profiles.filter(profile => {
+          if (
+            this.rootStore.me.follows.isFollowing(
+              profile.did,
+              !!profile.viewer?.following,
+            )
+          ) {
+            return false
+          }
+          if (profile.did === this.rootStore.me.did) {
+            return false
+          }
+          return true
+        })
       })
     } catch (e) {
       this.rootStore.log.error(

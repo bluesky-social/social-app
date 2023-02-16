@@ -55,6 +55,8 @@ export const PostVotedBy = observer(function PostVotedBy({
   const renderItem = ({item}: {item: VoteItem}) => (
     <ProfileCardWithFollowBtn
       key={item.actor.did}
+      did={item.actor.did}
+      declarationCid={item.actor.declaration.cid}
       handle={item.actor.handle}
       displayName={item.actor.displayName}
       avatar={item.actor.avatar}

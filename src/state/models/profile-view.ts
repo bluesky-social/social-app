@@ -104,6 +104,7 @@ export class ProfileViewModel {
       runInAction(() => {
         this.followersCount--
         this.viewer.following = undefined
+        this.rootStore.me.follows.removeFollow(this.did)
       })
     } else {
       const res = await apilib.follow(
@@ -114,6 +115,7 @@ export class ProfileViewModel {
       runInAction(() => {
         this.followersCount++
         this.viewer.following = res.uri
+        this.rootStore.me.follows.addFollow(this.did, res.uri)
       })
     }
   }

@@ -60,6 +60,8 @@ export const ProfileFollows = observer(function ProfileFollows({
   const renderItem = ({item}: {item: FollowItem}) => (
     <ProfileCardWithFollowBtn
       key={item.did}
+      did={item.did}
+      declarationCid={item.declaration.cid}
       handle={item.handle}
       displayName={item.displayName}
       avatar={item.avatar}
