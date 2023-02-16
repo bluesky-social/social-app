@@ -1,22 +1,25 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import {s} from '../../lib/styles'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {useStores} from '../../../state'
 
 export function ProfileCard({
   handle,
   displayName,
   avatar,
   description,
+  isFollowedBy,
   renderButton,
 }: {
   handle: string
   displayName?: string
   avatar?: string
   description?: string
+  isFollowedBy?: boolean
   renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
@@ -36,12 +39,19 @@ export function ProfileCard({
           />
         </View>
         <View style={styles.layoutContent}>
-          <Text style={[s.bold, pal.text]} numberOfLines={1}>
+          <Text type="lg" style={[s.bold, pal.text]} numberOfLines={1}>
             {displayName || handle}
           </Text>
-          <Text type="sm" style={[pal.textLight]} numberOfLines={1}>
+          <Text type="md" style={[pal.textLight]} numberOfLines={1}>
             @{handle}
           </Text>
+          {isFollowedBy && (
+            <View style={s.flexRow}>
+              <View style={[s.mt5, pal.btn, styles.pill]}>
+                <Text type="xs">Follows You</Text>
+              </View>
+            </View>
+          )}
         </View>
         {renderButton ? (
           <View style={styles.layoutButton}>{renderButton()}</View>
@@ -55,6 +65,60 @@ export function ProfileCard({
         </View>
       ) : undefined}
     </Link>
+  )
+}
+
+export function ProfileCardWithFollowBtn({
+  handle,
+  displayName,
+  avatar,
+  description,
+  isFollowedBy,
+}: {
+  handle: string
+  displayName?: string
+  avatar?: string
+  description?: string
+  isFollowedBy?: boolean
+}) {
+  const store = useStores()
+  const isMe = store.me.handle === handle
+  const isFollowing = false // TODO
+  const onToggleFollow = () => {} // TODO
+  return (
+    <ProfileCard
+      handle={handle}
+      displayName={displayName}
+      avatar={avatar}
+      description={description}
+      isFollowedBy={isFollowedBy}
+      renderButton={
+        isMe
+          ? undefined
+          : () => (
+              <FollowBtn isFollowing={isFollowing} onPress={onToggleFollow} />
+            )
+      }
+    />
+  )
+}
+
+function FollowBtn({
+  isFollowing,
+  onPress,
+}: {
+  isFollowing: boolean
+  onPress: () => void
+}) {
+  const pal = usePalette('default')
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <View style={[styles.btn, pal.btn]}>
+        <Text type="button" style={[pal.text]}>
+          {isFollowing ? 'Unfollow' : 'Follow'}
+        </Text>
+      </View>
+    </TouchableOpacity>
   )
 }
 
@@ -92,5 +156,16 @@ const styles = StyleSheet.create({
     paddingLeft: 60,
     paddingRight: 10,
     paddingBottom: 10,
+  },
+  pill: {
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  btn: {
+    paddingVertical: 7,
+    borderRadius: 50,
+    marginLeft: 6,
+    paddingHorizontal: 14,
   },
 })
