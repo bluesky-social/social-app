@@ -39,7 +39,8 @@ export function displayNotificationFromModel(
     title = `${author} replied to your post`
     body = notif.additionalPost?.thread?.postRecord?.text || ''
   } else if (notif.isFollow) {
-    title = `${author} followed you`
+    title = 'New follower!'
+    body = `${author} has followed you`
   } else {
     return
   }
