@@ -51,7 +51,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     view?.toggleFollowing().then(
       () => {
         Toast.show(
-          `${view.myState.follow ? 'Following' : 'No longer following'} ${
+          `${view.viewer.following ? 'Following' : 'No longer following'} ${
             view.displayName || view.handle
           }`,
         )
@@ -140,8 +140,8 @@ export const ProfileHeader = observer(function ProfileHeader({
   let dropdownItems: DropdownItem[] = [{label: 'Share', onPress: onPressShare}]
   if (!isMe) {
     dropdownItems.push({
-      label: view.myState.muted ? 'Unmute Account' : 'Mute Account',
-      onPress: view.myState.muted ? onPressUnmuteAccount : onPressMuteAccount,
+      label: view.viewer.muted ? 'Unmute Account' : 'Mute Account',
+      onPress: view.viewer.muted ? onPressUnmuteAccount : onPressMuteAccount,
     })
     dropdownItems.push({
       label: 'Report Account',
@@ -164,7 +164,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             </TouchableOpacity>
           ) : (
             <>
-              {view.myState.follow ? (
+              {view.viewer.following ? (
                 <TouchableOpacity
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.mainBtn, pal.btn]}>
@@ -257,7 +257,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             entities={view.descriptionEntities}
           />
         ) : undefined}
-        {view.myState.muted ? (
+        {view.viewer.muted ? (
           <View style={[styles.detailLine, pal.btn, s.p5]}>
             <FontAwesomeIcon
               icon={['far', 'eye-slash']}

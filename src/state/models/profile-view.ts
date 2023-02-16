@@ -15,9 +15,10 @@ import {cleanError} from '../../lib/strings'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
 
-export class ProfileViewMyStateModel {
-  follow?: string
+export class ProfileViewViewerModel {
   muted?: boolean
+  following?: string
+  followedBy?: string
 
   constructor() {
     makeAutoObservable(this)
@@ -47,7 +48,7 @@ export class ProfileViewModel {
   followersCount: number = 0
   followsCount: number = 0
   postsCount: number = 0
-  myState = new ProfileViewMyStateModel()
+  viewer = new ProfileViewViewerModel()
 
   // added data
   descriptionEntities?: Entity[]
@@ -98,11 +99,11 @@ export class ProfileViewModel {
     if (!this.rootStore.me.did) {
       throw new Error('Not logged in')
     }
-    if (this.myState.follow) {
-      await apilib.unfollow(this.rootStore, this.myState.follow)
+    if (this.viewer.following) {
+      await apilib.unfollow(this.rootStore, this.viewer.following)
       runInAction(() => {
         this.followersCount--
-        this.myState.follow = undefined
+        this.viewer.following = undefined
       })
     } else {
       const res = await apilib.follow(
@@ -112,7 +113,7 @@ export class ProfileViewModel {
       )
       runInAction(() => {
         this.followersCount++
-        this.myState.follow = res.uri
+        this.viewer.following = res.uri
       })
     }
   }
@@ -153,13 +154,13 @@ export class ProfileViewModel {
 
   async muteAccount() {
     await this.rootStore.api.app.bsky.graph.mute({user: this.did})
-    this.myState.muted = true
+    this.viewer.muted = true
     await this.refresh()
   }
 
   async unmuteAccount() {
     await this.rootStore.api.app.bsky.graph.unmute({user: this.did})
-    this.myState.muted = false
+    this.viewer.muted = false
     await this.refresh()
   }
 
@@ -211,8 +212,8 @@ export class ProfileViewModel {
     this.followersCount = res.data.followersCount
     this.followsCount = res.data.followsCount
     this.postsCount = res.data.postsCount
-    if (res.data.myState) {
-      Object.assign(this.myState, res.data.myState)
+    if (res.data.viewer) {
+      Object.assign(this.viewer, res.data.viewer)
     }
     this.descriptionEntities = extractEntities(this.description || '')
   }

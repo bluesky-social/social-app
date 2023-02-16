@@ -9,7 +9,7 @@ import {bundleAsync} from '../../lib/async/bundle'
 
 const PAGE_SIZE = 30
 
-export type FollowItem = GetFollows.Follow
+export type FollowItem = ActorRef.WithInfo
 
 export class UserFollowsViewModel {
   // state

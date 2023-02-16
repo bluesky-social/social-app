@@ -144,7 +144,7 @@ export class SuggestedActorsViewModel {
       runInAction(() => {
         this.hardCodedSuggestions = profiles.filter(
           profile =>
-            !profile.myState?.follow && profile.did !== this.rootStore.me.did,
+            !profile.viewer?.following && profile.did !== this.rootStore.me.did,
         )
       })
     } catch (e) {
