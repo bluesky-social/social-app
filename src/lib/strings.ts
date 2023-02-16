@@ -298,9 +298,59 @@ export const getYoutubeVideoId = (link: string): string | undefined => {
   return videoId
 }
 
-export const sanitizePost = (str: string): string => {
-  return str.replace(
-    /[\r\n]([\u00AD\u2060\u200D\u200C\u200B\s]*[\r\n]){2,}/g,
-    '\n\n',
-  )
+const excessSpacePattern =
+  /[\r\n]([\u00AD\u2060\u200D\u200C\u200B\s]*[\r\n]){2,}/
+const replacement = '\n\n'
+export const hasExcessSpace = (inputStr: string): RegExpMatchArray | null => {
+  return inputStr.match(excessSpacePattern)
+}
+
+export const sanitizeText = (inputStr: string): string => {
+  return inputStr.replace(excessSpacePattern, replacement).trim()
+}
+
+export const sanitizePost = (postRecord: AppBskyFeedPost.Record): any => {
+  // NOTE: Mutates
+  const str = postRecord.text
+  let sanitizedStr = str
+  let match = hasExcessSpace(sanitizedStr)
+
+  while (match && typeof match.index !== 'undefined') {
+    const startIndex = match.index
+    const endIndex = startIndex + match[0].length
+    sanitizedStr =
+      sanitizedStr.slice(0, startIndex) +
+      replacement +
+      sanitizedStr.slice(endIndex)
+
+    const entities = postRecord.entities
+    const removedStringLength = endIndex - startIndex
+    // Remove entities that are completely within the removed range
+    // Adjust the start and end index of entities that are after the removed range
+
+    postRecord.entities = entities
+      ?.filter(entity => {
+        return !(
+          entity.index.start >= startIndex && entity.index.end <= endIndex
+        )
+      })
+      .map(entity => {
+        if (entity.index.start >= endIndex) {
+          return {
+            ...entity,
+            index: {
+              start:
+                entity.index.start - removedStringLength + replacement.length,
+              end: entity.index.end - removedStringLength + replacement.length,
+            },
+          }
+        } else {
+          return entity
+        }
+      })
+
+    match = hasExcessSpace(sanitizedStr)
+  }
+
+  return sanitizedStr
 }
