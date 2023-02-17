@@ -15,6 +15,7 @@ import {NavigationModel} from './navigation'
 import {ShellUiModel} from './shell-ui'
 import {ProfilesViewModel} from './profiles-view'
 import {LinkMetasViewModel} from './link-metas-view'
+import {NotificationsViewItemModel} from './notifications-view'
 import {MeModel} from './me'
 import {OnboardModel} from './onboard'
 
@@ -152,7 +153,6 @@ export class RootStoreModel {
       return
     }
     try {
-      await this.me.fetchNotifications()
       await this.me.follows.fetchIfNeeded()
     } catch (e: any) {
       this.log.error('Failed to fetch latest state', e)
@@ -164,26 +164,34 @@ export class RootStoreModel {
   // - some events need to be passed around between views and models
   //   in order to keep state in sync; these methods are for that
 
+  // a post was deleted by the local user
   onPostDeleted(handler: (uri: string) => void): EmitterSubscription {
     return DeviceEventEmitter.addListener('post-deleted', handler)
   }
-
   emitPostDeleted(uri: string) {
     DeviceEventEmitter.emit('post-deleted', uri)
   }
 
+  // the session has started and been fully hydrated
+  onSessionLoaded(handler: () => void): EmitterSubscription {
+    return DeviceEventEmitter.addListener('session-loaded', handler)
+  }
+  emitSessionLoaded() {
+    DeviceEventEmitter.emit('session-loaded')
+  }
+
+  // the session was dropped due to bad/expired refresh tokens
   onSessionDropped(handler: () => void): EmitterSubscription {
     return DeviceEventEmitter.addListener('session-dropped', handler)
   }
-
   emitSessionDropped() {
     DeviceEventEmitter.emit('session-dropped')
   }
 
+  // the current screen has changed
   onNavigation(handler: () => void): EmitterSubscription {
     return DeviceEventEmitter.addListener('navigation', handler)
   }
-
   emitNavigation() {
     DeviceEventEmitter.emit('navigation')
   }
@@ -193,9 +201,26 @@ export class RootStoreModel {
   onScreenSoftReset(handler: () => void): EmitterSubscription {
     return DeviceEventEmitter.addListener('screen-soft-reset', handler)
   }
-
   emitScreenSoftReset() {
     DeviceEventEmitter.emit('screen-soft-reset')
+  }
+
+  // the unread notifications count has changed
+  onUnreadNotifications(handler: (count: number) => void): EmitterSubscription {
+    return DeviceEventEmitter.addListener('unread-notifications', handler)
+  }
+  emitUnreadNotifications(count: number) {
+    DeviceEventEmitter.emit('unread-notifications', count)
+  }
+
+  // a notification has been queued for push
+  onPushNotification(
+    handler: (notif: NotificationsViewItemModel) => void,
+  ): EmitterSubscription {
+    return DeviceEventEmitter.addListener('push-notification', handler)
+  }
+  emitPushNotification(notif: NotificationsViewItemModel) {
+    DeviceEventEmitter.emit('push-notification', notif)
   }
 
   // background fetch
@@ -220,7 +245,22 @@ export class RootStoreModel {
   async onBgFetch(taskId: string) {
     this.log.debug(`Background fetch fired for task ${taskId}`)
     if (this.session.hasSession) {
-      await this.me.bgFetchNotifications()
+      const res = await this.api.app.bsky.notification.getCount()
+      const hasNewNotifs = this.me.notifications.unreadCount !== res.data.count
+      this.emitUnreadNotifications(res.data.count)
+      this.log.debug(
+        `Background fetch received unread count = ${res.data.count}`,
+      )
+      if (hasNewNotifs) {
+        this.log.debug(
+          'Background fetch detected potentially a new notification',
+        )
+        const mostRecent = await this.me.notifications.getNewMostRecent()
+        if (mostRecent) {
+          this.log.debug('Got the notification, triggering a push')
+          this.emitPushNotification(mostRecent)
+        }
+      }
     }
     BackgroundFetch.finish(taskId)
   }

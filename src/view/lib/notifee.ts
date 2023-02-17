@@ -1,7 +1,26 @@
-import notifee from '@notifee/react-native'
+import notifee, {EventType} from '@notifee/react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
+import {RootStoreModel} from '../../state/models/root-store'
+import {TabPurpose} from '../../state/models/navigation'
 import {NotificationsViewItemModel} from '../../state/models/notifications-view'
 import {enforceLen} from '../../lib/strings'
+
+export function init(store: RootStoreModel) {
+  store.onUnreadNotifications(count => notifee.setBadgeCount(count))
+  store.onPushNotification(displayNotificationFromModel)
+  store.onSessionLoaded(() => {
+    // request notifications permission once the user has logged in
+    notifee.requestPermission()
+  })
+  notifee.onForegroundEvent(async ({type}: {type: EventType}) => {
+    store.log.debug('Notifee foreground event', {type})
+    if (type === EventType.PRESS) {
+      store.log.debug('User pressed a notifee, opening notifications')
+      store.nav.switchTo(TabPurpose.Notifs, true)
+    }
+  })
+  notifee.onBackgroundEvent(async _e => {}) // notifee requires this but we handle it with onForegroundEvent
+}
 
 export function displayNotification(
   title: string,
@@ -39,7 +58,8 @@ export function displayNotificationFromModel(
     title = `${author} replied to your post`
     body = notif.additionalPost?.thread?.postRecord?.text || ''
   } else if (notif.isFollow) {
-    title = `${author} followed you`
+    title = 'New follower!'
+    body = `${author} has followed you`
   } else {
     return
   }

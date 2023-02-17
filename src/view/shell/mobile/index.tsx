@@ -513,7 +513,7 @@ export const MobileShell: React.FC = observer(() => {
           icon={isAtNotifications ? 'bell-solid' : 'bell'}
           onPress={onPressNotifications}
           onLongPress={TABS_ENABLED ? doNewTab('/notifications') : undefined}
-          notificationCount={store.me.notificationCount}
+          notificationCount={store.me.notifications.unreadCount}
         />
       </Animated.View>
       <Modal />
