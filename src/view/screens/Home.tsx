@@ -37,7 +37,7 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
       if (store.me.mainFeed.isLoading) {
         return
       }
-      store.log.debug('Polling home feed')
+      store.log.debug('HomeScreen: Polling for new posts')
       store.me.mainFeed.checkForLatest()
     },
     [appState, visible, store],
@@ -52,7 +52,7 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
   useEffect(() => {
     const softResetSub = store.onScreenSoftReset(scrollToTop)
     const feedCleanup = store.me.mainFeed.registerListeners()
-    const pollInterval = setInterval(() => doPoll(), 15e3)
+    const pollInterval = setInterval(doPoll, 15e3)
     const cleanup = () => {
       clearInterval(pollInterval)
       softResetSub.remove()
@@ -73,7 +73,7 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
     // just became visible
     screen('Feed')
     store.nav.setTitle(navIdx, 'Home')
-    store.log.debug('Updating home feed')
+    store.log.debug('HomeScreen: Updating feed')
     if (store.me.mainFeed.hasContent) {
       store.me.mainFeed.update()
     } else {

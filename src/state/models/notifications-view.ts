@@ -198,6 +198,7 @@ export class NotificationsViewModel {
 
   // data
   notifications: NotificationsViewItemModel[] = []
+  unreadCount = 0
 
   // this is used to help trigger push notifications
   mostRecentNotificationUri: string | undefined
@@ -245,6 +246,8 @@ export class NotificationsViewModel {
     this.hasMore = true
     this.loadMoreCursor = undefined
     this.notifications = []
+    this.unreadCount = 0
+    this.rootStore.emitUnreadNotifications(0)
     this.mostRecentNotificationUri = undefined
   }
 
@@ -350,15 +353,33 @@ export class NotificationsViewModel {
     }
   })
 
+  // unread notification apis
+  // =
+
+  /**
+   * Get the current number of unread notifications
+   * returns true if the number changed
+   */
+  loadUnreadCount = bundleAsync(async () => {
+    const old = this.unreadCount
+    const res = await this.rootStore.api.app.bsky.notification.getCount()
+    runInAction(() => {
+      this.unreadCount = res.data.count
+    })
+    this.rootStore.emitUnreadNotifications(this.unreadCount)
+    return this.unreadCount !== old
+  })
+
   /**
    * Update read/unread state
    */
-  async updateReadState() {
+  async markAllRead() {
     try {
+      this.unreadCount = 0
+      this.rootStore.emitUnreadNotifications(0)
       await this.rootStore.api.app.bsky.notification.updateSeen({
         seenAt: new Date().toISOString(),
       })
-      this.rootStore.me.clearNotificationCount()
     } catch (e: any) {
       this.rootStore.log.warn('Failed to update notifications read state', e)
     }
