@@ -1,4 +1,4 @@
-import {extractEntities, sanitizePost} from './../../lib/strings'
+import {sanitizePost} from './../../lib/strings'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AppBskyFeedGetPostThread as GetPostThread,
