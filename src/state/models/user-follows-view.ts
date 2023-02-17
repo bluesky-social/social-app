@@ -9,7 +9,7 @@ import {bundleAsync} from '../../lib/async/bundle'
 
 const PAGE_SIZE = 30
 
-export type FollowItem = GetFollows.Follow
+export type FollowItem = ActorRef.WithInfo
 
 export class UserFollowsViewModel {
   // state
@@ -116,5 +116,6 @@ export class UserFollowsViewModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     this.follows = this.follows.concat(res.data.follows)
+    this.rootStore.me.follows.hydrateProfiles(res.data.follows)
   }
 }

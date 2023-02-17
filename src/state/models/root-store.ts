@@ -153,7 +153,7 @@ export class RootStoreModel {
       return
     }
     try {
-      // NOTE: another PR will add something here soon -prf
+      await this.me.follows.fetchIfNeeded()
     } catch (e: any) {
       this.log.error('Failed to fetch latest state', e)
     }

@@ -1,8 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {
-  AppBskyActorGetSuggestions as GetSuggestions,
-  AppBskyActorProfile as Profile,
-} from '@atproto/api'
+import {AppBskyActorProfile as Profile} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {cleanError} from '../../lib/strings'
 import {bundleAsync} from '../../lib/async/bundle'
@@ -14,7 +11,7 @@ import {
 
 const PAGE_SIZE = 30
 
-export type SuggestedActor = GetSuggestions.Actor | Profile.View
+export type SuggestedActor = Profile.ViewBasic | Profile.View
 
 const getSuggestionList = ({serviceUrl}: {serviceUrl: string}) => {
   if (serviceUrl.includes('localhost')) {
@@ -142,10 +139,15 @@ export class SuggestedActorsViewModel {
       } while (actors.length)
 
       runInAction(() => {
-        this.hardCodedSuggestions = profiles.filter(
-          profile =>
-            !profile.myState?.follow && profile.did !== this.rootStore.me.did,
-        )
+        this.hardCodedSuggestions = profiles.filter(profile => {
+          if (this.rootStore.me.follows.isFollowing(profile.did)) {
+            return false
+          }
+          if (profile.did === this.rootStore.me.did) {
+            return false
+          }
+          return true
+        })
       })
     } catch (e) {
       this.rootStore.log.error(

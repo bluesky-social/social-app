@@ -51,7 +51,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     view?.toggleFollowing().then(
       () => {
         Toast.show(
-          `${view.myState.follow ? 'Following' : 'No longer following'} ${
+          `${view.viewer.following ? 'Following' : 'No longer following'} ${
             view.displayName || view.handle
           }`,
         )
@@ -140,8 +140,8 @@ export const ProfileHeader = observer(function ProfileHeader({
   let dropdownItems: DropdownItem[] = [{label: 'Share', onPress: onPressShare}]
   if (!isMe) {
     dropdownItems.push({
-      label: view.myState.muted ? 'Unmute Account' : 'Mute Account',
-      onPress: view.myState.muted ? onPressUnmuteAccount : onPressMuteAccount,
+      label: view.viewer.muted ? 'Unmute Account' : 'Mute Account',
+      onPress: view.viewer.muted ? onPressUnmuteAccount : onPressMuteAccount,
     })
     dropdownItems.push({
       label: 'Report Account',
@@ -164,7 +164,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             </TouchableOpacity>
           ) : (
             <>
-              {view.myState.follow ? (
+              {store.me.follows.isFollowing(view.did) ? (
                 <TouchableOpacity
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.mainBtn, pal.btn]}>
@@ -213,6 +213,13 @@ export const ProfileHeader = observer(function ProfileHeader({
           </Text>
         </View>
         <View style={styles.handleLine}>
+          {view.viewer.followedBy ? (
+            <View style={[styles.pill, pal.btn, s.mr5]}>
+              <Text type="xs" style={[pal.text]}>
+                Follows you
+              </Text>
+            </View>
+          ) : undefined}
           <Text style={pal.textLight}>@{view.handle}</Text>
         </View>
         <View style={styles.metricsLine}>
@@ -257,14 +264,14 @@ export const ProfileHeader = observer(function ProfileHeader({
             entities={view.descriptionEntities}
           />
         ) : undefined}
-        {view.myState.muted ? (
+        {view.viewer.muted ? (
           <View style={[styles.detailLine, pal.btn, s.p5]}>
             <FontAwesomeIcon
               icon={['far', 'eye-slash']}
               style={[pal.text, s.mr5]}
             />
             <Text type="md" style={[s.mr2, pal.text]}>
-              Account muted.
+              Account muted
             </Text>
           </View>
         ) : undefined}
@@ -369,6 +376,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 5,
+  },
+
+  pill: {
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
   },
 
   br40: {borderRadius: 40},
