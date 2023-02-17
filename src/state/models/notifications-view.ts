@@ -315,6 +315,34 @@ export class NotificationsViewModel {
   })
 
   /**
+   * Load more posts at the start of the notifications
+   */
+  loadLatest = bundleAsync(async () => {
+    if (this.notifications.length === 0 || this.unreadCount > PAGE_SIZE) {
+      return this.refresh()
+    }
+    this.lock.acquireAsync()
+    try {
+      this._xLoading()
+      try {
+        const res = await this.rootStore.api.app.bsky.notification.list({
+          limit: PAGE_SIZE,
+        })
+        await this._prependAll(res)
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle() // don't bubble the error to the user
+        this.rootStore.log.error('NotificationsView: Failed to load latest', {
+          params: this.params,
+          e,
+        })
+      }
+    } finally {
+      this.lock.release()
+    }
+  })
+
+  /**
    * Update content in-place
    */
   update = bundleAsync(async () => {
@@ -463,14 +491,40 @@ export class NotificationsViewModel {
     })
   }
 
+  private async _prependAll(res: ListNotifications.Response) {
+    const promises = []
+    const itemModels: NotificationsViewItemModel[] = []
+    const dedupedNotifs = res.data.notifications.filter(
+      n1 =>
+        !this.notifications.find(
+          n2 => isEq(n1, n2) || n2.additional?.find(n3 => isEq(n1, n3)),
+        ),
+    )
+    for (const item of groupNotifications(dedupedNotifs)) {
+      const itemModel = new NotificationsViewItemModel(
+        this.rootStore,
+        `item-${_idCounter++}`,
+        item,
+      )
+      if (itemModel.needsAdditionalData) {
+        promises.push(itemModel.fetchAdditionalData())
+      }
+      itemModels.push(itemModel)
+    }
+    await Promise.all(promises).catch(e => {
+      this.rootStore.log.error(
+        'Uncaught failure during notifications-view _prependAll()',
+        e,
+      )
+    })
+    runInAction(() => {
+      this.notifications = itemModels.concat(this.notifications)
+    })
+  }
+
   private _updateAll(res: ListNotifications.Response) {
     for (const item of res.data.notifications) {
-      const existingItem = this.notifications.find(
-        // this find function has a key subtlety- the indexedAt comparison
-        // the reason for this is reposts: they set the URI of the original post, not of the repost record
-        // the indexedAt time will be for the repost however, so we use that to help us
-        item2 => item.uri === item2.uri && item.indexedAt === item2.indexedAt,
-      )
+      const existingItem = this.notifications.find(item2 => isEq(item, item2))
       if (existingItem) {
         existingItem.copy(item, true)
       }
@@ -506,4 +560,12 @@ function groupNotifications(
     }
   }
   return items2
+}
+
+type N = ListNotifications.Notification | NotificationsViewItemModel
+function isEq(a: N, b: N) {
+  // this function has a key subtlety- the indexedAt comparison
+  // the reason for this is reposts: they set the URI of the original post, not of the repost record
+  // the indexedAt time will be for the repost however, so we use that to help us
+  return a.uri === b.uri && a.indexedAt === b.indexedAt
 }

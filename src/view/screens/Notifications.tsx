@@ -45,11 +45,8 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
         store.log.debug('NotificationsScreen: Polling for new notifications')
         const didChange = await store.me.notifications.loadUnreadCount()
         if (didChange) {
-          // TODO this should be a "loadLatest" not a refresh
-          store.log.debug(
-            'NotificationsScreen: Refreshing to fetch new notifications',
-          )
-          await store.me.notifications.refresh()
+          store.log.debug('NotificationsScreen: Loading new notifications')
+          await store.me.notifications.loadLatest()
         }
       }
     },
