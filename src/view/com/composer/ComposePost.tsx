@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {useEffect, useMemo, useRef, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
@@ -40,7 +40,6 @@ import {
   detectLinkables,
   extractEntities,
   cleanError,
-  sanitizeText,
 } from '../../../lib/strings'
 import {getLinkMeta} from '../../../lib/link-meta'
 import {downloadAndResize} from '../../../lib/images'
@@ -104,10 +103,10 @@ export const ComposePost = observer(function ComposePost({
   // is focused during unmount, an exception will throw (seems that a blur method isnt implemented)
   // manually blurring before closing gets around that
   // -prf
-  const hackfixOnClose = useCallback(() => {
+  const hackfixOnClose = () => {
     textInput.current?.blur()
     onClose()
-  }, [onClose])
+  }
 
   // initial setup
   useEffect(() => {
@@ -205,33 +204,25 @@ export const ComposePost = observer(function ComposePost({
   const onPressAddLinkCard = (uri: string) => {
     setExtLink({uri, isLoading: true})
   }
-  const onChangeText = useCallback(
-    async (newText: string) => {
-      await setText(newText)
+  const onChangeText = (newText: string) => {
+    setText(newText)
 
-      const prefix = getMentionAt(
-        newText,
-        textInputSelection.current?.start || 0,
-      )
-      if (prefix) {
-        autocompleteView.setActive(true)
-        autocompleteView.setPrefix(prefix.value)
-      } else {
-        autocompleteView.setActive(false)
-      }
+    const prefix = getMentionAt(newText, textInputSelection.current?.start || 0)
+    if (prefix) {
+      autocompleteView.setActive(true)
+      autocompleteView.setPrefix(prefix.value)
+    } else {
+      autocompleteView.setActive(false)
+    }
 
-      if (!extLink) {
-        const ents = extractEntities(newText)?.filter(
-          ent => ent.type === 'link',
-        )
-        const set = new Set(ents ? ents.map(e => e.value) : [])
-        if (!_isEqual(set, suggestedExtLinks)) {
-          setSuggestedExtLinks(set)
-        }
+    if (!extLink) {
+      const ents = extractEntities(newText)?.filter(ent => ent.type === 'link')
+      const set = new Set(ents ? ents.map(e => e.value) : [])
+      if (!_isEqual(set, suggestedExtLinks)) {
+        setSuggestedExtLinks(set)
       }
-    },
-    [autocompleteView, extLink, suggestedExtLinks],
-  )
+    }
+  }
   const onPaste = async (err: string | undefined, files: PastedFile[]) => {
     if (err) {
       return setError(cleanError(err))
@@ -257,7 +248,7 @@ export const ComposePost = observer(function ComposePost({
     autocompleteView.setActive(false)
   }
   const onPressCancel = () => hackfixOnClose()
-  const onPressPublish = useCallback(async () => {
+  const onPressPublish = async () => {
     if (isProcessing) {
       return
     }
@@ -297,18 +288,7 @@ export const ComposePost = observer(function ComposePost({
     onPost?.()
     hackfixOnClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
-  }, [
-    autocompleteView.knownHandles,
-    extLink,
-    hackfixOnClose,
-    isProcessing,
-    onPost,
-    replyTo,
-    selectedPhotos,
-    store,
-    text,
-    track,
-  ])
+  }
 
   const canPost = text.length <= MAX_TEXT_LENGTH
   const progressColor =
