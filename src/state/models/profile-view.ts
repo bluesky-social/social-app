@@ -4,14 +4,13 @@ import {
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorProfile as Profile,
   AppBskySystemDeclRef,
-  AppBskyFeedPost,
 } from '@atproto/api'
 type DeclRef = AppBskySystemDeclRef.Main
-type Entity = AppBskyFeedPost.Entity
 import {extractEntities} from '../../lib/strings'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 import {cleanError} from '../../lib/strings'
+import {RichText} from '../../lib/strings/rich-text'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
 
@@ -51,7 +50,7 @@ export class ProfileViewModel {
   viewer = new ProfileViewViewerModel()
 
   // added data
-  descriptionEntities?: Entity[]
+  descriptionRichText?: RichText
 
   constructor(
     public rootStore: RootStoreModel,
@@ -230,6 +229,10 @@ export class ProfileViewModel {
       Object.assign(this.viewer, res.data.viewer)
       this.rootStore.me.follows.hydrate(this.did, res.data.viewer.following)
     }
-    this.descriptionEntities = extractEntities(this.description || '')
+    this.descriptionRichText = new RichText(
+      this.description || '',
+      extractEntities(this.description || ''),
+      {cleanNewlines: true},
+    )
   }
 }

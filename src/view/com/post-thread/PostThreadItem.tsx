@@ -177,7 +177,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             </View>
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
-            {record.text ? (
+            {item.richText?.text ? (
               <View
                 style={[
                   styles.postTextContainer,
@@ -185,8 +185,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 ]}>
                 <RichText
                   type="post-text-lg"
-                  text={record.text}
-                  entities={record.entities}
+                  richText={item.richText}
                   lineHeight={1.3}
                 />
               </View>
@@ -301,12 +300,11 @@ export const PostThreadItem = observer(function PostThreadItem({
                   <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
                   <Text type="sm">This post is by a muted account.</Text>
                 </View>
-              ) : record.text ? (
+              ) : item.richText?.text ? (
                 <View style={styles.postTextContainer}>
                   <RichText
                     type="post-text"
-                    text={record.text}
-                    entities={record.entities}
+                    richText={item.richText}
                     style={pal.text}
                     lineHeight={1.3}
                   />

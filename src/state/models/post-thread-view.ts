@@ -7,6 +7,7 @@ import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 import {cleanError} from '../../lib/strings'
+import {RichText} from '../../lib/strings/rich-text'
 
 function* reactKeyGenerator(): Generator<string> {
   let counter = 0
@@ -27,6 +28,7 @@ export class PostThreadViewPostModel {
   postRecord?: FeedPost.Record
   parent?: PostThreadViewPostModel | GetPostThread.NotFoundPost
   replies?: (PostThreadViewPostModel | GetPostThread.NotFoundPost)[]
+  richText?: RichText
 
   constructor(
     public rootStore: RootStoreModel,
@@ -39,6 +41,11 @@ export class PostThreadViewPostModel {
       const valid = FeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
+        this.richText = new RichText(
+          this.postRecord.text,
+          this.postRecord.entities,
+          {cleanNewlines: true},
+        )
       } else {
         rootStore.log.warn(
           'Received an invalid app.bsky.feed.post record',

@@ -6,6 +6,7 @@ import {extractEntities} from '../../lib/strings'
 import {isNetworkError} from '../../lib/errors'
 import {LinkMeta} from '../../lib/link-meta'
 import {Image} from '../../lib/images'
+import {RichText} from './../../lib/strings/rich-text'
 
 const TIMEOUT = 10e3 // 10s
 
@@ -35,7 +36,7 @@ export async function resolveName(store: RootStoreModel, didOrHandle: string) {
 
 export async function post(
   store: RootStoreModel,
-  text: string,
+  rawText: string,
   replyTo?: string,
   extLink?: ExternalEmbedDraft,
   images?: string[],
@@ -44,6 +45,9 @@ export async function post(
 ) {
   let embed: AppBskyEmbedImages.Main | AppBskyEmbedExternal.Main | undefined
   let reply
+  const text = new RichText(rawText, undefined, {
+    cleanNewlines: true,
+  }).text.trim()
 
   onStateChange?.('Processing...')
   const entities = extractEntities(text, knownHandles)

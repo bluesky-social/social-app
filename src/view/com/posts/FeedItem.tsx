@@ -194,12 +194,11 @@ export const FeedItem = observer(function ({
                 <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
                 <Text type="sm">This post is by a muted account.</Text>
               </View>
-            ) : record.text ? (
+            ) : item.richText?.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
                   type="post-text"
-                  text={record.text}
-                  entities={record.entities}
+                  richText={item.richText}
                   lineHeight={1.3}
                 />
               </View>

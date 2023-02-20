@@ -14,6 +14,7 @@ import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 import {cleanError} from '../../lib/strings'
+import {RichText} from '../../lib/strings/rich-text'
 
 const PAGE_SIZE = 30
 
@@ -39,6 +40,7 @@ export class FeedItemModel {
   reply?: FeedViewPost['reply']
   replyParent?: FeedItemModel
   reason?: FeedViewPost['reason']
+  richText?: RichText
 
   constructor(
     public rootStore: RootStoreModel,
@@ -51,6 +53,11 @@ export class FeedItemModel {
       const valid = AppBskyFeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
+        this.richText = new RichText(
+          this.postRecord.text,
+          this.postRecord.entities,
+          {cleanNewlines: true},
+        )
       } else {
         rootStore.log.warn(
           'Received an invalid app.bsky.feed.post record',
