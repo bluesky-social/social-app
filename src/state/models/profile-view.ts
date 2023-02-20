@@ -12,6 +12,7 @@ import {extractEntities} from '../../lib/strings'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
 import {cleanError} from '../../lib/strings'
+import {RichText} from '../../lib/strings/rich-text'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
 
@@ -50,7 +51,7 @@ export class ProfileViewModel {
   myState = new ProfileViewMyStateModel()
 
   // added data
-  descriptionEntities?: Entity[]
+  descriptionRichText?: RichText
 
   constructor(
     public rootStore: RootStoreModel,
@@ -214,6 +215,10 @@ export class ProfileViewModel {
     if (res.data.myState) {
       Object.assign(this.myState, res.data.myState)
     }
-    this.descriptionEntities = extractEntities(this.description || '')
+    this.descriptionRichText = new RichText(
+      this.description || '',
+      extractEntities(this.description || ''),
+      {cleanNewlines: true},
+    )
   }
 }

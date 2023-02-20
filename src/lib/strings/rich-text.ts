@@ -93,13 +93,31 @@ F: 0 1 2 3 4 5 6 7 8 910   // string indices
 
 import cloneDeep from 'lodash.clonedeep'
 import {AppBskyFeedPost} from '@atproto/api'
-type Entity = AppBskyFeedPost.Entity
+import {removeExcessNewlines} from './rich-text-sanitize'
+
+export type Entity = AppBskyFeedPost.Entity
+export interface RichTextOpts {
+  cleanNewlines?: boolean
+}
 
 export class RichText {
-  constructor(public text: string, public entities?: Entity[]) {}
+  constructor(
+    public text: string,
+    public entities?: Entity[],
+    opts?: RichTextOpts,
+  ) {
+    if (opts?.cleanNewlines) {
+      removeExcessNewlines(this).copyInto(this)
+    }
+  }
 
   clone() {
     return new RichText(this.text, cloneDeep(this.entities))
+  }
+
+  copyInto(target: RichText) {
+    target.text = this.text
+    target.entities = cloneDeep(this.entities)
   }
 
   insert(insertIndex: number, insertText: string) {

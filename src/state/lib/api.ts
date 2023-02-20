@@ -1,4 +1,3 @@
-import {sanitizeText} from './../../lib/strings'
 import AtpAgent, {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import RNFS from 'react-native-fs'
 import {AtUri} from '../../third-party/uri'
@@ -7,6 +6,8 @@ import {extractEntities} from '../../lib/strings'
 import {isNetworkError} from '../../lib/errors'
 import {LinkMeta} from '../../lib/link-meta'
 import {Image} from '../../lib/images'
+import {RichText} from './../../lib/strings/rich-text'
+import {removeExcessNewlines} from './../../lib/strings/rich-text-sanitize'
 
 const TIMEOUT = 10e3 // 10s
 
@@ -45,7 +46,9 @@ export async function post(
 ) {
   let embed: AppBskyEmbedImages.Main | AppBskyEmbedExternal.Main | undefined
   let reply
-  const text = sanitizeText(rawText)
+  const text = new RichText(rawText, undefined, {
+    cleanNewlines: true,
+  }).text.trim()
 
   onStateChange?.('Processing...')
   const entities = extractEntities(text, knownHandles)

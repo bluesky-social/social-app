@@ -249,12 +249,11 @@ export const ProfileHeader = observer(function ProfileHeader({
             </Text>
           </View>
         </View>
-        {view.description ? (
+        {view.descriptionRichText ? (
           <RichText
             style={[styles.description, pal.text]}
             numberOfLines={15}
-            text={view.description}
-            entities={view.descriptionEntities}
+            richText={view.descriptionRichText}
           />
         ) : undefined}
         {view.myState.muted ? (
