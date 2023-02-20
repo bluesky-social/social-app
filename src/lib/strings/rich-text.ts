@@ -1,5 +1,5 @@
 /*
-= Rich Text Manipulation 
+= Rich Text Manipulation
 
 When we sanitize rich text, we have to update the entity indices as the
 text is modified. This can be modeled as inserts() and deletes() of the

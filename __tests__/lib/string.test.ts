@@ -12,7 +12,6 @@ import {
   toNiceDomain,
   toShortUrl,
   toShareUrl,
-  sanitizeText,
 } from '../../src/lib/strings'
 
 describe('extractEntities', () => {

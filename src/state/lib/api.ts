@@ -7,7 +7,6 @@ import {isNetworkError} from '../../lib/errors'
 import {LinkMeta} from '../../lib/link-meta'
 import {Image} from '../../lib/images'
 import {RichText} from './../../lib/strings/rich-text'
-import {removeExcessNewlines} from './../../lib/strings/rich-text-sanitize'
 
 const TIMEOUT = 10e3 // 10s
 

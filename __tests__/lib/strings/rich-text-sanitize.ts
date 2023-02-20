@@ -116,6 +116,8 @@ describe('removeExcessNewlines w/entities', () => {
 })
 
 function entToStr(str: string, ent?: Entity) {
-  if (!ent) return ''
+  if (!ent) {
+    return ''
+  }
   return str.slice(ent.index.start, ent.index.end)
 }

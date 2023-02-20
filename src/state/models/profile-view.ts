@@ -4,10 +4,8 @@ import {
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorProfile as Profile,
   AppBskySystemDeclRef,
-  AppBskyFeedPost,
 } from '@atproto/api'
 type DeclRef = AppBskySystemDeclRef.Main
-type Entity = AppBskyFeedPost.Entity
 import {extractEntities} from '../../lib/strings'
 import {RootStoreModel} from './root-store'
 import * as apilib from '../lib/api'
