@@ -88,8 +88,6 @@ export const ComposePost = observer(function ComposePost({
     imagesOpen || false,
   )
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
-  const [shouldSubmitAfterCleaning, setShouldSubmitAfterCleaning] =
-    useState(false)
 
   useEffect(() => {
     screen('ComposePost')
@@ -273,15 +271,6 @@ export const ComposePost = observer(function ComposePost({
     }
     setIsProcessing(true)
     try {
-      const cleanedText = sanitizeText(text)
-      const textWasDirty = cleanedText !== text
-      if (textWasDirty) {
-        await onChangeText(cleanedText)
-        await setIsProcessing(false)
-        setShouldSubmitAfterCleaning(true)
-        return
-      }
-
       await apilib.post(
         store,
         text,
@@ -313,7 +302,6 @@ export const ComposePost = observer(function ComposePost({
     extLink,
     hackfixOnClose,
     isProcessing,
-    onChangeText,
     onPost,
     replyTo,
     selectedPhotos,
@@ -321,14 +309,6 @@ export const ComposePost = observer(function ComposePost({
     text,
     track,
   ])
-
-  useEffect(() => {
-    // This needs to happen in a useEffect because recursively calling onPressPublish does not pick up new values of text:
-    // https://stackoverflow.com/questions/65788812/react-updated-state-not-reflecting-in-recursive-usecallback
-    if (shouldSubmitAfterCleaning) {
-      onPressPublish()
-    }
-  }, [onPressPublish, shouldSubmitAfterCleaning])
 
   const canPost = text.length <= MAX_TEXT_LENGTH
   const progressColor =

@@ -1,3 +1,4 @@
+import {sanitizeText} from './../../lib/strings'
 import AtpAgent, {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import RNFS from 'react-native-fs'
 import {AtUri} from '../../third-party/uri'
@@ -35,7 +36,7 @@ export async function resolveName(store: RootStoreModel, didOrHandle: string) {
 
 export async function post(
   store: RootStoreModel,
-  text: string,
+  rawText: string,
   replyTo?: string,
   extLink?: ExternalEmbedDraft,
   images?: string[],
@@ -44,6 +45,7 @@ export async function post(
 ) {
   let embed: AppBskyEmbedImages.Main | AppBskyEmbedExternal.Main | undefined
   let reply
+  const text = sanitizeText(rawText)
 
   onStateChange?.('Processing...')
   const entities = extractEntities(text, knownHandles)
