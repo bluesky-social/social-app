@@ -121,6 +121,7 @@ export class SuggestedActorsViewModel {
     if (this.hardCodedSuggestions) {
       return
     }
+    await this.rootStore.me.follows.fetchIfNeeded()
     try {
       // clone the array so we can mutate it
       const actors = [
