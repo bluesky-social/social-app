@@ -1,10 +1,9 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import notifee from '@notifee/react-native'
 import {RootStoreModel} from './root-store'
 import {FeedModel} from './feed-view'
 import {NotificationsViewModel} from './notifications-view'
+import {MyFollowsModel} from './my-follows'
 import {isObj, hasProp} from '../lib/type-guards'
-import {displayNotificationFromModel} from '../../view/lib/notifee'
 
 export class MeModel {
   did: string = ''
@@ -12,9 +11,9 @@ export class MeModel {
   displayName: string = ''
   description: string = ''
   avatar: string = ''
-  notificationCount: number = 0
   mainFeed: FeedModel
   notifications: NotificationsViewModel
+  follows: MyFollowsModel
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -26,6 +25,7 @@ export class MeModel {
       algorithm: 'reverse-chronological',
     })
     this.notifications = new NotificationsViewModel(this.rootStore, {})
+    this.follows = new MyFollowsModel(this.rootStore)
   }
 
   clear() {
@@ -36,7 +36,6 @@ export class MeModel {
     this.displayName = ''
     this.description = ''
     this.avatar = ''
-    this.notificationCount = 0
   }
 
   serialize(): unknown {
@@ -104,51 +103,13 @@ export class MeModel {
         this.notifications.setup().catch(e => {
           this.rootStore.log.error('Failed to setup notifications model', e)
         }),
+        this.follows.fetch().catch(e => {
+          this.rootStore.log.error('Failed to load my follows', e)
+        }),
       ])
-
-      // request notifications permission once the user has logged in
-      notifee.requestPermission()
+      this.rootStore.emitSessionLoaded()
     } else {
       this.clear()
-    }
-  }
-
-  clearNotificationCount() {
-    this.notificationCount = 0
-    notifee.setBadgeCount(0)
-  }
-
-  async fetchNotifications() {
-    const res = await this.rootStore.api.app.bsky.notification.getCount()
-    runInAction(() => {
-      const newNotifications = this.notificationCount !== res.data.count
-      this.notificationCount = res.data.count
-      notifee.setBadgeCount(this.notificationCount)
-      if (newNotifications) {
-        this.notifications.refresh()
-      }
-    })
-  }
-
-  async bgFetchNotifications() {
-    const res = await this.rootStore.api.app.bsky.notification.getCount()
-    // NOTE we don't update this.notificationCount to avoid repaints during bg
-    //      this means `newNotifications` may not be accurate, so we rely on
-    //      `mostRecent` to determine if there really is a new notif to show -prf
-    const newNotifications = this.notificationCount !== res.data.count
-    notifee.setBadgeCount(res.data.count)
-    this.rootStore.log.debug(
-      `Background fetch received unread count = ${res.data.count}`,
-    )
-    if (newNotifications) {
-      this.rootStore.log.debug(
-        'Background fetch detected potentially a new notification',
-      )
-      const mostRecent = await this.notifications.getNewMostRecent()
-      if (mostRecent) {
-        this.rootStore.log.debug('Got the notification, triggering a push')
-        displayNotificationFromModel(mostRecent)
-      }
     }
   }
 }

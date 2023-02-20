@@ -7,13 +7,12 @@ import SplashScreen from 'react-native-splash-screen'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
 import {SegmentClient, AnalyticsProvider} from '@segment/analytics-react-native'
-import {TabPurpose} from './state/models/navigation'
 import {ThemeProvider} from './view/lib/ThemeContext'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {MobileShell} from './view/shell/mobile'
 import {s} from './view/lib/styles'
-import notifee, {EventType} from '@notifee/react-native'
+import * as notifee from './view/lib/notifee'
 import * as analytics from './lib/analytics'
 import * as Toast from './view/com/util/Toast'
 
@@ -30,6 +29,7 @@ const App = observer(() => {
     setupState().then(store => {
       setRootStore(store)
       analytics.init(store)
+      notifee.init(store)
       SplashScreen.hide()
       Linking.getInitialURL().then((url: string | null) => {
         if (url) {
@@ -42,14 +42,6 @@ const App = observer(() => {
       store.onSessionDropped(() => {
         Toast.show('Sorry! Your session expired. Please log in again.')
       })
-      notifee.onForegroundEvent(async ({type}: {type: EventType}) => {
-        store.log.debug('Notifee foreground event', {type})
-        if (type === EventType.PRESS) {
-          store.log.debug('User pressed a notifee, opening notifications')
-          store.nav.switchTo(TabPurpose.Notifs, true)
-        }
-      })
-      notifee.onBackgroundEvent(async _e => {}) // notifee requires this but we handle it with onForegroundEvent
     })
   }, [])
 

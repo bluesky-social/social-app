@@ -1,8 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {
-  AppBskyActorGetSuggestions as GetSuggestions,
-  AppBskyActorProfile as Profile,
-} from '@atproto/api'
+import {AppBskyActorProfile as Profile} from '@atproto/api'
+import shuffle from 'lodash.shuffle'
 import {RootStoreModel} from './root-store'
 import {cleanError} from '../../lib/strings'
 import {bundleAsync} from '../../lib/async/bundle'
@@ -14,7 +12,7 @@ import {
 
 const PAGE_SIZE = 30
 
-export type SuggestedActor = GetSuggestions.Actor | Profile.View
+export type SuggestedActor = Profile.ViewBasic | Profile.View
 
 const getSuggestionList = ({serviceUrl}: {serviceUrl: string}) => {
   if (serviceUrl.includes('localhost')) {
@@ -124,6 +122,7 @@ export class SuggestedActorsViewModel {
     if (this.hardCodedSuggestions) {
       return
     }
+    await this.rootStore.me.follows.fetchIfNeeded()
     try {
       // clone the array so we can mutate it
       const actors = [
@@ -142,10 +141,16 @@ export class SuggestedActorsViewModel {
       } while (actors.length)
 
       runInAction(() => {
-        this.hardCodedSuggestions = profiles.filter(
-          profile =>
-            !profile.myState?.follow && profile.did !== this.rootStore.me.did,
-        )
+        profiles = profiles.filter(profile => {
+          if (this.rootStore.me.follows.isFollowing(profile.did)) {
+            return false
+          }
+          if (profile.did === this.rootStore.me.did) {
+            return false
+          }
+          return true
+        })
+        this.hardCodedSuggestions = shuffle(profiles)
       })
     } catch (e) {
       this.rootStore.log.error(

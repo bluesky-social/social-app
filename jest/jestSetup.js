@@ -7,7 +7,13 @@ configure({asyncUtilTimeout: 20000})
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 )
-jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
+  const {EventEmitter} = require('events')
+  return {
+    __esModule: true,
+    default: EventEmitter,
+  }
+})
 
 // Silence the warning: Animated: `useNativeDriver` is not supported
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')

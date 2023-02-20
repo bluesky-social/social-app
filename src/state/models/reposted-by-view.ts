@@ -1,6 +1,9 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
-import {AppBskyFeedGetRepostedBy as GetRepostedBy} from '@atproto/api'
+import {
+  AppBskyFeedGetRepostedBy as GetRepostedBy,
+  AppBskyActorRef as ActorRef,
+} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {bundleAsync} from '../../lib/async/bundle'
 import {cleanError} from '../../lib/strings'
@@ -8,7 +11,7 @@ import * as apilib from '../lib/api'
 
 const PAGE_SIZE = 30
 
-export type RepostedByItem = GetRepostedBy.RepostedBy
+export type RepostedByItem = ActorRef.WithInfo
 
 export class RepostedByViewModel {
   // state
@@ -127,5 +130,6 @@ export class RepostedByViewModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     this.repostedBy = this.repostedBy.concat(res.data.repostedBy)
+    this.rootStore.me.follows.hydrateProfiles(res.data.repostedBy)
   }
 }
