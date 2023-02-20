@@ -1,5 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyActorProfile as Profile} from '@atproto/api'
+import shuffle from 'lodash.shuffle'
 import {RootStoreModel} from './root-store'
 import {cleanError} from '../../lib/strings'
 import {bundleAsync} from '../../lib/async/bundle'
@@ -121,6 +122,7 @@ export class SuggestedActorsViewModel {
     if (this.hardCodedSuggestions) {
       return
     }
+    await this.rootStore.me.follows.fetchIfNeeded()
     try {
       // clone the array so we can mutate it
       const actors = [
@@ -139,7 +141,7 @@ export class SuggestedActorsViewModel {
       } while (actors.length)
 
       runInAction(() => {
-        this.hardCodedSuggestions = profiles.filter(profile => {
+        profiles = profiles.filter(profile => {
           if (this.rootStore.me.follows.isFollowing(profile.did)) {
             return false
           }
@@ -148,6 +150,7 @@ export class SuggestedActorsViewModel {
           }
           return true
         })
+        this.hardCodedSuggestions = shuffle(profiles)
       })
     } catch (e) {
       this.rootStore.log.error(
