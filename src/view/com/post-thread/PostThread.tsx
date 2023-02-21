@@ -18,8 +18,14 @@ export const PostThread = observer(function PostThread({
 }) {
   const ref = useRef<FlatList>(null)
   const [isRefreshing, setIsRefreshing] = React.useState(false)
-  const posts = view.thread ? Array.from(flattenThread(view.thread)) : []
-  const onRefresh = async () => {
+  const posts = React.useMemo(
+    () => (view.thread ? Array.from(flattenThread(view.thread)) : []),
+    [view.thread],
+  )
+
+  // events
+  // =
+  const onRefresh = React.useCallback(async () => {
     setIsRefreshing(true)
     try {
       view?.refresh()
@@ -27,8 +33,8 @@ export const PostThread = observer(function PostThread({
       view.rootStore.log.error('Failed to refresh posts thread', err)
     }
     setIsRefreshing(false)
-  }
-  const onLayout = () => {
+  }, [view, setIsRefreshing])
+  const onLayout = React.useCallback(() => {
     const index = posts.findIndex(post => post._isHighlightedPost)
     if (index !== -1) {
       ref.current?.scrollToIndex({
@@ -37,17 +43,20 @@ export const PostThread = observer(function PostThread({
         viewOffset: 40,
       })
     }
-  }
-  const onScrollToIndexFailed = (info: {
-    index: number
-    highestMeasuredFrameIndex: number
-    averageItemLength: number
-  }) => {
-    ref.current?.scrollToOffset({
-      animated: false,
-      offset: info.averageItemLength * info.index,
-    })
-  }
+  }, [posts, ref])
+  const onScrollToIndexFailed = React.useCallback(
+    (info: {
+      index: number
+      highestMeasuredFrameIndex: number
+      averageItemLength: number
+    }) => {
+      ref.current?.scrollToOffset({
+        animated: false,
+        offset: info.averageItemLength * info.index,
+      })
+    },
+    [ref],
+  )
 
   // loading
   // =
@@ -78,6 +87,7 @@ export const PostThread = observer(function PostThread({
     <FlatList
       ref={ref}
       data={posts}
+      initialNumToRender={posts.length}
       keyExtractor={item => item._reactKey}
       renderItem={renderItem}
       refreshing={isRefreshing}
