@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react'
+import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
@@ -32,36 +32,36 @@ export const PostThreadItem = observer(function PostThreadItem({
 }) {
   const pal = usePalette('default')
   const store = useStores()
-  const [deleted, setDeleted] = useState(false)
+  const [deleted, setDeleted] = React.useState(false)
   const record = item.postRecord
   const hasEngagement = item.post.upvoteCount || item.post.repostCount
 
   const itemUri = item.post.uri
   const itemCid = item.post.cid
-  const itemHref = useMemo(() => {
+  const itemHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}`
   }, [item.post.uri, item.post.author.handle])
   const itemTitle = `Post by ${item.post.author.handle}`
   const authorHref = `/profile/${item.post.author.handle}`
   const authorTitle = item.post.author.handle
-  const upvotesHref = useMemo(() => {
+  const upvotesHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}/upvoted-by`
   }, [item.post.uri, item.post.author.handle])
   const upvotesTitle = 'Likes on this post'
-  const repostsHref = useMemo(() => {
+  const repostsHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}/reposted-by`
   }, [item.post.uri, item.post.author.handle])
   const repostsTitle = 'Reposts of this post'
 
-  const onPressReply = () => {
+  const onPressReply = React.useCallback(() => {
     store.shell.openComposer({
       replyTo: {
         uri: item.post.uri,
         cid: item.post.cid,
-        text: record.text as string,
+        text: record?.text as string,
         author: {
           handle: item.post.author.handle,
           displayName: item.post.author.displayName,
@@ -70,22 +70,22 @@ export const PostThreadItem = observer(function PostThreadItem({
       },
       onPost: onPostReply,
     })
-  }
-  const onPressToggleRepost = () => {
+  }, [store, item, record, onPostReply])
+  const onPressToggleRepost = React.useCallback(() => {
     return item
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
-  }
-  const onPressToggleUpvote = () => {
+  }, [item, store])
+  const onPressToggleUpvote = React.useCallback(() => {
     return item
       .toggleUpvote()
       .catch(e => store.log.error('Failed to toggle upvote', e))
-  }
-  const onCopyPostText = () => {
+  }, [item, store])
+  const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')
     Toast.show('Copied to clipboard')
-  }
-  const onDeletePost = () => {
+  }, [record])
+  const onDeletePost = React.useCallback(() => {
     item.delete().then(
       () => {
         setDeleted(true)
@@ -96,7 +96,7 @@ export const PostThreadItem = observer(function PostThreadItem({
         Toast.show('Failed to delete post, please try again')
       },
     )
-  }
+  }, [item, store])
 
   if (!record) {
     return <ErrorMessage message="Invalid or unsupported post record" />
@@ -341,7 +341,8 @@ export const PostThreadItem = observer(function PostThreadItem({
             href={itemHref}
             title={itemTitle}
             noFeedback>
-            <Text style={pal.link}>Load more</Text>
+            <Text style={pal.link}>Continue thread...</Text>
+            <FontAwesomeIcon icon="angle-right" style={pal.link} size={18} />
           </Link>
         ) : undefined}
       </>
@@ -433,8 +434,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   loadMore: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     borderTopWidth: 1,
-    paddingLeft: 28,
+    paddingLeft: 80,
+    paddingRight: 20,
     paddingVertical: 10,
+    marginBottom: 8,
   },
 })
