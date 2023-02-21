@@ -322,7 +322,7 @@ export class PostThreadViewModel {
   }
 
   private _replaceAll(res: GetPostThread.Response) {
-    // sortThread(res.data.thread) TODO needed?
+    sortThread(res.data.thread)
     const keyGen = reactKeyGenerator()
     const thread = new PostThreadViewPostModel(
       this.rootStore,
@@ -338,36 +338,37 @@ export class PostThreadViewModel {
   }
 }
 
-/*
-TODO needed?
+type MaybePost =
+  | GetPostThread.ThreadViewPost
+  | GetPostThread.NotFoundPost
+  | {[k: string]: unknown; $type: string}
 function sortThread(post: MaybePost) {
   if (post.notFound) {
     return
   }
-  post = post as GetPostThread.Post
+  post = post as GetPostThread.ThreadViewPost
   if (post.replies) {
     post.replies.sort((a: MaybePost, b: MaybePost) => {
-      post = post as GetPostThread.Post
+      post = post as GetPostThread.ThreadViewPost
       if (a.notFound) {
         return 1
       }
       if (b.notFound) {
         return -1
       }
-      a = a as GetPostThread.Post
-      b = b as GetPostThread.Post
-      const aIsByOp = a.author.did === post.author.did
-      const bIsByOp = b.author.did === post.author.did
+      a = a as GetPostThread.ThreadViewPost
+      b = b as GetPostThread.ThreadViewPost
+      const aIsByOp = a.post.author.did === post.post.author.did
+      const bIsByOp = b.post.author.did === post.post.author.did
       if (aIsByOp && bIsByOp) {
-        return a.indexedAt.localeCompare(b.indexedAt) // oldest
+        return a.post.indexedAt.localeCompare(b.post.indexedAt) // oldest
       } else if (aIsByOp) {
         return -1 // op's own reply
       } else if (bIsByOp) {
         return 1 // op's own reply
       }
-      return b.indexedAt.localeCompare(a.indexedAt) // newest
+      return b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
     })
     post.replies.forEach(reply => sortThread(reply))
   }
 }
-*/

@@ -341,7 +341,8 @@ export const PostThreadItem = observer(function PostThreadItem({
             href={itemHref}
             title={itemTitle}
             noFeedback>
-            <Text style={pal.link}>Load more</Text>
+            <Text style={pal.link}>Continue thread...</Text>
+            <FontAwesomeIcon icon="angle-right" style={pal.link} size={18} />
           </Link>
         ) : undefined}
       </>
@@ -433,8 +434,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   loadMore: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     borderTopWidth: 1,
-    paddingLeft: 28,
+    paddingLeft: 80,
+    paddingRight: 20,
     paddingVertical: 10,
+    marginBottom: 8,
   },
 })
