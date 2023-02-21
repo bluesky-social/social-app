@@ -41,18 +41,18 @@ export const Feed = observer(function Feed({
   const [isRefreshing, setIsRefreshing] = React.useState(false)
 
   const data = React.useMemo(() => {
-    let dataItems: any[] = []
+    let feedItems: any[] = []
     if (feed.hasError) {
-      dataItems = dataItems.concat([ERROR_FEED_ITEM])
+      feedItems = feedItems.concat([ERROR_FEED_ITEM])
     }
     if (feed.hasLoaded) {
       if (feed.isEmpty) {
-        dataItems = dataItems.concat([EMPTY_FEED_ITEM])
+        feedItems = feedItems.concat([EMPTY_FEED_ITEM])
       } else {
-        dataItems = dataItems.concat(feed.feed)
+        feedItems = feedItems.concat(feed.feed)
       }
     }
-    return dataItems
+    return feedItems
   }, [feed.hasError, feed.hasLoaded, feed.isEmpty, feed.feed])
 
   // events
