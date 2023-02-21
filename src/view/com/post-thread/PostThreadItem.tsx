@@ -70,7 +70,7 @@ export const PostThreadItem = observer(function PostThreadItem({
       },
       onPost: onPostReply,
     })
-  }, [store, item, record])
+  }, [store, item, record, onPostReply])
   const onPressToggleRepost = React.useCallback(() => {
     return item
       .toggleRepost()
