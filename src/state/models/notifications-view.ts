@@ -14,7 +14,7 @@ import {RootStoreModel} from './root-store'
 import {PostThreadViewModel} from './post-thread-view'
 import {cleanError} from '../../lib/strings'
 
-const UNGROUPABLE_REASONS = ['assertion']
+const GROUPABLE_REASONS = ['vote', 'repost', 'follow']
 const PAGE_SIZE = 30
 const MS_1HR = 1e3 * 60 * 60
 const MS_2DAY = MS_1HR * 48
@@ -539,7 +539,7 @@ function groupNotifications(
   for (const item of items) {
     const ts = +new Date(item.indexedAt)
     let grouped = false
-    if (!UNGROUPABLE_REASONS.includes(item.reason)) {
+    if (GROUPABLE_REASONS.includes(item.reason)) {
       for (const item2 of items2) {
         const ts2 = +new Date(item2.indexedAt)
         if (

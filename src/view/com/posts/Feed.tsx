@@ -40,27 +40,25 @@ export const Feed = observer(function Feed({
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
 
-  // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
-  //   VirtualizedList: You have a large list that is slow to update - make sure your
-  //   renderItem function renders components that follow React performance best practices
-  //   like PureComponent, shouldComponentUpdate, etc
-  const renderItem = ({item}: {item: any}) => {
-    if (item === EMPTY_FEED_ITEM) {
-      return (
-        <EmptyState
-          icon="bars"
-          message="This feed is empty!"
-          style={styles.emptyState}
-        />
-      )
-    } else if (item === ERROR_FEED_ITEM) {
-      return (
-        <ErrorMessage message={feed.error} onPressTryAgain={onPressTryAgain} />
-      )
+  const data = React.useMemo(() => {
+    let feedItems: any[] = []
+    if (feed.hasError) {
+      feedItems = feedItems.concat([ERROR_FEED_ITEM])
     }
-    return <FeedItem item={item} />
-  }
-  const onRefresh = async () => {
+    if (feed.hasLoaded) {
+      if (feed.isEmpty) {
+        feedItems = feedItems.concat([EMPTY_FEED_ITEM])
+      } else {
+        feedItems = feedItems.concat(feed.feed)
+      }
+    }
+    return feedItems
+  }, [feed.hasError, feed.hasLoaded, feed.isEmpty, feed.feed])
+
+  // events
+  // =
+
+  const onRefresh = React.useCallback(async () => {
     track('Feed:onRefresh')
     setIsRefreshing(true)
     try {
@@ -69,34 +67,58 @@ export const Feed = observer(function Feed({
       feed.rootStore.log.error('Failed to refresh posts feed', err)
     }
     setIsRefreshing(false)
-  }
-  const onEndReached = async () => {
+  }, [feed, track, setIsRefreshing])
+  const onEndReached = React.useCallback(async () => {
     track('Feed:onEndReached')
     try {
       await feed.loadMore()
     } catch (err) {
       feed.rootStore.log.error('Failed to load more posts', err)
     }
-  }
-  let data: any[] = []
-  if (feed.hasError) {
-    data = data.concat([ERROR_FEED_ITEM])
-  }
-  if (feed.hasLoaded) {
-    if (feed.isEmpty) {
-      data = data.concat([EMPTY_FEED_ITEM])
-    } else {
-      data = data.concat(feed.feed)
-    }
-  }
-  const FeedFooter = () =>
-    feed.isLoading ? (
-      <View style={styles.feedFooter}>
-        <ActivityIndicator />
-      </View>
-    ) : (
-      <View />
-    )
+  }, [feed, track])
+
+  // rendering
+  // =
+
+  // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
+  //   VirtualizedList: You have a large list that is slow to update - make sure your
+  //   renderItem function renders components that follow React performance best practices
+  //   like PureComponent, shouldComponentUpdate, etc
+  const renderItem = React.useCallback(
+    ({item}: {item: any}) => {
+      if (item === EMPTY_FEED_ITEM) {
+        return (
+          <EmptyState
+            icon="bars"
+            message="This feed is empty!"
+            style={styles.emptyState}
+          />
+        )
+      } else if (item === ERROR_FEED_ITEM) {
+        return (
+          <ErrorMessage
+            message={feed.error}
+            onPressTryAgain={onPressTryAgain}
+          />
+        )
+      }
+      return <FeedItem item={item} />
+    },
+    [feed, onPressTryAgain],
+  )
+
+  const FeedFooter = React.useCallback(
+    () =>
+      feed.isLoading ? (
+        <View style={styles.feedFooter}>
+          <ActivityIndicator />
+        </View>
+      ) : (
+        <View />
+      ),
+    [feed],
+  )
+
   return (
     <View testID={testID} style={style}>
       {feed.isLoading && data.length === 0 && (
