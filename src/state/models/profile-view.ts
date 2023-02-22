@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {PickedMedia} from '../../view/com/util/images/image-crop-picker/ImageCropPicker'
+import {PickedMedia} from 'view/com/util/images/image-crop-picker/ImageCropPicker'
 import {
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorProfile as Profile,

@@ -1,5 +1,5 @@
 // import {Share} from 'react-native'
-// import * as Toast from '../view/com/util/Toast'
+// import * as Toast from 'view/com/util/Toast'
 
 export interface DownloadAndResizeOpts {
   uri: string

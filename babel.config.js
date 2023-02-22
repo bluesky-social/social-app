@@ -21,6 +21,7 @@ module.exports = {
           // This needs to be mirrored in tsconfig.json
           lib: './src/lib',
           state: './src/state',
+          view: './src/view',
         },
       },
     ],

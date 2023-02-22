@@ -3,7 +3,7 @@ import ImageResizer from '@bam.tech/react-native-image-resizer'
 import {Share} from 'react-native'
 import RNFS from 'react-native-fs'
 import uuid from 'react-native-uuid'
-import * as Toast from '../view/com/util/Toast'
+import * as Toast from 'view/com/util/Toast'
 
 export interface DownloadAndResizeOpts {
   uri: string
