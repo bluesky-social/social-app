@@ -1,22 +1,23 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {Image as PickedImage} from '../../view/com/util/images/image-crop-picker/ImageCropPicker'
+import {PickedMedia} from 'view/com/util/images/image-crop-picker/ImageCropPicker'
 import {
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorProfile as Profile,
   AppBskySystemDeclRef,
-  AppBskyFeedPost,
 } from '@atproto/api'
 type DeclRef = AppBskySystemDeclRef.Main
-type Entity = AppBskyFeedPost.Entity
-import {extractEntities} from '../../lib/strings'
+import {extractEntities} from 'lib/strings/rich-text-detection'
 import {RootStoreModel} from './root-store'
-import * as apilib from '../lib/api'
+import * as apilib from 'lib/api/index'
+import {cleanError} from 'lib/strings/errors'
+import {RichText} from 'lib/strings/rich-text'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
 
-export class ProfileViewMyStateModel {
-  follow?: string
+export class ProfileViewViewerModel {
   muted?: boolean
+  following?: string
+  followedBy?: string
 
   constructor() {
     makeAutoObservable(this)
@@ -46,10 +47,10 @@ export class ProfileViewModel {
   followersCount: number = 0
   followsCount: number = 0
   postsCount: number = 0
-  myState = new ProfileViewMyStateModel()
+  viewer = new ProfileViewViewerModel()
 
   // added data
-  descriptionEntities?: Entity[]
+  descriptionRichText?: RichText
 
   constructor(
     public rootStore: RootStoreModel,
@@ -97,11 +98,24 @@ export class ProfileViewModel {
     if (!this.rootStore.me.did) {
       throw new Error('Not logged in')
     }
-    if (this.myState.follow) {
-      await apilib.unfollow(this.rootStore, this.myState.follow)
+
+    const follows = this.rootStore.me.follows
+    const followUri = follows.isFollowing(this.did)
+      ? follows.getFollowUri(this.did)
+      : undefined
+
+    // guard against this view getting out of sync with the follows cache
+    if (followUri !== this.viewer.following) {
+      this.viewer.following = followUri
+      return
+    }
+
+    if (followUri) {
+      await apilib.unfollow(this.rootStore, followUri)
       runInAction(() => {
         this.followersCount--
-        this.myState.follow = undefined
+        this.viewer.following = undefined
+        this.rootStore.me.follows.removeFollow(this.did)
       })
     } else {
       const res = await apilib.follow(
@@ -111,15 +125,16 @@ export class ProfileViewModel {
       )
       runInAction(() => {
         this.followersCount++
-        this.myState.follow = res.uri
+        this.viewer.following = res.uri
+        this.rootStore.me.follows.addFollow(this.did, res.uri)
       })
     }
   }
 
   async updateProfile(
     updates: Profile.Record,
-    newUserAvatar: PickedImage | undefined,
-    newUserBanner: PickedImage | undefined,
+    newUserAvatar: PickedMedia | undefined,
+    newUserBanner: PickedMedia | undefined,
   ) {
     if (newUserAvatar) {
       const res = await this.rootStore.api.com.atproto.blob.upload(
@@ -152,13 +167,13 @@ export class ProfileViewModel {
 
   async muteAccount() {
     await this.rootStore.api.app.bsky.graph.mute({user: this.did})
-    this.myState.muted = true
+    this.viewer.muted = true
     await this.refresh()
   }
 
   async unmuteAccount() {
     await this.rootStore.api.app.bsky.graph.unmute({user: this.did})
-    this.myState.muted = false
+    this.viewer.muted = false
     await this.refresh()
   }
 
@@ -175,7 +190,7 @@ export class ProfileViewModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err ? err.toString() : ''
+    this.error = cleanError(err)
     if (err) {
       this.rootStore.log.error('Failed to fetch profile', err)
     }
@@ -210,9 +225,14 @@ export class ProfileViewModel {
     this.followersCount = res.data.followersCount
     this.followsCount = res.data.followsCount
     this.postsCount = res.data.postsCount
-    if (res.data.myState) {
-      Object.assign(this.myState, res.data.myState)
+    if (res.data.viewer) {
+      Object.assign(this.viewer, res.data.viewer)
+      this.rootStore.me.follows.hydrate(this.did, res.data.viewer.following)
     }
-    this.descriptionEntities = extractEntities(this.description || '')
+    this.descriptionRichText = new RichText(
+      this.description || '',
+      extractEntities(this.description || ''),
+      {cleanNewlines: true},
+    )
   }
 }

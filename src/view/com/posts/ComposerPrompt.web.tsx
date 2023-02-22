@@ -1,8 +1,8 @@
 import React from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {Text} from '../util/text/Text'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {s} from '../../lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
 
 export function ComposerPrompt({
   onPressCompose,

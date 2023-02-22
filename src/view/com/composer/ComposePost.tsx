@@ -3,10 +3,12 @@ import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
+  NativeSyntheticEvent,
   Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  TextInputSelectionChangeEventData,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -16,8 +18,9 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-// import {useAnalytics} from '@segment/analytics-react-native' TODO
-import {UserAutocompleteViewModel} from '../../../state/models/user-autocomplete-view'
+import {useAnalytics} from 'lib/analytics'
+import _isEqual from 'lodash.isequal'
+import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
 import {Autocomplete} from './Autocomplete'
 import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
@@ -26,23 +29,26 @@ import {TextInput, TextInputRef} from './text-input/TextInput'
 import {CharProgress} from './char-progress/CharProgress'
 import {TextLink} from '../util/Link'
 import {UserAvatar} from '../util/UserAvatar'
-import {useStores} from '../../../state'
-import * as apilib from '../../../state/lib/api'
-import {ComposerOpts} from '../../../state/models/shell-ui'
-import {s, colors, gradients} from '../../lib/styles'
-import {
-  detectLinkables,
-  extractEntities,
-  cleanError,
-} from '../../../lib/strings'
-import {getLinkMeta} from '../../../lib/link-meta'
-import {downloadAndResize} from '../../../lib/images'
+import {useStores} from 'state/index'
+import * as apilib from 'lib/api/index'
+import {ComposerOpts} from 'state/models/shell-ui'
+import {s, colors, gradients} from 'lib/styles'
+import {cleanError} from 'lib/strings/errors'
+import {detectLinkables, extractEntities} from 'lib/strings/rich-text-detection'
+import {getLinkMeta} from 'lib/link-meta/link-meta'
+import {downloadAndResize} from 'lib/images'
 import {PhotoCarouselPicker, cropPhoto} from './photos/PhotoCarouselPicker'
+import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
 import {SelectedPhoto} from './SelectedPhoto'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 
 const MAX_TEXT_LENGTH = 256
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
+
+interface Selection {
+  start: number
+  end: number
+}
 
 export const ComposePost = observer(function ComposePost({
   replyTo,
@@ -55,10 +61,11 @@ export const ComposePost = observer(function ComposePost({
   onPost?: ComposerOpts['onPost']
   onClose: () => void
 }) {
-  // const {track} = useAnalytics() TODO
+  const {track, screen} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const textInput = useRef<TextInputRef>(null)
+  const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
@@ -66,7 +73,9 @@ export const ComposePost = observer(function ComposePost({
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
   )
-  const [attemptedExtLinks, setAttemptedExtLinks] = useState<string[]>([])
+  const [suggestedExtLinks, setSuggestedExtLinks] = useState<Set<string>>(
+    new Set(),
+  )
   const [isSelectingPhotos, setIsSelectingPhotos] = useState(
     imagesOpen || false,
   )
@@ -117,10 +126,10 @@ export const ComposePost = observer(function ComposePost({
     if (extLink.isLoading && extLink.meta?.image && !extLink.localThumb) {
       downloadAndResize({
         uri: extLink.meta.image,
-        width: 250,
-        height: 250,
+        width: 2000,
+        height: 2000,
         mode: 'contain',
-        maxSize: 100000,
+        maxSize: 1000000,
         timeout: 15e3,
       })
         .catch(() => undefined)
@@ -166,6 +175,7 @@ export const ComposePost = observer(function ComposePost({
     textInput.current?.focus()
   }
   const onPressSelectPhotos = () => {
+    track('ComposePost:SelectPhotos')
     if (isSelectingPhotos) {
       setIsSelectingPhotos(false)
     } else if (selectedPhotos.length < 4) {
@@ -173,35 +183,31 @@ export const ComposePost = observer(function ComposePost({
     }
   }
   const onSelectPhotos = (photos: string[]) => {
+    track('ComposePost:SelectPhotos:Done')
     setSelectedPhotos(photos)
     if (photos.length >= 4) {
       setIsSelectingPhotos(false)
     }
   }
+  const onPressAddLinkCard = (uri: string) => {
+    setExtLink({uri, isLoading: true})
+  }
   const onChangeText = (newText: string) => {
     setText(newText)
 
-    const prefix = extractTextAutocompletePrefix(newText)
-    if (typeof prefix === 'string') {
+    const prefix = getMentionAt(newText, textInputSelection.current?.start || 0)
+    if (prefix) {
       autocompleteView.setActive(true)
-      autocompleteView.setPrefix(prefix)
+      autocompleteView.setPrefix(prefix.value)
     } else {
       autocompleteView.setActive(false)
     }
 
-    if (!extLink && /\s$/.test(newText)) {
-      const ents = extractEntities(newText)
-      const entLink = ents
-        ?.filter(
-          ent => ent.type === 'link' && !attemptedExtLinks.includes(ent.value),
-        )
-        .pop() // use last
-      if (entLink) {
-        setExtLink({
-          uri: entLink.value,
-          isLoading: true,
-        })
-        setAttemptedExtLinks([...attemptedExtLinks, entLink.value])
+    if (!extLink) {
+      const ents = extractEntities(newText)?.filter(ent => ent.type === 'link')
+      const set = new Set(ents ? ents.map(e => e.value) : [])
+      if (!_isEqual(set, suggestedExtLinks)) {
+        setSuggestedExtLinks(set)
       }
     }
   }
@@ -217,6 +223,16 @@ export const ComposePost = observer(function ComposePost({
       const finalImgPath = await cropPhoto(store, imgUri)
       onSelectPhotos([...selectedPhotos, finalImgPath])
     }
+  }
+  const onSelectionChange = (
+    evt: NativeSyntheticEvent<TextInputSelectionChangeEventData>,
+  ) => {
+    // NOTE we track the input selection using a ref to avoid excessive renders -prf
+    textInputSelection.current = evt.nativeEvent.selection
+  }
+  const onSelectAutocompleteItem = (item: string) => {
+    setText(insertMentionAt(text, textInputSelection.current?.start || 0, item))
+    autocompleteView.setActive(false)
   }
   const onPressCancel = () => hackfixOnClose()
   const onPressPublish = async () => {
@@ -242,11 +258,15 @@ export const ComposePost = observer(function ComposePost({
         autocompleteView.knownHandles,
         setProcessingState,
       )
-      // TODO
-      // track('Create Post', {
-      //   imageCount: selectedPhotos.length,
-      // })
+      track('Create Post', {
+        imageCount: selectedPhotos.length,
+      })
     } catch (e: any) {
+      setExtLink({
+        ...extLink,
+        isLoading: true,
+        localThumb: undefined,
+      } as apilib.ExternalEmbedDraft)
       setError(cleanError(e.message))
       setIsProcessing(false)
       return
@@ -255,10 +275,6 @@ export const ComposePost = observer(function ComposePost({
     onPost?.()
     hackfixOnClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
-  }
-  const onSelectAutocompleteItem = (item: string) => {
-    setText(replaceTextAutocompletePrefix(text, item))
-    autocompleteView.setActive(false)
   }
 
   const canPost = text.length <= MAX_TEXT_LENGTH
@@ -386,6 +402,7 @@ export const ComposePost = observer(function ComposePost({
                 innerRef={textInput}
                 onChangeText={(str: string) => onChangeText(str)}
                 onPaste={onPaste}
+                onSelectionChange={onSelectionChange}
                 placeholder={selectTextInputPlaceholder}
                 style={[
                   pal.text,
@@ -406,12 +423,27 @@ export const ComposePost = observer(function ComposePost({
               />
             )}
           </ScrollView>
-          {isSelectingPhotos && selectedPhotos.length < 4 && (
+          {isSelectingPhotos && selectedPhotos.length < 4 ? (
             <PhotoCarouselPicker
               selectedPhotos={selectedPhotos}
               onSelectPhotos={onSelectPhotos}
             />
-          )}
+          ) : !extLink &&
+            selectedPhotos.length === 0 &&
+            suggestedExtLinks.size > 0 ? (
+            <View style={s.mb5}>
+              {Array.from(suggestedExtLinks).map(url => (
+                <TouchableOpacity
+                  key={`suggested-${url}`}
+                  style={[pal.borderDark, styles.addExtLinkBtn]}
+                  onPress={() => onPressAddLinkCard(url)}>
+                  <Text>
+                    Add link card: <Text style={pal.link}>{url}</Text>
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          ) : null}
           <View style={[pal.border, styles.bottomBar]}>
             <TouchableOpacity
               testID="composerSelectPhotosButton"
@@ -441,18 +473,6 @@ export const ComposePost = observer(function ComposePost({
     </KeyboardAvoidingView>
   )
 })
-
-const atPrefixRegex = /@([a-z0-9.]*)$/i
-function extractTextAutocompletePrefix(text: string) {
-  const match = atPrefixRegex.exec(text)
-  if (match) {
-    return match[1]
-  }
-  return undefined
-}
-function replaceTextAutocompletePrefix(text: string, item: string) {
-  return text.replace(atPrefixRegex, `@${item} `)
-}
 
 const styles = StyleSheet.create({
   outer: {
@@ -531,6 +551,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 13,
     paddingRight: 8,
+  },
+  addExtLinkBtn: {
+    borderWidth: 1,
+    borderRadius: 24,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 4,
   },
   bottomBar: {
     flexDirection: 'row',

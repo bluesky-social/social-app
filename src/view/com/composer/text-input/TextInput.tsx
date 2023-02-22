@@ -1,10 +1,15 @@
 import React from 'react'
-import {StyleProp, TextStyle} from 'react-native'
+import {
+  NativeSyntheticEvent,
+  StyleProp,
+  TextInputSelectionChangeEventData,
+  TextStyle,
+} from 'react-native'
 import PasteInput, {
   PastedFile,
   PasteInputRef,
 } from '@mattermost/react-native-paste-input'
-import {usePalette} from '../../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export type TextInputRef = PasteInputRef
 
@@ -14,6 +19,9 @@ interface TextInputProps {
   placeholder: string
   style: StyleProp<TextStyle>
   onChangeText: (str: string) => void
+  onSelectionChange?:
+    | ((e: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => void)
+    | undefined
   onPaste: (err: string | undefined, uris: string[]) => void
 }
 
@@ -23,6 +31,7 @@ export function TextInput({
   placeholder,
   style,
   onChangeText,
+  onSelectionChange,
   onPaste,
   children,
 }: React.PropsWithChildren<TextInputProps>) {
@@ -44,6 +53,7 @@ export function TextInput({
       multiline
       scrollEnabled
       onChangeText={(str: string) => onChangeText(str)}
+      onSelectionChange={onSelectionChange}
       onPaste={onPasteInner}
       placeholder={placeholder}
       placeholderTextColor={pal.colors.textLight}

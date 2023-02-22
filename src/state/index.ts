@@ -1,9 +1,9 @@
 import {autorun} from 'mobx'
-import {Platform} from 'react-native'
-import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
+import {AppState, Platform} from 'react-native'
+import {AtpAgent} from '@atproto/api'
 import {RootStoreModel} from './models/root-store'
-import * as apiPolyfill from './lib/api-polyfill'
-import * as storage from './lib/storage'
+import * as apiPolyfill from 'lib/api/api-polyfill'
+import * as storage from 'lib/storage'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'ios' ? 'http://localhost:2583' : 'http://10.0.2.2:2583'
@@ -19,8 +19,7 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
 
   apiPolyfill.doPolyfill()
 
-  const api = AtpApi.service(serviceUri) as SessionServiceClient
-  rootStore = new RootStoreModel(api)
+  rootStore = new RootStoreModel(new AtpAgent({service: serviceUri}))
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
     rootStore.log.debug('Initial hydrate', {hasSession: !!data.session})
@@ -28,25 +27,7 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
   } catch (e: any) {
     rootStore.log.error('Failed to load state from storage', e)
   }
-
-  rootStore.session
-    .connect()
-    .then(() => {
-      rootStore.log.debug('Session connected')
-      return rootStore.fetchStateUpdate()
-    })
-    .catch((e: any) => {
-      rootStore.log.warn('Failed initial connect', e)
-    })
-  // @ts-ignore .on() is correct -prf
-  api.sessionManager.on('session', () => {
-    if (!api.sessionManager.session && rootStore.session.hasSession) {
-      // reset session
-      rootStore.session.clear()
-    } else if (api.sessionManager.session) {
-      rootStore.session.updateAuthTokens(api.sessionManager.session)
-    }
-  })
+  rootStore.attemptSessionResumption()
 
   // track changes & save to storage
   autorun(() => {
@@ -56,7 +37,14 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
 
   // periodic state fetch
   setInterval(() => {
-    rootStore.fetchStateUpdate()
+    // NOTE
+    // this must ONLY occur when the app is active, as the bg-fetch handler
+    // will wake up the thread and cause this interval to fire, which in
+    // turn schedules a bunch of work at a poor time
+    // -prf
+    if (AppState.currentState === 'active') {
+      rootStore.updateSessionState()
+    }
   }, STATE_FETCH_INTERVAL)
 
   return rootStore

@@ -1,15 +1,23 @@
-import React, {useCallback} from 'react'
-import {Alert, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {HighPriorityImage} from 'view/com/util/images/Image'
 import {
   openCamera,
   openCropper,
   openPicker,
   PickedMedia,
 } from './images/image-crop-picker/ImageCropPicker'
-import {useStores} from '../../../state'
-import {colors, gradients} from '../../lib/styles'
+import {
+  requestPhotoAccessIfNeeded,
+  requestCameraAccessIfNeeded,
+} from 'lib/permissions'
+import {useStores} from 'state/index'
+import {colors, gradients} from 'lib/styles'
+import {DropdownButton} from './forms/DropdownButton'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export function UserAvatar({
   size,
@@ -25,39 +33,8 @@ export function UserAvatar({
   onSelectNewAvatar?: (img: PickedMedia) => void
 }) {
   const store = useStores()
+  const pal = usePalette('default')
   const initials = getInitials(displayName || handle)
-
-  const handleEditAvatar = useCallback(() => {
-    Alert.alert('Select upload method', '', [
-      {
-        text: 'Take a new photo',
-        onPress: () => {
-          openCamera(store, {
-            mediaType: 'photo',
-            width: 1000,
-            height: 1000,
-            cropperCircleOverlay: true,
-          }).then(onSelectNewAvatar)
-        },
-      },
-      {
-        text: 'Select from gallery',
-        onPress: () => {
-          openPicker(store, {
-            mediaType: 'photo',
-          }).then(async items => {
-            await openCropper(store, {
-              mediaType: 'photo',
-              path: items[0].path,
-              width: 1000,
-              height: 1000,
-              cropperCircleOverlay: true,
-            }).then(onSelectNewAvatar)
-          })
-        },
-      },
-    ])
-  }, [store, onSelectNewAvatar])
 
   const renderSvg = (svgSize: number, svgInitials: string) => (
     <Svg width={svgSize} height={svgSize} viewBox="0 0 100 100">
@@ -80,11 +57,65 @@ export function UserAvatar({
     </Svg>
   )
 
+  const dropdownItems = [
+    {
+      label: 'Camera',
+      icon: 'camera' as IconProp,
+      onPress: async () => {
+        if (!(await requestCameraAccessIfNeeded())) {
+          return
+        }
+        onSelectNewAvatar?.(
+          await openCamera(store, {
+            mediaType: 'photo',
+            width: 1000,
+            height: 1000,
+            cropperCircleOverlay: true,
+          }),
+        )
+      },
+    },
+    {
+      label: 'Library',
+      icon: 'image' as IconProp,
+      onPress: async () => {
+        if (!(await requestPhotoAccessIfNeeded())) {
+          return
+        }
+        const items = await openPicker(store, {
+          mediaType: 'photo',
+        })
+        onSelectNewAvatar?.(
+          await openCropper(store, {
+            mediaType: 'photo',
+            path: items[0].path,
+            width: 1000,
+            height: 1000,
+            cropperCircleOverlay: true,
+          }),
+        )
+      },
+    },
+    // TODO: Remove avatar https://github.com/bluesky-social/social-app/issues/122
+    // {
+    //   label: 'Remove',
+    //   icon: ['far', 'trash-can'],
+    //   onPress: () => {
+    //   // Remove avatar API call
+    //   },
+    // },
+  ]
   // onSelectNewAvatar is only passed as prop on the EditProfile component
   return onSelectNewAvatar ? (
-    <TouchableOpacity onPress={handleEditAvatar}>
+    <DropdownButton
+      type="bare"
+      items={dropdownItems}
+      openToRight
+      rightOffset={-10}
+      bottomOffset={-10}
+      menuWidth={170}>
       {avatar ? (
-        <Image
+        <HighPriorityImage
           style={{
             width: size,
             height: size,
@@ -95,16 +126,16 @@ export function UserAvatar({
       ) : (
         renderSvg(size, initials)
       )}
-      <View style={styles.editButtonContainer}>
+      <View style={[styles.editButtonContainer, pal.btn]}>
         <FontAwesomeIcon
           icon="camera"
           size={12}
-          style={{color: colors.white}}
+          color={pal.text.color as string}
         />
       </View>
-    </TouchableOpacity>
+    </DropdownButton>
   ) : avatar ? (
-    <Image
+    <HighPriorityImage
       style={{width: size, height: size, borderRadius: Math.floor(size / 2)}}
       resizeMode="stretch"
       source={{uri: avatar}}

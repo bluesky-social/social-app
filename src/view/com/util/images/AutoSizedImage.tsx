@@ -1,125 +1,59 @@
-import React, {useState, useEffect} from 'react'
-import {
-  Image,
-  ImageStyle,
-  LayoutChangeEvent,
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native'
-import {Text} from '../text/Text'
-import {useTheme} from '../../../lib/ThemeContext'
-import {usePalette} from '../../../lib/hooks/usePalette'
-import {DELAY_PRESS_IN} from './constants'
+import React from 'react'
+import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native'
+import Image, {OnLoadEvent} from 'view/com/util/images/Image'
+import {clamp} from 'lib/numbers'
 
-const MAX_HEIGHT = 300
-
-interface Dim {
-  width: number
-  height: number
-}
+export const DELAY_PRESS_IN = 500
+const MIN_ASPECT_RATIO = 0.33 // 1/3
+const MAX_ASPECT_RATIO = 5 // 5/1
 
 export function AutoSizedImage({
   uri,
   onPress,
   onLongPress,
+  onPressIn,
   style,
-  containerStyle,
+  children = null,
 }: {
   uri: string
   onPress?: () => void
   onLongPress?: () => void
-  style?: StyleProp<ImageStyle>
-  containerStyle?: StyleProp<ViewStyle>
+  onPressIn?: () => void
+  style?: StyleProp<ViewStyle>
+  children?: React.ReactNode
 }) {
-  const theme = useTheme()
-  const errPal = usePalette('error')
-  const [error, setError] = useState<string | undefined>('')
-  const [imgInfo, setImgInfo] = useState<Dim | undefined>()
-  const [containerInfo, setContainerInfo] = useState<Dim | undefined>()
-
-  useEffect(() => {
-    let aborted = false
-    if (!imgInfo) {
-      Image.getSize(
-        uri,
-        (width: number, height: number) => {
-          if (!aborted) {
-            setImgInfo({width, height})
-          }
-        },
-        (err: any) => {
-          if (!aborted) {
-            setError(String(err))
-          }
-        },
-      )
-    }
-    return () => {
-      aborted = true
-    }
-  }, [uri, imgInfo])
-
-  const onLayout = (evt: LayoutChangeEvent) => {
-    setContainerInfo({
-      width: evt.nativeEvent.layout.width,
-      height: evt.nativeEvent.layout.height,
-    })
-  }
-
-  let calculatedStyle: StyleProp<ImageStyle> | undefined
-  if (imgInfo && containerInfo) {
-    // imgInfo.height / imgInfo.width = x / containerInfo.width
-    // x = imgInfo.height / imgInfo.width * containerInfo.width
-    calculatedStyle = {
-      height: Math.min(
-        MAX_HEIGHT,
-        (imgInfo.height / imgInfo.width) * containerInfo.width,
+  const [aspectRatio, setAspectRatio] = React.useState<number>(1)
+  const onLoad = (e: OnLoadEvent) => {
+    setAspectRatio(
+      clamp(
+        e.nativeEvent.width / e.nativeEvent.height,
+        MIN_ASPECT_RATIO,
+        MAX_ASPECT_RATIO,
       ),
-    }
+    )
   }
-
   return (
-    <View style={style}>
-      <TouchableOpacity
-        onPress={onPress}
-        onLongPress={onLongPress}
-        delayPressIn={DELAY_PRESS_IN}>
-        {error ? (
-          <View style={[styles.errorContainer, errPal.view, containerStyle]}>
-            <Text style={errPal.text}>{error}</Text>
-          </View>
-        ) : calculatedStyle ? (
-          <View style={[styles.container, containerStyle]}>
-            <Image style={calculatedStyle} source={{uri}} />
-          </View>
-        ) : (
-          <View
-            style={[
-              style,
-              styles.placeholder,
-              {backgroundColor: theme.palette.default.backgroundLight},
-            ]}
-            onLayout={onLayout}
-          />
-        )}
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity
+      onPress={onPress}
+      onLongPress={onLongPress}
+      onPressIn={onPressIn}
+      delayPressIn={DELAY_PRESS_IN}
+      style={[styles.container, style]}>
+      <Image
+        style={[styles.image, {aspectRatio}]}
+        source={{uri}}
+        onLoad={onLoad}
+      />
+      {children}
+    </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
-  placeholder: {
-    width: '100%',
-    aspectRatio: 1,
-  },
-  errorContainer: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
   container: {
     overflow: 'hidden',
+  },
+  image: {
+    width: '100%',
   },
 })

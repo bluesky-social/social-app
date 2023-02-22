@@ -1,25 +1,48 @@
-import {makeAutoObservable} from 'mobx'
-import {AppBskyActorGetSuggestions as GetSuggestions} from '@atproto/api'
+import {makeAutoObservable, runInAction} from 'mobx'
+import {AppBskyActorProfile as Profile} from '@atproto/api'
+import shuffle from 'lodash.shuffle'
 import {RootStoreModel} from './root-store'
+import {cleanError} from 'lib/strings/errors'
+import {bundleAsync} from 'lib/async/bundle'
+import {
+  DEV_SUGGESTED_FOLLOWS,
+  PROD_SUGGESTED_FOLLOWS,
+  STAGING_SUGGESTED_FOLLOWS,
+} from 'lib/constants'
 
 const PAGE_SIZE = 30
 
-export type SuggestedActor = GetSuggestions.Actor
+export type SuggestedActor = Profile.ViewBasic | Profile.View
+
+const getSuggestionList = ({serviceUrl}: {serviceUrl: string}) => {
+  if (serviceUrl.includes('localhost')) {
+    return DEV_SUGGESTED_FOLLOWS
+  } else if (serviceUrl.includes('staging')) {
+    return STAGING_SUGGESTED_FOLLOWS
+  } else {
+    return PROD_SUGGESTED_FOLLOWS
+  }
+}
 
 export class SuggestedActorsViewModel {
   // state
+  pageSize = PAGE_SIZE
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
   hasMore = true
   loadMoreCursor?: string
-  private _loadMorePromise: Promise<void> | undefined
+
+  private hardCodedSuggestions: SuggestedActor[] | undefined
 
   // data
   suggestions: SuggestedActor[] = []
 
-  constructor(public rootStore: RootStoreModel) {
+  constructor(public rootStore: RootStoreModel, opts?: {pageSize?: number}) {
+    if (opts?.pageSize) {
+      this.pageSize = opts.pageSize
+    }
     makeAutoObservable(
       this,
       {
@@ -48,13 +71,96 @@ export class SuggestedActorsViewModel {
     return this.loadMore(true)
   }
 
-  async loadMore(isRefreshing = false) {
-    if (this._loadMorePromise) {
-      return this._loadMorePromise
+  loadMore = bundleAsync(async (replace: boolean = false) => {
+    if (!replace && !this.hasMore) {
+      return
     }
-    this._loadMorePromise = this._loadMore(isRefreshing)
-    await this._loadMorePromise
-    this._loadMorePromise = undefined
+    if (replace) {
+      this.hardCodedSuggestions = undefined
+    }
+    this._xLoading(replace)
+    try {
+      let items: SuggestedActor[] = this.suggestions
+      if (replace) {
+        items = []
+        this.loadMoreCursor = undefined
+      }
+      let res
+      do {
+        await this.fetchHardcodedSuggestions()
+        if (this.hardCodedSuggestions && this.hardCodedSuggestions.length > 0) {
+          // pull from the hard-coded suggestions
+          const newItems = this.hardCodedSuggestions.splice(0, this.pageSize)
+          items = items.concat(newItems)
+          this.hasMore = true
+          this.loadMoreCursor = undefined
+        } else {
+          // pull from the PDS' algo
+          res = await this.rootStore.api.app.bsky.actor.getSuggestions({
+            limit: this.pageSize,
+            cursor: this.loadMoreCursor,
+          })
+          this.loadMoreCursor = res.data.cursor
+          this.hasMore = !!this.loadMoreCursor
+          items = items.concat(
+            res.data.actors.filter(
+              actor => !items.find(i => i.did === actor.did),
+            ),
+          )
+        }
+      } while (items.length < this.pageSize && this.hasMore)
+      runInAction(() => {
+        this.suggestions = items
+      })
+      this._xIdle()
+    } catch (e: any) {
+      this._xIdle(e)
+    }
+  })
+
+  private async fetchHardcodedSuggestions() {
+    if (this.hardCodedSuggestions) {
+      return
+    }
+    await this.rootStore.me.follows.fetchIfNeeded()
+    try {
+      // clone the array so we can mutate it
+      const actors = [
+        ...getSuggestionList({
+          serviceUrl: this.rootStore.session.currentSession?.service || '',
+        }),
+      ]
+
+      // fetch the profiles in chunks of 25 (the limit allowed by `getProfiles`)
+      let profiles: Profile.View[] = []
+      do {
+        const res = await this.rootStore.api.app.bsky.actor.getProfiles({
+          actors: actors.splice(0, 25),
+        })
+        profiles = profiles.concat(res.data.profiles)
+      } while (actors.length)
+
+      runInAction(() => {
+        profiles = profiles.filter(profile => {
+          if (this.rootStore.me.follows.isFollowing(profile.did)) {
+            return false
+          }
+          if (profile.did === this.rootStore.me.did) {
+            return false
+          }
+          return true
+        })
+        this.hardCodedSuggestions = shuffle(profiles)
+      })
+    } catch (e) {
+      this.rootStore.log.error(
+        'Failed to getProfiles() for suggested follows',
+        {e},
+      )
+      runInAction(() => {
+        this.hardCodedSuggestions = []
+      })
+    }
   }
 
   // state transitions
@@ -70,52 +176,9 @@ export class SuggestedActorsViewModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err ? err.toString() : ''
+    this.error = cleanError(err)
     if (err) {
       this.rootStore.log.error('Failed to fetch suggested actors', err)
     }
-  }
-
-  // loader functions
-  // =
-
-  private async _loadMore(isRefreshing = false) {
-    if (!this.hasMore) {
-      return
-    }
-    this._xLoading(isRefreshing)
-    try {
-      if (this.isRefreshing) {
-        this.suggestions = []
-      }
-      let res
-      let totalAdded = 0
-      do {
-        res = await this.rootStore.api.app.bsky.actor.getSuggestions({
-          limit: PAGE_SIZE,
-          cursor: this.loadMoreCursor,
-        })
-        totalAdded += await this._appendAll(res)
-      } while (totalAdded < PAGE_SIZE && this.hasMore)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
-    }
-  }
-
-  private async _appendAll(res: GetSuggestions.Response) {
-    this.loadMoreCursor = res.data.cursor
-    this.hasMore = !!this.loadMoreCursor
-    const newSuggestions = res.data.actors.filter(actor => {
-      if (actor.did === this.rootStore.me.did) {
-        return false // skip self
-      }
-      if (actor.myState?.follow) {
-        return false // skip already-followed users
-      }
-      return true
-    })
-    this.suggestions = this.suggestions.concat(newSuggestions)
-    return newSuggestions.length
   }
 }

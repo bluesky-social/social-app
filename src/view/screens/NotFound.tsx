@@ -2,7 +2,7 @@ import React from 'react'
 import {Button, StyleSheet, View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Text} from '../com/util/text/Text'
-import {useStores} from '../../state'
+import {useStores} from 'state/index'
 
 export const NotFound = () => {
   const stores = useStores()

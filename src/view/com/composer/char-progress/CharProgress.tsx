@@ -5,7 +5,7 @@ import {Text} from '../../util/text/Text'
 import ProgressCircle from 'react-native-progress/Circle'
 // @ts-ignore no type definition -prf
 import ProgressPie from 'react-native-progress/Pie'
-import {s, colors} from '../../../lib/styles'
+import {s, colors} from 'lib/styles'
 
 const MAX_TEXT_LENGTH = 256
 const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH

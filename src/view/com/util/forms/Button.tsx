@@ -7,8 +7,8 @@ import {
   ViewStyle,
 } from 'react-native'
 import {Text} from '../text/Text'
-import {useTheme} from '../../../lib/ThemeContext'
-import {choose} from '../../../../lib/functions'
+import {useTheme} from 'lib/ThemeContext'
+import {choose} from 'lib/functions'
 
 export type ButtonType =
   | 'primary'

@@ -1,10 +1,10 @@
 import React from 'react'
 import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {useStores} from '../../../state'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {useStores} from 'state/index'
+import {usePalette} from 'lib/hooks/usePalette'
 
-import * as models from '../../../state/models/shell-ui'
+import * as models from 'state/models/shell-ui'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
@@ -48,9 +48,17 @@ export const Modal = observer(function Modal() {
       />
     )
   } else if (store.shell.activeModal?.name === 'report-post') {
-    element = <ReportPostModal.Component />
+    element = (
+      <ReportPostModal.Component
+        {...(store.shell.activeModal as models.ReportPostModal)}
+      />
+    )
   } else if (store.shell.activeModal?.name === 'report-account') {
-    element = <ReportAccountModal.Component />
+    element = (
+      <ReportAccountModal.Component
+        {...(store.shell.activeModal as models.ReportAccountModal)}
+      />
+    )
   } else if (store.shell.activeModal?.name === 'crop-image') {
     element = (
       <CropImageModal.Component

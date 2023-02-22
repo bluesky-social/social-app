@@ -3,10 +3,10 @@ import {View} from 'react-native'
 import {Selector} from './Selector'
 import {HorzSwipe} from './gestures/HorzSwipe'
 import {FlatList} from './Views'
-import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
-import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
-import {clamp} from '../../../lib/numbers'
-import {s} from '../../lib/styles'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {clamp} from 'lib/numbers'
+import {s} from 'lib/styles'
 
 const HEADER_ITEM = {_reactKey: '__header__'}
 const SELECTOR_ITEM = {_reactKey: '__selector__'}
@@ -101,6 +101,7 @@ export function ViewSelector({
         onRefresh={onRefresh}
         onEndReached={onEndReached}
         contentContainerStyle={s.contentContainer}
+        removeClippedSubviews={true}
       />
     </HorzSwipe>
   )

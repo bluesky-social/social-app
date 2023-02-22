@@ -8,7 +8,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {FeedItemModel} from '../../../state/models/feed-view'
+import {FeedItemModel} from 'state/models/feed-view'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
@@ -18,9 +18,10 @@ import {PostEmbeds} from '../util/PostEmbeds'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import {s} from '../../lib/styles'
-import {useStores} from '../../../state'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {s} from 'lib/styles'
+import {useStores} from 'state/index'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useAnalytics} from 'lib/analytics'
 
 export const FeedItem = observer(function ({
   item,
@@ -33,8 +34,11 @@ export const FeedItem = observer(function ({
 }) {
   const store = useStores()
   const pal = usePalette('default')
+  const {track} = useAnalytics()
   const [deleted, setDeleted] = useState(false)
   const record = item.postRecord
+  const itemUri = item.post.uri
+  const itemCid = item.post.cid
   const itemHref = useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}`
@@ -50,6 +54,7 @@ export const FeedItem = observer(function ({
   }, [record?.reply])
 
   const onPressReply = () => {
+    track('FeedItem:PostReply')
     store.shell.openComposer({
       replyTo: {
         uri: item.post.uri,
@@ -64,12 +69,14 @@ export const FeedItem = observer(function ({
     })
   }
   const onPressToggleRepost = () => {
-    item
+    track('FeedItem:PostRepost')
+    return item
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
   }
   const onPressToggleUpvote = () => {
-    item
+    track('FeedItem:PostLike')
+    return item
       .toggleUpvote()
       .catch(e => store.log.error('Failed to toggle upvote', e))
   }
@@ -78,6 +85,7 @@ export const FeedItem = observer(function ({
     Toast.show('Copied to clipboard')
   }
   const onDeletePost = () => {
+    track('FeedItem:PostDelete')
     item.delete().then(
       () => {
         setDeleted(true)
@@ -195,12 +203,11 @@ export const FeedItem = observer(function ({
                 <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
                 <Text type="sm">This post is by a muted account.</Text>
               </View>
-            ) : record.text ? (
+            ) : item.richText?.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
                   type="post-text"
-                  text={record.text}
-                  entities={record.entities}
+                  richText={item.richText}
                   lineHeight={1.3}
                 />
               </View>
@@ -210,6 +217,8 @@ export const FeedItem = observer(function ({
             ) : null}
             <PostCtrls
               style={styles.ctrls}
+              itemUri={itemUri}
+              itemCid={itemCid}
               itemHref={itemHref}
               itemTitle={itemTitle}
               isAuthor={item.post.author.did === store.me.did}

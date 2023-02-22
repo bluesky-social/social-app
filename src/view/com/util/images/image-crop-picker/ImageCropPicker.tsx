@@ -4,7 +4,7 @@ import {
   openCropper as openCropperFn,
   ImageOrVideo,
 } from 'react-native-image-crop-picker'
-import {RootStoreModel} from '../../../../../state'
+import {RootStoreModel} from 'state/index'
 import {PickerOpts, CameraOpts, CropperOpts, PickedMedia} from './types'
 export type {PickedMedia} from './types'
 

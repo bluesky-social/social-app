@@ -1,17 +1,18 @@
 import {
-  extractEntities,
-  detectLinkables,
-  pluralize,
+  getYoutubeVideoId,
   makeRecordUri,
-  ago,
-  makeValidHandle,
-  createFullHandle,
-  enforceLen,
-  cleanError,
   toNiceDomain,
   toShortUrl,
   toShareUrl,
-} from '../../src/lib/strings'
+} from '../../src/lib/strings/url-helpers'
+import {pluralize, enforceLen} from '../../src/lib/strings/helpers'
+import {ago} from '../../src/lib/strings/time'
+import {
+  extractEntities,
+  detectLinkables,
+} from '../../src/lib/strings/rich-text-detection'
+import {makeValidHandle, createFullHandle} from '../../src/lib/strings/handles'
+import {cleanError} from '../../src/lib/strings/errors'
 
 describe('extractEntities', () => {
   const knownHandles = new Set(['handle.com', 'full123.test-of-chars'])
@@ -485,5 +486,31 @@ describe('toShareUrl', () => {
       const result = toShareUrl(inputs[i])
       expect(result).toEqual(outputs[i])
     }
+  })
+})
+
+describe('getYoutubeVideoId', () => {
+  it(' should return undefined for invalid youtube links', () => {
+    expect(getYoutubeVideoId('')).toBeUndefined()
+    expect(getYoutubeVideoId('https://www.google.com')).toBeUndefined()
+    expect(getYoutubeVideoId('https://www.youtube.com')).toBeUndefined()
+    expect(
+      getYoutubeVideoId('https://www.youtube.com/channelName'),
+    ).toBeUndefined()
+    expect(
+      getYoutubeVideoId('https://www.youtube.com/channel/channelName'),
+    ).toBeUndefined()
+  })
+
+  it('getYoutubeVideoId should return video id for valid youtube links', () => {
+    expect(getYoutubeVideoId('https://www.youtube.com/watch?v=videoId')).toBe(
+      'videoId',
+    )
+    expect(
+      getYoutubeVideoId(
+        'https://www.youtube.com/watch?v=videoId&feature=share',
+      ),
+    ).toBe('videoId')
+    expect(getYoutubeVideoId('https://youtu.be/videoId')).toBe('videoId')
   })
 })

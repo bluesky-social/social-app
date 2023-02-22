@@ -1,11 +1,16 @@
+import {RootStoreModel} from './../../../src/state/models/root-store'
 import {NavigationModel} from './../../../src/state/models/navigation'
-import * as flags from '../../../src/build-flags'
+import * as flags from '../../../src/lib/build-flags'
+import AtpAgent from '@atproto/api'
+import {DEFAULT_SERVICE} from '../../../src/state'
 
 describe('NavigationModel', () => {
   let model: NavigationModel
+  let rootStore: RootStoreModel
 
   beforeEach(() => {
-    model = new NavigationModel()
+    rootStore = new RootStoreModel(new AtpAgent({service: DEFAULT_SERVICE}))
+    model = new NavigationModel(rootStore)
     model.setTitle('0-0', 'title')
   })
 
@@ -15,7 +20,7 @@ describe('NavigationModel', () => {
 
   it('should clear() to the correct base state', async () => {
     await model.clear()
-    expect(model.tabCount).toBe(2)
+    expect(model.tabCount).toBe(3)
     expect(model.tab).toEqual({
       fixedTabPurpose: 0,
       history: [
@@ -64,7 +69,7 @@ describe('NavigationModel', () => {
   })
 
   it('should call the tabCount getter', () => {
-    expect(model.tabCount).toBe(2)
+    expect(model.tabCount).toBe(3)
   })
 
   describe('tabs not enabled', () => {
@@ -87,7 +92,7 @@ describe('NavigationModel', () => {
     it('should not change the active tab', () => {
       // @ts-expect-error
       flags.TABS_ENABLED = false
-      model.setActiveTab(2)
+      model.setActiveTab(3)
       expect(model.tabIndex).toBe(0)
     })
 
@@ -95,57 +100,58 @@ describe('NavigationModel', () => {
       // @ts-expect-error
       flags.TABS_ENABLED = false
       model.closeTab(0)
-      expect(model.tabCount).toBe(2)
+      expect(model.tabCount).toBe(3)
     })
   })
 
-  describe('tabs enabled', () => {
-    jest.mock('../../../src/build-flags', () => ({
-      TABS_ENABLED: true,
-    }))
+  // TODO restore when tabs get re-enabled
+  // describe('tabs enabled', () => {
+  //   jest.mock('../../../src/build-flags', () => ({
+  //     TABS_ENABLED: true,
+  //   }))
 
-    afterAll(() => {
-      jest.clearAllMocks()
-    })
+  //   afterAll(() => {
+  //     jest.clearAllMocks()
+  //   })
 
-    it('should create new tabs', () => {
-      // @ts-expect-error
-      flags.TABS_ENABLED = true
+  //   it('should create new tabs', () => {
+  //     // @ts-expect-error
+  //     flags.TABS_ENABLED = true
 
-      model.newTab('testurl', 'title')
-      expect(model.tab.isNewTab).toBe(true)
-      expect(model.tabIndex).toBe(2)
-    })
+  //     model.newTab('testurl', 'title')
+  //     expect(model.tab.isNewTab).toBe(true)
+  //     expect(model.tabIndex).toBe(2)
+  //   })
 
-    it('should change the current tab', () => {
-      // @ts-expect-error
-      flags.TABS_ENABLED = true
+  //   it('should change the current tab', () => {
+  //     // @ts-expect-error
+  //     flags.TABS_ENABLED = true
 
-      model.setActiveTab(0)
-      expect(model.tabIndex).toBe(0)
-    })
+  //     model.setActiveTab(0)
+  //     expect(model.tabIndex).toBe(0)
+  //   })
 
-    it('should close tabs', () => {
-      // @ts-expect-error
-      flags.TABS_ENABLED = true
+  //   it('should close tabs', () => {
+  //     // @ts-expect-error
+  //     flags.TABS_ENABLED = true
 
-      model.closeTab(0)
-      expect(model.tabs).toEqual([
-        {
-          fixedTabPurpose: 1,
-          history: [
-            {
-              id: expect.anything(),
-              ts: expect.anything(),
-              url: '/notifications',
-            },
-          ],
-          id: expect.anything(),
-          index: 0,
-          isNewTab: false,
-        },
-      ])
-      expect(model.tabIndex).toBe(0)
-    })
-  })
+  //     model.closeTab(0)
+  //     expect(model.tabs).toEqual([
+  //       {
+  //         fixedTabPurpose: 1,
+  //         history: [
+  //           {
+  //             id: expect.anything(),
+  //             ts: expect.anything(),
+  //             url: '/notifications',
+  //           },
+  //         ],
+  //         id: expect.anything(),
+  //         index: 0,
+  //         isNewTab: false,
+  //       },
+  //     ])
+  //     expect(model.tabIndex).toBe(0)
+  //   })
+  // })
 })

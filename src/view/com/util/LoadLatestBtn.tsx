@@ -4,9 +4,9 @@ import {observer} from 'mobx-react-lite'
 import LinearGradient from 'react-native-linear-gradient'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Text} from './text/Text'
-import {colors, gradients} from '../../lib/styles'
+import {colors, gradients} from 'lib/styles'
 import {clamp} from 'lodash'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 

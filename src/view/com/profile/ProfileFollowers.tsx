@@ -4,15 +4,11 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {
   UserFollowersViewModel,
   FollowerItem,
-} from '../../../state/models/user-followers-view'
+} from 'state/models/user-followers-view'
 import {CenteredView, FlatList} from '../util/Views'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {UserAvatar} from '../util/UserAvatar'
-import {useStores} from '../../../state'
-import {s} from '../../lib/styles'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {ProfileCardWithFollowBtn} from './ProfileCard'
+import {useStores} from 'state/index'
 
 export const ProfileFollowers = observer(function ProfileFollowers({
   name,
@@ -63,7 +59,15 @@ export const ProfileFollowers = observer(function ProfileFollowers({
   // loaded
   // =
   const renderItem = ({item}: {item: FollowerItem}) => (
-    <User key={item.did} item={item} />
+    <ProfileCardWithFollowBtn
+      key={item.did}
+      did={item.did}
+      declarationCid={item.declaration.cid}
+      handle={item.handle}
+      displayName={item.displayName}
+      avatar={item.avatar}
+      isFollowedBy={!!item.viewer?.followedBy}
+    />
   )
   return (
     <FlatList
@@ -84,55 +88,7 @@ export const ProfileFollowers = observer(function ProfileFollowers({
   )
 })
 
-const User = ({item}: {item: FollowerItem}) => {
-  const pal = usePalette('default')
-  return (
-    <Link
-      style={[styles.outer, pal.view, pal.border]}
-      href={`/profile/${item.handle}`}
-      title={item.handle}
-      noFeedback>
-      <View style={styles.layout}>
-        <View style={styles.layoutAvi}>
-          <UserAvatar
-            size={40}
-            displayName={item.displayName}
-            handle={item.handle}
-            avatar={item.avatar}
-          />
-        </View>
-        <View style={styles.layoutContent}>
-          <Text style={[s.bold, pal.text]}>
-            {item.displayName || item.handle}
-          </Text>
-          <Text type="sm" style={[pal.textLight]}>
-            @{item.handle}
-          </Text>
-        </View>
-      </View>
-    </Link>
-  )
-}
-
 const styles = StyleSheet.create({
-  outer: {
-    borderTopWidth: 1,
-  },
-  layout: {
-    flexDirection: 'row',
-  },
-  layoutAvi: {
-    width: 60,
-    paddingLeft: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
-  layoutContent: {
-    flex: 1,
-    paddingRight: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
   footer: {
     height: 200,
     paddingTop: 20,

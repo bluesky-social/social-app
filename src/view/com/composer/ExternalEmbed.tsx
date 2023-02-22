@@ -7,12 +7,11 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {BlurView} from '../util/BlurView'
-import LinearGradient from 'react-native-linear-gradient'
 import {AutoSizedImage} from '../util/images/AutoSizedImage'
 import {Text} from '../util/text/Text'
-import {s, gradients} from '../../lib/styles'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {ExternalEmbedDraft} from '../../../state/lib/api'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {ExternalEmbedDraft} from 'lib/api/index'
 
 export const ExternalEmbed = ({
   link,
@@ -30,31 +29,12 @@ export const ExternalEmbed = ({
     <View style={[styles.outer, pal.view, pal.border]}>
       {link.isLoading ? (
         <View
-          style={[
-            styles.image,
-            styles.imageFallback,
-            {backgroundColor: pal.colors.backgroundLight},
-          ]}>
+          style={[styles.image, {backgroundColor: pal.colors.backgroundLight}]}>
           <ActivityIndicator size="large" style={styles.spinner} />
         </View>
       ) : link.localThumb ? (
-        <AutoSizedImage
-          uri={link.localThumb.path}
-          containerStyle={styles.image}
-        />
-      ) : (
-        <LinearGradient
-          colors={[gradients.blueDark.start, gradients.blueDark.end]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={[styles.image, styles.imageFallback]}
-        />
-      )}
-      <TouchableWithoutFeedback onPress={onRemove}>
-        <BlurView style={styles.removeBtn} blurType="dark">
-          <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
-        </BlurView>
-      </TouchableWithoutFeedback>
+        <AutoSizedImage uri={link.localThumb.path} style={styles.image} />
+      ) : undefined}
       <View style={styles.inner}>
         {!!link.meta?.title && (
           <Text type="sm-bold" numberOfLines={2} style={[pal.text]}>
@@ -81,6 +61,11 @@ export const ExternalEmbed = ({
           </Text>
         )}
       </View>
+      <TouchableWithoutFeedback onPress={onRemove}>
+        <BlurView style={styles.removeBtn} blurType="dark">
+          <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
+        </BlurView>
+      </TouchableWithoutFeedback>
     </View>
   )
 }
@@ -98,10 +83,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
     width: '100%',
-    height: 200,
-  },
-  imageFallback: {
-    height: 160,
+    maxHeight: 200,
   },
   removeBtn: {
     position: 'absolute',

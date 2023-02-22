@@ -5,7 +5,9 @@ import {
 } from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
-import * as apilib from '../lib/api'
+import * as apilib from 'lib/api/index'
+import {cleanError} from 'lib/strings/errors'
+import {RichText} from 'lib/strings/rich-text'
 
 function* reactKeyGenerator(): Generator<string> {
   let counter = 0
@@ -26,6 +28,7 @@ export class PostThreadViewPostModel {
   postRecord?: FeedPost.Record
   parent?: PostThreadViewPostModel | GetPostThread.NotFoundPost
   replies?: (PostThreadViewPostModel | GetPostThread.NotFoundPost)[]
+  richText?: RichText
 
   constructor(
     public rootStore: RootStoreModel,
@@ -38,6 +41,11 @@ export class PostThreadViewPostModel {
       const valid = FeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
+        this.richText = new RichText(
+          this.postRecord.text,
+          this.postRecord.entities,
+          {cleanNewlines: true},
+        )
       } else {
         rootStore.log.warn(
           'Received an invalid app.bsky.feed.post record',
@@ -276,7 +284,7 @@ export class PostThreadViewModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err ? err.toString() : ''
+    this.error = cleanError(err)
     if (err) {
       this.rootStore.log.error('Failed to fetch post thread', err)
     }
@@ -290,7 +298,7 @@ export class PostThreadViewModel {
     const urip = new AtUri(this.params.uri)
     if (!urip.host.startsWith('did:')) {
       try {
-        urip.host = await this.rootStore.resolveName(urip.host)
+        urip.host = await apilib.resolveName(this.rootStore, urip.host)
       } catch (e: any) {
         this.error = e.toString()
       }
@@ -314,7 +322,7 @@ export class PostThreadViewModel {
   }
 
   private _replaceAll(res: GetPostThread.Response) {
-    // sortThread(res.data.thread) TODO needed?
+    sortThread(res.data.thread)
     const keyGen = reactKeyGenerator()
     const thread = new PostThreadViewPostModel(
       this.rootStore,
@@ -330,36 +338,37 @@ export class PostThreadViewModel {
   }
 }
 
-/*
-TODO needed?
+type MaybePost =
+  | GetPostThread.ThreadViewPost
+  | GetPostThread.NotFoundPost
+  | {[k: string]: unknown; $type: string}
 function sortThread(post: MaybePost) {
   if (post.notFound) {
     return
   }
-  post = post as GetPostThread.Post
+  post = post as GetPostThread.ThreadViewPost
   if (post.replies) {
     post.replies.sort((a: MaybePost, b: MaybePost) => {
-      post = post as GetPostThread.Post
+      post = post as GetPostThread.ThreadViewPost
       if (a.notFound) {
         return 1
       }
       if (b.notFound) {
         return -1
       }
-      a = a as GetPostThread.Post
-      b = b as GetPostThread.Post
-      const aIsByOp = a.author.did === post.author.did
-      const bIsByOp = b.author.did === post.author.did
+      a = a as GetPostThread.ThreadViewPost
+      b = b as GetPostThread.ThreadViewPost
+      const aIsByOp = a.post.author.did === post.post.author.did
+      const bIsByOp = b.post.author.did === post.post.author.did
       if (aIsByOp && bIsByOp) {
-        return a.indexedAt.localeCompare(b.indexedAt) // oldest
+        return a.post.indexedAt.localeCompare(b.post.indexedAt) // oldest
       } else if (aIsByOp) {
         return -1 // op's own reply
       } else if (bIsByOp) {
         return 1 // op's own reply
       }
-      return b.indexedAt.localeCompare(a.indexedAt) // newest
+      return b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
     })
     post.replies.forEach(reply => sortThread(reply))
   }
 }
-*/

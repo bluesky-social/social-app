@@ -1,56 +1,40 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {CenteredView} from './Views'
+import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {UserAvatar} from './UserAvatar'
 import {Text} from './text/Text'
-import {MagnifyingGlassIcon} from '../../lib/icons'
-import {useStores} from '../../../state'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {colors} from '../../lib/styles'
+import {useStores} from 'state/index'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {useAnalytics} from 'lib/analytics'
 
-const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 
 export const ViewHeader = observer(function ViewHeader({
   title,
-  subtitle,
   canGoBack,
+  hideOnScroll,
 }: {
   title: string
-  subtitle?: string
   canGoBack?: boolean
+  hideOnScroll?: boolean
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const {track} = useAnalytics()
   const onPressBack = () => {
     store.nav.tab.goBack()
   }
   const onPressMenu = () => {
+    track('ViewHeader:MenuButtonClicked')
     store.shell.setMainMenuOpen(true)
-  }
-  const onPressSearch = () => {
-    store.nav.navigate('/search')
-  }
-  const onPressReconnect = () => {
-    store.session.connect().catch(e => {
-      store.log.warn('Failed to reconnect to server', e)
-    })
   }
   if (typeof canGoBack === 'undefined') {
     canGoBack = store.nav.tab.canGoBack
   }
   return (
-    <CenteredView style={[styles.header, pal.view]}>
+    <Container hideOnScroll={hideOnScroll || false}>
       <TouchableOpacity
         testID="viewHeaderBackOrMenuBtn"
         onPress={canGoBack ? onPressBack : onPressMenu}
@@ -75,47 +59,56 @@ export const ViewHeader = observer(function ViewHeader({
         <Text type="title" style={[pal.text, styles.title]}>
           {title}
         </Text>
-        {subtitle ? (
-          <Text
-            type="title-sm"
-            style={[styles.subtitle, pal.textLight]}
-            numberOfLines={1}>
-            {subtitle}
-          </Text>
-        ) : undefined}
       </View>
-      <TouchableOpacity
-        onPress={onPressSearch}
-        hitSlop={HITSLOP}
-        style={styles.btn}>
-        <MagnifyingGlassIcon size={21} strokeWidth={3} style={pal.text} />
-      </TouchableOpacity>
-      {!store.session.online ? (
-        <TouchableOpacity style={styles.btn} onPress={onPressReconnect}>
-          {store.session.attemptingConnect ? (
-            <ActivityIndicator />
-          ) : (
-            <>
-              <FontAwesomeIcon
-                icon="signal"
-                style={pal.text as FontAwesomeIconStyle}
-                size={16}
-              />
-              <FontAwesomeIcon
-                icon="x"
-                style={[
-                  styles.littleXIcon,
-                  {backgroundColor: pal.colors.background},
-                ]}
-                size={8}
-              />
-            </>
-          )}
-        </TouchableOpacity>
-      ) : undefined}
-    </CenteredView>
+      <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
+    </Container>
   )
 })
+
+const Container = observer(
+  ({
+    children,
+    hideOnScroll,
+  }: {
+    children: React.ReactNode
+    hideOnScroll: boolean
+  }) => {
+    const store = useStores()
+    const pal = usePalette('default')
+    const interp = useAnimatedValue(0)
+
+    React.useEffect(() => {
+      if (store.shell.minimalShellMode) {
+        Animated.timing(interp, {
+          toValue: 1,
+          duration: 100,
+          useNativeDriver: true,
+          isInteraction: false,
+        }).start()
+      } else {
+        Animated.timing(interp, {
+          toValue: 0,
+          duration: 100,
+          useNativeDriver: true,
+          isInteraction: false,
+        }).start()
+      }
+    }, [interp, store.shell.minimalShellMode])
+    const transform = {
+      transform: [{translateY: Animated.multiply(interp, -100)}],
+    }
+
+    if (!hideOnScroll) {
+      return <View style={[styles.header, pal.view]}>{children}</View>
+    }
+    return (
+      <Animated.View
+        style={[styles.header, pal.view, styles.headerFloating, transform]}>
+        {children}
+      </Animated.View>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   header: {
@@ -125,19 +118,19 @@ const styles = StyleSheet.create({
     paddingTop: 6,
     paddingBottom: 6,
   },
+  headerFloating: {
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+  },
 
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
+    marginLeft: 'auto',
     marginRight: 'auto',
+    paddingRight: 10,
   },
   title: {
     fontWeight: 'bold',
-  },
-  subtitle: {
-    marginLeft: 4,
-    maxWidth: 200,
-    fontWeight: 'normal',
   },
 
   backBtn: {
@@ -151,20 +144,5 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     marginTop: 6,
-  },
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 36,
-    height: 36,
-    borderRadius: 20,
-    marginLeft: 4,
-  },
-  littleXIcon: {
-    color: colors.red3,
-    position: 'absolute',
-    right: 7,
-    bottom: 7,
   },
 })

@@ -4,10 +4,12 @@ import {
   AppBskyActorRef as ActorRef,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
+import {cleanError} from 'lib/strings/errors'
+import {bundleAsync} from 'lib/async/bundle'
 
 const PAGE_SIZE = 30
 
-export type FollowItem = GetFollows.Follow
+export type FollowItem = ActorRef.WithInfo
 
 export class UserFollowsViewModel {
   // state
@@ -18,7 +20,6 @@ export class UserFollowsViewModel {
   params: GetFollows.QueryParams
   hasMore = true
   loadMoreCursor?: string
-  private _loadMorePromise: Promise<void> | undefined
 
   // data
   subject: ActorRef.WithInfo = {
@@ -62,14 +63,27 @@ export class UserFollowsViewModel {
     return this.loadMore(true)
   }
 
-  async loadMore(isRefreshing = false) {
-    if (this._loadMorePromise) {
-      return this._loadMorePromise
+  loadMore = bundleAsync(async (replace: boolean = false) => {
+    if (!replace && !this.hasMore) {
+      return
     }
-    this._loadMorePromise = this._loadMore(isRefreshing)
-    await this._loadMorePromise
-    this._loadMorePromise = undefined
-  }
+    this._xLoading(replace)
+    try {
+      const params = Object.assign({}, this.params, {
+        limit: PAGE_SIZE,
+        before: replace ? undefined : this.loadMoreCursor,
+      })
+      const res = await this.rootStore.api.app.bsky.graph.getFollows(params)
+      if (replace) {
+        this._replaceAll(res)
+      } else {
+        this._appendAll(res)
+      }
+      this._xIdle()
+    } catch (e: any) {
+      this._xIdle(e)
+    }
+  })
 
   // state transitions
   // =
@@ -84,39 +98,24 @@ export class UserFollowsViewModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err ? err.toString() : ''
+    this.error = cleanError(err)
     if (err) {
       this.rootStore.log.error('Failed to fetch user follows', err)
     }
   }
 
-  // loader functions
+  // helper functions
   // =
 
-  private async _loadMore(isRefreshing = false) {
-    if (!this.hasMore) {
-      return
-    }
-    this._xLoading(isRefreshing)
-    try {
-      const params = Object.assign({}, this.params, {
-        limit: PAGE_SIZE,
-        before: this.loadMoreCursor,
-      })
-      if (this.isRefreshing) {
-        this.follows = []
-      }
-      const res = await this.rootStore.api.app.bsky.graph.getFollows(params)
-      await this._appendAll(res)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
-    }
+  private _replaceAll(res: GetFollows.Response) {
+    this.follows = []
+    this._appendAll(res)
   }
 
-  private async _appendAll(res: GetFollows.Response) {
+  private _appendAll(res: GetFollows.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     this.follows = this.follows.concat(res.data.follows)
+    this.rootStore.me.follows.hydrateProfiles(res.data.follows)
   }
 }

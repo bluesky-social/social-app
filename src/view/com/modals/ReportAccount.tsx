@@ -5,12 +5,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import {ComAtprotoReportReasonType} from '@atproto/api'
 import LinearGradient from 'react-native-linear-gradient'
-import {useStores} from '../../../state'
-import {s, colors, gradients} from '../../lib/styles'
+import {useStores} from 'state/index'
+import {s, colors, gradients} from 'lib/styles'
 import {RadioGroup, RadioGroupItem} from '../util/forms/RadioGroup'
 import {Text} from '../util/text/Text'
+import * as Toast from '../util/Toast'
 import {ErrorMessage} from '../util/error/ErrorMessage'
+import {cleanError} from 'lib/strings/errors'
 
 const ITEMS: RadioGroupItem[] = [
   {key: 'spam', label: 'Spam or excessive repeat posts'},
@@ -20,7 +23,7 @@ const ITEMS: RadioGroupItem[] = [
 
 export const snapPoints = ['50%']
 
-export function Component() {
+export function Component({did}: {did: string}) {
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
@@ -28,13 +31,30 @@ export function Component() {
   const onSelectIssue = (v: string) => setIssue(v)
   const onPress = async () => {
     setError('')
+    if (!issue) {
+      return
+    }
     setIsProcessing(true)
     try {
-      // TODO
+      // NOTE: we should update the lexicon of reasontype to include more options -prf
+      let reasonType = ComAtprotoReportReasonType.OTHER
+      if (issue === 'spam') {
+        reasonType = ComAtprotoReportReasonType.SPAM
+      }
+      const reason = ITEMS.find(item => item.key === issue)?.label || ''
+      await store.api.com.atproto.report.create({
+        reasonType,
+        reason,
+        subject: {
+          $type: 'com.atproto.repo.repoRef',
+          did,
+        },
+      })
+      Toast.show("Thank you for your report! We'll look into it promptly.")
       store.shell.closeModal()
       return
     } catch (e: any) {
-      setError(e.toString())
+      setError(cleanError(e))
       setIsProcessing(false)
     }
   }

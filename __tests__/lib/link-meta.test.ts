@@ -1,8 +1,19 @@
-import {LikelyType, getLinkMeta, getLikelyType} from '../../src/lib/link-meta'
+import {
+  LikelyType,
+  getLinkMeta,
+  getLikelyType,
+} from '../../src/lib/link-meta/link-meta'
 import {exampleComHtml} from './__mocks__/exampleComHtml'
-import {mockedRootStore} from '../../__mocks__/state-mock'
+import AtpAgent from '@atproto/api'
+import {DEFAULT_SERVICE, RootStoreModel} from '../../src/state'
 
 describe('getLinkMeta', () => {
+  let rootStore: RootStoreModel
+
+  beforeEach(() => {
+    rootStore = new RootStoreModel(new AtpAgent({service: DEFAULT_SERVICE}))
+  })
+
   const inputs = [
     '',
     'httpbadurl',
@@ -88,7 +99,7 @@ describe('getLinkMeta', () => {
         })
       })
       const input = inputs[i]
-      const output = await getLinkMeta(mockedRootStore, input)
+      const output = await getLinkMeta(rootStore, input)
       expect(output).toEqual(outputs[i])
     }
   })

@@ -5,13 +5,16 @@ import {
   AppBskyFeedPost,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
 } from '@atproto/api'
+import AwaitLock from 'await-lock'
+import {bundleAsync} from 'lib/async/bundle'
 type FeedViewPost = AppBskyFeedFeedViewPost.Main
 type ReasonRepost = AppBskyFeedFeedViewPost.ReasonRepost
 type PostView = AppBskyFeedPost.View
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
-import * as apilib from '../lib/api'
-import {cleanError} from '../../lib/strings'
+import * as apilib from 'lib/api/index'
+import {cleanError} from 'lib/strings/errors'
+import {RichText} from 'lib/strings/rich-text'
 
 const PAGE_SIZE = 30
 
@@ -37,6 +40,7 @@ export class FeedItemModel {
   reply?: FeedViewPost['reply']
   replyParent?: FeedItemModel
   reason?: FeedViewPost['reason']
+  richText?: RichText
 
   constructor(
     public rootStore: RootStoreModel,
@@ -49,6 +53,11 @@ export class FeedItemModel {
       const valid = AppBskyFeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
+        this.richText = new RichText(
+          this.postRecord.text,
+          this.postRecord.entities,
+          {cleanNewlines: true},
+        )
       } else {
         rootStore.log.warn(
           'Received an invalid app.bsky.feed.post record',
@@ -187,10 +196,9 @@ export class FeedModel {
   hasMore = true
   loadMoreCursor: string | undefined
   pollCursor: string | undefined
-  _loadPromise: Promise<void> | undefined
-  _loadMorePromise: Promise<void> | undefined
-  _loadLatestPromise: Promise<void> | undefined
-  _updatePromise: Promise<void> | undefined
+
+  // used to linearize async modifications to state
+  private lock = new AwaitLock()
 
   // data
   feed: FeedItemModel[] = []
@@ -206,10 +214,6 @@ export class FeedModel {
         rootStore: false,
         params: false,
         loadMoreCursor: false,
-        _loadPromise: false,
-        _loadMorePromise: false,
-        _loadLatestPromise: false,
-        _updatePromise: false,
       },
       {autoBind: true},
     )
@@ -229,13 +233,22 @@ export class FeedModel {
   }
 
   get nonReplyFeed() {
-    return this.feed.filter(
-      item =>
+    const nonReplyFeed = this.feed.filter(item => {
+      const params = this.params as GetAuthorFeed.QueryParams
+      const isRepost =
+        item.reply &&
+        (item?.reasonRepost?.by?.handle === params.author ||
+          item?.reasonRepost?.by?.did === params.author)
+
+      return (
         !item.reply || // not a reply
+        isRepost ||
         ((item._isThreadParent || // but allow if it's a thread by the user
           item._isThreadChild) &&
-          item.reply?.root.author.did === item.post.author.did),
-    )
+          item.reply?.root.author.did === item.post.author.did)
+      )
+    })
+    return nonReplyFeed
   }
 
   setHasNewLatest(v: boolean) {
@@ -246,21 +259,44 @@ export class FeedModel {
   // =
 
   /**
+   * Nuke all data
+   */
+  clear() {
+    this.rootStore.log.debug('FeedModel:clear')
+    this.isLoading = false
+    this.isRefreshing = false
+    this.hasNewLatest = false
+    this.hasLoaded = false
+    this.error = ''
+    this.hasMore = true
+    this.loadMoreCursor = undefined
+    this.pollCursor = undefined
+    this.feed = []
+  }
+
+  /**
    * Load for first render
    */
-  async setup(isRefreshing = false) {
+  setup = bundleAsync(async (isRefreshing: boolean = false) => {
+    this.rootStore.log.debug('FeedModel:setup', {isRefreshing})
     if (isRefreshing) {
       this.isRefreshing = true // set optimistically for UI
     }
-    if (this._loadPromise) {
-      return this._loadPromise
+    await this.lock.acquireAsync()
+    try {
+      this.setHasNewLatest(false)
+      this._xLoading(isRefreshing)
+      try {
+        const res = await this._getFeed({limit: PAGE_SIZE})
+        await this._replaceAll(res)
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle(e)
+      }
+    } finally {
+      this.lock.release()
     }
-    await this._pendingWork()
-    this.setHasNewLatest(false)
-    this._loadPromise = this._initialLoad(isRefreshing)
-    await this._loadPromise
-    this._loadPromise = undefined
-  }
+  })
 
   /**
    * Register any event listeners. Returns a cleanup function.
@@ -280,42 +316,93 @@ export class FeedModel {
   /**
    * Load more posts to the end of the feed
    */
-  async loadMore() {
-    if (this._loadMorePromise) {
-      return this._loadMorePromise
+  loadMore = bundleAsync(async () => {
+    await this.lock.acquireAsync()
+    try {
+      if (!this.hasMore || this.hasError) {
+        return
+      }
+      this._xLoading()
+      try {
+        const res = await this._getFeed({
+          before: this.loadMoreCursor,
+          limit: PAGE_SIZE,
+        })
+        await this._appendAll(res)
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle() // don't bubble the error to the user
+        this.rootStore.log.error('FeedView: Failed to load more', {
+          params: this.params,
+          e,
+        })
+      }
+    } finally {
+      this.lock.release()
     }
-    await this._pendingWork()
-    this._loadMorePromise = this._loadMore()
-    await this._loadMorePromise
-    this._loadMorePromise = undefined
-  }
+  })
 
   /**
    * Load more posts to the start of the feed
    */
-  async loadLatest() {
-    if (this._loadLatestPromise) {
-      return this._loadLatestPromise
+  loadLatest = bundleAsync(async () => {
+    await this.lock.acquireAsync()
+    try {
+      this.setHasNewLatest(false)
+      this._xLoading()
+      try {
+        const res = await this._getFeed({limit: PAGE_SIZE})
+        await this._prependAll(res)
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle() // don't bubble the error to the user
+        this.rootStore.log.error('FeedView: Failed to load latest', {
+          params: this.params,
+          e,
+        })
+      }
+    } finally {
+      this.lock.release()
     }
-    await this._pendingWork()
-    this.setHasNewLatest(false)
-    this._loadLatestPromise = this._loadLatest()
-    await this._loadLatestPromise
-    this._loadLatestPromise = undefined
-  }
+  })
 
   /**
    * Update content in-place
    */
-  async update() {
-    if (this._updatePromise) {
-      return this._updatePromise
+  update = bundleAsync(async () => {
+    await this.lock.acquireAsync()
+    try {
+      if (!this.feed.length) {
+        return
+      }
+      this._xLoading()
+      let numToFetch = this.feed.length
+      let cursor
+      try {
+        do {
+          const res: GetTimeline.Response = await this._getFeed({
+            before: cursor,
+            limit: Math.min(numToFetch, 100),
+          })
+          if (res.data.feed.length === 0) {
+            break // sanity check
+          }
+          this._updateAll(res)
+          numToFetch -= res.data.feed.length
+          cursor = res.data.cursor
+        } while (cursor && numToFetch > 0)
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle() // don't bubble the error to the user
+        this.rootStore.log.error('FeedView: Failed to update', {
+          params: this.params,
+          e,
+        })
+      }
+    } finally {
+      this.lock.release()
     }
-    await this._pendingWork()
-    this._updatePromise = this._update()
-    await this._updatePromise
-    this._updatePromise = undefined
-  }
+  })
 
   /**
    * Check if new posts are available
@@ -324,17 +411,18 @@ export class FeedModel {
     if (this.hasNewLatest) {
       return
     }
-    await this._pendingWork()
     const res = await this._getFeed({limit: 1})
     const currentLatestUri = this.pollCursor
-    const receivedLatestUri = res.data.feed[0]
-      ? res.data.feed[0].post.uri
-      : undefined
-    const hasNewLatest = Boolean(
-      receivedLatestUri &&
-        (this.feed.length === 0 || receivedLatestUri !== currentLatestUri),
-    )
-    this.setHasNewLatest(hasNewLatest)
+    const item = res.data.feed[0]
+    if (!item) {
+      return
+    }
+    if (AppBskyFeedFeedViewPost.isReasonRepost(item.reason)) {
+      if (item.reason.by.did === this.rootStore.me.did) {
+        return // ignore reposts by the user
+      }
+    }
+    this.setHasNewLatest(item.post.uri !== currentLatestUri)
   }
 
   /**
@@ -363,94 +451,14 @@ export class FeedModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = err ? cleanError(err.toString()) : ''
+    this.error = cleanError(err)
     if (err) {
       this.rootStore.log.error('Posts feed request failed', err)
     }
   }
 
-  // loader functions
+  // helper functions
   // =
-
-  private async _pendingWork() {
-    if (this._loadPromise) {
-      await this._loadPromise
-    }
-    if (this._loadMorePromise) {
-      await this._loadMorePromise
-    }
-    if (this._loadLatestPromise) {
-      await this._loadLatestPromise
-    }
-    if (this._updatePromise) {
-      await this._updatePromise
-    }
-  }
-
-  private async _initialLoad(isRefreshing = false) {
-    this._xLoading(isRefreshing)
-    try {
-      const res = await this._getFeed({limit: PAGE_SIZE})
-      await this._replaceAll(res)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
-    }
-  }
-
-  private async _loadLatest() {
-    this._xLoading()
-    try {
-      const res = await this._getFeed({limit: PAGE_SIZE})
-      await this._prependAll(res)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
-    }
-  }
-
-  private async _loadMore() {
-    if (!this.hasMore || this.hasError) {
-      return
-    }
-    this._xLoading()
-    try {
-      const res = await this._getFeed({
-        before: this.loadMoreCursor,
-        limit: PAGE_SIZE,
-      })
-      await this._appendAll(res)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
-    }
-  }
-
-  private async _update() {
-    if (!this.feed.length) {
-      return
-    }
-    this._xLoading()
-    let numToFetch = this.feed.length
-    let cursor
-    try {
-      do {
-        const res: GetTimeline.Response = await this._getFeed({
-          before: cursor,
-          limit: Math.min(numToFetch, 100),
-        })
-        if (res.data.feed.length === 0) {
-          break // sanity check
-        }
-        this._updateAll(res)
-        numToFetch -= res.data.feed.length
-        cursor = res.data.cursor
-      } while (cursor && numToFetch > 0)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
-    }
-  }
 
   private async _replaceAll(
     res: GetTimeline.Response | GetAuthorFeed.Response,
@@ -570,11 +578,46 @@ function preprocessFeed(feed: FeedViewPost[]): FeedViewPostWithThreadMeta[] {
     reorg.unshift(item)
   }
 
-  // phase two: identify the positions of the threads
+  // phase two: reorder the feed so that the timestamp of the
+  // last post in a thread establishes its ordering
+  let threadSlices: Slice[] = identifyThreadSlices(reorg)
+  for (const slice of threadSlices) {
+    const removed: FeedViewPostWithThreadMeta[] = reorg.splice(
+      slice.index,
+      slice.length,
+    )
+    const targetDate = new Date(ts(removed[removed.length - 1]))
+    let newIndex = reorg.findIndex(item => new Date(ts(item)) < targetDate)
+    if (newIndex === -1) {
+      newIndex = reorg.length
+    }
+    reorg.splice(newIndex, 0, ...removed)
+    slice.index = newIndex
+  }
+
+  // phase three: compress any threads that are longer than 3 posts
+  let removedCount = 0
+  // phase 2 moved posts around, so we need to re-identify the slice indices
+  threadSlices = identifyThreadSlices(reorg)
+  for (const slice of threadSlices) {
+    if (slice.length > 3) {
+      reorg.splice(slice.index - removedCount + 1, slice.length - 3)
+      if (reorg[slice.index - removedCount]) {
+        // ^ sanity check
+        reorg[slice.index - removedCount]._isThreadChildElided = true
+      }
+      removedCount += slice.length - 3
+    }
+  }
+
+  return reorg
+}
+
+function identifyThreadSlices(feed: FeedViewPost[]): Slice[] {
   let activeSlice = -1
   let threadSlices: Slice[] = []
-  for (let i = 0; i < reorg.length; i++) {
-    const item = reorg[i] as FeedViewPostWithThreadMeta
+  for (let i = 0; i < feed.length; i++) {
+    const item = feed[i] as FeedViewPostWithThreadMeta
     if (activeSlice === -1) {
       if (item._isThreadParent) {
         activeSlice = i
@@ -591,39 +634,9 @@ function preprocessFeed(feed: FeedViewPost[]): FeedViewPostWithThreadMeta[] {
     }
   }
   if (activeSlice !== -1) {
-    threadSlices.push({index: activeSlice, length: reorg.length - activeSlice})
+    threadSlices.push({index: activeSlice, length: feed.length - activeSlice})
   }
-
-  // phase three: reorder the feed so that the timestamp of the
-  // last post in a thread establishes its ordering
-  for (const slice of threadSlices) {
-    const removed: FeedViewPostWithThreadMeta[] = reorg.splice(
-      slice.index,
-      slice.length,
-    )
-    const targetDate = new Date(ts(removed[removed.length - 1]))
-    let newIndex = reorg.findIndex(item => new Date(ts(item)) < targetDate)
-    if (newIndex === -1) {
-      newIndex = reorg.length
-    }
-    reorg.splice(newIndex, 0, ...removed)
-    slice.index = newIndex
-  }
-
-  // phase four: compress any threads that are longer than 3 posts
-  let removedCount = 0
-  for (const slice of threadSlices) {
-    if (slice.length > 3) {
-      reorg.splice(slice.index - removedCount + 1, slice.length - 3)
-      if (reorg[slice.index - removedCount]) {
-        // ^ sanity check
-        reorg[slice.index - removedCount]._isThreadChildElided = true
-      }
-      removedCount += slice.length - 3
-    }
-  }
-
-  return reorg
+  return threadSlices
 }
 
 // WARNING: mutates `feed`

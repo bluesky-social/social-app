@@ -1,7 +1,8 @@
+import {RootStoreModel} from './root-store'
 import {makeAutoObservable} from 'mobx'
 import {ProfileViewModel} from './profile-view'
-import {isObj, hasProp} from '../lib/type-guards'
-import {PickedMedia} from '../../view/com/util/images/image-crop-picker/types'
+import {isObj, hasProp} from 'lib/type-guards'
+import {PickedMedia} from 'view/com/util/images/image-crop-picker/types'
 
 export class ConfirmModal {
   name = 'confirm'
@@ -40,7 +41,7 @@ export class ServerInputModal {
 export class ReportPostModal {
   name = 'report-post'
 
-  constructor(public postUrl: string) {
+  constructor(public postUri: string, public postCid: string) {
     makeAutoObservable(this)
   }
 }
@@ -59,7 +60,13 @@ export class CropImageModal {
   constructor(
     public uri: string,
     public onSelect: (img?: PickedMedia) => void,
-  ) {
+  ) {}
+}
+
+export class DeleteAccountModal {
+  name = 'delete-account'
+
+  constructor() {
     makeAutoObservable(this)
   }
 }
@@ -111,14 +118,19 @@ export class ShellUiModel {
     | ReportPostModal
     | ReportAccountModal
     | CropImageModal
+    | DeleteAccountModal
     | undefined
   isLightboxActive = false
   activeLightbox: ProfileImageLightbox | ImagesLightbox | undefined
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
 
-  constructor() {
-    makeAutoObservable(this, {serialize: false, hydrate: false})
+  constructor(public rootStore: RootStoreModel) {
+    makeAutoObservable(this, {
+      serialize: false,
+      rootStore: false,
+      hydrate: false,
+    })
   }
 
   serialize(): unknown {
@@ -154,8 +166,10 @@ export class ShellUiModel {
       | ServerInputModal
       | ReportPostModal
       | ReportAccountModal
-      | CropImageModal,
+      | CropImageModal
+      | DeleteAccountModal,
   ) {
+    this.rootStore.emitNavigation()
     this.isModalActive = true
     this.activeModal = modal
   }
@@ -166,6 +180,7 @@ export class ShellUiModel {
   }
 
   openLightbox(lightbox: ProfileImageLightbox | ImagesLightbox) {
+    this.rootStore.emitNavigation()
     this.isLightboxActive = true
     this.activeLightbox = lightbox
   }
@@ -176,6 +191,7 @@ export class ShellUiModel {
   }
 
   openComposer(opts: ComposerOpts) {
+    this.rootStore.emitNavigation()
     this.isComposerActive = true
     this.composerOpts = opts
   }

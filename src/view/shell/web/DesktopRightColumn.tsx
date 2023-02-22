@@ -2,10 +2,10 @@ import React from 'react'
 import {View, StyleSheet} from 'react-native'
 import {Link} from '../../com/util/Link'
 import {Text} from '../../com/util/text/Text'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {MagnifyingGlassIcon} from '../../lib/icons'
+import {usePalette} from 'lib/hooks/usePalette'
+import {MagnifyingGlassIcon} from 'lib/icons'
 import {LiteSuggestedFollows} from '../../com/discover/LiteSuggestedFollows'
-import {s} from '../../lib/styles'
+import {s} from 'lib/styles'
 
 export const DesktopRightColumn: React.FC = () => {
   const pal = usePalette('default')

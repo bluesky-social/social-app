@@ -5,10 +5,10 @@ import {Slider} from '@miblanchard/react-native-slider'
 import LinearGradient from 'react-native-linear-gradient'
 import {Text} from '../../util/text/Text'
 import {PickedMedia} from '../../util/images/image-crop-picker/types'
-import {s, gradients} from '../../../lib/styles'
-import {useStores} from '../../../../state'
-import {usePalette} from '../../../lib/hooks/usePalette'
-import {SquareIcon, RectWideIcon, RectTallIcon} from '../../../lib/icons'
+import {s, gradients} from 'lib/styles'
+import {useStores} from 'state/index'
+import {usePalette} from 'lib/hooks/usePalette'
+import {SquareIcon, RectWideIcon, RectTallIcon} from 'lib/icons'
 
 enum AspectRatio {
   Square = 'square',

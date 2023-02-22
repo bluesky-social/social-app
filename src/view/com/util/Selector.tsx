@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native'
 import {Text} from './text/Text'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 
 interface Layout {
   x: number

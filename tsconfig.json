@@ -1,3 +1,10 @@
 {
-  "extends": "@tsconfig/react-native/tsconfig.json"
+  "extends": "@tsconfig/react-native/tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "lib/*": ["./src/lib/*"],
+      "state/*": ["./src/state/*"],
+      "view/*": ["./src/view/*"]
+    }
+  }
 }
