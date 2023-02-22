@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native'
 import {clamp} from 'lodash'
-import {s} from '../../../lib/styles'
+import {s} from 'lib/styles'
 
 interface Props {
   panX: Animated.Value
@@ -90,6 +90,7 @@ export function HorzSwipe({
       // swiping right
       (diffX < 0 && !canSwipeRight)
     ) {
+      panX.setValue(0)
       return
     }
 
@@ -119,6 +120,7 @@ export function HorzSwipe({
         toValue: final,
         duration: 100,
         useNativeDriver,
+        isInteraction: false,
       }).start(() => {
         onSwipeEnd?.(final)
         panX.flattenOffset()
@@ -130,6 +132,7 @@ export function HorzSwipe({
         toValue: 0,
         duration: 100,
         useNativeDriver,
+        isInteraction: false,
       }).start(() => {
         panX.flattenOffset()
         panX.setValue(0)

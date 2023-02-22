@@ -1,17 +1,16 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useMemo} from 'react'
 import {View} from 'react-native'
-import {makeRecordUri} from '../../lib/strings'
+import {makeRecordUri} from 'lib/strings/url-helpers'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
-import {PostThreadViewModel} from '../../state/models/post-thread-view'
+import {PostThreadViewModel} from 'state/models/post-thread-view'
 import {ScreenParams} from '../routes'
-import {useStores} from '../../state'
-import {s} from '../lib/styles'
+import {useStores} from 'state/index'
+import {s} from 'lib/styles'
 
 export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
   const {name, rkey} = params
-  const [viewSubtitle, setViewSubtitle] = useState<string>(`by ${name}`)
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
   const view = useMemo<PostThreadViewModel>(
     () => new PostThreadViewModel(store, {uri}),
@@ -24,7 +23,6 @@ export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
     const setTitle = () => {
       const author = view.thread?.post.author
       const niceName = author?.handle || name
-      setViewSubtitle(`by ${niceName}`)
       store.nav.setTitle(navIdx, `Post by ${niceName}`)
     }
     if (!visible) {
@@ -52,7 +50,7 @@ export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
 
   return (
     <View style={s.h100pct}>
-      <ViewHeader title="Post" subtitle={viewSubtitle} />
+      <ViewHeader title="Post" />
       <View style={s.h100pct}>
         <PostThreadComponent uri={uri} view={view} />
       </View>

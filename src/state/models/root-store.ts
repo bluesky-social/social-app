@@ -3,71 +3,63 @@
  */
 
 import {makeAutoObservable} from 'mobx'
-import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
+import {AtpAgent} from '@atproto/api'
 import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
-import * as BgScheduler from '../lib/bg-scheduler'
-import {isObj, hasProp} from '../lib/type-guards'
+import * as BgScheduler from 'lib/bg-scheduler'
+import {z} from 'zod'
+import {isObj, hasProp} from 'lib/type-guards'
 import {LogModel} from './log'
 import {SessionModel} from './session'
 import {NavigationModel} from './navigation'
 import {ShellUiModel} from './shell-ui'
 import {ProfilesViewModel} from './profiles-view'
 import {LinkMetasViewModel} from './link-metas-view'
+import {NotificationsViewItemModel} from './notifications-view'
 import {MeModel} from './me'
 import {OnboardModel} from './onboard'
-import {isNetworkError} from '../../lib/errors'
+
+export const appInfo = z.object({
+  build: z.string(),
+  name: z.string(),
+  namespace: z.string(),
+  version: z.string(),
+})
+export type AppInfo = z.infer<typeof appInfo>
 
 export class RootStoreModel {
+  agent: AtpAgent
+  appInfo?: AppInfo
   log = new LogModel()
   session = new SessionModel(this)
-  nav = new NavigationModel()
-  shell = new ShellUiModel()
+  nav = new NavigationModel(this)
+  shell = new ShellUiModel(this)
   me = new MeModel(this)
   onboard = new OnboardModel()
   profiles = new ProfilesViewModel(this)
   linkMetas = new LinkMetasViewModel(this)
 
-  constructor(public api: SessionServiceClient) {
+  constructor(agent: AtpAgent) {
+    this.agent = agent
     makeAutoObservable(this, {
       api: false,
-      resolveName: false,
       serialize: false,
       hydrate: false,
     })
     this.initBgFetch()
   }
 
-  async resolveName(didOrHandle: string) {
-    if (!didOrHandle) {
-      throw new Error('Invalid handle: ""')
-    }
-    if (didOrHandle.startsWith('did:')) {
-      return didOrHandle
-    }
-    const res = await this.api.com.atproto.handle.resolve({handle: didOrHandle})
-    return res.data.did
+  get api() {
+    return this.agent.api
   }
 
-  async fetchStateUpdate() {
-    if (!this.session.hasSession) {
-      return
-    }
-    try {
-      if (!this.session.online) {
-        await this.session.connect()
-      }
-      await this.me.fetchNotifications()
-    } catch (e: any) {
-      if (isNetworkError(e)) {
-        this.session.setOnline(false) // connection lost
-      }
-      this.log.error('Failed to fetch latest state', e)
-    }
+  setAppInfo(info: AppInfo) {
+    this.appInfo = info
   }
 
   serialize(): unknown {
     return {
+      appInfo: this.appInfo,
       log: this.log.serialize(),
       session: this.session.serialize(),
       me: this.me.serialize(),
@@ -79,6 +71,12 @@ export class RootStoreModel {
 
   hydrate(v: unknown) {
     if (isObj(v)) {
+      if (hasProp(v, 'appInfo')) {
+        const appInfoParsed = appInfo.safeParse(v.appInfo)
+        if (appInfoParsed.success) {
+          this.setAppInfo(appInfoParsed.data)
+        }
+      }
       if (hasProp(v, 'log')) {
         this.log.hydrate(v.log)
       }
@@ -100,18 +98,129 @@ export class RootStoreModel {
     }
   }
 
-  clearAll() {
+  /**
+   * Called during init to resume any stored session.
+   */
+  async attemptSessionResumption() {
+    this.log.debug('RootStoreModel:attemptSessionResumption')
+    try {
+      await this.session.attemptSessionResumption()
+      this.log.debug('Session initialized', {
+        hasSession: this.session.hasSession,
+      })
+      this.updateSessionState()
+    } catch (e: any) {
+      this.log.warn('Failed to initialize session', e)
+    }
+  }
+
+  /**
+   * Called by the session model. Refreshes session-oriented state.
+   */
+  async handleSessionChange(agent: AtpAgent) {
+    this.log.debug('RootStoreModel:handleSessionChange')
+    this.agent = agent
+    this.nav.clear()
+    this.me.clear()
+    await this.me.load()
+  }
+
+  /**
+   * Called by the session model. Handles session drops by informing the user.
+   */
+  async handleSessionDrop() {
+    this.log.debug('RootStoreModel:handleSessionDrop')
+    this.nav.clear()
+    this.me.clear()
+    this.emitSessionDropped()
+  }
+
+  /**
+   * Clears all session-oriented state.
+   */
+  clearAllSessionState() {
+    this.log.debug('RootStoreModel:clearAllSessionState')
     this.session.clear()
     this.nav.clear()
     this.me.clear()
   }
 
+  /**
+   * Periodic poll for new session state.
+   */
+  async updateSessionState() {
+    if (!this.session.hasSession) {
+      return
+    }
+    try {
+      await this.me.follows.fetchIfNeeded()
+    } catch (e: any) {
+      this.log.error('Failed to fetch latest state', e)
+    }
+  }
+
+  // global event bus
+  // =
+  // - some events need to be passed around between views and models
+  //   in order to keep state in sync; these methods are for that
+
+  // a post was deleted by the local user
   onPostDeleted(handler: (uri: string) => void): EmitterSubscription {
     return DeviceEventEmitter.addListener('post-deleted', handler)
   }
-
   emitPostDeleted(uri: string) {
     DeviceEventEmitter.emit('post-deleted', uri)
+  }
+
+  // the session has started and been fully hydrated
+  onSessionLoaded(handler: () => void): EmitterSubscription {
+    return DeviceEventEmitter.addListener('session-loaded', handler)
+  }
+  emitSessionLoaded() {
+    DeviceEventEmitter.emit('session-loaded')
+  }
+
+  // the session was dropped due to bad/expired refresh tokens
+  onSessionDropped(handler: () => void): EmitterSubscription {
+    return DeviceEventEmitter.addListener('session-dropped', handler)
+  }
+  emitSessionDropped() {
+    DeviceEventEmitter.emit('session-dropped')
+  }
+
+  // the current screen has changed
+  onNavigation(handler: () => void): EmitterSubscription {
+    return DeviceEventEmitter.addListener('navigation', handler)
+  }
+  emitNavigation() {
+    DeviceEventEmitter.emit('navigation')
+  }
+
+  // a "soft reset" typically means scrolling to top and loading latest
+  // but it can depend on the screen
+  onScreenSoftReset(handler: () => void): EmitterSubscription {
+    return DeviceEventEmitter.addListener('screen-soft-reset', handler)
+  }
+  emitScreenSoftReset() {
+    DeviceEventEmitter.emit('screen-soft-reset')
+  }
+
+  // the unread notifications count has changed
+  onUnreadNotifications(handler: (count: number) => void): EmitterSubscription {
+    return DeviceEventEmitter.addListener('unread-notifications', handler)
+  }
+  emitUnreadNotifications(count: number) {
+    DeviceEventEmitter.emit('unread-notifications', count)
+  }
+
+  // a notification has been queued for push
+  onPushNotification(
+    handler: (notif: NotificationsViewItemModel) => void,
+  ): EmitterSubscription {
+    return DeviceEventEmitter.addListener('push-notification', handler)
+  }
+  emitPushNotification(notif: NotificationsViewItemModel) {
+    DeviceEventEmitter.emit('push-notification', notif)
   }
 
   // background fetch
@@ -135,7 +244,22 @@ export class RootStoreModel {
   async onBgFetch(taskId: string) {
     this.log.debug(`Background fetch fired for task ${taskId}`)
     if (this.session.hasSession) {
-      await this.me.bgFetchNotifications()
+      const res = await this.api.app.bsky.notification.getCount()
+      const hasNewNotifs = this.me.notifications.unreadCount !== res.data.count
+      this.emitUnreadNotifications(res.data.count)
+      this.log.debug(
+        `Background fetch received unread count = ${res.data.count}`,
+      )
+      if (hasNewNotifs) {
+        this.log.debug(
+          'Background fetch detected potentially a new notification',
+        )
+        const mostRecent = await this.me.notifications.getNewMostRecent()
+        if (mostRecent) {
+          this.log.debug('Got the notification, triggering a push')
+          this.emitPushNotification(mostRecent)
+        }
+      }
     }
     BgScheduler.finish(taskId)
   }
@@ -146,7 +270,9 @@ export class RootStoreModel {
   }
 }
 
-const throwawayInst = new RootStoreModel(AtpApi.service('http://localhost')) // this will be replaced by the loader, we just need to supply a value at init
+const throwawayInst = new RootStoreModel(
+  new AtpAgent({service: 'http://localhost'}),
+) // this will be replaced by the loader, we just need to supply a value at init
 const RootStoreContext = createContext<RootStoreModel>(throwawayInst)
 export const RootStoreProvider = RootStoreContext.Provider
 export const useStores = () => useContext(RootStoreContext)

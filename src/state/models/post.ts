@@ -2,7 +2,7 @@ import {makeAutoObservable} from 'mobx'
 import {AppBskyFeedPost as Post} from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
-import {cleanError} from '../../lib/strings'
+import {cleanError} from 'lib/strings/errors'
 
 type RemoveIndex<T> = {
   [P in keyof T as string extends P
@@ -67,7 +67,6 @@ export class PostModel implements RemoveIndex<Post.Record> {
     this.isLoading = false
     this.hasLoaded = true
     this.error = cleanError(err)
-    this.error = err ? cleanError(err) : ''
     if (err) {
       this.rootStore.log.error('Failed to fetch post', err)
     }

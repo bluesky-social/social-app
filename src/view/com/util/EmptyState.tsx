@@ -6,8 +6,8 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from './text/Text'
-import {UserGroupIcon} from '../../lib/icons'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {UserGroupIcon} from 'lib/icons'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export function EmptyState({
   icon,

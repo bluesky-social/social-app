@@ -2,17 +2,10 @@ import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {CenteredView, FlatList} from '../util/Views'
-import {
-  UserFollowsViewModel,
-  FollowItem,
-} from '../../../state/models/user-follows-view'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
+import {UserFollowsViewModel, FollowItem} from 'state/models/user-follows-view'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {UserAvatar} from '../util/UserAvatar'
-import {useStores} from '../../../state'
-import {s} from '../../lib/styles'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {ProfileCardWithFollowBtn} from './ProfileCard'
+import {useStores} from 'state/index'
 
 export const ProfileFollows = observer(function ProfileFollows({
   name,
@@ -63,7 +56,15 @@ export const ProfileFollows = observer(function ProfileFollows({
   // loaded
   // =
   const renderItem = ({item}: {item: FollowItem}) => (
-    <User key={item.did} item={item} />
+    <ProfileCardWithFollowBtn
+      key={item.did}
+      did={item.did}
+      declarationCid={item.declaration.cid}
+      handle={item.handle}
+      displayName={item.displayName}
+      avatar={item.avatar}
+      isFollowedBy={!!item.viewer?.followedBy}
+    />
   )
   return (
     <FlatList
@@ -84,59 +85,7 @@ export const ProfileFollows = observer(function ProfileFollows({
   )
 })
 
-const User = ({item}: {item: FollowItem}) => {
-  const pal = usePalette('default')
-  return (
-    <Link
-      style={[styles.outer, pal.view, pal.border]}
-      href={`/profile/${item.handle}`}
-      title={item.handle}
-      noFeedback>
-      <View style={styles.layout}>
-        <View style={styles.layoutAvi}>
-          <UserAvatar
-            size={40}
-            displayName={item.displayName}
-            handle={item.handle}
-            avatar={
-              item.avatar as
-                | string
-                | undefined /* HACK: type signature is wrong in the api */
-            }
-          />
-        </View>
-        <View style={styles.layoutContent}>
-          <Text style={[s.bold, pal.text]}>
-            {item.displayName || item.handle}
-          </Text>
-          <Text type="sm" style={[pal.textLight]}>
-            @{item.handle}
-          </Text>
-        </View>
-      </View>
-    </Link>
-  )
-}
-
 const styles = StyleSheet.create({
-  outer: {
-    borderTopWidth: 1,
-  },
-  layout: {
-    flexDirection: 'row',
-  },
-  layoutAvi: {
-    width: 60,
-    paddingLeft: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
-  layoutContent: {
-    flex: 1,
-    paddingRight: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
   footer: {
     height: 200,
     paddingTop: 20,

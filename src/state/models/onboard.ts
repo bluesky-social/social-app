@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx'
-import {isObj, hasProp} from '../lib/type-guards'
+import {isObj, hasProp} from 'lib/type-guards'
 
 export const OnboardStage = {
   Explainers: 'explainers',

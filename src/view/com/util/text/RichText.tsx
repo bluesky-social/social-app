@@ -2,29 +2,21 @@ import React from 'react'
 import {TextStyle, StyleProp} from 'react-native'
 import {TextLink} from '../Link'
 import {Text} from './Text'
-import {lh} from '../../../lib/styles'
-import {toShortUrl} from '../../../../lib/strings'
-import {useTheme, TypographyVariant} from '../../../lib/ThemeContext'
-import {usePalette} from '../../../lib/hooks/usePalette'
-
-type TextSlice = {start: number; end: number}
-type Entity = {
-  index: TextSlice
-  type: string
-  value: string
-}
+import {lh} from 'lib/styles'
+import {toShortUrl} from 'lib/strings/url-helpers'
+import {RichText as RichTextObj, Entity} from 'lib/strings/rich-text'
+import {useTheme, TypographyVariant} from 'lib/ThemeContext'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export function RichText({
   type = 'md',
-  text,
-  entities,
+  richText,
   lineHeight = 1.2,
   style,
   numberOfLines,
 }: {
   type?: TypographyVariant
-  text: string
-  entities?: Entity[]
+  richText?: RichTextObj
   lineHeight?: number
   style?: StyleProp<TextStyle>
   numberOfLines?: number
@@ -32,6 +24,12 @@ export function RichText({
   const theme = useTheme()
   const pal = usePalette('default')
   const lineHeightStyle = lh(theme, type, lineHeight)
+
+  if (!richText) {
+    return null
+  }
+
+  const {text, entities} = richText
   if (!entities?.length) {
     if (/^\p{Extended_Pictographic}+$/u.test(text) && text.length <= 5) {
       style = {

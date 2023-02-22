@@ -63,3 +63,4 @@ buck-out/
 # Testing
 coverage/
 junit.xml
+artifacts

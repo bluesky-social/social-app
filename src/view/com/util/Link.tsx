@@ -10,9 +10,9 @@ import {
   ViewStyle,
 } from 'react-native'
 import {Text} from './text/Text'
-import {TypographyVariant} from '../../lib/ThemeContext'
-import {useStores, RootStoreModel} from '../../../state'
-import {convertBskyAppUrlIfNeeded} from '../../../lib/strings'
+import {TypographyVariant} from 'lib/ThemeContext'
+import {useStores, RootStoreModel} from 'state/index'
+import {convertBskyAppUrlIfNeeded} from 'lib/strings/url-helpers'
 
 export const Link = observer(function Link({
   style,
@@ -22,17 +22,21 @@ export const Link = observer(function Link({
   noFeedback,
 }: {
   style?: StyleProp<ViewStyle>
-  href: string
+  href?: string
   title?: string
   children?: React.ReactNode
   noFeedback?: boolean
 }) {
   const store = useStores()
   const onPress = () => {
-    handleLink(store, href, false)
+    if (href) {
+      handleLink(store, href, false)
+    }
   }
   const onLongPress = () => {
-    handleLink(store, href, true)
+    if (href) {
+      handleLink(store, href, true)
+    }
   }
   if (noFeedback) {
     return (

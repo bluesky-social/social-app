@@ -1,8 +1,8 @@
 import React from 'react'
 import {Platform, StyleSheet, View} from 'react-native'
 import {Text} from './text/Text'
-import {ago} from '../../../lib/strings'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {ago} from 'lib/strings/time'
+import {usePalette} from 'lib/hooks/usePalette'
 
 interface PostMetaOpts {
   authorHandle: string

@@ -14,10 +14,10 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
-import {useStores} from '../../../state'
-import {s} from '../../lib/styles'
-import {TABS_EXPLAINER} from '../../lib/assets'
-import {TABS_ENABLED} from '../../../build-flags'
+import {useStores} from 'state/index'
+import {s} from 'lib/styles'
+import {TABS_EXPLAINER} from 'lib/assets'
+import {TABS_ENABLED} from 'lib/build-flags'
 
 const ROUTES = TABS_ENABLED
   ? [
@@ -127,11 +127,15 @@ export const FeatureExplainer = () => {
         <View />
       )}
       <View style={styles.footer}>
-        <TouchableOpacity onPress={onPressSkip}>
+        <TouchableOpacity
+          onPress={onPressSkip}
+          testID="onboardFeatureExplainerSkipBtn">
           <Text style={[s.blue3, s.f18]}>Skip</Text>
         </TouchableOpacity>
         <View style={s.flex1} />
-        <TouchableOpacity onPress={onPressNext}>
+        <TouchableOpacity
+          onPress={onPressNext}
+          testID="onboardFeatureExplainerNextBtn">
           <Text style={[s.blue3, s.f18]}>Next</Text>
         </TouchableOpacity>
       </View>

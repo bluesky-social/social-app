@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {ProfileFollowers as ProfileFollowersComponent} from '../com/profile/ProfileFollowers'
 import {ScreenParams} from '../routes'
-import {useStores} from '../../state'
+import {useStores} from 'state/index'
 
 export const ProfileFollowers = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
@@ -18,7 +18,7 @@ export const ProfileFollowers = ({navIdx, visible, params}: ScreenParams) => {
 
   return (
     <View>
-      <ViewHeader title="Followers" subtitle={`of ${name}`} />
+      <ViewHeader title="Followers" />
       <ProfileFollowersComponent name={name} />
     </View>
   )

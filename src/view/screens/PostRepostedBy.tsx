@@ -3,8 +3,8 @@ import {View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {PostRepostedBy as PostRepostedByComponent} from '../com/post-thread/PostRepostedBy'
 import {ScreenParams} from '../routes'
-import {useStores} from '../../state'
-import {makeRecordUri} from '../../lib/strings'
+import {useStores} from 'state/index'
+import {makeRecordUri} from 'lib/strings/url-helpers'
 
 export const PostRepostedBy = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()

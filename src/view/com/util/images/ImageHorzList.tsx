@@ -1,12 +1,12 @@
 import React from 'react'
 import {
-  Image,
   StyleProp,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
   ViewStyle,
 } from 'react-native'
+import Image from 'view/com/util/images/Image'
 
 export function ImageHorzList({
   uris,

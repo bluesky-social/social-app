@@ -86,12 +86,18 @@ function ImageViewing({
     [toggleBarsVisible],
   )
 
+  const onLayout = useCallback(() => {
+    if (imageIndex) {
+      imageList.current?.scrollToIndex({index: imageIndex, animated: false})
+    }
+  }, [imageList, imageIndex])
+
   if (!visible) {
     return null
   }
 
   return (
-    <View style={styles.screen}>
+    <View style={styles.screen} onLayout={onLayout}>
       <Modal />
       <View style={[styles.container, {opacity, backgroundColor}]}>
         <Animated.View style={[styles.header, {transform: headerTransform}]}>
@@ -108,12 +114,8 @@ function ImageViewing({
           data={images}
           horizontal
           pagingEnabled
-          windowSize={2}
-          initialNumToRender={1}
-          maxToRenderPerBatch={1}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-          initialScrollIndex={imageIndex}
           getItem={(_, index) => images[index]}
           getItemCount={() => images.length}
           getItemLayout={(_, index) => ({

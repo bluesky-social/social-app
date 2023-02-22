@@ -1,6 +1,6 @@
 import {makeAutoObservable} from 'mobx'
 import {XRPCError, XRPCInvalidResponseError} from '@atproto/xrpc'
-import {isObj, hasProp} from '../lib/type-guards'
+import {isObj, hasProp} from 'lib/type-guards'
 
 interface LogEntry {
   id: string

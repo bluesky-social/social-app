@@ -5,9 +5,9 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
-import {colors} from '../../../lib/styles'
-import {useTheme} from '../../../lib/ThemeContext'
-import {usePalette} from '../../../lib/hooks/usePalette'
+import {colors} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export function ErrorScreen({
   title,

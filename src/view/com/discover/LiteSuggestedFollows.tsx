@@ -8,19 +8,18 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import {observer} from 'mobx-react-lite'
 import _omit from 'lodash.omit'
-import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import * as Toast from '../util/Toast'
-import {useStores} from '../../../state'
-import * as apilib from '../../../state/lib/api'
+import {useStores} from 'state/index'
+import * as apilib from 'lib/api/index'
 import {
   SuggestedActorsViewModel,
   SuggestedActor,
-} from '../../../state/models/suggested-actors-view'
-import {s, gradients} from '../../lib/styles'
-import {usePalette} from '../../lib/hooks/usePalette'
+} from 'state/models/suggested-actors-view'
+import {s, gradients} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export const LiteSuggestedFollows = observer(() => {
   const store = useStores()

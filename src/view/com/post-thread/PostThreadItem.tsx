@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react'
+import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
@@ -7,22 +7,23 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
+import {PostThreadViewPostModel} from 'state/models/post-thread-view'
 import {Link} from '../util/Link'
 import {RichText} from '../util/text/RichText'
 import {Text} from '../util/text/Text'
 import {PostDropdownBtn} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import {s} from '../../lib/styles'
-import {ago, pluralize} from '../../../lib/strings'
-import {useStores} from '../../../state'
+import {s} from 'lib/styles'
+import {ago} from 'lib/strings/time'
+import {pluralize} from 'lib/strings/helpers'
+import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/PostEmbeds'
 import {PostCtrls} from '../util/PostCtrls'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ComposePrompt} from '../composer/Prompt'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 
 const PARENT_REPLY_LINE_LENGTH = 8
 
@@ -35,29 +36,31 @@ export const PostThreadItem = observer(function PostThreadItem({
 }) {
   const pal = usePalette('default')
   const store = useStores()
-  const [deleted, setDeleted] = useState(false)
+  const [deleted, setDeleted] = React.useState(false)
   const record = item.postRecord
   const hasEngagement = item.post.upvoteCount || item.post.repostCount
 
-  const itemHref = useMemo(() => {
+  const itemUri = item.post.uri
+  const itemCid = item.post.cid
+  const itemHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}`
   }, [item.post.uri, item.post.author.handle])
   const itemTitle = `Post by ${item.post.author.handle}`
   const authorHref = `/profile/${item.post.author.handle}`
   const authorTitle = item.post.author.handle
-  const upvotesHref = useMemo(() => {
+  const upvotesHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}/upvoted-by`
   }, [item.post.uri, item.post.author.handle])
   const upvotesTitle = 'Likes on this post'
-  const repostsHref = useMemo(() => {
+  const repostsHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}/reposted-by`
   }, [item.post.uri, item.post.author.handle])
   const repostsTitle = 'Reposts of this post'
 
-  const onPressReply = () => {
+  const onPressReply = React.useCallback(() => {
     store.shell.openComposer({
       replyTo: {
         uri: item.post.uri,
@@ -71,22 +74,22 @@ export const PostThreadItem = observer(function PostThreadItem({
       },
       onPost: onPostReply,
     })
-  }
-  const onPressToggleRepost = () => {
-    item
+  }, [store, item, record, onPostReply])
+  const onPressToggleRepost = React.useCallback(() => {
+    return item
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
-  }
-  const onPressToggleUpvote = () => {
-    item
+  }, [item, store])
+  const onPressToggleUpvote = React.useCallback(() => {
+    return item
       .toggleUpvote()
       .catch(e => store.log.error('Failed to toggle upvote', e))
-  }
-  const onCopyPostText = () => {
+  }, [item, store])
+  const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')
     Toast.show('Copied to clipboard')
-  }
-  const onDeletePost = () => {
+  }, [record])
+  const onDeletePost = React.useCallback(() => {
     item.delete().then(
       () => {
         setDeleted(true)
@@ -97,7 +100,7 @@ export const PostThreadItem = observer(function PostThreadItem({
         Toast.show('Failed to delete post, please try again')
       },
     )
-  }
+  }, [item, store])
 
   if (!record) {
     return <ErrorMessage message="Invalid or unsupported post record" />
@@ -154,6 +157,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                 <View style={s.flex1} />
                 <PostDropdownBtn
                   style={styles.metaItem}
+                  itemUri={itemUri}
+                  itemCid={itemCid}
                   itemHref={itemHref}
                   itemTitle={itemTitle}
                   isAuthor={item.post.author.did === store.me.did}
@@ -179,7 +184,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             </View>
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
-            {record.text ? (
+            {item.richText?.text ? (
               <View
                 style={[
                   styles.postTextContainer,
@@ -187,8 +192,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 ]}>
                 <RichText
                   type="post-text-lg"
-                  text={record.text}
-                  entities={record.entities}
+                  richText={item.richText}
                   lineHeight={1.3}
                 />
               </View>
@@ -233,6 +237,8 @@ export const PostThreadItem = observer(function PostThreadItem({
             <View style={[s.pl10, s.pb5]}>
               <PostCtrls
                 big
+                itemUri={itemUri}
+                itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
                 isAuthor={item.post.author.did === store.me.did}
@@ -301,12 +307,11 @@ export const PostThreadItem = observer(function PostThreadItem({
                   <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
                   <Text type="sm">This post is by a muted account.</Text>
                 </View>
-              ) : record.text ? (
+              ) : item.richText?.text ? (
                 <View style={styles.postTextContainer}>
                   <RichText
                     type="post-text"
-                    text={record.text}
-                    entities={record.entities}
+                    richText={item.richText}
                     style={pal.text}
                     lineHeight={1.3}
                   />
@@ -314,6 +319,8 @@ export const PostThreadItem = observer(function PostThreadItem({
               ) : undefined}
               <PostEmbeds embed={item.post.embed} style={s.mb10} />
               <PostCtrls
+                itemUri={itemUri}
+                itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
                 isAuthor={item.post.author.did === store.me.did}
@@ -341,7 +348,12 @@ export const PostThreadItem = observer(function PostThreadItem({
             href={itemHref}
             title={itemTitle}
             noFeedback>
-            <Text style={pal.link}>Load more</Text>
+            <Text style={pal.link}>Continue thread...</Text>
+            <FontAwesomeIcon
+              icon="angle-right"
+              style={pal.link as FontAwesomeIconStyle}
+              size={18}
+            />
           </Link>
         ) : undefined}
       </>
@@ -433,8 +445,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   loadMore: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     borderTopWidth: 1,
-    paddingLeft: 28,
+    paddingLeft: 80,
+    paddingRight: 20,
     paddingVertical: 10,
+    marginBottom: 8,
   },
 })

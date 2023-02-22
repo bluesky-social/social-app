@@ -9,9 +9,9 @@ import {
   openCamera,
   openCropper,
 } from '../../util/images/image-crop-picker/ImageCropPicker'
-import {compressIfNeeded, scaleDownDimensions} from '../../../../lib/images'
-import {usePalette} from '../../../lib/hooks/usePalette'
-import {useStores, RootStoreModel} from '../../../../state'
+import {compressIfNeeded, scaleDownDimensions} from 'lib/images'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores, RootStoreModel} from 'state/index'
 
 const MAX_WIDTH = 1000
 const MAX_HEIGHT = 1000

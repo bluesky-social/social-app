@@ -10,7 +10,7 @@ import {observer} from 'mobx-react-lite'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '../../../third-party/uri'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {PostThreadViewModel} from '../../../state/models/post-thread-view'
+import {PostThreadViewModel} from 'state/models/post-thread-view'
 import {Link} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
@@ -20,9 +20,9 @@ import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import {useStores} from '../../../state'
-import {s, colors} from '../../lib/styles'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {useStores} from 'state/index'
+import {s, colors} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export const Post = observer(function Post({
   uri,
@@ -80,6 +80,8 @@ export const Post = observer(function Post({
   const item = view.thread
   const record = view.thread.postRecord
 
+  const itemUri = item.post.uri
+  const itemCid = item.post.cid
   const itemUrip = new AtUri(item.post.uri)
   const itemHref = `/profile/${item.post.author.handle}/post/${itemUrip.rkey}`
   const itemTitle = `Post by ${item.post.author.handle}`
@@ -105,12 +107,12 @@ export const Post = observer(function Post({
     })
   }
   const onPressToggleRepost = () => {
-    item
+    return item
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
   }
   const onPressToggleUpvote = () => {
-    item
+    return item
       .toggleUpvote()
       .catch(e => store.log.error('Failed to toggle upvote', e))
   }
@@ -178,18 +180,19 @@ export const Post = observer(function Post({
               <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
               <Text type="sm">This post is by a muted account.</Text>
             </View>
-          ) : record.text ? (
+          ) : item.richText?.text ? (
             <View style={styles.postTextContainer}>
               <RichText
                 type="post-text"
-                text={record.text}
-                entities={record.entities}
+                richText={item.richText}
                 lineHeight={1.3}
               />
             </View>
           ) : undefined}
           <PostEmbeds embed={item.post.embed} style={s.mb10} />
           <PostCtrls
+            itemUri={itemUri}
+            itemCid={itemCid}
             itemHref={itemHref}
             itemTitle={itemTitle}
             isAuthor={item.post.author.did === store.me.did}

@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
-import {addStyle} from '../../lib/addStyle'
+import {addStyle} from 'lib/styles'
 
 type BlurViewProps = ViewProps & {
   blurType?: 'dark' | 'light'

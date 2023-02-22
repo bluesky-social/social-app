@@ -11,18 +11,17 @@ import {ScrollView, TextInput} from './util'
 import {PickedMedia} from '../util/images/image-crop-picker/ImageCropPicker'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {useStores} from '../../../state'
-import {ProfileViewModel} from '../../../state/models/profile-view'
-import {s, colors, gradients} from '../../lib/styles'
-import {
-  enforceLen,
-  MAX_DISPLAY_NAME,
-  MAX_DESCRIPTION,
-} from '../../../lib/strings'
-import {isNetworkError} from '../../../lib/errors'
-import {compressIfNeeded} from '../../../lib/images'
+import {useStores} from 'state/index'
+import {ProfileViewModel} from 'state/models/profile-view'
+import {s, colors, gradients} from 'lib/styles'
+import {enforceLen} from 'lib/strings/helpers'
+import {MAX_DISPLAY_NAME, MAX_DESCRIPTION} from 'lib/constants'
+import {compressIfNeeded} from 'lib/images'
 import {UserBanner} from '../util/UserBanner'
 import {UserAvatar} from '../util/UserAvatar'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useAnalytics} from 'lib/analytics'
+import {cleanError, isNetworkError} from 'lib/strings/errors'
 
 export const snapPoints = ['80%']
 
@@ -35,6 +34,9 @@ export function Component({
 }) {
   const store = useStores()
   const [error, setError] = useState<string>('')
+  const pal = usePalette('default')
+  const {track} = useAnalytics()
+
   const [isProcessing, setProcessing] = useState<boolean>(false)
   const [displayName, setDisplayName] = useState<string>(
     profileView.displayName || '',
@@ -54,24 +56,27 @@ export function Component({
     store.shell.closeModal()
   }
   const onSelectNewAvatar = async (img: PickedMedia) => {
+    track('EditProfile:AvatarSelected')
     try {
-      const finalImg = await compressIfNeeded(img, 300000)
-      setNewUserAvatar(finalImg)
+      const finalImg = await compressIfNeeded(img, 1000000)
+      setNewUserAvatar({mediaType: 'photo', ...finalImg})
       setUserAvatar(finalImg.path)
     } catch (e: any) {
-      setError(e.message || e.toString())
+      setError(cleanError(e))
     }
   }
   const onSelectNewBanner = async (img: PickedMedia) => {
+    track('EditProfile:BannerSelected')
     try {
-      const finalImg = await compressIfNeeded(img, 500000)
-      setNewUserBanner(finalImg)
+      const finalImg = await compressIfNeeded(img, 1000000)
+      setNewUserBanner({mediaType: 'photo', ...finalImg})
       setUserBanner(finalImg.path)
     } catch (e: any) {
-      setError(e.message || e.toString())
+      setError(cleanError(e))
     }
   }
   const onPressSave = async () => {
+    track('EditProfile:Save')
     setProcessing(true)
     if (error) {
       setError('')
@@ -94,7 +99,7 @@ export function Component({
           'Failed to save your profile. Check your internet connection and try again.',
         )
       } else {
-        setError(e.message)
+        setError(cleanError(e))
       }
     }
     setProcessing(false)
@@ -103,13 +108,13 @@ export function Component({
   return (
     <View style={s.flex1}>
       <ScrollView style={styles.inner}>
-        <Text style={styles.title}>Edit my profile</Text>
+        <Text style={[styles.title, pal.text]}>Edit my profile</Text>
         <View style={styles.photos}>
           <UserBanner
             banner={userBanner}
             onSelectNewBanner={onSelectNewBanner}
           />
-          <View style={styles.avi}>
+          <View style={[styles.avi, {borderColor: pal.colors.background}]}>
             <UserAvatar
               size={80}
               avatar={userAvatar}
@@ -127,7 +132,7 @@ export function Component({
         <View>
           <Text style={styles.label}>Display Name</Text>
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput, pal.text]}
             placeholder="e.g. Alice Roberts"
             placeholderTextColor={colors.gray4}
             value={displayName}
@@ -135,9 +140,9 @@ export function Component({
           />
         </View>
         <View style={s.pb10}>
-          <Text style={styles.label}>Description</Text>
+          <Text style={[styles.label, pal.text]}>Description</Text>
           <TextInput
-            style={[styles.textArea]}
+            style={[styles.textArea, pal.text]}
             placeholder="e.g. Artist, dog-lover, and memelord."
             placeholderTextColor={colors.gray4}
             multiline
@@ -162,7 +167,7 @@ export function Component({
         )}
         <TouchableOpacity style={s.mt5} onPress={onPressCancel}>
           <View style={[styles.btn]}>
-            <Text style={[s.black, s.bold]}>Cancel</Text>
+            <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>
           </View>
         </TouchableOpacity>
       </ScrollView>

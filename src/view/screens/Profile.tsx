@@ -4,8 +4,8 @@ import {observer} from 'mobx-react-lite'
 import {ViewSelector} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
 import {ScreenParams} from '../routes'
-import {ProfileUiModel, Sections} from '../../state/models/profile-ui'
-import {useStores} from '../../state'
+import {ProfileUiModel, Sections} from 'state/models/profile-ui'
+import {useStores} from 'state/index'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedItem} from '../com/posts/FeedItem'
 import {PostFeedLoadingPlaceholder} from '../com/util/LoadingPlaceholder'
@@ -14,8 +14,9 @@ import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {EmptyState} from '../com/util/EmptyState'
 import {Text} from '../com/util/text/Text'
 import {FAB} from '../com/util/FAB'
-import {s, colors} from '../lib/styles'
-import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
+import {s, colors} from 'lib/styles'
+import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {useAnalytics} from 'lib/analytics'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const END_ITEM = {_reactKey: '__end__'}
@@ -23,6 +24,12 @@ const EMPTY_ITEM = {_reactKey: '__empty__'}
 
 export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
+  const {screen} = useAnalytics()
+
+  useEffect(() => {
+    screen('Profile')
+  }, [screen])
+
   const onMainScroll = useOnMainScroll(store)
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const uiState = React.useMemo(
@@ -128,7 +135,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
           }
           if (!uiState.feed.hasMore) {
             items = items.concat([END_ITEM])
-          } else {
+          } else if (uiState.feed.isLoading) {
             Footer = LoadingMoreFooter
           }
           renderItem = (item: any) => {
@@ -184,7 +191,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
       ) : (
         <CenteredView>{renderHeader()}</CenteredView>
       )}
-      <FAB icon="pen-nib" onPress={onPressCompose} />
+      <FAB icon="plus" onPress={onPressCompose} />
     </View>
   )
 })

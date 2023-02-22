@@ -3,8 +3,8 @@ import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {SuggestedFollows} from '../discover/SuggestedFollows'
 import {Text} from '../util/text/Text'
-import {useStores} from '../../../state'
-import {s} from '../../lib/styles'
+import {useStores} from 'state/index'
+import {s} from 'lib/styles'
 
 export const Follows = observer(() => {
   const store = useStores()
@@ -18,13 +18,15 @@ export const Follows = observer(() => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Suggested follows</Text>
-      <SuggestedFollows onNoSuggestions={onNoSuggestions} />
+      <View style={s.flex1}>
+        <SuggestedFollows onNoSuggestions={onNoSuggestions} />
+      </View>
       <View style={styles.footer}>
-        <TouchableOpacity onPress={onPressNext}>
+        <TouchableOpacity onPress={onPressNext} testID="onboardFollowsSkipBtn">
           <Text style={[s.blue3, s.f18]}>Skip</Text>
         </TouchableOpacity>
         <View style={s.flex1} />
-        <TouchableOpacity onPress={onPressNext}>
+        <TouchableOpacity onPress={onPressNext} testID="onboardFollowsNextBtn">
           <Text style={[s.blue3, s.f18]}>Next</Text>
         </TouchableOpacity>
       </View>

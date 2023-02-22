@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  ScrollView,
+  Linking,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -8,38 +8,54 @@ import {
   ViewStyle,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
-import VersionNumber from 'react-native-version-number'
-import {s, colors} from '../../lib/styles'
-import {useStores} from '../../../state'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {s, colors} from 'lib/styles'
+import {FEEDBACK_FORM_URL} from 'lib/constants'
+import {useStores} from 'state/index'
 import {
   HomeIcon,
   BellIcon,
   UserIcon,
   CogIcon,
   MagnifyingGlassIcon,
-} from '../../lib/icons'
+} from 'lib/icons'
+import {TabPurpose, TabPurposeMainPath} from 'state/models/navigation'
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {Text} from '../../com/util/text/Text'
 import {ToggleButton} from '../../com/util/forms/ToggleButton'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useAnalytics} from 'lib/analytics'
 
 export const Menu = observer(({onClose}: {onClose: () => void}) => {
   const pal = usePalette('default')
   const store = useStores()
+  const {track} = useAnalytics()
 
   // events
   // =
 
   const onNavigate = (url: string) => {
+    track('Menu:ItemClicked', {url})
+
     onClose()
-    if (url === '/notifications') {
-      store.nav.switchTo(1, true)
+    if (url === TabPurposeMainPath[TabPurpose.Notifs]) {
+      store.nav.switchTo(TabPurpose.Notifs, true)
+    } else if (url === TabPurposeMainPath[TabPurpose.Search]) {
+      store.nav.switchTo(TabPurpose.Search, true)
     } else {
-      store.nav.switchTo(0, true)
+      store.nav.switchTo(TabPurpose.Default, true)
       if (url !== '/') {
         store.nav.navigate(url)
       }
     }
+  }
+
+  const onPressFeedback = () => {
+    track('Menu:FeedbackClicked')
+    Linking.openURL(FEEDBACK_FORM_URL)
   }
 
   // rendering
@@ -84,8 +100,19 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
     </TouchableOpacity>
   )
 
+  const onDarkmodePress = () => {
+    track('Menu:ItemClicked', {url: '/darkmode'})
+    store.shell.setDarkMode(!store.shell.darkMode)
+  }
+
   return (
-    <ScrollView testID="menuView" style={[styles.view, pal.view]}>
+    <View
+      testID="menuView"
+      style={[
+        styles.view,
+        pal.view,
+        store.shell.minimalShellMode && styles.viewMinimalShell,
+      ]}>
       <TouchableOpacity
         testID="profileCardButton"
         onPress={() => onNavigate(`/profile/${store.me.handle}`)}
@@ -132,7 +159,7 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
           icon={<BellIcon style={pal.text as StyleProp<ViewStyle>} size="28" />}
           label="Notifications"
           url="/notifications"
-          count={store.me.notificationCount}
+          count={store.me.notifications.unreadCount}
         />
         <MenuItem
           icon={
@@ -161,23 +188,34 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
         <ToggleButton
           label="Dark mode"
           isSelected={store.shell.darkMode}
-          onPress={() => store.shell.setDarkMode(!store.shell.darkMode)}
+          onPress={onDarkmodePress}
         />
       </View>
+      <View style={s.flex1} />
       <View style={styles.footer}>
-        <Text style={[pal.textLight]}>
-          Build version {VersionNumber.appVersion} ({VersionNumber.buildVersion}
-          )
-        </Text>
+        <MenuItem
+          icon={
+            <FontAwesomeIcon
+              style={pal.text as FontAwesomeIconStyle}
+              size={24}
+              icon={['far', 'message']}
+            />
+          }
+          label="Feedback"
+          onPress={onPressFeedback}
+        />
       </View>
-      <View style={s.footerSpacer} />
-    </ScrollView>
+    </View>
   )
 })
 
 const styles = StyleSheet.create({
   view: {
     flex: 1,
+    paddingBottom: 90,
+  },
+  viewMinimalShell: {
+    paddingBottom: 50,
   },
   section: {
     paddingHorizontal: 10,
@@ -254,7 +292,6 @@ const styles = StyleSheet.create({
   },
 
   footer: {
-    paddingHorizontal: 14,
-    paddingVertical: 18,
+    paddingHorizontal: 10,
   },
 })

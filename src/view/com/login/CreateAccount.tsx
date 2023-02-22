@@ -15,24 +15,22 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {ComAtprotoAccountCreate} from '@atproto/api'
 import * as EmailValidator from 'email-validator'
-// import {useAnalytics} from '@segment/analytics-react-native' TODO
+import {useAnalytics} from 'lib/analytics'
 import {LogoTextHero} from './Logo'
 import {Picker} from '../util/Picker'
 import {TextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
-import {s, colors} from '../../lib/styles'
-import {
-  makeValidHandle,
-  createFullHandle,
-  toNiceDomain,
-} from '../../../lib/strings'
-import {useStores, DEFAULT_SERVICE} from '../../../state'
-import {ServiceDescription} from '../../../state/models/session'
-import {ServerInputModal} from '../../../state/models/shell-ui'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {s, colors} from 'lib/styles'
+import {makeValidHandle, createFullHandle} from 'lib/strings/handles'
+import {toNiceDomain} from 'lib/strings/url-helpers'
+import {useStores, DEFAULT_SERVICE} from 'state/index'
+import {ServiceDescription} from 'state/models/session'
+import {ServerInputModal} from 'state/models/shell-ui'
+import {usePalette} from 'lib/hooks/usePalette'
+import {cleanError} from 'lib/strings/errors'
 
 export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
-  // const {track} = useAnalytics() TODO
+  const {track, screen} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -48,6 +46,10 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const [password, setPassword] = useState<string>('')
   const [handle, setHandle] = useState<string>('')
   const [is13, setIs13] = useState<boolean>(false)
+
+  useEffect(() => {
+    screen('CreateAccount')
+  }, [screen])
 
   useEffect(() => {
     let aborted = false
@@ -109,7 +111,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
         password,
         inviteCode,
       })
-      // track('Create Account') TODO
+      track('Create Account')
     } catch (e: any) {
       let errMsg = e.toString()
       if (e instanceof ComAtprotoAccountCreate.InvalidInviteCodeError) {
@@ -118,7 +120,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
       }
       store.log.error('Failed to create account', e)
       setIsProcessing(false)
-      setError(errMsg.replace(/^Error:/, ''))
+      setError(cleanError(errMsg))
     }
   }
 

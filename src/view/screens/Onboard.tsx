@@ -3,8 +3,8 @@ import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FeatureExplainer} from '../com/onboard/FeatureExplainer'
 import {Follows} from '../com/onboard/Follows'
-import {OnboardStage, OnboardStageOrder} from '../../state/models/onboard'
-import {useStores} from '../../state'
+import {OnboardStage, OnboardStageOrder} from 'state/models/onboard'
+import {useStores} from 'state/index'
 
 export const Onboard = observer(() => {
   const store = useStores()

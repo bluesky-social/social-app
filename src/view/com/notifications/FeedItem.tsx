@@ -14,19 +14,19 @@ import {
   FontAwesomeIconStyle,
   Props,
 } from '@fortawesome/react-native-fontawesome'
-import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
-import {PostThreadViewModel} from '../../../state/models/post-thread-view'
-import {s, colors} from '../../lib/styles'
-import {ago, pluralize} from '../../../lib/strings'
-import {HeartIconSolid} from '../../lib/icons'
+import {NotificationsViewItemModel} from 'state/models/notifications-view'
+import {PostThreadViewModel} from 'state/models/post-thread-view'
+import {s, colors} from 'lib/styles'
+import {ago} from 'lib/strings/time'
+import {pluralize} from 'lib/strings/helpers'
+import {HeartIconSolid} from 'lib/icons'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import {ImageHorzList} from '../util/images/ImageHorzList'
-import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Post} from '../post/Post'
 import {Link} from '../util/Link'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 
 const MAX_AUTHORS = 5
 
@@ -78,6 +78,10 @@ export const FeedItem = observer(function FeedItem({
   }
 
   if (item.isReply || item.isMention) {
+    if (item.additionalPost?.error) {
+      // hide errors - it doesnt help the user to show them
+      return <View />
+    }
     return (
       <Link href={itemHref} title={itemTitle} noFeedback>
         <Post
@@ -347,11 +351,12 @@ function AdditionalPostText({
   additionalPost?: PostThreadViewModel
 }) {
   const pal = usePalette('default')
-  if (!additionalPost || !additionalPost.thread?.postRecord) {
+  if (
+    !additionalPost ||
+    !additionalPost.thread?.postRecord ||
+    additionalPost.error
+  ) {
     return <View />
-  }
-  if (additionalPost.error) {
-    return <ErrorMessage message={additionalPost.error} />
   }
   const text = additionalPost.thread?.postRecord.text
   const images = (

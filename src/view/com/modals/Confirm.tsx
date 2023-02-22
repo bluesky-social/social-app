@@ -7,9 +7,10 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {Text} from '../util/text/Text'
-import {useStores} from '../../../state'
-import {s, colors, gradients} from '../../lib/styles'
+import {useStores} from 'state/index'
+import {s, colors, gradients} from 'lib/styles'
 import {ErrorMessage} from '../util/error/ErrorMessage'
+import {cleanError} from 'lib/strings/errors'
 
 export const snapPoints = ['50%']
 
@@ -33,7 +34,7 @@ export function Component({
       store.shell.closeModal()
       return
     } catch (e: any) {
-      setError(e.toString())
+      setError(cleanError(e))
       setIsProcessing(false)
     }
   }

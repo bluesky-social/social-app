@@ -5,13 +5,10 @@ import {CenteredView, FlatList} from '../util/Views'
 import {
   RepostedByViewModel,
   RepostedByItem,
-} from '../../../state/models/reposted-by-view'
-import {UserAvatar} from '../util/UserAvatar'
+} from 'state/models/reposted-by-view'
+import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
-import {useStores} from '../../../state'
-import {s, colors} from '../../lib/styles'
+import {useStores} from 'state/index'
 
 export const PostRepostedBy = observer(function PostRepostedBy({
   uri,
@@ -62,7 +59,15 @@ export const PostRepostedBy = observer(function PostRepostedBy({
   // loaded
   // =
   const renderItem = ({item}: {item: RepostedByItem}) => (
-    <RepostedByItemCom item={item} />
+    <ProfileCardWithFollowBtn
+      key={item.did}
+      did={item.did}
+      declarationCid={item.declaration.cid}
+      handle={item.handle}
+      displayName={item.displayName}
+      avatar={item.avatar}
+      isFollowedBy={!!item.viewer?.followedBy}
+    />
   )
   return (
     <FlatList
@@ -83,57 +88,7 @@ export const PostRepostedBy = observer(function PostRepostedBy({
   )
 })
 
-const RepostedByItemCom = ({item}: {item: RepostedByItem}) => {
-  return (
-    <Link
-      style={styles.outer}
-      href={`/profile/${item.handle}`}
-      title={item.handle}
-      noFeedback>
-      <View style={styles.layout}>
-        <View style={styles.layoutAvi}>
-          <UserAvatar
-            size={40}
-            displayName={item.displayName}
-            handle={item.handle}
-            avatar={item.avatar}
-          />
-        </View>
-        <View style={styles.layoutContent}>
-          <Text style={[s.f15, s.bold]}>{item.displayName || item.handle}</Text>
-          <Text style={[s.f14, s.gray5]}>@{item.handle}</Text>
-        </View>
-      </View>
-    </Link>
-  )
-}
-
 const styles = StyleSheet.create({
-  outer: {
-    marginTop: 1,
-    backgroundColor: colors.white,
-  },
-  layout: {
-    flexDirection: 'row',
-  },
-  layoutAvi: {
-    width: 60,
-    paddingLeft: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
-  avi: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    resizeMode: 'cover',
-  },
-  layoutContent: {
-    flex: 1,
-    paddingRight: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
   footer: {
     height: 200,
     paddingTop: 20,

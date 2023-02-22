@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native'
 import {clamp} from 'lodash'
-import {s} from '../../../lib/styles'
+import {s} from 'lib/styles'
 
 export enum Dir {
   None,

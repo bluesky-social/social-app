@@ -1,7 +1,5 @@
 import React from 'react'
 import {
-  Image,
-  ImageStyle,
   LayoutChangeEvent,
   StyleProp,
   StyleSheet,
@@ -9,7 +7,9 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {DELAY_PRESS_IN} from './constants'
+import Image, {ImageStyle} from 'view/com/util/images/Image'
+
+export const DELAY_PRESS_IN = 500
 
 interface Dim {
   width: number
@@ -23,12 +23,14 @@ export function ImageLayoutGrid({
   uris,
   onPress,
   onLongPress,
+  onPressIn,
   style,
 }: {
   type: ImageLayoutGridType
   uris: string[]
   onPress?: (index: number) => void
   onLongPress?: (index: number) => void
+  onPressIn?: (index: number) => void
   style?: StyleProp<ViewStyle>
 }) {
   const [containerInfo, setContainerInfo] = React.useState<Dim | undefined>()
@@ -47,6 +49,7 @@ export function ImageLayoutGrid({
           type={type}
           uris={uris}
           onPress={onPress}
+          onPressIn={onPressIn}
           onLongPress={onLongPress}
           containerInfo={containerInfo}
         />
@@ -60,15 +63,17 @@ function ImageLayoutGridInner({
   uris,
   onPress,
   onLongPress,
+  onPressIn,
   containerInfo,
 }: {
   type: ImageLayoutGridType
   uris: string[]
   onPress?: (index: number) => void
   onLongPress?: (index: number) => void
+  onPressIn?: (index: number) => void
   containerInfo: Dim
 }) {
-  const size1 = React.useMemo<ImageStyle>(() => {
+  const size1 = React.useMemo<StyleProp<ImageStyle>>(() => {
     if (type === 'three') {
       const size = (containerInfo.width - 10) / 3
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
@@ -77,7 +82,7 @@ function ImageLayoutGridInner({
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     }
   }, [type, containerInfo])
-  const size2 = React.useMemo<ImageStyle>(() => {
+  const size2 = React.useMemo<StyleProp<ImageStyle>>(() => {
     if (type === 'three') {
       const size = ((containerInfo.width - 10) / 3) * 2 + 5
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
@@ -93,6 +98,7 @@ function ImageLayoutGridInner({
         <TouchableOpacity
           delayPressIn={DELAY_PRESS_IN}
           onPress={() => onPress?.(0)}
+          onPressIn={() => onPressIn?.(0)}
           onLongPress={() => onLongPress?.(0)}>
           <Image source={{uri: uris[0]}} style={size1} />
         </TouchableOpacity>
@@ -100,6 +106,7 @@ function ImageLayoutGridInner({
         <TouchableOpacity
           delayPressIn={DELAY_PRESS_IN}
           onPress={() => onPress?.(1)}
+          onPressIn={() => onPressIn?.(1)}
           onLongPress={() => onLongPress?.(1)}>
           <Image source={{uri: uris[1]}} style={size1} />
         </TouchableOpacity>
@@ -112,6 +119,7 @@ function ImageLayoutGridInner({
         <TouchableOpacity
           delayPressIn={DELAY_PRESS_IN}
           onPress={() => onPress?.(0)}
+          onPressIn={() => onPressIn?.(0)}
           onLongPress={() => onLongPress?.(0)}>
           <Image source={{uri: uris[0]}} style={size2} />
         </TouchableOpacity>
@@ -120,6 +128,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(1)}
+            onPressIn={() => onPressIn?.(1)}
             onLongPress={() => onLongPress?.(1)}>
             <Image source={{uri: uris[1]}} style={size1} />
           </TouchableOpacity>
@@ -127,6 +136,7 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(2)}
+            onPressIn={() => onPressIn?.(2)}
             onLongPress={() => onLongPress?.(2)}>
             <Image source={{uri: uris[2]}} style={size1} />
           </TouchableOpacity>
@@ -141,29 +151,33 @@ function ImageLayoutGridInner({
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(0)}
+            onPressIn={() => onPressIn?.(0)}
             onLongPress={() => onLongPress?.(0)}>
             <Image source={{uri: uris[0]}} style={size1} />
           </TouchableOpacity>
           <View style={styles.hSpace} />
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
-            onPress={() => onPress?.(1)}
-            onLongPress={() => onLongPress?.(1)}>
-            <Image source={{uri: uris[1]}} style={size1} />
+            onPress={() => onPress?.(2)}
+            onPressIn={() => onPressIn?.(2)}
+            onLongPress={() => onLongPress?.(2)}>
+            <Image source={{uri: uris[2]}} style={size1} />
           </TouchableOpacity>
         </View>
         <View style={styles.wSpace} />
         <View>
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
-            onPress={() => onPress?.(2)}
-            onLongPress={() => onLongPress?.(2)}>
-            <Image source={{uri: uris[2]}} style={size1} />
+            onPress={() => onPress?.(1)}
+            onPressIn={() => onPressIn?.(1)}
+            onLongPress={() => onLongPress?.(1)}>
+            <Image source={{uri: uris[1]}} style={size1} />
           </TouchableOpacity>
           <View style={styles.hSpace} />
           <TouchableOpacity
             delayPressIn={DELAY_PRESS_IN}
             onPress={() => onPress?.(3)}
+            onPressIn={() => onPressIn?.(3)}
             onLongPress={() => onLongPress?.(3)}>
             <Image source={{uri: uris[3]}} style={size1} />
           </TouchableOpacity>

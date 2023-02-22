@@ -1,20 +1,12 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CenteredView} from './Views'
 import {Text} from './text/Text'
-import {useStores} from '../../../state'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {colors} from '../../lib/styles'
+import {useStores} from 'state/index'
+import {usePalette} from 'lib/hooks/usePalette'
+import {colors} from 'lib/styles'
 
 const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 
@@ -31,11 +23,6 @@ export const ViewHeader = observer(function ViewHeader({
   const store = useStores()
   const onPressBack = () => {
     store.nav.tab.goBack()
-  }
-  const onPressReconnect = () => {
-    store.session.connect().catch(e => {
-      store.log.warn('Failed to reconnect to server', e)
-    })
   }
   if (typeof canGoBack === 'undefined') {
     canGoBack = store.nav.tab.canGoBack
@@ -76,29 +63,6 @@ export const ViewHeader = observer(function ViewHeader({
           </Text>
         </View>
       )}
-      {!store.session.online ? (
-        <TouchableOpacity style={styles.btn} onPress={onPressReconnect}>
-          {store.session.attemptingConnect ? (
-            <ActivityIndicator />
-          ) : (
-            <>
-              <FontAwesomeIcon
-                icon="signal"
-                style={pal.text as FontAwesomeIconStyle}
-                size={16}
-              />
-              <FontAwesomeIcon
-                icon="x"
-                style={[
-                  styles.littleXIcon,
-                  {backgroundColor: pal.colors.background},
-                ]}
-                size={8}
-              />
-            </>
-          )}
-        </TouchableOpacity>
-      ) : undefined}
     </CenteredView>
   )
 })

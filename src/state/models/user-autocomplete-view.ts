@@ -1,8 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {
-  AppBskyGraphGetFollows as GetFollows,
-  AppBskyActorSearchTypeahead as SearchTypeahead,
-} from '@atproto/api'
+import {AppBskyActorRef} from '@atproto/api'
+import AwaitLock from 'await-lock'
 import {RootStoreModel} from './root-store'
 
 export class UserAutocompleteViewModel {
@@ -10,11 +8,11 @@ export class UserAutocompleteViewModel {
   isLoading = false
   isActive = false
   prefix = ''
-  _searchPromise: Promise<any> | undefined
+  lock = new AwaitLock()
 
   // data
-  follows: GetFollows.Follow[] = []
-  searchRes: SearchTypeahead.User[] = []
+  follows: AppBskyActorRef.WithInfo[] = []
+  searchRes: AppBskyActorRef.WithInfo[] = []
   knownHandles: Set<string> = new Set()
 
   constructor(public rootStore: RootStoreModel) {
@@ -58,16 +56,20 @@ export class UserAutocompleteViewModel {
   }
 
   async setPrefix(prefix: string) {
-    const origPrefix = prefix
-    this.prefix = prefix.trim()
-    if (this.prefix) {
-      await this._searchPromise
-      if (this.prefix !== origPrefix) {
-        return // another prefix was set before we got our chance
+    const origPrefix = prefix.trim()
+    this.prefix = origPrefix
+    await this.lock.acquireAsync()
+    try {
+      if (this.prefix) {
+        if (this.prefix !== origPrefix) {
+          return // another prefix was set before we got our chance
+        }
+        await this._search()
+      } else {
+        this.searchRes = []
       }
-      this._searchPromise = this._search()
-    } else {
-      this.searchRes = []
+    } finally {
+      this.lock.release()
     }
   }
 

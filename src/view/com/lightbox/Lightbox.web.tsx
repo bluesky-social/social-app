@@ -8,9 +8,9 @@ import {
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useStores} from '../../../state'
-import * as models from '../../../state/models/shell-ui'
-import {colors} from '../../lib/styles'
+import {useStores} from 'state/index'
+import * as models from 'state/models/shell-ui'
+import {colors} from 'lib/styles'
 
 interface Img {
   uri: string

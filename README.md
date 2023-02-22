@@ -1,18 +1,12 @@
-# Social App
-
-In-progress social app.
-
-Uses:
-
-- [React Native](https://reactnative.dev)
-- [React Native for Web](https://necolas.github.io/react-native-web/)
-- [React Navigation](https://reactnative.dev/docs/navigation#react-navigation)
-- [MobX](https://mobx.js.org/README.html)
-- [Async Storage](https://github.com/react-native-async-storage/async-storage)
+# Bluesky
 
 ## Build instructions
 
 - Setup your environment [using the react native instructions](https://reactnative.dev/docs/environment-setup).
+- Setup your environment [for e2e testing using detox](https://wix.github.io/Detox/docs/introduction/getting-started):
+  - yarn global add detox-cli
+  - brew tap wix/brew
+  - brew install applesimutils
 - After initial setup:
   - `cd ios ; pod install`
 - Start the dev servers
@@ -33,6 +27,17 @@ Uses:
   - For some reason, the typescript compiler chokes on platform-specific files (e.g. `foo.native.ts`) but only when compiling for Web thus far. Therefore we always have one version of the file which doesn't use a platform specifier, and that should bee the Web version. ([More info](https://stackoverflow.com/questions/44001050/platform-specific-import-component-in-react-native-with-typescript).)
 
 ## Various notes
+
+### Debugging
+
+- Note that since 0.70, debugging using the old debugger (which shows up using CMD+D) doesn't work anymore. Follow the instructions below to debug the code: https://reactnative.dev/docs/next/hermes#debugging-js-on-hermes-using-google-chromes-devtools
+
+### Running E2E Tests
+
+- Make sure you've setup your environment following above
+- Make sure Metro and the dev server are running
+- Run `yarn e2e`
+- Find the artifacts in the `artifact` folder
 
 ### Polyfills
 

@@ -2,9 +2,9 @@ import React from 'react'
 import {View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import ImageView from './ImageViewing'
-import {useStores} from '../../../state'
-import * as models from '../../../state/models/shell-ui'
-import {saveImageModal} from '../../../lib/images'
+import {useStores} from 'state/index'
+import * as models from 'state/models/shell-ui'
+import {saveImageModal} from 'lib/images'
 import {ImageSource} from './ImageViewing/@types'
 
 export const Lightbox = observer(function Lightbox() {

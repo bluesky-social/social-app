@@ -5,9 +5,9 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native'
-import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from '../util/text/Text'
-import {usePalette} from '../../lib/hooks/usePalette'
 
 interface AutocompleteItem {
   handle: string

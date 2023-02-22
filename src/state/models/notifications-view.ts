@@ -8,11 +8,13 @@ import {
   AppBskyGraphAssertion,
   AppBskyGraphFollow,
 } from '@atproto/api'
+import AwaitLock from 'await-lock'
+import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from './root-store'
 import {PostThreadViewModel} from './post-thread-view'
-import {cleanError} from '../../lib/strings'
+import {cleanError} from 'lib/strings/errors'
 
-const UNGROUPABLE_REASONS = ['assertion']
+const GROUPABLE_REASONS = ['vote', 'repost', 'follow']
 const PAGE_SIZE = 30
 const MS_1HR = 1e3 * 60 * 60
 const MS_2DAY = MS_1HR * 48
@@ -190,15 +192,16 @@ export class NotificationsViewModel {
   params: ListNotifications.QueryParams
   hasMore = true
   loadMoreCursor?: string
-  _loadPromise: Promise<void> | undefined
-  _loadMorePromise: Promise<void> | undefined
-  _updatePromise: Promise<void> | undefined
+
+  // used to linearize async modifications to state
+  private lock = new AwaitLock()
 
   // data
   notifications: NotificationsViewItemModel[] = []
+  unreadCount = 0
 
   // this is used to help trigger push notifications
-  mostRecentNotification: NotificationsViewItemModel | undefined
+  mostRecentNotificationUri: string | undefined
 
   constructor(
     public rootStore: RootStoreModel,
@@ -209,10 +212,7 @@ export class NotificationsViewModel {
       {
         rootStore: false,
         params: false,
-        mostRecentNotification: false,
-        _loadPromise: false,
-        _loadMorePromise: false,
-        _updatePromise: false,
+        mostRecentNotificationUri: false,
       },
       {autoBind: true},
     )
@@ -235,20 +235,47 @@ export class NotificationsViewModel {
   // =
 
   /**
+   * Nuke all data
+   */
+  clear() {
+    this.rootStore.log.debug('NotificationsModel:clear')
+    this.isLoading = false
+    this.isRefreshing = false
+    this.hasLoaded = false
+    this.error = ''
+    this.hasMore = true
+    this.loadMoreCursor = undefined
+    this.notifications = []
+    this.unreadCount = 0
+    this.rootStore.emitUnreadNotifications(0)
+    this.mostRecentNotificationUri = undefined
+  }
+
+  /**
    * Load for first render
    */
-  async setup(isRefreshing = false) {
+  setup = bundleAsync(async (isRefreshing: boolean = false) => {
+    this.rootStore.log.debug('NotificationsModel:setup', {isRefreshing})
     if (isRefreshing) {
       this.isRefreshing = true // set optimistically for UI
     }
-    if (this._loadPromise) {
-      return this._loadPromise
+    await this.lock.acquireAsync()
+    try {
+      this._xLoading(isRefreshing)
+      try {
+        const params = Object.assign({}, this.params, {
+          limit: PAGE_SIZE,
+        })
+        const res = await this.rootStore.api.app.bsky.notification.list(params)
+        await this._replaceAll(res)
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle(e)
+      }
+    } finally {
+      this.lock.release()
     }
-    await this._pendingWork()
-    this._loadPromise = this._initialLoad(isRefreshing)
-    await this._loadPromise
-    this._loadPromise = undefined
-  }
+  })
 
   /**
    * Reset and load
@@ -260,59 +287,148 @@ export class NotificationsViewModel {
   /**
    * Load more posts to the end of the notifications
    */
-  async loadMore() {
-    if (this._loadMorePromise) {
-      return this._loadMorePromise
+  loadMore = bundleAsync(async () => {
+    if (!this.hasMore) {
+      return
     }
-    await this._pendingWork()
-    this._loadMorePromise = this._loadMore()
-    await this._loadMorePromise
-    this._loadMorePromise = undefined
-  }
+    this.lock.acquireAsync()
+    try {
+      this._xLoading()
+      try {
+        const params = Object.assign({}, this.params, {
+          limit: PAGE_SIZE,
+          before: this.loadMoreCursor,
+        })
+        const res = await this.rootStore.api.app.bsky.notification.list(params)
+        await this._appendAll(res)
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle() // don't bubble the error to the user
+        this.rootStore.log.error('NotificationsView: Failed to load more', {
+          params: this.params,
+          e,
+        })
+      }
+    } finally {
+      this.lock.release()
+    }
+  })
+
+  /**
+   * Load more posts at the start of the notifications
+   */
+  loadLatest = bundleAsync(async () => {
+    if (this.notifications.length === 0 || this.unreadCount > PAGE_SIZE) {
+      return this.refresh()
+    }
+    this.lock.acquireAsync()
+    try {
+      this._xLoading()
+      try {
+        const res = await this.rootStore.api.app.bsky.notification.list({
+          limit: PAGE_SIZE,
+        })
+        await this._prependAll(res)
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle() // don't bubble the error to the user
+        this.rootStore.log.error('NotificationsView: Failed to load latest', {
+          params: this.params,
+          e,
+        })
+      }
+    } finally {
+      this.lock.release()
+    }
+  })
 
   /**
    * Update content in-place
    */
-  async update() {
-    if (this._updatePromise) {
-      return this._updatePromise
+  update = bundleAsync(async () => {
+    await this.lock.acquireAsync()
+    try {
+      if (!this.notifications.length) {
+        return
+      }
+      this._xLoading()
+      let numToFetch = this.notifications.length
+      let cursor
+      try {
+        do {
+          const res: ListNotifications.Response =
+            await this.rootStore.api.app.bsky.notification.list({
+              before: cursor,
+              limit: Math.min(numToFetch, 100),
+            })
+          if (res.data.notifications.length === 0) {
+            break // sanity check
+          }
+          this._updateAll(res)
+          numToFetch -= res.data.notifications.length
+          cursor = res.data.cursor
+        } while (cursor && numToFetch > 0)
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle() // don't bubble the error to the user
+        this.rootStore.log.error('NotificationsView: Failed to update', {
+          params: this.params,
+          e,
+        })
+      }
+    } finally {
+      this.lock.release()
     }
-    await this._pendingWork()
-    this._updatePromise = this._update()
-    await this._updatePromise
-    this._updatePromise = undefined
-  }
+  })
+
+  // unread notification apis
+  // =
+
+  /**
+   * Get the current number of unread notifications
+   * returns true if the number changed
+   */
+  loadUnreadCount = bundleAsync(async () => {
+    const old = this.unreadCount
+    const res = await this.rootStore.api.app.bsky.notification.getCount()
+    runInAction(() => {
+      this.unreadCount = res.data.count
+    })
+    this.rootStore.emitUnreadNotifications(this.unreadCount)
+    return this.unreadCount !== old
+  })
 
   /**
    * Update read/unread state
    */
-  async updateReadState() {
+  async markAllRead() {
     try {
+      this.unreadCount = 0
+      this.rootStore.emitUnreadNotifications(0)
       await this.rootStore.api.app.bsky.notification.updateSeen({
         seenAt: new Date().toISOString(),
       })
-      this.rootStore.me.clearNotificationCount()
     } catch (e: any) {
       this.rootStore.log.warn('Failed to update notifications read state', e)
     }
   }
 
   async getNewMostRecent(): Promise<NotificationsViewItemModel | undefined> {
-    let old = this.mostRecentNotification
-    const res = await this.rootStore.api.app.bsky.notification.list({limit: 1})
-    if (
-      !res.data.notifications[0] ||
-      old?.uri === res.data.notifications[0].uri
-    ) {
+    let old = this.mostRecentNotificationUri
+    const res = await this.rootStore.api.app.bsky.notification.list({
+      limit: 1,
+    })
+    if (!res.data.notifications[0] || old === res.data.notifications[0].uri) {
       return
     }
-    this.mostRecentNotification = new NotificationsViewItemModel(
+    this.mostRecentNotificationUri = res.data.notifications[0].uri
+    const notif = new NotificationsViewItemModel(
       this.rootStore,
       'mostRecent',
       res.data.notifications[0],
     )
-    await this.mostRecentNotification.fetchAdditionalData()
-    return this.mostRecentNotification
+    await notif.fetchAdditionalData()
+    return notif
   }
 
   // state transitions
@@ -329,93 +445,17 @@ export class NotificationsViewModel {
     this.isRefreshing = false
     this.hasLoaded = true
     this.error = cleanError(err)
-    this.error = err ? cleanError(err) : ''
     if (err) {
       this.rootStore.log.error('Failed to fetch notifications', err)
     }
   }
 
-  // loader functions
+  // helper functions
   // =
-
-  private async _pendingWork() {
-    if (this._loadPromise) {
-      await this._loadPromise
-    }
-    if (this._loadMorePromise) {
-      await this._loadMorePromise
-    }
-    if (this._updatePromise) {
-      await this._updatePromise
-    }
-  }
-
-  private async _initialLoad(isRefreshing = false) {
-    this._xLoading(isRefreshing)
-    try {
-      const params = Object.assign({}, this.params, {
-        limit: PAGE_SIZE,
-      })
-      const res = await this.rootStore.api.app.bsky.notification.list(params)
-      await this._replaceAll(res)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
-    }
-  }
-
-  private async _loadMore() {
-    if (!this.hasMore) {
-      return
-    }
-    this._xLoading()
-    try {
-      const params = Object.assign({}, this.params, {
-        limit: PAGE_SIZE,
-        before: this.loadMoreCursor,
-      })
-      const res = await this.rootStore.api.app.bsky.notification.list(params)
-      await this._appendAll(res)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
-    }
-  }
-
-  private async _update() {
-    if (!this.notifications.length) {
-      return
-    }
-    this._xLoading()
-    let numToFetch = this.notifications.length
-    let cursor
-    try {
-      do {
-        const res: ListNotifications.Response =
-          await this.rootStore.api.app.bsky.notification.list({
-            before: cursor,
-            limit: Math.min(numToFetch, 100),
-          })
-        if (res.data.notifications.length === 0) {
-          break // sanity check
-        }
-        this._updateAll(res)
-        numToFetch -= res.data.notifications.length
-        cursor = res.data.cursor
-      } while (cursor && numToFetch > 0)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
-    }
-  }
 
   private async _replaceAll(res: ListNotifications.Response) {
     if (res.data.notifications[0]) {
-      this.mostRecentNotification = new NotificationsViewItemModel(
-        this.rootStore,
-        'mostRecent',
-        res.data.notifications[0],
-      )
+      this.mostRecentNotificationUri = res.data.notifications[0].uri
     }
     return this._appendAll(res, true)
   }
@@ -451,14 +491,40 @@ export class NotificationsViewModel {
     })
   }
 
+  private async _prependAll(res: ListNotifications.Response) {
+    const promises = []
+    const itemModels: NotificationsViewItemModel[] = []
+    const dedupedNotifs = res.data.notifications.filter(
+      n1 =>
+        !this.notifications.find(
+          n2 => isEq(n1, n2) || n2.additional?.find(n3 => isEq(n1, n3)),
+        ),
+    )
+    for (const item of groupNotifications(dedupedNotifs)) {
+      const itemModel = new NotificationsViewItemModel(
+        this.rootStore,
+        `item-${_idCounter++}`,
+        item,
+      )
+      if (itemModel.needsAdditionalData) {
+        promises.push(itemModel.fetchAdditionalData())
+      }
+      itemModels.push(itemModel)
+    }
+    await Promise.all(promises).catch(e => {
+      this.rootStore.log.error(
+        'Uncaught failure during notifications-view _prependAll()',
+        e,
+      )
+    })
+    runInAction(() => {
+      this.notifications = itemModels.concat(this.notifications)
+    })
+  }
+
   private _updateAll(res: ListNotifications.Response) {
     for (const item of res.data.notifications) {
-      const existingItem = this.notifications.find(
-        // this find function has a key subtlety- the indexedAt comparison
-        // the reason for this is reposts: they set the URI of the original post, not of the repost record
-        // the indexedAt time will be for the repost however, so we use that to help us
-        item2 => item.uri === item2.uri && item.indexedAt === item2.indexedAt,
-      )
+      const existingItem = this.notifications.find(item2 => isEq(item, item2))
       if (existingItem) {
         existingItem.copy(item, true)
       }
@@ -473,7 +539,7 @@ function groupNotifications(
   for (const item of items) {
     const ts = +new Date(item.indexedAt)
     let grouped = false
-    if (!UNGROUPABLE_REASONS.includes(item.reason)) {
+    if (GROUPABLE_REASONS.includes(item.reason)) {
       for (const item2 of items2) {
         const ts2 = +new Date(item2.indexedAt)
         if (
@@ -494,4 +560,12 @@ function groupNotifications(
     }
   }
   return items2
+}
+
+type N = ListNotifications.Notification | NotificationsViewItemModel
+function isEq(a: N, b: N) {
+  // this function has a key subtlety- the indexedAt comparison
+  // the reason for this is reposts: they set the URI of the original post, not of the repost record
+  // the indexedAt time will be for the repost however, so we use that to help us
+  return a.uri === b.uri && a.indexedAt === b.indexedAt
 }

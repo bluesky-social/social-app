@@ -1,11 +1,11 @@
 import React from 'react'
-import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {SuggestedFollows} from '../discover/SuggestedFollows'
 import {CenteredView} from '../util/Views.web'
 import {Text} from '../util/text/Text'
-import {useStores} from '../../../state'
-import {s, colors} from '../../lib/styles'
+import {useStores} from 'state/index'
+import {s} from 'lib/styles'
 
 export const Follows = observer(() => {
   const store = useStores()

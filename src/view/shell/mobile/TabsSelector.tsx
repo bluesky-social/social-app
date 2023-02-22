@@ -12,11 +12,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../../com/util/text/Text'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
-import {useStores} from '../../../state'
-import {s, colors} from '../../lib/styles'
-import {toShareUrl} from '../../../lib/strings'
+import {useStores} from 'state/index'
+import {s, colors} from 'lib/styles'
+import {toShareUrl} from 'lib/strings/url-helpers'
 import {match} from '../../routes'
-import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 
 const TAB_HEIGHT = 42
 

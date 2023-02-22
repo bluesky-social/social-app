@@ -11,8 +11,8 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
-import {useTheme} from '../../../lib/ThemeContext'
-import {usePalette} from '../../../lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export function ErrorMessage({
   message,

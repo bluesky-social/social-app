@@ -1,20 +1,13 @@
 import React, {useState} from 'react'
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {CenteredView} from '../com/util/Views'
 import {Signin} from '../com/login/Signin'
 import {CreateAccount} from '../com/login/CreateAccount'
 import {Text} from '../com/util/text/Text'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
-import {colors} from '../lib/styles'
-import {usePalette} from '../lib/hooks/usePalette'
-import {CLOUD_SPLASH} from '../lib/assets'
+import {colors} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 
 enum ScreenState {
   S_SigninOrCreateAccount,
@@ -125,6 +118,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  hero: {},
   heroText: {
     backgroundColor: colors.white,
     paddingTop: 10,
