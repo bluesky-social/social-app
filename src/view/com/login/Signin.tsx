@@ -14,7 +14,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
 import AtpAgent from '@atproto/api'
-// import {useAnalytics} from '@segment/analytics-react-native' TODO
+import {useAnalytics} from 'lib/analytics'
 import {LogoTextHero} from './Logo'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
@@ -40,7 +40,7 @@ enum Forms {
 export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   const pal = usePalette('default')
   const store = useStores()
-  // const {track} = useAnalytics() TODO
+  const {track} = useAnalytics()
   const [error, setError] = useState<string>('')
   const [retryDescribeTrigger, setRetryDescribeTrigger] = useState<any>({})
   const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
@@ -95,7 +95,7 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
 
   const onPressRetryConnect = () => setRetryDescribeTrigger({})
   const onPressForgotPassword = () => {
-    // track('Signin:PressedForgotPassword') TODO
+    track('Signin:PressedForgotPassword')
     setCurrentForm(Forms.ForgotPassword)
   }
 
@@ -160,19 +160,19 @@ const ChooseAccountForm = ({
   onSelectAccount: (account?: AccountData) => void
   onPressBack: () => void
 }) => {
-  // const {track, screen} = useAnalytics() TODO
+  const {track, screen} = useAnalytics()
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = React.useState(false)
 
   // React.useEffect(() => {
-  // screen('Choose Account') TODO
+  screen('Choose Account')
   // }, [screen])
 
   const onTryAccount = async (account: AccountData) => {
     if (account.accessJwt && account.refreshJwt) {
       setIsProcessing(true)
       if (await store.session.resumeSession(account)) {
-        // track('Sign In', {resumedSession: true}) TODO
+        track('Sign In', {resumedSession: true})
         setIsProcessing(false)
         return
       }
@@ -272,7 +272,7 @@ const LoginForm = ({
   onPressBack: () => void
   onPressForgotPassword: () => void
 }) => {
-  // const {track} = useAnalytics() TODO
+  const {track} = useAnalytics()
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [identifier, setIdentifier] = useState<string>(initialHandle)
@@ -281,7 +281,7 @@ const LoginForm = ({
   const onPressSelectService = () => {
     store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
     Keyboard.dismiss()
-    // track('Signin:PressedSelectService') TODO
+    track('Signin:PressedSelectService')
   }
 
   const onPressNext = async () => {
@@ -315,7 +315,7 @@ const LoginForm = ({
         identifier: fullIdent,
         password,
       })
-      // track('Sign In', {resumedSession: false}) TODO
+      track('Sign In', {resumedSession: false})
     } catch (e: any) {
       const errMsg = e.toString()
       store.log.warn('Failed to login', e)
@@ -477,10 +477,10 @@ const ForgotPasswordForm = ({
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
-  // const {screen} = useAnalytics() TODO
+  const {screen} = useAnalytics()
 
   // useEffect(() => {
-  // screen('Signin:ForgotPassword') TODO
+  screen('Signin:ForgotPassword')
   // }, [screen])
 
   const onPressSelectService = () => {
@@ -622,10 +622,10 @@ const SetNewPasswordForm = ({
   onPasswordSet: () => void
 }) => {
   const pal = usePalette('default')
-  // const {screen} = useAnalytics() TODO
+  const {screen} = useAnalytics()
 
   // useEffect(() => {
-  // screen('Signin:SetNewPasswordForm') TODO
+  screen('Signin:SetNewPasswordForm')
   // }, [screen])
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -753,10 +753,10 @@ const SetNewPasswordForm = ({
 }
 
 const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
-  // const {screen} = useAnalytics() TODO
+  const {screen} = useAnalytics()
 
   // useEffect(() => {
-  // screen('Signin:PasswordUpdatedForm') TODO
+  screen('Signin:PasswordUpdatedForm')
   // }, [screen])
 
   const pal = usePalette('default')

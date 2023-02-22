@@ -10,14 +10,14 @@ import {useStores} from 'state/index'
 import {ScreenParams} from '../routes'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-// import {useAnalytics} from '@segment/analytics-react-native' TODO
+import {useAnalytics} from 'lib/analytics'
 
 const HEADER_HEIGHT = 42
 
 export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
-  // const {screen, track} = useAnalytics() TODO
+  const {screen, track} = useAnalytics()
   const scrollElRef = React.useRef<FlatList>(null)
   const [wasVisible, setWasVisible] = React.useState<boolean>(false)
   const {appState} = useAppState({
@@ -66,7 +66,7 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
     setWasVisible(true)
 
     // just became visible
-    // screen('Feed') TODO
+    screen('Feed')
     store.nav.setTitle(navIdx, 'Home')
     store.log.debug('HomeScreen: Updating feed')
     if (store.me.mainFeed.hasContent) {
@@ -75,10 +75,10 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
       store.me.mainFeed.setup()
     }
     return cleanup
-  }, [visible, store, store.me.mainFeed, navIdx, doPoll, wasVisible, scrollToTop /*, screen*/])
+  }, [visible, store, store.me.mainFeed, navIdx, doPoll, wasVisible, scrollToTop, screen])
 
   const onPressCompose = (imagesOpen?: boolean) => {
-    // track('Home:ComposeButtonPressed') TODO
+    track('Home:ComposeButtonPressed')
     store.shell.openComposer({imagesOpen})
   }
   const onPressTryAgain = () => {

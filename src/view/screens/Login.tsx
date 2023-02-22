@@ -10,7 +10,7 @@ import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {CLOUD_SPLASH} from 'lib/assets'
-import {useAnalytics} from '@segment/analytics-react-native'
+import {useAnalytics} from 'lib/analytics'
 
 enum ScreenState {
   S_SigninOrCreateAccount,

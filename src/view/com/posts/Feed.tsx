@@ -16,7 +16,7 @@ import {FeedItem} from './FeedItem'
 import {ComposerPrompt} from './ComposerPrompt'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
-// import {useAnalytics} from '@segment/analytics-react-native' TODO
+import {useAnalytics} from 'lib/analytics'
 
 const COMPOSE_PROMPT_ITEM = {_reactKey: '__prompt__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -41,7 +41,7 @@ export const Feed = observer(function Feed({
   testID?: string
   headerOffset?: number
 }) {
-  // const {track} = useAnalytics() TODO
+  const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
 
   const data = React.useMemo(() => {
@@ -64,7 +64,7 @@ export const Feed = observer(function Feed({
   // =
 
   const onRefresh = React.useCallback(async () => {
-    // track('Feed:onRefresh') TODO
+    track('Feed:onRefresh')
     setIsRefreshing(true)
     try {
       await feed.refresh()
@@ -72,15 +72,15 @@ export const Feed = observer(function Feed({
       feed.rootStore.log.error('Failed to refresh posts feed', err)
     }
     setIsRefreshing(false)
-  }, [feed, /*track, */ setIsRefreshing])
+  }, [feed, track, setIsRefreshing])
   const onEndReached = React.useCallback(async () => {
-    // track('Feed:onEndReached') TODO
+    track('Feed:onEndReached')
     try {
       await feed.loadMore()
     } catch (err) {
       feed.rootStore.log.error('Failed to load more posts', err)
     }
-  }, [feed /* track*/])
+  }, [feed, track])
 
   // rendering
   // =

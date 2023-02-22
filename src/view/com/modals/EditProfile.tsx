@@ -20,7 +20,7 @@ import {compressIfNeeded} from 'lib/images'
 import {UserBanner} from '../util/UserBanner'
 import {UserAvatar} from '../util/UserAvatar'
 import {usePalette} from 'lib/hooks/usePalette'
-// import {useAnalytics} from '@segment/analytics-react-native' TODO
+import {useAnalytics} from 'lib/analytics'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
 
 export const snapPoints = ['80%']
@@ -35,7 +35,7 @@ export function Component({
   const store = useStores()
   const [error, setError] = useState<string>('')
   const pal = usePalette('default')
-  // const {track} = useAnalytics() TODO
+  const {track} = useAnalytics()
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
   const [displayName, setDisplayName] = useState<string>(
@@ -56,7 +56,7 @@ export function Component({
     store.shell.closeModal()
   }
   const onSelectNewAvatar = async (img: PickedMedia) => {
-    // track('EditProfile:AvatarSelected') TODO
+    track('EditProfile:AvatarSelected')
     try {
       const finalImg = await compressIfNeeded(img, 1000000)
       setNewUserAvatar({mediaType: 'photo', ...finalImg})
@@ -66,7 +66,7 @@ export function Component({
     }
   }
   const onSelectNewBanner = async (img: PickedMedia) => {
-    // track('EditProfile:BannerSelected') TODO
+    track('EditProfile:BannerSelected')
     try {
       const finalImg = await compressIfNeeded(img, 1000000)
       setNewUserBanner({mediaType: 'photo', ...finalImg})
@@ -76,7 +76,7 @@ export function Component({
     }
   }
   const onPressSave = async () => {
-    // track('EditProfile:Save') TODO
+    track('EditProfile:Save')
     setProcessing(true)
     if (error) {
       setError('')

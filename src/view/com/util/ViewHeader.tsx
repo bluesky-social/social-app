@@ -7,7 +7,7 @@ import {Text} from './text/Text'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {useAnalytics} from '@segment/analytics-react-native'
+import {useAnalytics} from 'lib/analytics'
 
 const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 

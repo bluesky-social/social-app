@@ -7,7 +7,7 @@ import {useStores} from 'state/index'
 import {ScreenParams} from '../routes'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
-import {useAnalytics} from '@segment/analytics-react-native'
+import {useAnalytics} from 'lib/analytics'
 
 const NOTIFICATIONS_POLL_INTERVAL = 15e3
 

@@ -4,7 +4,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-// import {useAnalytics} from '@segment/analytics-react-native' TODO
+import {useAnalytics} from 'lib/analytics'
 import {
   openPicker,
   openCamera,
@@ -68,7 +68,7 @@ export const PhotoCarouselPicker = ({
   selectedPhotos: string[]
   onSelectPhotos: (v: string[]) => void
 }) => {
-  // const {track} = useAnalytics() TODO
+  const {track} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const [isSetup, setIsSetup] = React.useState<boolean>(false)
@@ -104,7 +104,7 @@ export const PhotoCarouselPicker = ({
 
   const handleSelectPhoto = useCallback(
     async (item: PhotoIdentifier) => {
-      // track('PhotoCarouselPicker:PhotoSelected') TODO
+      track('PhotoCarouselPicker:PhotoSelected')
       try {
         const imgPath = await cropPhoto(
           store,
@@ -118,11 +118,11 @@ export const PhotoCarouselPicker = ({
         store.log.warn('Error selecting photo', err)
       }
     },
-    [/*track, */ store, onSelectPhotos, selectedPhotos],
+    [track, store, onSelectPhotos, selectedPhotos],
   )
 
   const handleOpenGallery = useCallback(async () => {
-    // track('PhotoCarouselPicker:GalleryOpened') TODO
+    track('PhotoCarouselPicker:GalleryOpened')
     if (!(await requestPhotoAccessIfNeeded())) {
       return
     }
@@ -152,7 +152,7 @@ export const PhotoCarouselPicker = ({
       result.push(permanentPath)
     }
     onSelectPhotos([...selectedPhotos, ...result])
-  }, [/*track, */ store, selectedPhotos, onSelectPhotos])
+  }, [track, store, selectedPhotos, onSelectPhotos])
 
   return (
     <ScrollView

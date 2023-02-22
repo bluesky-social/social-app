@@ -6,26 +6,23 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import SplashScreen from 'react-native-splash-screen'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
-import {SegmentClient, AnalyticsProvider} from '@segment/analytics-react-native'
 import {ThemeProvider} from 'lib/ThemeContext'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {MobileShell} from './view/shell/mobile'
 import {s} from 'lib/styles'
 import * as notifee from 'lib/notifee'
-import * as analytics from './lib/analytics'
+import * as analytics from 'lib/analytics'
 import * as Toast from './view/com/util/Toast'
 
 const App = observer(() => {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
-  const [segment, setSegment] = useState<SegmentClient | undefined>(undefined)
 
   // init
   useEffect(() => {
     view.setup()
-    setSegment(analytics.segmentClient)
     setupState().then(store => {
       setRootStore(store)
       analytics.init(store)
@@ -53,13 +50,13 @@ const App = observer(() => {
     <GestureHandlerRootView style={s.h100pct}>
       <ThemeProvider theme={rootStore.shell.darkMode ? 'dark' : 'light'}>
         <RootSiblingParent>
-          <AnalyticsProvider client={segment}>
+          <analytics.Provider>
             <RootStoreProvider value={rootStore}>
               <SafeAreaProvider>
                 <MobileShell />
               </SafeAreaProvider>
             </RootStoreProvider>
-          </AnalyticsProvider>
+          </analytics.Provider>
         </RootSiblingParent>
       </ThemeProvider>
     </GestureHandlerRootView>

@@ -21,7 +21,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from '@segment/analytics-react-native'
+import {useAnalytics} from 'lib/analytics'
 
 export const FeedItem = observer(function ({
   item,

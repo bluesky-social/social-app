@@ -16,7 +16,7 @@ import {Text} from '../com/util/text/Text'
 import {FAB} from '../com/util/FAB'
 import {s, colors} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-import {useAnalytics} from '@segment/analytics-react-native'
+import {useAnalytics} from 'lib/analytics'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const END_ITEM = {_reactKey: '__end__'}

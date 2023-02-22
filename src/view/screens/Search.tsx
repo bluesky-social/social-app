@@ -21,7 +21,7 @@ import {SuggestedPosts} from '../com/discover/SuggestedPosts'
 import {ProfileCard} from '../com/profile/ProfileCard'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-import {useAnalytics} from '@segment/analytics-react-native'
+import {useAnalytics} from 'lib/analytics'
 
 const MENU_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 const FIVE_MIN = 5 * 60 * 1e3

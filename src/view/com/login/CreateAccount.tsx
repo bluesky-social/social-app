@@ -15,7 +15,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {ComAtprotoAccountCreate} from '@atproto/api'
 import * as EmailValidator from 'email-validator'
-// import {useAnalytics} from '@segment/analytics-react-native' TODO
+import {useAnalytics} from 'lib/analytics'
 import {LogoTextHero} from './Logo'
 import {Picker} from '../util/Picker'
 import {TextLink} from '../util/Link'
@@ -30,7 +30,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {cleanError} from 'lib/strings/errors'
 
 export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
-  // const {track, screen} = useAnalytics() TODO
+  const {track, screen} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -47,9 +47,9 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const [handle, setHandle] = useState<string>('')
   const [is13, setIs13] = useState<boolean>(false)
 
-  // useEffect(() => {
-  // screen('CreateAccount') TODO
-  // }, [screen])
+  useEffect(() => {
+    screen('CreateAccount')
+  }, [screen])
 
   useEffect(() => {
     let aborted = false
@@ -111,7 +111,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
         password,
         inviteCode,
       })
-      // track('Create Account') TODO
+      track('Create Account')
     } catch (e: any) {
       let errMsg = e.toString()
       if (e instanceof ComAtprotoAccountCreate.InvalidInviteCodeError) {

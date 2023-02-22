@@ -27,7 +27,7 @@ import {UserAvatar} from '../../com/util/UserAvatar'
 import {Text} from '../../com/util/text/Text'
 import {ToggleButton} from '../../com/util/forms/ToggleButton'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from '@segment/analytics-react-native'
+import {useAnalytics} from 'lib/analytics'
 
 export const Menu = observer(({onClose}: {onClose: () => void}) => {
   const pal = usePalette('default')

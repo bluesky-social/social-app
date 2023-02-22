@@ -1,11 +1,14 @@
+import React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
-import {createClient} from '@segment/analytics-react-native'
+import {createClient, AnalyticsProvider} from '@segment/analytics-react-native'
 import {RootStoreModel, AppInfo} from 'state/models/root-store'
 
-export const segmentClient = createClient({
+const segmentClient = createClient({
   writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
   trackAppLifecycleEvents: false,
 })
+
+export {useAnalytics} from '@segment/analytics-react-native'
 
 export function init(store: RootStoreModel) {
   // NOTE
@@ -62,4 +65,10 @@ export function init(store: RootStoreModel) {
     }
     lastState = state
   })
+}
+
+export function Provider({children}: React.PropsWithChildren<{}>) {
+  return (
+    <AnalyticsProvider client={segmentClient}>{children}</AnalyticsProvider>
+  )
 }

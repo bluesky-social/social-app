@@ -48,7 +48,7 @@ import {
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from '@segment/analytics-react-native'
+import {useAnalytics} from 'lib/analytics'
 
 const Btn = ({
   icon,

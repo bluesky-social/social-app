@@ -31,7 +31,7 @@ import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from '@segment/analytics-react-native'
+import {useAnalytics} from 'lib/analytics'
 
 export const ProfileHeader = observer(function ProfileHeader({
   view,

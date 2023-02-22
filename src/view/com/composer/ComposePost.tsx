@@ -18,7 +18,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-// import {useAnalytics} from '@segment/analytics-react-native' TODO
+import {useAnalytics} from 'lib/analytics'
 import _isEqual from 'lodash.isequal'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
 import {Autocomplete} from './Autocomplete'
@@ -61,7 +61,7 @@ export const ComposePost = observer(function ComposePost({
   onPost?: ComposerOpts['onPost']
   onClose: () => void
 }) {
-  // const {track, screen} = useAnalytics() TODO
+  const {track, screen} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const textInput = useRef<TextInputRef>(null)
@@ -175,7 +175,7 @@ export const ComposePost = observer(function ComposePost({
     textInput.current?.focus()
   }
   const onPressSelectPhotos = () => {
-    // track('ComposePost:SelectPhotos') TODO
+    track('ComposePost:SelectPhotos')
     if (isSelectingPhotos) {
       setIsSelectingPhotos(false)
     } else if (selectedPhotos.length < 4) {
@@ -183,7 +183,7 @@ export const ComposePost = observer(function ComposePost({
     }
   }
   const onSelectPhotos = (photos: string[]) => {
-    // track('ComposePost:SelectPhotos:Done') TODO
+    track('ComposePost:SelectPhotos:Done')
     setSelectedPhotos(photos)
     if (photos.length >= 4) {
       setIsSelectingPhotos(false)
@@ -258,10 +258,9 @@ export const ComposePost = observer(function ComposePost({
         autocompleteView.knownHandles,
         setProcessingState,
       )
-      // TODO
-      // track('Create Post', {
-      //   imageCount: selectedPhotos.length,
-      // })
+      track('Create Post', {
+        imageCount: selectedPhotos.length,
+      })
     } catch (e: any) {
       setExtLink({
         ...extLink,
