@@ -8,7 +8,7 @@
     "web": "webpack-dev-server --config ./web/webpack.config.js -d inline-source-map --hot --color",
     "start": "react-native start",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
-    "test": "jest --forceExit --testTimeout=20000",
+    "test": "jest --forceExit --testTimeout=20000 --bail",
     "test-watch": "jest --watchAll",
     "test-ci": "jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "jest --coverage",

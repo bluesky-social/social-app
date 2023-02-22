@@ -251,16 +251,16 @@ PODS:
     - glog
   - react-native-blur (4.3.0):
     - React-Core
-  - react-native-cameraroll (5.2.2):
+  - react-native-cameraroll (5.2.4):
     - React-Core
-  - react-native-image-resizer (3.0.4):
+  - react-native-image-resizer (3.0.5):
     - React-Core
-  - react-native-pager-view (6.1.2):
+  - react-native-pager-view (6.1.4):
     - React-Core
-  - react-native-paste-input (0.6.0):
+  - react-native-paste-input (0.6.2):
     - React-Core
     - Swime (= 3.0.6)
-  - react-native-safe-area-context (4.4.1):
+  - react-native-safe-area-context (4.5.0):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -367,7 +367,7 @@ PODS:
     - SDWebImageWebPCoder (~> 0.8.4)
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (2.8.0):
+  - RNGestureHandler (2.9.0):
     - React-Core
   - RNImageCropPicker (0.38.1):
     - React-Core
@@ -380,16 +380,16 @@ PODS:
     - TOCropViewController
   - RNInAppBrowser (3.7.0):
     - React-Core
-  - RNNotifee (7.4.0):
+  - RNNotifee (7.5.0):
     - React-Core
-    - RNNotifee/NotifeeCore (= 7.4.0)
-  - RNNotifee/NotifeeCore (7.4.0):
+    - RNNotifee/NotifeeCore (= 7.5.0)
+  - RNNotifee/NotifeeCore (7.5.0):
     - React-Core
   - RNPermissions (3.6.1):
     - React-Core
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
-  - RNReanimated (2.13.0):
+  - RNReanimated (2.14.4):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -416,10 +416,10 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.18.2):
+  - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
-  - RNSVG (12.5.0):
+  - RNSVG (12.5.1):
     - React-Core
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
@@ -427,7 +427,7 @@ PODS:
   - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
-  - segment-analytics-react-native (2.10.1):
+  - segment-analytics-react-native (2.13.0):
     - React-Core
     - sovran-react-native
   - sovran-react-native (0.4.5):
@@ -669,11 +669,11 @@ SPEC CHECKSUMS:
   React-jsinspector: ff56004b0c974b688a6548c156d5830ad751ae07
   React-logger: 60a0b5f8bed667ecf9e24fecca1f30d125de6d75
   react-native-blur: 50c9feabacbc5f49b61337ebc32192c6be7ec3c3
-  react-native-cameraroll: 71d68167beb6fc7216aa564abb6d86f1d666a2c6
-  react-native-image-resizer: 794abf75ec13ed1f0dbb1f134e27504ea65e9e66
-  react-native-pager-view: 54bed894cecebe28cede54c01038d9d1e122de43
-  react-native-paste-input: 5182843692fd2ec72be50f241a38a49796e225d7
-  react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
+  react-native-cameraroll: cb752fda6d5268f1646b4390bd5be1f27706b9a0
+  react-native-image-resizer: 00ceb0e05586c7aadf061eea676957a6c2ec60fa
+  react-native-pager-view: b58cb9e9f42f64e50cab3040815772c1d119a2e2
+  react-native-paste-input: 3392800944a47c00dddbff23c31c281482209679
+  react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-version-number: b415bbec6a13f2df62bf978e85bc0d699462f37f
   react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
@@ -696,18 +696,18 @@ SPEC CHECKSUMS:
   RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
-  RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
+  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
   RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
-  RNNotifee: da8dcf09f079ea22f46e239d7c406e10d4525a5f
+  RNNotifee: 053c0ace9c73634709a0214fd9c436a5777a562f
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
-  RNReanimated: d8d9d3d3801bda5e35e85cdffc871577d044dc2e
-  RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
-  RNSVG: 6adc5c52d2488a476248413064b7f2832e639057
+  RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
+  RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
+  RNSVG: d7d7bc8229af3842c9cfc3a723c815a52cdd1105
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
-  segment-analytics-react-native: cb097e393c3560a0d4cfd877044293e37b0050d9
+  segment-analytics-react-native: bd1f13ea95bad2313a9c7130da032af0e9a6da60
   sovran-react-native: fd3dc8f1a4b14acdc4ad25fc6b4ac4f52a2a2a15
   Swime: d7b2c277503b6cea317774aedc2dce05613f8b0b
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863

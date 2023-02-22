@@ -5451,9 +5451,9 @@ ejs@^3.1.6:
     jake "^10.8.5"
 
 electron-to-chromium@^1.4.284:
-  version "1.4.305"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.305.tgz#e4dfe3e06ab783f33171f9bde9e8ed092510fcd0"
-  integrity sha512-WETy6tG0CT5gm1O+xCbyapWNsCcmIvrn4NHViIGYo2AT8FV2qUCXdaB+WqYxSv/vS5mFqhBYnfZAAkVArjBmUg==
+  version "1.4.306"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.306.tgz#3f16bc14e150ad79803145fffeaf0bee15d3fca7"
+  integrity sha512-1zGmLFfpcs2v7ELt/1HgLZF6Gm2CCHaAdNKxd9Ge4INSU/HDYWjs7fcWU6eVMmhkpwmh+52ZrGCUU+Ji9OJihA==
 
 email-validator@^2.0.4:
   version "2.0.4"
@@ -10445,9 +10445,9 @@ pino-std-serializers@^6.0.0:
   integrity sha512-KO0m2f1HkrPe9S0ldjx7za9BJjeHqBku5Ch8JyxETxT8dEFGz1PwgrHaOQupVYitpzbFSYm7nnljxD8dik2c+g==
 
 pino@^8.0.0, pino@^8.6.1:
-  version "8.10.0"
-  resolved "https://registry.yarnpkg.com/pino/-/pino-8.10.0.tgz#fe35a3fe90554630b0254d3f810f6fae27c38990"
-  integrity sha512-ODfIe+giJtQGsvNAEj5/sHHpL3TFBg161JBH4W62Hc0l0PJjsDFD1R7meLI4PZ2aoHDJznxFNShkJcaG/qJToQ==
+  version "8.11.0"
+  resolved "https://registry.yarnpkg.com/pino/-/pino-8.11.0.tgz#2a91f454106b13e708a66c74ebc1c2ab7ab38498"
+  integrity sha512-Z2eKSvlrl2rH8p5eveNUnTdd4AjJk8tAsLkHYZQKGHP4WTh2Gi1cOSOs3eWPqaj+niS3gj4UkoreoaWgF3ZWYg==
   dependencies:
     atomic-sleep "^1.0.0"
     fast-redact "^3.1.1"
