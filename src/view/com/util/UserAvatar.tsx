@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import FastImage from 'react-native-fast-image'
 import {
   openCamera,
@@ -59,7 +60,7 @@ export function UserAvatar({
   const dropdownItems = [
     {
       label: 'Camera',
-      icon: 'camera',
+      icon: 'camera' as IconProp,
       onPress: async () => {
         if (!(await requestCameraAccessIfNeeded())) {
           return
@@ -76,7 +77,7 @@ export function UserAvatar({
     },
     {
       label: 'Library',
-      icon: 'image',
+      icon: 'image' as IconProp,
       onPress: async () => {
         if (!(await requestPhotoAccessIfNeeded())) {
           return

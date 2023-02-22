@@ -92,7 +92,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       color: theme.palette.default.postCtrl,
     }),
     [theme],
-  )
+  ) as StyleProp<ViewStyle>
   const [repostMod, setRepostMod] = React.useState<number>(0)
   const [likeMod, setLikeMod] = React.useState<number>(0)
   // DISABLED see #135
@@ -174,7 +174,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           <RepostIcon
             style={
               opts.isReposted || repostMod > 0
-                ? styles.ctrlIconReposted
+                ? (styles.ctrlIconReposted as StyleProp<ViewStyle>)
                 : defaultCtrlColor
             }
             strokeWidth={2.4}
@@ -212,7 +212,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           onPress={onPressToggleUpvoteWrapper}>
           {opts.isUpvoted || likeMod > 0 ? (
             <HeartIconSolid
-              style={[styles.ctrlIconUpvoted]}
+              style={styles.ctrlIconUpvoted as StyleProp<ViewStyle>}
               size={opts.big ? 22 : 16}
             />
           ) : (

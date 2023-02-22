@@ -159,7 +159,7 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
           icon={<BellIcon style={pal.text as StyleProp<ViewStyle>} size="28" />}
           label="Notifications"
           url="/notifications"
-          count={store.me.notificationCount}
+          count={store.me.notifications.unreadCount}
         />
         <MenuItem
           icon={

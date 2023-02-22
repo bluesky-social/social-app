@@ -29,11 +29,7 @@ export const ExternalEmbed = ({
     <View style={[styles.outer, pal.view, pal.border]}>
       {link.isLoading ? (
         <View
-          style={[
-            styles.image,
-            styles.imageFallback,
-            {backgroundColor: pal.colors.backgroundLight},
-          ]}>
+          style={[styles.image, {backgroundColor: pal.colors.backgroundLight}]}>
           <ActivityIndicator size="large" style={styles.spinner} />
         </View>
       ) : link.localThumb ? (

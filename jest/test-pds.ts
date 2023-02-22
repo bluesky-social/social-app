@@ -87,6 +87,8 @@ export async function createServer(): Promise<TestPDS> {
     dbPostgresUrl: process.env.DB_POSTGRES_URL,
     blobstoreLocation: `${blobstoreLoc}/blobs`,
     blobstoreTmp: `${blobstoreLoc}/tmp`,
+    maxSubscriptionBuffer: 200,
+    repoBackfillLimitMs: 1e3 * 60 * 60,
   })
 
   const db = PDSDatabase.memory()

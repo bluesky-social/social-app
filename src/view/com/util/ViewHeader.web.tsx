@@ -32,11 +32,6 @@ export const ViewHeader = observer(function ViewHeader({
   const onPressBack = () => {
     store.nav.tab.goBack()
   }
-  const onPressReconnect = () => {
-    store.session.connect().catch(e => {
-      store.log.warn('Failed to reconnect to server', e)
-    })
-  }
   if (typeof canGoBack === 'undefined') {
     canGoBack = store.nav.tab.canGoBack
   }
@@ -76,29 +71,6 @@ export const ViewHeader = observer(function ViewHeader({
           </Text>
         </View>
       )}
-      {!store.session.online ? (
-        <TouchableOpacity style={styles.btn} onPress={onPressReconnect}>
-          {store.session.attemptingConnect ? (
-            <ActivityIndicator />
-          ) : (
-            <>
-              <FontAwesomeIcon
-                icon="signal"
-                style={pal.text as FontAwesomeIconStyle}
-                size={16}
-              />
-              <FontAwesomeIcon
-                icon="x"
-                style={[
-                  styles.littleXIcon,
-                  {backgroundColor: pal.colors.background},
-                ]}
-                size={8}
-              />
-            </>
-          )}
-        </TouchableOpacity>
-      ) : undefined}
     </CenteredView>
   )
 })

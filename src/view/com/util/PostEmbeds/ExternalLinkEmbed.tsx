@@ -11,8 +11,8 @@ const ExternalLinkEmbed = ({
   imageChild,
 }: {
   link: PresentedExternal
-  onImagePress: () => void
-  imageChild: React.ReactNode
+  onImagePress?: () => void
+  imageChild?: React.ReactNode
 }) => {
   const pal = usePalette('default')
   return (

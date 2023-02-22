@@ -24,7 +24,7 @@ import {useStores, RootStoreModel} from '../../../../state'
 import {
   requestPhotoAccessIfNeeded,
   requestCameraAccessIfNeeded,
-} from '../../../lib/permissions'
+} from '../../../../lib/permissions'
 
 const MAX_WIDTH = 2000
 const MAX_HEIGHT = 2000
@@ -90,7 +90,7 @@ export const PhotoCarouselPicker = ({
       if (!(await requestCameraAccessIfNeeded())) {
         return
       }
-      const cameraRes = await openCamera({
+      const cameraRes = await openCamera(store, {
         mediaType: 'photo',
         ...IMAGE_PARAMS,
       })

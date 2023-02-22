@@ -48,9 +48,17 @@ export const Modal = observer(function Modal() {
       />
     )
   } else if (store.shell.activeModal?.name === 'report-post') {
-    element = <ReportPostModal.Component />
+    element = (
+      <ReportPostModal.Component
+        {...(store.shell.activeModal as models.ReportPostModal)}
+      />
+    )
   } else if (store.shell.activeModal?.name === 'report-account') {
-    element = <ReportAccountModal.Component />
+    element = (
+      <ReportAccountModal.Component
+        {...(store.shell.activeModal as models.ReportAccountModal)}
+      />
+    )
   } else if (store.shell.activeModal?.name === 'crop-image') {
     element = (
       <CropImageModal.Component

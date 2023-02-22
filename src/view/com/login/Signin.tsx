@@ -94,7 +94,7 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
 
   const onPressRetryConnect = () => setRetryDescribeTrigger({})
   const onPressForgotPassword = () => {
-    track('Signin:PressedForgotPassword')
+    // track('Signin:PressedForgotPassword') TODO
     setCurrentForm(Forms.ForgotPassword)
   }
 

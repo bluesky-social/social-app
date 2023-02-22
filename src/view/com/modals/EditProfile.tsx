@@ -59,21 +59,21 @@ export function Component({
   const onPressCancel = () => {
     store.shell.closeModal()
   }
-  const onSelectNewAvatar = async (img: PickedImage) => {
+  const onSelectNewAvatar = async (img: PickedMedia) => {
     // track('EditProfile:AvatarSelected') TODO
     try {
       const finalImg = await compressIfNeeded(img, 1000000)
-      setNewUserAvatar(finalImg)
+      setNewUserAvatar({mediaType: 'photo', ...finalImg})
       setUserAvatar(finalImg.path)
     } catch (e: any) {
       setError(cleanError(e))
     }
   }
-  const onSelectNewBanner = async (img: PickedImage) => {
+  const onSelectNewBanner = async (img: PickedMedia) => {
     // track('EditProfile:BannerSelected') TODO
     try {
       const finalImg = await compressIfNeeded(img, 1000000)
-      setNewUserBanner(finalImg)
+      setNewUserBanner({mediaType: 'photo', ...finalImg})
       setUserBanner(finalImg.path)
     } catch (e: any) {
       setError(cleanError(e))

@@ -97,7 +97,7 @@ export const DesktopLeftColumn = observer(() => {
       <NavItem
         href="/notifications"
         label="Notifications"
-        count={store.me.notificationCount}
+        count={store.me.notifications.unreadCount}
         icon={<BellIcon />}
         iconFilled={<BellIconSolid />}
       />

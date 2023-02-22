@@ -10,7 +10,10 @@ import {
 } from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import RootSiblings from 'react-native-root-siblings'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
 import {Button, ButtonType} from './Button'
 import {colors} from '../../../lib/styles'
@@ -258,7 +261,7 @@ const DropdownItems = ({
   width,
   items,
   onPressItem,
-}: DropDownItemProps): React.ReactNode => {
+}: DropDownItemProps) => {
   const pal = usePalette('default')
   const theme = useTheme()
   const dropDownBackgroundColor =
@@ -284,7 +287,7 @@ const DropdownItems = ({
               <FontAwesomeIcon
                 style={styles.icon}
                 icon={item.icon}
-                color={pal.text.color as text}
+                color={pal.text.color as string}
               />
             )}
             <Text style={[styles.label, pal.text]}>{item.label}</Text>

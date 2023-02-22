@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {Image as PickedImage} from '../../view/com/util/images/image-crop-picker/ImageCropPicker'
+import {PickedMedia} from '../../view/com/util/images/image-crop-picker/ImageCropPicker'
 import {
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorProfile as Profile,
@@ -133,8 +133,8 @@ export class ProfileViewModel {
 
   async updateProfile(
     updates: Profile.Record,
-    newUserAvatar: PickedImage | undefined,
-    newUserBanner: PickedImage | undefined,
+    newUserAvatar: PickedMedia | undefined,
+    newUserBanner: PickedMedia | undefined,
   ) {
     if (newUserAvatar) {
       const res = await this.rootStore.api.com.atproto.blob.upload(

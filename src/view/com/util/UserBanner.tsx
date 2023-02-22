@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import FastImage from 'react-native-fast-image'
 import {colors, gradients} from '../../lib/styles'
 import {
@@ -30,7 +31,7 @@ export function UserBanner({
   const dropdownItems = [
     {
       label: 'Camera',
-      icon: 'camera',
+      icon: 'camera' as IconProp,
       onPress: async () => {
         if (!(await requestCameraAccessIfNeeded())) {
           return
@@ -48,7 +49,7 @@ export function UserBanner({
     },
     {
       label: 'Library',
-      icon: 'image',
+      icon: 'image' as IconProp,
       onPress: async () => {
         if (!(await requestPhotoAccessIfNeeded())) {
           return

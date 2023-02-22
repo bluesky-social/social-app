@@ -65,7 +65,11 @@ export const Modal = observer(function Modal() {
     )
   } else if (store.shell.activeModal?.name === 'report-post') {
     snapPoints = ReportPostModal.snapPoints
-    element = <ReportPostModal.Component />
+    element = (
+      <ReportPostModal.Component
+        {...(store.shell.activeModal as models.ReportPostModal)}
+      />
+    )
   } else if (store.shell.activeModal?.name === 'report-account') {
     snapPoints = ReportAccountModal.snapPoints
     element = (

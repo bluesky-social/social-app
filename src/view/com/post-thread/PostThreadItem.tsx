@@ -348,7 +348,11 @@ export const PostThreadItem = observer(function PostThreadItem({
             title={itemTitle}
             noFeedback>
             <Text style={pal.link}>Continue thread...</Text>
-            <FontAwesomeIcon icon="angle-right" style={pal.link} size={18} />
+            <FontAwesomeIcon
+              icon="angle-right"
+              style={pal.link as FontAwesomeIconStyle}
+              size={18}
+            />
           </Link>
         ) : undefined}
       </>

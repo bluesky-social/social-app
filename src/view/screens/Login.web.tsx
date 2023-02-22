@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  hero: {},
   heroText: {
     backgroundColor: colors.white,
     paddingTop: 10,

@@ -4,7 +4,7 @@ import BackgroundFetch, {
 
 export function configure(
   handler: (taskId: string) => Promise<void>,
-  timeoutHandler: (taskId: string) => Promise<void>,
+  timeoutHandler: (taskId: string) => void,
 ): Promise<BackgroundFetchStatus> {
   return BackgroundFetch.configure(
     {minimumFetchInterval: 15},

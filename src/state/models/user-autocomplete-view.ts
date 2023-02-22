@@ -1,8 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {
-  AppBskyGraphGetFollows as GetFollows,
-  AppBskyActorSearchTypeahead as SearchTypeahead,
-} from '@atproto/api'
+import {AppBskyActorRef} from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {RootStoreModel} from './root-store'
 
@@ -14,8 +11,8 @@ export class UserAutocompleteViewModel {
   lock = new AwaitLock()
 
   // data
-  follows: GetFollows.Follow[] = []
-  searchRes: SearchTypeahead.User[] = []
+  follows: AppBskyActorRef.WithInfo[] = []
+  searchRes: AppBskyActorRef.WithInfo[] = []
   knownHandles: Set<string> = new Set()
 
   constructor(public rootStore: RootStoreModel) {
