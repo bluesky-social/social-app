@@ -14,7 +14,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {TABS_EXPLAINER} from 'lib/assets'
 import {TABS_ENABLED} from 'lib/build-flags'

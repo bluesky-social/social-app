@@ -6,7 +6,7 @@ import {Link} from '../../com/util/Link'
 import {Text} from '../../com/util/text/Text'
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {s, colors, gradients} from 'lib/styles'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {
   HomeIcon,

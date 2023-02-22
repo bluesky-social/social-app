@@ -5,7 +5,7 @@ import {CenteredView, FlatList} from '../util/Views'
 import {
   PostThreadViewModel,
   PostThreadViewPostModel,
-} from '../../../state/models/post-thread-view'
+} from 'state/models/post-thread-view'
 import {PostThreadItem} from './PostThreadItem'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {s} from 'lib/styles'

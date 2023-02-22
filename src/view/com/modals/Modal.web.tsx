@@ -1,10 +1,10 @@
 import React from 'react'
 import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 
-import * as models from '../../../state/models/shell-ui'
+import * as models from 'state/models/shell-ui'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'

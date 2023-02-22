@@ -2,10 +2,10 @@ import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {CenteredView, FlatList} from '../util/Views'
-import {VotesViewModel, VoteItem} from '../../../state/models/votes-view'
+import {VotesViewModel, VoteItem} from 'state/models/votes-view'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 
 export const PostVotedBy = observer(function PostVotedBy({
   uri,

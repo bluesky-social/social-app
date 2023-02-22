@@ -12,7 +12,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {CenteredView} from './Views'
 import {Text} from './text/Text'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {colors} from 'lib/styles'
 

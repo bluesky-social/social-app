@@ -7,7 +7,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import * as Toast from '../util/Toast'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import * as apilib from 'lib/api/index'
 
 export function ProfileCard({

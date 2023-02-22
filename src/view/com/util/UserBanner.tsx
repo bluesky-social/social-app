@@ -11,7 +11,7 @@ import {
   openPicker,
   PickedMedia,
 } from './images/image-crop-picker/ImageCropPicker'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {
   requestPhotoAccessIfNeeded,
   requestCameraAccessIfNeeded,

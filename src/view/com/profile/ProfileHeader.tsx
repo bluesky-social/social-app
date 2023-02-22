@@ -13,13 +13,13 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {BlurView} from '../util/BlurView'
-import {ProfileViewModel} from '../../../state/models/profile-view'
-import {useStores} from '../../../state'
+import {ProfileViewModel} from 'state/models/profile-view'
+import {useStores} from 'state/index'
 import {
   EditProfileModal,
   ReportAccountModal,
   ProfileImageLightbox,
-} from '../../../state/models/shell-ui'
+} from 'state/models/shell-ui'
 import {pluralize} from 'lib/strings/helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {s, gradients} from 'lib/styles'

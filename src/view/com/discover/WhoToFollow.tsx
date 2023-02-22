@@ -6,8 +6,8 @@ import {
   View,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {useStores} from '../../../state'
-import {SuggestedActorsViewModel} from '../../../state/models/suggested-actors-view'
+import {useStores} from 'state/index'
+import {SuggestedActorsViewModel} from 'state/models/suggested-actors-view'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'

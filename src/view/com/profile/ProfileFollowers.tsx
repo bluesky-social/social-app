@@ -4,11 +4,11 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {
   UserFollowersViewModel,
   FollowerItem,
-} from '../../../state/models/user-followers-view'
+} from 'state/models/user-followers-view'
 import {CenteredView, FlatList} from '../util/Views'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 
 export const ProfileFollowers = observer(function ProfileFollowers({
   name,

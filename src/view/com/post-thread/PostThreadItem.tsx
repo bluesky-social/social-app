@@ -7,7 +7,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {PostThreadViewPostModel} from '../../../state/models/post-thread-view'
+import {PostThreadViewPostModel} from 'state/models/post-thread-view'
 import {Link} from '../util/Link'
 import {RichText} from '../util/text/RichText'
 import {Text} from '../util/text/Text'
@@ -17,7 +17,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {ago} from 'lib/strings/time'
 import {pluralize} from 'lib/strings/helpers'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/PostEmbeds'
 import {PostCtrls} from '../util/PostCtrls'

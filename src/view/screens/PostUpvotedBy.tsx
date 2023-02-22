@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {PostVotedBy as PostLikedByComponent} from '../com/post-thread/PostVotedBy'
 import {ScreenParams} from '../routes'
-import {useStores} from '../../state'
+import {useStores} from 'state/index'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 
 export const PostUpvotedBy = ({navIdx, visible, params}: ScreenParams) => {

@@ -14,7 +14,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {s, colors} from 'lib/styles'
 import {FEEDBACK_FORM_URL} from 'lib/constants'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {
   HomeIcon,
   BellIcon,
@@ -22,7 +22,7 @@ import {
   CogIcon,
   MagnifyingGlassIcon,
 } from 'lib/icons'
-import {TabPurpose, TabPurposeMainPath} from '../../../state/models/navigation'
+import {TabPurpose, TabPurposeMainPath} from 'state/models/navigation'
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {Text} from '../../com/util/text/Text'
 import {ToggleButton} from '../../com/util/forms/ToggleButton'

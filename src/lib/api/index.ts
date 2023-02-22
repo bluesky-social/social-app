@@ -1,6 +1,6 @@
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
-import {RootStoreModel} from '../../state/models/root-store'
+import {RootStoreModel} from 'state/models/root-store'
 import {extractEntities} from 'lib/strings/rich-text-detection'
 import {isNetworkError} from 'lib/strings/errors'
 import {LinkMeta} from '../link-meta/link-meta'

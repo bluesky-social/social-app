@@ -8,7 +8,7 @@ import {Text} from '../com/util/text/Text'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
 import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from '../../state'
+import {useStores} from 'state/index'
 import {CLOUD_SPLASH} from 'lib/assets'
 import {useAnalytics} from '@segment/analytics-react-native'
 

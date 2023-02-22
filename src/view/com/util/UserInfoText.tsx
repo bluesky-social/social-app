@@ -4,7 +4,7 @@ import {StyleProp, StyleSheet, TextStyle} from 'react-native'
 import {Link} from './Link'
 import {Text} from './text/Text'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {TypographyVariant} from 'lib/ThemeContext'
 
 export function UserInfoText({

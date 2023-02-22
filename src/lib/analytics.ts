@@ -1,6 +1,6 @@
 import {AppState, AppStateStatus} from 'react-native'
 import {createClient} from '@segment/analytics-react-native'
-import {RootStoreModel, AppInfo} from '../state/models/root-store'
+import {RootStoreModel, AppInfo} from 'state/models/root-store'
 
 export const segmentClient = createClient({
   writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',

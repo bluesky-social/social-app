@@ -1,6 +1,6 @@
 import he from 'he'
 import {isBskyAppUrl} from '../strings/url-helpers'
-import {RootStoreModel} from '../../state'
+import {RootStoreModel} from 'state/index'
 import {extractBskyMeta} from './bsky'
 import {extractHtmlMeta} from './html'
 

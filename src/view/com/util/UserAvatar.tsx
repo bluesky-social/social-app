@@ -14,7 +14,7 @@ import {
   requestPhotoAccessIfNeeded,
   requestCameraAccessIfNeeded,
 } from 'lib/permissions'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {colors, gradients} from 'lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'

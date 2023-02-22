@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {Text} from '../util/text/Text'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {s, colors, gradients} from 'lib/styles'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'

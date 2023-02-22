@@ -8,7 +8,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
 import VersionNumber from 'react-native-version-number'
-import {useStores} from '../../state'
+import {useStores} from 'state/index'
 import {ScreenParams} from '../routes'
 import {s} from 'lib/styles'
 import {ScrollView} from '../com/util/Views'
@@ -18,9 +18,9 @@ import {Text} from '../com/util/text/Text'
 import * as Toast from '../com/util/Toast'
 import {UserAvatar} from '../com/util/UserAvatar'
 import {usePalette} from 'lib/hooks/usePalette'
-import {AccountData} from '../../state/models/session'
+import {AccountData} from 'state/models/session'
 // import {useAnalytics} from '@segment/analytics-react-native' TODO
-import {DeleteAccountModal} from '../../state/models/shell-ui'
+import {DeleteAccountModal} from 'state/models/shell-ui'
 
 export const Settings = observer(function Settings({
   navIdx,

@@ -6,13 +6,9 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {ScrollView, TextInput} from './util'
 import {Text} from '../util/text/Text'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
-import {
-  LOCAL_DEV_SERVICE,
-  STAGING_SERVICE,
-  PROD_SERVICE,
-} from '../../../state/index'
+import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'state/index'
 import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
 
 export const snapPoints = ['80%']

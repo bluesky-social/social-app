@@ -1,8 +1,8 @@
 import {LikelyType, LinkMeta} from './link-meta'
 import {match as matchRoute} from '../../view/routes'
 import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
-import {RootStoreModel} from '../../state'
-import {PostThreadViewModel} from '../../state/models/post-thread-view'
+import {RootStoreModel} from 'state/index'
+import {PostThreadViewModel} from 'state/models/post-thread-view'
 
 import {Home} from '../../view/screens/Home'
 import {Search} from '../../view/screens/Search'

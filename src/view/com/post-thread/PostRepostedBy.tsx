@@ -5,10 +5,10 @@ import {CenteredView, FlatList} from '../util/Views'
 import {
   RepostedByViewModel,
   RepostedByItem,
-} from '../../../state/models/reposted-by-view'
+} from 'state/models/reposted-by-view'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 
 export const PostRepostedBy = observer(function PostRepostedBy({
   uri,

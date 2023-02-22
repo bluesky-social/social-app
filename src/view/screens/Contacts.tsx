@@ -6,7 +6,7 @@ import {Selector} from '../com/util/Selector'
 import {Text} from '../com/util/text/Text'
 import {colors} from 'lib/styles'
 import {ScreenParams} from '../routes'
-import {useStores} from '../../state'
+import {useStores} from 'state/index'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 
 export const Contacts = ({navIdx, visible}: ScreenParams) => {

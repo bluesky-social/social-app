@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import {ComAtprotoReportReasonType} from '@atproto/api'
 import LinearGradient from 'react-native-linear-gradient'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {s, colors, gradients} from 'lib/styles'
 import {RadioGroup, RadioGroupItem} from '../util/forms/RadioGroup'
 import {Text} from '../util/text/Text'

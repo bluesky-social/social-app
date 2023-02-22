@@ -1,9 +1,9 @@
 /// <reference lib="dom" />
 
-import {CropImageModal} from '../../../../../state/models/shell-ui'
+import {CropImageModal} from 'state/models/shell-ui'
 import {PickerOpts, CameraOpts, CropperOpts, PickedMedia} from './types'
 export type {PickedMedia} from './types'
-import {RootStoreModel} from '../../../../../state'
+import {RootStoreModel} from 'state/index'
 
 interface PickedFile {
   uri: string

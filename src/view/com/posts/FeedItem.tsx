@@ -8,7 +8,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {FeedItemModel} from '../../../state/models/feed-view'
+import {FeedItemModel} from 'state/models/feed-view'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
@@ -19,7 +19,7 @@ import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from '@segment/analytics-react-native'
 

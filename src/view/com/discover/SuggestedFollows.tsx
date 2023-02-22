@@ -4,11 +4,11 @@ import {CenteredView, FlatList} from '../util/Views'
 import {observer} from 'mobx-react-lite'
 import {ErrorScreen} from '../util/error/ErrorScreen'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {
   SuggestedActorsViewModel,
   SuggestedActor,
-} from '../../../state/models/suggested-actors-view'
+} from 'state/models/suggested-actors-view'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 

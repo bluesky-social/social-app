@@ -11,7 +11,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {colors, gradients} from 'lib/styles'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 
 type OnPress = ((event: GestureResponderEvent) => void) | undefined
 export const FAB = observer(

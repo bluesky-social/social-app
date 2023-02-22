@@ -12,7 +12,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ExternalLinkEmbed from './ExternalLinkEmbed'
 import {PresentedExternal} from '@atproto/api/dist/client/types/app/bsky/embed/external'
-import {useStores} from '../../../../state'
+import {useStores} from 'state/index'
 
 const YoutubeEmbed = ({
   link,

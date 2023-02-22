@@ -13,14 +13,14 @@ import {
 import {
   UserLocalPhotosModel,
   PhotoIdentifier,
-} from '../../../../state/models/user-local-photos'
+} from 'state/models/user-local-photos'
 import {
   compressIfNeeded,
   moveToPremanantPath,
   scaleDownDimensions,
 } from 'lib/images'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores, RootStoreModel} from '../../../../state'
+import {useStores, RootStoreModel} from 'state/index'
 import {
   requestPhotoAccessIfNeeded,
   requestCameraAccessIfNeeded,

@@ -14,8 +14,8 @@ import {
   FontAwesomeIconStyle,
   Props,
 } from '@fortawesome/react-native-fontawesome'
-import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
-import {PostThreadViewModel} from '../../../state/models/post-thread-view'
+import {NotificationsViewItemModel} from 'state/models/notifications-view'
+import {PostThreadViewModel} from 'state/models/post-thread-view'
 import {s, colors} from 'lib/styles'
 import {ago} from 'lib/strings/time'
 import {pluralize} from 'lib/strings/helpers'

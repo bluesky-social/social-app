@@ -3,7 +3,7 @@ import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {SuggestedFollows} from '../discover/SuggestedFollows'
 import {Text} from '../util/text/Text'
-import {useStores} from '../../../state'
+import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 
 export const Follows = observer(() => {
