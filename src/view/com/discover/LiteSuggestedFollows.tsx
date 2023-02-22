@@ -8,7 +8,6 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import {observer} from 'mobx-react-lite'
 import _omit from 'lodash.omit'
-import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'

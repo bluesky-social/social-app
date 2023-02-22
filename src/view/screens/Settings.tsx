@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
+import VersionNumber from 'react-native-version-number'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
 import {s} from '../lib/styles'
@@ -18,6 +19,8 @@ import * as Toast from '../com/util/Toast'
 import {UserAvatar} from '../com/util/UserAvatar'
 import {usePalette} from '../lib/hooks/usePalette'
 import {AccountData} from '../../state/models/session'
+// import {useAnalytics} from '@segment/analytics-react-native' TODO
+import {DeleteAccountModal} from '../../state/models/shell-ui'
 
 export const Settings = observer(function Settings({
   navIdx,
@@ -25,7 +28,12 @@ export const Settings = observer(function Settings({
 }: ScreenParams) {
   const pal = usePalette('default')
   const store = useStores()
+  // const {screen, track} = useAnalytics() TODO
   const [isSwitching, setIsSwitching] = React.useState(false)
+
+  // useEffect(() => {
+  //   screen('Settings') TODO
+  // }, [screen])
 
   useEffect(() => {
     if (!visible) {
@@ -36,21 +44,29 @@ export const Settings = observer(function Settings({
   }, [visible, store, navIdx])
 
   const onPressSwitchAccount = async (acct: AccountData) => {
+    // track('Settings:SwitchAccountButtonClicked') TODO
     setIsSwitching(true)
     if (await store.session.resumeSession(acct)) {
       setIsSwitching(false)
+      store.nav.tab.fixedTabReset()
       Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
       return
     }
     setIsSwitching(false)
     Toast.show('Sorry! We need you to enter your password.')
+    store.nav.tab.fixedTabReset()
     store.session.clear()
   }
   const onPressAddAccount = () => {
+    // track('Settings:AddAccountButtonClicked') TODO
     store.session.clear()
   }
   const onPressSignout = () => {
+    // track('Settings:SignOutButtonClicked') TODO
     store.session.logout()
+  }
+  const onPressDeleteAccount = () => {
+    store.shell.openModal(new DeleteAccountModal())
   }
 
   return (
@@ -143,22 +159,35 @@ export const Settings = observer(function Settings({
               </Text>
             </View>
           </TouchableOpacity>
+
           <View style={styles.spacer} />
           <Text type="sm-medium" style={[s.mb5]}>
+            Danger zone
+          </Text>
+          <TouchableOpacity
+            style={[pal.view, s.p10, s.mb10]}
+            onPress={onPressDeleteAccount}>
+            <Text style={pal.textLight}>Delete my account</Text>
+          </TouchableOpacity>
+          <Text type="sm-medium" style={[s.mt10, s.mb5]}>
             Developer tools
           </Text>
           <Link
             style={[pal.view, s.p10, s.mb2]}
             href="/sys/log"
             title="System log">
-            <Text style={pal.link}>System log</Text>
+            <Text style={pal.textLight}>System log</Text>
           </Link>
           <Link
             style={[pal.view, s.p10, s.mb2]}
             href="/sys/debug"
             title="Debug tools">
-            <Text style={pal.link}>Storybook</Text>
+            <Text style={pal.textLight}>Storybook</Text>
           </Link>
+          <Text type="sm" style={[s.mt10, pal.textLight]}>
+            Build version {VersionNumber.appVersion} (
+            {VersionNumber.buildVersion})
+          </Text>
           <View style={s.footerSpacer} />
         </View>
       </ScrollView>

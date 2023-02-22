@@ -65,6 +65,8 @@ import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
 import {faTrashCan} from '@fortawesome/free-regular-svg-icons/faTrashCan'
 import {faX} from '@fortawesome/free-solid-svg-icons/faX'
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark'
+import {faPlay} from '@fortawesome/free-solid-svg-icons/faPlay'
+import {faPause} from '@fortawesome/free-solid-svg-icons/faPause'
 
 export function setup() {
   library.add(
@@ -133,5 +135,7 @@ export function setup() {
     faTrashCan,
     faX,
     faXmark,
+    faPlay,
+    faPause,
   )
 }

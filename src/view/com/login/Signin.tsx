@@ -13,7 +13,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
-import {sessionClient as AtpApi, SessionServiceClient} from '@atproto/api'
+import AtpAgent from '@atproto/api'
 // import {useAnalytics} from '@segment/analytics-react-native' TODO
 import {LogoTextHero} from './Logo'
 import {Text} from '../util/text/Text'
@@ -26,6 +26,7 @@ import {ServerInputModal} from '../../../state/models/shell-ui'
 import {AccountData} from '../../../state/models/session'
 import {isNetworkError} from '../../../lib/errors'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {cleanError} from '../../../lib/strings'
 
 enum Forms {
   Login,
@@ -38,6 +39,7 @@ enum Forms {
 export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   const pal = usePalette('default')
   const store = useStores()
+  // const {track} = useAnalytics() TODO
   const [error, setError] = useState<string>('')
   const [retryDescribeTrigger, setRetryDescribeTrigger] = useState<any>({})
   const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
@@ -91,6 +93,10 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   }, [store.session, store.log, serviceUrl, retryDescribeTrigger])
 
   const onPressRetryConnect = () => setRetryDescribeTrigger({})
+  const onPressForgotPassword = () => {
+    track('Signin:PressedForgotPassword')
+    setCurrentForm(Forms.ForgotPassword)
+  }
 
   return (
     <KeyboardAvoidingView testID="signIn" behavior="padding" style={[pal.view]}>
@@ -104,7 +110,7 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
           setError={setError}
           setServiceUrl={setServiceUrl}
           onPressBack={onPressBack}
-          onPressForgotPassword={gotoForm(Forms.ForgotPassword)}
+          onPressForgotPassword={onPressForgotPassword}
           onPressRetryConnect={onPressRetryConnect}
         />
       ) : undefined}
@@ -153,9 +159,13 @@ const ChooseAccountForm = ({
   onSelectAccount: (account?: AccountData) => void
   onPressBack: () => void
 }) => {
-  // const {track} = useAnalytics() TODO
+  // const {track, screen} = useAnalytics() TODO
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = React.useState(false)
+
+  // React.useEffect(() => {
+  // screen('Choose Account') TODO
+  // }, [screen])
 
   const onTryAccount = async (account: AccountData) => {
     if (account.accessJwt && account.refreshJwt) {
@@ -264,12 +274,13 @@ const LoginForm = ({
   // const {track} = useAnalytics() TODO
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [handle, setHandle] = useState<string>(initialHandle)
+  const [identifier, setIdentifier] = useState<string>(initialHandle)
   const [password, setPassword] = useState<string>('')
 
   const onPressSelectService = () => {
     store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
     Keyboard.dismiss()
+    // track('Signin:PressedSelectService') TODO
   }
 
   const onPressNext = async () => {
@@ -278,20 +289,21 @@ const LoginForm = ({
 
     try {
       // try to guess the handle if the user just gave their own username
-      let fullHandle = handle
+      let fullIdent = identifier
       if (
+        !identifier.includes('@') && // not an email
         serviceDescription &&
         serviceDescription.availableUserDomains.length > 0
       ) {
         let matched = false
         for (const domain of serviceDescription.availableUserDomains) {
-          if (fullHandle.endsWith(domain)) {
+          if (fullIdent.endsWith(domain)) {
             matched = true
           }
         }
         if (!matched) {
-          fullHandle = createFullHandle(
-            handle,
+          fullIdent = createFullHandle(
+            identifier,
             serviceDescription.availableUserDomains[0],
           )
         }
@@ -299,7 +311,7 @@ const LoginForm = ({
 
       await store.session.login({
         service: serviceUrl,
-        handle: fullHandle,
+        identifier: fullIdent,
         password,
       })
       // track('Sign In', {resumedSession: false}) TODO
@@ -314,12 +326,12 @@ const LoginForm = ({
           'Unable to contact your service. Please check your Internet connection.',
         )
       } else {
-        setError(errMsg.replace(/^Error:/, ''))
+        setError(cleanError(errMsg))
       }
     }
   }
 
-  const isReady = !!serviceDescription && !!handle && !!password
+  const isReady = !!serviceDescription && !!identifier && !!password
   return (
     <View testID="loginForm">
       <LogoTextHero />
@@ -361,13 +373,13 @@ const LoginForm = ({
           <TextInput
             testID="loginUsernameInput"
             style={[pal.text, styles.textInput]}
-            placeholder="Username"
+            placeholder="Username or email address"
             placeholderTextColor={pal.colors.textLight}
             autoCapitalize="none"
             autoFocus
             autoCorrect={false}
-            value={handle}
-            onChangeText={str => setHandle((str || '').toLowerCase())}
+            value={identifier}
+            onChangeText={str => setIdentifier((str || '').toLowerCase())}
             editable={!isProcessing}
           />
         </View>
@@ -464,6 +476,11 @@ const ForgotPasswordForm = ({
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
+  // const {screen} = useAnalytics() TODO
+
+  // useEffect(() => {
+  // screen('Signin:ForgotPassword') TODO
+  // }, [screen])
 
   const onPressSelectService = () => {
     store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
@@ -478,8 +495,8 @@ const ForgotPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const api = AtpApi.service(serviceUrl) as SessionServiceClient
-      await api.com.atproto.account.requestPasswordReset({email})
+      const agent = new AtpAgent({service: serviceUrl})
+      await agent.api.com.atproto.account.requestPasswordReset({email})
       onEmailSent()
     } catch (e: any) {
       const errMsg = e.toString()
@@ -490,7 +507,7 @@ const ForgotPasswordForm = ({
           'Unable to contact your service. Please check your Internet connection.',
         )
       } else {
-        setError(errMsg.replace(/^Error:/, ''))
+        setError(cleanError(errMsg))
       }
     }
   }
@@ -604,6 +621,12 @@ const SetNewPasswordForm = ({
   onPasswordSet: () => void
 }) => {
   const pal = usePalette('default')
+  // const {screen} = useAnalytics() TODO
+
+  // useEffect(() => {
+  // screen('Signin:SetNewPasswordForm') TODO
+  // }, [screen])
+
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [resetCode, setResetCode] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -613,8 +636,11 @@ const SetNewPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const api = AtpApi.service(serviceUrl) as SessionServiceClient
-      await api.com.atproto.account.resetPassword({token: resetCode, password})
+      const agent = new AtpAgent({service: serviceUrl})
+      await agent.api.com.atproto.account.resetPassword({
+        token: resetCode,
+        password,
+      })
       onPasswordSet()
     } catch (e: any) {
       const errMsg = e.toString()
@@ -625,7 +651,7 @@ const SetNewPasswordForm = ({
           'Unable to contact your service. Please check your Internet connection.',
         )
       } else {
-        setError(errMsg.replace(/^Error:/, ''))
+        setError(cleanError(errMsg))
       }
     }
   }
@@ -726,6 +752,12 @@ const SetNewPasswordForm = ({
 }
 
 const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
+  // const {screen} = useAnalytics() TODO
+
+  // useEffect(() => {
+  // screen('Signin:PasswordUpdatedForm') TODO
+  // }, [screen])
+
   const pal = usePalette('default')
   return (
     <>

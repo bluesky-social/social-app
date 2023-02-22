@@ -18,7 +18,7 @@ export const ProfileFollows = ({navIdx, visible, params}: ScreenParams) => {
 
   return (
     <View>
-      <ViewHeader title="Followed" subtitle={`by ${name}`} />
+      <ViewHeader title="Following" />
       <ProfileFollowsComponent name={name} />
     </View>
   )

@@ -14,7 +14,7 @@ export const defaultTheme: Theme = {
       link: colors.blue3,
       border: '#f0e9e9',
       borderDark: '#e0d9d9',
-      icon: colors.gray3,
+      icon: colors.gray4,
 
       // non-standard
       textVeryLight: colors.gray4,
@@ -208,8 +208,13 @@ export const defaultTheme: Theme = {
       fontWeight: '800',
     },
 
-    'title-xl': {
+    'title-2xl': {
       fontSize: 34,
+      letterSpacing: 0.25,
+      fontWeight: '500',
+    },
+    'title-xl': {
+      fontSize: 28,
       letterSpacing: 0.25,
       fontWeight: '500',
     },
@@ -237,6 +242,11 @@ export const defaultTheme: Theme = {
       letterSpacing: 0.4,
       fontWeight: '400',
     },
+    'button-lg': {
+      fontWeight: '500',
+      fontSize: 18,
+      letterSpacing: 0.5,
+    },
     button: {
       fontWeight: '500',
       fontSize: 14,
@@ -263,7 +273,7 @@ export const darkTheme: Theme = {
       link: colors.blue3,
       border: colors.gray6,
       borderDark: colors.gray5,
-      icon: colors.gray5,
+      icon: colors.gray4,
 
       // non-standard
       textVeryLight: colors.gray4,

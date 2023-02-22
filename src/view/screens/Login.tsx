@@ -1,11 +1,6 @@
-import React, {useState} from 'react'
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import FastImage, {Source as FISource} from 'react-native-fast-image'
 import {observer} from 'mobx-react-lite'
 import {Signin} from '../com/login/Signin'
 import {CreateAccount} from '../com/login/CreateAccount'
@@ -13,7 +8,9 @@ import {Text} from '../com/util/text/Text'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
 import {colors} from '../lib/styles'
 import {usePalette} from '../lib/hooks/usePalette'
+import {useStores} from '../../state'
 import {CLOUD_SPLASH} from '../lib/assets'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 enum ScreenState {
   S_SigninOrCreateAccount,
@@ -28,6 +25,12 @@ const SigninOrCreateAccount = ({
   onPressSignin: () => void
   onPressCreateAccount: () => void
 }) => {
+  const {screen} = useAnalytics()
+
+  useEffect(() => {
+    screen('Login')
+  }, [screen])
+
   const pal = usePalette('default')
   return (
     <>
@@ -57,22 +60,28 @@ const SigninOrCreateAccount = ({
 
 export const Login = observer(() => {
   const pal = usePalette('default')
+  const store = useStores()
   const [screenState, setScreenState] = useState<ScreenState>(
     ScreenState.S_SigninOrCreateAccount,
   )
 
-  if (screenState === ScreenState.S_SigninOrCreateAccount) {
+  if (
+    store.session.isResumingSession ||
+    screenState === ScreenState.S_SigninOrCreateAccount
+  ) {
     return (
       <View style={styles.container}>
-        <Image source={CLOUD_SPLASH} style={styles.bgImg} />
+        <FastImage source={CLOUD_SPLASH as FISource} style={styles.bgImg} />
         <SafeAreaView testID="noSessionView" style={styles.container}>
           <ErrorBoundary>
-            <SigninOrCreateAccount
-              onPressSignin={() => setScreenState(ScreenState.S_Signin)}
-              onPressCreateAccount={() =>
-                setScreenState(ScreenState.S_CreateAccount)
-              }
-            />
+            {!store.session.isResumingSession && (
+              <SigninOrCreateAccount
+                onPressSignin={() => setScreenState(ScreenState.S_Signin)}
+                onPressCreateAccount={() =>
+                  setScreenState(ScreenState.S_CreateAccount)
+                }
+              />
+            )}
           </ErrorBoundary>
         </SafeAreaView>
       </View>

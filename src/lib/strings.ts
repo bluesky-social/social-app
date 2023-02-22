@@ -198,13 +198,16 @@ export function enforceLen(str: string, len: number, ellipsis = false): string {
 
 export function cleanError(str: any): string {
   if (!str) {
-    return str
+    return ''
   }
   if (typeof str !== 'string') {
     str = str.toString()
   }
   if (isNetworkError(str)) {
     return 'Unable to connect. Please check your internet connection and try again.'
+  }
+  if (str.includes('Upstream Failure')) {
+    return 'The server appears to be experiencing issues. Please try again in a few moments.'
   }
   if (str.startsWith('Error: ')) {
     return str.slice('Error: '.length)
@@ -264,4 +267,33 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
     }
   }
   return url
+}
+
+export const getYoutubeVideoId = (link: string): string | undefined => {
+  let url
+  try {
+    url = new URL(link)
+  } catch (e) {
+    return undefined
+  }
+
+  if (
+    url.hostname !== 'www.youtube.com' &&
+    url.hostname !== 'youtube.com' &&
+    url.hostname !== 'youtu.be'
+  ) {
+    return undefined
+  }
+  if (url.hostname === 'youtu.be') {
+    const videoId = url.pathname.split('/')[1]
+    if (!videoId) {
+      return undefined
+    }
+    return videoId
+  }
+  const videoId = url.searchParams.get('v') as string
+  if (!videoId) {
+    return undefined
+  }
+  return videoId
 }

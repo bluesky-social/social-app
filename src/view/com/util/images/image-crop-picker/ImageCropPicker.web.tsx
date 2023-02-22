@@ -31,17 +31,17 @@ export async function openPicker(
 
 export async function openCamera(
   _store: RootStoreModel,
-  opts: CameraOpts,
+  _opts: CameraOpts,
 ): Promise<PickedMedia> {
-  const mediaType = opts.mediaType || 'photo'
+  // const mediaType = opts.mediaType || 'photo' TODO
   throw new Error('TODO')
 }
 
 export async function openCropper(
   _store: RootStoreModel,
-  opts: CropperOpts,
+  _opts: CropperOpts,
 ): Promise<PickedMedia> {
-  const mediaType = opts.mediaType || 'photo'
+  // const mediaType = opts.mediaType || 'photo' TODO
   throw new Error('TODO')
 }
 

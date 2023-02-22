@@ -30,9 +30,10 @@ import {useStores, DEFAULT_SERVICE} from '../../../state'
 import {ServiceDescription} from '../../../state/models/session'
 import {ServerInputModal} from '../../../state/models/shell-ui'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {cleanError} from '../../../lib/strings'
 
 export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
-  // const {track} = useAnalytics() TODO
+  // const {track, screen} = useAnalytics() TODO
   const pal = usePalette('default')
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -48,6 +49,10 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const [password, setPassword] = useState<string>('')
   const [handle, setHandle] = useState<string>('')
   const [is13, setIs13] = useState<boolean>(false)
+
+  // useEffect(() => {
+  // screen('CreateAccount') TODO
+  // }, [screen])
 
   useEffect(() => {
     let aborted = false
@@ -118,7 +123,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
       }
       store.log.error('Failed to create account', e)
       setIsProcessing(false)
-      setError(errMsg.replace(/^Error:/, ''))
+      setError(cleanError(errMsg))
     }
   }
 

@@ -1,10 +1,10 @@
-import {sessionClient as AtpApi} from '@atproto/api'
+import AtpAgent from '@atproto/api'
 import RNFS from 'react-native-fs'
 
 const TIMEOUT = 10e3 // 10s
 
 export function doPolyfill() {
-  AtpApi.xrpc.fetch = fetchHandler
+  AtpAgent.configure({fetch: fetchHandler})
 }
 
 interface FetchHandlerResponse {

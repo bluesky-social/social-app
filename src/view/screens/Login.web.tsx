@@ -1,11 +1,5 @@
 import React, {useState} from 'react'
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {CenteredView} from '../com/util/Views'
 import {Signin} from '../com/login/Signin'
@@ -14,7 +8,6 @@ import {Text} from '../com/util/text/Text'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
 import {colors} from '../lib/styles'
 import {usePalette} from '../lib/hooks/usePalette'
-import {CLOUD_SPLASH} from '../lib/assets'
 
 enum ScreenState {
   S_SigninOrCreateAccount,

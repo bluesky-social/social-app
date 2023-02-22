@@ -30,6 +30,7 @@ import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {usePalette} from '../../lib/hooks/usePalette'
+import {useAnalytics} from '@segment/analytics-react-native'
 
 export const ProfileHeader = observer(function ProfileHeader({
   view,
@@ -40,7 +41,7 @@ export const ProfileHeader = observer(function ProfileHeader({
 }) {
   const pal = usePalette('default')
   const store = useStores()
-
+  const {track} = useAnalytics()
   const onPressBack = () => {
     store.nav.tab.goBack()
   }
@@ -53,7 +54,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     view?.toggleFollowing().then(
       () => {
         Toast.show(
-          `${view.myState.follow ? 'Following' : 'No longer following'} ${
+          `${view.viewer.following ? 'Following' : 'No longer following'} ${
             view.displayName || view.handle
           }`,
         )
@@ -62,18 +63,23 @@ export const ProfileHeader = observer(function ProfileHeader({
     )
   }
   const onPressEditProfile = () => {
+    track('ProfileHeader:EditProfileButtonClicked')
     store.shell.openModal(new EditProfileModal(view, onRefreshAll))
   }
   const onPressFollowers = () => {
+    track('ProfileHeader:FollowersButtonClicked')
     store.nav.navigate(`/profile/${view.handle}/followers`)
   }
   const onPressFollows = () => {
+    track('ProfileHeader:FollowsButtonClicked')
     store.nav.navigate(`/profile/${view.handle}/follows`)
   }
   const onPressShare = () => {
+    track('ProfileHeader:ShareButtonClicked')
     Share.share({url: toShareUrl(`/profile/${view.handle}`)})
   }
   const onPressMuteAccount = async () => {
+    track('ProfileHeader:MuteAccountButtonClicked')
     try {
       await view.muteAccount()
       Toast.show('Account muted')
@@ -83,6 +89,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     }
   }
   const onPressUnmuteAccount = async () => {
+    track('ProfileHeader:UnmuteAccountButtonClicked')
     try {
       await view.unmuteAccount()
       Toast.show('Account unmuted')
@@ -92,6 +99,7 @@ export const ProfileHeader = observer(function ProfileHeader({
     }
   }
   const onPressReportAccount = () => {
+    track('ProfileHeader:ReportAccountButtonClicked')
     store.shell.openModal(new ReportAccountModal(view.did))
   }
 
@@ -110,7 +118,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             <LoadingPlaceholder width={100} height={31} style={styles.br50} />
           </View>
           <View style={styles.displayNameLine}>
-            <Text type="title-xl" style={[pal.text, styles.title]}>
+            <Text type="title-2xl" style={[pal.text, styles.title]}>
               {view.displayName || view.handle}
             </Text>
           </View>
@@ -135,8 +143,8 @@ export const ProfileHeader = observer(function ProfileHeader({
   let dropdownItems: DropdownItem[] = [{label: 'Share', onPress: onPressShare}]
   if (!isMe) {
     dropdownItems.push({
-      label: view.myState.muted ? 'Unmute Account' : 'Mute Account',
-      onPress: view.myState.muted ? onPressUnmuteAccount : onPressMuteAccount,
+      label: view.viewer.muted ? 'Unmute Account' : 'Mute Account',
+      onPress: view.viewer.muted ? onPressUnmuteAccount : onPressMuteAccount,
     })
     dropdownItems.push({
       label: 'Report Account',
@@ -159,7 +167,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             </TouchableOpacity>
           ) : (
             <>
-              {view.myState.follow ? (
+              {store.me.follows.isFollowing(view.did) ? (
                 <TouchableOpacity
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.mainBtn, pal.btn]}>
@@ -206,11 +214,18 @@ export const ProfileHeader = observer(function ProfileHeader({
           ) : undefined}
         </View>
         <View style={styles.displayNameLine}>
-          <Text type="title-xl" style={[pal.text, styles.title]}>
+          <Text type="title-2xl" style={[pal.text, styles.title]}>
             {view.displayName || view.handle}
           </Text>
         </View>
         <View style={styles.handleLine}>
+          {view.viewer.followedBy ? (
+            <View style={[styles.pill, pal.btn, s.mr5]}>
+              <Text type="xs" style={[pal.text]}>
+                Follows you
+              </Text>
+            </View>
+          ) : undefined}
           <Text style={pal.textLight}>@{view.handle}</Text>
         </View>
         <View style={styles.metricsLine}>
@@ -247,22 +262,21 @@ export const ProfileHeader = observer(function ProfileHeader({
             </Text>
           </View>
         </View>
-        {view.description ? (
+        {view.descriptionRichText ? (
           <RichText
             style={[styles.description, pal.text]}
             numberOfLines={15}
-            text={view.description}
-            entities={view.descriptionEntities}
+            richText={view.descriptionRichText}
           />
         ) : undefined}
-        {view.myState.muted ? (
+        {view.viewer.muted ? (
           <View style={[styles.detailLine, pal.btn, s.p5]}>
             <FontAwesomeIcon
               icon={['far', 'eye-slash']}
               style={[pal.text, s.mr5]}
             />
             <Text type="md" style={[s.mr2, pal.text]}>
-              Account muted.
+              Account muted
             </Text>
           </View>
         ) : undefined}
@@ -367,6 +381,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 5,
+  },
+
+  pill: {
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
   },
 
   br40: {borderRadius: 40},

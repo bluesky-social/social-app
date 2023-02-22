@@ -1,3 +1,4 @@
+import {getYoutubeVideoId} from './../../src/lib/strings'
 import {
   extractEntities,
   detectLinkables,
@@ -485,5 +486,31 @@ describe('toShareUrl', () => {
       const result = toShareUrl(inputs[i])
       expect(result).toEqual(outputs[i])
     }
+  })
+})
+
+describe('getYoutubeVideoId', () => {
+  it(' should return undefined for invalid youtube links', () => {
+    expect(getYoutubeVideoId('')).toBeUndefined()
+    expect(getYoutubeVideoId('https://www.google.com')).toBeUndefined()
+    expect(getYoutubeVideoId('https://www.youtube.com')).toBeUndefined()
+    expect(
+      getYoutubeVideoId('https://www.youtube.com/channelName'),
+    ).toBeUndefined()
+    expect(
+      getYoutubeVideoId('https://www.youtube.com/channel/channelName'),
+    ).toBeUndefined()
+  })
+
+  it('getYoutubeVideoId should return video id for valid youtube links', () => {
+    expect(getYoutubeVideoId('https://www.youtube.com/watch?v=videoId')).toBe(
+      'videoId',
+    )
+    expect(
+      getYoutubeVideoId(
+        'https://www.youtube.com/watch?v=videoId&feature=share',
+      ),
+    ).toBe('videoId')
+    expect(getYoutubeVideoId('https://youtu.be/videoId')).toBe('videoId')
   })
 })

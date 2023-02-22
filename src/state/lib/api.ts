@@ -1,9 +1,3 @@
-/**
- * The environment is a place where services and shared dependencies between
- * models live. They are made available to every model via dependency injection.
- */
-
-// import {ReactNativeStore} from './auth'
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from '../models/root-store'
@@ -11,6 +5,7 @@ import {extractEntities} from '../../lib/strings'
 import {isNetworkError} from '../../lib/errors'
 import {LinkMeta} from '../../lib/link-meta'
 import {Image} from '../../lib/images'
+import {RichText} from './../../lib/strings/rich-text'
 
 export interface ExternalEmbedDraft {
   uri: string
@@ -19,9 +14,22 @@ export interface ExternalEmbedDraft {
   localThumb?: Image
 }
 
+export async function resolveName(store: RootStoreModel, didOrHandle: string) {
+  if (!didOrHandle) {
+    throw new Error('Invalid handle: ""')
+  }
+  if (didOrHandle.startsWith('did:')) {
+    return didOrHandle
+  }
+  const res = await store.api.com.atproto.handle.resolve({
+    handle: didOrHandle,
+  })
+  return res.data.did
+}
+
 export async function post(
   store: RootStoreModel,
-  text: string,
+  rawText: string,
   replyTo?: string,
   extLink?: ExternalEmbedDraft,
   images?: string[],
@@ -30,6 +38,9 @@ export async function post(
 ) {
   let embed: AppBskyEmbedImages.Main | AppBskyEmbedExternal.Main | undefined
   let reply
+  const text = new RichText(rawText, undefined, {
+    cleanNewlines: true,
+  }).text.trim()
 
   onStateChange?.('Processing...')
   const entities = extractEntities(text, knownHandles)

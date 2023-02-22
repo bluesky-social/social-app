@@ -1,7 +1,8 @@
-import React, {useCallback} from 'react'
-import {StyleSheet, View, TouchableOpacity, Alert, Image} from 'react-native'
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
 import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import FastImage from 'react-native-fast-image'
 import {colors, gradients} from '../../lib/styles'
 import {
   openCamera,
@@ -10,6 +11,12 @@ import {
   PickedMedia,
 } from './images/image-crop-picker/ImageCropPicker'
 import {useStores} from '../../../state'
+import {
+  requestPhotoAccessIfNeeded,
+  requestCameraAccessIfNeeded,
+} from '../../../lib/permissions'
+import {DropdownButton} from './forms/DropdownButton'
+import {usePalette} from '../../lib/hooks/usePalette'
 
 export function UserBanner({
   banner,
@@ -19,39 +26,57 @@ export function UserBanner({
   onSelectNewBanner?: (img: PickedMedia) => void
 }) {
   const store = useStores()
-  const handleEditBanner = useCallback(() => {
-    Alert.alert('Select upload method', '', [
-      {
-        text: 'Take a new photo',
-        onPress: () => {
-          openCamera(store, {
+  const pal = usePalette('default')
+  const dropdownItems = [
+    {
+      label: 'Camera',
+      icon: 'camera',
+      onPress: async () => {
+        if (!(await requestCameraAccessIfNeeded())) {
+          return
+        }
+        onSelectNewBanner?.(
+          await openCamera(store, {
             mediaType: 'photo',
             // compressImageMaxWidth: 3000, TODO needed?
             width: 3000,
             // compressImageMaxHeight: 1000, TODO needed?
             height: 1000,
-          }).then(onSelectNewBanner)
-        },
+          }),
+        )
       },
-      {
-        text: 'Select from gallery',
-        onPress: () => {
-          openPicker(store, {
+    },
+    {
+      label: 'Library',
+      icon: 'image',
+      onPress: async () => {
+        if (!(await requestPhotoAccessIfNeeded())) {
+          return
+        }
+        const items = await openPicker(store, {
+          mediaType: 'photo',
+        })
+        onSelectNewBanner?.(
+          await openCropper(store, {
             mediaType: 'photo',
-          }).then(async items => {
-            await openCropper(store, {
-              mediaType: 'photo',
-              path: items[0].path,
-              // compressImageMaxWidth: 3000, TODO needed?
-              width: 3000,
-              // compressImageMaxHeight: 1000, TODO needed?
-              height: 1000,
-            }).then(onSelectNewBanner)
-          })
-        },
+            path: items[0].path,
+            // compressImageMaxWidth: 3000, TODO needed?
+            width: 3000,
+            // compressImageMaxHeight: 1000, TODO needed?
+            height: 1000,
+          }),
+        )
       },
-    ])
-  }, [store, onSelectNewBanner])
+    },
+    // TODO: Remove banner https://github.com/bluesky-social/social-app/issues/122
+    // {
+    //   label: 'Remove',
+    //   icon: ['far', 'trash-can'],
+    //   onPress: () => {
+    //     // Remove banner api call
+    //   },
+    // },
+  ]
 
   const renderSvg = () => (
     <Svg width="100%" height="150" viewBox="50 0 200 100">
@@ -72,22 +97,29 @@ export function UserBanner({
 
   // setUserBanner is only passed as prop on the EditProfile component
   return onSelectNewBanner ? (
-    <TouchableOpacity onPress={handleEditBanner}>
+    <DropdownButton
+      type="bare"
+      items={dropdownItems}
+      openToRight
+      rightOffset={-200}
+      bottomOffset={-10}
+      menuWidth={170}>
       {banner ? (
-        <Image style={styles.bannerImage} source={{uri: banner}} />
+        <FastImage style={styles.bannerImage} source={{uri: banner}} />
       ) : (
         renderSvg()
       )}
-      <View style={styles.editButtonContainer}>
+      <View style={[styles.editButtonContainer, pal.btn]}>
         <FontAwesomeIcon
           icon="camera"
           size={12}
           style={{color: colors.white}}
+          color={pal.text.color as string}
         />
       </View>
-    </TouchableOpacity>
+    </DropdownButton>
   ) : banner ? (
-    <Image
+    <FastImage
       style={styles.bannerImage}
       resizeMode="cover"
       source={{uri: banner}}

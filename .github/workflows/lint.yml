@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Yarn install
         run: yarn
       - name: Lint Reporter
@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: 18
       - name: Check out Git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Yarn install
         run: yarn
       - name: Run tests

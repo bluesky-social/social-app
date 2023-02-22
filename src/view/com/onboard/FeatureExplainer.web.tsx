@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import {
   Animated,
   Image,
-  SafeAreaView,
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
