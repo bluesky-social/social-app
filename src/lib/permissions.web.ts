@@ -1,3 +1,7 @@
+/*
+At the moment, Web doesn't have any equivalence for these.
+*/
+
 export const PHOTO_LIBRARY = ''
 export const CAMERA = ''
 
