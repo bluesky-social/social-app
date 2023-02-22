@@ -44,6 +44,16 @@ const imageLoaderConfiguration = {
   },
 }
 
+const reactNativeWebWebviewConfiguration = {
+  test: /postMock.html$/,
+  use: {
+    loader: 'file-loader',
+    options: {
+      name: '[name].[ext]',
+    },
+  },
+}
+
 module.exports = {
   mode: webpackEnv,
 
@@ -64,13 +74,18 @@ module.exports = {
   ],
 
   module: {
-    rules: [babelLoaderConfiguration, imageLoaderConfiguration],
+    rules: [
+      babelLoaderConfiguration,
+      imageLoaderConfiguration,
+      reactNativeWebWebviewConfiguration,
+    ],
   },
 
   resolve: {
     alias: {
       'react-native$': 'react-native-web',
       'react-native-linear-gradient': 'react-native-web-linear-gradient',
+      'react-native-webview': 'react-native-web-webview',
     },
     extensions: [
       '.web.tsx',
