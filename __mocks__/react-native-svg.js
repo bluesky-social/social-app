@@ -3,7 +3,7 @@
 // https://github.com/FormidableLabs/react-native-svg-mock
 import React from 'react'
 
-const createComponent = function (name: string) {
+const createComponent = function (name) {
   return class extends React.Component {
     // overwrite the displayName, since this is a class created dynamically
     static displayName = name
