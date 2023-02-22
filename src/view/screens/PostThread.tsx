@@ -1,12 +1,12 @@
 import React, {useEffect, useMemo} from 'react'
 import {View} from 'react-native'
-import {makeRecordUri} from '../../lib/strings'
+import {makeRecordUri} from 'lib/strings/url-helpers'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {PostThreadViewModel} from '../../state/models/post-thread-view'
 import {ScreenParams} from '../routes'
 import {useStores} from '../../state'
-import {s} from '../lib/styles'
+import {s} from 'lib/styles'
 
 export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()

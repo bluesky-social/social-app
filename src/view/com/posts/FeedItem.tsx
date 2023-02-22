@@ -18,9 +18,9 @@ import {PostEmbeds} from '../util/PostEmbeds'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import {s} from '../../lib/styles'
+import {s} from 'lib/styles'
 import {useStores} from '../../../state'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from '@segment/analytics-react-native'
 
 export const FeedItem = observer(function ({

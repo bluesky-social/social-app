@@ -1,10 +1,10 @@
 import React from 'react'
 import {StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {HeartIcon} from '../../lib/icons'
-import {s} from '../../lib/styles'
-import {useTheme} from '../../lib/ThemeContext'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {HeartIcon} from 'lib/icons'
+import {s} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export function LoadingPlaceholder({
   width,

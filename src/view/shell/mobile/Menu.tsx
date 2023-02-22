@@ -12,8 +12,8 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {s, colors} from '../../lib/styles'
-import {FEEDBACK_FORM_URL} from '../../../lib/constants'
+import {s, colors} from 'lib/styles'
+import {FEEDBACK_FORM_URL} from 'lib/constants'
 import {useStores} from '../../../state'
 import {
   HomeIcon,
@@ -21,12 +21,12 @@ import {
   UserIcon,
   CogIcon,
   MagnifyingGlassIcon,
-} from '../../lib/icons'
+} from 'lib/icons'
 import {TabPurpose, TabPurposeMainPath} from '../../../state/models/navigation'
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {Text} from '../../com/util/text/Text'
 import {ToggleButton} from '../../com/util/forms/ToggleButton'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from '@segment/analytics-react-native'
 
 export const Menu = observer(({onClose}: {onClose: () => void}) => {

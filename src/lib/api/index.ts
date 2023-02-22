@@ -1,11 +1,11 @@
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
-import {RootStoreModel} from '../models/root-store'
-import {extractEntities} from '../../lib/strings'
-import {isNetworkError} from '../../lib/errors'
-import {LinkMeta} from '../../lib/link-meta'
-import {Image} from '../../lib/images'
-import {RichText} from './../../lib/strings/rich-text'
+import {RootStoreModel} from '../../state/models/root-store'
+import {extractEntities} from 'lib/strings/rich-text-detection'
+import {isNetworkError} from 'lib/strings/errors'
+import {LinkMeta} from '../link-meta/link-meta'
+import {Image} from '../images'
+import {RichText} from '../strings/rich-text'
 
 export interface ExternalEmbedDraft {
   uri: string

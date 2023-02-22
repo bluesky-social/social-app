@@ -15,8 +15,8 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {useStores} from '../../../state'
-import {s} from '../../lib/styles'
-import {TABS_EXPLAINER} from '../../lib/assets'
+import {s} from 'lib/styles'
+import {TABS_EXPLAINER} from 'lib/assets'
 import {TABS_ENABLED} from '../../../build-flags'
 
 const ROUTES = TABS_ENABLED

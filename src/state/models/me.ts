@@ -3,7 +3,7 @@ import {RootStoreModel} from './root-store'
 import {FeedModel} from './feed-view'
 import {NotificationsViewModel} from './notifications-view'
 import {MyFollowsModel} from './my-follows'
-import {isObj, hasProp} from '../lib/type-guards'
+import {isObj, hasProp} from 'lib/type-guards'
 
 export class MeModel {
   did: string = ''

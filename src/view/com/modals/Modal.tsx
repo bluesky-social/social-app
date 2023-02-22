@@ -13,7 +13,7 @@ import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
 import * as ReportAccountModal from './ReportAccount'
 import * as DeleteAccountModal from './DeleteAccount'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 import {StyleSheet} from 'react-native'
 
 const CLOSED_SNAPPOINTS = ['10%']

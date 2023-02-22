@@ -4,8 +4,8 @@ import {
   AppBskyActorRef as ActorRef,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
-import {cleanError} from '../../lib/strings'
-import {bundleAsync} from '../../lib/async/bundle'
+import {cleanError} from 'lib/strings/errors'
+import {bundleAsync} from 'lib/async/bundle'
 
 const PAGE_SIZE = 30
 

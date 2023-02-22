@@ -1,0 +1,108 @@
+import {AtUri} from '../../third-party/uri'
+import {PROD_SERVICE} from 'state/index'
+import TLDs from 'tlds'
+
+export function isValidDomain(str: string): boolean {
+  return !!TLDs.find(tld => {
+    let i = str.lastIndexOf(tld)
+    if (i === -1) {
+      return false
+    }
+    return str.charAt(i - 1) === '.' && i === str.length - tld.length
+  })
+}
+
+export function makeRecordUri(
+  didOrName: string,
+  collection: string,
+  rkey: string,
+) {
+  const urip = new AtUri('at://host/')
+  urip.host = didOrName
+  urip.collection = collection
+  urip.rkey = rkey
+  return urip.toString()
+}
+
+export function toNiceDomain(url: string): string {
+  try {
+    const urlp = new URL(url)
+    if (`https://${urlp.host}` === PROD_SERVICE) {
+      return 'Bluesky Social'
+    }
+    return urlp.host
+  } catch (e) {
+    return url
+  }
+}
+
+export function toShortUrl(url: string): string {
+  try {
+    const urlp = new URL(url)
+    const shortened =
+      urlp.host +
+      (urlp.pathname === '/' ? '' : urlp.pathname) +
+      urlp.search +
+      urlp.hash
+    if (shortened.length > 30) {
+      return shortened.slice(0, 27) + '...'
+    }
+    return shortened
+  } catch (e) {
+    return url
+  }
+}
+
+export function toShareUrl(url: string): string {
+  if (!url.startsWith('https')) {
+    const urlp = new URL('https://bsky.app')
+    urlp.pathname = url
+    url = urlp.toString()
+  }
+  return url
+}
+
+export function isBskyAppUrl(url: string): boolean {
+  return url.startsWith('https://bsky.app/')
+}
+
+export function convertBskyAppUrlIfNeeded(url: string): string {
+  if (isBskyAppUrl(url)) {
+    try {
+      const urlp = new URL(url)
+      return urlp.pathname
+    } catch (e) {
+      console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
+    }
+  }
+  return url
+}
+
+export function getYoutubeVideoId(link: string): string | undefined {
+  let url
+  try {
+    url = new URL(link)
+  } catch (e) {
+    return undefined
+  }
+
+  if (
+    url.hostname !== 'www.youtube.com' &&
+    url.hostname !== 'youtube.com' &&
+    url.hostname !== 'youtu.be'
+  ) {
+    return undefined
+  }
+  if (url.hostname === 'youtu.be') {
+    const videoId = url.pathname.split('/')[1]
+    if (!videoId) {
+      return undefined
+    }
+    return videoId
+  }
+  const videoId = url.searchParams.get('v') as string
+  if (!videoId) {
+    return undefined
+  }
+  return videoId
+}

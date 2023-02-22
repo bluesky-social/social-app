@@ -5,9 +5,9 @@ import LinearGradient from 'react-native-linear-gradient'
 import {Link} from '../../com/util/Link'
 import {Text} from '../../com/util/text/Text'
 import {UserAvatar} from '../../com/util/UserAvatar'
-import {s, colors, gradients} from '../../lib/styles'
+import {s, colors, gradients} from 'lib/styles'
 import {useStores} from '../../../state'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 import {
   HomeIcon,
   HomeIconSolid,
@@ -15,7 +15,7 @@ import {
   BellIconSolid,
   MagnifyingGlassIcon,
   CogIcon,
-} from '../../lib/icons'
+} from 'lib/icons'
 
 interface NavItemProps {
   label: string

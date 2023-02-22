@@ -1,4 +1,4 @@
-import {StyleSheet, TextStyle} from 'react-native'
+import {StyleProp, StyleSheet, TextStyle} from 'react-native'
 import {Theme, TypographyVariant} from './ThemeContext'
 
 // 1 is lightest, 2 is light, 3 is mid, 4 is dark, 5 is darkest
@@ -205,4 +205,14 @@ export function lh(
   return {
     lineHeight: (theme.typography[type].fontSize || 16) * height,
   }
+}
+
+export function addStyle<T>(
+  base: StyleProp<T>,
+  addedStyle: StyleProp<T>,
+): StyleProp<T> {
+  if (Array.isArray(base)) {
+    return base.concat([addedStyle])
+  }
+  return [base, addedStyle]
 }

@@ -1,7 +1,7 @@
 import {RootStoreModel} from './root-store'
 import {makeAutoObservable} from 'mobx'
 import {ProfileViewModel} from './profile-view'
-import {isObj, hasProp} from '../lib/type-guards'
+import {isObj, hasProp} from 'lib/type-guards'
 import {PickedMedia} from '../../view/com/util/images/image-crop-picker/types'
 
 export class ConfirmModal {

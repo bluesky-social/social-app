@@ -15,8 +15,8 @@ import {
 import {CenteredView} from '../util/Views.web'
 import {Text} from '../util/text/Text'
 import {useStores} from '../../../state'
-import {s, colors} from '../../lib/styles'
-import {TABS_EXPLAINER} from '../../lib/assets'
+import {s, colors} from 'lib/styles'
+import {TABS_EXPLAINER} from 'lib/assets'
 import {TABS_ENABLED} from '../../../build-flags'
 
 const ROUTES = TABS_ENABLED

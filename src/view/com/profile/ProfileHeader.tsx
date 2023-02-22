@@ -20,8 +20,9 @@ import {
   ReportAccountModal,
   ProfileImageLightbox,
 } from '../../../state/models/shell-ui'
-import {pluralize, toShareUrl} from '../../../lib/strings'
-import {s, gradients} from '../../lib/styles'
+import {pluralize} from 'lib/strings/helpers'
+import {toShareUrl} from 'lib/strings/url-helpers'
+import {s, gradients} from 'lib/styles'
 import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -29,7 +30,7 @@ import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from '@segment/analytics-react-native'
 
 export const ProfileHeader = observer(function ProfileHeader({

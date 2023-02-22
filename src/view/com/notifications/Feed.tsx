@@ -7,8 +7,8 @@ import {FeedItem} from './FeedItem'
 import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {EmptyState} from '../util/EmptyState'
-import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
-import {s} from '../../lib/styles'
+import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {s} from 'lib/styles'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 

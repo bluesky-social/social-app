@@ -8,7 +8,7 @@ import {
 } from '../../../state/models/post-thread-view'
 import {PostThreadItem} from './PostThreadItem'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {s} from '../../lib/styles'
+import {s} from 'lib/styles'
 
 export const PostThread = observer(function PostThread({
   uri,

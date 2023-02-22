@@ -13,19 +13,15 @@ import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from '../../../state'
 import {ProfileViewModel} from '../../../state/models/profile-view'
-import {s, colors, gradients} from '../../lib/styles'
-import {
-  enforceLen,
-  MAX_DISPLAY_NAME,
-  MAX_DESCRIPTION,
-} from '../../../lib/strings'
-import {isNetworkError} from '../../../lib/errors'
-import {compressIfNeeded} from '../../../lib/images'
+import {s, colors, gradients} from 'lib/styles'
+import {enforceLen} from 'lib/strings/helpers'
+import {MAX_DISPLAY_NAME, MAX_DESCRIPTION} from 'lib/constants'
+import {compressIfNeeded} from 'lib/images'
 import {UserBanner} from '../util/UserBanner'
 import {UserAvatar} from '../util/UserAvatar'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 // import {useAnalytics} from '@segment/analytics-react-native' TODO
-import {cleanError} from '../../../lib/strings'
+import {cleanError, isNetworkError} from 'lib/strings/errors'
 
 export const snapPoints = ['80%']
 

@@ -10,8 +10,8 @@ import {useStores} from '../../../state'
 import {SuggestedActorsViewModel} from '../../../state/models/suggested-actors-view'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {Text} from '../util/text/Text'
-import {s} from '../../lib/styles'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export const WhoToFollow = observer(() => {
   const pal = usePalette('default')

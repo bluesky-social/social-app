@@ -3,10 +3,10 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {useStores} from '../../../state'
 import {SuggestedPostsView} from '../../../state/models/suggested-posts-view'
-import {s} from '../../lib/styles'
+import {s} from 'lib/styles'
 import {FeedItem as Post} from '../posts/FeedItem'
 import {Text} from '../util/text/Text'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export const SuggestedPosts = observer(() => {
   const pal = usePalette('default')

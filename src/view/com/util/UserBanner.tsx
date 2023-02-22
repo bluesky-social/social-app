@@ -4,7 +4,7 @@ import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import FastImage from 'react-native-fast-image'
-import {colors, gradients} from '../../lib/styles'
+import {colors, gradients} from 'lib/styles'
 import {
   openCamera,
   openCropper,
@@ -15,9 +15,9 @@ import {useStores} from '../../../state'
 import {
   requestPhotoAccessIfNeeded,
   requestCameraAccessIfNeeded,
-} from '../../../lib/permissions'
+} from 'lib/permissions'
 import {DropdownButton} from './forms/DropdownButton'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export function UserBanner({
   banner,

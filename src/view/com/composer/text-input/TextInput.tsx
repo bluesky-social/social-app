@@ -9,7 +9,7 @@ import PasteInput, {
   PastedFile,
   PasteInputRef,
 } from '@mattermost/react-native-paste-input'
-import {usePalette} from '../../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export type TextInputRef = PasteInputRef
 

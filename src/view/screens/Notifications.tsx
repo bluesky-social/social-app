@@ -5,8 +5,8 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/notifications/Feed'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
-import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
-import {s} from '../lib/styles'
+import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {s} from 'lib/styles'
 import {useAnalytics} from '@segment/analytics-react-native'
 
 const NOTIFICATIONS_POLL_INTERVAL = 15e3

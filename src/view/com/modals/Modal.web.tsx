@@ -2,7 +2,7 @@ import React from 'react'
 import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {useStores} from '../../../state'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 
 import * as models from '../../../state/models/shell-ui'
 

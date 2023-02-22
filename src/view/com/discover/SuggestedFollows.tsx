@@ -9,8 +9,8 @@ import {
   SuggestedActorsViewModel,
   SuggestedActor,
 } from '../../../state/models/suggested-actors-view'
-import {s} from '../../lib/styles'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export const SuggestedFollows = observer(
   ({onNoSuggestions}: {onNoSuggestions?: () => void}) => {

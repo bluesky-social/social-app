@@ -30,20 +30,17 @@ import {CharProgress} from './char-progress/CharProgress'
 import {TextLink} from '../util/Link'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
-import * as apilib from '../../../state/lib/api'
+import * as apilib from 'lib/api/index'
 import {ComposerOpts} from '../../../state/models/shell-ui'
-import {s, colors, gradients} from '../../lib/styles'
-import {
-  detectLinkables,
-  extractEntities,
-  cleanError,
-} from '../../../lib/strings'
-import {getLinkMeta} from '../../../lib/link-meta'
-import {downloadAndResize} from '../../../lib/images'
+import {s, colors, gradients} from 'lib/styles'
+import {cleanError} from 'lib/strings/errors'
+import {detectLinkables, extractEntities} from 'lib/strings/rich-text-detection'
+import {getLinkMeta} from 'lib/link-meta/link-meta'
+import {downloadAndResize} from 'lib/images'
 import {PhotoCarouselPicker, cropPhoto} from './photos/PhotoCarouselPicker'
-import {getMentionAt, insertMentionAt} from '../../../lib/strings/mention-manip'
+import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
 import {SelectedPhoto} from './SelectedPhoto'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 
 const MAX_TEXT_LENGTH = 256
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}

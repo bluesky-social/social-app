@@ -6,15 +6,15 @@ import {
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
-import {bundleAsync} from '../../lib/async/bundle'
+import {bundleAsync} from 'lib/async/bundle'
 type FeedViewPost = AppBskyFeedFeedViewPost.Main
 type ReasonRepost = AppBskyFeedFeedViewPost.ReasonRepost
 type PostView = AppBskyFeedPost.View
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
-import * as apilib from '../lib/api'
-import {cleanError} from '../../lib/strings'
-import {RichText} from '../../lib/strings/rich-text'
+import * as apilib from 'lib/api/index'
+import {cleanError} from 'lib/strings/errors'
+import {RichText} from 'lib/strings/rich-text'
 
 const PAGE_SIZE = 30
 

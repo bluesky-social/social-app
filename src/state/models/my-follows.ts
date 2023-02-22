@@ -1,7 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {FollowRecord, AppBskyActorProfile, AppBskyActorRef} from '@atproto/api'
 import {RootStoreModel} from './root-store'
-import {bundleAsync} from '../../lib/async/bundle'
+import {bundleAsync} from 'lib/async/bundle'
 
 const CACHE_TTL = 1000 * 60 * 60 // hourly
 type FollowsListResponse = Awaited<ReturnType<FollowRecord['list']>>

@@ -8,12 +8,12 @@ import {
 import {ComAtprotoReportReasonType} from '@atproto/api'
 import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from '../../../state'
-import {s, colors, gradients} from '../../lib/styles'
+import {s, colors, gradients} from 'lib/styles'
 import {RadioGroup, RadioGroupItem} from '../util/forms/RadioGroup'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {cleanError} from '../../../lib/strings'
+import {cleanError} from 'lib/strings/errors'
 
 const ITEMS: RadioGroupItem[] = [
   {key: 'spam', label: 'Spam or excessive repeat posts'},

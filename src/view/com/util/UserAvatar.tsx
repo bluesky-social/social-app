@@ -13,11 +13,11 @@ import {
 import {
   requestPhotoAccessIfNeeded,
   requestCameraAccessIfNeeded,
-} from '../../../lib/permissions'
+} from 'lib/permissions'
 import {useStores} from '../../../state'
-import {colors, gradients} from '../../lib/styles'
+import {colors, gradients} from 'lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export function UserAvatar({
   size,

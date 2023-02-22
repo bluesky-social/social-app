@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native'
 import FastImage, {OnLoadEvent} from 'react-native-fast-image'
 import {DELAY_PRESS_IN} from './constants'
-import {clamp} from '../../../../lib/numbers'
+import {clamp} from 'lib/numbers'
 
 const MIN_ASPECT_RATIO = 0.33 // 1/3
 const MAX_ASPECT_RATIO = 5 // 5/1

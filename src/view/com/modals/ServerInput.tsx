@@ -7,7 +7,7 @@ import {
 import {ScrollView, TextInput} from './util'
 import {Text} from '../util/text/Text'
 import {useStores} from '../../../state'
-import {s, colors} from '../../lib/styles'
+import {s, colors} from 'lib/styles'
 import {
   LOCAL_DEV_SERVICE,
   STAGING_SERVICE,

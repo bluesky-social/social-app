@@ -13,8 +13,8 @@ import {
 import {CenteredView} from './Views'
 import {Text} from './text/Text'
 import {useStores} from '../../../state'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {colors} from '../../lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {colors} from 'lib/styles'
 
 const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 

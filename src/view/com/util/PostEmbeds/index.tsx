@@ -12,11 +12,11 @@ import {Image} from '../images/Image'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ImagesLightbox} from '../../../../state/models/shell-ui'
 import {useStores} from '../../../../state'
-import {usePalette} from '../../../lib/hooks/usePalette'
-import {saveImageModal} from '../../../../lib/images'
+import {usePalette} from 'lib/hooks/usePalette'
+import {saveImageModal} from 'lib/images'
 import YoutubeEmbed from './YoutubeEmbed'
 import ExternalLinkEmbed from './ExternalLinkEmbed'
-import {getYoutubeVideoId} from '../../../../lib/strings'
+import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 
 type Embed =
   | AppBskyEmbedImages.Presented

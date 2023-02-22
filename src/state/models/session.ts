@@ -6,7 +6,7 @@ import {
   ComAtprotoServerGetAccountsConfig as GetAccountsConfig,
 } from '@atproto/api'
 import normalizeUrl from 'normalize-url'
-import {isObj, hasProp} from '../lib/type-guards'
+import {isObj, hasProp} from 'lib/type-guards'
 import {z} from 'zod'
 import {RootStoreModel} from './root-store'
 

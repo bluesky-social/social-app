@@ -2,7 +2,7 @@ import React from 'react'
 import {Text} from '../text/Text'
 import {Image} from '../images/Image'
 import {StyleSheet, View} from 'react-native'
-import {usePalette} from '../../../lib/hooks/usePalette'
+import {usePalette} from 'lib/hooks/usePalette'
 import {PresentedExternal} from '@atproto/api/dist/client/types/app/bsky/embed/external'
 
 const ExternalLinkEmbed = ({

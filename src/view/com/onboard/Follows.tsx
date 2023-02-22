@@ -4,7 +4,7 @@ import {observer} from 'mobx-react-lite'
 import {SuggestedFollows} from '../discover/SuggestedFollows'
 import {Text} from '../util/text/Text'
 import {useStores} from '../../../state'
-import {s} from '../../lib/styles'
+import {s} from 'lib/styles'
 
 export const Follows = observer(() => {
   const store = useStores()

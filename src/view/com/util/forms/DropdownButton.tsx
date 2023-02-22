@@ -16,13 +16,13 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
 import {Button, ButtonType} from './Button'
-import {colors} from '../../../lib/styles'
-import {toShareUrl} from '../../../../lib/strings'
+import {colors} from 'lib/styles'
+import {toShareUrl} from 'lib/strings/url-helpers'
 import {useStores} from '../../../../state'
 import {ReportPostModal, ConfirmModal} from '../../../../state/models/shell-ui'
 import {TABS_ENABLED} from '../../../../build-flags'
-import {usePalette} from '../../../lib/hooks/usePalette'
-import {useTheme} from '../../../lib/ThemeContext'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 

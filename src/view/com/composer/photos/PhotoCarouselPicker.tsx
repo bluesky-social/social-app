@@ -18,13 +18,13 @@ import {
   compressIfNeeded,
   moveToPremanantPath,
   scaleDownDimensions,
-} from '../../../../lib/images'
-import {usePalette} from '../../../lib/hooks/usePalette'
+} from 'lib/images'
+import {usePalette} from 'lib/hooks/usePalette'
 import {useStores, RootStoreModel} from '../../../../state'
 import {
   requestPhotoAccessIfNeeded,
   requestCameraAccessIfNeeded,
-} from '../../../../lib/permissions'
+} from 'lib/permissions'
 
 const MAX_WIDTH = 2000
 const MAX_HEIGHT = 2000

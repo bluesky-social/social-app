@@ -5,10 +5,10 @@ import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import * as Toast from '../util/Toast'
-import {s} from '../../lib/styles'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from '../../../state'
-import * as apilib from '../../../state/lib/api'
+import * as apilib from 'lib/api/index'
 
 export function ProfileCard({
   handle,

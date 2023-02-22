@@ -9,9 +9,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {BlurView} from '@react-native-community/blur'
 import {Image} from '../util/images/Image'
 import {Text} from '../util/text/Text'
-import {s} from '../../lib/styles'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {ExternalEmbedDraft} from '../../../state/lib/api'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {ExternalEmbedDraft} from 'lib/api/index'
 
 export const ExternalEmbed = ({
   link,

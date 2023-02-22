@@ -14,8 +14,8 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {FeedModel} from '../../../state/models/feed-view'
 import {FeedItem} from './FeedItem'
 import {ComposerPrompt} from './ComposerPrompt'
-import {OnScrollCb} from '../../lib/hooks/useOnMainScroll'
-import {s} from '../../lib/styles'
+import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {s} from 'lib/styles'
 // import {useAnalytics} from '@segment/analytics-react-native' TODO
 
 const COMPOSE_PROMPT_ITEM = {_reactKey: '__prompt__'}

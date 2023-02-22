@@ -16,16 +16,17 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {NotificationsViewItemModel} from '../../../state/models/notifications-view'
 import {PostThreadViewModel} from '../../../state/models/post-thread-view'
-import {s, colors} from '../../lib/styles'
-import {ago, pluralize} from '../../../lib/strings'
-import {HeartIconSolid} from '../../lib/icons'
+import {s, colors} from 'lib/styles'
+import {ago} from 'lib/strings/time'
+import {pluralize} from 'lib/strings/helpers'
+import {HeartIconSolid} from 'lib/icons'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import {ImageHorzList} from '../util/images/ImageHorzList'
 import {Post} from '../post/Post'
 import {Link} from '../util/Link'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 
 const MAX_AUTHORS = 5
 

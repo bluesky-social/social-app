@@ -5,11 +5,11 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ScrollView} from '../com/util/Views'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
-import {s} from '../lib/styles'
+import {s} from 'lib/styles'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Text} from '../com/util/text/Text'
-import {usePalette} from '../lib/hooks/usePalette'
-import {ago} from '../../lib/strings'
+import {usePalette} from 'lib/hooks/usePalette'
+import {ago} from 'lib/strings/time'
 
 export const Log = observer(function Log({navIdx, visible}: ScreenParams) {
   const pal = usePalette('default')

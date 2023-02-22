@@ -5,9 +5,9 @@ import {
 } from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
-import * as apilib from '../lib/api'
-import {cleanError} from '../../lib/strings'
-import {RichText} from '../../lib/strings/rich-text'
+import * as apilib from 'lib/api/index'
+import {cleanError} from 'lib/strings/errors'
+import {RichText} from 'lib/strings/rich-text'
 
 function* reactKeyGenerator(): Generator<string> {
   let counter = 0

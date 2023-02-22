@@ -1,4 +1,4 @@
-import {extractHtmlMeta} from '../../src/lib/extractHtmlMeta'
+import {extractHtmlMeta} from '../../src/lib/link-meta/html'
 import {exampleComHtml} from './__mocks__/exampleComHtml'
 import {youtubeHTML} from './__mocks__/youtubeHtml'
 import {tiktokHtml} from './__mocks__/tiktokHtml'

@@ -21,8 +21,8 @@ import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from '../../../state'
-import {s, colors} from '../../lib/styles'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {s, colors} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export const Post = observer(function Post({
   uri,

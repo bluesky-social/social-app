@@ -7,8 +7,8 @@ import {
   TextInputSelectionChangeEventData,
   TextStyle,
 } from 'react-native'
-import {usePalette} from '../../../lib/hooks/usePalette'
-import {addStyle} from '../../../lib/addStyle'
+import {usePalette} from 'lib/hooks/usePalette'
+import {addStyle} from 'lib/styles'
 
 export type TextInputRef = RNTextInput
 

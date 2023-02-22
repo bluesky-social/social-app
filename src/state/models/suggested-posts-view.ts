@@ -6,7 +6,7 @@ import {
 type ReasonRepost = AppBskyFeedFeedViewPost.ReasonRepost
 import {RootStoreModel} from './root-store'
 import {FeedItemModel} from './feed-view'
-import {cleanError} from '../../lib/strings'
+import {cleanError} from 'lib/strings/errors'
 
 const TEAM_HANDLES = [
   'jay.bsky.social',

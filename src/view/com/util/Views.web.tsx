@@ -22,9 +22,8 @@ import {
   View,
   ViewProps,
 } from 'react-native'
-import {useTheme} from '../../lib/ThemeContext'
-import {addStyle} from '../../lib/addStyle'
-import {colors} from '../../lib/styles'
+import {useTheme} from 'lib/ThemeContext'
+import {addStyle, colors} from 'lib/styles'
 
 export function CenteredView({
   style,

@@ -2,14 +2,11 @@ import React from 'react'
 import {TextStyle, StyleProp} from 'react-native'
 import {TextLink} from '../Link'
 import {Text} from './Text'
-import {lh} from '../../../lib/styles'
-import {toShortUrl} from '../../../../lib/strings'
-import {
-  RichText as RichTextObj,
-  Entity,
-} from '../../../../lib/strings/rich-text'
-import {useTheme, TypographyVariant} from '../../../lib/ThemeContext'
-import {usePalette} from '../../../lib/hooks/usePalette'
+import {lh} from 'lib/styles'
+import {toShortUrl} from 'lib/strings/url-helpers'
+import {RichText as RichTextObj, Entity} from 'lib/strings/rich-text'
+import {useTheme, TypographyVariant} from 'lib/ThemeContext'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export function RichText({
   type = 'md',

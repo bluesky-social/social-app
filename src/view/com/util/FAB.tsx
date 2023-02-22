@@ -9,8 +9,8 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import {colors, gradients} from '../../lib/styles'
-import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
+import {colors, gradients} from 'lib/styles'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useStores} from '../../../state'
 
 type OnPress = ((event: GestureResponderEvent) => void) | undefined

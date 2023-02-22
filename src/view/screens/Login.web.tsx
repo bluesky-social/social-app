@@ -6,8 +6,8 @@ import {Signin} from '../com/login/Signin'
 import {CreateAccount} from '../com/login/CreateAccount'
 import {Text} from '../com/util/text/Text'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
-import {colors} from '../lib/styles'
-import {usePalette} from '../lib/hooks/usePalette'
+import {colors} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 
 enum ScreenState {
   S_SigninOrCreateAccount,

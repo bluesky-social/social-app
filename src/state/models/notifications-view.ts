@@ -9,10 +9,10 @@ import {
   AppBskyGraphFollow,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
-import {bundleAsync} from '../../lib/async/bundle'
+import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from './root-store'
 import {PostThreadViewModel} from './post-thread-view'
-import {cleanError} from '../../lib/strings'
+import {cleanError} from 'lib/strings/errors'
 
 const GROUPABLE_REASONS = ['vote', 'repost', 'follow']
 const PAGE_SIZE = 30

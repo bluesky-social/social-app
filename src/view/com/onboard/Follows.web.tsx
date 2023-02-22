@@ -5,7 +5,7 @@ import {SuggestedFollows} from '../discover/SuggestedFollows'
 import {CenteredView} from '../util/Views.web'
 import {Text} from '../util/text/Text'
 import {useStores} from '../../../state'
-import {s} from '../../lib/styles'
+import {s} from 'lib/styles'
 
 export const Follows = observer(() => {
   const store = useStores()

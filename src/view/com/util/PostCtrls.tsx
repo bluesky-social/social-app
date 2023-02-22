@@ -23,9 +23,9 @@ import {
   HeartIconSolid,
   RepostIcon,
   CommentBottomArrow,
-} from '../../lib/icons'
-import {s, colors} from '../../lib/styles'
-import {useTheme} from '../../lib/ThemeContext'
+} from 'lib/icons'
+import {s, colors} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
 
 interface PostCtrlsOpts {
   itemUri: string

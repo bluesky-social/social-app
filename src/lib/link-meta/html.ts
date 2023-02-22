@@ -1,5 +1,5 @@
-import {extractTwitterMeta} from './extractTwitterMeta'
-import {extractYoutubeMeta} from './extractYoutubeMeta'
+import {extractTwitterMeta} from './twitter'
+import {extractYoutubeMeta} from './youtube'
 
 interface ExtractHtmlMetaInput {
   html: string

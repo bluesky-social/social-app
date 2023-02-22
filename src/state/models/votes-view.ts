@@ -2,9 +2,9 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
 import {AppBskyFeedGetVotes as GetVotes} from '@atproto/api'
 import {RootStoreModel} from './root-store'
-import {cleanError} from '../../lib/strings'
-import {bundleAsync} from '../../lib/async/bundle'
-import * as apilib from '../lib/api'
+import {cleanError} from 'lib/strings/errors'
+import {bundleAsync} from 'lib/async/bundle'
+import * as apilib from 'lib/api/index'
 
 const PAGE_SIZE = 30
 

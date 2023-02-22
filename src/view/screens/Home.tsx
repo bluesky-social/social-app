@@ -8,8 +8,8 @@ import {FAB} from '../com/util/FAB'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
 import {useStores} from '../../state'
 import {ScreenParams} from '../routes'
-import {s} from '../lib/styles'
-import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
+import {s} from 'lib/styles'
+import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 // import {useAnalytics} from '@segment/analytics-react-native' TODO
 
 const HEADER_HEIGHT = 42

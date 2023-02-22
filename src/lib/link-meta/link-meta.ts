@@ -1,8 +1,8 @@
 import he from 'he'
-import {isBskyAppUrl} from './strings'
-import {RootStoreModel} from '../state'
-import {extractBskyMeta} from './extractBskyMeta'
-import {extractHtmlMeta} from './extractHtmlMeta'
+import {isBskyAppUrl} from '../strings/url-helpers'
+import {RootStoreModel} from '../../state'
+import {extractBskyMeta} from './bsky'
+import {extractHtmlMeta} from './html'
 
 export enum LikelyType {
   HTML,

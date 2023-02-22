@@ -34,8 +34,8 @@ import {Text} from '../../com/util/text/Text'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
 import {TabsSelector} from './TabsSelector'
 import {Composer} from './Composer'
-import {s, colors} from '../../lib/styles'
-import {clamp} from '../../../lib/numbers'
+import {s, colors} from 'lib/styles'
+import {clamp} from 'lib/numbers'
 import {
   GridIcon,
   GridIconSolid,
@@ -44,10 +44,10 @@ import {
   MagnifyingGlassIcon,
   BellIcon,
   BellIconSolid,
-} from '../../lib/icons'
-import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
-import {useTheme} from '../../lib/ThemeContext'
-import {usePalette} from '../../lib/hooks/usePalette'
+} from 'lib/icons'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {useTheme} from 'lib/ThemeContext'
+import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from '@segment/analytics-react-native'
 
 const Btn = ({

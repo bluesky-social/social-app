@@ -3,8 +3,8 @@ import {observer} from 'mobx-react-lite'
 import {Animated, Easing, Platform, StyleSheet, View} from 'react-native'
 import {ComposePost} from '../../com/composer/ComposePost'
 import {ComposerOpts} from '../../../state/models/shell-ui'
-import {useAnimatedValue} from '../../lib/hooks/useAnimatedValue'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export const Composer = observer(
   ({

@@ -14,8 +14,8 @@ import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {EmptyState} from '../com/util/EmptyState'
 import {Text} from '../com/util/text/Text'
 import {FAB} from '../com/util/FAB'
-import {s, colors} from '../lib/styles'
-import {useOnMainScroll} from '../lib/hooks/useOnMainScroll'
+import {s, colors} from 'lib/styles'
+import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from '@segment/analytics-react-native'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}

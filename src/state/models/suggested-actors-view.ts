@@ -2,13 +2,13 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyActorProfile as Profile} from '@atproto/api'
 import shuffle from 'lodash.shuffle'
 import {RootStoreModel} from './root-store'
-import {cleanError} from '../../lib/strings'
-import {bundleAsync} from '../../lib/async/bundle'
+import {cleanError} from 'lib/strings/errors'
+import {bundleAsync} from 'lib/async/bundle'
 import {
-  devSuggestedFollows,
-  productionSuggestedFollows,
-  stagingSuggestedFollows,
-} from '../../lib/suggestedFollows'
+  DEV_SUGGESTED_FOLLOWS,
+  PROD_SUGGESTED_FOLLOWS,
+  STAGING_SUGGESTED_FOLLOWS,
+} from 'lib/constants'
 
 const PAGE_SIZE = 30
 
@@ -16,11 +16,11 @@ export type SuggestedActor = Profile.ViewBasic | Profile.View
 
 const getSuggestionList = ({serviceUrl}: {serviceUrl: string}) => {
   if (serviceUrl.includes('localhost')) {
-    return devSuggestedFollows
+    return DEV_SUGGESTED_FOLLOWS
   } else if (serviceUrl.includes('staging')) {
-    return stagingSuggestedFollows
+    return STAGING_SUGGESTED_FOLLOWS
   } else {
-    return productionSuggestedFollows
+    return PROD_SUGGESTED_FOLLOWS
   }
 }
 

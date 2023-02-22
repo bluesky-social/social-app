@@ -1,4 +1,4 @@
-import {isNetworkError} from '../../src/lib/errors'
+import {isNetworkError} from '../../src/lib/strings/errors'
 
 describe('isNetworkError', () => {
   const inputs = [

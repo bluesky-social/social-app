@@ -1,4 +1,8 @@
-import {LikelyType, getLinkMeta, getLikelyType} from '../../src/lib/link-meta'
+import {
+  LikelyType,
+  getLinkMeta,
+  getLikelyType,
+} from '../../src/lib/link-meta/link-meta'
 import {exampleComHtml} from './__mocks__/exampleComHtml'
 import AtpAgent from '@atproto/api'
 import {DEFAULT_SERVICE, RootStoreModel} from '../../src/state'

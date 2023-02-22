@@ -2,8 +2,8 @@ import {autorun} from 'mobx'
 import {AppState, Platform} from 'react-native'
 import {AtpAgent} from '@atproto/api'
 import {RootStoreModel} from './models/root-store'
-import * as apiPolyfill from './lib/api-polyfill'
-import * as storage from './lib/storage'
+import * as apiPolyfill from 'lib/api/api-polyfill'
+import * as storage from 'lib/storage'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'ios' ? 'http://localhost:2583' : 'http://10.0.2.2:2583'

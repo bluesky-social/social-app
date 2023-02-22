@@ -20,17 +20,14 @@ import {LogoTextHero} from './Logo'
 import {Picker} from '../util/Picker'
 import {TextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
-import {s, colors} from '../../lib/styles'
-import {
-  makeValidHandle,
-  createFullHandle,
-  toNiceDomain,
-} from '../../../lib/strings'
+import {s, colors} from 'lib/styles'
+import {makeValidHandle, createFullHandle} from 'lib/strings/handles'
+import {toNiceDomain} from 'lib/strings/url-helpers'
 import {useStores, DEFAULT_SERVICE} from '../../../state'
 import {ServiceDescription} from '../../../state/models/session'
 import {ServerInputModal} from '../../../state/models/shell-ui'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {cleanError} from '../../../lib/strings'
+import {usePalette} from 'lib/hooks/usePalette'
+import {cleanError} from 'lib/strings/errors'
 
 export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   // const {track, screen} = useAnalytics() TODO

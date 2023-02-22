@@ -4,7 +4,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {RootStoreProvider, RootStoreModel} from '../src/state'
-import {ThemeProvider} from '../src/view/lib/ThemeContext'
+import {ThemeProvider} from '../src/lib/ThemeContext'
 
 const customRender = (ui: any, rootStore: RootStoreModel) =>
   render(

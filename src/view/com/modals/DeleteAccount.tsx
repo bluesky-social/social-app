@@ -10,10 +10,10 @@ import LinearGradient from 'react-native-linear-gradient'
 import * as Toast from '../util/Toast'
 import {Text} from '../util/text/Text'
 import {useStores} from '../../../state'
-import {s, colors, gradients} from '../../lib/styles'
-import {usePalette} from '../../lib/hooks/usePalette'
+import {s, colors, gradients} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {cleanError} from '../../../lib/strings'
+import {cleanError} from 'lib/strings/errors'
 
 export const snapPoints = ['60%']
 

@@ -6,11 +6,11 @@ import {
   AppBskySystemDeclRef,
 } from '@atproto/api'
 type DeclRef = AppBskySystemDeclRef.Main
-import {extractEntities} from '../../lib/strings'
+import {extractEntities} from 'lib/strings/rich-text-detection'
 import {RootStoreModel} from './root-store'
-import * as apilib from '../lib/api'
-import {cleanError} from '../../lib/strings'
-import {RichText} from '../../lib/strings/rich-text'
+import * as apilib from 'lib/api/index'
+import {cleanError} from 'lib/strings/errors'
+import {RichText} from 'lib/strings/rich-text'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
 

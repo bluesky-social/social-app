@@ -13,8 +13,8 @@ import {ErrorBoundary} from '../../com/util/ErrorBoundary'
 import {Lightbox} from '../../com/lightbox/Lightbox'
 import {Modal} from '../../com/modals/Modal'
 import {Composer} from './Composer'
-import {usePalette} from '../../lib/hooks/usePalette'
-import {s} from '../../lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
 
 export const WebShell: React.FC = observer(() => {
   const pal = usePalette('default')

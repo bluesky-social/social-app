@@ -10,9 +10,9 @@ import {
   ViewStyle,
 } from 'react-native'
 import {Text} from './text/Text'
-import {TypographyVariant} from '../../lib/ThemeContext'
+import {TypographyVariant} from 'lib/ThemeContext'
 import {useStores, RootStoreModel} from '../../../state'
-import {convertBskyAppUrlIfNeeded} from '../../../lib/strings'
+import {convertBskyAppUrlIfNeeded} from 'lib/strings/url-helpers'
 
 export const Link = observer(function Link({
   style,
