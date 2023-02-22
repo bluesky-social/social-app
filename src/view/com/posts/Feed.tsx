@@ -111,7 +111,7 @@ export const Feed = observer(function Feed({
       }
       return <FeedItem item={item} />
     },
-    [feed, onPressTryAgain],
+    [feed, onPressTryAgain, onPressCompose],
   )
 
   const FeedFooter = React.useCallback(

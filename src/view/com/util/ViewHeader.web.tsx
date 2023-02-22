@@ -1,15 +1,7 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CenteredView} from './Views'
 import {Text} from './text/Text'
 import {useStores} from 'state/index'

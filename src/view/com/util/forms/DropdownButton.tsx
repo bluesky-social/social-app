@@ -10,10 +10,7 @@ import {
 } from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import RootSiblings from 'react-native-root-siblings'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
 import {Button, ButtonType} from './Button'
 import {colors} from 'lib/styles'
