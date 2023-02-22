@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import FastImage from 'react-native-fast-image'
+import Image from 'view/com/util/images/Image'
 import {
   openCamera,
   openCropper,
@@ -115,7 +115,7 @@ export function UserAvatar({
       bottomOffset={-10}
       menuWidth={170}>
       {avatar ? (
-        <FastImage
+        <Image
           style={{
             width: size,
             height: size,
@@ -123,7 +123,7 @@ export function UserAvatar({
           }}
           source={{
             uri: avatar,
-            priority: FastImage.priority.high,
+            priority: Image.priority.high,
           }}
         />
       ) : (
@@ -138,10 +138,10 @@ export function UserAvatar({
       </View>
     </DropdownButton>
   ) : avatar ? (
-    <FastImage
+    <Image
       style={{width: size, height: size, borderRadius: Math.floor(size / 2)}}
       resizeMode="stretch"
-      source={{uri: avatar, priority: FastImage.priority.high}}
+      source={{uri: avatar, priority: Image.priority.high}}
     />
   ) : (
     renderSvg(size, initials)

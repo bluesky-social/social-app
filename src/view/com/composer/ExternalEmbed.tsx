@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {BlurView} from '../util/BlurView'
-import {Image} from '../util/images/Image'
+import {AutoSizedImage} from '../util/images/AutoSizedImage'
 import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -33,7 +33,7 @@ export const ExternalEmbed = ({
           <ActivityIndicator size="large" style={styles.spinner} />
         </View>
       ) : link.localThumb ? (
-        <Image uri={link.localThumb.path} style={styles.image} />
+        <AutoSizedImage uri={link.localThumb.path} style={styles.image} />
       ) : undefined}
       <View style={styles.inner}>
         {!!link.meta?.title && (

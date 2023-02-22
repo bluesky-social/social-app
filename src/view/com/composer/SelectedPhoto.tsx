@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import FastImage from 'react-native-fast-image'
+import Image from 'view/com/util/images/Image'
 import {colors} from 'lib/styles'
 
 export const SelectedPhoto = ({
@@ -43,7 +43,7 @@ export const SelectedPhoto = ({
               />
             </TouchableOpacity>
 
-            <FastImage
+            <Image
               testID="selectedPhotoImage"
               style={[styles.image, imageStyle]}
               source={{uri: item}}

@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
 import {Link} from '../Link'
-import {Image} from '../images/Image'
+import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ImagesLightbox} from 'state/models/shell-ui'
 import {useStores} from 'state/index'
@@ -91,7 +91,7 @@ export function PostEmbeds({
       } else {
         return (
           <View style={[styles.imagesContainer, style]}>
-            <Image
+            <AutoSizedImage
               uri={embed.images[0].thumb}
               onPress={() => openLightbox(0)}
               onLongPress={() => onLongPress(0)}

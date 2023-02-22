@@ -6,7 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import Image from 'view/com/util/images/Image'
 
 export function ImageHorzList({
   uris,
@@ -21,7 +21,7 @@ export function ImageHorzList({
     <View style={[styles.flexRow, style]}>
       {uris.map((uri, i) => (
         <TouchableWithoutFeedback key={i} onPress={() => onPress?.(i)}>
-          <FastImage source={{uri}} style={styles.image} />
+          <Image source={{uri}} style={styles.image} />
         </TouchableWithoutFeedback>
       ))}
     </View>

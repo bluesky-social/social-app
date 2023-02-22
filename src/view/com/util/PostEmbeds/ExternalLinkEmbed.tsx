@@ -1,6 +1,6 @@
 import React from 'react'
 import {Text} from '../text/Text'
-import {Image} from '../images/Image'
+import {AutoSizedImage} from '../images/AutoSizedImage'
 import {StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {PresentedExternal} from '@atproto/api/dist/client/types/app/bsky/embed/external'
@@ -18,9 +18,12 @@ const ExternalLinkEmbed = ({
   return (
     <>
       {link.thumb ? (
-        <Image uri={link.thumb} style={styles.extImage} onPress={onImagePress}>
+        <AutoSizedImage
+          uri={link.thumb}
+          style={styles.extImage}
+          onPress={onImagePress}>
           {imageChild}
-        </Image>
+        </AutoSizedImage>
       ) : undefined}
       <View style={styles.extInner}>
         <Text type="md-bold" numberOfLines={2} style={[pal.text]}>
