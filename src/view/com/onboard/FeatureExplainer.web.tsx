@@ -17,7 +17,7 @@ import {Text} from '../util/text/Text'
 import {useStores} from '../../../state'
 import {s, colors} from 'lib/styles'
 import {TABS_EXPLAINER} from 'lib/assets'
-import {TABS_ENABLED} from '../../../build-flags'
+import {TABS_ENABLED} from 'lib/build-flags'
 
 const ROUTES = TABS_ENABLED
   ? [

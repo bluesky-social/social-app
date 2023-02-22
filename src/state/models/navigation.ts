@@ -1,6 +1,6 @@
 import {RootStoreModel} from './root-store'
 import {makeAutoObservable} from 'mobx'
-import {TABS_ENABLED} from '../../build-flags'
+import {TABS_ENABLED} from 'lib/build-flags'
 import {segmentClient} from 'lib/analytics'
 
 let __id = 0

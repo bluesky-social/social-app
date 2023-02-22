@@ -1,6 +1,6 @@
 import {RootStoreModel} from './../../../src/state/models/root-store'
 import {NavigationModel} from './../../../src/state/models/navigation'
-import * as flags from '../../../src/build-flags'
+import * as flags from '../../../src/lib/build-flags'
 import AtpAgent from '@atproto/api'
 import {DEFAULT_SERVICE} from '../../../src/state'
 

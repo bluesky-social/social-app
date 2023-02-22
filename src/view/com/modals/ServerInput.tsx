@@ -13,7 +13,7 @@ import {
   STAGING_SERVICE,
   PROD_SERVICE,
 } from '../../../state/index'
-import {LOGIN_INCLUDE_DEV_SERVERS} from '../../../build-flags'
+import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
 
 export const snapPoints = ['80%']
 

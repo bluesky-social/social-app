@@ -20,7 +20,7 @@ import {colors} from 'lib/styles'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useStores} from '../../../../state'
 import {ReportPostModal, ConfirmModal} from '../../../../state/models/shell-ui'
-import {TABS_ENABLED} from '../../../../build-flags'
+import {TABS_ENABLED} from 'lib/build-flags'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 

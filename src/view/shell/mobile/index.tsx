@@ -16,7 +16,7 @@ import {ScreenContainer, Screen} from 'react-native-screens'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import {TABS_ENABLED} from '../../../build-flags'
+import {TABS_ENABLED} from 'lib/build-flags'
 import {useStores} from '../../../state'
 import {
   NavigationModel,
