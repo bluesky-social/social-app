@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {getInitialURL} from 'platform/urls'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {WebShell} from './view/shell/web'
@@ -13,7 +14,14 @@ function App() {
   // init
   useEffect(() => {
     view.setup()
-    setupState().then(setRootStore)
+    setupState().then(store => {
+      setRootStore(store)
+      getInitialURL().then(url => {
+        if (url) {
+          store.nav.handleLink(url)
+        }
+      })
+    })
   }, [])
 
   // show nothing prior to init

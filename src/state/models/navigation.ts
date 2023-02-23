@@ -2,6 +2,7 @@ import {RootStoreModel} from './root-store'
 import {makeAutoObservable} from 'mobx'
 import {TABS_ENABLED} from 'lib/build-flags'
 import {segmentClient} from 'lib/analytics'
+import {getHistory} from 'platform/urls'
 
 let __id = 0
 function genId() {
@@ -41,6 +42,7 @@ export type HistoryPtr = string // `{tabId}-{historyId}`
 export class NavigationTabModel {
   id = genId()
   history: HistoryItem[]
+  browserHistory: any
   index = 0
   isNewTab = false
 
@@ -48,6 +50,7 @@ export class NavigationTabModel {
     this.history = [
       {url: TabPurposeMainPath[fixedTabPurpose], ts: Date.now(), id: genId()},
     ]
+    this.browserHistory = getHistory()
     makeAutoObservable(this, {
       serialize: false,
       hydrate: false,
@@ -122,6 +125,7 @@ export class NavigationTabModel {
         this.history.push({url: fixedUrl, ts: Date.now(), id: genId()})
       }
       this.history.push({url, title, ts: Date.now(), id: genId()})
+      this.browserHistory.push(url)
       this.index = this.history.length - 1
     }
   }
@@ -142,6 +146,7 @@ export class NavigationTabModel {
   goBack() {
     if (this.canGoBack) {
       this.index--
+      this.browserHistory.back()
     }
   }
 
@@ -155,12 +160,14 @@ export class NavigationTabModel {
   goForward() {
     if (this.canGoForward) {
       this.index++
+      this.browserHistory.forward()
     }
   }
 
   goToIndex(index: number) {
     if (index >= 0 && index <= this.history.length - 1) {
       this.index = index
+      this.browserHistory.go(index)
     }
   }
 

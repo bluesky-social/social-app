@@ -5,7 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios --simulator=\"iPhone 14\"",
-    "web": "webpack-dev-server --config ./web/webpack.config.js -d inline-source-map --hot --color",
+    "web": "webpack-dev-server --config ./web/webpack.config.js -d inline-source-map --hot --color --history-api-fallback",
     "start": "react-native start",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
     "test": "jest --forceExit --testTimeout=20000 --bail",
@@ -39,6 +39,7 @@
     "base64-js": "^1.5.1",
     "email-validator": "^2.0.4",
     "he": "^1.2.0",
+    "history": "^5.3.0",
     "lodash.chunk": "^4.2.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",

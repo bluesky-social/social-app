@@ -120,7 +120,6 @@ export class RootStoreModel {
   async handleSessionChange(agent: AtpAgent) {
     this.log.debug('RootStoreModel:handleSessionChange')
     this.agent = agent
-    this.nav.clear()
     this.me.clear()
     await this.me.load()
   }
