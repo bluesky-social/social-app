@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     right: 0,
-    top: 90,
+    top: 60,
     width: '400px',
     paddingHorizontal: 16,
     paddingRight: 32,
