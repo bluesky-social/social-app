@@ -1,6 +1,5 @@
 /// <reference lib="dom" />
 
-import {CropImageModal} from 'state/models/shell-ui'
 import {PickerOpts, CameraOpts, CropperOpts, PickedMedia} from './types'
 export type {PickedMedia} from './types'
 import {RootStoreModel} from 'state/index'
@@ -51,15 +50,17 @@ export async function openCropper(
 ): Promise<PickedMedia> {
   // TODO handle more opts
   return new Promise((resolve, reject) => {
-    store.shell.openModal(
-      new CropImageModal(opts.path, (img?: PickedMedia) => {
+    store.shell.openModal({
+      name: 'crop-image',
+      uri: opts.path,
+      onSelect: (img?: PickedMedia) => {
         if (img) {
           resolve(img)
         } else {
           reject(new Error('Canceled'))
         }
-      }),
-    )
+      },
+    })
   })
 }
 

@@ -15,11 +15,7 @@ import {
 import {BlurView} from '../util/BlurView'
 import {ProfileViewModel} from 'state/models/profile-view'
 import {useStores} from 'state/index'
-import {
-  EditProfileModal,
-  ReportAccountModal,
-  ProfileImageLightbox,
-} from 'state/models/shell-ui'
+import {ProfileImageLightbox} from 'state/models/shell-ui'
 import {pluralize} from 'lib/strings/helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {s, gradients} from 'lib/styles'
@@ -65,7 +61,11 @@ export const ProfileHeader = observer(function ProfileHeader({
   }
   const onPressEditProfile = () => {
     track('ProfileHeader:EditProfileButtonClicked')
-    store.shell.openModal(new EditProfileModal(view, onRefreshAll))
+    store.shell.openModal({
+      name: 'edit-profile',
+      profileView: view,
+      onUpdate: onRefreshAll,
+    })
   }
   const onPressFollowers = () => {
     track('ProfileHeader:FollowersButtonClicked')
@@ -101,7 +101,10 @@ export const ProfileHeader = observer(function ProfileHeader({
   }
   const onPressReportAccount = () => {
     track('ProfileHeader:ReportAccountButtonClicked')
-    store.shell.openModal(new ReportAccountModal(view.did))
+    store.shell.openModal({
+      name: 'report-account',
+      did: view.did,
+    })
   }
 
   // loading

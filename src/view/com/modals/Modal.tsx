@@ -5,8 +5,6 @@ import BottomSheet from '@gorhom/bottom-sheet'
 import {useStores} from 'state/index'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 
-import * as models from 'state/models/shell-ui'
-
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
@@ -32,52 +30,37 @@ export const Modal = observer(function Modal() {
     store.shell.closeModal()
   }
 
+  const activeModal = React.useMemo(
+    () => store.shell.activeModals.at(-1),
+    [store.shell.activeModals],
+  )
+
   useEffect(() => {
     if (store.shell.isModalActive) {
       bottomSheetRef.current?.expand()
     } else {
       bottomSheetRef.current?.close()
     }
-  }, [store.shell.isModalActive, bottomSheetRef, store.shell.activeModal?.name])
+  }, [store.shell.isModalActive, bottomSheetRef, activeModal?.name])
 
   let snapPoints: (string | number)[] = CLOSED_SNAPPOINTS
   let element
-  if (store.shell.activeModal?.name === 'confirm') {
+  if (activeModal?.name === 'confirm') {
     snapPoints = ConfirmModal.snapPoints
-    element = (
-      <ConfirmModal.Component
-        {...(store.shell.activeModal as models.ConfirmModal)}
-      />
-    )
-  } else if (store.shell.activeModal?.name === 'edit-profile') {
+    element = <ConfirmModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'edit-profile') {
     snapPoints = EditProfileModal.snapPoints
-    element = (
-      <EditProfileModal.Component
-        {...(store.shell.activeModal as models.EditProfileModal)}
-      />
-    )
-  } else if (store.shell.activeModal?.name === 'server-input') {
+    element = <EditProfileModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'server-input') {
     snapPoints = ServerInputModal.snapPoints
-    element = (
-      <ServerInputModal.Component
-        {...(store.shell.activeModal as models.ServerInputModal)}
-      />
-    )
-  } else if (store.shell.activeModal?.name === 'report-post') {
+    element = <ServerInputModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'report-post') {
     snapPoints = ReportPostModal.snapPoints
-    element = (
-      <ReportPostModal.Component
-        {...(store.shell.activeModal as models.ReportPostModal)}
-      />
-    )
-  } else if (store.shell.activeModal?.name === 'report-account') {
+    element = <ReportPostModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'report-account') {
     snapPoints = ReportAccountModal.snapPoints
-    element = (
-      <ReportAccountModal.Component
-        {...(store.shell.activeModal as models.ReportAccountModal)}
-      />
-    )
-  } else if (store.shell.activeModal?.name === 'delete-account') {
+    element = <ReportAccountModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'delete-account') {
     snapPoints = DeleteAccountModal.snapPoints
     element = <DeleteAccountModal.Component />
   } else {
