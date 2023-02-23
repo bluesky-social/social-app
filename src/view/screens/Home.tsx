@@ -11,7 +11,7 @@ import {ScreenParams} from '../routes'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
-import {isWeb} from 'platform/detection'
+import {isWeb} from '../../platform/detection'
 
 const HEADER_HEIGHT = 42
 
@@ -100,7 +100,6 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
         scrollElRef={scrollElRef}
         style={s.h100pct}
         onPressTryAgain={onPressTryAgain}
-        onPressCompose={onPressCompose}
         onScroll={onMainScroll}
         headerOffset={HEADER_HEIGHT}
       />

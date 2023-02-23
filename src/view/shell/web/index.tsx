@@ -131,10 +131,10 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   bgLight: {
-    backgroundColor: colors.gray1,
+    backgroundColor: colors.white,
   },
   bgDark: {
-    backgroundColor: colors.gray1, // TODO
+    backgroundColor: colors.black, // TODO
   },
   visible: {
     display: 'flex',
