@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import {observer} from 'mobx-react-lite'
 import _omit from 'lodash.omit'
 import {Link} from '../util/Link'
@@ -99,6 +98,7 @@ const User = ({
   onPressUnfollow: (item: SuggestedActor) => void
 }) => {
   const pal = usePalette('default')
+  const palInverted = usePalette('inverted')
   return (
     <View style={[styles.actor]}>
       <View style={styles.actorMeta}>
@@ -121,23 +121,19 @@ const User = ({
         <View style={styles.actorBtn}>
           {follow ? (
             <TouchableOpacity onPress={() => onPressUnfollow(item)}>
-              <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
+              <View style={[styles.btn, pal.btn]}>
                 <Text type="button" style={pal.text}>
                   Unfollow
                 </Text>
               </View>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={() => onPressFollow(item)}>
-              <LinearGradient
-                colors={[gradients.blueLight.start, gradients.blueLight.end]}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 1}}
-                style={[styles.btn, styles.gradientBtn]}>
-                <Text type="sm-medium" style={s.white}>
-                  Follow
-                </Text>
-              </LinearGradient>
+            <TouchableOpacity
+              onPress={() => onPressFollow(item)}
+              style={[styles.btn, palInverted.view]}>
+              <Text type="sm-medium" style={palInverted.text}>
+                Follow
+              </Text>
             </TouchableOpacity>
           )}
         </View>
@@ -187,6 +183,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 7,
+    paddingHorizontal: 14,
     borderRadius: 50,
     marginLeft: 6,
   },

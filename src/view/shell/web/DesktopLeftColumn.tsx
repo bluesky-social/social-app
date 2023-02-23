@@ -1,13 +1,13 @@
 import React from 'react'
 import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import LinearGradient from 'react-native-linear-gradient'
 import {Link} from '../../com/util/Link'
 import {Text} from '../../com/util/text/Text'
 import {UserAvatar} from '../../com/util/UserAvatar'
-import {s, colors, gradients} from 'lib/styles'
+import {colors} from 'lib/styles'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {
   HomeIcon,
   HomeIconSolid,
@@ -15,6 +15,7 @@ import {
   BellIconSolid,
   MagnifyingGlassIcon,
   CogIcon,
+  ComposeIcon,
 } from 'lib/icons'
 
 interface NavItemProps {
@@ -28,15 +29,18 @@ interface NavItemProps {
 export const NavItem = observer(
   ({label, count, href, icon, iconFilled, isProfile}: NavItemProps) => {
     const store = useStores()
-    const pal = usePalette('default')
+    const hoverBg = useColorSchemeStyle(
+      styles.navItemHoverBgLight,
+      styles.navItemHoverBgDark,
+    )
     const isCurrent = store.nav.tab.current.url === href
     return (
       <Pressable
         style={state => [
           // @ts-ignore Pressable state differs for RNW -prf
-          state.hovered && {backgroundColor: pal.colors.backgroundLight},
+          state.hovered && hoverBg,
         ]}>
-        <Link style={styles.navItem} href={href}>
+        <Link style={[styles.navItem, isCurrent && hoverBg]} href={href}>
           <View
             style={[
               styles.navItemIconWrapper,
@@ -50,8 +54,7 @@ export const NavItem = observer(
             )}
           </View>
           <Text
-            type={isCurrent ? 'xl-bold' : 'xl'}
-            style={styles.navItemLabel}
+            type={isCurrent || isProfile ? 'xl' : 'xl-thin'}
             numberOfLines={1}>
             {label}
           </Text>
@@ -63,6 +66,14 @@ export const NavItem = observer(
 
 export const DesktopLeftColumn = observer(() => {
   const store = useStores()
+  const containerBg = useColorSchemeStyle(
+    styles.containerBgLight,
+    styles.containerBgDark,
+  )
+  const hoverBg = useColorSchemeStyle(
+    styles.navItemHoverBgLight,
+    styles.navItemHoverBgDark,
+  )
   const pal = usePalette('default')
   const onPressCompose = () => store.shell.openComposer({})
   const avi = (
@@ -70,81 +81,152 @@ export const DesktopLeftColumn = observer(() => {
       handle={store.me.handle}
       displayName={store.me.displayName}
       avatar={store.me.avatar}
-      size={40}
+      size={30}
     />
   )
   return (
-    <View style={[styles.container, pal.border]}>
-      <NavItem
-        isProfile
-        href={`/profile/${store.me.handle}`}
-        label={store.me.displayName || store.me.handle}
-        icon={avi}
-        iconFilled={avi}
-      />
-      <NavItem
-        href="/"
-        label="Home"
-        icon={<HomeIcon />}
-        iconFilled={<HomeIconSolid />}
-      />
-      <NavItem
-        href="/search"
-        label="Search"
-        icon={<MagnifyingGlassIcon />}
-        iconFilled={<MagnifyingGlassIcon strokeWidth={4} />}
-      />
-      <NavItem
-        href="/notifications"
-        label="Notifications"
-        count={store.me.notifications.unreadCount}
-        icon={<BellIcon />}
-        iconFilled={<BellIconSolid />}
-      />
-      <NavItem
-        href="/settings"
-        label="Settings"
-        icon={<CogIcon strokeWidth={1.5} />}
-        iconFilled={<CogIcon strokeWidth={2} />}
-      />
-      <TouchableOpacity onPress={onPressCompose}>
-        <LinearGradient
-          colors={[gradients.blueLight.start, gradients.blueLight.end]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={styles.composeBtn}>
-          <Text type="xl-medium" style={[s.white, s.textCenter]}>
-            New Post
+    <View style={[styles.container, containerBg, pal.border]}>
+      <View style={styles.main}>
+        <Link style={styles.logo} href="/">
+          <Text type="title-xl">Bluesky</Text>
+        </Link>
+        <Link href="/search" style={[pal.view, pal.borderDark, styles.search]}>
+          <MagnifyingGlassIcon
+            size={18}
+            style={[pal.textLight, styles.searchIconWrapper]}
+          />
+          <Text type="md-thin" style={pal.textLight}>
+            Search
           </Text>
-        </LinearGradient>
-      </TouchableOpacity>
+        </Link>
+        <NavItem
+          href="/"
+          label="Home"
+          icon={<HomeIcon size={21} />}
+          iconFilled={<HomeIconSolid size={21} />}
+        />
+        <NavItem
+          href="/search"
+          label="Explore"
+          icon={<MagnifyingGlassIcon size={21} />}
+          iconFilled={<MagnifyingGlassIcon strokeWidth={3} size={21} />}
+        />
+        <NavItem
+          href="/notifications"
+          label="Notifications"
+          count={store.me.notifications.unreadCount}
+          icon={<BellIcon size={21} />}
+          iconFilled={<BellIconSolid size={21} />}
+        />
+        <NavItem
+          href="/settings"
+          label="Settings"
+          icon={<CogIcon strokeWidth={2} size={21} />}
+          iconFilled={<CogIcon strokeWidth={2.5} size={21} />}
+        />
+        <View style={[pal.border, styles.separator]} />
+        <Pressable
+          style={state => [
+            // @ts-ignore Pressable state differs for RNW -prf
+            state.hovered && hoverBg,
+          ]}>
+          <TouchableOpacity style={styles.navItem} onPress={onPressCompose}>
+            <View style={styles.navItemIconWrapper}>
+              <ComposeIcon size={21} />
+            </View>
+            <Text type="xl-thin">New Post</Text>
+          </TouchableOpacity>
+        </Pressable>
+      </View>
+      <View style={[styles.footer, pal.borderDark]}>
+        <NavItem
+          isProfile
+          href={`/profile/${store.me.handle}`}
+          label={store.me.displayName || store.me.handle}
+          icon={avi}
+          iconFilled={avi}
+        />
+      </View>
     </View>
   )
 })
 
 const styles = StyleSheet.create({
+  containerBgLight: {
+    backgroundColor: '#f9f9fd',
+  },
+  containerBgDark: {
+    backgroundColor: '#f9f9fd', // TODO
+  },
+
   container: {
     position: 'absolute',
-    left: 'calc(50vw - 530px)',
-    width: '230px',
-    height: '100%',
+    left: 0,
+    width: '300px',
+    height: '100vh',
     borderRightWidth: 1,
     paddingTop: 5,
   },
-  navItem: {
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+  main: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
+  footer: {
+    borderTopWidth: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  separator: {
+    borderTopWidth: 1,
+    marginVertical: 12,
+    marginHorizontal: 8,
+  },
+
+  logo: {
+    paddingTop: 6,
+    paddingBottom: 12,
+  },
+
+  search: {
     flexDirection: 'row',
     alignItems: 'center',
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 6,
+    marginBottom: 10,
+    borderWidth: 1,
+  },
+  searchIconWrapper: {
+    flexDirection: 'row',
+    width: 30,
+    justifyContent: 'center',
+    marginRight: 6,
+  },
+
+  navItem: {
+    paddingVertical: 8,
+    paddingHorizontal: 6,
+    marginBottom: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 6,
+  },
+  navItemHoverBgLight: {
+    backgroundColor: '#ebebf0',
+    borderRadius: 6,
+  },
+  navItemHoverBgDark: {
+    backgroundColor: colors.gray2, // TODO
+    borderRadius: 6,
   },
   navItemIconWrapper: {
     flexDirection: 'row',
     width: 30,
     justifyContent: 'center',
-    marginRight: 5,
+    marginRight: 8,
   },
   navItemProfile: {
-    width: 40,
+    width: 30,
     marginRight: 10,
   },
   navItemCount: {
@@ -157,9 +239,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingHorizontal: 4,
     borderRadius: 6,
-  },
-  navItemLabel: {
-    fontSize: 19,
   },
   composeBtn: {
     marginTop: 20,
