@@ -11,7 +11,6 @@ import {ScreenParams} from '../routes'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
-import {isWeb} from '../../platform/detection'
 
 const HEADER_HEIGHT = 42
 
@@ -92,7 +91,6 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
 
   return (
     <View style={s.h100pct}>
-      {isWeb && <ViewHeader title="Home Feed" canGoBack={false} />}
       <Feed
         testID="homeFeed"
         key="default"
@@ -103,7 +101,7 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
         onScroll={onMainScroll}
         headerOffset={HEADER_HEIGHT}
       />
-      {!isWeb && <ViewHeader title="Bluesky" canGoBack={false} hideOnScroll />}
+      <ViewHeader title="Bluesky" canGoBack={false} hideOnScroll />
       {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing && (
         <LoadLatestBtn onPress={onPressLoadLatest} />
       )}
