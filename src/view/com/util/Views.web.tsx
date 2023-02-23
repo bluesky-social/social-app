@@ -33,26 +33,13 @@ export function CenteredView({
   return <View style={style} {...props} />
 }
 
-export function FlatList<ItemT>({
-  contentContainerStyle,
-  ...props
-}: React.PropsWithChildren<FlatListProps<ItemT>>) {
-  const theme = useTheme()
-  contentContainerStyle = addStyle(
+export const FlatList = React.forwardRef(function <ItemT>(
+  {
     contentContainerStyle,
-    styles.containerScroll,
-  )
-  contentContainerStyle = addStyle(
-    contentContainerStyle,
-    theme.colorScheme === 'dark' ? styles.containerDark : styles.containerLight,
-  )
-  return <RNFlatList contentContainerStyle={contentContainerStyle} {...props} />
-}
-
-export function ScrollView({
-  contentContainerStyle,
-  ...props
-}: React.PropsWithChildren<ScrollViewProps>) {
+    ...props
+  }: React.PropsWithChildren<FlatListProps<ItemT>>,
+  ref: React.Ref<RNFlatList>,
+) {
   const theme = useTheme()
   contentContainerStyle = addStyle(
     contentContainerStyle,
@@ -63,9 +50,35 @@ export function ScrollView({
     theme.colorScheme === 'dark' ? styles.containerDark : styles.containerLight,
   )
   return (
-    <RNScrollView contentContainerStyle={contentContainerStyle} {...props} />
+    <RNFlatList
+      contentContainerStyle={contentContainerStyle}
+      ref={ref}
+      {...props}
+    />
   )
-}
+})
+
+export const ScrollView = React.forwardRef(function (
+  {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
+  ref: React.Ref<RNFlatList>,
+) {
+  const theme = useTheme()
+  contentContainerStyle = addStyle(
+    contentContainerStyle,
+    styles.containerScroll,
+  )
+  contentContainerStyle = addStyle(
+    contentContainerStyle,
+    theme.colorScheme === 'dark' ? styles.containerDark : styles.containerLight,
+  )
+  return (
+    <RNScrollView
+      contentContainerStyle={contentContainerStyle}
+      ref={ref}
+      {...props}
+    />
+  )
+})
 
 const styles = StyleSheet.create({
   container: {
