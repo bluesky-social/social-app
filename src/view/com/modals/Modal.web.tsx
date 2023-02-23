@@ -21,7 +21,10 @@ export const Modal = observer(function Modal() {
     return null
   }
 
-  const onClose = () => {
+  const onPressMask = () => {
+    if (store.shell.activeModal?.name === 'crop-image') {
+      return // dont close on mask presses during crop
+    }
     store.shell.closeModal()
   }
   const onInnerPress = () => {
@@ -70,7 +73,7 @@ export const Modal = observer(function Modal() {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={onClose}>
+    <TouchableWithoutFeedback onPress={onPressMask}>
       <View style={styles.mask}>
         <TouchableWithoutFeedback onPress={onInnerPress}>
           <View style={[styles.container, pal.view]}>{element}</View>

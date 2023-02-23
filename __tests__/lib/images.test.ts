@@ -1,4 +1,7 @@
-import {downloadAndResize, DownloadAndResizeOpts} from '../../src/lib/images'
+import {
+  downloadAndResize,
+  DownloadAndResizeOpts,
+} from '../../src/lib/media/manip'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
 import RNFetchBlob from 'rn-fetch-blob'
 

@@ -9,57 +9,24 @@ import {
   openPicker,
   openCamera,
   openCropper,
-} from '../../util/images/image-crop-picker/ImageCropPicker'
+  cropAndCompressFlow,
+} from '../../../../lib/media/picker'
 import {
   UserLocalPhotosModel,
   PhotoIdentifier,
 } from 'state/models/user-local-photos'
-import {
-  compressIfNeeded,
-  moveToPremanantPath,
-  scaleDownDimensions,
-} from 'lib/images'
+import {compressIfNeeded} from 'lib/media/manip'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores, RootStoreModel} from 'state/index'
+import {useStores} from 'state/index'
 import {
   requestPhotoAccessIfNeeded,
   requestCameraAccessIfNeeded,
 } from 'lib/permissions'
-
-const MAX_WIDTH = 2000
-const MAX_HEIGHT = 2000
-const MAX_SIZE = 1000000
-
-const IMAGE_PARAMS = {
-  width: 2000,
-  height: 2000,
-  freeStyleCropEnabled: true,
-}
-
-export async function cropPhoto(
-  store: RootStoreModel,
-  path: string,
-  imgWidth = MAX_WIDTH,
-  imgHeight = MAX_HEIGHT,
-) {
-  // choose target dimensions based on the original
-  // this causes the photo cropper to start with the full image "selected"
-  const {width, height} = scaleDownDimensions(
-    {width: imgWidth, height: imgHeight},
-    {width: MAX_WIDTH, height: MAX_HEIGHT},
-  )
-  const cropperRes = await openCropper(store, {
-    mediaType: 'photo',
-    path,
-    freeStyleCropEnabled: true,
-    width,
-    height,
-  })
-
-  const img = await compressIfNeeded(cropperRes, MAX_SIZE)
-  const permanentPath = await moveToPremanantPath(img.path)
-  return permanentPath
-}
+import {
+  POST_IMG_MAX_WIDTH,
+  POST_IMG_MAX_HEIGHT,
+  POST_IMG_MAX_SIZE,
+} from 'lib/constants'
 
 export const PhotoCarouselPicker = ({
   selectedPhotos,
@@ -92,9 +59,11 @@ export const PhotoCarouselPicker = ({
       }
       const cameraRes = await openCamera(store, {
         mediaType: 'photo',
-        ...IMAGE_PARAMS,
+        width: POST_IMG_MAX_WIDTH,
+        height: POST_IMG_MAX_HEIGHT,
+        freeStyleCropEnabled: true,
       })
-      const img = await compressIfNeeded(cameraRes, MAX_SIZE)
+      const img = await compressIfNeeded(cameraRes, POST_IMG_MAX_SIZE)
       onSelectPhotos([...selectedPhotos, img.path])
     } catch (err: any) {
       // ignore
@@ -106,11 +75,15 @@ export const PhotoCarouselPicker = ({
     async (item: PhotoIdentifier) => {
       track('PhotoCarouselPicker:PhotoSelected')
       try {
-        const imgPath = await cropPhoto(
+        const imgPath = await cropAndCompressFlow(
           store,
           item.node.image.uri,
-          item.node.image.width,
-          item.node.image.height,
+          {
+            width: item.node.image.width,
+            height: item.node.image.height,
+          },
+          {width: POST_IMG_MAX_WIDTH, height: POST_IMG_MAX_HEIGHT},
+          POST_IMG_MAX_SIZE,
         )
         onSelectPhotos([...selectedPhotos, imgPath])
       } catch (err: any) {
@@ -132,24 +105,16 @@ export const PhotoCarouselPicker = ({
       mediaType: 'photo',
     })
     const result = []
-
     for (const image of items) {
-      // choose target dimensions based on the original
-      // this causes the photo cropper to start with the full image "selected"
-      const {width, height} = scaleDownDimensions(
-        {width: image.width, height: image.height},
-        {width: MAX_WIDTH, height: MAX_HEIGHT},
+      result.push(
+        await cropAndCompressFlow(
+          store,
+          image.path,
+          image,
+          {width: POST_IMG_MAX_WIDTH, height: POST_IMG_MAX_HEIGHT},
+          POST_IMG_MAX_SIZE,
+        ),
       )
-      const cropperRes = await openCropper(store, {
-        mediaType: 'photo',
-        path: image.path,
-        ...IMAGE_PARAMS,
-        width,
-        height,
-      })
-      const finalImg = await compressIfNeeded(cropperRes, MAX_SIZE)
-      const permanentPath = await moveToPremanantPath(finalImg.path)
-      result.push(permanentPath)
     }
     onSelectPhotos([...selectedPhotos, ...result])
   }, [track, store, selectedPhotos, onSelectPhotos])

@@ -10,7 +10,7 @@ import {
   openCropper,
   openPicker,
   PickedMedia,
-} from './images/image-crop-picker/ImageCropPicker'
+} from '../../../lib/media/picker'
 import {useStores} from 'state/index'
 import {
   requestPhotoAccessIfNeeded,

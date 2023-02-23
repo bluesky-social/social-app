@@ -63,3 +63,7 @@ export const STAGING_SUGGESTED_FOLLOWS = ['arcalinea', 'paul', 'paul2'].map(
 export const DEV_SUGGESTED_FOLLOWS = ['alice', 'bob', 'carla'].map(
   handle => `${handle}.test`,
 )
+
+export const POST_IMG_MAX_WIDTH = 2000
+export const POST_IMG_MAX_HEIGHT = 2000
+export const POST_IMG_MAX_SIZE = 1000000
