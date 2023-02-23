@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {Link} from '../../com/util/Link'
 import {Text} from '../../com/util/text/Text'
@@ -15,7 +15,6 @@ import {
   BellIconSolid,
   MagnifyingGlassIcon,
   CogIcon,
-  ComposeIcon,
 } from 'lib/icons'
 
 interface NavItemProps {
@@ -40,7 +39,7 @@ export const NavItem = observer(
           // @ts-ignore Pressable state differs for RNW -prf
           state.hovered && hoverBg,
         ]}>
-        <Link style={[styles.navItem, isCurrent && hoverBg]} href={href}>
+        <Link style={[styles.navItem]} href={href}>
           <View
             style={[
               styles.navItemIconWrapper,
@@ -66,10 +65,6 @@ export const NavItem = observer(
 
 export const DesktopLeftColumn = observer(() => {
   const store = useStores()
-  const containerBg = useColorSchemeStyle(
-    styles.containerBgLight,
-    styles.containerBgDark,
-  )
   const pal = usePalette('default')
   const avi = (
     <UserAvatar
@@ -80,11 +75,8 @@ export const DesktopLeftColumn = observer(() => {
     />
   )
   return (
-    <View style={[styles.container, containerBg, pal.border]}>
+    <View style={[styles.container]}>
       <View style={styles.main}>
-        <Link style={styles.logo} href="/">
-          <Text type="title-xl">Bluesky</Text>
-        </Link>
         <NavItem
           href="/"
           label="Home"
@@ -110,8 +102,7 @@ export const DesktopLeftColumn = observer(() => {
           icon={<CogIcon strokeWidth={2} size={21} />}
           iconFilled={<CogIcon strokeWidth={2.5} size={21} />}
         />
-      </View>
-      <View style={[styles.footer, pal.borderDark]}>
+        <View style={[styles.separator, pal.borderDark]} />
         <NavItem
           isProfile
           href={`/profile/${store.me.handle}`}
@@ -125,20 +116,11 @@ export const DesktopLeftColumn = observer(() => {
 })
 
 const styles = StyleSheet.create({
-  containerBgLight: {
-    backgroundColor: '#f9f9fd',
-  },
-  containerBgDark: {
-    backgroundColor: '#f9f9fd', // TODO
-  },
-
   container: {
     position: 'absolute',
-    left: 0,
+    left: 5,
+    top: 100,
     width: '300px',
-    height: '100vh',
-    borderRightWidth: 1,
-    paddingTop: 5,
   },
   main: {
     flex: 1,
@@ -153,11 +135,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     marginVertical: 12,
     marginHorizontal: 8,
-  },
-
-  logo: {
-    paddingTop: 8,
-    paddingBottom: 14,
   },
 
   navItem: {

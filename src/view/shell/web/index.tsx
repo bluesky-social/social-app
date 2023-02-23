@@ -5,6 +5,7 @@ import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {useStores} from 'state/index'
 import {NavigationModel} from 'state/models/navigation'
 import {match, MatchResult} from '../../routes'
+import {DesktopHeader} from './DesktopHeader'
 import {DesktopLeftColumn} from './DesktopLeftColumn'
 import {DesktopRightColumn} from './DesktopRightColumn'
 import {Onboard} from '../../screens/Onboard'
@@ -14,10 +15,11 @@ import {Lightbox} from '../../com/lightbox/Lightbox'
 import {Modal} from '../../com/modals/Modal'
 import {Composer} from './Composer'
 import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {s, colors} from 'lib/styles'
 
 export const WebShell: React.FC = observer(() => {
-  const pal = usePalette('default')
+  const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   const store = useStores()
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
 
@@ -40,7 +42,8 @@ export const WebShell: React.FC = observer(() => {
   }
 
   return (
-    <View style={[styles.outerContainer, pal.view]}>
+    <View style={[styles.outerContainer, pageBg]}>
+      <DesktopHeader />
       {screenRenderDesc.screens.map(({Com, navIdx, params, key, current}) => (
         <View
           key={key}
@@ -129,6 +132,12 @@ function constructScreenRenderDesc(nav: NavigationModel): {
 const styles = StyleSheet.create({
   outerContainer: {
     height: '100%',
+  },
+  bgLight: {
+    backgroundColor: colors.gray1,
+  },
+  bgDark: {
+    backgroundColor: colors.gray1, // TODO
   },
   visible: {
     display: 'flex',
