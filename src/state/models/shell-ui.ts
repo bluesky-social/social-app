@@ -2,74 +2,56 @@ import {RootStoreModel} from './root-store'
 import {makeAutoObservable} from 'mobx'
 import {ProfileViewModel} from './profile-view'
 import {isObj, hasProp} from 'lib/type-guards'
-import {PickedMedia} from 'view/com/util/images/image-crop-picker/types'
+import {PickedMedia} from 'lib/media/types'
 
-export class ConfirmModal {
-  name = 'confirm'
-
-  constructor(
-    public title: string,
-    public message: string | (() => JSX.Element),
-    public onPressConfirm: () => void | Promise<void>,
-  ) {
-    makeAutoObservable(this)
-  }
+export interface ConfirmModal {
+  name: 'confirm'
+  title: string
+  message: string | (() => JSX.Element)
+  onPressConfirm: () => void | Promise<void>
 }
 
-export class EditProfileModal {
-  name = 'edit-profile'
-
-  constructor(
-    public profileView: ProfileViewModel,
-    public onUpdate?: () => void,
-  ) {
-    makeAutoObservable(this)
-  }
+export interface EditProfileModal {
+  name: 'edit-profile'
+  profileView: ProfileViewModel
+  onUpdate?: () => void
 }
 
-export class ServerInputModal {
-  name = 'server-input'
-
-  constructor(
-    public initialService: string,
-    public onSelect: (url: string) => void,
-  ) {
-    makeAutoObservable(this)
-  }
+export interface ServerInputModal {
+  name: 'server-input'
+  initialService: string
+  onSelect: (url: string) => void
 }
 
-export class ReportPostModal {
-  name = 'report-post'
-
-  constructor(public postUri: string, public postCid: string) {
-    makeAutoObservable(this)
-  }
+export interface ReportPostModal {
+  name: 'report-post'
+  postUri: string
+  postCid: string
 }
 
-export class ReportAccountModal {
-  name = 'report-account'
-
-  constructor(public did: string) {
-    makeAutoObservable(this)
-  }
+export interface ReportAccountModal {
+  name: 'report-account'
+  did: string
 }
 
-export class CropImageModal {
-  name = 'crop-image'
-
-  constructor(
-    public uri: string,
-    public onSelect: (img?: PickedMedia) => void,
-  ) {}
+export interface CropImageModal {
+  name: 'crop-image'
+  uri: string
+  onSelect: (img?: PickedMedia) => void
 }
 
-export class DeleteAccountModal {
-  name = 'delete-account'
-
-  constructor() {
-    makeAutoObservable(this)
-  }
+export interface DeleteAccountModal {
+  name: 'delete-account'
 }
+
+export type Modal =
+  | ConfirmModal
+  | EditProfileModal
+  | ServerInputModal
+  | ReportPostModal
+  | ReportAccountModal
+  | CropImageModal
+  | DeleteAccountModal
 
 interface LightboxModel {}
 
@@ -111,15 +93,7 @@ export class ShellUiModel {
   minimalShellMode = false
   isMainMenuOpen = false
   isModalActive = false
-  activeModal:
-    | ConfirmModal
-    | EditProfileModal
-    | ServerInputModal
-    | ReportPostModal
-    | ReportAccountModal
-    | CropImageModal
-    | DeleteAccountModal
-    | undefined
+  activeModals: Modal[] = []
   isLightboxActive = false
   activeLightbox: ProfileImageLightbox | ImagesLightbox | undefined
   isComposerActive = false
@@ -159,24 +133,15 @@ export class ShellUiModel {
     this.isMainMenuOpen = v
   }
 
-  openModal(
-    modal:
-      | ConfirmModal
-      | EditProfileModal
-      | ServerInputModal
-      | ReportPostModal
-      | ReportAccountModal
-      | CropImageModal
-      | DeleteAccountModal,
-  ) {
+  openModal(modal: Modal) {
     this.rootStore.emitNavigation()
     this.isModalActive = true
-    this.activeModal = modal
+    this.activeModals.push(modal)
   }
 
   closeModal() {
-    this.isModalActive = false
-    this.activeModal = undefined
+    this.activeModals.pop()
+    this.isModalActive = this.activeModals.length > 0
   }
 
   openLightbox(lightbox: ProfileImageLightbox | ImagesLightbox) {

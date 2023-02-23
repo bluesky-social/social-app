@@ -3,8 +3,7 @@ import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-
-import * as models from 'state/models/shell-ui'
+import type {Modal as ModalIface} from 'state/models/shell-ui'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
@@ -13,7 +12,23 @@ import * as ReportPostModal from './ReportPost'
 import * as ReportAccountModal from './ReportAccount'
 import * as CropImageModal from './crop-image/CropImage.web'
 
-export const Modal = observer(function Modal() {
+export const ModalsContainer = observer(function ModalsContainer() {
+  const store = useStores()
+
+  if (!store.shell.isModalActive) {
+    return null
+  }
+
+  return (
+    <>
+      {store.shell.activeModals.map((modal, i) => (
+        <Modal key={`modal-${i}`} modal={modal} />
+      ))}
+    </>
+  )
+})
+
+function Modal({modal}: {modal: ModalIface}) {
   const store = useStores()
   const pal = usePalette('default')
 
@@ -22,7 +37,7 @@ export const Modal = observer(function Modal() {
   }
 
   const onPressMask = () => {
-    if (store.shell.activeModal?.name === 'crop-image') {
+    if (modal.name === 'crop-image') {
       return // dont close on mask presses during crop
     }
     store.shell.closeModal()
@@ -32,42 +47,18 @@ export const Modal = observer(function Modal() {
   }
 
   let element
-  if (store.shell.activeModal?.name === 'confirm') {
-    element = (
-      <ConfirmModal.Component
-        {...(store.shell.activeModal as models.ConfirmModal)}
-      />
-    )
-  } else if (store.shell.activeModal?.name === 'edit-profile') {
-    element = (
-      <EditProfileModal.Component
-        {...(store.shell.activeModal as models.EditProfileModal)}
-      />
-    )
-  } else if (store.shell.activeModal?.name === 'server-input') {
-    element = (
-      <ServerInputModal.Component
-        {...(store.shell.activeModal as models.ServerInputModal)}
-      />
-    )
-  } else if (store.shell.activeModal?.name === 'report-post') {
-    element = (
-      <ReportPostModal.Component
-        {...(store.shell.activeModal as models.ReportPostModal)}
-      />
-    )
-  } else if (store.shell.activeModal?.name === 'report-account') {
-    element = (
-      <ReportAccountModal.Component
-        {...(store.shell.activeModal as models.ReportAccountModal)}
-      />
-    )
-  } else if (store.shell.activeModal?.name === 'crop-image') {
-    element = (
-      <CropImageModal.Component
-        {...(store.shell.activeModal as models.CropImageModal)}
-      />
-    )
+  if (modal.name === 'confirm') {
+    element = <ConfirmModal.Component {...modal} />
+  } else if (modal.name === 'edit-profile') {
+    element = <EditProfileModal.Component {...modal} />
+  } else if (modal.name === 'server-input') {
+    element = <ServerInputModal.Component {...modal} />
+  } else if (modal.name === 'report-post') {
+    element = <ReportPostModal.Component {...modal} />
+  } else if (modal.name === 'report-account') {
+    element = <ReportAccountModal.Component {...modal} />
+  } else if (modal.name === 'crop-image') {
+    element = <CropImageModal.Component {...modal} />
   } else {
     return null
   }
@@ -81,7 +72,7 @@ export const Modal = observer(function Modal() {
       </View>
     </TouchableWithoutFeedback>
   )
-})
+}
 
 const styles = StyleSheet.create({
   mask: {

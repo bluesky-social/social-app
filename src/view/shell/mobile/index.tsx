@@ -28,7 +28,7 @@ import {Login} from '../../screens/Login'
 import {Menu} from './Menu'
 import {Onboard} from '../../screens/Onboard'
 import {HorzSwipe} from '../../com/util/gestures/HorzSwipe'
-import {Modal} from '../../com/modals/Modal'
+import {ModalsContainer} from '../../com/modals/Modal'
 import {Lightbox} from '../../com/lightbox/Lightbox'
 import {Text} from '../../com/util/text/Text'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
@@ -366,7 +366,7 @@ export const MobileShell: React.FC = observer(() => {
     return (
       <View style={styles.outerContainer}>
         <Login />
-        <Modal />
+        <ModalsContainer />
       </View>
     )
   }
@@ -515,7 +515,7 @@ export const MobileShell: React.FC = observer(() => {
           notificationCount={store.me.notifications.unreadCount}
         />
       </Animated.View>
-      <Modal />
+      <ModalsContainer />
       <Lightbox />
       <Composer
         active={store.shell.isComposerActive}

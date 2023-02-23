@@ -11,7 +11,7 @@ import {Onboard} from '../../screens/Onboard'
 import {Login} from '../../screens/Login'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
 import {Lightbox} from '../../com/lightbox/Lightbox'
-import {Modal} from '../../com/modals/Modal'
+import {ModalsContainer} from '../../com/modals/Modal'
 import {Text} from 'view/com/util/text/Text'
 import {Composer} from './Composer'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -32,7 +32,7 @@ export const WebShell: React.FC = observer(() => {
     return (
       <View style={styles.outerContainer}>
         <Login />
-        <Modal />
+        <ModalsContainer />
       </View>
     )
   }
@@ -67,7 +67,7 @@ export const WebShell: React.FC = observer(() => {
         imagesOpen={store.shell.composerOpts?.imagesOpen}
         onPost={store.shell.composerOpts?.onPost}
       />
-      <Modal />
+      <ModalsContainer />
       <Lightbox />
     </View>
   )
