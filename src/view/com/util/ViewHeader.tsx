@@ -8,6 +8,7 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useAnalytics} from 'lib/analytics'
+import {isDesktopWeb} from '../../../platform/detection'
 
 const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 
@@ -32,6 +33,9 @@ export const ViewHeader = observer(function ViewHeader({
   }
   if (typeof canGoBack === 'undefined') {
     canGoBack = store.nav.tab.canGoBack
+  }
+  if (isDesktopWeb) {
+    return undefined
   }
   return (
     <Container hideOnScroll={hideOnScroll || false}>

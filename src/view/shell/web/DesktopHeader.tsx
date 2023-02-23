@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   },
   navItemCount: {
     position: 'absolute',
-    top: -5,
+    top: 0,
     left: 15,
     backgroundColor: colors.red3,
     color: colors.white,
