@@ -35,7 +35,7 @@ export const ViewHeader = observer(function ViewHeader({
     canGoBack = store.nav.tab.canGoBack
   }
   if (isDesktopWeb) {
-    return undefined
+    return <></>
   }
   return (
     <Container hideOnScroll={hideOnScroll || false}>
