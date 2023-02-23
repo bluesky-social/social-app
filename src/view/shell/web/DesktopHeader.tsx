@@ -92,27 +92,27 @@ export const DesktopHeader = observer(function DesktopHeader({}: {
   const onPressCompose = () => store.shell.openComposer({})
   return (
     <View style={[styles.header, pal.borderDark, pal.view]}>
-      <Text type="title-2xl" style={[pal.text, styles.title]}>
+      <Text type="title-xl" style={[pal.text, styles.title]}>
         Bluesky
       </Text>
       <View style={styles.space30} />
       <NavItem
         href="/"
-        icon={<HomeIcon size={28} />}
-        iconFilled={<HomeIconSolid size={28} />}
+        icon={<HomeIcon size={24} />}
+        iconFilled={<HomeIconSolid size={24} />}
       />
       <View style={styles.space15} />
       <NavItem
         href="/search"
-        icon={<MagnifyingGlassIcon size={28} />}
-        iconFilled={<MagnifyingGlassIcon strokeWidth={3} size={28} />}
+        icon={<MagnifyingGlassIcon size={24} />}
+        iconFilled={<MagnifyingGlassIcon strokeWidth={3} size={24} />}
       />
       <View style={styles.space15} />
       <NavItem
         href="/notifications"
         count={store.me.notifications.unreadCount}
-        icon={<BellIcon size={28} />}
-        iconFilled={<BellIconSolid size={28} />}
+        icon={<BellIcon size={24} />}
+        iconFilled={<BellIconSolid size={24} />}
       />
       <View style={styles.spaceFlex} />
       <TouchableOpacity style={[styles.newPostBtn]} onPress={onPressCompose}>
@@ -191,6 +191,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blue3,
   },
   navItemIconWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 28,
+    height: 28,
     marginBottom: 2,
   },
   navItemCount: {

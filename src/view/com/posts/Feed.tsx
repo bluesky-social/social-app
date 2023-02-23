@@ -13,12 +13,10 @@ import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {FeedModel} from 'state/models/feed-view'
 import {FeedItem} from './FeedItem'
-import {ComposerPrompt} from './ComposerPrompt'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 
-const COMPOSE_PROMPT_ITEM = {_reactKey: '__prompt__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_FEED_ITEM = {_reactKey: '__error__'}
 
@@ -27,7 +25,6 @@ export const Feed = observer(function Feed({
   style,
   scrollElRef,
   onPressTryAgain,
-  onPressCompose,
   onScroll,
   testID,
   headerOffset = 0,
@@ -36,7 +33,6 @@ export const Feed = observer(function Feed({
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
-  onPressCompose: (imagesOpen?: boolean) => void
   onScroll?: OnScrollCb
   testID?: string
   headerOffset?: number
@@ -47,7 +43,6 @@ export const Feed = observer(function Feed({
   const data = React.useMemo(() => {
     let feedItems: any[] = []
     if (feed.hasLoaded) {
-      feedItems = feedItems.concat([COMPOSE_PROMPT_ITEM])
       if (feed.hasError) {
         feedItems = feedItems.concat([ERROR_FEED_ITEM])
       }
@@ -91,9 +86,7 @@ export const Feed = observer(function Feed({
   //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = React.useCallback(
     ({item}: {item: any}) => {
-      if (item === COMPOSE_PROMPT_ITEM) {
-        return <ComposerPrompt onPressCompose={onPressCompose} />
-      } else if (item === EMPTY_FEED_ITEM) {
+      if (item === EMPTY_FEED_ITEM) {
         return (
           <EmptyState
             icon="bars"
@@ -111,7 +104,7 @@ export const Feed = observer(function Feed({
       }
       return <FeedItem item={item} />
     },
-    [feed, onPressTryAgain, onPressCompose],
+    [feed, onPressTryAgain],
   )
 
   const FeedFooter = React.useCallback(
