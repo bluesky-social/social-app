@@ -2,11 +2,12 @@
 import React from 'react'
 import {RootStoreModel} from 'state/models/root-store'
 
+const _analytics = {
+  screen(_name: string) {},
+  track(_name: string, _opts: any) {},
+}
 export function useAnalytics() {
-  return {
-    screen(_name: string) {},
-    track(_name: string, _opts: any) {},
-  }
+  return _analytics
 }
 
 export function init(_store: RootStoreModel) {}
