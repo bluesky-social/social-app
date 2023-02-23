@@ -20,6 +20,7 @@ module.exports = {
         alias: {
           // This needs to be mirrored in tsconfig.json
           lib: './src/lib',
+          platform: './src/platform',
           state: './src/state',
           view: './src/view',
         },

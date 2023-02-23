@@ -22,7 +22,6 @@ import {
   View,
   ViewProps,
 } from 'react-native'
-import {useTheme} from 'lib/ThemeContext'
 import {addStyle, colors} from 'lib/styles'
 
 export function CenteredView({
@@ -40,14 +39,9 @@ export const FlatList = React.forwardRef(function <ItemT>(
   }: React.PropsWithChildren<FlatListProps<ItemT>>,
   ref: React.Ref<RNFlatList>,
 ) {
-  const theme = useTheme()
   contentContainerStyle = addStyle(
     contentContainerStyle,
     styles.containerScroll,
-  )
-  contentContainerStyle = addStyle(
-    contentContainerStyle,
-    theme.colorScheme === 'dark' ? styles.containerDark : styles.containerLight,
   )
   return (
     <RNFlatList
@@ -60,16 +54,11 @@ export const FlatList = React.forwardRef(function <ItemT>(
 
 export const ScrollView = React.forwardRef(function (
   {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
-  ref: React.Ref<RNFlatList>,
+  ref: React.Ref<RNScrollView>,
 ) {
-  const theme = useTheme()
   contentContainerStyle = addStyle(
     contentContainerStyle,
     styles.containerScroll,
-  )
-  contentContainerStyle = addStyle(
-    contentContainerStyle,
-    theme.colorScheme === 'dark' ? styles.containerDark : styles.containerLight,
   )
   return (
     <RNScrollView

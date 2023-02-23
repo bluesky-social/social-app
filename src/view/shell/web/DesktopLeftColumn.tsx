@@ -70,12 +70,7 @@ export const DesktopLeftColumn = observer(() => {
     styles.containerBgLight,
     styles.containerBgDark,
   )
-  const hoverBg = useColorSchemeStyle(
-    styles.navItemHoverBgLight,
-    styles.navItemHoverBgDark,
-  )
   const pal = usePalette('default')
-  const onPressCompose = () => store.shell.openComposer({})
   const avi = (
     <UserAvatar
       handle={store.me.handle}
@@ -89,15 +84,6 @@ export const DesktopLeftColumn = observer(() => {
       <View style={styles.main}>
         <Link style={styles.logo} href="/">
           <Text type="title-xl">Bluesky</Text>
-        </Link>
-        <Link href="/search" style={[pal.view, pal.borderDark, styles.search]}>
-          <MagnifyingGlassIcon
-            size={18}
-            style={[pal.textLight, styles.searchIconWrapper]}
-          />
-          <Text type="md-thin" style={pal.textLight}>
-            Search
-          </Text>
         </Link>
         <NavItem
           href="/"
@@ -124,19 +110,6 @@ export const DesktopLeftColumn = observer(() => {
           icon={<CogIcon strokeWidth={2} size={21} />}
           iconFilled={<CogIcon strokeWidth={2.5} size={21} />}
         />
-        <View style={[pal.border, styles.separator]} />
-        <Pressable
-          style={state => [
-            // @ts-ignore Pressable state differs for RNW -prf
-            state.hovered && hoverBg,
-          ]}>
-          <TouchableOpacity style={styles.navItem} onPress={onPressCompose}>
-            <View style={styles.navItemIconWrapper}>
-              <ComposeIcon size={21} />
-            </View>
-            <Text type="xl-thin">New Post</Text>
-          </TouchableOpacity>
-        </Pressable>
       </View>
       <View style={[styles.footer, pal.borderDark]}>
         <NavItem
@@ -183,24 +156,8 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    paddingTop: 6,
-    paddingBottom: 12,
-  },
-
-  search: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 6,
-    marginBottom: 10,
-    borderWidth: 1,
-  },
-  searchIconWrapper: {
-    flexDirection: 'row',
-    width: 30,
-    justifyContent: 'center',
-    marginRight: 6,
+    paddingTop: 8,
+    paddingBottom: 14,
   },
 
   navItem: {
@@ -239,14 +196,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingHorizontal: 4,
     borderRadius: 6,
-  },
-  composeBtn: {
-    marginTop: 20,
-    marginBottom: 10,
-    marginLeft: 10,
-    marginRight: 20,
-    borderRadius: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
   },
 })

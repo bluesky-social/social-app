@@ -3,6 +3,7 @@
   "compilerOptions": {
     "paths": {
       "lib/*": ["./src/lib/*"],
+      "platform/*": ["./src/platform/*"],
       "state/*": ["./src/state/*"],
       "view/*": ["./src/view/*"]
     }

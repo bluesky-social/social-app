@@ -1,69 +1,51 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {CenteredView} from './Views'
 import {Text} from './text/Text'
-import {useStores} from 'state/index'
+import {Link} from './Link'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
+import {ComposeIcon, MagnifyingGlassIcon} from 'lib/icons'
 import {colors} from 'lib/styles'
-
-const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 
 export const ViewHeader = observer(function ViewHeader({
   title,
-  subtitle,
-  canGoBack,
 }: {
   title: string
-  subtitle?: string
   canGoBack?: boolean
 }) {
-  const pal = usePalette('default')
   const store = useStores()
-  const onPressBack = () => {
-    store.nav.tab.goBack()
-  }
-  if (typeof canGoBack === 'undefined') {
-    canGoBack = store.nav.tab.canGoBack
-  }
+  const pal = usePalette('default')
+  const onPressCompose = () => store.shell.openComposer({})
   return (
-    <CenteredView style={[styles.header, pal.view]}>
-      {canGoBack ? (
-        <>
-          <TouchableOpacity
-            testID="viewHeaderBackOrMenuBtn"
-            onPress={onPressBack}
-            hitSlop={BACK_HITSLOP}
-            style={styles.backBtn}>
-            <FontAwesomeIcon
-              size={18}
-              icon="angle-left"
-              style={[styles.backIcon, pal.text]}
-            />
-          </TouchableOpacity>
-          <View style={styles.titleContainer} pointerEvents="none">
-            <Text type="title" style={[pal.text, styles.title]}>
-              {title}
-            </Text>
-            {subtitle ? (
-              <Text
-                type="title-sm"
-                style={[styles.subtitle, pal.textLight]}
-                numberOfLines={1}>
-                {subtitle}
-              </Text>
-            ) : undefined}
-          </View>
-        </>
-      ) : (
-        <View style={styles.titleContainer} pointerEvents="none">
-          <Text type="title" style={[pal.text, styles.title]}>
-            Home
-          </Text>
+    <View style={[styles.header, pal.borderDark, pal.view]}>
+      <View style={styles.titleContainer} pointerEvents="none">
+        <Text type="title-2xl" style={[pal.text, styles.title]}>
+          {title}
+        </Text>
+      </View>
+      <TouchableOpacity style={[styles.newPostBtn]} onPress={onPressCompose}>
+        <View style={styles.newPostBtnIconWrapper}>
+          <ComposeIcon
+            size={16}
+            strokeWidth={1.5}
+            style={styles.newPostBtnLabel}
+          />
         </View>
-      )}
-    </CenteredView>
+        <Text type="md" style={styles.newPostBtnLabel}>
+          New Post
+        </Text>
+      </TouchableOpacity>
+      <Link href="/search" style={[pal.view, pal.borderDark, styles.search]}>
+        <MagnifyingGlassIcon
+          size={18}
+          style={[pal.textLight, styles.searchIconWrapper]}
+        />
+        <Text type="md-thin" style={pal.textLight}>
+          Search
+        </Text>
+      </Link>
+    </View>
   )
 })
 
@@ -71,44 +53,52 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingTop: 24,
+    paddingBottom: 18,
+    paddingLeft: 30,
+    paddingRight: 40,
+    marginLeft: 300,
+    borderBottomWidth: 1,
   },
 
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
     marginRight: 'auto',
   },
   title: {
     fontWeight: 'bold',
   },
-  subtitle: {
-    marginLeft: 4,
-    maxWidth: 200,
-    fontWeight: 'normal',
+
+  search: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 300,
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+  },
+  searchIconWrapper: {
+    flexDirection: 'row',
+    width: 30,
+    justifyContent: 'center',
+    marginRight: 2,
   },
 
-  backBtn: {
-    width: 30,
-  },
-  backIcon: {
-    position: 'relative',
-    top: -1,
-  },
-  btn: {
+  newPostBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 36,
-    height: 36,
-    borderRadius: 20,
-    marginLeft: 4,
+    borderRadius: 24,
+    paddingTop: 8,
+    paddingBottom: 9,
+    paddingHorizontal: 18,
+    backgroundColor: colors.blue3,
+    marginRight: 10,
   },
-  littleXIcon: {
-    color: colors.red3,
-    position: 'absolute',
-    right: 7,
-    bottom: 7,
+  newPostBtnIconWrapper: {
+    marginRight: 8,
+  },
+  newPostBtnLabel: {
+    color: colors.white,
   },
 })
