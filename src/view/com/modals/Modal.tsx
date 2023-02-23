@@ -16,7 +16,7 @@ import {StyleSheet} from 'react-native'
 
 const CLOSED_SNAPPOINTS = ['10%']
 
-export const Modal = observer(function Modal() {
+export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
   const bottomSheetRef = useRef<BottomSheet>(null)
   const pal = usePalette('default')
