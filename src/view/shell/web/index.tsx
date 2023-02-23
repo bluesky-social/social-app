@@ -53,7 +53,6 @@ export const WebShell: React.FC = observer(() => {
           </ErrorBoundary>
         </View>
       ))}
-      <DesktopLeftColumn />
       <DesktopRightColumn />
       <Composer
         active={store.shell.isComposerActive}
