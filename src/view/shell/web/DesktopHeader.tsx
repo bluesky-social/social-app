@@ -2,7 +2,6 @@ import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Text} from 'view/com/util/text/Text'
-import {Link} from 'view/com/util/Link'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
@@ -17,6 +16,7 @@ import {
   MagnifyingGlassIcon,
   CogIcon,
 } from 'lib/icons'
+import {DesktopSearch} from './DesktopSearch'
 
 interface NavItemProps {
   count?: number
@@ -90,6 +90,7 @@ export const DesktopHeader = observer(function DesktopHeader({}: {
   const store = useStores()
   const pal = usePalette('default')
   const onPressCompose = () => store.shell.openComposer({})
+
   return (
     <View style={[styles.header, pal.borderDark, pal.view]}>
       <Text type="title-xl" style={[pal.text, styles.title]}>
@@ -128,15 +129,7 @@ export const DesktopHeader = observer(function DesktopHeader({}: {
         </Text>
       </TouchableOpacity>
       <View style={styles.space20} />
-      <Link href="/search" style={[pal.view, pal.borderDark, styles.search]}>
-        <MagnifyingGlassIcon
-          size={18}
-          style={[pal.textLight, styles.searchIconWrapper]}
-        />
-        <Text type="md-thin" style={pal.textLight}>
-          Search
-        </Text>
-      </Link>
+      <DesktopSearch />
       <View style={styles.space15} />
       <ProfileItem />
       <NavItem
@@ -157,6 +150,7 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
     paddingRight: 40,
     borderBottomWidth: 1,
+    zIndex: 1,
   },
 
   spaceFlex: {
