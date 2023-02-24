@@ -1,8 +1,8 @@
 import {RootStoreModel} from './root-store'
 import {makeAutoObservable} from 'mobx'
 import {TABS_ENABLED} from 'lib/build-flags'
-import {segmentClient} from 'lib/analytics'
-import {getHistory} from 'platform/urls'
+import * as analytics from 'lib/analytics'
+import {isNative} from 'platform/detection'
 
 let __id = 0
 function genId() {
@@ -42,7 +42,6 @@ export type HistoryPtr = string // `{tabId}-{historyId}`
 export class NavigationTabModel {
   id = genId()
   history: HistoryItem[]
-  browserHistory: any
   index = 0
   isNewTab = false
 
@@ -50,13 +49,11 @@ export class NavigationTabModel {
     this.history = [
       {url: TabPurposeMainPath[fixedTabPurpose], ts: Date.now(), id: genId()},
     ]
-    this.browserHistory = getHistory()
     makeAutoObservable(this, {
       serialize: false,
       hydrate: false,
     })
   }
-
   // accessors
   // =
 
@@ -108,7 +105,7 @@ export class NavigationTabModel {
   navigate(url: string, title?: string) {
     try {
       const path = url.split('/')[1]
-      segmentClient.track('Navigation', {
+      analytics.track('Navigation', {
         path,
       })
     } catch (error) {}
@@ -125,8 +122,10 @@ export class NavigationTabModel {
         this.history.push({url: fixedUrl, ts: Date.now(), id: genId()})
       }
       this.history.push({url, title, ts: Date.now(), id: genId()})
-      this.browserHistory.push(url)
       this.index = this.history.length - 1
+      if (!isNative) {
+        window.history.pushState({hindex: this.index, hurl: url}, '', url)
+      }
     }
   }
 
@@ -146,7 +145,9 @@ export class NavigationTabModel {
   goBack() {
     if (this.canGoBack) {
       this.index--
-      this.browserHistory.back()
+      if (!isNative) {
+        window.history.back()
+      }
     }
   }
 
@@ -160,14 +161,19 @@ export class NavigationTabModel {
   goForward() {
     if (this.canGoForward) {
       this.index++
-      this.browserHistory.forward()
+      if (!isNative) {
+        window.history.forward()
+      }
     }
   }
 
   goToIndex(index: number) {
     if (index >= 0 && index <= this.history.length - 1) {
+      const delta = index - this.index
       this.index = index
-      this.browserHistory.go(index)
+      if (!isNative) {
+        window.history.go(delta)
+      }
     }
   }
 
@@ -182,6 +188,15 @@ export class NavigationTabModel {
 
   setIsNewTab(v: boolean) {
     this.isNewTab = v
+  }
+
+  // browser only
+  // =
+
+  resetTo(url: string) {
+    this.index = 0
+    this.history.push({url, title: '', ts: Date.now(), id: genId()})
+    this.index = this.history.length - 1
   }
 
   // persistence
@@ -229,11 +244,13 @@ export class NavigationTabModel {
 }
 
 export class NavigationModel {
-  tabs: NavigationTabModel[] = [
-    new NavigationTabModel(TabPurpose.Default),
-    new NavigationTabModel(TabPurpose.Search),
-    new NavigationTabModel(TabPurpose.Notifs),
-  ]
+  tabs: NavigationTabModel[] = isNative
+    ? [
+        new NavigationTabModel(TabPurpose.Default),
+        new NavigationTabModel(TabPurpose.Search),
+        new NavigationTabModel(TabPurpose.Notifs),
+      ]
+    : [new NavigationTabModel(TabPurpose.Default)]
   tabIndex = 0
 
   constructor(public rootStore: RootStoreModel) {
@@ -244,12 +261,39 @@ export class NavigationModel {
     })
   }
 
+  /**
+   * Used only in the web build to sync with browser history state
+   */
+  bindWebNavigation() {
+    if (!isNative) {
+      window.addEventListener('popstate', e => {
+        const {hindex, hurl} = e.state
+        if (hindex >= 0 && hindex <= this.tab.history.length - 1) {
+          this.tab.index = hindex
+        }
+        if (this.tab.current.url !== hurl) {
+          // desynced because they went back to an old tab session-
+          // do a reset to match that
+          this.tab.resetTo(hurl)
+        }
+
+        // sanity check
+        if (this.tab.current.url !== window.location.pathname) {
+          // state has completely desynced, reload
+          window.location.reload()
+        }
+      })
+    }
+  }
+
   clear() {
-    this.tabs = [
-      new NavigationTabModel(TabPurpose.Default),
-      new NavigationTabModel(TabPurpose.Search),
-      new NavigationTabModel(TabPurpose.Notifs),
-    ]
+    this.tabs = isNative
+      ? [
+          new NavigationTabModel(TabPurpose.Default),
+          new NavigationTabModel(TabPurpose.Search),
+          new NavigationTabModel(TabPurpose.Notifs),
+        ]
+      : [new NavigationTabModel(TabPurpose.Default)]
     this.tabIndex = 0
   }
 
@@ -372,7 +416,7 @@ export class NavigationModel {
   hydrate(_v: unknown) {
     // TODO fixme
     this.clear()
-    /*if (isObj(v)) {
+    /*if (isObj(v)) { 
       if (hasProp(v, 'tabs') && Array.isArray(v.tabs)) {
         for (const tab of v.tabs) {
           const copy = new NavigationTabModel()
