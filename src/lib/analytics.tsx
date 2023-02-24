@@ -7,6 +7,7 @@ const segmentClient = createClient({
   writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
   trackAppLifecycleEvents: false,
 })
+export const track = segmentClient.track
 
 export {useAnalytics} from '@segment/analytics-react-native'
 

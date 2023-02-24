@@ -16,6 +16,7 @@ function App() {
     view.setup()
     setupState().then(store => {
       setRootStore(store)
+      store.nav.bindWebNavigation()
       getInitialURL().then(url => {
         if (url) {
           store.nav.handleLink(url)

@@ -1,5 +1,4 @@
 import {Linking} from 'react-native'
-import {createBrowserHistory, createMemoryHistory} from 'history'
 import {isNative, isWeb} from './detection'
 
 export async function getInitialURL(): Promise<string | undefined> {
@@ -22,13 +21,5 @@ export function clearHash() {
   if (isWeb) {
     // @ts-ignore window exists -prf
     window.location.hash = ''
-  }
-}
-
-export function getHistory() {
-  if (isWeb) {
-    return createBrowserHistory()
-  } else {
-    return createMemoryHistory()
   }
 }
