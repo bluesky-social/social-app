@@ -188,7 +188,7 @@ export const FeedItem = observer(function FeedItem({
                   style={styles.metaItem}
                   href={authors[0].href}
                   title={`@${authors[0].handle}`}>
-                  <Text style={[pal.text, s.bold]}>
+                  <Text style={[pal.text, s.bold]} lineHeight={1.2}>
                     {authors[0].displayName || authors[0].handle}
                   </Text>
                 </Link>
@@ -333,10 +333,16 @@ function ExpandedAuthorsList({
             />
           </View>
           <View style={s.flex1}>
-            <Text type="lg-bold" numberOfLines={1} style={pal.text}>
+            <Text
+              type="lg-bold"
+              numberOfLines={1}
+              style={pal.text}
+              lineHeight={1.2}>
               {author.displayName || author.handle}
               &nbsp;
-              <Text style={[pal.textLight]}>{author.handle}</Text>
+              <Text style={[pal.textLight]} lineHeight={1.2}>
+                {author.handle}
+              </Text>
             </Text>
           </View>
         </Link>

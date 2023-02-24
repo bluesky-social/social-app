@@ -164,7 +164,7 @@ export const Post = observer(function Post({
                 size={9}
                 style={[pal.textLight, s.mr5]}
               />
-              <Text type="sm" style={[pal.textLight, s.mr2]}>
+              <Text type="sm" style={[pal.textLight, s.mr2]} lineHeight={1.2}>
                 Reply to
               </Text>
               <UserInfoText

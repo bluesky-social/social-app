@@ -146,7 +146,11 @@ export const PostThreadItem = observer(function PostThreadItem({
                     style={styles.metaItem}
                     href={authorHref}
                     title={authorTitle}>
-                    <Text type="xl-bold" style={[pal.text]} numberOfLines={1}>
+                    <Text
+                      type="xl-bold"
+                      style={[pal.text]}
+                      numberOfLines={1}
+                      lineHeight={1.2}>
                       {item.post.author.displayName || item.post.author.handle}
                     </Text>
                   </Link>
