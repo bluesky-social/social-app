@@ -17,7 +17,7 @@ import {
   VirtualizedList,
   ModalProps,
 } from 'react-native'
-import {Modal} from '../../modals/Modal'
+import {ModalsContainer} from '../../modals/Modal'
 
 import ImageItem from './components/ImageItem/ImageItem'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
@@ -98,7 +98,7 @@ function ImageViewing({
 
   return (
     <View style={styles.screen} onLayout={onLayout}>
-      <Modal />
+      <ModalsContainer />
       <View style={[styles.container, {opacity, backgroundColor}]}>
         <Animated.View style={[styles.header, {transform: headerTransform}]}>
           {typeof HeaderComponent !== 'undefined' ? (

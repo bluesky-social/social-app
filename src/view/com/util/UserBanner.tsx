@@ -10,7 +10,7 @@ import {
   openCropper,
   openPicker,
   PickedMedia,
-} from './images/image-crop-picker/ImageCropPicker'
+} from '../../../lib/media/picker'
 import {useStores} from 'state/index'
 import {
   requestPhotoAccessIfNeeded,
@@ -18,6 +18,7 @@ import {
 } from 'lib/permissions'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
+import {isWeb} from 'platform/detection'
 
 export function UserBanner({
   banner,
@@ -29,7 +30,7 @@ export function UserBanner({
   const store = useStores()
   const pal = usePalette('default')
   const dropdownItems = [
-    {
+    !isWeb && {
       label: 'Camera',
       icon: 'camera' as IconProp,
       onPress: async () => {

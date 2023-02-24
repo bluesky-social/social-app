@@ -25,7 +25,6 @@ import {makeValidHandle, createFullHandle} from 'lib/strings/handles'
 import {toNiceDomain} from 'lib/strings/url-helpers'
 import {useStores, DEFAULT_SERVICE} from 'state/index'
 import {ServiceDescription} from 'state/models/session'
-import {ServerInputModal} from 'state/models/shell-ui'
 import {usePalette} from 'lib/hooks/usePalette'
 import {cleanError} from 'lib/strings/errors'
 
@@ -84,7 +83,11 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const onPressRetryConnect = () => setRetryDescribeTrigger({})
 
   const onPressSelectService = () => {
-    store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
+    store.shell.openModal({
+      name: 'server-input',
+      initialService: serviceUrl,
+      onSelect: setServiceUrl,
+    })
     Keyboard.dismiss()
   }
 

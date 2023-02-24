@@ -11,21 +11,28 @@ import {Onboard} from '../../screens/Onboard'
 import {Login} from '../../screens/Login'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
 import {Lightbox} from '../../com/lightbox/Lightbox'
-import {Modal} from '../../com/modals/Modal'
+import {ModalsContainer} from '../../com/modals/Modal'
+import {Text} from 'view/com/util/text/Text'
 import {Composer} from './Composer'
+import {usePalette} from 'lib/hooks/usePalette'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {s, colors} from 'lib/styles'
+import {isMobileWeb} from 'platform/detection'
 
 export const WebShell: React.FC = observer(() => {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   const store = useStores()
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
 
+  if (isMobileWeb) {
+    return <NoMobileWeb />
+  }
+
   if (!store.session.hasSession) {
     return (
       <View style={styles.outerContainer}>
         <Login />
-        <Modal />
+        <ModalsContainer />
       </View>
     )
   }
@@ -60,21 +67,10 @@ export const WebShell: React.FC = observer(() => {
         imagesOpen={store.shell.composerOpts?.imagesOpen}
         onPost={store.shell.composerOpts?.onPost}
       />
-      <Modal />
+      <ModalsContainer />
       <Lightbox />
     </View>
   )
-  // TODO
-  // <Modal />
-  // <Lightbox />
-  // <Composer
-  //   active={store.shell.isComposerActive}
-  //   onClose={() => store.shell.closeComposer()}
-  //   winHeight={winDim.height}
-  //   replyTo={store.shell.composerOpts?.replyTo}
-  //   imagesOpen={store.shell.composerOpts?.imagesOpen}
-  //   onPost={store.shell.composerOpts?.onPost}
-  // />
 })
 
 /**
@@ -126,6 +122,21 @@ function constructScreenRenderDesc(nav: NavigationModel): {
   }
 }
 
+function NoMobileWeb() {
+  const pal = usePalette('default')
+  return (
+    <View style={[pal.view, styles.noMobileWeb]}>
+      <Text type="title-2xl" style={{paddingBottom: 20}}>
+        We're so sorry!
+      </Text>
+      <Text type="lg">
+        This app is not available for mobile Web yet. Please open it on your
+        desktop or download the iOS app.
+      </Text>
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
   outerContainer: {
     height: '100%',
@@ -141,5 +152,11 @@ const styles = StyleSheet.create({
   },
   hidden: {
     display: 'none',
+  },
+  noMobileWeb: {
+    height: '100%',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
 })

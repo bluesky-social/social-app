@@ -16,7 +16,6 @@ import {Button, ButtonType} from './Button'
 import {colors} from 'lib/styles'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useStores} from 'state/index'
-import {ReportPostModal, ConfirmModal} from 'state/models/shell-ui'
 import {TABS_ENABLED} from 'lib/build-flags'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
@@ -28,6 +27,7 @@ export interface DropdownItem {
   label: string
   onPress: () => void
 }
+type MaybeDropdownItem = DropdownItem | false | undefined
 
 export type DropdownButtonType = ButtonType | 'bare'
 
@@ -44,7 +44,7 @@ export function DropdownButton({
 }: {
   type?: DropdownButtonType
   style?: StyleProp<ViewStyle>
-  items: DropdownItem[]
+  items: MaybeDropdownItem[]
   label?: string
   menuWidth?: number
   children?: React.ReactNode
@@ -71,7 +71,12 @@ export function DropdownButton({
           ? pageX + width + rightOffset
           : pageX + width - menuWidth
         const newY = pageY + height + bottomOffset
-        createDropdownMenu(newX, newY, menuWidth, items)
+        createDropdownMenu(
+          newX,
+          newY,
+          menuWidth,
+          items.filter(v => !!v) as DropdownItem[],
+        )
       },
     )
   }
@@ -151,7 +156,11 @@ export function PostDropdownBtn({
       icon: 'circle-exclamation',
       label: 'Report post',
       onPress() {
-        store.shell.openModal(new ReportPostModal(itemUri, itemCid))
+        store.shell.openModal({
+          name: 'report-post',
+          postUri: itemUri,
+          postCid: itemCid,
+        })
       },
     },
     isAuthor
@@ -159,13 +168,12 @@ export function PostDropdownBtn({
           icon: ['far', 'trash-can'],
           label: 'Delete post',
           onPress() {
-            store.shell.openModal(
-              new ConfirmModal(
-                'Delete this post?',
-                'Are you sure? This can not be undone.',
-                onDeletePost,
-              ),
-            )
+            store.shell.openModal({
+              name: 'confirm',
+              title: 'Delete this post?',
+              message: 'Are you sure? This can not be undone.',
+              onPressConfirm: onDeletePost,
+            })
           },
         }
       : undefined,

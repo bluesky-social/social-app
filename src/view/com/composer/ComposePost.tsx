@@ -36,11 +36,18 @@ import {s, colors, gradients} from 'lib/styles'
 import {cleanError} from 'lib/strings/errors'
 import {detectLinkables, extractEntities} from 'lib/strings/rich-text-detection'
 import {getLinkMeta} from 'lib/link-meta/link-meta'
-import {downloadAndResize} from 'lib/images'
-import {PhotoCarouselPicker, cropPhoto} from './photos/PhotoCarouselPicker'
+import {getImageDim, downloadAndResize} from 'lib/media/manip'
+import {PhotoCarouselPicker} from './photos/PhotoCarouselPicker'
+import {cropAndCompressFlow, pickImagesFlow} from '../../../lib/media/picker'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
 import {SelectedPhoto} from './SelectedPhoto'
 import {usePalette} from 'lib/hooks/usePalette'
+import {
+  POST_IMG_MAX_WIDTH,
+  POST_IMG_MAX_HEIGHT,
+  POST_IMG_MAX_SIZE,
+} from 'lib/constants'
+import {isWeb} from 'platform/detection'
 
 const MAX_TEXT_LENGTH = 256
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
@@ -61,7 +68,7 @@ export const ComposePost = observer(function ComposePost({
   onPost?: ComposerOpts['onPost']
   onClose: () => void
 }) {
-  const {track, screen} = useAnalytics()
+  const {track} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const textInput = useRef<TextInputRef>(null)
@@ -174,12 +181,24 @@ export const ComposePost = observer(function ComposePost({
   const onPressContainer = () => {
     textInput.current?.focus()
   }
-  const onPressSelectPhotos = () => {
+  const onPressSelectPhotos = async () => {
     track('ComposePost:SelectPhotos')
-    if (isSelectingPhotos) {
-      setIsSelectingPhotos(false)
-    } else if (selectedPhotos.length < 4) {
-      setIsSelectingPhotos(true)
+    if (isWeb) {
+      if (selectedPhotos.length < 4) {
+        const images = await pickImagesFlow(
+          store,
+          4 - selectedPhotos.length,
+          {width: POST_IMG_MAX_WIDTH, height: POST_IMG_MAX_HEIGHT},
+          POST_IMG_MAX_SIZE,
+        )
+        setSelectedPhotos([...selectedPhotos, ...images])
+      }
+    } else {
+      if (isSelectingPhotos) {
+        setIsSelectingPhotos(false)
+      } else if (selectedPhotos.length < 4) {
+        setIsSelectingPhotos(true)
+      }
     }
   }
   const onSelectPhotos = (photos: string[]) => {
@@ -220,7 +239,19 @@ export const ComposePost = observer(function ComposePost({
     }
     const imgUri = uris.find(uri => /\.(jpe?g|png)$/.test(uri))
     if (imgUri) {
-      const finalImgPath = await cropPhoto(store, imgUri)
+      let imgDim
+      try {
+        imgDim = await getImageDim(imgUri)
+      } catch (e) {
+        imgDim = {width: POST_IMG_MAX_WIDTH, height: POST_IMG_MAX_HEIGHT}
+      }
+      const finalImgPath = await cropAndCompressFlow(
+        store,
+        imgUri,
+        imgDim,
+        {width: POST_IMG_MAX_WIDTH, height: POST_IMG_MAX_HEIGHT},
+        POST_IMG_MAX_SIZE,
+      )
       onSelectPhotos([...selectedPhotos, finalImgPath])
     }
   }
