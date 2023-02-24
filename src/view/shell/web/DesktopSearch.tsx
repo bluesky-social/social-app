@@ -34,132 +34,106 @@ export const DesktopSearch = observer(function DesktopSearch() {
   }
 
   return (
-    <View
-      style={[
-        styles.searchContainer,
-        pal.borderDark,
-        pal.view,
-        styles.container,
-        styles.search,
-      ]}>
-      <View style={[styles.container, styles.searchInputWrapper]}>
-        <MagnifyingGlassIcon
-          size={18}
-          style={[pal.textLight, styles.searchIconWrapper]}
-        />
-
-        <TextInput
-          testID="searchTextInput"
-          ref={textInput}
-          placeholder="Search"
-          placeholderTextColor={pal.colors.textLight}
-          selectTextOnFocus
-          returnKeyType="search"
-          value={query}
-          style={[pal.textLight, styles.headerSearchInput]}
-          onFocus={() => setIsInputFocused(true)}
-          onBlur={() => setIsInputFocused(false)}
-          onChangeText={onChangeQuery}
-        />
-
-        {query ? (
-          <View style={styles.headerCancelBtn}>
-            <TouchableOpacity onPress={onPressCancelSearch}>
-              <Text>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        ) : undefined}
+    <View style={styles.container}>
+      <View style={[pal.borderDark, pal.view, styles.search]}>
+        <View style={[styles.inputContainer]}>
+          <MagnifyingGlassIcon
+            size={18}
+            style={[pal.textLight, styles.iconWrapper]}
+          />
+          <TextInput
+            testID="searchTextInput"
+            ref={textInput}
+            placeholder="Search"
+            placeholderTextColor={pal.colors.textLight}
+            selectTextOnFocus
+            returnKeyType="search"
+            value={query}
+            style={[pal.textLight, styles.input]}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
+            onChangeText={onChangeQuery}
+          />
+          {query ? (
+            <View style={styles.cancelBtn}>
+              <TouchableOpacity onPress={onPressCancelSearch}>
+                <Text style={[pal.link]}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          ) : undefined}
+        </View>
       </View>
 
-      <View
-        style={[
-          {backgroundColor: pal.colors.background},
-          styles.searchResultsContainer,
-          styles.container,
-        ]}>
-        {query && autocompleteView.searchRes.length ? (
-          <>
-            {autocompleteView.searchRes.map(item => (
-              <ProfileCard
-                key={item.did}
-                handle={item.handle}
-                displayName={item.displayName}
-                avatar={item.avatar}
-              />
-            ))}
-          </>
-        ) : query && !autocompleteView.searchRes.length ? (
-          <View>
-            <Text style={[pal.textLight, styles.searchPrompt]}>
-              No results found for {autocompleteView.prefix}
-            </Text>
-          </View>
-        ) : isInputFocused ? (
-          <View>
-            <Text style={[pal.textLight, styles.searchPrompt]}>
-              Search for users on the network
-            </Text>
-          </View>
-        ) : null}
-      </View>
+      {query !== '' && (
+        <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
+          {autocompleteView.searchRes.length ? (
+            <>
+              {autocompleteView.searchRes.map((item, i) => (
+                <ProfileCard
+                  key={item.did}
+                  handle={item.handle}
+                  displayName={item.displayName}
+                  avatar={item.avatar}
+                  noBorder={i === 0}
+                />
+              ))}
+            </>
+          ) : (
+            <View>
+              <Text style={[pal.textLight, styles.noResults]}>
+                No results found for {autocompleteView.prefix}
+              </Text>
+            </View>
+          )}
+        </View>
+      )}
     </View>
   )
 })
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'relative',
+    width: 300,
   },
   search: {
-    maxWidth: 300,
+    paddingHorizontal: 10,
+    width: 300,
     borderRadius: 20,
     borderWidth: 1,
   },
-  searchIconWrapper: {
-    flexDirection: 'row',
-    width: 30,
-    justifyContent: 'center',
-    marginRight: 2,
-  },
-  searchInputWrapper: {
+  inputContainer: {
     flexDirection: 'row',
   },
-  searchContainer: {
-    flexWrap: 'wrap',
-    position: 'relative',
-    paddingHorizontal: 12,
-    paddingTop: 6,
-    paddingBottom: 6,
+  iconWrapper: {
+    paddingVertical: 7,
+    marginRight: 4,
   },
-  headerMenuBtn: {
-    width: 40,
-    height: 30,
-    marginLeft: 6,
-  },
-  searchResultsContainer: {
-    position: 'fixed',
+  input: {
     flex: 1,
-    flexDirection: 'column',
-    borderRadius: 30,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginTop: 50,
-  },
-  headerSearchIcon: {
-    marginRight: 6,
-    alignSelf: 'center',
-  },
-  headerSearchInput: {
-    flex: 1,
-    fontSize: 17,
+    fontSize: 16,
     width: '100%',
+    paddingTop: 7,
+    paddingBottom: 7,
   },
-  headerCancelBtn: {
-    width: 60,
+  cancelBtn: {
+    paddingRight: 4,
     paddingLeft: 10,
+    paddingVertical: 7,
   },
-  searchPrompt: {
+  resultsContainer: {
+    // @ts-ignore supported by web
+    position: 'fixed',
+    marginTop: 40,
+
+    flexDirection: 'column',
+    width: 300,
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingVertical: 4,
+  },
+  noResults: {
     textAlign: 'center',
-    paddingTop: 10,
+    paddingVertical: 10,
   },
 })

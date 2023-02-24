@@ -203,29 +203,13 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
 
-  search: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: 300,
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-  },
-  searchIconWrapper: {
-    flexDirection: 'row',
-    width: 30,
-    justifyContent: 'center',
-    marginRight: 2,
-  },
-
   newPostBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 24,
     paddingTop: 8,
-    paddingBottom: 9,
+    paddingBottom: 8,
     paddingHorizontal: 18,
     backgroundColor: colors.blue3,
   },

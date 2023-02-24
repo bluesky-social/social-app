@@ -16,6 +16,7 @@ export function ProfileCard({
   avatar,
   description,
   isFollowedBy,
+  noBorder,
   renderButton,
 }: {
   handle: string
@@ -23,12 +24,18 @@ export function ProfileCard({
   avatar?: string
   description?: string
   isFollowedBy?: boolean
+  noBorder?: boolean
   renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
   return (
     <Link
-      style={[styles.outer, pal.view, pal.border]}
+      style={[
+        styles.outer,
+        pal.view,
+        pal.border,
+        noBorder && styles.outerNoBorder,
+      ]}
       href={`/profile/${handle}`}
       title={handle}
       noFeedback>
@@ -42,7 +49,11 @@ export function ProfileCard({
           />
         </View>
         <View style={styles.layoutContent}>
-          <Text type="lg" style={[s.bold, pal.text]} numberOfLines={1}>
+          <Text
+            type="lg"
+            style={[s.bold, pal.text]}
+            numberOfLines={1}
+            lineHeight={1.2}>
             {displayName || handle}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
@@ -153,6 +164,9 @@ const styles = StyleSheet.create({
   outer: {
     borderTopWidth: 1,
     paddingHorizontal: 6,
+  },
+  outerNoBorder: {
+    borderTopWidth: 0,
   },
   layout: {
     flexDirection: 'row',
