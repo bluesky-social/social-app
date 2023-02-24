@@ -20,7 +20,6 @@ import {UserAvatar} from '../com/util/UserAvatar'
 import {usePalette} from 'lib/hooks/usePalette'
 import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics'
-import {DeleteAccountModal} from 'state/models/shell-ui'
 
 export const Settings = observer(function Settings({
   navIdx,
@@ -66,7 +65,7 @@ export const Settings = observer(function Settings({
     store.session.logout()
   }
   const onPressDeleteAccount = () => {
-    store.shell.openModal(new DeleteAccountModal())
+    store.shell.openModal({name: 'delete-account'})
   }
 
   return (
