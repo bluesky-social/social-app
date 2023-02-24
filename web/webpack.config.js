@@ -81,6 +81,27 @@ module.exports = {
     ],
   },
 
+  devServer: {
+    historyApiFallback: {
+      rewrites: [
+        {from: /.*\/bundle.web.js/, to: '/bundle.web.js'},
+        {
+          from: /.*^\/(.*.hot-update.json)$/,
+          to: function (context) {
+            return '/' + context.parsedUrl.pathname.split('/').pop()
+          },
+        },
+        {
+          from: /.*^\/(.*.hot-update.js)$/,
+          to: function (context) {
+            return '/' + context.parsedUrl.pathname.split('/').pop()
+          },
+        },
+        {from: /.*/, to: '/index.html'},
+      ],
+    },
+  },
+
   resolve: {
     alias: {
       'react-native$': 'react-native-web',
