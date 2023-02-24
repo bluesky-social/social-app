@@ -64,7 +64,7 @@ export function UserInfoText({
     )
   } else if (profile) {
     inner = (
-      <Text type={type} style={style}>{`${prefix || ''}${
+      <Text type={type} style={style} lineHeight={1.2}>{`${prefix || ''}${
         profile[attr] || profile.handle
       }`}</Text>
     )

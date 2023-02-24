@@ -35,7 +35,11 @@ export function PostMeta(opts: PostMetaOpts) {
   return (
     <View style={styles.meta}>
       <View style={[styles.metaItem, styles.maxWidth]}>
-        <Text type="lg-bold" style={[pal.text]} numberOfLines={1}>
+        <Text
+          type="lg-bold"
+          style={[pal.text]}
+          numberOfLines={1}
+          lineHeight={1.2}>
           {displayName}
           {handle ? (
             <Text type="md" style={[pal.textLight]}>
@@ -44,7 +48,7 @@ export function PostMeta(opts: PostMetaOpts) {
           ) : undefined}
         </Text>
       </View>
-      <Text type="md" style={[styles.metaItem, pal.textLight]}>
+      <Text type="md" style={[styles.metaItem, pal.textLight]} lineHeight={1.2}>
         &middot; {ago(opts.timestamp)}
       </Text>
     </View>

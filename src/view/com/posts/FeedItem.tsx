@@ -155,7 +155,7 @@ export const FeedItem = observer(function ({
                 {color: pal.colors.textLight} as FontAwesomeIconStyle,
               ]}
             />
-            <Text type="sm-bold" style={pal.textLight}>
+            <Text type="sm-bold" style={pal.textLight} lineHeight={1.2}>
               Reposted by{' '}
               {item.reasonRepost.by.displayName || item.reasonRepost.by.handle}
             </Text>
@@ -188,7 +188,7 @@ export const FeedItem = observer(function ({
                     s.mr5,
                   ]}
                 />
-                <Text type="md" style={[pal.textLight, s.mr2]}>
+                <Text type="md" style={[pal.textLight, s.mr2]} lineHeight={1.2}>
                   Reply to
                 </Text>
                 <UserInfoText

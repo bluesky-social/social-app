@@ -73,14 +73,14 @@ export const ScrollView = React.forwardRef(function (
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    maxWidth: 600,
+    maxWidth: 550,
     marginLeft: 'auto',
     marginRight: 'auto',
   },
   containerScroll: {
     width: '100%',
     height: `calc(100vh - ${DESKTOP_HEADER_HEIGHT}px)`,
-    maxWidth: 600,
+    maxWidth: 550,
     marginLeft: 'auto',
     marginRight: 'auto',
   },
