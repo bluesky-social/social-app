@@ -22,7 +22,6 @@ import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
-import {isDesktopWeb} from 'platform/detection'
 
 export const FeedItem = observer(function ({
   item,
@@ -109,7 +108,6 @@ export const FeedItem = observer(function ({
   const isNoTop = isChild && !item._isThreadChild
   const outerStyles = [
     styles.outer,
-    isDesktopWeb && styles.outerDesktopWeb,
     pal.view,
     {borderColor: pal.colors.border},
     isSmallTop ? styles.outerSmallTop : undefined,
@@ -275,12 +273,6 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     paddingBottom: 8,
   },
-  outerDesktopWeb: {
-    borderWidth: 1,
-    borderRadius: 4,
-    marginBottom: 10,
-    paddingBottom: 10,
-  },
   outerNoTop: {
     borderTopWidth: 0,
     paddingTop: 0,
@@ -290,7 +282,6 @@ const styles = StyleSheet.create({
   },
   outerNoBottom: {
     paddingBottom: 2,
-    marginBottom: 0,
   },
   topReplyLine: {
     position: 'absolute',
