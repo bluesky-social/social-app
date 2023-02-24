@@ -73,7 +73,7 @@ function DebugInner({
   const items = [{currentView}]
 
   return (
-    <View style={[s.h100pct, pal.view]}>
+    <View style={[s.hContentRegion, pal.view]}>
       <ViewHeader title="Debug panel" />
       <ViewSelector
         swipeEnabled

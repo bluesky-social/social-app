@@ -76,7 +76,7 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
   }, [visible, store, navIdx, screen, scrollToTop])
 
   return (
-    <View style={s.h100pct}>
+    <View style={s.hContentRegion}>
       <ViewHeader title="Notifications" canGoBack={false} />
       <Feed
         view={store.me.notifications}

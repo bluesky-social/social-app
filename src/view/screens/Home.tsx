@@ -90,13 +90,13 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
   }
 
   return (
-    <View style={s.h100pct}>
+    <View style={s.hContentRegion}>
       <Feed
         testID="homeFeed"
         key="default"
         feed={store.me.mainFeed}
         scrollElRef={scrollElRef}
-        style={s.h100pct}
+        style={s.hContentRegion}
         onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
         headerOffset={HEADER_HEIGHT}

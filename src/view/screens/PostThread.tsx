@@ -49,9 +49,9 @@ export const PostThread = ({navIdx, visible, params}: ScreenParams) => {
   }, [visible, store.nav, store.log, store.shell, name, navIdx, view])
 
   return (
-    <View style={s.h100pct}>
+    <View style={s.hContentRegion}>
       <ViewHeader title="Post" />
-      <View style={s.h100pct}>
+      <View style={s.hContentRegion}>
         <PostThreadComponent uri={uri} view={view} />
       </View>
     </View>

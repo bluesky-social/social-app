@@ -67,3 +67,5 @@ export const DEV_SUGGESTED_FOLLOWS = ['alice', 'bob', 'carla'].map(
 export const POST_IMG_MAX_WIDTH = 2000
 export const POST_IMG_MAX_HEIGHT = 2000
 export const POST_IMG_MAX_SIZE = 1000000
+
+export const DESKTOP_HEADER_HEIGHT = 57
