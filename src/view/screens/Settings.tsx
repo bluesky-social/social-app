@@ -69,9 +69,9 @@ export const Settings = observer(function Settings({
   }
 
   return (
-    <View style={[s.h100pct]} testID="settingsScreen">
+    <View style={[s.hContentRegion]} testID="settingsScreen">
       <ViewHeader title="Settings" />
-      <ScrollView style={s.h100pct}>
+      <ScrollView style={s.hContentRegion}>
         <View style={[s.mt10, s.pl10, s.pr10]}>
           <View style={[s.flexRow]}>
             <Text type="xl-bold" style={pal.text}>

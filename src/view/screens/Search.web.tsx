@@ -84,7 +84,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
   }
 
   return (
-    <View style={s.h100pct}>
+    <View style={s.hContentRegion}>
       <ViewHeader title="Explore" />
       <ScrollView
         ref={scrollElRef}

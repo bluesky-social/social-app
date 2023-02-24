@@ -23,6 +23,7 @@ import {
   ViewProps,
 } from 'react-native'
 import {addStyle, colors} from 'lib/styles'
+import {DESKTOP_HEADER_HEIGHT} from 'lib/constants'
 
 export function CenteredView({
   style,
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
   },
   containerScroll: {
     width: '100%',
-    height: '100%',
+    height: `calc(100vh - ${DESKTOP_HEADER_HEIGHT}px)`,
     maxWidth: 600,
     marginLeft: 'auto',
     marginRight: 'auto',

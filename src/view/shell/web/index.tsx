@@ -52,7 +52,7 @@ export const WebShell: React.FC = observer(() => {
       {screenRenderDesc.screens.map(({Com, navIdx, params, key, current}) => (
         <View
           key={key}
-          style={[s.h100pct, current ? styles.visible : styles.hidden]}>
+          style={[s.hContentRegion, current ? styles.visible : styles.hidden]}>
           <ErrorBoundary>
             <Com params={params} navIdx={navIdx} visible={current} />
           </ErrorBoundary>

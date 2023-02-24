@@ -482,9 +482,9 @@ const ForgotPasswordForm = ({
   const [email, setEmail] = useState<string>('')
   const {screen} = useAnalytics()
 
-  // useEffect(() => {
-  screen('Signin:ForgotPassword')
-  // }, [screen])
+  useEffect(() => {
+    screen('Signin:ForgotPassword')
+  }, [screen])
 
   const onPressSelectService = () => {
     store.shell.openModal({

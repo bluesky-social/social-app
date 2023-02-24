@@ -81,7 +81,7 @@ export const Feed = observer(function Feed({
   )
 
   return (
-    <View style={s.h100pct}>
+    <View style={s.hContentRegion}>
       <CenteredView>
         {view.isLoading && !data && <NotificationFeedLoadingPlaceholder />}
         {view.hasError && (
