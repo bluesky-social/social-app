@@ -23,7 +23,6 @@ import {createFullHandle} from 'lib/strings/handles'
 import {toNiceDomain} from 'lib/strings/url-helpers'
 import {useStores, RootStoreModel, DEFAULT_SERVICE} from 'state/index'
 import {ServiceDescription} from 'state/models/session'
-import {ServerInputModal} from 'state/models/shell-ui'
 import {AccountData} from 'state/models/session'
 import {isNetworkError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -488,7 +487,11 @@ const ForgotPasswordForm = ({
   // }, [screen])
 
   const onPressSelectService = () => {
-    store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
+    store.shell.openModal({
+      name: 'server-input',
+      initialService: serviceUrl,
+      onSelect: setServiceUrl,
+    })
   }
 
   const onPressNext = async () => {
