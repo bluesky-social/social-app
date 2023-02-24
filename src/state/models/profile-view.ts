@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {PickedMedia} from 'view/com/util/images/image-crop-picker/ImageCropPicker'
+import {PickedMedia} from 'lib/media/picker'
 import {
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorProfile as Profile,
@@ -137,11 +137,10 @@ export class ProfileViewModel {
     newUserBanner: PickedMedia | undefined,
   ) {
     if (newUserAvatar) {
-      const res = await this.rootStore.api.com.atproto.blob.upload(
-        newUserAvatar.path, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
-        {
-          encoding: newUserAvatar.mime,
-        },
+      const res = await apilib.uploadBlob(
+        this.rootStore,
+        newUserAvatar.path,
+        newUserAvatar.mime,
       )
       updates.avatar = {
         cid: res.data.cid,
@@ -149,11 +148,10 @@ export class ProfileViewModel {
       }
     }
     if (newUserBanner) {
-      const res = await this.rootStore.api.com.atproto.blob.upload(
-        newUserBanner.path, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
-        {
-          encoding: newUserBanner.mime,
-        },
+      const res = await apilib.uploadBlob(
+        this.rootStore,
+        newUserBanner.path,
+        newUserBanner.mime,
       )
       updates.banner = {
         cid: res.data.cid,

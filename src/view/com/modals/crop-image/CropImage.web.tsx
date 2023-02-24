@@ -38,6 +38,7 @@ export function Component({
   const pal = usePalette('default')
   const [as, setAs] = React.useState<AspectRatio>(AspectRatio.Square)
   const [scale, setScale] = React.useState<number>(1)
+  const editorRef = React.useRef<ImageEditor>(null)
 
   const doSetAs = (v: AspectRatio) => () => setAs(v)
 
@@ -46,8 +47,20 @@ export function Component({
     store.shell.closeModal()
   }
   const onPressDone = () => {
-    console.log('TODO')
-    onSelect(undefined) // TODO
+    const canvas = editorRef.current?.getImageScaledToCanvas()
+    if (canvas) {
+      const dataUri = canvas.toDataURL('image/jpeg')
+      onSelect({
+        mediaType: 'photo',
+        path: dataUri,
+        mime: 'image/jpeg',
+        size: Math.round((dataUri.length * 3) / 4), // very rough estimate
+        width: DIMS[as].width,
+        height: DIMS[as].height,
+      })
+    } else {
+      onSelect(undefined)
+    }
     store.shell.closeModal()
   }
 
@@ -61,13 +74,15 @@ export function Component({
   }
   return (
     <View>
-      <View style={[styles.cropper, cropperStyle]}>
+      <View style={[styles.cropper, pal.borderDark, cropperStyle]}>
         <ImageEditor
+          ref={editorRef}
           style={styles.imageEditor}
           image={uri}
           width={DIMS[as].width}
           height={DIMS[as].height}
           scale={scale}
+          border={0}
         />
       </View>
       <View style={styles.ctrls}>
@@ -126,6 +141,9 @@ const styles = StyleSheet.create({
   cropper: {
     marginLeft: 'auto',
     marginRight: 'auto',
+    borderWidth: 1,
+    borderRadius: 4,
+    overflow: 'hidden',
   },
   cropperSquare: {
     width: 400,

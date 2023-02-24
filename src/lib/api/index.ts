@@ -1,11 +1,16 @@
-import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
+import {
+  AppBskyEmbedImages,
+  AppBskyEmbedExternal,
+  ComAtprotoBlobUpload,
+} from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from 'state/models/root-store'
 import {extractEntities} from 'lib/strings/rich-text-detection'
 import {isNetworkError} from 'lib/strings/errors'
 import {LinkMeta} from '../link-meta/link-meta'
-import {Image} from '../images'
+import {Image} from '../media/manip'
 import {RichText} from '../strings/rich-text'
+import {isWeb} from 'platform/detection'
 
 export interface ExternalEmbedDraft {
   uri: string
@@ -25,6 +30,25 @@ export async function resolveName(store: RootStoreModel, didOrHandle: string) {
     handle: didOrHandle,
   })
   return res.data.did
+}
+
+export async function uploadBlob(
+  store: RootStoreModel,
+  blob: string,
+  encoding: string,
+): Promise<ComAtprotoBlobUpload.Response> {
+  if (isWeb) {
+    // `blob` should be a data uri
+    return store.api.com.atproto.blob.upload(convertDataURIToUint8Array(blob), {
+      encoding,
+    })
+  } else {
+    // `blob` should be a path to a file in the local FS
+    return store.api.com.atproto.blob.upload(
+      blob, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
+      {encoding},
+    )
+  }
 }
 
 export async function post(
@@ -61,10 +85,7 @@ export async function post(
     let i = 1
     for (const image of images) {
       onStateChange?.(`Uploading image #${i++}...`)
-      const res = await store.api.com.atproto.blob.upload(
-        image, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
-        {encoding: 'image/jpeg'},
-      )
+      const res = await uploadBlob(store, image, 'image/jpeg')
       embed.images.push({
         image: {
           cid: res.data.cid,
@@ -94,9 +115,10 @@ export async function post(
         )
       }
       if (encoding) {
-        const thumbUploadRes = await store.api.com.atproto.blob.upload(
-          extLink.localThumb.path, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
-          {encoding},
+        const thumbUploadRes = await uploadBlob(
+          store,
+          extLink.localThumb.path,
+          encoding,
         )
         thumb = {
           cid: thumbUploadRes.data.cid,
@@ -198,4 +220,16 @@ export async function unfollow(store: RootStoreModel, followUri: string) {
     did: followUrip.hostname,
     rkey: followUrip.rkey,
   })
+}
+
+// helpers
+// =
+
+function convertDataURIToUint8Array(uri: string): Uint8Array {
+  var raw = window.atob(uri.substring(uri.indexOf(';base64,') + 8))
+  var binary = new Uint8Array(new ArrayBuffer(raw.length))
+  for (let i = 0; i < raw.length; i++) {
+    binary[i] = raw.charCodeAt(i)
+  }
+  return binary
 }

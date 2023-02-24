@@ -1,6 +1,6 @@
 import RNFetchBlob from 'rn-fetch-blob'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
-import {Share} from 'react-native'
+import {Image as RNImage, Share} from 'react-native'
 import RNFS from 'react-native-fs'
 import uuid from 'react-native-uuid'
 import * as Toast from 'view/com/util/Toast'
@@ -135,7 +135,7 @@ export function scaleDownDimensions(dim: Dim, max: Dim): Dim {
   return {width: dim.width * hScale, height: dim.height * hScale}
 }
 
-export const saveImageModal = async ({uri}: {uri: string}) => {
+export async function saveImageModal({uri}: {uri: string}) {
   const downloadResponse = await RNFetchBlob.config({
     fileCache: true,
   }).fetch('GET', uri)
@@ -153,7 +153,7 @@ export const saveImageModal = async ({uri}: {uri: string}) => {
   RNFS.unlink(imagePath)
 }
 
-export const moveToPremanantPath = async (path: string) => {
+export async function moveToPremanantPath(path: string) {
   /*
   Since this package stores images in a temp directory, we need to move the file to a permanent location.
   Relevant: IOS bug when trying to open a second time:
@@ -163,4 +163,16 @@ export const moveToPremanantPath = async (path: string) => {
   const destinationPath = `${RNFS.TemporaryDirectoryPath}/${filename}`
   RNFS.moveFile(path, destinationPath)
   return destinationPath
+}
+
+export function getImageDim(path: string): Promise<Dim> {
+  return new Promise((resolve, reject) => {
+    RNImage.getSize(
+      path,
+      (width, height) => {
+        resolve({width, height})
+      },
+      reject,
+    )
+  })
 }

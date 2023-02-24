@@ -279,7 +279,11 @@ const LoginForm = ({
   const [password, setPassword] = useState<string>('')
 
   const onPressSelectService = () => {
-    store.shell.openModal(new ServerInputModal(serviceUrl, setServiceUrl))
+    store.shell.openModal({
+      name: 'server-input',
+      initialService: serviceUrl,
+      onSelect: setServiceUrl,
+    })
     Keyboard.dismiss()
     track('Signin:PressedSelectService')
   }

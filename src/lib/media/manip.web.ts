@@ -39,11 +39,16 @@ export async function resize(
 }
 
 export async function compressIfNeeded(
-  _img: Image,
-  _maxSize: number,
+  img: Image,
+  maxSize: number,
 ): Promise<Image> {
-  // TODO
-  throw new Error('TODO')
+  if (img.size > maxSize) {
+    // TODO
+    throw new Error(
+      "This image is too large and we haven't implemented compression yet -- sorry!",
+    )
+  }
+  return img
 }
 
 export interface Dim {
@@ -62,7 +67,22 @@ export function scaleDownDimensions(dim: Dim, max: Dim): Dim {
   return {width: dim.width * hScale, height: dim.height * hScale}
 }
 
-export const saveImageModal = async (_opts: {uri: string}) => {
+export async function saveImageModal(_opts: {uri: string}) {
   // TODO
   throw new Error('TODO')
+}
+
+export async function moveToPremanantPath(path: string) {
+  return path
+}
+
+export async function getImageDim(path: string): Promise<Dim> {
+  var img = document.createElement('img')
+  const promise = new Promise((resolve, reject) => {
+    img.onload = resolve
+    img.onerror = reject
+  })
+  img.src = path
+  await promise
+  return {width: img.width, height: img.height}
 }
