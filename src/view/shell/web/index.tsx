@@ -6,7 +6,6 @@ import {useStores} from 'state/index'
 import {NavigationModel} from 'state/models/navigation'
 import {match, MatchResult} from '../../routes'
 import {DesktopHeader} from './DesktopHeader'
-import {DesktopRightColumn} from './DesktopRightColumn'
 import {Onboard} from '../../screens/Onboard'
 import {Login} from '../../screens/Login'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
@@ -58,7 +57,6 @@ export const WebShell: React.FC = observer(() => {
           </ErrorBoundary>
         </View>
       ))}
-      <DesktopRightColumn />
       <Composer
         active={store.shell.isComposerActive}
         onClose={() => store.shell.closeComposer()}
