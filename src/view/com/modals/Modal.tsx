@@ -30,10 +30,8 @@ export const ModalsContainer = observer(function ModalsContainer() {
     store.shell.closeModal()
   }
 
-  const activeModal = React.useMemo(
-    () => store.shell.activeModals[store.shell.activeModals.length - 1],
-    [store.shell.activeModals],
-  )
+  const activeModal =
+    store.shell.activeModals[store.shell.activeModals.length - 1]
 
   useEffect(() => {
     if (store.shell.isModalActive) {
