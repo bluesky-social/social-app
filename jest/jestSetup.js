@@ -17,7 +17,6 @@ jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
 
 // Silence the warning: Animated: `useNativeDriver` is not supported
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
-require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests()
 
 jest.mock('@fortawesome/react-native-fontawesome', () => ({
   FontAwesomeIcon: '',
