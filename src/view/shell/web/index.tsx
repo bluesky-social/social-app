@@ -124,7 +124,7 @@ function NoMobileWeb() {
   const pal = usePalette('default')
   return (
     <View style={[pal.view, styles.noMobileWeb]}>
-      <Text type="title-2xl" style={{paddingBottom: 20}}>
+      <Text type="title-2xl" style={s.pb20}>
         We're so sorry!
       </Text>
       <Text type="lg">
