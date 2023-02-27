@@ -416,7 +416,7 @@ export class NavigationModel {
   hydrate(_v: unknown) {
     // TODO fixme
     this.clear()
-    /*if (isObj(v)) { 
+    /*if (isObj(v)) {
       if (hasProp(v, 'tabs') && Array.isArray(v.tabs)) {
         for (const tab of v.tabs) {
           const copy = new NavigationTabModel()

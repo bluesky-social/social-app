@@ -8,7 +8,6 @@ import {useAnalytics} from 'lib/analytics'
 import {
   openPicker,
   openCamera,
-  openCropper,
   cropAndCompressFlow,
 } from '../../../../lib/media/picker'
 import {
