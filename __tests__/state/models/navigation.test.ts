@@ -73,7 +73,7 @@ describe('NavigationModel', () => {
   })
 
   describe('tabs not enabled', () => {
-    jest.mock('../../../src/build-flags', () => ({
+    jest.mock('../../../src/lib/build-flags', () => ({
       TABS_ENABLED: false,
     }))
 
