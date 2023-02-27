@@ -31,7 +31,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
   }
 
   const activeModal = React.useMemo(
-    () => store.shell.activeModals.at(-1),
+    () => store.shell.activeModals[store.shell.activeModals.length - 1],
     [store.shell.activeModals],
   )
 
