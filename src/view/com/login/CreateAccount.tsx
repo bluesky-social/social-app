@@ -118,7 +118,6 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
 
       const email_hashed = sha256(email)
       identify(email_hashed, {email_hashed})
-      console.log('identify', email_hashed)
 
       track('Create Account')
     } catch (e: any) {
