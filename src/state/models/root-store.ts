@@ -2,7 +2,7 @@
  * The root store is the base of all modeled state.
  */
 
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {AtpAgent} from '@atproto/api'
 import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
@@ -38,6 +38,23 @@ export class RootStoreModel {
   onboard = new OnboardModel()
   profiles = new ProfilesViewModel(this)
   linkMetas = new LinkMetasViewModel(this)
+
+  // HACK
+  // this flag is to track the lexicon breaking refactor
+  // it should be removed once we get that done
+  // -prf
+  hackUpgradeNeeded = false
+  async hackCheckIfUpgradeNeeded() {
+    try {
+      const res = await fetch('https://bsky.social/xrpc/app.bsky.feed.getLikes')
+      await res.text()
+      runInAction(() => {
+        this.hackUpgradeNeeded = res.status !== 501
+      })
+    } catch (e) {
+      this.log.error('Failed to hackCheckIfUpgradeNeeded', {e})
+    }
+  }
 
   constructor(agent: AtpAgent) {
     this.agent = agent
