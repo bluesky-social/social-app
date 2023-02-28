@@ -5,6 +5,7 @@ import {RootStoreModel} from 'state/models/root-store'
 const _analytics = {
   screen(_name: string) {},
   track(_name: string, _opts: any) {},
+  identify(_userId: string, _userTraits: any) {},
 }
 export const track = _analytics.track
 export function useAnalytics() {

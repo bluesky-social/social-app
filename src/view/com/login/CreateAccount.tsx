@@ -15,6 +15,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {ComAtprotoAccountCreate} from '@atproto/api'
 import * as EmailValidator from 'email-validator'
+import {sha256} from 'js-sha256'
 import {useAnalytics} from 'lib/analytics'
 import {LogoTextHero} from './Logo'
 import {Picker} from '../util/Picker'
@@ -29,7 +30,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {cleanError} from 'lib/strings/errors'
 
 export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
-  const {track, screen} = useAnalytics()
+  const {track, screen, identify} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -114,6 +115,11 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
         password,
         inviteCode,
       })
+
+      const email_hashed = sha256(email)
+      identify(email_hashed, {email_hashed})
+      console.log('identify', email_hashed)
+
       track('Create Account')
     } catch (e: any) {
       let errMsg = e.toString()
