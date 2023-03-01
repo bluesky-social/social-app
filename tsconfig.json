@@ -7,6 +7,6 @@
       "platform/*": ["./src/platform/*"],
       "state/*": ["./src/state/*"],
       "view/*": ["./src/view/*"]
-    }
-  }
+    },
+  },
 }
