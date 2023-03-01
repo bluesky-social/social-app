@@ -69,6 +69,10 @@ export class MyFollowsModel {
     return !!this.followDidToRecordMap[did]
   }
 
+  isEmpty() {
+    return Object.keys(this.followDidToRecordMap).length === 0
+  }
+
   getFollowUri(did: string): string {
     const v = this.followDidToRecordMap[did]
     if (!v) {
