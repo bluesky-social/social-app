@@ -5,7 +5,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
 import * as AppInfo from 'lib/app-info'
 import {useStores} from 'state/index'
@@ -151,7 +154,10 @@ export const Settings = observer(function Settings({
               isSwitching && styles.dimmed,
             ]}
             onPress={isSwitching ? undefined : onPressAddAccount}>
-            <FontAwesomeIcon icon="plus" />
+            <FontAwesomeIcon
+              icon="plus"
+              style={pal.text as FontAwesomeIconStyle}
+            />
             <View style={[s.ml5]}>
               <Text type="md-medium" style={pal.text}>
                 Add account
@@ -160,7 +166,7 @@ export const Settings = observer(function Settings({
           </TouchableOpacity>
 
           <View style={styles.spacer} />
-          <Text type="sm-medium" style={[s.mb5]}>
+          <Text type="sm-medium" style={[s.mb5, pal.text]}>
             Danger zone
           </Text>
           <TouchableOpacity
@@ -168,7 +174,7 @@ export const Settings = observer(function Settings({
             onPress={onPressDeleteAccount}>
             <Text style={pal.textLight}>Delete my account</Text>
           </TouchableOpacity>
-          <Text type="sm-medium" style={[s.mt10, s.mb5]}>
+          <Text type="sm-medium" style={[s.mt10, s.mb5, pal.text]}>
             Developer tools
           </Text>
           <Link
