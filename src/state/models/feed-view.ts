@@ -16,6 +16,7 @@ import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {RichText} from 'lib/strings/rich-text'
 import {
+  getCombinedCursors,
   getMultipleAuthorsPostsAsPromise,
   mergeAndFilterMultipleAuthorPostsIntoOneFeed,
 } from 'lib/api/build-suggested-posts'
@@ -546,7 +547,11 @@ export class FeedModel {
     if (this.feedType === 'home') {
       await this.rootStore.me.follows.fetchIfNeeded()
       if (this.rootStore.me.follows.isEmpty()) {
-        const response = await getMultipleAuthorsPostsAsPromise(this.rootStore)
+        const response = await getMultipleAuthorsPostsAsPromise(
+          this.rootStore,
+          params.before,
+        )
+        const combinedCursor = getCombinedCursors(response)
         const finalData = await mergeAndFilterMultipleAuthorPostsIntoOneFeed(
           this.rootStore,
           response,
@@ -556,6 +561,7 @@ export class FeedModel {
           success: true,
           data: {
             feed: finalData as any,
+            cursor: combinedCursor,
           },
           headers: lastHeaders,
         }

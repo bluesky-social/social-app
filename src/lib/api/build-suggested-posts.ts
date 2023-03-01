@@ -14,11 +14,19 @@ const TEAM_HANDLES = [
   'iamrosewang.bsky.social',
 ]
 
-async function getMultipleAuthorsPostsAsPromise(rootStore: RootStoreModel) {
+async function getMultipleAuthorsPostsAsPromise(
+  rootStore: RootStoreModel,
+  cursor: string | undefined = undefined,
+  teamHandles = TEAM_HANDLES,
+) {
   const responses = Promise.all(
-    TEAM_HANDLES.map(handle =>
+    teamHandles.map((handle, index) =>
       rootStore.api.app.bsky.feed
-        .getAuthorFeed({author: handle, limit: 10})
+        .getAuthorFeed({
+          author: handle,
+          limit: 10,
+          before: cursor ? cursor.split(',')[index] : undefined,
+        })
         .catch(_err => ({success: false, headers: {}, data: {feed: []}})),
     ),
   )
@@ -81,7 +89,21 @@ function isRecentEnough(
   return now - Number(new Date(post.post.indexedAt)) < THREE_DAYS
 }
 
+function getCombinedCursors(responses: GetAuthorFeed.Response[]) {
+  const cursors = responses.map(r => r.data.cursor).filter(c => c !== null)
+  const combinedCursors = cursors.join(',')
+  console.log(combinedCursors)
+  return combinedCursors
+}
+
+function isCombinedCursor(cursor: string) {
+  return cursor?.includes(',')
+}
+
 export {
   getMultipleAuthorsPostsAsPromise,
   mergeAndFilterMultipleAuthorPostsIntoOneFeed,
+  getCombinedCursors,
+  isCombinedCursor,
+  TEAM_HANDLES,
 }
