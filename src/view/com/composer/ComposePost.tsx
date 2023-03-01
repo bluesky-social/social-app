@@ -379,7 +379,7 @@ export const ComposePost = observer(function ComposePost({
           </View>
           {isProcessing ? (
             <View style={[pal.btn, styles.processingLine]}>
-              <Text style={s.black}>{processingState}</Text>
+              <Text style={pal.text}>{processingState}</Text>
             </View>
           ) : undefined}
           {error !== '' && (
@@ -468,7 +468,7 @@ export const ComposePost = observer(function ComposePost({
                   key={`suggested-${url}`}
                   style={[pal.borderDark, styles.addExtLinkBtn]}
                   onPress={() => onPressAddLinkCard(url)}>
-                  <Text>
+                  <Text style={pal.text}>
                     Add link card: <Text style={pal.link}>{url}</Text>
                   </Text>
                 </TouchableOpacity>
