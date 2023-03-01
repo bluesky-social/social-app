@@ -14,6 +14,7 @@ import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
+import {usePalette} from 'lib/hooks/usePalette'
 
 const ITEMS: RadioGroupItem[] = [
   {key: 'spam', label: 'Spam or excessive repeat posts'},
@@ -32,6 +33,7 @@ export function Component({
   postCid: string
 }) {
   const store = useStores()
+  const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const [issue, setIssue] = useState<string>('')
@@ -67,9 +69,11 @@ export function Component({
     }
   }
   return (
-    <View style={[s.flex1, s.pl10, s.pr10]}>
-      <Text style={styles.title}>Report post</Text>
-      <Text style={styles.description}>What is the issue with this post?</Text>
+    <View style={[s.flex1, s.pl10, s.pr10, pal.view]}>
+      <Text style={[pal.text, styles.title]}>Report post</Text>
+      <Text style={[pal.textLight, styles.description]}>
+        What is the issue with this post?
+      </Text>
       <RadioGroup items={ITEMS} onSelect={onSelectIssue} />
       {error ? (
         <View style={s.mt10}>
@@ -106,7 +110,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 17,
     paddingHorizontal: 22,
-    color: colors.gray5,
     marginBottom: 10,
   },
   btn: {

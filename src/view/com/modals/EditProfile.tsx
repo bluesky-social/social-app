@@ -106,7 +106,7 @@ export function Component({
   }
 
   return (
-    <View style={s.flex1}>
+    <View style={[s.flex1, pal.view]}>
       <ScrollView style={styles.inner}>
         <Text style={[styles.title, pal.text]}>Edit my profile</Text>
         <View style={styles.photos}>
@@ -130,7 +130,7 @@ export function Component({
           </View>
         )}
         <View>
-          <Text style={styles.label}>Display Name</Text>
+          <Text style={[styles.label, pal.text]}>Display Name</Text>
           <TextInput
             style={[styles.textInput, pal.text]}
             placeholder="e.g. Alice Roberts"

@@ -81,6 +81,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
   const onPressCancelSearch = () => {
     setQuery('')
     autocompleteView.setActive(false)
+    textInput.current?.blur()
   }
 
   return (
@@ -127,10 +128,10 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
               onChangeText={onChangeQuery}
             />
           </View>
-          {query ? (
+          {query || isInputFocused ? (
             <View style={styles.headerCancelBtn}>
               <TouchableOpacity onPress={onPressCancelSearch}>
-                <Text>Cancel</Text>
+                <Text style={pal.text}>Cancel</Text>
               </TouchableOpacity>
             </View>
           ) : undefined}
