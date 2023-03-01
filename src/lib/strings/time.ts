@@ -1,7 +1,7 @@
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
-const MONTH = DAY * 30
+const MONTH = DAY * 28
 const YEAR = DAY * 365
 export function ago(date: number | string | Date): string {
   let ts: number
