@@ -398,6 +398,11 @@ export const MobileShell: React.FC = observer(() => {
   if (!store.session.hasSession) {
     return (
       <View style={styles.outerContainer}>
+        <StatusBar
+          barStyle={
+            theme.colorScheme === 'dark' ? 'light-content' : 'dark-content'
+          }
+        />
         <Login />
         <ModalsContainer />
       </View>
