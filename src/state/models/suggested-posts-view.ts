@@ -3,7 +3,7 @@ import {RootStoreModel} from './root-store'
 import {FeedItemModel} from './feed-view'
 import {cleanError} from 'lib/strings/errors'
 import {
-  getMultipleAuthorsPostsAsPromise,
+  getMultipleAuthorsPosts,
   mergeAndFilterMultipleAuthorPostsIntoOneFeed,
 } from 'lib/api/build-suggested-posts'
 
@@ -44,7 +44,7 @@ export class SuggestedPostsView {
   async setup() {
     this._xLoading()
     try {
-      const responses = await getMultipleAuthorsPostsAsPromise(this.rootStore)
+      const responses = await getMultipleAuthorsPosts(this.rootStore)
       runInAction(() => {
         const finalPosts = mergeAndFilterMultipleAuthorPostsIntoOneFeed(
           this.rootStore,

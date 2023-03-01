@@ -14,7 +14,7 @@ const TEAM_HANDLES = [
   'iamrosewang.bsky.social',
 ]
 
-async function getMultipleAuthorsPostsAsPromise(
+async function getMultipleAuthorsPosts(
   rootStore: RootStoreModel,
   cursor: string | undefined = undefined,
   teamHandles = TEAM_HANDLES,
@@ -90,17 +90,22 @@ function isRecentEnough(
 }
 
 function getCombinedCursors(responses: GetAuthorFeed.Response[]) {
-  const cursors = responses.map(r => r.data.cursor).filter(c => c !== null)
+  const cursors = responses.map(r => {
+    if (r.data.cursor) {
+      return r.data.cursor
+    }
+    return ''
+  })
   const combinedCursors = cursors.join(',')
   return combinedCursors
 }
 
 function isCombinedCursor(cursor: string) {
-  return cursor?.includes(',')
+  return cursor.includes(',')
 }
 
 export {
-  getMultipleAuthorsPostsAsPromise,
+  getMultipleAuthorsPosts,
   mergeAndFilterMultipleAuthorPostsIntoOneFeed,
   getCombinedCursors,
   isCombinedCursor,
