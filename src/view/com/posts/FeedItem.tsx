@@ -175,6 +175,8 @@ export const FeedItem = observer(function ({
               authorHandle={item.post.author.handle}
               authorDisplayName={item.post.author.displayName}
               timestamp={item.post.indexedAt}
+              did={item.post.author.did}
+              declarationCid={item.post.author.declaration.cid}
             />
             {!isChild && replyAuthorDid !== '' && (
               <View style={[s.flexRow, s.mb2, s.alignCenter]}>

@@ -156,6 +156,8 @@ export const Post = observer(function Post({
             authorHandle={item.post.author.handle}
             authorDisplayName={item.post.author.displayName}
             timestamp={item.post.indexedAt}
+            did={item.post.author.did}
+            declarationCid={item.post.author.declaration.cid}
           />
           {replyAuthorDid !== '' && (
             <View style={[s.flexRow, s.mb2, s.alignCenter]}>
