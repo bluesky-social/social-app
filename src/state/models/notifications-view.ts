@@ -405,6 +405,9 @@ export class NotificationsViewModel {
     try {
       this.unreadCount = 0
       this.rootStore.emitUnreadNotifications(0)
+      for (const notif of this.notifications) {
+        notif.isRead = true
+      }
       await this.rootStore.api.app.bsky.notification.updateSeen({
         seenAt: new Date().toISOString(),
       })

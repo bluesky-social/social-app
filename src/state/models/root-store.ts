@@ -46,10 +46,14 @@ export class RootStoreModel {
   hackUpgradeNeeded = false
   async hackCheckIfUpgradeNeeded() {
     try {
+      this.log.debug('hackCheckIfUpgradeNeeded()')
       const res = await fetch('https://bsky.social/xrpc/app.bsky.feed.getLikes')
       await res.text()
       runInAction(() => {
         this.hackUpgradeNeeded = res.status !== 501
+        this.log.debug(
+          `hackCheckIfUpgradeNeeded() said ${this.hackUpgradeNeeded}`,
+        )
       })
     } catch (e) {
       this.log.error('Failed to hackCheckIfUpgradeNeeded', {e})
