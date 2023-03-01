@@ -92,7 +92,6 @@ function isRecentEnough(
 function getCombinedCursors(responses: GetAuthorFeed.Response[]) {
   const cursors = responses.map(r => r.data.cursor).filter(c => c !== null)
   const combinedCursors = cursors.join(',')
-  console.log(combinedCursors)
   return combinedCursors
 }
 
