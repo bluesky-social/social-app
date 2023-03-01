@@ -61,13 +61,13 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
   // =
   useEffect(() => {
     if (!visible) {
+      // mark read when the user leaves the screen
+      store.me.notifications.markAllRead()
       return
     }
     store.log.debug('NotificationsScreen: Updating feed')
     const softResetSub = store.onScreenSoftReset(scrollToTop)
-    store.me.notifications.update().then(() => {
-      store.me.notifications.markAllRead()
-    })
+    store.me.notifications.update()
     screen('Notifications')
     store.nav.setTitle(navIdx, 'Notifications')
     return () => {
