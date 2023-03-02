@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -33,25 +33,27 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const {track, screen, identify} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
-  const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
-  const [error, setError] = useState<string>('')
-  const [retryDescribeTrigger, setRetryDescribeTrigger] = useState<any>({})
-  const [serviceDescription, setServiceDescription] = useState<
+  const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
+  const [serviceUrl, setServiceUrl] = React.useState<string>(DEFAULT_SERVICE)
+  const [error, setError] = React.useState<string>('')
+  const [retryDescribeTrigger, setRetryDescribeTrigger] = React.useState<any>(
+    {},
+  )
+  const [serviceDescription, setServiceDescription] = React.useState<
     ServiceDescription | undefined
   >(undefined)
-  const [userDomain, setUserDomain] = useState<string>('')
-  const [inviteCode, setInviteCode] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [handle, setHandle] = useState<string>('')
-  const [is13, setIs13] = useState<boolean>(false)
+  const [userDomain, setUserDomain] = React.useState<string>('')
+  const [inviteCode, setInviteCode] = React.useState<string>('')
+  const [email, setEmail] = React.useState<string>('')
+  const [password, setPassword] = React.useState<string>('')
+  const [handle, setHandle] = React.useState<string>('')
+  const [is13, setIs13] = React.useState<boolean>(false)
 
-  useEffect(() => {
+  React.useEffect(() => {
     screen('CreateAccount')
   }, [screen])
 
-  useEffect(() => {
+  React.useEffect(() => {
     let aborted = false
     setError('')
     setServiceDescription(undefined)
@@ -81,18 +83,25 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
     }
   }, [serviceUrl, store.session, store.log, retryDescribeTrigger])
 
-  const onPressRetryConnect = () => setRetryDescribeTrigger({})
+  const onPressRetryConnect = React.useCallback(
+    () => setRetryDescribeTrigger({}),
+    [setRetryDescribeTrigger],
+  )
 
-  const onPressSelectService = () => {
+  const onPressSelectService = React.useCallback(() => {
     store.shell.openModal({
       name: 'server-input',
       initialService: serviceUrl,
       onSelect: setServiceUrl,
     })
     Keyboard.dismiss()
-  }
+  }, [store, serviceUrl])
 
-  const onPressNext = async () => {
+  const onBlurInviteCode = React.useCallback(() => {
+    setInviteCode(inviteCode.trim())
+  }, [setInviteCode, inviteCode])
+
+  const onPressNext = React.useCallback(async () => {
     if (!email) {
       return setError('Please enter your email.')
     }
@@ -130,7 +139,19 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
       setIsProcessing(false)
       setError(cleanError(errMsg))
     }
-  }
+  }, [
+    serviceUrl,
+    userDomain,
+    inviteCode,
+    email,
+    password,
+    handle,
+    setError,
+    setIsProcessing,
+    store,
+    track,
+    identify,
+  ])
 
   const isReady = !!email && !!password && !!handle && is13
   return (
@@ -201,6 +222,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                     autoFocus
                     value={inviteCode}
                     onChangeText={setInviteCode}
+                    onBlur={onBlurInviteCode}
                     editable={!isProcessing}
                   />
                 </View>
