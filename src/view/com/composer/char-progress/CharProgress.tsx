@@ -5,16 +5,19 @@ import {Text} from '../../util/text/Text'
 import ProgressCircle from 'react-native-progress/Circle'
 // @ts-ignore no type definition -prf
 import ProgressPie from 'react-native-progress/Pie'
-import {s, colors} from 'lib/styles'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 
 const MAX_TEXT_LENGTH = 256
 const DANGER_TEXT_LENGTH = MAX_TEXT_LENGTH
 
 export function CharProgress({count}: {count: number}) {
-  const progressColor = count > DANGER_TEXT_LENGTH ? '#e60000' : undefined
+  const pal = usePalette('default')
+  const textColor = count > DANGER_TEXT_LENGTH ? '#e60000' : pal.colors.text
+  const circleColor = count > DANGER_TEXT_LENGTH ? '#e60000' : pal.colors.link
   return (
     <>
-      <Text style={[s.mr10, {color: progressColor}]}>
+      <Text style={[s.mr10, {color: textColor}]}>
         {MAX_TEXT_LENGTH - count}
       </Text>
       <View>
@@ -22,16 +25,16 @@ export function CharProgress({count}: {count: number}) {
           <ProgressPie
             size={30}
             borderWidth={4}
-            borderColor={progressColor}
-            color={progressColor}
+            borderColor={circleColor}
+            color={circleColor}
             progress={Math.min((count - MAX_TEXT_LENGTH) / MAX_TEXT_LENGTH, 1)}
           />
         ) : (
           <ProgressCircle
             size={30}
             borderWidth={1}
-            borderColor={colors.gray2}
-            color={progressColor}
+            borderColor={pal.colors.border}
+            color={circleColor}
             progress={count / MAX_TEXT_LENGTH}
           />
         )}
