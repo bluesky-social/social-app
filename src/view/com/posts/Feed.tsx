@@ -55,12 +55,12 @@ export const Feed = observer(function Feed({
       if (feed.hasError) {
         feedItems = feedItems.concat([ERROR_FEED_ITEM])
       }
+      if (showWelcomeBanner && isNewUser) {
+        feedItems = feedItems.concat([WELCOME_FEED_ITEM])
+      }
       if (feed.isEmpty) {
         feedItems = feedItems.concat([EMPTY_FEED_ITEM])
       } else {
-        if (showWelcomeBanner && isNewUser) {
-          feedItems = feedItems.concat([WELCOME_FEED_ITEM])
-        }
         feedItems = feedItems.concat(feed.feed)
       }
     }

@@ -96,6 +96,7 @@ export class MeModel {
           this.avatar = ''
         }
       })
+      this.mainFeed.clear()
       await Promise.all([
         this.mainFeed.setup().catch(e => {
           this.rootStore.log.error('Failed to setup main feed model', e)
