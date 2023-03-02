@@ -155,6 +155,7 @@ export const Feed = observer(function Feed({
     <View testID={testID} style={style}>
       {feed.isLoading && data.length === 0 && (
         <CenteredView style={{paddingTop: headerOffset}}>
+          {showWelcomeBanner && isNewUser && <WelcomeBanner />}
           <PostFeedLoadingPlaceholder />
         </CenteredView>
       )}
