@@ -450,7 +450,11 @@ export const ComposePost = observer(function ComposePost({
               </TextInput>
             </View>
 
-            {quote ? <QuoteEmbed quote={quote} /> : undefined}
+            {quote ? (
+              <View style={s.mt5}>
+                <QuoteEmbed quote={quote} />
+              </View>
+            ) : undefined}
 
             <SelectedPhoto
               selectedPhotos={selectedPhotos}
