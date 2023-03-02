@@ -1,6 +1,6 @@
 /* eslint-env detox/detox */
 
-describe('Example', () => {
+describe('Happy paths', () => {
   async function grantAccessToUserWithValidCredentials(
     username,
     {takeScreenshots} = {takeScreenshots: false},
@@ -65,13 +65,6 @@ describe('Example', () => {
     await element(by.id('registerIs13Input')).tap()
     await device.takeScreenshot('4- entered account details')
     await element(by.id('createAccountButton')).tap()
-    await expect(element(by.id('onboardFeatureExplainerSkipBtn'))).toBeVisible()
-    await expect(element(by.id('onboardFeatureExplainerNextBtn'))).toBeVisible()
-    await device.takeScreenshot('5- onboard feature explainer')
-    await element(by.id('onboardFeatureExplainerSkipBtn')).tap()
-    await expect(element(by.id('onboardFollowsSkipBtn'))).toBeVisible()
-    await expect(element(by.id('onboardFollowsNextBtn'))).toBeVisible()
-    await device.takeScreenshot('6- onboard follows recommender')
-    await element(by.id('onboardFollowsSkipBtn')).tap()
+    await expect(element(by.id('welcomeBanner'))).toBeVisible()
   })
 })

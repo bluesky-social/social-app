@@ -13,16 +13,21 @@ import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {FeedModel} from 'state/models/feed-view'
 import {FeedItem} from './FeedItem'
+import {WelcomeBanner} from '../util/WelcomeBanner'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
+import {useStores} from 'state/index'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_FEED_ITEM = {_reactKey: '__error__'}
+const WELCOME_FEED_ITEM = {_reactKey: '__welcome__'}
 
 export const Feed = observer(function Feed({
   feed,
   style,
+  showWelcomeBanner,
+  showPostFollowBtn,
   scrollElRef,
   onPressTryAgain,
   onScroll,
@@ -31,6 +36,8 @@ export const Feed = observer(function Feed({
 }: {
   feed: FeedModel
   style?: StyleProp<ViewStyle>
+  showWelcomeBanner?: boolean
+  showPostFollowBtn?: boolean
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
@@ -38,13 +45,18 @@ export const Feed = observer(function Feed({
   headerOffset?: number
 }) {
   const {track} = useAnalytics()
+  const store = useStores()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const [isNewUser, setIsNewUser] = React.useState<boolean>(false)
 
   const data = React.useMemo(() => {
     let feedItems: any[] = []
     if (feed.hasLoaded) {
       if (feed.hasError) {
         feedItems = feedItems.concat([ERROR_FEED_ITEM])
+      }
+      if (showWelcomeBanner && isNewUser) {
+        feedItems = feedItems.concat([WELCOME_FEED_ITEM])
       }
       if (feed.isEmpty) {
         feedItems = feedItems.concat([EMPTY_FEED_ITEM])
@@ -53,21 +65,39 @@ export const Feed = observer(function Feed({
       }
     }
     return feedItems
-  }, [feed.hasError, feed.hasLoaded, feed.isEmpty, feed.feed])
+  }, [
+    feed.hasError,
+    feed.hasLoaded,
+    feed.isEmpty,
+    feed.feed,
+    showWelcomeBanner,
+    isNewUser,
+  ])
 
   // events
   // =
 
+  const checkWelcome = React.useCallback(async () => {
+    if (showWelcomeBanner) {
+      await store.me.follows.fetchIfNeeded()
+      setIsNewUser(store.me.follows.isEmpty)
+    }
+  }, [showWelcomeBanner, store.me.follows])
+  React.useEffect(() => {
+    checkWelcome()
+  }, [checkWelcome])
+
   const onRefresh = React.useCallback(async () => {
     track('Feed:onRefresh')
     setIsRefreshing(true)
+    checkWelcome()
     try {
       await feed.refresh()
     } catch (err) {
       feed.rootStore.log.error('Failed to refresh posts feed', err)
     }
     setIsRefreshing(false)
-  }, [feed, track, setIsRefreshing])
+  }, [feed, track, setIsRefreshing, checkWelcome])
   const onEndReached = React.useCallback(async () => {
     track('Feed:onEndReached')
     try {
@@ -101,10 +131,12 @@ export const Feed = observer(function Feed({
             onPressTryAgain={onPressTryAgain}
           />
         )
+      } else if (item === WELCOME_FEED_ITEM) {
+        return <WelcomeBanner />
       }
-      return <FeedItem item={item} />
+      return <FeedItem item={item} showFollowBtn={showPostFollowBtn} />
     },
-    [feed, onPressTryAgain],
+    [feed, onPressTryAgain, showPostFollowBtn],
   )
 
   const FeedFooter = React.useCallback(
@@ -123,6 +155,7 @@ export const Feed = observer(function Feed({
     <View testID={testID} style={style}>
       {feed.isLoading && data.length === 0 && (
         <CenteredView style={{paddingTop: headerOffset}}>
+          {showWelcomeBanner && isNewUser && <WelcomeBanner />}
           <PostFeedLoadingPlaceholder />
         </CenteredView>
       )}

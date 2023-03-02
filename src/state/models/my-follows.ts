@@ -20,6 +20,7 @@ export class MyFollowsModel {
   // data
   followDidToRecordMap: Record<string, string> = {}
   lastSync = 0
+  myDid?: string
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -36,6 +37,7 @@ export class MyFollowsModel {
 
   fetchIfNeeded = bundleAsync(async () => {
     if (
+      this.myDid !== this.rootStore.me.did ||
       Object.keys(this.followDidToRecordMap).length === 0 ||
       Date.now() - this.lastSync > CACHE_TTL
     ) {
@@ -62,11 +64,16 @@ export class MyFollowsModel {
         this.followDidToRecordMap[record.value.subject.did] = record.uri
       }
       this.lastSync = Date.now()
+      this.myDid = this.rootStore.me.did
     })
   })
 
   isFollowing(did: string) {
     return !!this.followDidToRecordMap[did]
+  }
+
+  get isEmpty() {
+    return Object.keys(this.followDidToRecordMap).length === 0
   }
 
   getFollowUri(did: string): string {

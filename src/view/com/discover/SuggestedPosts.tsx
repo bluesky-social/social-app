@@ -33,7 +33,7 @@ export const SuggestedPosts = observer(() => {
         <>
           <View style={[pal.border, styles.bottomBorder]}>
             {suggestedPostsView.posts.map(item => (
-              <Post item={item} key={item._reactKey} />
+              <Post item={item} key={item._reactKey} showFollowBtn />
             ))}
           </View>
         </>

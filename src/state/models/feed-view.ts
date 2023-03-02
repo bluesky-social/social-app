@@ -15,6 +15,12 @@ import {RootStoreModel} from './root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {RichText} from 'lib/strings/rich-text'
+import {SUGGESTED_FOLLOWS} from 'lib/constants'
+import {
+  getCombinedCursors,
+  getMultipleAuthorsPosts,
+  mergePosts,
+} from 'lib/api/build-suggested-posts'
 
 const PAGE_SIZE = 30
 
@@ -535,11 +541,31 @@ export class FeedModel {
     }
   }
 
-  protected _getFeed(
+  protected async _getFeed(
     params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams = {},
   ): Promise<GetTimeline.Response | GetAuthorFeed.Response> {
     params = Object.assign({}, this.params, params)
     if (this.feedType === 'home') {
+      await this.rootStore.me.follows.fetchIfNeeded()
+      if (this.rootStore.me.follows.isEmpty) {
+        const responses = await getMultipleAuthorsPosts(
+          this.rootStore,
+          SUGGESTED_FOLLOWS(String(this.rootStore.agent.service)),
+          params.before,
+          20,
+        )
+        const combinedCursor = getCombinedCursors(responses)
+        const finalData = mergePosts(responses, {bestOfOnly: true})
+        const lastHeaders = responses[responses.length - 1].headers
+        return {
+          success: true,
+          data: {
+            feed: finalData,
+            cursor: combinedCursor,
+          },
+          headers: lastHeaders,
+        }
+      }
       return this.rootStore.api.app.bsky.feed.getTimeline(
         params as GetTimeline.QueryParams,
       )

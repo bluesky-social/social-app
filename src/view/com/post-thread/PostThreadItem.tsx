@@ -305,6 +305,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                 authorHandle={item.post.author.handle}
                 authorDisplayName={item.post.author.displayName}
                 timestamp={item.post.indexedAt}
+                did={item.post.author.did}
+                declarationCid={item.post.author.declaration.cid}
               />
               {item.post.author.viewer?.muted ? (
                 <View style={[styles.mutedWarning, pal.btn]}>
