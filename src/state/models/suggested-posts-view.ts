@@ -3,6 +3,7 @@ import {RootStoreModel} from './root-store'
 import {FeedItemModel} from './feed-view'
 import {cleanError} from 'lib/strings/errors'
 import {
+  getTeamHandles,
   getMultipleAuthorsPosts,
   mergeAndFilterMultipleAuthorPostsIntoOneFeed,
 } from 'lib/api/build-suggested-posts'
@@ -44,12 +45,13 @@ export class SuggestedPostsView {
   async setup() {
     this._xLoading()
     try {
-      const responses = await getMultipleAuthorsPosts(this.rootStore)
+      const responses = await getMultipleAuthorsPosts(
+        this.rootStore,
+        getTeamHandles(String(this.rootStore.agent.service)),
+      )
       runInAction(() => {
-        const finalPosts = mergeAndFilterMultipleAuthorPostsIntoOneFeed(
-          this.rootStore,
-          responses,
-        )
+        const finalPosts =
+          mergeAndFilterMultipleAuthorPostsIntoOneFeed(responses)
         // hydrate into models
         this.posts = finalPosts.map((post, i) => {
           return new FeedItemModel(this.rootStore, `post-${i}`, post)

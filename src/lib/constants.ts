@@ -4,6 +4,21 @@ export const FEEDBACK_FORM_URL =
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
 
+export const PROD_TEAM_HANDLES = [
+  'jay.bsky.social',
+  'paul.bsky.social',
+  'dan.bsky.social',
+  'divy.bsky.social',
+  'why.bsky.social',
+  'iamrosewang.bsky.social',
+]
+export const STAGING_TEAM_HANDLES = [
+  'arcalinea.staging.bsky.dev',
+  'paul.staging.bsky.dev',
+  'paul2.staging.bsky.dev',
+]
+export const DEV_TEAM_HANDLES = ['alice.test', 'bob.test', 'carla.test']
+
 export const PROD_SUGGESTED_FOLLOWS = [
   'john',
   'visakanv',
@@ -55,11 +70,9 @@ export const PROD_SUGGESTED_FOLLOWS = [
   'jay',
   'paul',
 ].map(handle => `${handle}.bsky.social`)
-
 export const STAGING_SUGGESTED_FOLLOWS = ['arcalinea', 'paul', 'paul2'].map(
   handle => `${handle}.staging.bsky.dev`,
 )
-
 export const DEV_SUGGESTED_FOLLOWS = ['alice', 'bob', 'carla'].map(
   handle => `${handle}.test`,
 )

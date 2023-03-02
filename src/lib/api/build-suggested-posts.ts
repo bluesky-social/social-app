@@ -4,26 +4,32 @@ import {
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
 } from '@atproto/api'
 type ReasonRepost = AppBskyFeedFeedViewPost.ReasonRepost
+import {
+  DEV_TEAM_HANDLES,
+  STAGING_TEAM_HANDLES,
+  PROD_TEAM_HANDLES,
+} from 'lib/constants'
 
-const TEAM_HANDLES = [
-  'jay.bsky.social',
-  'paul.bsky.social',
-  'dan.bsky.social',
-  'divy.bsky.social',
-  'why.bsky.social',
-  'iamrosewang.bsky.social',
-]
+function getTeamHandles(serviceUrl: string) {
+  if (serviceUrl.includes('localhost')) {
+    return DEV_TEAM_HANDLES
+  } else if (serviceUrl.includes('staging')) {
+    return STAGING_TEAM_HANDLES
+  } else {
+    return PROD_TEAM_HANDLES
+  }
+}
 
 async function getMultipleAuthorsPosts(
   rootStore: RootStoreModel,
+  authors: string[],
   cursor: string | undefined = undefined,
-  teamHandles = TEAM_HANDLES,
 ) {
-  const responses = Promise.all(
-    teamHandles.map((handle, index) =>
+  const responses = await Promise.all(
+    authors.map((author, index) =>
       rootStore.api.app.bsky.feed
         .getAuthorFeed({
-          author: handle,
+          author,
           limit: 10,
           before: cursor ? cursor.split(',')[index] : undefined,
         })
@@ -34,7 +40,6 @@ async function getMultipleAuthorsPosts(
 }
 
 function mergeAndFilterMultipleAuthorPostsIntoOneFeed(
-  store: RootStoreModel,
   responses: GetAuthorFeed.Response[],
 ) {
   let posts: AppBskyFeedFeedViewPost.Main[] = []
@@ -110,9 +115,9 @@ function isCombinedCursor(cursor: string) {
 }
 
 export {
+  getTeamHandles,
   getMultipleAuthorsPosts,
   mergeAndFilterMultipleAuthorPostsIntoOneFeed,
   getCombinedCursors,
   isCombinedCursor,
-  TEAM_HANDLES,
 }

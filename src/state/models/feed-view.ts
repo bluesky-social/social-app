@@ -16,6 +16,7 @@ import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {RichText} from 'lib/strings/rich-text'
 import {
+  getTeamHandles,
   getCombinedCursors,
   getMultipleAuthorsPosts,
   mergeAndFilterMultipleAuthorPostsIntoOneFeed,
@@ -549,13 +550,11 @@ export class FeedModel {
       if (this.rootStore.me.follows.isEmpty()) {
         const response = await getMultipleAuthorsPosts(
           this.rootStore,
+          getTeamHandles(String(this.rootStore.agent.service)),
           params.before,
         )
         const combinedCursor = getCombinedCursors(response)
-        const finalData = mergeAndFilterMultipleAuthorPostsIntoOneFeed(
-          this.rootStore,
-          response,
-        )
+        const finalData = mergeAndFilterMultipleAuthorPostsIntoOneFeed(response)
         const lastHeaders = response[response.length - 1].headers
         return {
           success: true,
