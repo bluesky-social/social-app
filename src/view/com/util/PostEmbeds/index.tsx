@@ -10,9 +10,9 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
   AppBskyEmbedRecord,
+  AppBskyFeedPost,
 } from '@atproto/api'
 import {Link} from '../Link'
-import {Text} from '../text/Text'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ImagesLightbox} from 'state/models/shell-ui'
@@ -40,7 +40,11 @@ export function PostEmbeds({
   const pal = usePalette('default')
   const store = useStores()
   if (AppBskyEmbedRecord.isPresented(embed)) {
-    if (AppBskyEmbedRecord.isPresentedRecord(embed.record)) {
+    if (
+      AppBskyEmbedRecord.isPresentedRecord(embed.record) &&
+      AppBskyFeedPost.isRecord(embed.record.record) &&
+      AppBskyFeedPost.validateRecord(embed.record.record).success
+    ) {
       return (
         <QuoteEmbed
           quote={{
