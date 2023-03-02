@@ -547,7 +547,7 @@ export class FeedModel {
     params = Object.assign({}, this.params, params)
     if (this.feedType === 'home') {
       await this.rootStore.me.follows.fetchIfNeeded()
-      if (this.rootStore.me.follows.isEmpty()) {
+      if (this.rootStore.me.follows.isEmpty) {
         const response = await getMultipleAuthorsPosts(
           this.rootStore,
           getTeamHandles(String(this.rootStore.agent.service)),

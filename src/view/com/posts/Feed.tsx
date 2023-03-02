@@ -13,12 +13,15 @@ import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {FeedModel} from 'state/models/feed-view'
 import {FeedItem} from './FeedItem'
+import {WelcomeNotice} from '../util/WelcomeNotice'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
+import {useStores} from 'state/index'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_FEED_ITEM = {_reactKey: '__error__'}
+const WELCOME_FEED_ITEM = {_reactKey: '__welcome__'}
 
 export const Feed = observer(function Feed({
   feed,
@@ -40,6 +43,7 @@ export const Feed = observer(function Feed({
   headerOffset?: number
 }) {
   const {track} = useAnalytics()
+  const store = useStores()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
 
   const data = React.useMemo(() => {
@@ -51,11 +55,21 @@ export const Feed = observer(function Feed({
       if (feed.isEmpty) {
         feedItems = feedItems.concat([EMPTY_FEED_ITEM])
       } else {
+        if (showPostFollowBtn && store.me.follows.isEmpty) {
+          feedItems = feedItems.concat([WELCOME_FEED_ITEM])
+        }
         feedItems = feedItems.concat(feed.feed)
       }
     }
     return feedItems
-  }, [feed.hasError, feed.hasLoaded, feed.isEmpty, feed.feed])
+  }, [
+    feed.hasError,
+    feed.hasLoaded,
+    feed.isEmpty,
+    feed.feed,
+    showPostFollowBtn,
+    store.me.follows.isEmpty,
+  ])
 
   // events
   // =
@@ -103,6 +117,8 @@ export const Feed = observer(function Feed({
             onPressTryAgain={onPressTryAgain}
           />
         )
+      } else if (item === WELCOME_FEED_ITEM) {
+        return <WelcomeNotice />
       }
       return <FeedItem item={item} showFollowBtn={showPostFollowBtn} />
     },

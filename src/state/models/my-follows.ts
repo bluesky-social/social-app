@@ -69,7 +69,7 @@ export class MyFollowsModel {
     return !!this.followDidToRecordMap[did]
   }
 
-  isEmpty() {
+  get isEmpty() {
     return Object.keys(this.followDidToRecordMap).length === 0
   }
 

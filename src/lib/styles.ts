@@ -62,6 +62,10 @@ export const s = StyleSheet.create({
   footerSpacer: {height: 100},
   contentContainer: {paddingBottom: 200},
   border1: {borderWidth: 1},
+  borderTop1: {borderTopWidth: 1},
+  borderRight1: {borderRightWidth: 1},
+  borderBottom1: {borderBottomWidth: 1},
+  borderLeft1: {borderLeftWidth: 1},
 
   // font weights
   fw600: {fontWeight: '600'},
