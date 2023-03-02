@@ -97,6 +97,7 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
         feed={store.me.mainFeed}
         scrollElRef={scrollElRef}
         style={s.hContentRegion}
+        showPostFollowBtn
         onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
         headerOffset={HEADER_HEIGHT}

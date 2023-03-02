@@ -23,6 +23,7 @@ const ERROR_FEED_ITEM = {_reactKey: '__error__'}
 export const Feed = observer(function Feed({
   feed,
   style,
+  showPostFollowBtn,
   scrollElRef,
   onPressTryAgain,
   onScroll,
@@ -31,6 +32,7 @@ export const Feed = observer(function Feed({
 }: {
   feed: FeedModel
   style?: StyleProp<ViewStyle>
+  showPostFollowBtn?: boolean
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
@@ -102,9 +104,9 @@ export const Feed = observer(function Feed({
           />
         )
       }
-      return <FeedItem item={item} />
+      return <FeedItem item={item} showFollowBtn={showPostFollowBtn} />
     },
-    [feed, onPressTryAgain],
+    [feed, onPressTryAgain, showPostFollowBtn],
   )
 
   const FeedFooter = React.useCallback(
