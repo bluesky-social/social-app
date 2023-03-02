@@ -4,19 +4,18 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from './text/Text'
 import {s} from 'lib/styles'
 
-export function WelcomeNotice() {
+export function WelcomeBanner() {
   const pal = usePalette('default')
   return (
     <View style={[pal.view, styles.container, pal.border]}>
-      <Text type="title-2xl" style={[pal.link, s.bold, s.pb5]} lineHeight={1.1}>
-        Bluesky{' '}
-        <Text type="title-xl" style={[pal.textLight, s.bold]}>
-          private beta
-        </Text>
+      <Text
+        type="title-lg"
+        style={[pal.text, s.textCenter, s.bold, s.pb5]}
+        lineHeight={1.1}>
+        Welcome to the private beta!
       </Text>
-      <Text type="lg" style={[pal.text]}>
-        Welcome! Here are some recent posts. Follow their creators to build your
-        community.
+      <Text type="lg" style={[pal.text, s.textCenter]}>
+        Here are some recent posts. Follow their creators to build your feed.
       </Text>
     </View>
   )
@@ -24,7 +23,8 @@ export function WelcomeNotice() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 16,
+    paddingTop: 30,
+    paddingBottom: 26,
     paddingHorizontal: 20,
     borderTopWidth: 1,
   },

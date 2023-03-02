@@ -13,7 +13,7 @@ import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {FeedModel} from 'state/models/feed-view'
 import {FeedItem} from './FeedItem'
-import {WelcomeNotice} from '../util/WelcomeNotice'
+import {WelcomeBanner} from '../util/WelcomeBanner'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
@@ -132,7 +132,7 @@ export const Feed = observer(function Feed({
           />
         )
       } else if (item === WELCOME_FEED_ITEM) {
-        return <WelcomeNotice />
+        return <WelcomeBanner />
       }
       return <FeedItem item={item} showFollowBtn={showPostFollowBtn} />
     },
