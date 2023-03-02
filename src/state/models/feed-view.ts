@@ -15,11 +15,11 @@ import {RootStoreModel} from './root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {RichText} from 'lib/strings/rich-text'
+import {SUGGESTED_FOLLOWS} from 'lib/constants'
 import {
-  getTeamHandles,
   getCombinedCursors,
   getMultipleAuthorsPosts,
-  mergeAndFilterMultipleAuthorPostsIntoOneFeed,
+  mergePosts,
 } from 'lib/api/build-suggested-posts'
 
 const PAGE_SIZE = 30
@@ -548,14 +548,15 @@ export class FeedModel {
     if (this.feedType === 'home') {
       await this.rootStore.me.follows.fetchIfNeeded()
       if (this.rootStore.me.follows.isEmpty) {
-        const response = await getMultipleAuthorsPosts(
+        const responses = await getMultipleAuthorsPosts(
           this.rootStore,
-          getTeamHandles(String(this.rootStore.agent.service)),
+          SUGGESTED_FOLLOWS(String(this.rootStore.agent.service)),
           params.before,
+          20,
         )
-        const combinedCursor = getCombinedCursors(response)
-        const finalData = mergeAndFilterMultipleAuthorPostsIntoOneFeed(response)
-        const lastHeaders = response[response.length - 1].headers
+        const combinedCursor = getCombinedCursors(responses)
+        const finalData = mergePosts(responses, {bestOfOnly: true})
+        const lastHeaders = responses[responses.length - 1].headers
         return {
           success: true,
           data: {

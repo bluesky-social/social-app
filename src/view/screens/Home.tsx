@@ -71,8 +71,6 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
     store.log.debug('HomeScreen: Updating feed')
     if (store.me.mainFeed.hasContent) {
       store.me.mainFeed.update()
-    } else {
-      store.me.mainFeed.setup()
     }
     return cleanup
   }, [visible, store, store.me.mainFeed, navIdx, doPoll, wasVisible, scrollToTop, screen])

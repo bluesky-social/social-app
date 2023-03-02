@@ -2,10 +2,10 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from './root-store'
 import {FeedItemModel} from './feed-view'
 import {cleanError} from 'lib/strings/errors'
+import {TEAM_HANDLES} from 'lib/constants'
 import {
-  getTeamHandles,
   getMultipleAuthorsPosts,
-  mergeAndFilterMultipleAuthorPostsIntoOneFeed,
+  mergePosts,
 } from 'lib/api/build-suggested-posts'
 
 export class SuggestedPostsView {
@@ -47,13 +47,14 @@ export class SuggestedPostsView {
     try {
       const responses = await getMultipleAuthorsPosts(
         this.rootStore,
-        getTeamHandles(String(this.rootStore.agent.service)),
+        TEAM_HANDLES(String(this.rootStore.agent.service)),
       )
       runInAction(() => {
-        const finalPosts =
-          mergeAndFilterMultipleAuthorPostsIntoOneFeed(responses)
+        const finalPosts = mergePosts(responses, {repostsOnly: true})
         // hydrate into models
         this.posts = finalPosts.map((post, i) => {
+          // strip the reasons to hide that these are reposts
+          delete post.reason
           return new FeedItemModel(this.rootStore, `post-${i}`, post)
         })
       })

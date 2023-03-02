@@ -4,33 +4,19 @@ import {
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
 } from '@atproto/api'
 type ReasonRepost = AppBskyFeedFeedViewPost.ReasonRepost
-import {
-  DEV_TEAM_HANDLES,
-  STAGING_TEAM_HANDLES,
-  PROD_TEAM_HANDLES,
-} from 'lib/constants'
-
-function getTeamHandles(serviceUrl: string) {
-  if (serviceUrl.includes('localhost')) {
-    return DEV_TEAM_HANDLES
-  } else if (serviceUrl.includes('staging')) {
-    return STAGING_TEAM_HANDLES
-  } else {
-    return PROD_TEAM_HANDLES
-  }
-}
 
 async function getMultipleAuthorsPosts(
   rootStore: RootStoreModel,
   authors: string[],
   cursor: string | undefined = undefined,
+  limit: number = 10,
 ) {
   const responses = await Promise.all(
     authors.map((author, index) =>
       rootStore.api.app.bsky.feed
         .getAuthorFeed({
           author,
-          limit: 10,
+          limit,
           before: cursor ? cursor.split(',')[index] : undefined,
         })
         .catch(_err => ({success: false, headers: {}, data: {feed: []}})),
@@ -39,10 +25,35 @@ async function getMultipleAuthorsPosts(
   return responses
 }
 
-function mergeAndFilterMultipleAuthorPostsIntoOneFeed(
+function mergePosts(
   responses: GetAuthorFeed.Response[],
+  {repostsOnly, bestOfOnly}: {repostsOnly?: boolean; bestOfOnly?: boolean},
 ) {
   let posts: AppBskyFeedFeedViewPost.Main[] = []
+
+  if (bestOfOnly) {
+    for (const res of responses) {
+      if (res.success) {
+        // filter the feed down to the post with the most upvotes
+        res.data.feed = res.data.feed.reduce(
+          (acc: AppBskyFeedFeedViewPost.Main[], v) => {
+            if (!acc?.[0] && !v.reason) {
+              return [v]
+            }
+            if (
+              acc &&
+              !v.reason &&
+              v.post.upvoteCount > acc[0].post.upvoteCount
+            ) {
+              return [v]
+            }
+            return acc
+          },
+          [],
+        )
+      }
+    }
+  }
 
   // merge into one array
   for (const res of responses) {
@@ -52,17 +63,16 @@ function mergeAndFilterMultipleAuthorPostsIntoOneFeed(
   }
 
   // filter down to reposts of other users
-  const now = Date.now()
   const uris = new Set()
   posts = posts.filter(p => {
-    if (isARepostOfSomeoneElse(p) && isRecentEnough(now, p)) {
-      if (uris.has(p.post.uri)) {
-        return false
-      }
-      uris.add(p.post.uri)
-      return true
+    if (repostsOnly && !isARepostOfSomeoneElse(p)) {
+      return false
     }
-    return false
+    if (uris.has(p.post.uri)) {
+      return false
+    }
+    uris.add(p.post.uri)
+    return true
   })
 
   // sort by index time
@@ -72,11 +82,7 @@ function mergeAndFilterMultipleAuthorPostsIntoOneFeed(
     )
   })
 
-  // strip the reasons to hide that these are reposts
-  return posts.map(post => {
-    delete post.reason
-    return post
-  })
+  return posts
 }
 
 function isARepostOfSomeoneElse(post: AppBskyFeedFeedViewPost.Main): boolean {
@@ -115,9 +121,8 @@ function isCombinedCursor(cursor: string) {
 }
 
 export {
-  getTeamHandles,
   getMultipleAuthorsPosts,
-  mergeAndFilterMultipleAuthorPostsIntoOneFeed,
+  mergePosts,
   getCombinedCursors,
   isCombinedCursor,
 }
