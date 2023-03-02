@@ -8,7 +8,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {RepostIcon} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 
-export const snapPoints = ['30%']
+export const snapPoints = [250]
 
 export function Component({
   onRepost,
@@ -26,17 +26,19 @@ export function Component({
   }
 
   return (
-    <View style={[s.flex1, s.pl10, s.pr10, pal.view, styles.container]}>
-      <View>
+    <View style={[s.flex1, pal.view, styles.container]}>
+      <View style={s.pb20}>
         <TouchableOpacity style={[styles.actionBtn]} onPress={onRepost}>
           <RepostIcon strokeWidth={2} size={24} />
-          <Text style={[s.f18, s.bold, s.mt10, s.mb10, s.ml10]}>
+          <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
             {!isReposted ? 'Repost' : 'Undo repost'}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.actionBtn]} onPress={onQuote}>
           <FontAwesomeIcon icon="quote-left" size={24} style={s.blue3} />
-          <Text style={[s.f18, s.bold, s.mt10, s.mb10, s.ml10]}>Quote</Text>
+          <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
+            Quote Post
+          </Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={onPress}>
@@ -54,7 +56,7 @@ export function Component({
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'space-around',
+    paddingHorizontal: 30,
   },
   title: {
     textAlign: 'center',
@@ -80,5 +82,9 @@ const styles = StyleSheet.create({
   actionBtn: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  actionBtnLabel: {
+    paddingHorizontal: 14,
+    paddingVertical: 16,
   },
 })
