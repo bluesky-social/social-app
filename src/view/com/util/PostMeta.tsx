@@ -22,70 +22,72 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
   let handle = opts.authorHandle
   const store = useStores()
   const isMe = opts.did === store.me.did
-  const isFollowing = store.me.follows.isFollowing(opts.did)
 
-  if (!opts.showFollowBtn || isMe || isFollowing) {
-    // one-liner
+  // NOTE we capture `isFollowing` via a memo so that follows
+  //      don't change this UI immediately, but rather upon future
+  //      renders
+  const isFollowing = React.useMemo(
+    () => store.me.follows.isFollowing(opts.did),
+    [], // no deps -- we want to capture at first render
+  )
+
+  if (opts.showFollowBtn && !isMe && !isFollowing) {
+    // two-liner with follow button
     return (
-      <View style={styles.meta}>
-        <View style={[styles.metaItem, styles.maxWidth]}>
+      <View style={[styles.metaTwoLine]}>
+        <View>
           <Text
             type="lg-bold"
             style={[pal.text]}
             numberOfLines={1}
             lineHeight={1.2}>
-            {displayName}
+            {displayName}{' '}
+            <Text
+              type="md"
+              style={[styles.metaItem, pal.textLight]}
+              lineHeight={1.2}>
+              &middot; {ago(opts.timestamp)}
+            </Text>
+          </Text>
+          <Text
+            type="md"
+            style={[styles.metaItem, pal.textLight]}
+            lineHeight={1.2}>
             {handle ? (
               <Text type="md" style={[pal.textLight]}>
-                &nbsp;{handle}
+                @{handle}
               </Text>
             ) : undefined}
           </Text>
         </View>
-        <Text
-          type="md"
-          style={[styles.metaItem, pal.textLight]}
-          lineHeight={1.2}>
-          &middot; {ago(opts.timestamp)}
-        </Text>
+
+        <View>
+          <FollowButton did={opts.did} declarationCid={opts.declarationCid} />
+        </View>
       </View>
     )
   }
 
-  // two-liner with follow button
+  // one-liner
   return (
-    <View style={[styles.metaTwoLine]}>
-      <View>
+    <View style={styles.meta}>
+      <View style={[styles.metaItem, styles.maxWidth]}>
         <Text
           type="lg-bold"
           style={[pal.text]}
           numberOfLines={1}
           lineHeight={1.2}>
-          {displayName}{' '}
-          <Text
-            type="md"
-            style={[styles.metaItem, pal.textLight]}
-            lineHeight={1.2}>
-            &middot; {ago(opts.timestamp)}
-          </Text>
-        </Text>
-        <Text
-          type="md"
-          style={[styles.metaItem, pal.textLight]}
-          lineHeight={1.2}>
+          {displayName}
           {handle ? (
             <Text type="md" style={[pal.textLight]}>
-              @{handle}
+              &nbsp;{handle}
             </Text>
           ) : undefined}
         </Text>
       </View>
-
-      <View>
-        {isFollowing || isMe ? null : (
-          <FollowButton did={opts.did} declarationCid={opts.declarationCid} />
-        )}
-      </View>
+      <Text type="md" style={[styles.metaItem, pal.textLight]} lineHeight={1.2}>
+        &middot; {ago(opts.timestamp)}
+      </Text>
     </View>
   )
 })
