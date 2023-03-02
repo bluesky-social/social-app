@@ -28,7 +28,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
   //      renders
   const isFollowing = React.useMemo(
     () => store.me.follows.isFollowing(opts.did),
-    [], // no deps -- we want to capture at first render
+    [opts.did, store.me.follows],
   )
 
   if (opts.showFollowBtn && !isMe && !isFollowing) {

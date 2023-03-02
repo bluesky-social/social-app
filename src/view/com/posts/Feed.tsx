@@ -97,7 +97,7 @@ export const Feed = observer(function Feed({
       feed.rootStore.log.error('Failed to refresh posts feed', err)
     }
     setIsRefreshing(false)
-  }, [feed, track, setIsRefreshing])
+  }, [feed, track, setIsRefreshing, checkWelcome])
   const onEndReached = React.useCallback(async () => {
     track('Feed:onEndReached')
     try {
