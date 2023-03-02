@@ -7,7 +7,9 @@ import {s} from 'lib/styles'
 export function WelcomeBanner() {
   const pal = usePalette('default')
   return (
-    <View style={[pal.view, styles.container, pal.border]}>
+    <View
+      testID="welcomeBanner"
+      style={[pal.view, styles.container, pal.border]}>
       <Text
         type="title-lg"
         style={[pal.text, s.textCenter, s.bold, s.pb5]}
