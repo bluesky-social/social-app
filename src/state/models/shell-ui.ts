@@ -90,10 +90,22 @@ export interface ComposerOptsPostRef {
     avatar?: string
   }
 }
+export interface ComposerOptsQuote {
+  uri: string
+  cid: string
+  text: string
+  indexedAt: string
+  author: {
+    handle: string
+    displayName?: string
+    avatar?: string
+  }
+}
 export interface ComposerOpts {
   imagesOpen?: boolean
   replyTo?: ComposerOptsPostRef
   onPost?: () => void
+  quote?: ComposerOptsQuote
 }
 
 export class ShellUiModel {

@@ -34,6 +34,13 @@ interface PostCtrlsOpts {
   itemHref: string
   itemTitle: string
   isAuthor: boolean
+  author: {
+    handle: string
+    displayName: string
+    avatar: string
+  }
+  text: string
+  indexedAt: string
   big?: boolean
   style?: StyleProp<ViewStyle>
   replyCount?: number
@@ -128,7 +135,15 @@ export function PostCtrls(opts: PostCtrlsOpts) {
 
   const onQuote = () => {
     store.shell.closeModal()
-    store.shell.openComposer({})
+    store.shell.openComposer({
+      quote: {
+        uri: opts.itemUri,
+        cid: opts.itemCid,
+        text: opts.text,
+        author: opts.author,
+        indexedAt: opts.indexedAt,
+      },
+    })
     ReactNativeHapticFeedback.trigger('impactMedium')
   }
 
