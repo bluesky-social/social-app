@@ -92,14 +92,6 @@ function isARepostOfSomeoneElse(post: AppBskyFeedFeedViewPost.Main): boolean {
   )
 }
 
-function isRecentEnough(
-  now: number,
-  post: AppBskyFeedFeedViewPost.Main,
-): boolean {
-  const THREE_DAYS = 3 * 24 * 60 * 60 * 1000
-  return now - Number(new Date(post.post.indexedAt)) < THREE_DAYS
-}
-
 function getCombinedCursors(responses: GetAuthorFeed.Response[]) {
   let hasCursor = false
   const cursors = responses.map(r => {
