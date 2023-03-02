@@ -26,6 +26,7 @@ const WELCOME_FEED_ITEM = {_reactKey: '__welcome__'}
 export const Feed = observer(function Feed({
   feed,
   style,
+  showWelcomeBanner,
   showPostFollowBtn,
   scrollElRef,
   onPressTryAgain,
@@ -35,6 +36,7 @@ export const Feed = observer(function Feed({
 }: {
   feed: FeedModel
   style?: StyleProp<ViewStyle>
+  showWelcomeBanner?: boolean
   showPostFollowBtn?: boolean
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
@@ -45,6 +47,7 @@ export const Feed = observer(function Feed({
   const {track} = useAnalytics()
   const store = useStores()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const [isNewUser, setIsNewUser] = React.useState<boolean>(false)
 
   const data = React.useMemo(() => {
     let feedItems: any[] = []
@@ -55,7 +58,7 @@ export const Feed = observer(function Feed({
       if (feed.isEmpty) {
         feedItems = feedItems.concat([EMPTY_FEED_ITEM])
       } else {
-        if (showPostFollowBtn && store.me.follows.isEmpty) {
+        if (showWelcomeBanner && isNewUser) {
           feedItems = feedItems.concat([WELCOME_FEED_ITEM])
         }
         feedItems = feedItems.concat(feed.feed)
@@ -67,16 +70,27 @@ export const Feed = observer(function Feed({
     feed.hasLoaded,
     feed.isEmpty,
     feed.feed,
-    showPostFollowBtn,
-    store.me.follows.isEmpty,
+    showWelcomeBanner,
+    isNewUser,
   ])
 
   // events
   // =
 
+  const checkWelcome = React.useCallback(async () => {
+    if (showWelcomeBanner) {
+      await store.me.follows.fetchIfNeeded()
+      setIsNewUser(store.me.follows.isEmpty)
+    }
+  }, [showWelcomeBanner, store.me.follows])
+  React.useEffect(() => {
+    checkWelcome()
+  }, [checkWelcome])
+
   const onRefresh = React.useCallback(async () => {
     track('Feed:onRefresh')
     setIsRefreshing(true)
+    checkWelcome()
     try {
       await feed.refresh()
     } catch (err) {
