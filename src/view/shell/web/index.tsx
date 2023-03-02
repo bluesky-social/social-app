@@ -6,7 +6,6 @@ import {useStores} from 'state/index'
 import {NavigationModel} from 'state/models/navigation'
 import {match, MatchResult} from '../../routes'
 import {DesktopHeader} from './DesktopHeader'
-import {Onboard} from '../../screens/Onboard'
 import {Login} from '../../screens/Login'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
 import {Lightbox} from '../../com/lightbox/Lightbox'
@@ -32,15 +31,6 @@ export const WebShell: React.FC = observer(() => {
       <View style={styles.outerContainer}>
         <Login />
         <ModalsContainer />
-      </View>
-    )
-  }
-  if (store.onboard.isOnboarding) {
-    return (
-      <View style={styles.outerContainer}>
-        <ErrorBoundary>
-          <Onboard />
-        </ErrorBoundary>
       </View>
     )
   }

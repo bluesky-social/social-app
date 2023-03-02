@@ -26,9 +26,9 @@ PODS:
   - libwebp/mux (1.2.4):
     - libwebp/demux
   - libwebp/webp (1.2.4)
-  - Permission-Camera (3.6.1):
+  - Permission-Camera (3.7.2):
     - RNPermissions
-  - Permission-PhotoLibrary (3.6.1):
+  - Permission-PhotoLibrary (3.7.2):
     - RNPermissions
   - RCT-Folly (2021.07.22.00):
     - boost
@@ -359,7 +359,7 @@ PODS:
     - React-Core
   - RNCAsyncStorage (1.17.11):
     - React-Core
-  - RNCClipboard (1.11.1):
+  - RNCClipboard (1.11.2):
     - React-Core
   - RNFastImage (8.6.3):
     - React-Core
@@ -385,7 +385,7 @@ PODS:
     - RNNotifee/NotifeeCore (= 7.5.0)
   - RNNotifee/NotifeeCore (7.5.0):
     - React-Core
-  - RNPermissions (3.6.1):
+  - RNPermissions (3.7.2):
     - React-Core
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
@@ -652,8 +652,8 @@ SPEC CHECKSUMS:
   hermes-engine: 922ccd744f50d9bfde09e9677bf0f3b562ea5fb9
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: f62cb61d0a484ba548448a4bd52aabf150ff6eef
-  Permission-Camera: bf6791b17c7f614b6826019fcfdcc286d3a107f6
-  Permission-PhotoLibrary: 5b34ca67279f7201ae109cef36f9806a6596002d
+  Permission-Camera: db22e80aa0858a8b6d65979a97f2f481dd8a0ebd
+  Permission-PhotoLibrary: 7d80161682e08042fd8b0bf934ea97a8495e0e6a
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: fd4d923b964658aa0c4091a32c8b2004c6d9e3a6
   RCTTypeSafety: c276d85975bde3d8448907235c70bf0da257adfd
@@ -693,14 +693,14 @@ SPEC CHECKSUMS:
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNBackgroundFetch: 8e16176ff415daac743a6eb57afc8e9e14dbe623
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
-  RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
+  RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
   RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
   RNNotifee: 053c0ace9c73634709a0214fd9c436a5777a562f
-  RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
+  RNPermissions: 2fbbcb7244357507f958d626d58eb15fb0013d85
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
   RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f

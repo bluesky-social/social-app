@@ -26,10 +26,12 @@ import {useAnalytics} from 'lib/analytics'
 export const FeedItem = observer(function ({
   item,
   showReplyLine,
+  showFollowBtn,
   ignoreMuteFor,
 }: {
   item: FeedItemModel
   showReplyLine?: boolean
+  showFollowBtn?: boolean
   ignoreMuteFor?: string
 }) {
   const store = useStores()
@@ -175,6 +177,9 @@ export const FeedItem = observer(function ({
               authorHandle={item.post.author.handle}
               authorDisplayName={item.post.author.displayName}
               timestamp={item.post.indexedAt}
+              did={item.post.author.did}
+              declarationCid={item.post.author.declaration.cid}
+              showFollowBtn={showFollowBtn}
             />
             {!isChild && replyAuthorDid !== '' && (
               <View style={[s.flexRow, s.mb2, s.alignCenter]}>

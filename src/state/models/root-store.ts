@@ -17,7 +17,6 @@ import {ProfilesViewModel} from './profiles-view'
 import {LinkMetasViewModel} from './link-metas-view'
 import {NotificationsViewItemModel} from './notifications-view'
 import {MeModel} from './me'
-import {OnboardModel} from './onboard'
 
 export const appInfo = z.object({
   build: z.string(),
@@ -35,7 +34,6 @@ export class RootStoreModel {
   nav = new NavigationModel(this)
   shell = new ShellUiModel(this)
   me = new MeModel(this)
-  onboard = new OnboardModel()
   profiles = new ProfilesViewModel(this)
   linkMetas = new LinkMetasViewModel(this)
 
@@ -85,7 +83,6 @@ export class RootStoreModel {
       session: this.session.serialize(),
       me: this.me.serialize(),
       nav: this.nav.serialize(),
-      onboard: this.onboard.serialize(),
       shell: this.shell.serialize(),
     }
   }
@@ -106,9 +103,6 @@ export class RootStoreModel {
       }
       if (hasProp(v, 'nav')) {
         this.nav.hydrate(v.nav)
-      }
-      if (hasProp(v, 'onboard')) {
-        this.onboard.hydrate(v.onboard)
       }
       if (hasProp(v, 'session')) {
         this.session.hydrate(v.session)

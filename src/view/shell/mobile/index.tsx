@@ -26,7 +26,6 @@ import {
 import {match, MatchResult} from '../../routes'
 import {Login} from '../../screens/Login'
 import {Menu} from './Menu'
-import {Onboard} from '../../screens/Onboard'
 import {HorzSwipe} from '../../com/util/gestures/HorzSwipe'
 import {ModalsContainer} from '../../com/modals/Modal'
 import {Lightbox} from '../../com/lightbox/Lightbox'
@@ -405,17 +404,6 @@ export const MobileShell: React.FC = observer(() => {
         />
         <Login />
         <ModalsContainer />
-      </View>
-    )
-  }
-  if (store.onboard.isOnboarding) {
-    return (
-      <View testID="onboardOuterView" style={styles.outerContainer}>
-        <View style={styles.innerContainer}>
-          <ErrorBoundary>
-            <Onboard />
-          </ErrorBoundary>
-        </View>
       </View>
     )
   }
