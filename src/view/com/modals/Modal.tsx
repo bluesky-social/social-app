@@ -9,6 +9,7 @@ import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
+import * as RepostModal from './Repost'
 import * as ReportAccountModal from './ReportAccount'
 import * as DeleteAccountModal from './DeleteAccount'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -61,6 +62,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'delete-account') {
     snapPoints = DeleteAccountModal.snapPoints
     element = <DeleteAccountModal.Component />
+  } else if (activeModal?.name === 'repost') {
+    snapPoints = RepostModal.snapPoints
+    element = <RepostModal.Component {...activeModal} />
   } else {
     element = <View />
   }

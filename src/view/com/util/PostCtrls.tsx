@@ -26,6 +26,7 @@ import {
 } from 'lib/icons'
 import {s, colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
+import {useStores} from 'state/index'
 
 interface PostCtrlsOpts {
   itemUri: string
@@ -86,6 +87,7 @@ function ctrlAnimStyle(interp: Animated.Value) {
 */
 
 export function PostCtrls(opts: PostCtrlsOpts) {
+  const store = useStores()
   const theme = useTheme()
   const defaultCtrlColor = React.useMemo(
     () => ({
@@ -98,7 +100,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   // DISABLED see #135
   // const repostRef = React.useRef<TriggerableAnimatedRef | null>(null)
   // const likeRef = React.useRef<TriggerableAnimatedRef | null>(null)
-  const onPressToggleRepostWrapper = () => {
+  const onRepost = () => {
+    store.shell.closeModal()
     if (!opts.isReposted) {
       ReactNativeHapticFeedback.trigger('impactMedium')
       setRepostMod(1)
@@ -122,6 +125,22 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         .then(() => setRepostMod(0))
     }
   }
+
+  const onQuote = () => {
+    store.shell.closeModal()
+    store.shell.openComposer({})
+    ReactNativeHapticFeedback.trigger('impactMedium')
+  }
+
+  const onPressToggleRepostWrapper = () => {
+    store.shell.openModal({
+      name: 'repost',
+      onRepost: onRepost,
+      onQuote: onQuote,
+      isReposted: opts.isReposted,
+    })
+  }
+
   const onPressToggleUpvoteWrapper = () => {
     if (!opts.isUpvoted) {
       ReactNativeHapticFeedback.trigger('impactMedium')

@@ -44,6 +44,13 @@ export interface DeleteAccountModal {
   name: 'delete-account'
 }
 
+export interface RepostModal {
+  name: 'repost'
+  onRepost: () => void
+  onQuote: () => void
+  isReposted: boolean
+}
+
 export type Modal =
   | ConfirmModal
   | EditProfileModal
@@ -52,6 +59,7 @@ export type Modal =
   | ReportAccountModal
   | CropImageModal
   | DeleteAccountModal
+  | RepostModal
 
 interface LightboxModel {}
 
