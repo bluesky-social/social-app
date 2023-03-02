@@ -51,7 +51,7 @@ export function PostEmbeds({
             author: embed.record.author,
             cid: embed.record.cid,
             uri: embed.record.uri,
-            indexedAt: embed.record.record.indexedAt,
+            indexedAt: embed.record.record.createdAt, // TODO
             text: embed.record.record.text,
           }}
         />
