@@ -48,7 +48,7 @@ import {
   POST_IMG_MAX_SIZE,
 } from 'lib/constants'
 import {isWeb} from 'platform/detection'
-import {PostMeta} from '../util/PostMeta'
+import QuoteEmbed from '../util/PostEmbeds/QuoteEmbed'
 
 const MAX_TEXT_LENGTH = 256
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
@@ -283,15 +283,15 @@ export const ComposePost = observer(function ComposePost({
     }
     setIsProcessing(true)
     try {
-      await apilib.post(
-        store,
-        text,
-        replyTo?.uri,
-        extLink,
-        selectedPhotos,
-        autocompleteView.knownHandles,
-        setProcessingState,
-      )
+      await apilib.post(store, {
+        rawText: text,
+        replyTo: replyTo?.uri,
+        images: selectedPhotos,
+        quote: quote,
+        extLink: extLink,
+        onStateChange: setProcessingState,
+        knownHandles: autocompleteView.knownHandles,
+      })
       track('Create Post', {
         imageCount: selectedPhotos.length,
       })
@@ -450,48 +450,8 @@ export const ComposePost = observer(function ComposePost({
               </TextInput>
             </View>
 
-            {replyTo ? (
-              <View style={[pal.border, styles.replyToLayout]}>
-                <UserAvatar
-                  handle={replyTo.author.handle}
-                  displayName={replyTo.author.displayName}
-                  avatar={replyTo.author.avatar}
-                  size={50}
-                />
-                <View style={styles.replyToPost}>
-                  <TextLink
-                    type="xl-medium"
-                    href={`/profile/${replyTo.author.handle}`}
-                    text={replyTo.author.displayName || replyTo.author.handle}
-                    style={[pal.text]}
-                  />
-                  <Text type="post-text" style={pal.text} numberOfLines={6}>
-                    {replyTo.text}
-                  </Text>
-                </View>
-              </View>
-            ) : undefined}
+            {quote ? <QuoteEmbed quote={quote} /> : undefined}
 
-            {quote ? (
-              <View style={styles.quoteContainer}>
-                <UserAvatar
-                  handle={quote.author.handle}
-                  displayName={quote.author.displayName}
-                  avatar={quote.author.avatar}
-                  size={50}
-                />
-                <View style={styles.replyToPost}>
-                  <PostMeta
-                    authorHandle={quote.author.handle}
-                    authorDisplayName={quote.author.displayName}
-                    timestamp={quote.indexedAt}
-                  />
-                  <Text type="post-text" style={pal.text} numberOfLines={6}>
-                    {quote.text}
-                  </Text>
-                </View>
-              </View>
-            ) : undefined}
             <SelectedPhoto
               selectedPhotos={selectedPhotos}
               onSelectPhotos={onSelectPhotos}
@@ -525,21 +485,23 @@ export const ComposePost = observer(function ComposePost({
             </View>
           ) : null}
           <View style={[pal.border, styles.bottomBar]}>
-            <TouchableOpacity
-              testID="composerSelectPhotosButton"
-              onPress={onPressSelectPhotos}
-              style={[s.pl5]}
-              hitSlop={HITSLOP}>
-              <FontAwesomeIcon
-                icon={['far', 'image']}
-                style={
-                  (selectedPhotos.length < 4
-                    ? pal.link
-                    : pal.textLight) as FontAwesomeIconStyle
-                }
-                size={24}
-              />
-            </TouchableOpacity>
+            {!quote && (
+              <TouchableOpacity
+                testID="composerSelectPhotosButton"
+                onPress={onPressSelectPhotos}
+                style={[s.pl5]}
+                hitSlop={HITSLOP}>
+                <FontAwesomeIcon
+                  icon={['far', 'image']}
+                  style={
+                    (selectedPhotos.length < 4
+                      ? pal.link
+                      : pal.textLight) as FontAwesomeIconStyle
+                  }
+                  size={24}
+                />
+              </TouchableOpacity>
+            )}
             <View style={s.flex1} />
             <CharProgress count={text.length} />
           </View>
@@ -645,13 +607,5 @@ const styles = StyleSheet.create({
     paddingRight: 5,
     alignItems: 'center',
     borderTopWidth: 1,
-  },
-  quoteContainer: {
-    borderRadius: 8,
-    padding: 8,
-    marginVertical: 8,
-    borderColor: colors.gray2,
-    borderWidth: 1,
-    flexDirection: 'row',
   },
 })
