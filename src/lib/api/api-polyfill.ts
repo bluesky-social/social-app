@@ -1,7 +1,8 @@
 import AtpAgent from '@atproto/api'
 import RNFS from 'react-native-fs'
 
-const TIMEOUT = 10e3 // 10s
+const GET_TIMEOUT = 15e3 // 15s
+const POST_TIMEOUT = 60e3 // 60s
 
 export function doPolyfill() {
   AtpAgent.configure({fetch: fetchHandler})
@@ -43,7 +44,10 @@ async function fetchHandler(
   }
 
   const controller = new AbortController()
-  const to = setTimeout(() => controller.abort(), TIMEOUT)
+  const to = setTimeout(
+    () => controller.abort(),
+    reqMethod === 'post' ? POST_TIMEOUT : GET_TIMEOUT,
+  )
 
   const res = await fetch(reqUri, {
     method: reqMethod,
