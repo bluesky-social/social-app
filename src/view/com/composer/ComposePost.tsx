@@ -470,7 +470,8 @@ export const ComposePost = observer(function ComposePost({
             />
           ) : !extLink &&
             selectedPhotos.length === 0 &&
-            suggestedExtLinks.size > 0 ? (
+            suggestedExtLinks.size > 0 &&
+            !quote ? (
             <View style={s.mb5}>
               {Array.from(suggestedExtLinks).map(url => (
                 <TouchableOpacity
@@ -485,7 +486,7 @@ export const ComposePost = observer(function ComposePost({
             </View>
           ) : null}
           <View style={[pal.border, styles.bottomBar]}>
-            {!quote && (
+            {quote ? undefined : (
               <TouchableOpacity
                 testID="composerSelectPhotosButton"
                 onPress={onPressSelectPhotos}
