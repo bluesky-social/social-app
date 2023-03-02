@@ -1,14 +1,26 @@
 import {StyleSheet, View} from 'react-native'
 import React from 'react'
+import {AtUri} from '../../../../third-party/uri'
 import {PostMeta} from '../PostMeta'
+import {Link} from '../Link'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ComposerOptsQuote} from 'state/models/shell-ui'
 
 const QuoteEmbed = ({quote}: {quote: ComposerOptsQuote}) => {
   const pal = usePalette('default')
+  const itemUrip = new AtUri(quote.uri)
+  const itemHref = `/profile/${quote.author.handle}/post/${itemUrip.rkey}`
+  const itemTitle = `Post by ${quote.author.handle}`
+  const isEmpty = React.useMemo(
+    () => quote.text.trim().length === 0,
+    [quote.text],
+  )
   return (
-    <View style={[styles.container, pal.border]}>
+    <Link
+      style={[styles.container, pal.border]}
+      href={itemHref}
+      title={itemTitle}>
       <PostMeta
         authorAvatar={quote.author.avatar}
         authorHandle={quote.author.handle}
@@ -16,9 +28,15 @@ const QuoteEmbed = ({quote}: {quote: ComposerOptsQuote}) => {
         timestamp={quote.indexedAt}
       />
       <Text type="post-text" style={pal.text} numberOfLines={6}>
-        {quote.text}
+        {isEmpty ? (
+          <Text style={pal.link} lineHeight={1.5}>
+            View post
+          </Text>
+        ) : (
+          quote.text
+        )}
       </Text>
-    </View>
+    </Link>
   )
 }
 
