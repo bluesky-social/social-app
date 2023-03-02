@@ -13,8 +13,8 @@ interface PostMetaOpts {
   authorHandle: string
   authorDisplayName: string | undefined
   timestamp: string
-  did: string
-  declarationCid: string
+  did?: string
+  declarationCid?: string
   showFollowBtn?: boolean
 }
 
@@ -29,7 +29,8 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
   //      don't change this UI immediately, but rather upon future
   //      renders
   const isFollowing = React.useMemo(
-    () => store.me.follows.isFollowing(opts.did),
+    () =>
+      typeof opts.did === 'string' && store.me.follows.isFollowing(opts.did),
     [opts.did, store.me.follows],
   )
 
