@@ -1,5 +1,5 @@
 import React from 'react'
-import {Platform, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {Text} from './text/Text'
 import {ago} from 'lib/strings/time'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -13,6 +13,7 @@ interface PostMetaOpts {
   timestamp: string
   did: string
   declarationCid: string
+  showFollowBtn?: boolean
 }
 
 export const PostMeta = observer(function (opts: PostMetaOpts) {
@@ -23,57 +24,67 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
   const isMe = opts.did === store.me.did
   const isFollowing = store.me.follows.isFollowing(opts.did)
 
-  // HACK
-  // Android simply cannot handle the truncation case we need
-  // so we have to do it manually here
-  // -prf
-  if (Platform.OS === 'android') {
-    if (displayName.length + handle.length > 26) {
-      if (displayName.length > 26) {
-        displayName = displayName.slice(0, 23) + '...'
-      } else {
-        handle = handle.slice(0, 23 - displayName.length) + '...'
-        if (handle.endsWith('....')) {
-          handle = handle.slice(0, -4) + '...'
-        }
-      }
-    }
-  }
-
-  return (
-    <View>
+  if (!opts.showFollowBtn || isMe || isFollowing) {
+    // one-liner
+    return (
       <View style={styles.meta}>
-        <View>
+        <View style={[styles.metaItem, styles.maxWidth]}>
           <Text
             type="lg-bold"
             style={[pal.text]}
             numberOfLines={1}
             lineHeight={1.2}>
-            {displayName}{' '}
-            <Text
-              type="md"
-              style={[styles.metaItem, pal.textLight]}
-              lineHeight={1.2}>
-              &middot; {ago(opts.timestamp)}
-            </Text>
-          </Text>
-          <Text
-            type="md"
-            style={[styles.metaItem, pal.textLight]}
-            lineHeight={1.2}>
+            {displayName}
             {handle ? (
               <Text type="md" style={[pal.textLight]}>
-                @{handle}
+                &nbsp;{handle}
               </Text>
             ) : undefined}
           </Text>
         </View>
+        <Text
+          type="md"
+          style={[styles.metaItem, pal.textLight]}
+          lineHeight={1.2}>
+          &middot; {ago(opts.timestamp)}
+        </Text>
+      </View>
+    )
+  }
 
-        <View>
-          {isFollowing || isMe ? null : (
-            <FollowButton did={opts.did} declarationCid={opts.declarationCid} />
-          )}
-        </View>
+  // two-liner with follow button
+  return (
+    <View style={[styles.metaTwoLine]}>
+      <View>
+        <Text
+          type="lg-bold"
+          style={[pal.text]}
+          numberOfLines={1}
+          lineHeight={1.2}>
+          {displayName}{' '}
+          <Text
+            type="md"
+            style={[styles.metaItem, pal.textLight]}
+            lineHeight={1.2}>
+            &middot; {ago(opts.timestamp)}
+          </Text>
+        </Text>
+        <Text
+          type="md"
+          style={[styles.metaItem, pal.textLight]}
+          lineHeight={1.2}>
+          {handle ? (
+            <Text type="md" style={[pal.textLight]}>
+              @{handle}
+            </Text>
+          ) : undefined}
+        </Text>
+      </View>
+
+      <View>
+        {isFollowing || isMe ? null : (
+          <FollowButton did={opts.did} declarationCid={opts.declarationCid} />
+        )}
       </View>
     </View>
   )
@@ -81,6 +92,11 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
 
 const styles = StyleSheet.create({
   meta: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    paddingBottom: 2,
+  },
+  metaTwoLine: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

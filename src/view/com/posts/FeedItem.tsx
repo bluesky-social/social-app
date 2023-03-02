@@ -177,6 +177,7 @@ export const FeedItem = observer(function ({
               timestamp={item.post.indexedAt}
               did={item.post.author.did}
               declarationCid={item.post.author.declaration.cid}
+              showFollowBtn
             />
             {!isChild && replyAuthorDid !== '' && (
               <View style={[s.flexRow, s.mb2, s.alignCenter]}>
