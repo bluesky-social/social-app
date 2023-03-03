@@ -1,5 +1,6 @@
 import React, {useRef} from 'react'
 import {
+  Dimensions,
   Share,
   StyleProp,
   StyleSheet,
@@ -21,6 +22,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
+const ESTIMATED_MENU_ITEM_HEIGHT = 52
 
 export interface DropdownItem {
   icon?: IconProp
@@ -67,10 +69,15 @@ export function DropdownButton({
         if (!menuWidth) {
           menuWidth = 200
         }
+        const winHeight = Dimensions.get('window').height
+        const estimatedMenuHeight = items.length * ESTIMATED_MENU_ITEM_HEIGHT
         const newX = openToRight
           ? pageX + width + rightOffset
           : pageX + width - menuWidth
-        const newY = pageY + height + bottomOffset
+        let newY = pageY + height + bottomOffset
+        if (newY + estimatedMenuHeight > winHeight) {
+          newY -= estimatedMenuHeight
+        }
         createDropdownMenu(
           newX,
           newY,
