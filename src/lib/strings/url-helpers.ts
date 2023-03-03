@@ -70,7 +70,7 @@ export function isBskyPostUrl(url: string): boolean {
   if (isBskyAppUrl(url)) {
     try {
       const urlp = new URL(url)
-      return /profile\/(?<name>[^\/]+)\/post\/(?<rkey>[^\/]+)/i.test(
+      return /profile\/(?<name>[^/]+)\/post\/(?<rkey>[^/]+)/i.test(
         urlp.pathname,
       )
     } catch {}
