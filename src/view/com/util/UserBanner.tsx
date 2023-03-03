@@ -25,7 +25,7 @@ export function UserBanner({
   onSelectNewBanner,
 }: {
   banner?: string | null
-  onSelectNewBanner?: (img: PickedMedia) => void
+  onSelectNewBanner?: (img: PickedMedia | null) => void
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -70,14 +70,13 @@ export function UserBanner({
         )
       },
     },
-    // TODO: Remove banner https://github.com/bluesky-social/social-app/issues/122
-    // {
-    //   label: 'Remove',
-    //   icon: ['far', 'trash-can'],
-    //   onPress: () => {
-    //     // Remove banner api call
-    //   },
-    // },
+    {
+      label: 'Remove',
+      icon: ['far', 'trash-can'] as IconProp,
+      onPress: () => {
+        onSelectNewBanner?.(null)
+      },
+    },
   ]
 
   const renderSvg = () => (
