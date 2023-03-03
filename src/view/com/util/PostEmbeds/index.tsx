@@ -6,7 +6,12 @@ import {
   ViewStyle,
   Image as RNImage,
 } from 'react-native'
-import {AppBskyEmbedImages, AppBskyEmbedExternal} from '@atproto/api'
+import {
+  AppBskyEmbedImages,
+  AppBskyEmbedExternal,
+  AppBskyEmbedRecord,
+  AppBskyFeedPost,
+} from '@atproto/api'
 import {Link} from '../Link'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
@@ -17,8 +22,10 @@ import {saveImageModal} from 'lib/media/manip'
 import YoutubeEmbed from './YoutubeEmbed'
 import ExternalLinkEmbed from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
+import QuoteEmbed from './QuoteEmbed'
 
 type Embed =
+  | AppBskyEmbedRecord.Presented
   | AppBskyEmbedImages.Presented
   | AppBskyEmbedExternal.Presented
   | {$type: string; [k: string]: unknown}
@@ -32,6 +39,25 @@ export function PostEmbeds({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  if (AppBskyEmbedRecord.isPresented(embed)) {
+    if (
+      AppBskyEmbedRecord.isPresentedRecord(embed.record) &&
+      AppBskyFeedPost.isRecord(embed.record.record) &&
+      AppBskyFeedPost.validateRecord(embed.record.record).success
+    ) {
+      return (
+        <QuoteEmbed
+          quote={{
+            author: embed.record.author,
+            cid: embed.record.cid,
+            uri: embed.record.uri,
+            indexedAt: embed.record.record.createdAt, // TODO
+            text: embed.record.record.text,
+          }}
+        />
+      )
+    }
+  }
   if (AppBskyEmbedImages.isPresented(embed)) {
     if (embed.images.length > 0) {
       const uris = embed.images.map(img => img.fullsize)

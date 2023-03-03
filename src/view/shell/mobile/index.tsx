@@ -550,6 +550,7 @@ export const MobileShell: React.FC = observer(() => {
         replyTo={store.shell.composerOpts?.replyTo}
         imagesOpen={store.shell.composerOpts?.imagesOpen}
         onPost={store.shell.composerOpts?.onPost}
+        quote={store.shell.composerOpts?.quote}
       />
     </View>
   )

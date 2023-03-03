@@ -2,6 +2,7 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
   ComAtprotoBlobUpload,
+  AppBskyEmbedRecord,
 } from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from 'state/models/root-store'
@@ -51,23 +52,32 @@ export async function uploadBlob(
   }
 }
 
-export async function post(
-  store: RootStoreModel,
-  rawText: string,
-  replyTo?: string,
-  extLink?: ExternalEmbedDraft,
-  images?: string[],
-  knownHandles?: Set<string>,
-  onStateChange?: (state: string) => void,
-) {
-  let embed: AppBskyEmbedImages.Main | AppBskyEmbedExternal.Main | undefined
+interface PostOpts {
+  rawText: string
+  replyTo?: string
+  quote?: {
+    uri: string
+    cid: string
+  }
+  extLink?: ExternalEmbedDraft
+  images?: string[]
+  knownHandles?: Set<string>
+  onStateChange?: (state: string) => void
+}
+
+export async function post(store: RootStoreModel, opts: PostOpts) {
+  let embed:
+    | AppBskyEmbedImages.Main
+    | AppBskyEmbedExternal.Main
+    | AppBskyEmbedRecord.Main
+    | undefined
   let reply
-  const text = new RichText(rawText, undefined, {
+  const text = new RichText(opts.rawText, undefined, {
     cleanNewlines: true,
   }).text.trim()
 
-  onStateChange?.('Processing...')
-  const entities = extractEntities(text, knownHandles)
+  opts.onStateChange?.('Processing...')
+  const entities = extractEntities(text, opts.knownHandles)
   if (entities) {
     for (const ent of entities) {
       if (ent.type === 'mention') {
@@ -77,14 +87,22 @@ export async function post(
     }
   }
 
-  if (images?.length) {
+  if (opts.quote) {
+    embed = {
+      $type: 'app.bsky.embed.record',
+      record: {
+        uri: opts.quote.uri,
+        cid: opts.quote.cid,
+      },
+    } as AppBskyEmbedRecord.Main
+  } else if (opts.images?.length) {
     embed = {
       $type: 'app.bsky.embed.images',
       images: [],
     } as AppBskyEmbedImages.Main
     let i = 1
-    for (const image of images) {
-      onStateChange?.(`Uploading image #${i++}...`)
+    for (const image of opts.images) {
+      opts.onStateChange?.(`Uploading image #${i++}...`)
       const res = await uploadBlob(store, image, 'image/jpeg')
       embed.images.push({
         image: {
@@ -94,30 +112,28 @@ export async function post(
         alt: '', // TODO supply alt text
       })
     }
-  }
-
-  if (!embed && extLink) {
+  } else if (opts.extLink) {
     let thumb
-    if (extLink.localThumb) {
-      onStateChange?.('Uploading link thumbnail...')
+    if (opts.extLink.localThumb) {
+      opts.onStateChange?.('Uploading link thumbnail...')
       let encoding
-      if (extLink.localThumb.path.endsWith('.png')) {
+      if (opts.extLink.localThumb.path.endsWith('.png')) {
         encoding = 'image/png'
       } else if (
-        extLink.localThumb.path.endsWith('.jpeg') ||
-        extLink.localThumb.path.endsWith('.jpg')
+        opts.extLink.localThumb.path.endsWith('.jpeg') ||
+        opts.extLink.localThumb.path.endsWith('.jpg')
       ) {
         encoding = 'image/jpeg'
       } else {
         store.log.warn(
           'Unexpected image format for thumbnail, skipping',
-          extLink.localThumb.path,
+          opts.extLink.localThumb.path,
         )
       }
       if (encoding) {
         const thumbUploadRes = await uploadBlob(
           store,
-          extLink.localThumb.path,
+          opts.extLink.localThumb.path,
           encoding,
         )
         thumb = {
@@ -129,16 +145,16 @@ export async function post(
     embed = {
       $type: 'app.bsky.embed.external',
       external: {
-        uri: extLink.uri,
-        title: extLink.meta?.title || '',
-        description: extLink.meta?.description || '',
+        uri: opts.extLink.uri,
+        title: opts.extLink.meta?.title || '',
+        description: opts.extLink.meta?.description || '',
         thumb,
       },
     } as AppBskyEmbedExternal.Main
   }
 
-  if (replyTo) {
-    const replyToUrip = new AtUri(replyTo)
+  if (opts.replyTo) {
+    const replyToUrip = new AtUri(opts.replyTo)
     const parentPost = await store.api.app.bsky.feed.post.get({
       user: replyToUrip.host,
       rkey: replyToUrip.rkey,
@@ -156,7 +172,7 @@ export async function post(
   }
 
   try {
-    onStateChange?.('Posting...')
+    opts.onStateChange?.('Posting...')
     return await store.api.app.bsky.feed.post.create(
       {did: store.me.did || ''},
       {

@@ -44,6 +44,13 @@ export interface DeleteAccountModal {
   name: 'delete-account'
 }
 
+export interface RepostModal {
+  name: 'repost'
+  onRepost: () => void
+  onQuote: () => void
+  isReposted: boolean
+}
+
 export type Modal =
   | ConfirmModal
   | EditProfileModal
@@ -52,6 +59,7 @@ export type Modal =
   | ReportAccountModal
   | CropImageModal
   | DeleteAccountModal
+  | RepostModal
 
 interface LightboxModel {}
 
@@ -82,10 +90,22 @@ export interface ComposerOptsPostRef {
     avatar?: string
   }
 }
+export interface ComposerOptsQuote {
+  uri: string
+  cid: string
+  text: string
+  indexedAt: string
+  author: {
+    handle: string
+    displayName?: string
+    avatar?: string
+  }
+}
 export interface ComposerOpts {
   imagesOpen?: boolean
   replyTo?: ComposerOptsPostRef
   onPost?: () => void
+  quote?: ComposerOptsQuote
 }
 
 export class ShellUiModel {

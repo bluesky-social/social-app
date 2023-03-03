@@ -245,6 +245,13 @@ export const PostThreadItem = observer(function PostThreadItem({
                 itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
+                author={{
+                  avatar: item.post.author.avatar!,
+                  handle: item.post.author.handle,
+                  displayName: item.post.author.displayName!,
+                }}
+                text={item.richText?.text || record.text}
+                indexedAt={item.post.indexedAt}
                 isAuthor={item.post.author.did === store.me.did}
                 isReposted={!!item.post.viewer.repost}
                 isUpvoted={!!item.post.viewer.upvote}
@@ -329,6 +336,13 @@ export const PostThreadItem = observer(function PostThreadItem({
                 itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
+                author={{
+                  avatar: item.post.author.avatar!,
+                  handle: item.post.author.handle,
+                  displayName: item.post.author.displayName!,
+                }}
+                text={item.richText?.text || record.text}
+                indexedAt={item.post.indexedAt}
                 isAuthor={item.post.author.did === store.me.did}
                 replyCount={item.post.replyCount}
                 repostCount={item.post.repostCount}
