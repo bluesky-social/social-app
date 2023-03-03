@@ -148,6 +148,13 @@ export function PostDropdownBtn({
         }
       : undefined,
     {
+      icon: 'language',
+      label: 'Translate...',
+      onPress() {
+        onOpenTranslate()
+      },
+    },
+    {
       icon: ['far', 'paste'],
       label: 'Copy post text',
       onPress() {
@@ -159,13 +166,6 @@ export function PostDropdownBtn({
       label: 'Share...',
       onPress() {
         Share.share({url: toShareUrl(itemHref)})
-      },
-    },
-    {
-      icon: 'language',
-      label: 'Translate...',
-      onPress() {
-        onOpenTranslate()
       },
     },
     {
