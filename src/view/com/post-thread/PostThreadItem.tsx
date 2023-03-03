@@ -171,7 +171,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   <FontAwesomeIcon
                     icon="ellipsis-h"
                     size={14}
-                    style={[s.mt2, s.mr5]}
+                    style={[s.mt2, s.mr5, pal.textLight]}
                   />
                 </PostDropdownBtn>
               </View>
