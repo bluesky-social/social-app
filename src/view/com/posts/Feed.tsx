@@ -171,6 +171,7 @@ export const Feed = observer(function Feed({
           onScroll={onScroll}
           onRefresh={onRefresh}
           onEndReached={onEndReached}
+          onEndReachedThreshold={0.25}
           removeClippedSubviews={true}
           contentInset={{top: headerOffset}}
           contentOffset={{x: 0, y: headerOffset * -1}}
