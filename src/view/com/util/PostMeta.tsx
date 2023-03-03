@@ -9,7 +9,7 @@ import {observer} from 'mobx-react-lite'
 import FollowButton from '../profile/FollowButton'
 
 interface PostMetaOpts {
-  authorAvatar: string | undefined
+  authorAvatar?: string
   authorHandle: string
   authorDisplayName: string | undefined
   timestamp: string
