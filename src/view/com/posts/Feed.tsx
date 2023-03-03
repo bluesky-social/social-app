@@ -61,7 +61,7 @@ export const Feed = observer(function Feed({
       if (feed.isEmpty) {
         feedItems = feedItems.concat([EMPTY_FEED_ITEM])
       } else {
-        feedItems = feedItems.concat(feed.feed)
+        feedItems = feedItems.concat(feed.nonReplyFeed)
       }
     }
     return feedItems
@@ -69,7 +69,7 @@ export const Feed = observer(function Feed({
     feed.hasError,
     feed.hasLoaded,
     feed.isEmpty,
-    feed.feed,
+    feed.nonReplyFeed,
     showWelcomeBanner,
     isNewUser,
   ])
@@ -171,6 +171,7 @@ export const Feed = observer(function Feed({
           onScroll={onScroll}
           onRefresh={onRefresh}
           onEndReached={onEndReached}
+          onEndReachedThreshold={0.25}
           removeClippedSubviews={true}
           contentInset={{top: headerOffset}}
           contentOffset={{x: 0, y: headerOffset * -1}}

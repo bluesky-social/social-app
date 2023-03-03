@@ -239,22 +239,33 @@ export class FeedModel {
   }
 
   get nonReplyFeed() {
-    const nonReplyFeed = this.feed.filter(item => {
-      const params = this.params as GetAuthorFeed.QueryParams
-      const isRepost =
-        item.reply &&
-        (item?.reasonRepost?.by?.handle === params.author ||
-          item?.reasonRepost?.by?.did === params.author)
+    if (this.feedType === 'author') {
+      return this.feed.filter(item => {
+        const params = this.params as GetAuthorFeed.QueryParams
+        const isRepost =
+          item.reply &&
+          (item?.reasonRepost?.by?.handle === params.author ||
+            item?.reasonRepost?.by?.did === params.author)
 
-      return (
-        !item.reply || // not a reply
-        isRepost ||
-        ((item._isThreadParent || // but allow if it's a thread by the user
-          item._isThreadChild) &&
-          item.reply?.root.author.did === item.post.author.did)
-      )
-    })
-    return nonReplyFeed
+        return (
+          !item.reply || // not a reply
+          isRepost ||
+          ((item._isThreadParent || // but allow if it's a thread by the user
+            item._isThreadChild) &&
+            item.reply?.root.author.did === item.post.author.did)
+        )
+      })
+    } else {
+      return this.feed.filter(item => {
+        const isRepost = Boolean(item?.reasonRepost)
+        return (
+          !item.reply || // not a reply
+          isRepost || // but allow if it's a repost or thread
+          item._isThreadParent ||
+          item._isThreadChild
+        )
+      })
+    }
   }
 
   setHasNewLatest(v: boolean) {
@@ -421,6 +432,10 @@ export class FeedModel {
     const currentLatestUri = this.pollCursor
     const item = res.data.feed[0]
     if (!item) {
+      return
+    }
+    if (item.reply) {
+      // TEMPORARY ignore replies
       return
     }
     if (AppBskyFeedFeedViewPost.isReasonRepost(item.reason)) {
