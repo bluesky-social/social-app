@@ -42,6 +42,7 @@ import {faHouse} from '@fortawesome/free-solid-svg-icons/faHouse'
 import {faImage as farImage} from '@fortawesome/free-regular-svg-icons/faImage'
 import {faImage} from '@fortawesome/free-solid-svg-icons/faImage'
 import {faInfo} from '@fortawesome/free-solid-svg-icons/faInfo'
+import {faLanguage} from '@fortawesome/free-solid-svg-icons/faLanguage'
 import {faLink} from '@fortawesome/free-solid-svg-icons/faLink'
 import {faLock} from '@fortawesome/free-solid-svg-icons/faLock'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
@@ -113,6 +114,7 @@ export function setup() {
     faImage,
     farImage,
     faInfo,
+    faLanguage,
     faLink,
     faLock,
     faMagnifyingGlass,
