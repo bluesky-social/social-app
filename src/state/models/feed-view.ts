@@ -415,7 +415,7 @@ export class FeedModel {
    * Check if new posts are available
    */
   async checkForLatest() {
-    if (this.hasNewLatest) {
+    if (this.hasNewLatest || this.rootStore.me.follows.isEmpty) {
       return
     }
     const res = await this._getFeed({limit: 1})
