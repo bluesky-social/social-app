@@ -146,7 +146,7 @@ export class ProfileViewModel {
         cid: res.data.cid,
         mimeType: newUserAvatar.mime,
       }
-    } else {
+    } else if (newUserAvatar === null) {
       updates.avatar = null
     }
     if (newUserBanner) {
@@ -159,7 +159,7 @@ export class ProfileViewModel {
         cid: res.data.cid,
         mimeType: newUserBanner.mime,
       }
-    } else {
+    } else if (newUserBanner === null) {
       updates.banner = null
     }
     await this.rootStore.api.app.bsky.actor.updateProfile(updates)
