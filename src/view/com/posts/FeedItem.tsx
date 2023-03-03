@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
-import {StyleSheet, View} from 'react-native'
+import {Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '../../../third-party/uri'
@@ -86,6 +86,11 @@ export const FeedItem = observer(function ({
     Clipboard.setString(record?.text || '')
     Toast.show('Copied to clipboard')
   }
+  const onOpenTranslate = React.useCallback(() => {
+    Linking.openURL(
+      encodeURI(`https://translate.google.com/#auto|en|${record?.text || ''}`),
+    )
+  }, [record])
   const onDeletePost = () => {
     track('FeedItem:PostDelete')
     item.delete().then(
@@ -243,6 +248,7 @@ export const FeedItem = observer(function ({
               onPressToggleRepost={onPressToggleRepost}
               onPressToggleUpvote={onPressToggleUpvote}
               onCopyPostText={onCopyPostText}
+              onOpenTranslate={onOpenTranslate}
               onDeletePost={onDeletePost}
             />
           </View>

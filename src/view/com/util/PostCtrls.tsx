@@ -52,6 +52,7 @@ interface PostCtrlsOpts {
   onPressToggleRepost: () => Promise<void>
   onPressToggleUpvote: () => Promise<void>
   onCopyPostText: () => void
+  onOpenTranslate: () => void
   onDeletePost: () => void
 }
 
@@ -297,6 +298,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             itemTitle={opts.itemTitle}
             isAuthor={opts.isAuthor}
             onCopyPostText={opts.onCopyPostText}
+            onOpenTranslate={opts.onOpenTranslate}
             onDeletePost={opts.onDeletePost}>
             <FontAwesomeIcon
               icon="ellipsis-h"
