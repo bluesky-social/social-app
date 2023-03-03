@@ -3,6 +3,7 @@ import {match as matchRoute} from 'view/routes'
 import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
 import {RootStoreModel} from 'state/index'
 import {PostThreadViewModel} from 'state/models/post-thread-view'
+import {ComposerOptsQuote} from 'state/models/shell-ui'
 
 import {Home} from 'view/screens/Home'
 import {Search} from 'view/screens/Search'
@@ -96,4 +97,33 @@ export async function extractBskyMeta(
   }
 
   return meta
+}
+
+export async function getPostAsQuote(
+  store: RootStoreModel,
+  url: string,
+): Promise<ComposerOptsQuote> {
+  url = convertBskyAppUrlIfNeeded(url)
+  const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
+  const threadUri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
+
+  const threadView = new PostThreadViewModel(store, {
+    uri: threadUri,
+    depth: 0,
+  })
+  await threadView.setup()
+  if (!threadView.thread || threadView.notFound) {
+    throw new Error('Not found')
+  }
+  return {
+    uri: threadView.thread.post.uri,
+    cid: threadView.thread.post.cid,
+    text: threadView.thread.postRecord?.text || '',
+    indexedAt: threadView.thread.post.indexedAt,
+    author: {
+      handle: threadView.thread.post.author.handle,
+      displayName: threadView.thread.post.author.displayName,
+      avatar: threadView.thread.post.author.avatar,
+    },
+  }
 }

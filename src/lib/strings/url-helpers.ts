@@ -66,6 +66,18 @@ export function isBskyAppUrl(url: string): boolean {
   return url.startsWith('https://bsky.app/')
 }
 
+export function isBskyPostUrl(url: string): boolean {
+  if (isBskyAppUrl(url)) {
+    try {
+      const urlp = new URL(url)
+      return /profile\/(?<name>[^/]+)\/post\/(?<rkey>[^/]+)/i.test(
+        urlp.pathname,
+      )
+    } catch {}
+  }
+  return false
+}
+
 export function convertBskyAppUrlIfNeeded(url: string): string {
   if (isBskyAppUrl(url)) {
     try {
