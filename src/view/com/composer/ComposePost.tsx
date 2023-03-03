@@ -21,7 +21,7 @@ import {
 import {useAnalytics} from 'lib/analytics'
 import _isEqual from 'lodash.isequal'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
-import {Autocomplete} from './Autocomplete'
+import {Autocomplete} from './autocomplete/Autocomplete'
 import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
