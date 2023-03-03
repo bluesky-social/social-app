@@ -78,11 +78,11 @@ export const Feed = observer(function Feed({
   // =
 
   const checkWelcome = React.useCallback(async () => {
-    if (showWelcomeBanner) {
+    if (showWelcomeBanner && store.me.did) {
       await store.me.follows.fetchIfNeeded()
       setIsNewUser(store.me.follows.isEmpty)
     }
-  }, [showWelcomeBanner, store.me.follows])
+  }, [showWelcomeBanner, store.me.follows, store.me.did])
   React.useEffect(() => {
     checkWelcome()
   }, [checkWelcome])
