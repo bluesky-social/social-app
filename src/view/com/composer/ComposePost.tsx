@@ -36,10 +36,12 @@ import {s, colors, gradients} from 'lib/styles'
 import {cleanError} from 'lib/strings/errors'
 import {detectLinkables, extractEntities} from 'lib/strings/rich-text-detection'
 import {getLinkMeta} from 'lib/link-meta/link-meta'
+import {getPostAsQuote} from 'lib/link-meta/bsky'
 import {getImageDim, downloadAndResize} from 'lib/media/manip'
 import {PhotoCarouselPicker} from './photos/PhotoCarouselPicker'
 import {cropAndCompressFlow, pickImagesFlow} from '../../../lib/media/picker'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
+import {isBskyPostUrl} from 'lib/strings/url-helpers'
 import {SelectedPhoto} from './SelectedPhoto'
 import {usePalette} from 'lib/hooks/usePalette'
 import {
@@ -63,7 +65,7 @@ export const ComposePost = observer(function ComposePost({
   imagesOpen,
   onPost,
   onClose,
-  quote,
+  quote: initQuote,
 }: {
   replyTo?: ComposerOpts['replyTo']
   imagesOpen?: ComposerOpts['imagesOpen']
@@ -80,6 +82,9 @@ export const ComposePost = observer(function ComposePost({
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
   const [text, setText] = useState('')
+  const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
+    initQuote,
+  )
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
   )
@@ -121,16 +126,32 @@ export const ComposePost = observer(function ComposePost({
       return cleanup
     }
     if (!extLink.meta) {
-      getLinkMeta(store, extLink.uri).then(meta => {
-        if (aborted) {
-          return
-        }
-        setExtLink({
-          uri: extLink.uri,
-          isLoading: !!meta.image,
-          meta,
+      if (isBskyPostUrl(extLink.uri)) {
+        getPostAsQuote(store, extLink.uri).then(
+          newQuote => {
+            if (aborted) {
+              return
+            }
+            setQuote(newQuote)
+            setExtLink(undefined)
+          },
+          err => {
+            store.log.error('Failed to fetch post for quote embedding', {err})
+            setExtLink(undefined)
+          },
+        )
+      } else {
+        getLinkMeta(store, extLink.uri).then(meta => {
+          if (aborted) {
+            return
+          }
+          setExtLink({
+            uri: extLink.uri,
+            isLoading: !!meta.image,
+            meta,
+          })
         })
-      })
+      }
       return cleanup
     }
     if (extLink.isLoading && extLink.meta?.image && !extLink.localThumb) {
