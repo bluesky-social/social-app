@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {
   ActivityIndicator,
+  Linking,
   StyleProp,
   StyleSheet,
   View,
@@ -120,6 +121,11 @@ export const Post = observer(function Post({
     Clipboard.setString(record.text)
     Toast.show('Copied to clipboard')
   }
+  const onOpenTranslate = () => {
+    Linking.openURL(
+      encodeURI(`https://translate.google.com/#auto|en|${record?.text || ''}`),
+    )
+  }
   const onDeletePost = () => {
     item.delete().then(
       () => {
@@ -214,6 +220,7 @@ export const Post = observer(function Post({
             onPressToggleRepost={onPressToggleRepost}
             onPressToggleUpvote={onPressToggleUpvote}
             onCopyPostText={onCopyPostText}
+            onOpenTranslate={onOpenTranslate}
             onDeletePost={onDeletePost}
           />
         </View>

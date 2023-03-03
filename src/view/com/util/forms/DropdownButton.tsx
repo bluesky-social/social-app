@@ -114,6 +114,7 @@ export function PostDropdownBtn({
   itemHref,
   isAuthor,
   onCopyPostText,
+  onOpenTranslate,
   onDeletePost,
 }: {
   style?: StyleProp<ViewStyle>
@@ -124,6 +125,7 @@ export function PostDropdownBtn({
   itemTitle: string
   isAuthor: boolean
   onCopyPostText: () => void
+  onOpenTranslate: () => void
   onDeletePost: () => void
 }) {
   const store = useStores()
@@ -150,6 +152,13 @@ export function PostDropdownBtn({
       label: 'Share...',
       onPress() {
         Share.share({url: toShareUrl(itemHref)})
+      },
+    },
+    {
+      icon: 'language',
+      label: 'Translate...',
+      onPress() {
+        onOpenTranslate()
       },
     },
     {
