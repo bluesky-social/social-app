@@ -31,7 +31,7 @@ export function UserAvatar({
   handle: string
   displayName: string | undefined
   avatar?: string | null
-  onSelectNewAvatar?: (img: PickedMedia) => void
+  onSelectNewAvatar?: (img: PickedMedia | null) => void
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -97,14 +97,13 @@ export function UserAvatar({
         )
       },
     },
-    // TODO: Remove avatar https://github.com/bluesky-social/social-app/issues/122
-    // {
-    //   label: 'Remove',
-    //   icon: ['far', 'trash-can'],
-    //   onPress: () => {
-    //   // Remove avatar API call
-    //   },
-    // },
+    {
+      label: 'Remove',
+      icon: ['far', 'trash-can'] as IconProp,
+      onPress: async () => {
+        onSelectNewAvatar?.(null)
+      },
+    },
   ]
   // onSelectNewAvatar is only passed as prop on the EditProfile component
   return onSelectNewAvatar ? (

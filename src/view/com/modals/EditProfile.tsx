@@ -47,17 +47,25 @@ export function Component({
   const [userBanner, setUserBanner] = useState<string | undefined>(
     profileView.banner,
   )
-  const [userAvatar, setUserAvatar] = useState<string | undefined>(
+  const [userAvatar, setUserAvatar] = useState<string | undefined | null>(
     profileView.avatar,
   )
   const [newUserBanner, setNewUserBanner] = useState<PickedMedia | undefined>()
-  const [newUserAvatar, setNewUserAvatar] = useState<PickedMedia | undefined>()
+  const [newUserAvatar, setNewUserAvatar] = useState<
+    PickedMedia | undefined | null
+  >()
   const onPressCancel = () => {
     store.shell.closeModal()
   }
-  const onSelectNewAvatar = async (img: PickedMedia) => {
+  const onSelectNewAvatar = async (img: PickedMedia | null) => {
     track('EditProfile:AvatarSelected')
     try {
+      // if img is null, user selected "remove avatar"
+      if (!img) {
+        setNewUserAvatar(null)
+        setUserAvatar(null)
+        return
+      }
       const finalImg = await compressIfNeeded(img, 1000000)
       setNewUserAvatar({mediaType: 'photo', ...finalImg})
       setUserAvatar(finalImg.path)
