@@ -2,8 +2,8 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {PickedMedia} from 'lib/media/picker'
 import {
   AppBskyActorGetProfile as GetProfile,
-  AppBskyActorProfile as Profile,
   AppBskySystemDeclRef,
+  AppBskyActorUpdateProfile,
 } from '@atproto/api'
 type DeclRef = AppBskySystemDeclRef.Main
 import {extractEntities} from 'lib/strings/rich-text-detection'
@@ -132,9 +132,9 @@ export class ProfileViewModel {
   }
 
   async updateProfile(
-    updates: Profile.Record,
-    newUserAvatar: PickedMedia | undefined,
-    newUserBanner: PickedMedia | undefined,
+    updates: AppBskyActorUpdateProfile.InputSchema,
+    newUserAvatar: PickedMedia | undefined | null,
+    newUserBanner: PickedMedia | undefined | null,
   ) {
     if (newUserAvatar) {
       const res = await apilib.uploadBlob(
@@ -146,6 +146,8 @@ export class ProfileViewModel {
         cid: res.data.cid,
         mimeType: newUserAvatar.mime,
       }
+    } else {
+      updates.avatar = null
     }
     if (newUserBanner) {
       const res = await apilib.uploadBlob(
@@ -157,6 +159,8 @@ export class ProfileViewModel {
         cid: res.data.cid,
         mimeType: newUserBanner.mime,
       }
+    } else {
+      updates.banner = null
     }
     await this.rootStore.api.app.bsky.actor.updateProfile(updates)
     await this.rootStore.me.load()
