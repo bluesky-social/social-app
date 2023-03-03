@@ -197,6 +197,13 @@ export const Post = observer(function Post({
             itemCid={itemCid}
             itemHref={itemHref}
             itemTitle={itemTitle}
+            author={{
+              avatar: item.post.author.avatar!,
+              handle: item.post.author.handle,
+              displayName: item.post.author.displayName!,
+            }}
+            indexedAt={item.post.indexedAt}
+            text={item.richText?.text || record.text}
             isAuthor={item.post.author.did === store.me.did}
             replyCount={item.post.replyCount}
             repostCount={item.post.repostCount}

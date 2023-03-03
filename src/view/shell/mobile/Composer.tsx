@@ -14,6 +14,7 @@ export const Composer = observer(
     imagesOpen,
     onPost,
     onClose,
+    quote,
   }: {
     active: boolean
     winHeight: number
@@ -21,6 +22,7 @@ export const Composer = observer(
     imagesOpen?: ComposerOpts['imagesOpen']
     onPost?: ComposerOpts['onPost']
     onClose: () => void
+    quote?: ComposerOpts['quote']
   }) => {
     const pal = usePalette('default')
     const initInterp = useAnimatedValue(0)
@@ -62,6 +64,7 @@ export const Composer = observer(
           imagesOpen={imagesOpen}
           onPost={onPost}
           onClose={onClose}
+          quote={quote}
         />
       </Animated.View>
     )

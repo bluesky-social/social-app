@@ -48,6 +48,7 @@ import {
   POST_IMG_MAX_SIZE,
 } from 'lib/constants'
 import {isWeb} from 'platform/detection'
+import QuoteEmbed from '../util/PostEmbeds/QuoteEmbed'
 
 const MAX_TEXT_LENGTH = 256
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
@@ -62,11 +63,13 @@ export const ComposePost = observer(function ComposePost({
   imagesOpen,
   onPost,
   onClose,
+  quote,
 }: {
   replyTo?: ComposerOpts['replyTo']
   imagesOpen?: ComposerOpts['imagesOpen']
   onPost?: ComposerOpts['onPost']
   onClose: () => void
+  quote?: ComposerOpts['quote']
 }) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
@@ -280,15 +283,15 @@ export const ComposePost = observer(function ComposePost({
     }
     setIsProcessing(true)
     try {
-      await apilib.post(
-        store,
-        text,
-        replyTo?.uri,
-        extLink,
-        selectedPhotos,
-        autocompleteView.knownHandles,
-        setProcessingState,
-      )
+      await apilib.post(store, {
+        rawText: text,
+        replyTo: replyTo?.uri,
+        images: selectedPhotos,
+        quote: quote,
+        extLink: extLink,
+        onStateChange: setProcessingState,
+        knownHandles: autocompleteView.knownHandles,
+      })
       track('Create Post', {
         imageCount: selectedPhotos.length,
       })
@@ -418,6 +421,7 @@ export const ComposePost = observer(function ComposePost({
                 </View>
               </View>
             ) : undefined}
+
             <View
               style={[
                 pal.border,
@@ -445,6 +449,13 @@ export const ComposePost = observer(function ComposePost({
                 {textDecorated}
               </TextInput>
             </View>
+
+            {quote ? (
+              <View style={s.mt5}>
+                <QuoteEmbed quote={quote} />
+              </View>
+            ) : undefined}
+
             <SelectedPhoto
               selectedPhotos={selectedPhotos}
               onSelectPhotos={onSelectPhotos}
@@ -463,7 +474,8 @@ export const ComposePost = observer(function ComposePost({
             />
           ) : !extLink &&
             selectedPhotos.length === 0 &&
-            suggestedExtLinks.size > 0 ? (
+            suggestedExtLinks.size > 0 &&
+            !quote ? (
             <View style={s.mb5}>
               {Array.from(suggestedExtLinks).map(url => (
                 <TouchableOpacity
@@ -478,21 +490,23 @@ export const ComposePost = observer(function ComposePost({
             </View>
           ) : null}
           <View style={[pal.border, styles.bottomBar]}>
-            <TouchableOpacity
-              testID="composerSelectPhotosButton"
-              onPress={onPressSelectPhotos}
-              style={[s.pl5]}
-              hitSlop={HITSLOP}>
-              <FontAwesomeIcon
-                icon={['far', 'image']}
-                style={
-                  (selectedPhotos.length < 4
-                    ? pal.link
-                    : pal.textLight) as FontAwesomeIconStyle
-                }
-                size={24}
-              />
-            </TouchableOpacity>
+            {quote ? undefined : (
+              <TouchableOpacity
+                testID="composerSelectPhotosButton"
+                onPress={onPressSelectPhotos}
+                style={[s.pl5]}
+                hitSlop={HITSLOP}>
+                <FontAwesomeIcon
+                  icon={['far', 'image']}
+                  style={
+                    (selectedPhotos.length < 4
+                      ? pal.link
+                      : pal.textLight) as FontAwesomeIconStyle
+                  }
+                  size={24}
+                />
+              </TouchableOpacity>
+            )}
             <View style={s.flex1} />
             <CharProgress count={text.length} />
           </View>

@@ -4,15 +4,17 @@ import {Text} from './text/Text'
 import {ago} from 'lib/strings/time'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
+import {UserAvatar} from './UserAvatar'
 import {observer} from 'mobx-react-lite'
 import FollowButton from '../profile/FollowButton'
 
 interface PostMetaOpts {
+  authorAvatar: string | undefined
   authorHandle: string
   authorDisplayName: string | undefined
   timestamp: string
-  did: string
-  declarationCid: string
+  did?: string
+  declarationCid?: string
   showFollowBtn?: boolean
 }
 
@@ -27,11 +29,18 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
   //      don't change this UI immediately, but rather upon future
   //      renders
   const isFollowing = React.useMemo(
-    () => store.me.follows.isFollowing(opts.did),
+    () =>
+      typeof opts.did === 'string' && store.me.follows.isFollowing(opts.did),
     [opts.did, store.me.follows],
   )
 
-  if (opts.showFollowBtn && !isMe && !isFollowing) {
+  if (
+    opts.showFollowBtn &&
+    !isMe &&
+    !isFollowing &&
+    opts.did &&
+    opts.declarationCid
+  ) {
     // two-liner with follow button
     return (
       <View style={[styles.metaTwoLine]}>
@@ -71,6 +80,16 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
   // one-liner
   return (
     <View style={styles.meta}>
+      {typeof opts.authorAvatar !== 'undefined' && (
+        <View style={[styles.metaItem, styles.avatar]}>
+          <UserAvatar
+            avatar={opts.authorAvatar}
+            handle={opts.authorHandle}
+            displayName={opts.authorDisplayName}
+            size={16}
+          />
+        </View>
+      )}
       <View style={[styles.metaItem, styles.maxWidth]}>
         <Text
           type="lg-bold"
@@ -106,6 +125,9 @@ const styles = StyleSheet.create({
   },
   metaItem: {
     paddingRight: 5,
+  },
+  avatar: {
+    alignSelf: 'center',
   },
   maxWidth: {
     maxWidth: '80%',
