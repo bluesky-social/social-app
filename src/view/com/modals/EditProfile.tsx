@@ -44,13 +44,15 @@ export function Component({
   const [description, setDescription] = useState<string>(
     profileView.description || '',
   )
-  const [userBanner, setUserBanner] = useState<string | undefined>(
+  const [userBanner, setUserBanner] = useState<string | undefined | null>(
     profileView.banner,
   )
   const [userAvatar, setUserAvatar] = useState<string | undefined | null>(
     profileView.avatar,
   )
-  const [newUserBanner, setNewUserBanner] = useState<PickedMedia | undefined>()
+  const [newUserBanner, setNewUserBanner] = useState<
+    PickedMedia | undefined | null
+  >()
   const [newUserAvatar, setNewUserAvatar] = useState<
     PickedMedia | undefined | null
   >()
@@ -73,7 +75,12 @@ export function Component({
       setError(cleanError(e))
     }
   }
-  const onSelectNewBanner = async (img: PickedMedia) => {
+  const onSelectNewBanner = async (img: PickedMedia | null) => {
+    if (!img) {
+      setNewUserBanner(null)
+      setUserBanner(null)
+      return
+    }
     track('EditProfile:BannerSelected')
     try {
       const finalImg = await compressIfNeeded(img, 1000000)
