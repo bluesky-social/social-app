@@ -15,7 +15,7 @@ import * as DeleteAccountModal from './DeleteAccount'
 import {usePalette} from 'lib/hooks/usePalette'
 import {StyleSheet} from 'react-native'
 
-const CLOSED_SNAPPOINTS = ['10%']
+const DEFAULT_SNAPPOINTS = ['90%']
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
@@ -42,7 +42,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
     }
   }, [store.shell.isModalActive, bottomSheetRef, activeModal?.name])
 
-  let snapPoints: (string | number)[] = CLOSED_SNAPPOINTS
+  let snapPoints: (string | number)[] = DEFAULT_SNAPPOINTS
   let element
   if (activeModal?.name === 'confirm') {
     snapPoints = ConfirmModal.snapPoints
