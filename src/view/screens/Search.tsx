@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ScrollView} from '../com/util/Views'
 import {observer} from 'mobx-react-lite'
 import {UserAvatar} from '../com/util/UserAvatar'
@@ -78,6 +79,9 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
       autocompleteView.setActive(false)
     }
   }
+  const onPressClearQuery = () => {
+    setQuery('')
+  }
   const onPressCancelSearch = () => {
     setQuery('')
     autocompleteView.setActive(false)
@@ -127,6 +131,11 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
               onBlur={() => setIsInputFocused(false)}
               onChangeText={onChangeQuery}
             />
+            {query ? (
+              <TouchableOpacity onPress={onPressClearQuery}>
+                <FontAwesomeIcon icon="xmark" size={16} style={pal.textLight} />
+              </TouchableOpacity>
+            ) : undefined}
           </View>
           {query || isInputFocused ? (
             <View style={styles.headerCancelBtn}>
