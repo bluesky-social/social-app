@@ -7,6 +7,7 @@ import {
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
+import sampleSize from 'lodash.samplesize'
 type FeedViewPost = AppBskyFeedFeedViewPost.Main
 type ReasonRepost = AppBskyFeedFeedViewPost.ReasonRepost
 type PostView = AppBskyFeedPost.View
@@ -425,7 +426,7 @@ export class FeedModel {
    * Check if new posts are available
    */
   async checkForLatest() {
-    if (this.hasNewLatest) {
+    if (this.hasNewLatest || this.rootStore.me.follows.isEmpty) {
       return
     }
     const res = await this._getFeed({limit: 1})
@@ -565,7 +566,10 @@ export class FeedModel {
       if (this.rootStore.me.follows.isEmpty) {
         const responses = await getMultipleAuthorsPosts(
           this.rootStore,
-          SUGGESTED_FOLLOWS(String(this.rootStore.agent.service)),
+          sampleSize(
+            SUGGESTED_FOLLOWS(String(this.rootStore.agent.service)),
+            20,
+          ),
           params.before,
           20,
         )
