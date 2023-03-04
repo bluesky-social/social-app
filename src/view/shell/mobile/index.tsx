@@ -33,8 +33,9 @@ import {clamp} from 'lib/numbers'
 import {
   HomeIcon,
   HomeIconSolid,
-  MagnifyingGlassIcon,
-  SquarePlusIcon,
+  MagnifyingGlassIcon2,
+  MagnifyingGlassIcon2Solid,
+  ComposeIcon2,
   BellIcon,
   BellIconSolid,
   UserIcon,
@@ -383,9 +384,17 @@ export const MobileShell: React.FC = observer(() => {
         <Btn
           icon={
             isAtHome ? (
-              <HomeIconSolid size={27} style={[styles.ctrlIcon, pal.text]} />
+              <HomeIconSolid
+                strokeWidth={3}
+                size={28}
+                style={[styles.ctrlIcon, pal.text]}
+              />
             ) : (
-              <HomeIcon size={27} style={[styles.ctrlIcon, pal.text]} />
+              <HomeIcon
+                strokeWidth={3}
+                size={28}
+                style={[styles.ctrlIcon, pal.text]}
+              />
             )
           }
           onPress={onPressHome}
@@ -393,40 +402,41 @@ export const MobileShell: React.FC = observer(() => {
         <Btn
           icon={
             isAtSearch ? (
-              <MagnifyingGlassIcon
+              <MagnifyingGlassIcon2Solid
                 size={28}
                 style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
-                strokeWidth={3}
+                strokeWidth={1.5}
               />
             ) : (
-              <MagnifyingGlassIcon
+              <MagnifyingGlassIcon2
                 size={28}
                 style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
+                strokeWidth={1.5}
               />
             )
           }
           onPress={onPressSearch}
         />
-        <Btn
-          icon={
-            <SquarePlusIcon
-              strokeWidth={1.8}
-              size={27}
-              style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
-            />
-          }
-          onPress={onPressCompose}
-        />
+        <TouchableOpacity style={styles.postCtrl} onPressIn={onPressCompose}>
+          <ComposeIcon2
+            strokeWidth={1.1}
+            size={40}
+            style={[styles.ctrlIcon, pal.text]}
+            backgroundColor={pal.colors.background}
+          />
+        </TouchableOpacity>
         <Btn
           icon={
             isAtNotifications ? (
               <BellIconSolid
                 size={27}
+                strokeWidth={1.7}
                 style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
               />
             ) : (
               <BellIcon
                 size={27}
+                strokeWidth={1.7}
                 style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
               />
             )
@@ -439,7 +449,7 @@ export const MobileShell: React.FC = observer(() => {
             <View style={styles.ctrlIconSizingWrapper}>
               <UserIcon
                 size={32}
-                strokeWidth={1.7}
+                strokeWidth={1.2}
                 style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
               />
             </View>
@@ -563,14 +573,19 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 2,
   },
+  postCtrl: {
+    flex: 1.2,
+    paddingTop: 4,
+  },
   notificationCount: {
     position: 'absolute',
-    left: '60%',
+    left: '52%',
     top: 10,
     backgroundColor: colors.red3,
     paddingHorizontal: 4,
     paddingBottom: 1,
     borderRadius: 8,
+    zIndex: 1,
   },
   notificationCountLabel: {
     fontSize: 12,

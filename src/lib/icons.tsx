@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleProp, TextStyle, ViewStyle} from 'react-native'
-import Svg, {Path, Rect} from 'react-native-svg'
+import Svg, {Path, Rect, Line, Ellipse} from 'react-native-svg'
 
 export function GridIcon({
   style,
@@ -72,9 +72,11 @@ export function HomeIcon({
 export function HomeIconSolid({
   style,
   size,
+  strokeWidth = 4,
 }: {
   style?: StyleProp<ViewStyle>
   size?: string | number
+  strokeWidth?: number
 }) {
   return (
     <Svg
@@ -84,9 +86,13 @@ export function HomeIconSolid({
       stroke="currentColor"
       style={style}>
       <Path
-        strokeWidth={2}
-        fill="currentColor"
+        strokeWidth={strokeWidth}
         d="M 23.951 2 C 23.631 2.011 23.323 2.124 23.072 2.322 L 8.859 13.52 C 7.055 14.941 6 17.114 6 19.41 L 6 38.5 C 6 39.864 7.136 41 8.5 41 L 18.5 41 C 19.864 41 21 39.864 21 38.5 L 21 28.5 C 21 28.205 21.205 28 21.5 28 L 26.5 28 C 26.795 28 27 28.205 27 28.5 L 27 38.5 C 27 39.864 28.136 41 29.5 41 L 39.5 41 C 40.864 41 42 39.864 42 38.5 L 42 19.41 C 42 17.114 40.945 14.941 39.141 13.52 L 24.928 2.322 C 24.65 2.103 24.304 1.989 23.951 2 Z"
+      />
+      <Path
+        fill="currentColor"
+        d="M 23.947 7.35 C 23.605 7.361 23.275 7.482 23.006 7.694 L 13.063 15.438 C 11.131 16.953 10 19.272 10 21.72 L 10 34.683 C 10 36.137 11.218 37.349 12.678 37.349 L 15.822 37.349 C 17.103 37.349 17.5 37.033 17.5 35.683 L 17.5 26.017 C 17.5 25.013 18.086 24.483 19.036 24.483 L 28.964 24.483 C 30.166 24.483 30.5 24.943 30.5 26.017 L 30.5 35.683 C 30.5 36.707 31.605 37.349 32.178 37.349 L 35.322 37.349 C 36.782 37.349 38 36.137 38 34.683 L 38 21.72 C 38 19.272 36.869 16.953 34.937 15.438 L 24.994 7.694 C 24.696 7.459 24.326 7.339 23.947 7.35 Z"
+        opacity="0.33"
       />
     </Svg>
   )
@@ -121,13 +127,72 @@ export function MagnifyingGlassIcon({
   )
 }
 
+export function MagnifyingGlassIcon2({
+  style,
+  size,
+  strokeWidth = 2,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+  strokeWidth?: number
+}) {
+  return (
+    <Svg
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={strokeWidth}
+      stroke="currentColor"
+      width={size || 24}
+      height={size || 24}
+      style={style}>
+      <Ellipse cx="12" cy="11" rx="9" ry="9" />
+      <Line x1="19" y1="17.3" x2="23.5" y2="21" strokeLinecap="round" />
+    </Svg>
+  )
+}
+
+export function MagnifyingGlassIcon2Solid({
+  style,
+  size,
+  strokeWidth = 2,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+  strokeWidth?: number
+}) {
+  return (
+    <Svg
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={strokeWidth}
+      stroke="currentColor"
+      width={size || 24}
+      height={size || 24}
+      style={style}>
+      <Ellipse cx="12" cy="11" rx="9" ry="9" />
+      <Ellipse
+        cx="12"
+        cy="11"
+        rx="7"
+        ry="7"
+        stroke="none"
+        fill="currentColor"
+        opacity="0.33"
+      />
+      <Line x1="19" y1="17.3" x2="23.5" y2="21" strokeLinecap="round" />
+    </Svg>
+  )
+}
+
 // https://github.com/Remix-Design/RemixIcon/blob/master/License
 export function BellIcon({
   style,
   size,
+  strokeWidth = 1.5,
 }: {
   style?: StyleProp<ViewStyle>
   size?: string | number
+  strokeWidth?: number
 }) {
   return (
     <Svg
@@ -135,12 +200,11 @@ export function BellIcon({
       viewBox="0 0 24 24"
       width={size || 24}
       height={size || 24}
+      strokeWidth={strokeWidth}
+      stroke="currentColor"
       style={style}>
-      <Path fill="none" d="M0 0h24v24H0z" />
-      <Path
-        fill="currentColor"
-        d="M20 17h2v2H2v-2h2v-7a8 8 0 1 1 16 0v7zm-2 0v-7a6 6 0 1 0-12 0v7h12zm-9 4h6v2H9v-2z"
-      />
+      <Path d="M 11.642 2 H 12.442 A 8.6 8.55 0 0 1 21.042 10.55 V 18.1 A 1 1 0 0 1 20.042 19.1 H 4.042 A 1 1 0 0 1 3.042 18.1 V 10.55 A 8.6 8.55 0 0 1 11.642 2 Z" />
+      <Line x1="9" y1="22" x2="15" y2="22" />
     </Svg>
   )
 }
@@ -149,22 +213,28 @@ export function BellIcon({
 export function BellIconSolid({
   style,
   size,
+  strokeWidth = 1.5,
 }: {
   style?: StyleProp<ViewStyle>
   size?: string | number
+  strokeWidth?: number
 }) {
   return (
     <Svg
-      fill="none"
       viewBox="0 0 24 24"
       width={size || 24}
       height={size || 24}
+      strokeWidth={strokeWidth}
+      stroke="currentColor"
       style={style}>
-      <Path fill="none" d="M0 0h24v24H0z" />
+      <Path d="M 11.642 2 H 12.442 A 8.6 8.55 0 0 1 21.042 10.55 V 18.1 A 1 1 0 0 1 20.042 19.1 H 4.042 A 1 1 0 0 1 3.042 18.1 V 10.55 A 8.6 8.55 0 0 1 11.642 2 Z" />
       <Path
+        d="M 12 4 H 12 A 7 6.5 0 0 1 19 10.5 V 16 A 1 1 0 0 1 18 17 H 6 A 1 1 0 0 1 5 16 V 10.5 A 7 6.5 0 0 1 12 4 Z"
         fill="currentColor"
-        d="M 20 17 L 22 17 L 22 19 L 2 19 L 2 17 L 4 17 L 4 10 C 4 3.842 10.667 -0.007 16 3.072 C 18.475 4.501 20 7.142 20 10 L 20 17 Z M 9 21 L 15 21 L 15 23 L 9 23 L 9 21 Z"
+        stroke="none"
+        opacity="0.33"
       />
+      <Line x1="9" y1="22" x2="15" y2="22" />
     </Svg>
   )
 }
@@ -555,6 +625,62 @@ export function ComposeIcon({
   )
 }
 
+export function ComposeIcon2({
+  style,
+  size,
+  strokeWidth = 1.5,
+  backgroundColor,
+}: {
+  style?: StyleProp<TextStyle>
+  size?: string | number
+  strokeWidth?: number
+  backgroundColor: string
+}) {
+  return (
+    <Svg
+      viewBox="0 0 24 24"
+      strokeWidth={strokeWidth}
+      stroke="currentColor"
+      width={size || 24}
+      height={size || 24}
+      style={style}>
+      <Rect
+        strokeWidth={strokeWidth}
+        x="4"
+        y="4"
+        width="16"
+        height="16"
+        rx="4"
+        ry="4"
+      />
+      <Line
+        x1="10"
+        y1="14"
+        x2="22"
+        y2="2"
+        strokeWidth={strokeWidth * 6}
+        stroke={backgroundColor}
+      />
+      <Line
+        strokeLinecap="round"
+        x1="10"
+        y1="14"
+        x2="18.5"
+        y2="5.5"
+        strokeWidth={strokeWidth * 2}
+      />
+      <Line
+        strokeLinecap="round"
+        x1="20.5"
+        y1="3.5"
+        x2="21"
+        y2="3"
+        strokeWidth={strokeWidth * 2}
+      />
+    </Svg>
+  )
+}
+
 export function SquarePlusIcon({
   style,
   size,
@@ -572,15 +698,32 @@ export function SquarePlusIcon({
       width={size || 24}
       height={size || 24}
       style={style}>
-      <Path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+      <Line
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        x1="12"
+        y1="5.5"
+        x2="12"
+        y2="18.5"
+        strokeWidth={strokeWidth * 1.5}
+      />
+      <Line
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        x1="5.5"
+        y1="12"
+        x2="18.5"
+        y2="12"
+        strokeWidth={strokeWidth * 1.5}
+      />
       <Rect
         strokeWidth={strokeWidth}
-        x="2"
-        y="2"
-        width="20"
-        height="20"
-        rx="2"
-        ry="2"
+        x="4"
+        y="4"
+        width="16"
+        height="16"
+        rx="4"
+        ry="4"
       />
     </Svg>
   )
