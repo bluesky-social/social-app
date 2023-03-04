@@ -12,7 +12,6 @@ import {
 } from 'react-native'
 import {ScreenContainer, Screen} from 'react-native-screens'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {useStores} from 'state/index'
 import {
