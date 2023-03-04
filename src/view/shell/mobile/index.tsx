@@ -48,11 +48,13 @@ import {useAnalytics} from 'lib/analytics'
 const Btn = ({
   icon,
   notificationCount,
+  isCurrent,
   onPress,
   onLongPress,
 }: {
   icon: JSX.Element
   notificationCount?: number
+  isCurrent?: boolean
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }) => {
@@ -62,6 +64,7 @@ const Btn = ({
       onPress={onLongPress ? onPress : undefined}
       onPressIn={onLongPress ? undefined : onPress}
       onLongPress={onLongPress}>
+      {isCurrent ? <View style={styles.currentIndicator} /> : undefined}
       {notificationCount ? (
         <View style={styles.notificationCount}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
@@ -397,6 +400,7 @@ export const MobileShell: React.FC = observer(() => {
               />
             )
           }
+          isCurrent={isAtHome}
           onPress={onPressHome}
         />
         <Btn
@@ -415,6 +419,7 @@ export const MobileShell: React.FC = observer(() => {
               />
             )
           }
+          isCurrent={isAtSearch}
           onPress={onPressSearch}
         />
         <TouchableOpacity style={styles.postCtrl} onPressIn={onPressCompose}>
@@ -441,6 +446,7 @@ export const MobileShell: React.FC = observer(() => {
               />
             )
           }
+          isCurrent={isAtNotifications}
           onPress={onPressNotifications}
           notificationCount={store.me.notifications.unreadCount}
         />
@@ -576,6 +582,17 @@ const styles = StyleSheet.create({
   postCtrl: {
     flex: 1.2,
     paddingTop: 4,
+  },
+  currentIndicator: {
+    position: 'absolute',
+    backgroundColor: colors.blue3,
+    left: '50%',
+    transform: [{translateX: -4}],
+    bottom: -4,
+    width: 8,
+    height: 8,
+    borderRadius: 8,
+    zIndex: 1,
   },
   notificationCount: {
     position: 'absolute',
