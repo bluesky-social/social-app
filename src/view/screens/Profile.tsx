@@ -13,7 +13,6 @@ import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {EmptyState} from '../com/util/EmptyState'
 import {Text} from '../com/util/text/Text'
-import {FAB} from '../com/util/FAB'
 import {s, colors} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
@@ -85,10 +84,6 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   }
   const onPressTryAgain = () => {
     uiState.setup()
-  }
-
-  const onPressCompose = () => {
-    store.shell.openComposer({})
   }
 
   // rendering
@@ -191,7 +186,6 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
       ) : (
         <CenteredView>{renderHeader()}</CenteredView>
       )}
-      <FAB icon="plus" onPress={onPressCompose} />
     </View>
   )
 })

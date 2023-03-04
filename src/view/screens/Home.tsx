@@ -4,7 +4,6 @@ import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
-import {FAB} from '../com/util/FAB'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
 import {useStores} from 'state/index'
 import {ScreenParams} from '../routes'
@@ -17,7 +16,7 @@ const HEADER_HEIGHT = 42
 export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
-  const {screen, track} = useAnalytics()
+  const {screen} = useAnalytics()
   const scrollElRef = React.useRef<FlatList>(null)
   const [wasVisible, setWasVisible] = React.useState<boolean>(false)
   const {appState} = useAppState({
@@ -75,10 +74,6 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
     return cleanup
   }, [visible, store, store.me.mainFeed, navIdx, doPoll, wasVisible, scrollToTop, screen])
 
-  const onPressCompose = (imagesOpen?: boolean) => {
-    track('Home:ComposeButtonPressed')
-    store.shell.openComposer({imagesOpen})
-  }
   const onPressTryAgain = () => {
     store.me.mainFeed.refresh()
   }
@@ -105,11 +100,6 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
       {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing && (
         <LoadLatestBtn onPress={onPressLoadLatest} />
       )}
-      <FAB
-        testID="composeFAB"
-        icon="plus"
-        onPress={() => onPressCompose(false)}
-      />
     </View>
   )
 })

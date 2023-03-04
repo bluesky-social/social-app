@@ -35,8 +35,10 @@ import {
   HomeIcon,
   HomeIconSolid,
   MagnifyingGlassIcon,
+  SquarePlusIcon,
   BellIcon,
   BellIconSolid,
+  UserIcon,
 } from 'lib/icons'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useTheme} from 'lib/ThemeContext'
@@ -112,6 +114,10 @@ export const MobileShell: React.FC = observer(() => {
       }
     }
   }
+  const onPressCompose = () => {
+    track('MobileShell:ComposeButtonPressed')
+    store.shell.openComposer({})
+  }
   const onPressNotifications = () => {
     track('MobileShell:NotificationsButtonPressed')
     if (store.nav.tab.fixedTabPurpose === TabPurpose.Notifs) {
@@ -128,7 +134,8 @@ export const MobileShell: React.FC = observer(() => {
     }
   }
   const onPressProfile = () => {
-    // TODO
+    track('MobileShell:ProfileButtonPressed')
+    store.nav.navigate(`/profile/${store.me.handle}`)
   }
 
   // minimal shell animation
@@ -390,6 +397,7 @@ export const MobileShell: React.FC = observer(() => {
               <MagnifyingGlassIcon
                 size={28}
                 style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
+                strokeWidth={3}
               />
             ) : (
               <MagnifyingGlassIcon
@@ -399,6 +407,16 @@ export const MobileShell: React.FC = observer(() => {
             )
           }
           onPress={onPressSearch}
+        />
+        <Btn
+          icon={
+            <SquarePlusIcon
+              strokeWidth={1.8}
+              size={27}
+              style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
+            />
+          }
+          onPress={onPressCompose}
         />
         <Btn
           icon={
@@ -416,6 +434,18 @@ export const MobileShell: React.FC = observer(() => {
           }
           onPress={onPressNotifications}
           notificationCount={store.me.notifications.unreadCount}
+        />
+        <Btn
+          icon={
+            <View style={styles.ctrlIconSizingWrapper}>
+              <UserIcon
+                size={32}
+                strokeWidth={1.7}
+                style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
+              />
+            </View>
+          }
+          onPress={onPressProfile}
         />
       </Animated.View>
       <ModalsContainer />
@@ -527,12 +557,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderTopWidth: 1,
     paddingLeft: 5,
-    paddingRight: 25,
+    paddingRight: 10,
   },
   ctrl: {
     flex: 1,
     paddingTop: 12,
-    paddingBottom: 5,
+    paddingBottom: 2,
   },
   notificationCount: {
     position: 'absolute',
@@ -551,6 +581,12 @@ const styles = StyleSheet.create({
   ctrlIcon: {
     marginLeft: 'auto',
     marginRight: 'auto',
+  },
+  ctrlIconSizingWrapper: {
+    height: 27,
+  },
+  profileIcon: {
+    top: -3,
   },
   inactive: {
     color: colors.gray3,
