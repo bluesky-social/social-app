@@ -28,6 +28,11 @@ export type ShapeName = 'button' | 'bigButton' | 'smallButton'
 export type Shapes = Record<ShapeName, ViewStyle>
 
 export type TypographyVariant =
+  | '2xl-thin'
+  | '2xl'
+  | '2xl-medium'
+  | '2xl-bold'
+  | '2xl-heavy'
   | 'xl-thin'
   | 'xl'
   | 'xl-medium'
