@@ -82,6 +82,31 @@ export const defaultTheme: Theme = {
     },
   },
   typography: {
+    '2xl-thin': {
+      fontSize: 18,
+      letterSpacing: 0.25,
+      fontWeight: '300',
+    },
+    '2xl': {
+      fontSize: 18,
+      letterSpacing: 0.25,
+      fontWeight: '400',
+    },
+    '2xl-medium': {
+      fontSize: 18,
+      letterSpacing: 0.25,
+      fontWeight: '500',
+    },
+    '2xl-bold': {
+      fontSize: 18,
+      letterSpacing: 0.25,
+      fontWeight: '700',
+    },
+    '2xl-heavy': {
+      fontSize: 18,
+      letterSpacing: 0.25,
+      fontWeight: '800',
+    },
     'xl-thin': {
       fontSize: 17,
       letterSpacing: 0.25,

@@ -23,6 +23,7 @@ export const colors = {
   blue3: '#0085ff',
   blue4: '#0062bd',
   blue5: '#034581',
+  blue6: '#012561',
 
   red1: '#ffe6f2',
   red2: '#fba2ce',

@@ -207,6 +207,21 @@ function TypographyView() {
   const pal = usePalette('default')
   return (
     <View style={[pal.view]}>
+      <Text type="2xl-thin" style={[pal.text]}>
+        '2xl-thin' lorem ipsum dolor
+      </Text>
+      <Text type="2xl" style={[pal.text]}>
+        '2xl' lorem ipsum dolor
+      </Text>
+      <Text type="2xl-medium" style={[pal.text]}>
+        '2xl-medium' lorem ipsum dolor
+      </Text>
+      <Text type="2xl-bold" style={[pal.text]}>
+        '2xl-bold' lorem ipsum dolor
+      </Text>
+      <Text type="2xl-heavy" style={[pal.text]}>
+        '2xl-heavy' lorem ipsum dolor
+      </Text>
       <Text type="xl-thin" style={[pal.text]}>
         'xl-thin' lorem ipsum dolor
       </Text>
