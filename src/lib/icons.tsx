@@ -665,7 +665,7 @@ export function ComposeIcon2({
         y1="14"
         x2="22"
         y2="2"
-        strokeWidth={strokeWidth * 6}
+        strokeWidth={strokeWidth * 4}
         stroke={backgroundColor}
       />
       <Line
@@ -674,7 +674,7 @@ export function ComposeIcon2({
         y1="14"
         x2="18.5"
         y2="5.5"
-        strokeWidth={strokeWidth * 2}
+        strokeWidth={strokeWidth * 1.5}
       />
       <Line
         strokeLinecap="round"
@@ -682,7 +682,7 @@ export function ComposeIcon2({
         y1="3.5"
         x2="21"
         y2="3"
-        strokeWidth={strokeWidth * 2}
+        strokeWidth={strokeWidth * 1.5}
       />
     </Svg>
   )

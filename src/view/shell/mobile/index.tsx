@@ -377,7 +377,7 @@ export const MobileShell: React.FC = observer(() => {
         style={[
           styles.bottomBar,
           pal.view,
-          pal.borderDark,
+          pal.border,
           {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
           footerMinimalShellTransform,
         ]}>
@@ -385,15 +385,15 @@ export const MobileShell: React.FC = observer(() => {
           icon={
             isAtHome ? (
               <HomeIconSolid
-                strokeWidth={3}
-                size={26}
-                style={[styles.ctrlIcon, pal.text]}
+                strokeWidth={4}
+                size={24}
+                style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
               />
             ) : (
               <HomeIcon
-                strokeWidth={3}
-                size={26}
-                style={[styles.ctrlIcon, pal.text]}
+                strokeWidth={4}
+                size={24}
+                style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
               />
             )
           }
@@ -403,41 +403,46 @@ export const MobileShell: React.FC = observer(() => {
           icon={
             isAtSearch ? (
               <MagnifyingGlassIcon2Solid
-                size={26}
-                style={[styles.ctrlIcon, pal.text, styles.bumpUp1]}
-                strokeWidth={1.5}
+                size={25}
+                style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                strokeWidth={1.8}
               />
             ) : (
               <MagnifyingGlassIcon2
-                size={26}
-                style={[styles.ctrlIcon, pal.text, styles.bumpUp1]}
-                strokeWidth={1.5}
+                size={25}
+                style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                strokeWidth={1.8}
               />
             )
           }
           onPress={onPressSearch}
         />
-        <TouchableOpacity style={styles.postCtrl} onPressIn={onPressCompose}>
-          <ComposeIcon2
-            strokeWidth={1.1}
-            size={38}
-            style={[styles.ctrlIcon, pal.text]}
-            backgroundColor={pal.colors.background}
-          />
-        </TouchableOpacity>
+        <Btn
+          icon={
+            <View style={styles.ctrlIconSizingWrapper}>
+              <ComposeIcon2
+                strokeWidth={1.5}
+                size={29}
+                style={[styles.ctrlIcon, pal.text, styles.composeIcon]}
+                backgroundColor={pal.colors.background}
+              />
+            </View>
+          }
+          onPress={onPressCompose}
+        />
         <Btn
           icon={
             isAtNotifications ? (
               <BellIconSolid
-                size={25}
-                strokeWidth={1.7}
-                style={[styles.ctrlIcon, pal.text, styles.bumpUp2]}
+                size={24}
+                strokeWidth={1.9}
+                style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
               />
             ) : (
               <BellIcon
-                size={25}
-                strokeWidth={1.7}
-                style={[styles.ctrlIcon, pal.text, styles.bumpUp2]}
+                size={24}
+                strokeWidth={1.9}
+                style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
               />
             )
           }
@@ -448,9 +453,9 @@ export const MobileShell: React.FC = observer(() => {
           icon={
             <View style={styles.ctrlIconSizingWrapper}>
               <UserIcon
-                size={30}
-                strokeWidth={1.3}
-                style={[styles.ctrlIcon, pal.text, styles.bumpUp4]}
+                size={28}
+                strokeWidth={1.5}
+                style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
               />
             </View>
           }
@@ -570,18 +575,14 @@ const styles = StyleSheet.create({
   },
   ctrl: {
     flex: 1,
-    paddingTop: 12,
-    paddingBottom: 2,
-  },
-  postCtrl: {
-    flex: 1.2,
-    paddingTop: 4,
+    paddingTop: 13,
+    paddingBottom: 4,
   },
   notificationCount: {
     position: 'absolute',
-    left: '52%',
+    left: '56%',
     top: 10,
-    backgroundColor: colors.red3,
+    backgroundColor: colors.blue3,
     paddingHorizontal: 4,
     paddingBottom: 1,
     borderRadius: 8,
@@ -602,13 +603,19 @@ const styles = StyleSheet.create({
   inactive: {
     color: colors.gray3,
   },
-  bumpUp1: {
-    top: -1,
+  homeIcon: {
+    top: 0,
   },
-  bumpUp2: {
+  searchIcon: {
     top: -2,
   },
-  bumpUp4: {
+  bellIcon: {
+    top: -2.5,
+  },
+  composeIcon: {
+    top: -4.5,
+  },
+  profileIcon: {
     top: -4,
   },
 })
