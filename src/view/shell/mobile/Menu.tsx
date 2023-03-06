@@ -119,7 +119,6 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
       style={[
         styles.view,
         theme.colorScheme === 'light' ? pal.view : styles.viewDarkMode,
-        store.shell.minimalShellMode && styles.viewMinimalShell,
       ]}>
       <TouchableOpacity
         testID="profileCardButton"
@@ -272,14 +271,11 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     paddingTop: 10,
-    paddingBottom: 90,
+    paddingBottom: 50,
     paddingLeft: 30,
   },
   viewDarkMode: {
     backgroundColor: colors.gray8,
-  },
-  viewMinimalShell: {
-    paddingBottom: 50,
   },
 
   profileCardDisplayName: {
