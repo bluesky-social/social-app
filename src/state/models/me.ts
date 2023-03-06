@@ -97,17 +97,17 @@ export class MeModel {
         }
       })
       this.mainFeed.clear()
-      await Promise.all([
-        this.mainFeed.setup().catch(e => {
-          this.rootStore.log.error('Failed to setup main feed model', e)
-        }),
-        this.notifications.setup().catch(e => {
-          this.rootStore.log.error('Failed to setup notifications model', e)
-        }),
-        this.follows.fetch().catch(e => {
-          this.rootStore.log.error('Failed to load my follows', e)
-        }),
-      ])
+      await this.follows.fetch().catch(e => {
+        this.rootStore.log.error('Failed to load my follows', e)
+      }),
+        await Promise.all([
+          this.mainFeed.setup().catch(e => {
+            this.rootStore.log.error('Failed to setup main feed model', e)
+          }),
+          this.notifications.setup().catch(e => {
+            this.rootStore.log.error('Failed to setup notifications model', e)
+          }),
+        ])
       this.rootStore.emitSessionLoaded()
     } else {
       this.clear()
