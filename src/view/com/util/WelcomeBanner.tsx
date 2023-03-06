@@ -8,16 +8,32 @@ import {Button} from './forms/Button'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {SUGGESTED_FOLLOWS} from 'lib/constants'
+// @ts-ignore no type definition -prf
+import ProgressBar from 'react-native-progress/Bar'
 
 export const WelcomeBanner = observer(() => {
   const pal = usePalette('default')
   const store = useStores()
+  const [isReady, setIsReady] = React.useState(false)
 
   const numFollows = Math.min(
     SUGGESTED_FOLLOWS(String(store.agent.service)).length,
     5,
   )
   const remaining = numFollows - store.me.follows.numFollows
+
+  React.useEffect(() => {
+    if (remaining <= 0) {
+      // wait 500ms for the progress bar anim to finish
+      const ti = setTimeout(() => {
+        setIsReady(true)
+      }, 500)
+      return () => clearTimeout(ti)
+    } else {
+      setIsReady(false)
+    }
+  }, [remaining])
+
   const onPressDone = React.useCallback(() => {
     store.shell.setOnboarding(false)
   }, [store])
@@ -32,7 +48,7 @@ export const WelcomeBanner = observer(() => {
         lineHeight={1.1}>
         Welcome to the private beta!
       </Text>
-      {store.me.follows.numFollows >= numFollows ? (
+      {isReady ? (
         <View style={styles.controls}>
           <Button
             type="primary"
@@ -45,10 +61,20 @@ export const WelcomeBanner = observer(() => {
           </Button>
         </View>
       ) : (
-        <Text type="lg" style={[pal.text, s.textCenter]}>
-          Follow at least {remaining} {remaining === 1 ? 'person' : 'people'} to
-          build your feed.
-        </Text>
+        <>
+          <Text type="lg" style={[pal.text, s.textCenter]}>
+            Follow at least {remaining} {remaining === 1 ? 'person' : 'people'}{' '}
+            to build your feed.
+          </Text>
+          <View style={[styles.controls, styles.progress]}>
+            <ProgressBar
+              progress={Math.max(
+                store.me.follows.numFollows / numFollows,
+                0.05,
+              )}
+            />
+          </View>
+        </>
       )}
     </View>
   )
@@ -67,5 +93,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 10,
+  },
+  progress: {
+    marginTop: 12,
   },
 })
