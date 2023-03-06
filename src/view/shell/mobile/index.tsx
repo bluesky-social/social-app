@@ -2,21 +2,17 @@ import React, {useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   Animated,
-  Easing,
   GestureResponderEvent,
   StatusBar,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  useColorScheme,
   useWindowDimensions,
   View,
 } from 'react-native'
 import {ScreenContainer, Screen} from 'react-native-screens'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import {TABS_ENABLED} from 'lib/build-flags'
 import {useStores} from 'state/index'
 import {
   NavigationModel,
@@ -31,18 +27,18 @@ import {ModalsContainer} from '../../com/modals/Modal'
 import {Lightbox} from '../../com/lightbox/Lightbox'
 import {Text} from '../../com/util/text/Text'
 import {ErrorBoundary} from '../../com/util/ErrorBoundary'
-import {TabsSelector} from './TabsSelector'
 import {Composer} from './Composer'
 import {s, colors} from 'lib/styles'
 import {clamp} from 'lib/numbers'
 import {
-  GridIcon,
-  GridIconSolid,
   HomeIcon,
   HomeIconSolid,
-  MagnifyingGlassIcon,
+  MagnifyingGlassIcon2,
+  MagnifyingGlassIcon2Solid,
+  ComposeIcon2,
   BellIcon,
   BellIconSolid,
+  UserIcon,
 } from 'lib/icons'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useTheme} from 'lib/ThemeContext'
@@ -52,74 +48,14 @@ import {useAnalytics} from 'lib/analytics'
 const Btn = ({
   icon,
   notificationCount,
-  tabCount,
   onPress,
   onLongPress,
 }: {
-  icon:
-    | IconProp
-    | 'menu'
-    | 'menu-solid'
-    | 'home'
-    | 'home-solid'
-    | 'search'
-    | 'search-solid'
-    | 'bell'
-    | 'bell-solid'
+  icon: JSX.Element
   notificationCount?: number
-  tabCount?: number
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }) => {
-  const pal = usePalette('default')
-  let iconEl
-  if (icon === 'menu') {
-    iconEl = <GridIcon style={[styles.ctrlIcon, pal.text]} />
-  } else if (icon === 'menu-solid') {
-    iconEl = <GridIconSolid style={[styles.ctrlIcon, pal.text]} />
-  } else if (icon === 'home') {
-    iconEl = <HomeIcon size={27} style={[styles.ctrlIcon, pal.text]} />
-  } else if (icon === 'home-solid') {
-    iconEl = <HomeIconSolid size={27} style={[styles.ctrlIcon, pal.text]} />
-  } else if (icon === 'search') {
-    iconEl = (
-      <MagnifyingGlassIcon
-        size={28}
-        style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
-      />
-    )
-  } else if (icon === 'search-solid') {
-    iconEl = (
-      <MagnifyingGlassIcon
-        size={28}
-        strokeWidth={3}
-        style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
-      />
-    )
-  } else if (icon === 'bell') {
-    iconEl = (
-      <BellIcon
-        size={27}
-        style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
-      />
-    )
-  } else if (icon === 'bell-solid') {
-    iconEl = (
-      <BellIconSolid
-        size={27}
-        style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
-      />
-    )
-  } else {
-    iconEl = (
-      <FontAwesomeIcon
-        icon={icon}
-        size={24}
-        style={[styles.ctrlIcon, pal.text]}
-      />
-    )
-  }
-
   return (
     <TouchableOpacity
       style={styles.ctrl}
@@ -131,12 +67,7 @@ const Btn = ({
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : undefined}
-      {tabCount && tabCount > 1 ? (
-        <View style={styles.tabCount}>
-          <Text style={styles.tabCountLabel}>{tabCount}</Text>
-        </View>
-      ) : undefined}
-      {iconEl}
+      {icon}
     </TouchableOpacity>
   )
 }
@@ -145,15 +76,10 @@ export const MobileShell: React.FC = observer(() => {
   const theme = useTheme()
   const pal = usePalette('default')
   const store = useStores()
-  const [isTabsSelectorActive, setTabsSelectorActive] = useState(false)
   const winDim = useWindowDimensions()
   const [menuSwipingDirection, setMenuSwipingDirection] = useState(0)
   const swipeGestureInterp = useAnimatedValue(0)
   const minimalShellInterp = useAnimatedValue(0)
-  const tabMenuInterp = useAnimatedValue(0)
-  const newTabInterp = useAnimatedValue(0)
-  const [isRunningNewTabAnim, setIsRunningNewTabAnim] = useState(false)
-  const colorScheme = useColorScheme()
   const safeAreaInsets = useSafeAreaInsets()
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
   const {track} = useAnalytics()
@@ -188,6 +114,10 @@ export const MobileShell: React.FC = observer(() => {
       }
     }
   }
+  const onPressCompose = () => {
+    track('MobileShell:ComposeButtonPressed')
+    store.shell.openComposer({})
+  }
   const onPressNotifications = () => {
     track('MobileShell:NotificationsButtonPressed')
     if (store.nav.tab.fixedTabPurpose === TabPurpose.Notifs) {
@@ -203,8 +133,10 @@ export const MobileShell: React.FC = observer(() => {
       }
     }
   }
-  const onPressTabs = () => toggleTabsMenu(!isTabsSelectorActive)
-  const doNewTab = (url: string) => () => store.nav.newTab(url)
+  const onPressProfile = () => {
+    track('MobileShell:ProfileButtonPressed')
+    store.nav.navigate(`/profile/${store.me.handle}`)
+  }
 
   // minimal shell animation
   // =
@@ -228,60 +160,6 @@ export const MobileShell: React.FC = observer(() => {
   const footerMinimalShellTransform = {
     transform: [{translateY: Animated.multiply(minimalShellInterp, 100)}],
   }
-
-  // tab selector animation
-  // =
-  const toggleTabsMenu = (active: boolean) => {
-    if (active) {
-      // will trigger the animation below
-      setTabsSelectorActive(true)
-    } else {
-      Animated.timing(tabMenuInterp, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: false,
-      }).start(() => {
-        // hide once the animation has finished
-        setTabsSelectorActive(false)
-      })
-    }
-  }
-  useEffect(() => {
-    if (isTabsSelectorActive) {
-      // trigger the animation once the tabs selector is rendering
-      Animated.timing(tabMenuInterp, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: false,
-      }).start()
-    }
-  }, [tabMenuInterp, isTabsSelectorActive])
-
-  // new tab animation
-  // =
-  useEffect(() => {
-    if (screenRenderDesc.hasNewTab && !isRunningNewTabAnim) {
-      setIsRunningNewTabAnim(true)
-    }
-  }, [isRunningNewTabAnim, screenRenderDesc.hasNewTab])
-  useEffect(() => {
-    if (isRunningNewTabAnim) {
-      const reset = () => {
-        store.nav.tab.setIsNewTab(false)
-        setIsRunningNewTabAnim(false)
-      }
-      Animated.timing(newTabInterp, {
-        toValue: 1,
-        duration: 250,
-        easing: Easing.out(Easing.exp),
-        useNativeDriver: false,
-      }).start(() => {
-        reset()
-      })
-    } else {
-      newTabInterp.setValue(0)
-    }
-  }, [newTabInterp, store.nav.tab, isRunningNewTabAnim])
 
   // navigation swipes
   // =
@@ -495,20 +373,6 @@ export const MobileShell: React.FC = observer(() => {
           )}
         </HorzSwipe>
       </View>
-      {isTabsSelectorActive ? (
-        <View
-          style={[
-            styles.topBarProtector,
-            colorScheme === 'dark' ? styles.topBarProtectorDark : undefined,
-            {height: safeAreaInsets.top},
-          ]}
-        />
-      ) : undefined}
-      <TabsSelector
-        active={isTabsSelectorActive}
-        tabMenuInterp={tabMenuInterp}
-        onClose={() => toggleTabsMenu(false)}
-      />
       <Animated.View
         style={[
           styles.bottomBar,
@@ -518,27 +382,84 @@ export const MobileShell: React.FC = observer(() => {
           footerMinimalShellTransform,
         ]}>
         <Btn
-          icon={isAtHome ? 'home-solid' : 'home'}
+          icon={
+            isAtHome ? (
+              <HomeIconSolid
+                strokeWidth={4}
+                size={24}
+                style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+              />
+            ) : (
+              <HomeIcon
+                strokeWidth={4}
+                size={24}
+                style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+              />
+            )
+          }
           onPress={onPressHome}
-          onLongPress={TABS_ENABLED ? doNewTab('/') : undefined}
         />
         <Btn
-          icon={isAtSearch ? 'search-solid' : 'search'}
+          icon={
+            isAtSearch ? (
+              <MagnifyingGlassIcon2Solid
+                size={25}
+                style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                strokeWidth={1.8}
+              />
+            ) : (
+              <MagnifyingGlassIcon2
+                size={25}
+                style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                strokeWidth={1.8}
+              />
+            )
+          }
           onPress={onPressSearch}
-          onLongPress={TABS_ENABLED ? doNewTab('/') : undefined}
         />
-        {TABS_ENABLED ? (
-          <Btn
-            icon={isTabsSelectorActive ? 'clone' : ['far', 'clone']}
-            onPress={onPressTabs}
-            tabCount={store.nav.tabCount}
-          />
-        ) : undefined}
         <Btn
-          icon={isAtNotifications ? 'bell-solid' : 'bell'}
+          icon={
+            <View style={styles.ctrlIconSizingWrapper}>
+              <ComposeIcon2
+                strokeWidth={1.5}
+                size={29}
+                style={[styles.ctrlIcon, pal.text, styles.composeIcon]}
+                backgroundColor={pal.colors.background}
+              />
+            </View>
+          }
+          onPress={onPressCompose}
+        />
+        <Btn
+          icon={
+            isAtNotifications ? (
+              <BellIconSolid
+                size={24}
+                strokeWidth={1.9}
+                style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+              />
+            ) : (
+              <BellIcon
+                size={24}
+                strokeWidth={1.9}
+                style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+              />
+            )
+          }
           onPress={onPressNotifications}
-          onLongPress={TABS_ENABLED ? doNewTab('/notifications') : undefined}
           notificationCount={store.me.notifications.unreadCount}
+        />
+        <Btn
+          icon={
+            <View style={styles.ctrlIconSizingWrapper}>
+              <UserIcon
+                size={28}
+                strokeWidth={1.5}
+                style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
+              />
+            </View>
+          }
+          onPress={onPressProfile}
         />
       </Animated.View>
       <ModalsContainer />
@@ -650,46 +571,51 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderTopWidth: 1,
     paddingLeft: 5,
-    paddingRight: 25,
+    paddingRight: 10,
   },
   ctrl: {
     flex: 1,
-    paddingTop: 12,
-    paddingBottom: 5,
+    paddingTop: 13,
+    paddingBottom: 4,
   },
   notificationCount: {
     position: 'absolute',
-    left: '60%',
+    left: '56%',
     top: 10,
-    backgroundColor: colors.red3,
+    backgroundColor: colors.blue3,
     paddingHorizontal: 4,
     paddingBottom: 1,
     borderRadius: 8,
+    zIndex: 1,
   },
   notificationCountLabel: {
     fontSize: 12,
     fontWeight: 'bold',
     color: colors.white,
   },
-  tabCount: {
-    position: 'absolute',
-    left: 46,
-    top: 30,
-  },
-  tabCountLabel: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: colors.black,
-  },
   ctrlIcon: {
     marginLeft: 'auto',
     marginRight: 'auto',
   },
+  ctrlIconSizingWrapper: {
+    height: 27,
+  },
   inactive: {
     color: colors.gray3,
   },
-  bumpUpOnePixel: {
-    position: 'relative',
-    top: -1,
+  homeIcon: {
+    top: 0,
+  },
+  searchIcon: {
+    top: -2,
+  },
+  bellIcon: {
+    top: -2.5,
+  },
+  composeIcon: {
+    top: -4.5,
+  },
+  profileIcon: {
+    top: -4,
   },
 })

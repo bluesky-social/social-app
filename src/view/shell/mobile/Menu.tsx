@@ -17,19 +17,23 @@ import {FEEDBACK_FORM_URL} from 'lib/constants'
 import {useStores} from 'state/index'
 import {
   HomeIcon,
+  HomeIconSolid,
   BellIcon,
+  BellIconSolid,
   UserIcon,
   CogIcon,
-  MagnifyingGlassIcon,
+  MagnifyingGlassIcon2,
+  MagnifyingGlassIcon2Solid,
 } from 'lib/icons'
 import {TabPurpose, TabPurposeMainPath} from 'state/models/navigation'
 import {UserAvatar} from '../../com/util/UserAvatar'
 import {Text} from '../../com/util/text/Text'
-import {ToggleButton} from '../../com/util/forms/ToggleButton'
+import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 
 export const Menu = observer(({onClose}: {onClose: () => void}) => {
+  const theme = useTheme()
   const pal = usePalette('default')
   const store = useStores()
   const {track} = useAnalytics()
@@ -89,11 +93,8 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
         ) : undefined}
       </View>
       <Text
-        type="title"
-        style={[
-          pal.text,
-          bold ? styles.menuItemLabelBold : styles.menuItemLabel,
-        ]}
+        type={bold ? '2xl-bold' : '2xl'}
+        style={[pal.text, s.flex1]}
         numberOfLines={1}>
         {label}
       </Text>
@@ -105,68 +106,114 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
     store.shell.setDarkMode(!store.shell.darkMode)
   }
 
+  const isAtHome =
+    store.nav.tab.current.url === TabPurposeMainPath[TabPurpose.Default]
+  const isAtSearch =
+    store.nav.tab.current.url === TabPurposeMainPath[TabPurpose.Search]
+  const isAtNotifications =
+    store.nav.tab.current.url === TabPurposeMainPath[TabPurpose.Notifs]
+
   return (
     <View
       testID="menuView"
       style={[
         styles.view,
-        pal.view,
+        theme.colorScheme === 'light' ? pal.view : styles.viewDarkMode,
         store.shell.minimalShellMode && styles.viewMinimalShell,
       ]}>
       <TouchableOpacity
         testID="profileCardButton"
-        onPress={() => onNavigate(`/profile/${store.me.handle}`)}
-        style={styles.profileCard}>
+        onPress={() => onNavigate(`/profile/${store.me.handle}`)}>
         <UserAvatar
-          size={60}
+          size={80}
           displayName={store.me.displayName}
           handle={store.me.handle}
           avatar={store.me.avatar}
         />
-        <View style={s.flex1}>
-          <Text
-            type="title-lg"
-            style={[pal.text, styles.profileCardDisplayName]}
-            numberOfLines={1}>
-            {store.me.displayName || store.me.handle}
-          </Text>
-          <Text
-            style={[pal.textLight, styles.profileCardHandle]}
-            numberOfLines={1}>
-            @{store.me.handle}
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity
-        testID="searchBtn"
-        style={[styles.searchBtn, pal.btn]}
-        onPress={() => onNavigate('/search')}>
-        <MagnifyingGlassIcon
-          style={pal.text as StyleProp<ViewStyle>}
-          size={25}
-        />
-        <Text type="title" style={[pal.text, styles.searchBtnLabel]}>
-          Search
+        <Text
+          type="title-lg"
+          style={[pal.text, s.bold, styles.profileCardDisplayName]}
+          numberOfLines={1}>
+          {store.me.displayName || store.me.handle}
+        </Text>
+        <Text
+          type="2xl"
+          style={[pal.textLight, styles.profileCardHandle]}
+          numberOfLines={1}>
+          @{store.me.handle}
         </Text>
       </TouchableOpacity>
-      <View style={[styles.section, pal.border, s.pt5]}>
+      <View style={s.flex1} />
+      <View>
         <MenuItem
-          icon={<HomeIcon style={pal.text as StyleProp<ViewStyle>} size="26" />}
-          label="Home"
-          url="/"
+          icon={
+            isAtSearch ? (
+              <MagnifyingGlassIcon2Solid
+                style={pal.text as StyleProp<ViewStyle>}
+                size={24}
+                strokeWidth={1.7}
+              />
+            ) : (
+              <MagnifyingGlassIcon2
+                style={pal.text as StyleProp<ViewStyle>}
+                size={24}
+                strokeWidth={1.7}
+              />
+            )
+          }
+          label="Search"
+          url="/search"
+          bold={isAtSearch}
         />
         <MenuItem
-          icon={<BellIcon style={pal.text as StyleProp<ViewStyle>} size="28" />}
+          icon={
+            isAtHome ? (
+              <HomeIconSolid
+                style={pal.text as StyleProp<ViewStyle>}
+                size="24"
+                strokeWidth={3.25}
+                fillOpacity={1}
+              />
+            ) : (
+              <HomeIcon
+                style={pal.text as StyleProp<ViewStyle>}
+                size="24"
+                strokeWidth={3.25}
+              />
+            )
+          }
+          label="Home"
+          url="/"
+          bold={isAtHome}
+        />
+        <MenuItem
+          icon={
+            isAtNotifications ? (
+              <BellIconSolid
+                style={pal.text as StyleProp<ViewStyle>}
+                size="24"
+                strokeWidth={1.7}
+                fillOpacity={1}
+              />
+            ) : (
+              <BellIcon
+                style={pal.text as StyleProp<ViewStyle>}
+                size="24"
+                strokeWidth={1.7}
+              />
+            )
+          }
           label="Notifications"
           url="/notifications"
           count={store.me.notifications.unreadCount}
+          bold={isAtNotifications}
         />
         <MenuItem
           icon={
             <UserIcon
               style={pal.text as StyleProp<ViewStyle>}
-              size="30"
-              strokeWidth={2}
+              size="26"
+              strokeWidth={1.5}
             />
           }
           label="Profile"
@@ -176,34 +223,46 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
           icon={
             <CogIcon
               style={pal.text as StyleProp<ViewStyle>}
-              size="30"
-              strokeWidth={2}
+              size="26"
+              strokeWidth={1.75}
             />
           }
           label="Settings"
           url="/settings"
         />
       </View>
-      <View style={[styles.section, pal.border]}>
-        <ToggleButton
-          label="Dark mode"
-          isSelected={store.shell.darkMode}
-          onPress={onDarkmodePress}
-        />
-      </View>
       <View style={s.flex1} />
       <View style={styles.footer}>
-        <MenuItem
-          icon={
-            <FontAwesomeIcon
-              style={pal.text as FontAwesomeIconStyle}
-              size={24}
-              icon={['far', 'message']}
-            />
-          }
-          label="Feedback"
+        <TouchableOpacity
+          onPress={onDarkmodePress}
+          style={[
+            styles.footerBtn,
+            theme.colorScheme === 'light' ? pal.btn : styles.footerBtnDarkMode,
+          ]}>
+          <CogIcon
+            style={pal.text as StyleProp<ViewStyle>}
+            size="26"
+            strokeWidth={1.75}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={onPressFeedback}
-        />
+          style={[
+            styles.footerBtn,
+            styles.footerBtnFeedback,
+            theme.colorScheme === 'light'
+              ? styles.footerBtnFeedbackLight
+              : styles.footerBtnFeedbackDark,
+          ]}>
+          <FontAwesomeIcon
+            style={pal.link as FontAwesomeIconStyle}
+            size={19}
+            icon={['far', 'message']}
+          />
+          <Text type="2xl-medium" style={[pal.link, s.pl10]}>
+            Feedback
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -212,69 +271,36 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
+    paddingTop: 10,
     paddingBottom: 90,
+    paddingLeft: 30,
+  },
+  viewDarkMode: {
+    backgroundColor: colors.gray8,
   },
   viewMinimalShell: {
     paddingBottom: 50,
   },
-  section: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-  },
-  heading: {
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-  },
 
-  profileCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    margin: 10,
-    marginBottom: 6,
-  },
   profileCardDisplayName: {
-    marginLeft: 12,
+    marginTop: 20,
   },
   profileCardHandle: {
-    marginLeft: 12,
-  },
-
-  searchBtn: {
-    flexDirection: 'row',
-    borderRadius: 8,
-    margin: 10,
-    marginBottom: 0,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-  },
-  searchBtnLabel: {
-    marginLeft: 14,
-    fontWeight: 'normal',
+    marginTop: 4,
   },
 
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 6,
-    paddingLeft: 6,
+    paddingVertical: 16,
     paddingRight: 10,
   },
   menuItemIconWrapper: {
-    width: 36,
-    height: 36,
+    width: 24,
+    height: 24,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
-  },
-  menuItemLabel: {
-    flex: 1,
-    fontWeight: 'normal',
-  },
-  menuItemLabelBold: {
-    flex: 1,
-    fontWeight: 'bold',
   },
   menuItemCount: {
     position: 'absolute',
@@ -292,6 +318,27 @@ const styles = StyleSheet.create({
   },
 
   footer: {
-    paddingHorizontal: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 30,
+    paddingTop: 20,
+  },
+  footerBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 25,
+  },
+  footerBtnDarkMode: {
+    backgroundColor: colors.black,
+  },
+  footerBtnFeedback: {
+    paddingHorizontal: 24,
+  },
+  footerBtnFeedbackLight: {
+    backgroundColor: '#DDEFFF',
+  },
+  footerBtnFeedbackDark: {
+    backgroundColor: colors.blue6,
   },
 })
