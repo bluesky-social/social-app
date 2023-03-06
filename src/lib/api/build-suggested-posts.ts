@@ -37,14 +37,20 @@ function mergePosts(
         // filter the feed down to the post with the most upvotes
         res.data.feed = res.data.feed.reduce(
           (acc: AppBskyFeedFeedViewPost.Main[], v) => {
-            if (!acc?.[0] && !v.reason && !v.reply) {
+            if (
+              !acc?.[0] &&
+              !v.reason &&
+              !v.reply &&
+              isRecentEnough(v.post.indexedAt)
+            ) {
               return [v]
             }
             if (
               acc &&
               !v.reason &&
               !v.reply &&
-              v.post.upvoteCount > acc[0].post.upvoteCount
+              v.post.upvoteCount > acc[0]?.post.upvoteCount &&
+              isRecentEnough(v.post.indexedAt)
             ) {
               return [v]
             }
@@ -111,6 +117,16 @@ function getCombinedCursors(responses: GetAuthorFeed.Response[]) {
 
 function isCombinedCursor(cursor: string) {
   return cursor.includes(',')
+}
+
+const TWO_DAYS_AGO = Date.now() - 1e3 * 60 * 60 * 48
+function isRecentEnough(date: string) {
+  try {
+    const d = Number(new Date(date))
+    return d > TWO_DAYS_AGO
+  } catch {
+    return false
+  }
 }
 
 export {
