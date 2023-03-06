@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
   },
   viewDarkMode: {
-    backgroundColor: colors.gray8,
+    backgroundColor: '#202023',
   },
 
   profileCardDisplayName: {
