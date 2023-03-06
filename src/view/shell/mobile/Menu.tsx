@@ -24,6 +24,7 @@ import {
   CogIcon,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
+  MoonIcon,
 } from 'lib/icons'
 import {TabPurpose, TabPurposeMainPath} from 'state/models/navigation'
 import {UserAvatar} from '../../com/util/UserAvatar'
@@ -234,10 +235,10 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
             styles.footerBtn,
             theme.colorScheme === 'light' ? pal.btn : styles.footerBtnDarkMode,
           ]}>
-          <CogIcon
+          <MoonIcon
+            size={22}
             style={pal.text as StyleProp<ViewStyle>}
-            size="26"
-            strokeWidth={1.75}
+            strokeWidth={2}
           />
         </TouchableOpacity>
         <TouchableOpacity
