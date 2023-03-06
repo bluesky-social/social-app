@@ -368,4 +368,11 @@ export class SessionModel {
     this.clearSessionTokens()
     this.rootStore.clearAllSessionState()
   }
+
+  /**
+   * Removes an account from the list of stored accounts.
+   */
+  removeAccount(handle: string) {
+    this.accounts = this.accounts.filter(acc => acc.handle !== handle)
+  }
 }
