@@ -48,23 +48,21 @@ import {useAnalytics} from 'lib/analytics'
 const Btn = ({
   icon,
   notificationCount,
-  isCurrent,
   onPress,
   onLongPress,
 }: {
   icon: JSX.Element
   notificationCount?: number
-  isCurrent?: boolean
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }) => {
+  const pal = usePalette('inverted')
   return (
     <TouchableOpacity
       style={styles.ctrl}
       onPress={onLongPress ? onPress : undefined}
       onPressIn={onLongPress ? undefined : onPress}
       onLongPress={onLongPress}>
-      {isCurrent ? <View style={styles.currentIndicator} /> : undefined}
       {notificationCount ? (
         <View style={styles.notificationCount}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
@@ -380,7 +378,7 @@ export const MobileShell: React.FC = observer(() => {
         style={[
           styles.bottomBar,
           pal.view,
-          pal.border,
+          pal.borderDark,
           {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
           footerMinimalShellTransform,
         ]}>
@@ -389,43 +387,41 @@ export const MobileShell: React.FC = observer(() => {
             isAtHome ? (
               <HomeIconSolid
                 strokeWidth={3}
-                size={28}
+                size={26}
                 style={[styles.ctrlIcon, pal.text]}
               />
             ) : (
               <HomeIcon
                 strokeWidth={3}
-                size={28}
+                size={26}
                 style={[styles.ctrlIcon, pal.text]}
               />
             )
           }
-          isCurrent={isAtHome}
           onPress={onPressHome}
         />
         <Btn
           icon={
             isAtSearch ? (
               <MagnifyingGlassIcon2Solid
-                size={28}
-                style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
+                size={26}
+                style={[styles.ctrlIcon, pal.text, styles.bumpUp1]}
                 strokeWidth={1.5}
               />
             ) : (
               <MagnifyingGlassIcon2
-                size={28}
-                style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
+                size={26}
+                style={[styles.ctrlIcon, pal.text, styles.bumpUp1]}
                 strokeWidth={1.5}
               />
             )
           }
-          isCurrent={isAtSearch}
           onPress={onPressSearch}
         />
         <TouchableOpacity style={styles.postCtrl} onPressIn={onPressCompose}>
           <ComposeIcon2
             strokeWidth={1.1}
-            size={40}
+            size={38}
             style={[styles.ctrlIcon, pal.text]}
             backgroundColor={pal.colors.background}
           />
@@ -434,19 +430,18 @@ export const MobileShell: React.FC = observer(() => {
           icon={
             isAtNotifications ? (
               <BellIconSolid
-                size={27}
+                size={25}
                 strokeWidth={1.7}
-                style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
+                style={[styles.ctrlIcon, pal.text, styles.bumpUp2]}
               />
             ) : (
               <BellIcon
-                size={27}
+                size={25}
                 strokeWidth={1.7}
-                style={[styles.ctrlIcon, pal.text, styles.bumpUpOnePixel]}
+                style={[styles.ctrlIcon, pal.text, styles.bumpUp2]}
               />
             )
           }
-          isCurrent={isAtNotifications}
           onPress={onPressNotifications}
           notificationCount={store.me.notifications.unreadCount}
         />
@@ -454,9 +449,9 @@ export const MobileShell: React.FC = observer(() => {
           icon={
             <View style={styles.ctrlIconSizingWrapper}>
               <UserIcon
-                size={32}
-                strokeWidth={1.2}
-                style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
+                size={30}
+                strokeWidth={1.3}
+                style={[styles.ctrlIcon, pal.text, styles.bumpUp4]}
               />
             </View>
           }
@@ -583,17 +578,6 @@ const styles = StyleSheet.create({
     flex: 1.2,
     paddingTop: 4,
   },
-  currentIndicator: {
-    position: 'absolute',
-    backgroundColor: colors.blue3,
-    left: '50%',
-    transform: [{translateX: -4}],
-    bottom: -4,
-    width: 8,
-    height: 8,
-    borderRadius: 8,
-    zIndex: 1,
-  },
   notificationCount: {
     position: 'absolute',
     left: '52%',
@@ -616,14 +600,16 @@ const styles = StyleSheet.create({
   ctrlIconSizingWrapper: {
     height: 27,
   },
-  profileIcon: {
-    top: -3,
-  },
   inactive: {
     color: colors.gray3,
   },
-  bumpUpOnePixel: {
-    position: 'relative',
+  bumpUp1: {
     top: -1,
+  },
+  bumpUp2: {
+    top: -2,
+  },
+  bumpUp4: {
+    top: -4,
   },
 })
