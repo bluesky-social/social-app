@@ -37,12 +37,13 @@ function mergePosts(
         // filter the feed down to the post with the most upvotes
         res.data.feed = res.data.feed.reduce(
           (acc: AppBskyFeedFeedViewPost.Main[], v) => {
-            if (!acc?.[0] && !v.reason) {
+            if (!acc?.[0] && !v.reason && !v.reply) {
               return [v]
             }
             if (
               acc &&
               !v.reason &&
+              !v.reply &&
               v.post.upvoteCount > acc[0].post.upvoteCount
             ) {
               return [v]

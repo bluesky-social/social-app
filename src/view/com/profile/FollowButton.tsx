@@ -1,16 +1,13 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {Text} from '../util/text/Text'
+import {Button} from '../util/forms/Button'
 import {useStores} from 'state/index'
 import * as apilib from 'lib/api/index'
 import * as Toast from '../util/Toast'
-import {usePalette} from 'lib/hooks/usePalette'
 
 const FollowButton = observer(
   ({did, declarationCid}: {did: string; declarationCid: string}) => {
     const store = useStores()
-    const pal = usePalette('default')
     const isFollowing = store.me.follows.isFollowing(did)
 
     const onToggleFollow = async () => {
@@ -34,24 +31,13 @@ const FollowButton = observer(
     }
 
     return (
-      <TouchableOpacity onPress={onToggleFollow}>
-        <View style={[styles.btn, pal.btn]}>
-          <Text type="button" style={[pal.text]}>
-            {isFollowing ? 'Unfollow' : 'Follow'}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <Button
+        type={isFollowing ? 'default' : 'primary'}
+        onPress={onToggleFollow}
+        label={isFollowing ? 'Unfollow' : 'Follow'}
+      />
     )
   },
 )
 
 export default FollowButton
-
-const styles = StyleSheet.create({
-  btn: {
-    paddingVertical: 7,
-    borderRadius: 50,
-    marginLeft: 6,
-    paddingHorizontal: 14,
-  },
-})
