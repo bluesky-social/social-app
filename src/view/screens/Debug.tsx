@@ -341,6 +341,9 @@ function ButtonsView() {
       <View style={[s.flexRow, s.mb5]}>
         <Button type="primary" label="Primary solid" style={buttonStyles} />
         <Button type="secondary" label="Secondary solid" style={buttonStyles} />
+      </View>
+      <View style={[s.flexRow, s.mb5]}>
+        <Button type="default" label="Default solid" style={buttonStyles} />
         <Button type="inverted" label="Inverted solid" style={buttonStyles} />
       </View>
       <View style={s.flexRow}>

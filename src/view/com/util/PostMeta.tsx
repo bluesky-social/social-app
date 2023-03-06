@@ -24,20 +24,18 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
   let handle = opts.authorHandle
   const store = useStores()
   const isMe = opts.did === store.me.did
+  const isFollowing =
+    typeof opts.did === 'string' && store.me.follows.isFollowing(opts.did)
 
-  // NOTE we capture `isFollowing` via a memo so that follows
-  //      don't change this UI immediately, but rather upon future
-  //      renders
-  const isFollowing = React.useMemo(
-    () =>
-      typeof opts.did === 'string' && store.me.follows.isFollowing(opts.did),
-    [opts.did, store.me.follows],
-  )
+  const [didFollow, setDidFollow] = React.useState(false)
+  const onToggleFollow = React.useCallback(() => {
+    setDidFollow(true)
+  }, [setDidFollow])
 
   if (
     opts.showFollowBtn &&
     !isMe &&
-    !isFollowing &&
+    (!isFollowing || didFollow) &&
     opts.did &&
     opts.declarationCid
   ) {
@@ -71,7 +69,11 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
         </View>
 
         <View>
-          <FollowButton did={opts.did} declarationCid={opts.declarationCid} />
+          <FollowButton
+            did={opts.did}
+            declarationCid={opts.declarationCid}
+            onToggleFollow={onToggleFollow}
+          />
         </View>
       </View>
     )

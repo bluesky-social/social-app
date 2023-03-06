@@ -1,10 +1,11 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {FlatList, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
+import {WelcomeBanner} from '../com/util/WelcomeBanner'
 import {useStores} from 'state/index'
 import {ScreenParams} from '../routes'
 import {s} from 'lib/styles'
@@ -43,7 +44,7 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
     scrollElRef.current?.scrollToOffset({offset: -HEADER_HEIGHT})
   }, [scrollElRef])
 
-  useEffect(() => {
+  React.useEffect(() => {
     const softResetSub = store.onScreenSoftReset(scrollToTop)
     const feedCleanup = store.me.mainFeed.registerListeners()
     const pollInterval = setInterval(doPoll, 15e3)
@@ -72,7 +73,16 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
       store.me.mainFeed.update()
     }
     return cleanup
-  }, [visible, store, store.me.mainFeed, navIdx, doPoll, wasVisible, scrollToTop, screen])
+  }, [
+    visible,
+    store,
+    store.me.mainFeed,
+    navIdx,
+    doPoll,
+    wasVisible,
+    scrollToTop,
+    screen,
+  ])
 
   const onPressTryAgain = () => {
     store.me.mainFeed.refresh()
@@ -84,19 +94,21 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
 
   return (
     <View style={s.hContentRegion}>
+      {store.shell.isOnboarding && <WelcomeBanner />}
       <Feed
         testID="homeFeed"
         key="default"
         feed={store.me.mainFeed}
         scrollElRef={scrollElRef}
         style={s.hContentRegion}
-        showWelcomeBanner
         showPostFollowBtn
         onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
-        headerOffset={HEADER_HEIGHT}
+        headerOffset={store.shell.isOnboarding ? 0 : HEADER_HEIGHT}
       />
-      <ViewHeader title="Bluesky" canGoBack={false} hideOnScroll />
+      {!store.shell.isOnboarding && (
+        <ViewHeader title="Bluesky" canGoBack={false} hideOnScroll />
+      )}
       {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing && (
         <LoadLatestBtn onPress={onPressLoadLatest} />
       )}

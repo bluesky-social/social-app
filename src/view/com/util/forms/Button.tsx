@@ -13,6 +13,7 @@ import {choose} from 'lib/functions'
 export type ButtonType =
   | 'primary'
   | 'secondary'
+  | 'default'
   | 'inverted'
   | 'primary-outline'
   | 'secondary-outline'
@@ -40,6 +41,9 @@ export function Button({
     secondary: {
       backgroundColor: theme.palette.secondary.background,
     },
+    default: {
+      backgroundColor: theme.palette.default.backgroundLight,
+    },
     inverted: {
       backgroundColor: theme.palette.inverted.background,
     },
@@ -66,15 +70,18 @@ export function Button({
   const labelStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(type, {
     primary: {
       color: theme.palette.primary.text,
-      fontWeight: theme.palette.primary.isLowContrast ? '500' : undefined,
+      fontWeight: '600',
     },
     secondary: {
       color: theme.palette.secondary.text,
       fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
     },
+    default: {
+      color: theme.palette.default.text,
+    },
     inverted: {
       color: theme.palette.inverted.text,
-      fontWeight: theme.palette.inverted.isLowContrast ? '500' : undefined,
+      fontWeight: '600',
     },
     'primary-outline': {
       color: theme.palette.primary.textInverted,
@@ -114,7 +121,8 @@ export function Button({
 
 const styles = StyleSheet.create({
   outer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 14,
     paddingVertical: 8,
+    borderRadius: 24,
   },
 })
