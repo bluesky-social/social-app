@@ -81,7 +81,7 @@ export function Button({
     },
     inverted: {
       color: theme.palette.inverted.text,
-      fontWeight: theme.palette.inverted.isLowContrast ? '500' : undefined,
+      fontWeight: '600',
     },
     'primary-outline': {
       color: theme.palette.primary.textInverted,
