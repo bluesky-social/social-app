@@ -345,6 +345,7 @@ export class SessionModel {
     )
 
     this.setActiveSession(agent, did)
+    this.rootStore.shell.setOnboarding(true)
     this.rootStore.log.debug('SessionModel:createAccount succeeded')
   }
 

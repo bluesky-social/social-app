@@ -212,7 +212,7 @@ export class FeedModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public feedType: 'home' | 'author',
+    public feedType: 'home' | 'author' | 'suggested',
     params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams,
   ) {
     makeAutoObservable(
@@ -256,7 +256,7 @@ export class FeedModel {
             item.reply?.root.author.did === item.post.author.did)
         )
       })
-    } else {
+    } else if (this.feedType === 'home') {
       return this.feed.filter(item => {
         const isRepost = Boolean(item?.reasonRepost)
         return (
@@ -267,6 +267,8 @@ export class FeedModel {
           item.post.upvoteCount >= 2
         )
       })
+    } else {
+      return this.feed
     }
   }
 
@@ -291,6 +293,14 @@ export class FeedModel {
     this.loadMoreCursor = undefined
     this.pollCursor = undefined
     this.feed = []
+  }
+
+  switchFeedType(feedType: 'home' | 'suggested') {
+    if (this.feedType === feedType) {
+      return
+    }
+    this.feedType = feedType
+    return this.setup()
   }
 
   /**
@@ -427,7 +437,7 @@ export class FeedModel {
    * Check if new posts are available
    */
   async checkForLatest() {
-    if (this.hasNewLatest || this.rootStore.me.follows.isEmpty) {
+    if (this.hasNewLatest || this.feedType === 'suggested') {
       return
     }
     const res = await this._getFeed({limit: 1})
@@ -562,30 +572,25 @@ export class FeedModel {
     params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams = {},
   ): Promise<GetTimeline.Response | GetAuthorFeed.Response> {
     params = Object.assign({}, this.params, params)
-    if (this.feedType === 'home') {
-      await this.rootStore.me.follows.fetchIfNeeded()
-      if (this.rootStore.me.follows.isEmpty) {
-        const responses = await getMultipleAuthorsPosts(
-          this.rootStore,
-          sampleSize(
-            SUGGESTED_FOLLOWS(String(this.rootStore.agent.service)),
-            20,
-          ),
-          params.before,
-          20,
-        )
-        const combinedCursor = getCombinedCursors(responses)
-        const finalData = mergePosts(responses, {bestOfOnly: true})
-        const lastHeaders = responses[responses.length - 1].headers
-        return {
-          success: true,
-          data: {
-            feed: finalData,
-            cursor: combinedCursor,
-          },
-          headers: lastHeaders,
-        }
+    if (this.feedType === 'suggested') {
+      const responses = await getMultipleAuthorsPosts(
+        this.rootStore,
+        sampleSize(SUGGESTED_FOLLOWS(String(this.rootStore.agent.service)), 20),
+        params.before,
+        20,
+      )
+      const combinedCursor = getCombinedCursors(responses)
+      const finalData = mergePosts(responses, {bestOfOnly: true})
+      const lastHeaders = responses[responses.length - 1].headers
+      return {
+        success: true,
+        data: {
+          feed: finalData,
+          cursor: combinedCursor,
+        },
+        headers: lastHeaders,
       }
+    } else if (this.feedType === 'home') {
       return this.rootStore.api.app.bsky.feed.getTimeline(
         params as GetTimeline.QueryParams,
       )
