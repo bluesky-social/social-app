@@ -56,7 +56,6 @@ const Btn = ({
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }) => {
-  const pal = usePalette('inverted')
   return (
     <TouchableOpacity
       style={styles.ctrl}
