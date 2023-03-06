@@ -131,14 +131,10 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
         />
         <Text
           type="title-lg"
-          style={[pal.text, s.bold, styles.profileCardDisplayName]}
-          numberOfLines={1}>
+          style={[pal.text, s.bold, styles.profileCardDisplayName]}>
           {store.me.displayName || store.me.handle}
         </Text>
-        <Text
-          type="2xl"
-          style={[pal.textLight, styles.profileCardHandle]}
-          numberOfLines={1}>
+        <Text type="2xl" style={[pal.textLight, styles.profileCardHandle]}>
           @{store.me.handle}
         </Text>
       </TouchableOpacity>
@@ -280,9 +276,11 @@ const styles = StyleSheet.create({
 
   profileCardDisplayName: {
     marginTop: 20,
+    paddingRight: 20,
   },
   profileCardHandle: {
     marginTop: 4,
+    paddingRight: 20,
   },
 
   menuItem: {
