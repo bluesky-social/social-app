@@ -263,7 +263,8 @@ export class FeedModel {
           !item.reply || // not a reply
           isRepost || // but allow if it's a repost or thread
           item._isThreadParent ||
-          item._isThreadChild
+          item._isThreadChild ||
+          item.post.upvoteCount >= 2
         )
       })
     }
