@@ -2,6 +2,7 @@ import RootSiblings from 'react-native-root-siblings'
 import React from 'react'
 import {Animated, StyleSheet, View} from 'react-native'
 import {Text} from './text/Text'
+import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
@@ -74,6 +75,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
   },
   toastDark: {
+    backgroundColor: colors.gray6,
     shadowOpacity: 0.5,
   },
 })
