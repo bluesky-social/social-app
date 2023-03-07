@@ -19,7 +19,6 @@ import {
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
-  ComposeIcon2,
   BellIcon,
   BellIconSolid,
   UserIcon,
@@ -84,10 +83,6 @@ export const BottomBar = observer(() => {
         store.nav.tab.fixedTabReset()
       }
     }
-  }, [store, track])
-  const onPressCompose = React.useCallback(() => {
-    track('MobileShell:ComposeButtonPressed')
-    store.shell.openComposer({})
   }, [store, track])
   const onPressNotifications = React.useCallback(() => {
     track('MobileShell:NotificationsButtonPressed')
@@ -160,19 +155,6 @@ export const BottomBar = observer(() => {
           )
         }
         onPress={onPressSearch}
-      />
-      <Btn
-        icon={
-          <View style={styles.ctrlIconSizingWrapper}>
-            <ComposeIcon2
-              strokeWidth={1.5}
-              size={29}
-              style={[styles.ctrlIcon, pal.text, styles.composeIcon]}
-              backgroundColor={pal.colors.background}
-            />
-          </View>
-        }
-        onPress={onPressCompose}
       />
       <Btn
         icon={
@@ -254,7 +236,7 @@ const styles = StyleSheet.create({
   },
   notificationCount: {
     position: 'absolute',
-    left: '56%',
+    left: '52%',
     top: 10,
     backgroundColor: colors.blue3,
     paddingHorizontal: 4,
@@ -282,9 +264,6 @@ const styles = StyleSheet.create({
   },
   bellIcon: {
     top: -2.5,
-  },
-  composeIcon: {
-    top: -4.5,
   },
   profileIcon: {
     top: -4,

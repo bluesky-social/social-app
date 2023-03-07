@@ -665,37 +665,21 @@ export function ComposeIcon2({
   style,
   size,
   strokeWidth = 1.5,
-  backgroundColor,
 }: {
   style?: StyleProp<TextStyle>
   size?: string | number
   strokeWidth?: number
-  backgroundColor: string
 }) {
   return (
     <Svg
       viewBox="0 0 24 24"
-      strokeWidth={strokeWidth}
       stroke="currentColor"
       width={size || 24}
       height={size || 24}
       style={style}>
-      <Rect
+      <Path
+        d="M 20 9 L 20 16 C 20 18.209 18.209 20 16 20 L 8 20 C 5.791 20 4 18.209 4 16 L 4 8 C 4 5.791 5.791 4 8 4 L 15 4"
         strokeWidth={strokeWidth}
-        x="4"
-        y="4"
-        width="16"
-        height="16"
-        rx="4"
-        ry="4"
-      />
-      <Line
-        x1="10"
-        y1="14"
-        x2="22"
-        y2="2"
-        strokeWidth={strokeWidth * 4}
-        stroke={backgroundColor}
       />
       <Line
         strokeLinecap="round"
