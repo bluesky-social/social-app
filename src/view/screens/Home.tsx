@@ -9,10 +9,9 @@ import {WelcomeBanner} from '../com/util/WelcomeBanner'
 import {FAB} from '../com/util/FAB'
 import {useStores} from 'state/index'
 import {ScreenParams} from '../routes'
-import {s, colors} from 'lib/styles'
+import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
 import {ComposeIcon2} from 'lib/icons'
 
 const HEADER_HEIGHT = 42
