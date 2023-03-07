@@ -66,7 +66,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
     snapPoints = RepostModal.snapPoints
     element = <RepostModal.Component {...activeModal} />
   } else {
-    element = <View />
+    return <View />
   }
 
   return (
