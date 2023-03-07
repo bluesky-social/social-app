@@ -1,4 +1,4 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AtpAgent,
   AtpSessionEvent,
@@ -367,5 +367,46 @@ export class SessionModel {
     }*/
     this.clearSessionTokens()
     this.rootStore.clearAllSessionState()
+  }
+
+  /**
+   * Removes an account from the list of stored accounts.
+   */
+  removeAccount(handle: string) {
+    this.accounts = this.accounts.filter(acc => acc.handle !== handle)
+  }
+
+  /**
+   * Reloads the session from the server. Useful when account details change, like the handle.
+   */
+  async reloadFromServer() {
+    const sess = this.currentSession
+    if (!sess) {
+      return
+    }
+    const res = await this.rootStore.api.app.bsky.actor
+      .getProfile({actor: sess.did})
+      .catch(_e => undefined)
+    if (res?.success) {
+      const updated = {
+        ...sess,
+        handle: res.data.handle,
+        displayName: res.data.displayName,
+        aviUrl: res.data.avatar,
+      }
+      runInAction(() => {
+        this.accounts = [
+          updated,
+          ...this.accounts.filter(
+            account =>
+              !(
+                account.service === updated.service &&
+                account.did === updated.did
+              ),
+          ),
+        ]
+      })
+      await this.rootStore.me.load()
+    }
   }
 }
