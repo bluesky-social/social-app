@@ -64,3 +64,6 @@ buck-out/
 coverage/
 junit.xml
 artifacts
+
+# Web bundle outputs
+/dist/
