@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
-	"html/template"
 	"io"
+	"fmt"
+	"errors"
 	"net/http"
-	"strings"
 
+	comatproto "github.com/bluesky-social/indigo/api/atproto"
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
 	cliutil "github.com/bluesky-social/indigo/cmd/gosky/util"
 	"github.com/bluesky-social/indigo/xrpc"
@@ -14,20 +15,47 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/urfave/cli/v2"
+	"github.com/flosch/pongo2/v6"
 )
 
 // TODO: embed templates in executable
 
-type Template struct {
-	templates *template.Template
+type Renderer struct {
+	Debug bool
 }
+
+func (r Renderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+
+	var ctx pongo2.Context
+
+	if data != nil {
+		var ok bool
+		ctx, ok = data.(pongo2.Context)
+
+		if !ok {
+			return errors.New("no pongo2.Context data was passed...")
+		}
+	}
+
+	var t *pongo2.Template
+	var err error
+
+	if r.Debug {
+		t, err = pongo2.FromFile(name)
+	} else {
+		t, err = pongo2.FromCache(name)
+	}
+
+	if err != nil {
+		return err
+	}
+
+	return t.ExecuteWriter(ctx, w)
+}
+
 
 type Server struct {
 	xrpcc *xrpc.Client
-}
-
-func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
-	return t.templates.ExecuteTemplate(w, name, data)
 }
 
 func serve(cctx *cli.Context) error {
@@ -37,8 +65,22 @@ func serve(cctx *cli.Context) error {
 	xrpcc := &xrpc.Client{
 		Client: cliutil.NewHttpClient(),
 		Host:   cctx.String("pds-host"),
-		Auth:   &xrpc.AuthInfo{},
+		Auth:   &xrpc.AuthInfo{
+			Handle: cctx.String("handle"),
+		},
 	}
+
+    auth, err := comatproto.SessionCreate(context.TODO(), xrpcc, &comatproto.SessionCreate_Input{        
+        Identifier: &xrpcc.Auth.Handle,
+        Password:   cctx.String("password"),
+    })
+    if err != nil {
+        return err
+    }
+    xrpcc.Auth.AccessJwt = auth.AccessJwt
+    xrpcc.Auth.RefreshJwt = auth.RefreshJwt
+    xrpcc.Auth.Did = auth.Did
+    xrpcc.Auth.Handle = auth.Handle
 
 	server := Server{ xrpcc }
 
@@ -47,9 +89,7 @@ func serve(cctx *cli.Context) error {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method} path=${uri} status=${status} latency=${latency_human}\n",
 	}))
-	e.Renderer = &Template{
-		templates: template.Must(template.ParseGlob("templates/*.html")),
-	}
+	e.Renderer = Renderer{ Debug: true }
 	e.HTTPErrorHandler = customHTTPErrorHandler
 
 	// configure routes
@@ -87,42 +127,66 @@ func customHTTPErrorHandler(err error, c echo.Context) {
 		code = he.Code
 	}
 	c.Logger().Error(err)
-	data := map[string]interface{}{
+	data := pongo2.Context{
 		"statusCode": code,
-		"skipBundle": true,
 	}
-	c.Render(code, "error.html", data)
+	c.Render(code, "templates/error.html", data)
 }
 
 // handler for endpoint that have no specific server-side handling
 func (srv *Server) WebGeneric(c echo.Context) error {
-	data := map[string]interface{}{}
-	return c.Render(http.StatusOK, "base.html", data)
+	data := pongo2.Context{}
+	return c.Render(http.StatusOK, "templates/base.html", data)
 }
 
 func (srv *Server) WebHome(c echo.Context) error {
-	data := map[string]interface{}{}
-	return c.Render(http.StatusOK, "home.html", data)
+	data := pongo2.Context{}
+	return c.Render(http.StatusOK, "templates/home.html", data)
 }
 
 func (srv *Server) WebPost(c echo.Context) error {
-	data := map[string]interface{}{}
-	return c.Render(http.StatusOK, "post.html", data)
+	data := pongo2.Context{}
+	handle := c.Param("handle")
+	rkey := c.Param("rkey")
+	// sanity check argument
+	if (len(handle) > 4 && len(handle) < 128 && len(rkey) > 0) {
+		ctx := context.TODO()
+		// requires two fetches: first fetch profile (!)
+		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle)
+		if err != nil {
+			log.Warnf("failed to fetch handle: %s\t%v", handle, err)
+		} else {
+			did := pv.Did
+			data["did"] = did
+
+			// then fetch the post thread (with extra context)
+			uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
+			tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, uri)
+			if err != nil {
+				log.Warnf("failed to fetch post: %s\t%v", uri, err)
+			} else {
+				data["postView"] = tpv.Thread.FeedGetPostThread_ThreadViewPost.Post
+			}
+		}
+
+
+	}
+	return c.Render(http.StatusOK, "templates/post.html", data)
 }
 
 func (srv *Server) WebProfile(c echo.Context) error {
-	ctx := context.TODO()
-	data := map[string]interface{}{}
+	data := pongo2.Context{}
 	handle := c.Param("handle")
 	// sanity check argument
-	if (len(handle) > 4 && len(handle) < 128 && strings.HasPrefix(handle, "did:")) {
+	if (len(handle) > 4 && len(handle) < 128) {
+		ctx := context.TODO()
 		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle)
 		if err != nil {
-			log.Warnf("failed to fetch handle: %s", handle)
+			log.Warnf("failed to fetch handle: %s\t%v", handle, err)
 		} else {
 			data["profileView"] = pv
 		}
 	}
 
-	return c.Render(http.StatusOK, "profile.html", data)
+	return c.Render(http.StatusOK, "templates/profile.html", data)
 }

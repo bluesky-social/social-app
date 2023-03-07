@@ -1,13 +1,15 @@
-{{ template "base.html" .}}
+{% extends "base.html" %}
 
-{{ define "head-title" }}Bluesky - Error {{ .statusCode }}{{end}}
+{% block head_title %}Error {{ statusCode }} - Bluesky{% endblock %}
 
-{{ define "body" }}
-	<h1>
-  	{{ if eq .statusCode 404 }}
-  		404: Not Found
-  	{{ else }}
-  	  {{ .statusCode }}: Server Error
-  	{{ end }}
-  </h1>
-{{ end }}
+{# don't include the bundle on error pages #}
+{% block head_bundle %}{% endblock %}
+
+{% block body_all %}
+  {% if statusCode == 404 %}
+	  <h1>404: Not Found</h1>
+  {% else %}
+	  <h1>{{ statusCode }}: Server Error</h1>
+    <p>Sorry about that! Our <a href="https://bluesky.statuspage.io/">Status Page</a> might have more context.
+  {% endif %}
+{% endblock %}

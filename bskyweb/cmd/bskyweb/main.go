@@ -42,6 +42,18 @@ func run(args []string) {
 			Value:   "http://localhost:4849",
 			EnvVars: []string{"ATP_PDS_HOST"},
 		},
+		&cli.StringFlag{
+			Name:     "handle",
+			Usage:    "for PDS login",
+			Required: true,
+			EnvVars:  []string{"ATP_AUTH_HANDLE"},
+		},
+		&cli.StringFlag{
+			Name:     "password",
+			Usage:    "for PDS login",
+			Required: true,
+			EnvVars:  []string{"ATP_AUTH_PASSWORD"},
+		},
 		// TODO: local IP/port to bind on
 	}
 

@@ -1,7 +1,7 @@
-{{ template "base.html" .}}
+{% extends "base.html" %}
 
-{{ define "head-title" }}Bluesky{{end}}
+{% block head_title %}Bluesky{% endblock %}
 
-{{ define "body" }}
-<h1>Home Page</h1>
-{{ end }}
+{% block noscript_extra %}
+<p>This is the home page.
+{% endblock %}
