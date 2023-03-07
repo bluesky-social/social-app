@@ -35,3 +35,6 @@ In this directory (`bskyweb/`):
 
     # build and output a binary
     go build -o bskyweb ./cmd/bskyweb/
+
+The easiest way to configure the daemon is to copy `example.env` to `.env` and
+fill in auth values there.
