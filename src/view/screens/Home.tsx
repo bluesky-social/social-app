@@ -6,18 +6,21 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
 import {WelcomeBanner} from '../com/util/WelcomeBanner'
+import {FAB} from '../com/util/FAB'
 import {useStores} from 'state/index'
 import {ScreenParams} from '../routes'
-import {s} from 'lib/styles'
+import {s, colors} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {ComposeIcon2} from 'lib/icons'
 
 const HEADER_HEIGHT = 42
 
 export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
-  const {screen} = useAnalytics()
+  const {screen, track} = useAnalytics()
   const scrollElRef = React.useRef<FlatList>(null)
   const [wasVisible, setWasVisible] = React.useState<boolean>(false)
   const {appState} = useAppState({
@@ -84,13 +87,17 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
     screen,
   ])
 
-  const onPressTryAgain = () => {
+  const onPressCompose = React.useCallback(() => {
+    track('HomeScreen:PressCompose')
+    store.shell.openComposer({})
+  }, [store, track])
+  const onPressTryAgain = React.useCallback(() => {
     store.me.mainFeed.refresh()
-  }
-  const onPressLoadLatest = () => {
+  }, [store])
+  const onPressLoadLatest = React.useCallback(() => {
     store.me.mainFeed.refresh()
     scrollToTop()
-  }
+  }, [store, scrollToTop])
 
   return (
     <View style={s.hContentRegion}>
@@ -112,6 +119,11 @@ export const Home = observer(function Home({navIdx, visible}: ScreenParams) {
       {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing && (
         <LoadLatestBtn onPress={onPressLoadLatest} />
       )}
+      <FAB
+        testID="composeFAB"
+        onPress={onPressCompose}
+        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+      />
     </View>
   )
 })
