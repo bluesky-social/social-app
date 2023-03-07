@@ -90,10 +90,10 @@ export const FeedItem = observer(function FeedItem({
           style={
             item.isRead
               ? undefined
-              : [
-                  styles.outerUnread,
-                  {backgroundColor: pal.colors.unreadNotifBg},
-                ]
+              : {
+                  backgroundColor: pal.colors.unreadNotifBg,
+                  borderColor: pal.colors.unreadNotifBorder,
+                }
           }
         />
       </Link>
@@ -152,7 +152,10 @@ export const FeedItem = observer(function FeedItem({
         pal.border,
         item.isRead
           ? undefined
-          : [styles.outerUnread, {backgroundColor: pal.colors.unreadNotifBg}],
+          : {
+              backgroundColor: pal.colors.unreadNotifBg,
+              borderColor: pal.colors.unreadNotifBorder,
+            },
       ]}
       href={itemHref}
       title={itemTitle}
@@ -390,9 +393,6 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingRight: 15,
     borderTopWidth: 1,
-  },
-  outerUnread: {
-    borderColor: colors.blue1,
   },
   layout: {
     flexDirection: 'row',
