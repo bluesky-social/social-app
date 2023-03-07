@@ -32,6 +32,7 @@ import {Text} from '../../com/util/text/Text'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
+import {pluralize} from 'lib/strings/helpers'
 
 export const Menu = observer(({onClose}: {onClose: () => void}) => {
   const theme = useTheme()
@@ -137,6 +138,16 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
         </Text>
         <Text type="2xl" style={[pal.textLight, styles.profileCardHandle]}>
           @{store.me.handle}
+        </Text>
+        <Text type="xl" style={[pal.textLight, styles.profileCardFollowers]}>
+          <Text type="xl-medium" style={pal.text}>
+            {store.me.followersCount || 0}
+          </Text>{' '}
+          {pluralize(store.me.followersCount || 0, 'follower')} &middot;{' '}
+          <Text type="xl-medium" style={pal.text}>
+            {store.me.followsCount || 0}
+          </Text>{' '}
+          following
         </Text>
       </TouchableOpacity>
       <View style={s.flex1} />
@@ -267,12 +278,12 @@ export const Menu = observer(({onClose}: {onClose: () => void}) => {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    paddingTop: 10,
+    paddingTop: 20,
     paddingBottom: 50,
     paddingLeft: 30,
   },
   viewDarkMode: {
-    backgroundColor: '#202023',
+    backgroundColor: '#1B1919',
   },
 
   profileCardDisplayName: {
@@ -281,6 +292,10 @@ const styles = StyleSheet.create({
   },
   profileCardHandle: {
     marginTop: 4,
+    paddingRight: 20,
+  },
+  profileCardFollowers: {
+    marginTop: 16,
     paddingRight: 20,
   },
 
@@ -316,7 +331,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingRight: 30,
-    paddingTop: 20,
+    paddingTop: 80,
   },
   footerBtn: {
     flexDirection: 'row',

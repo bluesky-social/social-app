@@ -5,6 +5,7 @@ import {ThemeProvider, PaletteColorName} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {displayNotification} from 'lib/notifee'
+import * as Toast from 'view/com/util/Toast'
 
 import {Text} from '../com/util/text/Text'
 import {ViewSelector} from '../com/util/ViewSelector'
@@ -171,16 +172,24 @@ function ErrorView() {
 }
 
 function NotifsView() {
-  const trigger = () => {
+  const triggerPush = () => {
     displayNotification(
       'Paul Frazee liked your post',
       "Hello world! This is a test of the notifications card. The text is long to see how that's handled.",
     )
   }
+  const triggerToast = () => {
+    Toast.show('The task has been completed')
+  }
+  const triggerToast2 = () => {
+    Toast.show('The task has been completed successfully and with no problems')
+  }
   return (
     <View style={s.p10}>
       <View style={s.flexRow}>
-        <Button onPress={trigger} label="Trigger" />
+        <Button onPress={triggerPush} label="Trigger Push" />
+        <Button onPress={triggerToast} label="Trigger Toast" />
+        <Button onPress={triggerToast2} label="Trigger Toast 2" />
       </View>
     </View>
   )

@@ -15,6 +15,7 @@ import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 import {PostEmbeds} from '../util/PostEmbeds'
+import {PostMutedWrapper} from '../util/PostMuted'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
@@ -113,6 +114,8 @@ export const FeedItem = observer(function ({
     item._isThreadChild || (!item.reason && !item._hideParent && item.reply)
   const isSmallTop = isChild && item._isThreadChild
   const isNoTop = isChild && !item._isThreadChild
+  const isMuted =
+    item.post.author.viewer?.muted && ignoreMuteFor !== item.post.author.did
   const outerStyles = [
     styles.outer,
     pal.view,
@@ -123,7 +126,7 @@ export const FeedItem = observer(function ({
   ]
 
   return (
-    <>
+    <PostMutedWrapper isMuted={isMuted}>
       {isChild && !item._isThreadChild && item.replyParent ? (
         <FeedItem
           item={item.replyParent}
@@ -160,7 +163,11 @@ export const FeedItem = observer(function ({
                 {color: pal.colors.textLight} as FontAwesomeIconStyle,
               ]}
             />
-            <Text type="sm-bold" style={pal.textLight} lineHeight={1.2}>
+            <Text
+              type="sm-bold"
+              style={pal.textLight}
+              lineHeight={1.2}
+              numberOfLines={1}>
               Reposted by{' '}
               {item.reasonRepost.by.displayName || item.reasonRepost.by.handle}
             </Text>
@@ -207,13 +214,7 @@ export const FeedItem = observer(function ({
                 />
               </View>
             )}
-            {item.post.author.viewer?.muted &&
-            ignoreMuteFor !== item.post.author.did ? (
-              <View style={[styles.mutedWarning, pal.btn]}>
-                <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
-                <Text type="sm">This post is by a muted account.</Text>
-              </View>
-            ) : item.richText?.text ? (
+            {item.richText?.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
                   type="post-text"
@@ -222,9 +223,7 @@ export const FeedItem = observer(function ({
                 />
               </View>
             ) : undefined}
-            {item.post.embed ? (
-              <PostEmbeds embed={item.post.embed} style={styles.embed} />
-            ) : null}
+            <PostEmbeds embed={item.post.embed} style={styles.embed} />
             <PostCtrls
               style={styles.ctrls}
               itemUri={itemUri}
@@ -280,7 +279,7 @@ export const FeedItem = observer(function ({
           </Text>
         </Link>
       ) : undefined}
-    </>
+    </PostMutedWrapper>
   )
 })
 
@@ -319,6 +318,7 @@ const styles = StyleSheet.create({
   includeReason: {
     flexDirection: 'row',
     paddingLeft: 50,
+    paddingRight: 20,
     marginTop: 2,
     marginBottom: 2,
   },
@@ -335,14 +335,6 @@ const styles = StyleSheet.create({
   },
   layoutContent: {
     flex: 1,
-  },
-  mutedWarning: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    marginTop: 2,
-    marginBottom: 6,
-    borderRadius: 2,
   },
   postTextContainer: {
     flexDirection: 'row',

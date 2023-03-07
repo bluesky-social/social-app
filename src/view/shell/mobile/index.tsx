@@ -157,7 +157,7 @@ export const MobileShell: React.FC = observer(() => {
   }
 
   const screenBg = {
-    backgroundColor: theme.colorScheme === 'dark' ? colors.gray7 : colors.gray1,
+    backgroundColor: theme.colorScheme === 'dark' ? colors.black : colors.gray1,
   }
   return (
     <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
@@ -202,13 +202,7 @@ export const MobileShell: React.FC = observer(() => {
                       style={[
                         s.h100pct,
                         screenBg,
-                        current
-                          ? [
-                              swipeTransform,
-                              // tabMenuTransform, TODO
-                              // isRunningNewTabAnim ? newTabTransform : undefined, TODO
-                            ]
-                          : undefined,
+                        current ? [swipeTransform] : undefined,
                       ]}>
                       <ErrorBoundary>
                         <Com
