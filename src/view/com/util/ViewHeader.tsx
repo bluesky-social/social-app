@@ -10,7 +10,7 @@ import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useAnalytics} from 'lib/analytics'
 import {isDesktopWeb} from '../../../platform/detection'
 
-const BACK_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
+const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
 export const ViewHeader = observer(function ViewHeader({
   title,
