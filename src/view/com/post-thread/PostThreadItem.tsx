@@ -22,7 +22,6 @@ import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/PostEmbeds'
 import {PostCtrls} from '../util/PostCtrls'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {ComposePrompt} from '../composer/Prompt'
 import {usePalette} from 'lib/hooks/usePalette'
 
 const PARENT_REPLY_LINE_LENGTH = 8
@@ -271,12 +270,6 @@ export const PostThreadItem = observer(function PostThreadItem({
             </View>
           </View>
         </View>
-        <ComposePrompt
-          isReply
-          text="Write your reply"
-          btn="Reply"
-          onPressCompose={onPressReply}
-        />
       </>
     )
   } else {
