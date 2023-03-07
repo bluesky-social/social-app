@@ -163,7 +163,11 @@ export const FeedItem = observer(function ({
                 {color: pal.colors.textLight} as FontAwesomeIconStyle,
               ]}
             />
-            <Text type="sm-bold" style={pal.textLight} lineHeight={1.2}>
+            <Text
+              type="sm-bold"
+              style={pal.textLight}
+              lineHeight={1.2}
+              numberOfLines={1}>
               Reposted by{' '}
               {item.reasonRepost.by.displayName || item.reasonRepost.by.handle}
             </Text>
@@ -314,6 +318,7 @@ const styles = StyleSheet.create({
   includeReason: {
     flexDirection: 'row',
     paddingLeft: 50,
+    paddingRight: 20,
     marginTop: 2,
     marginBottom: 2,
   },
