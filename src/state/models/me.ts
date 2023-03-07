@@ -11,6 +11,8 @@ export class MeModel {
   displayName: string = ''
   description: string = ''
   avatar: string = ''
+  followsCount: number | undefined
+  followersCount: number | undefined
   mainFeed: FeedModel
   notifications: NotificationsViewModel
   follows: MyFollowsModel
@@ -90,10 +92,14 @@ export class MeModel {
           this.displayName = profile.data.displayName || ''
           this.description = profile.data.description || ''
           this.avatar = profile.data.avatar || ''
+          this.followsCount = profile.data.followsCount
+          this.followersCount = profile.data.followersCount
         } else {
           this.displayName = ''
           this.description = ''
           this.avatar = ''
+          this.followsCount = profile.data.followsCount
+          this.followersCount = undefined
         }
       })
       this.mainFeed.clear()

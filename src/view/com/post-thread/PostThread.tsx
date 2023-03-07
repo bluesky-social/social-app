@@ -96,7 +96,7 @@ export const PostThread = observer(function PostThread({
       onLayout={onLayout}
       onScrollToIndexFailed={onScrollToIndexFailed}
       style={s.hContentRegion}
-      contentContainerStyle={s.contentContainer}
+      contentContainerStyle={s.contentContainerExtra}
     />
   )
 })

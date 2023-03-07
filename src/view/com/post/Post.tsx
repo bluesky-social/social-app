@@ -17,6 +17,7 @@ import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/PostEmbeds'
 import {PostCtrls} from '../util/PostCtrls'
+import {PostMutedWrapper} from '../util/PostMuted'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
@@ -140,92 +141,89 @@ export const Post = observer(function Post({
   }
 
   return (
-    <Link
-      style={[styles.outer, pal.view, pal.border, style]}
-      href={itemHref}
-      title={itemTitle}
-      noFeedback>
-      {showReplyLine && <View style={styles.replyLine} />}
-      <View style={styles.layout}>
-        <View style={styles.layoutAvi}>
-          <Link href={authorHref} title={authorTitle}>
-            <UserAvatar
-              size={52}
-              displayName={item.post.author.displayName}
-              handle={item.post.author.handle}
-              avatar={item.post.author.avatar}
+    <PostMutedWrapper isMuted={item.post.author.viewer?.muted === true}>
+      <Link
+        style={[styles.outer, pal.view, pal.border, style]}
+        href={itemHref}
+        title={itemTitle}
+        noFeedback>
+        {showReplyLine && <View style={styles.replyLine} />}
+        <View style={styles.layout}>
+          <View style={styles.layoutAvi}>
+            <Link href={authorHref} title={authorTitle}>
+              <UserAvatar
+                size={52}
+                displayName={item.post.author.displayName}
+                handle={item.post.author.handle}
+                avatar={item.post.author.avatar}
+              />
+            </Link>
+          </View>
+          <View style={styles.layoutContent}>
+            <PostMeta
+              authorHandle={item.post.author.handle}
+              authorDisplayName={item.post.author.displayName}
+              timestamp={item.post.indexedAt}
+              did={item.post.author.did}
+              declarationCid={item.post.author.declaration.cid}
             />
-          </Link>
+            {replyAuthorDid !== '' && (
+              <View style={[s.flexRow, s.mb2, s.alignCenter]}>
+                <FontAwesomeIcon
+                  icon="reply"
+                  size={9}
+                  style={[pal.textLight, s.mr5]}
+                />
+                <Text type="sm" style={[pal.textLight, s.mr2]} lineHeight={1.2}>
+                  Reply to
+                </Text>
+                <UserInfoText
+                  type="sm"
+                  did={replyAuthorDid}
+                  attr="displayName"
+                  style={[pal.textLight]}
+                />
+              </View>
+            )}
+            {item.richText?.text ? (
+              <View style={styles.postTextContainer}>
+                <RichText
+                  type="post-text"
+                  richText={item.richText}
+                  lineHeight={1.3}
+                />
+              </View>
+            ) : undefined}
+            <PostEmbeds embed={item.post.embed} style={s.mb10} />
+            <PostCtrls
+              itemUri={itemUri}
+              itemCid={itemCid}
+              itemHref={itemHref}
+              itemTitle={itemTitle}
+              author={{
+                avatar: item.post.author.avatar!,
+                handle: item.post.author.handle,
+                displayName: item.post.author.displayName!,
+              }}
+              indexedAt={item.post.indexedAt}
+              text={item.richText?.text || record.text}
+              isAuthor={item.post.author.did === store.me.did}
+              replyCount={item.post.replyCount}
+              repostCount={item.post.repostCount}
+              upvoteCount={item.post.upvoteCount}
+              isReposted={!!item.post.viewer.repost}
+              isUpvoted={!!item.post.viewer.upvote}
+              onPressReply={onPressReply}
+              onPressToggleRepost={onPressToggleRepost}
+              onPressToggleUpvote={onPressToggleUpvote}
+              onCopyPostText={onCopyPostText}
+              onOpenTranslate={onOpenTranslate}
+              onDeletePost={onDeletePost}
+            />
+          </View>
         </View>
-        <View style={styles.layoutContent}>
-          <PostMeta
-            authorHandle={item.post.author.handle}
-            authorDisplayName={item.post.author.displayName}
-            timestamp={item.post.indexedAt}
-            did={item.post.author.did}
-            declarationCid={item.post.author.declaration.cid}
-          />
-          {replyAuthorDid !== '' && (
-            <View style={[s.flexRow, s.mb2, s.alignCenter]}>
-              <FontAwesomeIcon
-                icon="reply"
-                size={9}
-                style={[pal.textLight, s.mr5]}
-              />
-              <Text type="sm" style={[pal.textLight, s.mr2]} lineHeight={1.2}>
-                Reply to
-              </Text>
-              <UserInfoText
-                type="sm"
-                did={replyAuthorDid}
-                attr="displayName"
-                style={[pal.textLight]}
-              />
-            </View>
-          )}
-          {item.post.author.viewer?.muted ? (
-            <View style={[styles.mutedWarning, pal.btn]}>
-              <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
-              <Text type="sm">This post is by a muted account.</Text>
-            </View>
-          ) : item.richText?.text ? (
-            <View style={styles.postTextContainer}>
-              <RichText
-                type="post-text"
-                richText={item.richText}
-                lineHeight={1.3}
-              />
-            </View>
-          ) : undefined}
-          <PostEmbeds embed={item.post.embed} style={s.mb10} />
-          <PostCtrls
-            itemUri={itemUri}
-            itemCid={itemCid}
-            itemHref={itemHref}
-            itemTitle={itemTitle}
-            author={{
-              avatar: item.post.author.avatar!,
-              handle: item.post.author.handle,
-              displayName: item.post.author.displayName!,
-            }}
-            indexedAt={item.post.indexedAt}
-            text={item.richText?.text || record.text}
-            isAuthor={item.post.author.did === store.me.did}
-            replyCount={item.post.replyCount}
-            repostCount={item.post.repostCount}
-            upvoteCount={item.post.upvoteCount}
-            isReposted={!!item.post.viewer.repost}
-            isUpvoted={!!item.post.viewer.upvote}
-            onPressReply={onPressReply}
-            onPressToggleRepost={onPressToggleRepost}
-            onPressToggleUpvote={onPressToggleUpvote}
-            onCopyPostText={onCopyPostText}
-            onOpenTranslate={onOpenTranslate}
-            onDeletePost={onDeletePost}
-          />
-        </View>
-      </View>
-    </Link>
+      </Link>
+    </PostMutedWrapper>
   )
 })
 
@@ -244,14 +242,6 @@ const styles = StyleSheet.create({
   },
   layoutContent: {
     flex: 1,
-  },
-  mutedWarning: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    marginTop: 2,
-    marginBottom: 6,
-    borderRadius: 2,
   },
   postTextContainer: {
     flexDirection: 'row',

@@ -9,7 +9,6 @@ const uncompiled_deps = [
   '@bam.tech/react-native-image-resizer',
   'react-native-fs',
   'rn-fetch-blob',
-  'react-native-root-toast',
   'react-native-root-siblings',
   'react-native-linear-gradient',
 ]

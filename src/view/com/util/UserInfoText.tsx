@@ -58,15 +58,15 @@ export function UserInfoText({
   let inner
   if (didFail) {
     inner = (
-      <Text type={type} style={style}>
+      <Text type={type} style={style} numberOfLines={1}>
         {failed}
       </Text>
     )
   } else if (profile) {
     inner = (
-      <Text type={type} style={style} lineHeight={1.2}>{`${prefix || ''}${
-        profile[attr] || profile.handle
-      }`}</Text>
+      <Text type={type} style={style} lineHeight={1.2} numberOfLines={1}>{`${
+        prefix || ''
+      }${profile[attr] || profile.handle}`}</Text>
     )
   } else {
     inner = (

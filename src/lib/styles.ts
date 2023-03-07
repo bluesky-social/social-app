@@ -15,7 +15,7 @@ export const colors = {
   gray5: '#545664',
   gray6: '#373942',
   gray7: '#26272D',
-  gray8: '#101013',
+  gray8: '#141417',
 
   blue0: '#bfe1ff',
   blue1: '#8bc7fd',
@@ -24,6 +24,7 @@ export const colors = {
   blue4: '#0062bd',
   blue5: '#034581',
   blue6: '#012561',
+  blue7: '#001040',
 
   red1: '#ffe6f2',
   red2: '#fba2ce',
@@ -64,6 +65,7 @@ export const s = StyleSheet.create({
   // helpers
   footerSpacer: {height: 100},
   contentContainer: {paddingBottom: 200},
+  contentContainerExtra: {paddingBottom: 300},
   border1: {borderWidth: 1},
   borderTop1: {borderTopWidth: 1},
   borderRight1: {borderRightWidth: 1},
