@@ -1,0 +1,43 @@
+<!DOCTYPE html>                                                                                          
+<html lang="en">
+<head>   
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="origin-when-cross-origin">
+  <title>{{ block "head-title" .}}Bluesky{{ end }}</title>
+  <!-- Hello Humans! API docs at https://atproto.com -->
+
+  <style>
+    /* These styles make the body full-height */
+    html, body { height: 100%; }
+    /* These styles disable body scrolling if you are using <ScrollView> */
+    body { overflow: hidden; }
+    /* These styles make the root element full-height */
+    #app-root { display:flex; height:100%; }
+
+    /* Remove focus state on inputs */
+    *:focus {
+      outline: 0;
+    }
+  </style>
+
+  {{ if not .skipBundle }}<script defer src="/static/bundle.web.js"></script>{{ end }}
+
+	<!-- TODO: could put <link rel="preload"> tags here -->
+
+  <!-- TODO: could put an actual icon path here if we want one -->
+  <link rel="icon" href="data:,">
+  <meta name="generator" name="bskyweb">
+	{{ block "head-metadata" .}}<!-- empty -->{{ end }}
+</head>
+<body>
+	<div id="app-root">
+    <noscript>
+      <h1>Javascript Required</h1>
+      <p>This is a heavily interactive web application, and Javascript is required. Simple HTML interfaces are possible, but that is not what this is.
+    </noscript>
+	</div>
+{{ block "body" .}}
+{{ end }}
+</body>
+</html>

@@ -1,0 +1,13 @@
+{{ template "base.html" .}}
+
+{{ define "head-title" }}Bluesky - Error {{ .statusCode }}{{end}}
+
+{{ define "body" }}
+	<h1>
+  	{{ if eq .statusCode 404 }}
+  		404: Not Found
+  	{{ else }}
+  	  {{ .statusCode }}: Server Error
+  	{{ end }}
+  </h1>
+{{ end }}
