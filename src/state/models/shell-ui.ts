@@ -51,6 +51,11 @@ export interface RepostModal {
   isReposted: boolean
 }
 
+export interface ChangeHandleModal {
+  name: 'change-handle'
+  onChanged: () => void
+}
+
 export type Modal =
   | ConfirmModal
   | EditProfileModal
@@ -60,6 +65,7 @@ export type Modal =
   | CropImageModal
   | DeleteAccountModal
   | RepostModal
+  | ChangeHandleModal
 
 interface LightboxModel {}
 

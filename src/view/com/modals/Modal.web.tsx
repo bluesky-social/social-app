@@ -12,6 +12,7 @@ import * as ReportPostModal from './ReportPost'
 import * as ReportAccountModal from './ReportAccount'
 import * as RepostModal from './Repost'
 import * as CropImageModal from './crop-image/CropImage.web'
+import * as ChangeHandleModal from './ChangeHandle'
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
@@ -62,6 +63,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <CropImageModal.Component {...modal} />
   } else if (modal.name === 'repost') {
     element = <RepostModal.Component {...modal} />
+  } else if (modal.name === 'change-handle') {
+    element = <ChangeHandleModal.Component {...modal} />
   } else {
     return null
   }

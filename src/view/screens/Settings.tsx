@@ -13,13 +13,15 @@ import {observer} from 'mobx-react-lite'
 import * as AppInfo from 'lib/app-info'
 import {useStores} from 'state/index'
 import {ScreenParams} from '../routes'
-import {s} from 'lib/styles'
+import {s, colors} from 'lib/styles'
 import {ScrollView} from '../com/util/Views'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Link} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
 import * as Toast from '../com/util/Toast'
 import {UserAvatar} from '../com/util/UserAvatar'
+import {DropdownButton} from 'view/com/util/forms/DropdownButton'
+import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics'
@@ -28,6 +30,7 @@ export const Settings = observer(function Settings({
   navIdx,
   visible,
 }: ScreenParams) {
+  const theme = useTheme()
   const pal = usePalette('default')
   const store = useStores()
   const {screen, track} = useAnalytics()
@@ -63,6 +66,28 @@ export const Settings = observer(function Settings({
     track('Settings:AddAccountButtonClicked')
     store.session.clear()
   }
+  const onPressChangeHandle = () => {
+    track('Settings:ChangeHandleButtonClicked')
+    store.shell.openModal({
+      name: 'change-handle',
+      onChanged() {
+        setIsSwitching(true)
+        store.session.reloadFromServer().then(
+          () => {
+            setIsSwitching(false)
+            Toast.show('Your handle has been updated')
+          },
+          err => {
+            store.log.error(
+              'Failed to reload from server after handle update',
+              {err},
+            )
+            setIsSwitching(false)
+          },
+        )
+      },
+    })
+  }
   const onPressSignout = () => {
     track('Settings:SignOutButtonClicked')
     store.session.logout()
@@ -75,145 +100,207 @@ export const Settings = observer(function Settings({
     <View style={[s.hContentRegion]} testID="settingsScreen">
       <ViewHeader title="Settings" />
       <ScrollView style={s.hContentRegion}>
-        <View style={[s.mt10, s.pl10, s.pr10]}>
-          <View style={[s.flexRow]}>
-            <Text type="xl-bold" style={pal.text}>
-              Signed in as
-            </Text>
-            <View style={s.flex1} />
-            <TouchableOpacity
-              testID="signOutBtn"
-              onPress={isSwitching ? undefined : onPressSignout}>
-              <Text type="xl-medium" style={pal.link}>
-                Sign out
-              </Text>
-            </TouchableOpacity>
+        <View style={styles.spacer20} />
+        <View style={[s.flexRow, styles.heading]}>
+          <Text type="xl-bold" style={pal.text}>
+            Signed in as
+          </Text>
+          <View style={s.flex1} />
+        </View>
+        {isSwitching ? (
+          <View style={[pal.view, styles.linkCard]}>
+            <ActivityIndicator />
           </View>
-          {isSwitching ? (
-            <View style={[pal.view, styles.profile]}>
-              <ActivityIndicator />
-            </View>
-          ) : (
-            <Link
-              href={`/profile/${store.me.handle}`}
-              title="Your profile"
-              noFeedback>
-              <View style={[pal.view, styles.profile]}>
+        ) : (
+          <Link
+            href={`/profile/${store.me.handle}`}
+            title="Your profile"
+            noFeedback>
+            <View style={[pal.view, styles.linkCard]}>
+              <View style={styles.avi}>
                 <UserAvatar
                   size={40}
                   displayName={store.me.displayName}
                   handle={store.me.handle || ''}
                   avatar={store.me.avatar}
                 />
-                <View style={[s.ml10]}>
-                  <Text type="xl-bold" style={pal.text}>
-                    {store.me.displayName || store.me.handle}
-                  </Text>
-                  <Text style={pal.textLight}>@{store.me.handle}</Text>
-                </View>
               </View>
-            </Link>
-          )}
-          <Text type="sm-medium" style={pal.text}>
-            Switch to:
-          </Text>
-          {store.session.switchableAccounts.map(account => (
-            <TouchableOpacity
-              testID={`switchToAccountBtn-${account.handle}`}
-              key={account.did}
-              style={[
-                pal.view,
-                styles.profile,
-                s.mb2,
-                isSwitching && styles.dimmed,
-              ]}
-              onPress={
-                isSwitching ? undefined : () => onPressSwitchAccount(account)
-              }>
+              <View style={[s.flex1]}>
+                <Text type="md-bold" style={pal.text} numberOfLines={1}>
+                  {store.me.displayName || store.me.handle}
+                </Text>
+                <Text type="sm" style={pal.textLight} numberOfLines={1}>
+                  {store.me.handle}
+                </Text>
+              </View>
+              <TouchableOpacity
+                testID="signOutBtn"
+                onPress={isSwitching ? undefined : onPressSignout}>
+                <Text type="lg" style={pal.link}>
+                  Sign out
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Link>
+        )}
+        {store.session.switchableAccounts.map(account => (
+          <TouchableOpacity
+            testID={`switchToAccountBtn-${account.handle}`}
+            key={account.did}
+            style={[pal.view, styles.linkCard, isSwitching && styles.dimmed]}
+            onPress={
+              isSwitching ? undefined : () => onPressSwitchAccount(account)
+            }>
+            <View style={styles.avi}>
               <UserAvatar
                 size={40}
                 displayName={account.displayName}
                 handle={account.handle || ''}
                 avatar={account.aviUrl}
               />
-              <View style={[s.ml10]}>
-                <Text type="xl-bold" style={pal.text}>
-                  {account.displayName || account.handle}
-                </Text>
-                <Text style={pal.textLight}>@{account.handle}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity
-            testID="switchToNewAccountBtn"
-            style={[
-              pal.view,
-              styles.profile,
-              styles.alignCenter,
-              s.mb2,
-              isSwitching && styles.dimmed,
-            ]}
-            onPress={isSwitching ? undefined : onPressAddAccount}>
+            </View>
+            <View style={[s.flex1]}>
+              <Text type="md-bold" style={pal.text}>
+                {account.displayName || account.handle}
+              </Text>
+              <Text type="sm" style={pal.textLight}>
+                {account.handle}
+              </Text>
+            </View>
+            <AccountDropdownBtn handle={account.handle} />
+          </TouchableOpacity>
+        ))}
+        <TouchableOpacity
+          testID="switchToNewAccountBtn"
+          style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+          onPress={isSwitching ? undefined : onPressAddAccount}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="plus"
               style={pal.text as FontAwesomeIconStyle}
             />
-            <View style={[s.ml5]}>
-              <Text type="md-medium" style={pal.text}>
-                Add account
-              </Text>
-            </View>
-          </TouchableOpacity>
+          </View>
+          <Text type="lg" style={pal.text}>
+            Add account
+          </Text>
+        </TouchableOpacity>
 
-          <View style={styles.spacer} />
-          <Text type="sm-medium" style={[s.mb5, pal.text]}>
-            Danger zone
+        <View style={styles.spacer20} />
+
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          Advanced
+        </Text>
+        <TouchableOpacity
+          testID="changeHandleBtn"
+          style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+          onPress={isSwitching ? undefined : onPressChangeHandle}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="at"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            Change my handle
           </Text>
-          <TouchableOpacity
-            style={[pal.view, s.p10, s.mb10]}
-            onPress={onPressDeleteAccount}>
-            <Text style={pal.textLight}>Delete my account</Text>
-          </TouchableOpacity>
-          <Text type="sm-medium" style={[s.mt10, s.mb5, pal.text]}>
-            Developer tools
+        </TouchableOpacity>
+
+        <View style={styles.spacer20} />
+
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          Danger zone
+        </Text>
+        <TouchableOpacity
+          style={[pal.view, styles.linkCard]}
+          onPress={onPressDeleteAccount}>
+          <View
+            style={[
+              styles.iconContainer,
+              theme.colorScheme === 'dark'
+                ? styles.trashIconContainerDark
+                : styles.trashIconContainerLight,
+            ]}>
+            <FontAwesomeIcon
+              icon={['far', 'trash-can']}
+              style={
+                theme.colorScheme === 'dark'
+                  ? styles.dangerDark
+                  : styles.dangerLight
+              }
+              size={21}
+            />
+          </View>
+          <Text
+            type="lg"
+            style={
+              theme.colorScheme === 'dark'
+                ? styles.dangerDark
+                : styles.dangerLight
+            }>
+            Delete my account
           </Text>
-          <Link
-            style={[pal.view, s.p10, s.mb2]}
-            href="/sys/log"
-            title="System log">
-            <Text style={pal.textLight}>System log</Text>
-          </Link>
-          <Link
-            style={[pal.view, s.p10, s.mb2]}
-            href="/sys/debug"
-            title="Debug tools">
-            <Text style={pal.textLight}>Storybook</Text>
-          </Link>
-          <Text type="sm" style={[s.mt10, pal.textLight]}>
-            Build version {AppInfo.appVersion} ({AppInfo.buildVersion})
+        </TouchableOpacity>
+
+        <View style={styles.spacer20} />
+
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          Developer tools
+        </Text>
+        <Link
+          style={[pal.view, styles.linkCardNoIcon]}
+          href="/sys/log"
+          title="System log">
+          <Text type="lg" style={pal.text}>
+            System log
           </Text>
-          <View style={s.footerSpacer} />
-        </View>
+        </Link>
+        <Link
+          style={[pal.view, styles.linkCardNoIcon]}
+          href="/sys/debug"
+          title="Debug tools">
+          <Text type="lg" style={pal.text}>
+            Storybook
+          </Text>
+        </Link>
+        <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
+          Build version {AppInfo.appVersion} ({AppInfo.buildVersion})
+        </Text>
+        <View style={s.footerSpacer} />
       </ScrollView>
     </View>
   )
 })
 
+function AccountDropdownBtn({handle}: {handle: string}) {
+  const store = useStores()
+  const items = [
+    {
+      label: 'Remove account',
+      onPress: () => {
+        store.session.removeAccount(handle)
+        Toast.show('Account removed from quick access')
+      },
+    },
+  ]
+  return (
+    <View style={s.pl10}>
+      <DropdownButton type="bare" items={items}>
+        <FontAwesomeIcon icon="ellipsis-h" />
+      </DropdownButton>
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
   dimmed: {
     opacity: 0.5,
   },
-  spacer: {
-    height: 50,
+  spacer20: {
+    height: 20,
   },
-  alignCenter: {
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 14,
+  heading: {
+    paddingHorizontal: 18,
+    paddingBottom: 6,
   },
   profile: {
     flexDirection: 'row',
@@ -222,10 +309,45 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
   },
+  linkCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    marginBottom: 1,
+  },
+  linkCardNoIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 18,
+    marginBottom: 1,
+  },
   avi: {
+    marginRight: 12,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
     width: 40,
     height: 40,
     borderRadius: 30,
-    marginRight: 8,
+    marginRight: 12,
+  },
+  trashIconContainerDark: {
+    backgroundColor: colors.red7,
+  },
+  trashIconContainerLight: {
+    backgroundColor: colors.red1,
+  },
+  dangerLight: {
+    color: colors.red4,
+  },
+  dangerDark: {
+    color: colors.red2,
+  },
+  buildInfo: {
+    paddingVertical: 8,
+    paddingHorizontal: 18,
   },
 })

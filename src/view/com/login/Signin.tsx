@@ -296,6 +296,7 @@ const LoginForm = ({
       let fullIdent = identifier
       if (
         !identifier.includes('@') && // not an email
+        !identifier.includes('.') && // not a domain
         serviceDescription &&
         serviceDescription.availableUserDomains.length > 0
       ) {

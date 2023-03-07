@@ -30,6 +30,8 @@ export const colors = {
   red3: '#ec4899',
   red4: '#d1106f',
   red5: '#97074e',
+  red6: '#690436',
+  red7: '#4F0328',
 
   pink1: '#f8ccff',
   pink2: '#e966ff',
