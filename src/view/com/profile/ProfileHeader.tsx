@@ -29,6 +29,8 @@ import {UserBanner} from '../util/UserBanner'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 
+const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
+
 export const ProfileHeader = observer(function ProfileHeader({
   view,
   onRefreshAll,
@@ -285,10 +287,12 @@ export const ProfileHeader = observer(function ProfileHeader({
           </View>
         ) : undefined}
       </View>
-      <TouchableWithoutFeedback onPress={onPressBack}>
-        <BlurView style={styles.backBtn} blurType="dark">
-          <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
-        </BlurView>
+      <TouchableWithoutFeedback onPress={onPressBack} hitSlop={BACK_HITSLOP}>
+        <View style={styles.backBtnWrapper}>
+          <BlurView style={styles.backBtn} blurType="dark">
+            <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
+          </BlurView>
+        </View>
       </TouchableWithoutFeedback>
       <TouchableWithoutFeedback
         testID="profileHeaderAviButton"
@@ -312,10 +316,14 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 120,
   },
-  backBtn: {
+  backBtnWrapper: {
     position: 'absolute',
     top: 10,
     left: 10,
+    width: 30,
+    height: 30,
+  },
+  backBtn: {
     width: 30,
     height: 30,
     borderRadius: 15,

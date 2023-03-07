@@ -13,9 +13,11 @@ import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {EmptyState} from '../com/util/EmptyState'
 import {Text} from '../com/util/text/Text'
+import {FAB} from '../com/util/FAB'
 import {s, colors} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
+import {ComposeIcon2} from 'lib/icons'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const END_ITEM = {_reactKey: '__end__'}
@@ -23,7 +25,7 @@ const EMPTY_ITEM = {_reactKey: '__empty__'}
 
 export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const store = useStores()
-  const {screen} = useAnalytics()
+  const {screen, track} = useAnalytics()
 
   useEffect(() => {
     screen('Profile')
@@ -65,6 +67,10 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   // events
   // =
 
+  const onPressCompose = React.useCallback(() => {
+    track('ProfileScreen:PressCompose')
+    store.shell.openComposer({})
+  }, [store, track])
   const onSelectView = (index: number) => {
     uiState.setSelectedViewIndex(index)
   }
@@ -186,6 +192,11 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
       ) : (
         <CenteredView>{renderHeader()}</CenteredView>
       )}
+      <FAB
+        testID="composeFAB"
+        onPress={onPressCompose}
+        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+      />
     </View>
   )
 })

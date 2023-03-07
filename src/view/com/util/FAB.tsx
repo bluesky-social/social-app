@@ -7,9 +7,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import {colors, gradients} from 'lib/styles'
+import {gradients} from 'lib/styles'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useStores} from 'state/index'
 
@@ -21,7 +19,7 @@ export const FAB = observer(
     onPress,
   }: {
     testID?: string
-    icon: IconProp
+    icon: JSX.Element
     onPress: OnPress
   }) => {
     const store = useStores()
@@ -45,7 +43,7 @@ export const FAB = observer(
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={styles.inner}>
-            <FontAwesomeIcon size={24} icon={icon} color={colors.white} />
+            {icon}
           </LinearGradient>
         </Animated.View>
       </TouchableWithoutFeedback>
@@ -57,7 +55,7 @@ const styles = StyleSheet.create({
   outer: {
     position: 'absolute',
     zIndex: 1,
-    right: 22,
+    right: 28,
     bottom: 94,
     width: 60,
     height: 60,

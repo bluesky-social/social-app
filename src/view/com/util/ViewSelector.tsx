@@ -100,6 +100,7 @@ export function ViewSelector({
         onScroll={onScroll}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
+        onEndReachedThreshold={0.6}
         contentContainerStyle={s.contentContainer}
         removeClippedSubviews={true}
       />
