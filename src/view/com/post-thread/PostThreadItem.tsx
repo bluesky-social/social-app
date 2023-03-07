@@ -21,6 +21,7 @@ import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/PostEmbeds'
 import {PostCtrls} from '../util/PostCtrls'
+import {PostMutedWrapper} from '../util/PostMuted'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 
@@ -274,7 +275,7 @@ export const PostThreadItem = observer(function PostThreadItem({
     )
   } else {
     return (
-      <>
+      <PostMutedWrapper isMuted={item.post.author.viewer?.muted === true}>
         <Link
           style={[styles.outer, {borderTopColor: pal.colors.border}, pal.view]}
           href={itemHref}
@@ -315,12 +316,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 did={item.post.author.did}
                 declarationCid={item.post.author.declaration.cid}
               />
-              {item.post.author.viewer?.muted ? (
-                <View style={[styles.mutedWarning, pal.btn]}>
-                  <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
-                  <Text type="sm">This post is by a muted account.</Text>
-                </View>
-              ) : item.richText?.text ? (
+              {item.richText?.text ? (
                 <View style={styles.postTextContainer}>
                   <RichText
                     type="post-text"
@@ -377,7 +373,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             />
           </Link>
         ) : undefined}
-      </>
+      </PostMutedWrapper>
     )
   }
 })
@@ -433,14 +429,6 @@ const styles = StyleSheet.create({
   metaItem: {
     paddingRight: 5,
     maxWidth: 240,
-  },
-  mutedWarning: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    marginTop: 2,
-    marginBottom: 6,
-    borderRadius: 2,
   },
   postTextContainer: {
     flexDirection: 'row',
