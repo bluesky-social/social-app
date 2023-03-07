@@ -66,6 +66,28 @@ export const Settings = observer(function Settings({
     track('Settings:AddAccountButtonClicked')
     store.session.clear()
   }
+  const onPressChangeHandle = () => {
+    track('Settings:ChangeHandleButtonClicked')
+    store.shell.openModal({
+      name: 'change-handle',
+      onChanged() {
+        setIsSwitching(true)
+        store.session.reloadFromServer().then(
+          () => {
+            setIsSwitching(false)
+            Toast.show('Your handle has been updated')
+          },
+          err => {
+            store.log.error(
+              'Failed to reload from server after handle update',
+              {err},
+            )
+            setIsSwitching(false)
+          },
+        )
+      },
+    })
+  }
   const onPressSignout = () => {
     track('Settings:SignOutButtonClicked')
     store.session.logout()
@@ -160,6 +182,26 @@ export const Settings = observer(function Settings({
           </View>
           <Text type="lg" style={pal.text}>
             Add account
+          </Text>
+        </TouchableOpacity>
+
+        <View style={styles.spacer20} />
+
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          Advanced
+        </Text>
+        <TouchableOpacity
+          testID="changeHandleBtn"
+          style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+          onPress={isSwitching ? undefined : onPressChangeHandle}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="at"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            Change my handle
           </Text>
         </TouchableOpacity>
 
