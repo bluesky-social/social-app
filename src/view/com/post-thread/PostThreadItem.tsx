@@ -281,7 +281,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           href={itemHref}
           title={itemTitle}
           noFeedback>
-          {record.reply && (
+          {item._showParentReplyLine && (
             <View
               style={[
                 styles.parentReplyLine,
@@ -289,7 +289,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               ]}
             />
           )}
-          {item.replies?.length !== 0 && (
+          {item._showChildReplyLine && (
             <View
               style={[
                 styles.childReplyLine,

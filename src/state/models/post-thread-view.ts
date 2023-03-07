@@ -21,6 +21,8 @@ export class PostThreadViewPostModel {
   _reactKey: string = ''
   _depth = 0
   _isHighlightedPost = false
+  _showParentReplyLine = false
+  _showChildReplyLine = false
   _hasMore = false
 
   // data
@@ -29,6 +31,14 @@ export class PostThreadViewPostModel {
   parent?: PostThreadViewPostModel | GetPostThread.NotFoundPost
   replies?: (PostThreadViewPostModel | GetPostThread.NotFoundPost)[]
   richText?: RichText
+
+  get uri() {
+    return this.post.uri
+  }
+
+  get parentUri() {
+    return this.postRecord?.reply?.parent.uri
+  }
 
   constructor(
     public rootStore: RootStoreModel,
@@ -65,6 +75,7 @@ export class PostThreadViewPostModel {
   assignTreeModels(
     keyGen: Generator<string>,
     v: GetPostThread.ThreadViewPost,
+    higlightedPostUri: string,
     includeParent = true,
     includeChildren = true,
   ) {
@@ -77,8 +88,16 @@ export class PostThreadViewPostModel {
           v.parent,
         )
         parentModel._depth = this._depth - 1
+        parentModel._showChildReplyLine = true
         if (v.parent.parent) {
-          parentModel.assignTreeModels(keyGen, v.parent, true, false)
+          parentModel._showParentReplyLine = true //parentModel.uri !== higlightedPostUri
+          parentModel.assignTreeModels(
+            keyGen,
+            v.parent,
+            higlightedPostUri,
+            true,
+            false,
+          )
         }
         this.parent = parentModel
       } else if (GetPostThread.isNotFoundPost(v.parent)) {
@@ -96,8 +115,17 @@ export class PostThreadViewPostModel {
             item,
           )
           itemModel._depth = this._depth + 1
-          if (item.replies) {
-            itemModel.assignTreeModels(keyGen, item, false, true)
+          itemModel._showParentReplyLine =
+            itemModel.parentUri !== higlightedPostUri
+          if (item.replies?.length) {
+            itemModel._showChildReplyLine = true
+            itemModel.assignTreeModels(
+              keyGen,
+              item,
+              higlightedPostUri,
+              false,
+              true,
+            )
           }
           replies.push(itemModel)
         } else if (GetPostThread.isNotFoundPost(item)) {
@@ -333,6 +361,7 @@ export class PostThreadViewModel {
     thread.assignTreeModels(
       keyGen,
       res.data.thread as GetPostThread.ThreadViewPost,
+      thread.uri,
     )
     this.thread = thread
   }
