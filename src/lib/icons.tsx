@@ -674,6 +674,7 @@ export function ComposeIcon2({
     <Svg
       viewBox="0 0 24 24"
       stroke="currentColor"
+      fill="none"
       width={size || 24}
       height={size || 24}
       style={style}>
