@@ -7,7 +7,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {ScrollView} from '../com/util/Views'
 import {observer} from 'mobx-react-lite'
 import {UserAvatar} from '../com/util/UserAvatar'
@@ -133,7 +136,11 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
             />
             {query ? (
               <TouchableOpacity onPress={onPressClearQuery}>
-                <FontAwesomeIcon icon="xmark" size={16} style={pal.textLight} />
+                <FontAwesomeIcon
+                  icon="xmark"
+                  size={16}
+                  style={pal.textLight as FontAwesomeIconStyle}
+                />
               </TouchableOpacity>
             ) : undefined}
           </View>
