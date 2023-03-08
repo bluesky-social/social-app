@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"io"
-	"fmt"
 	"errors"
+	"fmt"
+	"io"
 	"net/http"
 
 	comatproto "github.com/bluesky-social/indigo/api/atproto"
@@ -12,10 +12,10 @@ import (
 	cliutil "github.com/bluesky-social/indigo/cmd/gosky/util"
 	"github.com/bluesky-social/indigo/xrpc"
 
+	"github.com/flosch/pongo2/v6"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/urfave/cli/v2"
-	"github.com/flosch/pongo2/v6"
 )
 
 // TODO: embed templates in executable
@@ -53,7 +53,6 @@ func (r Renderer) Render(w io.Writer, name string, data interface{}, c echo.Cont
 	return t.ExecuteWriter(ctx, w)
 }
 
-
 type Server struct {
 	xrpcc *xrpc.Client
 }
@@ -65,31 +64,31 @@ func serve(cctx *cli.Context) error {
 	xrpcc := &xrpc.Client{
 		Client: cliutil.NewHttpClient(),
 		Host:   cctx.String("pds-host"),
-		Auth:   &xrpc.AuthInfo{
+		Auth: &xrpc.AuthInfo{
 			Handle: cctx.String("handle"),
 		},
 	}
 
-    auth, err := comatproto.SessionCreate(context.TODO(), xrpcc, &comatproto.SessionCreate_Input{        
-        Identifier: &xrpcc.Auth.Handle,
-        Password:   cctx.String("password"),
-    })
-    if err != nil {
-        return err
-    }
-    xrpcc.Auth.AccessJwt = auth.AccessJwt
-    xrpcc.Auth.RefreshJwt = auth.RefreshJwt
-    xrpcc.Auth.Did = auth.Did
-    xrpcc.Auth.Handle = auth.Handle
+	auth, err := comatproto.SessionCreate(context.TODO(), xrpcc, &comatproto.SessionCreate_Input{
+		Identifier: &xrpcc.Auth.Handle,
+		Password:   cctx.String("password"),
+	})
+	if err != nil {
+		return err
+	}
+	xrpcc.Auth.AccessJwt = auth.AccessJwt
+	xrpcc.Auth.RefreshJwt = auth.RefreshJwt
+	xrpcc.Auth.Did = auth.Did
+	xrpcc.Auth.Handle = auth.Handle
 
-	server := Server{ xrpcc }
+	server := Server{xrpcc}
 
 	e := echo.New()
 	e.HideBanner = true
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method} path=${uri} status=${status} latency=${latency_human}\n",
 	}))
-	e.Renderer = Renderer{ Debug: true }
+	e.Renderer = Renderer{Debug: true}
 	e.HTTPErrorHandler = customHTTPErrorHandler
 
 	// configure routes
@@ -149,7 +148,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 	handle := c.Param("handle")
 	rkey := c.Param("rkey")
 	// sanity check argument
-	if (len(handle) > 4 && len(handle) < 128 && len(rkey) > 0) {
+	if len(handle) > 4 && len(handle) < 128 && len(rkey) > 0 {
 		ctx := context.TODO()
 		// requires two fetches: first fetch profile (!)
 		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle)
@@ -169,7 +168,6 @@ func (srv *Server) WebPost(c echo.Context) error {
 			}
 		}
 
-
 	}
 	return c.Render(http.StatusOK, "templates/post.html", data)
 }
@@ -178,7 +176,7 @@ func (srv *Server) WebProfile(c echo.Context) error {
 	data := pongo2.Context{}
 	handle := c.Param("handle")
 	// sanity check argument
-	if (len(handle) > 4 && len(handle) < 128) {
+	if len(handle) > 4 && len(handle) < 128 {
 		ctx := context.TODO()
 		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle)
 		if err != nil {
