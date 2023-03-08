@@ -46,7 +46,7 @@ export const WelcomeBanner = observer(() => {
         type="title-lg"
         style={[pal.text, s.textCenter, s.bold, s.pb5]}
         lineHeight={1.1}>
-        Welcome to the private beta!
+        Welcome to Bluesky!
       </Text>
       {isReady ? (
         <View style={styles.controls}>
