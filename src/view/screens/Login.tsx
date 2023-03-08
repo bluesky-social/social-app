@@ -37,7 +37,6 @@ const SigninOrCreateAccount = ({
       <View style={styles.hero}>
         <View style={styles.heroText}>
           <Text style={styles.title}>Bluesky</Text>
-          <Text style={styles.subtitle}>[ private beta ]</Text>
         </View>
       </View>
       <View testID="signinOrCreateAccount" style={styles.btns}>
