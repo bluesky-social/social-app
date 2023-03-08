@@ -1,4 +1,3 @@
-
 ## Build / Develop
 
 ### SPA Bundle (monolithic static javascript file)
@@ -8,9 +7,9 @@ environment set up. Either follow the top-level README, or something quick
 like:
 
     # install nodejs 18 (specifically)
-	nvm install 18
-	nvm use 18
-	npm install --global yarn
+    nvm install 18
+    nvm use 18
+    npm install --global yarn
 
     # setup tools and deps (in top level of this repo)
     yarn install --frozen-lockfile
