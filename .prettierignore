@@ -3,3 +3,6 @@ android
 src/third-party
 src/app.json
 public
+/bskyweb/templates
+/dist/
+/.watchmanconfig
