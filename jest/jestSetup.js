@@ -64,10 +64,6 @@ jest.mock('@segment/analytics-react-native', () => ({
   }),
 }))
 
-jest.mock('react-native-permissions', () =>
-  require('react-native-permissions/mock'),
-)
-
 jest.mock('expo-camera', () => ({
   Camera: {
     useCameraPermissions: jest.fn(() => [true]),

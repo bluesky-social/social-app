@@ -11,9 +11,9 @@ import {
   PickedMedia,
 } from '../../../lib/media/picker'
 import {
-  requestPhotoAccessIfNeeded,
-  requestCameraAccessIfNeeded,
-} from 'lib/permissions'
+  usePhotoLibraryPermission,
+  useCameraPermission,
+} from 'lib/hooks/usePermissions'
 import {useStores} from 'state/index'
 import {colors, gradients} from 'lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
@@ -36,6 +36,8 @@ export function UserAvatar({
   const store = useStores()
   const pal = usePalette('default')
   const initials = getInitials(displayName || handle)
+  const {requestCameraAccessIfNeeded} = useCameraPermission()
+  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
   const renderSvg = (svgSize: number, svgInitials: string) => (
     <Svg width={svgSize} height={svgSize} viewBox="0 0 100 100">

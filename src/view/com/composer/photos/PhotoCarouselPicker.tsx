@@ -18,9 +18,9 @@ import {compressIfNeeded} from 'lib/media/manip'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {
-  requestPhotoAccessIfNeeded,
-  requestCameraAccessIfNeeded,
-} from 'lib/permissions'
+  usePhotoLibraryPermission,
+  useCameraPermission,
+} from 'lib/hooks/usePermissions'
 import {
   POST_IMG_MAX_WIDTH,
   POST_IMG_MAX_HEIGHT,
@@ -38,6 +38,8 @@ export const PhotoCarouselPicker = ({
   const pal = usePalette('default')
   const store = useStores()
   const [isSetup, setIsSetup] = React.useState<boolean>(false)
+  const {requestCameraAccessIfNeeded} = useCameraPermission()
+  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
   const localPhotos = React.useMemo<UserLocalPhotosModel>(
     () => new UserLocalPhotosModel(store),
@@ -68,7 +70,7 @@ export const PhotoCarouselPicker = ({
       // ignore
       store.log.warn('Error using camera', err)
     }
-  }, [store, selectedPhotos, onSelectPhotos])
+  }, [store, selectedPhotos, onSelectPhotos, requestCameraAccessIfNeeded])
 
   const handleSelectPhoto = useCallback(
     async (item: PhotoIdentifier) => {
@@ -116,7 +118,7 @@ export const PhotoCarouselPicker = ({
       )
     }
     onSelectPhotos([...selectedPhotos, ...result])
-  }, [track, store, selectedPhotos, onSelectPhotos])
+  }, [track, store, selectedPhotos, onSelectPhotos, requestPhotoAccessIfNeeded])
 
   return (
     <ScrollView

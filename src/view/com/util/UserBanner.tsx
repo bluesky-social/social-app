@@ -13,9 +13,9 @@ import {
 } from '../../../lib/media/picker'
 import {useStores} from 'state/index'
 import {
-  requestPhotoAccessIfNeeded,
-  requestCameraAccessIfNeeded,
-} from 'lib/permissions'
+  usePhotoLibraryPermission,
+  useCameraPermission,
+} from 'lib/hooks/usePermissions'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
@@ -29,6 +29,9 @@ export function UserBanner({
 }) {
   const store = useStores()
   const pal = usePalette('default')
+  const {requestCameraAccessIfNeeded} = useCameraPermission()
+  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+
   const dropdownItems = [
     !isWeb && {
       label: 'Camera',
