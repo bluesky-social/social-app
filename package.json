@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "private": true,
   "scripts": {
     "android": "expo run:android",
