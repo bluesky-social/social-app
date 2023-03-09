@@ -28,6 +28,8 @@ import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 
+import {Screens} from '../../screens'
+
 export const MobileShell: React.FC = observer(() => {
   const theme = useTheme()
   const pal = usePalette('default')
@@ -166,71 +168,7 @@ export const MobileShell: React.FC = observer(() => {
           theme.colorScheme === 'dark' ? 'light-content' : 'dark-content'
         }
       />
-      <View style={[styles.innerContainer, {paddingTop: safeAreaInsets.top}]}>
-        <HorzSwipe
-          distThresholdDivisor={2.5}
-          useNativeDriver
-          panX={swipeGestureInterp}
-          swipeEnabled
-          canSwipeLeft={canSwipeLeft}
-          canSwipeRight={canSwipeRight}
-          onSwipeStartDirection={onNavSwipeStartDirection}
-          onSwipeEnd={onNavSwipeEnd}>
-          <ScreenContainer style={styles.screenContainer}>
-            {screenRenderDesc.screens.map(
-              ({Com, navIdx, params, key, current, previous}) => {
-                if (isMenuActive) {
-                  // HACK menu is active, treat current as previous
-                  if (previous) {
-                    previous = false
-                  } else if (current) {
-                    current = false
-                    previous = true
-                  }
-                }
-                return (
-                  <Screen
-                    key={key}
-                    style={[StyleSheet.absoluteFill]}
-                    activityState={current ? 2 : previous ? 1 : 0}>
-                    <Animated.View
-                      style={
-                        current ? [styles.screenMask, swipeOpacity] : undefined
-                      }
-                    />
-                    <Animated.View
-                      style={[
-                        s.h100pct,
-                        screenBg,
-                        current ? [swipeTransform] : undefined,
-                      ]}>
-                      <ErrorBoundary>
-                        <Com
-                          params={params}
-                          navIdx={navIdx}
-                          visible={current}
-                        />
-                      </ErrorBoundary>
-                    </Animated.View>
-                  </Screen>
-                )
-              },
-            )}
-          </ScreenContainer>
-          <BottomBar />
-          {isMenuActive || menuSwipingDirection !== 0 ? (
-            <TouchableWithoutFeedback
-              onPress={() => store.shell.setMainMenuOpen(false)}>
-              <Animated.View style={[styles.screenMask, menuSwipeOpacity]} />
-            </TouchableWithoutFeedback>
-          ) : undefined}
-          {shouldRenderMenu && (
-            <Animated.View style={[styles.menuDrawer, menuSwipeTransform]}>
-              <Menu onClose={() => store.shell.setMainMenuOpen(false)} />
-            </Animated.View>
-          )}
-        </HorzSwipe>
-      </View>
+      <Screens />
       <ModalsContainer />
       <Lightbox />
       <Composer

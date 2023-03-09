@@ -17,6 +17,8 @@ import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {s, colors} from 'lib/styles'
 import {isMobileWeb} from 'platform/detection'
 
+import {Screens} from '../../screens'
+
 export const WebShell: React.FC = observer(() => {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   const store = useStores()
@@ -25,6 +27,8 @@ export const WebShell: React.FC = observer(() => {
   if (isMobileWeb) {
     return <NoMobileWeb />
   }
+
+  return <Screens />
 
   if (!store.session.hasSession) {
     return (
