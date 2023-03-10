@@ -1,5 +1,4 @@
 import * as React from 'react'
-import {View, Text} from 'react-native'
 import {NavigationContainer} from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {createDrawerNavigator} from '@react-navigation/drawer'
@@ -12,6 +11,7 @@ import {
   State,
 } from 'lib/routes/types'
 
+import {Drawer} from './shell/Drawer'
 import {BottomBar} from './shell/BottomBar'
 
 import {HomeScreen} from './screens/Home'
@@ -137,15 +137,6 @@ function buildStateObject(stack: string, route: string, params: RouteParams) {
   }
 }
 
-function DrawerContent() {
-  // TODO
-  return (
-    <View>
-      <Text>Drawer</Text>
-    </View>
-  )
-}
-
 function commonScreens(Stack: ReturnType<typeof createNativeStackNavigator>) {
   return (
     <>
@@ -166,9 +157,10 @@ function commonScreens(Stack: ReturnType<typeof createNativeStackNavigator>) {
 }
 
 function HomeDrawerNavigator() {
+  const drawerContent = React.useCallback(props => <Drawer {...props} />, [])
   return (
     <HomeDrawer.Navigator
-      drawerContent={DrawerContent}
+      drawerContent={drawerContent}
       screenOptions={{swipeEdgeWidth: 300, headerShown: false}}>
       <HomeDrawer.Screen name="HomeInner" component={HomeScreen} />
     </HomeDrawer.Navigator>
@@ -190,9 +182,10 @@ function HomeStackNavigator() {
 }
 
 function NotificationsDrawerNavigator() {
+  const drawerContent = React.useCallback(props => <Drawer {...props} />, [])
   return (
     <NotificationsDrawer.Navigator
-      drawerContent={DrawerContent}
+      drawerContent={drawerContent}
       screenOptions={{swipeEdgeWidth: 300, headerShown: false}}>
       <NotificationsDrawer.Screen
         name="NotificationsInner"
@@ -220,9 +213,10 @@ function NotificationsStackNavigator() {
 }
 
 function SearchDrawerNavigator() {
+  const drawerContent = React.useCallback(props => <Drawer {...props} />, [])
   return (
     <SearchDrawer.Navigator
-      drawerContent={DrawerContent}
+      drawerContent={drawerContent}
       screenOptions={{swipeEdgeWidth: 300, headerShown: false}}>
       <SearchDrawer.Screen name="SearchInner" component={SearchScreen} />
     </SearchDrawer.Navigator>

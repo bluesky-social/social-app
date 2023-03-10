@@ -14,7 +14,6 @@ import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
 import {useAnalytics} from 'lib/analytics'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {TabPurpose, TabPurposeMainPath} from 'state/models/navigation'
 import {clamp} from 'lib/numbers'
 import {
   HomeIcon,
@@ -28,6 +27,7 @@ import {
 import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 
+// TODO move to lib
 function currentRoute(state) {
   let node = state.routes[state.index]
   while (node.state?.routes && typeof node.state?.index === 'number') {
