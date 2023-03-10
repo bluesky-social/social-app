@@ -19,12 +19,24 @@ export type HomeTabNavigatorParams = CommonNavigatorParams & {
   Home: undefined
 }
 
-export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
-  Notifications: undefined
+export type HomeDrawerNavigatorParams = {
+  HomeInner: undefined
 }
 
 export type SearchTabNavigatorParams = CommonNavigatorParams & {
   Search: undefined
+}
+
+export type SearchDrawerNavigatorParams = {
+  SearchInner: undefined
+}
+
+export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
+  Notifications: undefined
+}
+
+export type NotificationsDrawerNavigatorParams = {
+  NotificationsInner: undefined
 }
 
 // NOTE

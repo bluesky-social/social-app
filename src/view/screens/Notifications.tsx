@@ -4,7 +4,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import useAppState from 'react-native-appstate-hook'
 import {
   NativeStackScreenProps,
-  NotificationsTabNavigatorParams,
+  NotificationsDrawerNavigatorParams,
 } from 'lib/routes/types'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/notifications/Feed'
@@ -15,10 +15,11 @@ import {useAnalytics} from 'lib/analytics'
 
 const NOTIFICATIONS_POLL_INTERVAL = 15e3
 
-export const NotificationsScreen = ({}: NativeStackScreenProps<
-  NotificationsTabNavigatorParams,
-  'Notifications'
->) => {
+type Props = NativeStackScreenProps<
+  NotificationsDrawerNavigatorParams,
+  'NotificationsInner'
+>
+export const NotificationsScreen = ({}: Props) => {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
   const scrollElRef = React.useRef<FlatList>(null)

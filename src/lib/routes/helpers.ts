@@ -15,7 +15,7 @@ import {State, NavigationProp} from './types'
 // }
 
 export function getCurrentRoute(state: State) {
-  let node = state.routes[state.index]
+  let node = state.routes[state.index || 0]
   while (node.state?.routes && typeof node.state?.index === 'number') {
     node = node.state?.routes[node.state?.index]
   }

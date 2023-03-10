@@ -6,8 +6,11 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 
 import {
   HomeTabNavigatorParams,
-  NotificationsTabNavigatorParams,
+  HomeDrawerNavigatorParams,
   SearchTabNavigatorParams,
+  SearchDrawerNavigatorParams,
+  NotificationsTabNavigatorParams,
+  NotificationsDrawerNavigatorParams,
   State,
 } from 'lib/routes/types'
 
@@ -27,11 +30,12 @@ import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
 import {DebugScreen} from './view/screens/Debug'
 import {LogScreen} from './view/screens/Log'
 
-const HomeDrawer = createDrawerNavigator()
+const HomeDrawer = createDrawerNavigator<HomeDrawerNavigatorParams>()
 const HomeTab = createNativeStackNavigator<HomeTabNavigatorParams>()
-const SearchDrawer = createDrawerNavigator()
+const SearchDrawer = createDrawerNavigator<SearchDrawerNavigatorParams>()
 const SearchTab = createNativeStackNavigator<SearchTabNavigatorParams>()
-const NotificationsDrawer = createDrawerNavigator()
+const NotificationsDrawer =
+  createDrawerNavigator<NotificationsDrawerNavigatorParams>()
 const NotificationsTab =
   createNativeStackNavigator<NotificationsTabNavigatorParams>()
 const Tab = createBottomTabNavigator()
@@ -139,7 +143,7 @@ function buildStateObject(stack: string, route: string, params: RouteParams) {
   }
 }
 
-function commonScreens(Stack: ReturnType<typeof createNativeStackNavigator>) {
+function commonScreens(Stack: typeof HomeTab) {
   return (
     <>
       <Stack.Screen name="Settings" component={SettingsScreen} />
@@ -183,6 +187,31 @@ function HomeTabNavigator() {
   )
 }
 
+function SearchDrawerNavigator() {
+  const drawerContent = React.useCallback(props => <Drawer {...props} />, [])
+  return (
+    <SearchDrawer.Navigator
+      drawerContent={drawerContent}
+      screenOptions={{swipeEdgeWidth: 300, headerShown: false}}>
+      <SearchDrawer.Screen name="SearchInner" component={SearchScreen} />
+    </SearchDrawer.Navigator>
+  )
+}
+
+function SearchTabNavigator() {
+  return (
+    <SearchTab.Navigator
+      screenOptions={{
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+      }}>
+      <SearchTab.Screen name="Search" component={SearchDrawerNavigator} />
+      {commonScreens(SearchTab as typeof HomeTab)}
+    </SearchTab.Navigator>
+  )
+}
+
 function NotificationsDrawerNavigator() {
   const drawerContent = React.useCallback(props => <Drawer {...props} />, [])
   return (
@@ -209,33 +238,8 @@ function NotificationsTabNavigator() {
         name="Notifications"
         component={NotificationsDrawerNavigator}
       />
-      {commonScreens(NotificationsTab)}
+      {commonScreens(NotificationsTab as typeof HomeTab)}
     </NotificationsTab.Navigator>
-  )
-}
-
-function SearchDrawerNavigator() {
-  const drawerContent = React.useCallback(props => <Drawer {...props} />, [])
-  return (
-    <SearchDrawer.Navigator
-      drawerContent={drawerContent}
-      screenOptions={{swipeEdgeWidth: 300, headerShown: false}}>
-      <SearchDrawer.Screen name="SearchInner" component={SearchScreen} />
-    </SearchDrawer.Navigator>
-  )
-}
-
-function SearchTabNavigator() {
-  return (
-    <SearchTab.Navigator
-      screenOptions={{
-        gestureEnabled: true,
-        fullScreenGestureEnabled: true,
-        headerShown: false,
-      }}>
-      <SearchTab.Screen name="Search" component={SearchDrawerNavigator} />
-      {commonScreens(SearchTab)}
-    </SearchTab.Navigator>
   )
 }
 

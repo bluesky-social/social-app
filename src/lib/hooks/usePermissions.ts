@@ -38,7 +38,7 @@ export function useCameraPermission() {
   const [cameraPermissionStatus] = Camera.useCameraPermissions()
 
   const requestCameraAccessIfNeeded = async () => {
-    if (cameraPermissionStatus.granted) {
+    if (cameraPermissionStatus?.granted) {
       return true
     } else {
       openPermissionAlert('camera')
