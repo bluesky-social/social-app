@@ -20,6 +20,7 @@ import {BottomBar} from './view/shell/BottomBar'
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
 import {NotificationsScreen} from './view/screens/Notifications'
+import {NotFoundScreen} from './view/screens/NotFound'
 import {SettingsScreen} from './view/screens/Settings'
 import {ProfileScreen} from './view/screens/Profile'
 import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
@@ -87,7 +88,7 @@ const ROUTES: Record<string, Route> = {
 }
 
 export function matchPath(path: string): {name: string; params: RouteParams} {
-  let name = 'Home' // TODO should be not found
+  let name = 'NotFound'
   let params: RouteParams = {}
   for (const [screenName, matcher] of Object.entries(ROUTES)) {
     const res = matcher.match(path)
@@ -146,6 +147,7 @@ function buildStateObject(stack: string, route: string, params: RouteParams) {
 function commonScreens(Stack: typeof HomeTab) {
   return (
     <>
+      <Stack.Screen name="NotFound" component={NotFoundScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen
