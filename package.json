@@ -72,7 +72,6 @@
     "react-native-background-fetch": "^4.1.8",
     "react-native-fast-image": "^8.6.3",
     "react-native-fs": "^2.20.0",
-    "react-native-gesture-handler": "^2.5.0",
     "react-native-haptic-feedback": "^1.14.0",
     "react-native-image-crop-picker": "^0.38.1",
     "react-native-inappbrowser-reborn": "^3.6.3",
@@ -149,7 +148,6 @@
     "preset": "jest-expo/ios",
     "setupFilesAfterEnv": [
       "./jest/jestSetup.js",
-      "./node_modules/react-native-gesture-handler/jestSetup.js",
       "@testing-library/jest-native/extend-expect"
     ],
     "moduleFileExtensions": [
