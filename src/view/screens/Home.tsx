@@ -18,7 +18,7 @@ import {ComposeIcon2} from 'lib/icons'
 const HEADER_HEIGHT = 42
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
-export const HomeScreen = observer(function Home({}: Props) {
+export const HomeScreen = observer(function Home(_opts: Props) {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
   const {screen, track} = useAnalytics()

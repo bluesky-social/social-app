@@ -1,23 +1,28 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StatusBar, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useStores} from 'state/index'
-import {Login} from '../../screens/Login'
-import {ModalsContainer} from '../../com/modals/Modal'
-import {Lightbox} from '../../com/lightbox/Lightbox'
-import {Text} from '../../com/util/text/Text'
+import {Login} from '../screens/Login'
+import {ModalsContainer} from '../com/modals/Modal'
+import {Lightbox} from '../com/lightbox/Lightbox'
+import {Text} from '../com/util/text/Text'
 import {Composer} from './Composer'
 import {s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
+import {RoutesContainer, TabsNavigator} from '../../Routes'
 
-import {Screens} from '../../screens'
-
-export const MobileShell: React.FC = observer(() => {
+export const Shell: React.FC = observer(() => {
   const theme = useTheme()
   const pal = usePalette('default')
   const store = useStores()
   const winDim = useWindowDimensions()
+  const safeAreaInsets = useSafeAreaInsets()
+  const containerPadding = React.useMemo(
+    () => ({height: '100%', paddingTop: safeAreaInsets.top}),
+    [safeAreaInsets],
+  )
 
   if (store.hackUpgradeNeeded) {
     return (
@@ -73,18 +78,22 @@ export const MobileShell: React.FC = observer(() => {
           theme.colorScheme === 'dark' ? 'light-content' : 'dark-content'
         }
       />
-      <Screens />
-      <ModalsContainer />
-      <Lightbox />
-      <Composer
-        active={store.shell.isComposerActive}
-        onClose={() => store.shell.closeComposer()}
-        winHeight={winDim.height}
-        replyTo={store.shell.composerOpts?.replyTo}
-        imagesOpen={store.shell.composerOpts?.imagesOpen}
-        onPost={store.shell.composerOpts?.onPost}
-        quote={store.shell.composerOpts?.quote}
-      />
+      <RoutesContainer>
+        <View style={containerPadding}>
+          <TabsNavigator />
+        </View>
+        <ModalsContainer />
+        <Lightbox />
+        <Composer
+          active={store.shell.isComposerActive}
+          onClose={() => store.shell.closeComposer()}
+          winHeight={winDim.height}
+          replyTo={store.shell.composerOpts?.replyTo}
+          imagesOpen={store.shell.composerOpts?.imagesOpen}
+          onPost={store.shell.composerOpts?.onPost}
+          quote={store.shell.composerOpts?.quote}
+        />
+      </RoutesContainer>
     </View>
   )
 })

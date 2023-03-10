@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingBottom: 50,
-    paddingLeft: 30,
+    paddingLeft: 20,
   },
   viewDarkMode: {
     backgroundColor: '#1B1919',

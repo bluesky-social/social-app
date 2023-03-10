@@ -3,7 +3,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {getInitialURL} from 'platform/urls'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
-import {WebShell} from './view/shell/web'
+import {Shell} from './view/shell/index'
 import {ToastContainer} from './view/com/util/Toast.web'
 
 function App() {
@@ -33,7 +33,7 @@ function App() {
   return (
     <RootStoreProvider value={rootStore}>
       <SafeAreaProvider>
-        <WebShell />
+        <Shell />
       </SafeAreaProvider>
       <ToastContainer />
     </RootStoreProvider>

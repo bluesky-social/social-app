@@ -9,7 +9,7 @@ import {observer} from 'mobx-react-lite'
 import {ThemeProvider} from 'lib/ThemeContext'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
-import {MobileShell} from './view/shell/mobile'
+import {Shell} from './view/shell'
 import {s} from 'lib/styles'
 import * as notifee from 'lib/notifee'
 import * as analytics from 'lib/analytics'
@@ -54,7 +54,7 @@ const App = observer(() => {
           <analytics.Provider>
             <RootStoreProvider value={rootStore}>
               <SafeAreaProvider>
-                <MobileShell />
+                <Shell />
               </SafeAreaProvider>
             </RootStoreProvider>
           </analytics.Provider>

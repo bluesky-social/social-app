@@ -15,7 +15,7 @@ import {useLinkProps, useNavigation} from '@react-navigation/native'
 import {Text} from './text/Text'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {NavigationProp} from 'lib/routes/types'
-import {matchPath} from 'view/screens'
+import {matchPath} from '../../../Routes'
 import {useStores, RootStoreModel} from 'state/index'
 import {convertBskyAppUrlIfNeeded} from 'lib/strings/url-helpers'
 
@@ -36,7 +36,7 @@ export const Link = observer(function Link({
   children?: React.ReactNode
   noFeedback?: boolean
 }) {
-  let {...props} = useLinkProps({to: href})
+  let {...props} = useLinkProps({to: href || ''})
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
 

@@ -11,21 +11,21 @@ import {
   State,
 } from 'lib/routes/types'
 
-import {Drawer} from './shell/Drawer'
-import {BottomBar} from './shell/BottomBar'
+import {Drawer} from './view/shell/Drawer'
+import {BottomBar} from './view/shell/BottomBar'
 
-import {HomeScreen} from './screens/Home'
-import {SearchScreen} from './screens/Search'
-import {NotificationsScreen} from './screens/Notifications'
-import {SettingsScreen} from './screens/Settings'
-import {ProfileScreen} from './screens/Profile'
-import {ProfileFollowersScreen} from './screens/ProfileFollowers'
-import {ProfileFollowsScreen} from './screens/ProfileFollows'
-import {PostThreadScreen} from './screens/PostThread'
-import {PostUpvotedByScreen} from './screens/PostUpvotedBy'
-import {PostRepostedByScreen} from './screens/PostRepostedBy'
-import {DebugScreen} from './screens/Debug'
-import {LogScreen} from './screens/Log'
+import {HomeScreen} from './view/screens/Home'
+import {SearchScreen} from './view/screens/Search'
+import {NotificationsScreen} from './view/screens/Notifications'
+import {SettingsScreen} from './view/screens/Settings'
+import {ProfileScreen} from './view/screens/Profile'
+import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
+import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
+import {PostThreadScreen} from './view/screens/PostThread'
+import {PostUpvotedByScreen} from './view/screens/PostUpvotedBy'
+import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
+import {DebugScreen} from './view/screens/Debug'
+import {LogScreen} from './view/screens/Log'
 
 const HomeDrawer = createDrawerNavigator()
 const HomeTab = createNativeStackNavigator<HomeTabNavigatorParams>()
@@ -52,7 +52,7 @@ function r(pattern: string): Route {
     match(path: string) {
       const res = matcherRe.exec(path)
       if (res) {
-        return {params: res.groups}
+        return {params: res.groups || {}}
       }
       return undefined
     },
@@ -101,7 +101,7 @@ export const LINKING = {
 
   getPathFromState(state: State) {
     // find the current node in the navigation tree
-    let node = state.routes[state.index]
+    let node = state.routes[state.index || 0]
     while (node.state?.routes && typeof node.state?.index === 'number') {
       node = node.state?.routes[node.state?.index]
     }
@@ -239,7 +239,7 @@ function SearchTabNavigator() {
   )
 }
 
-function TabsNavigator() {
+export function TabsNavigator() {
   const tabBar = React.useCallback(props => <BottomBar {...props} />, [])
   return (
     <Tab.Navigator
@@ -257,10 +257,6 @@ function TabsNavigator() {
   )
 }
 
-export function Screens() {
-  return (
-    <NavigationContainer linking={LINKING}>
-      <TabsNavigator />
-    </NavigationContainer>
-  )
+export function RoutesContainer({children}: React.PropsWithChildren<{}>) {
+  return <NavigationContainer linking={LINKING}>{children}</NavigationContainer>
 }
