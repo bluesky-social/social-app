@@ -12,6 +12,8 @@ import {
   State,
 } from 'lib/routes/types'
 
+import {BottomBar} from './shell/BottomBar'
+
 import {HomeScreen} from './screens/Home'
 import {SearchScreen} from './screens/Search'
 import {NotificationsScreen} from './screens/Notifications'
@@ -167,7 +169,7 @@ function HomeDrawerNavigator() {
   return (
     <HomeDrawer.Navigator
       drawerContent={DrawerContent}
-      screenOptions={{swipeEdgeWidth: 300}}>
+      screenOptions={{swipeEdgeWidth: 300, headerShown: false}}>
       <HomeDrawer.Screen name="HomeInner" component={HomeScreen} />
     </HomeDrawer.Navigator>
   )
@@ -176,7 +178,11 @@ function HomeDrawerNavigator() {
 function HomeStackNavigator() {
   return (
     <HomeStack.Navigator
-      screenOptions={{gestureEnabled: true, fullScreenGestureEnabled: true}}>
+      screenOptions={{
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+      }}>
       <HomeStack.Screen name="Home" component={HomeDrawerNavigator} />
       {commonScreens(HomeStack)}
     </HomeStack.Navigator>
@@ -187,7 +193,7 @@ function NotificationsDrawerNavigator() {
   return (
     <NotificationsDrawer.Navigator
       drawerContent={DrawerContent}
-      screenOptions={{swipeEdgeWidth: 300}}>
+      screenOptions={{swipeEdgeWidth: 300, headerShown: false}}>
       <NotificationsDrawer.Screen
         name="NotificationsInner"
         component={NotificationsScreen}
@@ -199,7 +205,11 @@ function NotificationsDrawerNavigator() {
 function NotificationsStackNavigator() {
   return (
     <NotificationsStack.Navigator
-      screenOptions={{gestureEnabled: true, fullScreenGestureEnabled: true}}>
+      screenOptions={{
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+      }}>
       <NotificationsStack.Screen
         name="Notifications"
         component={NotificationsDrawerNavigator}
@@ -213,7 +223,7 @@ function SearchDrawerNavigator() {
   return (
     <SearchDrawer.Navigator
       drawerContent={DrawerContent}
-      screenOptions={{swipeEdgeWidth: 300}}>
+      screenOptions={{swipeEdgeWidth: 300, headerShown: false}}>
       <SearchDrawer.Screen name="SearchInner" component={SearchScreen} />
     </SearchDrawer.Navigator>
   )
@@ -222,7 +232,11 @@ function SearchDrawerNavigator() {
 function SearchStackNavigator() {
   return (
     <SearchStack.Navigator
-      screenOptions={{gestureEnabled: true, fullScreenGestureEnabled: true}}>
+      screenOptions={{
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+      }}>
       <SearchStack.Screen name="Search" component={SearchDrawerNavigator} />
       {commonScreens(SearchStack)}
     </SearchStack.Navigator>
@@ -230,17 +244,20 @@ function SearchStackNavigator() {
 }
 
 function TabsNavigator() {
+  const tabBar = React.useCallback(props => <BottomBar {...props} />, [])
   return (
-    <React.Fragment>
-      <Tab.Navigator initialRouteName="HomeStack" backBehavior="initialRoute">
-        <Tab.Screen name="HomeStack" component={HomeStackNavigator} />
-        <Tab.Screen
-          name="NotificationsStack"
-          component={NotificationsStackNavigator}
-        />
-        <Tab.Screen name="SearchStack" component={SearchStackNavigator} />
-      </Tab.Navigator>
-    </React.Fragment>
+    <Tab.Navigator
+      initialRouteName="HomeStack"
+      backBehavior="initialRoute"
+      screenOptions={{headerShown: false}}
+      tabBar={tabBar}>
+      <Tab.Screen name="HomeStack" component={HomeStackNavigator} />
+      <Tab.Screen
+        name="NotificationsStack"
+        component={NotificationsStackNavigator}
+      />
+      <Tab.Screen name="SearchStack" component={SearchStackNavigator} />
+    </Tab.Navigator>
   )
 }
 
