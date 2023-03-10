@@ -1,18 +1,4 @@
-import {State, NavigationProp} from './types'
-
-// TODO needed?
-// export function getCurrentTabName(
-//   navigator: NavigationProp | undefined,
-// ): string {
-//   if (!navigator) {
-//     throw new Error('Failed to get current tab')
-//   }
-//   const state = navigator.getState()
-//   if (state.type !== 'tab') {
-//     return getCurrentTabName(navigator.getParent())
-//   }
-//   return state.routes[state.index].name
-// }
+import {State} from './types'
 
 export function getCurrentRoute(state: State) {
   let node = state.routes[state.index || 0]

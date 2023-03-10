@@ -43,7 +43,7 @@ export type NotificationsDrawerNavigatorParams = {
 export type AllNavigatorParams = CommonNavigatorParams & {
   HomeTab: undefined
   Home: undefined
-  SeachTab: undefined
+  SearchTab: undefined
   Search: undefined
   NotificationsTab: undefined
   Notifications: undefined

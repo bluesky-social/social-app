@@ -14,6 +14,7 @@ import {s, colors, gradients} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
+import {resetToTab} from '../../../Routes'
 
 export const snapPoints = ['60%']
 
@@ -46,7 +47,7 @@ export function Component({}: {}) {
         token: confirmCode,
       })
       Toast.show('Your account has been deleted')
-      // store.nav.tab.fixedTabReset() TODO
+      resetToTab('HomeTab')
       store.session.clear()
       store.shell.closeModal()
     } catch (e: any) {

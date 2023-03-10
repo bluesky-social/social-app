@@ -16,6 +16,7 @@ import {ProfilesViewModel} from './profiles-view'
 import {LinkMetasViewModel} from './link-metas-view'
 import {NotificationsViewItemModel} from './notifications-view'
 import {MeModel} from './me'
+import {resetToTab} from '../../Routes'
 
 export const appInfo = z.object({
   build: z.string(),
@@ -138,7 +139,7 @@ export class RootStoreModel {
    */
   async handleSessionDrop() {
     this.log.debug('RootStoreModel:handleSessionDrop')
-    // this.nav.clear() TODO
+    resetToTab('HomeTab')
     this.me.clear()
     this.emitSessionDropped()
   }
@@ -149,7 +150,7 @@ export class RootStoreModel {
   clearAllSessionState() {
     this.log.debug('RootStoreModel:clearAllSessionState')
     this.session.clear()
-    // this.nav.clear() TODO
+    resetToTab('HomeTab')
     this.me.clear()
   }
 

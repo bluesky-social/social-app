@@ -2,6 +2,7 @@ import * as React from 'react'
 import {
   NavigationContainer,
   createNavigationContainerRef,
+  StackActions,
 } from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {createDrawerNavigator} from '@react-navigation/drawer'
@@ -277,4 +278,21 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export {navigationRef as navigation, matchPath, TabsNavigator, RoutesContainer}
+function navigate<K extends keyof AllNavigatorParams>(
+  name: K,
+  params?: AllNavigatorParams[K],
+) {
+  if (navigationRef.isReady()) {
+    // @ts-ignore I dont know what would make typescript happy but I have a life -prf
+    navigationRef.navigate(name, params)
+  }
+}
+
+function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'NotificationsTab') {
+  if (navigationRef.isReady()) {
+    navigate(tabName)
+    navigationRef.dispatch(StackActions.popToTop())
+  }
+}
+
+export {navigate, resetToTab, matchPath, TabsNavigator, RoutesContainer}

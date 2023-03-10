@@ -1,10 +1,9 @@
 import notifee, {EventType} from '@notifee/react-native'
-import {StackActions} from '@react-navigation/native'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {RootStoreModel} from 'state/models/root-store'
 import {NotificationsViewItemModel} from 'state/models/notifications-view'
 import {enforceLen} from 'lib/strings/helpers'
-import {navigation} from '../Routes'
+import {resetToTab} from '../Routes'
 
 export function init(store: RootStoreModel) {
   store.onUnreadNotifications(count => notifee.setBadgeCount(count))
@@ -17,8 +16,7 @@ export function init(store: RootStoreModel) {
     store.log.debug('Notifee foreground event', {type})
     if (type === EventType.PRESS) {
       store.log.debug('User pressed a notifee, opening notifications')
-      navigation.navigate('NotificationsTab')
-      navigation.dispatch(StackActions.popToTop())
+      resetToTab('NotificationsTab')
     }
   })
   notifee.onBackgroundEvent(async _e => {}) // notifee requires this but we handle it with onForegroundEvent
