@@ -40,6 +40,15 @@ export type NotificationsDrawerNavigatorParams = {
   NotificationsInner: undefined
 }
 
+export type AllNavigatorParams = CommonNavigatorParams & {
+  HomeTab: undefined
+  Home: undefined
+  SeachTab: undefined
+  Search: undefined
+  NotificationsTab: undefined
+  Notifications: undefined
+}
+
 // NOTE
 // this isn't strictly correct but it should be close enough
 // a TS wizard might be able to get this 100%

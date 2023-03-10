@@ -1,5 +1,8 @@
 import * as React from 'react'
-import {NavigationContainer} from '@react-navigation/native'
+import {
+  NavigationContainer,
+  createNavigationContainerRef,
+} from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {createDrawerNavigator} from '@react-navigation/drawer'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
@@ -11,6 +14,7 @@ import {
   SearchDrawerNavigatorParams,
   NotificationsTabNavigatorParams,
   NotificationsDrawerNavigatorParams,
+  AllNavigatorParams,
   State,
 } from 'lib/routes/types'
 
@@ -30,6 +34,8 @@ import {PostUpvotedByScreen} from './view/screens/PostUpvotedBy'
 import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
 import {DebugScreen} from './view/screens/Debug'
 import {LogScreen} from './view/screens/Log'
+
+const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
 const HomeDrawer = createDrawerNavigator<HomeDrawerNavigatorParams>()
 const HomeTab = createNativeStackNavigator<HomeTabNavigatorParams>()
@@ -87,7 +93,7 @@ const ROUTES: Record<string, Route> = {
   Log: r('/sys/log'),
 }
 
-export function matchPath(path: string): {name: string; params: RouteParams} {
+function matchPath(path: string): {name: string; params: RouteParams} {
   let name = 'NotFound'
   let params: RouteParams = {}
   for (const [screenName, matcher] of Object.entries(ROUTES)) {
@@ -101,7 +107,7 @@ export function matchPath(path: string): {name: string; params: RouteParams} {
   return {name, params}
 }
 
-export const LINKING = {
+const LINKING = {
   prefixes: ['bsky://', 'https://bsky.app'],
 
   getPathFromState(state: State) {
@@ -245,7 +251,7 @@ function NotificationsTabNavigator() {
   )
 }
 
-export function TabsNavigator() {
+function TabsNavigator() {
   const tabBar = React.useCallback(props => <BottomBar {...props} />, [])
   return (
     <Tab.Navigator
@@ -263,6 +269,12 @@ export function TabsNavigator() {
   )
 }
 
-export function RoutesContainer({children}: React.PropsWithChildren<{}>) {
-  return <NavigationContainer linking={LINKING}>{children}</NavigationContainer>
+function RoutesContainer({children}: React.PropsWithChildren<{}>) {
+  return (
+    <NavigationContainer ref={navigationRef} linking={LINKING}>
+      {children}
+    </NavigationContainer>
+  )
 }
+
+export {navigationRef as navigation, matchPath, TabsNavigator, RoutesContainer}
