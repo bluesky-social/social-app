@@ -1,11 +1,17 @@
 import React from 'react'
 import {Button, StyleSheet, View} from 'react-native'
+import {useNavigation} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Text} from '../com/util/text/Text'
-import {useStores} from 'state/index'
+import {NavigationProp} from 'lib/routes/types'
 
 export const NotFound = () => {
-  const stores = useStores()
+  const navigation = useNavigation<NavigationProp>()
+
+  const onPressHome = React.useCallback(() => {
+    navigation.navigate('HomeTab') // TODO go fully home
+  }, [navigation])
+
   return (
     <View testID="notFoundView">
       <ViewHeader title="Page not found" />
@@ -14,7 +20,7 @@ export const NotFound = () => {
         <Button
           testID="navigateHomeButton"
           title="Home"
-          onPress={() => stores.nav.navigate('/')}
+          onPress={onPressHome}
         />
       </View>
     </View>

@@ -66,7 +66,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
       } else if (isTab(state.routes[state.index].name, tab)) {
         navigation.dispatch(StackActions.popToTop())
       } else {
-        navigation.navigate(`${tab}Stack`)
+        navigation.navigate(`${tab}Tab`)
       }
     },
     [store, track, navigation],

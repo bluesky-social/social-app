@@ -16,7 +16,8 @@ export function init(store: RootStoreModel) {
     store.log.debug('Notifee foreground event', {type})
     if (type === EventType.PRESS) {
       store.log.debug('User pressed a notifee, opening notifications')
-      store.nav.switchTo(TabPurpose.Notifs, true)
+      // TODO
+      // store.nav.switchTo(TabPurpose.Notifs, true)
     }
   })
   notifee.onBackgroundEvent(async _e => {}) // notifee requires this but we handle it with onForegroundEvent

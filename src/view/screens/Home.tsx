@@ -3,10 +3,7 @@ import {FlatList, View} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
-import {
-  NativeStackScreenProps,
-  HomeStackNavigatorParams,
-} from 'lib/routes/types'
+import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
@@ -20,7 +17,7 @@ import {ComposeIcon2} from 'lib/icons'
 
 const HEADER_HEIGHT = 42
 
-type Props = NativeStackScreenProps<HomeStackNavigatorParams, 'Home'>
+type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = observer(function Home({}: Props) {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)

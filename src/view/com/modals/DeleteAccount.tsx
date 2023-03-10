@@ -46,7 +46,7 @@ export function Component({}: {}) {
         token: confirmCode,
       })
       Toast.show('Your account has been deleted')
-      store.nav.tab.fixedTabReset()
+      // store.nav.tab.fixedTabReset() TODO
       store.session.clear()
       store.shell.closeModal()
     } catch (e: any) {

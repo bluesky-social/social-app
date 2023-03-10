@@ -5,9 +5,9 @@ import {createDrawerNavigator} from '@react-navigation/drawer'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 
 import {
-  HomeStackNavigatorParams,
-  NotificationsStackNavigatorParams,
-  SearchStackNavigatorParams,
+  HomeTabNavigatorParams,
+  NotificationsTabNavigatorParams,
+  SearchTabNavigatorParams,
   State,
 } from 'lib/routes/types'
 
@@ -28,12 +28,12 @@ import {DebugScreen} from './screens/Debug'
 import {LogScreen} from './screens/Log'
 
 const HomeDrawer = createDrawerNavigator()
-const HomeStack = createNativeStackNavigator<HomeStackNavigatorParams>()
+const HomeTab = createNativeStackNavigator<HomeTabNavigatorParams>()
 const SearchDrawer = createDrawerNavigator()
-const SearchStack = createNativeStackNavigator<SearchStackNavigatorParams>()
+const SearchTab = createNativeStackNavigator<SearchTabNavigatorParams>()
 const NotificationsDrawer = createDrawerNavigator()
-const NotificationsStack =
-  createNativeStackNavigator<NotificationsStackNavigatorParams>()
+const NotificationsTab =
+  createNativeStackNavigator<NotificationsTabNavigatorParams>()
 const Tab = createBottomTabNavigator()
 
 type RouteParams = Record<string, string>
@@ -82,7 +82,21 @@ const ROUTES: Record<string, Route> = {
   Log: r('/sys/log'),
 }
 
-const LINKING = {
+export function matchPath(path: string): {name: string; params: RouteParams} {
+  let name = 'Home' // TODO should be not found
+  let params: RouteParams = {}
+  for (const [screenName, matcher] of Object.entries(ROUTES)) {
+    const res = matcher.match(path)
+    if (res) {
+      name = screenName
+      params = res.params
+      break
+    }
+  }
+  return {name, params}
+}
+
+export const LINKING = {
   prefixes: ['bsky://', 'https://bsky.app'],
 
   getPathFromState(state: State) {
@@ -101,26 +115,14 @@ const LINKING = {
   },
 
   getStateFromPath(path: string) {
-    // match the route
-    let match = 'Home' // TODO should be not found
-    let params: RouteParams = {}
-    for (const [name, matcher] of Object.entries(ROUTES)) {
-      const res = matcher.match(path)
-      if (res) {
-        match = name
-        params = res.params
-        break
-      }
+    const {name, params} = matchPath(path)
+    if (name === 'Search') {
+      return buildStateObject('SearchTab', 'Search', params)
     }
-
-    // build the state object
-    if (match === 'Search') {
-      return buildStateObject('SearchStack', 'Search', params)
+    if (name === 'Notifications') {
+      return buildStateObject('NotificationsTab', 'Notifications', params)
     }
-    if (match === 'Notifications') {
-      return buildStateObject('NotificationsStack', 'Notifications', params)
-    }
-    return buildStateObject('HomeStack', match, params)
+    return buildStateObject('HomeTab', name, params)
   },
 }
 
@@ -167,17 +169,17 @@ function HomeDrawerNavigator() {
   )
 }
 
-function HomeStackNavigator() {
+function HomeTabNavigator() {
   return (
-    <HomeStack.Navigator
+    <HomeTab.Navigator
       screenOptions={{
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
       }}>
-      <HomeStack.Screen name="Home" component={HomeDrawerNavigator} />
-      {commonScreens(HomeStack)}
-    </HomeStack.Navigator>
+      <HomeTab.Screen name="Home" component={HomeDrawerNavigator} />
+      {commonScreens(HomeTab)}
+    </HomeTab.Navigator>
   )
 }
 
@@ -195,20 +197,20 @@ function NotificationsDrawerNavigator() {
   )
 }
 
-function NotificationsStackNavigator() {
+function NotificationsTabNavigator() {
   return (
-    <NotificationsStack.Navigator
+    <NotificationsTab.Navigator
       screenOptions={{
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
       }}>
-      <NotificationsStack.Screen
+      <NotificationsTab.Screen
         name="Notifications"
         component={NotificationsDrawerNavigator}
       />
-      {commonScreens(NotificationsStack)}
-    </NotificationsStack.Navigator>
+      {commonScreens(NotificationsTab)}
+    </NotificationsTab.Navigator>
   )
 }
 
@@ -223,17 +225,17 @@ function SearchDrawerNavigator() {
   )
 }
 
-function SearchStackNavigator() {
+function SearchTabNavigator() {
   return (
-    <SearchStack.Navigator
+    <SearchTab.Navigator
       screenOptions={{
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
       }}>
-      <SearchStack.Screen name="Search" component={SearchDrawerNavigator} />
-      {commonScreens(SearchStack)}
-    </SearchStack.Navigator>
+      <SearchTab.Screen name="Search" component={SearchDrawerNavigator} />
+      {commonScreens(SearchTab)}
+    </SearchTab.Navigator>
   )
 }
 
@@ -241,16 +243,16 @@ function TabsNavigator() {
   const tabBar = React.useCallback(props => <BottomBar {...props} />, [])
   return (
     <Tab.Navigator
-      initialRouteName="HomeStack"
+      initialRouteName="HomeTab"
       backBehavior="initialRoute"
       screenOptions={{headerShown: false}}
       tabBar={tabBar}>
-      <Tab.Screen name="HomeStack" component={HomeStackNavigator} />
+      <Tab.Screen name="HomeTab" component={HomeTabNavigator} />
       <Tab.Screen
-        name="NotificationsStack"
-        component={NotificationsStackNavigator}
+        name="NotificationsTab"
+        component={NotificationsTabNavigator}
       />
-      <Tab.Screen name="SearchStack" component={SearchStackNavigator} />
+      <Tab.Screen name="SearchTab" component={SearchTabNavigator} />
     </Tab.Navigator>
   )
 }

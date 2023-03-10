@@ -1,4 +1,18 @@
-import {State} from './types'
+import {State, NavigationProp} from './types'
+
+// TODO needed?
+// export function getCurrentTabName(
+//   navigator: NavigationProp | undefined,
+// ): string {
+//   if (!navigator) {
+//     throw new Error('Failed to get current tab')
+//   }
+//   const state = navigator.getState()
+//   if (state.type !== 'tab') {
+//     return getCurrentTabName(navigator.getParent())
+//   }
+//   return state.routes[state.index].name
+// }
 
 export function getCurrentRoute(state: State) {
   let node = state.routes[state.index]
@@ -15,7 +29,7 @@ export function isTab(current: string, route: string) {
   // -prf
   return (
     current === route ||
-    current === `${route}Stack` ||
+    current === `${route}Tab` ||
     current === `${route}Inner`
   )
 }

@@ -1,4 +1,5 @@
 import {NavigationState, PartialState} from '@react-navigation/native'
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -13,15 +14,31 @@ export type CommonNavigatorParams = {
   Debug: undefined
   Log: undefined
 }
-export type HomeStackNavigatorParams = CommonNavigatorParams & {
+
+export type HomeTabNavigatorParams = CommonNavigatorParams & {
   Home: undefined
 }
-export type NotificationsStackNavigatorParams = CommonNavigatorParams & {
+
+export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
   Notifications: undefined
 }
-export type SearchStackNavigatorParams = CommonNavigatorParams & {
+
+export type SearchTabNavigatorParams = CommonNavigatorParams & {
   Search: undefined
 }
+
+// NOTE
+// this isn't strictly correct but it should be close enough
+// a TS wizard might be able to get this 100%
+// -prf
+export type NavigationProp = NativeStackNavigationProp<
+  CommonNavigatorParams & {
+    HomeTab: undefined
+    NotificationsTab: undefined
+    SearchTab: undefined
+  }
+>
+
 export type State =
   | NavigationState
   | Omit<PartialState<NavigationState>, 'stale'>

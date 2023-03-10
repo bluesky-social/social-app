@@ -15,7 +15,7 @@ import {
 import {ScrollView} from '../com/util/Views'
 import {
   NativeStackScreenProps,
-  SearchStackNavigatorParams,
+  SearchTabNavigatorParams,
 } from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
 import {UserAvatar} from '../com/util/UserAvatar'
@@ -34,7 +34,7 @@ import {useAnalytics} from 'lib/analytics'
 const MENU_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 const FIVE_MIN = 5 * 60 * 1e3
 
-type Props = NativeStackScreenProps<SearchStackNavigatorParams, 'Search'>
+type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = observer(({}: Props) => {
   const pal = usePalette('default')
   const store = useStores()

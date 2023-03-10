@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native'
+import {useNavigation} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {CenteredView, FlatList} from '../util/Views'
@@ -18,10 +19,10 @@ import {FeedModel} from 'state/models/feed-view'
 import {FeedItem} from './FeedItem'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
-import {useStores} from 'state/index'
 import {useAnalytics} from 'lib/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from 'lib/icons'
+import {NavigationProp} from 'lib/routes/types'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_FEED_ITEM = {_reactKey: '__error__'}
@@ -47,9 +48,9 @@ export const Feed = observer(function Feed({
 }) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
-  const store = useStores()
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const navigation = useNavigation<NavigationProp>()
 
   const data = React.useMemo(() => {
     let feedItems: any[] = []
@@ -112,7 +113,12 @@ export const Feed = observer(function Feed({
             <Button
               type="inverted"
               style={styles.emptyBtn}
-              onPress={() => store.nav.navigate('/search')}>
+              onPress={
+                () =>
+                  navigation.navigate(
+                    'SearchTab',
+                  ) /* TODO make sure it goes to root of the tab */
+              }>
               <Text type="lg-medium" style={palInverted.text}>
                 Find accounts
               </Text>
@@ -134,7 +140,7 @@ export const Feed = observer(function Feed({
       }
       return <FeedItem item={item} showFollowBtn={showPostFollowBtn} />
     },
-    [feed, onPressTryAgain, showPostFollowBtn, pal, palInverted, store.nav],
+    [feed, onPressTryAgain, showPostFollowBtn, pal, palInverted, navigation],
   )
 
   const FeedFooter = React.useCallback(

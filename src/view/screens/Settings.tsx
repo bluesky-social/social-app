@@ -5,7 +5,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
+import {
+  useFocusEffect,
+  useNavigation,
+  StackActions,
+} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -26,6 +30,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics'
+import {NavigationProp} from 'lib/routes/types'
 
 export const SettingsScreen = observer(
   function Settings({}: NativeStackScreenProps<
@@ -35,6 +40,7 @@ export const SettingsScreen = observer(
     const theme = useTheme()
     const pal = usePalette('default')
     const store = useStores()
+    const navigation = useNavigation<NavigationProp>()
     const {screen, track} = useAnalytics()
     const [isSwitching, setIsSwitching] = React.useState(false)
 
@@ -50,13 +56,15 @@ export const SettingsScreen = observer(
       setIsSwitching(true)
       if (await store.session.resumeSession(acct)) {
         setIsSwitching(false)
-        store.nav.tab.fixedTabReset()
+        navigation.navigate('HomeTab')
+        navigation.dispatch(StackActions.popToTop())
         Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
         return
       }
       setIsSwitching(false)
       Toast.show('Sorry! We need you to enter your password.')
-      store.nav.tab.fixedTabReset()
+      navigation.navigate('HomeTab')
+      navigation.dispatch(StackActions.popToTop())
       store.session.clear()
     }
     const onPressAddAccount = () => {

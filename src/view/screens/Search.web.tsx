@@ -5,7 +5,7 @@ import {ScrollView} from '../com/util/Views'
 import {observer} from 'mobx-react-lite'
 import {
   NativeStackScreenProps,
-  SearchStackNavigatorParams,
+  SearchTabNavigatorParams,
 } from 'lib/routes/types'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
@@ -16,7 +16,7 @@ import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 
 const FIVE_MIN = 5 * 60 * 1e3
 
-type Props = NativeStackScreenProps<SearchStackNavigatorParams, 'Search'>
+type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = observer(({}: Props) => {
   const pal = usePalette('default')
   const store = useStores()

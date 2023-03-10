@@ -68,7 +68,7 @@ export const Drawer = observer(({navigation}: DrawerContentComponentProps) => {
       } else {
         // wait for drawer anim to finish
         setTimeout(() => {
-          navigation.navigate(`${tab}Stack`)
+          navigation.navigate(`${tab}Tab`)
         }, 250)
       }
     },

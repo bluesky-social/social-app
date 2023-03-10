@@ -4,7 +4,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import useAppState from 'react-native-appstate-hook'
 import {
   NativeStackScreenProps,
-  NotificationsStackNavigatorParams,
+  NotificationsTabNavigatorParams,
 } from 'lib/routes/types'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/notifications/Feed'
@@ -16,7 +16,7 @@ import {useAnalytics} from 'lib/analytics'
 const NOTIFICATIONS_POLL_INTERVAL = 15e3
 
 export const NotificationsScreen = ({}: NativeStackScreenProps<
-  NotificationsStackNavigatorParams,
+  NotificationsTabNavigatorParams,
   'Notifications'
 >) => {
   const store = useStores()
