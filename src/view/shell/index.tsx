@@ -3,10 +3,11 @@ import {observer} from 'mobx-react-lite'
 import {StatusBar, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useStores} from 'state/index'
-import {Login} from '../screens/Login'
-import {ModalsContainer} from '../com/modals/Modal'
-import {Lightbox} from '../com/lightbox/Lightbox'
-import {Text} from '../com/util/text/Text'
+import {Login} from 'view/screens/Login'
+import {ModalsContainer} from 'view/com/modals/Modal'
+import {Lightbox} from 'view/com/lightbox/Lightbox'
+import {Text} from 'view/com/util/text/Text'
+import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {Composer} from './Composer'
 import {s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
@@ -80,7 +81,9 @@ export const Shell: React.FC = observer(() => {
       />
       <RoutesContainer>
         <View style={containerPadding}>
-          <TabsNavigator />
+          <ErrorBoundary>
+            <TabsNavigator />
+          </ErrorBoundary>
         </View>
         <ModalsContainer />
         <Lightbox />
