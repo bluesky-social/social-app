@@ -69,7 +69,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
       track(`MobileShell:${tab}ButtonPressed`)
       const state = navigation.getState()
       const curr = currentRoute(state).name
-      if (curr === tab || curr === `${tab}Stack`) {
+      if (curr === tab || curr === `${tab}Stack` || curr === `${tab}Inner`) {
         store.emitScreenSoftReset()
       } else if (state.routes[state.index].name === `${tab}Stack`) {
         navigation.dispatch(StackActions.popToTop())
@@ -94,10 +94,14 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   }, [navigation, track, store.me.handle])
 
   const curr = currentRoute(navigation.getState()).name
-  const isAtHome = curr === 'HomeStack' || curr === 'Home'
-  const isAtSearch = curr === 'SearchStack' || curr === 'Search'
+  const isAtHome =
+    curr === 'HomeStack' || curr === 'Home' || curr === 'HomeInner'
+  const isAtSearch =
+    curr === 'SearchStack' || curr === 'Search' || curr === 'SearchInner'
   const isAtNotifications =
-    curr === 'NotificationsStack' || curr === 'Notifications'
+    curr === 'NotificationsStack' ||
+    curr === 'Notifications' ||
+    curr === 'NotificationsInner'
 
   return (
     <Animated.View
