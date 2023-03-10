@@ -1,22 +1,23 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {View} from 'react-native'
+import {useFocusEffect} from '@react-navigation/native'
+import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {PostRepostedBy as PostRepostedByComponent} from '../com/post-thread/PostRepostedBy'
-import {ScreenParams} from '../routes'
 import {useStores} from 'state/index'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 
-export const PostRepostedBy = ({navIdx, visible, params}: ScreenParams) => {
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostRepostedBy'>
+export const PostRepostedByScreen = ({route}: Props) => {
   const store = useStores()
-  const {name, rkey} = params
+  const {name, rkey} = route.params
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
 
-  useEffect(() => {
-    if (visible) {
-      store.nav.setTitle(navIdx, 'Reposted by')
+  useFocusEffect(
+    React.useCallback(() => {
       store.shell.setMinimalShellMode(false)
-    }
-  }, [store, visible, navIdx])
+    }, [store]),
+  )
 
   return (
     <View>

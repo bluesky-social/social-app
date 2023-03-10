@@ -1,36 +1,29 @@
 import * as React from 'react'
-import {View, Text, Button} from 'react-native'
+import {View, Text} from 'react-native'
 import {NavigationContainer} from '@react-navigation/native'
-import {
-  createNativeStackNavigator,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack'
+import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {createDrawerNavigator} from '@react-navigation/drawer'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 
-import {NavigationState, PartialState} from '@react-navigation/native'
+import {
+  HomeStackNavigatorParams,
+  NotificationsStackNavigatorParams,
+  SearchStackNavigatorParams,
+  State,
+} from 'lib/routes/types'
 
-type CommonNavigatorParams = {
-  Settings: undefined
-  Profile: {name: string}
-  ProfileFollowers: {name: string}
-  ProfileFollows: {name: string}
-  PostThread: {name: string; rkey: string}
-  PostUpvotedBy: {name: string; rkey: string}
-  PostRepostedBy: {name: string; rkey: string}
-  Debug: undefined
-  Log: undefined
-}
-type HomeStackNavigatorParams = CommonNavigatorParams & {
-  Home: undefined
-}
-type NotificationsStackNavigatorParams = CommonNavigatorParams & {
-  Notifications: undefined
-}
-type SearchStackNavigatorParams = CommonNavigatorParams & {
-  Search: undefined
-}
-type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>
+import {HomeScreen} from './screens/Home'
+import {SearchScreen} from './screens/Search'
+import {NotificationsScreen} from './screens/Notifications'
+import {SettingsScreen} from './screens/Settings'
+import {ProfileScreen} from './screens/Profile'
+import {ProfileFollowersScreen} from './screens/ProfileFollowers'
+import {ProfileFollowsScreen} from './screens/ProfileFollows'
+import {PostThreadScreen} from './screens/PostThread'
+import {PostUpvotedByScreen} from './screens/PostUpvotedBy'
+import {PostRepostedByScreen} from './screens/PostRepostedBy'
+import {DebugScreen} from './screens/Debug'
+import {LogScreen} from './screens/Log'
 
 const HomeDrawer = createDrawerNavigator()
 const HomeStack = createNativeStackNavigator<HomeStackNavigatorParams>()
@@ -71,8 +64,11 @@ function r(pattern: string): Route {
 }
 const ROUTES: Record<string, Route> = {
   Home: r('/'),
+  HomeInner: r('/'),
   Search: r('/search'),
+  SearchInner: r('/search'),
   Notifications: r('/notifications'),
+  NotificationsInner: r('/notifications'),
   Settings: r('/settings'),
   Profile: r('/profile/:name'),
   ProfileFollowers: r('/profile/:name/followers'),
@@ -116,182 +112,31 @@ const LINKING = {
     }
 
     // build the state object
-    let container = 'HomeStack'
+    if (match === 'Search') {
+      return buildStateObject('SearchStack', 'Search', params)
+    }
     if (match === 'Notifications') {
-      container = 'NotificationsStack'
-    } else if (match === 'Search') {
-      container = 'SearchStack'
+      return buildStateObject('NotificationsStack', 'Notifications', params)
     }
-    return {
-      routes: [
-        {
-          name: container,
-          state: {
-            routes: [{name: match, params}],
-          },
-        },
-      ],
-    }
+    return buildStateObject('HomeStack', match, params)
   },
 }
 
-function HomeScreen({
-  navigation,
-}: NativeStackScreenProps<HomeStackNavigatorParams, 'Home'>) {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Post"
-        onPress={() =>
-          navigation.push('PostThread', {name: 'bob', rkey: '123'})
-        }
-      />
-      <Button
-        title="Go to profile"
-        onPress={() => navigation.push('Profile', {name: 'alice'})}
-      />
-    </View>
-  )
-}
-
-function NotificationsScreen({
-  navigation,
-}: NativeStackScreenProps<NotificationsStackNavigatorParams, 'Notifications'>) {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Notifications Screen</Text>
-      <Button
-        title="Go to Post"
-        onPress={() =>
-          navigation.push('PostThread', {name: 'bob', rkey: '123'})
-        }
-      />
-      <Button
-        title="Go to profile"
-        onPress={() => navigation.push('Profile', {name: 'alice'})}
-      />
-    </View>
-  )
-}
-
-function SearchScreen({
-  navigation,
-}: NativeStackScreenProps<SearchStackNavigatorParams, 'Search'>) {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Search Screen</Text>
-      <Button
-        title="Go to Post"
-        onPress={() =>
-          navigation.push('PostThread', {name: 'bob', rkey: '123'})
-        }
-      />
-      <Button
-        title="Go to profile"
-        onPress={() => navigation.push('Profile', {name: 'alice'})}
-      />
-    </View>
-  )
-}
-
-function SettingsScreen({}: NativeStackScreenProps<
-  CommonNavigatorParams,
-  'Settings'
->) {
-  return (
-    <View>
-      <Text>SettingsScreen</Text>
-    </View>
-  )
-}
-
-function ProfileScreen({
-  route,
-}: NativeStackScreenProps<CommonNavigatorParams, 'Profile'>) {
-  return (
-    <View>
-      <Text>ProfileScreen {route.params.name}</Text>
-    </View>
-  )
-}
-
-function ProfileFollowersScreen({
-  route,
-}: NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollowers'>) {
-  return (
-    <View>
-      <Text>ProfileFollowersScreen {route.params.name}</Text>
-    </View>
-  )
-}
-
-function ProfileFollowsScreen({
-  route,
-}: NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollows'>) {
-  return (
-    <View>
-      <Text>ProfileFollowsScreen {route.params.name}</Text>
-    </View>
-  )
-}
-
-function PostThreadScreen({
-  route,
-}: NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>) {
-  return (
-    <View>
-      <Text>
-        PostThreadScreen {route.params.name} {route.params.rkey}
-      </Text>
-    </View>
-  )
-}
-
-function PostUpvotedByScreen({
-  route,
-}: NativeStackScreenProps<CommonNavigatorParams, 'PostUpvotedBy'>) {
-  return (
-    <View>
-      <Text>
-        PostUpvotedByScreen {route.params.name} {route.params.rkey}
-      </Text>
-    </View>
-  )
-}
-
-function PostRepostedByScreen({
-  route,
-}: NativeStackScreenProps<CommonNavigatorParams, 'PostRepostedBy'>) {
-  return (
-    <View>
-      <Text>
-        PostRepostedByScreen {route.params.name} {route.params.rkey}
-      </Text>
-    </View>
-  )
-}
-
-function DebugScreen({}: NativeStackScreenProps<
-  CommonNavigatorParams,
-  'Debug'
->) {
-  return (
-    <View>
-      <Text>DebugScreen</Text>
-    </View>
-  )
-}
-
-function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log'>) {
-  return (
-    <View>
-      <Text>LogScreen</Text>
-    </View>
-  )
+function buildStateObject(stack: string, route: string, params: RouteParams) {
+  return {
+    routes: [
+      {
+        name: stack,
+        state: {
+          routes: [{name: route, params}],
+        },
+      },
+    ],
+  }
 }
 
 function DrawerContent() {
+  // TODO
   return (
     <View>
       <Text>Drawer</Text>

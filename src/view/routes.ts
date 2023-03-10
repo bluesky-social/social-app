@@ -1,13 +1,11 @@
 import React from 'react'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {Home} from './screens/Home'
-import {Contacts} from './screens/Contacts'
 import {Search} from './screens/Search'
 import {Notifications} from './screens/Notifications'
 import {NotFound} from './screens/NotFound'
 import {PostThread} from './screens/PostThread'
 import {PostUpvotedBy} from './screens/PostUpvotedBy'
-import {PostDownvotedBy} from './screens/PostDownvotedBy'
 import {PostRepostedBy} from './screens/PostRepostedBy'
 import {Profile} from './screens/Profile'
 import {ProfileFollowers} from './screens/ProfileFollowers'
@@ -33,7 +31,6 @@ export type MatchResult = {
 const r = (pattern: string) => new RegExp('^' + pattern + '([?]|$)', 'i')
 export const routes: Route[] = [
   [Home, 'Home', 'house', r('/')],
-  [Contacts, 'Contacts', ['far', 'circle-user'], r('/contacts')],
   [Search, 'Search', 'magnifying-glass', r('/search')],
   [Notifications, 'Notifications', 'bell', r('/notifications')],
   [Settings, 'Settings', 'bell', r('/settings')],
@@ -56,12 +53,6 @@ export const routes: Route[] = [
     'Liked by',
     'heart',
     r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)/upvoted-by'),
-  ],
-  [
-    PostDownvotedBy,
-    'Downvoted by',
-    'heart',
-    r('/profile/(?<name>[^/]+)/post/(?<rkey>[^/]+)/downvoted-by'),
   ],
   [
     PostRepostedBy,

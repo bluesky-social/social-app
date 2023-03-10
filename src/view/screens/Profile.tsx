@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
+import {useFocusEffect} from '@react-navigation/native'
+import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {ViewSelector} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
-import {ScreenParams} from '../routes'
 import {ProfileUiModel, Sections} from 'state/models/profile-ui'
 import {useStores} from 'state/index'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
@@ -23,7 +24,8 @@ const LOADING_ITEM = {_reactKey: '__loading__'}
 const END_ITEM = {_reactKey: '__end__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
 
-export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
+export const ProfileScreen = observer(({route}: Props) => {
   const store = useStores()
   const {screen, track} = useAnalytics()
 
@@ -34,35 +36,30 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
   const onMainScroll = useOnMainScroll(store)
   const [hasSetup, setHasSetup] = useState<boolean>(false)
   const uiState = React.useMemo(
-    () => new ProfileUiModel(store, {user: params.name}),
-    [params.name, store],
+    () => new ProfileUiModel(store, {user: route.params.name}),
+    [route.params.name, store],
   )
 
-  useEffect(() => {
-    store.nav.setTitle(navIdx, params.name)
-  }, [store, navIdx, params.name])
-
-  useEffect(() => {
-    let aborted = false
-    const feedCleanup = uiState.feed.registerListeners()
-    if (!visible) {
-      return feedCleanup
-    }
-    if (hasSetup) {
-      uiState.update()
-    } else {
-      uiState.setup().then(() => {
-        if (aborted) {
-          return
-        }
-        setHasSetup(true)
-      })
-    }
-    return () => {
-      aborted = true
-      feedCleanup()
-    }
-  }, [visible, store, hasSetup, uiState])
+  useFocusEffect(
+    React.useCallback(() => {
+      let aborted = false
+      const feedCleanup = uiState.feed.registerListeners()
+      if (hasSetup) {
+        uiState.update()
+      } else {
+        uiState.setup().then(() => {
+          if (aborted) {
+            return
+          }
+          setHasSetup(true)
+        })
+      }
+      return () => {
+        aborted = true
+        feedCleanup()
+      }
+    }, [hasSetup, uiState]),
+  )
 
   // events
   // =
@@ -171,7 +168,7 @@ export const Profile = observer(({navIdx, visible, params}: ScreenParams) => {
         <ErrorScreen
           testID="profileErrorScreen"
           title="Failed to load profile"
-          message={`There was an issue when attempting to load ${params.name}`}
+          message={`There was an issue when attempting to load ${route.params.name}`}
           details={uiState.profile.error}
           onPressTryAgain={onPressTryAgain}
         />
