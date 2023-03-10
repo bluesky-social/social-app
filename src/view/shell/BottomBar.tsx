@@ -26,15 +26,7 @@ import {
 } from 'lib/icons'
 import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-
-// TODO move to lib
-function currentRoute(state) {
-  let node = state.routes[state.index]
-  while (node.state?.routes && typeof node.state?.index === 'number') {
-    node = node.state?.routes[node.state?.index]
-  }
-  return node
-}
+import {getCurrentRoute, isTab} from 'lib/routes/helpers'
 
 export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const store = useStores()
@@ -68,10 +60,10 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
     (tab: string) => {
       track(`MobileShell:${tab}ButtonPressed`)
       const state = navigation.getState()
-      const curr = currentRoute(state).name
-      if (curr === tab || curr === `${tab}Stack` || curr === `${tab}Inner`) {
+      const currentRoute = getCurrentRoute(state)
+      if (isTab(currentRoute.name, tab)) {
         store.emitScreenSoftReset()
-      } else if (state.routes[state.index].name === `${tab}Stack`) {
+      } else if (isTab(state.routes[state.index].name, tab)) {
         navigation.dispatch(StackActions.popToTop())
       } else {
         navigation.navigate(`${tab}Stack`)
@@ -93,15 +85,10 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
     navigation.navigate('Profile', {name: store.me.handle})
   }, [navigation, track, store.me.handle])
 
-  const curr = currentRoute(navigation.getState()).name
-  const isAtHome =
-    curr === 'HomeStack' || curr === 'Home' || curr === 'HomeInner'
-  const isAtSearch =
-    curr === 'SearchStack' || curr === 'Search' || curr === 'SearchInner'
-  const isAtNotifications =
-    curr === 'NotificationsStack' ||
-    curr === 'Notifications' ||
-    curr === 'NotificationsInner'
+  const currentRoute = getCurrentRoute(navigation.getState())
+  const isAtHome = isTab(currentRoute.name, 'Home')
+  const isAtSearch = isTab(currentRoute.name, 'Search')
+  const isAtNotifications = isTab(currentRoute.name, 'Notifications')
 
   return (
     <Animated.View

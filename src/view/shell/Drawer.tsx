@@ -38,15 +38,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {pluralize} from 'lib/strings/helpers'
-
-// TODO move to lib
-function currentRoute(state) {
-  let node = state.routes[state.index]
-  while (node.state?.routes && typeof node.state?.index === 'number') {
-    node = node.state?.routes[node.state?.index]
-  }
-  return node
-}
+import {getCurrentRoute, isTab} from 'lib/routes/helpers'
 
 export const Drawer = observer(({navigation}: DrawerContentComponentProps) => {
   const theme = useTheme()
@@ -68,10 +60,10 @@ export const Drawer = observer(({navigation}: DrawerContentComponentProps) => {
       track('Menu:ItemClicked', {url: tab})
       const state = navigation.getState()
       navigation.closeDrawer()
-      const curr = currentRoute(state).name
-      if (curr === tab || curr === `${tab}Stack`) {
+      const currentRoute = getCurrentRoute(state)
+      if (isTab(currentRoute.name, tab)) {
         store.emitScreenSoftReset()
-      } else if (state.routes[state.index].name === `${tab}Stack`) {
+      } else if (isTab(state.routes[state.index].name, tab)) {
         navigation.dispatch(StackActions.popToTop())
       } else {
         // wait for drawer anim to finish
@@ -154,15 +146,10 @@ export const Drawer = observer(({navigation}: DrawerContentComponentProps) => {
     store.shell.setDarkMode(!store.shell.darkMode)
   }
 
-  const curr = currentRoute(navigation.getState()).name
-  const isAtHome =
-    curr === 'HomeStack' || curr === 'Home' || curr === 'HomeInner'
-  const isAtSearch =
-    curr === 'SearchStack' || curr === 'Search' || curr === 'SearchInner'
-  const isAtNotifications =
-    curr === 'NotificationsStack' ||
-    curr === 'Notifications' ||
-    curr === 'NotificationsInner'
+  const currentRoute = getCurrentRoute(navigation.getState())
+  const isAtHome = isTab(currentRoute.name, 'Home')
+  const isAtSearch = isTab(currentRoute.name, 'Search')
+  const isAtNotifications = isTab(currentRoute.name, 'Notifications')
 
   return (
     <View
