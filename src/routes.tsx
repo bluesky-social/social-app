@@ -167,6 +167,7 @@ function HomeTabNavigator() {
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
+        animationDuration: 250,
       }}>
       <HomeTab.Screen name="Home" component={HomeScreen} />
       {commonScreens(HomeTab)}
@@ -181,6 +182,7 @@ function SearchTabNavigator() {
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
+        animationDuration: 250,
       }}>
       <SearchTab.Screen name="Search" component={SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
@@ -195,6 +197,7 @@ function NotificationsTabNavigator() {
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
+        animationDuration: 250,
       }}>
       <NotificationsTab.Screen
         name="Notifications"
