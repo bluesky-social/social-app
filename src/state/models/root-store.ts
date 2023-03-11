@@ -16,7 +16,7 @@ import {ProfilesViewModel} from './profiles-view'
 import {LinkMetasViewModel} from './link-metas-view'
 import {NotificationsViewItemModel} from './notifications-view'
 import {MeModel} from './me'
-import {resetToTab} from '../../Routes'
+import {resetToTab} from '../../Navigation'
 
 export const appInfo = z.object({
   build: z.string(),

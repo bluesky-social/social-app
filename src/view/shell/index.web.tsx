@@ -13,7 +13,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {s, colors} from 'lib/styles'
 import {isMobileWeb} from 'platform/detection'
-import {RoutesContainer, FlatNavigator} from '../../Routes'
+import {RoutesContainer, FlatNavigator} from '../../Navigation'
 
 const ShellInner = observer(() => {
   const store = useStores()

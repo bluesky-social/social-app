@@ -15,7 +15,7 @@ import {useLinkProps, useNavigation} from '@react-navigation/native'
 import {Text} from './text/Text'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {NavigationProp} from 'lib/routes/types'
-import {matchPath} from '../../../Routes'
+import {router} from '../../../routes'
 import {useStores, RootStoreModel} from 'state/index'
 import {convertBskyAppUrlIfNeeded} from 'lib/strings/url-helpers'
 
@@ -136,7 +136,7 @@ function onPressInner(
       store.shell.closeModal() // close any active modals
 
       // @ts-ignore we're not able to type check on this one -prf
-      navigation.push(...matchPath(href))
+      navigation.push(...router.matchPath(href))
     }
   }
 }

@@ -14,7 +14,7 @@ import {s, colors, gradients} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
-import {resetToTab} from '../../../Routes'
+import {resetToTab} from '../../../Navigation'
 
 export const snapPoints = ['60%']
 

@@ -3,7 +3,7 @@ import {AppBskyEmbedImages} from '@atproto/api'
 import {RootStoreModel} from 'state/models/root-store'
 import {NotificationsViewItemModel} from 'state/models/notifications-view'
 import {enforceLen} from 'lib/strings/helpers'
-import {resetToTab} from '../Routes'
+import {resetToTab} from '../Navigation'
 
 export function init(store: RootStoreModel) {
   store.onUnreadNotifications(count => notifee.setBadgeCount(count))

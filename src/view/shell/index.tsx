@@ -15,7 +15,7 @@ import {Composer} from './Composer'
 import {s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
-import {RoutesContainer, TabsNavigator} from '../../Routes'
+import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
 
 const ShellInner = observer(() => {

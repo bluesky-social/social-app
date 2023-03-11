@@ -5,7 +5,6 @@ import {
   useNavigation,
   useNavigationState,
   useLinkProps,
-  TabActions,
   StackActions,
 } from '@react-navigation/native'
 import {Text} from 'view/com/util/text/Text'
@@ -26,7 +25,7 @@ import {
 import {DesktopSearch} from './Search'
 import {NavigationProp} from 'lib/routes/types'
 import {getCurrentRoute, isTab} from 'lib/routes/helpers'
-import {matchPath} from '../../../Routes'
+import {router} from '../../../routes'
 
 interface NavItemProps {
   count?: number
@@ -43,7 +42,7 @@ export const NavItem = observer(
       styles.navItemHoverBgDark,
     )
     const {onPress} = useLinkProps({to: href})
-    const [pathName, pathParams] = React.useMemo(() => matchPath(href), [href])
+    const [pathName] = React.useMemo(() => router.matchPath(href), [href])
     const currentRouteName = useNavigationState(state => {
       if (!state) {
         return 'Home'

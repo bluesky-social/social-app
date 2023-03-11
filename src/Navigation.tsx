@@ -12,10 +12,12 @@ import {
   NotificationsTabNavigatorParams,
   FlatNavigatorParams,
   AllNavigatorParams,
-  State,
 } from 'lib/routes/types'
 import {BottomBar} from './view/shell/BottomBar'
+import {buildStateObject} from 'lib/routes/helpers'
+import {State, RouteParams} from 'lib/routes/types'
 import {isNative} from 'platform/detection'
+import {router} from './routes'
 
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
@@ -39,112 +41,6 @@ const NotificationsTab =
   createNativeStackNavigator<NotificationsTabNavigatorParams>()
 const Flat = createNativeStackNavigator<FlatNavigatorParams>()
 const Tab = createBottomTabNavigator()
-
-type RouteParams = Record<string, string>
-type MatchResult = {params: RouteParams}
-type Route = {
-  match: (path: string) => MatchResult | undefined
-  build: (params: RouteParams) => string
-}
-function r(pattern: string): Route {
-  let matcherReInternal = pattern.replace(
-    /:([\w]+)/g,
-    (_m, name) => `(?<${name}>[^/]+)`,
-  )
-  const matcherRe = new RegExp(`^${matcherReInternal}([?]|$)`, 'i')
-  return {
-    match(path: string) {
-      const res = matcherRe.exec(path)
-      if (res) {
-        return {params: res.groups || {}}
-      }
-      return undefined
-    },
-    build(params: Record<string, string>) {
-      return pattern.replace(
-        /:([\w]+)/g,
-        (_m, name) => params[name] || 'undefined',
-      )
-    },
-  }
-}
-const ROUTES: Record<string, Route> = {
-  Home: r('/'),
-  Search: r('/search'),
-  Notifications: r('/notifications'),
-  Settings: r('/settings'),
-  Profile: r('/profile/:name'),
-  ProfileFollowers: r('/profile/:name/followers'),
-  ProfileFollows: r('/profile/:name/follows'),
-  PostThread: r('/profile/:name/post/:rkey'),
-  PostUpvotedBy: r('/profile/:name/post/:rkey/upvoted-by'),
-  PostRepostedBy: r('/profile/:name/post/:rkey/reposted-by'),
-  Debug: r('/sys/debug'),
-  Log: r('/sys/log'),
-}
-
-function matchPath(path: string): [string, RouteParams] {
-  let name = 'NotFound'
-  let params: RouteParams = {}
-  for (const [screenName, matcher] of Object.entries(ROUTES)) {
-    const res = matcher.match(path)
-    if (res) {
-      name = screenName
-      params = res.params
-      break
-    }
-  }
-  return [name, params]
-}
-
-const LINKING = {
-  prefixes: ['bsky://', 'https://bsky.app'],
-
-  getPathFromState(state: State) {
-    // find the current node in the navigation tree
-    let node = state.routes[state.index || 0]
-    while (node.state?.routes && typeof node.state?.index === 'number') {
-      node = node.state?.routes[node.state?.index]
-    }
-
-    // build the path
-    const route = ROUTES[node.name]
-    if (typeof route === 'undefined') {
-      return '/' // default to home
-    }
-    return route.build((node.params || {}) as RouteParams)
-  },
-
-  getStateFromPath(path: string) {
-    const [name, params] = matchPath(path)
-    if (isNative) {
-      if (name === 'Search') {
-        return buildStateObject('SearchTab', 'Search', params)
-      }
-      if (name === 'Notifications') {
-        return buildStateObject('NotificationsTab', 'Notifications', params)
-      }
-      return buildStateObject('HomeTab', name, params)
-    } else {
-      return {
-        routes: [{name, params}],
-      }
-    }
-  },
-}
-
-function buildStateObject(stack: string, route: string, params: RouteParams) {
-  return {
-    routes: [
-      {
-        name: stack,
-        state: {
-          routes: [{name: route, params}],
-        },
-      },
-    ],
-  }
-}
 
 /**
  * These "common screens" are reused across stacks.
@@ -264,6 +160,41 @@ function FlatNavigator() {
  * The RoutesContainer should wrap all components which need access
  * to the navigation context.
  */
+
+const LINKING = {
+  prefixes: ['bsky://', 'https://bsky.app'],
+
+  getPathFromState(state: State) {
+    // find the current node in the navigation tree
+    let node = state.routes[state.index || 0]
+    while (node.state?.routes && typeof node.state?.index === 'number') {
+      node = node.state?.routes[node.state?.index]
+    }
+
+    // build the path
+    const route = router.matchName(node.name)
+    if (typeof route === 'undefined') {
+      return '/' // default to home
+    }
+    return route.build((node.params || {}) as RouteParams)
+  },
+
+  getStateFromPath(path: string) {
+    const [name, params] = router.matchPath(path)
+    if (isNative) {
+      if (name === 'Search') {
+        return buildStateObject('SearchTab', 'Search', params)
+      }
+      if (name === 'Notifications') {
+        return buildStateObject('NotificationsTab', 'Notifications', params)
+      }
+      return buildStateObject('HomeTab', name, params)
+    } else {
+      return buildStateObject('Flat', name, params)
+    }
+  },
+}
+
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   return (
     <NavigationContainer ref={navigationRef} linking={LINKING}>
@@ -271,6 +202,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
     </NavigationContainer>
   )
 }
+
+/**
+ * These helpers can be used from outside of the RoutesContainer
+ * (eg in the state models).
+ */
 
 function navigate<K extends keyof AllNavigatorParams>(
   name: K,
@@ -289,11 +225,4 @@ function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'NotificationsTab') {
   }
 }
 
-export {
-  navigate,
-  resetToTab,
-  matchPath,
-  TabsNavigator,
-  FlatNavigator,
-  RoutesContainer,
-}
+export {navigate, resetToTab, TabsNavigator, FlatNavigator, RoutesContainer}

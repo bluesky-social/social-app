@@ -1,4 +1,4 @@
-import {State} from './types'
+import {State, RouteParams} from './types'
 
 export function getCurrentRoute(state: State) {
   let node = state.routes[state.index || 0]
@@ -52,4 +52,26 @@ export function getTabState(state: State | undefined, tab: string): TabState {
     return TabState.Inside
   }
   return TabState.Outside
+}
+
+export function buildStateObject(
+  stack: string,
+  route: string,
+  params: RouteParams,
+) {
+  if (stack === 'Flat') {
+    return {
+      routes: [{name: route, params}],
+    }
+  }
+  return {
+    routes: [
+      {
+        name: stack,
+        state: {
+          routes: [{name: route, params}],
+        },
+      },
+    ],
+  }
 }
