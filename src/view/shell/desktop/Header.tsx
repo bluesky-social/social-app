@@ -36,7 +36,6 @@ interface NavItemProps {
 }
 export const NavItem = observer(
   ({count, href, icon, iconFilled}: NavItemProps) => {
-    const navigation = useNavigation<NavigationProp>()
     const hoverBg = useColorSchemeStyle(
       styles.navItemHoverBgLight,
       styles.navItemHoverBgDark,
@@ -50,17 +49,6 @@ export const NavItem = observer(
       return getCurrentRoute(state).name
     })
     const isCurrent = isTab(currentRouteName, pathName)
-
-    // const onPress = React.useCallback(() => {
-    //   if (href === '/search') {
-    //     navigation.dispatch(TabActions.jumpTo('SearchTab'))
-    //   } else if (href === '/notifications') {
-    //     navigation.dispatch(TabActions.jumpTo('NotificationsTab'))
-    //   } else {
-    //     navigation.dispatch(TabActions.jumpTo('HomeTab'))
-    //   }
-    //   navigation.dispatch(StackActions.push(pathName, pathParams))
-    // }, [navigation, href, pathName, pathParams])
 
     return (
       <Pressable
