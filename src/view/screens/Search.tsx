@@ -74,7 +74,7 @@ export const SearchScreen = observer<Props>(({}: Props) => {
 
   const onPressMenu = () => {
     track('ViewHeader:MenuButtonClicked')
-    store.shell.setMainMenuOpen(true)
+    store.shell.openDrawer()
   }
 
   const onChangeQuery = (text: string) => {

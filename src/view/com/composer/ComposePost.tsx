@@ -27,7 +27,6 @@ import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
 import {TextInput, TextInputRef} from './text-input/TextInput'
 import {CharProgress} from './char-progress/CharProgress'
-import {TextLink} from '../util/Link'
 import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from 'state/index'
 import * as apilib from 'lib/api/index'
@@ -430,12 +429,9 @@ export const ComposePost = observer(function ComposePost({
                   size={50}
                 />
                 <View style={styles.replyToPost}>
-                  <TextLink
-                    type="xl-medium"
-                    href={`/profile/${replyTo.author.handle}`}
-                    text={replyTo.author.displayName || replyTo.author.handle}
-                    style={[pal.text]}
-                  />
+                  <Text type="xl-medium" style={[pal.text]}>
+                    {replyTo.author.displayName || replyTo.author.handle}
+                  </Text>
                   <Text type="post-text" style={pal.text} numberOfLines={6}>
                     {replyTo.text}
                   </Text>
