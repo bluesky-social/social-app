@@ -9,10 +9,10 @@ import {
   ViewStyle,
 } from 'react-native'
 import {
-  DrawerContentComponentProps,
-  useDrawerStatus,
-} from '@react-navigation/drawer'
-import {StackActions} from '@react-navigation/native'
+  useNavigation,
+  useNavigationState,
+  StackActions,
+} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import {
   FontAwesomeIcon,
@@ -38,38 +38,44 @@ import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {pluralize} from 'lib/strings/helpers'
-import {getCurrentRoute, isTab} from 'lib/routes/helpers'
+import {getCurrentRoute, isTab, getTabState, TabState} from 'lib/routes/helpers'
+import {NavigationProp} from 'lib/routes/types'
 
-export const Drawer = observer(({navigation}: DrawerContentComponentProps) => {
+export const DrawerContent = observer(() => {
   const theme = useTheme()
   const pal = usePalette('default')
   const store = useStores()
+  const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const isDrawerOpen = useDrawerStatus() === 'open'
+  const {isAtHome, isAtSearch, isAtNotifications} = useNavigationState(
+    state => {
+      const currentRoute = state ? getCurrentRoute(state) : false
+      return {
+        isAtHome: currentRoute ? isTab(currentRoute.name, 'Home') : true,
+        isAtSearch: currentRoute ? isTab(currentRoute.name, 'Search') : false,
+        isAtNotifications: currentRoute
+          ? isTab(currentRoute.name, 'Notifications')
+          : false,
+      }
+    },
+  )
 
   // events
   // =
-
-  React.useEffect(() => {
-    console.log('Drawer', isDrawerOpen ? 'minimizing' : 'unminimizing', 'shell')
-    store.shell.setMinimalShellMode(isDrawerOpen)
-  }, [isDrawerOpen, store])
 
   const onPressTab = React.useCallback(
     (tab: string) => {
       track('Menu:ItemClicked', {url: tab})
       const state = navigation.getState()
-      navigation.closeDrawer()
-      const currentRoute = getCurrentRoute(state)
-      if (isTab(currentRoute.name, tab)) {
+      store.shell.closeDrawer()
+      const tabState = getTabState(state, tab)
+      if (tabState === TabState.InsideAtRoot) {
         store.emitScreenSoftReset()
-      } else if (isTab(state.routes[state.index].name, tab)) {
+      } else if (tabState === TabState.Inside) {
         navigation.dispatch(StackActions.popToTop())
       } else {
-        // wait for drawer anim to finish
-        setTimeout(() => {
-          navigation.navigate(`${tab}Tab`)
-        }, 250)
+        // @ts-ignore must be Home, Search, or Notifications
+        navigation.navigate(`${tab}Tab`)
       }
     },
     [store, track, navigation],
@@ -90,14 +96,14 @@ export const Drawer = observer(({navigation}: DrawerContentComponentProps) => {
   const onPressProfile = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Profile'})
     navigation.navigate('Profile', {name: store.me.handle})
-    navigation.closeDrawer()
-  }, [navigation, track, store.me.handle])
+    store.shell.closeDrawer()
+  }, [navigation, track, store.me.handle, store.shell])
 
   const onPressSettings = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Settings'})
     navigation.navigate('Settings')
-    navigation.closeDrawer()
-  }, [navigation, track])
+    store.shell.closeDrawer()
+  }, [navigation, track, store.shell])
 
   const onPressFeedback = () => {
     track('Menu:FeedbackClicked')
@@ -145,11 +151,6 @@ export const Drawer = observer(({navigation}: DrawerContentComponentProps) => {
     track('Menu:ItemClicked', {url: '/darkmode'})
     store.shell.setDarkMode(!store.shell.darkMode)
   }
-
-  const currentRoute = getCurrentRoute(navigation.getState())
-  const isAtHome = isTab(currentRoute.name, 'Home')
-  const isAtSearch = isTab(currentRoute.name, 'Search')
-  const isAtNotifications = isTab(currentRoute.name, 'Notifications')
 
   return (
     <View

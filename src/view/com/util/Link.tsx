@@ -51,7 +51,7 @@ export const Link = observer(function Link({
 
   if (noFeedback) {
     return (
-      <TouchableWithoutFeedback delayPressIn={50} {...props}>
+      <TouchableWithoutFeedback {...props}>
         <View style={style} {...props}>
           {children ? children : <Text>{title || 'link'}</Text>}
         </View>
@@ -59,7 +59,7 @@ export const Link = observer(function Link({
     )
   }
   return (
-    <TouchableOpacity delayPressIn={50} style={style} {...props}>
+    <TouchableOpacity style={style} {...props}>
       {children ? children : <Text>{title || 'link'}</Text>}
     </TouchableOpacity>
   )

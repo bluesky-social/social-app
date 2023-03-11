@@ -26,7 +26,7 @@ import {
 } from 'lib/icons'
 import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {getCurrentRoute, isTab} from 'lib/routes/helpers'
+import {getCurrentRoute, isTab, getTabState, TabState} from 'lib/routes/helpers'
 
 export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const store = useStores()
@@ -60,10 +60,10 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
     (tab: string) => {
       track(`MobileShell:${tab}ButtonPressed`)
       const state = navigation.getState()
-      const currentRoute = getCurrentRoute(state)
-      if (isTab(currentRoute.name, tab)) {
+      const tabState = getTabState(state, tab)
+      if (tabState === TabState.InsideAtRoot) {
         store.emitScreenSoftReset()
-      } else if (isTab(state.routes[state.index].name, tab)) {
+      } else if (tabState === TabState.Inside) {
         navigation.dispatch(StackActions.popToTop())
       } else {
         navigation.navigate(`${tab}Tab`)

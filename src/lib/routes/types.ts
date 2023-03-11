@@ -20,24 +20,12 @@ export type HomeTabNavigatorParams = CommonNavigatorParams & {
   Home: undefined
 }
 
-export type HomeDrawerNavigatorParams = {
-  HomeInner: undefined
-}
-
 export type SearchTabNavigatorParams = CommonNavigatorParams & {
   Search: undefined
 }
 
-export type SearchDrawerNavigatorParams = {
-  SearchInner: undefined
-}
-
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
   Notifications: undefined
-}
-
-export type NotificationsDrawerNavigatorParams = {
-  NotificationsInner: undefined
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {
@@ -53,13 +41,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
 // this isn't strictly correct but it should be close enough
 // a TS wizard might be able to get this 100%
 // -prf
-export type NavigationProp = NativeStackNavigationProp<
-  CommonNavigatorParams & {
-    HomeTab: undefined
-    NotificationsTab: undefined
-    SearchTab: undefined
-  }
->
+export type NavigationProp = NativeStackNavigationProp<AllNavigatorParams>
 
 export type State =
   | NavigationState

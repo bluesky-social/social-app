@@ -34,8 +34,8 @@ export const ViewHeader = observer(function ViewHeader({
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
-    navigation.dispatch(DrawerActions.openDrawer())
-  }, [track, navigation])
+    store.shell.openDrawer()
+  }, [track, store])
 
   if (typeof canGoBack === 'undefined') {
     canGoBack = navigation.canGoBack()

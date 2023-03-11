@@ -5,16 +5,12 @@ import {
   StackActions,
 } from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
-import {createDrawerNavigator} from '@react-navigation/drawer'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 
 import {
   HomeTabNavigatorParams,
-  HomeDrawerNavigatorParams,
   SearchTabNavigatorParams,
-  SearchDrawerNavigatorParams,
   NotificationsTabNavigatorParams,
-  NotificationsDrawerNavigatorParams,
   AllNavigatorParams,
   State,
 } from 'lib/routes/types'
@@ -38,12 +34,8 @@ import {LogScreen} from './view/screens/Log'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
-const HomeDrawer = createDrawerNavigator<HomeDrawerNavigatorParams>()
 const HomeTab = createNativeStackNavigator<HomeTabNavigatorParams>()
-const SearchDrawer = createDrawerNavigator<SearchDrawerNavigatorParams>()
 const SearchTab = createNativeStackNavigator<SearchTabNavigatorParams>()
-const NotificationsDrawer =
-  createDrawerNavigator<NotificationsDrawerNavigatorParams>()
 const NotificationsTab =
   createNativeStackNavigator<NotificationsTabNavigatorParams>()
 const Tab = createBottomTabNavigator()
@@ -78,11 +70,8 @@ function r(pattern: string): Route {
 }
 const ROUTES: Record<string, Route> = {
   Home: r('/'),
-  HomeInner: r('/'),
   Search: r('/search'),
-  SearchInner: r('/search'),
   Notifications: r('/notifications'),
-  NotificationsInner: r('/notifications'),
   Settings: r('/settings'),
   Profile: r('/profile/:name'),
   ProfileFollowers: r('/profile/:name/followers'),
@@ -171,17 +160,6 @@ function commonScreens(Stack: typeof HomeTab) {
   )
 }
 
-function HomeDrawerNavigator() {
-  const drawerContent = React.useCallback(props => <Drawer {...props} />, [])
-  return (
-    <HomeDrawer.Navigator
-      drawerContent={drawerContent}
-      screenOptions={{swipeEdgeWidth: 300, headerShown: false}}>
-      <HomeDrawer.Screen name="HomeInner" component={HomeScreen} />
-    </HomeDrawer.Navigator>
-  )
-}
-
 function HomeTabNavigator() {
   return (
     <HomeTab.Navigator
@@ -190,20 +168,9 @@ function HomeTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
       }}>
-      <HomeTab.Screen name="Home" component={HomeDrawerNavigator} />
+      <HomeTab.Screen name="Home" component={HomeScreen} />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
-  )
-}
-
-function SearchDrawerNavigator() {
-  const drawerContent = React.useCallback(props => <Drawer {...props} />, [])
-  return (
-    <SearchDrawer.Navigator
-      drawerContent={drawerContent}
-      screenOptions={{swipeEdgeWidth: 300, headerShown: false}}>
-      <SearchDrawer.Screen name="SearchInner" component={SearchScreen} />
-    </SearchDrawer.Navigator>
   )
 }
 
@@ -215,23 +182,9 @@ function SearchTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
       }}>
-      <SearchTab.Screen name="Search" component={SearchDrawerNavigator} />
+      <SearchTab.Screen name="Search" component={SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
     </SearchTab.Navigator>
-  )
-}
-
-function NotificationsDrawerNavigator() {
-  const drawerContent = React.useCallback(props => <Drawer {...props} />, [])
-  return (
-    <NotificationsDrawer.Navigator
-      drawerContent={drawerContent}
-      screenOptions={{swipeEdgeWidth: 300, headerShown: false}}>
-      <NotificationsDrawer.Screen
-        name="NotificationsInner"
-        component={NotificationsScreen}
-      />
-    </NotificationsDrawer.Navigator>
   )
 }
 
@@ -245,7 +198,7 @@ function NotificationsTabNavigator() {
       }}>
       <NotificationsTab.Screen
         name="Notifications"
-        component={NotificationsDrawerNavigator}
+        component={NotificationsScreen}
       />
       {commonScreens(NotificationsTab as typeof HomeTab)}
     </NotificationsTab.Navigator>

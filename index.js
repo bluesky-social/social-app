@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler' // must be first
+
 import {LogBox} from 'react-native'
 LogBox.ignoreLogs(['Require cycle:']) // suppress require-cycle warnings, it's fine
 
