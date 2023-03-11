@@ -1,9 +1,7 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {View, StyleSheet} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {useStores} from 'state/index'
-import {match, MatchResult} from '../routes'
 import {DesktopHeader} from './desktop/Header'
 import {Login} from '../screens/Login'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
@@ -15,19 +13,40 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {s, colors} from 'lib/styles'
 import {isMobileWeb} from 'platform/detection'
+import {RoutesContainer, FlatNavigator} from '../../Routes'
 
-import {RoutesContainer} from '../../Routes'
+const ShellInner = observer(() => {
+  const store = useStores()
+
+  return (
+    <>
+      <DesktopHeader />
+      <View style={[s.hContentRegion]}>
+        <ErrorBoundary>
+          <FlatNavigator />
+        </ErrorBoundary>
+      </View>
+      <Composer
+        active={store.shell.isComposerActive}
+        onClose={() => store.shell.closeComposer()}
+        winHeight={0}
+        replyTo={store.shell.composerOpts?.replyTo}
+        imagesOpen={store.shell.composerOpts?.imagesOpen}
+        onPost={store.shell.composerOpts?.onPost}
+      />
+      <ModalsContainer />
+      <Lightbox />
+    </>
+  )
+})
 
 export const Shell: React.FC = observer(() => {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   const store = useStores()
-  const screenRenderDesc = constructScreenRenderDesc(store.nav)
 
   if (isMobileWeb) {
     return <NoMobileWeb />
   }
-
-  return <RoutesContainer />
 
   if (!store.session.hasSession) {
     return (
@@ -40,78 +59,12 @@ export const Shell: React.FC = observer(() => {
 
   return (
     <View style={[styles.outerContainer, pageBg]}>
-      <DesktopHeader />
-      {screenRenderDesc.screens.map(({Com, navIdx, params, key, current}) => (
-        <View
-          key={key}
-          style={[s.hContentRegion, current ? styles.visible : styles.hidden]}>
-          <ErrorBoundary>
-            <Com params={params} navIdx={navIdx} visible={current} />
-          </ErrorBoundary>
-        </View>
-      ))}
-      <Composer
-        active={store.shell.isComposerActive}
-        onClose={() => store.shell.closeComposer()}
-        winHeight={0}
-        replyTo={store.shell.composerOpts?.replyTo}
-        imagesOpen={store.shell.composerOpts?.imagesOpen}
-        onPost={store.shell.composerOpts?.onPost}
-      />
-      <ModalsContainer />
-      <Lightbox />
+      <RoutesContainer>
+        <ShellInner />
+      </RoutesContainer>
     </View>
   )
 })
-
-/**
- * This method produces the information needed by the shell to
- * render the current screens with screen-caching behaviors.
- */
-type ScreenRenderDesc = MatchResult & {
-  key: string
-  navIdx: string
-  current: boolean
-  previous: boolean
-  isNewTab: boolean
-}
-function constructScreenRenderDesc(nav: NavigationModel): {
-  icon: IconProp
-  hasNewTab: boolean
-  screens: ScreenRenderDesc[]
-} {
-  let hasNewTab = false
-  let icon: IconProp = 'magnifying-glass'
-  let screens: ScreenRenderDesc[] = []
-  for (const tab of nav.tabs) {
-    const tabScreens = [
-      ...tab.getBackList(5),
-      Object.assign({}, tab.current, {index: tab.index}),
-    ]
-    const parsedTabScreens = tabScreens.map(screen => {
-      const isCurrent = nav.isCurrentScreen(tab.id, screen.index)
-      const isPrevious = nav.isCurrentScreen(tab.id, screen.index + 1)
-      const matchRes = match(screen.url)
-      if (isCurrent) {
-        icon = matchRes.icon
-      }
-      hasNewTab = hasNewTab || tab.isNewTab
-      return Object.assign(matchRes, {
-        key: `t${tab.id}-s${screen.index}`,
-        navIdx: `${tab.id}-${screen.id}`,
-        current: isCurrent,
-        previous: isPrevious,
-        isNewTab: tab.isNewTab,
-      }) as ScreenRenderDesc
-    })
-    screens = screens.concat(parsedTabScreens)
-  }
-  return {
-    icon,
-    hasNewTab,
-    screens,
-  }
-}
 
 function NoMobileWeb() {
   const pal = usePalette('default')

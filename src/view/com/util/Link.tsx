@@ -135,9 +135,8 @@ function onPressInner(
     } else {
       store.shell.closeModal() // close any active modals
 
-      const {name, params} = matchPath(href)
       // @ts-ignore we're not able to type check on this one -prf
-      navigation.push(name, params)
+      navigation.push(...matchPath(href))
     }
   }
 }

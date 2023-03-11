@@ -5,7 +5,7 @@ import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from 'lib/icons'
-import {ProfileCard} from '../com/profile/ProfileCard'
+import {ProfileCard} from 'view/com/profile/ProfileCard'
 
 export const DesktopSearch = observer(function DesktopSearch() {
   const store = useStores()

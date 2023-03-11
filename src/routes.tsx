@@ -6,17 +6,16 @@ import {
 } from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-
 import {
   HomeTabNavigatorParams,
   SearchTabNavigatorParams,
   NotificationsTabNavigatorParams,
+  FlatNavigatorParams,
   AllNavigatorParams,
   State,
 } from 'lib/routes/types'
-
-import {Drawer} from './view/shell/Drawer'
 import {BottomBar} from './view/shell/BottomBar'
+import {isNative} from 'platform/detection'
 
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
@@ -38,6 +37,7 @@ const HomeTab = createNativeStackNavigator<HomeTabNavigatorParams>()
 const SearchTab = createNativeStackNavigator<SearchTabNavigatorParams>()
 const NotificationsTab =
   createNativeStackNavigator<NotificationsTabNavigatorParams>()
+const Flat = createNativeStackNavigator<FlatNavigatorParams>()
 const Tab = createBottomTabNavigator()
 
 type RouteParams = Record<string, string>
@@ -83,7 +83,7 @@ const ROUTES: Record<string, Route> = {
   Log: r('/sys/log'),
 }
 
-function matchPath(path: string): {name: string; params: RouteParams} {
+function matchPath(path: string): [string, RouteParams] {
   let name = 'NotFound'
   let params: RouteParams = {}
   for (const [screenName, matcher] of Object.entries(ROUTES)) {
@@ -94,7 +94,7 @@ function matchPath(path: string): {name: string; params: RouteParams} {
       break
     }
   }
-  return {name, params}
+  return [name, params]
 }
 
 const LINKING = {
@@ -116,14 +116,20 @@ const LINKING = {
   },
 
   getStateFromPath(path: string) {
-    const {name, params} = matchPath(path)
-    if (name === 'Search') {
-      return buildStateObject('SearchTab', 'Search', params)
+    const [name, params] = matchPath(path)
+    if (isNative) {
+      if (name === 'Search') {
+        return buildStateObject('SearchTab', 'Search', params)
+      }
+      if (name === 'Notifications') {
+        return buildStateObject('NotificationsTab', 'Notifications', params)
+      }
+      return buildStateObject('HomeTab', name, params)
+    } else {
+      return {
+        routes: [{name, params}],
+      }
     }
-    if (name === 'Notifications') {
-      return buildStateObject('NotificationsTab', 'Notifications', params)
-    }
-    return buildStateObject('HomeTab', name, params)
   },
 }
 
@@ -140,6 +146,9 @@ function buildStateObject(stack: string, route: string, params: RouteParams) {
   }
 }
 
+/**
+ * These "common screens" are reused across stacks.
+ */
 function commonScreens(Stack: typeof HomeTab) {
   return (
     <>
@@ -157,6 +166,28 @@ function commonScreens(Stack: typeof HomeTab) {
       <Stack.Screen name="Debug" component={DebugScreen} />
       <Stack.Screen name="Log" component={LogScreen} />
     </>
+  )
+}
+
+/**
+ * The TabsNavigator is used by native mobile to represent the routes
+ * in 3 distinct tab-stacks with a different root screen on each.
+ */
+function TabsNavigator() {
+  const tabBar = React.useCallback(props => <BottomBar {...props} />, [])
+  return (
+    <Tab.Navigator
+      initialRouteName="HomeTab"
+      backBehavior="initialRoute"
+      screenOptions={{headerShown: false}}
+      tabBar={tabBar}>
+      <Tab.Screen name="HomeTab" component={HomeTabNavigator} />
+      <Tab.Screen
+        name="NotificationsTab"
+        component={NotificationsTabNavigator}
+      />
+      <Tab.Screen name="SearchTab" component={SearchTabNavigator} />
+    </Tab.Navigator>
   )
 }
 
@@ -208,24 +239,31 @@ function NotificationsTabNavigator() {
   )
 }
 
-function TabsNavigator() {
-  const tabBar = React.useCallback(props => <BottomBar {...props} />, [])
+/**
+ * The FlatNavigator is used by Web to represent the routes
+ * in a single ("flat") stack.
+ */
+function FlatNavigator() {
   return (
-    <Tab.Navigator
-      initialRouteName="HomeTab"
-      backBehavior="initialRoute"
-      screenOptions={{headerShown: false}}
-      tabBar={tabBar}>
-      <Tab.Screen name="HomeTab" component={HomeTabNavigator} />
-      <Tab.Screen
-        name="NotificationsTab"
-        component={NotificationsTabNavigator}
-      />
-      <Tab.Screen name="SearchTab" component={SearchTabNavigator} />
-    </Tab.Navigator>
+    <Flat.Navigator
+      screenOptions={{
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+        animationDuration: 250,
+      }}>
+      <Flat.Screen name="Home" component={HomeScreen} />
+      <Flat.Screen name="Search" component={SearchScreen} />
+      <Flat.Screen name="Notifications" component={NotificationsScreen} />
+      {commonScreens(Flat as typeof HomeTab)}
+    </Flat.Navigator>
   )
 }
 
+/**
+ * The RoutesContainer should wrap all components which need access
+ * to the navigation context.
+ */
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   return (
     <NavigationContainer ref={navigationRef} linking={LINKING}>
@@ -251,4 +289,11 @@ function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'NotificationsTab') {
   }
 }
 
-export {navigate, resetToTab, matchPath, TabsNavigator, RoutesContainer}
+export {
+  navigate,
+  resetToTab,
+  matchPath,
+  TabsNavigator,
+  FlatNavigator,
+  RoutesContainer,
+}

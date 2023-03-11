@@ -28,6 +28,12 @@ export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
   Notifications: undefined
 }
 
+export type FlatNavigatorParams = CommonNavigatorParams & {
+  Home: undefined
+  Search: undefined
+  Notifications: undefined
+}
+
 export type AllNavigatorParams = CommonNavigatorParams & {
   HomeTab: undefined
   Home: undefined

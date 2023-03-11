@@ -1,6 +1,13 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  useNavigation,
+  useNavigationState,
+  useLinkProps,
+  TabActions,
+  StackActions,
+} from '@react-navigation/native'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -17,6 +24,9 @@ import {
   CogIcon,
 } from 'lib/icons'
 import {DesktopSearch} from './Search'
+import {NavigationProp} from 'lib/routes/types'
+import {getCurrentRoute, isTab} from 'lib/routes/helpers'
+import {matchPath} from '../../../Routes'
 
 interface NavItemProps {
   count?: number
@@ -27,13 +37,32 @@ interface NavItemProps {
 }
 export const NavItem = observer(
   ({count, href, icon, iconFilled}: NavItemProps) => {
-    const store = useStores()
+    const navigation = useNavigation<NavigationProp>()
     const hoverBg = useColorSchemeStyle(
       styles.navItemHoverBgLight,
       styles.navItemHoverBgDark,
     )
-    const isCurrent = store.nav.tab.current.url === href
-    const onPress = () => store.nav.navigate(href)
+    const {onPress} = useLinkProps({to: href})
+    const [pathName, pathParams] = React.useMemo(() => matchPath(href), [href])
+    const currentRouteName = useNavigationState(state => {
+      if (!state) {
+        return 'Home'
+      }
+      return getCurrentRoute(state).name
+    })
+    const isCurrent = isTab(currentRouteName, pathName)
+
+    // const onPress = React.useCallback(() => {
+    //   if (href === '/search') {
+    //     navigation.dispatch(TabActions.jumpTo('SearchTab'))
+    //   } else if (href === '/notifications') {
+    //     navigation.dispatch(TabActions.jumpTo('NotificationsTab'))
+    //   } else {
+    //     navigation.dispatch(TabActions.jumpTo('HomeTab'))
+    //   }
+    //   navigation.dispatch(StackActions.push(pathName, pathParams))
+    // }, [navigation, href, pathName, pathParams])
+
     return (
       <Pressable
         style={state => [
@@ -61,15 +90,18 @@ export const ProfileItem = observer(() => {
     styles.navItemHoverBgLight,
     styles.navItemHoverBgDark,
   )
-  const href = `/profile/${store.me.handle}`
-  const isCurrent = store.nav.tab.current.url === href
-  const onPress = () => store.nav.navigate(href)
+  const navigation = useNavigation<NavigationProp>()
+
+  const onPress = React.useCallback(() => {
+    navigation.dispatch(StackActions.push('Profile', {name: store.me.handle}))
+  }, [navigation, store.me.handle])
+
   return (
     <Pressable
       style={state => [
         styles.navItem,
         // @ts-ignore Pressable state differs for RNW -prf
-        (state.hovered || isCurrent) && hoverBg,
+        state.hovered && hoverBg,
       ]}
       onPress={onPress}>
       <View style={[styles.navItemIconWrapper]}>
