@@ -16,7 +16,7 @@ import {
   MagnifyingGlassIcon,
   CogIcon,
 } from 'lib/icons'
-import {DesktopSearch} from './DesktopSearch'
+import {DesktopSearch} from './Search'
 
 interface NavItemProps {
   count?: number

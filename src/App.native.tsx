@@ -2,15 +2,13 @@ import 'react-native-url-polyfill/auto'
 import React, {useState, useEffect} from 'react'
 import {Linking} from 'react-native'
 import {RootSiblingParent} from 'react-native-root-siblings'
-import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import SplashScreen from 'react-native-splash-screen'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
 import {ThemeProvider} from 'lib/ThemeContext'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
-import {MobileShell} from './view/shell/mobile'
-import {s} from 'lib/styles'
+import {Shell} from './view/shell'
 import * as notifee from 'lib/notifee'
 import * as analytics from 'lib/analytics'
 import * as Toast from './view/com/util/Toast'
@@ -48,19 +46,17 @@ const App = observer(() => {
     return null
   }
   return (
-    <GestureHandlerRootView style={s.h100pct}>
-      <ThemeProvider theme={rootStore.shell.darkMode ? 'dark' : 'light'}>
-        <RootSiblingParent>
-          <analytics.Provider>
-            <RootStoreProvider value={rootStore}>
-              <SafeAreaProvider>
-                <MobileShell />
-              </SafeAreaProvider>
-            </RootStoreProvider>
-          </analytics.Provider>
-        </RootSiblingParent>
-      </ThemeProvider>
-    </GestureHandlerRootView>
+    <ThemeProvider theme={rootStore.shell.darkMode ? 'dark' : 'light'}>
+      <RootSiblingParent>
+        <analytics.Provider>
+          <RootStoreProvider value={rootStore}>
+            <SafeAreaProvider>
+              <Shell />
+            </SafeAreaProvider>
+          </RootStoreProvider>
+        </analytics.Provider>
+      </RootSiblingParent>
+    </ThemeProvider>
   )
 })
 

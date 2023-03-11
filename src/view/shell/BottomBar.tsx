@@ -6,13 +6,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import {StackActions} from '@react-navigation/native'
+import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
 import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
 import {useAnalytics} from 'lib/analytics'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {TabPurpose, TabPurposeMainPath} from 'state/models/navigation'
 import {clamp} from 'lib/numbers'
 import {
   HomeIcon,
@@ -25,8 +26,9 @@ import {
 } from 'lib/icons'
 import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
+import {getCurrentRoute, isTab, getTabState, TabState} from 'lib/routes/helpers'
 
-export const BottomBar = observer(() => {
+export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const store = useStores()
   const pal = usePalette('default')
   const minimalShellInterp = useAnimatedValue(0)
@@ -54,62 +56,39 @@ export const BottomBar = observer(() => {
     transform: [{translateY: Animated.multiply(minimalShellInterp, 100)}],
   }
 
-  const onPressHome = React.useCallback(() => {
-    track('MobileShell:HomeButtonPressed')
-    if (store.nav.tab.fixedTabPurpose === TabPurpose.Default) {
-      if (!store.nav.tab.canGoBack) {
+  const onPressTab = React.useCallback(
+    (tab: string) => {
+      track(`MobileShell:${tab}ButtonPressed`)
+      const state = navigation.getState()
+      const tabState = getTabState(state, tab)
+      if (tabState === TabState.InsideAtRoot) {
         store.emitScreenSoftReset()
+      } else if (tabState === TabState.Inside) {
+        navigation.dispatch(StackActions.popToTop())
       } else {
-        store.nav.tab.fixedTabReset()
+        navigation.navigate(`${tab}Tab`)
       }
-    } else {
-      store.nav.switchTo(TabPurpose.Default, false)
-      if (store.nav.tab.index === 0) {
-        store.nav.tab.fixedTabReset()
-      }
-    }
-  }, [store, track])
-  const onPressSearch = React.useCallback(() => {
-    track('MobileShell:SearchButtonPressed')
-    if (store.nav.tab.fixedTabPurpose === TabPurpose.Search) {
-      if (!store.nav.tab.canGoBack) {
-        store.emitScreenSoftReset()
-      } else {
-        store.nav.tab.fixedTabReset()
-      }
-    } else {
-      store.nav.switchTo(TabPurpose.Search, false)
-      if (store.nav.tab.index === 0) {
-        store.nav.tab.fixedTabReset()
-      }
-    }
-  }, [store, track])
-  const onPressNotifications = React.useCallback(() => {
-    track('MobileShell:NotificationsButtonPressed')
-    if (store.nav.tab.fixedTabPurpose === TabPurpose.Notifs) {
-      if (!store.nav.tab.canGoBack) {
-        store.emitScreenSoftReset()
-      } else {
-        store.nav.tab.fixedTabReset()
-      }
-    } else {
-      store.nav.switchTo(TabPurpose.Notifs, false)
-      if (store.nav.tab.index === 0) {
-        store.nav.tab.fixedTabReset()
-      }
-    }
-  }, [store, track])
+    },
+    [store, track, navigation],
+  )
+  const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
+  const onPressSearch = React.useCallback(
+    () => onPressTab('Search'),
+    [onPressTab],
+  )
+  const onPressNotifications = React.useCallback(
+    () => onPressTab('Notifications'),
+    [onPressTab],
+  )
   const onPressProfile = React.useCallback(() => {
     track('MobileShell:ProfileButtonPressed')
-    store.nav.navigate(`/profile/${store.me.handle}`)
-  }, [store, track])
+    navigation.navigate('Profile', {name: store.me.handle})
+  }, [navigation, track, store.me.handle])
 
-  const isAtHome =
-    store.nav.tab.current.url === TabPurposeMainPath[TabPurpose.Default]
-  const isAtSearch =
-    store.nav.tab.current.url === TabPurposeMainPath[TabPurpose.Search]
-  const isAtNotifications =
-    store.nav.tab.current.url === TabPurposeMainPath[TabPurpose.Notifs]
+  const currentRoute = getCurrentRoute(navigation.getState())
+  const isAtHome = isTab(currentRoute.name, 'Home')
+  const isAtSearch = isTab(currentRoute.name, 'Search')
+  const isAtNotifications = isTab(currentRoute.name, 'Notifications')
 
   return (
     <Animated.View

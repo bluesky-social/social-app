@@ -17,7 +17,6 @@ import {Button, ButtonType} from './Button'
 import {colors} from 'lib/styles'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useStores} from 'state/index'
-import {TABS_ENABLED} from 'lib/build-flags'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 
@@ -138,15 +137,6 @@ export function PostDropdownBtn({
   const store = useStores()
 
   const dropdownItems: DropdownItem[] = [
-    TABS_ENABLED
-      ? {
-          icon: ['far', 'clone'],
-          label: 'Open in new tab',
-          onPress() {
-            store.nav.newTab(itemHref)
-          },
-        }
-      : undefined,
     {
       icon: 'language',
       label: 'Translate...',

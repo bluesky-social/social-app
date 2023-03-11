@@ -3,21 +3,22 @@ import {observer} from 'mobx-react-lite'
 import {View, StyleSheet} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {useStores} from 'state/index'
-import {NavigationModel} from 'state/models/navigation'
-import {match, MatchResult} from '../../routes'
-import {DesktopHeader} from './DesktopHeader'
-import {Login} from '../../screens/Login'
-import {ErrorBoundary} from '../../com/util/ErrorBoundary'
-import {Lightbox} from '../../com/lightbox/Lightbox'
-import {ModalsContainer} from '../../com/modals/Modal'
+import {match, MatchResult} from '../routes'
+import {DesktopHeader} from './desktop/Header'
+import {Login} from '../screens/Login'
+import {ErrorBoundary} from '../com/util/ErrorBoundary'
+import {Lightbox} from '../com/lightbox/Lightbox'
+import {ModalsContainer} from '../com/modals/Modal'
 import {Text} from 'view/com/util/text/Text'
-import {Composer} from './Composer'
+import {Composer} from './Composer.web'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {s, colors} from 'lib/styles'
 import {isMobileWeb} from 'platform/detection'
 
-export const WebShell: React.FC = observer(() => {
+import {RoutesContainer} from '../../Routes'
+
+export const Shell: React.FC = observer(() => {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   const store = useStores()
   const screenRenderDesc = constructScreenRenderDesc(store.nav)
@@ -25,6 +26,8 @@ export const WebShell: React.FC = observer(() => {
   if (isMobileWeb) {
     return <NoMobileWeb />
   }
+
+  return <RoutesContainer />
 
   if (!store.session.hasSession) {
     return (

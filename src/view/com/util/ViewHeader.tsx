@@ -2,6 +2,7 @@ import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useNavigation, DrawerActions} from '@react-navigation/native'
 import {UserAvatar} from './UserAvatar'
 import {Text} from './text/Text'
 import {useStores} from 'state/index'
@@ -9,6 +10,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useAnalytics} from 'lib/analytics'
 import {isDesktopWeb} from '../../../platform/detection'
+import {NavigationProp} from 'lib/routes/types'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -23,17 +25,22 @@ export const ViewHeader = observer(function ViewHeader({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const onPressBack = () => {
-    store.nav.tab.goBack()
-  }
-  const onPressMenu = () => {
+
+  const onPressBack = React.useCallback(() => {
+    navigation.goBack()
+  }, [navigation])
+
+  const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
-    store.shell.setMainMenuOpen(true)
-  }
+    store.shell.openDrawer()
+  }, [track, store])
+
   if (typeof canGoBack === 'undefined') {
-    canGoBack = store.nav.tab.canGoBack
+    canGoBack = navigation.canGoBack()
   }
+
   if (isDesktopWeb) {
     return <></>
   }

@@ -1,17 +1,25 @@
 import React, {useEffect} from 'react'
 import {FlatList, View} from 'react-native'
+import {useFocusEffect} from '@react-navigation/native'
 import useAppState from 'react-native-appstate-hook'
+import {
+  NativeStackScreenProps,
+  NotificationsTabNavigatorParams,
+} from 'lib/routes/types'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/notifications/Feed'
 import {useStores} from 'state/index'
-import {ScreenParams} from '../routes'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 
 const NOTIFICATIONS_POLL_INTERVAL = 15e3
 
-export const Notifications = ({navIdx, visible}: ScreenParams) => {
+type Props = NativeStackScreenProps<
+  NotificationsTabNavigatorParams,
+  'Notifications'
+>
+export const NotificationsScreen = ({}: Props) => {
   const store = useStores()
   const onMainScroll = useOnMainScroll(store)
   const scrollElRef = React.useRef<FlatList>(null)
@@ -59,21 +67,19 @@ export const Notifications = ({navIdx, visible}: ScreenParams) => {
 
   // on-visible setup
   // =
-  useEffect(() => {
-    if (!visible) {
-      // mark read when the user leaves the screen
-      store.me.notifications.markAllRead()
-      return
-    }
-    store.log.debug('NotificationsScreen: Updating feed')
-    const softResetSub = store.onScreenSoftReset(scrollToTop)
-    store.me.notifications.update()
-    screen('Notifications')
-    store.nav.setTitle(navIdx, 'Notifications')
-    return () => {
-      softResetSub.remove()
-    }
-  }, [visible, store, navIdx, screen, scrollToTop])
+  useFocusEffect(
+    React.useCallback(() => {
+      store.log.debug('NotificationsScreen: Updating feed')
+      const softResetSub = store.onScreenSoftReset(scrollToTop)
+      store.me.notifications.update()
+      screen('Notifications')
+
+      return () => {
+        softResetSub.remove()
+        store.me.notifications.markAllRead()
+      }
+    }, [store, screen, scrollToTop]),
+  )
 
   return (
     <View style={s.hContentRegion}>
