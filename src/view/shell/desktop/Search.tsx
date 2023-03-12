@@ -1,11 +1,12 @@
 import React from 'react'
-import {TextInput, View, StyleSheet, TouchableOpacity, Text} from 'react-native'
+import {TextInput, View, StyleSheet, TouchableOpacity} from 'react-native'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {MagnifyingGlassIcon} from 'lib/icons'
+import {MagnifyingGlassIcon2} from 'lib/icons'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
+import {Text} from 'view/com/util/text/Text'
 
 export const DesktopSearch = observer(function DesktopSearch() {
   const store = useStores()
@@ -35,9 +36,10 @@ export const DesktopSearch = observer(function DesktopSearch() {
 
   return (
     <View style={styles.container}>
-      <View style={[pal.borderDark, pal.view, styles.search]}>
+      <View
+        style={[{backgroundColor: pal.colors.backgroundLight}, styles.search]}>
         <View style={[styles.inputContainer]}>
-          <MagnifyingGlassIcon
+          <MagnifyingGlassIcon2
             size={18}
             style={[pal.textLight, styles.iconWrapper]}
           />
@@ -57,7 +59,9 @@ export const DesktopSearch = observer(function DesktopSearch() {
           {query ? (
             <View style={styles.cancelBtn}>
               <TouchableOpacity onPress={onPressCancelSearch}>
-                <Text style={[pal.link]}>Cancel</Text>
+                <Text type="lg" style={[pal.link]}>
+                  Cancel
+                </Text>
               </TouchableOpacity>
             </View>
           ) : undefined}
@@ -97,21 +101,23 @@ const styles = StyleSheet.create({
     width: 300,
   },
   search: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 2,
     width: 300,
     borderRadius: 20,
-    borderWidth: 1,
   },
   inputContainer: {
     flexDirection: 'row',
   },
   iconWrapper: {
+    position: 'relative',
+    top: 1,
     paddingVertical: 7,
-    marginRight: 4,
+    marginRight: 8,
   },
   input: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 18,
     width: '100%',
     paddingTop: 7,
     paddingBottom: 7,

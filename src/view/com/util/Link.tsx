@@ -11,7 +11,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {useLinkProps, useNavigation} from '@react-navigation/native'
+import {
+  useLinkProps,
+  useNavigation,
+  StackActions,
+} from '@react-navigation/native'
 import {Text} from './text/Text'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {NavigationProp} from 'lib/routes/types'
@@ -136,7 +140,7 @@ function onPressInner(
       store.shell.closeModal() // close any active modals
 
       // @ts-ignore we're not able to type check on this one -prf
-      navigation.push(...router.matchPath(href))
+      navigation.dispatch(StackActions.push(...router.matchPath(href)))
     }
   }
 }

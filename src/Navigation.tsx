@@ -147,6 +147,7 @@ function FlatNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
+        contentStyle: {backgroundColor: 'white'},
       }}>
       <Flat.Screen name="Home" component={HomeScreen} />
       <Flat.Screen name="Search" component={SearchScreen} />

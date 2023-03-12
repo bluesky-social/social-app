@@ -161,9 +161,7 @@ export const s = StyleSheet.create({
   // dimensions
   w100pct: {width: '100%'},
   h100pct: {height: '100%'},
-  hContentRegion: isDesktopWeb
-    ? {height: `calc(100vh - ${DESKTOP_HEADER_HEIGHT}px)`}
-    : {height: '100%'},
+  hContentRegion: {height: '100%'},
 
   // text align
   textLeft: {textAlign: 'left'},
