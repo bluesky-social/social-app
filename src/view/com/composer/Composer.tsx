@@ -1,14 +1,12 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
-  NativeSyntheticEvent,
   Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  TextInputSelectionChangeEventData,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -16,9 +14,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useAnalytics} from 'lib/analytics'
-import isEqual from 'lodash.isequal'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
-import {Autocomplete} from './autocomplete/Autocomplete'
 import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
@@ -30,28 +26,14 @@ import * as apilib from 'lib/api/index'
 import {ComposerOpts} from 'state/models/shell-ui'
 import {s, colors, gradients} from 'lib/styles'
 import {cleanError} from 'lib/strings/errors'
-import {detectLinkables, extractEntities} from 'lib/strings/rich-text-detection'
-import {getImageDim} from 'lib/media/manip'
 import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
-import {cropAndCompressFlow} from '../../../lib/media/picker'
-import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
-import {SelectedPhotos} from './SelectedPhotos'
+import {SelectedPhotos} from './photos/SelectedPhotos'
 import {usePalette} from 'lib/hooks/usePalette'
-import {
-  POST_IMG_MAX_WIDTH,
-  POST_IMG_MAX_HEIGHT,
-  POST_IMG_MAX_SIZE,
-} from 'lib/constants'
 import QuoteEmbed from '../util/PostEmbeds/QuoteEmbed'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 
 const MAX_TEXT_LENGTH = 256
-
-interface Selection {
-  start: number
-  end: number
-}
 
 export const ComposePost = observer(function ComposePost({
   replyTo,
@@ -68,7 +50,6 @@ export const ComposePost = observer(function ComposePost({
   const pal = usePalette('default')
   const store = useStores()
   const textInput = useRef<TextInputRef>(null)
-  const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
@@ -77,9 +58,7 @@ export const ComposePost = observer(function ComposePost({
     initQuote,
   )
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
-  const [suggestedExtLinks, setSuggestedExtLinks] = useState<Set<string>>(
-    new Set(),
-  )
+  const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
 
   const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
@@ -119,72 +98,41 @@ export const ComposePost = observer(function ComposePost({
     }
   }, [])
 
-  const onPressContainer = () => {
+  const onPressContainer = React.useCallback(() => {
     textInput.current?.focus()
-  }
-  const onSelectPhotos = (photos: string[]) => {
-    track('ComposePost:SelectPhotos:Done')
-    setSelectedPhotos(photos)
-  }
-  const onPressAddLinkCard = (uri: string) => {
-    setExtLink({uri, isLoading: true})
-  }
-  const onChangeText = (newText: string) => {
-    setText(newText)
+  }, [textInput])
 
-    const prefix = getMentionAt(newText, textInputSelection.current?.start || 0)
-    if (prefix) {
-      autocompleteView.setActive(true)
-      autocompleteView.setPrefix(prefix.value)
-    } else {
-      autocompleteView.setActive(false)
-    }
+  const onSelectPhotos = React.useCallback(
+    (photos: string[]) => {
+      track('Composer:SelectedPhotos')
+      setSelectedPhotos(photos)
+    },
+    [track, setSelectedPhotos],
+  )
 
-    if (!extLink) {
-      const ents = extractEntities(newText)?.filter(ent => ent.type === 'link')
-      const set = new Set(ents ? ents.map(e => e.value) : [])
-      if (!isEqual(set, suggestedExtLinks)) {
-        setSuggestedExtLinks(set)
+  const onPressAddLinkCard = React.useCallback(
+    (uri: string) => {
+      setExtLink({uri, isLoading: true})
+    },
+    [setExtLink],
+  )
+
+  const onPhotoPasted = React.useCallback(
+    async (uri: string) => {
+      if (selectedPhotos.length >= 4) {
+        return
       }
-    }
-  }
-  const onPaste = async (err: string | undefined, uris: string[]) => {
-    if (err) {
-      return setError(cleanError(err))
-    }
-    if (selectedPhotos.length >= 4) {
-      return
-    }
-    const imgUri = uris.find(uri => /\.(jpe?g|png)$/.test(uri))
-    if (imgUri) {
-      let imgDim
-      try {
-        imgDim = await getImageDim(imgUri)
-      } catch (e) {
-        imgDim = {width: POST_IMG_MAX_WIDTH, height: POST_IMG_MAX_HEIGHT}
-      }
-      const finalImgPath = await cropAndCompressFlow(
-        store,
-        imgUri,
-        imgDim,
-        {width: POST_IMG_MAX_WIDTH, height: POST_IMG_MAX_HEIGHT},
-        POST_IMG_MAX_SIZE,
-      )
-      onSelectPhotos([...selectedPhotos, finalImgPath])
-    }
-  }
-  const onSelectionChange = (
-    evt: NativeSyntheticEvent<TextInputSelectionChangeEventData>,
-  ) => {
-    // NOTE we track the input selection using a ref to avoid excessive renders -prf
-    textInputSelection.current = evt.nativeEvent.selection
-  }
-  const onSelectAutocompleteItem = (item: string) => {
-    setText(insertMentionAt(text, textInputSelection.current?.start || 0, item))
-    autocompleteView.setActive(false)
-  }
-  const onPressCancel = () => hackfixOnClose()
-  const onPressPublish = async () => {
+      onSelectPhotos([...selectedPhotos, uri])
+    },
+    [selectedPhotos, onSelectPhotos],
+  )
+
+  const onPressCancel = React.useCallback(
+    () => hackfixOnClose(),
+    [hackfixOnClose],
+  )
+
+  const onPressPublish = React.useCallback(async () => {
     if (isProcessing) {
       return
     }
@@ -226,7 +174,22 @@ export const ComposePost = observer(function ComposePost({
     onPost?.()
     hackfixOnClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
-  }
+  }, [
+    isProcessing,
+    text,
+    setError,
+    setIsProcessing,
+    replyTo,
+    autocompleteView.knownHandles,
+    extLink,
+    hackfixOnClose,
+    onPost,
+    quote,
+    selectedPhotos,
+    setExtLink,
+    store,
+    track,
+  ])
 
   const canPost = text.length <= MAX_TEXT_LENGTH
 
@@ -239,25 +202,6 @@ export const ComposePost = observer(function ComposePost({
     : selectedPhotos.length !== 0
     ? 'Write a comment'
     : "What's up?"
-
-  const textDecorated = useMemo(() => {
-    let i = 0
-    return detectLinkables(text).map(v => {
-      if (typeof v === 'string') {
-        return (
-          <Text key={i++} style={[pal.text, styles.textInputFormatting]}>
-            {v}
-          </Text>
-        )
-      } else {
-        return (
-          <Text key={i++} style={[pal.link, styles.textInputFormatting]}>
-            {v.link}
-          </Text>
-        )
-      }
-    })
-  }, [text, pal.link, pal.text])
 
   return (
     <KeyboardAvoidingView
@@ -347,19 +291,16 @@ export const ComposePost = observer(function ComposePost({
                 size={50}
               />
               <TextInput
-                testID="composerTextInput"
-                innerRef={textInput}
-                onChangeText={(str: string) => onChangeText(str)}
-                onPaste={onPaste}
-                onSelectionChange={onSelectionChange}
+                ref={textInput}
+                text={text}
                 placeholder={selectTextInputPlaceholder}
-                style={[
-                  pal.text,
-                  styles.textInput,
-                  styles.textInputFormatting,
-                ]}>
-                {textDecorated}
-              </TextInput>
+                suggestedLinks={suggestedLinks}
+                autocompleteView={autocompleteView}
+                onTextChanged={setText}
+                onPhotoPasted={onPhotoPasted}
+                onSuggestedLinksChanged={setSuggestedLinks}
+                onError={setError}
+              />
             </View>
 
             {quote ? (
@@ -381,10 +322,10 @@ export const ComposePost = observer(function ComposePost({
           </ScrollView>
           {!extLink &&
           selectedPhotos.length === 0 &&
-          suggestedExtLinks.size > 0 &&
+          suggestedLinks.size > 0 &&
           !quote ? (
             <View style={s.mb5}>
-              {Array.from(suggestedExtLinks).map(url => (
+              {Array.from(suggestedLinks).map(url => (
                 <TouchableOpacity
                   key={`suggested-${url}`}
                   style={[pal.borderDark, styles.addExtLinkBtn]}
@@ -410,11 +351,6 @@ export const ComposePost = observer(function ComposePost({
             <View style={s.flex1} />
             <CharProgress count={text.length} />
           </View>
-          <Autocomplete
-            active={autocompleteView.isActive}
-            items={autocompleteView.suggestions}
-            onSelect={onSelectAutocompleteItem}
-          />
         </SafeAreaView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -475,18 +411,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderTopWidth: 1,
     paddingTop: 16,
-  },
-  textInput: {
-    flex: 1,
-    padding: 5,
-    marginLeft: 8,
-    alignSelf: 'flex-start',
-  },
-  textInputFormatting: {
-    fontSize: 18,
-    letterSpacing: 0.2,
-    fontWeight: '400',
-    lineHeight: 23.4, // 1.3*16
   },
   replyToLayout: {
     flexDirection: 'row',
