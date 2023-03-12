@@ -71,10 +71,10 @@ export const ComposePost = observer(function ComposePost({
   // is focused during unmount, an exception will throw (seems that a blur method isnt implemented)
   // manually blurring before closing gets around that
   // -prf
-  const hackfixOnClose = () => {
+  const hackfixOnClose = React.useCallback(() => {
     textInput.current?.blur()
     onClose()
-  }
+  }, [textInput, onClose])
 
   // initial setup
   useEffect(() => {
@@ -125,11 +125,6 @@ export const ComposePost = observer(function ComposePost({
       onSelectPhotos([...selectedPhotos, uri])
     },
     [selectedPhotos, onSelectPhotos],
-  )
-
-  const onPressCancel = React.useCallback(
-    () => hackfixOnClose(),
-    [hackfixOnClose],
   )
 
   const onPressPublish = React.useCallback(async () => {
@@ -213,7 +208,7 @@ export const ComposePost = observer(function ComposePost({
           <View style={styles.topbar}>
             <TouchableOpacity
               testID="composerCancelButton"
-              onPress={onPressCancel}>
+              onPress={hackfixOnClose}>
               <Text style={[pal.link, s.f18]}>Cancel</Text>
             </TouchableOpacity>
             <View style={s.flex1} />
