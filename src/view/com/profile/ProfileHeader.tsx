@@ -30,6 +30,7 @@ import {UserBanner} from '../util/UserBanner'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
+import {isDesktopWeb} from 'platform/detection'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
@@ -290,13 +291,15 @@ export const ProfileHeader = observer(function ProfileHeader({
           </View>
         ) : undefined}
       </View>
-      <TouchableWithoutFeedback onPress={onPressBack} hitSlop={BACK_HITSLOP}>
-        <View style={styles.backBtnWrapper}>
-          <BlurView style={styles.backBtn} blurType="dark">
-            <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
-          </BlurView>
-        </View>
-      </TouchableWithoutFeedback>
+      {!isDesktopWeb && (
+        <TouchableWithoutFeedback onPress={onPressBack} hitSlop={BACK_HITSLOP}>
+          <View style={styles.backBtnWrapper}>
+            <BlurView style={styles.backBtn} blurType="dark">
+              <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
+            </BlurView>
+          </View>
+        </TouchableWithoutFeedback>
+      )}
       <TouchableWithoutFeedback
         testID="profileHeaderAviButton"
         onPress={onPressAvi}>
