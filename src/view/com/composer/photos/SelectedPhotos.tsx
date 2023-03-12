@@ -4,7 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import Image from 'view/com/util/images/Image'
 import {colors} from 'lib/styles'
 
-export const SelectedPhoto = ({
+export const SelectedPhotos = ({
   selectedPhotos,
   onSelectPhotos,
 }: {

@@ -14,12 +14,9 @@ import {
   View,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useAnalytics} from 'lib/analytics'
-import _isEqual from 'lodash.isequal'
+import isEqual from 'lodash.isequal'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
 import {Autocomplete} from './autocomplete/Autocomplete'
 import {ExternalEmbed} from './ExternalEmbed'
@@ -34,25 +31,22 @@ import {ComposerOpts} from 'state/models/shell-ui'
 import {s, colors, gradients} from 'lib/styles'
 import {cleanError} from 'lib/strings/errors'
 import {detectLinkables, extractEntities} from 'lib/strings/rich-text-detection'
-import {getLinkMeta} from 'lib/link-meta/link-meta'
-import {getPostAsQuote} from 'lib/link-meta/bsky'
-import {getImageDim, downloadAndResize} from 'lib/media/manip'
-import {PhotoCarouselPicker} from './photos/PhotoCarouselPicker'
-import {cropAndCompressFlow, pickImagesFlow} from '../../../lib/media/picker'
+import {getImageDim} from 'lib/media/manip'
+import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
+import {OpenCameraBtn} from './photos/OpenCameraBtn'
+import {cropAndCompressFlow} from '../../../lib/media/picker'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
-import {isBskyPostUrl} from 'lib/strings/url-helpers'
-import {SelectedPhoto} from './SelectedPhoto'
+import {SelectedPhotos} from './SelectedPhotos'
 import {usePalette} from 'lib/hooks/usePalette'
 import {
   POST_IMG_MAX_WIDTH,
   POST_IMG_MAX_HEIGHT,
   POST_IMG_MAX_SIZE,
 } from 'lib/constants'
-import {isWeb} from 'platform/detection'
 import QuoteEmbed from '../util/PostEmbeds/QuoteEmbed'
+import {useExternalLinkFetch} from './useExternalLinkFetch'
 
 const MAX_TEXT_LENGTH = 256
-const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
 interface Selection {
   start: number
@@ -61,13 +55,11 @@ interface Selection {
 
 export const ComposePost = observer(function ComposePost({
   replyTo,
-  imagesOpen,
   onPost,
   onClose,
   quote: initQuote,
 }: {
   replyTo?: ComposerOpts['replyTo']
-  imagesOpen?: ComposerOpts['imagesOpen']
   onPost?: ComposerOpts['onPost']
   onClose: () => void
   quote?: ComposerOpts['quote']
@@ -84,14 +76,9 @@ export const ComposePost = observer(function ComposePost({
   const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
-  const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
-    undefined,
-  )
+  const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [suggestedExtLinks, setSuggestedExtLinks] = useState<Set<string>>(
     new Set(),
-  )
-  const [isSelectingPhotos, setIsSelectingPhotos] = useState(
-    imagesOpen || false,
   )
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
 
@@ -115,75 +102,6 @@ export const ComposePost = observer(function ComposePost({
     autocompleteView.setup()
   }, [autocompleteView])
 
-  // external link metadata-fetch flow
-  useEffect(() => {
-    let aborted = false
-    const cleanup = () => {
-      aborted = true
-    }
-    if (!extLink) {
-      return cleanup
-    }
-    if (!extLink.meta) {
-      if (isBskyPostUrl(extLink.uri)) {
-        getPostAsQuote(store, extLink.uri).then(
-          newQuote => {
-            if (aborted) {
-              return
-            }
-            setQuote(newQuote)
-            setExtLink(undefined)
-          },
-          err => {
-            store.log.error('Failed to fetch post for quote embedding', {err})
-            setExtLink(undefined)
-          },
-        )
-      } else {
-        getLinkMeta(store, extLink.uri).then(meta => {
-          if (aborted) {
-            return
-          }
-          setExtLink({
-            uri: extLink.uri,
-            isLoading: !!meta.image,
-            meta,
-          })
-        })
-      }
-      return cleanup
-    }
-    if (extLink.isLoading && extLink.meta?.image && !extLink.localThumb) {
-      downloadAndResize({
-        uri: extLink.meta.image,
-        width: 2000,
-        height: 2000,
-        mode: 'contain',
-        maxSize: 1000000,
-        timeout: 15e3,
-      })
-        .catch(() => undefined)
-        .then(localThumb => {
-          if (aborted) {
-            return
-          }
-          setExtLink({
-            ...extLink,
-            isLoading: false, // done
-            localThumb,
-          })
-        })
-      return cleanup
-    }
-    if (extLink.isLoading) {
-      setExtLink({
-        ...extLink,
-        isLoading: false, // done
-      })
-    }
-    return cleanup
-  }, [store, extLink])
-
   useEffect(() => {
     // HACK
     // wait a moment before focusing the input to resolve some layout bugs with the keyboard-avoiding-view
@@ -204,32 +122,9 @@ export const ComposePost = observer(function ComposePost({
   const onPressContainer = () => {
     textInput.current?.focus()
   }
-  const onPressSelectPhotos = async () => {
-    track('ComposePost:SelectPhotos')
-    if (isWeb) {
-      if (selectedPhotos.length < 4) {
-        const images = await pickImagesFlow(
-          store,
-          4 - selectedPhotos.length,
-          {width: POST_IMG_MAX_WIDTH, height: POST_IMG_MAX_HEIGHT},
-          POST_IMG_MAX_SIZE,
-        )
-        setSelectedPhotos([...selectedPhotos, ...images])
-      }
-    } else {
-      if (isSelectingPhotos) {
-        setIsSelectingPhotos(false)
-      } else if (selectedPhotos.length < 4) {
-        setIsSelectingPhotos(true)
-      }
-    }
-  }
   const onSelectPhotos = (photos: string[]) => {
     track('ComposePost:SelectPhotos:Done')
     setSelectedPhotos(photos)
-    if (photos.length >= 4) {
-      setIsSelectingPhotos(false)
-    }
   }
   const onPressAddLinkCard = (uri: string) => {
     setExtLink({uri, isLoading: true})
@@ -248,7 +143,7 @@ export const ComposePost = observer(function ComposePost({
     if (!extLink) {
       const ents = extractEntities(newText)?.filter(ent => ent.type === 'link')
       const set = new Set(ents ? ents.map(e => e.value) : [])
-      if (!_isEqual(set, suggestedExtLinks)) {
+      if (!isEqual(set, suggestedExtLinks)) {
         setSuggestedExtLinks(set)
       }
     }
@@ -473,7 +368,7 @@ export const ComposePost = observer(function ComposePost({
               </View>
             ) : undefined}
 
-            <SelectedPhoto
+            <SelectedPhotos
               selectedPhotos={selectedPhotos}
               onSelectPhotos={onSelectPhotos}
             />
@@ -484,15 +379,10 @@ export const ComposePost = observer(function ComposePost({
               />
             )}
           </ScrollView>
-          {isSelectingPhotos && selectedPhotos.length < 4 ? (
-            <PhotoCarouselPicker
-              selectedPhotos={selectedPhotos}
-              onSelectPhotos={onSelectPhotos}
-            />
-          ) : !extLink &&
-            selectedPhotos.length === 0 &&
-            suggestedExtLinks.size > 0 &&
-            !quote ? (
+          {!extLink &&
+          selectedPhotos.length === 0 &&
+          suggestedExtLinks.size > 0 &&
+          !quote ? (
             <View style={s.mb5}>
               {Array.from(suggestedExtLinks).map(url => (
                 <TouchableOpacity
@@ -507,23 +397,16 @@ export const ComposePost = observer(function ComposePost({
             </View>
           ) : null}
           <View style={[pal.border, styles.bottomBar]}>
-            {quote ? undefined : (
-              <TouchableOpacity
-                testID="composerSelectPhotosButton"
-                onPress={onPressSelectPhotos}
-                style={[s.pl5]}
-                hitSlop={HITSLOP}>
-                <FontAwesomeIcon
-                  icon={['far', 'image']}
-                  style={
-                    (selectedPhotos.length < 4
-                      ? pal.link
-                      : pal.textLight) as FontAwesomeIconStyle
-                  }
-                  size={24}
-                />
-              </TouchableOpacity>
-            )}
+            <SelectPhotoBtn
+              enabled={!quote && selectedPhotos.length < 4}
+              selectedPhotos={selectedPhotos}
+              onSelectPhotos={setSelectedPhotos}
+            />
+            <OpenCameraBtn
+              enabled={!quote && selectedPhotos.length < 4}
+              selectedPhotos={selectedPhotos}
+              onSelectPhotos={setSelectedPhotos}
+            />
             <View style={s.flex1} />
             <CharProgress count={text.length} />
           </View>

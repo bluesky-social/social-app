@@ -59,7 +59,6 @@ const ShellInner = observer(() => {
         onClose={() => store.shell.closeComposer()}
         winHeight={winDim.height}
         replyTo={store.shell.composerOpts?.replyTo}
-        imagesOpen={store.shell.composerOpts?.imagesOpen}
         onPost={store.shell.composerOpts?.onPost}
         quote={store.shell.composerOpts?.quote}
       />

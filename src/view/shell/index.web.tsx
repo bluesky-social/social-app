@@ -35,7 +35,6 @@ const ShellInner = observer(() => {
         onClose={() => store.shell.closeComposer()}
         winHeight={0}
         replyTo={store.shell.composerOpts?.replyTo}
-        imagesOpen={store.shell.composerOpts?.imagesOpen}
         onPost={store.shell.composerOpts?.onPost}
       />
       <ModalsContainer />

@@ -108,7 +108,6 @@ export interface ComposerOptsQuote {
   }
 }
 export interface ComposerOpts {
-  imagesOpen?: boolean
   replyTo?: ComposerOptsPostRef
   onPost?: () => void
   quote?: ComposerOptsQuote

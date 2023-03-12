@@ -1,7 +1,7 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, View} from 'react-native'
-import {ComposePost} from '../com/composer/ComposePost'
+import {ComposePost} from '../com/composer/Composer'
 import {ComposerOpts} from 'state/models/shell-ui'
 import {usePalette} from 'lib/hooks/usePalette'
 
@@ -9,14 +9,12 @@ export const Composer = observer(
   ({
     active,
     replyTo,
-    imagesOpen,
     onPost,
     onClose,
   }: {
     active: boolean
     winHeight: number
     replyTo?: ComposerOpts['replyTo']
-    imagesOpen?: ComposerOpts['imagesOpen']
     onPost?: ComposerOpts['onPost']
     onClose: () => void
   }) => {
@@ -32,12 +30,7 @@ export const Composer = observer(
     return (
       <View style={styles.mask}>
         <View style={[styles.container, pal.view]}>
-          <ComposePost
-            replyTo={replyTo}
-            imagesOpen={imagesOpen}
-            onPost={onPost}
-            onClose={onClose}
-          />
+          <ComposePost replyTo={replyTo} onPost={onPost} onClose={onClose} />
         </View>
       </View>
     )

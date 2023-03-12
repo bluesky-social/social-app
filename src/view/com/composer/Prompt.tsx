@@ -6,11 +6,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {isDesktopWeb} from 'platform/detection'
 
-export function ComposePrompt({
-  onPressCompose,
-}: {
-  onPressCompose: (imagesOpen?: boolean) => void
-}) {
+export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
   const store = useStores()
   const pal = usePalette('default')
   return (

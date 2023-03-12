@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Animated, Easing, Platform, StyleSheet, View} from 'react-native'
-import {ComposePost} from '../com/composer/ComposePost'
+import {ComposePost} from '../com/composer/Composer'
 import {ComposerOpts} from 'state/models/shell-ui'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -11,7 +11,6 @@ export const Composer = observer(
     active,
     winHeight,
     replyTo,
-    imagesOpen,
     onPost,
     onClose,
     quote,
@@ -19,7 +18,6 @@ export const Composer = observer(
     active: boolean
     winHeight: number
     replyTo?: ComposerOpts['replyTo']
-    imagesOpen?: ComposerOpts['imagesOpen']
     onPost?: ComposerOpts['onPost']
     onClose: () => void
     quote?: ComposerOpts['quote']
@@ -61,7 +59,6 @@ export const Composer = observer(
       <Animated.View style={[styles.wrapper, pal.view, wrapperAnimStyle]}>
         <ComposePost
           replyTo={replyTo}
-          imagesOpen={imagesOpen}
           onPost={onPost}
           onClose={onClose}
           quote={quote}
