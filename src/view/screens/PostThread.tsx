@@ -11,6 +11,7 @@ import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {clamp} from 'lodash'
+import {isDesktopWeb} from 'platform/detection'
 
 const SHELL_FOOTER_HEIGHT = 44
 
@@ -63,15 +64,24 @@ export const PostThreadScreen = ({route}: Props) => {
     <View style={s.hContentRegion}>
       <ViewHeader title="Post" />
       <View style={s.hContentRegion}>
-        <PostThreadComponent uri={uri} view={view} />
+        <PostThreadComponent
+          uri={uri}
+          view={view}
+          onPressReply={onPressReply}
+        />
       </View>
-      <View
-        style={[
-          styles.prompt,
-          {bottom: SHELL_FOOTER_HEIGHT + clamp(safeAreaInsets.bottom, 15, 30)},
-        ]}>
-        <ComposePrompt onPressCompose={onPressReply} />
-      </View>
+      {!isDesktopWeb && (
+        <View
+          style={[
+            styles.prompt,
+            {
+              bottom:
+                SHELL_FOOTER_HEIGHT + clamp(safeAreaInsets.bottom, 15, 30),
+            },
+          ]}>
+          <ComposePrompt onPressCompose={onPressReply} />
+        </View>
+      )}
     </View>
   )
 }
