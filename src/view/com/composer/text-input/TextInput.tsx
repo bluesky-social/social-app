@@ -10,7 +10,7 @@ import PasteInput, {
 } from '@mattermost/react-native-paste-input'
 import isEqual from 'lodash.isequal'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
-import {Autocomplete} from './Autocomplete'
+import {Autocomplete} from './mobile/Autocomplete'
 import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
 import {cleanError} from 'lib/strings/errors'
@@ -30,11 +30,6 @@ export interface TextInputRef {
   blur: () => void
 }
 
-interface Selection {
-  start: number
-  end: number
-}
-
 interface TextInputProps {
   text: string
   placeholder: string
@@ -44,16 +39,11 @@ interface TextInputProps {
   onPhotoPasted: (uri: string) => void
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
+}
 
-  // testID: string
-  // innerRef: React.Ref<TextInputRef>
-  // placeholder: string
-  // style: StyleProp<TextStyle>
-  // onChangeText: (str: string) => void
-  // onSelectionChange?:
-  //   | ((e: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => void)
-  //   | undefined
-  // onPaste: (err: string | undefined, uris: string[]) => void
+interface Selection {
+  start: number
+  end: number
 }
 
 export const TextInput = React.forwardRef(

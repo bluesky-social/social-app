@@ -1,7 +1,5 @@
 import {StyleProp, StyleSheet, TextStyle} from 'react-native'
 import {Theme, TypographyVariant} from './ThemeContext'
-import {isDesktopWeb} from 'platform/detection'
-import {DESKTOP_HEADER_HEIGHT} from './constants'
 
 // 1 is lightest, 2 is light, 3 is mid, 4 is dark, 5 is darkest
 export const colors = {
