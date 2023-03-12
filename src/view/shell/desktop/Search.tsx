@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   },
   iconWrapper: {
     position: 'relative',
-    top: 1,
+    top: 2,
     paddingVertical: 7,
     marginRight: 8,
   },

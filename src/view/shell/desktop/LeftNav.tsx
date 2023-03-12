@@ -1,7 +1,8 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {StyleSheet, View} from 'react-native'
-import {useNavigationState} from '@react-navigation/native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {useNavigation, useNavigationState} from '@react-navigation/native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Link} from 'view/com/util/Link'
@@ -20,7 +21,8 @@ import {
   CogIcon,
   CogIconSolid,
 } from 'lib/icons'
-import {getCurrentRoute, isTab} from 'lib/routes/helpers'
+import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
+import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
 
 const ProfileCard = observer(() => {
@@ -37,6 +39,32 @@ const ProfileCard = observer(() => {
   )
 })
 
+function BackBtn() {
+  const pal = usePalette('default')
+  const navigation = useNavigation<NavigationProp>()
+  const shouldShow = useNavigationState(state => !isStateAtTabRoot(state))
+
+  const onPressBack = React.useCallback(() => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('Home')
+    }
+  }, [navigation])
+
+  if (!shouldShow) {
+    return <></>
+  }
+  return (
+    <TouchableOpacity
+      testID="viewHeaderBackOrMenuBtn"
+      onPress={onPressBack}
+      style={styles.backBtn}>
+      <FontAwesomeIcon size={24} icon="angle-left" style={pal.text} />
+    </TouchableOpacity>
+  )
+}
+
 interface NavItemProps {
   count?: number
   href: string
@@ -46,6 +74,7 @@ interface NavItemProps {
 }
 const NavItem = observer(
   ({count, href, icon, iconFilled, label}: NavItemProps) => {
+    const pal = usePalette('default')
     const [pathName] = React.useMemo(() => router.matchPath(href), [href])
     const currentRouteName = useNavigationState(state => {
       if (!state) {
@@ -65,7 +94,7 @@ const NavItem = observer(
             </Text>
           )}
         </View>
-        <Text type="title" style={isCurrent ? s.bold : s.normal}>
+        <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
           {label}
         </Text>
       </Link>
@@ -78,37 +107,54 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
   const pal = usePalette('default')
 
   return (
-    <View style={[styles.leftNav, pal.view]}>
+    <View style={styles.leftNav}>
       <ProfileCard />
+      <BackBtn />
       <NavItem
         href="/"
-        icon={<HomeIcon size={24} />}
-        iconFilled={<HomeIconSolid strokeWidth={4} size={24} />}
+        icon={<HomeIcon size={24} style={pal.text} />}
+        iconFilled={
+          <HomeIconSolid strokeWidth={4} size={24} style={pal.text} />
+        }
         label="Home"
       />
       <NavItem
         href="/search"
-        icon={<MagnifyingGlassIcon2 strokeWidth={2} size={24} />}
-        iconFilled={<MagnifyingGlassIcon2Solid strokeWidth={2} size={24} />}
+        icon={
+          <MagnifyingGlassIcon2 strokeWidth={2} size={24} style={pal.text} />
+        }
+        iconFilled={
+          <MagnifyingGlassIcon2Solid
+            strokeWidth={2}
+            size={24}
+            style={pal.text}
+          />
+        }
         label="Search"
       />
       <NavItem
         href="/notifications"
         count={store.me.notifications.unreadCount}
-        icon={<BellIcon strokeWidth={2} size={24} />}
-        iconFilled={<BellIconSolid strokeWidth={1.5} size={24} />}
+        icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
+        iconFilled={
+          <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />
+        }
         label="Notifications"
       />
       <NavItem
         href={`/profile/${store.me.handle}`}
-        icon={<UserIcon strokeWidth={1.75} size={28} />}
-        iconFilled={<UserIconSolid strokeWidth={1.75} size={28} />}
+        icon={<UserIcon strokeWidth={1.75} size={28} style={pal.text} />}
+        iconFilled={
+          <UserIconSolid strokeWidth={1.75} size={28} style={pal.text} />
+        }
         label="Profile"
       />
       <NavItem
         href="/settings"
-        icon={<CogIcon strokeWidth={1.75} size={28} />}
-        iconFilled={<CogIconSolid strokeWidth={1.5} size={28} />}
+        icon={<CogIcon strokeWidth={1.75} size={28} style={pal.text} />}
+        iconFilled={
+          <CogIconSolid strokeWidth={1.5} size={28} style={pal.text} />
+        }
         label="Settings"
       />
     </View>
@@ -125,6 +171,15 @@ const styles = StyleSheet.create({
 
   profileCard: {
     marginVertical: 10,
+    width: 60,
+  },
+
+  backBtn: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    width: 30,
+    height: 30,
   },
 
   navItem: {
@@ -145,7 +200,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 15,
-    backgroundColor: colors.red3,
+    backgroundColor: colors.blue3,
     color: colors.white,
     fontSize: 12,
     fontWeight: 'bold',
