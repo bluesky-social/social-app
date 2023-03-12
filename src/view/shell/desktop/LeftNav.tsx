@@ -20,6 +20,7 @@ import {
   UserIconSolid,
   CogIcon,
   CogIconSolid,
+  ComposeIcon2,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
@@ -102,6 +103,26 @@ const NavItem = observer(
   },
 )
 
+function ComposeBtn() {
+  const store = useStores()
+  const onPressCompose = () => store.shell.openComposer({})
+
+  return (
+    <TouchableOpacity style={[styles.newPostBtn]} onPress={onPressCompose}>
+      <View style={styles.newPostBtnIconWrapper}>
+        <ComposeIcon2
+          size={19}
+          strokeWidth={2}
+          style={styles.newPostBtnLabel}
+        />
+      </View>
+      <Text type="button" style={styles.newPostBtnLabel}>
+        New Post
+      </Text>
+    </TouchableOpacity>
+  )
+}
+
 export const DesktopLeftNav = observer(function DesktopLeftNav() {
   const store = useStores()
   const pal = usePalette('default')
@@ -157,6 +178,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         }
         label="Settings"
       />
+      <ComposeBtn />
     </View>
   )
 })
@@ -212,16 +234,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    width: 134,
     borderRadius: 24,
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingHorizontal: 18,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     backgroundColor: colors.blue3,
+    marginTop: 20,
   },
   newPostBtnIconWrapper: {
     marginRight: 8,
   },
   newPostBtnLabel: {
     color: colors.white,
+    fontSize: 16,
   },
 })
