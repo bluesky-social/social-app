@@ -91,7 +91,7 @@ function TabsNavigator() {
 }
 
 function HomeTabNavigator() {
-  const contentStyle = useColorSchemeStyle(styles.bgDark, styles.bgLight)
+  const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   return (
     <HomeTab.Navigator
       screenOptions={{
@@ -108,7 +108,7 @@ function HomeTabNavigator() {
 }
 
 function SearchTabNavigator() {
-  const contentStyle = useColorSchemeStyle(styles.bgDark, styles.bgLight)
+  const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   return (
     <SearchTab.Navigator
       screenOptions={{
@@ -125,7 +125,7 @@ function SearchTabNavigator() {
 }
 
 function NotificationsTabNavigator() {
-  const contentStyle = useColorSchemeStyle(styles.bgDark, styles.bgLight)
+  const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   return (
     <NotificationsTab.Navigator
       screenOptions={{
@@ -259,10 +259,10 @@ function handleLink(url: string) {
       resetToTab('NotificationsTab')
     } else {
       resetToTab('HomeTab')
-      navigate(name, params)
+      navigate(name as keyof AllNavigatorParams, params)
     }
   } else {
-    navigate(name, params)
+    navigate(name as keyof AllNavigatorParams, params)
   }
 }
 
