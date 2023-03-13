@@ -235,6 +235,37 @@ function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'NotificationsTab') {
   }
 }
 
+function handleLink(url: string) {
+  let path
+  if (url.startsWith('/')) {
+    path = url
+  } else if (url.startsWith('http')) {
+    try {
+      path = new URL(url).pathname
+    } catch (e) {
+      console.error('Invalid url', url, e)
+      return
+    }
+  } else {
+    console.error('Invalid url', url)
+    return
+  }
+
+  const [name, params] = router.matchPath(path)
+  if (isNative) {
+    if (name === 'Search') {
+      resetToTab('SearchTab')
+    } else if (name === 'Notifications') {
+      resetToTab('NotificationsTab')
+    } else {
+      resetToTab('HomeTab')
+      navigate(name, params)
+    }
+  } else {
+    navigate(name, params)
+  }
+}
+
 const styles = StyleSheet.create({
   bgDark: {
     backgroundColor: colors.black,
@@ -244,4 +275,11 @@ const styles = StyleSheet.create({
   },
 })
 
-export {navigate, resetToTab, TabsNavigator, FlatNavigator, RoutesContainer}
+export {
+  navigate,
+  resetToTab,
+  handleLink,
+  TabsNavigator,
+  FlatNavigator,
+  RoutesContainer,
+}

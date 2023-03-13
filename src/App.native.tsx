@@ -12,6 +12,7 @@ import {Shell} from './view/shell'
 import * as notifee from 'lib/notifee'
 import * as analytics from 'lib/analytics'
 import * as Toast from './view/com/util/Toast'
+import {handleLink} from './Navigation'
 
 const App = observer(() => {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -29,11 +30,11 @@ const App = observer(() => {
       store.hackCheckIfUpgradeNeeded()
       Linking.getInitialURL().then((url: string | null) => {
         if (url) {
-          store.nav.handleLink(url)
+          handleLink(url)
         }
       })
       Linking.addEventListener('url', ({url}) => {
-        store.nav.handleLink(url)
+        handleLink(url)
       })
       store.onSessionDropped(() => {
         Toast.show('Sorry! Your session expired. Please log in again.')
