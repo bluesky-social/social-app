@@ -35,10 +35,10 @@ export const TextInput = React.forwardRef(
       suggestedLinks,
       autocompleteView,
       onTextChanged,
-      onPhotoPasted,
+      // onPhotoPasted, TODO
       onSuggestedLinksChanged,
-      onError,
-    }: TextInputProps,
+    }: // onError, TODO
+    TextInputProps,
     ref,
   ) => {
     const editor = useEditor({
@@ -64,8 +64,8 @@ export const TextInput = React.forwardRef(
       autofocus: true,
       editable: true,
       injectCSS: true,
-      onUpdate({editor}) {
-        const json = editor.getJSON()
+      onUpdate({editor: editorProp}) {
+        const json = editorProp.getJSON()
         const newText = editorJsonToText(json).trim()
         onTextChanged(newText)
 

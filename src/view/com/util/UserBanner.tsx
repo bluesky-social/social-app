@@ -1,10 +1,10 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
+import Svg, {Rect} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import Image from 'view/com/util/images/Image'
-import {colors, gradients} from 'lib/styles'
+import {colors} from 'lib/styles'
 import {
   openCamera,
   openCropper,

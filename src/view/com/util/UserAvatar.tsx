@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import Svg, {Circle, Path, Defs, LinearGradient, Stop} from 'react-native-svg'
+import Svg, {Circle, Path} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {HighPriorityImage} from 'view/com/util/images/Image'

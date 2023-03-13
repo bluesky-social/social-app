@@ -23,7 +23,6 @@ import {
   ViewProps,
 } from 'react-native'
 import {addStyle, colors} from 'lib/styles'
-import {DESKTOP_HEADER_HEIGHT} from 'lib/constants'
 
 export function CenteredView({
   style,
