@@ -55,6 +55,7 @@ export function useExternalLinkFetch({
       return cleanup
     }
     if (extLink.isLoading && extLink.meta?.image && !extLink.localThumb) {
+      console.log('attempting download')
       downloadAndResize({
         uri: extLink.meta.image,
         width: 2000,
