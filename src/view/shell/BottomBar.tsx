@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {StackActions} from '@react-navigation/native'
+import {StackActions, useNavigationState} from '@react-navigation/native'
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
@@ -26,7 +26,7 @@ import {
 } from 'lib/icons'
 import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {getCurrentRoute, isTab, getTabState, TabState} from 'lib/routes/helpers'
+import {getTabState, TabState} from 'lib/routes/helpers'
 
 export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const store = useStores()
@@ -34,6 +34,16 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const minimalShellInterp = useAnimatedValue(0)
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
+  const {isAtHome, isAtSearch, isAtNotifications} = useNavigationState(
+    state => {
+      return {
+        isAtHome: getTabState(state, 'Home') !== TabState.Outside,
+        isAtSearch: getTabState(state, 'Search') !== TabState.Outside,
+        isAtNotifications:
+          getTabState(state, 'Notifications') !== TabState.Outside,
+      }
+    },
+  )
 
   React.useEffect(() => {
     if (store.shell.minimalShellMode) {
@@ -85,11 +95,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
     navigation.navigate('Profile', {name: store.me.handle})
   }, [navigation, track, store.me.handle])
 
-  const currentRoute = getCurrentRoute(navigation.getState())
-  const isAtHome = isTab(currentRoute.name, 'Home')
-  const isAtSearch = isTab(currentRoute.name, 'Search')
-  const isAtNotifications = isTab(currentRoute.name, 'Notifications')
-
+  console.log({isAtHome, isAtNotifications, isAtSearch})
   return (
     <Animated.View
       style={[
