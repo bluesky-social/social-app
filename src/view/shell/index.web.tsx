@@ -53,7 +53,7 @@ export const Shell: React.FC = observer(() => {
 
   if (!store.session.hasSession) {
     return (
-      <View style={styles.outerContainer}>
+      <View style={[s.hContentRegion, pageBg]}>
         <Login />
         <ModalsContainer />
       </View>

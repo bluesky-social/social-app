@@ -190,7 +190,6 @@ export const FeedItem = observer(function FeedItem({
                   key={authors[0].href}
                   style={[pal.text, s.bold, styles.metaItem]}
                   href={authors[0].href}
-                  title={`@${authors[0].handle}`}
                   text={authors[0].displayName || authors[0].handle}
                 />
                 {authors.length > 1 ? (

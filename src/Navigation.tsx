@@ -259,10 +259,12 @@ function handleLink(url: string) {
       resetToTab('NotificationsTab')
     } else {
       resetToTab('HomeTab')
-      navigate(name as keyof AllNavigatorParams, params)
+      // @ts-ignore matchPath doesnt give us type-checked output -prf
+      navigate(name, params)
     }
   } else {
-    navigate(name as keyof AllNavigatorParams, params)
+    // @ts-ignore matchPath doesnt give us type-checked output -prf
+    navigate(name, params)
   }
 }
 

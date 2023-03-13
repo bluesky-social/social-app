@@ -210,7 +210,6 @@ export const DrawerContent = observer(() => {
                   style={pal.text as StyleProp<ViewStyle>}
                   size="24"
                   strokeWidth={3.25}
-                  fillOpacity={1}
                 />
               ) : (
                 <HomeIcon
@@ -231,7 +230,6 @@ export const DrawerContent = observer(() => {
                   style={pal.text as StyleProp<ViewStyle>}
                   size="24"
                   strokeWidth={1.7}
-                  fillOpacity={1}
                 />
               ) : (
                 <BellIcon

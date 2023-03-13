@@ -2,7 +2,10 @@ import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Link} from 'view/com/util/Link'
@@ -56,7 +59,11 @@ function BackBtn() {
       testID="viewHeaderBackOrMenuBtn"
       onPress={onPressBack}
       style={styles.backBtn}>
-      <FontAwesomeIcon size={24} icon="angle-left" style={pal.text} />
+      <FontAwesomeIcon
+        size={24}
+        icon="angle-left"
+        style={pal.text as FontAwesomeIconStyle}
+      />
     </TouchableOpacity>
   )
 }
