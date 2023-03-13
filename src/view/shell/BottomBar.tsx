@@ -95,7 +95,6 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
     navigation.navigate('Profile', {name: store.me.handle})
   }, [navigation, track, store.me.handle])
 
-  console.log({isAtHome, isAtNotifications, isAtSearch})
   return (
     <Animated.View
       style={[
