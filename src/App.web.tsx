@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {RootSiblingParent} from 'react-native-root-siblings'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from './view/shell/index'
@@ -24,12 +25,14 @@ function App() {
   }
 
   return (
-    <RootStoreProvider value={rootStore}>
-      <SafeAreaProvider>
-        <Shell />
-      </SafeAreaProvider>
-      <ToastContainer />
-    </RootStoreProvider>
+    <RootSiblingParent>
+      <RootStoreProvider value={rootStore}>
+        <SafeAreaProvider>
+          <Shell />
+        </SafeAreaProvider>
+        <ToastContainer />
+      </RootStoreProvider>
+    </RootSiblingParent>
   )
 }
 
