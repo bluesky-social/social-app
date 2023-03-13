@@ -7,18 +7,18 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {useNavigation} from '@react-navigation/native'
 import {BlurView} from '../util/BlurView'
 import {ProfileViewModel} from 'state/models/profile-view'
 import {useStores} from 'state/index'
 import {ProfileImageLightbox} from 'state/models/shell-ui'
 import {pluralize} from 'lib/strings/helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
-import {s, gradients} from 'lib/styles'
+import {s, colors} from 'lib/styles'
 import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -28,6 +28,8 @@ import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
+import {NavigationProp} from 'lib/routes/types'
+import {isDesktopWeb} from 'platform/detection'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
@@ -40,16 +42,17 @@ export const ProfileHeader = observer(function ProfileHeader({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const onPressBack = () => {
-    store.nav.tab.goBack()
-  }
-  const onPressAvi = () => {
+  const onPressBack = React.useCallback(() => {
+    navigation.goBack()
+  }, [navigation])
+  const onPressAvi = React.useCallback(() => {
     if (view.avatar) {
       store.shell.openLightbox(new ProfileImageLightbox(view))
     }
-  }
-  const onPressToggleFollow = () => {
+  }, [store, view])
+  const onPressToggleFollow = React.useCallback(() => {
     view?.toggleFollowing().then(
       () => {
         Toast.show(
@@ -60,28 +63,28 @@ export const ProfileHeader = observer(function ProfileHeader({
       },
       err => store.log.error('Failed to toggle follow', err),
     )
-  }
-  const onPressEditProfile = () => {
+  }, [view, store])
+  const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
     store.shell.openModal({
       name: 'edit-profile',
       profileView: view,
       onUpdate: onRefreshAll,
     })
-  }
-  const onPressFollowers = () => {
+  }, [track, store, view, onRefreshAll])
+  const onPressFollowers = React.useCallback(() => {
     track('ProfileHeader:FollowersButtonClicked')
-    store.nav.navigate(`/profile/${view.handle}/followers`)
-  }
-  const onPressFollows = () => {
+    navigation.push('ProfileFollowers', {name: view.handle})
+  }, [track, navigation, view])
+  const onPressFollows = React.useCallback(() => {
     track('ProfileHeader:FollowsButtonClicked')
-    store.nav.navigate(`/profile/${view.handle}/follows`)
-  }
-  const onPressShare = () => {
+    navigation.push('ProfileFollows', {name: view.handle})
+  }, [track, navigation, view])
+  const onPressShare = React.useCallback(() => {
     track('ProfileHeader:ShareButtonClicked')
     Share.share({url: toShareUrl(`/profile/${view.handle}`)})
-  }
-  const onPressMuteAccount = async () => {
+  }, [track, view])
+  const onPressMuteAccount = React.useCallback(async () => {
     track('ProfileHeader:MuteAccountButtonClicked')
     try {
       await view.muteAccount()
@@ -90,8 +93,8 @@ export const ProfileHeader = observer(function ProfileHeader({
       store.log.error('Failed to mute account', e)
       Toast.show(`There was an issue! ${e.toString()}`)
     }
-  }
-  const onPressUnmuteAccount = async () => {
+  }, [track, view, store])
+  const onPressUnmuteAccount = React.useCallback(async () => {
     track('ProfileHeader:UnmuteAccountButtonClicked')
     try {
       await view.unmuteAccount()
@@ -100,14 +103,14 @@ export const ProfileHeader = observer(function ProfileHeader({
       store.log.error('Failed to unmute account', e)
       Toast.show(`There was an issue! ${e.toString()}`)
     }
-  }
-  const onPressReportAccount = () => {
+  }, [track, view, store])
+  const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
     store.shell.openModal({
       name: 'report-account',
       did: view.did,
     })
-  }
+  }, [track, store, view])
 
   // loading
   // =
@@ -189,23 +192,15 @@ export const ProfileHeader = observer(function ProfileHeader({
               ) : (
                 <TouchableOpacity
                   testID="profileHeaderToggleFollowButton"
-                  onPress={onPressToggleFollow}>
-                  <LinearGradient
-                    colors={[
-                      gradients.blueLight.start,
-                      gradients.blueLight.end,
-                    ]}
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 1}}
-                    style={[styles.btn, styles.gradientBtn]}>
-                    <FontAwesomeIcon
-                      icon="plus"
-                      style={[s.white as FontAwesomeIconStyle, s.mr5]}
-                    />
-                    <Text type="button" style={[s.white, s.bold]}>
-                      Follow
-                    </Text>
-                  </LinearGradient>
+                  onPress={onPressToggleFollow}
+                  style={[styles.btn, styles.primaryBtn]}>
+                  <FontAwesomeIcon
+                    icon="plus"
+                    style={[s.white as FontAwesomeIconStyle, s.mr5]}
+                  />
+                  <Text type="button" style={[s.white, s.bold]}>
+                    Follow
+                  </Text>
                 </TouchableOpacity>
               )}
             </>
@@ -287,24 +282,21 @@ export const ProfileHeader = observer(function ProfileHeader({
           </View>
         ) : undefined}
       </View>
-      <TouchableWithoutFeedback onPress={onPressBack} hitSlop={BACK_HITSLOP}>
-        <View style={styles.backBtnWrapper}>
-          <BlurView style={styles.backBtn} blurType="dark">
-            <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
-          </BlurView>
-        </View>
-      </TouchableWithoutFeedback>
+      {!isDesktopWeb && (
+        <TouchableWithoutFeedback onPress={onPressBack} hitSlop={BACK_HITSLOP}>
+          <View style={styles.backBtnWrapper}>
+            <BlurView style={styles.backBtn} blurType="dark">
+              <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
+            </BlurView>
+          </View>
+        </TouchableWithoutFeedback>
+      )}
       <TouchableWithoutFeedback
         testID="profileHeaderAviButton"
         onPress={onPressAvi}>
         <View
           style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
-          <UserAvatar
-            size={80}
-            handle={view.handle}
-            displayName={view.displayName}
-            avatar={view.avatar}
-          />
+          <UserAvatar size={80} avatar={view.avatar} />
         </View>
       </TouchableWithoutFeedback>
     </View>
@@ -350,7 +342,8 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginBottom: 12,
   },
-  gradientBtn: {
+  primaryBtn: {
+    backgroundColor: colors.blue3,
     paddingHorizontal: 24,
     paddingVertical: 6,
   },

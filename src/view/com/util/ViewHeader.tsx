@@ -2,17 +2,19 @@ import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useNavigation} from '@react-navigation/native'
 import {UserAvatar} from './UserAvatar'
 import {Text} from './text/Text'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useAnalytics} from 'lib/analytics'
-import {isDesktopWeb} from '../../../platform/detection'
+import {NavigationProp} from 'lib/routes/types'
+import {isDesktopWeb} from 'platform/detection'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
-export const ViewHeader = observer(function ViewHeader({
+export const ViewHeader = observer(function ({
   title,
   canGoBack,
   hideOnScroll,
@@ -23,50 +25,55 @@ export const ViewHeader = observer(function ViewHeader({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const onPressBack = () => {
-    store.nav.tab.goBack()
-  }
-  const onPressMenu = () => {
+
+  const onPressBack = React.useCallback(() => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('Home')
+    }
+  }, [navigation])
+
+  const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
-    store.shell.setMainMenuOpen(true)
-  }
-  if (typeof canGoBack === 'undefined') {
-    canGoBack = store.nav.tab.canGoBack
-  }
+    store.shell.openDrawer()
+  }, [track, store])
+
   if (isDesktopWeb) {
     return <></>
+  } else {
+    if (typeof canGoBack === 'undefined') {
+      canGoBack = navigation.canGoBack()
+    }
+
+    return (
+      <Container hideOnScroll={hideOnScroll || false}>
+        <TouchableOpacity
+          testID="viewHeaderBackOrMenuBtn"
+          onPress={canGoBack ? onPressBack : onPressMenu}
+          hitSlop={BACK_HITSLOP}
+          style={canGoBack ? styles.backBtn : styles.backBtnWide}>
+          {canGoBack ? (
+            <FontAwesomeIcon
+              size={18}
+              icon="angle-left"
+              style={[styles.backIcon, pal.text]}
+            />
+          ) : (
+            <UserAvatar size={30} avatar={store.me.avatar} />
+          )}
+        </TouchableOpacity>
+        <View style={styles.titleContainer} pointerEvents="none">
+          <Text type="title" style={[pal.text, styles.title]}>
+            {title}
+          </Text>
+        </View>
+        <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
+      </Container>
+    )
   }
-  return (
-    <Container hideOnScroll={hideOnScroll || false}>
-      <TouchableOpacity
-        testID="viewHeaderBackOrMenuBtn"
-        onPress={canGoBack ? onPressBack : onPressMenu}
-        hitSlop={BACK_HITSLOP}
-        style={canGoBack ? styles.backBtn : styles.backBtnWide}>
-        {canGoBack ? (
-          <FontAwesomeIcon
-            size={18}
-            icon="angle-left"
-            style={[styles.backIcon, pal.text]}
-          />
-        ) : (
-          <UserAvatar
-            size={30}
-            handle={store.me.handle}
-            displayName={store.me.displayName}
-            avatar={store.me.avatar}
-          />
-        )}
-      </TouchableOpacity>
-      <View style={styles.titleContainer} pointerEvents="none">
-        <Text type="title" style={[pal.text, styles.title]}>
-          {title}
-        </Text>
-      </View>
-      <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
-    </Container>
-  )
 })
 
 const Container = observer(
@@ -119,8 +126,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
-    paddingTop: 6,
-    paddingBottom: 6,
+    paddingVertical: 6,
   },
   headerFloating: {
     position: 'absolute',

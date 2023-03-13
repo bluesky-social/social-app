@@ -73,12 +73,10 @@ export function HomeIconSolid({
   style,
   size,
   strokeWidth = 4,
-  fillOpacity = 1,
 }: {
   style?: StyleProp<ViewStyle>
   size?: string | number
   strokeWidth?: number
-  fillOpacity?: number
 }) {
   return (
     <Svg
@@ -89,11 +87,6 @@ export function HomeIconSolid({
       style={style}>
       <Path
         fill="currentColor"
-        stroke="none"
-        opacity={fillOpacity}
-        d="M 23.951 2 C 23.631 2.011 23.323 2.124 23.072 2.322 L 8.859 13.52 C 7.055 14.941 6 17.114 6 19.41 L 6 38.5 C 6 39.864 7.136 41 8.5 41 L 18.5 41 C 19.864 41 21 39.864 21 38.5 L 21 28.5 C 21 28.205 21.205 28 21.5 28 L 26.5 28 C 26.795 28 27 28.205 27 28.5 L 27 38.5 C 27 39.864 28.136 41 29.5 41 L 39.5 41 C 40.864 41 42 39.864 42 38.5 L 42 19.41 C 42 17.114 40.945 14.941 39.141 13.52 L 24.928 2.322 C 24.65 2.103 24.304 1.989 23.951 2 Z"
-      />
-      <Path
         strokeWidth={strokeWidth}
         d="M 23.951 2 C 23.631 2.011 23.323 2.124 23.072 2.322 L 8.859 13.52 C 7.055 14.941 6 17.114 6 19.41 L 6 38.5 C 6 39.864 7.136 41 8.5 41 L 18.5 41 C 19.864 41 21 39.864 21 38.5 L 21 28.5 C 21 28.205 21.205 28 21.5 28 L 26.5 28 C 26.795 28 27 28.205 27 28.5 L 27 38.5 C 27 39.864 28.136 41 29.5 41 L 39.5 41 C 40.864 41 42 39.864 42 38.5 L 42 19.41 C 42 17.114 40.945 14.941 39.141 13.52 L 24.928 2.322 C 24.65 2.103 24.304 1.989 23.951 2 Z"
       />
@@ -158,12 +151,10 @@ export function MagnifyingGlassIcon2Solid({
   style,
   size,
   strokeWidth = 2,
-  fillOpacity = 1,
 }: {
   style?: StyleProp<ViewStyle>
   size?: string | number
   strokeWidth?: number
-  fillOpacity?: number
 }) {
   return (
     <Svg
@@ -181,7 +172,6 @@ export function MagnifyingGlassIcon2Solid({
         ry="7"
         stroke="none"
         fill="currentColor"
-        opacity={fillOpacity}
       />
       <Ellipse cx="12" cy="11" rx="9" ry="9" />
       <Line x1="19" y1="17.3" x2="23.5" y2="21" strokeLinecap="round" />
@@ -219,12 +209,10 @@ export function BellIconSolid({
   style,
   size,
   strokeWidth = 1.5,
-  fillOpacity = 1,
 }: {
   style?: StyleProp<ViewStyle>
   size?: string | number
   strokeWidth?: number
-  fillOpacity?: number
 }) {
   return (
     <Svg
@@ -237,10 +225,7 @@ export function BellIconSolid({
       <Path
         d="M 11.642 2 H 12.442 A 8.6 8.55 0 0 1 21.042 10.55 V 18.1 A 1 1 0 0 1 20.042 19.1 H 4.042 A 1 1 0 0 1 3.042 18.1 V 10.55 A 8.6 8.55 0 0 1 11.642 2 Z"
         fill="currentColor"
-        stroke="none"
-        opacity={fillOpacity}
       />
-      <Path d="M 11.642 2 H 12.442 A 8.6 8.55 0 0 1 21.042 10.55 V 18.1 A 1 1 0 0 1 20.042 19.1 H 4.042 A 1 1 0 0 1 3.042 18.1 V 10.55 A 8.6 8.55 0 0 1 11.642 2 Z" />
       <Line x1="9" y1="22" x2="15" y2="22" />
     </Svg>
   )
@@ -273,6 +258,34 @@ export function CogIcon({
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+      />
+    </Svg>
+  )
+}
+
+export function CogIconSolid({
+  style,
+  size,
+  strokeWidth = 1.5,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+  strokeWidth: number
+}) {
+  return (
+    <Svg
+      fill="none"
+      viewBox="0 0 24 24"
+      width={size || 32}
+      height={size || 32}
+      strokeWidth={strokeWidth}
+      stroke="currentColor"
+      style={style}>
+      <Path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M 9.594 3.94 C 9.684 3.398 10.154 3 10.704 3 L 13.297 3 C 13.847 3 14.317 3.398 14.407 3.94 L 14.62 5.221 C 14.683 5.595 14.933 5.907 15.265 6.091 C 15.339 6.131 15.412 6.174 15.485 6.218 C 15.809 6.414 16.205 6.475 16.56 6.342 L 17.777 5.886 C 18.292 5.692 18.872 5.9 19.147 6.376 L 20.443 8.623 C 20.718 9.099 20.608 9.705 20.183 10.054 L 19.18 10.881 C 18.887 11.121 18.742 11.494 18.749 11.873 C 18.751 11.958 18.751 12.043 18.749 12.128 C 18.742 12.506 18.887 12.878 19.179 13.118 L 20.184 13.946 C 20.608 14.296 20.718 14.9 20.444 15.376 L 19.146 17.623 C 18.871 18.099 18.292 18.307 17.777 18.114 L 16.56 17.658 C 16.205 17.525 15.81 17.586 15.484 17.782 C 15.412 17.826 15.338 17.869 15.264 17.91 C 14.933 18.093 14.683 18.405 14.62 18.779 L 14.407 20.059 C 14.317 20.602 13.847 21 13.297 21 L 10.703 21 C 10.153 21 9.683 20.602 9.593 20.06 L 9.38 18.779 C 9.318 18.405 9.068 18.093 8.736 17.909 C 8.662 17.868 8.589 17.826 8.516 17.782 C 8.191 17.586 7.796 17.525 7.44 17.658 L 6.223 18.114 C 5.708 18.307 5.129 18.1 4.854 17.624 L 3.557 15.377 C 3.282 14.901 3.392 14.295 3.817 13.946 L 4.821 13.119 C 5.113 12.879 5.258 12.506 5.251 12.127 C 5.249 12.042 5.249 11.957 5.251 11.872 C 5.258 11.494 5.113 11.122 4.821 10.882 L 3.817 10.054 C 3.393 9.705 3.283 9.1 3.557 8.624 L 4.854 6.377 C 5.129 5.9 5.709 5.692 6.224 5.886 L 7.44 6.342 C 7.796 6.475 8.191 6.414 8.516 6.218 C 8.588 6.174 8.662 6.131 8.736 6.09 C 9.068 5.907 9.318 5.595 9.38 5.221 Z M 13.5 9.402 C 11.5 8.247 9 9.691 9 12 C 9 13.072 9.572 14.062 10.5 14.598 C 12.5 15.753 15 14.309 15 12 C 15 10.928 14.428 9.938 13.5 9.402 Z"
+        fill="currentColor"
       />
     </Svg>
   )
@@ -331,6 +344,45 @@ export function UserIcon({
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+      />
+    </Svg>
+  )
+}
+
+export function UserIconSolid({
+  style,
+  size,
+  strokeWidth = 1.5,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+  strokeWidth?: number
+}) {
+  return (
+    <Svg
+      fill="none"
+      viewBox="0 0 24 24"
+      width={size || 32}
+      height={size || 32}
+      strokeWidth={strokeWidth}
+      stroke="currentColor"
+      style={style}>
+      <Path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="currentColor"
+        d="M 15 9.75 C 15 12.059 12.5 13.503 10.5 12.348 C 9.572 11.812 9 10.822 9 9.75 C 9 7.441 11.5 5.997 13.5 7.152 C 14.428 7.688 15 8.678 15 9.75 Z"
+      />
+      <Path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="currentColor"
+        d="M 17.982 18.725 C 16.565 16.849 14.35 15.748 12 15.75 C 9.65 15.748 7.435 16.849 6.018 18.725 M 17.981 18.725 C 16.335 20.193 14.206 21.003 12 21 C 9.794 21.003 7.664 20.193 6.018 18.725"
+      />
+      <Path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M 17.981 18.725 C 23.158 14.12 21.409 5.639 14.833 3.458 C 8.257 1.277 1.786 7.033 3.185 13.818 C 3.576 15.716 4.57 17.437 6.018 18.725 M 17.981 18.725 C 16.335 20.193 14.206 21.003 12 21 C 9.794 21.003 7.664 20.193 6.018 18.725"
       />
     </Svg>
   )
@@ -674,6 +726,7 @@ export function ComposeIcon2({
     <Svg
       viewBox="0 0 24 24"
       stroke="currentColor"
+      fill="none"
       width={size || 24}
       height={size || 24}
       style={style}>

@@ -150,13 +150,8 @@ export const Post = observer(function Post({
         {showReplyLine && <View style={styles.replyLine} />}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
-            <Link href={authorHref} title={authorTitle}>
-              <UserAvatar
-                size={52}
-                displayName={item.post.author.displayName}
-                handle={item.post.author.handle}
-                avatar={item.post.author.avatar}
-              />
+            <Link href={authorHref} title={authorTitle} asAnchor>
+              <UserAvatar size={52} avatar={item.post.author.avatar} />
             </Link>
           </View>
           <View style={styles.layoutContent}>
@@ -164,6 +159,7 @@ export const Post = observer(function Post({
               authorHandle={item.post.author.handle}
               authorDisplayName={item.post.author.displayName}
               timestamp={item.post.indexedAt}
+              postHref={itemHref}
               did={item.post.author.did}
               declarationCid={item.post.author.declaration.cid}
             />

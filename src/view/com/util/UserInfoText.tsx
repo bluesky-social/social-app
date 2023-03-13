@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
 import {StyleProp, StyleSheet, TextStyle} from 'react-native'
-import {Link} from './Link'
+import {DesktopWebTextLink} from './Link'
 import {Text} from './text/Text'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
 import {useStores} from 'state/index'
@@ -14,7 +14,6 @@ export function UserInfoText({
   failed,
   prefix,
   style,
-  asLink,
 }: {
   type?: TypographyVariant
   did: string
@@ -23,7 +22,6 @@ export function UserInfoText({
   failed?: string
   prefix?: string
   style?: StyleProp<TextStyle>
-  asLink?: boolean
 }) {
   attr = attr || 'handle'
   failed = failed || 'user'
@@ -64,9 +62,14 @@ export function UserInfoText({
     )
   } else if (profile) {
     inner = (
-      <Text type={type} style={style} lineHeight={1.2} numberOfLines={1}>{`${
-        prefix || ''
-      }${profile[attr] || profile.handle}`}</Text>
+      <DesktopWebTextLink
+        type={type}
+        style={style}
+        lineHeight={1.2}
+        numberOfLines={1}
+        href={`/profile/${profile.handle}`}
+        text={`${prefix || ''}${profile[attr] || profile.handle}`}
+      />
     )
   } else {
     inner = (
@@ -75,17 +78,6 @@ export function UserInfoText({
         height={8}
         style={styles.loadingPlaceholder}
       />
-    )
-  }
-
-  if (asLink) {
-    const title = profile?.displayName || profile?.handle || 'User'
-    return (
-      <Link
-        href={`/profile/${profile?.handle ? profile.handle : did}`}
-        title={title}>
-        {inner}
-      </Link>
     )
   }
 

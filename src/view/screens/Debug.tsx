@@ -1,5 +1,6 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
+import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {ThemeProvider, PaletteColorName} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -20,7 +21,10 @@ import {ErrorMessage} from '../com/util/error/ErrorMessage'
 
 const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
 
-export const Debug = () => {
+export const DebugScreen = ({}: NativeStackScreenProps<
+  CommonNavigatorParams,
+  'Debug'
+>) => {
   const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
     'light',
   )

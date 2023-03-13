@@ -1,28 +1,43 @@
 import React, {useRef} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {CenteredView, FlatList} from '../util/Views'
 import {
   PostThreadViewModel,
   PostThreadViewPostModel,
 } from 'state/models/post-thread-view'
 import {PostThreadItem} from './PostThreadItem'
+import {ComposePrompt} from '../composer/Prompt'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {s} from 'lib/styles'
+import {isDesktopWeb} from 'platform/detection'
+import {usePalette} from 'lib/hooks/usePalette'
+
+const REPLY_PROMPT = {_reactKey: '__reply__', _isHighlightedPost: false}
+const BOTTOM_BORDER = {
+  _reactKey: '__bottom_border__',
+  _isHighlightedPost: false,
+}
+type YieldedItem = PostThreadViewPostModel | typeof REPLY_PROMPT
 
 export const PostThread = observer(function PostThread({
   uri,
   view,
+  onPressReply,
 }: {
   uri: string
   view: PostThreadViewModel
+  onPressReply: () => void
 }) {
+  const pal = usePalette('default')
   const ref = useRef<FlatList>(null)
   const [isRefreshing, setIsRefreshing] = React.useState(false)
-  const posts = React.useMemo(
-    () => (view.thread ? Array.from(flattenThread(view.thread)) : []),
-    [view.thread],
-  )
+  const posts = React.useMemo(() => {
+    if (view.thread) {
+      return Array.from(flattenThread(view.thread)).concat([BOTTOM_BORDER])
+    }
+    return []
+  }, [view.thread])
 
   // events
   // =
@@ -58,6 +73,23 @@ export const PostThread = observer(function PostThread({
     },
     [ref],
   )
+  const renderItem = React.useCallback(
+    ({item}: {item: YieldedItem}) => {
+      if (item === REPLY_PROMPT) {
+        return <ComposePrompt onPressCompose={onPressReply} />
+      } else if (item === BOTTOM_BORDER) {
+        // HACK
+        // due to some complexities with how flatlist works, this is the easiest way
+        // I could find to get a border positioned directly under the last item
+        // -prf
+        return <View style={[styles.bottomBorder, pal.border]} />
+      } else if (item instanceof PostThreadViewPostModel) {
+        return <PostThreadItem item={item} onPostReply={onRefresh} />
+      }
+      return <></>
+    },
+    [onRefresh, onPressReply, pal],
+  )
 
   // loading
   // =
@@ -81,9 +113,6 @@ export const PostThread = observer(function PostThread({
 
   // loaded
   // =
-  const renderItem = ({item}: {item: PostThreadViewPostModel}) => (
-    <PostThreadItem item={item} onPostReply={onRefresh} />
-  )
   return (
     <FlatList
       ref={ref}
@@ -104,7 +133,7 @@ export const PostThread = observer(function PostThread({
 function* flattenThread(
   post: PostThreadViewPostModel,
   isAscending = false,
-): Generator<PostThreadViewPostModel, void> {
+): Generator<YieldedItem, void> {
   if (post.parent) {
     if ('notFound' in post.parent && post.parent.notFound) {
       // TODO render not found
@@ -113,6 +142,9 @@ function* flattenThread(
     }
   }
   yield post
+  if (isDesktopWeb && post._isHighlightedPost) {
+    yield REPLY_PROMPT
+  }
   if (post.replies?.length) {
     for (const reply of post.replies) {
       if ('notFound' in reply && reply.notFound) {
@@ -125,3 +157,9 @@ function* flattenThread(
     post._hasMore = true
   }
 }
+
+const styles = StyleSheet.create({
+  bottomBorder: {
+    borderBottomWidth: 1,
+  },
+})

@@ -1,8 +1,12 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {useFocusEffect} from '@react-navigation/native'
 import {ScrollView} from '../com/util/Views'
 import {observer} from 'mobx-react-lite'
-import {ScreenParams} from '../routes'
+import {
+  NativeStackScreenProps,
+  SearchTabNavigatorParams,
+} from 'lib/routes/types'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {WhoToFollow} from '../com/discover/WhoToFollow'
@@ -12,7 +16,8 @@ import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 
 const FIVE_MIN = 5 * 60 * 1e3
 
-export const Search = observer(({navIdx, visible}: ScreenParams) => {
+type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
+export const SearchScreen = observer(({}: Props) => {
   const pal = usePalette('default')
   const store = useStores()
   const scrollElRef = React.useRef<ScrollView>(null)
@@ -23,22 +28,21 @@ export const Search = observer(({navIdx, visible}: ScreenParams) => {
     scrollElRef.current?.scrollTo({x: 0, y: 0})
   }
 
-  React.useEffect(() => {
-    const softResetSub = store.onScreenSoftReset(onSoftReset)
-    const cleanup = () => {
-      softResetSub.remove()
-    }
+  useFocusEffect(
+    React.useCallback(() => {
+      const softResetSub = store.onScreenSoftReset(onSoftReset)
 
-    if (visible) {
       const now = Date.now()
       if (now - lastRenderTime > FIVE_MIN) {
         setRenderTime(Date.now()) // trigger reload of suggestions
       }
       store.shell.setMinimalShellMode(false)
-      store.nav.setTitle(navIdx, 'Search')
-    }
-    return cleanup
-  }, [store, visible, navIdx, lastRenderTime])
+
+      return () => {
+        softResetSub.remove()
+      }
+    }, [store, lastRenderTime, setRenderTime]),
+  )
 
   return (
     <ScrollView

@@ -1,5 +1,6 @@
 import React, {Component, ErrorInfo, ReactNode} from 'react'
 import {ErrorScreen} from './error/ErrorScreen'
+import {CenteredView} from './Views'
 
 interface Props {
   children?: ReactNode
@@ -27,11 +28,13 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <ErrorScreen
-          title="Oh no!"
-          message="There was an unexpected issue in the application. Please let us know if this happened to you!"
-          details={this.state.error.toString()}
-        />
+        <CenteredView>
+          <ErrorScreen
+            title="Oh no!"
+            message="There was an unexpected issue in the application. Please let us know if this happened to you!"
+            details={this.state.error.toString()}
+          />
+        </CenteredView>
       )
     }
 

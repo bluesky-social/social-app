@@ -25,6 +25,7 @@ const QuoteEmbed = ({quote}: {quote: ComposerOptsQuote}) => {
         authorAvatar={quote.author.avatar}
         authorHandle={quote.author.handle}
         authorDisplayName={quote.author.displayName}
+        postHref={itemHref}
         timestamp={quote.indexedAt}
       />
       <Text type="post-text" style={pal.text} numberOfLines={6}>

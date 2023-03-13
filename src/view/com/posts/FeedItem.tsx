@@ -9,7 +9,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {FeedItemModel} from 'state/models/feed-view'
-import {Link} from '../util/Link'
+import {Link, DesktopWebTextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
@@ -169,19 +169,24 @@ export const FeedItem = observer(function ({
               lineHeight={1.2}
               numberOfLines={1}>
               Reposted by{' '}
-              {item.reasonRepost.by.displayName || item.reasonRepost.by.handle}
+              <DesktopWebTextLink
+                type="sm-bold"
+                style={pal.textLight}
+                lineHeight={1.2}
+                numberOfLines={1}
+                text={
+                  item.reasonRepost.by.displayName ||
+                  item.reasonRepost.by.handle
+                }
+                href={`/profile/${item.reasonRepost.by.handle}`}
+              />
             </Text>
           </Link>
         )}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
-            <Link href={authorHref} title={item.post.author.handle}>
-              <UserAvatar
-                size={52}
-                displayName={item.post.author.displayName}
-                handle={item.post.author.handle}
-                avatar={item.post.author.avatar}
-              />
+            <Link href={authorHref} title={item.post.author.handle} asAnchor>
+              <UserAvatar size={52} avatar={item.post.author.avatar} />
             </Link>
           </View>
           <View style={styles.layoutContent}>
@@ -189,6 +194,7 @@ export const FeedItem = observer(function ({
               authorHandle={item.post.author.handle}
               authorDisplayName={item.post.author.displayName}
               timestamp={item.post.indexedAt}
+              postHref={itemHref}
               did={item.post.author.did}
               declarationCid={item.post.author.declaration.cid}
               showFollowBtn={showFollowBtn}
