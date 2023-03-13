@@ -109,12 +109,7 @@ export const SearchScreen = observer<Props>(({}: Props) => {
             onPress={onPressMenu}
             hitSlop={MENU_HITSLOP}
             style={styles.headerMenuBtn}>
-            <UserAvatar
-              size={30}
-              handle={store.me.handle}
-              displayName={store.me.displayName}
-              avatar={store.me.avatar}
-            />
+            <UserAvatar size={30} avatar={store.me.avatar} />
           </TouchableOpacity>
           <View
             style={[

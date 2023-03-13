@@ -14,12 +14,7 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
       testID="replyPromptBtn"
       style={[pal.view, pal.border, styles.prompt]}
       onPress={() => onPressCompose()}>
-      <UserAvatar
-        handle={store.me.handle}
-        avatar={store.me.avatar}
-        displayName={store.me.displayName}
-        size={38}
-      />
+      <UserAvatar avatar={store.me.avatar} size={38} />
       <Text
         type="xl"
         style={[

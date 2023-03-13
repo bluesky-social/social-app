@@ -120,12 +120,7 @@ export const SettingsScreen = observer(function Settings({}: Props) {
             noFeedback>
             <View style={[pal.view, styles.linkCard]}>
               <View style={styles.avi}>
-                <UserAvatar
-                  size={40}
-                  displayName={store.me.displayName}
-                  handle={store.me.handle || ''}
-                  avatar={store.me.avatar}
-                />
+                <UserAvatar size={40} avatar={store.me.avatar} />
               </View>
               <View style={[s.flex1]}>
                 <Text type="md-bold" style={pal.text} numberOfLines={1}>
@@ -154,12 +149,7 @@ export const SettingsScreen = observer(function Settings({}: Props) {
               isSwitching ? undefined : () => onPressSwitchAccount(account)
             }>
             <View style={styles.avi}>
-              <UserAvatar
-                size={40}
-                displayName={account.displayName}
-                handle={account.handle || ''}
-                avatar={account.aviUrl}
-              />
+              <UserAvatar size={40} avatar={account.aviUrl} />
             </View>
             <View style={[s.flex1]}>
               <Text type="md-bold" style={pal.text}>

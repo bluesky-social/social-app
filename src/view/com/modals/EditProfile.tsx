@@ -133,9 +133,7 @@ export function Component({
             <UserAvatar
               size={80}
               avatar={userAvatar}
-              handle={profileView.handle}
               onSelectNewAvatar={onSelectNewAvatar}
-              displayName={profileView.displayName}
             />
           </View>
         </View>

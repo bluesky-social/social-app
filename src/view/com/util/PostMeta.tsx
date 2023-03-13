@@ -84,12 +84,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
     <View style={styles.meta}>
       {typeof opts.authorAvatar !== 'undefined' && (
         <View style={[styles.metaItem, styles.avatar]}>
-          <UserAvatar
-            avatar={opts.authorAvatar}
-            handle={opts.authorHandle}
-            displayName={opts.authorDisplayName}
-            size={16}
-          />
+          <UserAvatar avatar={opts.authorAvatar} size={16} />
         </View>
       )}
       <View style={[styles.metaItem, styles.maxWidth]}>

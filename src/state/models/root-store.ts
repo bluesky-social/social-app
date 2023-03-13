@@ -198,6 +198,7 @@ export class RootStoreModel {
   }
 
   // the current screen has changed
+  // TODO is this still needed?
   onNavigation(handler: () => void): EmitterSubscription {
     return DeviceEventEmitter.addListener('navigation', handler)
   }

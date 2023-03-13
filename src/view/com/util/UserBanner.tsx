@@ -83,19 +83,8 @@ export function UserBanner({
   ]
 
   const renderSvg = () => (
-    <Svg width="100%" height="150" viewBox="50 0 200 100">
-      <Defs>
-        <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-          <Stop
-            offset="0"
-            stopColor={gradients.blueDark.start}
-            stopOpacity="1"
-          />
-          <Stop offset="1" stopColor={gradients.blueDark.end} stopOpacity="1" />
-        </LinearGradient>
-      </Defs>
-      <Rect x="0" y="0" width="400" height="100" fill="url(#grad)" />
-      <Rect x="0" y="0" width="400" height="100" fill="url(#grad2)" />
+    <Svg width="100%" height="150" viewBox="0 0 400 100">
+      <Rect x="0" y="0" width="400" height="100" fill="#0070ff" />
     </Svg>
   )
 

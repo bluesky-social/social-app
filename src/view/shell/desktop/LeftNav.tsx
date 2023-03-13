@@ -30,12 +30,7 @@ const ProfileCard = observer(() => {
   const store = useStores()
   return (
     <Link href={`/profile/${store.me.handle}`} style={styles.profileCard}>
-      <UserAvatar
-        handle={store.me.handle}
-        displayName={store.me.displayName}
-        avatar={store.me.avatar}
-        size={64}
-      />
+      <UserAvatar avatar={store.me.avatar} size={64} />
     </Link>
   )
 })
@@ -234,7 +229,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 134,
+    width: 136,
     borderRadius: 24,
     paddingVertical: 10,
     paddingHorizontal: 16,
@@ -247,5 +242,6 @@ const styles = StyleSheet.create({
   newPostBtnLabel: {
     color: colors.white,
     fontSize: 16,
+    fontWeight: 'bold',
   },
 })

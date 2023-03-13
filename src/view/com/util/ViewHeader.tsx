@@ -62,12 +62,7 @@ export const ViewHeader = observer(function ({
               style={[styles.backIcon, pal.text]}
             />
           ) : (
-            <UserAvatar
-              size={30}
-              handle={store.me.handle}
-              displayName={store.me.displayName}
-              avatar={store.me.avatar}
-            />
+            <UserAvatar size={30} avatar={store.me.avatar} />
           )}
         </TouchableOpacity>
         <View style={styles.titleContainer} pointerEvents="none">

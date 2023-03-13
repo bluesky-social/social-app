@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -19,7 +18,7 @@ import {useStores} from 'state/index'
 import {ProfileImageLightbox} from 'state/models/shell-ui'
 import {pluralize} from 'lib/strings/helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
-import {s, gradients} from 'lib/styles'
+import {s, colors} from 'lib/styles'
 import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -193,23 +192,15 @@ export const ProfileHeader = observer(function ProfileHeader({
               ) : (
                 <TouchableOpacity
                   testID="profileHeaderToggleFollowButton"
-                  onPress={onPressToggleFollow}>
-                  <LinearGradient
-                    colors={[
-                      gradients.blueLight.start,
-                      gradients.blueLight.end,
-                    ]}
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 1}}
-                    style={[styles.btn, styles.gradientBtn]}>
-                    <FontAwesomeIcon
-                      icon="plus"
-                      style={[s.white as FontAwesomeIconStyle, s.mr5]}
-                    />
-                    <Text type="button" style={[s.white, s.bold]}>
-                      Follow
-                    </Text>
-                  </LinearGradient>
+                  onPress={onPressToggleFollow}
+                  style={[styles.btn, styles.primaryBtn]}>
+                  <FontAwesomeIcon
+                    icon="plus"
+                    style={[s.white as FontAwesomeIconStyle, s.mr5]}
+                  />
+                  <Text type="button" style={[s.white, s.bold]}>
+                    Follow
+                  </Text>
                 </TouchableOpacity>
               )}
             </>
@@ -305,12 +296,7 @@ export const ProfileHeader = observer(function ProfileHeader({
         onPress={onPressAvi}>
         <View
           style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
-          <UserAvatar
-            size={80}
-            handle={view.handle}
-            displayName={view.displayName}
-            avatar={view.avatar}
-          />
+          <UserAvatar size={80} avatar={view.avatar} />
         </View>
       </TouchableWithoutFeedback>
     </View>
@@ -356,7 +342,8 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginBottom: 12,
   },
-  gradientBtn: {
+  primaryBtn: {
+    backgroundColor: colors.blue3,
     paddingHorizontal: 24,
     paddingVertical: 6,
   },

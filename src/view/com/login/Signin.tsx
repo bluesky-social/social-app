@@ -195,12 +195,7 @@ const ChooseAccountForm = ({
           <View
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
             <View style={s.p10}>
-              <UserAvatar
-                displayName={account.displayName}
-                handle={account.handle}
-                avatar={account.aviUrl}
-                size={30}
-              />
+              <UserAvatar avatar={account.aviUrl} size={30} />
             </View>
             <Text style={styles.accountText}>
               <Text type="lg-bold" style={pal.text}>

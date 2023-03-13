@@ -256,12 +256,7 @@ export const ComposePost = observer(function ComposePost({
           <ScrollView style={s.flex1}>
             {replyTo ? (
               <View style={[pal.border, styles.replyToLayout]}>
-                <UserAvatar
-                  handle={replyTo.author.handle}
-                  displayName={replyTo.author.displayName}
-                  avatar={replyTo.author.avatar}
-                  size={50}
-                />
+                <UserAvatar avatar={replyTo.author.avatar} size={50} />
                 <View style={styles.replyToPost}>
                   <Text type="xl-medium" style={[pal.text]}>
                     {replyTo.author.displayName || replyTo.author.handle}
@@ -279,12 +274,7 @@ export const ComposePost = observer(function ComposePost({
                 styles.textInputLayout,
                 selectTextInputLayout,
               ]}>
-              <UserAvatar
-                handle={store.me.handle || ''}
-                displayName={store.me.displayName}
-                avatar={store.me.avatar}
-                size={50}
-              />
+              <UserAvatar avatar={store.me.avatar} size={50} />
               <TextInput
                 ref={textInput}
                 text={text}

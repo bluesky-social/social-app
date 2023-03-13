@@ -1,6 +1,4 @@
-import {State} from 'lib/routes/types'
 import {Router} from 'lib/routes/router'
-import {isNative} from 'platform/detection'
 
 export const router = new Router({
   Home: '/',

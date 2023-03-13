@@ -161,12 +161,7 @@ export const DrawerContent = observer(() => {
       ]}>
       <SafeAreaView style={s.flex1}>
         <TouchableOpacity testID="profileCardButton" onPress={onPressProfile}>
-          <UserAvatar
-            size={80}
-            displayName={store.me.displayName}
-            handle={store.me.handle}
-            avatar={store.me.avatar}
-          />
+          <UserAvatar size={80} avatar={store.me.avatar} />
           <Text
             type="title-lg"
             style={[pal.text, s.bold, styles.profileCardDisplayName]}>

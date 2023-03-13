@@ -176,12 +176,7 @@ export const FeedItem = observer(function ({
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
             <Link href={authorHref} title={item.post.author.handle}>
-              <UserAvatar
-                size={52}
-                displayName={item.post.author.displayName}
-                handle={item.post.author.handle}
-                avatar={item.post.author.avatar}
-              />
+              <UserAvatar size={52} avatar={item.post.author.avatar} />
             </Link>
           </View>
           <View style={styles.layoutContent}>

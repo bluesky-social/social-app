@@ -257,12 +257,7 @@ function CondensedAuthorsList({
           style={s.mr5}
           href={authors[0].href}
           title={`@${authors[0].handle}`}>
-          <UserAvatar
-            size={35}
-            displayName={authors[0].displayName}
-            handle={authors[0].handle}
-            avatar={authors[0].avatar}
-          />
+          <UserAvatar size={35} avatar={authors[0].avatar} />
         </Link>
       </View>
     )
@@ -271,12 +266,7 @@ function CondensedAuthorsList({
     <View style={styles.avis}>
       {authors.slice(0, MAX_AUTHORS).map(author => (
         <View key={author.href} style={s.mr5}>
-          <UserAvatar
-            size={35}
-            displayName={author.displayName}
-            handle={author.handle}
-            avatar={author.avatar}
-          />
+          <UserAvatar size={35} avatar={author.avatar} />
         </View>
       ))}
       {authors.length > MAX_AUTHORS ? (
@@ -328,12 +318,7 @@ function ExpandedAuthorsList({
           title={author.displayName || author.handle}
           style={styles.expandedAuthor}>
           <View style={styles.expandedAuthorAvi}>
-            <UserAvatar
-              size={35}
-              displayName={author.displayName}
-              handle={author.handle}
-              avatar={author.avatar}
-            />
+            <UserAvatar size={35} avatar={author.avatar} />
           </View>
           <View style={s.flex1}>
             <Text
