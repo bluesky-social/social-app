@@ -27,11 +27,13 @@ import {toNiceDomain} from 'lib/strings/url-helpers'
 import {useStores, DEFAULT_SERVICE} from 'state/index'
 import {ServiceDescription} from 'state/models/session'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 import {cleanError} from 'lib/strings/errors'
 
 export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
   const {track, screen, identify} = useAnalytics()
   const pal = usePalette('default')
+  const theme = useTheme()
   const store = useStores()
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
   const [serviceUrl, setServiceUrl] = React.useState<string>(DEFAULT_SERVICE)
@@ -220,6 +222,7 @@ export const CreateAccount = ({onPressBack}: {onPressBack: () => void}) => {
                     autoCapitalize="none"
                     autoCorrect={false}
                     autoFocus
+                    keyboardAppearance={theme.colorScheme}
                     value={inviteCode}
                     onChangeText={setInviteCode}
                     onBlur={onBlurInviteCode}

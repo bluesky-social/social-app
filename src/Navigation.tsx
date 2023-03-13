@@ -1,4 +1,5 @@
 import * as React from 'react'
+import {StyleSheet} from 'react-native'
 import {
   NavigationContainer,
   createNavigationContainerRef,
@@ -16,7 +17,9 @@ import {
 import {BottomBar} from './view/shell/BottomBar'
 import {buildStateObject} from 'lib/routes/helpers'
 import {State, RouteParams} from 'lib/routes/types'
+import {colors} from 'lib/styles'
 import {isNative} from 'platform/detection'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {router} from './routes'
 
 import {HomeScreen} from './view/screens/Home'
@@ -88,6 +91,7 @@ function TabsNavigator() {
 }
 
 function HomeTabNavigator() {
+  const contentStyle = useColorSchemeStyle(styles.bgDark, styles.bgLight)
   return (
     <HomeTab.Navigator
       screenOptions={{
@@ -95,6 +99,7 @@ function HomeTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
+        contentStyle,
       }}>
       <HomeTab.Screen name="Home" component={HomeScreen} />
       {commonScreens(HomeTab)}
@@ -103,6 +108,7 @@ function HomeTabNavigator() {
 }
 
 function SearchTabNavigator() {
+  const contentStyle = useColorSchemeStyle(styles.bgDark, styles.bgLight)
   return (
     <SearchTab.Navigator
       screenOptions={{
@@ -110,6 +116,7 @@ function SearchTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
+        contentStyle,
       }}>
       <SearchTab.Screen name="Search" component={SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
@@ -118,6 +125,7 @@ function SearchTabNavigator() {
 }
 
 function NotificationsTabNavigator() {
+  const contentStyle = useColorSchemeStyle(styles.bgDark, styles.bgLight)
   return (
     <NotificationsTab.Navigator
       screenOptions={{
@@ -125,6 +133,7 @@ function NotificationsTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
+        contentStyle,
       }}>
       <NotificationsTab.Screen
         name="Notifications"
@@ -225,5 +234,14 @@ function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'NotificationsTab') {
     navigationRef.dispatch(StackActions.popToTop())
   }
 }
+
+const styles = StyleSheet.create({
+  bgDark: {
+    backgroundColor: colors.black,
+  },
+  bgLight: {
+    backgroundColor: colors.gray1,
+  },
+})
 
 export {navigate, resetToTab, TabsNavigator, FlatNavigator, RoutesContainer}

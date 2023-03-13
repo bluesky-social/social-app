@@ -28,6 +28,7 @@ import {WhoToFollow} from '../com/discover/WhoToFollow'
 import {SuggestedPosts} from '../com/discover/SuggestedPosts'
 import {ProfileCard} from '../com/profile/ProfileCard'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 
@@ -37,6 +38,7 @@ const FIVE_MIN = 5 * 60 * 1e3
 type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = observer<Props>(({}: Props) => {
   const pal = usePalette('default')
+  const theme = useTheme()
   const store = useStores()
   const {track} = useAnalytics()
   const scrollElRef = React.useRef<ScrollView>(null)
@@ -129,6 +131,7 @@ export const SearchScreen = observer<Props>(({}: Props) => {
               returnKeyType="search"
               value={query}
               style={[pal.text, styles.headerSearchInput]}
+              keyboardAppearance={theme.colorScheme}
               onFocus={() => setIsInputFocused(true)}
               onBlur={() => setIsInputFocused(false)}
               onChangeText={onChangeQuery}

@@ -26,6 +26,7 @@ import {ServiceDescription} from 'state/models/session'
 import {AccountData} from 'state/models/session'
 import {isNetworkError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 import {cleanError} from 'lib/strings/errors'
 
 enum Forms {
@@ -268,6 +269,7 @@ const LoginForm = ({
 }) => {
   const {track} = useAnalytics()
   const pal = usePalette('default')
+  const theme = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [identifier, setIdentifier] = useState<string>(initialHandle)
   const [password, setPassword] = useState<string>('')
@@ -378,6 +380,7 @@ const LoginForm = ({
             autoCapitalize="none"
             autoFocus
             autoCorrect={false}
+            keyboardAppearance={theme.colorScheme}
             value={identifier}
             onChangeText={str => setIdentifier((str || '').toLowerCase())}
             editable={!isProcessing}
@@ -395,6 +398,7 @@ const LoginForm = ({
             placeholderTextColor={pal.colors.textLight}
             autoCapitalize="none"
             autoCorrect={false}
+            keyboardAppearance={theme.colorScheme}
             secureTextEntry
             value={password}
             onChangeText={setPassword}
@@ -474,6 +478,7 @@ const ForgotPasswordForm = ({
   onEmailSent: () => void
 }) => {
   const pal = usePalette('default')
+  const theme = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
   const {screen} = useAnalytics()
@@ -562,6 +567,7 @@ const ForgotPasswordForm = ({
               autoCapitalize="none"
               autoFocus
               autoCorrect={false}
+              keyboardAppearance={theme.colorScheme}
               value={email}
               onChangeText={setEmail}
               editable={!isProcessing}
@@ -625,11 +631,12 @@ const SetNewPasswordForm = ({
   onPasswordSet: () => void
 }) => {
   const pal = usePalette('default')
+  const theme = useTheme()
   const {screen} = useAnalytics()
 
-  // useEffect(() => {
-  screen('Signin:SetNewPasswordForm')
-  // }, [screen])
+  useEffect(() => {
+    screen('Signin:SetNewPasswordForm')
+  }, [screen])
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [resetCode, setResetCode] = useState<string>('')
@@ -687,6 +694,7 @@ const SetNewPasswordForm = ({
               placeholderTextColor={pal.colors.textLight}
               autoCapitalize="none"
               autoCorrect={false}
+              keyboardAppearance={theme.colorScheme}
               autoFocus
               value={resetCode}
               onChangeText={setResetCode}
@@ -705,6 +713,7 @@ const SetNewPasswordForm = ({
               placeholderTextColor={pal.colors.textLight}
               autoCapitalize="none"
               autoCorrect={false}
+              keyboardAppearance={theme.colorScheme}
               secureTextEntry
               value={password}
               onChangeText={setPassword}

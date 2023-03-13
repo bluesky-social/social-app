@@ -24,6 +24,7 @@ import {
   POST_IMG_MAX_SIZE,
 } from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 
 export interface TextInputRef {
   focus: () => void
@@ -64,6 +65,7 @@ export const TextInput = React.forwardRef(
     const store = useStores()
     const textInput = React.useRef<PasteInputRef>(null)
     const textInputSelection = React.useRef<Selection>({start: 0, end: 0})
+    const theme = useTheme()
 
     React.useImperativeHandle(ref, () => ({
       focus: () => textInput.current?.focus(),
@@ -191,6 +193,7 @@ export const TextInput = React.forwardRef(
           onPaste={onPaste}
           onSelectionChange={onSelectionChange}
           placeholder={placeholder}
+          keyboardAppearance={theme.colorScheme}
           style={[pal.text, styles.textInput, styles.textInputFormatting]}>
           {textDecorated}
         </PasteInput>

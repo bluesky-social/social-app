@@ -17,6 +17,7 @@ import {ServiceDescription} from 'state/models/session'
 import {s} from 'lib/styles'
 import {makeValidHandle, createFullHandle} from 'lib/strings/handles'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics'
 import {cleanError} from 'lib/strings/errors'
 
@@ -212,6 +213,7 @@ function ProvidedHandleForm({
   setCanSave: (v: boolean) => void
 }) {
   const pal = usePalette('default')
+  const theme = useTheme()
 
   // events
   // =
@@ -239,6 +241,7 @@ function ProvidedHandleForm({
           placeholder="eg alice"
           placeholderTextColor={pal.colors.textLight}
           autoCapitalize="none"
+          keyboardAppearance={theme.colorScheme}
           value={handle}
           onChangeText={onChangeHandle}
           editable={!isProcessing}
@@ -283,6 +286,7 @@ function CustomHandleForm({
   const pal = usePalette('default')
   const palSecondary = usePalette('secondary')
   const palError = usePalette('error')
+  const theme = useTheme()
   const [isVerifying, setIsVerifying] = React.useState(false)
   const [error, setError] = React.useState<string>('')
 
@@ -348,6 +352,7 @@ function CustomHandleForm({
           placeholder="eg alice.com"
           placeholderTextColor={pal.colors.textLight}
           autoCapitalize="none"
+          keyboardAppearance={theme.colorScheme}
           value={handle}
           onChangeText={onChangeHandle}
           editable={!isProcessing}

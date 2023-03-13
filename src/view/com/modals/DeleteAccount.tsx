@@ -12,6 +12,7 @@ import {Text} from '../util/text/Text'
 import {useStores} from 'state/index'
 import {s, colors, gradients} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {resetToTab} from '../../../Navigation'
@@ -20,6 +21,7 @@ export const snapPoints = ['60%']
 
 export function Component({}: {}) {
   const pal = usePalette('default')
+  const theme = useTheme()
   const store = useStores()
   const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false)
   const [confirmCode, setConfirmCode] = React.useState<string>('')
@@ -118,6 +120,7 @@ export function Component({}: {}) {
               style={[styles.textInput, pal.borderDark, pal.text, styles.mb20]}
               placeholder="Confirmation code"
               placeholderTextColor={pal.textLight.color}
+              keyboardAppearance={theme.colorScheme}
               value={confirmCode}
               onChangeText={setConfirmCode}
             />
@@ -128,6 +131,7 @@ export function Component({}: {}) {
               style={[styles.textInput, pal.borderDark, pal.text]}
               placeholder="Password"
               placeholderTextColor={pal.textLight.color}
+              keyboardAppearance={theme.colorScheme}
               secureTextEntry
               value={password}
               onChangeText={setPassword}
