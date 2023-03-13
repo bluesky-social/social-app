@@ -108,7 +108,6 @@ export interface ComposerOptsQuote {
   }
 }
 export interface ComposerOpts {
-  imagesOpen?: boolean
   replyTo?: ComposerOptsPostRef
   onPost?: () => void
   quote?: ComposerOptsQuote
@@ -117,7 +116,7 @@ export interface ComposerOpts {
 export class ShellUiModel {
   darkMode = false
   minimalShellMode = false
-  isMainMenuOpen = false
+  isDrawerOpen = false
   isModalActive = false
   activeModals: Modal[] = []
   isLightboxActive = false
@@ -156,8 +155,12 @@ export class ShellUiModel {
     this.minimalShellMode = v
   }
 
-  setMainMenuOpen(v: boolean) {
-    this.isMainMenuOpen = v
+  openDrawer() {
+    this.isDrawerOpen = true
+  }
+
+  closeDrawer() {
+    this.isDrawerOpen = false
   }
 
   openModal(modal: Modal) {

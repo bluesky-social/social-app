@@ -1,10 +1,10 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import Svg, {Rect, Defs, LinearGradient, Stop} from 'react-native-svg'
+import Svg, {Rect} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import Image from 'view/com/util/images/Image'
-import {colors, gradients} from 'lib/styles'
+import {colors} from 'lib/styles'
 import {
   openCamera,
   openCropper,
@@ -13,9 +13,9 @@ import {
 } from '../../../lib/media/picker'
 import {useStores} from 'state/index'
 import {
-  requestPhotoAccessIfNeeded,
-  requestCameraAccessIfNeeded,
-} from 'lib/permissions'
+  usePhotoLibraryPermission,
+  useCameraPermission,
+} from 'lib/hooks/usePermissions'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
@@ -29,6 +29,9 @@ export function UserBanner({
 }) {
   const store = useStores()
   const pal = usePalette('default')
+  const {requestCameraAccessIfNeeded} = useCameraPermission()
+  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+
   const dropdownItems = [
     !isWeb && {
       label: 'Camera',
@@ -80,19 +83,8 @@ export function UserBanner({
   ]
 
   const renderSvg = () => (
-    <Svg width="100%" height="150" viewBox="50 0 200 100">
-      <Defs>
-        <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-          <Stop
-            offset="0"
-            stopColor={gradients.blueDark.start}
-            stopOpacity="1"
-          />
-          <Stop offset="1" stopColor={gradients.blueDark.end} stopOpacity="1" />
-        </LinearGradient>
-      </Defs>
-      <Rect x="0" y="0" width="400" height="100" fill="url(#grad)" />
-      <Rect x="0" y="0" width="400" height="100" fill="url(#grad2)" />
+    <Svg width="100%" height="150" viewBox="0 0 400 100">
+      <Rect x="0" y="0" width="400" height="100" fill="#0070ff" />
     </Svg>
   )
 

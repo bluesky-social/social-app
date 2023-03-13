@@ -7,12 +7,19 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useFocusEffect} from '@react-navigation/native'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {ScrollView} from '../com/util/Views'
+import {
+  NativeStackScreenProps,
+  SearchTabNavigatorParams,
+} from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
 import {UserAvatar} from '../com/util/UserAvatar'
 import {Text} from '../com/util/text/Text'
-import {ScreenParams} from '../routes'
 import {useStores} from 'state/index'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
 import {s} from 'lib/styles'
@@ -21,14 +28,17 @@ import {WhoToFollow} from '../com/discover/WhoToFollow'
 import {SuggestedPosts} from '../com/discover/SuggestedPosts'
 import {ProfileCard} from '../com/profile/ProfileCard'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 
 const MENU_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 const FIVE_MIN = 5 * 60 * 1e3
 
-export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
+type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
+export const SearchScreen = observer<Props>(({}: Props) => {
   const pal = usePalette('default')
+  const theme = useTheme()
   const store = useStores()
   const {track} = useAnalytics()
   const scrollElRef = React.useRef<ScrollView>(null)
@@ -41,33 +51,32 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
     () => new UserAutocompleteViewModel(store),
     [store],
   )
-  const {name} = params
 
   const onSoftReset = () => {
     scrollElRef.current?.scrollTo({x: 0, y: 0})
   }
 
-  React.useEffect(() => {
-    const softResetSub = store.onScreenSoftReset(onSoftReset)
-    const cleanup = () => {
-      softResetSub.remove()
-    }
+  useFocusEffect(
+    React.useCallback(() => {
+      const softResetSub = store.onScreenSoftReset(onSoftReset)
+      const cleanup = () => {
+        softResetSub.remove()
+      }
 
-    if (visible) {
       const now = Date.now()
       if (now - lastRenderTime > FIVE_MIN) {
         setRenderTime(Date.now()) // trigger reload of suggestions
       }
       store.shell.setMinimalShellMode(false)
       autocompleteView.setup()
-      store.nav.setTitle(navIdx, 'Search')
-    }
-    return cleanup
-  }, [store, visible, name, navIdx, autocompleteView, lastRenderTime])
+
+      return cleanup
+    }, [store, autocompleteView, lastRenderTime, setRenderTime]),
+  )
 
   const onPressMenu = () => {
     track('ViewHeader:MenuButtonClicked')
-    store.shell.setMainMenuOpen(true)
+    store.shell.openDrawer()
   }
 
   const onChangeQuery = (text: string) => {
@@ -102,12 +111,7 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
             onPress={onPressMenu}
             hitSlop={MENU_HITSLOP}
             style={styles.headerMenuBtn}>
-            <UserAvatar
-              size={30}
-              handle={store.me.handle}
-              displayName={store.me.displayName}
-              avatar={store.me.avatar}
-            />
+            <UserAvatar size={30} avatar={store.me.avatar} />
           </TouchableOpacity>
           <View
             style={[
@@ -127,13 +131,18 @@ export const Search = observer(({navIdx, visible, params}: ScreenParams) => {
               returnKeyType="search"
               value={query}
               style={[pal.text, styles.headerSearchInput]}
+              keyboardAppearance={theme.colorScheme}
               onFocus={() => setIsInputFocused(true)}
               onBlur={() => setIsInputFocused(false)}
               onChangeText={onChangeQuery}
             />
             {query ? (
               <TouchableOpacity onPress={onPressClearQuery}>
-                <FontAwesomeIcon icon="xmark" size={16} style={pal.textLight} />
+                <FontAwesomeIcon
+                  icon="xmark"
+                  size={16}
+                  style={pal.textLight as FontAwesomeIconStyle}
+                />
               </TouchableOpacity>
             ) : undefined}
           </View>

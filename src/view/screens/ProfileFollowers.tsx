@@ -1,20 +1,21 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {View} from 'react-native'
+import {useFocusEffect} from '@react-navigation/native'
+import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {ProfileFollowers as ProfileFollowersComponent} from '../com/profile/ProfileFollowers'
-import {ScreenParams} from '../routes'
 import {useStores} from 'state/index'
 
-export const ProfileFollowers = ({navIdx, visible, params}: ScreenParams) => {
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollowers'>
+export const ProfileFollowersScreen = ({route}: Props) => {
   const store = useStores()
-  const {name} = params
+  const {name} = route.params
 
-  useEffect(() => {
-    if (visible) {
-      store.nav.setTitle(navIdx, `Followers of ${name}`)
+  useFocusEffect(
+    React.useCallback(() => {
       store.shell.setMinimalShellMode(false)
-    }
-  }, [store, visible, name, navIdx])
+    }, [store]),
+  )
 
   return (
     <View>

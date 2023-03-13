@@ -1,6 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {Text} from './text/Text'
+import {DesktopWebTextLink} from './Link'
 import {ago} from 'lib/strings/time'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
@@ -12,6 +13,7 @@ interface PostMetaOpts {
   authorAvatar?: string
   authorHandle: string
   authorDisplayName: string | undefined
+  postHref: string
   timestamp: string
   did?: string
   declarationCid?: string
@@ -20,8 +22,8 @@ interface PostMetaOpts {
 
 export const PostMeta = observer(function (opts: PostMetaOpts) {
   const pal = usePalette('default')
-  let displayName = opts.authorDisplayName || opts.authorHandle
-  let handle = opts.authorHandle
+  const displayName = opts.authorDisplayName || opts.authorHandle
+  const handle = opts.authorHandle
   const store = useStores()
   const isMe = opts.did === store.me.did
   const isFollowing =
@@ -41,31 +43,35 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
   ) {
     // two-liner with follow button
     return (
-      <View style={[styles.metaTwoLine]}>
+      <View style={styles.metaTwoLine}>
         <View>
-          <Text
-            type="lg-bold"
-            style={[pal.text]}
-            numberOfLines={1}
-            lineHeight={1.2}>
-            {displayName}{' '}
-            <Text
+          <View style={styles.metaTwoLineTop}>
+            <DesktopWebTextLink
+              type="lg-bold"
+              style={pal.text}
+              numberOfLines={1}
+              lineHeight={1.2}
+              text={displayName}
+              href={`/profile/${opts.authorHandle}`}
+            />
+            <Text type="md" style={pal.textLight} lineHeight={1.2}>
+              &nbsp;&middot;&nbsp;
+            </Text>
+            <DesktopWebTextLink
               type="md"
               style={[styles.metaItem, pal.textLight]}
-              lineHeight={1.2}>
-              &middot; {ago(opts.timestamp)}
-            </Text>
-          </Text>
-          <Text
+              lineHeight={1.2}
+              text={ago(opts.timestamp)}
+              href={opts.postHref}
+            />
+          </View>
+          <DesktopWebTextLink
             type="md"
             style={[styles.metaItem, pal.textLight]}
-            lineHeight={1.2}>
-            {handle ? (
-              <Text type="md" style={[pal.textLight]}>
-                @{handle}
-              </Text>
-            ) : undefined}
-          </Text>
+            lineHeight={1.2}
+            text={`@${handle}`}
+            href={`/profile/${opts.authorHandle}`}
+          />
         </View>
 
         <View>
@@ -84,31 +90,36 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
     <View style={styles.meta}>
       {typeof opts.authorAvatar !== 'undefined' && (
         <View style={[styles.metaItem, styles.avatar]}>
-          <UserAvatar
-            avatar={opts.authorAvatar}
-            handle={opts.authorHandle}
-            displayName={opts.authorDisplayName}
-            size={16}
-          />
+          <UserAvatar avatar={opts.authorAvatar} size={16} />
         </View>
       )}
       <View style={[styles.metaItem, styles.maxWidth]}>
-        <Text
+        <DesktopWebTextLink
           type="lg-bold"
-          style={[pal.text]}
+          style={pal.text}
           numberOfLines={1}
-          lineHeight={1.2}>
-          {displayName}
-          {handle ? (
-            <Text type="md" style={[pal.textLight]}>
-              &nbsp;{handle}
-            </Text>
-          ) : undefined}
-        </Text>
+          lineHeight={1.2}
+          text={
+            <>
+              {displayName}
+              <Text type="md" style={[pal.textLight]}>
+                &nbsp;{handle}
+              </Text>
+            </>
+          }
+          href={`/profile/${opts.authorHandle}`}
+        />
       </View>
-      <Text type="md" style={[styles.metaItem, pal.textLight]} lineHeight={1.2}>
-        &middot; {ago(opts.timestamp)}
+      <Text type="md" style={pal.textLight} lineHeight={1.2}>
+        &middot;&nbsp;
       </Text>
+      <DesktopWebTextLink
+        type="md"
+        style={[styles.metaItem, pal.textLight]}
+        lineHeight={1.2}
+        text={ago(opts.timestamp)}
+        href={opts.postHref}
+      />
     </View>
   )
 })
@@ -124,6 +135,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingBottom: 2,
+  },
+  metaTwoLineTop: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
   },
   metaItem: {
     paddingRight: 5,

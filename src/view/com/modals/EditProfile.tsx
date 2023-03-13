@@ -20,6 +20,7 @@ import {compressIfNeeded} from 'lib/media/manip'
 import {UserBanner} from '../util/UserBanner'
 import {UserAvatar} from '../util/UserAvatar'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
 
@@ -35,6 +36,7 @@ export function Component({
   const store = useStores()
   const [error, setError] = useState<string>('')
   const pal = usePalette('default')
+  const theme = useTheme()
   const {track} = useAnalytics()
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
@@ -133,9 +135,7 @@ export function Component({
             <UserAvatar
               size={80}
               avatar={userAvatar}
-              handle={profileView.handle}
               onSelectNewAvatar={onSelectNewAvatar}
-              displayName={profileView.displayName}
             />
           </View>
         </View>
@@ -160,6 +160,7 @@ export function Component({
             style={[styles.textArea, pal.text]}
             placeholder="e.g. Artist, dog-lover, and memelord."
             placeholderTextColor={colors.gray4}
+            keyboardAppearance={theme.colorScheme}
             multiline
             value={description}
             onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}

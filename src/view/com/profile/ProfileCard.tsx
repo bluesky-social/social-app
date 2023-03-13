@@ -37,15 +37,11 @@ export function ProfileCard({
       ]}
       href={`/profile/${handle}`}
       title={handle}
-      noFeedback>
+      noFeedback
+      asAnchor>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <UserAvatar
-            size={40}
-            displayName={displayName}
-            handle={handle}
-            avatar={avatar}
-          />
+          <UserAvatar size={40} avatar={avatar} />
         </View>
         <View style={styles.layoutContent}>
           <Text

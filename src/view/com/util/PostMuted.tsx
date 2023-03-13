@@ -7,7 +7,7 @@ import {Text} from './text/Text'
 export function PostMutedWrapper({
   isMuted,
   children,
-}: React.PropsWithChildren<{isMuted: boolean}>) {
+}: React.PropsWithChildren<{isMuted?: boolean}>) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
   if (!isMuted || override) {

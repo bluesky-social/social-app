@@ -24,7 +24,7 @@ import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import {ImageHorzList} from '../util/images/ImageHorzList'
 import {Post} from '../post/Post'
-import {Link} from '../util/Link'
+import {Link, TextLink} from '../util/Link'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 
@@ -186,15 +186,12 @@ export const FeedItem = observer(function FeedItem({
                 authors={authors}
               />
               <View style={styles.meta}>
-                <Link
+                <TextLink
                   key={authors[0].href}
-                  style={styles.metaItem}
+                  style={[pal.text, s.bold, styles.metaItem]}
                   href={authors[0].href}
-                  title={`@${authors[0].handle}`}>
-                  <Text style={[pal.text, s.bold]} lineHeight={1.2}>
-                    {authors[0].displayName || authors[0].handle}
-                  </Text>
-                </Link>
+                  text={authors[0].displayName || authors[0].handle}
+                />
                 {authors.length > 1 ? (
                   <>
                     <Text style={[styles.metaItem, pal.text]}>and</Text>
@@ -256,13 +253,9 @@ function CondensedAuthorsList({
         <Link
           style={s.mr5}
           href={authors[0].href}
-          title={`@${authors[0].handle}`}>
-          <UserAvatar
-            size={35}
-            displayName={authors[0].displayName}
-            handle={authors[0].handle}
-            avatar={authors[0].avatar}
-          />
+          title={`@${authors[0].handle}`}
+          asAnchor>
+          <UserAvatar size={35} avatar={authors[0].avatar} />
         </Link>
       </View>
     )
@@ -271,12 +264,7 @@ function CondensedAuthorsList({
     <View style={styles.avis}>
       {authors.slice(0, MAX_AUTHORS).map(author => (
         <View key={author.href} style={s.mr5}>
-          <UserAvatar
-            size={35}
-            displayName={author.displayName}
-            handle={author.handle}
-            avatar={author.avatar}
-          />
+          <UserAvatar size={35} avatar={author.avatar} />
         </View>
       ))}
       {authors.length > MAX_AUTHORS ? (
@@ -326,14 +314,10 @@ function ExpandedAuthorsList({
           key={author.href}
           href={author.href}
           title={author.displayName || author.handle}
-          style={styles.expandedAuthor}>
+          style={styles.expandedAuthor}
+          asAnchor>
           <View style={styles.expandedAuthorAvi}>
-            <UserAvatar
-              size={35}
-              displayName={author.displayName}
-              handle={author.handle}
-              avatar={author.avatar}
-            />
+            <UserAvatar size={35} avatar={author.avatar} />
           </View>
           <View style={s.flex1}>
             <Text

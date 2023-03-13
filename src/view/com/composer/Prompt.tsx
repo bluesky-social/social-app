@@ -4,12 +4,9 @@ import {UserAvatar} from '../util/UserAvatar'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
+import {isDesktopWeb} from 'platform/detection'
 
-export function ComposePrompt({
-  onPressCompose,
-}: {
-  onPressCompose: (imagesOpen?: boolean) => void
-}) {
+export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
   const store = useStores()
   const pal = usePalette('default')
   return (
@@ -17,13 +14,13 @@ export function ComposePrompt({
       testID="replyPromptBtn"
       style={[pal.view, pal.border, styles.prompt]}
       onPress={() => onPressCompose()}>
-      <UserAvatar
-        handle={store.me.handle}
-        avatar={store.me.avatar}
-        displayName={store.me.displayName}
-        size={38}
-      />
-      <Text type="xl" style={[pal.text, styles.label]}>
+      <UserAvatar avatar={store.me.avatar} size={38} />
+      <Text
+        type="xl"
+        style={[
+          pal.text,
+          isDesktopWeb ? styles.labelDesktopWeb : styles.labelMobile,
+        ]}>
         Write your reply
       </Text>
     </TouchableOpacity>
@@ -39,7 +36,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopWidth: 1,
   },
-  label: {
+  labelMobile: {
     paddingLeft: 12,
+  },
+  labelDesktopWeb: {
+    paddingLeft: 20,
   },
 })

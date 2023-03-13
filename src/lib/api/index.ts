@@ -117,7 +117,9 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     if (opts.extLink.localThumb) {
       opts.onStateChange?.('Uploading link thumbnail...')
       let encoding
-      if (opts.extLink.localThumb.path.endsWith('.png')) {
+      if (opts.extLink.localThumb.mime) {
+        encoding = opts.extLink.localThumb.mime
+      } else if (opts.extLink.localThumb.path.endsWith('.png')) {
         encoding = 'image/png'
       } else if (
         opts.extLink.localThumb.path.endsWith('.jpeg') ||

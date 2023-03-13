@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -6,13 +6,18 @@ import {
   View,
 } from 'react-native'
 import {
+  useFocusEffect,
+  useNavigation,
+  StackActions,
+} from '@react-navigation/native'
+import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
+import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import * as AppInfo from 'lib/app-info'
 import {useStores} from 'state/index'
-import {ScreenParams} from '../routes'
 import {s, colors} from 'lib/styles'
 import {ScrollView} from '../com/util/Views'
 import {ViewHeader} from '../com/util/ViewHeader'
@@ -25,41 +30,38 @@ import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics'
+import {NavigationProp} from 'lib/routes/types'
 
-export const Settings = observer(function Settings({
-  navIdx,
-  visible,
-}: ScreenParams) {
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
+export const SettingsScreen = observer(function Settings({}: Props) {
   const theme = useTheme()
   const pal = usePalette('default')
   const store = useStores()
+  const navigation = useNavigation<NavigationProp>()
   const {screen, track} = useAnalytics()
   const [isSwitching, setIsSwitching] = React.useState(false)
 
-  useEffect(() => {
-    screen('Settings')
-  }, [screen])
-
-  useEffect(() => {
-    if (!visible) {
-      return
-    }
-    store.shell.setMinimalShellMode(false)
-    store.nav.setTitle(navIdx, 'Settings')
-  }, [visible, store, navIdx])
+  useFocusEffect(
+    React.useCallback(() => {
+      screen('Settings')
+      store.shell.setMinimalShellMode(false)
+    }, [screen, store]),
+  )
 
   const onPressSwitchAccount = async (acct: AccountData) => {
     track('Settings:SwitchAccountButtonClicked')
     setIsSwitching(true)
     if (await store.session.resumeSession(acct)) {
       setIsSwitching(false)
-      store.nav.tab.fixedTabReset()
+      navigation.navigate('HomeTab')
+      navigation.dispatch(StackActions.popToTop())
       Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
       return
     }
     setIsSwitching(false)
     Toast.show('Sorry! We need you to enter your password.')
-    store.nav.tab.fixedTabReset()
+    navigation.navigate('HomeTab')
+    navigation.dispatch(StackActions.popToTop())
     store.session.clear()
   }
   const onPressAddAccount = () => {
@@ -118,12 +120,7 @@ export const Settings = observer(function Settings({
             noFeedback>
             <View style={[pal.view, styles.linkCard]}>
               <View style={styles.avi}>
-                <UserAvatar
-                  size={40}
-                  displayName={store.me.displayName}
-                  handle={store.me.handle || ''}
-                  avatar={store.me.avatar}
-                />
+                <UserAvatar size={40} avatar={store.me.avatar} />
               </View>
               <View style={[s.flex1]}>
                 <Text type="md-bold" style={pal.text} numberOfLines={1}>
@@ -152,12 +149,7 @@ export const Settings = observer(function Settings({
               isSwitching ? undefined : () => onPressSwitchAccount(account)
             }>
             <View style={styles.avi}>
-              <UserAvatar
-                size={40}
-                displayName={account.displayName}
-                handle={account.handle || ''}
-                avatar={account.aviUrl}
-              />
+              <UserAvatar size={40} avatar={account.aviUrl} />
             </View>
             <View style={[s.flex1]}>
               <Text type="md-bold" style={pal.text}>

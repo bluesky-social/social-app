@@ -1,5 +1,6 @@
 // import {Share} from 'react-native'
 // import * as Toast from 'view/com/util/Toast'
+import {extractDataUriMime, getDataUriSize} from './util'
 
 export interface DownloadAndResizeOpts {
   uri: string
@@ -18,9 +19,15 @@ export interface Image {
   height: number
 }
 
-export async function downloadAndResize(_opts: DownloadAndResizeOpts) {
-  // TODO
-  throw new Error('TODO')
+export async function downloadAndResize(opts: DownloadAndResizeOpts) {
+  const controller = new AbortController()
+  const to = setTimeout(() => controller.abort(), opts.timeout || 5e3)
+  const res = await fetch(opts.uri)
+  const resBody = await res.blob()
+  clearTimeout(to)
+
+  const dataUri = await blobToDataUri(resBody)
+  return await resize(dataUri, opts)
 }
 
 export interface ResizeOpts {
@@ -31,11 +38,18 @@ export interface ResizeOpts {
 }
 
 export async function resize(
-  _localUri: string,
+  dataUri: string,
   _opts: ResizeOpts,
 ): Promise<Image> {
-  // TODO
-  throw new Error('TODO')
+  const dim = await getImageDim(dataUri)
+  // TODO -- need to resize
+  return {
+    path: dataUri,
+    mime: extractDataUriMime(dataUri),
+    size: getDataUriSize(dataUri),
+    width: dim.width,
+    height: dim.height,
+  }
 }
 
 export async function compressIfNeeded(
@@ -85,4 +99,19 @@ export async function getImageDim(path: string): Promise<Dim> {
   img.src = path
   await promise
   return {width: img.width, height: img.height}
+}
+
+function blobToDataUri(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result)
+      } else {
+        reject(new Error('Failed to read blob'))
+      }
+    }
+    reader.onerror = reject
+    reader.readAsDataURL(blob)
+  })
 }

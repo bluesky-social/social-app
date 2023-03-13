@@ -1,28 +1,30 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {useFocusEffect} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {ScrollView} from '../com/util/Views'
 import {useStores} from 'state/index'
-import {ScreenParams} from '../routes'
 import {s} from 'lib/styles'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Text} from '../com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ago} from 'lib/strings/time'
 
-export const Log = observer(function Log({navIdx, visible}: ScreenParams) {
+export const LogScreen = observer(function Log({}: NativeStackScreenProps<
+  CommonNavigatorParams,
+  'Log'
+>) {
   const pal = usePalette('default')
   const store = useStores()
   const [expanded, setExpanded] = React.useState<string[]>([])
 
-  useEffect(() => {
-    if (!visible) {
-      return
-    }
-    store.shell.setMinimalShellMode(false)
-    store.nav.setTitle(navIdx, 'Log')
-  }, [visible, store, navIdx])
+  useFocusEffect(
+    React.useCallback(() => {
+      store.shell.setMinimalShellMode(false)
+    }, [store]),
+  )
 
   const toggler = (id: string) => () => {
     if (expanded.includes(id)) {

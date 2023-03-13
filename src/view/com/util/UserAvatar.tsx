@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import Svg, {Circle, Text, Defs, LinearGradient, Stop} from 'react-native-svg'
+import Svg, {Circle, Path} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {HighPriorityImage} from 'view/com/util/images/Image'
@@ -11,52 +11,48 @@ import {
   PickedMedia,
 } from '../../../lib/media/picker'
 import {
-  requestPhotoAccessIfNeeded,
-  requestCameraAccessIfNeeded,
-} from 'lib/permissions'
+  usePhotoLibraryPermission,
+  useCameraPermission,
+} from 'lib/hooks/usePermissions'
 import {useStores} from 'state/index'
-import {colors, gradients} from 'lib/styles'
+import {colors} from 'lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 
+function DefaultAvatar({size}: {size: number}) {
+  return (
+    <Svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="none">
+      <Circle cx="12" cy="12" r="12" fill="#0070ff" />
+      <Circle cx="12" cy="9.5" r="3.5" fill="#fff" />
+      <Path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="#fff"
+        d="M 12.058 22.784 C 9.422 22.784 7.007 21.836 5.137 20.262 C 5.667 17.988 8.534 16.25 11.99 16.25 C 15.494 16.25 18.391 18.036 18.864 20.357 C 17.01 21.874 14.64 22.784 12.058 22.784 Z"
+      />
+    </Svg>
+  )
+}
+
 export function UserAvatar({
   size,
-  handle,
   avatar,
-  displayName,
   onSelectNewAvatar,
 }: {
   size: number
-  handle: string
-  displayName: string | undefined
   avatar?: string | null
   onSelectNewAvatar?: (img: PickedMedia | null) => void
 }) {
   const store = useStores()
   const pal = usePalette('default')
-  const initials = getInitials(displayName || handle)
-
-  const renderSvg = (svgSize: number, svgInitials: string) => (
-    <Svg width={svgSize} height={svgSize} viewBox="0 0 100 100">
-      <Defs>
-        <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-          <Stop offset="0" stopColor={gradients.blue.start} stopOpacity="1" />
-          <Stop offset="1" stopColor={gradients.blue.end} stopOpacity="1" />
-        </LinearGradient>
-      </Defs>
-      <Circle cx="50" cy="50" r="50" fill="url(#grad)" />
-      <Text
-        fill="white"
-        fontSize="50"
-        fontWeight="bold"
-        x="50"
-        y="67"
-        textAnchor="middle">
-        {svgInitials}
-      </Text>
-    </Svg>
-  )
+  const {requestCameraAccessIfNeeded} = useCameraPermission()
+  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
   const dropdownItems = [
     !isWeb && {
@@ -124,7 +120,7 @@ export function UserAvatar({
           source={{uri: avatar}}
         />
       ) : (
-        renderSvg(size, initials)
+        <DefaultAvatar size={size} />
       )}
       <View style={[styles.editButtonContainer, pal.btn]}>
         <FontAwesomeIcon
@@ -141,24 +137,8 @@ export function UserAvatar({
       source={{uri: avatar}}
     />
   ) : (
-    renderSvg(size, initials)
+    <DefaultAvatar size={size} />
   )
-}
-
-function getInitials(str: string): string {
-  const tokens = str
-    .toLowerCase()
-    .replace(/[^a-z]/g, '')
-    .split(' ')
-    .filter(Boolean)
-    .map(v => v.trim())
-  if (tokens.length >= 2 && tokens[0][0] && tokens[0][1]) {
-    return tokens[0][0].toUpperCase() + tokens[1][0].toUpperCase()
-  }
-  if (tokens.length === 1 && tokens[0][0]) {
-    return tokens[0][0].toUpperCase()
-  }
-  return 'X'
 }
 
 const styles = StyleSheet.create({

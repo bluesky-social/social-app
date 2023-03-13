@@ -11,12 +11,12 @@ import {z} from 'zod'
 import {isObj, hasProp} from 'lib/type-guards'
 import {LogModel} from './log'
 import {SessionModel} from './session'
-import {NavigationModel} from './navigation'
 import {ShellUiModel} from './shell-ui'
 import {ProfilesViewModel} from './profiles-view'
 import {LinkMetasViewModel} from './link-metas-view'
 import {NotificationsViewItemModel} from './notifications-view'
 import {MeModel} from './me'
+import {resetToTab} from '../../Navigation'
 
 export const appInfo = z.object({
   build: z.string(),
@@ -31,7 +31,6 @@ export class RootStoreModel {
   appInfo?: AppInfo
   log = new LogModel()
   session = new SessionModel(this)
-  nav = new NavigationModel(this)
   shell = new ShellUiModel(this)
   me = new MeModel(this)
   profiles = new ProfilesViewModel(this)
@@ -82,7 +81,6 @@ export class RootStoreModel {
       log: this.log.serialize(),
       session: this.session.serialize(),
       me: this.me.serialize(),
-      nav: this.nav.serialize(),
       shell: this.shell.serialize(),
     }
   }
@@ -100,9 +98,6 @@ export class RootStoreModel {
       }
       if (hasProp(v, 'me')) {
         this.me.hydrate(v.me)
-      }
-      if (hasProp(v, 'nav')) {
-        this.nav.hydrate(v.nav)
       }
       if (hasProp(v, 'session')) {
         this.session.hydrate(v.session)
@@ -144,7 +139,7 @@ export class RootStoreModel {
    */
   async handleSessionDrop() {
     this.log.debug('RootStoreModel:handleSessionDrop')
-    this.nav.clear()
+    resetToTab('HomeTab')
     this.me.clear()
     this.emitSessionDropped()
   }
@@ -155,7 +150,7 @@ export class RootStoreModel {
   clearAllSessionState() {
     this.log.debug('RootStoreModel:clearAllSessionState')
     this.session.clear()
-    this.nav.clear()
+    resetToTab('HomeTab')
     this.me.clear()
   }
 
@@ -203,6 +198,7 @@ export class RootStoreModel {
   }
 
   // the current screen has changed
+  // TODO is this still needed?
   onNavigation(handler: () => void): EmitterSubscription {
     return DeviceEventEmitter.addListener('navigation', handler)
   }

@@ -5,6 +5,7 @@ import {Slider} from '@miblanchard/react-native-slider'
 import LinearGradient from 'react-native-linear-gradient'
 import {Text} from 'view/com/util/text/Text'
 import {PickedMedia} from 'lib/media/types'
+import {getDataUriSize} from 'lib/media/util'
 import {s, gradients} from 'lib/styles'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -54,7 +55,7 @@ export function Component({
         mediaType: 'photo',
         path: dataUri,
         mime: 'image/jpeg',
-        size: Math.round((dataUri.length * 3) / 4), // very rough estimate
+        size: getDataUriSize(dataUri),
         width: DIMS[as].width,
         height: DIMS[as].height,
       })
