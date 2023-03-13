@@ -37,7 +37,8 @@ export function ProfileCard({
       ]}
       href={`/profile/${handle}`}
       title={handle}
-      noFeedback>
+      noFeedback
+      asAnchor>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <UserAvatar size={40} avatar={avatar} />

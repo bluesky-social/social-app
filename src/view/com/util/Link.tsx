@@ -22,6 +22,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {useStores, RootStoreModel} from 'state/index'
 import {convertBskyAppUrlIfNeeded} from 'lib/strings/url-helpers'
+import {isDesktopWeb} from 'platform/detection'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -33,18 +34,19 @@ export const Link = observer(function Link({
   title,
   children,
   noFeedback,
+  asAnchor,
 }: {
   style?: StyleProp<ViewStyle>
   href?: string
   title?: string
   children?: React.ReactNode
   noFeedback?: boolean
+  asAnchor?: boolean
 }) {
-  let {...props} = useLinkProps({to: href || ''})
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
 
-  props.onPress = React.useCallback(
+  const onPress = React.useCallback(
     (e?: Event) => {
       if (typeof href === 'string') {
         return onPressInner(store, navigation, href, e)
@@ -55,15 +57,22 @@ export const Link = observer(function Link({
 
   if (noFeedback) {
     return (
-      <TouchableWithoutFeedback {...props}>
-        <View style={style} {...props}>
+      <TouchableWithoutFeedback
+        onPress={onPress}
+        // @ts-ignore web only -prf
+        href={asAnchor ? href : undefined}>
+        <View style={style}>
           {children ? children : <Text>{title || 'link'}</Text>}
         </View>
       </TouchableWithoutFeedback>
     )
   }
   return (
-    <TouchableOpacity style={style} {...props}>
+    <TouchableOpacity
+      style={style}
+      onPress={onPress}
+      // @ts-ignore web only -prf
+      href={asAnchor ? href : undefined}>
       {children ? children : <Text>{title || 'link'}</Text>}
     </TouchableOpacity>
   )
@@ -74,11 +83,15 @@ export const TextLink = observer(function TextLink({
   style,
   href,
   text,
+  numberOfLines,
+  lineHeight,
 }: {
   type?: TypographyVariant
   style?: StyleProp<TextStyle>
   href: string
-  text: string
+  text: string | JSX.Element
+  numberOfLines?: number
+  lineHeight?: number
 }) {
   const {...props} = useLinkProps({to: href})
   const store = useStores()
@@ -92,7 +105,53 @@ export const TextLink = observer(function TextLink({
   )
 
   return (
-    <Text type={type} style={style} {...props}>
+    <Text
+      type={type}
+      style={style}
+      numberOfLines={numberOfLines}
+      lineHeight={lineHeight}
+      {...props}>
+      {text}
+    </Text>
+  )
+})
+
+/**
+ * Only acts as a link on desktop web
+ */
+export const DesktopWebTextLink = observer(function DesktopWebTextLink({
+  type = 'md',
+  style,
+  href,
+  text,
+  numberOfLines,
+  lineHeight,
+}: {
+  type?: TypographyVariant
+  style?: StyleProp<TextStyle>
+  href: string
+  text: string | JSX.Element
+  numberOfLines?: number
+  lineHeight?: number
+}) {
+  if (isDesktopWeb) {
+    return (
+      <TextLink
+        type={type}
+        style={style}
+        href={href}
+        text={text}
+        numberOfLines={numberOfLines}
+        lineHeight={lineHeight}
+      />
+    )
+  }
+  return (
+    <Text
+      type={type}
+      style={style}
+      numberOfLines={numberOfLines}
+      lineHeight={lineHeight}>
       {text}
     </Text>
   )
