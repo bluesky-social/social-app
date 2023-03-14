@@ -531,14 +531,12 @@ export default function () {
         sale of certain personal information to third parties who intend to
         license or sell that personal information. You can exercise this right
         by contacting us at{' '}
-        <A href="mailto:support@bsky.app" title="support@bsky.app">
-          support@bsky.app
-        </A>{' '}
-        with the subject line “Nevada Do Not Sell Request” and providing us with
-        your name and the email address associated with your account. Please
-        note that we do not currently sell your personal information as sales
-        are defined in Nevada Revised Statutes Chapter 603A. If you have any
-        questions, please contact us as set forth in Contact Us below.
+        <A href="mailto:support@bsky.app">support@bsky.app</A> with the subject
+        line “Nevada Do Not Sell Request” and providing us with your name and
+        the email address associated with your account. Please note that we do
+        not currently sell your personal information as sales are defined in
+        Nevada Revised Statutes Chapter 603A. If you have any questions, please
+        contact us as set forth in Contact Us below.
       </P>
       <H2>10. CHILDREN&rsquo;S INFORMATION</H2>
       <P>
