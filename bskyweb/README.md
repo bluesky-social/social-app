@@ -20,8 +20,7 @@ like:
 Then build and copy over the big 'ol `bundle.web.js` file:
 
     # in the top level of this repo
-    yarn webpack build --config ./web/webpack.config.js -d inline-source-map --color
-    cp dist/bundle.web.js bskyweb/static/
+    yarn build-web
 
 ### Golang Daemon
 
