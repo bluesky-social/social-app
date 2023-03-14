@@ -1,6 +1,6 @@
-import {RootStoreModel} from './root-store'
+import {RootStoreModel} from '../root-store'
 import {makeAutoObservable} from 'mobx'
-import {ProfileViewModel} from './profile-view'
+import {ProfileViewModel} from '../profile-view'
 import {isObj, hasProp} from 'lib/type-guards'
 import {PickedMedia} from 'lib/media/types'
 

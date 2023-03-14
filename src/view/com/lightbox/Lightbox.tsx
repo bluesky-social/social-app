@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import ImageView from './ImageViewing'
 import {useStores} from 'state/index'
-import * as models from 'state/models/shell-ui'
+import * as models from 'state/models/ui/shell'
 import {saveImageModal} from 'lib/media/manip'
 import {ImageSource} from './ImageViewing/@types'
 

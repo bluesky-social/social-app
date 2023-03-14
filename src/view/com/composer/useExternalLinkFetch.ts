@@ -5,7 +5,7 @@ import {getLinkMeta} from 'lib/link-meta/link-meta'
 import {getPostAsQuote} from 'lib/link-meta/bsky'
 import {downloadAndResize} from 'lib/media/manip'
 import {isBskyPostUrl} from 'lib/strings/url-helpers'
-import {ComposerOpts} from 'state/models/shell-ui'
+import {ComposerOpts} from 'state/models/ui/shell'
 
 export function useExternalLinkFetch({
   setQuote,

@@ -2,7 +2,7 @@ import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, View} from 'react-native'
 import {ComposePost} from '../com/composer/Composer'
-import {ComposerOpts} from 'state/models/shell-ui'
+import {ComposerOpts} from 'state/models/ui/shell'
 import {usePalette} from 'lib/hooks/usePalette'
 
 export const Composer = observer(

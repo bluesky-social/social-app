@@ -3,7 +3,7 @@ import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import type {Modal as ModalIface} from 'state/models/shell-ui'
+import type {Modal as ModalIface} from 'state/models/ui/shell'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
