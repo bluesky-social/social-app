@@ -194,6 +194,7 @@ export const TextInput = React.forwardRef(
           onSelectionChange={onSelectionChange}
           placeholder={placeholder}
           keyboardAppearance={theme.colorScheme}
+          multiline
           style={[pal.text, styles.textInput, styles.textInputFormatting]}>
           {textDecorated}
         </PasteInput>
