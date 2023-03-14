@@ -14,6 +14,7 @@ import * as DeleteAccountModal from './DeleteAccount'
 import * as RepostModal from './Repost'
 import * as CropImageModal from './crop-image/CropImage.web'
 import * as ChangeHandleModal from './ChangeHandle'
+import * as WaitlistModal from './Waitlist'
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
@@ -68,6 +69,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <RepostModal.Component {...modal} />
   } else if (modal.name === 'change-handle') {
     element = <ChangeHandleModal.Component {...modal} />
+  } else if (modal.name === 'waitlist') {
+    element = <WaitlistModal.Component />
   } else {
     return null
   }

@@ -11,9 +11,16 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {TextInput} from '../util/TextInput'
 import {Policies} from './Policies'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
+import {useStores} from 'state/index'
 
 export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
   const pal = usePalette('default')
+  const store = useStores()
+
+  const onPressWaitlist = React.useCallback(() => {
+    store.shell.openModal({name: 'waitlist'})
+  }, [store])
+
   return (
     <View>
       <StepHeader step="2" title="Your account" />
@@ -36,7 +43,11 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
       {!model.inviteCode && model.isInviteCodeRequired ? (
         <Text>
           Don't have an invite code?{' '}
-          <TextLink text="Join the waitlist" href="#" style={pal.link} /> to try
+          <TouchableOpacity onPress={onPressWaitlist}>
+            <Text type="xl" style={pal.link}>
+              Join the waitlist
+            </Text>
+          </TouchableOpacity>{' '}
           the beta before it's publicly available.
         </Text>
       ) : (
