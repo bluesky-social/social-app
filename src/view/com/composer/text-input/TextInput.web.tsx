@@ -66,6 +66,7 @@ export const TextInput = React.forwardRef(
       injectCSS: true,
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
+
         const newText = editorJsonToText(json).trim()
         onTextChanged(newText)
 
@@ -101,7 +102,7 @@ function editorJsonToText(json: JSONContent): string {
   } else if (json.type === 'text') {
     text += json.text || ''
   } else if (json.type === 'mention') {
-    text += json.attrs?.id || ''
+    text += `@${json.attrs?.id || ''}`
   }
   return text
 }
