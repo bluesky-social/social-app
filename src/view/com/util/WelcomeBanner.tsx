@@ -10,6 +10,7 @@ import {useStores} from 'state/index'
 import {SUGGESTED_FOLLOWS} from 'lib/constants'
 // @ts-ignore no type definition -prf
 import ProgressBar from 'react-native-progress/Bar'
+import {CenteredView} from './Views'
 
 export const WelcomeBanner = observer(() => {
   const pal = usePalette('default')
@@ -39,7 +40,7 @@ export const WelcomeBanner = observer(() => {
   }, [store])
 
   return (
-    <View
+    <CenteredView
       testID="welcomeBanner"
       style={[pal.view, styles.container, pal.border]}>
       <Text
@@ -76,7 +77,7 @@ export const WelcomeBanner = observer(() => {
           </View>
         </>
       )}
-    </View>
+    </CenteredView>
   )
 })
 

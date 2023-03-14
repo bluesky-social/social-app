@@ -15,9 +15,8 @@ import {
 import * as EmailValidator from 'email-validator'
 import AtpAgent from '@atproto/api'
 import {useAnalytics} from 'lib/analytics'
-import {LogoTextHero} from './Logo'
-import {Text} from '../util/text/Text'
-import {UserAvatar} from '../util/UserAvatar'
+import {Text} from '../../util/text/Text'
+import {UserAvatar} from '../../util/UserAvatar'
 import {s, colors} from 'lib/styles'
 import {createFullHandle} from 'lib/strings/handles'
 import {toNiceDomain} from 'lib/strings/url-helpers'
@@ -37,7 +36,7 @@ enum Forms {
   PasswordUpdated,
 }
 
-export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
+export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const pal = usePalette('default')
   const store = useStores()
   const {track} = useAnalytics()
@@ -100,7 +99,10 @@ export const Signin = ({onPressBack}: {onPressBack: () => void}) => {
   }
 
   return (
-    <KeyboardAvoidingView testID="signIn" behavior="padding" style={[pal.view]}>
+    <KeyboardAvoidingView
+      testID="signIn"
+      behavior="padding"
+      style={[pal.view, s.pt10]}>
       {currentForm === Forms.Login ? (
         <LoginForm
           store={store}
@@ -164,9 +166,9 @@ const ChooseAccountForm = ({
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = React.useState(false)
 
-  // React.useEffect(() => {
-  screen('Choose Account')
-  // }, [screen])
+  React.useEffect(() => {
+    screen('Choose Account')
+  }, [screen])
 
   const onTryAccount = async (account: AccountData) => {
     if (account.accessJwt && account.refreshJwt) {
@@ -183,15 +185,16 @@ const ChooseAccountForm = ({
 
   return (
     <View testID="chooseAccountForm">
-      <LogoTextHero />
-      <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
+      <Text
+        type="2xl-medium"
+        style={[pal.text, styles.groupLabel, s.mt5, s.mb10]}>
         Sign in as...
       </Text>
       {store.session.accounts.map(account => (
         <TouchableOpacity
           testID={`chooseAccountBtn-${account.handle}`}
           key={account.did}
-          style={[pal.borderDark, styles.group, s.mb5]}
+          style={[pal.view, pal.border, styles.account]}
           onPress={() => onTryAccount(account)}>
           <View
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
@@ -216,7 +219,7 @@ const ChooseAccountForm = ({
       ))}
       <TouchableOpacity
         testID="chooseNewAccountBtn"
-        style={[pal.borderDark, styles.group]}
+        style={[pal.view, pal.border, styles.account, styles.accountLast]}
         onPress={() => onSelectAccount(undefined)}>
         <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
           <Text style={[styles.accountText, styles.accountTextOther]}>
@@ -336,7 +339,6 @@ const LoginForm = ({
   const isReady = !!serviceDescription && !!identifier && !!password
   return (
     <View testID="loginForm">
-      <LogoTextHero />
       <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
         Sign into
       </Text>
@@ -523,7 +525,6 @@ const ForgotPasswordForm = ({
 
   return (
     <>
-      <LogoTextHero />
       <View>
         <Text type="title-lg" style={[pal.text, styles.screenTitle]}>
           Reset password
@@ -669,7 +670,6 @@ const SetNewPasswordForm = ({
 
   return (
     <>
-      <LogoTextHero />
       <View>
         <Text type="title-lg" style={[pal.text, styles.screenTitle]}>
           Set new password
@@ -774,7 +774,6 @@ const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
   const pal = usePalette('default')
   return (
     <>
-      <LogoTextHero />
       <View>
         <Text type="title-lg" style={[pal.text, styles.screenTitle]}>
           Password updated!
@@ -824,6 +823,16 @@ const styles = StyleSheet.create({
   },
   groupContentIcon: {
     marginLeft: 10,
+  },
+  account: {
+    borderTopWidth: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 4,
+  },
+  accountLast: {
+    borderBottomWidth: 1,
+    marginBottom: 20,
+    paddingVertical: 8,
   },
   textInput: {
     flex: 1,

@@ -6,7 +6,7 @@ import * as apiPolyfill from 'lib/api/api-polyfill'
 import * as storage from 'lib/storage'
 
 export const LOCAL_DEV_SERVICE =
-  Platform.OS === 'ios' ? 'http://localhost:2583' : 'http://10.0.2.2:2583'
+  Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://pds.staging.bsky.dev'
 export const PROD_SERVICE = 'https://bsky.social'
 export const DEFAULT_SERVICE = PROD_SERVICE
