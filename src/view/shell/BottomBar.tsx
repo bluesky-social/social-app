@@ -26,6 +26,7 @@ import {
 } from 'lib/icons'
 import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {getTabState, TabState} from 'lib/routes/helpers'
 
 export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
@@ -186,6 +187,10 @@ function Btn({
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }) {
+  const borderStyle = useColorSchemeStyle(
+    styles.notificationCountLight,
+    styles.notificationCountDark,
+  )
   return (
     <TouchableOpacity
       style={styles.ctrl}
@@ -193,7 +198,7 @@ function Btn({
       onPressIn={onLongPress ? undefined : onPress}
       onLongPress={onLongPress}>
       {notificationCount ? (
-        <View style={styles.notificationCount}>
+        <View style={[styles.notificationCount, borderStyle]}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : undefined}
@@ -221,12 +226,19 @@ const styles = StyleSheet.create({
   notificationCount: {
     position: 'absolute',
     left: '52%',
-    top: 10,
+    top: 8,
     backgroundColor: colors.blue3,
     paddingHorizontal: 4,
     paddingBottom: 1,
-    borderRadius: 8,
+    borderRadius: 6,
+    borderWidth: 2,
     zIndex: 1,
+  },
+  notificationCountLight: {
+    borderColor: colors.white,
+  },
+  notificationCountDark: {
+    borderColor: colors.gray8,
   },
   notificationCountLabel: {
     fontSize: 12,

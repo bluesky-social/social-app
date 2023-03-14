@@ -38,7 +38,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {pluralize} from 'lib/strings/helpers'
-import {getCurrentRoute, isTab, getTabState, TabState} from 'lib/routes/helpers'
+import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
 
 export const DrawerContent = observer(() => {
@@ -49,13 +49,11 @@ export const DrawerContent = observer(() => {
   const {track} = useAnalytics()
   const {isAtHome, isAtSearch, isAtNotifications} = useNavigationState(
     state => {
-      const currentRoute = state ? getCurrentRoute(state) : false
       return {
-        isAtHome: currentRoute ? isTab(currentRoute.name, 'Home') : true,
-        isAtSearch: currentRoute ? isTab(currentRoute.name, 'Search') : false,
-        isAtNotifications: currentRoute
-          ? isTab(currentRoute.name, 'Notifications')
-          : false,
+        isAtHome: getTabState(state, 'Home') !== TabState.Outside,
+        isAtSearch: getTabState(state, 'Search') !== TabState.Outside,
+        isAtNotifications:
+          getTabState(state, 'Notifications') !== TabState.Outside,
       }
     },
   )
@@ -133,8 +131,21 @@ export const DrawerContent = observer(() => {
       <View style={[styles.menuItemIconWrapper]}>
         {icon}
         {count ? (
-          <View style={styles.menuItemCount}>
-            <Text style={styles.menuItemCountLabel}>{count}</Text>
+          <View
+            style={[
+              styles.menuItemCount,
+              theme.colorScheme === 'light'
+                ? styles.menuItemCountLight
+                : styles.menuItemCountDark,
+              count > 99
+                ? styles.menuItemCountHundreds
+                : count > 9
+                ? styles.menuItemCountTens
+                : undefined,
+            ]}>
+            <Text style={styles.menuItemCountLabel} numberOfLines={1}>
+              {count > 999 ? `${Math.round(count / 1000)}k` : count}
+            </Text>
           </View>
         ) : undefined}
       </View>
@@ -346,16 +357,31 @@ const styles = StyleSheet.create({
   },
   menuItemCount: {
     position: 'absolute',
-    right: -6,
-    top: -2,
-    backgroundColor: colors.red3,
+    width: 'auto',
+    right: -8,
+    top: -8,
+    backgroundColor: colors.blue3,
+    borderWidth: 2,
     paddingHorizontal: 4,
     paddingBottom: 1,
     borderRadius: 6,
   },
+  menuItemCountLight: {
+    borderColor: colors.white,
+  },
+  menuItemCountDark: {
+    borderColor: '#1B1919',
+  },
+  menuItemCountTens: {
+    width: 29,
+  },
+  menuItemCountHundreds: {
+    width: 38,
+  },
   menuItemCountLabel: {
     fontSize: 12,
     fontWeight: 'bold',
+    fontVariant: ['tabular-nums'],
     color: colors.white,
   },
 
