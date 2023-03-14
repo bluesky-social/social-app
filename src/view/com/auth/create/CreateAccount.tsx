@@ -42,7 +42,6 @@ export const CreateAccount = observer(
 
     const onPressBackInner = React.useCallback(() => {
       if (model.canBack) {
-        console.log('?')
         model.back()
       } else {
         onPressBack()
