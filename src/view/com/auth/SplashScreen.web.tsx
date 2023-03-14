@@ -1,11 +1,14 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Text} from 'view/com/util/text/Text'
+import {TextLink} from '../util/Link'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {CenteredView} from '../util/Views'
+import {isDesktopWeb, isMobileWeb} from 'platform/detection'
+import {HelpTip} from './util/HelpTip'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -23,26 +26,38 @@ export const SplashScreen = ({
 
   return (
     <CenteredView style={[styles.container, pal.view]}>
-      <View testID="noSessionView" style={[styles.containerInner, pal.border]}>
+      <View
+        testID="noSessionView"
+        style={[
+          styles.containerInner,
+          isMobileWeb && styles.containerInnerMobile,
+          pal.border,
+        ]}>
         <ErrorBoundary>
-          <Text style={styles.title}>Bluesky</Text>
-          <Text style={styles.subtitle}>See what's next</Text>
-          <View testID="signinOrCreateAccount" style={styles.btns}>
-            <TouchableOpacity
-              testID="createAccountButton"
-              style={[styles.btn, {backgroundColor: colors.blue3}]}
-              onPress={onPressCreateAccount}>
-              <Text style={[s.white, styles.btnLabel]}>
-                Create a new account
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              testID="signInButton"
-              style={[styles.btn, pal.btn]}
-              onPress={onPressSignin}>
-              <Text style={[pal.text, styles.btnLabel]}>Sign in</Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={isMobileWeb ? styles.titleMobile : styles.title}>
+            Bluesky
+          </Text>
+          <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
+            See what's next
+          </Text>
+          {isDesktopWeb && (
+            <View testID="signinOrCreateAccount" style={styles.btns}>
+              <TouchableOpacity
+                testID="createAccountButton"
+                style={[styles.btn, {backgroundColor: colors.blue3}]}
+                onPress={onPressCreateAccount}>
+                <Text style={[s.white, styles.btnLabel]}>
+                  Create a new account
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                testID="signInButton"
+                style={[styles.btn, pal.btn]}
+                onPress={onPressSignin}>
+                <Text style={[pal.text, styles.btnLabel]}>Sign in</Text>
+              </TouchableOpacity>
+            </View>
+          )}
           <Text
             type="xl"
             style={[styles.notice, pal.textLight]}
@@ -55,9 +70,40 @@ export const SplashScreen = ({
             </TouchableOpacity>{' '}
             to try the beta before it's publicly available.
           </Text>
+          {isMobileWeb && (
+            <>
+              <View style={[s.p20, s.mt10]}>
+                <HelpTip text="Beta testers: the mobile web app isn't quite ready yet. Log in on desktop web or using the iPhone app." />
+              </View>
+            </>
+          )}
         </ErrorBoundary>
       </View>
+      <Footer />
     </CenteredView>
+  )
+}
+
+function Footer() {
+  const pal = usePalette('default')
+  return (
+    <View style={[styles.footer, pal.view, pal.border]}>
+      <TextLink
+        href="https://blueskyweb.xyz"
+        text="Business"
+        style={[styles.footerLink, pal.link]}
+      />
+      <TextLink
+        href="https://blueskyweb.xyz/blog"
+        text="Blog"
+        style={[styles.footerLink, pal.link]}
+      />
+      <TextLink
+        href="https://blueskyweb.xyz/join"
+        text="Jobs"
+        style={[styles.footerLink, pal.link]}
+      />
+    </View>
   )
 }
 
@@ -66,10 +112,13 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   containerInner: {
-    borderBottomWidth: 1,
-    paddingVertical: 40,
-    paddingBottom: 50,
+    height: '100%',
+    justifyContent: 'center',
+    paddingBottom: '20vh',
     paddingHorizontal: 20,
+  },
+  containerInnerMobile: {
+    paddingBottom: 50,
   },
   title: {
     textAlign: 'center',
@@ -78,10 +127,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingBottom: 10,
   },
+  titleMobile: {
+    textAlign: 'center',
+    color: colors.blue3,
+    fontSize: 58,
+    fontWeight: 'bold',
+  },
   subtitle: {
     textAlign: 'center',
     color: colors.gray5,
     fontSize: 52,
+    fontWeight: 'bold',
+    paddingBottom: 30,
+  },
+  subtitleMobile: {
+    textAlign: 'center',
+    color: colors.gray5,
+    fontSize: 42,
     fontWeight: 'bold',
     paddingBottom: 30,
   },
@@ -104,5 +166,17 @@ const styles = StyleSheet.create({
   notice: {
     paddingHorizontal: 40,
     textAlign: 'center',
+  },
+  footer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    padding: 20,
+    borderTopWidth: 1,
+    flexDirection: 'row',
+  },
+  footerLink: {
+    marginRight: 20,
   },
 })

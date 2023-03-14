@@ -4,6 +4,7 @@ import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import type {Modal as ModalIface} from 'state/models/ui/shell'
+import {isMobileWeb} from 'platform/detection'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
@@ -79,7 +80,14 @@ function Modal({modal}: {modal: ModalIface}) {
     <TouchableWithoutFeedback onPress={onPressMask}>
       <View style={styles.mask}>
         <TouchableWithoutFeedback onPress={onInnerPress}>
-          <View style={[styles.container, pal.view]}>{element}</View>
+          <View
+            style={[
+              styles.container,
+              isMobileWeb && styles.containerMobile,
+              pal.view,
+            ]}>
+            {element}
+          </View>
         </TouchableWithoutFeedback>
       </View>
     </TouchableWithoutFeedback>
@@ -99,8 +107,13 @@ const styles = StyleSheet.create({
   },
   container: {
     width: 500,
+    maxWidth: '100vw',
     paddingVertical: 20,
     paddingHorizontal: 24,
     borderRadius: 8,
+  },
+  containerMobile: {
+    borderRadius: 0,
+    paddingHorizontal: 0,
   },
 })

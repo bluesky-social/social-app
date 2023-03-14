@@ -12,7 +12,6 @@ import {Composer} from './Composer.web'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {s, colors} from 'lib/styles'
-import {isMobileWeb} from 'platform/detection'
 import {RoutesContainer, FlatNavigator} from '../../Navigation'
 
 const ShellInner = observer(() => {
@@ -44,10 +43,6 @@ const ShellInner = observer(() => {
 
 export const Shell: React.FC = observer(() => {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
-
-  if (isMobileWeb) {
-    return <NoMobileWeb />
-  }
   return (
     <View style={[s.hContentRegion, pageBg]}>
       <RoutesContainer>
@@ -56,21 +51,6 @@ export const Shell: React.FC = observer(() => {
     </View>
   )
 })
-
-function NoMobileWeb() {
-  const pal = usePalette('default')
-  return (
-    <View style={[pal.view, styles.noMobileWeb]}>
-      <Text type="title-2xl" style={s.pb20}>
-        We're so sorry!
-      </Text>
-      <Text type="lg">
-        This app is not available for mobile Web yet. Please open it on your
-        desktop or download the iOS app.
-      </Text>
-    </View>
-  )
-}
 
 const styles = StyleSheet.create({
   bgLight: {
@@ -91,11 +71,5 @@ const styles = StyleSheet.create({
   },
   viewBorderRight: {
     left: 'calc(50vw + 300px)',
-  },
-  noMobileWeb: {
-    height: '100%',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingBottom: 40,
   },
 })
