@@ -15,7 +15,7 @@ import {
 import {Link} from '../Link'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
-import {ImagesLightbox} from 'state/models/shell-ui'
+import {ImagesLightbox} from 'state/models/ui/shell'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {saveImageModal} from 'lib/media/manip'

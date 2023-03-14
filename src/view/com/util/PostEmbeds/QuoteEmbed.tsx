@@ -5,7 +5,7 @@ import {PostMeta} from '../PostMeta'
 import {Link} from '../Link'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {ComposerOptsQuote} from 'state/models/shell-ui'
+import {ComposerOptsQuote} from 'state/models/ui/shell'
 
 const QuoteEmbed = ({quote}: {quote: ComposerOptsQuote}) => {
   const pal = usePalette('default')
