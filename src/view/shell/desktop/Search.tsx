@@ -35,7 +35,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, pal.view]}>
       <View
         style={[{backgroundColor: pal.colors.backgroundLight}, styles.search]}>
         <View style={[styles.inputContainer]}>
@@ -129,8 +129,8 @@ const styles = StyleSheet.create({
   },
   resultsContainer: {
     // @ts-ignore supported by web
-    position: 'fixed',
-    marginTop: 40,
+    // position: 'fixed',
+    marginTop: 10,
 
     flexDirection: 'column',
     width: 300,
