@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx'
-import {RootStoreModel} from './root-store'
-import {ProfileViewModel} from './profile-view'
-import {FeedModel} from './feed-view'
+import {RootStoreModel} from '../root-store'
+import {ProfileViewModel} from '../profile-view'
+import {FeedModel} from '../feed-view'
 
 export enum Sections {
   Posts = 'Posts',
