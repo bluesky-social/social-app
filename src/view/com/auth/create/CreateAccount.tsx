@@ -15,7 +15,6 @@ import {s, colors} from 'lib/styles'
 import {useStores} from 'state/index'
 import {CreateAccountModel} from 'state/models/ui/create-account'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
 
 import {Step1} from './Step1'
 import {Step2} from './Step2'
