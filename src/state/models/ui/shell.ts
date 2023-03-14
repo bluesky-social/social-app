@@ -56,6 +56,10 @@ export interface ChangeHandleModal {
   onChanged: () => void
 }
 
+export interface WaitlistModal {
+  name: 'waitlist'
+}
+
 export type Modal =
   | ConfirmModal
   | EditProfileModal
@@ -66,6 +70,7 @@ export type Modal =
   | DeleteAccountModal
   | RepostModal
   | ChangeHandleModal
+  | WaitlistModal
 
 interface LightboxModel {}
 
