@@ -89,7 +89,7 @@ export const TextLink = observer(function TextLink({
   type?: TypographyVariant
   style?: StyleProp<TextStyle>
   href: string
-  text: string | JSX.Element
+  text: string | JSX.Element | React.ReactNode
   numberOfLines?: number
   lineHeight?: number
 }) {
@@ -193,7 +193,7 @@ function onPressInner(
 
   if (shouldHandle) {
     href = convertBskyAppUrlIfNeeded(href)
-    if (href.startsWith('http')) {
+    if (href.startsWith('http') || href.startsWith('mailto')) {
       Linking.openURL(href)
     } else {
       store.shell.closeModal() // close any active modals

@@ -6,6 +6,7 @@ import {DesktopSearch} from './Search'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
 import {FEEDBACK_FORM_URL} from 'lib/constants'
+import {s} from 'lib/styles'
 
 export const DesktopRightNav = observer(function DesktopRightNav() {
   const pal = usePalette('default')
@@ -17,12 +18,23 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
           Welcome to Bluesky! This is a beta application that's still in
           development.
         </Text>
-        <TextLink
-          type="md"
-          style={pal.link}
-          href={FEEDBACK_FORM_URL}
-          text="Send feedback"
-        />
+        <View style={[s.flexRow]}>
+          <TextLink
+            type="md"
+            style={pal.link}
+            href={FEEDBACK_FORM_URL}
+            text="Send feedback"
+          />
+          <Text type="md" style={pal.textLight}>
+            &nbsp;&middot;&nbsp;
+          </Text>
+          <TextLink
+            type="md"
+            style={pal.link}
+            href="/support/privacy"
+            text="Privacy Policy"
+          />
+        </View>
       </View>
     </View>
   )

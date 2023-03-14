@@ -35,6 +35,8 @@ import {PostUpvotedByScreen} from './view/screens/PostUpvotedBy'
 import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
 import {DebugScreen} from './view/screens/Debug'
 import {LogScreen} from './view/screens/Log'
+import {SupportScreen} from './view/screens/Support'
+import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -64,6 +66,8 @@ function commonScreens(Stack: typeof HomeTab) {
       <Stack.Screen name="PostRepostedBy" component={PostRepostedByScreen} />
       <Stack.Screen name="Debug" component={DebugScreen} />
       <Stack.Screen name="Log" component={LogScreen} />
+      <Stack.Screen name="Support" component={SupportScreen} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
     </>
   )
 }

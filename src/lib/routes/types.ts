@@ -14,6 +14,8 @@ export type CommonNavigatorParams = {
   PostRepostedBy: {name: string; rkey: string}
   Debug: undefined
   Log: undefined
+  Support: undefined
+  PrivacyPolicy: undefined
 }
 
 export type HomeTabNavigatorParams = CommonNavigatorParams & {
