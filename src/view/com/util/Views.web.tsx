@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   containerScroll: {
     width: '100%',
-    minHeight: '100vh',
+    maxHeight: '100vh',
     maxWidth: 600,
     marginLeft: 'auto',
     marginRight: 'auto',
