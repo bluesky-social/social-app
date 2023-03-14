@@ -1,10 +1,14 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CreateAccountModel} from 'state/models/ui/create-account'
 import {Text} from 'view/com/util/text/Text'
-import {TextLink} from 'view/com/util/Link'
 import {StepHeader} from './StepHeader'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -41,14 +45,12 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
       )}
 
       {!model.inviteCode && model.isInviteCodeRequired ? (
-        <Text>
+        <Text style={s.alignBaseline}>
           Don't have an invite code?{' '}
-          <TouchableOpacity onPress={onPressWaitlist}>
-            <Text type="xl" style={pal.link}>
-              Join the waitlist
-            </Text>
-          </TouchableOpacity>{' '}
-          the beta before it's publicly available.
+          <TouchableWithoutFeedback onPress={onPressWaitlist}>
+            <Text style={pal.link}>Join the waitlist</Text>
+          </TouchableWithoutFeedback>{' '}
+          to try the beta before it's publicly available.
         </Text>
       ) : (
         <>
