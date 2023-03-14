@@ -65,6 +65,10 @@ coverage/
 junit.xml
 artifacts
 
+# Web bundle outputs
+/dist/
+
+# Expo
 .expo/
 dist/
 *.jks

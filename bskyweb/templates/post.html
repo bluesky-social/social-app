@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block head_page_meta -%}
+<!-- TODO: "same as" indication with at:// URI? -->
+{%- if postView -%}
+	<meta property="og:type" content="article"/>
+	<meta name="twitter:card" content="summary"/>
+  {%- if postView.Author.DisplayName -%}
+	<meta property="og:title" content="{{ postView.Author.DisplayName }} / {{ postView.Author.Handle }}"/>
+	<meta name="twitter:title" content="{{ postView.Author.DisplayName }} / {{ postView.Author.Handle }}"/>
+  {%- else -%}
+	<meta property="og:title" content="{{ postView.Author.Handle }}"/>
+	<meta name="twitter:title" content="{{ postView.Author.Handle }}"/>
+  {%- endif -%}
+	{%- if postView.Record.Text -%}
+	<meta name="twitter:description" content="{{ postView.Record.Text }}"/>
+	<!-- TODO: could put any images in here, or author avatar -->
+	{%- endif -%}
+{%- endif -%}
+{%- endblock %}
+
+{% block noscript_extra -%}
+<p>{{ postView.Author.DisplayName }} / {{ postView.Author.Handle }}
+<p>{{ postView.Record.Text }}
+{%- endblock %}

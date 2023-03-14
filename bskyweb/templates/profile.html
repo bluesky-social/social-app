@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block head_page_meta -%}
+<!-- TODO: "same as" indication with DID? -->
+{%- if profileView -%}
+	<meta property="og:type" content="article"/>
+	<meta name="twitter:card" content="summary"/>
+  {%- if profileView.DisplayName -%}
+	<meta property="og:title" content="{{ profileView.DisplayName }} / {{ profileView.Handle }}"/>
+	<meta name="twitter:title" content="{{ profileView.DisplayName }} / {{ profileView.Handle }}"/>
+  {%- else -%}
+	<meta property="og:title" content="{{ profileView.Handle }}"/>
+	<meta name="twitter:title" content="{{ profileView.Handle }}"/>
+  {%- endif -%}
+	<meta name="twitter:description" content="{{ profileView.Description }}"/>
+	{%- if profileView.Avatar -%}
+  <meta name="twitter:image" content="{{ profileView.Avatar }}"/>
+  {%- endif -%}
+{%- endif -%}
+{%- endblock %}
+
+{% block noscript_extra -%}
+<p>{{ profileView.DisplayName }} / {{ profileView.Handle }}
+<p>{{ profileView.Description }}
+{%- endblock %}
