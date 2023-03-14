@@ -16,8 +16,8 @@ export const SplashScreen = ({
 }) => {
   const pal = usePalette('default')
   return (
-    <CenteredView style={styles.container}>
-      <View testID="noSessionView" style={styles.containerInner}>
+    <CenteredView style={[styles.container, pal.view]}>
+      <View testID="noSessionView" style={[styles.containerInner, pal.border]}>
         <ErrorBoundary>
           <Text style={styles.title}>Bluesky</Text>
           <Text style={styles.subtitle}>See what's next</Text>
@@ -34,7 +34,7 @@ export const SplashScreen = ({
               testID="signInButton"
               style={[styles.btn, pal.btn]}
               onPress={onPressSignin}>
-              <Text style={[pal.link, styles.btnLabel]}>Sign in</Text>
+              <Text style={[pal.text, styles.btnLabel]}>Sign in</Text>
             </TouchableOpacity>
           </View>
           <Text
@@ -59,10 +59,9 @@ export const SplashScreen = ({
 const styles = StyleSheet.create({
   container: {
     height: '100%',
-    backgroundColor: colors.gray1,
   },
   containerInner: {
-    backgroundColor: colors.white,
+    borderBottomWidth: 1,
     paddingVertical: 40,
     paddingBottom: 50,
     paddingHorizontal: 20,
@@ -83,13 +82,15 @@ const styles = StyleSheet.create({
   },
   btns: {
     flexDirection: 'row',
+    justifyContent: 'center',
     paddingBottom: 40,
   },
   btn: {
-    flex: 1,
     borderRadius: 30,
+    paddingHorizontal: 24,
     paddingVertical: 12,
     marginHorizontal: 10,
+    minWidth: 220,
   },
   btnLabel: {
     textAlign: 'center',
