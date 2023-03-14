@@ -1,0 +1,51 @@
+<!DOCTYPE html>                                                                                          
+<html lang="en">
+<head>   
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="origin-when-cross-origin">
+  <title>{%- block head_title -%}Bluesky{%- endblock -%}</title>
+  <!-- Hello Humans! API docs at https://atproto.com -->
+  <style>
+    /* These styles make the body full-height */
+    html, body { height: 100%; }
+    /* These styles disable body scrolling if you are using <ScrollView> */
+    body { overflow: hidden; }
+    /* These styles make the root element full-height */
+    #app-root { display:flex; height:100%; }
+    /* Remove focus state on inputs */
+    *:focus { outline: 0; }
+  </style>
+  {% block head_bundle -%}<script defer src="/static/bundle.web.js"></script>{%- endblock %}
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png"/>
+  {% block head_page_meta -%}
+  <meta property="og:title" content="Bluesky Social"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:image" content="/static/default-social-card.png"/>
+  <meta name="twitter:title" content="Bluesky Social"/>
+  <meta name="twitter:description" content="See what&#x27;s next."/>
+  <meta name="twitter:image" content="/static/default-social-card.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@bluesky"/>
+  {%- endblock %}
+	<!-- TODO: link rel=canonical -->
+	<!-- TODO: analytics code -->
+	<!-- TODO: could put <link rel="preload"> tags here -->
+  <meta name="generator" name="bskyweb">
+	{% block head_metadata %}{% endblock %}
+</head>
+<body>
+{%- block body_all %}
+	<div id="app-root">
+    <noscript>
+			{%- block noscript_extra %}{% endblock -%}
+      <h1>Javascript Required</h1>
+      <p>This is a heavily interactive web application, and Javascript is required. Simple HTML interfaces are possible, but that is not what this is.
+      <p>Learn more about Bluesky at <a href="https://blueskyweb.xyz">blueskyweb.xyz</a> and <a href="https://atproto.com">atproto.com</a>.
+    </noscript>
+	</div>
+{% endblock -%}
+</body>
+</html>
