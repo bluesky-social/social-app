@@ -17,7 +17,7 @@ ENV GOARCH="amd64"
 COPY . .
 
 #
-# Node
+# Generate the Javascript webpack.
 #
 RUN mkdir --parents $NVM_DIR && \
   wget \
@@ -29,11 +29,11 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   nvm install $NODE_VERSION && \
   nvm use $NODE_VERSION && \
   npm install --global yarn && \
-  yarn build-web && \
-  yarn webpack build --config ./web/webpack.config.js -d inline-source-map --color
+  yarn && \
+  yarn build-web
 
 #
-# Go
+# Generate the bksyweb Go binary.
 #
 RUN cd bskyweb/ && \
   go mod download && \
@@ -63,6 +63,8 @@ WORKDIR /bskyweb
 COPY --from=build-env /bskyweb /usr/bin/bskyweb
 # TODO: remove this when templates have been embedded.
 COPY --from=build-env /usr/src/social-app/bskyweb/templates /bskyweb/templates
+COPY --from=build-env /usr/src/social-app/bskyweb/static /bskyweb/static
+COPY --from=build-env /usr/src/social-app/web-build/static/js /bskyweb/static/js
 
 CMD ["/usr/bin/bskyweb"]
 

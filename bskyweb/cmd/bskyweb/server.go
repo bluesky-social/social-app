@@ -94,7 +94,6 @@ func serve(cctx *cli.Context) error {
 	// configure routes
 	e.File("/robots.txt", "static/robots.txt")
 	e.Static("/static", "static")
-	e.Static("/static/js", "../web-build/static/js")
 
 	e.GET("/", server.WebHome)
 
