@@ -1,10 +1,12 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
+import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {ThemeProvider, PaletteColorName} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {displayNotification} from 'lib/notifee'
+import * as Toast from 'view/com/util/Toast'
 
 import {Text} from '../com/util/text/Text'
 import {ViewSelector} from '../com/util/ViewSelector'
@@ -19,7 +21,10 @@ import {ErrorMessage} from '../com/util/error/ErrorMessage'
 
 const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
 
-export const Debug = () => {
+export const DebugScreen = ({}: NativeStackScreenProps<
+  CommonNavigatorParams,
+  'Debug'
+>) => {
   const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
     'light',
   )
@@ -171,16 +176,24 @@ function ErrorView() {
 }
 
 function NotifsView() {
-  const trigger = () => {
+  const triggerPush = () => {
     displayNotification(
       'Paul Frazee liked your post',
       "Hello world! This is a test of the notifications card. The text is long to see how that's handled.",
     )
   }
+  const triggerToast = () => {
+    Toast.show('The task has been completed')
+  }
+  const triggerToast2 = () => {
+    Toast.show('The task has been completed successfully and with no problems')
+  }
   return (
     <View style={s.p10}>
       <View style={s.flexRow}>
-        <Button onPress={trigger} label="Trigger" />
+        <Button onPress={triggerPush} label="Trigger Push" />
+        <Button onPress={triggerToast} label="Trigger Toast" />
+        <Button onPress={triggerToast2} label="Trigger Toast 2" />
       </View>
     </View>
   )
@@ -207,6 +220,21 @@ function TypographyView() {
   const pal = usePalette('default')
   return (
     <View style={[pal.view]}>
+      <Text type="2xl-thin" style={[pal.text]}>
+        '2xl-thin' lorem ipsum dolor
+      </Text>
+      <Text type="2xl" style={[pal.text]}>
+        '2xl' lorem ipsum dolor
+      </Text>
+      <Text type="2xl-medium" style={[pal.text]}>
+        '2xl-medium' lorem ipsum dolor
+      </Text>
+      <Text type="2xl-bold" style={[pal.text]}>
+        '2xl-bold' lorem ipsum dolor
+      </Text>
+      <Text type="2xl-heavy" style={[pal.text]}>
+        '2xl-heavy' lorem ipsum dolor
+      </Text>
       <Text type="xl-thin" style={[pal.text]}>
         'xl-thin' lorem ipsum dolor
       </Text>
@@ -326,6 +354,9 @@ function ButtonsView() {
       <View style={[s.flexRow, s.mb5]}>
         <Button type="primary" label="Primary solid" style={buttonStyles} />
         <Button type="secondary" label="Secondary solid" style={buttonStyles} />
+      </View>
+      <View style={[s.flexRow, s.mb5]}>
+        <Button type="default" label="Default solid" style={buttonStyles} />
         <Button type="inverted" label="Inverted solid" style={buttonStyles} />
       </View>
       <View style={s.flexRow}>

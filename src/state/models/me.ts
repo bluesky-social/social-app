@@ -11,6 +11,8 @@ export class MeModel {
   displayName: string = ''
   description: string = ''
   avatar: string = ''
+  followsCount: number | undefined
+  followersCount: number | undefined
   mainFeed: FeedModel
   notifications: NotificationsViewModel
   follows: MyFollowsModel
@@ -90,22 +92,26 @@ export class MeModel {
           this.displayName = profile.data.displayName || ''
           this.description = profile.data.description || ''
           this.avatar = profile.data.avatar || ''
+          this.followsCount = profile.data.followsCount
+          this.followersCount = profile.data.followersCount
         } else {
           this.displayName = ''
           this.description = ''
           this.avatar = ''
+          this.followsCount = profile.data.followsCount
+          this.followersCount = undefined
         }
       })
       this.mainFeed.clear()
+      await this.follows.fetch().catch(e => {
+        this.rootStore.log.error('Failed to load my follows', e)
+      })
       await Promise.all([
         this.mainFeed.setup().catch(e => {
           this.rootStore.log.error('Failed to setup main feed model', e)
         }),
         this.notifications.setup().catch(e => {
           this.rootStore.log.error('Failed to setup notifications model', e)
-        }),
-        this.follows.fetch().catch(e => {
-          this.rootStore.log.error('Failed to load my follows', e)
         }),
       ])
       this.rootStore.emitSessionLoaded()

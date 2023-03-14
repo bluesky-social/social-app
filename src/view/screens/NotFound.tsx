@@ -1,20 +1,41 @@
 import React from 'react'
-import {Button, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
+import {useNavigation, StackActions} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Text} from '../com/util/text/Text'
-import {useStores} from 'state/index'
+import {Button} from 'view/com/util/forms/Button'
+import {NavigationProp} from 'lib/routes/types'
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
 
-export const NotFound = () => {
-  const stores = useStores()
+export const NotFoundScreen = () => {
+  const pal = usePalette('default')
+  const navigation = useNavigation<NavigationProp>()
+
+  const canGoBack = navigation.canGoBack()
+  const onPressHome = React.useCallback(() => {
+    if (canGoBack) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('HomeTab')
+      navigation.dispatch(StackActions.popToTop())
+    }
+  }, [navigation, canGoBack])
+
   return (
-    <View testID="notFoundView">
+    <View testID="notFoundView" style={pal.view}>
       <ViewHeader title="Page not found" />
       <View style={styles.container}>
-        <Text style={styles.title}>Page not found</Text>
+        <Text type="title-2xl" style={[pal.text, s.mb10]}>
+          Page not found
+        </Text>
+        <Text type="md" style={[pal.text, s.mb10]}>
+          We're sorry! We can't find the page you were looking for.
+        </Text>
         <Button
-          testID="navigateHomeButton"
-          title="Home"
-          onPress={() => stores.nav.navigate('/')}
+          type="primary"
+          label={canGoBack ? 'Go back' : 'Go home'}
+          onPress={onPressHome}
         />
       </View>
     </View>
@@ -23,12 +44,9 @@ export const NotFound = () => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
     paddingTop: 100,
-  },
-  title: {
-    fontSize: 40,
-    fontWeight: 'bold',
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    height: '100%',
   },
 })

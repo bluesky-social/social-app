@@ -21,6 +21,7 @@ export const defaultTheme: Theme = {
       replyLine: colors.gray2,
       replyLineDot: colors.gray3,
       unreadNotifBg: '#ebf6ff',
+      unreadNotifBorder: colors.blue1,
       postCtrl: '#71768A',
       brandText: '#0066FF',
       emptyStateIcon: '#B6B6C9',
@@ -82,6 +83,31 @@ export const defaultTheme: Theme = {
     },
   },
   typography: {
+    '2xl-thin': {
+      fontSize: 18,
+      letterSpacing: 0.25,
+      fontWeight: '300',
+    },
+    '2xl': {
+      fontSize: 18,
+      letterSpacing: 0.25,
+      fontWeight: '400',
+    },
+    '2xl-medium': {
+      fontSize: 18,
+      letterSpacing: 0.25,
+      fontWeight: '500',
+    },
+    '2xl-bold': {
+      fontSize: 18,
+      letterSpacing: 0.25,
+      fontWeight: '700',
+    },
+    '2xl-heavy': {
+      fontSize: 18,
+      letterSpacing: 0.25,
+      fontWeight: '800',
+    },
     'xl-thin': {
       fontSize: 17,
       letterSpacing: 0.25,
@@ -271,15 +297,16 @@ export const darkTheme: Theme = {
       textLight: colors.gray3,
       textInverted: colors.black,
       link: colors.blue3,
-      border: colors.gray6,
-      borderDark: colors.gray5,
+      border: colors.black,
+      borderDark: colors.gray6,
       icon: colors.gray4,
 
       // non-standard
       textVeryLight: colors.gray4,
       replyLine: colors.gray5,
       replyLineDot: colors.gray6,
-      unreadNotifBg: colors.blue5,
+      unreadNotifBg: colors.blue7,
+      unreadNotifBorder: colors.blue6,
       postCtrl: '#61657A',
       brandText: '#0085ff',
       emptyStateIcon: colors.gray4,

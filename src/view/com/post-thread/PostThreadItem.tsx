@@ -21,8 +21,8 @@ import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/PostEmbeds'
 import {PostCtrls} from '../util/PostCtrls'
+import {PostMutedWrapper} from '../util/PostMuted'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {ComposePrompt} from '../composer/Prompt'
 import {usePalette} from 'lib/hooks/usePalette'
 
 const PARENT_REPLY_LINE_LENGTH = 8
@@ -135,13 +135,8 @@ export const PostThreadItem = observer(function PostThreadItem({
           ]}>
           <View style={styles.layout}>
             <View style={styles.layoutAvi}>
-              <Link href={authorHref} title={authorTitle}>
-                <UserAvatar
-                  size={52}
-                  displayName={item.post.author.displayName}
-                  handle={item.post.author.handle}
-                  avatar={item.post.author.avatar}
-                />
+              <Link href={authorHref} title={authorTitle} asAnchor>
+                <UserAvatar size={52} avatar={item.post.author.avatar} />
               </Link>
             </View>
             <View style={styles.layoutContent}>
@@ -271,23 +266,17 @@ export const PostThreadItem = observer(function PostThreadItem({
             </View>
           </View>
         </View>
-        <ComposePrompt
-          isReply
-          text="Write your reply"
-          btn="Reply"
-          onPressCompose={onPressReply}
-        />
       </>
     )
   } else {
     return (
-      <>
+      <PostMutedWrapper isMuted={item.post.author.viewer?.muted === true}>
         <Link
           style={[styles.outer, {borderTopColor: pal.colors.border}, pal.view]}
           href={itemHref}
           title={itemTitle}
           noFeedback>
-          {record.reply && (
+          {item._showParentReplyLine && (
             <View
               style={[
                 styles.parentReplyLine,
@@ -295,7 +284,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               ]}
             />
           )}
-          {item.replies?.length !== 0 && (
+          {item._showChildReplyLine && (
             <View
               style={[
                 styles.childReplyLine,
@@ -305,13 +294,8 @@ export const PostThreadItem = observer(function PostThreadItem({
           )}
           <View style={styles.layout}>
             <View style={styles.layoutAvi}>
-              <Link href={authorHref} title={authorTitle}>
-                <UserAvatar
-                  size={52}
-                  displayName={item.post.author.displayName}
-                  handle={item.post.author.handle}
-                  avatar={item.post.author.avatar}
-                />
+              <Link href={authorHref} title={authorTitle} asAnchor>
+                <UserAvatar size={52} avatar={item.post.author.avatar} />
               </Link>
             </View>
             <View style={styles.layoutContent}>
@@ -319,15 +303,11 @@ export const PostThreadItem = observer(function PostThreadItem({
                 authorHandle={item.post.author.handle}
                 authorDisplayName={item.post.author.displayName}
                 timestamp={item.post.indexedAt}
+                postHref={itemHref}
                 did={item.post.author.did}
                 declarationCid={item.post.author.declaration.cid}
               />
-              {item.post.author.viewer?.muted ? (
-                <View style={[styles.mutedWarning, pal.btn]}>
-                  <FontAwesomeIcon icon={['far', 'eye-slash']} style={s.mr2} />
-                  <Text type="sm">This post is by a muted account.</Text>
-                </View>
-              ) : item.richText?.text ? (
+              {item.richText?.text ? (
                 <View style={styles.postTextContainer}>
                   <RichText
                     type="post-text"
@@ -384,7 +364,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             />
           </Link>
         ) : undefined}
-      </>
+      </PostMutedWrapper>
     )
   }
 })
@@ -440,14 +420,6 @@ const styles = StyleSheet.create({
   metaItem: {
     paddingRight: 5,
     maxWidth: 240,
-  },
-  mutedWarning: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    marginTop: 2,
-    marginBottom: 6,
-    borderRadius: 2,
   },
   postTextContainer: {
     flexDirection: 'row',

@@ -67,3 +67,17 @@ artifacts
 
 # Web bundle outputs
 /dist/
+
+# Expo
+.expo/
+dist/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# Temporary files created by Metro to check the health of the file watcher
+.metro-health-check*

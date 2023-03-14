@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {getInitialURL} from 'platform/urls'
+import {RootSiblingParent} from 'react-native-root-siblings'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
-import {WebShell} from './view/shell/web'
+import {Shell} from './view/shell/index'
 import {ToastContainer} from './view/com/util/Toast.web'
 
 function App() {
@@ -16,12 +16,6 @@ function App() {
     view.setup()
     setupState().then(store => {
       setRootStore(store)
-      store.nav.bindWebNavigation()
-      getInitialURL().then(url => {
-        if (url) {
-          store.nav.handleLink(url)
-        }
-      })
     })
   }, [])
 
@@ -31,12 +25,14 @@ function App() {
   }
 
   return (
-    <RootStoreProvider value={rootStore}>
-      <SafeAreaProvider>
-        <WebShell />
-      </SafeAreaProvider>
-      <ToastContainer />
-    </RootStoreProvider>
+    <RootSiblingParent>
+      <RootStoreProvider value={rootStore}>
+        <SafeAreaProvider>
+          <Shell />
+        </SafeAreaProvider>
+        <ToastContainer />
+      </RootStoreProvider>
+    </RootSiblingParent>
   )
 }
 

@@ -12,6 +12,8 @@ import * as ReportPostModal from './ReportPost'
 import * as RepostModal from './Repost'
 import * as ReportAccountModal from './ReportAccount'
 import * as DeleteAccountModal from './DeleteAccount'
+import * as ChangeHandleModal from './ChangeHandle'
+import * as WaitlistModal from './Waitlist'
 import {usePalette} from 'lib/hooks/usePalette'
 import {StyleSheet} from 'react-native'
 
@@ -65,8 +67,14 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'repost') {
     snapPoints = RepostModal.snapPoints
     element = <RepostModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'change-handle') {
+    snapPoints = ChangeHandleModal.snapPoints
+    element = <ChangeHandleModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'waitlist') {
+    snapPoints = WaitlistModal.snapPoints
+    element = <WaitlistModal.Component />
   } else {
-    element = <View />
+    return <View />
   }
 
   return (

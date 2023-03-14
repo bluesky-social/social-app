@@ -5,7 +5,7 @@ import {PostMeta} from '../PostMeta'
 import {Link} from '../Link'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {ComposerOptsQuote} from 'state/models/shell-ui'
+import {ComposerOptsQuote} from 'state/models/ui/shell'
 
 const QuoteEmbed = ({quote}: {quote: ComposerOptsQuote}) => {
   const pal = usePalette('default')
@@ -25,6 +25,7 @@ const QuoteEmbed = ({quote}: {quote: ComposerOptsQuote}) => {
         authorAvatar={quote.author.avatar}
         authorHandle={quote.author.handle}
         authorDisplayName={quote.author.displayName}
+        postHref={itemHref}
         timestamp={quote.indexedAt}
       />
       <Text type="post-text" style={pal.text} numberOfLines={6}>

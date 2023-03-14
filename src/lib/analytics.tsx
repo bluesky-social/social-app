@@ -16,7 +16,7 @@ export function init(store: RootStoreModel) {
   // this method is a copy of segment's own lifecycle event tracking
   // we handle it manually to ensure that it never fires while the app is backgrounded
   // -prf
-  segmentClient.onContextLoaded(() => {
+  segmentClient.isReady.onChange(() => {
     if (AppState.currentState !== 'active') {
       store.log.debug('Prevented a metrics ping while the app was backgrounded')
       return

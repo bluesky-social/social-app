@@ -1,20 +1,22 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {View} from 'react-native'
+import {useFocusEffect} from '@react-navigation/native'
+import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
+import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {ProfileFollows as ProfileFollowsComponent} from '../com/profile/ProfileFollows'
-import {ScreenParams} from '../routes'
 import {useStores} from 'state/index'
 
-export const ProfileFollows = ({navIdx, visible, params}: ScreenParams) => {
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollows'>
+export const ProfileFollowsScreen = withAuthRequired(({route}: Props) => {
   const store = useStores()
-  const {name} = params
+  const {name} = route.params
 
-  useEffect(() => {
-    if (visible) {
-      store.nav.setTitle(navIdx, `Followed by ${name}`)
+  useFocusEffect(
+    React.useCallback(() => {
       store.shell.setMinimalShellMode(false)
-    }
-  }, [store, visible, name, navIdx])
+    }, [store]),
+  )
 
   return (
     <View>
@@ -22,4 +24,4 @@ export const ProfileFollows = ({navIdx, visible, params}: ScreenParams) => {
       <ProfileFollowsComponent name={name} />
     </View>
   )
-}
+})

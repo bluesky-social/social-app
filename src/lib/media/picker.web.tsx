@@ -10,6 +10,7 @@ import {
   compressIfNeeded,
   moveToPremanantPath,
 } from 'lib/media/manip'
+import {extractDataUriMime} from './util'
 
 interface PickedFile {
   uri: string
@@ -137,8 +138,4 @@ function selectFile(opts: PickerOpts): Promise<PickedFile> {
     }
     input.click()
   })
-}
-
-function extractDataUriMime(uri: string): string {
-  return uri.substring(uri.indexOf(':') + 1, uri.indexOf(';'))
 }

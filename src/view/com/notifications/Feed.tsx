@@ -101,6 +101,7 @@ export const Feed = observer(function Feed({
           refreshing={view.isRefreshing}
           onRefresh={onRefresh}
           onEndReached={onEndReached}
+          onEndReachedThreshold={0.6}
           onScroll={onScroll}
           contentContainerStyle={s.contentContainer}
         />

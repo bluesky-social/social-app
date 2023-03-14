@@ -3,15 +3,19 @@ import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import type {Modal as ModalIface} from 'state/models/shell-ui'
+import type {Modal as ModalIface} from 'state/models/ui/shell'
+import {isMobileWeb} from 'platform/detection'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
 import * as ReportAccountModal from './ReportAccount'
+import * as DeleteAccountModal from './DeleteAccount'
 import * as RepostModal from './Repost'
 import * as CropImageModal from './crop-image/CropImage.web'
+import * as ChangeHandleModal from './ChangeHandle'
+import * as WaitlistModal from './Waitlist'
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
@@ -60,8 +64,14 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ReportAccountModal.Component {...modal} />
   } else if (modal.name === 'crop-image') {
     element = <CropImageModal.Component {...modal} />
+  } else if (modal.name === 'delete-account') {
+    element = <DeleteAccountModal.Component />
   } else if (modal.name === 'repost') {
     element = <RepostModal.Component {...modal} />
+  } else if (modal.name === 'change-handle') {
+    element = <ChangeHandleModal.Component {...modal} />
+  } else if (modal.name === 'waitlist') {
+    element = <WaitlistModal.Component />
   } else {
     return null
   }
@@ -70,7 +80,14 @@ function Modal({modal}: {modal: ModalIface}) {
     <TouchableWithoutFeedback onPress={onPressMask}>
       <View style={styles.mask}>
         <TouchableWithoutFeedback onPress={onInnerPress}>
-          <View style={[styles.container, pal.view]}>{element}</View>
+          <View
+            style={[
+              styles.container,
+              isMobileWeb && styles.containerMobile,
+              pal.view,
+            ]}>
+            {element}
+          </View>
         </TouchableWithoutFeedback>
       </View>
     </TouchableWithoutFeedback>
@@ -90,8 +107,13 @@ const styles = StyleSheet.create({
   },
   container: {
     width: 500,
+    maxWidth: '100vw',
     paddingVertical: 20,
     paddingHorizontal: 24,
     borderRadius: 8,
+  },
+  containerMobile: {
+    borderRadius: 0,
+    paddingHorizontal: 0,
   },
 })

@@ -1,7 +1,5 @@
 import {StyleProp, StyleSheet, TextStyle} from 'react-native'
 import {Theme, TypographyVariant} from './ThemeContext'
-import {isDesktopWeb} from 'platform/detection'
-import {DESKTOP_HEADER_HEIGHT} from './constants'
 
 // 1 is lightest, 2 is light, 3 is mid, 4 is dark, 5 is darkest
 export const colors = {
@@ -15,7 +13,7 @@ export const colors = {
   gray5: '#545664',
   gray6: '#373942',
   gray7: '#26272D',
-  gray8: '#101013',
+  gray8: '#141417',
 
   blue0: '#bfe1ff',
   blue1: '#8bc7fd',
@@ -23,12 +21,16 @@ export const colors = {
   blue3: '#0085ff',
   blue4: '#0062bd',
   blue5: '#034581',
+  blue6: '#012561',
+  blue7: '#001040',
 
   red1: '#ffe6f2',
   red2: '#fba2ce',
   red3: '#ec4899',
   red4: '#d1106f',
   red5: '#97074e',
+  red6: '#690436',
+  red7: '#4F0328',
 
   pink1: '#f8ccff',
   pink2: '#e966ff',
@@ -61,6 +63,8 @@ export const s = StyleSheet.create({
   // helpers
   footerSpacer: {height: 100},
   contentContainer: {paddingBottom: 200},
+  contentContainerExtra: {paddingBottom: 300},
+  border0: {borderWidth: 0},
   border1: {borderWidth: 1},
   borderTop1: {borderTopWidth: 1},
   borderRight1: {borderRightWidth: 1},
@@ -156,9 +160,7 @@ export const s = StyleSheet.create({
   // dimensions
   w100pct: {width: '100%'},
   h100pct: {height: '100%'},
-  hContentRegion: isDesktopWeb
-    ? {height: `calc(100vh - ${DESKTOP_HEADER_HEIGHT}px)`}
-    : {height: '100%'},
+  hContentRegion: {height: '100%'},
 
   // text align
   textLeft: {textAlign: 'left'},

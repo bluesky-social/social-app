@@ -42,6 +42,9 @@ export function ToggleButton({
     'secondary-light': {
       borderColor: theme.palette.secondary.border,
     },
+    default: {
+      borderColor: theme.palette.default.border,
+    },
     'default-light': {
       borderColor: theme.palette.default.border,
     },
@@ -76,6 +79,11 @@ export function ToggleButton({
       'secondary-light': {
         backgroundColor: theme.palette.secondary.background,
         opacity: isSelected ? 1 : 0.5,
+      },
+      default: {
+        backgroundColor: isSelected
+          ? theme.palette.primary.background
+          : colors.gray3,
       },
       'default-light': {
         backgroundColor: isSelected
@@ -112,6 +120,10 @@ export function ToggleButton({
     'secondary-light': {
       color: theme.palette.secondary.textInverted,
       fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
+    },
+    default: {
+      color: theme.palette.default.text,
+      fontWeight: theme.palette.default.isLowContrast ? '500' : undefined,
     },
     'default-light': {
       color: theme.palette.default.text,

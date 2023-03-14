@@ -41,6 +41,9 @@ export function RadioButton({
     'secondary-light': {
       borderColor: theme.palette.secondary.border,
     },
+    default: {
+      borderColor: theme.palette.default.border,
+    },
     'default-light': {
       borderColor: theme.palette.default.border,
     },
@@ -68,6 +71,9 @@ export function RadioButton({
       },
       'secondary-light': {
         backgroundColor: theme.palette.secondary.background,
+      },
+      default: {
+        backgroundColor: theme.palette.primary.background,
       },
       'default-light': {
         backgroundColor: theme.palette.primary.background,
@@ -102,6 +108,10 @@ export function RadioButton({
     'secondary-light': {
       color: theme.palette.secondary.textInverted,
       fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
+    },
+    default: {
+      color: theme.palette.default.text,
+      fontWeight: theme.palette.default.isLowContrast ? '500' : undefined,
     },
     'default-light': {
       color: theme.palette.default.text,
