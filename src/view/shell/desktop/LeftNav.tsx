@@ -131,7 +131,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
 
   return (
     <View style={styles.leftNav}>
-      <ProfileCard />
+      {store.session.hasSession && <ProfileCard />}
       <BackBtn />
       <NavItem
         href="/"
@@ -164,14 +164,16 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         }
         label="Notifications"
       />
-      <NavItem
-        href={`/profile/${store.me.handle}`}
-        icon={<UserIcon strokeWidth={1.75} size={28} style={pal.text} />}
-        iconFilled={
-          <UserIconSolid strokeWidth={1.75} size={28} style={pal.text} />
-        }
-        label="Profile"
-      />
+      {store.session.hasSession && (
+        <NavItem
+          href={`/profile/${store.me.handle}`}
+          icon={<UserIcon strokeWidth={1.75} size={28} style={pal.text} />}
+          iconFilled={
+            <UserIconSolid strokeWidth={1.75} size={28} style={pal.text} />
+          }
+          label="Profile"
+        />
+      )}
       <NavItem
         href="/settings"
         icon={<CogIcon strokeWidth={1.75} size={28} style={pal.text} />}
@@ -180,7 +182,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         }
         label="Settings"
       />
-      <ComposeBtn />
+      {store.session.hasSession && <ComposeBtn />}
     </View>
   )
 })

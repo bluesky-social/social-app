@@ -1,0 +1,102 @@
+import React from 'react'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Text} from 'view/com/util/text/Text'
+import {TextLink} from '../util/Link'
+import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
+import {s, colors} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {CenteredView} from '../util/Views'
+
+export const SplashScreen = ({
+  onPressSignin,
+  onPressCreateAccount,
+}: {
+  onPressSignin: () => void
+  onPressCreateAccount: () => void
+}) => {
+  const pal = usePalette('default')
+  return (
+    <CenteredView style={styles.container}>
+      <View testID="noSessionView" style={styles.containerInner}>
+        <ErrorBoundary>
+          <Text style={styles.title}>Bluesky</Text>
+          <Text style={styles.subtitle}>See what's next</Text>
+          <View testID="signinOrCreateAccount" style={styles.btns}>
+            <TouchableOpacity
+              testID="createAccountButton"
+              style={[styles.btn, {backgroundColor: colors.blue3}]}
+              onPress={onPressCreateAccount}>
+              <Text style={[s.white, styles.btnLabel]}>
+                Create a new account
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              testID="signInButton"
+              style={[styles.btn, pal.btn]}
+              onPress={onPressSignin}>
+              <Text style={[pal.link, styles.btnLabel]}>Sign in</Text>
+            </TouchableOpacity>
+          </View>
+          <Text
+            type="xl"
+            style={[styles.notice, pal.textLight]}
+            lineHeight={1.3}>
+            Bluesky will launch soon.{' '}
+            <TextLink
+              type="xl"
+              text="Join the waitlist"
+              href="#"
+              style={pal.link}
+            />{' '}
+            to try the beta before it's publicly available.
+          </Text>
+        </ErrorBoundary>
+      </View>
+    </CenteredView>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    height: '100%',
+    backgroundColor: colors.gray1,
+  },
+  containerInner: {
+    backgroundColor: colors.white,
+    paddingVertical: 40,
+    paddingBottom: 50,
+    paddingHorizontal: 20,
+  },
+  title: {
+    textAlign: 'center',
+    color: colors.blue3,
+    fontSize: 68,
+    fontWeight: 'bold',
+    paddingBottom: 10,
+  },
+  subtitle: {
+    textAlign: 'center',
+    color: colors.gray5,
+    fontSize: 52,
+    fontWeight: 'bold',
+    paddingBottom: 30,
+  },
+  btns: {
+    flexDirection: 'row',
+    paddingBottom: 40,
+  },
+  btn: {
+    flex: 1,
+    borderRadius: 30,
+    paddingVertical: 12,
+    marginHorizontal: 10,
+  },
+  btnLabel: {
+    textAlign: 'center',
+    fontSize: 18,
+  },
+  notice: {
+    paddingHorizontal: 40,
+    textAlign: 'center',
+  },
+})

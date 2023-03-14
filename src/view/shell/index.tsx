@@ -5,7 +5,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Drawer} from 'react-native-drawer-layout'
 import {useNavigationState} from '@react-navigation/native'
 import {useStores} from 'state/index'
-import {Login} from 'view/screens/Login'
 import {ModalsContainer} from 'view/com/modals/Modal'
 import {Lightbox} from 'view/com/lightbox/Lightbox'
 import {Text} from 'view/com/util/text/Text'
@@ -100,20 +99,6 @@ export const Shell: React.FC = observer(() => {
           <View style={s.flex1} />
           <View style={s.footerSpacer} />
         </View>
-      </View>
-    )
-  }
-
-  if (!store.session.hasSession) {
-    return (
-      <View style={styles.outerContainer}>
-        <StatusBar
-          barStyle={
-            theme.colorScheme === 'dark' ? 'light-content' : 'dark-content'
-          }
-        />
-        <Login />
-        <ModalsContainer />
       </View>
     )
   }
