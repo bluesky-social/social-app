@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
+import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {ComposePrompt} from 'view/com/composer/Prompt'
@@ -16,7 +17,7 @@ import {isDesktopWeb} from 'platform/detection'
 const SHELL_FOOTER_HEIGHT = 44
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
-export const PostThreadScreen = ({route}: Props) => {
+export const PostThreadScreen = withAuthRequired(({route}: Props) => {
   const store = useStores()
   const safeAreaInsets = useSafeAreaInsets()
   const {name, rkey} = route.params
@@ -84,7 +85,7 @@ export const PostThreadScreen = ({route}: Props) => {
       )}
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   prompt: {

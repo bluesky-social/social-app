@@ -7,12 +7,14 @@ import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
 import {FEEDBACK_FORM_URL} from 'lib/constants'
 import {s} from 'lib/styles'
+import {useStores} from 'state/index'
 
 export const DesktopRightNav = observer(function DesktopRightNav() {
+  const store = useStores()
   const pal = usePalette('default')
   return (
     <View style={[styles.rightNav, pal.view]}>
-      <DesktopSearch />
+      {store.session.hasSession && <DesktopSearch />}
       <View style={styles.message}>
         <Text type="md" style={[pal.textLight, styles.messageLine]}>
           Welcome to Bluesky! This is a beta application that's still in

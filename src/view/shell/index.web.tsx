@@ -4,7 +4,6 @@ import {View, StyleSheet} from 'react-native'
 import {useStores} from 'state/index'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
-import {Login} from '../screens/Login'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
 import {Lightbox} from '../com/lightbox/Lightbox'
 import {ModalsContainer} from '../com/modals/Modal'
@@ -45,21 +44,10 @@ const ShellInner = observer(() => {
 
 export const Shell: React.FC = observer(() => {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
-  const store = useStores()
 
   if (isMobileWeb) {
     return <NoMobileWeb />
   }
-
-  if (!store.session.hasSession) {
-    return (
-      <View style={[s.hContentRegion, pageBg]}>
-        <Login />
-        <ModalsContainer />
-      </View>
-    )
-  }
-
   return (
     <View style={[s.hContentRegion, pageBg]}>
       <RoutesContainer>

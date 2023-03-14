@@ -26,7 +26,7 @@ export const PrivacyPolicyScreen = (_props: Props) => {
       <ViewHeader title="Privacy Policy" />
       <ScrollView style={[s.hContentRegion, pal.view]}>
         <View style={[s.p20]}>
-          <Text type="title-xl" style={[pal.text, s.pb20]}>
+          <Text type="title-xl" style={[pal.text, s.bold, s.pb20]}>
             Privacy Policy
           </Text>
           <PrivacyPolicyHtml />

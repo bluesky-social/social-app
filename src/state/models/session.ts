@@ -122,7 +122,9 @@ export class SessionModel {
       try {
         return await this.resumeSession(sess)
       } finally {
-        this.isResumingSession = false
+        runInAction(() => {
+          this.isResumingSession = false
+        })
       }
     } else {
       this.rootStore.log.debug(
