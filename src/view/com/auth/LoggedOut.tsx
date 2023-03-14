@@ -1,8 +1,8 @@
 import React from 'react'
 import {SafeAreaView} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {Signin} from 'view/com/auth/Signin'
-import {CreateAccount} from 'view/com/auth/CreateAccount'
+import {Login} from 'view/com/auth/login/Login'
+import {CreateAccount} from 'view/com/auth/create/CreateAccount'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -12,8 +12,8 @@ import {SplashScreen} from './SplashScreen'
 import {CenteredView} from '../util/Views'
 
 enum ScreenState {
-  S_SigninOrCreateAccount,
-  S_Signin,
+  S_LoginOrCreateAccount,
+  S_Login,
   S_CreateAccount,
 }
 
@@ -22,7 +22,7 @@ export const LoggedOut = observer(() => {
   const store = useStores()
   const {screen} = useAnalytics()
   const [screenState, setScreenState] = React.useState<ScreenState>(
-    ScreenState.S_SigninOrCreateAccount,
+    ScreenState.S_LoginOrCreateAccount,
   )
 
   React.useEffect(() => {
@@ -32,11 +32,11 @@ export const LoggedOut = observer(() => {
 
   if (
     store.session.isResumingSession ||
-    screenState === ScreenState.S_SigninOrCreateAccount
+    screenState === ScreenState.S_LoginOrCreateAccount
   ) {
     return (
       <SplashScreen
-        onPressSignin={() => setScreenState(ScreenState.S_Signin)}
+        onPressSignin={() => setScreenState(ScreenState.S_Login)}
         onPressCreateAccount={() => setScreenState(ScreenState.S_CreateAccount)}
       />
     )
@@ -46,17 +46,17 @@ export const LoggedOut = observer(() => {
     <CenteredView style={[s.hContentRegion, pal.view]}>
       <SafeAreaView testID="noSessionView" style={s.hContentRegion}>
         <ErrorBoundary>
-          {screenState === ScreenState.S_Signin ? (
-            <Signin
+          {screenState === ScreenState.S_Login ? (
+            <Login
               onPressBack={() =>
-                setScreenState(ScreenState.S_SigninOrCreateAccount)
+                setScreenState(ScreenState.S_LoginOrCreateAccount)
               }
             />
           ) : undefined}
           {screenState === ScreenState.S_CreateAccount ? (
             <CreateAccount
               onPressBack={() =>
-                setScreenState(ScreenState.S_SigninOrCreateAccount)
+                setScreenState(ScreenState.S_LoginOrCreateAccount)
               }
             />
           ) : undefined}

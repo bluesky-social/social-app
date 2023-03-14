@@ -38,7 +38,7 @@ export function ErrorMessage({
         />
       </View>
       <Text
-        type="sm"
+        type="sm-medium"
         style={[styles.message, pal.text]}
         numberOfLines={numberOfLines}>
         {message}

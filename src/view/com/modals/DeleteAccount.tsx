@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {BottomSheetTextInput} from '@gorhom/bottom-sheet'
+import {TextInput} from './util'
 import LinearGradient from 'react-native-linear-gradient'
 import * as Toast from '../util/Toast'
 import {Text} from '../util/text/Text'
@@ -116,7 +116,7 @@ export function Component({}: {}) {
               Check your inbox for an email with the confirmation code to enter
               below:
             </Text>
-            <BottomSheetTextInput
+            <TextInput
               style={[styles.textInput, pal.borderDark, pal.text, styles.mb20]}
               placeholder="Confirmation code"
               placeholderTextColor={pal.textLight.color}
@@ -127,7 +127,7 @@ export function Component({}: {}) {
             <Text type="lg" style={styles.description}>
               Please enter your password as well:
             </Text>
-            <BottomSheetTextInput
+            <TextInput
               style={[styles.textInput, pal.borderDark, pal.text]}
               placeholder="Password"
               placeholderTextColor={pal.textLight.color}

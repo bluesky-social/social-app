@@ -64,6 +64,7 @@ export const s = StyleSheet.create({
   footerSpacer: {height: 100},
   contentContainer: {paddingBottom: 200},
   contentContainerExtra: {paddingBottom: 300},
+  border0: {borderWidth: 0},
   border1: {borderWidth: 1},
   borderTop1: {borderTopWidth: 1},
   borderRight1: {borderRightWidth: 1},
