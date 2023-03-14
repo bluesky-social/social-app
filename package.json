@@ -6,6 +6,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
+    "build-web": "expo export:web && node ./scripts/post-web-build.js",
     "start": "expo start --dev-client",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
     "test": "jest --forceExit --testTimeout=20000 --bail",

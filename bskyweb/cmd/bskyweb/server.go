@@ -94,20 +94,23 @@ func serve(cctx *cli.Context) error {
 	// configure routes
 	e.File("/robots.txt", "static/robots.txt")
 	e.Static("/static", "static")
+	e.Static("/static/js", "../web-build/static/js")
 
 	e.GET("/", server.WebHome)
 
 	// generic routes
-	e.GET("/contacts", server.WebGeneric)
 	e.GET("/search", server.WebGeneric)
 	e.GET("/notifications", server.WebGeneric)
 	e.GET("/settings", server.WebGeneric)
-	e.GET("/settings", server.WebGeneric)
+	e.GET("/sys/debug", server.WebGeneric)
+	e.GET("/sys/log", server.WebGeneric)
+	e.GET("/support", server.WebGeneric)
+	e.GET("/support/privacy", server.WebGeneric)
 
 	// profile endpoints; only first populates info
 	e.GET("/profile/:handle", server.WebProfile)
 	e.GET("/profile/:handle/follows", server.WebGeneric)
-	e.GET("/profile/:handle/following", server.WebGeneric)
+	e.GET("/profile/:handle/followers", server.WebGeneric)
 
 	// post endpoints; only first populates info
 	e.GET("/profile/:handle/post/:rkey", server.WebPost)
