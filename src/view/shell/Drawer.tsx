@@ -134,9 +134,6 @@ export const DrawerContent = observer(() => {
           <View
             style={[
               styles.menuItemCount,
-              theme.colorScheme === 'light'
-                ? styles.menuItemCountLight
-                : styles.menuItemCountDark,
               count > 99
                 ? styles.menuItemCountHundreds
                 : count > 9
@@ -358,25 +355,19 @@ const styles = StyleSheet.create({
   menuItemCount: {
     position: 'absolute',
     width: 'auto',
-    right: -8,
-    top: -8,
+    right: -6,
+    top: -4,
     backgroundColor: colors.blue3,
-    borderWidth: 2,
     paddingHorizontal: 4,
     paddingBottom: 1,
     borderRadius: 6,
   },
-  menuItemCountLight: {
-    borderColor: colors.white,
-  },
-  menuItemCountDark: {
-    borderColor: '#1B1919',
-  },
   menuItemCountTens: {
-    width: 29,
+    width: 25,
   },
   menuItemCountHundreds: {
-    width: 38,
+    right: -12,
+    width: 34,
   },
   menuItemCountLabel: {
     fontSize: 12,
