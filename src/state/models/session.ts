@@ -7,6 +7,7 @@ import {
 } from '@atproto/api'
 import normalizeUrl from 'normalize-url'
 import {isObj, hasProp} from 'lib/type-guards'
+import {networkRetry} from 'lib/async/retry'
 import {z} from 'zod'
 import {RootStoreModel} from './root-store'
 
@@ -279,12 +280,14 @@ export class SessionModel {
     })
 
     try {
-      await agent.resumeSession({
-        accessJwt: account.accessJwt,
-        refreshJwt: account.refreshJwt,
-        did: account.did,
-        handle: account.handle,
-      })
+      await networkRetry(3, () =>
+        agent.resumeSession({
+          accessJwt: account.accessJwt || '',
+          refreshJwt: account.refreshJwt || '',
+          did: account.did,
+          handle: account.handle,
+        }),
+      )
       const addedInfo = await this.loadAccountInfo(agent, account.did)
       this.persistSession(
         account.service,
