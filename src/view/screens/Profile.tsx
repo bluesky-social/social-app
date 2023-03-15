@@ -8,6 +8,7 @@ import {ViewSelector} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
 import {ProfileUiModel, Sections} from 'state/models/ui/profile'
 import {useStores} from 'state/index'
+import {FeedItemModel} from 'state/models/feed-view'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedItem} from '../com/posts/FeedItem'
 import {PostFeedLoadingPlaceholder} from '../com/util/LoadingPlaceholder'
@@ -20,10 +21,6 @@ import {s, colors} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
-
-const LOADING_ITEM = {_reactKey: '__loading__'}
-const END_ITEM = {_reactKey: '__end__'}
-const EMPTY_ITEM = {_reactKey: '__empty__'}
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
@@ -73,98 +70,66 @@ export const ProfileScreen = withAuthRequired(
     const onSelectView = (index: number) => {
       uiState.setSelectedViewIndex(index)
     }
-    const onRefresh = () => {
+    const onRefresh = React.useCallback(() => {
       uiState
         .refresh()
         .catch((err: any) =>
           store.log.error('Failed to refresh user profile', err),
         )
-    }
-    const onEndReached = () => {
+    }, [uiState, store])
+    const onEndReached = React.useCallback(() => {
       uiState
         .loadMore()
         .catch((err: any) =>
           store.log.error('Failed to load more entries in user profile', err),
         )
-    }
-    const onPressTryAgain = () => {
+    }, [uiState, store])
+    const onPressTryAgain = React.useCallback(() => {
       uiState.setup()
-    }
+    }, [uiState])
 
     // rendering
     // =
 
-    const renderHeader = () => {
+    const renderHeader = React.useCallback(() => {
       if (!uiState) {
         return <View />
       }
       return <ProfileHeader view={uiState.profile} onRefreshAll={onRefresh} />
-    }
-    let renderItem
-    let Footer
-    let items: any[] = []
-    if (uiState) {
-      if (uiState.isInitialLoading) {
-        items = items.concat([LOADING_ITEM])
-        renderItem = () => <PostFeedLoadingPlaceholder />
-      } else if (uiState.currentView.hasError) {
-        items = items.concat([
-          {
-            _reactKey: '__error__',
-            error: uiState.currentView.error,
-          },
-        ])
-        renderItem = (item: any) => (
-          <View style={s.p5}>
-            <ErrorMessage
-              message={item.error}
-              onPressTryAgain={onPressTryAgain}
-            />
-          </View>
-        )
-      } else {
-        if (
-          uiState.selectedView === Sections.Posts ||
-          uiState.selectedView === Sections.PostsWithReplies
-        ) {
-          if (uiState.feed.hasContent) {
-            if (uiState.selectedView === Sections.Posts) {
-              items = uiState.feed.nonReplyFeed
-            } else {
-              items = uiState.feed.feed.slice()
-            }
-            if (!uiState.feed.hasMore) {
-              items = items.concat([END_ITEM])
-            } else if (uiState.feed.isLoading) {
-              Footer = LoadingMoreFooter
-            }
-            renderItem = (item: any) => {
-              if (item === END_ITEM) {
-                return <Text style={styles.endItem}>- end of feed -</Text>
-              }
-              return (
-                <FeedItem item={item} ignoreMuteFor={uiState.profile.did} />
-              )
-            }
-          } else if (uiState.feed.isEmpty) {
-            items = items.concat([EMPTY_ITEM])
-            renderItem = () => (
-              <EmptyState
-                icon={['far', 'message']}
-                message="No posts yet!"
-                style={styles.emptyState}
+    }, [uiState, onRefresh])
+    const Footer = React.useMemo(() => {
+      return uiState.showLoadingMoreFooter ? LoadingMoreFooter : undefined
+    }, [uiState.showLoadingMoreFooter])
+    const renderItem = React.useCallback(
+      (item: any) => {
+        if (item === ProfileUiModel.END_ITEM) {
+          return <Text style={styles.endItem}>- end of feed -</Text>
+        } else if (item === ProfileUiModel.LOADING_ITEM) {
+          return <PostFeedLoadingPlaceholder />
+        } else if (item._reactKey === '__error__') {
+          return (
+            <View style={s.p5}>
+              <ErrorMessage
+                message={item.error}
+                onPressTryAgain={onPressTryAgain}
               />
-            )
-          }
-        } else {
-          items = items.concat([EMPTY_ITEM])
-          renderItem = () => <Text>TODO</Text>
+            </View>
+          )
+        } else if (item === ProfileUiModel.EMPTY_ITEM) {
+          return (
+            <EmptyState
+              icon={['far', 'message']}
+              message="No posts yet!"
+              style={styles.emptyState}
+            />
+          )
+        } else if (item instanceof FeedItemModel) {
+          return <FeedItem item={item} ignoreMuteFor={uiState.profile.did} />
         }
-      }
-    }
-    if (!renderItem) {
-      renderItem = () => <View />
-    }
+        return <View />
+      },
+      [onPressTryAgain, uiState.profile.did],
+    )
 
     return (
       <View testID="profileView" style={styles.container}>
@@ -180,7 +145,7 @@ export const ProfileScreen = withAuthRequired(
           <ViewSelector
             swipeEnabled={false}
             sections={uiState.selectorItems}
-            items={items}
+            items={uiState.uiItems}
             renderHeader={renderHeader}
             renderItem={renderItem}
             ListFooterComponent={Footer}

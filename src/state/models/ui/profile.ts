@@ -15,6 +15,10 @@ export interface ProfileUiParams {
 }
 
 export class ProfileUiModel {
+  static LOADING_ITEM = {_reactKey: '__loading__'}
+  static END_ITEM = {_reactKey: '__end__'}
+  static EMPTY_ITEM = {_reactKey: '__empty__'}
+
   // data
   profile: ProfileViewModel
   feed: FeedModel
@@ -74,6 +78,51 @@ export class ProfileUiModel {
 
   get selectedView() {
     return this.selectorItems[this.selectedViewIndex]
+  }
+
+  get uiItems() {
+    let arr: any[] = []
+    if (this.isInitialLoading) {
+      arr = arr.concat([ProfileUiModel.LOADING_ITEM])
+    } else if (this.currentView.hasError) {
+      arr = arr.concat([
+        {
+          _reactKey: '__error__',
+          error: this.currentView.error,
+        },
+      ])
+    } else {
+      if (
+        this.selectedView === Sections.Posts ||
+        this.selectedView === Sections.PostsWithReplies
+      ) {
+        if (this.feed.hasContent) {
+          if (this.selectedView === Sections.Posts) {
+            arr = this.feed.nonReplyFeed
+          } else {
+            arr = this.feed.feed.slice()
+          }
+          if (!this.feed.hasMore) {
+            arr = arr.concat([ProfileUiModel.END_ITEM])
+          }
+        } else if (this.feed.isEmpty) {
+          arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
+        }
+      } else {
+        arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
+      }
+    }
+    return arr
+  }
+
+  get showLoadingMoreFooter() {
+    if (
+      this.selectedView === Sections.Posts ||
+      this.selectedView === Sections.PostsWithReplies
+    ) {
+      return this.feed.hasContent && this.feed.hasMore && this.feed.isLoading
+    }
+    return false
   }
 
   // public api
