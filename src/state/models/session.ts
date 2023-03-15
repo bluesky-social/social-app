@@ -179,15 +179,25 @@ export class SessionModel {
       hasSession: !!session,
     })
 
-    // upsert the account in our listing
     const existingAccount = this.accounts.find(
       account => account.service === service && account.did === did,
     )
+
+    // fall back to any pre-existing access tokens
+    let refreshJwt = session?.refreshJwt || existingAccount?.refreshJwt
+    let accessJwt = session?.accessJwt || existingAccount?.accessJwt
+    if (event === 'expired') {
+      // only clear the tokens when they're known to have expired
+      refreshJwt = undefined
+      accessJwt = undefined
+    }
+
     const newAccount = {
       service,
       did,
-      refreshJwt: session?.refreshJwt,
-      accessJwt: session?.accessJwt,
+      refreshJwt,
+      accessJwt,
+
       handle: session?.handle || existingAccount?.handle || '',
       displayName: addedInfo
         ? addedInfo.displayName
