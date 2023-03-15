@@ -22,11 +22,20 @@ export const withAuthRequired = <P extends object>(
 
 function Loading() {
   const pal = usePalette('default')
+
+  const [isTakingTooLong, setIsTakingTooLong] = React.useState(false)
+  React.useEffect(() => {
+    const t = setTimeout(() => setIsTakingTooLong(true), 15e3)
+    return () => clearTimeout(t)
+  }, [setIsTakingTooLong])
+
   return (
     <View style={[styles.loading, pal.view]}>
       <ActivityIndicator size="large" />
       <Text type="2xl" style={[styles.loadingText, pal.textLight]}>
-        Firing up the grill...
+        {isTakingTooLong
+          ? "This is taking too long. There may be a problem with your internet or with the service, but we're going to try a couple more times..."
+          : 'Connecting...'}
       </Text>
     </View>
   )

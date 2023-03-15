@@ -7,6 +7,7 @@ import {
 } from '@atproto/api'
 import normalizeUrl from 'normalize-url'
 import {isObj, hasProp} from 'lib/type-guards'
+import {networkRetry} from 'lib/async/retry'
 import {z} from 'zod'
 import {RootStoreModel} from './root-store'
 
@@ -35,6 +36,25 @@ interface AdditionalAccountData {
 }
 
 export class SessionModel {
+  // DEBUG
+  // emergency log facility to help us track down this logout issue
+  // remove when resolved
+  // -prf
+  private _log(message: string, details?: Record<string, any>) {
+    details = details || {}
+    details.state = {
+      data: this.data,
+      accounts: this.accounts.map(
+        a =>
+          `${!!a.accessJwt && !!a.refreshJwt ? '✅' : '❌'} ${a.handle} (${
+            a.service
+          })`,
+      ),
+      isResumingSession: this.isResumingSession,
+    }
+    this.rootStore.log.debug(message, details)
+  }
+
   /**
    * Currently-active session
    */
@@ -115,9 +135,7 @@ export class SessionModel {
   async attemptSessionResumption() {
     const sess = this.currentSession
     if (sess) {
-      this.rootStore.log.debug(
-        'SessionModel:attemptSessionResumption found stored session',
-      )
+      this._log('SessionModel:attemptSessionResumption found stored session')
       this.isResumingSession = true
       try {
         return await this.resumeSession(sess)
@@ -127,7 +145,7 @@ export class SessionModel {
         })
       }
     } else {
-      this.rootStore.log.debug(
+      this._log(
         'SessionModel:attemptSessionResumption has no session to resume',
       )
     }
@@ -137,7 +155,7 @@ export class SessionModel {
    * Sets the active session
    */
   setActiveSession(agent: AtpAgent, did: string) {
-    this.rootStore.log.debug('SessionModel:setActiveSession')
+    this._log('SessionModel:setActiveSession')
     this.data = {
       service: agent.service.toString(),
       did,
@@ -155,22 +173,32 @@ export class SessionModel {
     session?: AtpSessionData,
     addedInfo?: AdditionalAccountData,
   ) {
-    this.rootStore.log.debug('SessionModel:persistSession', {
+    this._log('SessionModel:persistSession', {
       service,
       did,
       event,
       hasSession: !!session,
     })
 
-    // upsert the account in our listing
     const existingAccount = this.accounts.find(
       account => account.service === service && account.did === did,
     )
+
+    // fall back to any pre-existing access tokens
+    let refreshJwt = session?.refreshJwt || existingAccount?.refreshJwt
+    let accessJwt = session?.accessJwt || existingAccount?.accessJwt
+    if (event === 'expired') {
+      // only clear the tokens when they're known to have expired
+      refreshJwt = undefined
+      accessJwt = undefined
+    }
+
     const newAccount = {
       service,
       did,
-      refreshJwt: session?.refreshJwt,
-      accessJwt: session?.accessJwt,
+      refreshJwt,
+      accessJwt,
+
       handle: session?.handle || existingAccount?.handle || '',
       displayName: addedInfo
         ? addedInfo.displayName
@@ -198,7 +226,7 @@ export class SessionModel {
    * Clears any session tokens from the accounts; used on logout.
    */
   private clearSessionTokens() {
-    this.rootStore.log.debug('SessionModel:clearSessionTokens')
+    this._log('SessionModel:clearSessionTokens')
     this.accounts = this.accounts.map(acct => ({
       service: acct.service,
       handle: acct.handle,
@@ -236,9 +264,9 @@ export class SessionModel {
    * Attempt to resume a session that we still have access tokens for.
    */
   async resumeSession(account: AccountData): Promise<boolean> {
-    this.rootStore.log.debug('SessionModel:resumeSession')
+    this._log('SessionModel:resumeSession')
     if (!(account.accessJwt && account.refreshJwt && account.service)) {
-      this.rootStore.log.debug(
+      this._log(
         'SessionModel:resumeSession aborted due to lack of access tokens',
       )
       return false
@@ -252,12 +280,14 @@ export class SessionModel {
     })
 
     try {
-      await agent.resumeSession({
-        accessJwt: account.accessJwt,
-        refreshJwt: account.refreshJwt,
-        did: account.did,
-        handle: account.handle,
-      })
+      await networkRetry(3, () =>
+        agent.resumeSession({
+          accessJwt: account.accessJwt || '',
+          refreshJwt: account.refreshJwt || '',
+          did: account.did,
+          handle: account.handle,
+        }),
+      )
       const addedInfo = await this.loadAccountInfo(agent, account.did)
       this.persistSession(
         account.service,
@@ -266,9 +296,9 @@ export class SessionModel {
         agent.session,
         addedInfo,
       )
-      this.rootStore.log.debug('SessionModel:resumeSession succeeded')
+      this._log('SessionModel:resumeSession succeeded')
     } catch (e: any) {
-      this.rootStore.log.debug('SessionModel:resumeSession failed', {
+      this._log('SessionModel:resumeSession failed', {
         error: e.toString(),
       })
       return false
@@ -290,7 +320,7 @@ export class SessionModel {
     identifier: string
     password: string
   }) {
-    this.rootStore.log.debug('SessionModel:login')
+    this._log('SessionModel:login')
     const agent = new AtpAgent({service})
     await agent.login({identifier, password})
     if (!agent.session) {
@@ -308,7 +338,7 @@ export class SessionModel {
     )
 
     this.setActiveSession(agent, did)
-    this.rootStore.log.debug('SessionModel:login succeeded')
+    this._log('SessionModel:login succeeded')
   }
 
   async createAccount({
@@ -324,7 +354,7 @@ export class SessionModel {
     handle: string
     inviteCode?: string
   }) {
-    this.rootStore.log.debug('SessionModel:createAccount')
+    this._log('SessionModel:createAccount')
     const agent = new AtpAgent({service})
     await agent.createAccount({
       handle,
@@ -348,14 +378,14 @@ export class SessionModel {
 
     this.setActiveSession(agent, did)
     this.rootStore.shell.setOnboarding(true)
-    this.rootStore.log.debug('SessionModel:createAccount succeeded')
+    this._log('SessionModel:createAccount succeeded')
   }
 
   /**
    * Close all sessions across all accounts.
    */
   async logout() {
-    this.rootStore.log.debug('SessionModel:logout')
+    this._log('SessionModel:logout')
     // TODO
     // need to evaluate why deleting the session has caused errors at times
     // -prf
