@@ -78,7 +78,6 @@ export class RootStoreModel {
   serialize(): unknown {
     return {
       appInfo: this.appInfo,
-      log: this.log.serialize(),
       session: this.session.serialize(),
       me: this.me.serialize(),
       shell: this.shell.serialize(),
@@ -92,9 +91,6 @@ export class RootStoreModel {
         if (appInfoParsed.success) {
           this.setAppInfo(appInfoParsed.data)
         }
-      }
-      if (hasProp(v, 'log')) {
-        this.log.hydrate(v.log)
       }
       if (hasProp(v, 'me')) {
         this.me.hydrate(v.me)

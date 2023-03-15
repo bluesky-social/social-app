@@ -1,6 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 import {XRPCError, XRPCInvalidResponseError} from '@atproto/xrpc'
-import {isObj, hasProp} from 'lib/type-guards'
+
+const MAX_ENTRIES = 300
 
 interface LogEntry {
   id: string
@@ -28,27 +29,14 @@ export class LogModel {
   entries: LogEntry[] = []
 
   constructor() {
-    makeAutoObservable(this, {serialize: false, hydrate: false})
-  }
-
-  serialize(): unknown {
-    return {
-      entries: this.entries.slice(-100),
-    }
-  }
-
-  hydrate(v: unknown) {
-    if (isObj(v)) {
-      if (hasProp(v, 'entries') && Array.isArray(v.entries)) {
-        this.entries = v.entries.filter(
-          e => isObj(e) && hasProp(e, 'id') && typeof e.id === 'string',
-        )
-      }
-    }
+    makeAutoObservable(this)
   }
 
   private add(entry: LogEntry) {
     this.entries.push(entry)
+    while (this.entries.length > MAX_ENTRIES) {
+      this.entries = this.entries.slice(50)
+    }
   }
 
   debug(summary: string, details?: any) {
