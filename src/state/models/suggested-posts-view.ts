@@ -48,6 +48,8 @@ export class SuggestedPostsView {
       const responses = await getMultipleAuthorsPosts(
         this.rootStore,
         TEAM_HANDLES(String(this.rootStore.agent.service)),
+        undefined,
+        30,
       )
       runInAction(() => {
         const finalPosts = mergePosts(responses, {repostsOnly: true})
