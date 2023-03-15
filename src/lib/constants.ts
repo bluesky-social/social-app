@@ -6,10 +6,10 @@ export const MAX_DESCRIPTION = 256
 
 export const PROD_TEAM_HANDLES = [
   'jay.bsky.social',
-  'paul.bsky.social',
-  'dan.bsky.social',
-  'divy.bsky.social',
-  'why.bsky.social',
+  'pfrazee.com',
+  'divy.zone',
+  'dholms.xyz',
+  'why.bsky.world',
   'iamrosewang.bsky.social',
 ]
 export const STAGING_TEAM_HANDLES = [
@@ -141,12 +141,10 @@ export const PROD_SUGGESTED_FOLLOWS = [
   'pwang',
   'martin',
   'jack',
-  'dan',
-  'why',
-  'divy',
   'jay',
-  'paul',
-].map(handle => `${handle}.bsky.social`)
+]
+  .map(handle => `${handle}.bsky.social`)
+  .concat(['pfrazee.com', 'divy.zone', 'dholms.xyz', 'why.bsky.world'])
 export const STAGING_SUGGESTED_FOLLOWS = ['arcalinea', 'paul', 'paul2'].map(
   handle => `${handle}.staging.bsky.dev`,
 )
