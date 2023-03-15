@@ -117,7 +117,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handle/post/:rkey/downvoted-by", server.WebGeneric)
 	e.GET("/profile/:handle/post/:rkey/reposted-by", server.WebGeneric)
 
-	bind := "localhost:8100"
+	bind := ":8100"
 	log.Infof("starting server bind=%s", bind)
 	return e.Start(bind)
 }
