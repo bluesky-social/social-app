@@ -178,7 +178,7 @@ export const ProfileScreen = withAuthRequired(
           />
         ) : uiState.profile.hasLoaded ? (
           <ViewSelector
-            swipeEnabled
+            swipeEnabled={false}
             sections={uiState.selectorItems}
             items={items}
             renderHeader={renderHeader}
