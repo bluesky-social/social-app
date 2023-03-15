@@ -2,15 +2,17 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"io"
+	"io/fs"
 	"net/http"
+	"os"
+	"strings"
 
 	comatproto "github.com/bluesky-social/indigo/api/atproto"
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
 	cliutil "github.com/bluesky-social/indigo/cmd/gosky/util"
 	"github.com/bluesky-social/indigo/xrpc"
+	"github.com/bluesky-social/social-app/bskyweb"
 
 	"github.com/flosch/pongo2/v6"
 	"github.com/labstack/echo/v4"
@@ -18,60 +20,35 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// TODO: embed templates in executable
-
-type Renderer struct {
-	Debug bool
-}
-
-func (r Renderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
-
-	var ctx pongo2.Context
-
-	if data != nil {
-		var ok bool
-		ctx, ok = data.(pongo2.Context)
-
-		if !ok {
-			return errors.New("no pongo2.Context data was passed...")
-		}
-	}
-
-	var t *pongo2.Template
-	var err error
-
-	if r.Debug {
-		t, err = pongo2.FromFile(name)
-	} else {
-		t, err = pongo2.FromCache(name)
-	}
-
-	if err != nil {
-		return err
-	}
-
-	return t.ExecuteWriter(ctx, w)
-}
-
 type Server struct {
 	xrpcc *xrpc.Client
 }
 
 func serve(cctx *cli.Context) error {
+	debug := cctx.Bool("debug")
+	httpAddress := cctx.String("http-address")
+	pdsHost := cctx.String("pds-host")
+	atpHandle := cctx.String("handle")
+	atpPassword := cctx.String("password")
+	mailmodoAPIKey := cctx.String("mailmodo-api-key")
+	mailmodoListName := cctx.String("mailmodo-list-name")
+
+	// Mailmodo client.
+	mailmodo := NewMailmodo(mailmodoAPIKey)
 
 	// create a new session
 	// TODO: does this work with no auth at all?
 	xrpcc := &xrpc.Client{
 		Client: cliutil.NewHttpClient(),
-		Host:   cctx.String("pds-host"),
+		Host:   pdsHost,
 		Auth: &xrpc.AuthInfo{
-			Handle: cctx.String("handle"),
+			Handle: atpHandle,
 		},
 	}
 
 	auth, err := comatproto.SessionCreate(context.TODO(), xrpcc, &comatproto.SessionCreate_Input{
 		Identifier: &xrpcc.Auth.Handle,
-		Password:   cctx.String("password"),
+		Password:   atpPassword,
 	})
 	if err != nil {
 		return err
@@ -83,19 +60,32 @@ func serve(cctx *cli.Context) error {
 
 	server := Server{xrpcc}
 
+	staticHandler := http.FileServer(func() http.FileSystem {
+		if debug {
+			return http.FS(os.DirFS("static"))
+		}
+		fsys, err := fs.Sub(bskyweb.StaticFS, "static")
+		if err != nil {
+			log.Fatal(err)
+		}
+		return http.FS(fsys)
+	}())
+
 	e := echo.New()
 	e.HideBanner = true
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		// Don't log requests for static content.
+		Skipper: func(c echo.Context) bool {
+			return strings.HasPrefix(c.Request().URL.Path, "/static")
+		},
 		Format: "method=${method} path=${uri} status=${status} latency=${latency_human}\n",
 	}))
-	e.Renderer = Renderer{Debug: true}
+	e.Renderer = NewRenderer("templates/", &bskyweb.TemplateFS, debug)
 	e.HTTPErrorHandler = customHTTPErrorHandler
 
 	// configure routes
-	e.File("/robots.txt", "static/robots.txt")
-	e.Static("/static", "static")
-	e.Static("/static/js", "../web-build/static/js")
-
+	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
+	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)))
 	e.GET("/", server.WebHome)
 
 	// generic routes
@@ -118,9 +108,17 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handle/post/:rkey/downvoted-by", server.WebGeneric)
 	e.GET("/profile/:handle/post/:rkey/reposted-by", server.WebGeneric)
 
-	bind := "localhost:8100"
-	log.Infof("starting server bind=%s", bind)
-	return e.Start(bind)
+	// Mailmodo
+	e.POST("/waitlist", func(c echo.Context) error {
+		email := strings.TrimSpace(c.FormValue("email"))
+		if err := mailmodo.AddToList(c.Request().Context(), mailmodoListName, email); err != nil {
+			return err
+		}
+		return c.JSON(http.StatusOK, map[string]bool{"success": true})
+	})
+
+	log.Infof("starting server address=%s", httpAddress)
+	return e.Start(httpAddress)
 }
 
 func customHTTPErrorHandler(err error, c echo.Context) {
@@ -132,18 +130,18 @@ func customHTTPErrorHandler(err error, c echo.Context) {
 	data := pongo2.Context{
 		"statusCode": code,
 	}
-	c.Render(code, "templates/error.html", data)
+	c.Render(code, "error.html", data)
 }
 
 // handler for endpoint that have no specific server-side handling
 func (srv *Server) WebGeneric(c echo.Context) error {
 	data := pongo2.Context{}
-	return c.Render(http.StatusOK, "templates/base.html", data)
+	return c.Render(http.StatusOK, "base.html", data)
 }
 
 func (srv *Server) WebHome(c echo.Context) error {
 	data := pongo2.Context{}
-	return c.Render(http.StatusOK, "templates/home.html", data)
+	return c.Render(http.StatusOK, "home.html", data)
 }
 
 func (srv *Server) WebPost(c echo.Context) error {
@@ -152,7 +150,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 	rkey := c.Param("rkey")
 	// sanity check argument
 	if len(handle) > 4 && len(handle) < 128 && len(rkey) > 0 {
-		ctx := context.TODO()
+		ctx := c.Request().Context()
 		// requires two fetches: first fetch profile (!)
 		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle)
 		if err != nil {
@@ -172,7 +170,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 		}
 
 	}
-	return c.Render(http.StatusOK, "templates/post.html", data)
+	return c.Render(http.StatusOK, "post.html", data)
 }
 
 func (srv *Server) WebProfile(c echo.Context) error {
@@ -180,7 +178,7 @@ func (srv *Server) WebProfile(c echo.Context) error {
 	handle := c.Param("handle")
 	// sanity check argument
 	if len(handle) > 4 && len(handle) < 128 {
-		ctx := context.TODO()
+		ctx := c.Request().Context()
 		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle)
 		if err != nil {
 			log.Warnf("failed to fetch handle: %s\t%v", handle, err)
@@ -189,5 +187,5 @@ func (srv *Server) WebProfile(c echo.Context) error {
 		}
 	}
 
-	return c.Render(http.StatusOK, "templates/profile.html", data)
+	return c.Render(http.StatusOK, "profile.html", data)
 }
