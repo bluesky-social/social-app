@@ -1,1 +1,4 @@
 .env
+
+# Don't check in the binary.
+/bskyweb
