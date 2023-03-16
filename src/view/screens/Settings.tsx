@@ -68,6 +68,8 @@ export const SettingsScreen = withAuthRequired(
     }
     const onPressAddAccount = () => {
       track('Settings:AddAccountButtonClicked')
+      navigation.navigate('HomeTab')
+      navigation.dispatch(StackActions.popToTop())
       store.session.clear()
     }
     const onPressChangeHandle = () => {
