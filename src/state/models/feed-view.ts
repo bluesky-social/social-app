@@ -23,36 +23,27 @@ import {
   mergePosts,
 } from 'lib/api/build-suggested-posts'
 
+import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
+
 const PAGE_SIZE = 30
 
 let _idCounter = 0
 
-type FeedViewPostWithThreadMeta = FeedViewPost & {
-  _isThreadParent?: boolean
-  _isThreadChildElided?: boolean
-  _isThreadChild?: boolean
-}
-
 export class FeedItemModel {
   // ui state
   _reactKey: string = ''
-  _isThreadParent: boolean = false
-  _isThreadChildElided: boolean = false
-  _isThreadChild: boolean = false
-  _hideParent: boolean = true // used to avoid dup post rendering while showing some parents
 
   // data
   post: PostView
   postRecord?: AppBskyFeedPost.Record
   reply?: FeedViewPost['reply']
-  replyParent?: FeedItemModel
   reason?: FeedViewPost['reason']
   richText?: RichText
 
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
-    v: FeedViewPostWithThreadMeta,
+    v: FeedViewPost,
   ) {
     this._reactKey = reactKey
     this.post = v.post
@@ -78,35 +69,21 @@ export class FeedItemModel {
       )
     }
     this.reply = v.reply
-    if (v.reply?.parent) {
-      this.replyParent = new FeedItemModel(rootStore, '', {
-        post: v.reply.parent,
-      })
-    }
     this.reason = v.reason
-    this._isThreadParent = v._isThreadParent || false
-    this._isThreadChild = v._isThreadChild || false
-    this._isThreadChildElided = v._isThreadChildElided || false
     makeAutoObservable(this, {rootStore: false})
   }
 
   copy(v: FeedViewPost) {
     this.post = v.post
     this.reply = v.reply
-    if (v.reply?.parent) {
-      this.replyParent = new FeedItemModel(this.rootStore, '', {
-        post: v.reply.parent,
-      })
-    } else {
-      this.replyParent = undefined
-    }
     this.reason = v.reason
   }
 
-  get _isRenderingAsThread() {
-    return (
-      this._isThreadParent || this._isThreadChild || this._isThreadChildElided
-    )
+  copyMetrics(v: FeedViewPost) {
+    this.post.replyCount = v.post.replyCount
+    this.post.repostCount = v.post.repostCount
+    this.post.upvoteCount = v.post.upvoteCount
+    this.post.viewer = v.post.viewer
   }
 
   get reasonRepost(): ReasonRepost | undefined {
@@ -192,6 +169,73 @@ export class FeedItemModel {
   }
 }
 
+export class FeedSliceModel {
+  // ui state
+  _reactKey: string = ''
+
+  // data
+  items: FeedItemModel[] = []
+
+  constructor(
+    public rootStore: RootStoreModel,
+    reactKey: string,
+    slice: FeedViewPostsSlice,
+  ) {
+    this._reactKey = reactKey
+    for (const item of slice.items) {
+      this.items.push(
+        new FeedItemModel(rootStore, `item-${_idCounter++}`, item),
+      )
+    }
+    makeAutoObservable(this, {rootStore: false})
+  }
+
+  get uri() {
+    if (this.isReply) {
+      return this.items[1].post.uri
+    }
+    return this.items[0].post.uri
+  }
+
+  get isThread() {
+    return (
+      this.items.length > 1 &&
+      this.items.every(
+        item => item.post.author.did === this.items[0].post.author.did,
+      )
+    )
+  }
+
+  get isReply() {
+    return this.items.length === 2 && !this.isThread
+  }
+
+  get rootItem() {
+    if (this.isReply) {
+      return this.items[1]
+    }
+    return this.items[0]
+  }
+
+  containsUri(uri: string) {
+    return !!this.items.find(item => item.post.uri === uri)
+  }
+
+  isThreadParentAt(i: number) {
+    if (this.items.length === 1) {
+      return false
+    }
+    return i < this.items.length - 1
+  }
+
+  isThreadChildAt(i: number) {
+    if (this.items.length === 1) {
+      return false
+    }
+    return i > 0
+  }
+}
+
 export class FeedModel {
   // state
   isLoading = false
@@ -203,12 +247,13 @@ export class FeedModel {
   hasMore = true
   loadMoreCursor: string | undefined
   pollCursor: string | undefined
+  tuner = new FeedTuner()
 
   // used to linearize async modifications to state
   private lock = new AwaitLock()
 
   // data
-  feed: FeedItemModel[] = []
+  slices: FeedSliceModel[] = []
 
   constructor(
     public rootStore: RootStoreModel,
@@ -228,7 +273,7 @@ export class FeedModel {
   }
 
   get hasContent() {
-    return this.feed.length !== 0
+    return this.slices.length !== 0
   }
 
   get hasError() {
@@ -241,34 +286,21 @@ export class FeedModel {
 
   get nonReplyFeed() {
     if (this.feedType === 'author') {
-      return this.feed.filter(item => {
+      return this.slices.filter(slice => {
         const params = this.params as GetAuthorFeed.QueryParams
+        const item = slice.rootItem
         const isRepost =
-          item.reply &&
-          (item?.reasonRepost?.by?.handle === params.author ||
-            item?.reasonRepost?.by?.did === params.author)
-
+          item?.reasonRepost?.by?.handle === params.author ||
+          item?.reasonRepost?.by?.did === params.author
         return (
           !item.reply || // not a reply
-          isRepost ||
-          ((item._isThreadParent || // but allow if it's a thread by the user
-            item._isThreadChild) &&
+          isRepost || // but allow if it's a repost
+          (slice.isThread && // or a thread by the user
             item.reply?.root.author.did === item.post.author.did)
         )
       })
-    } else if (this.feedType === 'home') {
-      return this.feed.filter(item => {
-        const isRepost = Boolean(item?.reasonRepost)
-        return (
-          !item.reply || // not a reply
-          isRepost || // but allow if it's a repost or thread
-          item._isThreadParent ||
-          item._isThreadChild ||
-          item.post.upvoteCount >= 2
-        )
-      })
     } else {
-      return this.feed
+      return this.slices
     }
   }
 
@@ -292,7 +324,8 @@ export class FeedModel {
     this.hasMore = true
     this.loadMoreCursor = undefined
     this.pollCursor = undefined
-    this.feed = []
+    this.slices = []
+    this.tuner.reset()
   }
 
   switchFeedType(feedType: 'home' | 'suggested') {
@@ -314,6 +347,7 @@ export class FeedModel {
     await this.lock.acquireAsync()
     try {
       this.setHasNewLatest(false)
+      this.tuner.reset()
       this._xLoading(isRefreshing)
       try {
         const res = await this._getFeed({limit: PAGE_SIZE})
@@ -401,11 +435,11 @@ export class FeedModel {
   update = bundleAsync(async () => {
     await this.lock.acquireAsync()
     try {
-      if (!this.feed.length) {
+      if (!this.slices.length) {
         return
       }
       this._xLoading()
-      let numToFetch = this.feed.length
+      let numToFetch = this.slices.length
       let cursor
       try {
         do {
@@ -464,9 +498,9 @@ export class FeedModel {
   onPostDeleted(uri: string) {
     let i
     do {
-      i = this.feed.findIndex(item => item.post.uri === uri)
+      i = this.slices.findIndex(slice => slice.containsUri(uri))
       if (i !== -1) {
-        this.feed.splice(i, 1)
+        this.slices.splice(i, 1)
       }
     } while (i !== -1)
   }
@@ -506,27 +540,29 @@ export class FeedModel {
   ) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    const orgLen = this.feed.length
 
-    const reorgedFeed = preprocessFeed(res.data.feed)
+    const slices = this.tuner.tune(
+      res.data.feed,
+      this.feedType === 'home'
+        ? [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
+        : [],
+    )
 
-    const toAppend: FeedItemModel[] = []
-    for (const item of reorgedFeed) {
-      const itemModel = new FeedItemModel(
+    const toAppend: FeedSliceModel[] = []
+    for (const slice of slices) {
+      const sliceModel = new FeedSliceModel(
         this.rootStore,
         `item-${_idCounter++}`,
-        item,
+        slice,
       )
-      toAppend.push(itemModel)
+      toAppend.push(sliceModel)
     }
     runInAction(() => {
       if (replace) {
-        this.feed = toAppend
+        this.slices = toAppend
       } else {
-        this.feed = this.feed.concat(toAppend)
+        this.slices = this.slices.concat(toAppend)
       }
-      dedupReposts(this.feed)
-      dedupParents(this.feed.slice(orgLen)) // we slice to avoid modifying rendering of already-shown posts
     })
   }
 
@@ -535,35 +571,39 @@ export class FeedModel {
   ) {
     this.pollCursor = res.data.feed[0]?.post.uri
 
-    const toPrepend: FeedItemModel[] = []
-    for (const item of res.data.feed) {
-      if (this.feed.find(item2 => item2.post.uri === item.post.uri)) {
-        break // stop here - we've hit a post we already have
-      }
+    const slices = this.tuner.tune(
+      res.data.feed,
+      this.feedType === 'home'
+        ? [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
+        : [],
+    )
 
-      const itemModel = new FeedItemModel(
+    const toPrepend: FeedSliceModel[] = []
+    for (const slice of slices) {
+      const itemModel = new FeedSliceModel(
         this.rootStore,
         `item-${_idCounter++}`,
-        item,
+        slice,
       )
       toPrepend.push(itemModel)
     }
     runInAction(() => {
-      this.feed = toPrepend.concat(this.feed)
+      this.slices = toPrepend.concat(this.slices)
     })
   }
 
   private _updateAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     for (const item of res.data.feed) {
-      const existingItem = this.feed.find(
-        // HACK: need to find the reposts' item, so we have to check for that -prf
-        item2 =>
-          item.post.uri === item2.post.uri &&
-          // @ts-ignore todo
-          item.reason?.by?.did === item2.reason?.by?.did,
+      const existingSlice = this.slices.find(slice =>
+        slice.containsUri(item.post.uri),
       )
-      if (existingItem) {
-        existingItem.copy(item)
+      if (existingSlice) {
+        const existingItem = existingSlice.items.find(
+          item2 => item2.post.uri === item.post.uri,
+        )
+        if (existingItem) {
+          existingItem.copyMetrics(item)
+        }
       }
     }
   }
@@ -600,148 +640,4 @@ export class FeedModel {
       )
     }
   }
-}
-
-interface Slice {
-  index: number
-  length: number
-}
-function preprocessFeed(feed: FeedViewPost[]): FeedViewPostWithThreadMeta[] {
-  const reorg: FeedViewPostWithThreadMeta[] = []
-
-  // phase one: identify threads and reorganize them into the feed so
-  // that they are in order and marked as part of a thread
-  for (let i = feed.length - 1; i >= 0; i--) {
-    const item = feed[i] as FeedViewPostWithThreadMeta
-
-    const selfReplyUri = getSelfReplyUri(item)
-    if (selfReplyUri) {
-      const parentIndex = reorg.findIndex(
-        item2 => item2.post.uri === selfReplyUri,
-      )
-      if (parentIndex !== -1 && !reorg[parentIndex]._isThreadParent) {
-        reorg[parentIndex]._isThreadParent = true
-        item._isThreadChild = true
-        reorg.splice(parentIndex + 1, 0, item)
-        continue
-      }
-    }
-    reorg.unshift(item)
-  }
-
-  // phase two: reorder the feed so that the timestamp of the
-  // last post in a thread establishes its ordering
-  let threadSlices: Slice[] = identifyThreadSlices(reorg)
-  for (const slice of threadSlices) {
-    const removed: FeedViewPostWithThreadMeta[] = reorg.splice(
-      slice.index,
-      slice.length,
-    )
-    const targetDate = new Date(ts(removed[removed.length - 1]))
-    let newIndex = reorg.findIndex(item => new Date(ts(item)) < targetDate)
-    if (newIndex === -1) {
-      newIndex = reorg.length
-    }
-    reorg.splice(newIndex, 0, ...removed)
-    slice.index = newIndex
-  }
-
-  // phase three: compress any threads that are longer than 3 posts
-  let removedCount = 0
-  // phase 2 moved posts around, so we need to re-identify the slice indices
-  threadSlices = identifyThreadSlices(reorg)
-  for (const slice of threadSlices) {
-    if (slice.length > 3) {
-      reorg.splice(slice.index - removedCount + 1, slice.length - 3)
-      if (reorg[slice.index - removedCount]) {
-        // ^ sanity check
-        reorg[slice.index - removedCount]._isThreadChildElided = true
-      }
-      removedCount += slice.length - 3
-    }
-  }
-
-  return reorg
-}
-
-function identifyThreadSlices(feed: FeedViewPost[]): Slice[] {
-  let activeSlice = -1
-  let threadSlices: Slice[] = []
-  for (let i = 0; i < feed.length; i++) {
-    const item = feed[i] as FeedViewPostWithThreadMeta
-    if (activeSlice === -1) {
-      if (item._isThreadParent) {
-        activeSlice = i
-      }
-    } else {
-      if (!item._isThreadChild) {
-        threadSlices.push({index: activeSlice, length: i - activeSlice})
-        if (item._isThreadParent) {
-          activeSlice = i
-        } else {
-          activeSlice = -1
-        }
-      }
-    }
-  }
-  if (activeSlice !== -1) {
-    threadSlices.push({index: activeSlice, length: feed.length - activeSlice})
-  }
-  return threadSlices
-}
-
-// WARNING: mutates `feed`
-function dedupReposts(feed: FeedItemModel[]) {
-  // remove duplicates caused by reposts
-  for (let i = 0; i < feed.length; i++) {
-    const item1 = feed[i]
-    for (let j = i + 1; j < feed.length; j++) {
-      const item2 = feed[j]
-      if (item2._isRenderingAsThread) {
-        // dont dedup items that are rendering in a thread as this can cause rendering errors
-        continue
-      }
-      if (item1.post.uri === item2.post.uri) {
-        feed.splice(j, 1)
-        j--
-      }
-    }
-  }
-}
-
-// WARNING: mutates `feed`
-function dedupParents(feed: FeedItemModel[]) {
-  // only show parents that aren't already in the feed
-  for (let i = 0; i < feed.length; i++) {
-    const item1 = feed[i]
-    if (!item1.replyParent || item1._isThreadChild) {
-      continue
-    }
-    let hideParent = false
-    for (let j = 0; j < feed.length; j++) {
-      const item2 = feed[j]
-      if (
-        item1.replyParent.post.uri === item2.post.uri || // the post itself is there
-        (j < i && item1.replyParent.post.uri === item2.replyParent?.post.uri) // another reply already showed it
-      ) {
-        hideParent = true
-        break
-      }
-    }
-    item1._hideParent = hideParent
-  }
-}
-
-function getSelfReplyUri(item: FeedViewPost): string | undefined {
-  return item.reply?.parent.author.did === item.post.author.did
-    ? item.reply?.parent.uri
-    : undefined
-}
-
-function ts(item: FeedViewPost | FeedItemModel): string {
-  if (item.reason?.indexedAt) {
-    // @ts-ignore need better type checks
-    return item.reason.indexedAt
-  }
-  return item.post.indexedAt
 }

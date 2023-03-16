@@ -6,11 +6,11 @@ import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewSelector} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
-import {ProfileUiModel, Sections} from 'state/models/ui/profile'
+import {ProfileUiModel} from 'state/models/ui/profile'
 import {useStores} from 'state/index'
-import {FeedItemModel} from 'state/models/feed-view'
+import {FeedSliceModel} from 'state/models/feed-view'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
-import {FeedItem} from '../com/posts/FeedItem'
+import {FeedSlice} from '../com/posts/FeedSlice'
 import {PostFeedLoadingPlaceholder} from '../com/util/LoadingPlaceholder'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
@@ -123,8 +123,8 @@ export const ProfileScreen = withAuthRequired(
               style={styles.emptyState}
             />
           )
-        } else if (item instanceof FeedItemModel) {
-          return <FeedItem item={item} ignoreMuteFor={uiState.profile.did} />
+        } else if (item instanceof FeedSliceModel) {
+          return <FeedSlice slice={item} ignoreMuteFor={uiState.profile.did} />
         }
         return <View />
       },
