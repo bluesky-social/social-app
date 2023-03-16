@@ -32,8 +32,11 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   yarn && \
   yarn build-web
 
+# DEBUG
+RUN find ./bskyweb/static && find ./web-build/static
+
 # Copy the bundle js files.
-RUN cp web-build/static/js/*.* bskyweb/static/js/
+RUN cp --verbose ./web-build/static/js/*.* ./bskyweb/static/js/
 
 #
 # Generate the bksyweb Go binary.
