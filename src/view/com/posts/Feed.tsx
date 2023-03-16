@@ -16,7 +16,7 @@ import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Button} from '../util/forms/Button'
 import {FeedModel} from 'state/models/feed-view'
-import {FeedItem} from './FeedItem'
+import {FeedSlice} from './FeedSlice'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
@@ -61,11 +61,11 @@ export const Feed = observer(function Feed({
       if (feed.isEmpty) {
         feedItems = feedItems.concat([EMPTY_FEED_ITEM])
       } else {
-        feedItems = feedItems.concat(feed.nonReplyFeed)
+        feedItems = feedItems.concat(feed.slices)
       }
     }
     return feedItems
-  }, [feed.hasError, feed.hasLoaded, feed.isEmpty, feed.nonReplyFeed])
+  }, [feed.hasError, feed.hasLoaded, feed.isEmpty, feed.slices])
 
   // events
   // =
@@ -92,10 +92,6 @@ export const Feed = observer(function Feed({
   // rendering
   // =
 
-  // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
-  //   VirtualizedList: You have a large list that is slow to update - make sure your
-  //   renderItem function renders components that follow React performance best practices
-  //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = React.useCallback(
     ({item}: {item: any}) => {
       if (item === EMPTY_FEED_ITEM) {
@@ -138,7 +134,7 @@ export const Feed = observer(function Feed({
           />
         )
       }
-      return <FeedItem item={item} showFollowBtn={showPostFollowBtn} />
+      return <FeedSlice slice={item} showFollowBtn={showPostFollowBtn} />
     },
     [feed, onPressTryAgain, showPostFollowBtn, pal, palInverted, navigation],
   )

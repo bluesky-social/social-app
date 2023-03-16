@@ -26,11 +26,14 @@ import {useAnalytics} from 'lib/analytics'
 
 export const FeedItem = observer(function ({
   item,
-  showReplyLine,
+  isThreadChild,
+  isThreadParent,
   showFollowBtn,
   ignoreMuteFor,
 }: {
   item: FeedItemModel
+  isThreadChild?: boolean
+  isThreadParent?: boolean
   showReplyLine?: boolean
   showFollowBtn?: boolean
   ignoreMuteFor?: string
@@ -110,10 +113,8 @@ export const FeedItem = observer(function ({
     return <View />
   }
 
-  const isChild =
-    item._isThreadChild || (!item.reason && !item._hideParent && item.reply)
-  const isSmallTop = isChild && item._isThreadChild
-  const isNoTop = isChild && !item._isThreadChild
+  const isSmallTop = isThreadChild
+  const isNoTop = false //isChild && !item._isThreadChild
   const isMuted =
     item.post.author.viewer?.muted && ignoreMuteFor !== item.post.author.did
   const outerStyles = [
@@ -122,25 +123,18 @@ export const FeedItem = observer(function ({
     {borderColor: pal.colors.border},
     isSmallTop ? styles.outerSmallTop : undefined,
     isNoTop ? styles.outerNoTop : undefined,
-    item._isThreadParent ? styles.outerNoBottom : undefined,
+    isThreadParent ? styles.outerNoBottom : undefined,
   ]
 
   return (
     <PostMutedWrapper isMuted={isMuted}>
-      {isChild && !item._isThreadChild && item.replyParent ? (
-        <FeedItem
-          item={item.replyParent}
-          showReplyLine
-          ignoreMuteFor={ignoreMuteFor}
-        />
-      ) : undefined}
       <Link style={outerStyles} href={itemHref} title={itemTitle} noFeedback>
-        {item._isThreadChild && (
+        {isThreadChild && (
           <View
             style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
           />
         )}
-        {(showReplyLine || item._isThreadParent) && (
+        {isThreadParent && (
           <View
             style={[
               styles.bottomReplyLine,
@@ -199,7 +193,7 @@ export const FeedItem = observer(function ({
               declarationCid={item.post.author.declaration.cid}
               showFollowBtn={showFollowBtn}
             />
-            {!isChild && replyAuthorDid !== '' && (
+            {!isThreadChild && replyAuthorDid !== '' && (
               <View style={[s.flexRow, s.mb2, s.alignCenter]}>
                 <FontAwesomeIcon
                   icon="reply"
@@ -259,7 +253,7 @@ export const FeedItem = observer(function ({
           </View>
         </View>
       </Link>
-      {item._isThreadChildElided ? (
+      {false /*isThreadChildElided*/ ? (
         <Link
           style={[pal.view, styles.viewFullThread]}
           href={itemHref}
