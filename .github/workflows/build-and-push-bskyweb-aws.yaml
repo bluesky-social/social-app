@@ -1,5 +1,8 @@
 name: build-and-push-bskyweb-aws
-on: [push]
+on:
+  push:
+    branches:
+      - main
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
   USERNAME: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_USERNAME }}
