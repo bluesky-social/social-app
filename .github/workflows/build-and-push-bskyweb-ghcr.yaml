@@ -37,7 +37,7 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=sha,enable=true,priority=100,prefix=pds:,suffix=,format=long
+            type=sha,enable=true,priority=100,prefix=bskyweb:,suffix=,format=long
 
       - name: Build and push Docker image
         id: build-and-push
