@@ -100,7 +100,7 @@ export class ProfileUiModel {
           if (this.selectedView === Sections.Posts) {
             arr = this.feed.nonReplyFeed
           } else {
-            arr = this.feed.feed.slice()
+            arr = this.feed.slices.slice()
           }
           if (!this.feed.hasMore) {
             arr = arr.concat([ProfileUiModel.END_ITEM])
