@@ -18,7 +18,7 @@ import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
 
-import PagerView, {PagerViewOnPageSelectedEvent} from 'react-native-pager-view'
+import {Pager, PageSelectedEvent} from 'view/com/util/Pager'
 import {Text} from 'view/com/util/text/Text'
 
 const HEADER_HEIGHT = 42
@@ -27,7 +27,7 @@ type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired((_opts: Props) => {
   const store = useStores()
   const onPageSelected = React.useCallback(
-    (e: PagerViewOnPageSelectedEvent) => {
+    (e: PageSelectedEvent) => {
       store.shell.setIsDrawerSwipeDisabled(e.nativeEvent.position > 0)
     },
     [store],
@@ -42,17 +42,17 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
   )
 
   return (
-    <PagerView
-      style={{height: '100%'}}
-      initialPage={0}
-      onPageSelected={onPageSelected}>
+    <Pager onPageSelected={onPageSelected}>
       <View key="1">
         <MyPage>First page</MyPage>
       </View>
       <View key="2">
         <MyPage>Second page</MyPage>
       </View>
-    </PagerView>
+      <View key="3">
+        <MyPage>Third page</MyPage>
+      </View>
+    </Pager>
   )
 })
 function MyPage({children}) {
