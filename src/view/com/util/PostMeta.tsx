@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    paddingBottom: 2,
+    paddingBottom: 4,
   },
   metaTwoLineLeft: {
     flex: 1,

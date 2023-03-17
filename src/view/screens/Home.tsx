@@ -58,11 +58,11 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
   const renderTabBar = React.useCallback(
     (props: TabBarProps) => {
       return (
-        <View style={[pal.view, styles.tabBar]}>
+        <View style={[pal.view, pal.border, styles.tabBar]}>
           <TouchableOpacity style={styles.tabBarAvi} onPress={onPressAvi}>
             <UserAvatar avatar={store.me.avatar} size={32} />
           </TouchableOpacity>
-          <TabBar items={['Popular', 'Following']} {...props} />
+          <TabBar items={['Suggested', 'Following']} {...props} />
         </View>
       )
     },
@@ -273,8 +273,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 18,
+    borderBottomWidth: 1,
   },
   tabBarAvi: {
     marginRight: 16,
+    paddingBottom: 2,
   },
 })
