@@ -36,6 +36,12 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
   const store = useStores()
   const [selectedPage, setSelectedPage] = React.useState(0)
 
+  const algoFeed = React.useMemo(() => {
+    const feed = new FeedModel(store, 'goodstuff', {})
+    feed.setup()
+    return feed
+  }, [store])
+
   useFocusEffect(
     React.useCallback(() => {
       store.shell.setIsDrawerSwipeDisabled(selectedPage > 0)
@@ -62,10 +68,12 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
       onPageSelected={onPageSelected}
       renderTabBar={renderTabBar}
       tabBarPosition="bottom">
-      <AlgoView key="1" />
-      <View key="2">
-        <FollowingView />
-      </View>
+      <FeedPage key="1" isPageFocused={selectedPage === 0} feed={algoFeed} />
+      <FeedPage
+        key="2"
+        isPageFocused={selectedPage === 1}
+        feed={store.me.mainFeed}
+      />
     </Pager>
   )
 })
@@ -110,194 +118,103 @@ const FloatingTabBar = observer((props: TabBarProps) => {
   )
 })
 
-const AlgoView = observer(() => {
-  const store = useStores()
-  const onMainScroll = useOnMainScroll(store)
-  const {screen, track} = useAnalytics()
-  const scrollElRef = React.useRef<FlatList>(null)
-  const {appState} = useAppState({
-    onForeground: () => doPoll(true),
-  })
-  const isFocused = useIsFocused()
-  const winDim = useWindowDimensions()
-  const containerStyle = React.useMemo(
-    () => ({height: winDim.height - TAB_BAR_HEIGHT}),
-    [winDim],
-  )
-  const algoFeed = React.useMemo(() => {
-    const feed = new FeedModel(store, 'goodstuff', {})
-    feed.setup()
-    return feed
-  }, [store])
+const FeedPage = observer(
+  ({isPageFocused, feed}: {feed: FeedModel; isPageFocused: boolean}) => {
+    const store = useStores()
+    const onMainScroll = useOnMainScroll(store)
+    const {screen, track} = useAnalytics()
+    const scrollElRef = React.useRef<FlatList>(null)
+    const {appState} = useAppState({
+      onForeground: () => doPoll(true),
+    })
+    const isScreenFocused = useIsFocused()
+    const winDim = useWindowDimensions()
+    const containerStyle = React.useMemo(
+      () => ({height: winDim.height - TAB_BAR_HEIGHT}),
+      [winDim],
+    )
 
-  const doPoll = React.useCallback(
-    (knownActive = false) => {
-      if ((!knownActive && appState !== 'active') || !isFocused) {
-        return
-      }
-      if (algoFeed.isLoading) {
-        return
-      }
-      store.log.debug('HomeScreen: Polling for new posts')
-      algoFeed.checkForLatest()
-    },
-    [appState, isFocused, store, algoFeed],
-  )
+    const doPoll = React.useCallback(
+      (knownActive = false) => {
+        if (
+          (!knownActive && appState !== 'active') ||
+          !isScreenFocused ||
+          !isPageFocused
+        ) {
+          return
+        }
+        if (feed.isLoading) {
+          return
+        }
+        store.log.debug('HomeScreen: Polling for new posts')
+        feed.checkForLatest()
+      },
+      [appState, isScreenFocused, isPageFocused, store, feed],
+    )
 
-  const scrollToTop = React.useCallback(() => {
-    scrollElRef.current?.scrollToOffset({offset: 0})
-  }, [scrollElRef])
+    const scrollToTop = React.useCallback(() => {
+      scrollElRef.current?.scrollToOffset({offset: 0})
+    }, [scrollElRef])
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const softResetSub = store.onScreenSoftReset(scrollToTop)
-      const feedCleanup = algoFeed.registerListeners()
-      const pollInterval = setInterval(doPoll, 15e3)
+    useFocusEffect(
+      React.useCallback(() => {
+        const softResetSub = store.onScreenSoftReset(scrollToTop)
+        const feedCleanup = feed.registerListeners()
+        const pollInterval = setInterval(doPoll, 15e3)
 
-      screen('Feed')
-      store.log.debug('HomeScreen: Updating feed')
-      if (algoFeed.hasContent) {
-        algoFeed.update()
-      }
+        screen('Feed')
+        store.log.debug('HomeScreen: Updating feed')
+        if (feed.hasContent) {
+          feed.update()
+        }
 
-      return () => {
-        clearInterval(pollInterval)
-        softResetSub.remove()
-        feedCleanup()
-      }
-    }, [store, doPoll, scrollToTop, screen, algoFeed]),
-  )
+        return () => {
+          clearInterval(pollInterval)
+          softResetSub.remove()
+          feedCleanup()
+        }
+      }, [store, doPoll, scrollToTop, screen, feed]),
+    )
 
-  const onPressCompose = React.useCallback(() => {
-    track('HomeScreen:PressCompose')
-    store.shell.openComposer({})
-  }, [store, track])
+    const onPressCompose = React.useCallback(() => {
+      track('HomeScreen:PressCompose')
+      store.shell.openComposer({})
+    }, [store, track])
 
-  const onPressTryAgain = React.useCallback(() => {
-    algoFeed.refresh()
-  }, [algoFeed])
+    const onPressTryAgain = React.useCallback(() => {
+      feed.refresh()
+    }, [feed])
 
-  const onPressLoadLatest = React.useCallback(() => {
-    algoFeed.refresh()
-    scrollToTop()
-  }, [algoFeed, scrollToTop])
+    const onPressLoadLatest = React.useCallback(() => {
+      feed.refresh()
+      scrollToTop()
+    }, [feed, scrollToTop])
 
-  return (
-    <View style={containerStyle}>
-      {store.shell.isOnboarding && <WelcomeBanner />}
-      <Feed
-        testID="homeFeed"
-        key="default"
-        feed={algoFeed}
-        scrollElRef={scrollElRef}
-        style={s.hContentRegion}
-        showPostFollowBtn
-        onPressTryAgain={onPressTryAgain}
-        onScroll={onMainScroll}
-      />
-      {algoFeed.hasNewLatest && !algoFeed.isRefreshing && (
-        <LoadLatestBtn onPress={onPressLoadLatest} />
-      )}
-      <FAB
-        testID="composeFAB"
-        onPress={onPressCompose}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-      />
-    </View>
-  )
-})
-
-const FollowingView = observer(() => {
-  const store = useStores()
-  const onMainScroll = useOnMainScroll(store)
-  const {screen, track} = useAnalytics()
-  const scrollElRef = React.useRef<FlatList>(null)
-  const {appState} = useAppState({
-    onForeground: () => doPoll(true),
-  })
-  const isFocused = useIsFocused()
-  const winDim = useWindowDimensions()
-  const containerStyle = React.useMemo(
-    () => ({height: winDim.height - TAB_BAR_HEIGHT}),
-    [winDim],
-  )
-
-  const doPoll = React.useCallback(
-    (knownActive = false) => {
-      if ((!knownActive && appState !== 'active') || !isFocused) {
-        return
-      }
-      if (store.me.mainFeed.isLoading) {
-        return
-      }
-      store.log.debug('HomeScreen: Polling for new posts')
-      store.me.mainFeed.checkForLatest()
-    },
-    [appState, isFocused, store],
-  )
-
-  const scrollToTop = React.useCallback(() => {
-    scrollElRef.current?.scrollToOffset({offset: 0})
-  }, [scrollElRef])
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const softResetSub = store.onScreenSoftReset(scrollToTop)
-      const feedCleanup = store.me.mainFeed.registerListeners()
-      const pollInterval = setInterval(doPoll, 15e3)
-
-      screen('Feed')
-      store.log.debug('HomeScreen: Updating feed')
-      if (store.me.mainFeed.hasContent) {
-        store.me.mainFeed.update()
-      }
-
-      return () => {
-        clearInterval(pollInterval)
-        softResetSub.remove()
-        feedCleanup()
-      }
-    }, [store, doPoll, scrollToTop, screen]),
-  )
-
-  const onPressCompose = React.useCallback(() => {
-    track('HomeScreen:PressCompose')
-    store.shell.openComposer({})
-  }, [store, track])
-
-  const onPressTryAgain = React.useCallback(() => {
-    store.me.mainFeed.refresh()
-  }, [store])
-
-  const onPressLoadLatest = React.useCallback(() => {
-    store.me.mainFeed.refresh()
-    scrollToTop()
-  }, [store, scrollToTop])
-
-  return (
-    <View style={containerStyle}>
-      {store.shell.isOnboarding && <WelcomeBanner />}
-      <Feed
-        testID="homeFeed"
-        key="default"
-        feed={store.me.mainFeed}
-        scrollElRef={scrollElRef}
-        style={s.hContentRegion}
-        showPostFollowBtn
-        onPressTryAgain={onPressTryAgain}
-        onScroll={onMainScroll}
-      />
-      {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing && (
-        <LoadLatestBtn onPress={onPressLoadLatest} />
-      )}
-      <FAB
-        testID="composeFAB"
-        onPress={onPressCompose}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-      />
-    </View>
-  )
-})
+    return (
+      <View style={containerStyle}>
+        {store.shell.isOnboarding && <WelcomeBanner />}
+        <Feed
+          testID="homeFeed"
+          key="default"
+          feed={feed}
+          scrollElRef={scrollElRef}
+          style={s.hContentRegion}
+          showPostFollowBtn
+          onPressTryAgain={onPressTryAgain}
+          onScroll={onMainScroll}
+        />
+        {feed.hasNewLatest && !feed.isRefreshing && (
+          <LoadLatestBtn onPress={onPressLoadLatest} />
+        )}
+        <FAB
+          testID="composeFAB"
+          onPress={onPressCompose}
+          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+        />
+      </View>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   tabBar: {
