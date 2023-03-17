@@ -59,8 +59,12 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
     [store],
   )
 
+  const onPressSelected = React.useCallback(() => {
+    store.emitScreenSoftReset()
+  }, [store])
+
   const renderTabBar = React.useCallback((props: TabBarProps) => {
-    return <FloatingTabBar {...props} />
+    return <FloatingTabBar {...props} onPressSelected={onPressSelected} />
   }, [])
 
   return (
@@ -156,9 +160,15 @@ const FeedPage = observer(
       scrollElRef.current?.scrollToOffset({offset: 0})
     }, [scrollElRef])
 
+    const onSoftReset = React.useCallback(() => {
+      if (isPageFocused) {
+        scrollToTop()
+      }
+    }, [isPageFocused, scrollToTop])
+
     useFocusEffect(
       React.useCallback(() => {
-        const softResetSub = store.onScreenSoftReset(scrollToTop)
+        const softResetSub = store.onScreenSoftReset(onSoftReset)
         const feedCleanup = feed.registerListeners()
         const pollInterval = setInterval(doPoll, 15e3)
 
@@ -173,7 +183,7 @@ const FeedPage = observer(
           softResetSub.remove()
           feedCleanup()
         }
-      }, [store, doPoll, scrollToTop, screen, feed]),
+      }, [store, doPoll, onSoftReset, screen, feed]),
     )
 
     const onPressCompose = React.useCallback(() => {

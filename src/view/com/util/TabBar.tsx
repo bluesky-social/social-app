@@ -21,6 +21,7 @@ export function TabBar({
   indicatorPosition = 'bottom',
   indicatorColor,
   onSelect,
+  onPressSelected,
 }: {
   selectedPage: number
   items: string[]
@@ -29,6 +30,7 @@ export function TabBar({
   indicatorPosition?: 'top' | 'bottom'
   indicatorColor?: string
   onSelect?: (index: number) => void
+  onPressSelected?: () => void
 }) {
   const pal = usePalette('default')
   const [itemLayouts, setItemLayouts] = useState<Layout[]>(
@@ -80,6 +82,9 @@ export function TabBar({
 
   const onPressItem = (index: number) => {
     onSelect?.(index)
+    if (index === selectedPage) {
+      onPressSelected?.()
+    }
   }
 
   return (
