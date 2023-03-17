@@ -257,7 +257,7 @@ export class FeedModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public feedType: 'home' | 'author' | 'suggested',
+    public feedType: 'home' | 'author' | 'suggested' | 'goodstuff',
     params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams,
   ) {
     makeAutoObservable(
@@ -634,6 +634,16 @@ export class FeedModel {
       return this.rootStore.api.app.bsky.feed.getTimeline(
         params as GetTimeline.QueryParams,
       )
+    } else if (this.feedType === 'goodstuff') {
+      const res = await this.rootStore.api.app.bsky.feed.getAuthorFeed({
+        ...params,
+        author: 'jay.bsky.social',
+      } as GetAuthorFeed.QueryParams)
+      res.data.feed = mergePosts([res], {repostsOnly: true})
+      res.data.feed.forEach(item => {
+        delete item.reason
+      })
+      return res
     } else {
       return this.rootStore.api.app.bsky.feed.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,

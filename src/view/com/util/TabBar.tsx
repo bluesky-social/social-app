@@ -37,7 +37,7 @@ export function TabBar({
   const panX = Animated.add(position, offset)
 
   const underlineStyle = {
-    backgroundColor: pal.colors.text,
+    backgroundColor: pal.colors.link,
     left: panX.interpolate({
       inputRange: items.map((_item, i) => i),
       outputRange: itemLayouts.map(l => l.x),
@@ -79,11 +79,8 @@ export function TabBar({
           <TouchableWithoutFeedback key={i} onPress={() => onPressItem(i)}>
             <View style={styles.item} ref={itemRefs[i]}>
               <Text
-                style={
-                  selected
-                    ? [styles.labelSelected, pal.text]
-                    : [styles.label, pal.textLight]
-                }>
+                type="xl-medium"
+                style={selected ? pal.text : pal.textLight}>
                 {item}
               </Text>
             </View>
@@ -100,20 +97,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
   },
   item: {
-    paddingTop: 8,
-    paddingBottom: 12,
-    marginRight: 14,
-    paddingHorizontal: 10,
-  },
-  label: {
-    fontWeight: '600',
-  },
-  labelSelected: {
-    fontWeight: '600',
+    paddingTop: 6,
+    paddingBottom: 14,
+    marginRight: 24,
   },
   underline: {
     position: 'absolute',
-    height: 4,
+    height: 3,
     bottom: 0,
+    borderRadius: 4,
   },
 })

@@ -2,16 +2,25 @@ import React from 'react'
 import {Animated, StyleSheet, View} from 'react-native'
 import PagerView, {PagerViewOnPageSelectedEvent} from 'react-native-pager-view'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {TabBar} from './TabBar'
+import {s} from 'lib/styles'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
+export interface TabBarProps {
+  selectedPage: number
+  position: Animated.Value
+  offset: Animated.Value
+  onSelect?: (index: number) => void
+}
+
 interface Props {
+  renderTabBar: (props: TabBarProps) => JSX.Element
   onPageSelected?: (e: PageSelectedEvent) => void
 }
 export const Pager = ({
   children,
+  renderTabBar,
   onPageSelected,
 }: React.PropsWithChildren<Props>) => {
   const [selectedPage, setSelectedPage] = React.useState(0)
@@ -36,16 +45,10 @@ export const Pager = ({
 
   return (
     <View>
-      <TabBar
-        position={position}
-        offset={offset}
-        items={['One', 'Two', 'Three']}
-        selectedPage={selectedPage}
-        onSelect={onTabBarSelect}
-      />
+      {renderTabBar({selectedPage, position, offset, onSelect: onTabBarSelect})}
       <AnimatedPagerView
         ref={pagerView}
-        style={{height: '100%'}}
+        style={s.h100pct}
         initialPage={0}
         onPageSelected={onPageSelectedInner}
         onPageScroll={Animated.event(
@@ -64,9 +67,3 @@ export const Pager = ({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  tabBar: {
-    flexDirection: 'row',
-  },
-})
