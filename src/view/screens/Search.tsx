@@ -205,7 +205,7 @@ export const SearchScreen = withAuthRequired(
               }>
               {foafsView.isLoading ? (
                 <ProfileCardFeedLoadingPlaceholder />
-              ) : foafsView.sources.length ? (
+              ) : foafsView.hasContent ? (
                 <>
                   {foafsView.popular.length > 0 && (
                     <View style={styles.suggestions}>

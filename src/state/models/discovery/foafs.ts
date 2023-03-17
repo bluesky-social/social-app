@@ -23,6 +23,18 @@ export class FoafsModel {
     makeAutoObservable(this)
   }
 
+  get hasContent() {
+    if (this.popular.length > 0) {
+      return true
+    }
+    for (const foaf of this.foafs.values()) {
+      if (foaf.follows.length) {
+        return true
+      }
+    }
+    return false
+  }
+
   fetch = bundleAsync(async () => {
     try {
       this.isLoading = true
