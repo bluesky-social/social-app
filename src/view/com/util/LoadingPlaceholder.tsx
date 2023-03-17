@@ -128,6 +128,46 @@ export function NotificationFeedLoadingPlaceholder() {
   )
 }
 
+export function ProfileCardLoadingPlaceholder({
+  style,
+}: {
+  style?: StyleProp<ViewStyle>
+}) {
+  const pal = usePalette('default')
+  return (
+    <View style={[styles.profileCard, pal.view, style]}>
+      <LoadingPlaceholder
+        width={40}
+        height={40}
+        style={styles.profileCardAvi}
+      />
+      <View>
+        <LoadingPlaceholder width={140} height={8} style={[s.mb5]} />
+        <LoadingPlaceholder width={120} height={8} style={[s.mb10]} />
+        <LoadingPlaceholder width={220} height={8} style={[s.mb5]} />
+      </View>
+    </View>
+  )
+}
+
+export function ProfileCardFeedLoadingPlaceholder() {
+  return (
+    <>
+      <ProfileCardLoadingPlaceholder />
+      <ProfileCardLoadingPlaceholder />
+      <ProfileCardLoadingPlaceholder />
+      <ProfileCardLoadingPlaceholder />
+      <ProfileCardLoadingPlaceholder />
+      <ProfileCardLoadingPlaceholder />
+      <ProfileCardLoadingPlaceholder />
+      <ProfileCardLoadingPlaceholder />
+      <ProfileCardLoadingPlaceholder />
+      <ProfileCardLoadingPlaceholder />
+      <ProfileCardLoadingPlaceholder />
+    </>
+  )
+}
+
 const styles = StyleSheet.create({
   loadingPlaceholder: {
     borderRadius: 6,
@@ -146,6 +186,15 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingLeft: 46,
     margin: 1,
+  },
+  profileCard: {
+    flexDirection: 'row',
+    padding: 10,
+    margin: 1,
+  },
+  profileCardAvi: {
+    borderRadius: 20,
+    marginRight: 10,
   },
   smallAvatar: {
     borderRadius: 15,

@@ -4,6 +4,7 @@ import {useTheme, PaletteColorName, PaletteColor} from '../ThemeContext'
 export interface UsePaletteValue {
   colors: PaletteColor
   view: ViewStyle
+  viewLight: ViewStyle
   btn: ViewStyle
   border: ViewStyle
   borderDark: ViewStyle
@@ -19,6 +20,9 @@ export function usePalette(color: PaletteColorName): UsePaletteValue {
     colors: palette,
     view: {
       backgroundColor: palette.background,
+    },
+    viewLight: {
+      backgroundColor: palette.backgroundLight,
     },
     btn: {
       backgroundColor: palette.backgroundLight,
