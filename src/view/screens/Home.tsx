@@ -14,7 +14,6 @@ import {FeedModel} from 'state/models/feed-view'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {Feed} from '../com/posts/Feed'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
-import {WelcomeBanner} from '../com/util/WelcomeBanner'
 import {TabBar} from 'view/com/util/TabBar'
 import {Pager, PageSelectedEvent, TabBarProps} from 'view/com/util/Pager'
 import {FAB} from '../com/util/FAB'
@@ -202,7 +201,6 @@ const FeedPage = observer(
 
     return (
       <View style={containerStyle}>
-        {store.shell.isOnboarding && <WelcomeBanner />}
         <Feed
           testID="homeFeed"
           key="default"
