@@ -77,6 +77,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
 
         <View>
           <FollowButton
+            type="default"
             did={opts.did}
             declarationCid={opts.declarationCid}
             onToggleFollow={onToggleFollow}

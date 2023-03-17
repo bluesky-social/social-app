@@ -1,8 +1,8 @@
 import React from 'react'
 import {
+  Animated,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
   View,
   useWindowDimensions,
 } from 'react-native'
@@ -15,7 +15,6 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {Feed} from '../com/posts/Feed'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
 import {WelcomeBanner} from '../com/util/WelcomeBanner'
-import {UserAvatar} from 'view/com/util/UserAvatar'
 import {TabBar} from 'view/com/util/TabBar'
 import {Pager, PageSelectedEvent, TabBarProps} from 'view/com/util/Pager'
 import {FAB} from '../com/util/FAB'
@@ -23,15 +22,18 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
+import {clamp} from 'lodash'
 
 const TAB_BAR_HEIGHT = 82
+const BOTTOM_BAR_HEIGHT = 48
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired((_opts: Props) => {
   const store = useStores()
-  const pal = usePalette('default')
   const [selectedPage, setSelectedPage] = React.useState(0)
 
   useFocusEffect(
@@ -51,31 +53,60 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
     [store],
   )
 
-  const onPressAvi = React.useCallback(() => {
-    store.shell.openDrawer()
-  }, [store])
-
-  const renderTabBar = React.useCallback(
-    (props: TabBarProps) => {
-      return (
-        <View style={[pal.view, pal.border, styles.tabBar]}>
-          <TouchableOpacity style={styles.tabBarAvi} onPress={onPressAvi}>
-            <UserAvatar avatar={store.me.avatar} size={32} />
-          </TouchableOpacity>
-          <TabBar items={['Suggested', 'Following']} {...props} />
-        </View>
-      )
-    },
-    [store.me.avatar, pal, onPressAvi],
-  )
+  const renderTabBar = React.useCallback((props: TabBarProps) => {
+    return <FloatingTabBar {...props} />
+  }, [])
 
   return (
-    <Pager onPageSelected={onPageSelected} renderTabBar={renderTabBar}>
+    <Pager
+      onPageSelected={onPageSelected}
+      renderTabBar={renderTabBar}
+      tabBarPosition="bottom">
       <AlgoView key="1" />
       <View key="2">
         <FollowingView />
       </View>
     </Pager>
+  )
+})
+
+const FloatingTabBar = observer((props: TabBarProps) => {
+  const store = useStores()
+  const safeAreaInsets = useSafeAreaInsets()
+  const pal = usePalette('default')
+  const interp = useAnimatedValue(0)
+
+  const pad = React.useMemo(
+    () => ({
+      paddingBottom: clamp(safeAreaInsets.bottom, 15, 20),
+    }),
+    [safeAreaInsets],
+  )
+
+  React.useEffect(() => {
+    Animated.timing(interp, {
+      toValue: store.shell.minimalShellMode ? 0 : 1,
+      duration: 100,
+      useNativeDriver: true,
+      isInteraction: false,
+    }).start()
+  }, [interp, store.shell.minimalShellMode])
+  const transform = {
+    transform: [
+      {translateY: Animated.multiply(interp, -1 * BOTTOM_BAR_HEIGHT)},
+    ],
+  }
+
+  return (
+    <Animated.View
+      style={[pal.view, pal.border, styles.tabBar, pad, transform]}>
+      <TabBar
+        items={['Suggested', 'Following']}
+        {...props}
+        indicatorPosition="top"
+        indicatorColor={pal.colors.link}
+      />
+    </Animated.View>
   )
 })
 
@@ -270,13 +301,19 @@ const FollowingView = observer(() => {
 
 const styles = StyleSheet.create({
   tabBar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 18,
-    borderBottomWidth: 1,
+    paddingHorizontal: 8,
+    borderTopWidth: 1,
+    paddingTop: 0,
+    paddingBottom: 30,
+    // height: 100,
   },
   tabBarAvi: {
-    marginRight: 16,
-    paddingBottom: 2,
+    marginRight: 4,
   },
 })
