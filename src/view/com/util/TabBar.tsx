@@ -78,9 +78,7 @@ export function TabBar({
         return (
           <TouchableWithoutFeedback key={i} onPress={() => onPressItem(i)}>
             <View style={styles.item} ref={itemRefs[i]}>
-              <Text
-                type="xl-medium"
-                style={selected ? pal.text : pal.textLight}>
+              <Text type="xl-bold" style={selected ? pal.text : pal.textLight}>
                 {item}
               </Text>
             </View>
@@ -97,14 +95,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
   },
   item: {
-    paddingTop: 6,
-    paddingBottom: 14,
+    paddingTop: 8,
+    paddingBottom: 12,
     marginRight: 24,
   },
   underline: {
     position: 'absolute',
     height: 3,
-    bottom: 0,
+    bottom: -1,
     borderRadius: 4,
   },
 })
