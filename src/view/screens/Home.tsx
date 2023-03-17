@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, View} from 'react-native'
+import {FlatList, StyleSheet, View, useWindowDimensions} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
@@ -9,15 +9,73 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
 import {WelcomeBanner} from '../com/util/WelcomeBanner'
+import {UserAvatar} from 'view/com/util/UserAvatar'
 import {FAB} from '../com/util/FAB'
 import {useStores} from 'state/index'
+import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
 
+import PagerView, {PagerViewOnPageSelectedEvent} from 'react-native-pager-view'
+import {Text} from 'view/com/util/text/Text'
+
 const HEADER_HEIGHT = 42
 
+type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
+export const HomeScreen = withAuthRequired((_opts: Props) => {
+  const store = useStores()
+  const onPageSelected = React.useCallback(
+    (e: PagerViewOnPageSelectedEvent) => {
+      store.shell.setIsDrawerSwipeDisabled(e.nativeEvent.position > 0)
+    },
+    [store],
+  )
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        store.shell.setIsDrawerSwipeDisabled(false)
+      }
+    }, [store]),
+  )
+
+  return (
+    <PagerView
+      style={{height: '100%'}}
+      initialPage={0}
+      onPageSelected={onPageSelected}>
+      <View key="1">
+        <MyPage>First page</MyPage>
+      </View>
+      <View key="2">
+        <MyPage>Second page</MyPage>
+      </View>
+    </PagerView>
+  )
+})
+function MyPage({children}) {
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        backgroundColor: 'white',
+      }}>
+      <Text>{children}</Text>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  tabBar: {
+    flexDirection: 'row',
+  },
+})
+/*
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired(
   observer(function Home(_opts: Props) {
@@ -113,3 +171,4 @@ export const HomeScreen = withAuthRequired(
     )
   }),
 )
+*/

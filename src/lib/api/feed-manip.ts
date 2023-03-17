@@ -140,7 +140,8 @@ export class FeedTuner {
       for (const item of slice.items) {
         this.seenUris.add(item.post.uri)
       }
-      slice.logSelf()
+      // DEBUG uncomment to get a quick view of the data
+      // slice.logSelf()
     }
 
     return slices

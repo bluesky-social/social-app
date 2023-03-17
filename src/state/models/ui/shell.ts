@@ -122,6 +122,7 @@ export class ShellUiModel {
   darkMode = false
   minimalShellMode = false
   isDrawerOpen = false
+  isDrawerSwipeDisabled = false
   isModalActive = false
   activeModals: Modal[] = []
   isLightboxActive = false
@@ -166,6 +167,10 @@ export class ShellUiModel {
 
   closeDrawer() {
     this.isDrawerOpen = false
+  }
+
+  setIsDrawerSwipeDisabled(v: boolean) {
+    this.isDrawerSwipeDisabled = v
   }
 
   openModal(modal: Modal) {

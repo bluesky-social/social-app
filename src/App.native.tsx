@@ -4,8 +4,10 @@ import {Linking} from 'react-native'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import SplashScreen from 'react-native-splash-screen'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {observer} from 'mobx-react-lite'
 import {ThemeProvider} from 'lib/ThemeContext'
+import {s} from 'lib/styles'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from './view/shell'
@@ -51,9 +53,11 @@ const App = observer(() => {
       <RootSiblingParent>
         <analytics.Provider>
           <RootStoreProvider value={rootStore}>
-            <SafeAreaProvider>
-              <Shell />
-            </SafeAreaProvider>
+            <GestureHandlerRootView style={s.h100pct}>
+              <SafeAreaProvider>
+                <Shell />
+              </SafeAreaProvider>
+            </GestureHandlerRootView>
           </RootStoreProvider>
         </analytics.Provider>
       </RootSiblingParent>
