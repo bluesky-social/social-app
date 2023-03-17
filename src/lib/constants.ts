@@ -161,16 +161,6 @@ export function SUGGESTED_FOLLOWS(serviceUrl: string) {
   }
 }
 
-export function GOOD_STUFF(serviceUrl: string) {
-  if (serviceUrl.includes('localhost')) {
-    return 'alice.test'
-  } else if (serviceUrl.includes('staging')) {
-    return 'paul.staging.bsky.dev'
-  } else {
-    return 'jay.bsky.social'
-  }
-}
-
 export const POST_IMG_MAX_WIDTH = 2000
 export const POST_IMG_MAX_HEIGHT = 2000
 export const POST_IMG_MAX_SIZE = 1000000
