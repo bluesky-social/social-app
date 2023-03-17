@@ -42,7 +42,7 @@ const FollowButton = observer(
 
     return (
       <Button
-        type={isFollowing ? 'default' : 'primary'}
+        type={isFollowing ? 'default' : 'inverted'}
         onPress={onToggleFollowInner}
         label={isFollowing ? 'Unfollow' : 'Follow'}
       />

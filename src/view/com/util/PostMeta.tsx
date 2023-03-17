@@ -44,7 +44,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
     // two-liner with follow button
     return (
       <View style={styles.metaTwoLine}>
-        <View>
+        <View style={styles.metaTwoLineLeft}>
           <View style={styles.metaTwoLineTop}>
             <DesktopWebTextLink
               type="lg-bold"
@@ -69,6 +69,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
             type="md"
             style={[styles.metaItem, pal.textLight]}
             lineHeight={1.2}
+            numberOfLines={1}
             text={`@${handle}`}
             href={`/profile/${opts.authorHandle}`}
           />
@@ -134,7 +135,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    width: '100%',
     paddingBottom: 2,
+  },
+  metaTwoLineLeft: {
+    flex: 1,
+    paddingRight: 40,
   },
   metaTwoLineTop: {
     flexDirection: 'row',
