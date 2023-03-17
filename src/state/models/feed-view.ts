@@ -646,7 +646,7 @@ export class FeedModel {
         this.rootStore.session.currentSession?.accessJwt || '',
         params as GetTimeline.QueryParams,
       )
-      res.data.feed = res.data.feed.filter(
+      res.data.feed = (res.data.feed || []).filter(
         item => !item.post.author.viewer?.muted,
       )
       return res
