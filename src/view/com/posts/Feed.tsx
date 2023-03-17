@@ -12,6 +12,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {CenteredView, FlatList} from '../util/Views'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {ViewHeader} from '../util/ViewHeader'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Button} from '../util/forms/Button'
@@ -24,6 +25,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
 
+const HEADER_ITEM = {_reactKey: '__header__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_FEED_ITEM = {_reactKey: '__error__'}
 
@@ -53,7 +55,7 @@ export const Feed = observer(function Feed({
   const navigation = useNavigation<NavigationProp>()
 
   const data = React.useMemo(() => {
-    let feedItems: any[] = []
+    let feedItems: any[] = [HEADER_ITEM]
     if (feed.hasLoaded) {
       if (feed.hasError) {
         feedItems = feedItems.concat([ERROR_FEED_ITEM])
@@ -133,6 +135,8 @@ export const Feed = observer(function Feed({
             onPressTryAgain={onPressTryAgain}
           />
         )
+      } else if (item === HEADER_ITEM) {
+        return <ViewHeader title="Bluesky" canGoBack={false} />
       }
       return <FeedSlice slice={item} showFollowBtn={showPostFollowBtn} />
     },
