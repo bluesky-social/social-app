@@ -476,7 +476,13 @@ export class FeedModel {
     }
     const res = await this._getFeed({limit: 1})
     const currentLatestUri = this.pollCursor
-    const item = res.data.feed[0]
+    const slices = this.tuner.tune(
+      res.data.feed,
+      this.feedType === 'home'
+        ? [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
+        : [],
+    )
+    const item = slices[0]?.rootItem
     if (!item) {
       return
     }
