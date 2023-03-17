@@ -18,12 +18,16 @@ export function TabBar({
   items,
   position,
   offset,
+  indicatorPosition = 'bottom',
+  indicatorColor,
   onSelect,
 }: {
   selectedPage: number
   items: string[]
   position: Animated.Value
   offset: Animated.Value
+  indicatorPosition?: 'top' | 'bottom'
+  indicatorColor?: string
   onSelect?: (index: number) => void
 }) {
   const pal = usePalette('default')
@@ -36,8 +40,10 @@ export function TabBar({
   )
   const panX = Animated.add(position, offset)
 
-  const underlineStyle = {
-    backgroundColor: pal.colors.link,
+  const indicatorStyle = {
+    backgroundColor: indicatorColor || pal.colors.link,
+    bottom: indicatorPosition === 'bottom' ? -1 : undefined,
+    top: indicatorPosition === 'top' ? -1 : undefined,
     left: panX.interpolate({
       inputRange: items.map((_item, i) => i),
       outputRange: itemLayouts.map(l => l.x),
@@ -72,12 +78,16 @@ export function TabBar({
 
   return (
     <View style={[pal.view, styles.outer]} onLayout={onLayout}>
-      <Animated.View style={[styles.underline, underlineStyle]} />
+      <Animated.View style={[styles.indicator, indicatorStyle]} />
       {items.map((item, i) => {
         const selected = i === selectedPage
         return (
           <TouchableWithoutFeedback key={i} onPress={() => onPressItem(i)}>
-            <View style={styles.item} ref={itemRefs[i]}>
+            <View
+              style={
+                indicatorPosition === 'top' ? styles.itemTop : styles.itemBottom
+              }
+              ref={itemRefs[i]}>
               <Text type="xl-bold" style={selected ? pal.text : pal.textLight}>
                 {item}
               </Text>
@@ -94,15 +104,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 14,
   },
-  item: {
+  itemTop: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginRight: 24,
+  },
+  itemBottom: {
     paddingTop: 8,
     paddingBottom: 12,
     marginRight: 24,
   },
-  underline: {
+  indicator: {
     position: 'absolute',
     height: 3,
-    bottom: -1,
     borderRadius: 4,
   },
 })

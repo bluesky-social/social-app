@@ -15,11 +15,13 @@ export interface TabBarProps {
 }
 
 interface Props {
+  tabBarPosition?: 'top' | 'bottom'
   renderTabBar: (props: TabBarProps) => JSX.Element
   onPageSelected?: (e: PageSelectedEvent) => void
 }
 export const Pager = ({
   children,
+  tabBarPosition = 'top',
   renderTabBar,
   onPageSelected,
 }: React.PropsWithChildren<Props>) => {
@@ -45,7 +47,13 @@ export const Pager = ({
 
   return (
     <View>
-      {renderTabBar({selectedPage, position, offset, onSelect: onTabBarSelect})}
+      {tabBarPosition === 'top' &&
+        renderTabBar({
+          selectedPage,
+          position,
+          offset,
+          onSelect: onTabBarSelect,
+        })}
       <AnimatedPagerView
         ref={pagerView}
         style={s.h100pct}
@@ -64,6 +72,13 @@ export const Pager = ({
         )}>
         {children}
       </AnimatedPagerView>
+      {tabBarPosition === 'bottom' &&
+        renderTabBar({
+          selectedPage,
+          position,
+          offset,
+          onSelect: onTabBarSelect,
+        })}
     </View>
   )
 }
