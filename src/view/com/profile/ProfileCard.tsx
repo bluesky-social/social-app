@@ -16,6 +16,7 @@ export function ProfileCard({
   avatar,
   description,
   isFollowedBy,
+  noBg,
   noBorder,
   followers,
   renderButton,
@@ -25,6 +26,7 @@ export function ProfileCard({
   avatar?: string
   description?: string
   isFollowedBy?: boolean
+  noBg?: boolean
   noBorder?: boolean
   followers?: AppBskyActorProfile.View[] | undefined
   renderButton?: () => JSX.Element
@@ -32,7 +34,12 @@ export function ProfileCard({
   const pal = usePalette('default')
   return (
     <Link
-      style={[styles.outer, pal.border, noBorder && styles.outerNoBorder]}
+      style={[
+        styles.outer,
+        pal.border,
+        noBorder && styles.outerNoBorder,
+        !noBg && pal.view,
+      ]}
       href={`/profile/${handle}`}
       title={handle}
       noFeedback
@@ -103,6 +110,7 @@ export const ProfileCardWithFollowBtn = observer(
     avatar,
     description,
     isFollowedBy,
+    noBg,
     noBorder,
     followers,
   }: {
@@ -113,6 +121,7 @@ export const ProfileCardWithFollowBtn = observer(
     avatar?: string
     description?: string
     isFollowedBy?: boolean
+    noBg?: boolean
     noBorder?: boolean
     followers?: AppBskyActorProfile.View[] | undefined
   }) => {
@@ -126,6 +135,7 @@ export const ProfileCardWithFollowBtn = observer(
         avatar={avatar}
         description={description}
         isFollowedBy={isFollowedBy}
+        noBg={noBg}
         noBorder={noBorder}
         followers={followers}
         renderButton={

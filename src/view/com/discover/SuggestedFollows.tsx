@@ -28,6 +28,7 @@ export const SuggestedFollows = ({
             handle={item.handle}
             displayName={item.displayName}
             avatar={item.avatar}
+            noBg
             noBorder
             description=""
             followers={
