@@ -388,6 +388,8 @@ PODS:
     - React-Core
   - react-native-image-resizer (3.0.5):
     - React-Core
+  - react-native-pager-view (6.1.4):
+    - React-Core
   - react-native-paste-input (0.6.2):
     - React-Core
     - Swime (= 3.0.6)
@@ -614,6 +616,7 @@ DEPENDENCIES:
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - "react-native-cameraroll (from `../node_modules/@react-native-camera-roll/camera-roll`)"
   - "react-native-image-resizer (from `../node_modules/@bam.tech/react-native-image-resizer`)"
+  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - "react-native-paste-input (from `../node_modules/@mattermost/react-native-paste-input`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
@@ -747,6 +750,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-camera-roll/camera-roll"
   react-native-image-resizer:
     :path: "../node_modules/@bam.tech/react-native-image-resizer"
+  react-native-pager-view:
+    :path: "../node_modules/react-native-pager-view"
   react-native-paste-input:
     :path: "../node_modules/@mattermost/react-native-paste-input"
   react-native-safe-area-context:
@@ -865,6 +870,7 @@ SPEC CHECKSUMS:
   react-native-blur: 50c9feabacbc5f49b61337ebc32192c6be7ec3c3
   react-native-cameraroll: cb752fda6d5268f1646b4390bd5be1f27706b9a0
   react-native-image-resizer: 00ceb0e05586c7aadf061eea676957a6c2ec60fa
+  react-native-pager-view: b58cb9e9f42f64e50cab3040815772c1d119a2e2
   react-native-paste-input: 3392800944a47c00dddbff23c31c281482209679
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
