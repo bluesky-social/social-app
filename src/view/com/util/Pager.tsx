@@ -68,7 +68,7 @@ export const Pager = ({
               },
             },
           ],
-          {useNativeDriver: false},
+          {useNativeDriver: true},
         )}>
         {children}
       </AnimatedPagerView>

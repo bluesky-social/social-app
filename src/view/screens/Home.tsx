@@ -311,7 +311,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingTop: 0,
     paddingBottom: 30,
-    // height: 100,
   },
   tabBarAvi: {
     marginRight: 4,

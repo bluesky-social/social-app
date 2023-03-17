@@ -44,14 +44,20 @@ export function TabBar({
     backgroundColor: indicatorColor || pal.colors.link,
     bottom: indicatorPosition === 'bottom' ? -1 : undefined,
     top: indicatorPosition === 'top' ? -1 : undefined,
-    left: panX.interpolate({
-      inputRange: items.map((_item, i) => i),
-      outputRange: itemLayouts.map(l => l.x),
-    }),
-    width: panX.interpolate({
-      inputRange: items.map((_item, i) => i),
-      outputRange: itemLayouts.map(l => l.width),
-    }),
+    transform: [
+      {
+        translateX: panX.interpolate({
+          inputRange: items.map((_item, i) => i),
+          outputRange: itemLayouts.map(l => l.x + l.width / 2),
+        }),
+      },
+      {
+        scaleX: panX.interpolate({
+          inputRange: items.map((_item, i) => i),
+          outputRange: itemLayouts.map(l => l.width),
+        }),
+      },
+    ],
   }
 
   const onLayout = () => {
@@ -116,6 +122,8 @@ const styles = StyleSheet.create({
   },
   indicator: {
     position: 'absolute',
+    left: 0,
+    width: 1,
     height: 3,
     borderRadius: 4,
   },
