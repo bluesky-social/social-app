@@ -16,7 +16,7 @@ import {RootStoreModel} from './root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {RichText} from 'lib/strings/rich-text'
-import {SUGGESTED_FOLLOWS} from 'lib/constants'
+import {SUGGESTED_FOLLOWS, GOOD_STUFF} from 'lib/constants'
 import {
   getCombinedCursors,
   getMultipleAuthorsPosts,
@@ -643,7 +643,7 @@ export class FeedModel {
     } else if (this.feedType === 'goodstuff') {
       const res = await this.rootStore.api.app.bsky.feed.getAuthorFeed({
         ...params,
-        author: 'jay.bsky.social',
+        author: GOOD_STUFF(String(this.rootStore.agent.service)),
       } as GetAuthorFeed.QueryParams)
       res.data.feed = mergePosts([res], {repostsOnly: true})
       res.data.feed.forEach(item => {
