@@ -33,6 +33,7 @@ export class MeModel {
   clear() {
     this.mainFeed.clear()
     this.notifications.clear()
+    this.follows.clear()
     this.did = ''
     this.handle = ''
     this.displayName = ''

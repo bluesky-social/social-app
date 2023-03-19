@@ -1,21 +1,30 @@
 import React from 'react'
 import {Animated, View} from 'react-native'
 import PagerView, {PagerViewOnPageSelectedEvent} from 'react-native-pager-view'
-import {TabBarProps} from './TabBar'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {s} from 'lib/styles'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
+export interface RenderTabBarFnProps {
+  selectedPage: number
+  position: Animated.Value
+  offset: Animated.Value
+  onSelect?: (index: number) => void
+}
+export type RenderTabBarFn = (props: RenderTabBarFnProps) => JSX.Element
+
 interface Props {
   tabBarPosition?: 'top' | 'bottom'
-  renderTabBar: (props: TabBarProps) => JSX.Element
+  initialPage?: number
+  renderTabBar: RenderTabBarFn
   onPageSelected?: (e: PageSelectedEvent) => void
 }
 export const Pager = ({
   children,
   tabBarPosition = 'top',
+  initialPage = 0,
   renderTabBar,
   onPageSelected,
 }: React.PropsWithChildren<Props>) => {
@@ -51,7 +60,7 @@ export const Pager = ({
       <AnimatedPagerView
         ref={pagerView}
         style={s.h100pct}
-        initialPage={0}
+        initialPage={initialPage}
         onPageSelected={onPageSelectedInner}
         onPageScroll={Animated.event(
           [

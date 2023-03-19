@@ -13,9 +13,14 @@ import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {FeedModel} from 'state/models/feed-view'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {Feed} from '../com/posts/Feed'
+import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
-import {TabBar, TabBarProps} from 'view/com/util/TabBar'
-import {Pager, PageSelectedEvent} from 'view/com/util/Pager'
+import {TabBar} from 'view/com/util/TabBar'
+import {
+  Pager,
+  PageSelectedEvent,
+  RenderTabBarFnProps,
+} from 'view/com/util/Pager'
 import {FAB} from '../com/util/FAB'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -63,69 +68,86 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
   }, [store])
 
   const renderTabBar = React.useCallback(
-    (props: TabBarProps) => {
+    (props: RenderTabBarFnProps) => {
       return <FloatingTabBar {...props} onPressSelected={onPressSelected} />
     },
     [onPressSelected],
   )
 
+  const renderFollowingEmptyState = React.useCallback(() => {
+    return <FollowingEmptyState />
+  }, [])
+
+  const initialPage = store.me.follows.isEmpty ? 1 : 0
   return (
     <Pager
       onPageSelected={onPageSelected}
       renderTabBar={renderTabBar}
-      tabBarPosition="bottom">
+      tabBarPosition="bottom"
+      initialPage={initialPage}>
       <FeedPage
         key="1"
         isPageFocused={selectedPage === 0}
         feed={store.me.mainFeed}
+        renderEmptyState={renderFollowingEmptyState}
       />
       <FeedPage key="2" isPageFocused={selectedPage === 1} feed={algoFeed} />
     </Pager>
   )
 })
 
-const FloatingTabBar = observer((props: TabBarProps) => {
-  const store = useStores()
-  const safeAreaInsets = useSafeAreaInsets()
-  const pal = usePalette('default')
-  const interp = useAnimatedValue(0)
+const FloatingTabBar = observer(
+  (props: RenderTabBarFnProps & {onPressSelected: () => void}) => {
+    const store = useStores()
+    const safeAreaInsets = useSafeAreaInsets()
+    const pal = usePalette('default')
+    const interp = useAnimatedValue(0)
 
-  const pad = React.useMemo(
-    () => ({
-      paddingBottom: clamp(safeAreaInsets.bottom, 15, 20),
-    }),
-    [safeAreaInsets],
-  )
+    const pad = React.useMemo(
+      () => ({
+        paddingBottom: clamp(safeAreaInsets.bottom, 15, 20),
+      }),
+      [safeAreaInsets],
+    )
 
-  React.useEffect(() => {
-    Animated.timing(interp, {
-      toValue: store.shell.minimalShellMode ? 0 : 1,
-      duration: 100,
-      useNativeDriver: true,
-      isInteraction: false,
-    }).start()
-  }, [interp, store.shell.minimalShellMode])
-  const transform = {
-    transform: [
-      {translateY: Animated.multiply(interp, -1 * BOTTOM_BAR_HEIGHT)},
-    ],
-  }
+    React.useEffect(() => {
+      Animated.timing(interp, {
+        toValue: store.shell.minimalShellMode ? 0 : 1,
+        duration: 100,
+        useNativeDriver: true,
+        isInteraction: false,
+      }).start()
+    }, [interp, store.shell.minimalShellMode])
+    const transform = {
+      transform: [
+        {translateY: Animated.multiply(interp, -1 * BOTTOM_BAR_HEIGHT)},
+      ],
+    }
 
-  return (
-    <Animated.View
-      style={[pal.view, pal.border, styles.tabBar, pad, transform]}>
-      <TabBar
-        {...props}
-        items={['Following', "What's hot"]}
-        indicatorPosition="top"
-        indicatorColor={pal.colors.link}
-      />
-    </Animated.View>
-  )
-})
+    return (
+      <Animated.View
+        style={[pal.view, pal.border, styles.tabBar, pad, transform]}>
+        <TabBar
+          {...props}
+          items={['Following', "What's hot"]}
+          indicatorPosition="top"
+          indicatorColor={pal.colors.link}
+        />
+      </Animated.View>
+    )
+  },
+)
 
 const FeedPage = observer(
-  ({isPageFocused, feed}: {feed: FeedModel; isPageFocused: boolean}) => {
+  ({
+    isPageFocused,
+    feed,
+    renderEmptyState,
+  }: {
+    feed: FeedModel
+    isPageFocused: boolean
+    renderEmptyState?: () => JSX.Element
+  }) => {
     const store = useStores()
     const onMainScroll = useOnMainScroll(store)
     const {screen, track} = useAnalytics()
@@ -213,6 +235,7 @@ const FeedPage = observer(
           showPostFollowBtn
           onPressTryAgain={onPressTryAgain}
           onScroll={onMainScroll}
+          renderEmptyState={renderEmptyState}
         />
         {feed.hasNewLatest && !feed.isRefreshing && (
           <LoadLatestBtn onPress={onPressLoadLatest} />
