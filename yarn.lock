@@ -10492,6 +10492,13 @@ kysely@^0.22.0:
   resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.22.0.tgz#8aac53942da3cadc604d7d154a746d983fe8f7b9"
   integrity sha512-ZE3qWtnqLOalodzfK5QUEcm7AEulhxsPNuKaGFsC3XiqO92vMLm+mAHk/NnbSIOtC4RmGm0nsv700i8KDp1gfQ==
 
+lande@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/lande/-/lande-1.0.10.tgz#1f6c6542e628338eb18def22edd1038f5fce9e7a"
+  integrity sha512-yT52DQh+UV2pEp08jOYrA4drDv0DbjpiRyZYgl25ak9G2cVR2AimzrqkYQWrD9a7Ud+qkAcaiDDoNH9DXfHPmw==
+  dependencies:
+    toygrad "^2.6.0"
+
 language-subtag-registry@~0.3.2:
   version "0.3.22"
   resolved "https://registry.yarnpkg.com/language-subtag-registry/-/language-subtag-registry-0.3.22.tgz#2e1500861b2e457eba7e7ae86877cbd08fa1fd1d"
@@ -15678,6 +15685,11 @@ tough-cookie@^4.0.0, tough-cookie@^4.1.2:
     punycode "^2.1.1"
     universalify "^0.2.0"
     url-parse "^1.5.3"
+
+toygrad@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/toygrad/-/toygrad-2.6.0.tgz#e814bb7da026db8e08dc7da14c7155f49cdb4d54"
+  integrity sha512-g4zBmlSbvzOE5FOILxYkAybTSxijKLkj1WoNqVGnbMcWDyj4wWQ+eYSr3ik7XOpIgMq/7eBcPRTJX3DM2E0YMg==
 
 tr46@^1.0.1:
   version "1.0.1"

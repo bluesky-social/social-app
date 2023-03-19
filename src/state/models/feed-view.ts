@@ -336,6 +336,20 @@ export class FeedModel {
     return this.setup()
   }
 
+  private get feedTuners() {
+    if (this.feedType === 'goodstuff') {
+      return [
+        FeedTuner.dedupReposts,
+        FeedTuner.likedRepliesOnly,
+        FeedTuner.englishOnly,
+      ]
+    }
+    if (this.feedType === 'home') {
+      return [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
+    }
+    return []
+  }
+
   /**
    * Load for first render
    */
@@ -477,12 +491,7 @@ export class FeedModel {
     }
     const res = await this._getFeed({limit: 1})
     const currentLatestUri = this.pollCursor
-    const slices = this.tuner.tune(
-      res.data.feed,
-      this.feedType === 'home'
-        ? [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
-        : [],
-    )
+    const slices = this.tuner.tune(res.data.feed, this.feedTuners)
     const item = slices[0]?.rootItem
     if (!item) {
       return
@@ -548,12 +557,7 @@ export class FeedModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
 
-    const slices = this.tuner.tune(
-      res.data.feed,
-      this.feedType === 'home'
-        ? [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
-        : [],
-    )
+    const slices = this.tuner.tune(res.data.feed, this.feedTuners)
 
     const toAppend: FeedSliceModel[] = []
     for (const slice of slices) {
@@ -578,12 +582,7 @@ export class FeedModel {
   ) {
     this.pollCursor = res.data.feed[0]?.post.uri
 
-    const slices = this.tuner.tune(
-      res.data.feed,
-      this.feedType === 'home'
-        ? [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
-        : [],
-    )
+    const slices = this.tuner.tune(res.data.feed, this.feedTuners)
 
     const toPrepend: FeedSliceModel[] = []
     for (const slice of slices) {
