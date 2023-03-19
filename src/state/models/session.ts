@@ -154,13 +154,13 @@ export class SessionModel {
   /**
    * Sets the active session
    */
-  setActiveSession(agent: AtpAgent, did: string) {
+  async setActiveSession(agent: AtpAgent, did: string) {
     this._log('SessionModel:setActiveSession')
     this.data = {
       service: agent.service.toString(),
       did,
     }
-    this.rootStore.handleSessionChange(agent)
+    await this.rootStore.handleSessionChange(agent)
   }
 
   /**
@@ -304,7 +304,7 @@ export class SessionModel {
       return false
     }
 
-    this.setActiveSession(agent, account.did)
+    await this.setActiveSession(agent, account.did)
     return true
   }
 
@@ -337,7 +337,7 @@ export class SessionModel {
       },
     )
 
-    this.setActiveSession(agent, did)
+    await this.setActiveSession(agent, did)
     this._log('SessionModel:login succeeded')
   }
 
@@ -376,7 +376,7 @@ export class SessionModel {
       },
     )
 
-    this.setActiveSession(agent, did)
+    await this.setActiveSession(agent, did)
     this._log('SessionModel:createAccount succeeded')
   }
 
