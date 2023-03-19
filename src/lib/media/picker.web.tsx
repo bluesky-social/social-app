@@ -111,6 +111,18 @@ export async function cropAndCompressFlow(
 // helpers
 // =
 
+/**
+ * Opens the select file dialog in the browser.
+ * NOTE:
+ * If in the future someone updates this method to use:
+ * https://developer.mozilla.org/en-US/docs/Web/API/window/showOpenFilePicker
+ * Check that the `showOpenFilePicker` API does not require any permissions
+ * granted to use. As of this writing, it does not, but that could change
+ * in the future. If the user does need to go through a permissions granting
+ * flow, then checkout the usePhotoLibraryPermission() hook in
+ *   src/lib/hooks/usePermissions.ts
+ * so that it gets appropriately updated.
+ */
 function selectFile(opts: PickerOpts): Promise<PickedFile> {
   return new Promise((resolve, reject) => {
     var input = document.createElement('input')
