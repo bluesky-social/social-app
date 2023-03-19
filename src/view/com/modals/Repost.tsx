@@ -29,7 +29,7 @@ export function Component({
     <View style={[s.flex1, pal.view, styles.container]}>
       <View style={s.pb20}>
         <TouchableOpacity style={[styles.actionBtn]} onPress={onRepost}>
-          <RepostIcon strokeWidth={2} size={24} />
+          <RepostIcon strokeWidth={2} size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
             {!isReposted ? 'Repost' : 'Undo repost'}
           </Text>

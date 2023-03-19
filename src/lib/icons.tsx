@@ -420,7 +420,7 @@ export function RepostIcon({
   size = 24,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<ViewStyle>
+  style?: StyleProp<TextStyle>
   size?: string | number
   strokeWidth: number
 }) {

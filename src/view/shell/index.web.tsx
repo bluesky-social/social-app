@@ -33,6 +33,7 @@ const ShellInner = observer(() => {
         onClose={() => store.shell.closeComposer()}
         winHeight={0}
         replyTo={store.shell.composerOpts?.replyTo}
+        quote={store.shell.composerOpts?.quote}
         onPost={store.shell.composerOpts?.onPost}
       />
       <ModalsContainer />
