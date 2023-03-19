@@ -14,8 +14,8 @@ import {FeedModel} from 'state/models/feed-view'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {Feed} from '../com/posts/Feed'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
-import {TabBar} from 'view/com/util/TabBar'
-import {Pager, PageSelectedEvent, TabBarProps} from 'view/com/util/Pager'
+import {TabBar, TabBarProps} from 'view/com/util/TabBar'
+import {Pager, PageSelectedEvent} from 'view/com/util/Pager'
 import {FAB} from '../com/util/FAB'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -62,21 +62,24 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
     store.emitScreenSoftReset()
   }, [store])
 
-  const renderTabBar = React.useCallback((props: TabBarProps) => {
-    return <FloatingTabBar {...props} onPressSelected={onPressSelected} />
-  }, [])
+  const renderTabBar = React.useCallback(
+    (props: TabBarProps) => {
+      return <FloatingTabBar {...props} onPressSelected={onPressSelected} />
+    },
+    [onPressSelected],
+  )
 
   return (
     <Pager
       onPageSelected={onPageSelected}
       renderTabBar={renderTabBar}
       tabBarPosition="bottom">
-      <FeedPage key="1" isPageFocused={selectedPage === 0} feed={algoFeed} />
       <FeedPage
-        key="2"
-        isPageFocused={selectedPage === 1}
+        key="1"
+        isPageFocused={selectedPage === 0}
         feed={store.me.mainFeed}
       />
+      <FeedPage key="2" isPageFocused={selectedPage === 1} feed={algoFeed} />
     </Pager>
   )
 })
@@ -112,8 +115,8 @@ const FloatingTabBar = observer((props: TabBarProps) => {
     <Animated.View
       style={[pal.view, pal.border, styles.tabBar, pad, transform]}>
       <TabBar
-        items={['Suggested', 'Following']}
         {...props}
+        items={['Following', "What's hot"]}
         indicatorPosition="top"
         indicatorColor={pal.colors.link}
       />
@@ -232,7 +235,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
     borderTopWidth: 1,
     paddingTop: 0,
     paddingBottom: 30,

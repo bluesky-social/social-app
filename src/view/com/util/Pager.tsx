@@ -1,18 +1,12 @@
 import React from 'react'
-import {Animated, StyleSheet, View} from 'react-native'
+import {Animated, View} from 'react-native'
 import PagerView, {PagerViewOnPageSelectedEvent} from 'react-native-pager-view'
+import {TabBarProps} from './TabBar'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {s} from 'lib/styles'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
-
-export interface TabBarProps {
-  selectedPage: number
-  position: Animated.Value
-  offset: Animated.Value
-  onSelect?: (index: number) => void
-}
 
 interface Props {
   tabBarPosition?: 'top' | 'bottom'

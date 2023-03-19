@@ -13,6 +13,17 @@ interface Layout {
   width: number
 }
 
+export interface TabBarProps {
+  selectedPage: number
+  items: string[]
+  position: Animated.Value
+  offset: Animated.Value
+  indicatorPosition?: 'top' | 'bottom'
+  indicatorColor?: string
+  onSelect?: (index: number) => void
+  onPressSelected?: () => void
+}
+
 export function TabBar({
   selectedPage,
   items,
@@ -22,16 +33,7 @@ export function TabBar({
   indicatorColor,
   onSelect,
   onPressSelected,
-}: {
-  selectedPage: number
-  items: string[]
-  position: Animated.Value
-  offset: Animated.Value
-  indicatorPosition?: 'top' | 'bottom'
-  indicatorColor?: string
-  onSelect?: (index: number) => void
-  onPressSelected?: () => void
-}) {
+}: TabBarProps) {
   const pal = usePalette('default')
   const [itemLayouts, setItemLayouts] = useState<Layout[]>(
     items.map(() => ({x: 0, width: 0})),
