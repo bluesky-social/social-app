@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   Keyboard,
+  RefreshControl,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -13,21 +14,23 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {ScrollView} from '../com/util/Views'
+import {ScrollView} from 'view/com/util/Views'
 import {
   NativeStackScreenProps,
   SearchTabNavigatorParams,
 } from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
-import {UserAvatar} from '../com/util/UserAvatar'
-import {Text} from '../com/util/text/Text'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
+import {FoafsModel} from 'state/models/discovery/foafs'
 import {s} from 'lib/styles'
 import {MagnifyingGlassIcon} from 'lib/icons'
-import {WhoToFollow} from '../com/discover/WhoToFollow'
-import {SuggestedPosts} from '../com/discover/SuggestedPosts'
-import {ProfileCard} from '../com/profile/ProfileCard'
+import {WhoToFollow} from 'view/com/discover/WhoToFollow'
+import {SuggestedFollows} from 'view/com/discover/SuggestedFollows'
+import {ProfileCard} from 'view/com/profile/ProfileCard'
+import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
@@ -53,6 +56,11 @@ export const SearchScreen = withAuthRequired(
       () => new UserAutocompleteViewModel(store),
       [store],
     )
+    const foafsView = React.useMemo<FoafsModel>(
+      () => new FoafsModel(store),
+      [store],
+    )
+    const [refreshing, setRefreshing] = React.useState(false)
 
     const onSoftReset = () => {
       scrollElRef.current?.scrollTo({x: 0, y: 0})
@@ -71,9 +79,12 @@ export const SearchScreen = withAuthRequired(
         }
         store.shell.setMinimalShellMode(false)
         autocompleteView.setup()
+        if (!foafsView.hasData) {
+          foafsView.fetch()
+        }
 
         return cleanup
-      }, [store, autocompleteView, lastRenderTime, setRenderTime]),
+      }, [store, autocompleteView, foafsView, lastRenderTime, setRenderTime]),
     )
 
     const onPressMenu = () => {
@@ -98,15 +109,18 @@ export const SearchScreen = withAuthRequired(
       autocompleteView.setActive(false)
       textInput.current?.blur()
     }
+    const onRefresh = React.useCallback(async () => {
+      setRefreshing(true)
+      try {
+        await foafsView.fetch()
+      } finally {
+        setRefreshing(false)
+      }
+    }, [foafsView, setRefreshing])
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView
-          ref={scrollElRef}
-          testID="searchScrollView"
-          style={[pal.view, styles.container]}
-          onScroll={onMainScroll}
-          scrollEventThrottle={100}>
+        <View style={[pal.view, styles.container]}>
           <View style={[pal.view, pal.border, styles.header]}>
             <TouchableOpacity
               testID="viewHeaderBackOrMenuBtn"
@@ -180,14 +194,53 @@ export const SearchScreen = withAuthRequired(
               </Text>
             </View>
           ) : (
-            <ScrollView onScroll={Keyboard.dismiss}>
-              <WhoToFollow key={`wtf-${lastRenderTime}`} />
-              <SuggestedPosts key={`sp-${lastRenderTime}`} />
+            <ScrollView
+              ref={scrollElRef}
+              testID="searchScrollView"
+              style={pal.view}
+              onScroll={onMainScroll}
+              scrollEventThrottle={100}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }>
+              {foafsView.isLoading ? (
+                <ProfileCardFeedLoadingPlaceholder />
+              ) : foafsView.hasContent ? (
+                <>
+                  {foafsView.popular.length > 0 && (
+                    <View style={styles.suggestions}>
+                      <SuggestedFollows
+                        title="In your network"
+                        suggestions={foafsView.popular}
+                      />
+                    </View>
+                  )}
+                  {foafsView.sources.map((source, i) => {
+                    const item = foafsView.foafs.get(source)
+                    if (!item || item.follows.length === 0) {
+                      return <View key={`sf-${item?.did || i}`} />
+                    }
+                    return (
+                      <View key={`sf-${item.did}`} style={styles.suggestions}>
+                        <SuggestedFollows
+                          title={`Followed by ${
+                            item.displayName || item.handle
+                          }`}
+                          suggestions={item.follows.slice(0, 10)}
+                        />
+                      </View>
+                    )
+                  })}
+                </>
+              ) : (
+                <View style={pal.view}>
+                  <WhoToFollow />
+                </View>
+              )}
               <View style={s.footerSpacer} />
             </ScrollView>
           )}
-          <View style={s.footerSpacer} />
-        </ScrollView>
+        </View>
       </TouchableWithoutFeedback>
     )
   }),
@@ -234,5 +287,9 @@ const styles = StyleSheet.create({
   searchPrompt: {
     textAlign: 'center',
     paddingTop: 10,
+  },
+
+  suggestions: {
+    marginBottom: 8,
   },
 })

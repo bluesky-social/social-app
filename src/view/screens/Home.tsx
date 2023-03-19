@@ -1,26 +1,97 @@
 import React from 'react'
-import {FlatList, View} from 'react-native'
+import {FlatList, View, useWindowDimensions} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
+import {FeedModel} from 'state/models/feed-view'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/posts/Feed'
+import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
-import {WelcomeBanner} from '../com/util/WelcomeBanner'
+import {FeedsTabBar} from './home/FeedsTabBar'
+import {Pager, RenderTabBarFnProps} from 'view/com/util/pager/Pager'
 import {FAB} from '../com/util/FAB'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
+import {isDesktopWeb} from 'platform/detection'
 
-const HEADER_HEIGHT = 42
+const TAB_BAR_HEIGHT = 82
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
-export const HomeScreen = withAuthRequired(
-  observer(function Home(_opts: Props) {
+export const HomeScreen = withAuthRequired((_opts: Props) => {
+  const store = useStores()
+  const [selectedPage, setSelectedPage] = React.useState(0)
+
+  const algoFeed = React.useMemo(() => {
+    const feed = new FeedModel(store, 'goodstuff', {})
+    feed.setup()
+    return feed
+  }, [store])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      store.shell.setIsDrawerSwipeDisabled(selectedPage > 0)
+      return () => {
+        store.shell.setIsDrawerSwipeDisabled(false)
+      }
+    }, [store, selectedPage]),
+  )
+
+  const onPageSelected = React.useCallback(
+    (index: number) => {
+      setSelectedPage(index)
+      store.shell.setIsDrawerSwipeDisabled(index > 0)
+    },
+    [store],
+  )
+
+  const onPressSelected = React.useCallback(() => {
+    store.emitScreenSoftReset()
+  }, [store])
+
+  const renderTabBar = React.useCallback(
+    (props: RenderTabBarFnProps) => {
+      return <FeedsTabBar {...props} onPressSelected={onPressSelected} />
+    },
+    [onPressSelected],
+  )
+
+  const renderFollowingEmptyState = React.useCallback(() => {
+    return <FollowingEmptyState />
+  }, [])
+
+  const initialPage = store.me.follows.isEmpty ? 1 : 0
+  return (
+    <Pager
+      onPageSelected={onPageSelected}
+      renderTabBar={renderTabBar}
+      tabBarPosition={isDesktopWeb ? 'top' : 'bottom'}
+      initialPage={initialPage}>
+      <FeedPage
+        key="1"
+        isPageFocused={selectedPage === 0}
+        feed={store.me.mainFeed}
+        renderEmptyState={renderFollowingEmptyState}
+      />
+      <FeedPage key="2" isPageFocused={selectedPage === 1} feed={algoFeed} />
+    </Pager>
+  )
+})
+
+const FeedPage = observer(
+  ({
+    isPageFocused,
+    feed,
+    renderEmptyState,
+  }: {
+    feed: FeedModel
+    isPageFocused: boolean
+    renderEmptyState?: () => JSX.Element
+  }) => {
     const store = useStores()
     const onMainScroll = useOnMainScroll(store)
     const {screen, track} = useAnalytics()
@@ -28,38 +99,51 @@ export const HomeScreen = withAuthRequired(
     const {appState} = useAppState({
       onForeground: () => doPoll(true),
     })
-    const isFocused = useIsFocused()
+    const isScreenFocused = useIsFocused()
+    const winDim = useWindowDimensions()
+    const containerStyle = React.useMemo(
+      () => ({height: winDim.height - (isDesktopWeb ? 0 : TAB_BAR_HEIGHT)}),
+      [winDim],
+    )
 
     const doPoll = React.useCallback(
       (knownActive = false) => {
-        if ((!knownActive && appState !== 'active') || !isFocused) {
+        if (
+          (!knownActive && appState !== 'active') ||
+          !isScreenFocused ||
+          !isPageFocused
+        ) {
           return
         }
-        if (store.me.mainFeed.isLoading) {
+        if (feed.isLoading) {
           return
         }
         store.log.debug('HomeScreen: Polling for new posts')
-        store.me.mainFeed.checkForLatest()
+        feed.checkForLatest()
       },
-      [appState, isFocused, store],
+      [appState, isScreenFocused, isPageFocused, store, feed],
     )
 
     const scrollToTop = React.useCallback(() => {
-      // NOTE: the feed is offset by the height of the collapsing header,
-      //       so we scroll to the negative of that height -prf
-      scrollElRef.current?.scrollToOffset({offset: -HEADER_HEIGHT})
+      scrollElRef.current?.scrollToOffset({offset: 0})
     }, [scrollElRef])
+
+    const onSoftReset = React.useCallback(() => {
+      if (isPageFocused) {
+        scrollToTop()
+      }
+    }, [isPageFocused, scrollToTop])
 
     useFocusEffect(
       React.useCallback(() => {
-        const softResetSub = store.onScreenSoftReset(scrollToTop)
-        const feedCleanup = store.me.mainFeed.registerListeners()
+        const softResetSub = store.onScreenSoftReset(onSoftReset)
+        const feedCleanup = feed.registerListeners()
         const pollInterval = setInterval(doPoll, 15e3)
 
         screen('Feed')
         store.log.debug('HomeScreen: Updating feed')
-        if (store.me.mainFeed.hasContent) {
-          store.me.mainFeed.update()
+        if (feed.hasContent) {
+          feed.update()
         }
 
         return () => {
@@ -67,7 +151,7 @@ export const HomeScreen = withAuthRequired(
           softResetSub.remove()
           feedCleanup()
         }
-      }, [store, doPoll, scrollToTop, screen]),
+      }, [store, doPoll, onSoftReset, screen, feed]),
     )
 
     const onPressCompose = React.useCallback(() => {
@@ -76,32 +160,28 @@ export const HomeScreen = withAuthRequired(
     }, [store, track])
 
     const onPressTryAgain = React.useCallback(() => {
-      store.me.mainFeed.refresh()
-    }, [store])
+      feed.refresh()
+    }, [feed])
 
     const onPressLoadLatest = React.useCallback(() => {
-      store.me.mainFeed.refresh()
+      feed.refresh()
       scrollToTop()
-    }, [store, scrollToTop])
+    }, [feed, scrollToTop])
 
     return (
-      <View style={s.hContentRegion}>
-        {store.shell.isOnboarding && <WelcomeBanner />}
+      <View style={containerStyle}>
         <Feed
           testID="homeFeed"
           key="default"
-          feed={store.me.mainFeed}
+          feed={feed}
           scrollElRef={scrollElRef}
           style={s.hContentRegion}
           showPostFollowBtn
           onPressTryAgain={onPressTryAgain}
           onScroll={onMainScroll}
-          headerOffset={store.shell.isOnboarding ? 0 : HEADER_HEIGHT}
+          renderEmptyState={renderEmptyState}
         />
-        {!store.shell.isOnboarding && (
-          <ViewHeader title="Bluesky" canGoBack={false} hideOnScroll />
-        )}
-        {store.me.mainFeed.hasNewLatest && !store.me.mainFeed.isRefreshing && (
+        {feed.hasNewLatest && !feed.isRefreshing && (
           <LoadLatestBtn onPress={onPressLoadLatest} />
         )}
         <FAB
@@ -111,5 +191,5 @@ export const HomeScreen = withAuthRequired(
         />
       </View>
     )
-  }),
+  },
 )

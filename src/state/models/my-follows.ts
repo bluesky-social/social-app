@@ -35,6 +35,12 @@ export class MyFollowsModel {
   // public api
   // =
 
+  clear() {
+    this.followDidToRecordMap = {}
+    this.lastSync = 0
+    this.myDid = undefined
+  }
+
   fetchIfNeeded = bundleAsync(async () => {
     if (
       this.myDid !== this.rootStore.me.did ||

@@ -19,10 +19,10 @@ PODS:
   - EXJSONUtils (0.5.1)
   - EXManifests (0.5.2):
     - EXJSONUtils
-  - EXMediaLibrary (15.2.2):
+  - EXMediaLibrary (15.2.3):
     - ExpoModulesCore
     - React-Core
-  - Expo (48.0.6):
+  - Expo (48.0.7):
     - ExpoModulesCore
   - expo-dev-client (2.1.5):
     - EXManifests
@@ -100,7 +100,7 @@ PODS:
     - ExpoModulesCore
   - ExpoKeepAwake (12.0.1):
     - ExpoModulesCore
-  - ExpoModulesCore (1.2.4):
+  - ExpoModulesCore (1.2.5):
     - React-Core
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
@@ -384,9 +384,11 @@ PODS:
     - glog
   - react-native-blur (4.3.0):
     - React-Core
-  - react-native-cameraroll (5.2.4):
+  - react-native-cameraroll (5.3.1):
     - React-Core
   - react-native-image-resizer (3.0.5):
+    - React-Core
+  - react-native-pager-view (6.1.2):
     - React-Core
   - react-native-paste-input (0.6.2):
     - React-Core
@@ -401,7 +403,7 @@ PODS:
     - React-Core
   - react-native-version-number (0.3.6):
     - React
-  - react-native-webview (11.26.1):
+  - react-native-webview (11.26.0):
     - React-Core
   - React-perflogger (0.71.3)
   - React-RCTActionSheet (0.71.3):
@@ -489,9 +491,9 @@ PODS:
     - React-perflogger (= 0.71.3)
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNBackgroundFetch (4.1.8):
+  - RNBackgroundFetch (4.1.9):
     - React-Core
-  - RNCAsyncStorage (1.17.11):
+  - RNCAsyncStorage (1.17.12):
     - React-Core
   - RNCClipboard (1.11.2):
     - React-Core
@@ -514,10 +516,10 @@ PODS:
     - TOCropViewController
   - RNInAppBrowser (3.7.0):
     - React-Core
-  - RNNotifee (7.5.0):
+  - RNNotifee (7.6.1):
     - React-Core
-    - RNNotifee/NotifeeCore (= 7.5.0)
-  - RNNotifee/NotifeeCore (7.5.0):
+    - RNNotifee/NotifeeCore (= 7.6.1)
+  - RNNotifee/NotifeeCore (7.6.1):
     - React-Core
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
@@ -551,7 +553,7 @@ PODS:
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
-  - RNSVG (13.8.0):
+  - RNSVG (13.4.0):
     - React-Core
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
@@ -559,7 +561,7 @@ PODS:
   - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
-  - segment-analytics-react-native (2.13.1):
+  - segment-analytics-react-native (2.13.4):
     - React-Core
     - sovran-react-native
   - sovran-react-native (0.4.5):
@@ -614,6 +616,7 @@ DEPENDENCIES:
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - "react-native-cameraroll (from `../node_modules/@react-native-camera-roll/camera-roll`)"
   - "react-native-image-resizer (from `../node_modules/@bam.tech/react-native-image-resizer`)"
+  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - "react-native-paste-input (from `../node_modules/@mattermost/react-native-paste-input`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
@@ -747,6 +750,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-camera-roll/camera-roll"
   react-native-image-resizer:
     :path: "../node_modules/@bam.tech/react-native-image-resizer"
+  react-native-pager-view:
+    :path: "../node_modules/react-native-pager-view"
   react-native-paste-input:
     :path: "../node_modules/@mattermost/react-native-paste-input"
   react-native-safe-area-context:
@@ -830,15 +835,15 @@ SPEC CHECKSUMS:
   EXImageLoader: fd053169a8ee932dd83bf1fe5487a50c26d27c2b
   EXJSONUtils: 48b1e764ac35160e6f54d21ab60d7d9501f3e473
   EXManifests: 500666d48e8dd7ca5a482c9e729e4a7a6c34081b
-  EXMediaLibrary: 792fe9b828b5bfa2c5a8b629730f175af2938285
-  Expo: 04ba1ddde0be07aff4306ae636a1804810679145
+  EXMediaLibrary: 587cd8aad27a6fc8d7c38b950bc75bc1845a7480
+  Expo: 707f9b0039eacc6a1dce90c08c9e37b9c417bba2
   expo-dev-client: 7c1ef51516853465f4d448c14ddf365167d20361
   expo-dev-launcher: 90de99d9e5d1a883d81355ca10e87c2f3c81d46e
   expo-dev-menu: d4369e74d8d21a0ccdee35f7c732e7118b0fee16
   expo-dev-menu-interface: 6c82ae323c4b8724dead4763ce3ff24a2108bdb1
   ExpoImagePicker: 270dea232b3a072d981dd564e2cafc63a864edb1
   ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
-  ExpoModulesCore: 1667335d4f4c9b7801990930e6f0eea42c916a21
+  ExpoModulesCore: 397fc99e9d6c9dcc010f36d5802097c17b90424c
   EXSplashScreen: cd7fb052dff5ba8311d5c2455ecbebffe1b7a8ca
   EXUpdatesInterface: dd699d1930e28639dcbd70a402caea98e86364ca
   FBLazyVector: 60195509584153283780abdac5569feffb8f08cc
@@ -863,13 +868,14 @@ SPEC CHECKSUMS:
   React-jsinspector: 9f7c9137605e72ca0343db4cea88006cb94856dd
   React-logger: 957e5dc96d9dbffc6e0f15e0ee4d2b42829ff207
   react-native-blur: 50c9feabacbc5f49b61337ebc32192c6be7ec3c3
-  react-native-cameraroll: cb752fda6d5268f1646b4390bd5be1f27706b9a0
+  react-native-cameraroll: f3050460fe1708378698c16686bfaa5f34099be2
   react-native-image-resizer: 00ceb0e05586c7aadf061eea676957a6c2ec60fa
+  react-native-pager-view: 54bed894cecebe28cede54c01038d9d1e122de43
   react-native-paste-input: 3392800944a47c00dddbff23c31c281482209679
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-version-number: b415bbec6a13f2df62bf978e85bc0d699462f37f
-  react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
+  react-native-webview: 994b9f8fbb504d6314dc40d83f94f27c6831b3bf
   React-perflogger: af8a3d31546077f42d729b949925cc4549f14def
   React-RCTActionSheet: 57cc5adfefbaaf0aae2cf7e10bccd746f2903673
   React-RCTAnimation: 11c61e94da700c4dc915cf134513764d87fc5e2b
@@ -884,22 +890,22 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 7bf0dafc7b727d93c8cb94eb00a9d3753c446c3e
   ReactCommon: 6f65ea5b7d84deb9e386f670dd11ce499ded7b40
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNBackgroundFetch: 8e16176ff415daac743a6eb57afc8e9e14dbe623
-  RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
+  RNBackgroundFetch: 642777e4e76435773c149d565a043d66f1781237
+  RNCAsyncStorage: 09fc8595e6d6f6d5abf16b23a56b257d9c6b7c5b
   RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
   RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
-  RNNotifee: 053c0ace9c73634709a0214fd9c436a5777a562f
+  RNNotifee: bdc064c29f4d558046f51f0c3ae02bab4fd3cd85
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
   RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
-  RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
+  RNSVG: 07dbd870b0dcdecc99b3a202fa37c8ca163caec2
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
-  segment-analytics-react-native: f962dff3a084655a29f9403b8c139c75a3362524
+  segment-analytics-react-native: cc12d9422f7ce863ee57c1b650ab48eec4b6d5bd
   sovran-react-native: fd3dc8f1a4b14acdc4ad25fc6b4ac4f52a2a2a15
   Swime: d7b2c277503b6cea317774aedc2dce05613f8b0b
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863

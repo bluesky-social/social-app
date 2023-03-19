@@ -1,16 +1,18 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {Button} from '../util/forms/Button'
+import {Button, ButtonType} from '../util/forms/Button'
 import {useStores} from 'state/index'
 import * as apilib from 'lib/api/index'
 import * as Toast from '../util/Toast'
 
 const FollowButton = observer(
   ({
+    type = 'inverted',
     did,
     declarationCid,
     onToggleFollow,
   }: {
+    type?: ButtonType
     did: string
     declarationCid: string
     onToggleFollow?: (v: boolean) => void
@@ -42,7 +44,7 @@ const FollowButton = observer(
 
     return (
       <Button
-        type={isFollowing ? 'default' : 'primary'}
+        type={isFollowing ? 'default' : type}
         onPress={onToggleFollowInner}
         label={isFollowing ? 'Unfollow' : 'Follow'}
       />

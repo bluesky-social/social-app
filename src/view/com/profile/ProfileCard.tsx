@@ -1,6 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
+import {AppBskyActorProfile} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
@@ -15,7 +16,9 @@ export function ProfileCard({
   avatar,
   description,
   isFollowedBy,
+  noBg,
   noBorder,
+  followers,
   renderButton,
 }: {
   handle: string
@@ -23,7 +26,9 @@ export function ProfileCard({
   avatar?: string
   description?: string
   isFollowedBy?: boolean
+  noBg?: boolean
   noBorder?: boolean
+  followers?: AppBskyActorProfile.View[] | undefined
   renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
@@ -31,9 +36,9 @@ export function ProfileCard({
     <Link
       style={[
         styles.outer,
-        pal.view,
         pal.border,
         noBorder && styles.outerNoBorder,
+        !noBg && pal.view,
       ]}
       href={`/profile/${handle}`}
       title={handle}
@@ -73,6 +78,25 @@ export function ProfileCard({
           </Text>
         </View>
       ) : undefined}
+      {followers?.length ? (
+        <View style={styles.followedBy}>
+          <Text
+            type="sm"
+            style={[styles.followsByDesc, pal.textLight]}
+            numberOfLines={2}
+            lineHeight={1.2}>
+            Followed by{' '}
+            {followers.map(f => f.displayName || f.handle).join(', ')}
+          </Text>
+          {followers.slice(0, 3).map(f => (
+            <View key={f.did} style={styles.followedByAviContainer}>
+              <View style={[styles.followedByAvi, pal.view]}>
+                <UserAvatar avatar={f.avatar} size={32} />
+              </View>
+            </View>
+          ))}
+        </View>
+      ) : undefined}
     </Link>
   )
 }
@@ -86,6 +110,9 @@ export const ProfileCardWithFollowBtn = observer(
     avatar,
     description,
     isFollowedBy,
+    noBg,
+    noBorder,
+    followers,
   }: {
     did: string
     declarationCid: string
@@ -94,6 +121,9 @@ export const ProfileCardWithFollowBtn = observer(
     avatar?: string
     description?: string
     isFollowedBy?: boolean
+    noBg?: boolean
+    noBorder?: boolean
+    followers?: AppBskyActorProfile.View[] | undefined
   }) => {
     const store = useStores()
     const isMe = store.me.handle === handle
@@ -105,6 +135,9 @@ export const ProfileCardWithFollowBtn = observer(
         avatar={avatar}
         description={description}
         isFollowedBy={isFollowedBy}
+        noBg={noBg}
+        noBorder={noBorder}
+        followers={followers}
         renderButton={
           isMe
             ? undefined
@@ -128,8 +161,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   layoutAvi: {
-    width: 60,
-    paddingLeft: 10,
+    width: 54,
+    paddingLeft: 4,
     paddingTop: 8,
     paddingBottom: 10,
   },
@@ -163,5 +196,28 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginLeft: 6,
     paddingHorizontal: 14,
+  },
+
+  followedBy: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingLeft: 54,
+    paddingRight: 20,
+    marginBottom: 10,
+    marginTop: -6,
+  },
+  followedByAviContainer: {
+    width: 24,
+    height: 36,
+  },
+  followedByAvi: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    padding: 2,
+  },
+  followsByDesc: {
+    flex: 1,
+    paddingRight: 10,
   },
 })

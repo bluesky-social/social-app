@@ -7,23 +7,17 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native'
-import {useNavigation} from '@react-navigation/native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {CenteredView, FlatList} from '../util/Views'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {Text} from '../util/text/Text'
+import {ViewHeader} from '../util/ViewHeader'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Button} from '../util/forms/Button'
 import {FeedModel} from 'state/models/feed-view'
 import {FeedSlice} from './FeedSlice'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {MagnifyingGlassIcon} from 'lib/icons'
-import {NavigationProp} from 'lib/routes/types'
 
+const HEADER_ITEM = {_reactKey: '__header__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_FEED_ITEM = {_reactKey: '__error__'}
 
@@ -34,6 +28,7 @@ export const Feed = observer(function Feed({
   scrollElRef,
   onPressTryAgain,
   onScroll,
+  renderEmptyState,
   testID,
   headerOffset = 0,
 }: {
@@ -43,17 +38,15 @@ export const Feed = observer(function Feed({
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
+  renderEmptyState?: () => JSX.Element
   testID?: string
   headerOffset?: number
 }) {
-  const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
-  const navigation = useNavigation<NavigationProp>()
 
   const data = React.useMemo(() => {
-    let feedItems: any[] = []
+    let feedItems: any[] = [HEADER_ITEM]
     if (feed.hasLoaded) {
       if (feed.hasError) {
         feedItems = feedItems.concat([ERROR_FEED_ITEM])
@@ -80,6 +73,7 @@ export const Feed = observer(function Feed({
     }
     setIsRefreshing(false)
   }, [feed, track, setIsRefreshing])
+
   const onEndReached = React.useCallback(async () => {
     track('Feed:onEndReached')
     try {
@@ -95,37 +89,10 @@ export const Feed = observer(function Feed({
   const renderItem = React.useCallback(
     ({item}: {item: any}) => {
       if (item === EMPTY_FEED_ITEM) {
-        return (
-          <View style={styles.emptyContainer}>
-            <View style={styles.emptyIconContainer}>
-              <MagnifyingGlassIcon
-                style={[styles.emptyIcon, pal.text]}
-                size={62}
-              />
-            </View>
-            <Text type="xl-medium" style={[s.textCenter, pal.text]}>
-              Your feed is empty! You should follow some accounts to fix this.
-            </Text>
-            <Button
-              type="inverted"
-              style={styles.emptyBtn}
-              onPress={
-                () =>
-                  navigation.navigate(
-                    'SearchTab',
-                  ) /* TODO make sure it goes to root of the tab */
-              }>
-              <Text type="lg-medium" style={palInverted.text}>
-                Find accounts
-              </Text>
-              <FontAwesomeIcon
-                icon="angle-right"
-                style={palInverted.text as FontAwesomeIconStyle}
-                size={14}
-              />
-            </Button>
-          </View>
-        )
+        if (renderEmptyState) {
+          return renderEmptyState()
+        }
+        return <View />
       } else if (item === ERROR_FEED_ITEM) {
         return (
           <ErrorMessage
@@ -133,10 +100,12 @@ export const Feed = observer(function Feed({
             onPressTryAgain={onPressTryAgain}
           />
         )
+      } else if (item === HEADER_ITEM) {
+        return <ViewHeader title="Bluesky" canGoBack={false} />
       }
       return <FeedSlice slice={item} showFollowBtn={showPostFollowBtn} />
     },
-    [feed, onPressTryAgain, showPostFollowBtn, pal, palInverted, navigation],
+    [feed, onPressTryAgain, showPostFollowBtn, renderEmptyState],
   )
 
   const FeedFooter = React.useCallback(
@@ -183,21 +152,4 @@ export const Feed = observer(function Feed({
 
 const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},
-  emptyContainer: {
-    paddingVertical: 40,
-    paddingHorizontal: 30,
-  },
-  emptyIconContainer: {
-    marginBottom: 16,
-  },
-  emptyIcon: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
-  emptyBtn: {
-    marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
 })

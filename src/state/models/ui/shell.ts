@@ -122,13 +122,13 @@ export class ShellUiModel {
   darkMode = false
   minimalShellMode = false
   isDrawerOpen = false
+  isDrawerSwipeDisabled = false
   isModalActive = false
   activeModals: Modal[] = []
   isLightboxActive = false
   activeLightbox: ProfileImageLightbox | ImagesLightbox | undefined
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
-  isOnboarding = false
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -168,6 +168,10 @@ export class ShellUiModel {
     this.isDrawerOpen = false
   }
 
+  setIsDrawerSwipeDisabled(v: boolean) {
+    this.isDrawerSwipeDisabled = v
+  }
+
   openModal(modal: Modal) {
     this.rootStore.emitNavigation()
     this.isModalActive = true
@@ -199,14 +203,5 @@ export class ShellUiModel {
   closeComposer() {
     this.isComposerActive = false
     this.composerOpts = undefined
-  }
-
-  setOnboarding(v: boolean) {
-    this.isOnboarding = v
-    if (this.isOnboarding) {
-      this.rootStore.me.mainFeed.switchFeedType('suggested')
-    } else {
-      this.rootStore.me.mainFeed.switchFeedType('home')
-    }
   }
 }
