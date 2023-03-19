@@ -23,16 +23,20 @@ export const Lightbox = observer(function Lightbox() {
     return null
   }
 
+  const activeLightbox = store.shell.activeLightbox
+  const initialIndex =
+    activeLightbox instanceof models.ImagesLightbox ? activeLightbox.index : 0
+
   const onClose = () => store.shell.closeLightbox()
 
   let imgs: Img[] | undefined
-  if (store.shell.activeLightbox?.name === 'profile-image') {
-    const opts = store.shell.activeLightbox as models.ProfileImageLightbox
+  if (activeLightbox instanceof models.ProfileImageLightbox) {
+    const opts = activeLightbox
     if (opts.profileView.avatar) {
       imgs = [{uri: opts.profileView.avatar}]
     }
-  } else if (store.shell.activeLightbox?.name === 'images') {
-    const opts = store.shell.activeLightbox as models.ImagesLightbox
+  } else if (activeLightbox instanceof models.ImagesLightbox) {
+    const opts = activeLightbox
     imgs = opts.uris.map(uri => ({uri}))
   }
 
@@ -40,11 +44,21 @@ export const Lightbox = observer(function Lightbox() {
     return null
   }
 
-  return <LightboxInner imgs={imgs} onClose={onClose} />
+  return (
+    <LightboxInner imgs={imgs} initialIndex={initialIndex} onClose={onClose} />
+  )
 })
 
-function LightboxInner({imgs, onClose}: {imgs: Img[]; onClose: () => void}) {
-  const [index, setIndex] = React.useState<number>(0)
+function LightboxInner({
+  imgs,
+  initialIndex = 0,
+  onClose,
+}: {
+  imgs: Img[]
+  initialIndex: number
+  onClose: () => void
+}) {
+  const [index, setIndex] = React.useState<number>(initialIndex)
 
   const canGoLeft = index >= 1
   const canGoRight = index < imgs.length - 1
