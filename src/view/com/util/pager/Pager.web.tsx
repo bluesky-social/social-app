@@ -51,7 +51,11 @@ export const Pager = ({
           onSelect: onTabBarSelect,
         })}
       {children.map((child, i) => (
-        <View style={selectedPage === i ? undefined : s.hidden}>{child}</View>
+        <View
+          style={selectedPage === i ? undefined : s.hidden}
+          key={`page-${i}`}>
+          {child}
+        </View>
       ))}
       {tabBarPosition === 'bottom' &&
         renderTabBar({
