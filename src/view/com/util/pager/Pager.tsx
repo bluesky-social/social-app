@@ -19,7 +19,7 @@ interface Props {
   tabBarPosition?: 'top' | 'bottom'
   initialPage?: number
   renderTabBar: RenderTabBarFn
-  onPageSelected?: (e: PageSelectedEvent) => void
+  onPageSelected?: (index: number) => void
 }
 export const Pager = ({
   children,
@@ -36,7 +36,7 @@ export const Pager = ({
   const onPageSelectedInner = React.useCallback(
     (e: PageSelectedEvent) => {
       setSelectedPage(e.nativeEvent.position)
-      onPageSelected?.(e)
+      onPageSelected?.(e.nativeEvent.position)
     },
     [setSelectedPage, onPageSelected],
   )
