@@ -70,6 +70,7 @@ export const s = StyleSheet.create({
   borderRight1: {borderRightWidth: 1},
   borderBottom1: {borderBottomWidth: 1},
   borderLeft1: {borderLeftWidth: 1},
+  hidden: {display: 'none'},
 
   // font weights
   fw600: {fontWeight: '600'},

@@ -257,7 +257,7 @@ export class FeedModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public feedType: 'home' | 'author' | 'suggested',
+    public feedType: 'home' | 'author' | 'suggested' | 'goodstuff',
     params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams,
   ) {
     makeAutoObservable(
@@ -336,6 +336,20 @@ export class FeedModel {
     return this.setup()
   }
 
+  private get feedTuners() {
+    if (this.feedType === 'goodstuff') {
+      return [
+        FeedTuner.dedupReposts,
+        FeedTuner.likedRepliesOnly,
+        FeedTuner.englishOnly,
+      ]
+    }
+    if (this.feedType === 'home') {
+      return [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
+    }
+    return []
+  }
+
   /**
    * Load for first render
    */
@@ -399,6 +413,7 @@ export class FeedModel {
           params: this.params,
           e,
         })
+        this.hasMore = false
       }
     } finally {
       this.lock.release()
@@ -476,7 +491,8 @@ export class FeedModel {
     }
     const res = await this._getFeed({limit: 1})
     const currentLatestUri = this.pollCursor
-    const item = res.data.feed[0]
+    const slices = this.tuner.tune(res.data.feed, this.feedTuners)
+    const item = slices[0]?.rootItem
     if (!item) {
       return
     }
@@ -541,12 +557,7 @@ export class FeedModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
 
-    const slices = this.tuner.tune(
-      res.data.feed,
-      this.feedType === 'home'
-        ? [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
-        : [],
-    )
+    const slices = this.tuner.tune(res.data.feed, this.feedTuners)
 
     const toAppend: FeedSliceModel[] = []
     for (const slice of slices) {
@@ -571,12 +582,7 @@ export class FeedModel {
   ) {
     this.pollCursor = res.data.feed[0]?.post.uri
 
-    const slices = this.tuner.tune(
-      res.data.feed,
-      this.feedType === 'home'
-        ? [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
-        : [],
-    )
+    const slices = this.tuner.tune(res.data.feed, this.feedTuners)
 
     const toPrepend: FeedSliceModel[] = []
     for (const slice of slices) {
@@ -634,10 +640,61 @@ export class FeedModel {
       return this.rootStore.api.app.bsky.feed.getTimeline(
         params as GetTimeline.QueryParams,
       )
+    } else if (this.feedType === 'goodstuff') {
+      const res = await getGoodStuff(
+        this.rootStore.session.currentSession?.accessJwt || '',
+        params as GetTimeline.QueryParams,
+      )
+      res.data.feed = (res.data.feed || []).filter(
+        item => !item.post.author.viewer?.muted,
+      )
+      return res
     } else {
       return this.rootStore.api.app.bsky.feed.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,
       )
     }
+  }
+}
+
+// HACK
+// temporary off-spec route to get the good stuff
+// -prf
+async function getGoodStuff(
+  accessJwt: string,
+  params: GetTimeline.QueryParams,
+): Promise<GetTimeline.Response> {
+  const controller = new AbortController()
+  const to = setTimeout(() => controller.abort(), 15e3)
+
+  const uri = new URL('https://bsky.social/xrpc/app.bsky.unspecced.getPopular')
+  let k: keyof GetTimeline.QueryParams
+  for (k in params) {
+    if (typeof params[k] !== 'undefined') {
+      uri.searchParams.set(k, String(params[k]))
+    }
+  }
+
+  const res = await fetch(String(uri), {
+    method: 'get',
+    headers: {
+      accept: 'application/json',
+      authorization: `Bearer ${accessJwt}`,
+    },
+    signal: controller.signal,
+  })
+
+  const resHeaders: Record<string, string> = {}
+  res.headers.forEach((value: string, key: string) => {
+    resHeaders[key] = value
+  })
+  let resBody = await res.json()
+
+  clearTimeout(to)
+
+  return {
+    success: res.status === 200,
+    headers: resHeaders,
+    data: resBody,
   }
 }

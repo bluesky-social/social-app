@@ -1,5 +1,7 @@
 import {AppBskyFeedFeedViewPost} from '@atproto/api'
+import lande from 'lande'
 type FeedViewPost = AppBskyFeedFeedViewPost.Main
+import {hasProp} from '@atproto/lexicon'
 
 export type FeedTunerFn = (
   tuner: FeedTuner,
@@ -140,7 +142,8 @@ export class FeedTuner {
       for (const item of slice.items) {
         this.seenUris.add(item.post.uri)
       }
-      slice.logSelf()
+      // DEBUG uncomment to get a quick view of the data
+      // slice.logSelf()
     }
 
     return slices
@@ -173,6 +176,33 @@ export class FeedTuner {
       const item = slices[i].rootItem
       const isRepost = Boolean(item.reason)
       if (item.reply && !isRepost && item.post.upvoteCount === 0) {
+        slices.splice(i, 1)
+      }
+    }
+  }
+
+  static englishOnly(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+    // TEMP
+    // remove slices with no english in them
+    // we very soon need to get the local user's language and filter
+    // according to their preferences, but for the moment
+    // we're just rolling with english
+    // -prf
+    for (let i = slices.length - 1; i >= 0; i--) {
+      let hasEnglish = false
+      for (const item of slices[i].items) {
+        if (
+          hasProp(item.post.record, 'text') &&
+          typeof item.post.record.text === 'string'
+        ) {
+          const res = lande(item.post.record.text)
+          if (res[0][0] === 'eng') {
+            hasEnglish = true
+            break
+          }
+        }
+      }
+      if (!hasEnglish) {
         slices.splice(i, 1)
       }
     }
