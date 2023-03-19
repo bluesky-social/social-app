@@ -9,12 +9,14 @@ export const Composer = observer(
   ({
     active,
     replyTo,
+    quote,
     onPost,
     onClose,
   }: {
     active: boolean
     winHeight: number
     replyTo?: ComposerOpts['replyTo']
+    quote: ComposerOpts['quote']
     onPost?: ComposerOpts['onPost']
     onClose: () => void
   }) => {
@@ -30,7 +32,12 @@ export const Composer = observer(
     return (
       <View style={styles.mask}>
         <View style={[styles.container, pal.view]}>
-          <ComposePost replyTo={replyTo} onPost={onPost} onClose={onClose} />
+          <ComposePost
+            replyTo={replyTo}
+            quote={quote}
+            onPost={onPost}
+            onClose={onClose}
+          />
         </View>
       </View>
     )
