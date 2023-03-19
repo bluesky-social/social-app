@@ -11,6 +11,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useStores} from 'state/index'
 import * as models from 'state/models/ui/shell'
 import {colors} from 'lib/styles'
+import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
 
 interface Img {
   uri: string
@@ -59,25 +60,38 @@ function LightboxInner({imgs, onClose}: {imgs: Img[]; onClose: () => void}) {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={onClose}>
-      <View style={styles.mask}>
-        <Image source={imgs[index]} style={styles.image} />
-        {canGoLeft && (
-          <TouchableOpacity
-            onPress={onPressLeft}
-            style={[styles.btn, styles.leftBtn]}>
-            <FontAwesomeIcon icon="angle-left" style={styles.icon} size={40} />
-          </TouchableOpacity>
-        )}
-        {canGoRight && (
-          <TouchableOpacity
-            onPress={onPressRight}
-            style={[styles.btn, styles.rightBtn]}>
-            <FontAwesomeIcon icon="angle-right" style={styles.icon} size={40} />
-          </TouchableOpacity>
-        )}
+    <View style={styles.mask}>
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.imageCenterer}>
+          <Image source={imgs[index]} style={styles.image} />
+          {canGoLeft && (
+            <TouchableOpacity
+              onPress={onPressLeft}
+              style={[styles.btn, styles.leftBtn]}>
+              <FontAwesomeIcon
+                icon="angle-left"
+                style={styles.icon}
+                size={40}
+              />
+            </TouchableOpacity>
+          )}
+          {canGoRight && (
+            <TouchableOpacity
+              onPress={onPressRight}
+              style={[styles.btn, styles.rightBtn]}>
+              <FontAwesomeIcon
+                icon="angle-right"
+                style={styles.icon}
+                size={40}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
+      <View style={styles.closeBtn}>
+        <ImageDefaultHeader onRequestClose={onClose} />
       </View>
-    </TouchableWithoutFeedback>
+    </View>
   )
 }
 
@@ -89,6 +103,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: '#000c',
+  },
+  imageCenterer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -99,6 +116,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     color: colors.white,
+  },
+  closeBtn: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
   btn: {
     position: 'absolute',
