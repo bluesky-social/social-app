@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import {Text} from './text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
+import {isDesktopWeb} from 'platform/detection'
 
 interface Layout {
   x: number
@@ -46,8 +47,9 @@ export function TabBar({
 
   const indicatorStyle = {
     backgroundColor: indicatorColor || pal.colors.link,
-    bottom: indicatorPosition === 'bottom' ? -1 : undefined,
-    top: indicatorPosition === 'top' ? -1 : undefined,
+    bottom:
+      indicatorPosition === 'bottom' ? (isDesktopWeb ? 0 : -1) : undefined,
+    top: indicatorPosition === 'top' ? (isDesktopWeb ? 0 : -1) : undefined,
     transform: [
       {
         translateX: panX.interpolate({
@@ -112,26 +114,49 @@ export function TabBar({
   )
 }
 
-const styles = StyleSheet.create({
-  outer: {
-    flexDirection: 'row',
-    paddingHorizontal: 14,
-  },
-  itemTop: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    marginRight: 24,
-  },
-  itemBottom: {
-    paddingTop: 8,
-    paddingBottom: 12,
-    marginRight: 24,
-  },
-  indicator: {
-    position: 'absolute',
-    left: 0,
-    width: 1,
-    height: 3,
-    borderRadius: 4,
-  },
-})
+const styles = isDesktopWeb
+  ? StyleSheet.create({
+      outer: {
+        flexDirection: 'row',
+        paddingHorizontal: 18,
+      },
+      itemTop: {
+        paddingTop: 16,
+        paddingBottom: 14,
+        marginRight: 24,
+      },
+      itemBottom: {
+        paddingTop: 14,
+        paddingBottom: 16,
+        marginRight: 24,
+      },
+      indicator: {
+        position: 'absolute',
+        left: 0,
+        width: 1,
+        height: 3,
+      },
+    })
+  : StyleSheet.create({
+      outer: {
+        flexDirection: 'row',
+        paddingHorizontal: 14,
+      },
+      itemTop: {
+        paddingTop: 10,
+        paddingBottom: 10,
+        marginRight: 24,
+      },
+      itemBottom: {
+        paddingTop: 8,
+        paddingBottom: 12,
+        marginRight: 24,
+      },
+      indicator: {
+        position: 'absolute',
+        left: 0,
+        width: 1,
+        height: 3,
+        borderRadius: 4,
+      },
+    })

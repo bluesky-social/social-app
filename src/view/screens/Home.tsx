@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  Animated,
-  FlatList,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-} from 'react-native'
+import {FlatList, View, useWindowDimensions} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
@@ -15,25 +9,17 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {Feed} from '../com/posts/Feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
-import {TabBar} from 'view/com/util/TabBar'
-import {
-  Pager,
-  PageSelectedEvent,
-  RenderTabBarFnProps,
-} from 'view/com/util/Pager'
+import {FeedsTabBar} from './home/FeedsTabBar'
+import {Pager, RenderTabBarFnProps} from 'view/com/util/pager/Pager'
 import {FAB} from '../com/util/FAB'
 import {useStores} from 'state/index'
-import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
-import {clamp} from 'lodash'
+import {isDesktopWeb} from 'platform/detection'
 
 const TAB_BAR_HEIGHT = 82
-const BOTTOM_BAR_HEIGHT = 48
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired((_opts: Props) => {
@@ -56,9 +42,9 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
   )
 
   const onPageSelected = React.useCallback(
-    (e: PageSelectedEvent) => {
-      setSelectedPage(e.nativeEvent.position)
-      store.shell.setIsDrawerSwipeDisabled(e.nativeEvent.position > 0)
+    (index: number) => {
+      setSelectedPage(index)
+      store.shell.setIsDrawerSwipeDisabled(index > 0)
     },
     [store],
   )
@@ -69,7 +55,7 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
 
   const renderTabBar = React.useCallback(
     (props: RenderTabBarFnProps) => {
-      return <FloatingTabBar {...props} onPressSelected={onPressSelected} />
+      return <FeedsTabBar {...props} onPressSelected={onPressSelected} />
     },
     [onPressSelected],
   )
@@ -83,7 +69,7 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
     <Pager
       onPageSelected={onPageSelected}
       renderTabBar={renderTabBar}
-      tabBarPosition="bottom"
+      tabBarPosition={isDesktopWeb ? 'top' : 'bottom'}
       initialPage={initialPage}>
       <FeedPage
         key="1"
@@ -95,48 +81,6 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
     </Pager>
   )
 })
-
-const FloatingTabBar = observer(
-  (props: RenderTabBarFnProps & {onPressSelected: () => void}) => {
-    const store = useStores()
-    const safeAreaInsets = useSafeAreaInsets()
-    const pal = usePalette('default')
-    const interp = useAnimatedValue(0)
-
-    const pad = React.useMemo(
-      () => ({
-        paddingBottom: clamp(safeAreaInsets.bottom, 15, 20),
-      }),
-      [safeAreaInsets],
-    )
-
-    React.useEffect(() => {
-      Animated.timing(interp, {
-        toValue: store.shell.minimalShellMode ? 0 : 1,
-        duration: 100,
-        useNativeDriver: true,
-        isInteraction: false,
-      }).start()
-    }, [interp, store.shell.minimalShellMode])
-    const transform = {
-      transform: [
-        {translateY: Animated.multiply(interp, -1 * BOTTOM_BAR_HEIGHT)},
-      ],
-    }
-
-    return (
-      <Animated.View
-        style={[pal.view, pal.border, styles.tabBar, pad, transform]}>
-        <TabBar
-          {...props}
-          items={['Following', "What's hot"]}
-          indicatorPosition="top"
-          indicatorColor={pal.colors.link}
-        />
-      </Animated.View>
-    )
-  },
-)
 
 const FeedPage = observer(
   ({
@@ -158,7 +102,7 @@ const FeedPage = observer(
     const isScreenFocused = useIsFocused()
     const winDim = useWindowDimensions()
     const containerStyle = React.useMemo(
-      () => ({height: winDim.height - TAB_BAR_HEIGHT}),
+      () => ({height: winDim.height - (isDesktopWeb ? 0 : TAB_BAR_HEIGHT)}),
       [winDim],
     )
 
@@ -249,21 +193,3 @@ const FeedPage = observer(
     )
   },
 )
-
-const styles = StyleSheet.create({
-  tabBar: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    borderTopWidth: 1,
-    paddingTop: 0,
-    paddingBottom: 30,
-  },
-  tabBarAvi: {
-    marginRight: 4,
-  },
-})
