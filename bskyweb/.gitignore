@@ -1,3 +1,4 @@
-/static/bundle.web.js
-/bskyweb
 .env
+
+# Don't check in the binary.
+/bskyweb

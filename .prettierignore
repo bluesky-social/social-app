@@ -6,3 +6,6 @@ public
 /bskyweb/templates
 /dist/
 /.watchmanconfig
+
+web/index.html
+web-build/*
