@@ -32,6 +32,7 @@ import {SelectedPhotos} from './photos/SelectedPhotos'
 import {usePalette} from 'lib/hooks/usePalette'
 import QuoteEmbed from '../util/PostEmbeds/QuoteEmbed'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
+import {isDesktopWeb} from 'platform/detection'
 
 const MAX_TEXT_LENGTH = 256
 
@@ -188,10 +189,6 @@ export const ComposePost = observer(function ComposePost({
 
   const canPost = text.length <= MAX_TEXT_LENGTH
 
-  const selectTextInputLayout =
-    selectedPhotos.length !== 0
-      ? styles.textInputLayoutWithPhoto
-      : styles.textInputLayoutWithoutPhoto
   const selectTextInputPlaceholder = replyTo
     ? 'Write your reply'
     : selectedPhotos.length !== 0
@@ -253,7 +250,9 @@ export const ComposePost = observer(function ComposePost({
               <Text style={[s.red4, s.flex1]}>{error}</Text>
             </View>
           )}
-          <ScrollView style={s.flex1}>
+          <ScrollView
+            style={styles.scrollView}
+            keyboardShouldPersistTaps="always">
             {replyTo ? (
               <View style={[pal.border, styles.replyToLayout]}>
                 <UserAvatar avatar={replyTo.author.avatar} size={50} />
@@ -268,12 +267,7 @@ export const ComposePost = observer(function ComposePost({
               </View>
             ) : undefined}
 
-            <View
-              style={[
-                pal.border,
-                styles.textInputLayout,
-                selectTextInputLayout,
-              ]}>
+            <View style={[pal.border, styles.textInputLayout]}>
               <UserAvatar avatar={store.me.avatar} size={50} />
               <TextInput
                 ref={textInput}
@@ -346,14 +340,14 @@ const styles = StyleSheet.create({
   outer: {
     flexDirection: 'column',
     flex: 1,
-    padding: 15,
     height: '100%',
   },
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingTop: isDesktopWeb ? 10 : undefined,
     paddingBottom: 10,
-    paddingHorizontal: 5,
+    paddingHorizontal: 20,
     height: 55,
   },
   postBtn: {
@@ -365,12 +359,14 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 6,
+    marginHorizontal: 15,
     marginBottom: 6,
   },
   errorLine: {
     flexDirection: 'row',
     backgroundColor: colors.red1,
     borderRadius: 6,
+    marginHorizontal: 15,
     paddingHorizontal: 8,
     paddingVertical: 6,
     marginVertical: 6,
@@ -386,13 +382,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 5,
   },
-  textInputLayoutWithPhoto: {
-    flexWrap: 'wrap',
-  },
-  textInputLayoutWithoutPhoto: {
+  scrollView: {
     flex: 1,
+    paddingHorizontal: 15,
   },
   textInputLayout: {
+    flex: isDesktopWeb ? undefined : 1,
     flexDirection: 'row',
     borderTopWidth: 1,
     paddingTop: 16,
@@ -418,7 +413,8 @@ const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: 'row',
     paddingVertical: 10,
-    paddingRight: 5,
+    paddingLeft: 15,
+    paddingRight: 20,
     alignItems: 'center',
     borderTopWidth: 1,
   },

@@ -1,10 +1,5 @@
 import React, {useEffect} from 'react'
-import {
-  Animated,
-  TouchableOpacity,
-  StyleSheet,
-  useWindowDimensions,
-} from 'react-native'
+import {Animated, TouchableOpacity, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
@@ -20,51 +15,71 @@ export const Autocomplete = observer(
     onSelect: (item: string) => void
   }) => {
     const pal = usePalette('default')
-    const winDim = useWindowDimensions()
     const positionInterp = useAnimatedValue(0)
 
     useEffect(() => {
       Animated.timing(positionInterp, {
         toValue: view.isActive ? 1 : 0,
         duration: 200,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }).start()
     }, [positionInterp, view.isActive])
 
     const topAnimStyle = {
-      top: positionInterp.interpolate({
-        inputRange: [0, 1],
-        outputRange: [winDim.height, winDim.height / 4],
-      }),
+      transform: [
+        {
+          translateY: positionInterp.interpolate({
+            inputRange: [0, 1],
+            outputRange: [200, 0],
+          }),
+        },
+      ],
     }
     return (
-      <Animated.View style={[styles.outer, pal.view, pal.border, topAnimStyle]}>
-        {view.suggestions.map(item => (
-          <TouchableOpacity
-            testID="autocompleteButton"
-            key={item.handle}
-            style={[pal.border, styles.item]}
-            onPress={() => onSelect(item.handle)}>
-            <Text type="md-medium" style={pal.text}>
-              {item.displayName || item.handle}
-              <Text type="sm" style={pal.textLight}>
-                &nbsp;@{item.handle}
+      <View style={[styles.container, view.isActive && styles.visible]}>
+        <Animated.View
+          style={[
+            styles.animatedContainer,
+            pal.view,
+            pal.border,
+            topAnimStyle,
+            view.isActive && styles.visible,
+          ]}>
+          {view.suggestions.slice(0, 5).map(item => (
+            <TouchableOpacity
+              testID="autocompleteButton"
+              key={item.handle}
+              style={[pal.border, styles.item]}
+              onPress={() => onSelect(item.handle)}>
+              <Text type="md-medium" style={pal.text}>
+                {item.displayName || item.handle}
+                <Text type="sm" style={pal.textLight}>
+                  &nbsp;@{item.handle}
+                </Text>
               </Text>
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </Animated.View>
+            </TouchableOpacity>
+          ))}
+        </Animated.View>
+      </View>
     )
   },
 )
 
 const styles = StyleSheet.create({
-  outer: {
+  container: {
+    display: 'none',
+    height: 250,
+  },
+  animatedContainer: {
+    display: 'none',
     position: 'absolute',
-    left: 0,
+    left: -64,
     right: 0,
-    bottom: 0,
+    top: 0,
     borderTopWidth: 1,
+  },
+  visible: {
+    display: 'flex',
   },
   item: {
     borderBottomWidth: 1,
