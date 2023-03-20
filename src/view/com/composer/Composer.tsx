@@ -250,7 +250,9 @@ export const ComposePost = observer(function ComposePost({
               <Text style={[s.red4, s.flex1]}>{error}</Text>
             </View>
           )}
-          <ScrollView style={styles.scrollView}>
+          <ScrollView
+            style={styles.scrollView}
+            keyboardShouldPersistTaps="always">
             {replyTo ? (
               <View style={[pal.border, styles.replyToLayout]}>
                 <UserAvatar avatar={replyTo.author.avatar} size={50} />
