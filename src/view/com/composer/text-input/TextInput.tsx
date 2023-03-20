@@ -3,6 +3,7 @@ import {
   NativeSyntheticEvent,
   StyleSheet,
   TextInputSelectionChangeEventData,
+  View,
 } from 'react-native'
 import PasteInput, {
   PastedFile,
@@ -185,7 +186,7 @@ export const TextInput = React.forwardRef(
     }, [text, pal.link, pal.text])
 
     return (
-      <>
+      <View style={styles.container}>
         <PasteInput
           testID="composerTextInput"
           ref={textInput}
@@ -202,15 +203,20 @@ export const TextInput = React.forwardRef(
           view={autocompleteView}
           onSelect={onSelectAutocompleteItem}
         />
-      </>
+      </View>
     )
   },
 )
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+  },
   textInput: {
     flex: 1,
+    minHeight: 80,
     padding: 5,
+    paddingBottom: 20,
     marginLeft: 8,
     alignSelf: 'flex-start',
   },
