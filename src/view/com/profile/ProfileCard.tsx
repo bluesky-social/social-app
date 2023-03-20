@@ -62,7 +62,9 @@ export function ProfileCard({
           {isFollowedBy && (
             <View style={s.flexRow}>
               <View style={[s.mt5, pal.btn, styles.pill]}>
-                <Text type="xs">Follows You</Text>
+                <Text type="xs" style={pal.text}>
+                  Follows You
+                </Text>
               </View>
             </View>
           )}
