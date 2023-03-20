@@ -14,7 +14,7 @@
     "test-watch": "jest --watchAll",
     "test-ci": "jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "jest --coverage",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "e2e": "detox test --configuration ios.sim.debug --take-screenshots all"
   },
   "dependencies": {

@@ -2,9 +2,10 @@ import React, {MutableRefObject} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
-  View,
+  RefreshControl,
   StyleProp,
   StyleSheet,
+  View,
   ViewStyle,
 } from 'react-native'
 import {CenteredView, FlatList} from '../util/Views'
@@ -16,6 +17,7 @@ import {FeedSlice} from './FeedSlice'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
 
 const HEADER_ITEM = {_reactKey: '__header__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -42,6 +44,7 @@ export const Feed = observer(function Feed({
   testID?: string
   headerOffset?: number
 }) {
+  const pal = usePalette('default')
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
 
@@ -134,10 +137,16 @@ export const Feed = observer(function Feed({
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
           ListFooterComponent={FeedFooter}
-          refreshing={isRefreshing}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={onRefresh}
+              tintColor={pal.colors.text}
+              titleColor={pal.colors.text}
+            />
+          }
           contentContainerStyle={s.contentContainer}
           onScroll={onScroll}
-          onRefresh={onRefresh}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.6}
           removeClippedSubviews={true}

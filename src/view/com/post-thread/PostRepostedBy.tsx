@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
 import {CenteredView, FlatList} from '../util/Views'
 import {
   RepostedByViewModel,
@@ -9,12 +9,14 @@ import {
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from 'state/index'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export const PostRepostedBy = observer(function PostRepostedBy({
   uri,
 }: {
   uri: string
 }) {
+  const pal = usePalette('default')
   const store = useStores()
   const view = React.useMemo(
     () => new RepostedByViewModel(store, {uri}),
@@ -73,8 +75,14 @@ export const PostRepostedBy = observer(function PostRepostedBy({
     <FlatList
       data={view.repostedBy}
       keyExtractor={item => item.did}
-      refreshing={view.isRefreshing}
-      onRefresh={onRefresh}
+      refreshControl={
+        <RefreshControl
+          refreshing={view.isRefreshing}
+          onRefresh={onRefresh}
+          tintColor={pal.colors.text}
+          titleColor={pal.colors.text}
+        />
+      }
       onEndReached={onEndReached}
       renderItem={renderItem}
       initialNumToRender={15}

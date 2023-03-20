@@ -1,11 +1,12 @@
 import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
 import {CenteredView, FlatList} from '../util/Views'
 import {VotesViewModel, VoteItem} from 'state/models/votes-view'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {useStores} from 'state/index'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export const PostVotedBy = observer(function PostVotedBy({
   uri,
@@ -14,6 +15,7 @@ export const PostVotedBy = observer(function PostVotedBy({
   uri: string
   direction: 'up' | 'down'
 }) {
+  const pal = usePalette('default')
   const store = useStores()
   const view = React.useMemo(
     () => new VotesViewModel(store, {uri, direction}),
@@ -68,8 +70,14 @@ export const PostVotedBy = observer(function PostVotedBy({
     <FlatList
       data={view.votes}
       keyExtractor={item => item.actor.did}
-      refreshing={view.isRefreshing}
-      onRefresh={onRefresh}
+      refreshControl={
+        <RefreshControl
+          refreshing={view.isRefreshing}
+          onRefresh={onRefresh}
+          tintColor={pal.colors.text}
+          titleColor={pal.colors.text}
+        />
+      }
       onEndReached={onEndReached}
       renderItem={renderItem}
       initialNumToRender={15}

@@ -1,7 +1,7 @@
 import React, {MutableRefObject} from 'react'
 import {observer} from 'mobx-react-lite'
 import {CenteredView, FlatList} from '../util/Views'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
 import {NotificationsViewModel} from 'state/models/notifications-view'
 import {FeedItem} from './FeedItem'
 import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -9,6 +9,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {EmptyState} from '../util/EmptyState'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 
@@ -23,6 +24,7 @@ export const Feed = observer(function Feed({
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
 }) {
+  const pal = usePalette('default')
   const data = React.useMemo(() => {
     let feedItems
     if (view.hasLoaded) {
@@ -98,8 +100,14 @@ export const Feed = observer(function Feed({
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
           ListFooterComponent={FeedFooter}
-          refreshing={view.isRefreshing}
-          onRefresh={onRefresh}
+          refreshControl={
+            <RefreshControl
+              refreshing={view.isRefreshing}
+              onRefresh={onRefresh}
+              tintColor={pal.colors.text}
+              titleColor={pal.colors.text}
+            />
+          }
           onEndReached={onEndReached}
           onEndReachedThreshold={0.6}
           onScroll={onScroll}

@@ -363,7 +363,7 @@ function CustomHandleForm({
         Add the following record to your domain:
       </Text>
       <View style={[styles.dnsTable, pal.btn]}>
-        <Text type="md-medium" style={styles.dnsLabel}>
+        <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
           Domain:
         </Text>
         <View style={[styles.dnsValue]}>
@@ -371,7 +371,7 @@ function CustomHandleForm({
             _atproto.{handle}
           </Text>
         </View>
-        <Text type="md-medium" style={styles.dnsLabel}>
+        <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
           Type:
         </Text>
         <View style={[styles.dnsValue]}>
@@ -379,7 +379,7 @@ function CustomHandleForm({
             TXT
           </Text>
         </View>
-        <Text type="md-medium" style={styles.dnsLabel}>
+        <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
           Value:
         </Text>
         <View style={[styles.dnsValue]}>
@@ -415,7 +415,7 @@ function CustomHandleForm({
         {isVerifying ? (
           <ActivityIndicator color="white" />
         ) : (
-          <Text type="xl-medium" style={[pal.textInverted, s.textCenter]}>
+          <Text type="xl-medium" style={[s.white, s.textCenter]}>
             {canSave ? `Update to ${handle}` : 'Verify DNS Record'}
           </Text>
         )}
