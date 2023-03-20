@@ -90,6 +90,7 @@
     "react-native-fast-image": "^8.6.3",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "~2.9.0",
+    "react-native-get-random-values": "^1.8.0",
     "react-native-haptic-feedback": "^1.14.0",
     "react-native-image-crop-picker": "^0.38.1",
     "react-native-inappbrowser-reborn": "^3.6.3",
