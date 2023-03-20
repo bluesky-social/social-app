@@ -23,7 +23,7 @@ const openPermissionAlert = (perm: string) => {
 }
 
 export function usePhotoLibraryPermission() {
-  const [mediaLibraryPermissions] = MediaLibrary.usePermissions()
+  const [res, requestPermission] = MediaLibrary.usePermissions()
   const requestPhotoAccessIfNeeded = async () => {
     // On the, we use <input type="file"> to produce a filepicker
     // This does not need any permission granting.
@@ -31,8 +31,11 @@ export function usePhotoLibraryPermission() {
       return true
     }
 
-    if (mediaLibraryPermissions?.status === 'granted') {
+    if (res?.granted) {
       return true
+    } else if (!res || res?.status === 'undetermined' || res?.canAskAgain) {
+      const updatedRes = await requestPermission()
+      return updatedRes?.granted
     } else {
       openPermissionAlert('photo library')
       return false
@@ -42,11 +45,14 @@ export function usePhotoLibraryPermission() {
 }
 
 export function useCameraPermission() {
-  const [cameraPermissionStatus] = Camera.useCameraPermissions()
+  const [res, requestPermission] = Camera.useCameraPermissions()
 
   const requestCameraAccessIfNeeded = async () => {
-    if (cameraPermissionStatus?.granted) {
+    if (res?.granted) {
       return true
+    } else if (!res || res?.status === 'undetermined' || res?.canAskAgain) {
+      const updatedRes = await requestPermission()
+      return updatedRes?.granted
     } else {
       openPermissionAlert('camera')
       return false
