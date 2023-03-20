@@ -1,6 +1,6 @@
 import React, {useRef} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
 import {CenteredView, FlatList} from '../util/Views'
 import {
   PostThreadViewModel,
@@ -120,8 +120,14 @@ export const PostThread = observer(function PostThread({
       initialNumToRender={posts.length}
       keyExtractor={item => item._reactKey}
       renderItem={renderItem}
-      refreshing={isRefreshing}
-      onRefresh={onRefresh}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefreshing}
+          onRefresh={onRefresh}
+          tintColor={pal.colors.text}
+          titleColor={pal.colors.text}
+        />
+      }
       onLayout={onLayout}
       onScrollToIndexFailed={onScrollToIndexFailed}
       style={s.hContentRegion}

@@ -201,7 +201,12 @@ export const SearchScreen = withAuthRequired(
               onScroll={onMainScroll}
               scrollEventThrottle={100}
               refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  tintColor={pal.colors.text}
+                  titleColor={pal.colors.text}
+                />
               }>
               {foafsView.isLoading ? (
                 <ProfileCardFeedLoadingPlaceholder />
