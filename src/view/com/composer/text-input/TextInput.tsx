@@ -210,10 +210,11 @@ export const TextInput = React.forwardRef(
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    flex: 1,
   },
   textInput: {
     flex: 1,
+    width: '100%',
     minHeight: 80,
     padding: 5,
     paddingBottom: 20,
