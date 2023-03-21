@@ -2,7 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from './root-store'
 import {FeedModel} from './feed-view'
 import {NotificationsViewModel} from './notifications-view'
-import {MyFollowsModel} from './my-follows'
+import {MyFollowsCache} from './cache/my-follows'
 import {isObj, hasProp} from 'lib/type-guards'
 
 export class MeModel {
@@ -15,7 +15,7 @@ export class MeModel {
   followersCount: number | undefined
   mainFeed: FeedModel
   notifications: NotificationsViewModel
-  follows: MyFollowsModel
+  follows: MyFollowsCache
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -27,7 +27,7 @@ export class MeModel {
       algorithm: 'reverse-chronological',
     })
     this.notifications = new NotificationsViewModel(this.rootStore, {})
-    this.follows = new MyFollowsModel(this.rootStore)
+    this.follows = new MyFollowsCache(this.rootStore)
   }
 
   clear() {
