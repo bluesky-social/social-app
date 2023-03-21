@@ -2,7 +2,6 @@ import React, {useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
-import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '../../../third-party/uri'
 import {
   FontAwesomeIcon,
@@ -253,32 +252,6 @@ export const FeedItem = observer(function ({
           </View>
         </View>
       </Link>
-      {false /*isThreadChildElided*/ ? (
-        <Link
-          style={[pal.view, styles.viewFullThread]}
-          href={itemHref}
-          title={itemTitle}
-          noFeedback>
-          <View style={styles.viewFullThreadDots}>
-            <Svg width="4" height="30">
-              <Line
-                x1="2"
-                y1="0"
-                x2="2"
-                y2="8"
-                stroke={pal.colors.replyLine}
-                strokeWidth="2"
-              />
-              <Circle x="2" y="14" r="1.5" fill={pal.colors.replyLineDot} />
-              <Circle x="2" y="20" r="1.5" fill={pal.colors.replyLineDot} />
-              <Circle x="2" y="26" r="1.5" fill={pal.colors.replyLineDot} />
-            </Svg>
-          </View>
-          <Text type="md" style={pal.link}>
-            View full thread
-          </Text>
-        </Link>
-      ) : undefined}
     </PostMutedWrapper>
   )
 })
@@ -347,15 +320,5 @@ const styles = StyleSheet.create({
   },
   ctrls: {
     marginTop: 4,
-  },
-  viewFullThread: {
-    paddingTop: 12,
-    paddingBottom: 2,
-    paddingLeft: 80,
-  },
-  viewFullThreadDots: {
-    position: 'absolute',
-    left: 41,
-    top: 0,
   },
 })
