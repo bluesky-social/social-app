@@ -1,7 +1,15 @@
 import React from 'react'
-import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native'
-import Image, {OnLoadEvent} from 'view/com/util/images/Image'
+import {
+  Image,
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native'
+// import Image from 'view/com/util/images/Image'
 import {clamp} from 'lib/numbers'
+import {useStores} from 'state/index'
+import {Dim} from 'lib/media/manip'
 
 export const DELAY_PRESS_IN = 500
 const MIN_ASPECT_RATIO = 0.33 // 1/3
@@ -22,16 +30,27 @@ export function AutoSizedImage({
   style?: StyleProp<ViewStyle>
   children?: React.ReactNode
 }) {
-  const [aspectRatio, setAspectRatio] = React.useState<number>(1)
-  const onLoad = (e: OnLoadEvent) => {
-    setAspectRatio(
-      clamp(
-        e.nativeEvent.width / e.nativeEvent.height,
-        MIN_ASPECT_RATIO,
-        MAX_ASPECT_RATIO,
-      ),
-    )
-  }
+  const store = useStores()
+  const [dim, setDim] = React.useState<Dim | undefined>(
+    store.imageSizes.get(uri),
+  )
+  const [aspectRatio, setAspectRatio] = React.useState<number>(
+    dim ? calc(dim) : 1,
+  )
+  React.useEffect(() => {
+    let aborted = false
+    if (dim) {
+      return
+    }
+    store.imageSizes.fetch(uri).then(newDim => {
+      if (aborted) {
+        return
+      }
+      setDim(newDim)
+      setAspectRatio(calc(newDim))
+    })
+  }, [dim, setDim, setAspectRatio, store, uri])
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -39,14 +58,17 @@ export function AutoSizedImage({
       onPressIn={onPressIn}
       delayPressIn={DELAY_PRESS_IN}
       style={[styles.container, style]}>
-      <Image
-        style={[styles.image, {aspectRatio}]}
-        source={{uri}}
-        onLoad={onLoad}
-      />
+      <Image style={[styles.image, {aspectRatio}]} source={{uri}} />
       {children}
     </TouchableOpacity>
   )
+}
+
+function calc(dim: Dim) {
+  if (dim.width === 0 || dim.height === 0) {
+    return 1
+  }
+  return clamp(dim.width / dim.height, MIN_ASPECT_RATIO, MAX_ASPECT_RATIO)
 }
 
 const styles = StyleSheet.create({

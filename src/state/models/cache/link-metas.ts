@@ -1,10 +1,10 @@
 import {makeAutoObservable} from 'mobx'
 import {LRUMap} from 'lru_map'
-import {RootStoreModel} from './root-store'
+import {RootStoreModel} from '../root-store'
 import {LinkMeta, getLinkMeta} from 'lib/link-meta/link-meta'
 
 type CacheValue = Promise<LinkMeta> | LinkMeta
-export class LinkMetasViewModel {
+export class LinkMetasCache {
   cache: LRUMap<string, CacheValue> = new LRUMap(100)
 
   constructor(public rootStore: RootStoreModel) {

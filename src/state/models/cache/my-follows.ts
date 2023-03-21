@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {FollowRecord, AppBskyActorProfile, AppBskyActorRef} from '@atproto/api'
-import {RootStoreModel} from './root-store'
+import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 
 const CACHE_TTL = 1000 * 60 * 60 // hourly
@@ -16,7 +16,7 @@ type Profile =
  * follows. It should be periodically refreshed and updated any time
  * the user makes a change to their follows.
  */
-export class MyFollowsModel {
+export class MyFollowsCache {
   // data
   followDidToRecordMap: Record<string, string> = {}
   lastSync = 0
