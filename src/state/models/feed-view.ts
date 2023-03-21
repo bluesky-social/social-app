@@ -491,13 +491,8 @@ export class FeedModel {
     }
     const res = await this._getFeed({limit: 1})
     const currentLatestUri = this.pollCursor
-    const slices = this.tuner.tune(res.data.feed, this.feedTuners)
-    const item = slices[0]?.rootItem
+    const item = res.data.feed?.[0]
     if (!item) {
-      return
-    }
-    if (item.reply) {
-      // TEMPORARY ignore replies
       return
     }
     if (AppBskyFeedFeedViewPost.isReasonRepost(item.reason)) {
