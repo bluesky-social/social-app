@@ -30,11 +30,13 @@ export const Post = observer(function Post({
   uri,
   initView,
   showReplyLine,
+  hideError,
   style,
 }: {
   uri: string
   initView?: PostThreadViewModel
   showReplyLine?: boolean
+  hideError?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -70,6 +72,9 @@ export const Post = observer(function Post({
   // error
   // =
   if (view.hasError || !view.thread || !view.thread?.postRecord) {
+    if (hideError) {
+      return <View />
+    }
     return (
       <View style={pal.view}>
         <Text>{view.error || 'Thread not found'}</Text>

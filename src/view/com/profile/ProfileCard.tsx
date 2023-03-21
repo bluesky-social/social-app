@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   details: {
-    paddingLeft: 60,
+    paddingLeft: 54,
     paddingRight: 10,
     paddingBottom: 10,
   },
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
 
   followedBy: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     paddingLeft: 54,
     paddingRight: 20,
     marginBottom: 10,
