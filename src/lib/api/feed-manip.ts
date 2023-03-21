@@ -116,9 +116,14 @@ export class FeedTuner {
     }
 
     // remove any items already "seen"
+    const soonToBeSeenUris: Set<string> = new Set()
     for (let i = slices.length - 1; i >= 0; i--) {
       if (this.seenUris.has(slices[i].uri)) {
         slices.splice(i, 1)
+      } else {
+        for (const item of slices[i].items) {
+          soonToBeSeenUris.add(item.post.uri)
+        }
       }
     }
 
@@ -128,9 +133,12 @@ export class FeedTuner {
         !slice.isThread &&
         !slice.items[0].reason &&
         slice.items[0].reply?.parent &&
-        !this.seenUris.has(slice.items[0].reply?.parent.uri)
+        !this.seenUris.has(slice.items[0].reply?.parent.uri) &&
+        !soonToBeSeenUris.has(slice.items[0].reply?.parent.uri)
       ) {
+        const uri = slice.items[0].reply?.parent.uri
         slice.flattenReplyParent()
+        soonToBeSeenUris.add(uri)
       }
     }
 
