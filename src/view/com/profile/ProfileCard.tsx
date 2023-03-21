@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
 
   followedBy: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     paddingLeft: 54,
     paddingRight: 20,
     marginBottom: 10,

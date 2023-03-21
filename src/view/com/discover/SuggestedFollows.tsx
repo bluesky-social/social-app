@@ -44,25 +44,16 @@ export const SuggestedFollows = ({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 10,
-    paddingHorizontal: 4,
-  },
+  container: {},
 
   heading: {
     fontWeight: 'bold',
-    paddingHorizontal: 4,
+    paddingHorizontal: 12,
+    paddingTop: 16,
     paddingBottom: 8,
   },
 
   card: {
-    borderRadius: 12,
-    marginBottom: 2,
-    borderWidth: 1,
-  },
-
-  loadMore: {
-    paddingLeft: 16,
-    paddingVertical: 12,
+    borderTopWidth: 1,
   },
 })

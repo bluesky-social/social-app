@@ -21,6 +21,7 @@ export const Suggestions = observer(({foafs}: {foafs: FoafsModel}) => {
             />
           </View>
         )}
+        <WhoToFollow />
         {foafs.sources.map((source, i) => {
           const item = foafs.foafs.get(source)
           if (!item || item.follows.length === 0) {
@@ -43,6 +44,6 @@ export const Suggestions = observer(({foafs}: {foafs: FoafsModel}) => {
 
 const styles = StyleSheet.create({
   suggestions: {
-    marginBottom: 8,
+    marginBottom: 0,
   },
 })
