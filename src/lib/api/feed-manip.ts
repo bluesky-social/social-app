@@ -49,6 +49,10 @@ export class FeedViewPostsSlice {
     return !!this.items.find(item => item.post.uri === uri)
   }
 
+  isNextInThread(uri: string) {
+    return this.items[this.items.length - 1].post.uri === uri
+  }
+
   insert(item: FeedViewPost) {
     const selfReplyUri = getSelfReplyUri(item)
     const i = this.items.findIndex(item2 => item2.post.uri === selfReplyUri)
@@ -102,7 +106,7 @@ export class FeedTuner {
 
       const selfReplyUri = getSelfReplyUri(item)
       if (selfReplyUri) {
-        const parent = slices.find(item2 => item2.containsUri(selfReplyUri))
+        const parent = slices.find(item2 => item2.isNextInThread(selfReplyUri))
         if (parent) {
           parent.insert(item)
           continue
