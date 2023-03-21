@@ -28,6 +28,7 @@ export class FeedViewPostsSlice {
   get isThread() {
     return (
       this.items.length > 1 &&
+      !this.items[0].reply &&
       this.items.every(
         item => item.post.author.did === this.items[0].post.author.did,
       )
@@ -35,7 +36,7 @@ export class FeedViewPostsSlice {
   }
 
   get isReply() {
-    return this.items.length === 2 && !this.isThread
+    return this.items.length > 1 && !this.isThread
   }
 
   get rootItem() {
@@ -180,14 +181,14 @@ export class FeedTuner {
   }
 
   static likedRepliesOnly(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
-    // remove any replies without any likes
+    // remove any replies without at least 2 likes
     for (let i = slices.length - 1; i >= 0; i--) {
       if (slices[i].isThread) {
         continue
       }
       const item = slices[i].rootItem
       const isRepost = Boolean(item.reason)
-      if (item.reply && !isRepost && item.post.upvoteCount === 0) {
+      if (item.reply && !isRepost && item.post.upvoteCount < 2) {
         slices.splice(i, 1)
       }
     }
