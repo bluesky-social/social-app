@@ -38,8 +38,8 @@ export async function searchProfiles(
   return await doFetch<ProfileSearchItem[]>(PROFILES_ENDPOINT, query)
 }
 
-export async function searchPosts(query: string): Promise<ProfileSearchItem[]> {
-  return await doFetch<ProfileSearchItem[]>(POSTS_ENDPOINT, query)
+export async function searchPosts(query: string): Promise<PostSearchItem[]> {
+  return await doFetch<PostSearchItem[]>(POSTS_ENDPOINT, query)
 }
 
 async function doFetch<T>(endpoint: string, query: string): Promise<T> {

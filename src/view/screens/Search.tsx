@@ -17,9 +17,11 @@ import {observer} from 'mobx-react-lite'
 import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
+import {SearchUIModel} from 'state/models/ui/search'
+import {FoafsModel} from 'state/models/discovery/foafs'
 import {HeaderWithInput} from 'view/com/search/HeaderWithInput'
 import {Suggestions} from 'view/com/search/Suggestions'
-import {FoafsModel} from 'state/models/discovery/foafs'
+import {SearchResults} from 'view/com/search/SearchResults'
 import {s} from 'lib/styles'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -42,6 +44,9 @@ export const SearchScreen = withAuthRequired(
       () => new FoafsModel(store),
       [store],
     )
+    const [searchUIModel, setSearchUIModel] = React.useState<
+      SearchUIModel | undefined
+    >()
     const [refreshing, setRefreshing] = React.useState(false)
 
     const onSoftReset = () => {
@@ -65,22 +70,37 @@ export const SearchScreen = withAuthRequired(
       }, [store, autocompleteView, foafs]),
     )
 
-    const onChangeQuery = (text: string) => {
-      setQuery(text)
-      if (text.length > 0) {
-        autocompleteView.setActive(true)
-        autocompleteView.setPrefix(text)
-      } else {
-        autocompleteView.setActive(false)
-      }
-    }
-    const onPressClearQuery = () => {
+    const onChangeQuery = React.useCallback(
+      (text: string) => {
+        setQuery(text)
+        if (text.length > 0) {
+          autocompleteView.setActive(true)
+          autocompleteView.setPrefix(text)
+        } else {
+          autocompleteView.setActive(false)
+        }
+      },
+      [setQuery, autocompleteView],
+    )
+
+    const onPressClearQuery = React.useCallback(() => {
       setQuery('')
-    }
-    const onPressCancelSearch = () => {
+    }, [setQuery])
+
+    const onPressCancelSearch = React.useCallback(() => {
       setQuery('')
       autocompleteView.setActive(false)
-    }
+      setSearchUIModel(undefined)
+      store.shell.setIsDrawerSwipeDisabled(false)
+    }, [setQuery, autocompleteView, store])
+
+    const onSubmitQuery = React.useCallback(() => {
+      const model = new SearchUIModel(store)
+      model.fetch(query)
+      setSearchUIModel(model)
+      store.shell.setIsDrawerSwipeDisabled(true)
+    }, [query, setSearchUIModel, store])
+
     const onRefresh = React.useCallback(async () => {
       setRefreshing(true)
       try {
@@ -100,49 +120,54 @@ export const SearchScreen = withAuthRequired(
             onChangeQuery={onChangeQuery}
             onPressClearQuery={onPressClearQuery}
             onPressCancelSearch={onPressCancelSearch}
+            onSubmitQuery={onSubmitQuery}
           />
-          <ScrollView
-            ref={scrollElRef}
-            testID="searchScrollView"
-            style={pal.view}
-            onScroll={onMainScroll}
-            scrollEventThrottle={100}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                tintColor={pal.colors.text}
-                titleColor={pal.colors.text}
-              />
-            }>
-            {query && autocompleteView.searchRes.length ? (
-              <>
-                {autocompleteView.searchRes.map(item => (
-                  <ProfileCard
-                    key={item.did}
-                    handle={item.handle}
-                    displayName={item.displayName}
-                    avatar={item.avatar}
-                  />
-                ))}
-              </>
-            ) : query && !autocompleteView.searchRes.length ? (
-              <View>
-                <Text style={[pal.textLight, styles.searchPrompt]}>
-                  No results found for {autocompleteView.prefix}
-                </Text>
-              </View>
-            ) : isInputFocused ? (
-              <View>
-                <Text style={[pal.textLight, styles.searchPrompt]}>
-                  Search for users on the network
-                </Text>
-              </View>
-            ) : (
-              <Suggestions foafs={foafs} />
-            )}
-            <View style={s.footerSpacer} />
-          </ScrollView>
+          {searchUIModel ? (
+            <SearchResults model={searchUIModel} />
+          ) : (
+            <ScrollView
+              ref={scrollElRef}
+              testID="searchScrollView"
+              style={pal.view}
+              onScroll={onMainScroll}
+              scrollEventThrottle={100}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  tintColor={pal.colors.text}
+                  titleColor={pal.colors.text}
+                />
+              }>
+              {query && autocompleteView.searchRes.length ? (
+                <>
+                  {autocompleteView.searchRes.map(item => (
+                    <ProfileCard
+                      key={item.did}
+                      handle={item.handle}
+                      displayName={item.displayName}
+                      avatar={item.avatar}
+                    />
+                  ))}
+                </>
+              ) : query && !autocompleteView.searchRes.length ? (
+                <View>
+                  <Text style={[pal.textLight, styles.searchPrompt]}>
+                    No results found for {autocompleteView.prefix}
+                  </Text>
+                </View>
+              ) : isInputFocused ? (
+                <View>
+                  <Text style={[pal.textLight, styles.searchPrompt]}>
+                    Search for users on the network
+                  </Text>
+                </View>
+              ) : (
+                <Suggestions foafs={foafs} />
+              )}
+              <View style={s.footerSpacer} />
+            </ScrollView>
+          )}
         </View>
       </TouchableWithoutFeedback>
     )

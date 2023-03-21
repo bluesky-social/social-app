@@ -21,6 +21,7 @@ interface Props {
   onChangeQuery: (v: string) => void
   onPressClearQuery: () => void
   onPressCancelSearch: () => void
+  onSubmitQuery: () => void
 }
 export function HeaderWithInput({
   isInputFocused,
@@ -29,6 +30,7 @@ export function HeaderWithInput({
   onChangeQuery,
   onPressClearQuery,
   onPressCancelSearch,
+  onSubmitQuery,
 }: Props) {
   const store = useStores()
   const theme = useTheme()
@@ -77,6 +79,7 @@ export function HeaderWithInput({
           onFocus={() => setIsInputFocused(true)}
           onBlur={() => setIsInputFocused(false)}
           onChangeText={onChangeQuery}
+          onSubmitEditing={onSubmitQuery}
         />
         {query ? (
           <TouchableOpacity onPress={onPressClearQuery}>
@@ -104,8 +107,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
-    paddingTop: 4,
-    marginBottom: 14,
+    paddingVertical: 4,
   },
   headerMenuBtn: {
     width: 40,

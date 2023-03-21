@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   details: {
-    paddingLeft: 60,
+    paddingLeft: 54,
     paddingRight: 10,
     paddingBottom: 10,
   },
