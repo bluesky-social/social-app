@@ -78,6 +78,7 @@ const Profiles = observer(({model}: {model: SearchUIModel}) => {
     <ScrollView style={pal.view}>
       {model.profiles.map(item => (
         <ProfileCardWithFollowBtn
+          key={item.did}
           did={item.did}
           declarationCid={item.declaration.cid}
           handle={item.handle}
