@@ -13,10 +13,11 @@ import {LogModel} from './log'
 import {SessionModel} from './session'
 import {ShellUiModel} from './ui/shell'
 import {ProfilesViewModel} from './profiles-view'
-import {LinkMetasViewModel} from './link-metas-view'
+import {LinkMetasCache} from './cache/link-metas'
 import {NotificationsViewItemModel} from './notifications-view'
 import {MeModel} from './me'
 import {resetToTab} from '../../Navigation'
+import {ImageSizesCache} from './cache/image-sizes'
 
 export const appInfo = z.object({
   build: z.string(),
@@ -34,7 +35,8 @@ export class RootStoreModel {
   shell = new ShellUiModel(this)
   me = new MeModel(this)
   profiles = new ProfilesViewModel(this)
-  linkMetas = new LinkMetasViewModel(this)
+  linkMetas = new LinkMetasCache(this)
+  imageSizes = new ImageSizesCache()
 
   // HACK
   // this flag is to track the lexicon breaking refactor

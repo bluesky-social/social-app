@@ -5,6 +5,11 @@ import RNFS from 'react-native-fs'
 import uuid from 'react-native-uuid'
 import * as Toast from 'view/com/util/Toast'
 
+export interface Dim {
+  width: number
+  height: number
+}
+
 export interface DownloadAndResizeOpts {
   uri: string
   width: number
@@ -119,10 +124,6 @@ export async function compressIfNeeded(
   return finalImg
 }
 
-export interface Dim {
-  width: number
-  height: number
-}
 export function scaleDownDimensions(dim: Dim, max: Dim): Dim {
   if (dim.width < max.width && dim.height < max.height) {
     return dim
