@@ -32,24 +32,39 @@ export class Router {
 }
 
 function createRoute(pattern: string): Route {
-  let matcherReInternal = pattern.replace(
-    /:([\w]+)/g,
-    (_m, name) => `(?<${name}>[^/]+)`,
-  )
+  const pathParamNames: Set<string> = new Set()
+  let matcherReInternal = pattern.replace(/:([\w]+)/g, (_m, name) => {
+    pathParamNames.add(name)
+    return `(?<${name}>[^/]+)`
+  })
   const matcherRe = new RegExp(`^${matcherReInternal}([?]|$)`, 'i')
   return {
     match(path: string) {
-      const res = matcherRe.exec(path)
+      const {pathname, searchParams} = new URL(path, 'http://throwaway.com')
+      const addedParams = Object.fromEntries(searchParams.entries())
+
+      const res = matcherRe.exec(pathname)
       if (res) {
-        return {params: res.groups || {}}
+        return {params: Object.assign(addedParams, res.groups || {})}
       }
       return undefined
     },
     build(params: Record<string, string>) {
-      return pattern.replace(
+      const str = pattern.replace(
         /:([\w]+)/g,
         (_m, name) => params[name] || 'undefined',
       )
+
+      let hasQp = false
+      const qp = new URLSearchParams()
+      for (const paramName in params) {
+        if (!pathParamNames.has(paramName)) {
+          qp.set(paramName, params[paramName])
+          hasQp = true
+        }
+      }
+
+      return str + (hasQp ? `?${qp.toString()}` : '')
     },
   }
 }

@@ -1,9 +1,11 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {SearchUIModel} from 'state/models/ui/search'
+import {FoafsModel} from 'state/models/discovery/foafs'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ScrollView} from 'view/com/util/Views'
 import {Suggestions} from 'view/com/search/Suggestions'
-import {FoafsModel} from 'state/models/discovery/foafs'
+import {SearchResults} from 'view/com/search/SearchResults'
 import {observer} from 'mobx-react-lite'
 import {
   NativeStackScreenProps,
@@ -15,22 +17,30 @@ import {usePalette} from 'lib/hooks/usePalette'
 
 type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = withAuthRequired(
-  observer(({}: Props) => {
+  observer(({route}: Props) => {
     const pal = usePalette('default')
     const store = useStores()
     const foafs = React.useMemo<FoafsModel>(
       () => new FoafsModel(store),
       [store],
     )
-    // const [searchUIModel, setSearchUIModel] = React.useState<
-    //   SearchUIModel | undefined
-    // >()
+    const searchUIModel = React.useMemo<SearchUIModel | undefined>(
+      () => (route.params.q ? new SearchUIModel(store) : undefined),
+      [route.params.q, store],
+    )
 
     React.useEffect(() => {
+      if (route.params.q && searchUIModel) {
+        searchUIModel.fetch(route.params.q)
+      }
       if (!foafs.hasData) {
         foafs.fetch()
       }
-    }, [foafs])
+    }, [foafs, searchUIModel, route.params.q])
+
+    if (searchUIModel) {
+      return <SearchResults model={searchUIModel} />
+    }
 
     return (
       <ScrollView

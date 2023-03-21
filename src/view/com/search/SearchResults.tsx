@@ -1,7 +1,8 @@
 import React from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {SearchUIModel} from 'state/models/ui/search'
+import {CenteredView, ScrollView} from '../util/Views'
 import {Pager, RenderTabBarFnProps} from 'view/com/util/pager/Pager'
 import {TabBar} from 'view/com/util/TabBar'
 import {Post} from 'view/com/post/Post'
@@ -12,6 +13,7 @@ import {
 } from 'view/com/util/LoadingPlaceholder'
 import {Text} from 'view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
 
 const SECTIONS = ['Posts', 'Users']
 
@@ -21,9 +23,9 @@ export const SearchResults = observer(({model}: {model: SearchUIModel}) => {
   const renderTabBar = React.useCallback(
     (props: RenderTabBarFnProps) => {
       return (
-        <View style={[pal.border, styles.tabBar]}>
+        <CenteredView style={[pal.border, styles.tabBar]}>
           <TabBar {...props} items={SECTIONS} />
-        </View>
+        </CenteredView>
       )
     },
     [pal],
@@ -56,6 +58,9 @@ const PostResults = observer(({model}: {model: SearchUIModel}) => {
       {model.postUris.map(uri => (
         <Post key={uri} uri={uri} hideError />
       ))}
+      <View style={s.footerSpacer} />
+      <View style={s.footerSpacer} />
+      <View style={s.footerSpacer} />
     </ScrollView>
   )
 })
@@ -87,6 +92,9 @@ const Profiles = observer(({model}: {model: SearchUIModel}) => {
           description={item.description}
         />
       ))}
+      <View style={s.footerSpacer} />
+      <View style={s.footerSpacer} />
+      <View style={s.footerSpacer} />
     </ScrollView>
   )
 })
