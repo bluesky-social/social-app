@@ -157,6 +157,5 @@ const styles = isDesktopWeb
         left: 0,
         width: 1,
         height: 3,
-        borderRadius: 4,
       },
     })

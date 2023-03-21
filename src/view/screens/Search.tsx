@@ -3,16 +3,10 @@ import {
   Keyboard,
   RefreshControl,
   StyleSheet,
-  TextInput,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ScrollView} from 'view/com/util/Views'
 import {
@@ -20,46 +14,39 @@ import {
   SearchTabNavigatorParams,
 } from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
-import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
+import {SearchUIModel} from 'state/models/ui/search'
 import {FoafsModel} from 'state/models/discovery/foafs'
+import {HeaderWithInput} from 'view/com/search/HeaderWithInput'
+import {Suggestions} from 'view/com/search/Suggestions'
+import {SearchResults} from 'view/com/search/SearchResults'
 import {s} from 'lib/styles'
-import {MagnifyingGlassIcon} from 'lib/icons'
-import {WhoToFollow} from 'view/com/discover/WhoToFollow'
-import {SuggestedFollows} from 'view/com/discover/SuggestedFollows'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
-import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-import {useAnalytics} from 'lib/analytics'
-
-const MENU_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
-const FIVE_MIN = 5 * 60 * 1e3
 
 type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = withAuthRequired(
   observer<Props>(({}: Props) => {
     const pal = usePalette('default')
-    const theme = useTheme()
     const store = useStores()
-    const {track} = useAnalytics()
     const scrollElRef = React.useRef<ScrollView>(null)
     const onMainScroll = useOnMainScroll(store)
-    const textInput = React.useRef<TextInput>(null)
-    const [lastRenderTime, setRenderTime] = React.useState<number>(Date.now()) // used to trigger reloads
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
     const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
       () => new UserAutocompleteViewModel(store),
       [store],
     )
-    const foafsView = React.useMemo<FoafsModel>(
+    const foafs = React.useMemo<FoafsModel>(
       () => new FoafsModel(store),
       [store],
     )
+    const [searchUIModel, setSearchUIModel] = React.useState<
+      SearchUIModel | undefined
+    >()
     const [refreshing, setRefreshing] = React.useState(false)
 
     const onSoftReset = () => {
@@ -73,126 +60,70 @@ export const SearchScreen = withAuthRequired(
           softResetSub.remove()
         }
 
-        const now = Date.now()
-        if (now - lastRenderTime > FIVE_MIN) {
-          setRenderTime(Date.now()) // trigger reload of suggestions
-        }
         store.shell.setMinimalShellMode(false)
         autocompleteView.setup()
-        if (!foafsView.hasData) {
-          foafsView.fetch()
+        if (!foafs.hasData) {
+          foafs.fetch()
         }
 
         return cleanup
-      }, [store, autocompleteView, foafsView, lastRenderTime, setRenderTime]),
+      }, [store, autocompleteView, foafs]),
     )
 
-    const onPressMenu = () => {
-      track('ViewHeader:MenuButtonClicked')
-      store.shell.openDrawer()
-    }
+    const onChangeQuery = React.useCallback(
+      (text: string) => {
+        setQuery(text)
+        if (text.length > 0) {
+          autocompleteView.setActive(true)
+          autocompleteView.setPrefix(text)
+        } else {
+          autocompleteView.setActive(false)
+        }
+      },
+      [setQuery, autocompleteView],
+    )
 
-    const onChangeQuery = (text: string) => {
-      setQuery(text)
-      if (text.length > 0) {
-        autocompleteView.setActive(true)
-        autocompleteView.setPrefix(text)
-      } else {
-        autocompleteView.setActive(false)
-      }
-    }
-    const onPressClearQuery = () => {
+    const onPressClearQuery = React.useCallback(() => {
       setQuery('')
-    }
-    const onPressCancelSearch = () => {
+    }, [setQuery])
+
+    const onPressCancelSearch = React.useCallback(() => {
       setQuery('')
       autocompleteView.setActive(false)
-      textInput.current?.blur()
-    }
+      setSearchUIModel(undefined)
+      store.shell.setIsDrawerSwipeDisabled(false)
+    }, [setQuery, autocompleteView, store])
+
+    const onSubmitQuery = React.useCallback(() => {
+      const model = new SearchUIModel(store)
+      model.fetch(query)
+      setSearchUIModel(model)
+      store.shell.setIsDrawerSwipeDisabled(true)
+    }, [query, setSearchUIModel, store])
+
     const onRefresh = React.useCallback(async () => {
       setRefreshing(true)
       try {
-        await foafsView.fetch()
+        await foafs.fetch()
       } finally {
         setRefreshing(false)
       }
-    }, [foafsView, setRefreshing])
+    }, [foafs, setRefreshing])
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={[pal.view, styles.container]}>
-          <View style={[pal.view, pal.border, styles.header]}>
-            <TouchableOpacity
-              testID="viewHeaderBackOrMenuBtn"
-              onPress={onPressMenu}
-              hitSlop={MENU_HITSLOP}
-              style={styles.headerMenuBtn}>
-              <UserAvatar size={30} avatar={store.me.avatar} />
-            </TouchableOpacity>
-            <View
-              style={[
-                {backgroundColor: pal.colors.backgroundLight},
-                styles.headerSearchContainer,
-              ]}>
-              <MagnifyingGlassIcon
-                style={[pal.icon, styles.headerSearchIcon]}
-                size={21}
-              />
-              <TextInput
-                testID="searchTextInput"
-                ref={textInput}
-                placeholder="Search"
-                placeholderTextColor={pal.colors.textLight}
-                selectTextOnFocus
-                returnKeyType="search"
-                value={query}
-                style={[pal.text, styles.headerSearchInput]}
-                keyboardAppearance={theme.colorScheme}
-                onFocus={() => setIsInputFocused(true)}
-                onBlur={() => setIsInputFocused(false)}
-                onChangeText={onChangeQuery}
-              />
-              {query ? (
-                <TouchableOpacity onPress={onPressClearQuery}>
-                  <FontAwesomeIcon
-                    icon="xmark"
-                    size={16}
-                    style={pal.textLight as FontAwesomeIconStyle}
-                  />
-                </TouchableOpacity>
-              ) : undefined}
-            </View>
-            {query || isInputFocused ? (
-              <View style={styles.headerCancelBtn}>
-                <TouchableOpacity onPress={onPressCancelSearch}>
-                  <Text style={pal.text}>Cancel</Text>
-                </TouchableOpacity>
-              </View>
-            ) : undefined}
-          </View>
-          {query && autocompleteView.searchRes.length ? (
-            <>
-              {autocompleteView.searchRes.map(item => (
-                <ProfileCard
-                  key={item.did}
-                  handle={item.handle}
-                  displayName={item.displayName}
-                  avatar={item.avatar}
-                />
-              ))}
-            </>
-          ) : query && !autocompleteView.searchRes.length ? (
-            <View>
-              <Text style={[pal.textLight, styles.searchPrompt]}>
-                No results found for {autocompleteView.prefix}
-              </Text>
-            </View>
-          ) : isInputFocused ? (
-            <View>
-              <Text style={[pal.textLight, styles.searchPrompt]}>
-                Search for users on the network
-              </Text>
-            </View>
+          <HeaderWithInput
+            isInputFocused={isInputFocused}
+            query={query}
+            setIsInputFocused={setIsInputFocused}
+            onChangeQuery={onChangeQuery}
+            onPressClearQuery={onPressClearQuery}
+            onPressCancelSearch={onPressCancelSearch}
+            onSubmitQuery={onSubmitQuery}
+          />
+          {searchUIModel ? (
+            <SearchResults model={searchUIModel} />
           ) : (
             <ScrollView
               ref={scrollElRef}
@@ -208,39 +139,31 @@ export const SearchScreen = withAuthRequired(
                   titleColor={pal.colors.text}
                 />
               }>
-              {foafsView.isLoading ? (
-                <ProfileCardFeedLoadingPlaceholder />
-              ) : foafsView.hasContent ? (
+              {query && autocompleteView.searchRes.length ? (
                 <>
-                  {foafsView.popular.length > 0 && (
-                    <View style={styles.suggestions}>
-                      <SuggestedFollows
-                        title="In your network"
-                        suggestions={foafsView.popular}
-                      />
-                    </View>
-                  )}
-                  {foafsView.sources.map((source, i) => {
-                    const item = foafsView.foafs.get(source)
-                    if (!item || item.follows.length === 0) {
-                      return <View key={`sf-${item?.did || i}`} />
-                    }
-                    return (
-                      <View key={`sf-${item.did}`} style={styles.suggestions}>
-                        <SuggestedFollows
-                          title={`Followed by ${
-                            item.displayName || item.handle
-                          }`}
-                          suggestions={item.follows.slice(0, 10)}
-                        />
-                      </View>
-                    )
-                  })}
+                  {autocompleteView.searchRes.map(item => (
+                    <ProfileCard
+                      key={item.did}
+                      handle={item.handle}
+                      displayName={item.displayName}
+                      avatar={item.avatar}
+                    />
+                  ))}
                 </>
-              ) : (
-                <View style={pal.view}>
-                  <WhoToFollow />
+              ) : query && !autocompleteView.searchRes.length ? (
+                <View>
+                  <Text style={[pal.textLight, styles.searchPrompt]}>
+                    No results found for {autocompleteView.prefix}
+                  </Text>
                 </View>
+              ) : isInputFocused ? (
+                <View>
+                  <Text style={[pal.textLight, styles.searchPrompt]}>
+                    Search for users on the network
+                  </Text>
+                </View>
+              ) : (
+                <Suggestions foafs={foafs} />
               )}
               <View style={s.footerSpacer} />
             </ScrollView>
@@ -256,45 +179,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingTop: 4,
-    marginBottom: 14,
-  },
-  headerMenuBtn: {
-    width: 40,
-    height: 30,
-    marginLeft: 6,
-  },
-  headerSearchContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 30,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  headerSearchIcon: {
-    marginRight: 6,
-    alignSelf: 'center',
-  },
-  headerSearchInput: {
-    flex: 1,
-    fontSize: 17,
-  },
-  headerCancelBtn: {
-    width: 60,
-    paddingLeft: 10,
-  },
-
   searchPrompt: {
     textAlign: 'center',
     paddingTop: 10,
-  },
-
-  suggestions: {
-    marginBottom: 8,
   },
 })

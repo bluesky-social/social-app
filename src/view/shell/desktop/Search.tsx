@@ -1,10 +1,12 @@
 import React from 'react'
 import {TextInput, View, StyleSheet, TouchableOpacity} from 'react-native'
+import {useNavigation, StackActions} from '@react-navigation/native'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon2} from 'lib/icons'
+import {NavigationProp} from 'lib/routes/types'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {Text} from 'view/com/util/text/Text'
 
@@ -18,21 +20,30 @@ export const DesktopSearch = observer(function DesktopSearch() {
     () => new UserAutocompleteViewModel(store),
     [store],
   )
+  const navigation = useNavigation<NavigationProp>()
 
-  const onChangeQuery = (text: string) => {
-    setQuery(text)
-    if (text.length > 0 && isInputFocused) {
-      autocompleteView.setActive(true)
-      autocompleteView.setPrefix(text)
-    } else {
-      autocompleteView.setActive(false)
-    }
-  }
+  const onChangeQuery = React.useCallback(
+    (text: string) => {
+      setQuery(text)
+      if (text.length > 0 && isInputFocused) {
+        autocompleteView.setActive(true)
+        autocompleteView.setPrefix(text)
+      } else {
+        autocompleteView.setActive(false)
+      }
+    },
+    [setQuery, autocompleteView, isInputFocused],
+  )
 
-  const onPressCancelSearch = () => {
+  const onPressCancelSearch = React.useCallback(() => {
     setQuery('')
     autocompleteView.setActive(false)
-  }
+  }, [setQuery, autocompleteView])
+
+  const onSubmit = React.useCallback(() => {
+    navigation.dispatch(StackActions.push('Search', {q: query}))
+    autocompleteView.setActive(false)
+  }, [query, navigation, autocompleteView])
 
   return (
     <View style={[styles.container, pal.view]}>
@@ -55,6 +66,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
             onFocus={() => setIsInputFocused(true)}
             onBlur={() => setIsInputFocused(false)}
             onChangeText={onChangeQuery}
+            onSubmitEditing={onSubmit}
           />
           {query ? (
             <View style={styles.cancelBtn}>

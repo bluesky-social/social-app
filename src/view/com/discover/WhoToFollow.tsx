@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {SuggestedActorsViewModel} from 'state/models/suggested-actors-view'
@@ -17,7 +12,7 @@ export const WhoToFollow = observer(() => {
   const pal = usePalette('default')
   const store = useStores()
   const suggestedActorsView = React.useMemo<SuggestedActorsViewModel>(
-    () => new SuggestedActorsViewModel(store, {pageSize: 5}),
+    () => new SuggestedActorsViewModel(store, {pageSize: 15}),
     [store],
   )
 
@@ -25,9 +20,6 @@ export const WhoToFollow = observer(() => {
     suggestedActorsView.loadMore(true)
   }, [store, suggestedActorsView])
 
-  const onPressLoadMoreSuggestedActors = () => {
-    suggestedActorsView.loadMore()
-  }
   return (
     <>
       {(suggestedActorsView.hasContent || suggestedActorsView.isLoading) && (
@@ -50,15 +42,6 @@ export const WhoToFollow = observer(() => {
               />
             ))}
           </View>
-          {!suggestedActorsView.isLoading && suggestedActorsView.hasMore && (
-            <TouchableOpacity
-              onPress={onPressLoadMoreSuggestedActors}
-              style={styles.loadMore}>
-              <Text type="lg" style={pal.link}>
-                Show more
-              </Text>
-            </TouchableOpacity>
-          )}
         </>
       )}
       {suggestedActorsView.isLoading && (
@@ -74,16 +57,10 @@ const styles = StyleSheet.create({
   heading: {
     fontWeight: 'bold',
     paddingHorizontal: 12,
-    paddingTop: 16,
     paddingBottom: 8,
   },
 
   bottomBorder: {
     borderBottomWidth: 1,
-  },
-
-  loadMore: {
-    paddingLeft: 16,
-    paddingVertical: 12,
   },
 })
