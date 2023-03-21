@@ -82,12 +82,6 @@ export function UserBanner({
     },
   ]
 
-  const renderSvg = () => (
-    <Svg width="100%" height="150" viewBox="0 0 400 150">
-      <Rect x="0" y="0" width="400" height="150" fill="#0070ff" />
-    </Svg>
-  )
-
   // setUserBanner is only passed as prop on the EditProfile component
   return onSelectNewBanner ? (
     <DropdownButton
@@ -118,7 +112,7 @@ export function UserBanner({
       source={{uri: banner}}
     />
   ) : (
-    renderSvg()
+    <View style={[styles.bannerImage, styles.defaultBanner]} />
   )
 }
 
@@ -137,5 +131,8 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: 150,
+  },
+  defaultBanner: {
+    backgroundColor: '#0070ff',
   },
 })
