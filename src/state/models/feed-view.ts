@@ -200,6 +200,7 @@ export class FeedSliceModel {
   get isThread() {
     return (
       this.items.length > 1 &&
+      !this.items[0].reply &&
       this.items.every(
         item => item.post.author.did === this.items[0].post.author.did,
       )
@@ -207,7 +208,7 @@ export class FeedSliceModel {
   }
 
   get isReply() {
-    return this.items.length === 2 && !this.isThread
+    return this.items.length > 1 && !this.isThread
   }
 
   get rootItem() {
