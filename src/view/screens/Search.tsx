@@ -25,8 +25,6 @@ import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 
-const FIVE_MIN = 5 * 60 * 1e3
-
 type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = withAuthRequired(
   observer<Props>(({}: Props) => {
@@ -34,7 +32,6 @@ export const SearchScreen = withAuthRequired(
     const store = useStores()
     const scrollElRef = React.useRef<ScrollView>(null)
     const onMainScroll = useOnMainScroll(store)
-    const [lastRenderTime, setRenderTime] = React.useState<number>(Date.now()) // used to trigger reloads
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
     const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
@@ -58,10 +55,6 @@ export const SearchScreen = withAuthRequired(
           softResetSub.remove()
         }
 
-        const now = Date.now()
-        if (now - lastRenderTime > FIVE_MIN) {
-          setRenderTime(Date.now()) // trigger reload of suggestions
-        }
         store.shell.setMinimalShellMode(false)
         autocompleteView.setup()
         if (!foafs.hasData) {
@@ -69,7 +62,7 @@ export const SearchScreen = withAuthRequired(
         }
 
         return cleanup
-      }, [store, autocompleteView, foafs, lastRenderTime, setRenderTime]),
+      }, [store, autocompleteView, foafs]),
     )
 
     const onChangeQuery = (text: string) => {
