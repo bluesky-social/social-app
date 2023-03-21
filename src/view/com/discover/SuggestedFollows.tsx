@@ -15,7 +15,7 @@ export const SuggestedFollows = ({
 }) => {
   const pal = usePalette('default')
   return (
-    <View style={[styles.container, pal.view]}>
+    <View style={[styles.container, pal.view, pal.border]}>
       <Text type="title" style={[styles.heading, pal.text]}>
         {title}
       </Text>
@@ -44,12 +44,13 @@ export const SuggestedFollows = ({
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    borderBottomWidth: 1,
+  },
 
   heading: {
     fontWeight: 'bold',
     paddingHorizontal: 12,
-    paddingTop: 16,
     paddingBottom: 8,
   },
 

@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
   heading: {
     fontWeight: 'bold',
     paddingHorizontal: 12,
-    paddingTop: 16,
     paddingBottom: 8,
   },
 

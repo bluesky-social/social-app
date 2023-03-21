@@ -44,6 +44,7 @@ export const Suggestions = observer(({foafs}: {foafs: FoafsModel}) => {
 
 const styles = StyleSheet.create({
   suggestions: {
-    marginBottom: 0,
+    marginTop: 10,
+    marginBottom: 20,
   },
 })
