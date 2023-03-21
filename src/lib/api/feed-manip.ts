@@ -28,11 +28,14 @@ export class FeedViewPostsSlice {
   get isThread() {
     return (
       this.items.length > 1 &&
-      !this.items[0].reply &&
       this.items.every(
         item => item.post.author.did === this.items[0].post.author.did,
       )
     )
+  }
+
+  get isFullThread() {
+    return this.isThread && !this.items[0].reply
   }
 
   get isReply() {
@@ -119,7 +122,7 @@ export class FeedTuner {
     // remove any items already "seen"
     const soonToBeSeenUris: Set<string> = new Set()
     for (let i = slices.length - 1; i >= 0; i--) {
-      if (this.seenUris.has(slices[i].uri)) {
+      if (!slices[i].isThread && this.seenUris.has(slices[i].uri)) {
         slices.splice(i, 1)
       } else {
         for (const item of slices[i].items) {
@@ -183,7 +186,7 @@ export class FeedTuner {
   static likedRepliesOnly(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
     // remove any replies without at least 2 likes
     for (let i = slices.length - 1; i >= 0; i--) {
-      if (slices[i].isThread) {
+      if (slices[i].isFullThread) {
         continue
       }
       const item = slices[i].rootItem
