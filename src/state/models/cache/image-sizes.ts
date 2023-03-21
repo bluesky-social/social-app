@@ -30,6 +30,7 @@ export class ImageSizesCache {
       })
     this.activeRequests.set(uri, prom)
     const res = await prom
+    this.activeRequests.delete(uri)
     this.sizes.set(uri, res)
     return res
   }
