@@ -1,8 +1,8 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {TabBar} from 'view/com/util/TabBar'
+import {TabBar} from 'view/com/pager/TabBar'
 import {CenteredView} from 'view/com/util/Views'
-import {RenderTabBarFnProps} from 'view/com/util/pager/Pager'
+import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {usePalette} from 'lib/hooks/usePalette'
 
 export const FeedsTabBar = observer(
