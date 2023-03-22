@@ -74,7 +74,8 @@ export const NotificationsScreen = withAuthRequired(
       React.useCallback(() => {
         store.log.debug('NotificationsScreen: Updating feed')
         const softResetSub = store.onScreenSoftReset(scrollToTop)
-        store.me.notifications.update()
+        store.me.notifications.loadUnreadCount()
+        store.me.notifications.loadLatest()
         screen('Notifications')
 
         return () => {
