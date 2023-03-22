@@ -166,7 +166,7 @@ export const ComposePost = observer(function ComposePost({
       setIsProcessing(false)
       return
     }
-    store.me.mainFeed.loadLatest()
+    store.me.mainFeed.checkForLatest({autoPrepend: true})
     onPost?.()
     hackfixOnClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)

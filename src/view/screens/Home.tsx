@@ -158,7 +158,7 @@ const FeedPage = observer(
     }, [feed])
 
     const onPressLoadLatest = React.useCallback(() => {
-      feed.refresh()
+      feed.resetToLatest()
       scrollToTop()
     }, [feed, scrollToTop])
 

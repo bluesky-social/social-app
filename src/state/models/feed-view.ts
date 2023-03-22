@@ -254,6 +254,7 @@ export class FeedModel {
 
   // data
   slices: FeedSliceModel[] = []
+  nextSlices: FeedSliceModel[] = []
 
   constructor(
     public rootStore: RootStoreModel,
@@ -325,6 +326,7 @@ export class FeedModel {
     this.loadMoreCursor = undefined
     this.pollCursor = undefined
     this.slices = []
+    this.nextSlices = []
     this.tuner.reset()
   }
 
@@ -423,30 +425,6 @@ export class FeedModel {
   })
 
   /**
-   * Load more posts to the start of the feed
-   */
-  loadLatest = bundleAsync(async () => {
-    await this.lock.acquireAsync()
-    try {
-      this.setHasNewLatest(false)
-      this._xLoading()
-      try {
-        const res = await this._getFeed({limit: PAGE_SIZE})
-        await this._prependAll(res)
-        this._xIdle()
-      } catch (e: any) {
-        this._xIdle() // don't bubble the error to the user
-        this.rootStore.log.error('FeedView: Failed to load latest', {
-          params: this.params,
-          e,
-        })
-      }
-    } finally {
-      this.lock.release()
-    }
-  })
-
-  /**
    * Update content in-place
    */
   update = bundleAsync(async () => {
@@ -487,22 +465,42 @@ export class FeedModel {
   /**
    * Check if new posts are available
    */
-  async checkForLatest() {
+  async checkForLatest({autoPrepend}: {autoPrepend?: boolean} = {}) {
     if (this.hasNewLatest || this.feedType === 'suggested') {
       return
     }
-    const res = await this._getFeed({limit: 1})
-    const currentLatestUri = this.pollCursor
-    const item = res.data.feed?.[0]
-    if (!item) {
-      return
-    }
-    if (AppBskyFeedFeedViewPost.isReasonRepost(item.reason)) {
-      if (item.reason.by.did === this.rootStore.me.did) {
-        return // ignore reposts by the user
+    const res = await this._getFeed({limit: PAGE_SIZE})
+    const tuner = new FeedTuner()
+    const nextSlices = tuner.tune(res.data.feed, this.feedTuners)
+    if (nextSlices[0]?.uri !== this.slices[0]?.uri) {
+      const nextSlicesModels = nextSlices.map(
+        slice =>
+          new FeedSliceModel(this.rootStore, `item-${_idCounter++}`, slice),
+      )
+      if (autoPrepend) {
+        this.slices = nextSlicesModels.concat(
+          this.slices.filter(slice1 =>
+            nextSlicesModels.find(slice2 => slice1.uri === slice2.uri),
+          ),
+        )
+        this.setHasNewLatest(false)
+      } else {
+        this.nextSlices = nextSlicesModels
+        this.setHasNewLatest(true)
       }
+    } else {
+      this.setHasNewLatest(false)
     }
-    this.setHasNewLatest(item.post.uri !== currentLatestUri)
+  }
+
+  /**
+   * Sets the current slices to the "next slices" loaded by checkForLatest
+   */
+  resetToLatest() {
+    if (this.nextSlices.length) {
+      this.slices = this.nextSlices
+    }
+    this.setHasNewLatest(false)
   }
 
   /**
@@ -571,27 +569,6 @@ export class FeedModel {
       } else {
         this.slices = this.slices.concat(toAppend)
       }
-    })
-  }
-
-  private async _prependAll(
-    res: GetTimeline.Response | GetAuthorFeed.Response,
-  ) {
-    this.pollCursor = res.data.feed[0]?.post.uri
-
-    const slices = this.tuner.tune(res.data.feed, this.feedTuners)
-
-    const toPrepend: FeedSliceModel[] = []
-    for (const slice of slices) {
-      const itemModel = new FeedSliceModel(
-        this.rootStore,
-        `item-${_idCounter++}`,
-        slice,
-      )
-      toPrepend.push(itemModel)
-    }
-    runInAction(() => {
-      this.slices = toPrepend.concat(this.slices)
     })
   }
 
