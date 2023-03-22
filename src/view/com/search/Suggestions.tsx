@@ -2,15 +2,21 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FoafsModel} from 'state/models/discovery/foafs'
-import {WhoToFollow} from 'view/com/discover/WhoToFollow'
+import {SuggestedActorsModel} from 'state/models/discovery/suggested-actors'
 import {SuggestedFollows} from 'view/com/discover/SuggestedFollows'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 
-export const Suggestions = observer(({foafs}: {foafs: FoafsModel}) => {
-  if (foafs.isLoading) {
-    return <ProfileCardFeedLoadingPlaceholder />
-  }
-  if (foafs.hasContent) {
+export const Suggestions = observer(
+  ({
+    foafs,
+    suggestedActors,
+  }: {
+    foafs: FoafsModel
+    suggestedActors: SuggestedActorsModel
+  }) => {
+    if (foafs.isLoading || suggestedActors.isLoading) {
+      return <ProfileCardFeedLoadingPlaceholder />
+    }
     return (
       <>
         {foafs.popular.length > 0 && (
@@ -21,7 +27,14 @@ export const Suggestions = observer(({foafs}: {foafs: FoafsModel}) => {
             />
           </View>
         )}
-        <WhoToFollow />
+        {suggestedActors.hasContent && (
+          <View style={styles.suggestions}>
+            <SuggestedFollows
+              title="Suggested follows"
+              suggestions={suggestedActors.suggestions}
+            />
+          </View>
+        )}
         {foafs.sources.map((source, i) => {
           const item = foafs.foafs.get(source)
           if (!item || item.follows.length === 0) {
@@ -38,9 +51,8 @@ export const Suggestions = observer(({foafs}: {foafs: FoafsModel}) => {
         })}
       </>
     )
-  }
-  return <WhoToFollow />
-})
+  },
+)
 
 const styles = StyleSheet.create({
   suggestions: {

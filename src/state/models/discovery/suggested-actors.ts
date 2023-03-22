@@ -1,7 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyActorProfile as Profile} from '@atproto/api'
 import shuffle from 'lodash.shuffle'
-import {RootStoreModel} from './root-store'
+import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
 import {SUGGESTED_FOLLOWS} from 'lib/constants'
@@ -10,7 +10,7 @@ const PAGE_SIZE = 30
 
 export type SuggestedActor = Profile.ViewBasic | Profile.View
 
-export class SuggestedActorsViewModel {
+export class SuggestedActorsModel {
   // state
   pageSize = PAGE_SIZE
   isLoading = false
