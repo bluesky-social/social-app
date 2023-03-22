@@ -2,6 +2,7 @@ import {AppBskyFeedFeedViewPost} from '@atproto/api'
 import lande from 'lande'
 type FeedViewPost = AppBskyFeedFeedViewPost.Main
 import {hasProp} from '@atproto/lexicon'
+import {LANGUAGES_MAP_CODE2} from '../../locale/languages'
 
 export type FeedTunerFn = (
   tuner: FeedTuner,
@@ -180,29 +181,27 @@ export class FeedTuner {
     }
   }
 
-  static englishOnly(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
-    // TEMP
-    // remove slices with no english in them
-    // we very soon need to get the local user's language and filter
-    // according to their preferences, but for the moment
-    // we're just rolling with english
-    // -prf
-    for (let i = slices.length - 1; i >= 0; i--) {
-      let hasEnglish = false
-      for (const item of slices[i].items) {
-        if (
-          hasProp(item.post.record, 'text') &&
-          typeof item.post.record.text === 'string'
-        ) {
-          const res = lande(item.post.record.text)
-          if (res[0][0] === 'eng') {
-            hasEnglish = true
-            break
+  static preferredLangOnly(langsCode2: string[]) {
+    const langsCode3 = langsCode2.map(l => LANGUAGES_MAP_CODE2[l]?.code3 || l)
+    return (tuner: FeedTuner, slices: FeedViewPostsSlice[]) => {
+      for (let i = slices.length - 1; i >= 0; i--) {
+        let hasPreferredLang = false
+        for (const item of slices[i].items) {
+          if (
+            hasProp(item.post.record, 'text') &&
+            typeof item.post.record.text === 'string'
+          ) {
+            const res = lande(item.post.record.text)
+            const contentLangCode3 = res[0][0]
+            if (langsCode3.includes(contentLangCode3)) {
+              hasPreferredLang = true
+              break
+            }
           }
         }
-      }
-      if (!hasEnglish) {
-        slices.splice(i, 1)
+        if (!hasPreferredLang) {
+          slices.splice(i, 1)
+        }
       }
     }
   }
