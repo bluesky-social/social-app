@@ -1,51 +1,44 @@
 import React from 'react'
-import {Animated, StyleSheet} from 'react-native'
+import {Animated, StyleSheet, TouchableOpacity} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {TabBar} from 'view/com/util/TabBar'
-import {RenderTabBarFnProps} from 'view/com/util/pager/Pager'
+import {TabBar} from 'view/com/pager/TabBar'
+import {RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {clamp} from 'lodash'
-
-const BOTTOM_BAR_HEIGHT = 48
 
 export const FeedsTabBar = observer(
   (props: RenderTabBarFnProps & {onPressSelected: () => void}) => {
     const store = useStores()
-    const safeAreaInsets = useSafeAreaInsets()
     const pal = usePalette('default')
     const interp = useAnimatedValue(0)
 
-    const pad = React.useMemo(
-      () => ({
-        paddingBottom: clamp(safeAreaInsets.bottom, 15, 20),
-      }),
-      [safeAreaInsets],
-    )
-
     React.useEffect(() => {
       Animated.timing(interp, {
-        toValue: store.shell.minimalShellMode ? 0 : 1,
+        toValue: store.shell.minimalShellMode ? 1 : 0,
         duration: 100,
         useNativeDriver: true,
         isInteraction: false,
       }).start()
     }, [interp, store.shell.minimalShellMode])
     const transform = {
-      transform: [
-        {translateY: Animated.multiply(interp, -1 * BOTTOM_BAR_HEIGHT)},
-      ],
+      transform: [{translateY: Animated.multiply(interp, -100)}],
     }
 
+    const onPressAvi = React.useCallback(() => {
+      store.shell.openDrawer()
+    }, [store])
+
     return (
-      <Animated.View
-        style={[pal.view, pal.border, styles.tabBar, pad, transform]}>
+      <Animated.View style={[pal.view, styles.tabBar, transform]}>
+        <TouchableOpacity style={styles.tabBarAvi} onPress={onPressAvi}>
+          <UserAvatar avatar={store.me.avatar} size={30} />
+        </TouchableOpacity>
         <TabBar
           {...props}
           items={['Following', "What's hot"]}
-          indicatorPosition="top"
+          indicatorPosition="bottom"
           indicatorColor={pal.colors.link}
         />
       </Animated.View>
@@ -56,17 +49,16 @@ export const FeedsTabBar = observer(
 const styles = StyleSheet.create({
   tabBar: {
     position: 'absolute',
+    zIndex: 1,
     left: 0,
     right: 0,
-    bottom: 0,
+    top: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    borderTopWidth: 1,
-    paddingTop: 0,
-    paddingBottom: 30,
+    paddingHorizontal: 18,
   },
   tabBarAvi: {
-    marginRight: 4,
+    marginTop: 1,
+    marginRight: 18,
   },
 })

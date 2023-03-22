@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, View, useWindowDimensions} from 'react-native'
+import {FlatList, View} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
@@ -9,17 +9,16 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {Feed} from '../com/posts/Feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
-import {FeedsTabBar} from './home/FeedsTabBar'
-import {Pager, RenderTabBarFnProps} from 'view/com/util/pager/Pager'
+import {FeedsTabBar} from '../com/pager/FeedsTabBar'
+import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {FAB} from '../com/util/FAB'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
-import {isDesktopWeb} from 'platform/detection'
 
-const TAB_BAR_HEIGHT = 82
+const HEADER_OFFSET = 40
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired((_opts: Props) => {
@@ -69,7 +68,7 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
     <Pager
       onPageSelected={onPageSelected}
       renderTabBar={renderTabBar}
-      tabBarPosition={isDesktopWeb ? 'top' : 'bottom'}
+      tabBarPosition="top"
       initialPage={initialPage}>
       <FeedPage
         key="1"
@@ -100,11 +99,6 @@ const FeedPage = observer(
       onForeground: () => doPoll(true),
     })
     const isScreenFocused = useIsFocused()
-    const winDim = useWindowDimensions()
-    const containerStyle = React.useMemo(
-      () => ({height: winDim.height - (isDesktopWeb ? 0 : TAB_BAR_HEIGHT)}),
-      [winDim],
-    )
 
     const doPoll = React.useCallback(
       (knownActive = false) => {
@@ -125,7 +119,7 @@ const FeedPage = observer(
     )
 
     const scrollToTop = React.useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: 0})
+      scrollElRef.current?.scrollToOffset({offset: -HEADER_OFFSET})
     }, [scrollElRef])
 
     const onSoftReset = React.useCallback(() => {
@@ -169,7 +163,7 @@ const FeedPage = observer(
     }, [feed, scrollToTop])
 
     return (
-      <View style={containerStyle}>
+      <View style={s.h100pct}>
         <Feed
           testID="homeFeed"
           key="default"
@@ -180,6 +174,7 @@ const FeedPage = observer(
           onPressTryAgain={onPressTryAgain}
           onScroll={onMainScroll}
           renderEmptyState={renderEmptyState}
+          headerOffset={HEADER_OFFSET}
         />
         {feed.hasNewLatest && !feed.isRefreshing && (
           <LoadLatestBtn onPress={onPressLoadLatest} />
