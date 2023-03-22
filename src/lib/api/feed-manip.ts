@@ -10,10 +10,12 @@ export type FeedTunerFn = (
 ) => void
 
 export class FeedViewPostsSlice {
+  isFlattenedReply = false
+
   constructor(public items: FeedViewPost[] = []) {}
 
   get uri() {
-    if (this.isReply) {
+    if (this.isFlattenedReply) {
       return this.items[1].post.uri
     }
     return this.items[0].post.uri
@@ -39,12 +41,8 @@ export class FeedViewPostsSlice {
     return this.isThread && !this.items[0].reply
   }
 
-  get isReply() {
-    return this.items.length > 1 && !this.isThread
-  }
-
   get rootItem() {
-    if (this.isReply) {
+    if (this.isFlattenedReply) {
       return this.items[1]
     }
     return this.items[0]
@@ -70,6 +68,7 @@ export class FeedViewPostsSlice {
 
   flattenReplyParent() {
     if (this.items[0].reply?.parent) {
+      this.isFlattenedReply = true
       this.items.splice(0, 0, {post: this.items[0].reply?.parent})
     }
   }
@@ -105,6 +104,11 @@ export class FeedTuner {
       slices.unshift(new FeedViewPostsSlice([item]))
     }
 
+    // run the custom tuners
+    for (const tunerFn of tunerFns) {
+      tunerFn(this, slices)
+    }
+
     // remove any items already "seen"
     const soonToBeSeenUris: Set<string> = new Set()
     for (let i = slices.length - 1; i >= 0; i--) {
@@ -134,11 +138,6 @@ export class FeedTuner {
 
     // sort by slice roots' timestamps
     slices.sort((a, b) => b.ts.localeCompare(a.ts))
-
-    // run the custom tuners
-    for (const tunerFn of tunerFns) {
-      tunerFn(this, slices)
-    }
 
     for (const slice of slices) {
       for (const item of slice.items) {
@@ -170,12 +169,12 @@ export class FeedTuner {
   static likedRepliesOnly(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
     // remove any replies without at least 2 likes
     for (let i = slices.length - 1; i >= 0; i--) {
-      if (slices[i].isFullThread) {
+      if (slices[i].isFullThread || !slices[i].rootItem.reply) {
         continue
       }
       const item = slices[i].rootItem
       const isRepost = Boolean(item.reason)
-      if (item.reply && !isRepost && item.post.upvoteCount < 2) {
+      if (!isRepost && item.post.upvoteCount < 2) {
         slices.splice(i, 1)
       }
     }
