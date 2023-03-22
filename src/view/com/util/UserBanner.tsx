@@ -93,7 +93,7 @@ export function UserBanner({
       {banner ? (
         <Image style={styles.bannerImage} source={{uri: banner}} />
       ) : (
-        renderSvg()
+        <View style={[styles.bannerImage, styles.defaultBanner]} />
       )}
       <View style={[styles.editButtonContainer, pal.btn]}>
         <FontAwesomeIcon
