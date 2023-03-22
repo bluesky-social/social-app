@@ -34,24 +34,23 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const minimalShellInterp = useAnimatedValue(0)
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtNotifications, noBorder} =
-    useNavigationState(state => {
+  const {isAtHome, isAtSearch, isAtNotifications} = useNavigationState(
+    state => {
       const res = {
         isAtHome: getTabState(state, 'Home') !== TabState.Outside,
         isAtSearch: getTabState(state, 'Search') !== TabState.Outside,
         isAtNotifications:
           getTabState(state, 'Notifications') !== TabState.Outside,
-        noBorder: getTabState(state, 'Home') === TabState.InsideAtRoot,
       }
       if (!res.isAtHome && !res.isAtNotifications && !res.isAtSearch) {
         // HACK for some reason useNavigationState will give us pre-hydration results
         //      and not update after, so we force isAtHome if all came back false
         //      -prf
         res.isAtHome = true
-        res.noBorder = true
       }
       return res
-    })
+    },
+  )
 
   React.useEffect(() => {
     if (store.shell.minimalShellMode) {
@@ -107,7 +106,6 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
     <Animated.View
       style={[
         styles.bottomBar,
-        noBorder && styles.noBorder,
         pal.view,
         pal.border,
         {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
@@ -221,9 +219,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingLeft: 5,
     paddingRight: 10,
-  },
-  noBorder: {
-    borderTopWidth: 0,
   },
   ctrl: {
     flex: 1,

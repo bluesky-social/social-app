@@ -8,9 +8,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {CenteredView, FlatList} from '../util/Views'
+import {FlatList} from '../util/Views'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {ViewHeader} from '../util/ViewHeader'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {FeedModel} from 'state/models/feed-view'
 import {FeedSlice} from './FeedSlice'
@@ -19,9 +18,9 @@ import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 
-const HEADER_ITEM = {_reactKey: '__header__'}
+const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
-const ERROR_FEED_ITEM = {_reactKey: '__error__'}
+const ERROR_ITEM = {_reactKey: '__error__'}
 
 export const Feed = observer(function Feed({
   feed,
@@ -49,19 +48,21 @@ export const Feed = observer(function Feed({
   const [isRefreshing, setIsRefreshing] = React.useState(false)
 
   const data = React.useMemo(() => {
-    let feedItems: any[] = [HEADER_ITEM]
+    let feedItems: any[] = []
     if (feed.hasLoaded) {
       if (feed.hasError) {
-        feedItems = feedItems.concat([ERROR_FEED_ITEM])
+        feedItems = feedItems.concat([ERROR_ITEM])
       }
       if (feed.isEmpty) {
         feedItems = feedItems.concat([EMPTY_FEED_ITEM])
       } else {
         feedItems = feedItems.concat(feed.slices)
       }
+    } else if (feed.isLoading) {
+      feedItems = feedItems.concat([LOADING_ITEM])
     }
     return feedItems
-  }, [feed.hasError, feed.hasLoaded, feed.isEmpty, feed.slices])
+  }, [feed.hasError, feed.hasLoaded, feed.isLoading, feed.isEmpty, feed.slices])
 
   // events
   // =
@@ -96,15 +97,15 @@ export const Feed = observer(function Feed({
           return renderEmptyState()
         }
         return <View />
-      } else if (item === ERROR_FEED_ITEM) {
+      } else if (item === ERROR_ITEM) {
         return (
           <ErrorMessage
             message={feed.error}
             onPressTryAgain={onPressTryAgain}
           />
         )
-      } else if (item === HEADER_ITEM) {
-        return <ViewHeader title="Bluesky" canGoBack={false} />
+      } else if (item === LOADING_ITEM) {
+        return <PostFeedLoadingPlaceholder />
       }
       return <FeedSlice slice={item} showFollowBtn={showPostFollowBtn} />
     },
@@ -125,11 +126,6 @@ export const Feed = observer(function Feed({
 
   return (
     <View testID={testID} style={style}>
-      {feed.isLoading && data.length === 0 && (
-        <CenteredView style={{paddingTop: headerOffset}}>
-          <PostFeedLoadingPlaceholder />
-        </CenteredView>
-      )}
       {data.length > 0 && (
         <FlatList
           ref={scrollElRef}
