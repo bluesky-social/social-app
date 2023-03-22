@@ -16,6 +16,7 @@ import {ProfilesViewModel} from './profiles-view'
 import {LinkMetasCache} from './cache/link-metas'
 import {NotificationsViewItemModel} from './notifications-view'
 import {MeModel} from './me'
+import {PreferencesModel} from './ui/preferences'
 import {resetToTab} from '../../Navigation'
 import {ImageSizesCache} from './cache/image-sizes'
 
@@ -33,6 +34,7 @@ export class RootStoreModel {
   log = new LogModel()
   session = new SessionModel(this)
   shell = new ShellUiModel(this)
+  preferences = new PreferencesModel()
   me = new MeModel(this)
   profiles = new ProfilesViewModel(this)
   linkMetas = new LinkMetasCache(this)
@@ -83,6 +85,7 @@ export class RootStoreModel {
       session: this.session.serialize(),
       me: this.me.serialize(),
       shell: this.shell.serialize(),
+      preferences: this.preferences.serialize(),
     }
   }
 
@@ -102,6 +105,9 @@ export class RootStoreModel {
       }
       if (hasProp(v, 'shell')) {
         this.shell.hydrate(v.shell)
+      }
+      if (hasProp(v, 'preferences')) {
+        this.preferences.hydrate(v.preferences)
       }
     }
   }
