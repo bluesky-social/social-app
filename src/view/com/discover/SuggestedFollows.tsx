@@ -11,7 +11,11 @@ export const SuggestedFollows = ({
   suggestions,
 }: {
   title: string
-  suggestions: (AppBskyActorRef.WithInfo | RefWithInfoAndFollowers)[]
+  suggestions: (
+    | AppBskyActorRef.WithInfo
+    | RefWithInfoAndFollowers
+    | AppBskyActorProfile.View
+  )[]
 }) => {
   const pal = usePalette('default')
   return (
@@ -30,7 +34,11 @@ export const SuggestedFollows = ({
             avatar={item.avatar}
             noBg
             noBorder
-            description=""
+            description={
+              item.description
+                ? (item as AppBskyActorProfile.View).description
+                : ''
+            }
             followers={
               item.followers
                 ? (item.followers as AppBskyActorProfile.View[])

@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {SearchUIModel} from 'state/models/ui/search'
 import {FoafsModel} from 'state/models/discovery/foafs'
+import {SuggestedActorsModel} from 'state/models/discovery/suggested-actors'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ScrollView} from 'view/com/util/Views'
 import {Suggestions} from 'view/com/search/Suggestions'
@@ -24,6 +25,10 @@ export const SearchScreen = withAuthRequired(
       () => new FoafsModel(store),
       [store],
     )
+    const suggestedActors = React.useMemo<SuggestedActorsModel>(
+      () => new SuggestedActorsModel(store),
+      [store],
+    )
     const searchUIModel = React.useMemo<SearchUIModel | undefined>(
       () => (route.params.q ? new SearchUIModel(store) : undefined),
       [route.params.q, store],
@@ -36,7 +41,10 @@ export const SearchScreen = withAuthRequired(
       if (!foafs.hasData) {
         foafs.fetch()
       }
-    }, [foafs, searchUIModel, route.params.q])
+      if (!suggestedActors.hasLoaded) {
+        suggestedActors.loadMore(true)
+      }
+    }, [foafs, suggestedActors, searchUIModel, route.params.q])
 
     if (searchUIModel) {
       return <SearchResults model={searchUIModel} />
@@ -47,7 +55,7 @@ export const SearchScreen = withAuthRequired(
         testID="searchScrollView"
         style={[pal.view, styles.container]}
         scrollEventThrottle={100}>
-        <Suggestions foafs={foafs} />
+        <Suggestions foafs={foafs} suggestedActors={suggestedActors} />
         <View style={s.footerSpacer} />
       </ScrollView>
     )

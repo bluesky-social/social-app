@@ -19,6 +19,7 @@ import {useStores} from 'state/index'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
 import {SearchUIModel} from 'state/models/ui/search'
 import {FoafsModel} from 'state/models/discovery/foafs'
+import {SuggestedActorsModel} from 'state/models/discovery/suggested-actors'
 import {HeaderWithInput} from 'view/com/search/HeaderWithInput'
 import {Suggestions} from 'view/com/search/Suggestions'
 import {SearchResults} from 'view/com/search/SearchResults'
@@ -44,6 +45,10 @@ export const SearchScreen = withAuthRequired(
       () => new FoafsModel(store),
       [store],
     )
+    const suggestedActors = React.useMemo<SuggestedActorsModel>(
+      () => new SuggestedActorsModel(store),
+      [store],
+    )
     const [searchUIModel, setSearchUIModel] = React.useState<
       SearchUIModel | undefined
     >()
@@ -65,9 +70,12 @@ export const SearchScreen = withAuthRequired(
         if (!foafs.hasData) {
           foafs.fetch()
         }
+        if (!suggestedActors.hasLoaded) {
+          suggestedActors.loadMore(true)
+        }
 
         return cleanup
-      }, [store, autocompleteView, foafs]),
+      }, [store, autocompleteView, foafs, suggestedActors]),
     )
 
     const onChangeQuery = React.useCallback(
@@ -163,7 +171,7 @@ export const SearchScreen = withAuthRequired(
                   </Text>
                 </View>
               ) : (
-                <Suggestions foafs={foafs} />
+                <Suggestions foafs={foafs} suggestedActors={suggestedActors} />
               )}
               <View style={s.footerSpacer} />
             </ScrollView>
