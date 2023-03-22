@@ -42,14 +42,20 @@ export const SearchResults = observer(({model}: {model: SearchUIModel}) => {
 const PostResults = observer(({model}: {model: SearchUIModel}) => {
   const pal = usePalette('default')
   if (model.isPostsLoading) {
-    return <PostFeedLoadingPlaceholder />
+    return (
+      <CenteredView>
+        <PostFeedLoadingPlaceholder />
+      </CenteredView>
+    )
   }
 
   if (model.postUris.length === 0) {
     return (
-      <Text type="xl" style={[styles.empty, pal.text]}>
-        No posts found for "{model.query}"
-      </Text>
+      <CenteredView>
+        <Text type="xl" style={[styles.empty, pal.text]}>
+          No posts found for "{model.query}"
+        </Text>
+      </CenteredView>
     )
   }
 
@@ -68,14 +74,20 @@ const PostResults = observer(({model}: {model: SearchUIModel}) => {
 const Profiles = observer(({model}: {model: SearchUIModel}) => {
   const pal = usePalette('default')
   if (model.isProfilesLoading) {
-    return <ProfileCardFeedLoadingPlaceholder />
+    return (
+      <CenteredView>
+        <ProfileCardFeedLoadingPlaceholder />
+      </CenteredView>
+    )
   }
 
   if (model.profiles.length === 0) {
     return (
-      <Text type="xl" style={[styles.empty, pal.text]}>
-        No users found for "{model.query}"
-      </Text>
+      <CenteredView>
+        <Text type="xl" style={[styles.empty, pal.text]}>
+          No users found for "{model.query}"
+        </Text>
+      </CenteredView>
     )
   }
 
