@@ -465,7 +465,7 @@ export class FeedModel {
   /**
    * Check if new posts are available
    */
-  async checkForLatest() {
+  async checkForLatest({autoPrepend}: {autoPrepend?: boolean} = {}) {
     if (this.hasNewLatest || this.feedType === 'suggested') {
       return
     }
@@ -473,11 +473,21 @@ export class FeedModel {
     const tuner = new FeedTuner()
     const nextSlices = tuner.tune(res.data.feed, this.feedTuners)
     if (nextSlices[0]?.uri !== this.slices[0]?.uri) {
-      this.nextSlices = nextSlices.map(
+      const nextSlicesModels = nextSlices.map(
         slice =>
           new FeedSliceModel(this.rootStore, `item-${_idCounter++}`, slice),
       )
-      this.setHasNewLatest(true)
+      if (autoPrepend) {
+        this.slices = nextSlicesModels.concat(
+          this.slices.filter(slice1 =>
+            nextSlicesModels.find(slice2 => slice1.uri === slice2.uri),
+          ),
+        )
+        this.setHasNewLatest(false)
+      } else {
+        this.nextSlices = nextSlicesModels
+        this.setHasNewLatest(true)
+      }
     } else {
       this.setHasNewLatest(false)
     }
