@@ -341,7 +341,9 @@ export class FeedModel {
       return [
         FeedTuner.dedupReposts,
         FeedTuner.likedRepliesOnly,
-        FeedTuner.englishOnly,
+        FeedTuner.preferredLangOnly(
+          this.rootStore.preferences.contentLanguages,
+        ),
       ]
     }
     if (this.feedType === 'home') {
