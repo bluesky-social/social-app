@@ -72,21 +72,6 @@ export class FeedViewPostsSlice {
       this.items.splice(0, 0, {post: this.items[0].reply?.parent})
     }
   }
-
-  logSelf() {
-    console.log(
-      `- Slice ${this.items.length}${this.isThread ? ' (thread)' : ''} -`,
-    )
-    for (const item of this.items) {
-      console.log(
-        `  ${item.reason ? `RP by ${item.reason.by.handle}: ` : ''}${
-          item.post.author.handle
-        }: ${item.reply ? `(Reply ${item.reply.parent.author.handle}) ` : ''}${
-          item.post.record.text
-        }`,
-      )
-    }
-  }
 }
 
 export class FeedTuner {
@@ -158,8 +143,6 @@ export class FeedTuner {
       for (const item of slice.items) {
         this.seenUris.add(item.post.uri)
       }
-      // DEBUG uncomment to get a quick view of the data
-      // slice.logSelf()
     }
 
     return slices

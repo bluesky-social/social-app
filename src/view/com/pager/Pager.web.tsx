@@ -50,7 +50,7 @@ export const Pager = ({
           offset,
           onSelect: onTabBarSelect,
         })}
-      {children.map((child, i) => (
+      {React.Children.map(children, (child, i) => (
         <View
           style={selectedPage === i ? undefined : s.hidden}
           key={`page-${i}`}>
