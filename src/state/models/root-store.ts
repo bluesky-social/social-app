@@ -40,27 +40,6 @@ export class RootStoreModel {
   linkMetas = new LinkMetasCache(this)
   imageSizes = new ImageSizesCache()
 
-  // HACK
-  // this flag is to track the lexicon breaking refactor
-  // it should be removed once we get that done
-  // -prf
-  hackUpgradeNeeded = false
-  async hackCheckIfUpgradeNeeded() {
-    try {
-      this.log.debug('hackCheckIfUpgradeNeeded()')
-      const res = await fetch('https://bsky.social/xrpc/app.bsky.feed.getLikes')
-      await res.text()
-      runInAction(() => {
-        this.hackUpgradeNeeded = res.status !== 501
-        this.log.debug(
-          `hackCheckIfUpgradeNeeded() said ${this.hackUpgradeNeeded}`,
-        )
-      })
-    } catch (e) {
-      this.log.error('Failed to hackCheckIfUpgradeNeeded', {e})
-    }
-  }
-
   constructor(agent: AtpAgent) {
     this.agent = agent
     makeAutoObservable(this, {
