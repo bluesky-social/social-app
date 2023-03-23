@@ -30,7 +30,7 @@ import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
 import {SelectedPhotos} from './photos/SelectedPhotos'
 import {usePalette} from 'lib/hooks/usePalette'
-import QuoteEmbed from '../util/PostEmbeds/QuoteEmbed'
+import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {isDesktopWeb} from 'platform/detection'
 
