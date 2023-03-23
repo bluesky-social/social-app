@@ -73,7 +73,7 @@ export class RepostedByViewModel {
         limit: PAGE_SIZE,
         before: replace ? undefined : this.loadMoreCursor,
       })
-      const res = await this.rootStore.api.app.bsky.feed.getRepostedBy(params)
+      const res = await this.rootStore.agent.getRepostedBy(params)
       if (replace) {
         this._replaceAll(res)
       } else {

@@ -44,7 +44,7 @@ export function Component({did}: {did: string}) {
         reasonType = ComAtprotoModerationDefs.REASONSPAM
       }
       const reason = ITEMS.find(item => item.key === issue)?.label || ''
-      await store.api.com.atproto.moderation.createReport({
+      await store.agent.com.atproto.moderation.createReport({
         reasonType,
         reason,
         subject: {

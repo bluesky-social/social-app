@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
-  AtpAgent,
+  BskyAgent,
   AtpSessionEvent,
   AtpSessionData,
   ComAtprotoServerDescribeServer as DescribeServer,
@@ -154,7 +154,7 @@ export class SessionModel {
   /**
    * Sets the active session
    */
-  async setActiveSession(agent: AtpAgent, did: string) {
+  async setActiveSession(agent: BskyAgent, did: string) {
     this._log('SessionModel:setActiveSession')
     this.data = {
       service: agent.service.toString(),
@@ -239,10 +239,8 @@ export class SessionModel {
   /**
    * Fetches additional information about an account on load.
    */
-  private async loadAccountInfo(agent: AtpAgent, did: string) {
-    const res = await agent.api.app.bsky.actor
-      .getProfile({actor: did})
-      .catch(_e => undefined)
+  private async loadAccountInfo(agent: BskyAgent, did: string) {
+    const res = await agent.getProfile({actor: did}).catch(_e => undefined)
     if (res) {
       return {
         dispayName: res.data.displayName,
@@ -255,8 +253,8 @@ export class SessionModel {
    * Helper to fetch the accounts config settings from an account.
    */
   async describeService(service: string): Promise<ServiceDescription> {
-    const agent = new AtpAgent({service})
-    const res = await agent.api.com.atproto.server.describeServer({})
+    const agent = new BskyAgent({service})
+    const res = await agent.com.atproto.server.describeServer({})
     return res.data
   }
 
@@ -272,7 +270,7 @@ export class SessionModel {
       return false
     }
 
-    const agent = new AtpAgent({
+    const agent = new BskyAgent({
       service: account.service,
       persistSession: (evt: AtpSessionEvent, sess?: AtpSessionData) => {
         this.persistSession(account.service, account.did, evt, sess)
@@ -321,7 +319,7 @@ export class SessionModel {
     password: string
   }) {
     this._log('SessionModel:login')
-    const agent = new AtpAgent({service})
+    const agent = new BskyAgent({service})
     await agent.login({identifier, password})
     if (!agent.session) {
       throw new Error('Failed to establish session')
@@ -355,7 +353,7 @@ export class SessionModel {
     inviteCode?: string
   }) {
     this._log('SessionModel:createAccount')
-    const agent = new AtpAgent({service})
+    const agent = new BskyAgent({service})
     await agent.createAccount({
       handle,
       password,
@@ -389,7 +387,7 @@ export class SessionModel {
     // need to evaluate why deleting the session has caused errors at times
     // -prf
     /*if (this.hasSession) {
-      this.rootStore.api.com.atproto.session.delete().catch((e: any) => {
+      this.rootStore.agent.com.atproto.session.delete().catch((e: any) => {
         this.rootStore.log.warn(
           '(Minor issue) Failed to delete session on the server',
           e,
@@ -415,7 +413,7 @@ export class SessionModel {
     if (!sess) {
       return
     }
-    const res = await this.rootStore.api.app.bsky.actor
+    const res = await this.rootStore.agent
       .getProfile({actor: sess.did})
       .catch(_e => undefined)
     if (res?.success) {

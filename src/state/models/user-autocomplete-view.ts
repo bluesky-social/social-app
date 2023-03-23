@@ -77,7 +77,7 @@ export class UserAutocompleteViewModel {
   // =
 
   private async _getFollows() {
-    const res = await this.rootStore.api.app.bsky.graph.getFollows({
+    const res = await this.rootStore.agent.getFollows({
       actor: this.rootStore.me.did || '',
     })
     runInAction(() => {
@@ -89,7 +89,7 @@ export class UserAutocompleteViewModel {
   }
 
   private async _search() {
-    const res = await this.rootStore.api.app.bsky.actor.searchActorsTypeahead({
+    const res = await this.rootStore.agent.searchActorsTypeahead({
       term: this.prefix,
       limit: 8,
     })

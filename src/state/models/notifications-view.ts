@@ -258,10 +258,7 @@ export class NotificationsViewModel {
         const params = Object.assign({}, this.params, {
           limit: PAGE_SIZE,
         })
-        const res =
-          await this.rootStore.api.app.bsky.notification.listNotifications(
-            params,
-          )
+        const res = await this.rootStore.agent.listNotifications(params)
         await this._replaceAll(res)
         this._xIdle()
       } catch (e: any) {
@@ -294,10 +291,7 @@ export class NotificationsViewModel {
           limit: PAGE_SIZE,
           before: this.loadMoreCursor,
         })
-        const res =
-          await this.rootStore.api.app.bsky.notification.listNotifications(
-            params,
-          )
+        const res = await this.rootStore.agent.listNotifications(params)
         await this._appendAll(res)
         this._xIdle()
       } catch (e: any) {
@@ -323,10 +317,9 @@ export class NotificationsViewModel {
     try {
       this._xLoading()
       try {
-        const res =
-          await this.rootStore.api.app.bsky.notification.listNotifications({
-            limit: PAGE_SIZE,
-          })
+        const res = await this.rootStore.agent.listNotifications({
+          limit: PAGE_SIZE,
+        })
         await this._prependAll(res)
         this._xIdle()
       } catch (e: any) {
@@ -356,7 +349,7 @@ export class NotificationsViewModel {
       try {
         do {
           const res: ListNotifications.Response =
-            await this.rootStore.api.app.bsky.notification.listNotifications({
+            await this.rootStore.agent.listNotifications({
               cursor,
               limit: Math.min(numToFetch, 100),
             })
@@ -389,7 +382,7 @@ export class NotificationsViewModel {
    */
   loadUnreadCount = bundleAsync(async () => {
     const old = this.unreadCount
-    const res = await this.rootStore.api.app.bsky.notification.getUnreadCount()
+    const res = await this.rootStore.agent.countUnreadNotifications()
     runInAction(() => {
       this.unreadCount = res.data.count
     })
@@ -407,9 +400,7 @@ export class NotificationsViewModel {
       for (const notif of this.notifications) {
         notif.isRead = true
       }
-      await this.rootStore.api.app.bsky.notification.updateSeen({
-        seenAt: new Date().toISOString(),
-      })
+      await this.rootStore.agent.updateSeenNotifications()
     } catch (e: any) {
       this.rootStore.log.warn('Failed to update notifications read state', e)
     }
@@ -417,10 +408,9 @@ export class NotificationsViewModel {
 
   async getNewMostRecent(): Promise<NotificationsViewItemModel | undefined> {
     let old = this.mostRecentNotificationUri
-    const res =
-      await this.rootStore.api.app.bsky.notification.listNotifications({
-        limit: 1,
-      })
+    const res = await this.rootStore.agent.listNotifications({
+      limit: 1,
+    })
     if (!res.data.notifications[0] || old === res.data.notifications[0].uri) {
       return
     }

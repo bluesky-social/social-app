@@ -13,7 +13,7 @@ async function getMultipleAuthorsPosts(
 ) {
   const responses = await Promise.all(
     authors.map((actor, index) =>
-      rootStore.api.app.bsky.feed
+      rootStore.agent
         .getAuthorFeed({
           actor,
           limit,

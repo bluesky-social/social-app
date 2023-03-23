@@ -101,14 +101,14 @@ export class ProfileViewModel {
     }
 
     if (followUri) {
-      await apilib.unfollow(this.rootStore, followUri)
+      await this.rootStore.agent.deleteFollow(followUri)
       runInAction(() => {
         this.followersCount--
         this.viewer.following = undefined
         this.rootStore.me.follows.removeFollow(this.did)
       })
     } else {
-      const res = await apilib.follow(this.rootStore, this.did)
+      const res = await this.rootStore.agent.follow(this.did)
       runInAction(() => {
         this.followersCount++
         this.viewer.following = res.uri
@@ -154,13 +154,13 @@ export class ProfileViewModel {
   }
 
   async muteAccount() {
-    await this.rootStore.api.app.bsky.graph.muteActor({actor: this.did})
+    await this.rootStore.agent.mute(this.did)
     this.viewer.muted = true
     await this.refresh()
   }
 
   async unmuteAccount() {
-    await this.rootStore.api.app.bsky.graph.unmuteActor({actor: this.did})
+    await this.rootStore.agent.unmute(this.did)
     this.viewer.muted = false
     await this.refresh()
   }
@@ -190,9 +190,7 @@ export class ProfileViewModel {
   private async _load(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.actor.getProfile(
-        this.params,
-      )
+      const res = await this.rootStore.agent.getProfile(this.params)
       this.rootStore.profiles.overwrite(this.params.actor, res) // cache invalidation
       this._replaceAll(res)
       this._xIdle()

@@ -37,7 +37,7 @@ export class SearchUIModel {
     let profiles: AppBskyActorDefs.ProfileView[] = []
     if (profilesSearch?.length) {
       do {
-        const res = await this.rootStore.api.app.bsky.actor.getProfiles({
+        const res = await this.rootStore.agent.getProfiles({
           actors: profilesSearch.splice(0, 25).map(p => p.did),
         })
         profiles = profiles.concat(res.data.profiles)

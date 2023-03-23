@@ -51,14 +51,14 @@ export class FoafsModel {
       this.popular.length = 0
 
       // fetch their profiles
-      const profiles = await this.rootStore.api.app.bsky.actor.getProfiles({
+      const profiles = await this.rootStore.agent.getProfiles({
         actors: this.sources,
       })
 
       // fetch their follows
       const results = await Promise.allSettled(
         this.sources.map(source =>
-          this.rootStore.api.app.bsky.graph.getFollows({actor: source}),
+          this.rootStore.agent.getFollows({actor: source}),
         ),
       )
 

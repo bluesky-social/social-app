@@ -84,7 +84,7 @@ export class SuggestedActorsModel {
           this.loadMoreCursor = undefined
         } else {
           // pull from the PDS' algo
-          res = await this.rootStore.api.app.bsky.actor.getSuggestions({
+          res = await this.rootStore.agent.app.bsky.actor.getSuggestions({
             limit: this.pageSize,
             cursor: this.loadMoreCursor,
           })
@@ -122,7 +122,7 @@ export class SuggestedActorsModel {
       // fetch the profiles in chunks of 25 (the limit allowed by `getProfiles`)
       let profiles: AppBskyActorDefs.ProfileView[] = []
       do {
-        const res = await this.rootStore.api.app.bsky.actor.getProfiles({
+        const res = await this.rootStore.agent.getProfiles({
           actors: actors.splice(0, 25),
         })
         profiles = profiles.concat(res.data.profiles)

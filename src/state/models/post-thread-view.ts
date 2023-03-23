@@ -139,7 +139,7 @@ export class PostThreadViewPostModel {
 
   async toggleLike() {
     if (this.post.viewer?.like) {
-      await apilib.unlike(this.rootStore, this.post.viewer.like)
+      await this.rootStore.agent.deleteLike(this.post.viewer.like)
       runInAction(() => {
         this.post.likeCount = this.post.likeCount || 0
         this.post.viewer = this.post.viewer || {}
@@ -147,11 +147,7 @@ export class PostThreadViewPostModel {
         this.post.viewer.like = undefined
       })
     } else {
-      const res = await apilib.like(
-        this.rootStore,
-        this.post.uri,
-        this.post.cid,
-      )
+      const res = await this.rootStore.agent.like(this.post.uri, this.post.cid)
       runInAction(() => {
         this.post.likeCount = this.post.likeCount || 0
         this.post.viewer = this.post.viewer || {}
@@ -163,7 +159,7 @@ export class PostThreadViewPostModel {
 
   async toggleRepost() {
     if (this.post.viewer?.repost) {
-      await apilib.unrepost(this.rootStore, this.post.viewer.repost)
+      await this.rootStore.agent.deleteRepost(this.post.viewer.repost)
       runInAction(() => {
         this.post.repostCount = this.post.repostCount || 0
         this.post.viewer = this.post.viewer || {}
@@ -171,8 +167,7 @@ export class PostThreadViewPostModel {
         this.post.viewer.repost = undefined
       })
     } else {
-      const res = await apilib.repost(
-        this.rootStore,
+      const res = await this.rootStore.agent.repost(
         this.post.uri,
         this.post.cid,
       )
@@ -186,10 +181,7 @@ export class PostThreadViewPostModel {
   }
 
   async delete() {
-    await this.rootStore.api.app.bsky.feed.post.delete({
-      did: this.post.author.did,
-      rkey: new AtUri(this.post.uri).rkey,
-    })
+    await this.rootStore.agent.deletePost(this.post.uri)
     this.rootStore.emitPostDeleted(this.post.uri)
   }
 }
@@ -320,7 +312,7 @@ export class PostThreadViewModel {
   private async _load(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.feed.getPostThread(
+      const res = await this.rootStore.agent.getPostThread(
         Object.assign({}, this.params, {uri: this.resolvedUri}),
       )
       this._replaceAll(res)

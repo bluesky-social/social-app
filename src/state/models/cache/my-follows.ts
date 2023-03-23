@@ -57,7 +57,7 @@ export class MyFollowsCache {
     let records: FollowsListResponseRecord[] = []
     do {
       const res: FollowsListResponse =
-        await this.rootStore.api.app.bsky.graph.follow.list({
+        await this.rootStore.agent.app.bsky.graph.follow.list({
           repo: this.rootStore.me.did,
           rkeyStart,
         })

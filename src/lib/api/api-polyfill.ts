@@ -1,11 +1,11 @@
-import AtpAgent from '@atproto/api'
+import {BskyAgent} from '@atproto/api'
 import RNFS from 'react-native-fs'
 
 const GET_TIMEOUT = 15e3 // 15s
 const POST_TIMEOUT = 60e3 // 60s
 
 export function doPolyfill() {
-  AtpAgent.configure({fetch: fetchHandler})
+  BskyAgent.configure({fetch: fetchHandler})
 }
 
 interface FetchHandlerResponse {

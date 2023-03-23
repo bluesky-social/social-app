@@ -79,7 +79,7 @@ export class PostModel implements RemoveIndex<Post.Record> {
     this._xLoading()
     try {
       const urip = new AtUri(this.uri)
-      const res = await this.rootStore.api.app.bsky.feed.post.get({
+      const res = await this.rootStore.agent.getPost({
         repo: urip.host,
         rkey: urip.rkey,
       })

@@ -70,7 +70,7 @@ export class LikesViewModel {
         limit: PAGE_SIZE,
         before: replace ? undefined : this.loadMoreCursor,
       })
-      const res = await this.rootStore.api.app.bsky.feed.getLikes(params)
+      const res = await this.rootStore.agent.getLikes(params)
       if (replace) {
         this._replaceAll(res)
       } else {

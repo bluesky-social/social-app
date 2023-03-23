@@ -72,7 +72,7 @@ export class UserFollowsViewModel {
         limit: PAGE_SIZE,
         before: replace ? undefined : this.loadMoreCursor,
       })
-      const res = await this.rootStore.api.app.bsky.graph.getFollows(params)
+      const res = await this.rootStore.agent.getFollows(params)
       if (replace) {
         this._replaceAll(res)
       } else {

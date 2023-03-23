@@ -3,7 +3,7 @@
  */
 
 import {makeAutoObservable} from 'mobx'
-import {AtpAgent} from '@atproto/api'
+import {BskyAgent} from '@atproto/api'
 import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
 import * as BgScheduler from 'lib/bg-scheduler'
@@ -29,7 +29,7 @@ export const appInfo = z.object({
 export type AppInfo = z.infer<typeof appInfo>
 
 export class RootStoreModel {
-  agent: AtpAgent
+  agent: BskyAgent
   appInfo?: AppInfo
   log = new LogModel()
   session = new SessionModel(this)
@@ -40,7 +40,7 @@ export class RootStoreModel {
   linkMetas = new LinkMetasCache(this)
   imageSizes = new ImageSizesCache()
 
-  constructor(agent: AtpAgent) {
+  constructor(agent: BskyAgent) {
     this.agent = agent
     makeAutoObservable(this, {
       api: false,
@@ -48,10 +48,6 @@ export class RootStoreModel {
       hydrate: false,
     })
     this.initBgFetch()
-  }
-
-  get api() {
-    return this.agent.api
   }
 
   setAppInfo(info: AppInfo) {
@@ -110,7 +106,7 @@ export class RootStoreModel {
   /**
    * Called by the session model. Refreshes session-oriented state.
    */
-  async handleSessionChange(agent: AtpAgent) {
+  async handleSessionChange(agent: BskyAgent) {
     this.log.debug('RootStoreModel:handleSessionChange')
     this.agent = agent
     this.me.clear()
@@ -238,7 +234,7 @@ export class RootStoreModel {
   async onBgFetch(taskId: string) {
     this.log.debug(`Background fetch fired for task ${taskId}`)
     if (this.session.hasSession) {
-      const res = await this.api.app.bsky.notification.getUnreadCount()
+      const res = await this.agent.countUnreadNotifications()
       const hasNewNotifs = this.me.notifications.unreadCount !== res.data.count
       this.emitUnreadNotifications(res.data.count)
       this.log.debug(
@@ -265,7 +261,7 @@ export class RootStoreModel {
 }
 
 const throwawayInst = new RootStoreModel(
-  new AtpAgent({service: 'http://localhost'}),
+  new BskyAgent({service: 'http://localhost'}),
 ) // this will be replaced by the loader, we just need to supply a value at init
 const RootStoreContext = createContext<RootStoreModel>(throwawayInst)
 export const RootStoreProvider = RootStoreContext.Provider

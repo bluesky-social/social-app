@@ -10,7 +10,6 @@ import {bundleAsync} from 'lib/async/bundle'
 import sampleSize from 'lodash.samplesize'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
-import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {RichText} from 'lib/strings/rich-text'
 import {SUGGESTED_FOLLOWS} from 'lib/constants'
@@ -93,7 +92,7 @@ export class FeedItemModel {
 
   async toggleLike() {
     if (this.post.viewer?.like) {
-      await apilib.unlike(this.rootStore, this.post.viewer.like)
+      await this.rootStore.agent.deleteLike(this.post.viewer.like)
       runInAction(() => {
         this.post.likeCount = this.post.likeCount || 0
         this.post.viewer = this.post.viewer || {}
@@ -101,11 +100,7 @@ export class FeedItemModel {
         this.post.viewer.like = undefined
       })
     } else {
-      const res = await apilib.like(
-        this.rootStore,
-        this.post.uri,
-        this.post.cid,
-      )
+      const res = await this.rootStore.agent.like(this.post.uri, this.post.cid)
       runInAction(() => {
         this.post.likeCount = this.post.likeCount || 0
         this.post.viewer = this.post.viewer || {}
@@ -117,7 +112,7 @@ export class FeedItemModel {
 
   async toggleRepost() {
     if (this.post.viewer?.repost) {
-      await apilib.unrepost(this.rootStore, this.post.viewer.repost)
+      await this.rootStore.agent.deleteRepost(this.post.viewer.repost)
       runInAction(() => {
         this.post.repostCount = this.post.repostCount || 0
         this.post.viewer = this.post.viewer || {}
@@ -125,8 +120,7 @@ export class FeedItemModel {
         this.post.viewer.repost = undefined
       })
     } else {
-      const res = await apilib.repost(
-        this.rootStore,
+      const res = await this.rootStore.agent.repost(
         this.post.uri,
         this.post.cid,
       )
@@ -140,10 +134,7 @@ export class FeedItemModel {
   }
 
   async delete() {
-    await this.rootStore.api.app.bsky.feed.post.delete({
-      did: this.post.author.did,
-      rkey: new AtUri(this.post.uri).rkey,
-    })
+    await this.rootStore.agent.deletePost(this.post.uri)
     this.rootStore.emitPostDeleted(this.post.uri)
   }
 }
@@ -590,9 +581,7 @@ export class FeedModel {
         headers: lastHeaders,
       }
     } else if (this.feedType === 'home') {
-      return this.rootStore.api.app.bsky.feed.getTimeline(
-        params as GetTimeline.QueryParams,
-      )
+      return this.rootStore.agent.getTimeline(params as GetTimeline.QueryParams)
     } else if (this.feedType === 'goodstuff') {
       const res = await getGoodStuff(
         this.rootStore.session.currentSession?.accessJwt || '',
@@ -603,7 +592,7 @@ export class FeedModel {
       )
       return res
     } else {
-      return this.rootStore.api.app.bsky.feed.getAuthorFeed(
+      return this.rootStore.agent.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,
       )
     }
