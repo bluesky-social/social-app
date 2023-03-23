@@ -11,6 +11,15 @@ import {Text} from '@tiptap/extension-text'
 import isEqual from 'lodash.isequal'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
 import {createSuggestion} from './web/Autocomplete'
+import {Transaction} from '@tiptap/pm/state'
+import {cropAndCompressFlow} from 'lib/media/picker'
+import {useStores} from 'state/index'
+import {
+  POST_IMG_MAX_HEIGHT,
+  POST_IMG_MAX_SIZE,
+  POST_IMG_MAX_WIDTH,
+} from 'lib/constants'
+import {getImageInfoFromFile} from 'lib/media/util'
 
 export interface TextInputRef {
   focus: () => void
@@ -36,12 +45,28 @@ export const TextInput = React.forwardRef(
       suggestedLinks,
       autocompleteView,
       setRichText,
-      // onPhotoPasted, TODO
+      onPhotoPasted,
       onSuggestedLinksChanged,
     }: // onError, TODO
     TextInputProps,
     ref,
   ) => {
+    const store = useStores()
+    const processClipboardItemAsPhoto = async (item: DataTransferItem) => {
+      const file = item.getAsFile()
+
+      if (file && file.type && file.type.startsWith('image/')) {
+        const {uri, width, height} = await getImageInfoFromFile(file)
+        const croppedUri = await cropAndCompressFlow(
+          store,
+          uri,
+          {width, height},
+          {width: POST_IMG_MAX_WIDTH, height: POST_IMG_MAX_HEIGHT},
+          POST_IMG_MAX_SIZE,
+        )
+        onPhotoPasted(croppedUri)
+      }
+    }
     const editor = useEditor({
       extensions: [
         Document,
@@ -65,6 +90,29 @@ export const TextInput = React.forwardRef(
       autofocus: true,
       editable: true,
       injectCSS: true,
+      editorProps: {
+        handlePaste(_, event) {
+          // It's possible to copy a single screenshot or multiple files
+          // In the case of a single screenshot (e.g. cmd+shift+4), this
+          // list will be length 1. In the case of selecting multiple
+          // files in a file explorer and copying/pasting, this will be
+          // those list of copied files
+          const items = event.clipboardData?.items
+
+          // Let tiptap know to fallback to default paste behavior
+          if (!items || items.length === 0) {
+            return false
+          }
+
+          // For any pasted images, bring them through the crop and compress flow
+          for (const item of Array.from(items)) {
+            processClipboardItemAsPhoto(item)
+          }
+
+          // Let tiptap know that we handled the paste event
+          return true
+        },
+      },
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
 

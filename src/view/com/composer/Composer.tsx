@@ -130,9 +130,17 @@ export const ComposePost = observer(function ComposePost({
       if (selectedPhotos.length >= 4) {
         return
       }
-      onSelectPhotos([...selectedPhotos, uri])
+
+      setSelectedPhotos(sp => {
+        if (sp.length >= 4) {
+          return sp
+        }
+
+        track('Composer:SelectedPhotos')
+        return [...sp, uri]
+      })
     },
-    [selectedPhotos, onSelectPhotos],
+    [selectedPhotos, setSelectedPhotos, track],
   )
 
   const onPressPublish = React.useCallback(async () => {
