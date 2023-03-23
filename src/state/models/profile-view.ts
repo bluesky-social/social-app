@@ -2,10 +2,8 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {PickedMedia} from 'lib/media/picker'
 import {
   AppBskyActorGetProfile as GetProfile,
-  AppBskySystemDeclRef,
   AppBskyActorUpdateProfile,
 } from '@atproto/api'
-type DeclRef = AppBskySystemDeclRef.Main
 import {extractEntities} from 'lib/strings/rich-text-detection'
 import {RootStoreModel} from './root-store'
 import * as apilib from 'lib/api/index'
@@ -35,10 +33,6 @@ export class ProfileViewModel {
   // data
   did: string = ''
   handle: string = ''
-  declaration: DeclRef = {
-    cid: '',
-    actorType: '',
-  }
   creator: string = ''
   displayName?: string
   description?: string
@@ -79,10 +73,6 @@ export class ProfileViewModel {
     return this.hasLoaded && !this.hasContent
   }
 
-  get isUser() {
-    return this.declaration.actorType === ACTOR_TYPE_USER
-  }
-
   // public api
   // =
 
@@ -118,11 +108,7 @@ export class ProfileViewModel {
         this.rootStore.me.follows.removeFollow(this.did)
       })
     } else {
-      const res = await apilib.follow(
-        this.rootStore,
-        this.did,
-        this.declaration.cid,
-      )
+      const res = await apilib.follow(this.rootStore, this.did)
       runInAction(() => {
         this.followersCount++
         this.viewer.following = res.uri
@@ -168,13 +154,13 @@ export class ProfileViewModel {
   }
 
   async muteAccount() {
-    await this.rootStore.api.app.bsky.graph.mute({user: this.did})
+    await this.rootStore.api.app.bsky.graph.muteActor({actor: this.did})
     this.viewer.muted = true
     await this.refresh()
   }
 
   async unmuteAccount() {
-    await this.rootStore.api.app.bsky.graph.unmute({user: this.did})
+    await this.rootStore.api.app.bsky.graph.unmuteActor({actor: this.did})
     this.viewer.muted = false
     await this.refresh()
   }
@@ -218,15 +204,14 @@ export class ProfileViewModel {
   private _replaceAll(res: GetProfile.Response) {
     this.did = res.data.did
     this.handle = res.data.handle
-    Object.assign(this.declaration, res.data.declaration)
     this.creator = res.data.creator
     this.displayName = res.data.displayName
     this.description = res.data.description
     this.avatar = res.data.avatar
     this.banner = res.data.banner
-    this.followersCount = res.data.followersCount
-    this.followsCount = res.data.followsCount
-    this.postsCount = res.data.postsCount
+    this.followersCount = res.data.followersCount || 0
+    this.followsCount = res.data.followsCount || 0
+    this.postsCount = res.data.postsCount || 0
     if (res.data.viewer) {
       Object.assign(this.viewer, res.data.viewer)
       this.rootStore.me.follows.hydrate(this.did, res.data.viewer.following)

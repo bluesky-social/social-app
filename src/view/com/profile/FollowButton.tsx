@@ -9,12 +9,10 @@ const FollowButton = observer(
   ({
     type = 'inverted',
     did,
-    declarationCid,
     onToggleFollow,
   }: {
     type?: ButtonType
     did: string
-    declarationCid: string
     onToggleFollow?: (v: boolean) => void
   }) => {
     const store = useStores()
@@ -32,7 +30,7 @@ const FollowButton = observer(
         }
       } else {
         try {
-          const res = await apilib.follow(store, did, declarationCid)
+          const res = await apilib.follow(store, did)
           store.me.follows.addFollow(did, res.uri)
           onToggleFollow?.(true)
         } catch (e: any) {

@@ -38,7 +38,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   const store = useStores()
   const [deleted, setDeleted] = React.useState(false)
   const record = item.postRecord
-  const hasEngagement = item.post.upvoteCount || item.post.repostCount
+  const hasEngagement = item.post.likeCount || item.post.repostCount
 
   const itemUri = item.post.uri
   const itemCid = item.post.cid
@@ -49,11 +49,11 @@ export const PostThreadItem = observer(function PostThreadItem({
   const itemTitle = `Post by ${item.post.author.handle}`
   const authorHref = `/profile/${item.post.author.handle}`
   const authorTitle = item.post.author.handle
-  const upvotesHref = React.useMemo(() => {
+  const likesHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
-    return `/profile/${item.post.author.handle}/post/${urip.rkey}/upvoted-by`
+    return `/profile/${item.post.author.handle}/post/${urip.rkey}/liked-by`
   }, [item.post.uri, item.post.author.handle])
-  const upvotesTitle = 'Likes on this post'
+  const likesTitle = 'Likes on this post'
   const repostsHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}/reposted-by`
@@ -80,10 +80,10 @@ export const PostThreadItem = observer(function PostThreadItem({
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
   }, [item, store])
-  const onPressToggleUpvote = React.useCallback(() => {
+  const onPressToggleLike = React.useCallback(() => {
     return item
-      .toggleUpvote()
-      .catch(e => store.log.error('Failed to toggle upvote', e))
+      .toggleLike()
+      .catch(e => store.log.error('Failed to toggle like', e))
   }, [item, store])
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')
@@ -220,16 +220,16 @@ export const PostThreadItem = observer(function PostThreadItem({
                 ) : (
                   <></>
                 )}
-                {item.post.upvoteCount ? (
+                {item.post.likeCount ? (
                   <Link
                     style={styles.expandedInfoItem}
-                    href={upvotesHref}
-                    title={upvotesTitle}>
+                    href={likesHref}
+                    title={likesTitle}>
                     <Text type="lg" style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {item.post.upvoteCount}
+                        {item.post.likeCount}
                       </Text>{' '}
-                      {pluralize(item.post.upvoteCount, 'like')}
+                      {pluralize(item.post.likeCount, 'like')}
                     </Text>
                   </Link>
                 ) : (
@@ -254,11 +254,11 @@ export const PostThreadItem = observer(function PostThreadItem({
                 text={item.richText?.text || record.text}
                 indexedAt={item.post.indexedAt}
                 isAuthor={item.post.author.did === store.me.did}
-                isReposted={!!item.post.viewer.repost}
-                isUpvoted={!!item.post.viewer.upvote}
+                isReposted={!!item.post.viewer?.repost}
+                isLiked={!!item.post.viewer?.like}
                 onPressReply={onPressReply}
                 onPressToggleRepost={onPressToggleRepost}
-                onPressToggleUpvote={onPressToggleUpvote}
+                onPressToggleLike={onPressToggleLike}
                 onCopyPostText={onCopyPostText}
                 onOpenTranslate={onOpenTranslate}
                 onDeletePost={onDeletePost}
@@ -305,7 +305,6 @@ export const PostThreadItem = observer(function PostThreadItem({
                 timestamp={item.post.indexedAt}
                 postHref={itemHref}
                 did={item.post.author.did}
-                declarationCid={item.post.author.declaration.cid}
               />
               {item.richText?.text ? (
                 <View style={styles.postTextContainer}>
@@ -333,12 +332,12 @@ export const PostThreadItem = observer(function PostThreadItem({
                 isAuthor={item.post.author.did === store.me.did}
                 replyCount={item.post.replyCount}
                 repostCount={item.post.repostCount}
-                upvoteCount={item.post.upvoteCount}
-                isReposted={!!item.post.viewer.repost}
-                isUpvoted={!!item.post.viewer.upvote}
+                likeCount={item.post.likeCount}
+                isReposted={!!item.post.viewer?.repost}
+                isLiked={!!item.post.viewer?.like}
                 onPressReply={onPressReply}
                 onPressToggleRepost={onPressToggleRepost}
-                onPressToggleUpvote={onPressToggleUpvote}
+                onPressToggleLike={onPressToggleLike}
                 onCopyPostText={onCopyPostText}
                 onOpenTranslate={onOpenTranslate}
                 onDeletePost={onDeletePost}

@@ -241,19 +241,17 @@ export const ProfileHeader = observer(function ProfileHeader({
               {pluralize(view.followersCount, 'follower')}
             </Text>
           </TouchableOpacity>
-          {view.isUser ? (
-            <TouchableOpacity
-              testID="profileHeaderFollowsButton"
-              style={[s.flexRow, s.mr10]}
-              onPress={onPressFollows}>
-              <Text type="md" style={[s.bold, s.mr2, pal.text]}>
-                {view.followsCount}
-              </Text>
-              <Text type="md" style={[pal.textLight]}>
-                following
-              </Text>
-            </TouchableOpacity>
-          ) : undefined}
+          <TouchableOpacity
+            testID="profileHeaderFollowsButton"
+            style={[s.flexRow, s.mr10]}
+            onPress={onPressFollows}>
+            <Text type="md" style={[s.bold, s.mr2, pal.text]}>
+              {view.followsCount}
+            </Text>
+            <Text type="md" style={[pal.textLight]}>
+              following
+            </Text>
+          </TouchableOpacity>
           <View style={[s.flexRow, s.mr10]}>
             <Text type="md" style={[s.bold, s.mr2, pal.text]}>
               {view.postsCount}

@@ -3,14 +3,14 @@ import {Text} from '../text/Text'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
-import {PresentedExternal} from '@atproto/api'
+import {AppBskyEmbedExternal} from '@atproto/api'
 
 const ExternalLinkEmbed = ({
   link,
   onImagePress,
   imageChild,
 }: {
-  link: PresentedExternal
+  link: AppBskyEmbedExternal.ViewExternal
   onImagePress?: () => void
   imageChild?: React.ReactNode
 }) => {

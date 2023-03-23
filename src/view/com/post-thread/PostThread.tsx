@@ -159,7 +159,7 @@ function* flattenThread(
         yield* flattenThread(reply as PostThreadViewPostModel)
       }
     }
-  } else if (!isAscending && !post.parent && post.post.replyCount > 0) {
+  } else if (!isAscending && !post.parent && post.post.replyCount) {
     post._hasMore = true
   }
 }

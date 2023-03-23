@@ -1,11 +1,10 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
-  AppBskyNotificationList as ListNotifications,
-  AppBskyActorRef as ActorRef,
+  AppBskyNotificationListNotifications as ListNotifications,
+  AppBskyActorDefs,
   AppBskyFeedPost,
   AppBskyFeedRepost,
-  AppBskyFeedVote,
-  AppBskyGraphAssertion,
+  AppBskyFeedLike,
   AppBskyGraphFollow,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
@@ -28,8 +27,7 @@ export interface GroupedNotification extends ListNotifications.Notification {
 type SupportedRecord =
   | AppBskyFeedPost.Record
   | AppBskyFeedRepost.Record
-  | AppBskyFeedVote.Record
-  | AppBskyGraphAssertion.Record
+  | AppBskyFeedLike.Record
   | AppBskyGraphFollow.Record
 
 export class NotificationsViewItemModel {
@@ -39,11 +37,10 @@ export class NotificationsViewItemModel {
   // data
   uri: string = ''
   cid: string = ''
-  author: ActorRef.WithInfo = {
+  author: AppBskyActorDefs.WithInfo = {
     did: '',
     handle: '',
     avatar: '',
-    declaration: {cid: '', actorType: ''},
   }
   reason: string = ''
   reasonSubject?: string
@@ -86,8 +83,8 @@ export class NotificationsViewItemModel {
     }
   }
 
-  get isUpvote() {
-    return this.reason === 'vote'
+  get isLike() {
+    return this.reason === 'like'
   }
 
   get isRepost() {
@@ -106,12 +103,8 @@ export class NotificationsViewItemModel {
     return this.reason === 'follow'
   }
 
-  get isAssertion() {
-    return this.reason === 'assertion'
-  }
-
   get needsAdditionalData() {
-    if (this.isUpvote || this.isRepost || this.isReply || this.isMention) {
+    if (this.isLike || this.isRepost || this.isReply || this.isMention) {
       return !this.additionalPost
     }
     return false
@@ -124,7 +117,7 @@ export class NotificationsViewItemModel {
     const record = this.record
     if (
       AppBskyFeedRepost.isRecord(record) ||
-      AppBskyFeedVote.isRecord(record)
+      AppBskyFeedLike.isRecord(record)
     ) {
       return record.subject.uri
     }
@@ -135,8 +128,7 @@ export class NotificationsViewItemModel {
     for (const ns of [
       AppBskyFeedPost,
       AppBskyFeedRepost,
-      AppBskyFeedVote,
-      AppBskyGraphAssertion,
+      AppBskyFeedLike,
       AppBskyGraphFollow,
     ]) {
       if (ns.isRecord(v)) {
@@ -165,7 +157,7 @@ export class NotificationsViewItemModel {
     let postUri
     if (this.isReply || this.isMention) {
       postUri = this.uri
-    } else if (this.isUpvote || this.isRepost) {
+    } else if (this.isLike || this.isRepost) {
       postUri = this.subjectUri
     }
     if (postUri) {
@@ -266,7 +258,10 @@ export class NotificationsViewModel {
         const params = Object.assign({}, this.params, {
           limit: PAGE_SIZE,
         })
-        const res = await this.rootStore.api.app.bsky.notification.list(params)
+        const res =
+          await this.rootStore.api.app.bsky.notification.listNotifications(
+            params,
+          )
         await this._replaceAll(res)
         this._xIdle()
       } catch (e: any) {
@@ -299,7 +294,10 @@ export class NotificationsViewModel {
           limit: PAGE_SIZE,
           before: this.loadMoreCursor,
         })
-        const res = await this.rootStore.api.app.bsky.notification.list(params)
+        const res =
+          await this.rootStore.api.app.bsky.notification.listNotifications(
+            params,
+          )
         await this._appendAll(res)
         this._xIdle()
       } catch (e: any) {
@@ -325,9 +323,10 @@ export class NotificationsViewModel {
     try {
       this._xLoading()
       try {
-        const res = await this.rootStore.api.app.bsky.notification.list({
-          limit: PAGE_SIZE,
-        })
+        const res =
+          await this.rootStore.api.app.bsky.notification.listNotifications({
+            limit: PAGE_SIZE,
+          })
         await this._prependAll(res)
         this._xIdle()
       } catch (e: any) {
@@ -357,8 +356,8 @@ export class NotificationsViewModel {
       try {
         do {
           const res: ListNotifications.Response =
-            await this.rootStore.api.app.bsky.notification.list({
-              before: cursor,
+            await this.rootStore.api.app.bsky.notification.listNotifications({
+              cursor,
               limit: Math.min(numToFetch, 100),
             })
           if (res.data.notifications.length === 0) {
@@ -390,7 +389,7 @@ export class NotificationsViewModel {
    */
   loadUnreadCount = bundleAsync(async () => {
     const old = this.unreadCount
-    const res = await this.rootStore.api.app.bsky.notification.getCount()
+    const res = await this.rootStore.api.app.bsky.notification.getUnreadCount()
     runInAction(() => {
       this.unreadCount = res.data.count
     })
@@ -418,9 +417,10 @@ export class NotificationsViewModel {
 
   async getNewMostRecent(): Promise<NotificationsViewItemModel | undefined> {
     let old = this.mostRecentNotificationUri
-    const res = await this.rootStore.api.app.bsky.notification.list({
-      limit: 1,
-    })
+    const res =
+      await this.rootStore.api.app.bsky.notification.listNotifications({
+        limit: 1,
+      })
     if (!res.data.notifications[0] || old === res.data.notifications[0].uri) {
       return
     }

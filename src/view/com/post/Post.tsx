@@ -118,10 +118,10 @@ export const Post = observer(function Post({
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
   }
-  const onPressToggleUpvote = () => {
+  const onPressToggleLike = () => {
     return item
-      .toggleUpvote()
-      .catch(e => store.log.error('Failed to toggle upvote', e))
+      .toggleLike()
+      .catch(e => store.log.error('Failed to toggle like', e))
   }
   const onCopyPostText = () => {
     Clipboard.setString(record.text)
@@ -166,7 +166,6 @@ export const Post = observer(function Post({
               timestamp={item.post.indexedAt}
               postHref={itemHref}
               did={item.post.author.did}
-              declarationCid={item.post.author.declaration.cid}
             />
             {replyAuthorDid !== '' && (
               <View style={[s.flexRow, s.mb2, s.alignCenter]}>
@@ -211,12 +210,12 @@ export const Post = observer(function Post({
               isAuthor={item.post.author.did === store.me.did}
               replyCount={item.post.replyCount}
               repostCount={item.post.repostCount}
-              upvoteCount={item.post.upvoteCount}
-              isReposted={!!item.post.viewer.repost}
-              isUpvoted={!!item.post.viewer.upvote}
+              likeCount={item.post.likeCount}
+              isReposted={!!item.post.viewer?.repost}
+              isLiked={!!item.post.viewer?.like}
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
-              onPressToggleUpvote={onPressToggleUpvote}
+              onPressToggleLike={onPressToggleLike}
               onCopyPostText={onCopyPostText}
               onOpenTranslate={onOpenTranslate}
               onDeletePost={onDeletePost}

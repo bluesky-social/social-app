@@ -1,7 +1,7 @@
 import {
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
-  ComAtprotoBlobUpload,
+  ComAtprotoRepoUploadBlob,
   AppBskyEmbedRecord,
 } from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
@@ -27,7 +27,7 @@ export async function resolveName(store: RootStoreModel, didOrHandle: string) {
   if (didOrHandle.startsWith('did:')) {
     return didOrHandle
   }
-  const res = await store.api.com.atproto.handle.resolve({
+  const res = await store.api.com.atproto.identity.resolveHandle({
     handle: didOrHandle,
   })
   return res.data.did
@@ -37,15 +37,18 @@ export async function uploadBlob(
   store: RootStoreModel,
   blob: string,
   encoding: string,
-): Promise<ComAtprotoBlobUpload.Response> {
+): Promise<ComAtprotoRepoUploadBlob.Response> {
   if (isWeb) {
     // `blob` should be a data uri
-    return store.api.com.atproto.blob.upload(convertDataURIToUint8Array(blob), {
-      encoding,
-    })
+    return store.api.com.atproto.repo.uploadBlob(
+      convertDataURIToUint8Array(blob),
+      {
+        encoding,
+      },
+    )
   } else {
     // `blob` should be a path to a file in the local FS
-    return store.api.com.atproto.blob.upload(
+    return store.api.com.atproto.repo.uploadBlob(
       blob, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
       {encoding},
     )
@@ -158,7 +161,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
   if (opts.replyTo) {
     const replyToUrip = new AtUri(opts.replyTo)
     const parentPost = await store.api.app.bsky.feed.post.get({
-      user: replyToUrip.host,
+      repo: replyToUrip.host,
       rkey: replyToUrip.rkey,
     })
     if (parentPost) {
@@ -197,6 +200,24 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
   }
 }
 
+export async function like(store: RootStoreModel, uri: string, cid: string) {
+  return await store.api.app.bsky.feed.like.create(
+    {did: store.me.did || ''},
+    {
+      subject: {uri, cid},
+      createdAt: new Date().toISOString(),
+    },
+  )
+}
+
+export async function unlike(store: RootStoreModel, likeUri: string) {
+  const likeUrip = new AtUri(likeUri)
+  return await store.api.app.bsky.feed.like.delete({
+    did: likeUrip.hostname,
+    rkey: likeUrip.rkey,
+  })
+}
+
 export async function repost(store: RootStoreModel, uri: string, cid: string) {
   return await store.api.app.bsky.feed.repost.create(
     {did: store.me.did || ''},
@@ -215,18 +236,11 @@ export async function unrepost(store: RootStoreModel, repostUri: string) {
   })
 }
 
-export async function follow(
-  store: RootStoreModel,
-  subjectDid: string,
-  subjectDeclarationCid: string,
-) {
+export async function follow(store: RootStoreModel, subjectDid: string) {
   return await store.api.app.bsky.graph.follow.create(
     {did: store.me.did || ''},
     {
-      subject: {
-        did: subjectDid,
-        declarationCid: subjectDeclarationCid,
-      },
+      subject: subjectDid,
       createdAt: new Date().toISOString(),
     },
   )

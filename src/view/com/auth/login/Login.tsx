@@ -507,7 +507,7 @@ const ForgotPasswordForm = ({
 
     try {
       const agent = new AtpAgent({service: serviceUrl})
-      await agent.api.com.atproto.account.requestPasswordReset({email})
+      await agent.api.com.atproto.server.requestPasswordReset({email})
       onEmailSent()
     } catch (e: any) {
       const errMsg = e.toString()
@@ -649,7 +649,7 @@ const SetNewPasswordForm = ({
 
     try {
       const agent = new AtpAgent({service: serviceUrl})
-      await agent.api.com.atproto.account.resetPassword({
+      await agent.api.com.atproto.server.resetPassword({
         token: resetCode,
         password,
       })

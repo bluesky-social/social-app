@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {searchProfiles, searchPosts} from 'lib/api/search'
-import {AppBskyActorProfile as Profile} from '@atproto/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 
 export class SearchUIModel {
@@ -8,7 +8,7 @@ export class SearchUIModel {
   isProfilesLoading = false
   query: string = ''
   postUris: string[] = []
-  profiles: Profile.View[] = []
+  profiles: AppBskyActorDefs.ProfileView[] = []
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this)
@@ -34,7 +34,7 @@ export class SearchUIModel {
       this.isPostsLoading = false
     })
 
-    let profiles: Profile.View[] = []
+    let profiles: AppBskyActorDefs.ProfileView[] = []
     if (profilesSearch?.length) {
       do {
         const res = await this.rootStore.api.app.bsky.actor.getProfiles({

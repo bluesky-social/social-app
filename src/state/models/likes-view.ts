@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
-import {AppBskyFeedGetVotes as GetVotes} from '@atproto/api'
+import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
@@ -8,24 +8,24 @@ import * as apilib from 'lib/api/index'
 
 const PAGE_SIZE = 30
 
-export type VoteItem = GetVotes.Vote
+export type LikeItem = GetLikes.Like
 
-export class VotesViewModel {
+export class LikesViewModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
   resolvedUri = ''
-  params: GetVotes.QueryParams
+  params: GetLikes.QueryParams
   hasMore = true
   loadMoreCursor?: string
 
   // data
   uri: string = ''
-  votes: VoteItem[] = []
+  likes: LikeItem[] = []
 
-  constructor(public rootStore: RootStoreModel, params: GetVotes.QueryParams) {
+  constructor(public rootStore: RootStoreModel, params: GetLikes.QueryParams) {
     makeAutoObservable(
       this,
       {
@@ -70,7 +70,7 @@ export class VotesViewModel {
         limit: PAGE_SIZE,
         before: replace ? undefined : this.loadMoreCursor,
       })
-      const res = await this.rootStore.api.app.bsky.feed.getVotes(params)
+      const res = await this.rootStore.api.app.bsky.feed.getLikes(params)
       if (replace) {
         this._replaceAll(res)
       } else {
@@ -118,14 +118,14 @@ export class VotesViewModel {
     })
   }
 
-  private _replaceAll(res: GetVotes.Response) {
-    this.votes = []
+  private _replaceAll(res: GetLikes.Response) {
+    this.likes = []
     this._appendAll(res)
   }
 
-  private _appendAll(res: GetVotes.Response) {
+  private _appendAll(res: GetLikes.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    this.votes = this.votes.concat(res.data.votes)
+    this.likes = this.likes.concat(res.data.likes)
   }
 }

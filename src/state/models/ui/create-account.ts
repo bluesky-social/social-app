@@ -2,7 +2,7 @@ import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from '../root-store'
 import {ServiceDescription} from '../session'
 import {DEFAULT_SERVICE} from 'state/index'
-import {ComAtprotoAccountCreate} from '@atproto/api'
+import {ComAtprotoServerCreateAccount} from '@atproto/api'
 import * as EmailValidator from 'email-validator'
 import {createFullHandle} from 'lib/strings/handles'
 import {cleanError} from 'lib/strings/errors'
@@ -99,7 +99,7 @@ export class CreateAccountModel {
       })
     } catch (e: any) {
       let errMsg = e.toString()
-      if (e instanceof ComAtprotoAccountCreate.InvalidInviteCodeError) {
+      if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
         errMsg =
           'Invite code not accepted. Check that you input it correctly and try again.'
       }

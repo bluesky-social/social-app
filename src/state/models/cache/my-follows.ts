@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {FollowRecord, AppBskyActorProfile, AppBskyActorRef} from '@atproto/api'
+import {FollowRecord, AppBskyActorDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 
@@ -7,9 +7,9 @@ const CACHE_TTL = 1000 * 60 * 60 // hourly
 type FollowsListResponse = Awaited<ReturnType<FollowRecord['list']>>
 type FollowsListResponseRecord = FollowsListResponse['records'][0]
 type Profile =
-  | AppBskyActorProfile.ViewBasic
-  | AppBskyActorProfile.View
-  | AppBskyActorRef.WithInfo
+  | AppBskyActorDefs.ProfileViewBasic
+  | AppBskyActorDefs.ProfileView
+  | AppBskyActorDefs.WithInfo
 
 /**
  * This model is used to maintain a synced local cache of the user's
@@ -53,21 +53,21 @@ export class MyFollowsCache {
 
   fetch = bundleAsync(async () => {
     this.rootStore.log.debug('MyFollowsModel:fetch running full fetch')
-    let before
+    let rkeyStart
     let records: FollowsListResponseRecord[] = []
     do {
       const res: FollowsListResponse =
         await this.rootStore.api.app.bsky.graph.follow.list({
-          user: this.rootStore.me.did,
-          before,
+          repo: this.rootStore.me.did,
+          rkeyStart,
         })
       records = records.concat(res.records)
-      before = res.cursor
-    } while (typeof before !== 'undefined')
+      rkeyStart = res.cursor
+    } while (typeof rkeyStart !== 'undefined')
     runInAction(() => {
       this.followDidToRecordMap = {}
       for (const record of records) {
-        this.followDidToRecordMap[record.value.subject.did] = record.uri
+        this.followDidToRecordMap[record.value.subject] = record.uri
       }
       this.lastSync = Date.now()
       this.myDid = this.rootStore.me.did

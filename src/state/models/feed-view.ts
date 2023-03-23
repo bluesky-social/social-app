@@ -1,16 +1,13 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AppBskyFeedGetTimeline as GetTimeline,
-  AppBskyFeedFeedViewPost,
+  AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
 import sampleSize from 'lodash.samplesize'
-type FeedViewPost = AppBskyFeedFeedViewPost.Main
-type ReasonRepost = AppBskyFeedFeedViewPost.ReasonRepost
-type PostView = AppBskyFeedPost.View
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from 'lib/api/index'
@@ -22,11 +19,13 @@ import {
   getMultipleAuthorsPosts,
   mergePosts,
 } from 'lib/api/build-suggested-posts'
-
 import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
 
-const PAGE_SIZE = 30
+type FeedViewPost = AppBskyFeedDefs.FeedViewPost
+type ReasonRepost = AppBskyFeedDefs.ReasonRepost
+type PostView = AppBskyFeedDefs.PostView
 
+const PAGE_SIZE = 30
 let _idCounter = 0
 
 export class FeedItemModel {
@@ -82,7 +81,7 @@ export class FeedItemModel {
   copyMetrics(v: FeedViewPost) {
     this.post.replyCount = v.post.replyCount
     this.post.repostCount = v.post.repostCount
-    this.post.upvoteCount = v.post.upvoteCount
+    this.post.likeCount = v.post.likeCount
     this.post.viewer = v.post.viewer
   }
 
@@ -92,58 +91,36 @@ export class FeedItemModel {
     }
   }
 
-  async toggleUpvote() {
-    const wasUpvoted = !!this.post.viewer.upvote
-    const wasDownvoted = !!this.post.viewer.downvote
-    const res = await this.rootStore.api.app.bsky.feed.setVote({
-      subject: {
-        uri: this.post.uri,
-        cid: this.post.cid,
-      },
-      direction: wasUpvoted ? 'none' : 'up',
-    })
-    runInAction(() => {
-      if (wasDownvoted) {
-        this.post.downvoteCount--
-      }
-      if (wasUpvoted) {
-        this.post.upvoteCount--
-      } else {
-        this.post.upvoteCount++
-      }
-      this.post.viewer.upvote = res.data.upvote
-      this.post.viewer.downvote = res.data.downvote
-    })
-  }
-
-  async toggleDownvote() {
-    const wasUpvoted = !!this.post.viewer.upvote
-    const wasDownvoted = !!this.post.viewer.downvote
-    const res = await this.rootStore.api.app.bsky.feed.setVote({
-      subject: {
-        uri: this.post.uri,
-        cid: this.post.cid,
-      },
-      direction: wasDownvoted ? 'none' : 'down',
-    })
-    runInAction(() => {
-      if (wasUpvoted) {
-        this.post.upvoteCount--
-      }
-      if (wasDownvoted) {
-        this.post.downvoteCount--
-      } else {
-        this.post.downvoteCount++
-      }
-      this.post.viewer.upvote = res.data.upvote
-      this.post.viewer.downvote = res.data.downvote
-    })
+  async toggleLike() {
+    if (this.post.viewer?.like) {
+      await apilib.unlike(this.rootStore, this.post.viewer.like)
+      runInAction(() => {
+        this.post.likeCount = this.post.likeCount || 0
+        this.post.viewer = this.post.viewer || {}
+        this.post.likeCount--
+        this.post.viewer.like = undefined
+      })
+    } else {
+      const res = await apilib.like(
+        this.rootStore,
+        this.post.uri,
+        this.post.cid,
+      )
+      runInAction(() => {
+        this.post.likeCount = this.post.likeCount || 0
+        this.post.viewer = this.post.viewer || {}
+        this.post.likeCount++
+        this.post.viewer.like = res.uri
+      })
+    }
   }
 
   async toggleRepost() {
-    if (this.post.viewer.repost) {
+    if (this.post.viewer?.repost) {
       await apilib.unrepost(this.rootStore, this.post.viewer.repost)
       runInAction(() => {
+        this.post.repostCount = this.post.repostCount || 0
+        this.post.viewer = this.post.viewer || {}
         this.post.repostCount--
         this.post.viewer.repost = undefined
       })
@@ -154,6 +131,8 @@ export class FeedItemModel {
         this.post.cid,
       )
       runInAction(() => {
+        this.post.repostCount = this.post.repostCount || 0
+        this.post.viewer = this.post.viewer || {}
         this.post.repostCount++
         this.post.viewer.repost = res.uri
       })
@@ -291,8 +270,8 @@ export class FeedModel {
         const params = this.params as GetAuthorFeed.QueryParams
         const item = slice.rootItem
         const isRepost =
-          item?.reasonRepost?.by?.handle === params.author ||
-          item?.reasonRepost?.by?.did === params.author
+          item?.reasonRepost?.by?.handle === params.actor ||
+          item?.reasonRepost?.by?.did === params.actor
         return (
           !item.reply || // not a reply
           isRepost || // but allow if it's a repost
@@ -406,7 +385,7 @@ export class FeedModel {
       this._xLoading()
       try {
         const res = await this._getFeed({
-          before: this.loadMoreCursor,
+          cursor: this.loadMoreCursor,
           limit: PAGE_SIZE,
         })
         await this._appendAll(res)
@@ -439,7 +418,7 @@ export class FeedModel {
       try {
         do {
           const res: GetTimeline.Response = await this._getFeed({
-            before: cursor,
+            cursor,
             limit: Math.min(numToFetch, 100),
           })
           if (res.data.feed.length === 0) {
@@ -596,7 +575,7 @@ export class FeedModel {
       const responses = await getMultipleAuthorsPosts(
         this.rootStore,
         sampleSize(SUGGESTED_FOLLOWS(String(this.rootStore.agent.service)), 20),
-        params.before,
+        params.cursor,
         20,
       )
       const combinedCursor = getCombinedCursors(responses)

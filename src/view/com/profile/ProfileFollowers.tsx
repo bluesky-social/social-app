@@ -19,7 +19,7 @@ export const ProfileFollowers = observer(function ProfileFollowers({
   const pal = usePalette('default')
   const store = useStores()
   const view = React.useMemo(
-    () => new UserFollowersViewModel(store, {user: name}),
+    () => new UserFollowersViewModel(store, {actor: name}),
     [store, name],
   )
 
@@ -64,7 +64,6 @@ export const ProfileFollowers = observer(function ProfileFollowers({
     <ProfileCardWithFollowBtn
       key={item.did}
       did={item.did}
-      declarationCid={item.declaration.cid}
       handle={item.handle}
       displayName={item.displayName}
       avatar={item.avatar}

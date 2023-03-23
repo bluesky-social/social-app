@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AppBskyActorProfile as Profile} from '@atproto/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import shuffle from 'lodash.shuffle'
 import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
@@ -8,7 +8,9 @@ import {SUGGESTED_FOLLOWS} from 'lib/constants'
 
 const PAGE_SIZE = 30
 
-export type SuggestedActor = Profile.ViewBasic | Profile.View
+export type SuggestedActor =
+  | AppBskyActorDefs.ProfileViewBasic
+  | AppBskyActorDefs.ProfileView
 
 export class SuggestedActorsModel {
   // state
@@ -118,7 +120,7 @@ export class SuggestedActorsModel {
       ]
 
       // fetch the profiles in chunks of 25 (the limit allowed by `getProfiles`)
-      let profiles: Profile.View[] = []
+      let profiles: AppBskyActorDefs.ProfileView[] = []
       do {
         const res = await this.rootStore.api.app.bsky.actor.getProfiles({
           actors: actors.splice(0, 25),

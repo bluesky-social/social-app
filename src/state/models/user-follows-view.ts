@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 import {
   AppBskyGraphGetFollows as GetFollows,
-  AppBskyActorRef as ActorRef,
+  AppBskyActorDefs as ActorDefs,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {cleanError} from 'lib/strings/errors'
@@ -9,7 +9,7 @@ import {bundleAsync} from 'lib/async/bundle'
 
 const PAGE_SIZE = 30
 
-export type FollowItem = ActorRef.WithInfo
+export type FollowItem = ActorDefs.WithInfo
 
 export class UserFollowsViewModel {
   // state
@@ -22,10 +22,9 @@ export class UserFollowsViewModel {
   loadMoreCursor?: string
 
   // data
-  subject: ActorRef.WithInfo = {
+  subject: ActorDefs.WithInfo = {
     did: '',
     handle: '',
-    declaration: {cid: '', actorType: ''},
   }
   follows: FollowItem[] = []
 

@@ -13,7 +13,6 @@ import AtpAgent from '@atproto/api'
 export interface TestUser {
   email: string
   did: string
-  declarationCid: string
   handle: string
   password: string
   agent: AtpAgent
@@ -124,7 +123,6 @@ async function genMockData(pdsUrl: string): Promise<TestUsers> {
     {
       email: 'alice@test.com',
       did: '',
-      declarationCid: '',
       handle: 'alice.test',
       password: 'hunter2',
       agent: agents.alice,
@@ -132,7 +130,6 @@ async function genMockData(pdsUrl: string): Promise<TestUsers> {
     {
       email: 'bob@test.com',
       did: '',
-      declarationCid: '',
       handle: 'bob.test',
       password: 'hunter2',
       agent: agents.bob,
@@ -140,7 +137,6 @@ async function genMockData(pdsUrl: string): Promise<TestUsers> {
     {
       email: 'carla@test.com',
       did: '',
-      declarationCid: '',
       handle: 'carla.test',
       password: 'hunter2',
       agent: agents.carla,
@@ -152,17 +148,13 @@ async function genMockData(pdsUrl: string): Promise<TestUsers> {
 
   let _i = 1
   for (const user of users) {
-    const res = await agents.loggedout.api.com.atproto.account.create({
+    const res = await agents.loggedout.api.com.atproto.server.createAccount({
       email: user.email,
       handle: user.handle,
       password: user.password,
     })
     user.agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
-    const {data: profile} = await user.agent.api.app.bsky.actor.getProfile({
-      actor: user.handle,
-    })
     user.did = res.data.did
-    user.declarationCid = profile.declaration.cid
     await user.agent.api.app.bsky.actor.profile.create(
       {did: user.did},
       {
@@ -177,10 +169,7 @@ async function genMockData(pdsUrl: string): Promise<TestUsers> {
     await author.agent.api.app.bsky.graph.follow.create(
       {did: author.did},
       {
-        subject: {
-          did: subject.did,
-          declarationCid: subject.declarationCid,
-        },
+        subject: subject.did,
         createdAt: date.next().value || '',
       },
     )

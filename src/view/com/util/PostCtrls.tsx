@@ -45,12 +45,12 @@ interface PostCtrlsOpts {
   style?: StyleProp<ViewStyle>
   replyCount?: number
   repostCount?: number
-  upvoteCount?: number
+  likeCount?: number
   isReposted: boolean
-  isUpvoted: boolean
+  isLiked: boolean
   onPressReply: () => void
   onPressToggleRepost: () => Promise<void>
-  onPressToggleUpvote: () => Promise<void>
+  onPressToggleLike: () => Promise<void>
   onCopyPostText: () => void
   onOpenTranslate: () => void
   onDeletePost: () => void
@@ -157,26 +157,26 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     })
   }
 
-  const onPressToggleUpvoteWrapper = () => {
-    if (!opts.isUpvoted) {
+  const onPressToggleLikeWrapper = () => {
+    if (!opts.isLiked) {
       ReactNativeHapticFeedback.trigger('impactMedium')
       setLikeMod(1)
       opts
-        .onPressToggleUpvote()
+        .onPressToggleLike()
         .catch(_e => undefined)
         .then(() => setLikeMod(0))
       // DISABLED see #135
       // likeRef.current?.trigger(
       //   {start: ctrlAnimStart, style: ctrlAnimStyle},
       //   async () => {
-      //     await opts.onPressToggleUpvote().catch(_e => undefined)
+      //     await opts.onPressToggleLike().catch(_e => undefined)
       //     setLikeMod(0)
       //   },
       // )
     } else {
       setLikeMod(-1)
       opts
-        .onPressToggleUpvote()
+        .onPressToggleLike()
         .catch(_e => undefined)
         .then(() => setLikeMod(0))
     }
@@ -244,10 +244,10 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         <TouchableOpacity
           style={styles.ctrl}
           hitSlop={HITSLOP}
-          onPress={onPressToggleUpvoteWrapper}>
-          {opts.isUpvoted || likeMod > 0 ? (
+          onPress={onPressToggleLikeWrapper}>
+          {opts.isLiked || likeMod > 0 ? (
             <HeartIconSolid
-              style={styles.ctrlIconUpvoted as StyleProp<ViewStyle>}
+              style={styles.ctrlIconLiked as StyleProp<ViewStyle>}
               size={opts.big ? 22 : 16}
             />
           ) : (
@@ -259,9 +259,9 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           )}
           {
             undefined /*DISABLED see #135 <TriggerableAnimated ref={likeRef}>
-            {opts.isUpvoted || likeMod > 0 ? (
+            {opts.isLiked || likeMod > 0 ? (
               <HeartIconSolid
-                style={styles.ctrlIconUpvoted as ViewStyle}
+                style={styles.ctrlIconLiked as ViewStyle}
                 size={opts.big ? 22 : 16}
               />
             ) : (
@@ -276,14 +276,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             )}
             </TriggerableAnimated>*/
           }
-          {typeof opts.upvoteCount !== 'undefined' ? (
+          {typeof opts.likeCount !== 'undefined' ? (
             <Text
               style={
-                opts.isUpvoted || likeMod > 0
+                opts.isLiked || likeMod > 0
                   ? [s.bold, s.red3, s.f15, s.ml5]
                   : [defaultCtrlColor, s.f15, s.ml5]
               }>
-              {opts.upvoteCount + likeMod}
+              {opts.likeCount + likeMod}
             </Text>
           ) : undefined}
         </TouchableOpacity>
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
   ctrlIconReposted: {
     color: colors.green3,
   },
-  ctrlIconUpvoted: {
+  ctrlIconLiked: {
     color: colors.red3,
   },
   mt1: {

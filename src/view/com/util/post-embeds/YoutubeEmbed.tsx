@@ -11,7 +11,7 @@ import YoutubePlayer from 'react-native-youtube-iframe'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ExternalLinkEmbed from './ExternalLinkEmbed'
-import {PresentedExternal} from '@atproto/api'
+import {AppBskyEmbedExternal} from '@atproto/api'
 import {useStores} from 'state/index'
 
 const YoutubeEmbed = ({
@@ -19,7 +19,7 @@ const YoutubeEmbed = ({
   videoId,
 }: {
   videoId: string
-  link: PresentedExternal
+  link: AppBskyEmbedExternal.ViewExternal
 }) => {
   const store = useStores()
   const [displayVideoPlayer, setDisplayVideoPlayer] = useState(false)

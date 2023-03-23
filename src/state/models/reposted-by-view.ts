@@ -2,7 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
 import {
   AppBskyFeedGetRepostedBy as GetRepostedBy,
-  AppBskyActorRef as ActorRef,
+  AppBskyActorDefs,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {bundleAsync} from 'lib/async/bundle'
@@ -11,7 +11,7 @@ import * as apilib from 'lib/api/index'
 
 const PAGE_SIZE = 30
 
-export type RepostedByItem = ActorRef.WithInfo
+export type RepostedByItem = AppBskyActorDefs.WithInfo
 
 export class RepostedByViewModel {
   // state

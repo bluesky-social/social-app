@@ -2,7 +2,7 @@
  * The root store is the base of all modeled state.
  */
 
-import {makeAutoObservable, runInAction} from 'mobx'
+import {makeAutoObservable} from 'mobx'
 import {AtpAgent} from '@atproto/api'
 import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
@@ -238,7 +238,7 @@ export class RootStoreModel {
   async onBgFetch(taskId: string) {
     this.log.debug(`Background fetch fired for task ${taskId}`)
     if (this.session.hasSession) {
-      const res = await this.api.app.bsky.notification.getCount()
+      const res = await this.api.app.bsky.notification.getUnreadCount()
       const hasNewNotifs = this.me.notifications.unreadCount !== res.data.count
       this.emitUnreadNotifications(res.data.count)
       this.log.debug(

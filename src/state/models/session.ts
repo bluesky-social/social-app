@@ -3,7 +3,7 @@ import {
   AtpAgent,
   AtpSessionEvent,
   AtpSessionData,
-  ComAtprotoServerGetAccountsConfig as GetAccountsConfig,
+  ComAtprotoServerDescribeServer as DescribeServer,
 } from '@atproto/api'
 import normalizeUrl from 'normalize-url'
 import {isObj, hasProp} from 'lib/type-guards'
@@ -11,7 +11,7 @@ import {networkRetry} from 'lib/async/retry'
 import {z} from 'zod'
 import {RootStoreModel} from './root-store'
 
-export type ServiceDescription = GetAccountsConfig.OutputSchema
+export type ServiceDescription = DescribeServer.OutputSchema
 
 export const activeSession = z.object({
   service: z.string(),
@@ -256,7 +256,7 @@ export class SessionModel {
    */
   async describeService(service: string): Promise<ServiceDescription> {
     const agent = new AtpAgent({service})
-    const res = await agent.api.com.atproto.server.getAccountsConfig({})
+    const res = await agent.api.com.atproto.server.describeServer({})
     return res.data
   }
 

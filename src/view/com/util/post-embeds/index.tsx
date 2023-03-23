@@ -25,9 +25,9 @@ import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import QuoteEmbed from './QuoteEmbed'
 
 type Embed =
-  | AppBskyEmbedRecord.Presented
-  | AppBskyEmbedImages.Presented
-  | AppBskyEmbedExternal.Presented
+  | AppBskyEmbedRecord.View
+  | AppBskyEmbedImages.View
+  | AppBskyEmbedExternal.View
   | {$type: string; [k: string]: unknown}
 
 export function PostEmbeds({
@@ -39,9 +39,9 @@ export function PostEmbeds({
 }) {
   const pal = usePalette('default')
   const store = useStores()
-  if (AppBskyEmbedRecord.isPresented(embed)) {
+  if (AppBskyEmbedRecord.isView(embed)) {
     if (
-      AppBskyEmbedRecord.isPresentedRecord(embed.record) &&
+      AppBskyEmbedRecord.isViewRecord(embed.record) &&
       AppBskyFeedPost.isRecord(embed.record.record) &&
       AppBskyFeedPost.validateRecord(embed.record.record).success
     ) {
@@ -58,9 +58,9 @@ export function PostEmbeds({
       )
     }
   }
-  if (AppBskyEmbedImages.isPresented(embed)) {
-    if (embed.images.length > 0) {
-      const uris = embed.images.map(img => img.fullsize)
+  if (AppBskyEmbedImages.isView(embed)) {
+    if (embed.value.length > 0) {
+      const uris = embed.value.map(img => img.fullsize)
       const openLightbox = (index: number) => {
         store.shell.openLightbox(new ImagesLightbox(uris, index))
       }
@@ -78,36 +78,36 @@ export function PostEmbeds({
         })
       }
 
-      if (embed.images.length === 4) {
+      if (embed.value.length === 4) {
         return (
           <View style={[styles.imagesContainer, style]}>
             <ImageLayoutGrid
               type="four"
-              uris={embed.images.map(img => img.thumb)}
+              uris={embed.value.map(img => img.thumb)}
               onPress={openLightbox}
               onLongPress={onLongPress}
               onPressIn={onPressIn}
             />
           </View>
         )
-      } else if (embed.images.length === 3) {
+      } else if (embed.value.length === 3) {
         return (
           <View style={[styles.imagesContainer, style]}>
             <ImageLayoutGrid
               type="three"
-              uris={embed.images.map(img => img.thumb)}
+              uris={embed.value.map(img => img.thumb)}
               onPress={openLightbox}
               onLongPress={onLongPress}
               onPressIn={onPressIn}
             />
           </View>
         )
-      } else if (embed.images.length === 2) {
+      } else if (embed.value.length === 2) {
         return (
           <View style={[styles.imagesContainer, style]}>
             <ImageLayoutGrid
               type="two"
-              uris={embed.images.map(img => img.thumb)}
+              uris={embed.value.map(img => img.thumb)}
               onPress={openLightbox}
               onLongPress={onLongPress}
               onPressIn={onPressIn}
@@ -118,7 +118,7 @@ export function PostEmbeds({
         return (
           <View style={[styles.imagesContainer, style]}>
             <AutoSizedImage
-              uri={embed.images[0].thumb}
+              uri={embed.value[0].thumb}
               onPress={() => openLightbox(0)}
               onLongPress={() => onLongPress(0)}
               onPressIn={() => onPressIn(0)}
@@ -129,8 +129,8 @@ export function PostEmbeds({
       }
     }
   }
-  if (AppBskyEmbedExternal.isPresented(embed)) {
-    const link = embed.external
+  if (AppBskyEmbedExternal.isView(embed) && embed.value) {
+    const link = embed.value
     const youtubeVideoId = getYoutubeVideoId(link.uri)
 
     if (youtubeVideoId) {

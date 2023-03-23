@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {ComAtprotoReportReasonType} from '@atproto/api'
+import {ComAtprotoModerationDefs} from '@atproto/api'
 import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from 'state/index'
 import {s, colors, gradients} from 'lib/styles'
@@ -39,12 +39,12 @@ export function Component({did}: {did: string}) {
     setIsProcessing(true)
     try {
       // NOTE: we should update the lexicon of reasontype to include more options -prf
-      let reasonType = ComAtprotoReportReasonType.OTHER
+      let reasonType = ComAtprotoModerationDefs.REASONOTHER
       if (issue === 'spam') {
-        reasonType = ComAtprotoReportReasonType.SPAM
+        reasonType = ComAtprotoModerationDefs.REASONSPAM
       }
       const reason = ITEMS.find(item => item.key === issue)?.label || ''
-      await store.api.com.atproto.report.create({
+      await store.api.com.atproto.moderation.createReport({
         reasonType,
         reason,
         subject: {

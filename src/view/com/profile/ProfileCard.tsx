@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {AppBskyActorProfile} from '@atproto/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
@@ -28,7 +28,7 @@ export function ProfileCard({
   isFollowedBy?: boolean
   noBg?: boolean
   noBorder?: boolean
-  followers?: AppBskyActorProfile.View[] | undefined
+  followers?: AppBskyActorDefs.ProfileView[] | undefined
   renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
@@ -106,7 +106,6 @@ export function ProfileCard({
 export const ProfileCardWithFollowBtn = observer(
   ({
     did,
-    declarationCid,
     handle,
     displayName,
     avatar,
@@ -117,7 +116,6 @@ export const ProfileCardWithFollowBtn = observer(
     followers,
   }: {
     did: string
-    declarationCid: string
     handle: string
     displayName?: string
     avatar?: string
@@ -125,7 +123,7 @@ export const ProfileCardWithFollowBtn = observer(
     isFollowedBy?: boolean
     noBg?: boolean
     noBorder?: boolean
-    followers?: AppBskyActorProfile.View[] | undefined
+    followers?: AppBskyActorDefs.ProfileView[] | undefined
   }) => {
     const store = useStores()
     const isMe = store.me.handle === handle
@@ -140,11 +138,7 @@ export const ProfileCardWithFollowBtn = observer(
         noBg={noBg}
         noBorder={noBorder}
         followers={followers}
-        renderButton={
-          isMe
-            ? undefined
-            : () => <FollowButton did={did} declarationCid={declarationCid} />
-        }
+        renderButton={isMe ? undefined : () => <FollowButton did={did} />}
       />
     )
   },
