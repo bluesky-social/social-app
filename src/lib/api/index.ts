@@ -3,14 +3,13 @@ import {
   AppBskyEmbedExternal,
   ComAtprotoRepoUploadBlob,
   AppBskyEmbedRecord,
+  RichText,
 } from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from 'state/models/root-store'
-import {extractEntities} from 'lib/strings/rich-text-detection'
 import {isNetworkError} from 'lib/strings/errors'
 import {LinkMeta} from '../link-meta/link-meta'
 import {Image} from '../media/manip'
-import {RichText} from '../strings/rich-text'
 import {isWeb} from 'platform/detection'
 
 export interface ExternalEmbedDraft {
@@ -72,20 +71,15 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     | AppBskyEmbedRecord.Main
     | undefined
   let reply
-  const text = new RichText(opts.rawText, undefined, {
-    cleanNewlines: true,
-  }).text.trim()
+  const rt = new RichText(
+    {text: opts.rawText.trim()},
+    {
+      cleanNewlines: true,
+    },
+  )
 
   opts.onStateChange?.('Processing...')
-  const entities = extractEntities(text, opts.knownHandles)
-  if (entities) {
-    for (const ent of entities) {
-      if (ent.type === 'mention') {
-        const prof = await store.profiles.getProfile(ent.value)
-        ent.value = prof.data.did
-      }
-    }
-  }
+  await rt.detectFacets(store.agent)
 
   if (opts.quote) {
     embed = {
@@ -176,10 +170,10 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
   try {
     opts.onStateChange?.('Posting...')
     return await store.agent.post({
-      text,
+      text: rt.text,
+      facets: rt.facets,
       reply,
       embed,
-      entities,
     })
   } catch (e: any) {
     console.error(`Failed to create post: ${e.toString()}`)

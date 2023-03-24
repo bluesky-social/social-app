@@ -9,13 +9,13 @@ import PasteInput, {
   PastedFile,
   PasteInputRef,
 } from '@mattermost/react-native-paste-input'
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import isEqual from 'lodash.isequal'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
 import {Autocomplete} from './mobile/Autocomplete'
 import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
 import {cleanError} from 'lib/strings/errors'
-import {detectLinkables, extractEntities} from 'lib/strings/rich-text-detection'
 import {getImageDim} from 'lib/media/manip'
 import {cropAndCompressFlow} from 'lib/media/picker'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
@@ -66,6 +66,7 @@ export const TextInput = React.forwardRef(
     const store = useStores()
     const textInput = React.useRef<PasteInputRef>(null)
     const textInputSelection = React.useRef<Selection>({start: 0, end: 0})
+    const [rt, setRt] = React.useState<RichText>(new RichText({text}))
     const theme = useTheme()
 
     React.useImperativeHandle(ref, () => ({
@@ -94,6 +95,10 @@ export const TextInput = React.forwardRef(
       (newText: string) => {
         onTextChanged(newText)
 
+        const newRt = new RichText({text: newText})
+        newRt.detectFacetsWithoutResolution()
+        setRt(newRt)
+
         const prefix = getMentionAt(
           newText,
           textInputSelection.current?.start || 0,
@@ -105,10 +110,12 @@ export const TextInput = React.forwardRef(
           autocompleteView.setActive(false)
         }
 
-        const ents = extractEntities(newText)?.filter(
-          ent => ent.type === 'link',
+        const links = newRt.facets?.filter(ent =>
+          AppBskyRichtextFacet.isLink(ent.value),
         )
-        const set = new Set(ents ? ents.map(e => e.value) : [])
+        const set = new Set(
+          links ? links.map(link => link.value.uri as string) : [],
+        )
         if (!isEqual(set, suggestedLinks)) {
           onSuggestedLinksChanged(set)
         }
@@ -168,22 +175,22 @@ export const TextInput = React.forwardRef(
 
     const textDecorated = React.useMemo(() => {
       let i = 0
-      return detectLinkables(text).map(v => {
-        if (typeof v === 'string') {
+      return Array.from(rt.segments()).map(segment => {
+        if (!segment.facet) {
           return (
             <Text key={i++} style={[pal.text, styles.textInputFormatting]}>
-              {v}
+              {segment.text}
             </Text>
           )
         } else {
           return (
             <Text key={i++} style={[pal.link, styles.textInputFormatting]}>
-              {v.link}
+              {segment.text}
             </Text>
           )
         }
       })
-    }, [text, pal.link, pal.text])
+    }, [rt, pal.link, pal.text])
 
     return (
       <View style={styles.container}>

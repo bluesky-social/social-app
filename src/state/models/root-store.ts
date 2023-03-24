@@ -43,7 +43,7 @@ export class RootStoreModel {
   constructor(agent: BskyAgent) {
     this.agent = agent
     makeAutoObservable(this, {
-      api: false,
+      agent: false,
       serialize: false,
       hydrate: false,
     })

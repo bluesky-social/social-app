@@ -3,12 +3,11 @@ import {PickedMedia} from 'lib/media/picker'
 import {
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorUpdateProfile,
+  RichText,
 } from '@atproto/api'
-import {extractEntities} from 'lib/strings/rich-text-detection'
 import {RootStoreModel} from './root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
-import {RichText} from 'lib/strings/rich-text'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
 
@@ -193,6 +192,7 @@ export class ProfileViewModel {
       const res = await this.rootStore.agent.getProfile(this.params)
       this.rootStore.profiles.overwrite(this.params.actor, res) // cache invalidation
       this._replaceAll(res)
+      await this._createRichText()
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e)
@@ -214,10 +214,13 @@ export class ProfileViewModel {
       Object.assign(this.viewer, res.data.viewer)
       this.rootStore.me.follows.hydrate(this.did, res.data.viewer.following)
     }
+  }
+
+  private async _createRichText() {
     this.descriptionRichText = new RichText(
-      this.description || '',
-      extractEntities(this.description || ''),
+      {text: this.description || ''},
       {cleanNewlines: true},
     )
+    await this.descriptionRichText.detectFacets(this.rootStore.agent)
   }
 }

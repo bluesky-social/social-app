@@ -3,12 +3,12 @@ import {
   AppBskyFeedGetPostThread as GetPostThread,
   AppBskyFeedPost as FeedPost,
   AppBskyFeedDefs,
+  RichText,
 } from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
-import {RichText} from 'lib/strings/rich-text'
 
 function* reactKeyGenerator(): Generator<string> {
   let counter = 0
@@ -52,11 +52,7 @@ export class PostThreadViewPostModel {
       const valid = FeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
-        this.richText = new RichText(
-          this.postRecord.text,
-          this.postRecord.entities,
-          {cleanNewlines: true},
-        )
+        this.richText = new RichText(this.postRecord, {cleanNewlines: true})
       } else {
         rootStore.log.warn(
           'Received an invalid app.bsky.feed.post record',
