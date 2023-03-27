@@ -1,4 +1,8 @@
 .env
+test-coverage.out
 
 # Don't check in the binary.
 /bskyweb
+
+# Don't ignore this file
+!.gitignore
