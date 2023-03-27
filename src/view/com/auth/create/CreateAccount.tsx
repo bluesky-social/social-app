@@ -75,16 +75,14 @@ export const CreateAccount = observer(
             {model.step === 3 && <Step3 model={model} />}
           </View>
           <View style={[s.flexRow, s.pl20, s.pr20]}>
-            <TouchableOpacity onPress={onPressBackInner}>
+            <TouchableOpacity onPress={onPressBackInner} testID="backBtn">
               <Text type="xl" style={pal.link}>
                 Back
               </Text>
             </TouchableOpacity>
             <View style={s.flex1} />
             {model.canNext ? (
-              <TouchableOpacity
-                testID="createAccountButton"
-                onPress={onPressNext}>
+              <TouchableOpacity testID="nextBtn" onPress={onPressNext}>
                 {model.isProcessing ? (
                   <ActivityIndicator />
                 ) : (
@@ -95,7 +93,7 @@ export const CreateAccount = observer(
               </TouchableOpacity>
             ) : model.didServiceDescriptionFetchFail ? (
               <TouchableOpacity
-                testID="registerRetryButton"
+                testID="retryConnectBtn"
                 onPress={onPressRetryConnect}>
                 <Text type="xl-bold" style={[pal.link, s.pr5]}>
                   Retry

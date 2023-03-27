@@ -66,6 +66,7 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
   const initialPage = store.me.follows.isEmpty ? 1 : 0
   return (
     <Pager
+      testID="homeScreen"
       onPageSelected={onPageSelected}
       renderTabBar={renderTabBar}
       tabBarPosition="top"
@@ -165,7 +166,6 @@ const FeedPage = observer(
     return (
       <View style={s.h100pct}>
         <Feed
-          testID="homeFeed"
           key="default"
           feed={feed}
           scrollElRef={scrollElRef}
