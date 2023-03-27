@@ -1,5 +1,7 @@
 /* eslint-env detox/detox */
 
+const {openApp} = require('../util')
+
 describe('Happy paths', () => {
   async function grantAccessToUserWithValidCredentials(
     username,
@@ -26,9 +28,7 @@ describe('Happy paths', () => {
   }
 
   beforeEach(async () => {
-    await device.uninstallApp()
-    await device.installApp()
-    await device.launchApp({permissions: {notifications: 'YES'}})
+    await openApp({permissions: {notifications: 'YES'}})
   })
 
   it('As Alice, I can login', async () => {
