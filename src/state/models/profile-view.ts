@@ -2,7 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {PickedMedia} from 'lib/media/picker'
 import {
   AppBskyActorGetProfile as GetProfile,
-  AppBskyActorUpdateProfile,
+  AppBskyActorProfile,
   RichText,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
@@ -117,37 +117,42 @@ export class ProfileViewModel {
   }
 
   async updateProfile(
-    updates: AppBskyActorUpdateProfile.InputSchema,
+    updates: AppBskyActorProfile.Record,
     newUserAvatar: PickedMedia | undefined | null,
     newUserBanner: PickedMedia | undefined | null,
   ) {
-    if (newUserAvatar) {
-      const res = await apilib.uploadBlob(
-        this.rootStore,
-        newUserAvatar.path,
-        newUserAvatar.mime,
-      )
-      updates.avatar = {
-        cid: res.data.cid,
-        mimeType: newUserAvatar.mime,
+    await this.rootStore.agent.upsertProfile(async existing => {
+      existing = existing || {}
+      existing.displayName = updates.displayName
+      existing.description = updates.description
+      if (newUserAvatar) {
+        const res = await apilib.uploadBlob(
+          this.rootStore,
+          newUserAvatar.path,
+          newUserAvatar.mime,
+        )
+        updates.avatar = {
+          cid: res.data.cid,
+          mimeType: newUserAvatar.mime,
+        }
+      } else if (newUserAvatar === null) {
+        updates.avatar = null
       }
-    } else if (newUserAvatar === null) {
-      updates.avatar = null
-    }
-    if (newUserBanner) {
-      const res = await apilib.uploadBlob(
-        this.rootStore,
-        newUserBanner.path,
-        newUserBanner.mime,
-      )
-      updates.banner = {
-        cid: res.data.cid,
-        mimeType: newUserBanner.mime,
+      if (newUserBanner) {
+        const res = await apilib.uploadBlob(
+          this.rootStore,
+          newUserBanner.path,
+          newUserBanner.mime,
+        )
+        updates.banner = {
+          cid: res.data.cid,
+          mimeType: newUserBanner.mime,
+        }
+      } else if (newUserBanner === null) {
+        updates.banner = null
       }
-    } else if (newUserBanner === null) {
-      updates.banner = null
-    }
-    await this.rootStore.api.app.bsky.actor.updateProfile(updates)
+      return existing
+    })
     await this.rootStore.me.load()
     await this.refresh()
   }
