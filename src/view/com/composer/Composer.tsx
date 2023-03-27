@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
@@ -13,6 +13,7 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {RichText} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
 import {ExternalEmbed} from './ExternalEmbed'
@@ -34,7 +35,7 @@ import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {isDesktopWeb} from 'platform/detection'
 
-const MAX_TEXT_LENGTH = 256
+const MAX_GRAPHEME_LENGTH = 300
 
 export const ComposePost = observer(function ComposePost({
   replyTo,
@@ -50,17 +51,23 @@ export const ComposePost = observer(function ComposePost({
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
-  const textInput = useRef<TextInputRef>(null)
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [processingState, setProcessingState] = useState('')
-  const [error, setError] = useState('')
-  const [text, setText] = useState('')
-  const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
+  const textInput = React.useRef<TextInputRef>(null)
+  const [isProcessing, setIsProcessing] = React.useState(false)
+  const [processingState, setProcessingState] = React.useState('')
+  const [error, setError] = React.useState('')
+  const [richtext, setRichText] = React.useState(new RichText({text: ''}))
+  const graphemeLength = React.useMemo(
+    () => richtext.graphemeLength,
+    [richtext],
+  )
+  const [quote, setQuote] = React.useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
-  const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
-  const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
+  const [suggestedLinks, setSuggestedLinks] = React.useState<Set<string>>(
+    new Set(),
+  )
+  const [selectedPhotos, setSelectedPhotos] = React.useState<string[]>([])
 
   const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
     () => new UserAutocompleteViewModel(store),
@@ -78,11 +85,11 @@ export const ComposePost = observer(function ComposePost({
   }, [textInput, onClose])
 
   // initial setup
-  useEffect(() => {
+  React.useEffect(() => {
     autocompleteView.setup()
   }, [autocompleteView])
 
-  useEffect(() => {
+  React.useEffect(() => {
     // HACK
     // wait a moment before focusing the input to resolve some layout bugs with the keyboard-avoiding-view
     // -prf
@@ -132,18 +139,18 @@ export const ComposePost = observer(function ComposePost({
     if (isProcessing) {
       return
     }
-    if (text.length > MAX_TEXT_LENGTH) {
+    if (richtext.graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
     }
     setError('')
-    if (text.trim().length === 0 && selectedPhotos.length === 0) {
+    if (richtext.text.trim().length === 0 && selectedPhotos.length === 0) {
       setError('Did you want to say anything?')
       return false
     }
     setIsProcessing(true)
     try {
       await apilib.post(store, {
-        rawText: text,
+        rawText: richtext.text,
         replyTo: replyTo?.uri,
         images: selectedPhotos,
         quote: quote,
@@ -172,7 +179,7 @@ export const ComposePost = observer(function ComposePost({
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
   }, [
     isProcessing,
-    text,
+    richtext,
     setError,
     setIsProcessing,
     replyTo,
@@ -187,7 +194,7 @@ export const ComposePost = observer(function ComposePost({
     track,
   ])
 
-  const canPost = text.length <= MAX_TEXT_LENGTH
+  const canPost = graphemeLength <= MAX_GRAPHEME_LENGTH
 
   const selectTextInputPlaceholder = replyTo
     ? 'Write your reply'
@@ -271,11 +278,11 @@ export const ComposePost = observer(function ComposePost({
               <UserAvatar avatar={store.me.avatar} size={50} />
               <TextInput
                 ref={textInput}
-                text={text}
+                richtext={richtext}
                 placeholder={selectTextInputPlaceholder}
                 suggestedLinks={suggestedLinks}
                 autocompleteView={autocompleteView}
-                onTextChanged={setText}
+                setRichText={setRichText}
                 onPhotoPasted={onPhotoPasted}
                 onSuggestedLinksChanged={setSuggestedLinks}
                 onError={setError}
@@ -328,7 +335,7 @@ export const ComposePost = observer(function ComposePost({
               onSelectPhotos={setSelectedPhotos}
             />
             <View style={s.flex1} />
-            <CharProgress count={text.length} />
+            <CharProgress count={graphemeLength} />
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>

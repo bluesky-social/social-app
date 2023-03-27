@@ -33,11 +33,11 @@ export interface TextInputRef {
 }
 
 interface TextInputProps {
-  text: string
+  richtext: RichText
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteViewModel
-  onTextChanged: (v: string) => void
+  setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
@@ -51,11 +51,11 @@ interface Selection {
 export const TextInput = React.forwardRef(
   (
     {
-      text,
+      richtext,
       placeholder,
       suggestedLinks,
       autocompleteView,
-      onTextChanged,
+      setRichText,
       onPhotoPasted,
       onSuggestedLinksChanged,
       onError,
@@ -66,7 +66,6 @@ export const TextInput = React.forwardRef(
     const store = useStores()
     const textInput = React.useRef<PasteInputRef>(null)
     const textInputSelection = React.useRef<Selection>({start: 0, end: 0})
-    const [rt, setRt] = React.useState<RichText>(new RichText({text}))
     const theme = useTheme()
 
     React.useImperativeHandle(ref, () => ({
@@ -93,11 +92,9 @@ export const TextInput = React.forwardRef(
 
     const onChangeText = React.useCallback(
       (newText: string) => {
-        onTextChanged(newText)
-
         const newRt = new RichText({text: newText})
         newRt.detectFacetsWithoutResolution()
-        setRt(newRt)
+        setRichText(newRt)
 
         const prefix = getMentionAt(
           newText,
@@ -120,12 +117,7 @@ export const TextInput = React.forwardRef(
           onSuggestedLinksChanged(set)
         }
       },
-      [
-        onTextChanged,
-        autocompleteView,
-        suggestedLinks,
-        onSuggestedLinksChanged,
-      ],
+      [setRichText, autocompleteView, suggestedLinks, onSuggestedLinksChanged],
     )
 
     const onPaste = React.useCallback(
@@ -166,16 +158,20 @@ export const TextInput = React.forwardRef(
     const onSelectAutocompleteItem = React.useCallback(
       (item: string) => {
         onChangeText(
-          insertMentionAt(text, textInputSelection.current?.start || 0, item),
+          insertMentionAt(
+            richtext.text,
+            textInputSelection.current?.start || 0,
+            item,
+          ),
         )
         autocompleteView.setActive(false)
       },
-      [onChangeText, text, autocompleteView],
+      [onChangeText, richtext, autocompleteView],
     )
 
     const textDecorated = React.useMemo(() => {
       let i = 0
-      return Array.from(rt.segments()).map(segment => {
+      return Array.from(richtext.segments()).map(segment => {
         if (!segment.facet) {
           return (
             <Text key={i++} style={[pal.text, styles.textInputFormatting]}>
@@ -190,7 +186,7 @@ export const TextInput = React.forwardRef(
           )
         }
       })
-    }, [rt, pal.link, pal.text])
+    }, [richtext, pal.link, pal.text])
 
     return (
       <View style={styles.container}>

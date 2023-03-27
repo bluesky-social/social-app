@@ -60,10 +60,8 @@ globalThis.Intl.Segmenter =
   globalThis.Intl.Segmenter ||
   class Segmenter {
     constructor() {}
-    *segment(str: string) {
-      // NOTE
-      // this is not a precisely correct polyfill but it's sufficient for our needs
-      // -prf
-      return splitter.iterateGraphemes(str)
-    }
+    // NOTE
+    // this is not a precisely correct polyfill but it's sufficient for our needs
+    // -prf
+    segment = splitter.iterateGraphemes
   }
