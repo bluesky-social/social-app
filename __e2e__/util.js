@@ -16,6 +16,44 @@ module.exports.openApp = async function openApp(opts) {
   }
 }
 
+async function isVisible(id) {
+  try {
+    await expect(element(by.id(id))).toBeVisible()
+    return true
+  } catch (e) {
+    return false
+  }
+}
+module.exports.isVisible = isVisible
+
+module.exports.login = async function login(
+  username,
+  password,
+  {takeScreenshots} = {takeScreenshots: false},
+) {
+  await element(by.id('signInButton')).tap()
+  if (takeScreenshots) {
+    await device.takeScreenshot('1- opened sign-in screen')
+  }
+  if (await isVisible('chooseAccountForm')) {
+    await element(by.id('chooseNewAccountBtn')).tap()
+  }
+  await element(by.id('loginSelectServiceButton')).tap()
+  if (takeScreenshots) {
+    await device.takeScreenshot('2- opened service selector')
+  }
+  await element(by.id('localDevServerButton')).tap()
+  if (takeScreenshots) {
+    await device.takeScreenshot('3- selected local dev server')
+  }
+  await element(by.id('loginUsernameInput')).typeText(username)
+  await element(by.id('loginPasswordInput')).typeText(password)
+  if (takeScreenshots) {
+    await device.takeScreenshot('4- entered username and password')
+  }
+  await element(by.id('loginNextButton')).tap()
+}
+
 async function openAppForDebugBuild(platform, opts) {
   const deepLinkUrl = process.env.EXPO_USE_UPDATES
     ? // Testing latest published EAS update for the test_debug channel
