@@ -1,4 +1,5 @@
 import 'fast-text-encoding'
+import Graphemer from 'graphemer'
 export {}
 
 /**
@@ -49,3 +50,20 @@ globalThis.atob = (str: string): string => {
   }
   return result
 }
+
+const splitter = new Graphemer()
+globalThis.Intl = globalThis.Intl || {}
+
+// @ts-ignore we're polyfilling -prf
+globalThis.Intl.Segmenter =
+  // @ts-ignore we're polyfilling -prf
+  globalThis.Intl.Segmenter ||
+  class Segmenter {
+    constructor() {}
+    *segment(str: string) {
+      // NOTE
+      // this is not a precisely correct polyfill but it's sufficient for our needs
+      // -prf
+      return splitter.iterateGraphemes(str)
+    }
+  }
