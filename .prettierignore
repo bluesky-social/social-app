@@ -6,6 +6,7 @@ public
 /bskyweb/templates
 /dist/
 /.watchmanconfig
+/app.json
 
 web/index.html
 web-build/*
