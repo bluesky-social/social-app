@@ -62,38 +62,28 @@ export function RichText({
   const els = []
   let key = 0
   for (const segment of richText.segments()) {
-    const facet = segment.facet
-    if (facet) {
-      const value = facet.value
-      if (
-        AppBskyRichtextFacet.isMention(value) &&
-        AppBskyRichtextFacet.validateMention(value).success
-      ) {
-        els.push(
-          <TextLink
-            key={key}
-            type={type}
-            text={segment.text}
-            href={`/profile/${value.did}`}
-            style={[style, lineHeightStyle, pal.link]}
-          />,
-        )
-      } else if (
-        AppBskyRichtextFacet.isLink(value) &&
-        AppBskyRichtextFacet.validateLink(value).success
-      ) {
-        els.push(
-          <TextLink
-            key={key}
-            type={type}
-            text={toShortUrl(segment.text)}
-            href={value.uri}
-            style={[style, lineHeightStyle, pal.link]}
-          />,
-        )
-      } else {
-        els.push(segment.text)
-      }
+    const link = segment.link
+    const mention = segment.mention
+    if (mention && AppBskyRichtextFacet.validateMention(mention).success) {
+      els.push(
+        <TextLink
+          key={key}
+          type={type}
+          text={segment.text}
+          href={`/profile/${mention.did}`}
+          style={[style, lineHeightStyle, pal.link]}
+        />,
+      )
+    } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
+      els.push(
+        <TextLink
+          key={key}
+          type={type}
+          text={toShortUrl(segment.text)}
+          href={link.uri}
+          style={[style, lineHeightStyle, pal.link]}
+        />,
+      )
     } else {
       els.push(segment.text)
     }

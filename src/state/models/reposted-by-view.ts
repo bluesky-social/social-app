@@ -11,7 +11,7 @@ import * as apilib from 'lib/api/index'
 
 const PAGE_SIZE = 30
 
-export type RepostedByItem = AppBskyActorDefs.WithInfo
+export type RepostedByItem = AppBskyActorDefs.ProfileViewBasic
 
 export class RepostedByViewModel {
   // state

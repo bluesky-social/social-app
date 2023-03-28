@@ -12,7 +12,7 @@ export const SuggestedFollows = ({
 }: {
   title: string
   suggestions: (
-    | AppBskyActorDefs.WithInfo
+    | AppBskyActorDefs.ProfileViewBasic
     | AppBskyActorDefs.ProfileView
     | RefWithInfoAndFollowers
   )[]

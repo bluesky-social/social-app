@@ -9,7 +9,7 @@ import {bundleAsync} from 'lib/async/bundle'
 
 const PAGE_SIZE = 30
 
-export type FollowItem = ActorDefs.WithInfo
+export type FollowItem = ActorDefs.ProfileViewBasic
 
 export class UserFollowsViewModel {
   // state
@@ -22,7 +22,7 @@ export class UserFollowsViewModel {
   loadMoreCursor?: string
 
   // data
-  subject: ActorDefs.WithInfo = {
+  subject: ActorDefs.ProfileViewBasic = {
     did: '',
     handle: '',
   }

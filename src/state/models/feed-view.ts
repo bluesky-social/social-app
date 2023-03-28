@@ -443,14 +443,18 @@ export class FeedModel {
           new FeedSliceModel(this.rootStore, `item-${_idCounter++}`, slice),
       )
       if (autoPrepend) {
-        this.slices = nextSlicesModels.concat(
-          this.slices.filter(slice1 =>
-            nextSlicesModels.find(slice2 => slice1.uri === slice2.uri),
-          ),
-        )
-        this.setHasNewLatest(false)
+        runInAction(() => {
+          this.slices = nextSlicesModels.concat(
+            this.slices.filter(slice1 =>
+              nextSlicesModels.find(slice2 => slice1.uri === slice2.uri),
+            ),
+          )
+          this.setHasNewLatest(false)
+        })
       } else {
-        this.nextSlices = nextSlicesModels
+        runInAction(() => {
+          this.nextSlices = nextSlicesModels
+        })
         this.setHasNewLatest(true)
       }
     } else {

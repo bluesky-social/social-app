@@ -352,8 +352,9 @@ function AdditionalPostText({
     return <View />
   }
   const text = additionalPost.thread?.postRecord.text
-  const images = (additionalPost.thread.post.embed as AppBskyEmbedImages.View)
-    ?.value
+  const images = AppBskyEmbedImages.isView(additionalPost.thread.post.embed)
+    ? additionalPost.thread.post.embed.images
+    : undefined
   return (
     <>
       {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}

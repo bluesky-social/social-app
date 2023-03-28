@@ -10,6 +10,7 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
   AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
   AppBskyFeedPost,
 } from '@atproto/api'
 import {Link} from '../Link'
@@ -28,6 +29,7 @@ type Embed =
   | AppBskyEmbedRecord.View
   | AppBskyEmbedImages.View
   | AppBskyEmbedExternal.View
+  | AppBskyEmbedRecordWithMedia.View
   | {$type: string; [k: string]: unknown}
 
 export function PostEmbeds({
@@ -39,11 +41,35 @@ export function PostEmbeds({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+
+  if (
+    AppBskyEmbedRecordWithMedia.isView(embed) &&
+    AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
+    AppBskyFeedPost.isRecord(embed.record.record.value) &&
+    AppBskyFeedPost.validateRecord(embed.record.record.value).success
+  ) {
+    return (
+      <View style={[styles.stackContainer, style]}>
+        <PostEmbeds embed={embed.media} />
+        <QuoteEmbed
+          quote={{
+            author: embed.record.record.author,
+            cid: embed.record.record.cid,
+            uri: embed.record.record.uri,
+            indexedAt: embed.record.record.indexedAt,
+            text: embed.record.record.value.text,
+            embeds: embed.record.record.embeds,
+          }}
+        />
+      </View>
+    )
+  }
+
   if (AppBskyEmbedRecord.isView(embed)) {
     if (
       AppBskyEmbedRecord.isViewRecord(embed.record) &&
-      AppBskyFeedPost.isRecord(embed.record.record) &&
-      AppBskyFeedPost.validateRecord(embed.record.record).success
+      AppBskyFeedPost.isRecord(embed.record.value) &&
+      AppBskyFeedPost.validateRecord(embed.record.value).success
     ) {
       return (
         <QuoteEmbed
@@ -51,16 +77,18 @@ export function PostEmbeds({
             author: embed.record.author,
             cid: embed.record.cid,
             uri: embed.record.uri,
-            indexedAt: embed.record.record.createdAt, // TODO
-            text: embed.record.record.text,
+            indexedAt: embed.record.indexedAt,
+            text: embed.record.value.text,
+            embeds: embed.record.embeds,
           }}
         />
       )
     }
   }
+
   if (AppBskyEmbedImages.isView(embed)) {
-    if (embed.value.length > 0) {
-      const uris = embed.value.map(img => img.fullsize)
+    if (embed.images.length > 0) {
+      const uris = embed.images.map(img => img.fullsize)
       const openLightbox = (index: number) => {
         store.shell.openLightbox(new ImagesLightbox(uris, index))
       }
@@ -78,36 +106,36 @@ export function PostEmbeds({
         })
       }
 
-      if (embed.value.length === 4) {
+      if (embed.images.length === 4) {
         return (
           <View style={[styles.imagesContainer, style]}>
             <ImageLayoutGrid
               type="four"
-              uris={embed.value.map(img => img.thumb)}
+              uris={embed.images.map(img => img.thumb)}
               onPress={openLightbox}
               onLongPress={onLongPress}
               onPressIn={onPressIn}
             />
           </View>
         )
-      } else if (embed.value.length === 3) {
+      } else if (embed.images.length === 3) {
         return (
           <View style={[styles.imagesContainer, style]}>
             <ImageLayoutGrid
               type="three"
-              uris={embed.value.map(img => img.thumb)}
+              uris={embed.images.map(img => img.thumb)}
               onPress={openLightbox}
               onLongPress={onLongPress}
               onPressIn={onPressIn}
             />
           </View>
         )
-      } else if (embed.value.length === 2) {
+      } else if (embed.images.length === 2) {
         return (
           <View style={[styles.imagesContainer, style]}>
             <ImageLayoutGrid
               type="two"
-              uris={embed.value.map(img => img.thumb)}
+              uris={embed.images.map(img => img.thumb)}
               onPress={openLightbox}
               onLongPress={onLongPress}
               onPressIn={onPressIn}
@@ -118,7 +146,7 @@ export function PostEmbeds({
         return (
           <View style={[styles.imagesContainer, style]}>
             <AutoSizedImage
-              uri={embed.value[0].thumb}
+              uri={embed.images[0].thumb}
               onPress={() => openLightbox(0)}
               onLongPress={() => onLongPress(0)}
               onPressIn={() => onPressIn(0)}
@@ -129,8 +157,9 @@ export function PostEmbeds({
       }
     }
   }
-  if (AppBskyEmbedExternal.isView(embed) && embed.value) {
-    const link = embed.value
+
+  if (AppBskyEmbedExternal.isView(embed)) {
+    const link = embed.external
     const youtubeVideoId = getYoutubeVideoId(link.uri)
 
     if (youtubeVideoId) {
@@ -150,6 +179,7 @@ export function PostEmbeds({
 }
 
 const styles = StyleSheet.create({
+  stackContainer: {},
   imagesContainer: {
     marginTop: 4,
   },

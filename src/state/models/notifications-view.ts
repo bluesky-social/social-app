@@ -37,7 +37,7 @@ export class NotificationsViewItemModel {
   // data
   uri: string = ''
   cid: string = ''
-  author: AppBskyActorDefs.WithInfo = {
+  author: AppBskyActorDefs.ProfileViewBasic = {
     did: '',
     handle: '',
     avatar: '',

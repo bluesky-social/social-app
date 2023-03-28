@@ -1,8 +1,9 @@
 import {
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
-  ComAtprotoRepoUploadBlob,
   AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  ComAtprotoRepoUploadBlob,
   RichText,
 } from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
@@ -69,6 +70,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     | AppBskyEmbedImages.Main
     | AppBskyEmbedExternal.Main
     | AppBskyEmbedRecord.Main
+    | AppBskyEmbedRecordWithMedia.Main
     | undefined
   let reply
   const rt = new RichText(
@@ -89,24 +91,37 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
         cid: opts.quote.cid,
       },
     } as AppBskyEmbedRecord.Main
-  } else if (opts.images?.length) {
-    embed = {
-      $type: 'app.bsky.embed.images',
-      images: [],
-    } as AppBskyEmbedImages.Main
-    let i = 1
+  }
+
+  if (opts.images?.length) {
+    const images: AppBskyEmbedImages.Image[] = []
     for (const image of opts.images) {
-      opts.onStateChange?.(`Uploading image #${i++}...`)
+      opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
       const res = await uploadBlob(store, image, 'image/jpeg')
-      embed.images.push({
-        image: {
-          cid: res.data.cid,
-          mimeType: 'image/jpeg',
-        },
+      images.push({
+        image: res.data.blob,
         alt: '', // TODO supply alt text
       })
     }
-  } else if (opts.extLink) {
+
+    if (opts.quote) {
+      embed = {
+        $type: 'app.bsky.embed.recordWithMedia',
+        record: embed,
+        media: {
+          $type: 'app.bsky.embed.images',
+          images,
+        },
+      } as AppBskyEmbedRecordWithMedia.Main
+    } else {
+      embed = {
+        $type: 'app.bsky.embed.images',
+        images,
+      } as AppBskyEmbedImages.Main
+    }
+  }
+
+  if (opts.extLink && !opts.images?.length) {
     let thumb
     if (opts.extLink.localThumb) {
       opts.onStateChange?.('Uploading link thumbnail...')
@@ -132,21 +147,35 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
           opts.extLink.localThumb.path,
           encoding,
         )
-        thumb = {
-          cid: thumbUploadRes.data.cid,
-          mimeType: encoding,
-        }
+        thumb = thumbUploadRes.data.blob
       }
     }
-    embed = {
-      $type: 'app.bsky.embed.external',
-      external: {
-        uri: opts.extLink.uri,
-        title: opts.extLink.meta?.title || '',
-        description: opts.extLink.meta?.description || '',
-        thumb,
-      },
-    } as AppBskyEmbedExternal.Main
+
+    if (opts.quote) {
+      embed = {
+        $type: 'app.bsky.embed.recordWithMedia',
+        record: embed,
+        media: {
+          $type: 'app.bsky.embed.external',
+          external: {
+            uri: opts.extLink.uri,
+            title: opts.extLink.meta?.title || '',
+            description: opts.extLink.meta?.description || '',
+            thumb,
+          },
+        } as AppBskyEmbedExternal.Main,
+      } as AppBskyEmbedRecordWithMedia.Main
+    } else {
+      embed = {
+        $type: 'app.bsky.embed.external',
+        external: {
+          uri: opts.extLink.uri,
+          title: opts.extLink.meta?.title || '',
+          description: opts.extLink.meta?.description || '',
+          thumb,
+        },
+      } as AppBskyEmbedExternal.Main
+    }
   }
 
   if (opts.replyTo) {

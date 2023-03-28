@@ -107,12 +107,16 @@ export const TextInput = React.forwardRef(
           autocompleteView.setActive(false)
         }
 
-        const links = newRt.facets?.filter(ent =>
-          AppBskyRichtextFacet.isLink(ent.value),
-        )
-        const set = new Set(
-          links ? links.map(link => link.value.uri as string) : [],
-        )
+        const set: Set<string> = new Set()
+        if (newRt.facets) {
+          for (const facet of newRt.facets) {
+            for (const feature of facet.features) {
+              if (AppBskyRichtextFacet.isLink(feature)) {
+                set.add(feature.uri)
+              }
+            }
+          }
+        }
         if (!isEqual(set, suggestedLinks)) {
           onSuggestedLinksChanged(set)
         }

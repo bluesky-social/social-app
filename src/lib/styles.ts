@@ -71,6 +71,7 @@ export const s = StyleSheet.create({
   borderBottom1: {borderBottomWidth: 1},
   borderLeft1: {borderLeftWidth: 1},
   hidden: {display: 'none'},
+  dimmed: {opacity: 0.5},
 
   // font weights
   fw600: {fontWeight: '600'},

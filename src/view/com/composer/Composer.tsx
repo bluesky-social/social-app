@@ -289,27 +289,25 @@ export const ComposePost = observer(function ComposePost({
               />
             </View>
 
-            {quote ? (
-              <View style={s.mt5}>
-                <QuoteEmbed quote={quote} />
-              </View>
-            ) : undefined}
-
             <SelectedPhotos
               selectedPhotos={selectedPhotos}
               onSelectPhotos={onSelectPhotos}
             />
-            {!selectedPhotos.length && extLink && (
+            {selectedPhotos.length === 0 && extLink && (
               <ExternalEmbed
                 link={extLink}
                 onRemove={() => setExtLink(undefined)}
               />
             )}
+            {quote ? (
+              <View style={s.mt5}>
+                <QuoteEmbed quote={quote} />
+              </View>
+            ) : undefined}
           </ScrollView>
           {!extLink &&
           selectedPhotos.length === 0 &&
-          suggestedLinks.size > 0 &&
-          !quote ? (
+          suggestedLinks.size > 0 ? (
             <View style={s.mb5}>
               {Array.from(suggestedLinks).map(url => (
                 <TouchableOpacity
@@ -325,12 +323,12 @@ export const ComposePost = observer(function ComposePost({
           ) : null}
           <View style={[pal.border, styles.bottomBar]}>
             <SelectPhotoBtn
-              enabled={!quote && selectedPhotos.length < 4}
+              enabled={selectedPhotos.length < 4}
               selectedPhotos={selectedPhotos}
               onSelectPhotos={setSelectedPhotos}
             />
             <OpenCameraBtn
-              enabled={!quote && selectedPhotos.length < 4}
+              enabled={selectedPhotos.length < 4}
               selectedPhotos={selectedPhotos}
               onSelectPhotos={setSelectedPhotos}
             />
@@ -415,6 +413,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     paddingHorizontal: 16,
     paddingVertical: 12,
+    marginHorizontal: 10,
     marginBottom: 4,
   },
   bottomBar: {

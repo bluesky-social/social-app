@@ -4,12 +4,12 @@ import sampleSize from 'lodash.samplesize'
 import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from '../root-store'
 
-export type RefWithInfoAndFollowers = AppBskyActorDefs.WithInfo & {
+export type RefWithInfoAndFollowers = AppBskyActorDefs.ProfileViewBasic & {
   followers: AppBskyActorDefs.ProfileView[]
 }
 
 export type ProfileViewFollows = AppBskyActorDefs.ProfileView & {
-  follows: AppBskyActorDefs.WithInfo[]
+  follows: AppBskyActorDefs.ProfileViewBasic[]
 }
 
 export class FoafsModel {

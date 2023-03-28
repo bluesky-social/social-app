@@ -11,8 +11,8 @@ export class UserAutocompleteViewModel {
   lock = new AwaitLock()
 
   // data
-  follows: AppBskyActorDefs.WithInfo[] = []
-  searchRes: AppBskyActorDefs.WithInfo[] = []
+  follows: AppBskyActorDefs.ProfileViewBasic[] = []
+  searchRes: AppBskyActorDefs.ProfileViewBasic[] = []
   knownHandles: Set<string> = new Set()
 
   constructor(public rootStore: RootStoreModel) {

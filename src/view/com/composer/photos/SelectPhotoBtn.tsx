@@ -86,7 +86,11 @@ export function SelectPhotoBtn({
       hitSlop={HITSLOP}>
       <FontAwesomeIcon
         icon={['far', 'image']}
-        style={(enabled ? pal.link : pal.textLight) as FontAwesomeIconStyle}
+        style={
+          (enabled
+            ? pal.link
+            : [pal.textLight, s.dimmed]) as FontAwesomeIconStyle
+        }
         size={24}
       />
     </TouchableOpacity>

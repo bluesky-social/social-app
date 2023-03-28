@@ -6,10 +6,7 @@ import {bundleAsync} from 'lib/async/bundle'
 const CACHE_TTL = 1000 * 60 * 60 // hourly
 type FollowsListResponse = Awaited<ReturnType<FollowRecord['list']>>
 type FollowsListResponseRecord = FollowsListResponse['records'][0]
-type Profile =
-  | AppBskyActorDefs.ProfileViewBasic
-  | AppBskyActorDefs.ProfileView
-  | AppBskyActorDefs.WithInfo
+type Profile = AppBskyActorDefs.ProfileViewBasic | AppBskyActorDefs.ProfileView
 
 /**
  * This model is used to maintain a synced local cache of the user's
