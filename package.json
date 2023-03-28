@@ -15,9 +15,10 @@
     "test-ci": "jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "jest --coverage",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "mock-server": "ts-node __e2e__/mock-server.ts",
-    "ios:e2e": "detox build -c ios.sim.debug && detox test --configuration ios.sim.debug --take-screenshots all",
-    "ios:e2e-nobuild": "detox test --configuration ios.sim.debug --take-screenshots all"
+    "e2e:mock-server": "ts-node __e2e__/mock-server.ts",
+    "e2e:metro": "RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
+    "e2e:build": "detox build -c ios.sim.debug",
+    "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all"
   },
   "dependencies": {
     "@atproto/api": "0.1.3",
