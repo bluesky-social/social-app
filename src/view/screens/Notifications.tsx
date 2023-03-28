@@ -86,7 +86,7 @@ export const NotificationsScreen = withAuthRequired(
     )
 
     return (
-      <View style={s.hContentRegion}>
+      <View testID="notificationsScreen" style={s.hContentRegion}>
         <ViewHeader title="Notifications" canGoBack={false} />
         <Feed
           view={store.me.notifications}

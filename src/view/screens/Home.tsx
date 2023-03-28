@@ -54,7 +54,13 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
 
   const renderTabBar = React.useCallback(
     (props: RenderTabBarFnProps) => {
-      return <FeedsTabBar {...props} onPressSelected={onPressSelected} />
+      return (
+        <FeedsTabBar
+          {...props}
+          testID="homeScreenFeedTabs"
+          onPressSelected={onPressSelected}
+        />
+      )
     },
     [onPressSelected],
   )
