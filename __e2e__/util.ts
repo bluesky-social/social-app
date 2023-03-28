@@ -93,4 +93,4 @@ const getDeepLinkUrl = (url: string) =>
 const getDevLauncherPackagerUrl = (platform: string) =>
   `http://localhost:8081/index.bundle?platform=${platform}&dev=true&minify=false&disableOnboarding=1`
 
-const sleep = (t: number) => new Promise(res => setTimeout(res, t))
+export const sleep = (t: number) => new Promise(res => setTimeout(res, t))

@@ -56,6 +56,7 @@ export function UserAvatar({
 
   const dropdownItems = [
     !isWeb && {
+      testID: 'changeAviCameraBtn',
       label: 'Camera',
       icon: 'camera' as IconProp,
       onPress: async () => {
@@ -73,6 +74,7 @@ export function UserAvatar({
       },
     },
     {
+      testID: 'changeAviLibraryBtn',
       label: 'Library',
       icon: 'image' as IconProp,
       onPress: async () => {
@@ -94,6 +96,7 @@ export function UserAvatar({
       },
     },
     {
+      testID: 'changeAviRemoveBtn',
       label: 'Remove',
       icon: ['far', 'trash-can'] as IconProp,
       onPress: async () => {
@@ -104,6 +107,7 @@ export function UserAvatar({
   // onSelectNewAvatar is only passed as prop on the EditProfile component
   return onSelectNewAvatar ? (
     <DropdownButton
+      testID="changeAviBtn"
       type="bare"
       items={dropdownItems}
       openToRight

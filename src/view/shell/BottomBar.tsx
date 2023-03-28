@@ -112,6 +112,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         footerMinimalShellTransform,
       ]}>
       <Btn
+        testID="bottomBarHomeBtn"
         icon={
           isAtHome ? (
             <HomeIconSolid
@@ -130,6 +131,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         onPress={onPressHome}
       />
       <Btn
+        testID="bottomBarSearchBtn"
         icon={
           isAtSearch ? (
             <MagnifyingGlassIcon2Solid
@@ -148,6 +150,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         onPress={onPressSearch}
       />
       <Btn
+        testID="bottomBarNotificationsBtn"
         icon={
           isAtNotifications ? (
             <BellIconSolid
@@ -167,6 +170,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         notificationCount={store.me.notifications.unreadCount}
       />
       <Btn
+        testID="bottomBarProfileBtn"
         icon={
           <View style={styles.ctrlIconSizingWrapper}>
             <UserIcon
@@ -183,11 +187,13 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
 })
 
 function Btn({
+  testID,
   icon,
   notificationCount,
   onPress,
   onLongPress,
 }: {
+  testID?: string
   icon: JSX.Element
   notificationCount?: number
   onPress?: (event: GestureResponderEvent) => void
@@ -195,6 +201,7 @@ function Btn({
 }) {
   return (
     <TouchableOpacity
+      testID={testID}
       style={styles.ctrl}
       onPress={onLongPress ? onPress : undefined}
       onPressIn={onLongPress ? undefined : onPress}

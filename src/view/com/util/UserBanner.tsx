@@ -33,6 +33,7 @@ export function UserBanner({
 
   const dropdownItems = [
     !isWeb && {
+      testID: 'changeBannerCameraBtn',
       label: 'Camera',
       icon: 'camera' as IconProp,
       onPress: async () => {
@@ -51,6 +52,7 @@ export function UserBanner({
       },
     },
     {
+      testID: 'changeBannerLibraryBtn',
       label: 'Library',
       icon: 'image' as IconProp,
       onPress: async () => {
@@ -73,6 +75,7 @@ export function UserBanner({
       },
     },
     {
+      testID: 'changeBannerRemoveBtn',
       label: 'Remove',
       icon: ['far', 'trash-can'] as IconProp,
       onPress: () => {
@@ -84,6 +87,7 @@ export function UserBanner({
   // setUserBanner is only passed as prop on the EditProfile component
   return onSelectNewBanner ? (
     <DropdownButton
+      testID="changeBannerBtn"
       type="bare"
       items={dropdownItems}
       openToRight

@@ -47,13 +47,18 @@ export function ViewSelector({
   // events
   // =
 
-  const onSwipeEnd = (dx: number) => {
-    if (dx !== 0) {
-      setSelectedIndex(clamp(selectedIndex + dx, 0, sections.length))
-    }
-  }
-  const onPressSelection = (index: number) =>
-    setSelectedIndex(clamp(index, 0, sections.length))
+  const onSwipeEnd = React.useCallback(
+    (dx: number) => {
+      if (dx !== 0) {
+        setSelectedIndex(clamp(selectedIndex + dx, 0, sections.length))
+      }
+    },
+    [setSelectedIndex, selectedIndex, sections],
+  )
+  const onPressSelection = React.useCallback(
+    (index: number) => setSelectedIndex(clamp(index, 0, sections.length)),
+    [setSelectedIndex, sections],
+  )
   useEffect(() => {
     onSelectView?.(selectedIndex)
   }, [selectedIndex, onSelectView])
@@ -61,27 +66,33 @@ export function ViewSelector({
   // rendering
   // =
 
-  const renderItemInternal = ({item}: {item: any}) => {
-    if (item === HEADER_ITEM) {
-      if (renderHeader) {
-        return renderHeader()
+  const renderItemInternal = React.useCallback(
+    ({item}: {item: any}) => {
+      if (item === HEADER_ITEM) {
+        if (renderHeader) {
+          return renderHeader()
+        }
+        return <View />
+      } else if (item === SELECTOR_ITEM) {
+        return (
+          <Selector
+            items={sections}
+            panX={panX}
+            selectedIndex={selectedIndex}
+            onSelect={onPressSelection}
+          />
+        )
+      } else {
+        return renderItem(item)
       }
-      return <View />
-    } else if (item === SELECTOR_ITEM) {
-      return (
-        <Selector
-          items={sections}
-          panX={panX}
-          selectedIndex={selectedIndex}
-          onSelect={onPressSelection}
-        />
-      )
-    } else {
-      return renderItem(item)
-    }
-  }
+    },
+    [sections, panX, selectedIndex, onPressSelection, renderHeader, renderItem],
+  )
 
-  const data = [HEADER_ITEM, SELECTOR_ITEM, ...items]
+  const data = React.useMemo(
+    () => [HEADER_ITEM, SELECTOR_ITEM, ...items],
+    [items],
+  )
   return (
     <HorzSwipe
       hasPriority

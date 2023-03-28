@@ -9,12 +9,14 @@ import {useTheme, TypographyVariant} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 
 export function RichText({
+  testID,
   type = 'md',
   richText,
   lineHeight = 1.2,
   style,
   numberOfLines,
 }: {
+  testID?: string
   type?: TypographyVariant
   richText?: RichTextObj
   lineHeight?: number
@@ -36,10 +38,17 @@ export function RichText({
         fontSize: 26,
         lineHeight: 30,
       }
-      return <Text style={[style, pal.text]}>{text}</Text>
+      return (
+        <Text testID={testID} style={[style, pal.text]}>
+          {text}
+        </Text>
+      )
     }
     return (
-      <Text type={type} style={[style, pal.text, lineHeightStyle]}>
+      <Text
+        testID={testID}
+        type={type}
+        style={[style, pal.text, lineHeightStyle]}>
         {text}
       </Text>
     )
@@ -92,6 +101,7 @@ export function RichText({
   }
   return (
     <Text
+      testID={testID}
       type={type}
       style={[style, pal.text, lineHeightStyle]}
       numberOfLines={numberOfLines}>

@@ -33,17 +33,17 @@ export class ProfileViewModel {
   did: string = ''
   handle: string = ''
   creator: string = ''
-  displayName?: string
-  description?: string
-  avatar?: string
-  banner?: string
+  displayName?: string = ''
+  description?: string = ''
+  avatar?: string = ''
+  banner?: string = ''
   followersCount: number = 0
   followsCount: number = 0
   postsCount: number = 0
   viewer = new ProfileViewViewerModel()
 
   // added data
-  descriptionRichText?: RichText
+  descriptionRichText?: RichText = new RichText({text: ''})
 
   constructor(
     public rootStore: RootStoreModel,
@@ -131,12 +131,12 @@ export class ProfileViewModel {
           newUserAvatar.path,
           newUserAvatar.mime,
         )
-        updates.avatar = {
+        existing.avatar = {
           cid: res.data.cid,
           mimeType: newUserAvatar.mime,
         }
       } else if (newUserAvatar === null) {
-        updates.avatar = null
+        existing.avatar = null
       }
       if (newUserBanner) {
         const res = await apilib.uploadBlob(
@@ -144,12 +144,12 @@ export class ProfileViewModel {
           newUserBanner.path,
           newUserBanner.mime,
         )
-        updates.banner = {
+        existing.banner = {
           cid: res.data.cid,
           mimeType: newUserBanner.mime,
         }
       } else if (newUserBanner === null) {
-        updates.banner = null
+        existing.banner = null
       }
       return existing
     })
