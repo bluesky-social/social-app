@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx'
-import {XRPCError, XRPCInvalidResponseError} from '@atproto/xrpc'
+// import {XRPCError, XRPCInvalidResponseError} from '@atproto/xrpc' TODO
 
 const MAX_ENTRIES = 300
 
@@ -79,14 +79,14 @@ export class LogModel {
 function detailsToStr(details?: any) {
   if (details && typeof details !== 'string') {
     if (
-      details instanceof XRPCInvalidResponseError ||
+      // details instanceof XRPCInvalidResponseError || TODO
       details.constructor.name === 'XRPCInvalidResponseError'
     ) {
       return `The server gave an ill-formatted response.\nMethod: ${
         details.lexiconNsid
       }.\nError: ${details.validationError.toString()}`
     } else if (
-      details instanceof XRPCError ||
+      // details instanceof XRPCError || TODO
       details.constructor.name === 'XRPCError'
     ) {
       return `An XRPC error occurred.\nStatus: ${details.status}\nError: ${details.error}\nMessage: ${details.message}`

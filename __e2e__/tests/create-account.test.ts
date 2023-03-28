@@ -1,9 +1,11 @@
 /* eslint-env detox/detox */
 
-const {openApp} = require('../util')
+import {openApp, createServer} from '../util'
 
 describe('Create account', () => {
-  beforeEach(async () => {
+  let service: string
+  beforeAll(async () => {
+    service = await createServer('mock0')
     await openApp({permissions: {notifications: 'YES'}})
   })
 
@@ -12,8 +14,9 @@ describe('Create account', () => {
     await device.takeScreenshot('1- opened create account screen')
     await element(by.id('otherServerBtn')).tap()
     await device.takeScreenshot('2- selected other server')
-    await element(by.id('localDevServerBtn')).tap()
-    await device.takeScreenshot('3- selected local dev server')
+    await element(by.id('customServerInput')).clearText()
+    await element(by.id('customServerInput')).typeText(service)
+    await device.takeScreenshot('3- input test server URL')
     await element(by.id('nextBtn')).tap()
     await element(by.id('emailInput')).typeText('example@test.com')
     await element(by.id('passwordInput')).typeText('hunter2')

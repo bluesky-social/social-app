@@ -19,6 +19,7 @@
   - Android: `yarn android`
   - Web: `yarn web`
 - Run e2e tests
+  - Start the mock-server manager with `yarn mock-server`
   - First run: `yarn ios:e2e`
   - Subsequent runs if you don't need to rebuild: `yarn ios:e2e-nobuild`
 - Tips

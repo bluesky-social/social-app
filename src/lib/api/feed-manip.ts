@@ -1,6 +1,6 @@
 import {AppBskyFeedDefs} from '@atproto/api'
 import lande from 'lande'
-import {hasProp} from '@atproto/lexicon'
+import {hasProp} from 'lib/type-guards'
 import {LANGUAGES_MAP_CODE2} from '../../locale/languages'
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 

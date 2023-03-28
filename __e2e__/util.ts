@@ -1,9 +1,8 @@
-const appConfig = require('../app.json')
-const {resolveConfig} = require('detox/internals')
+import {resolveConfig} from 'detox/internals'
 
 const platform = device.getPlatform()
 
-module.exports.openApp = async function openApp(opts) {
+export async function openApp(opts: any) {
   opts = opts || {}
   const config = await resolveConfig()
   if (config.configurationName.split('.').includes('debug')) {
@@ -16,7 +15,7 @@ module.exports.openApp = async function openApp(opts) {
   }
 }
 
-async function isVisible(id) {
+export async function isVisible(id: string) {
   try {
     await expect(element(by.id(id))).toBeVisible()
     return true
@@ -24,11 +23,11 @@ async function isVisible(id) {
     return false
   }
 }
-module.exports.isVisible = isVisible
 
-module.exports.login = async function login(
-  username,
-  password,
+export async function login(
+  service: string,
+  username: string,
+  password: string,
   {takeScreenshots} = {takeScreenshots: false},
 ) {
   await element(by.id('signInButton')).tap()
@@ -42,9 +41,10 @@ module.exports.login = async function login(
   if (takeScreenshots) {
     await device.takeScreenshot('2- opened service selector')
   }
-  await element(by.id('localDevServerButton')).tap()
+  await element(by.id('customServerTextInput')).typeText(service)
+  await element(by.id('customServerSelectBtn')).tap()
   if (takeScreenshots) {
-    await device.takeScreenshot('3- selected local dev server')
+    await device.takeScreenshot('3- input custom service')
   }
   await element(by.id('loginUsernameInput')).typeText(username)
   await element(by.id('loginPasswordInput')).typeText(password)
@@ -54,12 +54,12 @@ module.exports.login = async function login(
   await element(by.id('loginNextButton')).tap()
 }
 
-async function openAppForDebugBuild(platform, opts) {
-  const deepLinkUrl = process.env.EXPO_USE_UPDATES
+async function openAppForDebugBuild(platform: string, opts: any) {
+  const deepLinkUrl = // Local testing with packager
+    /*process.env.EXPO_USE_UPDATES
     ? // Testing latest published EAS update for the test_debug channel
       getDeepLinkUrl(getLatestUpdateUrl())
-    : // Local testing with packager
-      getDeepLinkUrl(getDevLauncherPackagerUrl(platform))
+    : */ getDeepLinkUrl(getDevLauncherPackagerUrl(platform))
 
   if (platform === 'ios') {
     await device.launchApp({
@@ -81,15 +81,16 @@ async function openAppForDebugBuild(platform, opts) {
   await sleep(3000)
 }
 
-const getDeepLinkUrl = url =>
+export async function createServer(mock = 'mock0') {
+  const res = await fetch(`http://localhost:1986/${mock}`)
+  const resBody = await res.text()
+  return resBody
+}
+
+const getDeepLinkUrl = (url: string) =>
   `expo+bluesky://expo-development-client/?url=${encodeURIComponent(url)}`
 
-const getDevLauncherPackagerUrl = platform =>
+const getDevLauncherPackagerUrl = (platform: string) =>
   `http://localhost:8081/index.bundle?platform=${platform}&dev=true&minify=false&disableOnboarding=1`
 
-const getLatestUpdateUrl = () =>
-  `https://u.expo.dev/${getAppId()}?channel-name=test_debug&disableOnboarding=1`
-
-const getAppId = () => appConfig?.expo?.extra?.eas?.projectId ?? ''
-
-const sleep = t => new Promise(res => setTimeout(res, t))
+const sleep = (t: number) => new Promise(res => setTimeout(res, t))

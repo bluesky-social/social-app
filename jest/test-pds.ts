@@ -2,77 +2,62 @@ import {AddressInfo} from 'net'
 import os from 'os'
 import path from 'path'
 import * as crypto from '@atproto/crypto'
-import PDSServer, {
-  Database as PDSDatabase,
-  MemoryBlobStore,
-  ServerConfig as PDSServerConfig,
-} from '@atproto/pds'
-import * as plc from '@atproto/plc'
-import AtpAgent from '@atproto/api'
+import {PDS, ServerConfig, Database, MemoryBlobStore} from '@atproto/pds'
+import * as plc from '@did-plc/lib'
+import {PlcServer, Database as PlcDatabase} from '@did-plc/server'
+import {BskyAgent} from '@atproto/api'
+
+const ADMIN_PASSWORD = 'admin-pass'
+const SECOND = 1000
+const MINUTE = SECOND * 60
+const HOUR = MINUTE * 60
 
 export interface TestUser {
   email: string
   did: string
   handle: string
   password: string
-  agent: AtpAgent
-}
-
-export interface TestUsers {
-  alice: TestUser
-  bob: TestUser
-  carla: TestUser
+  agent: BskyAgent
 }
 
 export interface TestPDS {
   pdsUrl: string
-  users: TestUsers
+  mocker: Mocker
   close: () => Promise<void>
 }
 
-// NOTE
-// deterministic date generator
-// we use this to ensure the mock dataset is always the same
-// which is very useful when testing
-function* dateGen() {
-  let start = 1657846031914
-  while (true) {
-    yield new Date(start).toISOString()
-    start += 1e3
-  }
-}
-
 export async function createServer(): Promise<TestPDS> {
-  const keypair = await crypto.EcdsaKeypair.create()
+  const repoSigningKey = await crypto.Secp256k1Keypair.create()
+  const plcRotationKey = await crypto.Secp256k1Keypair.create()
 
-  // run plc server
-  const plcDb = plc.Database.memory()
-  await plcDb.migrateToLatestOrThrow()
-  const plcServer = plc.PlcServer.create({db: plcDb})
+  const plcDb = PlcDatabase.mock()
+
+  const plcServer = PlcServer.create({db: plcDb})
   const plcListener = await plcServer.start()
   const plcPort = (plcListener.address() as AddressInfo).port
   const plcUrl = `http://localhost:${plcPort}`
 
-  const recoveryKey = (await crypto.EcdsaKeypair.create()).did()
+  const recoveryKey = (await crypto.Secp256k1Keypair.create()).did()
 
-  const plcClient = new plc.PlcClient(plcUrl)
-  const serverDid = await plcClient.createDid(
-    keypair,
-    recoveryKey,
-    'localhost',
-    'https://pds.public.url',
-  )
+  const plcClient = new plc.Client(plcUrl)
+  const serverDid = await plcClient.createDid({
+    signingKey: repoSigningKey.did(),
+    rotationKeys: [recoveryKey, plcRotationKey.did()],
+    handle: 'localhost',
+    pds: 'https://pds.public.url',
+    signer: plcRotationKey,
+  })
 
   const blobstoreLoc = path.join(os.tmpdir(), crypto.randomStr(5, 'base32'))
 
-  const cfg = new PDSServerConfig({
+  const cfg = new ServerConfig({
     debugMode: true,
     version: '0.0.0',
     scheme: 'http',
     hostname: 'localhost',
     serverDid,
     recoveryKey,
-    adminPassword: 'admin-pass',
+    adminPassword: ADMIN_PASSWORD,
     inviteRequired: false,
     didPlcUrl: plcUrl,
     jwtSecret: 'jwt-secret',
@@ -87,22 +72,34 @@ export async function createServer(): Promise<TestPDS> {
     blobstoreLocation: `${blobstoreLoc}/blobs`,
     blobstoreTmp: `${blobstoreLoc}/tmp`,
     maxSubscriptionBuffer: 200,
-    repoBackfillLimitMs: 1e3 * 60 * 60,
+    repoBackfillLimitMs: HOUR,
   })
 
-  const db = PDSDatabase.memory()
+  const db =
+    cfg.dbPostgresUrl !== undefined
+      ? Database.postgres({
+          url: cfg.dbPostgresUrl,
+          schema: cfg.dbPostgresSchema,
+        })
+      : Database.memory()
   await db.migrateToLatestOrThrow()
+
   const blobstore = new MemoryBlobStore()
 
-  const pds = PDSServer.create({db, blobstore, keypair, config: cfg})
+  const pds = PDS.create({
+    db,
+    blobstore,
+    repoSigningKey,
+    plcRotationKey,
+    config: cfg,
+  })
   const pdsServer = await pds.start()
   const pdsPort = (pdsServer.address() as AddressInfo).port
   const pdsUrl = `http://localhost:${pdsPort}`
-  const testUsers = await genMockData(pdsUrl)
 
   return {
     pdsUrl,
-    users: testUsers,
+    mocker: new Mocker(pdsUrl),
     async close() {
       await pds.destroy()
       await plcServer.destroy()
@@ -110,80 +107,72 @@ export async function createServer(): Promise<TestPDS> {
   }
 }
 
-async function genMockData(pdsUrl: string): Promise<TestUsers> {
-  const date = dateGen()
+class Mocker {
+  agent: BskyAgent
+  users: Record<string, TestUser> = {}
 
-  const agents = {
-    loggedout: new AtpAgent({service: pdsUrl}),
-    alice: new AtpAgent({service: pdsUrl}),
-    bob: new AtpAgent({service: pdsUrl}),
-    carla: new AtpAgent({service: pdsUrl}),
+  constructor(public service: string) {
+    this.agent = new BskyAgent({service})
   }
-  const users: TestUser[] = [
-    {
-      email: 'alice@test.com',
-      did: '',
-      handle: 'alice.test',
-      password: 'hunter2',
-      agent: agents.alice,
-    },
-    {
-      email: 'bob@test.com',
-      did: '',
-      handle: 'bob.test',
-      password: 'hunter2',
-      agent: agents.bob,
-    },
-    {
-      email: 'carla@test.com',
-      did: '',
-      handle: 'carla.test',
-      password: 'hunter2',
-      agent: agents.carla,
-    },
-  ]
-  const alice = users[0]
-  const bob = users[1]
-  const carla = users[2]
 
-  let _i = 1
-  for (const user of users) {
-    const res = await agents.loggedout.api.com.atproto.server.createAccount({
-      email: user.email,
-      handle: user.handle,
-      password: user.password,
+  // NOTE
+  // deterministic date generator
+  // we use this to ensure the mock dataset is always the same
+  // which is very useful when testing
+  *dateGen() {
+    let start = 1657846031914
+    while (true) {
+      yield new Date(start).toISOString()
+      start += 1e3
+    }
+  }
+
+  async createUser(name: string) {
+    const agent = new BskyAgent({service: this.agent.service})
+    const email = `fake${Object.keys(this.users).length + 1}@fake.com`
+    const res = await agent.createAccount({
+      email,
+      handle: name + '.test',
+      password: 'hunter2',
     })
-    user.agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
-    user.did = res.data.did
-    await user.agent.api.app.bsky.actor.profile.create(
-      {did: user.did},
-      {
-        displayName: ucfirst(user.handle).slice(0, -5),
-        description: `Test user ${_i++}`,
-      },
-    )
+    this.users[name] = {
+      did: res.data.did,
+      email,
+      handle: name + '.test',
+      password: 'hunter2',
+      agent: agent,
+    }
   }
 
-  // everybody follows everybody
-  const follow = async (author: TestUser, subject: TestUser) => {
-    await author.agent.api.app.bsky.graph.follow.create(
-      {did: author.did},
-      {
-        subject: subject.did,
-        createdAt: date.next().value || '',
-      },
-    )
+  async follow(a: string, b: string) {
+    await this.users[a].agent.follow(this.users[b].did)
   }
-  await follow(alice, bob)
-  await follow(alice, carla)
-  await follow(bob, alice)
-  await follow(bob, carla)
-  await follow(carla, alice)
-  await follow(carla, bob)
 
-  return {alice, bob, carla}
-}
+  async generateStandardMock() {
+    await this.createUser('alice')
+    await this.createUser('bob')
+    await this.createUser('carla')
 
-function ucfirst(str: string): string {
-  return str.at(0)?.toUpperCase() + str.slice(1)
+    await this.users.alice.agent.upsertProfile(() => ({
+      displayName: 'Alice',
+      description: 'Test user 1',
+    }))
+
+    await this.users.bob.agent.upsertProfile(() => ({
+      displayName: 'Bob',
+      description: 'Test user 2',
+    }))
+
+    await this.users.carla.agent.upsertProfile(() => ({
+      displayName: 'Carla',
+      description: 'Test user 3',
+    }))
+
+    await this.follow('alice', 'bob')
+    await this.follow('alice', 'carla')
+    await this.follow('bob', 'alice')
+    await this.follow('bob', 'carla')
+    await this.follow('carla', 'alice')
+    await this.follow('carla', 'bob')
+  }
 }

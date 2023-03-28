@@ -1,15 +1,17 @@
 /* eslint-env detox/detox */
 
-const {openApp, login} = require('../util')
+import {openApp, login, createServer} from '../util'
 
 describe('Login', () => {
-  beforeEach(async () => {
+  let service: string
+  beforeAll(async () => {
+    service = await createServer('mock1')
     await openApp({permissions: {notifications: 'YES'}})
   })
 
   it('As Alice, I can login', async () => {
     await expect(element(by.id('signInButton'))).toBeVisible()
-    await login('alice', 'hunter2', {
+    await login(service, 'alice', 'hunter2', {
       takeScreenshots: true,
     })
     await device.takeScreenshot('5- opened home screen')

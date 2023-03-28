@@ -1,14 +1,16 @@
 /* eslint-env detox/detox */
 
-const {openApp, login} = require('../util')
+import {openApp, login, createServer} from '../util'
 
 describe('Composer', () => {
-  beforeEach(async () => {
+  let service: string
+  beforeAll(async () => {
+    service = await createServer('mock1')
     await openApp({permissions: {notifications: 'YES'}})
   })
 
   it('As Alice, I can login, and post a text', async () => {
-    await login('alice', 'hunter2')
+    await login(service, 'alice', 'hunter2')
     await element(by.id('composeFAB')).tap()
     await device.takeScreenshot('1- opened composer')
     await element(by.id('composerTextInput')).typeText(

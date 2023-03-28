@@ -76,6 +76,7 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
             Enter the address of your provider:
           </Text>
           <TextInput
+            testID="customServerInput"
             icon="globe"
             placeholder="Hosting provider address"
             value={model.serviceUrl}
