@@ -176,18 +176,39 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
     })
   }, [track, store, view])
 
-  const isMe = store.me.did === view.did
-  let dropdownItems: DropdownItem[] = [{label: 'Share', onPress: onPressShare}]
-  if (!isMe) {
-    dropdownItems.push({
-      label: view.viewer.muted ? 'Unmute Account' : 'Mute Account',
-      onPress: view.viewer.muted ? onPressUnmuteAccount : onPressMuteAccount,
-    })
-    dropdownItems.push({
-      label: 'Report Account',
-      onPress: onPressReportAccount,
-    })
-  }
+  const isMe = React.useMemo(
+    () => store.me.did === view.did,
+    [store.me.did, view.did],
+  )
+  const dropdownItems: DropdownItem[] = React.useMemo(() => {
+    let items: DropdownItem[] = [
+      {
+        testID: 'profileHeaderDropdownSahreBtn',
+        label: 'Share',
+        onPress: onPressShare,
+      },
+    ]
+    if (!isMe) {
+      items.push({
+        testID: 'profileHeaderDropdownMuteBtn',
+        label: view.viewer.muted ? 'Unmute Account' : 'Mute Account',
+        onPress: view.viewer.muted ? onPressUnmuteAccount : onPressMuteAccount,
+      })
+      items.push({
+        testID: 'profileHeaderDropdownReportBtn',
+        label: 'Report Account',
+        onPress: onPressReportAccount,
+      })
+    }
+    return items
+  }, [
+    isMe,
+    view.viewer.muted,
+    onPressShare,
+    onPressUnmuteAccount,
+    onPressMuteAccount,
+    onPressReportAccount,
+  ])
   return (
     <View style={pal.view}>
       <UserBanner banner={view.banner} />
@@ -206,6 +227,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
             <>
               {store.me.follows.isFollowing(view.did) ? (
                 <TouchableOpacity
+                  testID="unfollowBtn"
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.mainBtn, pal.btn]}>
                   <FontAwesomeIcon
@@ -219,7 +241,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
-                  testID="profileHeaderToggleFollowButton"
+                  testID="followBtn"
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.primaryBtn]}>
                   <FontAwesomeIcon
@@ -235,6 +257,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
           )}
           {dropdownItems?.length ? (
             <DropdownButton
+              testID="profileHeaderDropdownBtn"
               type="bare"
               items={dropdownItems}
               style={[styles.btn, styles.secondaryBtn, pal.btn]}>
@@ -301,7 +324,9 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
           />
         ) : undefined}
         {view.viewer.muted ? (
-          <View style={[styles.detailLine, pal.btn, s.p5]}>
+          <View
+            testID="profileHeaderMutedNotice"
+            style={[styles.detailLine, pal.btn, s.p5]}>
             <FontAwesomeIcon
               icon={['far', 'eye-slash']}
               style={[pal.text, s.mr5]}

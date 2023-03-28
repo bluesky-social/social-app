@@ -48,7 +48,7 @@ export function Component({did}: {did: string}) {
         reasonType,
         reason,
         subject: {
-          $type: 'com.atproto.repo.repoRef',
+          $type: 'com.atproto.admin.defs#repoRef',
           did,
         },
       })
@@ -61,12 +61,18 @@ export function Component({did}: {did: string}) {
     }
   }
   return (
-    <View style={[s.flex1, s.pl10, s.pr10, pal.view]}>
+    <View
+      testID="reportAccountModal"
+      style={[s.flex1, s.pl10, s.pr10, pal.view]}>
       <Text style={[pal.text, styles.title]}>Report account</Text>
       <Text style={[pal.textLight, styles.description]}>
         What is the issue with this account?
       </Text>
-      <RadioGroup items={ITEMS} onSelect={onSelectIssue} />
+      <RadioGroup
+        testID="reportAccountRadios"
+        items={ITEMS}
+        onSelect={onSelectIssue}
+      />
       {error ? (
         <View style={s.mt10}>
           <ErrorMessage message={error} />
@@ -77,7 +83,10 @@ export function Component({did}: {did: string}) {
           <ActivityIndicator />
         </View>
       ) : issue ? (
-        <TouchableOpacity style={s.mt10} onPress={onPress}>
+        <TouchableOpacity
+          testID="sendReportBtn"
+          style={s.mt10}
+          onPress={onPress}>
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}

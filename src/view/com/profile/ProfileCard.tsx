@@ -11,6 +11,7 @@ import {useStores} from 'state/index'
 import FollowButton from './FollowButton'
 
 export function ProfileCard({
+  testID,
   handle,
   displayName,
   avatar,
@@ -21,6 +22,7 @@ export function ProfileCard({
   followers,
   renderButton,
 }: {
+  testID?: string
   handle: string
   displayName?: string
   avatar?: string
@@ -34,6 +36,7 @@ export function ProfileCard({
   const pal = usePalette('default')
   return (
     <Link
+      testID={testID}
       style={[
         styles.outer,
         pal.border,
