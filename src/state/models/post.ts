@@ -58,12 +58,12 @@ export class PostModel implements RemoveIndex<Post.Record> {
   // state transitions
   // =
 
-  private _xLoading() {
+  _xLoading() {
     this.isLoading = true
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.hasLoaded = true
     this.error = cleanError(err)
@@ -75,7 +75,7 @@ export class PostModel implements RemoveIndex<Post.Record> {
   // loader functions
   // =
 
-  private async _load() {
+  async _load() {
     this._xLoading()
     try {
       const urip = new AtUri(this.uri)
@@ -94,7 +94,7 @@ export class PostModel implements RemoveIndex<Post.Record> {
     }
   }
 
-  private _replaceAll(res: Post.Record) {
+  _replaceAll(res: Post.Record) {
     this.text = res.text
     this.entities = res.entities
     this.reply = res.reply

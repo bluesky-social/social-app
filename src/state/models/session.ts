@@ -40,7 +40,7 @@ export class SessionModel {
   // emergency log facility to help us track down this logout issue
   // remove when resolved
   // -prf
-  private _log(message: string, details?: Record<string, any>) {
+  _log(message: string, details?: Record<string, any>) {
     details = details || {}
     details.state = {
       data: this.data,
@@ -166,7 +166,7 @@ export class SessionModel {
   /**
    * Upserts a session into the accounts
    */
-  private persistSession(
+  persistSession(
     service: string,
     did: string,
     event: AtpSessionEvent,
@@ -225,7 +225,7 @@ export class SessionModel {
   /**
    * Clears any session tokens from the accounts; used on logout.
    */
-  private clearSessionTokens() {
+  clearSessionTokens() {
     this._log('SessionModel:clearSessionTokens')
     this.accounts = this.accounts.map(acct => ({
       service: acct.service,
@@ -239,7 +239,7 @@ export class SessionModel {
   /**
    * Fetches additional information about an account on load.
    */
-  private async loadAccountInfo(agent: BskyAgent, did: string) {
+  async loadAccountInfo(agent: BskyAgent, did: string) {
     const res = await agent.getProfile({actor: did}).catch(_e => undefined)
     if (res) {
       return {

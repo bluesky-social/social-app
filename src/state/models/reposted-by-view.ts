@@ -88,13 +88,13 @@ export class RepostedByViewModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -107,7 +107,7 @@ export class RepostedByViewModel {
   // helper functions
   // =
 
-  private async _resolveUri() {
+  async _resolveUri() {
     const urip = new AtUri(this.params.uri)
     if (!urip.host.startsWith('did:')) {
       try {
@@ -121,12 +121,12 @@ export class RepostedByViewModel {
     })
   }
 
-  private _replaceAll(res: GetRepostedBy.Response) {
+  _replaceAll(res: GetRepostedBy.Response) {
     this.repostedBy = []
     this._appendAll(res)
   }
 
-  private _appendAll(res: GetRepostedBy.Response) {
+  _appendAll(res: GetRepostedBy.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     this.repostedBy = this.repostedBy.concat(res.data.repostedBy)

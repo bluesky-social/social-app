@@ -215,7 +215,7 @@ export class FeedModel {
   tuner = new FeedTuner()
 
   // used to linearize async modifications to state
-  private lock = new AwaitLock()
+  lock = new AwaitLock()
 
   // data
   slices: FeedSliceModel[] = []
@@ -303,7 +303,7 @@ export class FeedModel {
     return this.setup()
   }
 
-  private get feedTuners() {
+  get feedTuners() {
     if (this.feedType === 'goodstuff') {
       return [
         FeedTuner.dedupReposts,
@@ -484,13 +484,13 @@ export class FeedModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -503,14 +503,12 @@ export class FeedModel {
   // helper functions
   // =
 
-  private async _replaceAll(
-    res: GetTimeline.Response | GetAuthorFeed.Response,
-  ) {
+  async _replaceAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     this.pollCursor = res.data.feed[0]?.post.uri
     return this._appendAll(res, true)
   }
 
-  private async _appendAll(
+  async _appendAll(
     res: GetTimeline.Response | GetAuthorFeed.Response,
     replace = false,
   ) {
@@ -537,7 +535,7 @@ export class FeedModel {
     })
   }
 
-  private _updateAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
+  _updateAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     for (const item of res.data.feed) {
       const existingSlice = this.slices.find(slice =>
         slice.containsUri(item.post.uri),

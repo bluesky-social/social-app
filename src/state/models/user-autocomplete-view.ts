@@ -76,7 +76,7 @@ export class UserAutocompleteViewModel {
   // internal
   // =
 
-  private async _getFollows() {
+  async _getFollows() {
     const res = await this.rootStore.agent.getFollows({
       actor: this.rootStore.me.did || '',
     })
@@ -88,7 +88,7 @@ export class UserAutocompleteViewModel {
     })
   }
 
-  private async _search() {
+  async _search() {
     const res = await this.rootStore.agent.searchActorsTypeahead({
       term: this.prefix,
       limit: 8,

@@ -172,13 +172,13 @@ export class ProfileViewModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -191,7 +191,7 @@ export class ProfileViewModel {
   // loader functions
   // =
 
-  private async _load(isRefreshing = false) {
+  async _load(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
       const res = await this.rootStore.agent.getProfile(this.params)
@@ -204,10 +204,9 @@ export class ProfileViewModel {
     }
   }
 
-  private _replaceAll(res: GetProfile.Response) {
+  _replaceAll(res: GetProfile.Response) {
     this.did = res.data.did
     this.handle = res.data.handle
-    this.creator = res.data.creator
     this.displayName = res.data.displayName
     this.description = res.data.description
     this.avatar = res.data.avatar
@@ -221,7 +220,7 @@ export class ProfileViewModel {
     }
   }
 
-  private async _createRichText() {
+  async _createRichText() {
     this.descriptionRichText = new RichText(
       {text: this.description || ''},
       {cleanNewlines: true},

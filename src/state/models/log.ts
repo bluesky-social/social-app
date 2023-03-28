@@ -32,7 +32,7 @@ export class LogModel {
     makeAutoObservable(this)
   }
 
-  private add(entry: LogEntry) {
+  add(entry: LogEntry) {
     this.entries.push(entry)
     while (this.entries.length > MAX_ENTRIES) {
       this.entries = this.entries.slice(50)

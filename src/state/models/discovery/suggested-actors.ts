@@ -22,7 +22,7 @@ export class SuggestedActorsModel {
   hasMore = true
   loadMoreCursor?: string
 
-  private hardCodedSuggestions: SuggestedActor[] | undefined
+  hardCodedSuggestions: SuggestedActor[] | undefined
 
   // data
   suggestions: SuggestedActor[] = []
@@ -106,7 +106,7 @@ export class SuggestedActorsModel {
     }
   })
 
-  private async fetchHardcodedSuggestions() {
+  async fetchHardcodedSuggestions() {
     if (this.hardCodedSuggestions) {
       return
     }
@@ -154,13 +154,13 @@ export class SuggestedActorsModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true

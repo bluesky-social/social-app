@@ -270,14 +270,14 @@ export class PostThreadViewModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
     this.notFound = false
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -291,7 +291,7 @@ export class PostThreadViewModel {
   // loader functions
   // =
 
-  private async _resolveUri() {
+  async _resolveUri() {
     const urip = new AtUri(this.params.uri)
     if (!urip.host.startsWith('did:')) {
       try {
@@ -305,7 +305,7 @@ export class PostThreadViewModel {
     })
   }
 
-  private async _load(isRefreshing = false) {
+  async _load(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
       const res = await this.rootStore.agent.getPostThread(
@@ -318,7 +318,7 @@ export class PostThreadViewModel {
     }
   }
 
-  private _replaceAll(res: GetPostThread.Response) {
+  _replaceAll(res: GetPostThread.Response) {
     sortThread(res.data.thread)
     const keyGen = reactKeyGenerator()
     const thread = new PostThreadViewPostModel(

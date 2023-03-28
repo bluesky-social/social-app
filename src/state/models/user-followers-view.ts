@@ -87,13 +87,13 @@ export class UserFollowersViewModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -106,12 +106,12 @@ export class UserFollowersViewModel {
   // helper functions
   // =
 
-  private _replaceAll(res: GetFollowers.Response) {
+  _replaceAll(res: GetFollowers.Response) {
     this.followers = []
     this._appendAll(res)
   }
 
-  private _appendAll(res: GetFollowers.Response) {
+  _appendAll(res: GetFollowers.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     this.followers = this.followers.concat(res.data.followers)

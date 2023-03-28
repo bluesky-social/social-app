@@ -85,13 +85,13 @@ export class LikesViewModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -104,7 +104,7 @@ export class LikesViewModel {
   // helper functions
   // =
 
-  private async _resolveUri() {
+  async _resolveUri() {
     const urip = new AtUri(this.params.uri)
     if (!urip.host.startsWith('did:')) {
       try {
@@ -118,12 +118,12 @@ export class LikesViewModel {
     })
   }
 
-  private _replaceAll(res: GetLikes.Response) {
+  _replaceAll(res: GetLikes.Response) {
     this.likes = []
     this._appendAll(res)
   }
 
-  private _appendAll(res: GetLikes.Response) {
+  _appendAll(res: GetLikes.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     this.likes = this.likes.concat(res.data.likes)

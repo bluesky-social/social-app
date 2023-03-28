@@ -186,7 +186,7 @@ export class NotificationsViewModel {
   loadMoreCursor?: string
 
   // used to linearize async modifications to state
-  private lock = new AwaitLock()
+  lock = new AwaitLock()
 
   // data
   notifications: NotificationsViewItemModel[] = []
@@ -427,13 +427,13 @@ export class NotificationsViewModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -446,14 +446,14 @@ export class NotificationsViewModel {
   // helper functions
   // =
 
-  private async _replaceAll(res: ListNotifications.Response) {
+  async _replaceAll(res: ListNotifications.Response) {
     if (res.data.notifications[0]) {
       this.mostRecentNotificationUri = res.data.notifications[0].uri
     }
     return this._appendAll(res, true)
   }
 
-  private async _appendAll(res: ListNotifications.Response, replace = false) {
+  async _appendAll(res: ListNotifications.Response, replace = false) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     const promises = []
@@ -484,7 +484,7 @@ export class NotificationsViewModel {
     })
   }
 
-  private async _prependAll(res: ListNotifications.Response) {
+  async _prependAll(res: ListNotifications.Response) {
     const promises = []
     const itemModels: NotificationsViewItemModel[] = []
     const dedupedNotifs = res.data.notifications.filter(
@@ -515,7 +515,7 @@ export class NotificationsViewModel {
     })
   }
 
-  private _updateAll(res: ListNotifications.Response) {
+  _updateAll(res: ListNotifications.Response) {
     for (const item of res.data.notifications) {
       const existingItem = this.notifications.find(item2 => isEq(item, item2))
       if (existingItem) {
