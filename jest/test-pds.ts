@@ -148,7 +148,7 @@ class Mocker {
     await this.users[a].agent.follow(this.users[b].did)
   }
 
-  async generateStandardMock() {
+  async generateStandardGraph() {
     await this.createUser('alice')
     await this.createUser('bob')
     await this.createUser('carla')

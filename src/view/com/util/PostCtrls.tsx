@@ -203,6 +203,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       </View>
       <View style={s.flex1}>
         <TouchableOpacity
+          testID="repostBtn"
           hitSlop={HITSLOP}
           onPress={onPressToggleRepostWrapper}
           style={styles.ctrl}>
@@ -230,6 +231,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           }
           {typeof opts.repostCount !== 'undefined' ? (
             <Text
+              testID="repostCount"
               style={
                 opts.isReposted || repostMod > 0
                   ? [s.bold, s.green3, s.f15, s.ml5]
@@ -242,6 +244,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       </View>
       <View style={s.flex1}>
         <TouchableOpacity
+          testID="likeBtn"
           style={styles.ctrl}
           hitSlop={HITSLOP}
           onPress={onPressToggleLikeWrapper}>
@@ -278,6 +281,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           }
           {typeof opts.likeCount !== 'undefined' ? (
             <Text
+              testID="likeCount"
               style={
                 opts.isLiked || likeMod > 0
                   ? [s.bold, s.red3, s.f15, s.ml5]
@@ -291,6 +295,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       <View style={s.flex1}>
         {opts.big ? undefined : (
           <PostDropdownBtn
+            testID="postDropdownBtn"
             style={styles.ctrl}
             itemUri={opts.itemUri}
             itemCid={opts.itemCid}

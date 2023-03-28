@@ -39,7 +39,7 @@ export function Component({
     }
   }
   return (
-    <View style={[s.flex1, s.pl10, s.pr10]}>
+    <View testID="confirmModal" style={[s.flex1, s.pl10, s.pr10]}>
       <Text style={styles.title}>{title}</Text>
       {typeof message === 'string' ? (
         <Text style={styles.description}>{message}</Text>
@@ -56,7 +56,7 @@ export function Component({
           <ActivityIndicator />
         </View>
       ) : (
-        <TouchableOpacity style={s.mt10} onPress={onPress}>
+        <TouchableOpacity testID="confirmBtn" style={s.mt10} onPress={onPress}>
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}

@@ -112,6 +112,7 @@ export function DropdownButton({
 }
 
 export function PostDropdownBtn({
+  testID,
   style,
   children,
   itemUri,
@@ -122,6 +123,7 @@ export function PostDropdownBtn({
   onOpenTranslate,
   onDeletePost,
 }: {
+  testID?: string
   style?: StyleProp<ViewStyle>
   children?: React.ReactNode
   itemUri: string
@@ -137,6 +139,7 @@ export function PostDropdownBtn({
 
   const dropdownItems: DropdownItem[] = [
     {
+      testID: 'postDropdownTranslateBtn',
       icon: 'language',
       label: 'Translate...',
       onPress() {
@@ -144,6 +147,7 @@ export function PostDropdownBtn({
       },
     },
     {
+      testID: 'postDropdownCopyTextBtn',
       icon: ['far', 'paste'],
       label: 'Copy post text',
       onPress() {
@@ -151,6 +155,7 @@ export function PostDropdownBtn({
       },
     },
     {
+      testID: 'postDropdownShareBtn',
       icon: 'share',
       label: 'Share...',
       onPress() {
@@ -158,6 +163,7 @@ export function PostDropdownBtn({
       },
     },
     {
+      testID: 'postDropdownReportBtn',
       icon: 'circle-exclamation',
       label: 'Report post',
       onPress() {
@@ -170,6 +176,7 @@ export function PostDropdownBtn({
     },
     isAuthor
       ? {
+          testID: 'postDropdownDeleteBtn',
           icon: ['far', 'trash-can'],
           label: 'Delete post',
           onPress() {
@@ -185,7 +192,11 @@ export function PostDropdownBtn({
   ].filter(Boolean) as DropdownItem[]
 
   return (
-    <DropdownButton style={style} items={dropdownItems} menuWidth={200}>
+    <DropdownButton
+      testID={testID}
+      style={style}
+      items={dropdownItems}
+      menuWidth={200}>
       {children}
     </DropdownButton>
   )

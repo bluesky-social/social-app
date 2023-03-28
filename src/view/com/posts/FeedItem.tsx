@@ -127,7 +127,12 @@ export const FeedItem = observer(function ({
 
   return (
     <PostMutedWrapper isMuted={isMuted}>
-      <Link style={outerStyles} href={itemHref} title={itemTitle} noFeedback>
+      <Link
+        testID={`feedItem-by-${item.post.author.handle}`}
+        style={outerStyles}
+        href={itemHref}
+        title={itemTitle}
+        noFeedback>
         {isThreadChild && (
           <View
             style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}

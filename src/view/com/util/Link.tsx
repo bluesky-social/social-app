@@ -29,6 +29,7 @@ type Event =
   | GestureResponderEvent
 
 export const Link = observer(function Link({
+  testID,
   style,
   href,
   title,
@@ -36,6 +37,7 @@ export const Link = observer(function Link({
   noFeedback,
   asAnchor,
 }: {
+  testID?: string
   style?: StyleProp<ViewStyle>
   href?: string
   title?: string
@@ -58,6 +60,7 @@ export const Link = observer(function Link({
   if (noFeedback) {
     return (
       <TouchableWithoutFeedback
+        testID={testID}
         onPress={onPress}
         // @ts-ignore web only -prf
         href={asAnchor ? href : undefined}>
@@ -69,6 +72,7 @@ export const Link = observer(function Link({
   }
   return (
     <TouchableOpacity
+      testID={testID}
       style={style}
       onPress={onPress}
       // @ts-ignore web only -prf
@@ -79,6 +83,7 @@ export const Link = observer(function Link({
 })
 
 export const TextLink = observer(function TextLink({
+  testID,
   type = 'md',
   style,
   href,
@@ -86,6 +91,7 @@ export const TextLink = observer(function TextLink({
   numberOfLines,
   lineHeight,
 }: {
+  testID?: string
   type?: TypographyVariant
   style?: StyleProp<TextStyle>
   href: string
@@ -106,6 +112,7 @@ export const TextLink = observer(function TextLink({
 
   return (
     <Text
+      testID={testID}
       type={type}
       style={style}
       numberOfLines={numberOfLines}
@@ -120,6 +127,7 @@ export const TextLink = observer(function TextLink({
  * Only acts as a link on desktop web
  */
 export const DesktopWebTextLink = observer(function DesktopWebTextLink({
+  testID,
   type = 'md',
   style,
   href,
@@ -127,6 +135,7 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   numberOfLines,
   lineHeight,
 }: {
+  testID?: string
   type?: TypographyVariant
   style?: StyleProp<TextStyle>
   href: string
@@ -137,6 +146,7 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   if (isDesktopWeb) {
     return (
       <TextLink
+        testID={testID}
         type={type}
         style={style}
         href={href}
@@ -148,6 +158,7 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   }
   return (
     <Text
+      testID={testID}
       type={type}
       style={style}
       numberOfLines={numberOfLines}

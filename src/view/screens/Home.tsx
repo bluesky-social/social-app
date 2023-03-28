@@ -79,21 +79,29 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
       initialPage={initialPage}>
       <FeedPage
         key="1"
+        testID="followingFeedPage"
         isPageFocused={selectedPage === 0}
         feed={store.me.mainFeed}
         renderEmptyState={renderFollowingEmptyState}
       />
-      <FeedPage key="2" isPageFocused={selectedPage === 1} feed={algoFeed} />
+      <FeedPage
+        key="2"
+        testID="whatshotFeedPage"
+        isPageFocused={selectedPage === 1}
+        feed={algoFeed}
+      />
     </Pager>
   )
 })
 
 const FeedPage = observer(
   ({
+    testID,
     isPageFocused,
     feed,
     renderEmptyState,
   }: {
+    testID?: string
     feed: FeedModel
     isPageFocused: boolean
     renderEmptyState?: () => JSX.Element
@@ -170,8 +178,9 @@ const FeedPage = observer(
     }, [feed, scrollToTop])
 
     return (
-      <View style={s.h100pct}>
+      <View testID={testID} style={s.h100pct}>
         <Feed
+          testID={testID ? `${testID}-feed` : undefined}
           key="default"
           feed={feed}
           scrollElRef={scrollElRef}

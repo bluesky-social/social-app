@@ -5,7 +5,7 @@ import {openApp, login, createServer} from '../util'
 describe('Composer', () => {
   let service: string
   beforeAll(async () => {
-    service = await createServer('mock1')
+    service = await createServer('?users')
     await openApp({permissions: {notifications: 'YES'}})
   })
 

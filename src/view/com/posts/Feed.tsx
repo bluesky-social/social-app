@@ -128,6 +128,7 @@ export const Feed = observer(function Feed({
     <View testID={testID} style={style}>
       {data.length > 0 && (
         <FlatList
+          testID={testID ? `${testID}-flatlist` : undefined}
           ref={scrollElRef}
           data={data}
           keyExtractor={item => item._reactKey}

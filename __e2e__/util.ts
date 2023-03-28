@@ -81,8 +81,8 @@ async function openAppForDebugBuild(platform: string, opts: any) {
   await sleep(3000)
 }
 
-export async function createServer(mock = 'mock0') {
-  const res = await fetch(`http://localhost:1986/${mock}`)
+export async function createServer(path = '') {
+  const res = await fetch(`http://localhost:1986/${path}`, {method: 'POST'})
   const resBody = await res.text()
   return resBody
 }

@@ -69,12 +69,16 @@ export function Component({
     }
   }
   return (
-    <View style={[s.flex1, s.pl10, s.pr10, pal.view]}>
+    <View testID="reportPostModal" style={[s.flex1, s.pl10, s.pr10, pal.view]}>
       <Text style={[pal.text, styles.title]}>Report post</Text>
       <Text style={[pal.textLight, styles.description]}>
         What is the issue with this post?
       </Text>
-      <RadioGroup items={ITEMS} onSelect={onSelectIssue} />
+      <RadioGroup
+        testID="reportPostRadios"
+        items={ITEMS}
+        onSelect={onSelectIssue}
+      />
       {error ? (
         <View style={s.mt10}>
           <ErrorMessage message={error} />
@@ -85,7 +89,10 @@ export function Component({
           <ActivityIndicator />
         </View>
       ) : issue ? (
-        <TouchableOpacity style={s.mt10} onPress={onPress}>
+        <TouchableOpacity
+          testID="sendReportBtn"
+          style={s.mt10}
+          onPress={onPress}>
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}
