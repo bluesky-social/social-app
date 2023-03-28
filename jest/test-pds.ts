@@ -1,5 +1,6 @@
 import {AddressInfo} from 'net'
 import os from 'os'
+import net from 'net'
 import path from 'path'
 import * as crypto from '@atproto/crypto'
 import {PDS, ServerConfig, Database, MemoryBlobStore} from '@atproto/pds'
@@ -29,6 +30,7 @@ export interface TestPDS {
 export async function createServer(): Promise<TestPDS> {
   const repoSigningKey = await crypto.Secp256k1Keypair.create()
   const plcRotationKey = await crypto.Secp256k1Keypair.create()
+  const port = await getPort()
 
   const plcDb = PlcDatabase.mock()
 
@@ -44,7 +46,7 @@ export async function createServer(): Promise<TestPDS> {
     signingKey: repoSigningKey.did(),
     rotationKeys: [recoveryKey, plcRotationKey.did()],
     handle: 'localhost',
-    pds: 'https://pds.public.url',
+    pds: `http://localhost:${port}`,
     signer: plcRotationKey,
   })
 
@@ -55,6 +57,7 @@ export async function createServer(): Promise<TestPDS> {
     version: '0.0.0',
     scheme: 'http',
     hostname: 'localhost',
+    port,
     serverDid,
     recoveryKey,
     adminPassword: ADMIN_PASSWORD,
@@ -64,7 +67,7 @@ export async function createServer(): Promise<TestPDS> {
     availableUserDomains: ['.test'],
     appUrlPasswordReset: 'app://forgot-password',
     emailNoReplyAddress: 'noreply@blueskyweb.xyz',
-    publicUrl: 'https://pds.public.url',
+    publicUrl: `http://localhost:${port}`,
     imgUriSalt: '9dd04221f5755bce5f55f47464c27e1e',
     imgUriKey:
       'f23ecd142835025f42c3db2cf25dd813956c178392760256211f9d315f8ab4d8',
@@ -93,9 +96,8 @@ export async function createServer(): Promise<TestPDS> {
     plcRotationKey,
     config: cfg,
   })
-  const pdsServer = await pds.start()
-  const pdsPort = (pdsServer.address() as AddressInfo).port
-  const pdsUrl = `http://localhost:${pdsPort}`
+  await pds.start()
+  const pdsUrl = `http://localhost:${port}`
 
   return {
     pdsUrl,
@@ -175,4 +177,25 @@ class Mocker {
     await this.follow('carla', 'alice')
     await this.follow('carla', 'bob')
   }
+}
+
+const checkAvailablePort = (port: number) =>
+  new Promise(resolve => {
+    const server = net.createServer()
+    server.unref()
+    server.on('error', () => resolve(false))
+    server.listen({port}, () => {
+      server.close(() => {
+        resolve(true)
+      })
+    })
+  })
+
+async function getPort() {
+  for (let i = 3000; i < 65000; i++) {
+    if (await checkAvailablePort(i)) {
+      return i
+    }
+  }
+  throw new Error('Unable to find an available port')
 }

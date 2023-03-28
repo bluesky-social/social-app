@@ -85,7 +85,7 @@
   dependencies:
     "@sideway/address" "^5.0.0"
 
-"@atproto/lexicon@*", "@atproto/lexicon@^0.0.4":
+"@atproto/lexicon@*":
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.0.4.tgz#f0a6688ad54adb2ec4a8d1f11fcbf45e96203c4b"
   integrity sha512-00lqIKJetVlxQzNmEhrFzZeT9k+zGPBsHwtYpG7rH4vZ211i5WiDkmQcBwwFs2g/qCBt+nVq0dlgl3JhCLJXQg==
@@ -190,7 +190,7 @@
     mime-types "^2.1.35"
     zod "^3.14.2"
 
-"@atproto/xrpc@*", "@atproto/xrpc@^0.0.4":
+"@atproto/xrpc@*":
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.0.4.tgz#d7dd45cdb21e29b9715ca30eb18320548f293413"
   integrity sha512-Hxh+GgZx21Zvlb2RMlSlJDd3r3GR0vAS6OOZPW2xzWiVHsetb9ZlFB6D0AeAPj2R+U2UUkmdUR8G3U/nkgnQFA==
@@ -8131,6 +8131,11 @@ get-port@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/get-port/-/get-port-3.2.0.tgz#dd7ce7de187c06c8bf353796ac71e099f0980ebc"
   integrity sha512-x5UJKlgeUiNT8nyo/AcnwLnZuZNcSjSw0kogRB+Whd1fjjFq4B1hySFxSFWWSn4mIBzg3sRNUDFYc4g5gjPoLg==
+
+get-port@^6.1.2:
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/get-port/-/get-port-6.1.2.tgz#c1228abb67ba0e17fb346da33b15187833b9c08a"
+  integrity sha512-BrGGraKm2uPqurfGVj/z97/zv8dPleC6x9JBNRTrDNtCkkRF4rPwrQXFgL7+I+q8QSdU4ntLQX2D7KIxSy8nGw==
 
 get-stream@^4.0.0:
   version "4.1.0"

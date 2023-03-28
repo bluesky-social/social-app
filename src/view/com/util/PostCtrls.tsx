@@ -186,6 +186,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     <View style={[styles.ctrls, opts.style]}>
       <View style={s.flex1}>
         <TouchableOpacity
+          testID="replyBtn"
           style={styles.ctrl}
           hitSlop={HITSLOP}
           onPress={opts.onPressReply}>

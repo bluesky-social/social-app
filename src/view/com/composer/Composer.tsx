@@ -222,7 +222,7 @@ export const ComposePost = observer(function ComposePost({
               </View>
             ) : canPost ? (
               <TouchableOpacity
-                testID="composerPublishButton"
+                testID="composerPublishBtn"
                 onPress={onPressPublish}>
                 <LinearGradient
                   colors={[gradients.blueLight.start, gradients.blueLight.end]}
@@ -312,6 +312,7 @@ export const ComposePost = observer(function ComposePost({
               {Array.from(suggestedLinks).map(url => (
                 <TouchableOpacity
                   key={`suggested-${url}`}
+                  testID="addLinkCardBtn"
                   style={[pal.borderDark, styles.addExtLinkBtn]}
                   onPress={() => onPressAddLinkCard(url)}>
                   <Text style={pal.text}>

@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native'
 import React from 'react'
-import {AppBskyEmbedImages} from '@atproto/api'
+import {AppBskyEmbedImages, AppBskyEmbedRecordWithMedia} from '@atproto/api'
 import {AtUri} from '../../../../third-party/uri'
 import {PostMeta} from '../PostMeta'
 import {Link} from '../Link'
@@ -19,7 +19,12 @@ export function QuoteEmbed({quote}: {quote: ComposerOptsQuote}) {
     [quote.text],
   )
   const imagesEmbed = React.useMemo(
-    () => quote.embeds?.find(embed => AppBskyEmbedImages.isView(embed)),
+    () =>
+      quote.embeds?.find(
+        embed =>
+          AppBskyEmbedImages.isView(embed) ||
+          AppBskyEmbedRecordWithMedia.isView(embed),
+      ),
     [quote.embeds],
   )
   return (
@@ -43,7 +48,12 @@ export function QuoteEmbed({quote}: {quote: ComposerOptsQuote}) {
           quote.text
         )}
       </Text>
-      {imagesEmbed && <PostEmbeds embed={imagesEmbed} />}
+      {AppBskyEmbedImages.isView(imagesEmbed) && (
+        <PostEmbeds embed={imagesEmbed} />
+      )}
+      {AppBskyEmbedRecordWithMedia.isView(imagesEmbed) && (
+        <PostEmbeds embed={imagesEmbed.media} />
+      )}
     </Link>
   )
 }
