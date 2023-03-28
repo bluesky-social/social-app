@@ -1,6 +1,6 @@
 /* eslint-env detox/detox */
 
-import {openApp, login, createServer} from '../util'
+import {openApp, login, createServer, sleep} from '../util'
 
 describe('Profile screen', () => {
   let service: string
@@ -56,16 +56,37 @@ describe('Profile screen', () => {
     await expect(element(by.id('profileHeaderDescription'))).toHaveText('')
   })
 
-  // TODO
-  // it('Set avi and banner via the edit profile modal', async () => {
-  //   await element(by.id('profileHeaderEditProfileButton')).tap()
-  //   await expect(element(by.id('editProfileModal'))).toBeVisible()
-  //   await element(by.id('changeBannerBtn')).tap()
-  //   await element(by.id('changeBannerLibraryBtn')).tap()
-  //   await sleep(3e3)
-  //   await element(by.id('editProfileSaveBtn')).tap()
-  //   await expect(element(by.id('editProfileModal'))).not.toBeVisible()
-  // })
+  it('Set avi and banner via the edit profile modal', async () => {
+    await expect(element(by.id('userBannerFallback'))).toExist()
+    await expect(element(by.id('userAvatarFallback'))).toExist()
+    await element(by.id('profileHeaderEditProfileButton')).tap()
+    await expect(element(by.id('editProfileModal'))).toBeVisible()
+    await element(by.id('changeBannerBtn')).tap()
+    await element(by.id('changeBannerLibraryBtn')).tap()
+    await sleep(3e3)
+    await element(by.id('changeAvatarBtn')).tap()
+    await element(by.id('changeAvatarLibraryBtn')).tap()
+    await sleep(3e3)
+    await element(by.id('editProfileSaveBtn')).tap()
+    await expect(element(by.id('editProfileModal'))).not.toBeVisible()
+    await expect(element(by.id('userBannerImage'))).toExist()
+    await expect(element(by.id('userAvatarImage'))).toExist()
+  })
+
+  it('Remove avi and banner via the edit profile modal', async () => {
+    await expect(element(by.id('userBannerImage'))).toExist()
+    await expect(element(by.id('userAvatarImage'))).toExist()
+    await element(by.id('profileHeaderEditProfileButton')).tap()
+    await expect(element(by.id('editProfileModal'))).toBeVisible()
+    await element(by.id('changeBannerBtn')).tap()
+    await element(by.id('changeBannerRemoveBtn')).tap()
+    await element(by.id('changeAvatarBtn')).tap()
+    await element(by.id('changeAvatarRemoveBtn')).tap()
+    await element(by.id('editProfileSaveBtn')).tap()
+    await expect(element(by.id('editProfileModal'))).not.toBeVisible()
+    await expect(element(by.id('userBannerFallback'))).toExist()
+    await expect(element(by.id('userAvatarFallback'))).toExist()
+  })
 
   it('Navigate to another user profile', async () => {
     await element(by.id('bottomBarSearchBtn')).tap()

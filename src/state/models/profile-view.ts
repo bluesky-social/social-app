@@ -131,12 +131,9 @@ export class ProfileViewModel {
           newUserAvatar.path,
           newUserAvatar.mime,
         )
-        existing.avatar = {
-          cid: res.data.cid,
-          mimeType: newUserAvatar.mime,
-        }
+        existing.avatar = res.data.blob
       } else if (newUserAvatar === null) {
-        existing.avatar = null
+        existing.avatar = undefined
       }
       if (newUserBanner) {
         const res = await apilib.uploadBlob(
@@ -144,12 +141,9 @@ export class ProfileViewModel {
           newUserBanner.path,
           newUserBanner.mime,
         )
-        existing.banner = {
-          cid: res.data.cid,
-          mimeType: newUserBanner.mime,
-        }
+        existing.banner = res.data.blob
       } else if (newUserBanner === null) {
-        existing.banner = null
+        existing.banner = undefined
       }
       return existing
     })

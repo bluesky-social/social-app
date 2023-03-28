@@ -9,8 +9,7 @@ import {
 export type {PickedMedia} from './types'
 import RNFS from 'react-native-fs'
 
-console.log('using e2e')
-
+let _imageCounter = 0
 async function getFile() {
   const files = await RNFS.readDir(
     RNFS.LibraryDirectoryPath.split('/')
@@ -18,7 +17,7 @@ async function getFile() {
       .concat(['Media', 'DCIM', '100APPLE'])
       .join('/'),
   )
-  return files[0]
+  return files[_imageCounter++ % files.length]
 }
 
 export async function openPicker(

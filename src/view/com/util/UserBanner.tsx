@@ -95,9 +95,16 @@ export function UserBanner({
       bottomOffset={-10}
       menuWidth={170}>
       {banner ? (
-        <Image style={styles.bannerImage} source={{uri: banner}} />
+        <Image
+          testID="userBannerImage"
+          style={styles.bannerImage}
+          source={{uri: banner}}
+        />
       ) : (
-        <View style={[styles.bannerImage, styles.defaultBanner]} />
+        <View
+          testID="userBannerFallback"
+          style={[styles.bannerImage, styles.defaultBanner]}
+        />
       )}
       <View style={[styles.editButtonContainer, pal.btn]}>
         <FontAwesomeIcon
@@ -110,12 +117,16 @@ export function UserBanner({
     </DropdownButton>
   ) : banner ? (
     <Image
+      testID="userBannerImage"
       style={styles.bannerImage}
       resizeMode="cover"
       source={{uri: banner}}
     />
   ) : (
-    <View style={[styles.bannerImage, styles.defaultBanner]} />
+    <View
+      testID="userBannerFallback"
+      style={[styles.bannerImage, styles.defaultBanner]}
+    />
   )
 }
 

@@ -55,7 +55,7 @@ export function Component({
         reasonType,
         reason,
         subject: {
-          $type: 'com.atproto.repo.recordRef',
+          $type: 'com.atproto.repo.strongRef',
           uri: postUri,
           cid: postCid,
         },
