@@ -73,6 +73,7 @@ export class SessionModel {
       rootStore: false,
       serialize: false,
       hydrate: false,
+      hasSession: false,
     })
   }
 
