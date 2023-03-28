@@ -103,9 +103,12 @@ export class PostThreadViewPostModel {
     }
     // replies
     if (includeChildren && v.replies) {
+      console.log('assigning children')
       const replies = []
       for (const item of v.replies) {
+        console.log(item)
         if (AppBskyFeedDefs.isThreadViewPost(item)) {
+          console.log('yes')
           const itemModel = new PostThreadViewPostModel(
             this.rootStore,
             keyGen.next().value,
@@ -126,7 +129,10 @@ export class PostThreadViewPostModel {
           }
           replies.push(itemModel)
         } else if (AppBskyFeedDefs.isNotFoundPost(item)) {
+          console.log('yesish')
           replies.push(item)
+        } else {
+          console.log('no')
         }
       }
       this.replies = replies

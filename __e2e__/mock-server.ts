@@ -18,15 +18,49 @@ async function main() {
       if (url?.query) {
         if ('users' in url.query) {
           console.log('Generating mock users')
-          await server.mocker.generateStandardGraph()
+          await server.mocker.createUser('alice')
+          await server.mocker.createUser('bob')
+          await server.mocker.createUser('carla')
+          await server.mocker.users.alice.agent.upsertProfile(() => ({
+            displayName: 'Alice',
+            description: 'Test user 1',
+          }))
+          await server.mocker.users.bob.agent.upsertProfile(() => ({
+            displayName: 'Bob',
+            description: 'Test user 2',
+          }))
+          await server.mocker.users.carla.agent.upsertProfile(() => ({
+            displayName: 'Carla',
+            description: 'Test user 3',
+          }))
+        }
+        if ('follows' in url.query) {
+          console.log('Generating mock follows')
+          await server.mocker.follow('alice', 'bob')
+          await server.mocker.follow('alice', 'carla')
+          await server.mocker.follow('bob', 'alice')
+          await server.mocker.follow('bob', 'carla')
+          await server.mocker.follow('carla', 'alice')
+          await server.mocker.follow('carla', 'bob')
         }
         if ('posts' in url.query) {
           console.log('Generating mock posts')
           for (let user in server.mocker.users) {
-            for (let i = 1; i <= 5; i++) {
-              await server.mocker.users[user].agent.post({text: `Post ${i}`})
-            }
+            await server.mocker.users[user].agent.post({text: 'Post'})
           }
+        }
+        if ('thread' in url.query) {
+          console.log('Generating mock posts')
+          const res = await server.mocker.users.bob.agent.post({
+            text: 'Thread root',
+          })
+          await server.mocker.users.carla.agent.post({
+            text: 'Thread reply',
+            reply: {
+              parent: {cid: res.cid, uri: res.uri},
+              root: {cid: res.cid, uri: res.uri},
+            },
+          })
         }
       }
       console.log('Ready')

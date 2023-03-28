@@ -2,10 +2,10 @@
 
 import {openApp, login, createServer} from '../util'
 
-describe('Composer', () => {
+describe('Home screen', () => {
   let service: string
   beforeAll(async () => {
-    service = await createServer('?users&posts')
+    service = await createServer('?users&follows&posts')
     await openApp({permissions: {notifications: 'YES'}})
   })
 
@@ -78,22 +78,7 @@ describe('Composer', () => {
 
   it('Can delete posts', async () => {
     const alicePosts = by.id('feedItem-by-alice.test')
-    await element(by.id('followingFeedPage-feed-flatlist')).scroll(
-      1000,
-      'down',
-      NaN,
-      0.8,
-    )
-    // scroll twice due to load more
-    await element(by.id('followingFeedPage-feed-flatlist')).scroll(
-      1000,
-      'down',
-      NaN,
-      0.8,
-    )
-    await expect(
-      element(alicePosts.withDescendant(by.text('Post 5'))),
-    ).toExist()
+    await expect(element(alicePosts.withDescendant(by.text('Post')))).toExist()
     await element(by.id('postDropdownBtn').withAncestor(alicePosts))
       .atIndex(0)
       .tap()
@@ -101,7 +86,7 @@ describe('Composer', () => {
     await expect(element(by.id('confirmModal'))).toBeVisible()
     await element(by.id('confirmBtn')).tap()
     await expect(
-      element(alicePosts.withDescendant(by.text('Post 5'))),
+      element(alicePosts.withDescendant(by.text('Post'))),
     ).not.toExist()
   })
 })
