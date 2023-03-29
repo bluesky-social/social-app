@@ -7,21 +7,16 @@ import {AppBskyEmbedExternal} from '@atproto/api'
 
 export const ExternalLinkEmbed = ({
   link,
-  onImagePress,
   imageChild,
 }: {
   link: AppBskyEmbedExternal.ViewExternal
-  onImagePress?: () => void
   imageChild?: React.ReactNode
 }) => {
   const pal = usePalette('default')
   return (
     <>
       {link.thumb ? (
-        <AutoSizedImage
-          uri={link.thumb}
-          style={styles.extImage}
-          onPress={onImagePress}>
+        <AutoSizedImage uri={link.thumb} style={styles.extImage}>
           {imageChild}
         </AutoSizedImage>
       ) : undefined}
