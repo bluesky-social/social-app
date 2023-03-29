@@ -164,7 +164,7 @@ export function PostEmbeds({
     const youtubeVideoId = getYoutubeVideoId(link.uri)
 
     if (youtubeVideoId) {
-      return <YoutubeEmbed videoId={youtubeVideoId} link={link} style={style} />
+      return <YoutubeEmbed link={link} style={style} />
     }
 
     return (

@@ -1,16 +1,28 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {useNavigation, StackActions} from '@react-navigation/native'
+import {
+  useNavigation,
+  StackActions,
+  useFocusEffect,
+} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Text} from '../com/util/text/Text'
 import {Button} from 'view/com/util/forms/Button'
 import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 
 export const NotFoundScreen = () => {
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
+  const store = useStores()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      store.shell.setMinimalShellMode(false)
+    }, [store]),
+  )
 
   const canGoBack = navigation.canGoBack()
   const onPressHome = React.useCallback(() => {

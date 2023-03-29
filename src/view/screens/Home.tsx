@@ -33,6 +33,7 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      store.shell.setMinimalShellMode(false)
       store.shell.setIsDrawerSwipeDisabled(selectedPage > 0)
       return () => {
         store.shell.setIsDrawerSwipeDisabled(false)
@@ -42,6 +43,7 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
 
   const onPageSelected = React.useCallback(
     (index: number) => {
+      store.shell.setMinimalShellMode(false)
       setSelectedPage(index)
       store.shell.setIsDrawerSwipeDisabled(index > 0)
     },
