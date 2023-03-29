@@ -5,7 +5,7 @@ import {StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {AppBskyEmbedExternal} from '@atproto/api'
 
-const ExternalLinkEmbed = ({
+export const ExternalLinkEmbed = ({
   link,
   onImagePress,
   imageChild,
@@ -65,5 +65,3 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 })
-
-export default ExternalLinkEmbed

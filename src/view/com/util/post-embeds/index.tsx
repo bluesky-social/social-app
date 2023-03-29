@@ -20,8 +20,8 @@ import {ImagesLightbox} from 'state/models/ui/shell'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {saveImageModal} from 'lib/media/manip'
-import YoutubeEmbed from './YoutubeEmbed'
-import ExternalLinkEmbed from './ExternalLinkEmbed'
+import {YoutubeEmbed} from './YoutubeEmbed'
+import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import QuoteEmbed from './QuoteEmbed'
 
@@ -81,6 +81,7 @@ export function PostEmbeds({
             text: embed.record.value.text,
             embeds: embed.record.embeds,
           }}
+          style={style}
         />
       )
     }
@@ -163,7 +164,7 @@ export function PostEmbeds({
     const youtubeVideoId = getYoutubeVideoId(link.uri)
 
     if (youtubeVideoId) {
-      return <YoutubeEmbed videoId={youtubeVideoId} link={link} />
+      return <YoutubeEmbed videoId={youtubeVideoId} link={link} style={style} />
     }
 
     return (
@@ -179,7 +180,9 @@ export function PostEmbeds({
 }
 
 const styles = StyleSheet.create({
-  stackContainer: {},
+  stackContainer: {
+    gap: 6,
+  },
   imagesContainer: {
     marginTop: 4,
   },

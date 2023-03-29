@@ -1,25 +1,29 @@
 import React, {useEffect} from 'react'
 import {useState} from 'react'
 import {
-  View,
-  StyleSheet,
-  Pressable,
-  TouchableWithoutFeedback,
   EmitterSubscription,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle,
 } from 'react-native'
 import YoutubePlayer from 'react-native-youtube-iframe'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import ExternalLinkEmbed from './ExternalLinkEmbed'
+import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {useStores} from 'state/index'
 
-const YoutubeEmbed = ({
+export const YoutubeEmbed = ({
   link,
   videoId,
+  style,
 }: {
   videoId: string
   link: AppBskyEmbedExternal.ViewExternal
+  style?: StyleProp<ViewStyle>
 }) => {
   const store = useStores()
   const [displayVideoPlayer, setDisplayVideoPlayer] = useState(false)
@@ -58,7 +62,7 @@ const YoutubeEmbed = ({
   if (!displayVideoPlayer) {
     return (
       <View
-        style={[styles.extOuter, pal.view, pal.border]}
+        style={[styles.extOuter, pal.view, pal.border, style]}
         onLayout={handleOnLayout}>
         <ExternalLinkEmbed
           link={link}
@@ -74,7 +78,7 @@ const YoutubeEmbed = ({
 
   return (
     <TouchableWithoutFeedback onPress={noop}>
-      <View>
+      <View style={style}>
         {/* Removing the outter View will make tap events propagate to parents */}
         <YoutubePlayer
           initialPlayerParams={{
@@ -96,7 +100,6 @@ const styles = StyleSheet.create({
   extOuter: {
     borderWidth: 1,
     borderRadius: 8,
-    marginTop: 4,
   },
   playButton: {
     position: 'absolute',
@@ -115,5 +118,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 })
-
-export default YoutubeEmbed
