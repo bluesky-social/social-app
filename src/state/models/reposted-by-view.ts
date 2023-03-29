@@ -71,7 +71,7 @@ export class RepostedByViewModel {
       const params = Object.assign({}, this.params, {
         uri: this.resolvedUri,
         limit: PAGE_SIZE,
-        before: replace ? undefined : this.loadMoreCursor,
+        cursor: replace ? undefined : this.loadMoreCursor,
       })
       const res = await this.rootStore.agent.getRepostedBy(params)
       if (replace) {

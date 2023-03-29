@@ -289,7 +289,7 @@ export class NotificationsViewModel {
       try {
         const params = Object.assign({}, this.params, {
           limit: PAGE_SIZE,
-          before: this.loadMoreCursor,
+          cursor: this.loadMoreCursor,
         })
         const res = await this.rootStore.agent.listNotifications(params)
         await this._appendAll(res)
