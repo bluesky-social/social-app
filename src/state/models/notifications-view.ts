@@ -99,12 +99,22 @@ export class NotificationsViewItemModel {
     return this.reason === 'reply'
   }
 
+  get isQuote() {
+    return this.reason === 'quote'
+  }
+
   get isFollow() {
     return this.reason === 'follow'
   }
 
   get needsAdditionalData() {
-    if (this.isLike || this.isRepost || this.isReply || this.isMention) {
+    if (
+      this.isLike ||
+      this.isRepost ||
+      this.isReply ||
+      this.isQuote ||
+      this.isMention
+    ) {
       return !this.additionalPost
     }
     return false
@@ -155,7 +165,7 @@ export class NotificationsViewItemModel {
       return
     }
     let postUri
-    if (this.isReply || this.isMention) {
+    if (this.isReply || this.isQuote || this.isMention) {
       postUri = this.uri
     } else if (this.isLike || this.isRepost) {
       postUri = this.subjectUri

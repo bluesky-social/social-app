@@ -77,7 +77,7 @@ export const FeedItem = observer(function FeedItem({
     return <View />
   }
 
-  if (item.isReply || item.isMention) {
+  if (item.isReply || item.isMention || item.isQuote) {
     if (item.additionalPost?.error) {
       // hide errors - it doesnt help the user to show them
       return <View />
@@ -114,9 +114,6 @@ export const FeedItem = observer(function FeedItem({
     action = 'reposted your post'
     icon = 'retweet'
     iconStyle = [s.green3 as FontAwesomeIconStyle]
-  } else if (item.isReply) {
-    action = 'replied to your post'
-    icon = ['far', 'comment']
   } else if (item.isFollow) {
     action = 'followed you'
     icon = 'user-plus'
@@ -208,7 +205,7 @@ export const FeedItem = observer(function FeedItem({
               </View>
             </View>
           </TouchableWithoutFeedback>
-          {item.isLike || item.isRepost ? (
+          {item.isLike || item.isRepost || item.isQuote ? (
             <AdditionalPostText additionalPost={item.additionalPost} />
           ) : (
             <></>
