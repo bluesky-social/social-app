@@ -2,8 +2,8 @@
  * The root store is the base of all modeled state.
  */
 
-import {makeAutoObservable, runInAction} from 'mobx'
-import {AtpAgent} from '@atproto/api'
+import {makeAutoObservable} from 'mobx'
+import {BskyAgent} from '@atproto/api'
 import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
 import * as BgScheduler from 'lib/bg-scheduler'
@@ -29,7 +29,7 @@ export const appInfo = z.object({
 export type AppInfo = z.infer<typeof appInfo>
 
 export class RootStoreModel {
-  agent: AtpAgent
+  agent: BskyAgent
   appInfo?: AppInfo
   log = new LogModel()
   session = new SessionModel(this)
@@ -40,39 +40,14 @@ export class RootStoreModel {
   linkMetas = new LinkMetasCache(this)
   imageSizes = new ImageSizesCache()
 
-  // HACK
-  // this flag is to track the lexicon breaking refactor
-  // it should be removed once we get that done
-  // -prf
-  hackUpgradeNeeded = false
-  async hackCheckIfUpgradeNeeded() {
-    try {
-      this.log.debug('hackCheckIfUpgradeNeeded()')
-      const res = await fetch('https://bsky.social/xrpc/app.bsky.feed.getLikes')
-      await res.text()
-      runInAction(() => {
-        this.hackUpgradeNeeded = res.status !== 501
-        this.log.debug(
-          `hackCheckIfUpgradeNeeded() said ${this.hackUpgradeNeeded}`,
-        )
-      })
-    } catch (e) {
-      this.log.error('Failed to hackCheckIfUpgradeNeeded', {e})
-    }
-  }
-
-  constructor(agent: AtpAgent) {
+  constructor(agent: BskyAgent) {
     this.agent = agent
     makeAutoObservable(this, {
-      api: false,
+      agent: false,
       serialize: false,
       hydrate: false,
     })
     this.initBgFetch()
-  }
-
-  get api() {
-    return this.agent.api
   }
 
   setAppInfo(info: AppInfo) {
@@ -131,7 +106,7 @@ export class RootStoreModel {
   /**
    * Called by the session model. Refreshes session-oriented state.
    */
-  async handleSessionChange(agent: AtpAgent) {
+  async handleSessionChange(agent: BskyAgent) {
     this.log.debug('RootStoreModel:handleSessionChange')
     this.agent = agent
     this.me.clear()
@@ -259,7 +234,7 @@ export class RootStoreModel {
   async onBgFetch(taskId: string) {
     this.log.debug(`Background fetch fired for task ${taskId}`)
     if (this.session.hasSession) {
-      const res = await this.api.app.bsky.notification.getCount()
+      const res = await this.agent.countUnreadNotifications()
       const hasNewNotifs = this.me.notifications.unreadCount !== res.data.count
       this.emitUnreadNotifications(res.data.count)
       this.log.debug(
@@ -286,7 +261,7 @@ export class RootStoreModel {
 }
 
 const throwawayInst = new RootStoreModel(
-  new AtpAgent({service: 'http://localhost'}),
+  new BskyAgent({service: 'http://localhost'}),
 ) // this will be replaced by the loader, we just need to supply a value at init
 const RootStoreContext = createContext<RootStoreModel>(throwawayInst)
 export const RootStoreProvider = RootStoreContext.Provider

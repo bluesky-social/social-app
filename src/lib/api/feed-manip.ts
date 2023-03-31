@@ -1,8 +1,8 @@
-import {AppBskyFeedFeedViewPost} from '@atproto/api'
+import {AppBskyFeedDefs} from '@atproto/api'
 import lande from 'lande'
-type FeedViewPost = AppBskyFeedFeedViewPost.Main
-import {hasProp} from '@atproto/lexicon'
+import {hasProp} from 'lib/type-guards'
 import {LANGUAGES_MAP_CODE2} from '../../locale/languages'
+type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 
 export type FeedTunerFn = (
   tuner: FeedTuner,
@@ -174,7 +174,7 @@ export class FeedTuner {
       }
       const item = slices[i].rootItem
       const isRepost = Boolean(item.reason)
-      if (!isRepost && item.post.upvoteCount < 2) {
+      if (!isRepost && (item.post.likeCount || 0) < 2) {
         slices.splice(i, 1)
       }
     }

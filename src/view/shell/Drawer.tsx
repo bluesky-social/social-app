@@ -162,7 +162,7 @@ export const DrawerContent = observer(() => {
 
   return (
     <View
-      testID="menuView"
+      testID="drawer"
       style={[
         styles.view,
         theme.colorScheme === 'light' ? pal.view : styles.viewDarkMode,

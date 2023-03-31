@@ -1,11 +1,10 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
-  AppBskyNotificationList as ListNotifications,
-  AppBskyActorRef as ActorRef,
+  AppBskyNotificationListNotifications as ListNotifications,
+  AppBskyActorDefs,
   AppBskyFeedPost,
   AppBskyFeedRepost,
-  AppBskyFeedVote,
-  AppBskyGraphAssertion,
+  AppBskyFeedLike,
   AppBskyGraphFollow,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
@@ -28,8 +27,7 @@ export interface GroupedNotification extends ListNotifications.Notification {
 type SupportedRecord =
   | AppBskyFeedPost.Record
   | AppBskyFeedRepost.Record
-  | AppBskyFeedVote.Record
-  | AppBskyGraphAssertion.Record
+  | AppBskyFeedLike.Record
   | AppBskyGraphFollow.Record
 
 export class NotificationsViewItemModel {
@@ -39,11 +37,10 @@ export class NotificationsViewItemModel {
   // data
   uri: string = ''
   cid: string = ''
-  author: ActorRef.WithInfo = {
+  author: AppBskyActorDefs.ProfileViewBasic = {
     did: '',
     handle: '',
     avatar: '',
-    declaration: {cid: '', actorType: ''},
   }
   reason: string = ''
   reasonSubject?: string
@@ -86,8 +83,8 @@ export class NotificationsViewItemModel {
     }
   }
 
-  get isUpvote() {
-    return this.reason === 'vote'
+  get isLike() {
+    return this.reason === 'like'
   }
 
   get isRepost() {
@@ -102,16 +99,22 @@ export class NotificationsViewItemModel {
     return this.reason === 'reply'
   }
 
+  get isQuote() {
+    return this.reason === 'quote'
+  }
+
   get isFollow() {
     return this.reason === 'follow'
   }
 
-  get isAssertion() {
-    return this.reason === 'assertion'
-  }
-
   get needsAdditionalData() {
-    if (this.isUpvote || this.isRepost || this.isReply || this.isMention) {
+    if (
+      this.isLike ||
+      this.isRepost ||
+      this.isReply ||
+      this.isQuote ||
+      this.isMention
+    ) {
       return !this.additionalPost
     }
     return false
@@ -124,7 +127,7 @@ export class NotificationsViewItemModel {
     const record = this.record
     if (
       AppBskyFeedRepost.isRecord(record) ||
-      AppBskyFeedVote.isRecord(record)
+      AppBskyFeedLike.isRecord(record)
     ) {
       return record.subject.uri
     }
@@ -135,8 +138,7 @@ export class NotificationsViewItemModel {
     for (const ns of [
       AppBskyFeedPost,
       AppBskyFeedRepost,
-      AppBskyFeedVote,
-      AppBskyGraphAssertion,
+      AppBskyFeedLike,
       AppBskyGraphFollow,
     ]) {
       if (ns.isRecord(v)) {
@@ -163,9 +165,9 @@ export class NotificationsViewItemModel {
       return
     }
     let postUri
-    if (this.isReply || this.isMention) {
+    if (this.isReply || this.isQuote || this.isMention) {
       postUri = this.uri
-    } else if (this.isUpvote || this.isRepost) {
+    } else if (this.isLike || this.isRepost) {
       postUri = this.subjectUri
     }
     if (postUri) {
@@ -194,7 +196,7 @@ export class NotificationsViewModel {
   loadMoreCursor?: string
 
   // used to linearize async modifications to state
-  private lock = new AwaitLock()
+  lock = new AwaitLock()
 
   // data
   notifications: NotificationsViewItemModel[] = []
@@ -266,7 +268,7 @@ export class NotificationsViewModel {
         const params = Object.assign({}, this.params, {
           limit: PAGE_SIZE,
         })
-        const res = await this.rootStore.api.app.bsky.notification.list(params)
+        const res = await this.rootStore.agent.listNotifications(params)
         await this._replaceAll(res)
         this._xIdle()
       } catch (e: any) {
@@ -297,9 +299,9 @@ export class NotificationsViewModel {
       try {
         const params = Object.assign({}, this.params, {
           limit: PAGE_SIZE,
-          before: this.loadMoreCursor,
+          cursor: this.loadMoreCursor,
         })
-        const res = await this.rootStore.api.app.bsky.notification.list(params)
+        const res = await this.rootStore.agent.listNotifications(params)
         await this._appendAll(res)
         this._xIdle()
       } catch (e: any) {
@@ -325,7 +327,7 @@ export class NotificationsViewModel {
     try {
       this._xLoading()
       try {
-        const res = await this.rootStore.api.app.bsky.notification.list({
+        const res = await this.rootStore.agent.listNotifications({
           limit: PAGE_SIZE,
         })
         await this._prependAll(res)
@@ -357,8 +359,8 @@ export class NotificationsViewModel {
       try {
         do {
           const res: ListNotifications.Response =
-            await this.rootStore.api.app.bsky.notification.list({
-              before: cursor,
+            await this.rootStore.agent.listNotifications({
+              cursor,
               limit: Math.min(numToFetch, 100),
             })
           if (res.data.notifications.length === 0) {
@@ -390,7 +392,7 @@ export class NotificationsViewModel {
    */
   loadUnreadCount = bundleAsync(async () => {
     const old = this.unreadCount
-    const res = await this.rootStore.api.app.bsky.notification.getCount()
+    const res = await this.rootStore.agent.countUnreadNotifications()
     runInAction(() => {
       this.unreadCount = res.data.count
     })
@@ -408,9 +410,7 @@ export class NotificationsViewModel {
       for (const notif of this.notifications) {
         notif.isRead = true
       }
-      await this.rootStore.api.app.bsky.notification.updateSeen({
-        seenAt: new Date().toISOString(),
-      })
+      await this.rootStore.agent.updateSeenNotifications()
     } catch (e: any) {
       this.rootStore.log.warn('Failed to update notifications read state', e)
     }
@@ -418,7 +418,7 @@ export class NotificationsViewModel {
 
   async getNewMostRecent(): Promise<NotificationsViewItemModel | undefined> {
     let old = this.mostRecentNotificationUri
-    const res = await this.rootStore.api.app.bsky.notification.list({
+    const res = await this.rootStore.agent.listNotifications({
       limit: 1,
     })
     if (!res.data.notifications[0] || old === res.data.notifications[0].uri) {
@@ -437,13 +437,13 @@ export class NotificationsViewModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -456,14 +456,14 @@ export class NotificationsViewModel {
   // helper functions
   // =
 
-  private async _replaceAll(res: ListNotifications.Response) {
+  async _replaceAll(res: ListNotifications.Response) {
     if (res.data.notifications[0]) {
       this.mostRecentNotificationUri = res.data.notifications[0].uri
     }
     return this._appendAll(res, true)
   }
 
-  private async _appendAll(res: ListNotifications.Response, replace = false) {
+  async _appendAll(res: ListNotifications.Response, replace = false) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     const promises = []
@@ -494,7 +494,7 @@ export class NotificationsViewModel {
     })
   }
 
-  private async _prependAll(res: ListNotifications.Response) {
+  async _prependAll(res: ListNotifications.Response) {
     const promises = []
     const itemModels: NotificationsViewItemModel[] = []
     const dedupedNotifs = res.data.notifications.filter(
@@ -525,7 +525,7 @@ export class NotificationsViewModel {
     })
   }
 
-  private _updateAll(res: ListNotifications.Response) {
+  _updateAll(res: ListNotifications.Response) {
     for (const item of res.data.notifications) {
       const existingItem = this.notifications.find(item2 => isEq(item, item2))
       if (existingItem) {

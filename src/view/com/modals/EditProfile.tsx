@@ -123,7 +123,7 @@ export function Component({
   }
 
   return (
-    <View style={[s.flex1, pal.view]}>
+    <View style={[s.flex1, pal.view]} testID="editProfileModal">
       <ScrollView style={styles.inner}>
         <Text style={[styles.title, pal.text]}>Edit my profile</Text>
         <View style={styles.photos}>
@@ -147,6 +147,7 @@ export function Component({
         <View>
           <Text style={[styles.label, pal.text]}>Display Name</Text>
           <TextInput
+            testID="editProfileDisplayNameInput"
             style={[styles.textInput, pal.text]}
             placeholder="e.g. Alice Roberts"
             placeholderTextColor={colors.gray4}
@@ -157,6 +158,7 @@ export function Component({
         <View style={s.pb10}>
           <Text style={[styles.label, pal.text]}>Description</Text>
           <TextInput
+            testID="editProfileDescriptionInput"
             style={[styles.textArea, pal.text]}
             placeholder="e.g. Artist, dog-lover, and memelord."
             placeholderTextColor={colors.gray4}
@@ -171,7 +173,10 @@ export function Component({
             <ActivityIndicator />
           </View>
         ) : (
-          <TouchableOpacity style={s.mt10} onPress={onPressSave}>
+          <TouchableOpacity
+            testID="editProfileSaveBtn"
+            style={s.mt10}
+            onPress={onPressSave}>
             <LinearGradient
               colors={[gradients.blueLight.start, gradients.blueLight.end]}
               start={{x: 0, y: 0}}
@@ -181,7 +186,10 @@ export function Component({
             </LinearGradient>
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={s.mt5} onPress={onPressCancel}>
+        <TouchableOpacity
+          testID="editProfileCancelBtn"
+          style={s.mt5}
+          onPress={onPressCancel}>
           <View style={[styles.btn]}>
             <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>
           </View>

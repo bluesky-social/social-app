@@ -1,17 +1,30 @@
 import React, {useRef} from 'react'
 import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
+import {
+  ActivityIndicator,
+  RefreshControl,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {CenteredView, FlatList} from '../util/Views'
 import {
   PostThreadViewModel,
   PostThreadViewPostModel,
 } from 'state/models/post-thread-view'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {PostThreadItem} from './PostThreadItem'
 import {ComposePrompt} from '../composer/Prompt'
 import {ErrorMessage} from '../util/error/ErrorMessage'
+import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useNavigation} from '@react-navigation/native'
+import {NavigationProp} from 'lib/routes/types'
 
 const REPLY_PROMPT = {_reactKey: '__reply__', _isHighlightedPost: false}
 const BOTTOM_BORDER = {
@@ -32,6 +45,7 @@ export const PostThread = observer(function PostThread({
   const pal = usePalette('default')
   const ref = useRef<FlatList>(null)
   const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const navigation = useNavigation<NavigationProp>()
   const posts = React.useMemo(() => {
     if (view.thread) {
       return Array.from(flattenThread(view.thread)).concat([BOTTOM_BORDER])
@@ -41,6 +55,7 @@ export const PostThread = observer(function PostThread({
 
   // events
   // =
+
   const onRefresh = React.useCallback(async () => {
     setIsRefreshing(true)
     try {
@@ -50,6 +65,7 @@ export const PostThread = observer(function PostThread({
     }
     setIsRefreshing(false)
   }, [view, setIsRefreshing])
+
   const onLayout = React.useCallback(() => {
     const index = posts.findIndex(post => post._isHighlightedPost)
     if (index !== -1) {
@@ -60,6 +76,7 @@ export const PostThread = observer(function PostThread({
       })
     }
   }, [posts, ref])
+
   const onScrollToIndexFailed = React.useCallback(
     (info: {
       index: number
@@ -73,6 +90,15 @@ export const PostThread = observer(function PostThread({
     },
     [ref],
   )
+
+  const onPressBack = React.useCallback(() => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('Home')
+    }
+  }, [navigation])
+
   const renderItem = React.useCallback(
     ({item}: {item: YieldedItem}) => {
       if (item === REPLY_PROMPT) {
@@ -104,6 +130,30 @@ export const PostThread = observer(function PostThread({
   // error
   // =
   if (view.hasError) {
+    if (view.notFound) {
+      return (
+        <CenteredView>
+          <View style={[pal.view, pal.border, styles.notFoundContainer]}>
+            <Text type="title-lg" style={[pal.text, s.mb5]}>
+              Post not found
+            </Text>
+            <Text type="md" style={[pal.text, s.mb10]}>
+              The post may have been deleted.
+            </Text>
+            <TouchableOpacity onPress={onPressBack}>
+              <Text type="2xl" style={pal.link}>
+                <FontAwesomeIcon
+                  icon="angle-left"
+                  style={[pal.link as FontAwesomeIconStyle, s.mr5]}
+                  size={14}
+                />
+                Back
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </CenteredView>
+      )
+    }
     return (
       <CenteredView>
         <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
@@ -159,12 +209,18 @@ function* flattenThread(
         yield* flattenThread(reply as PostThreadViewPostModel)
       }
     }
-  } else if (!isAscending && !post.parent && post.post.replyCount > 0) {
+  } else if (!isAscending && !post.parent && post.post.replyCount) {
     post._hasMore = true
   }
 }
 
 const styles = StyleSheet.create({
+  notFoundContainer: {
+    margin: 10,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    borderRadius: 6,
+  },
   bottomBorder: {
     borderBottomWidth: 1,
   },

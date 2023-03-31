@@ -9,7 +9,7 @@ export const router = new Router({
   ProfileFollowers: '/profile/:name/followers',
   ProfileFollows: '/profile/:name/follows',
   PostThread: '/profile/:name/post/:rkey',
-  PostUpvotedBy: '/profile/:name/post/:rkey/upvoted-by',
+  PostLikedBy: '/profile/:name/post/:rkey/liked-by',
   PostRepostedBy: '/profile/:name/post/:rkey/reposted-by',
   Debug: '/sys/debug',
   Log: '/sys/log',

@@ -2,7 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {AtUri} from '../../third-party/uri'
 import {
   AppBskyFeedGetRepostedBy as GetRepostedBy,
-  AppBskyActorRef as ActorRef,
+  AppBskyActorDefs,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {bundleAsync} from 'lib/async/bundle'
@@ -11,7 +11,7 @@ import * as apilib from 'lib/api/index'
 
 const PAGE_SIZE = 30
 
-export type RepostedByItem = ActorRef.WithInfo
+export type RepostedByItem = AppBskyActorDefs.ProfileViewBasic
 
 export class RepostedByViewModel {
   // state
@@ -71,9 +71,9 @@ export class RepostedByViewModel {
       const params = Object.assign({}, this.params, {
         uri: this.resolvedUri,
         limit: PAGE_SIZE,
-        before: replace ? undefined : this.loadMoreCursor,
+        cursor: replace ? undefined : this.loadMoreCursor,
       })
-      const res = await this.rootStore.api.app.bsky.feed.getRepostedBy(params)
+      const res = await this.rootStore.agent.getRepostedBy(params)
       if (replace) {
         this._replaceAll(res)
       } else {
@@ -88,13 +88,13 @@ export class RepostedByViewModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -107,7 +107,7 @@ export class RepostedByViewModel {
   // helper functions
   // =
 
-  private async _resolveUri() {
+  async _resolveUri() {
     const urip = new AtUri(this.params.uri)
     if (!urip.host.startsWith('did:')) {
       try {
@@ -121,12 +121,12 @@ export class RepostedByViewModel {
     })
   }
 
-  private _replaceAll(res: GetRepostedBy.Response) {
+  _replaceAll(res: GetRepostedBy.Response) {
     this.repostedBy = []
     this._appendAll(res)
   }
 
-  private _appendAll(res: GetRepostedBy.Response) {
+  _appendAll(res: GetRepostedBy.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     this.repostedBy = this.repostedBy.concat(res.data.repostedBy)

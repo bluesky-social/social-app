@@ -85,7 +85,7 @@ export class MeModel {
     if (sess.hasSession) {
       this.did = sess.currentSession?.did || ''
       this.handle = sess.currentSession?.handle || ''
-      const profile = await this.rootStore.api.app.bsky.actor.getProfile({
+      const profile = await this.rootStore.agent.getProfile({
         actor: this.did,
       })
       runInAction(() => {

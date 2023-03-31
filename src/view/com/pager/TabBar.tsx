@@ -15,6 +15,7 @@ interface Layout {
 }
 
 export interface TabBarProps {
+  testID?: string
   selectedPage: number
   items: string[]
   position: Animated.Value
@@ -26,6 +27,7 @@ export interface TabBarProps {
 }
 
 export function TabBar({
+  testID,
   selectedPage,
   items,
   position,
@@ -92,12 +94,15 @@ export function TabBar({
   }
 
   return (
-    <View style={[pal.view, styles.outer]} onLayout={onLayout}>
+    <View testID={testID} style={[pal.view, styles.outer]} onLayout={onLayout}>
       <Animated.View style={[styles.indicator, indicatorStyle]} />
       {items.map((item, i) => {
         const selected = i === selectedPage
         return (
-          <TouchableWithoutFeedback key={i} onPress={() => onPressItem(i)}>
+          <TouchableWithoutFeedback
+            key={i}
+            testID={testID ? `${testID}-${item}` : undefined}
+            onPress={() => onPressItem(i)}>
             <View
               style={
                 indicatorPosition === 'top' ? styles.itemTop : styles.itemBottom

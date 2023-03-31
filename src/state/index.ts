@@ -1,6 +1,6 @@
 import {autorun} from 'mobx'
 import {AppState, Platform} from 'react-native'
-import {AtpAgent} from '@atproto/api'
+import {BskyAgent} from '@atproto/api'
 import {RootStoreModel} from './models/root-store'
 import * as apiPolyfill from 'lib/api/api-polyfill'
 import * as storage from 'lib/storage'
@@ -19,7 +19,7 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
 
   apiPolyfill.doPolyfill()
 
-  rootStore = new RootStoreModel(new AtpAgent({service: serviceUri}))
+  rootStore = new RootStoreModel(new BskyAgent({service: serviceUri}))
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
     rootStore.log.debug('Initial hydrate', {hasSession: !!data.session})

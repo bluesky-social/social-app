@@ -23,6 +23,7 @@ import {isWeb} from 'platform/detection'
 function DefaultAvatar({size}: {size: number}) {
   return (
     <Svg
+      testID="userAvatarFallback"
       width={size}
       height={size}
       viewBox="0 0 24 24"
@@ -56,6 +57,7 @@ export function UserAvatar({
 
   const dropdownItems = [
     !isWeb && {
+      testID: 'changeAvatarCameraBtn',
       label: 'Camera',
       icon: 'camera' as IconProp,
       onPress: async () => {
@@ -73,6 +75,7 @@ export function UserAvatar({
       },
     },
     {
+      testID: 'changeAvatarLibraryBtn',
       label: 'Library',
       icon: 'image' as IconProp,
       onPress: async () => {
@@ -94,6 +97,7 @@ export function UserAvatar({
       },
     },
     {
+      testID: 'changeAvatarRemoveBtn',
       label: 'Remove',
       icon: ['far', 'trash-can'] as IconProp,
       onPress: async () => {
@@ -104,6 +108,7 @@ export function UserAvatar({
   // onSelectNewAvatar is only passed as prop on the EditProfile component
   return onSelectNewAvatar ? (
     <DropdownButton
+      testID="changeAvatarBtn"
       type="bare"
       items={dropdownItems}
       openToRight
@@ -112,6 +117,7 @@ export function UserAvatar({
       menuWidth={170}>
       {avatar ? (
         <HighPriorityImage
+          testID="userAvatarImage"
           style={{
             width: size,
             height: size,
@@ -132,6 +138,7 @@ export function UserAvatar({
     </DropdownButton>
   ) : avatar ? (
     <HighPriorityImage
+      testID="userAvatarImage"
       style={{width: size, height: size, borderRadius: Math.floor(size / 2)}}
       resizeMode="stretch"
       source={{uri: avatar}}

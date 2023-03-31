@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {RichText} from '@atproto/api'
 import {useEditor, EditorContent, JSONContent} from '@tiptap/react'
 import {Document} from '@tiptap/extension-document'
 import {Link} from '@tiptap/extension-link'
@@ -17,11 +18,11 @@ export interface TextInputRef {
 }
 
 interface TextInputProps {
-  text: string
+  richtext: RichText
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteViewModel
-  onTextChanged: (v: string) => void
+  setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
@@ -30,11 +31,11 @@ interface TextInputProps {
 export const TextInput = React.forwardRef(
   (
     {
-      text,
+      richtext,
       placeholder,
       suggestedLinks,
       autocompleteView,
-      onTextChanged,
+      setRichText,
       // onPhotoPasted, TODO
       onSuggestedLinksChanged,
     }: // onError, TODO
@@ -60,15 +61,15 @@ export const TextInput = React.forwardRef(
         }),
         Text,
       ],
-      content: text,
+      content: richtext.text.toString(),
       autofocus: true,
       editable: true,
       injectCSS: true,
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
 
-        const newText = editorJsonToText(json).trim()
-        onTextChanged(newText)
+        const newRt = new RichText({text: editorJsonToText(json).trim()})
+        setRichText(newRt)
 
         const newSuggestedLinks = new Set(editorJsonToLinks(json))
         if (!isEqual(newSuggestedLinks, suggestedLinks)) {

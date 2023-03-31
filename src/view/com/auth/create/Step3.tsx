@@ -17,6 +17,7 @@ export const Step3 = observer(({model}: {model: CreateAccountModel}) => {
       <StepHeader step="3" title="Your user handle" />
       <View style={s.pb10}>
         <TextInput
+          testID="handleInput"
           icon="at"
           placeholder="eg alice"
           value={model.handle}

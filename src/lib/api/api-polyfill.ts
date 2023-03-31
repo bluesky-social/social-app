@@ -1,11 +1,11 @@
-import AtpAgent from '@atproto/api'
+import {BskyAgent, stringifyLex, jsonToLex} from '@atproto/api'
 import RNFS from 'react-native-fs'
 
 const GET_TIMEOUT = 15e3 // 15s
 const POST_TIMEOUT = 60e3 // 60s
 
 export function doPolyfill() {
-  AtpAgent.configure({fetch: fetchHandler})
+  BskyAgent.configure({fetch: fetchHandler})
 }
 
 interface FetchHandlerResponse {
@@ -22,7 +22,7 @@ async function fetchHandler(
 ): Promise<FetchHandlerResponse> {
   const reqMimeType = reqHeaders['Content-Type'] || reqHeaders['content-type']
   if (reqMimeType && reqMimeType.startsWith('application/json')) {
-    reqBody = JSON.stringify(reqBody)
+    reqBody = stringifyLex(reqBody)
   } else if (
     typeof reqBody === 'string' &&
     (reqBody.startsWith('/') || reqBody.startsWith('file:'))
@@ -65,7 +65,7 @@ async function fetchHandler(
   let resBody
   if (resMimeType) {
     if (resMimeType.startsWith('application/json')) {
-      resBody = await res.json()
+      resBody = jsonToLex(await res.json())
     } else if (resMimeType.startsWith('text/')) {
       resBody = await res.text()
     } else {

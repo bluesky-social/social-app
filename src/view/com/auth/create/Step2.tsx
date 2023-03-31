@@ -59,6 +59,7 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
               Email address
             </Text>
             <TextInput
+              testID="emailInput"
               icon="envelope"
               placeholder="Enter your email address"
               value={model.email}
@@ -72,6 +73,7 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
               Password
             </Text>
             <TextInput
+              testID="passwordInput"
               icon="lock"
               placeholder="Choose your password"
               value={model.password}
@@ -86,7 +88,7 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
               Legal check
             </Text>
             <TouchableOpacity
-              testID="registerIs13Input"
+              testID="is13Input"
               style={[styles.toggleBtn, pal.border]}
               onPress={() => model.setIs13(!model.is13)}>
               <View style={[pal.borderDark, styles.checkbox]}>

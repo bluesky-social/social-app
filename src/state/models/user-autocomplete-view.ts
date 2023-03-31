@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AppBskyActorRef} from '@atproto/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {RootStoreModel} from './root-store'
 
@@ -11,8 +11,8 @@ export class UserAutocompleteViewModel {
   lock = new AwaitLock()
 
   // data
-  follows: AppBskyActorRef.WithInfo[] = []
-  searchRes: AppBskyActorRef.WithInfo[] = []
+  follows: AppBskyActorDefs.ProfileViewBasic[] = []
+  searchRes: AppBskyActorDefs.ProfileViewBasic[] = []
   knownHandles: Set<string> = new Set()
 
   constructor(public rootStore: RootStoreModel) {
@@ -76,9 +76,9 @@ export class UserAutocompleteViewModel {
   // internal
   // =
 
-  private async _getFollows() {
-    const res = await this.rootStore.api.app.bsky.graph.getFollows({
-      user: this.rootStore.me.did || '',
+  async _getFollows() {
+    const res = await this.rootStore.agent.getFollows({
+      actor: this.rootStore.me.did || '',
     })
     runInAction(() => {
       this.follows = res.data.follows
@@ -88,13 +88,13 @@ export class UserAutocompleteViewModel {
     })
   }
 
-  private async _search() {
-    const res = await this.rootStore.api.app.bsky.actor.searchTypeahead({
+  async _search() {
+    const res = await this.rootStore.agent.searchActorsTypeahead({
       term: this.prefix,
       limit: 8,
     })
     runInAction(() => {
-      this.searchRes = res.data.users
+      this.searchRes = res.data.actors
       for (const u of this.searchRes) {
         this.knownHandles.add(u.handle)
       }

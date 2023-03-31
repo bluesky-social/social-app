@@ -24,6 +24,7 @@ const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 const ESTIMATED_MENU_ITEM_HEIGHT = 52
 
 export interface DropdownItem {
+  testID?: string
   icon?: IconProp
   label: string
   onPress: () => void
@@ -33,6 +34,7 @@ type MaybeDropdownItem = DropdownItem | false | undefined
 export type DropdownButtonType = ButtonType | 'bare'
 
 export function DropdownButton({
+  testID,
   type = 'bare',
   style,
   items,
@@ -43,6 +45,7 @@ export function DropdownButton({
   rightOffset = 0,
   bottomOffset = 0,
 }: {
+  testID?: string
   type?: DropdownButtonType
   style?: StyleProp<ViewStyle>
   items: MaybeDropdownItem[]
@@ -90,22 +93,18 @@ export function DropdownButton({
   if (type === 'bare') {
     return (
       <TouchableOpacity
+        testID={testID}
         style={style}
         onPress={onPress}
         hitSlop={HITSLOP}
-        // Fix an issue where specific references cause runtime error in jest environment
-        ref={
-          typeof process !== 'undefined' && process.env.JEST_WORKER_ID != null
-            ? null
-            : ref
-        }>
+        ref={ref}>
         {children}
       </TouchableOpacity>
     )
   }
   return (
     <View ref={ref}>
-      <Button onPress={onPress} style={style} label={label}>
+      <Button testID={testID} onPress={onPress} style={style} label={label}>
         {children}
       </Button>
     </View>
@@ -113,6 +112,7 @@ export function DropdownButton({
 }
 
 export function PostDropdownBtn({
+  testID,
   style,
   children,
   itemUri,
@@ -123,6 +123,7 @@ export function PostDropdownBtn({
   onOpenTranslate,
   onDeletePost,
 }: {
+  testID?: string
   style?: StyleProp<ViewStyle>
   children?: React.ReactNode
   itemUri: string
@@ -138,6 +139,7 @@ export function PostDropdownBtn({
 
   const dropdownItems: DropdownItem[] = [
     {
+      testID: 'postDropdownTranslateBtn',
       icon: 'language',
       label: 'Translate...',
       onPress() {
@@ -145,6 +147,7 @@ export function PostDropdownBtn({
       },
     },
     {
+      testID: 'postDropdownCopyTextBtn',
       icon: ['far', 'paste'],
       label: 'Copy post text',
       onPress() {
@@ -152,6 +155,7 @@ export function PostDropdownBtn({
       },
     },
     {
+      testID: 'postDropdownShareBtn',
       icon: 'share',
       label: 'Share...',
       onPress() {
@@ -159,6 +163,7 @@ export function PostDropdownBtn({
       },
     },
     {
+      testID: 'postDropdownReportBtn',
       icon: 'circle-exclamation',
       label: 'Report post',
       onPress() {
@@ -171,6 +176,7 @@ export function PostDropdownBtn({
     },
     isAuthor
       ? {
+          testID: 'postDropdownDeleteBtn',
           icon: ['far', 'trash-can'],
           label: 'Delete post',
           onPress() {
@@ -186,7 +192,11 @@ export function PostDropdownBtn({
   ].filter(Boolean) as DropdownItem[]
 
   return (
-    <DropdownButton style={style} items={dropdownItems} menuWidth={200}>
+    <DropdownButton
+      testID={testID}
+      style={style}
+      items={dropdownItems}
+      menuWidth={200}>
       {children}
     </DropdownButton>
   )
@@ -291,6 +301,7 @@ const DropdownItems = ({
         ]}>
         {items.map((item, index) => (
           <TouchableOpacity
+            testID={item.testID}
             key={index}
             style={[styles.menuItem]}
             onPress={() => onPressItem(index)}>

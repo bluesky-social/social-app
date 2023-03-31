@@ -31,7 +31,7 @@ export class ProfilesViewModel {
       }
     }
     try {
-      const promise = this.rootStore.api.app.bsky.actor.getProfile({
+      const promise = this.rootStore.agent.getProfile({
         actor: did,
       })
       this.cache.set(did, promise)

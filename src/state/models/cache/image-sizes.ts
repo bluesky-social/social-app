@@ -3,7 +3,7 @@ import {Dim} from 'lib/media/manip'
 
 export class ImageSizesCache {
   sizes: Map<string, Dim> = new Map()
-  private activeRequests: Map<string, Promise<Dim>> = new Map()
+  activeRequests: Map<string, Promise<Dim>> = new Map()
 
   constructor() {}
 

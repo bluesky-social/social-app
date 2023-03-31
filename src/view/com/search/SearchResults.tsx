@@ -97,7 +97,6 @@ const Profiles = observer(({model}: {model: SearchUIModel}) => {
         <ProfileCardWithFollowBtn
           key={item.did}
           did={item.did}
-          declarationCid={item.declaration.cid}
           handle={item.handle}
           displayName={item.displayName}
           avatar={item.avatar}

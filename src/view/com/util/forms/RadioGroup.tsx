@@ -10,11 +10,13 @@ export interface RadioGroupItem {
 }
 
 export function RadioGroup({
+  testID,
   type,
   items,
   initialSelection = '',
   onSelect,
 }: {
+  testID?: string
   type?: ButtonType
   items: RadioGroupItem[]
   initialSelection?: string
@@ -30,6 +32,7 @@ export function RadioGroup({
       {items.map((item, i) => (
         <RadioButton
           key={item.key}
+          testID={testID ? `${testID}-${item.key}` : undefined}
           style={i !== 0 ? s.mt2 : undefined}
           type={type}
           label={item.label}

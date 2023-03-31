@@ -27,11 +27,13 @@ export function Button({
   style,
   onPress,
   children,
+  testID,
 }: React.PropsWithChildren<{
   type?: ButtonType
   label?: string
   style?: StyleProp<ViewStyle>
   onPress?: () => void
+  testID?: string
 }>) {
   const theme = useTheme()
   const outerStyle = choose<ViewStyle, Record<ButtonType, ViewStyle>>(type, {
@@ -107,7 +109,8 @@ export function Button({
   return (
     <TouchableOpacity
       style={[outerStyle, styles.outer, style]}
-      onPress={onPress}>
+      onPress={onPress}
+      testID={testID}>
       {label ? (
         <Text type="button" style={[labelStyle]}>
           {label}

@@ -16,7 +16,6 @@ interface PostMetaOpts {
   postHref: string
   timestamp: string
   did?: string
-  declarationCid?: string
   showFollowBtn?: boolean
 }
 
@@ -34,13 +33,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
     setDidFollow(true)
   }, [setDidFollow])
 
-  if (
-    opts.showFollowBtn &&
-    !isMe &&
-    (!isFollowing || didFollow) &&
-    opts.did &&
-    opts.declarationCid
-  ) {
+  if (opts.showFollowBtn && !isMe && (!isFollowing || didFollow) && opts.did) {
     // two-liner with follow button
     return (
       <View style={styles.metaTwoLine}>
@@ -79,7 +72,6 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
           <FollowButton
             type="default"
             did={opts.did}
-            declarationCid={opts.declarationCid}
             onToggleFollow={onToggleFollow}
           />
         </View>

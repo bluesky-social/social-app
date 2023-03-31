@@ -6,12 +6,14 @@ import {useTheme} from 'lib/ThemeContext'
 import {choose} from 'lib/functions'
 
 export function RadioButton({
+  testID,
   type = 'default-light',
   label,
   isSelected,
   style,
   onPress,
 }: {
+  testID?: string
   type?: ButtonType
   label: string
   isSelected: boolean
@@ -119,7 +121,7 @@ export function RadioButton({
     },
   })
   return (
-    <Button type={type} onPress={onPress} style={style}>
+    <Button testID={testID} type={type} onPress={onPress} style={style}>
       <View style={styles.outer}>
         <View style={[circleStyle, styles.circle]}>
           {isSelected ? (

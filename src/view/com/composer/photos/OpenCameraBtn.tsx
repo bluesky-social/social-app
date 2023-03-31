@@ -76,7 +76,11 @@ export function OpenCameraBtn({
       hitSlop={HITSLOP}>
       <FontAwesomeIcon
         icon="camera"
-        style={(enabled ? pal.link : pal.textLight) as FontAwesomeIconStyle}
+        style={
+          (enabled
+            ? pal.link
+            : [pal.textLight, s.dimmed]) as FontAwesomeIconStyle
+        }
         size={24}
       />
     </TouchableOpacity>

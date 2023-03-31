@@ -45,7 +45,7 @@ export function displayNotificationFromModel(
   let author = notif.author.displayName || notif.author.handle
   let title: string
   let body: string = ''
-  if (notif.isUpvote) {
+  if (notif.isLike) {
     title = `${author} liked your post`
     body = notif.additionalPost?.thread?.postRecord?.text || ''
   } else if (notif.isRepost) {
@@ -65,7 +65,7 @@ export function displayNotificationFromModel(
   }
   let image
   if (
-    AppBskyEmbedImages.isPresented(notif.additionalPost?.thread?.post.embed) &&
+    AppBskyEmbedImages.isView(notif.additionalPost?.thread?.post.embed) &&
     notif.additionalPost?.thread?.post.embed.images[0]?.thumb
   ) {
     image = notif.additionalPost.thread.post.embed.images[0].thumb

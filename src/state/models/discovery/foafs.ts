@@ -1,15 +1,15 @@
-import {AppBskyActorProfile, AppBskyActorRef} from '@atproto/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import {makeAutoObservable, runInAction} from 'mobx'
 import sampleSize from 'lodash.samplesize'
 import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from '../root-store'
 
-export type RefWithInfoAndFollowers = AppBskyActorRef.WithInfo & {
-  followers: AppBskyActorProfile.View[]
+export type RefWithInfoAndFollowers = AppBskyActorDefs.ProfileViewBasic & {
+  followers: AppBskyActorDefs.ProfileView[]
 }
 
-export type ProfileViewFollows = AppBskyActorProfile.View & {
-  follows: AppBskyActorRef.WithInfo[]
+export type ProfileViewFollows = AppBskyActorDefs.ProfileView & {
+  follows: AppBskyActorDefs.ProfileViewBasic[]
 }
 
 export class FoafsModel {
@@ -51,14 +51,14 @@ export class FoafsModel {
       this.popular.length = 0
 
       // fetch their profiles
-      const profiles = await this.rootStore.api.app.bsky.actor.getProfiles({
+      const profiles = await this.rootStore.agent.getProfiles({
         actors: this.sources,
       })
 
       // fetch their follows
       const results = await Promise.allSettled(
         this.sources.map(source =>
-          this.rootStore.api.app.bsky.graph.getFollows({user: source}),
+          this.rootStore.agent.getFollows({actor: source}),
         ),
       )
 

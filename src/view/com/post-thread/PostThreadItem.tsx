@@ -19,7 +19,7 @@ import {ago} from 'lib/strings/time'
 import {pluralize} from 'lib/strings/helpers'
 import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
-import {PostEmbeds} from '../util/PostEmbeds'
+import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/PostCtrls'
 import {PostMutedWrapper} from '../util/PostMuted'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -38,7 +38,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   const store = useStores()
   const [deleted, setDeleted] = React.useState(false)
   const record = item.postRecord
-  const hasEngagement = item.post.upvoteCount || item.post.repostCount
+  const hasEngagement = item.post.likeCount || item.post.repostCount
 
   const itemUri = item.post.uri
   const itemCid = item.post.cid
@@ -49,11 +49,11 @@ export const PostThreadItem = observer(function PostThreadItem({
   const itemTitle = `Post by ${item.post.author.handle}`
   const authorHref = `/profile/${item.post.author.handle}`
   const authorTitle = item.post.author.handle
-  const upvotesHref = React.useMemo(() => {
+  const likesHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
-    return `/profile/${item.post.author.handle}/post/${urip.rkey}/upvoted-by`
+    return `/profile/${item.post.author.handle}/post/${urip.rkey}/liked-by`
   }, [item.post.uri, item.post.author.handle])
-  const upvotesTitle = 'Likes on this post'
+  const likesTitle = 'Likes on this post'
   const repostsHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return `/profile/${item.post.author.handle}/post/${urip.rkey}/reposted-by`
@@ -80,10 +80,10 @@ export const PostThreadItem = observer(function PostThreadItem({
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
   }, [item, store])
-  const onPressToggleUpvote = React.useCallback(() => {
+  const onPressToggleLike = React.useCallback(() => {
     return item
-      .toggleUpvote()
-      .catch(e => store.log.error('Failed to toggle upvote', e))
+      .toggleLike()
+      .catch(e => store.log.error('Failed to toggle like', e))
   }, [item, store])
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')
@@ -125,153 +125,151 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   if (item._isHighlightedPost) {
     return (
-      <>
-        <View
-          style={[
-            styles.outer,
-            styles.outerHighlighted,
-            {borderTopColor: pal.colors.border},
-            pal.view,
-          ]}>
-          <View style={styles.layout}>
-            <View style={styles.layoutAvi}>
-              <Link href={authorHref} title={authorTitle} asAnchor>
-                <UserAvatar size={52} avatar={item.post.author.avatar} />
-              </Link>
-            </View>
-            <View style={styles.layoutContent}>
-              <View style={[styles.meta, styles.metaExpandedLine1]}>
-                <View style={[s.flexRow, s.alignBaseline]}>
-                  <Link
-                    style={styles.metaItem}
-                    href={authorHref}
-                    title={authorTitle}>
-                    <Text
-                      type="xl-bold"
-                      style={[pal.text]}
-                      numberOfLines={1}
-                      lineHeight={1.2}>
-                      {item.post.author.displayName || item.post.author.handle}
-                    </Text>
-                  </Link>
-                  <Text type="md" style={[styles.metaItem, pal.textLight]}>
-                    &middot; {ago(item.post.indexedAt)}
-                  </Text>
-                </View>
-                <View style={s.flex1} />
-                <PostDropdownBtn
-                  style={styles.metaItem}
-                  itemUri={itemUri}
-                  itemCid={itemCid}
-                  itemHref={itemHref}
-                  itemTitle={itemTitle}
-                  isAuthor={item.post.author.did === store.me.did}
-                  onCopyPostText={onCopyPostText}
-                  onOpenTranslate={onOpenTranslate}
-                  onDeletePost={onDeletePost}>
-                  <FontAwesomeIcon
-                    icon="ellipsis-h"
-                    size={14}
-                    style={[s.mt2, s.mr5, pal.textLight]}
-                  />
-                </PostDropdownBtn>
-              </View>
-              <View style={styles.meta}>
+      <View
+        testID={`postThreadItem-by-${item.post.author.handle}`}
+        style={[
+          styles.outer,
+          styles.outerHighlighted,
+          {borderTopColor: pal.colors.border},
+          pal.view,
+        ]}>
+        <View style={styles.layout}>
+          <View style={styles.layoutAvi}>
+            <Link href={authorHref} title={authorTitle} asAnchor>
+              <UserAvatar size={52} avatar={item.post.author.avatar} />
+            </Link>
+          </View>
+          <View style={styles.layoutContent}>
+            <View style={[styles.meta, styles.metaExpandedLine1]}>
+              <View style={[s.flexRow, s.alignBaseline]}>
                 <Link
                   style={styles.metaItem}
                   href={authorHref}
                   title={authorTitle}>
-                  <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-                    @{item.post.author.handle}
+                  <Text
+                    type="xl-bold"
+                    style={[pal.text]}
+                    numberOfLines={1}
+                    lineHeight={1.2}>
+                    {item.post.author.displayName || item.post.author.handle}
                   </Text>
                 </Link>
+                <Text type="md" style={[styles.metaItem, pal.textLight]}>
+                  &middot; {ago(item.post.indexedAt)}
+                </Text>
               </View>
-            </View>
-          </View>
-          <View style={[s.pl10, s.pr10, s.pb10]}>
-            {item.richText?.text ? (
-              <View
-                style={[
-                  styles.postTextContainer,
-                  styles.postTextLargeContainer,
-                ]}>
-                <RichText
-                  type="post-text-lg"
-                  richText={item.richText}
-                  lineHeight={1.3}
-                />
-              </View>
-            ) : undefined}
-            <PostEmbeds embed={item.post.embed} style={s.mb10} />
-            {item._isHighlightedPost && hasEngagement ? (
-              <View style={[styles.expandedInfo, pal.border]}>
-                {item.post.repostCount ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={repostsHref}
-                    title={repostsTitle}>
-                    <Text type="lg" style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
-                        {item.post.repostCount}
-                      </Text>{' '}
-                      {pluralize(item.post.repostCount, 'repost')}
-                    </Text>
-                  </Link>
-                ) : (
-                  <></>
-                )}
-                {item.post.upvoteCount ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={upvotesHref}
-                    title={upvotesTitle}>
-                    <Text type="lg" style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
-                        {item.post.upvoteCount}
-                      </Text>{' '}
-                      {pluralize(item.post.upvoteCount, 'like')}
-                    </Text>
-                  </Link>
-                ) : (
-                  <></>
-                )}
-              </View>
-            ) : (
-              <></>
-            )}
-            <View style={[s.pl10, s.pb5]}>
-              <PostCtrls
-                big
+              <View style={s.flex1} />
+              <PostDropdownBtn
+                testID="postDropdownBtn"
+                style={styles.metaItem}
                 itemUri={itemUri}
                 itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
-                author={{
-                  avatar: item.post.author.avatar!,
-                  handle: item.post.author.handle,
-                  displayName: item.post.author.displayName!,
-                }}
-                text={item.richText?.text || record.text}
-                indexedAt={item.post.indexedAt}
                 isAuthor={item.post.author.did === store.me.did}
-                isReposted={!!item.post.viewer.repost}
-                isUpvoted={!!item.post.viewer.upvote}
-                onPressReply={onPressReply}
-                onPressToggleRepost={onPressToggleRepost}
-                onPressToggleUpvote={onPressToggleUpvote}
                 onCopyPostText={onCopyPostText}
                 onOpenTranslate={onOpenTranslate}
-                onDeletePost={onDeletePost}
-              />
+                onDeletePost={onDeletePost}>
+                <FontAwesomeIcon
+                  icon="ellipsis-h"
+                  size={14}
+                  style={[s.mt2, s.mr5, pal.textLight]}
+                />
+              </PostDropdownBtn>
+            </View>
+            <View style={styles.meta}>
+              <Link
+                style={styles.metaItem}
+                href={authorHref}
+                title={authorTitle}>
+                <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+                  @{item.post.author.handle}
+                </Text>
+              </Link>
             </View>
           </View>
         </View>
-      </>
+        <View style={[s.pl10, s.pr10, s.pb10]}>
+          {item.richText?.text ? (
+            <View
+              style={[styles.postTextContainer, styles.postTextLargeContainer]}>
+              <RichText
+                type="post-text-lg"
+                richText={item.richText}
+                lineHeight={1.3}
+              />
+            </View>
+          ) : undefined}
+          <PostEmbeds embed={item.post.embed} style={s.mb10} />
+          {item._isHighlightedPost && hasEngagement ? (
+            <View style={[styles.expandedInfo, pal.border]}>
+              {item.post.repostCount ? (
+                <Link
+                  style={styles.expandedInfoItem}
+                  href={repostsHref}
+                  title={repostsTitle}>
+                  <Text testID="repostCount" type="lg" style={pal.textLight}>
+                    <Text type="xl-bold" style={pal.text}>
+                      {item.post.repostCount}
+                    </Text>{' '}
+                    {pluralize(item.post.repostCount, 'repost')}
+                  </Text>
+                </Link>
+              ) : (
+                <></>
+              )}
+              {item.post.likeCount ? (
+                <Link
+                  style={styles.expandedInfoItem}
+                  href={likesHref}
+                  title={likesTitle}>
+                  <Text testID="likeCount" type="lg" style={pal.textLight}>
+                    <Text type="xl-bold" style={pal.text}>
+                      {item.post.likeCount}
+                    </Text>{' '}
+                    {pluralize(item.post.likeCount, 'like')}
+                  </Text>
+                </Link>
+              ) : (
+                <></>
+              )}
+            </View>
+          ) : (
+            <></>
+          )}
+          <View style={[s.pl10, s.pb5]}>
+            <PostCtrls
+              big
+              itemUri={itemUri}
+              itemCid={itemCid}
+              itemHref={itemHref}
+              itemTitle={itemTitle}
+              author={{
+                avatar: item.post.author.avatar!,
+                handle: item.post.author.handle,
+                displayName: item.post.author.displayName!,
+              }}
+              text={item.richText?.text || record.text}
+              indexedAt={item.post.indexedAt}
+              isAuthor={item.post.author.did === store.me.did}
+              isReposted={!!item.post.viewer?.repost}
+              isLiked={!!item.post.viewer?.like}
+              onPressReply={onPressReply}
+              onPressToggleRepost={onPressToggleRepost}
+              onPressToggleLike={onPressToggleLike}
+              onCopyPostText={onCopyPostText}
+              onOpenTranslate={onOpenTranslate}
+              onDeletePost={onDeletePost}
+            />
+          </View>
+        </View>
+      </View>
     )
   } else {
     return (
       <PostMutedWrapper isMuted={item.post.author.viewer?.muted === true}>
         <Link
+          testID={`postThreadItem-by-${item.post.author.handle}`}
           style={[styles.outer, {borderTopColor: pal.colors.border}, pal.view]}
           href={itemHref}
           title={itemTitle}
@@ -305,7 +303,6 @@ export const PostThreadItem = observer(function PostThreadItem({
                 timestamp={item.post.indexedAt}
                 postHref={itemHref}
                 did={item.post.author.did}
-                declarationCid={item.post.author.declaration.cid}
               />
               {item.richText?.text ? (
                 <View style={styles.postTextContainer}>
@@ -333,12 +330,12 @@ export const PostThreadItem = observer(function PostThreadItem({
                 isAuthor={item.post.author.did === store.me.did}
                 replyCount={item.post.replyCount}
                 repostCount={item.post.repostCount}
-                upvoteCount={item.post.upvoteCount}
-                isReposted={!!item.post.viewer.repost}
-                isUpvoted={!!item.post.viewer.upvote}
+                likeCount={item.post.likeCount}
+                isReposted={!!item.post.viewer?.repost}
+                isLiked={!!item.post.viewer?.like}
                 onPressReply={onPressReply}
                 onPressToggleRepost={onPressToggleRepost}
-                onPressToggleUpvote={onPressToggleUpvote}
+                onPressToggleLike={onPressToggleLike}
                 onCopyPostText={onCopyPostText}
                 onOpenTranslate={onOpenTranslate}
                 onDeletePost={onDeletePost}

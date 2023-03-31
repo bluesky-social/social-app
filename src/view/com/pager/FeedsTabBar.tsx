@@ -9,7 +9,9 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 
 export const FeedsTabBar = observer(
-  (props: RenderTabBarFnProps & {onPressSelected: () => void}) => {
+  (
+    props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
+  ) => {
     const store = useStores()
     const pal = usePalette('default')
     const interp = useAnimatedValue(0)
@@ -32,7 +34,10 @@ export const FeedsTabBar = observer(
 
     return (
       <Animated.View style={[pal.view, styles.tabBar, transform]}>
-        <TouchableOpacity style={styles.tabBarAvi} onPress={onPressAvi}>
+        <TouchableOpacity
+          testID="viewHeaderDrawerBtn"
+          style={styles.tabBarAvi}
+          onPress={onPressAvi}>
           <UserAvatar avatar={store.me.avatar} size={30} />
         </TouchableOpacity>
         <TabBar

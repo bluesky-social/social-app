@@ -1,32 +1,29 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AppBskyFeedGetTimeline as GetTimeline,
-  AppBskyFeedFeedViewPost,
+  AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
+  RichText,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
 import sampleSize from 'lodash.samplesize'
-type FeedViewPost = AppBskyFeedFeedViewPost.Main
-type ReasonRepost = AppBskyFeedFeedViewPost.ReasonRepost
-type PostView = AppBskyFeedPost.View
-import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
-import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
-import {RichText} from 'lib/strings/rich-text'
 import {SUGGESTED_FOLLOWS} from 'lib/constants'
 import {
   getCombinedCursors,
   getMultipleAuthorsPosts,
   mergePosts,
 } from 'lib/api/build-suggested-posts'
-
 import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
 
-const PAGE_SIZE = 30
+type FeedViewPost = AppBskyFeedDefs.FeedViewPost
+type ReasonRepost = AppBskyFeedDefs.ReasonRepost
+type PostView = AppBskyFeedDefs.PostView
 
+const PAGE_SIZE = 30
 let _idCounter = 0
 
 export class FeedItemModel {
@@ -51,11 +48,7 @@ export class FeedItemModel {
       const valid = AppBskyFeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
-        this.richText = new RichText(
-          this.postRecord.text,
-          this.postRecord.entities,
-          {cleanNewlines: true},
-        )
+        this.richText = new RichText(this.postRecord, {cleanNewlines: true})
       } else {
         rootStore.log.warn(
           'Received an invalid app.bsky.feed.post record',
@@ -82,7 +75,7 @@ export class FeedItemModel {
   copyMetrics(v: FeedViewPost) {
     this.post.replyCount = v.post.replyCount
     this.post.repostCount = v.post.repostCount
-    this.post.upvoteCount = v.post.upvoteCount
+    this.post.likeCount = v.post.likeCount
     this.post.viewer = v.post.viewer
   }
 
@@ -92,68 +85,43 @@ export class FeedItemModel {
     }
   }
 
-  async toggleUpvote() {
-    const wasUpvoted = !!this.post.viewer.upvote
-    const wasDownvoted = !!this.post.viewer.downvote
-    const res = await this.rootStore.api.app.bsky.feed.setVote({
-      subject: {
-        uri: this.post.uri,
-        cid: this.post.cid,
-      },
-      direction: wasUpvoted ? 'none' : 'up',
-    })
-    runInAction(() => {
-      if (wasDownvoted) {
-        this.post.downvoteCount--
-      }
-      if (wasUpvoted) {
-        this.post.upvoteCount--
-      } else {
-        this.post.upvoteCount++
-      }
-      this.post.viewer.upvote = res.data.upvote
-      this.post.viewer.downvote = res.data.downvote
-    })
-  }
-
-  async toggleDownvote() {
-    const wasUpvoted = !!this.post.viewer.upvote
-    const wasDownvoted = !!this.post.viewer.downvote
-    const res = await this.rootStore.api.app.bsky.feed.setVote({
-      subject: {
-        uri: this.post.uri,
-        cid: this.post.cid,
-      },
-      direction: wasDownvoted ? 'none' : 'down',
-    })
-    runInAction(() => {
-      if (wasUpvoted) {
-        this.post.upvoteCount--
-      }
-      if (wasDownvoted) {
-        this.post.downvoteCount--
-      } else {
-        this.post.downvoteCount++
-      }
-      this.post.viewer.upvote = res.data.upvote
-      this.post.viewer.downvote = res.data.downvote
-    })
+  async toggleLike() {
+    if (this.post.viewer?.like) {
+      await this.rootStore.agent.deleteLike(this.post.viewer.like)
+      runInAction(() => {
+        this.post.likeCount = this.post.likeCount || 0
+        this.post.viewer = this.post.viewer || {}
+        this.post.likeCount--
+        this.post.viewer.like = undefined
+      })
+    } else {
+      const res = await this.rootStore.agent.like(this.post.uri, this.post.cid)
+      runInAction(() => {
+        this.post.likeCount = this.post.likeCount || 0
+        this.post.viewer = this.post.viewer || {}
+        this.post.likeCount++
+        this.post.viewer.like = res.uri
+      })
+    }
   }
 
   async toggleRepost() {
-    if (this.post.viewer.repost) {
-      await apilib.unrepost(this.rootStore, this.post.viewer.repost)
+    if (this.post.viewer?.repost) {
+      await this.rootStore.agent.deleteRepost(this.post.viewer.repost)
       runInAction(() => {
+        this.post.repostCount = this.post.repostCount || 0
+        this.post.viewer = this.post.viewer || {}
         this.post.repostCount--
         this.post.viewer.repost = undefined
       })
     } else {
-      const res = await apilib.repost(
-        this.rootStore,
+      const res = await this.rootStore.agent.repost(
         this.post.uri,
         this.post.cid,
       )
       runInAction(() => {
+        this.post.repostCount = this.post.repostCount || 0
+        this.post.viewer = this.post.viewer || {}
         this.post.repostCount++
         this.post.viewer.repost = res.uri
       })
@@ -161,10 +129,7 @@ export class FeedItemModel {
   }
 
   async delete() {
-    await this.rootStore.api.app.bsky.feed.post.delete({
-      did: this.post.author.did,
-      rkey: new AtUri(this.post.uri).rkey,
-    })
+    await this.rootStore.agent.deletePost(this.post.uri)
     this.rootStore.emitPostDeleted(this.post.uri)
   }
 }
@@ -250,7 +215,7 @@ export class FeedModel {
   tuner = new FeedTuner()
 
   // used to linearize async modifications to state
-  private lock = new AwaitLock()
+  lock = new AwaitLock()
 
   // data
   slices: FeedSliceModel[] = []
@@ -291,8 +256,8 @@ export class FeedModel {
         const params = this.params as GetAuthorFeed.QueryParams
         const item = slice.rootItem
         const isRepost =
-          item?.reasonRepost?.by?.handle === params.author ||
-          item?.reasonRepost?.by?.did === params.author
+          item?.reasonRepost?.by?.handle === params.actor ||
+          item?.reasonRepost?.by?.did === params.actor
         return (
           !item.reply || // not a reply
           isRepost || // but allow if it's a repost
@@ -338,7 +303,7 @@ export class FeedModel {
     return this.setup()
   }
 
-  private get feedTuners() {
+  get feedTuners() {
     if (this.feedType === 'goodstuff') {
       return [
         FeedTuner.dedupReposts,
@@ -406,7 +371,7 @@ export class FeedModel {
       this._xLoading()
       try {
         const res = await this._getFeed({
-          before: this.loadMoreCursor,
+          cursor: this.loadMoreCursor,
           limit: PAGE_SIZE,
         })
         await this._appendAll(res)
@@ -439,7 +404,7 @@ export class FeedModel {
       try {
         do {
           const res: GetTimeline.Response = await this._getFeed({
-            before: cursor,
+            cursor,
             limit: Math.min(numToFetch, 100),
           })
           if (res.data.feed.length === 0) {
@@ -478,14 +443,18 @@ export class FeedModel {
           new FeedSliceModel(this.rootStore, `item-${_idCounter++}`, slice),
       )
       if (autoPrepend) {
-        this.slices = nextSlicesModels.concat(
-          this.slices.filter(slice1 =>
-            nextSlicesModels.find(slice2 => slice1.uri === slice2.uri),
-          ),
-        )
-        this.setHasNewLatest(false)
+        runInAction(() => {
+          this.slices = nextSlicesModels.concat(
+            this.slices.filter(slice1 =>
+              nextSlicesModels.find(slice2 => slice1.uri === slice2.uri),
+            ),
+          )
+          this.setHasNewLatest(false)
+        })
       } else {
-        this.nextSlices = nextSlicesModels
+        runInAction(() => {
+          this.nextSlices = nextSlicesModels
+        })
         this.setHasNewLatest(true)
       }
     } else {
@@ -519,13 +488,13 @@ export class FeedModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -538,14 +507,12 @@ export class FeedModel {
   // helper functions
   // =
 
-  private async _replaceAll(
-    res: GetTimeline.Response | GetAuthorFeed.Response,
-  ) {
+  async _replaceAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     this.pollCursor = res.data.feed[0]?.post.uri
     return this._appendAll(res, true)
   }
 
-  private async _appendAll(
+  async _appendAll(
     res: GetTimeline.Response | GetAuthorFeed.Response,
     replace = false,
   ) {
@@ -572,7 +539,7 @@ export class FeedModel {
     })
   }
 
-  private _updateAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
+  _updateAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
     for (const item of res.data.feed) {
       const existingSlice = this.slices.find(slice =>
         slice.containsUri(item.post.uri),
@@ -596,7 +563,7 @@ export class FeedModel {
       const responses = await getMultipleAuthorsPosts(
         this.rootStore,
         sampleSize(SUGGESTED_FOLLOWS(String(this.rootStore.agent.service)), 20),
-        params.before,
+        params.cursor,
         20,
       )
       const combinedCursor = getCombinedCursors(responses)
@@ -611,9 +578,7 @@ export class FeedModel {
         headers: lastHeaders,
       }
     } else if (this.feedType === 'home') {
-      return this.rootStore.api.app.bsky.feed.getTimeline(
-        params as GetTimeline.QueryParams,
-      )
+      return this.rootStore.agent.getTimeline(params as GetTimeline.QueryParams)
     } else if (this.feedType === 'goodstuff') {
       const res = await getGoodStuff(
         this.rootStore.session.currentSession?.accessJwt || '',
@@ -624,7 +589,7 @@ export class FeedModel {
       )
       return res
     } else {
-      return this.rootStore.api.app.bsky.feed.getAuthorFeed(
+      return this.rootStore.agent.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,
       )
     }

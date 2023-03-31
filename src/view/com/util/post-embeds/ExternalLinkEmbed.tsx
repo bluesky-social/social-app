@@ -3,25 +3,20 @@ import {Text} from '../text/Text'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
-import {PresentedExternal} from '@atproto/api/dist/client/types/app/bsky/embed/external'
+import {AppBskyEmbedExternal} from '@atproto/api'
 
-const ExternalLinkEmbed = ({
+export const ExternalLinkEmbed = ({
   link,
-  onImagePress,
   imageChild,
 }: {
-  link: PresentedExternal
-  onImagePress?: () => void
+  link: AppBskyEmbedExternal.ViewExternal
   imageChild?: React.ReactNode
 }) => {
   const pal = usePalette('default')
   return (
     <>
       {link.thumb ? (
-        <AutoSizedImage
-          uri={link.thumb}
-          style={styles.extImage}
-          onPress={onImagePress}>
+        <AutoSizedImage uri={link.thumb} style={styles.extImage}>
           {imageChild}
         </AutoSizedImage>
       ) : undefined}
@@ -65,5 +60,3 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 })
-
-export default ExternalLinkEmbed

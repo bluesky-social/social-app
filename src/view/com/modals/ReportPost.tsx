@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {ComAtprotoReportReasonType} from '@atproto/api'
+import {ComAtprotoModerationDefs} from '@atproto/api'
 import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from 'state/index'
 import {s, colors, gradients} from 'lib/styles'
@@ -46,16 +46,16 @@ export function Component({
     setIsProcessing(true)
     try {
       // NOTE: we should update the lexicon of reasontype to include more options -prf
-      let reasonType = ComAtprotoReportReasonType.OTHER
+      let reasonType = ComAtprotoModerationDefs.REASONOTHER
       if (issue === 'spam') {
-        reasonType = ComAtprotoReportReasonType.SPAM
+        reasonType = ComAtprotoModerationDefs.REASONSPAM
       }
       const reason = ITEMS.find(item => item.key === issue)?.label || ''
-      await store.api.com.atproto.report.create({
+      await store.agent.createModerationReport({
         reasonType,
         reason,
         subject: {
-          $type: 'com.atproto.repo.recordRef',
+          $type: 'com.atproto.repo.strongRef',
           uri: postUri,
           cid: postCid,
         },
@@ -69,12 +69,16 @@ export function Component({
     }
   }
   return (
-    <View style={[s.flex1, s.pl10, s.pr10, pal.view]}>
+    <View testID="reportPostModal" style={[s.flex1, s.pl10, s.pr10, pal.view]}>
       <Text style={[pal.text, styles.title]}>Report post</Text>
       <Text style={[pal.textLight, styles.description]}>
         What is the issue with this post?
       </Text>
-      <RadioGroup items={ITEMS} onSelect={onSelectIssue} />
+      <RadioGroup
+        testID="reportPostRadios"
+        items={ITEMS}
+        onSelect={onSelectIssue}
+      />
       {error ? (
         <View style={s.mt10}>
           <ErrorMessage message={error} />
@@ -85,7 +89,10 @@ export function Component({
           <ActivityIndicator />
         </View>
       ) : issue ? (
-        <TouchableOpacity style={s.mt10} onPress={onPress}>
+        <TouchableOpacity
+          testID="sendReportBtn"
+          style={s.mt10}
+          onPress={onPress}>
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}
