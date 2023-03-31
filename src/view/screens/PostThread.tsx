@@ -29,8 +29,8 @@ export const PostThreadScreen = withAuthRequired(({route}: Props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      const threadCleanup = view.registerListeners()
       store.shell.setMinimalShellMode(false)
+      const threadCleanup = view.registerListeners()
       if (!view.hasLoaded && !view.isLoading) {
         view.setup().catch(err => {
           store.log.error('Failed to fetch thread', err)

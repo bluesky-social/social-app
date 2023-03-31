@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 import {
   AppBskyGraphGetFollows as GetFollows,
-  AppBskyActorRef as ActorRef,
+  AppBskyActorDefs as ActorDefs,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {cleanError} from 'lib/strings/errors'
@@ -9,7 +9,7 @@ import {bundleAsync} from 'lib/async/bundle'
 
 const PAGE_SIZE = 30
 
-export type FollowItem = ActorRef.WithInfo
+export type FollowItem = ActorDefs.ProfileViewBasic
 
 export class UserFollowsViewModel {
   // state
@@ -22,10 +22,9 @@ export class UserFollowsViewModel {
   loadMoreCursor?: string
 
   // data
-  subject: ActorRef.WithInfo = {
+  subject: ActorDefs.ProfileViewBasic = {
     did: '',
     handle: '',
-    declaration: {cid: '', actorType: ''},
   }
   follows: FollowItem[] = []
 
@@ -71,9 +70,9 @@ export class UserFollowsViewModel {
     try {
       const params = Object.assign({}, this.params, {
         limit: PAGE_SIZE,
-        before: replace ? undefined : this.loadMoreCursor,
+        cursor: replace ? undefined : this.loadMoreCursor,
       })
-      const res = await this.rootStore.api.app.bsky.graph.getFollows(params)
+      const res = await this.rootStore.agent.getFollows(params)
       if (replace) {
         this._replaceAll(res)
       } else {
@@ -88,13 +87,13 @@ export class UserFollowsViewModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -107,12 +106,12 @@ export class UserFollowsViewModel {
   // helper functions
   // =
 
-  private _replaceAll(res: GetFollows.Response) {
+  _replaceAll(res: GetFollows.Response) {
     this.follows = []
     this._appendAll(res)
   }
 
-  private _appendAll(res: GetFollows.Response) {
+  _appendAll(res: GetFollows.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     this.follows = this.follows.concat(res.data.follows)

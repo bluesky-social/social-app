@@ -33,6 +33,7 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      store.shell.setMinimalShellMode(false)
       store.shell.setIsDrawerSwipeDisabled(selectedPage > 0)
       return () => {
         store.shell.setIsDrawerSwipeDisabled(false)
@@ -42,6 +43,7 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
 
   const onPageSelected = React.useCallback(
     (index: number) => {
+      store.shell.setMinimalShellMode(false)
       setSelectedPage(index)
       store.shell.setIsDrawerSwipeDisabled(index > 0)
     },
@@ -54,7 +56,13 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
 
   const renderTabBar = React.useCallback(
     (props: RenderTabBarFnProps) => {
-      return <FeedsTabBar {...props} onPressSelected={onPressSelected} />
+      return (
+        <FeedsTabBar
+          {...props}
+          testID="homeScreenFeedTabs"
+          onPressSelected={onPressSelected}
+        />
+      )
     },
     [onPressSelected],
   )
@@ -66,27 +74,36 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
   const initialPage = store.me.follows.isEmpty ? 1 : 0
   return (
     <Pager
+      testID="homeScreen"
       onPageSelected={onPageSelected}
       renderTabBar={renderTabBar}
       tabBarPosition="top"
       initialPage={initialPage}>
       <FeedPage
         key="1"
+        testID="followingFeedPage"
         isPageFocused={selectedPage === 0}
         feed={store.me.mainFeed}
         renderEmptyState={renderFollowingEmptyState}
       />
-      <FeedPage key="2" isPageFocused={selectedPage === 1} feed={algoFeed} />
+      <FeedPage
+        key="2"
+        testID="whatshotFeedPage"
+        isPageFocused={selectedPage === 1}
+        feed={algoFeed}
+      />
     </Pager>
   )
 })
 
 const FeedPage = observer(
   ({
+    testID,
     isPageFocused,
     feed,
     renderEmptyState,
   }: {
+    testID?: string
     feed: FeedModel
     isPageFocused: boolean
     renderEmptyState?: () => JSX.Element
@@ -163,9 +180,9 @@ const FeedPage = observer(
     }, [feed, scrollToTop])
 
     return (
-      <View style={s.h100pct}>
+      <View testID={testID} style={s.h100pct}>
         <Feed
-          testID="homeFeed"
+          testID={testID ? `${testID}-feed` : undefined}
           key="default"
           feed={feed}
           scrollElRef={scrollElRef}

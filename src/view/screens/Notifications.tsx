@@ -72,6 +72,7 @@ export const NotificationsScreen = withAuthRequired(
     // =
     useFocusEffect(
       React.useCallback(() => {
+        store.shell.setMinimalShellMode(false)
         store.log.debug('NotificationsScreen: Updating feed')
         const softResetSub = store.onScreenSoftReset(scrollToTop)
         store.me.notifications.loadUnreadCount()
@@ -86,7 +87,7 @@ export const NotificationsScreen = withAuthRequired(
     )
 
     return (
-      <View style={s.hContentRegion}>
+      <View testID="notificationsScreen" style={s.hContentRegion}>
         <ViewHeader title="Notifications" canGoBack={false} />
         <Feed
           view={store.me.notifications}

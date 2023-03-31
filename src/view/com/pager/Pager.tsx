@@ -20,6 +20,7 @@ interface Props {
   initialPage?: number
   renderTabBar: RenderTabBarFn
   onPageSelected?: (index: number) => void
+  testID?: string
 }
 export const Pager = ({
   children,
@@ -27,6 +28,7 @@ export const Pager = ({
   initialPage = 0,
   renderTabBar,
   onPageSelected,
+  testID,
 }: React.PropsWithChildren<Props>) => {
   const [selectedPage, setSelectedPage] = React.useState(0)
   const position = useAnimatedValue(0)
@@ -49,7 +51,7 @@ export const Pager = ({
   )
 
   return (
-    <View>
+    <View testID={testID}>
       {tabBarPosition === 'top' &&
         renderTabBar({
           selectedPage,

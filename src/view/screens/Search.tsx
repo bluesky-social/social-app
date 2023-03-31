@@ -152,6 +152,7 @@ export const SearchScreen = withAuthRequired(
                   {autocompleteView.searchRes.map(item => (
                     <ProfileCard
                       key={item.did}
+                      testID={`searchAutoCompleteResult-${item.handle}`}
                       handle={item.handle}
                       displayName={item.displayName}
                       avatar={item.avatar}

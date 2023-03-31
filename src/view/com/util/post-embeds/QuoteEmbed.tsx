@@ -1,13 +1,21 @@
-import {StyleSheet} from 'react-native'
 import React from 'react'
+import {StyleProp, StyleSheet, ViewStyle} from 'react-native'
+import {AppBskyEmbedImages, AppBskyEmbedRecordWithMedia} from '@atproto/api'
 import {AtUri} from '../../../../third-party/uri'
 import {PostMeta} from '../PostMeta'
 import {Link} from '../Link'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ComposerOptsQuote} from 'state/models/ui/shell'
+import {PostEmbeds} from '.'
 
-const QuoteEmbed = ({quote}: {quote: ComposerOptsQuote}) => {
+export function QuoteEmbed({
+  quote,
+  style,
+}: {
+  quote: ComposerOptsQuote
+  style?: StyleProp<ViewStyle>
+}) {
   const pal = usePalette('default')
   const itemUrip = new AtUri(quote.uri)
   const itemHref = `/profile/${quote.author.handle}/post/${itemUrip.rkey}`
@@ -16,9 +24,18 @@ const QuoteEmbed = ({quote}: {quote: ComposerOptsQuote}) => {
     () => quote.text.trim().length === 0,
     [quote.text],
   )
+  const imagesEmbed = React.useMemo(
+    () =>
+      quote.embeds?.find(
+        embed =>
+          AppBskyEmbedImages.isView(embed) ||
+          AppBskyEmbedRecordWithMedia.isView(embed),
+      ),
+    [quote.embeds],
+  )
   return (
     <Link
-      style={[styles.container, pal.border]}
+      style={[styles.container, pal.border, style]}
       href={itemHref}
       title={itemTitle}>
       <PostMeta
@@ -37,6 +54,12 @@ const QuoteEmbed = ({quote}: {quote: ComposerOptsQuote}) => {
           quote.text
         )}
       </Text>
+      {AppBskyEmbedImages.isView(imagesEmbed) && (
+        <PostEmbeds embed={imagesEmbed} />
+      )}
+      {AppBskyEmbedRecordWithMedia.isView(imagesEmbed) && (
+        <PostEmbeds embed={imagesEmbed.media} />
+      )}
     </Link>
   )
 }
@@ -48,7 +71,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 8,
     paddingHorizontal: 12,
-    marginVertical: 8,
     borderWidth: 1,
   },
   quotePost: {

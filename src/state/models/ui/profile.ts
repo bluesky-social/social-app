@@ -40,7 +40,7 @@ export class ProfileUiModel {
     )
     this.profile = new ProfileViewModel(rootStore, {actor: params.user})
     this.feed = new FeedModel(rootStore, 'author', {
-      author: params.user,
+      actor: params.user,
       limit: 10,
     })
   }
@@ -64,16 +64,8 @@ export class ProfileUiModel {
     return this.profile.isRefreshing || this.currentView.isRefreshing
   }
 
-  get isUser() {
-    return this.profile.isUser
-  }
-
   get selectorItems() {
-    if (this.isUser) {
-      return USER_SELECTOR_ITEMS
-    } else {
-      return USER_SELECTOR_ITEMS
-    }
+    return USER_SELECTOR_ITEMS
   }
 
   get selectedView() {

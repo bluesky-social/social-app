@@ -4,14 +4,14 @@ import {
   getLikelyType,
 } from '../../src/lib/link-meta/link-meta'
 import {exampleComHtml} from './__mocks__/exampleComHtml'
-import AtpAgent from '@atproto/api'
+import {BskyAgent} from '@atproto/api'
 import {DEFAULT_SERVICE, RootStoreModel} from '../../src/state'
 
 describe('getLinkMeta', () => {
   let rootStore: RootStoreModel
 
   beforeEach(() => {
-    rootStore = new RootStoreModel(new AtpAgent({service: DEFAULT_SERVICE}))
+    rootStore = new RootStoreModel(new BskyAgent({service: DEFAULT_SERVICE}))
   })
 
   const inputs = [

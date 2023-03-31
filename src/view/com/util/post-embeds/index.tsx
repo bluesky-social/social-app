@@ -10,6 +10,7 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
   AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
   AppBskyFeedPost,
 } from '@atproto/api'
 import {Link} from '../Link'
@@ -19,15 +20,16 @@ import {ImagesLightbox} from 'state/models/ui/shell'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {saveImageModal} from 'lib/media/manip'
-import YoutubeEmbed from './YoutubeEmbed'
-import ExternalLinkEmbed from './ExternalLinkEmbed'
+import {YoutubeEmbed} from './YoutubeEmbed'
+import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import QuoteEmbed from './QuoteEmbed'
 
 type Embed =
-  | AppBskyEmbedRecord.Presented
-  | AppBskyEmbedImages.Presented
-  | AppBskyEmbedExternal.Presented
+  | AppBskyEmbedRecord.View
+  | AppBskyEmbedImages.View
+  | AppBskyEmbedExternal.View
+  | AppBskyEmbedRecordWithMedia.View
   | {$type: string; [k: string]: unknown}
 
 export function PostEmbeds({
@@ -39,11 +41,35 @@ export function PostEmbeds({
 }) {
   const pal = usePalette('default')
   const store = useStores()
-  if (AppBskyEmbedRecord.isPresented(embed)) {
+
+  if (
+    AppBskyEmbedRecordWithMedia.isView(embed) &&
+    AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
+    AppBskyFeedPost.isRecord(embed.record.record.value) &&
+    AppBskyFeedPost.validateRecord(embed.record.record.value).success
+  ) {
+    return (
+      <View style={[styles.stackContainer, style]}>
+        <PostEmbeds embed={embed.media} />
+        <QuoteEmbed
+          quote={{
+            author: embed.record.record.author,
+            cid: embed.record.record.cid,
+            uri: embed.record.record.uri,
+            indexedAt: embed.record.record.indexedAt,
+            text: embed.record.record.value.text,
+            embeds: embed.record.record.embeds,
+          }}
+        />
+      </View>
+    )
+  }
+
+  if (AppBskyEmbedRecord.isView(embed)) {
     if (
-      AppBskyEmbedRecord.isPresentedRecord(embed.record) &&
-      AppBskyFeedPost.isRecord(embed.record.record) &&
-      AppBskyFeedPost.validateRecord(embed.record.record).success
+      AppBskyEmbedRecord.isViewRecord(embed.record) &&
+      AppBskyFeedPost.isRecord(embed.record.value) &&
+      AppBskyFeedPost.validateRecord(embed.record.value).success
     ) {
       return (
         <QuoteEmbed
@@ -51,14 +77,17 @@ export function PostEmbeds({
             author: embed.record.author,
             cid: embed.record.cid,
             uri: embed.record.uri,
-            indexedAt: embed.record.record.createdAt, // TODO
-            text: embed.record.record.text,
+            indexedAt: embed.record.indexedAt,
+            text: embed.record.value.text,
+            embeds: embed.record.embeds,
           }}
+          style={style}
         />
       )
     }
   }
-  if (AppBskyEmbedImages.isPresented(embed)) {
+
+  if (AppBskyEmbedImages.isView(embed)) {
     if (embed.images.length > 0) {
       const uris = embed.images.map(img => img.fullsize)
       const openLightbox = (index: number) => {
@@ -129,12 +158,13 @@ export function PostEmbeds({
       }
     }
   }
-  if (AppBskyEmbedExternal.isPresented(embed)) {
+
+  if (AppBskyEmbedExternal.isView(embed)) {
     const link = embed.external
     const youtubeVideoId = getYoutubeVideoId(link.uri)
 
     if (youtubeVideoId) {
-      return <YoutubeEmbed videoId={youtubeVideoId} link={link} />
+      return <YoutubeEmbed link={link} style={style} />
     }
 
     return (
@@ -150,6 +180,9 @@ export function PostEmbeds({
 }
 
 const styles = StyleSheet.create({
+  stackContainer: {
+    gap: 6,
+  },
   imagesContainer: {
     marginTop: 4,
   },

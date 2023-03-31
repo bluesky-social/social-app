@@ -47,10 +47,10 @@ export const FeedItem = observer(function FeedItem({
   const pal = usePalette('default')
   const [isAuthorsExpanded, setAuthorsExpanded] = React.useState<boolean>(false)
   const itemHref = React.useMemo(() => {
-    if (item.isUpvote || item.isRepost) {
+    if (item.isLike || item.isRepost) {
       const urip = new AtUri(item.subjectUri)
       return `/profile/${urip.host}/post/${urip.rkey}`
-    } else if (item.isFollow || item.isAssertion) {
+    } else if (item.isFollow) {
       return `/profile/${item.author.handle}`
     } else if (item.isReply) {
       const urip = new AtUri(item.uri)
@@ -59,9 +59,9 @@ export const FeedItem = observer(function FeedItem({
     return ''
   }, [item])
   const itemTitle = React.useMemo(() => {
-    if (item.isUpvote || item.isRepost) {
+    if (item.isLike || item.isRepost) {
       return 'Post'
-    } else if (item.isFollow || item.isAssertion) {
+    } else if (item.isFollow) {
       return item.author.handle
     } else if (item.isReply) {
       return 'Post'
@@ -77,7 +77,7 @@ export const FeedItem = observer(function FeedItem({
     return <View />
   }
 
-  if (item.isReply || item.isMention) {
+  if (item.isReply || item.isMention || item.isQuote) {
     if (item.additionalPost?.error) {
       // hide errors - it doesnt help the user to show them
       return <View />
@@ -103,7 +103,7 @@ export const FeedItem = observer(function FeedItem({
   let action = ''
   let icon: Props['icon'] | 'HeartIconSolid'
   let iconStyle: Props['style'] = []
-  if (item.isUpvote) {
+  if (item.isLike) {
     action = 'liked your post'
     icon = 'HeartIconSolid'
     iconStyle = [
@@ -114,9 +114,6 @@ export const FeedItem = observer(function FeedItem({
     action = 'reposted your post'
     icon = 'retweet'
     iconStyle = [s.green3 as FontAwesomeIconStyle]
-  } else if (item.isReply) {
-    action = 'replied to your post'
-    icon = ['far', 'comment']
   } else if (item.isFollow) {
     action = 'followed you'
     icon = 'user-plus'
@@ -208,7 +205,7 @@ export const FeedItem = observer(function FeedItem({
               </View>
             </View>
           </TouchableWithoutFeedback>
-          {item.isUpvote || item.isRepost ? (
+          {item.isLike || item.isRepost || item.isQuote ? (
             <AdditionalPostText additionalPost={item.additionalPost} />
           ) : (
             <></>
@@ -352,9 +349,9 @@ function AdditionalPostText({
     return <View />
   }
   const text = additionalPost.thread?.postRecord.text
-  const images = (
-    additionalPost.thread.post.embed as AppBskyEmbedImages.Presented
-  )?.images
+  const images = AppBskyEmbedImages.isView(additionalPost.thread.post.embed)
+    ? additionalPost.thread.post.embed.images
+    : undefined
   return (
     <>
       {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}

@@ -1,3 +1,4 @@
+import {AppBskyEmbedRecord} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {makeAutoObservable} from 'mobx'
 import {ProfileViewModel} from '../profile-view'
@@ -111,6 +112,7 @@ export interface ComposerOptsQuote {
     displayName?: string
     avatar?: string
   }
+  embeds?: AppBskyEmbedRecord.ViewRecord['embeds']
 }
 export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef

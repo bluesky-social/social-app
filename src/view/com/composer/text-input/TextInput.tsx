@@ -9,13 +9,13 @@ import PasteInput, {
   PastedFile,
   PasteInputRef,
 } from '@mattermost/react-native-paste-input'
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import isEqual from 'lodash.isequal'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
 import {Autocomplete} from './mobile/Autocomplete'
 import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
 import {cleanError} from 'lib/strings/errors'
-import {detectLinkables, extractEntities} from 'lib/strings/rich-text-detection'
 import {getImageDim} from 'lib/media/manip'
 import {cropAndCompressFlow} from 'lib/media/picker'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
@@ -33,11 +33,11 @@ export interface TextInputRef {
 }
 
 interface TextInputProps {
-  text: string
+  richtext: RichText
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteViewModel
-  onTextChanged: (v: string) => void
+  setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
@@ -51,11 +51,11 @@ interface Selection {
 export const TextInput = React.forwardRef(
   (
     {
-      text,
+      richtext,
       placeholder,
       suggestedLinks,
       autocompleteView,
-      onTextChanged,
+      setRichText,
       onPhotoPasted,
       onSuggestedLinksChanged,
       onError,
@@ -92,7 +92,9 @@ export const TextInput = React.forwardRef(
 
     const onChangeText = React.useCallback(
       (newText: string) => {
-        onTextChanged(newText)
+        const newRt = new RichText({text: newText})
+        newRt.detectFacetsWithoutResolution()
+        setRichText(newRt)
 
         const prefix = getMentionAt(
           newText,
@@ -105,20 +107,21 @@ export const TextInput = React.forwardRef(
           autocompleteView.setActive(false)
         }
 
-        const ents = extractEntities(newText)?.filter(
-          ent => ent.type === 'link',
-        )
-        const set = new Set(ents ? ents.map(e => e.value) : [])
+        const set: Set<string> = new Set()
+        if (newRt.facets) {
+          for (const facet of newRt.facets) {
+            for (const feature of facet.features) {
+              if (AppBskyRichtextFacet.isLink(feature)) {
+                set.add(feature.uri)
+              }
+            }
+          }
+        }
         if (!isEqual(set, suggestedLinks)) {
           onSuggestedLinksChanged(set)
         }
       },
-      [
-        onTextChanged,
-        autocompleteView,
-        suggestedLinks,
-        onSuggestedLinksChanged,
-      ],
+      [setRichText, autocompleteView, suggestedLinks, onSuggestedLinksChanged],
     )
 
     const onPaste = React.useCallback(
@@ -159,31 +162,35 @@ export const TextInput = React.forwardRef(
     const onSelectAutocompleteItem = React.useCallback(
       (item: string) => {
         onChangeText(
-          insertMentionAt(text, textInputSelection.current?.start || 0, item),
+          insertMentionAt(
+            richtext.text,
+            textInputSelection.current?.start || 0,
+            item,
+          ),
         )
         autocompleteView.setActive(false)
       },
-      [onChangeText, text, autocompleteView],
+      [onChangeText, richtext, autocompleteView],
     )
 
     const textDecorated = React.useMemo(() => {
       let i = 0
-      return detectLinkables(text).map(v => {
-        if (typeof v === 'string') {
+      return Array.from(richtext.segments()).map(segment => {
+        if (!segment.facet) {
           return (
             <Text key={i++} style={[pal.text, styles.textInputFormatting]}>
-              {v}
+              {segment.text}
             </Text>
           )
         } else {
           return (
             <Text key={i++} style={[pal.link, styles.textInputFormatting]}>
-              {v.link}
+              {segment.text}
             </Text>
           )
         }
       })
-    }, [text, pal.link, pal.text])
+    }, [richtext, pal.link, pal.text])
 
     return (
       <View style={styles.container}>

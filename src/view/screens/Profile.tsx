@@ -42,6 +42,7 @@ export const ProfileScreen = withAuthRequired(
     useFocusEffect(
       React.useCallback(() => {
         let aborted = false
+        store.shell.setMinimalShellMode(false)
         const feedCleanup = uiState.feed.registerListeners()
         if (hasSetup) {
           uiState.update()
@@ -57,7 +58,7 @@ export const ProfileScreen = withAuthRequired(
           aborted = true
           feedCleanup()
         }
-      }, [hasSetup, uiState]),
+      }, [hasSetup, uiState, store]),
     )
 
     // events

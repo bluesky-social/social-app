@@ -1,16 +1,16 @@
 import {
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
-  ComAtprotoBlobUpload,
   AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  ComAtprotoRepoUploadBlob,
+  RichText,
 } from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from 'state/models/root-store'
-import {extractEntities} from 'lib/strings/rich-text-detection'
 import {isNetworkError} from 'lib/strings/errors'
 import {LinkMeta} from '../link-meta/link-meta'
 import {Image} from '../media/manip'
-import {RichText} from '../strings/rich-text'
 import {isWeb} from 'platform/detection'
 
 export interface ExternalEmbedDraft {
@@ -27,7 +27,7 @@ export async function resolveName(store: RootStoreModel, didOrHandle: string) {
   if (didOrHandle.startsWith('did:')) {
     return didOrHandle
   }
-  const res = await store.api.com.atproto.handle.resolve({
+  const res = await store.agent.resolveHandle({
     handle: didOrHandle,
   })
   return res.data.did
@@ -37,15 +37,15 @@ export async function uploadBlob(
   store: RootStoreModel,
   blob: string,
   encoding: string,
-): Promise<ComAtprotoBlobUpload.Response> {
+): Promise<ComAtprotoRepoUploadBlob.Response> {
   if (isWeb) {
     // `blob` should be a data uri
-    return store.api.com.atproto.blob.upload(convertDataURIToUint8Array(blob), {
+    return store.agent.uploadBlob(convertDataURIToUint8Array(blob), {
       encoding,
     })
   } else {
     // `blob` should be a path to a file in the local FS
-    return store.api.com.atproto.blob.upload(
+    return store.agent.uploadBlob(
       blob, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
       {encoding},
     )
@@ -70,22 +70,18 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     | AppBskyEmbedImages.Main
     | AppBskyEmbedExternal.Main
     | AppBskyEmbedRecord.Main
+    | AppBskyEmbedRecordWithMedia.Main
     | undefined
   let reply
-  const text = new RichText(opts.rawText, undefined, {
-    cleanNewlines: true,
-  }).text.trim()
+  const rt = new RichText(
+    {text: opts.rawText.trim()},
+    {
+      cleanNewlines: true,
+    },
+  )
 
   opts.onStateChange?.('Processing...')
-  const entities = extractEntities(text, opts.knownHandles)
-  if (entities) {
-    for (const ent of entities) {
-      if (ent.type === 'mention') {
-        const prof = await store.profiles.getProfile(ent.value)
-        ent.value = prof.data.did
-      }
-    }
-  }
+  await rt.detectFacets(store.agent)
 
   if (opts.quote) {
     embed = {
@@ -95,24 +91,37 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
         cid: opts.quote.cid,
       },
     } as AppBskyEmbedRecord.Main
-  } else if (opts.images?.length) {
-    embed = {
-      $type: 'app.bsky.embed.images',
-      images: [],
-    } as AppBskyEmbedImages.Main
-    let i = 1
+  }
+
+  if (opts.images?.length) {
+    const images: AppBskyEmbedImages.Image[] = []
     for (const image of opts.images) {
-      opts.onStateChange?.(`Uploading image #${i++}...`)
+      opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
       const res = await uploadBlob(store, image, 'image/jpeg')
-      embed.images.push({
-        image: {
-          cid: res.data.cid,
-          mimeType: 'image/jpeg',
-        },
+      images.push({
+        image: res.data.blob,
         alt: '', // TODO supply alt text
       })
     }
-  } else if (opts.extLink) {
+
+    if (opts.quote) {
+      embed = {
+        $type: 'app.bsky.embed.recordWithMedia',
+        record: embed,
+        media: {
+          $type: 'app.bsky.embed.images',
+          images,
+        },
+      } as AppBskyEmbedRecordWithMedia.Main
+    } else {
+      embed = {
+        $type: 'app.bsky.embed.images',
+        images,
+      } as AppBskyEmbedImages.Main
+    }
+  }
+
+  if (opts.extLink && !opts.images?.length) {
     let thumb
     if (opts.extLink.localThumb) {
       opts.onStateChange?.('Uploading link thumbnail...')
@@ -138,27 +147,41 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
           opts.extLink.localThumb.path,
           encoding,
         )
-        thumb = {
-          cid: thumbUploadRes.data.cid,
-          mimeType: encoding,
-        }
+        thumb = thumbUploadRes.data.blob
       }
     }
-    embed = {
-      $type: 'app.bsky.embed.external',
-      external: {
-        uri: opts.extLink.uri,
-        title: opts.extLink.meta?.title || '',
-        description: opts.extLink.meta?.description || '',
-        thumb,
-      },
-    } as AppBskyEmbedExternal.Main
+
+    if (opts.quote) {
+      embed = {
+        $type: 'app.bsky.embed.recordWithMedia',
+        record: embed,
+        media: {
+          $type: 'app.bsky.embed.external',
+          external: {
+            uri: opts.extLink.uri,
+            title: opts.extLink.meta?.title || '',
+            description: opts.extLink.meta?.description || '',
+            thumb,
+          },
+        } as AppBskyEmbedExternal.Main,
+      } as AppBskyEmbedRecordWithMedia.Main
+    } else {
+      embed = {
+        $type: 'app.bsky.embed.external',
+        external: {
+          uri: opts.extLink.uri,
+          title: opts.extLink.meta?.title || '',
+          description: opts.extLink.meta?.description || '',
+          thumb,
+        },
+      } as AppBskyEmbedExternal.Main
+    }
   }
 
   if (opts.replyTo) {
     const replyToUrip = new AtUri(opts.replyTo)
-    const parentPost = await store.api.app.bsky.feed.post.get({
-      user: replyToUrip.host,
+    const parentPost = await store.agent.getPost({
+      repo: replyToUrip.host,
       rkey: replyToUrip.rkey,
     })
     if (parentPost) {
@@ -175,16 +198,12 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
 
   try {
     opts.onStateChange?.('Posting...')
-    return await store.api.app.bsky.feed.post.create(
-      {did: store.me.did || ''},
-      {
-        text,
-        reply,
-        embed,
-        entities,
-        createdAt: new Date().toISOString(),
-      },
-    )
+    return await store.agent.post({
+      text: rt.text,
+      facets: rt.facets,
+      reply,
+      embed,
+    })
   } catch (e: any) {
     console.error(`Failed to create post: ${e.toString()}`)
     if (isNetworkError(e)) {
@@ -195,49 +214,6 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
       throw e
     }
   }
-}
-
-export async function repost(store: RootStoreModel, uri: string, cid: string) {
-  return await store.api.app.bsky.feed.repost.create(
-    {did: store.me.did || ''},
-    {
-      subject: {uri, cid},
-      createdAt: new Date().toISOString(),
-    },
-  )
-}
-
-export async function unrepost(store: RootStoreModel, repostUri: string) {
-  const repostUrip = new AtUri(repostUri)
-  return await store.api.app.bsky.feed.repost.delete({
-    did: repostUrip.hostname,
-    rkey: repostUrip.rkey,
-  })
-}
-
-export async function follow(
-  store: RootStoreModel,
-  subjectDid: string,
-  subjectDeclarationCid: string,
-) {
-  return await store.api.app.bsky.graph.follow.create(
-    {did: store.me.did || ''},
-    {
-      subject: {
-        did: subjectDid,
-        declarationCid: subjectDeclarationCid,
-      },
-      createdAt: new Date().toISOString(),
-    },
-  )
-}
-
-export async function unfollow(store: RootStoreModel, followUri: string) {
-  const followUrip = new AtUri(followUri)
-  return await store.api.app.bsky.graph.follow.delete({
-    did: followUrip.hostname,
-    rkey: followUrip.rkey,
-  })
 }
 
 // helpers

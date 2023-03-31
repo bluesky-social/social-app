@@ -29,7 +29,6 @@ const App = observer(() => {
       analytics.init(store)
       notifee.init(store)
       SplashScreen.hide()
-      store.hackCheckIfUpgradeNeeded()
       Linking.getInitialURL().then((url: string | null) => {
         if (url) {
           handleLink(url)

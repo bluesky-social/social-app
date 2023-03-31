@@ -18,6 +18,12 @@
   - iOS: `yarn ios`
   - Android: `yarn android`
   - Web: `yarn web`
+- Run e2e tests
+  - Start in various console tabs:
+    - `yarn e2e:server`
+    - `yarn e2e:metro`
+  - Run once: `yarn e2e:build`
+  - Each test run: `yarn e2e:run`
 - Tips
   - `npx react-native info` Checks what has been installed.
   - On M1 macs, [you need to exclude "arm64" from the target architectures](https://stackoverflow.com/a/65399525)

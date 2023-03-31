@@ -10,7 +10,7 @@ export type CommonNavigatorParams = {
   ProfileFollowers: {name: string}
   ProfileFollows: {name: string}
   PostThread: {name: string; rkey: string}
-  PostUpvotedBy: {name: string; rkey: string}
+  PostLikedBy: {name: string; rkey: string}
   PostRepostedBy: {name: string; rkey: string}
   Debug: undefined
   Log: undefined

@@ -26,22 +26,28 @@ export function Component({
   }
 
   return (
-    <View style={[s.flex1, pal.view, styles.container]}>
+    <View testID="repostModal" style={[s.flex1, pal.view, styles.container]}>
       <View style={s.pb20}>
-        <TouchableOpacity style={[styles.actionBtn]} onPress={onRepost}>
+        <TouchableOpacity
+          testID="repostBtn"
+          style={[styles.actionBtn]}
+          onPress={onRepost}>
           <RepostIcon strokeWidth={2} size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
             {!isReposted ? 'Repost' : 'Undo repost'}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.actionBtn]} onPress={onQuote}>
+        <TouchableOpacity
+          testID="quoteBtn"
+          style={[styles.actionBtn]}
+          onPress={onQuote}>
           <FontAwesomeIcon icon="quote-left" size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
             Quote Post
           </Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity testID="cancelBtn" onPress={onPress}>
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
           start={{x: 0, y: 0}}

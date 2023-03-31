@@ -13,7 +13,7 @@ import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
-import {PostEmbeds} from '../util/PostEmbeds'
+import {PostEmbeds} from '../util/post-embeds'
 import {PostMutedWrapper} from '../util/PostMuted'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
@@ -79,11 +79,11 @@ export const FeedItem = observer(function ({
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
   }
-  const onPressToggleUpvote = () => {
+  const onPressToggleLike = () => {
     track('FeedItem:PostLike')
     return item
-      .toggleUpvote()
-      .catch(e => store.log.error('Failed to toggle upvote', e))
+      .toggleLike()
+      .catch(e => store.log.error('Failed to toggle like', e))
   }
   const onCopyPostText = () => {
     Clipboard.setString(record?.text || '')
@@ -127,7 +127,12 @@ export const FeedItem = observer(function ({
 
   return (
     <PostMutedWrapper isMuted={isMuted}>
-      <Link style={outerStyles} href={itemHref} title={itemTitle} noFeedback>
+      <Link
+        testID={`feedItem-by-${item.post.author.handle}`}
+        style={outerStyles}
+        href={itemHref}
+        title={itemTitle}
+        noFeedback>
         {isThreadChild && (
           <View
             style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
@@ -189,7 +194,6 @@ export const FeedItem = observer(function ({
               timestamp={item.post.indexedAt}
               postHref={itemHref}
               did={item.post.author.did}
-              declarationCid={item.post.author.declaration.cid}
               showFollowBtn={showFollowBtn}
             />
             {!isThreadChild && replyAuthorDid !== '' && (
@@ -239,12 +243,12 @@ export const FeedItem = observer(function ({
               isAuthor={item.post.author.did === store.me.did}
               replyCount={item.post.replyCount}
               repostCount={item.post.repostCount}
-              upvoteCount={item.post.upvoteCount}
-              isReposted={!!item.post.viewer.repost}
-              isUpvoted={!!item.post.viewer.upvote}
+              likeCount={item.post.likeCount}
+              isReposted={!!item.post.viewer?.repost}
+              isLiked={!!item.post.viewer?.like}
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
-              onPressToggleUpvote={onPressToggleUpvote}
+              onPressToggleLike={onPressToggleLike}
               onCopyPostText={onCopyPostText}
               onOpenTranslate={onOpenTranslate}
               onDeletePost={onDeletePost}

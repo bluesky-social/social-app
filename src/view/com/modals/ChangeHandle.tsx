@@ -105,7 +105,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
       track('EditHandle:SetNewHandle')
       const newHandle = isCustom ? handle : createFullHandle(handle, userDomain)
       store.log.debug(`Updating handle to ${newHandle}`)
-      await store.api.com.atproto.handle.update({
+      await store.agent.updateHandle({
         handle: newHandle,
       })
       store.shell.closeModal()
@@ -310,7 +310,7 @@ function CustomHandleForm({
     try {
       setIsVerifying(true)
       setError('')
-      const res = await store.api.com.atproto.handle.resolve({handle})
+      const res = await store.agent.com.atproto.identity.resolveHandle({handle})
       if (res.data.did === store.me.did) {
         setCanSave(true)
       } else {
@@ -331,7 +331,7 @@ function CustomHandleForm({
     canSave,
     onPressSave,
     store.log,
-    store.api,
+    store.agent,
   ])
 
   // rendering

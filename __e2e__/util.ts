@@ -1,0 +1,96 @@
+import {resolveConfig} from 'detox/internals'
+
+const platform = device.getPlatform()
+
+export async function openApp(opts: any) {
+  opts = opts || {}
+  const config = await resolveConfig()
+  if (config.configurationName.split('.').includes('debug')) {
+    return await openAppForDebugBuild(platform, opts)
+  } else {
+    return await device.launchApp({
+      ...opts,
+      newInstance: true,
+    })
+  }
+}
+
+export async function isVisible(id: string) {
+  try {
+    await expect(element(by.id(id))).toBeVisible()
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+export async function login(
+  service: string,
+  username: string,
+  password: string,
+  {takeScreenshots} = {takeScreenshots: false},
+) {
+  await element(by.id('signInButton')).tap()
+  if (takeScreenshots) {
+    await device.takeScreenshot('1- opened sign-in screen')
+  }
+  if (await isVisible('chooseAccountForm')) {
+    await element(by.id('chooseNewAccountBtn')).tap()
+  }
+  await element(by.id('loginSelectServiceButton')).tap()
+  if (takeScreenshots) {
+    await device.takeScreenshot('2- opened service selector')
+  }
+  await element(by.id('customServerTextInput')).typeText(service)
+  await element(by.id('customServerSelectBtn')).tap()
+  if (takeScreenshots) {
+    await device.takeScreenshot('3- input custom service')
+  }
+  await element(by.id('loginUsernameInput')).typeText(username)
+  await element(by.id('loginPasswordInput')).typeText(password)
+  if (takeScreenshots) {
+    await device.takeScreenshot('4- entered username and password')
+  }
+  await element(by.id('loginNextButton')).tap()
+}
+
+async function openAppForDebugBuild(platform: string, opts: any) {
+  const deepLinkUrl = // Local testing with packager
+    /*process.env.EXPO_USE_UPDATES
+    ? // Testing latest published EAS update for the test_debug channel
+      getDeepLinkUrl(getLatestUpdateUrl())
+    : */ getDeepLinkUrl(getDevLauncherPackagerUrl(platform))
+
+  if (platform === 'ios') {
+    await device.launchApp({
+      ...opts,
+      newInstance: true,
+    })
+    sleep(3000)
+    await device.openURL({
+      url: deepLinkUrl,
+    })
+  } else {
+    await device.launchApp({
+      ...opts,
+      newInstance: true,
+      url: deepLinkUrl,
+    })
+  }
+
+  await sleep(3000)
+}
+
+export async function createServer(path = '') {
+  const res = await fetch(`http://localhost:1986/${path}`, {method: 'POST'})
+  const resBody = await res.text()
+  return resBody
+}
+
+const getDeepLinkUrl = (url: string) =>
+  `expo+bluesky://expo-development-client/?url=${encodeURIComponent(url)}`
+
+const getDevLauncherPackagerUrl = (platform: string) =>
+  `http://localhost:8081/index.bundle?platform=${platform}&dev=true&minify=false&disableOnboarding=1`
+
+export const sleep = (t: number) => new Promise(res => setTimeout(res, t))

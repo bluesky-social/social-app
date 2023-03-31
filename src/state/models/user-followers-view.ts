@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 import {
   AppBskyGraphGetFollowers as GetFollowers,
-  AppBskyActorRef as ActorRef,
+  AppBskyActorDefs as ActorDefs,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {cleanError} from 'lib/strings/errors'
@@ -9,7 +9,7 @@ import {bundleAsync} from 'lib/async/bundle'
 
 const PAGE_SIZE = 30
 
-export type FollowerItem = ActorRef.WithInfo
+export type FollowerItem = ActorDefs.ProfileViewBasic
 
 export class UserFollowersViewModel {
   // state
@@ -22,10 +22,9 @@ export class UserFollowersViewModel {
   loadMoreCursor?: string
 
   // data
-  subject: ActorRef.WithInfo = {
+  subject: ActorDefs.ProfileViewBasic = {
     did: '',
     handle: '',
-    declaration: {cid: '', actorType: ''},
   }
   followers: FollowerItem[] = []
 
@@ -71,9 +70,9 @@ export class UserFollowersViewModel {
     try {
       const params = Object.assign({}, this.params, {
         limit: PAGE_SIZE,
-        before: replace ? undefined : this.loadMoreCursor,
+        cursor: replace ? undefined : this.loadMoreCursor,
       })
-      const res = await this.rootStore.api.app.bsky.graph.getFollowers(params)
+      const res = await this.rootStore.agent.getFollowers(params)
       if (replace) {
         this._replaceAll(res)
       } else {
@@ -88,13 +87,13 @@ export class UserFollowersViewModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -107,12 +106,12 @@ export class UserFollowersViewModel {
   // helper functions
   // =
 
-  private _replaceAll(res: GetFollowers.Response) {
+  _replaceAll(res: GetFollowers.Response) {
     this.followers = []
     this._appendAll(res)
   }
 
-  private _appendAll(res: GetFollowers.Response) {
+  _appendAll(res: GetFollowers.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     this.followers = this.followers.concat(res.data.followers)

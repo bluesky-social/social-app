@@ -2,12 +2,13 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AppBskyFeedGetPostThread as GetPostThread,
   AppBskyFeedPost as FeedPost,
+  AppBskyFeedDefs,
+  RichText,
 } from '@atproto/api'
 import {AtUri} from '../../third-party/uri'
 import {RootStoreModel} from './root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
-import {RichText} from 'lib/strings/rich-text'
 
 function* reactKeyGenerator(): Generator<string> {
   let counter = 0
@@ -26,10 +27,10 @@ export class PostThreadViewPostModel {
   _hasMore = false
 
   // data
-  post: FeedPost.View
+  post: AppBskyFeedDefs.PostView
   postRecord?: FeedPost.Record
-  parent?: PostThreadViewPostModel | GetPostThread.NotFoundPost
-  replies?: (PostThreadViewPostModel | GetPostThread.NotFoundPost)[]
+  parent?: PostThreadViewPostModel | AppBskyFeedDefs.NotFoundPost
+  replies?: (PostThreadViewPostModel | AppBskyFeedDefs.NotFoundPost)[]
   richText?: RichText
 
   get uri() {
@@ -43,7 +44,7 @@ export class PostThreadViewPostModel {
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
-    v: GetPostThread.ThreadViewPost,
+    v: AppBskyFeedDefs.ThreadViewPost,
   ) {
     this._reactKey = reactKey
     this.post = v.post
@@ -51,11 +52,7 @@ export class PostThreadViewPostModel {
       const valid = FeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
-        this.richText = new RichText(
-          this.postRecord.text,
-          this.postRecord.entities,
-          {cleanNewlines: true},
-        )
+        this.richText = new RichText(this.postRecord, {cleanNewlines: true})
       } else {
         rootStore.log.warn(
           'Received an invalid app.bsky.feed.post record',
@@ -74,14 +71,14 @@ export class PostThreadViewPostModel {
 
   assignTreeModels(
     keyGen: Generator<string>,
-    v: GetPostThread.ThreadViewPost,
+    v: AppBskyFeedDefs.ThreadViewPost,
     higlightedPostUri: string,
     includeParent = true,
     includeChildren = true,
   ) {
     // parents
     if (includeParent && v.parent) {
-      if (GetPostThread.isThreadViewPost(v.parent)) {
+      if (AppBskyFeedDefs.isThreadViewPost(v.parent)) {
         const parentModel = new PostThreadViewPostModel(
           this.rootStore,
           keyGen.next().value,
@@ -100,7 +97,7 @@ export class PostThreadViewPostModel {
           )
         }
         this.parent = parentModel
-      } else if (GetPostThread.isNotFoundPost(v.parent)) {
+      } else if (AppBskyFeedDefs.isNotFoundPost(v.parent)) {
         this.parent = v.parent
       }
     }
@@ -108,7 +105,7 @@ export class PostThreadViewPostModel {
     if (includeChildren && v.replies) {
       const replies = []
       for (const item of v.replies) {
-        if (GetPostThread.isThreadViewPost(item)) {
+        if (AppBskyFeedDefs.isThreadViewPost(item)) {
           const itemModel = new PostThreadViewPostModel(
             this.rootStore,
             keyGen.next().value,
@@ -128,7 +125,7 @@ export class PostThreadViewPostModel {
             )
           }
           replies.push(itemModel)
-        } else if (GetPostThread.isNotFoundPost(item)) {
+        } else if (AppBskyFeedDefs.isNotFoundPost(item)) {
           replies.push(item)
         }
       }
@@ -136,68 +133,43 @@ export class PostThreadViewPostModel {
     }
   }
 
-  async toggleUpvote() {
-    const wasUpvoted = !!this.post.viewer.upvote
-    const wasDownvoted = !!this.post.viewer.downvote
-    const res = await this.rootStore.api.app.bsky.feed.setVote({
-      subject: {
-        uri: this.post.uri,
-        cid: this.post.cid,
-      },
-      direction: wasUpvoted ? 'none' : 'up',
-    })
-    runInAction(() => {
-      if (wasDownvoted) {
-        this.post.downvoteCount--
-      }
-      if (wasUpvoted) {
-        this.post.upvoteCount--
-      } else {
-        this.post.upvoteCount++
-      }
-      this.post.viewer.upvote = res.data.upvote
-      this.post.viewer.downvote = res.data.downvote
-    })
-  }
-
-  async toggleDownvote() {
-    const wasUpvoted = !!this.post.viewer.upvote
-    const wasDownvoted = !!this.post.viewer.downvote
-    const res = await this.rootStore.api.app.bsky.feed.setVote({
-      subject: {
-        uri: this.post.uri,
-        cid: this.post.cid,
-      },
-      direction: wasDownvoted ? 'none' : 'down',
-    })
-    runInAction(() => {
-      if (wasUpvoted) {
-        this.post.upvoteCount--
-      }
-      if (wasDownvoted) {
-        this.post.downvoteCount--
-      } else {
-        this.post.downvoteCount++
-      }
-      this.post.viewer.upvote = res.data.upvote
-      this.post.viewer.downvote = res.data.downvote
-    })
+  async toggleLike() {
+    if (this.post.viewer?.like) {
+      await this.rootStore.agent.deleteLike(this.post.viewer.like)
+      runInAction(() => {
+        this.post.likeCount = this.post.likeCount || 0
+        this.post.viewer = this.post.viewer || {}
+        this.post.likeCount--
+        this.post.viewer.like = undefined
+      })
+    } else {
+      const res = await this.rootStore.agent.like(this.post.uri, this.post.cid)
+      runInAction(() => {
+        this.post.likeCount = this.post.likeCount || 0
+        this.post.viewer = this.post.viewer || {}
+        this.post.likeCount++
+        this.post.viewer.like = res.uri
+      })
+    }
   }
 
   async toggleRepost() {
-    if (this.post.viewer.repost) {
-      await apilib.unrepost(this.rootStore, this.post.viewer.repost)
+    if (this.post.viewer?.repost) {
+      await this.rootStore.agent.deleteRepost(this.post.viewer.repost)
       runInAction(() => {
+        this.post.repostCount = this.post.repostCount || 0
+        this.post.viewer = this.post.viewer || {}
         this.post.repostCount--
         this.post.viewer.repost = undefined
       })
     } else {
-      const res = await apilib.repost(
-        this.rootStore,
+      const res = await this.rootStore.agent.repost(
         this.post.uri,
         this.post.cid,
       )
       runInAction(() => {
+        this.post.repostCount = this.post.repostCount || 0
+        this.post.viewer = this.post.viewer || {}
         this.post.repostCount++
         this.post.viewer.repost = res.uri
       })
@@ -205,10 +177,7 @@ export class PostThreadViewPostModel {
   }
 
   async delete() {
-    await this.rootStore.api.app.bsky.feed.post.delete({
-      did: this.post.author.did,
-      rkey: new AtUri(this.post.uri).rkey,
-    })
+    await this.rootStore.agent.deletePost(this.post.uri)
     this.rootStore.emitPostDeleted(this.post.uri)
   }
 }
@@ -301,14 +270,14 @@ export class PostThreadViewModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
     this.notFound = false
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -322,7 +291,7 @@ export class PostThreadViewModel {
   // loader functions
   // =
 
-  private async _resolveUri() {
+  async _resolveUri() {
     const urip = new AtUri(this.params.uri)
     if (!urip.host.startsWith('did:')) {
       try {
@@ -336,10 +305,10 @@ export class PostThreadViewModel {
     })
   }
 
-  private async _load(isRefreshing = false) {
+  async _load(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.feed.getPostThread(
+      const res = await this.rootStore.agent.getPostThread(
         Object.assign({}, this.params, {uri: this.resolvedUri}),
       )
       this._replaceAll(res)
@@ -349,18 +318,18 @@ export class PostThreadViewModel {
     }
   }
 
-  private _replaceAll(res: GetPostThread.Response) {
+  _replaceAll(res: GetPostThread.Response) {
     sortThread(res.data.thread)
     const keyGen = reactKeyGenerator()
     const thread = new PostThreadViewPostModel(
       this.rootStore,
       keyGen.next().value,
-      res.data.thread as GetPostThread.ThreadViewPost,
+      res.data.thread as AppBskyFeedDefs.ThreadViewPost,
     )
     thread._isHighlightedPost = true
     thread.assignTreeModels(
       keyGen,
-      res.data.thread as GetPostThread.ThreadViewPost,
+      res.data.thread as AppBskyFeedDefs.ThreadViewPost,
       thread.uri,
     )
     this.thread = thread
@@ -368,25 +337,25 @@ export class PostThreadViewModel {
 }
 
 type MaybePost =
-  | GetPostThread.ThreadViewPost
-  | GetPostThread.NotFoundPost
+  | AppBskyFeedDefs.ThreadViewPost
+  | AppBskyFeedDefs.NotFoundPost
   | {[k: string]: unknown; $type: string}
 function sortThread(post: MaybePost) {
   if (post.notFound) {
     return
   }
-  post = post as GetPostThread.ThreadViewPost
+  post = post as AppBskyFeedDefs.ThreadViewPost
   if (post.replies) {
     post.replies.sort((a: MaybePost, b: MaybePost) => {
-      post = post as GetPostThread.ThreadViewPost
+      post = post as AppBskyFeedDefs.ThreadViewPost
       if (a.notFound) {
         return 1
       }
       if (b.notFound) {
         return -1
       }
-      a = a as GetPostThread.ThreadViewPost
-      b = b as GetPostThread.ThreadViewPost
+      a = a as AppBskyFeedDefs.ThreadViewPost
+      b = b as AppBskyFeedDefs.ThreadViewPost
       const aIsByOp = a.post.author.did === post.post.author.did
       const bIsByOp = b.post.author.did === post.post.author.did
       if (aIsByOp && bIsByOp) {

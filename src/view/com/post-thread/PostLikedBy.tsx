@@ -2,24 +2,18 @@ import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
 import {CenteredView, FlatList} from '../util/Views'
-import {VotesViewModel, VoteItem} from 'state/models/votes-view'
+import {LikesViewModel, LikeItem} from 'state/models/likes-view'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 
-export const PostVotedBy = observer(function PostVotedBy({
-  uri,
-  direction,
-}: {
-  uri: string
-  direction: 'up' | 'down'
-}) {
+export const PostLikedBy = observer(function PostVotedBy({uri}: {uri: string}) {
   const pal = usePalette('default')
   const store = useStores()
   const view = React.useMemo(
-    () => new VotesViewModel(store, {uri, direction}),
-    [store, uri, direction],
+    () => new LikesViewModel(store, {uri}),
+    [store, uri],
   )
 
   useEffect(() => {
@@ -55,11 +49,10 @@ export const PostVotedBy = observer(function PostVotedBy({
 
   // loaded
   // =
-  const renderItem = ({item}: {item: VoteItem}) => (
+  const renderItem = ({item}: {item: LikeItem}) => (
     <ProfileCardWithFollowBtn
       key={item.actor.did}
       did={item.actor.did}
-      declarationCid={item.actor.declaration.cid}
       handle={item.actor.handle}
       displayName={item.actor.displayName}
       avatar={item.actor.avatar}
@@ -68,7 +61,7 @@ export const PostVotedBy = observer(function PostVotedBy({
   )
   return (
     <FlatList
-      data={view.votes}
+      data={view.likes}
       keyExtractor={item => item.actor.did}
       refreshControl={
         <RefreshControl

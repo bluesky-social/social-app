@@ -13,7 +13,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
-import AtpAgent from '@atproto/api'
+import {BskyAgent} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics'
 import {Text} from '../../util/text/Text'
 import {UserAvatar} from '../../util/UserAvatar'
@@ -506,8 +506,8 @@ const ForgotPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const agent = new AtpAgent({service: serviceUrl})
-      await agent.api.com.atproto.account.requestPasswordReset({email})
+      const agent = new BskyAgent({service: serviceUrl})
+      await agent.com.atproto.server.requestPasswordReset({email})
       onEmailSent()
     } catch (e: any) {
       const errMsg = e.toString()
@@ -648,8 +648,8 @@ const SetNewPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const agent = new AtpAgent({service: serviceUrl})
-      await agent.api.com.atproto.account.resetPassword({
+      const agent = new BskyAgent({service: serviceUrl})
+      await agent.com.atproto.server.resetPassword({
         token: resetCode,
         password,
       })

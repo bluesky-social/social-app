@@ -60,12 +60,14 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
         This is the company that keeps you online.
       </Text>
       <Option
+        testID="blueskyServerBtn"
         isSelected={isDefaultSelected}
         label="Bluesky"
         help="&nbsp;(default)"
         onPress={onPressDefault}
       />
       <Option
+        testID="otherServerBtn"
         isSelected={!isDefaultSelected}
         label="Other"
         onPress={onPressOther}>
@@ -74,6 +76,7 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
             Enter the address of your provider:
           </Text>
           <TextInput
+            testID="customServerInput"
             icon="globe"
             placeholder="Hosting provider address"
             value={model.serviceUrl}
@@ -83,12 +86,14 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
           {LOGIN_INCLUDE_DEV_SERVERS && (
             <View style={[s.flexRow, s.mt10]}>
               <Button
+                testID="stagingServerBtn"
                 type="default"
                 style={s.mr5}
                 label="Staging"
                 onPress={() => onDebugChangeServiceUrl(STAGING_SERVICE)}
               />
               <Button
+                testID="localDevServerBtn"
                 type="default"
                 label="Dev Server"
                 onPress={() => onDebugChangeServiceUrl(LOCAL_DEV_SERVICE)}
@@ -112,11 +117,13 @@ function Option({
   label,
   help,
   onPress,
+  testID,
 }: React.PropsWithChildren<{
   isSelected: boolean
   label: string
   help?: string
   onPress: () => void
+  testID?: string
 }>) {
   const theme = useTheme()
   const pal = usePalette('default')
@@ -129,7 +136,7 @@ function Option({
 
   return (
     <View style={[styles.option, pal.border]}>
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableWithoutFeedback onPress={onPress} testID={testID}>
         <View style={styles.optionHeading}>
           <View style={[styles.circle, pal.border]}>
             {isSelected ? (

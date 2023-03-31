@@ -72,12 +72,12 @@ export class SuggestedPostsView {
   // state transitions
   // =
 
-  private _xLoading() {
+  _xLoading() {
     this.isLoading = true
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.hasLoaded = true
     this.error = cleanError(err)

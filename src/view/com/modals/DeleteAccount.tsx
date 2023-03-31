@@ -32,7 +32,7 @@ export function Component({}: {}) {
     setError('')
     setIsProcessing(true)
     try {
-      await store.api.com.atproto.account.requestDelete()
+      await store.agent.com.atproto.server.requestAccountDelete()
       setIsEmailSent(true)
     } catch (e: any) {
       setError(cleanError(e))
@@ -43,7 +43,7 @@ export function Component({}: {}) {
     setError('')
     setIsProcessing(true)
     try {
-      await store.api.com.atproto.account.delete({
+      await store.agent.com.atproto.server.deleteAccount({
         did: store.me.did,
         password,
         token: confirmCode,

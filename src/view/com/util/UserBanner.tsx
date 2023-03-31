@@ -33,6 +33,7 @@ export function UserBanner({
 
   const dropdownItems = [
     !isWeb && {
+      testID: 'changeBannerCameraBtn',
       label: 'Camera',
       icon: 'camera' as IconProp,
       onPress: async () => {
@@ -51,6 +52,7 @@ export function UserBanner({
       },
     },
     {
+      testID: 'changeBannerLibraryBtn',
       label: 'Library',
       icon: 'image' as IconProp,
       onPress: async () => {
@@ -73,6 +75,7 @@ export function UserBanner({
       },
     },
     {
+      testID: 'changeBannerRemoveBtn',
       label: 'Remove',
       icon: ['far', 'trash-can'] as IconProp,
       onPress: () => {
@@ -84,6 +87,7 @@ export function UserBanner({
   // setUserBanner is only passed as prop on the EditProfile component
   return onSelectNewBanner ? (
     <DropdownButton
+      testID="changeBannerBtn"
       type="bare"
       items={dropdownItems}
       openToRight
@@ -91,9 +95,16 @@ export function UserBanner({
       bottomOffset={-10}
       menuWidth={170}>
       {banner ? (
-        <Image style={styles.bannerImage} source={{uri: banner}} />
+        <Image
+          testID="userBannerImage"
+          style={styles.bannerImage}
+          source={{uri: banner}}
+        />
       ) : (
-        <View style={[styles.bannerImage, styles.defaultBanner]} />
+        <View
+          testID="userBannerFallback"
+          style={[styles.bannerImage, styles.defaultBanner]}
+        />
       )}
       <View style={[styles.editButtonContainer, pal.btn]}>
         <FontAwesomeIcon
@@ -106,12 +117,16 @@ export function UserBanner({
     </DropdownButton>
   ) : banner ? (
     <Image
+      testID="userBannerImage"
       style={styles.bannerImage}
       resizeMode="cover"
       source={{uri: banner}}
     />
   ) : (
-    <View style={[styles.bannerImage, styles.defaultBanner]} />
+    <View
+      testID="userBannerFallback"
+      style={[styles.bannerImage, styles.defaultBanner]}
+    />
   )
 }
 

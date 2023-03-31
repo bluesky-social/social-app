@@ -33,7 +33,61 @@ import {isDesktopWeb} from 'platform/detection'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
-export const ProfileHeader = observer(function ProfileHeader({
+export const ProfileHeader = observer(
+  ({
+    view,
+    onRefreshAll,
+  }: {
+    view: ProfileViewModel
+    onRefreshAll: () => void
+  }) => {
+    const pal = usePalette('default')
+
+    // loading
+    // =
+    if (!view || !view.hasLoaded) {
+      return (
+        <View style={pal.view}>
+          <LoadingPlaceholder width="100%" height={120} />
+          <View
+            style={[
+              pal.view,
+              {borderColor: pal.colors.background},
+              styles.avi,
+            ]}>
+            <LoadingPlaceholder width={80} height={80} style={styles.br40} />
+          </View>
+          <View style={styles.content}>
+            <View style={[styles.buttonsLine]}>
+              <LoadingPlaceholder width={100} height={31} style={styles.br50} />
+            </View>
+            <View style={styles.displayNameLine}>
+              <Text type="title-2xl" style={[pal.text, styles.title]}>
+                {view.displayName || view.handle}
+              </Text>
+            </View>
+          </View>
+        </View>
+      )
+    }
+
+    // error
+    // =
+    if (view.hasError) {
+      return (
+        <View testID="profileHeaderHasError">
+          <Text>{view.error}</Text>
+        </View>
+      )
+    }
+
+    // loaded
+    // =
+    return <ProfileHeaderLoaded view={view} onRefreshAll={onRefreshAll} />
+  },
+)
+
+const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
   view,
   onRefreshAll,
 }: {
@@ -44,14 +98,17 @@ export const ProfileHeader = observer(function ProfileHeader({
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
+
   const onPressBack = React.useCallback(() => {
     navigation.goBack()
   }, [navigation])
+
   const onPressAvi = React.useCallback(() => {
     if (view.avatar) {
       store.shell.openLightbox(new ProfileImageLightbox(view))
     }
   }, [store, view])
+
   const onPressToggleFollow = React.useCallback(() => {
     view?.toggleFollowing().then(
       () => {
@@ -64,6 +121,7 @@ export const ProfileHeader = observer(function ProfileHeader({
       err => store.log.error('Failed to toggle follow', err),
     )
   }, [view, store])
+
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
     store.shell.openModal({
@@ -72,18 +130,22 @@ export const ProfileHeader = observer(function ProfileHeader({
       onUpdate: onRefreshAll,
     })
   }, [track, store, view, onRefreshAll])
+
   const onPressFollowers = React.useCallback(() => {
     track('ProfileHeader:FollowersButtonClicked')
     navigation.push('ProfileFollowers', {name: view.handle})
   }, [track, navigation, view])
+
   const onPressFollows = React.useCallback(() => {
     track('ProfileHeader:FollowsButtonClicked')
     navigation.push('ProfileFollows', {name: view.handle})
   }, [track, navigation, view])
+
   const onPressShare = React.useCallback(() => {
     track('ProfileHeader:ShareButtonClicked')
     Share.share({url: toShareUrl(`/profile/${view.handle}`)})
   }, [track, view])
+
   const onPressMuteAccount = React.useCallback(async () => {
     track('ProfileHeader:MuteAccountButtonClicked')
     try {
@@ -94,6 +156,7 @@ export const ProfileHeader = observer(function ProfileHeader({
       Toast.show(`There was an issue! ${e.toString()}`)
     }
   }, [track, view, store])
+
   const onPressUnmuteAccount = React.useCallback(async () => {
     track('ProfileHeader:UnmuteAccountButtonClicked')
     try {
@@ -104,6 +167,7 @@ export const ProfileHeader = observer(function ProfileHeader({
       Toast.show(`There was an issue! ${e.toString()}`)
     }
   }, [track, view, store])
+
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
     store.shell.openModal({
@@ -112,54 +176,39 @@ export const ProfileHeader = observer(function ProfileHeader({
     })
   }, [track, store, view])
 
-  // loading
-  // =
-  if (!view || !view.hasLoaded) {
-    return (
-      <View style={pal.view}>
-        <LoadingPlaceholder width="100%" height={120} />
-        <View
-          style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
-          <LoadingPlaceholder width={80} height={80} style={styles.br40} />
-        </View>
-        <View style={styles.content}>
-          <View style={[styles.buttonsLine]}>
-            <LoadingPlaceholder width={100} height={31} style={styles.br50} />
-          </View>
-          <View style={styles.displayNameLine}>
-            <Text type="title-2xl" style={[pal.text, styles.title]}>
-              {view.displayName || view.handle}
-            </Text>
-          </View>
-        </View>
-      </View>
-    )
-  }
-
-  // error
-  // =
-  if (view.hasError) {
-    return (
-      <View testID="profileHeaderHasError">
-        <Text>{view.error}</Text>
-      </View>
-    )
-  }
-
-  // loaded
-  // =
-  const isMe = store.me.did === view.did
-  let dropdownItems: DropdownItem[] = [{label: 'Share', onPress: onPressShare}]
-  if (!isMe) {
-    dropdownItems.push({
-      label: view.viewer.muted ? 'Unmute Account' : 'Mute Account',
-      onPress: view.viewer.muted ? onPressUnmuteAccount : onPressMuteAccount,
-    })
-    dropdownItems.push({
-      label: 'Report Account',
-      onPress: onPressReportAccount,
-    })
-  }
+  const isMe = React.useMemo(
+    () => store.me.did === view.did,
+    [store.me.did, view.did],
+  )
+  const dropdownItems: DropdownItem[] = React.useMemo(() => {
+    let items: DropdownItem[] = [
+      {
+        testID: 'profileHeaderDropdownSahreBtn',
+        label: 'Share',
+        onPress: onPressShare,
+      },
+    ]
+    if (!isMe) {
+      items.push({
+        testID: 'profileHeaderDropdownMuteBtn',
+        label: view.viewer.muted ? 'Unmute Account' : 'Mute Account',
+        onPress: view.viewer.muted ? onPressUnmuteAccount : onPressMuteAccount,
+      })
+      items.push({
+        testID: 'profileHeaderDropdownReportBtn',
+        label: 'Report Account',
+        onPress: onPressReportAccount,
+      })
+    }
+    return items
+  }, [
+    isMe,
+    view.viewer.muted,
+    onPressShare,
+    onPressUnmuteAccount,
+    onPressMuteAccount,
+    onPressReportAccount,
+  ])
   return (
     <View style={pal.view}>
       <UserBanner banner={view.banner} />
@@ -178,6 +227,7 @@ export const ProfileHeader = observer(function ProfileHeader({
             <>
               {store.me.follows.isFollowing(view.did) ? (
                 <TouchableOpacity
+                  testID="unfollowBtn"
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.mainBtn, pal.btn]}>
                   <FontAwesomeIcon
@@ -191,7 +241,7 @@ export const ProfileHeader = observer(function ProfileHeader({
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
-                  testID="profileHeaderToggleFollowButton"
+                  testID="followBtn"
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.primaryBtn]}>
                   <FontAwesomeIcon
@@ -207,6 +257,7 @@ export const ProfileHeader = observer(function ProfileHeader({
           )}
           {dropdownItems?.length ? (
             <DropdownButton
+              testID="profileHeaderDropdownBtn"
               type="bare"
               items={dropdownItems}
               style={[styles.btn, styles.secondaryBtn, pal.btn]}>
@@ -215,7 +266,10 @@ export const ProfileHeader = observer(function ProfileHeader({
           ) : undefined}
         </View>
         <View style={styles.displayNameLine}>
-          <Text type="title-2xl" style={[pal.text, styles.title]}>
+          <Text
+            testID="profileHeaderDisplayName"
+            type="title-2xl"
+            style={[pal.text, styles.title]}>
             {view.displayName || view.handle}
           </Text>
         </View>
@@ -241,19 +295,17 @@ export const ProfileHeader = observer(function ProfileHeader({
               {pluralize(view.followersCount, 'follower')}
             </Text>
           </TouchableOpacity>
-          {view.isUser ? (
-            <TouchableOpacity
-              testID="profileHeaderFollowsButton"
-              style={[s.flexRow, s.mr10]}
-              onPress={onPressFollows}>
-              <Text type="md" style={[s.bold, s.mr2, pal.text]}>
-                {view.followsCount}
-              </Text>
-              <Text type="md" style={[pal.textLight]}>
-                following
-              </Text>
-            </TouchableOpacity>
-          ) : undefined}
+          <TouchableOpacity
+            testID="profileHeaderFollowsButton"
+            style={[s.flexRow, s.mr10]}
+            onPress={onPressFollows}>
+            <Text type="md" style={[s.bold, s.mr2, pal.text]}>
+              {view.followsCount}
+            </Text>
+            <Text type="md" style={[pal.textLight]}>
+              following
+            </Text>
+          </TouchableOpacity>
           <View style={[s.flexRow, s.mr10]}>
             <Text type="md" style={[s.bold, s.mr2, pal.text]}>
               {view.postsCount}
@@ -265,13 +317,16 @@ export const ProfileHeader = observer(function ProfileHeader({
         </View>
         {view.descriptionRichText ? (
           <RichText
+            testID="profileHeaderDescription"
             style={[styles.description, pal.text]}
             numberOfLines={15}
             richText={view.descriptionRichText}
           />
         ) : undefined}
         {view.viewer.muted ? (
-          <View style={[styles.detailLine, pal.btn, s.p5]}>
+          <View
+            testID="profileHeaderMutedNotice"
+            style={[styles.detailLine, pal.btn, s.p5]}>
             <FontAwesomeIcon
               icon={['far', 'eye-slash']}
               style={[pal.text, s.mr5]}

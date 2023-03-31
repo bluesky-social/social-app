@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {AppBskyActorRef, AppBskyActorProfile} from '@atproto/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import {RefWithInfoAndFollowers} from 'state/models/discovery/foafs'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {Text} from '../util/text/Text'
@@ -12,9 +12,9 @@ export const SuggestedFollows = ({
 }: {
   title: string
   suggestions: (
-    | AppBskyActorRef.WithInfo
+    | AppBskyActorDefs.ProfileViewBasic
+    | AppBskyActorDefs.ProfileView
     | RefWithInfoAndFollowers
-    | AppBskyActorProfile.View
   )[]
 }) => {
   const pal = usePalette('default')
@@ -28,7 +28,6 @@ export const SuggestedFollows = ({
           <ProfileCardWithFollowBtn
             key={item.did}
             did={item.did}
-            declarationCid={item.declaration.cid}
             handle={item.handle}
             displayName={item.displayName}
             avatar={item.avatar}
@@ -36,12 +35,12 @@ export const SuggestedFollows = ({
             noBorder
             description={
               item.description
-                ? (item as AppBskyActorProfile.View).description
+                ? (item as AppBskyActorDefs.ProfileView).description
                 : ''
             }
             followers={
               item.followers
-                ? (item.followers as AppBskyActorProfile.View[])
+                ? (item.followers as AppBskyActorDefs.ProfileView[])
                 : undefined
             }
           />

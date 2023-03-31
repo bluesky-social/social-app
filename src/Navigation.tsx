@@ -31,7 +31,7 @@ import {ProfileScreen} from './view/screens/Profile'
 import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
 import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
 import {PostThreadScreen} from './view/screens/PostThread'
-import {PostUpvotedByScreen} from './view/screens/PostUpvotedBy'
+import {PostLikedByScreen} from './view/screens/PostLikedBy'
 import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
 import {DebugScreen} from './view/screens/Debug'
 import {LogScreen} from './view/screens/Log'
@@ -62,7 +62,7 @@ function commonScreens(Stack: typeof HomeTab) {
       />
       <Stack.Screen name="ProfileFollows" component={ProfileFollowsScreen} />
       <Stack.Screen name="PostThread" component={PostThreadScreen} />
-      <Stack.Screen name="PostUpvotedBy" component={PostUpvotedByScreen} />
+      <Stack.Screen name="PostLikedBy" component={PostLikedByScreen} />
       <Stack.Screen name="PostRepostedBy" component={PostRepostedByScreen} />
       <Stack.Screen name="Debug" component={DebugScreen} />
       <Stack.Screen name="Log" component={LogScreen} />

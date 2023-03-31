@@ -1,9 +1,9 @@
 import {RootStoreModel} from 'state/index'
 import {
-  AppBskyFeedFeedViewPost,
+  AppBskyFeedDefs,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
 } from '@atproto/api'
-type ReasonRepost = AppBskyFeedFeedViewPost.ReasonRepost
+type ReasonRepost = AppBskyFeedDefs.ReasonRepost
 
 async function getMultipleAuthorsPosts(
   rootStore: RootStoreModel,
@@ -12,12 +12,12 @@ async function getMultipleAuthorsPosts(
   limit: number = 10,
 ) {
   const responses = await Promise.all(
-    authors.map((author, index) =>
-      rootStore.api.app.bsky.feed
+    authors.map((actor, index) =>
+      rootStore.agent
         .getAuthorFeed({
-          author,
+          actor,
           limit,
-          before: cursor ? cursor.split(',')[index] : undefined,
+          cursor: cursor ? cursor.split(',')[index] : undefined,
         })
         .catch(_err => ({success: false, headers: {}, data: {feed: []}})),
     ),
@@ -29,14 +29,14 @@ function mergePosts(
   responses: GetAuthorFeed.Response[],
   {repostsOnly, bestOfOnly}: {repostsOnly?: boolean; bestOfOnly?: boolean},
 ) {
-  let posts: AppBskyFeedFeedViewPost.Main[] = []
+  let posts: AppBskyFeedDefs.FeedViewPost[] = []
 
   if (bestOfOnly) {
     for (const res of responses) {
       if (res.success) {
-        // filter the feed down to the post with the most upvotes
+        // filter the feed down to the post with the most likes
         res.data.feed = res.data.feed.reduce(
-          (acc: AppBskyFeedFeedViewPost.Main[], v) => {
+          (acc: AppBskyFeedDefs.FeedViewPost[], v) => {
             if (
               !acc?.[0] &&
               !v.reason &&
@@ -49,7 +49,7 @@ function mergePosts(
               acc &&
               !v.reason &&
               !v.reply &&
-              v.post.upvoteCount > acc[0]?.post.upvoteCount &&
+              (v.post.likeCount || 0) > (acc[0]?.post.likeCount || 0) &&
               isRecentEnough(v.post.indexedAt)
             ) {
               return [v]
@@ -92,7 +92,7 @@ function mergePosts(
   return posts
 }
 
-function isARepostOfSomeoneElse(post: AppBskyFeedFeedViewPost.Main): boolean {
+function isARepostOfSomeoneElse(post: AppBskyFeedDefs.FeedViewPost): boolean {
   return (
     post.reason?.$type === 'app.bsky.feed.feedViewPost#reasonRepost' &&
     post.post.author.did !== (post.reason as ReasonRepost).by.did

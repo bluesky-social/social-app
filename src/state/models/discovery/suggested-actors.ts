@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AppBskyActorProfile as Profile} from '@atproto/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import shuffle from 'lodash.shuffle'
 import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
@@ -8,7 +8,9 @@ import {SUGGESTED_FOLLOWS} from 'lib/constants'
 
 const PAGE_SIZE = 30
 
-export type SuggestedActor = Profile.ViewBasic | Profile.View
+export type SuggestedActor =
+  | AppBskyActorDefs.ProfileViewBasic
+  | AppBskyActorDefs.ProfileView
 
 export class SuggestedActorsModel {
   // state
@@ -20,7 +22,7 @@ export class SuggestedActorsModel {
   hasMore = true
   loadMoreCursor?: string
 
-  private hardCodedSuggestions: SuggestedActor[] | undefined
+  hardCodedSuggestions: SuggestedActor[] | undefined
 
   // data
   suggestions: SuggestedActor[] = []
@@ -82,7 +84,7 @@ export class SuggestedActorsModel {
           this.loadMoreCursor = undefined
         } else {
           // pull from the PDS' algo
-          res = await this.rootStore.api.app.bsky.actor.getSuggestions({
+          res = await this.rootStore.agent.app.bsky.actor.getSuggestions({
             limit: this.pageSize,
             cursor: this.loadMoreCursor,
           })
@@ -104,7 +106,7 @@ export class SuggestedActorsModel {
     }
   })
 
-  private async fetchHardcodedSuggestions() {
+  async fetchHardcodedSuggestions() {
     if (this.hardCodedSuggestions) {
       return
     }
@@ -118,9 +120,9 @@ export class SuggestedActorsModel {
       ]
 
       // fetch the profiles in chunks of 25 (the limit allowed by `getProfiles`)
-      let profiles: Profile.View[] = []
+      let profiles: AppBskyActorDefs.ProfileView[] = []
       do {
-        const res = await this.rootStore.api.app.bsky.actor.getProfiles({
+        const res = await this.rootStore.agent.getProfiles({
           actors: actors.splice(0, 25),
         })
         profiles = profiles.concat(res.data.profiles)
@@ -152,13 +154,13 @@ export class SuggestedActorsModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true

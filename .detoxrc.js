@@ -3,7 +3,7 @@ module.exports = {
   testRunner: {
     args: {
       $0: 'jest',
-      config: 'e2e/jest.config.js',
+      config: '__e2e__/jest.config.js',
     },
     jest: {
       setupTimeout: 120000,
@@ -12,15 +12,16 @@ module.exports = {
   apps: {
     'ios.debug': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/app.app',
+      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/bluesky.app',
       build:
-        'xcodebuild -workspace ios/app.xcworkspace -scheme app -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build',
+        'xcodebuild -workspace ios/bluesky.xcworkspace -scheme bluesky -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build',
     },
     'ios.release': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/app.app',
+      binaryPath:
+        'ios/build/Build/Products/Release-iphonesimulator/bluesky.app',
       build:
-        'xcodebuild -workspace ios/app.xcworkspace -scheme app -configuration Release -sdk iphonesimulator -derivedDataPath ios/build',
+        'xcodebuild -workspace ios/bluesky.xcworkspace -scheme bluesky -configuration Release -sdk iphonesimulator -derivedDataPath ios/build',
     },
     'android.debug': {
       type: 'android.apk',

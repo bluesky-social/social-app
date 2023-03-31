@@ -4,9 +4,9 @@ import {
   StyleProp,
   StyleSheet,
   TouchableOpacity,
+  View,
   ViewStyle,
 } from 'react-native'
-// import Image from 'view/com/util/images/Image'
 import {clamp} from 'lib/numbers'
 import {useStores} from 'state/index'
 import {Dim} from 'lib/media/manip'
@@ -51,16 +51,24 @@ export function AutoSizedImage({
     })
   }, [dim, setDim, setAspectRatio, store, uri])
 
+  if (onPress || onLongPress || onPressIn) {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        onLongPress={onLongPress}
+        onPressIn={onPressIn}
+        delayPressIn={DELAY_PRESS_IN}
+        style={[styles.container, style]}>
+        <Image style={[styles.image, {aspectRatio}]} source={{uri}} />
+        {children}
+      </TouchableOpacity>
+    )
+  }
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      onLongPress={onLongPress}
-      onPressIn={onPressIn}
-      delayPressIn={DELAY_PRESS_IN}
-      style={[styles.container, style]}>
+    <View style={[styles.container, style]}>
       <Image style={[styles.image, {aspectRatio}]} source={{uri}} />
       {children}
-    </TouchableOpacity>
+    </View>
   )
 }
 

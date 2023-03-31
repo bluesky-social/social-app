@@ -2,15 +2,12 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {PickedMedia} from 'lib/media/picker'
 import {
   AppBskyActorGetProfile as GetProfile,
-  AppBskySystemDeclRef,
-  AppBskyActorUpdateProfile,
+  AppBskyActorProfile,
+  RichText,
 } from '@atproto/api'
-type DeclRef = AppBskySystemDeclRef.Main
-import {extractEntities} from 'lib/strings/rich-text-detection'
 import {RootStoreModel} from './root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
-import {RichText} from 'lib/strings/rich-text'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
 
@@ -35,22 +32,18 @@ export class ProfileViewModel {
   // data
   did: string = ''
   handle: string = ''
-  declaration: DeclRef = {
-    cid: '',
-    actorType: '',
-  }
   creator: string = ''
-  displayName?: string
-  description?: string
-  avatar?: string
-  banner?: string
+  displayName?: string = ''
+  description?: string = ''
+  avatar?: string = ''
+  banner?: string = ''
   followersCount: number = 0
   followsCount: number = 0
   postsCount: number = 0
   viewer = new ProfileViewViewerModel()
 
   // added data
-  descriptionRichText?: RichText
+  descriptionRichText?: RichText = new RichText({text: ''})
 
   constructor(
     public rootStore: RootStoreModel,
@@ -77,10 +70,6 @@ export class ProfileViewModel {
 
   get isEmpty() {
     return this.hasLoaded && !this.hasContent
-  }
-
-  get isUser() {
-    return this.declaration.actorType === ACTOR_TYPE_USER
   }
 
   // public api
@@ -111,18 +100,14 @@ export class ProfileViewModel {
     }
 
     if (followUri) {
-      await apilib.unfollow(this.rootStore, followUri)
+      await this.rootStore.agent.deleteFollow(followUri)
       runInAction(() => {
         this.followersCount--
         this.viewer.following = undefined
         this.rootStore.me.follows.removeFollow(this.did)
       })
     } else {
-      const res = await apilib.follow(
-        this.rootStore,
-        this.did,
-        this.declaration.cid,
-      )
+      const res = await this.rootStore.agent.follow(this.did)
       runInAction(() => {
         this.followersCount++
         this.viewer.following = res.uri
@@ -132,49 +117,48 @@ export class ProfileViewModel {
   }
 
   async updateProfile(
-    updates: AppBskyActorUpdateProfile.InputSchema,
+    updates: AppBskyActorProfile.Record,
     newUserAvatar: PickedMedia | undefined | null,
     newUserBanner: PickedMedia | undefined | null,
   ) {
-    if (newUserAvatar) {
-      const res = await apilib.uploadBlob(
-        this.rootStore,
-        newUserAvatar.path,
-        newUserAvatar.mime,
-      )
-      updates.avatar = {
-        cid: res.data.cid,
-        mimeType: newUserAvatar.mime,
+    await this.rootStore.agent.upsertProfile(async existing => {
+      existing = existing || {}
+      existing.displayName = updates.displayName
+      existing.description = updates.description
+      if (newUserAvatar) {
+        const res = await apilib.uploadBlob(
+          this.rootStore,
+          newUserAvatar.path,
+          newUserAvatar.mime,
+        )
+        existing.avatar = res.data.blob
+      } else if (newUserAvatar === null) {
+        existing.avatar = undefined
       }
-    } else if (newUserAvatar === null) {
-      updates.avatar = null
-    }
-    if (newUserBanner) {
-      const res = await apilib.uploadBlob(
-        this.rootStore,
-        newUserBanner.path,
-        newUserBanner.mime,
-      )
-      updates.banner = {
-        cid: res.data.cid,
-        mimeType: newUserBanner.mime,
+      if (newUserBanner) {
+        const res = await apilib.uploadBlob(
+          this.rootStore,
+          newUserBanner.path,
+          newUserBanner.mime,
+        )
+        existing.banner = res.data.blob
+      } else if (newUserBanner === null) {
+        existing.banner = undefined
       }
-    } else if (newUserBanner === null) {
-      updates.banner = null
-    }
-    await this.rootStore.api.app.bsky.actor.updateProfile(updates)
+      return existing
+    })
     await this.rootStore.me.load()
     await this.refresh()
   }
 
   async muteAccount() {
-    await this.rootStore.api.app.bsky.graph.mute({user: this.did})
+    await this.rootStore.agent.mute(this.did)
     this.viewer.muted = true
     await this.refresh()
   }
 
   async unmuteAccount() {
-    await this.rootStore.api.app.bsky.graph.unmute({user: this.did})
+    await this.rootStore.agent.unmute(this.did)
     this.viewer.muted = false
     await this.refresh()
   }
@@ -182,13 +166,13 @@ export class ProfileViewModel {
   // state transitions
   // =
 
-  private _xLoading(isRefreshing = false) {
+  _xLoading(isRefreshing = false) {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
   }
 
-  private _xIdle(err?: any) {
+  _xIdle(err?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
@@ -201,40 +185,40 @@ export class ProfileViewModel {
   // loader functions
   // =
 
-  private async _load(isRefreshing = false) {
+  async _load(isRefreshing = false) {
     this._xLoading(isRefreshing)
     try {
-      const res = await this.rootStore.api.app.bsky.actor.getProfile(
-        this.params,
-      )
+      const res = await this.rootStore.agent.getProfile(this.params)
       this.rootStore.profiles.overwrite(this.params.actor, res) // cache invalidation
       this._replaceAll(res)
+      await this._createRichText()
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e)
     }
   }
 
-  private _replaceAll(res: GetProfile.Response) {
+  _replaceAll(res: GetProfile.Response) {
     this.did = res.data.did
     this.handle = res.data.handle
-    Object.assign(this.declaration, res.data.declaration)
-    this.creator = res.data.creator
     this.displayName = res.data.displayName
     this.description = res.data.description
     this.avatar = res.data.avatar
     this.banner = res.data.banner
-    this.followersCount = res.data.followersCount
-    this.followsCount = res.data.followsCount
-    this.postsCount = res.data.postsCount
+    this.followersCount = res.data.followersCount || 0
+    this.followsCount = res.data.followsCount || 0
+    this.postsCount = res.data.postsCount || 0
     if (res.data.viewer) {
       Object.assign(this.viewer, res.data.viewer)
       this.rootStore.me.follows.hydrate(this.did, res.data.viewer.following)
     }
+  }
+
+  async _createRichText() {
     this.descriptionRichText = new RichText(
-      this.description || '',
-      extractEntities(this.description || ''),
+      {text: this.description || ''},
       {cleanNewlines: true},
     )
+    await this.descriptionRichText.detectFacets(this.rootStore.agent)
   }
 }

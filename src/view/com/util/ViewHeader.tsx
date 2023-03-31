@@ -51,7 +51,7 @@ export const ViewHeader = observer(function ({
     return (
       <Container hideOnScroll={hideOnScroll || false}>
         <TouchableOpacity
-          testID="viewHeaderBackOrMenuBtn"
+          testID="viewHeaderDrawerBtn"
           onPress={canGoBack ? onPressBack : onPressMenu}
           hitSlop={BACK_HITSLOP}
           style={canGoBack ? styles.backBtn : styles.backBtnWide}>
