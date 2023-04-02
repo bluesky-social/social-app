@@ -97,7 +97,7 @@ export class LikesViewModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch votes', err)
+      this.rootStore.log.error('Failed to fetch likes', err)
     }
   }
 

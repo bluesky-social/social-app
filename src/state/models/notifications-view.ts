@@ -13,7 +13,7 @@ import {RootStoreModel} from './root-store'
 import {PostThreadViewModel} from './post-thread-view'
 import {cleanError} from 'lib/strings/errors'
 
-const GROUPABLE_REASONS = ['vote', 'repost', 'follow']
+const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const PAGE_SIZE = 30
 const MS_1HR = 1e3 * 60 * 60
 const MS_2DAY = MS_1HR * 48
