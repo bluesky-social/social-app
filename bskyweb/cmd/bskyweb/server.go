@@ -46,7 +46,7 @@ func serve(cctx *cli.Context) error {
 		},
 	}
 
-	auth, err := comatproto.SessionCreate(context.TODO(), xrpcc, &comatproto.SessionCreate_Input{
+	auth, err := comatproto.ServerCreateSession(context.TODO(), xrpcc, &comatproto.ServerCreateSession_Input{
 		Identifier: &xrpcc.Auth.Handle,
 		Password:   atpPassword,
 	})
@@ -165,7 +165,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 			if err != nil {
 				log.Warnf("failed to fetch post: %s\t%v", uri, err)
 			} else {
-				data["postView"] = tpv.Thread.FeedGetPostThread_ThreadViewPost.Post
+				data["postView"] = tpv.Thread.FeedDefs_ThreadViewPost.Post
 			}
 		}
 
