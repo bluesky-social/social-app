@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "private": true,
   "scripts": {
     "postinstall": "patch-package",
@@ -21,7 +21,7 @@
     "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all"
   },
   "dependencies": {
-    "@atproto/api": "0.2.0",
+    "@atproto/api": "0.2.1",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@expo/webpack-config": "^18.0.1",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
