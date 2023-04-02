@@ -57,6 +57,7 @@ export class MyFollowsCache {
         await this.rootStore.agent.app.bsky.graph.follow.list({
           repo: this.rootStore.me.did,
           rkeyStart,
+          reverse: true,
         })
       records = records.concat(res.records)
       rkeyStart = res.cursor
