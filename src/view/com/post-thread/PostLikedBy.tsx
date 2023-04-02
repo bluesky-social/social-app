@@ -8,7 +8,7 @@ import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 
-export const PostLikedBy = observer(function PostVotedBy({uri}: {uri: string}) {
+export const PostLikedBy = observer(function ({uri}: {uri: string}) {
   const pal = usePalette('default')
   const store = useStores()
   const view = React.useMemo(
@@ -17,7 +17,7 @@ export const PostLikedBy = observer(function PostVotedBy({uri}: {uri: string}) {
   )
 
   useEffect(() => {
-    view.loadMore().catch(err => store.log.error('Failed to fetch votes', err))
+    view.loadMore().catch(err => store.log.error('Failed to fetch likes', err))
   }, [view, store.log])
 
   const onRefresh = () => {
@@ -26,7 +26,7 @@ export const PostLikedBy = observer(function PostVotedBy({uri}: {uri: string}) {
   const onEndReached = () => {
     view
       .loadMore()
-      .catch(err => view?.rootStore.log.error('Failed to load more votes', err))
+      .catch(err => view?.rootStore.log.error('Failed to load more likes', err))
   }
 
   if (!view.hasLoaded) {
