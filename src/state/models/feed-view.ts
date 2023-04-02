@@ -5,6 +5,7 @@ import {
   AppBskyFeedPost,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
   RichText,
+  jsonToLex,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
@@ -638,6 +639,6 @@ async function getGoodStuff(
   return {
     success: res.status === 200,
     headers: resHeaders,
-    data: resBody,
+    data: jsonToLex(resBody),
   }
 }
