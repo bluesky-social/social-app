@@ -50,12 +50,16 @@ export class FeedItemModel {
         this.postRecord = this.post.record
         this.richText = new RichText(this.postRecord, {cleanNewlines: true})
       } else {
+        this.postRecord = undefined
+        this.richText = undefined
         rootStore.log.warn(
           'Received an invalid app.bsky.feed.post record',
           valid.error,
         )
       }
     } else {
+      this.postRecord = undefined
+      this.richText = undefined
       rootStore.log.warn(
         'app.bsky.feed.getTimeline or app.bsky.feed.getAuthorFeed served an unexpected record type',
         this.post.record,
