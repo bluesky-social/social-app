@@ -184,7 +184,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
 
   return (
     <View style={[styles.ctrls, opts.style]}>
-      <View style={s.flex1}>
+      <View>
         <TouchableOpacity
           testID="replyBtn"
           style={styles.ctrl}
@@ -202,7 +202,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           ) : undefined}
         </TouchableOpacity>
       </View>
-      <View style={s.flex1}>
+      <View>
         <TouchableOpacity
           testID="repostBtn"
           hitSlop={HITSLOP}
@@ -243,7 +243,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           ) : undefined}
         </TouchableOpacity>
       </View>
-      <View style={s.flex1}>
+      <View>
         <TouchableOpacity
           testID="likeBtn"
           style={styles.ctrl}
@@ -293,7 +293,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           ) : undefined}
         </TouchableOpacity>
       </View>
-      <View style={s.flex1}>
+      <View>
         {opts.big ? undefined : (
           <PostDropdownBtn
             testID="postDropdownBtn"
@@ -321,6 +321,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           </PostDropdownBtn>
         )}
       </View>
+      {/* used for adding pad to the right side */}
+      <View />
     </View>
   )
 }
@@ -328,10 +330,13 @@ export function PostCtrls(opts: PostCtrlsOpts) {
 const styles = StyleSheet.create({
   ctrls: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   ctrl: {
     flexDirection: 'row',
     alignItems: 'center',
+    padding: 5,
+    margin: -5,
   },
   ctrlIconReposted: {
     color: colors.green3,
