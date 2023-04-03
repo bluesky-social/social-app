@@ -37,6 +37,7 @@ interface TextInputProps {
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteViewModel
+  numPasteableImages: number
   setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
   onSuggestedLinksChanged: (uris: Set<string>) => void
@@ -55,6 +56,7 @@ export const TextInput = React.forwardRef(
       placeholder,
       suggestedLinks,
       autocompleteView,
+      numPasteableImages,
       setRichText,
       onPhotoPasted,
       onSuggestedLinksChanged,
@@ -129,6 +131,9 @@ export const TextInput = React.forwardRef(
         if (err) {
           return onError(cleanError(err))
         }
+        if (numPasteableImages <= 0) {
+          return
+        }
         const uris = files.map(f => f.uri)
         const imgUri = uris.find(uri => /\.(jpe?g|png)$/.test(uri))
         if (imgUri) {
@@ -148,7 +153,7 @@ export const TextInput = React.forwardRef(
           onPhotoPasted(finalImgPath)
         }
       },
-      [store, onError, onPhotoPasted],
+      [store, onError, onPhotoPasted, numPasteableImages],
     )
 
     const onSelectionChange = React.useCallback(

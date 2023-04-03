@@ -35,6 +35,7 @@ import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {isDesktopWeb} from 'platform/detection'
 
+const MAX_IMAGES = 4
 const MAX_GRAPHEME_LENGTH = 300
 
 export const ComposePost = observer(function ComposePost({
@@ -127,12 +128,12 @@ export const ComposePost = observer(function ComposePost({
 
   const onPhotoPasted = React.useCallback(
     async (uri: string) => {
-      if (selectedPhotos.length >= 4) {
+      if (selectedPhotos.length >= MAX_IMAGES) {
         return
       }
 
       setSelectedPhotos(sp => {
-        if (sp.length >= 4) {
+        if (sp.length >= MAX_IMAGES) {
           return sp
         }
 
@@ -290,6 +291,7 @@ export const ComposePost = observer(function ComposePost({
                 placeholder={selectTextInputPlaceholder}
                 suggestedLinks={suggestedLinks}
                 autocompleteView={autocompleteView}
+                numPasteableImages={MAX_IMAGES - selectedPhotos.length}
                 setRichText={setRichText}
                 onPhotoPasted={onPhotoPasted}
                 onSuggestedLinksChanged={setSuggestedLinks}
@@ -332,12 +334,12 @@ export const ComposePost = observer(function ComposePost({
           ) : null}
           <View style={[pal.border, styles.bottomBar]}>
             <SelectPhotoBtn
-              enabled={selectedPhotos.length < 4}
+              enabled={selectedPhotos.length < MAX_IMAGES}
               selectedPhotos={selectedPhotos}
               onSelectPhotos={setSelectedPhotos}
             />
             <OpenCameraBtn
-              enabled={selectedPhotos.length < 4}
+              enabled={selectedPhotos.length < MAX_IMAGES}
               selectedPhotos={selectedPhotos}
               onSelectPhotos={setSelectedPhotos}
             />

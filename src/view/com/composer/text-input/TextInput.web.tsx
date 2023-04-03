@@ -11,7 +11,6 @@ import {Text} from '@tiptap/extension-text'
 import isEqual from 'lodash.isequal'
 import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
 import {createSuggestion} from './web/Autocomplete'
-import {Transaction} from '@tiptap/pm/state'
 import {cropAndCompressFlow} from 'lib/media/picker'
 import {useStores} from 'state/index'
 import {
@@ -31,6 +30,7 @@ interface TextInputProps {
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteViewModel
+  numPasteableImages: number
   setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
   onSuggestedLinksChanged: (uris: Set<string>) => void
@@ -44,6 +44,7 @@ export const TextInput = React.forwardRef(
       placeholder,
       suggestedLinks,
       autocompleteView,
+      numPasteableImages,
       setRichText,
       onPhotoPasted,
       onSuggestedLinksChanged,
@@ -52,79 +53,91 @@ export const TextInput = React.forwardRef(
     ref,
   ) => {
     const store = useStores()
-    const processClipboardItemAsPhoto = async (item: DataTransferItem) => {
-      const file = item.getAsFile()
+    const editorContent = React.useRef({}) // track the editor content in a ref to avoid triggering renders
+    const processClipboardItemAsPhoto = React.useCallback(
+      async (item: DataTransferItem) => {
+        const file = item.getAsFile()
+        if (numPasteableImages <= 0) {
+          return
+        }
 
-      if (file && file.type && file.type.startsWith('image/')) {
-        const {uri, width, height} = await getImageInfoFromFile(file)
-        const croppedUri = await cropAndCompressFlow(
-          store,
-          uri,
-          {width, height},
-          {width: POST_IMG_MAX_WIDTH, height: POST_IMG_MAX_HEIGHT},
-          POST_IMG_MAX_SIZE,
-        )
-        onPhotoPasted(croppedUri)
-      }
-    }
-    const editor = useEditor({
-      extensions: [
-        Document,
-        Link.configure({
-          protocols: ['http', 'https'],
-          autolink: true,
-        }),
-        Mention.configure({
-          HTMLAttributes: {
-            class: 'mention',
-          },
-          suggestion: createSuggestion({autocompleteView}),
-        }),
-        Paragraph,
-        Placeholder.configure({
-          placeholder,
-        }),
-        Text,
-      ],
-      content: richtext.text.toString(),
-      autofocus: true,
-      editable: true,
-      injectCSS: true,
-      editorProps: {
-        handlePaste(_, event) {
-          // It's possible to copy a single screenshot or multiple files
-          // In the case of a single screenshot (e.g. cmd+shift+4), this
-          // list will be length 1. In the case of selecting multiple
-          // files in a file explorer and copying/pasting, this will be
-          // those list of copied files
-          const items = event.clipboardData?.items
-
-          // Let tiptap know to fallback to default paste behavior
-          if (!items || items.length === 0) {
-            return false
-          }
-
-          // For any pasted images, bring them through the crop and compress flow
-          for (const item of Array.from(items)) {
-            processClipboardItemAsPhoto(item)
-          }
-
-          // Let tiptap know that we handled the paste event
-          return true
-        },
-      },
-      onUpdate({editor: editorProp}) {
-        const json = editorProp.getJSON()
-
-        const newRt = new RichText({text: editorJsonToText(json).trim()})
-        setRichText(newRt)
-
-        const newSuggestedLinks = new Set(editorJsonToLinks(json))
-        if (!isEqual(newSuggestedLinks, suggestedLinks)) {
-          onSuggestedLinksChanged(newSuggestedLinks)
+        if (file && file.type && file.type.startsWith('image/')) {
+          const {uri, width, height} = await getImageInfoFromFile(file)
+          const croppedUri = await cropAndCompressFlow(
+            store,
+            uri,
+            {width, height},
+            {width: POST_IMG_MAX_WIDTH, height: POST_IMG_MAX_HEIGHT},
+            POST_IMG_MAX_SIZE,
+          )
+          onPhotoPasted(croppedUri)
         }
       },
-    })
+      [store, onPhotoPasted, numPasteableImages],
+    )
+    const editor = useEditor(
+      {
+        extensions: [
+          Document,
+          Link.configure({
+            protocols: ['http', 'https'],
+            autolink: true,
+          }),
+          Mention.configure({
+            HTMLAttributes: {
+              class: 'mention',
+            },
+            suggestion: createSuggestion({autocompleteView}),
+          }),
+          Paragraph,
+          Placeholder.configure({
+            placeholder,
+          }),
+          Text,
+        ],
+        // use editorContent when possible to preserve state across re-renders (see useEditor deps below)
+        content: editorContent.current || richtext.text.toString(),
+        autofocus: true,
+        editable: true,
+        injectCSS: true,
+        editorProps: {
+          handlePaste(_, event) {
+            // It's possible to copy a single screenshot or multiple files
+            // In the case of a single screenshot (e.g. cmd+shift+4), this
+            // list will be length 1. In the case of selecting multiple
+            // files in a file explorer and copying/pasting, this will be
+            // those list of copied files
+            const items = event.clipboardData?.items
+
+            // Let tiptap know to fallback to default paste behavior
+            if (!items || items.length === 0) {
+              return false
+            }
+
+            // For any pasted images, bring them through the crop and compress flow
+            for (const item of Array.from(items).slice(0, numPasteableImages)) {
+              processClipboardItemAsPhoto(item)
+            }
+
+            // Let tiptap know that we handled the paste event
+            return true
+          },
+        },
+        onUpdate({editor: editorProp}) {
+          const json = editorProp.getJSON()
+          editorContent.current = json
+
+          const newRt = new RichText({text: editorJsonToText(json).trim()})
+          setRichText(newRt)
+
+          const newSuggestedLinks = new Set(editorJsonToLinks(json))
+          if (!isEqual(newSuggestedLinks, suggestedLinks)) {
+            onSuggestedLinksChanged(newSuggestedLinks)
+          }
+        },
+      },
+      [numPasteableImages],
+    )
 
     React.useImperativeHandle(ref, () => ({
       focus: () => {}, // TODO
