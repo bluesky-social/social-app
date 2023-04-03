@@ -69,6 +69,15 @@ target 'bluesky' do
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
 
+    # Required to force the pods to use the correct deploy version
+    # See https://github.com/facebook/react-native/issues/34106
+    installer.pods_project.targets.each do |target|
+          target.build_configurations.each do |config|
+                config.build_settings['SWIFT_VERSION'] = '5.0'
+                config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+        end
+    end
+
     # This is necessary for Xcode 14, because it signs resource bundles by default
     # when building for devices.
     installer.target_installation_results.pod_target_installation_results
