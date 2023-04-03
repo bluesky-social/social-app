@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {FeedSliceModel} from 'state/models/feed-view'
+import {PostsFeedSliceModel} from 'state/models/feeds/posts'
 import {AtUri} from '../../../third-party/uri'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -13,7 +13,7 @@ export function FeedSlice({
   showFollowBtn,
   ignoreMuteFor,
 }: {
-  slice: FeedSliceModel
+  slice: PostsFeedSliceModel
   showFollowBtn?: boolean
   ignoreMuteFor?: string
 }) {
@@ -66,7 +66,7 @@ export function FeedSlice({
   )
 }
 
-function ViewFullThread({slice}: {slice: FeedSliceModel}) {
+function ViewFullThread({slice}: {slice: PostsFeedSliceModel}) {
   const pal = usePalette('default')
   const itemHref = React.useMemo(() => {
     const urip = new AtUri(slice.rootItem.post.uri)

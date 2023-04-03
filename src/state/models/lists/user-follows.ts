@@ -1,31 +1,37 @@
-import {makeAutoObservable, runInAction} from 'mobx'
-import {AtUri} from '../../third-party/uri'
-import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
-import {RootStoreModel} from './root-store'
+import {makeAutoObservable} from 'mobx'
+import {
+  AppBskyGraphGetFollows as GetFollows,
+  AppBskyActorDefs as ActorDefs,
+} from '@atproto/api'
+import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
-import * as apilib from 'lib/api/index'
 
 const PAGE_SIZE = 30
 
-export type LikeItem = GetLikes.Like
+export type FollowItem = ActorDefs.ProfileViewBasic
 
-export class LikesViewModel {
+export class UserFollowsModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
-  resolvedUri = ''
-  params: GetLikes.QueryParams
+  params: GetFollows.QueryParams
   hasMore = true
   loadMoreCursor?: string
 
   // data
-  uri: string = ''
-  likes: LikeItem[] = []
+  subject: ActorDefs.ProfileViewBasic = {
+    did: '',
+    handle: '',
+  }
+  follows: FollowItem[] = []
 
-  constructor(public rootStore: RootStoreModel, params: GetLikes.QueryParams) {
+  constructor(
+    public rootStore: RootStoreModel,
+    params: GetFollows.QueryParams,
+  ) {
     makeAutoObservable(
       this,
       {
@@ -38,7 +44,7 @@ export class LikesViewModel {
   }
 
   get hasContent() {
-    return this.uri !== ''
+    return this.subject.did !== ''
   }
 
   get hasError() {
@@ -62,15 +68,11 @@ export class LikesViewModel {
     }
     this._xLoading(replace)
     try {
-      if (!this.resolvedUri) {
-        await this._resolveUri()
-      }
       const params = Object.assign({}, this.params, {
-        uri: this.resolvedUri,
         limit: PAGE_SIZE,
         cursor: replace ? undefined : this.loadMoreCursor,
       })
-      const res = await this.rootStore.agent.getLikes(params)
+      const res = await this.rootStore.agent.getFollows(params)
       if (replace) {
         this._replaceAll(res)
       } else {
@@ -97,35 +99,22 @@ export class LikesViewModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch likes', err)
+      this.rootStore.log.error('Failed to fetch user follows', err)
     }
   }
 
   // helper functions
   // =
 
-  async _resolveUri() {
-    const urip = new AtUri(this.params.uri)
-    if (!urip.host.startsWith('did:')) {
-      try {
-        urip.host = await apilib.resolveName(this.rootStore, urip.host)
-      } catch (e: any) {
-        this.error = e.toString()
-      }
-    }
-    runInAction(() => {
-      this.resolvedUri = urip.toString()
-    })
-  }
-
-  _replaceAll(res: GetLikes.Response) {
-    this.likes = []
+  _replaceAll(res: GetFollows.Response) {
+    this.follows = []
     this._appendAll(res)
   }
 
-  _appendAll(res: GetLikes.Response) {
+  _appendAll(res: GetFollows.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    this.likes = this.likes.concat(res.data.likes)
+    this.follows = this.follows.concat(res.data.follows)
+    this.rootStore.me.follows.hydrateProfiles(res.data.follows)
   }
 }

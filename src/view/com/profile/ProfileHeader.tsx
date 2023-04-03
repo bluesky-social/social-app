@@ -13,7 +13,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {BlurView} from '../util/BlurView'
-import {ProfileViewModel} from 'state/models/profile-view'
+import {ProfileModel} from 'state/models/content/profile'
 import {useStores} from 'state/index'
 import {ProfileImageLightbox} from 'state/models/ui/shell'
 import {pluralize} from 'lib/strings/helpers'
@@ -34,13 +34,7 @@ import {isDesktopWeb} from 'platform/detection'
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
 export const ProfileHeader = observer(
-  ({
-    view,
-    onRefreshAll,
-  }: {
-    view: ProfileViewModel
-    onRefreshAll: () => void
-  }) => {
+  ({view, onRefreshAll}: {view: ProfileModel; onRefreshAll: () => void}) => {
     const pal = usePalette('default')
 
     // loading
@@ -91,7 +85,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
   view,
   onRefreshAll,
 }: {
-  view: ProfileViewModel
+  view: ProfileModel
   onRefreshAll: () => void
 }) {
   const pal = usePalette('default')

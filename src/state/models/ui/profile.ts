@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from '../root-store'
-import {ProfileViewModel} from '../profile-view'
-import {FeedModel} from '../feed-view'
+import {ProfileModel} from '../content/profile'
+import {PostsFeedModel} from '../feeds/posts'
 
 export enum Sections {
   Posts = 'Posts',
@@ -20,8 +20,8 @@ export class ProfileUiModel {
   static EMPTY_ITEM = {_reactKey: '__empty__'}
 
   // data
-  profile: ProfileViewModel
-  feed: FeedModel
+  profile: ProfileModel
+  feed: PostsFeedModel
 
   // ui state
   selectedViewIndex = 0
@@ -38,14 +38,14 @@ export class ProfileUiModel {
       },
       {autoBind: true},
     )
-    this.profile = new ProfileViewModel(rootStore, {actor: params.user})
-    this.feed = new FeedModel(rootStore, 'author', {
+    this.profile = new ProfileModel(rootStore, {actor: params.user})
+    this.feed = new PostsFeedModel(rootStore, 'author', {
       actor: params.user,
       limit: 10,
     })
   }
 
-  get currentView(): FeedModel {
+  get currentView(): PostsFeedModel {
     if (
       this.selectedView === Sections.Posts ||
       this.selectedView === Sections.PostsWithReplies
@@ -137,7 +137,7 @@ export class ProfileUiModel {
 
   async update() {
     const view = this.currentView
-    if (view instanceof FeedModel) {
+    if (view instanceof PostsFeedModel) {
       await view.update()
     }
   }

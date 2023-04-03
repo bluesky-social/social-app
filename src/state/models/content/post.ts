@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 import {AppBskyFeedPost as Post} from '@atproto/api'
-import {AtUri} from '../../third-party/uri'
-import {RootStoreModel} from './root-store'
+import {AtUri} from '../../../third-party/uri'
+import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 
 type RemoveIndex<T> = {

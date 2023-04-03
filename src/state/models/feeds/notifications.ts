@@ -9,8 +9,8 @@ import {
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
-import {RootStoreModel} from './root-store'
-import {PostThreadViewModel} from './post-thread-view'
+import {RootStoreModel} from '../root-store'
+import {PostThreadModel} from '../content/post-thread'
 import {cleanError} from 'lib/strings/errors'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
@@ -30,7 +30,7 @@ type SupportedRecord =
   | AppBskyFeedLike.Record
   | AppBskyGraphFollow.Record
 
-export class NotificationsViewItemModel {
+export class NotificationsFeedItemModel {
   // ui state
   _reactKey: string = ''
 
@@ -47,10 +47,10 @@ export class NotificationsViewItemModel {
   record?: SupportedRecord
   isRead: boolean = false
   indexedAt: string = ''
-  additional?: NotificationsViewItemModel[]
+  additional?: NotificationsFeedItemModel[]
 
   // additional data
-  additionalPost?: PostThreadViewModel
+  additionalPost?: PostThreadModel
 
   constructor(
     public rootStore: RootStoreModel,
@@ -75,7 +75,7 @@ export class NotificationsViewItemModel {
       this.additional = []
       for (const add of v.additional) {
         this.additional.push(
-          new NotificationsViewItemModel(this.rootStore, '', add),
+          new NotificationsFeedItemModel(this.rootStore, '', add),
         )
       }
     } else if (!preserve) {
@@ -171,7 +171,7 @@ export class NotificationsViewItemModel {
       postUri = this.subjectUri
     }
     if (postUri) {
-      this.additionalPost = new PostThreadViewModel(this.rootStore, {
+      this.additionalPost = new PostThreadModel(this.rootStore, {
         uri: postUri,
         depth: 0,
       })
@@ -185,7 +185,7 @@ export class NotificationsViewItemModel {
   }
 }
 
-export class NotificationsViewModel {
+export class NotificationsFeedModel {
   // state
   isLoading = false
   isRefreshing = false
@@ -199,7 +199,7 @@ export class NotificationsViewModel {
   lock = new AwaitLock()
 
   // data
-  notifications: NotificationsViewItemModel[] = []
+  notifications: NotificationsFeedItemModel[] = []
   unreadCount = 0
 
   // this is used to help trigger push notifications
@@ -416,7 +416,7 @@ export class NotificationsViewModel {
     }
   }
 
-  async getNewMostRecent(): Promise<NotificationsViewItemModel | undefined> {
+  async getNewMostRecent(): Promise<NotificationsFeedItemModel | undefined> {
     let old = this.mostRecentNotificationUri
     const res = await this.rootStore.agent.listNotifications({
       limit: 1,
@@ -425,7 +425,7 @@ export class NotificationsViewModel {
       return
     }
     this.mostRecentNotificationUri = res.data.notifications[0].uri
-    const notif = new NotificationsViewItemModel(
+    const notif = new NotificationsFeedItemModel(
       this.rootStore,
       'mostRecent',
       res.data.notifications[0],
@@ -467,9 +467,9 @@ export class NotificationsViewModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     const promises = []
-    const itemModels: NotificationsViewItemModel[] = []
+    const itemModels: NotificationsFeedItemModel[] = []
     for (const item of groupNotifications(res.data.notifications)) {
-      const itemModel = new NotificationsViewItemModel(
+      const itemModel = new NotificationsFeedItemModel(
         this.rootStore,
         `item-${_idCounter++}`,
         item,
@@ -496,7 +496,7 @@ export class NotificationsViewModel {
 
   async _prependAll(res: ListNotifications.Response) {
     const promises = []
-    const itemModels: NotificationsViewItemModel[] = []
+    const itemModels: NotificationsFeedItemModel[] = []
     const dedupedNotifs = res.data.notifications.filter(
       n1 =>
         !this.notifications.find(
@@ -504,7 +504,7 @@ export class NotificationsViewModel {
         ),
     )
     for (const item of groupNotifications(dedupedNotifs)) {
-      const itemModel = new NotificationsViewItemModel(
+      const itemModel = new NotificationsFeedItemModel(
         this.rootStore,
         `item-${_idCounter++}`,
         item,
@@ -565,7 +565,7 @@ function groupNotifications(
   return items2
 }
 
-type N = ListNotifications.Notification | NotificationsViewItemModel
+type N = ListNotifications.Notification | NotificationsFeedItemModel
 function isEq(a: N, b: N) {
   // this function has a key subtlety- the indexedAt comparison
   // the reason for this is reposts: they set the URI of the original post, not of the repost record

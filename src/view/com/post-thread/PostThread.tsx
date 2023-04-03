@@ -9,9 +9,9 @@ import {
 } from 'react-native'
 import {CenteredView, FlatList} from '../util/Views'
 import {
-  PostThreadViewModel,
-  PostThreadViewPostModel,
-} from 'state/models/post-thread-view'
+  PostThreadModel,
+  PostThreadItemModel,
+} from 'state/models/content/post-thread'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -31,7 +31,7 @@ const BOTTOM_BORDER = {
   _reactKey: '__bottom_border__',
   _isHighlightedPost: false,
 }
-type YieldedItem = PostThreadViewPostModel | typeof REPLY_PROMPT
+type YieldedItem = PostThreadItemModel | typeof REPLY_PROMPT
 
 export const PostThread = observer(function PostThread({
   uri,
@@ -39,7 +39,7 @@ export const PostThread = observer(function PostThread({
   onPressReply,
 }: {
   uri: string
-  view: PostThreadViewModel
+  view: PostThreadModel
   onPressReply: () => void
 }) {
   const pal = usePalette('default')
@@ -109,7 +109,7 @@ export const PostThread = observer(function PostThread({
         // I could find to get a border positioned directly under the last item
         // -prf
         return <View style={[styles.bottomBorder, pal.border]} />
-      } else if (item instanceof PostThreadViewPostModel) {
+      } else if (item instanceof PostThreadItemModel) {
         return <PostThreadItem item={item} onPostReply={onRefresh} />
       }
       return <></>
@@ -187,14 +187,14 @@ export const PostThread = observer(function PostThread({
 })
 
 function* flattenThread(
-  post: PostThreadViewPostModel,
+  post: PostThreadItemModel,
   isAscending = false,
 ): Generator<YieldedItem, void> {
   if (post.parent) {
     if ('notFound' in post.parent && post.parent.notFound) {
       // TODO render not found
     } else {
-      yield* flattenThread(post.parent as PostThreadViewPostModel, true)
+      yield* flattenThread(post.parent as PostThreadItemModel, true)
     }
   }
   yield post
@@ -206,7 +206,7 @@ function* flattenThread(
       if ('notFound' in reply && reply.notFound) {
         // TODO render not found
       } else {
-        yield* flattenThread(reply as PostThreadViewPostModel)
+        yield* flattenThread(reply as PostThreadItemModel)
       }
     }
   } else if (!isAscending && !post.parent && post.post.replyCount) {

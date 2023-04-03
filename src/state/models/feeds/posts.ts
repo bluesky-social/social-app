@@ -10,7 +10,7 @@ import {
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
 import sampleSize from 'lodash.samplesize'
-import {RootStoreModel} from './root-store'
+import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 import {SUGGESTED_FOLLOWS} from 'lib/constants'
 import {
@@ -27,7 +27,7 @@ type PostView = AppBskyFeedDefs.PostView
 const PAGE_SIZE = 30
 let _idCounter = 0
 
-export class FeedItemModel {
+export class PostsFeedItemModel {
   // ui state
   _reactKey: string = ''
 
@@ -139,12 +139,12 @@ export class FeedItemModel {
   }
 }
 
-export class FeedSliceModel {
+export class PostsFeedSliceModel {
   // ui state
   _reactKey: string = ''
 
   // data
-  items: FeedItemModel[] = []
+  items: PostsFeedItemModel[] = []
 
   constructor(
     public rootStore: RootStoreModel,
@@ -154,7 +154,7 @@ export class FeedSliceModel {
     this._reactKey = reactKey
     for (const item of slice.items) {
       this.items.push(
-        new FeedItemModel(rootStore, `item-${_idCounter++}`, item),
+        new PostsFeedItemModel(rootStore, `item-${_idCounter++}`, item),
       )
     }
     makeAutoObservable(this, {rootStore: false})
@@ -206,7 +206,7 @@ export class FeedSliceModel {
   }
 }
 
-export class FeedModel {
+export class PostsFeedModel {
   // state
   isLoading = false
   isRefreshing = false
@@ -223,8 +223,8 @@ export class FeedModel {
   lock = new AwaitLock()
 
   // data
-  slices: FeedSliceModel[] = []
-  nextSlices: FeedSliceModel[] = []
+  slices: PostsFeedSliceModel[] = []
+  nextSlices: PostsFeedSliceModel[] = []
 
   constructor(
     public rootStore: RootStoreModel,
@@ -445,7 +445,11 @@ export class FeedModel {
     if (nextSlices[0]?.uri !== this.slices[0]?.uri) {
       const nextSlicesModels = nextSlices.map(
         slice =>
-          new FeedSliceModel(this.rootStore, `item-${_idCounter++}`, slice),
+          new PostsFeedSliceModel(
+            this.rootStore,
+            `item-${_idCounter++}`,
+            slice,
+          ),
       )
       if (autoPrepend) {
         runInAction(() => {
@@ -526,9 +530,9 @@ export class FeedModel {
 
     const slices = this.tuner.tune(res.data.feed, this.feedTuners)
 
-    const toAppend: FeedSliceModel[] = []
+    const toAppend: PostsFeedSliceModel[] = []
     for (const slice of slices) {
-      const sliceModel = new FeedSliceModel(
+      const sliceModel = new PostsFeedSliceModel(
         this.rootStore,
         `item-${_idCounter++}`,
         slice,

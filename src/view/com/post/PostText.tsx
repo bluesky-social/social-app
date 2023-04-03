@@ -4,7 +4,7 @@ import {StyleProp, StyleSheet, TextStyle, View} from 'react-native'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
-import {PostModel} from 'state/models/post'
+import {PostModel} from 'state/models/content/post'
 import {useStores} from 'state/index'
 
 export const PostText = observer(function PostText({

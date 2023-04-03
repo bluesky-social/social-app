@@ -1,23 +1,23 @@
 import {makeAutoObservable} from 'mobx'
 import {
-  AppBskyGraphGetFollows as GetFollows,
+  AppBskyGraphGetFollowers as GetFollowers,
   AppBskyActorDefs as ActorDefs,
 } from '@atproto/api'
-import {RootStoreModel} from './root-store'
+import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
 
 const PAGE_SIZE = 30
 
-export type FollowItem = ActorDefs.ProfileViewBasic
+export type FollowerItem = ActorDefs.ProfileViewBasic
 
-export class UserFollowsViewModel {
+export class UserFollowersModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
-  params: GetFollows.QueryParams
+  params: GetFollowers.QueryParams
   hasMore = true
   loadMoreCursor?: string
 
@@ -26,11 +26,11 @@ export class UserFollowsViewModel {
     did: '',
     handle: '',
   }
-  follows: FollowItem[] = []
+  followers: FollowerItem[] = []
 
   constructor(
     public rootStore: RootStoreModel,
-    params: GetFollows.QueryParams,
+    params: GetFollowers.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -72,7 +72,7 @@ export class UserFollowsViewModel {
         limit: PAGE_SIZE,
         cursor: replace ? undefined : this.loadMoreCursor,
       })
-      const res = await this.rootStore.agent.getFollows(params)
+      const res = await this.rootStore.agent.getFollowers(params)
       if (replace) {
         this._replaceAll(res)
       } else {
@@ -99,22 +99,22 @@ export class UserFollowsViewModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch user follows', err)
+      this.rootStore.log.error('Failed to fetch user followers', err)
     }
   }
 
   // helper functions
   // =
 
-  _replaceAll(res: GetFollows.Response) {
-    this.follows = []
+  _replaceAll(res: GetFollowers.Response) {
+    this.followers = []
     this._appendAll(res)
   }
 
-  _appendAll(res: GetFollows.Response) {
+  _appendAll(res: GetFollowers.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    this.follows = this.follows.concat(res.data.follows)
-    this.rootStore.me.follows.hydrateProfiles(res.data.follows)
+    this.followers = this.followers.concat(res.data.followers)
+    this.rootStore.me.follows.hydrateProfiles(res.data.followers)
   }
 }

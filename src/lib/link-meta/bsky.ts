@@ -2,7 +2,7 @@ import {LikelyType, LinkMeta} from './link-meta'
 // import {match as matchRoute} from 'view/routes'
 import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
 import {RootStoreModel} from 'state/index'
-import {PostThreadViewModel} from 'state/models/post-thread-view'
+import {PostThreadModel} from 'state/models/content/post-thread'
 import {ComposerOptsQuote} from 'state/models/ui/shell'
 
 // TODO
@@ -108,7 +108,7 @@ export async function getPostAsQuote(
   const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
   const threadUri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
 
-  const threadView = new PostThreadViewModel(store, {
+  const threadView = new PostThreadModel(store, {
     uri: threadUri,
     depth: 0,
   })

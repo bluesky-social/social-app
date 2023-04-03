@@ -1,7 +1,7 @@
 import React from 'react'
 import {TextInput, View, StyleSheet, TouchableOpacity} from 'react-native'
 import {useNavigation, StackActions} from '@react-navigation/native'
-import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
+import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -16,8 +16,8 @@ export const DesktopSearch = observer(function DesktopSearch() {
   const textInput = React.useRef<TextInput>(null)
   const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
-  const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
-    () => new UserAutocompleteViewModel(store),
+  const autocompleteView = React.useMemo<UserAutocompleteModel>(
+    () => new UserAutocompleteModel(store),
     [store],
   )
   const navigation = useNavigation<NavigationProp>()

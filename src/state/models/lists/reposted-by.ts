@@ -1,36 +1,36 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
+import {AtUri} from '../../../third-party/uri'
 import {
-  AppBskyGraphGetFollowers as GetFollowers,
-  AppBskyActorDefs as ActorDefs,
+  AppBskyFeedGetRepostedBy as GetRepostedBy,
+  AppBskyActorDefs,
 } from '@atproto/api'
-import {RootStoreModel} from './root-store'
-import {cleanError} from 'lib/strings/errors'
+import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
+import {cleanError} from 'lib/strings/errors'
+import * as apilib from 'lib/api/index'
 
 const PAGE_SIZE = 30
 
-export type FollowerItem = ActorDefs.ProfileViewBasic
+export type RepostedByItem = AppBskyActorDefs.ProfileViewBasic
 
-export class UserFollowersViewModel {
+export class RepostedByModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
-  params: GetFollowers.QueryParams
+  resolvedUri = ''
+  params: GetRepostedBy.QueryParams
   hasMore = true
   loadMoreCursor?: string
 
   // data
-  subject: ActorDefs.ProfileViewBasic = {
-    did: '',
-    handle: '',
-  }
-  followers: FollowerItem[] = []
+  uri: string = ''
+  repostedBy: RepostedByItem[] = []
 
   constructor(
     public rootStore: RootStoreModel,
-    params: GetFollowers.QueryParams,
+    params: GetRepostedBy.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -44,7 +44,7 @@ export class UserFollowersViewModel {
   }
 
   get hasContent() {
-    return this.subject.did !== ''
+    return this.uri !== ''
   }
 
   get hasError() {
@@ -63,16 +63,17 @@ export class UserFollowersViewModel {
   }
 
   loadMore = bundleAsync(async (replace: boolean = false) => {
-    if (!replace && !this.hasMore) {
-      return
-    }
     this._xLoading(replace)
     try {
+      if (!this.resolvedUri) {
+        await this._resolveUri()
+      }
       const params = Object.assign({}, this.params, {
+        uri: this.resolvedUri,
         limit: PAGE_SIZE,
         cursor: replace ? undefined : this.loadMoreCursor,
       })
-      const res = await this.rootStore.agent.getFollowers(params)
+      const res = await this.rootStore.agent.getRepostedBy(params)
       if (replace) {
         this._replaceAll(res)
       } else {
@@ -99,22 +100,36 @@ export class UserFollowersViewModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch user followers', err)
+      this.rootStore.log.error('Failed to fetch reposted by view', err)
     }
   }
 
   // helper functions
   // =
 
-  _replaceAll(res: GetFollowers.Response) {
-    this.followers = []
+  async _resolveUri() {
+    const urip = new AtUri(this.params.uri)
+    if (!urip.host.startsWith('did:')) {
+      try {
+        urip.host = await apilib.resolveName(this.rootStore, urip.host)
+      } catch (e: any) {
+        this.error = e.toString()
+      }
+    }
+    runInAction(() => {
+      this.resolvedUri = urip.toString()
+    })
+  }
+
+  _replaceAll(res: GetRepostedBy.Response) {
+    this.repostedBy = []
     this._appendAll(res)
   }
 
-  _appendAll(res: GetFollowers.Response) {
+  _appendAll(res: GetRepostedBy.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    this.followers = this.followers.concat(res.data.followers)
-    this.rootStore.me.follows.hydrateProfiles(res.data.followers)
+    this.repostedBy = this.repostedBy.concat(res.data.repostedBy)
+    this.rootStore.me.follows.hydrateProfiles(res.data.repostedBy)
   }
 }

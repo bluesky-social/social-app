@@ -5,8 +5,8 @@ import {
   AppBskyFeedDefs,
   RichText,
 } from '@atproto/api'
-import {AtUri} from '../../third-party/uri'
-import {RootStoreModel} from './root-store'
+import {AtUri} from '../../../third-party/uri'
+import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 
@@ -17,7 +17,7 @@ function* reactKeyGenerator(): Generator<string> {
   }
 }
 
-export class PostThreadViewPostModel {
+export class PostThreadItemModel {
   // ui state
   _reactKey: string = ''
   _depth = 0
@@ -29,8 +29,8 @@ export class PostThreadViewPostModel {
   // data
   post: AppBskyFeedDefs.PostView
   postRecord?: FeedPost.Record
-  parent?: PostThreadViewPostModel | AppBskyFeedDefs.NotFoundPost
-  replies?: (PostThreadViewPostModel | AppBskyFeedDefs.NotFoundPost)[]
+  parent?: PostThreadItemModel | AppBskyFeedDefs.NotFoundPost
+  replies?: (PostThreadItemModel | AppBskyFeedDefs.NotFoundPost)[]
   richText?: RichText
 
   get uri() {
@@ -79,7 +79,7 @@ export class PostThreadViewPostModel {
     // parents
     if (includeParent && v.parent) {
       if (AppBskyFeedDefs.isThreadViewPost(v.parent)) {
-        const parentModel = new PostThreadViewPostModel(
+        const parentModel = new PostThreadItemModel(
           this.rootStore,
           keyGen.next().value,
           v.parent,
@@ -106,7 +106,7 @@ export class PostThreadViewPostModel {
       const replies = []
       for (const item of v.replies) {
         if (AppBskyFeedDefs.isThreadViewPost(item)) {
-          const itemModel = new PostThreadViewPostModel(
+          const itemModel = new PostThreadItemModel(
             this.rootStore,
             keyGen.next().value,
             item,
@@ -182,7 +182,7 @@ export class PostThreadViewPostModel {
   }
 }
 
-export class PostThreadViewModel {
+export class PostThreadModel {
   // state
   isLoading = false
   isRefreshing = false
@@ -193,7 +193,7 @@ export class PostThreadViewModel {
   params: GetPostThread.QueryParams
 
   // data
-  thread?: PostThreadViewPostModel
+  thread?: PostThreadItemModel
 
   constructor(
     public rootStore: RootStoreModel,
@@ -321,7 +321,7 @@ export class PostThreadViewModel {
   _replaceAll(res: GetPostThread.Response) {
     sortThread(res.data.thread)
     const keyGen = reactKeyGenerator()
-    const thread = new PostThreadViewPostModel(
+    const thread = new PostThreadItemModel(
       this.rootStore,
       keyGen.next().value,
       res.data.thread as AppBskyFeedDefs.ThreadViewPost,

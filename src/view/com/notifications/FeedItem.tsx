@@ -14,8 +14,8 @@ import {
   FontAwesomeIconStyle,
   Props,
 } from '@fortawesome/react-native-fontawesome'
-import {NotificationsViewItemModel} from 'state/models/notifications-view'
-import {PostThreadViewModel} from 'state/models/post-thread-view'
+import {NotificationsFeedItemModel} from 'state/models/feeds/notifications'
+import {PostThreadModel} from 'state/models/content/post-thread'
 import {s, colors} from 'lib/styles'
 import {ago} from 'lib/strings/time'
 import {pluralize} from 'lib/strings/helpers'
@@ -42,7 +42,7 @@ interface Author {
 export const FeedItem = observer(function FeedItem({
   item,
 }: {
-  item: NotificationsViewItemModel
+  item: NotificationsFeedItemModel
 }) {
   const pal = usePalette('default')
   const [isAuthorsExpanded, setAuthorsExpanded] = React.useState<boolean>(false)
@@ -338,7 +338,7 @@ function ExpandedAuthorsList({
 function AdditionalPostText({
   additionalPost,
 }: {
-  additionalPost?: PostThreadViewModel
+  additionalPost?: PostThreadModel
 }) {
   const pal = usePalette('default')
   if (

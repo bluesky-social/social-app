@@ -8,7 +8,7 @@ import {ViewSelector} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
 import {ProfileUiModel} from 'state/models/ui/profile'
 import {useStores} from 'state/index'
-import {FeedSliceModel} from 'state/models/feed-view'
+import {PostsFeedSliceModel} from 'state/models/feeds/posts'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedSlice} from '../com/posts/FeedSlice'
 import {PostFeedLoadingPlaceholder} from '../com/util/LoadingPlaceholder'
@@ -124,7 +124,7 @@ export const ProfileScreen = withAuthRequired(
               style={styles.emptyState}
             />
           )
-        } else if (item instanceof FeedSliceModel) {
+        } else if (item instanceof PostsFeedSliceModel) {
           return <FeedSlice slice={item} ignoreMuteFor={uiState.profile.did} />
         }
         return <View />

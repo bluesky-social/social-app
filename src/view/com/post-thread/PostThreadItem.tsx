@@ -7,7 +7,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {PostThreadViewPostModel} from 'state/models/post-thread-view'
+import {PostThreadItemModel} from 'state/models/content/post-thread'
 import {Link} from '../util/Link'
 import {RichText} from '../util/text/RichText'
 import {Text} from '../util/text/Text'
@@ -31,7 +31,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   item,
   onPostReply,
 }: {
-  item: PostThreadViewPostModel
+  item: PostThreadItemModel
   onPostReply: () => void
 }) {
   const pal = usePalette('default')

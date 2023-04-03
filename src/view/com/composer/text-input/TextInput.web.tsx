@@ -9,7 +9,7 @@ import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text} from '@tiptap/extension-text'
 import isEqual from 'lodash.isequal'
-import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
+import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {createSuggestion} from './web/Autocomplete'
 
 export interface TextInputRef {
@@ -21,7 +21,7 @@ interface TextInputProps {
   richtext: RichText
   placeholder: string
   suggestedLinks: Set<string>
-  autocompleteView: UserAutocompleteViewModel
+  autocompleteView: UserAutocompleteModel
   setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
   onSuggestedLinksChanged: (uris: Set<string>) => void

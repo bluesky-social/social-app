@@ -5,13 +5,13 @@ import {
   AppBskyActorProfile,
   RichText,
 } from '@atproto/api'
-import {RootStoreModel} from './root-store'
+import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
 
-export class ProfileViewViewerModel {
+export class ProfileViewerModel {
   muted?: boolean
   following?: string
   followedBy?: string
@@ -21,7 +21,7 @@ export class ProfileViewViewerModel {
   }
 }
 
-export class ProfileViewModel {
+export class ProfileModel {
   // state
   isLoading = false
   isRefreshing = false
@@ -40,7 +40,7 @@ export class ProfileViewModel {
   followersCount: number = 0
   followsCount: number = 0
   postsCount: number = 0
-  viewer = new ProfileViewViewerModel()
+  viewer = new ProfileViewerModel()
 
   // added data
   descriptionRichText?: RichText = new RichText({text: ''})

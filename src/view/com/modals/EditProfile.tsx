@@ -12,7 +12,7 @@ import {PickedMedia} from '../../../lib/media/picker'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from 'state/index'
-import {ProfileViewModel} from 'state/models/profile-view'
+import {ProfileModel} from 'state/models/content/profile'
 import {s, colors, gradients} from 'lib/styles'
 import {enforceLen} from 'lib/strings/helpers'
 import {MAX_DISPLAY_NAME, MAX_DESCRIPTION} from 'lib/constants'
@@ -30,7 +30,7 @@ export function Component({
   profileView,
   onUpdate,
 }: {
-  profileView: ProfileViewModel
+  profileView: ProfileModel
   onUpdate?: () => void
 }) {
   const store = useStores()

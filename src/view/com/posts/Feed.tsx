@@ -11,7 +11,7 @@ import {
 import {FlatList} from '../util/Views'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {FeedModel} from 'state/models/feed-view'
+import {PostsFeedModel} from 'state/models/feeds/posts'
 import {FeedSlice} from './FeedSlice'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
@@ -33,7 +33,7 @@ export const Feed = observer(function Feed({
   testID,
   headerOffset = 0,
 }: {
-  feed: FeedModel
+  feed: PostsFeedModel
   style?: StyleProp<ViewStyle>
   showPostFollowBtn?: boolean
   scrollElRef?: MutableRefObject<FlatList<any> | null>

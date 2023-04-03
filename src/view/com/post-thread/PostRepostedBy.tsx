@@ -2,10 +2,7 @@ import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
 import {CenteredView, FlatList} from '../util/Views'
-import {
-  RepostedByViewModel,
-  RepostedByItem,
-} from 'state/models/reposted-by-view'
+import {RepostedByModel, RepostedByItem} from 'state/models/lists/reposted-by'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from 'state/index'
@@ -19,7 +16,7 @@ export const PostRepostedBy = observer(function PostRepostedBy({
   const pal = usePalette('default')
   const store = useStores()
   const view = React.useMemo(
-    () => new RepostedByViewModel(store, {uri}),
+    () => new RepostedByModel(store, {uri}),
     [store, uri],
   )
 

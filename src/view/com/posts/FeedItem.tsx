@@ -7,7 +7,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {FeedItemModel} from 'state/models/feed-view'
+import {PostsFeedItemModel} from 'state/models/feeds/posts'
 import {Link, DesktopWebTextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
@@ -30,7 +30,7 @@ export const FeedItem = observer(function ({
   showFollowBtn,
   ignoreMuteFor,
 }: {
-  item: FeedItemModel
+  item: PostsFeedItemModel
   isThreadChild?: boolean
   isThreadParent?: boolean
   showReplyLine?: boolean

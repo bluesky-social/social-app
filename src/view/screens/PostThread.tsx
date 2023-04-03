@@ -7,7 +7,7 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {ComposePrompt} from 'view/com/composer/Prompt'
-import {PostThreadViewModel} from 'state/models/post-thread-view'
+import {PostThreadModel} from 'state/models/content/post-thread'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -22,8 +22,8 @@ export const PostThreadScreen = withAuthRequired(({route}: Props) => {
   const safeAreaInsets = useSafeAreaInsets()
   const {name, rkey} = route.params
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
-  const view = useMemo<PostThreadViewModel>(
-    () => new PostThreadViewModel(store, {uri}),
+  const view = useMemo<PostThreadModel>(
+    () => new PostThreadModel(store, {uri}),
     [store, uri],
   )
 
