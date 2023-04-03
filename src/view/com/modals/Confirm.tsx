@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import {Text} from '../util/text/Text'
 import {useStores} from 'state/index'
-import {s, colors, gradients} from 'lib/styles'
+import {s, colors} from 'lib/styles'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
