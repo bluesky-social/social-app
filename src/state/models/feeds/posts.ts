@@ -384,7 +384,9 @@ export class PostsFeedModel {
         this._xIdle()
       } catch (e: any) {
         this._xIdle(undefined, e)
-        this.hasMore = false
+        runInAction(() => {
+          this.hasMore = false
+        })
       }
     } finally {
       this.lock.release()

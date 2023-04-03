@@ -307,6 +307,9 @@ export class NotificationsFeedModel {
         this._xIdle()
       } catch (e: any) {
         this._xIdle(undefined, e)
+        runInAction(() => {
+          this.hasMore = false
+        })
       }
     } finally {
       this.lock.release()
