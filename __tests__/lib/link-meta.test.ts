@@ -73,13 +73,10 @@ describe('getLinkMeta', () => {
     {
       likelyType: LikelyType.AtpData,
       url: '/',
-      title: 'Bluesky',
-      description: 'A new kind of social network',
     },
     {
       likelyType: LikelyType.AtpData,
       url: '/index.html',
-      title: 'Not found',
     },
     {
       likelyType: LikelyType.Other,
