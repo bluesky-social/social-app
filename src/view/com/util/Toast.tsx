@@ -39,7 +39,7 @@ function Toast({message}: {message: string}) {
 
   const opacityStyle = {opacity: interp}
   return (
-    <View style={styles.container}>
+    <View style={styles.container} pointerEvents="none">
       <Animated.View
         style={[
           pal.view,
