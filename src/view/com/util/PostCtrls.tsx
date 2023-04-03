@@ -321,6 +321,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           </PostDropdownBtn>
         )}
       </View>
+      {/* used for adding pad to the right side */}
+      <View />
     </View>
   )
 }
