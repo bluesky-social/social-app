@@ -7,7 +7,7 @@ type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 export type FeedTunerFn = (
   tuner: FeedTuner,
   slices: FeedViewPostsSlice[],
-) => void
+) => FeedViewPostsSlice[]
 
 export class FeedViewPostsSlice {
   isFlattenedReply = false
@@ -87,7 +87,7 @@ export class FeedTuner {
     feed: FeedViewPost[],
     tunerFns: FeedTunerFn[] = [],
   ): FeedViewPostsSlice[] {
-    const slices: FeedViewPostsSlice[] = []
+    let slices: FeedViewPostsSlice[] = []
 
     // arrange the posts into thread slices
     for (let i = feed.length - 1; i >= 0; i--) {
@@ -106,7 +106,7 @@ export class FeedTuner {
 
     // run the custom tuners
     for (const tunerFn of tunerFns) {
-      tunerFn(this, slices)
+      slices = tunerFn(this, slices.slice())
     }
 
     // remove any items already "seen"
@@ -148,7 +148,10 @@ export class FeedTuner {
     return slices
   }
 
-  static dedupReposts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+  static dedupReposts(
+    tuner: FeedTuner,
+    slices: FeedViewPostsSlice[],
+  ): FeedViewPostsSlice[] {
     // remove duplicates caused by reposts
     for (let i = 0; i < slices.length; i++) {
       const item1 = slices[i]
@@ -164,9 +167,13 @@ export class FeedTuner {
         }
       }
     }
+    return slices
   }
 
-  static likedRepliesOnly(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+  static likedRepliesOnly(
+    tuner: FeedTuner,
+    slices: FeedViewPostsSlice[],
+  ): FeedViewPostsSlice[] {
     // remove any replies without at least 2 likes
     for (let i = slices.length - 1; i >= 0; i--) {
       if (slices[i].isFullThread || !slices[i].rootItem.reply) {
@@ -178,11 +185,16 @@ export class FeedTuner {
         slices.splice(i, 1)
       }
     }
+    return slices
   }
 
   static preferredLangOnly(langsCode2: string[]) {
     const langsCode3 = langsCode2.map(l => LANGUAGES_MAP_CODE2[l]?.code3 || l)
-    return (tuner: FeedTuner, slices: FeedViewPostsSlice[]) => {
+    return (
+      tuner: FeedTuner,
+      slices: FeedViewPostsSlice[],
+    ): FeedViewPostsSlice[] => {
+      const origSlices = slices.concat()
       for (let i = slices.length - 1; i >= 0; i--) {
         let hasPreferredLang = false
         for (const item of slices[i].items) {
@@ -202,6 +214,11 @@ export class FeedTuner {
           slices.splice(i, 1)
         }
       }
+      if (slices.length) {
+        return slices
+      }
+      // fallback: give everything if the language filter left nothing
+      return origSlices
     }
   }
 }
