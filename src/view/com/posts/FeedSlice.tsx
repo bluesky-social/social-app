@@ -85,9 +85,9 @@ function ViewFullThread({slice}: {slice: FeedSliceModel}) {
             stroke={pal.colors.replyLine}
             strokeWidth="2"
           />
-          <Circle x="2" y="16" r="1.5" fill={pal.colors.replyLineDot} />
-          <Circle x="2" y="22" r="1.5" fill={pal.colors.replyLineDot} />
-          <Circle x="2" y="28" r="1.5" fill={pal.colors.replyLineDot} />
+          <Circle cx="2" cy="16" r="1.5" fill={pal.colors.replyLineDot} />
+          <Circle cx="2" cy="22" r="1.5" fill={pal.colors.replyLineDot} />
+          <Circle cx="2" cy="28" r="1.5" fill={pal.colors.replyLineDot} />
         </Svg>
       </View>
       <Text type="md" style={pal.link}>
