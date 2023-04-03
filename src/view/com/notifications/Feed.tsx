@@ -6,12 +6,14 @@ import {NotificationsFeedModel} from 'state/models/feeds/notifications'
 import {FeedItem} from './FeedItem'
 import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
+import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {EmptyState} from '../util/EmptyState'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
+const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
 export const Feed = observer(function Feed({
   view,
@@ -34,8 +36,11 @@ export const Feed = observer(function Feed({
         feedItems = view.notifications
       }
     }
+    if (view.loadMoreError) {
+      feedItems = (feedItems || []).concat([LOAD_MORE_ERROR_ITEM])
+    }
     return feedItems
-  }, [view.hasLoaded, view.isEmpty, view.notifications])
+  }, [view.hasLoaded, view.isEmpty, view.notifications, view.loadMoreError])
 
   const onRefresh = React.useCallback(async () => {
     try {
@@ -45,6 +50,7 @@ export const Feed = observer(function Feed({
       view.rootStore.log.error('Failed to refresh notifications feed', err)
     }
   }, [view])
+
   const onEndReached = React.useCallback(async () => {
     try {
       await view.loadMore()
@@ -53,22 +59,36 @@ export const Feed = observer(function Feed({
     }
   }, [view])
 
+  const onPressRetryLoadMore = React.useCallback(() => {
+    view.retryLoadMore()
+  }, [view])
+
   // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
   //   VirtualizedList: You have a large list that is slow to update - make sure your
   //   renderItem function renders components that follow React performance best practices
   //   like PureComponent, shouldComponentUpdate, etc
-  const renderItem = React.useCallback(({item}: {item: any}) => {
-    if (item === EMPTY_FEED_ITEM) {
-      return (
-        <EmptyState
-          icon="bell"
-          message="No notifications yet!"
-          style={styles.emptyState}
-        />
-      )
-    }
-    return <FeedItem item={item} />
-  }, [])
+  const renderItem = React.useCallback(
+    ({item}: {item: any}) => {
+      if (item === EMPTY_FEED_ITEM) {
+        return (
+          <EmptyState
+            icon="bell"
+            message="No notifications yet!"
+            style={styles.emptyState}
+          />
+        )
+      } else if (item === LOAD_MORE_ERROR_ITEM) {
+        return (
+          <LoadMoreRetryBtn
+            label="There was an issue fetching notifications. Tap here to try again."
+            onPress={onPressRetryLoadMore}
+          />
+        )
+      }
+      return <FeedItem item={item} />
+    },
+    [onPressRetryLoadMore],
+  )
 
   const FeedFooter = React.useCallback(
     () =>
