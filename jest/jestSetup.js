@@ -43,12 +43,6 @@ jest.mock('@bam.tech/react-native-image-resizer', () => ({
   createResizedImage: jest.fn(),
 }))
 
-import {View as mockedView} from 'react-native'
-jest.mock('react-native-tab-view', () => ({
-  ...jest.requireActual('react-native-tab-view'),
-  TabView: mockedView,
-}))
-
 jest.mock('@segment/analytics-react-native', () => ({
   createClient: () => ({
     add: jest.fn(),
@@ -74,4 +68,9 @@ jest.mock('expo-media-library', () => ({
   __esModule: true, // this property makes it work
   default: jest.fn(),
   usePermissions: jest.fn(() => [true]),
+}))
+
+jest.mock('lande', () => ({
+  __esModule: true, // this property makes it work
+  default: jest.fn().mockReturnValue([['eng']]),
 }))
