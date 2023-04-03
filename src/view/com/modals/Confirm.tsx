@@ -5,14 +5,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import {Text} from '../util/text/Text'
 import {useStores} from 'state/index'
-import {s, colors, gradients} from 'lib/styles'
+import {s, colors} from 'lib/styles'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
+import {usePalette} from 'lib/hooks/usePalette'
 
-export const snapPoints = ['50%']
+export const snapPoints = [300]
 
 export function Component({
   title,
@@ -23,6 +23,7 @@ export function Component({
   message: string | (() => JSX.Element)
   onPressConfirm: () => void | Promise<void>
 }) {
+  const pal = usePalette('default')
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
@@ -39,10 +40,14 @@ export function Component({
     }
   }
   return (
-    <View testID="confirmModal" style={[s.flex1, s.pl10, s.pr10]}>
-      <Text style={styles.title}>{title}</Text>
+    <View testID="confirmModal" style={[pal.view, styles.container]}>
+      <Text type="title-xl" style={[pal.text, styles.title]}>
+        {title}
+      </Text>
       {typeof message === 'string' ? (
-        <Text style={styles.description}>{message}</Text>
+        <Text type="xl" style={[pal.textLight, styles.description]}>
+          {message}
+        </Text>
       ) : (
         message()
       )}
@@ -51,19 +56,17 @@ export function Component({
           <ErrorMessage message={error} />
         </View>
       ) : undefined}
+      <View style={s.flex1} />
       {isProcessing ? (
         <View style={[styles.btn, s.mt10]}>
           <ActivityIndicator />
         </View>
       ) : (
-        <TouchableOpacity testID="confirmBtn" style={s.mt10} onPress={onPress}>
-          <LinearGradient
-            colors={[gradients.blueLight.start, gradients.blueLight.end]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
-            style={[styles.btn]}>
-            <Text style={[s.white, s.bold, s.f18]}>Confirm</Text>
-          </LinearGradient>
+        <TouchableOpacity
+          testID="confirmBtn"
+          onPress={onPress}
+          style={[styles.btn]}>
+          <Text style={[s.white, s.bold, s.f18]}>Confirm</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -71,26 +74,28 @@ export function Component({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+    paddingBottom: 60,
+  },
   title: {
     textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 24,
     marginBottom: 12,
   },
   description: {
     textAlign: 'center',
-    fontSize: 17,
     paddingHorizontal: 22,
-    color: colors.gray5,
     marginBottom: 10,
   },
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
     borderRadius: 32,
     padding: 14,
-    backgroundColor: colors.gray1,
+    marginTop: 22,
+    marginHorizontal: 44,
+    backgroundColor: colors.blue3,
   },
 })
