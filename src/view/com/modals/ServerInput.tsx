@@ -8,6 +8,7 @@ import {ScrollView, TextInput} from './util'
 import {Text} from '../util/text/Text'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'state/index'
 import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
@@ -16,6 +17,7 @@ export const snapPoints = ['80%']
 
 export function Component({onSelect}: {onSelect: (url: string) => void}) {
   const theme = useTheme()
+  const pal = usePalette('default')
   const store = useStores()
   const [customUrl, setCustomUrl] = useState<string>('')
 
@@ -28,8 +30,10 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
   }
 
   return (
-    <View style={s.flex1} testID="serverInputModal">
-      <Text style={[s.textCenter, s.bold, s.f18]}>Choose Service</Text>
+    <View style={[pal.view, s.flex1]} testID="serverInputModal">
+      <Text type="2xl-bold" style={[pal.text, s.textCenter]}>
+        Choose Service
+      </Text>
       <ScrollView style={styles.inner}>
         <View style={styles.group}>
           {LOGIN_INCLUDE_DEV_SERVERS ? (
@@ -66,11 +70,11 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
           </TouchableOpacity>
         </View>
         <View style={styles.group}>
-          <Text style={styles.label}>Other service</Text>
+          <Text style={[pal.text, styles.label]}>Other service</Text>
           <View style={s.flexRow}>
             <TextInput
               testID="customServerTextInput"
-              style={styles.textInput}
+              style={[pal.borderDark, pal.text, styles.textInput]}
               placeholder="e.g. https://bsky.app"
               placeholderTextColor={colors.gray4}
               autoCapitalize="none"
@@ -82,11 +86,11 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             />
             <TouchableOpacity
               testID="customServerSelectBtn"
-              style={styles.textInputBtn}
+              style={[pal.borderDark, pal.text, styles.textInputBtn]}
               onPress={() => doSelect(customUrl)}>
               <FontAwesomeIcon
                 icon="check"
-                style={[s.black as FontAwesomeIconStyle, styles.checkIcon]}
+                style={[pal.text as FontAwesomeIconStyle, styles.checkIcon]}
                 size={18}
               />
             </TouchableOpacity>
@@ -112,18 +116,15 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     borderWidth: 1,
-    borderColor: colors.gray3,
     borderTopLeftRadius: 6,
     borderBottomLeftRadius: 6,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    color: colors.black,
   },
   textInputBtn: {
     borderWidth: 1,
     borderLeftWidth: 0,
-    borderColor: colors.gray3,
     borderTopRightRadius: 6,
     borderBottomRightRadius: 6,
     paddingHorizontal: 14,
