@@ -4,7 +4,7 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
-import {FeedModel} from 'state/models/feed-view'
+import {PostsFeedModel} from 'state/models/feeds/posts'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {Feed} from '../com/posts/Feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
@@ -26,7 +26,7 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
   const [selectedPage, setSelectedPage] = React.useState(0)
 
   const algoFeed = React.useMemo(() => {
-    const feed = new FeedModel(store, 'goodstuff', {})
+    const feed = new PostsFeedModel(store, 'goodstuff', {})
     feed.setup()
     return feed
   }, [store])
@@ -104,7 +104,7 @@ const FeedPage = observer(
     renderEmptyState,
   }: {
     testID?: string
-    feed: FeedModel
+    feed: PostsFeedModel
     isPageFocused: boolean
     renderEmptyState?: () => JSX.Element
   }) => {

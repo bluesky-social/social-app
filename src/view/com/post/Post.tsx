@@ -11,7 +11,7 @@ import {observer} from 'mobx-react-lite'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '../../../third-party/uri'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {PostThreadViewModel} from 'state/models/post-thread-view'
+import {PostThreadModel} from 'state/models/content/post-thread'
 import {Link} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
@@ -34,21 +34,21 @@ export const Post = observer(function Post({
   style,
 }: {
   uri: string
-  initView?: PostThreadViewModel
+  initView?: PostThreadModel
   showReplyLine?: boolean
   hideError?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
   const store = useStores()
-  const [view, setView] = useState<PostThreadViewModel | undefined>(initView)
+  const [view, setView] = useState<PostThreadModel | undefined>(initView)
   const [deleted, setDeleted] = useState(false)
 
   useEffect(() => {
     if (initView || view?.params.uri === uri) {
       return // no change needed? or trigger refresh?
     }
-    const newView = new PostThreadViewModel(store, {uri, depth: 0})
+    const newView = new PostThreadModel(store, {uri, depth: 0})
     setView(newView)
     newView.setup().catch(err => store.log.error('Failed to fetch post', err))
   }, [initView, uri, view?.params.uri, store])

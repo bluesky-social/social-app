@@ -11,7 +11,7 @@ import PasteInput, {
 } from '@mattermost/react-native-paste-input'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import isEqual from 'lodash.isequal'
-import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
+import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {Autocomplete} from './mobile/Autocomplete'
 import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
@@ -36,7 +36,7 @@ interface TextInputProps {
   richtext: RichText
   placeholder: string
   suggestedLinks: Set<string>
-  autocompleteView: UserAutocompleteViewModel
+  autocompleteView: UserAutocompleteModel
   setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
   onSuggestedLinksChanged: (uris: Set<string>) => void

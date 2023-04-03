@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
 import {CenteredView, FlatList} from '../util/Views'
-import {UserFollowsViewModel, FollowItem} from 'state/models/user-follows-view'
+import {UserFollowsModel, FollowItem} from 'state/models/lists/user-follows'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
 import {useStores} from 'state/index'
@@ -16,7 +16,7 @@ export const ProfileFollows = observer(function ProfileFollows({
   const pal = usePalette('default')
   const store = useStores()
   const view = React.useMemo(
-    () => new UserFollowsViewModel(store, {actor: name}),
+    () => new UserFollowsModel(store, {actor: name}),
     [store, name],
   )
 

@@ -1,10 +1,10 @@
 import {makeAutoObservable} from 'mobx'
 import {LRUMap} from 'lru_map'
-import {RootStoreModel} from './root-store'
+import {RootStoreModel} from '../root-store'
 import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
 
 type CacheValue = Promise<GetProfile.Response> | GetProfile.Response
-export class ProfilesViewModel {
+export class ProfilesCache {
   cache: LRUMap<string, CacheValue> = new LRUMap(100)
 
   constructor(public rootStore: RootStoreModel) {

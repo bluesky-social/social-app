@@ -2,7 +2,7 @@ import React, {MutableRefObject} from 'react'
 import {observer} from 'mobx-react-lite'
 import {CenteredView, FlatList} from '../util/Views'
 import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
-import {NotificationsViewModel} from 'state/models/notifications-view'
+import {NotificationsFeedModel} from 'state/models/feeds/notifications'
 import {FeedItem} from './FeedItem'
 import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -19,7 +19,7 @@ export const Feed = observer(function Feed({
   onPressTryAgain,
   onScroll,
 }: {
-  view: NotificationsViewModel
+  view: NotificationsFeedModel
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb

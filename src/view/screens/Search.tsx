@@ -16,7 +16,7 @@ import {
 import {observer} from 'mobx-react-lite'
 import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
-import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
+import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {SearchUIModel} from 'state/models/ui/search'
 import {FoafsModel} from 'state/models/discovery/foafs'
 import {SuggestedActorsModel} from 'state/models/discovery/suggested-actors'
@@ -37,8 +37,8 @@ export const SearchScreen = withAuthRequired(
     const onMainScroll = useOnMainScroll(store)
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
-    const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
-      () => new UserAutocompleteViewModel(store),
+    const autocompleteView = React.useMemo<UserAutocompleteModel>(
+      () => new UserAutocompleteModel(store),
       [store],
     )
     const foafs = React.useMemo<FoafsModel>(

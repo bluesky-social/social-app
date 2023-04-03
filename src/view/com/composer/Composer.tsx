@@ -15,7 +15,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {RichText} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics'
-import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
+import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
@@ -69,8 +69,8 @@ export const ComposePost = observer(function ComposePost({
   )
   const [selectedPhotos, setSelectedPhotos] = React.useState<string[]>([])
 
-  const autocompleteView = React.useMemo<UserAutocompleteViewModel>(
-    () => new UserAutocompleteViewModel(store),
+  const autocompleteView = React.useMemo<UserAutocompleteModel>(
+    () => new UserAutocompleteModel(store),
     [store],
   )
 

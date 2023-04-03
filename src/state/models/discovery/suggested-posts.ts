@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {RootStoreModel} from './root-store'
-import {FeedItemModel} from './feed-view'
+import {RootStoreModel} from '../root-store'
+import {PostsFeedItemModel} from '../feeds/posts'
 import {cleanError} from 'lib/strings/errors'
 import {TEAM_HANDLES} from 'lib/constants'
 import {
@@ -8,14 +8,14 @@ import {
   mergePosts,
 } from 'lib/api/build-suggested-posts'
 
-export class SuggestedPostsView {
+export class SuggestedPostsModel {
   // state
   isLoading = false
   hasLoaded = false
   error = ''
 
   // data
-  posts: FeedItemModel[] = []
+  posts: PostsFeedItemModel[] = []
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -57,7 +57,7 @@ export class SuggestedPostsView {
         this.posts = finalPosts.map((post, i) => {
           // strip the reasons to hide that these are reposts
           delete post.reason
-          return new FeedItemModel(this.rootStore, `post-${i}`, post)
+          return new PostsFeedItemModel(this.rootStore, `post-${i}`, post)
         })
       })
       this._xIdle()

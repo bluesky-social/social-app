@@ -1,9 +1,9 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyActorDefs} from '@atproto/api'
 import AwaitLock from 'await-lock'
-import {RootStoreModel} from './root-store'
+import {RootStoreModel} from '../root-store'
 
-export class UserAutocompleteViewModel {
+export class UserAutocompleteModel {
   // state
   isLoading = false
   isActive = false

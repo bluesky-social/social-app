@@ -1,7 +1,7 @@
 import {AppBskyEmbedRecord} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {makeAutoObservable} from 'mobx'
-import {ProfileViewModel} from '../profile-view'
+import {ProfileModel} from '../content/profile'
 import {isObj, hasProp} from 'lib/type-guards'
 import {PickedMedia} from 'lib/media/types'
 
@@ -14,7 +14,7 @@ export interface ConfirmModal {
 
 export interface EditProfileModal {
   name: 'edit-profile'
-  profileView: ProfileViewModel
+  profileView: ProfileModel
   onUpdate?: () => void
 }
 
@@ -77,7 +77,7 @@ interface LightboxModel {}
 
 export class ProfileImageLightbox implements LightboxModel {
   name = 'profile-image'
-  constructor(public profileView: ProfileViewModel) {
+  constructor(public profileView: ProfileModel) {
     makeAutoObservable(this)
   }
 }

@@ -1,7 +1,7 @@
 import notifee, {EventType} from '@notifee/react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {RootStoreModel} from 'state/models/root-store'
-import {NotificationsViewItemModel} from 'state/models/notifications-view'
+import {NotificationsFeedItemModel} from 'state/models/feeds/notifications'
 import {enforceLen} from 'lib/strings/helpers'
 import {resetToTab} from '../Navigation'
 
@@ -40,7 +40,7 @@ export function displayNotification(
 }
 
 export function displayNotificationFromModel(
-  notif: NotificationsViewItemModel,
+  notif: NotificationsFeedItemModel,
 ) {
   let author = notif.author.displayName || notif.author.handle
   let title: string

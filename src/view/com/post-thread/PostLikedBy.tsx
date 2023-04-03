@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
 import {CenteredView, FlatList} from '../util/Views'
-import {LikesViewModel, LikeItem} from 'state/models/likes-view'
+import {LikesModel, LikeItem} from 'state/models/lists/likes'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {useStores} from 'state/index'
@@ -11,10 +11,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 export const PostLikedBy = observer(function ({uri}: {uri: string}) {
   const pal = usePalette('default')
   const store = useStores()
-  const view = React.useMemo(
-    () => new LikesViewModel(store, {uri}),
-    [store, uri],
-  )
+  const view = React.useMemo(() => new LikesModel(store, {uri}), [store, uri])
 
   useEffect(() => {
     view.loadMore().catch(err => store.log.error('Failed to fetch likes', err))

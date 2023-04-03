@@ -1,37 +1,31 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AtUri} from '../../third-party/uri'
-import {
-  AppBskyFeedGetRepostedBy as GetRepostedBy,
-  AppBskyActorDefs,
-} from '@atproto/api'
-import {RootStoreModel} from './root-store'
-import {bundleAsync} from 'lib/async/bundle'
+import {AtUri} from '../../../third-party/uri'
+import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
+import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
+import {bundleAsync} from 'lib/async/bundle'
 import * as apilib from 'lib/api/index'
 
 const PAGE_SIZE = 30
 
-export type RepostedByItem = AppBskyActorDefs.ProfileViewBasic
+export type LikeItem = GetLikes.Like
 
-export class RepostedByViewModel {
+export class LikesModel {
   // state
   isLoading = false
   isRefreshing = false
   hasLoaded = false
   error = ''
   resolvedUri = ''
-  params: GetRepostedBy.QueryParams
+  params: GetLikes.QueryParams
   hasMore = true
   loadMoreCursor?: string
 
   // data
   uri: string = ''
-  repostedBy: RepostedByItem[] = []
+  likes: LikeItem[] = []
 
-  constructor(
-    public rootStore: RootStoreModel,
-    params: GetRepostedBy.QueryParams,
-  ) {
+  constructor(public rootStore: RootStoreModel, params: GetLikes.QueryParams) {
     makeAutoObservable(
       this,
       {
@@ -63,6 +57,9 @@ export class RepostedByViewModel {
   }
 
   loadMore = bundleAsync(async (replace: boolean = false) => {
+    if (!replace && !this.hasMore) {
+      return
+    }
     this._xLoading(replace)
     try {
       if (!this.resolvedUri) {
@@ -73,7 +70,7 @@ export class RepostedByViewModel {
         limit: PAGE_SIZE,
         cursor: replace ? undefined : this.loadMoreCursor,
       })
-      const res = await this.rootStore.agent.getRepostedBy(params)
+      const res = await this.rootStore.agent.getLikes(params)
       if (replace) {
         this._replaceAll(res)
       } else {
@@ -100,7 +97,7 @@ export class RepostedByViewModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch reposted by view', err)
+      this.rootStore.log.error('Failed to fetch likes', err)
     }
   }
 
@@ -121,15 +118,14 @@ export class RepostedByViewModel {
     })
   }
 
-  _replaceAll(res: GetRepostedBy.Response) {
-    this.repostedBy = []
+  _replaceAll(res: GetLikes.Response) {
+    this.likes = []
     this._appendAll(res)
   }
 
-  _appendAll(res: GetRepostedBy.Response) {
+  _appendAll(res: GetLikes.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    this.repostedBy = this.repostedBy.concat(res.data.repostedBy)
-    this.rootStore.me.follows.hydrateProfiles(res.data.repostedBy)
+    this.likes = this.likes.concat(res.data.likes)
   }
 }

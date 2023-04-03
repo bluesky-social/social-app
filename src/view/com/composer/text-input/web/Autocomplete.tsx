@@ -11,7 +11,7 @@ import {
   SuggestionProps,
   SuggestionKeyDownProps,
 } from '@tiptap/suggestion'
-import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
+import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 
 interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
@@ -20,7 +20,7 @@ interface MentionListRef {
 export function createSuggestion({
   autocompleteView,
 }: {
-  autocompleteView: UserAutocompleteViewModel
+  autocompleteView: UserAutocompleteModel
 }): Omit<SuggestionOptions, 'editor'> {
   return {
     async items({query}) {

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import {Animated, TouchableOpacity, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {UserAutocompleteViewModel} from 'state/models/user-autocomplete-view'
+import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
@@ -11,7 +11,7 @@ export const Autocomplete = observer(
     view,
     onSelect,
   }: {
-    view: UserAutocompleteViewModel
+    view: UserAutocompleteModel
     onSelect: (item: string) => void
   }) => {
     const pal = usePalette('default')

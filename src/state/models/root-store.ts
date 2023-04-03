@@ -12,9 +12,9 @@ import {isObj, hasProp} from 'lib/type-guards'
 import {LogModel} from './log'
 import {SessionModel} from './session'
 import {ShellUiModel} from './ui/shell'
-import {ProfilesViewModel} from './profiles-view'
+import {ProfilesCache} from './cache/profiles-view'
 import {LinkMetasCache} from './cache/link-metas'
-import {NotificationsViewItemModel} from './notifications-view'
+import {NotificationsFeedItemModel} from './feeds/notifications'
 import {MeModel} from './me'
 import {PreferencesModel} from './ui/preferences'
 import {resetToTab} from '../../Navigation'
@@ -36,7 +36,7 @@ export class RootStoreModel {
   shell = new ShellUiModel(this)
   preferences = new PreferencesModel()
   me = new MeModel(this)
-  profiles = new ProfilesViewModel(this)
+  profiles = new ProfilesCache(this)
   linkMetas = new LinkMetasCache(this)
   imageSizes = new ImageSizesCache()
 
@@ -205,11 +205,11 @@ export class RootStoreModel {
 
   // a notification has been queued for push
   onPushNotification(
-    handler: (notif: NotificationsViewItemModel) => void,
+    handler: (notif: NotificationsFeedItemModel) => void,
   ): EmitterSubscription {
     return DeviceEventEmitter.addListener('push-notification', handler)
   }
-  emitPushNotification(notif: NotificationsViewItemModel) {
+  emitPushNotification(notif: NotificationsFeedItemModel) {
     DeviceEventEmitter.emit('push-notification', notif)
   }
 
