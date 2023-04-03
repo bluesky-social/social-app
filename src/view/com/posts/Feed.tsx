@@ -13,6 +13,7 @@ import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {FeedSlice} from './FeedSlice'
+import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
@@ -21,6 +22,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
+const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
 export const Feed = observer(function Feed({
   feed,
@@ -58,11 +60,21 @@ export const Feed = observer(function Feed({
       } else {
         feedItems = feedItems.concat(feed.slices)
       }
+      if (feed.loadMoreError) {
+        feedItems = feedItems.concat([LOAD_MORE_ERROR_ITEM])
+      }
     } else if (feed.isLoading) {
       feedItems = feedItems.concat([LOADING_ITEM])
     }
     return feedItems
-  }, [feed.hasError, feed.hasLoaded, feed.isLoading, feed.isEmpty, feed.slices])
+  }, [
+    feed.hasError,
+    feed.hasLoaded,
+    feed.isLoading,
+    feed.isEmpty,
+    feed.slices,
+    feed.loadMoreError,
+  ])
 
   // events
   // =
@@ -87,6 +99,10 @@ export const Feed = observer(function Feed({
     }
   }, [feed, track])
 
+  const onPressRetryLoadMore = React.useCallback(() => {
+    feed.retryLoadMore()
+  }, [feed])
+
   // rendering
   // =
 
@@ -104,12 +120,25 @@ export const Feed = observer(function Feed({
             onPressTryAgain={onPressTryAgain}
           />
         )
+      } else if (item === LOAD_MORE_ERROR_ITEM) {
+        return (
+          <LoadMoreRetryBtn
+            label="There was an issue fetching posts. Tap here to try again."
+            onPress={onPressRetryLoadMore}
+          />
+        )
       } else if (item === LOADING_ITEM) {
         return <PostFeedLoadingPlaceholder />
       }
       return <FeedSlice slice={item} showFollowBtn={showPostFollowBtn} />
     },
-    [feed, onPressTryAgain, showPostFollowBtn, renderEmptyState],
+    [
+      feed,
+      onPressTryAgain,
+      onPressRetryLoadMore,
+      showPostFollowBtn,
+      renderEmptyState,
+    ],
   )
 
   const FeedFooter = React.useCallback(

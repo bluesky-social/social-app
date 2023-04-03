@@ -213,6 +213,7 @@ export class PostsFeedModel {
   hasNewLatest = false
   hasLoaded = false
   error = ''
+  loadMoreError = ''
   params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams
   hasMore = true
   loadMoreCursor: string | undefined
@@ -382,17 +383,24 @@ export class PostsFeedModel {
         await this._appendAll(res)
         this._xIdle()
       } catch (e: any) {
-        this._xIdle() // don't bubble the error to the user
-        this.rootStore.log.error('FeedView: Failed to load more', {
-          params: this.params,
-          e,
+        this._xIdle(undefined, e)
+        runInAction(() => {
+          this.hasMore = false
         })
-        this.hasMore = false
       }
     } finally {
       this.lock.release()
     }
   })
+
+  /**
+   * Attempt to load more again after a failure
+   */
+  async retryLoadMore() {
+    this.loadMoreError = ''
+    this.hasMore = true
+    return this.loadMore()
+  }
 
   /**
    * Update content in-place
@@ -503,13 +511,20 @@ export class PostsFeedModel {
     this.error = ''
   }
 
-  _xIdle(err?: any) {
+  _xIdle(error?: any, loadMoreError?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = cleanError(err)
-    if (err) {
-      this.rootStore.log.error('Posts feed request failed', err)
+    this.error = cleanError(error)
+    this.loadMoreError = cleanError(loadMoreError)
+    if (error) {
+      this.rootStore.log.error('Posts feed request failed', error)
+    }
+    if (loadMoreError) {
+      this.rootStore.log.error(
+        'Posts feed load-more request failed',
+        loadMoreError,
+      )
     }
   }
 

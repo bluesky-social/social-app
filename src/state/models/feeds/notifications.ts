@@ -191,6 +191,7 @@ export class NotificationsFeedModel {
   isRefreshing = false
   hasLoaded = false
   error = ''
+  loadMoreError = ''
   params: ListNotifications.QueryParams
   hasMore = true
   loadMoreCursor?: string
@@ -305,16 +306,24 @@ export class NotificationsFeedModel {
         await this._appendAll(res)
         this._xIdle()
       } catch (e: any) {
-        this._xIdle() // don't bubble the error to the user
-        this.rootStore.log.error('NotificationsView: Failed to load more', {
-          params: this.params,
-          e,
+        this._xIdle(undefined, e)
+        runInAction(() => {
+          this.hasMore = false
         })
       }
     } finally {
       this.lock.release()
     }
   })
+
+  /**
+   * Attempt to load more again after a failure
+   */
+  async retryLoadMore() {
+    this.loadMoreError = ''
+    this.hasMore = true
+    return this.loadMore()
+  }
 
   /**
    * Load more posts at the start of the notifications
@@ -443,13 +452,20 @@ export class NotificationsFeedModel {
     this.error = ''
   }
 
-  _xIdle(err?: any) {
+  _xIdle(error?: any, loadMoreError?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
-    this.error = cleanError(err)
-    if (err) {
-      this.rootStore.log.error('Failed to fetch notifications', err)
+    this.error = cleanError(error)
+    this.loadMoreError = cleanError(loadMoreError)
+    if (error) {
+      this.rootStore.log.error('Failed to fetch notifications', error)
+    }
+    if (loadMoreError) {
+      this.rootStore.log.error(
+        'Failed to load more notifications',
+        loadMoreError,
+      )
     }
   }
 

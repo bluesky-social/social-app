@@ -1,6 +1,6 @@
 import {library} from '@fortawesome/fontawesome-svg-core'
 
-import {faAddressCard} from '@fortawesome/free-regular-svg-icons/faAddressCard'
+import {faAddressCard} from '@fortawesome/free-regular-svg-icons'
 import {faAngleDown} from '@fortawesome/free-solid-svg-icons/faAngleDown'
 import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft'
 import {faAngleRight} from '@fortawesome/free-solid-svg-icons/faAngleRight'
@@ -14,6 +14,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import {faArrowUpFromBracket} from '@fortawesome/free-solid-svg-icons/faArrowUpFromBracket'
 import {faArrowUpRightFromSquare} from '@fortawesome/free-solid-svg-icons/faArrowUpRightFromSquare'
+import {faArrowRotateLeft} from '@fortawesome/free-solid-svg-icons/faArrowRotateLeft'
 import {faArrowsRotate} from '@fortawesome/free-solid-svg-icons/faArrowsRotate'
 import {faAt} from '@fortawesome/free-solid-svg-icons/faAt'
 import {faBars} from '@fortawesome/free-solid-svg-icons/faBars'
@@ -86,6 +87,7 @@ export function setup() {
     faArrowRightFromBracket,
     faArrowUpFromBracket,
     faArrowUpRightFromSquare,
+    faArrowRotateLeft,
     faArrowsRotate,
     faAt,
     faBars,
