@@ -3,7 +3,7 @@ module github.com/bluesky-social/social-app/bskyweb
 go 1.20
 
 require (
-	github.com/bluesky-social/indigo v0.0.0-20230402165318-56d29448c031
+	github.com/bluesky-social/indigo v0.0.0-20230403211508-3cb4320bd5c8
 	github.com/flosch/pongo2/v6 v6.0.0
 	github.com/ipfs/go-log v1.0.5
 	github.com/joho/godotenv v1.5.1
