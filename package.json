@@ -40,6 +40,8 @@
     "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
+    "@segment/analytics-next": "^1.51.3",
+    "@segment/analytics-react": "^1.0.0-rc1",
     "@segment/analytics-react-native": "^2.10.1",
     "@segment/sovran-react-native": "^0.4.5",
     "@tiptap/core": "^2.0.0-beta.220",
