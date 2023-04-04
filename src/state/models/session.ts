@@ -25,6 +25,7 @@ export const accountData = z.object({
   accessJwt: z.string().optional(),
   handle: z.string(),
   did: z.string(),
+  email: z.string().optional(),
   displayName: z.string().optional(),
   aviUrl: z.string().optional(),
 })
@@ -201,6 +202,7 @@ export class SessionModel {
       accessJwt,
 
       handle: session?.handle || existingAccount?.handle || '',
+      email: session?.email || existingAccount?.email || '',
       displayName: addedInfo
         ? addedInfo.displayName
         : existingAccount?.displayName || '',

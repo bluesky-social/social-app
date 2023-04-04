@@ -7,6 +7,7 @@ import {
 } from '@segment/analytics-react-native'
 import {RootStoreModel, AppInfo} from 'state/models/root-store'
 import {useStores} from 'state/models/root-store'
+import {sha256} from 'js-sha256'
 
 const segmentClient = createClient({
   writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
@@ -34,8 +35,22 @@ export function useAnalytics() {
 }
 
 export function init(store: RootStoreModel) {
+  store.onSessionLoaded(() => {
+    const sess = store.session.currentSession
+    if (sess) {
+      if (sess.email) {
+        store.log.debug('Ping w/hash')
+        const email_hashed = sha256(sess.email)
+        segmentClient.identify(email_hashed, {email_hashed})
+      } else {
+        store.log.debug('Ping w/o hash')
+        segmentClient.identify()
+      }
+    }
+  })
+
   // NOTE
-  // this method is a copy of segment's own lifecycle event tracking
+  // this is a copy of segment's own lifecycle event tracking
   // we handle it manually to ensure that it never fires while the app is backgrounded
   // -prf
   segmentClient.isReady.onChange(() => {

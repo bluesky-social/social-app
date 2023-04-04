@@ -6,6 +6,7 @@ import {
 } from '@segment/analytics-react'
 import {RootStoreModel} from 'state/models/root-store'
 import {useStores} from 'state/models/root-store'
+import {sha256} from 'js-sha256'
 
 const segmentClient = createClient(
   {
@@ -26,7 +27,6 @@ export function useAnalytics() {
   const methods = useAnalyticsOrig()
   return React.useMemo(() => {
     if (store.session.hasSession) {
-      console.log('real')
       return methods
     }
     // dont send analytics pings for anonymous users
@@ -42,8 +42,20 @@ export function useAnalytics() {
   }, [store, methods])
 }
 
-export function init(_store: RootStoreModel) {
-  // no init needed on web
+export function init(store: RootStoreModel) {
+  store.onSessionLoaded(() => {
+    const sess = store.session.currentSession
+    if (sess) {
+      if (sess.email) {
+        store.log.debug('Ping w/hash')
+        const email_hashed = sha256(sess.email)
+        segmentClient.identify(email_hashed, {email_hashed})
+      } else {
+        store.log.debug('Ping w/o hash')
+        segmentClient.identify()
+      }
+    }
+  })
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
