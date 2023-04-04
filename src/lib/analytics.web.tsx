@@ -2,9 +2,18 @@ import React from 'react'
 import {createClient, AnalyticsProvider} from '@segment/analytics-react'
 import {RootStoreModel} from 'state/models/root-store'
 
-const segmentClient = createClient({
-  writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
-})
+const segmentClient = createClient(
+  {
+    writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
+  },
+  {
+    integrations: {
+      'Segment.io': {
+        apiHost: 'api.evt.bsky.app/v1',
+      },
+    },
+  },
+)
 export const track = segmentClient?.track?.bind?.(segmentClient)
 
 export {useAnalytics} from '@segment/analytics-react'
