@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import * as view from './view/index'
+import * as analytics from 'lib/analytics'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from './view/shell/index'
 import {ToastContainer} from './view/com/util/Toast.web'
@@ -16,6 +17,7 @@ function App() {
     view.setup()
     setupState().then(store => {
       setRootStore(store)
+      analytics.init(store)
     })
   }, [])
 
@@ -26,12 +28,14 @@ function App() {
 
   return (
     <RootSiblingParent>
-      <RootStoreProvider value={rootStore}>
-        <SafeAreaProvider>
-          <Shell />
-        </SafeAreaProvider>
-        <ToastContainer />
-      </RootStoreProvider>
+      <analytics.Provider>
+        <RootStoreProvider value={rootStore}>
+          <SafeAreaProvider>
+            <Shell />
+          </SafeAreaProvider>
+          <ToastContainer />
+        </RootStoreProvider>
+      </analytics.Provider>
     </RootSiblingParent>
   )
 }
