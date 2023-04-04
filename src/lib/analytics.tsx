@@ -1,15 +1,36 @@
 import React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
-import {createClient, AnalyticsProvider} from '@segment/analytics-react-native'
+import {
+  createClient,
+  AnalyticsProvider,
+  useAnalytics as useAnalyticsOrig,
+} from '@segment/analytics-react-native'
 import {RootStoreModel, AppInfo} from 'state/models/root-store'
+import {useStores} from 'state/models/root-store'
 
 const segmentClient = createClient({
   writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
   trackAppLifecycleEvents: false,
 })
-export const track = segmentClient?.track?.bind?.(segmentClient)
 
-export {useAnalytics} from '@segment/analytics-react-native'
+export function useAnalytics() {
+  const store = useStores()
+  const methods = useAnalyticsOrig()
+  return React.useMemo(() => {
+    if (store.session.hasSession) {
+      return methods
+    }
+    return {
+      screen: () => {},
+      track: () => {},
+      identify: () => {},
+      flush: () => {},
+      group: () => {},
+      alias: () => {},
+      reset: () => {},
+    }
+  }, [store, methods])
+}
 
 export function init(store: RootStoreModel) {
   // NOTE
@@ -33,23 +54,29 @@ export function init(store: RootStoreModel) {
     store.log.debug('Recording app info', {new: newAppInfo, old: oldAppInfo})
 
     if (typeof oldAppInfo === 'undefined') {
-      segmentClient.track('Application Installed', {
-        version: newAppInfo.version,
-        build: newAppInfo.build,
-      })
+      if (store.session.hasSession) {
+        segmentClient.track('Application Installed', {
+          version: newAppInfo.version,
+          build: newAppInfo.build,
+        })
+      }
     } else if (newAppInfo.version !== oldAppInfo.version) {
-      segmentClient.track('Application Updated', {
+      if (store.session.hasSession) {
+        segmentClient.track('Application Updated', {
+          version: newAppInfo.version,
+          build: newAppInfo.build,
+          previous_version: oldAppInfo.version,
+          previous_build: oldAppInfo.build,
+        })
+      }
+    }
+    if (store.session.hasSession) {
+      segmentClient.track('Application Opened', {
+        from_background: false,
         version: newAppInfo.version,
         build: newAppInfo.build,
-        previous_version: oldAppInfo.version,
-        previous_build: oldAppInfo.build,
       })
     }
-    segmentClient.track('Application Opened', {
-      from_background: false,
-      version: newAppInfo.version,
-      build: newAppInfo.build,
-    })
   })
 
   let lastState: AppStateStatus = AppState.currentState
