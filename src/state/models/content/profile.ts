@@ -8,6 +8,7 @@ import {
 import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
+import {FollowState} from '../cache/my-follows'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
 
@@ -89,9 +90,10 @@ export class ProfileModel {
     }
 
     const follows = this.rootStore.me.follows
-    const followUri = follows.isFollowing(this.did)
-      ? follows.getFollowUri(this.did)
-      : undefined
+    const followUri =
+      (await follows.fetchFollowState(this.did)) === FollowState.Following
+        ? follows.getFollowUri(this.did)
+        : undefined
 
     // guard against this view getting out of sync with the follows cache
     if (followUri !== this.viewer.following) {

@@ -1,12 +1,14 @@
-import {makeAutoObservable, runInAction} from 'mobx'
-import {FollowRecord, AppBskyActorDefs} from '@atproto/api'
+import {makeAutoObservable} from 'mobx'
+import {AppBskyActorDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
-import {bundleAsync} from 'lib/async/bundle'
 
-const CACHE_TTL = 1000 * 60 * 60 // hourly
-type FollowsListResponse = Awaited<ReturnType<FollowRecord['list']>>
-type FollowsListResponseRecord = FollowsListResponse['records'][0]
 type Profile = AppBskyActorDefs.ProfileViewBasic | AppBskyActorDefs.ProfileView
+
+export enum FollowState {
+  Following,
+  NotFollowing,
+  Unknown,
+}
 
 /**
  * This model is used to maintain a synced local cache of the user's
@@ -15,7 +17,7 @@ type Profile = AppBskyActorDefs.ProfileViewBasic | AppBskyActorDefs.ProfileView
  */
 export class MyFollowsCache {
   // data
-  followDidToRecordMap: Record<string, string> = {}
+  followDidToRecordMap: Record<string, string | boolean> = {}
   lastSync = 0
   myDid?: string
 
@@ -38,58 +40,33 @@ export class MyFollowsCache {
     this.myDid = undefined
   }
 
-  fetchIfNeeded = bundleAsync(async () => {
-    if (
-      this.myDid !== this.rootStore.me.did ||
-      Object.keys(this.followDidToRecordMap).length === 0 ||
-      Date.now() - this.lastSync > CACHE_TTL
-    ) {
-      return await this.fetch()
+  getFollowState(did: string): FollowState {
+    if (typeof this.followDidToRecordMap[did] === 'undefined') {
+      return FollowState.Unknown
     }
-  })
-
-  fetch = bundleAsync(async () => {
-    this.rootStore.log.debug('MyFollowsModel:fetch running full fetch')
-    let rkeyStart
-    let records: FollowsListResponseRecord[] = []
-    do {
-      const res: FollowsListResponse =
-        await this.rootStore.agent.app.bsky.graph.follow.list({
-          repo: this.rootStore.me.did,
-          rkeyStart,
-          reverse: true,
-        })
-      records = records.concat(res.records)
-      rkeyStart = res.cursor
-    } while (typeof rkeyStart !== 'undefined')
-    runInAction(() => {
-      this.followDidToRecordMap = {}
-      for (const record of records) {
-        this.followDidToRecordMap[record.value.subject] = record.uri
-      }
-      this.lastSync = Date.now()
-      this.myDid = this.rootStore.me.did
-    })
-  })
-
-  isFollowing(did: string) {
-    return !!this.followDidToRecordMap[did]
+    if (typeof this.followDidToRecordMap[did] === 'string') {
+      return FollowState.Following
+    }
+    return FollowState.NotFollowing
   }
 
-  get numFollows() {
-    return Object.keys(this.followDidToRecordMap).length
-  }
-
-  get isEmpty() {
-    return Object.keys(this.followDidToRecordMap).length === 0
+  async fetchFollowState(did: string): Promise<FollowState> {
+    // TODO: can we get a more efficient method for this? getProfile fetches more data than we need -prf
+    const res = await this.rootStore.agent.getProfile({actor: did})
+    if (res.data.viewer?.following) {
+      this.addFollow(did, res.data.viewer.following)
+    } else {
+      this.removeFollow(did)
+    }
+    return this.getFollowState(did)
   }
 
   getFollowUri(did: string): string {
     const v = this.followDidToRecordMap[did]
-    if (!v) {
-      throw new Error('Not a followed user')
+    if (typeof v === 'string') {
+      return v
     }
-    return v
+    throw new Error('Not a followed user')
   }
 
   addFollow(did: string, recordUri: string) {
@@ -97,7 +74,7 @@ export class MyFollowsCache {
   }
 
   removeFollow(did: string) {
-    delete this.followDidToRecordMap[did]
+    this.followDidToRecordMap[did] = false
   }
 
   /**
@@ -107,7 +84,7 @@ export class MyFollowsCache {
     if (recordUri) {
       this.followDidToRecordMap[did] = recordUri
     } else {
-      delete this.followDidToRecordMap[did]
+      this.followDidToRecordMap[did] = false
     }
   }
 

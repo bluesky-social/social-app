@@ -8,6 +8,7 @@ import {useStores} from 'state/index'
 import {UserAvatar} from './UserAvatar'
 import {observer} from 'mobx-react-lite'
 import FollowButton from '../profile/FollowButton'
+import {FollowState} from 'state/models/cache/my-follows'
 
 interface PostMetaOpts {
   authorAvatar?: string
@@ -25,15 +26,22 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
   const handle = opts.authorHandle
   const store = useStores()
   const isMe = opts.did === store.me.did
-  const isFollowing =
-    typeof opts.did === 'string' && store.me.follows.isFollowing(opts.did)
+  const followState =
+    typeof opts.did === 'string'
+      ? store.me.follows.getFollowState(opts.did)
+      : FollowState.Unknown
 
   const [didFollow, setDidFollow] = React.useState(false)
   const onToggleFollow = React.useCallback(() => {
     setDidFollow(true)
   }, [setDidFollow])
 
-  if (opts.showFollowBtn && !isMe && (!isFollowing || didFollow) && opts.did) {
+  if (
+    opts.showFollowBtn &&
+    !isMe &&
+    (followState === FollowState.NotFollowing || didFollow) &&
+    opts.did
+  ) {
     // two-liner with follow button
     return (
       <View style={styles.metaTwoLine}>

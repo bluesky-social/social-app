@@ -110,7 +110,6 @@ export class SuggestedActorsModel {
     if (this.hardCodedSuggestions) {
       return
     }
-    await this.rootStore.me.follows.fetchIfNeeded()
     try {
       // clone the array so we can mutate it
       const actors = [
@@ -128,9 +127,11 @@ export class SuggestedActorsModel {
         profiles = profiles.concat(res.data.profiles)
       } while (actors.length)
 
+      this.rootStore.me.follows.hydrateProfiles(profiles)
+
       runInAction(() => {
         profiles = profiles.filter(profile => {
-          if (this.rootStore.me.follows.isFollowing(profile.did)) {
+          if (profile.viewer?.following) {
             return false
           }
           if (profile.did === this.rootStore.me.did) {

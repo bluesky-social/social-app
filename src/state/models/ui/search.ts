@@ -43,6 +43,9 @@ export class SearchUIModel {
         profiles = profiles.concat(res.data.profiles)
       } while (profilesSearch.length)
     }
+
+    this.rootStore.me.follows.hydrateProfiles(profiles)
+
     runInAction(() => {
       this.profiles = profiles
       this.isProfilesLoading = false

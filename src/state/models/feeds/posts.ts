@@ -543,6 +543,10 @@ export class PostsFeedModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
 
+    this.rootStore.me.follows.hydrateProfiles(
+      res.data.feed.map(item => item.post.author),
+    )
+
     const slices = this.tuner.tune(res.data.feed, this.feedTuners)
 
     const toAppend: PostsFeedSliceModel[] = []
