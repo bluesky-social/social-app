@@ -1,6 +1,11 @@
 import React from 'react'
-import {createClient, AnalyticsProvider} from '@segment/analytics-react'
+import {
+  createClient,
+  AnalyticsProvider,
+  useAnalytics as useAnalyticsOrig,
+} from '@segment/analytics-react'
 import {RootStoreModel} from 'state/models/root-store'
+import {useStores} from 'state/models/root-store'
 
 const segmentClient = createClient(
   {
@@ -16,7 +21,26 @@ const segmentClient = createClient(
 )
 export const track = segmentClient?.track?.bind?.(segmentClient)
 
-export {useAnalytics} from '@segment/analytics-react'
+export function useAnalytics() {
+  const store = useStores()
+  const methods = useAnalyticsOrig()
+  return React.useMemo(() => {
+    if (store.session.hasSession) {
+      console.log('real')
+      return methods
+    }
+    // dont send analytics pings for anonymous users
+    return {
+      screen: () => {},
+      track: () => {},
+      identify: () => {},
+      flush: () => {},
+      group: () => {},
+      alias: () => {},
+      reset: () => {},
+    }
+  }, [store, methods])
+}
 
 export function init(_store: RootStoreModel) {
   // no init needed on web

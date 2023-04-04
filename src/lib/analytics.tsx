@@ -20,6 +20,7 @@ export function useAnalytics() {
     if (store.session.hasSession) {
       return methods
     }
+    // dont send analytics pings for anonymous users
     return {
       screen: () => {},
       track: () => {},
