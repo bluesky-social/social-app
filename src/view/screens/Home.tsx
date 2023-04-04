@@ -71,7 +71,7 @@ export const HomeScreen = withAuthRequired((_opts: Props) => {
     return <FollowingEmptyState />
   }, [])
 
-  const initialPage = store.me.follows.isEmpty ? 1 : 0
+  const initialPage = store.me.followsCount === 0 ? 1 : 0
   return (
     <Pager
       testID="homeScreen"

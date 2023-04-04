@@ -38,7 +38,24 @@ export class FoafsModel {
   fetch = bundleAsync(async () => {
     try {
       this.isLoading = true
-      await this.rootStore.me.follows.fetchIfNeeded()
+
+      // fetch & hydrate up to 1000 follows
+      {
+        let cursor
+        for (let i = 0; i < 10; i++) {
+          const res = await this.rootStore.agent.getFollows({
+            actor: this.rootStore.me.did,
+            cursor,
+            limit: 100,
+          })
+          this.rootStore.me.follows.hydrateProfiles(res.data.follows)
+          if (!res.data.cursor) {
+            break
+          }
+          cursor = res.data.cursor
+        }
+      }
+
       // grab 10 of the users followed by the user
       this.sources = sampleSize(
         Object.keys(this.rootStore.me.follows.followDidToRecordMap),
@@ -66,14 +83,16 @@ export class FoafsModel {
       const popular: RefWithInfoAndFollowers[] = []
       for (let i = 0; i < results.length; i++) {
         const res = results[i]
+        if (res.status === 'fulfilled') {
+          this.rootStore.me.follows.hydrateProfiles(res.value.data.follows)
+        }
         const profile = profiles.data.profiles[i]
         const source = this.sources[i]
         if (res.status === 'fulfilled' && profile) {
           // filter out users already followed by the user or that *is* the user
           res.value.data.follows = res.value.data.follows.filter(follow => {
             return (
-              follow.did !== this.rootStore.me.did &&
-              !this.rootStore.me.follows.isFollowing(follow.did)
+              follow.did !== this.rootStore.me.did && !follow.viewer?.following
             )
           })
 

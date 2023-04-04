@@ -30,6 +30,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {isDesktopWeb} from 'platform/detection'
+import {FollowState} from 'state/models/cache/my-follows'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
@@ -219,7 +220,8 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
             </TouchableOpacity>
           ) : (
             <>
-              {store.me.follows.isFollowing(view.did) ? (
+              {store.me.follows.getFollowState(view.did) ===
+              FollowState.Following ? (
                 <TouchableOpacity
                   testID="unfollowBtn"
                   onPress={onPressToggleFollow}
