@@ -1,13 +1,16 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {DesktopSearch} from './Search'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
 import {FEEDBACK_FORM_URL} from 'lib/constants'
-import {s} from 'lib/styles'
+import {s, colors} from 'lib/styles'
 import {useStores} from 'state/index'
+import {pluralize} from 'lib/strings/helpers'
 
 export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores()
@@ -38,9 +41,37 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
           />
         </View>
       </View>
+      <InviteCodes />
     </View>
   )
 })
+
+function InviteCodes() {
+  const store = useStores()
+  const pal = usePalette('default')
+
+  const numCodes = 1
+  const onPress = React.useCallback(() => {
+    store.shell.openModal({name: 'invite-codes'})
+  }, [store])
+  return (
+    <TouchableOpacity
+      style={[styles.inviteCodes, pal.border]}
+      onPress={onPress}>
+      <FontAwesomeIcon
+        icon="ticket"
+        style={[
+          styles.inviteCodesIcon,
+          numCodes > 0 ? pal.link : pal.textLight,
+        ]}
+        size={16}
+      />
+      <Text type="md-medium" style={numCodes > 0 ? pal.link : pal.textLight}>
+        {numCodes} invite {pluralize(numCodes, 'code')} available
+      </Text>
+    </TouchableOpacity>
+  )
+}
 
 const styles = StyleSheet.create({
   rightNav: {
@@ -56,5 +87,17 @@ const styles = StyleSheet.create({
   },
   messageLine: {
     marginBottom: 10,
+  },
+
+  inviteCodes: {
+    marginTop: 12,
+    borderTopWidth: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inviteCodesIcon: {
+    marginRight: 6,
   },
 })

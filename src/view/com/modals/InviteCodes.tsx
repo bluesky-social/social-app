@@ -11,6 +11,7 @@ import * as Toast from '../util/Toast'
 import {useStores} from 'state/index'
 import {ScrollView} from './util'
 import {usePalette} from 'lib/hooks/usePalette'
+import {isDesktopWeb} from 'platform/detection'
 
 export const snapPoints = ['70%']
 
@@ -114,7 +115,7 @@ function InviteCode({code, used}: {code: string; used?: boolean}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 50,
+    paddingBottom: isDesktopWeb ? 0 : 50,
   },
   title: {
     textAlign: 'center',
