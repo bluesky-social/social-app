@@ -1,14 +1,13 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {DesktopSearch} from './Search'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
 import {FEEDBACK_FORM_URL} from 'lib/constants'
-import {s, colors} from 'lib/styles'
+import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {pluralize} from 'lib/strings/helpers'
 
@@ -50,7 +49,6 @@ function InviteCodes() {
   const store = useStores()
   const pal = usePalette('default')
 
-  const numCodes = 1
   const onPress = React.useCallback(() => {
     store.shell.openModal({name: 'invite-codes'})
   }, [store])
@@ -62,12 +60,15 @@ function InviteCodes() {
         icon="ticket"
         style={[
           styles.inviteCodesIcon,
-          numCodes > 0 ? pal.link : pal.textLight,
+          store.me.invitesAvailable > 0 ? pal.link : pal.textLight,
         ]}
         size={16}
       />
-      <Text type="md-medium" style={numCodes > 0 ? pal.link : pal.textLight}>
-        {numCodes} invite {pluralize(numCodes, 'code')} available
+      <Text
+        type="md-medium"
+        style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}>
+        {store.me.invitesAvailable} invite{' '}
+        {pluralize(store.me.invitesAvailable, 'code')} available
       </Text>
     </TouchableOpacity>
   )

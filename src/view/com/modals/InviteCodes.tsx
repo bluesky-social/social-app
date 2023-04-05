@@ -5,7 +5,6 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import Clipboard from '@react-native-clipboard/clipboard'
-import {ComAtprotoServerDefs} from '@atproto/api'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
