@@ -35,6 +35,7 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
             Invite code
           </Text>
           <TextInput
+            testID="inviteCodeInput"
             icon="ticket"
             placeholder="Required for this provider"
             value={model.inviteCode}

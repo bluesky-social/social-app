@@ -6,13 +6,15 @@ import {useStores} from 'state/index'
 import * as Toast from '../util/Toast'
 import {FollowState} from 'state/models/cache/my-follows'
 
-const FollowButton = observer(
+export const FollowButton = observer(
   ({
-    type = 'inverted',
+    unfollowedType = 'inverted',
+    followedType = 'inverted',
     did,
     onToggleFollow,
   }: {
-    type?: ButtonType
+    unfollowedType?: ButtonType
+    followedType?: ButtonType
     did: string
     onToggleFollow?: (v: boolean) => void
   }) => {
@@ -48,12 +50,12 @@ const FollowButton = observer(
 
     return (
       <Button
-        type={followState === FollowState.Following ? 'default' : type}
+        type={
+          followState === FollowState.Following ? followedType : unfollowedType
+        }
         onPress={onToggleFollowInner}
         label={followState === FollowState.Following ? 'Unfollow' : 'Follow'}
       />
     )
   },
 )
-
-export default FollowButton

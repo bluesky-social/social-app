@@ -103,62 +103,18 @@ export const DrawerContent = observer(() => {
     store.shell.closeDrawer()
   }, [navigation, track, store.shell])
 
-  const onPressFeedback = () => {
+  const onPressFeedback = React.useCallback(() => {
     track('Menu:FeedbackClicked')
     Linking.openURL(FEEDBACK_FORM_URL)
-  }
+  }, [track])
+
+  const onDarkmodePress = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: '#darkmode'})
+    store.shell.setDarkMode(!store.shell.darkMode)
+  }, [track, store])
 
   // rendering
   // =
-
-  const MenuItem = ({
-    icon,
-    label,
-    count,
-    bold,
-    onPress,
-  }: {
-    icon: JSX.Element
-    label: string
-    count?: number
-    bold?: boolean
-    onPress: () => void
-  }) => (
-    <TouchableOpacity
-      testID={`menuItemButton-${label}`}
-      style={styles.menuItem}
-      onPress={onPress}>
-      <View style={[styles.menuItemIconWrapper]}>
-        {icon}
-        {count ? (
-          <View
-            style={[
-              styles.menuItemCount,
-              count > 99
-                ? styles.menuItemCountHundreds
-                : count > 9
-                ? styles.menuItemCountTens
-                : undefined,
-            ]}>
-            <Text style={styles.menuItemCountLabel} numberOfLines={1}>
-              {count > 999 ? `${Math.round(count / 1000)}k` : count}
-            </Text>
-          </View>
-        ) : undefined}
-      </View>
-      <Text
-        type={bold ? '2xl-bold' : '2xl'}
-        style={[pal.text, s.flex1]}
-        numberOfLines={1}>
-        {label}
-      </Text>
-    </TouchableOpacity>
-  )
-
-  const onDarkmodePress = () => {
-    track('Menu:ItemClicked', {url: '/darkmode'})
-    store.shell.setDarkMode(!store.shell.darkMode)
-  }
 
   return (
     <View
@@ -168,29 +124,34 @@ export const DrawerContent = observer(() => {
         theme.colorScheme === 'light' ? pal.view : styles.viewDarkMode,
       ]}>
       <SafeAreaView style={s.flex1}>
-        <TouchableOpacity testID="profileCardButton" onPress={onPressProfile}>
-          <UserAvatar size={80} avatar={store.me.avatar} />
-          <Text
-            type="title-lg"
-            style={[pal.text, s.bold, styles.profileCardDisplayName]}>
-            {store.me.displayName || store.me.handle}
-          </Text>
-          <Text type="2xl" style={[pal.textLight, styles.profileCardHandle]}>
-            @{store.me.handle}
-          </Text>
-          <Text type="xl" style={[pal.textLight, styles.profileCardFollowers]}>
-            <Text type="xl-medium" style={pal.text}>
-              {store.me.followersCount || 0}
-            </Text>{' '}
-            {pluralize(store.me.followersCount || 0, 'follower')} &middot;{' '}
-            <Text type="xl-medium" style={pal.text}>
-              {store.me.followsCount || 0}
-            </Text>{' '}
-            following
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.main}>
+          <TouchableOpacity testID="profileCardButton" onPress={onPressProfile}>
+            <UserAvatar size={80} avatar={store.me.avatar} />
+            <Text
+              type="title-lg"
+              style={[pal.text, s.bold, styles.profileCardDisplayName]}>
+              {store.me.displayName || store.me.handle}
+            </Text>
+            <Text type="2xl" style={[pal.textLight, styles.profileCardHandle]}>
+              @{store.me.handle}
+            </Text>
+            <Text
+              type="xl"
+              style={[pal.textLight, styles.profileCardFollowers]}>
+              <Text type="xl-medium" style={pal.text}>
+                {store.me.followersCount || 0}
+              </Text>{' '}
+              {pluralize(store.me.followersCount || 0, 'follower')} &middot;{' '}
+              <Text type="xl-medium" style={pal.text}>
+                {store.me.followsCount || 0}
+              </Text>{' '}
+              following
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <InviteCodes />
         <View style={s.flex1} />
-        <View>
+        <View style={styles.main}>
           <MenuItem
             icon={
               isAtSearch ? (
@@ -248,7 +209,9 @@ export const DrawerContent = observer(() => {
               )
             }
             label="Notifications"
-            count={store.me.notifications.unreadCount}
+            count={
+              store.me.notifications.unreadCount + store.invitedUsers.numNotifs
+            }
             bold={isAtNotifications}
             onPress={onPressNotifications}
           />
@@ -315,15 +278,96 @@ export const DrawerContent = observer(() => {
   )
 })
 
+function MenuItem({
+  icon,
+  label,
+  count,
+  bold,
+  onPress,
+}: {
+  icon: JSX.Element
+  label: string
+  count?: number
+  bold?: boolean
+  onPress: () => void
+}) {
+  const pal = usePalette('default')
+  return (
+    <TouchableOpacity
+      testID={`menuItemButton-${label}`}
+      style={styles.menuItem}
+      onPress={onPress}>
+      <View style={[styles.menuItemIconWrapper]}>
+        {icon}
+        {count ? (
+          <View
+            style={[
+              styles.menuItemCount,
+              count > 99
+                ? styles.menuItemCountHundreds
+                : count > 9
+                ? styles.menuItemCountTens
+                : undefined,
+            ]}>
+            <Text style={styles.menuItemCountLabel} numberOfLines={1}>
+              {count > 999 ? `${Math.round(count / 1000)}k` : count}
+            </Text>
+          </View>
+        ) : undefined}
+      </View>
+      <Text
+        type={bold ? '2xl-bold' : '2xl'}
+        style={[pal.text, s.flex1]}
+        numberOfLines={1}>
+        {label}
+      </Text>
+    </TouchableOpacity>
+  )
+}
+
+const InviteCodes = observer(() => {
+  const {track} = useAnalytics()
+  const store = useStores()
+  const pal = usePalette('default')
+  const onPress = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: '#invite-codes'})
+    store.shell.closeDrawer()
+    store.shell.openModal({name: 'invite-codes'})
+  }, [store, track])
+  return (
+    <TouchableOpacity
+      testID="menuItemInviteCodes"
+      style={[styles.inviteCodes]}
+      onPress={onPress}>
+      <FontAwesomeIcon
+        icon="ticket"
+        style={[
+          styles.inviteCodesIcon,
+          store.me.invitesAvailable > 0 ? pal.link : pal.textLight,
+        ]}
+        size={18}
+      />
+      <Text
+        type="lg-medium"
+        style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}>
+        {store.me.invitesAvailable} invite{' '}
+        {pluralize(store.me.invitesAvailable, 'code')}
+      </Text>
+    </TouchableOpacity>
+  )
+})
+
 const styles = StyleSheet.create({
   view: {
     flex: 1,
     paddingTop: 20,
     paddingBottom: 50,
-    paddingLeft: 20,
   },
   viewDarkMode: {
     backgroundColor: '#1B1919',
+  },
+  main: {
+    paddingLeft: 20,
   },
 
   profileCardDisplayName: {
@@ -336,7 +380,7 @@ const styles = StyleSheet.create({
   },
   profileCardFollowers: {
     marginTop: 16,
-    paddingRight: 30,
+    paddingRight: 10,
   },
 
   menuItem: {
@@ -376,11 +420,22 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
 
+  inviteCodes: {
+    paddingLeft: 22,
+    paddingVertical: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inviteCodesIcon: {
+    marginRight: 6,
+  },
+
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingRight: 30,
-    paddingTop: 80,
+    paddingTop: 20,
+    paddingLeft: 20,
   },
   footerBtn: {
     flexDirection: 'row',

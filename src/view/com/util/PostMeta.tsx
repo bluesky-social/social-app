@@ -7,7 +7,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {UserAvatar} from './UserAvatar'
 import {observer} from 'mobx-react-lite'
-import FollowButton from '../profile/FollowButton'
+import {FollowButton} from '../profile/FollowButton'
 import {FollowState} from 'state/models/cache/my-follows'
 
 interface PostMetaOpts {
@@ -78,7 +78,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
 
         <View>
           <FollowButton
-            type="default"
+            unfollowedType="default"
             did={opts.did}
             onToggleFollow={onToggleFollow}
           />

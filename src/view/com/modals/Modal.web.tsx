@@ -16,6 +16,7 @@ import * as RepostModal from './Repost'
 import * as CropImageModal from './crop-image/CropImage.web'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
+import * as InviteCodesModal from './InviteCodes'
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
@@ -72,6 +73,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ChangeHandleModal.Component {...modal} />
   } else if (modal.name === 'waitlist') {
     element = <WaitlistModal.Component />
+  } else if (modal.name === 'invite-codes') {
+    element = <InviteCodesModal.Component />
   } else {
     return null
   }

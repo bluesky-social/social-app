@@ -2,8 +2,10 @@ import React from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
+  TextStyle,
   TouchableOpacity,
   View,
+  ViewStyle,
 } from 'react-native'
 import {
   useFocusEffect,
@@ -27,21 +29,38 @@ import {Text} from '../com/util/text/Text'
 import * as Toast from '../com/util/Toast'
 import {UserAvatar} from '../com/util/UserAvatar'
 import {DropdownButton} from 'view/com/util/forms/DropdownButton'
-import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
+import {pluralize} from 'lib/strings/helpers'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
   observer(function Settings({}: Props) {
-    const theme = useTheme()
     const pal = usePalette('default')
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
     const {screen, track} = useAnalytics()
     const [isSwitching, setIsSwitching] = React.useState(false)
+
+    const primaryBg = useCustomPalette<ViewStyle>({
+      light: {backgroundColor: colors.blue0},
+      dark: {backgroundColor: colors.blue6},
+    })
+    const primaryText = useCustomPalette<TextStyle>({
+      light: {color: colors.blue3},
+      dark: {color: colors.blue2},
+    })
+    const dangerBg = useCustomPalette<ViewStyle>({
+      light: {backgroundColor: colors.red1},
+      dark: {backgroundColor: colors.red7},
+    })
+    const dangerText = useCustomPalette<TextStyle>({
+      light: {color: colors.red4},
+      dark: {color: colors.red2},
+    })
 
     useFocusEffect(
       React.useCallback(() => {
@@ -50,29 +69,34 @@ export const SettingsScreen = withAuthRequired(
       }, [screen, store]),
     )
 
-    const onPressSwitchAccount = async (acct: AccountData) => {
-      track('Settings:SwitchAccountButtonClicked')
-      setIsSwitching(true)
-      if (await store.session.resumeSession(acct)) {
+    const onPressSwitchAccount = React.useCallback(
+      async (acct: AccountData) => {
+        track('Settings:SwitchAccountButtonClicked')
+        setIsSwitching(true)
+        if (await store.session.resumeSession(acct)) {
+          setIsSwitching(false)
+          navigation.navigate('HomeTab')
+          navigation.dispatch(StackActions.popToTop())
+          Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
+          return
+        }
         setIsSwitching(false)
+        Toast.show('Sorry! We need you to enter your password.')
         navigation.navigate('HomeTab')
         navigation.dispatch(StackActions.popToTop())
-        Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
-        return
-      }
-      setIsSwitching(false)
-      Toast.show('Sorry! We need you to enter your password.')
-      navigation.navigate('HomeTab')
-      navigation.dispatch(StackActions.popToTop())
-      store.session.clear()
-    }
-    const onPressAddAccount = () => {
+        store.session.clear()
+      },
+      [track, setIsSwitching, navigation, store],
+    )
+
+    const onPressAddAccount = React.useCallback(() => {
       track('Settings:AddAccountButtonClicked')
       navigation.navigate('HomeTab')
       navigation.dispatch(StackActions.popToTop())
       store.session.clear()
-    }
-    const onPressChangeHandle = () => {
+    }, [track, navigation, store])
+
+    const onPressChangeHandle = React.useCallback(() => {
       track('Settings:ChangeHandleButtonClicked')
       store.shell.openModal({
         name: 'change-handle',
@@ -93,14 +117,21 @@ export const SettingsScreen = withAuthRequired(
           )
         },
       })
-    }
-    const onPressSignout = () => {
+    }, [track, store, setIsSwitching])
+
+    const onPressInviteCodes = React.useCallback(() => {
+      track('Settings:InvitecodesButtonClicked')
+      store.shell.openModal({name: 'invite-codes'})
+    }, [track, store])
+
+    const onPressSignout = React.useCallback(() => {
       track('Settings:SignOutButtonClicked')
       store.session.logout()
-    }
-    const onPressDeleteAccount = () => {
+    }, [track, store])
+
+    const onPressDeleteAccount = React.useCallback(() => {
       store.shell.openModal({name: 'delete-account'})
-    }
+    }, [store])
 
     return (
       <View style={[s.hContentRegion]} testID="settingsScreen">
@@ -184,6 +215,37 @@ export const SettingsScreen = withAuthRequired(
           <View style={styles.spacer20} />
 
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
+            Invite a friend
+          </Text>
+          <TouchableOpacity
+            testID="inviteFriendBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            onPress={isSwitching ? undefined : onPressInviteCodes}>
+            <View
+              style={[
+                styles.iconContainer,
+                store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
+              ]}>
+              <FontAwesomeIcon
+                icon="ticket"
+                style={
+                  (store.me.invitesAvailable > 0
+                    ? primaryText
+                    : pal.text) as FontAwesomeIconStyle
+                }
+              />
+            </View>
+            <Text
+              type="lg"
+              style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
+              {store.me.invitesAvailable} invite{' '}
+              {pluralize(store.me.invitesAvailable, 'code')} available
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.spacer20} />
+
+          <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Advanced
           </Text>
           <TouchableOpacity
@@ -209,30 +271,14 @@ export const SettingsScreen = withAuthRequired(
           <TouchableOpacity
             style={[pal.view, styles.linkCard]}
             onPress={onPressDeleteAccount}>
-            <View
-              style={[
-                styles.iconContainer,
-                theme.colorScheme === 'dark'
-                  ? styles.trashIconContainerDark
-                  : styles.trashIconContainerLight,
-              ]}>
+            <View style={[styles.iconContainer, dangerBg]}>
               <FontAwesomeIcon
                 icon={['far', 'trash-can']}
-                style={
-                  theme.colorScheme === 'dark'
-                    ? styles.dangerDark
-                    : styles.dangerLight
-                }
+                style={dangerText as FontAwesomeIconStyle}
                 size={21}
               />
             </View>
-            <Text
-              type="lg"
-              style={
-                theme.colorScheme === 'dark'
-                  ? styles.dangerDark
-                  : styles.dangerLight
-              }>
+            <Text type="lg" style={dangerText}>
               Delete my account
             </Text>
           </TouchableOpacity>
@@ -330,18 +376,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 30,
     marginRight: 12,
-  },
-  trashIconContainerDark: {
-    backgroundColor: colors.red7,
-  },
-  trashIconContainerLight: {
-    backgroundColor: colors.red1,
-  },
-  dangerLight: {
-    color: colors.red4,
-  },
-  dangerDark: {
-    color: colors.red2,
   },
   buildInfo: {
     paddingVertical: 8,
