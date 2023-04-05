@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
@@ -35,42 +35,38 @@ import {usePalette} from 'lib/hooks/usePalette'
 import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {isDesktopWeb} from 'platform/detection'
+import {SelectedPhoto, Image} from 'lib/media/types'
+import {compressIfNeeded, moveToPermanentPath} from 'lib/media/manip'
 
 const MAX_GRAPHEME_LENGTH = 300
+
+type Props = ComposerOpts & {
+  onClose: () => void
+}
 
 export const ComposePost = observer(function ComposePost({
   replyTo,
   onPost,
   onClose,
   quote: initQuote,
-}: {
-  replyTo?: ComposerOpts['replyTo']
-  onPost?: ComposerOpts['onPost']
-  onClose: () => void
-  quote?: ComposerOpts['quote']
-}) {
+}: Props) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
-  const textInput = React.useRef<TextInputRef>(null)
-  const [isProcessing, setIsProcessing] = React.useState(false)
-  const [processingState, setProcessingState] = React.useState('')
-  const [error, setError] = React.useState('')
-  const [richtext, setRichText] = React.useState(new RichText({text: ''}))
-  const graphemeLength = React.useMemo(
-    () => richtext.graphemeLength,
-    [richtext],
-  )
-  const [quote, setQuote] = React.useState<ComposerOpts['quote'] | undefined>(
+  const textInput = useRef<TextInputRef>(null)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [processingState, setProcessingState] = useState('')
+  const [error, setError] = useState('')
+  const [richtext, setRichText] = useState(new RichText({text: ''}))
+  const graphemeLength = useMemo(() => richtext.graphemeLength, [richtext])
+  const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
-  const [suggestedLinks, setSuggestedLinks] = React.useState<Set<string>>(
-    new Set(),
-  )
-  const [selectedPhotos, setSelectedPhotos] = React.useState<string[]>([])
+  const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
+  const [selectedPhotos, setSelectedPhotos] = useState<SelectedPhoto[]>([])
 
-  const autocompleteView = React.useMemo<UserAutocompleteModel>(
+  const autocompleteView = useMemo<UserAutocompleteModel>(
     () => new UserAutocompleteModel(store),
     [store],
   )
@@ -82,17 +78,17 @@ export const ComposePost = observer(function ComposePost({
   // is focused during unmount, an exception will throw (seems that a blur method isnt implemented)
   // manually blurring before closing gets around that
   // -prf
-  const hackfixOnClose = React.useCallback(() => {
+  const hackfixOnClose = useCallback(() => {
     textInput.current?.blur()
     onClose()
   }, [textInput, onClose])
 
   // initial setup
-  React.useEffect(() => {
+  useEffect(() => {
     autocompleteView.setup()
   }, [autocompleteView])
 
-  React.useEffect(() => {
+  useEffect(() => {
     // HACK
     // wait a moment before focusing the input to resolve some layout bugs with the keyboard-avoiding-view
     // -prf
@@ -109,53 +105,79 @@ export const ComposePost = observer(function ComposePost({
     }
   }, [])
 
-  const onPressContainer = React.useCallback(() => {
+  const onPressContainer = useCallback(() => {
     textInput.current?.focus()
   }, [textInput])
 
-  const onSelectPhotos = React.useCallback(
-    (photos: string[]) => {
-      track('Composer:SelectedPhotos')
-      setSelectedPhotos(photos)
-    },
-    [track, setSelectedPhotos],
-  )
-
-  const onPressAddLinkCard = React.useCallback(
+  const onPressAddLinkCard = useCallback(
     (uri: string) => {
       setExtLink({uri, isLoading: true})
     },
     [setExtLink],
   )
 
-  const onPhotoPasted = React.useCallback(
-    async (uri: string) => {
+  const onPhotoPasted = useCallback(
+    async (image: Image) => {
+      // TODO: handle more than four images at a time
       if (selectedPhotos.length >= 4) {
         return
       }
-      onSelectPhotos([...selectedPhotos, uri])
+
+      track('Composer:SelectedPhotos')
+      setSelectedPhotos(prevPhotos => [
+        ...prevPhotos.filter(
+          prevPhoto => prevPhoto.original.path !== image.path,
+        ),
+        {
+          original: image,
+        },
+      ])
     },
-    [selectedPhotos, onSelectPhotos],
+    [selectedPhotos, track],
   )
 
-  const onPressPublish = React.useCallback(async () => {
-    if (isProcessing) {
+  const onPressPublish = useCallback(async () => {
+    if (isProcessing || richtext.graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
     }
-    if (richtext.graphemeLength > MAX_GRAPHEME_LENGTH) {
-      return
-    }
+
     setError('')
-    if (richtext.text.trim().length === 0 && selectedPhotos.length === 0) {
+
+    if (
+      richtext.text.trim().length === 0 &&
+      Object.keys(selectedPhotos).length === 0
+    ) {
       setError('Did you want to say anything?')
       return false
     }
+
     setIsProcessing(true)
+
     try {
+      const images: string[] = []
+
+      try {
+        const compressedImages = await Promise.all(
+          selectedPhotos.map(photo =>
+            compressIfNeeded(
+              'cropped' in photo ? photo.cropped : photo.original,
+            ),
+          ),
+        )
+
+        const imagePaths = await Promise.all(
+          compressedImages.map(img => moveToPermanentPath(img.path)),
+        )
+
+        images.push(...imagePaths)
+      } catch (err) {
+        store.log.warn('Failed to compress image')
+      }
+
       await apilib.post(store, {
         rawText: richtext.text,
         replyTo: replyTo?.uri,
-        images: selectedPhotos,
+        images,
         quote: quote,
         extLink: extLink,
         onStateChange: setProcessingState,
@@ -303,7 +325,7 @@ export const ComposePost = observer(function ComposePost({
 
             <SelectedPhotos
               selectedPhotos={selectedPhotos}
-              onSelectPhotos={onSelectPhotos}
+              setSelectedPhotos={setSelectedPhotos}
             />
             {selectedPhotos.length === 0 && extLink && (
               <ExternalEmbed
@@ -338,12 +360,11 @@ export const ComposePost = observer(function ComposePost({
             <SelectPhotoBtn
               enabled={selectedPhotos.length < 4}
               selectedPhotos={selectedPhotos}
-              onSelectPhotos={setSelectedPhotos}
+              setSelectedPhotos={setSelectedPhotos}
             />
             <OpenCameraBtn
               enabled={selectedPhotos.length < 4}
-              selectedPhotos={selectedPhotos}
-              onSelectPhotos={setSelectedPhotos}
+              setSelectedPhotos={setSelectedPhotos}
             />
             <View style={s.flex1} />
             <CharProgress count={graphemeLength} />

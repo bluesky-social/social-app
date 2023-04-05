@@ -1,15 +1,8 @@
 /// <reference lib="dom" />
 
-import {PickerOpts, CameraOpts, CropperOpts, PickedMedia} from './types'
-export type {PickedMedia} from './types'
+import {PickerOpts, CameraOpts, CropperOptions, Image} from './types'
 import {RootStoreModel} from 'state/index'
-import {
-  scaleDownDimensions,
-  getImageDim,
-  Dim,
-  compressIfNeeded,
-  moveToPremanantPath,
-} from 'lib/media/manip'
+import {getImageDim} from 'lib/media/manip'
 import {extractDataUriMime} from './util'
 
 interface PickedFile {
@@ -21,7 +14,7 @@ interface PickedFile {
 export async function openPicker(
   _store: RootStoreModel,
   opts: PickerOpts,
-): Promise<PickedMedia[]> {
+): Promise<Image[]> {
   const res = await selectFile(opts)
   const dim = await getImageDim(res.uri)
   const mime = extractDataUriMime(res.uri)
@@ -40,21 +33,21 @@ export async function openPicker(
 export async function openCamera(
   _store: RootStoreModel,
   _opts: CameraOpts,
-): Promise<PickedMedia> {
+): Promise<Image> {
   // const mediaType = opts.mediaType || 'photo' TODO
   throw new Error('TODO')
 }
 
 export async function openCropper(
   store: RootStoreModel,
-  opts: CropperOpts,
-): Promise<PickedMedia> {
+  opts: CropperOptions,
+): Promise<Image> {
   // TODO handle more opts
   return new Promise((resolve, reject) => {
     store.shell.openModal({
       name: 'crop-image',
       uri: opts.path,
-      onSelect: (img?: PickedMedia) => {
+      onSelect: (img?: Image) => {
         if (img) {
           resolve(img)
         } else {
@@ -64,52 +57,6 @@ export async function openCropper(
     })
   })
 }
-
-export async function pickImagesFlow(
-  store: RootStoreModel,
-  maxFiles: number,
-  maxDim: Dim,
-  maxSize: number,
-) {
-  const items = await openPicker(store, {
-    multiple: true,
-    maxFiles,
-    mediaType: 'photo',
-  })
-  const result = []
-  for (const image of items) {
-    result.push(
-      await cropAndCompressFlow(store, image.path, image, maxDim, maxSize),
-    )
-  }
-  return result
-}
-
-export async function cropAndCompressFlow(
-  store: RootStoreModel,
-  path: string,
-  imgDim: Dim,
-  maxDim: Dim,
-  maxSize: number,
-) {
-  // choose target dimensions based on the original
-  // this causes the photo cropper to start with the full image "selected"
-  const {width, height} = scaleDownDimensions(imgDim, maxDim)
-  const cropperRes = await openCropper(store, {
-    mediaType: 'photo',
-    path,
-    freeStyleCropEnabled: true,
-    width,
-    height,
-  })
-
-  const img = await compressIfNeeded(cropperRes, maxSize)
-  const permanentPath = await moveToPremanantPath(img.path)
-  return permanentPath
-}
-
-// helpers
-// =
 
 /**
  * Opens the select file dialog in the browser.

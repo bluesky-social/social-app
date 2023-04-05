@@ -1,3 +1,10 @@
+import {Image as RNImage, openCropper} from 'react-native-image-crop-picker'
+
+export interface Dimensions {
+  width: number
+  height: number
+}
+
 export interface PickerOpts {
   mediaType?: 'photo'
   multiple?: boolean
@@ -12,20 +19,18 @@ export interface CameraOpts {
   cropperCircleOverlay?: boolean
 }
 
-export interface CropperOpts {
-  path: string
-  mediaType?: 'photo'
-  width: number
-  height: number
-  freeStyleCropEnabled?: boolean
-  cropperCircleOverlay?: boolean
+export type CropperOptions = Parameters<typeof openCropper>[0]
+
+export type Image = RNImage & {
+  mediaType: 'photo'
 }
 
-export interface PickedMedia {
-  mediaType: 'photo'
-  path: string
-  mime: string
-  size: number
-  width: number
-  height: number
+type SelectedPhotoOriginal = {
+  original: Image
 }
+
+export type SelectedPhoto =
+  | SelectedPhotoOriginal
+  | (SelectedPhotoOriginal & {
+      cropped: Image
+    })

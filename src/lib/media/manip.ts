@@ -4,11 +4,8 @@ import {Image as RNImage, Share} from 'react-native'
 import RNFS from 'react-native-fs'
 import uuid from 'react-native-uuid'
 import * as Toast from 'view/com/util/Toast'
-
-export interface Dim {
-  width: number
-  height: number
-}
+import {Dimensions} from './types'
+import {Image} from 'lib/media/types'
 
 export interface DownloadAndResizeOpts {
   uri: string
@@ -19,12 +16,16 @@ export interface DownloadAndResizeOpts {
   timeout: number
 }
 
-export interface Image {
-  path: string
-  mime: string
-  size: number
-  width: number
-  height: number
+export async function moveToPermanentPath(path: string): Promise<string> {
+  /*
+  Since this package stores images in a temp directory, we need to move the file to a permanent location.
+  Relevant: IOS bug when trying to open a second time:
+  https://github.com/ivpusic/react-native-image-crop-picker/issues/1199
+  */
+  const filename = uuid.v4()
+  const destinationPath = `${RNFS.TemporaryDirectoryPath}/${filename}`
+  RNFS.moveFile(path, destinationPath)
+  return destinationPath
 }
 
 export async function downloadAndResize(opts: DownloadAndResizeOpts) {
@@ -89,6 +90,7 @@ export async function resize(
     )
     if (resizeRes.size < opts.maxSize) {
       return {
+        mediaType: 'photo',
         path: resizeRes.path,
         mime: 'image/jpeg',
         size: resizeRes.size,
@@ -104,7 +106,7 @@ export async function resize(
 
 export async function compressIfNeeded(
   img: Image,
-  maxSize: number,
+  maxSize: number = 1000000,
 ): Promise<Image> {
   const origUri = `file://${img.path}`
   if (img.size < maxSize) {
@@ -116,24 +118,12 @@ export async function compressIfNeeded(
     mode: 'stretch',
     maxSize,
   })
-  const finalImageMovedPath = await moveToPremanantPath(resizedImage.path)
+  const finalImageMovedPath = await moveToPermanentPath(resizedImage.path)
   const finalImg = {
     ...resizedImage,
     path: finalImageMovedPath,
   }
   return finalImg
-}
-
-export function scaleDownDimensions(dim: Dim, max: Dim): Dim {
-  if (dim.width < max.width && dim.height < max.height) {
-    return dim
-  }
-  let wScale = dim.width > max.width ? max.width / dim.width : 1
-  let hScale = dim.height > max.height ? max.height / dim.height : 1
-  if (wScale < hScale) {
-    return {width: dim.width * wScale, height: dim.height * wScale}
-  }
-  return {width: dim.width * hScale, height: dim.height * hScale}
 }
 
 export async function saveImageModal({uri}: {uri: string}) {
@@ -154,19 +144,7 @@ export async function saveImageModal({uri}: {uri: string}) {
   RNFS.unlink(imagePath)
 }
 
-export async function moveToPremanantPath(path: string) {
-  /*
-  Since this package stores images in a temp directory, we need to move the file to a permanent location.
-  Relevant: IOS bug when trying to open a second time:
-  https://github.com/ivpusic/react-native-image-crop-picker/issues/1199
-  */
-  const filename = uuid.v4()
-  const destinationPath = `${RNFS.TemporaryDirectoryPath}/${filename}`
-  RNFS.moveFile(path, destinationPath)
-  return destinationPath
-}
-
-export function getImageDim(path: string): Promise<Dim> {
+export function getImageDim(path: string): Promise<Dimensions> {
   return new Promise((resolve, reject) => {
     RNImage.getSize(
       path,

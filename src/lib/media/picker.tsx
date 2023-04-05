@@ -5,14 +5,7 @@ import {
   ImageOrVideo,
 } from 'react-native-image-crop-picker'
 import {RootStoreModel} from 'state/index'
-import {PickerOpts, CameraOpts, CropperOpts, PickedMedia} from './types'
-import {
-  scaleDownDimensions,
-  Dim,
-  compressIfNeeded,
-  moveToPremanantPath,
-} from 'lib/media/manip'
-export type {PickedMedia} from './types'
+import {PickerOpts, CameraOpts, CropperOptions, Image} from './types'
 
 /**
  * NOTE
@@ -26,7 +19,7 @@ export type {PickedMedia} from './types'
 export async function openPicker(
   _store: RootStoreModel,
   opts: PickerOpts,
-): Promise<PickedMedia[]> {
+): Promise<Image[]> {
   const mediaType = opts.mediaType || 'photo'
   const items = await openPickerFn({
     mediaType,
@@ -52,7 +45,7 @@ export async function openPicker(
 export async function openCamera(
   _store: RootStoreModel,
   opts: CameraOpts,
-): Promise<PickedMedia> {
+): Promise<Image> {
   const mediaType = opts.mediaType || 'photo'
   const item = await openCameraFn({
     mediaType,
@@ -60,7 +53,7 @@ export async function openCamera(
     height: opts.height,
     freeStyleCropEnabled: opts.freeStyleCropEnabled,
     cropperCircleOverlay: opts.cropperCircleOverlay,
-    cropping: true,
+    cropping: false,
     forceJpg: true, // ios only
     compressImageQuality: 0.8,
   })
@@ -76,19 +69,17 @@ export async function openCamera(
 
 export async function openCropper(
   _store: RootStoreModel,
-  opts: CropperOpts,
-): Promise<PickedMedia> {
+  opts: CropperOptions,
+): Promise<Image> {
   const mediaType = opts.mediaType || 'photo'
+
   const item = await openCropperFn({
-    path: opts.path,
-    mediaType: opts.mediaType || 'photo',
-    width: opts.width,
-    height: opts.height,
-    freeStyleCropEnabled: opts.freeStyleCropEnabled,
-    cropperCircleOverlay: opts.cropperCircleOverlay,
+    ...opts,
+    mediaType,
     forceJpg: true, // ios only
     compressImageQuality: 0.8,
   })
+
   return {
     mediaType,
     path: item.path,
@@ -97,47 +88,4 @@ export async function openCropper(
     width: item.width,
     height: item.height,
   }
-}
-
-export async function pickImagesFlow(
-  store: RootStoreModel,
-  maxFiles: number,
-  maxDim: Dim,
-  maxSize: number,
-) {
-  const items = await openPicker(store, {
-    multiple: true,
-    maxFiles,
-    mediaType: 'photo',
-  })
-  const result = []
-  for (const image of items) {
-    result.push(
-      await cropAndCompressFlow(store, image.path, image, maxDim, maxSize),
-    )
-  }
-  return result
-}
-
-export async function cropAndCompressFlow(
-  store: RootStoreModel,
-  path: string,
-  imgDim: Dim,
-  maxDim: Dim,
-  maxSize: number,
-) {
-  // choose target dimensions based on the original
-  // this causes the photo cropper to start with the full image "selected"
-  const {width, height} = scaleDownDimensions(imgDim, maxDim)
-  const cropperRes = await openCropper(store, {
-    mediaType: 'photo',
-    path,
-    freeStyleCropEnabled: true,
-    width,
-    height,
-  })
-
-  const img = await compressIfNeeded(cropperRes, maxSize)
-  const permanentPath = await moveToPremanantPath(img.path)
-  return permanentPath
 }

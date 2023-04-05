@@ -12,6 +12,8 @@ import isEqual from 'lodash.isequal'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {createSuggestion} from './web/Autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {Image} from 'lib/media/types'
+import {POST_IMG_MAX} from 'lib/constants'
 
 export interface TextInputRef {
   focus: () => void
@@ -24,7 +26,7 @@ interface TextInputProps {
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteModel
   setRichText: (v: RichText) => void
-  onPhotoPasted: (uri: string) => void
+  onPhotoPasted: (image: Image) => void
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
 }
@@ -37,7 +39,7 @@ export const TextInput = React.forwardRef(
       suggestedLinks,
       autocompleteView,
       setRichText,
-      // onPhotoPasted, TODO
+      onPhotoPasted,
       onSuggestedLinksChanged,
     }: // onError, TODO
     TextInputProps,
@@ -71,6 +73,36 @@ export const TextInput = React.forwardRef(
         editorProps: {
           attributes: {
             class: modeClass,
+          },
+          handlePaste: (view, event) => {
+            const items = event.clipboardData?.items
+
+            if (items === undefined) {
+              return
+            }
+
+            for (let index = 0; index < items.length; index++) {
+              const item = items[index]
+              const {kind} = item
+
+              if (kind === 'file') {
+                const file = item.getAsFile()
+
+                if (file instanceof Blob) {
+                  const url = URL.createObjectURL(
+                    new Blob([file], {type: item.type}),
+                  )
+                  onPhotoPasted({
+                    mediaType: 'photo',
+                    path: url,
+                    size: file.size,
+                    mime: file.type,
+                    width: POST_IMG_MAX.width,
+                    height: POST_IMG_MAX.height,
+                  })
+                }
+              }
+            }
           },
         },
         content: richtext.text.toString(),

@@ -4,12 +4,7 @@ import Svg, {Circle, Path} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {HighPriorityImage} from 'view/com/util/images/Image'
-import {
-  openCamera,
-  openCropper,
-  openPicker,
-  PickedMedia,
-} from '../../../lib/media/picker'
+import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 import {
   usePhotoLibraryPermission,
   useCameraPermission,
@@ -19,6 +14,7 @@ import {colors} from 'lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
+import {Image} from 'lib/media/types'
 
 function DefaultAvatar({size}: {size: number}) {
   return (
@@ -50,7 +46,7 @@ export function UserAvatar({
   size: number
   avatar?: string | null
   hasWarning?: boolean
-  onSelectNewAvatar?: (img: PickedMedia | null) => void
+  onSelectNewAvatar?: (img: Image | null) => void
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -87,6 +83,7 @@ export function UserAvatar({
         const items = await openPicker(store, {
           mediaType: 'photo',
         })
+
         onSelectNewAvatar?.(
           await openCropper(store, {
             mediaType: 'photo',

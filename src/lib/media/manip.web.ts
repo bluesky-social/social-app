@@ -1,5 +1,6 @@
-// import {Share} from 'react-native'
-// import * as Toast from 'view/com/util/Toast'
+import uuid from 'react-native-uuid'
+import RNFS from 'react-native-fs'
+import {Dimensions, Image} from './types'
 import {extractDataUriMime, getDataUriSize} from './util'
 
 export interface DownloadAndResizeOpts {
@@ -9,14 +10,6 @@ export interface DownloadAndResizeOpts {
   mode: 'contain' | 'cover' | 'stretch'
   maxSize: number
   timeout: number
-}
-
-export interface Image {
-  path: string
-  mime: string
-  size: number
-  width: number
-  height: number
 }
 
 export async function downloadAndResize(opts: DownloadAndResizeOpts) {
@@ -44,6 +37,7 @@ export async function resize(
   const dim = await getImageDim(dataUri)
   // TODO -- need to resize
   return {
+    mediaType: 'photo',
     path: dataUri,
     mime: extractDataUriMime(dataUri),
     size: getDataUriSize(dataUri),
@@ -52,9 +46,13 @@ export async function resize(
   }
 }
 
+export async function moveToPermanentPath(path: string) {
+  return path
+}
+
 export async function compressIfNeeded(
   img: Image,
-  maxSize: number,
+  maxSize: number, // OLLIE TODO - Find value
 ): Promise<Image> {
   if (img.size > maxSize) {
     // TODO
@@ -65,32 +63,12 @@ export async function compressIfNeeded(
   return img
 }
 
-export interface Dim {
-  width: number
-  height: number
-}
-export function scaleDownDimensions(dim: Dim, max: Dim): Dim {
-  if (dim.width < max.width && dim.height < max.height) {
-    return dim
-  }
-  let wScale = dim.width > max.width ? max.width / dim.width : 1
-  let hScale = dim.height > max.height ? max.height / dim.height : 1
-  if (wScale < hScale) {
-    return {width: dim.width * wScale, height: dim.height * wScale}
-  }
-  return {width: dim.width * hScale, height: dim.height * hScale}
-}
-
 export async function saveImageModal(_opts: {uri: string}) {
   // TODO
   throw new Error('TODO')
 }
 
-export async function moveToPremanantPath(path: string) {
-  return path
-}
-
-export async function getImageDim(path: string): Promise<Dim> {
+export async function getImageDim(path: string): Promise<Dimensions> {
   var img = document.createElement('img')
   const promise = new Promise((resolve, reject) => {
     img.onload = resolve

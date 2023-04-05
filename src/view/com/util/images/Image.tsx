@@ -10,3 +10,8 @@ export function HighPriorityImage({source, ...props}: HighPriorityImageProps) {
   } satisfies ImageSource
   return <Image source={updatedSource} {...props} />
 }
+
+// TODO: .HEIC
+export function isUriImage(uri: string) {
+  return /\.(jpg|jpeg|png).*$/.test(uri)
+}

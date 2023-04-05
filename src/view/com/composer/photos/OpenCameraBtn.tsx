@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Dispatch, useCallback, SetStateAction} from 'react'
 import {TouchableOpacity} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -10,31 +10,24 @@ import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
 import {openCamera} from 'lib/media/picker'
-import {compressIfNeeded} from 'lib/media/manip'
 import {useCameraPermission} from 'lib/hooks/usePermissions'
-import {
-  POST_IMG_MAX_WIDTH,
-  POST_IMG_MAX_HEIGHT,
-  POST_IMG_MAX_SIZE,
-} from 'lib/constants'
+import {SelectedPhoto} from 'lib/media/types'
+import {POST_IMG_MAX} from 'lib/constants'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
-export function OpenCameraBtn({
-  enabled,
-  selectedPhotos,
-  onSelectPhotos,
-}: {
+type Props = {
   enabled: boolean
-  selectedPhotos: string[]
-  onSelectPhotos: (v: string[]) => void
-}) {
+  setSelectedPhotos: Dispatch<SetStateAction<SelectedPhoto[]>>
+}
+
+export function OpenCameraBtn({enabled, setSelectedPhotos}: Props) {
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const store = useStores()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
 
-  const onPressTakePicture = React.useCallback(async () => {
+  const onPressTakePicture = useCallback(async () => {
     track('Composer:CameraOpened')
     if (!enabled) {
       return
@@ -43,29 +36,27 @@ export function OpenCameraBtn({
       if (!(await requestCameraAccessIfNeeded())) {
         return
       }
-      const cameraRes = await openCamera(store, {
+      const img = await openCamera(store, {
         mediaType: 'photo',
-        width: POST_IMG_MAX_WIDTH,
-        height: POST_IMG_MAX_HEIGHT,
+        width: POST_IMG_MAX.width,
+        height: POST_IMG_MAX.height,
         freeStyleCropEnabled: true,
       })
-      const img = await compressIfNeeded(cameraRes, POST_IMG_MAX_SIZE)
-      onSelectPhotos([...selectedPhotos, img.path])
+
+      setSelectedPhotos(prevPhotos => [
+        ...prevPhotos,
+        {
+          original: img,
+        },
+      ])
     } catch (err: any) {
       // ignore
       store.log.warn('Error using camera', err)
     }
-  }, [
-    track,
-    store,
-    onSelectPhotos,
-    selectedPhotos,
-    enabled,
-    requestCameraAccessIfNeeded,
-  ])
+  }, [track, store, setSelectedPhotos, enabled, requestCameraAccessIfNeeded])
 
   if (isDesktopWeb) {
-    return <></>
+    return null
   }
 
   return (

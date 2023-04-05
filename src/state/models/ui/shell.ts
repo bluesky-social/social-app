@@ -3,7 +3,7 @@ import {RootStoreModel} from '../root-store'
 import {makeAutoObservable} from 'mobx'
 import {ProfileModel} from '../content/profile'
 import {isObj, hasProp} from 'lib/type-guards'
-import {PickedMedia} from 'lib/media/types'
+import {Image} from 'lib/media/types'
 
 export interface ConfirmModal {
   name: 'confirm'
@@ -38,7 +38,7 @@ export interface ReportAccountModal {
 export interface CropImageModal {
   name: 'crop-image'
   uri: string
-  onSelect: (img?: PickedMedia) => void
+  onSelect: (img?: Image) => void
 }
 
 export interface DeleteAccountModal {

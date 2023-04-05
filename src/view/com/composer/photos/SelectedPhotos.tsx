@@ -1,55 +1,115 @@
-import React, {useCallback} from 'react'
+import React, {Dispatch, useCallback} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Image} from 'expo-image'
 import {colors} from 'lib/styles'
+import {SelectedPhoto} from 'lib/media/types'
+import {openCropper} from 'lib/media/picker'
+import {useStores} from 'state/index'
+import {scaleDownDimensions} from 'lib/media/util'
+import {POST_IMG_MAX} from 'lib/constants'
 
-export const SelectedPhotos = ({
-  selectedPhotos,
-  onSelectPhotos,
-}: {
-  selectedPhotos: string[]
-  onSelectPhotos: (v: string[]) => void
-}) => {
-  const imageStyle =
-    selectedPhotos.length === 1
-      ? styles.image250
-      : selectedPhotos.length === 2
-      ? styles.image175
-      : styles.image85
+type Props = {
+  selectedPhotos: SelectedPhoto[]
+  setSelectedPhotos: Dispatch<React.SetStateAction<SelectedPhoto[]>>
+}
+
+export const SelectedPhotos = ({selectedPhotos, setSelectedPhotos}: Props) => {
+  const store = useStores()
+
+  const getImageStyle = useCallback(() => {
+    switch (selectedPhotos.length) {
+      case 1:
+        return styles.image250
+      case 2:
+        return styles.image175
+      default:
+        return styles.image85
+    }
+  }, [selectedPhotos])
+
+  const imageStyle = getImageStyle()
 
   const handleRemovePhoto = useCallback(
-    item => {
-      onSelectPhotos(selectedPhotos.filter(filterItem => filterItem !== item))
+    (image: SelectedPhoto) => {
+      setSelectedPhotos(prevPhotos =>
+        prevPhotos.filter(
+          filterItem => filterItem.original.path !== image.original.path,
+        ),
+      )
     },
-    [selectedPhotos, onSelectPhotos],
+    [setSelectedPhotos],
+  )
+
+  const handleEditPhoto = useCallback(
+    async (image: SelectedPhoto) => {
+      const {width, height} = scaleDownDimensions(image.original, POST_IMG_MAX)
+
+      const cropped = await openCropper(store, {
+        mediaType: 'photo',
+        path: image.original.path,
+        freeStyleCropEnabled: true,
+        width,
+        height,
+      })
+
+      setSelectedPhotos(prevPhotos => {
+        return prevPhotos.map(photo =>
+          photo.original.path === image.original.path
+            ? {
+                original: image.original,
+                cropped,
+              }
+            : photo,
+        )
+      })
+    },
+    [store, setSelectedPhotos],
   )
 
   return selectedPhotos.length !== 0 ? (
     <View testID="selectedPhotosView" style={styles.gallery}>
       {selectedPhotos.length !== 0 &&
-        selectedPhotos.map((item, index) => (
-          <View
-            key={`selected-image-${index}`}
-            style={[styles.imageContainer, imageStyle]}>
-            <TouchableOpacity
-              testID="removePhotoButton"
-              onPress={() => handleRemovePhoto(item)}
-              style={styles.removePhotoButton}>
-              <FontAwesomeIcon
-                icon="xmark"
-                size={16}
-                style={{color: colors.white}}
-              />
-            </TouchableOpacity>
+        selectedPhotos.map(image => {
+          const photo = 'cropped' in image ? image.cropped : image.original
 
-            <Image
-              testID="selectedPhotoImage"
-              style={[styles.image, imageStyle]}
-              source={{uri: item}}
-            />
-          </View>
-        ))}
+          return (
+            <View
+              key={`selected-image-${photo.path}`}
+              style={[styles.imageContainer, imageStyle]}>
+              <View style={styles.imageControls}>
+                <TouchableOpacity
+                  testID="cropPhotoButton"
+                  onPress={() => {
+                    handleEditPhoto(image)
+                  }}
+                  style={styles.imageControl}>
+                  <FontAwesomeIcon
+                    icon="pen"
+                    size={12}
+                    style={{color: colors.white}}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  testID="removePhotoButton"
+                  onPress={() => handleRemovePhoto(image)}
+                  style={styles.imageControl}>
+                  <FontAwesomeIcon
+                    icon="xmark"
+                    size={16}
+                    style={{color: colors.white}}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <Image
+                testID="selectedPhotoImage"
+                style={[styles.image, imageStyle]}
+                source={{uri: photo.path}}
+              />
+            </View>
+          )
+        })}
     </View>
   ) : null
 }
@@ -79,18 +139,22 @@ const styles = StyleSheet.create({
     width: 85,
     height: 85,
   },
-  removePhotoButton: {
+  imageControls: {
     position: 'absolute',
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 4,
     top: 8,
     right: 8,
+    zIndex: 1,
+  },
+  imageControl: {
     width: 24,
     height: 24,
     borderRadius: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderWidth: 0.5,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.black,
-    zIndex: 1,
-    borderColor: colors.gray4,
-    borderWidth: 0.5,
   },
 })

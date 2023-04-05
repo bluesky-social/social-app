@@ -1,4 +1,5 @@
-import React from 'react'
+import {Dimensions} from 'lib/media/types'
+import React, {useState} from 'react'
 import {
   LayoutChangeEvent,
   StyleProp,
@@ -10,11 +11,6 @@ import {
 import {Image, ImageStyle} from 'expo-image'
 
 export const DELAY_PRESS_IN = 500
-
-interface Dim {
-  width: number
-  height: number
-}
 
 export type ImageLayoutGridType = 'two' | 'three' | 'four'
 
@@ -33,7 +29,7 @@ export function ImageLayoutGrid({
   onPressIn?: (index: number) => void
   style?: StyleProp<ViewStyle>
 }) {
-  const [containerInfo, setContainerInfo] = React.useState<Dim | undefined>()
+  const [containerInfo, setContainerInfo] = useState<Dimensions | undefined>()
 
   const onLayout = (evt: LayoutChangeEvent) => {
     setContainerInfo({
@@ -71,7 +67,7 @@ function ImageLayoutGridInner({
   onPress?: (index: number) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
-  containerInfo: Dim
+  containerInfo: Dimensions
 }) {
   const size1 = React.useMemo<ImageStyle>(() => {
     if (type === 'three') {

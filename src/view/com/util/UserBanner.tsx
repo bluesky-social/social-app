@@ -4,12 +4,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {Image} from 'expo-image'
 import {colors} from 'lib/styles'
-import {
-  openCamera,
-  openCropper,
-  openPicker,
-  PickedMedia,
-} from '../../../lib/media/picker'
+import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
+import {Image as TImage} from 'lib/media/types'
 import {useStores} from 'state/index'
 import {
   usePhotoLibraryPermission,
@@ -24,7 +20,7 @@ export function UserBanner({
   onSelectNewBanner,
 }: {
   banner?: string | null
-  onSelectNewBanner?: (img: PickedMedia | null) => void
+  onSelectNewBanner?: (img: TImage | null) => void
 }) {
   const store = useStores()
   const pal = usePalette('default')
