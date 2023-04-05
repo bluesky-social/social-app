@@ -27,7 +27,9 @@ export interface TestPDS {
   close: () => Promise<void>
 }
 
-export async function createServer(): Promise<TestPDS> {
+export async function createServer(
+  {inviteRequired}: {inviteRequired: boolean} = {inviteRequired: false},
+): Promise<TestPDS> {
   const repoSigningKey = await crypto.Secp256k1Keypair.create()
   const plcRotationKey = await crypto.Secp256k1Keypair.create()
   const port = await getPort()
@@ -61,7 +63,7 @@ export async function createServer(): Promise<TestPDS> {
     serverDid,
     recoveryKey,
     adminPassword: ADMIN_PASSWORD,
-    inviteRequired: false,
+    inviteRequired,
     didPlcUrl: plcUrl,
     jwtSecret: 'jwt-secret',
     availableUserDomains: ['.test'],
@@ -76,6 +78,7 @@ export async function createServer(): Promise<TestPDS> {
     blobstoreTmp: `${blobstoreLoc}/tmp`,
     maxSubscriptionBuffer: 200,
     repoBackfillLimitMs: HOUR,
+    userInviteInterval: 1,
   })
 
   const db =
@@ -131,8 +134,18 @@ class Mocker {
 
   async createUser(name: string) {
     const agent = new BskyAgent({service: this.agent.service})
+
+    const inviteRes = await agent.api.com.atproto.server.createInviteCode(
+      {useCount: 1},
+      {
+        headers: {authorization: `Basic ${btoa(`admin:${ADMIN_PASSWORD}`)}`},
+        encoding: 'application/json',
+      },
+    )
+
     const email = `fake${Object.keys(this.users).length + 1}@fake.com`
     const res = await agent.createAccount({
+      inviteCode: inviteRes.data.code,
       email,
       handle: name + '.test',
       password: 'hunter2',

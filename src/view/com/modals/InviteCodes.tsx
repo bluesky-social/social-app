@@ -25,7 +25,7 @@ export function Component({}: {}) {
 
   if (store.me.invites.length === 0) {
     return (
-      <View style={[styles.container, pal.view]}>
+      <View style={[styles.container, pal.view]} testID="inviteCodesModal">
         <View style={[styles.empty, pal.viewLight]}>
           <Text type="lg" style={[pal.text, styles.emptyText]}>
             You don't have any invite codes yet! We'll send you some when you've
@@ -47,7 +47,7 @@ export function Component({}: {}) {
   }
 
   return (
-    <View style={[styles.container, pal.view]}>
+    <View style={[styles.container, pal.view]} testID="inviteCodesModal">
       <Text type="title-xl" style={[styles.title, pal.text]}>
         Invite a Friend
       </Text>
@@ -61,7 +61,8 @@ export function Component({}: {}) {
       <ScrollView style={[styles.scrollContainer, pal.border]}>
         {store.me.invites.map((invite, i) => (
           <InviteCode
-            key={i}
+            testID={`inviteCode-${i}`}
+            key={invite.code}
             code={invite.code}
             used={invite.available - invite.uses.length <= 0 || invite.disabled}
           />
@@ -69,6 +70,7 @@ export function Component({}: {}) {
       </ScrollView>
       <View style={styles.btnContainer}>
         <Button
+          testID="closeBtn"
           type="primary"
           label="Done"
           style={styles.btn}
@@ -80,7 +82,15 @@ export function Component({}: {}) {
   )
 }
 
-function InviteCode({code, used}: {code: string; used?: boolean}) {
+function InviteCode({
+  testID,
+  code,
+  used,
+}: {
+  testID: string
+  code: string
+  used?: boolean
+}) {
   const pal = usePalette('default')
   const [wasCopied, setWasCopied] = React.useState(false)
 
@@ -91,8 +101,12 @@ function InviteCode({code, used}: {code: string; used?: boolean}) {
   }, [code])
 
   return (
-    <TouchableOpacity style={[styles.inviteCode, pal.border]} onPress={onPress}>
+    <TouchableOpacity
+      testID={testID}
+      style={[styles.inviteCode, pal.border]}
+      onPress={onPress}>
       <Text
+        testID={`${testID}-code`}
         type={used ? 'md' : 'md-bold'}
         style={used ? [pal.textLight, styles.strikeThrough] : pal.text}>
         {code}

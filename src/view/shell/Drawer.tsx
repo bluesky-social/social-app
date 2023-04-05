@@ -335,7 +335,10 @@ const InviteCodes = observer(() => {
     store.shell.openModal({name: 'invite-codes'})
   }, [store, track])
   return (
-    <TouchableOpacity style={[styles.inviteCodes]} onPress={onPress}>
+    <TouchableOpacity
+      testID="menuItemInviteCodes"
+      style={[styles.inviteCodes]}
+      onPress={onPress}>
       <FontAwesomeIcon
         icon="ticket"
         style={[

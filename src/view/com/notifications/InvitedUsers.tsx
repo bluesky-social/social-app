@@ -41,6 +41,7 @@ function InvitedUser({
 
   return (
     <View
+      testID="invitedUser"
       style={[
         styles.layout,
         {
@@ -75,6 +76,7 @@ function InvitedUser({
             did={profile.did}
           />
           <Button
+            testID="dismissBtn"
             type="primary-light"
             label="Dismiss"
             onPress={onPressDismiss}

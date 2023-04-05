@@ -13,7 +13,8 @@ async function main() {
       console.log('Closing old server')
       await server?.close()
       console.log('Starting new server')
-      server = await createServer()
+      const inviteRequired = url?.query && 'invite' in url.query
+      server = await createServer({inviteRequired})
       console.log('Listening at', server.pdsUrl)
       if (url?.query) {
         if ('users' in url.query) {

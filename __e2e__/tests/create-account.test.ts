@@ -5,7 +5,7 @@ import {openApp, createServer} from '../util'
 describe('Create account', () => {
   let service: string
   beforeAll(async () => {
-    service = await createServer('mock0')
+    service = await createServer('')
     await openApp({permissions: {notifications: 'YES'}})
   })
 
