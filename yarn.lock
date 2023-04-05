@@ -30,10 +30,10 @@
     tlds "^1.234.0"
     typed-emitter "^2.1.0"
 
-"@atproto/api@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.2.1.tgz#034cab5928e1a6b0059e7237f6a82c57daadb264"
-  integrity sha512-ub92BFrHrm/r1En9IedqRc9r9BZy0i7J8mmFZ5EMxRJwdCJeMYB8CdmLfgNXQcsTPswbYF94pyZkrpeQNJWr1A==
+"@atproto/api@0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.2.3.tgz#0eb9cb542c113b2c839f2c5ca284c30b117f489a"
+  integrity sha512-i0tWdOPQyZuSlkd2MY3s7QTac2ovH104tzy5rJwTZXZyhpf2Zom1xedaHb+pQmFzug7YaD7tx7OMSPlJIV0dpg==
   dependencies:
     "@atproto/common-web" "*"
     "@atproto/uri" "*"

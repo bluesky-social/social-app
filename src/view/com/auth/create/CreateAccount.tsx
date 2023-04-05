@@ -8,7 +8,6 @@ import {
   View,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {sha256} from 'js-sha256'
 import {useAnalytics} from 'lib/analytics'
 import {Text} from '../../util/text/Text'
 import {s, colors} from 'lib/styles'
@@ -22,7 +21,7 @@ import {Step3} from './Step3'
 
 export const CreateAccount = observer(
   ({onPressBack}: {onPressBack: () => void}) => {
-    const {track, screen, identify} = useAnalytics()
+    const {track, screen} = useAnalytics()
     const pal = usePalette('default')
     const store = useStores()
     const model = React.useMemo(() => new CreateAccountModel(store), [store])
@@ -57,14 +56,12 @@ export const CreateAccount = observer(
       } else {
         try {
           await model.submit()
-          const email_hashed = sha256(model.email)
-          identify(email_hashed, {email_hashed})
           track('Create Account')
         } catch {
           // dont need to handle here
         }
       }
-    }, [model, identify, track])
+    }, [model, track])
 
     return (
       <ScrollView testID="createAccount" style={pal.view}>

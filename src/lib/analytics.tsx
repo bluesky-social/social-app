@@ -1,19 +1,56 @@
 import React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
-import {createClient, AnalyticsProvider} from '@segment/analytics-react-native'
+import {
+  createClient,
+  AnalyticsProvider,
+  useAnalytics as useAnalyticsOrig,
+} from '@segment/analytics-react-native'
 import {RootStoreModel, AppInfo} from 'state/models/root-store'
+import {useStores} from 'state/models/root-store'
+import {sha256} from 'js-sha256'
 
 const segmentClient = createClient({
   writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
   trackAppLifecycleEvents: false,
 })
-export const track = segmentClient?.track?.bind?.(segmentClient)
 
-export {useAnalytics} from '@segment/analytics-react-native'
+export function useAnalytics() {
+  const store = useStores()
+  const methods = useAnalyticsOrig()
+  return React.useMemo(() => {
+    if (store.session.hasSession) {
+      return methods
+    }
+    // dont send analytics pings for anonymous users
+    return {
+      screen: () => {},
+      track: () => {},
+      identify: () => {},
+      flush: () => {},
+      group: () => {},
+      alias: () => {},
+      reset: () => {},
+    }
+  }, [store, methods])
+}
 
 export function init(store: RootStoreModel) {
+  store.onSessionLoaded(() => {
+    const sess = store.session.currentSession
+    if (sess) {
+      if (sess.email) {
+        store.log.debug('Ping w/hash')
+        const email_hashed = sha256(sess.email)
+        segmentClient.identify(email_hashed, {email_hashed})
+      } else {
+        store.log.debug('Ping w/o hash')
+        segmentClient.identify()
+      }
+    }
+  })
+
   // NOTE
-  // this method is a copy of segment's own lifecycle event tracking
+  // this is a copy of segment's own lifecycle event tracking
   // we handle it manually to ensure that it never fires while the app is backgrounded
   // -prf
   segmentClient.isReady.onChange(() => {
@@ -33,23 +70,29 @@ export function init(store: RootStoreModel) {
     store.log.debug('Recording app info', {new: newAppInfo, old: oldAppInfo})
 
     if (typeof oldAppInfo === 'undefined') {
-      segmentClient.track('Application Installed', {
-        version: newAppInfo.version,
-        build: newAppInfo.build,
-      })
+      if (store.session.hasSession) {
+        segmentClient.track('Application Installed', {
+          version: newAppInfo.version,
+          build: newAppInfo.build,
+        })
+      }
     } else if (newAppInfo.version !== oldAppInfo.version) {
-      segmentClient.track('Application Updated', {
+      if (store.session.hasSession) {
+        segmentClient.track('Application Updated', {
+          version: newAppInfo.version,
+          build: newAppInfo.build,
+          previous_version: oldAppInfo.version,
+          previous_build: oldAppInfo.build,
+        })
+      }
+    }
+    if (store.session.hasSession) {
+      segmentClient.track('Application Opened', {
+        from_background: false,
         version: newAppInfo.version,
         build: newAppInfo.build,
-        previous_version: oldAppInfo.version,
-        previous_build: oldAppInfo.build,
       })
     }
-    segmentClient.track('Application Opened', {
-      from_background: false,
-      version: newAppInfo.version,
-      build: newAppInfo.build,
-    })
   })
 
   let lastState: AppStateStatus = AppState.currentState
