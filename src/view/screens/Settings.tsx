@@ -45,8 +45,6 @@ export const SettingsScreen = withAuthRequired(
     const {screen, track} = useAnalytics()
     const [isSwitching, setIsSwitching] = React.useState(false)
 
-    const numCodes = 5
-
     const primaryBg = useCustomPalette<ViewStyle>({
       light: {backgroundColor: colors.blue0},
       dark: {backgroundColor: colors.blue6},
@@ -226,19 +224,22 @@ export const SettingsScreen = withAuthRequired(
             <View
               style={[
                 styles.iconContainer,
-                numCodes > 0 ? primaryBg : pal.btn,
+                store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
               ]}>
               <FontAwesomeIcon
                 icon="ticket"
                 style={
-                  (numCodes > 0
+                  (store.me.invitesAvailable > 0
                     ? primaryText
                     : pal.text) as FontAwesomeIconStyle
                 }
               />
             </View>
-            <Text type="lg" style={numCodes > 0 ? pal.link : pal.text}>
-              {numCodes} invite {pluralize(numCodes, 'code')} available
+            <Text
+              type="lg"
+              style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
+              {store.me.invitesAvailable} invite{' '}
+              {pluralize(store.me.invitesAvailable, 'code')} available
             </Text>
           </TouchableOpacity>
 

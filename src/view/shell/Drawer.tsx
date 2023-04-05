@@ -209,7 +209,9 @@ export const DrawerContent = observer(() => {
               )
             }
             label="Notifications"
-            count={store.me.notifications.unreadCount}
+            count={
+              store.me.notifications.unreadCount + store.invitedUsers.numNotifs
+            }
             bold={isAtNotifications}
             onPress={onPressNotifications}
           />
@@ -323,11 +325,10 @@ function MenuItem({
   )
 }
 
-function InviteCodes() {
+const InviteCodes = observer(() => {
   const {track} = useAnalytics()
   const store = useStores()
   const pal = usePalette('default')
-  const numCodes = 5
   const onPress = React.useCallback(() => {
     track('Menu:ItemClicked', {url: '#invite-codes'})
     store.shell.closeDrawer()
@@ -339,16 +340,19 @@ function InviteCodes() {
         icon="ticket"
         style={[
           styles.inviteCodesIcon,
-          numCodes > 0 ? pal.link : pal.textLight,
+          store.me.invitesAvailable > 0 ? pal.link : pal.textLight,
         ]}
         size={18}
       />
-      <Text type="lg-medium" style={numCodes > 0 ? pal.link : pal.textLight}>
-        {numCodes} invite {pluralize(numCodes, 'code')}
+      <Text
+        type="lg-medium"
+        style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}>
+        {store.me.invitesAvailable} invite{' '}
+        {pluralize(store.me.invitesAvailable, 'code')}
       </Text>
     </TouchableOpacity>
   )
-}
+})
 
 const styles = StyleSheet.create({
   view: {

@@ -1,9 +1,12 @@
 import {makeAutoObservable, runInAction} from 'mobx'
+import {ComAtprotoServerDefs} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {PostsFeedModel} from './feeds/posts'
 import {NotificationsFeedModel} from './feeds/notifications'
 import {MyFollowsCache} from './cache/my-follows'
 import {isObj, hasProp} from 'lib/type-guards'
+
+const PROFILE_UPDATE_INTERVAL = 10 * 60 * 1e3 // 10min
 
 export class MeModel {
   did: string = ''
@@ -16,6 +19,12 @@ export class MeModel {
   mainFeed: PostsFeedModel
   notifications: NotificationsFeedModel
   follows: MyFollowsCache
+  invites: ComAtprotoServerDefs.InviteCode[] = []
+  lastProfileStateUpdate = Date.now()
+
+  get invitesAvailable() {
+    return this.invites.filter(isInviteAvailable).length
+  }
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -39,6 +48,7 @@ export class MeModel {
     this.displayName = ''
     this.description = ''
     this.avatar = ''
+    this.invites = []
   }
 
   serialize(): unknown {
@@ -85,24 +95,7 @@ export class MeModel {
     if (sess.hasSession) {
       this.did = sess.currentSession?.did || ''
       this.handle = sess.currentSession?.handle || ''
-      const profile = await this.rootStore.agent.getProfile({
-        actor: this.did,
-      })
-      runInAction(() => {
-        if (profile?.data) {
-          this.displayName = profile.data.displayName || ''
-          this.description = profile.data.description || ''
-          this.avatar = profile.data.avatar || ''
-          this.followsCount = profile.data.followsCount
-          this.followersCount = profile.data.followersCount
-        } else {
-          this.displayName = ''
-          this.description = ''
-          this.avatar = ''
-          this.followsCount = profile.data.followsCount
-          this.followersCount = undefined
-        }
-      })
+      await this.fetchProfile()
       this.mainFeed.clear()
       await Promise.all([
         this.mainFeed.setup().catch(e => {
@@ -113,8 +106,69 @@ export class MeModel {
         }),
       ])
       this.rootStore.emitSessionLoaded()
+      await this.fetchInviteCodes()
     } else {
       this.clear()
     }
   }
+
+  async updateIfNeeded() {
+    if (Date.now() - this.lastProfileStateUpdate > PROFILE_UPDATE_INTERVAL) {
+      this.rootStore.log.debug('Updating me profile information')
+      await this.fetchProfile()
+      await this.fetchInviteCodes()
+    }
+    await this.notifications.loadUnreadCount()
+  }
+
+  async fetchProfile() {
+    const profile = await this.rootStore.agent.getProfile({
+      actor: this.did,
+    })
+    runInAction(() => {
+      if (profile?.data) {
+        this.displayName = profile.data.displayName || ''
+        this.description = profile.data.description || ''
+        this.avatar = profile.data.avatar || ''
+        this.followsCount = profile.data.followsCount
+        this.followersCount = profile.data.followersCount
+      } else {
+        this.displayName = ''
+        this.description = ''
+        this.avatar = ''
+        this.followsCount = profile.data.followsCount
+        this.followersCount = undefined
+      }
+    })
+  }
+
+  async fetchInviteCodes() {
+    if (this.rootStore.session) {
+      try {
+        const res =
+          await this.rootStore.agent.com.atproto.server.getAccountInviteCodes(
+            {},
+          )
+        runInAction(() => {
+          this.invites = res.data.codes
+          this.invites.sort((a, b) => {
+            if (!isInviteAvailable(a)) {
+              return 1
+            }
+            if (!isInviteAvailable(b)) {
+              return -1
+            }
+            return 0
+          })
+        })
+      } catch (e) {
+        this.rootStore.log.error('Failed to fetch user invite codes', e)
+      }
+      await this.rootStore.invitedUsers.fetch(this.invites)
+    }
+  }
+}
+
+function isInviteAvailable(invite: ComAtprotoServerDefs.InviteCode): boolean {
+  return invite.available - invite.uses.length > 0 && !invite.disabled
 }

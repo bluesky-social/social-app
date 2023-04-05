@@ -157,7 +157,9 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
       />
       <NavItem
         href="/notifications"
-        count={store.me.notifications.unreadCount}
+        count={
+          store.me.notifications.unreadCount + store.invitedUsers.numNotifs
+        }
         icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
         iconFilled={
           <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />

@@ -167,7 +167,9 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
           )
         }
         onPress={onPressNotifications}
-        notificationCount={store.me.notifications.unreadCount}
+        notificationCount={
+          store.me.notifications.unreadCount + store.invitedUsers.numNotifs
+        }
       />
       <Btn
         testID="bottomBarProfileBtn"

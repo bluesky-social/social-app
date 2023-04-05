@@ -8,7 +8,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
-import FollowButton from './FollowButton'
+import {FollowButton} from './FollowButton'
 
 export function ProfileCard({
   testID,

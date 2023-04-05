@@ -5,6 +5,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import Clipboard from '@react-native-clipboard/clipboard'
+import {ComAtprotoServerDefs} from '@atproto/api'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
@@ -19,18 +20,11 @@ export function Component({}: {}) {
   const pal = usePalette('default')
   const store = useStores()
 
-  const codes = [
-    'bsky-social-xxxxxxx',
-    'bsky-social-xxxxxxx',
-    'bsky-social-xxxxxxx',
-    'bsky-social-xxxxxxx',
-  ]
-
   const onClose = React.useCallback(() => {
     store.shell.closeModal()
   }, [store])
 
-  if (codes.length === 0) {
+  if (store.me.invites.length === 0) {
     return (
       <View style={[styles.container, pal.view]}>
         <View style={[styles.empty, pal.viewLight]}>
@@ -66,8 +60,12 @@ export function Component({}: {}) {
         ( We'll send you more periodically. )
       </Text>
       <ScrollView style={[styles.scrollContainer, pal.border]}>
-        {codes.map((code, i) => (
-          <InviteCode key={i} code={code} />
+        {store.me.invites.map((invite, i) => (
+          <InviteCode
+            key={i}
+            code={invite.code}
+            used={invite.available - invite.uses.length <= 0 || invite.disabled}
+          />
         ))}
       </ScrollView>
       <View style={styles.btnContainer}>

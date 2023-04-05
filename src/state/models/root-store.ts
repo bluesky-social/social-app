@@ -16,6 +16,7 @@ import {ProfilesCache} from './cache/profiles-view'
 import {LinkMetasCache} from './cache/link-metas'
 import {NotificationsFeedItemModel} from './feeds/notifications'
 import {MeModel} from './me'
+import {InvitedUsers} from './invited-users'
 import {PreferencesModel} from './ui/preferences'
 import {resetToTab} from '../../Navigation'
 import {ImageSizesCache} from './cache/image-sizes'
@@ -36,6 +37,7 @@ export class RootStoreModel {
   shell = new ShellUiModel(this)
   preferences = new PreferencesModel()
   me = new MeModel(this)
+  invitedUsers = new InvitedUsers(this)
   profiles = new ProfilesCache(this)
   linkMetas = new LinkMetasCache(this)
   imageSizes = new ImageSizesCache()
@@ -61,6 +63,7 @@ export class RootStoreModel {
       me: this.me.serialize(),
       shell: this.shell.serialize(),
       preferences: this.preferences.serialize(),
+      invitedUsers: this.invitedUsers.serialize(),
     }
   }
 
@@ -83,6 +86,9 @@ export class RootStoreModel {
       }
       if (hasProp(v, 'preferences')) {
         this.preferences.hydrate(v.preferences)
+      }
+      if (hasProp(v, 'invitedUsers')) {
+        this.invitedUsers.hydrate(v.invitedUsers)
       }
     }
   }
@@ -141,7 +147,7 @@ export class RootStoreModel {
       return
     }
     try {
-      await this.me.notifications.loadUnreadCount()
+      await this.me.updateIfNeeded()
     } catch (e: any) {
       this.log.error('Failed to fetch latest state', e)
     }
