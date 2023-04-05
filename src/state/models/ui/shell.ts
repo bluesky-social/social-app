@@ -61,6 +61,10 @@ export interface WaitlistModal {
   name: 'waitlist'
 }
 
+export interface InviteCodesModal {
+  name: 'invite-codes'
+}
+
 export type Modal =
   | ConfirmModal
   | EditProfileModal
@@ -72,6 +76,7 @@ export type Modal =
   | RepostModal
   | ChangeHandleModal
   | WaitlistModal
+  | InviteCodesModal
 
 interface LightboxModel {}
 

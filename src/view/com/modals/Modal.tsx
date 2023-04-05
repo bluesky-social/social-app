@@ -14,6 +14,7 @@ import * as ReportAccountModal from './ReportAccount'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
+import * as InviteCodesModal from './InviteCodes'
 import {usePalette} from 'lib/hooks/usePalette'
 import {StyleSheet} from 'react-native'
 
@@ -73,6 +74,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'waitlist') {
     snapPoints = WaitlistModal.snapPoints
     element = <WaitlistModal.Component />
+  } else if (activeModal?.name === 'invite-codes') {
+    snapPoints = InviteCodesModal.snapPoints
+    element = <InviteCodesModal.Component />
   } else {
     return <View />
   }
