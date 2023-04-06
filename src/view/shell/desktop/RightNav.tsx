@@ -45,7 +45,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
   )
 })
 
-function InviteCodes() {
+const InviteCodes = observer(() => {
   const store = useStores()
   const pal = usePalette('default')
 
@@ -72,7 +72,7 @@ function InviteCodes() {
       </Text>
     </TouchableOpacity>
   )
-}
+})
 
 const styles = StyleSheet.create({
   rightNav: {
