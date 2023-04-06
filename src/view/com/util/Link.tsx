@@ -90,6 +90,7 @@ export const TextLink = observer(function TextLink({
   text,
   numberOfLines,
   lineHeight,
+  dataSet,
 }: {
   testID?: string
   type?: TypographyVariant
@@ -98,6 +99,7 @@ export const TextLink = observer(function TextLink({
   text: string | JSX.Element | React.ReactNode
   numberOfLines?: number
   lineHeight?: number
+  dataSet?: any
 }) {
   const {...props} = useLinkProps({to: href})
   const store = useStores()
@@ -117,6 +119,8 @@ export const TextLink = observer(function TextLink({
       style={style}
       numberOfLines={numberOfLines}
       lineHeight={lineHeight}
+      // @ts-ignore web only -prf
+      dataSet={dataSet}
       {...props}>
       {text}
     </Text>

@@ -8,6 +8,8 @@ import {toShortUrl} from 'lib/strings/url-helpers'
 import {useTheme, TypographyVariant} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 
+const WORD_WRAP = {wordWrap: 1}
+
 export function RichText({
   testID,
   type = 'md',
@@ -39,7 +41,8 @@ export function RichText({
         lineHeight: 30,
       }
       return (
-        <Text testID={testID} style={[style, pal.text]}>
+        // @ts-ignore web only -prf
+        <Text testID={testID} style={[style, pal.text]} dataSet={WORD_WRAP}>
           {text}
         </Text>
       )
@@ -48,7 +51,9 @@ export function RichText({
       <Text
         testID={testID}
         type={type}
-        style={[style, pal.text, lineHeightStyle]}>
+        style={[style, pal.text, lineHeightStyle]}
+        // @ts-ignore web only -prf
+        dataSet={WORD_WRAP}>
         {text}
       </Text>
     )
@@ -72,6 +77,7 @@ export function RichText({
           text={segment.text}
           href={`/profile/${mention.did}`}
           style={[style, lineHeightStyle, pal.link]}
+          dataSet={WORD_WRAP}
         />,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
@@ -82,6 +88,7 @@ export function RichText({
           text={toShortUrl(segment.text)}
           href={link.uri}
           style={[style, lineHeightStyle, pal.link]}
+          dataSet={WORD_WRAP}
         />,
       )
     } else {
@@ -94,7 +101,9 @@ export function RichText({
       testID={testID}
       type={type}
       style={[style, pal.text, lineHeightStyle]}
-      numberOfLines={numberOfLines}>
+      numberOfLines={numberOfLines}
+      // @ts-ignore web only -prf
+      dataSet={WORD_WRAP}>
       {els}
     </Text>
   )
