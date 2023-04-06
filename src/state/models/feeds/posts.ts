@@ -85,7 +85,7 @@ export class PostsFeedItemModel {
   }
 
   get reasonRepost(): ReasonRepost | undefined {
-    if (this.reason?.$type === 'app.bsky.feed.feedViewPost#reasonRepost') {
+    if (this.reason?.$type === 'app.bsky.feed.defs#reasonRepost') {
       return this.reason as ReasonRepost
     }
   }

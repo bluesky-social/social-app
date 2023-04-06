@@ -94,7 +94,7 @@ function mergePosts(
 
 function isARepostOfSomeoneElse(post: AppBskyFeedDefs.FeedViewPost): boolean {
   return (
-    post.reason?.$type === 'app.bsky.feed.feedViewPost#reasonRepost' &&
+    post.reason?.$type === 'app.bsky.feed.defs#reasonRepost' &&
     post.post.author.did !== (post.reason as ReasonRepost).by.did
   )
 }
