@@ -20,6 +20,8 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
   apiPolyfill.doPolyfill()
 
   rootStore = new RootStoreModel(new BskyAgent({service: serviceUri}))
+  // TODO only do this in dev?
+  ;(window as any).store = rootStore
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
     rootStore.log.debug('Initial hydrate', {hasSession: !!data.session})

@@ -40,24 +40,22 @@ export const SplashScreen = ({
           <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
             See what's next
           </Text>
-          {isDesktopWeb && (
-            <View testID="signinOrCreateAccount" style={styles.btns}>
-              <TouchableOpacity
-                testID="createAccountButton"
-                style={[styles.btn, {backgroundColor: colors.blue3}]}
-                onPress={onPressCreateAccount}>
-                <Text style={[s.white, styles.btnLabel]}>
-                  Create a new account
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                testID="signInButton"
-                style={[styles.btn, pal.btn]}
-                onPress={onPressSignin}>
-                <Text style={[pal.text, styles.btnLabel]}>Sign in</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          <View testID="signinOrCreateAccount" style={styles.btns}>
+            <TouchableOpacity
+              testID="createAccountButton"
+              style={[styles.btn, {backgroundColor: colors.blue3}]}
+              onPress={onPressCreateAccount}>
+              <Text style={[s.white, styles.btnLabel]}>
+                Create a new account
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              testID="signInButton"
+              style={[styles.btn, pal.btn]}
+              onPress={onPressSignin}>
+              <Text style={[pal.text, styles.btnLabel]}>Sign in</Text>
+            </TouchableOpacity>
+          </View>
           <Text
             type="xl"
             style={[styles.notice, pal.textLight]}

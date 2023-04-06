@@ -191,10 +191,11 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
 
 const styles = StyleSheet.create({
   leftNav: {
-    position: 'absolute',
-    top: 10,
-    right: 'calc(50vw + 300px)',
-    width: 220,
+    // position: 'fixed',
+    // position: 'absolute',
+    // top: 10,
+    // right: 'calc(50vw + 300px)',
+    // width: 220,
   },
 
   profileCard: {

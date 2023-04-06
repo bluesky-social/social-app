@@ -1,6 +1,7 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {View, StyleSheet} from 'react-native'
+import {useMediaQuery} from 'react-responsive'
 import {useStores} from 'state/index'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -11,9 +12,14 @@ import {Composer} from './Composer.web'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {s, colors} from 'lib/styles'
 import {RoutesContainer, FlatNavigator} from '../../Navigation'
+import {HamburgerIcon} from 'lib/icons'
+import {DrawerContent} from './Drawer'
 
 const ShellInner = observer(() => {
   const store = useStores()
+  const isDesktop = useMediaQuery({
+    query: '(min-width: 1230px)',
+  })
 
   return (
     <>
@@ -22,8 +28,8 @@ const ShellInner = observer(() => {
           <FlatNavigator />
         </ErrorBoundary>
       </View>
-      <DesktopLeftNav />
-      <DesktopRightNav />
+      {isDesktop && <DesktopLeftNav />}
+      {isDesktop && <DesktopRightNav />}
       <View style={[styles.viewBorder, styles.viewBorderLeft]} />
       <View style={[styles.viewBorder, styles.viewBorderRight]} />
       <Composer
@@ -36,6 +42,44 @@ const ShellInner = observer(() => {
       />
       <ModalsContainer />
       <Lightbox />
+      {!isDesktop && (
+        <button
+          style={{
+            position: 'absolute',
+            top: 5,
+            left: 10,
+            background: 'none',
+            border: 0,
+            padding: 0,
+          }}
+          onClick={() => store.shell.openDrawer()}>
+          <HamburgerIcon width={30} height={28} />
+        </button>
+      )}
+
+      {!isDesktop && store.shell.isDrawerOpen && (
+        <div
+          onClick={() => store.shell.closeDrawer()}
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            top: 0,
+            left: 0,
+            background: 'rgba(0,0,0,0.25)',
+          }}>
+          <div
+            style={{
+              display: 'flex',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              height: '100%',
+            }}>
+            <DrawerContent />
+          </div>
+        </div>
+      )}
     </>
   )
 })
