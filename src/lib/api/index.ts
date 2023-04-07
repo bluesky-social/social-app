@@ -3,6 +3,7 @@ import {
   AppBskyEmbedExternal,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyRichtextFacet,
   ComAtprotoRepoUploadBlob,
   RichText,
 } from '@atproto/api'
@@ -82,6 +83,17 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
 
   opts.onStateChange?.('Processing...')
   await rt.detectFacets(store.agent)
+
+  // filter out any mention facets that didn't map to a user
+  rt.facets = rt.facets?.filter(facet => {
+    const mention = facet.features.find(feature =>
+      AppBskyRichtextFacet.isMention(feature),
+    )
+    if (mention && !mention.did) {
+      return false
+    }
+    return true
+  })
 
   if (opts.quote) {
     embed = {
