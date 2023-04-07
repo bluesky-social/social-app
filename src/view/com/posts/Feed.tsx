@@ -169,6 +169,7 @@ export const Feed = observer(function Feed({
               onRefresh={onRefresh}
               tintColor={pal.colors.text}
               titleColor={pal.colors.text}
+              progressViewOffset={headerOffset}
             />
           }
           contentContainerStyle={s.contentContainer}
@@ -178,7 +179,6 @@ export const Feed = observer(function Feed({
           removeClippedSubviews={true}
           contentInset={{top: headerOffset}}
           contentOffset={{x: 0, y: headerOffset * -1}}
-          progressViewOffset={headerOffset}
         />
       )}
     </View>
