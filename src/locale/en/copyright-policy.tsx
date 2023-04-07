@@ -1,5 +1,5 @@
 import React from 'react'
-import {H3, H4, P, UL, LI, A, EM, OL} from 'view/com/util/Html'
+import {H3, H4, P, UL, LI, A} from 'view/com/util/Html'
 
 export default function () {
   return (
