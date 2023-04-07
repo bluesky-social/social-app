@@ -297,7 +297,9 @@ export class PostThreadModel {
       try {
         urip.host = await apilib.resolveName(this.rootStore, urip.host)
       } catch (e: any) {
-        this.error = e.toString()
+        runInAction(() => {
+          this.error = e.toString()
+        })
       }
     }
     runInAction(() => {
