@@ -5,6 +5,7 @@ import {FoafsModel} from 'state/models/discovery/foafs'
 import {SuggestedActorsModel} from 'state/models/discovery/suggested-actors'
 import {SuggestedFollows} from 'view/com/discover/SuggestedFollows'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 
 export const Suggestions = observer(
   ({
@@ -43,7 +44,9 @@ export const Suggestions = observer(
           return (
             <View key={`sf-${item.did}`} style={styles.suggestions}>
               <SuggestedFollows
-                title={`Followed by ${item.displayName || item.handle}`}
+                title={`Followed by ${sanitizeDisplayName(
+                  item.displayName || item.handle,
+                )}`}
                 suggestions={item.follows.slice(0, 10)}
               />
             </View>

@@ -16,6 +16,7 @@ import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {ago} from 'lib/strings/time'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {pluralize} from 'lib/strings/helpers'
 import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
@@ -151,7 +152,9 @@ export const PostThreadItem = observer(function PostThreadItem({
                     style={[pal.text]}
                     numberOfLines={1}
                     lineHeight={1.2}>
-                    {item.post.author.displayName || item.post.author.handle}
+                    {sanitizeDisplayName(
+                      item.post.author.displayName || item.post.author.handle,
+                    )}
                   </Text>
                 </Link>
                 <Text type="md" style={[styles.metaItem, pal.textLight]}>

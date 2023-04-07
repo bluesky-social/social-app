@@ -9,6 +9,7 @@ import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {FollowButton} from './FollowButton'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 
 export function ProfileCard({
   testID,
@@ -57,7 +58,7 @@ export function ProfileCard({
             style={[s.bold, pal.text]}
             numberOfLines={1}
             lineHeight={1.2}>
-            {displayName || handle}
+            {sanitizeDisplayName(displayName || handle)}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
             @{handle}

@@ -26,6 +26,7 @@ import {useStores} from 'state/index'
 import * as apilib from 'lib/api/index'
 import {ComposerOpts} from 'state/models/ui/shell'
 import {s, colors, gradients} from 'lib/styles'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {cleanError} from 'lib/strings/errors'
 import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
@@ -265,7 +266,9 @@ export const ComposePost = observer(function ComposePost({
                 <UserAvatar avatar={replyTo.author.avatar} size={50} />
                 <View style={styles.replyToPost}>
                   <Text type="xl-medium" style={[pal.text]}>
-                    {replyTo.author.displayName || replyTo.author.handle}
+                    {sanitizeDisplayName(
+                      replyTo.author.displayName || replyTo.author.handle,
+                    )}
                   </Text>
                   <Text type="post-text" style={pal.text} numberOfLines={6}>
                     {replyTo.text}

@@ -6,6 +6,7 @@ import {Text} from './text/Text'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
 import {useStores} from 'state/index'
 import {TypographyVariant} from 'lib/ThemeContext'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 
 export function UserInfoText({
   type = 'md',
@@ -68,7 +69,9 @@ export function UserInfoText({
         lineHeight={1.2}
         numberOfLines={1}
         href={`/profile/${profile.handle}`}
-        text={`${prefix || ''}${profile[attr] || profile.handle}`}
+        text={`${prefix || ''}${sanitizeDisplayName(
+          profile[attr] || profile.handle,
+        )}`}
       />
     )
   } else {

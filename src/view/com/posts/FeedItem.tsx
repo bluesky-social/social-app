@@ -22,6 +22,7 @@ import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 
 export const FeedItem = observer(function ({
   item,
@@ -151,9 +152,9 @@ export const FeedItem = observer(function ({
           <Link
             style={styles.includeReason}
             href={`/profile/${item.reasonRepost.by.handle}`}
-            title={
-              item.reasonRepost.by.displayName || item.reasonRepost.by.handle
-            }>
+            title={sanitizeDisplayName(
+              item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
+            )}>
             <FontAwesomeIcon
               icon="retweet"
               style={[
@@ -172,10 +173,10 @@ export const FeedItem = observer(function ({
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}
-                text={
+                text={sanitizeDisplayName(
                   item.reasonRepost.by.displayName ||
-                  item.reasonRepost.by.handle
-                }
+                    item.reasonRepost.by.handle,
+                )}
                 href={`/profile/${item.reasonRepost.by.handle}`}
               />
             </Text>

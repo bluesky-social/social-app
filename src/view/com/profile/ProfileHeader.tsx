@@ -18,6 +18,7 @@ import {useStores} from 'state/index'
 import {ProfileImageLightbox} from 'state/models/ui/shell'
 import {pluralize} from 'lib/strings/helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {s, colors} from 'lib/styles'
 import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
@@ -58,7 +59,7 @@ export const ProfileHeader = observer(
             </View>
             <View style={styles.displayNameLine}>
               <Text type="title-2xl" style={[pal.text, styles.title]}>
-                {view.displayName || view.handle}
+                {sanitizeDisplayName(view.displayName || view.handle)}
               </Text>
             </View>
           </View>
@@ -108,9 +109,9 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
     view?.toggleFollowing().then(
       () => {
         Toast.show(
-          `${view.viewer.following ? 'Following' : 'No longer following'} ${
-            view.displayName || view.handle
-          }`,
+          `${
+            view.viewer.following ? 'Following' : 'No longer following'
+          } ${sanitizeDisplayName(view.displayName || view.handle)}`,
         )
       },
       err => store.log.error('Failed to toggle follow', err),
@@ -266,7 +267,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
             testID="profileHeaderDisplayName"
             type="title-2xl"
             style={[pal.text, styles.title]}>
-            {view.displayName || view.handle}
+            {sanitizeDisplayName(view.displayName || view.handle)}
           </Text>
         </View>
         <View style={styles.handleLine}>

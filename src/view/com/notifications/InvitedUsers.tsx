@@ -15,6 +15,7 @@ import {CenteredView} from '../util/Views.web'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 
 export const InvitedUsers = observer(() => {
   const store = useStores()
@@ -65,7 +66,7 @@ function InvitedUser({
             type="md-bold"
             style={pal.text}
             href={`/profile/${profile.handle}`}
-            text={profile.displayName || profile.handle}
+            text={sanitizeDisplayName(profile.displayName || profile.handle)}
           />{' '}
           joined using your invite code!
         </Text>
