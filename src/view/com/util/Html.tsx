@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from './text/Text'
 import {TextLink} from './Link'
+import {isDesktopWeb} from 'platform/detection'
 
 /**
  * These utilities are used to define long documents in an html-like
@@ -54,12 +55,26 @@ export function P({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function UL({children}: React.PropsWithChildren<{}>) {
-  return <View style={styles.ul}>{children}</View>
+export function UL({
+  children,
+  isChild,
+}: React.PropsWithChildren<{isChild: boolean}>) {
+  return (
+    <View style={[styles.ul, isChild && styles.ulChild]}>
+      {markChildProps(children)}
+    </View>
+  )
 }
 
-export function OL({children}: React.PropsWithChildren<{}>) {
-  return <View style={styles.ol}>{children}</View>
+export function OL({
+  children,
+  isChild,
+}: React.PropsWithChildren<{isChild: boolean}>) {
+  return (
+    <View style={[styles.ol, isChild && styles.olChild]}>
+      {markChildProps(children)}
+    </View>
+  )
 }
 
 export function LI({
@@ -71,7 +86,7 @@ export function LI({
     <View style={styles.li}>
       <Text style={[pal.text, styles.liBullet]}>{value || <>&bull;</>}</Text>
       <Text type="md" style={[pal.text, styles.liText]}>
-        {children}
+        {markChildProps(children)}
       </Text>
     </View>
   )
@@ -87,6 +102,33 @@ export function A({children, href}: React.PropsWithChildren<{href: string}>) {
       href={href}
     />
   )
+}
+
+export function STRONG({children}: React.PropsWithChildren<{}>) {
+  const pal = usePalette('default')
+  return (
+    <Text type="md-medium" style={[pal.text]}>
+      {children}
+    </Text>
+  )
+}
+
+export function EM({children}: React.PropsWithChildren<{}>) {
+  const pal = usePalette('default')
+  return (
+    <Text type="md" style={[pal.text, styles.em]}>
+      {children}
+    </Text>
+  )
+}
+
+function markChildProps(children) {
+  return React.Children.map(children, child => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, {isChild: true})
+    }
+    return child
+  })
 }
 
 const styles = StyleSheet.create({
@@ -112,15 +154,23 @@ const styles = StyleSheet.create({
   },
   ul: {
     marginBottom: 10,
-    paddingLeft: 18,
+    paddingLeft: isDesktopWeb ? 18 : 4,
+  },
+  ulChild: {
+    paddingTop: 10,
+    marginBottom: 0,
   },
   ol: {
     marginBottom: 10,
-    paddingLeft: 18,
+    paddingLeft: isDesktopWeb ? 18 : 4,
+  },
+  olChild: {
+    paddingTop: 10,
+    marginBottom: 0,
   },
   li: {
     flexDirection: 'row',
-    paddingRight: 10,
+    paddingRight: 20,
     marginBottom: 10,
   },
   liBullet: {
@@ -129,5 +179,8 @@ const styles = StyleSheet.create({
   liText: {},
   a: {
     marginBottom: 10,
+  },
+  em: {
+    fontStyle: 'italic',
   },
 })

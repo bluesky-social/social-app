@@ -15,4 +15,7 @@ export const router = new Router({
   Log: '/sys/log',
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
+  TermsOfService: '/support/tos',
+  CommunityGuidelines: '/support/community-guidelines',
+  CopyrightPolicy: '/support/copyright',
 })

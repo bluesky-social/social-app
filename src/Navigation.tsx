@@ -37,6 +37,9 @@ import {DebugScreen} from './view/screens/Debug'
 import {LogScreen} from './view/screens/Log'
 import {SupportScreen} from './view/screens/Support'
 import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
+import {TermsOfServiceScreen} from './view/screens/TermsOfService'
+import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
+import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -68,6 +71,12 @@ function commonScreens(Stack: typeof HomeTab) {
       <Stack.Screen name="Log" component={LogScreen} />
       <Stack.Screen name="Support" component={SupportScreen} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+      <Stack.Screen name="TermsOfService" component={TermsOfServiceScreen} />
+      <Stack.Screen
+        name="CommunityGuidelines"
+        component={CommunityGuidelinesScreen}
+      />
+      <Stack.Screen name="CopyrightPolicy" component={CopyrightPolicyScreen} />
     </>
   )
 }

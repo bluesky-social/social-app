@@ -16,6 +16,9 @@ export type CommonNavigatorParams = {
   Log: undefined
   Support: undefined
   PrivacyPolicy: undefined
+  TermsOfService: undefined
+  CommunityGuidelines: undefined
+  CopyrightPolicy: undefined
 }
 
 export type HomeTabNavigatorParams = CommonNavigatorParams & {
