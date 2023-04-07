@@ -5,7 +5,7 @@ import {
   AppBskyFeedDefs,
   RichText,
 } from '@atproto/api'
-import {AtUri} from '../../../third-party/uri'
+import {AtUri} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'

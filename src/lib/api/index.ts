@@ -6,7 +6,7 @@ import {
   ComAtprotoRepoUploadBlob,
   RichText,
 } from '@atproto/api'
-import {AtUri} from '../../third-party/uri'
+import {AtUri} from '@atproto/api'
 import {RootStoreModel} from 'state/models/root-store'
 import {isNetworkError} from 'lib/strings/errors'
 import {LinkMeta} from '../link-meta/link-meta'

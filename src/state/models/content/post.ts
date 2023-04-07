@@ -1,6 +1,6 @@
 import {makeAutoObservable} from 'mobx'
 import {AppBskyFeedPost as Post} from '@atproto/api'
-import {AtUri} from '../../../third-party/uri'
+import {AtUri} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 

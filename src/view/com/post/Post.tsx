@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
 import Clipboard from '@react-native-clipboard/clipboard'
-import {AtUri} from '../../../third-party/uri'
+import {AtUri} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadModel} from 'state/models/content/post-thread'
 import {Link} from '../util/Link'

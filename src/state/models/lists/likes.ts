@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AtUri} from '../../../third-party/uri'
+import {AtUri} from '@atproto/api'
 import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'

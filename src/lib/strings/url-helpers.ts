@@ -1,4 +1,4 @@
-import {AtUri} from '../../third-party/uri'
+import {AtUri} from '@atproto/api'
 import {PROD_SERVICE} from 'state/index'
 import TLDs from 'tlds'
 

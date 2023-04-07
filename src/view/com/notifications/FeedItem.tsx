@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
-import {AtUri} from '../../../third-party/uri'
+import {AtUri} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,

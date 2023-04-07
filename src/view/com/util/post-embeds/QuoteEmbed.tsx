@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleProp, StyleSheet, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages, AppBskyEmbedRecordWithMedia} from '@atproto/api'
-import {AtUri} from '../../../../third-party/uri'
+import {AtUri} from '@atproto/api'
 import {PostMeta} from '../PostMeta'
 import {Link} from '../Link'
 import {Text} from '../text/Text'

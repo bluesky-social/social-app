@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {PostsFeedSliceModel} from 'state/models/feeds/posts'
-import {AtUri} from '../../../third-party/uri'
+import {AtUri} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import Svg, {Circle, Line} from 'react-native-svg'
