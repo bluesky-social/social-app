@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AtUri} from '../../../third-party/uri'
+import {AtUri} from '@atproto/api'
 import {
   AppBskyFeedGetRepostedBy as GetRepostedBy,
   AppBskyActorDefs,
