@@ -18,6 +18,7 @@ import {NotificationsFeedItemModel} from 'state/models/feeds/notifications'
 import {PostThreadModel} from 'state/models/content/post-thread'
 import {s, colors} from 'lib/styles'
 import {ago} from 'lib/strings/time'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {pluralize} from 'lib/strings/helpers'
 import {HeartIconSolid} from 'lib/icons'
 import {Text} from '../util/text/Text'
@@ -187,7 +188,9 @@ export const FeedItem = observer(function FeedItem({
                   key={authors[0].href}
                   style={[pal.text, s.bold, styles.metaItem]}
                   href={authors[0].href}
-                  text={authors[0].displayName || authors[0].handle}
+                  text={sanitizeDisplayName(
+                    authors[0].displayName || authors[0].handle,
+                  )}
                 />
                 {authors.length > 1 ? (
                   <>
@@ -310,7 +313,7 @@ function ExpandedAuthorsList({
         <Link
           key={author.href}
           href={author.href}
-          title={author.displayName || author.handle}
+          title={sanitizeDisplayName(author.displayName || author.handle)}
           style={styles.expandedAuthor}
           asAnchor>
           <View style={styles.expandedAuthorAvi}>
@@ -322,7 +325,7 @@ function ExpandedAuthorsList({
               numberOfLines={1}
               style={pal.text}
               lineHeight={1.2}>
-              {author.displayName || author.handle}
+              {sanitizeDisplayName(author.displayName || author.handle)}
               &nbsp;
               <Text style={[pal.textLight]} lineHeight={1.2}>
                 {author.handle}

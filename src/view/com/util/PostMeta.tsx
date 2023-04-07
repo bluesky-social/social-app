@@ -9,6 +9,7 @@ import {UserAvatar} from './UserAvatar'
 import {observer} from 'mobx-react-lite'
 import {FollowButton} from '../profile/FollowButton'
 import {FollowState} from 'state/models/cache/my-follows'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 
 interface PostMetaOpts {
   authorAvatar?: string
@@ -52,7 +53,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
               style={pal.text}
               numberOfLines={1}
               lineHeight={1.2}
-              text={displayName}
+              text={sanitizeDisplayName(displayName)}
               href={`/profile/${opts.authorHandle}`}
             />
             <Text type="md" style={pal.textLight} lineHeight={1.2}>
@@ -103,7 +104,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
           lineHeight={1.2}
           text={
             <>
-              {displayName}
+              {sanitizeDisplayName(displayName)}
               <Text type="md" style={[pal.textLight]}>
                 &nbsp;{handle}
               </Text>

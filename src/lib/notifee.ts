@@ -3,6 +3,7 @@ import {AppBskyEmbedImages} from '@atproto/api'
 import {RootStoreModel} from 'state/models/root-store'
 import {NotificationsFeedItemModel} from 'state/models/feeds/notifications'
 import {enforceLen} from 'lib/strings/helpers'
+import {sanitizeDisplayName} from './strings/display-names'
 import {resetToTab} from '../Navigation'
 
 export function init(store: RootStoreModel) {
@@ -42,7 +43,9 @@ export function displayNotification(
 export function displayNotificationFromModel(
   notif: NotificationsFeedItemModel,
 ) {
-  let author = notif.author.displayName || notif.author.handle
+  let author = sanitizeDisplayName(
+    notif.author.displayName || notif.author.handle,
+  )
   let title: string
   let body: string = ''
   if (notif.isLike) {
