@@ -115,6 +115,7 @@ export class MeModel {
   async updateIfNeeded() {
     if (Date.now() - this.lastProfileStateUpdate > PROFILE_UPDATE_INTERVAL) {
       this.rootStore.log.debug('Updating me profile information')
+      this.lastProfileStateUpdate = Date.now()
       await this.fetchProfile()
       await this.fetchInviteCodes()
     }
