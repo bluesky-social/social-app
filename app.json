@@ -26,7 +26,15 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-localization"
+      "expo-localization",
+      "react-native-background-fetch",
+      [
+        "expo-build-properties", 
+        {
+        "android" : {
+          "kotlinVersion": "1.8.0"
+        }
+      }]
     ]
   }
 }
