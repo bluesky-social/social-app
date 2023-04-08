@@ -1,6 +1,7 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {StatusBar, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {StatusBar} from 'expo-status-bar'
+import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Drawer} from 'react-native-drawer-layout'
 import {useNavigationState} from '@react-navigation/native'
@@ -72,11 +73,7 @@ export const Shell: React.FC = observer(() => {
   const pal = usePalette('default')
   return (
     <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
-      <StatusBar
-        barStyle={
-          theme.colorScheme === 'dark' ? 'light-content' : 'dark-content'
-        }
-      />
+      <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
       <RoutesContainer>
         <ShellInner />
       </RoutesContainer>
