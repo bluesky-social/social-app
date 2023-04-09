@@ -2,7 +2,6 @@ import React from 'react'
 import {
   Animated,
   GestureResponderEvent,
-  StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native'
@@ -13,7 +12,6 @@ import {observer} from 'mobx-react-lite'
 import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
 import {useAnalytics} from 'lib/analytics'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {clamp} from 'lib/numbers'
 import {
   HomeIcon,
@@ -24,14 +22,14 @@ import {
   BellIconSolid,
   UserIcon,
 } from 'lib/icons'
-import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getTabState, TabState} from 'lib/routes/helpers'
+import {styles} from './BottomBarStyles'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 
 export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const store = useStores()
   const pal = usePalette('default')
-  const minimalShellInterp = useAnimatedValue(0)
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
   const {isAtHome, isAtSearch, isAtNotifications} = useNavigationState(
@@ -52,26 +50,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
     },
   )
 
-  React.useEffect(() => {
-    if (store.shell.minimalShellMode) {
-      Animated.timing(minimalShellInterp, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-        isInteraction: false,
-      }).start()
-    } else {
-      Animated.timing(minimalShellInterp, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: true,
-        isInteraction: false,
-      }).start()
-    }
-  }, [minimalShellInterp, store.shell.minimalShellMode])
-  const footerMinimalShellTransform = {
-    transform: [{translateY: Animated.multiply(minimalShellInterp, 100)}],
-  }
+  const {footerMinimalShellTransform} = useMinimalShellMode()
 
   const onPressTab = React.useCallback(
     (tab: string) => {
@@ -217,62 +196,3 @@ function Btn({
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  bottomBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    paddingLeft: 5,
-    paddingRight: 10,
-  },
-  ctrl: {
-    flex: 1,
-    paddingTop: 13,
-    paddingBottom: 4,
-  },
-  notificationCount: {
-    position: 'absolute',
-    left: '52%',
-    top: 8,
-    backgroundColor: colors.blue3,
-    paddingHorizontal: 4,
-    paddingBottom: 1,
-    borderRadius: 6,
-    zIndex: 1,
-  },
-  notificationCountLight: {
-    borderColor: colors.white,
-  },
-  notificationCountDark: {
-    borderColor: colors.gray8,
-  },
-  notificationCountLabel: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: colors.white,
-    fontVariant: ['tabular-nums'],
-  },
-  ctrlIcon: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
-  ctrlIconSizingWrapper: {
-    height: 27,
-  },
-  homeIcon: {
-    top: 0,
-  },
-  searchIcon: {
-    top: -2,
-  },
-  bellIcon: {
-    top: -2.5,
-  },
-  profileIcon: {
-    top: -4,
-  },
-})

@@ -15,6 +15,8 @@ import {
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
+import * as Mobile from './SearchMobile'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = withAuthRequired(
@@ -48,6 +50,12 @@ export const SearchScreen = withAuthRequired(
 
     if (searchUIModel) {
       return <SearchResults model={searchUIModel} />
+    }
+
+    const {isDesktop} = useWebMediaQueries()
+
+    if (!isDesktop) {
+      return <Mobile.SearchScreen navigation={null as any} route={route} />
     }
 
     return (

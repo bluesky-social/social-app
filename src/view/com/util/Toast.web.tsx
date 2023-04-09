@@ -55,9 +55,10 @@ export function show(text: string) {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    right: 20,
+    left: 20,
     bottom: 20,
-    width: 350,
+    width: 'calc(100% - 40px)',
+    maxWidth: 350,
     padding: 20,
     flexDirection: 'row',
     alignItems: 'center',

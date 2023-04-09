@@ -1,7 +1,6 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {View, StyleSheet} from 'react-native'
-import {useMediaQuery} from 'react-responsive'
 import {useStores} from 'state/index'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -12,14 +11,13 @@ import {Composer} from './Composer.web'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {s, colors} from 'lib/styles'
 import {RoutesContainer, FlatNavigator} from '../../Navigation'
-import {HamburgerIcon} from 'lib/icons'
 import {DrawerContent} from './Drawer'
+import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
+import {BottomBarWeb} from './BottomBarWeb'
 
 const ShellInner = observer(() => {
   const store = useStores()
-  const isDesktop = useMediaQuery({
-    query: '(min-width: 1230px)',
-  })
+  const {isDesktop} = useWebMediaQueries()
 
   return (
     <>
@@ -30,8 +28,10 @@ const ShellInner = observer(() => {
       </View>
       {isDesktop && <DesktopLeftNav />}
       {isDesktop && <DesktopRightNav />}
-      <View style={[styles.viewBorder, styles.viewBorderLeft]} />
-      <View style={[styles.viewBorder, styles.viewBorderRight]} />
+      {isDesktop && <View style={[styles.viewBorder, styles.viewBorderLeft]} />}
+      {isDesktop && (
+        <View style={[styles.viewBorder, styles.viewBorderRight]} />
+      )}
       <Composer
         active={store.shell.isComposerActive}
         onClose={() => store.shell.closeComposer()}
@@ -40,23 +40,9 @@ const ShellInner = observer(() => {
         quote={store.shell.composerOpts?.quote}
         onPost={store.shell.composerOpts?.onPost}
       />
+      {!isDesktop && <BottomBarWeb />}
       <ModalsContainer />
       <Lightbox />
-      {!isDesktop && (
-        <button
-          style={{
-            position: 'absolute',
-            top: 5,
-            left: 10,
-            background: 'none',
-            border: 0,
-            padding: 0,
-          }}
-          onClick={() => store.shell.openDrawer()}>
-          <HamburgerIcon width={30} height={28} />
-        </button>
-      )}
-
       {!isDesktop && store.shell.isDrawerOpen && (
         <div
           onClick={() => store.shell.closeDrawer()}

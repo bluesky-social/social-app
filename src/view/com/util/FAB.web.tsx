@@ -1,8 +1,14 @@
 import React from 'react'
-import {GestureResponderEvent, View} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {View} from 'react-native'
+import * as Mobile from './FABMobile'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
-type OnPress = ((event: GestureResponderEvent) => void) | undefined
-export const FAB = (_opts: {icon: IconProp; onPress: OnPress}) => {
+export const FAB = (_opts: Mobile.FABProps) => {
+  const {isDesktop} = useWebMediaQueries()
+
+  if (!isDesktop) {
+    return <Mobile.FAB {..._opts} />
+  }
+
   return <View />
 }
