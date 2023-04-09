@@ -366,6 +366,8 @@ const styles = StyleSheet.create({
     left: 10,
     width: 30,
     height: 30,
+    overflow: 'hidden',
+    borderRadius: 15,
   },
   backBtn: {
     width: 30,
