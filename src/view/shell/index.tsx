@@ -44,7 +44,7 @@ const ShellInner = observer(() => {
             open={store.shell.isDrawerOpen}
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
-            swipeEdgeWidth={winDim.width}
+            swipeEdgeWidth={winDim.width / 2}
             swipeEnabled={
               !canGoBack &&
               store.session.hasSession &&
