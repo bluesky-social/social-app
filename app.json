@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "bluesky",
+    "name": "Bluesky",
     "slug": "bluesky",
     "version": "1.15.0",
     "orientation": "portrait",
@@ -13,7 +13,19 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "xyz.blueskyweb.app"
+      "bundleIdentifier": "xyz.blueskyweb.app",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "fetch",
+          "processing"
+        ],
+        "BGTaskSchedulerPermittedIdentifiers": [
+          "com.transistorsoft.fetch"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
