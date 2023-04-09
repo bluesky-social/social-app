@@ -26,6 +26,7 @@ import useAnimatedComponents from './hooks/useAnimatedComponents'
 import useImageIndexChange from './hooks/useImageIndexChange'
 import useRequestClose from './hooks/useRequestClose'
 import {ImageSource} from './@types'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 type Props = {
   images: ImageSource[]
@@ -97,7 +98,7 @@ function ImageViewing({
   }
 
   return (
-    <View style={styles.screen} onLayout={onLayout}>
+    <SafeAreaView style={styles.screen} onLayout={onLayout}>
       <ModalsContainer />
       <View style={[styles.container, {opacity, backgroundColor}]}>
         <Animated.View style={[styles.header, {transform: headerTransform}]}>
@@ -152,7 +153,7 @@ function ImageViewing({
           </Animated.View>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 
