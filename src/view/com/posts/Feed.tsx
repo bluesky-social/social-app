@@ -173,11 +173,11 @@ export const Feed = observer(function Feed({
             />
           }
           contentContainerStyle={s.contentContainer}
+          style={{paddingTop: headerOffset}}
           onScroll={onScroll}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.6}
           removeClippedSubviews={true}
-          contentInset={{top: headerOffset}}
           contentOffset={{x: 0, y: headerOffset * -1}}
         />
       )}
