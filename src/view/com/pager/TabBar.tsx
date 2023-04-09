@@ -1,4 +1,4 @@
-import React, {createRef, useState, useMemo} from 'react'
+import React, {createRef, useState, useMemo, useRef} from 'react'
 import {
   Animated,
   StyleSheet,
@@ -46,6 +46,7 @@ export function TabBar({
     [items.length],
   )
   const panX = Animated.add(position, offset)
+  const containerRef = useRef<View>(null)
 
   const indicatorStyle = {
     backgroundColor: indicatorColor || pal.colors.link,
@@ -73,7 +74,12 @@ export function TabBar({
     for (let i = 0; i < items.length; i++) {
       promises.push(
         new Promise<Layout>(resolve => {
-          itemRefs[i].current?.measure(
+          if (!containerRef.current || !itemRefs[i].current) {
+            return resolve({x: 0, width: 0})
+          }
+
+          itemRefs[i].current?.measureLayout(
+            containerRef.current,
             (x: number, _y: number, width: number) => {
               resolve({x, width})
             },
@@ -94,7 +100,11 @@ export function TabBar({
   }
 
   return (
-    <View testID={testID} style={[pal.view, styles.outer]} onLayout={onLayout}>
+    <View
+      testID={testID}
+      style={[pal.view, styles.outer]}
+      onLayout={onLayout}
+      ref={containerRef}>
       <Animated.View style={[styles.indicator, indicatorStyle]} />
       {items.map((item, i) => {
         const selected = i === selectedPage
