@@ -1,4 +1,4 @@
-import React, {createRef, useState, useMemo} from 'react'
+import React, {createRef, useState, useMemo, useRef} from 'react'
 import {
   Animated,
   StyleSheet,
@@ -24,6 +24,7 @@ export function Selector({
   panX: Animated.Value
   onSelect?: (index: number) => void
 }) {
+  const containerRef = useRef<View>(null)
   const pal = usePalette('default')
   const [itemLayouts, setItemLayouts] = useState<undefined | Layout[]>(
     undefined,
@@ -68,7 +69,11 @@ export function Selector({
     for (let i = 0; i < items.length; i++) {
       promises.push(
         new Promise<Layout>(resolve => {
-          itemRefs[i].current?.measure(
+          if (!containerRef.current || !itemRefs[i].current) {
+            return resolve({x: 0, width: 0})
+          }
+          itemRefs[i].current?.measureLayout(
+            containerRef.current,
             (x: number, _y: number, width: number) => {
               resolve({x, width})
             },
@@ -86,7 +91,10 @@ export function Selector({
   }
 
   return (
-    <View style={[pal.view, styles.outer]} onLayout={onLayout}>
+    <View
+      style={[pal.view, styles.outer]}
+      onLayout={onLayout}
+      ref={containerRef}>
       <Animated.View style={[styles.underline, underlineStyle]} />
       {items.map((item, i) => {
         const selected = i === selectedIndex
