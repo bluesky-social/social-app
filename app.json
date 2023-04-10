@@ -52,6 +52,12 @@
             "kotlinVersion": "1.8.0"
           }
         }
+      ],
+      [
+        "expo-updates",
+        {
+          "username": "blueskysocial"
+        }
       ]
     ],
     "extra": {
