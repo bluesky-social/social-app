@@ -105,8 +105,12 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
           text={
             <>
               {sanitizeDisplayName(displayName)}
-              <Text type="md" style={[pal.textLight]}>
-                &nbsp;{handle}
+              <Text
+                type="md"
+                style={[pal.textLight]}
+                numberOfLines={1}
+                lineHeight={1.2}>
+                &nbsp;@{handle}
               </Text>
             </>
           }
@@ -130,7 +134,6 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
 const styles = StyleSheet.create({
   meta: {
     flexDirection: 'row',
-    alignItems: 'baseline',
     paddingBottom: 2,
   },
   metaTwoLine: {

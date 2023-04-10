@@ -85,3 +85,8 @@ web-build/
 # gitignore and github actions
 !.gitignore
 !.github
+
+
+# Android & iOS folders
+android/
+ios/

@@ -4,13 +4,13 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {RichText} from '@atproto/api'
@@ -209,7 +209,7 @@ export const ComposePost = observer(function ComposePost({
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.outer}>
       <TouchableWithoutFeedback onPressIn={onPressContainer}>
-        <SafeAreaView style={s.flex1}>
+        <SafeAreaView style={[s.flex1]}>
           <View style={styles.topbar}>
             <TouchableOpacity
               testID="composerCancelButton"
