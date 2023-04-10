@@ -9,7 +9,7 @@ import {FollowState} from 'state/models/cache/my-follows'
 export const FollowButton = observer(
   ({
     unfollowedType = 'inverted',
-    followedType = 'inverted',
+    followedType = 'default',
     did,
     onToggleFollow,
   }: {
