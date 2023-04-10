@@ -1,12 +1,12 @@
 import React from 'react'
 import {
-  Image,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native'
+import {Image} from 'expo-image'
 import {clamp} from 'lib/numbers'
 import {useStores} from 'state/index'
 import {Dim} from 'lib/media/manip'
@@ -59,7 +59,7 @@ export function AutoSizedImage({
         onPressIn={onPressIn}
         delayPressIn={DELAY_PRESS_IN}
         style={[styles.container, style]}>
-        <Image style={[styles.image, {aspectRatio}]} source={{uri}} />
+        <Image style={[styles.image, {aspectRatio}]} source={uri} />
         {children}
       </TouchableOpacity>
     )

@@ -6,7 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import Image from 'view/com/util/images/Image'
+import {Image} from 'expo-image'
 
 export function ImageHorzList({
   uris,

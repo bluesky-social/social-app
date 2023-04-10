@@ -7,7 +7,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import Image, {ImageStyle} from 'view/com/util/images/Image'
+import {Image, ImageStyle} from 'expo-image'
 
 export const DELAY_PRESS_IN = 500
 
@@ -73,7 +73,7 @@ function ImageLayoutGridInner({
   onPressIn?: (index: number) => void
   containerInfo: Dim
 }) {
-  const size1 = React.useMemo<StyleProp<ImageStyle>>(() => {
+  const size1 = React.useMemo<ImageStyle>(() => {
     if (type === 'three') {
       const size = (containerInfo.width - 10) / 3
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
@@ -82,7 +82,7 @@ function ImageLayoutGridInner({
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     }
   }, [type, containerInfo])
-  const size2 = React.useMemo<StyleProp<ImageStyle>>(() => {
+  const size2 = React.useMemo<ImageStyle>(() => {
     if (type === 'three') {
       const size = ((containerInfo.width - 10) / 3) * 2 + 5
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}

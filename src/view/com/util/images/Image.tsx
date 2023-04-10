@@ -1,12 +1,12 @@
 import React from 'react'
-import FastImage, {FastImageProps, Source} from 'react-native-fast-image'
-export default FastImage
-export type {OnLoadEvent, ImageStyle, Source} from 'react-native-fast-image'
+import {Image, ImageProps, ImageSource} from 'expo-image'
 
-export function HighPriorityImage({source, ...props}: FastImageProps) {
+interface HighPriorityImageProps extends ImageProps {
+  source: ImageSource
+}
+export function HighPriorityImage({source, ...props}: HighPriorityImageProps) {
   const updatedSource = {
     uri: typeof source === 'object' && source ? source.uri : '',
-    priority: FastImage.priority.high,
-  } as Source
-  return <FastImage source={updatedSource} {...props} />
+  } satisfies ImageSource
+  return <Image source={updatedSource} {...props} />
 }
