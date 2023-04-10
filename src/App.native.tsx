@@ -2,7 +2,7 @@ import 'react-native-url-polyfill/auto'
 import React, {useState, useEffect} from 'react'
 import {Linking} from 'react-native'
 import {RootSiblingParent} from 'react-native-root-siblings'
-import SplashScreen from 'react-native-splash-screen'
+import * as SplashScreen from 'expo-splash-screen'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {observer} from 'mobx-react-lite'
@@ -28,7 +28,7 @@ const App = observer(() => {
       setRootStore(store)
       analytics.init(store)
       notifee.init(store)
-      SplashScreen.hide()
+      SplashScreen.hideAsync()
       Linking.getInitialURL().then((url: string | null) => {
         if (url) {
           handleLink(url)
