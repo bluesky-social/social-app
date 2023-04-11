@@ -17,8 +17,9 @@ import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
+import {isWeb} from 'platform/detection'
 
-const HEADER_OFFSET = 40
+const HEADER_OFFSET = isWeb ? 0 : 40
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired((_opts: Props) => {
