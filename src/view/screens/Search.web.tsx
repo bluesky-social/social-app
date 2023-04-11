@@ -20,9 +20,10 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = withAuthRequired(
-  observer(({route}: Props) => {
+  observer(({navigation, route}: Props) => {
     const pal = usePalette('default')
     const store = useStores()
+    const params = route.params || {}
     const foafs = React.useMemo<FoafsModel>(
       () => new FoafsModel(store),
       [store],
@@ -32,13 +33,13 @@ export const SearchScreen = withAuthRequired(
       [store],
     )
     const searchUIModel = React.useMemo<SearchUIModel | undefined>(
-      () => (route.params.q ? new SearchUIModel(store) : undefined),
-      [route.params.q, store],
+      () => (params.q ? new SearchUIModel(store) : undefined),
+      [params.q, store],
     )
 
     React.useEffect(() => {
-      if (route.params.q && searchUIModel) {
-        searchUIModel.fetch(route.params.q)
+      if (params.q && searchUIModel) {
+        searchUIModel.fetch(params.q)
       }
       if (!foafs.hasData) {
         foafs.fetch()
@@ -46,7 +47,7 @@ export const SearchScreen = withAuthRequired(
       if (!suggestedActors.hasLoaded) {
         suggestedActors.loadMore(true)
       }
-    }, [foafs, suggestedActors, searchUIModel, route.params.q])
+    }, [foafs, suggestedActors, searchUIModel, params.q])
 
     if (searchUIModel) {
       return <SearchResults model={searchUIModel} />
@@ -55,7 +56,7 @@ export const SearchScreen = withAuthRequired(
     const {isDesktop} = useWebMediaQueries()
 
     if (!isDesktop) {
-      return <Mobile.SearchScreen navigation={null as any} route={route} />
+      return <Mobile.SearchScreen navigation={navigation} route={route} />
     }
 
     return (
