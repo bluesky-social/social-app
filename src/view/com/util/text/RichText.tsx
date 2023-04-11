@@ -1,5 +1,5 @@
 import React from 'react'
-import {TextStyle, StyleProp} from 'react-native'
+import {TextStyle, StyleProp, Text as RNText} from 'react-native'
 import {RichText as RichTextObj, AppBskyRichtextFacet} from '@atproto/api'
 import {TextLink} from '../Link'
 import {Text} from './Text'
@@ -96,7 +96,11 @@ export function RichText({
         />,
       )
     } else {
-      els.push(segment.text)
+      els.push(
+        <RNText key={key} style={[style, pal.text, lineHeightStyle]}>
+          {segment.text}
+        </RNText>,
+      )
     }
     key++
   }
@@ -106,6 +110,7 @@ export function RichText({
       type={type}
       style={[style, pal.text, lineHeightStyle]}
       numberOfLines={numberOfLines}
+      selectable={selectable}
       // @ts-ignore web only -prf
       dataSet={WORD_WRAP}>
       {els}
