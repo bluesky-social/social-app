@@ -40,6 +40,8 @@ import {useAnalytics} from 'lib/analytics'
 import {pluralize} from 'lib/strings/helpers'
 import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
+import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
+import {isWeb} from 'platform/detection'
 
 export const DrawerContent = observer(() => {
   const theme = useTheme()
@@ -47,16 +49,7 @@ export const DrawerContent = observer(() => {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtNotifications} = useNavigationState(
-    state => {
-      return {
-        isAtHome: getTabState(state, 'Home') !== TabState.Outside,
-        isAtSearch: getTabState(state, 'Search') !== TabState.Outside,
-        isAtNotifications:
-          getTabState(state, 'Notifications') !== TabState.Outside,
-      }
-    },
-  )
+  const {isAtHome, isAtSearch, isAtNotifications} = useNavigationTabState()
 
   // events
   // =
@@ -66,14 +59,19 @@ export const DrawerContent = observer(() => {
       track('Menu:ItemClicked', {url: tab})
       const state = navigation.getState()
       store.shell.closeDrawer()
-      const tabState = getTabState(state, tab)
-      if (tabState === TabState.InsideAtRoot) {
-        store.emitScreenSoftReset()
-      } else if (tabState === TabState.Inside) {
-        navigation.dispatch(StackActions.popToTop())
-      } else {
+      if (isWeb) {
         // @ts-ignore must be Home, Search, or Notifications
-        navigation.navigate(`${tab}Tab`)
+        navigation.navigate(tab)
+      } else {
+        const tabState = getTabState(state, tab)
+        if (tabState === TabState.InsideAtRoot) {
+          store.emitScreenSoftReset()
+        } else if (tabState === TabState.Inside) {
+          navigation.dispatch(StackActions.popToTop())
+        } else {
+          // @ts-ignore must be Home, Search, or Notifications
+          navigation.navigate(`${tab}Tab`)
+        }
       }
     },
     [store, track, navigation],

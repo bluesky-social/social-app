@@ -1,6 +1,6 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {View, StyleSheet} from 'react-native'
+import {View, StyleSheet, TouchableOpacity} from 'react-native'
 import {useStores} from 'state/index'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -26,11 +26,13 @@ const ShellInner = observer(() => {
           <FlatNavigator />
         </ErrorBoundary>
       </View>
-      {isDesktop && <DesktopLeftNav />}
-      {isDesktop && <DesktopRightNav />}
-      {isDesktop && <View style={[styles.viewBorder, styles.viewBorderLeft]} />}
       {isDesktop && (
-        <View style={[styles.viewBorder, styles.viewBorderRight]} />
+        <>
+          <DesktopLeftNav />
+          <DesktopRightNav />
+          <View style={[styles.viewBorder, styles.viewBorderLeft]} />
+          <View style={[styles.viewBorder, styles.viewBorderRight]} />
+        </>
       )}
       <Composer
         active={store.shell.isComposerActive}
@@ -44,27 +46,13 @@ const ShellInner = observer(() => {
       <ModalsContainer />
       <Lightbox />
       {!isDesktop && store.shell.isDrawerOpen && (
-        <div
-          onClick={() => store.shell.closeDrawer()}
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            top: 0,
-            left: 0,
-            background: 'rgba(0,0,0,0.25)',
-          }}>
-          <div
-            style={{
-              display: 'flex',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              height: '100%',
-            }}>
+        <TouchableOpacity
+          onPress={() => store.shell.closeDrawer()}
+          style={styles.drawerMask}>
+          <View style={styles.drawerContainer}>
             <DrawerContent />
-          </div>
-        </div>
+          </View>
+        </TouchableOpacity>
       )}
     </>
   )
@@ -100,5 +88,20 @@ const styles = StyleSheet.create({
   },
   viewBorderRight: {
     left: 'calc(50vw + 300px)',
+  },
+  drawerMask: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    top: 0,
+    left: 0,
+    backgroundColor: 'rgba(0,0,0,0.25)',
+  },
+  drawerContainer: {
+    display: 'flex',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: '100%',
   },
 })
