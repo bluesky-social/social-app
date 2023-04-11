@@ -4,6 +4,7 @@ import {StyleSheet, View} from 'react-native'
 import {ComposePost} from '../com/composer/Composer'
 import {ComposerOpts} from 'state/models/ui/shell'
 import {usePalette} from 'lib/hooks/usePalette'
+import {isMobileWeb} from 'platform/detection'
 
 export const Composer = observer(
   ({
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 0,
     paddingHorizontal: 2,
-    borderRadius: 8,
+    borderRadius: isMobileWeb ? 0 : 8,
     marginBottom: '10vh',
   },
 })

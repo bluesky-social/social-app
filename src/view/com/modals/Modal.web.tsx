@@ -6,7 +6,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import type {Modal as ModalIface} from 'state/models/ui/shell'
 import {isMobileWeb} from 'platform/detection'
 
-import * as Mobile from './ModalMobile'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
@@ -18,18 +17,12 @@ import * as CropImageModal from './crop-image/CropImage.web'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
-  const {isDesktop} = useWebMediaQueries()
 
   if (!store.shell.isModalActive) {
     return null
-  }
-
-  if (!isDesktop) {
-    return <Mobile.ModalsContainer />
   }
 
   return (
