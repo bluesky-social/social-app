@@ -13,7 +13,7 @@ import {s, colors} from 'lib/styles'
 import {RoutesContainer, FlatNavigator} from '../../Navigation'
 import {DrawerContent} from './Drawer'
 import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
-import {BottomBarWeb} from './BottomBarWeb'
+import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 
 const ShellInner = observer(() => {
   const store = useStores()
