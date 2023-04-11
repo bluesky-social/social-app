@@ -8,11 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  useNavigation,
-  useNavigationState,
-  StackActions,
-} from '@react-navigation/native'
+import {useNavigation, StackActions} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import {
   FontAwesomeIcon,
@@ -238,20 +234,22 @@ export const DrawerContent = observer(() => {
         </View>
         <View style={s.flex1} />
         <View style={styles.footer}>
-          <TouchableOpacity
-            onPress={onDarkmodePress}
-            style={[
-              styles.footerBtn,
-              theme.colorScheme === 'light'
-                ? pal.btn
-                : styles.footerBtnDarkMode,
-            ]}>
-            <MoonIcon
-              size={22}
-              style={pal.text as StyleProp<ViewStyle>}
-              strokeWidth={2}
-            />
-          </TouchableOpacity>
+          {!isWeb && (
+            <TouchableOpacity
+              onPress={onDarkmodePress}
+              style={[
+                styles.footerBtn,
+                theme.colorScheme === 'light'
+                  ? pal.btn
+                  : styles.footerBtnDarkMode,
+              ]}>
+              <MoonIcon
+                size={22}
+                style={pal.text as StyleProp<ViewStyle>}
+                strokeWidth={2}
+              />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             onPress={onPressFeedback}
             style={[
