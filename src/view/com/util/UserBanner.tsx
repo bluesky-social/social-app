@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import Image from 'view/com/util/images/Image'
+import {Image} from 'expo-image'
 import {colors} from 'lib/styles'
 import {
   openCamera,

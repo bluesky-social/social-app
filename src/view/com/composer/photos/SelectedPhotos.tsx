@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import Image from 'view/com/util/images/Image'
+import {Image} from 'expo-image'
 import {colors} from 'lib/styles'
 
 export const SelectedPhotos = ({
