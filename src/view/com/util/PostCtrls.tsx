@@ -157,11 +157,16 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     })
   }
 
-  const onPressToggleLikeWrapper = () => {
+  const [isLikePressed, setIsLikedPressed] = React.useState<boolean>(false)
+  const onPressToggleLikeWrapper = async () => {
+    if (isLikePressed) {
+      return
+    }
+    setIsLikedPressed(true)
     if (!opts.isLiked) {
       ReactNativeHapticFeedback.trigger('impactMedium')
       setLikeMod(1)
-      opts
+      await opts
         .onPressToggleLike()
         .catch(_e => undefined)
         .then(() => setLikeMod(0))
@@ -173,12 +178,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       //     setLikeMod(0)
       //   },
       // )
+      setIsLikedPressed(false)
     } else {
       setLikeMod(-1)
-      opts
+      await opts
         .onPressToggleLike()
         .catch(_e => undefined)
         .then(() => setLikeMod(0))
+      setIsLikedPressed(false)
     }
   }
 
@@ -217,19 +224,6 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             strokeWidth={2.4}
             size={opts.big ? 24 : 20}
           />
-          {
-            undefined /*DISABLED see #135 <TriggerableAnimated ref={repostRef}>
-            <RepostIcon
-              style={
-                (opts.isReposted
-                  ? styles.ctrlIconReposted
-                  : defaultCtrlColor) as ViewStyle
-              }
-              strokeWidth={2.4}
-              size={opts.big ? 24 : 20}
-            />
-            </TriggerableAnimated>*/
-          }
           {typeof opts.repostCount !== 'undefined' ? (
             <Text
               testID="repostCount"
@@ -261,25 +255,6 @@ export function PostCtrls(opts: PostCtrlsOpts) {
               size={opts.big ? 20 : 16}
             />
           )}
-          {
-            undefined /*DISABLED see #135 <TriggerableAnimated ref={likeRef}>
-            {opts.isLiked || likeMod > 0 ? (
-              <HeartIconSolid
-                style={styles.ctrlIconLiked as ViewStyle}
-                size={opts.big ? 22 : 16}
-              />
-            ) : (
-              <HeartIcon
-                style={[
-                  defaultCtrlColor as ViewStyle,
-                  opts.big ? styles.mt1 : undefined,
-                ]}
-                strokeWidth={3}
-                size={opts.big ? 20 : 16}
-              />
-            )}
-            </TriggerableAnimated>*/
-          }
           {typeof opts.likeCount !== 'undefined' ? (
             <Text
               testID="likeCount"
