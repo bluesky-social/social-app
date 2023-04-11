@@ -200,6 +200,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 type="post-text-lg"
                 richText={item.richText}
                 lineHeight={1.3}
+                selectable={true}
               />
             </View>
           ) : undefined}

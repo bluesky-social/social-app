@@ -16,6 +16,7 @@ export function RichText({
   richText,
   lineHeight = 1.2,
   style,
+  selectable = false,
   numberOfLines,
 }: {
   testID?: string
@@ -24,6 +25,7 @@ export function RichText({
   lineHeight?: number
   style?: StyleProp<TextStyle>
   numberOfLines?: number
+  selectable?: boolean
 }) {
   const theme = useTheme()
   const pal = usePalette('default')
@@ -47,11 +49,13 @@ export function RichText({
         </Text>
       )
     }
+
     return (
       <Text
         testID={testID}
         type={type}
         style={[style, pal.text, lineHeightStyle]}
+        selectable={selectable}
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
         {text}
