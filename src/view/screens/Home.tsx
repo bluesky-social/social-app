@@ -11,15 +11,15 @@ import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
 import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {FAB} from '../com/util/FAB'
+import {FAB} from '../com/util/fab/FAB'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
-import {isWeb} from 'platform/detection'
+import {isDesktopWeb, isMobileWeb} from 'platform/detection'
 
-const HEADER_OFFSET = isWeb ? 0 : 40
+const HEADER_OFFSET = isDesktopWeb ? 0 : isMobileWeb ? 20 : 40
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired((_opts: Props) => {

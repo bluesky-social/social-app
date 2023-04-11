@@ -10,6 +10,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {gradients} from 'lib/styles'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useStores} from 'state/index'
+import {isMobileWeb} from 'platform/detection'
 
 type OnPress = ((event: GestureResponderEvent) => void) | undefined
 export interface FABProps {
@@ -18,7 +19,7 @@ export interface FABProps {
   onPress: OnPress
 }
 
-export const FAB = observer(({testID, icon, onPress}: FABProps) => {
+export const FABInner = observer(({testID, icon, onPress}: FABProps) => {
   const store = useStores()
   const interp = useAnimatedValue(0)
   React.useEffect(() => {
@@ -34,7 +35,8 @@ export const FAB = observer(({testID, icon, onPress}: FABProps) => {
   }
   return (
     <TouchableWithoutFeedback testID={testID} onPress={onPress}>
-      <Animated.View style={[styles.outer, transform]}>
+      <Animated.View
+        style={[styles.outer, isMobileWeb && styles.mobileWebOuter, transform]}>
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
           start={{x: 0, y: 0}}
@@ -56,6 +58,9 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
+  },
+  mobileWebOuter: {
+    bottom: 114,
   },
   inner: {
     width: 60,
