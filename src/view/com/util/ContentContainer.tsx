@@ -9,34 +9,30 @@ import {
 import {ComAtprotoLabelDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
-import {Link} from './Link'
 import {Text} from './text/Text'
 import {getLabelValueGroup} from 'lib/labeling/helpers'
 import {addStyle} from 'lib/styles'
 
-export function PostContainer({
+export function ContentContainer({
   testID,
-  href,
   isMuted,
   labels,
   style,
   children,
 }: React.PropsWithChildren<{
   testID?: string
-  href: string
   isMuted: boolean
   labels: ComAtprotoLabelDefs.Label[] | undefined
-  style: StyleProp<ViewStyle>
+  style?: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
-  const bg = override ? pal.viewLight : pal.view
 
   if (!isMuted && !labels?.length) {
     return (
-      <Link testID={testID} style={style} href={href} noFeedback>
+      <View testID={testID} style={style}>
         {children}
-      </Link>
+      </View>
     )
   }
 
@@ -47,8 +43,13 @@ export function PostContainer({
   }
 
   return (
-    <>
-      <View style={[styles.description, bg, pal.border]}>
+    <View style={[styles.container, pal.view, pal.border]}>
+      <View
+        style={[
+          styles.description,
+          pal.viewLight,
+          override && styles.descriptionOpen,
+        ]}>
         <FontAwesomeIcon
           icon={['far', 'eye-slash']}
           style={[styles.icon, pal.text]}
@@ -66,32 +67,37 @@ export function PostContainer({
           style={styles.showBtn}
           onPress={() => setOverride(v => !v)}>
           <Text type="md" style={pal.link}>
-            {override ? 'Hide' : 'Show'} post
+            {override ? 'Hide' : 'Show'}
           </Text>
         </TouchableOpacity>
       </View>
       {override && (
-        <View style={[styles.childrenContainer, pal.border, bg]}>
-          <Link
-            testID={testID}
-            style={addStyle(style, styles.child)}
-            href={href}
-            noFeedback>
+        <View style={[styles.childrenContainer, pal.border]}>
+          <View testID={testID} style={addStyle(style, styles.child)}>
             {children}
-          </Link>
+          </View>
         </View>
       )}
-    </>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginBottom: 10,
+    borderWidth: 1,
+    borderRadius: 12,
+  },
   description: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 14,
     paddingHorizontal: 18,
-    borderTopWidth: 1,
+    borderRadius: 12,
+  },
+  descriptionOpen: {
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
   },
   icon: {
     marginRight: 10,
@@ -100,11 +106,8 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   childrenContainer: {
-    paddingHorizontal: 6,
-    paddingBottom: 6,
+    paddingHorizontal: 8,
+    paddingTop: 8,
   },
-  child: {
-    borderWidth: 1,
-    borderRadius: 12,
-  },
+  child: {},
 })

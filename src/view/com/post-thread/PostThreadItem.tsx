@@ -23,6 +23,7 @@ import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/PostCtrls'
 import {PostContainer} from '../util/PostContainer'
+import {ContentContainer} from '../util/ContentContainer'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 
@@ -193,17 +194,24 @@ export const PostThreadItem = observer(function PostThreadItem({
           </View>
         </View>
         <View style={[s.pl10, s.pr10, s.pb10]}>
-          {item.richText?.text ? (
-            <View
-              style={[styles.postTextContainer, styles.postTextLargeContainer]}>
-              <RichText
-                type="post-text-lg"
-                richText={item.richText}
-                lineHeight={1.3}
-              />
-            </View>
-          ) : undefined}
-          <PostEmbeds embed={item.post.embed} style={s.mb10} />
+          <ContentContainer
+            isMuted={item.post.author.viewer?.muted === true}
+            labels={item.post.labels}>
+            {item.richText?.text ? (
+              <View
+                style={[
+                  styles.postTextContainer,
+                  styles.postTextLargeContainer,
+                ]}>
+                <RichText
+                  type="post-text-lg"
+                  richText={item.richText}
+                  lineHeight={1.3}
+                />
+              </View>
+            ) : undefined}
+            <PostEmbeds embed={item.post.embed} style={s.mb10} />
+          </ContentContainer>
           {item._isHighlightedPost && hasEngagement ? (
             <View style={[styles.expandedInfo, pal.border]}>
               {item.post.repostCount ? (
