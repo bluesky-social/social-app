@@ -7,8 +7,9 @@ import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from './view/shell/index'
 import {ToastContainer} from './view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
+import {observer} from 'mobx-react-lite'
 
-function App() {
+const App = observer(() => {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
@@ -41,6 +42,6 @@ function App() {
       </RootSiblingParent>
     </ThemeProvider>
   )
-}
+})
 
 export default App
