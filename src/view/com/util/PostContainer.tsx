@@ -1,25 +1,43 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {ComAtprotoLabelDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
+import {Link} from './Link'
 import {Text} from './text/Text'
 import {getLabelValueGroup} from 'lib/labeling/helpers'
+import {addStyle} from 'lib/styles'
 
-export function PostHider({
+export function PostContainer({
+  testID,
+  href,
   isMuted,
   labels,
+  style,
   children,
 }: React.PropsWithChildren<{
+  testID?: string
+  href: string
   isMuted?: boolean
+  style: StyleProp<ViewStyle>
   labels: ComAtprotoLabelDefs.Label[] | undefined
 }>) {
   const pal = usePalette('default')
-  const palError = usePalette('error')
   const [override, setOverride] = React.useState(false)
+  const bg = override ? pal.viewLight : pal.view
 
   if (!isMuted && !labels?.length) {
-    return <>{children}</>
+    return (
+      <Link testID={testID} style={style} href={href} noFeedback>
+        {children}
+      </Link>
+    )
   }
 
   const label = labels?.[0] // TODO use config to settle on most relevant item
@@ -29,8 +47,8 @@ export function PostHider({
   }
 
   return (
-    <View style={[styles.container, pal.view]}>
-      <View style={[styles.description, pal.view, pal.border]}>
+    <>
+      <View style={[styles.description, bg, pal.border]}>
         <FontAwesomeIcon
           icon={['far', 'eye-slash']}
           style={[styles.icon, pal.text]}
@@ -53,12 +71,17 @@ export function PostHider({
         </TouchableOpacity>
       </View>
       {override && (
-        <View
-          style={[styles.childrenContainer, pal.border, palError.viewLight]}>
-          {children}
+        <View style={[styles.childrenContainer, pal.border, bg]}>
+          <Link
+            testID={testID}
+            style={addStyle(style, styles.child)}
+            href={href}
+            noFeedback>
+            {children}
+          </Link>
         </View>
       )}
-    </View>
+    </>
   )
 }
 
@@ -78,6 +101,10 @@ const styles = StyleSheet.create({
   },
   childrenContainer: {
     paddingHorizontal: 6,
-    paddingVertical: 6,
+    paddingBottom: 6,
+  },
+  child: {
+    borderWidth: 1,
+    borderRadius: 12,
   },
 })

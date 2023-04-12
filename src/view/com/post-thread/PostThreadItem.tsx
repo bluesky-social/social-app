@@ -22,7 +22,7 @@ import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/PostCtrls'
-import {PostHider} from '../util/PostHider'
+import {PostContainer} from '../util/PostContainer'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 
@@ -270,15 +270,13 @@ export const PostThreadItem = observer(function PostThreadItem({
     )
   } else {
     return (
-      <PostHider
-        isMuted={item.post.author.viewer?.muted === true}
-        labels={item.post.labels}>
-        <Link
+      <>
+        <PostContainer
           testID={`postThreadItem-by-${item.post.author.handle}`}
-          style={[styles.outer, {borderTopColor: pal.colors.border}, pal.view]}
           href={itemHref}
-          title={itemTitle}
-          noFeedback>
+          style={[styles.outer, {borderTopColor: pal.colors.border}, pal.view]}
+          isMuted={item.post.author.viewer?.muted === true}
+          labels={item.post.labels}>
           {item._showParentReplyLine && (
             <View
               style={[
@@ -347,7 +345,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               />
             </View>
           </View>
-        </Link>
+        </PostContainer>
         {item._hasMore ? (
           <Link
             style={[
@@ -366,7 +364,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             />
           </Link>
         ) : undefined}
-      </PostHider>
+      </>
     )
   }
 })

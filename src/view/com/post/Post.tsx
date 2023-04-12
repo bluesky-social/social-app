@@ -17,7 +17,7 @@ import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/PostCtrls'
-import {PostHider} from '../util/PostHider'
+import {PostContainer} from '../util/PostContainer'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
@@ -150,86 +150,82 @@ export const Post = observer(function Post({
   }
 
   return (
-    <PostHider
+    <PostContainer
+      href={itemHref}
+      style={[styles.outer, pal.view, pal.border, style]}
       isMuted={item.post.author.viewer?.muted === true}
       labels={item.post.labels}>
-      <Link
-        style={[styles.outer, pal.view, pal.border, style]}
-        href={itemHref}
-        title={itemTitle}
-        noFeedback>
-        {showReplyLine && <View style={styles.replyLine} />}
-        <View style={styles.layout}>
-          <View style={styles.layoutAvi}>
-            <Link href={authorHref} title={authorTitle} asAnchor>
-              <UserAvatar size={52} avatar={item.post.author.avatar} />
-            </Link>
-          </View>
-          <View style={styles.layoutContent}>
-            <PostMeta
-              authorHandle={item.post.author.handle}
-              authorDisplayName={item.post.author.displayName}
-              timestamp={item.post.indexedAt}
-              postHref={itemHref}
-              did={item.post.author.did}
-            />
-            {replyAuthorDid !== '' && (
-              <View style={[s.flexRow, s.mb2, s.alignCenter]}>
-                <FontAwesomeIcon
-                  icon="reply"
-                  size={9}
-                  style={[pal.textLight, s.mr5]}
-                />
-                <Text type="sm" style={[pal.textLight, s.mr2]} lineHeight={1.2}>
-                  Reply to
-                </Text>
-                <UserInfoText
-                  type="sm"
-                  did={replyAuthorDid}
-                  attr="displayName"
-                  style={[pal.textLight]}
-                />
-              </View>
-            )}
-            {item.richText?.text ? (
-              <View style={styles.postTextContainer}>
-                <RichText
-                  type="post-text"
-                  richText={item.richText}
-                  lineHeight={1.3}
-                />
-              </View>
-            ) : undefined}
-            <PostEmbeds embed={item.post.embed} style={s.mb10} />
-            <PostCtrls
-              itemUri={itemUri}
-              itemCid={itemCid}
-              itemHref={itemHref}
-              itemTitle={itemTitle}
-              author={{
-                avatar: item.post.author.avatar!,
-                handle: item.post.author.handle,
-                displayName: item.post.author.displayName!,
-              }}
-              indexedAt={item.post.indexedAt}
-              text={item.richText?.text || record.text}
-              isAuthor={item.post.author.did === store.me.did}
-              replyCount={item.post.replyCount}
-              repostCount={item.post.repostCount}
-              likeCount={item.post.likeCount}
-              isReposted={!!item.post.viewer?.repost}
-              isLiked={!!item.post.viewer?.like}
-              onPressReply={onPressReply}
-              onPressToggleRepost={onPressToggleRepost}
-              onPressToggleLike={onPressToggleLike}
-              onCopyPostText={onCopyPostText}
-              onOpenTranslate={onOpenTranslate}
-              onDeletePost={onDeletePost}
-            />
-          </View>
+      {showReplyLine && <View style={styles.replyLine} />}
+      <View style={styles.layout}>
+        <View style={styles.layoutAvi}>
+          <Link href={authorHref} title={authorTitle} asAnchor>
+            <UserAvatar size={52} avatar={item.post.author.avatar} />
+          </Link>
         </View>
-      </Link>
-    </PostHider>
+        <View style={styles.layoutContent}>
+          <PostMeta
+            authorHandle={item.post.author.handle}
+            authorDisplayName={item.post.author.displayName}
+            timestamp={item.post.indexedAt}
+            postHref={itemHref}
+            did={item.post.author.did}
+          />
+          {replyAuthorDid !== '' && (
+            <View style={[s.flexRow, s.mb2, s.alignCenter]}>
+              <FontAwesomeIcon
+                icon="reply"
+                size={9}
+                style={[pal.textLight, s.mr5]}
+              />
+              <Text type="sm" style={[pal.textLight, s.mr2]} lineHeight={1.2}>
+                Reply to
+              </Text>
+              <UserInfoText
+                type="sm"
+                did={replyAuthorDid}
+                attr="displayName"
+                style={[pal.textLight]}
+              />
+            </View>
+          )}
+          {item.richText?.text ? (
+            <View style={styles.postTextContainer}>
+              <RichText
+                type="post-text"
+                richText={item.richText}
+                lineHeight={1.3}
+              />
+            </View>
+          ) : undefined}
+          <PostEmbeds embed={item.post.embed} style={s.mb10} />
+          <PostCtrls
+            itemUri={itemUri}
+            itemCid={itemCid}
+            itemHref={itemHref}
+            itemTitle={itemTitle}
+            author={{
+              avatar: item.post.author.avatar!,
+              handle: item.post.author.handle,
+              displayName: item.post.author.displayName!,
+            }}
+            indexedAt={item.post.indexedAt}
+            text={item.richText?.text || record.text}
+            isAuthor={item.post.author.did === store.me.did}
+            replyCount={item.post.replyCount}
+            repostCount={item.post.repostCount}
+            likeCount={item.post.likeCount}
+            isReposted={!!item.post.viewer?.repost}
+            isLiked={!!item.post.viewer?.like}
+            onPressReply={onPressReply}
+            onPressToggleRepost={onPressToggleRepost}
+            onPressToggleLike={onPressToggleLike}
+            onCopyPostText={onCopyPostText}
+            onOpenTranslate={onOpenTranslate}
+            onDeletePost={onDeletePost}
+          />
+        </View>
+      </View>
+    </PostContainer>
   )
 })
 
