@@ -45,7 +45,6 @@ export const Feed = observer(function Feed({
   const onRefresh = React.useCallback(async () => {
     try {
       await view.refresh()
-      await view.markAllRead()
     } catch (err) {
       view.rootStore.log.error('Failed to refresh notifications feed', err)
     }

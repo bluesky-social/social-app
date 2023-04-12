@@ -10,31 +10,33 @@ import {useStores} from 'state/index'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
-export const LoadLatestBtn = observer(({onPress}: {onPress: () => void}) => {
-  const store = useStores()
-  const safeAreaInsets = useSafeAreaInsets()
-  return (
-    <TouchableOpacity
-      style={[
-        styles.loadLatest,
-        !store.shell.minimalShellMode && {
-          bottom: 60 + clamp(safeAreaInsets.bottom, 15, 30),
-        },
-      ]}
-      onPress={onPress}
-      hitSlop={HITSLOP}>
-      <LinearGradient
-        colors={[gradients.blueLight.start, gradients.blueLight.end]}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}
-        style={styles.loadLatestInner}>
-        <Text type="md-bold" style={styles.loadLatestText}>
-          Load new posts
-        </Text>
-      </LinearGradient>
-    </TouchableOpacity>
-  )
-})
+export const LoadLatestBtn = observer(
+  ({onPress, label}: {onPress: () => void; label: string}) => {
+    const store = useStores()
+    const safeAreaInsets = useSafeAreaInsets()
+    return (
+      <TouchableOpacity
+        style={[
+          styles.loadLatest,
+          !store.shell.minimalShellMode && {
+            bottom: 60 + clamp(safeAreaInsets.bottom, 15, 30),
+          },
+        ]}
+        onPress={onPress}
+        hitSlop={HITSLOP}>
+        <LinearGradient
+          colors={[gradients.blueLight.start, gradients.blueLight.end]}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={styles.loadLatestInner}>
+          <Text type="md-bold" style={styles.loadLatestText}>
+            Load new {label}
+          </Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   loadLatest: {

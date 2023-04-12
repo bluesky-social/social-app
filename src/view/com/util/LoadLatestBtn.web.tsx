@@ -6,7 +6,13 @@ import {UpIcon} from 'lib/icons'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
-export const LoadLatestBtn = ({onPress}: {onPress: () => void}) => {
+export const LoadLatestBtn = ({
+  onPress,
+  label,
+}: {
+  onPress: () => void
+  label: string
+}) => {
   const pal = usePalette('default')
   return (
     <TouchableOpacity
@@ -15,7 +21,7 @@ export const LoadLatestBtn = ({onPress}: {onPress: () => void}) => {
       hitSlop={HITSLOP}>
       <Text type="md-bold" style={pal.text}>
         <UpIcon size={16} strokeWidth={1} style={[pal.text, styles.icon]} />
-        Load new posts
+        Load new {label}
       </Text>
     </TouchableOpacity>
   )
