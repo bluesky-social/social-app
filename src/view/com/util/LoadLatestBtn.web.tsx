@@ -31,7 +31,9 @@ const styles = StyleSheet.create({
   loadLatest: {
     flexDirection: 'row',
     position: 'absolute',
-    left: 'calc(50vw - 80px)',
+    left: '50vw',
+    // @ts-ignore web only -prf
+    transform: 'translateX(-50%)',
     top: 30,
     shadowColor: '#000',
     shadowOpacity: 0.2,
