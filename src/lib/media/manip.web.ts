@@ -1,6 +1,5 @@
-import uuid from 'react-native-uuid'
-import RNFS from 'react-native-fs'
-import {Dimensions, Image} from './types'
+import {Dimensions} from './types'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 import {extractDataUriMime, getDataUriSize} from './util'
 
 export interface DownloadAndResizeOpts {
@@ -33,14 +32,26 @@ export interface ResizeOpts {
 export async function resize(
   dataUri: string,
   _opts: ResizeOpts,
-): Promise<Image> {
+): Promise<RNImage> {
   const dim = await getImageDim(dataUri)
   // TODO -- need to resize
   return {
-    mediaType: 'photo',
     path: dataUri,
     mime: extractDataUriMime(dataUri),
     size: getDataUriSize(dataUri),
+    width: dim.width,
+    height: dim.height,
+  }
+}
+
+export async function resizeImage(image: RNImage): Promise<RNImage> {
+  const uri = image.path
+  const dim = await getImageDim(uri)
+  // TODO -- need to resize
+  return {
+    path: uri,
+    mime: extractDataUriMime(uri),
+    size: getDataUriSize(uri),
     width: dim.width,
     height: dim.height,
   }
@@ -50,10 +61,11 @@ export async function moveToPermanentPath(path: string) {
   return path
 }
 
+// Still being used for EditProfile
 export async function compressIfNeeded(
-  img: Image,
-  maxSize: number, // OLLIE TODO - Find value
-): Promise<Image> {
+  img: RNImage,
+  maxSize: number,
+): Promise<RNImage> {
   if (img.size > maxSize) {
     // TODO
     throw new Error(

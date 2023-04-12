@@ -14,7 +14,7 @@ import {colors} from 'lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
-import {Image} from 'lib/media/types'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 
 function DefaultAvatar({size}: {size: number}) {
   return (
@@ -46,7 +46,7 @@ export function UserAvatar({
   size: number
   avatar?: string | null
   hasWarning?: boolean
-  onSelectNewAvatar?: (img: Image | null) => void
+  onSelectNewAvatar?: (img: RNImage | null) => void
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -64,7 +64,6 @@ export function UserAvatar({
         }
         onSelectNewAvatar?.(
           await openCamera(store, {
-            mediaType: 'photo',
             width: 1000,
             height: 1000,
             cropperCircleOverlay: true,
@@ -80,9 +79,7 @@ export function UserAvatar({
         if (!(await requestPhotoAccessIfNeeded())) {
           return
         }
-        const items = await openPicker(store, {
-          mediaType: 'photo',
-        })
+        const items = await openPicker(store)
 
         onSelectNewAvatar?.(
           await openCropper(store, {

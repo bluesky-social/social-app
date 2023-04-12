@@ -12,8 +12,6 @@ import isEqual from 'lodash.isequal'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {createSuggestion} from './web/Autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {Image} from 'lib/media/types'
-import {POST_IMG_MAX} from 'lib/constants'
 
 export interface TextInputRef {
   focus: () => void
@@ -26,7 +24,7 @@ interface TextInputProps {
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteModel
   setRichText: (v: RichText) => void
-  onPhotoPasted: (image: Image) => void
+  onPhotoPasted: (uri: string) => void
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
 }
@@ -92,14 +90,7 @@ export const TextInput = React.forwardRef(
                   const url = URL.createObjectURL(
                     new Blob([file], {type: item.type}),
                   )
-                  onPhotoPasted({
-                    mediaType: 'photo',
-                    path: url,
-                    size: file.size,
-                    mime: file.type,
-                    width: POST_IMG_MAX.width,
-                    height: POST_IMG_MAX.height,
-                  })
+                  onPhotoPasted(url)
                 }
               }
             }

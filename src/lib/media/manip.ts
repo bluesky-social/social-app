@@ -1,11 +1,12 @@
 import RNFetchBlob from 'rn-fetch-blob'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
 import {Image as RNImage, Share} from 'react-native'
+import {Image} from 'react-native-image-crop-picker'
 import RNFS from 'react-native-fs'
 import uuid from 'react-native-uuid'
 import * as Toast from 'view/com/util/Toast'
 import {Dimensions} from './types'
-import {Image} from 'lib/media/types'
+import {POST_IMG_MAX} from 'lib/constants'
 
 export interface DownloadAndResizeOpts {
   uri: string
@@ -23,8 +24,9 @@ export async function moveToPermanentPath(path: string): Promise<string> {
   https://github.com/ivpusic/react-native-image-crop-picker/issues/1199
   */
   const filename = uuid.v4()
+
   const destinationPath = `${RNFS.TemporaryDirectoryPath}/${filename}`
-  RNFS.moveFile(path, destinationPath)
+  await RNFS.moveFile(path, destinationPath)
   return destinationPath
 }
 
@@ -90,7 +92,6 @@ export async function resize(
     )
     if (resizeRes.size < opts.maxSize) {
       return {
-        mediaType: 'photo',
         path: resizeRes.path,
         mime: 'image/jpeg',
         size: resizeRes.size,
@@ -154,4 +155,45 @@ export function getImageDim(path: string): Promise<Dimensions> {
       reject,
     )
   })
+}
+
+export async function resizeImage(image: Image): Promise<Image> {
+  const uri = `file://${image.path}`
+  let resized: Omit<Image, 'mime'>
+
+  for (let i = 0; i < 9; i++) {
+    const quality = 100 - i * 10
+
+    try {
+      resized = await ImageResizer.createResizedImage(
+        uri,
+        image.width,
+        image.height,
+        'JPEG',
+        quality,
+        undefined,
+        undefined,
+        undefined,
+        {mode: 'stretch'},
+      )
+    } catch (err) {
+      throw new Error(`Failed to resize: ${err}`)
+    }
+
+    if (resized.size < POST_IMG_MAX.size) {
+      const path = await moveToPermanentPath(resized.path)
+
+      return {
+        path,
+        mime: 'image/jpeg',
+        size: resized.size,
+        height: resized.height,
+        width: resized.width,
+      }
+    }
+  }
+
+  throw new Error(
+    `This image is too big! We couldn't compress it down to ${POST_IMG_MAX.size} bytes`,
+  )
 }

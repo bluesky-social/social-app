@@ -38,7 +38,6 @@ export function UserBanner({
         }
         onSelectNewBanner?.(
           await openCamera(store, {
-            mediaType: 'photo',
             // compressImageMaxWidth: 3000, TODO needed?
             width: 3000,
             // compressImageMaxHeight: 1000, TODO needed?
@@ -55,9 +54,7 @@ export function UserBanner({
         if (!(await requestPhotoAccessIfNeeded())) {
           return
         }
-        const items = await openPicker(store, {
-          mediaType: 'photo',
-        })
+        const items = await openPicker(store)
         onSelectNewBanner?.(
           await openCropper(store, {
             mediaType: 'photo',

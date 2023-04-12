@@ -5,7 +5,8 @@ import {
   ImageOrVideo,
 } from 'react-native-image-crop-picker'
 import {RootStoreModel} from 'state/index'
-import {PickerOpts, CameraOpts, CropperOptions, Image} from './types'
+import {PickerOpts, CameraOpts, CropperOptions} from './types'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 
 /**
  * NOTE
@@ -18,18 +19,15 @@ import {PickerOpts, CameraOpts, CropperOptions, Image} from './types'
 
 export async function openPicker(
   _store: RootStoreModel,
-  opts: PickerOpts,
-): Promise<Image[]> {
-  const mediaType = opts.mediaType || 'photo'
+  opts?: PickerOpts,
+): Promise<RNImage[]> {
   const items = await openPickerFn({
-    mediaType,
-    multiple: opts.multiple,
-    maxFiles: opts.maxFiles,
-    forceJpg: true, // ios only
-    compressImageQuality: 0.8,
+    mediaType: 'photo', // TODO: eventually add other media types
+    multiple: opts?.multiple,
+    maxFiles: opts?.maxFiles,
   })
+
   const toMedia = (item: ImageOrVideo) => ({
-    mediaType,
     path: item.path,
     mime: item.mime,
     size: item.size,
@@ -45,10 +43,8 @@ export async function openPicker(
 export async function openCamera(
   _store: RootStoreModel,
   opts: CameraOpts,
-): Promise<Image> {
-  const mediaType = opts.mediaType || 'photo'
+): Promise<RNImage> {
   const item = await openCameraFn({
-    mediaType,
     width: opts.width,
     height: opts.height,
     freeStyleCropEnabled: opts.freeStyleCropEnabled,
@@ -58,7 +54,6 @@ export async function openCamera(
     compressImageQuality: 0.8,
   })
   return {
-    mediaType,
     path: item.path,
     mime: item.mime,
     size: item.size,
@@ -70,18 +65,14 @@ export async function openCamera(
 export async function openCropper(
   _store: RootStoreModel,
   opts: CropperOptions,
-): Promise<Image> {
-  const mediaType = opts.mediaType || 'photo'
-
+): Promise<RNImage> {
   const item = await openCropperFn({
     ...opts,
-    mediaType,
     forceJpg: true, // ios only
     compressImageQuality: 0.8,
   })
 
   return {
-    mediaType,
     path: item.path,
     mime: item.mime,
     size: item.size,

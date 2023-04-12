@@ -4,8 +4,10 @@ export function extractDataUriMime(uri: string): string {
   return uri.substring(uri.indexOf(':') + 1, uri.indexOf(';'))
 }
 
+// Fairly accurate estimate that is more performant
+// than decoding and checking length of URI
 export function getDataUriSize(uri: string): number {
-  return Math.round((uri.length * 3) / 4) // very rough estimate
+  return Math.round((uri.length * 3) / 4)
 }
 
 export function scaleDownDimensions(

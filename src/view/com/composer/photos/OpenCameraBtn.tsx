@@ -1,4 +1,4 @@
-import React, {Dispatch, useCallback, SetStateAction} from 'react'
+import React, {useCallback} from 'react'
 import {TouchableOpacity} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -11,17 +11,16 @@ import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
 import {openCamera} from 'lib/media/picker'
 import {useCameraPermission} from 'lib/hooks/usePermissions'
-import {SelectedPhoto} from 'lib/media/types'
 import {POST_IMG_MAX} from 'lib/constants'
+import {GalleryModel} from 'lib/media/gallery'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
 type Props = {
-  enabled: boolean
-  setSelectedPhotos: Dispatch<SetStateAction<SelectedPhoto[]>>
+  gallery: GalleryModel
 }
 
-export function OpenCameraBtn({enabled, setSelectedPhotos}: Props) {
+export function OpenCameraBtn({gallery}: Props) {
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const store = useStores()
@@ -29,31 +28,23 @@ export function OpenCameraBtn({enabled, setSelectedPhotos}: Props) {
 
   const onPressTakePicture = useCallback(async () => {
     track('Composer:CameraOpened')
-    if (!enabled) {
-      return
-    }
     try {
       if (!(await requestCameraAccessIfNeeded())) {
         return
       }
+
       const img = await openCamera(store, {
-        mediaType: 'photo',
         width: POST_IMG_MAX.width,
         height: POST_IMG_MAX.height,
         freeStyleCropEnabled: true,
       })
 
-      setSelectedPhotos(prevPhotos => [
-        ...prevPhotos,
-        {
-          original: img,
-        },
-      ])
+      gallery.add(img)
     } catch (err: any) {
       // ignore
       store.log.warn('Error using camera', err)
     }
-  }, [track, store, setSelectedPhotos, enabled, requestCameraAccessIfNeeded])
+  }, [gallery, track, store, requestCameraAccessIfNeeded])
 
   if (isDesktopWeb) {
     return null
@@ -67,11 +58,7 @@ export function OpenCameraBtn({enabled, setSelectedPhotos}: Props) {
       hitSlop={HITSLOP}>
       <FontAwesomeIcon
         icon="camera"
-        style={
-          (enabled
-            ? pal.link
-            : [pal.textLight, s.dimmed]) as FontAwesomeIconStyle
-        }
+        style={pal.link as FontAwesomeIconStyle}
         size={24}
       />
     </TouchableOpacity>

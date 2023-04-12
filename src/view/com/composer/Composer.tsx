@@ -30,13 +30,12 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {cleanError} from 'lib/strings/errors'
 import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
-import {SelectedPhotos} from './photos/SelectedPhotos'
 import {usePalette} from 'lib/hooks/usePalette'
 import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {isDesktopWeb} from 'platform/detection'
-import {SelectedPhoto, Image} from 'lib/media/types'
-import {compressIfNeeded, moveToPermanentPath} from 'lib/media/manip'
+import {GalleryModel} from 'lib/media/gallery'
+import {Gallery} from './photos/Gallery'
 
 const MAX_GRAPHEME_LENGTH = 300
 
@@ -64,7 +63,7 @@ export const ComposePost = observer(function ComposePost({
   )
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
-  const [selectedPhotos, setSelectedPhotos] = useState<SelectedPhoto[]>([])
+  const gallery = useMemo(() => new GalleryModel(store), [store])
 
   const autocompleteView = useMemo<UserAutocompleteModel>(
     () => new UserAutocompleteModel(store),
@@ -117,23 +116,11 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const onPhotoPasted = useCallback(
-    async (image: Image) => {
-      // TODO: handle more than four images at a time
-      if (selectedPhotos.length >= 4) {
-        return
-      }
-
-      track('Composer:SelectedPhotos')
-      setSelectedPhotos(prevPhotos => [
-        ...prevPhotos.filter(
-          prevPhoto => prevPhoto.original.path !== image.path,
-        ),
-        {
-          original: image,
-        },
-      ])
+    async (uri: string) => {
+      track('Composer:PastedPhotos')
+      gallery.paste(uri)
     },
-    [selectedPhotos, track],
+    [gallery, track],
   )
 
   const onPressPublish = useCallback(async () => {
@@ -143,10 +130,7 @@ export const ComposePost = observer(function ComposePost({
 
     setError('')
 
-    if (
-      richtext.text.trim().length === 0 &&
-      Object.keys(selectedPhotos).length === 0
-    ) {
+    if (richtext.text.trim().length === 0 && gallery.isEmpty) {
       setError('Did you want to say anything?')
       return false
     }
@@ -154,37 +138,17 @@ export const ComposePost = observer(function ComposePost({
     setIsProcessing(true)
 
     try {
-      const images: string[] = []
-
-      try {
-        const compressedImages = await Promise.all(
-          selectedPhotos.map(photo =>
-            compressIfNeeded(
-              'cropped' in photo ? photo.cropped : photo.original,
-            ),
-          ),
-        )
-
-        const imagePaths = await Promise.all(
-          compressedImages.map(img => moveToPermanentPath(img.path)),
-        )
-
-        images.push(...imagePaths)
-      } catch (err) {
-        store.log.warn('Failed to compress image')
-      }
-
       await apilib.post(store, {
         rawText: richtext.text,
         replyTo: replyTo?.uri,
-        images,
+        images: gallery.paths,
         quote: quote,
         extLink: extLink,
         onStateChange: setProcessingState,
         knownHandles: autocompleteView.knownHandles,
       })
       track('Create Post', {
-        imageCount: selectedPhotos.length,
+        imageCount: gallery.size,
       })
     } catch (e: any) {
       if (extLink) {
@@ -213,19 +177,25 @@ export const ComposePost = observer(function ComposePost({
     hackfixOnClose,
     onPost,
     quote,
-    selectedPhotos,
     setExtLink,
     store,
     track,
+    gallery,
   ])
 
   const canPost = graphemeLength <= MAX_GRAPHEME_LENGTH
 
   const selectTextInputPlaceholder = replyTo
     ? 'Write your reply'
-    : selectedPhotos.length !== 0
+    : gallery.isEmpty
     ? 'Write a comment'
     : "What's up?"
+
+  const canSelectImages = gallery.size <= 4
+  const viewStyles = {
+    paddingBottom: Platform.OS === 'android' ? insets.bottom : 0,
+    paddingTop: Platform.OS === 'android' ? insets.top : 15,
+  }
 
   return (
     <KeyboardAvoidingView
@@ -233,14 +203,7 @@ export const ComposePost = observer(function ComposePost({
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.outer}>
       <TouchableWithoutFeedback onPressIn={onPressContainer}>
-        <View
-          style={[
-            s.flex1,
-            {
-              paddingBottom: Platform.OS === 'android' ? insets.bottom : 0,
-              paddingTop: Platform.OS === 'android' ? insets.top : 15,
-            },
-          ]}>
+        <View style={[s.flex1, viewStyles]}>
           <View style={styles.topbar}>
             <TouchableOpacity
               testID="composerCancelButton"
@@ -323,11 +286,8 @@ export const ComposePost = observer(function ComposePost({
               />
             </View>
 
-            <SelectedPhotos
-              selectedPhotos={selectedPhotos}
-              setSelectedPhotos={setSelectedPhotos}
-            />
-            {selectedPhotos.length === 0 && extLink && (
+            <Gallery gallery={gallery} />
+            {gallery.isEmpty && extLink && (
               <ExternalEmbed
                 link={extLink}
                 onRemove={() => setExtLink(undefined)}
@@ -339,9 +299,7 @@ export const ComposePost = observer(function ComposePost({
               </View>
             ) : undefined}
           </ScrollView>
-          {!extLink &&
-          selectedPhotos.length === 0 &&
-          suggestedLinks.size > 0 ? (
+          {!extLink && gallery.isEmpty && suggestedLinks.size > 0 ? (
             <View style={s.mb5}>
               {Array.from(suggestedLinks).map(url => (
                 <TouchableOpacity
@@ -357,15 +315,12 @@ export const ComposePost = observer(function ComposePost({
             </View>
           ) : null}
           <View style={[pal.border, styles.bottomBar]}>
-            <SelectPhotoBtn
-              enabled={selectedPhotos.length < 4}
-              selectedPhotos={selectedPhotos}
-              setSelectedPhotos={setSelectedPhotos}
-            />
-            <OpenCameraBtn
-              enabled={selectedPhotos.length < 4}
-              setSelectedPhotos={setSelectedPhotos}
-            />
+            {canSelectImages ? (
+              <>
+                <SelectPhotoBtn gallery={gallery} />
+                <OpenCameraBtn gallery={gallery} />
+              </>
+            ) : null}
             <View style={s.flex1} />
             <CharProgress count={graphemeLength} />
           </View>

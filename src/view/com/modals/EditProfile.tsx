@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {ScrollView, TextInput} from './util'
-import {Image} from '../../../lib/media/types'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from 'state/index'
@@ -52,12 +52,16 @@ export function Component({
   const [userAvatar, setUserAvatar] = useState<string | undefined | null>(
     profileView.avatar,
   )
-  const [newUserBanner, setNewUserBanner] = useState<Image | undefined | null>()
-  const [newUserAvatar, setNewUserAvatar] = useState<Image | undefined | null>()
+  const [newUserBanner, setNewUserBanner] = useState<
+    RNImage | undefined | null
+  >()
+  const [newUserAvatar, setNewUserAvatar] = useState<
+    RNImage | undefined | null
+  >()
   const onPressCancel = () => {
     store.shell.closeModal()
   }
-  const onSelectNewAvatar = async (img: Image | null) => {
+  const onSelectNewAvatar = async (img: RNImage | null) => {
     track('EditProfile:AvatarSelected')
     try {
       // if img is null, user selected "remove avatar"
@@ -73,7 +77,7 @@ export function Component({
       setError(cleanError(e))
     }
   }
-  const onSelectNewBanner = async (img: Image | null) => {
+  const onSelectNewBanner = async (img: RNImage | null) => {
     if (!img) {
       setNewUserBanner(null)
       setUserBanner(null)

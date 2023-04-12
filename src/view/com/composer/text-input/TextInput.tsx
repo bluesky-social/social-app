@@ -15,13 +15,13 @@ import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {Autocomplete} from './mobile/Autocomplete'
 import {Text} from 'view/com/util/text/Text'
 import {cleanError} from 'lib/strings/errors'
-import {getImageDim} from 'lib/media/manip'
+// import {getImageDim} from 'lib/media/manip'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {Image} from 'lib/media/types'
 import {isUriImage} from 'view/com/util/images/Image'
-import {POST_IMG_MAX} from 'lib/constants'
+// import {POST_IMG_MAX} from 'lib/constants'
+// import {Image as RNImage} from 'react-native-image-crop-picker'
 
 export interface TextInputRef {
   focus: () => void
@@ -34,7 +34,7 @@ interface TextInputProps {
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteModel
   setRichText: (v: RichText) => void
-  onPhotoPasted: (image: Image) => void
+  onPhotoPasted: (uri: string) => void
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
 }
@@ -85,29 +85,6 @@ export const TextInput = forwardRef(
       }
     }, [])
 
-    const handleImageInput = useCallback(
-      async (uri: string | undefined) => {
-        if (uri) {
-          let imgDim
-          try {
-            imgDim = await getImageDim(uri)
-          } catch (e) {
-            imgDim = POST_IMG_MAX
-          }
-
-          onPhotoPasted({
-            mediaType: 'photo',
-            path: uri,
-            mime: 'image/jpeg',
-            height: imgDim.height,
-            width: imgDim.width,
-            size: POST_IMG_MAX.size,
-          })
-        }
-      },
-      [onPhotoPasted],
-    )
-
     const onChangeText = useCallback(
       (newText: string) => {
         const newRt = new RichText({text: newText})
@@ -132,10 +109,10 @@ export const TextInput = forwardRef(
             for (const feature of facet.features) {
               if (AppBskyRichtextFacet.isLink(feature)) {
                 if (isUriImage(feature.uri)) {
-                  handleImageInput(feature.uri)
-                } else {
-                  set.add(feature.uri)
+                  onPhotoPasted(feature.uri)
                 }
+
+                set.add(feature.uri)
               }
             }
           }
@@ -148,9 +125,9 @@ export const TextInput = forwardRef(
       [
         setRichText,
         autocompleteView,
-        handleImageInput,
         suggestedLinks,
         onSuggestedLinksChanged,
+        onPhotoPasted,
       ],
     )
 
@@ -163,9 +140,11 @@ export const TextInput = forwardRef(
         const uris = files.map(f => f.uri)
         const uri = uris.find(isUriImage)
 
-        handleImageInput(uri)
+        if (uri) {
+          onPhotoPasted(uri)
+        }
       },
-      [onError, handleImageInput],
+      [onError, onPhotoPasted],
     )
 
     const onSelectionChange = useCallback(

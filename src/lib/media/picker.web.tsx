@@ -1,9 +1,10 @@
 /// <reference lib="dom" />
 
-import {PickerOpts, CameraOpts, CropperOptions, Image} from './types'
+import {PickerOpts, CameraOpts, CropperOptions} from './types'
 import {RootStoreModel} from 'state/index'
 import {getImageDim} from 'lib/media/manip'
 import {extractDataUriMime} from './util'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 
 interface PickedFile {
   uri: string
@@ -14,13 +15,12 @@ interface PickedFile {
 export async function openPicker(
   _store: RootStoreModel,
   opts: PickerOpts,
-): Promise<Image[]> {
+): Promise<RNImage[]> {
   const res = await selectFile(opts)
   const dim = await getImageDim(res.uri)
   const mime = extractDataUriMime(res.uri)
   return [
     {
-      mediaType: 'photo',
       path: res.uri,
       mime,
       size: res.size,
@@ -33,7 +33,7 @@ export async function openPicker(
 export async function openCamera(
   _store: RootStoreModel,
   _opts: CameraOpts,
-): Promise<Image> {
+): Promise<RNImage> {
   // const mediaType = opts.mediaType || 'photo' TODO
   throw new Error('TODO')
 }
@@ -41,13 +41,13 @@ export async function openCamera(
 export async function openCropper(
   store: RootStoreModel,
   opts: CropperOptions,
-): Promise<Image> {
+): Promise<RNImage> {
   // TODO handle more opts
   return new Promise((resolve, reject) => {
     store.shell.openModal({
       name: 'crop-image',
       uri: opts.path,
-      onSelect: (img?: Image) => {
+      onSelect: (img?: RNImage) => {
         if (img) {
           resolve(img)
         } else {

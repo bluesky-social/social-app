@@ -49,7 +49,6 @@ export function Component({
     if (canvas) {
       const dataUri = canvas.toDataURL('image/jpeg')
       onSelect({
-        mediaType: 'photo',
         path: dataUri,
         mime: 'image/jpeg',
         size: getDataUriSize(dataUri),
