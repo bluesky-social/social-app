@@ -70,7 +70,6 @@ export const NotificationsScreen = withAuthRequired(
           onScroll={onMainScroll}
           scrollElRef={scrollElRef}
         />
-
         {store.me.notifications.hasNewLatest &&
           !store.me.notifications.isRefreshing && (
             <LoadLatestBtn onPress={onPressLoadLatest} label="notifications" />

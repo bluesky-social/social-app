@@ -356,7 +356,9 @@ export class NotificationsFeedModel {
     } catch (e) {
       this.rootStore.log.error('NotificationsModel:processQueue failed', {e})
     } finally {
-      this.isRefreshing = false
+      runInAction(() => {
+        this.isRefreshing = false
+      })
       this.lock.release()
     }
   })
@@ -508,7 +510,7 @@ export class NotificationsFeedModel {
         }
         accRes.data.notifications.push(notif)
       }
-      if (pageIsDone) {
+      if (pageIsDone || res.data.notifications.length < PAGE_SIZE) {
         return accRes
       }
     }
