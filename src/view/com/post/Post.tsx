@@ -61,7 +61,11 @@ export const Post = observer(function Post({
 
   // loading
   // =
-  if (!view || view.isLoading || view.params.uri !== uri) {
+  if (
+    !view ||
+    (!view.hasContent && view.isLoading) ||
+    view.params.uri !== uri
+  ) {
     return (
       <View style={pal.view}>
         <ActivityIndicator />
