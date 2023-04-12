@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
-import {AtUri} from '@atproto/api'
+import {AtUri, ComAtprotoLabelDefs} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -38,6 +38,7 @@ interface Author {
   handle: string
   displayName?: string
   avatar?: string
+  labels?: ComAtprotoLabelDefs.Label[]
 }
 
 export const FeedItem = observer(function FeedItem({
@@ -129,6 +130,7 @@ export const FeedItem = observer(function FeedItem({
       handle: item.author.handle,
       displayName: item.author.displayName,
       avatar: item.author.avatar,
+      labels: item.author.labels,
     },
   ]
   if (item.additional?.length) {
@@ -138,6 +140,7 @@ export const FeedItem = observer(function FeedItem({
         handle: item2.author.handle,
         displayName: item2.author.displayName,
         avatar: item2.author.avatar,
+        labels: item.author.labels,
       })),
     )
   }
@@ -255,7 +258,11 @@ function CondensedAuthorsList({
           href={authors[0].href}
           title={`@${authors[0].handle}`}
           asAnchor>
-          <UserAvatar size={35} avatar={authors[0].avatar} />
+          <UserAvatar
+            size={35}
+            avatar={authors[0].avatar}
+            hasWarning={!!authors[0].labels?.length}
+          />
         </Link>
       </View>
     )
@@ -264,7 +271,11 @@ function CondensedAuthorsList({
     <View style={styles.avis}>
       {authors.slice(0, MAX_AUTHORS).map(author => (
         <View key={author.href} style={s.mr5}>
-          <UserAvatar size={35} avatar={author.avatar} />
+          <UserAvatar
+            size={35}
+            avatar={author.avatar}
+            hasWarning={!!author.labels?.length}
+          />
         </View>
       ))}
       {authors.length > MAX_AUTHORS ? (
@@ -317,7 +328,11 @@ function ExpandedAuthorsList({
           style={styles.expandedAuthor}
           asAnchor>
           <View style={styles.expandedAuthorAvi}>
-            <UserAvatar size={35} avatar={author.avatar} />
+            <UserAvatar
+              size={35}
+              avatar={author.avatar}
+              hasWarning={!!author.labels?.length}
+            />
           </View>
           <View style={s.flex1}>
             <Text

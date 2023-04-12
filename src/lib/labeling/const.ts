@@ -104,7 +104,7 @@ export const LABEL_VAL_GROUPS: Record<string, LabelValGroup> = {
   },
   impersonation: {
     id: 'impersonation',
-    title: 'Impersonated Content',
+    title: 'Impersonation',
     values: ['impersonation'],
   },
   unknown: {

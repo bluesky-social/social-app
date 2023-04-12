@@ -1,4 +1,3 @@
-import {ComAtprotoLabelDefs} from '@atproto/api'
 import {LabelValGroup, LABEL_VAL_GROUPS} from './const'
 
 export function getLabelValueGroup(labelVal: string): LabelValGroup {

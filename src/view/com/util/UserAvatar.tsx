@@ -44,10 +44,12 @@ function DefaultAvatar({size}: {size: number}) {
 export function UserAvatar({
   size,
   avatar,
+  hasWarning,
   onSelectNewAvatar,
 }: {
   size: number
   avatar?: string | null
+  hasWarning?: boolean
   onSelectNewAvatar?: (img: PickedMedia | null) => void
 }) {
   const store = useStores()
@@ -105,6 +107,22 @@ export function UserAvatar({
       },
     },
   ]
+
+  const warning = React.useMemo(() => {
+    if (!hasWarning) {
+      return <></>
+    }
+    return (
+      <View style={[styles.warningIconContainer, pal.view]}>
+        <FontAwesomeIcon
+          icon="exclamation-circle"
+          style={styles.warningIcon}
+          size={Math.floor(size / 3)}
+        />
+      </View>
+    )
+  }, [hasWarning, size, pal])
+
   // onSelectNewAvatar is only passed as prop on the EditProfile component
   return onSelectNewAvatar ? (
     <DropdownButton
@@ -137,14 +155,20 @@ export function UserAvatar({
       </View>
     </DropdownButton>
   ) : avatar ? (
-    <HighPriorityImage
-      testID="userAvatarImage"
-      style={{width: size, height: size, borderRadius: Math.floor(size / 2)}}
-      resizeMode="stretch"
-      source={{uri: avatar}}
-    />
+    <View style={{width: size, height: size}}>
+      <HighPriorityImage
+        testID="userAvatarImage"
+        style={{width: size, height: size, borderRadius: Math.floor(size / 2)}}
+        resizeMode="stretch"
+        source={{uri: avatar}}
+      />
+      {warning}
+    </View>
   ) : (
-    <DefaultAvatar size={size} />
+    <View style={{width: size, height: size}}>
+      <DefaultAvatar size={size} />
+      {warning}
+    </View>
   )
 }
 
@@ -164,5 +188,14 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
+  },
+  warningIconContainer: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    borderRadius: 100,
+  },
+  warningIcon: {
+    color: colors.red3,
   },
 })

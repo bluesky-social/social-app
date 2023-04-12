@@ -1,6 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {PickedMedia} from 'lib/media/picker'
 import {
+  ComAtprotoLabelDefs,
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorProfile,
   RichText,
@@ -41,6 +42,7 @@ export class ProfileModel {
   followersCount: number = 0
   followsCount: number = 0
   postsCount: number = 0
+  labels?: ComAtprotoLabelDefs.Label[] = undefined
   viewer = new ProfileViewerModel()
 
   // added data
@@ -210,6 +212,7 @@ export class ProfileModel {
     this.followersCount = res.data.followersCount || 0
     this.followsCount = res.data.followsCount || 0
     this.postsCount = res.data.postsCount || 0
+    this.labels = res.data.labels
     if (res.data.viewer) {
       Object.assign(this.viewer, res.data.viewer)
       this.rootStore.me.follows.hydrate(this.did, res.data.viewer.following)

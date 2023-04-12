@@ -96,7 +96,6 @@ export const Post = observer(function Post({
 
   return (
     <PostLoaded
-      view={view}
       item={view.thread}
       record={view.thread.postRecord}
       setDeleted={setDeleted}
@@ -198,13 +197,18 @@ const PostLoaded = observer(
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
             <Link href={authorHref} title={authorTitle} asAnchor>
-              <UserAvatar size={52} avatar={item.post.author.avatar} />
+              <UserAvatar
+                size={52}
+                avatar={item.post.author.avatar}
+                hasWarning={!!item.post.author.labels?.length}
+              />
             </Link>
           </View>
           <View style={styles.layoutContent}>
             <PostMeta
               authorHandle={item.post.author.handle}
               authorDisplayName={item.post.author.displayName}
+              authorHasWarning={!!item.post.author.labels?.length}
               timestamp={item.post.indexedAt}
               postHref={itemHref}
               did={item.post.author.did}

@@ -101,6 +101,7 @@ const Profiles = observer(({model}: {model: SearchUIModel}) => {
           displayName={item.displayName}
           avatar={item.avatar}
           description={item.description}
+          labels={item.labels}
         />
       ))}
       <View style={s.footerSpacer} />

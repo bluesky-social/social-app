@@ -64,6 +64,7 @@ export const PostRepostedBy = observer(function PostRepostedBy({
       handle={item.handle}
       displayName={item.displayName}
       avatar={item.avatar}
+      labels={item.labels}
       isFollowedBy={!!item.viewer?.followedBy}
     />
   )
