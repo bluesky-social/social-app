@@ -9,12 +9,12 @@ import {
 import {ComAtprotoLabelDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
-import {Link} from './Link'
-import {Text} from './text/Text'
+import {Link} from '../Link'
+import {Text} from '../text/Text'
 import {getLabelValueGroup} from 'lib/labeling/helpers'
 import {addStyle} from 'lib/styles'
 
-export function PostContainer({
+export function PostHider({
   testID,
   href,
   isMuted,
@@ -24,7 +24,7 @@ export function PostContainer({
 }: React.PropsWithChildren<{
   testID?: string
   href: string
-  isMuted: boolean
+  isMuted: boolean | undefined
   labels: ComAtprotoLabelDefs.Label[] | undefined
   style: StyleProp<ViewStyle>
 }>) {
@@ -32,18 +32,19 @@ export function PostContainer({
   const [override, setOverride] = React.useState(false)
   const bg = override ? pal.viewLight : pal.view
 
-  if (!isMuted && !labels?.length) {
+  const label = labels?.[0] // TODO use config to settle on most relevant item
+  const labelGroup = getLabelValueGroup(label?.val || '')
+  if (labelGroup.id === 'illegal') {
+    return <></>
+  }
+
+  if (!isMuted) {
+    // NOTE: any further label enforcement should occur in ContentContainer
     return (
       <Link testID={testID} style={style} href={href} noFeedback>
         {children}
       </Link>
     )
-  }
-
-  const label = labels?.[0] // TODO use config to settle on most relevant item
-  const labelGroup = getLabelValueGroup(label?.val || '')
-  if (labelGroup.id === 'illegal') {
-    return <></>
   }
 
   return (
@@ -54,13 +55,7 @@ export function PostContainer({
           style={[styles.icon, pal.text]}
         />
         <Text type="md" style={pal.textLight}>
-          {isMuted ? (
-            <>Post from an account you muted.</>
-          ) : label ? (
-            <>Warning: {labelGroup.title}</>
-          ) : (
-            ''
-          )}
+          Post from an account you muted.
         </Text>
         <TouchableOpacity
           style={styles.showBtn}

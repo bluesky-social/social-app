@@ -9,21 +9,23 @@ import {
 import {ComAtprotoLabelDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
-import {Text} from './text/Text'
+import {Text} from '../text/Text'
 import {getLabelValueGroup} from 'lib/labeling/helpers'
 import {addStyle} from 'lib/styles'
 
-export function ContentContainer({
+export function ContentHider({
   testID,
   isMuted,
   labels,
   style,
+  containerStyle,
   children,
 }: React.PropsWithChildren<{
   testID?: string
-  isMuted: boolean
+  isMuted?: boolean
   labels: ComAtprotoLabelDefs.Label[] | undefined
   style?: StyleProp<ViewStyle>
+  containerStyle?: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
@@ -43,17 +45,13 @@ export function ContentContainer({
   }
 
   return (
-    <View style={[styles.container, pal.view, pal.border]}>
+    <View style={[styles.container, pal.view, pal.border, containerStyle]}>
       <View
         style={[
           styles.description,
           pal.viewLight,
           override && styles.descriptionOpen,
         ]}>
-        <FontAwesomeIcon
-          icon={['far', 'eye-slash']}
-          style={[styles.icon, pal.text]}
-        />
         <Text type="md" style={pal.textLight}>
           {isMuted ? (
             <>Post from an account you muted.</>
@@ -92,7 +90,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 14,
-    paddingHorizontal: 18,
+    paddingLeft: 14,
+    paddingRight: 18,
     borderRadius: 12,
   },
   descriptionOpen: {
@@ -106,7 +105,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   childrenContainer: {
-    paddingHorizontal: 8,
+    paddingHorizontal: 12,
     paddingTop: 8,
   },
   child: {},

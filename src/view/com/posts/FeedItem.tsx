@@ -14,7 +14,8 @@ import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
-import {PostContainer} from '../util/PostContainer'
+import {PostHider} from '../util/moderation/PostHider'
+import {ContentHider} from '../util/moderation/ContentHider'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
@@ -132,7 +133,7 @@ export const FeedItem = observer(function ({
   ]
 
   return (
-    <PostContainer
+    <PostHider
       testID={`feedItem-by-${item.post.author.handle}`}
       style={outerStyles}
       href={itemHref}
@@ -221,16 +222,20 @@ export const FeedItem = observer(function ({
               />
             </View>
           )}
-          {item.richText?.text ? (
-            <View style={styles.postTextContainer}>
-              <RichText
-                type="post-text"
-                richText={item.richText}
-                lineHeight={1.3}
-              />
-            </View>
-          ) : undefined}
-          <PostEmbeds embed={item.post.embed} style={styles.embed} />
+          <ContentHider
+            labels={item.post.labels}
+            containerStyle={styles.contentHider}>
+            {item.richText?.text ? (
+              <View style={styles.postTextContainer}>
+                <RichText
+                  type="post-text"
+                  richText={item.richText}
+                  lineHeight={1.3}
+                />
+              </View>
+            ) : undefined}
+            <PostEmbeds embed={item.post.embed} style={styles.embed} />
+          </ContentHider>
           <PostCtrls
             style={styles.ctrls}
             itemUri={itemUri}
@@ -259,7 +264,7 @@ export const FeedItem = observer(function ({
           />
         </View>
       </View>
-    </PostContainer>
+    </PostHider>
   )
 })
 
@@ -321,6 +326,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 4,
+  },
+  contentHider: {
+    marginTop: 4,
   },
   embed: {
     marginBottom: 6,
