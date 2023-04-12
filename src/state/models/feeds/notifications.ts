@@ -314,7 +314,7 @@ export class NotificationsFeedModel {
    */
   syncQueue = bundleAsync(async () => {
     this.rootStore.log.debug('NotificationsModel:syncQueue')
-    this.lock.acquireAsync()
+    await this.lock.acquireAsync()
     try {
       const res = await this._fetchUntil(
         notif =>
@@ -340,9 +340,12 @@ export class NotificationsFeedModel {
     if (!this.queuedNotifications) {
       return
     }
-    this.lock.acquireAsync()
+    this.isRefreshing = true
+    await this.lock.acquireAsync()
     try {
-      this.mostRecentNotificationUri = this.queuedNotifications[0].uri
+      runInAction(() => {
+        this.mostRecentNotificationUri = this.queuedNotifications?.[0].uri
+      })
       const itemModels = await this._processNotifications(
         this.queuedNotifications,
       )
@@ -353,6 +356,7 @@ export class NotificationsFeedModel {
     } catch (e) {
       this.rootStore.log.error('NotificationsModel:processQueue failed', {e})
     } finally {
+      this.isRefreshing = false
       this.lock.release()
     }
   })
@@ -364,7 +368,7 @@ export class NotificationsFeedModel {
     if (!this.hasMore) {
       return
     }
-    this.lock.acquireAsync()
+    await this.lock.acquireAsync()
     try {
       this._xLoading()
       try {
