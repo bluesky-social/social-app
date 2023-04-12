@@ -6,6 +6,7 @@ import {
   AppBskyFeedRepost,
   AppBskyFeedLike,
   AppBskyGraphFollow,
+  ComAtprotoLabelDefs,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
@@ -49,6 +50,7 @@ export class NotificationsFeedItemModel {
   record?: SupportedRecord
   isRead: boolean = false
   indexedAt: string = ''
+  labels?: ComAtprotoLabelDefs.Label[]
   additional?: NotificationsFeedItemModel[]
 
   // additional data
@@ -73,6 +75,7 @@ export class NotificationsFeedItemModel {
     this.record = this.toSupportedRecord(v.record)
     this.isRead = v.isRead
     this.indexedAt = v.indexedAt
+    this.labels = v.labels
     if (v.additional?.length) {
       this.additional = []
       for (const add of v.additional) {

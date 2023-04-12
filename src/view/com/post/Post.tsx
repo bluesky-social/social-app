@@ -17,7 +17,7 @@ import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/PostCtrls'
-import {PostMutedWrapper} from '../util/PostMuted'
+import {PostHider} from '../util/PostHider'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
@@ -150,7 +150,9 @@ export const Post = observer(function Post({
   }
 
   return (
-    <PostMutedWrapper isMuted={item.post.author.viewer?.muted === true}>
+    <PostHider
+      isMuted={item.post.author.viewer?.muted === true}
+      labels={item.post.labels}>
       <Link
         style={[styles.outer, pal.view, pal.border, style]}
         href={itemHref}
@@ -227,7 +229,7 @@ export const Post = observer(function Post({
           </View>
         </View>
       </Link>
-    </PostMutedWrapper>
+    </PostHider>
   )
 })
 

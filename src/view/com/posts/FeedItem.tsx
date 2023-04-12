@@ -14,7 +14,7 @@ import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
-import {PostMutedWrapper} from '../util/PostMuted'
+import {PostHider} from '../util/PostHider'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
@@ -59,7 +59,7 @@ export const FeedItem = observer(function ({
     return urip.hostname
   }, [record?.reply])
 
-  const onPressReply = () => {
+  const onPressReply = React.useCallback(() => {
     track('FeedItem:PostReply')
     store.shell.openComposer({
       replyTo: {
@@ -73,29 +73,34 @@ export const FeedItem = observer(function ({
         },
       },
     })
-  }
-  const onPressToggleRepost = () => {
+  }, [item, track, record, store])
+
+  const onPressToggleRepost = React.useCallback(() => {
     track('FeedItem:PostRepost')
     return item
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
-  }
-  const onPressToggleLike = () => {
+  }, [track, item, store])
+
+  const onPressToggleLike = React.useCallback(() => {
     track('FeedItem:PostLike')
     return item
       .toggleLike()
       .catch(e => store.log.error('Failed to toggle like', e))
-  }
-  const onCopyPostText = () => {
+  }, [track, item, store])
+
+  const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')
     Toast.show('Copied to clipboard')
-  }
+  }, [record])
+
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(
       encodeURI(`https://translate.google.com/#auto|en|${record?.text || ''}`),
     )
   }, [record])
-  const onDeletePost = () => {
+
+  const onDeletePost = React.useCallback(() => {
     track('FeedItem:PostDelete')
     item.delete().then(
       () => {
@@ -107,7 +112,7 @@ export const FeedItem = observer(function ({
         Toast.show('Failed to delete post, please try again')
       },
     )
-  }
+  }, [track, item, setDeleted, store])
 
   if (!record || deleted) {
     return <View />
@@ -127,7 +132,7 @@ export const FeedItem = observer(function ({
   ]
 
   return (
-    <PostMutedWrapper isMuted={isMuted}>
+    <PostHider isMuted={isMuted} labels={item.post.labels}>
       <Link
         testID={`feedItem-by-${item.post.author.handle}`}
         style={outerStyles}
@@ -257,7 +262,7 @@ export const FeedItem = observer(function ({
           </View>
         </View>
       </Link>
-    </PostMutedWrapper>
+    </PostHider>
   )
 })
 

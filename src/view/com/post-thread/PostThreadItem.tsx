@@ -22,7 +22,7 @@ import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/PostCtrls'
-import {PostMutedWrapper} from '../util/PostMuted'
+import {PostHider} from '../util/PostHider'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 
@@ -270,7 +270,9 @@ export const PostThreadItem = observer(function PostThreadItem({
     )
   } else {
     return (
-      <PostMutedWrapper isMuted={item.post.author.viewer?.muted === true}>
+      <PostHider
+        isMuted={item.post.author.viewer?.muted === true}
+        labels={item.post.labels}>
         <Link
           testID={`postThreadItem-by-${item.post.author.handle}`}
           style={[styles.outer, {borderTopColor: pal.colors.border}, pal.view]}
@@ -364,7 +366,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             />
           </Link>
         ) : undefined}
-      </PostMutedWrapper>
+      </PostHider>
     )
   }
 })
