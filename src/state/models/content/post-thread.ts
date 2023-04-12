@@ -9,6 +9,7 @@ import {AtUri} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
+import {updateDataOptimistically} from 'lib/async/revertible'
 
 function* reactKeyGenerator(): Generator<string> {
   let counter = 0
@@ -135,21 +136,31 @@ export class PostThreadItemModel {
 
   async toggleLike() {
     if (this.post.viewer?.like) {
-      await this.rootStore.agent.deleteLike(this.post.viewer.like)
-      runInAction(() => {
-        this.post.likeCount = this.post.likeCount || 0
-        this.post.viewer = this.post.viewer || {}
-        this.post.likeCount--
-        this.post.viewer.like = undefined
-      })
+      updateDataOptimistically(
+        this.post,
+        ['likeCount', 'viewer', 'likeCount', 'like'],
+        [
+          this.post.likeCount || 0,
+          this.post.viewer || {},
+          this.post.likeCount! - 1,
+          undefined,
+        ],
+        () => this.rootStore.agent.deleteLike(this.post.viewer?.like!),
+      )
     } else {
-      const res = await this.rootStore.agent.like(this.post.uri, this.post.cid)
-      runInAction(() => {
-        this.post.likeCount = this.post.likeCount || 0
-        this.post.viewer = this.post.viewer || {}
-        this.post.likeCount++
-        this.post.viewer.like = res.uri
-      })
+      updateDataOptimistically(
+        this.post,
+        ['likeCount', 'viewer', 'likeCount', 'like'],
+        [
+          this.post.likeCount || 0,
+          this.post.viewer || {},
+          this.post.likeCount! + 1,
+          this.post.uri,
+        ],
+        async () => {
+          await this.rootStore.agent.like(this.post.uri, this.post.cid)
+        },
+      )
     }
   }
 
