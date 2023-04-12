@@ -157,12 +157,12 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     })
   }
 
-  const [isLikePressed, setIsLikedPressed] = React.useState<boolean>(false)
+  // const [isLikePressed, setIsLikedPressed] = React.useState<boolean>(false)
   const onPressToggleLikeWrapper = async () => {
-    if (isLikePressed) {
-      return
-    }
-    setIsLikedPressed(true)
+    // if (isLikePressed) {
+    //   return
+    // }
+    // setIsLikedPressed(true)
     if (!opts.isLiked) {
       ReactNativeHapticFeedback.trigger('impactMedium')
       setLikeMod(1)
@@ -178,14 +178,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       //     setLikeMod(0)
       //   },
       // )
-      setIsLikedPressed(false)
+      // setIsLikedPressed(false)
     } else {
       setLikeMod(-1)
       await opts
         .onPressToggleLike()
         .catch(_e => undefined)
         .then(() => setLikeMod(0))
-      setIsLikedPressed(false)
+      // setIsLikedPressed(false)
     }
   }
 

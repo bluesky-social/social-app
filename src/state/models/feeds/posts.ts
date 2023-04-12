@@ -19,6 +19,7 @@ import {
   mergePosts,
 } from 'lib/api/build-suggested-posts'
 import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
+import {updateDataOptimistically} from 'lib/async/revertible'
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 type ReasonRepost = AppBskyFeedDefs.ReasonRepost
@@ -92,21 +93,33 @@ export class PostsFeedItemModel {
 
   async toggleLike() {
     if (this.post.viewer?.like) {
-      await this.rootStore.agent.deleteLike(this.post.viewer.like)
-      runInAction(() => {
-        this.post.likeCount = this.post.likeCount || 0
-        this.post.viewer = this.post.viewer || {}
-        this.post.likeCount--
-        this.post.viewer.like = undefined
-      })
+      await updateDataOptimistically(
+        this.post,
+        ['likeCount', 'viewer', 'likeCount', 'like'],
+        [
+          this.post.likeCount || 0,
+          this.post.viewer || {},
+          this.post.likeCount! - 1,
+          undefined,
+        ],
+        () => this.rootStore.agent.deleteLike(this.post.viewer?.like!),
+        'like',
+      )
     } else {
-      const res = await this.rootStore.agent.like(this.post.uri, this.post.cid)
-      runInAction(() => {
-        this.post.likeCount = this.post.likeCount || 0
-        this.post.viewer = this.post.viewer || {}
-        this.post.likeCount++
-        this.post.viewer.like = res.uri
-      })
+      await updateDataOptimistically(
+        this.post,
+        ['likeCount', 'viewer', 'likeCount', 'like'],
+        [
+          this.post.likeCount || 0,
+          this.post.viewer || {},
+          this.post.likeCount! + 1,
+          this.post.uri,
+        ],
+        async () => {
+          await this.rootStore.agent.like(this.post.uri, this.post.cid)
+        },
+        'like',
+      )
     }
   }
 

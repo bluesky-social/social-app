@@ -136,7 +136,7 @@ export class PostThreadItemModel {
 
   async toggleLike() {
     if (this.post.viewer?.like) {
-      updateDataOptimistically(
+      await updateDataOptimistically(
         this.post,
         ['likeCount', 'viewer', 'likeCount', 'like'],
         [
@@ -146,9 +146,10 @@ export class PostThreadItemModel {
           undefined,
         ],
         () => this.rootStore.agent.deleteLike(this.post.viewer?.like!),
+        'like',
       )
     } else {
-      updateDataOptimistically(
+      await updateDataOptimistically(
         this.post,
         ['likeCount', 'viewer', 'likeCount', 'like'],
         [
@@ -160,6 +161,7 @@ export class PostThreadItemModel {
         async () => {
           await this.rootStore.agent.like(this.post.uri, this.post.cid)
         },
+        'like',
       )
     }
   }
