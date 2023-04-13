@@ -6,7 +6,13 @@ import {UpIcon} from 'lib/icons'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
-export const LoadLatestBtn = ({onPress}: {onPress: () => void}) => {
+export const LoadLatestBtn = ({
+  onPress,
+  label,
+}: {
+  onPress: () => void
+  label: string
+}) => {
   const pal = usePalette('default')
   return (
     <TouchableOpacity
@@ -15,7 +21,7 @@ export const LoadLatestBtn = ({onPress}: {onPress: () => void}) => {
       hitSlop={HITSLOP}>
       <Text type="md-bold" style={pal.text}>
         <UpIcon size={16} strokeWidth={1} style={[pal.text, styles.icon]} />
-        Load new posts
+        Load new {label}
       </Text>
     </TouchableOpacity>
   )
@@ -25,7 +31,9 @@ const styles = StyleSheet.create({
   loadLatest: {
     flexDirection: 'row',
     position: 'absolute',
-    left: 'calc(50vw - 80px)',
+    left: '50vw',
+    // @ts-ignore web only -prf
+    transform: 'translateX(-50%)',
     top: 30,
     shadowColor: '#000',
     shadowOpacity: 0.2,

@@ -119,7 +119,7 @@ export class MeModel {
       await this.fetchProfile()
       await this.fetchInviteCodes()
     }
-    await this.notifications.loadUnreadCount()
+    await this.notifications.syncQueue()
   }
 
   async fetchProfile() {

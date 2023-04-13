@@ -1,9 +1,10 @@
 import React, {useRef, useEffect} from 'react'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import BottomSheet from '@gorhom/bottom-sheet'
 import {useStores} from 'state/index'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
+import {usePalette} from 'lib/hooks/usePalette'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
@@ -15,8 +16,7 @@ import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
-import {usePalette} from 'lib/hooks/usePalette'
-import {StyleSheet} from 'react-native'
+import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 
@@ -77,6 +77,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'invite-codes') {
     snapPoints = InviteCodesModal.snapPoints
     element = <InviteCodesModal.Component />
+  } else if (activeModal?.name === 'content-filtering-settings') {
+    snapPoints = ContentFilteringSettingsModal.snapPoints
+    element = <ContentFilteringSettingsModal.Component />
   } else {
     return <View />
   }

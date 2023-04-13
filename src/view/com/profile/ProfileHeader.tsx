@@ -27,6 +27,7 @@ import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
+import {ProfileHeaderLabels} from '../util/moderation/ProfileHeaderLabels'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
@@ -320,6 +321,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
             richText={view.descriptionRichText}
           />
         ) : undefined}
+        <ProfileHeaderLabels labels={view.labels} />
         {view.viewer.muted ? (
           <View
             testID="profileHeaderMutedNotice"
@@ -348,7 +350,11 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
         onPress={onPressAvi}>
         <View
           style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
-          <UserAvatar size={80} avatar={view.avatar} />
+          <UserAvatar
+            size={80}
+            avatar={view.avatar}
+            hasWarning={!!view.labels?.length}
+          />
         </View>
       </TouchableWithoutFeedback>
     </View>

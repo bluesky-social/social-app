@@ -14,7 +14,8 @@ import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
-import {PostMutedWrapper} from '../util/PostMuted'
+import {PostHider} from '../util/moderation/PostHider'
+import {ContentHider} from '../util/moderation/ContentHider'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
@@ -59,7 +60,7 @@ export const FeedItem = observer(function ({
     return urip.hostname
   }, [record?.reply])
 
-  const onPressReply = () => {
+  const onPressReply = React.useCallback(() => {
     track('FeedItem:PostReply')
     store.shell.openComposer({
       replyTo: {
@@ -73,29 +74,34 @@ export const FeedItem = observer(function ({
         },
       },
     })
-  }
-  const onPressToggleRepost = () => {
+  }, [item, track, record, store])
+
+  const onPressToggleRepost = React.useCallback(() => {
     track('FeedItem:PostRepost')
     return item
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
-  }
-  const onPressToggleLike = () => {
+  }, [track, item, store])
+
+  const onPressToggleLike = React.useCallback(() => {
     track('FeedItem:PostLike')
     return item
       .toggleLike()
       .catch(e => store.log.error('Failed to toggle like', e))
-  }
-  const onCopyPostText = () => {
+  }, [track, item, store])
+
+  const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')
     Toast.show('Copied to clipboard')
-  }
+  }, [record])
+
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(
       encodeURI(`https://translate.google.com/#auto|en|${record?.text || ''}`),
     )
   }, [record])
-  const onDeletePost = () => {
+
+  const onDeletePost = React.useCallback(() => {
     track('FeedItem:PostDelete')
     item.delete().then(
       () => {
@@ -107,7 +113,7 @@ export const FeedItem = observer(function ({
         Toast.show('Failed to delete post, please try again')
       },
     )
-  }
+  }, [track, item, setDeleted, store])
 
   if (!record || deleted) {
     return <View />
@@ -127,97 +133,103 @@ export const FeedItem = observer(function ({
   ]
 
   return (
-    <PostMutedWrapper isMuted={isMuted}>
-      <Link
-        testID={`feedItem-by-${item.post.author.handle}`}
-        style={outerStyles}
-        href={itemHref}
-        title={itemTitle}
-        noFeedback>
-        {isThreadChild && (
-          <View
-            style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
-          />
-        )}
-        {isThreadParent && (
-          <View
+    <PostHider
+      testID={`feedItem-by-${item.post.author.handle}`}
+      style={outerStyles}
+      href={itemHref}
+      isMuted={isMuted}
+      labels={item.post.labels}>
+      {isThreadChild && (
+        <View
+          style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
+        />
+      )}
+      {isThreadParent && (
+        <View
+          style={[
+            styles.bottomReplyLine,
+            {borderColor: pal.colors.replyLine},
+            isNoTop ? styles.bottomReplyLineNoTop : undefined,
+          ]}
+        />
+      )}
+      {item.reasonRepost && (
+        <Link
+          style={styles.includeReason}
+          href={`/profile/${item.reasonRepost.by.handle}`}
+          title={sanitizeDisplayName(
+            item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
+          )}>
+          <FontAwesomeIcon
+            icon="retweet"
             style={[
-              styles.bottomReplyLine,
-              {borderColor: pal.colors.replyLine},
-              isNoTop ? styles.bottomReplyLineNoTop : undefined,
+              styles.includeReasonIcon,
+              {color: pal.colors.textLight} as FontAwesomeIconStyle,
             ]}
           />
-        )}
-        {item.reasonRepost && (
-          <Link
-            style={styles.includeReason}
-            href={`/profile/${item.reasonRepost.by.handle}`}
-            title={sanitizeDisplayName(
-              item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
-            )}>
-            <FontAwesomeIcon
-              icon="retweet"
-              style={[
-                styles.includeReasonIcon,
-                {color: pal.colors.textLight} as FontAwesomeIconStyle,
-              ]}
-            />
-            <Text
+          <Text
+            type="sm-bold"
+            style={pal.textLight}
+            lineHeight={1.2}
+            numberOfLines={1}>
+            Reposted by{' '}
+            <DesktopWebTextLink
               type="sm-bold"
               style={pal.textLight}
               lineHeight={1.2}
-              numberOfLines={1}>
-              Reposted by{' '}
-              <DesktopWebTextLink
-                type="sm-bold"
-                style={pal.textLight}
-                lineHeight={1.2}
-                numberOfLines={1}
-                text={sanitizeDisplayName(
-                  item.reasonRepost.by.displayName ||
-                    item.reasonRepost.by.handle,
-                )}
-                href={`/profile/${item.reasonRepost.by.handle}`}
-              />
-            </Text>
-          </Link>
-        )}
-        <View style={styles.layout}>
-          <View style={styles.layoutAvi}>
-            <Link href={authorHref} title={item.post.author.handle} asAnchor>
-              <UserAvatar size={52} avatar={item.post.author.avatar} />
-            </Link>
-          </View>
-          <View style={styles.layoutContent}>
-            <PostMeta
-              authorHandle={item.post.author.handle}
-              authorDisplayName={item.post.author.displayName}
-              timestamp={item.post.indexedAt}
-              postHref={itemHref}
-              did={item.post.author.did}
-              showFollowBtn={showFollowBtn}
+              numberOfLines={1}
+              text={sanitizeDisplayName(
+                item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
+              )}
+              href={`/profile/${item.reasonRepost.by.handle}`}
             />
-            {!isThreadChild && replyAuthorDid !== '' && (
-              <View style={[s.flexRow, s.mb2, s.alignCenter]}>
-                <FontAwesomeIcon
-                  icon="reply"
-                  size={9}
-                  style={[
-                    {color: pal.colors.textLight} as FontAwesomeIconStyle,
-                    s.mr5,
-                  ]}
-                />
-                <Text type="md" style={[pal.textLight, s.mr2]} lineHeight={1.2}>
-                  Reply to
-                </Text>
-                <UserInfoText
-                  type="md"
-                  did={replyAuthorDid}
-                  attr="displayName"
-                  style={[pal.textLight, s.ml2]}
-                />
-              </View>
-            )}
+          </Text>
+        </Link>
+      )}
+      <View style={styles.layout}>
+        <View style={styles.layoutAvi}>
+          <Link href={authorHref} title={item.post.author.handle} asAnchor>
+            <UserAvatar
+              size={52}
+              avatar={item.post.author.avatar}
+              hasWarning={!!item.post.author.labels?.length}
+            />
+          </Link>
+        </View>
+        <View style={styles.layoutContent}>
+          <PostMeta
+            authorHandle={item.post.author.handle}
+            authorDisplayName={item.post.author.displayName}
+            authorHasWarning={!!item.post.author.labels?.length}
+            timestamp={item.post.indexedAt}
+            postHref={itemHref}
+            did={item.post.author.did}
+            showFollowBtn={showFollowBtn}
+          />
+          {!isThreadChild && replyAuthorDid !== '' && (
+            <View style={[s.flexRow, s.mb2, s.alignCenter]}>
+              <FontAwesomeIcon
+                icon="reply"
+                size={9}
+                style={[
+                  {color: pal.colors.textLight} as FontAwesomeIconStyle,
+                  s.mr5,
+                ]}
+              />
+              <Text type="md" style={[pal.textLight, s.mr2]} lineHeight={1.2}>
+                Reply to
+              </Text>
+              <UserInfoText
+                type="md"
+                did={replyAuthorDid}
+                attr="displayName"
+                style={[pal.textLight, s.ml2]}
+              />
+            </View>
+          )}
+          <ContentHider
+            labels={item.post.labels}
+            containerStyle={styles.contentHider}>
             {item.richText?.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
@@ -228,36 +240,36 @@ export const FeedItem = observer(function ({
               </View>
             ) : undefined}
             <PostEmbeds embed={item.post.embed} style={styles.embed} />
-            <PostCtrls
-              style={styles.ctrls}
-              itemUri={itemUri}
-              itemCid={itemCid}
-              itemHref={itemHref}
-              itemTitle={itemTitle}
-              author={{
-                avatar: item.post.author.avatar!,
-                handle: item.post.author.handle,
-                displayName: item.post.author.displayName!,
-              }}
-              text={item.richText?.text || record.text}
-              indexedAt={item.post.indexedAt}
-              isAuthor={item.post.author.did === store.me.did}
-              replyCount={item.post.replyCount}
-              repostCount={item.post.repostCount}
-              likeCount={item.post.likeCount}
-              isReposted={!!item.post.viewer?.repost}
-              isLiked={!!item.post.viewer?.like}
-              onPressReply={onPressReply}
-              onPressToggleRepost={onPressToggleRepost}
-              onPressToggleLike={onPressToggleLike}
-              onCopyPostText={onCopyPostText}
-              onOpenTranslate={onOpenTranslate}
-              onDeletePost={onDeletePost}
-            />
-          </View>
+          </ContentHider>
+          <PostCtrls
+            style={styles.ctrls}
+            itemUri={itemUri}
+            itemCid={itemCid}
+            itemHref={itemHref}
+            itemTitle={itemTitle}
+            author={{
+              avatar: item.post.author.avatar!,
+              handle: item.post.author.handle,
+              displayName: item.post.author.displayName!,
+            }}
+            text={item.richText?.text || record.text}
+            indexedAt={item.post.indexedAt}
+            isAuthor={item.post.author.did === store.me.did}
+            replyCount={item.post.replyCount}
+            repostCount={item.post.repostCount}
+            likeCount={item.post.likeCount}
+            isReposted={!!item.post.viewer?.repost}
+            isLiked={!!item.post.viewer?.like}
+            onPressReply={onPressReply}
+            onPressToggleRepost={onPressToggleRepost}
+            onPressToggleLike={onPressToggleLike}
+            onCopyPostText={onCopyPostText}
+            onOpenTranslate={onOpenTranslate}
+            onDeletePost={onDeletePost}
+          />
         </View>
-      </Link>
-    </PostMutedWrapper>
+      </View>
+    </PostHider>
   )
 })
 
@@ -319,6 +331,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 4,
+  },
+  contentHider: {
+    marginTop: 4,
   },
   embed: {
     marginBottom: 6,

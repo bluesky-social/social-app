@@ -67,6 +67,7 @@ export const ProfileFollowers = observer(function ProfileFollowers({
       handle={item.handle}
       displayName={item.displayName}
       avatar={item.avatar}
+      labels={item.labels}
       isFollowedBy={!!item.viewer?.followedBy}
     />
   )

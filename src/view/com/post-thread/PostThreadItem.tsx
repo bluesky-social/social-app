@@ -22,7 +22,8 @@ import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/PostCtrls'
-import {PostMutedWrapper} from '../util/PostMuted'
+import {PostHider} from '../util/moderation/PostHider'
+import {ContentHider} from '../util/moderation/ContentHider'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 
@@ -137,7 +138,11 @@ export const PostThreadItem = observer(function PostThreadItem({
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
             <Link href={authorHref} title={authorTitle} asAnchor>
-              <UserAvatar size={52} avatar={item.post.author.avatar} />
+              <UserAvatar
+                size={52}
+                avatar={item.post.author.avatar}
+                hasWarning={!!item.post.author.labels?.length}
+              />
             </Link>
           </View>
           <View style={styles.layoutContent}>
@@ -193,17 +198,24 @@ export const PostThreadItem = observer(function PostThreadItem({
           </View>
         </View>
         <View style={[s.pl10, s.pr10, s.pb10]}>
-          {item.richText?.text ? (
-            <View
-              style={[styles.postTextContainer, styles.postTextLargeContainer]}>
-              <RichText
-                type="post-text-lg"
-                richText={item.richText}
-                lineHeight={1.3}
-              />
-            </View>
-          ) : undefined}
-          <PostEmbeds embed={item.post.embed} style={s.mb10} />
+          <ContentHider
+            isMuted={item.post.author.viewer?.muted === true}
+            labels={item.post.labels}>
+            {item.richText?.text ? (
+              <View
+                style={[
+                  styles.postTextContainer,
+                  styles.postTextLargeContainer,
+                ]}>
+                <RichText
+                  type="post-text-lg"
+                  richText={item.richText}
+                  lineHeight={1.3}
+                />
+              </View>
+            ) : undefined}
+            <PostEmbeds embed={item.post.embed} style={s.mb10} />
+          </ContentHider>
           {item._isHighlightedPost && hasEngagement ? (
             <View style={[styles.expandedInfo, pal.border]}>
               {item.post.repostCount ? (
@@ -270,13 +282,13 @@ export const PostThreadItem = observer(function PostThreadItem({
     )
   } else {
     return (
-      <PostMutedWrapper isMuted={item.post.author.viewer?.muted === true}>
-        <Link
+      <>
+        <PostHider
           testID={`postThreadItem-by-${item.post.author.handle}`}
-          style={[styles.outer, {borderTopColor: pal.colors.border}, pal.view]}
           href={itemHref}
-          title={itemTitle}
-          noFeedback>
+          style={[styles.outer, {borderColor: pal.colors.border}, pal.view]}
+          isMuted={item.post.author.viewer?.muted === true}
+          labels={item.post.labels}>
           {item._showParentReplyLine && (
             <View
               style={[
@@ -296,28 +308,37 @@ export const PostThreadItem = observer(function PostThreadItem({
           <View style={styles.layout}>
             <View style={styles.layoutAvi}>
               <Link href={authorHref} title={authorTitle} asAnchor>
-                <UserAvatar size={52} avatar={item.post.author.avatar} />
+                <UserAvatar
+                  size={52}
+                  avatar={item.post.author.avatar}
+                  hasWarning={!!item.post.author.labels?.length}
+                />
               </Link>
             </View>
             <View style={styles.layoutContent}>
               <PostMeta
                 authorHandle={item.post.author.handle}
                 authorDisplayName={item.post.author.displayName}
+                authorHasWarning={!!item.post.author.labels?.length}
                 timestamp={item.post.indexedAt}
                 postHref={itemHref}
                 did={item.post.author.did}
               />
-              {item.richText?.text ? (
-                <View style={styles.postTextContainer}>
-                  <RichText
-                    type="post-text"
-                    richText={item.richText}
-                    style={pal.text}
-                    lineHeight={1.3}
-                  />
-                </View>
-              ) : undefined}
-              <PostEmbeds embed={item.post.embed} style={s.mb10} />
+              <ContentHider
+                labels={item.post.labels}
+                containerStyle={styles.contentHider}>
+                {item.richText?.text ? (
+                  <View style={styles.postTextContainer}>
+                    <RichText
+                      type="post-text"
+                      richText={item.richText}
+                      style={pal.text}
+                      lineHeight={1.3}
+                    />
+                  </View>
+                ) : undefined}
+                <PostEmbeds embed={item.post.embed} style={s.mb10} />
+              </ContentHider>
               <PostCtrls
                 itemUri={itemUri}
                 itemCid={itemCid}
@@ -345,7 +366,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               />
             </View>
           </View>
-        </Link>
+        </PostHider>
         {item._hasMore ? (
           <Link
             style={[
@@ -364,7 +385,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             />
           </Link>
         ) : undefined}
-      </PostMutedWrapper>
+      </>
     )
   }
 })
@@ -432,6 +453,9 @@ const styles = StyleSheet.create({
   postTextLargeContainer: {
     paddingHorizontal: 0,
     paddingBottom: 10,
+  },
+  contentHider: {
+    marginTop: 4,
   },
   expandedInfo: {
     flexDirection: 'row',

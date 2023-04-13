@@ -90,6 +90,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
                   handle={item.handle}
                   displayName={item.displayName}
                   avatar={item.avatar}
+                  labels={item.labels}
                   noBorder={i === 0}
                 />
               ))}

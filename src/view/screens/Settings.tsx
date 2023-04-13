@@ -124,6 +124,11 @@ export const SettingsScreen = withAuthRequired(
       store.shell.openModal({name: 'invite-codes'})
     }, [track, store])
 
+    const onPressContentFiltering = React.useCallback(() => {
+      track('Settings:ContentfilteringButtonClicked')
+      store.shell.openModal({name: 'content-filtering-settings'})
+    }, [track, store])
+
     const onPressSignout = React.useCallback(() => {
       track('Settings:SignOutButtonClicked')
       store.session.logout()
@@ -248,6 +253,20 @@ export const SettingsScreen = withAuthRequired(
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Advanced
           </Text>
+          <TouchableOpacity
+            testID="contentFilteringBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            onPress={isSwitching ? undefined : onPressContentFiltering}>
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="eye"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Content moderation
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             testID="changeHandleBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}

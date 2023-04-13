@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, ComAtprotoLabelDefs} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
@@ -17,6 +17,7 @@ export function ProfileCard({
   displayName,
   avatar,
   description,
+  labels,
   isFollowedBy,
   noBg,
   noBorder,
@@ -28,6 +29,7 @@ export function ProfileCard({
   displayName?: string
   avatar?: string
   description?: string
+  labels: ComAtprotoLabelDefs.Label[] | undefined
   isFollowedBy?: boolean
   noBg?: boolean
   noBorder?: boolean
@@ -50,7 +52,7 @@ export function ProfileCard({
       asAnchor>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <UserAvatar size={40} avatar={avatar} />
+          <UserAvatar size={40} avatar={avatar} hasWarning={!!labels?.length} />
         </View>
         <View style={styles.layoutContent}>
           <Text
@@ -114,6 +116,7 @@ export const ProfileCardWithFollowBtn = observer(
     displayName,
     avatar,
     description,
+    labels,
     isFollowedBy,
     noBg,
     noBorder,
@@ -124,6 +127,7 @@ export const ProfileCardWithFollowBtn = observer(
     displayName?: string
     avatar?: string
     description?: string
+    labels: ComAtprotoLabelDefs.Label[] | undefined
     isFollowedBy?: boolean
     noBg?: boolean
     noBorder?: boolean
@@ -138,6 +142,7 @@ export const ProfileCardWithFollowBtn = observer(
         displayName={displayName}
         avatar={avatar}
         description={description}
+        labels={labels}
         isFollowedBy={isFollowedBy}
         noBg={noBg}
         noBorder={noBorder}

@@ -155,6 +155,7 @@ export const SearchScreen = withAuthRequired(
                       testID={`searchAutoCompleteResult-${item.handle}`}
                       handle={item.handle}
                       displayName={item.displayName}
+                      labels={item.labels}
                       avatar={item.avatar}
                     />
                   ))}

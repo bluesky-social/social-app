@@ -53,6 +53,7 @@ export const PostLikedBy = observer(function ({uri}: {uri: string}) {
       handle={item.actor.handle}
       displayName={item.actor.displayName}
       avatar={item.actor.avatar}
+      labels={item.actor.labels}
       isFollowedBy={!!item.actor.viewer?.followedBy}
     />
   )

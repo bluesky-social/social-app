@@ -42,6 +42,7 @@ export function QuoteEmbed({
         authorAvatar={quote.author.avatar}
         authorHandle={quote.author.handle}
         authorDisplayName={quote.author.displayName}
+        authorHasWarning={false}
         postHref={itemHref}
         timestamp={quote.indexedAt}
       />

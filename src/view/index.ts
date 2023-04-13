@@ -34,6 +34,7 @@ import {faCompass} from '@fortawesome/free-regular-svg-icons/faCompass'
 import {faEllipsis} from '@fortawesome/free-solid-svg-icons/faEllipsis'
 import {faEnvelope} from '@fortawesome/free-solid-svg-icons/faEnvelope'
 import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation'
+import {faEye} from '@fortawesome/free-solid-svg-icons/faEye'
 import {faEyeSlash as farEyeSlash} from '@fortawesome/free-regular-svg-icons/faEyeSlash'
 import {faGear} from '@fortawesome/free-solid-svg-icons/faGear'
 import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
@@ -106,8 +107,8 @@ export function setup() {
     faCompass,
     faEllipsis,
     faEnvelope,
+    faEye,
     faExclamation,
-    faQuoteLeft,
     farEyeSlash,
     faGear,
     faGlobe,
@@ -128,6 +129,7 @@ export function setup() {
     faPenNib,
     faPenToSquare,
     faPlus,
+    faQuoteLeft,
     faReply,
     faRetweet,
     faRss,
