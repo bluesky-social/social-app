@@ -21,6 +21,13 @@ export type CommonNavigatorParams = {
   CopyrightPolicy: undefined
 }
 
+export type BottomTabNavigatorParams = CommonNavigatorParams & {
+  HomeTab: undefined
+  SearchTab: undefined
+  NotificationsTab: undefined
+  MyProfileTab: undefined
+}
+
 export type HomeTabNavigatorParams = CommonNavigatorParams & {
   Home: undefined
 }
@@ -31,6 +38,10 @@ export type SearchTabNavigatorParams = CommonNavigatorParams & {
 
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
   Notifications: undefined
+}
+
+export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
+  MyProfile: {name: string} | undefined
 }
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
