@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
   container: {
     width: 500,
     maxWidth: '100vw',
+    maxHeight: '100vh',
     paddingVertical: 20,
     paddingHorizontal: 24,
     borderRadius: 8,
