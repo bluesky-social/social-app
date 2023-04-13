@@ -7,8 +7,7 @@ import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {CenteredView} from '../util/Views'
-import {isDesktopWeb, isMobileWeb} from 'platform/detection'
-import {HelpTip} from './util/HelpTip'
+import {isMobileWeb} from 'platform/detection'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -40,24 +39,22 @@ export const SplashScreen = ({
           <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
             See what's next
           </Text>
-          {isDesktopWeb && (
-            <View testID="signinOrCreateAccount" style={styles.btns}>
-              <TouchableOpacity
-                testID="createAccountButton"
-                style={[styles.btn, {backgroundColor: colors.blue3}]}
-                onPress={onPressCreateAccount}>
-                <Text style={[s.white, styles.btnLabel]}>
-                  Create a new account
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                testID="signInButton"
-                style={[styles.btn, pal.btn]}
-                onPress={onPressSignin}>
-                <Text style={[pal.text, styles.btnLabel]}>Sign in</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          <View testID="signinOrCreateAccount" style={styles.btns}>
+            <TouchableOpacity
+              testID="createAccountButton"
+              style={[styles.btn, {backgroundColor: colors.blue3}]}
+              onPress={onPressCreateAccount}>
+              <Text style={[s.white, styles.btnLabel]}>
+                Create a new account
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              testID="signInButton"
+              style={[styles.btn, pal.btn]}
+              onPress={onPressSignin}>
+              <Text style={[pal.text, styles.btnLabel]}>Sign in</Text>
+            </TouchableOpacity>
+          </View>
           <Text
             type="xl"
             style={[styles.notice, pal.textLight]}
@@ -70,13 +67,6 @@ export const SplashScreen = ({
             </TouchableOpacity>{' '}
             to try the beta before it's publicly available.
           </Text>
-          {isMobileWeb && (
-            <>
-              <View style={[s.p20, s.mt10]}>
-                <HelpTip text="Beta testers: the mobile web app isn't quite ready yet. Log in on desktop web or using the iPhone app." />
-              </View>
-            </>
-          )}
         </ErrorBoundary>
       </View>
       <Footer />
@@ -148,7 +138,8 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   btns: {
-    flexDirection: 'row',
+    flexDirection: isMobileWeb ? 'column' : 'row',
+    gap: 20,
     justifyContent: 'center',
     paddingBottom: 40,
   },
@@ -156,7 +147,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     paddingHorizontal: 24,
     paddingVertical: 12,
-    marginHorizontal: 10,
     minWidth: 220,
   },
   btnLabel: {

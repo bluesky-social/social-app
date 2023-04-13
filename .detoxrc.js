@@ -14,14 +14,14 @@ module.exports = {
       type: 'ios.app',
       binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/bluesky.app',
       build:
-        'xcodebuild -workspace ios/bluesky.xcworkspace -scheme bluesky -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build',
+        'xcodebuild -workspace ios/Bluesky.xcworkspace -scheme Bluesky -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build',
     },
     'ios.release': {
       type: 'ios.app',
       binaryPath:
         'ios/build/Build/Products/Release-iphonesimulator/bluesky.app',
       build:
-        'xcodebuild -workspace ios/bluesky.xcworkspace -scheme bluesky -configuration Release -sdk iphonesimulator -derivedDataPath ios/build',
+        'xcodebuild -workspace ios/Bluesky.xcworkspace -scheme Bluesky -configuration Release -sdk iphonesimulator -derivedDataPath ios/build',
     },
     'android.debug': {
       type: 'android.apk',

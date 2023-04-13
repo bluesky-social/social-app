@@ -8,11 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  useNavigation,
-  useNavigationState,
-  StackActions,
-} from '@react-navigation/native'
+import {useNavigation, StackActions} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import {
   FontAwesomeIcon,
@@ -40,6 +36,8 @@ import {useAnalytics} from 'lib/analytics'
 import {pluralize} from 'lib/strings/helpers'
 import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
+import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
+import {isWeb} from 'platform/detection'
 
 export const DrawerContent = observer(() => {
   const theme = useTheme()
@@ -47,16 +45,7 @@ export const DrawerContent = observer(() => {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtNotifications} = useNavigationState(
-    state => {
-      return {
-        isAtHome: getTabState(state, 'Home') !== TabState.Outside,
-        isAtSearch: getTabState(state, 'Search') !== TabState.Outside,
-        isAtNotifications:
-          getTabState(state, 'Notifications') !== TabState.Outside,
-      }
-    },
-  )
+  const {isAtHome, isAtSearch, isAtNotifications} = useNavigationTabState()
 
   // events
   // =
@@ -66,14 +55,19 @@ export const DrawerContent = observer(() => {
       track('Menu:ItemClicked', {url: tab})
       const state = navigation.getState()
       store.shell.closeDrawer()
-      const tabState = getTabState(state, tab)
-      if (tabState === TabState.InsideAtRoot) {
-        store.emitScreenSoftReset()
-      } else if (tabState === TabState.Inside) {
-        navigation.dispatch(StackActions.popToTop())
-      } else {
+      if (isWeb) {
         // @ts-ignore must be Home, Search, or Notifications
-        navigation.navigate(`${tab}Tab`)
+        navigation.navigate(tab)
+      } else {
+        const tabState = getTabState(state, tab)
+        if (tabState === TabState.InsideAtRoot) {
+          store.emitScreenSoftReset()
+        } else if (tabState === TabState.Inside) {
+          navigation.dispatch(StackActions.popToTop())
+        } else {
+          // @ts-ignore must be Home, Search, or Notifications
+          navigation.navigate(`${tab}Tab`)
+        }
       }
     },
     [store, track, navigation],
@@ -240,20 +234,22 @@ export const DrawerContent = observer(() => {
         </View>
         <View style={s.flex1} />
         <View style={styles.footer}>
-          <TouchableOpacity
-            onPress={onDarkmodePress}
-            style={[
-              styles.footerBtn,
-              theme.colorScheme === 'light'
-                ? pal.btn
-                : styles.footerBtnDarkMode,
-            ]}>
-            <MoonIcon
-              size={22}
-              style={pal.text as StyleProp<ViewStyle>}
-              strokeWidth={2}
-            />
-          </TouchableOpacity>
+          {!isWeb && (
+            <TouchableOpacity
+              onPress={onDarkmodePress}
+              style={[
+                styles.footerBtn,
+                theme.colorScheme === 'light'
+                  ? pal.btn
+                  : styles.footerBtnDarkMode,
+              ]}>
+              <MoonIcon
+                size={22}
+                style={pal.text as StyleProp<ViewStyle>}
+                strokeWidth={2}
+              />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             onPress={onPressFeedback}
             style={[

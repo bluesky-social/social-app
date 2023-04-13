@@ -93,7 +93,7 @@ describe('Profile screen', () => {
     // have to wait for the toast to clear
     await waitFor(element(by.id('searchTextInput')))
       .toBeVisible()
-      .withTimeout(2000)
+      .withTimeout(5000)
     await element(by.id('searchTextInput')).typeText('bob')
     await element(by.id('searchAutoCompleteResult-bob.test')).tap()
     await expect(element(by.id('profileView'))).toBeVisible()

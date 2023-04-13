@@ -14,7 +14,7 @@ import {
   FlatNavigatorParams,
   AllNavigatorParams,
 } from 'lib/routes/types'
-import {BottomBar} from './view/shell/BottomBar'
+import {BottomBar} from './view/shell/bottom-bar/BottomBar'
 import {buildStateObject} from 'lib/routes/helpers'
 import {State, RouteParams} from 'lib/routes/types'
 import {colors} from 'lib/styles'

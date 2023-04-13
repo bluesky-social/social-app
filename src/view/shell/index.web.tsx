@@ -1,6 +1,6 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {View, StyleSheet} from 'react-native'
+import {View, StyleSheet, TouchableOpacity} from 'react-native'
 import {useStores} from 'state/index'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -11,9 +11,13 @@ import {Composer} from './Composer.web'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {s, colors} from 'lib/styles'
 import {RoutesContainer, FlatNavigator} from '../../Navigation'
+import {DrawerContent} from './Drawer'
+import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
+import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 
 const ShellInner = observer(() => {
   const store = useStores()
+  const {isDesktop} = useWebMediaQueries()
 
   return (
     <>
@@ -22,10 +26,14 @@ const ShellInner = observer(() => {
           <FlatNavigator />
         </ErrorBoundary>
       </View>
-      <DesktopLeftNav />
-      <DesktopRightNav />
-      <View style={[styles.viewBorder, styles.viewBorderLeft]} />
-      <View style={[styles.viewBorder, styles.viewBorderRight]} />
+      {isDesktop && (
+        <>
+          <DesktopLeftNav />
+          <DesktopRightNav />
+          <View style={[styles.viewBorder, styles.viewBorderLeft]} />
+          <View style={[styles.viewBorder, styles.viewBorderRight]} />
+        </>
+      )}
       <Composer
         active={store.shell.isComposerActive}
         onClose={() => store.shell.closeComposer()}
@@ -34,8 +42,18 @@ const ShellInner = observer(() => {
         quote={store.shell.composerOpts?.quote}
         onPost={store.shell.composerOpts?.onPost}
       />
+      {!isDesktop && <BottomBarWeb />}
       <ModalsContainer />
       <Lightbox />
+      {!isDesktop && store.shell.isDrawerOpen && (
+        <TouchableOpacity
+          onPress={() => store.shell.closeDrawer()}
+          style={styles.drawerMask}>
+          <View style={styles.drawerContainer}>
+            <DrawerContent />
+          </View>
+        </TouchableOpacity>
+      )}
     </>
   )
 })
@@ -70,5 +88,20 @@ const styles = StyleSheet.create({
   },
   viewBorderRight: {
     left: 'calc(50vw + 300px)',
+  },
+  drawerMask: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    top: 0,
+    left: 0,
+    backgroundColor: 'rgba(0,0,0,0.25)',
+  },
+  drawerContainer: {
+    display: 'flex',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: '100%',
   },
 })
