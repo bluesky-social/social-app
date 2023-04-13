@@ -148,7 +148,7 @@ export function Component({
           <Text style={[styles.label, pal.text]}>Display Name</Text>
           <TextInput
             testID="editProfileDisplayNameInput"
-            style={[styles.textInput, pal.text]}
+            style={[styles.textInput, pal.border, pal.text]}
             placeholder="e.g. Alice Roberts"
             placeholderTextColor={colors.gray4}
             value={displayName}
@@ -159,7 +159,7 @@ export function Component({
           <Text style={[styles.label, pal.text]}>Description</Text>
           <TextInput
             testID="editProfileDescriptionInput"
-            style={[styles.textArea, pal.text]}
+            style={[styles.textArea, pal.border, pal.text]}
             placeholder="e.g. Artist, dog-lover, and memelord."
             placeholderTextColor={colors.gray4}
             keyboardAppearance={theme.colorScheme}
@@ -217,21 +217,17 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderWidth: 1,
-    borderColor: colors.gray3,
     borderRadius: 6,
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: 16,
-    color: colors.black,
   },
   textArea: {
     borderWidth: 1,
-    borderColor: colors.gray3,
     borderRadius: 6,
     paddingHorizontal: 12,
     paddingTop: 10,
     fontSize: 16,
-    color: colors.black,
     height: 100,
     textAlignVertical: 'top',
   },
@@ -252,8 +248,6 @@ const styles = StyleSheet.create({
     height: 84,
     borderWidth: 2,
     borderRadius: 42,
-    borderColor: colors.white,
-    backgroundColor: colors.white,
   },
   photos: {
     marginBottom: 36,
