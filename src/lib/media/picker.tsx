@@ -32,6 +32,8 @@ export async function openPicker(
     mediaType,
     multiple: opts.multiple,
     maxFiles: opts.maxFiles,
+    forceJpg: true, // ios only
+    compressImageQuality: 0.8,
   })
   const toMedia = (item: ImageOrVideo) => ({
     mediaType,
@@ -60,7 +62,7 @@ export async function openCamera(
     cropperCircleOverlay: opts.cropperCircleOverlay,
     cropping: true,
     forceJpg: true, // ios only
-    compressImageQuality: 1.0,
+    compressImageQuality: 0.8,
   })
   return {
     mediaType,
@@ -85,7 +87,7 @@ export async function openCropper(
     freeStyleCropEnabled: opts.freeStyleCropEnabled,
     cropperCircleOverlay: opts.cropperCircleOverlay,
     forceJpg: true, // ios only
-    compressImageQuality: 1.0,
+    compressImageQuality: 0.8,
   })
   return {
     mediaType,
