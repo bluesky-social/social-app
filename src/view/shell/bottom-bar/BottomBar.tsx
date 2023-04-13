@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {StackActions, useNavigationState} from '@react-navigation/native'
+import {StackActions} from '@react-navigation/native'
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'

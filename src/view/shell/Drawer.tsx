@@ -58,7 +58,7 @@ export const DrawerContent = observer(() => {
       const state = navigation.getState()
       store.shell.closeDrawer()
       if (isWeb) {
-        // @ts-ignore must be Home, Search, or Notifications
+        // @ts-ignore must be Home, Search, Notifications, or MyProfile
         navigation.navigate(tab)
       } else {
         const tabState = getTabState(state, tab)
@@ -67,7 +67,7 @@ export const DrawerContent = observer(() => {
         } else if (tabState === TabState.Inside) {
           navigation.dispatch(StackActions.popToTop())
         } else {
-          // @ts-ignore must be Home, Search, or Notifications
+          // @ts-ignore must be Home, Search, Notifications, or MyProfile
           navigation.navigate(`${tab}Tab`)
         }
       }
