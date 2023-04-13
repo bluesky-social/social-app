@@ -13,6 +13,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "buildNumber": "2",
       "supportsTablet": false,
       "bundleIdentifier": "xyz.blueskyweb.app",
       "config": {
