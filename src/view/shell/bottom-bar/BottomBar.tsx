@@ -84,8 +84,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   )
   const onPressProfile = React.useCallback(() => {
     onPressTab('MyProfile')
-    track('MobileShell:ProfileButtonPressed')
-  }, [onPressTab, track])
+  }, [onPressTab])
 
   return (
     <Animated.View

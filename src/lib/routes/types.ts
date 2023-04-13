@@ -41,7 +41,7 @@ export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
-  MyProfile: {name: string}
+  MyProfile: undefined
 }
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
@@ -57,6 +57,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Search: {q?: string}
   NotificationsTab: undefined
   Notifications: undefined
+  MyProfileTab: undefined
 }
 
 // NOTE

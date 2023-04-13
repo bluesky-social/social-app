@@ -8,6 +8,7 @@ export function useNavigationTabState() {
       isAtSearch: getTabState(state, 'Search') !== TabState.Outside,
       isAtNotifications:
         getTabState(state, 'Notifications') !== TabState.Outside,
+      isAtMyProfile: getTabState(state, 'MyProfile') !== TabState.Outside,
     }
   })
 }
