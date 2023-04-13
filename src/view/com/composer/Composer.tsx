@@ -10,7 +10,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {RichText} from '@atproto/api'
@@ -74,6 +74,8 @@ export const ComposePost = observer(function ComposePost({
     () => new UserAutocompleteModel(store),
     [store],
   )
+
+  const insets = useSafeAreaInsets()
 
   // HACK
   // there's a bug with @mattermost/react-native-paste-input where if the input
@@ -209,7 +211,14 @@ export const ComposePost = observer(function ComposePost({
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.outer}>
       <TouchableWithoutFeedback onPressIn={onPressContainer}>
-        <SafeAreaView style={[s.flex1]}>
+        <View
+          style={[
+            s.flex1,
+            {
+              paddingBottom: Platform.OS === 'android' ? insets.bottom : 0,
+              paddingTop: Platform.OS === 'android' ? insets.top : 15,
+            },
+          ]}>
           <View style={styles.topbar}>
             <TouchableOpacity
               testID="composerCancelButton"
@@ -339,7 +348,7 @@ export const ComposePost = observer(function ComposePost({
             <View style={s.flex1} />
             <CharProgress count={graphemeLength} />
           </View>
-        </SafeAreaView>
+        </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   )
