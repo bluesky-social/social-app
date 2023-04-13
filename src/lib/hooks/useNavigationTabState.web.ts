@@ -8,6 +8,7 @@ export function useNavigationTabState() {
       isAtHome: currentRoute === 'Home',
       isAtSearch: currentRoute === 'Search',
       isAtNotifications: currentRoute === 'Notifications',
+      isAtMyProfile: currentRoute === 'MyProfile',
     }
   })
 }

@@ -27,34 +27,15 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {getTabState, TabState} from 'lib/routes/helpers'
 import {styles} from './BottomBarStyles'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 
 export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const store = useStores()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtNotifications, isAtProfile} =
-    useNavigationState(state => {
-      const res = {
-        isAtHome: getTabState(state, 'Home') !== TabState.Outside,
-        isAtSearch: getTabState(state, 'Search') !== TabState.Outside,
-        isAtNotifications:
-          getTabState(state, 'Notifications') !== TabState.Outside,
-        isAtProfile: getTabState(state, 'MyProfile') !== TabState.Outside,
-      }
-      if (
-        !res.isAtHome &&
-        !res.isAtNotifications &&
-        !res.isAtSearch &&
-        !res.isAtProfile
-      ) {
-        // HACK for some reason useNavigationState will give us pre-hydration results
-        //      and not update after, so we force isAtHome if all came back false
-        //      -prf
-        res.isAtHome = true
-      }
-      return res
-    })
+  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile} =
+    useNavigationTabState()
 
   const {footerMinimalShellTransform} = useMinimalShellMode()
 
@@ -159,7 +140,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         testID="bottomBarProfileBtn"
         icon={
           <View style={styles.ctrlIconSizingWrapper}>
-            {isAtProfile ? (
+            {isAtMyProfile ? (
               <UserIconSolid
                 size={28}
                 strokeWidth={1.5}
