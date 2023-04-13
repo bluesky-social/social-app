@@ -297,7 +297,7 @@ export const darkTheme: Theme = {
       textLight: colors.gray3,
       textInverted: colors.black,
       link: colors.blue3,
-      border: colors.black,
+      border: colors.gray7,
       borderDark: colors.gray6,
       icon: colors.gray4,
 
