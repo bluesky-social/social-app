@@ -17,6 +17,7 @@ import * as CropImageModal from './crop-image/CropImage.web'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
+import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
@@ -75,6 +76,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <WaitlistModal.Component />
   } else if (modal.name === 'invite-codes') {
     element = <InviteCodesModal.Component />
+  } else if (modal.name === 'content-filtering-settings') {
+    element = <ContentFilteringSettingsModal.Component />
   } else {
     return null
   }

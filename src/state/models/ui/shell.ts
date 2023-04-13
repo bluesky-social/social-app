@@ -65,6 +65,10 @@ export interface InviteCodesModal {
   name: 'invite-codes'
 }
 
+export interface ContentFilteringSettingsModal {
+  name: 'content-filtering-settings'
+}
+
 export type Modal =
   | ConfirmModal
   | EditProfileModal
@@ -77,6 +81,7 @@ export type Modal =
   | ChangeHandleModal
   | WaitlistModal
   | InviteCodesModal
+  | ContentFilteringSettingsModal
 
 interface LightboxModel {}
 

@@ -7,10 +7,9 @@ import {
   ViewStyle,
 } from 'react-native'
 import {ComAtprotoLabelDefs} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 import {Text} from '../text/Text'
-import {getLabelValueGroup} from 'lib/labeling/helpers'
 import {addStyle} from 'lib/styles'
 
 export function ContentHider({
@@ -29,8 +28,10 @@ export function ContentHider({
 }>) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
+  const store = useStores()
+  const labelPref = store.preferences.getLabelPreference(labels)
 
-  if (!isMuted && !labels?.length) {
+  if (!isMuted && labelPref.pref === 'show') {
     return (
       <View testID={testID} style={style}>
         {children}
@@ -38,9 +39,7 @@ export function ContentHider({
     )
   }
 
-  const label = labels?.[0] // TODO use config to settle on most relevant item
-  const labelGroup = getLabelValueGroup(label?.val || '')
-  if (labelGroup.id === 'illegal') {
+  if (labelPref.pref === 'hide') {
     return <></>
   }
 
@@ -55,10 +54,8 @@ export function ContentHider({
         <Text type="md" style={pal.textLight}>
           {isMuted ? (
             <>Post from an account you muted.</>
-          ) : label ? (
-            <>Warning: {labelGroup.title}</>
           ) : (
-            ''
+            <>Warning: {labelPref.desc.title}</>
           )}
         </Text>
         <TouchableOpacity

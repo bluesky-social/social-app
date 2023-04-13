@@ -11,8 +11,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Link} from '../Link'
 import {Text} from '../text/Text'
-import {getLabelValueGroup} from 'lib/labeling/helpers'
 import {addStyle} from 'lib/styles'
+import {useStores} from 'state/index'
 
 export function PostHider({
   testID,
@@ -28,13 +28,13 @@ export function PostHider({
   labels: ComAtprotoLabelDefs.Label[] | undefined
   style: StyleProp<ViewStyle>
 }>) {
+  const store = useStores()
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
   const bg = override ? pal.viewLight : pal.view
 
-  const label = labels?.[0] // TODO use config to settle on most relevant item
-  const labelGroup = getLabelValueGroup(label?.val || '')
-  if (labelGroup.id === 'illegal') {
+  const labelPref = store.preferences.getLabelPreference(labels)
+  if (labelPref.pref === 'hide') {
     return <></>
   }
 
