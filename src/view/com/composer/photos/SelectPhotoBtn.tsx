@@ -1,5 +1,5 @@
 import React from 'react'
-import {TouchableOpacity} from 'react-native'
+import {Platform, TouchableOpacity} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -57,6 +57,10 @@ export function SelectPhotoBtn({
       })
       const result = []
       for (const image of items) {
+        if (Platform.OS === 'android') {
+          result.push(image.path)
+          continue
+        }
         result.push(
           await cropAndCompressFlow(
             store,
