@@ -63,6 +63,10 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "updates": {
+      "enabled": true,
+      "fallbackToCacheTimeout": 1000
+    },
     "plugins": [
       "expo-localization",
       "react-native-background-fetch",
