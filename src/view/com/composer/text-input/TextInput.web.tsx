@@ -11,6 +11,7 @@ import {Text} from '@tiptap/extension-text'
 import isEqual from 'lodash.isequal'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {createSuggestion} from './web/Autocomplete'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 
 export interface TextInputRef {
   focus: () => void
@@ -42,41 +43,54 @@ export const TextInput = React.forwardRef(
     TextInputProps,
     ref,
   ) => {
-    const editor = useEditor({
-      extensions: [
-        Document,
-        Link.configure({
-          protocols: ['http', 'https'],
-          autolink: true,
-        }),
-        Mention.configure({
-          HTMLAttributes: {
-            class: 'mention',
+    const modeClass = useColorSchemeStyle(
+      'ProseMirror-light',
+      'ProseMirror-dark',
+    )
+
+    const editor = useEditor(
+      {
+        extensions: [
+          Document,
+          Link.configure({
+            protocols: ['http', 'https'],
+            autolink: true,
+          }),
+          Mention.configure({
+            HTMLAttributes: {
+              class: 'mention',
+            },
+            suggestion: createSuggestion({autocompleteView}),
+          }),
+          Paragraph,
+          Placeholder.configure({
+            placeholder,
+          }),
+          Text,
+        ],
+        editorProps: {
+          attributes: {
+            class: modeClass,
           },
-          suggestion: createSuggestion({autocompleteView}),
-        }),
-        Paragraph,
-        Placeholder.configure({
-          placeholder,
-        }),
-        Text,
-      ],
-      content: richtext.text.toString(),
-      autofocus: true,
-      editable: true,
-      injectCSS: true,
-      onUpdate({editor: editorProp}) {
-        const json = editorProp.getJSON()
+        },
+        content: richtext.text.toString(),
+        autofocus: true,
+        editable: true,
+        injectCSS: true,
+        onUpdate({editor: editorProp}) {
+          const json = editorProp.getJSON()
 
-        const newRt = new RichText({text: editorJsonToText(json).trim()})
-        setRichText(newRt)
+          const newRt = new RichText({text: editorJsonToText(json).trim()})
+          setRichText(newRt)
 
-        const newSuggestedLinks = new Set(editorJsonToLinks(json))
-        if (!isEqual(newSuggestedLinks, suggestedLinks)) {
-          onSuggestedLinksChanged(newSuggestedLinks)
-        }
+          const newSuggestedLinks = new Set(editorJsonToLinks(json))
+          if (!isEqual(newSuggestedLinks, suggestedLinks)) {
+            onSuggestedLinksChanged(newSuggestedLinks)
+          }
+        },
       },
-    })
+      [modeClass],
+    )
 
     React.useImperativeHandle(ref, () => ({
       focus: () => {}, // TODO
