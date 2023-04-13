@@ -545,6 +545,12 @@ export class NotificationsFeedModel {
   ): Promise<NotificationsFeedItemModel[]> {
     const promises = []
     const itemModels: NotificationsFeedItemModel[] = []
+    items = items.filter(item => {
+      return (
+        this.rootStore.preferences.getLabelPreference(item.labels).pref !==
+        'hide'
+      )
+    })
     for (const item of groupNotifications(items)) {
       const itemModel = new NotificationsFeedItemModel(
         this.rootStore,
