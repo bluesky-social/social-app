@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
@@ -24,13 +24,10 @@ import {
   CogIcon,
   CogIconSolid,
   ComposeIcon2,
-  MoonIcon,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
-import {track} from 'lib/analytics.web'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 
 const ProfileCard = observer(() => {
   const store = useStores()
@@ -131,12 +128,6 @@ function ComposeBtn() {
 export const DesktopLeftNav = observer(function DesktopLeftNav() {
   const store = useStores()
   const pal = usePalette('default')
-  const mode = useColorSchemeStyle('Dark', 'Light')
-
-  const onDarkmodePress = useCallback(() => {
-    track('Menu:ItemClicked', {url: '#darkmode'})
-    store.shell.setDarkMode(!store.shell.darkMode)
-  }, [store])
 
   return (
     <View style={[styles.leftNav, pal.view]}>
@@ -193,17 +184,6 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         }
         label="Settings"
       />
-
-      <View>
-        <TouchableOpacity
-          style={[pal.view, styles.navItem]}
-          onPress={onDarkmodePress}>
-          <MoonIcon size={28} style={[pal.text, styles.navItemIconWrapper]} />
-          <Text type="title" style={pal.text}>
-            {mode} Mode
-          </Text>
-        </TouchableOpacity>
-      </View>
       {store.session.hasSession && <ComposeBtn />}
     </View>
   )
@@ -266,6 +246,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: colors.blue3,
     marginTop: 20,
+    marginBottom: 10,
   },
   newPostBtnIconWrapper: {
     marginRight: 8,
@@ -274,8 +255,5 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  darkModeBtn: {
-    backgroundColor: colors.black,
   },
 })

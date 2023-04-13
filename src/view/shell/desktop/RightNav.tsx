@@ -10,10 +10,18 @@ import {FEEDBACK_FORM_URL} from 'lib/constants'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {pluralize} from 'lib/strings/helpers'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {MoonIcon} from 'lib/icons'
 
 export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores()
   const pal = usePalette('default')
+  const mode = useColorSchemeStyle('Light', 'Dark')
+
+  const onDarkmodePress = React.useCallback(() => {
+    store.shell.setDarkMode(!store.shell.darkMode)
+  }, [store])
+
   return (
     <View style={[styles.rightNav, pal.view]}>
       {store.session.hasSession && <DesktopSearch />}
@@ -50,6 +58,18 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
         </View>
       </View>
       <InviteCodes />
+      <View>
+        <TouchableOpacity
+          style={[styles.darkModeToggle]}
+          onPress={onDarkmodePress}>
+          <View style={[pal.viewLight, styles.darkModeToggleIcon]}>
+            <MoonIcon size={18} style={pal.textLight} />
+          </View>
+          <Text type="sm" style={pal.textLight}>
+            {mode} mode
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 })
@@ -109,5 +129,20 @@ const styles = StyleSheet.create({
   },
   inviteCodesIcon: {
     marginRight: 6,
+  },
+
+  darkModeToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginHorizontal: 12,
+  },
+  darkModeToggleIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 26,
+    height: 26,
+    borderRadius: 15,
   },
 })
