@@ -3,7 +3,7 @@
     "name": "Bluesky",
     "slug": "bluesky",
     "owner": "blueskysocial",
-    "version": "1.15.0",
+    "version": "1.16.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
