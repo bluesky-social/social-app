@@ -79,6 +79,8 @@ export async function createServer(
     maxSubscriptionBuffer: 200,
     repoBackfillLimitMs: HOUR,
     userInviteInterval: 1,
+    labelerDid: 'did:example:labeler',
+    labelerKeywords: {},
   })
 
   const db =
