@@ -1,10 +1,10 @@
 import React, {useCallback} from 'react'
-import {GalleryModel} from 'lib/media/gallery'
+import {GalleryModel} from 'state/models/media/gallery'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from 'lib/styles'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {ImageModel} from 'lib/media/image'
+import {ImageModel} from 'state/models/media/image'
 import {Image} from 'expo-image'
 
 interface Props {

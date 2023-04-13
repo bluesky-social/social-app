@@ -1,9 +1,9 @@
 import {POST_IMG_MAX} from 'lib/constants'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {RootStoreModel} from 'state/index'
-import {getImageDim, resizeImage} from './manip'
+import {getImageDim, resizeImage} from 'lib/media/manip'
 import {makeAutoObservable, runInAction} from 'mobx'
-import {openCropper} from './picker'
+import {openCropper} from 'lib/media/picker'
 
 // TODO: EXIF embed
 // Cases to consider: ExternalEmbed

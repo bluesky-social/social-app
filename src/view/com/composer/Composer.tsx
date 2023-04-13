@@ -299,7 +299,7 @@ export const ComposePost = observer(function ComposePost({
               </View>
             ) : undefined}
           </ScrollView>
-          {!extLink && gallery.isEmpty && suggestedLinks.size > 0 ? (
+          {!extLink && suggestedLinks.size > 0 ? (
             <View style={s.mb5}>
               {Array.from(suggestedLinks).map(url => (
                 <TouchableOpacity
