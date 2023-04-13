@@ -36,8 +36,14 @@ import {FollowState} from 'state/models/cache/my-follows'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
+interface Props {
+  view: ProfileModel
+  onRefreshAll: () => void
+  hideBackButton?: boolean
+}
+
 export const ProfileHeader = observer(
-  ({view, onRefreshAll}: {view: ProfileModel; onRefreshAll: () => void}) => {
+  ({view, onRefreshAll, hideBackButton = false}: Props) => {
     const pal = usePalette('default')
 
     // loading
@@ -80,17 +86,21 @@ export const ProfileHeader = observer(
 
     // loaded
     // =
-    return <ProfileHeaderLoaded view={view} onRefreshAll={onRefreshAll} />
+    return (
+      <ProfileHeaderLoaded
+        view={view}
+        onRefreshAll={onRefreshAll}
+        hideBackButton={hideBackButton}
+      />
+    )
   },
 )
 
 const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
   view,
   onRefreshAll,
-}: {
-  view: ProfileModel
-  onRefreshAll: () => void
-}) {
+  hideBackButton = false,
+}: Props) {
   const pal = usePalette('default')
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
@@ -336,7 +346,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
           </View>
         ) : undefined}
       </View>
-      {!isDesktopWeb && (
+      {!isDesktopWeb && !hideBackButton && (
         <TouchableWithoutFeedback onPress={onPressBack} hitSlop={BACK_HITSLOP}>
           <View style={styles.backBtnWrapper}>
             <BlurView style={styles.backBtn} blurType="dark">

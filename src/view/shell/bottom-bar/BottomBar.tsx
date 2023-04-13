@@ -21,6 +21,7 @@ import {
   BellIcon,
   BellIconSolid,
   UserIcon,
+  UserIconSolid,
 } from 'lib/icons'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getTabState, TabState} from 'lib/routes/helpers'
@@ -32,23 +33,28 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtNotifications} = useNavigationState(
-    state => {
+  const {isAtHome, isAtSearch, isAtNotifications, isAtProfile} =
+    useNavigationState(state => {
       const res = {
         isAtHome: getTabState(state, 'Home') !== TabState.Outside,
         isAtSearch: getTabState(state, 'Search') !== TabState.Outside,
         isAtNotifications:
           getTabState(state, 'Notifications') !== TabState.Outside,
+        isAtProfile: getTabState(state, 'MyProfile') !== TabState.Outside,
       }
-      if (!res.isAtHome && !res.isAtNotifications && !res.isAtSearch) {
+      if (
+        !res.isAtHome &&
+        !res.isAtNotifications &&
+        !res.isAtSearch &&
+        !res.isAtProfile
+      ) {
         // HACK for some reason useNavigationState will give us pre-hydration results
         //      and not update after, so we force isAtHome if all came back false
         //      -prf
         res.isAtHome = true
       }
       return res
-    },
-  )
+    })
 
   const {footerMinimalShellTransform} = useMinimalShellMode()
 
@@ -77,9 +83,9 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
     [onPressTab],
   )
   const onPressProfile = React.useCallback(() => {
+    onPressTab('MyProfile')
     track('MobileShell:ProfileButtonPressed')
-    navigation.navigate('Profile', {name: store.me.handle})
-  }, [navigation, track, store.me.handle])
+  }, [onPressTab, track])
 
   return (
     <Animated.View
@@ -154,11 +160,19 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         testID="bottomBarProfileBtn"
         icon={
           <View style={styles.ctrlIconSizingWrapper}>
-            <UserIcon
-              size={28}
-              strokeWidth={1.5}
-              style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
-            />
+            {isAtProfile ? (
+              <UserIconSolid
+                size={28}
+                strokeWidth={1.5}
+                style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
+              />
+            ) : (
+              <UserIcon
+                size={28}
+                strokeWidth={1.5}
+                style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
+              />
+            )}
           </View>
         }
         onPress={onPressProfile}
