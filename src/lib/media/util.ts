@@ -24,3 +24,7 @@ export function scaleDownDimensions(
   }
   return {width: dim.width * hScale, height: dim.height * hScale}
 }
+
+export function isUriImage(uri: string) {
+  return /\.(jpg|jpeg|png).*$/.test(uri)
+}

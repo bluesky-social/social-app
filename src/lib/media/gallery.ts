@@ -4,7 +4,6 @@ import {ImageModel} from './image'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {openPicker} from './picker'
 import {POST_IMG_MAX} from 'lib/constants'
-import {moveToPermanentPath} from './manip'
 
 export class GalleryModel {
   images: ImageModel[] = []
@@ -45,9 +44,7 @@ export class GalleryModel {
     }
   }
 
-  async paste(uri_: string) {
-    const uri = await moveToPermanentPath(uri_)
-
+  async paste(uri: string) {
     const image = {
       path: uri,
       height: POST_IMG_MAX.height,
@@ -56,15 +53,11 @@ export class GalleryModel {
       mime: 'image/jpeg',
     }
 
-    runInAction(async () => {
-      await this.add(image)
-    })
+    this.add(image)
   }
 
   crop(image: ImageModel) {
-    runInAction(async () => {
-      await image.crop()
-    })
+    image.crop()
   }
 
   remove(image: ImageModel) {
@@ -80,8 +73,7 @@ export class GalleryModel {
 
     runInAction(() => {
       for (let image_ of images) {
-        const image = new ImageModel(this.rootStore, image_)
-        this.images.push(image)
+        this.add(image_)
       }
     })
   }

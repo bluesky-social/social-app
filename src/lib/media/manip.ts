@@ -197,3 +197,40 @@ export async function resizeImage(image: Image): Promise<Image> {
     `This image is too big! We couldn't compress it down to ${POST_IMG_MAX.size} bytes`,
   )
 }
+
+export async function getImageFromUri(uri: string) {
+  let appendExt = 'jpeg'
+  try {
+    const urip = new URL(uri)
+    const ext = urip.pathname.split('.').pop()
+    if (ext === 'png') {
+      appendExt = 'png'
+    }
+  } catch (e: any) {
+    console.error('Invalid URI', uri, e)
+    return
+  }
+
+  let downloadRes
+
+  try {
+    const downloadResPromise = RNFetchBlob.config({
+      fileCache: true,
+      appendExt,
+    }).fetch('GET', uri)
+    const to1 = setTimeout(() => downloadResPromise.cancel(), 10000)
+    downloadRes = await downloadResPromise
+    clearTimeout(to1)
+
+    let localUri = downloadRes.path()
+    if (!localUri.startsWith('file://')) {
+      localUri = `file://${localUri}`
+    }
+
+    return await moveToPermanentPath(localUri)
+  } finally {
+    if (downloadRes) {
+      downloadRes.flush()
+    }
+  }
+}

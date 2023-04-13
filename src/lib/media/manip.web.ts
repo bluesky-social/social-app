@@ -1,6 +1,6 @@
 import {Dimensions} from './types'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {extractDataUriMime, getDataUriSize} from './util'
+import {extractDataUriMime, getDataUriSize, isUriImage} from './util'
 
 export interface DownloadAndResizeOpts {
   uri: string
@@ -104,4 +104,34 @@ function blobToDataUri(blob: Blob): Promise<string> {
     reader.onerror = reject
     reader.readAsDataURL(blob)
   })
+}
+
+export async function getImageFromUri(
+  items: DataTransferItemList,
+  callback: (uri: string) => void,
+) {
+  for (let index = 0; index < items.length; index++) {
+    const item = items[index]
+    const {kind, type} = item
+
+    if (type === 'text/plain') {
+      item.getAsString(async itemString => {
+        if (isUriImage(itemString)) {
+          const response = await fetch(itemString)
+          const blob = await response.blob()
+          const uri = URL.createObjectURL(blob)
+          callback(uri)
+        }
+      })
+    }
+
+    if (kind === 'file') {
+      const file = item.getAsFile()
+
+      if (file instanceof Blob) {
+        const uri = URL.createObjectURL(new Blob([file], {type: item.type}))
+        callback(uri)
+      }
+    }
+  }
 }

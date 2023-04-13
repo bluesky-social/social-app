@@ -15,13 +15,10 @@ import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {Autocomplete} from './mobile/Autocomplete'
 import {Text} from 'view/com/util/text/Text'
 import {cleanError} from 'lib/strings/errors'
-// import {getImageDim} from 'lib/media/manip'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {isUriImage} from 'view/com/util/images/Image'
-// import {POST_IMG_MAX} from 'lib/constants'
-// import {Image as RNImage} from 'react-native-image-crop-picker'
+import {isUriImage} from 'lib/media/util'
 
 export interface TextInputRef {
   focus: () => void

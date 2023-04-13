@@ -12,6 +12,7 @@ import isEqual from 'lodash.isequal'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {createSuggestion} from './web/Autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {getImageFromUri} from 'lib/media/manip.web'
 
 export interface TextInputRef {
   focus: () => void
@@ -79,21 +80,7 @@ export const TextInput = React.forwardRef(
               return
             }
 
-            for (let index = 0; index < items.length; index++) {
-              const item = items[index]
-              const {kind} = item
-
-              if (kind === 'file') {
-                const file = item.getAsFile()
-
-                if (file instanceof Blob) {
-                  const url = URL.createObjectURL(
-                    new Blob([file], {type: item.type}),
-                  )
-                  onPhotoPasted(url)
-                }
-              }
-            }
+            getImageFromUri(items, onPhotoPasted)
           },
         },
         content: richtext.text.toString(),
