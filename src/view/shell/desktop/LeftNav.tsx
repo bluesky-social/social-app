@@ -130,7 +130,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
   const pal = usePalette('default')
 
   return (
-    <View style={styles.leftNav}>
+    <View style={[styles.leftNav, pal.view]}>
       {store.session.hasSession && <ProfileCard />}
       <BackBtn />
       <NavItem
@@ -246,6 +246,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: colors.blue3,
     marginTop: 20,
+    marginBottom: 10,
   },
   newPostBtnIconWrapper: {
     marginRight: 8,

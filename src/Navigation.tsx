@@ -40,6 +40,7 @@ import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
 import {TermsOfServiceScreen} from './view/screens/TermsOfService'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
+import {usePalette} from 'lib/hooks/usePalette'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -162,6 +163,7 @@ function NotificationsTabNavigator() {
  * in a single ("flat") stack.
  */
 function FlatNavigator() {
+  const pal = usePalette('default')
   return (
     <Flat.Navigator
       screenOptions={{
@@ -169,7 +171,7 @@ function FlatNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle: {backgroundColor: 'white'},
+        contentStyle: [pal.view],
       }}>
       <Flat.Screen name="Home" component={HomeScreen} />
       <Flat.Screen name="Search" component={SearchScreen} />

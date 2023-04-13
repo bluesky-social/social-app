@@ -14,9 +14,11 @@ import {RoutesContainer, FlatNavigator} from '../../Navigation'
 import {DrawerContent} from './Drawer'
 import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
+import {usePalette} from 'lib/hooks/usePalette'
 
 const ShellInner = observer(() => {
   const store = useStores()
+  const pal = usePalette('default')
   const {isDesktop} = useWebMediaQueries()
 
   return (
@@ -30,8 +32,20 @@ const ShellInner = observer(() => {
         <>
           <DesktopLeftNav />
           <DesktopRightNav />
-          <View style={[styles.viewBorder, styles.viewBorderLeft]} />
-          <View style={[styles.viewBorder, styles.viewBorderRight]} />
+          <View
+            style={[
+              styles.viewBorder,
+              {borderLeftColor: pal.colors.border},
+              styles.viewBorderLeft,
+            ]}
+          />
+          <View
+            style={[
+              styles.viewBorder,
+              {borderLeftColor: pal.colors.border},
+              styles.viewBorderRight,
+            ]}
+          />
         </>
       )}
       <Composer
@@ -81,7 +95,6 @@ const styles = StyleSheet.create({
     width: 1,
     height: '100%',
     borderLeftWidth: 1,
-    borderLeftColor: colors.gray2,
   },
   viewBorderLeft: {
     left: 'calc(50vw - 300px)',

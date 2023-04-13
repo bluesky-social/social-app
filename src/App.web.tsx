@@ -6,8 +6,10 @@ import * as analytics from 'lib/analytics'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from './view/shell/index'
 import {ToastContainer} from './view/com/util/Toast.web'
+import {ThemeProvider} from 'lib/ThemeContext'
+import {observer} from 'mobx-react-lite'
 
-function App() {
+const App = observer(() => {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
@@ -27,17 +29,19 @@ function App() {
   }
 
   return (
-    <RootSiblingParent>
-      <analytics.Provider>
-        <RootStoreProvider value={rootStore}>
-          <SafeAreaProvider>
-            <Shell />
-          </SafeAreaProvider>
-          <ToastContainer />
-        </RootStoreProvider>
-      </analytics.Provider>
-    </RootSiblingParent>
+    <ThemeProvider theme={rootStore.shell.darkMode ? 'dark' : 'light'}>
+      <RootSiblingParent>
+        <analytics.Provider>
+          <RootStoreProvider value={rootStore}>
+            <SafeAreaProvider>
+              <Shell />
+            </SafeAreaProvider>
+            <ToastContainer />
+          </RootStoreProvider>
+        </analytics.Provider>
+      </RootSiblingParent>
+    </ThemeProvider>
   )
-}
+})
 
 export default App

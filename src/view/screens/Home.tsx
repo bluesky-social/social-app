@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, View} from 'react-native'
+import {FlatList, View, Platform} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
@@ -187,12 +187,11 @@ const FeedPage = observer(
           key="default"
           feed={feed}
           scrollElRef={scrollElRef}
-          style={s.hContentRegion}
           showPostFollowBtn
           onPressTryAgain={onPressTryAgain}
           onScroll={onMainScroll}
           renderEmptyState={renderEmptyState}
-          headerOffset={HEADER_OFFSET}
+          headerOffset={Platform.OS === 'web' ? 0 : HEADER_OFFSET} // only offset on mobile
         />
         {feed.hasNewLatest && !feed.isRefreshing && (
           <LoadLatestBtn onPress={onPressLoadLatest} label="posts" />
