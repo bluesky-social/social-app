@@ -177,6 +177,7 @@ function MyProfileTabNavigator() {
       }}>
       <MyProfileTab.Screen
         name="MyProfile"
+        // @ts-ignore // TODO: fix this broken type in ProfileScreen
         component={ProfileScreen}
         initialParams={{
           name: store.me.handle,
