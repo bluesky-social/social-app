@@ -96,6 +96,9 @@ func serve(cctx *cli.Context) error {
 	e.GET("/sys/log", server.WebGeneric)
 	e.GET("/support", server.WebGeneric)
 	e.GET("/support/privacy", server.WebGeneric)
+	e.GET("/support/tos", server.WebGeneric)
+	e.GET("/support/community-guidelines", server.WebGeneric)
+	e.GET("/support/copyright", server.WebGeneric)
 
 	// profile endpoints; only first populates info
 	e.GET("/profile/:handle", server.WebProfile)
@@ -104,8 +107,7 @@ func serve(cctx *cli.Context) error {
 
 	// post endpoints; only first populates info
 	e.GET("/profile/:handle/post/:rkey", server.WebPost)
-	e.GET("/profile/:handle/post/:rkey/upvoted-by", server.WebGeneric)
-	e.GET("/profile/:handle/post/:rkey/downvoted-by", server.WebGeneric)
+	e.GET("/profile/:handle/post/:rkey/liked-by", server.WebGeneric)
 	e.GET("/profile/:handle/post/:rkey/reposted-by", server.WebGeneric)
 
 	// Mailmodo
