@@ -5,6 +5,7 @@ import {useStores} from 'state/index'
 import {LoggedOut} from './LoggedOut'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
 
 export const withAuthRequired = <P extends object>(
   Component: React.ComponentType<P>,
@@ -22,6 +23,7 @@ export const withAuthRequired = <P extends object>(
 
 function Loading() {
   const pal = usePalette('default')
+  useOTAUpdate() // hook to check for updates via a listener
 
   const [isTakingTooLong, setIsTakingTooLong] = React.useState(false)
   React.useEffect(() => {
