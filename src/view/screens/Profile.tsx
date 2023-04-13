@@ -100,10 +100,10 @@ export const ProfileScreen = withAuthRequired(
         <ProfileHeader
           view={uiState.profile}
           onRefreshAll={onRefresh}
-          hideBackButton={route.params.name === store.me.handle}
+          hideBackButton={route.params.hideBackButton}
         />
       )
-    }, [uiState, onRefresh, route.params.name, store.me.handle])
+    }, [uiState, onRefresh, route.params.hideBackButton])
     const Footer = React.useMemo(() => {
       return uiState.showLoadingMoreFooter ? LoadingMoreFooter : undefined
     }, [uiState.showLoadingMoreFooter])

@@ -181,6 +181,7 @@ function MyProfileTabNavigator() {
         component={ProfileScreen}
         initialParams={{
           name: store.me.handle,
+          hideBackButton: true,
         }}
       />
       {commonScreens(MyProfileTab as typeof HomeTab)}
