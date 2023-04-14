@@ -9,7 +9,7 @@ import {useAnalytics} from 'lib/analytics'
 import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
-import {GalleryModel} from 'lib/media/gallery'
+import {GalleryModel} from 'state/models/media/gallery'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 

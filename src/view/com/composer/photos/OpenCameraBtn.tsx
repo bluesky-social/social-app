@@ -12,7 +12,7 @@ import {isDesktopWeb} from 'platform/detection'
 import {openCamera} from 'lib/media/picker'
 import {useCameraPermission} from 'lib/hooks/usePermissions'
 import {POST_IMG_MAX} from 'lib/constants'
-import {GalleryModel} from 'lib/media/gallery'
+import {GalleryModel} from 'state/models/media/gallery'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 

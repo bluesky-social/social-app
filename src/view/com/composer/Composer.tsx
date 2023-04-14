@@ -34,7 +34,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {isDesktopWeb} from 'platform/detection'
-import {GalleryModel} from 'lib/media/gallery'
+import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
 
 const MAX_GRAPHEME_LENGTH = 300

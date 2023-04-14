@@ -19,6 +19,7 @@ import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {isUriImage} from 'lib/media/util'
+import {getImageFromUri} from 'lib/media/manip'
 
 export interface TextInputRef {
   focus: () => void
@@ -83,7 +84,7 @@ export const TextInput = forwardRef(
     }, [])
 
     const onChangeText = useCallback(
-      (newText: string) => {
+      async (newText: string) => {
         const newRt = new RichText({text: newText})
         newRt.detectFacetsWithoutResolution()
         setRichText(newRt)
@@ -106,10 +107,14 @@ export const TextInput = forwardRef(
             for (const feature of facet.features) {
               if (AppBskyRichtextFacet.isLink(feature)) {
                 if (isUriImage(feature.uri)) {
-                  onPhotoPasted(feature.uri)
-                }
+                  const uri = await getImageFromUri(feature.uri)
 
-                set.add(feature.uri)
+                  if (uri !== undefined) {
+                    onPhotoPasted(uri)
+                  }
+                } else {
+                  set.add(feature.uri)
+                }
               }
             }
           }

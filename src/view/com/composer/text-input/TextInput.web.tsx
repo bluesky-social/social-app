@@ -73,7 +73,7 @@ export const TextInput = React.forwardRef(
           attributes: {
             class: modeClass,
           },
-          handlePaste: (view, event) => {
+          handlePaste: (_, event) => {
             const items = event.clipboardData?.items
 
             if (items === undefined) {
