@@ -167,8 +167,8 @@ export async function resizeImage(image: Image): Promise<Image> {
     try {
       resized = await ImageResizer.createResizedImage(
         uri,
-        image.width,
-        image.height,
+        POST_IMG_MAX.width,
+        POST_IMG_MAX.height,
         'JPEG',
         quality,
         undefined,
@@ -179,6 +179,8 @@ export async function resizeImage(image: Image): Promise<Image> {
     } catch (err) {
       throw new Error(`Failed to resize: ${err}`)
     }
+
+    console.log('RESIZED: ', resized)
 
     if (resized.size < POST_IMG_MAX.size) {
       const path = await moveToPermanentPath(resized.path)

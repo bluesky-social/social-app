@@ -1,6 +1,7 @@
 import {Dimensions} from './types'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {extractDataUriMime, getDataUriSize, isUriImage} from './util'
+import {POST_IMG_MAX} from 'lib/constants'
 
 export interface DownloadAndResizeOpts {
   uri: string
@@ -44,14 +45,22 @@ export async function resize(
   }
 }
 
-export async function resizeImage(image: RNImage): Promise<RNImage> {
-  const uri = image.path
-  const dim = await getImageDim(uri)
-  // TODO -- need to resize
+export async function resizeImage({path}: RNImage): Promise<RNImage> {
+  const size = getDataUriSize(path)
+
+  if (size > POST_IMG_MAX.size) {
+    // TODO -- need to resize
+    throw new Error(
+      "This image is too large and we haven't implemented compression yet -- sorry!",
+    )
+  }
+
+  const dim = await getImageDim(path)
+
   return {
-    path: uri,
-    mime: extractDataUriMime(uri),
-    size: getDataUriSize(uri),
+    path,
+    mime: extractDataUriMime(path),
+    size,
     width: dim.width,
     height: dim.height,
   }

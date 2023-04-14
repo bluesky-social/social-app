@@ -40,47 +40,46 @@ export const Gallery = observer(function ({gallery}: Props) {
 
   return !gallery.isEmpty ? (
     <View testID="selectedPhotosView" style={styles.gallery}>
-      {gallery.images.map(image => (
-        <View
-          key={`selected-image-${image.path}`}
-          style={[styles.imageContainer, imageStyle]}>
-          <View style={styles.imageControls}>
-            <TouchableOpacity
-              testID="cropPhotoButton"
-              onPress={() => {
-                handleEditPhoto(image)
-              }}
-              style={styles.imageControl}>
-              <FontAwesomeIcon
-                icon="pen"
-                size={12}
-                style={{color: colors.white}}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              testID="removePhotoButton"
-              onPress={() => handleRemovePhoto(image)}
-              style={styles.imageControl}>
-              <FontAwesomeIcon
-                icon="xmark"
-                size={16}
-                style={{color: colors.white}}
-              />
-            </TouchableOpacity>
-          </View>
+      {gallery.images.map(image =>
+        image.compressed !== undefined ? (
+          <View
+            key={`selected-image-${image.path}`}
+            style={[styles.imageContainer, imageStyle]}>
+            <View style={styles.imageControls}>
+              <TouchableOpacity
+                testID="cropPhotoButton"
+                onPress={() => {
+                  handleEditPhoto(image)
+                }}
+                style={styles.imageControl}>
+                <FontAwesomeIcon
+                  icon="pen"
+                  size={12}
+                  style={{color: colors.white}}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                testID="removePhotoButton"
+                onPress={() => handleRemovePhoto(image)}
+                style={styles.imageControl}>
+                <FontAwesomeIcon
+                  icon="xmark"
+                  size={16}
+                  style={{color: colors.white}}
+                />
+              </TouchableOpacity>
+            </View>
 
-          <Image
-            testID="selectedPhotoImage"
-            style={[styles.image, imageStyle]}
-            source={{
-              uri:
-                image.compressed === undefined
-                  ? image.path
-                  : image.compressed.path,
-            }}
-          />
-        </View>
-      ))}
+            <Image
+              testID="selectedPhotoImage"
+              style={[styles.image, imageStyle]}
+              source={{
+                uri: image.compressed.path,
+              }}
+            />
+          </View>
+        ) : null,
+      )}
     </View>
   ) : null
 })

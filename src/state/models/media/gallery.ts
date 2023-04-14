@@ -2,8 +2,9 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from 'state/index'
 import {ImageModel} from './image'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {POST_IMG_MAX} from 'lib/constants'
 import {openPicker} from 'lib/media/picker'
+import {getImageDim} from 'lib/media/manip'
+import {getDataUriSize} from 'lib/media/util'
 
 export class GalleryModel {
   images: ImageModel[] = []
@@ -45,15 +46,19 @@ export class GalleryModel {
   }
 
   async paste(uri: string) {
-    const image = {
+    const {width, height} = await getImageDim(uri)
+
+    const image: RNImage = {
       path: uri,
-      height: POST_IMG_MAX.height,
-      width: POST_IMG_MAX.width,
-      size: POST_IMG_MAX.size,
+      height,
+      width,
+      size: getDataUriSize(uri),
       mime: 'image/jpeg',
     }
 
-    this.add(image)
+    runInAction(() => {
+      this.add(image)
+    })
   }
 
   crop(image: ImageModel) {
@@ -72,9 +77,7 @@ export class GalleryModel {
     })
 
     runInAction(() => {
-      for (let image_ of images) {
-        this.add(image_)
-      }
+      Promise.all(images.map(image => this.add(image)))
     })
   }
 }
