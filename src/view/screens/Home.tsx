@@ -20,6 +20,7 @@ import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import {isDesktopWeb} from 'platform/detection'
+import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
 
 const HEADER_OFFSET = isDesktopWeb ? 50 : 40
 const POLL_FREQ = 30e3 // 30sec
@@ -32,6 +33,7 @@ export const HomeScreen = withAuthRequired(
     const [initialLanguages] = React.useState(
       store.preferences.contentLanguages,
     )
+    useOTAUpdate() // hook to check for updates via a listener
 
     const algoFeed: PostsFeedModel = React.useMemo(() => {
       const feed = new PostsFeedModel(store, 'goodstuff', {})

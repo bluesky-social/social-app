@@ -2,8 +2,9 @@ import * as Updates from 'expo-updates'
 import {useStores} from 'state/index'
 
 export function useOTAUpdate() {
+  console.log('OTA Update: Checking for update...')
   const store = useStores()
-  const upadateEventListener = async (event: Updates.UpdateEvent) => {
+  const upadateEventListener = (event: Updates.UpdateEvent) => {
     if (event.type === Updates.UpdateEventType.ERROR) {
       throw new Error(event.message)
     } else if (event.type === Updates.UpdateEventType.NO_UPDATE_AVAILABLE) {
@@ -18,7 +19,9 @@ export function useOTAUpdate() {
         message:
           'A new version of the app is available. Please update to continue using the app.',
         onPressConfirm: async () => {
-          await Updates.reloadAsync()
+          Updates.reloadAsync().catch(err => {
+            throw err
+          })
         },
       })
     }
