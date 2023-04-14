@@ -18,6 +18,7 @@ import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import {isDesktopWeb, isMobileWeb} from 'platform/detection'
+import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
 
 const HEADER_OFFSET = isDesktopWeb ? 0 : isMobileWeb ? 20 : 40
 
@@ -25,6 +26,7 @@ type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired((_opts: Props) => {
   const store = useStores()
   const [selectedPage, setSelectedPage] = React.useState(0)
+  useOTAUpdate() // hook to check for updates via a listener
 
   const algoFeed = React.useMemo(() => {
     const feed = new PostsFeedModel(store, 'goodstuff', {})
