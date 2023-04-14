@@ -35,6 +35,8 @@ export function CenteredView({
 export const FlatList = React.forwardRef(function <ItemT>(
   {
     contentContainerStyle,
+    style,
+    contentOffset,
     ...props
   }: React.PropsWithChildren<FlatListProps<ItemT>>,
   ref: React.Ref<RNFlatList>,
@@ -43,10 +45,25 @@ export const FlatList = React.forwardRef(function <ItemT>(
     contentContainerStyle,
     styles.containerScroll,
   )
+  if (contentOffset && contentOffset?.y !== 0) {
+    // NOTE
+    // we use paddingTop & contentOffset to space around the floating header
+    // but reactnative web puts the paddingTop on the wrong element (style instead of the contentContainer)
+    // so we manually correct it here
+    // -prf
+    style = addStyle(style, {
+      paddingTop: 0,
+    })
+    contentContainerStyle = addStyle(contentContainerStyle, {
+      paddingTop: Math.abs(contentOffset.y),
+    })
+  }
   return (
     <RNFlatList
-      contentContainerStyle={contentContainerStyle}
       ref={ref}
+      contentContainerStyle={contentContainerStyle}
+      style={style}
+      contentOffset={contentOffset}
       {...props}
     />
   )
