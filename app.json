@@ -38,14 +38,18 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "xyz.blueskyweb.app"
+      "package": "xyz.blueskyweb.app",
+      "runtimeVersion": {
+        "policy": "sdkVersion"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "updates": {
       "enabled": true,
-      "fallbackToCacheTimeout": 1000
+      "fallbackToCacheTimeout": 1000,
+      "url": "https://u.expo.dev/55bd077a-d905-4184-9c7f-94789ba0f302"
     },
     "plugins": [
       "expo-localization",
