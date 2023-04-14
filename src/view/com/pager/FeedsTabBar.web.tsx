@@ -1,5 +1,5 @@
 import React from 'react'
-import {Animated, StyleSheet, TouchableOpacity} from 'react-native'
+import {Animated, StyleSheet} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
