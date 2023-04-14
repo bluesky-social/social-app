@@ -174,7 +174,7 @@ export async function resizeImage(image: Image): Promise<Image> {
         undefined,
         undefined,
         undefined,
-        {mode: 'stretch'},
+        {mode: 'cover'},
       )
     } catch (err) {
       throw new Error(`Failed to resize: ${err}`)
