@@ -58,14 +58,18 @@
           ],
           "category": ["BROWSABLE", "DEFAULT"]
         }
-      ]
+      ],
+      "runtimeVersion": {
+        "policy": "sdkVersion"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "updates": {
       "enabled": true,
-      "fallbackToCacheTimeout": 1000
+      "fallbackToCacheTimeout": 1000,
+      "url": "https://u.expo.dev/55bd077a-d905-4184-9c7f-94789ba0f302"
     },
     "plugins": [
       "expo-localization",
@@ -86,6 +90,7 @@
       ],
       "sentry-expo"
     ],
+    
     "extra": {
       "eas": {
         "projectId": "55bd077a-d905-4184-9c7f-94789ba0f302"
