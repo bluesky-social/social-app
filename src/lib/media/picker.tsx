@@ -25,6 +25,8 @@ export async function openPicker(
     mediaType: 'photo', // TODO: eventually add other media types
     multiple: opts?.multiple,
     maxFiles: opts?.maxFiles,
+    forceJpg: true, // ios only
+    compressImageQuality: 0.8,
   })
 
   const toMedia = (item: ImageOrVideo) => ({

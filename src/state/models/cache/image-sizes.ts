@@ -23,7 +23,7 @@ export class ImageSizesCache {
           uri,
           (width: number, height: number) => resolve({width, height}),
           (err: any) => {
-            console.error('Failed to fetch image Dimensions for', uri, err)
+            console.error('Failed to fetch image dimensions for', uri, err)
             resolve({width: 0, height: 0})
           },
         )

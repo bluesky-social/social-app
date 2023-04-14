@@ -180,8 +180,6 @@ export async function resizeImage(image: Image): Promise<Image> {
       throw new Error(`Failed to resize: ${err}`)
     }
 
-    console.log('RESIZED: ', resized)
-
     if (resized.size < POST_IMG_MAX.size) {
       const path = await moveToPermanentPath(resized.path)
 

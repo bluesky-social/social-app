@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     margin: 2,
   },
   image: {
-    contentFit: 'cover',
+    resizeMode: 'cover',
     borderRadius: 8,
   },
   image250: {
