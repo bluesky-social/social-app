@@ -35,7 +35,7 @@ export function QuoteEmbed({
   )
   return (
     <Link
-      style={[styles.container, pal.border, style]}
+      style={[styles.container, pal.borderDark, style]}
       href={itemHref}
       title={itemTitle}>
       <PostMeta
@@ -46,15 +46,11 @@ export function QuoteEmbed({
         postHref={itemHref}
         timestamp={quote.indexedAt}
       />
-      <Text type="post-text" style={pal.text} numberOfLines={6}>
-        {isEmpty ? (
-          <Text style={pal.link} lineHeight={1.5}>
-            View post
-          </Text>
-        ) : (
-          quote.text
-        )}
-      </Text>
+      {!isEmpty ? (
+        <Text type="post-text" style={pal.text} numberOfLines={6}>
+          {quote.text}
+        </Text>
+      ) : null}
       {AppBskyEmbedImages.isView(imagesEmbed) && (
         <PostEmbeds embed={imagesEmbed} />
       )}
@@ -70,7 +66,8 @@ export default QuoteEmbed
 const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
-    paddingVertical: 8,
+    marginTop: 8,
+    paddingVertical: 12,
     paddingHorizontal: 12,
     borderWidth: 1,
   },

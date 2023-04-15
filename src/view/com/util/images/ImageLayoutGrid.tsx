@@ -1,5 +1,4 @@
-import {Dimensions} from 'lib/media/types'
-import React, {useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import {
   LayoutChangeEvent,
   StyleProp,
@@ -9,10 +8,11 @@ import {
   ViewStyle,
 } from 'react-native'
 import {Image, ImageStyle} from 'expo-image'
+import {Dimensions} from 'lib/media/types'
 
 export const DELAY_PRESS_IN = 500
 
-export type ImageLayoutGridType = 'two' | 'three' | 'four'
+export type ImageLayoutGridType = number
 
 export function ImageLayoutGrid({
   type,
@@ -69,8 +69,8 @@ function ImageLayoutGridInner({
   onPressIn?: (index: number) => void
   containerInfo: Dimensions
 }) {
-  const size1 = React.useMemo<ImageStyle>(() => {
-    if (type === 'three') {
+  const size1 = useMemo<ImageStyle>(() => {
+    if (type === 3) {
       const size = (containerInfo.width - 10) / 3
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     } else {
@@ -79,7 +79,7 @@ function ImageLayoutGridInner({
     }
   }, [type, containerInfo])
   const size2 = React.useMemo<ImageStyle>(() => {
-    if (type === 'three') {
+    if (type === 3) {
       const size = ((containerInfo.width - 10) / 3) * 2 + 5
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     } else {
@@ -88,7 +88,7 @@ function ImageLayoutGridInner({
     }
   }, [type, containerInfo])
 
-  if (type === 'two') {
+  if (type === 2) {
     return (
       <View style={styles.flexRow}>
         <TouchableOpacity
@@ -109,7 +109,7 @@ function ImageLayoutGridInner({
       </View>
     )
   }
-  if (type === 'three') {
+  if (type === 3) {
     return (
       <View style={styles.flexRow}>
         <TouchableOpacity
@@ -140,7 +140,7 @@ function ImageLayoutGridInner({
       </View>
     )
   }
-  if (type === 'four') {
+  if (type === 4) {
     return (
       <View style={styles.flexRow}>
         <View>

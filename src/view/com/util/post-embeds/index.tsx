@@ -107,54 +107,31 @@ export function PostEmbeds({
         })
       }
 
-      if (embed.images.length === 4) {
-        return (
-          <View style={[styles.imagesContainer, style]}>
-            <ImageLayoutGrid
-              type="four"
-              uris={embed.images.map(img => img.thumb)}
-              onPress={openLightbox}
-              onLongPress={onLongPress}
-              onPressIn={onPressIn}
-            />
-          </View>
-        )
-      } else if (embed.images.length === 3) {
-        return (
-          <View style={[styles.imagesContainer, style]}>
-            <ImageLayoutGrid
-              type="three"
-              uris={embed.images.map(img => img.thumb)}
-              onPress={openLightbox}
-              onLongPress={onLongPress}
-              onPressIn={onPressIn}
-            />
-          </View>
-        )
-      } else if (embed.images.length === 2) {
-        return (
-          <View style={[styles.imagesContainer, style]}>
-            <ImageLayoutGrid
-              type="two"
-              uris={embed.images.map(img => img.thumb)}
-              onPress={openLightbox}
-              onLongPress={onLongPress}
-              onPressIn={onPressIn}
-            />
-          </View>
-        )
-      } else {
-        return (
-          <View style={[styles.imagesContainer, style]}>
-            <AutoSizedImage
-              uri={embed.images[0].thumb}
-              onPress={() => openLightbox(0)}
-              onLongPress={() => onLongPress(0)}
-              onPressIn={() => onPressIn(0)}
-              style={styles.singleImage}
-            />
-          </View>
-        )
+      switch (embed.images.length) {
+        case 1:
+          return (
+            <View style={[styles.imagesContainer, style]}>
+              <AutoSizedImage
+                uri={embed.images[0].thumb}
+                onPress={() => openLightbox(0)}
+                onLongPress={() => onLongPress(0)}
+                onPressIn={() => onPressIn(0)}
+                style={styles.singleImage}
+              />
+            </View>
+          )
+        default:
+          return (
+            <View style={[styles.imagesContainer, style]}>
+              <ImageLayoutGrid
+                type={embed.images.length}
+                uris={embed.images.map(img => img.thumb)}
+                onPress={openLightbox}
+                onLongPress={onLongPress}
+                onPressIn={onPressIn}
+              />
+            </View>
+          )
       }
     }
   }
@@ -184,7 +161,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   imagesContainer: {
-    marginTop: 4,
+    marginTop: 8,
   },
   singleImage: {
     borderRadius: 8,
