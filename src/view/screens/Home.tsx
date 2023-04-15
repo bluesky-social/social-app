@@ -191,7 +191,7 @@ const FeedPage = observer(
           onPressTryAgain={onPressTryAgain}
           onScroll={onMainScroll}
           renderEmptyState={renderEmptyState}
-          headerOffset={HEADER_OFFSET} // only offset on mobile
+          headerOffset={HEADER_OFFSET}
         />
         {feed.hasNewLatest && !feed.isRefreshing && (
           <LoadLatestBtn onPress={onPressLoadLatest} label="posts" />
