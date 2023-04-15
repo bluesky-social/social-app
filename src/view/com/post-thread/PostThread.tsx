@@ -21,14 +21,14 @@ import {ComposePrompt} from '../composer/Prompt'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
-import {isDesktopWeb} from 'platform/detection'
+import {isDesktopWeb, isMobileWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 
 const REPLY_PROMPT = {_reactKey: '__reply__', _isHighlightedPost: false}
-const BOTTOM_BORDER = {
-  _reactKey: '__bottom_border__',
+const BOTTOM_COMPONENT = {
+  _reactKey: '__bottom_component__',
   _isHighlightedPost: false,
 }
 type YieldedItem = PostThreadItemModel | typeof REPLY_PROMPT
@@ -48,7 +48,7 @@ export const PostThread = observer(function PostThread({
   const navigation = useNavigation<NavigationProp>()
   const posts = React.useMemo(() => {
     if (view.thread) {
-      return Array.from(flattenThread(view.thread)).concat([BOTTOM_BORDER])
+      return Array.from(flattenThread(view.thread)).concat([BOTTOM_COMPONENT])
     }
     return []
   }, [view.thread])
@@ -103,12 +103,23 @@ export const PostThread = observer(function PostThread({
     ({item}: {item: YieldedItem}) => {
       if (item === REPLY_PROMPT) {
         return <ComposePrompt onPressCompose={onPressReply} />
-      } else if (item === BOTTOM_BORDER) {
+      } else if (item === BOTTOM_COMPONENT) {
         // HACK
         // due to some complexities with how flatlist works, this is the easiest way
         // I could find to get a border positioned directly under the last item
+        // -
+        // addendum -- it's also the best way to get mobile web to add padding
+        // at the bottom of the thread since paddingbottom is ignored. yikes.
         // -prf
-        return <View style={[styles.bottomBorder, pal.border]} />
+        return (
+          <View
+            style={[
+              styles.bottomBorder,
+              pal.border,
+              isMobileWeb && styles.bottomSpacer,
+            ]}
+          />
+        )
       } else if (item instanceof PostThreadItemModel) {
         return <PostThreadItem item={item} onPostReply={onRefresh} />
       }
@@ -223,5 +234,8 @@ const styles = StyleSheet.create({
   },
   bottomBorder: {
     borderBottomWidth: 1,
+  },
+  bottomSpacer: {
+    height: 200,
   },
 })
