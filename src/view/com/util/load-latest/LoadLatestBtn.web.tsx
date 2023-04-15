@@ -1,8 +1,10 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
-import {Text} from './text/Text'
+import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {UpIcon} from 'lib/icons'
+import {LoadLatestBtn as LoadLatestBtnMobile} from './LoadLatestBtnMobile'
+import {isMobileWeb} from 'platform/detection'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
@@ -14,6 +16,9 @@ export const LoadLatestBtn = ({
   label: string
 }) => {
   const pal = usePalette('default')
+  if (isMobileWeb) {
+    return <LoadLatestBtnMobile onPress={onPress} label={label} />
+  }
   return (
     <TouchableOpacity
       style={[pal.view, pal.borderDark, styles.loadLatest]}

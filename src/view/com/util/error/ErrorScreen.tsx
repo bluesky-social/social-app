@@ -8,6 +8,7 @@ import {Text} from '../text/Text'
 import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
+import {CenteredView} from '../Views'
 
 export function ErrorScreen({
   title,
@@ -25,7 +26,7 @@ export function ErrorScreen({
   const theme = useTheme()
   const pal = usePalette('error')
   return (
-    <View testID={testID} style={[styles.outer, pal.view]}>
+    <CenteredView testID={testID} style={[styles.outer, pal.view]}>
       <View style={styles.errorIconContainer}>
         <View
           style={[
@@ -72,7 +73,7 @@ export function ErrorScreen({
           </TouchableOpacity>
         </View>
       )}
-    </View>
+    </CenteredView>
   )
 }
 

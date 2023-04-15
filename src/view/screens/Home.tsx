@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, View, Platform} from 'react-native'
+import {FlatList, View} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
@@ -8,7 +8,7 @@ import {PostsFeedModel} from 'state/models/feeds/posts'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {Feed} from '../com/posts/Feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
-import {LoadLatestBtn} from '../com/util/LoadLatestBtn'
+import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
 import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {FAB} from '../com/util/fab/FAB'
@@ -17,9 +17,9 @@ import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
-import {isDesktopWeb, isMobileWeb} from 'platform/detection'
+import {isDesktopWeb} from 'platform/detection'
 
-const HEADER_OFFSET = isDesktopWeb ? 0 : isMobileWeb ? 20 : 40
+const HEADER_OFFSET = isDesktopWeb ? 50 : 40
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired((_opts: Props) => {
@@ -191,7 +191,7 @@ const FeedPage = observer(
           onPressTryAgain={onPressTryAgain}
           onScroll={onMainScroll}
           renderEmptyState={renderEmptyState}
-          headerOffset={Platform.OS === 'web' ? 0 : HEADER_OFFSET} // only offset on mobile
+          headerOffset={HEADER_OFFSET}
         />
         {feed.hasNewLatest && !feed.isRefreshing && (
           <LoadLatestBtn onPress={onPressLoadLatest} label="posts" />
