@@ -23,6 +23,7 @@ import {router} from '../../../routes'
 import {useStores, RootStoreModel} from 'state/index'
 import {convertBskyAppUrlIfNeeded} from 'lib/strings/url-helpers'
 import {isDesktopWeb} from 'platform/detection'
+import {sanitizeUrl} from '@braintree/sanitize-url'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -51,7 +52,7 @@ export const Link = observer(function Link({
   const onPress = React.useCallback(
     (e?: Event) => {
       if (typeof href === 'string') {
-        return onPressInner(store, navigation, href, e)
+        return onPressInner(store, navigation, sanitizeUrl(href), e)
       }
     },
     [store, navigation, href],
@@ -63,7 +64,7 @@ export const Link = observer(function Link({
         testID={testID}
         onPress={onPress}
         // @ts-ignore web only -prf
-        href={asAnchor ? href : undefined}>
+        href={asAnchor ? sanitizeUrl(href) : undefined}>
         <View style={style}>
           {children ? children : <Text>{title || 'link'}</Text>}
         </View>
@@ -76,7 +77,7 @@ export const Link = observer(function Link({
       style={style}
       onPress={onPress}
       // @ts-ignore web only -prf
-      href={asAnchor ? href : undefined}>
+      href={asAnchor ? sanitizeUrl(href) : undefined}>
       {children ? children : <Text>{title || 'link'}</Text>}
     </TouchableOpacity>
   )
@@ -101,13 +102,13 @@ export const TextLink = observer(function TextLink({
   lineHeight?: number
   dataSet?: any
 }) {
-  const {...props} = useLinkProps({to: href})
+  const {...props} = useLinkProps({to: sanitizeUrl(href)})
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
 
   props.onPress = React.useCallback(
     (e?: Event) => {
-      return onPressInner(store, navigation, href, e)
+      return onPressInner(store, navigation, sanitizeUrl(href), e)
     },
     [store, navigation, href],
   )

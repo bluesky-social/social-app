@@ -23,6 +23,7 @@
   "dependencies": {
     "@atproto/api": "0.2.7",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
+    "@braintree/sanitize-url": "^6.0.2",
     "@expo/webpack-config": "^18.0.1",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
