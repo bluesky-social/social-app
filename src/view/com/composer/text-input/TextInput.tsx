@@ -225,7 +225,6 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     width: '100%',
-    minHeight: 80,
     padding: 5,
     paddingBottom: 20,
     marginLeft: 8,
