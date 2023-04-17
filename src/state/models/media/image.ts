@@ -1,6 +1,6 @@
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {RootStoreModel} from 'state/index'
-import {getImageDim, compressAndResizeImageForPost} from 'lib/media/manip'
+import {compressAndResizeImageForPost} from 'lib/media/manip'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {openCropper} from 'lib/media/picker'
 import {POST_IMG_MAX} from 'lib/constants'
@@ -39,19 +39,6 @@ export class ImageModel implements RNImage {
 
     this.scaledWidth = width
     this.scaledHeight = height
-  }
-
-  async getDimensions() {
-    try {
-      const {height, width} = await getImageDim(this.path)
-
-      runInAction(() => {
-        this.height = height
-        this.width = width
-      })
-    } catch (err) {
-      this.rootStore.log.error('Failed to fetch image dimensions', err)
-    }
   }
 
   async crop() {

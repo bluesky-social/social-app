@@ -1,3 +1,4 @@
+import React from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
