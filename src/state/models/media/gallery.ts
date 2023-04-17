@@ -80,8 +80,6 @@ export class GalleryModel {
       maxFiles: 4 - this.images.length,
     })
 
-    runInAction(() => {
-      Promise.all(images.map(image => this.add(image)))
-    })
+    await Promise.all(images.map(image => this.add(image)))
   }
 }
