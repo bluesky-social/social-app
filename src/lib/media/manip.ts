@@ -7,6 +7,7 @@ import uuid from 'react-native-uuid'
 import * as Toast from 'view/com/util/Toast'
 import {Dimensions} from './types'
 import {POST_IMG_MAX} from 'lib/constants'
+import {isAndroid} from 'platform/detection'
 
 export async function compressAndResizeImageForPost(
   image: Image,
@@ -174,7 +175,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
     )
     if (resizeRes.size < opts.maxSize) {
       return {
-        path: resizeRes.path,
+        path: normalizePath(resizeRes.path),
         mime: 'image/jpeg',
         size: resizeRes.size,
         width: resizeRes.width,
@@ -197,5 +198,14 @@ async function moveToPermanentPath(path: string): Promise<string> {
 
   const destinationPath = `${RNFS.TemporaryDirectoryPath}/${filename}`
   await RNFS.moveFile(path, destinationPath)
-  return destinationPath
+  return normalizePath(destinationPath)
+}
+
+function normalizePath(str: string): string {
+  if (isAndroid) {
+    if (!str.startsWith('file://')) {
+      return `file://${str}`
+    }
+  }
+  return str
 }
