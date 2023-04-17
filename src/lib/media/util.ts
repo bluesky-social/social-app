@@ -28,3 +28,18 @@ export function scaleDownDimensions(
 export function isUriImage(uri: string) {
   return /\.(jpg|jpeg|png).*$/.test(uri)
 }
+
+export function blobToDataUri(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result)
+      } else {
+        reject(new Error('Failed to read blob'))
+      }
+    }
+    reader.onerror = reject
+    reader.readAsDataURL(blob)
+  })
+}

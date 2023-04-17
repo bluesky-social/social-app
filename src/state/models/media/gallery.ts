@@ -46,6 +46,10 @@ export class GalleryModel {
   }
 
   async paste(uri: string) {
+    if (this.size >= 4) {
+      return
+    }
+
     const {width, height} = await getImageDim(uri)
 
     const image: RNImage = {

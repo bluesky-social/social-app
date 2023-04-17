@@ -1,6 +1,6 @@
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {RootStoreModel} from 'state/index'
-import {getImageDim, resizeImage} from 'lib/media/manip'
+import {getImageDim, compressAndResizeImageForPost} from 'lib/media/manip'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {openCropper} from 'lib/media/picker'
 import {POST_IMG_MAX} from 'lib/constants'
@@ -28,10 +28,10 @@ export class ImageModel implements RNImage {
     this.width = image.width
     this.height = image.height
     this.size = image.size
-    this.getScaledDimensions()
+    this.calcScaledDimensions()
   }
 
-  getScaledDimensions() {
+  calcScaledDimensions() {
     const {width, height} = scaleDownDimensions(
       {width: this.width, height: this.height},
       POST_IMG_MAX,
@@ -64,22 +64,28 @@ export class ImageModel implements RNImage {
         height: this.scaledHeight,
       })
 
-      this.cropped = cropped
+      runInAction(() => {
+        this.cropped = cropped
+      })
     } catch (err) {
       this.rootStore.log.error('Failed to crop photo', err)
     }
 
-    runInAction(() => {
-      this.compress()
-    })
+    this.compress()
   }
 
   async compress() {
     try {
-      const compressed = await resizeImage({
+      const {width, height} = scaleDownDimensions(
+        this.cropped
+          ? {width: this.cropped.width, height: this.cropped.height}
+          : {width: this.width, height: this.height},
+        POST_IMG_MAX,
+      )
+      const compressed = await compressAndResizeImageForPost({
         ...(this.cropped === undefined ? this : this.cropped),
-        width: this.scaledWidth,
-        height: this.scaledHeight,
+        width,
+        height,
       })
 
       runInAction(() => {

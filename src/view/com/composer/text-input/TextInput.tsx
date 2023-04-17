@@ -19,7 +19,8 @@ import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {isUriImage} from 'lib/media/util'
-import {getImageFromUri} from 'lib/media/manip'
+import {downloadAndResize} from 'lib/media/manip'
+import {POST_IMG_MAX} from 'lib/constants'
 
 export interface TextInputRef {
   focus: () => void
@@ -107,10 +108,17 @@ export const TextInput = forwardRef(
             for (const feature of facet.features) {
               if (AppBskyRichtextFacet.isLink(feature)) {
                 if (isUriImage(feature.uri)) {
-                  const uri = await getImageFromUri(feature.uri)
+                  const res = await downloadAndResize({
+                    uri: feature.uri,
+                    width: POST_IMG_MAX.width,
+                    height: POST_IMG_MAX.height,
+                    mode: 'contain',
+                    maxSize: POST_IMG_MAX.size,
+                    timeout: 15e3,
+                  })
 
-                  if (uri !== undefined) {
-                    onPhotoPasted(uri)
+                  if (res !== undefined) {
+                    onPhotoPasted(res.path)
                   }
                 } else {
                   set.add(feature.uri)
