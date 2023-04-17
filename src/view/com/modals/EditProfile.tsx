@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {ScrollView, TextInput} from './util'
-import {PickedMedia} from '../../../lib/media/picker'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from 'state/index'
@@ -53,15 +53,15 @@ export function Component({
     profileView.avatar,
   )
   const [newUserBanner, setNewUserBanner] = useState<
-    PickedMedia | undefined | null
+    RNImage | undefined | null
   >()
   const [newUserAvatar, setNewUserAvatar] = useState<
-    PickedMedia | undefined | null
+    RNImage | undefined | null
   >()
   const onPressCancel = () => {
     store.shell.closeModal()
   }
-  const onSelectNewAvatar = async (img: PickedMedia | null) => {
+  const onSelectNewAvatar = async (img: RNImage | null) => {
     track('EditProfile:AvatarSelected')
     try {
       // if img is null, user selected "remove avatar"
@@ -71,13 +71,13 @@ export function Component({
         return
       }
       const finalImg = await compressIfNeeded(img, 1000000)
-      setNewUserAvatar({mediaType: 'photo', ...finalImg})
+      setNewUserAvatar(finalImg)
       setUserAvatar(finalImg.path)
     } catch (e: any) {
       setError(cleanError(e))
     }
   }
-  const onSelectNewBanner = async (img: PickedMedia | null) => {
+  const onSelectNewBanner = async (img: RNImage | null) => {
     if (!img) {
       setNewUserBanner(null)
       setUserBanner(null)
@@ -86,7 +86,7 @@ export function Component({
     track('EditProfile:BannerSelected')
     try {
       const finalImg = await compressIfNeeded(img, 1000000)
-      setNewUserBanner({mediaType: 'photo', ...finalImg})
+      setNewUserBanner(finalImg)
       setUserBanner(finalImg.path)
     } catch (e: any) {
       setError(cleanError(e))

@@ -161,6 +161,8 @@ export function SUGGESTED_FOLLOWS(serviceUrl: string) {
   }
 }
 
-export const POST_IMG_MAX_WIDTH = 2000
-export const POST_IMG_MAX_HEIGHT = 2000
-export const POST_IMG_MAX_SIZE = 1000000
+export const POST_IMG_MAX = {
+  width: 2000,
+  height: 2000,
+  size: 1000000,
+}

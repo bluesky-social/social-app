@@ -1,31 +1,21 @@
+import {openCropper} from 'react-native-image-crop-picker'
+
+export interface Dimensions {
+  width: number
+  height: number
+}
+
 export interface PickerOpts {
-  mediaType?: 'photo'
+  mediaType?: string
   multiple?: boolean
   maxFiles?: number
 }
 
 export interface CameraOpts {
-  mediaType?: 'photo'
   width: number
   height: number
   freeStyleCropEnabled?: boolean
   cropperCircleOverlay?: boolean
 }
 
-export interface CropperOpts {
-  path: string
-  mediaType?: 'photo'
-  width: number
-  height: number
-  freeStyleCropEnabled?: boolean
-  cropperCircleOverlay?: boolean
-}
-
-export interface PickedMedia {
-  mediaType: 'photo'
-  path: string
-  mime: string
-  size: number
-  width: number
-  height: number
-}
+export type CropperOptions = Parameters<typeof openCropper>[0]

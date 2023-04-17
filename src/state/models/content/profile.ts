@@ -1,5 +1,4 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {PickedMedia} from 'lib/media/picker'
 import {
   ComAtprotoLabelDefs,
   AppBskyActorGetProfile as GetProfile,
@@ -10,6 +9,7 @@ import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {FollowState} from '../cache/my-follows'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 
 export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
 
@@ -122,8 +122,8 @@ export class ProfileModel {
 
   async updateProfile(
     updates: AppBskyActorProfile.Record,
-    newUserAvatar: PickedMedia | undefined | null,
-    newUserBanner: PickedMedia | undefined | null,
+    newUserAvatar: RNImage | undefined | null,
+    newUserBanner: RNImage | undefined | null,
   ) {
     await this.rootStore.agent.upsertProfile(async existing => {
       existing = existing || {}

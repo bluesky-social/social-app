@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {TouchableOpacity} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -10,62 +10,44 @@ import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
 import {openCamera} from 'lib/media/picker'
-import {compressIfNeeded} from 'lib/media/manip'
 import {useCameraPermission} from 'lib/hooks/usePermissions'
-import {
-  POST_IMG_MAX_WIDTH,
-  POST_IMG_MAX_HEIGHT,
-  POST_IMG_MAX_SIZE,
-} from 'lib/constants'
+import {POST_IMG_MAX} from 'lib/constants'
+import {GalleryModel} from 'state/models/media/gallery'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
-export function OpenCameraBtn({
-  enabled,
-  selectedPhotos,
-  onSelectPhotos,
-}: {
-  enabled: boolean
-  selectedPhotos: string[]
-  onSelectPhotos: (v: string[]) => void
-}) {
+type Props = {
+  gallery: GalleryModel
+}
+
+export function OpenCameraBtn({gallery}: Props) {
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const store = useStores()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
 
-  const onPressTakePicture = React.useCallback(async () => {
+  const onPressTakePicture = useCallback(async () => {
     track('Composer:CameraOpened')
-    if (!enabled) {
-      return
-    }
     try {
       if (!(await requestCameraAccessIfNeeded())) {
         return
       }
-      const cameraRes = await openCamera(store, {
-        mediaType: 'photo',
-        width: POST_IMG_MAX_WIDTH,
-        height: POST_IMG_MAX_HEIGHT,
+
+      const img = await openCamera(store, {
+        width: POST_IMG_MAX.width,
+        height: POST_IMG_MAX.height,
         freeStyleCropEnabled: true,
       })
-      const img = await compressIfNeeded(cameraRes, POST_IMG_MAX_SIZE)
-      onSelectPhotos([...selectedPhotos, img.path])
+
+      gallery.add(img)
     } catch (err: any) {
       // ignore
       store.log.warn('Error using camera', err)
     }
-  }, [
-    track,
-    store,
-    onSelectPhotos,
-    selectedPhotos,
-    enabled,
-    requestCameraAccessIfNeeded,
-  ])
+  }, [gallery, track, store, requestCameraAccessIfNeeded])
 
   if (isDesktopWeb) {
-    return <></>
+    return null
   }
 
   return (
@@ -76,11 +58,7 @@ export function OpenCameraBtn({
       hitSlop={HITSLOP}>
       <FontAwesomeIcon
         icon="camera"
-        style={
-          (enabled
-            ? pal.link
-            : [pal.textLight, s.dimmed]) as FontAwesomeIconStyle
-        }
+        style={pal.link as FontAwesomeIconStyle}
         size={24}
       />
     </TouchableOpacity>

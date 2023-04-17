@@ -1,6 +1,40 @@
-// import {Share} from 'react-native'
-// import * as Toast from 'view/com/util/Toast'
-import {extractDataUriMime, getDataUriSize} from './util'
+import {Dimensions} from './types'
+import {Image as RNImage} from 'react-native-image-crop-picker'
+import {getDataUriSize, blobToDataUri} from './util'
+import {POST_IMG_MAX} from 'lib/constants'
+
+export async function compressAndResizeImageForPost({
+  path,
+  width,
+  height,
+}: {
+  path: string
+  width: number
+  height: number
+}): Promise<RNImage> {
+  // Compression is handled in `doResize` via `quality`
+  return await doResize(path, {
+    width,
+    height,
+    maxSize: POST_IMG_MAX.size,
+    mode: 'stretch',
+  })
+}
+
+export async function compressIfNeeded(
+  img: RNImage,
+  maxSize: number,
+): Promise<RNImage> {
+  if (img.size < maxSize) {
+    return img
+  }
+  return await doResize(img.path, {
+    width: img.width,
+    height: img.height,
+    mode: 'stretch',
+    maxSize,
+  })
+}
 
 export interface DownloadAndResizeOpts {
   uri: string
@@ -11,14 +45,6 @@ export interface DownloadAndResizeOpts {
   timeout: number
 }
 
-export interface Image {
-  path: string
-  mime: string
-  size: number
-  width: number
-  height: number
-}
-
 export async function downloadAndResize(opts: DownloadAndResizeOpts) {
   const controller = new AbortController()
   const to = setTimeout(() => controller.abort(), opts.timeout || 5e3)
@@ -27,58 +53,7 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
   clearTimeout(to)
 
   const dataUri = await blobToDataUri(resBody)
-  return await resize(dataUri, opts)
-}
-
-export interface ResizeOpts {
-  width: number
-  height: number
-  mode: 'contain' | 'cover' | 'stretch'
-  maxSize: number
-}
-
-export async function resize(
-  dataUri: string,
-  _opts: ResizeOpts,
-): Promise<Image> {
-  const dim = await getImageDim(dataUri)
-  // TODO -- need to resize
-  return {
-    path: dataUri,
-    mime: extractDataUriMime(dataUri),
-    size: getDataUriSize(dataUri),
-    width: dim.width,
-    height: dim.height,
-  }
-}
-
-export async function compressIfNeeded(
-  img: Image,
-  maxSize: number,
-): Promise<Image> {
-  if (img.size > maxSize) {
-    // TODO
-    throw new Error(
-      "This image is too large and we haven't implemented compression yet -- sorry!",
-    )
-  }
-  return img
-}
-
-export interface Dim {
-  width: number
-  height: number
-}
-export function scaleDownDimensions(dim: Dim, max: Dim): Dim {
-  if (dim.width < max.width && dim.height < max.height) {
-    return dim
-  }
-  let wScale = dim.width > max.width ? max.width / dim.width : 1
-  let hScale = dim.height > max.height ? max.height / dim.height : 1
-  if (wScale < hScale) {
-    return {width: dim.width * wScale, height: dim.height * wScale}
-  }
-  return {width: dim.width * hScale, height: dim.height * hScale}
+  return await doResize(dataUri, opts)
 }
 
 export async function saveImageModal(_opts: {uri: string}) {
@@ -86,11 +61,7 @@ export async function saveImageModal(_opts: {uri: string}) {
   throw new Error('TODO')
 }
 
-export async function moveToPremanantPath(path: string) {
-  return path
-}
-
-export async function getImageDim(path: string): Promise<Dim> {
+export async function getImageDim(path: string): Promise<Dimensions> {
   var img = document.createElement('img')
   const promise = new Promise((resolve, reject) => {
     img.onload = resolve
@@ -101,17 +72,82 @@ export async function getImageDim(path: string): Promise<Dim> {
   return {width: img.width, height: img.height}
 }
 
-function blobToDataUri(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      if (typeof reader.result === 'string') {
-        resolve(reader.result)
-      } else {
-        reject(new Error('Failed to read blob'))
-      }
+// internal methods
+// =
+
+interface DoResizeOpts {
+  width: number
+  height: number
+  mode: 'contain' | 'cover' | 'stretch'
+  maxSize: number
+}
+
+async function doResize(dataUri: string, opts: DoResizeOpts): Promise<RNImage> {
+  let newDataUri
+
+  for (let i = 0; i <= 10; i++) {
+    newDataUri = await createResizedImage(dataUri, {
+      width: opts.width,
+      height: opts.height,
+      quality: 1 - i * 0.1,
+      mode: opts.mode,
+    })
+    if (getDataUriSize(newDataUri) < opts.maxSize) {
+      break
     }
-    reader.onerror = reject
-    reader.readAsDataURL(blob)
+  }
+  if (!newDataUri) {
+    throw new Error('Failed to compress image')
+  }
+  return {
+    path: newDataUri,
+    mime: 'image/jpeg',
+    size: getDataUriSize(newDataUri),
+    width: opts.width,
+    height: opts.height,
+  }
+}
+
+function createResizedImage(
+  dataUri: string,
+  {
+    width,
+    height,
+    quality,
+    mode,
+  }: {
+    width: number
+    height: number
+    quality: number
+    mode: 'contain' | 'cover' | 'stretch'
+  },
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = document.createElement('img')
+    img.addEventListener('load', () => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        return reject(new Error('Failed to resize image'))
+      }
+
+      canvas.width = width
+      canvas.height = height
+
+      let scale = 1
+      if (mode === 'cover') {
+        scale = img.width < img.height ? width / img.width : height / img.height
+      } else if (mode === 'contain') {
+        scale = img.width > img.height ? width / img.width : height / img.height
+      }
+      let w = img.width * scale
+      let h = img.height * scale
+      let x = (width - w) / 2
+      let y = (height - h) / 2
+
+      ctx.drawImage(img, x, y, w, h)
+      resolve(canvas.toDataURL('image/jpeg', quality))
+    })
+    img.src = dataUri
   })
 }

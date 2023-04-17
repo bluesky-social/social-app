@@ -12,6 +12,7 @@ import isEqual from 'lodash.isequal'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {createSuggestion} from './web/Autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {isUriImage, blobToDataUri} from 'lib/media/util'
 
 export interface TextInputRef {
   focus: () => void
@@ -37,7 +38,7 @@ export const TextInput = React.forwardRef(
       suggestedLinks,
       autocompleteView,
       setRichText,
-      // onPhotoPasted, TODO
+      onPhotoPasted,
       onSuggestedLinksChanged,
     }: // onError, TODO
     TextInputProps,
@@ -71,6 +72,15 @@ export const TextInput = React.forwardRef(
         editorProps: {
           attributes: {
             class: modeClass,
+          },
+          handlePaste: (_, event) => {
+            const items = event.clipboardData?.items
+
+            if (items === undefined) {
+              return
+            }
+
+            getImageFromUri(items, onPhotoPasted)
           },
         },
         content: richtext.text.toString(),
@@ -147,3 +157,33 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 })
+
+function getImageFromUri(
+  items: DataTransferItemList,
+  callback: (uri: string) => void,
+) {
+  for (let index = 0; index < items.length; index++) {
+    const item = items[index]
+    const {kind, type} = item
+
+    if (type === 'text/plain') {
+      item.getAsString(async itemString => {
+        if (isUriImage(itemString)) {
+          const response = await fetch(itemString)
+          const blob = await response.blob()
+          blobToDataUri(blob).then(callback, err => console.error(err))
+        }
+      })
+    }
+
+    if (kind === 'file') {
+      const file = item.getAsFile()
+
+      if (file instanceof Blob) {
+        blobToDataUri(new Blob([file], {type: item.type})).then(callback, err =>
+          console.error(err),
+        )
+      }
+    }
+  }
+}

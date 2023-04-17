@@ -4,7 +4,7 @@ import ImageEditor from 'react-avatar-editor'
 import {Slider} from '@miblanchard/react-native-slider'
 import LinearGradient from 'react-native-linear-gradient'
 import {Text} from 'view/com/util/text/Text'
-import {PickedMedia} from 'lib/media/types'
+import {Dimensions, Image} from 'lib/media/types'
 import {getDataUriSize} from 'lib/media/util'
 import {s, gradients} from 'lib/styles'
 import {useStores} from 'state/index'
@@ -16,11 +16,8 @@ enum AspectRatio {
   Wide = 'wide',
   Tall = 'tall',
 }
-interface Dim {
-  width: number
-  height: number
-}
-const DIMS: Record<string, Dim> = {
+
+const DIMS: Record<string, Dimensions> = {
   [AspectRatio.Square]: {width: 1000, height: 1000},
   [AspectRatio.Wide]: {width: 1000, height: 750},
   [AspectRatio.Tall]: {width: 750, height: 1000},
@@ -33,7 +30,7 @@ export function Component({
   onSelect,
 }: {
   uri: string
-  onSelect: (img?: PickedMedia) => void
+  onSelect: (img?: Image) => void
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -52,7 +49,6 @@ export function Component({
     if (canvas) {
       const dataUri = canvas.toDataURL('image/jpeg')
       onSelect({
-        mediaType: 'photo',
         path: dataUri,
         mime: 'image/jpeg',
         size: getDataUriSize(dataUri),

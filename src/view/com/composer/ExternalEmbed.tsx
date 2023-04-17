@@ -2,11 +2,10 @@ import React from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   View,
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {BlurView} from '../util/BlurView'
 import {AutoSizedImage} from '../util/images/AutoSizedImage'
 import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
@@ -61,11 +60,9 @@ export const ExternalEmbed = ({
           </Text>
         )}
       </View>
-      <TouchableWithoutFeedback onPress={onRemove}>
-        <BlurView style={styles.removeBtn} blurType="dark">
-          <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
-        </BlurView>
-      </TouchableWithoutFeedback>
+      <TouchableOpacity style={styles.removeBtn} onPress={onRemove}>
+        <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
+      </TouchableOpacity>
     </View>
   )
 }
@@ -92,6 +89,7 @@ const styles = StyleSheet.create({
     right: 10,
     width: 36,
     height: 36,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',

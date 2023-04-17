@@ -1,13 +1,77 @@
 import RNFetchBlob from 'rn-fetch-blob'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
 import {Image as RNImage, Share} from 'react-native'
+import {Image} from 'react-native-image-crop-picker'
 import RNFS from 'react-native-fs'
 import uuid from 'react-native-uuid'
 import * as Toast from 'view/com/util/Toast'
+import {Dimensions} from './types'
+import {POST_IMG_MAX} from 'lib/constants'
+import {isAndroid} from 'platform/detection'
 
-export interface Dim {
-  width: number
-  height: number
+export async function compressAndResizeImageForPost(
+  image: Image,
+): Promise<Image> {
+  const uri = `file://${image.path}`
+  let resized: Omit<Image, 'mime'>
+
+  for (let i = 0; i < 9; i++) {
+    const quality = 100 - i * 10
+
+    try {
+      resized = await ImageResizer.createResizedImage(
+        uri,
+        POST_IMG_MAX.width,
+        POST_IMG_MAX.height,
+        'JPEG',
+        quality,
+        undefined,
+        undefined,
+        undefined,
+        {mode: 'cover'},
+      )
+    } catch (err) {
+      throw new Error(`Failed to resize: ${err}`)
+    }
+
+    if (resized.size < POST_IMG_MAX.size) {
+      const path = await moveToPermanentPath(resized.path)
+
+      return {
+        path,
+        mime: 'image/jpeg',
+        size: resized.size,
+        height: resized.height,
+        width: resized.width,
+      }
+    }
+  }
+
+  throw new Error(
+    `This image is too big! We couldn't compress it down to ${POST_IMG_MAX.size} bytes`,
+  )
+}
+
+export async function compressIfNeeded(
+  img: Image,
+  maxSize: number = 1000000,
+): Promise<Image> {
+  const origUri = `file://${img.path}`
+  if (img.size < maxSize) {
+    return img
+  }
+  const resizedImage = await doResize(origUri, {
+    width: img.width,
+    height: img.height,
+    mode: 'stretch',
+    maxSize,
+  })
+  const finalImageMovedPath = await moveToPermanentPath(resizedImage.path)
+  const finalImg = {
+    ...resizedImage,
+    path: finalImageMovedPath,
+  }
+  return finalImg
 }
 
 export interface DownloadAndResizeOpts {
@@ -17,14 +81,6 @@ export interface DownloadAndResizeOpts {
   mode: 'contain' | 'cover' | 'stretch'
   maxSize: number
   timeout: number
-}
-
-export interface Image {
-  path: string
-  mime: string
-  size: number
-  width: number
-  height: number
 }
 
 export async function downloadAndResize(opts: DownloadAndResizeOpts) {
@@ -55,85 +111,12 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
       localUri = `file://${localUri}`
     }
 
-    return await resize(localUri, opts)
+    return await doResize(localUri, opts)
   } finally {
     if (downloadRes) {
       downloadRes.flush()
     }
   }
-}
-
-export interface ResizeOpts {
-  width: number
-  height: number
-  mode: 'contain' | 'cover' | 'stretch'
-  maxSize: number
-}
-
-export async function resize(
-  localUri: string,
-  opts: ResizeOpts,
-): Promise<Image> {
-  for (let i = 0; i < 9; i++) {
-    const quality = 100 - i * 10
-    const resizeRes = await ImageResizer.createResizedImage(
-      localUri,
-      opts.width,
-      opts.height,
-      'JPEG',
-      quality,
-      undefined,
-      undefined,
-      undefined,
-      {mode: opts.mode},
-    )
-    if (resizeRes.size < opts.maxSize) {
-      return {
-        path: resizeRes.path,
-        mime: 'image/jpeg',
-        size: resizeRes.size,
-        width: resizeRes.width,
-        height: resizeRes.height,
-      }
-    }
-  }
-  throw new Error(
-    `This image is too big! We couldn't compress it down to ${opts.maxSize} bytes`,
-  )
-}
-
-export async function compressIfNeeded(
-  img: Image,
-  maxSize: number,
-): Promise<Image> {
-  const origUri = `file://${img.path}`
-  if (img.size < maxSize) {
-    return img
-  }
-  const resizedImage = await resize(origUri, {
-    width: img.width,
-    height: img.height,
-    mode: 'stretch',
-    maxSize,
-  })
-  const finalImageMovedPath = await moveToPremanantPath(resizedImage.path)
-  const finalImg = {
-    ...resizedImage,
-    path: finalImageMovedPath,
-  }
-  return finalImg
-}
-
-export function scaleDownDimensions(dim: Dim, max: Dim): Dim {
-  if (dim.width < max.width && dim.height < max.height) {
-    return dim
-  }
-  let wScale = dim.width > max.width ? max.width / dim.width : 1
-  let hScale = dim.height > max.height ? max.height / dim.height : 1
-  if (wScale < hScale) {
-    return {width: dim.width * wScale, height: dim.height * wScale}
-  }
-  return {width: dim.width * hScale, height: dim.height * hScale}
 }
 
 export async function saveImageModal({uri}: {uri: string}) {
@@ -154,19 +137,7 @@ export async function saveImageModal({uri}: {uri: string}) {
   RNFS.unlink(imagePath)
 }
 
-export async function moveToPremanantPath(path: string) {
-  /*
-  Since this package stores images in a temp directory, we need to move the file to a permanent location.
-  Relevant: IOS bug when trying to open a second time:
-  https://github.com/ivpusic/react-native-image-crop-picker/issues/1199
-  */
-  const filename = uuid.v4()
-  const destinationPath = `${RNFS.TemporaryDirectoryPath}/${filename}`
-  RNFS.moveFile(path, destinationPath)
-  return destinationPath
-}
-
-export function getImageDim(path: string): Promise<Dim> {
+export function getImageDim(path: string): Promise<Dimensions> {
   return new Promise((resolve, reject) => {
     RNImage.getSize(
       path,
@@ -176,4 +147,65 @@ export function getImageDim(path: string): Promise<Dim> {
       reject,
     )
   })
+}
+
+// internal methods
+// =
+
+interface DoResizeOpts {
+  width: number
+  height: number
+  mode: 'contain' | 'cover' | 'stretch'
+  maxSize: number
+}
+
+async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
+  for (let i = 0; i < 9; i++) {
+    const quality = 100 - i * 10
+    const resizeRes = await ImageResizer.createResizedImage(
+      localUri,
+      opts.width,
+      opts.height,
+      'JPEG',
+      quality,
+      undefined,
+      undefined,
+      undefined,
+      {mode: opts.mode},
+    )
+    if (resizeRes.size < opts.maxSize) {
+      return {
+        path: normalizePath(resizeRes.path),
+        mime: 'image/jpeg',
+        size: resizeRes.size,
+        width: resizeRes.width,
+        height: resizeRes.height,
+      }
+    }
+  }
+  throw new Error(
+    `This image is too big! We couldn't compress it down to ${opts.maxSize} bytes`,
+  )
+}
+
+async function moveToPermanentPath(path: string): Promise<string> {
+  /*
+  Since this package stores images in a temp directory, we need to move the file to a permanent location.
+  Relevant: IOS bug when trying to open a second time:
+  https://github.com/ivpusic/react-native-image-crop-picker/issues/1199
+  */
+  const filename = uuid.v4()
+
+  const destinationPath = `${RNFS.TemporaryDirectoryPath}/${filename}`
+  await RNFS.moveFile(path, destinationPath)
+  return normalizePath(destinationPath)
+}
+
+function normalizePath(str: string): string {
+  if (isAndroid) {
+    if (!str.startsWith('file://')) {
+      return `file://${str}`
+    }
+  }
+  return str
 }

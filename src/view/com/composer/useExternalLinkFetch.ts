@@ -6,6 +6,7 @@ import {getPostAsQuote} from 'lib/link-meta/bsky'
 import {downloadAndResize} from 'lib/media/manip'
 import {isBskyPostUrl} from 'lib/strings/url-helpers'
 import {ComposerOpts} from 'state/models/ui/shell'
+import {POST_IMG_MAX} from 'lib/constants'
 
 export function useExternalLinkFetch({
   setQuote,
@@ -55,13 +56,12 @@ export function useExternalLinkFetch({
       return cleanup
     }
     if (extLink.isLoading && extLink.meta?.image && !extLink.localThumb) {
-      console.log('attempting download')
       downloadAndResize({
         uri: extLink.meta.image,
-        width: 2000,
-        height: 2000,
+        width: POST_IMG_MAX.width,
+        height: POST_IMG_MAX.height,
         mode: 'contain',
-        maxSize: 1000000,
+        maxSize: POST_IMG_MAX.size,
         timeout: 15e3,
       })
         .catch(() => undefined)

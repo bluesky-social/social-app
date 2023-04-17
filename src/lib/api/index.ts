@@ -10,8 +10,8 @@ import {
 import {AtUri} from '@atproto/api'
 import {RootStoreModel} from 'state/models/root-store'
 import {isNetworkError} from 'lib/strings/errors'
+import {Image} from 'lib/media/types'
 import {LinkMeta} from '../link-meta/link-meta'
-import {Image} from '../media/manip'
 import {isWeb} from 'platform/detection'
 
 export interface ExternalEmbedDraft {

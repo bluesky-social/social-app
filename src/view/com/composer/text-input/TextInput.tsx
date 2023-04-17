@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {forwardRef, useCallback, useEffect, useRef, useMemo} from 'react'
 import {
   NativeSyntheticEvent,
   StyleSheet,
@@ -14,18 +14,13 @@ import isEqual from 'lodash.isequal'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {Autocomplete} from './mobile/Autocomplete'
 import {Text} from 'view/com/util/text/Text'
-import {useStores} from 'state/index'
 import {cleanError} from 'lib/strings/errors'
-import {getImageDim} from 'lib/media/manip'
-import {cropAndCompressFlow} from 'lib/media/picker'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
-import {
-  POST_IMG_MAX_WIDTH,
-  POST_IMG_MAX_HEIGHT,
-  POST_IMG_MAX_SIZE,
-} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
+import {isUriImage} from 'lib/media/util'
+import {downloadAndResize} from 'lib/media/manip'
+import {POST_IMG_MAX} from 'lib/constants'
 
 export interface TextInputRef {
   focus: () => void
@@ -48,7 +43,7 @@ interface Selection {
   end: number
 }
 
-export const TextInput = React.forwardRef(
+export const TextInput = forwardRef(
   (
     {
       richtext,
@@ -63,9 +58,8 @@ export const TextInput = React.forwardRef(
     ref,
   ) => {
     const pal = usePalette('default')
-    const store = useStores()
-    const textInput = React.useRef<PasteInputRef>(null)
-    const textInputSelection = React.useRef<Selection>({start: 0, end: 0})
+    const textInput = useRef<PasteInputRef>(null)
+    const textInputSelection = useRef<Selection>({start: 0, end: 0})
     const theme = useTheme()
 
     React.useImperativeHandle(ref, () => ({
@@ -73,7 +67,7 @@ export const TextInput = React.forwardRef(
       blur: () => textInput.current?.blur(),
     }))
 
-    React.useEffect(() => {
+    useEffect(() => {
       // HACK
       // wait a moment before focusing the input to resolve some layout bugs with the keyboard-avoiding-view
       // -prf
@@ -90,8 +84,8 @@ export const TextInput = React.forwardRef(
       }
     }, [])
 
-    const onChangeText = React.useCallback(
-      (newText: string) => {
+    const onChangeText = useCallback(
+      async (newText: string) => {
         const newRt = new RichText({text: newText})
         newRt.detectFacetsWithoutResolution()
         setRichText(newRt)
@@ -108,50 +102,62 @@ export const TextInput = React.forwardRef(
         }
 
         const set: Set<string> = new Set()
+
         if (newRt.facets) {
           for (const facet of newRt.facets) {
             for (const feature of facet.features) {
               if (AppBskyRichtextFacet.isLink(feature)) {
-                set.add(feature.uri)
+                if (isUriImage(feature.uri)) {
+                  const res = await downloadAndResize({
+                    uri: feature.uri,
+                    width: POST_IMG_MAX.width,
+                    height: POST_IMG_MAX.height,
+                    mode: 'contain',
+                    maxSize: POST_IMG_MAX.size,
+                    timeout: 15e3,
+                  })
+
+                  if (res !== undefined) {
+                    onPhotoPasted(res.path)
+                  }
+                } else {
+                  set.add(feature.uri)
+                }
               }
             }
           }
         }
+
         if (!isEqual(set, suggestedLinks)) {
           onSuggestedLinksChanged(set)
         }
       },
-      [setRichText, autocompleteView, suggestedLinks, onSuggestedLinksChanged],
+      [
+        setRichText,
+        autocompleteView,
+        suggestedLinks,
+        onSuggestedLinksChanged,
+        onPhotoPasted,
+      ],
     )
 
-    const onPaste = React.useCallback(
+    const onPaste = useCallback(
       async (err: string | undefined, files: PastedFile[]) => {
         if (err) {
           return onError(cleanError(err))
         }
+
         const uris = files.map(f => f.uri)
-        const imgUri = uris.find(uri => /\.(jpe?g|png)$/.test(uri))
-        if (imgUri) {
-          let imgDim
-          try {
-            imgDim = await getImageDim(imgUri)
-          } catch (e) {
-            imgDim = {width: POST_IMG_MAX_WIDTH, height: POST_IMG_MAX_HEIGHT}
-          }
-          const finalImgPath = await cropAndCompressFlow(
-            store,
-            imgUri,
-            imgDim,
-            {width: POST_IMG_MAX_WIDTH, height: POST_IMG_MAX_HEIGHT},
-            POST_IMG_MAX_SIZE,
-          )
-          onPhotoPasted(finalImgPath)
+        const uri = uris.find(isUriImage)
+
+        if (uri) {
+          onPhotoPasted(uri)
         }
       },
-      [store, onError, onPhotoPasted],
+      [onError, onPhotoPasted],
     )
 
-    const onSelectionChange = React.useCallback(
+    const onSelectionChange = useCallback(
       (evt: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
         // NOTE we track the input selection using a ref to avoid excessive renders -prf
         textInputSelection.current = evt.nativeEvent.selection
@@ -159,7 +165,7 @@ export const TextInput = React.forwardRef(
       [textInputSelection],
     )
 
-    const onSelectAutocompleteItem = React.useCallback(
+    const onSelectAutocompleteItem = useCallback(
       (item: string) => {
         onChangeText(
           insertMentionAt(
@@ -173,23 +179,19 @@ export const TextInput = React.forwardRef(
       [onChangeText, richtext, autocompleteView],
     )
 
-    const textDecorated = React.useMemo(() => {
+    const textDecorated = useMemo(() => {
       let i = 0
-      return Array.from(richtext.segments()).map(segment => {
-        if (!segment.facet) {
-          return (
-            <Text key={i++} style={[pal.text, styles.textInputFormatting]}>
-              {segment.text}
-            </Text>
-          )
-        } else {
-          return (
-            <Text key={i++} style={[pal.link, styles.textInputFormatting]}>
-              {segment.text}
-            </Text>
-          )
-        }
-      })
+
+      return Array.from(richtext.segments()).map(segment => (
+        <Text
+          key={i++}
+          style={[
+            !segment.facet ? pal.text : pal.link,
+            styles.textInputFormatting,
+          ]}>
+          {segment.text}
+        </Text>
+      ))
     }, [richtext, pal.link, pal.text])
 
     return (
@@ -223,7 +225,6 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     width: '100%',
-    minHeight: 80,
     padding: 5,
     paddingBottom: 20,
     marginLeft: 8,

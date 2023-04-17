@@ -1,24 +1,24 @@
 import {Image} from 'react-native'
-import {Dim} from 'lib/media/manip'
+import type {Dimensions} from 'lib/media/types'
 
 export class ImageSizesCache {
-  sizes: Map<string, Dim> = new Map()
-  activeRequests: Map<string, Promise<Dim>> = new Map()
+  sizes: Map<string, Dimensions> = new Map()
+  activeRequests: Map<string, Promise<Dimensions>> = new Map()
 
   constructor() {}
 
-  get(uri: string): Dim | undefined {
+  get(uri: string): Dimensions | undefined {
     return this.sizes.get(uri)
   }
 
-  async fetch(uri: string): Promise<Dim> {
-    const dim = this.sizes.get(uri)
-    if (dim) {
-      return dim
+  async fetch(uri: string): Promise<Dimensions> {
+    const Dimensions = this.sizes.get(uri)
+    if (Dimensions) {
+      return Dimensions
     }
     const prom =
       this.activeRequests.get(uri) ||
-      new Promise<Dim>(resolve => {
+      new Promise<Dimensions>(resolve => {
         Image.getSize(
           uri,
           (width: number, height: number) => resolve({width, height}),

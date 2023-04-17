@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
@@ -30,47 +30,42 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {cleanError} from 'lib/strings/errors'
 import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
-import {SelectedPhotos} from './photos/SelectedPhotos'
 import {usePalette} from 'lib/hooks/usePalette'
 import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {isDesktopWeb} from 'platform/detection'
+import {GalleryModel} from 'state/models/media/gallery'
+import {Gallery} from './photos/Gallery'
 
 const MAX_GRAPHEME_LENGTH = 300
+
+type Props = ComposerOpts & {
+  onClose: () => void
+}
 
 export const ComposePost = observer(function ComposePost({
   replyTo,
   onPost,
   onClose,
   quote: initQuote,
-}: {
-  replyTo?: ComposerOpts['replyTo']
-  onPost?: ComposerOpts['onPost']
-  onClose: () => void
-  quote?: ComposerOpts['quote']
-}) {
+}: Props) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
-  const textInput = React.useRef<TextInputRef>(null)
-  const [isProcessing, setIsProcessing] = React.useState(false)
-  const [processingState, setProcessingState] = React.useState('')
-  const [error, setError] = React.useState('')
-  const [richtext, setRichText] = React.useState(new RichText({text: ''}))
-  const graphemeLength = React.useMemo(
-    () => richtext.graphemeLength,
-    [richtext],
-  )
-  const [quote, setQuote] = React.useState<ComposerOpts['quote'] | undefined>(
+  const textInput = useRef<TextInputRef>(null)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [processingState, setProcessingState] = useState('')
+  const [error, setError] = useState('')
+  const [richtext, setRichText] = useState(new RichText({text: ''}))
+  const graphemeLength = useMemo(() => richtext.graphemeLength, [richtext])
+  const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
-  const [suggestedLinks, setSuggestedLinks] = React.useState<Set<string>>(
-    new Set(),
-  )
-  const [selectedPhotos, setSelectedPhotos] = React.useState<string[]>([])
+  const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
+  const gallery = useMemo(() => new GalleryModel(store), [store])
 
-  const autocompleteView = React.useMemo<UserAutocompleteModel>(
+  const autocompleteView = useMemo<UserAutocompleteModel>(
     () => new UserAutocompleteModel(store),
     [store],
   )
@@ -82,17 +77,17 @@ export const ComposePost = observer(function ComposePost({
   // is focused during unmount, an exception will throw (seems that a blur method isnt implemented)
   // manually blurring before closing gets around that
   // -prf
-  const hackfixOnClose = React.useCallback(() => {
+  const hackfixOnClose = useCallback(() => {
     textInput.current?.blur()
     onClose()
   }, [textInput, onClose])
 
   // initial setup
-  React.useEffect(() => {
+  useEffect(() => {
     autocompleteView.setup()
   }, [autocompleteView])
 
-  React.useEffect(() => {
+  useEffect(() => {
     // HACK
     // wait a moment before focusing the input to resolve some layout bugs with the keyboard-avoiding-view
     // -prf
@@ -109,60 +104,51 @@ export const ComposePost = observer(function ComposePost({
     }
   }, [])
 
-  const onPressContainer = React.useCallback(() => {
+  const onPressContainer = useCallback(() => {
     textInput.current?.focus()
   }, [textInput])
 
-  const onSelectPhotos = React.useCallback(
-    (photos: string[]) => {
-      track('Composer:SelectedPhotos')
-      setSelectedPhotos(photos)
-    },
-    [track, setSelectedPhotos],
-  )
-
-  const onPressAddLinkCard = React.useCallback(
+  const onPressAddLinkCard = useCallback(
     (uri: string) => {
       setExtLink({uri, isLoading: true})
     },
     [setExtLink],
   )
 
-  const onPhotoPasted = React.useCallback(
+  const onPhotoPasted = useCallback(
     async (uri: string) => {
-      if (selectedPhotos.length >= 4) {
-        return
-      }
-      onSelectPhotos([...selectedPhotos, uri])
+      track('Composer:PastedPhotos')
+      gallery.paste(uri)
     },
-    [selectedPhotos, onSelectPhotos],
+    [gallery, track],
   )
 
-  const onPressPublish = React.useCallback(async () => {
-    if (isProcessing) {
+  const onPressPublish = useCallback(async () => {
+    if (isProcessing || richtext.graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
     }
-    if (richtext.graphemeLength > MAX_GRAPHEME_LENGTH) {
-      return
-    }
+
     setError('')
-    if (richtext.text.trim().length === 0 && selectedPhotos.length === 0) {
+
+    if (richtext.text.trim().length === 0 && gallery.isEmpty) {
       setError('Did you want to say anything?')
       return false
     }
+
     setIsProcessing(true)
+
     try {
       await apilib.post(store, {
         rawText: richtext.text,
         replyTo: replyTo?.uri,
-        images: selectedPhotos,
+        images: gallery.paths,
         quote: quote,
         extLink: extLink,
         onStateChange: setProcessingState,
         knownHandles: autocompleteView.knownHandles,
       })
       track('Create Post', {
-        imageCount: selectedPhotos.length,
+        imageCount: gallery.size,
       })
     } catch (e: any) {
       if (extLink) {
@@ -191,19 +177,25 @@ export const ComposePost = observer(function ComposePost({
     hackfixOnClose,
     onPost,
     quote,
-    selectedPhotos,
     setExtLink,
     store,
     track,
+    gallery,
   ])
 
   const canPost = graphemeLength <= MAX_GRAPHEME_LENGTH
 
   const selectTextInputPlaceholder = replyTo
     ? 'Write your reply'
-    : selectedPhotos.length !== 0
+    : gallery.isEmpty
     ? 'Write a comment'
     : "What's up?"
+
+  const canSelectImages = gallery.size <= 4
+  const viewStyles = {
+    paddingBottom: Platform.OS === 'android' ? insets.bottom : 0,
+    paddingTop: Platform.OS === 'android' ? insets.top : 15,
+  }
 
   return (
     <KeyboardAvoidingView
@@ -211,14 +203,7 @@ export const ComposePost = observer(function ComposePost({
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.outer}>
       <TouchableWithoutFeedback onPressIn={onPressContainer}>
-        <View
-          style={[
-            s.flex1,
-            {
-              paddingBottom: Platform.OS === 'android' ? insets.bottom : 0,
-              paddingTop: Platform.OS === 'android' ? insets.top : 15,
-            },
-          ]}>
+        <View style={[s.flex1, viewStyles]}>
           <View style={styles.topbar}>
             <TouchableOpacity
               testID="composerCancelButton"
@@ -301,11 +286,8 @@ export const ComposePost = observer(function ComposePost({
               />
             </View>
 
-            <SelectedPhotos
-              selectedPhotos={selectedPhotos}
-              onSelectPhotos={onSelectPhotos}
-            />
-            {selectedPhotos.length === 0 && extLink && (
+            <Gallery gallery={gallery} />
+            {gallery.isEmpty && extLink && (
               <ExternalEmbed
                 link={extLink}
                 onRemove={() => setExtLink(undefined)}
@@ -317,9 +299,7 @@ export const ComposePost = observer(function ComposePost({
               </View>
             ) : undefined}
           </ScrollView>
-          {!extLink &&
-          selectedPhotos.length === 0 &&
-          suggestedLinks.size > 0 ? (
+          {!extLink && suggestedLinks.size > 0 ? (
             <View style={s.mb5}>
               {Array.from(suggestedLinks).map(url => (
                 <TouchableOpacity
@@ -335,16 +315,12 @@ export const ComposePost = observer(function ComposePost({
             </View>
           ) : null}
           <View style={[pal.border, styles.bottomBar]}>
-            <SelectPhotoBtn
-              enabled={selectedPhotos.length < 4}
-              selectedPhotos={selectedPhotos}
-              onSelectPhotos={setSelectedPhotos}
-            />
-            <OpenCameraBtn
-              enabled={selectedPhotos.length < 4}
-              selectedPhotos={selectedPhotos}
-              onSelectPhotos={setSelectedPhotos}
-            />
+            {canSelectImages ? (
+              <>
+                <SelectPhotoBtn gallery={gallery} />
+                <OpenCameraBtn gallery={gallery} />
+              </>
+            ) : null}
             <View style={s.flex1} />
             <CharProgress count={graphemeLength} />
           </View>
