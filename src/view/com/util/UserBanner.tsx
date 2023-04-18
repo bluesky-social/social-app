@@ -38,9 +38,7 @@ export function UserBanner({
         }
         onSelectNewBanner?.(
           await openCamera(store, {
-            // compressImageMaxWidth: 3000, TODO needed?
             width: 3000,
-            // compressImageMaxHeight: 1000, TODO needed?
             height: 1000,
           }),
         )
@@ -54,14 +52,15 @@ export function UserBanner({
         if (!(await requestPhotoAccessIfNeeded())) {
           return
         }
-        const items = await openPicker(store)
+        const items = await openPicker(store, {
+          mediaType: 'photo',
+          multiple: false,
+        })
         onSelectNewBanner?.(
           await openCropper(store, {
             mediaType: 'photo',
             path: items[0].path,
-            // compressImageMaxWidth: 3000, TODO needed?
             width: 3000,
-            // compressImageMaxHeight: 1000, TODO needed?
             height: 1000,
           }),
         )

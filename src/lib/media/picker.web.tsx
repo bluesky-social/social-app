@@ -14,7 +14,7 @@ interface PickedFile {
 
 export async function openPicker(
   _store: RootStoreModel,
-  opts: PickerOpts,
+  opts?: PickerOpts,
 ): Promise<RNImage[]> {
   const res = await selectFile(opts)
   const dim = await getImageDim(res.uri)
@@ -70,11 +70,11 @@ export async function openCropper(
  *   src/lib/hooks/usePermissions.ts
  * so that it gets appropriately updated.
  */
-function selectFile(opts: PickerOpts): Promise<PickedFile> {
+function selectFile(opts?: PickerOpts): Promise<PickedFile> {
   return new Promise((resolve, reject) => {
     var input = document.createElement('input')
     input.type = 'file'
-    input.accept = opts.mediaType === 'photo' ? 'image/*' : '*/*'
+    input.accept = opts?.mediaType === 'photo' ? 'image/*' : '*/*'
     input.onchange = e => {
       const target = e.target as HTMLInputElement
       const file = target?.files?.[0]

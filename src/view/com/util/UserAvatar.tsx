@@ -79,7 +79,10 @@ export function UserAvatar({
         if (!(await requestPhotoAccessIfNeeded())) {
           return
         }
-        const items = await openPicker(store)
+        const items = await openPicker(store, {
+          mediaType: 'photo',
+          multiple: false,
+        })
 
         onSelectNewAvatar?.(
           await openCropper(store, {
