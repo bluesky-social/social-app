@@ -64,7 +64,7 @@ export const ProfileHeader = observer(
             <View style={[styles.buttonsLine]}>
               <LoadingPlaceholder width={100} height={31} style={styles.br50} />
             </View>
-            <View style={styles.displayNameLine}>
+            <View>
               <Text type="title-2xl" style={[pal.text, styles.title]}>
                 {sanitizeDisplayName(view.displayName || view.handle)}
               </Text>
@@ -273,7 +273,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
             </DropdownButton>
           ) : undefined}
         </View>
-        <View style={styles.displayNameLine}>
+        <View>
           <Text
             testID="profileHeaderDisplayName"
             type="title-2xl"
@@ -430,11 +430,6 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 50,
     marginLeft: 6,
-  },
-
-  displayNameLine: {
-    // paddingLeft: 86,
-    // marginBottom: 14,
   },
   title: {lineHeight: 38},
 

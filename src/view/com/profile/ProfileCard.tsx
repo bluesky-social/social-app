@@ -48,7 +48,6 @@ export function ProfileCard({
       ]}
       href={`/profile/${handle}`}
       title={handle}
-      noFeedback
       asAnchor>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>

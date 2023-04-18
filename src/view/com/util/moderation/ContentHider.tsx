@@ -40,7 +40,7 @@ export function ContentHider({
   }
 
   if (labelPref.pref === 'hide') {
-    return <></>
+    return null
   }
 
   return (
