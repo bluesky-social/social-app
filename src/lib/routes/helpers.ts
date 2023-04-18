@@ -20,7 +20,8 @@ export function isStateAtTabRoot(state: State | undefined) {
   return (
     isTab(currentRoute.name, 'Home') ||
     isTab(currentRoute.name, 'Search') ||
-    isTab(currentRoute.name, 'Notifications')
+    isTab(currentRoute.name, 'Notifications') ||
+    isTab(currentRoute.name, 'MyProfile')
   )
 }
 

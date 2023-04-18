@@ -6,7 +6,7 @@ export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 export type CommonNavigatorParams = {
   NotFound: undefined
   Settings: undefined
-  Profile: {name: string}
+  Profile: {name: string; hideBackButton?: boolean}
   ProfileFollowers: {name: string}
   ProfileFollows: {name: string}
   PostThread: {name: string; rkey: string}
@@ -21,6 +21,13 @@ export type CommonNavigatorParams = {
   CopyrightPolicy: undefined
 }
 
+export type BottomTabNavigatorParams = CommonNavigatorParams & {
+  HomeTab: undefined
+  SearchTab: undefined
+  NotificationsTab: undefined
+  MyProfileTab: undefined
+}
+
 export type HomeTabNavigatorParams = CommonNavigatorParams & {
   Home: undefined
 }
@@ -31,6 +38,10 @@ export type SearchTabNavigatorParams = CommonNavigatorParams & {
 
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
   Notifications: undefined
+}
+
+export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
+  MyProfile: undefined
 }
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
@@ -46,6 +57,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Search: {q?: string}
   NotificationsTab: undefined
   Notifications: undefined
+  MyProfileTab: undefined
 }
 
 // NOTE

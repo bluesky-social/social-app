@@ -27,6 +27,7 @@ import {
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
   MoonIcon,
+  UserIconSolid,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
@@ -45,7 +46,8 @@ export const DrawerContent = observer(() => {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtNotifications} = useNavigationTabState()
+  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile} =
+    useNavigationTabState()
 
   // events
   // =
@@ -56,7 +58,7 @@ export const DrawerContent = observer(() => {
       const state = navigation.getState()
       store.shell.closeDrawer()
       if (isWeb) {
-        // @ts-ignore must be Home, Search, or Notifications
+        // @ts-ignore must be Home, Search, Notifications, or MyProfile
         navigation.navigate(tab)
       } else {
         const tabState = getTabState(state, tab)
@@ -65,7 +67,7 @@ export const DrawerContent = observer(() => {
         } else if (tabState === TabState.Inside) {
           navigation.dispatch(StackActions.popToTop())
         } else {
-          // @ts-ignore must be Home, Search, or Notifications
+          // @ts-ignore must be Home, Search, Notifications, or MyProfile
           navigation.navigate(`${tab}Tab`)
         }
       }
@@ -86,10 +88,8 @@ export const DrawerContent = observer(() => {
   )
 
   const onPressProfile = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: 'Profile'})
-    navigation.navigate('Profile', {name: store.me.handle})
-    store.shell.closeDrawer()
-  }, [navigation, track, store.me.handle, store.shell])
+    onPressTab('MyProfile')
+  }, [onPressTab])
 
   const onPressSettings = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Settings'})
@@ -211,11 +211,19 @@ export const DrawerContent = observer(() => {
           />
           <MenuItem
             icon={
-              <UserIcon
-                style={pal.text as StyleProp<ViewStyle>}
-                size="26"
-                strokeWidth={1.5}
-              />
+              isAtMyProfile ? (
+                <UserIconSolid
+                  style={pal.text as StyleProp<ViewStyle>}
+                  size="26"
+                  strokeWidth={1.5}
+                />
+              ) : (
+                <UserIcon
+                  style={pal.text as StyleProp<ViewStyle>}
+                  size="26"
+                  strokeWidth={1.5}
+                />
+              )
             }
             label="Profile"
             onPress={onPressProfile}

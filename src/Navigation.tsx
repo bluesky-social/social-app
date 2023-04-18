@@ -13,6 +13,8 @@ import {
   NotificationsTabNavigatorParams,
   FlatNavigatorParams,
   AllNavigatorParams,
+  MyProfileTabNavigatorParams,
+  BottomTabNavigatorParams,
 } from 'lib/routes/types'
 import {BottomBar} from './view/shell/bottom-bar/BottomBar'
 import {buildStateObject} from 'lib/routes/helpers'
@@ -41,6 +43,7 @@ import {TermsOfServiceScreen} from './view/screens/TermsOfService'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from './state'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -48,8 +51,9 @@ const HomeTab = createNativeStackNavigator<HomeTabNavigatorParams>()
 const SearchTab = createNativeStackNavigator<SearchTabNavigatorParams>()
 const NotificationsTab =
   createNativeStackNavigator<NotificationsTabNavigatorParams>()
+const MyProfileTab = createNativeStackNavigator<MyProfileTabNavigatorParams>()
 const Flat = createNativeStackNavigator<FlatNavigatorParams>()
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 
 /**
  * These "common screens" are reused across stacks.
@@ -100,6 +104,7 @@ function TabsNavigator() {
         component={NotificationsTabNavigator}
       />
       <Tab.Screen name="SearchTab" component={SearchTabNavigator} />
+      <Tab.Screen name="MyProfileTab" component={MyProfileTabNavigator} />
     </Tab.Navigator>
   )
 }
@@ -155,6 +160,32 @@ function NotificationsTabNavigator() {
       />
       {commonScreens(NotificationsTab as typeof HomeTab)}
     </NotificationsTab.Navigator>
+  )
+}
+
+function MyProfileTabNavigator() {
+  const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
+  const store = useStores()
+  return (
+    <MyProfileTab.Navigator
+      screenOptions={{
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+        animationDuration: 250,
+        contentStyle,
+      }}>
+      <MyProfileTab.Screen
+        name="MyProfile"
+        // @ts-ignore // TODO: fix this broken type in ProfileScreen
+        component={ProfileScreen}
+        initialParams={{
+          name: store.me.handle,
+          hideBackButton: true,
+        }}
+      />
+      {commonScreens(MyProfileTab as typeof HomeTab)}
+    </MyProfileTab.Navigator>
   )
 }
 
