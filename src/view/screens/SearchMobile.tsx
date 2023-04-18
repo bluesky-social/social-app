@@ -1,14 +1,13 @@
 import React from 'react'
 import {
   Keyboard,
-  RefreshControl,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {ScrollView} from 'view/com/util/Views'
+import {FlatList, ScrollView} from 'view/com/util/Views'
 import {
   NativeStackScreenProps,
   SearchTabNavigatorParams,
@@ -33,7 +32,8 @@ export const SearchScreen = withAuthRequired(
   observer<Props>(({}: Props) => {
     const pal = usePalette('default')
     const store = useStores()
-    const scrollElRef = React.useRef<ScrollView>(null)
+    const scrollViewRef = React.useRef<ScrollView>(null)
+    const flatListRef = React.useRef<FlatList>(null)
     const onMainScroll = useOnMainScroll(store)
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
@@ -52,31 +52,6 @@ export const SearchScreen = withAuthRequired(
     const [searchUIModel, setSearchUIModel] = React.useState<
       SearchUIModel | undefined
     >()
-    const [refreshing, setRefreshing] = React.useState(false)
-
-    const onSoftReset = () => {
-      scrollElRef.current?.scrollTo({x: 0, y: 0})
-    }
-
-    useFocusEffect(
-      React.useCallback(() => {
-        const softResetSub = store.onScreenSoftReset(onSoftReset)
-        const cleanup = () => {
-          softResetSub.remove()
-        }
-
-        store.shell.setMinimalShellMode(false)
-        autocompleteView.setup()
-        if (!foafs.hasData) {
-          foafs.fetch()
-        }
-        if (!suggestedActors.hasLoaded) {
-          suggestedActors.loadMore(true)
-        }
-
-        return cleanup
-      }, [store, autocompleteView, foafs, suggestedActors]),
-    )
 
     const onChangeQuery = React.useCallback(
       (text: string) => {
@@ -109,14 +84,31 @@ export const SearchScreen = withAuthRequired(
       store.shell.setIsDrawerSwipeDisabled(true)
     }, [query, setSearchUIModel, store])
 
-    const onRefresh = React.useCallback(async () => {
-      setRefreshing(true)
-      try {
-        await foafs.fetch()
-      } finally {
-        setRefreshing(false)
-      }
-    }, [foafs, setRefreshing])
+    const onSoftReset = React.useCallback(() => {
+      scrollViewRef.current?.scrollTo({x: 0, y: 0})
+      flatListRef.current?.scrollToOffset({offset: 0})
+      onPressCancelSearch()
+    }, [scrollViewRef, flatListRef, onPressCancelSearch])
+
+    useFocusEffect(
+      React.useCallback(() => {
+        const softResetSub = store.onScreenSoftReset(onSoftReset)
+        const cleanup = () => {
+          softResetSub.remove()
+        }
+
+        store.shell.setMinimalShellMode(false)
+        autocompleteView.setup()
+        if (!foafs.hasData) {
+          foafs.fetch()
+        }
+        if (!suggestedActors.hasLoaded) {
+          suggestedActors.loadMore(true)
+        }
+
+        return cleanup
+      }, [store, autocompleteView, foafs, suggestedActors, onSoftReset]),
+    )
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -132,21 +124,19 @@ export const SearchScreen = withAuthRequired(
           />
           {searchUIModel ? (
             <SearchResults model={searchUIModel} />
+          ) : !isInputFocused && !query ? (
+            <Suggestions
+              ref={flatListRef}
+              foafs={foafs}
+              suggestedActors={suggestedActors}
+            />
           ) : (
             <ScrollView
-              ref={scrollElRef}
+              ref={scrollViewRef}
               testID="searchScrollView"
               style={pal.view}
               onScroll={onMainScroll}
-              scrollEventThrottle={100}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={onRefresh}
-                  tintColor={pal.colors.text}
-                  titleColor={pal.colors.text}
-                />
-              }>
+              scrollEventThrottle={100}>
               {query && autocompleteView.searchRes.length ? (
                 <>
                   {autocompleteView.searchRes.map(item => (
@@ -155,6 +145,7 @@ export const SearchScreen = withAuthRequired(
                       testID={`searchAutoCompleteResult-${item.handle}`}
                       handle={item.handle}
                       displayName={item.displayName}
+                      labels={item.labels}
                       avatar={item.avatar}
                     />
                   ))}
@@ -171,9 +162,7 @@ export const SearchScreen = withAuthRequired(
                     Search for users on the network
                   </Text>
                 </View>
-              ) : (
-                <Suggestions foafs={foafs} suggestedActors={suggestedActors} />
-              )}
+              ) : null}
               <View style={s.footerSpacer} />
             </ScrollView>
           )}

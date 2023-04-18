@@ -57,15 +57,19 @@ export class FoafsModel {
       }
 
       // grab 10 of the users followed by the user
-      this.sources = sampleSize(
-        Object.keys(this.rootStore.me.follows.followDidToRecordMap),
-        10,
-      )
+      runInAction(() => {
+        this.sources = sampleSize(
+          Object.keys(this.rootStore.me.follows.followDidToRecordMap),
+          10,
+        )
+      })
       if (this.sources.length === 0) {
         return
       }
-      this.foafs.clear()
-      this.popular.length = 0
+      runInAction(() => {
+        this.foafs.clear()
+        this.popular.length = 0
+      })
 
       // fetch their profiles
       const profiles = await this.rootStore.agent.getProfiles({
