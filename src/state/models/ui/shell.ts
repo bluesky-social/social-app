@@ -57,6 +57,11 @@ export interface ChangeHandleModal {
   onChanged: () => void
 }
 
+export interface ChangePasswordModal {
+  name: 'change-password'
+  onChanged: () => void
+}
+
 export interface WaitlistModal {
   name: 'waitlist'
 }
@@ -70,18 +75,30 @@ export interface ContentFilteringSettingsModal {
 }
 
 export type Modal =
-  | ConfirmModal
-  | EditProfileModal
-  | ServerInputModal
-  | ReportPostModal
-  | ReportAccountModal
-  | CropImageModal
-  | DeleteAccountModal
-  | RepostModal
+  // Account
   | ChangeHandleModal
+  | ChangePasswordModal
+  | DeleteAccountModal
+  | EditProfileModal
+
+  // Curation
+  | ContentFilteringSettingsModal
+
+  // Reporting
+  | ReportAccountModal
+  | ReportPostModal
+
+  // Posting
+  | CropImageModal
+  | ServerInputModal
+  | RepostModal
+
+  // Bluesky access
   | WaitlistModal
   | InviteCodesModal
-  | ContentFilteringSettingsModal
+
+  // Generic
+  | ConfirmModal
 
 interface LightboxModel {}
 

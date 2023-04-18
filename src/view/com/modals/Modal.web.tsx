@@ -15,6 +15,7 @@ import * as DeleteAccountModal from './DeleteAccount'
 import * as RepostModal from './Repost'
 import * as CropImageModal from './crop-image/CropImage.web'
 import * as ChangeHandleModal from './ChangeHandle'
+import * as ChangePasswordModal from './ChangePassword'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
@@ -72,6 +73,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <RepostModal.Component {...modal} />
   } else if (modal.name === 'change-handle') {
     element = <ChangeHandleModal.Component {...modal} />
+  } else if (modal.name === 'change-password') {
+    element = <ChangePasswordModal.Component {...modal} />
   } else if (modal.name === 'waitlist') {
     element = <WaitlistModal.Component />
   } else if (modal.name === 'invite-codes') {

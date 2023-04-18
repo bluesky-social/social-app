@@ -14,6 +14,7 @@ import * as RepostModal from './Repost'
 import * as ReportAccountModal from './ReportAccount'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
+import * as ChangePasswordModal from './ChangePassword'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
@@ -71,6 +72,8 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'change-handle') {
     snapPoints = ChangeHandleModal.snapPoints
     element = <ChangeHandleModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'change-password') {
+    element = <ChangePasswordModal.Component {...modal} />
   } else if (activeModal?.name === 'waitlist') {
     snapPoints = WaitlistModal.snapPoints
     element = <WaitlistModal.Component />
@@ -96,7 +99,8 @@ export const ModalsContainer = observer(function ModalsContainer() {
       }
       handleIndicatorStyle={{backgroundColor: pal.text.color}}
       handleStyle={[styles.handle, pal.view]}
-      onChange={onBottomSheetChange}>
+      onChange={onBottomSheetChange}
+      onClose={onClose}>
       {element}
     </BottomSheet>
   )

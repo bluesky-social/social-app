@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback, useState} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -34,7 +34,6 @@ import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {pluralize} from 'lib/strings/helpers'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -43,16 +42,8 @@ export const SettingsScreen = withAuthRequired(
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
     const {screen, track} = useAnalytics()
-    const [isSwitching, setIsSwitching] = React.useState(false)
+    const [isSwitching, setIsSwitching] = useState(false)
 
-    const primaryBg = useCustomPalette<ViewStyle>({
-      light: {backgroundColor: colors.blue0},
-      dark: {backgroundColor: colors.blue6},
-    })
-    const primaryText = useCustomPalette<TextStyle>({
-      light: {color: colors.blue3},
-      dark: {color: colors.blue2},
-    })
     const dangerBg = useCustomPalette<ViewStyle>({
       light: {backgroundColor: colors.red1},
       dark: {backgroundColor: colors.red7},
@@ -63,13 +54,13 @@ export const SettingsScreen = withAuthRequired(
     })
 
     useFocusEffect(
-      React.useCallback(() => {
+      useCallback(() => {
         screen('Settings')
         store.shell.setMinimalShellMode(false)
       }, [screen, store]),
     )
 
-    const onPressSwitchAccount = React.useCallback(
+    const onPressSwitchAccount = useCallback(
       async (acct: AccountData) => {
         track('Settings:SwitchAccountButtonClicked')
         setIsSwitching(true)
@@ -89,14 +80,14 @@ export const SettingsScreen = withAuthRequired(
       [track, setIsSwitching, navigation, store],
     )
 
-    const onPressAddAccount = React.useCallback(() => {
+    const onPressAddAccount = useCallback(() => {
       track('Settings:AddAccountButtonClicked')
       navigation.navigate('HomeTab')
       navigation.dispatch(StackActions.popToTop())
       store.session.clear()
     }, [track, navigation, store])
 
-    const onPressChangeHandle = React.useCallback(() => {
+    const onPressChangeHandle = useCallback(() => {
       track('Settings:ChangeHandleButtonClicked')
       store.shell.openModal({
         name: 'change-handle',
@@ -119,29 +110,53 @@ export const SettingsScreen = withAuthRequired(
       })
     }, [track, store, setIsSwitching])
 
-    const onPressInviteCodes = React.useCallback(() => {
-      track('Settings:InvitecodesButtonClicked')
-      store.shell.openModal({name: 'invite-codes'})
-    }, [track, store])
+    const onPressChangePassword = useCallback(() => {
+      track('Settings:ChangePasswordButtonClicked')
+      store.shell.openModal({
+        name: 'change-password',
+        onChanged() {
+          setIsSwitching(true)
+          store.session.reloadFromServer().then(
+            () => {
+              setIsSwitching(false)
+              Toast.show('Your password has been updated')
+            },
+            err => {
+              store.log.error(
+                'Failed to reload from server after handle update',
+                {err},
+              )
+              setIsSwitching(false)
+            },
+          )
+        },
+      })
+    }, [track, store, setIsSwitching])
 
-    const onPressContentFiltering = React.useCallback(() => {
+    React.useEffect(() => {
+      onPressChangePassword()
+    }, [onPressChangePassword])
+
+    const onPressContentFiltering = useCallback(() => {
       track('Settings:ContentfilteringButtonClicked')
       store.shell.openModal({name: 'content-filtering-settings'})
     }, [track, store])
 
-    const onPressSignout = React.useCallback(() => {
+    const onPressSignout = useCallback(() => {
       track('Settings:SignOutButtonClicked')
       store.session.logout()
     }, [track, store])
 
-    const onPressDeleteAccount = React.useCallback(() => {
+    const onPressDeleteAccount = useCallback(() => {
       store.shell.openModal({name: 'delete-account'})
     }, [store])
 
     return (
-      <View style={[s.hContentRegion]} testID="settingsScreen">
+      <View testID="settingsScreen">
         <ViewHeader title="Settings" />
-        <ScrollView style={s.hContentRegion} scrollIndicatorInsets={{right: 1}}>
+        <ScrollView
+          contentContainerStyle={styles.contentContainer}
+          scrollIndicatorInsets={{right: 1}}>
           <View style={styles.spacer20} />
           <View style={[s.flexRow, styles.heading]}>
             <Text type="xl-bold" style={pal.text}>
@@ -180,6 +195,7 @@ export const SettingsScreen = withAuthRequired(
               </View>
             </Link>
           )}
+
           {store.session.switchableAccounts.map(account => (
             <TouchableOpacity
               testID={`switchToAccountBtn-${account.handle}`}
@@ -220,37 +236,6 @@ export const SettingsScreen = withAuthRequired(
           <View style={styles.spacer20} />
 
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Invite a friend
-          </Text>
-          <TouchableOpacity
-            testID="inviteFriendBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressInviteCodes}>
-            <View
-              style={[
-                styles.iconContainer,
-                store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
-              ]}>
-              <FontAwesomeIcon
-                icon="ticket"
-                style={
-                  (store.me.invitesAvailable > 0
-                    ? primaryText
-                    : pal.text) as FontAwesomeIconStyle
-                }
-              />
-            </View>
-            <Text
-              type="lg"
-              style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
-              {store.me.invitesAvailable} invite{' '}
-              {pluralize(store.me.invitesAvailable, 'code')} available
-            </Text>
-          </TouchableOpacity>
-
-          <View style={styles.spacer20} />
-
-          <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Advanced
           </Text>
           <TouchableOpacity
@@ -278,7 +263,21 @@ export const SettingsScreen = withAuthRequired(
               />
             </View>
             <Text type="lg" style={pal.text}>
-              Change my handle
+              Change handle
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            testID="changePasswordBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            onPress={isSwitching ? undefined : onPressChangePassword}>
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="lock"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Change password
             </Text>
           </TouchableOpacity>
 
@@ -308,7 +307,7 @@ export const SettingsScreen = withAuthRequired(
             Developer tools
           </Text>
           <Link
-            style={[pal.view, styles.linkCardNoIcon]}
+            style={[pal.view, styles.linkCard]}
             href="/sys/log"
             title="System log">
             <Text type="lg" style={pal.text}>
@@ -316,7 +315,7 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </Link>
           <Link
-            style={[pal.view, styles.linkCardNoIcon]}
+            style={[pal.view, styles.linkCard]}
             href="/sys/debug"
             title="Debug tools">
             <Text type="lg" style={pal.text}>
@@ -354,6 +353,10 @@ function AccountDropdownBtn({handle}: {handle: string}) {
 }
 
 const styles = StyleSheet.create({
+  contentContainer: {
+    paddingLeft: '18px',
+    paddingRight: '18px',
+  },
   dimmed: {
     opacity: 0.5,
   },
@@ -361,7 +364,6 @@ const styles = StyleSheet.create({
     height: 20,
   },
   heading: {
-    paddingHorizontal: 18,
     paddingBottom: 6,
   },
   profile: {
@@ -369,20 +371,11 @@ const styles = StyleSheet.create({
     marginVertical: 6,
     borderRadius: 4,
     paddingVertical: 10,
-    paddingHorizontal: 10,
   },
   linkCard: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
-    paddingHorizontal: 18,
-    marginBottom: 1,
-  },
-  linkCardNoIcon: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 18,
     marginBottom: 1,
   },
   avi: {
@@ -398,6 +391,5 @@ const styles = StyleSheet.create({
   },
   buildInfo: {
     paddingVertical: 8,
-    paddingHorizontal: 18,
   },
 })
