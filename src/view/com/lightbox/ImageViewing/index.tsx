@@ -8,7 +8,13 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {ComponentType, useCallback, useRef, useEffect} from 'react'
+import React, {
+  ComponentType,
+  useCallback,
+  useRef,
+  useEffect,
+  useMemo,
+} from 'react'
 import {
   Animated,
   Dimensions,
@@ -16,6 +22,7 @@ import {
   View,
   VirtualizedList,
   ModalProps,
+  Platform,
 } from 'react-native'
 import {ModalsContainer} from '../../modals/Modal'
 
@@ -26,7 +33,7 @@ import useAnimatedComponents from './hooks/useAnimatedComponents'
 import useImageIndexChange from './hooks/useImageIndexChange'
 import useRequestClose from './hooks/useRequestClose'
 import {ImageSource} from './@types'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 
 type Props = {
   images: ImageSource[]
@@ -87,6 +94,13 @@ function ImageViewing({
     [toggleBarsVisible],
   )
 
+  const edges = useMemo(() => {
+    if (Platform.OS === 'android') {
+      return ['top', 'bottom', 'left', 'right'] satisfies Edge[]
+    }
+    return ['left', 'right'] satisfies Edge[] // iOS, so no top/bottom safe area
+  }, [])
+
   const onLayout = useCallback(() => {
     if (imageIndex) {
       imageList.current?.scrollToIndex({index: imageIndex, animated: false})
@@ -98,7 +112,7 @@ function ImageViewing({
   }
 
   return (
-    <SafeAreaView style={styles.screen} onLayout={onLayout}>
+    <SafeAreaView style={styles.screen} onLayout={onLayout} edges={edges}>
       <ModalsContainer />
       <View style={[styles.container, {opacity, backgroundColor}]}>
         <Animated.View style={[styles.header, {transform: headerTransform}]}>
