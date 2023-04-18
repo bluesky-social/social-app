@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  Keyboard,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {FlatList, ScrollView} from 'view/com/util/Views'
@@ -111,63 +106,64 @@ export const SearchScreen = withAuthRequired(
     )
 
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={[pal.view, styles.container]}>
-          <HeaderWithInput
-            isInputFocused={isInputFocused}
-            query={query}
-            setIsInputFocused={setIsInputFocused}
-            onChangeQuery={onChangeQuery}
-            onPressClearQuery={onPressClearQuery}
-            onPressCancelSearch={onPressCancelSearch}
-            onSubmitQuery={onSubmitQuery}
+      <View style={[pal.view, styles.container]}>
+        <HeaderWithInput
+          isInputFocused={isInputFocused}
+          query={query}
+          setIsInputFocused={setIsInputFocused}
+          onChangeQuery={onChangeQuery}
+          onPressClearQuery={onPressClearQuery}
+          onPressCancelSearch={onPressCancelSearch}
+          onSubmitQuery={onSubmitQuery}
+        />
+        {searchUIModel ? (
+          <SearchResults model={searchUIModel} />
+        ) : !isInputFocused && !query ? (
+          <Suggestions
+            ref={flatListRef}
+            foafs={foafs}
+            suggestedActors={suggestedActors}
           />
-          {searchUIModel ? (
-            <SearchResults model={searchUIModel} />
-          ) : !isInputFocused && !query ? (
-            <Suggestions
-              ref={flatListRef}
-              foafs={foafs}
-              suggestedActors={suggestedActors}
-            />
-          ) : (
-            <ScrollView
-              ref={scrollViewRef}
-              testID="searchScrollView"
-              style={pal.view}
-              onScroll={onMainScroll}
-              scrollEventThrottle={100}>
-              {query && autocompleteView.searchRes.length ? (
-                <>
-                  {autocompleteView.searchRes.map(item => (
+        ) : (
+          <ScrollView
+            ref={scrollViewRef}
+            testID="searchScrollView"
+            style={pal.view}
+            onScroll={onMainScroll}
+            scrollEventThrottle={100}>
+            {query && autocompleteView.searchRes.length ? (
+              <>
+                {autocompleteView.searchRes.map(
+                  ({did, handle, displayName, labels, avatar}, index) => (
                     <ProfileCard
-                      key={item.did}
-                      testID={`searchAutoCompleteResult-${item.handle}`}
-                      handle={item.handle}
-                      displayName={item.displayName}
-                      labels={item.labels}
-                      avatar={item.avatar}
+                      key={did}
+                      testID={`searchAutoCompleteResult-${handle}`}
+                      handle={handle}
+                      displayName={displayName}
+                      labels={labels}
+                      avatar={avatar}
+                      noBorder={index === 0}
                     />
-                  ))}
-                </>
-              ) : query && !autocompleteView.searchRes.length ? (
-                <View>
-                  <Text style={[pal.textLight, styles.searchPrompt]}>
-                    No results found for {autocompleteView.prefix}
-                  </Text>
-                </View>
-              ) : isInputFocused ? (
-                <View>
-                  <Text style={[pal.textLight, styles.searchPrompt]}>
-                    Search for users on the network
-                  </Text>
-                </View>
-              ) : null}
-              <View style={s.footerSpacer} />
-            </ScrollView>
-          )}
-        </View>
-      </TouchableWithoutFeedback>
+                  ),
+                )}
+              </>
+            ) : query && !autocompleteView.searchRes.length ? (
+              <View>
+                <Text style={[pal.textLight, styles.searchPrompt]}>
+                  No results found for {autocompleteView.prefix}
+                </Text>
+              </View>
+            ) : isInputFocused ? (
+              <View>
+                <Text style={[pal.textLight, styles.searchPrompt]}>
+                  Search for users on the network
+                </Text>
+              </View>
+            ) : null}
+            <View style={s.footerSpacer} />
+          </ScrollView>
+        )}
+      </View>
     )
   }),
 )

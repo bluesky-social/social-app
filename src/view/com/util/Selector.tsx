@@ -1,10 +1,5 @@
 import React, {createRef, useState, useMemo, useRef} from 'react'
-import {
-  Animated,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import {Animated, Pressable, StyleSheet, View} from 'react-native'
 import {Text} from './text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 
@@ -99,7 +94,7 @@ export function Selector({
       {items.map((item, i) => {
         const selected = i === selectedIndex
         return (
-          <TouchableWithoutFeedback key={i} onPress={() => onPressItem(i)}>
+          <Pressable key={item} onPress={() => onPressItem(i)}>
             <View style={styles.item} ref={itemRefs[i]}>
               <Text
                 style={
@@ -110,7 +105,7 @@ export function Selector({
                 {item}
               </Text>
             </View>
-          </TouchableWithoutFeedback>
+          </Pressable>
         )
       })}
     </View>
