@@ -103,8 +103,6 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     }),
     [theme],
   ) as StyleProp<ViewStyle>
-  const [repostMod, setRepostMod] = React.useState<number>(0)
-  const [likeMod, setLikeMod] = React.useState<number>(0)
   // DISABLED see #135
   // const repostRef = React.useRef<TriggerableAnimatedRef | null>(null)
   // const likeRef = React.useRef<TriggerableAnimatedRef | null>(null)
@@ -112,11 +110,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     store.shell.closeModal()
     if (!opts.isReposted) {
       ReactNativeHapticFeedback.trigger('impactMedium')
-      setRepostMod(1)
-      opts
-        .onPressToggleRepost()
-        .catch(_e => undefined)
-        .then(() => setRepostMod(0))
+      opts.onPressToggleRepost().catch(_e => undefined)
       // DISABLED see #135
       // repostRef.current?.trigger(
       //   {start: ctrlAnimStart, style: ctrlAnimStyle},
@@ -126,11 +120,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       //   },
       // )
     } else {
-      setRepostMod(-1)
-      opts
-        .onPressToggleRepost()
-        .catch(_e => undefined)
-        .then(() => setRepostMod(0))
+      opts.onPressToggleRepost().catch(_e => undefined)
     }
   }
 
@@ -157,19 +147,10 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     })
   }
 
-  // const [isLikePressed, setIsLikedPressed] = React.useState<boolean>(false)
   const onPressToggleLikeWrapper = async () => {
-    // if (isLikePressed) {
-    //   return
-    // }
-    // setIsLikedPressed(true)
     if (!opts.isLiked) {
       ReactNativeHapticFeedback.trigger('impactMedium')
-      setLikeMod(1)
-      await opts
-        .onPressToggleLike()
-        .catch(_e => undefined)
-        .then(() => setLikeMod(0))
+      await opts.onPressToggleLike().catch(_e => undefined)
       // DISABLED see #135
       // likeRef.current?.trigger(
       //   {start: ctrlAnimStart, style: ctrlAnimStyle},
@@ -180,11 +161,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       // )
       // setIsLikedPressed(false)
     } else {
-      setLikeMod(-1)
-      await opts
-        .onPressToggleLike()
-        .catch(_e => undefined)
-        .then(() => setLikeMod(0))
+      await opts.onPressToggleLike().catch(_e => undefined)
       // setIsLikedPressed(false)
     }
   }
@@ -217,7 +194,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           style={styles.ctrl}>
           <RepostIcon
             style={
-              opts.isReposted || repostMod > 0
+              opts.isReposted
                 ? (styles.ctrlIconReposted as StyleProp<ViewStyle>)
                 : defaultCtrlColor
             }
@@ -228,11 +205,11 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             <Text
               testID="repostCount"
               style={
-                opts.isReposted || repostMod > 0
+                opts.isReposted
                   ? [s.bold, s.green3, s.f15, s.ml5]
                   : [defaultCtrlColor, s.f15, s.ml5]
               }>
-              {opts.repostCount + repostMod}
+              {opts.repostCount}
             </Text>
           ) : undefined}
         </TouchableOpacity>
@@ -243,7 +220,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           style={styles.ctrl}
           hitSlop={HITSLOP}
           onPress={onPressToggleLikeWrapper}>
-          {opts.isLiked || likeMod > 0 ? (
+          {opts.isLiked ? (
             <HeartIconSolid
               style={styles.ctrlIconLiked as StyleProp<ViewStyle>}
               size={opts.big ? 22 : 16}
@@ -259,11 +236,11 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             <Text
               testID="likeCount"
               style={
-                opts.isLiked || likeMod > 0
+                opts.isLiked
                   ? [s.bold, s.red3, s.f15, s.ml5]
                   : [defaultCtrlColor, s.f15, s.ml5]
               }>
-              {opts.likeCount + likeMod}
+              {opts.likeCount}
             </Text>
           ) : undefined}
         </TouchableOpacity>

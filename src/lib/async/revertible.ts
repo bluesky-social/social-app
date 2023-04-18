@@ -1,36 +1,52 @@
 import {runInAction} from 'mobx'
+import {deepObserve} from 'mobx-utils'
+import set from 'lodash.set'
 
-const ongoingActions = new Set<string>()
+const ongoingActions = new Set<any>()
 
-export const updateDataOptimistically = async <T>(
-  rootStore: T,
-  valueKeys: (keyof T)[],
-  newValues: (typeof rootStore)[keyof T][],
-  serverUpdate: () => Promise<void>,
-  actionKey: string,
+export const updateDataOptimistically = async <
+  T extends Record<string, any>,
+  U,
+>(
+  model: T,
+  preUpdate: () => void,
+  serverUpdate: () => Promise<U>,
+  postUpdate?: (res: U) => void,
 ): Promise<void> => {
-  console.log('updateDataOptimistically', ongoingActions)
-  if (ongoingActions.has(actionKey)) {
+  if (ongoingActions.has(model)) {
     return
   }
-  ongoingActions.add(actionKey)
-  const oldValues = valueKeys.map(valueKey => rootStore[valueKey])
-  runInAction(() => {
-    valueKeys.forEach((valueKey, index) => {
-      rootStore[valueKey] = newValues[index]
-    })
+  ongoingActions.add(model)
+
+  const prevState: Map<string, any> = new Map<string, any>()
+  const dispose = deepObserve(model, (change, path) => {
+    if (change.observableKind === 'object') {
+      if (change.type === 'update') {
+        prevState.set(
+          [path, change.name].filter(Boolean).join('.'),
+          change.oldValue,
+        )
+      } else if (change.type === 'add') {
+        prevState.set([path, change.name].filter(Boolean).join('.'), undefined)
+      }
+    }
   })
+  preUpdate()
+  dispose()
 
   try {
-    await serverUpdate()
-  } catch (error) {
-    console.error('Server update failed, reverting value', error)
+    const res = await serverUpdate()
     runInAction(() => {
-      valueKeys.forEach((valueKey, index) => {
-        rootStore[valueKey] = oldValues[index]
+      postUpdate?.(res)
+    })
+  } catch (error) {
+    runInAction(() => {
+      prevState.forEach((value, path) => {
+        set(model, path, value)
       })
     })
+    throw error
   } finally {
-    ongoingActions.delete(actionKey)
+    ongoingActions.delete(model)
   }
 }

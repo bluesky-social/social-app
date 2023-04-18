@@ -92,57 +92,56 @@ export class PostsFeedItemModel {
   }
 
   async toggleLike() {
-    if (this.post.viewer?.like) {
+    this.post.viewer = this.post.viewer || {}
+    if (this.post.viewer.like) {
+      const url = this.post.viewer.like
       await updateDataOptimistically(
         this.post,
-        ['likeCount', 'viewer', 'likeCount', 'like'],
-        [
-          this.post.likeCount || 0,
-          this.post.viewer || {},
-          this.post.likeCount! - 1,
-          undefined,
-        ],
-        () => this.rootStore.agent.deleteLike(this.post.viewer?.like!),
-        'like',
+        () => {
+          this.post.likeCount = (this.post.likeCount || 0) - 1
+          this.post.viewer!.like = undefined
+        },
+        () => this.rootStore.agent.deleteLike(url),
       )
     } else {
       await updateDataOptimistically(
         this.post,
-        ['likeCount', 'viewer', 'likeCount', 'like'],
-        [
-          this.post.likeCount || 0,
-          this.post.viewer || {},
-          this.post.likeCount! + 1,
-          this.post.uri,
-        ],
-        async () => {
-          await this.rootStore.agent.like(this.post.uri, this.post.cid)
+        () => {
+          this.post.likeCount = (this.post.likeCount || 0) + 1
+          this.post.viewer!.like = 'pending'
         },
-        'like',
+        () => this.rootStore.agent.like(this.post.uri, this.post.cid),
+        res => {
+          this.post.viewer!.like = res.uri
+        },
       )
     }
   }
 
   async toggleRepost() {
+    this.post.viewer = this.post.viewer || {}
     if (this.post.viewer?.repost) {
-      await this.rootStore.agent.deleteRepost(this.post.viewer.repost)
-      runInAction(() => {
-        this.post.repostCount = this.post.repostCount || 0
-        this.post.viewer = this.post.viewer || {}
-        this.post.repostCount--
-        this.post.viewer.repost = undefined
-      })
-    } else {
-      const res = await this.rootStore.agent.repost(
-        this.post.uri,
-        this.post.cid,
+      const url = this.post.viewer.repost
+      await updateDataOptimistically(
+        this.post,
+        () => {
+          this.post.repostCount = (this.post.repostCount || 0) - 1
+          this.post.viewer!.repost = undefined
+        },
+        () => this.rootStore.agent.deleteRepost(url),
       )
-      runInAction(() => {
-        this.post.repostCount = this.post.repostCount || 0
-        this.post.viewer = this.post.viewer || {}
-        this.post.repostCount++
-        this.post.viewer.repost = res.uri
-      })
+    } else {
+      await updateDataOptimistically(
+        this.post,
+        () => {
+          this.post.repostCount = (this.post.repostCount || 0) + 1
+          this.post.viewer!.repost = 'pending'
+        },
+        () => this.rootStore.agent.repost(this.post.uri, this.post.cid),
+        res => {
+          this.post.viewer!.repost = res.uri
+        },
+      )
     }
   }
 
