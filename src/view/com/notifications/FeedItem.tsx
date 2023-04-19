@@ -140,7 +140,7 @@ export const FeedItem = observer(function FeedItem({
         handle: item2.author.handle,
         displayName: item2.author.displayName,
         avatar: item2.author.avatar,
-        labels: item.author.labels,
+        labels: item2.author.labels,
       })),
     )
   }

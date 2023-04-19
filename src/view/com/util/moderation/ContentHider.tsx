@@ -55,7 +55,7 @@ export function ContentHider({
           {isMuted ? (
             <>Post from an account you muted.</>
           ) : (
-            <>Warning: {labelPref.desc.title}</>
+            <>Warning: {labelPref.desc.warning || labelPref.desc.title}</>
           )}
         </Text>
         <TouchableOpacity

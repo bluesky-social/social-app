@@ -3,6 +3,8 @@ import {LabelPreferencesModel} from 'state/models/ui/preferences'
 export interface LabelValGroup {
   id: keyof LabelPreferencesModel | 'illegal' | 'unknown'
   title: string
+  subtitle?: string
+  warning?: string
   values: string[]
 }
 
@@ -24,27 +26,50 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
 > = {
   nsfw: {
     id: 'nsfw',
-    title: 'Sexual Content',
-    values: ['porn', 'nudity', 'sexual'],
+    title: 'Explicit Sexual Images',
+    subtitle: 'i.e. Pornography',
+    warning: 'Sexually Explicit',
+    values: ['porn'],
+  },
+  nudity: {
+    id: 'nudity',
+    title: 'Other Nudity',
+    subtitle: 'Including non-sexual and artistic',
+    warning: 'Nudity',
+    values: ['nudity'],
+  },
+  suggestive: {
+    id: 'suggestive',
+    title: 'Sexually Suggestive',
+    subtitle: 'Does not include nudity',
+    warning: 'Sexually Suggestive',
+    values: ['sexual'],
   },
   gore: {
     id: 'gore',
     title: 'Violent / Bloody',
+    subtitle: 'Gore, self-harm, torture',
+    warning: 'Violence',
     values: ['gore', 'self-harm', 'torture'],
   },
   hate: {
     id: 'hate',
     title: 'Political Hate-Groups',
-    values: ['icon-kkk', 'icon-nazi', 'icon-confederate'],
+    warning: 'Hate',
+    values: ['icon-kkk', 'icon-nazi'],
   },
   spam: {
     id: 'spam',
     title: 'Spam',
+    subtitle: 'Excessive low-quality posts',
+    warning: 'Spam',
     values: ['spam'],
   },
   impersonation: {
     id: 'impersonation',
     title: 'Impersonation',
+    subtitle: 'Accounts falsely claiming to be people or orgs',
+    warning: 'Impersonation',
     values: ['impersonation'],
   },
 }
