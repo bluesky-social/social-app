@@ -33,7 +33,7 @@ export function ProfileHeaderLabels({
             />
             <Text style={palErr.text}>
               This account has been flagged for{' '}
-              {labelGroup.title.toLocaleLowerCase()}.
+              {(labelGroup.warning || labelGroup.title).toLocaleLowerCase()}.
             </Text>
           </View>
         )

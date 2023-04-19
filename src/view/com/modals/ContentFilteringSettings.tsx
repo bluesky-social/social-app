@@ -1,15 +1,17 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Pressable, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {observer} from 'mobx-react-lite'
+import {ScrollView} from './util'
 import {useStores} from 'state/index'
 import {LabelPreference} from 'state/models/ui/preferences'
 import {s, colors, gradients} from 'lib/styles'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CONFIGURABLE_LABEL_GROUPS} from 'lib/labeling/const'
+import {isDesktopWeb} from 'platform/detection'
 
-export const snapPoints = [500]
+export const snapPoints = ['90%']
 
 export function Component({}: {}) {
   const store = useStores()
@@ -20,22 +22,28 @@ export function Component({}: {}) {
 
   return (
     <View testID="reportPostModal" style={[pal.view, styles.container]}>
-      <Text style={[pal.text, styles.title]}>Content Filtering</Text>
-      <ContentLabelPref group="nsfw" />
-      <ContentLabelPref group="gore" />
-      <ContentLabelPref group="hate" />
-      <ContentLabelPref group="spam" />
-      <ContentLabelPref group="impersonation" />
-      <View style={s.flex1} />
-      <TouchableOpacity testID="sendReportBtn" onPress={onPressDone}>
-        <LinearGradient
-          colors={[gradients.blueLight.start, gradients.blueLight.end]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={[styles.btn]}>
-          <Text style={[s.white, s.bold, s.f18]}>Done</Text>
-        </LinearGradient>
-      </TouchableOpacity>
+      <Text style={[pal.text, styles.title]}>Content Moderation</Text>
+      <ScrollView style={styles.scrollContainer}>
+        <ContentLabelPref group="nsfw" />
+        <ContentLabelPref group="nudity" />
+        <ContentLabelPref group="suggestive" />
+        <ContentLabelPref group="gore" />
+        <ContentLabelPref group="hate" />
+        <ContentLabelPref group="spam" />
+        <ContentLabelPref group="impersonation" />
+        <View style={styles.bottomSpacer} />
+      </ScrollView>
+      <View style={[styles.btnContainer, pal.borderDark]}>
+        <Pressable testID="sendReportBtn" onPress={onPressDone}>
+          <LinearGradient
+            colors={[gradients.blueLight.start, gradients.blueLight.end]}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={[styles.btn]}>
+            <Text style={[s.white, s.bold, s.f18]}>Done</Text>
+          </LinearGradient>
+        </Pressable>
+      </View>
     </View>
   )
 }
@@ -46,9 +54,16 @@ const ContentLabelPref = observer(
     const pal = usePalette('default')
     return (
       <View style={[styles.contentLabelPref, pal.border]}>
-        <Text type="md-medium" style={[pal.text]}>
-          {CONFIGURABLE_LABEL_GROUPS[group].title}
-        </Text>
+        <View style={s.flex1}>
+          <Text type="md-medium" style={[pal.text]}>
+            {CONFIGURABLE_LABEL_GROUPS[group].title}
+          </Text>
+          {typeof CONFIGURABLE_LABEL_GROUPS[group].subtitle === 'string' && (
+            <Text type="sm" style={[pal.textLight]}>
+              {CONFIGURABLE_LABEL_GROUPS[group].subtitle}
+            </Text>
+          )}
+        </View>
         <SelectGroup
           current={store.preferences.contentLabels[group]}
           onChange={v => store.preferences.setContentLabelPref(group, v)}
@@ -109,7 +124,7 @@ function SelectableBtn({
   const pal = usePalette('default')
   const palPrimary = usePalette('inverted')
   return (
-    <TouchableOpacity
+    <Pressable
       style={[
         styles.selectableBtn,
         left && styles.selectableBtnLeft,
@@ -121,15 +136,13 @@ function SelectableBtn({
       <Text style={current === value ? palPrimary.text : pal.text}>
         {label}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 10,
-    paddingBottom: 40,
   },
   title: {
     textAlign: 'center',
@@ -141,19 +154,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
     marginBottom: 10,
   },
+  scrollContainer: {
+    flex: 1,
+    paddingHorizontal: 10,
+  },
+  bottomSpacer: {
+    height: isDesktopWeb ? 0 : 60,
+  },
+  btnContainer: {
+    paddingTop: 10,
+    paddingHorizontal: 10,
+    paddingBottom: isDesktopWeb ? 0 : 40,
+    borderTopWidth: isDesktopWeb ? 0 : 1,
+  },
 
   contentLabelPref: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 10,
+    paddingTop: 14,
     paddingLeft: 4,
-    marginBottom: 10,
+    marginBottom: 14,
     borderTopWidth: 1,
   },
 
   selectableBtns: {
     flexDirection: 'row',
+    marginLeft: 10,
   },
   selectableBtn: {
     flexDirection: 'row',
