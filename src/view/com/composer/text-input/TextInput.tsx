@@ -34,6 +34,7 @@ interface TextInputProps {
   autocompleteView: UserAutocompleteModel
   setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
+  onPressPublish: (richtext: RichText) => Promise<false | undefined>
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
 }
