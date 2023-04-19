@@ -26,6 +26,7 @@ interface TextInputProps {
   autocompleteView: UserAutocompleteModel
   setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
+  onPressPublish: (richtext: RichText) => Promise<false | undefined>
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
 }
@@ -39,6 +40,7 @@ export const TextInput = React.forwardRef(
       autocompleteView,
       setRichText,
       onPhotoPasted,
+      onPressPublish,
       onSuggestedLinksChanged,
     }: // onError, TODO
     TextInputProps,
@@ -81,6 +83,16 @@ export const TextInput = React.forwardRef(
             }
 
             getImageFromUri(items, onPhotoPasted)
+          },
+          handleKeyDown: (_, event) => {
+            if (event.metaKey && event.code === 'Enter') {
+              // Workaround relying on previous state from `setRichText` to
+              // get the updated text content during editor initialization
+              setRichText((state: RichText) => {
+                onPressPublish(state)
+                return state
+              })
+            }
           },
         },
         content: richtext.text.toString(),

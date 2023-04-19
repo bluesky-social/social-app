@@ -123,65 +123,67 @@ export const ComposePost = observer(function ComposePost({
     [gallery, track],
   )
 
-  const onPressPublish = useCallback(async () => {
-    if (isProcessing || richtext.graphemeLength > MAX_GRAPHEME_LENGTH) {
-      return
-    }
-
-    setError('')
-
-    if (richtext.text.trim().length === 0 && gallery.isEmpty) {
-      setError('Did you want to say anything?')
-      return false
-    }
-
-    setIsProcessing(true)
-
-    try {
-      await apilib.post(store, {
-        rawText: richtext.text,
-        replyTo: replyTo?.uri,
-        images: gallery.paths,
-        quote: quote,
-        extLink: extLink,
-        onStateChange: setProcessingState,
-        knownHandles: autocompleteView.knownHandles,
-      })
-      track('Create Post', {
-        imageCount: gallery.size,
-      })
-    } catch (e: any) {
-      if (extLink) {
-        setExtLink({
-          ...extLink,
-          isLoading: true,
-          localThumb: undefined,
-        } as apilib.ExternalEmbedDraft)
+  const onPressPublish = useCallback(
+    async rt => {
+      if (isProcessing || rt.graphemeLength_ > MAX_GRAPHEME_LENGTH) {
+        return
       }
-      setError(cleanError(e.message))
-      setIsProcessing(false)
-      return
-    }
-    store.me.mainFeed.checkForLatest({autoPrepend: true})
-    onPost?.()
-    hackfixOnClose()
-    Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
-  }, [
-    isProcessing,
-    richtext,
-    setError,
-    setIsProcessing,
-    replyTo,
-    autocompleteView.knownHandles,
-    extLink,
-    hackfixOnClose,
-    onPost,
-    quote,
-    setExtLink,
-    store,
-    track,
-    gallery,
-  ])
+
+      setError('')
+
+      if (rt.text.trim().length === 0 && gallery.isEmpty) {
+        setError('Did you want to say anything?')
+        return false
+      }
+
+      setIsProcessing(true)
+
+      try {
+        await apilib.post(store, {
+          rawText: rt.text,
+          replyTo: replyTo?.uri,
+          images: gallery.paths,
+          quote: quote,
+          extLink: extLink,
+          onStateChange: setProcessingState,
+          knownHandles: autocompleteView.knownHandles,
+        })
+        track('Create Post', {
+          imageCount: gallery.size,
+        })
+      } catch (e: any) {
+        if (extLink) {
+          setExtLink({
+            ...extLink,
+            isLoading: true,
+            localThumb: undefined,
+          } as apilib.ExternalEmbedDraft)
+        }
+        setError(cleanError(e.message))
+        setIsProcessing(false)
+        return
+      }
+      store.me.mainFeed.checkForLatest({autoPrepend: true})
+      onPost?.()
+      hackfixOnClose()
+      Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
+    },
+    [
+      isProcessing,
+      setError,
+      setIsProcessing,
+      replyTo,
+      autocompleteView.knownHandles,
+      extLink,
+      hackfixOnClose,
+      onPost,
+      quote,
+      setExtLink,
+      store,
+      track,
+      gallery,
+    ],
+  )
 
   const canPost = graphemeLength <= MAX_GRAPHEME_LENGTH
 
@@ -218,7 +220,9 @@ export const ComposePost = observer(function ComposePost({
             ) : canPost ? (
               <TouchableOpacity
                 testID="composerPublishBtn"
-                onPress={onPressPublish}>
+                onPress={() => {
+                  onPressPublish(richtext)
+                }}>
                 <LinearGradient
                   colors={[gradients.blueLight.start, gradients.blueLight.end]}
                   start={{x: 0, y: 0}}
@@ -281,6 +285,7 @@ export const ComposePost = observer(function ComposePost({
                 autocompleteView={autocompleteView}
                 setRichText={setRichText}
                 onPhotoPasted={onPhotoPasted}
+                onPressPublish={onPressPublish}
                 onSuggestedLinksChanged={setSuggestedLinks}
                 onError={setError}
               />
