@@ -101,7 +101,7 @@ export const Feed = observer(function Feed({
       } else if (item === LOADING_SPINNER) {
         return (
           <View style={styles.loading}>
-            <ActivityIndicator size="large" />
+            <ActivityIndicator size="small" />
           </View>
         )
       }
