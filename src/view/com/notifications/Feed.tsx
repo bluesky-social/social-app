@@ -27,6 +27,7 @@ export const Feed = observer(function Feed({
   onScroll?: OnScrollCb
 }) {
   const pal = usePalette('default')
+  const [isPTRing, setIsPTRing] = React.useState(false)
   const data = React.useMemo(() => {
     let feedItems
     if (view.hasLoaded) {
@@ -44,11 +45,14 @@ export const Feed = observer(function Feed({
 
   const onRefresh = React.useCallback(async () => {
     try {
+      setIsPTRing(true)
       await view.refresh()
     } catch (err) {
       view.rootStore.log.error('Failed to refresh notifications feed', err)
+    } finally {
+      setIsPTRing(false)
     }
-  }, [view])
+  }, [view, setIsPTRing])
 
   const onEndReached = React.useCallback(async () => {
     try {
@@ -111,6 +115,11 @@ export const Feed = observer(function Feed({
             onPressTryAgain={onPressTryAgain}
           />
         )}
+        {view.isRefreshing && !isPTRing && (
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" />
+          </View>
+        )}
       </CenteredView>
       {data && (
         <FlatList
@@ -121,7 +130,7 @@ export const Feed = observer(function Feed({
           ListFooterComponent={FeedFooter}
           refreshControl={
             <RefreshControl
-              refreshing={view.isRefreshing}
+              refreshing={isPTRing}
               onRefresh={onRefresh}
               tintColor={pal.colors.text}
               titleColor={pal.colors.text}
@@ -138,6 +147,9 @@ export const Feed = observer(function Feed({
 })
 
 const styles = StyleSheet.create({
+  loading: {
+    paddingVertical: 20,
+  },
   feedFooter: {paddingTop: 20},
   emptyState: {paddingVertical: 40},
 })
