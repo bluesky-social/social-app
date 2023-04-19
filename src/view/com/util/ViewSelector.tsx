@@ -113,7 +113,7 @@ export function ViewSelector({
         onEndReached={onEndReached}
         onEndReachedThreshold={0.6}
         contentContainerStyle={s.contentContainer}
-        removeClippedSubviews={true}
+        scrollIndicatorInsets={{right: 1}} // fixes a bug where the scroll indicator is on the middle of the screen https://github.com/bluesky-social/social-app/pull/464
       />
     </HorzSwipe>
   )
