@@ -331,6 +331,9 @@ export class NotificationsFeedModel {
    */
   syncQueue = bundleAsync(async () => {
     this.rootStore.log.debug('NotificationsModel:syncQueue')
+    if (this.unreadCount >= MAX_VISIBLE_NOTIFS) {
+      return // no need to check
+    }
     await this.lock.acquireAsync()
     try {
       const res = await this.rootStore.agent.listNotifications({
