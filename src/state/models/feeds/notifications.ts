@@ -21,6 +21,8 @@ const MS_2DAY = MS_1HR * 48
 
 let _idCounter = 0
 
+export const MAX_VISIBLE_NOTIFS = 30
+
 export interface GroupedNotification extends ListNotifications.Notification {
   additional?: ListNotifications.Notification[]
 }
@@ -256,6 +258,17 @@ export class NotificationsFeedModel {
 
   get hasNewLatest() {
     return this.queuedNotifications && this.queuedNotifications?.length > 0
+  }
+
+  get unreadCountLabel(): string {
+    const count = this.unreadCount + this.rootStore.invitedUsers.numNotifs
+    if (count >= MAX_VISIBLE_NOTIFS) {
+      return `${MAX_VISIBLE_NOTIFS}+`
+    }
+    if (count === 0) {
+      return ''
+    }
+    return String(count)
   }
 
   // public api

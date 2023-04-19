@@ -203,9 +203,7 @@ export const DrawerContent = observer(() => {
               )
             }
             label="Notifications"
-            count={
-              store.me.notifications.unreadCount + store.invitedUsers.numNotifs
-            }
+            count={store.me.notifications.unreadCountLabel}
             bold={isAtNotifications}
             onPress={onPressNotifications}
           />
@@ -291,7 +289,7 @@ function MenuItem({
 }: {
   icon: JSX.Element
   label: string
-  count?: number
+  count?: string
   bold?: boolean
   onPress: () => void
 }) {
@@ -307,14 +305,14 @@ function MenuItem({
           <View
             style={[
               styles.menuItemCount,
-              count > 99
+              count.length > 2
                 ? styles.menuItemCountHundreds
-                : count > 9
+                : count.length > 1
                 ? styles.menuItemCountTens
                 : undefined,
             ]}>
             <Text style={styles.menuItemCountLabel} numberOfLines={1}>
-              {count > 999 ? `${Math.round(count / 1000)}k` : count}
+              {count}
             </Text>
           </View>
         ) : undefined}
