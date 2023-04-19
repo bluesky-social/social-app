@@ -49,7 +49,6 @@ export const NotificationsScreen = withAuthRequired(
         store.shell.setMinimalShellMode(false)
         store.log.debug('NotificationsScreen: Updating feed')
         const softResetSub = store.onScreenSoftReset(onPressLoadLatest)
-        store.me.notifications.syncQueue()
         store.me.notifications.update()
         screen('Notifications')
 

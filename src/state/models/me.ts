@@ -7,6 +7,7 @@ import {MyFollowsCache} from './cache/my-follows'
 import {isObj, hasProp} from 'lib/type-guards'
 
 const PROFILE_UPDATE_INTERVAL = 10 * 60 * 1e3 // 10min
+const NOTIFS_UPDATE_INTERVAL = 30 * 1e3 // 30sec
 
 export class MeModel {
   did: string = ''
@@ -21,6 +22,7 @@ export class MeModel {
   follows: MyFollowsCache
   invites: ComAtprotoServerDefs.InviteCode[] = []
   lastProfileStateUpdate = Date.now()
+  lastNotifsUpdate = Date.now()
 
   get invitesAvailable() {
     return this.invites.filter(isInviteAvailable).length
@@ -119,7 +121,10 @@ export class MeModel {
       await this.fetchProfile()
       await this.fetchInviteCodes()
     }
-    await this.notifications.syncQueue()
+    if (Date.now() - this.lastNotifsUpdate > NOTIFS_UPDATE_INTERVAL) {
+      this.lastNotifsUpdate = Date.now()
+      await this.notifications.syncQueue()
+    }
   }
 
   async fetchProfile() {
