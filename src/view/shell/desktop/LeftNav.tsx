@@ -70,7 +70,7 @@ function BackBtn() {
 }
 
 interface NavItemProps {
-  count?: number
+  count?: string
   href: string
   icon: JSX.Element
   iconFilled: JSX.Element
@@ -95,7 +95,7 @@ const NavItem = observer(
         <Link href={href} style={styles.navItem}>
           <View style={[styles.navItemIconWrapper]}>
             {isCurrent ? iconFilled : icon}
-            {typeof count === 'number' && count > 0 && (
+            {typeof count === 'string' && count && (
               <Text type="button" style={styles.navItemCount}>
                 {count}
               </Text>
@@ -162,9 +162,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
       />
       <NavItem
         href="/notifications"
-        count={
-          store.me.notifications.unreadCount + store.invitedUsers.numNotifs
-        }
+        count={store.me.notifications.unreadCountLabel}
         icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
         iconFilled={
           <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />

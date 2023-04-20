@@ -38,8 +38,8 @@ export const NotificationsScreen = withAuthRequired(
     }, [scrollElRef])
 
     const onPressLoadLatest = React.useCallback(() => {
-      store.me.notifications.processQueue()
       scrollToTop()
+      store.me.notifications.refresh()
     }, [store, scrollToTop])
 
     // on-visible setup
@@ -49,13 +49,12 @@ export const NotificationsScreen = withAuthRequired(
         store.shell.setMinimalShellMode(false)
         store.log.debug('NotificationsScreen: Updating feed')
         const softResetSub = store.onScreenSoftReset(onPressLoadLatest)
-        store.me.notifications.syncQueue()
         store.me.notifications.update()
         screen('Notifications')
 
         return () => {
           softResetSub.remove()
-          store.me.notifications.markAllUnqueuedRead()
+          store.me.notifications.markAllRead()
         }
       }, [store, screen, onPressLoadLatest]),
     )

@@ -20,6 +20,7 @@ import {ComposeIcon2} from 'lib/icons'
 import {isDesktopWeb} from 'platform/detection'
 
 const HEADER_OFFSET = isDesktopWeb ? 50 : 40
+const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired((_opts: Props) => {
@@ -150,7 +151,7 @@ const FeedPage = observer(
       React.useCallback(() => {
         const softResetSub = store.onScreenSoftReset(onSoftReset)
         const feedCleanup = feed.registerListeners()
-        const pollInterval = setInterval(doPoll, 15e3)
+        const pollInterval = setInterval(doPoll, POLL_FREQ)
 
         screen('Feed')
         store.log.debug('HomeScreen: Updating feed')
@@ -176,8 +177,8 @@ const FeedPage = observer(
     }, [feed])
 
     const onPressLoadLatest = React.useCallback(() => {
-      feed.resetToLatest()
       scrollToTop()
+      feed.refresh()
     }, [feed, scrollToTop])
 
     return (

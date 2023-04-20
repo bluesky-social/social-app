@@ -237,7 +237,6 @@ export class PostsFeedModel {
 
   // data
   slices: PostsFeedSliceModel[] = []
-  nextSlices: PostsFeedSliceModel[] = []
 
   constructor(
     public rootStore: RootStoreModel,
@@ -309,7 +308,6 @@ export class PostsFeedModel {
     this.loadMoreCursor = undefined
     this.pollCursor = undefined
     this.slices = []
-    this.nextSlices = []
     this.tuner.reset()
   }
 
@@ -461,44 +459,31 @@ export class PostsFeedModel {
     }
     const res = await this._getFeed({limit: PAGE_SIZE})
     const tuner = new FeedTuner()
-    const nextSlices = tuner.tune(res.data.feed, this.feedTuners)
-    if (nextSlices[0]?.uri !== this.slices[0]?.uri) {
-      const nextSlicesModels = nextSlices.map(
-        slice =>
-          new PostsFeedSliceModel(
-            this.rootStore,
-            `item-${_idCounter++}`,
-            slice,
-          ),
-      )
-      if (autoPrepend) {
+    const slices = tuner.tune(res.data.feed, this.feedTuners)
+    if (slices[0]?.uri !== this.slices[0]?.uri) {
+      if (!autoPrepend) {
+        this.setHasNewLatest(true)
+      } else {
+        this.setHasNewLatest(false)
         runInAction(() => {
-          this.slices = nextSlicesModels.concat(
+          const slicesModels = slices.map(
+            slice =>
+              new PostsFeedSliceModel(
+                this.rootStore,
+                `item-${_idCounter++}`,
+                slice,
+              ),
+          )
+          this.slices = slicesModels.concat(
             this.slices.filter(slice1 =>
-              nextSlicesModels.find(slice2 => slice1.uri === slice2.uri),
+              slicesModels.find(slice2 => slice1.uri === slice2.uri),
             ),
           )
-          this.setHasNewLatest(false)
         })
-      } else {
-        runInAction(() => {
-          this.nextSlices = nextSlicesModels
-        })
-        this.setHasNewLatest(true)
       }
     } else {
       this.setHasNewLatest(false)
     }
-  }
-
-  /**
-   * Sets the current slices to the "next slices" loaded by checkForLatest
-   */
-  resetToLatest() {
-    if (this.nextSlices.length) {
-      this.slices = this.nextSlices
-    }
-    this.setHasNewLatest(false)
   }
 
   /**

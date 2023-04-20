@@ -132,9 +132,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
           )
         }
         onPress={onPressNotifications}
-        notificationCount={
-          store.me.notifications.unreadCount + store.invitedUsers.numNotifs
-        }
+        notificationCount={store.me.notifications.unreadCountLabel}
       />
       <Btn
         testID="bottomBarProfileBtn"
@@ -170,7 +168,7 @@ function Btn({
 }: {
   testID?: string
   icon: JSX.Element
-  notificationCount?: number
+  notificationCount?: string
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }) {

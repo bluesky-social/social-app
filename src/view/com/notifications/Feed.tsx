@@ -14,6 +14,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
+const LOADING_SPINNER = {_reactKey: '__loading_spinner__'}
 
 export const Feed = observer(function Feed({
   view,
@@ -27,28 +28,42 @@ export const Feed = observer(function Feed({
   onScroll?: OnScrollCb
 }) {
   const pal = usePalette('default')
+  const [isPTRing, setIsPTRing] = React.useState(false)
   const data = React.useMemo(() => {
-    let feedItems
+    let feedItems: any[] = []
+    if (view.isRefreshing && !isPTRing) {
+      feedItems = [LOADING_SPINNER]
+    }
     if (view.hasLoaded) {
       if (view.isEmpty) {
-        feedItems = [EMPTY_FEED_ITEM]
+        feedItems = feedItems.concat([EMPTY_FEED_ITEM])
       } else {
-        feedItems = view.notifications
+        feedItems = feedItems.concat(view.notifications)
       }
     }
     if (view.loadMoreError) {
       feedItems = (feedItems || []).concat([LOAD_MORE_ERROR_ITEM])
     }
     return feedItems
-  }, [view.hasLoaded, view.isEmpty, view.notifications, view.loadMoreError])
+  }, [
+    view.hasLoaded,
+    view.isEmpty,
+    view.notifications,
+    view.loadMoreError,
+    view.isRefreshing,
+    isPTRing,
+  ])
 
   const onRefresh = React.useCallback(async () => {
     try {
+      setIsPTRing(true)
       await view.refresh()
     } catch (err) {
       view.rootStore.log.error('Failed to refresh notifications feed', err)
+    } finally {
+      setIsPTRing(false)
     }
-  }, [view])
+  }, [view, setIsPTRing])
 
   const onEndReached = React.useCallback(async () => {
     try {
@@ -83,6 +98,12 @@ export const Feed = observer(function Feed({
             onPress={onPressRetryLoadMore}
           />
         )
+      } else if (item === LOADING_SPINNER) {
+        return (
+          <View style={styles.loading}>
+            <ActivityIndicator size="small" />
+          </View>
+        )
       }
       return <FeedItem item={item} />
     },
@@ -104,7 +125,9 @@ export const Feed = observer(function Feed({
   return (
     <View style={s.hContentRegion}>
       <CenteredView>
-        {view.isLoading && !data && <NotificationFeedLoadingPlaceholder />}
+        {view.isLoading && !data.length && (
+          <NotificationFeedLoadingPlaceholder />
+        )}
         {view.hasError && (
           <ErrorMessage
             message={view.error}
@@ -112,7 +135,7 @@ export const Feed = observer(function Feed({
           />
         )}
       </CenteredView>
-      {data && (
+      {data.length && (
         <FlatList
           ref={scrollElRef}
           data={data}
@@ -121,7 +144,7 @@ export const Feed = observer(function Feed({
           ListFooterComponent={FeedFooter}
           refreshControl={
             <RefreshControl
-              refreshing={view.isRefreshing}
+              refreshing={isPTRing}
               onRefresh={onRefresh}
               tintColor={pal.colors.text}
               titleColor={pal.colors.text}
@@ -138,6 +161,9 @@ export const Feed = observer(function Feed({
 })
 
 const styles = StyleSheet.create({
+  loading: {
+    paddingVertical: 20,
+  },
   feedFooter: {paddingTop: 20},
   emptyState: {paddingVertical: 40},
 })
