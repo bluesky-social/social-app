@@ -1,6 +1,6 @@
 import React from 'react'
 import {FlatList, View} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import {
   NativeStackScreenProps,
@@ -13,6 +13,7 @@ import {InvitedUsers} from '../com/notifications/InvitedUsers'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {useStores} from 'state/index'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 
@@ -26,6 +27,7 @@ export const NotificationsScreen = withAuthRequired(
     const onMainScroll = useOnMainScroll(store)
     const scrollElRef = React.useRef<FlatList>(null)
     const {screen} = useAnalytics()
+    const isFocused = useIsFocused()
 
     // event handlers
     // =
@@ -57,6 +59,27 @@ export const NotificationsScreen = withAuthRequired(
           store.me.notifications.markAllRead()
         }
       }, [store, screen, onPressLoadLatest]),
+    )
+    useTabFocusEffect(
+      'Notifications',
+      React.useCallback(
+        isInside => {
+          // on mobile:
+          // fires with `isInside=true` when the user navigates to the root tab
+          // but not when the user goes back to the screen by pressing back
+          // on web:
+          // essentially equivalent to useFocusEffect because we dont used tabbed
+          // navigation
+          if (isInside) {
+            if (store.me.notifications.unreadCount > 0) {
+              store.me.notifications.refresh()
+            } else {
+              store.me.notifications.syncQueue()
+            }
+          }
+        },
+        [store],
+      ),
     )
 
     return (
