@@ -7,21 +7,25 @@ import {
   ViewStyle,
 } from 'react-native'
 import {Image} from 'expo-image'
+import {AppBskyEmbedImages} from '@atproto/api'
 
-export function ImageHorzList({
-  uris,
-  onPress,
-  style,
-}: {
-  uris: string[]
+interface Props {
+  images: AppBskyEmbedImages.ViewImage[]
   onPress?: (index: number) => void
   style?: StyleProp<ViewStyle>
-}) {
+}
+
+export function ImageHorzList({images, onPress, style}: Props) {
   return (
     <View style={[styles.flexRow, style]}>
-      {uris.map((uri, i) => (
+      {images.map(({thumb, alt}, i) => (
         <TouchableWithoutFeedback key={i} onPress={() => onPress?.(i)}>
-          <Image source={{uri}} style={styles.image} />
+          <Image
+            source={{uri: thumb}}
+            style={styles.image}
+            accessible={true}
+            accessibilityLabel={alt}
+          />
         </TouchableWithoutFeedback>
       ))}
     </View>

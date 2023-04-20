@@ -17,6 +17,7 @@ import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
+import * as AltTextImageModal from './AltTextImage'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 
@@ -80,6 +81,8 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'content-filtering-settings') {
     snapPoints = ContentFilteringSettingsModal.snapPoints
     element = <ContentFilteringSettingsModal.Component />
+  } else if (activeModal?.name === 'alt-text-image') {
+    element = <AltTextImageModal.Component {...activeModal} />
   } else {
     return <View />
   }

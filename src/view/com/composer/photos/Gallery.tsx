@@ -1,4 +1,5 @@
 import React, {useCallback} from 'react'
+import {ImageStyle, TextStyle} from 'react-native'
 import {GalleryModel} from 'state/models/media/gallery'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -6,6 +7,7 @@ import {colors} from 'lib/styles'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ImageModel} from 'state/models/media/image'
 import {Image} from 'expo-image'
+import {Text} from 'view/com/util/text/Text'
 
 interface Props {
   gallery: GalleryModel
@@ -24,6 +26,12 @@ export const Gallery = observer(function ({gallery}: Props) {
   }, [gallery])
 
   const imageStyle = getImageStyle()
+  const handleAddImageAltText = useCallback(
+    (image: ImageModel) => {
+      gallery.setAltText(image)
+    },
+    [gallery],
+  )
   const handleRemovePhoto = useCallback(
     (image: ImageModel) => {
       gallery.remove(image)
@@ -47,32 +55,42 @@ export const Gallery = observer(function ({gallery}: Props) {
             style={[styles.imageContainer, imageStyle]}>
             <View style={styles.imageControls}>
               <TouchableOpacity
-                testID="cropPhotoButton"
+                testID="altTextButton"
                 onPress={() => {
-                  handleEditPhoto(image)
+                  handleAddImageAltText(image)
                 }}
-                style={styles.imageControl}>
-                <FontAwesomeIcon
-                  icon="pen"
-                  size={12}
-                  style={{color: colors.white}}
-                />
+                style={[styles.imageControl, styles.imageControlLabel]}>
+                <Text style={styles.imageControlTextContent}>ALT</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                testID="removePhotoButton"
-                onPress={() => handleRemovePhoto(image)}
-                style={styles.imageControl}>
-                <FontAwesomeIcon
-                  icon="xmark"
-                  size={16}
-                  style={{color: colors.white}}
-                />
-              </TouchableOpacity>
+              <View style={styles.imageControlsSubgroupRight}>
+                <TouchableOpacity
+                  testID="cropPhotoButton"
+                  onPress={() => {
+                    handleEditPhoto(image)
+                  }}
+                  style={styles.imageControl}>
+                  <FontAwesomeIcon
+                    icon="pen"
+                    size={12}
+                    style={{color: colors.white}}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  testID="removePhotoButton"
+                  onPress={() => handleRemovePhoto(image)}
+                  style={styles.imageControl}>
+                  <FontAwesomeIcon
+                    icon="xmark"
+                    size={16}
+                    style={{color: colors.white}}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
 
             <Image
               testID="selectedPhotoImage"
-              style={[styles.image, imageStyle]}
+              style={[styles.image, imageStyle] as ImageStyle}
               source={{
                 uri: image.compressed.path,
               }}
@@ -113,10 +131,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     display: 'flex',
     flexDirection: 'row',
-    gap: 4,
-    top: 8,
-    right: 8,
+    justifyContent: 'space-between',
+    paddingTop: 8,
+    paddingHorizontal: 8,
+    width: '100%',
     zIndex: 1,
+  },
+  imageControlsSubgroupRight: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 8,
   },
   imageControl: {
     width: 24,
@@ -127,4 +151,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  imageControlLabel: {
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    width: 'initial',
+  },
+  imageControlTextContent: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
+    letterSpacing: '0.05em' as TextStyle,
+  } as TextStyle,
 })

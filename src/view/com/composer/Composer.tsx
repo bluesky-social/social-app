@@ -142,7 +142,7 @@ export const ComposePost = observer(function ComposePost({
         await apilib.post(store, {
           rawText: rt.text,
           replyTo: replyTo?.uri,
-          images: gallery.paths,
+          images: gallery.images,
           quote: quote,
           extLink: extLink,
           onStateChange: setProcessingState,

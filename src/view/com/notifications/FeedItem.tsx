@@ -369,10 +369,7 @@ function AdditionalPostText({
     <>
       {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
       {images && images?.length > 0 && (
-        <ImageHorzList
-          uris={images?.map(img => img.thumb)}
-          style={styles.additionalPostImages}
-        />
+        <ImageHorzList images={images} style={styles.additionalPostImages} />
       )}
     </>
   )

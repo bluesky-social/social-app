@@ -65,6 +65,10 @@ export class GalleryModel {
     })
   }
 
+  setAltText(image: ImageModel) {
+    image.setAltText()
+  }
+
   crop(image: ImageModel) {
     image.crop()
   }
