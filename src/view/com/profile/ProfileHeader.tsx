@@ -31,8 +31,9 @@ import {ProfileHeaderLabels} from '../util/moderation/ProfileHeaderLabels'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {isDesktopWeb} from 'platform/detection'
+import {isAndroid, isDesktopWeb, isIOS} from 'platform/detection'
 import {FollowState} from 'state/models/cache/my-follows'
+import Clipboard from '@react-native-clipboard/clipboard'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
@@ -148,9 +149,18 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
     navigation.push('ProfileFollows', {name: view.handle})
   }, [track, navigation, view])
 
-  const onPressShare = React.useCallback(() => {
+  const onPressShare = React.useCallback(async () => {
     track('ProfileHeader:ShareButtonClicked')
-    Share.share({url: toShareUrl(`/profile/${view.handle}`)})
+    const url = toShareUrl(`/profile/${view.handle}`)
+
+    if (isIOS || isAndroid) {
+      Share.share({url})
+    } else {
+      // React Native Share is not supported by web. Web Share API
+      // has increasing but not full support, so default to clipboard
+      Clipboard.setString(url)
+      Toast.show('Copied to clipboard')
+    }
   }, [track, view])
 
   const onPressMuteAccount = React.useCallback(async () => {
