@@ -103,7 +103,6 @@ export class RootStoreModel {
       this.log.debug('Session initialized', {
         hasSession: this.session.hasSession,
       })
-      this.updateSessionState()
     } catch (e: any) {
       this.log.warn('Failed to initialize session', e)
     }

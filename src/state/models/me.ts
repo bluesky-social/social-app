@@ -99,14 +99,12 @@ export class MeModel {
       this.handle = sess.currentSession?.handle || ''
       await this.fetchProfile()
       this.mainFeed.clear()
-      await Promise.all([
-        this.mainFeed.setup().catch(e => {
-          this.rootStore.log.error('Failed to setup main feed model', e)
-        }),
-        this.notifications.setup().catch(e => {
-          this.rootStore.log.error('Failed to setup notifications model', e)
-        }),
-      ])
+      /* dont await */ this.mainFeed.setup().catch(e => {
+        this.rootStore.log.error('Failed to setup main feed model', e)
+      })
+      /* dont await */ this.notifications.setup().catch(e => {
+        this.rootStore.log.error('Failed to setup notifications model', e)
+      })
       this.rootStore.emitSessionLoaded()
       await this.fetchInviteCodes()
     } else {
