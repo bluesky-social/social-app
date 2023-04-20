@@ -1,7 +1,8 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
+import {CenteredView} from '../util/Views'
 import {LoggedOut} from './LoggedOut'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -30,14 +31,14 @@ function Loading() {
   }, [setIsTakingTooLong])
 
   return (
-    <View style={[styles.loading, pal.view]}>
+    <CenteredView style={[styles.loading, pal.view]}>
       <ActivityIndicator size="large" />
       <Text type="2xl" style={[styles.loadingText, pal.textLight]}>
         {isTakingTooLong
           ? "This is taking too long. There may be a problem with your internet or with the service, but we're going to try a couple more times..."
           : 'Connecting...'}
       </Text>
-    </View>
+    </CenteredView>
   )
 }
 

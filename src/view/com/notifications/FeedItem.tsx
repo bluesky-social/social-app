@@ -3,7 +3,7 @@ import {observer} from 'mobx-react-lite'
 import {
   Animated,
   TouchableOpacity,
-  TouchableWithoutFeedback,
+  Pressable,
   StyleSheet,
   View,
 } from 'react-native'
@@ -124,7 +124,7 @@ export const FeedItem = observer(function FeedItem({
     return <></>
   }
 
-  let authors: Author[] = [
+  const authors: Author[] = [
     {
       href: `/profile/${item.author.handle}`,
       handle: item.author.handle,
@@ -132,18 +132,18 @@ export const FeedItem = observer(function FeedItem({
       avatar: item.author.avatar,
       labels: item.author.labels,
     },
+    ...(item.additional?.map(
+      ({author: {avatar, labels, handle, displayName}}) => {
+        return {
+          href: `/profile/${handle}`,
+          handle,
+          displayName,
+          avatar,
+          labels,
+        }
+      },
+    ) || []),
   ]
-  if (item.additional?.length) {
-    authors = authors.concat(
-      item.additional.map(item2 => ({
-        href: `/profile/${item2.author.handle}`,
-        handle: item2.author.handle,
-        displayName: item2.author.displayName,
-        avatar: item2.author.avatar,
-        labels: item2.author.labels,
-      })),
-    )
-  }
 
   return (
     <Link
@@ -161,62 +161,52 @@ export const FeedItem = observer(function FeedItem({
       href={itemHref}
       title={itemTitle}
       noFeedback>
-      <View style={styles.layout}>
-        <View style={styles.layoutIcon}>
-          {icon === 'HeartIconSolid' ? (
-            <HeartIconSolid size={28} style={[styles.icon, ...iconStyle]} />
-          ) : (
-            <FontAwesomeIcon
-              icon={icon}
-              size={24}
-              style={[styles.icon, ...iconStyle]}
+      <View style={styles.layoutIcon}>
+        {icon === 'HeartIconSolid' ? (
+          <HeartIconSolid size={28} style={[styles.icon, ...iconStyle]} />
+        ) : (
+          <FontAwesomeIcon
+            icon={icon}
+            size={24}
+            style={[styles.icon, ...iconStyle]}
+          />
+        )}
+      </View>
+      <View style={styles.layoutContent}>
+        <Pressable
+          onPress={authors.length > 1 ? onToggleAuthorsExpanded : () => {}}>
+          <CondensedAuthorsList
+            visible={!isAuthorsExpanded}
+            authors={authors}
+            onToggleAuthorsExpanded={onToggleAuthorsExpanded}
+          />
+          <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
+          <View style={styles.meta}>
+            <TextLink
+              key={authors[0].href}
+              style={[pal.text, s.bold, styles.metaItem]}
+              href={authors[0].href}
+              text={sanitizeDisplayName(
+                authors[0].displayName || authors[0].handle,
+              )}
             />
-          )}
-        </View>
-        <View style={styles.layoutContent}>
-          <TouchableWithoutFeedback
-            onPress={authors.length > 1 ? onToggleAuthorsExpanded : () => {}}>
-            <View>
-              <CondensedAuthorsList
-                visible={!isAuthorsExpanded}
-                authors={authors}
-                onToggleAuthorsExpanded={onToggleAuthorsExpanded}
-              />
-              <ExpandedAuthorsList
-                visible={isAuthorsExpanded}
-                authors={authors}
-              />
-              <View style={styles.meta}>
-                <TextLink
-                  key={authors[0].href}
-                  style={[pal.text, s.bold, styles.metaItem]}
-                  href={authors[0].href}
-                  text={sanitizeDisplayName(
-                    authors[0].displayName || authors[0].handle,
-                  )}
-                />
-                {authors.length > 1 ? (
-                  <>
-                    <Text style={[styles.metaItem, pal.text]}>and</Text>
-                    <Text style={[styles.metaItem, pal.text, s.bold]}>
-                      {authors.length - 1}{' '}
-                      {pluralize(authors.length - 1, 'other')}
-                    </Text>
-                  </>
-                ) : undefined}
-                <Text style={[styles.metaItem, pal.text]}>{action}</Text>
-                <Text style={[styles.metaItem, pal.textLight]}>
-                  {ago(item.indexedAt)}
+            {authors.length > 1 ? (
+              <>
+                <Text style={[styles.metaItem, pal.text]}>and</Text>
+                <Text style={[styles.metaItem, pal.text, s.bold]}>
+                  {authors.length - 1} {pluralize(authors.length - 1, 'other')}
                 </Text>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-          {item.isLike || item.isRepost || item.isQuote ? (
-            <AdditionalPostText additionalPost={item.additionalPost} />
-          ) : (
-            <></>
-          )}
-        </View>
+              </>
+            ) : undefined}
+            <Text style={[styles.metaItem, pal.text]}>{action}</Text>
+            <Text style={[styles.metaItem, pal.textLight]}>
+              {ago(item.indexedAt)}
+            </Text>
+          </View>
+        </Pressable>
+        {item.isLike || item.isRepost || item.isQuote ? (
+          <AdditionalPostText additionalPost={item.additionalPost} />
+        ) : null}
       </View>
     </Link>
   )
@@ -392,8 +382,6 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingRight: 15,
     borderTopWidth: 1,
-  },
-  layout: {
     flexDirection: 'row',
   },
   layoutIcon: {
@@ -405,6 +393,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginTop: 4,
   },
+  layoutContent: {
+    flex: 1,
+  },
   avis: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -412,9 +403,6 @@ const styles = StyleSheet.create({
   aviExtraCount: {
     fontWeight: 'bold',
     paddingLeft: 6,
-  },
-  layoutContent: {
-    flex: 1,
   },
   meta: {
     flexDirection: 'row',

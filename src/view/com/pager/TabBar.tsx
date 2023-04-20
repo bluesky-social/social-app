@@ -1,11 +1,7 @@
 import React, {createRef, useState, useMemo, useRef} from 'react'
-import {
-  Animated,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import {Animated, StyleSheet, View} from 'react-native'
 import {Text} from '../util/text/Text'
+import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
 
@@ -109,20 +105,21 @@ export function TabBar({
       {items.map((item, i) => {
         const selected = i === selectedPage
         return (
-          <TouchableWithoutFeedback
-            key={i}
-            testID={testID ? `${testID}-${item}` : undefined}
+          <PressableWithHover
+            ref={itemRefs[i]}
+            key={item}
+            style={
+              indicatorPosition === 'top' ? styles.itemTop : styles.itemBottom
+            }
+            hoverStyle={pal.viewLight}
             onPress={() => onPressItem(i)}>
-            <View
-              style={
-                indicatorPosition === 'top' ? styles.itemTop : styles.itemBottom
-              }
-              ref={itemRefs[i]}>
-              <Text type="xl-bold" style={selected ? pal.text : pal.textLight}>
-                {item}
-              </Text>
-            </View>
-          </TouchableWithoutFeedback>
+            <Text
+              type="xl-bold"
+              testID={testID ? `${testID}-${item}` : undefined}
+              style={selected ? pal.text : pal.textLight}>
+              {item}
+            </Text>
+          </PressableWithHover>
         )
       })}
     </View>
@@ -138,18 +135,19 @@ const styles = isDesktopWeb
       itemTop: {
         paddingTop: 16,
         paddingBottom: 14,
-        marginRight: 24,
+        paddingHorizontal: 12,
       },
       itemBottom: {
         paddingTop: 14,
         paddingBottom: 16,
-        marginRight: 24,
+        paddingHorizontal: 12,
       },
       indicator: {
         position: 'absolute',
         left: 0,
         width: 1,
         height: 3,
+        zIndex: 1,
       },
     })
   : StyleSheet.create({

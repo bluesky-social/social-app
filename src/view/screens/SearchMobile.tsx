@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {
-  Keyboard,
   StyleSheet,
   TouchableWithoutFeedback,
+  Keyboard,
   View,
 } from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
@@ -26,6 +26,7 @@ import {s} from 'lib/styles'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {isAndroid, isIOS} from 'platform/detection'
 
 type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = withAuthRequired(
@@ -110,8 +111,14 @@ export const SearchScreen = withAuthRequired(
       }, [store, autocompleteView, foafs, suggestedActors, onSoftReset]),
     )
 
+    const onPress = useCallback(() => {
+      if (isIOS || isAndroid) {
+        Keyboard.dismiss()
+      }
+    }, [])
+
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback onPress={onPress}>
         <View style={[pal.view, styles.container]}>
           <HeaderWithInput
             isInputFocused={isInputFocused}
@@ -139,16 +146,19 @@ export const SearchScreen = withAuthRequired(
               scrollEventThrottle={100}>
               {query && autocompleteView.searchRes.length ? (
                 <>
-                  {autocompleteView.searchRes.map(item => (
-                    <ProfileCard
-                      key={item.did}
-                      testID={`searchAutoCompleteResult-${item.handle}`}
-                      handle={item.handle}
-                      displayName={item.displayName}
-                      labels={item.labels}
-                      avatar={item.avatar}
-                    />
-                  ))}
+                  {autocompleteView.searchRes.map(
+                    ({did, handle, displayName, labels, avatar}, index) => (
+                      <ProfileCard
+                        key={did}
+                        testID={`searchAutoCompleteResult-${handle}`}
+                        handle={handle}
+                        displayName={displayName}
+                        labels={labels}
+                        avatar={avatar}
+                        noBorder={index === 0}
+                      />
+                    ),
+                  )}
                 </>
               ) : query && !autocompleteView.searchRes.length ? (
                 <View>
