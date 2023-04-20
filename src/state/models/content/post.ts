@@ -48,11 +48,30 @@ export class PostModel implements RemoveIndex<Post.Record> {
     return this.hasLoaded && !this.hasContent
   }
 
+  get rootUri(): string {
+    if (this.reply?.root.uri) {
+      return this.reply.root.uri
+    }
+    return this.uri
+  }
+
+  get isThreadMuted() {
+    return this.rootStore.mutedThreads.uris.has(this.rootUri)
+  }
+
   // public api
   // =
 
   async setup() {
     await this._load()
+  }
+
+  async toggleThreadMute() {
+    if (this.isThreadMuted) {
+      this.rootStore.mutedThreads.uris.delete(this.rootUri)
+    } else {
+      this.rootStore.mutedThreads.uris.add(this.rootUri)
+    }
   }
 
   // state transitions

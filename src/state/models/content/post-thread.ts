@@ -42,6 +42,17 @@ export class PostThreadItemModel {
     return this.postRecord?.reply?.parent.uri
   }
 
+  get rootUri(): string {
+    if (this.postRecord?.reply?.root.uri) {
+      return this.postRecord.reply.root.uri
+    }
+    return this.uri
+  }
+
+  get isThreadMuted() {
+    return this.rootStore.mutedThreads.uris.has(this.rootUri)
+  }
+
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
@@ -188,6 +199,14 @@ export class PostThreadItemModel {
     }
   }
 
+  async toggleThreadMute() {
+    if (this.isThreadMuted) {
+      this.rootStore.mutedThreads.uris.delete(this.rootUri)
+    } else {
+      this.rootStore.mutedThreads.uris.add(this.rootUri)
+    }
+  }
+
   async delete() {
     await this.rootStore.agent.deletePost(this.post.uri)
     this.rootStore.emitPostDeleted(this.post.uri)
@@ -228,6 +247,19 @@ export class PostThreadModel {
 
   get hasError() {
     return this.error !== ''
+  }
+
+  get rootUri(): string {
+    if (this.thread) {
+      if (this.thread.postRecord?.reply?.root.uri) {
+        return this.thread.postRecord.reply.root.uri
+      }
+    }
+    return this.resolvedUri
+  }
+
+  get isThreadMuted() {
+    return this.rootStore.mutedThreads.uris.has(this.rootUri)
   }
 
   // public api
@@ -277,6 +309,14 @@ export class PostThreadModel {
    */
   onPostDeleted(_uri: string) {
     this.refresh()
+  }
+
+  async toggleThreadMute() {
+    if (this.isThreadMuted) {
+      this.rootStore.mutedThreads.uris.delete(this.rootUri)
+    } else {
+      this.rootStore.mutedThreads.uris.add(this.rootUri)
+    }
   }
 
   // state transitions

@@ -101,6 +101,20 @@ export const FeedItem = observer(function ({
     )
   }, [record])
 
+  const onToggleThreadMute = React.useCallback(async () => {
+    track('FeedItem:ThreadMute')
+    try {
+      await item.toggleThreadMute()
+      if (item.isThreadMuted) {
+        Toast.show('You will no longer receive notifications for this thread')
+      } else {
+        Toast.show('You will now receive notifications for this thread')
+      }
+    } catch (e) {
+      store.log.error('Failed to toggle thread mute', e)
+    }
+  }, [track, item, store])
+
   const onDeletePost = React.useCallback(() => {
     track('FeedItem:PostDelete')
     item.delete().then(
@@ -120,7 +134,6 @@ export const FeedItem = observer(function ({
   }
 
   const isSmallTop = isThreadChild
-  const isNoTop = false //isChild && !item._isThreadChild
   const isMuted =
     item.post.author.viewer?.muted && ignoreMuteFor !== item.post.author.did
   const outerStyles = [
@@ -128,7 +141,6 @@ export const FeedItem = observer(function ({
     pal.view,
     {borderColor: pal.colors.border},
     isSmallTop ? styles.outerSmallTop : undefined,
-    isNoTop ? styles.outerNoTop : undefined,
     isThreadParent ? styles.outerNoBottom : undefined,
   ]
 
@@ -146,11 +158,7 @@ export const FeedItem = observer(function ({
       )}
       {isThreadParent && (
         <View
-          style={[
-            styles.bottomReplyLine,
-            {borderColor: pal.colors.replyLine},
-            isNoTop ? styles.bottomReplyLineNoTop : undefined,
-          ]}
+          style={[styles.bottomReplyLine, {borderColor: pal.colors.replyLine}]}
         />
       )}
       {item.reasonRepost && (
@@ -260,11 +268,13 @@ export const FeedItem = observer(function ({
             likeCount={item.post.likeCount}
             isReposted={!!item.post.viewer?.repost}
             isLiked={!!item.post.viewer?.like}
+            isThreadMuted={item.isThreadMuted}
             onPressReply={onPressReply}
             onPressToggleRepost={onPressToggleRepost}
             onPressToggleLike={onPressToggleLike}
             onCopyPostText={onCopyPostText}
             onOpenTranslate={onOpenTranslate}
+            onToggleThreadMute={onToggleThreadMute}
             onDeletePost={onDeletePost}
           />
         </View>
@@ -279,10 +289,6 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingRight: 15,
     paddingBottom: 8,
-  },
-  outerNoTop: {
-    borderTopWidth: 0,
-    paddingTop: 0,
   },
   outerSmallTop: {
     borderTopWidth: 0,
@@ -304,7 +310,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     borderLeftWidth: 2,
   },
-  bottomReplyLineNoTop: {top: 64},
   includeReason: {
     flexDirection: 'row',
     paddingLeft: 50,

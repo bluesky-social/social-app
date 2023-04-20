@@ -72,6 +72,17 @@ export class PostsFeedItemModel {
     makeAutoObservable(this, {rootStore: false})
   }
 
+  get rootUri(): string {
+    if (this.reply?.root.uri) {
+      return this.reply.root.uri
+    }
+    return this.post.uri
+  }
+
+  get isThreadMuted() {
+    return this.rootStore.mutedThreads.uris.has(this.rootUri)
+  }
+
   copy(v: FeedViewPost) {
     this.post = v.post
     this.reply = v.reply
@@ -142,6 +153,14 @@ export class PostsFeedItemModel {
           this.post.viewer!.repost = res.uri
         },
       )
+    }
+  }
+
+  async toggleThreadMute() {
+    if (this.isThreadMuted) {
+      this.rootStore.mutedThreads.uris.delete(this.rootUri)
+    } else {
+      this.rootStore.mutedThreads.uris.add(this.rootUri)
     }
   }
 

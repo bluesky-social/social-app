@@ -8,10 +8,7 @@ import {faAngleUp} from '@fortawesome/free-solid-svg-icons/faAngleUp'
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons/faArrowLeft'
 import {faArrowRight} from '@fortawesome/free-solid-svg-icons/faArrowRight'
 import {faArrowUp} from '@fortawesome/free-solid-svg-icons/faArrowUp'
-import {
-  faArrowRightFromBracket,
-  faQuoteLeft,
-} from '@fortawesome/free-solid-svg-icons'
+import {faArrowRightFromBracket} from '@fortawesome/free-solid-svg-icons/faArrowRightFromBracket'
 import {faArrowUpFromBracket} from '@fortawesome/free-solid-svg-icons/faArrowUpFromBracket'
 import {faArrowUpRightFromSquare} from '@fortawesome/free-solid-svg-icons/faArrowUpRightFromSquare'
 import {faArrowRotateLeft} from '@fortawesome/free-solid-svg-icons/faArrowRotateLeft'
@@ -30,6 +27,7 @@ import {faCircleUser} from '@fortawesome/free-regular-svg-icons/faCircleUser'
 import {faClone} from '@fortawesome/free-solid-svg-icons/faClone'
 import {faClone as farClone} from '@fortawesome/free-regular-svg-icons/faClone'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
+import {faCommentSlash} from '@fortawesome/free-solid-svg-icons/faCommentSlash'
 import {faCompass} from '@fortawesome/free-regular-svg-icons/faCompass'
 import {faEllipsis} from '@fortawesome/free-solid-svg-icons/faEllipsis'
 import {faEnvelope} from '@fortawesome/free-solid-svg-icons/faEnvelope'
@@ -55,6 +53,7 @@ import {faPen} from '@fortawesome/free-solid-svg-icons/faPen'
 import {faPenNib} from '@fortawesome/free-solid-svg-icons/faPenNib'
 import {faPenToSquare} from '@fortawesome/free-solid-svg-icons/faPenToSquare'
 import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus'
+import {faQuoteLeft} from '@fortawesome/free-solid-svg-icons/faQuoteLeft'
 import {faShare} from '@fortawesome/free-solid-svg-icons/faShare'
 import {faShareFromSquare} from '@fortawesome/free-solid-svg-icons/faShareFromSquare'
 import {faShield} from '@fortawesome/free-solid-svg-icons/faShield'
@@ -104,6 +103,7 @@ export function setup() {
     faClone,
     farClone,
     faComment,
+    faCommentSlash,
     faCompass,
     faEllipsis,
     faEnvelope,
