@@ -1,6 +1,6 @@
 import React from 'react'
 import {FlatList, View} from 'react-native'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import {
   NativeStackScreenProps,
@@ -27,7 +27,6 @@ export const NotificationsScreen = withAuthRequired(
     const onMainScroll = useOnMainScroll(store)
     const scrollElRef = React.useRef<FlatList>(null)
     const {screen} = useAnalytics()
-    const isFocused = useIsFocused()
 
     // event handlers
     // =
