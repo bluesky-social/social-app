@@ -1,6 +1,7 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {PressableWithHover} from 'view/com/util/PressableWithHover'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
@@ -88,19 +89,23 @@ const NavItem = observer(
     const isCurrent = isTab(currentRouteName, pathName)
 
     return (
-      <Link href={href} style={styles.navItem}>
-        <View style={[styles.navItemIconWrapper]}>
-          {isCurrent ? iconFilled : icon}
-          {typeof count === 'number' && count > 0 && (
-            <Text type="button" style={styles.navItemCount}>
-              {count}
-            </Text>
-          )}
-        </View>
-        <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
-          {label}
-        </Text>
-      </Link>
+      <PressableWithHover
+        style={styles.navItemWrapper}
+        hoverStyle={pal.viewLight}>
+        <Link href={href} style={styles.navItem}>
+          <View style={[styles.navItemIconWrapper]}>
+            {isCurrent ? iconFilled : icon}
+            {typeof count === 'number' && count > 0 && (
+              <Text type="button" style={styles.navItemCount}>
+                {count}
+              </Text>
+            )}
+          </View>
+          <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
+            {label}
+          </Text>
+        </Link>
+      </PressableWithHover>
     )
   },
 )
@@ -193,13 +198,14 @@ const styles = StyleSheet.create({
   leftNav: {
     position: 'absolute',
     top: 10,
-    right: 'calc(50vw + 300px)',
+    right: 'calc(50vw + 312px)',
     width: 220,
   },
 
   profileCard: {
     marginVertical: 10,
     width: 60,
+    paddingLeft: 12,
   },
 
   backBtn: {
@@ -210,11 +216,15 @@ const styles = StyleSheet.create({
     height: 30,
   },
 
+  navItemWrapper: {
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
   navItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 14,
-    paddingBottom: 10,
+    paddingTop: 12,
+    paddingBottom: 12,
   },
   navItemIconWrapper: {
     alignItems: 'center',
@@ -245,6 +255,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     backgroundColor: colors.blue3,
+    marginLeft: 12,
     marginTop: 20,
     marginBottom: 10,
   },
