@@ -174,6 +174,21 @@ const PostLoaded = observer(
       )
     }, [record])
 
+    const onToggleThreadMute = React.useCallback(async () => {
+      try {
+        await item.toggleThreadMute()
+        if (item.isThreadMuted) {
+          Toast.show(
+            'You will no longer received notifications for this thread',
+          )
+        } else {
+          Toast.show('You will now receive notifications for this thread')
+        }
+      } catch (e) {
+        store.log.error('Failed to toggle thread mute', e)
+      }
+    }, [item, store])
+
     const onDeletePost = React.useCallback(() => {
       item.delete().then(
         () => {
@@ -237,6 +252,7 @@ const PostLoaded = observer(
               {item.richText?.text ? (
                 <View style={styles.postTextContainer}>
                   <RichText
+                    testID="postText"
                     type="post-text"
                     richText={item.richText}
                     lineHeight={1.3}
@@ -263,11 +279,13 @@ const PostLoaded = observer(
               likeCount={item.post.likeCount}
               isReposted={!!item.post.viewer?.repost}
               isLiked={!!item.post.viewer?.like}
+              isThreadMuted={item.isThreadMuted}
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
               onPressToggleLike={onPressToggleLike}
               onCopyPostText={onCopyPostText}
               onOpenTranslate={onOpenTranslate}
+              onToggleThreadMute={onToggleThreadMute}
               onDeletePost={onDeletePost}
             />
           </View>

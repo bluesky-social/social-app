@@ -48,11 +48,13 @@ interface PostCtrlsOpts {
   likeCount?: number
   isReposted: boolean
   isLiked: boolean
+  isThreadMuted: boolean
   onPressReply: () => void
   onPressToggleRepost: () => Promise<void>
   onPressToggleLike: () => Promise<void>
   onCopyPostText: () => void
   onOpenTranslate: () => void
+  onToggleThreadMute: () => void
   onDeletePost: () => void
 }
 
@@ -255,8 +257,10 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             itemHref={opts.itemHref}
             itemTitle={opts.itemTitle}
             isAuthor={opts.isAuthor}
+            isThreadMuted={opts.isThreadMuted}
             onCopyPostText={opts.onCopyPostText}
             onOpenTranslate={opts.onOpenTranslate}
+            onToggleThreadMute={opts.onToggleThreadMute}
             onDeletePost={opts.onDeletePost}>
             <FontAwesomeIcon
               icon="ellipsis-h"

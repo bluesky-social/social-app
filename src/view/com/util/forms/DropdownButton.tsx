@@ -22,16 +22,22 @@ import {useTheme} from 'lib/ThemeContext'
 import {isAndroid, isIOS} from 'platform/detection'
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as Toast from '../../util/Toast'
+import {isWeb} from 'platform/detection'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
-const ESTIMATED_MENU_ITEM_HEIGHT = 52
+const ESTIMATED_BTN_HEIGHT = 50
+const ESTIMATED_SEP_HEIGHT = 16
 
-export interface DropdownItem {
+export interface DropdownItemButton {
   testID?: string
   icon?: IconProp
   label: string
   onPress: () => void
 }
+export interface DropdownItemSeparator {
+  sep: true
+}
+export type DropdownItem = DropdownItemButton | DropdownItemSeparator
 type MaybeDropdownItem = DropdownItem | false | undefined
 
 export type DropdownButtonType = ButtonType | 'bare'
@@ -59,10 +65,12 @@ export function DropdownButton({
   rightOffset?: number
   bottomOffset?: number
 }) {
-  const ref = useRef<TouchableOpacity>(null)
+  const ref1 = useRef<TouchableOpacity>(null)
+  const ref2 = useRef<View>(null)
 
   const onPress = () => {
-    ref.current?.measure(
+    const ref = ref1.current || ref2.current
+    ref?.measure(
       (
         _x: number,
         _y: number,
@@ -75,7 +83,14 @@ export function DropdownButton({
           menuWidth = 200
         }
         const winHeight = Dimensions.get('window').height
-        const estimatedMenuHeight = items.length * ESTIMATED_MENU_ITEM_HEIGHT
+        let estimatedMenuHeight = 0
+        for (const item of items) {
+          if (item && isSep(item)) {
+            estimatedMenuHeight += ESTIMATED_SEP_HEIGHT
+          } else if (item && isBtn(item)) {
+            estimatedMenuHeight += ESTIMATED_BTN_HEIGHT
+          }
+        }
         const newX = openToRight
           ? pageX + width + rightOffset
           : pageX + width - menuWidth
@@ -100,13 +115,13 @@ export function DropdownButton({
         style={style}
         onPress={onPress}
         hitSlop={HITSLOP}
-        ref={ref}>
+        ref={ref1}>
         {children}
       </TouchableOpacity>
     )
   }
   return (
-    <View ref={ref}>
+    <View ref={ref2}>
       <Button testID={testID} onPress={onPress} style={style} label={label}>
         {children}
       </Button>
@@ -122,8 +137,10 @@ export function PostDropdownBtn({
   itemCid,
   itemHref,
   isAuthor,
+  isThreadMuted,
   onCopyPostText,
   onOpenTranslate,
+  onToggleThreadMute,
   onDeletePost,
 }: {
   testID?: string
@@ -134,8 +151,10 @@ export function PostDropdownBtn({
   itemHref: string
   itemTitle: string
   isAuthor: boolean
+  isThreadMuted: boolean
   onCopyPostText: () => void
   onOpenTranslate: () => void
+  onToggleThreadMute: () => void
   onDeletePost: () => void
 }) {
   const store = useStores()
@@ -174,6 +193,16 @@ export function PostDropdownBtn({
         }
       },
     },
+    {sep: true},
+    {
+      testID: 'postDropdownMuteThreadBtn',
+      icon: 'comment-slash',
+      label: isThreadMuted ? 'Unmute thread' : 'Mute thread',
+      onPress() {
+        onToggleThreadMute()
+      },
+    },
+    {sep: true},
     {
       testID: 'postDropdownReportBtn',
       icon: 'circle-exclamation',
@@ -186,21 +215,19 @@ export function PostDropdownBtn({
         })
       },
     },
-    isAuthor
-      ? {
-          testID: 'postDropdownDeleteBtn',
-          icon: ['far', 'trash-can'],
-          label: 'Delete post',
-          onPress() {
-            store.shell.openModal({
-              name: 'confirm',
-              title: 'Delete this post?',
-              message: 'Are you sure? This can not be undone.',
-              onPressConfirm: onDeletePost,
-            })
-          },
-        }
-      : undefined,
+    isAuthor && {
+      testID: 'postDropdownDeleteBtn',
+      icon: ['far', 'trash-can'],
+      label: 'Delete post',
+      onPress() {
+        store.shell.openModal({
+          name: 'confirm',
+          title: 'Delete this post?',
+          message: 'Are you sure? This can not be undone.',
+          onPressConfirm: onDeletePost,
+        })
+      },
+    },
   ].filter(Boolean) as DropdownItem[]
 
   return (
@@ -208,7 +235,7 @@ export function PostDropdownBtn({
       testID={testID}
       style={style}
       items={dropdownItems}
-      menuWidth={200}>
+      menuWidth={isWeb ? 220 : 200}>
       {children}
     </DropdownButton>
   )
@@ -222,7 +249,10 @@ function createDropdownMenu(
 ): RootSiblings {
   const onPressItem = (index: number) => {
     sibling.destroy()
-    items[index].onPress()
+    const item = items[index]
+    if (isBtn(item)) {
+      item.onPress()
+    }
   }
   const onOuterPress = () => sibling.destroy()
   const sibling = new RootSiblings(
@@ -238,6 +268,74 @@ function createDropdownMenu(
     ),
   )
   return sibling
+}
+
+type DropDownItemProps = {
+  onOuterPress: () => void
+  x: number
+  y: number
+  width: number
+  items: DropdownItem[]
+  onPressItem: (index: number) => void
+}
+
+const DropdownItems = ({
+  onOuterPress,
+  x,
+  y,
+  width,
+  items,
+  onPressItem,
+}: DropDownItemProps) => {
+  const pal = usePalette('default')
+  const theme = useTheme()
+  const dropDownBackgroundColor =
+    theme.colorScheme === 'dark' ? pal.btn : pal.view
+
+  return (
+    <>
+      <TouchableWithoutFeedback onPress={onOuterPress}>
+        <View style={[styles.bg]} />
+      </TouchableWithoutFeedback>
+      <View
+        style={[
+          styles.menu,
+          {left: x, top: y, width},
+          dropDownBackgroundColor,
+        ]}>
+        {items.map((item, index) => {
+          if (isBtn(item)) {
+            return (
+              <TouchableOpacity
+                testID={item.testID}
+                key={index}
+                style={[styles.menuItem]}
+                onPress={() => onPressItem(index)}>
+                {item.icon && (
+                  <FontAwesomeIcon
+                    style={styles.icon}
+                    icon={item.icon}
+                    color={pal.text.color as string}
+                  />
+                )}
+                <Text style={[styles.label, pal.text]}>{item.label}</Text>
+              </TouchableOpacity>
+            )
+          } else if (isSep(item)) {
+            return <View key={index} style={[styles.separator, pal.border]} />
+          }
+          return null
+        })}
+      </View>
+    </>
+  )
+}
+
+function isSep(item: DropdownItem): item is DropdownItemSeparator {
+  return 'sep' in item && item.sep
+}
+function isBtn(item: DropdownItem): item is DropdownItemButton {
+  return !isSep(item)
 }
 
 const styles = StyleSheet.create({
@@ -277,57 +375,8 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
   },
+  separator: {
+    borderTopWidth: 1,
+    marginVertical: 8,
+  },
 })
-type DropDownItemProps = {
-  onOuterPress: () => void
-  x: number
-  y: number
-  width: number
-  items: DropdownItem[]
-  onPressItem: (index: number) => void
-}
-
-const DropdownItems = ({
-  onOuterPress,
-  x,
-  y,
-  width,
-  items,
-  onPressItem,
-}: DropDownItemProps) => {
-  const pal = usePalette('default')
-  const theme = useTheme()
-  const dropDownBackgroundColor =
-    theme.colorScheme === 'dark' ? pal.btn : pal.view
-
-  return (
-    <>
-      <TouchableWithoutFeedback onPress={onOuterPress}>
-        <View style={[styles.bg]} />
-      </TouchableWithoutFeedback>
-      <View
-        style={[
-          styles.menu,
-          {left: x, top: y, width},
-          dropDownBackgroundColor,
-        ]}>
-        {items.map((item, index) => (
-          <TouchableOpacity
-            testID={item.testID}
-            key={index}
-            style={[styles.menuItem]}
-            onPress={() => onPressItem(index)}>
-            {item.icon && (
-              <FontAwesomeIcon
-                style={styles.icon}
-                icon={item.icon}
-                color={pal.text.color as string}
-              />
-            )}
-            <Text style={[styles.label, pal.text]}>{item.label}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </>
-  )
-}

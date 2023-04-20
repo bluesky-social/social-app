@@ -160,6 +160,13 @@ export class NotificationsFeedItemModel {
     return ''
   }
 
+  get reasonSubjectRootUri(): string | undefined {
+    if (this.additionalPost) {
+      return this.additionalPost.rootUri
+    }
+    return undefined
+  }
+
   toSupportedRecord(v: unknown): SupportedRecord | undefined {
     for (const ns of [
       AppBskyFeedPost,
@@ -227,7 +234,7 @@ export class NotificationsFeedModel {
 
   // data
   notifications: NotificationsFeedItemModel[] = []
-  queuedNotifications: undefined | ListNotifications.Notification[] = undefined
+  queuedNotifications: undefined | NotificationsFeedItemModel[] = undefined
   unreadCount = 0
 
   // this is used to help trigger push notifications
@@ -354,7 +361,13 @@ export class NotificationsFeedModel {
         queue.push(notif)
       }
 
-      this._setQueued(this._filterNotifications(queue))
+      // NOTE
+      // because filtering depends on the added information we have to fetch
+      // the full models here. this is *not* ideal performance and we need
+      // to update the notifications route to give all the info we need
+      // -prf
+      const queueModels = await this._fetchItemModels(queue)
+      this._setQueued(this._filterNotifications(queueModels))
       this._countUnread()
     } catch (e) {
       this.rootStore.log.error('NotificationsModel:syncQueue failed', {e})
@@ -452,7 +465,8 @@ export class NotificationsFeedModel {
       res.data.notifications[0],
     )
     await notif.fetchAdditionalData()
-    return notif
+    const filtered = this._filterNotifications([notif])
+    return filtered[0]
   }
 
   // state transitions
@@ -505,23 +519,26 @@ export class NotificationsFeedModel {
   }
 
   _filterNotifications(
-    items: ListNotifications.Notification[],
-  ): ListNotifications.Notification[] {
+    items: NotificationsFeedItemModel[],
+  ): NotificationsFeedItemModel[] {
     return items.filter(item => {
-      return (
-        this.rootStore.preferences.getLabelPreference(item.labels).pref !==
+      const hideByLabel =
+        this.rootStore.preferences.getLabelPreference(item.labels).pref ===
         'hide'
+      let mutedThread = !!(
+        item.reasonSubjectRootUri &&
+        this.rootStore.mutedThreads.uris.has(item.reasonSubjectRootUri)
       )
+      return !hideByLabel && !mutedThread
     })
   }
 
-  async _processNotifications(
+  async _fetchItemModels(
     items: ListNotifications.Notification[],
   ): Promise<NotificationsFeedItemModel[]> {
     const promises = []
     const itemModels: NotificationsFeedItemModel[] = []
-    items = this._filterNotifications(items)
-    for (const item of groupNotifications(items)) {
+    for (const item of items) {
       const itemModel = new NotificationsFeedItemModel(
         this.rootStore,
         `item-${_idCounter++}`,
@@ -541,7 +558,14 @@ export class NotificationsFeedModel {
     return itemModels
   }
 
-  _setQueued(queued: undefined | ListNotifications.Notification[]) {
+  async _processNotifications(
+    items: ListNotifications.Notification[],
+  ): Promise<NotificationsFeedItemModel[]> {
+    const itemModels = await this._fetchItemModels(groupNotifications(items))
+    return this._filterNotifications(itemModels)
+  }
+
+  _setQueued(queued: undefined | NotificationsFeedItemModel[]) {
     this.queuedNotifications = queued
   }
 

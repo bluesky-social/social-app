@@ -20,6 +20,7 @@ import {InvitedUsers} from './invited-users'
 import {PreferencesModel} from './ui/preferences'
 import {resetToTab} from '../../Navigation'
 import {ImageSizesCache} from './cache/image-sizes'
+import {MutedThreads} from './muted-threads'
 
 export const appInfo = z.object({
   build: z.string(),
@@ -41,6 +42,7 @@ export class RootStoreModel {
   profiles = new ProfilesCache(this)
   linkMetas = new LinkMetasCache(this)
   imageSizes = new ImageSizesCache()
+  mutedThreads = new MutedThreads()
 
   constructor(agent: BskyAgent) {
     this.agent = agent
@@ -64,6 +66,7 @@ export class RootStoreModel {
       shell: this.shell.serialize(),
       preferences: this.preferences.serialize(),
       invitedUsers: this.invitedUsers.serialize(),
+      mutedThreads: this.mutedThreads.serialize(),
     }
   }
 
@@ -89,6 +92,9 @@ export class RootStoreModel {
       }
       if (hasProp(v, 'invitedUsers')) {
         this.invitedUsers.hydrate(v.invitedUsers)
+      }
+      if (hasProp(v, 'mutedThreads')) {
+        this.mutedThreads.hydrate(v.mutedThreads)
       }
     }
   }

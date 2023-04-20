@@ -77,25 +77,43 @@ export const PostThreadItem = observer(function PostThreadItem({
       onPost: onPostReply,
     })
   }, [store, item, record, onPostReply])
+
   const onPressToggleRepost = React.useCallback(() => {
     return item
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
   }, [item, store])
+
   const onPressToggleLike = React.useCallback(() => {
     return item
       .toggleLike()
       .catch(e => store.log.error('Failed to toggle like', e))
   }, [item, store])
+
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')
     Toast.show('Copied to clipboard')
   }, [record])
+
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(
       encodeURI(`https://translate.google.com/#auto|en|${record?.text || ''}`),
     )
   }, [record])
+
+  const onToggleThreadMute = React.useCallback(async () => {
+    try {
+      await item.toggleThreadMute()
+      if (item.isThreadMuted) {
+        Toast.show('You will no longer received notifications for this thread')
+      } else {
+        Toast.show('You will now receive notifications for this thread')
+      }
+    } catch (e) {
+      store.log.error('Failed to toggle thread mute', e)
+    }
+  }, [item, store])
+
   const onDeletePost = React.useCallback(() => {
     item.delete().then(
       () => {
@@ -175,8 +193,10 @@ export const PostThreadItem = observer(function PostThreadItem({
                 itemHref={itemHref}
                 itemTitle={itemTitle}
                 isAuthor={item.post.author.did === store.me.did}
+                isThreadMuted={item.isThreadMuted}
                 onCopyPostText={onCopyPostText}
                 onOpenTranslate={onOpenTranslate}
+                onToggleThreadMute={onToggleThreadMute}
                 onDeletePost={onDeletePost}>
                 <FontAwesomeIcon
                   icon="ellipsis-h"
@@ -269,11 +289,13 @@ export const PostThreadItem = observer(function PostThreadItem({
               isAuthor={item.post.author.did === store.me.did}
               isReposted={!!item.post.viewer?.repost}
               isLiked={!!item.post.viewer?.like}
+              isThreadMuted={item.isThreadMuted}
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
               onPressToggleLike={onPressToggleLike}
               onCopyPostText={onCopyPostText}
               onOpenTranslate={onOpenTranslate}
+              onToggleThreadMute={onToggleThreadMute}
               onDeletePost={onDeletePost}
             />
           </View>
@@ -357,11 +379,13 @@ export const PostThreadItem = observer(function PostThreadItem({
                 likeCount={item.post.likeCount}
                 isReposted={!!item.post.viewer?.repost}
                 isLiked={!!item.post.viewer?.like}
+                isThreadMuted={item.isThreadMuted}
                 onPressReply={onPressReply}
                 onPressToggleRepost={onPressToggleRepost}
                 onPressToggleLike={onPressToggleLike}
                 onCopyPostText={onCopyPostText}
                 onOpenTranslate={onOpenTranslate}
+                onToggleThreadMute={onToggleThreadMute}
                 onDeletePost={onDeletePost}
               />
             </View>
