@@ -135,8 +135,9 @@ export const Feed = observer(function Feed({
           />
         )}
       </CenteredView>
-      {data.length && (
+      {data.length ? (
         <FlatList
+          testID="notifsFeed"
           ref={scrollElRef}
           data={data}
           keyExtractor={item => item._reactKey}
@@ -155,7 +156,7 @@ export const Feed = observer(function Feed({
           onScroll={onScroll}
           contentContainerStyle={s.contentContainer}
         />
-      )}
+      ) : null}
     </View>
   )
 })

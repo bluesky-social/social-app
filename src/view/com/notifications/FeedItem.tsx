@@ -85,7 +85,11 @@ export const FeedItem = observer(function FeedItem({
       return <View />
     }
     return (
-      <Link href={itemHref} title={itemTitle} noFeedback>
+      <Link
+        testID={`feedItem-by-${item.author.handle}`}
+        href={itemHref}
+        title={itemTitle}
+        noFeedback>
         <Post
           uri={item.uri}
           initView={item.additionalPost}
@@ -147,6 +151,7 @@ export const FeedItem = observer(function FeedItem({
 
   return (
     <Link
+      testID={`feedItem-by-${item.author.handle}`}
       style={[
         styles.outer,
         pal.view,

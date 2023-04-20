@@ -252,6 +252,7 @@ const PostLoaded = observer(
               {item.richText?.text ? (
                 <View style={styles.postTextContainer}>
                   <RichText
+                    testID="postText"
                     type="post-text"
                     richText={item.richText}
                     lineHeight={1.3}
