@@ -172,7 +172,7 @@ export const FeedItem = observer(function FeedItem({
           />
         )}
       </View>
-      <View>
+      <View style={styles.layoutContent}>
         <Pressable
           onPress={authors.length > 1 ? onToggleAuthorsExpanded : () => {}}>
           <CondensedAuthorsList
@@ -392,6 +392,9 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 10,
     marginTop: 4,
+  },
+  layoutContent: {
+    flex: 1,
   },
   avis: {
     flexDirection: 'row',
