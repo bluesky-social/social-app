@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     left: '50vw',
     // @ts-ignore web only -prf
     transform: 'translateX(-50%)',
-    top: 30,
+    top: 60,
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowOffset: {width: 0, height: 2},
