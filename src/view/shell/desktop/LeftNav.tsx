@@ -95,11 +95,11 @@ const NavItem = observer(
         <Link href={href} style={styles.navItem}>
           <View style={[styles.navItemIconWrapper]}>
             {isCurrent ? iconFilled : icon}
-            {typeof count === 'string' && count && (
+            {typeof count === 'string' && count ? (
               <Text type="button" style={styles.navItemCount}>
                 {count}
               </Text>
-            )}
+            ) : null}
           </View>
           <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
             {label}
