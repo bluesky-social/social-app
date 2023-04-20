@@ -465,7 +465,8 @@ export class NotificationsFeedModel {
       res.data.notifications[0],
     )
     await notif.fetchAdditionalData()
-    return notif
+    const filtered = this._filterNotifications([notif])
+    return filtered[0]
   }
 
   // state transitions
