@@ -3,7 +3,7 @@
     "name": "Bluesky",
     "slug": "bluesky",
     "owner": "blueskysocial",
-    "version": "1.18.0",
+    "version": "1.19.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -34,7 +34,7 @@
       "backgroundColor": "#ffffff"
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 4,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
