@@ -1,5 +1,5 @@
 import React, {createRef, useState, useMemo, useRef} from 'react'
-import {Animated, StyleSheet, View} from 'react-native'
+import {Animated, Pressable, StyleSheet, View} from 'react-native'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
@@ -104,20 +104,20 @@ export function TabBar({
       {items.map((item, i) => {
         const selected = i === selectedPage
         return (
-          <View
+          <Pressable
+            key={item}
             style={
               indicatorPosition === 'top' ? styles.itemTop : styles.itemBottom
             }
-            ref={itemRefs[i]}>
+            ref={itemRefs[i]}
+            onPress={() => onPressItem(i)}>
             <Text
-              key={item}
               type="xl-bold"
               testID={testID ? `${testID}-${item}` : undefined}
-              onPress={() => onPressItem(i)}
               style={selected ? pal.text : pal.textLight}>
               {item}
             </Text>
-          </View>
+          </Pressable>
         )
       })}
     </View>

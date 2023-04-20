@@ -15,7 +15,9 @@ export type LabelPreference = 'show' | 'warn' | 'hide'
 
 export class LabelPreferencesModel {
   nsfw: LabelPreference = 'warn'
-  gore: LabelPreference = 'hide'
+  nudity: LabelPreference = 'show'
+  suggestive: LabelPreference = 'show'
+  gore: LabelPreference = 'warn'
   hate: LabelPreference = 'hide'
   spam: LabelPreference = 'hide'
   impersonation: LabelPreference = 'warn'

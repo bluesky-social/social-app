@@ -9,6 +9,7 @@ import {AtUri} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
+import {updateDataOptimistically} from 'lib/async/revertible'
 
 function* reactKeyGenerator(): Generator<string> {
   let counter = 0
@@ -134,45 +135,56 @@ export class PostThreadItemModel {
   }
 
   async toggleLike() {
-    if (this.post.viewer?.like) {
-      await this.rootStore.agent.deleteLike(this.post.viewer.like)
-      runInAction(() => {
-        this.post.likeCount = this.post.likeCount || 0
-        this.post.viewer = this.post.viewer || {}
-        this.post.likeCount--
-        this.post.viewer.like = undefined
-      })
+    this.post.viewer = this.post.viewer || {}
+    if (this.post.viewer.like) {
+      const url = this.post.viewer.like
+      await updateDataOptimistically(
+        this.post,
+        () => {
+          this.post.likeCount = (this.post.likeCount || 0) - 1
+          this.post.viewer!.like = undefined
+        },
+        () => this.rootStore.agent.deleteLike(url),
+      )
     } else {
-      const res = await this.rootStore.agent.like(this.post.uri, this.post.cid)
-      runInAction(() => {
-        this.post.likeCount = this.post.likeCount || 0
-        this.post.viewer = this.post.viewer || {}
-        this.post.likeCount++
-        this.post.viewer.like = res.uri
-      })
+      await updateDataOptimistically(
+        this.post,
+        () => {
+          this.post.likeCount = (this.post.likeCount || 0) + 1
+          this.post.viewer!.like = 'pending'
+        },
+        () => this.rootStore.agent.like(this.post.uri, this.post.cid),
+        res => {
+          this.post.viewer!.like = res.uri
+        },
+      )
     }
   }
 
   async toggleRepost() {
+    this.post.viewer = this.post.viewer || {}
     if (this.post.viewer?.repost) {
-      await this.rootStore.agent.deleteRepost(this.post.viewer.repost)
-      runInAction(() => {
-        this.post.repostCount = this.post.repostCount || 0
-        this.post.viewer = this.post.viewer || {}
-        this.post.repostCount--
-        this.post.viewer.repost = undefined
-      })
-    } else {
-      const res = await this.rootStore.agent.repost(
-        this.post.uri,
-        this.post.cid,
+      const url = this.post.viewer.repost
+      await updateDataOptimistically(
+        this.post,
+        () => {
+          this.post.repostCount = (this.post.repostCount || 0) - 1
+          this.post.viewer!.repost = undefined
+        },
+        () => this.rootStore.agent.deleteRepost(url),
       )
-      runInAction(() => {
-        this.post.repostCount = this.post.repostCount || 0
-        this.post.viewer = this.post.viewer || {}
-        this.post.repostCount++
-        this.post.viewer.repost = res.uri
-      })
+    } else {
+      await updateDataOptimistically(
+        this.post,
+        () => {
+          this.post.repostCount = (this.post.repostCount || 0) + 1
+          this.post.viewer!.repost = 'pending'
+        },
+        () => this.rootStore.agent.repost(this.post.uri, this.post.cid),
+        res => {
+          this.post.viewer!.repost = res.uri
+        },
+      )
     }
   }
 

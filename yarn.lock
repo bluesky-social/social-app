@@ -4540,6 +4540,13 @@
   dependencies:
     "@types/lodash" "*"
 
+"@types/lodash.set@^4.3.7":
+  version "4.3.7"
+  resolved "https://registry.yarnpkg.com/@types/lodash.set/-/lodash.set-4.3.7.tgz#784fccea3fbef4d0949d1897a780f592da700942"
+  integrity sha512-bS5Wkg/nrT82YUfkNYPSccFrNZRL+irl7Yt4iM6OTSQ0VZJED2oUIVm15NkNtUAQ8SRhCe+axqERUV6MJgkeEg==
+  dependencies:
+    "@types/lodash" "*"
+
 "@types/lodash.shuffle@^4.2.7":
   version "4.2.7"
   resolved "https://registry.yarnpkg.com/@types/lodash.shuffle/-/lodash.shuffle-4.2.7.tgz#b714d829af948a266b0df1477d629c70de2f4c72"
@@ -11767,6 +11774,11 @@ lodash.samplesize@^4.2.0:
   resolved "https://registry.yarnpkg.com/lodash.samplesize/-/lodash.samplesize-4.2.0.tgz#460762fbb2b342290517499e90d51586db465ff9"
   integrity sha512-1ZhKV7/nuISuaQdxfCqrs4HHxXIYN+0Z4f7NMQn2PHkxFZJGavJQ1j/paxyJnLJmN2ZamNN6SMepneV+dCgQTA==
 
+lodash.set@^4.3.2:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/lodash.set/-/lodash.set-4.3.2.tgz#d8757b1da807dde24816b0d6a84bea1a76230b23"
+  integrity sha512-4hNPN5jlm/N/HLMCO43v8BXKq9Z7QdAGc/VGrRD61w8gN9g/6jF9A4L1pbUgBLCffi0w9VsXfTOij5x8iTyFvg==
+
 lodash.shuffle@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/lodash.shuffle/-/lodash.shuffle-4.2.0.tgz#145b5053cf875f6f5c2a33f48b6e9948c6ec7b4b"
@@ -12513,6 +12525,11 @@ mobx-react-lite@^3.4.0:
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-3.4.3.tgz#3a4c22c30bfaa8b1b2aa48d12b2ba811c0947ab7"
   integrity sha512-NkJREyFTSUXR772Qaai51BnE1voWx56LOL80xG7qkZr6vo8vEaLF3sz1JNUVh+rxmUzxYaqOhfuxTfqUh0FXUg==
+
+mobx-utils@^6.0.6:
+  version "6.0.6"
+  resolved "https://registry.yarnpkg.com/mobx-utils/-/mobx-utils-6.0.6.tgz#99a2e0d54e958e4c9de4b35729e0c3768b6afc43"
+  integrity sha512-lzJtxOWgj3Dp2HeXviInV3ZRY4YhThzRHXuy90oKXDH2g+ymJGIts4bdjb7NQuSi34V25cMZoQX7TkHJQuKLOQ==
 
 mobx@^6.6.1:
   version "6.8.0"

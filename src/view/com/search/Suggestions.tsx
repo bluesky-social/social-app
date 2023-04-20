@@ -91,7 +91,7 @@ export const Suggestions = observer(
         for (const source of foafs.sources) {
           const item = foafs.foafs.get(source)
           if (!item || item.follows.length === 0) {
-            return
+            continue
           }
           items = items
             .concat([
