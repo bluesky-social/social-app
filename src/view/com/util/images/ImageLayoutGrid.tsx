@@ -67,72 +67,169 @@ function ImageLayoutGridInner({
   onPressIn,
   containerInfo,
 }: ImageLayoutGridInnerProps) {
-  const numImages = images.length
-  const offset = numImages > 1 ? 10 : 0
-
+  const count = images.length
   const size1 = useMemo<ImageStyle>(() => {
-    const size =
-      (containerInfo.width - offset * (numImages === 3 ? 2 : 1)) /
-      (numImages === 3 ? 3 : 2)
-    return {
-      width: size,
-      height: size,
-      resizeMode: 'cover',
-      borderRadius: 4,
+    if (count === 3) {
+      const size = (containerInfo.width - 10) / 3
+      return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
+    } else {
+      const size = (containerInfo.width - 5) / 2
+      return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     }
-  }, [numImages, containerInfo, offset])
-
+  }, [count, containerInfo])
   const size2 = React.useMemo<ImageStyle>(() => {
-    const size = (containerInfo.width * 2) / 3
-    return {
-      width: size - offset,
-      height: size,
-      resizeMode: 'cover',
-      borderRadius: 4,
+    if (count === 3) {
+      const size = ((containerInfo.width - 10) / 3) * 2 + 5
+      return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
+    } else {
+      const size = (containerInfo.width - 5) / 2
+      return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     }
-  }, [containerInfo, offset])
+  }, [count, containerInfo])
 
-  const direction = (
-    numImages === 3
-      ? {
-          flexDirection: 'column',
-          maxHeight: size2.height,
-        }
-      : {flexDirection: 'row'}
-  ) as ViewStyle
-
-  if (numImages > 0) {
+  if (count === 2) {
     return (
-      <View style={[styles.gallery, direction]}>
-        {images.map(({alt, thumb}, index) => {
-          const size = numImages === 3 && index === 0 ? size2 : size1
-
-          return (
-            <TouchableOpacity
-              key={index}
-              delayPressIn={DELAY_PRESS_IN}
-              onPress={() => onPress?.(index)}
-              onPressIn={() => onPressIn?.(index)}
-              onLongPress={() => onLongPress?.(index)}>
-              <Image
-                source={{uri: thumb}}
-                style={size}
-                accessible={true}
-                accessibilityLabel={alt}
-              />
-            </TouchableOpacity>
-          )
-        })}
+      <View style={styles.flexRow}>
+        <TouchableOpacity
+          delayPressIn={DELAY_PRESS_IN}
+          onPress={() => onPress?.(0)}
+          onPressIn={() => onPressIn?.(0)}
+          onLongPress={() => onLongPress?.(0)}>
+          <Image
+            source={{uri: images[0].thumb}}
+            style={size1}
+            accessible={true}
+            accessibilityLabel={images[0].alt}
+          />
+        </TouchableOpacity>
+        <View style={styles.wSpace} />
+        <TouchableOpacity
+          delayPressIn={DELAY_PRESS_IN}
+          onPress={() => onPress?.(1)}
+          onPressIn={() => onPressIn?.(1)}
+          onLongPress={() => onLongPress?.(1)}>
+          <Image
+            source={{uri: images[1].thumb}}
+            style={size1}
+            accessible={true}
+            accessibilityLabel={images[1].alt}
+          />
+        </TouchableOpacity>
       </View>
     )
   }
-
-  return null
+  if (count === 3) {
+    return (
+      <View style={styles.flexRow}>
+        <TouchableOpacity
+          delayPressIn={DELAY_PRESS_IN}
+          onPress={() => onPress?.(0)}
+          onPressIn={() => onPressIn?.(0)}
+          onLongPress={() => onLongPress?.(0)}>
+          <Image
+            source={{uri: images[0].thumb}}
+            style={size2}
+            accessible={true}
+            accessibilityLabel={images[0].alt}
+          />
+        </TouchableOpacity>
+        <View style={styles.wSpace} />
+        <View>
+          <TouchableOpacity
+            delayPressIn={DELAY_PRESS_IN}
+            onPress={() => onPress?.(1)}
+            onPressIn={() => onPressIn?.(1)}
+            onLongPress={() => onLongPress?.(1)}>
+            <Image
+              source={{uri: images[1].thumb}}
+              style={size1}
+              accessible={true}
+              accessibilityLabel={images[1].alt}
+            />
+          </TouchableOpacity>
+          <View style={styles.hSpace} />
+          <TouchableOpacity
+            delayPressIn={DELAY_PRESS_IN}
+            onPress={() => onPress?.(2)}
+            onPressIn={() => onPressIn?.(2)}
+            onLongPress={() => onLongPress?.(2)}>
+            <Image
+              source={{uri: images[2].thumb}}
+              style={size1}
+              accessible={true}
+              accessibilityLabel={images[2].alt}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+  if (count === 4) {
+    return (
+      <View style={styles.flexRow}>
+        <View>
+          <TouchableOpacity
+            delayPressIn={DELAY_PRESS_IN}
+            onPress={() => onPress?.(0)}
+            onPressIn={() => onPressIn?.(0)}
+            onLongPress={() => onLongPress?.(0)}>
+            <Image
+              source={{uri: images[0].thumb}}
+              style={size1}
+              accessible={true}
+              accessibilityLabel={images[0].alt}
+            />
+          </TouchableOpacity>
+          <View style={styles.hSpace} />
+          <TouchableOpacity
+            delayPressIn={DELAY_PRESS_IN}
+            onPress={() => onPress?.(2)}
+            onPressIn={() => onPressIn?.(2)}
+            onLongPress={() => onLongPress?.(2)}>
+            <Image
+              source={{uri: images[2].thumb}}
+              style={size1}
+              accessible={true}
+              accessibilityLabel={images[2].alt}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.wSpace} />
+        <View>
+          <TouchableOpacity
+            delayPressIn={DELAY_PRESS_IN}
+            onPress={() => onPress?.(1)}
+            onPressIn={() => onPressIn?.(1)}
+            onLongPress={() => onLongPress?.(1)}>
+            <Image
+              source={{uri: images[1].thumb}}
+              style={size1}
+              accessible={true}
+              accessibilityLabel={images[1].alt}
+            />
+          </TouchableOpacity>
+          <View style={styles.hSpace} />
+          <TouchableOpacity
+            delayPressIn={DELAY_PRESS_IN}
+            onPress={() => onPress?.(3)}
+            onPressIn={() => onPressIn?.(3)}
+            onLongPress={() => onLongPress?.(3)}>
+            <Image
+              source={{uri: images[3].thumb}}
+              style={size1}
+              accessible={true}
+              accessibilityLabel={images[3].alt}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+  return <View />
 }
 
 const styles = StyleSheet.create({
-  gallery: {
-    flexWrap: 'wrap',
-    gap: 5,
-  },
+  flexRow: {flexDirection: 'row'},
+  wSpace: {width: 5},
+  hSpace: {height: 5},
 })
