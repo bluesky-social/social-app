@@ -63,11 +63,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
     left: '50%',
-    width: 640,
+    width: 598,
     top: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 18,
   },
   tabBarAvi: {
     marginTop: 1,
