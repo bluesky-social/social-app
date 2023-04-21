@@ -270,7 +270,7 @@ export const SettingsScreen = withAuthRequired(
           <Link
             testID="appPasswordBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            href="/app-passwords">
+            href="/settings/app-passwords">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="lock"
