@@ -21,6 +21,7 @@ import {PreferencesModel} from './ui/preferences'
 import {resetToTab} from '../../Navigation'
 import {ImageSizesCache} from './cache/image-sizes'
 import {MutedThreads} from './muted-threads'
+import {reset as resetNavigation} from '../../Navigation'
 
 export const appInfo = z.object({
   build: z.string(),
@@ -123,6 +124,7 @@ export class RootStoreModel {
     this.agent = agent
     this.me.clear()
     await this.me.load()
+    resetNavigation()
   }
 
   /**
