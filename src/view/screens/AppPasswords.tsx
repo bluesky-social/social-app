@@ -39,7 +39,12 @@ export const AppPasswords = withAuthRequired(
     if (store.me.appPasswords.length === 0) {
       return (
         <CenteredView
-          style={[styles.container, pal.view]}
+          style={[
+            styles.container,
+            isDesktopWeb && styles.containerDesktop,
+            pal.view,
+            pal.border,
+          ]}
           testID="appPasswordsScreen">
           <AppPasswordsHeader />
           <View style={[styles.empty, pal.viewLight]}>
@@ -49,7 +54,11 @@ export const AppPasswords = withAuthRequired(
             </Text>
           </View>
           {!isDesktopWeb && <View style={styles.flex1} />}
-          <View style={styles.btnContainer}>
+          <View
+            style={[
+              styles.btnContainer,
+              isDesktopWeb && styles.btnContainerDesktop,
+            ]}>
             <Button
               testID="appPasswordBtn"
               type="primary"
@@ -66,7 +75,12 @@ export const AppPasswords = withAuthRequired(
     // has app passwords
     return (
       <CenteredView
-        style={[styles.container, pal.view]}
+        style={[
+          styles.container,
+          isDesktopWeb && styles.containerDesktop,
+          pal.view,
+          pal.border,
+        ]}
         testID="appPasswordsScreen">
         <AppPasswordsHeader />
         <ScrollView
@@ -186,6 +200,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: isDesktopWeb ? 0 : 100,
+  },
+  containerDesktop: {
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
   },
   title: {
     textAlign: 'center',
