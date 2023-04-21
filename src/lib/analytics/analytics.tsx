@@ -22,8 +22,8 @@ export function useAnalytics() {
   return React.useMemo(() => {
     if (store.session.hasSession) {
       return {
-        screen: methods.screen as ScreenEvent,
-        track: methods.track as TrackEvent,
+        screen: methods.screen as ScreenEvent, // ScreenEvents defines all the possible screen names
+        track: methods.track as TrackEvent, // TrackEvents defines all the possible track events and their properties
         identify: methods.identify,
         flush: methods.flush,
         group: methods.group,
