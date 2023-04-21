@@ -10,15 +10,15 @@ import {
 import {AtUri} from '@atproto/api'
 import {RootStoreModel} from 'state/models/root-store'
 import {isNetworkError} from 'lib/strings/errors'
-import {Image} from 'lib/media/types'
 import {LinkMeta} from '../link-meta/link-meta'
 import {isWeb} from 'platform/detection'
+import {ImageModel} from 'state/models/media/image'
 
 export interface ExternalEmbedDraft {
   uri: string
   isLoading: boolean
   meta?: LinkMeta
-  localThumb?: Image
+  localThumb?: ImageModel
 }
 
 export async function resolveName(store: RootStoreModel, didOrHandle: string) {
@@ -61,7 +61,7 @@ interface PostOpts {
     cid: string
   }
   extLink?: ExternalEmbedDraft
-  images?: string[]
+  images?: ImageModel[]
   knownHandles?: Set<string>
   onStateChange?: (state: string) => void
 }
@@ -109,10 +109,11 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     const images: AppBskyEmbedImages.Image[] = []
     for (const image of opts.images) {
       opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
-      const res = await uploadBlob(store, image, 'image/jpeg')
+      const path = image.compressed?.path ?? image.path
+      const res = await uploadBlob(store, path, 'image/jpeg')
       images.push({
         image: res.data.blob,
-        alt: '', // TODO supply alt text
+        alt: image.altText ?? '',
       })
     }
 

@@ -1,5 +1,5 @@
 import React, {useRef, useEffect} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import BottomSheet from '@gorhom/bottom-sheet'
 import {useStores} from 'state/index'
@@ -11,6 +11,7 @@ import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
 import * as RepostModal from './Repost'
+import * as AltImageModal from './AltImage'
 import * as ReportAccountModal from './ReportAccount'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
@@ -68,6 +69,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'repost') {
     snapPoints = RepostModal.snapPoints
     element = <RepostModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'alt-text-image') {
+    snapPoints = AltImageModal.snapPoints
+    element = <AltImageModal.Component {...activeModal} />
   } else if (activeModal?.name === 'change-handle') {
     snapPoints = ChangeHandleModal.snapPoints
     element = <ChangeHandleModal.Component {...activeModal} />
@@ -81,7 +85,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
     snapPoints = ContentFilteringSettingsModal.snapPoints
     element = <ContentFilteringSettingsModal.Component />
   } else {
-    return <View />
+    return null
   }
 
   return (

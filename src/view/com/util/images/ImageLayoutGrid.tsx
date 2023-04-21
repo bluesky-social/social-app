@@ -9,26 +9,25 @@ import {
 } from 'react-native'
 import {Image, ImageStyle} from 'expo-image'
 import {Dimensions} from 'lib/media/types'
+import {AppBskyEmbedImages} from '@atproto/api'
 
 export const DELAY_PRESS_IN = 500
 
-export type ImageLayoutGridType = number
-
-export function ImageLayoutGrid({
-  type,
-  uris,
-  onPress,
-  onLongPress,
-  onPressIn,
-  style,
-}: {
-  type: ImageLayoutGridType
-  uris: string[]
+interface ImageLayoutGridProps {
+  images: AppBskyEmbedImages.ViewImage[]
   onPress?: (index: number) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
   style?: StyleProp<ViewStyle>
-}) {
+}
+
+export function ImageLayoutGrid({
+  images,
+  onPress,
+  onLongPress,
+  onPressIn,
+  style,
+}: ImageLayoutGridProps) {
   const [containerInfo, setContainerInfo] = useState<Dimensions | undefined>()
 
   const onLayout = (evt: LayoutChangeEvent) => {
@@ -42,8 +41,7 @@ export function ImageLayoutGrid({
     <View style={style} onLayout={onLayout}>
       {containerInfo ? (
         <ImageLayoutGridInner
-          type={type}
-          uris={uris}
+          images={images}
           onPress={onPress}
           onPressIn={onPressIn}
           onLongPress={onLongPress}
@@ -54,41 +52,42 @@ export function ImageLayoutGrid({
   )
 }
 
-function ImageLayoutGridInner({
-  type,
-  uris,
-  onPress,
-  onLongPress,
-  onPressIn,
-  containerInfo,
-}: {
-  type: ImageLayoutGridType
-  uris: string[]
+interface ImageLayoutGridInnerProps {
+  images: AppBskyEmbedImages.ViewImage[]
   onPress?: (index: number) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
   containerInfo: Dimensions
-}) {
+}
+
+function ImageLayoutGridInner({
+  images,
+  onPress,
+  onLongPress,
+  onPressIn,
+  containerInfo,
+}: ImageLayoutGridInnerProps) {
+  const count = images.length
   const size1 = useMemo<ImageStyle>(() => {
-    if (type === 3) {
+    if (count === 3) {
       const size = (containerInfo.width - 10) / 3
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     } else {
       const size = (containerInfo.width - 5) / 2
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     }
-  }, [type, containerInfo])
+  }, [count, containerInfo])
   const size2 = React.useMemo<ImageStyle>(() => {
-    if (type === 3) {
+    if (count === 3) {
       const size = ((containerInfo.width - 10) / 3) * 2 + 5
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     } else {
       const size = (containerInfo.width - 5) / 2
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     }
-  }, [type, containerInfo])
+  }, [count, containerInfo])
 
-  if (type === 2) {
+  if (count === 2) {
     return (
       <View style={styles.flexRow}>
         <TouchableOpacity
@@ -96,7 +95,12 @@ function ImageLayoutGridInner({
           onPress={() => onPress?.(0)}
           onPressIn={() => onPressIn?.(0)}
           onLongPress={() => onLongPress?.(0)}>
-          <Image source={{uri: uris[0]}} style={size1} />
+          <Image
+            source={{uri: images[0].thumb}}
+            style={size1}
+            accessible={true}
+            accessibilityLabel={images[0].alt}
+          />
         </TouchableOpacity>
         <View style={styles.wSpace} />
         <TouchableOpacity
@@ -104,12 +108,17 @@ function ImageLayoutGridInner({
           onPress={() => onPress?.(1)}
           onPressIn={() => onPressIn?.(1)}
           onLongPress={() => onLongPress?.(1)}>
-          <Image source={{uri: uris[1]}} style={size1} />
+          <Image
+            source={{uri: images[1].thumb}}
+            style={size1}
+            accessible={true}
+            accessibilityLabel={images[1].alt}
+          />
         </TouchableOpacity>
       </View>
     )
   }
-  if (type === 3) {
+  if (count === 3) {
     return (
       <View style={styles.flexRow}>
         <TouchableOpacity
@@ -117,7 +126,12 @@ function ImageLayoutGridInner({
           onPress={() => onPress?.(0)}
           onPressIn={() => onPressIn?.(0)}
           onLongPress={() => onLongPress?.(0)}>
-          <Image source={{uri: uris[0]}} style={size2} />
+          <Image
+            source={{uri: images[0].thumb}}
+            style={size2}
+            accessible={true}
+            accessibilityLabel={images[0].alt}
+          />
         </TouchableOpacity>
         <View style={styles.wSpace} />
         <View>
@@ -126,7 +140,12 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(1)}
             onPressIn={() => onPressIn?.(1)}
             onLongPress={() => onLongPress?.(1)}>
-            <Image source={{uri: uris[1]}} style={size1} />
+            <Image
+              source={{uri: images[1].thumb}}
+              style={size1}
+              accessible={true}
+              accessibilityLabel={images[1].alt}
+            />
           </TouchableOpacity>
           <View style={styles.hSpace} />
           <TouchableOpacity
@@ -134,13 +153,18 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(2)}
             onPressIn={() => onPressIn?.(2)}
             onLongPress={() => onLongPress?.(2)}>
-            <Image source={{uri: uris[2]}} style={size1} />
+            <Image
+              source={{uri: images[2].thumb}}
+              style={size1}
+              accessible={true}
+              accessibilityLabel={images[2].alt}
+            />
           </TouchableOpacity>
         </View>
       </View>
     )
   }
-  if (type === 4) {
+  if (count === 4) {
     return (
       <View style={styles.flexRow}>
         <View>
@@ -149,7 +173,12 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(0)}
             onPressIn={() => onPressIn?.(0)}
             onLongPress={() => onLongPress?.(0)}>
-            <Image source={{uri: uris[0]}} style={size1} />
+            <Image
+              source={{uri: images[0].thumb}}
+              style={size1}
+              accessible={true}
+              accessibilityLabel={images[0].alt}
+            />
           </TouchableOpacity>
           <View style={styles.hSpace} />
           <TouchableOpacity
@@ -157,7 +186,12 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(2)}
             onPressIn={() => onPressIn?.(2)}
             onLongPress={() => onLongPress?.(2)}>
-            <Image source={{uri: uris[2]}} style={size1} />
+            <Image
+              source={{uri: images[2].thumb}}
+              style={size1}
+              accessible={true}
+              accessibilityLabel={images[2].alt}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.wSpace} />
@@ -167,7 +201,12 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(1)}
             onPressIn={() => onPressIn?.(1)}
             onLongPress={() => onLongPress?.(1)}>
-            <Image source={{uri: uris[1]}} style={size1} />
+            <Image
+              source={{uri: images[1].thumb}}
+              style={size1}
+              accessible={true}
+              accessibilityLabel={images[1].alt}
+            />
           </TouchableOpacity>
           <View style={styles.hSpace} />
           <TouchableOpacity
@@ -175,7 +214,12 @@ function ImageLayoutGridInner({
             onPress={() => onPress?.(3)}
             onPressIn={() => onPressIn?.(3)}
             onLongPress={() => onLongPress?.(3)}>
-            <Image source={{uri: uris[3]}} style={size1} />
+            <Image
+              source={{uri: images[3].thumb}}
+              style={size1}
+              accessible={true}
+              accessibilityLabel={images[3].alt}
+            />
           </TouchableOpacity>
         </View>
       </View>

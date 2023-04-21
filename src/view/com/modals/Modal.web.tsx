@@ -14,6 +14,7 @@ import * as ReportAccountModal from './ReportAccount'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as RepostModal from './Repost'
 import * as CropImageModal from './crop-image/CropImage.web'
+import * as AltTextImageModal from './AltImage'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
@@ -78,6 +79,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <InviteCodesModal.Component />
   } else if (modal.name === 'content-filtering-settings') {
     element = <ContentFilteringSettingsModal.Component />
+  } else if (modal.name === 'alt-text-image') {
+    element = <AltTextImageModal.Component {...modal} />
   } else {
     return null
   }

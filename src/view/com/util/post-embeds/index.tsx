@@ -112,6 +112,7 @@ export function PostEmbeds({
           return (
             <View style={[styles.imagesContainer, style]}>
               <AutoSizedImage
+                alt={embed.images[0].alt}
                 uri={embed.images[0].thumb}
                 onPress={() => openLightbox(0)}
                 onLongPress={() => onLongPress(0)}
@@ -124,8 +125,7 @@ export function PostEmbeds({
           return (
             <View style={[styles.imagesContainer, style]}>
               <ImageLayoutGrid
-                type={embed.images.length}
-                uris={embed.images.map(img => img.thumb)}
+                images={embed.images}
                 onPress={openLightbox}
                 onLongPress={onLongPress}
                 onPressIn={onPressIn}

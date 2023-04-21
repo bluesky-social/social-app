@@ -3,7 +3,7 @@ import {RootStoreModel} from '../root-store'
 import {makeAutoObservable} from 'mobx'
 import {ProfileModel} from '../content/profile'
 import {isObj, hasProp} from 'lib/type-guards'
-import {Image} from 'lib/media/types'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 
 export interface ConfirmModal {
   name: 'confirm'
@@ -38,7 +38,12 @@ export interface ReportAccountModal {
 export interface CropImageModal {
   name: 'crop-image'
   uri: string
-  onSelect: (img?: Image) => void
+  onSelect: (img?: RNImage) => void
+}
+
+export interface AltTextImageModal {
+  name: 'alt-text-image'
+  onAltTextSet: (altText?: string) => void
 }
 
 export interface DeleteAccountModal {
@@ -70,18 +75,30 @@ export interface ContentFilteringSettingsModal {
 }
 
 export type Modal =
-  | ConfirmModal
-  | EditProfileModal
-  | ServerInputModal
-  | ReportPostModal
-  | ReportAccountModal
-  | CropImageModal
-  | DeleteAccountModal
-  | RepostModal
+  // Account
   | ChangeHandleModal
+  | DeleteAccountModal
+  | EditProfileModal
+
+  // Curation
+  | ContentFilteringSettingsModal
+
+  // Reporting
+  | ReportAccountModal
+  | ReportPostModal
+
+  // Posting
+  | AltTextImageModal
+  | CropImageModal
+  | ServerInputModal
+  | RepostModal
+
+  // Bluesky access
   | WaitlistModal
   | InviteCodesModal
-  | ContentFilteringSettingsModal
+
+  // Generic
+  | ConfirmModal
 
 interface LightboxModel {}
 
