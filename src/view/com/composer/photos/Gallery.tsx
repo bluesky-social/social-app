@@ -51,7 +51,7 @@ export const Gallery = observer(function ({gallery}: Props) {
     [gallery],
   )
 
-  const isOverflow = isNative && gallery.size > 2
+  const isOverflow = !isDesktopWeb && gallery.size > 2
 
   const imageControlLabelStyle = {
     borderRadius: 5,
