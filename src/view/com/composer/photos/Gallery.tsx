@@ -8,7 +8,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ImageModel} from 'state/models/media/image'
 import {Image} from 'expo-image'
 import {Text} from 'view/com/util/text/Text'
-import {isDesktopWeb, isNative} from 'platform/detection'
+import {isDesktopWeb} from 'platform/detection'
 
 interface Props {
   gallery: GalleryModel
