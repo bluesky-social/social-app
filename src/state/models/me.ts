@@ -186,7 +186,6 @@ export class MeModel {
           await this.rootStore.agent.com.atproto.server.listAppPasswords({})
         runInAction(() => {
           this.appPasswords = res.data.passwords
-          console.log('app passwords', res.data.passwords)
         })
       } catch (e) {
         this.rootStore.log.error('Failed to fetch user app passwords', e)
