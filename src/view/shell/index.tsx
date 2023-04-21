@@ -54,7 +54,6 @@ const ShellInner = observer(() => {
           </Drawer>
         </ErrorBoundary>
       </View>
-      <ModalsContainer />
       <Lightbox />
       <Composer
         active={store.shell.isComposerActive}
@@ -64,6 +63,7 @@ const ShellInner = observer(() => {
         onPost={store.shell.composerOpts?.onPost}
         quote={store.shell.composerOpts?.quote}
       />
+      <ModalsContainer />
     </>
   )
 })
