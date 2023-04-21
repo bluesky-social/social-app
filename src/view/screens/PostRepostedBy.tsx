@@ -22,7 +22,7 @@ export const PostRepostedByScreen = withAuthRequired(({route}: Props) => {
 
   return (
     <View>
-      <ViewHeader title="Reposted by" />
+      <ViewHeader title="Reposted by" showOnDesktop />
       <PostRepostedByComponent uri={uri} />
     </View>
   )

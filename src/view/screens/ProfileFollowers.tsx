@@ -20,7 +20,7 @@ export const ProfileFollowersScreen = withAuthRequired(({route}: Props) => {
 
   return (
     <View>
-      <ViewHeader title="Followers" />
+      <ViewHeader title="Followers" showOnDesktop />
       <ProfileFollowersComponent name={name} />
     </View>
   )

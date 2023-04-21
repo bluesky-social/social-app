@@ -140,7 +140,7 @@ export const SettingsScreen = withAuthRequired(
 
     return (
       <View style={[s.hContentRegion]} testID="settingsScreen">
-        <ViewHeader title="Settings" />
+        <ViewHeader title="Settings" showOnDesktop />
         <ScrollView style={s.hContentRegion} scrollIndicatorInsets={{right: 1}}>
           <View style={styles.spacer20} />
           <View style={[s.flexRow, styles.heading]}>

@@ -3,6 +3,7 @@ import {observer} from 'mobx-react-lite'
 import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
+import {CenteredView} from './Views'
 import {UserAvatar} from './UserAvatar'
 import {Text} from './text/Text'
 import {useStores} from 'state/index'
@@ -18,10 +19,12 @@ export const ViewHeader = observer(function ({
   title,
   canGoBack,
   hideOnScroll,
+  showOnDesktop,
 }: {
   title: string
   canGoBack?: boolean
   hideOnScroll?: boolean
+  showOnDesktop?: boolean
 }) {
   const pal = usePalette('default')
   const store = useStores()
@@ -42,7 +45,10 @@ export const ViewHeader = observer(function ({
   }, [track, store])
 
   if (isDesktopWeb) {
-    return <></>
+    if (showOnDesktop) {
+      return <DesktopWebHeader title={title} />
+    }
+    return null
   } else {
     if (typeof canGoBack === 'undefined') {
       canGoBack = navigation.canGoBack()
@@ -75,6 +81,19 @@ export const ViewHeader = observer(function ({
     )
   }
 })
+
+function DesktopWebHeader({title}: {title: string}) {
+  const pal = usePalette('default')
+  return (
+    <CenteredView style={[styles.header, styles.desktopHeader, pal.border]}>
+      <View style={styles.titleContainer} pointerEvents="none">
+        <Text type="title-lg" style={[pal.text, styles.title]}>
+          {title}
+        </Text>
+      </View>
+    </CenteredView>
+  )
+}
 
 const Container = observer(
   ({
@@ -132,6 +151,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     width: '100%',
+  },
+  desktopHeader: {
+    borderBottomWidth: 1,
+    paddingVertical: 12,
   },
 
   titleContainer: {
