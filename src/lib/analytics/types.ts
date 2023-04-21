@@ -1,31 +1,18 @@
-import {
-  ClientMethods,
-  GroupTraits,
-  JsonMap,
-  UserTraits,
-} from '@segment/analytics-react-native'
+export type TrackEvent = (
+  event: keyof TrackPropertiesMap,
+  properties?: TrackPropertiesMap[keyof TrackPropertiesMap],
+) => Promise<void>
 
-export type IAnalyticsEvent = {
-  name: keyof TrackPropertiesMap
-  properties: TrackPropertiesMap[keyof TrackPropertiesMap]
-}
-
-export interface IAnalyticsProvider extends ClientMethods {
-  screen: (name: string, properties?: JsonMap) => Promise<void>
-  track: (event: string, properties?: JsonMap) => Promise<void>
-  identify: (userId?: string, userTraits?: UserTraits) => Promise<void>
-  flush: () => Promise<void>
-  group: (groupId: string, groupTraits?: GroupTraits) => Promise<void>
-  alias: (newUserId: string) => Promise<void>
-  reset: (resetAnonymousId?: boolean) => Promise<void>
-}
-
-export interface TrackPropertiesMap {
+export type ScreenEvent = (
+  name: keyof ScreenPropertiesMap,
+  properties?: ScreenPropertiesMap[keyof ScreenPropertiesMap],
+) => Promise<void>
+interface TrackPropertiesMap {
   // LOGIN / SIGN UP events
-  'Sing In': {resumedSession: boolean}
+  'Sign In': {resumedSession: boolean}
   'Create Account': {}
-  'SignIn:ForgotPassowrd': {}
-  'SignIn:PressedSelectService': {}
+  'Signin:PressedForgotPassword': {}
+  'Signin:PressedSelectService': {}
   // COMPOSER / CREATE POST events
   'Create Post': {imageCount: string}
   'Composer:PastedPhotos': {}
@@ -49,7 +36,7 @@ export interface TrackPropertiesMap {
   'FeedItem:PostLike': {}
   'FeedItem:PostDelete': {}
   // PROFILE HEADER events
-  'ProfileHeaeder:EditProfileButtonClicked': {}
+  'ProfileHeader:EditProfileButtonClicked': {}
   'ProfileHeader:FollowersButtonClicked': {}
   'ProfileHeader:FollowsButtonClicked': {}
   'ProfileHeader:ShareButtonClicked': {}
@@ -58,7 +45,7 @@ export interface TrackPropertiesMap {
   'ProfileHeader:ReportAccountButtonClicked': {}
   'ViewHeader:MenuButtonClicked': {}
   // SETTINGS events
-  'Settings:SwitchAccountButtonCLicked': {}
+  'Settings:SwitchAccountButtonClicked': {}
   'Settings:AddAccountButtonClicked': {}
   'Settings:ChangeHandleButtonClicked': {}
   'Settings:InvitecodesButtonClicked': {}
@@ -68,13 +55,13 @@ export interface TrackPropertiesMap {
   'Menu:ItemClicked': {url: string}
   'Menu:FeedbackClicked': {}
   // MOBILE SHELL events
-  'MobileShell:ProfileButtonPressed': {}
-  'MobileShell:FeedButtonPressed': {}
+  'MobileShell:MyProfileButtonPressed': {}
+  'MobileShell:HomeButtonPressed': {}
   'MobileShell:SearchButtonPressed': {}
   'MobileShell:NotificationsButtonPressed': {}
 }
 
-export interface ScreenPropertiesMap {
+interface ScreenPropertiesMap {
   Login: {}
   CreateAccount: {}
   'Choose Account': {}

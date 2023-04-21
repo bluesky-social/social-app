@@ -5,11 +5,11 @@ import {
   AnalyticsProvider,
   useAnalytics as useAnalyticsOrig,
   ClientMethods,
-  JsonMap,
 } from '@segment/analytics-react-native'
 import {RootStoreModel, AppInfo} from 'state/models/root-store'
 import {useStores} from 'state/models/root-store'
 import {sha256} from 'js-sha256'
+import {ScreenEvent, TrackEvent} from './types'
 
 const segmentClient = createClient({
   writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
@@ -21,17 +21,25 @@ export function useAnalytics() {
   const methods: ClientMethods = useAnalyticsOrig()
   return React.useMemo(() => {
     if (store.session.hasSession) {
-      return methods
+      return {
+        screen: methods.screen as ScreenEvent,
+        track: methods.track as TrackEvent,
+        identify: methods.identify,
+        flush: methods.flush,
+        group: methods.group,
+        alias: methods.alias,
+        reset: methods.reset,
+      }
     }
     // dont send analytics pings for anonymous users
     return {
-      screen: (name: string, properties?: JsonMap) => Promise<void>,
-      track: (event: string, properties?: JsonMap) => Promise<void>,
-      identify: (userId?: string, userTraits?: UserTraits) => Promise<void>,
+      screen: () => Promise<void>,
+      track: () => Promise<void>,
+      identify: () => Promise<void>,
       flush: () => Promise<void>,
-      group: (groupId: string, groupTraits?: GroupTraits) => Promise<void>,
-      alias: (newUserId: string) => Promise<void>,
-      reset: (resetAnonymousId?: boolean) => Promise<void>,
+      group: () => Promise<void>,
+      alias: () => Promise<void>,
+      reset: () => Promise<void>,
     }
   }, [store, methods])
 }

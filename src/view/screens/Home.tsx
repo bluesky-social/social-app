@@ -15,7 +15,7 @@ import {FAB} from '../com/util/fab/FAB'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import {isDesktopWeb} from 'platform/detection'
 

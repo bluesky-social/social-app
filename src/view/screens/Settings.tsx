@@ -32,7 +32,7 @@ import {DropdownButton} from 'view/com/util/forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {AccountData} from 'state/models/session'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {pluralize} from 'lib/strings/helpers'
 

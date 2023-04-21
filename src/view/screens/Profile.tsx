@@ -19,7 +19,7 @@ import {Text} from '../com/util/text/Text'
 import {FAB} from '../com/util/fab/FAB'
 import {s, colors} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>

@@ -14,7 +14,7 @@ import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {useStores} from 'state/index'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,

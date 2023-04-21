@@ -11,7 +11,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
 import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {clamp} from 'lib/numbers'
 import {
   HomeIcon,
@@ -29,6 +29,8 @@ import {styles} from './BottomBarStyles'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 
+type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile'
+
 export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const store = useStores()
   const pal = usePalette('default')
@@ -40,7 +42,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const {footerMinimalShellTransform} = useMinimalShellMode()
 
   const onPressTab = React.useCallback(
-    (tab: string) => {
+    (tab: TabOptions) => {
       track(`MobileShell:${tab}ButtonPressed`)
       const state = navigation.getState()
       const tabState = getTabState(state, tab)
