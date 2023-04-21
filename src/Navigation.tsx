@@ -1,8 +1,10 @@
 import * as React from 'react'
 import {StyleSheet} from 'react-native'
+import {observer} from 'mobx-react-lite'
 import {
   NavigationContainer,
   createNavigationContainerRef,
+  CommonActions,
   StackActions,
 } from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
@@ -163,7 +165,7 @@ function NotificationsTabNavigator() {
   )
 }
 
-function MyProfileTabNavigator() {
+const MyProfileTabNavigator = observer(() => {
   const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   const store = useStores()
   return (
@@ -180,14 +182,14 @@ function MyProfileTabNavigator() {
         // @ts-ignore // TODO: fix this broken type in ProfileScreen
         component={ProfileScreen}
         initialParams={{
-          name: store.me.handle,
+          name: store.me.did,
           hideBackButton: true,
         }}
       />
       {commonScreens(MyProfileTab as typeof HomeTab)}
     </MyProfileTab.Navigator>
   )
-}
+})
 
 /**
  * The FlatNavigator is used by Web to represent the routes
@@ -281,6 +283,17 @@ function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'NotificationsTab') {
   }
 }
 
+function reset() {
+  if (navigationRef.isReady()) {
+    navigationRef.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: isNative ? 'HomeTab' : 'Home'}],
+      }),
+    )
+  }
+}
+
 function handleLink(url: string) {
   let path
   if (url.startsWith('/')) {
@@ -326,6 +339,7 @@ const styles = StyleSheet.create({
 export {
   navigate,
   resetToTab,
+  reset,
   handleLink,
   TabsNavigator,
   FlatNavigator,
