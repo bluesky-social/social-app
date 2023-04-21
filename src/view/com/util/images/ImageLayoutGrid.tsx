@@ -109,6 +109,7 @@ function ImageLayoutGridInner({
 
           return (
             <TouchableOpacity
+              key={index}
               delayPressIn={DELAY_PRESS_IN}
               onPress={() => onPress?.(index)}
               onPressIn={() => onPressIn?.(index)}
