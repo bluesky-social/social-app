@@ -14,17 +14,56 @@ import * as Toast from '../util/Toast'
 
 export const snapPoints = ['70%']
 
+const shadesOfBlue: string[] = [
+  'AliceBlue',
+  'Aqua',
+  'Aquamarine',
+  'Azure',
+  'BabyBlue',
+  'Blue',
+  'BlueViolet',
+  'CadetBlue',
+  'CornflowerBlue',
+  'Cyan',
+  'DarkBlue',
+  'DarkCyan',
+  'DarkSlateBlue',
+  'DeepSkyBlue',
+  'DodgerBlue',
+  'ElectricBlue',
+  'LightBlue',
+  'LightCyan',
+  'LightSkyBlue',
+  'LightSteelBlue',
+  'MediumAquaMarine',
+  'MediumBlue',
+  'MediumSlateBlue',
+  'MidnightBlue',
+  'Navy',
+  'PowderBlue',
+  'RoyalBlue',
+  'SkyBlue',
+  'SlateBlue',
+  'SteelBlue',
+  'Teal',
+  'Turquoise',
+]
+
 export function Component({}: {}) {
   const pal = usePalette('default')
   const store = useStores()
-  const [name, setName] = useState('')
-  const [appPassword, setAppPassword] = useState('')
+  const [name, setName] = useState(
+    shadesOfBlue[Math.floor(Math.random() * shadesOfBlue.length)],
+  )
+  const [appPassword, setAppPassword] = useState<string>()
   const [wasCopied, setWasCopied] = useState(false)
 
   const onCopy = React.useCallback(() => {
-    Clipboard.setString(appPassword)
-    Toast.show('Copied to clipboard')
-    setWasCopied(true)
+    if (appPassword) {
+      Clipboard.setString(appPassword)
+      Toast.show('Copied to clipboard')
+      setWasCopied(true)
+    }
   }, [appPassword])
 
   const onDone = React.useCallback(() => {
@@ -46,7 +85,7 @@ export function Component({}: {}) {
       <View>
         <Text type="lg">
           {!appPassword
-            ? 'Please enter a unique name for this App Password:'
+            ? 'Please enter a unique name for this App Password. We have generated a random name for you.'
             : "Please save this secret key somewhere safe and accessible. For security reasons, you won't be able to view it again. If you lose this secret key, you'll need to generate a new one."}
         </Text>
         {!appPassword ? (
@@ -61,6 +100,11 @@ export function Component({}: {}) {
               autoComplete="off"
               autoCapitalize="none"
               autoFocus={true}
+              selectTextOnFocus={true}
+              multiline={true} // need this to be true otherwise selectTextOnFocus doesn't work
+              numberOfLines={1} // hack for multiline so only one line shows (android)
+              scrollEnabled={false} // hack for multiline so only one line shows (ios)
+              blurOnSubmit={true} // hack for multiline so it submits
               editable={!appPassword}
               returnKeyType="done"
               onEndEditing={createAppPassword}
@@ -114,6 +158,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 10,
     paddingHorizontal: 8,
+    marginTop: 6,
     fontSize: 17,
     letterSpacing: 0.25,
     fontWeight: '400',
