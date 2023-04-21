@@ -34,9 +34,7 @@ export function Component({onAltTextSet}: Props) {
   }
 
   return (
-    <View
-      testID="altTextImageModal"
-      style={[s.flex1, pal.view, styles.container]}>
+    <View testID="altTextImageModal" style={[pal.view, styles.container]}>
       <Text style={[styles.title, pal.text]}>Add alt text</Text>
       <TextInput
         testID="altTextImageInput"
@@ -76,7 +74,7 @@ const styles = StyleSheet.create({
   container: {
     gap: 18,
     bottom: 0,
-    paddingVertical: isDesktopWeb ? 18 : 0,
+    paddingVertical: 18,
     paddingHorizontal: isDesktopWeb ? 0 : 12,
     width: '100%',
   },

@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {ImageStyle} from 'react-native'
+import {ImageStyle, Keyboard} from 'react-native'
 import {GalleryModel} from 'state/models/media/gallery'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -33,6 +33,7 @@ export const Gallery = observer(function ({gallery}: Props) {
   const imageStyle = getImageStyle()
   const handleAddImageAltText = useCallback(
     (image: ImageModel) => {
+      Keyboard.dismiss()
       gallery.setAltText(image)
     },
     [gallery],
