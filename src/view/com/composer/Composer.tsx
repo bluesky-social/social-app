@@ -36,6 +36,7 @@ import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {isDesktopWeb} from 'platform/detection'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
+import {AltImageModalMobile} from '../modals/alt-image/AltImageMobile'
 
 const MAX_GRAPHEME_LENGTH = 300
 
@@ -331,6 +332,7 @@ export const ComposePost = observer(function ComposePost({
           </View>
         </View>
       </TouchableWithoutFeedback>
+      <AltImageModalMobile />
     </KeyboardAvoidingView>
   )
 })

@@ -1,5 +1,5 @@
 import React, {useRef, useEffect} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import BottomSheet from '@gorhom/bottom-sheet'
 import {useStores} from 'state/index'
@@ -17,7 +17,6 @@ import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
-import * as AltTextImageModal from './AltTextImage'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 
@@ -81,10 +80,8 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'content-filtering-settings') {
     snapPoints = ContentFilteringSettingsModal.snapPoints
     element = <ContentFilteringSettingsModal.Component />
-  } else if (activeModal?.name === 'alt-text-image') {
-    element = <AltTextImageModal.Component {...activeModal} />
   } else {
-    return <View />
+    return null
   }
 
   return (

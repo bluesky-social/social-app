@@ -1,15 +1,18 @@
 import React, {useCallback, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
-import {TextInput} from './util'
+import {TextInput} from '../util'
 import {gradients, s} from 'lib/styles'
 import {enforceLen} from 'lib/strings/helpers'
 import {MAX_ALT_TEXT} from 'lib/constants'
 import {useTheme} from 'lib/ThemeContext'
-import {Text} from '../util/text/Text'
+import {Text} from '../../util/text/Text'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from 'state/index'
+import {isNative} from 'platform/detection'
+
+export const snapPoints = ['80%']
 
 interface Props {
   onAltTextSet: (altText?: string | undefined) => void
@@ -68,6 +71,10 @@ export function Component({onAltTextSet}: Props) {
 const styles = StyleSheet.create({
   container: {
     gap: 18,
+    bottom: 0,
+    paddingVertical: 18,
+    paddingHorizontal: isNative ? 12 : 0,
+    width: '100%',
   },
   title: {
     textAlign: 'center',
