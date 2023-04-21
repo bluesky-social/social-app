@@ -163,7 +163,7 @@ function NotificationsTabNavigator() {
   )
 }
 
-function MyProfileTabNavigator() {
+const MyProfileTabNavigator = observer(() => {
   const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   const store = useStores()
   return (
@@ -180,14 +180,14 @@ function MyProfileTabNavigator() {
         // @ts-ignore // TODO: fix this broken type in ProfileScreen
         component={ProfileScreen}
         initialParams={{
-          name: store.me.handle,
+          name: store.me.did,
           hideBackButton: true,
         }}
       />
       {commonScreens(MyProfileTab as typeof HomeTab)}
     </MyProfileTab.Navigator>
   )
-}
+})
 
 /**
  * The FlatNavigator is used by Web to represent the routes
