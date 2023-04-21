@@ -267,20 +267,6 @@ export const SettingsScreen = withAuthRequired(
               Content moderation
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            testID="changeHandleBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressChangeHandle}>
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="at"
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              Change my handle
-            </Text>
-          </TouchableOpacity>
           <Link
             testID="appPasswordBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
@@ -295,6 +281,20 @@ export const SettingsScreen = withAuthRequired(
               App Passwords
             </Text>
           </Link>
+          <TouchableOpacity
+            testID="changeHandleBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            onPress={isSwitching ? undefined : onPressChangeHandle}>
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="at"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Change my handle
+            </Text>
+          </TouchableOpacity>
 
           <View style={styles.spacer20} />
 
