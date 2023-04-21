@@ -281,6 +281,20 @@ export const SettingsScreen = withAuthRequired(
               Change my handle
             </Text>
           </TouchableOpacity>
+          <Link
+            testID="appPasswordBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            href="/app-passwords">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="lock"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              App Passwords
+            </Text>
+          </Link>
 
           <View style={styles.spacer20} />
 

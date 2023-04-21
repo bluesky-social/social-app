@@ -17,6 +17,7 @@ import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
+import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 
 const DEFAULT_SNAPPOINTS = ['90%']
@@ -81,6 +82,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'invite-codes') {
     snapPoints = InviteCodesModal.snapPoints
     element = <InviteCodesModal.Component />
+  } else if (activeModal?.name === 'add-app-password') {
+    snapPoints = AddAppPassword.snapPoints
+    element = <AddAppPassword.Component />
   } else if (activeModal?.name === 'content-filtering-settings') {
     snapPoints = ContentFilteringSettingsModal.snapPoints
     element = <ContentFilteringSettingsModal.Component />
