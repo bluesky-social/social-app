@@ -13,6 +13,7 @@ export const router = new Router({
   PostRepostedBy: '/profile/:name/post/:rkey/reposted-by',
   Debug: '/sys/debug',
   Log: '/sys/log',
+  AppPasswords: '/settings/app-passwords',
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
   TermsOfService: '/support/tos',

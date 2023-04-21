@@ -140,7 +140,7 @@ export const SettingsScreen = withAuthRequired(
 
     return (
       <View style={[s.hContentRegion]} testID="settingsScreen">
-        <ViewHeader title="Settings" />
+        <ViewHeader title="Settings" showOnDesktop />
         <ScrollView style={s.hContentRegion} scrollIndicatorInsets={{right: 1}}>
           <View style={styles.spacer20} />
           <View style={[s.flexRow, styles.heading]}>
@@ -267,6 +267,20 @@ export const SettingsScreen = withAuthRequired(
               Content moderation
             </Text>
           </TouchableOpacity>
+          <Link
+            testID="appPasswordBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            href="/settings/app-passwords">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="lock"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              App Passwords
+            </Text>
+          </Link>
           <TouchableOpacity
             testID="changeHandleBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}

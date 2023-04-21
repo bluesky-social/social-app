@@ -70,6 +70,10 @@ export interface InviteCodesModal {
   name: 'invite-codes'
 }
 
+export interface AddAppPasswordModal {
+  name: 'add-app-password'
+}
+
 export interface ContentFilteringSettingsModal {
   name: 'content-filtering-settings'
 }
@@ -79,6 +83,7 @@ export type Modal =
   | ChangeHandleModal
   | DeleteAccountModal
   | EditProfileModal
+  | AddAppPasswordModal
 
   // Curation
   | ContentFilteringSettingsModal

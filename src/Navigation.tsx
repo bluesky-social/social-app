@@ -46,6 +46,7 @@ import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from './state'
+import {AppPasswords} from 'view/screens/AppPasswords'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -84,6 +85,7 @@ function commonScreens(Stack: typeof HomeTab) {
         component={CommunityGuidelinesScreen}
       />
       <Stack.Screen name="CopyrightPolicy" component={CopyrightPolicyScreen} />
+      <Stack.Screen name="AppPasswords" component={AppPasswords} />
     </>
   )
 }
