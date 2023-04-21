@@ -33,7 +33,7 @@ export const FeedsTabBar = observer(
     }, [store])
 
     return (
-      <Animated.View style={[pal.view, styles.tabBar, transform]}>
+      <Animated.View style={[pal.view, pal.border, styles.tabBar, transform]}>
         <TouchableOpacity
           testID="viewHeaderDrawerBtn"
           style={styles.tabBarAvi}
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 18,
+    borderBottomWidth: 1,
   },
   tabBarAvi: {
     marginTop: 1,

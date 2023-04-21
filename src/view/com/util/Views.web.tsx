@@ -23,6 +23,7 @@ import {
   ViewProps,
 } from 'react-native'
 import {addStyle, colors} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export function CenteredView({
   style,
@@ -41,6 +42,7 @@ export const FlatList = React.forwardRef(function <ItemT>(
   }: React.PropsWithChildren<FlatListProps<ItemT>>,
   ref: React.Ref<RNFlatList>,
 ) {
+  const pal = usePalette('default')
   contentContainerStyle = addStyle(
     contentContainerStyle,
     styles.containerScroll,
@@ -61,7 +63,11 @@ export const FlatList = React.forwardRef(function <ItemT>(
   return (
     <RNFlatList
       ref={ref}
-      contentContainerStyle={contentContainerStyle}
+      contentContainerStyle={[
+        contentContainerStyle,
+        pal.border,
+        styles.contentContainer,
+      ]}
       style={style}
       contentOffset={contentOffset}
       {...props}
@@ -73,13 +79,19 @@ export const ScrollView = React.forwardRef(function (
   {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
   ref: React.Ref<RNScrollView>,
 ) {
+  const pal = usePalette('default')
+
   contentContainerStyle = addStyle(
     contentContainerStyle,
     styles.containerScroll,
   )
   return (
     <RNScrollView
-      contentContainerStyle={contentContainerStyle}
+      contentContainerStyle={[
+        contentContainerStyle,
+        pal.border,
+        styles.contentContainer,
+      ]}
       ref={ref}
       {...props}
     />
@@ -87,6 +99,11 @@ export const ScrollView = React.forwardRef(function (
 })
 
 const styles = StyleSheet.create({
+  contentContainer: {
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    minHeight: '100vh',
+  },
   container: {
     width: '100%',
     maxWidth: 600,
@@ -95,7 +112,6 @@ const styles = StyleSheet.create({
   },
   containerScroll: {
     width: '100%',
-    maxHeight: '100vh',
     maxWidth: 600,
     marginLeft: 'auto',
     marginRight: 'auto',
