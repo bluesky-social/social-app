@@ -20,6 +20,7 @@ const ITEMS: RadioGroupItem[] = [
   {key: 'spam', label: 'Spam or excessive repeat posts'},
   {key: 'abuse', label: 'Abusive, rude, or hateful'},
   {key: 'illegal', label: 'Posts illegal content'},
+  {key: 'impersonation', label: 'Misleading identity, affiliation, or content'},
 ]
 
 export const snapPoints = ['50%']
