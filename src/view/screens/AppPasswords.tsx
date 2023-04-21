@@ -31,8 +31,6 @@ export const AppPasswords = withAuthRequired(
     )
 
     const onAdd = React.useCallback(async () => {
-      // const createdPassword = await store.me.createAppPassword('test')
-      // console.log(createdPassword)
       store.shell.openModal({name: 'add-app-password'})
     }, [store])
 
@@ -97,7 +95,7 @@ function AppPasswordsHeader() {
     <>
       <ViewHeader title="App Passwords" />
       <Text type="sm" style={[styles.description, pal.text]}>
-        These app passwords can be used to log into Bluesky on other client apps
+        These app passwords can be used to log onto Bluesky in other apps
         without giving them full access to your account or your password.
       </Text>
     </>

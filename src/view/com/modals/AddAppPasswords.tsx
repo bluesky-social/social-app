@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {StyleSheet, TextInput, View, TouchableOpacity} from 'react-native'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
+import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
@@ -71,23 +72,34 @@ export function Component({}: {}) {
   }, [store])
 
   const createAppPassword = async () => {
-    const newPassword = await store.me.createAppPassword(name)
-    if (newPassword) {
-      setAppPassword(newPassword.password)
-    } else {
+    try {
+      const newPassword = await store.me.createAppPassword(name)
+      if (newPassword) {
+        setAppPassword(newPassword.password)
+      } else {
+        Toast.show('Failed to create app password.')
+        // TODO: better error handling (?)
+      }
+    } catch (e) {
       Toast.show('Failed to create app password.')
-      // TODO: better error handling (?)
+      store.log.error('Failed to create app password', {e})
     }
   }
 
   return (
     <View style={[styles.container, pal.view]} testID="addAppPasswordsModal">
       <View>
-        <Text type="lg">
-          {!appPassword
-            ? 'Please enter a unique name for this App Password. We have generated a random name for you.'
-            : "Please save this secret key somewhere safe and accessible. For security reasons, you won't be able to view it again. If you lose this secret key, you'll need to generate a new one."}
-        </Text>
+        {!appPassword ? (
+          <Text type="lg">
+            Please enter a unique name for this App Password. We have generated
+            a random name for you.
+          </Text>
+        ) : (
+          <Text type="lg">
+            <Text type="lg-bold">Here is your app password.</Text> Use this to
+            sign into the other app along with your handle.
+          </Text>
+        )}
         {!appPassword ? (
           <View style={[pal.btn, styles.textInputWrapper]}>
             <TextInput
@@ -127,6 +139,12 @@ export function Component({}: {}) {
           </TouchableOpacity>
         )}
       </View>
+      {appPassword ? (
+        <Text type="lg" style={[pal.textLight, s.mb10]}>
+          For security reasons, you won't be able to view this again. If you
+          lose this password, you'll need to generate a new one.
+        </Text>
+      ) : null}
       <View style={styles.btnContainer}>
         <Button
           type="primary"
@@ -172,11 +190,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     marginTop: 16,
-    marginBottom: 8,
+    marginBottom: 12,
   },
   btnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    marginTop: 12,
   },
   btn: {
     flexDirection: 'row',
