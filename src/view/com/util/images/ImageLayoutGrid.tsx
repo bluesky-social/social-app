@@ -68,7 +68,7 @@ function ImageLayoutGridInner({
   containerInfo,
 }: ImageLayoutGridInnerProps) {
   const numImages = images.length
-  const offset = numImages > 1 ? 5 : 0
+  const offset = numImages > 1 ? 10 : 0
 
   const size1 = useMemo<ImageStyle>(() => {
     const size =
