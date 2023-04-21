@@ -55,10 +55,6 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   let element
-  switch (modal.name) {
-    case 'confirm':
-      element = ConfirmModal
-  }
   if (modal.name === 'confirm') {
     element = <ConfirmModal.Component {...modal} />
   } else if (modal.name === 'edit-profile') {
