@@ -18,6 +18,7 @@ import * as AltTextImageModal from './AltImage'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
+import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 
 export const ModalsContainer = observer(function ModalsContainer() {
@@ -77,6 +78,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <WaitlistModal.Component />
   } else if (modal.name === 'invite-codes') {
     element = <InviteCodesModal.Component />
+  } else if (modal.name === 'add-app-password') {
+    element = <AddAppPassword.Component />
   } else if (modal.name === 'content-filtering-settings') {
     element = <ContentFilteringSettingsModal.Component />
   } else if (modal.name === 'alt-text-image') {
