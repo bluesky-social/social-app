@@ -25,6 +25,10 @@ import {
 import {addStyle, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 
+interface AddedProps {
+  desktopFixedHeight?: boolean
+}
+
 export function CenteredView({
   style,
   ...props
@@ -38,8 +42,9 @@ export const FlatList = React.forwardRef(function <ItemT>(
     contentContainerStyle,
     style,
     contentOffset,
+    desktopFixedHeight,
     ...props
-  }: React.PropsWithChildren<FlatListProps<ItemT>>,
+  }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
   ref: React.Ref<RNFlatList>,
 ) {
   const pal = usePalette('default')
@@ -59,6 +64,9 @@ export const FlatList = React.forwardRef(function <ItemT>(
     contentContainerStyle = addStyle(contentContainerStyle, {
       paddingTop: Math.abs(contentOffset.y),
     })
+  }
+  if (desktopFixedHeight) {
+    style = addStyle(style, styles.fixedHeight)
   }
   return (
     <RNFlatList
@@ -121,5 +129,8 @@ const styles = StyleSheet.create({
   },
   containerDark: {
     backgroundColor: colors.gray7,
+  },
+  fixedHeight: {
+    height: '100vh',
   },
 })
