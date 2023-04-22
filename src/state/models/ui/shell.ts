@@ -194,6 +194,30 @@ export class ShellUiModel {
     this.minimalShellMode = v
   }
 
+  /**
+   * returns true if something was closed
+   * (used by the android hardware back btn)
+   */
+  closeAnyActiveElement(): boolean {
+    if (this.isLightboxActive) {
+      this.closeLightbox()
+      return true
+    }
+    if (this.isModalActive) {
+      this.closeModal()
+      return true
+    }
+    if (this.isComposerActive) {
+      this.closeComposer()
+      return true
+    }
+    if (this.isDrawerOpen) {
+      this.closeDrawer()
+      return true
+    }
+    return false
+  }
+
   openDrawer() {
     this.isDrawerOpen = true
   }

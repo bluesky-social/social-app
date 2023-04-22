@@ -1,13 +1,15 @@
-import React, {useState} from 'react'
+import React, {useState, useCallback} from 'react'
 import * as Toast from '../util/Toast'
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import {ScrollView, TextInput} from './util'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -24,7 +26,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
 
-export const snapPoints = ['80%']
+export const snapPoints = ['fullscreen']
 
 export function Component({
   profileView,
@@ -61,38 +63,43 @@ export function Component({
   const onPressCancel = () => {
     store.shell.closeModal()
   }
-  const onSelectNewAvatar = async (img: RNImage | null) => {
-    track('EditProfile:AvatarSelected')
-    try {
-      // if img is null, user selected "remove avatar"
+  const onSelectNewAvatar = useCallback(
+    async (img: RNImage | null) => {
       if (!img) {
         setNewUserAvatar(null)
         setUserAvatar(null)
         return
       }
-      const finalImg = await compressIfNeeded(img, 1000000)
-      setNewUserAvatar(finalImg)
-      setUserAvatar(finalImg.path)
-    } catch (e: any) {
-      setError(cleanError(e))
-    }
-  }
-  const onSelectNewBanner = async (img: RNImage | null) => {
-    if (!img) {
-      setNewUserBanner(null)
-      setUserBanner(null)
-      return
-    }
-    track('EditProfile:BannerSelected')
-    try {
-      const finalImg = await compressIfNeeded(img, 1000000)
-      setNewUserBanner(finalImg)
-      setUserBanner(finalImg.path)
-    } catch (e: any) {
-      setError(cleanError(e))
-    }
-  }
-  const onPressSave = async () => {
+      track('EditProfile:AvatarSelected')
+      try {
+        const finalImg = await compressIfNeeded(img, 1000000)
+        setNewUserAvatar(finalImg)
+        setUserAvatar(finalImg.path)
+      } catch (e: any) {
+        setError(cleanError(e))
+      }
+    },
+    [track, setNewUserAvatar, setUserAvatar, setError],
+  )
+  const onSelectNewBanner = useCallback(
+    async (img: RNImage | null) => {
+      if (!img) {
+        setNewUserBanner(null)
+        setUserBanner(null)
+        return
+      }
+      track('EditProfile:BannerSelected')
+      try {
+        const finalImg = await compressIfNeeded(img, 1000000)
+        setNewUserBanner(finalImg)
+        setUserBanner(finalImg.path)
+      } catch (e: any) {
+        setError(cleanError(e))
+      }
+    },
+    [track, setNewUserBanner, setUserBanner, setError],
+  )
+  const onPressSave = useCallback(async () => {
     track('EditProfile:Save')
     setProcessing(true)
     if (error) {
@@ -120,11 +127,23 @@ export function Component({
       }
     }
     setProcessing(false)
-  }
+  }, [
+    track,
+    setProcessing,
+    setError,
+    error,
+    profileView,
+    onUpdate,
+    store,
+    displayName,
+    description,
+    newUserAvatar,
+    newUserBanner,
+  ])
 
   return (
-    <View style={[s.flex1, pal.view]} testID="editProfileModal">
-      <ScrollView style={styles.inner}>
+    <KeyboardAvoidingView behavior="height">
+      <ScrollView style={[pal.view]} testID="editProfileModal">
         <Text style={[styles.title, pal.text]}>Edit my profile</Text>
         <View style={styles.photos}>
           <UserBanner
@@ -144,65 +163,66 @@ export function Component({
             <ErrorMessage message={error} />
           </View>
         )}
-        <View>
-          <Text style={[styles.label, pal.text]}>Display Name</Text>
-          <TextInput
-            testID="editProfileDisplayNameInput"
-            style={[styles.textInput, pal.border, pal.text]}
-            placeholder="e.g. Alice Roberts"
-            placeholderTextColor={colors.gray4}
-            value={displayName}
-            onChangeText={v => setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))}
-          />
-        </View>
-        <View style={s.pb10}>
-          <Text style={[styles.label, pal.text]}>Description</Text>
-          <TextInput
-            testID="editProfileDescriptionInput"
-            style={[styles.textArea, pal.border, pal.text]}
-            placeholder="e.g. Artist, dog-lover, and memelord."
-            placeholderTextColor={colors.gray4}
-            keyboardAppearance={theme.colorScheme}
-            multiline
-            value={description}
-            onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
-          />
-        </View>
-        {isProcessing ? (
-          <View style={[styles.btn, s.mt10, {backgroundColor: colors.gray2}]}>
-            <ActivityIndicator />
+        <View style={styles.form}>
+          <View>
+            <Text style={[styles.label, pal.text]}>Display Name</Text>
+            <TextInput
+              testID="editProfileDisplayNameInput"
+              style={[styles.textInput, pal.border, pal.text]}
+              placeholder="e.g. Alice Roberts"
+              placeholderTextColor={colors.gray4}
+              value={displayName}
+              onChangeText={v =>
+                setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))
+              }
+            />
           </View>
-        ) : (
+          <View style={s.pb10}>
+            <Text style={[styles.label, pal.text]}>Description</Text>
+            <TextInput
+              testID="editProfileDescriptionInput"
+              style={[styles.textArea, pal.border, pal.text]}
+              placeholder="e.g. Artist, dog-lover, and memelord."
+              placeholderTextColor={colors.gray4}
+              keyboardAppearance={theme.colorScheme}
+              multiline
+              value={description}
+              onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
+            />
+          </View>
+          {isProcessing ? (
+            <View style={[styles.btn, s.mt10, {backgroundColor: colors.gray2}]}>
+              <ActivityIndicator />
+            </View>
+          ) : (
+            <TouchableOpacity
+              testID="editProfileSaveBtn"
+              style={s.mt10}
+              onPress={onPressSave}>
+              <LinearGradient
+                colors={[gradients.blueLight.start, gradients.blueLight.end]}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                style={[styles.btn]}>
+                <Text style={[s.white, s.bold]}>Save Changes</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
-            testID="editProfileSaveBtn"
-            style={s.mt10}
-            onPress={onPressSave}>
-            <LinearGradient
-              colors={[gradients.blueLight.start, gradients.blueLight.end]}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
-              style={[styles.btn]}>
-              <Text style={[s.white, s.bold]}>Save Changes</Text>
-            </LinearGradient>
+            testID="editProfileCancelBtn"
+            style={s.mt5}
+            onPress={onPressCancel}>
+            <View style={[styles.btn]}>
+              <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>
+            </View>
           </TouchableOpacity>
-        )}
-        <TouchableOpacity
-          testID="editProfileCancelBtn"
-          style={s.mt5}
-          onPress={onPressCancel}>
-          <View style={[styles.btn]}>
-            <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>
-          </View>
-        </TouchableOpacity>
+        </View>
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 
 const styles = StyleSheet.create({
-  inner: {
-    padding: 14,
-  },
   title: {
     textAlign: 'center',
     fontWeight: 'bold',
@@ -214,6 +234,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     paddingBottom: 4,
     marginTop: 20,
+  },
+  form: {
+    paddingHorizontal: 14,
   },
   textInput: {
     borderWidth: 1,
@@ -243,7 +266,7 @@ const styles = StyleSheet.create({
   avi: {
     position: 'absolute',
     top: 80,
-    left: 10,
+    left: 24,
     width: 84,
     height: 84,
     borderWidth: 2,

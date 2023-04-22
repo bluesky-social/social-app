@@ -1,5 +1,6 @@
 import React, {useRef, useEffect} from 'react'
 import {StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
 import BottomSheet from '@gorhom/bottom-sheet'
 import {useStores} from 'state/index'
@@ -92,13 +93,22 @@ export const ModalsContainer = observer(function ModalsContainer() {
     return null
   }
 
+  if (snapPoints[0] === 'fullscreen') {
+    return (
+      <SafeAreaView style={[styles.fullscreenContainer, pal.view]}>
+        {element}
+      </SafeAreaView>
+    )
+  }
+
   return (
     <BottomSheet
       ref={bottomSheetRef}
       snapPoints={snapPoints}
       index={store.shell.isModalActive ? 0 : -1}
       enablePanDownToClose
-      keyboardBehavior="fillParent"
+      keyboardBehavior="extend"
+      keyboardBlurBehavior="restore"
       backdropComponent={
         store.shell.isModalActive ? createCustomBackdrop(onClose) : undefined
       }
@@ -114,5 +124,12 @@ const styles = StyleSheet.create({
   handle: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+  },
+  fullscreenContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
 })

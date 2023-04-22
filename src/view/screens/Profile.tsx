@@ -18,7 +18,6 @@ import {EmptyState} from '../com/util/EmptyState'
 import {Text} from '../com/util/text/Text'
 import {FAB} from '../com/util/fab/FAB'
 import {s, colors} from 'lib/styles'
-import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
 
@@ -32,7 +31,6 @@ export const ProfileScreen = withAuthRequired(
       screen('Profile')
     }, [screen])
 
-    const onMainScroll = useOnMainScroll(store)
     const [hasSetup, setHasSetup] = useState<boolean>(false)
     const uiState = React.useMemo(
       () => new ProfileUiModel(store, {user: route.params.name}),
@@ -68,9 +66,12 @@ export const ProfileScreen = withAuthRequired(
       track('ProfileScreen:PressCompose')
       store.shell.openComposer({})
     }, [store, track])
-    const onSelectView = (index: number) => {
-      uiState.setSelectedViewIndex(index)
-    }
+    const onSelectView = React.useCallback(
+      (index: number) => {
+        uiState.setSelectedViewIndex(index)
+      },
+      [uiState],
+    )
     const onRefresh = React.useCallback(() => {
       uiState
         .refresh()
@@ -158,7 +159,6 @@ export const ProfileScreen = withAuthRequired(
             ListFooterComponent={Footer}
             refreshing={uiState.isRefreshing || false}
             onSelectView={onSelectView}
-            onScroll={onMainScroll}
             onRefresh={onRefresh}
             onEndReached={onEndReached}
           />
