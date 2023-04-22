@@ -1,5 +1,4 @@
 import React from 'react'
-import {View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import ImageView from './ImageViewing'
 import {useStores} from 'state/index'
@@ -48,6 +47,6 @@ export const Lightbox = observer(function Lightbox() {
       />
     )
   } else {
-    return <View />
+    return null
   }
 })
