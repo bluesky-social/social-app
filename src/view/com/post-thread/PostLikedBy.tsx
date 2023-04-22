@@ -78,6 +78,8 @@ export const PostLikedBy = observer(function ({uri}: {uri: string}) {
         </View>
       )}
       extraData={view.isLoading}
+      // @ts-ignore our .web version only -prf
+      desktopFixedHeight
     />
   )
 })

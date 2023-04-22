@@ -89,6 +89,8 @@ export const PostRepostedBy = observer(function PostRepostedBy({
         </View>
       )}
       extraData={view.isLoading}
+      // @ts-ignore our .web version only -prf
+      desktopFixedHeight
     />
   )
 })
