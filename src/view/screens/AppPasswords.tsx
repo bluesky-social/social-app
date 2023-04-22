@@ -159,24 +159,31 @@ function AppPassword({
   const store = useStores()
 
   const onDelete = React.useCallback(async () => {
-    Alert.alert(
-      'Delete App Password',
-      `Are you sure you want to delete the app password "${name}"?`,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            await store.me.deleteAppPassword(name)
-            Toast.show('App password deleted')
+    if (isDesktopWeb) {
+      if (confirm('Delete app password?')) {
+        await store.me.deleteAppPassword(name)
+        Toast.show('App password deleted')
+      }
+    } else {
+      Alert.alert(
+        'Delete App Password',
+        `Are you sure you want to delete the app password "${name}"?`,
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
           },
-        },
-      ],
-    )
+          {
+            text: 'Delete',
+            style: 'destructive',
+            onPress: async () => {
+              await store.me.deleteAppPassword(name)
+              Toast.show('App password deleted')
+            },
+          },
+        ],
+      )
+    }
   }, [store, name])
 
   return (
