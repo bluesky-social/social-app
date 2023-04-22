@@ -1,8 +1,8 @@
-import {Alert} from 'react-native'
 import {Camera} from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library'
 import {Linking} from 'react-native'
 import {isWeb} from 'platform/detection'
+import {Alert} from 'view/com/util/Alert'
 
 const openSettings = () => {
   Linking.openURL('app-settings:')
