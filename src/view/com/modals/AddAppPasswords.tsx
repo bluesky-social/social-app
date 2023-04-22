@@ -90,14 +90,16 @@ export function Component({}: {}) {
     <View style={[styles.container, pal.view]} testID="addAppPasswordsModal">
       <View>
         {!appPassword ? (
-          <Text type="lg">
+          <Text type="lg" style={[pal.text]}>
             Please enter a unique name for this App Password. We have generated
             a random name for you.
           </Text>
         ) : (
-          <Text type="lg">
-            <Text type="lg-bold">Here is your app password.</Text> Use this to
-            sign into the other app along with your handle.
+          <Text type="lg" style={[pal.text]}>
+            <Text type="lg-bold" style={[pal.text]}>
+              Here is your app password.
+            </Text>{' '}
+            Use this to sign into the other app along with your handle.
           </Text>
         )}
         {!appPassword ? (
@@ -126,7 +128,9 @@ export function Component({}: {}) {
           <TouchableOpacity
             style={[pal.border, styles.passwordContainer, pal.btn]}
             onPress={onCopy}>
-            <Text type="2xl-bold">{appPassword}</Text>
+            <Text type="2xl-bold" style={[pal.text]}>
+              {appPassword}
+            </Text>
             {wasCopied ? (
               <Text style={[pal.textLight]}>Copied</Text>
             ) : (
@@ -162,7 +166,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: isDesktopWeb ? 0 : 50,
-    marginHorizontal: 16,
+    paddingHorizontal: 16,
   },
   textInputWrapper: {
     borderRadius: 8,
