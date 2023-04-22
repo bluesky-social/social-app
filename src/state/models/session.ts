@@ -158,11 +158,12 @@ export class SessionModel {
    */
   async setActiveSession(agent: BskyAgent, did: string) {
     this._log('SessionModel:setActiveSession')
+    const hadSession = !!this.data
     this.data = {
       service: agent.service.toString(),
       did,
     }
-    await this.rootStore.handleSessionChange(agent)
+    await this.rootStore.handleSessionChange(agent, {hadSession})
   }
 
   /**
