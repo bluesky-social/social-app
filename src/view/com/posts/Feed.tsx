@@ -179,6 +179,8 @@ export const Feed = observer(function Feed({
           onEndReachedThreshold={0.6}
           removeClippedSubviews={true}
           contentOffset={{x: 0, y: headerOffset * -1}}
+          // @ts-ignore our .web version only -prf
+          desktopFixedHeight
         />
       )}
     </View>
