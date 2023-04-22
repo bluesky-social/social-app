@@ -9,12 +9,12 @@ export type ScreenEvent = (
 ) => Promise<void>
 interface TrackPropertiesMap {
   // LOGIN / SIGN UP events
-  'Sign In': {resumedSession: boolean} // SERVER
-  'Create Account': {} // SERVER
+  'Sign In': {resumedSession: boolean} // CAN BE SERVER
+  'Create Account': {} // CAN BE SERVER
   'Signin:PressedForgotPassword': {}
   'Signin:PressedSelectService': {}
   // COMPOSER / CREATE POST events
-  'Create Post': {imageCount: string} // SERVER
+  'Create Post': {imageCount: string} // CAN BE SERVER
   'Composer:PastedPhotos': {}
   'Composer:CameraOpened': {}
   'Composer:GalleryOpened': {}
@@ -26,15 +26,15 @@ interface TrackPropertiesMap {
   'EditHandle:SetNewHandle': {}
   'EditProfile:AvatarSelected': {}
   'EditProfile:BannerSelected': {}
-  'EditProfile:Save': {} // SERVER
+  'EditProfile:Save': {} // CAN BE SERVER
   // FEED events
   'Feed:onRefresh': {}
   'Feed:onEndReached': {}
   // FEED ITEM events
-  'FeedItem:PostReply': {} // SERVER
-  'FeedItem:PostRepost': {} // SERVER
-  'FeedItem:PostLike': {} // SERVER
-  'FeedItem:PostDelete': {} // SERVER
+  'FeedItem:PostReply': {} // CAN BE SERVER
+  'FeedItem:PostRepost': {} // CAN BE SERVER
+  'FeedItem:PostLike': {} // CAN BE SERVER
+  'FeedItem:PostDelete': {} // CAN BE SERVER
   // PROFILE HEADER events
   'ProfileHeader:EditProfileButtonClicked': {}
   'ProfileHeader:FollowersButtonClicked': {}
