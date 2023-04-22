@@ -6,6 +6,7 @@ import useAppState from 'react-native-appstate-hook'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
+import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
 import {Feed} from '../com/posts/Feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
@@ -143,9 +144,10 @@ const FeedPage = observer(
 
     const onSoftReset = React.useCallback(() => {
       if (isPageFocused) {
+        feed.refresh()
         scrollToTop()
       }
-    }, [isPageFocused, scrollToTop])
+    }, [isPageFocused, scrollToTop, feed])
 
     useFocusEffect(
       React.useCallback(() => {
@@ -165,6 +167,30 @@ const FeedPage = observer(
           feedCleanup()
         }
       }, [store, doPoll, onSoftReset, screen, feed]),
+    )
+    useTabFocusEffect(
+      'Home',
+      React.useCallback(
+        isInside => {
+          if (!isPageFocused) {
+            return
+          }
+          // on mobile:
+          // fires with `isInside=true` when the user navigates to the root tab
+          // but not when the user goes back to the screen by pressing back
+          // on web:
+          // essentially equivalent to useFocusEffect because we dont used tabbed
+          // navigation
+          if (isInside) {
+            if (feed.hasNewLatest) {
+              feed.refresh()
+            } else {
+              feed.checkForLatest()
+            }
+          }
+        },
+        [isPageFocused, feed],
+      ),
     )
 
     const onPressCompose = React.useCallback(() => {

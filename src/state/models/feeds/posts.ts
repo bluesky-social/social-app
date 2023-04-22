@@ -294,12 +294,10 @@ export class PostsFeedModel {
         const isRepost =
           item?.reasonRepost?.by?.handle === params.actor ||
           item?.reasonRepost?.by?.did === params.actor
-        return (
-          !item.reply || // not a reply
-          isRepost || // but allow if it's a repost
-          (slice.isThread && // or a thread by the user
-            item.reply?.root.author.did === item.post.author.did)
-        )
+        const allow =
+          !item.postRecord?.reply || // not a reply
+          isRepost // but allow if it's a repost
+        return allow
       })
     } else {
       return this.slices
