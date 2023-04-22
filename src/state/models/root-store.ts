@@ -119,12 +119,17 @@ export class RootStoreModel {
   /**
    * Called by the session model. Refreshes session-oriented state.
    */
-  async handleSessionChange(agent: BskyAgent) {
+  async handleSessionChange(
+    agent: BskyAgent,
+    {hadSession}: {hadSession: boolean},
+  ) {
     this.log.debug('RootStoreModel:handleSessionChange')
     this.agent = agent
     this.me.clear()
     await this.me.load()
-    resetNavigation()
+    if (!hadSession) {
+      resetNavigation()
+    }
   }
 
   /**
