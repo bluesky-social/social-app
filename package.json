@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.20.0",
+  "version": "1.21.0",
   "private": true,
   "scripts": {
     "postinstall": "patch-package",
