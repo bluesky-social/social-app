@@ -13,7 +13,6 @@ import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from './view/shell'
 import * as notifee from 'lib/notifee'
 import * as analytics from 'lib/analytics'
-import * as backHandler from 'lib/routes/back-handler'
 import * as Toast from './view/com/util/Toast'
 import {handleLink} from './Navigation'
 
@@ -29,7 +28,6 @@ const App = observer(() => {
       setRootStore(store)
       analytics.init(store)
       notifee.init(store)
-      backHandler.init(store)
       SplashScreen.hideAsync()
       Linking.getInitialURL().then((url: string | null) => {
         if (url) {

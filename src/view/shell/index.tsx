@@ -12,7 +12,7 @@ import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {DrawerContent} from './Drawer'
 import {Composer} from './Composer'
 import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
+import * as backHandler from 'lib/routes/back-handler'
 import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
 
@@ -34,6 +34,9 @@ const ShellInner = observer(() => {
     [store],
   )
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
+  React.useEffect(() => {
+    backHandler.init(store)
+  }, [store])
 
   return (
     <>
@@ -70,7 +73,6 @@ const ShellInner = observer(() => {
 
 export const Shell: React.FC = observer(() => {
   const theme = useTheme()
-  const pal = usePalette('default')
   return (
     <View testID="mobileShellView" style={[styles.outerContainer]}>
       <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
