@@ -123,6 +123,7 @@ function HomeTabNavigator() {
         headerShown: false,
         animationDuration: 250,
         contentStyle,
+        animation: 'slide_from_right',
       }}>
       <HomeTab.Screen name="Home" component={HomeScreen} />
       {commonScreens(HomeTab)}
@@ -140,6 +141,7 @@ function SearchTabNavigator() {
         headerShown: false,
         animationDuration: 250,
         contentStyle,
+        animation: 'slide_from_right',
       }}>
       <SearchTab.Screen name="Search" component={SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
@@ -157,6 +159,7 @@ function NotificationsTabNavigator() {
         headerShown: false,
         animationDuration: 250,
         contentStyle,
+        animation: 'slide_from_right',
       }}>
       <NotificationsTab.Screen
         name="Notifications"
@@ -178,6 +181,7 @@ const MyProfileTabNavigator = observer(() => {
         headerShown: false,
         animationDuration: 250,
         contentStyle,
+        animation: 'slide_from_right',
       }}>
       <MyProfileTab.Screen
         name="MyProfile"
