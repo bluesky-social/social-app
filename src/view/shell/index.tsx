@@ -72,7 +72,7 @@ export const Shell: React.FC = observer(() => {
   const theme = useTheme()
   const pal = usePalette('default')
   return (
-    <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
+    <View testID="mobileShellView" style={[styles.outerContainer]}>
       <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
       <RoutesContainer>
         <ShellInner />

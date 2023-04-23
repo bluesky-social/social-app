@@ -291,8 +291,8 @@ export const darkTheme: Theme = {
   palette: {
     ...defaultTheme.palette,
     default: {
-      background: colors.gray8,
-      backgroundLight: colors.gray6,
+      background: colors.black,
+      backgroundLight: colors.gray7,
       text: colors.white,
       textLight: colors.gray3,
       textInverted: colors.black,
@@ -307,7 +307,7 @@ export const darkTheme: Theme = {
       replyLineDot: colors.gray6,
       unreadNotifBg: colors.blue7,
       unreadNotifBorder: colors.blue6,
-      postCtrl: '#61657A',
+      postCtrl: '#707489',
       brandText: '#0085ff',
       emptyStateIcon: colors.gray4,
     },

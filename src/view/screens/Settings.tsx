@@ -35,6 +35,7 @@ import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {pluralize} from 'lib/strings/helpers'
+import {isDesktopWeb} from 'platform/detection'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -139,9 +140,12 @@ export const SettingsScreen = withAuthRequired(
     }, [store])
 
     return (
-      <View style={[s.hContentRegion]} testID="settingsScreen">
-        <ViewHeader title="Settings" showOnDesktop />
-        <ScrollView style={s.hContentRegion} scrollIndicatorInsets={{right: 1}}>
+      <View style={s.hContentRegion} testID="settingsScreen">
+        <ViewHeader title="Settings" />
+        <ScrollView
+          style={s.hContentRegion}
+          contentContainerStyle={!isDesktopWeb && pal.viewLight}
+          scrollIndicatorInsets={{right: 1}}>
           <View style={styles.spacer20} />
           <View style={[s.flexRow, styles.heading]}>
             <Text type="xl-bold" style={pal.text}>

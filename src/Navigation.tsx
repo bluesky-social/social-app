@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
   },
   bgLight: {
-    backgroundColor: colors.gray1,
+    backgroundColor: colors.white,
   },
 })
 

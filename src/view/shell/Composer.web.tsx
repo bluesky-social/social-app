@@ -32,7 +32,7 @@ export const Composer = observer(
 
     return (
       <View style={styles.mask}>
-        <View style={[styles.container, pal.view]}>
+        <View style={[styles.container, pal.view, pal.border]}>
           <ComposePost
             replyTo={replyTo}
             quote={quote}
@@ -63,5 +63,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
     borderRadius: isMobileWeb ? 0 : 8,
     marginBottom: '10vh',
+    borderWidth: 1,
   },
 })

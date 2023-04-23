@@ -33,7 +33,7 @@ import {OpenCameraBtn} from './photos/OpenCameraBtn'
 import {usePalette} from 'lib/hooks/usePalette'
 import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
-import {isDesktopWeb} from 'platform/detection'
+import {isDesktopWeb, isAndroid} from 'platform/detection'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
 
@@ -195,8 +195,8 @@ export const ComposePost = observer(function ComposePost({
 
   const canSelectImages = gallery.size <= 4
   const viewStyles = {
-    paddingBottom: Platform.OS === 'android' ? insets.bottom : 0,
-    paddingTop: Platform.OS === 'android' ? insets.top : 15,
+    paddingBottom: isAndroid ? insets.bottom : 0,
+    paddingTop: isAndroid ? insets.top : isDesktopWeb ? 0 : 15,
   }
 
   return (
