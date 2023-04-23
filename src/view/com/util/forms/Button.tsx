@@ -1,14 +1,19 @@
 import React from 'react'
 import {
+  GestureResponderEvent,
   StyleProp,
   StyleSheet,
   TextStyle,
-  TouchableOpacity,
+  Pressable,
   ViewStyle,
 } from 'react-native'
 import {Text} from '../text/Text'
 import {useTheme} from 'lib/ThemeContext'
 import {choose} from 'lib/functions'
+
+type Event =
+  | React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  | GestureResponderEvent
 
 export type ButtonType =
   | 'primary'
@@ -114,10 +119,18 @@ export function Button({
       },
     },
   )
+  const onPressWrapped = React.useCallback(
+    (event: Event) => {
+      event.stopPropagation()
+      event.preventDefault()
+      onPress?.()
+    },
+    [onPress],
+  )
   return (
-    <TouchableOpacity
+    <Pressable
       style={[typeOuterStyle, styles.outer, style]}
-      onPress={onPress}
+      onPress={onPressWrapped}
       testID={testID}>
       {label ? (
         <Text type="button" style={[typeLabelStyle, labelStyle]}>
@@ -126,7 +139,7 @@ export function Button({
       ) : (
         children
       )}
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 

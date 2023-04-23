@@ -92,6 +92,8 @@ export const ProfileFollowers = observer(function ProfileFollowers({
         </View>
       )}
       extraData={view.isLoading}
+      // @ts-ignore our .web version only -prf
+      desktopFixedHeight
     />
   )
 })

@@ -22,7 +22,7 @@ export const PostLikedByScreen = withAuthRequired(({route}: Props) => {
 
   return (
     <View>
-      <ViewHeader title="Liked by" showOnDesktop />
+      <ViewHeader title="Liked by" />
       <PostLikedByComponent uri={uri} />
     </View>
   )
