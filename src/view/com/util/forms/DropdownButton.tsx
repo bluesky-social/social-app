@@ -291,6 +291,8 @@ const DropdownItems = ({
   const theme = useTheme()
   const dropDownBackgroundColor =
     theme.colorScheme === 'dark' ? pal.btn : pal.view
+  const separatorColor =
+    theme.colorScheme === 'dark' ? pal.borderDark : pal.border
 
   return (
     <>
@@ -322,7 +324,9 @@ const DropdownItems = ({
               </TouchableOpacity>
             )
           } else if (isSep(item)) {
-            return <View key={index} style={[styles.separator, pal.border]} />
+            return (
+              <View key={index} style={[styles.separator, separatorColor]} />
+            )
           }
           return null
         })}

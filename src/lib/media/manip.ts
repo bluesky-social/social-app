@@ -1,10 +1,10 @@
 import RNFetchBlob from 'rn-fetch-blob'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
-import {Image as RNImage, Share} from 'react-native'
+import {Image as RNImage} from 'react-native'
 import {Image} from 'react-native-image-crop-picker'
 import RNFS from 'react-native-fs'
 import uuid from 'react-native-uuid'
-import * as Toast from 'view/com/util/Toast'
+import * as Sharing from 'expo-sharing'
 import {Dimensions} from './types'
 import {POST_IMG_MAX} from 'lib/constants'
 import {isAndroid} from 'platform/detection'
@@ -120,20 +120,19 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
 }
 
 export async function saveImageModal({uri}: {uri: string}) {
+  if (!(await Sharing.isAvailableAsync())) {
+    // TODO might need to give an error to the user in this case -prf
+    return
+  }
   const downloadResponse = await RNFetchBlob.config({
     fileCache: true,
   }).fetch('GET', uri)
 
-  const imagePath = downloadResponse.path()
-  const base64Data = await downloadResponse.readFile('base64')
-  const result = await Share.share({
-    url: 'data:image/png;base64,' + base64Data,
+  let imagePath = downloadResponse.path()
+  await Sharing.shareAsync(normalizePath(imagePath, true), {
+    mimeType: 'image/png',
+    UTI: 'public.png',
   })
-  if (result.action === Share.sharedAction) {
-    Toast.show('Image saved to gallery')
-  } else if (result.action === Share.dismissedAction) {
-    // dismissed
-  }
   RNFS.unlink(imagePath)
 }
 
@@ -201,8 +200,8 @@ async function moveToPermanentPath(path: string): Promise<string> {
   return normalizePath(destinationPath)
 }
 
-function normalizePath(str: string): string {
-  if (isAndroid) {
+function normalizePath(str: string, allPlatforms = false): string {
+  if (isAndroid || allPlatforms) {
     if (!str.startsWith('file://')) {
       return `file://${str}`
     }

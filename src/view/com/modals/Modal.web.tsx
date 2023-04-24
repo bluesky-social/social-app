@@ -97,6 +97,7 @@ function Modal({modal}: {modal: ModalIface}) {
               styles.container,
               isMobileWeb && styles.containerMobile,
               pal.view,
+              pal.border,
             ]}>
             {element}
           </View>
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 24,
     borderRadius: 8,
+    borderWidth: 1,
   },
   containerMobile: {
     borderRadius: 0,
