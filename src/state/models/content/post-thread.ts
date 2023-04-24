@@ -11,13 +11,6 @@ import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {updateDataOptimistically} from 'lib/async/revertible'
 
-function* reactKeyGenerator(): Generator<string> {
-  let counter = 0
-  while (true) {
-    yield `item-${counter++}`
-  }
-}
-
 export class PostThreadItemModel {
   // ui state
   _reactKey: string = ''
@@ -55,10 +48,9 @@ export class PostThreadItemModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    reactKey: string,
     v: AppBskyFeedDefs.ThreadViewPost,
   ) {
-    this._reactKey = reactKey
+    this._reactKey = `thread-${v.post.uri}`
     this.post = v.post
     if (FeedPost.isRecord(this.post.record)) {
       const valid = FeedPost.validateRecord(this.post.record)
@@ -82,7 +74,6 @@ export class PostThreadItemModel {
   }
 
   assignTreeModels(
-    keyGen: Generator<string>,
     v: AppBskyFeedDefs.ThreadViewPost,
     higlightedPostUri: string,
     includeParent = true,
@@ -91,22 +82,12 @@ export class PostThreadItemModel {
     // parents
     if (includeParent && v.parent) {
       if (AppBskyFeedDefs.isThreadViewPost(v.parent)) {
-        const parentModel = new PostThreadItemModel(
-          this.rootStore,
-          keyGen.next().value,
-          v.parent,
-        )
+        const parentModel = new PostThreadItemModel(this.rootStore, v.parent)
         parentModel._depth = this._depth - 1
         parentModel._showChildReplyLine = true
         if (v.parent.parent) {
           parentModel._showParentReplyLine = true //parentModel.uri !== higlightedPostUri
-          parentModel.assignTreeModels(
-            keyGen,
-            v.parent,
-            higlightedPostUri,
-            true,
-            false,
-          )
+          parentModel.assignTreeModels(v.parent, higlightedPostUri, true, false)
         }
         this.parent = parentModel
       } else if (AppBskyFeedDefs.isNotFoundPost(v.parent)) {
@@ -118,23 +99,13 @@ export class PostThreadItemModel {
       const replies = []
       for (const item of v.replies) {
         if (AppBskyFeedDefs.isThreadViewPost(item)) {
-          const itemModel = new PostThreadItemModel(
-            this.rootStore,
-            keyGen.next().value,
-            item,
-          )
+          const itemModel = new PostThreadItemModel(this.rootStore, item)
           itemModel._depth = this._depth + 1
           itemModel._showParentReplyLine =
             itemModel.parentUri !== higlightedPostUri
           if (item.replies?.length) {
             itemModel._showChildReplyLine = true
-            itemModel.assignTreeModels(
-              keyGen,
-              item,
-              higlightedPostUri,
-              false,
-              true,
-            )
+            itemModel.assignTreeModels(item, higlightedPostUri, false, true)
           }
           replies.push(itemModel)
         } else if (AppBskyFeedDefs.isNotFoundPost(item)) {
@@ -245,11 +216,10 @@ export class PostThreadModel {
     rootStore: RootStoreModel,
     postView: AppBskyFeedDefs.PostView,
   ) {
-    const keyGen = reactKeyGenerator()
     const model = new PostThreadModel(rootStore, {uri: postView.uri})
     model.resolvedUri = postView.uri
     model.hasLoaded = true
-    model.thread = new PostThreadItemModel(rootStore, keyGen.next().value, {
+    model.thread = new PostThreadItemModel(rootStore, {
       post: postView,
     })
     return model
@@ -391,15 +361,12 @@ export class PostThreadModel {
 
   _replaceAll(res: GetPostThread.Response) {
     sortThread(res.data.thread)
-    const keyGen = reactKeyGenerator()
     const thread = new PostThreadItemModel(
       this.rootStore,
-      keyGen.next().value,
       res.data.thread as AppBskyFeedDefs.ThreadViewPost,
     )
     thread._isHighlightedPost = true
     thread.assignTreeModels(
-      keyGen,
       res.data.thread as AppBskyFeedDefs.ThreadViewPost,
       thread.uri,
     )
