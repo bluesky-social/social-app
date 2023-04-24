@@ -121,6 +121,7 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
 
 export async function saveImageModal({uri}: {uri: string}) {
   if (!(await Sharing.isAvailableAsync())) {
+    // TODO might need to give an error to the user in this case -prf
     return
   }
   const downloadResponse = await RNFetchBlob.config({
