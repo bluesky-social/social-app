@@ -107,6 +107,10 @@ export const Gallery = observer(function ({gallery}: Props) {
           <View key={`selected-image-${image.path}`} style={[imageStyle]}>
             <TouchableOpacity
               testID="altTextButton"
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="Add alt text"
+              accessibilityHint="Opens modal for inputting image alt text"
               onPress={() => {
                 handleAddImageAltText(image)
               }}
@@ -116,6 +120,10 @@ export const Gallery = observer(function ({gallery}: Props) {
             <View style={imageControlsSubgroupStyle}>
               <TouchableOpacity
                 testID="cropPhotoButton"
+                accessible={true}
+                accessibilityRole="button"
+                accessibilityLabel="Crop image"
+                accessibilityHint="Opens modal for cropping image"
                 onPress={() => {
                   handleEditPhoto(image)
                 }}
@@ -128,6 +136,10 @@ export const Gallery = observer(function ({gallery}: Props) {
               </TouchableOpacity>
               <TouchableOpacity
                 testID="removePhotoButton"
+                accessible={true}
+                accessibilityRole="button"
+                accessibilityLabel="Remove image"
+                accessibilityHint="Removes image from selected images"
                 onPress={() => handleRemovePhoto(image)}
                 style={styles.imageControl}>
                 <FontAwesomeIcon
@@ -144,6 +156,8 @@ export const Gallery = observer(function ({gallery}: Props) {
               source={{
                 uri: image.compressed.path,
               }}
+              accessible={true}
+              accessibilityIgnoresInvertColors
             />
           </View>
         ) : null,

@@ -60,7 +60,15 @@ export const ViewHeader = observer(function ({
           testID="viewHeaderDrawerBtn"
           onPress={canGoBack ? onPressBack : onPressMenu}
           hitSlop={BACK_HITSLOP}
-          style={canGoBack ? styles.backBtn : styles.backBtnWide}>
+          style={canGoBack ? styles.backBtn : styles.backBtnWide}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={canGoBack ? 'Go back' : 'Go to menu'}
+          accessibilityHint={
+            canGoBack
+              ? 'Navigates to the previous screen'
+              : 'Navigates to the menu'
+          }>
           {canGoBack ? (
             <FontAwesomeIcon
               size={18}

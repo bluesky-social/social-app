@@ -61,7 +61,13 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
       <View>
         <TouchableOpacity
           style={[styles.darkModeToggle]}
-          onPress={onDarkmodePress}>
+          onPress={onDarkmodePress}
+          accessibilityLabel="Toggle dark mode"
+          accessibilityHint={
+            mode === 'Dark'
+              ? 'Sets display to light mode'
+              : 'Sets display to dark mode'
+          }>
           <View style={[pal.viewLight, styles.darkModeToggleIcon]}>
             <MoonIcon size={18} style={pal.textLight} />
           </View>
@@ -84,7 +90,11 @@ const InviteCodes = observer(() => {
   return (
     <TouchableOpacity
       style={[styles.inviteCodes, pal.border]}
-      onPress={onPress}>
+      onPress={onPress}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel="Invite codes"
+      accessibilityHint="Opens list of invite codes">
       <FontAwesomeIcon
         icon="ticket"
         style={[

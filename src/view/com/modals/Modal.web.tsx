@@ -53,6 +53,7 @@ function Modal({modal}: {modal: ModalIface}) {
     store.shell.closeModal()
   }
   const onInnerPress = () => {
+    // TODO: can we use prevent default?
     // do nothing, we just want to stop it from bubbling
   }
 
@@ -92,8 +93,10 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   return (
+    // eslint-disable-next-line
     <TouchableWithoutFeedback onPress={onPressMask}>
       <View style={styles.mask}>
+        {/* eslint-disable-next-line */}
         <TouchableWithoutFeedback onPress={onInnerPress}>
           <View
             style={[

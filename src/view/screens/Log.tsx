@@ -46,7 +46,9 @@ export const LogScreen = observer(function Log({}: NativeStackScreenProps<
               <View key={`entry-${entry.id}`}>
                 <TouchableOpacity
                   style={[styles.entry, pal.border, pal.view]}
-                  onPress={toggler(entry.id)}>
+                  onPress={toggler(entry.id)}
+                  accessibilityLabel="View debug entry"
+                  accessibilityHint="Opens additional details for a debug entry">
                   {entry.type === 'debug' ? (
                     <FontAwesomeIcon icon="info" />
                   ) : (

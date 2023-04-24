@@ -29,6 +29,16 @@ type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
   | GestureResponderEvent
 
+interface Props {
+  testID?: string
+  style?: StyleProp<ViewStyle>
+  href?: string
+  title?: string
+  children?: React.ReactNode
+  noFeedback?: boolean
+  asAnchor?: boolean
+}
+
 export const Link = observer(function Link({
   testID,
   style,
@@ -37,15 +47,7 @@ export const Link = observer(function Link({
   children,
   noFeedback,
   asAnchor,
-}: {
-  testID?: string
-  style?: StyleProp<ViewStyle>
-  href?: string
-  title?: string
-  children?: React.ReactNode
-  noFeedback?: boolean
-  asAnchor?: boolean
-}) {
+}: Props) {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
 
@@ -64,7 +66,9 @@ export const Link = observer(function Link({
         testID={testID}
         onPress={onPress}
         // @ts-ignore web only -prf
-        href={asAnchor ? sanitizeUrl(href) : undefined}>
+        href={asAnchor ? sanitizeUrl(href) : undefined}
+        accessible={true}
+        accessibilityRole="link">
         <View style={style}>
           {children ? children : <Text>{title || 'link'}</Text>}
         </View>
@@ -76,6 +80,8 @@ export const Link = observer(function Link({
       testID={testID}
       style={style}
       onPress={onPress}
+      accessible={true}
+      accessibilityRole="link"
       // @ts-ignore web only -prf
       href={asAnchor ? sanitizeUrl(href) : undefined}>
       {children ? children : <Text>{title || 'link'}</Text>}

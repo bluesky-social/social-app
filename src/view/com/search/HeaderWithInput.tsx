@@ -15,6 +15,7 @@ import {useAnalytics} from 'lib/analytics'
 const MENU_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 
 interface Props {
+  // TODO: Rely on accessible={true} and default RN focus behaviors
   isInputFocused: boolean
   query: string
   setIsInputFocused: (v: boolean) => void
@@ -54,7 +55,11 @@ export function HeaderWithInput({
         testID="viewHeaderBackOrMenuBtn"
         onPress={onPressMenu}
         hitSlop={MENU_HITSLOP}
-        style={styles.headerMenuBtn}>
+        style={styles.headerMenuBtn}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Profile"
+        accessibilityHint="Navigates to profile">
         <UserAvatar size={30} avatar={store.me.avatar} />
       </TouchableOpacity>
       <View
@@ -80,9 +85,17 @@ export function HeaderWithInput({
           onBlur={() => setIsInputFocused(false)}
           onChangeText={onChangeQuery}
           onSubmitEditing={onSubmitQuery}
+          accessible={true}
+          accessibilityRole="search"
         />
         {query ? (
-          <TouchableOpacity onPress={onPressClearQuery}>
+          <TouchableOpacity
+            onPress={onPressClearQuery}
+            onAccessibilityEscape={onPressClearQuery}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Clear search"
+            accessibilityHint="Resets search query">
             <FontAwesomeIcon
               icon="xmark"
               size={16}
@@ -93,7 +106,13 @@ export function HeaderWithInput({
       </View>
       {query || isInputFocused ? (
         <View style={styles.headerCancelBtn}>
-          <TouchableOpacity onPress={onPressCancelSearchInner}>
+          <TouchableOpacity
+            onPress={onPressCancelSearchInner}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Cancel input search"
+            accessibilityHint="Reset search query string"
+            onAccessibilityEscape={onPressCancelSearchInner}>
             <Text style={pal.text}>Cancel</Text>
           </TouchableOpacity>
         </View>

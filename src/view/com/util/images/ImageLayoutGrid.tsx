@@ -11,6 +11,8 @@ import {Dimensions} from 'lib/media/types'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {GalleryItem} from './Gallery'
 
+export const DELAY_PRESS_IN = 500
+
 interface ImageLayoutGridProps {
   images: AppBskyEmbedImages.ViewImage[]
   onPress?: (index: number) => void

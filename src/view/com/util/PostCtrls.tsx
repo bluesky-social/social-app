@@ -175,7 +175,11 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           testID="replyBtn"
           style={styles.ctrl}
           hitSlop={HITSLOP}
-          onPress={opts.onPressReply}>
+          onPress={opts.onPressReply}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Reply"
+          accessibilityHint="Opens reply composer">
           <CommentBottomArrow
             style={[defaultCtrlColor, opts.big ? s.mt2 : styles.mt1]}
             strokeWidth={3}
@@ -193,7 +197,15 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           testID="repostBtn"
           hitSlop={HITSLOP}
           onPress={onPressToggleRepostWrapper}
-          style={styles.ctrl}>
+          style={styles.ctrl}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={opts.isReposted ? 'Undo repost' : 'Repost'}
+          accessibilityHint={
+            opts.isReposted
+              ? `Remove your repost of ${opts.author}'s post`
+              : `Repost or quote post ${opts.author}'s post`
+          }>
           <RepostIcon
             style={
               opts.isReposted
@@ -221,7 +233,15 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           testID="likeBtn"
           style={styles.ctrl}
           hitSlop={HITSLOP}
-          onPress={onPressToggleLikeWrapper}>
+          onPress={onPressToggleLikeWrapper}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={opts.isLiked ? 'Unlike' : 'Like'}
+          accessibilityHint={
+            opts.isReposted
+              ? `Removes like from ${opts.author}'s post`
+              : `Like ${opts.author}'s post`
+          }>
           {opts.isLiked ? (
             <HeartIconSolid
               style={styles.ctrlIconLiked as StyleProp<ViewStyle>}

@@ -1,25 +1,19 @@
-import React from 'react'
+import React, {ComponentProps} from 'react'
 import {observer} from 'mobx-react-lite'
-import {
-  Animated,
-  GestureResponderEvent,
-  StyleSheet,
-  TouchableWithoutFeedback,
-} from 'react-native'
+import {Animated, StyleSheet, TouchableWithoutFeedback} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {gradients} from 'lib/styles'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useStores} from 'state/index'
 import {isMobileWeb} from 'platform/detection'
 
-type OnPress = ((event: GestureResponderEvent) => void) | undefined
-export interface FABProps {
+export interface FABProps
+  extends ComponentProps<typeof TouchableWithoutFeedback> {
   testID?: string
   icon: JSX.Element
-  onPress: OnPress
 }
 
-export const FABInner = observer(({testID, icon, onPress}: FABProps) => {
+export const FABInner = observer(({testID, icon, ...props}: FABProps) => {
   const store = useStores()
   const interp = useAnimatedValue(0)
   React.useEffect(() => {
@@ -34,7 +28,7 @@ export const FABInner = observer(({testID, icon, onPress}: FABProps) => {
     transform: [{translateY: Animated.multiply(interp, 60)}],
   }
   return (
-    <TouchableWithoutFeedback testID={testID} onPress={onPress}>
+    <TouchableWithoutFeedback testID={testID} {...props}>
       <Animated.View
         style={[styles.outer, isMobileWeb && styles.mobileWebOuter, transform]}>
         <LinearGradient

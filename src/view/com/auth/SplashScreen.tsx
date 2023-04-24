@@ -28,7 +28,11 @@ export const SplashScreen = ({
             <TouchableOpacity
               testID="createAccountButton"
               style={[styles.btn, {backgroundColor: colors.blue3}]}
-              onPress={onPressCreateAccount}>
+              onPress={onPressCreateAccount}
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="Create account"
+              accessibilityHint="Opens flow to create a new Bluesky account">
               <Text style={[s.white, styles.btnLabel]}>
                 Create a new account
               </Text>
@@ -36,7 +40,11 @@ export const SplashScreen = ({
             <TouchableOpacity
               testID="signInButton"
               style={[styles.btn, pal.btn]}
-              onPress={onPressSignin}>
+              onPress={onPressSignin}
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="Sign in"
+              accessibilityHint="Opens flow to sign into your existing Bluesky account">
               <Text style={[pal.text, styles.btnLabel]}>Sign in</Text>
             </TouchableOpacity>
           </View>

@@ -37,7 +37,11 @@ export function SelectPhotoBtn({gallery}: Props) {
       testID="openGalleryBtn"
       onPress={onPressSelectPhotos}
       style={[s.pl5, s.pr20]}
-      hitSlop={HITSLOP}>
+      hitSlop={HITSLOP}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel="Gallery"
+      accessibilityHint="Opens device photo gallery">
       <FontAwesomeIcon
         icon={['far', 'image']}
         style={pal.link as FontAwesomeIconStyle}

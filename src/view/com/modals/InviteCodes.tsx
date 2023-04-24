@@ -98,7 +98,11 @@ const InviteCode = observer(
       <TouchableOpacity
         testID={testID}
         style={[styles.inviteCode, pal.border]}
-        onPress={onPress}>
+        onPress={onPress}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Invite codes"
+        accessibilityHint="Opens list of invite codes">
         <Text
           testID={`${testID}-code`}
           type={used ? 'md' : 'md-bold'}

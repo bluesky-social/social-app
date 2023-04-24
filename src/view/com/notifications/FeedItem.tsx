@@ -180,6 +180,8 @@ export const FeedItem = observer(function ({
       title={itemTitle}
       noFeedback>
       <View style={styles.layoutIcon}>
+        {/* TODO: Prevent conditional rendering and move toward composable
+        notifications for clearer accessibility labeling */}
         {icon === 'HeartIconSolid' ? (
           <HeartIconSolid size={28} style={[styles.icon, ...iconStyle]} />
         ) : (
@@ -192,7 +194,11 @@ export const FeedItem = observer(function ({
       </View>
       <View style={styles.layoutContent}>
         <Pressable
-          onPress={authors.length > 1 ? onToggleAuthorsExpanded : () => {}}>
+          onPress={authors.length > 1 ? onToggleAuthorsExpanded : () => {}}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Show users"
+          accessibilityHint="Expands list of users for the given notification">
           <CondensedAuthorsList
             visible={!isAuthorsExpanded}
             authors={authors}
@@ -245,7 +251,11 @@ function CondensedAuthorsList({
       <View style={styles.avis}>
         <TouchableOpacity
           style={styles.expandedAuthorsCloseBtn}
-          onPress={onToggleAuthorsExpanded}>
+          onPress={onToggleAuthorsExpanded}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Hide user list"
+          accessibilityHint="Collapses list of users for a given notification">
           <FontAwesomeIcon
             icon="angle-up"
             size={18}

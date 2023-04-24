@@ -180,7 +180,12 @@ export const PostThread = observer(function PostThread({
             <Text type="md" style={[pal.text, s.mb10]}>
               The post may have been deleted.
             </Text>
-            <TouchableOpacity onPress={onPressBack}>
+            <TouchableOpacity
+              onPress={onPressBack}
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="Go back"
+              accessibilityHint="Navigates to the previous screen">
               <Text type="2xl" style={pal.link}>
                 <FontAwesomeIcon
                   icon="angle-left"

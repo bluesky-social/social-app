@@ -13,7 +13,11 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
     <TouchableOpacity
       testID="replyPromptBtn"
       style={[pal.view, pal.border, styles.prompt]}
-      onPress={() => onPressCompose()}>
+      onPress={() => onPressCompose()}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel="Compose reply"
+      accessibilityHint="Opens composer">
       <UserAvatar avatar={store.me.avatar} size={38} />
       <Text
         type="xl"

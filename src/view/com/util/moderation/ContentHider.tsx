@@ -55,7 +55,14 @@ export function ContentHider({
         </Text>
         <TouchableOpacity
           style={styles.showBtn}
-          onPress={() => setOverride(v => !v)}>
+          onPress={() => setOverride(v => !v)}
+          accessibilityLabel={override ? 'Hide post' : 'Show post'}
+          // TODO: The text labelling should be split up so controls have unique roles
+          accessibilityHint={
+            override
+              ? 'Re-hide post'
+              : 'Shows post hidden based on your moderation settings'
+          }>
           <Text type="md" style={pal.link}>
             {override ? 'Hide' : 'Show'}
           </Text>

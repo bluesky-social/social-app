@@ -55,7 +55,11 @@ export function OpenCameraBtn({gallery}: Props) {
       testID="openCameraButton"
       onPress={onPressTakePicture}
       style={[s.pl5]}
-      hitSlop={HITSLOP}>
+      hitSlop={HITSLOP}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel="Camera"
+      accessibilityHint="Opens camera on device">
       <FontAwesomeIcon
         icon="camera"
         style={pal.link as FontAwesomeIconStyle}

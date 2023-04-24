@@ -19,6 +19,8 @@ import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
+// TODO: Prevent naming components that coincide with RN primitives
+// due to linting false positives
 import {TextInput, TextInputRef} from './text-input/TextInput'
 import {CharProgress} from './char-progress/CharProgress'
 import {UserAvatar} from '../util/UserAvatar'
@@ -203,12 +205,18 @@ export const ComposePost = observer(function ComposePost({
       testID="composePostView"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.outer}>
+      {/* eslint-disable-next-line */}
       <TouchableWithoutFeedback onPressIn={onPressContainer}>
         <View style={[s.flex1, viewStyles]}>
           <View style={styles.topbar}>
             <TouchableOpacity
               testID="composerCancelButton"
-              onPress={hackfixOnClose}>
+              onPress={hackfixOnClose}
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="Close composer"
+              accessibilityHint="Closes post composer"
+              onAccessibilityEscape={hackfixOnClose}>
               <Text style={[pal.link, s.f18]}>Cancel</Text>
             </TouchableOpacity>
             <View style={s.flex1} />
@@ -221,7 +229,13 @@ export const ComposePost = observer(function ComposePost({
                 testID="composerPublishBtn"
                 onPress={() => {
                   onPressPublish(richtext)
-                }}>
+                }}
+                accessible={true}
+                accessibilityRole="button"
+                accessibilityLabel={replyTo ? 'Publish reply' : 'Publish post'}
+                accessibilityHint={
+                  replyTo ? 'Publishes your reply' : 'Publishes your post'
+                }>
                 <LinearGradient
                   colors={[gradients.blueLight.start, gradients.blueLight.end]}
                   start={{x: 0, y: 0}}
@@ -287,6 +301,9 @@ export const ComposePost = observer(function ComposePost({
                 onPressPublish={onPressPublish}
                 onSuggestedLinksChanged={setSuggestedLinks}
                 onError={setError}
+                accessible={true}
+                accessibilityLabel="Compose post"
+                accessibilityHint="Compose posts up to 300 characters in length"
               />
             </View>
 
@@ -310,7 +327,11 @@ export const ComposePost = observer(function ComposePost({
                   key={`suggested-${url}`}
                   testID="addLinkCardBtn"
                   style={[pal.borderDark, styles.addExtLinkBtn]}
-                  onPress={() => onPressAddLinkCard(url)}>
+                  onPress={() => onPressAddLinkCard(url)}
+                  accessible={true}
+                  accessibilityRole="button"
+                  accessibilityLabel="Add link card"
+                  accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
                   <Text style={pal.text}>
                     Add link card: <Text style={pal.link}>{url}</Text>
                   </Text>

@@ -59,7 +59,11 @@ function BackBtn() {
     <TouchableOpacity
       testID="viewHeaderBackOrMenuBtn"
       onPress={onPressBack}
-      style={styles.backBtn}>
+      style={styles.backBtn}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel="Go back"
+      accessibilityHint="Navigates to the previous screen">
       <FontAwesomeIcon
         size={24}
         icon="angle-left"
@@ -115,7 +119,13 @@ function ComposeBtn() {
   const onPressCompose = () => store.shell.openComposer({})
 
   return (
-    <TouchableOpacity style={[styles.newPostBtn]} onPress={onPressCompose}>
+    <TouchableOpacity
+      style={[styles.newPostBtn]}
+      onPress={onPressCompose}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel="New post"
+      accessibilityHint="Opens post composer">
       <View style={styles.newPostBtnIconWrapper}>
         <ComposeIcon2
           size={19}

@@ -4,12 +4,13 @@ import ImageEditor from 'react-avatar-editor'
 import {Slider} from '@miblanchard/react-native-slider'
 import LinearGradient from 'react-native-linear-gradient'
 import {Text} from 'view/com/util/text/Text'
-import {Dimensions, Image} from 'lib/media/types'
+import {Dimensions} from 'lib/media/types'
 import {getDataUriSize} from 'lib/media/util'
 import {s, gradients} from 'lib/styles'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {SquareIcon, RectWideIcon, RectTallIcon} from 'lib/icons'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 
 enum AspectRatio {
   Square = 'square',
@@ -30,7 +31,7 @@ export function Component({
   onSelect,
 }: {
   uri: string
-  onSelect: (img?: Image) => void
+  onSelect: (img?: RNImage) => void
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -92,19 +93,34 @@ export function Component({
           maximumValue={3}
           containerStyle={styles.slider}
         />
-        <TouchableOpacity onPress={doSetAs(AspectRatio.Wide)}>
+        <TouchableOpacity
+          onPress={doSetAs(AspectRatio.Wide)}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Wide"
+          accessibilityHint="Sets image aspect ratio to wide">
           <RectWideIcon
             size={24}
             style={as === AspectRatio.Wide ? s.blue3 : undefined}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={doSetAs(AspectRatio.Tall)}>
+        <TouchableOpacity
+          onPress={doSetAs(AspectRatio.Tall)}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Tall"
+          accessibilityHint="Sets image aspect ratio to tall">
           <RectTallIcon
             size={24}
             style={as === AspectRatio.Tall ? s.blue3 : undefined}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={doSetAs(AspectRatio.Square)}>
+        <TouchableOpacity
+          onPress={doSetAs(AspectRatio.Square)}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Square"
+          accessibilityHint="Sets image aspect ratio to square">
           <SquareIcon
             size={24}
             style={as === AspectRatio.Square ? s.blue3 : undefined}
@@ -112,13 +128,23 @@ export function Component({
         </TouchableOpacity>
       </View>
       <View style={styles.btns}>
-        <TouchableOpacity onPress={onPressCancel}>
+        <TouchableOpacity
+          onPress={onPressCancel}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Cancel image crop"
+          accessibilityHint="Exits image cropping process">
           <Text type="xl" style={pal.link}>
             Cancel
           </Text>
         </TouchableOpacity>
         <View style={s.flex1} />
-        <TouchableOpacity onPress={onPressDone}>
+        <TouchableOpacity
+          onPress={onPressDone}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Save image crop"
+          accessibilityHint="Saves image crop settings">
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}

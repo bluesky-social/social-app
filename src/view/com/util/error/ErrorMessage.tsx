@@ -47,7 +47,11 @@ export function ErrorMessage({
         <TouchableOpacity
           testID="errorMessageTryAgainButton"
           style={styles.btn}
-          onPress={onPressTryAgain}>
+          onPress={onPressTryAgain}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Retry"
+          accessibilityHint="Retries the last action, which errored out">
           <FontAwesomeIcon
             icon="arrows-rotate"
             style={{color: theme.palette.error.icon}}

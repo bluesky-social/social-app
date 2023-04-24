@@ -176,7 +176,11 @@ export const SettingsScreen = withAuthRequired(
                 </View>
                 <TouchableOpacity
                   testID="signOutBtn"
-                  onPress={isSwitching ? undefined : onPressSignout}>
+                  onPress={isSwitching ? undefined : onPressSignout}
+                  accessible={true}
+                  accessibilityRole="button"
+                  accessibilityLabel="Sign out"
+                  accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}>
                   <Text type="lg" style={pal.link}>
                     Sign out
                   </Text>
@@ -191,7 +195,11 @@ export const SettingsScreen = withAuthRequired(
               style={[pal.view, styles.linkCard, isSwitching && styles.dimmed]}
               onPress={
                 isSwitching ? undefined : () => onPressSwitchAccount(account)
-              }>
+              }
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="Switch"
+              accessibilityHint="Switches the account you are logged in to">
               <View style={styles.avi}>
                 <UserAvatar size={40} avatar={account.aviUrl} />
               </View>
@@ -209,7 +217,11 @@ export const SettingsScreen = withAuthRequired(
           <TouchableOpacity
             testID="switchToNewAccountBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressAddAccount}>
+            onPress={isSwitching ? undefined : onPressAddAccount}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Add account"
+            accessibilityHint="Create a new Bluesky account">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="plus"
@@ -229,7 +241,11 @@ export const SettingsScreen = withAuthRequired(
           <TouchableOpacity
             testID="inviteFriendBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressInviteCodes}>
+            onPress={isSwitching ? undefined : onPressInviteCodes}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Invite"
+            accessibilityHint="Opens invite code list">
             <View
               style={[
                 styles.iconContainer,
@@ -260,7 +276,9 @@ export const SettingsScreen = withAuthRequired(
           <TouchableOpacity
             testID="contentFilteringBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressContentFiltering}>
+            onPress={isSwitching ? undefined : onPressContentFiltering}
+            accessibilityHint="Content moderation"
+            accessibilityLabel="Opens configurable content moderation settings">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="eye"
@@ -308,7 +326,11 @@ export const SettingsScreen = withAuthRequired(
           <TouchableOpacity
             testID="changeHandleBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressChangeHandle}>
+            onPress={isSwitching ? undefined : onPressChangeHandle}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Cancel change handle"
+            accessibilityHint="Exits change handle process">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="at"
@@ -327,7 +349,11 @@ export const SettingsScreen = withAuthRequired(
           </Text>
           <TouchableOpacity
             style={[pal.view, styles.linkCard]}
-            onPress={onPressDeleteAccount}>
+            onPress={onPressDeleteAccount}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Delete account"
+            accessibilityHint="Opens modal for account deletion confirmation. Requires email code.">
             <View style={[styles.iconContainer, dangerBg]}>
               <FontAwesomeIcon
                 icon={['far', 'trash-can']}

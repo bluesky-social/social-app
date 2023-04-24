@@ -37,7 +37,11 @@ export const FeedsTabBar = observer(
         <TouchableOpacity
           testID="viewHeaderDrawerBtn"
           style={styles.tabBarAvi}
-          onPress={onPressAvi}>
+          onPress={onPressAvi}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Select feed"
+          accessibilityHint="Displays either Following or What's Hot feeds. Customizable feeds will be added soon.">
           <UserAvatar avatar={store.me.avatar} size={30} />
         </TouchableOpacity>
         <TabBar

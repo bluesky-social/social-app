@@ -34,7 +34,13 @@ export function Component({}: {}) {
         <View style={styles.bottomSpacer} />
       </ScrollView>
       <View style={[styles.btnContainer, pal.borderDark]}>
-        <Pressable testID="sendReportBtn" onPress={onPressDone}>
+        <Pressable
+          testID="sendReportBtn"
+          onPress={onPressDone}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Report post"
+          accessibilityHint="Submits report">
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}
@@ -48,6 +54,7 @@ export function Component({}: {}) {
   )
 }
 
+// TODO: Refactor this component to pass labels down to each tab
 const ContentLabelPref = observer(
   ({group}: {group: keyof typeof CONFIGURABLE_LABEL_GROUPS}) => {
     const store = useStores()
@@ -67,19 +74,20 @@ const ContentLabelPref = observer(
         <SelectGroup
           current={store.preferences.contentLabels[group]}
           onChange={v => store.preferences.setContentLabelPref(group, v)}
+          group={group}
         />
       </View>
     )
   },
 )
 
-function SelectGroup({
-  current,
-  onChange,
-}: {
+interface SelectGroupProps {
   current: LabelPreference
   onChange: (v: LabelPreference) => void
-}) {
+  group: keyof typeof CONFIGURABLE_LABEL_GROUPS
+}
+
+function SelectGroup({current, onChange, group}: SelectGroupProps) {
   return (
     <View style={styles.selectableBtns}>
       <SelectableBtn
@@ -88,12 +96,14 @@ function SelectGroup({
         label="Hide"
         left
         onChange={onChange}
+        group={group}
       />
       <SelectableBtn
         current={current}
         value="warn"
         label="Warn"
         onChange={onChange}
+        group={group}
       />
       <SelectableBtn
         current={current}
@@ -101,9 +111,20 @@ function SelectGroup({
         label="Show"
         right
         onChange={onChange}
+        group={group}
       />
     </View>
   )
+}
+
+interface SelectableBtnProps {
+  current: string
+  value: LabelPreference
+  label: string
+  left?: boolean
+  right?: boolean
+  onChange: (v: LabelPreference) => void
+  group: keyof typeof CONFIGURABLE_LABEL_GROUPS
 }
 
 function SelectableBtn({
@@ -113,14 +134,8 @@ function SelectableBtn({
   left,
   right,
   onChange,
-}: {
-  current: string
-  value: LabelPreference
-  label: string
-  left?: boolean
-  right?: boolean
-  onChange: (v: LabelPreference) => void
-}) {
+  group,
+}: SelectableBtnProps) {
   const pal = usePalette('default')
   const palPrimary = usePalette('inverted')
   return (
@@ -132,7 +147,11 @@ function SelectableBtn({
         pal.border,
         current === value ? palPrimary.view : pal.view,
       ]}
-      onPress={() => onChange(value)}>
+      onPress={() => onChange(value)}
+      accessible={true}
+      accessibilityRole="tablist"
+      accessibilityLabel={`Select ${value}`}
+      accessibilityHint={`Sets content moderation policy to ${value} for ${group}`}>
       <Text style={current === value ? palPrimary.text : pal.text}>
         {label}
       </Text>

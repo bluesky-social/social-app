@@ -23,7 +23,11 @@ export const LoadLatestBtn = ({
     <TouchableOpacity
       style={[pal.view, pal.borderDark, styles.loadLatest]}
       onPress={onPress}
-      hitSlop={HITSLOP}>
+      hitSlop={HITSLOP}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel={`Load new ${label}`}
+      accessibilityHint={`Loads new ${label}`}>
       <Text type="md-bold" style={pal.text}>
         <UpIcon size={16} strokeWidth={1} style={[pal.text, styles.icon]} />
         Load new {label}

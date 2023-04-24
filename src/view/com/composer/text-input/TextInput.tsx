@@ -1,7 +1,15 @@
-import React, {forwardRef, useCallback, useEffect, useRef, useMemo} from 'react'
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useMemo,
+  ComponentProps,
+} from 'react'
 import {
   NativeSyntheticEvent,
   StyleSheet,
+  TextInput as RNTextInput,
   TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
@@ -27,7 +35,7 @@ export interface TextInputRef {
   blur: () => void
 }
 
-interface TextInputProps {
+interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   richtext: RichText
   placeholder: string
   suggestedLinks: Set<string>
@@ -55,6 +63,7 @@ export const TextInput = forwardRef(
       onPhotoPasted,
       onSuggestedLinksChanged,
       onError,
+      ...props
     }: TextInputProps,
     ref,
   ) => {
@@ -207,7 +216,8 @@ export const TextInput = forwardRef(
           placeholderTextColor={pal.colors.textLight}
           keyboardAppearance={theme.colorScheme}
           multiline
-          style={[pal.text, styles.textInput, styles.textInputFormatting]}>
+          style={[pal.text, styles.textInput, styles.textInputFormatting]}
+          {...props}>
           {textDecorated}
         </PasteInput>
         <Autocomplete

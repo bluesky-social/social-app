@@ -8,5 +8,12 @@ export function HighPriorityImage({source, ...props}: HighPriorityImageProps) {
   const updatedSource = {
     uri: typeof source === 'object' && source ? source.uri : '',
   } satisfies ImageSource
-  return <Image source={updatedSource} {...props} />
+  return (
+    <Image
+      accessible={true}
+      accessibilityIgnoresInvertColors
+      source={updatedSource}
+      {...props}
+    />
+  )
 }
