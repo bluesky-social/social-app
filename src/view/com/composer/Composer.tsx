@@ -164,7 +164,9 @@ export const ComposePost = observer(function ComposePost({
         setIsProcessing(false)
         return
       }
-      store.me.mainFeed.addPostToTop(createdPost.uri)
+      if (!replyTo) {
+        store.me.mainFeed.addPostToTop(createdPost.uri)
+      }
       onPost?.()
       hackfixOnClose()
       Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
