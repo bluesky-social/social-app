@@ -5,8 +5,8 @@ export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
 
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
-// but adding buffer room to account for languages like German
-export const MAX_ALT_TEXT = 120
+// but increasing limit per user feedback
+export const MAX_ALT_TEXT = 1000
 
 export const PROD_TEAM_HANDLES = [
   'jay.bsky.social',
