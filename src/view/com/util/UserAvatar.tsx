@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Path} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -53,61 +53,69 @@ export function UserAvatar({
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
-  const dropdownItems = [
-    !isWeb && {
-      testID: 'changeAvatarCameraBtn',
-      label: 'Camera',
-      icon: 'camera' as IconProp,
-      onPress: async () => {
-        if (!(await requestCameraAccessIfNeeded())) {
-          return
-        }
-        onSelectNewAvatar?.(
-          await openCamera(store, {
-            width: 1000,
-            height: 1000,
-            cropperCircleOverlay: true,
-          }),
-        )
+  const dropdownItems = useMemo(
+    () => [
+      !isWeb && {
+        testID: 'changeAvatarCameraBtn',
+        label: 'Camera',
+        icon: 'camera' as IconProp,
+        onPress: async () => {
+          if (!(await requestCameraAccessIfNeeded())) {
+            return
+          }
+          onSelectNewAvatar?.(
+            await openCamera(store, {
+              width: 1000,
+              height: 1000,
+              cropperCircleOverlay: true,
+            }),
+          )
+        },
       },
-    },
-    {
-      testID: 'changeAvatarLibraryBtn',
-      label: 'Library',
-      icon: 'image' as IconProp,
-      onPress: async () => {
-        if (!(await requestPhotoAccessIfNeeded())) {
-          return
-        }
-        const items = await openPicker(store, {
-          mediaType: 'photo',
-          multiple: false,
-        })
-
-        onSelectNewAvatar?.(
-          await openCropper(store, {
+      {
+        testID: 'changeAvatarLibraryBtn',
+        label: 'Library',
+        icon: 'image' as IconProp,
+        onPress: async () => {
+          if (!(await requestPhotoAccessIfNeeded())) {
+            return
+          }
+          const items = await openPicker(store, {
             mediaType: 'photo',
-            path: items[0].path,
-            width: 1000,
-            height: 1000,
-            cropperCircleOverlay: true,
-          }),
-        )
-      },
-    },
-    {
-      testID: 'changeAvatarRemoveBtn',
-      label: 'Remove',
-      icon: ['far', 'trash-can'] as IconProp,
-      onPress: async () => {
-        onSelectNewAvatar?.(null)
-      },
-    },
-  ]
+            multiple: false,
+          })
 
-  const warning = React.useMemo(() => {
+          onSelectNewAvatar?.(
+            await openCropper(store, {
+              mediaType: 'photo',
+              path: items[0].path,
+              width: 1000,
+              height: 1000,
+              cropperCircleOverlay: true,
+            }),
+          )
+        },
+      },
+      {
+        testID: 'changeAvatarRemoveBtn',
+        label: 'Remove',
+        icon: ['far', 'trash-can'] as IconProp,
+        onPress: async () => {
+          onSelectNewAvatar?.(null)
+        },
+      },
+    ],
+    [
+      onSelectNewAvatar,
+      requestCameraAccessIfNeeded,
+      requestPhotoAccessIfNeeded,
+      store,
+    ],
+  )
+
+  const warning = useMemo(() => {
     if (!hasWarning) {
-      return <></>
+      return null
     }
     return (
       <View style={[styles.warningIconContainer, pal.view]}>
@@ -156,7 +164,7 @@ export function UserAvatar({
       <HighPriorityImage
         testID="userAvatarImage"
         style={{width: size, height: size, borderRadius: Math.floor(size / 2)}}
-        resizeMode="stretch"
+        contentFit="cover"
         source={{uri: avatar}}
       />
       {warning}
