@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo, useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   Animated,
@@ -47,8 +47,8 @@ export const FeedItem = observer(function FeedItem({
   item: NotificationsFeedItemModel
 }) {
   const pal = usePalette('default')
-  const [isAuthorsExpanded, setAuthorsExpanded] = React.useState<boolean>(false)
-  const itemHref = React.useMemo(() => {
+  const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
+  const itemHref = useMemo(() => {
     if (item.isLike || item.isRepost) {
       const urip = new AtUri(item.subjectUri)
       return `/profile/${urip.host}/post/${urip.rkey}`
@@ -60,7 +60,7 @@ export const FeedItem = observer(function FeedItem({
     }
     return ''
   }, [item])
-  const itemTitle = React.useMemo(() => {
+  const itemTitle = useMemo(() => {
     if (item.isLike || item.isRepost) {
       return 'Post'
     } else if (item.isFollow) {
@@ -73,6 +73,35 @@ export const FeedItem = observer(function FeedItem({
   const onToggleAuthorsExpanded = () => {
     setAuthorsExpanded(!isAuthorsExpanded)
   }
+
+  const authors: Author[] = useMemo(() => {
+    return [
+      {
+        href: `/profile/${item.author.handle}`,
+        handle: item.author.handle,
+        displayName: item.author.displayName,
+        avatar: item.author.avatar,
+        labels: item.author.labels,
+      },
+      ...(item.additional?.map(
+        ({author: {avatar, labels, handle, displayName}}) => {
+          return {
+            href: `/profile/${handle}`,
+            handle,
+            displayName,
+            avatar,
+            labels,
+          }
+        },
+      ) || []),
+    ]
+  }, [
+    item.additional,
+    item.author.avatar,
+    item.author.displayName,
+    item.author.handle,
+    item.author.labels,
+  ])
 
   if (item.additionalPost?.notFound) {
     // don't render anything if the target post was deleted or unfindable
@@ -125,29 +154,8 @@ export const FeedItem = observer(function FeedItem({
     icon = 'user-plus'
     iconStyle = [s.blue3 as FontAwesomeIconStyle]
   } else {
-    return <></>
+    return null
   }
-
-  const authors: Author[] = [
-    {
-      href: `/profile/${item.author.handle}`,
-      handle: item.author.handle,
-      displayName: item.author.displayName,
-      avatar: item.author.avatar,
-      labels: item.author.labels,
-    },
-    ...(item.additional?.map(
-      ({author: {avatar, labels, handle, displayName}}) => {
-        return {
-          href: `/profile/${handle}`,
-          handle,
-          displayName,
-          avatar,
-          labels,
-        }
-      },
-    ) || []),
-  ]
 
   return (
     <Link
@@ -301,13 +309,14 @@ function ExpandedAuthorsList({
   const heightStyle = {
     height: Animated.multiply(heightInterp, targetHeight),
   }
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.timing(heightInterp, {
       toValue: visible ? 1 : 0,
       duration: 200,
       useNativeDriver: false,
     }).start()
   }, [heightInterp, visible])
+
   return (
     <Animated.View
       style={[
