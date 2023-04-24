@@ -12,6 +12,7 @@ import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {DrawerContent} from './Drawer'
 import {Composer} from './Composer'
 import {useTheme} from 'lib/ThemeContext'
+import {usePalette} from 'lib/hooks/usePalette'
 import * as backHandler from 'lib/routes/back-handler'
 import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
@@ -72,9 +73,10 @@ const ShellInner = observer(() => {
 })
 
 export const Shell: React.FC = observer(() => {
+  const pal = usePalette('default')
   const theme = useTheme()
   return (
-    <View testID="mobileShellView" style={[styles.outerContainer]}>
+    <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
       <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
       <RoutesContainer>
         <ShellInner />

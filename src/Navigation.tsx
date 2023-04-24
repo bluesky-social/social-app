@@ -6,6 +6,8 @@ import {
   createNavigationContainerRef,
   CommonActions,
   StackActions,
+  DefaultTheme,
+  DarkTheme,
 } from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
@@ -256,8 +258,9 @@ const LINKING = {
 }
 
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
+  const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   return (
-    <NavigationContainer ref={navigationRef} linking={LINKING}>
+    <NavigationContainer ref={navigationRef} linking={LINKING} theme={theme}>
       {children}
     </NavigationContainer>
   )
