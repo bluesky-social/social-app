@@ -241,6 +241,20 @@ export class PostThreadModel {
     this.params = params
   }
 
+  static fromPostView(
+    rootStore: RootStoreModel,
+    postView: AppBskyFeedDefs.PostView,
+  ) {
+    const keyGen = reactKeyGenerator()
+    const model = new PostThreadModel(rootStore, {uri: postView.uri})
+    model.resolvedUri = postView.uri
+    model.hasLoaded = true
+    model.thread = new PostThreadItemModel(rootStore, keyGen.next().value, {
+      post: postView,
+    })
+    return model
+  }
+
   get hasContent() {
     return typeof this.thread !== 'undefined'
   }
@@ -360,6 +374,9 @@ export class PostThreadModel {
   }
 
   async _load(isRefreshing = false) {
+    if (this.hasLoaded && !isRefreshing) {
+      return
+    }
     this._xLoading(isRefreshing)
     try {
       const res = await this.rootStore.agent.getPostThread(
