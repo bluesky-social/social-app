@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AppBskyNotificationListNotifications as ListNotifications,
   AppBskyActorDefs,
+  AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedRepost,
   AppBskyFeedLike,
@@ -146,6 +147,14 @@ export class NotificationsFeedItemModel {
     return false
   }
 
+  get additionaDataUri(): string | undefined {
+    if (this.isReply || this.isQuote || this.isMention) {
+      return this.uri
+    } else if (this.isLike || this.isRepost) {
+      return this.subjectUri
+    }
+  }
+
   get subjectUri(): string {
     if (this.reasonSubject) {
       return this.reasonSubject
@@ -193,28 +202,11 @@ export class NotificationsFeedItemModel {
     )
   }
 
-  async fetchAdditionalData() {
-    if (!this.needsAdditionalData) {
-      return
-    }
-    let postUri
-    if (this.isReply || this.isQuote || this.isMention) {
-      postUri = this.uri
-    } else if (this.isLike || this.isRepost) {
-      postUri = this.subjectUri
-    }
-    if (postUri) {
-      this.additionalPost = new PostThreadModel(this.rootStore, {
-        uri: postUri,
-        depth: 0,
-      })
-      await this.additionalPost.setup().catch(e => {
-        this.rootStore.log.error(
-          'Failed to load post needed by notification',
-          e,
-        )
-      })
-    }
+  setAdditionalData(additionalPost: AppBskyFeedDefs.PostView) {
+    this.additionalPost = PostThreadModel.fromPostView(
+      this.rootStore,
+      additionalPost,
+    )
   }
 }
 
@@ -464,7 +456,13 @@ export class NotificationsFeedModel {
       'mostRecent',
       res.data.notifications[0],
     )
-    await notif.fetchAdditionalData()
+    const addedUri = notif.additionaDataUri
+    if (addedUri) {
+      const postsRes = await this.rootStore.agent.app.bsky.feed.getPosts({
+        uris: [addedUri],
+      })
+      notif.setAdditionalData(postsRes.data.posts[0])
+    }
     const filtered = this._filterNotifications([notif])
     return filtered[0]
   }
@@ -536,25 +534,39 @@ export class NotificationsFeedModel {
   async _fetchItemModels(
     items: ListNotifications.Notification[],
   ): Promise<NotificationsFeedItemModel[]> {
-    const promises = []
+    // construct item models and track who needs more data
     const itemModels: NotificationsFeedItemModel[] = []
+    const addedPostMap = new Map<string, NotificationsFeedItemModel[]>()
     for (const item of items) {
       const itemModel = new NotificationsFeedItemModel(
         this.rootStore,
         `item-${_idCounter++}`,
         item,
       )
-      if (itemModel.needsAdditionalData) {
-        promises.push(itemModel.fetchAdditionalData())
+      const uri = itemModel.additionaDataUri
+      if (uri) {
+        const models = addedPostMap.get(uri) || []
+        models.push(itemModel)
+        addedPostMap.set(uri, models)
       }
       itemModels.push(itemModel)
     }
-    await Promise.all(promises).catch(e => {
-      this.rootStore.log.error(
-        'Uncaught failure during notifications _processNotifications()',
-        e,
-      )
-    })
+
+    // fetch additional data
+    if (addedPostMap.size > 0) {
+      const postsRes = await this.rootStore.agent.app.bsky.feed.getPosts({
+        uris: Array.from(addedPostMap.keys()),
+      })
+      for (const post of postsRes.data.posts) {
+        const models = addedPostMap.get(post.uri)
+        if (models?.length) {
+          for (const model of models) {
+            model.setAdditionalData(post)
+          }
+        }
+      }
+    }
+
     return itemModels
   }
 

@@ -49,7 +49,7 @@ const PostResults = observer(({model}: {model: SearchUIModel}) => {
     )
   }
 
-  if (model.postUris.length === 0) {
+  if (model.posts.length === 0) {
     return (
       <CenteredView>
         <Text type="xl" style={[styles.empty, pal.text]}>
@@ -61,8 +61,13 @@ const PostResults = observer(({model}: {model: SearchUIModel}) => {
 
   return (
     <ScrollView style={pal.view}>
-      {model.postUris.map(uri => (
-        <Post key={uri} uri={uri} hideError />
+      {model.posts.map(post => (
+        <Post
+          key={post.resolvedUri}
+          uri={post.resolvedUri}
+          initView={post}
+          hideError
+        />
       ))}
       <View style={s.footerSpacer} />
       <View style={s.footerSpacer} />

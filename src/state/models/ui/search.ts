@@ -1,13 +1,14 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {searchProfiles, searchPosts} from 'lib/api/search'
-import {AppBskyActorDefs} from '@atproto/api'
+import {PostThreadModel} from '../content/post-thread'
+import {AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 
 export class SearchUIModel {
   isPostsLoading = false
   isProfilesLoading = false
   query: string = ''
-  postUris: string[] = []
+  posts: PostThreadModel[] = []
   profiles: AppBskyActorDefs.ProfileView[] = []
 
   constructor(public rootStore: RootStoreModel) {
@@ -15,7 +16,7 @@ export class SearchUIModel {
   }
 
   async fetch(q: string) {
-    this.postUris = []
+    this.posts = []
     this.profiles = []
     this.query = q
     if (!q.trim()) {
@@ -29,8 +30,22 @@ export class SearchUIModel {
       searchPosts(q).catch(_e => []),
       searchProfiles(q).catch(_e => []),
     ])
+
+    let posts: AppBskyFeedDefs.PostView[] = []
+    if (postsSearch?.length) {
+      do {
+        const res = await this.rootStore.agent.app.bsky.feed.getPosts({
+          uris: postsSearch
+            .splice(0, 25)
+            .map(p => `at://${p.user.did}/${p.tid}`),
+        })
+        posts = posts.concat(res.data.posts)
+      } while (postsSearch.length)
+    }
     runInAction(() => {
-      this.postUris = postsSearch?.map(p => `at://${p.user.did}/${p.tid}`) || []
+      this.posts = posts.map(post =>
+        PostThreadModel.fromPostView(this.rootStore, post),
+      )
       this.isPostsLoading = false
     })
 
