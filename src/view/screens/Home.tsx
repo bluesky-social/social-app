@@ -172,22 +172,10 @@ const FeedPage = observer(
       'Home',
       React.useCallback(
         isInside => {
-          if (!isPageFocused) {
+          if (!isPageFocused || !isInside) {
             return
           }
-          // on mobile:
-          // fires with `isInside=true` when the user navigates to the root tab
-          // but not when the user goes back to the screen by pressing back
-          // on web:
-          // essentially equivalent to useFocusEffect because we dont used tabbed
-          // navigation
-          if (isInside) {
-            if (feed.hasNewLatest) {
-              feed.refresh()
-            } else {
-              feed.checkForLatest()
-            }
-          }
+          feed.checkForLatest()
         },
         [isPageFocused, feed],
       ),
