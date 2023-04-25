@@ -494,7 +494,9 @@ export class PostsFeedModel {
         uri,
         new FeedViewPostsSlice(res.data.posts.map(post => ({post}))),
       )
-      this.slices = [toPrepend].concat(this.slices)
+      runInAction(() => {
+        this.slices = [toPrepend].concat(this.slices)
+      })
     } catch (e) {
       this.rootStore.log.error('Failed to load post to prepend', {e})
     }
