@@ -145,8 +145,7 @@ export const ProfileScreen = withAuthRequired(
           <ErrorScreen
             testID="profileErrorScreen"
             title="Failed to load profile"
-            message={`There was an issue when attempting to load ${route.params.name}`}
-            details={uiState.profile.error}
+            message={uiState.profile.error}
             onPressTryAgain={onPressTryAgain}
           />
         ) : uiState.profile.hasLoaded ? (
