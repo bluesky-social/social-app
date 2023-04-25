@@ -75,7 +75,7 @@ export function Component({onAltTextSet}: Props) {
 const styles = StyleSheet.create({
   container: {
     gap: 18,
-    paddingVertical: 18,
+    paddingVertical: isDesktopWeb ? 0 : 18,
     paddingHorizontal: isDesktopWeb ? 0 : 12,
     height: '100%',
     width: '100%',
