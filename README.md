@@ -55,3 +55,8 @@ To open the [Developer Menu](https://docs.expo.dev/debugging/tools/#developer-me
 `./platform/polyfills.*.ts` adds polyfills to the environment. Currently this includes:
 
 - TextEncoder / TextDecoder
+
+
+### Sentry
+
+

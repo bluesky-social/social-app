@@ -10,20 +10,29 @@
       "ios": {
         "resourceClass": "medium"
       },
-      "channel": "development"
+      "channel": "development",
+      "env": {
+        "SENTRY_AUTH_TOKEN": "2e9a380d05614292901c9f396c26225cd7defac860c74c63b8110ab013861294"
+      }
     },
     "preview": {
       "distribution": "internal",
       "ios": {
         "resourceClass": "medium"
       },
-      "channel": "preview"
+      "channel": "preview",
+      "env": {
+        "SENTRY_AUTH_TOKEN": "2e9a380d05614292901c9f396c26225cd7defac860c74c63b8110ab013861294"
+      }
     },
     "production": {
       "ios": {
         "resourceClass": "medium"
       },
-      "channel": "production"
+      "channel": "production",
+      "env": {
+        "SENTRY_AUTH_TOKEN": "2e9a380d05614292901c9f396c26225cd7defac860c74c63b8110ab013861294"
+      }
     }
   },
   "submit": {
