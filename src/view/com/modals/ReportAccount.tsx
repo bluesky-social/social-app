@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useMemo} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -15,12 +15,7 @@ import * as Toast from '../util/Toast'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
-
-const ITEMS: RadioGroupItem[] = [
-  {key: 'spam', label: 'Spam or excessive repeat posts'},
-  {key: 'abuse', label: 'Abusive, rude, or hateful'},
-  {key: 'illegal', label: 'Posts illegal content'},
-]
+import {isDesktopWeb} from 'platform/detection'
 
 export const snapPoints = ['50%']
 
@@ -31,6 +26,39 @@ export function Component({did}: {did: string}) {
   const [error, setError] = useState<string>('')
   const [issue, setIssue] = useState<string>('')
   const onSelectIssue = (v: string) => setIssue(v)
+
+  const ITEMS: RadioGroupItem[] = useMemo(
+    () => [
+      {
+        key: ComAtprotoModerationDefs.REASONMISLEADING,
+        label: (
+          <View>
+            <Text style={pal.text} type="md-bold">
+              Misleading Account
+            </Text>
+            <Text style={pal.textLight}>
+              Impersonation or false claims about identity or affiliation
+            </Text>
+          </View>
+        ),
+      },
+      {
+        key: ComAtprotoModerationDefs.REASONSPAM,
+        label: (
+          <View>
+            <Text style={pal.text} type="md-bold">
+              Frequently Posts Unwanted Content
+            </Text>
+            <Text style={pal.textLight}>
+              Spam; excessive mentions or replies
+            </Text>
+          </View>
+        ),
+      },
+    ],
+    [pal],
+  )
+
   const onPress = async () => {
     setError('')
     if (!issue) {
@@ -38,15 +66,8 @@ export function Component({did}: {did: string}) {
     }
     setIsProcessing(true)
     try {
-      // NOTE: we should update the lexicon of reasontype to include more options -prf
-      let reasonType = ComAtprotoModerationDefs.REASONOTHER
-      if (issue === 'spam') {
-        reasonType = ComAtprotoModerationDefs.REASONSPAM
-      }
-      const reason = ITEMS.find(item => item.key === issue)?.label || ''
       await store.agent.com.atproto.moderation.createReport({
-        reasonType,
-        reason,
+        reasonType: issue,
         subject: {
           $type: 'com.atproto.admin.defs#repoRef',
           did,
@@ -61,11 +82,11 @@ export function Component({did}: {did: string}) {
     }
   }
   return (
-    <View
-      testID="reportAccountModal"
-      style={[s.flex1, s.pl10, s.pr10, pal.view]}>
-      <Text style={[pal.text, styles.title]}>Report account</Text>
-      <Text style={[pal.textLight, styles.description]}>
+    <View testID="reportAccountModal" style={[styles.container, pal.view]}>
+      <Text type="title-xl" style={[pal.text, styles.title]}>
+        Report account
+      </Text>
+      <Text type="xl" style={[pal.text, styles.description]}>
         What is the issue with this account?
       </Text>
       <RadioGroup
@@ -73,6 +94,9 @@ export function Component({did}: {did: string}) {
         items={ITEMS}
         onSelect={onSelectIssue}
       />
+      <Text type="sm" style={[pal.text, styles.description, s.pt10]}>
+        For other issues, please report specific posts.
+      </Text>
       {error ? (
         <View style={s.mt10}>
           <ErrorMessage message={error} />
@@ -101,15 +125,17 @@ export function Component({did}: {did: string}) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: isDesktopWeb ? 0 : 10,
+  },
   title: {
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 24,
     marginBottom: 12,
   },
   description: {
     textAlign: 'center',
-    fontSize: 17,
     paddingHorizontal: 22,
     marginBottom: 10,
   },

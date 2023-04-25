@@ -5,7 +5,7 @@ import {ButtonType} from './Button'
 import {s} from 'lib/styles'
 
 export interface RadioGroupItem {
-  label: string
+  label: string | JSX.Element
   key: string
 }
 
