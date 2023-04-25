@@ -196,7 +196,7 @@ export const ComposePost = observer(function ComposePost({
     ? 'Write a comment'
     : "What's up?"
 
-  const canSelectImages = gallery.size <= 4
+  const canSelectImages = gallery.size < 4
   const viewStyles = {
     paddingBottom: isAndroid ? insets.bottom : 0,
     paddingTop: isAndroid ? insets.top : isDesktopWeb ? 0 : 15,
