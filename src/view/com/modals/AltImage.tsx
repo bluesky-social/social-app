@@ -12,7 +12,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from 'state/index'
 import {isDesktopWeb} from 'platform/detection'
 
-export const snapPoints = [330]
+export const snapPoints = ['80%']
 
 interface Props {
   onAltTextSet: (altText?: string | undefined) => void
@@ -34,7 +34,9 @@ export function Component({onAltTextSet}: Props) {
   }
 
   return (
-    <View testID="altTextImageModal" style={[pal.view, styles.container]}>
+    <View
+      testID="altTextImageModal"
+      style={[pal.view, styles.container, s.flex1]}>
       <Text style={[styles.title, pal.text]}>Add alt text</Text>
       <TextInput
         testID="altTextImageInput"
@@ -73,9 +75,9 @@ export function Component({onAltTextSet}: Props) {
 const styles = StyleSheet.create({
   container: {
     gap: 18,
-    bottom: 0,
-    paddingVertical: 18,
+    paddingVertical: isDesktopWeb ? 0 : 18,
     paddingHorizontal: isDesktopWeb ? 0 : 12,
+    height: '100%',
     width: '100%',
   },
   title: {
