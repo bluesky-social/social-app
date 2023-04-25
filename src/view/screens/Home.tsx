@@ -149,6 +149,8 @@ const FeedPage = observer(
       }
     }, [isPageFocused, scrollToTop, feed])
 
+    // fires when screen is activated/deactivated
+    // - set up polls/listeners, update content
     useFocusEffect(
       React.useCallback(() => {
         const softResetSub = store.onScreenSoftReset(onSoftReset)
@@ -168,6 +170,8 @@ const FeedPage = observer(
         }
       }, [store, doPoll, onSoftReset, screen, feed]),
     )
+    // fires when tab is actived/deactivated
+    // - check for latest
     useTabFocusEffect(
       'Home',
       React.useCallback(
@@ -180,6 +184,13 @@ const FeedPage = observer(
         [isPageFocused, feed],
       ),
     )
+    // fires when page within screen is activated/deactivated
+    // - check for latest
+    React.useEffect(() => {
+      if (isPageFocused && isScreenFocused) {
+        feed.checkForLatest()
+      }
+    }, [isPageFocused, isScreenFocused, feed])
 
     const onPressCompose = React.useCallback(() => {
       track('HomeScreen:PressCompose')
