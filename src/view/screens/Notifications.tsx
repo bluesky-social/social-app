@@ -16,6 +16,7 @@ import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
+import {isWeb} from 'platform/detection'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -70,10 +71,14 @@ export const NotificationsScreen = withAuthRequired(
           // essentially equivalent to useFocusEffect because we dont used tabbed
           // navigation
           if (isInside) {
-            if (store.me.notifications.unreadCount > 0) {
-              store.me.notifications.refresh()
-            } else {
+            if (isWeb) {
               store.me.notifications.syncQueue()
+            } else {
+              if (store.me.notifications.unreadCount > 0) {
+                store.me.notifications.refresh()
+              } else {
+                store.me.notifications.syncQueue()
+              }
             }
           }
         },
