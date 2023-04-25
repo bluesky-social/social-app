@@ -1,7 +1,6 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {
-  Share,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -31,9 +30,9 @@ import {ProfileHeaderLabels} from '../util/moderation/ProfileHeaderLabels'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {isAndroid, isDesktopWeb, isIOS} from 'platform/detection'
+import {isDesktopWeb} from 'platform/detection'
 import {FollowState} from 'state/models/cache/my-follows'
-import Clipboard from '@react-native-clipboard/clipboard'
+import {shareUrl} from 'lib/sharing'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
@@ -152,15 +151,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
   const onPressShare = React.useCallback(async () => {
     track('ProfileHeader:ShareButtonClicked')
     const url = toShareUrl(`/profile/${view.handle}`)
-
-    if (isIOS || isAndroid) {
-      Share.share({url})
-    } else {
-      // React Native Share is not supported by web. Web Share API
-      // has increasing but not full support, so default to clipboard
-      Clipboard.setString(url)
-      Toast.show('Copied to clipboard')
-    }
+    shareUrl(url)
   }, [track, view])
 
   const onPressMuteAccount = React.useCallback(async () => {

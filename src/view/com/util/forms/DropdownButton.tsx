@@ -1,7 +1,6 @@
 import React, {useRef} from 'react'
 import {
   Dimensions,
-  Share,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -19,10 +18,8 @@ import {toShareUrl} from 'lib/strings/url-helpers'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {isAndroid, isIOS} from 'platform/detection'
-import Clipboard from '@react-native-clipboard/clipboard'
-import * as Toast from '../../util/Toast'
 import {isWeb} from 'platform/detection'
+import {shareUrl} from 'lib/sharing'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 const ESTIMATED_BTN_HEIGHT = 50
@@ -182,15 +179,7 @@ export function PostDropdownBtn({
       label: 'Share...',
       onPress() {
         const url = toShareUrl(itemHref)
-
-        if (isIOS || isAndroid) {
-          Share.share({url})
-        } else {
-          // React Native Share is not supported by web. Web Share API
-          // has increasing but not full support, so default to clipboard
-          Clipboard.setString(url)
-          Toast.show('Copied to clipboard')
-        }
+        shareUrl(url)
       },
     },
     {sep: true},
