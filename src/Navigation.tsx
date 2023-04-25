@@ -50,7 +50,7 @@ import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
 import {AppPasswords} from 'view/screens/AppPasswords'
 import {BlockedAccounts} from 'view/screens/BlockedAccounts'
-import {routingInstrumentation} from 'lib/sentry'
+import {getRoutingInstrumentation} from 'lib/sentry'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -268,8 +268,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onReady={() => {
-        // Register the navigation container with the Sentry instrumentation
-        routingInstrumentation.registerNavigationContainer(navigationRef)
+        // Register the navigation container with the Sentry instrumentation (only works on native)
+        if (isNative) {
+          const routingInstrumentation = getRoutingInstrumentation()
+          routingInstrumentation.registerNavigationContainer(navigationRef)
+        }
       }}>
       {children}
     </NavigationContainer>
