@@ -36,7 +36,7 @@ export function ErrorScreen({
           ]}>
           <FontAwesomeIcon
             icon="exclamation"
-            style={{color: colors.white}}
+            style={pal.textInverted}
             size={24}
           />
         </View>
