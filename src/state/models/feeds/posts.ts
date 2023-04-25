@@ -485,6 +485,9 @@ export class PostsFeedModel {
    * Used by the composer to add their new posts
    */
   async addPostToTop(uri: string) {
+    if (!this.slices.length) {
+      return this.refresh()
+    }
     try {
       const res = await this.rootStore.agent.app.bsky.feed.getPosts({
         uris: [uri],
