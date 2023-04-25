@@ -470,36 +470,35 @@ export class PostsFeedModel {
   /**
    * Check if new posts are available
    */
-  async checkForLatest({autoPrepend}: {autoPrepend?: boolean} = {}) {
+  async checkForLatest() {
     if (this.hasNewLatest || this.feedType === 'suggested') {
       return
     }
     const res = await this._getFeed({limit: PAGE_SIZE})
     const tuner = new FeedTuner()
     const slices = tuner.tune(res.data.feed, this.feedTuners)
-    if (slices[0]?.uri !== this.slices[0]?.uri) {
-      if (!autoPrepend) {
-        this.setHasNewLatest(true)
-      } else {
-        this.setHasNewLatest(false)
-        runInAction(() => {
-          const slicesModels = slices.map(
-            slice =>
-              new PostsFeedSliceModel(
-                this.rootStore,
-                `item-${_idCounter++}`,
-                slice,
-              ),
-          )
-          this.slices = slicesModels.concat(
-            this.slices.filter(slice1 =>
-              slicesModels.find(slice2 => slice1.uri === slice2.uri),
-            ),
-          )
-        })
-      }
-    } else {
-      this.setHasNewLatest(false)
+    this.setHasNewLatest(slices[0]?.uri !== this.slices[0]?.uri)
+  }
+
+  /**
+   * Fetches the given post and adds it to the top
+   * Used by the composer to add their new posts
+   */
+  async addPostToTop(uri: string) {
+    try {
+      const res = await this.rootStore.agent.app.bsky.feed.getPosts({
+        uris: [uri],
+      })
+      const toPrepend = new PostsFeedSliceModel(
+        this.rootStore,
+        uri,
+        new FeedViewPostsSlice(res.data.posts.map(post => ({post}))),
+      )
+      runInAction(() => {
+        this.slices = [toPrepend].concat(this.slices)
+      })
+    } catch (e) {
+      this.rootStore.log.error('Failed to load post to prepend', {e})
     }
   }
 

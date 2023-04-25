@@ -138,8 +138,9 @@ export const ComposePost = observer(function ComposePost({
 
       setIsProcessing(true)
 
+      let createdPost
       try {
-        await apilib.post(store, {
+        createdPost = await apilib.post(store, {
           rawText: rt.text,
           replyTo: replyTo?.uri,
           images: gallery.images,
@@ -163,7 +164,9 @@ export const ComposePost = observer(function ComposePost({
         setIsProcessing(false)
         return
       }
-      store.me.mainFeed.checkForLatest({autoPrepend: true})
+      if (!replyTo) {
+        store.me.mainFeed.addPostToTop(createdPost.uri)
+      }
       onPost?.()
       hackfixOnClose()
       Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
