@@ -106,7 +106,7 @@ const InviteCode = observer(
           {code}
         </Text>
         <View style={styles.flex1} />
-        {store.invitedUsers.isInviteCopied(code) && (
+        {!used && store.invitedUsers.isInviteCopied(code) && (
           <Text style={[pal.textLight, styles.codeCopied]}>Copied</Text>
         )}
         {!used && (
