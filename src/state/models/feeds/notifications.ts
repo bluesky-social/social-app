@@ -10,6 +10,7 @@ import {
   ComAtprotoLabelDefs,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
+import chunk from 'lodash.chunk'
 import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from '../root-store'
 import {PostThreadModel} from '../content/post-thread'
@@ -554,10 +555,15 @@ export class NotificationsFeedModel {
 
     // fetch additional data
     if (addedPostMap.size > 0) {
-      const postsRes = await this.rootStore.agent.app.bsky.feed.getPosts({
-        uris: Array.from(addedPostMap.keys()),
-      })
-      for (const post of postsRes.data.posts) {
+      const uriChunks = chunk(Array.from(addedPostMap.keys()), 25)
+      const postsChunks = await Promise.all(
+        uriChunks.map(uris =>
+          this.rootStore.agent.app.bsky.feed
+            .getPosts({uris})
+            .then(res => res.data.posts),
+        ),
+      )
+      for (const post of postsChunks.flat()) {
         const models = addedPostMap.get(post.uri)
         if (models?.length) {
           for (const model of models) {
