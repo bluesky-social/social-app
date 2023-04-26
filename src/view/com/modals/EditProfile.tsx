@@ -182,7 +182,7 @@ export function Component({
             <TextInput
               testID="editProfileDescriptionInput"
               style={[styles.textArea, pal.border, pal.text]}
-              placeholder="e.g. Artist, dog-lover, and memelord."
+              placeholder="e.g. Artist, dog-lover, and avid reader."
               placeholderTextColor={colors.gray4}
               keyboardAppearance={theme.colorScheme}
               multiline
