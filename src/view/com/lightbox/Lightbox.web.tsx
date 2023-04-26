@@ -1,10 +1,11 @@
-import React from 'react'
+import React, {useCallback, useEffect} from 'react'
 import {
   Image,
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
   View,
+  Keyboard,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -72,6 +73,20 @@ function LightboxInner({
       setIndex(index + 1)
     }
   }
+
+  const onEscape = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    },
+    [onClose],
+  )
+
+  useEffect(() => {
+    window.addEventListener('keydown', onEscape)
+    return () => window.removeEventListener('keydown', onEscape)
+  }, [onEscape])
 
   return (
     <View style={styles.mask}>
