@@ -43,6 +43,7 @@ export interface CropImageModal {
 
 export interface AltTextImageModal {
   name: 'alt-text-image'
+  prevAltText: string
   onAltTextSet: (altText?: string) => void
 }
 

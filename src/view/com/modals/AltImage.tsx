@@ -15,14 +15,15 @@ import {isDesktopWeb} from 'platform/detection'
 export const snapPoints = ['80%']
 
 interface Props {
+  prevAltText: string
   onAltTextSet: (altText?: string | undefined) => void
 }
 
-export function Component({onAltTextSet}: Props) {
+export function Component({prevAltText, onAltTextSet}: Props) {
   const pal = usePalette('default')
   const store = useStores()
   const theme = useTheme()
-  const [altText, setAltText] = useState('')
+  const [altText, setAltText] = useState(prevAltText)
 
   const onPressSave = useCallback(() => {
     onAltTextSet(altText)
