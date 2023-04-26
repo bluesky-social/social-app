@@ -1,6 +1,7 @@
-import React, {useState} from 'react'
+import React, {useState, useMemo} from 'react'
 import {
   ActivityIndicator,
+  Linking,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -16,14 +17,9 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 
-const ITEMS: RadioGroupItem[] = [
-  {key: 'spam', label: 'Spam or excessive repeat posts'},
-  {key: 'abuse', label: 'Abusive, rude, or hateful'},
-  {key: 'copyright', label: 'Contains copyrighted material'},
-  {key: 'illegal', label: 'Contains illegal content'},
-]
+const DMCA_LINK = 'https://bsky.app/support/copyright'
 
-export const snapPoints = ['50%']
+export const snapPoints = [500]
 
 export function Component({
   postUri,
@@ -38,6 +34,74 @@ export function Component({
   const [error, setError] = useState<string>('')
   const [issue, setIssue] = useState<string>('')
   const onSelectIssue = (v: string) => setIssue(v)
+
+  const ITEMS: RadioGroupItem[] = useMemo(
+    () => [
+      {
+        key: ComAtprotoModerationDefs.REASONSPAM,
+        label: (
+          <View>
+            <Text style={pal.text} type="md-bold">
+              Spam
+            </Text>
+            <Text style={pal.textLight}>Excessive mentions or replies</Text>
+          </View>
+        ),
+      },
+      {
+        key: ComAtprotoModerationDefs.REASONSEXUAL,
+        label: (
+          <View>
+            <Text style={pal.text} type="md-bold">
+              Unwanted Sexual Content
+            </Text>
+            <Text style={pal.textLight}>
+              Nudity or pornography not labeled as such
+            </Text>
+          </View>
+        ),
+      },
+      {
+        key: '__copyright__',
+        label: (
+          <View>
+            <Text style={pal.text} type="md-bold">
+              Copyright Violation
+            </Text>
+            <Text style={pal.textLight}>Contains copyrighted material</Text>
+          </View>
+        ),
+      },
+      {
+        key: ComAtprotoModerationDefs.REASONVIOLATION,
+        label: (
+          <View>
+            <Text style={pal.text} type="md-bold">
+              Illegal and Urgent
+            </Text>
+            <Text style={pal.textLight}>
+              Glaring violations of law or terms of service
+            </Text>
+          </View>
+        ),
+      },
+      {
+        key: ComAtprotoModerationDefs.REASONOTHER,
+        label: (
+          <View>
+            <Text style={pal.text} type="md-bold">
+              Other
+            </Text>
+            <Text style={pal.textLight}>
+              An issue not included in these options
+            </Text>
+          </View>
+        ),
+      },
+    ],
+    [pal],
+  )
+
   const onPress = async () => {
     setError('')
     if (!issue) {
@@ -45,22 +109,19 @@ export function Component({
     }
     setIsProcessing(true)
     try {
-      // NOTE: we should update the lexicon of reasontype to include more options -prf
-      let reasonType = ComAtprotoModerationDefs.REASONOTHER
-      if (issue === 'spam') {
-        reasonType = ComAtprotoModerationDefs.REASONSPAM
+      if (issue === '__copyright__') {
+        Linking.openURL(DMCA_LINK)
+      } else {
+        await store.agent.createModerationReport({
+          reasonType: issue,
+          subject: {
+            $type: 'com.atproto.repo.strongRef',
+            uri: postUri,
+            cid: postCid,
+          },
+        })
+        Toast.show("Thank you for your report! We'll look into it promptly.")
       }
-      const reason = ITEMS.find(item => item.key === issue)?.label || ''
-      await store.agent.createModerationReport({
-        reasonType,
-        reason,
-        subject: {
-          $type: 'com.atproto.repo.strongRef',
-          uri: postUri,
-          cid: postCid,
-        },
-      })
-      Toast.show("Thank you for your report! We'll look into it promptly.")
       store.shell.closeModal()
       return
     } catch (e: any) {

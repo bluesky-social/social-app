@@ -15,7 +15,7 @@ export function RadioButton({
 }: {
   testID?: string
   type?: ButtonType
-  label: string
+  label: string | JSX.Element
   isSelected: boolean
   style?: StyleProp<ViewStyle>
   onPress: () => void
@@ -47,7 +47,7 @@ export function RadioButton({
       borderColor: theme.palette.default.border,
     },
     'default-light': {
-      borderColor: theme.palette.default.border,
+      borderColor: theme.palette.default.borderDark,
     },
   })
   const circleFillStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(
@@ -128,9 +128,13 @@ export function RadioButton({
             <View style={[circleFillStyle, styles.circleFill]} />
           ) : undefined}
         </View>
-        <Text type="button" style={[labelStyle, styles.label]}>
-          {label}
-        </Text>
+        {typeof label === 'string' ? (
+          <Text type="button" style={[labelStyle, styles.label]}>
+            {label}
+          </Text>
+        ) : (
+          <View style={styles.label}>{label}</View>
+        )}
       </View>
     </Button>
   )
