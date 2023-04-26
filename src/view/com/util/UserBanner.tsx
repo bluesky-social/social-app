@@ -17,9 +17,11 @@ import {isWeb} from 'platform/detection'
 
 export function UserBanner({
   banner,
+  shouldBlur,
   onSelectNewBanner,
 }: {
   banner?: string | null
+  shouldBlur?: boolean
   onSelectNewBanner?: (img: TImage | null) => void
 }) {
   const store = useStores()
@@ -113,6 +115,7 @@ export function UserBanner({
       style={styles.bannerImage}
       resizeMode="cover"
       source={{uri: banner}}
+      blurRadius={shouldBlur ? 100 : 0}
     />
   ) : (
     <View

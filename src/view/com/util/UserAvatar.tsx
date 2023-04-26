@@ -40,11 +40,13 @@ function DefaultAvatar({size}: {size: number}) {
 export function UserAvatar({
   size,
   avatar,
+  shouldBlur,
   hasWarning,
   onSelectNewAvatar,
 }: {
   size: number
   avatar?: string | null
+  shouldBlur?: boolean
   hasWarning?: boolean
   onSelectNewAvatar?: (img: RNImage | null) => void
 }) {
@@ -166,6 +168,7 @@ export function UserAvatar({
         style={{width: size, height: size, borderRadius: Math.floor(size / 2)}}
         contentFit="cover"
         source={{uri: avatar}}
+        blurRadius={shouldBlur ? Math.floor(size / 6) : 0}
       />
       {warning}
     </View>
