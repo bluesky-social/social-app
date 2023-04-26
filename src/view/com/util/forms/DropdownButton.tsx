@@ -288,7 +288,7 @@ const DropdownItems = ({
   const separatorColor =
     theme.colorScheme === 'dark' ? pal.borderDark : pal.border
 
-  const numItems = items.length
+  const numItems = items.filter(isBtn).length
 
   return (
     <>
@@ -317,9 +317,8 @@ const DropdownItems = ({
                 key={index}
                 style={[styles.menuItem]}
                 onPress={() => onPressItem(index)}
-                accessible={true}
                 accessibilityLabel={item.label}
-                accessibilityHint={`Option ${index} of ${numItems}`}>
+                accessibilityHint={`Option ${index + 1} of ${numItems}`}>
                 {item.icon && (
                   <FontAwesomeIcon
                     style={styles.icon}

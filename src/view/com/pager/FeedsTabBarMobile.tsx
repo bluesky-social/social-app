@@ -38,7 +38,6 @@ export const FeedsTabBar = observer(
           testID="viewHeaderDrawerBtn"
           style={styles.tabBarAvi}
           onPress={onPressAvi}
-          accessible={true}
           accessibilityRole="button"
           accessibilityLabel="Open navigation"
           accessibilityHint="Access profile and other navigation links">

@@ -273,6 +273,7 @@ const ProfileHeaderLoaded = observer(
 
     const blockHide = !isMe && (view.viewer.blocking || view.viewer.blockedBy)
 
+<<<<<<< HEAD
     return (
       <View style={pal.view}>
         <UserBanner banner={view.banner} moderation={view.moderation.avatar} />
@@ -367,6 +368,105 @@ const ProfileHeaderLoaded = observer(
             <Text style={pal.textLight}>@{view.handle}</Text>
           </View>
           {!blockHide && (
+=======
+  const onPressFollowers = React.useCallback(() => {
+    track('ProfileHeader:FollowersButtonClicked')
+    navigation.push('ProfileFollowers', {name: view.handle})
+  }, [track, navigation, view])
+
+  const onPressFollows = React.useCallback(() => {
+    track('ProfileHeader:FollowsButtonClicked')
+    navigation.push('ProfileFollows', {name: view.handle})
+  }, [track, navigation, view])
+
+  const onPressShare = React.useCallback(async () => {
+    track('ProfileHeader:ShareButtonClicked')
+    const url = toShareUrl(`/profile/${view.handle}`)
+    shareUrl(url)
+  }, [track, view])
+
+  const onPressMuteAccount = React.useCallback(async () => {
+    track('ProfileHeader:MuteAccountButtonClicked')
+    try {
+      await view.muteAccount()
+      Toast.show('Account muted')
+    } catch (e: any) {
+      store.log.error('Failed to mute account', e)
+      Toast.show(`There was an issue! ${e.toString()}`)
+    }
+  }, [track, view, store])
+
+  const onPressUnmuteAccount = React.useCallback(async () => {
+    track('ProfileHeader:UnmuteAccountButtonClicked')
+    try {
+      await view.unmuteAccount()
+      Toast.show('Account unmuted')
+    } catch (e: any) {
+      store.log.error('Failed to unmute account', e)
+      Toast.show(`There was an issue! ${e.toString()}`)
+    }
+  }, [track, view, store])
+
+  const onPressReportAccount = React.useCallback(() => {
+    track('ProfileHeader:ReportAccountButtonClicked')
+    store.shell.openModal({
+      name: 'report-account',
+      did: view.did,
+    })
+  }, [track, store, view])
+
+  const isMe = React.useMemo(
+    () => store.me.did === view.did,
+    [store.me.did, view.did],
+  )
+  const dropdownItems: DropdownItem[] = React.useMemo(() => {
+    let items: DropdownItem[] = [
+      {
+        testID: 'profileHeaderDropdownSahreBtn',
+        label: 'Share',
+        onPress: onPressShare,
+      },
+    ]
+    if (!isMe) {
+      items.push({
+        testID: 'profileHeaderDropdownMuteBtn',
+        label: view.viewer.muted ? 'Unmute Account' : 'Mute Account',
+        onPress: view.viewer.muted ? onPressUnmuteAccount : onPressMuteAccount,
+      })
+      items.push({
+        testID: 'profileHeaderDropdownReportBtn',
+        label: 'Report Account',
+        onPress: onPressReportAccount,
+      })
+    }
+    return items
+  }, [
+    isMe,
+    view.viewer.muted,
+    onPressShare,
+    onPressUnmuteAccount,
+    onPressMuteAccount,
+    onPressReportAccount,
+  ])
+  return (
+    <View style={pal.view}>
+      <UserBanner banner={view.banner} moderation={view.moderation.avatar} />
+      <View style={styles.content}>
+        <View style={[styles.buttonsLine]}>
+          {isMe ? (
+            <TouchableOpacity
+              testID="profileHeaderEditProfileButton"
+              onPress={onPressEditProfile}
+              style={[styles.btn, styles.mainBtn, pal.btn]}
+              accessibilityRole="button"
+              accessibilityLabel="Edit profile"
+              accessibilityHint="Opens editor for profile display name, avatar, background image, and description">
+              <Text type="button" style={pal.text}>
+                Edit Profile
+              </Text>
+            </TouchableOpacity>
+          ) : (
+>>>>>>> 4521d020 (Latest update)
             <>
               <View style={styles.metricsLine}>
                 <TouchableOpacity
@@ -462,8 +562,76 @@ const ProfileHeaderLoaded = observer(
                 <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
               </BlurView>
             </View>
+<<<<<<< HEAD
           </TouchableWithoutFeedback>
         )}
+=======
+          ) : undefined}
+          <Text style={pal.textLight}>@{view.handle}</Text>
+        </View>
+        <View style={styles.metricsLine}>
+          <TouchableOpacity
+            testID="profileHeaderFollowersButton"
+            style={[s.flexRow, s.mr10]}
+            onPress={onPressFollowers}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel={`Show ${view.handle}'s followers`}
+            accessibilityHint={`Shows folks following ${view.handle}`}>
+            <Text type="md" style={[s.bold, s.mr2, pal.text]}>
+              {view.followersCount}
+            </Text>
+            <Text type="md" style={[pal.textLight]}>
+              {pluralize(view.followersCount, 'follower')}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            testID="profileHeaderFollowsButton"
+            style={[s.flexRow, s.mr10]}
+            onPress={onPressFollows}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel={`Show ${view.handle}'s follows`}
+            accessibilityHint={`Shows folks followed by ${view.handle}`}>
+            <Text type="md" style={[s.bold, s.mr2, pal.text]}>
+              {view.followsCount}
+            </Text>
+            <Text type="md" style={[pal.textLight]}>
+              following
+            </Text>
+          </TouchableOpacity>
+          <Text type="md" style={[s.bold, pal.text]}>
+            {view.postsCount}{' '}
+            <Text type="md" style={[pal.textLight]}>
+              {pluralize(view.postsCount, 'post')}
+            </Text>
+          </Text>
+        </View>
+        {view.descriptionRichText ? (
+          <RichText
+            testID="profileHeaderDescription"
+            style={[styles.description, pal.text]}
+            numberOfLines={15}
+            richText={view.descriptionRichText}
+          />
+        ) : undefined}
+        <ProfileHeaderWarnings moderation={view.moderation.view} />
+        {view.viewer.muted ? (
+          <View
+            testID="profileHeaderMutedNotice"
+            style={[styles.detailLine, pal.btn, s.p5]}>
+            <FontAwesomeIcon
+              icon={['far', 'eye-slash']}
+              style={[pal.text, s.mr5]}
+            />
+            <Text type="md" style={[s.mr2, pal.text]}>
+              Account muted
+            </Text>
+          </View>
+        ) : undefined}
+      </View>
+      {!isDesktopWeb && !hideBackButton && (
+>>>>>>> 4521d020 (Latest update)
         <TouchableWithoutFeedback
           testID="profileHeaderAviButton"
           onPress={onPressAvi}
@@ -483,10 +651,32 @@ const ProfileHeaderLoaded = observer(
             />
           </View>
         </TouchableWithoutFeedback>
+<<<<<<< HEAD
       </View>
     )
   },
 )
+=======
+      )}
+      <TouchableWithoutFeedback
+        testID="profileHeaderAviButton"
+        onPress={onPressAvi}
+        accessibilityRole="image"
+        accessibilityLabel={`View ${view.handle}'s avatar`}
+        accessibilityHint={`Opens ${view.handle}'s avatar in an image viewer`}>
+        <View
+          style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
+          <UserAvatar
+            size={80}
+            avatar={view.avatar}
+            moderation={view.moderation.avatar}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+    </View>
+  )
+})
+>>>>>>> 4521d020 (Latest update)
 
 const styles = StyleSheet.create({
   banner: {

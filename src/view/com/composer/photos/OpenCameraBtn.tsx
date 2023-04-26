@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {TouchableOpacity} from 'react-native'
+import {TouchableOpacity, StyleSheet} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -54,7 +54,7 @@ export function OpenCameraBtn({gallery}: Props) {
     <TouchableOpacity
       testID="openCameraButton"
       onPress={onPressTakePicture}
-      style={[s.pl5]}
+      style={styles.button}
       hitSlop={HITSLOP}
       accessible={true}
       accessibilityRole="button"
@@ -68,3 +68,9 @@ export function OpenCameraBtn({gallery}: Props) {
     </TouchableOpacity>
   )
 }
+
+const styles = StyleSheet.create({
+  button: {
+    paddingHorizontal: 15,
+  },
+})

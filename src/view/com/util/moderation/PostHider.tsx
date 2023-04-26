@@ -81,7 +81,6 @@ export function PostHider({
         <TouchableOpacity
           style={styles.showBtn}
           onPress={() => setOverride(v => !v)}
-          accessible={true}
           accessibilityLabel={override ? 'Hide post' : 'Show post'}
           accessibilityHint={
             override

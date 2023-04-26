@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {TouchableOpacity} from 'react-native'
+import {TouchableOpacity, StyleSheet} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -36,7 +36,7 @@ export function SelectPhotoBtn({gallery}: Props) {
     <TouchableOpacity
       testID="openGalleryBtn"
       onPress={onPressSelectPhotos}
-      style={[s.pl5, s.pr20]}
+      style={styles.button}
       hitSlop={HITSLOP}
       accessible={true}
       accessibilityRole="button"
@@ -50,3 +50,9 @@ export function SelectPhotoBtn({gallery}: Props) {
     </TouchableOpacity>
   )
 }
+
+const styles = StyleSheet.create({
+  button: {
+    paddingHorizontal: 15,
+  },
+})

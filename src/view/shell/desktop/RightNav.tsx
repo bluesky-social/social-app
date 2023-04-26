@@ -62,6 +62,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
         <TouchableOpacity
           style={[styles.darkModeToggle]}
           onPress={onDarkmodePress}
+          accessibilityRole="button"
           accessibilityLabel="Toggle dark mode"
           accessibilityHint={
             mode === 'Dark'
@@ -84,6 +85,8 @@ const InviteCodes = observer(() => {
   const store = useStores()
   const pal = usePalette('default')
 
+  const {invitesAvailable} = store.me
+
   const onPress = React.useCallback(() => {
     store.shell.openModal({name: 'invite-codes'})
   }, [store])
@@ -91,9 +94,12 @@ const InviteCodes = observer(() => {
     <TouchableOpacity
       style={[styles.inviteCodes, pal.border]}
       onPress={onPress}
-      accessible={true}
       accessibilityRole="button"
-      accessibilityLabel="Invite codes"
+      accessibilityLabel={
+        invitesAvailable === 1
+          ? 'Invite codes: 1 available'
+          : `Invite codes: ${invitesAvailable} available`
+      }
       accessibilityHint="Opens list of invite codes">
       <FontAwesomeIcon
         icon="ticket"

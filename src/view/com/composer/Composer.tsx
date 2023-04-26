@@ -7,7 +7,6 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -88,27 +87,6 @@ export const ComposePost = observer(function ComposePost({
   useEffect(() => {
     autocompleteView.setup()
   }, [autocompleteView])
-
-  useEffect(() => {
-    // HACK
-    // wait a moment before focusing the input to resolve some layout bugs with the keyboard-avoiding-view
-    // -prf
-    let to: NodeJS.Timeout | undefined
-    if (textInput.current) {
-      to = setTimeout(() => {
-        textInput.current?.focus()
-      }, 250)
-    }
-    return () => {
-      if (to) {
-        clearTimeout(to)
-      }
-    }
-  }, [])
-
-  const onPressContainer = useCallback(() => {
-    textInput.current?.focus()
-  }, [textInput])
 
   const onPressAddLinkCard = useCallback(
     (uri: string) => {
@@ -205,157 +183,148 @@ export const ComposePost = observer(function ComposePost({
       testID="composePostView"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.outer}>
-      <TouchableWithoutFeedback
-        onPressIn={onPressContainer}
-        aria-modal
-        accessibilityViewIsModal
-        accessibilityLabel="Compose post"
-        accessibilityHint="Double tap to write post">
-        <View style={[s.flex1, viewStyles]}>
-          <View style={styles.topbar}>
-            <TouchableOpacity
-              testID="composerCancelButton"
-              onPress={hackfixOnClose}
-              accessibilityRole="button"
-              accessibilityLabel="Close composer"
-              accessibilityHint="Double tap to close post composer"
-              onAccessibilityEscape={hackfixOnClose}>
-              <Text style={[pal.link, s.f18]}>Cancel</Text>
-            </TouchableOpacity>
-            <View style={s.flex1} />
-            {isProcessing ? (
-              <View style={styles.postBtn}>
-                <ActivityIndicator />
-              </View>
-            ) : canPost ? (
-              <TouchableOpacity
-                testID="composerPublishBtn"
-                onPress={() => {
-                  onPressPublish(richtext)
-                }}
-                accessible={true}
-                accessibilityRole="button"
-                accessibilityLabel={replyTo ? 'Publish reply' : 'Publish post'}
-                accessibilityHint={
-                  replyTo
-                    ? 'Double tap to publish your reply'
-                    : 'Double tap to publish your post'
-                }>
-                <LinearGradient
-                  colors={[gradients.blueLight.start, gradients.blueLight.end]}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 1}}
-                  style={styles.postBtn}>
-                  <Text style={[s.white, s.f16, s.bold]}>
-                    {replyTo ? 'Reply' : 'Post'}
-                  </Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            ) : (
-              <View style={[styles.postBtn, pal.btn]}>
-                <Text style={[pal.textLight, s.f16, s.bold]}>Post</Text>
-              </View>
-            )}
-          </View>
+      <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
+        <View style={styles.topbar}>
+          <TouchableOpacity
+            testID="composerCancelButton"
+            onPress={hackfixOnClose}
+            onAccessibilityEscape={hackfixOnClose}
+            accessibilityRole="button"
+            accessibilityLabel="Close"
+            accessibilityHint="Closes composer">
+            <Text style={[pal.link, s.f18]}>Cancel</Text>
+          </TouchableOpacity>
+          <View style={s.flex1} />
           {isProcessing ? (
-            <View style={[pal.btn, styles.processingLine]}>
-              <Text style={pal.text}>{processingState}</Text>
+            <View style={styles.postBtn}>
+              <ActivityIndicator />
             </View>
-          ) : undefined}
-          {error !== '' && (
-            <View style={styles.errorLine}>
-              <View style={styles.errorIcon}>
-                <FontAwesomeIcon
-                  icon="exclamation"
-                  style={{color: colors.red4}}
-                  size={10}
-                />
-              </View>
-              <Text style={[s.red4, s.flex1]}>{error}</Text>
+          ) : canPost ? (
+            <TouchableOpacity
+              testID="composerPublishBtn"
+              onPress={() => {
+                onPressPublish(richtext)
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={replyTo ? 'Publish reply' : 'Publish post'}
+              accessibilityHint={
+                replyTo
+                  ? 'Double tap to publish your reply'
+                  : 'Double tap to publish your post'
+              }>
+              <LinearGradient
+                colors={[gradients.blueLight.start, gradients.blueLight.end]}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                style={styles.postBtn}>
+                <Text style={[s.white, s.f16, s.bold]}>
+                  {replyTo ? 'Reply' : 'Post'}
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          ) : (
+            <View style={[styles.postBtn, pal.btn]}>
+              <Text style={[pal.textLight, s.f16, s.bold]}>Post</Text>
             </View>
           )}
-          <ScrollView
-            style={styles.scrollView}
-            keyboardShouldPersistTaps="always">
-            {replyTo ? (
-              <View style={[pal.border, styles.replyToLayout]}>
-                <UserAvatar avatar={replyTo.author.avatar} size={50} />
-                <View style={styles.replyToPost}>
-                  <Text type="xl-medium" style={[pal.text]}>
-                    {sanitizeDisplayName(
-                      replyTo.author.displayName || replyTo.author.handle,
-                    )}
-                  </Text>
-                  <Text type="post-text" style={pal.text} numberOfLines={6}>
-                    {replyTo.text}
-                  </Text>
-                </View>
-              </View>
-            ) : undefined}
-
-            <View style={[pal.border, styles.textInputLayout]}>
-              <UserAvatar avatar={store.me.avatar} size={50} />
-              <TextInput
-                ref={textInput}
-                richtext={richtext}
-                placeholder={selectTextInputPlaceholder}
-                suggestedLinks={suggestedLinks}
-                autocompleteView={autocompleteView}
-                setRichText={setRichText}
-                onPhotoPasted={onPhotoPasted}
-                onPressPublish={onPressPublish}
-                onSuggestedLinksChanged={setSuggestedLinks}
-                onError={setError}
-                accessible={true}
-                accessibilityLabel="Compose post"
-                accessibilityHint="Compose posts up to 300 characters in length"
-              />
-            </View>
-
-            <Gallery gallery={gallery} />
-            {gallery.isEmpty && extLink && (
-              <ExternalEmbed
-                link={extLink}
-                onRemove={() => setExtLink(undefined)}
-              />
-            )}
-            {quote ? (
-              <View style={s.mt5}>
-                <QuoteEmbed quote={quote} />
-              </View>
-            ) : undefined}
-          </ScrollView>
-          {!extLink && suggestedLinks.size > 0 ? (
-            <View style={s.mb5}>
-              {Array.from(suggestedLinks).map(url => (
-                <TouchableOpacity
-                  key={`suggested-${url}`}
-                  testID="addLinkCardBtn"
-                  style={[pal.borderDark, styles.addExtLinkBtn]}
-                  onPress={() => onPressAddLinkCard(url)}
-                  accessible={true}
-                  accessibilityRole="button"
-                  accessibilityLabel="Add link card"
-                  accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
-                  <Text style={pal.text}>
-                    Add link card: <Text style={pal.link}>{url}</Text>
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          ) : null}
-          <View style={[pal.border, styles.bottomBar]}>
-            {canSelectImages ? (
-              <>
-                <SelectPhotoBtn gallery={gallery} />
-                <OpenCameraBtn gallery={gallery} />
-              </>
-            ) : null}
-            <View style={s.flex1} />
-            <CharProgress count={graphemeLength} />
-          </View>
         </View>
-      </TouchableWithoutFeedback>
+        {isProcessing ? (
+          <View style={[pal.btn, styles.processingLine]}>
+            <Text style={pal.text}>{processingState}</Text>
+          </View>
+        ) : undefined}
+        {error !== '' && (
+          <View style={styles.errorLine}>
+            <View style={styles.errorIcon}>
+              <FontAwesomeIcon
+                icon="exclamation"
+                style={{color: colors.red4}}
+                size={10}
+              />
+            </View>
+            <Text style={[s.red4, s.flex1]}>{error}</Text>
+          </View>
+        )}
+        <ScrollView
+          style={styles.scrollView}
+          keyboardShouldPersistTaps="always">
+          {replyTo ? (
+            <View style={[pal.border, styles.replyToLayout]}>
+              <UserAvatar avatar={replyTo.author.avatar} size={50} />
+              <View style={styles.replyToPost}>
+                <Text type="xl-medium" style={[pal.text]}>
+                  {sanitizeDisplayName(
+                    replyTo.author.displayName || replyTo.author.handle,
+                  )}
+                </Text>
+                <Text type="post-text" style={pal.text} numberOfLines={6}>
+                  {replyTo.text}
+                </Text>
+              </View>
+            </View>
+          ) : undefined}
+
+          <View style={[pal.border, styles.textInputLayout]}>
+            <UserAvatar avatar={store.me.avatar} size={50} />
+            <TextInput
+              richtext={richtext}
+              placeholder={selectTextInputPlaceholder}
+              suggestedLinks={suggestedLinks}
+              autocompleteView={autocompleteView}
+              autoFocus={true}
+              setRichText={setRichText}
+              onPhotoPasted={onPhotoPasted}
+              onPressPublish={onPressPublish}
+              onSuggestedLinksChanged={setSuggestedLinks}
+              onError={setError}
+              accessible={true}
+              accessibilityLabel="Write post"
+              accessibilityHint="Compose posts up to 300 characters in length"
+            />
+          </View>
+
+          <Gallery gallery={gallery} />
+          {gallery.isEmpty && extLink && (
+            <ExternalEmbed
+              link={extLink}
+              onRemove={() => setExtLink(undefined)}
+            />
+          )}
+          {quote ? (
+            <View style={s.mt5}>
+              <QuoteEmbed quote={quote} />
+            </View>
+          ) : undefined}
+        </ScrollView>
+        {!extLink && suggestedLinks.size > 0 ? (
+          <View style={s.mb5}>
+            {Array.from(suggestedLinks).map(url => (
+              <TouchableOpacity
+                key={`suggested-${url}`}
+                testID="addLinkCardBtn"
+                style={[pal.borderDark, styles.addExtLinkBtn]}
+                onPress={() => onPressAddLinkCard(url)}
+                accessibilityRole="button"
+                accessibilityLabel="Add link card"
+                accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
+                <Text style={pal.text}>
+                  Add link card: <Text style={pal.link}>{url}</Text>
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        ) : null}
+        <View style={[pal.border, styles.bottomBar]}>
+          {canSelectImages ? (
+            <>
+              <SelectPhotoBtn gallery={gallery} />
+              <OpenCameraBtn gallery={gallery} />
+            </>
+          ) : null}
+          <View style={s.flex1} />
+          <CharProgress count={graphemeLength} />
+        </View>
+      </View>
     </KeyboardAvoidingView>
   )
 })
