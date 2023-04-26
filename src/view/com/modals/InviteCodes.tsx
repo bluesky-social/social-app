@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {observer} from 'mobx-react-lite'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -82,46 +83,42 @@ export function Component({}: {}) {
   )
 }
 
-function InviteCode({
-  testID,
-  code,
-  used,
-}: {
-  testID: string
-  code: string
-  used?: boolean
-}) {
-  const pal = usePalette('default')
-  const [wasCopied, setWasCopied] = React.useState(false)
+const InviteCode = observer(
+  ({testID, code, used}: {testID: string; code: string; used?: boolean}) => {
+    const pal = usePalette('default')
+    const store = useStores()
 
-  const onPress = React.useCallback(() => {
-    Clipboard.setString(code)
-    Toast.show('Copied to clipboard')
-    setWasCopied(true)
-  }, [code])
+    const onPress = React.useCallback(() => {
+      Clipboard.setString(code)
+      Toast.show('Copied to clipboard')
+      store.invitedUsers.setInviteCopied(code)
+    }, [store, code])
 
-  return (
-    <TouchableOpacity
-      testID={testID}
-      style={[styles.inviteCode, pal.border]}
-      onPress={onPress}>
-      <Text
-        testID={`${testID}-code`}
-        type={used ? 'md' : 'md-bold'}
-        style={used ? [pal.textLight, styles.strikeThrough] : pal.text}>
-        {code}
-      </Text>
-      {wasCopied ? (
-        <Text style={pal.textLight}>Copied</Text>
-      ) : !used ? (
-        <FontAwesomeIcon
-          icon={['far', 'clone']}
-          style={pal.text as FontAwesomeIconStyle}
-        />
-      ) : undefined}
-    </TouchableOpacity>
-  )
-}
+    return (
+      <TouchableOpacity
+        testID={testID}
+        style={[styles.inviteCode, pal.border]}
+        onPress={onPress}>
+        <Text
+          testID={`${testID}-code`}
+          type={used ? 'md' : 'md-bold'}
+          style={used ? [pal.textLight, styles.strikeThrough] : pal.text}>
+          {code}
+        </Text>
+        <View style={styles.flex1} />
+        {!used && store.invitedUsers.isInviteCopied(code) && (
+          <Text style={[pal.textLight, styles.codeCopied]}>Copied</Text>
+        )}
+        {!used && (
+          <FontAwesomeIcon
+            icon={['far', 'clone']}
+            style={pal.text as FontAwesomeIconStyle}
+          />
+        )}
+      </TouchableOpacity>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   container: {
@@ -163,10 +160,12 @@ const styles = StyleSheet.create({
   inviteCode: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     borderBottomWidth: 1,
     paddingHorizontal: 20,
     paddingVertical: 14,
+  },
+  codeCopied: {
+    marginRight: 8,
   },
   strikeThrough: {
     textDecorationLine: 'line-through',
