@@ -205,17 +205,20 @@ export const ComposePost = observer(function ComposePost({
       testID="composePostView"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.outer}>
-      {/* eslint-disable-next-line */}
-      <TouchableWithoutFeedback onPressIn={onPressContainer}>
+      <TouchableWithoutFeedback
+        onPressIn={onPressContainer}
+        aria-modal
+        accessibilityViewIsModal
+        accessibilityLabel="Compose post"
+        accessibilityHint="Double tap to write post">
         <View style={[s.flex1, viewStyles]}>
           <View style={styles.topbar}>
             <TouchableOpacity
               testID="composerCancelButton"
               onPress={hackfixOnClose}
-              accessible={true}
               accessibilityRole="button"
               accessibilityLabel="Close composer"
-              accessibilityHint="Closes post composer"
+              accessibilityHint="Double tap to close post composer"
               onAccessibilityEscape={hackfixOnClose}>
               <Text style={[pal.link, s.f18]}>Cancel</Text>
             </TouchableOpacity>
@@ -234,7 +237,9 @@ export const ComposePost = observer(function ComposePost({
                 accessibilityRole="button"
                 accessibilityLabel={replyTo ? 'Publish reply' : 'Publish post'}
                 accessibilityHint={
-                  replyTo ? 'Publishes your reply' : 'Publishes your post'
+                  replyTo
+                    ? 'Double tap to publish your reply'
+                    : 'Double tap to publish your post'
                 }>
                 <LinearGradient
                   colors={[gradients.blueLight.start, gradients.blueLight.end]}

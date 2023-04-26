@@ -317,7 +317,7 @@ function MenuItem({
       style={styles.menuItem}
       onPress={onPress}
       accessibilityLabel="Menu"
-      accessibilityHint="Opens left hand side navigation">
+      accessibilityHint="Double tap to open access to navigation items like profile, search, and settings">
       <View style={[styles.menuItemIconWrapper]}>
         {icon}
         {count ? (

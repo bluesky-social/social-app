@@ -31,7 +31,7 @@ export const Composer = observer(
     }
 
     return (
-      <View style={styles.mask}>
+      <View style={styles.mask} aria-modal accessibilityViewIsModal>
         <View style={[styles.container, pal.view, pal.border]}>
           <ComposePost
             replyTo={replyTo}

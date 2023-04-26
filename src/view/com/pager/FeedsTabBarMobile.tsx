@@ -40,8 +40,8 @@ export const FeedsTabBar = observer(
           onPress={onPressAvi}
           accessible={true}
           accessibilityRole="button"
-          accessibilityLabel="Select feed"
-          accessibilityHint="Displays either Following or What's Hot feeds. Customizable feeds will be added soon.">
+          accessibilityLabel="Open navigation"
+          accessibilityHint="Access profile and other navigation links">
           <UserAvatar avatar={store.me.avatar} size={30} />
         </TouchableOpacity>
         <TabBar
