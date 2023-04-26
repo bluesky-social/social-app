@@ -4193,6 +4193,11 @@
   dependencies:
     tippy.js "^6.3.7"
 
+"@tiptap/extension-history@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-history/-/extension-history-2.0.3.tgz#8936c15aa46f2ddeada1c3d9abe2888d58d08c30"
+  integrity sha512-00KHIcJ8kivn2ARI6NQYphv2LfllVCXViHGm0EhzDW6NQxCrriJKE3tKDcTFCu7LlC5doMpq9Z6KXdljc4oVeQ==
+
 "@tiptap/extension-link@^2.0.0-beta.220":
   version "2.0.0-beta.220"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-link/-/extension-link-2.0.0-beta.220.tgz#c9954613cd1e0a0f1527853b732ef50dff734eac"
