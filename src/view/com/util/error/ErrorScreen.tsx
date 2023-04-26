@@ -35,7 +35,7 @@ export function ErrorScreen({
           ]}>
           <FontAwesomeIcon
             icon="exclamation"
-            style={pal.textInverted}
+            style={pal.textInverted as FontAwesomeIconStyle}
             size={24}
           />
         </View>
