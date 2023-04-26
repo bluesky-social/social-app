@@ -1,13 +1,13 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
-import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
+import {Button} from '../forms/Button'
 import {CenteredView} from '../Views'
 
 export function ErrorScreen({
@@ -24,18 +24,18 @@ export function ErrorScreen({
   testID?: string
 }) {
   const theme = useTheme()
-  const pal = usePalette('error')
+  const pal = usePalette('default')
   return (
     <CenteredView testID={testID} style={[styles.outer, pal.view]}>
       <View style={styles.errorIconContainer}>
         <View
           style={[
             styles.errorIcon,
-            {backgroundColor: theme.palette.error.icon},
+            {backgroundColor: theme.palette.inverted.background},
           ]}>
           <FontAwesomeIcon
             icon="exclamation"
-            style={{color: colors.white}}
+            style={pal.textInverted}
             size={24}
           />
         </View>
@@ -43,34 +43,30 @@ export function ErrorScreen({
       <Text type="title-lg" style={[styles.title, pal.text]}>
         {title}
       </Text>
-      <Text style={[styles.message, pal.textLight]}>{message}</Text>
+      <Text style={[styles.message, pal.text]}>{message}</Text>
       {details && (
         <Text
           testID={`${testID}-details`}
-          type="sm"
-          style={[
-            styles.details,
-            pal.textInverted,
-            {backgroundColor: theme.palette.default.background},
-          ]}>
+          style={[styles.details, pal.text, pal.viewLight]}>
           {details}
         </Text>
       )}
       {onPressTryAgain && (
         <View style={styles.btnContainer}>
-          <TouchableOpacity
+          <Button
             testID="errorScreenTryAgainButton"
-            style={[styles.btn, {backgroundColor: theme.palette.error.icon}]}
+            type="default"
+            style={[styles.btn]}
             onPress={onPressTryAgain}>
             <FontAwesomeIcon
               icon="arrows-rotate"
-              style={pal.text as FontAwesomeIconStyle}
+              style={pal.link as FontAwesomeIconStyle}
               size={16}
             />
-            <Text type="button" style={[styles.btnText, pal.text]}>
+            <Text type="button" style={[styles.btnText, pal.link]}>
               Try again
             </Text>
-          </TouchableOpacity>
+          </Button>
         </View>
       )}
     </CenteredView>
@@ -115,11 +111,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   errorIcon: {
-    borderRadius: 30,
+    borderRadius: 25,
     width: 50,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 5,
   },
 })

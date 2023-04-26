@@ -130,10 +130,16 @@ export const PostThread = observer(function PostThread({
 
   // loading
   // =
-  if ((view.isLoading && !view.isRefreshing) || view.params.uri !== uri) {
+  if (
+    !view.hasLoaded ||
+    (view.isLoading && !view.isRefreshing) ||
+    view.params.uri !== uri
+  ) {
     return (
       <CenteredView>
-        <ActivityIndicator />
+        <View style={s.p20}>
+          <ActivityIndicator size="large" />
+        </View>
       </CenteredView>
     )
   }
