@@ -46,7 +46,7 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
       )}
 
       {!model.inviteCode && model.isInviteCodeRequired ? (
-        <Text style={s.alignBaseline}>
+        <Text style={[s.alignBaseline, pal.text]}>
           Don't have an invite code?{' '}
           <TouchableWithoutFeedback onPress={onPressWaitlist}>
             <Text style={pal.link}>Join the waitlist</Text>
