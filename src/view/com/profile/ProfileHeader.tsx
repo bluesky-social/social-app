@@ -26,7 +26,7 @@ import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
-import {ProfileHeaderLabels} from '../util/moderation/ProfileHeaderLabels'
+import {ProfileHeaderWarnings} from '../util/moderation/ProfileHeaderWarnings'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
@@ -332,7 +332,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
             richText={view.descriptionRichText}
           />
         ) : undefined}
-        <ProfileHeaderLabels labels={view.labels} />
+        <ProfileHeaderWarnings moderation={view.moderation.view} />
         {view.viewer.muted ? (
           <View
             testID="profileHeaderMutedNotice"

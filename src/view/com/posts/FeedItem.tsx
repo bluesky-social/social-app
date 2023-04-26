@@ -149,8 +149,7 @@ export const FeedItem = observer(function ({
       testID={`feedItem-by-${item.post.author.handle}`}
       style={outerStyles}
       href={itemHref}
-      isMuted={isMuted}
-      labels={item.post.labels}>
+      moderation={item.moderation.list}>
       {isThreadChild && (
         <View
           style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
@@ -236,7 +235,7 @@ export const FeedItem = observer(function ({
             </View>
           )}
           <ContentHider
-            labels={item.post.labels}
+            moderation={item.moderation.list}
             containerStyle={styles.contentHider}>
             {item.richText?.text ? (
               <View style={styles.postTextContainer}>

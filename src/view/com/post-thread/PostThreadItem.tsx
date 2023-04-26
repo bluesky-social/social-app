@@ -218,9 +218,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           </View>
         </View>
         <View style={[s.pl10, s.pr10, s.pb10]}>
-          <ContentHider
-            isMuted={item.post.author.viewer?.muted === true}
-            labels={item.post.labels}>
+          <ContentHider moderation={item.moderation.view}>
             {item.richText?.text ? (
               <View
                 style={[
@@ -309,8 +307,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           testID={`postThreadItem-by-${item.post.author.handle}`}
           href={itemHref}
           style={[styles.outer, {borderColor: pal.colors.border}, pal.view]}
-          isMuted={item.post.author.viewer?.muted === true}
-          labels={item.post.labels}>
+          moderation={item.moderation.view}>
           {item._showParentReplyLine && (
             <View
               style={[
@@ -347,7 +344,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 did={item.post.author.did}
               />
               <ContentHider
-                labels={item.post.labels}
+                moderation={item.moderation.view}
                 containerStyle={styles.contentHider}>
                 {item.richText?.text ? (
                   <View style={styles.postTextContainer}>

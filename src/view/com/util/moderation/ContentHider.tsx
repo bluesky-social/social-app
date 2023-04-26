@@ -6,32 +6,33 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {ComAtprotoLabelDefs} from '@atproto/api'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
+import {
+  ModerationBehaviorWithReason,
+  ModerationBehavior,
+} from 'lib/labeling/types'
 
 export function ContentHider({
   testID,
-  isMuted,
-  labels,
+  moderation,
   style,
   containerStyle,
   children,
 }: React.PropsWithChildren<{
   testID?: string
-  isMuted?: boolean
-  labels: ComAtprotoLabelDefs.Label[] | undefined
+  moderation: ModerationBehaviorWithReason
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
-  const store = useStores()
-  const labelPref = store.preferences.getLabelPreference(labels)
 
-  if (!isMuted && labelPref.pref === 'show') {
+  if (
+    moderation.behavior === ModerationBehavior.Show ||
+    moderation.behavior === ModerationBehavior.WarnImages
+  ) {
     return (
       <View testID={testID} style={style}>
         {children}
@@ -39,7 +40,7 @@ export function ContentHider({
     )
   }
 
-  if (labelPref.pref === 'hide') {
+  if (moderation.behavior === ModerationBehavior.Hide) {
     return null
   }
 
@@ -52,11 +53,7 @@ export function ContentHider({
           override && styles.descriptionOpen,
         ]}>
         <Text type="md" style={pal.textLight}>
-          {isMuted ? (
-            <>Post from an account you muted.</>
-          ) : (
-            <>Warning: {labelPref.desc.warning || labelPref.desc.title}</>
-          )}
+          {moderation.reason || 'Content warning'}
         </Text>
         <TouchableOpacity
           style={styles.showBtn}

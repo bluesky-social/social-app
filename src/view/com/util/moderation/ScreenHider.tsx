@@ -4,34 +4,34 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {ComAtprotoLabelDefs} from '@atproto/api'
 import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {NavigationProp} from 'lib/routes/types'
 import {Text} from '../text/Text'
 import {Button} from '../forms/Button'
 import {isDesktopWeb} from 'platform/detection'
+import {
+  ModerationBehavior,
+  ModerationBehaviorWithReason,
+} from 'lib/labeling/types'
 
 export function ScreenHider({
   testID,
   screenDescription,
-  labels,
+  moderation,
   style,
   containerStyle,
   children,
 }: React.PropsWithChildren<{
   testID?: string
   screenDescription: string
-  labels: ComAtprotoLabelDefs.Label[] | undefined
+  moderation: ModerationBehaviorWithReason
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const [override, setOverride] = React.useState(false)
-  const store = useStores()
-  const labelPref = store.preferences.getLabelPreference(labels)
   const navigation = useNavigation<NavigationProp>()
 
   const onPressBack = React.useCallback(() => {
@@ -42,7 +42,7 @@ export function ScreenHider({
     }
   }, [navigation])
 
-  if (labelPref.pref !== 'hide' || override) {
+  if (moderation.behavior !== ModerationBehavior.Hide || override) {
     return (
       <View testID={testID} style={style}>
         {children}
@@ -65,8 +65,8 @@ export function ScreenHider({
         Content Warning
       </Text>
       <Text type="2xl" style={[styles.description, pal.textLight]}>
-        This {screenDescription} has been flagged for:{' '}
-        {labelPref.desc.warning || labelPref.desc.title}
+        This {screenDescription} has been flagged:{' '}
+        {moderation.reason || 'Content warning'}
       </Text>
       {!isDesktopWeb && <View style={styles.spacer} />}
       <View style={styles.btnContainer}>
