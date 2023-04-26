@@ -120,7 +120,9 @@ describe('Profile screen', () => {
     await element(by.id('profileHeaderDropdownBtn')).tap()
     await element(by.id('profileHeaderDropdownReportBtn')).tap()
     await expect(element(by.id('reportAccountModal'))).toBeVisible()
-    await element(by.id('reportAccountRadios-spam')).tap()
+    await element(
+      by.id('reportAccountRadios-com.atproto.moderation.defs#reasonSpam'),
+    ).tap()
     await element(by.id('sendReportBtn')).tap()
     await expect(element(by.id('reportAccountModal'))).not.toBeVisible()
   })
@@ -166,7 +168,9 @@ describe('Profile screen', () => {
     await element(by.id('postDropdownBtn').withAncestor(posts)).atIndex(0).tap()
     await element(by.id('postDropdownReportBtn')).tap()
     await expect(element(by.id('reportPostModal'))).toBeVisible()
-    await element(by.id('reportPostRadios-spam')).tap()
+    await element(
+      by.id('reportPostRadios-com.atproto.moderation.defs#reasonSpam'),
+    ).tap()
     await element(by.id('sendReportBtn')).tap()
     await expect(element(by.id('reportPostModal'))).not.toBeVisible()
   })
