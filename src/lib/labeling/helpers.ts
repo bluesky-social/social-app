@@ -2,7 +2,6 @@ import {
   AppBskyActorDefs,
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedRecord,
-  AppBskyFeedPost,
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
 } from '@atproto/api'
@@ -229,12 +228,10 @@ export function getEmbedLabels(embed?: Embed): Label[] {
     return []
   }
   if (
-    AppBskyEmbedRecordWithMedia.isView(embed) &&
-    AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
-    AppBskyFeedPost.isRecord(embed.record.record.value) &&
-    AppBskyFeedPost.validateRecord(embed.record.record.value).success
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyEmbedRecord.isViewRecord(embed.record)
   ) {
-    return embed.record.record.labels || []
+    return embed.record.labels || []
   }
   return []
 }
@@ -312,9 +309,10 @@ function warnContent(reason: string) {
   }
 }
 
-function warnImages(reason: string) {
-  return {
-    behavior: ModerationBehaviorCode.WarnImages,
-    reason,
-  }
-}
+// TODO
+// function warnImages(reason: string) {
+//   return {
+//     behavior: ModerationBehaviorCode.WarnImages,
+//     reason,
+//   }
+// }
