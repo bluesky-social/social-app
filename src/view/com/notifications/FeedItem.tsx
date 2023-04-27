@@ -264,7 +264,7 @@ function CondensedAuthorsList({
           <UserAvatar
             size={35}
             avatar={authors[0].avatar}
-            hasWarning={!!authors[0].labels?.length}
+            // TODO apply moderation
           />
         </Link>
       </View>
@@ -277,7 +277,7 @@ function CondensedAuthorsList({
           <UserAvatar
             size={35}
             avatar={author.avatar}
-            hasWarning={!!author.labels?.length}
+            // TODO apply moderation
           />
         </View>
       ))}
@@ -335,7 +335,7 @@ function ExpandedAuthorsList({
             <UserAvatar
               size={35}
               avatar={author.avatar}
-              hasWarning={!!author.labels?.length}
+              // TODO apply moderation
             />
           </View>
           <View style={s.flex1}>

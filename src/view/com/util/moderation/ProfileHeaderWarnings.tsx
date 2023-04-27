@@ -6,18 +6,15 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {
-  ModerationBehaviorWithReason,
-  ModerationBehavior,
-} from 'lib/labeling/types'
+import {ModerationBehavior, ModerationBehaviorCode} from 'lib/labeling/types'
 
 export function ProfileHeaderWarnings({
   moderation,
 }: {
-  moderation: ModerationBehaviorWithReason
+  moderation: ModerationBehavior
 }) {
   const palErr = usePalette('error')
-  if (moderation.behavior === ModerationBehavior.Show) {
+  if (moderation.behavior === ModerationBehaviorCode.Show) {
     return null
   }
   return (

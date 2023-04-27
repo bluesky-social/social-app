@@ -13,7 +13,7 @@ import {
 import {
   Label,
   LabelValGroup,
-  ModerationBehavior,
+  ModerationBehaviorCode,
   PostModeration,
   ProfileModeration,
   PostLabelInfo,
@@ -56,7 +56,22 @@ export function getPostModeration(
   // avatar
   let avatar = {
     warn: accountPref.pref === 'hide' || accountPref.pref === 'warn',
-    blur: profilePref.pref === 'hide' || profilePref.pref === 'warn',
+    blur:
+      accountPref.pref === 'hide' ||
+      accountPref.pref === 'warn' ||
+      profilePref.pref === 'hide' ||
+      profilePref.pref === 'warn',
+  }
+
+  // hide no-override cases
+  if (accountPref.pref === 'hide' && accountPref.desc.id === 'illegal') {
+    return hidePostNoOverride(accountPref.desc.warning)
+  }
+  if (profilePref.pref === 'hide' && profilePref.desc.id === 'illegal') {
+    return hidePostNoOverride(profilePref.desc.warning)
+  }
+  if (postPref.pref === 'hide' && postPref.desc.id === 'illegal') {
+    return hidePostNoOverride(postPref.desc.warning)
   }
 
   // hide cases
@@ -64,14 +79,24 @@ export function getPostModeration(
     return {
       avatar,
       list: hide(accountPref.desc.warning),
+      thread: hide(accountPref.desc.warning),
       view: warn(accountPref.desc.warning),
+    }
+  }
+  if (profilePref.pref === 'hide') {
+    return {
+      avatar,
+      list: hide(profilePref.desc.warning),
+      thread: hide(profilePref.desc.warning),
+      view: warn(profilePref.desc.warning),
     }
   }
   if (postPref.pref === 'hide') {
     return {
       avatar,
       list: hide(postPref.desc.warning),
-      view: warnContent(postPref.desc.warning),
+      thread: hide(postPref.desc.warning),
+      view: warn(postPref.desc.warning),
     }
   }
 
@@ -80,6 +105,7 @@ export function getPostModeration(
     return {
       avatar,
       list: hide('Post from an account you muted.'),
+      thread: warn('Post from an account you muted.'),
       view: warn('Post from an account you muted.'),
     }
   }
@@ -89,13 +115,15 @@ export function getPostModeration(
     if (postPref.desc.imagesOnly) {
       return {
         avatar,
-        list: warnImages(postPref.desc.warning),
-        view: warnImages(postPref.desc.warning),
+        list: warnContent(postPref.desc.warning), // TODO make warnImages when there's time
+        thread: warnContent(postPref.desc.warning), // TODO make warnImages when there's time
+        view: warnContent(postPref.desc.warning), // TODO make warnImages when there's time
       }
     }
     return {
       avatar,
       list: warnContent(postPref.desc.warning),
+      thread: warnContent(postPref.desc.warning),
       view: warnContent(postPref.desc.warning),
     }
   }
@@ -103,6 +131,7 @@ export function getPostModeration(
     return {
       avatar,
       list: warnContent(accountPref.desc.warning),
+      thread: warnContent(accountPref.desc.warning),
       view: warnContent(accountPref.desc.warning),
     }
   }
@@ -110,6 +139,7 @@ export function getPostModeration(
   return {
     avatar,
     list: show(),
+    thread: show(),
     view: show(),
   }
 }
@@ -128,7 +158,19 @@ export function getProfileModeration(
   // avatar
   let avatar = {
     warn: accountPref.pref === 'hide' || accountPref.pref === 'warn',
-    blur: profilePref.pref === 'hide' || profilePref.pref === 'warn',
+    blur:
+      accountPref.pref === 'hide' ||
+      accountPref.pref === 'warn' ||
+      profilePref.pref === 'hide' ||
+      profilePref.pref === 'warn',
+  }
+
+  // hide no-override cases
+  if (accountPref.pref === 'hide' && accountPref.desc.id === 'illegal') {
+    return hideProfileNoOverride(accountPref.desc.warning)
+  }
+  if (profilePref.pref === 'hide' && profilePref.desc.id === 'illegal') {
+    return hideProfileNoOverride(profilePref.desc.warning)
   }
 
   // hide cases
@@ -155,13 +197,14 @@ export function getProfileModeration(
       view: warn(accountPref.desc.warning),
     }
   }
-  if (profilePref.pref === 'warn') {
-    return {
-      avatar,
-      list: warn(profilePref.desc.warning),
-      view: warn(profilePref.desc.warning),
-    }
-  }
+  // we don't warn for this
+  // if (profilePref.pref === 'warn') {
+  //   return {
+  //     avatar,
+  //     list: warn(profilePref.desc.warning),
+  //     view: warn(profilePref.desc.warning),
+  //   }
+  // }
 
   return {
     avatar,
@@ -208,34 +251,59 @@ export function filterProfileLabels(labels?: Label[]): Label[] {
 
 function show() {
   return {
-    behavior: ModerationBehavior.Show,
+    behavior: ModerationBehaviorCode.Show,
+  }
+}
+
+function hidePostNoOverride(reason: string) {
+  return {
+    avatar: {warn: true, blur: true},
+    list: hideNoOverride(reason),
+    thread: hideNoOverride(reason),
+    view: hideNoOverride(reason),
+  }
+}
+
+function hideProfileNoOverride(reason: string) {
+  return {
+    avatar: {warn: true, blur: true},
+    list: hideNoOverride(reason),
+    view: hideNoOverride(reason),
+  }
+}
+
+function hideNoOverride(reason: string) {
+  return {
+    behavior: ModerationBehaviorCode.Hide,
+    reason,
+    noOverride: true,
   }
 }
 
 function hide(reason: string) {
   return {
-    behavior: ModerationBehavior.Hide,
+    behavior: ModerationBehaviorCode.Hide,
     reason,
   }
 }
 
 function warn(reason: string) {
   return {
-    behavior: ModerationBehavior.Warn,
+    behavior: ModerationBehaviorCode.Warn,
     reason,
   }
 }
 
 function warnContent(reason: string) {
   return {
-    behavior: ModerationBehavior.WarnContent,
+    behavior: ModerationBehaviorCode.WarnContent,
     reason,
   }
 }
 
 function warnImages(reason: string) {
   return {
-    behavior: ModerationBehavior.WarnImages,
+    behavior: ModerationBehaviorCode.WarnImages,
     reason,
   }
 }

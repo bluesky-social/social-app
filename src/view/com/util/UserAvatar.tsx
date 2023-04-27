@@ -15,6 +15,7 @@ import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
+import {AvatarModeration} from 'lib/labeling/types'
 
 function DefaultAvatar({size}: {size: number}) {
   return (
@@ -40,14 +41,12 @@ function DefaultAvatar({size}: {size: number}) {
 export function UserAvatar({
   size,
   avatar,
-  shouldBlur,
-  hasWarning,
+  moderation,
   onSelectNewAvatar,
 }: {
   size: number
   avatar?: string | null
-  shouldBlur?: boolean
-  hasWarning?: boolean
+  moderation?: AvatarModeration
   onSelectNewAvatar?: (img: RNImage | null) => void
 }) {
   const store = useStores()
@@ -116,7 +115,7 @@ export function UserAvatar({
   )
 
   const warning = useMemo(() => {
-    if (!hasWarning) {
+    if (!moderation?.warn) {
       return null
     }
     return (
@@ -128,7 +127,7 @@ export function UserAvatar({
         />
       </View>
     )
-  }, [hasWarning, size, pal])
+  }, [moderation?.warn, size, pal])
 
   // onSelectNewAvatar is only passed as prop on the EditProfile component
   return onSelectNewAvatar ? (
@@ -168,7 +167,7 @@ export function UserAvatar({
         style={{width: size, height: size, borderRadius: Math.floor(size / 2)}}
         contentFit="cover"
         source={{uri: avatar}}
-        blurRadius={shouldBlur ? Math.floor(size / 6) : 0}
+        blurRadius={moderation?.blur ? Math.floor(size / 6) : 0}
       />
       {warning}
     </View>

@@ -79,16 +79,13 @@ async function main() {
           ]) {
             await server.mocker.createUser(user)
             await server.mocker.follow('alice', user)
+            await server.mocker.createPost(user, `Unlabeled post from ${user}`)
           }
 
           const anchorPost = await server.mocker.createPost(
             'alice',
             'Anchor post',
           )
-
-          for (let user in server.mocker.users) {
-            await server.mocker.createPost(user, `Post from ${user}`)
-          }
 
           await server.mocker.labelAccount('csam', 'csam-account')
           await server.mocker.labelProfile('csam', 'csam-profile')

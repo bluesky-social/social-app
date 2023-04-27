@@ -2,6 +2,7 @@ import {AddressInfo} from 'net'
 import os from 'os'
 import net from 'net'
 import path from 'path'
+import fs from 'fs'
 import * as crypto from '@atproto/crypto'
 import {PDS, ServerConfig, Database, MemoryBlobStore} from '@atproto/pds'
 import * as plc from '@did-plc/lib'
@@ -104,9 +105,13 @@ export async function createServer(
   await pds.start()
   const pdsUrl = `http://localhost:${port}`
 
+  const profilePic = fs.readFileSync(
+    path.join(__dirname, '..', 'assets', 'default-avatar.jpg'),
+  )
+
   return {
     pdsUrl,
-    mocker: new Mocker(pds, pdsUrl),
+    mocker: new Mocker(pds, pdsUrl, profilePic),
     async close() {
       await pds.destroy()
       await plcServer.destroy()
@@ -118,7 +123,11 @@ class Mocker {
   agent: BskyAgent
   users: Record<string, TestUser> = {}
 
-  constructor(public pds: PDS, public service: string) {
+  constructor(
+    public pds: PDS,
+    public service: string,
+    public profilePic: Uint8Array,
+  ) {
     this.agent = new BskyAgent({service})
   }
 
@@ -152,9 +161,15 @@ class Mocker {
       handle: name + '.test',
       password: 'hunter2',
     })
-    await agent.upsertProfile(() => ({
-      displayName: name,
-    }))
+    await agent.upsertProfile(async () => {
+      const blob = await agent.uploadBlob(this.profilePic, {
+        encoding: 'image/jpeg',
+      })
+      return {
+        displayName: name,
+        avatar: blob.data.blob,
+      }
+    })
     this.users[name] = {
       did: res.data.did,
       email,

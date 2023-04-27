@@ -11,10 +11,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {Link} from '../Link'
 import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
-import {
-  ModerationBehavior,
-  ModerationBehaviorWithReason,
-} from 'lib/labeling/types'
+import {ModerationBehaviorCode, ModerationBehavior} from 'lib/labeling/types'
 
 export function PostHider({
   testID,
@@ -24,19 +21,19 @@ export function PostHider({
   children,
 }: React.PropsWithChildren<{
   testID?: string
-  href: string
-  moderation: ModerationBehaviorWithReason
+  href?: string
+  moderation: ModerationBehavior
   style: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
   const bg = override ? pal.viewLight : pal.view
 
-  if (moderation.behavior === ModerationBehavior.Hide) {
+  if (moderation.behavior === ModerationBehaviorCode.Hide) {
     return null
   }
 
-  if (moderation.behavior === ModerationBehavior.Warn) {
+  if (moderation.behavior === ModerationBehaviorCode.Warn) {
     return (
       <>
         <View style={[styles.description, bg, pal.border]}>

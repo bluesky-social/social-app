@@ -51,7 +51,7 @@ export function ProfileCard({
       asAnchor>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <UserAvatar size={40} avatar={avatar} hasWarning={!!labels?.length} />
+          <UserAvatar size={40} avatar={avatar} /* TODO moderation */ />
         </View>
         <View style={styles.layoutContent}>
           <Text
@@ -98,7 +98,7 @@ export function ProfileCard({
           {followers.slice(0, 3).map(f => (
             <View key={f.did} style={styles.followedByAviContainer}>
               <View style={[styles.followedByAvi, pal.view]}>
-                <UserAvatar avatar={f.avatar} size={32} />
+                <UserAvatar avatar={f.avatar} size={32} /* TODO moderation */ />
               </View>
             </View>
           ))}

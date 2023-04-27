@@ -364,7 +364,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
           <UserAvatar
             size={80}
             avatar={view.avatar}
-            hasWarning={!!view.labels?.length}
+            moderation={view.moderation.avatar}
           />
         </View>
       </TouchableWithoutFeedback>

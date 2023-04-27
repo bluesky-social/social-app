@@ -9,10 +9,7 @@ import {
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
-import {
-  ModerationBehaviorWithReason,
-  ModerationBehavior,
-} from 'lib/labeling/types'
+import {ModerationBehavior, ModerationBehaviorCode} from 'lib/labeling/types'
 
 export function ContentHider({
   testID,
@@ -22,7 +19,7 @@ export function ContentHider({
   children,
 }: React.PropsWithChildren<{
   testID?: string
-  moderation: ModerationBehaviorWithReason
+  moderation: ModerationBehavior
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
 }>) {
@@ -30,8 +27,9 @@ export function ContentHider({
   const [override, setOverride] = React.useState(false)
 
   if (
-    moderation.behavior === ModerationBehavior.Show ||
-    moderation.behavior === ModerationBehavior.WarnImages
+    moderation.behavior === ModerationBehaviorCode.Show ||
+    moderation.behavior === ModerationBehaviorCode.Warn ||
+    moderation.behavior === ModerationBehaviorCode.WarnImages
   ) {
     return (
       <View testID={testID} style={style}>
@@ -40,7 +38,7 @@ export function ContentHider({
     )
   }
 
-  if (moderation.behavior === ModerationBehavior.Hide) {
+  if (moderation.behavior === ModerationBehaviorCode.Hide) {
     return null
   }
 

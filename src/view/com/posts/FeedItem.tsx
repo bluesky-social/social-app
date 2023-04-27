@@ -199,7 +199,7 @@ export const FeedItem = observer(function ({
             <UserAvatar
               size={52}
               avatar={item.post.author.avatar}
-              hasWarning={!!item.post.author.labels?.length}
+              moderation={item.moderation.avatar}
             />
           </Link>
         </View>

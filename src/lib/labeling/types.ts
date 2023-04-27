@@ -25,7 +25,7 @@ export interface ProfileLabelInfo {
   isMuted: boolean
 }
 
-export enum ModerationBehavior {
+export enum ModerationBehaviorCode {
   Show,
   Hide,
   Warn,
@@ -33,25 +33,26 @@ export enum ModerationBehavior {
   WarnImages,
 }
 
-export interface ModerationBehaviorWithReason {
-  behavior: ModerationBehavior
+export interface ModerationBehavior {
+  behavior: ModerationBehaviorCode
+  noOverride?: boolean
   reason?: string
 }
 
+export interface AvatarModeration {
+  warn: boolean
+  blur: boolean
+}
+
 export interface PostModeration {
-  avatar: {
-    warn: boolean
-    blur: boolean
-  }
-  list: ModerationBehaviorWithReason
-  view: ModerationBehaviorWithReason
+  avatar: AvatarModeration
+  list: ModerationBehavior
+  thread: ModerationBehavior
+  view: ModerationBehavior
 }
 
 export interface ProfileModeration {
-  avatar: {
-    warn: boolean
-    blur: boolean
-  }
-  list: ModerationBehaviorWithReason
-  view: ModerationBehaviorWithReason
+  avatar: AvatarModeration
+  list: ModerationBehavior
+  view: ModerationBehavior
 }

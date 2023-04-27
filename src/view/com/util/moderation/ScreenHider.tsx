@@ -10,10 +10,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {Text} from '../text/Text'
 import {Button} from '../forms/Button'
 import {isDesktopWeb} from 'platform/detection'
-import {
-  ModerationBehavior,
-  ModerationBehaviorWithReason,
-} from 'lib/labeling/types'
+import {ModerationBehaviorCode, ModerationBehavior} from 'lib/labeling/types'
 
 export function ScreenHider({
   testID,
@@ -25,7 +22,7 @@ export function ScreenHider({
 }: React.PropsWithChildren<{
   testID?: string
   screenDescription: string
-  moderation: ModerationBehaviorWithReason
+  moderation: ModerationBehavior
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
 }>) {
@@ -42,7 +39,7 @@ export function ScreenHider({
     }
   }, [navigation])
 
-  if (moderation.behavior !== ModerationBehavior.Hide || override) {
+  if (moderation.behavior !== ModerationBehaviorCode.Hide || override) {
     return (
       <View testID={testID} style={style}>
         {children}
@@ -75,14 +72,16 @@ export function ScreenHider({
             Go back
           </Text>
         </Button>
-        <Button
-          type="default"
-          onPress={() => setOverride(v => !v)}
-          style={styles.btn}>
-          <Text type="button-lg" style={pal.text}>
-            Show anyway
-          </Text>
-        </Button>
+        {!moderation.noOverride && (
+          <Button
+            type="default"
+            onPress={() => setOverride(v => !v)}
+            style={styles.btn}>
+            <Text type="button-lg" style={pal.text}>
+              Show anyway
+            </Text>
+          </Button>
+        )}
       </View>
     </View>
   )
