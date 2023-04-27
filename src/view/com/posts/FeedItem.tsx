@@ -30,14 +30,13 @@ export const FeedItem = observer(function ({
   isThreadChild,
   isThreadParent,
   showFollowBtn,
-  ignoreMuteFor,
 }: {
   item: PostsFeedItemModel
   isThreadChild?: boolean
   isThreadParent?: boolean
   showReplyLine?: boolean
   showFollowBtn?: boolean
-  ignoreMuteFor?: string
+  ignoreMuteFor?: string // NOTE currently disabled, will be addressed in the next PR -prf
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -134,8 +133,6 @@ export const FeedItem = observer(function ({
   }
 
   const isSmallTop = isThreadChild
-  const isMuted =
-    item.post.author.viewer?.muted && ignoreMuteFor !== item.post.author.did
   const outerStyles = [
     styles.outer,
     pal.view,

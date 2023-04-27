@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
-import {AtUri, ComAtprotoLabelDefs} from '@atproto/api'
+import {AtUri} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
