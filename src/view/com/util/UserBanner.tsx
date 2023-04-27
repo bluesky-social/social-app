@@ -14,7 +14,7 @@ import {
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {AvatarModeration} from 'lib/labeling/types'
-import {isWeb} from 'platform/detection'
+import {isWeb, isAndroid} from 'platform/detection'
 
 export function UserBanner({
   banner,
@@ -110,13 +110,14 @@ export function UserBanner({
         />
       </View>
     </DropdownButton>
-  ) : banner ? (
+  ) : banner &&
+    !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <Image
       testID="userBannerImage"
       style={styles.bannerImage}
       resizeMode="cover"
       source={{uri: banner}}
-      blurRadius={moderation.blur ? 100 : 0}
+      blurRadius={moderation?.blur ? 100 : 0}
     />
   ) : (
     <View

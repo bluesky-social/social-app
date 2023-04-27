@@ -13,9 +13,11 @@ import {useStores} from 'state/index'
 import {colors} from 'lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
+import {isWeb, isAndroid} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AvatarModeration} from 'lib/labeling/types'
+
+const BLUR_AMOUNT = isWeb ? 5 : 100
 
 function DefaultAvatar({size}: {size: number}) {
   return (
@@ -160,14 +162,15 @@ export function UserAvatar({
         />
       </View>
     </DropdownButton>
-  ) : avatar ? (
+  ) : avatar &&
+    !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <View style={{width: size, height: size}}>
       <HighPriorityImage
         testID="userAvatarImage"
         style={{width: size, height: size, borderRadius: Math.floor(size / 2)}}
         contentFit="cover"
         source={{uri: avatar}}
-        blurRadius={moderation?.blur ? Math.floor(size / 6) : 0}
+        blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
       />
       {warning}
     </View>
