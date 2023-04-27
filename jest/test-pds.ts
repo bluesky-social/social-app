@@ -254,6 +254,14 @@ class Mocker {
     })
   }
 
+  async like(user: string, {uri, cid}: {uri: string; cid: string}) {
+    const agent = this.users[user]?.agent
+    if (!agent) {
+      throw new Error(`Not a user: ${user}`)
+    }
+    return await agent.like(uri, cid)
+  }
+
   async labelAccount(label: string, user: string) {
     const did = this.users[user]?.did
     if (!did) {

@@ -15,6 +15,16 @@ import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from '../root-store'
 import {PostThreadModel} from '../content/post-thread'
 import {cleanError} from 'lib/strings/errors'
+import {
+  PostLabelInfo,
+  PostModeration,
+  ModerationBehaviorCode,
+} from 'lib/labeling/types'
+import {
+  getPostModeration,
+  filterAccountLabels,
+  filterProfileLabels,
+} from 'lib/labeling/helpers'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const PAGE_SIZE = 30
@@ -88,6 +98,24 @@ export class NotificationsFeedItemModel {
     } else if (!preserve) {
       this.additional = undefined
     }
+  }
+
+  get labelInfo(): PostLabelInfo {
+    const addedInfo = this.additionalPost?.thread?.labelInfo
+    return {
+      postLabels: (this.labels || []).concat(addedInfo?.postLabels || []),
+      accountLabels: filterAccountLabels(this.author.labels).concat(
+        addedInfo?.accountLabels || [],
+      ),
+      profileLabels: filterProfileLabels(this.author.labels).concat(
+        addedInfo?.profileLabels || [],
+      ),
+      isMuted: this.author.viewer?.muted || addedInfo?.isMuted || false,
+    }
+  }
+
+  get moderation(): PostModeration {
+    return getPostModeration(this.rootStore, this.labelInfo)
   }
 
   get numUnreadInGroup(): number {
@@ -520,16 +548,22 @@ export class NotificationsFeedModel {
   _filterNotifications(
     items: NotificationsFeedItemModel[],
   ): NotificationsFeedItemModel[] {
-    return items.filter(item => {
-      const hideByLabel =
-        this.rootStore.preferences.getLabelPreference(item.labels).pref ===
-        'hide'
-      let mutedThread = !!(
-        item.reasonSubjectRootUri &&
-        this.rootStore.mutedThreads.uris.has(item.reasonSubjectRootUri)
-      )
-      return !hideByLabel && !mutedThread
-    })
+    return items
+      .filter(item => {
+        const hideByLabel =
+          item.moderation.list.behavior === ModerationBehaviorCode.Hide
+        let mutedThread = !!(
+          item.reasonSubjectRootUri &&
+          this.rootStore.mutedThreads.uris.has(item.reasonSubjectRootUri)
+        )
+        return !hideByLabel && !mutedThread
+      })
+      .map(item => {
+        if (item.additional?.length) {
+          item.additional = this._filterNotifications(item.additional)
+        }
+        return item
+      })
   }
 
   async _fetchItemModels(

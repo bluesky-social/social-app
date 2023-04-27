@@ -65,6 +65,12 @@ async function main() {
         }
         if ('labels' in url.query) {
           console.log('Generating naughty users with labels')
+
+          const anchorPost = await server.mocker.createPost(
+            'alice',
+            'Anchor post',
+          )
+
           for (const user of [
             'csam-account',
             'csam-profile',
@@ -79,13 +85,15 @@ async function main() {
           ]) {
             await server.mocker.createUser(user)
             await server.mocker.follow('alice', user)
+            await server.mocker.follow(user, 'alice')
             await server.mocker.createPost(user, `Unlabeled post from ${user}`)
+            await server.mocker.createReply(
+              user,
+              `Unlabeled reply from ${user}`,
+              anchorPost,
+            )
+            await server.mocker.like(user, anchorPost)
           }
-
-          const anchorPost = await server.mocker.createPost(
-            'alice',
-            'Anchor post',
-          )
 
           await server.mocker.labelAccount('csam', 'csam-account')
           await server.mocker.labelProfile('csam', 'csam-profile')
@@ -162,12 +170,12 @@ async function main() {
             'muted-account',
             'account quote post',
             anchorPost,
-          ),
-            await server.mocker.createReply(
-              'muted-account',
-              'account reply',
-              anchorPost,
-            )
+          )
+          await server.mocker.createReply(
+            'muted-account',
+            'account reply',
+            anchorPost,
+          )
         }
       }
       console.log('Ready')
