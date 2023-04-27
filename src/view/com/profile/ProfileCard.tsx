@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {AppBskyActorDefs, ComAtprotoLabelDefs} from '@atproto/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
@@ -10,143 +10,159 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {FollowButton} from './FollowButton'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {
+  getProfileViewBasicLabelInfo,
+  getProfileModeration,
+} from 'lib/labeling/helpers'
+import {ModerationBehaviorCode} from 'lib/labeling/types'
 
-export function ProfileCard({
-  testID,
-  handle,
-  displayName,
-  avatar,
-  description,
-  labels,
-  isFollowedBy,
-  noBg,
-  noBorder,
-  followers,
-  renderButton,
-}: {
-  testID?: string
-  handle: string
-  displayName?: string
-  avatar?: string
-  description?: string
-  labels: ComAtprotoLabelDefs.Label[] | undefined
-  isFollowedBy?: boolean
-  noBg?: boolean
-  noBorder?: boolean
-  followers?: AppBskyActorDefs.ProfileView[] | undefined
-  renderButton?: () => JSX.Element
-}) {
-  const pal = usePalette('default')
-  return (
-    <Link
-      testID={testID}
-      style={[
-        styles.outer,
-        pal.border,
-        noBorder && styles.outerNoBorder,
-        !noBg && pal.view,
-      ]}
-      href={`/profile/${handle}`}
-      title={handle}
-      asAnchor>
-      <View style={styles.layout}>
-        <View style={styles.layoutAvi}>
-          <UserAvatar size={40} avatar={avatar} hasWarning={!!labels?.length} />
-        </View>
-        <View style={styles.layoutContent}>
-          <Text
-            type="lg"
-            style={[s.bold, pal.text]}
-            numberOfLines={1}
-            lineHeight={1.2}>
-            {sanitizeDisplayName(displayName || handle)}
-          </Text>
-          <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            @{handle}
-          </Text>
-          {isFollowedBy && (
-            <View style={s.flexRow}>
-              <View style={[s.mt5, pal.btn, styles.pill]}>
-                <Text type="xs" style={pal.text}>
-                  Follows You
-                </Text>
+export const ProfileCard = observer(
+  ({
+    testID,
+    profile,
+    noBg,
+    noBorder,
+    followers,
+    renderButton,
+  }: {
+    testID?: string
+    profile: AppBskyActorDefs.ProfileViewBasic
+    noBg?: boolean
+    noBorder?: boolean
+    followers?: AppBskyActorDefs.ProfileView[] | undefined
+    renderButton?: () => JSX.Element
+  }) => {
+    const store = useStores()
+    const pal = usePalette('default')
+
+    const moderation = getProfileModeration(
+      store,
+      getProfileViewBasicLabelInfo(profile),
+    )
+
+    if (moderation.list.behavior === ModerationBehaviorCode.Hide) {
+      return null
+    }
+
+    return (
+      <Link
+        testID={testID}
+        style={[
+          styles.outer,
+          pal.border,
+          noBorder && styles.outerNoBorder,
+          !noBg && pal.view,
+        ]}
+        href={`/profile/${profile.handle}`}
+        title={profile.handle}
+        asAnchor>
+        <View style={styles.layout}>
+          <View style={styles.layoutAvi}>
+            <UserAvatar
+              size={40}
+              avatar={profile.avatar}
+              moderation={moderation.avatar}
+            />
+          </View>
+          <View style={styles.layoutContent}>
+            <Text
+              type="lg"
+              style={[s.bold, pal.text]}
+              numberOfLines={1}
+              lineHeight={1.2}>
+              {sanitizeDisplayName(profile.displayName || profile.handle)}
+            </Text>
+            <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+              @{profile.handle}
+            </Text>
+            {!!profile.viewer?.followedBy && (
+              <View style={s.flexRow}>
+                <View style={[s.mt5, pal.btn, styles.pill]}>
+                  <Text type="xs" style={pal.text}>
+                    Follows You
+                  </Text>
+                </View>
               </View>
-            </View>
-          )}
+            )}
+          </View>
+          {renderButton ? (
+            <View style={styles.layoutButton}>{renderButton()}</View>
+          ) : undefined}
         </View>
-        {renderButton ? (
-          <View style={styles.layoutButton}>{renderButton()}</View>
+        {profile.description ? (
+          <View style={styles.details}>
+            <Text style={pal.text} numberOfLines={4}>
+              {profile.description}
+            </Text>
+          </View>
         ) : undefined}
-      </View>
-      {description ? (
-        <View style={styles.details}>
-          <Text style={pal.text} numberOfLines={4}>
-            {description}
-          </Text>
-        </View>
-      ) : undefined}
-      {followers?.length ? (
-        <View style={styles.followedBy}>
-          <Text
-            type="sm"
-            style={[styles.followsByDesc, pal.textLight]}
-            numberOfLines={2}
-            lineHeight={1.2}>
-            Followed by{' '}
-            {followers.map(f => f.displayName || f.handle).join(', ')}
-          </Text>
-          {followers.slice(0, 3).map(f => (
-            <View key={f.did} style={styles.followedByAviContainer}>
-              <View style={[styles.followedByAvi, pal.view]}>
-                <UserAvatar avatar={f.avatar} size={32} />
-              </View>
+        <FollowersList followers={followers} />
+      </Link>
+    )
+  },
+)
+
+const FollowersList = observer(
+  ({followers}: {followers?: AppBskyActorDefs.ProfileView[] | undefined}) => {
+    const store = useStores()
+    const pal = usePalette('default')
+    if (!followers?.length) {
+      return null
+    }
+
+    const followersWithMods = followers
+      .map(f => ({
+        f,
+        mod: getProfileModeration(store, getProfileViewBasicLabelInfo(f)),
+      }))
+      .filter(({mod}) => mod.list.behavior !== ModerationBehaviorCode.Hide)
+
+    return (
+      <View style={styles.followedBy}>
+        <Text
+          type="sm"
+          style={[styles.followsByDesc, pal.textLight]}
+          numberOfLines={2}
+          lineHeight={1.2}>
+          Followed by{' '}
+          {followersWithMods.map(({f}) => f.displayName || f.handle).join(', ')}
+        </Text>
+        {followersWithMods.slice(0, 3).map(({f, mod}) => (
+          <View key={f.did} style={styles.followedByAviContainer}>
+            <View style={[styles.followedByAvi, pal.view]}>
+              <UserAvatar avatar={f.avatar} size={32} moderation={mod.avatar} />
             </View>
-          ))}
-        </View>
-      ) : undefined}
-    </Link>
-  )
-}
+          </View>
+        ))}
+      </View>
+    )
+  },
+)
 
 export const ProfileCardWithFollowBtn = observer(
   ({
-    did,
-    handle,
-    displayName,
-    avatar,
-    description,
-    labels,
-    isFollowedBy,
+    profile,
     noBg,
     noBorder,
     followers,
   }: {
-    did: string
-    handle: string
-    displayName?: string
-    avatar?: string
-    description?: string
-    labels: ComAtprotoLabelDefs.Label[] | undefined
-    isFollowedBy?: boolean
+    profile: AppBskyActorDefs.ProfileViewBasic
     noBg?: boolean
     noBorder?: boolean
     followers?: AppBskyActorDefs.ProfileView[] | undefined
   }) => {
     const store = useStores()
-    const isMe = store.me.handle === handle
+    const isMe = store.me.handle === profile.handle
 
     return (
       <ProfileCard
-        handle={handle}
-        displayName={displayName}
-        avatar={avatar}
-        description={description}
-        labels={labels}
-        isFollowedBy={isFollowedBy}
+        profile={profile}
         noBg={noBg}
         noBorder={noBorder}
         followers={followers}
-        renderButton={isMe ? undefined : () => <FollowButton did={did} />}
+        renderButton={
+          isMe ? undefined : () => <FollowButton did={profile.did} />
+        }
       />
     )
   },

@@ -99,15 +99,7 @@ const Profiles = observer(({model}: {model: SearchUIModel}) => {
   return (
     <ScrollView style={pal.view}>
       {model.profiles.map(item => (
-        <ProfileCardWithFollowBtn
-          key={item.did}
-          did={item.did}
-          handle={item.handle}
-          displayName={item.displayName}
-          avatar={item.avatar}
-          description={item.description}
-          labels={item.labels}
-        />
+        <ProfileCardWithFollowBtn key={item.did} profile={item} />
       ))}
       <View style={s.footerSpacer} />
       <View style={s.footerSpacer} />

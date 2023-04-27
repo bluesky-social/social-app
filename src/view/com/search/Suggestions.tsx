@@ -144,18 +144,9 @@ export const Suggestions = observer(
               <View style={[styles.card, pal.view, pal.border]}>
                 <ProfileCardWithFollowBtn
                   key={item.ref.did}
-                  did={item.ref.did}
-                  handle={item.ref.handle}
-                  displayName={item.ref.displayName}
-                  avatar={item.ref.avatar}
-                  labels={item.ref.labels}
+                  profile={item.ref}
                   noBg
                   noBorder
-                  description={
-                    item.ref.description
-                      ? (item.ref as AppBskyActorDefs.ProfileView).description
-                      : ''
-                  }
                   followers={
                     item.ref.followers
                       ? (item.ref.followers as AppBskyActorDefs.ProfileView[])
@@ -170,18 +161,9 @@ export const Suggestions = observer(
               <View style={[styles.card, pal.view, pal.border]}>
                 <ProfileCardWithFollowBtn
                   key={item.view.did}
-                  did={item.view.did}
-                  handle={item.view.handle}
-                  displayName={item.view.displayName}
-                  avatar={item.view.avatar}
-                  labels={item.view.labels}
+                  profile={item.view}
                   noBg
                   noBorder
-                  description={
-                    item.view.description
-                      ? (item.view as AppBskyActorDefs.ProfileView).description
-                      : ''
-                  }
                 />
               </View>
             )
@@ -191,19 +173,9 @@ export const Suggestions = observer(
               <View style={[styles.card, pal.view, pal.border]}>
                 <ProfileCardWithFollowBtn
                   key={item.suggested.did}
-                  did={item.suggested.did}
-                  handle={item.suggested.handle}
-                  displayName={item.suggested.displayName}
-                  avatar={item.suggested.avatar}
-                  labels={item.suggested.labels}
+                  profile={item.suggested}
                   noBg
                   noBorder
-                  description={
-                    item.suggested.description
-                      ? (item.suggested as AppBskyActorDefs.ProfileView)
-                          .description
-                      : ''
-                  }
                 />
               </View>
             )

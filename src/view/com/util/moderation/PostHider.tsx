@@ -6,77 +6,72 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {ComAtprotoLabelDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Link} from '../Link'
 import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
-import {useStores} from 'state/index'
+import {ModerationBehaviorCode, ModerationBehavior} from 'lib/labeling/types'
 
 export function PostHider({
   testID,
   href,
-  isMuted,
-  labels,
+  moderation,
   style,
   children,
 }: React.PropsWithChildren<{
   testID?: string
-  href: string
-  isMuted: boolean | undefined
-  labels: ComAtprotoLabelDefs.Label[] | undefined
+  href?: string
+  moderation: ModerationBehavior
   style: StyleProp<ViewStyle>
 }>) {
-  const store = useStores()
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
   const bg = override ? pal.viewLight : pal.view
 
-  const labelPref = store.preferences.getLabelPreference(labels)
-  if (labelPref.pref === 'hide') {
-    return <></>
+  if (moderation.behavior === ModerationBehaviorCode.Hide) {
+    return null
   }
 
-  if (!isMuted) {
-    // NOTE: any further label enforcement should occur in ContentContainer
+  if (moderation.behavior === ModerationBehaviorCode.Warn) {
     return (
-      <Link testID={testID} style={style} href={href} noFeedback>
-        {children}
-      </Link>
+      <>
+        <View style={[styles.description, bg, pal.border]}>
+          <FontAwesomeIcon
+            icon={['far', 'eye-slash']}
+            style={[styles.icon, pal.text]}
+          />
+          <Text type="md" style={pal.textLight}>
+            {moderation.reason || 'Content warning'}
+          </Text>
+          <TouchableOpacity
+            style={styles.showBtn}
+            onPress={() => setOverride(v => !v)}>
+            <Text type="md" style={pal.link}>
+              {override ? 'Hide' : 'Show'} post
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {override && (
+          <View style={[styles.childrenContainer, pal.border, bg]}>
+            <Link
+              testID={testID}
+              style={addStyle(style, styles.child)}
+              href={href}
+              noFeedback>
+              {children}
+            </Link>
+          </View>
+        )}
+      </>
     )
   }
 
+  // NOTE: any further label enforcement should occur in ContentContainer
   return (
-    <>
-      <View style={[styles.description, bg, pal.border]}>
-        <FontAwesomeIcon
-          icon={['far', 'eye-slash']}
-          style={[styles.icon, pal.text]}
-        />
-        <Text type="md" style={pal.textLight}>
-          Post from an account you muted.
-        </Text>
-        <TouchableOpacity
-          style={styles.showBtn}
-          onPress={() => setOverride(v => !v)}>
-          <Text type="md" style={pal.link}>
-            {override ? 'Hide' : 'Show'} post
-          </Text>
-        </TouchableOpacity>
-      </View>
-      {override && (
-        <View style={[styles.childrenContainer, pal.border, bg]}>
-          <Link
-            testID={testID}
-            style={addStyle(style, styles.child)}
-            href={href}
-            noFeedback>
-            {children}
-          </Link>
-        </View>
-      )}
-    </>
+    <Link testID={testID} style={style} href={href} noFeedback>
+      {children}
+    </Link>
   )
 }
 

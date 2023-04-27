@@ -30,14 +30,13 @@ export const FeedItem = observer(function ({
   isThreadChild,
   isThreadParent,
   showFollowBtn,
-  ignoreMuteFor,
 }: {
   item: PostsFeedItemModel
   isThreadChild?: boolean
   isThreadParent?: boolean
   showReplyLine?: boolean
   showFollowBtn?: boolean
-  ignoreMuteFor?: string
+  ignoreMuteFor?: string // NOTE currently disabled, will be addressed in the next PR -prf
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -134,8 +133,6 @@ export const FeedItem = observer(function ({
   }
 
   const isSmallTop = isThreadChild
-  const isMuted =
-    item.post.author.viewer?.muted && ignoreMuteFor !== item.post.author.did
   const outerStyles = [
     styles.outer,
     pal.view,
@@ -149,8 +146,7 @@ export const FeedItem = observer(function ({
       testID={`feedItem-by-${item.post.author.handle}`}
       style={outerStyles}
       href={itemHref}
-      isMuted={isMuted}
-      labels={item.post.labels}>
+      moderation={item.moderation.list}>
       {isThreadChild && (
         <View
           style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
@@ -200,7 +196,7 @@ export const FeedItem = observer(function ({
             <UserAvatar
               size={52}
               avatar={item.post.author.avatar}
-              hasWarning={!!item.post.author.labels?.length}
+              moderation={item.moderation.avatar}
             />
           </Link>
         </View>
@@ -236,7 +232,7 @@ export const FeedItem = observer(function ({
             </View>
           )}
           <ContentHider
-            labels={item.post.labels}
+            moderation={item.moderation.list}
             containerStyle={styles.contentHider}>
             {item.richText?.text ? (
               <View style={styles.postTextContainer}>

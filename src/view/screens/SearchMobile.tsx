@@ -146,19 +146,14 @@ export const SearchScreen = withAuthRequired(
               scrollEventThrottle={100}>
               {query && autocompleteView.searchRes.length ? (
                 <>
-                  {autocompleteView.searchRes.map(
-                    ({did, handle, displayName, labels, avatar}, index) => (
-                      <ProfileCard
-                        key={did}
-                        testID={`searchAutoCompleteResult-${handle}`}
-                        handle={handle}
-                        displayName={displayName}
-                        labels={labels}
-                        avatar={avatar}
-                        noBorder={index === 0}
-                      />
-                    ),
-                  )}
+                  {autocompleteView.searchRes.map((profile, index) => (
+                    <ProfileCard
+                      key={profile.did}
+                      testID={`searchAutoCompleteResult-${profile.handle}`}
+                      profile={profile}
+                      noBorder={index === 0}
+                    />
+                  ))}
                 </>
               ) : query && !autocompleteView.searchRes.length ? (
                 <View>

@@ -63,6 +63,120 @@ async function main() {
             },
           })
         }
+        if ('labels' in url.query) {
+          console.log('Generating naughty users with labels')
+
+          const anchorPost = await server.mocker.createPost(
+            'alice',
+            'Anchor post',
+          )
+
+          for (const user of [
+            'csam-account',
+            'csam-profile',
+            'csam-posts',
+            'porn-account',
+            'porn-profile',
+            'porn-posts',
+            'nudity-account',
+            'nudity-profile',
+            'nudity-posts',
+            'muted-account',
+          ]) {
+            await server.mocker.createUser(user)
+            await server.mocker.follow('alice', user)
+            await server.mocker.follow(user, 'alice')
+            await server.mocker.createPost(user, `Unlabeled post from ${user}`)
+            await server.mocker.createReply(
+              user,
+              `Unlabeled reply from ${user}`,
+              anchorPost,
+            )
+            await server.mocker.like(user, anchorPost)
+          }
+
+          await server.mocker.labelAccount('csam', 'csam-account')
+          await server.mocker.labelProfile('csam', 'csam-profile')
+          await server.mocker.labelPost(
+            'csam',
+            await server.mocker.createPost('csam-posts', 'csam post'),
+          )
+          await server.mocker.labelPost(
+            'csam',
+            await server.mocker.createQuotePost(
+              'csam-posts',
+              'csam quote post',
+              anchorPost,
+            ),
+          )
+          await server.mocker.labelPost(
+            'csam',
+            await server.mocker.createReply(
+              'csam-posts',
+              'csam reply',
+              anchorPost,
+            ),
+          )
+
+          await server.mocker.labelAccount('porn', 'porn-account')
+          await server.mocker.labelProfile('porn', 'porn-profile')
+          await server.mocker.labelPost(
+            'porn',
+            await server.mocker.createPost('porn-posts', 'porn post'),
+          )
+          await server.mocker.labelPost(
+            'porn',
+            await server.mocker.createQuotePost(
+              'porn-posts',
+              'porn quote post',
+              anchorPost,
+            ),
+          )
+          await server.mocker.labelPost(
+            'porn',
+            await server.mocker.createReply(
+              'porn-posts',
+              'porn reply',
+              anchorPost,
+            ),
+          )
+
+          await server.mocker.labelAccount('nudity', 'nudity-account')
+          await server.mocker.labelProfile('nudity', 'nudity-profile')
+          await server.mocker.labelPost(
+            'nudity',
+            await server.mocker.createPost('nudity-posts', 'nudity post'),
+          )
+          await server.mocker.labelPost(
+            'nudity',
+            await server.mocker.createQuotePost(
+              'nudity-posts',
+              'nudity quote post',
+              anchorPost,
+            ),
+          )
+          await server.mocker.labelPost(
+            'nudity',
+            await server.mocker.createReply(
+              'nudity-posts',
+              'nudity reply',
+              anchorPost,
+            ),
+          )
+
+          await server.mocker.users.alice.agent.mute('muted-account.test')
+          await server.mocker.createPost('muted-account', 'muted post')
+          await server.mocker.createQuotePost(
+            'muted-account',
+            'account quote post',
+            anchorPost,
+          )
+          await server.mocker.createReply(
+            'muted-account',
+            'account reply',
+            anchorPost,
+          )
+        }
       }
       console.log('Ready')
       return res.writeHead(200).end(server.pdsUrl)
