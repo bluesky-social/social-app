@@ -87,7 +87,7 @@ export const TextInput = React.forwardRef(
             getImageFromUri(items, onPhotoPasted)
           },
           handleKeyDown: (_, event) => {
-            if (event.metaKey && event.code === 'Enter') {
+            if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
               // Workaround relying on previous state from `setRichText` to
               // get the updated text content during editor initialization
               setRichText((state: RichText) => {
