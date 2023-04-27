@@ -5,7 +5,6 @@ import {
   TouchableWithoutFeedback,
   StyleSheet,
   View,
-  Keyboard,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
