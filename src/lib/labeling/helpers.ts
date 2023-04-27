@@ -309,9 +309,10 @@ function warnContent(reason: string) {
   }
 }
 
-function warnImages(reason: string) {
-  return {
-    behavior: ModerationBehaviorCode.WarnImages,
-    reason,
-  }
-}
+// TODO
+// function warnImages(reason: string) {
+//   return {
+//     behavior: ModerationBehaviorCode.WarnImages,
+//     reason,
+//   }
+// }
