@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback, useEffect} from 'react'
 import {
   Image,
   TouchableOpacity,
@@ -72,6 +72,20 @@ function LightboxInner({
       setIndex(index + 1)
     }
   }
+
+  const onEscape = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    },
+    [onClose],
+  )
+
+  useEffect(() => {
+    window.addEventListener('keydown', onEscape)
+    return () => window.removeEventListener('keydown', onEscape)
+  }, [onEscape])
 
   return (
     <View style={styles.mask}>
