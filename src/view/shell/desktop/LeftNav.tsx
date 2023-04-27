@@ -2,7 +2,11 @@ import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {PressableWithHover} from 'view/com/util/PressableWithHover'
-import {useNavigation, useNavigationState} from '@react-navigation/native'
+import {
+  useLinkProps,
+  useNavigation,
+  useNavigationState,
+} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -89,25 +93,28 @@ const NavItem = observer(
       }
       return getCurrentRoute(state).name
     })
+
     const isCurrent = isTab(currentRouteName, pathName)
+    const {onPress} = useLinkProps({to: href})
 
     return (
       <PressableWithHover
         style={styles.navItemWrapper}
-        hoverStyle={pal.viewLight}>
-        <Link href={href} style={styles.navItem}>
-          <View style={[styles.navItemIconWrapper]}>
-            {isCurrent ? iconFilled : icon}
-            {typeof count === 'string' && count ? (
-              <Text type="button" style={styles.navItemCount}>
-                {count}
-              </Text>
-            ) : null}
-          </View>
-          <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
-            {label}
-          </Text>
-        </Link>
+        hoverStyle={pal.viewLight}
+        onPress={onPress}
+        accessibilityLabel={label}
+        accessibilityHint={`Navigates to ${label}`}>
+        <View style={[styles.navItemIconWrapper]}>
+          {isCurrent ? iconFilled : icon}
+          {typeof count === 'string' && count ? (
+            <Text type="button" style={styles.navItemCount}>
+              {count}
+            </Text>
+          ) : null}
+        </View>
+        <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
+          {label}
+        </Text>
       </PressableWithHover>
     )
   },
@@ -210,7 +217,7 @@ const styles = StyleSheet.create({
 
   profileCard: {
     marginVertical: 10,
-    width: 60,
+    width: 90,
     paddingLeft: 12,
   },
 
@@ -223,21 +230,18 @@ const styles = StyleSheet.create({
   },
 
   navItemWrapper: {
-    paddingHorizontal: 12,
-    borderRadius: 8,
-  },
-  navItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 12,
-    paddingBottom: 12,
+    paddingHorizontal: 12,
+    padding: 12,
+    borderRadius: 8,
+    gap: 10,
   },
   navItemIconWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
     width: 28,
     height: 28,
-    marginRight: 10,
     marginTop: 2,
   },
   navItemCount: {
