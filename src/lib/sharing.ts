@@ -1,4 +1,4 @@
-import {isNative} from 'platform/detection'
+import {isIOS, isAndroid} from 'platform/detection'
 // import * as Sharing from 'expo-sharing'
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as Toast from '../view/com/util/Toast'
@@ -11,8 +11,10 @@ import {Share} from 'react-native'
  * clipboard.
  */
 export async function shareUrl(url: string) {
-  if (isNative) {
-    Share.share({url: url})
+  if (isAndroid) {
+    Share.share({message: url})
+  } else if (isIOS) {
+    Share.share({url})
   } else {
     // React Native Share is not supported by web. Web Share API
     // has increasing but not full support, so default to clipboard
