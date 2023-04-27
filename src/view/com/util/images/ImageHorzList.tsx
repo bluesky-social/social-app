@@ -42,7 +42,7 @@ export function ImageHorzList({images, onPress, style}: Props) {
             accessible={true}
             accessibilityIgnoresInvertColors
             accessibilityHint={alt}
-            accessibilityLabel={alt}
+            accessibilityLabel=""
           />
         </TouchableWithoutFeedback>
       ))}

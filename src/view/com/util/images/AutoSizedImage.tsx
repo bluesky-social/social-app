@@ -72,7 +72,7 @@ export function AutoSizedImage({
           accessible={true} // Must set for `accessibilityLabel` to work
           accessibilityIgnoresInvertColors
           accessibilityLabel={alt}
-          accessibilityHint={alt}
+          accessibilityHint=""
         />
         {children}
       </TouchableOpacity>
@@ -87,7 +87,7 @@ export function AutoSizedImage({
         accessible={true} // Must set for `accessibilityLabel` to work
         accessibilityIgnoresInvertColors
         accessibilityLabel={alt}
-        accessibilityHint={alt}
+        accessibilityHint=""
       />
       {children}
     </View>
