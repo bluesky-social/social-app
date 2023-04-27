@@ -13,15 +13,16 @@ import {
 } from 'lib/hooks/usePermissions'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
+import {AvatarModeration} from 'lib/labeling/types'
 import {isWeb} from 'platform/detection'
 
 export function UserBanner({
   banner,
-  shouldBlur,
+  moderation,
   onSelectNewBanner,
 }: {
   banner?: string | null
-  shouldBlur?: boolean
+  moderation?: AvatarModeration
   onSelectNewBanner?: (img: TImage | null) => void
 }) {
   const store = useStores()
@@ -115,7 +116,7 @@ export function UserBanner({
       style={styles.bannerImage}
       resizeMode="cover"
       source={{uri: banner}}
-      blurRadius={shouldBlur ? 100 : 0}
+      blurRadius={moderation.blur ? 100 : 0}
     />
   ) : (
     <View

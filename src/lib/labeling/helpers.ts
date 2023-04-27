@@ -1,4 +1,5 @@
 import {
+  AppBskyActorDefs,
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedRecord,
   AppBskyFeedPost,
@@ -210,6 +211,16 @@ export function getProfileModeration(
     avatar,
     list: show(),
     view: show(),
+  }
+}
+
+export function getProfileViewBasicLabelInfo(
+  profile: AppBskyActorDefs.ProfileViewBasic,
+): ProfileLabelInfo {
+  return {
+    accountLabels: filterAccountLabels(profile.labels),
+    profileLabels: filterProfileLabels(profile.labels),
+    isMuted: profile.viewer?.muted || false,
   }
 }
 

@@ -219,7 +219,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
   ])
   return (
     <View style={pal.view}>
-      <UserBanner banner={view.banner} />
+      <UserBanner banner={view.banner} moderation={view.moderation.avatar} />
       <View style={styles.content}>
         <View style={[styles.buttonsLine]}>
           {isMe ? (
