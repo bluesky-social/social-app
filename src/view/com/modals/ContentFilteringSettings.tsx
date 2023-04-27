@@ -38,7 +38,8 @@ export function Component({}: {}) {
           testID="sendReportBtn"
           onPress={onPressDone}
           accessibilityRole="button"
-          accessibilityLabel="Confirm content moderation settings">
+          accessibilityLabel="Confirm content moderation settings"
+          accessibilityHint="">
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}
@@ -147,7 +148,8 @@ function SelectableBtn({
       ]}
       onPress={() => onChange(value)}
       accessibilityRole="button"
-      accessibilityLabel={`Set ${value} for ${group} content moderation policy`}>
+      accessibilityLabel={value}
+      accessibilityHint={`Set ${value} for ${group} content moderation policy`}>
       <Text style={current === value ? palPrimary.text : pal.text}>
         {label}
       </Text>

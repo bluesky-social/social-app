@@ -7,7 +7,6 @@ import {
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {useStores} from 'state/index'
-import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
 import {openCamera} from 'lib/media/picker'
 import {useCameraPermission} from 'lib/hooks/usePermissions'

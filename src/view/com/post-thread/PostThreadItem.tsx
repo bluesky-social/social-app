@@ -155,7 +155,8 @@ export const PostThreadItem = observer(function PostThreadItem({
               href={authorHref}
               title={authorTitle}
               asAnchor
-              accessibilityLabel={`${item.post.author.handle}'s avatar`}>
+              accessibilityLabel={`${item.post.author.handle}'s avatar`}
+              accessibilityHint="">
               <UserAvatar
                 size={52}
                 avatar={item.post.author.avatar}

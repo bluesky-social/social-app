@@ -102,6 +102,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
                   ? 'Button disabled. Input custom domain to proceed.'
                   : ''
               }`}
+              accessibilityHint=""
               // TODO - accessibility: Need to inform state change on failure
               disabled={customUrl === ''}>
               <FontAwesomeIcon
