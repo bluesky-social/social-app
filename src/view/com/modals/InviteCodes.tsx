@@ -57,7 +57,7 @@ export function Component({}: {}) {
         code works once!
       </Text>
       <Text type="sm" style={[styles.description, pal.textLight]}>
-        ( We'll send you more periodically. )
+        ( You'll receive one invite code every two weeks. )
       </Text>
       <ScrollView style={[styles.scrollContainer, pal.border]}>
         {store.me.invites.map((invite, i) => (
