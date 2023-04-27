@@ -48,6 +48,7 @@
     "@segment/sovran-react-native": "^0.4.5",
     "@tiptap/core": "^2.0.0-beta.220",
     "@tiptap/extension-document": "^2.0.0-beta.220",
+    "@tiptap/extension-history": "^2.0.3",
     "@tiptap/extension-link": "^2.0.0-beta.220",
     "@tiptap/extension-mention": "^2.0.0-beta.220",
     "@tiptap/extension-paragraph": "^2.0.0-beta.220",

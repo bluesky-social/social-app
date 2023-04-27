@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import {RichText} from '@atproto/api'
 import {useEditor, EditorContent, JSONContent} from '@tiptap/react'
 import {Document} from '@tiptap/extension-document'
+import History from '@tiptap/extension-history'
 import {Link} from '@tiptap/extension-link'
 import {Mention} from '@tiptap/extension-mention'
 import {Paragraph} from '@tiptap/extension-paragraph'
@@ -70,6 +71,7 @@ export const TextInput = React.forwardRef(
             placeholder,
           }),
           Text,
+          History,
         ],
         editorProps: {
           attributes: {
