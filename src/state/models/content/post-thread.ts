@@ -10,6 +10,13 @@ import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {updateDataOptimistically} from 'lib/async/revertible'
+import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
+import {
+  getEmbedLabels,
+  filterAccountLabels,
+  filterProfileLabels,
+  getPostModeration,
+} from 'lib/labeling/helpers'
 
 export class PostThreadItemModel {
   // ui state
@@ -44,6 +51,21 @@ export class PostThreadItemModel {
 
   get isThreadMuted() {
     return this.rootStore.mutedThreads.uris.has(this.rootUri)
+  }
+
+  get labelInfo(): PostLabelInfo {
+    return {
+      postLabels: (this.post.labels || []).concat(
+        getEmbedLabels(this.post.embed),
+      ),
+      accountLabels: filterAccountLabels(this.post.author.labels),
+      profileLabels: filterProfileLabels(this.post.author.labels),
+      isMuted: this.post.author.viewer?.muted || false,
+    }
+  }
+
+  get moderation(): PostModeration {
+    return getPostModeration(this.rootStore, this.labelInfo)
   }
 
   constructor(

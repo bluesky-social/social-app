@@ -206,8 +206,7 @@ const PostLoaded = observer(
       <PostHider
         href={itemHref}
         style={[styles.outer, pal.view, pal.border, style]}
-        isMuted={item.post.author.viewer?.muted === true}
-        labels={item.post.labels}>
+        moderation={item.moderation.list}>
         {showReplyLine && <View style={styles.replyLine} />}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
@@ -215,7 +214,7 @@ const PostLoaded = observer(
               <UserAvatar
                 size={52}
                 avatar={item.post.author.avatar}
-                hasWarning={!!item.post.author.labels?.length}
+                moderation={item.moderation.avatar}
               />
             </Link>
           </View>
@@ -247,7 +246,7 @@ const PostLoaded = observer(
               </View>
             )}
             <ContentHider
-              labels={item.post.labels}
+              moderation={item.moderation.list}
               containerStyle={styles.contentHider}>
               {item.richText?.text ? (
                 <View style={styles.postTextContainer}>

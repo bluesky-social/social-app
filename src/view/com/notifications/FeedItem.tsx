@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
-import {AtUri, ComAtprotoLabelDefs} from '@atproto/api'
+import {AtUri} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -26,8 +26,14 @@ import {UserAvatar} from '../util/UserAvatar'
 import {ImageHorzList} from '../util/images/ImageHorzList'
 import {Post} from '../post/Post'
 import {Link, TextLink} from '../util/Link'
+import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {
+  getProfileViewBasicLabelInfo,
+  getProfileModeration,
+} from 'lib/labeling/helpers'
+import {ProfileModeration} from 'lib/labeling/types'
 
 const MAX_AUTHORS = 5
 
@@ -38,14 +44,15 @@ interface Author {
   handle: string
   displayName?: string
   avatar?: string
-  labels?: ComAtprotoLabelDefs.Label[]
+  moderation: ProfileModeration
 }
 
-export const FeedItem = observer(function FeedItem({
+export const FeedItem = observer(function ({
   item,
 }: {
   item: NotificationsFeedItemModel
 }) {
+  const store = useStores()
   const pal = usePalette('default')
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
@@ -81,27 +88,25 @@ export const FeedItem = observer(function FeedItem({
         handle: item.author.handle,
         displayName: item.author.displayName,
         avatar: item.author.avatar,
-        labels: item.author.labels,
+        moderation: getProfileModeration(
+          store,
+          getProfileViewBasicLabelInfo(item.author),
+        ),
       },
-      ...(item.additional?.map(
-        ({author: {avatar, labels, handle, displayName}}) => {
-          return {
-            href: `/profile/${handle}`,
-            handle,
-            displayName,
-            avatar,
-            labels,
-          }
-        },
-      ) || []),
+      ...(item.additional?.map(({author}) => {
+        return {
+          href: `/profile/${author.handle}`,
+          handle: author.handle,
+          displayName: author.displayName,
+          avatar: author.avatar,
+          moderation: getProfileModeration(
+            store,
+            getProfileViewBasicLabelInfo(author),
+          ),
+        }
+      }) || []),
     ]
-  }, [
-    item.additional,
-    item.author.avatar,
-    item.author.displayName,
-    item.author.handle,
-    item.author.labels,
-  ])
+  }, [store, item.additional, item.author])
 
   if (item.additionalPost?.notFound) {
     // don't render anything if the target post was deleted or unfindable
@@ -264,7 +269,7 @@ function CondensedAuthorsList({
           <UserAvatar
             size={35}
             avatar={authors[0].avatar}
-            hasWarning={!!authors[0].labels?.length}
+            moderation={authors[0].moderation.avatar}
           />
         </Link>
       </View>
@@ -277,7 +282,7 @@ function CondensedAuthorsList({
           <UserAvatar
             size={35}
             avatar={author.avatar}
-            hasWarning={!!author.labels?.length}
+            moderation={author.moderation.avatar}
           />
         </View>
       ))}
@@ -335,7 +340,7 @@ function ExpandedAuthorsList({
             <UserAvatar
               size={35}
               avatar={author.avatar}
-              hasWarning={!!author.labels?.length}
+              moderation={author.moderation.avatar}
             />
           </View>
           <View style={s.flex1}>

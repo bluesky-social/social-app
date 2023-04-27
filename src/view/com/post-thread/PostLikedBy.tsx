@@ -47,15 +47,7 @@ export const PostLikedBy = observer(function ({uri}: {uri: string}) {
   // loaded
   // =
   const renderItem = ({item}: {item: LikeItem}) => (
-    <ProfileCardWithFollowBtn
-      key={item.actor.did}
-      did={item.actor.did}
-      handle={item.actor.handle}
-      displayName={item.actor.displayName}
-      avatar={item.actor.avatar}
-      labels={item.actor.labels}
-      isFollowedBy={!!item.actor.viewer?.followedBy}
-    />
+    <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} />
   )
   return (
     <FlatList

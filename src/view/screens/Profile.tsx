@@ -6,6 +6,7 @@ import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewSelector} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
+import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {ProfileUiModel} from 'state/models/ui/profile'
 import {useStores} from 'state/index'
 import {PostsFeedSliceModel} from 'state/models/feeds/posts'
@@ -140,7 +141,11 @@ export const ProfileScreen = withAuthRequired(
     )
 
     return (
-      <View testID="profileView" style={styles.container}>
+      <ScreenHider
+        testID="profileView"
+        style={styles.container}
+        screenDescription="profile"
+        moderation={uiState.profile.moderation.view}>
         {uiState.profile.hasError ? (
           <ErrorScreen
             testID="profileErrorScreen"
@@ -169,7 +174,7 @@ export const ProfileScreen = withAuthRequired(
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
         />
-      </View>
+      </ScreenHider>
     )
   }),
 )

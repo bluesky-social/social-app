@@ -20,6 +20,13 @@ import {
 } from 'lib/api/build-suggested-posts'
 import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
 import {updateDataOptimistically} from 'lib/async/revertible'
+import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
+import {
+  getEmbedLabels,
+  getPostModeration,
+  filterAccountLabels,
+  filterProfileLabels,
+} from 'lib/labeling/helpers'
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 type ReasonRepost = AppBskyFeedDefs.ReasonRepost
@@ -81,6 +88,21 @@ export class PostsFeedItemModel {
 
   get isThreadMuted() {
     return this.rootStore.mutedThreads.uris.has(this.rootUri)
+  }
+
+  get labelInfo(): PostLabelInfo {
+    return {
+      postLabels: (this.post.labels || []).concat(
+        getEmbedLabels(this.post.embed),
+      ),
+      accountLabels: filterAccountLabels(this.post.author.labels),
+      profileLabels: filterProfileLabels(this.post.author.labels),
+      isMuted: this.post.author.viewer?.muted || false,
+    }
+  }
+
+  get moderation(): PostModeration {
+    return getPostModeration(this.rootStore, this.labelInfo)
   }
 
   copy(v: FeedViewPost) {

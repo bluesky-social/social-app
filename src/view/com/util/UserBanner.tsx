@@ -13,13 +13,16 @@ import {
 } from 'lib/hooks/usePermissions'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
+import {AvatarModeration} from 'lib/labeling/types'
+import {isWeb, isAndroid} from 'platform/detection'
 
 export function UserBanner({
   banner,
+  moderation,
   onSelectNewBanner,
 }: {
   banner?: string | null
+  moderation?: AvatarModeration
   onSelectNewBanner?: (img: TImage | null) => void
 }) {
   const store = useStores()
@@ -107,12 +110,14 @@ export function UserBanner({
         />
       </View>
     </DropdownButton>
-  ) : banner ? (
+  ) : banner &&
+    !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <Image
       testID="userBannerImage"
       style={styles.bannerImage}
       resizeMode="cover"
       source={{uri: banner}}
+      blurRadius={moderation?.blur ? 100 : 0}
     />
   ) : (
     <View

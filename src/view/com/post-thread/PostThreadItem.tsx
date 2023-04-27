@@ -145,21 +145,17 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   if (item._isHighlightedPost) {
     return (
-      <View
+      <PostHider
         testID={`postThreadItem-by-${item.post.author.handle}`}
-        style={[
-          styles.outer,
-          styles.outerHighlighted,
-          {borderTopColor: pal.colors.border},
-          pal.view,
-        ]}>
+        style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
+        moderation={item.moderation.thread}>
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
             <Link href={authorHref} title={authorTitle} asAnchor>
               <UserAvatar
                 size={52}
                 avatar={item.post.author.avatar}
-                hasWarning={!!item.post.author.labels?.length}
+                moderation={item.moderation.avatar}
               />
             </Link>
           </View>
@@ -218,9 +214,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           </View>
         </View>
         <View style={[s.pl10, s.pr10, s.pb10]}>
-          <ContentHider
-            isMuted={item.post.author.viewer?.muted === true}
-            labels={item.post.labels}>
+          <ContentHider moderation={item.moderation.view}>
             {item.richText?.text ? (
               <View
                 style={[
@@ -300,7 +294,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             />
           </View>
         </View>
-      </View>
+      </PostHider>
     )
   } else {
     return (
@@ -309,8 +303,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           testID={`postThreadItem-by-${item.post.author.handle}`}
           href={itemHref}
           style={[styles.outer, {borderColor: pal.colors.border}, pal.view]}
-          isMuted={item.post.author.viewer?.muted === true}
-          labels={item.post.labels}>
+          moderation={item.moderation.thread}>
           {item._showParentReplyLine && (
             <View
               style={[
@@ -333,7 +326,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 <UserAvatar
                   size={52}
                   avatar={item.post.author.avatar}
-                  hasWarning={!!item.post.author.labels?.length}
+                  moderation={item.moderation.avatar}
                 />
               </Link>
             </View>
@@ -347,7 +340,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 did={item.post.author.did}
               />
               <ContentHider
-                labels={item.post.labels}
+                moderation={item.moderation.thread}
                 containerStyle={styles.contentHider}>
                 {item.richText?.text ? (
                   <View style={styles.postTextContainer}>

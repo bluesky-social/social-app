@@ -26,7 +26,7 @@ import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
-import {ProfileHeaderLabels} from '../util/moderation/ProfileHeaderLabels'
+import {ProfileHeaderWarnings} from '../util/moderation/ProfileHeaderWarnings'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
@@ -219,7 +219,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
   ])
   return (
     <View style={pal.view}>
-      <UserBanner banner={view.banner} />
+      <UserBanner banner={view.banner} moderation={view.moderation.avatar} />
       <View style={styles.content}>
         <View style={[styles.buttonsLine]}>
           {isMe ? (
@@ -332,7 +332,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
             richText={view.descriptionRichText}
           />
         ) : undefined}
-        <ProfileHeaderLabels labels={view.labels} />
+        <ProfileHeaderWarnings moderation={view.moderation.view} />
         {view.viewer.muted ? (
           <View
             testID="profileHeaderMutedNotice"
@@ -364,7 +364,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoaded({
           <UserAvatar
             size={80}
             avatar={view.avatar}
-            hasWarning={!!view.labels?.length}
+            moderation={view.moderation.avatar}
           />
         </View>
       </TouchableWithoutFeedback>

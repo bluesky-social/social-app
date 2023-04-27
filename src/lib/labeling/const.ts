@@ -1,23 +1,20 @@
 import {LabelPreferencesModel} from 'state/models/ui/preferences'
-
-export interface LabelValGroup {
-  id: keyof LabelPreferencesModel | 'illegal' | 'unknown'
-  title: string
-  subtitle?: string
-  warning?: string
-  values: string[]
-}
+import {LabelValGroup} from './types'
 
 export const ILLEGAL_LABEL_GROUP: LabelValGroup = {
   id: 'illegal',
   title: 'Illegal Content',
+  warning: 'Illegal Content',
   values: ['csam', 'dmca-violation', 'nudity-nonconsentual'],
+  imagesOnly: false, // not applicable
 }
 
 export const UNKNOWN_LABEL_GROUP: LabelValGroup = {
   id: 'unknown',
   title: 'Unknown Label',
+  warning: 'Content Warning',
   values: [],
+  imagesOnly: false,
 }
 
 export const CONFIGURABLE_LABEL_GROUPS: Record<
@@ -30,6 +27,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     subtitle: 'i.e. Pornography',
     warning: 'Sexually Explicit',
     values: ['porn'],
+    imagesOnly: false, // apply to whole thing
   },
   nudity: {
     id: 'nudity',
@@ -37,6 +35,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     subtitle: 'Including non-sexual and artistic',
     warning: 'Nudity',
     values: ['nudity'],
+    imagesOnly: true,
   },
   suggestive: {
     id: 'suggestive',
@@ -44,6 +43,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     subtitle: 'Does not include nudity',
     warning: 'Sexually Suggestive',
     values: ['sexual'],
+    imagesOnly: true,
   },
   gore: {
     id: 'gore',
@@ -51,12 +51,14 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     subtitle: 'Gore, self-harm, torture',
     warning: 'Violence',
     values: ['gore', 'self-harm', 'torture'],
+    imagesOnly: true,
   },
   hate: {
     id: 'hate',
     title: 'Political Hate-Groups',
     warning: 'Hate',
     values: ['icon-kkk', 'icon-nazi'],
+    imagesOnly: false,
   },
   spam: {
     id: 'spam',
@@ -64,6 +66,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     subtitle: 'Excessive low-quality posts',
     warning: 'Spam',
     values: ['spam'],
+    imagesOnly: false,
   },
   impersonation: {
     id: 'impersonation',
@@ -71,5 +74,6 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     subtitle: 'Accounts falsely claiming to be people or orgs',
     warning: 'Impersonation',
     values: ['impersonation'],
+    imagesOnly: false,
   },
 }
