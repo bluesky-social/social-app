@@ -60,7 +60,6 @@ function BackBtn() {
       testID="viewHeaderBackOrMenuBtn"
       onPress={onPressBack}
       style={styles.backBtn}
-      accessible={true}
       accessibilityRole="button"
       accessibilityLabel="Go back"
       accessibilityHint="Navigates to the previous screen">

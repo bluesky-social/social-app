@@ -196,10 +196,8 @@ const ChooseAccountForm = ({
           key={account.did}
           style={[pal.view, pal.border, styles.account]}
           onPress={() => onTryAccount(account)}
-          accessible={true}
           accessibilityRole="button"
-          accessibilityLabel={account.handle}
-          accessibilityHint={`Sign in as ${account.handle}`}>
+          accessibilityLabel={`Sign in as ${account.handle}`}>
           <View
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
             <View style={s.p10}>
@@ -225,10 +223,8 @@ const ChooseAccountForm = ({
         testID="chooseNewAccountBtn"
         style={[pal.view, pal.border, styles.account, styles.accountLast]}
         onPress={() => onSelectAccount(undefined)}
-        accessible={true}
         accessibilityRole="button"
-        accessibilityLabel="Other account"
-        accessibilityHint="Login to account that is not listed">
+        accessibilityLabel="Login to account that is not listed">
         <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
           <Text style={[styles.accountText, styles.accountTextOther]}>
             <Text type="lg" style={pal.text}>
@@ -245,7 +241,6 @@ const ChooseAccountForm = ({
       <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
         <TouchableOpacity
           onPress={onPressBack}
-          accessible={true}
           accessibilityRole="button"
           accessibilityLabel="Go back"
           accessibilityHint="Navigates to the previous screen">
@@ -365,7 +360,6 @@ const LoginForm = ({
             testID="loginSelectServiceButton"
             style={styles.textBtn}
             onPress={onPressSelectService}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Select service"
             accessibilityHint="Sets server for the Bluesky client">
@@ -403,7 +397,6 @@ const LoginForm = ({
             value={identifier}
             onChangeText={str => setIdentifier((str || '').toLowerCase())}
             editable={!isProcessing}
-            accessible={true}
             accessibilityLabel="Username or email address"
             accessibilityHint="Input the username or email address you used at signup"
           />
@@ -425,7 +418,6 @@ const LoginForm = ({
             value={password}
             onChangeText={setPassword}
             editable={!isProcessing}
-            accessible={true}
             accessibilityLabel="Password"
             accessibilityHint={
               identifier === ''
@@ -437,7 +429,6 @@ const LoginForm = ({
             testID="forgotPasswordButton"
             style={styles.textInputInnerBtn}
             onPress={onPressForgotPassword}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Forgot password"
             accessibilityHint="Opens password reset form">
@@ -458,7 +449,6 @@ const LoginForm = ({
       <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
         <TouchableOpacity
           onPress={onPressBack}
-          accessible={true}
           accessibilityRole="button"
           accessibilityLabel="Go back"
           accessibilityHint="Navigates to the previous screen">
@@ -471,7 +461,6 @@ const LoginForm = ({
           <TouchableOpacity
             testID="loginRetryButton"
             onPress={onPressRetryConnect}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Retry"
             accessibilityHint="Retries login">
@@ -492,7 +481,6 @@ const LoginForm = ({
           <TouchableOpacity
             testID="loginNextButton"
             onPress={onPressNext}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Go to next"
             accessibilityHint="Navigates to the next screen">
@@ -586,7 +574,6 @@ const ForgotPasswordForm = ({
             testID="forgotPasswordSelectServiceButton"
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}
             onPress={onPressSelectService}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Hosting provider"
             accessibilityHint="Sets hosting provider for password reset">
@@ -622,7 +609,6 @@ const ForgotPasswordForm = ({
               value={email}
               onChangeText={setEmail}
               editable={!isProcessing}
-              accessible={true}
               accessibilityLabel="Email"
               accessibilityHint="Sets email for password reset"
             />
@@ -641,7 +627,6 @@ const ForgotPasswordForm = ({
         <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
           <TouchableOpacity
             onPress={onPressBack}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Go back"
             accessibilityHint="Navigates to the previous screen">
@@ -660,7 +645,6 @@ const ForgotPasswordForm = ({
             <TouchableOpacity
               testID="newPasswordButton"
               onPress={onPressNext}
-              accessible={true}
               accessibilityRole="button"
               accessibilityLabel="Go to next"
               accessibilityHint="Navigates to the next screen">
@@ -804,7 +788,6 @@ const SetNewPasswordForm = ({
         <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
           <TouchableOpacity
             onPress={onPressBack}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Go back"
             accessibilityHint="Navigates to the previous screen">
@@ -823,7 +806,6 @@ const SetNewPasswordForm = ({
             <TouchableOpacity
               testID="setNewPasswordButton"
               onPress={onPressNext}
-              accessible={true}
               accessibilityRole="button"
               accessibilityLabel="Go to next"
               accessibilityHint="Navigates to the next screen">
@@ -864,7 +846,6 @@ const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
           <View style={s.flex1} />
           <TouchableOpacity
             onPress={onPressNext}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Close alert"
             accessibilityHint="Closes password update alert">

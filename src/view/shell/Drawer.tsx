@@ -124,7 +124,6 @@ export const DrawerContent = observer(() => {
         <View style={styles.main}>
           <TouchableOpacity
             testID="profileCardButton"
-            accessible={true}
             accessibilityLabel="Profile"
             accessibilityHint="Navigates to your profile"
             onPress={onPressProfile}>
@@ -283,7 +282,6 @@ export const DrawerContent = observer(() => {
             </TouchableOpacity>
           )}
           <TouchableOpacity
-            accessible={true}
             accessibilityRole="link"
             accessibilityLabel="Send feedback"
             accessibilityHint="Opens Google Forms feedback link"

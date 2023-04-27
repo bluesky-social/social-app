@@ -254,7 +254,6 @@ const styles = StyleSheet.create({
   pr10: {
     marginRight: 10,
   },
-
   btnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',

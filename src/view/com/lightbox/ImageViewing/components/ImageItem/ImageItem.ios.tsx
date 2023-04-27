@@ -127,11 +127,7 @@ const ImageItem = ({
         <TouchableWithoutFeedback
           onPress={doubleTapToZoomEnabled ? handleDoubleTap : undefined}
           onLongPress={onLongPressHandler}
-          delayLongPress={delayLongPress}
-          accessibilityLabel="Share or zoom into photo"
-          accessibilityHint="Performs additional actions on image inside viewer. Double tap to zoom or long press to share."
-          // TODO: Rework component API to support onAccessibilityAction
-        >
+          delayLongPress={delayLongPress}>
           <Animated.Image
             source={imageSrc}
             style={imageStylesWithOpacity}

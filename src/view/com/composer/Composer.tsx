@@ -190,8 +190,8 @@ export const ComposePost = observer(function ComposePost({
             onPress={hackfixOnClose}
             onAccessibilityEscape={hackfixOnClose}
             accessibilityRole="button"
-            accessibilityLabel="Close"
-            accessibilityHint="Closes composer">
+            accessibilityLabel="Cancel"
+            accessibilityHint="Closes post composer">
             <Text style={[pal.link, s.f18]}>Cancel</Text>
           </TouchableOpacity>
           <View style={s.flex1} />

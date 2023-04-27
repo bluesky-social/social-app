@@ -118,13 +118,10 @@ export const SearchScreen = withAuthRequired(
     }, [])
 
     return (
-      <TouchableWithoutFeedback
-        onPress={onPress}
-        accessible={true}
-        accessibilityRole="search">
+      <TouchableWithoutFeedback onPress={onPress} accessible={false}>
         <View style={[pal.view, styles.container]}>
           <HeaderWithInput
-            isInputFocused={isInputFocused}
+            isInputFocused={true}
             query={query}
             setIsInputFocused={setIsInputFocused}
             onChangeQuery={onChangeQuery}

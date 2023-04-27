@@ -89,7 +89,6 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               keyboardAppearance={theme.colorScheme}
               value={customUrl}
               onChangeText={setCustomUrl}
-              accessible={true}
               accessibilityLabel="Custom domain"
               // TODO: Simplify this wording further to be understandable by everyone
               accessibilityHint="Use your domain as your Bluesky client service provider"
@@ -98,10 +97,14 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               testID="customServerSelectBtn"
               style={[pal.borderDark, pal.text, styles.textInputBtn]}
               onPress={() => doSelect(customUrl)}
-              accessible={true}
               accessibilityRole="button"
-              accessibilityLabel="Select custom domain"
-              accessibilityHint={`Use ${customUrl} as your service provider`}>
+              accessibilityLabel={`Confirm service. ${
+                customUrl === ''
+                  ? 'Button disabled. Input custom domain to proceed.'
+                  : ''
+              }`}
+              // TODO - accessibility: Need to inform state change on failure
+              disabled={customUrl === ''}>
               <FontAwesomeIcon
                 icon="check"
                 style={[pal.text as FontAwesomeIconStyle, styles.checkIcon]}

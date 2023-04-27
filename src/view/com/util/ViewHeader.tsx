@@ -61,7 +61,6 @@ export const ViewHeader = observer(function ({
           onPress={canGoBack ? onPressBack : onPressMenu}
           hitSlop={BACK_HITSLOP}
           style={canGoBack ? styles.backBtn : styles.backBtnWide}
-          accessible={true}
           accessibilityRole="button"
           accessibilityLabel={canGoBack ? 'Go back' : 'Go to menu'}
           accessibilityHint={
@@ -179,9 +178,9 @@ const styles = StyleSheet.create({
     height: 30,
   },
   backBtnWide: {
-    width: 40,
+    width: 30,
     height: 30,
-    marginLeft: 6,
+    paddingHorizontal: 6,
   },
   backIcon: {
     marginTop: 6,

@@ -15,7 +15,6 @@ import {useAnalytics} from 'lib/analytics'
 const MENU_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 
 interface Props {
-  // TODO: Rely on accessible={true} and default RN focus behaviors
   isInputFocused: boolean
   query: string
   setIsInputFocused: (v: boolean) => void
@@ -55,11 +54,7 @@ export function HeaderWithInput({
         testID="viewHeaderBackOrMenuBtn"
         onPress={onPressMenu}
         hitSlop={MENU_HITSLOP}
-        style={styles.headerMenuBtn}
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel="Profile"
-        accessibilityHint="Navigates to profile">
+        style={styles.headerMenuBtn}>
         <UserAvatar size={30} avatar={store.me.avatar} />
       </TouchableOpacity>
       <View
@@ -85,17 +80,9 @@ export function HeaderWithInput({
           onBlur={() => setIsInputFocused(false)}
           onChangeText={onChangeQuery}
           onSubmitEditing={onSubmitQuery}
-          accessible={true}
-          accessibilityRole="search"
         />
         {query ? (
-          <TouchableOpacity
-            onPress={onPressClearQuery}
-            onAccessibilityEscape={onPressClearQuery}
-            accessible={true}
-            accessibilityRole="button"
-            accessibilityLabel="Clear search"
-            accessibilityHint="Resets search query">
+          <TouchableOpacity onPress={onPressClearQuery}>
             <FontAwesomeIcon
               icon="xmark"
               size={16}
@@ -106,13 +93,7 @@ export function HeaderWithInput({
       </View>
       {query || isInputFocused ? (
         <View style={styles.headerCancelBtn}>
-          <TouchableOpacity
-            onPress={onPressCancelSearchInner}
-            accessible={true}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel input search"
-            accessibilityHint="Reset search query string"
-            onAccessibilityEscape={onPressCancelSearchInner}>
+          <TouchableOpacity onPress={onPressCancelSearchInner}>
             <Text style={pal.text}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -129,9 +110,10 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   headerMenuBtn: {
-    width: 40,
+    width: 30,
     height: 30,
-    marginLeft: 6,
+    borderRadius: 30,
+    marginHorizontal: 6,
   },
   headerSearchContainer: {
     flex: 1,

@@ -633,6 +633,7 @@ const ProfileHeaderLoaded = observer(
       {!isDesktopWeb && !hideBackButton && (
 >>>>>>> 4521d020 (Latest update)
         <TouchableWithoutFeedback
+<<<<<<< HEAD
           testID="profileHeaderAviButton"
           onPress={onPressAvi}
           accessibilityRole="image"
@@ -649,6 +650,17 @@ const ProfileHeaderLoaded = observer(
               avatar={view.avatar}
               moderation={view.moderation.avatar}
             />
+=======
+          onPress={onPressBack}
+          hitSlop={BACK_HITSLOP}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          accessibilityHint="Navigates to the previous screen">
+          <View style={styles.backBtnWrapper}>
+            <BlurView style={styles.backBtn} blurType="dark">
+              <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
+            </BlurView>
+>>>>>>> 05b2dfe1 (Checkpoint)
           </View>
         </TouchableWithoutFeedback>
 <<<<<<< HEAD

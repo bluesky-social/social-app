@@ -112,7 +112,13 @@ function ImageViewing({
   }
 
   return (
-    <SafeAreaView style={styles.screen} onLayout={onLayout} edges={edges}>
+    <SafeAreaView
+      style={styles.screen}
+      onLayout={onLayout}
+      edges={edges}
+      // accessible={true}
+      aria-modal
+      accessibilityViewIsModal>
       <ModalsContainer />
       <View style={[styles.container, {opacity, backgroundColor}]}>
         <Animated.View style={[styles.header, {transform: headerTransform}]}>

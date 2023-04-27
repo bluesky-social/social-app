@@ -82,7 +82,6 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
             value={model.serviceUrl}
             editable
             onChange={onChangeServiceUrl}
-            accessible={true}
             accessibilityHint="Input hosting provider address"
             accessibilityLabel="Hosting provider address"
             accessibilityLabelledBy="addressProvider"
@@ -143,7 +142,6 @@ function Option({
       <TouchableWithoutFeedback
         onPress={onPress}
         testID={testID}
-        accessible={true}
         accessibilityRole="button"
         accessibilityLabel={label}
         accessibilityHint={`Sets hosting provider to ${label}`}>

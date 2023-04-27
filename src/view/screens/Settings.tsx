@@ -161,7 +161,9 @@ export const SettingsScreen = withAuthRequired(
             <Link
               href={`/profile/${store.me.handle}`}
               title="Your profile"
-              noFeedback>
+              noFeedback
+              accessible={true}
+              accessibilityLabel={`Sign out of ${store.me.handle}`}>
               <View style={[pal.view, styles.linkCard]}>
                 <View style={styles.avi}>
                   <UserAvatar size={40} avatar={store.me.avatar} />
@@ -177,10 +179,10 @@ export const SettingsScreen = withAuthRequired(
                 <TouchableOpacity
                   testID="signOutBtn"
                   onPress={isSwitching ? undefined : onPressSignout}
-                  accessible={true}
-                  accessibilityRole="button"
-                  accessibilityLabel="Sign out"
-                  accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}>
+                  // accessibilityRole="button"
+                  // accessibilityLabel="Sign out"
+                  // accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}
+                >
                   <Text type="lg" style={pal.link}>
                     Sign out
                   </Text>
@@ -196,9 +198,8 @@ export const SettingsScreen = withAuthRequired(
               onPress={
                 isSwitching ? undefined : () => onPressSwitchAccount(account)
               }
-              accessible={true}
               accessibilityRole="button"
-              accessibilityLabel="Switch"
+              accessibilityLabel={`Switch to ${account.handle}`}
               accessibilityHint="Switches the account you are logged in to">
               <View style={styles.avi}>
                 <UserAvatar size={40} avatar={account.aviUrl} />
@@ -327,10 +328,9 @@ export const SettingsScreen = withAuthRequired(
             testID="changeHandleBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressChangeHandle}
-            accessible={true}
             accessibilityRole="button"
-            accessibilityLabel="Cancel change handle"
-            accessibilityHint="Exits change handle process">
+            accessibilityLabel="Change handle"
+            accessibilityHint="Choose a new Bluesky username or create">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="at"

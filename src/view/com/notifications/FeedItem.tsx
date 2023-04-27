@@ -123,7 +123,8 @@ export const FeedItem = observer(function ({
         testID={`feedItem-by-${item.author.handle}`}
         href={itemHref}
         title={itemTitle}
-        noFeedback>
+        noFeedback
+        accessible={false}>
         <Post
           uri={item.uri}
           initView={item.additionalPost}
@@ -178,7 +179,8 @@ export const FeedItem = observer(function ({
       ]}
       href={itemHref}
       title={itemTitle}
-      noFeedback>
+      noFeedback
+      accessible={(item.isLike && authors.length === 1) || item.isRepost}>
       <View style={styles.layoutIcon}>
         {/* TODO: Prevent conditional rendering and move toward composable
         notifications for clearer accessibility labeling */}
@@ -194,20 +196,18 @@ export const FeedItem = observer(function ({
       </View>
       <View style={styles.layoutContent}>
         <Pressable
-          onPress={authors.length > 1 ? onToggleAuthorsExpanded : () => {}}
-          accessibilityRole="button"
-          accessibilityLabel="Show users"
-          accessibilityHint="Expands list of users for the given notification">
+          onPress={authors.length > 1 ? onToggleAuthorsExpanded : undefined}
+          accessible={false}>
           <CondensedAuthorsList
             visible={!isAuthorsExpanded}
             authors={authors}
             onToggleAuthorsExpanded={onToggleAuthorsExpanded}
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
-          <View style={styles.meta}>
+          <Text style={styles.meta}>
             <TextLink
               key={authors[0].href}
-              style={[pal.text, s.bold, styles.metaItem]}
+              style={[pal.text, s.bold]}
               href={authors[0].href}
               text={sanitizeDisplayName(
                 authors[0].displayName || authors[0].handle,
@@ -215,17 +215,15 @@ export const FeedItem = observer(function ({
             />
             {authors.length > 1 ? (
               <>
-                <Text style={[styles.metaItem, pal.text]}>and</Text>
-                <Text style={[styles.metaItem, pal.text, s.bold]}>
+                <Text style={[pal.text]}> and </Text>
+                <Text style={[pal.text, s.bold]}>
                   {authors.length - 1} {pluralize(authors.length - 1, 'other')}
                 </Text>
               </>
             ) : undefined}
-            <Text style={[styles.metaItem, pal.text]}>{action}</Text>
-            <Text style={[styles.metaItem, pal.textLight]}>
-              {ago(item.indexedAt)}
-            </Text>
-          </View>
+            <Text style={[pal.text]}> {action}</Text>
+            <Text style={[pal.textLight]}> {ago(item.indexedAt)}</Text>
+          </Text>
         </Pressable>
         {item.isLike || item.isRepost || item.isQuote ? (
           <AdditionalPostText additionalPost={item.additionalPost} />
@@ -284,27 +282,32 @@ function CondensedAuthorsList({
     )
   }
   return (
-    <View style={styles.avis}>
-      {authors.slice(0, MAX_AUTHORS).map(author => (
-        <View key={author.href} style={s.mr5}>
-          <UserAvatar
-            size={35}
-            avatar={author.avatar}
-            moderation={author.moderation.avatar}
-          />
-        </View>
-      ))}
-      {authors.length > MAX_AUTHORS ? (
-        <Text style={[styles.aviExtraCount, pal.textLight]}>
-          +{authors.length - MAX_AUTHORS}
-        </Text>
-      ) : undefined}
-      <FontAwesomeIcon
-        icon="angle-down"
-        size={18}
-        style={[styles.expandedAuthorsCloseBtnIcon, pal.textLight]}
-      />
-    </View>
+    <TouchableOpacity
+      accessibilityLabel="Show users"
+      accessibilityHint="Opens an expanded list of users in this notification"
+      onPress={onToggleAuthorsExpanded}>
+      <View style={styles.avis}>
+        {authors.slice(0, MAX_AUTHORS).map(author => (
+          <View key={author.href} style={s.mr5}>
+            <UserAvatar
+              size={35}
+              avatar={author.avatar}
+              moderation={author.moderation.avatar}
+            />
+          </View>
+        ))}
+        {authors.length > MAX_AUTHORS ? (
+          <Text style={[styles.aviExtraCount, pal.textLight]}>
+            +{authors.length - MAX_AUTHORS}
+          </Text>
+        ) : undefined}
+        <FontAwesomeIcon
+          icon="angle-down"
+          size={18}
+          style={[styles.expandedAuthorsCloseBtnIcon, pal.textLight]}
+        />
+      </View>
+    </TouchableOpacity>
   )
 }
 
@@ -433,9 +436,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingTop: 6,
     paddingBottom: 2,
-  },
-  metaItem: {
-    paddingRight: 3,
   },
   postText: {
     paddingBottom: 5,

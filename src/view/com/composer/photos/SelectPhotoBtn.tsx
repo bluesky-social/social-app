@@ -38,7 +38,6 @@ export function SelectPhotoBtn({gallery}: Props) {
       onPress={onPressSelectPhotos}
       style={styles.button}
       hitSlop={HITSLOP}
-      accessible={true}
       accessibilityRole="button"
       accessibilityLabel="Gallery"
       accessibilityHint="Opens device photo gallery">

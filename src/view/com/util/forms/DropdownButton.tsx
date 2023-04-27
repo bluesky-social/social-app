@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useRef} from 'react'
+import React, {PropsWithChildren, useMemo, useRef} from 'react'
 import {
   Dimensions,
   StyleProp,
@@ -107,6 +107,15 @@ export function DropdownButton({
     )
   }
 
+  const numItems = useMemo(
+    () =>
+      items.filter(item => {
+        if (item === undefined || item === false) return false
+        return isBtn(item)
+      }).length,
+    [],
+  )
+
   if (type === 'bare') {
     return (
       <TouchableOpacity
@@ -116,8 +125,7 @@ export function DropdownButton({
         hitSlop={HITSLOP}
         ref={ref1}
         accessibilityRole="button"
-        accessibilityLabel={label}
-        accessibilityHint={`Opens ${items.length} options`}>
+        accessibilityLabel={`Opens ${numItems} options`}>
         {children}
       </TouchableOpacity>
     )
@@ -299,8 +307,8 @@ const DropdownItems = ({
         // and <option /> elements for keyboard navigation out of the box
         // - (On mobile) be buttons by default, accept `label` and `nativeID`
         // props, and always have an explicit label
-        accessibilityLabel="Open dropdown"
-        accessibilityHint="Opens dropdown with options">
+        accessibilityRole="button"
+        accessibilityLabel="Toggle dropdown">
         <View style={[styles.bg]} />
       </TouchableWithoutFeedback>
       <View

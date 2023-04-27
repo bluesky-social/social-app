@@ -133,7 +133,6 @@ export function Button({
       style={[typeOuterStyle, styles.outer, style]}
       onPress={onPressWrapped}
       testID={testID}
-      accessible={true}
       accessibilityRole="button">
       {label ? (
         <Text type="button" style={[typeLabelStyle, labelStyle]}>

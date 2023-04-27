@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ComponentProps} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   Linking,
@@ -29,7 +29,7 @@ type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
   | GestureResponderEvent
 
-interface Props {
+interface Props extends ComponentProps<typeof TouchableOpacity> {
   testID?: string
   style?: StyleProp<ViewStyle>
   href?: string
@@ -47,6 +47,8 @@ export const Link = observer(function Link({
   children,
   noFeedback,
   asAnchor,
+  accessible,
+  ...props
 }: Props) {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
@@ -67,8 +69,9 @@ export const Link = observer(function Link({
         onPress={onPress}
         // @ts-ignore web only -prf
         href={asAnchor ? sanitizeUrl(href) : undefined}
-        accessible={true}
-        accessibilityRole="link">
+        accessible={accessible}
+        accessibilityRole="link"
+        {...props}>
         <View style={style}>
           {children ? children : <Text>{title || 'link'}</Text>}
         </View>
@@ -80,10 +83,11 @@ export const Link = observer(function Link({
       testID={testID}
       style={style}
       onPress={onPress}
-      accessible={true}
+      accessible={accessible}
       accessibilityRole="link"
       // @ts-ignore web only -prf
-      href={asAnchor ? sanitizeUrl(href) : undefined}>
+      href={asAnchor ? sanitizeUrl(href) : undefined}
+      {...props}>
       {children ? children : <Text>{title || 'link'}</Text>}
     </TouchableOpacity>
   )

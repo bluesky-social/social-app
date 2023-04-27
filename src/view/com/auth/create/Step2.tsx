@@ -41,7 +41,6 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
             value={model.inviteCode}
             editable
             onChange={model.setInviteCode}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Invite code"
             accessibilityHint="Input invite code to proceed"
@@ -54,7 +53,6 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
           Don't have an invite code?{' '}
           <TouchableWithoutFeedback
             onPress={onPressWaitlist}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Waitlist"
             accessibilityHint="Opens Bluesky waitlist form">
@@ -75,7 +73,6 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
               value={model.email}
               editable
               onChange={model.setEmail}
-              accessible={true}
               accessibilityLabel="Email"
               accessibilityHint="Input email for Bluesky waitlist"
               accessibilityLabelledBy="email"
@@ -97,7 +94,6 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
               editable
               secureTextEntry
               onChange={model.setPassword}
-              accessible={true}
               accessibilityLabel="Password"
               accessibilityHint="Set password"
               accessibilityLabelledBy="password"
@@ -115,7 +111,6 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
               testID="is13Input"
               style={[styles.toggleBtn, pal.border]}
               onPress={() => model.setIs13(!model.is13)}
-              accessible={true}
               accessibilityRole="checkbox"
               accessibilityLabel="Verify age"
               accessibilityHint="Verifies that I am at least 13 years of age"

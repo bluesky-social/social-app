@@ -75,7 +75,6 @@ export const CreateAccount = observer(
             <TouchableOpacity
               onPress={onPressBackInner}
               testID="backBtn"
-              accessible={true}
               accessibilityRole="button"
               accessibilityLabel="Go back"
               accessibilityHint="Navigates to the previous screen">
@@ -88,7 +87,6 @@ export const CreateAccount = observer(
               <TouchableOpacity
                 testID="nextBtn"
                 onPress={onPressNext}
-                accessible={true}
                 accessibilityRole="button"
                 accessibilityLabel="Go to next"
                 accessibilityHint="Navigates to the next screen">
@@ -104,7 +102,6 @@ export const CreateAccount = observer(
               <TouchableOpacity
                 testID="retryConnectBtn"
                 onPress={onPressRetryConnect}
-                accessible={true}
                 accessibilityRole="button"
                 accessibilityLabel="Retry"
                 accessibilityHint="Retries account creation"

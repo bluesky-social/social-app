@@ -24,7 +24,6 @@ export const Step3 = observer(({model}: {model: CreateAccountModel}) => {
           editable
           onChange={model.setHandle}
           // TODO: Add explicit text label
-          accessible={true}
           accessibilityLabel="User handle"
           accessibilityHint="Input your user handle"
         />

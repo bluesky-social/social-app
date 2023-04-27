@@ -1,7 +1,6 @@
 import React, {
   forwardRef,
   useCallback,
-  useEffect,
   useRef,
   useMemo,
   ComponentProps,
@@ -76,23 +75,6 @@ export const TextInput = forwardRef(
       focus: () => textInput.current?.focus(),
       blur: () => textInput.current?.blur(),
     }))
-
-    useEffect(() => {
-      // HACK
-      // wait a moment before focusing the input to resolve some layout bugs with the keyboard-avoiding-view
-      // -prf
-      let to: NodeJS.Timeout | undefined
-      if (textInput.current) {
-        to = setTimeout(() => {
-          textInput.current?.focus()
-        }, 250)
-      }
-      return () => {
-        if (to) {
-          clearTimeout(to)
-        }
-      }
-    }, [])
 
     const onChangeText = useCallback(
       async (newText: string) => {
@@ -215,6 +197,7 @@ export const TextInput = forwardRef(
           placeholder={placeholder}
           placeholderTextColor={pal.colors.textLight}
           keyboardAppearance={theme.colorScheme}
+          autoFocus={true}
           multiline
           style={[pal.text, styles.textInput, styles.textInputFormatting]}
           {...props}>
