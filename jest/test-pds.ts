@@ -106,7 +106,7 @@ export async function createServer(
 
   return {
     pdsUrl,
-    mocker: new Mocker(pdsUrl),
+    mocker: new Mocker(pds, pdsUrl),
     async close() {
       await pds.destroy()
       await plcServer.destroy()
@@ -118,7 +118,7 @@ class Mocker {
   agent: BskyAgent
   users: Record<string, TestUser> = {}
 
-  constructor(public service: string) {
+  constructor(public pds: PDS, public service: string) {
     this.agent = new BskyAgent({service})
   }
 
@@ -152,6 +152,9 @@ class Mocker {
       handle: name + '.test',
       password: 'hunter2',
     })
+    await agent.upsertProfile(() => ({
+      displayName: name,
+    }))
     this.users[name] = {
       did: res.data.did,
       email,
@@ -191,6 +194,125 @@ class Mocker {
     await this.follow('bob', 'carla')
     await this.follow('carla', 'alice')
     await this.follow('carla', 'bob')
+  }
+
+  async createPost(user: string, text: string) {
+    const agent = this.users[user]?.agent
+    if (!agent) {
+      throw new Error(`Not a user: ${user}`)
+    }
+    return await agent.post({
+      text,
+      createdAt: new Date().toISOString(),
+    })
+  }
+
+  async createQuotePost(
+    user: string,
+    text: string,
+    {uri, cid}: {uri: string; cid: string},
+  ) {
+    const agent = this.users[user]?.agent
+    if (!agent) {
+      throw new Error(`Not a user: ${user}`)
+    }
+    return await agent.post({
+      text,
+      embed: {$type: 'app.bsky.embed.record', record: {uri, cid}},
+      createdAt: new Date().toISOString(),
+    })
+  }
+
+  async createReply(
+    user: string,
+    text: string,
+    {uri, cid}: {uri: string; cid: string},
+  ) {
+    const agent = this.users[user]?.agent
+    if (!agent) {
+      throw new Error(`Not a user: ${user}`)
+    }
+    return await agent.post({
+      text,
+      reply: {root: {uri, cid}, parent: {uri, cid}},
+      createdAt: new Date().toISOString(),
+    })
+  }
+
+  async labelAccount(label: string, user: string) {
+    const did = this.users[user]?.did
+    if (!did) {
+      throw new Error(`Invalid user: ${user}`)
+    }
+    const ctx = this.pds.ctx
+    if (!ctx) {
+      throw new Error('Invalid PDS')
+    }
+
+    await ctx.db.db
+      .insertInto('label')
+      .values([
+        {
+          src: ctx.cfg.labelerDid,
+          uri: did,
+          cid: '',
+          val: label,
+          neg: 0,
+          cts: new Date().toISOString(),
+        },
+      ])
+      .execute()
+  }
+
+  async labelProfile(label: string, user: string) {
+    const agent = this.users[user]?.agent
+    const did = this.users[user]?.did
+    if (!did) {
+      throw new Error(`Invalid user: ${user}`)
+    }
+
+    const profile = await agent.app.bsky.actor.profile.get({
+      repo: user + '.test',
+      rkey: 'self',
+    })
+
+    const ctx = this.pds.ctx
+    if (!ctx) {
+      throw new Error('Invalid PDS')
+    }
+    await ctx.db.db
+      .insertInto('label')
+      .values([
+        {
+          src: ctx.cfg.labelerDid,
+          uri: profile.uri,
+          cid: profile.cid,
+          val: label,
+          neg: 0,
+          cts: new Date().toISOString(),
+        },
+      ])
+      .execute()
+  }
+
+  async labelPost(label: string, {uri, cid}: {uri: string; cid: string}) {
+    const ctx = this.pds.ctx
+    if (!ctx) {
+      throw new Error('Invalid PDS')
+    }
+    await ctx.db.db
+      .insertInto('label')
+      .values([
+        {
+          src: ctx.cfg.labelerDid,
+          uri,
+          cid,
+          val: label,
+          neg: 0,
+          cts: new Date().toISOString(),
+        },
+      ])
+      .execute()
   }
 }
 
