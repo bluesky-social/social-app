@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {AppBskyActorDefs, ComAtprotoLabelDefs} from '@atproto/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
@@ -13,24 +13,14 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 
 export function ProfileCard({
   testID,
-  handle,
-  displayName,
-  avatar,
-  description,
-  labels,
-  isFollowedBy,
+  profile,
   noBg,
   noBorder,
   followers,
   renderButton,
 }: {
   testID?: string
-  handle: string
-  displayName?: string
-  avatar?: string
-  description?: string
-  labels: ComAtprotoLabelDefs.Label[] | undefined
-  isFollowedBy?: boolean
+  profile: AppBskyActorDefs.ProfileViewBasic
   noBg?: boolean
   noBorder?: boolean
   followers?: AppBskyActorDefs.ProfileView[] | undefined
@@ -46,12 +36,12 @@ export function ProfileCard({
         noBorder && styles.outerNoBorder,
         !noBg && pal.view,
       ]}
-      href={`/profile/${handle}`}
-      title={handle}
+      href={`/profile/${profile.handle}`}
+      title={profile.handle}
       asAnchor>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <UserAvatar size={40} avatar={avatar} /* TODO moderation */ />
+          <UserAvatar size={40} avatar={profile.avatar} /* TODO moderation */ />
         </View>
         <View style={styles.layoutContent}>
           <Text
@@ -59,12 +49,12 @@ export function ProfileCard({
             style={[s.bold, pal.text]}
             numberOfLines={1}
             lineHeight={1.2}>
-            {sanitizeDisplayName(displayName || handle)}
+            {sanitizeDisplayName(profile.displayName || profile.handle)}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            @{handle}
+            @{profile.handle}
           </Text>
-          {isFollowedBy && (
+          {!!profile.viewer?.followedBy && (
             <View style={s.flexRow}>
               <View style={[s.mt5, pal.btn, styles.pill]}>
                 <Text type="xs" style={pal.text}>
@@ -78,10 +68,10 @@ export function ProfileCard({
           <View style={styles.layoutButton}>{renderButton()}</View>
         ) : undefined}
       </View>
-      {description ? (
+      {profile.description ? (
         <View style={styles.details}>
           <Text style={pal.text} numberOfLines={4}>
-            {description}
+            {profile.description}
           </Text>
         </View>
       ) : undefined}
@@ -110,43 +100,28 @@ export function ProfileCard({
 
 export const ProfileCardWithFollowBtn = observer(
   ({
-    did,
-    handle,
-    displayName,
-    avatar,
-    description,
-    labels,
-    isFollowedBy,
+    profile,
     noBg,
     noBorder,
     followers,
   }: {
-    did: string
-    handle: string
-    displayName?: string
-    avatar?: string
-    description?: string
-    labels: ComAtprotoLabelDefs.Label[] | undefined
-    isFollowedBy?: boolean
+    profile: AppBskyActorDefs.ProfileViewBasic
     noBg?: boolean
     noBorder?: boolean
     followers?: AppBskyActorDefs.ProfileView[] | undefined
   }) => {
     const store = useStores()
-    const isMe = store.me.handle === handle
+    const isMe = store.me.handle === profile.handle
 
     return (
       <ProfileCard
-        handle={handle}
-        displayName={displayName}
-        avatar={avatar}
-        description={description}
-        labels={labels}
-        isFollowedBy={isFollowedBy}
+        profile={profile}
         noBg={noBg}
         noBorder={noBorder}
         followers={followers}
-        renderButton={isMe ? undefined : () => <FollowButton did={did} />}
+        renderButton={
+          isMe ? undefined : () => <FollowButton did={profile.did} />
+        }
       />
     )
   },

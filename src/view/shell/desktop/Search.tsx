@@ -85,14 +85,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
           {autocompleteView.searchRes.length ? (
             <>
               {autocompleteView.searchRes.map((item, i) => (
-                <ProfileCard
-                  key={item.did}
-                  handle={item.handle}
-                  displayName={item.displayName}
-                  avatar={item.avatar}
-                  labels={item.labels}
-                  noBorder={i === 0}
-                />
+                <ProfileCard key={item.did} profile={item} noBorder={i === 0} />
               ))}
             </>
           ) : (

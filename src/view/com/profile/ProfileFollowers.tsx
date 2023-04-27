@@ -61,15 +61,7 @@ export const ProfileFollowers = observer(function ProfileFollowers({
   // loaded
   // =
   const renderItem = ({item}: {item: FollowerItem}) => (
-    <ProfileCardWithFollowBtn
-      key={item.did}
-      did={item.did}
-      handle={item.handle}
-      displayName={item.displayName}
-      avatar={item.avatar}
-      labels={item.labels}
-      isFollowedBy={!!item.viewer?.followedBy}
-    />
+    <ProfileCardWithFollowBtn key={item.did} profile={item} />
   )
   return (
     <FlatList
