@@ -15,7 +15,7 @@ export class ImageModel implements RNImage {
   width: number
   height: number
   size: number
-  altText?: string = undefined
+  altText = ''
   cropped?: RNImage = undefined
   compressed?: RNImage = undefined
   scaledWidth: number = POST_IMG_MAX.width
@@ -45,7 +45,7 @@ export class ImageModel implements RNImage {
 
   async setAltText() {
     try {
-      const altText = await openAltTextModal(this.rootStore)
+      const altText = await openAltTextModal(this.rootStore, this.altText)
 
       runInAction(() => {
         this.altText = altText
