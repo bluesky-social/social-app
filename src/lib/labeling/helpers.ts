@@ -2,7 +2,6 @@ import {
   AppBskyActorDefs,
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedRecord,
-  AppBskyFeedPost,
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
 } from '@atproto/api'
