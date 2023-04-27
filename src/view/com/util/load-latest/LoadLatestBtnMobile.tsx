@@ -24,7 +24,6 @@ export const LoadLatestBtn = observer(
         ]}
         onPress={onPress}
         hitSlop={HITSLOP}
-        accessible={true}
         accessibilityRole="button"
         accessibilityLabel={`Load new ${label}`}
         accessibilityHint={`Loads new ${label}`}>

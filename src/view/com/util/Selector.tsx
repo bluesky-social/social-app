@@ -100,7 +100,6 @@ export function Selector({
             testID={`selector-${i}`}
             key={item}
             onPress={() => onPressItem(i)}
-            accessible={true}
             accessibilityLabel={`Select ${item}`}
             accessibilityHint={`Select option ${i} of ${numItems}`}>
             <View style={styles.item} ref={itemRefs[i]}>

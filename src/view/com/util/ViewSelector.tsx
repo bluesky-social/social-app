@@ -133,7 +133,6 @@ export function Selector({
             testID={`selector-${i}`}
             key={item}
             onPress={() => onPressItem(i)}
-            accessible={true}
             accessibilityLabel={item}
             accessibilityHint={`Selects ${item}`}
             // TODO: Modify the component API such that lint fails

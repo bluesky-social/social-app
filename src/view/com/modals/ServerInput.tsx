@@ -64,7 +64,6 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
           <TouchableOpacity
             style={styles.btn}
             onPress={() => doSelect(PROD_SERVICE)}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Select Bluesky Social"
             accessibilityHint="Sets Bluesky Social as your service provider">

@@ -470,9 +470,15 @@ const ProfileHeaderLoaded = observer(
             <>
               <View style={styles.metricsLine}>
                 <TouchableOpacity
+<<<<<<< HEAD
                   testID="profileHeaderFollowersButton"
                   style={[s.flexRow, s.mr10]}
                   onPress={onPressFollowers}
+=======
+                  testID="unfollowBtn"
+                  onPress={onPressToggleFollow}
+                  style={[styles.btn, styles.mainBtn, pal.btn]}
+>>>>>>> a17654f0 (Wrap up)
                   accessibilityRole="button"
                   accessibilityLabel={`Show ${view.handle}'s followers`}
                   accessibilityHint={`Shows folks following ${view.handle}`}>
@@ -484,9 +490,15 @@ const ProfileHeaderLoaded = observer(
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+<<<<<<< HEAD
                   testID="profileHeaderFollowsButton"
                   style={[s.flexRow, s.mr10]}
                   onPress={onPressFollows}
+=======
+                  testID="followBtn"
+                  onPress={onPressToggleFollow}
+                  style={[styles.btn, styles.primaryBtn]}
+>>>>>>> a17654f0 (Wrap up)
                   accessibilityRole="button"
                   accessibilityLabel={`Show ${view.handle}'s follows`}
                   accessibilityHint={`Shows folks followed by ${view.handle}`}>
@@ -574,7 +586,6 @@ const ProfileHeaderLoaded = observer(
             testID="profileHeaderFollowersButton"
             style={[s.flexRow, s.mr10]}
             onPress={onPressFollowers}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel={`Show ${view.handle}'s followers`}
             accessibilityHint={`Shows folks following ${view.handle}`}>
@@ -589,7 +600,6 @@ const ProfileHeaderLoaded = observer(
             testID="profileHeaderFollowsButton"
             style={[s.flexRow, s.mr10]}
             onPress={onPressFollows}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel={`Show ${view.handle}'s follows`}
             accessibilityHint={`Shows folks followed by ${view.handle}`}>

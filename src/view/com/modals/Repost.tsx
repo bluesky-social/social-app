@@ -33,7 +33,6 @@ export function Component({
           testID="repostBtn"
           style={[styles.actionBtn]}
           onPress={onRepost}
-          accessible={true}
           accessibilityRole="button"
           accessibilityLabel={isReposted ? 'Undo repost' : 'Repost'}
           accessibilityHint={isReposted ? 'Remove repost' : 'Repost '}>
@@ -46,10 +45,9 @@ export function Component({
           testID="quoteBtn"
           style={[styles.actionBtn]}
           onPress={onQuote}
-          accessible={true}
           accessibilityRole="button"
           accessibilityLabel="Quote post"
-          accessibilityHint="Quote post">
+          accessibilityHint="">
           <FontAwesomeIcon icon="quote-left" size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
             Quote Post
@@ -59,10 +57,9 @@ export function Component({
       <TouchableOpacity
         testID="cancelBtn"
         onPress={onPress}
-        accessible={true}
         accessibilityRole="button"
         accessibilityLabel="Cancel quote post"
-        accessibilityHint="Exits quote post process"
+        accessibilityHint=""
         onAccessibilityEscape={onPress}>
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}

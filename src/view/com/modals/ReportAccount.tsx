@@ -111,7 +111,6 @@ export function Component({did}: {did: string}) {
           testID="sendReportBtn"
           style={s.mt10}
           onPress={onPress}
-          accessible={true}
           accessibilityRole="button"
           accessibilityLabel="Report account"
           accessibilityHint={`Reports account with reason ${issue}`}>

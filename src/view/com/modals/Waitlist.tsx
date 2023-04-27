@@ -104,7 +104,6 @@ export function Component({}: {}) {
           <>
             <TouchableOpacity
               onPress={onPressSignup}
-              accessible={true}
               accessibilityRole="button"
               accessibilityHint={`Confirms signing up ${email} to the waitlist`}>
               <LinearGradient
@@ -120,7 +119,6 @@ export function Component({}: {}) {
             <TouchableOpacity
               style={[styles.btn, s.mt10]}
               onPress={onCancel}
-              accessible={true}
               accessibilityRole="button"
               accessibilityLabel="Cancel waitlist signup"
               accessibilityHint={`Exits signing up for waitlist with ${email}`}

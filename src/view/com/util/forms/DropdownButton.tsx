@@ -110,10 +110,13 @@ export function DropdownButton({
   const numItems = useMemo(
     () =>
       items.filter(item => {
-        if (item === undefined || item === false) return false
+        if (item === undefined || item === false) {
+          return false
+        }
+
         return isBtn(item)
       }).length,
-    [],
+    [items],
   )
 
   if (type === 'bare') {
@@ -125,7 +128,8 @@ export function DropdownButton({
         hitSlop={HITSLOP}
         ref={ref1}
         accessibilityRole="button"
-        accessibilityLabel={`Opens ${numItems} options`}>
+        accessibilityLabel={`Opens ${numItems} options`}
+        accessibilityHint={`Opens ${numItems} options`}>
         {children}
       </TouchableOpacity>
     )
@@ -308,7 +312,8 @@ const DropdownItems = ({
         // - (On mobile) be buttons by default, accept `label` and `nativeID`
         // props, and always have an explicit label
         accessibilityRole="button"
-        accessibilityLabel="Toggle dropdown">
+        accessibilityLabel="Toggle dropdown"
+        accessibilityHint="">
         <View style={[styles.bg]} />
       </TouchableWithoutFeedback>
       <View

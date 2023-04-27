@@ -194,7 +194,6 @@ function Btn({
       onPress={onLongPress ? onPress : undefined}
       onPressIn={onLongPress ? undefined : onPress}
       onLongPress={onLongPress}
-      accessible={true}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}>
       {notificationCount ? (

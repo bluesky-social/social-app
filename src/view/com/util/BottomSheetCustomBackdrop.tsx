@@ -29,9 +29,8 @@ export function createCustomBackdrop(
     return (
       <TouchableWithoutFeedback
         onPress={onClose}
-        accessible={true}
         accessibilityLabel="Close bottom drawer"
-        accessibilityHint="Closes bottom drawer"
+        accessibilityHint=""
         onAccessibilityEscape={() => {
           if (onClose !== undefined) {
             onClose()

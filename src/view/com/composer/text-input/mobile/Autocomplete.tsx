@@ -51,7 +51,6 @@ export const Autocomplete = observer(
               key={item.handle}
               style={[pal.border, styles.item]}
               onPress={() => onSelect(item.handle)}
-              accessible={true}
               accessibilityLabel={`Select ${item.handle}`}
               accessibilityHint={`Autocompletes to ${item.handle}`}>
               <Text type="md-medium" style={pal.text}>

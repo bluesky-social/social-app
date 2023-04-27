@@ -121,7 +121,6 @@ function ComposeBtn() {
     <TouchableOpacity
       style={[styles.newPostBtn]}
       onPress={onPressCompose}
-      accessible={true}
       accessibilityRole="button"
       accessibilityLabel="New post"
       accessibilityHint="Opens post composer">

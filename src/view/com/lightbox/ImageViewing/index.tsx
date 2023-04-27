@@ -116,7 +116,6 @@ function ImageViewing({
       style={styles.screen}
       onLayout={onLayout}
       edges={edges}
-      // accessible={true}
       aria-modal
       accessibilityViewIsModal>
       <ModalsContainer />

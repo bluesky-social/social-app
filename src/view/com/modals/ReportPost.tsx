@@ -154,7 +154,6 @@ export function Component({
           testID="sendReportBtn"
           style={s.mt10}
           onPress={onPress}
-          accessible={true}
           accessibilityRole="button"
           accessibilityLabel="Report post"
           accessibilityHint={`Reports post with reason ${issue}`}>

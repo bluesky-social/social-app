@@ -87,7 +87,6 @@ export function Component({}: {}) {
                 <TouchableOpacity
                   style={styles.mt20}
                   onPress={onPressSendEmail}
-                  accessible={true}
                   accessibilityRole="button"
                   accessibilityLabel="Send email"
                   accessibilityHint="Sends email with confirmation code for account deletion">
@@ -107,10 +106,9 @@ export function Component({}: {}) {
                 <TouchableOpacity
                   style={[styles.btn, s.mt10]}
                   onPress={onCancel}
-                  accessible={true}
                   accessibilityRole="button"
                   accessibilityLabel="Cancel account deletion"
-                  accessibilityHint="Exits account deletion process"
+                  accessibilityHint=""
                   onAccessibilityEscape={onCancel}>
                   <Text type="button-lg" style={pal.textLight}>
                     Cancel
@@ -136,7 +134,6 @@ export function Component({}: {}) {
               keyboardAppearance={theme.colorScheme}
               value={confirmCode}
               onChangeText={setConfirmCode}
-              accessible={true}
               accessibilityLabelledBy="confirmationCode"
               accessibilityLabel="Confirmation code"
               accessibilityHint="Input confirmation code for account deletion"
@@ -170,10 +167,9 @@ export function Component({}: {}) {
                 <TouchableOpacity
                   style={[styles.btn, styles.evilBtn, styles.mt20]}
                   onPress={onPressConfirmDelete}
-                  accessible={true}
                   accessibilityRole="button"
                   accessibilityLabel="Confirm delete account"
-                  accessibilityHint="Confirm you want to delete your account">
+                  accessibilityHint="">
                   <Text type="button-lg" style={[s.white, s.bold]}>
                     Delete my account
                   </Text>
@@ -181,7 +177,6 @@ export function Component({}: {}) {
                 <TouchableOpacity
                   style={[styles.btn, s.mt10]}
                   onPress={onCancel}
-                  accessible={true}
                   accessibilityRole="button"
                   accessibilityLabel="Cancel account deletion"
                   accessibilityHint="Exits account deletion process"

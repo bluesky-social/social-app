@@ -205,7 +205,6 @@ export function Component({
               testID="editProfileSaveBtn"
               style={s.mt10}
               onPress={onPressSave}
-              accessible={true}
               accessibilityRole="button"
               accessibilityLabel="Save"
               accessibilityHint="Saves any changes to your profile">
@@ -222,10 +221,9 @@ export function Component({
             testID="editProfileCancelBtn"
             style={s.mt5}
             onPress={onPressCancel}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Cancel profile editing"
-            accessibilityHint="Exits profile editing process"
+            accessibilityHint=""
             onAccessibilityEscape={onPressCancel}>
             <View style={[styles.btn]}>
               <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>

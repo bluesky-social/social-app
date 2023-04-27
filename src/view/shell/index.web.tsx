@@ -47,7 +47,6 @@ const ShellInner = observer(() => {
         <TouchableOpacity
           onPress={() => store.shell.closeDrawer()}
           style={styles.drawerMask}
-          accessible={true}
           accessibilityLabel="Close navigation footer"
           accessibilityHint="Closes bottom navigation bar">
           <View style={styles.drawerContainer}>

@@ -47,7 +47,6 @@ export function Component({prevAltText, onAltTextSet}: Props) {
         multiline
         value={altText}
         onChangeText={text => setAltText(enforceLen(text, MAX_ALT_TEXT))}
-        accessible={true}
         accessibilityLabel="Image alt text"
         accessibilityHint="Sets image alt text for screenreaders"
         accessibilityLabelledBy="imageAltText"
@@ -56,7 +55,6 @@ export function Component({prevAltText, onAltTextSet}: Props) {
         <TouchableOpacity
           testID="altTextImageSaveBtn"
           onPress={onPressSave}
-          accessible={true}
           accessibilityLabel="Save alt text"
           accessibilityHint={`Saves alt text, which reads: ${altText}`}
           accessibilityRole="button">
@@ -73,7 +71,6 @@ export function Component({prevAltText, onAltTextSet}: Props) {
         <TouchableOpacity
           testID="altTextImageCancelBtn"
           onPress={onPressCancel}
-          accessible={true}
           accessibilityRole="button"
           accessibilityLabel="Cancel add image alt text"
           accessibilityHint="Exits adding alt text to image"

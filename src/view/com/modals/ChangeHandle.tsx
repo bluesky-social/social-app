@@ -135,7 +135,6 @@ export function Component({onChanged}: {onChanged: () => void}) {
         <View style={styles.titleLeft}>
           <TouchableOpacity
             onPress={onPressCancel}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Cancel change handle"
             accessibilityHint="Exits handle change process"
@@ -155,7 +154,6 @@ export function Component({onChanged}: {onChanged: () => void}) {
             <TouchableOpacity
               testID="retryConnectButton"
               onPress={onPressRetryConnect}
-              accessible={true}
               accessibilityRole="button"
               accessibilityLabel="Retry change handle"
               accessibilityHint={`Retries handle change to ${handle}`}>
@@ -166,7 +164,6 @@ export function Component({onChanged}: {onChanged: () => void}) {
           ) : canSave ? (
             <TouchableOpacity
               onPress={onPressSave}
-              accessible={true}
               accessibilityRole="button"
               accessibilityLabel="Save handle change"
               accessibilityHint={`Saves handle change to ${handle}`}>
@@ -273,7 +270,6 @@ function ProvidedHandleForm({
       </Text>
       <TouchableOpacity
         onPress={onToggleCustom}
-        accessible={true}
         accessibilityRole="button"
         accessibilityHint="Hosting provider"
         accessibilityLabel="Opens modal for using custom domain">

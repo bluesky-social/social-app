@@ -162,8 +162,8 @@ export const SettingsScreen = withAuthRequired(
               href={`/profile/${store.me.handle}`}
               title="Your profile"
               noFeedback
-              accessible={true}
-              accessibilityLabel={`Sign out of ${store.me.handle}`}>
+              accessibilityLabel={`Signed in as ${store.me.handle}`}
+              accessibilityHint="Double tap to sign out">
               <View style={[pal.view, styles.linkCard]}>
                 <View style={styles.avi}>
                   <UserAvatar size={40} avatar={store.me.avatar} />
@@ -179,10 +179,9 @@ export const SettingsScreen = withAuthRequired(
                 <TouchableOpacity
                   testID="signOutBtn"
                   onPress={isSwitching ? undefined : onPressSignout}
-                  // accessibilityRole="button"
-                  // accessibilityLabel="Sign out"
-                  // accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}
-                >
+                  accessibilityRole="button"
+                  accessibilityLabel="Sign out"
+                  accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}>
                   <Text type="lg" style={pal.link}>
                     Sign out
                   </Text>
@@ -219,7 +218,6 @@ export const SettingsScreen = withAuthRequired(
             testID="switchToNewAccountBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressAddAccount}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Add account"
             accessibilityHint="Create a new Bluesky account">
@@ -243,7 +241,6 @@ export const SettingsScreen = withAuthRequired(
             testID="inviteFriendBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressInviteCodes}
-            accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Invite"
             accessibilityHint="Opens invite code list">

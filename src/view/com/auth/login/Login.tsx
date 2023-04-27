@@ -197,7 +197,8 @@ const ChooseAccountForm = ({
           style={[pal.view, pal.border, styles.account]}
           onPress={() => onTryAccount(account)}
           accessibilityRole="button"
-          accessibilityLabel={`Sign in as ${account.handle}`}>
+          accessibilityLabel={`Sign in as ${account.handle}`}
+          accessibilityHint="Double tap to sign in">
           <View
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
             <View style={s.p10}>
@@ -224,7 +225,8 @@ const ChooseAccountForm = ({
         style={[pal.view, pal.border, styles.account, styles.accountLast]}
         onPress={() => onSelectAccount(undefined)}
         accessibilityRole="button"
-        accessibilityLabel="Login to account that is not listed">
+        accessibilityLabel="Login to account that is not listed"
+        accessibilityHint="">
         <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
           <Text style={[styles.accountText, styles.accountTextOther]}>
             <Text type="lg" style={pal.text}>
@@ -770,7 +772,7 @@ const SetNewPasswordForm = ({
               onChangeText={setPassword}
               editable={!isProcessing}
               accessible={true}
-              accessibilityLabel="New password"
+              accessibilityLabel="Password"
               accessibilityHint="Input new password"
             />
           </View>
