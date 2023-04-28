@@ -27,7 +27,7 @@ export const AppPasswords = withAuthRequired(
 
     useFocusEffect(
       React.useCallback(() => {
-        screen('Settings')
+        screen('AppPasswords')
         store.shell.setMinimalShellMode(false)
       }, [screen, store]),
     )

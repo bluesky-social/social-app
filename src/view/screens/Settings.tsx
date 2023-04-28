@@ -255,7 +255,7 @@ export const SettingsScreen = withAuthRequired(
           <View style={styles.spacer20} />
 
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Advanced
+            Moderation
           </Text>
           <TouchableOpacity
             testID="contentFilteringBtn"
@@ -271,6 +271,26 @@ export const SettingsScreen = withAuthRequired(
               Content moderation
             </Text>
           </TouchableOpacity>
+          <Link
+            testID="blockedAccountsBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            href="/settings/blocked-accounts">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="ban"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Blocked accounts
+            </Text>
+          </Link>
+
+          <View style={styles.spacer20} />
+
+          <Text type="xl-bold" style={[pal.text, styles.heading]}>
+            Advanced
+          </Text>
           <Link
             testID="appPasswordBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}

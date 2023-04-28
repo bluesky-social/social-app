@@ -20,6 +20,7 @@ export type CommonNavigatorParams = {
   CommunityGuidelines: undefined
   CopyrightPolicy: undefined
   AppPasswords: undefined
+  BlockedAccounts: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
