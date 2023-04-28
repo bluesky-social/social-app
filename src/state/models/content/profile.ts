@@ -1,5 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
+  AtUri,
   ComAtprotoLabelDefs,
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorProfile,
@@ -23,6 +24,8 @@ export class ProfileViewerModel {
   muted?: boolean
   following?: string
   followedBy?: string
+  blockedBy?: boolean
+  blocking?: boolean
 
   constructor() {
     makeAutoObservable(this)
@@ -182,6 +185,41 @@ export class ProfileModel {
   async unmuteAccount() {
     await this.rootStore.agent.unmute(this.did)
     this.viewer.muted = false
+    await this.refresh()
+  }
+
+  async blockAccount() {
+    await this.rootStore.agent.app.bsky.graph.block.create(
+      {
+        repo: this.rootStore.me.did,
+      },
+      {
+        subject: this.did,
+        createdAt: new Date().toISOString(),
+      },
+    )
+    this.viewer.blocking = true
+    await this.refresh()
+  }
+
+  async unblockAccount() {
+    const listRes = await this.rootStore.agent.app.bsky.graph.block.list({
+      repo: this.rootStore.me.did,
+    })
+    const blockRecord = listRes.records.find(
+      record => record.value.subject === this.did,
+    )
+    if (!blockRecord) {
+      throw new Error(
+        'Block not found. If this was unexpected, please report to the bluesky team.',
+      )
+    }
+    const {rkey} = new AtUri(blockRecord.uri)
+    await this.rootStore.agent.app.bsky.graph.block.delete({
+      repo: this.rootStore.me.did,
+      rkey,
+    })
+    this.viewer.blocking = false
     await this.refresh()
   }
 
