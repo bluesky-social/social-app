@@ -46,7 +46,8 @@ export function PostHider({
           </Text>
           <TouchableOpacity
             style={styles.showBtn}
-            onPress={() => setOverride(v => !v)}>
+            onPress={() => setOverride(v => !v)}
+            accessibilityRole="button">
             <Text type="md" style={pal.link}>
               {override ? 'Hide' : 'Show'} post
             </Text>
@@ -69,41 +70,9 @@ export function PostHider({
 
   // NOTE: any further label enforcement should occur in ContentContainer
   return (
-    <>
-      <View style={[styles.description, bg, pal.border]}>
-        <FontAwesomeIcon
-          icon={['far', 'eye-slash']}
-          style={[styles.icon, pal.text]}
-        />
-        <Text type="md" style={pal.textLight}>
-          Post from an account you muted.
-        </Text>
-        <TouchableOpacity
-          style={styles.showBtn}
-          onPress={() => setOverride(v => !v)}
-          accessibilityLabel={override ? 'Hide post' : 'Show post'}
-          accessibilityHint={
-            override
-              ? 'Re-hides post from muted account'
-              : 'Shows post from muted account'
-          }>
-          <Text type="md" style={pal.link}>
-            {override ? 'Hide' : 'Show'} post
-          </Text>
-        </TouchableOpacity>
-      </View>
-      {override && (
-        <View style={[styles.childrenContainer, pal.border, bg]}>
-          <Link
-            testID={testID}
-            style={addStyle(style, styles.child)}
-            href={href}
-            noFeedback>
-            {children}
-          </Link>
-        </View>
-      )}
-    </>
+    <Link testID={testID} style={style} href={href} noFeedback>
+      {children}
+    </Link>
   )
 }
 
