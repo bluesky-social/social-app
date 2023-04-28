@@ -15,6 +15,7 @@ import {
   getEmbedLabels,
   getEmbedMuted,
   getEmbedBlocking,
+  getEmbedBlockedBy,
   filterAccountLabels,
   filterProfileLabels,
   getPostModeration,
@@ -72,6 +73,10 @@ export class PostThreadItemModel {
       isBlocking:
         !!this.post.author.viewer?.blocking ||
         getEmbedBlocking(this.post.embed) ||
+        false,
+      isBlockedBy:
+        !!this.post.author.viewer?.blockedBy ||
+        getEmbedBlockedBy(this.post.embed) ||
         false,
     }
   }

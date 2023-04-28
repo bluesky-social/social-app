@@ -18,6 +18,7 @@ export interface PostLabelInfo {
   profileLabels: Label[]
   isMuted: boolean
   isBlocking: boolean
+  isBlockedBy: boolean
 }
 
 export interface ProfileLabelInfo {
@@ -25,6 +26,7 @@ export interface ProfileLabelInfo {
   profileLabels: Label[]
   isMuted: boolean
   isBlocking: boolean
+  isBlockedBy: boolean
 }
 
 export enum ModerationBehaviorCode {

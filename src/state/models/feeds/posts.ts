@@ -25,6 +25,7 @@ import {
   getEmbedLabels,
   getEmbedMuted,
   getEmbedBlocking,
+  getEmbedBlockedBy,
   getPostModeration,
   mergePostModerations,
   filterAccountLabels,
@@ -107,6 +108,10 @@ export class PostsFeedItemModel {
       isBlocking:
         !!this.post.author.viewer?.blocking ||
         getEmbedBlocking(this.post.embed) ||
+        false,
+      isBlockedBy:
+        !!this.post.author.viewer?.blockedBy ||
+        getEmbedBlockedBy(this.post.embed) ||
         false,
     }
   }

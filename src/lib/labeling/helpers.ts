@@ -84,6 +84,14 @@ export function getPostModeration(
       view: warn('Post from an account you blocked.'),
     }
   }
+  if (postInfo.isBlockedBy) {
+    return {
+      avatar,
+      list: hide('Post from an account that has blocked you.'),
+      thread: hide('Post from an account that has blocked you.'),
+      view: warn('Post from an account that has blocked you.'),
+    }
+  }
   if (accountPref.pref === 'hide') {
     return {
       avatar,
@@ -226,9 +234,10 @@ export function getProfileModeration(
   if (accountPref.pref === 'warn') {
     return {
       avatar,
-      list: profileInfo.isBlocking
-        ? hide('Blocked account')
-        : warn(accountPref.desc.warning),
+      list:
+        profileInfo.isBlocking || profileInfo.isBlockedBy
+          ? hide('Blocked account')
+          : warn(accountPref.desc.warning),
       view: warn(accountPref.desc.warning),
     }
   }
@@ -294,6 +303,19 @@ export function getEmbedBlocking(embed?: Embed): boolean {
     AppBskyEmbedRecord.isViewRecord(embed.record)
   ) {
     return !!embed.record.author.viewer?.blocking
+  }
+  return false
+}
+
+export function getEmbedBlockedBy(embed?: Embed): boolean {
+  if (!embed) {
+    return false
+  }
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyEmbedRecord.isViewRecord(embed.record)
+  ) {
+    return !!embed.record.author.viewer?.blockedBy
   }
   return false
 }

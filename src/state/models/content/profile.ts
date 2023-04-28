@@ -90,6 +90,7 @@ export class ProfileModel {
       profileLabels: filterProfileLabels(this.labels),
       isMuted: this.viewer?.muted || false,
       isBlocking: !!this.viewer?.blocking || false,
+      isBlockedBy: !!this.viewer?.blockedBy || false,
     }
   }
 
