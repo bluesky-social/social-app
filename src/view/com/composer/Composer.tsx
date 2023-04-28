@@ -190,11 +190,7 @@ export const ComposePost = observer(function ComposePost({
 
   const canPost = graphemeLength <= MAX_GRAPHEME_LENGTH
 
-  const selectTextInputPlaceholder = replyTo
-    ? 'Write your reply'
-    : gallery.isEmpty
-    ? 'Write a comment'
-    : "What's up?"
+  const selectTextInputPlaceholder = replyTo ? 'Write your reply' : "What's up?"
 
   const canSelectImages = gallery.size < 4
   const viewStyles = {
