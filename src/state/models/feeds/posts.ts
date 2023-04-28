@@ -26,6 +26,7 @@ import {
   getEmbedMuted,
   getEmbedBlocking,
   getPostModeration,
+  mergePostModerations,
   filterAccountLabels,
   filterProfileLabels,
 } from 'lib/labeling/helpers'
@@ -247,6 +248,10 @@ export class PostsFeedSliceModel {
       return this.items[1]
     }
     return this.items[0]
+  }
+
+  get moderation() {
+    return mergePostModerations(this.items.map(item => item.moderation))
   }
 
   containsUri(uri: string) {

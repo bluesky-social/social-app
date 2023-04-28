@@ -153,6 +153,29 @@ export function getPostModeration(
   }
 }
 
+export function mergePostModerations(
+  moderations: PostModeration[],
+): PostModeration {
+  const merged: PostModeration = {
+    avatar: {warn: false, blur: false},
+    list: show(),
+    thread: show(),
+    view: show(),
+  }
+  for (const mod of moderations) {
+    if (mod.list.behavior === ModerationBehaviorCode.Hide) {
+      merged.list = mod.list
+    }
+    if (mod.thread.behavior === ModerationBehaviorCode.Hide) {
+      merged.thread = mod.thread
+    }
+    if (mod.view.behavior === ModerationBehaviorCode.Hide) {
+      merged.view = mod.view
+    }
+  }
+  return merged
+}
+
 export function getProfileModeration(
   store: RootStoreModel,
   profileInfo: ProfileLabelInfo,
