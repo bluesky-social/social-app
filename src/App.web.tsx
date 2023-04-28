@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react'
 import 'lib/sentry' // must be relatively on top
-import {withSentry} from 'lib/sentry'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import * as view from './view/index'
@@ -46,4 +45,4 @@ const App = observer(() => {
   )
 })
 
-export default withSentry(App)
+export default App

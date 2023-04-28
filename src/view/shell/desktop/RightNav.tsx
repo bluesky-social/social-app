@@ -1,6 +1,6 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Button, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {DesktopSearch} from './Search'
@@ -58,6 +58,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
         </View>
       </View>
       <InviteCodes />
+      <Button title="Break the world" onPress={() => methodDoesNotExist()} />
       <View>
         <TouchableOpacity
           style={[styles.darkModeToggle]}
