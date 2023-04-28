@@ -17,12 +17,14 @@ export interface PostLabelInfo {
   accountLabels: Label[]
   profileLabels: Label[]
   isMuted: boolean
+  isBlocked: boolean
 }
 
 export interface ProfileLabelInfo {
   accountLabels: Label[]
   profileLabels: Label[]
   isMuted: boolean
+  isBlocked: boolean
 }
 
 export enum ModerationBehaviorCode {

@@ -23,6 +23,8 @@ import {updateDataOptimistically} from 'lib/async/revertible'
 import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
 import {
   getEmbedLabels,
+  getEmbedMuted,
+  getEmbedBlocking,
   getPostModeration,
   filterAccountLabels,
   filterProfileLabels,
@@ -97,7 +99,14 @@ export class PostsFeedItemModel {
       ),
       accountLabels: filterAccountLabels(this.post.author.labels),
       profileLabels: filterProfileLabels(this.post.author.labels),
-      isMuted: this.post.author.viewer?.muted || false,
+      isMuted:
+        this.post.author.viewer?.muted ||
+        getEmbedMuted(this.post.embed) ||
+        false,
+      isBlocked:
+        this.post.author.viewer?.blocking ||
+        getEmbedBlocking(this.post.embed) ||
+        false,
     }
   }
 

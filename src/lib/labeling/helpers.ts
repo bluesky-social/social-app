@@ -57,6 +57,7 @@ export function getPostModeration(
   let avatar = {
     warn: accountPref.pref === 'hide' || accountPref.pref === 'warn',
     blur:
+      postInfo.isBlocked ||
       accountPref.pref === 'hide' ||
       accountPref.pref === 'warn' ||
       profilePref.pref === 'hide' ||
@@ -146,19 +147,20 @@ export function getPostModeration(
 
 export function getProfileModeration(
   store: RootStoreModel,
-  profileLabels: ProfileLabelInfo,
+  profileInfo: ProfileLabelInfo,
 ): ProfileModeration {
   const accountPref = store.preferences.getLabelPreference(
-    profileLabels.accountLabels,
+    profileInfo.accountLabels,
   )
   const profilePref = store.preferences.getLabelPreference(
-    profileLabels.profileLabels,
+    profileInfo.profileLabels,
   )
 
   // avatar
   let avatar = {
     warn: accountPref.pref === 'hide' || accountPref.pref === 'warn',
     blur:
+      profileInfo.isBlocked ||
       accountPref.pref === 'hide' ||
       accountPref.pref === 'warn' ||
       profilePref.pref === 'hide' ||
@@ -220,6 +222,7 @@ export function getProfileViewBasicLabelInfo(
     accountLabels: filterAccountLabels(profile.labels),
     profileLabels: filterProfileLabels(profile.labels),
     isMuted: profile.viewer?.muted || false,
+    isBlocked: profile.viewer?.blocking || false,
   }
 }
 
@@ -234,6 +237,32 @@ export function getEmbedLabels(embed?: Embed): Label[] {
     return embed.record.labels || []
   }
   return []
+}
+
+export function getEmbedMuted(embed?: Embed): boolean {
+  if (!embed) {
+    return false
+  }
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyEmbedRecord.isViewRecord(embed.record)
+  ) {
+    return !!embed.record.author.viewer?.muted
+  }
+  return false
+}
+
+export function getEmbedBlocking(embed?: Embed): boolean {
+  if (!embed) {
+    return false
+  }
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyEmbedRecord.isViewRecord(embed.record)
+  ) {
+    return !!embed.record.author.viewer?.blocking
+  }
+  return false
 }
 
 export function filterAccountLabels(labels?: Label[]): Label[] {
