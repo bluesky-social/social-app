@@ -57,7 +57,7 @@ export function getPostModeration(
   let avatar = {
     warn: accountPref.pref === 'hide' || accountPref.pref === 'warn',
     blur:
-      postInfo.isBlocked ||
+      postInfo.isBlocking ||
       accountPref.pref === 'hide' ||
       accountPref.pref === 'warn' ||
       profilePref.pref === 'hide' ||
@@ -76,6 +76,14 @@ export function getPostModeration(
   }
 
   // hide cases
+  if (postInfo.isBlocking) {
+    return {
+      avatar,
+      list: hide('Post from an account you blocked.'),
+      thread: hide('Post from an account you blocked.'),
+      view: warn('Post from an account you blocked.'),
+    }
+  }
   if (accountPref.pref === 'hide') {
     return {
       avatar,
@@ -160,7 +168,7 @@ export function getProfileModeration(
   let avatar = {
     warn: accountPref.pref === 'hide' || accountPref.pref === 'warn',
     blur:
-      profileInfo.isBlocked ||
+      profileInfo.isBlocking ||
       accountPref.pref === 'hide' ||
       accountPref.pref === 'warn' ||
       profilePref.pref === 'hide' ||
@@ -195,7 +203,9 @@ export function getProfileModeration(
   if (accountPref.pref === 'warn') {
     return {
       avatar,
-      list: warn(accountPref.desc.warning),
+      list: profileInfo.isBlocking
+        ? hide('Blocked account')
+        : warn(accountPref.desc.warning),
       view: warn(accountPref.desc.warning),
     }
   }
@@ -210,7 +220,7 @@ export function getProfileModeration(
 
   return {
     avatar,
-    list: show(),
+    list: profileInfo.isBlocking ? hide('Blocked account') : show(),
     view: show(),
   }
 }
@@ -222,7 +232,7 @@ export function getProfileViewBasicLabelInfo(
     accountLabels: filterAccountLabels(profile.labels),
     profileLabels: filterProfileLabels(profile.labels),
     isMuted: profile.viewer?.muted || false,
-    isBlocked: profile.viewer?.blocking || false,
+    isBlocking: profile.viewer?.blocking || false,
   }
 }
 

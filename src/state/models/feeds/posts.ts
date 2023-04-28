@@ -103,7 +103,7 @@ export class PostsFeedItemModel {
         this.post.author.viewer?.muted ||
         getEmbedMuted(this.post.embed) ||
         false,
-      isBlocked:
+      isBlocking:
         this.post.author.viewer?.blocking ||
         getEmbedBlocking(this.post.embed) ||
         false,

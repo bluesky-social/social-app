@@ -89,7 +89,7 @@ export class ProfileModel {
       accountLabels: filterAccountLabels(this.labels),
       profileLabels: filterProfileLabels(this.labels),
       isMuted: this.viewer?.muted || false,
-      isBlocked: this.viewer?.blocking || false,
+      isBlocking: this.viewer?.blocking || false,
     }
   }
 
