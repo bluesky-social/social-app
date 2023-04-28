@@ -25,7 +25,7 @@ export class ProfileViewerModel {
   following?: string
   followedBy?: string
   blockedBy?: boolean
-  blocking?: boolean
+  blocking?: string
 
   constructor() {
     makeAutoObservable(this)
@@ -89,7 +89,7 @@ export class ProfileModel {
       accountLabels: filterAccountLabels(this.labels),
       profileLabels: filterProfileLabels(this.labels),
       isMuted: this.viewer?.muted || false,
-      isBlocking: this.viewer?.blocking || false,
+      isBlocking: !!this.viewer?.blocking || false,
     }
   }
 
@@ -190,7 +190,7 @@ export class ProfileModel {
   }
 
   async blockAccount() {
-    await this.rootStore.agent.app.bsky.graph.block.create(
+    const res = await this.rootStore.agent.app.bsky.graph.block.create(
       {
         repo: this.rootStore.me.did,
       },
@@ -199,28 +199,20 @@ export class ProfileModel {
         createdAt: new Date().toISOString(),
       },
     )
-    this.viewer.blocking = true
+    this.viewer.blocking = res.uri
     await this.refresh()
   }
 
   async unblockAccount() {
-    const listRes = await this.rootStore.agent.app.bsky.graph.block.list({
-      repo: this.rootStore.me.did,
-    })
-    const blockRecord = listRes.records.find(
-      record => record.value.subject === this.did,
-    )
-    if (!blockRecord) {
-      throw new Error(
-        'Block not found. If this was unexpected, please report to the bluesky team.',
-      )
+    if (!this.viewer.blocking) {
+      return
     }
-    const {rkey} = new AtUri(blockRecord.uri)
+    const {rkey} = new AtUri(this.viewer.blocking)
     await this.rootStore.agent.app.bsky.graph.block.delete({
       repo: this.rootStore.me.did,
       rkey,
     })
-    this.viewer.blocking = false
+    this.viewer.blocking = undefined
     await this.refresh()
   }
 

@@ -255,7 +255,7 @@ export function getProfileViewBasicLabelInfo(
     accountLabels: filterAccountLabels(profile.labels),
     profileLabels: filterProfileLabels(profile.labels),
     isMuted: profile.viewer?.muted || false,
-    isBlocking: profile.viewer?.blocking || false,
+    isBlocking: !!profile.viewer?.blocking || false,
   }
 }
 

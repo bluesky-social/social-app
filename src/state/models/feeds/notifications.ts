@@ -112,7 +112,7 @@ export class NotificationsFeedItemModel {
       ),
       isMuted: this.author.viewer?.muted || addedInfo?.isMuted || false,
       isBlocking:
-        this.author.viewer?.blocking || addedInfo?.isBlocking || false,
+        !!this.author.viewer?.blocking || addedInfo?.isBlocking || false,
     }
   }
 

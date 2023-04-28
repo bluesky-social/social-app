@@ -105,7 +105,7 @@ export class PostsFeedItemModel {
         getEmbedMuted(this.post.embed) ||
         false,
       isBlocking:
-        this.post.author.viewer?.blocking ||
+        !!this.post.author.viewer?.blocking ||
         getEmbedBlocking(this.post.embed) ||
         false,
     }
@@ -279,6 +279,8 @@ export class PostsFeedModel {
   isRefreshing = false
   hasNewLatest = false
   hasLoaded = false
+  isBlocking = false
+  isBlockedBy = false
   error = ''
   loadMoreError = ''
   params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams
@@ -567,6 +569,8 @@ export class PostsFeedModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
+    this.isBlocking = error instanceof GetAuthorFeed.BlockedActorError
+    this.isBlockedBy = error instanceof GetAuthorFeed.BlockedByActorError
     this.error = cleanError(error)
     this.loadMoreError = cleanError(loadMoreError)
     if (error) {
