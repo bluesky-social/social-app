@@ -88,6 +88,39 @@ export const ComposePost = observer(function ComposePost({
     autocompleteView.setup()
   }, [autocompleteView])
 
+  useEffect(() => {
+    // HACK
+    // wait a moment before focusing the input to resolve some layout bugs with the keyboard-avoiding-view
+    // -prf
+    let to: NodeJS.Timeout | undefined
+    if (textInput.current) {
+      to = setTimeout(() => {
+        textInput.current?.focus()
+      }, 250)
+    }
+    return () => {
+      if (to) {
+        clearTimeout(to)
+      }
+    }
+  }, [])
+
+  const onEscape = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    },
+    [onClose],
+  )
+
+  useEffect(() => {
+    if (isDesktopWeb) {
+      window.addEventListener('keydown', onEscape)
+      return () => window.removeEventListener('keydown', onEscape)
+    }
+  }, [onEscape])
+
   const onPressAddLinkCard = useCallback(
     (uri: string) => {
       setExtLink({uri, isLoading: true})
