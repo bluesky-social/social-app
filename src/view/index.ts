@@ -15,6 +15,7 @@ import {faArrowRotateLeft} from '@fortawesome/free-solid-svg-icons/faArrowRotate
 import {faArrowsRotate} from '@fortawesome/free-solid-svg-icons/faArrowsRotate'
 import {faAt} from '@fortawesome/free-solid-svg-icons/faAt'
 import {faBars} from '@fortawesome/free-solid-svg-icons/faBars'
+import {faBan} from '@fortawesome/free-solid-svg-icons/faBan'
 import {faBell} from '@fortawesome/free-solid-svg-icons/faBell'
 import {faBell as farBell} from '@fortawesome/free-regular-svg-icons/faBell'
 import {faBookmark} from '@fortawesome/free-solid-svg-icons/faBookmark'
@@ -90,6 +91,7 @@ export function setup() {
     faArrowRotateLeft,
     faArrowsRotate,
     faAt,
+    faBan,
     faBars,
     faBell,
     farBell,

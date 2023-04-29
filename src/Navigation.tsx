@@ -27,6 +27,8 @@ import {colors} from 'lib/styles'
 import {isNative} from 'platform/detection'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {router} from './routes'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from './state'
 
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
@@ -46,9 +48,8 @@ import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
 import {TermsOfServiceScreen} from './view/screens/TermsOfService'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from './state'
 import {AppPasswords} from 'view/screens/AppPasswords'
+import {BlockedAccounts} from 'view/screens/BlockedAccounts'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -88,6 +89,7 @@ function commonScreens(Stack: typeof HomeTab) {
       />
       <Stack.Screen name="CopyrightPolicy" component={CopyrightPolicyScreen} />
       <Stack.Screen name="AppPasswords" component={AppPasswords} />
+      <Stack.Screen name="BlockedAccounts" component={BlockedAccounts} />
     </>
   )
 }

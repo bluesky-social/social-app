@@ -7,6 +7,7 @@ import {Text} from '../util/text/Text'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {FeedItem} from './FeedItem'
 import {usePalette} from 'lib/hooks/usePalette'
+import {ModerationBehaviorCode} from 'lib/labeling/types'
 
 export function FeedSlice({
   slice,
@@ -17,6 +18,9 @@ export function FeedSlice({
   showFollowBtn?: boolean
   ignoreMuteFor?: string
 }) {
+  if (slice.moderation.list.behavior === ModerationBehaviorCode.Hide) {
+    return null
+  }
   if (slice.isThread && slice.items.length > 3) {
     const last = slice.items.length - 1
     return (

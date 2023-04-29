@@ -1,5 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
+  AtUri,
   ComAtprotoLabelDefs,
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorProfile,
@@ -23,6 +24,8 @@ export class ProfileViewerModel {
   muted?: boolean
   following?: string
   followedBy?: string
+  blockedBy?: boolean
+  blocking?: string
 
   constructor() {
     makeAutoObservable(this)
@@ -86,6 +89,8 @@ export class ProfileModel {
       accountLabels: filterAccountLabels(this.labels),
       profileLabels: filterProfileLabels(this.labels),
       isMuted: this.viewer?.muted || false,
+      isBlocking: !!this.viewer?.blocking || false,
+      isBlockedBy: !!this.viewer?.blockedBy || false,
     }
   }
 
@@ -182,6 +187,33 @@ export class ProfileModel {
   async unmuteAccount() {
     await this.rootStore.agent.unmute(this.did)
     this.viewer.muted = false
+    await this.refresh()
+  }
+
+  async blockAccount() {
+    const res = await this.rootStore.agent.app.bsky.graph.block.create(
+      {
+        repo: this.rootStore.me.did,
+      },
+      {
+        subject: this.did,
+        createdAt: new Date().toISOString(),
+      },
+    )
+    this.viewer.blocking = res.uri
+    await this.refresh()
+  }
+
+  async unblockAccount() {
+    if (!this.viewer.blocking) {
+      return
+    }
+    const {rkey} = new AtUri(this.viewer.blocking)
+    await this.rootStore.agent.app.bsky.graph.block.delete({
+      repo: this.rootStore.me.did,
+      rkey,
+    })
+    this.viewer.blocking = undefined
     await this.refresh()
   }
 

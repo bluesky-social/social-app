@@ -57,6 +57,7 @@ export function getPostModeration(
   let avatar = {
     warn: accountPref.pref === 'hide' || accountPref.pref === 'warn',
     blur:
+      postInfo.isBlocking ||
       accountPref.pref === 'hide' ||
       accountPref.pref === 'warn' ||
       profilePref.pref === 'hide' ||
@@ -75,6 +76,22 @@ export function getPostModeration(
   }
 
   // hide cases
+  if (postInfo.isBlocking) {
+    return {
+      avatar,
+      list: hide('Post from an account you blocked.'),
+      thread: hide('Post from an account you blocked.'),
+      view: warn('Post from an account you blocked.'),
+    }
+  }
+  if (postInfo.isBlockedBy) {
+    return {
+      avatar,
+      list: hide('Post from an account that has blocked you.'),
+      thread: hide('Post from an account that has blocked you.'),
+      view: warn('Post from an account that has blocked you.'),
+    }
+  }
   if (accountPref.pref === 'hide') {
     return {
       avatar,
@@ -144,21 +161,45 @@ export function getPostModeration(
   }
 }
 
+export function mergePostModerations(
+  moderations: PostModeration[],
+): PostModeration {
+  const merged: PostModeration = {
+    avatar: {warn: false, blur: false},
+    list: show(),
+    thread: show(),
+    view: show(),
+  }
+  for (const mod of moderations) {
+    if (mod.list.behavior === ModerationBehaviorCode.Hide) {
+      merged.list = mod.list
+    }
+    if (mod.thread.behavior === ModerationBehaviorCode.Hide) {
+      merged.thread = mod.thread
+    }
+    if (mod.view.behavior === ModerationBehaviorCode.Hide) {
+      merged.view = mod.view
+    }
+  }
+  return merged
+}
+
 export function getProfileModeration(
   store: RootStoreModel,
-  profileLabels: ProfileLabelInfo,
+  profileInfo: ProfileLabelInfo,
 ): ProfileModeration {
   const accountPref = store.preferences.getLabelPreference(
-    profileLabels.accountLabels,
+    profileInfo.accountLabels,
   )
   const profilePref = store.preferences.getLabelPreference(
-    profileLabels.profileLabels,
+    profileInfo.profileLabels,
   )
 
   // avatar
   let avatar = {
     warn: accountPref.pref === 'hide' || accountPref.pref === 'warn',
     blur:
+      profileInfo.isBlocking ||
       accountPref.pref === 'hide' ||
       accountPref.pref === 'warn' ||
       profilePref.pref === 'hide' ||
@@ -193,7 +234,10 @@ export function getProfileModeration(
   if (accountPref.pref === 'warn') {
     return {
       avatar,
-      list: warn(accountPref.desc.warning),
+      list:
+        profileInfo.isBlocking || profileInfo.isBlockedBy
+          ? hide('Blocked account')
+          : warn(accountPref.desc.warning),
       view: warn(accountPref.desc.warning),
     }
   }
@@ -208,7 +252,7 @@ export function getProfileModeration(
 
   return {
     avatar,
-    list: show(),
+    list: profileInfo.isBlocking ? hide('Blocked account') : show(),
     view: show(),
   }
 }
@@ -220,6 +264,7 @@ export function getProfileViewBasicLabelInfo(
     accountLabels: filterAccountLabels(profile.labels),
     profileLabels: filterProfileLabels(profile.labels),
     isMuted: profile.viewer?.muted || false,
+    isBlocking: !!profile.viewer?.blocking || false,
   }
 }
 
@@ -234,6 +279,45 @@ export function getEmbedLabels(embed?: Embed): Label[] {
     return embed.record.labels || []
   }
   return []
+}
+
+export function getEmbedMuted(embed?: Embed): boolean {
+  if (!embed) {
+    return false
+  }
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyEmbedRecord.isViewRecord(embed.record)
+  ) {
+    return !!embed.record.author.viewer?.muted
+  }
+  return false
+}
+
+export function getEmbedBlocking(embed?: Embed): boolean {
+  if (!embed) {
+    return false
+  }
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyEmbedRecord.isViewRecord(embed.record)
+  ) {
+    return !!embed.record.author.viewer?.blocking
+  }
+  return false
+}
+
+export function getEmbedBlockedBy(embed?: Embed): boolean {
+  if (!embed) {
+    return false
+  }
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyEmbedRecord.isViewRecord(embed.record)
+  ) {
+    return !!embed.record.author.viewer?.blockedBy
+  }
+  return false
 }
 
 export function filterAccountLabels(labels?: Label[]): Label[] {

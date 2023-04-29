@@ -23,7 +23,11 @@ import {updateDataOptimistically} from 'lib/async/revertible'
 import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
 import {
   getEmbedLabels,
+  getEmbedMuted,
+  getEmbedBlocking,
+  getEmbedBlockedBy,
   getPostModeration,
+  mergePostModerations,
   filterAccountLabels,
   filterProfileLabels,
 } from 'lib/labeling/helpers'
@@ -97,7 +101,18 @@ export class PostsFeedItemModel {
       ),
       accountLabels: filterAccountLabels(this.post.author.labels),
       profileLabels: filterProfileLabels(this.post.author.labels),
-      isMuted: this.post.author.viewer?.muted || false,
+      isMuted:
+        this.post.author.viewer?.muted ||
+        getEmbedMuted(this.post.embed) ||
+        false,
+      isBlocking:
+        !!this.post.author.viewer?.blocking ||
+        getEmbedBlocking(this.post.embed) ||
+        false,
+      isBlockedBy:
+        !!this.post.author.viewer?.blockedBy ||
+        getEmbedBlockedBy(this.post.embed) ||
+        false,
     }
   }
 
@@ -240,6 +255,10 @@ export class PostsFeedSliceModel {
     return this.items[0]
   }
 
+  get moderation() {
+    return mergePostModerations(this.items.map(item => item.moderation))
+  }
+
   containsUri(uri: string) {
     return !!this.items.find(item => item.post.uri === uri)
   }
@@ -265,6 +284,8 @@ export class PostsFeedModel {
   isRefreshing = false
   hasNewLatest = false
   hasLoaded = false
+  isBlocking = false
+  isBlockedBy = false
   error = ''
   loadMoreError = ''
   params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams
@@ -553,6 +574,8 @@ export class PostsFeedModel {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
+    this.isBlocking = error instanceof GetAuthorFeed.BlockedActorError
+    this.isBlockedBy = error instanceof GetAuthorFeed.BlockedByActorError
     this.error = cleanError(error)
     this.loadMoreError = cleanError(loadMoreError)
     if (error) {

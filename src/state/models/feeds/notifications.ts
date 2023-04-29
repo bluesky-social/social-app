@@ -111,6 +111,10 @@ export class NotificationsFeedItemModel {
         addedInfo?.profileLabels || [],
       ),
       isMuted: this.author.viewer?.muted || addedInfo?.isMuted || false,
+      isBlocking:
+        !!this.author.viewer?.blocking || addedInfo?.isBlocking || false,
+      isBlockedBy:
+        !!this.author.viewer?.blockedBy || addedInfo?.isBlockedBy || false,
     }
   }
 

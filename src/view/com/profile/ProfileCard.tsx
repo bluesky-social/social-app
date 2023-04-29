@@ -23,6 +23,7 @@ export const ProfileCard = observer(
     noBg,
     noBorder,
     followers,
+    overrideModeration,
     renderButton,
   }: {
     testID?: string
@@ -30,6 +31,7 @@ export const ProfileCard = observer(
     noBg?: boolean
     noBorder?: boolean
     followers?: AppBskyActorDefs.ProfileView[] | undefined
+    overrideModeration?: boolean
     renderButton?: () => JSX.Element
   }) => {
     const store = useStores()
@@ -40,7 +42,10 @@ export const ProfileCard = observer(
       getProfileViewBasicLabelInfo(profile),
     )
 
-    if (moderation.list.behavior === ModerationBehaviorCode.Hide) {
+    if (
+      moderation.list.behavior === ModerationBehaviorCode.Hide &&
+      !overrideModeration
+    ) {
       return null
     }
 

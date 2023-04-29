@@ -13,6 +13,9 @@ import {updateDataOptimistically} from 'lib/async/revertible'
 import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
 import {
   getEmbedLabels,
+  getEmbedMuted,
+  getEmbedBlocking,
+  getEmbedBlockedBy,
   filterAccountLabels,
   filterProfileLabels,
   getPostModeration,
@@ -30,7 +33,10 @@ export class PostThreadItemModel {
   // data
   post: AppBskyFeedDefs.PostView
   postRecord?: FeedPost.Record
-  parent?: PostThreadItemModel | AppBskyFeedDefs.NotFoundPost
+  parent?:
+    | PostThreadItemModel
+    | AppBskyFeedDefs.NotFoundPost
+    | AppBskyFeedDefs.BlockedPost
   replies?: (PostThreadItemModel | AppBskyFeedDefs.NotFoundPost)[]
   richText?: RichText
 
@@ -60,7 +66,18 @@ export class PostThreadItemModel {
       ),
       accountLabels: filterAccountLabels(this.post.author.labels),
       profileLabels: filterProfileLabels(this.post.author.labels),
-      isMuted: this.post.author.viewer?.muted || false,
+      isMuted:
+        this.post.author.viewer?.muted ||
+        getEmbedMuted(this.post.embed) ||
+        false,
+      isBlocking:
+        !!this.post.author.viewer?.blocking ||
+        getEmbedBlocking(this.post.embed) ||
+        false,
+      isBlockedBy:
+        !!this.post.author.viewer?.blockedBy ||
+        getEmbedBlockedBy(this.post.embed) ||
+        false,
     }
   }
 
@@ -113,6 +130,8 @@ export class PostThreadItemModel {
         }
         this.parent = parentModel
       } else if (AppBskyFeedDefs.isNotFoundPost(v.parent)) {
+        this.parent = v.parent
+      } else if (AppBskyFeedDefs.isBlockedPost(v.parent)) {
         this.parent = v.parent
       }
     }
@@ -218,6 +237,7 @@ export class PostThreadModel {
 
   // data
   thread?: PostThreadItemModel
+  isBlocked = false
 
   constructor(
     public rootStore: RootStoreModel,
@@ -377,11 +397,17 @@ export class PostThreadModel {
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
+      console.log(e)
       this._xIdle(e)
     }
   }
 
   _replaceAll(res: GetPostThread.Response) {
+    this.isBlocked = AppBskyFeedDefs.isBlockedPost(res.data.thread)
+    if (this.isBlocked) {
+      return
+    }
+    pruneReplies(res.data.thread)
     sortThread(res.data.thread)
     const thread = new PostThreadItemModel(
       this.rootStore,
@@ -399,7 +425,20 @@ export class PostThreadModel {
 type MaybePost =
   | AppBskyFeedDefs.ThreadViewPost
   | AppBskyFeedDefs.NotFoundPost
+  | AppBskyFeedDefs.BlockedPost
   | {[k: string]: unknown; $type: string}
+function pruneReplies(post: MaybePost) {
+  if (post.replies) {
+    post.replies = (post.replies as MaybePost[]).filter((reply: MaybePost) => {
+      if (reply.blocked) {
+        return false
+      }
+      pruneReplies(reply)
+      return true
+    })
+  }
+}
+
 function sortThread(post: MaybePost) {
   if (post.notFound) {
     return

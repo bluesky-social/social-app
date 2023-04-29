@@ -11,6 +11,7 @@ import {s, colors} from 'lib/styles'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
+import {isDesktopWeb} from 'platform/detection'
 
 export const snapPoints = [300]
 
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    paddingBottom: 60,
+    paddingBottom: isDesktopWeb ? 0 : 60,
   },
   title: {
     textAlign: 'center',

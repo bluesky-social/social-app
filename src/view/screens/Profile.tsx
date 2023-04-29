@@ -116,6 +116,24 @@ export const ProfileScreen = withAuthRequired(
         } else if (item === ProfileUiModel.LOADING_ITEM) {
           return <PostFeedLoadingPlaceholder />
         } else if (item._reactKey === '__error__') {
+          if (uiState.feed.isBlocking) {
+            return (
+              <EmptyState
+                icon="ban"
+                message="Posts hidden"
+                style={styles.emptyState}
+              />
+            )
+          }
+          if (uiState.feed.isBlockedBy) {
+            return (
+              <EmptyState
+                icon="ban"
+                message="Posts hidden"
+                style={styles.emptyState}
+              />
+            )
+          }
           return (
             <View style={s.p5}>
               <ErrorMessage
@@ -137,7 +155,12 @@ export const ProfileScreen = withAuthRequired(
         }
         return <View />
       },
-      [onPressTryAgain, uiState.profile.did],
+      [
+        onPressTryAgain,
+        uiState.profile.did,
+        uiState.feed.isBlocking,
+        uiState.feed.isBlockedBy,
+      ],
     )
 
     return (
