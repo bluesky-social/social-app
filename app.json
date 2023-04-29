@@ -3,7 +3,7 @@
     "name": "Bluesky",
     "slug": "bluesky",
     "owner": "blueskysocial",
-    "version": "1.24.0",
+    "version": "1.25.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -13,7 +13,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "buildNumber": "2",
+      "buildNumber": "1",
       "supportsTablet": false,
       "bundleIdentifier": "xyz.blueskyweb.app",
       "config": {
@@ -34,7 +34,7 @@
       "backgroundColor": "#ffffff"
     },
     "android": {
-      "versionCode": 9,
+      "versionCode": 10,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
