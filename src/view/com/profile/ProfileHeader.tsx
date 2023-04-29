@@ -228,7 +228,7 @@ const ProfileHeaderLoaded = observer(
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       let items: DropdownItem[] = [
         {
-          testID: 'profileHeaderDropdownSahreBtn',
+          testID: 'profileHeaderDropdownShareBtn',
           label: 'Share',
           onPress: onPressShare,
         },
@@ -245,7 +245,7 @@ const ProfileHeaderLoaded = observer(
           })
         }
         items.push({
-          testID: 'profileHeaderDropdownMuteBtn',
+          testID: 'profileHeaderDropdownBlockBtn',
           label: view.viewer.blocking ? 'Unblock Account' : 'Block Account',
           onPress: view.viewer.blocking
             ? onPressUnblockAccount

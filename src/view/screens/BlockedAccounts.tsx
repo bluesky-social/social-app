@@ -4,10 +4,8 @@ import {
   FlatList,
   RefreshControl,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {Text} from '../com/util/text/Text'
 import {useStores} from 'state/index'
