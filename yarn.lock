@@ -30,10 +30,10 @@
     tlds "^1.234.0"
     typed-emitter "^2.1.0"
 
-"@atproto/api@0.2.10":
-  version "0.2.10"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.2.10.tgz#19c4d695f88ab4e45e4c9f2f4db5fad61590a3d2"
-  integrity sha512-97UBtvIXhsgNO7bXhHk0JwDNwyqTcL1N0JT2rnXjUeLKNf2hDvomFtI50Y4RFU942uUS5W5VtM+JJuZO5Ryw5w==
+"@atproto/api@0.2.11":
+  version "0.2.11"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.2.11.tgz#53b70b0f4942b2e2dd5cb46433f133cde83917bf"
+  integrity sha512-5JY1Ii/81Bcy1ZTGRqALsaOdc8fIJTSlMNoSptpGH73uAPQE93weDrb8sc3KoxWi1G2ss3IIBSLPJWxALocJSQ==
   dependencies:
     "@atproto/common-web" "*"
     "@atproto/uri" "*"
@@ -122,10 +122,10 @@
   resolved "https://registry.yarnpkg.com/@atproto/nsid/-/nsid-0.0.1.tgz#0cdc00cefe8f0b1385f352b9f57b3ad37fff09a4"
   integrity sha512-t5M6/CzWBVYoBbIvfKDpqPj/+ZmyoK9ydZSStcTXosJ27XXwOPhz0VDUGKK2SM9G5Y7TPes8S5KTAU0UdVYFCw==
 
-"@atproto/pds@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.1.4.tgz#43379912e127d6d4f79a514e785dab9b54fd7810"
-  integrity sha512-vrFYL+2nNm/0fJyUIgFK9h9FRuEf4rHjU/LJV7/nBO+HA3hP3U/mTgvVxuuHHvcRsRL5AVpAJR0xWFUoYsFmmg==
+"@atproto/pds@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.1.5.tgz#59411497f2d85b6706ab793e8f7f618bdb8c51a3"
+  integrity sha512-QtTf2mbqO5MEsrXPTFU43dSb0WT3TzaLw5mL++9w18CZDMvdmv2uJXKeaSiU+u3WJEtRpRs5hoLSdfrJ2i3PuA==
   dependencies:
     "@atproto/api" "*"
     "@atproto/common" "*"
@@ -154,7 +154,7 @@
     nodemailer "^6.8.0"
     nodemailer-html-to-text "^3.2.0"
     p-queue "^6.6.2"
-    pg "^8.8.0"
+    pg "^8.10.0"
     pino "^8.6.1"
     pino-http "^8.2.1"
     sharp "^0.31.2"
@@ -13419,7 +13419,7 @@ pg-types@^2.1.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@^8.8.0, pg@^8.9.0:
+pg@^8.10.0, pg@^8.9.0:
   version "8.10.0"
   resolved "https://registry.yarnpkg.com/pg/-/pg-8.10.0.tgz#5b8379c9b4a36451d110fc8cd98fc325fe62ad24"
   integrity sha512-ke7o7qSTMb47iwzOSaZMfeR7xToFdkE71ifIipOAAaLIM0DYzfOAXlgFFmYUIE2BcJtvnVlGCID84ZzCegE8CQ==
