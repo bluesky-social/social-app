@@ -183,6 +183,7 @@ const ProfileHeaderLoaded = observer(
         onPressConfirm: async () => {
           try {
             await view.blockAccount()
+            onRefreshAll()
             Toast.show('Account blocked')
           } catch (e: any) {
             store.log.error('Failed to block account', e)
@@ -190,7 +191,7 @@ const ProfileHeaderLoaded = observer(
           }
         },
       })
-    }, [track, view, store])
+    }, [track, view, store, onRefreshAll])
 
     const onPressUnblockAccount = React.useCallback(async () => {
       track('ProfileHeader:UnblockAccountButtonClicked')
@@ -202,6 +203,7 @@ const ProfileHeaderLoaded = observer(
         onPressConfirm: async () => {
           try {
             await view.unblockAccount()
+            onRefreshAll()
             Toast.show('Account unblocked')
           } catch (e: any) {
             store.log.error('Failed to block unaccount', e)
@@ -209,7 +211,7 @@ const ProfileHeaderLoaded = observer(
           }
         },
       })
-    }, [track, view, store])
+    }, [track, view, store, onRefreshAll])
 
     const onPressReportAccount = React.useCallback(() => {
       track('ProfileHeader:ReportAccountButtonClicked')

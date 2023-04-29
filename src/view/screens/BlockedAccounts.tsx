@@ -1,12 +1,15 @@
 import React, {useMemo} from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {Alert} from 'view/com/util/Alert'
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {ScrollView} from 'react-native-gesture-handler'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {Text} from '../com/util/text/Text'
-import {Button} from '../com/util/forms/Button'
-import * as Toast from '../com/util/Toast'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
@@ -19,6 +22,7 @@ import {useAnalytics} from 'lib/analytics'
 import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
+import {ProfileCard} from 'view/com/profile/ProfileCard'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'BlockedAccounts'>
 export const BlockedAccounts = withAuthRequired(
@@ -35,9 +39,35 @@ export const BlockedAccounts = withAuthRequired(
       React.useCallback(() => {
         screen('BlockedAccounts')
         store.shell.setMinimalShellMode(false)
-      }, [screen, store]),
+        blockedAccounts.refresh()
+      }, [screen, store, blockedAccounts]),
     )
 
+    const onRefresh = React.useCallback(() => {
+      blockedAccounts.refresh()
+    }, [blockedAccounts])
+    const onEndReached = React.useCallback(() => {
+      blockedAccounts
+        .loadMore()
+        .catch(err =>
+          store.log.error('Failed to load more blocked accounts', err),
+        )
+    }, [blockedAccounts, store])
+
+    const renderItem = ({
+      item,
+      index,
+    }: {
+      item: ActorDefs.ProfileView
+      index: number
+    }) => (
+      <ProfileCard
+        testID={`blockedAccount-${index}`}
+        key={item.did}
+        profile={item}
+        overrideModeration
+      />
+    )
     return (
       <CenteredView
         style={[
@@ -59,13 +89,8 @@ export const BlockedAccounts = withAuthRequired(
           otherwise interact with you. You will not see their content and they
           will be prevented from seeing yours.
         </Text>
-        <ScrollView
-          style={[
-            styles.scrollContainer,
-            pal.border,
-            !isDesktopWeb && styles.flex1,
-          ]}>
-          {!blockedAccounts.hasContent ? (
+        {!blockedAccounts.hasContent ? (
+          <View style={[pal.border, !isDesktopWeb && styles.flex1]}>
             <View style={[styles.empty, pal.viewLight]}>
               <Text type="lg" style={[pal.text, styles.emptyText]}>
                 You have not blocked any accounts yet. To block an account, go
@@ -73,39 +98,37 @@ export const BlockedAccounts = withAuthRequired(
                 their account.
               </Text>
             </View>
-          ) : (
-            blockedAccounts.blocks.map((block, i) => (
-              <BlockedAccount
-                testID={`blockedAccount-${i}`}
-                key={block.did}
-                block={block}
+          </View>
+        ) : (
+          <FlatList
+            style={[!isDesktopWeb && styles.flex1]}
+            data={blockedAccounts.blocks}
+            keyExtractor={(item: ActorDefs.ProfileView) => item.did}
+            refreshControl={
+              <RefreshControl
+                refreshing={blockedAccounts.isRefreshing}
+                onRefresh={onRefresh}
+                tintColor={pal.colors.text}
+                titleColor={pal.colors.text}
               />
-            ))
-          )}
-        </ScrollView>
+            }
+            onEndReached={onEndReached}
+            renderItem={renderItem}
+            initialNumToRender={15}
+            ListFooterComponent={() => (
+              <View style={styles.footer}>
+                {blockedAccounts.isLoading && <ActivityIndicator />}
+              </View>
+            )}
+            extraData={blockedAccounts.isLoading}
+            // @ts-ignore our .web version only -prf
+            desktopFixedHeight
+          />
+        )}
       </CenteredView>
     )
   }),
 )
-
-function BlockedAccount({
-  testID,
-  block,
-}: {
-  testID: string
-  block: ActorDefs.ProfileView
-}) {
-  const pal = usePalette('default')
-  return (
-    <TouchableOpacity testID={testID} style={[styles.item, pal.border]}>
-      <Text type="md-bold" style={pal.text}>
-        {block.displayName}
-      </Text>
-      <View style={styles.flex1} />
-      <FontAwesomeIcon icon={['far', 'trash-can']} style={styles.trashIcon} />
-    </TouchableOpacity>
-  )
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -130,12 +153,6 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
 
-  scrollContainer: {
-    borderTopWidth: 1,
-    marginTop: 4,
-    marginBottom: 16,
-  },
-
   flex1: {
     flex: 1,
   },
@@ -150,14 +167,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-  },
-  pr10: {
-    marginRight: 10,
+  footer: {
+    height: 200,
+    paddingTop: 20,
   },
 })
