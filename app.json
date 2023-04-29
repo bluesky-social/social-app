@@ -45,7 +45,20 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "xyz.blueskyweb.app"
+      "package": "xyz.blueskyweb.app",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          // "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.bsky.app"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
