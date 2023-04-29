@@ -299,7 +299,9 @@ function navigate<K extends keyof AllNavigatorParams>(
 function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'NotificationsTab') {
   if (navigationRef.isReady()) {
     navigate(tabName)
-    navigationRef.dispatch(StackActions.popToTop())
+    if (navigationRef.canGoBack()) {
+      navigationRef.dispatch(StackActions.popToTop()) //we need to check .canGoBack() before calling it
+    }
   }
 }
 
