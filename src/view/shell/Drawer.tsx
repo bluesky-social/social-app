@@ -39,6 +39,7 @@ import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {isWeb} from 'platform/detection'
+import {formatCount} from 'view/com/util/numeric/format'
 
 export const DrawerContent = observer(() => {
   const theme = useTheme()
@@ -133,11 +134,11 @@ export const DrawerContent = observer(() => {
               type="xl"
               style={[pal.textLight, styles.profileCardFollowers]}>
               <Text type="xl-medium" style={pal.text}>
-                {store.me.followersCount || 0}
+                {formatCount(store.me.followersCount ?? 0)}
               </Text>{' '}
               {pluralize(store.me.followersCount || 0, 'follower')} &middot;{' '}
               <Text type="xl-medium" style={pal.text}>
-                {store.me.followsCount || 0}
+                {formatCount(store.me.followsCount ?? 0)}
               </Text>{' '}
               following
             </Text>

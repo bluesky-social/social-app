@@ -33,6 +33,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {isDesktopWeb} from 'platform/detection'
 import {FollowState} from 'state/models/cache/my-follows'
 import {shareUrl} from 'lib/sharing'
+import {formatCount} from '../util/numeric/format'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
@@ -364,7 +365,7 @@ const ProfileHeaderLoaded = observer(
                   style={[s.flexRow, s.mr10]}
                   onPress={onPressFollowers}>
                   <Text type="md" style={[s.bold, s.mr2, pal.text]}>
-                    {view.followersCount}
+                    {formatCount(view.followersCount)}
                   </Text>
                   <Text type="md" style={[pal.textLight]}>
                     {pluralize(view.followersCount, 'follower')}
@@ -375,7 +376,7 @@ const ProfileHeaderLoaded = observer(
                   style={[s.flexRow, s.mr10]}
                   onPress={onPressFollows}>
                   <Text type="md" style={[s.bold, s.mr2, pal.text]}>
-                    {view.followsCount}
+                    {formatCount(view.followsCount)}
                   </Text>
                   <Text type="md" style={[pal.textLight]}>
                     following
