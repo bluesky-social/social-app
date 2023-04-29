@@ -30,11 +30,11 @@ const ShellInner = observer(() => {
   )
 
   useEffect(() => {
-    if (isDesktopWeb) {
+    if (isDesktopWeb && store.shell.keyboardShortcuts) {
       window.addEventListener('keydown', openComposer)
       return () => window.removeEventListener('keydown', openComposer)
     }
-  }, [openComposer])
+  }, [openComposer, store.shell.keyboardShortcuts])
 
   return (
     <>

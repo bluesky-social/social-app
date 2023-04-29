@@ -4,12 +4,18 @@ import {makeAutoObservable} from 'mobx'
 import {ProfileModel} from '../content/profile'
 import {isObj, hasProp} from 'lib/type-guards'
 import {Image as RNImage} from 'react-native-image-crop-picker'
+import {KB_SHORTCUTS_KEY} from 'lib/constants'
+import {isDesktopWeb} from 'platform/detection'
 
 export interface ConfirmModal {
   name: 'confirm'
   title: string
   message: string | (() => JSX.Element)
   onPressConfirm: () => void | Promise<void>
+}
+
+export interface PreferencesModal {
+  name: 'preferences'
 }
 
 export interface EditProfileModal {
@@ -86,10 +92,11 @@ export interface ContentFilteringSettingsModal {
 
 export type Modal =
   // Account
+  | AddAppPasswordModal
   | ChangeHandleModal
   | DeleteAccountModal
   | EditProfileModal
-  | AddAppPasswordModal
+  | PreferencesModal
 
   // Curation
   | ContentFilteringSettingsModal
@@ -162,6 +169,9 @@ export interface ComposerOpts {
 export class ShellUiModel {
   darkMode = false
   minimalShellMode = false
+  keyboardShortcuts = isDesktopWeb
+    ? localStorage.getItem(KB_SHORTCUTS_KEY) === 'true'
+    : false
   isDrawerOpen = false
   isDrawerSwipeDisabled = false
   isModalActive = false
@@ -199,6 +209,11 @@ export class ShellUiModel {
 
   setMinimalShellMode(v: boolean) {
     this.minimalShellMode = v
+  }
+
+  setKeyboardShortcuts(v: boolean) {
+    this.keyboardShortcuts = v
+    localStorage.setItem(KB_SHORTCUTS_KEY, `${v}`)
   }
 
   /**

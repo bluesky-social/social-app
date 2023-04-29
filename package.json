@@ -59,6 +59,7 @@
     "@tiptap/pm": "^2.0.0-beta.220",
     "@tiptap/react": "^2.0.0-beta.220",
     "@tiptap/suggestion": "^2.0.0-beta.220",
+    "@types/node": "^18.16.2",
     "@zxing/text-encoding": "^0.9.0",
     "await-lock": "^2.2.2",
     "base64-js": "^1.5.1",

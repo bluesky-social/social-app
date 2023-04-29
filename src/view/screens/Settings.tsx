@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -16,6 +16,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {AntDesign} from '@expo/vector-icons'
 import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
@@ -34,7 +35,6 @@ import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {pluralize} from 'lib/strings/helpers'
 import {isDesktopWeb} from 'platform/detection'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
@@ -46,14 +46,6 @@ export const SettingsScreen = withAuthRequired(
     const {screen, track} = useAnalytics()
     const [isSwitching, setIsSwitching] = React.useState(false)
 
-    const primaryBg = useCustomPalette<ViewStyle>({
-      light: {backgroundColor: colors.blue0},
-      dark: {backgroundColor: colors.blue6},
-    })
-    const primaryText = useCustomPalette<TextStyle>({
-      light: {color: colors.blue3},
-      dark: {color: colors.blue2},
-    })
     const dangerBg = useCustomPalette<ViewStyle>({
       light: {backgroundColor: colors.red1},
       dark: {backgroundColor: colors.red7},
@@ -120,33 +112,32 @@ export const SettingsScreen = withAuthRequired(
       })
     }, [track, store, setIsSwitching])
 
-    const onPressInviteCodes = React.useCallback(() => {
-      track('Settings:InvitecodesButtonClicked')
-      store.shell.openModal({name: 'invite-codes'})
-    }, [track, store])
-
     const onPressContentFiltering = React.useCallback(() => {
       track('Settings:ContentfilteringButtonClicked')
       store.shell.openModal({name: 'content-filtering-settings'})
-    }, [track, store])
+    }, [track, store.shell])
 
     const onPressSignout = React.useCallback(() => {
       track('Settings:SignOutButtonClicked')
       store.session.logout()
-    }, [track, store])
+    }, [track, store.session])
+
+    const onPressChangeKeyboardSettings = useCallback(() => {
+      track('Settings:KeyboardSettingsButtonClicked')
+      store.shell.openModal({name: 'preferences'})
+    }, [track, store.shell])
 
     const onPressDeleteAccount = React.useCallback(() => {
       store.shell.openModal({name: 'delete-account'})
     }, [store])
 
     return (
-      <View style={s.hContentRegion} testID="settingsScreen">
+      <View style={[s.hContentRegion]} testID="settingsScreen">
         <ViewHeader title="Settings" />
         <ScrollView
-          style={s.hContentRegion}
+          style={[s.hContentRegion]}
           contentContainerStyle={!isDesktopWeb && pal.viewLight}
           scrollIndicatorInsets={{right: 1}}>
-          <View style={styles.spacer20} />
           <View style={[s.flexRow, styles.heading]}>
             <Text type="xl-bold" style={pal.text}>
               Signed in as
@@ -161,9 +152,7 @@ export const SettingsScreen = withAuthRequired(
             <Link
               href={`/profile/${store.me.handle}`}
               title="Your profile"
-              noFeedback
-              accessibilityLabel={`Signed in as ${store.me.handle}`}
-              accessibilityHint="Double tap to sign out">
+              noFeedback>
               <View style={[pal.view, styles.linkCard]}>
                 <View style={styles.avi}>
                   <UserAvatar size={40} avatar={store.me.avatar} />
@@ -233,38 +222,6 @@ export const SettingsScreen = withAuthRequired(
           </TouchableOpacity>
 
           <View style={styles.spacer20} />
-
-          <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Invite a friend
-          </Text>
-          <TouchableOpacity
-            testID="inviteFriendBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressInviteCodes}
-            accessibilityRole="button"
-            accessibilityLabel="Invite"
-            accessibilityHint="Opens invite code list">
-            <View
-              style={[
-                styles.iconContainer,
-                store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
-              ]}>
-              <FontAwesomeIcon
-                icon="ticket"
-                style={
-                  (store.me.invitesAvailable > 0
-                    ? primaryText
-                    : pal.text) as FontAwesomeIconStyle
-                }
-              />
-            </View>
-            <Text
-              type="lg"
-              style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
-              {store.me.invitesAvailable} invite{' '}
-              {pluralize(store.me.invitesAvailable, 'code')} available
-            </Text>
-          </TouchableOpacity>
 
           <View style={styles.spacer20} />
 
@@ -339,6 +296,23 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
 
+          {isDesktopWeb ? (
+            <TouchableOpacity
+              testID="changeKeyboardSettingsBtn"
+              style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+              onPress={isSwitching ? undefined : onPressChangeKeyboardSettings}
+              accessibilityRole="button"
+              accessibilityLabel="Preferences"
+              accessibilityHint="Configure preferences like keyboard shortcuts">
+              <View style={[styles.iconContainer, pal.btn]}>
+                <AntDesign name="profile" size={18} color={pal.text.color} />
+              </View>
+              <Text type="lg" style={pal.text}>
+                Preferences
+              </Text>
+            </TouchableOpacity>
+          ) : null}
+
           <View style={styles.spacer20} />
 
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
@@ -355,7 +329,7 @@ export const SettingsScreen = withAuthRequired(
               <FontAwesomeIcon
                 icon={['far', 'trash-can']}
                 style={dangerText as FontAwesomeIconStyle}
-                size={21}
+                size={18}
               />
             </View>
             <Text type="lg" style={dangerText}>
@@ -418,9 +392,6 @@ const styles = StyleSheet.create({
   dimmed: {
     opacity: 0.5,
   },
-  spacer20: {
-    height: 20,
-  },
   heading: {
     paddingHorizontal: 18,
     paddingBottom: 6,
@@ -460,5 +431,8 @@ const styles = StyleSheet.create({
   buildInfo: {
     paddingVertical: 8,
     paddingHorizontal: 18,
+  },
+  spacer20: {
+    height: 20,
   },
 })
