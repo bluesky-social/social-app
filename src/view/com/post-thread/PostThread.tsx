@@ -208,7 +208,7 @@ export const PostThread = observer(function PostThread({
             Post hidden
           </Text>
           <Text type="md" style={[pal.text, s.mb10]}>
-            You have been blocked by the author.
+            You have blocked the author or you have been blocked by the author.
           </Text>
           <TouchableOpacity onPress={onPressBack}>
             <Text type="2xl" style={pal.link}>
