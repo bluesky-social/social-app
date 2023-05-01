@@ -1,10 +1,12 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {
   StyleSheet,
   StyleProp,
   View,
   ViewStyle,
   Image as RNImage,
+  Pressable,
+  Text,
 } from 'react-native'
 import {
   AppBskyEmbedImages,
@@ -14,7 +16,6 @@ import {
   AppBskyFeedPost,
 } from '@atproto/api'
 import {Link} from '../Link'
-import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ImagesLightbox} from 'state/models/ui/shell'
 import {useStores} from 'state/index'
@@ -24,6 +25,7 @@ import {YoutubeEmbed} from './YoutubeEmbed'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import QuoteEmbed from './QuoteEmbed'
+import {AutoSizedImage} from '../images/AutoSizedImage'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -41,6 +43,16 @@ export function PostEmbeds({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+
+  const onPressAltText = useCallback(
+    (alt: string) => {
+      store.shell.openModal({
+        name: 'alt-text-image-read',
+        altText: alt,
+      })
+    },
+    [store.shell],
+  )
 
   if (
     AppBskyEmbedRecordWithMedia.isView(embed) &&
@@ -88,7 +100,9 @@ export function PostEmbeds({
   }
 
   if (AppBskyEmbedImages.isView(embed)) {
-    if (embed.images.length > 0) {
+    const {images} = embed
+
+    if (images.length > 0) {
       const uris = embed.images.map(img => img.fullsize)
       const openLightbox = (index: number) => {
         store.shell.openLightbox(new ImagesLightbox(uris, index))
@@ -107,32 +121,42 @@ export function PostEmbeds({
         })
       }
 
-      switch (embed.images.length) {
-        case 1:
-          return (
-            <View style={[styles.imagesContainer, style]}>
-              <AutoSizedImage
-                alt={embed.images[0].alt}
-                uri={embed.images[0].thumb}
-                onPress={() => openLightbox(0)}
-                onLongPress={() => onLongPress(0)}
-                onPressIn={() => onPressIn(0)}
-                style={styles.singleImage}
-              />
-            </View>
-          )
-        default:
-          return (
-            <View style={[styles.imagesContainer, style]}>
-              <ImageLayoutGrid
-                images={embed.images}
-                onPress={openLightbox}
-                onLongPress={onLongPress}
-                onPressIn={onPressIn}
-              />
-            </View>
-          )
+      if (images.length === 1) {
+        const {alt, thumb} = images[0]
+        return (
+          <View style={[styles.imagesContainer, style]}>
+            <AutoSizedImage
+              alt={alt}
+              uri={thumb}
+              onPress={() => openLightbox(0)}
+              onLongPress={() => onLongPress(0)}
+              onPressIn={() => onPressIn(0)}
+              style={styles.singleImage}>
+              {alt === '' ? null : (
+                <Pressable
+                  onPress={() => {
+                    onPressAltText(alt)
+                  }}>
+                  <Text style={styles.alt}>ALT</Text>
+                </Pressable>
+              )}
+            </AutoSizedImage>
+          </View>
+        )
       }
+
+      return (
+        <View style={[styles.imagesContainer, style]}>
+          <ImageLayoutGrid
+            images={embed.images}
+            onPress={openLightbox}
+            onLongPress={onLongPress}
+            onPressIn={onPressIn}
+            style={embed.images.length === 1 ? styles.singleImage : undefined}
+          />
+        </View>
+      )
+      // }
     }
   }
 
@@ -171,5 +195,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     marginTop: 4,
+  },
+  alt: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderRadius: 6,
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    position: 'absolute',
+    left: 10,
+    top: -26,
+    width: 46,
   },
 })

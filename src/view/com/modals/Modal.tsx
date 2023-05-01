@@ -13,6 +13,7 @@ import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
 import * as RepostModal from './Repost'
 import * as AltImageModal from './AltImage'
+import * as AltImageReadModal from './AltImageRead'
 import * as ReportAccountModal from './ReportAccount'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
@@ -74,6 +75,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'alt-text-image') {
     snapPoints = AltImageModal.snapPoints
     element = <AltImageModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'alt-text-image-read') {
+    snapPoints = AltImageReadModal.snapPoints
+    element = <AltImageReadModal.Component {...activeModal} />
   } else if (activeModal?.name === 'change-handle') {
     snapPoints = ChangeHandleModal.snapPoints
     element = <ChangeHandleModal.Component {...activeModal} />
