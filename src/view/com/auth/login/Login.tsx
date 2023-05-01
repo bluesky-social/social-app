@@ -417,6 +417,11 @@ const LoginForm = ({
             autoCorrect={false}
             keyboardAppearance={theme.colorScheme}
             secureTextEntry
+            // HACK
+            // mitigates a known issue where the secure password prompt interferes
+            // https://github.com/facebook/react-native/issues/21911
+            // prf
+            textContentType="oneTimeCode"
             value={password}
             onChangeText={setPassword}
             editable={!isProcessing}
