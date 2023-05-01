@@ -649,8 +649,9 @@ const SetNewPasswordForm = ({
 
     try {
       const agent = new BskyAgent({service: serviceUrl})
+      const token = resetCode.replace(/\s/g, '')
       await agent.com.atproto.server.resetPassword({
-        token: resetCode,
+        token,
         password,
       })
       onPasswordSet()
