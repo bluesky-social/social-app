@@ -98,8 +98,13 @@
         color: #0085ff;
         cursor: pointer;
       }
+      /* OLLIE: TODO -- this is not accessible */
+      /* Remove focus state on inputs */
       .ProseMirror-focused {
-        outline-width: 0px;
+        outline: 0;
+      }
+      input:focus {
+        outline: 0;
       }
       .tippy-content .items {
         border-radius: 6px;
