@@ -61,7 +61,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
 const styles = StyleSheet.create({
   alt: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    borderRadius: 5,
+    borderRadius: 6,
     color: 'white',
     fontSize: 12,
     fontWeight: 'bold',
