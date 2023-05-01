@@ -26,7 +26,11 @@
         ],
         "BGTaskSchedulerPermittedIdentifiers": [
           "com.transistorsoft.fetch"
-        ]
+        ],
+        "NSCameraUsageDescription": "Used for profile pictures, posts, and other kinds of content.",
+        "NSMicrophoneUsageDescription": "Used for posts and other kinds of content.",
+        "NSPhotoLibraryAddUsageDescription": "Used to save images to your library.",
+        "NSPhotoLibraryUsageDescription": "Used for profile pictures, posts, and other kinds of content"
       }
     },
     "androidStatusBar": {
