@@ -46,6 +46,7 @@
     "@segment/analytics-react": "^1.0.0-rc1",
     "@segment/analytics-react-native": "^2.10.1",
     "@segment/sovran-react-native": "^0.4.5",
+    "@sentry/react-native": "4.13.0",
     "@tiptap/core": "^2.0.0-beta.220",
     "@tiptap/extension-document": "^2.0.0-beta.220",
     "@tiptap/extension-history": "^2.0.3",
@@ -62,9 +63,12 @@
     "base64-js": "^1.5.1",
     "email-validator": "^2.0.4",
     "expo": "~48.0.15",
+    "expo-application": "~5.1.1",
     "expo-build-properties": "~0.5.1",
     "expo-camera": "~13.2.1",
+    "expo-constants": "~14.2.1",
     "expo-dev-client": "~2.1.1",
+    "expo-device": "~5.2.1",
     "expo-image": "^1.2.1",
     "expo-image-picker": "~14.1.1",
     "expo-localization": "~14.1.1",
@@ -125,6 +129,7 @@
     "react-native-web-linear-gradient": "^1.1.2",
     "react-responsive": "^9.0.2",
     "rn-fetch-blob": "^0.12.0",
+    "sentry-expo": "~6.1.0",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
     "zod": "^3.20.2"
@@ -197,7 +202,7 @@
       "node"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",

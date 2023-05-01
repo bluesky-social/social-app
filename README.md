@@ -55,3 +55,27 @@ To open the [Developer Menu](https://docs.expo.dev/debugging/tools/#developer-me
 `./platform/polyfills.*.ts` adds polyfills to the environment. Currently this includes:
 
 - TextEncoder / TextDecoder
+
+
+### Sentry sourcemaps
+Sourcemaps should automatically be updated when a signed build is created using `eas build` and published using `eas submit` due to the postPublish hook setup in `app.json`. However, if an update is created and published OTA using `eas update`, we need to the take the following steps to upload sourcemaps to Sentry:
+- Run eas update. This will generate a dist folder in your project root, which contains your JavaScript bundles and source maps. This command will also output the 'Android update ID' and 'iOS update ID' that we'll need in the next step.
+- Copy or rename the bundle names in the `dist/bundles` folder to match `index.android.bundle` (Android) or `main.jsbundle` (iOS).
+- Next, you can use the Sentry CLI to upload your bundles and source maps:
+  - release name should be set to `${bundleIdentifier}@${version}+${buildNumber}` (iOS) or `${androidPackage}@${version}+${versionCode}` (Android), so for example `com.domain.myapp@1.0.0+1`.
+  - `dist` should be set to the Update ID that `eas update` generated.
+- Command for Android: 
+`node_modules/@sentry/cli/bin/sentry-cli releases \
+    files <release name> \
+    upload-sourcemaps \
+    --dist <Android Update ID> \
+    --rewrite \
+    dist/bundles/index.android.bundle dist/bundles/android-<hash>.map`
+- Command for iOS:
+ `node_modules/@sentry/cli/bin/sentry-cli releases \
+    files <release name> \
+    upload-sourcemaps \
+    --dist <iOS Update ID> \
+    --rewrite \
+    dist/bundles/main.jsbundle dist/bundles/ios-<hash>.map`
+

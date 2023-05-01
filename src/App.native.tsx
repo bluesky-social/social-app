@@ -1,5 +1,7 @@
 import 'react-native-url-polyfill/auto'
 import React, {useState, useEffect} from 'react'
+import 'lib/sentry' // must be relatively on top
+import {withSentry} from 'lib/sentry'
 import {Linking} from 'react-native'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import * as SplashScreen from 'expo-splash-screen'
@@ -64,4 +66,4 @@ const App = observer(() => {
   )
 })
 
-export default App
+export default withSentry(App)
