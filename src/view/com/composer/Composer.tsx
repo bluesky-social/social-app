@@ -113,7 +113,7 @@ export const ComposePost = observer(function ComposePost({
 
       if (rt.text.trim().length === 0 && gallery.isEmpty) {
         setError('Did you want to say anything?')
-        return false
+        return
       }
 
       setIsProcessing(true)
@@ -267,6 +267,7 @@ export const ComposePost = observer(function ComposePost({
           <View style={[pal.border, styles.textInputLayout]}>
             <UserAvatar avatar={store.me.avatar} size={50} />
             <TextInput
+              ref={textInput}
               richtext={richtext}
               placeholder={selectTextInputPlaceholder}
               suggestedLinks={suggestedLinks}

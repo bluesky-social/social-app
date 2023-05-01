@@ -39,9 +39,9 @@ interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteModel
-  setRichText: (v: RichText) => void
+  setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => Promise<false | undefined>
+  onPressPublish: (richtext: RichText) => Promise<void>
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
 }
@@ -73,7 +73,9 @@ export const TextInput = forwardRef(
 
     React.useImperativeHandle(ref, () => ({
       focus: () => textInput.current?.focus(),
-      blur: () => textInput.current?.blur(),
+      blur: () => {
+        textInput.current?.blur()
+      },
     }))
 
     const onChangeText = useCallback(
