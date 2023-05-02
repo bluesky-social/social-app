@@ -42,11 +42,13 @@ export function Component({}: {}) {
   const onPressConfirmDelete = async () => {
     setError('')
     setIsProcessing(true)
+    const token = confirmCode.replace(/\s/g, '')
+
     try {
       await store.agent.com.atproto.server.deleteAccount({
         did: store.me.did,
         password,
-        token: confirmCode,
+        token,
       })
       Toast.show('Your account has been deleted')
       resetToTab('HomeTab')
