@@ -35,12 +35,9 @@ export const Gallery = observer(function ({gallery}: Props) {
 
   const imageStyle = getImageStyle()
   const handleAddImageAltText = useCallback(
-    async (image: ImageModel) => {
+    (image: ImageModel) => {
       Keyboard.dismiss()
-
-      try {
-        openAltTextModal(store, image)
-      } catch {}
+      openAltTextModal(store, image)
     },
     [store],
   )
