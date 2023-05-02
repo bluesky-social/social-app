@@ -11,24 +11,25 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from 'state/index'
 import {isDesktopWeb} from 'platform/detection'
+import {ImageModel} from 'state/models/media/image'
 
 export const snapPoints = ['80%']
 
 interface Props {
-  prevAltText: string
-  onAltTextSet: (altText?: string | undefined) => void
+  image: ImageModel
 }
 
-export function Component({prevAltText, onAltTextSet}: Props) {
+export function Component({image}: Props) {
   const pal = usePalette('default')
   const store = useStores()
   const theme = useTheme()
-  const [altText, setAltText] = useState(prevAltText)
+  const [altText, setAltText] = useState(image.altText)
 
   const onPressSave = useCallback(() => {
-    onAltTextSet(altText)
+    setAltText(altText)
+    image.setAltText(altText)
     store.shell.closeModal()
-  }, [store, altText, onAltTextSet])
+  }, [store, image, altText])
 
   const onPressCancel = () => {
     store.shell.closeModal()

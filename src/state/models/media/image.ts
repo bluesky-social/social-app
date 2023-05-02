@@ -5,7 +5,6 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {openCropper} from 'lib/media/picker'
 import {POST_IMG_MAX} from 'lib/constants'
 import {scaleDownDimensions} from 'lib/media/util'
-import {openAltTextModal} from 'lib/media/alt-text'
 
 // TODO: EXIF embed
 // Cases to consider: ExternalEmbed
@@ -43,16 +42,8 @@ export class ImageModel implements RNImage {
     this.scaledHeight = height
   }
 
-  async setAltText() {
-    try {
-      const altText = await openAltTextModal(this.rootStore, this.altText)
-
-      runInAction(() => {
-        this.altText = altText
-      })
-    } catch (err) {
-      this.rootStore.log.error('Failed to set alt text', err)
-    }
+  async setAltText(altText: string) {
+    this.altText = altText
   }
 
   async crop() {
