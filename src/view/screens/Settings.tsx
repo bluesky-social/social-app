@@ -392,6 +392,9 @@ const styles = StyleSheet.create({
   dimmed: {
     opacity: 0.5,
   },
+  spacer20: {
+    height: 20,
+  },
   heading: {
     paddingHorizontal: 18,
     paddingBottom: 6,
@@ -431,8 +434,5 @@ const styles = StyleSheet.create({
   buildInfo: {
     paddingVertical: 8,
     paddingHorizontal: 18,
-  },
-  spacer20: {
-    height: 20,
   },
 })
