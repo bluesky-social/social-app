@@ -1,13 +1,13 @@
 import RNFetchBlob from 'rn-fetch-blob'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
-import {Image as RNImage} from 'react-native'
+import {Image as RNImage, Share as RNShare} from 'react-native'
 import {Image} from 'react-native-image-crop-picker'
-import RNFS from 'react-native-fs'
+import * as RNFS from 'react-native-fs'
 import uuid from 'react-native-uuid'
 import * as Sharing from 'expo-sharing'
 import {Dimensions} from './types'
 import {POST_IMG_MAX} from 'lib/constants'
-import {isAndroid} from 'platform/detection'
+import {isAndroid, isIOS} from 'platform/detection'
 
 export async function compressAndResizeImageForPost(
   image: Image,
@@ -128,11 +128,26 @@ export async function saveImageModal({uri}: {uri: string}) {
     fileCache: true,
   }).fetch('GET', uri)
 
+  // NOTE
+  // assuming PNG
+  // we're currently relying on the fact our CDN only serves pngs
+  // -prf
+
   let imagePath = downloadResponse.path()
-  await Sharing.shareAsync(normalizePath(imagePath, true), {
-    mimeType: 'image/png',
-    UTI: 'public.png',
-  })
+  imagePath = normalizePath(await moveToPermanentPath(imagePath, '.png'), true)
+
+  // NOTE
+  // for some reason expo-sharing refuses to work on iOS
+  // ...and visa versa
+  // -prf
+  if (isIOS) {
+    await RNShare.share({url: imagePath})
+  } else {
+    await Sharing.shareAsync(imagePath, {
+      mimeType: 'image/png',
+      UTI: 'image/png',
+    })
+  }
   RNFS.unlink(imagePath)
 }
 
@@ -187,7 +202,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
   )
 }
 
-async function moveToPermanentPath(path: string): Promise<string> {
+async function moveToPermanentPath(path: string, ext = ''): Promise<string> {
   /*
   Since this package stores images in a temp directory, we need to move the file to a permanent location.
   Relevant: IOS bug when trying to open a second time:
@@ -195,9 +210,24 @@ async function moveToPermanentPath(path: string): Promise<string> {
   */
   const filename = uuid.v4()
 
-  const destinationPath = `${RNFS.TemporaryDirectoryPath}/${filename}`
+  const destinationPath = joinPath(
+    RNFS.TemporaryDirectoryPath,
+    `${filename}${ext}`,
+  )
   await RNFS.moveFile(path, destinationPath)
   return normalizePath(destinationPath)
+}
+
+function joinPath(a: string, b: string) {
+  if (a.endsWith('/')) {
+    if (b.startsWith('/')) {
+      return a.slice(0, -1) + b
+    }
+    return a + b
+  } else if (b.startsWith('/')) {
+    return a + b
+  }
+  return a + '/' + b
 }
 
 function normalizePath(str: string, allPlatforms = false): string {
