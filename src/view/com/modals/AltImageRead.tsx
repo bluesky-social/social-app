@@ -30,7 +30,12 @@ export function Component({altText}: Props) {
       <View style={[styles.text, pal.viewLight]}>
         <Text style={pal.text}>{altText}</Text>
       </View>
-      <TouchableOpacity testID="altTextImageSaveBtn" onPress={onPress}>
+      <TouchableOpacity
+        testID="altTextImageSaveBtn"
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel="Save"
+        accessibilityHint="Save alt text">
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
           start={{x: 0, y: 0}}

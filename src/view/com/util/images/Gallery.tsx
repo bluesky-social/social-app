@@ -41,16 +41,25 @@ export const GalleryItem: FC<GalleryItemProps> = ({
         delayPressIn={DELAY_PRESS_IN}
         onPress={() => onPress?.(index)}
         onPressIn={() => onPressIn?.(index)}
-        onLongPress={() => onLongPress?.(index)}>
+        onLongPress={() => onLongPress?.(index)}
+        accessibilityRole="button"
+        accessibilityLabel="View image"
+        accessibilityHint="">
         <Image
           source={{uri: image.thumb}}
           style={imageStyle}
           accessible={true}
           accessibilityLabel={image.alt}
+          accessibilityHint=""
+          accessibilityIgnoresInvertColors
         />
       </TouchableOpacity>
       {image.alt === '' ? null : (
-        <Pressable onPress={onPressAltText}>
+        <Pressable
+          onPress={onPressAltText}
+          accessibilityRole="button"
+          accessibilityLabel="View alt text"
+          accessibilityHint="Opens modal with alt text">
           <Text style={styles.alt}>ALT</Text>
         </Pressable>
       )}
