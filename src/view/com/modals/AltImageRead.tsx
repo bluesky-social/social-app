@@ -34,8 +34,8 @@ export function Component({altText}: Props) {
         testID="altTextImageSaveBtn"
         onPress={onPress}
         accessibilityRole="button"
-        accessibilityLabel="Save"
-        accessibilityHint="Save alt text">
+        accessibilityLabel="Done"
+        accessibilityHint="Closes alt text modal">
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
           start={{x: 0, y: 0}}

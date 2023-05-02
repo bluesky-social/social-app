@@ -58,7 +58,13 @@ export const Component = observer(() => {
           </Text>
         </View>
       </View>
-      <TouchableOpacity testID="sendReportBtn" style={s.mt10} onPress={onPress}>
+      <TouchableOpacity
+        testID="closePreferencesModalButton"
+        style={s.mt10}
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel="Close"
+        accessibilityHint="Closes preferences modal">
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
           start={{x: 0, y: 0}}
