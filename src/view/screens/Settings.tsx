@@ -36,6 +36,7 @@ import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {isDesktopWeb} from 'platform/detection'
+import {pluralize} from 'lib/strings/helpers'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -45,6 +46,15 @@ export const SettingsScreen = withAuthRequired(
     const navigation = useNavigation<NavigationProp>()
     const {screen, track} = useAnalytics()
     const [isSwitching, setIsSwitching] = React.useState(false)
+
+    const primaryBg = useCustomPalette<ViewStyle>({
+      light: {backgroundColor: colors.blue0},
+      dark: {backgroundColor: colors.blue6},
+    })
+    const primaryText = useCustomPalette<TextStyle>({
+      light: {color: colors.blue3},
+      dark: {color: colors.blue2},
+    })
 
     const dangerBg = useCustomPalette<ViewStyle>({
       light: {backgroundColor: colors.red1},
@@ -111,6 +121,11 @@ export const SettingsScreen = withAuthRequired(
         },
       })
     }, [track, store, setIsSwitching])
+
+    const onPressInviteCodes = React.useCallback(() => {
+      track('Settings:InvitecodesButtonClicked')
+      store.shell.openModal({name: 'invite-codes'})
+    }, [track, store])
 
     const onPressContentFiltering = React.useCallback(() => {
       track('Settings:ContentfilteringButtonClicked')
@@ -293,6 +308,38 @@ export const SettingsScreen = withAuthRequired(
             </View>
             <Text type="lg" style={pal.text}>
               Change my handle
+            </Text>
+          </TouchableOpacity>
+
+          <Text type="xl-bold" style={[pal.text, styles.heading]}>
+            Invite a friend
+          </Text>
+          <TouchableOpacity
+            testID="inviteFriendBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            onPress={isSwitching ? undefined : onPressInviteCodes}
+            accessibilityRole="button"
+            accessibilityLabel="Invite"
+            accessibilityHint="Opens invite code list">
+            <View
+              style={[
+                styles.iconContainer,
+                store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
+              ]}>
+              <FontAwesomeIcon
+                icon="ticket"
+                style={
+                  (store.me.invitesAvailable > 0
+                    ? primaryText
+                    : pal.text) as FontAwesomeIconStyle
+                }
+              />
+            </View>
+            <Text
+              type="lg"
+              style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
+              {store.me.invitesAvailable} invite{' '}
+              {pluralize(store.me.invitesAvailable, 'code')} available
             </Text>
           </TouchableOpacity>
 
