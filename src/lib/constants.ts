@@ -91,6 +91,3 @@ export const POST_IMG_MAX = {
   height: 2000,
   size: 1000000,
 }
-
-// Local storage
-export const KB_SHORTCUTS_KEY = 'bsky-kb-sc'

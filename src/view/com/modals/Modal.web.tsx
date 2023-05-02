@@ -17,7 +17,6 @@ import * as CropImageModal from './crop-image/CropImage.web'
 import * as AltTextImageModal from './AltImage'
 import * as AltTextImageReadModal from './AltImageRead'
 import * as ChangeHandleModal from './ChangeHandle'
-import * as PreferencesModal from './Preferences'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
@@ -89,8 +88,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <AltTextImageModal.Component {...modal} />
   } else if (modal.name === 'alt-text-image-read') {
     element = <AltTextImageReadModal.Component {...modal} />
-  } else if (modal.name === 'preferences') {
-    element = <PreferencesModal.Component />
   } else {
     return null
   }

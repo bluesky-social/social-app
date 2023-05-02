@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {View, StyleSheet, TouchableOpacity} from 'react-native'
 import {useStores} from 'state/index'
@@ -14,27 +14,10 @@ import {RoutesContainer, FlatNavigator} from '../../Navigation'
 import {DrawerContent} from './Drawer'
 import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
-import {isDesktopWeb} from 'platform/detection'
 
 const ShellInner = observer(() => {
   const store = useStores()
   const {isDesktop} = useWebMediaQueries()
-
-  const openComposer = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'n') {
-        store.shell.openComposer({})
-      }
-    },
-    [store.shell],
-  )
-
-  useEffect(() => {
-    if (isDesktopWeb && store.shell.keyboardShortcuts) {
-      window.addEventListener('keydown', openComposer)
-      return () => window.removeEventListener('keydown', openComposer)
-    }
-  }, [openComposer, store.shell.keyboardShortcuts])
 
   return (
     <>

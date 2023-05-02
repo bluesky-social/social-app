@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -16,7 +16,6 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {AntDesign} from '@expo/vector-icons'
 import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
@@ -130,17 +129,12 @@ export const SettingsScreen = withAuthRequired(
     const onPressContentFiltering = React.useCallback(() => {
       track('Settings:ContentfilteringButtonClicked')
       store.shell.openModal({name: 'content-filtering-settings'})
-    }, [track, store.shell])
+    }, [track, store])
 
     const onPressSignout = React.useCallback(() => {
       track('Settings:SignOutButtonClicked')
       store.session.logout()
-    }, [track, store.session])
-
-    const onPressChangeKeyboardSettings = useCallback(() => {
-      track('Settings:KeyboardSettingsButtonClicked')
-      store.shell.openModal({name: 'preferences'})
-    }, [track, store.shell])
+    }, [track, store])
 
     const onPressDeleteAccount = React.useCallback(() => {
       store.shell.openModal({name: 'delete-account'})
@@ -235,8 +229,38 @@ export const SettingsScreen = withAuthRequired(
               Add account
             </Text>
           </TouchableOpacity>
-
           <View style={styles.spacer20} />
+          <Text type="xl-bold" style={[pal.text, styles.heading]}>
+            Invite a friend
+          </Text>
+          <TouchableOpacity
+            testID="inviteFriendBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            onPress={isSwitching ? undefined : onPressInviteCodes}
+            accessibilityRole="button"
+            accessibilityLabel="Invite"
+            accessibilityHint="Opens invite code list">
+            <View
+              style={[
+                styles.iconContainer,
+                store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
+              ]}>
+              <FontAwesomeIcon
+                icon="ticket"
+                style={
+                  (store.me.invitesAvailable > 0
+                    ? primaryText
+                    : pal.text) as FontAwesomeIconStyle
+                }
+              />
+            </View>
+            <Text
+              type="lg"
+              style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
+              {store.me.invitesAvailable} invite{' '}
+              {pluralize(store.me.invitesAvailable, 'code')} available
+            </Text>
+          </TouchableOpacity>
 
           <View style={styles.spacer20} />
 
@@ -273,9 +297,7 @@ export const SettingsScreen = withAuthRequired(
               Blocked accounts
             </Text>
           </Link>
-
           <View style={styles.spacer20} />
-
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Advanced
           </Text>
@@ -310,58 +332,7 @@ export const SettingsScreen = withAuthRequired(
               Change my handle
             </Text>
           </TouchableOpacity>
-
-          <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Invite a friend
-          </Text>
-          <TouchableOpacity
-            testID="inviteFriendBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressInviteCodes}
-            accessibilityRole="button"
-            accessibilityLabel="Invite"
-            accessibilityHint="Opens invite code list">
-            <View
-              style={[
-                styles.iconContainer,
-                store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
-              ]}>
-              <FontAwesomeIcon
-                icon="ticket"
-                style={
-                  (store.me.invitesAvailable > 0
-                    ? primaryText
-                    : pal.text) as FontAwesomeIconStyle
-                }
-              />
-            </View>
-            <Text
-              type="lg"
-              style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
-              {store.me.invitesAvailable} invite{' '}
-              {pluralize(store.me.invitesAvailable, 'code')} available
-            </Text>
-          </TouchableOpacity>
-
-          {isDesktopWeb ? (
-            <TouchableOpacity
-              testID="changeKeyboardSettingsBtn"
-              style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-              onPress={isSwitching ? undefined : onPressChangeKeyboardSettings}
-              accessibilityRole="button"
-              accessibilityLabel="Preferences"
-              accessibilityHint="Configure preferences like keyboard shortcuts">
-              <View style={[styles.iconContainer, pal.btn]}>
-                <AntDesign name="profile" size={18} color={pal.text.color} />
-              </View>
-              <Text type="lg" style={pal.text}>
-                Preferences
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-
           <View style={styles.spacer20} />
-
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Danger zone
           </Text>
@@ -383,9 +354,7 @@ export const SettingsScreen = withAuthRequired(
               Delete my account
             </Text>
           </TouchableOpacity>
-
           <View style={styles.spacer20} />
-
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Developer tools
           </Text>

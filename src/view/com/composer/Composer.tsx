@@ -91,10 +91,18 @@ export const ComposePost = observer(function ComposePost({
   const onEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose()
+        store.shell.openModal({
+          name: 'confirm',
+          title: 'Close composer',
+          onPressConfirm: onClose,
+          onPressCancel: () => {
+            store.shell.closeModal()
+          },
+          message: "Are you sure you'd like to close the composer?",
+        })
       }
     },
-    [onClose],
+    [store.shell, onClose],
   )
 
   useEffect(() => {
