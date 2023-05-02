@@ -9,12 +9,15 @@ import {ImageModel} from 'state/models/media/image'
 import {Image} from 'expo-image'
 import {Text} from 'view/com/util/text/Text'
 import {isDesktopWeb} from 'platform/detection'
+import {openAltTextModal} from 'lib/media/alt-text'
+import {useStores} from 'state/index'
 
 interface Props {
   gallery: GalleryModel
 }
 
 export const Gallery = observer(function ({gallery}: Props) {
+  const store = useStores()
   const getImageStyle = useCallback(() => {
     let side: number
 
@@ -32,11 +35,14 @@ export const Gallery = observer(function ({gallery}: Props) {
 
   const imageStyle = getImageStyle()
   const handleAddImageAltText = useCallback(
-    (image: ImageModel) => {
+    async (image: ImageModel) => {
       Keyboard.dismiss()
-      gallery.setAltText(image)
+
+      try {
+        openAltTextModal(store, image)
+      } catch {}
     },
-    [gallery],
+    [store],
   )
   const handleRemovePhoto = useCallback(
     (image: ImageModel) => {

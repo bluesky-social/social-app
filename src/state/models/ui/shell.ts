@@ -4,6 +4,7 @@ import {makeAutoObservable} from 'mobx'
 import {ProfileModel} from '../content/profile'
 import {isObj, hasProp} from 'lib/type-guards'
 import {Image as RNImage} from 'react-native-image-crop-picker'
+import {ImageModel} from '../media/image'
 
 export interface ConfirmModal {
   name: 'confirm'
@@ -43,8 +44,7 @@ export interface CropImageModal {
 
 export interface AltTextImageModal {
   name: 'alt-text-image'
-  prevAltText: string
-  onAltTextSet: (altText?: string) => void
+  image: ImageModel
 }
 
 export interface AltTextImageReadModal {
