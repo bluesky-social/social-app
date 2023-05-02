@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {PropsWithChildren, useMemo, useRef} from 'react'
 import {
   Dimensions,
   StyleProp,
@@ -39,6 +39,19 @@ type MaybeDropdownItem = DropdownItem | false | undefined
 
 export type DropdownButtonType = ButtonType | 'bare'
 
+interface DropdownButtonProps {
+  testID?: string
+  type?: DropdownButtonType
+  style?: StyleProp<ViewStyle>
+  items: MaybeDropdownItem[]
+  label?: string
+  menuWidth?: number
+  children?: React.ReactNode
+  openToRight?: boolean
+  rightOffset?: number
+  bottomOffset?: number
+}
+
 export function DropdownButton({
   testID,
   type = 'bare',
@@ -50,18 +63,7 @@ export function DropdownButton({
   openToRight = false,
   rightOffset = 0,
   bottomOffset = 0,
-}: {
-  testID?: string
-  type?: DropdownButtonType
-  style?: StyleProp<ViewStyle>
-  items: MaybeDropdownItem[]
-  label?: string
-  menuWidth?: number
-  children?: React.ReactNode
-  openToRight?: boolean
-  rightOffset?: number
-  bottomOffset?: number
-}) {
+}: PropsWithChildren<DropdownButtonProps>) {
   const ref1 = useRef<TouchableOpacity>(null)
   const ref2 = useRef<View>(null)
 
@@ -105,6 +107,18 @@ export function DropdownButton({
     )
   }
 
+  const numItems = useMemo(
+    () =>
+      items.filter(item => {
+        if (item === undefined || item === false) {
+          return false
+        }
+
+        return isBtn(item)
+      }).length,
+    [items],
+  )
+
   if (type === 'bare') {
     return (
       <TouchableOpacity
@@ -112,7 +126,10 @@ export function DropdownButton({
         style={style}
         onPress={onPress}
         hitSlop={HITSLOP}
-        ref={ref1}>
+        ref={ref1}
+        accessibilityRole="button"
+        accessibilityLabel={`Opens ${numItems} options`}
+        accessibilityHint={`Opens ${numItems} options`}>
         {children}
       </TouchableOpacity>
     )
@@ -283,9 +300,20 @@ const DropdownItems = ({
   const separatorColor =
     theme.colorScheme === 'dark' ? pal.borderDark : pal.border
 
+  const numItems = items.filter(isBtn).length
+
   return (
     <>
-      <TouchableWithoutFeedback onPress={onOuterPress}>
+      <TouchableWithoutFeedback
+        onPress={onOuterPress}
+        // TODO: Refactor dropdown components to:
+        // - (On web, if not handled by React Native) use semantic <select />
+        // and <option /> elements for keyboard navigation out of the box
+        // - (On mobile) be buttons by default, accept `label` and `nativeID`
+        // props, and always have an explicit label
+        accessibilityRole="button"
+        accessibilityLabel="Toggle dropdown"
+        accessibilityHint="">
         <View style={[styles.bg]} />
       </TouchableWithoutFeedback>
       <View
@@ -301,7 +329,9 @@ const DropdownItems = ({
                 testID={item.testID}
                 key={index}
                 style={[styles.menuItem]}
-                onPress={() => onPressItem(index)}>
+                onPress={() => onPressItem(index)}
+                accessibilityLabel={item.label}
+                accessibilityHint={`Option ${index + 1} of ${numItems}`}>
                 {item.icon && (
                   <FontAwesomeIcon
                     style={styles.icon}

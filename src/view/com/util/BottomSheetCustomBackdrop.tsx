@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {GestureResponderEvent, TouchableWithoutFeedback} from 'react-native'
+import {TouchableWithoutFeedback} from 'react-native'
 import {BottomSheetBackdropProps} from '@gorhom/bottom-sheet'
 import Animated, {
   Extrapolate,
@@ -8,7 +8,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 export function createCustomBackdrop(
-  onClose?: ((event: GestureResponderEvent) => void) | undefined,
+  onClose?: (() => void) | undefined,
 ): React.FC<BottomSheetBackdropProps> {
   const CustomBackdrop = ({animatedIndex, style}: BottomSheetBackdropProps) => {
     // animated variables
@@ -27,7 +27,15 @@ export function createCustomBackdrop(
     )
 
     return (
-      <TouchableWithoutFeedback onPress={onClose}>
+      <TouchableWithoutFeedback
+        onPress={onClose}
+        accessibilityLabel="Close bottom drawer"
+        accessibilityHint=""
+        onAccessibilityEscape={() => {
+          if (onClose !== undefined) {
+            onClose()
+          }
+        }}>
         <Animated.View style={containerStyle} />
       </TouchableWithoutFeedback>
     )

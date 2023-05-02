@@ -89,13 +89,25 @@ function LightboxInner({
 
   return (
     <View style={styles.mask}>
-      <TouchableWithoutFeedback onPress={onClose}>
+      <TouchableWithoutFeedback
+        onPress={onClose}
+        accessibilityRole="button"
+        accessibilityLabel="Close image viewer"
+        accessibilityHint="Exits image view"
+        onAccessibilityEscape={onClose}>
         <View style={styles.imageCenterer}>
-          <Image source={imgs[index]} style={styles.image} />
+          <Image
+            accessibilityIgnoresInvertColors
+            source={imgs[index]}
+            style={styles.image}
+          />
           {canGoLeft && (
             <TouchableOpacity
               onPress={onPressLeft}
-              style={[styles.btn, styles.leftBtn]}>
+              style={[styles.btn, styles.leftBtn]}
+              accessibilityRole="button"
+              accessibilityLabel="Go back"
+              accessibilityHint="Navigates to previous image in viewer">
               <FontAwesomeIcon
                 icon="angle-left"
                 style={styles.icon}
@@ -106,7 +118,10 @@ function LightboxInner({
           {canGoRight && (
             <TouchableOpacity
               onPress={onPressRight}
-              style={[styles.btn, styles.rightBtn]}>
+              style={[styles.btn, styles.rightBtn]}
+              accessibilityRole="button"
+              accessibilityLabel="Go to next"
+              accessibilityHint="Navigates to next image in viewer">
               <FontAwesomeIcon
                 icon="angle-right"
                 style={styles.icon}

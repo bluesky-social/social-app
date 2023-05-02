@@ -62,12 +62,17 @@ export function AutoSizedImage({
         onLongPress={onLongPress}
         onPressIn={onPressIn}
         delayPressIn={DELAY_PRESS_IN}
-        style={[styles.container, style]}>
+        style={[styles.container, style]}
+        accessible={true}
+        accessibilityLabel="Share image"
+        accessibilityHint="Opens ways of sharing image">
         <Image
           style={[styles.image, {aspectRatio}]}
           source={uri}
           accessible={true} // Must set for `accessibilityLabel` to work
+          accessibilityIgnoresInvertColors
           accessibilityLabel={alt}
+          accessibilityHint=""
         />
         {children}
       </TouchableOpacity>
@@ -80,7 +85,9 @@ export function AutoSizedImage({
         style={[styles.image, {aspectRatio}]}
         source={{uri}}
         accessible={true} // Must set for `accessibilityLabel` to work
+        accessibilityIgnoresInvertColors
         accessibilityLabel={alt}
+        accessibilityHint=""
       />
       {children}
     </View>

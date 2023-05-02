@@ -60,7 +60,13 @@ export const ExternalEmbed = ({
           </Text>
         )}
       </View>
-      <TouchableOpacity style={styles.removeBtn} onPress={onRemove}>
+      <TouchableOpacity
+        style={styles.removeBtn}
+        onPress={onRemove}
+        accessibilityRole="button"
+        accessibilityLabel="Remove image preview"
+        accessibilityHint={`Removes default thumbnail from ${link.uri}`}
+        onAccessibilityEscape={onRemove}>
         <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
       </TouchableOpacity>
     </View>

@@ -136,7 +136,10 @@ export function PostEmbeds({
                 <Pressable
                   onPress={() => {
                     onPressAltText(alt)
-                  }}>
+                  }}
+                  accessibilityRole="button"
+                  accessibilityLabel="View alt text"
+                  accessibilityHint="Opens modal with alt text">
                   <Text style={styles.alt}>ALT</Text>
                 </Pressable>
               )}

@@ -16,15 +16,33 @@ interface Props {
 }
 
 export function ImageHorzList({images, onPress, style}: Props) {
+  const numImages = images.length
   return (
     <View style={[styles.flexRow, style]}>
       {images.map(({thumb, alt}, i) => (
-        <TouchableWithoutFeedback key={i} onPress={() => onPress?.(i)}>
+        <TouchableWithoutFeedback
+          key={i}
+          onPress={() => onPress?.(i)}
+          accessible={true}
+          accessibilityLabel={`Open image ${i} of ${numImages}`}
+          accessibilityHint="Opens image in viewer"
+          accessibilityActions={[{name: 'press', label: 'Press'}]}
+          onAccessibilityAction={action => {
+            switch (action.nativeEvent.actionName) {
+              case 'press':
+                onPress?.(0)
+                break
+              default:
+                break
+            }
+          }}>
           <Image
             source={{uri: thumb}}
             style={styles.image}
             accessible={true}
-            accessibilityLabel={alt}
+            accessibilityIgnoresInvertColors
+            accessibilityHint={alt}
+            accessibilityLabel=""
           />
         </TouchableWithoutFeedback>
       ))}

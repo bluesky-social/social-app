@@ -180,7 +180,11 @@ export const PostThread = observer(function PostThread({
             <Text type="md" style={[pal.text, s.mb10]}>
               The post may have been deleted.
             </Text>
-            <TouchableOpacity onPress={onPressBack}>
+            <TouchableOpacity
+              onPress={onPressBack}
+              accessibilityRole="button"
+              accessibilityLabel="Go back"
+              accessibilityHint="Navigates to the previous screen">
               <Text type="2xl" style={pal.link}>
                 <FontAwesomeIcon
                   icon="angle-left"
@@ -210,7 +214,11 @@ export const PostThread = observer(function PostThread({
           <Text type="md" style={[pal.text, s.mb10]}>
             You have blocked the author or you have been blocked by the author.
           </Text>
-          <TouchableOpacity onPress={onPressBack}>
+          <TouchableOpacity
+            onPress={onPressBack}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            accessibilityHint="Navigates to the previous screen">
             <Text type="2xl" style={pal.link}>
               <FontAwesomeIcon
                 icon="angle-left"

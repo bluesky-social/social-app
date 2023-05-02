@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ComponentProps} from 'react'
 import {
   Animated,
   GestureResponderEvent,
@@ -94,6 +94,8 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
           )
         }
         onPress={onPressHome}
+        accessibilityLabel="Go home"
+        accessibilityHint="Navigates to feed home"
       />
       <Btn
         testID="bottomBarSearchBtn"
@@ -113,6 +115,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
           )
         }
         onPress={onPressSearch}
+        accessibilityRole="search"
       />
       <Btn
         testID="bottomBarNotificationsBtn"
@@ -133,6 +136,8 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         }
         onPress={onPressNotifications}
         notificationCount={store.me.notifications.unreadCountLabel}
+        accessibilityLabel="Notifications"
+        accessibilityHint="Navigates to notifications"
       />
       <Btn
         testID="bottomBarProfileBtn"
@@ -154,10 +159,24 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
           </View>
         }
         onPress={onPressProfile}
+        accessibilityLabel="Profile"
+        accessibilityHint="Navigates to profile"
       />
     </Animated.View>
   )
 })
+
+interface BtnProps
+  extends Pick<
+    ComponentProps<typeof TouchableOpacity>,
+    'accessibilityRole' | 'accessibilityHint' | 'accessibilityLabel'
+  > {
+  testID?: string
+  icon: JSX.Element
+  notificationCount?: string
+  onPress?: (event: GestureResponderEvent) => void
+  onLongPress?: (event: GestureResponderEvent) => void
+}
 
 function Btn({
   testID,
@@ -165,20 +184,18 @@ function Btn({
   notificationCount,
   onPress,
   onLongPress,
-}: {
-  testID?: string
-  icon: JSX.Element
-  notificationCount?: string
-  onPress?: (event: GestureResponderEvent) => void
-  onLongPress?: (event: GestureResponderEvent) => void
-}) {
+  accessibilityHint,
+  accessibilityLabel,
+}: BtnProps) {
   return (
     <TouchableOpacity
       testID={testID}
       style={styles.ctrl}
       onPress={onLongPress ? onPress : undefined}
       onPressIn={onLongPress ? undefined : onPress}
-      onLongPress={onLongPress}>
+      onLongPress={onLongPress}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}>
       {notificationCount ? (
         <View style={[styles.notificationCount]}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>

@@ -26,6 +26,7 @@ export type ButtonType =
   | 'secondary-light'
   | 'default-light'
 
+// TODO: Enforce that button always has a label
 export function Button({
   type = 'primary',
   label,
@@ -131,7 +132,8 @@ export function Button({
     <Pressable
       style={[typeOuterStyle, styles.outer, style]}
       onPress={onPressWrapped}
-      testID={testID}>
+      testID={testID}
+      accessibilityRole="button">
       {label ? (
         <Text type="button" style={[typeLabelStyle, labelStyle]}>
           {label}

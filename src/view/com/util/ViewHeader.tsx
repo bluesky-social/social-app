@@ -60,7 +60,14 @@ export const ViewHeader = observer(function ({
           testID="viewHeaderDrawerBtn"
           onPress={canGoBack ? onPressBack : onPressMenu}
           hitSlop={BACK_HITSLOP}
-          style={canGoBack ? styles.backBtn : styles.backBtnWide}>
+          style={canGoBack ? styles.backBtn : styles.backBtnWide}
+          accessibilityRole="button"
+          accessibilityLabel={canGoBack ? 'Go back' : 'Go to menu'}
+          accessibilityHint={
+            canGoBack
+              ? 'Navigates to the previous screen'
+              : 'Navigates to the menu'
+          }>
           {canGoBack ? (
             <FontAwesomeIcon
               size={18}
@@ -171,9 +178,9 @@ const styles = StyleSheet.create({
     height: 30,
   },
   backBtnWide: {
-    width: 40,
+    width: 30,
     height: 30,
-    marginLeft: 6,
+    paddingHorizontal: 6,
   },
   backIcon: {
     marginTop: 6,

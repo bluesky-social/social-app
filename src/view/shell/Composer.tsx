@@ -56,7 +56,10 @@ export const Composer = observer(
     }
 
     return (
-      <Animated.View style={[styles.wrapper, pal.view, wrapperAnimStyle]}>
+      <Animated.View
+        style={[styles.wrapper, pal.view, wrapperAnimStyle]}
+        aria-modal
+        accessibilityViewIsModal>
         <ComposePost
           replyTo={replyTo}
           onPost={onPost}

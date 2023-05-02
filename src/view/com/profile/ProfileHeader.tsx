@@ -282,7 +282,10 @@ const ProfileHeaderLoaded = observer(
               <TouchableOpacity
                 testID="profileHeaderEditProfileButton"
                 onPress={onPressEditProfile}
-                style={[styles.btn, styles.mainBtn, pal.btn]}>
+                style={[styles.btn, styles.mainBtn, pal.btn]}
+                accessibilityRole="button"
+                accessibilityLabel="Edit profile"
+                accessibilityHint="Opens editor for profile display name, avatar, background image, and description">
                 <Text type="button" style={pal.text}>
                   Edit Profile
                 </Text>
@@ -291,7 +294,10 @@ const ProfileHeaderLoaded = observer(
               <TouchableOpacity
                 testID="unblockBtn"
                 onPress={onPressUnblockAccount}
-                style={[styles.btn, styles.mainBtn, pal.btn]}>
+                style={[styles.btn, styles.mainBtn, pal.btn]}
+                accessibilityRole="button"
+                accessibilityLabel="Unblock"
+                accessibilityHint="">
                 <Text type="button" style={[pal.text, s.bold]}>
                   Unblock
                 </Text>
@@ -303,7 +309,10 @@ const ProfileHeaderLoaded = observer(
                   <TouchableOpacity
                     testID="unfollowBtn"
                     onPress={onPressToggleFollow}
-                    style={[styles.btn, styles.mainBtn, pal.btn]}>
+                    style={[styles.btn, styles.mainBtn, pal.btn]}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Unfollow ${view.handle}`}
+                    accessibilityHint={`Hides direct posts from ${view.handle} in your feed`}>
                     <FontAwesomeIcon
                       icon="check"
                       style={[pal.text, s.mr5]}
@@ -317,7 +326,10 @@ const ProfileHeaderLoaded = observer(
                   <TouchableOpacity
                     testID="followBtn"
                     onPress={onPressToggleFollow}
-                    style={[styles.btn, styles.primaryBtn]}>
+                    style={[styles.btn, styles.primaryBtn]}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Follow ${view.handle}`}
+                    accessibilityHint={`Shows direct posts from ${view.handle} in your feed`}>
                     <FontAwesomeIcon
                       icon="plus"
                       style={[s.white as FontAwesomeIconStyle, s.mr5]}
@@ -363,7 +375,10 @@ const ProfileHeaderLoaded = observer(
                 <TouchableOpacity
                   testID="profileHeaderFollowersButton"
                   style={[s.flexRow, s.mr10]}
-                  onPress={onPressFollowers}>
+                  onPress={onPressFollowers}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Show ${view.handle}'s followers`}
+                  accessibilityHint={`Shows folks following ${view.handle}`}>
                   <Text type="md" style={[s.bold, s.mr2, pal.text]}>
                     {formatCount(view.followersCount)}
                   </Text>
@@ -374,7 +389,10 @@ const ProfileHeaderLoaded = observer(
                 <TouchableOpacity
                   testID="profileHeaderFollowsButton"
                   style={[s.flexRow, s.mr10]}
-                  onPress={onPressFollows}>
+                  onPress={onPressFollows}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Show ${view.handle}'s follows`}
+                  accessibilityHint={`Shows folks followed by ${view.handle}`}>
                   <Text type="md" style={[s.bold, s.mr2, pal.text]}>
                     {formatCount(view.followsCount)}
                   </Text>
@@ -382,14 +400,12 @@ const ProfileHeaderLoaded = observer(
                     following
                   </Text>
                 </TouchableOpacity>
-                <View style={[s.flexRow, s.mr10]}>
-                  <Text type="md" style={[s.bold, s.mr2, pal.text]}>
-                    {view.postsCount}
-                  </Text>
+                <Text type="md" style={[s.bold, pal.text]}>
+                  {view.postsCount}{' '}
                   <Text type="md" style={[pal.textLight]}>
                     {pluralize(view.postsCount, 'post')}
                   </Text>
-                </View>
+                </Text>
               </View>
               {view.descriptionRichText ? (
                 <RichText
@@ -440,7 +456,10 @@ const ProfileHeaderLoaded = observer(
         {!isDesktopWeb && !hideBackButton && (
           <TouchableWithoutFeedback
             onPress={onPressBack}
-            hitSlop={BACK_HITSLOP}>
+            hitSlop={BACK_HITSLOP}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            accessibilityHint="Navigates to the previous screen">
             <View style={styles.backBtnWrapper}>
               <BlurView style={styles.backBtn} blurType="dark">
                 <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
@@ -450,7 +469,10 @@ const ProfileHeaderLoaded = observer(
         )}
         <TouchableWithoutFeedback
           testID="profileHeaderAviButton"
-          onPress={onPressAvi}>
+          onPress={onPressAvi}
+          accessibilityRole="image"
+          accessibilityLabel={`View ${view.handle}'s avatar`}
+          accessibilityHint={`Opens ${view.handle}'s avatar in an image viewer`}>
           <View
             style={[
               pal.view,

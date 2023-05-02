@@ -50,7 +50,9 @@ export const Autocomplete = observer(
               testID="autocompleteButton"
               key={item.handle}
               style={[pal.border, styles.item]}
-              onPress={() => onSelect(item.handle)}>
+              onPress={() => onSelect(item.handle)}
+              accessibilityLabel={`Select ${item.handle}`}
+              accessibilityHint={`Autocompletes to ${item.handle}`}>
               <Text type="md-medium" style={pal.text}>
                 {item.displayName || item.handle}
                 <Text type="sm" style={pal.textLight}>

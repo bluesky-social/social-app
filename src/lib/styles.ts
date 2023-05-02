@@ -118,6 +118,7 @@ export const s = StyleSheet.create({
   mr2: {marginRight: 2},
   mr5: {marginRight: 5},
   mr10: {marginRight: 10},
+  mr20: {marginRight: 20},
   ml2: {marginLeft: 2},
   ml5: {marginLeft: 5},
   ml10: {marginLeft: 10},
@@ -149,6 +150,7 @@ export const s = StyleSheet.create({
   pb5: {paddingBottom: 5},
   pb10: {paddingBottom: 10},
   pb20: {paddingBottom: 20},
+  px5: {paddingHorizontal: 5},
 
   // flex
   flexRow: {flexDirection: 'row'},

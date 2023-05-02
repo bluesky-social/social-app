@@ -37,7 +37,10 @@ export const FeedsTabBar = observer(
         <TouchableOpacity
           testID="viewHeaderDrawerBtn"
           style={styles.tabBarAvi}
-          onPress={onPressAvi}>
+          onPress={onPressAvi}
+          accessibilityRole="button"
+          accessibilityLabel="Open navigation"
+          accessibilityHint="Access profile and other navigation links">
           <UserAvatar avatar={store.me.avatar} size={30} />
         </TouchableOpacity>
         <TabBar

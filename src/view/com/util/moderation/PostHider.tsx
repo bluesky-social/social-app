@@ -46,7 +46,8 @@ export function PostHider({
           </Text>
           <TouchableOpacity
             style={styles.showBtn}
-            onPress={() => setOverride(v => !v)}>
+            onPress={() => setOverride(v => !v)}
+            accessibilityRole="button">
             <Text type="md" style={pal.link}>
               {override ? 'Hide' : 'Show'} post
             </Text>

@@ -87,6 +87,7 @@ const InviteCode = observer(
   ({testID, code, used}: {testID: string; code: string; used?: boolean}) => {
     const pal = usePalette('default')
     const store = useStores()
+    const {invitesAvailable} = store.me
 
     const onPress = React.useCallback(() => {
       Clipboard.setString(code)
@@ -98,7 +99,14 @@ const InviteCode = observer(
       <TouchableOpacity
         testID={testID}
         style={[styles.inviteCode, pal.border]}
-        onPress={onPress}>
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel={
+          invitesAvailable === 1
+            ? 'Invite codes: 1 available'
+            : `Invite codes: ${invitesAvailable} available`
+        }
+        accessibilityHint="Opens list of invite codes">
         <Text
           testID={`${testID}-code`}
           type={used ? 'md' : 'md-bold'}

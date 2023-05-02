@@ -72,14 +72,24 @@ export const CreateAccount = observer(
             {model.step === 3 && <Step3 model={model} />}
           </View>
           <View style={[s.flexRow, s.pl20, s.pr20]}>
-            <TouchableOpacity onPress={onPressBackInner} testID="backBtn">
+            <TouchableOpacity
+              onPress={onPressBackInner}
+              testID="backBtn"
+              accessibilityRole="button"
+              accessibilityLabel="Go back"
+              accessibilityHint="Navigates to the previous screen">
               <Text type="xl" style={pal.link}>
                 Back
               </Text>
             </TouchableOpacity>
             <View style={s.flex1} />
             {model.canNext ? (
-              <TouchableOpacity testID="nextBtn" onPress={onPressNext}>
+              <TouchableOpacity
+                testID="nextBtn"
+                onPress={onPressNext}
+                accessibilityRole="button"
+                accessibilityLabel="Go to next"
+                accessibilityHint="Navigates to the next screen">
                 {model.isProcessing ? (
                   <ActivityIndicator />
                 ) : (
@@ -91,7 +101,11 @@ export const CreateAccount = observer(
             ) : model.didServiceDescriptionFetchFail ? (
               <TouchableOpacity
                 testID="retryConnectBtn"
-                onPress={onPressRetryConnect}>
+                onPress={onPressRetryConnect}
+                accessibilityRole="button"
+                accessibilityLabel="Retry"
+                accessibilityHint="Retries account creation"
+                accessibilityLiveRegion="polite">
                 <Text type="xl-bold" style={[pal.link, s.pr5]}>
                   Retry
                 </Text>

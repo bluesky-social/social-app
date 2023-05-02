@@ -127,7 +127,8 @@ const ImageItem = ({
         <TouchableWithoutFeedback
           onPress={doubleTapToZoomEnabled ? handleDoubleTap : undefined}
           onLongPress={onLongPressHandler}
-          delayLongPress={delayLongPress}>
+          delayLongPress={delayLongPress}
+          accessibilityRole="image">
           <Animated.Image
             source={imageSrc}
             style={imageStylesWithOpacity}

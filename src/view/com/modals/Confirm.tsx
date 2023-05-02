@@ -66,7 +66,12 @@ export function Component({
         <TouchableOpacity
           testID="confirmBtn"
           onPress={onPress}
-          style={[styles.btn]}>
+          style={[styles.btn]}
+          accessibilityRole="button"
+          accessibilityLabel="Confirm"
+          // TODO: This needs to be updated so that modal roles are clear;
+          // Currently there is only one usage for the confirm modal: post deletion
+          accessibilityHint="Confirms a potentially destructive action">
           <Text style={[s.white, s.bold, s.f18]}>Confirm</Text>
         </TouchableOpacity>
       )}

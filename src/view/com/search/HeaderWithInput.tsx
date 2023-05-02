@@ -54,7 +54,9 @@ export function HeaderWithInput({
         testID="viewHeaderBackOrMenuBtn"
         onPress={onPressMenu}
         hitSlop={MENU_HITSLOP}
-        style={styles.headerMenuBtn}>
+        style={styles.headerMenuBtn}
+        accessibilityLabel="Go back"
+        accessibilityHint="Navigates to the previous screen">
         <UserAvatar size={30} avatar={store.me.avatar} />
       </TouchableOpacity>
       <View
@@ -80,9 +82,15 @@ export function HeaderWithInput({
           onBlur={() => setIsInputFocused(false)}
           onChangeText={onChangeQuery}
           onSubmitEditing={onSubmitQuery}
+          autoFocus={true}
+          accessibilityRole="search"
         />
         {query ? (
-          <TouchableOpacity onPress={onPressClearQuery}>
+          <TouchableOpacity
+            onPress={onPressClearQuery}
+            accessibilityRole="button"
+            accessibilityLabel="Clear search query"
+            accessibilityHint="">
             <FontAwesomeIcon
               icon="xmark"
               size={16}
@@ -93,7 +101,9 @@ export function HeaderWithInput({
       </View>
       {query || isInputFocused ? (
         <View style={styles.headerCancelBtn}>
-          <TouchableOpacity onPress={onPressCancelSearchInner}>
+          <TouchableOpacity
+            onPress={onPressCancelSearchInner}
+            accessibilityRole="button">
             <Text style={pal.text}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -110,9 +120,10 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   headerMenuBtn: {
-    width: 40,
+    width: 30,
     height: 30,
-    marginLeft: 6,
+    borderRadius: 30,
+    marginHorizontal: 6,
   },
   headerSearchContainer: {
     flex: 1,

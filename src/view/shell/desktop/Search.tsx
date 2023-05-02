@@ -67,10 +67,16 @@ export const DesktopSearch = observer(function DesktopSearch() {
             onBlur={() => setIsInputFocused(false)}
             onChangeText={onChangeQuery}
             onSubmitEditing={onSubmit}
+            accessibilityRole="search"
           />
           {query ? (
             <View style={styles.cancelBtn}>
-              <TouchableOpacity onPress={onPressCancelSearch}>
+              <TouchableOpacity
+                onPress={onPressCancelSearch}
+                accessibilityRole="button"
+                accessibilityLabel="Cancel search"
+                accessibilityHint="Exits inputting search query"
+                onAccessibilityEscape={onPressCancelSearch}>
                 <Text type="lg" style={[pal.link]}>
                   Cancel
                 </Text>

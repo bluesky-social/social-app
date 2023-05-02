@@ -86,7 +86,10 @@ export function Component({}: {}) {
               <>
                 <TouchableOpacity
                   style={styles.mt20}
-                  onPress={onPressSendEmail}>
+                  onPress={onPressSendEmail}
+                  accessibilityRole="button"
+                  accessibilityLabel="Send email"
+                  accessibilityHint="Sends email with confirmation code for account deletion">
                   <LinearGradient
                     colors={[
                       gradients.blueLight.start,
@@ -102,7 +105,11 @@ export function Component({}: {}) {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.btn, s.mt10]}
-                  onPress={onCancel}>
+                  onPress={onCancel}
+                  accessibilityRole="button"
+                  accessibilityLabel="Cancel account deletion"
+                  accessibilityHint=""
+                  onAccessibilityEscape={onCancel}>
                   <Text type="button-lg" style={pal.textLight}>
                     Cancel
                   </Text>
@@ -112,7 +119,11 @@ export function Component({}: {}) {
           </>
         ) : (
           <>
-            <Text type="lg" style={styles.description}>
+            {/* TODO: Update this label to be more concise */}
+            <Text
+              type="lg"
+              style={styles.description}
+              nativeID="confirmationCode">
               Check your inbox for an email with the confirmation code to enter
               below:
             </Text>
@@ -123,8 +134,11 @@ export function Component({}: {}) {
               keyboardAppearance={theme.colorScheme}
               value={confirmCode}
               onChangeText={setConfirmCode}
+              accessibilityLabelledBy="confirmationCode"
+              accessibilityLabel="Confirmation code"
+              accessibilityHint="Input confirmation code for account deletion"
             />
-            <Text type="lg" style={styles.description}>
+            <Text type="lg" style={styles.description} nativeID="password">
               Please enter your password as well:
             </Text>
             <TextInput
@@ -135,6 +149,9 @@ export function Component({}: {}) {
               secureTextEntry
               value={password}
               onChangeText={setPassword}
+              accessibilityLabelledBy="password"
+              accessibilityLabel="Password"
+              accessibilityHint="Input password for account deletion"
             />
             {error ? (
               <View style={styles.mt20}>
@@ -149,14 +166,21 @@ export function Component({}: {}) {
               <>
                 <TouchableOpacity
                   style={[styles.btn, styles.evilBtn, styles.mt20]}
-                  onPress={onPressConfirmDelete}>
+                  onPress={onPressConfirmDelete}
+                  accessibilityRole="button"
+                  accessibilityLabel="Confirm delete account"
+                  accessibilityHint="">
                   <Text type="button-lg" style={[s.white, s.bold]}>
                     Delete my account
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.btn, s.mt10]}
-                  onPress={onCancel}>
+                  onPress={onCancel}
+                  accessibilityRole="button"
+                  accessibilityLabel="Cancel account deletion"
+                  accessibilityHint="Exits account deletion process"
+                  onAccessibilityEscape={onCancel}>
                   <Text type="button-lg" style={pal.textLight}>
                     Cancel
                   </Text>

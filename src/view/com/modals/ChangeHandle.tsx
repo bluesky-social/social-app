@@ -133,7 +133,12 @@ export function Component({onChanged}: {onChanged: () => void}) {
     <View style={[s.flex1, pal.view]}>
       <View style={[styles.title, pal.border]}>
         <View style={styles.titleLeft}>
-          <TouchableOpacity onPress={onPressCancel}>
+          <TouchableOpacity
+            onPress={onPressCancel}
+            accessibilityRole="button"
+            accessibilityLabel="Cancel change handle"
+            accessibilityHint="Exits handle change process"
+            onAccessibilityEscape={onPressCancel}>
             <Text type="lg" style={pal.textLight}>
               Cancel
             </Text>
@@ -148,13 +153,20 @@ export function Component({onChanged}: {onChanged: () => void}) {
           ) : error && !serviceDescription ? (
             <TouchableOpacity
               testID="retryConnectButton"
-              onPress={onPressRetryConnect}>
+              onPress={onPressRetryConnect}
+              accessibilityRole="button"
+              accessibilityLabel="Retry change handle"
+              accessibilityHint={`Retries handle change to ${handle}`}>
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 Retry
               </Text>
             </TouchableOpacity>
           ) : canSave ? (
-            <TouchableOpacity onPress={onPressSave}>
+            <TouchableOpacity
+              onPress={onPressSave}
+              accessibilityRole="button"
+              accessibilityLabel="Save handle change"
+              accessibilityHint={`Saves handle change to ${handle}`}>
               <Text type="2xl-medium" style={pal.link}>
                 Save
               </Text>
@@ -245,6 +257,9 @@ function ProvidedHandleForm({
           value={handle}
           onChangeText={onChangeHandle}
           editable={!isProcessing}
+          accessible={true}
+          accessibilityLabel="Handle"
+          accessibilityHint="Sets Bluesky username"
         />
       </View>
       <Text type="md" style={[pal.textLight, s.pl10, s.pt10]}>
@@ -253,7 +268,11 @@ function ProvidedHandleForm({
           @{createFullHandle(handle, userDomain)}
         </Text>
       </Text>
-      <TouchableOpacity onPress={onToggleCustom}>
+      <TouchableOpacity
+        onPress={onToggleCustom}
+        accessibilityRole="button"
+        accessibilityHint="Hosting provider"
+        accessibilityLabel="Opens modal for using custom domain">
         <Text type="md-medium" style={[pal.link, s.pl10, s.pt5]}>
           I have my own domain
         </Text>
@@ -338,7 +357,7 @@ function CustomHandleForm({
   // =
   return (
     <>
-      <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
+      <Text type="md" style={[pal.text, s.pb5, s.pl5]} nativeID="customDomain">
         Enter the domain you want to use
       </Text>
       <View style={[pal.btn, styles.textInputWrapper]}>
@@ -356,6 +375,9 @@ function CustomHandleForm({
           value={handle}
           onChangeText={onChangeHandle}
           editable={!isProcessing}
+          accessibilityLabelledBy="customDomain"
+          accessibilityLabel="Custom domain"
+          accessibilityHint="Input your preferred hosting provider"
         />
       </View>
       <View style={styles.spacer} />
@@ -421,7 +443,10 @@ function CustomHandleForm({
         )}
       </Button>
       <View style={styles.spacer} />
-      <TouchableOpacity onPress={onToggleCustom}>
+      <TouchableOpacity
+        onPress={onToggleCustom}
+        accessibilityLabel="Use default provider"
+        accessibilityHint="Use bsky.social as hosting provider">
         <Text type="md-medium" style={[pal.link, s.pl10, s.pt5]}>
           Nevermind, create a handle for me
         </Text>

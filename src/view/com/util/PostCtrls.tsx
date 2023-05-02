@@ -170,83 +170,94 @@ export function PostCtrls(opts: PostCtrlsOpts) {
 
   return (
     <View style={[styles.ctrls, opts.style]}>
-      <View>
-        <TouchableOpacity
-          testID="replyBtn"
-          style={styles.ctrl}
-          hitSlop={HITSLOP}
-          onPress={opts.onPressReply}>
-          <CommentBottomArrow
-            style={[defaultCtrlColor, opts.big ? s.mt2 : styles.mt1]}
-            strokeWidth={3}
-            size={opts.big ? 20 : 15}
-          />
-          {typeof opts.replyCount !== 'undefined' ? (
-            <Text style={[defaultCtrlColor, s.ml5, s.f15]}>
-              {opts.replyCount}
-            </Text>
-          ) : undefined}
-        </TouchableOpacity>
-      </View>
-      <View>
-        <TouchableOpacity
-          testID="repostBtn"
-          hitSlop={HITSLOP}
-          onPress={onPressToggleRepostWrapper}
-          style={styles.ctrl}>
-          <RepostIcon
+      <TouchableOpacity
+        testID="replyBtn"
+        style={styles.ctrl}
+        hitSlop={HITSLOP}
+        onPress={opts.onPressReply}
+        accessibilityRole="button"
+        accessibilityLabel="Reply"
+        accessibilityHint="Opens reply composer">
+        <CommentBottomArrow
+          style={[defaultCtrlColor, opts.big ? s.mt2 : styles.mt1]}
+          strokeWidth={3}
+          size={opts.big ? 20 : 15}
+        />
+        {typeof opts.replyCount !== 'undefined' ? (
+          <Text style={[defaultCtrlColor, s.ml5, s.f15]}>
+            {opts.replyCount}
+          </Text>
+        ) : undefined}
+      </TouchableOpacity>
+      <TouchableOpacity
+        testID="repostBtn"
+        hitSlop={HITSLOP}
+        onPress={onPressToggleRepostWrapper}
+        style={styles.ctrl}
+        accessibilityRole="button"
+        accessibilityLabel={opts.isReposted ? 'Undo repost' : 'Repost'}
+        accessibilityHint={
+          opts.isReposted
+            ? `Remove your repost of ${opts.author}'s post`
+            : `Repost or quote post ${opts.author}'s post`
+        }>
+        <RepostIcon
+          style={
+            opts.isReposted
+              ? (styles.ctrlIconReposted as StyleProp<ViewStyle>)
+              : defaultCtrlColor
+          }
+          strokeWidth={2.4}
+          size={opts.big ? 24 : 20}
+        />
+        {typeof opts.repostCount !== 'undefined' ? (
+          <Text
+            testID="repostCount"
             style={
               opts.isReposted
-                ? (styles.ctrlIconReposted as StyleProp<ViewStyle>)
-                : defaultCtrlColor
-            }
-            strokeWidth={2.4}
-            size={opts.big ? 24 : 20}
+                ? [s.bold, s.green3, s.f15, s.ml5]
+                : [defaultCtrlColor, s.f15, s.ml5]
+            }>
+            {opts.repostCount}
+          </Text>
+        ) : undefined}
+      </TouchableOpacity>
+      <TouchableOpacity
+        testID="likeBtn"
+        style={styles.ctrl}
+        hitSlop={HITSLOP}
+        onPress={onPressToggleLikeWrapper}
+        accessibilityRole="button"
+        accessibilityLabel={opts.isLiked ? 'Unlike' : 'Like'}
+        accessibilityHint={
+          opts.isReposted
+            ? `Removes like from ${opts.author}'s post`
+            : `Like ${opts.author}'s post`
+        }>
+        {opts.isLiked ? (
+          <HeartIconSolid
+            style={styles.ctrlIconLiked as StyleProp<ViewStyle>}
+            size={opts.big ? 22 : 16}
           />
-          {typeof opts.repostCount !== 'undefined' ? (
-            <Text
-              testID="repostCount"
-              style={
-                opts.isReposted
-                  ? [s.bold, s.green3, s.f15, s.ml5]
-                  : [defaultCtrlColor, s.f15, s.ml5]
-              }>
-              {opts.repostCount}
-            </Text>
-          ) : undefined}
-        </TouchableOpacity>
-      </View>
-      <View>
-        <TouchableOpacity
-          testID="likeBtn"
-          style={styles.ctrl}
-          hitSlop={HITSLOP}
-          onPress={onPressToggleLikeWrapper}>
-          {opts.isLiked ? (
-            <HeartIconSolid
-              style={styles.ctrlIconLiked as StyleProp<ViewStyle>}
-              size={opts.big ? 22 : 16}
-            />
-          ) : (
-            <HeartIcon
-              style={[defaultCtrlColor, opts.big ? styles.mt1 : undefined]}
-              strokeWidth={3}
-              size={opts.big ? 20 : 16}
-            />
-          )}
-          {typeof opts.likeCount !== 'undefined' ? (
-            <Text
-              testID="likeCount"
-              style={
-                opts.isLiked
-                  ? [s.bold, s.red3, s.f15, s.ml5]
-                  : [defaultCtrlColor, s.f15, s.ml5]
-              }>
-              {opts.likeCount}
-            </Text>
-          ) : undefined}
-        </TouchableOpacity>
-      </View>
+        ) : (
+          <HeartIcon
+            style={[defaultCtrlColor, opts.big ? styles.mt1 : undefined]}
+            strokeWidth={3}
+            size={opts.big ? 20 : 16}
+          />
+        )}
+        {typeof opts.likeCount !== 'undefined' ? (
+          <Text
+            testID="likeCount"
+            style={
+              opts.isLiked
+                ? [s.bold, s.red3, s.f15, s.ml5]
+                : [defaultCtrlColor, s.f15, s.ml5]
+            }>
+            {opts.likeCount}
+          </Text>
+        ) : undefined}
+      </TouchableOpacity>
       <View>
         {opts.big ? undefined : (
           <PostDropdownBtn

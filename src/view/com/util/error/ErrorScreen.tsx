@@ -57,7 +57,9 @@ export function ErrorScreen({
             testID="errorScreenTryAgainButton"
             type="default"
             style={[styles.btn]}
-            onPress={onPressTryAgain}>
+            onPress={onPressTryAgain}
+            accessibilityLabel="Retry"
+            accessibilityHint="Retries the last action, which errored out">
             <FontAwesomeIcon
               icon="arrows-rotate"
               style={pal.link as FontAwesomeIconStyle}

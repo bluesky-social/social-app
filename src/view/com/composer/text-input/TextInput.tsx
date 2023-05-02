@@ -1,7 +1,14 @@
-import React, {forwardRef, useCallback, useEffect, useRef, useMemo} from 'react'
+import React, {
+  forwardRef,
+  useCallback,
+  useRef,
+  useMemo,
+  ComponentProps,
+} from 'react'
 import {
   NativeSyntheticEvent,
   StyleSheet,
+  TextInput as RNTextInput,
   TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
@@ -27,14 +34,14 @@ export interface TextInputRef {
   blur: () => void
 }
 
-interface TextInputProps {
+interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   richtext: RichText
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteModel
-  setRichText: (v: RichText) => void
+  setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => Promise<false | undefined>
+  onPressPublish: (richtext: RichText) => Promise<void>
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
 }
@@ -55,6 +62,7 @@ export const TextInput = forwardRef(
       onPhotoPasted,
       onSuggestedLinksChanged,
       onError,
+      ...props
     }: TextInputProps,
     ref,
   ) => {
@@ -65,25 +73,10 @@ export const TextInput = forwardRef(
 
     React.useImperativeHandle(ref, () => ({
       focus: () => textInput.current?.focus(),
-      blur: () => textInput.current?.blur(),
+      blur: () => {
+        textInput.current?.blur()
+      },
     }))
-
-    useEffect(() => {
-      // HACK
-      // wait a moment before focusing the input to resolve some layout bugs with the keyboard-avoiding-view
-      // -prf
-      let to: NodeJS.Timeout | undefined
-      if (textInput.current) {
-        to = setTimeout(() => {
-          textInput.current?.focus()
-        }, 250)
-      }
-      return () => {
-        if (to) {
-          clearTimeout(to)
-        }
-      }
-    }, [])
 
     const onChangeText = useCallback(
       async (newText: string) => {
@@ -206,8 +199,10 @@ export const TextInput = forwardRef(
           placeholder={placeholder}
           placeholderTextColor={pal.colors.textLight}
           keyboardAppearance={theme.colorScheme}
+          autoFocus={true}
           multiline
-          style={[pal.text, styles.textInput, styles.textInputFormatting]}>
+          style={[pal.text, styles.textInput, styles.textInputFormatting]}
+          {...props}>
           {textDecorated}
         </PasteInput>
         <Autocomplete

@@ -110,7 +110,10 @@ export function Component({did}: {did: string}) {
         <TouchableOpacity
           testID="sendReportBtn"
           style={s.mt10}
-          onPress={onPress}>
+          onPress={onPress}
+          accessibilityRole="button"
+          accessibilityLabel="Report account"
+          accessibilityHint={`Reports account with reason ${issue}`}>
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}

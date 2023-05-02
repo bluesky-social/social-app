@@ -184,7 +184,10 @@ function AppPassword({
     <TouchableOpacity
       testID={testID}
       style={[styles.item, pal.border]}
-      onPress={onDelete}>
+      onPress={onDelete}
+      accessibilityRole="button"
+      accessibilityLabel="Delete"
+      accessibilityHint="Deletes app password">
       <Text type="md-bold" style={pal.text}>
         {name}
       </Text>
@@ -250,7 +253,6 @@ const styles = StyleSheet.create({
   pr10: {
     marginRight: 10,
   },
-
   btnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',

@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {TouchableOpacity} from 'react-native'
+import {TouchableOpacity, StyleSheet} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -7,7 +7,6 @@ import {
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {useStores} from 'state/index'
-import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
 import {openCamera} from 'lib/media/picker'
 import {useCameraPermission} from 'lib/hooks/usePermissions'
@@ -54,8 +53,11 @@ export function OpenCameraBtn({gallery}: Props) {
     <TouchableOpacity
       testID="openCameraButton"
       onPress={onPressTakePicture}
-      style={[s.pl5]}
-      hitSlop={HITSLOP}>
+      style={styles.button}
+      hitSlop={HITSLOP}
+      accessibilityRole="button"
+      accessibilityLabel="Camera"
+      accessibilityHint="Opens camera on device">
       <FontAwesomeIcon
         icon="camera"
         style={pal.link as FontAwesomeIconStyle}
@@ -64,3 +66,9 @@ export function OpenCameraBtn({gallery}: Props) {
     </TouchableOpacity>
   )
 }
+
+const styles = StyleSheet.create({
+  button: {
+    paddingHorizontal: 15,
+  },
+})

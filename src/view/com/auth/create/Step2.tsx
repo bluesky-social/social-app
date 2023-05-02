@@ -41,6 +41,9 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
             value={model.inviteCode}
             editable
             onChange={model.setInviteCode}
+            accessibilityRole="button"
+            accessibilityLabel="Invite code"
+            accessibilityHint="Input invite code to proceed"
           />
         </View>
       )}
@@ -48,7 +51,11 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
       {!model.inviteCode && model.isInviteCodeRequired ? (
         <Text style={[s.alignBaseline, pal.text]}>
           Don't have an invite code?{' '}
-          <TouchableWithoutFeedback onPress={onPressWaitlist}>
+          <TouchableWithoutFeedback
+            onPress={onPressWaitlist}
+            accessibilityRole="button"
+            accessibilityLabel="Waitlist"
+            accessibilityHint="Opens Bluesky waitlist form">
             <Text style={pal.link}>Join the waitlist</Text>
           </TouchableWithoutFeedback>{' '}
           to try the beta before it's publicly available.
@@ -56,7 +63,7 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
       ) : (
         <>
           <View style={s.pb20}>
-            <Text type="md-medium" style={[pal.text, s.mb2]}>
+            <Text type="md-medium" style={[pal.text, s.mb2]} nativeID="email">
               Email address
             </Text>
             <TextInput
@@ -66,11 +73,17 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
               value={model.email}
               editable
               onChange={model.setEmail}
+              accessibilityLabel="Email"
+              accessibilityHint="Input email for Bluesky waitlist"
+              accessibilityLabelledBy="email"
             />
           </View>
 
           <View style={s.pb20}>
-            <Text type="md-medium" style={[pal.text, s.mb2]}>
+            <Text
+              type="md-medium"
+              style={[pal.text, s.mb2]}
+              nativeID="password">
               Password
             </Text>
             <TextInput
@@ -81,17 +94,27 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
               editable
               secureTextEntry
               onChange={model.setPassword}
+              accessibilityLabel="Password"
+              accessibilityHint="Set password"
+              accessibilityLabelledBy="password"
             />
           </View>
 
           <View style={s.pb20}>
-            <Text type="md-medium" style={[pal.text, s.mb2]}>
+            <Text
+              type="md-medium"
+              style={[pal.text, s.mb2]}
+              nativeID="legalCheck">
               Legal check
             </Text>
             <TouchableOpacity
               testID="is13Input"
               style={[styles.toggleBtn, pal.border]}
-              onPress={() => model.setIs13(!model.is13)}>
+              onPress={() => model.setIs13(!model.is13)}
+              accessibilityRole="checkbox"
+              accessibilityLabel="Verify age"
+              accessibilityHint="Verifies that I am at least 13 years of age"
+              accessibilityLabelledBy="legalCheck">
               <View style={[pal.borderDark, styles.checkbox]}>
                 {model.is13 && (
                   <FontAwesomeIcon icon="check" style={s.blue3} size={16} />

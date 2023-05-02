@@ -57,7 +57,7 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
     <View>
       <StepHeader step="1" title="Your hosting provider" />
       <Text style={[pal.text, s.mb10]}>
-        This is the company that keeps you online.
+        This is the service that keeps you online.
       </Text>
       <Option
         testID="blueskyServerBtn"
@@ -72,7 +72,7 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
         label="Other"
         onPress={onPressOther}>
         <View style={styles.otherForm}>
-          <Text style={[pal.text, s.mb5]}>
+          <Text nativeID="addressProvider" style={[pal.text, s.mb5]}>
             Enter the address of your provider:
           </Text>
           <TextInput
@@ -82,6 +82,9 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
             value={model.serviceUrl}
             editable
             onChange={onChangeServiceUrl}
+            accessibilityHint="Input hosting provider address"
+            accessibilityLabel="Hosting provider address"
+            accessibilityLabelledBy="addressProvider"
           />
           {LOGIN_INCLUDE_DEV_SERVERS && (
             <View style={[s.flexRow, s.mt10]}>
@@ -136,7 +139,12 @@ function Option({
 
   return (
     <View style={[styles.option, pal.border]}>
-      <TouchableWithoutFeedback onPress={onPress} testID={testID}>
+      <TouchableWithoutFeedback
+        onPress={onPress}
+        testID={testID}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        accessibilityHint={`Sets hosting provider to ${label}`}>
         <View style={styles.optionHeading}>
           <View style={[styles.circle, pal.border]}>
             {isSelected ? (

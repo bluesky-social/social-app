@@ -1,12 +1,11 @@
 import React, {useCallback} from 'react'
-import {TouchableOpacity} from 'react-native'
+import {TouchableOpacity, StyleSheet} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
-import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {GalleryModel} from 'state/models/media/gallery'
@@ -36,8 +35,11 @@ export function SelectPhotoBtn({gallery}: Props) {
     <TouchableOpacity
       testID="openGalleryBtn"
       onPress={onPressSelectPhotos}
-      style={[s.pl5, s.pr20]}
-      hitSlop={HITSLOP}>
+      style={styles.button}
+      hitSlop={HITSLOP}
+      accessibilityRole="button"
+      accessibilityLabel="Gallery"
+      accessibilityHint="Opens device photo gallery">
       <FontAwesomeIcon
         icon={['far', 'image']}
         style={pal.link as FontAwesomeIconStyle}
@@ -46,3 +48,9 @@ export function SelectPhotoBtn({gallery}: Props) {
     </TouchableOpacity>
   )
 }
+
+const styles = StyleSheet.create({
+  button: {
+    paddingHorizontal: 15,
+  },
+})

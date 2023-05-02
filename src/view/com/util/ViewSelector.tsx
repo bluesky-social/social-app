@@ -132,7 +132,12 @@ export function Selector({
           <Pressable
             testID={`selector-${i}`}
             key={item}
-            onPress={() => onPressItem(i)}>
+            onPress={() => onPressItem(i)}
+            accessibilityLabel={item}
+            accessibilityHint={`Selects ${item}`}
+            // TODO: Modify the component API such that lint fails
+            // at the invocation site as well
+          >
             <View
               style={[
                 styles.item,
