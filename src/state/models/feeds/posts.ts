@@ -381,13 +381,7 @@ export class PostsFeedModel {
 
   get feedTuners() {
     if (this.feedType === 'goodstuff') {
-      return [
-        FeedTuner.dedupReposts,
-        FeedTuner.likedRepliesOnly,
-        FeedTuner.preferredLangOnly(
-          this.rootStore.preferences.contentLanguages,
-        ),
-      ]
+      return [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
     }
     if (this.feedType === 'home') {
       return [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
