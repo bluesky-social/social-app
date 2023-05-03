@@ -211,7 +211,7 @@ export class FeedTuner {
             }
 
             // if the user's languages are in the top 5 guesses, roll with it
-            for (let j = 0; j < 5 && i < res.length; j++) {
+            for (let j = 0; j < 5 && j < res.length; j++) {
               hasPreferredLang =
                 hasPreferredLang || langsCode3.includes(res[i][0])
             }
