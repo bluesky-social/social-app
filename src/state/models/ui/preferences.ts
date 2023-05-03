@@ -25,7 +25,8 @@ export class LabelPreferencesModel {
 }
 
 export class PreferencesModel {
-  contentLanguages: string[] = deviceLocales.map(locale => locale.languageCode)
+  contentLanguages: string[] =
+    deviceLocales?.map?.(locale => locale.languageCode) || []
   contentLabels = new LabelPreferencesModel()
 
   constructor() {
