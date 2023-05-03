@@ -13,7 +13,7 @@ import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
 
-export const snapPoints = [300]
+export const snapPoints = ['50%']
 
 export function Component({
   title,
