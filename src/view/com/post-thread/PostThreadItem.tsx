@@ -15,7 +15,7 @@ import {PostDropdownBtn} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
-import {ago} from 'lib/strings/time'
+import {ago, niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {pluralize} from 'lib/strings/helpers'
 import {useStores} from 'state/index'
@@ -235,7 +235,10 @@ export const PostThreadItem = observer(function PostThreadItem({
             ) : undefined}
             <PostEmbeds embed={item.post.embed} style={s.mb10} />
           </ContentHider>
-          {item._isHighlightedPost && hasEngagement ? (
+          <View style={[s.mt2, s.mb10]}>
+            <Text style={pal.textLight}>{niceDate(item.post.indexedAt)}</Text>
+          </View>
+          {hasEngagement ? (
             <View style={[styles.expandedInfo, pal.border]}>
               {item.post.repostCount ? (
                 <Link
