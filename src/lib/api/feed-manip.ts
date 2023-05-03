@@ -1,4 +1,4 @@
-import {AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import lande from 'lande'
 import {hasProp} from 'lib/type-guards'
 import {LANGUAGES_MAP_CODE2} from '../../locale/languages'
@@ -46,6 +46,13 @@ export class FeedViewPostsSlice {
       return this.items[1]
     }
     return this.items[0]
+  }
+
+  get isReply() {
+    return (
+      AppBskyFeedPost.isRecord(this.rootItem.post.record) &&
+      !!this.rootItem.post.record.reply
+    )
   }
 
   containsUri(uri: string) {
@@ -176,9 +183,10 @@ export class FeedTuner {
   ): FeedViewPostsSlice[] {
     // remove any replies without at least 2 likes
     for (let i = slices.length - 1; i >= 0; i--) {
-      if (slices[i].isFullThread || !slices[i].rootItem.reply) {
+      if (slices[i].isFullThread || !slices[i].isReply) {
         continue
       }
+
       const item = slices[i].rootItem
       const isRepost = Boolean(item.reason)
       if (!isRepost && (item.post.likeCount || 0) < 2) {
