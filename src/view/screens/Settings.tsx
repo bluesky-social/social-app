@@ -293,7 +293,7 @@ export const SettingsScreen = withAuthRequired(
             href="/settings/muted-accounts">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
-                icon="ban"
+                icon={['far', 'eye-slash']}
                 style={pal.text as FontAwesomeIconStyle}
               />
             </View>
