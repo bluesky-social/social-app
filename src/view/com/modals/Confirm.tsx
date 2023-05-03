@@ -19,10 +19,12 @@ export function Component({
   title,
   message,
   onPressConfirm,
+  onPressCancel,
 }: {
   title: string
   message: string | (() => JSX.Element)
   onPressConfirm: () => void | Promise<void>
+  onPressCancel?: () => void | Promise<void>
 }) {
   const pal = usePalette('default')
   const store = useStores()
@@ -69,10 +71,21 @@ export function Component({
           style={[styles.btn]}
           accessibilityRole="button"
           accessibilityLabel="Confirm"
-          // TODO: This needs to be updated so that modal roles are clear;
-          // Currently there is only one usage for the confirm modal: post deletion
-          accessibilityHint="Confirms a potentially destructive action">
+          accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>Confirm</Text>
+        </TouchableOpacity>
+      )}
+      {onPressCancel === undefined ? null : (
+        <TouchableOpacity
+          testID="cancelBtn"
+          onPress={onPressCancel}
+          style={[styles.btnCancel, s.mt10]}
+          accessibilityRole="button"
+          accessibilityLabel="Cancel"
+          accessibilityHint="">
+          <Text type="button-lg" style={pal.textLight}>
+            Cancel
+          </Text>
         </TouchableOpacity>
       )}
     </View>
@@ -103,5 +116,13 @@ const styles = StyleSheet.create({
     marginTop: 22,
     marginHorizontal: 44,
     backgroundColor: colors.blue3,
+  },
+  btnCancel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 32,
+    padding: 14,
+    marginHorizontal: 20,
   },
 })

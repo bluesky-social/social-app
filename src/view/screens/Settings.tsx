@@ -34,8 +34,8 @@ import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {pluralize} from 'lib/strings/helpers'
 import {isDesktopWeb} from 'platform/detection'
+import {pluralize} from 'lib/strings/helpers'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -54,6 +54,7 @@ export const SettingsScreen = withAuthRequired(
       light: {color: colors.blue3},
       dark: {color: colors.blue2},
     })
+
     const dangerBg = useCustomPalette<ViewStyle>({
       light: {backgroundColor: colors.red1},
       dark: {backgroundColor: colors.red7},
@@ -140,13 +141,12 @@ export const SettingsScreen = withAuthRequired(
     }, [store])
 
     return (
-      <View style={s.hContentRegion} testID="settingsScreen">
+      <View style={[s.hContentRegion]} testID="settingsScreen">
         <ViewHeader title="Settings" />
         <ScrollView
-          style={s.hContentRegion}
+          style={[s.hContentRegion]}
           contentContainerStyle={!isDesktopWeb && pal.viewLight}
           scrollIndicatorInsets={{right: 1}}>
-          <View style={styles.spacer20} />
           <View style={[s.flexRow, styles.heading]}>
             <Text type="xl-bold" style={pal.text}>
               Signed in as
@@ -161,9 +161,7 @@ export const SettingsScreen = withAuthRequired(
             <Link
               href={`/profile/${store.me.handle}`}
               title="Your profile"
-              noFeedback
-              accessibilityLabel={`Signed in as ${store.me.handle}`}
-              accessibilityHint="Double tap to sign out">
+              noFeedback>
               <View style={[pal.view, styles.linkCard]}>
                 <View style={styles.avi}>
                   <UserAvatar size={40} avatar={store.me.avatar} />
@@ -231,9 +229,7 @@ export const SettingsScreen = withAuthRequired(
               Add account
             </Text>
           </TouchableOpacity>
-
           <View style={styles.spacer20} />
-
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Invite a friend
           </Text>
@@ -301,9 +297,7 @@ export const SettingsScreen = withAuthRequired(
               Blocked accounts
             </Text>
           </Link>
-
           <View style={styles.spacer20} />
-
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Advanced
           </Text>
@@ -338,9 +332,7 @@ export const SettingsScreen = withAuthRequired(
               Change my handle
             </Text>
           </TouchableOpacity>
-
           <View style={styles.spacer20} />
-
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Danger zone
           </Text>
@@ -355,16 +347,14 @@ export const SettingsScreen = withAuthRequired(
               <FontAwesomeIcon
                 icon={['far', 'trash-can']}
                 style={dangerText as FontAwesomeIconStyle}
-                size={21}
+                size={18}
               />
             </View>
             <Text type="lg" style={dangerText}>
               Delete my account
             </Text>
           </TouchableOpacity>
-
           <View style={styles.spacer20} />
-
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Developer tools
           </Text>

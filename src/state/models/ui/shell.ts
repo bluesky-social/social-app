@@ -11,6 +11,7 @@ export interface ConfirmModal {
   title: string
   message: string | (() => JSX.Element)
   onPressConfirm: () => void | Promise<void>
+  onPressCancel?: () => void | Promise<void>
 }
 
 export interface EditProfileModal {
@@ -86,10 +87,10 @@ export interface ContentFilteringSettingsModal {
 
 export type Modal =
   // Account
+  | AddAppPasswordModal
   | ChangeHandleModal
   | DeleteAccountModal
   | EditProfileModal
-  | AddAppPasswordModal
 
   // Curation
   | ContentFilteringSettingsModal

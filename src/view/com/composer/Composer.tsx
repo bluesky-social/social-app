@@ -88,6 +88,30 @@ export const ComposePost = observer(function ComposePost({
     autocompleteView.setup()
   }, [autocompleteView])
 
+  const onEscape = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        store.shell.openModal({
+          name: 'confirm',
+          title: 'Cancel draft',
+          onPressConfirm: onClose,
+          onPressCancel: () => {
+            store.shell.closeModal()
+          },
+          message: "Are you sure you'd like to cancel this draft?",
+        })
+      }
+    },
+    [store.shell, onClose],
+  )
+
+  useEffect(() => {
+    if (isDesktopWeb) {
+      window.addEventListener('keydown', onEscape)
+      return () => window.removeEventListener('keydown', onEscape)
+    }
+  }, [onEscape])
+
   const onPressAddLinkCard = useCallback(
     (uri: string) => {
       setExtLink({uri, isLoading: true})
