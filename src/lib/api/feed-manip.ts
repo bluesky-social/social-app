@@ -194,7 +194,9 @@ export class FeedTuner {
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
     ): FeedViewPostsSlice[] => {
-      const origSlices = slices.concat()
+      if (!langsCode2.length) {
+        return slices
+      }
       for (let i = slices.length - 1; i >= 0; i--) {
         let hasPreferredLang = false
         for (const item of slices[i].items) {
@@ -214,11 +216,7 @@ export class FeedTuner {
           slices.splice(i, 1)
         }
       }
-      if (slices.length) {
-        return slices
-      }
-      // fallback: give everything if the language filter left nothing
-      return origSlices
+      return slices
     }
   }
 }

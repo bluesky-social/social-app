@@ -297,6 +297,9 @@ export class PostsFeedModel {
   // used to linearize async modifications to state
   lock = new AwaitLock()
 
+  // used to track if what's hot is coming up empty
+  emptyFetches = 0
+
   // data
   slices: PostsFeedSliceModel[] = []
 
@@ -603,6 +606,9 @@ export class PostsFeedModel {
   ) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
+    if (replace) {
+      this.emptyFetches = 0
+    }
 
     this.rootStore.me.follows.hydrateProfiles(
       res.data.feed.map(item => item.post.author),
@@ -624,6 +630,12 @@ export class PostsFeedModel {
         this.slices = toAppend
       } else {
         this.slices = this.slices.concat(toAppend)
+      }
+      if (toAppend.length === 0) {
+        this.emptyFetches++
+        if (this.emptyFetches >= 10) {
+          this.hasMore = false
+        }
       }
     })
   }
