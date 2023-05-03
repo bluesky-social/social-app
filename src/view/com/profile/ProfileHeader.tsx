@@ -180,7 +180,7 @@ const ProfileHeaderLoaded = observer(
         name: 'confirm',
         title: 'Block Account',
         message:
-          'Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours.',
+          'Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.',
         onPressConfirm: async () => {
           try {
             await view.blockAccount()
@@ -200,7 +200,7 @@ const ProfileHeaderLoaded = observer(
         name: 'confirm',
         title: 'Unblock Account',
         message:
-          'The account will be able to interact with you after unblocking. (You can always block again in the future.)',
+          'The account will be able to interact with you after unblocking.',
         onPressConfirm: async () => {
           try {
             await view.unblockAccount()
