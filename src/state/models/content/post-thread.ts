@@ -125,7 +125,7 @@ export class PostThreadItemModel {
         parentModel._depth = this._depth - 1
         parentModel._showChildReplyLine = true
         if (v.parent.parent) {
-          parentModel._showParentReplyLine = true //parentModel.uri !== higlightedPostUri
+          parentModel._showParentReplyLine = true
           parentModel.assignTreeModels(v.parent, higlightedPostUri, true, false)
         }
         this.parent = parentModel
@@ -143,7 +143,7 @@ export class PostThreadItemModel {
           const itemModel = new PostThreadItemModel(this.rootStore, item)
           itemModel._depth = this._depth + 1
           itemModel._showParentReplyLine =
-            itemModel.parentUri !== higlightedPostUri
+            itemModel.parentUri !== higlightedPostUri && replies.length === 0
           if (item.replies?.length) {
             itemModel._showChildReplyLine = true
             itemModel.assignTreeModels(item, higlightedPostUri, false, true)
