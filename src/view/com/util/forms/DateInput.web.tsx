@@ -31,16 +31,19 @@ export function DateInput(props: Props) {
   const [value, setValue] = useState(props.value.toLocaleDateString())
   const [isValid, setIsValid] = useState(true)
 
-  const onChangeInternal = useCallback((v: string) => {
-    setValue(v)
-    const d = new Date(v)
-    if (!isNaN(Number(d))) {
-      setIsValid(true)
-      props.onChange(d)
-    } else {
-      setIsValid(false)
-    }
-  }, [])
+  const onChangeInternal = useCallback(
+    (v: string) => {
+      setValue(v)
+      const d = new Date(v)
+      if (!isNaN(Number(d))) {
+        setIsValid(true)
+        props.onChange(d)
+      } else {
+        setIsValid(false)
+      }
+    },
+    [setValue, setIsValid, props],
+  )
 
   return (
     <View style={[isValid ? pal.border : palError.border, styles.container]}>

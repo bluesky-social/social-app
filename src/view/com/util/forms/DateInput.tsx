@@ -36,7 +36,7 @@ export function DateInput(props: Props) {
       setShow(false)
       props.onChange(date)
     },
-    [setShow, props.onChange],
+    [setShow, props],
   )
 
   const onPress = useCallback(() => {
