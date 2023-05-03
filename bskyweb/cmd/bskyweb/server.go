@@ -73,6 +73,15 @@ func serve(cctx *cli.Context) error {
 
 	e := echo.New()
 	e.HideBanner = true
+	// SECURITY: Do not modify without due consideration.
+	e.Use(middleware.SecureWithConfig(middleware.SecureConfig{
+		ContentTypeNosniff: "nosniff",
+		XFrameOptions:      "SAMEORIGIN",
+		HSTSMaxAge:         31536000, // 365 days
+		// TODO:
+		// ContentSecurityPolicy
+		// XSSProtection
+	}))
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		// Don't log requests for static content.
 		Skipper: func(c echo.Context) bool {
