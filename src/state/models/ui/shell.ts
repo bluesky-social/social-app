@@ -84,6 +84,10 @@ export interface ContentFilteringSettingsModal {
   name: 'content-filtering-settings'
 }
 
+export interface ContentLanguagesSettingsModal {
+  name: 'content-languages-settings'
+}
+
 export type Modal =
   // Account
   | ChangeHandleModal
@@ -93,6 +97,7 @@ export type Modal =
 
   // Curation
   | ContentFilteringSettingsModal
+  | ContentLanguagesSettingsModal
 
   // Reporting
   | ReportAccountModal

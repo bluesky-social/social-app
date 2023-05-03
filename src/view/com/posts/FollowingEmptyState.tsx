@@ -48,7 +48,6 @@ export function FollowingEmptyState() {
 }
 const styles = StyleSheet.create({
   emptyContainer: {
-    // flex: 1,
     height: '100%',
     paddingVertical: 40,
     paddingHorizontal: 30,
