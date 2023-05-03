@@ -235,7 +235,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             ) : undefined}
             <PostEmbeds embed={item.post.embed} style={s.mb10} />
           </ContentHider>
-          <View style={[s.mt2, s.mb20]}>
+          <View style={[s.mt2, s.mb10]}>
             <Text style={pal.textLight}>{niceDate(item.post.indexedAt)}</Text>
           </View>
           {hasEngagement ? (

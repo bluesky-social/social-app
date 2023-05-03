@@ -122,12 +122,15 @@ export const s = StyleSheet.create({
   ml2: {marginLeft: 2},
   ml5: {marginLeft: 5},
   ml10: {marginLeft: 10},
+  ml20: {marginLeft: 20},
   mt2: {marginTop: 2},
   mt5: {marginTop: 5},
   mt10: {marginTop: 10},
+  mt20: {marginTop: 20},
   mb2: {marginBottom: 2},
   mb5: {marginBottom: 5},
   mb10: {marginBottom: 10},
+  mb20: {marginBottom: 20},
 
   // paddings
   p2: {padding: 2},
