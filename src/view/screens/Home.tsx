@@ -29,9 +29,8 @@ export const HomeScreen = withAuthRequired(
   observer((_opts: Props) => {
     const store = useStores()
     const [selectedPage, setSelectedPage] = React.useState(0)
-    const initialLanguages = React.useMemo(
-      () => store.preferences.contentLanguages,
-      [],
+    const [initialLanguages] = React.useState(
+      store.preferences.contentLanguages,
     )
 
     const algoFeed: PostsFeedModel = React.useMemo(() => {
@@ -45,7 +44,7 @@ export const HomeScreen = withAuthRequired(
       if (initialLanguages !== store.preferences.contentLanguages) {
         algoFeed.refresh()
       }
-    }, [initialLanguages, store.preferences.contentLanguages])
+    }, [initialLanguages, store.preferences.contentLanguages, algoFeed])
 
     useFocusEffect(
       React.useCallback(() => {

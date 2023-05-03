@@ -81,7 +81,7 @@ const LanguageToggle = observer(
 
     const onPress = React.useCallback(() => {
       store.preferences.toggleContentLanguage(code2)
-    }, [store])
+    }, [store, code2])
 
     return (
       <ToggleButton
