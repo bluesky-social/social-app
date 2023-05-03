@@ -330,6 +330,7 @@ export const SettingsScreen = withAuthRequired(
             testID="contentLanguagesBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressContentLanguages}
+            accessibilityRole="button"
             accessibilityHint="Content languages"
             accessibilityLabel="Opens configurable content language settings">
             <View style={[styles.iconContainer, pal.btn]}>
