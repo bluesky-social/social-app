@@ -37,6 +37,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   children?: React.ReactNode
   noFeedback?: boolean
   asAnchor?: boolean
+  anchorNoUnderline?: boolean
 }
 
 export const Link = observer(function Link({
@@ -48,6 +49,7 @@ export const Link = observer(function Link({
   noFeedback,
   asAnchor,
   accessible,
+  anchorNoUnderline,
   ...props
 }: Props) {
   const store = useStores()
@@ -78,6 +80,14 @@ export const Link = observer(function Link({
       </TouchableWithoutFeedback>
     )
   }
+
+  if (anchorNoUnderline) {
+    // @ts-ignore web only -prf
+    props.dataSet = props.dataSet || {}
+    // @ts-ignore web only -prf
+    props.dataSet.noUnderline = 1
+  }
+
   return (
     <TouchableOpacity
       testID={testID}

@@ -49,6 +49,7 @@ import {TermsOfServiceScreen} from './view/screens/TermsOfService'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
 import {AppPasswords} from 'view/screens/AppPasswords'
+import {MutedAccounts} from 'view/screens/MutedAccounts'
 import {BlockedAccounts} from 'view/screens/BlockedAccounts'
 import {getRoutingInstrumentation} from 'lib/sentry'
 
@@ -90,6 +91,7 @@ function commonScreens(Stack: typeof HomeTab) {
       />
       <Stack.Screen name="CopyrightPolicy" component={CopyrightPolicyScreen} />
       <Stack.Screen name="AppPasswords" component={AppPasswords} />
+      <Stack.Screen name="MutedAccounts" component={MutedAccounts} />
       <Stack.Screen name="BlockedAccounts" component={BlockedAccounts} />
     </>
   )
