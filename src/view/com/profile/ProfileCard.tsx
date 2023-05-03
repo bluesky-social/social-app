@@ -60,7 +60,8 @@ export const ProfileCard = observer(
         ]}
         href={`/profile/${profile.handle}`}
         title={profile.handle}
-        asAnchor>
+        asAnchor
+        anchorNoUnderline>
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
             <UserAvatar

@@ -289,6 +289,20 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
           <Link
+            testID="mutedAccountsBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            href="/settings/muted-accounts">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon={['far', 'eye-slash']}
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Muted accounts
+            </Text>
+          </Link>
+          <Link
             testID="blockedAccountsBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             href="/settings/blocked-accounts">
