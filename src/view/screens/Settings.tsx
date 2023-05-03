@@ -131,6 +131,11 @@ export const SettingsScreen = withAuthRequired(
       store.shell.openModal({name: 'content-filtering-settings'})
     }, [track, store])
 
+    const onPressContentLanguages = React.useCallback(() => {
+      track('Settings:ContentlanguagesButtonClicked')
+      store.shell.openModal({name: 'content-languages-settings'})
+    }, [track, store])
+
     const onPressSignout = React.useCallback(() => {
       track('Settings:SignOutButtonClicked')
       store.session.logout()
@@ -312,9 +317,26 @@ export const SettingsScreen = withAuthRequired(
               />
             </View>
             <Text type="lg" style={pal.text}>
-              App Passwords
+              App passwords
             </Text>
           </Link>
+          <TouchableOpacity
+            testID="contentLanguagesBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            onPress={isSwitching ? undefined : onPressContentLanguages}
+            accessibilityRole="button"
+            accessibilityHint="Content languages"
+            accessibilityLabel="Opens configurable content language settings">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="language"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Content languages
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             testID="changeHandleBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}

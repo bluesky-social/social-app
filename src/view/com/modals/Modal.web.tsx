@@ -21,6 +21,7 @@ import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
+import * as ContentLanguagesSettingsModal from './ContentLanguagesSettings'
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
@@ -84,6 +85,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <AddAppPassword.Component />
   } else if (modal.name === 'content-filtering-settings') {
     element = <ContentFilteringSettingsModal.Component />
+  } else if (modal.name === 'content-languages-settings') {
+    element = <ContentLanguagesSettingsModal.Component />
   } else if (modal.name === 'alt-text-image') {
     element = <AltTextImageModal.Component {...modal} />
   } else if (modal.name === 'alt-text-image-read') {

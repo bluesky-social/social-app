@@ -1,6 +1,5 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -8,19 +7,18 @@ import {
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import {MagnifyingGlassIcon} from 'lib/icons'
-import {NavigationProp} from 'lib/routes/types'
+import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 
-export function FollowingEmptyState() {
+export function WhatsHotEmptyState() {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
-  const navigation = useNavigation<NavigationProp>()
+  const store = useStores()
 
-  const onPressFindAccounts = React.useCallback(() => {
-    navigation.navigate('SearchTab')
-    navigation.popToTop()
-  }, [navigation])
+  const onPressSettings = React.useCallback(() => {
+    store.shell.openModal({name: 'content-languages-settings'})
+  }, [store])
 
   return (
     <View style={styles.emptyContainer}>
@@ -28,14 +26,12 @@ export function FollowingEmptyState() {
         <MagnifyingGlassIcon style={[styles.emptyIcon, pal.text]} size={62} />
       </View>
       <Text type="xl-medium" style={[s.textCenter, pal.text]}>
-        Your following feed is empty! Find some accounts to follow to fix this.
+        Your What's Hot feed is empty! This is because there aren't enough users
+        posting in your selected language.
       </Text>
-      <Button
-        type="inverted"
-        style={styles.emptyBtn}
-        onPress={onPressFindAccounts}>
+      <Button type="inverted" style={styles.emptyBtn} onPress={onPressSettings}>
         <Text type="lg-medium" style={palInverted.text}>
-          Find accounts to follow
+          Update my settings
         </Text>
         <FontAwesomeIcon
           icon="angle-right"

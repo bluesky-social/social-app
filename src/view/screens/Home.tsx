@@ -9,6 +9,7 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
 import {Feed} from '../com/posts/Feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
+import {WhatsHotEmptyState} from 'view/com/posts/WhatsHotEmptyState'
 import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
 import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
@@ -24,80 +25,97 @@ const HEADER_OFFSET = isDesktopWeb ? 50 : 40
 const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
-export const HomeScreen = withAuthRequired((_opts: Props) => {
-  const store = useStores()
-  const [selectedPage, setSelectedPage] = React.useState(0)
+export const HomeScreen = withAuthRequired(
+  observer((_opts: Props) => {
+    const store = useStores()
+    const [selectedPage, setSelectedPage] = React.useState(0)
+    const [initialLanguages] = React.useState(
+      store.preferences.contentLanguages,
+    )
 
-  const algoFeed = React.useMemo(() => {
-    const feed = new PostsFeedModel(store, 'goodstuff', {})
-    feed.setup()
-    return feed
-  }, [store])
+    const algoFeed: PostsFeedModel = React.useMemo(() => {
+      const feed = new PostsFeedModel(store, 'goodstuff', {})
+      feed.setup()
+      return feed
+    }, [store])
 
-  useFocusEffect(
-    React.useCallback(() => {
-      store.shell.setMinimalShellMode(false)
-      store.shell.setIsDrawerSwipeDisabled(selectedPage > 0)
-      return () => {
-        store.shell.setIsDrawerSwipeDisabled(false)
+    React.useEffect(() => {
+      // refresh whats hot when lang preferences change
+      if (initialLanguages !== store.preferences.contentLanguages) {
+        algoFeed.refresh()
       }
-    }, [store, selectedPage]),
-  )
+    }, [initialLanguages, store.preferences.contentLanguages, algoFeed])
 
-  const onPageSelected = React.useCallback(
-    (index: number) => {
-      store.shell.setMinimalShellMode(false)
-      setSelectedPage(index)
-      store.shell.setIsDrawerSwipeDisabled(index > 0)
-    },
-    [store],
-  )
+    useFocusEffect(
+      React.useCallback(() => {
+        store.shell.setMinimalShellMode(false)
+        store.shell.setIsDrawerSwipeDisabled(selectedPage > 0)
+        return () => {
+          store.shell.setIsDrawerSwipeDisabled(false)
+        }
+      }, [store, selectedPage]),
+    )
 
-  const onPressSelected = React.useCallback(() => {
-    store.emitScreenSoftReset()
-  }, [store])
+    const onPageSelected = React.useCallback(
+      (index: number) => {
+        store.shell.setMinimalShellMode(false)
+        setSelectedPage(index)
+        store.shell.setIsDrawerSwipeDisabled(index > 0)
+      },
+      [store],
+    )
 
-  const renderTabBar = React.useCallback(
-    (props: RenderTabBarFnProps) => {
-      return (
-        <FeedsTabBar
-          {...props}
-          testID="homeScreenFeedTabs"
-          onPressSelected={onPressSelected}
+    const onPressSelected = React.useCallback(() => {
+      store.emitScreenSoftReset()
+    }, [store])
+
+    const renderTabBar = React.useCallback(
+      (props: RenderTabBarFnProps) => {
+        return (
+          <FeedsTabBar
+            {...props}
+            testID="homeScreenFeedTabs"
+            onPressSelected={onPressSelected}
+          />
+        )
+      },
+      [onPressSelected],
+    )
+
+    const renderFollowingEmptyState = React.useCallback(() => {
+      return <FollowingEmptyState />
+    }, [])
+
+    const renderWhatsHotEmptyState = React.useCallback(() => {
+      return <WhatsHotEmptyState />
+    }, [])
+
+    const initialPage = store.me.followsCount === 0 ? 1 : 0
+    return (
+      <Pager
+        testID="homeScreen"
+        onPageSelected={onPageSelected}
+        renderTabBar={renderTabBar}
+        tabBarPosition="top"
+        initialPage={initialPage}>
+        <FeedPage
+          key="1"
+          testID="followingFeedPage"
+          isPageFocused={selectedPage === 0}
+          feed={store.me.mainFeed}
+          renderEmptyState={renderFollowingEmptyState}
         />
-      )
-    },
-    [onPressSelected],
-  )
-
-  const renderFollowingEmptyState = React.useCallback(() => {
-    return <FollowingEmptyState />
-  }, [])
-
-  const initialPage = store.me.followsCount === 0 ? 1 : 0
-  return (
-    <Pager
-      testID="homeScreen"
-      onPageSelected={onPageSelected}
-      renderTabBar={renderTabBar}
-      tabBarPosition="top"
-      initialPage={initialPage}>
-      <FeedPage
-        key="1"
-        testID="followingFeedPage"
-        isPageFocused={selectedPage === 0}
-        feed={store.me.mainFeed}
-        renderEmptyState={renderFollowingEmptyState}
-      />
-      <FeedPage
-        key="2"
-        testID="whatshotFeedPage"
-        isPageFocused={selectedPage === 1}
-        feed={algoFeed}
-      />
-    </Pager>
-  )
-})
+        <FeedPage
+          key="2"
+          testID="whatshotFeedPage"
+          isPageFocused={selectedPage === 1}
+          feed={algoFeed}
+          renderEmptyState={renderWhatsHotEmptyState}
+        />
+      </Pager>
+    )
+  }),
+)
 
 const FeedPage = observer(
   ({

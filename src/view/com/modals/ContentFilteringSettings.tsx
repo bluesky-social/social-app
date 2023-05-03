@@ -21,7 +21,7 @@ export function Component({}: {}) {
   }, [store])
 
   return (
-    <View testID="reportPostModal" style={[pal.view, styles.container]}>
+    <View testID="contentModerationModal" style={[pal.view, styles.container]}>
       <Text style={[pal.text, styles.title]}>Content Moderation</Text>
       <ScrollView style={styles.scrollContainer}>
         <ContentLabelPref group="nsfw" />

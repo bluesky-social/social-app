@@ -23,7 +23,7 @@ export const LANGUAGES: Language[] = [
   {code3: 'alt', code2: '', name: 'Southern Altai'},
   {code3: 'amh', code2: 'am', name: 'Amharic'},
   {code3: 'ang', code2: '', name: 'English, Old (ca.450-1100)'},
-  {code3: 'anp ', code2: 'Angika', name: 'angika'},
+  {code3: 'anp ', code2: 'Angika', name: 'Angika'},
   {code3: 'apa', code2: '', name: 'Apache languages'},
   {code3: 'ara', code2: 'ar', name: 'Arabic'},
   {

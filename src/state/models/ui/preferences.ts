@@ -2,12 +2,9 @@ import {makeAutoObservable} from 'mobx'
 import {getLocales} from 'expo-localization'
 import {isObj, hasProp} from 'lib/type-guards'
 import {ComAtprotoLabelDefs} from '@atproto/api'
+import {LabelValGroup} from 'lib/labeling/types'
 import {getLabelValueGroup} from 'lib/labeling/helpers'
-import {
-  LabelValGroup,
-  UNKNOWN_LABEL_GROUP,
-  ILLEGAL_LABEL_GROUP,
-} from 'lib/labeling/const'
+import {UNKNOWN_LABEL_GROUP, ILLEGAL_LABEL_GROUP} from 'lib/labeling/const'
 
 const deviceLocales = getLocales()
 
@@ -28,24 +25,17 @@ export class LabelPreferencesModel {
 }
 
 export class PreferencesModel {
-  _contentLanguages: string[] | undefined
+  contentLanguages: string[] =
+    deviceLocales?.map?.(locale => locale.languageCode) || []
   contentLabels = new LabelPreferencesModel()
 
   constructor() {
     makeAutoObservable(this, {}, {autoBind: true})
   }
 
-  // gives an array of BCP 47 language tags without region codes
-  get contentLanguages() {
-    if (this._contentLanguages) {
-      return this._contentLanguages
-    }
-    return deviceLocales.map(locale => locale.languageCode)
-  }
-
   serialize() {
     return {
-      contentLanguages: this._contentLanguages,
+      contentLanguages: this.contentLanguages,
       contentLabels: this.contentLabels,
     }
   }
@@ -57,11 +47,28 @@ export class PreferencesModel {
         Array.isArray(v.contentLanguages) &&
         typeof v.contentLanguages.every(item => typeof item === 'string')
       ) {
-        this._contentLanguages = v.contentLanguages
+        this.contentLanguages = v.contentLanguages
       }
       if (hasProp(v, 'contentLabels') && typeof v.contentLabels === 'object') {
         Object.assign(this.contentLabels, v.contentLabels)
+      } else {
+        // default to the device languages
+        this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
       }
+    }
+  }
+
+  hasContentLanguage(code2: string) {
+    return this.contentLanguages.includes(code2)
+  }
+
+  toggleContentLanguage(code2: string) {
+    if (this.hasContentLanguage(code2)) {
+      this.contentLanguages = this.contentLanguages.filter(
+        lang => lang !== code2,
+      )
+    } else {
+      this.contentLanguages = this.contentLanguages.concat([code2])
     }
   }
 
