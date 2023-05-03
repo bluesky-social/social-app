@@ -214,18 +214,8 @@ export class FeedTuner {
           ) {
             const res = lande(item.post.record.text)
 
-            // require at least 70% confidence; otherwise, roll with it
-            if (res[0][1] <= 0.7) {
+            if (langsCode3.includes(res[0][0])) {
               hasPreferredLang = true
-              break
-            }
-
-            // if the user's languages are in the top 5 guesses, roll with it
-            for (let j = 0; j < 5 && j < res.length; j++) {
-              hasPreferredLang =
-                hasPreferredLang || langsCode3.includes(res[i][0])
-            }
-            if (hasPreferredLang) {
               break
             }
           } else {
