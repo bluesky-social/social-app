@@ -307,7 +307,12 @@ export const PostThreadItem = observer(function PostThreadItem({
         <PostHider
           testID={`postThreadItem-by-${item.post.author.handle}`}
           href={itemHref}
-          style={[styles.outer, {borderColor: pal.colors.border}, pal.view]}
+          style={[
+            styles.outer,
+            pal.border,
+            pal.view,
+            item._showParentReplyLine && styles.noTopBorder,
+          ]}
           moderation={item.moderation.thread}>
           {item._showParentReplyLine && (
             <View
@@ -421,6 +426,9 @@ const styles = StyleSheet.create({
     paddingTop: 2,
     paddingLeft: 6,
     paddingRight: 6,
+  },
+  noTopBorder: {
+    borderTopWidth: 0,
   },
   parentReplyLine: {
     position: 'absolute',
