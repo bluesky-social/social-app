@@ -93,12 +93,12 @@ export const ComposePost = observer(function ComposePost({
       if (e.key === 'Escape') {
         store.shell.openModal({
           name: 'confirm',
-          title: 'Close composer',
+          title: 'Cancel draft',
           onPressConfirm: onClose,
           onPressCancel: () => {
             store.shell.closeModal()
           },
-          message: "Are you sure you'd like to close the composer?",
+          message: "Are you sure you'd like to cancel this draft?",
         })
       }
     },
