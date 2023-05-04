@@ -10,11 +10,13 @@ import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useStores} from 'state/index'
 import * as models from 'state/models/ui/shell'
-import {colors} from 'lib/styles'
+import {colors, s} from 'lib/styles'
 import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
+import {Text} from '../util/text/Text'
 
 interface Img {
   uri: string
+  alt?: string
 }
 
 export const Lightbox = observer(function Lightbox() {
@@ -37,7 +39,7 @@ export const Lightbox = observer(function Lightbox() {
     }
   } else if (activeLightbox instanceof models.ImagesLightbox) {
     const opts = activeLightbox
-    imgs = opts.uris.map(uri => ({uri}))
+    imgs = opts.images
   }
 
   if (!imgs) {
@@ -131,6 +133,11 @@ function LightboxInner({
           )}
         </View>
       </TouchableWithoutFeedback>
+      {imgs[index].alt ? (
+        <View style={styles.footer}>
+          <Text style={s.white}>{imgs[index].alt}</Text>
+        </View>
+      ) : null}
       <View style={styles.closeBtn}>
         <ImageDefaultHeader onRequestClose={onClose} />
       </View>
@@ -182,5 +189,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 30,
     top: '50%',
+  },
+  footer: {
+    paddingHorizontal: 32,
+    paddingVertical: 24,
+    backgroundColor: colors.black,
   },
 })
