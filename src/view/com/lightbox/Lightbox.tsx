@@ -44,9 +44,11 @@ export const Lightbox = observer(function Lightbox() {
 
       return (
         <View style={[styles.footer]}>
-          <Text style={[s.gray3]} numberOfLines={3}>
-            {altText}
-          </Text>
+          {altText ? (
+            <Text style={[s.gray3, styles.footerText]} numberOfLines={3}>
+              {altText}
+            </Text>
+          ) : null}
           <View style={styles.footerBtns}>
             <Button
               type="primary-outline"
@@ -95,15 +97,17 @@ export const Lightbox = observer(function Lightbox() {
 
 const styles = StyleSheet.create({
   footer: {
-    paddingTop: 8,
-    paddingBottom: 48,
+    paddingTop: 16,
+    paddingBottom: 24,
     paddingHorizontal: 24,
     backgroundColor: '#000d',
+  },
+  footerText: {
+    paddingBottom: 16,
   },
   footerBtns: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingTop: 16,
   },
   footerBtn: {
     flexDirection: 'row',
