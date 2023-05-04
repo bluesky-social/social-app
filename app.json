@@ -49,11 +49,11 @@
       "intentFilters": [
         {
           "action": "VIEW",
-          // "autoVerify": true,
+          "autoVerify": true,
           "data": [
             {
               "scheme": "https",
-              "host": "*.bsky.app"
+              "host": "bsky.app"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]
