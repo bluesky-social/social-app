@@ -10,7 +10,9 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
+import ReactNativeHapticFeedback, {
+  HapticFeedbackTypes,
+} from 'react-native-haptic-feedback'
 // DISABLED see #135
 // import {
 //   TriggerableAnimated,
@@ -27,6 +29,7 @@ import {
 import {s, colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {useStores} from 'state/index'
+import {isIOS} from 'platform/detection'
 
 interface PostCtrlsOpts {
   itemUri: string
@@ -59,6 +62,7 @@ interface PostCtrlsOpts {
 }
 
 const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
+const hapticImpact: HapticFeedbackTypes = isIOS ? 'impactMedium' : 'impactLight' // Users said the medium impact was too strong on Android; see APP-537
 
 // DISABLED see #135
 /*
@@ -111,7 +115,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   const onRepost = () => {
     store.shell.closeModal()
     if (!opts.isReposted) {
-      ReactNativeHapticFeedback.trigger('impactMedium')
+      ReactNativeHapticFeedback.trigger(hapticImpact)
       opts.onPressToggleRepost().catch(_e => undefined)
       // DISABLED see #135
       // repostRef.current?.trigger(
@@ -137,7 +141,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         indexedAt: opts.indexedAt,
       },
     })
-    ReactNativeHapticFeedback.trigger('impactMedium')
+    ReactNativeHapticFeedback.trigger(hapticImpact)
   }
 
   const onPressToggleRepostWrapper = () => {
@@ -151,7 +155,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
 
   const onPressToggleLikeWrapper = async () => {
     if (!opts.isLiked) {
-      ReactNativeHapticFeedback.trigger('impactMedium')
+      ReactNativeHapticFeedback.trigger(hapticImpact)
       await opts.onPressToggleLike().catch(_e => undefined)
       // DISABLED see #135
       // likeRef.current?.trigger(
