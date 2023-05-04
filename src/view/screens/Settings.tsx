@@ -152,6 +152,19 @@ export const SettingsScreen = withAuthRequired(
           style={[s.hContentRegion]}
           contentContainerStyle={!isDesktopWeb && pal.viewLight}
           scrollIndicatorInsets={{right: 1}}>
+          <View style={styles.spacer20} />
+          <Text type="xl-bold" style={[pal.text, styles.heading]}>
+            Account
+          </Text>
+          <View style={[styles.infoLine]}>
+            <Text type="lg-medium" style={pal.text}>
+              Email:{' '}
+              <Text type="lg" style={pal.text}>
+                {store.session.currentSession.email}
+              </Text>
+            </Text>
+          </View>
+          <View style={styles.spacer20} />
           <View style={[s.flexRow, styles.heading]}>
             <Text type="xl-bold" style={pal.text}>
               Signed in as
@@ -448,6 +461,10 @@ const styles = StyleSheet.create({
     height: 20,
   },
   heading: {
+    paddingHorizontal: 18,
+    paddingBottom: 6,
+  },
+  infoLine: {
     paddingHorizontal: 18,
     paddingBottom: 6,
   },
