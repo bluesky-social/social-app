@@ -8,6 +8,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
+        "simulator": true,
         "resourceClass": "medium"
       },
       "channel": "development",

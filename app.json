@@ -2,6 +2,7 @@
   "expo": {
     "name": "Bluesky",
     "slug": "bluesky",
+    "scheme": "bluesky",
     "owner": "blueskysocial",
     "version": "1.27.0",
     "orientation": "portrait",
@@ -31,7 +32,8 @@
         "NSMicrophoneUsageDescription": "Used for posts and other kinds of content.",
         "NSPhotoLibraryAddUsageDescription": "Used to save images to your library.",
         "NSPhotoLibraryUsageDescription": "Used for profile pictures, posts, and other kinds of content"
-      }
+      },
+      "associatedDomains": ["applinks:bsky.app", "applinks:staging.bsky.app"]
     },
     "androidStatusBar": {
       "barStyle": "dark-content",
@@ -43,7 +45,20 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "xyz.blueskyweb.app"
+      "package": "xyz.blueskyweb.app",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "bsky.app"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
