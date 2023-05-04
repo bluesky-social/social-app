@@ -48,7 +48,7 @@ cp ./web-build/static/js/*.* bskyweb/static/js/
 cd bskyweb/
 go mod tidy
 go build -v -tags timetzdata -o bskyweb ./cmd/bskyweb
-./bskyweb serve --pds-host=<HOST> --handle=<HANDLE> --password=<PASSWORD>
+./bskyweb serve --pds-host=https://staging.bsky.dev --handle=<HANDLE> --password=<PASSWORD>
 ```
 
 On build success, access the application at [http://localhost:8100/](http://localhost:8100/). Subsequent changes require re-running the above steps in order to be reflected.
