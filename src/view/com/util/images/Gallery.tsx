@@ -1,8 +1,7 @@
 import {AppBskyEmbedImages} from '@atproto/api'
-import React, {ComponentProps, FC, useCallback} from 'react'
-import {Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import React, {ComponentProps, FC} from 'react'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Image} from 'expo-image'
-import {useStores} from 'state/index'
 
 type EventFunction = (index: number) => void
 
@@ -26,22 +25,14 @@ export const GalleryItem: FC<GalleryItemProps> = ({
   onLongPress,
 }) => {
   const image = images[index]
-  const store = useStores()
-
-  const onPressAltText = useCallback(() => {
-    store.shell.openModal({
-      name: 'alt-text-image-read',
-      altText: image.alt,
-    })
-  }, [image.alt, store.shell])
 
   return (
     <View>
       <TouchableOpacity
         delayPressIn={DELAY_PRESS_IN}
-        onPress={() => onPress?.(index)}
-        onPressIn={() => onPressIn?.(index)}
-        onLongPress={() => onLongPress?.(index)}
+        onPress={onPress ? () => onPress(index) : undefined}
+        onPressIn={onPressIn ? () => onPressIn(index) : undefined}
+        onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         accessibilityRole="button"
         accessibilityLabel="View image"
         accessibilityHint="">
@@ -54,15 +45,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
           accessibilityIgnoresInvertColors
         />
       </TouchableOpacity>
-      {image.alt === '' ? null : (
-        <Pressable
-          onPress={onPressAltText}
-          accessibilityRole="button"
-          accessibilityLabel="View alt text"
-          accessibilityHint="Opens modal with alt text">
-          <Text style={styles.alt}>ALT</Text>
-        </Pressable>
-      )}
+      {image.alt === '' ? null : <Text style={styles.alt}>ALT</Text>}
     </View>
   )
 }
@@ -78,8 +61,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 3,
     position: 'absolute',
-    left: 10,
-    top: -26,
+    left: 6,
+    bottom: 6,
     width: 46,
   },
 })

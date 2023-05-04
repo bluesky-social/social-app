@@ -48,11 +48,6 @@ export interface AltTextImageModal {
   image: ImageModel
 }
 
-export interface AltTextImageReadModal {
-  name: 'alt-text-image-read'
-  altText: string
-}
-
 export interface DeleteAccountModal {
   name: 'delete-account'
 }
@@ -106,7 +101,6 @@ export type Modal =
 
   // Posts
   | AltTextImageModal
-  | AltTextImageReadModal
   | CropImageModal
   | ServerInputModal
   | RepostModal
@@ -127,9 +121,14 @@ export class ProfileImageLightbox implements LightboxModel {
   }
 }
 
+interface ImagesLightboxItem {
+  uri: string
+  alt?: string
+}
+
 export class ImagesLightbox implements LightboxModel {
   name = 'images'
-  constructor(public uris: string[], public index: number) {
+  constructor(public images: ImagesLightboxItem[], public index: number) {
     makeAutoObservable(this)
   }
   setIndex(index: number) {
@@ -173,7 +172,7 @@ export class ShellUiModel {
   isModalActive = false
   activeModals: Modal[] = []
   isLightboxActive = false
-  activeLightbox: ProfileImageLightbox | ImagesLightbox | undefined
+  activeLightbox: ProfileImageLightbox | ImagesLightbox | null = null
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
 
@@ -262,7 +261,7 @@ export class ShellUiModel {
 
   closeLightbox() {
     this.isLightboxActive = false
-    this.activeLightbox = undefined
+    this.activeLightbox = null
   }
 
   openComposer(opts: ComposerOpts) {

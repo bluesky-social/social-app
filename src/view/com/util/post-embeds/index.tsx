@@ -1,11 +1,10 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {
   StyleSheet,
   StyleProp,
   View,
   ViewStyle,
   Image as RNImage,
-  Pressable,
   Text,
 } from 'react-native'
 import {
@@ -20,7 +19,6 @@ import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ImagesLightbox} from 'state/models/ui/shell'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {saveImageModal} from 'lib/media/manip'
 import {YoutubeEmbed} from './YoutubeEmbed'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
@@ -43,16 +41,6 @@ export function PostEmbeds({
 }) {
   const pal = usePalette('default')
   const store = useStores()
-
-  const onPressAltText = useCallback(
-    (alt: string) => {
-      store.shell.openModal({
-        name: 'alt-text-image-read',
-        altText: alt,
-      })
-    },
-    [store.shell],
-  )
 
   if (
     AppBskyEmbedRecordWithMedia.isView(embed) &&
@@ -103,20 +91,17 @@ export function PostEmbeds({
     const {images} = embed
 
     if (images.length > 0) {
-      const uris = embed.images.map(img => img.fullsize)
+      const items = embed.images.map(img => ({uri: img.fullsize, alt: img.alt}))
       const openLightbox = (index: number) => {
-        store.shell.openLightbox(new ImagesLightbox(uris, index))
-      }
-      const onLongPress = (index: number) => {
-        saveImageModal({uri: uris[index]})
+        store.shell.openLightbox(new ImagesLightbox(items, index))
       }
       const onPressIn = (index: number) => {
-        const firstImageToShow = uris[index]
+        const firstImageToShow = items[index].uri
         RNImage.prefetch(firstImageToShow)
-        uris.forEach(uri => {
-          if (firstImageToShow !== uri) {
+        items.forEach(item => {
+          if (firstImageToShow !== item.uri) {
             // First image already prefeched above
-            RNImage.prefetch(uri)
+            RNImage.prefetch(item.uri)
           }
         })
       }
@@ -129,20 +114,9 @@ export function PostEmbeds({
               alt={alt}
               uri={thumb}
               onPress={() => openLightbox(0)}
-              onLongPress={() => onLongPress(0)}
               onPressIn={() => onPressIn(0)}
               style={styles.singleImage}>
-              {alt === '' ? null : (
-                <Pressable
-                  onPress={() => {
-                    onPressAltText(alt)
-                  }}
-                  accessibilityRole="button"
-                  accessibilityLabel="View alt text"
-                  accessibilityHint="Opens modal with alt text">
-                  <Text style={styles.alt}>ALT</Text>
-                </Pressable>
-              )}
+              {alt === '' ? null : <Text style={styles.alt}>ALT</Text>}
             </AutoSizedImage>
           </View>
         )
@@ -153,7 +127,6 @@ export function PostEmbeds({
           <ImageLayoutGrid
             images={embed.images}
             onPress={openLightbox}
-            onLongPress={onLongPress}
             onPressIn={onPressIn}
             style={embed.images.length === 1 ? styles.singleImage : undefined}
           />
@@ -209,8 +182,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 3,
     position: 'absolute',
-    left: 10,
-    top: -26,
+    left: 6,
+    bottom: 6,
     width: 46,
   },
 })
