@@ -86,6 +86,7 @@ interface NavItemProps {
 const NavItem = observer(
   ({count, href, icon, iconFilled, label}: NavItemProps) => {
     const pal = usePalette('default')
+    const store = useStores()
     const [pathName] = React.useMemo(() => router.matchPath(href), [href])
     const currentRouteName = useNavigationState(state => {
       if (!state) {
@@ -96,12 +97,23 @@ const NavItem = observer(
 
     const isCurrent = isTab(currentRouteName, pathName)
     const {onPress} = useLinkProps({to: href})
+    const onPressWrapped = React.useCallback(
+      (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        e.preventDefault()
+        if (isCurrent) {
+          store.emitScreenSoftReset()
+        } else {
+          onPress()
+        }
+      },
+      [onPress, isCurrent, store],
+    )
 
     return (
       <PressableWithHover
         style={styles.navItemWrapper}
         hoverStyle={pal.viewLight}
-        onPress={onPress}
+        onPress={onPressWrapped}
         accessibilityRole="tab"
         accessibilityLabel={label}
         accessibilityHint="">
@@ -113,7 +125,11 @@ const NavItem = observer(
             </Text>
           ) : null}
         </View>
-        <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
+        <Text
+          type="title"
+          style={[isCurrent ? s.bold : s.normal, pal.text]}
+          href={href}
+          dataSet={{noUnderline: 1}}>
           {label}
         </Text>
       </PressableWithHover>
