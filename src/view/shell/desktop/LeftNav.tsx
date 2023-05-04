@@ -102,6 +102,9 @@ const NavItem = observer(
         style={styles.navItemWrapper}
         hoverStyle={pal.viewLight}
         onPress={onPress}
+        // @ts-ignore web only attribute -prf
+        href={href}
+        dataSet={{noUnderline: 1}}
         accessibilityRole="tab"
         accessibilityLabel={label}
         accessibilityHint="">
