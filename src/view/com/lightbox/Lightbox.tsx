@@ -1,12 +1,11 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ImageView from './ImageViewing'
 import {useStores} from 'state/index'
 import * as models from 'state/models/ui/shell'
 import {saveImageModal} from 'lib/media/manip'
-import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from '../util/text/Text'
 import {s, colors} from 'lib/styles'
 import {Button} from '../util/forms/Button'
@@ -24,7 +23,7 @@ export const Lightbox = observer(function Lightbox() {
 
   const LightboxFooter = React.useCallback(
     ({imageIndex}: {imageIndex: number}) => {
-      const pal = usePalette('default')
+      const [isAltExpanded, setAltExpanded] = React.useState(false)
 
       const lightbox = store.shell.activeLightbox
       if (!lightbox) {
@@ -45,9 +44,13 @@ export const Lightbox = observer(function Lightbox() {
       return (
         <View style={[styles.footer]}>
           {altText ? (
-            <Text style={[s.gray3, styles.footerText]} numberOfLines={3}>
-              {altText}
-            </Text>
+            <Pressable onPress={() => setAltExpanded(!isAltExpanded)}>
+              <Text
+                style={[s.gray3, styles.footerText]}
+                numberOfLines={isAltExpanded ? undefined : 3}>
+                {altText}
+              </Text>
+            </Pressable>
           ) : null}
           <View style={styles.footerBtns}>
             <Button

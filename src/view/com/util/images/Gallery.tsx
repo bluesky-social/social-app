@@ -28,13 +28,6 @@ export const GalleryItem: FC<GalleryItemProps> = ({
   const image = images[index]
   const store = useStores()
 
-  const onPressAltText = useCallback(() => {
-    store.shell.openModal({
-      name: 'alt-text-image-read',
-      altText: image.alt,
-    })
-  }, [image.alt, store.shell])
-
   return (
     <View>
       <TouchableOpacity
@@ -54,15 +47,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
           accessibilityIgnoresInvertColors
         />
       </TouchableOpacity>
-      {image.alt === '' ? null : (
-        <Pressable
-          onPress={onPressAltText}
-          accessibilityRole="button"
-          accessibilityLabel="View alt text"
-          accessibilityHint="Opens modal with alt text">
-          <Text style={styles.alt}>ALT</Text>
-        </Pressable>
-      )}
+      {image.alt === '' ? null : <Text style={styles.alt}>ALT</Text>}
     </View>
   )
 }
@@ -78,8 +63,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 3,
     position: 'absolute',
-    left: 10,
-    top: -26,
+    left: 6,
+    bottom: 6,
     width: 46,
   },
 })

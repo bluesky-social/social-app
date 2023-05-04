@@ -43,16 +43,6 @@ export function PostEmbeds({
   const pal = usePalette('default')
   const store = useStores()
 
-  const onPressAltText = useCallback(
-    (alt: string) => {
-      store.shell.openModal({
-        name: 'alt-text-image-read',
-        altText: alt,
-      })
-    },
-    [store.shell],
-  )
-
   if (
     AppBskyEmbedRecordWithMedia.isView(embed) &&
     AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
@@ -127,17 +117,7 @@ export function PostEmbeds({
               onPress={() => openLightbox(0)}
               onPressIn={() => onPressIn(0)}
               style={styles.singleImage}>
-              {alt === '' ? null : (
-                <Pressable
-                  onPress={() => {
-                    onPressAltText(alt)
-                  }}
-                  accessibilityRole="button"
-                  accessibilityLabel="View alt text"
-                  accessibilityHint="Opens modal with alt text">
-                  <Text style={styles.alt}>ALT</Text>
-                </Pressable>
-              )}
+              {alt === '' ? null : <Text style={styles.alt}>ALT</Text>}
             </AutoSizedImage>
           </View>
         )
@@ -203,8 +183,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 3,
     position: 'absolute',
-    left: 10,
-    top: -26,
+    left: 6,
+    bottom: 6,
     width: 46,
   },
 })

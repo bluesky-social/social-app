@@ -48,11 +48,6 @@ export interface AltTextImageModal {
   image: ImageModel
 }
 
-export interface AltTextImageReadModal {
-  name: 'alt-text-image-read'
-  altText: string
-}
-
 export interface DeleteAccountModal {
   name: 'delete-account'
 }
@@ -106,7 +101,6 @@ export type Modal =
 
   // Posts
   | AltTextImageModal
-  | AltTextImageReadModal
   | CropImageModal
   | ServerInputModal
   | RepostModal
