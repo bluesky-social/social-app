@@ -1,19 +1,17 @@
 import React, {useCallback, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
-import {TextInput} from './util'
 import {gradients, s} from 'lib/styles'
 import {enforceLen} from 'lib/strings/helpers'
 import {MAX_ALT_TEXT} from 'lib/constants'
 import {useTheme} from 'lib/ThemeContext'
 import {Text} from '../util/text/Text'
-import {TouchableOpacity} from 'react-native-gesture-handler'
 import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from 'state/index'
 import {isDesktopWeb} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
 
-export const snapPoints = ['80%']
+export const snapPoints = ['fullscreen']
 
 interface Props {
   image: ImageModel
