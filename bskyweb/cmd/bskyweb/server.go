@@ -87,7 +87,6 @@ func serve(cctx *cli.Context) error {
 		Skipper: func(c echo.Context) bool {
 			return strings.HasPrefix(c.Request().URL.Path, "/static")
 		},
-		Format: "method=${method} path=${uri} status=${status} latency=${latency_human}\n",
 	}))
 	e.Renderer = NewRenderer("templates/", &bskyweb.TemplateFS, debug)
 	e.HTTPErrorHandler = customHTTPErrorHandler
