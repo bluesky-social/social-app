@@ -81,6 +81,9 @@ async function main() {
             'nudity-account',
             'nudity-profile',
             'nudity-posts',
+            'unknown-account',
+            'unknown-profile',
+            'unknown-posts',
             'muted-account',
           ]) {
             await server.mocker.createUser(user)
@@ -160,6 +163,35 @@ async function main() {
             await server.mocker.createReply(
               'nudity-posts',
               'nudity reply',
+              anchorPost,
+            ),
+          )
+
+          await server.mocker.labelAccount(
+            'not-a-real-label',
+            'unknown-account',
+          )
+          await server.mocker.labelProfile(
+            'not-a-real-label',
+            'unknown-profile',
+          )
+          await server.mocker.labelPost(
+            'not-a-real-label',
+            await server.mocker.createPost('unknown-posts', 'unknown post'),
+          )
+          await server.mocker.labelPost(
+            'not-a-real-label',
+            await server.mocker.createQuotePost(
+              'unknown-posts',
+              'unknown quote post',
+              anchorPost,
+            ),
+          )
+          await server.mocker.labelPost(
+            'not-a-real-label',
+            await server.mocker.createReply(
+              'unknown-posts',
+              'unknown reply',
               anchorPost,
             ),
           )
