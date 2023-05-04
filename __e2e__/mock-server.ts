@@ -84,6 +84,12 @@ async function main() {
             'unknown-account',
             'unknown-profile',
             'unknown-posts',
+            'always-filter-account',
+            'always-filter-profile',
+            'always-filter-posts',
+            'always-warn-account',
+            'always-warn-profile',
+            'always-warn-posts',
             'muted-account',
           ]) {
             await server.mocker.createUser(user)
@@ -192,6 +198,58 @@ async function main() {
             await server.mocker.createReply(
               'unknown-posts',
               'unknown reply',
+              anchorPost,
+            ),
+          )
+
+          await server.mocker.labelAccount('!filter', 'always-filter-account')
+          await server.mocker.labelProfile('!filter', 'always-filter-profile')
+          await server.mocker.labelPost(
+            '!filter',
+            await server.mocker.createPost(
+              'always-filter-posts',
+              'always-filter post',
+            ),
+          )
+          await server.mocker.labelPost(
+            '!filter',
+            await server.mocker.createQuotePost(
+              'always-filter-posts',
+              'always-filter quote post',
+              anchorPost,
+            ),
+          )
+          await server.mocker.labelPost(
+            '!filter',
+            await server.mocker.createReply(
+              'always-filter-posts',
+              'always-filter reply',
+              anchorPost,
+            ),
+          )
+
+          await server.mocker.labelAccount('!warn', 'always-warn-account')
+          await server.mocker.labelProfile('!warn', 'always-warn-profile')
+          await server.mocker.labelPost(
+            '!warn',
+            await server.mocker.createPost(
+              'always-warn-posts',
+              'always-warn post',
+            ),
+          )
+          await server.mocker.labelPost(
+            '!warn',
+            await server.mocker.createQuotePost(
+              'always-warn-posts',
+              'always-warn quote post',
+              anchorPost,
+            ),
+          )
+          await server.mocker.labelPost(
+            '!warn',
+            await server.mocker.createReply(
+              'always-warn-posts',
+              'always-warn reply',
               anchorPost,
             ),
           )

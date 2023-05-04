@@ -8,6 +8,8 @@ import {
 import {
   CONFIGURABLE_LABEL_GROUPS,
   ILLEGAL_LABEL_GROUP,
+  ALWAYS_FILTER_LABEL_GROUP,
+  ALWAYS_WARN_LABEL_GROUP,
   UNKNOWN_LABEL_GROUP,
 } from './const'
 import {
@@ -33,6 +35,12 @@ export function getLabelValueGroup(labelVal: string): LabelValGroup {
   for (id in CONFIGURABLE_LABEL_GROUPS) {
     if (ILLEGAL_LABEL_GROUP.values.includes(labelVal)) {
       return ILLEGAL_LABEL_GROUP
+    }
+    if (ALWAYS_FILTER_LABEL_GROUP.values.includes(labelVal)) {
+      return ALWAYS_FILTER_LABEL_GROUP
+    }
+    if (ALWAYS_WARN_LABEL_GROUP.values.includes(labelVal)) {
+      return ALWAYS_WARN_LABEL_GROUP
     }
     if (CONFIGURABLE_LABEL_GROUPS[id].values.includes(labelVal)) {
       return CONFIGURABLE_LABEL_GROUPS[id]

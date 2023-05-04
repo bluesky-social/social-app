@@ -4,7 +4,12 @@ import {LabelPreferencesModel} from 'state/models/ui/preferences'
 export type Label = ComAtprotoLabelDefs.Label
 
 export interface LabelValGroup {
-  id: keyof LabelPreferencesModel | 'illegal' | 'unknown'
+  id:
+    | keyof LabelPreferencesModel
+    | 'illegal'
+    | 'always-filter'
+    | 'always-warn'
+    | 'unknown'
   title: string
   imagesOnly: boolean
   subtitle?: string
