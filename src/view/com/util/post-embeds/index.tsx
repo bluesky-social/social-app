@@ -103,20 +103,20 @@ export function PostEmbeds({
     const {images} = embed
 
     if (images.length > 0) {
-      const uris = embed.images.map(img => img.fullsize)
+      const items = embed.images.map(img => ({uri: img.fullsize, alt: img.alt}))
       const openLightbox = (index: number) => {
-        store.shell.openLightbox(new ImagesLightbox(uris, index))
+        store.shell.openLightbox(new ImagesLightbox(items, index))
       }
       const onLongPress = (index: number) => {
-        saveImageModal({uri: uris[index]})
+        saveImageModal({uri: items[index].uri})
       }
       const onPressIn = (index: number) => {
-        const firstImageToShow = uris[index]
+        const firstImageToShow = items[index].uri
         RNImage.prefetch(firstImageToShow)
-        uris.forEach(uri => {
-          if (firstImageToShow !== uri) {
+        items.forEach(item => {
+          if (firstImageToShow !== item.uri) {
             // First image already prefeched above
-            RNImage.prefetch(uri)
+            RNImage.prefetch(item.uri)
           }
         })
       }
