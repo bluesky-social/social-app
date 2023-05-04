@@ -42,8 +42,7 @@ export const Lightbox = observer(function Lightbox() {
           {altText ? (
             <Pressable
               onPress={() => setAltExpanded(!isAltExpanded)}
-              accessibilityLabel="Image description"
-              accessibilityHint="Tap to expand the image description">
+              accessibilityRole="button">
               <Text
                 style={[s.gray3, styles.footerText]}
                 numberOfLines={isAltExpanded ? undefined : 3}>
@@ -55,9 +54,7 @@ export const Lightbox = observer(function Lightbox() {
             <Button
               type="primary-outline"
               style={styles.footerBtn}
-              onPress={() => saveImageModal({uri})}
-              accessibilityLabel="Share"
-              accessibilityHint="Share or save the image">
+              onPress={() => saveImageModal({uri})}>
               <FontAwesomeIcon icon="arrow-up-from-bracket" style={s.white} />
               <Text type="xl" style={s.white}>
                 Share
