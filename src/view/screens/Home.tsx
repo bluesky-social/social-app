@@ -245,8 +245,8 @@ const FeedPage = observer(
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
           accessibilityRole="button"
-          accessibilityLabel="Compose"
-          accessibilityHint="Opens post composer"
+          accessibilityLabel="Compose post"
+          accessibilityHint=""
         />
       </View>
     )

@@ -62,12 +62,8 @@ export const ViewHeader = observer(function ({
           hitSlop={BACK_HITSLOP}
           style={canGoBack ? styles.backBtn : styles.backBtnWide}
           accessibilityRole="button"
-          accessibilityLabel={canGoBack ? 'Go back' : 'Go to menu'}
-          accessibilityHint={
-            canGoBack
-              ? 'Navigates to the previous screen'
-              : 'Navigates to the menu'
-          }>
+          accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
+          accessibilityHint="">
           {canGoBack ? (
             <FontAwesomeIcon
               size={18}

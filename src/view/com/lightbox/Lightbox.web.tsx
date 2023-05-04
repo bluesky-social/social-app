@@ -106,8 +106,8 @@ function LightboxInner({
               onPress={onPressLeft}
               style={[styles.btn, styles.leftBtn]}
               accessibilityRole="button"
-              accessibilityLabel="Go back"
-              accessibilityHint="Navigates to previous image in viewer">
+              accessibilityLabel="Previous image"
+              accessibilityHint="">
               <FontAwesomeIcon
                 icon="angle-left"
                 style={styles.icon}
@@ -120,8 +120,8 @@ function LightboxInner({
               onPress={onPressRight}
               style={[styles.btn, styles.rightBtn]}
               accessibilityRole="button"
-              accessibilityLabel="Go to next"
-              accessibilityHint="Navigates to next image in viewer">
+              accessibilityLabel="Next image"
+              accessibilityHint="">
               <FontAwesomeIcon
                 icon="angle-right"
                 style={styles.icon}

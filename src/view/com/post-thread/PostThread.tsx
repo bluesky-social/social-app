@@ -183,8 +183,8 @@ export const PostThread = observer(function PostThread({
             <TouchableOpacity
               onPress={onPressBack}
               accessibilityRole="button"
-              accessibilityLabel="Go back"
-              accessibilityHint="Navigates to the previous screen">
+              accessibilityLabel="Back"
+              accessibilityHint="">
               <Text type="2xl" style={pal.link}>
                 <FontAwesomeIcon
                   icon="angle-left"
@@ -217,8 +217,8 @@ export const PostThread = observer(function PostThread({
           <TouchableOpacity
             onPress={onPressBack}
             accessibilityRole="button"
-            accessibilityLabel="Go back"
-            accessibilityHint="Navigates to the previous screen">
+            accessibilityLabel="Back"
+            accessibilityHint="">
             <Text type="2xl" style={pal.link}>
               <FontAwesomeIcon
                 icon="angle-left"

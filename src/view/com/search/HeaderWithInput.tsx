@@ -55,8 +55,9 @@ export function HeaderWithInput({
         onPress={onPressMenu}
         hitSlop={MENU_HITSLOP}
         style={styles.headerMenuBtn}
-        accessibilityLabel="Go back"
-        accessibilityHint="Navigates to the previous screen">
+        accessibilityRole="button"
+        accessibilityLabel="Back"
+        accessibilityHint="">
         <UserAvatar size={30} avatar={store.me.avatar} />
       </TouchableOpacity>
       <View
@@ -84,6 +85,8 @@ export function HeaderWithInput({
           onSubmitEditing={onSubmitQuery}
           autoFocus={true}
           accessibilityRole="search"
+          accessibilityLabel="Search"
+          accessibilityHint=""
         />
         {query ? (
           <TouchableOpacity

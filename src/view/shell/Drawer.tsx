@@ -171,7 +171,7 @@ export const DrawerContent = observer(() => {
             }
             label="Search"
             accessibilityLabel="Search"
-            accessibilityHint="Search through users and posts"
+            accessibilityHint=""
             bold={isAtSearch}
             onPress={onPressSearch}
           />
@@ -193,7 +193,7 @@ export const DrawerContent = observer(() => {
             }
             label="Home"
             accessibilityLabel="Home"
-            accessibilityHint="Navigates to default feed"
+            accessibilityHint=""
             bold={isAtHome}
             onPress={onPressHome}
           />
@@ -214,12 +214,8 @@ export const DrawerContent = observer(() => {
               )
             }
             label="Notifications"
-            accessibilityLabel={
-              notifications.unreadCountLabel === '1'
-                ? 'Notifications: 1 unread notification'
-                : `Notifications: ${notifications.unreadCountLabel} unread notifications`
-            }
-            accessibilityHint="Opens notification feed"
+            accessibilityLabel="Notifications"
+            accessibilityHint={`${store.me.notifications.unreadCountLabel} unread`}
             count={notifications.unreadCountLabel}
             bold={isAtNotifications}
             onPress={onPressNotifications}
@@ -242,7 +238,7 @@ export const DrawerContent = observer(() => {
             }
             label="Profile"
             accessibilityLabel="Profile"
-            accessibilityHint="See profile display name, avatar, description, and other profile items"
+            accessibilityHint=""
             onPress={onPressProfile}
           />
           <MenuItem
@@ -255,7 +251,7 @@ export const DrawerContent = observer(() => {
             }
             label="Settings"
             accessibilityLabel="Settings"
-            accessibilityHint="Manage settings for your account, like handle, content moderation, and app passwords"
+            accessibilityHint=""
             onPress={onPressSettings}
           />
         </View>
@@ -332,7 +328,7 @@ function MenuItem({
       testID={`menuItemButton-${label}`}
       style={styles.menuItem}
       onPress={onPress}
-      accessibilityRole="menuitem"
+      accessibilityRole="tab"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint="">
       <View style={[styles.menuItemIconWrapper]}>

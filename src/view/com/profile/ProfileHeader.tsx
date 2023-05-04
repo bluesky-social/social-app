@@ -458,8 +458,8 @@ const ProfileHeaderLoaded = observer(
             onPress={onPressBack}
             hitSlop={BACK_HITSLOP}
             accessibilityRole="button"
-            accessibilityLabel="Go back"
-            accessibilityHint="Navigates to the previous screen">
+            accessibilityLabel="Back"
+            accessibilityHint="">
             <View style={styles.backBtnWrapper}>
               <BlurView style={styles.backBtn} blurType="dark">
                 <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
@@ -472,7 +472,7 @@ const ProfileHeaderLoaded = observer(
           onPress={onPressAvi}
           accessibilityRole="image"
           accessibilityLabel={`View ${view.handle}'s avatar`}
-          accessibilityHint={`Opens ${view.handle}'s avatar in an image viewer`}>
+          accessibilityHint="">
           <View
             style={[
               pal.view,
