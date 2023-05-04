@@ -9,6 +9,7 @@ import {saveImageModal} from 'lib/media/manip'
 import {Text} from '../util/text/Text'
 import {s, colors} from 'lib/styles'
 import {Button} from '../util/forms/Button'
+import {isIOS} from 'platform/detection'
 
 export const Lightbox = observer(function Lightbox() {
   const store = useStores()
@@ -16,10 +17,6 @@ export const Lightbox = observer(function Lightbox() {
   const onClose = React.useCallback(() => {
     store.shell.closeLightbox()
   }, [store])
-
-  const onPressShare = React.useCallback((uri: string) => {
-    saveImageModal({uri})
-  }, [])
 
   const LightboxFooter = React.useCallback(
     ({imageIndex}: {imageIndex: number}) => {
@@ -101,12 +98,12 @@ export const Lightbox = observer(function Lightbox() {
 const styles = StyleSheet.create({
   footer: {
     paddingTop: 16,
-    paddingBottom: 24,
+    paddingBottom: isIOS ? 40 : 24,
     paddingHorizontal: 24,
     backgroundColor: '#000d',
   },
   footerText: {
-    paddingBottom: 16,
+    paddingBottom: isIOS ? 20 : 16,
   },
   footerBtns: {
     flexDirection: 'row',
