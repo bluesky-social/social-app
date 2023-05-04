@@ -4,7 +4,12 @@ import {isObj, hasProp} from 'lib/type-guards'
 import {ComAtprotoLabelDefs} from '@atproto/api'
 import {LabelValGroup} from 'lib/labeling/types'
 import {getLabelValueGroup} from 'lib/labeling/helpers'
-import {UNKNOWN_LABEL_GROUP, ILLEGAL_LABEL_GROUP} from 'lib/labeling/const'
+import {
+  UNKNOWN_LABEL_GROUP,
+  ILLEGAL_LABEL_GROUP,
+  ALWAYS_FILTER_LABEL_GROUP,
+  ALWAYS_WARN_LABEL_GROUP,
+} from 'lib/labeling/const'
 
 const deviceLocales = getLocales()
 
@@ -94,6 +99,10 @@ export class PreferencesModel {
       const group = getLabelValueGroup(label.val)
       if (group.id === 'illegal') {
         return {pref: 'hide', desc: ILLEGAL_LABEL_GROUP}
+      } else if (group.id === 'always-filter') {
+        return {pref: 'hide', desc: ALWAYS_FILTER_LABEL_GROUP}
+      } else if (group.id === 'always-warn') {
+        return {pref: 'warn', desc: ALWAYS_WARN_LABEL_GROUP}
       } else if (group.id === 'unknown') {
         continue
       }

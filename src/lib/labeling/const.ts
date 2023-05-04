@@ -6,7 +6,23 @@ export const ILLEGAL_LABEL_GROUP: LabelValGroup = {
   title: 'Illegal Content',
   warning: 'Illegal Content',
   values: ['csam', 'dmca-violation', 'nudity-nonconsentual'],
-  imagesOnly: false, // not applicable
+  imagesOnly: false,
+}
+
+export const ALWAYS_FILTER_LABEL_GROUP: LabelValGroup = {
+  id: 'always-filter',
+  title: 'Content Warning',
+  warning: 'Content Warning',
+  values: ['!filter'],
+  imagesOnly: false,
+}
+
+export const ALWAYS_WARN_LABEL_GROUP: LabelValGroup = {
+  id: 'always-warn',
+  title: 'Content Warning',
+  warning: 'Content Warning',
+  values: ['!warn'],
+  imagesOnly: false,
 }
 
 export const UNKNOWN_LABEL_GROUP: LabelValGroup = {
