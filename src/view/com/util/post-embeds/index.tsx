@@ -20,7 +20,6 @@ import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ImagesLightbox} from 'state/models/ui/shell'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {saveImageModal} from 'lib/media/manip'
 import {YoutubeEmbed} from './YoutubeEmbed'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
@@ -107,9 +106,6 @@ export function PostEmbeds({
       const openLightbox = (index: number) => {
         store.shell.openLightbox(new ImagesLightbox(items, index))
       }
-      const onLongPress = (index: number) => {
-        saveImageModal({uri: items[index].uri})
-      }
       const onPressIn = (index: number) => {
         const firstImageToShow = items[index].uri
         RNImage.prefetch(firstImageToShow)
@@ -129,7 +125,6 @@ export function PostEmbeds({
               alt={alt}
               uri={thumb}
               onPress={() => openLightbox(0)}
-              onLongPress={() => onLongPress(0)}
               onPressIn={() => onPressIn(0)}
               style={styles.singleImage}>
               {alt === '' ? null : (
@@ -153,7 +148,6 @@ export function PostEmbeds({
           <ImageLayoutGrid
             images={embed.images}
             onPress={openLightbox}
-            onLongPress={onLongPress}
             onPressIn={onPressIn}
             style={embed.images.length === 1 ? styles.singleImage : undefined}
           />

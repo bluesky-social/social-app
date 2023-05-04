@@ -39,9 +39,9 @@ export const GalleryItem: FC<GalleryItemProps> = ({
     <View>
       <TouchableOpacity
         delayPressIn={DELAY_PRESS_IN}
-        onPress={() => onPress?.(index)}
-        onPressIn={() => onPressIn?.(index)}
-        onLongPress={() => onLongPress?.(index)}
+        onPress={onPress ? () => onPress(index) : undefined}
+        onPressIn={onPressIn ? () => onPressIn(index) : undefined}
+        onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         accessibilityRole="button"
         accessibilityLabel="View image"
         accessibilityHint="">
