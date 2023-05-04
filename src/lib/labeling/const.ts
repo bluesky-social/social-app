@@ -57,7 +57,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     id: 'hate',
     title: 'Political Hate-Groups',
     warning: 'Hate',
-    values: ['icon-kkk', 'icon-nazi'],
+    values: ['icon-kkk', 'icon-nazi', 'icon-intolerant', 'behavior-intolerant'],
     imagesOnly: false,
   },
   spam: {
