@@ -68,6 +68,8 @@ export const DesktopSearch = observer(function DesktopSearch() {
             onChangeText={onChangeQuery}
             onSubmitEditing={onSubmit}
             accessibilityRole="search"
+            accessibilityLabel="Search"
+            accessibilityHint=""
           />
           {query ? (
             <View style={styles.cancelBtn}>

@@ -94,8 +94,9 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
           )
         }
         onPress={onPressHome}
-        accessibilityLabel="Go home"
-        accessibilityHint="Navigates to feed home"
+        accessibilityRole="tab"
+        accessibilityLabel="Home"
+        accessibilityHint=""
       />
       <Btn
         testID="bottomBarSearchBtn"
@@ -116,6 +117,8 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         }
         onPress={onPressSearch}
         accessibilityRole="search"
+        accessibilityLabel="Search"
+        accessibilityHint=""
       />
       <Btn
         testID="bottomBarNotificationsBtn"
@@ -136,8 +139,10 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         }
         onPress={onPressNotifications}
         notificationCount={store.me.notifications.unreadCountLabel}
+        accessible={true}
+        accessibilityRole="tab"
         accessibilityLabel="Notifications"
-        accessibilityHint="Navigates to notifications"
+        accessibilityHint={`${store.me.notifications.unreadCountLabel} unread`}
       />
       <Btn
         testID="bottomBarProfileBtn"
@@ -159,8 +164,9 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
           </View>
         }
         onPress={onPressProfile}
+        accessibilityRole="tab"
         accessibilityLabel="Profile"
-        accessibilityHint="Navigates to profile"
+        accessibilityHint=""
       />
     </Animated.View>
   )
@@ -169,7 +175,10 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
 interface BtnProps
   extends Pick<
     ComponentProps<typeof TouchableOpacity>,
-    'accessibilityRole' | 'accessibilityHint' | 'accessibilityLabel'
+    | 'accessible'
+    | 'accessibilityRole'
+    | 'accessibilityHint'
+    | 'accessibilityLabel'
   > {
   testID?: string
   icon: JSX.Element
@@ -184,6 +193,7 @@ function Btn({
   notificationCount,
   onPress,
   onLongPress,
+  accessible,
   accessibilityHint,
   accessibilityLabel,
 }: BtnProps) {
@@ -194,6 +204,7 @@ function Btn({
       onPress={onLongPress ? onPress : undefined}
       onPressIn={onLongPress ? undefined : onPress}
       onLongPress={onLongPress}
+      accessible={accessible}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}>
       {notificationCount ? (

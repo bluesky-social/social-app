@@ -66,7 +66,7 @@ function BackBtn() {
       style={styles.backBtn}
       accessibilityRole="button"
       accessibilityLabel="Go back"
-      accessibilityHint="Navigates to the previous screen">
+      accessibilityHint="">
       <FontAwesomeIcon
         size={24}
         icon="angle-left"
@@ -102,8 +102,9 @@ const NavItem = observer(
         style={styles.navItemWrapper}
         hoverStyle={pal.viewLight}
         onPress={onPress}
+        accessibilityRole="tab"
         accessibilityLabel={label}
-        accessibilityHint={`Navigates to ${label}`}>
+        accessibilityHint="">
         <View style={[styles.navItemIconWrapper]}>
           {isCurrent ? iconFilled : icon}
           {typeof count === 'string' && count ? (
@@ -129,8 +130,8 @@ function ComposeBtn() {
       style={[styles.newPostBtn]}
       onPress={onPressCompose}
       accessibilityRole="button"
-      accessibilityLabel="New post"
-      accessibilityHint="Opens post composer">
+      accessibilityLabel="Compose post"
+      accessibilityHint="">
       <View style={styles.newPostBtnIconWrapper}>
         <ComposeIcon2
           size={19}

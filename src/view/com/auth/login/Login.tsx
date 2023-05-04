@@ -241,11 +241,7 @@ const ChooseAccountForm = ({
         </View>
       </TouchableOpacity>
       <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-        <TouchableOpacity
-          onPress={onPressBack}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-          accessibilityHint="Navigates to the previous screen">
+        <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
           <Text type="xl" style={[pal.link, s.pl5]}>
             Back
           </Text>
@@ -454,11 +450,7 @@ const LoginForm = ({
         </View>
       ) : undefined}
       <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-        <TouchableOpacity
-          onPress={onPressBack}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-          accessibilityHint="Navigates to the previous screen">
+        <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
           <Text type="xl" style={[pal.link, s.pl5]}>
             Back
           </Text>
@@ -632,11 +624,7 @@ const ForgotPasswordForm = ({
           </View>
         ) : undefined}
         <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-          <TouchableOpacity
-            onPress={onPressBack}
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-            accessibilityHint="Navigates to the previous screen">
+          <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
             <Text type="xl" style={[pal.link, s.pl5]}>
               Back
             </Text>
@@ -794,11 +782,7 @@ const SetNewPasswordForm = ({
           </View>
         ) : undefined}
         <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-          <TouchableOpacity
-            onPress={onPressBack}
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-            accessibilityHint="Navigates to the previous screen">
+          <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
             <Text type="xl" style={[pal.link, s.pl5]}>
               Back
             </Text>

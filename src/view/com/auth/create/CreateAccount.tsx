@@ -75,9 +75,7 @@ export const CreateAccount = observer(
             <TouchableOpacity
               onPress={onPressBackInner}
               testID="backBtn"
-              accessibilityRole="button"
-              accessibilityLabel="Go back"
-              accessibilityHint="Navigates to the previous screen">
+              accessibilityRole="button">
               <Text type="xl" style={pal.link}>
                 Back
               </Text>
@@ -87,9 +85,7 @@ export const CreateAccount = observer(
               <TouchableOpacity
                 testID="nextBtn"
                 onPress={onPressNext}
-                accessibilityRole="button"
-                accessibilityLabel="Go to next"
-                accessibilityHint="Navigates to the next screen">
+                accessibilityRole="button">
                 {model.isProcessing ? (
                   <ActivityIndicator />
                 ) : (
