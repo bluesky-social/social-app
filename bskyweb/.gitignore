@@ -4,5 +4,11 @@ test-coverage.out
 # Don't check in the binary.
 /bskyweb
 
+# Don't accidentally commit JS-generated code
+static/js/*.js
+static/js/*.map
+static/js/*.js.LICENSE.txt
+templates/scripts.html
+
 # Don't ignore this file
 !.gitignore
