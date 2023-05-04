@@ -1,8 +1,7 @@
 import {AppBskyEmbedImages} from '@atproto/api'
-import React, {ComponentProps, FC, useCallback} from 'react'
-import {Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import React, {ComponentProps, FC} from 'react'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Image} from 'expo-image'
-import {useStores} from 'state/index'
 
 type EventFunction = (index: number) => void
 
@@ -26,7 +25,6 @@ export const GalleryItem: FC<GalleryItemProps> = ({
   onLongPress,
 }) => {
   const image = images[index]
-  const store = useStores()
 
   return (
     <View>

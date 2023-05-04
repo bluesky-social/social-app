@@ -13,6 +13,7 @@ import {isIOS} from 'platform/detection'
 
 export const Lightbox = observer(function Lightbox() {
   const store = useStores()
+  const [isAltExpanded, setAltExpanded] = React.useState(false)
 
   const onClose = React.useCallback(() => {
     store.shell.closeLightbox()
@@ -20,8 +21,6 @@ export const Lightbox = observer(function Lightbox() {
 
   const LightboxFooter = React.useCallback(
     ({imageIndex}: {imageIndex: number}) => {
-      const [isAltExpanded, setAltExpanded] = React.useState(false)
-
       const lightbox = store.shell.activeLightbox
       if (!lightbox) {
         return null
@@ -41,7 +40,10 @@ export const Lightbox = observer(function Lightbox() {
       return (
         <View style={[styles.footer]}>
           {altText ? (
-            <Pressable onPress={() => setAltExpanded(!isAltExpanded)}>
+            <Pressable
+              onPress={() => setAltExpanded(!isAltExpanded)}
+              accessibilityLabel="Image description"
+              accessibilityHint="Tap to expand the image description">
               <Text
                 style={[s.gray3, styles.footerText]}
                 numberOfLines={isAltExpanded ? undefined : 3}>
@@ -53,7 +55,9 @@ export const Lightbox = observer(function Lightbox() {
             <Button
               type="primary-outline"
               style={styles.footerBtn}
-              onPress={() => saveImageModal({uri})}>
+              onPress={() => saveImageModal({uri})}
+              accessibilityLabel="Share"
+              accessibilityHint="Share or save the image">
               <FontAwesomeIcon icon="arrow-up-from-bracket" style={s.white} />
               <Text type="xl" style={s.white}>
                 Share
@@ -63,7 +67,7 @@ export const Lightbox = observer(function Lightbox() {
         </View>
       )
     },
-    [store.shell.activeLightbox],
+    [store.shell.activeLightbox, isAltExpanded, setAltExpanded],
   )
 
   if (!store.shell.activeLightbox) {

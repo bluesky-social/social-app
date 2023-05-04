@@ -1,11 +1,10 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {
   StyleSheet,
   StyleProp,
   View,
   ViewStyle,
   Image as RNImage,
-  Pressable,
   Text,
 } from 'react-native'
 import {
