@@ -28,7 +28,8 @@ export function SubscribedMutelistsEmptyState() {
       </View>
       <Text type="xl-medium" style={[s.textCenter, pal.text]}>
         You can subscribe to mutelists to automatically mute all of the users
-        they include. Mutelists are public but your subscription is not.
+        they include. Mutelists are public but your subscription to a mutelist
+        is private.
       </Text>
       <View style={styles.btns}>
         <Button type="inverted" style={styles.btn} onPress={onPressCreateList}>

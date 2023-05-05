@@ -22,8 +22,11 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'MutedAccounts'>
-export const MutedAccounts = withAuthRequired(
+type Props = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'ModerationMutedAccounts'
+>
+export const ModerationMutedAccounts = withAuthRequired(
   observer(({}: Props) => {
     const pal = usePalette('default')
     const store = useStores()

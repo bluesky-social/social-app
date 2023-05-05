@@ -94,9 +94,9 @@ export const DrawerContent = observer(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
 
-  const onPressLists = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: 'Lists'})
-    navigation.navigate('Lists')
+  const onPressModeration = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'Moderation'})
+    navigation.navigate('Moderation')
     store.shell.closeDrawer()
   }, [navigation, track, store.shell])
 
@@ -227,18 +227,17 @@ export const DrawerContent = observer(() => {
             onPress={onPressNotifications}
           />
           <MenuItem
-            href="/lists"
             icon={
               <FontAwesomeIcon
-                icon="list-ul"
+                icon={['far', 'hand']}
                 style={pal.text as FontAwesomeIconStyle}
                 size={20}
               />
             }
-            label="Lists"
-            accessibilityLabel="Lists"
+            label="Moderation"
+            accessibilityLabel="Moderation"
             accessibilityHint=""
-            onPress={onPressLists}
+            onPress={onPressModeration}
           />
           <MenuItem
             icon={

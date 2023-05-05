@@ -202,22 +202,22 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         label="Notifications"
       />
       <NavItem
-        href="/lists"
+        href="/moderation"
         icon={
           <FontAwesomeIcon
-            icon="list-ul"
+            icon={['far', 'hand']}
             style={pal.text as FontAwesomeIconStyle}
             size={20}
           />
         }
         iconFilled={
           <FontAwesomeIcon
-            icon="list-ul"
+            icon="hand"
             style={pal.text as FontAwesomeIconStyle}
             size={20}
           />
         }
-        label="Lists"
+        label="Moderation"
       />
       {store.session.hasSession && (
         <NavItem

@@ -11,8 +11,11 @@ import {ListsListModel} from 'state/models/lists/lists-list'
 import {ListsList} from 'view/com/lists/ListsList'
 import {usePalette} from 'lib/hooks/usePalette'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>
-export const ListsScreen = withAuthRequired(({route}: Props) => {
+type Props = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'ModerationMuteLists'
+>
+export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
   const pal = usePalette('default')
   const store = useStores()
   const [selectedPage, setSelectedPage] = React.useState(0)
