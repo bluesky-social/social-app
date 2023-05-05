@@ -9,7 +9,7 @@ import {Button} from '../util/forms/Button'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 
-export function SubscribedBlocklistsEmptyState() {
+export function SubscribedMutelistsEmptyState() {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
 
@@ -27,8 +27,8 @@ export function SubscribedBlocklistsEmptyState() {
         />
       </View>
       <Text type="xl-medium" style={[s.textCenter, pal.text]}>
-        You can subscribe to blocklists to automatically block all of the users
-        they include. Blocklists and your subscriptions are public.
+        You can subscribe to mutelists to automatically mute all of the users
+        they include. Mutelists are public but your subscription is not.
       </Text>
       <View style={styles.btns}>
         <Button type="inverted" style={styles.btn} onPress={onPressCreateList}>
@@ -38,7 +38,7 @@ export function SubscribedBlocklistsEmptyState() {
             size={14}
           />
           <Text type="lg-medium" style={palInverted.text}>
-            New blocklist
+            New mutelist
           </Text>
         </Button>
       </View>

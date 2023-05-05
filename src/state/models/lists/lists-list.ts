@@ -25,7 +25,7 @@ export class ListsListModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public source: 'blocklists' | string,
+    public source: 'mutelists' | string,
   ) {
     makeAutoObservable(
       this,
@@ -62,7 +62,7 @@ export class ListsListModel {
     this._xLoading(replace)
     try {
       let res
-      if (this.source === 'blocklists') {
+      if (this.source === 'mutelists') {
         res = await this.rootStore.agent.app.bsky.graph.getListBlocks({
           limit: PAGE_SIZE,
           cursor: replace ? undefined : this.loadMoreCursor,

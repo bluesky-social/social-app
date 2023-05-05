@@ -5,7 +5,7 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {TabBar} from '../com/pager/TabBar'
 import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {MyListsEmptyState} from 'view/com/lists/MyListsEmptyState'
-import {SubscribedBlocklistsEmptyState} from 'view/com/lists/SubscribedBlocklistsEmptyState'
+import {SubscribedMutelistsEmptyState} from 'view/com/lists/SubscribedMutelistsEmptyState'
 import {useStores} from 'state/index'
 import {ListsListModel} from 'state/models/lists/lists-list'
 import {ListsList} from 'view/com/lists/ListsList'
@@ -23,8 +23,8 @@ export const ListsScreen = withAuthRequired(({route}: Props) => {
     return list
   }, [store])
 
-  const blocklists: ListsListModel = React.useMemo(() => {
-    const list = new ListsListModel(store, 'blocklists')
+  const mutelists: ListsListModel = React.useMemo(() => {
+    const list = new ListsListModel(store, 'mutelists')
     list.loadMore()
     return list
   }, [store])
@@ -46,7 +46,7 @@ export const ListsScreen = withAuthRequired(({route}: Props) => {
     return (
       <TabBar
         {...props}
-        items={['My Lists', 'Blocklists']}
+        items={['My Lists', 'Mutelists']}
         indicatorColor={pal.colors.link}
         indicatorPosition="bottom"
         testID="tabs"
@@ -58,8 +58,8 @@ export const ListsScreen = withAuthRequired(({route}: Props) => {
     return <MyListsEmptyState />
   }, [])
 
-  const renderBlockliststEmptyState = React.useCallback(() => {
-    return <SubscribedBlocklistsEmptyState />
+  const renderMutelistsEmptyState = React.useCallback(() => {
+    return <SubscribedMutelistsEmptyState />
   }, [])
 
   return (
@@ -76,9 +76,9 @@ export const ListsScreen = withAuthRequired(({route}: Props) => {
       />
       <ListsList
         key="2"
-        testID="blocklistsPage"
-        listsList={blocklists}
-        renderEmptyState={renderBlockliststEmptyState}
+        testID="mutelistsPage"
+        listsList={mutelists}
+        renderEmptyState={renderMutelistsEmptyState}
       />
     </Pager>
   )

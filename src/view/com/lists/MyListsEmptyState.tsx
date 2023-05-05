@@ -38,15 +38,14 @@ export function MyListsEmptyState() {
             size={14}
           />
           <Text type="lg-medium" style={palInverted.text}>
-            New blocklist
+            New mutelist
           </Text>
         </Button>
       </View>
       <View style={[pal.viewLight, styles.notice]}>
         <Text type="lg" style={[pal.textLight, s.textCenter]}>
-          Currently only "blocklists" are available, which is kind of weird but
-          we wanted to prioritize user safety. Feedlists will be implemented
-          soon!
+          Currently only "mutelists" are available. Feed lists will be
+          implemented soon!
         </Text>
       </View>
     </View>
