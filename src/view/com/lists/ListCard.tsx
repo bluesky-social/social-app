@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {AppBskyGraphDefs, RichText} from '@atproto/api'
+import {AtUri, AppBskyGraphDefs, RichText} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {RichText as RichTextCom} from '../util/text/RichText'
@@ -8,11 +8,6 @@ import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {
-  getProfileViewBasicLabelInfo,
-  getProfileModeration,
-} from 'lib/labeling/helpers'
-import {ModerationBehaviorCode} from 'lib/labeling/types'
 
 export const ListCard = ({
   testID,
@@ -28,6 +23,15 @@ export const ListCard = ({
   renderButton?: () => JSX.Element
 }) => {
   const pal = usePalette('default')
+
+  const rkey = React.useMemo(() => {
+    try {
+      const urip = new AtUri(list.uri)
+      return urip.rkey
+    } catch {
+      return ''
+    }
+  }, [list])
 
   const descriptionRichText = React.useMemo(() => {
     if (list.description) {
@@ -48,7 +52,7 @@ export const ListCard = ({
         noBorder && styles.outerNoBorder,
         !noBg && pal.view,
       ]}
-      href={`/profile/${'list.author'}/lists/${'list.rkey'}`}
+      href={`/profile/${list.creator.did}/lists/${rkey}`}
       title={list.name}
       asAnchor
       anchorNoUnderline>
@@ -65,10 +69,10 @@ export const ListCard = ({
             {sanitizeDisplayName(list.name)}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            {list.purpose === 'app.bsky.graph.defs#blocklist' && 'Block list'}{' '}
-            by @TODO
+            {list.purpose === 'app.bsky.graph.defs#modlist' && 'Mute list'} by @
+            {list.creator.handle}
           </Text>
-          {!!list.viewer?.blocked && (
+          {!!list.viewer?.muted && (
             <View style={s.flexRow}>
               <View style={[s.mt5, pal.btn, styles.pill]}>
                 <Text type="xs" style={pal.text}>

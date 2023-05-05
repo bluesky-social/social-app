@@ -1,13 +1,18 @@
 import React from 'react'
 import {StyleSheet} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
+import {
+  useFocusEffect,
+  useNavigation,
+  StackActions,
+} from '@react-navigation/native'
+import {AtUri} from '@atproto/api'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {EmptyStateWithButton} from 'view/com/util/EmptyStateWithButton'
-import {MutelistsEmptyState} from 'view/com/lists/MutelistsEmptyState'
 import {useStores} from 'state/index'
 import {ListsListModel} from 'state/models/lists/lists-list'
 import {ListsList} from 'view/com/lists/ListsList'
+import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from 'view/com/util/Views'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -20,6 +25,7 @@ type Props = NativeStackScreenProps<
 export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
   const pal = usePalette('default')
   const store = useStores()
+  const navigation = useNavigation<NavigationProp>()
 
   const mutelists: ListsListModel = React.useMemo(() => {
     const list = new ListsListModel(store, 'mutelists')
@@ -37,7 +43,13 @@ export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
     store.shell.openModal({
       name: 'create-mute-list',
       onCreate: (uri: string) => {
-        // TODO
+        try {
+          const urip = new AtUri(uri)
+          navigation.navigate('ProfileList', {
+            name: urip.hostname,
+            rkey: urip.rkey,
+          })
+        } catch {}
       },
     })
   }, [store])

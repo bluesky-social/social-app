@@ -14,6 +14,7 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from 'state/index'
+import {ListModel} from 'state/models/content/list'
 import {s, colors, gradients} from 'lib/styles'
 import {enforceLen} from 'lib/strings/helpers'
 import {compressIfNeeded} from 'lib/media/manip'
@@ -71,9 +72,13 @@ export function Component({onCreate}: {onCreate?: (uri: string) => void}) {
       setError('')
     }
     try {
-      // TODO
+      const res = await ListModel.createModList(store, {
+        name,
+        description,
+        avatar: newAvatar,
+      })
       Toast.show('Mute-list created')
-      onCreate?.('todo')
+      onCreate?.(res.uri)
       store.shell.closeModal()
     } catch (e: any) {
       if (isNetworkError(e)) {

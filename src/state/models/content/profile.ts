@@ -18,8 +18,6 @@ import {
   filterProfileLabels,
 } from 'lib/labeling/helpers'
 
-export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
-
 export class ProfileViewerModel {
   muted?: boolean
   following?: string
