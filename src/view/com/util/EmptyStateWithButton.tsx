@@ -4,12 +4,20 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {Text} from './text/Text'
+import {Button} from './forms/Button'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 
-export function MyListsEmptyState() {
+interface Props {
+  icon: IconProp
+  message: string
+  buttonLabel: string
+  onPress: () => void
+}
+
+export function EmptyStateWithButton(props: Props) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
 
@@ -21,32 +29,25 @@ export function MyListsEmptyState() {
     <View style={styles.container}>
       <View style={styles.iconContainer}>
         <FontAwesomeIcon
-          icon="list-ul"
+          icon={props.icon}
           style={[styles.icon, pal.text]}
           size={62}
         />
       </View>
       <Text type="xl-medium" style={[s.textCenter, pal.text]}>
-        Lists are public collections of users. You can create a list or find
-        other users' lists on their profiles.
+        {props.message}
       </Text>
       <View style={styles.btns}>
-        <Button type="inverted" style={styles.btn} onPress={onPressCreateList}>
+        <Button type="inverted" style={styles.btn} onPress={props.onPress}>
           <FontAwesomeIcon
             icon="plus"
             style={palInverted.text as FontAwesomeIconStyle}
             size={14}
           />
           <Text type="lg-medium" style={palInverted.text}>
-            New mutelist
+            {props.buttonLabel}
           </Text>
         </Button>
-      </View>
-      <View style={[pal.viewLight, styles.notice]}>
-        <Text type="lg" style={[pal.textLight, s.textCenter]}>
-          Currently only "mutelists" are available. Feed lists will be
-          implemented soon!
-        </Text>
       </View>
     </View>
   )
