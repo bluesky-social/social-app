@@ -37,6 +37,11 @@ export interface ReportAccountModal {
   did: string
 }
 
+export interface CreateMuteListModal {
+  name: 'create-mute-list'
+  onCreate?: (uri: string) => void
+}
+
 export interface CropImageModal {
   name: 'crop-image'
   uri: string
@@ -95,9 +100,10 @@ export type Modal =
   | ContentFilteringSettingsModal
   | ContentLanguagesSettingsModal
 
-  // Reporting
+  // Moderation
   | ReportAccountModal
   | ReportPostModal
+  | CreateMuteListModal
 
   // Posts
   | AltTextImageModal

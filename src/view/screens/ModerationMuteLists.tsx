@@ -33,16 +33,25 @@ export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
     }, [store]),
   )
 
+  const onPressNewMuteList = React.useCallback(() => {
+    store.shell.openModal({
+      name: 'create-mute-list',
+      onCreate: (uri: string) => {
+        // TODO
+      },
+    })
+  }, [store])
+
   const renderEmptyState = React.useCallback(() => {
     return (
       <EmptyStateWithButton
         icon="users-slash"
         message="You can subscribe to mute-lists to automatically mute all of the users they include. Mute-lists are public but your subscription to a mute-list is private."
         buttonLabel="New Mute List"
-        onPress={() => undefined}
+        onPress={onPressNewMuteList}
       />
     )
-  }, [])
+  }, [onPressNewMuteList])
 
   return (
     <CenteredView
