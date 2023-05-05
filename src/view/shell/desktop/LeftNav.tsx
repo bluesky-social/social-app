@@ -113,7 +113,10 @@ const NavItem = observer(
       <PressableWithHover
         style={styles.navItemWrapper}
         hoverStyle={pal.viewLight}
+        // @ts-ignore web only -prf
         onPress={onPressWrapped}
+        href={href}
+        dataSet={{noUnderline: 1}}
         accessibilityRole="tab"
         accessibilityLabel={label}
         accessibilityHint="">
@@ -125,11 +128,7 @@ const NavItem = observer(
             </Text>
           ) : null}
         </View>
-        <Text
-          type="title"
-          style={[isCurrent ? s.bold : s.normal, pal.text]}
-          href={href}
-          dataSet={{noUnderline: 1}}>
+        <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
           {label}
         </Text>
       </PressableWithHover>
