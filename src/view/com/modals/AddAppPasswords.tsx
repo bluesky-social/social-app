@@ -72,6 +72,19 @@ export function Component({}: {}) {
   }, [store])
 
   const createAppPassword = async () => {
+    // if name is all whitespace, we don't allow it
+    if (!name || !name.trim()) {
+      Toast.show(
+        'Please enter a name for your app password. All spaces is not allowed.',
+      )
+      return
+    }
+    // if name is too short (under 4 chars), we don't allow it
+    if (name.length < 4) {
+      Toast.show('App Password names must be at least 4 characters long.')
+      return
+    }
+
     try {
       const newPassword = await store.me.createAppPassword(name)
       if (newPassword) {
@@ -86,13 +99,27 @@ export function Component({}: {}) {
     }
   }
 
+  const _onChangeText = (text: string) => {
+    // sanitize input
+    // we only all alphanumeric characters, spaces, dashes, and underscores
+    // if the user enters anything else, we ignore it and shake the input container
+    // also, it cannot start with a space
+    if (text.match(/^[a-zA-Z0-9-_ ]*$/)) {
+      setName(text)
+    } else {
+      Toast.show(
+        'App Password names can only contain letters, numbers, spaces, dashes, and underscores.',
+      )
+    }
+  }
+
   return (
     <View style={[styles.container, pal.view]} testID="addAppPasswordsModal">
       <View>
         {!appPassword ? (
           <Text type="lg" style={[pal.text]}>
-            Please enter a unique name for this App Password. We have generated
-            a random name for you.
+            Please enter a unique name for this App Password or use our randomly
+            generated one.
           </Text>
         ) : (
           <Text type="lg" style={[pal.text]}>
@@ -106,7 +133,7 @@ export function Component({}: {}) {
           <View style={[pal.btn, styles.textInputWrapper]}>
             <TextInput
               style={[styles.input, pal.text]}
-              onChangeText={setName}
+              onChangeText={_onChangeText}
               value={name}
               placeholder="Enter a name for this App Password"
               placeholderTextColor={pal.colors.textLight}
@@ -114,6 +141,7 @@ export function Component({}: {}) {
               autoComplete="off"
               autoCapitalize="none"
               autoFocus={true}
+              maxLength={32}
               selectTextOnFocus={true}
               multiline={true} // need this to be true otherwise selectTextOnFocus doesn't work
               numberOfLines={1} // hack for multiline so only one line shows (android)
@@ -154,7 +182,13 @@ export function Component({}: {}) {
           For security reasons, you won't be able to view this again. If you
           lose this password, you'll need to generate a new one.
         </Text>
-      ) : null}
+      ) : (
+        <Text type="xs" style={[pal.textLight, s.mb10, s.mt2]}>
+          Only contain letters, numbers, spaces, dashes, and underscores
+          allowed. Must be at least 4 characters long, but no more than 32
+          characters long.
+        </Text>
+      )}
       <View style={styles.btnContainer}>
         <Button
           type="primary"
