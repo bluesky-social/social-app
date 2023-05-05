@@ -17,6 +17,7 @@ import * as backHandler from 'lib/routes/back-handler'
 import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
 import {isAndroid} from 'platform/detection'
+import {SafeAreaProvider} from 'react-native-safe-area-context'
 
 const ShellInner = observer(() => {
   const store = useStores()
@@ -78,12 +79,14 @@ export const Shell: React.FC = observer(() => {
   const pal = usePalette('default')
   const theme = useTheme()
   return (
-    <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
-      <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
-      <RoutesContainer>
-        <ShellInner />
-      </RoutesContainer>
-    </View>
+    <SafeAreaProvider style={pal.view}>
+      <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
+        <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
+        <RoutesContainer>
+          <ShellInner />
+        </RoutesContainer>
+      </View>
+    </SafeAreaProvider>
   )
 })
 
