@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 import {
   AppBskyGraphGetLists as GetLists,
-  AppBskyGraphGetListBlocks as GetListBlocks,
+  AppBskyGraphGetListMutes as GetListMutes,
   AppBskyGraphDefs as GraphDefs,
 } from '@atproto/api'
 import {RootStoreModel} from '../root-store'
@@ -25,7 +25,7 @@ export class ListsListModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public source: 'mutelists' | string,
+    public source: 'my-modlists' | string,
   ) {
     makeAutoObservable(
       this,
@@ -62,11 +62,32 @@ export class ListsListModel {
     this._xLoading(replace)
     try {
       let res
-      if (this.source === 'mutelists') {
-        res = await this.rootStore.agent.app.bsky.graph.getListBlocks({
-          limit: PAGE_SIZE,
-          cursor: replace ? undefined : this.loadMoreCursor,
-        })
+      if (this.source === 'my-modlists') {
+        res = {
+          success: true,
+          headers: {},
+          data: {
+            subject: undefined,
+            lists: [],
+          },
+        }
+        const [res1, res2] = await Promise.all([
+          fetchAllUserLists(this.rootStore, this.rootStore.me.did),
+          fetchAllMyMuteLists(this.rootStore),
+        ])
+        for (let list of res1.data.lists) {
+          if (list.purpose === 'app.bsky.graph.defs#modlist') {
+            res.data.lists.push(list)
+          }
+        }
+        for (let list of res2.data.lists) {
+          if (
+            list.purpose === 'app.bsky.graph.defs#modlist' &&
+            !res.data.lists.find(l => l.uri === list.uri)
+          ) {
+            res.data.lists.push(list)
+          }
+        }
       } else {
         res = await this.rootStore.agent.app.bsky.graph.getLists({
           actor: this.source,
@@ -81,7 +102,7 @@ export class ListsListModel {
       }
       this._xIdle()
     } catch (e: any) {
-      this._xIdle(replace ?? e, !replace ?? e)
+      this._xIdle(replace ? e : undefined, !replace ? e : undefined)
     }
   })
 
@@ -120,14 +141,74 @@ export class ListsListModel {
   // helper functions
   // =
 
-  _replaceAll(res: GetLists.Response | GetListBlocks.Response) {
+  _replaceAll(res: GetLists.Response | GetListMutes.Response) {
     this.lists = []
     this._appendAll(res)
   }
 
-  _appendAll(res: GetLists.Response | GetListBlocks.Response) {
+  _appendAll(res: GetLists.Response | GetListMutes.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    this.lists = this.lists.concat(res.data.lists)
+    this.lists = this.lists.concat(
+      res.data.lists.map(list => ({...list, _reactKey: list.uri})),
+    )
   }
+}
+
+async function fetchAllUserLists(
+  store: RootStoreModel,
+  did: string,
+): Promise<GetLists.Response> {
+  let acc: GetLists.Response = {
+    success: true,
+    headers: {},
+    data: {
+      subject: undefined,
+      lists: [],
+    },
+  }
+
+  let cursor
+  for (let i = 0; i < 100; i++) {
+    const res = await store.agent.app.bsky.graph.getLists({
+      actor: did,
+      cursor,
+      limit: 50,
+    })
+    cursor = res.data.cursor
+    acc.data.lists = acc.data.lists.concat(res.data.lists)
+    if (!cursor) {
+      break
+    }
+  }
+
+  return acc
+}
+
+async function fetchAllMyMuteLists(
+  store: RootStoreModel,
+): Promise<GetListMutes.Response> {
+  let acc: GetListMutes.Response = {
+    success: true,
+    headers: {},
+    data: {
+      subject: undefined,
+      lists: [],
+    },
+  }
+
+  let cursor
+  for (let i = 0; i < 100; i++) {
+    const res = await store.agent.app.bsky.graph.getListMutes({
+      cursor,
+      limit: 50,
+    })
+    cursor = res.data.cursor
+    acc.data.lists = acc.data.lists.concat(res.data.lists)
+    if (!cursor) {
+      break
+    }
+  }
+
+  return acc
 }

@@ -151,6 +151,8 @@ export class ProfileUiModel {
         .setup()
         .catch(err => this.rootStore.log.error('Failed to fetch feed', err)),
     ])
+    // HACK: need to use the DID as a param, not the username -prf
+    this.lists.source = this.profile.did
     this.lists
       .loadMore()
       .catch(err => this.rootStore.log.error('Failed to fetch lists', err))

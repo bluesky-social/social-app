@@ -28,7 +28,7 @@ export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
   const navigation = useNavigation<NavigationProp>()
 
   const mutelists: ListsListModel = React.useMemo(() => {
-    const list = new ListsListModel(store, 'mutelists')
+    const list = new ListsListModel(store, 'my-modlists')
     list.loadMore()
     return list
   }, [store])
