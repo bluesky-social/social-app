@@ -62,7 +62,7 @@ export class ListsListModel {
     this._xLoading(replace)
     try {
       let res
-      if (this.source === 'mine') {
+      if (this.source === 'blocklists') {
         res = await this.rootStore.agent.app.bsky.graph.getListBlocks({
           limit: PAGE_SIZE,
           cursor: replace ? undefined : this.loadMoreCursor,

@@ -46,7 +46,7 @@ export const ListsScreen = withAuthRequired(({route}: Props) => {
     return (
       <TabBar
         {...props}
-        items={['Mine', 'Subscribed Blocklists']}
+        items={['My Lists', 'Blocklists']}
         indicatorColor={pal.colors.link}
         indicatorPosition="bottom"
         testID="tabs"
