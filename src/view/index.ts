@@ -45,6 +45,7 @@ import {faImage} from '@fortawesome/free-solid-svg-icons/faImage'
 import {faInfo} from '@fortawesome/free-solid-svg-icons/faInfo'
 import {faLanguage} from '@fortawesome/free-solid-svg-icons/faLanguage'
 import {faLink} from '@fortawesome/free-solid-svg-icons/faLink'
+import {faListUl} from '@fortawesome/free-solid-svg-icons/faListUl'
 import {faLock} from '@fortawesome/free-solid-svg-icons/faLock'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
 import {faMessage} from '@fortawesome/free-regular-svg-icons/faMessage'
@@ -122,6 +123,7 @@ export function setup() {
     faInfo,
     faLanguage,
     faLink,
+    faListUl,
     faLock,
     faMagnifyingGlass,
     faMessage,

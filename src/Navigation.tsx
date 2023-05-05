@@ -33,11 +33,13 @@ import {useStores} from './state'
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
 import {NotificationsScreen} from './view/screens/Notifications'
+import {ListsScreen} from './view/screens/Lists'
 import {NotFoundScreen} from './view/screens/NotFound'
 import {SettingsScreen} from './view/screens/Settings'
 import {ProfileScreen} from './view/screens/Profile'
 import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
 import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
+import {ProfileListScreen} from './view/screens/ProfileList'
 import {PostThreadScreen} from './view/screens/PostThread'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
 import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
@@ -70,6 +72,7 @@ function commonScreens(Stack: typeof HomeTab) {
   return (
     <>
       <Stack.Screen name="NotFound" component={NotFoundScreen} />
+      <Stack.Screen name="Lists" component={ListsScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen
@@ -77,6 +80,7 @@ function commonScreens(Stack: typeof HomeTab) {
         component={ProfileFollowersScreen}
       />
       <Stack.Screen name="ProfileFollows" component={ProfileFollowsScreen} />
+      <Stack.Screen name="ProfileList" component={ProfileListScreen} />
       <Stack.Screen name="PostThread" component={PostThreadScreen} />
       <Stack.Screen name="PostLikedBy" component={PostLikedByScreen} />
       <Stack.Screen name="PostRepostedBy" component={PostRepostedByScreen} />

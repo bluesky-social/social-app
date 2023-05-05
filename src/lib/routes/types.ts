@@ -5,10 +5,12 @@ export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 export type CommonNavigatorParams = {
   NotFound: undefined
+  Lists: undefined
   Settings: undefined
   Profile: {name: string; hideBackButton?: boolean}
   ProfileFollowers: {name: string}
   ProfileFollows: {name: string}
+  ProfileList: {name: string; rkey: string}
   PostThread: {name: string; rkey: string}
   PostLikedBy: {name: string; rkey: string}
   PostRepostedBy: {name: string; rkey: string}

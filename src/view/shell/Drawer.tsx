@@ -94,6 +94,12 @@ export const DrawerContent = observer(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
 
+  const onPressLists = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'Lists'})
+    navigation.navigate('Lists')
+    store.shell.closeDrawer()
+  }, [navigation, track, store.shell])
+
   const onPressSettings = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Settings'})
     navigation.navigate('Settings')
@@ -219,6 +225,20 @@ export const DrawerContent = observer(() => {
             count={notifications.unreadCountLabel}
             bold={isAtNotifications}
             onPress={onPressNotifications}
+          />
+          <MenuItem
+            href="/lists"
+            icon={
+              <FontAwesomeIcon
+                icon="list-ul"
+                style={pal.text as FontAwesomeIconStyle}
+                size={20}
+              />
+            }
+            label="Lists"
+            accessibilityLabel="Lists"
+            accessibilityHint=""
+            onPress={onPressLists}
           />
           <MenuItem
             icon={
