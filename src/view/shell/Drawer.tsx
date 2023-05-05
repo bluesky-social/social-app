@@ -28,6 +28,7 @@ import {
   MagnifyingGlassIcon2Solid,
   MoonIcon,
   UserIconSolid,
+  SunIcon,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
@@ -273,11 +274,19 @@ export const DrawerContent = observer(() => {
                   ? pal.btn
                   : styles.footerBtnDarkMode,
               ]}>
-              <MoonIcon
-                size={22}
-                style={pal.text as StyleProp<ViewStyle>}
-                strokeWidth={2}
-              />
+              {store.shell.darkMode ? (
+                <MoonIcon
+                  size={22}
+                  style={pal.text as StyleProp<ViewStyle>}
+                  strokeWidth={2}
+                />
+              ) : (
+                <SunIcon
+                  size={22}
+                  style={pal.text as StyleProp<ViewStyle>}
+                  strokeWidth={2}
+                />
+              )}
             </TouchableOpacity>
           )}
           <TouchableOpacity
