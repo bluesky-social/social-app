@@ -89,11 +89,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   theme,
   children,
 }) => {
-  const colorScheme = useColorScheme()
-
   const value = useMemo(
-    () => ((theme || colorScheme) === 'dark' ? darkTheme : defaultTheme),
-    [colorScheme, theme],
+    () => (theme === 'dark' ? darkTheme : defaultTheme),
+    [theme],
   )
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
