@@ -57,14 +57,6 @@
       }
     }*/
 
-    /* OLLIE: TODO -- this is not accessible */
-    /* Remove focus state on inputs */
-    .ProseMirror-focused {
-      outline: 0;
-    }
-    input:focus {
-      outline: 0;
-    }
     /* Remove default link styling */
     a {
       color: inherit;
@@ -106,28 +98,16 @@
       color: #0085ff;
       cursor: pointer;
     }
+    /* OLLIE: TODO -- this is not accessible */
+    /* Remove focus state on inputs */
+    .ProseMirror-focused {
+      outline: 0;
+    }
+    input:focus {
+      outline: 0;
+    }
     .tippy-content .items {
-      border-radius: 6px;
-      background: #F3F3F8;
-      border: 1px solid #e0d9d9;
-      padding: 3px 3px;
-    }
-    .tippy-content .items .item {
-      display: block;
-      background: transparent;
-      color: #8a8c9a;
-      border: 0;
-      font: 17px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      padding: 7px 10px 8px;
-      width: 100%;
-      text-align: left;
-      box-sizing: border-box;
-      letter-spacing: 0.2px;
-    }
-    .tippy-content .items .item.is-selected {
-      background: #fff;
-      border-radius: 4px;
-      color: #333;
+      width: fit-content;
     }
   </style>
   {% include "scripts.html" %}
