@@ -10,7 +10,7 @@ import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
-import {CenteredView, ScrollView} from '../com/util/Views'
+import {CenteredView} from '../com/util/Views'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Link} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
@@ -38,8 +38,12 @@ export const ModerationScreen = withAuthRequired(
     }, [track, store])
 
     return (
-      <View
-        style={[s.hContentRegion, !isDesktopWeb && pal.viewLight]}
+      <CenteredView
+        style={[
+          s.hContentRegion,
+          pal.border,
+          isDesktopWeb ? styles.desktopContainer : pal.viewLight,
+        ]}
         testID="moderationScreen">
         <ViewHeader title="Moderation" showOnDesktop />
         <View style={styles.spacer} />
@@ -101,12 +105,16 @@ export const ModerationScreen = withAuthRequired(
             Blocked accounts
           </Text>
         </Link>
-      </View>
+      </CenteredView>
     )
   }),
 )
 
 const styles = StyleSheet.create({
+  desktopContainer: {
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+  },
   spacer: {
     height: 6,
   },
