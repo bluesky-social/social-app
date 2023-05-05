@@ -192,10 +192,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
                   ]}>
                   <View style={styles.avatarAndDisplayName}>
                     <UserAvatar avatar={item.avatar ?? null} size={26} />
-                    <Text
-                      style={pal.text}
-                      numberOfLines={1}
-                      ellipsizeMode="clip">
+                    <Text style={pal.text} numberOfLines={1}>
                       {displayName}
                     </Text>
                   </View>
