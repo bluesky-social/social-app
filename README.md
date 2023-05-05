@@ -81,6 +81,11 @@ To open the [Developer Menu](https://docs.expo.dev/debugging/tools/#developer-me
 
 - TextEncoder / TextDecoder
 
+### OTA updates
+To create OTA updates, run `eas update` along with the `--branch` flag to indicate which branch you want to push the update to, and the `--message` flag to indicate a message for yourself and your team that shows up on https://expo.dev. ALl the channels (which make up the options for the `--branch` flag) are given in `eas.json`. [See more here](https://docs.expo.dev/eas-update/getting-started/)
+
+The clients which can receive an OTA update is governed by the `runtimeVersion` property in `app.json`. Right now, it is set so that only apps with the same `appVersion` (same as `version` property in `app.json`) can receive the update and install it. However, we can manually set `"runtimeVersion": "1.34.0"` or anything along those lines as well. This is useful if very little native code changes from update-to-update. If we are manually setting `runtimeVersion`, we should increment the version each time native code is changed. [See more here](https://docs.expo.dev/eas-update/runtime-versions/)
+
 ### Sentry sourcemaps
 
 Sourcemaps should automatically be updated when a signed build is created using `eas build` and published using `eas submit` due to the postPublish hook setup in `app.json`. However, if an update is created and published OTA using `eas update`, we need to the take the following steps to upload sourcemaps to Sentry:
