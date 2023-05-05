@@ -99,6 +99,9 @@ const NavItem = observer(
     const {onPress} = useLinkProps({to: href})
     const onPressWrapped = React.useCallback(
       (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        if (e.ctrlKey || e.metaKey || e.altKey) {
+          return
+        }
         e.preventDefault()
         if (isCurrent) {
           store.emitScreenSoftReset()
@@ -113,8 +116,8 @@ const NavItem = observer(
       <PressableWithHover
         style={styles.navItemWrapper}
         hoverStyle={pal.viewLight}
-        // @ts-ignore web only -prf
         onPress={onPressWrapped}
+        // @ts-ignore web only -prf
         href={href}
         dataSet={{noUnderline: 1}}
         accessibilityRole="tab"
