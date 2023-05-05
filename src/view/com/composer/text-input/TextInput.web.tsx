@@ -140,6 +140,8 @@ function editorJsonToText(json: JSONContent): string {
       }
     }
     text += '\n'
+  } else if (json.type === 'hardBreak') {
+    text += '\n'
   } else if (json.type === 'text') {
     text += json.text || ''
   } else if (json.type === 'mention') {
