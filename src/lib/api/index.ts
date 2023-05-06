@@ -77,7 +77,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
   const rt = new RichText(
     {text: opts.rawText.trim()},
     {
-      cleanNewlines: true,
+      cleanNewlines: false,
     },
   )
 

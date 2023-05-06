@@ -61,7 +61,7 @@ export class PostsFeedItemModel {
       const valid = AppBskyFeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
-        this.richText = new RichText(this.postRecord, {cleanNewlines: true})
+        this.richText = new RichText(this.postRecord, {cleanNewlines: false})
       } else {
         this.postRecord = undefined
         this.richText = undefined

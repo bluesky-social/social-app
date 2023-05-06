@@ -95,7 +95,7 @@ export class PostThreadItemModel {
       const valid = FeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
-        this.richText = new RichText(this.postRecord, {cleanNewlines: true})
+        this.richText = new RichText(this.postRecord, {cleanNewlines: false})
       } else {
         rootStore.log.warn(
           'Received an invalid app.bsky.feed.post record',
