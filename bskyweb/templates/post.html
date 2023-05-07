@@ -1,25 +1,32 @@
 {% extends "base.html" %}
 
-{% block head_page_meta -%}
-<!-- TODO: "same as" indication with at:// URI? -->
-{%- if postView -%}
-	<meta property="og:type" content="article"/>
-	<meta name="twitter:card" content="summary"/>
-  {%- if postView.Author.DisplayName -%}
-	<meta property="og:title" content="{{ postView.Author.DisplayName }} / {{ postView.Author.Handle }}"/>
-	<meta name="twitter:title" content="{{ postView.Author.DisplayName }} / {{ postView.Author.Handle }}"/>
-  {%- else -%}
-	<meta property="og:title" content="{{ postView.Author.Handle }}"/>
-	<meta name="twitter:title" content="{{ postView.Author.Handle }}"/>
-  {%- endif -%}
-	{%- if postView.Record.Text -%}
-	<meta name="twitter:description" content="{{ postView.Record.Text }}"/>
-	<!-- TODO: could put any images in here, or author avatar -->
-	{%- endif -%}
-{%- endif -%}
+{# TODO: link rel=canonical #}
+{# TODO: "same as" #}
+{% block html_head_extra -%}
+{%- if postView %}
+  <meta property="og:type" content="article"/>
+  <meta name="twitter:card" content="summary"/>
+  <meta property="og:title" content="{{ postView.Author.Handle }} - Bluesky"/>
+  <meta name="twitter:title" content="{{ postView.Author.Handle }} - Bluesky"/>
+  {%- if postView.Author.Avatar %}
+  <meta property="og:image" content="{{ postView.Author.Avatar }}"/>
+  <meta name="twitter:image" content="{{ postView.Author.Avatar }}"/>
+  {% endif -%}
+  {%- if postView.Record.Text %}
+  <meta property="og:description" content="{{ postView.Record.Text }}"/>
+  <meta name="twitter:description" content="{{ postView.Record.Text }}"/>
+  {% endif -%}
+  <meta name="twitter:label1" content="Author DID">
+  <meta name="twitter:value1" content="{{ postView.Author.Did }}">
+{% endif -%}
 {%- endblock %}
 
 {% block noscript_extra -%}
-<p>{{ postView.Author.DisplayName }} / {{ postView.Author.Handle }}
-<p>{{ postView.Record.Text }}
+<div id="bsky_post_summary">
+  <h3>Post</h3>
+  <p id="bsky_display_name">{{ postView.Author.DisplayName }}</p>
+  <p id="bsky_handle">{{ postView.Author.Handle }}</p>
+  <p id="bsky_did">{{ postView.Author.Did }}</p>
+  <p id="bsky_post_text">{{ postView.Record.Text }}</p>
+</div>
 {%- endblock %}
