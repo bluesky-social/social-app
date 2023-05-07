@@ -68,7 +68,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
     snapPoints = ReportAccountModal.snapPoints
     element = <ReportAccountModal.Component {...activeModal} />
   } else if (activeModal?.name === 'create-mute-list') {
-    snapPoints = ReportAccountModal.snapPoints
+    snapPoints = CreateMuteListModal.snapPoints
     element = <CreateMuteListModal.Component {...activeModal} />
   } else if (activeModal?.name === 'delete-account') {
     snapPoints = DeleteAccountModal.snapPoints

@@ -23,6 +23,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
+import {isDesktopWeb} from 'platform/detection'
 
 const MAX_NAME = 64 // todo
 const MAX_DESCRIPTION = 300 // todo
@@ -104,7 +105,9 @@ export function Component({onCreate}: {onCreate?: (uri: string) => void}) {
 
   return (
     <KeyboardAvoidingView behavior="height">
-      <ScrollView style={[pal.view]} testID="createMuteListModal">
+      <ScrollView
+        style={[pal.view, styles.container]}
+        testID="createMuteListModal">
         <Text style={[styles.title, pal.text]}>New Mute List</Text>
         {error !== '' && (
           <View style={styles.errorContainer}>
@@ -190,6 +193,9 @@ export function Component({onCreate}: {onCreate?: (uri: string) => void}) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: isDesktopWeb ? 0 : 16,
+  },
   title: {
     textAlign: 'center',
     fontWeight: 'bold',

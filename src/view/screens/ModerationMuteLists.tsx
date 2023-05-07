@@ -1,10 +1,10 @@
 import React from 'react'
 import {StyleSheet} from 'react-native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {
-  useFocusEffect,
-  useNavigation,
-  StackActions,
-} from '@react-navigation/native'
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {AtUri} from '@atproto/api'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
@@ -12,6 +12,7 @@ import {EmptyStateWithButton} from 'view/com/util/EmptyStateWithButton'
 import {useStores} from 'state/index'
 import {ListsListModel} from 'state/models/lists/lists-list'
 import {ListsList} from 'view/com/lists/ListsList'
+import {Button} from 'view/com/util/forms/Button'
 import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from 'view/com/util/Views'
@@ -65,6 +66,22 @@ export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
     )
   }, [onPressNewMuteList])
 
+  const renderHeaderButton = React.useCallback(
+    () => (
+      <Button
+        type="primary-light"
+        onPress={onPressNewMuteList}
+        style={styles.createBtn}>
+        <FontAwesomeIcon
+          icon="plus"
+          style={pal.link as FontAwesomeIconStyle}
+          size={18}
+        />
+      </Button>
+    ),
+    [onPressNewMuteList, pal],
+  )
+
   return (
     <CenteredView
       style={[
@@ -74,8 +91,16 @@ export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
         pal.border,
       ]}
       testID="moderationMutelistsScreen">
-      <ViewHeader title="Mute-list Subscriptions" showOnDesktop />
-      <ListsList listsList={mutelists} renderEmptyState={renderEmptyState} />
+      <ViewHeader
+        title="Mute-lists"
+        showOnDesktop
+        renderButton={renderHeaderButton}
+      />
+      <ListsList
+        listsList={mutelists}
+        renderEmptyState={renderEmptyState}
+        onPressCreateNew={onPressNewMuteList}
+      />
     </CenteredView>
   )
 })
@@ -89,36 +114,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderRightWidth: 1,
   },
-  title: {
-    textAlign: 'center',
-    marginTop: 12,
-    marginBottom: 12,
-  },
-  description: {
-    textAlign: 'center',
-    paddingHorizontal: 30,
-    marginBottom: 14,
-  },
-  descriptionDesktop: {
-    marginTop: 14,
-  },
-
-  flex1: {
-    flex: 1,
-  },
-  empty: {
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    borderRadius: 16,
-    marginHorizontal: 24,
-    marginTop: 10,
-  },
-  emptyText: {
-    textAlign: 'center',
-  },
-
-  footer: {
-    height: 200,
-    paddingTop: 20,
+  createBtn: {
+    width: 40,
   },
 })

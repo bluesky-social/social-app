@@ -8,17 +8,25 @@ import {
   ViewStyle,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {FlatList} from '../util/Views'
 import {ListCard} from './ListCard'
 import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
 import {ListsListModel} from 'state/models/lists/lists-list'
 import {useAnalytics} from 'lib/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {isDesktopWeb} from 'platform/detection'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
+const CREATENEW_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -27,17 +35,17 @@ export const ListsList = observer(
   ({
     listsList,
     style,
-    showPostFollowBtn,
     scrollElRef,
     onPressTryAgain,
+    onPressCreateNew,
     renderEmptyState,
     testID,
     headerOffset = 0,
   }: {
     listsList: ListsListModel
     style?: StyleProp<ViewStyle>
-    showPostFollowBtn?: boolean
     scrollElRef?: MutableRefObject<FlatList<any> | null>
+    onPressCreateNew: () => void
     onPressTryAgain?: () => void
     renderEmptyState?: () => JSX.Element
     testID?: string
@@ -56,6 +64,9 @@ export const ListsList = observer(
         if (listsList.isEmpty) {
           items = items.concat([EMPTY_ITEM])
         } else {
+          if (isDesktopWeb) {
+            items = items.concat([CREATENEW_ITEM])
+          }
           items = items.concat(listsList.lists)
         }
         if (listsList.loadMoreError) {
@@ -111,6 +122,8 @@ export const ListsList = observer(
             return renderEmptyState()
           }
           return <View />
+        } else if (item === CREATENEW_ITEM) {
+          return <CreateNewItem onPress={onPressCreateNew} />
         } else if (item === ERROR_ITEM) {
           return (
             <ErrorMessage
@@ -130,7 +143,7 @@ export const ListsList = observer(
         }
         return <ListCard list={item} />
       },
-      [listsList, onPressTryAgain, onPressRetryLoadMore, showPostFollowBtn],
+      [listsList, onPressTryAgain, onPressRetryLoadMore, onPressCreateNew],
     )
 
     const Footer = React.useCallback(
@@ -179,6 +192,35 @@ export const ListsList = observer(
   },
 )
 
+function CreateNewItem({onPress}: {onPress: () => void}) {
+  const palInverted = usePalette('inverted')
+
+  return (
+    <View style={[styles.createNewContainer]}>
+      <Button type="inverted" onPress={onPress} style={styles.createNewButton}>
+        <FontAwesomeIcon
+          icon="plus"
+          style={palInverted.text as FontAwesomeIconStyle}
+        />
+        <Text type="button" style={palInverted.text}>
+          New Mute-list
+        </Text>
+      </Button>
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
+  createNewContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 18,
+  },
+  createNewButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   feedFooter: {paddingTop: 20},
 })

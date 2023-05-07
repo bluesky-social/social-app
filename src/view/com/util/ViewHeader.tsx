@@ -20,11 +20,13 @@ export const ViewHeader = observer(function ({
   canGoBack,
   hideOnScroll,
   showOnDesktop,
+  renderButton,
 }: {
   title: string
   canGoBack?: boolean
   hideOnScroll?: boolean
   showOnDesktop?: boolean
+  renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
   const store = useStores()
@@ -79,7 +81,11 @@ export const ViewHeader = observer(function ({
             {title}
           </Text>
         </View>
-        <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
+        {renderButton ? (
+          renderButton()
+        ) : (
+          <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
+        )}
       </Container>
     )
   }
