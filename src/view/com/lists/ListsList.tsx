@@ -210,7 +210,7 @@ function CreateNewItem({onPress}: {onPress: () => void}) {
       <Button type="default" onPress={onPress} style={styles.createNewButton}>
         <FontAwesomeIcon icon="plus" style={pal.text as FontAwesomeIconStyle} />
         <Text type="button" style={pal.text}>
-          New Mute-list
+          New Mute List
         </Text>
       </Button>
     </View>

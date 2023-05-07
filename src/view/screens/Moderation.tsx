@@ -74,7 +74,7 @@ export const ModerationScreen = withAuthRequired(
             />
           </View>
           <Text type="lg" style={pal.text}>
-            Mute-list subscriptions
+            Mute list subscriptions
           </Text>
         </Link>
         <Link

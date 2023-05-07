@@ -78,13 +78,13 @@ export function Component({onCreate}: {onCreate?: (uri: string) => void}) {
         description,
         avatar: newAvatar,
       })
-      Toast.show('Mute-list created')
+      Toast.show('Mute list created')
       onCreate?.(res.uri)
       store.shell.closeModal()
     } catch (e: any) {
       if (isNetworkError(e)) {
         setError(
-          'Failed to create the mute-list. Check your internet connection and try again.',
+          'Failed to create the mute list. Check your internet connection and try again.',
         )
       } else {
         setError(cleanError(e))

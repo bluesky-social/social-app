@@ -244,7 +244,7 @@ const ProfileHeaderLoaded = observer(
         },
         {
           testID: 'profileHeaderDropdownListAddRemoveBtn',
-          label: 'Add to lists',
+          label: 'Add to Lists',
           onPress: onPressAddToLists,
         },
       ]

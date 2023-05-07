@@ -59,7 +59,7 @@ export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
     return (
       <EmptyStateWithButton
         icon="users-slash"
-        message="You can subscribe to mute-lists to automatically mute all of the users they include. Mute-lists are public but your subscription to a mute-list is private."
+        message="You can subscribe to mute lists to automatically mute all of the users they include. Mute lists are public but your subscription to a mute list is private."
         buttonLabel="New Mute List"
         onPress={onPressNewMuteList}
       />
@@ -92,7 +92,7 @@ export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
       ]}
       testID="moderationMutelistsScreen">
       <ViewHeader
-        title="Mute-lists"
+        title="Mute Lists"
         showOnDesktop
         renderButton={renderHeaderButton}
       />
