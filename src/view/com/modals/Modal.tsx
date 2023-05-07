@@ -13,6 +13,7 @@ import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
 import * as RepostModal from './Repost'
 import * as CreateMuteListModal from './CreateMuteList'
+import * as ListAddRemoveUserModal from './ListAddUser'
 import * as AltImageModal from './AltImage'
 import * as ReportAccountModal from './ReportAccount'
 import * as DeleteAccountModal from './DeleteAccount'
@@ -70,6 +71,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'create-mute-list') {
     snapPoints = CreateMuteListModal.snapPoints
     element = <CreateMuteListModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'list-add-user') {
+    snapPoints = ListAddRemoveUserModal.snapPoints
+    element = <ListAddRemoveUserModal.Component {...activeModal} />
   } else if (activeModal?.name === 'delete-account') {
     snapPoints = DeleteAccountModal.snapPoints
     element = <DeleteAccountModal.Component />

@@ -12,6 +12,7 @@ import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './ReportPost'
 import * as ReportAccountModal from './ReportAccount'
 import * as CreateMuteListModal from './CreateMuteList'
+import * as ListAddRemoveUserModal from './ListAddUser'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as RepostModal from './Repost'
 import * as CropImageModal from './crop-image/CropImage.web'
@@ -71,6 +72,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ReportAccountModal.Component {...modal} />
   } else if (modal.name === 'create-mute-list') {
     element = <CreateMuteListModal.Component {...modal} />
+  } else if (modal.name === 'list-add-user') {
+    element = <ListAddRemoveUserModal.Component {...modal} />
   } else if (modal.name === 'crop-image') {
     element = <CropImageModal.Component {...modal} />
   } else if (modal.name === 'delete-account') {

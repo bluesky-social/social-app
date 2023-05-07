@@ -152,27 +152,4 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     paddingHorizontal: 14,
   },
-
-  followedBy: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: 54,
-    paddingRight: 20,
-    marginBottom: 10,
-    marginTop: -6,
-  },
-  followedByAviContainer: {
-    width: 24,
-    height: 36,
-  },
-  followedByAvi: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    padding: 2,
-  },
-  followsByDesc: {
-    flex: 1,
-    paddingRight: 10,
-  },
 })

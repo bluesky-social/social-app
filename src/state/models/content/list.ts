@@ -1,16 +1,16 @@
 import {makeAutoObservable} from 'mobx'
 import {
   AppBskyGraphGetList as GetList,
-  AppBskyActorDefs,
-  AppBskyGraphDefs,
+  AppBskyGraphDefs as GraphDefs,
   AppBskyGraphList,
-  AppBskyRichtextFacet,
-  RichText,
 } from '@atproto/api'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
+import {bundleAsync} from 'lib/async/bundle'
+
+const PAGE_SIZE = 30
 
 export class ListModel {
   // state
@@ -18,21 +18,13 @@ export class ListModel {
   isRefreshing = false
   hasLoaded = false
   error = ''
-  params: GetList.QueryParams
+  loadMoreError = ''
+  hasMore = true
+  loadMoreCursor?: string
 
   // data
-  uri: string
-  creator: AppBskyActorDefs.ProfileView
-  name: string
-  purpose: AppBskyGraphDefs.ListPurpose
-  description?: string
-  descriptionFacets?: AppBskyRichtextFacet.Main[]
-  avatar?: string
-  viewer?: AppBskyGraphDefs.ListViewerState
-  indexedAt?: string
-
-  // added data
-  descriptionRichText?: RichText = new RichText({text: ''})
+  list: GraphDefs.ListView | null = null
+  items: GraphDefs.ListItemView[] = []
 
   static async createModList(
     rootStore: RootStoreModel,
@@ -65,20 +57,18 @@ export class ListModel {
     )
   }
 
-  constructor(public rootStore: RootStoreModel, params: GetList.QueryParams) {
+  constructor(public rootStore: RootStoreModel, public uri: string) {
     makeAutoObservable(
       this,
       {
         rootStore: false,
-        params: false,
       },
       {autoBind: true},
     )
-    this.params = params
   }
 
   get hasContent() {
-    return this.uri !== ''
+    return this.items.length > 0
   }
 
   get hasError() {
@@ -92,12 +82,39 @@ export class ListModel {
   // public api
   // =
 
-  async setup() {
-    await this._load()
+  async refresh() {
+    return this.loadMore(true)
   }
 
-  async refresh() {
-    await this._load(true)
+  loadMore = bundleAsync(async (replace: boolean = false) => {
+    if (!replace && !this.hasMore) {
+      return
+    }
+    this._xLoading(replace)
+    try {
+      const res = await this.rootStore.agent.app.bsky.graph.getList({
+        list: this.uri,
+        limit: PAGE_SIZE,
+        cursor: replace ? undefined : this.loadMoreCursor,
+      })
+      if (replace) {
+        this._replaceAll(res)
+      } else {
+        this._appendAll(res)
+      }
+      this._xIdle()
+    } catch (e: any) {
+      this._xIdle(replace ? e : undefined, !replace ? e : undefined)
+    }
+  })
+
+  /**
+   * Attempt to load more again after a failure
+   */
+  async retryLoadMore() {
+    this.loadMoreError = ''
+    this.hasMore = true
+    return this.loadMore()
   }
 
   // state transitions
@@ -109,43 +126,34 @@ export class ListModel {
     this.error = ''
   }
 
-  _xIdle(err?: any) {
+  _xIdle(err?: any, loadMoreErr?: any) {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
     this.error = cleanError(err)
+    this.loadMoreError = cleanError(loadMoreErr)
     if (err) {
-      this.rootStore.log.error('Failed to fetch profile', err)
+      this.rootStore.log.error('Failed to fetch user items', err)
+    }
+    if (loadMoreErr) {
+      this.rootStore.log.error('Failed to fetch user items', loadMoreErr)
     }
   }
 
-  // loader functions
+  // helper functions
   // =
 
-  async _load(isRefreshing = false) {
-    this._xLoading(isRefreshing)
-    try {
-      const res = await this.rootStore.agent.app.bsky.graph.getList(this.params)
-      this._replaceAll(res)
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
-    }
+  _replaceAll(res: GetList.Response) {
+    this.items = []
+    this._appendAll(res)
   }
 
-  _replaceAll(res: GetList.Response) {
-    this.uri = res.data.list.uri
-    this.creator = res.data.list.creator
-    this.name = res.data.list.name
-    this.purpose = res.data.list.purpose
-    this.description = res.data.list.description
-    this.descriptionFacets = res.data.list.descriptionFacets
-    this.avatar = res.data.list.avatar
-    this.viewer = res.data.list.viewer
-    this.indexedAt = res.data.list.indexedAt
-    this.descriptionRichText = new RichText({
-      text: this.description || '',
-      facets: this.descriptionFacets,
-    })
+  _appendAll(res: GetList.Response) {
+    this.loadMoreCursor = res.data.cursor
+    this.hasMore = !!this.loadMoreCursor
+    this.list = res.data.list
+    this.items = this.items.concat(
+      res.data.items.map(item => ({...item, _reactKey: item.subject})),
+    )
   }
 }

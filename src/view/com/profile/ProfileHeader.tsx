@@ -146,11 +146,20 @@ const ProfileHeaderLoaded = observer(
       navigation.push('ProfileFollows', {name: view.handle})
     }, [track, navigation, view])
 
-    const onPressShare = React.useCallback(async () => {
+    const onPressShare = React.useCallback(() => {
       track('ProfileHeader:ShareButtonClicked')
       const url = toShareUrl(`/profile/${view.handle}`)
       shareUrl(url)
     }, [track, view])
+
+    const onPressAddToLists = React.useCallback(() => {
+      track('ProfileHeader:AddToListsButtonClicked')
+      store.shell.openModal({
+        name: 'list-add-user',
+        subject: view.did,
+        displayName: view.displayName || view.handle,
+      })
+    })
 
     const onPressMuteAccount = React.useCallback(async () => {
       track('ProfileHeader:MuteAccountButtonClicked')
@@ -232,6 +241,11 @@ const ProfileHeaderLoaded = observer(
           testID: 'profileHeaderDropdownShareBtn',
           label: 'Share',
           onPress: onPressShare,
+        },
+        {
+          testID: 'profileHeaderDropdownListAddRemoveBtn',
+          label: 'Add to lists',
+          onPress: onPressAddToLists,
         },
       ]
       if (!isMe) {

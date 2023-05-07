@@ -12,6 +12,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {FlatList} from '../util/Views'
 import {ListCard} from './ListCard'
 import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -23,7 +24,6 @@ import {ListsListModel} from 'state/models/lists/lists-list'
 import {useAnalytics} from 'lib/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
-import {isDesktopWeb} from 'platform/detection'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const CREATENEW_ITEM = {_reactKey: '__loading__'}
@@ -34,19 +34,23 @@ const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 export const ListsList = observer(
   ({
     listsList,
+    showAddBtns,
     style,
     scrollElRef,
     onPressTryAgain,
     onPressCreateNew,
+    renderItem,
     renderEmptyState,
     testID,
     headerOffset = 0,
   }: {
     listsList: ListsListModel
+    showAddBtns?: boolean
     style?: StyleProp<ViewStyle>
     scrollElRef?: MutableRefObject<FlatList<any> | null>
     onPressCreateNew: () => void
     onPressTryAgain?: () => void
+    renderItem?: (list: GraphDefs.ListView) => JSX.Element
     renderEmptyState?: () => JSX.Element
     testID?: string
     headerOffset?: number
@@ -64,7 +68,7 @@ export const ListsList = observer(
         if (listsList.isEmpty) {
           items = items.concat([EMPTY_ITEM])
         } else {
-          if (isDesktopWeb) {
+          if (showAddBtns) {
             items = items.concat([CREATENEW_ITEM])
           }
           items = items.concat(listsList.lists)
@@ -115,7 +119,7 @@ export const ListsList = observer(
     // rendering
     // =
 
-    const renderItem = React.useCallback(
+    const renderItemInner = React.useCallback(
       ({item}: {item: any}) => {
         if (item === EMPTY_ITEM) {
           if (renderEmptyState) {
@@ -141,9 +145,15 @@ export const ListsList = observer(
         } else if (item === LOADING_ITEM) {
           return <ProfileCardFeedLoadingPlaceholder />
         }
-        return <ListCard list={item} />
+        return renderItem ? renderItem(item) : <ListCard list={item} />
       },
-      [listsList, onPressTryAgain, onPressRetryLoadMore, onPressCreateNew],
+      [
+        listsList,
+        onPressTryAgain,
+        onPressRetryLoadMore,
+        onPressCreateNew,
+        renderItem,
+      ],
     )
 
     const Footer = React.useCallback(
@@ -166,7 +176,7 @@ export const ListsList = observer(
             ref={scrollElRef}
             data={data}
             keyExtractor={item => item._reactKey}
-            renderItem={renderItem}
+            renderItem={renderItemInner}
             ListFooterComponent={Footer}
             refreshControl={
               <RefreshControl
@@ -193,16 +203,13 @@ export const ListsList = observer(
 )
 
 function CreateNewItem({onPress}: {onPress: () => void}) {
-  const palInverted = usePalette('inverted')
+  const pal = usePalette('default')
 
   return (
     <View style={[styles.createNewContainer]}>
-      <Button type="inverted" onPress={onPress} style={styles.createNewButton}>
-        <FontAwesomeIcon
-          icon="plus"
-          style={palInverted.text as FontAwesomeIconStyle}
-        />
-        <Text type="button" style={palInverted.text}>
+      <Button type="default" onPress={onPress} style={styles.createNewButton}>
+        <FontAwesomeIcon icon="plus" style={pal.text as FontAwesomeIconStyle} />
+        <Text type="button" style={pal.text}>
           New Mute-list
         </Text>
       </Button>
@@ -214,8 +221,9 @@ const styles = StyleSheet.create({
   createNewContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 16,
     paddingHorizontal: 18,
+    paddingTop: 18,
+    paddingBottom: 16,
   },
   createNewButton: {
     flexDirection: 'row',

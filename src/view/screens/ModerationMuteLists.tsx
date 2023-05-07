@@ -98,6 +98,7 @@ export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
       />
       <ListsList
         listsList={mutelists}
+        showAddBtns={isDesktopWeb}
         renderEmptyState={renderEmptyState}
         onPressCreateNew={onPressNewMuteList}
       />
