@@ -48,7 +48,7 @@ export const ViewHeader = observer(function ({
 
   if (isDesktopWeb) {
     if (showOnDesktop) {
-      return <DesktopWebHeader title={title} />
+      return <DesktopWebHeader title={title} renderButton={renderButton} />
     }
     return null
   } else {
@@ -91,7 +91,13 @@ export const ViewHeader = observer(function ({
   }
 })
 
-function DesktopWebHeader({title}: {title: string}) {
+function DesktopWebHeader({
+  title,
+  renderButton,
+}: {
+  title: string
+  renderButton?: () => JSX.Element
+}) {
   const pal = usePalette('default')
   return (
     <CenteredView style={[styles.header, styles.desktopHeader, pal.border]}>
@@ -100,6 +106,7 @@ function DesktopWebHeader({title}: {title: string}) {
           {title}
         </Text>
       </View>
+      {renderButton?.()}
     </CenteredView>
   )
 }

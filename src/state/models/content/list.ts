@@ -1,5 +1,6 @@
 import {makeAutoObservable} from 'mobx'
 import {
+  AtUri,
   AppBskyGraphGetList as GetList,
   AppBskyGraphDefs as GraphDefs,
   AppBskyGraphList,
@@ -49,12 +50,14 @@ export class ListModel {
       )
       record.avatar = blobRes.data.blob
     }
-    return await rootStore.agent.app.bsky.graph.list.create(
+    const res = await rootStore.agent.app.bsky.graph.list.create(
       {
         repo: rootStore.me.did,
       },
       record,
     )
+    await rootStore.agent.app.bsky.graph.subscribeMuteList({list: res.uri})
+    return res
   }
 
   constructor(public rootStore: RootStoreModel, public uri: string) {
@@ -77,6 +80,10 @@ export class ListModel {
 
   get isEmpty() {
     return this.hasLoaded && !this.hasContent
+  }
+
+  get isOwner() {
+    return this.list?.creator.did === this.rootStore.me.did
   }
 
   // public api
@@ -107,6 +114,85 @@ export class ListModel {
       this._xIdle(replace ? e : undefined, !replace ? e : undefined)
     }
   })
+
+  async updateMetadata({
+    name,
+    description,
+    avatar,
+  }: {
+    name: string
+    description: string
+    avatar: RNImage | null | undefined
+  }) {
+    if (!this.isOwner) {
+      throw new Error('Cannot edit this list')
+    }
+
+    // get the current record
+    const {rkey} = new AtUri(this.uri)
+    const {value: record} = await this.rootStore.agent.app.bsky.graph.list.get({
+      repo: this.rootStore.me.did,
+      rkey,
+    })
+
+    // update the fields
+    record.name = name
+    record.description = description
+    if (avatar) {
+      const blobRes = await apilib.uploadBlob(
+        this.rootStore,
+        avatar.path,
+        avatar.mime,
+      )
+      record.avatar = blobRes.data.blob
+    } else if (avatar === null) {
+      record.avatar = undefined
+    }
+    // TODO: server doesn't accept puts for list records yet
+    throw new Error('TODO')
+    // return await this.rootStore.agent.app.bsky.graph.list.(
+    //   {
+    //     repo: this.rootStore.me.did,
+    //   },
+    //   record,
+    // )
+  }
+
+  async delete() {
+    // fetch all the listitem records that belong to this list
+    let cursor
+    let records = []
+    for (let i = 0; i < 100; i++) {
+      const res = await this.rootStore.agent.app.bsky.graph.listitem.list({
+        repo: this.rootStore.me.did,
+        cursor,
+        limit: PAGE_SIZE,
+      })
+      records = records.concat(
+        res.records.filter(record => record.value.list === this.uri),
+      )
+      cursor = res.cursor
+      if (!cursor) {
+        break
+      }
+    }
+
+    // batch delete the list and listitem records
+    const createDel = (uri: string) => {
+      const urip = new AtUri(uri)
+      return {
+        $type: 'com.atproto.repo.applyWrites#delete',
+        collection: urip.collection,
+        rkey: urip.rkey,
+      }
+    }
+    await this.rootStore.agent.com.atproto.repo.applyWrites({
+      repo: this.rootStore.me.did,
+      writes: [createDel(this.uri)].concat(
+        records.map(record => createDel(record.uri)),
+      ),
+    })
+  }
 
   /**
    * Attempt to load more again after a failure

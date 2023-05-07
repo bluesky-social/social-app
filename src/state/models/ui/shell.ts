@@ -5,6 +5,7 @@ import {ProfileModel} from '../content/profile'
 import {isObj, hasProp} from 'lib/type-guards'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {ImageModel} from '../media/image'
+import {ListModel} from '../content/list'
 
 export interface ConfirmModal {
   name: 'confirm'
@@ -37,15 +38,17 @@ export interface ReportAccountModal {
   did: string
 }
 
-export interface CreateMuteListModal {
-  name: 'create-mute-list'
-  onCreate?: (uri: string) => void
+export interface CreateOrEditMuteListModal {
+  name: 'create-or-edit-mute-list'
+  list?: ListModel
+  onSave?: (uri: string) => void
 }
 
 export interface ListAddUserModal {
   name: 'list-add-user'
   subject: string
   displayName: string
+  onUpdate?: () => void
 }
 
 export interface CropImageModal {

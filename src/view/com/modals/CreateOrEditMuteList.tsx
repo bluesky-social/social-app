@@ -30,7 +30,13 @@ const MAX_DESCRIPTION = 300 // todo
 
 export const snapPoints = ['fullscreen']
 
-export function Component({onCreate}: {onCreate?: (uri: string) => void}) {
+export function Component({
+  onSave,
+  list,
+}: {
+  onSave?: (uri: string) => void
+  list?: ListModel
+}) {
   const store = useStores()
   const [error, setError] = useState<string>('')
   const pal = usePalette('default')
@@ -38,9 +44,11 @@ export function Component({onCreate}: {onCreate?: (uri: string) => void}) {
   const {track} = useAnalytics()
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
-  const [name, setName] = useState<string>('')
-  const [description, setDescription] = useState<string>('')
-  const [avatar, setAvatar] = useState<string | undefined>(undefined)
+  const [name, setName] = useState<string>(list?.list.name || '')
+  const [description, setDescription] = useState<string>(
+    list?.list.description || '',
+  )
+  const [avatar, setAvatar] = useState<string | undefined>(list?.list.avatar)
   const [newAvatar, setNewAvatar] = useState<RNImage | undefined | null>()
 
   const onPressCancel = useCallback(() => {
@@ -73,13 +81,23 @@ export function Component({onCreate}: {onCreate?: (uri: string) => void}) {
       setError('')
     }
     try {
-      const res = await ListModel.createModList(store, {
-        name,
-        description,
-        avatar: newAvatar,
-      })
-      Toast.show('Mute list created')
-      onCreate?.(res.uri)
+      if (list) {
+        await list.updateMetadata({
+          name,
+          description,
+          avatar: newAvatar,
+        })
+        Toast.show('Mute list updated')
+        onSave?.(list.uri)
+      } else {
+        const res = await ListModel.createModList(store, {
+          name,
+          description,
+          avatar: newAvatar,
+        })
+        Toast.show('Mute list created')
+        onSave?.(res.uri)
+      }
       store.shell.closeModal()
     } catch (e: any) {
       if (isNetworkError(e)) {
@@ -96,7 +114,7 @@ export function Component({onCreate}: {onCreate?: (uri: string) => void}) {
     setProcessing,
     setError,
     error,
-    onCreate,
+    onSave,
     store,
     name,
     description,
@@ -108,7 +126,9 @@ export function Component({onCreate}: {onCreate?: (uri: string) => void}) {
       <ScrollView
         style={[pal.view, styles.container]}
         testID="createMuteListModal">
-        <Text style={[styles.title, pal.text]}>New Mute List</Text>
+        <Text style={[styles.title, pal.text]}>
+          {list ? 'Edit Mute List' : 'New Mute List'}
+        </Text>
         {error !== '' && (
           <View style={styles.errorContainer}>
             <ErrorMessage message={error} />

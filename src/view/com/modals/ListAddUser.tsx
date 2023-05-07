@@ -24,9 +24,11 @@ export const snapPoints = ['fullscreen']
 export function Component({
   subject,
   displayName,
+  onUpdate,
 }: {
   subject: string
   displayName: string
+  onUpdate?: () => void
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -61,15 +63,17 @@ export function Component({
   const onPressSave = useCallback(async () => {
     try {
       await memberships.updateTo(selected)
-      store.shell.closeModal()
     } catch (err) {
       store.log.error('Failed to update memberships', {err})
+      return
     }
+    onUpdate?.()
+    store.shell.closeModal()
   }, [store, selected])
 
   const onPressNewMuteList = useCallback(() => {
     store.shell.openModal({
-      name: 'create-mute-list',
+      name: 'create-or-edit-mute-list',
       onCreate: (uri: string) => {
         listsList.refresh()
       },

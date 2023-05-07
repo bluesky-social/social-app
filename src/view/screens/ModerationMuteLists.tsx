@@ -28,22 +28,22 @@ export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
 
-  const mutelists: ListsListModel = React.useMemo(() => {
-    const list = new ListsListModel(store, 'my-modlists')
-    list.loadMore()
-    return list
-  }, [store])
+  const mutelists: ListsListModel = React.useMemo(
+    () => new ListsListModel(store, 'my-modlists'),
+    [store],
+  )
 
   useFocusEffect(
     React.useCallback(() => {
       store.shell.setMinimalShellMode(false)
+      mutelists.refresh()
     }, [store]),
   )
 
   const onPressNewMuteList = React.useCallback(() => {
     store.shell.openModal({
-      name: 'create-mute-list',
-      onCreate: (uri: string) => {
+      name: 'create-or-edit-mute-list',
+      onSave: (uri: string) => {
         try {
           const urip = new AtUri(uri)
           navigation.navigate('ProfileList', {
