@@ -182,6 +182,7 @@ export class ImageModel implements RNImage {
       modifiers.push({flip: FlipType.Vertical})
     }
 
+    // TODO: Fix rotation -- currently not functional
     if (rotate !== undefined) {
       this.rotation = rotate
     }
