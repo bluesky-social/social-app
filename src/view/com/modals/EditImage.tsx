@@ -43,8 +43,7 @@ export const Component = observer(function ({image, gallery}: Props) {
     image.flipVertical ?? false,
   )
 
-  // TODO: doesn't seem to be working correctly with crop
-  // const [rotation, setRotation] = useState(image.rotation ?? 0)
+  const [rotation, setRotation] = useState(image.rotation ?? 0)
   const [scale, setScale] = useState<number>(image.scale ?? 1)
   const [position, setPosition] = useState<Position>()
   const [isEditing, setIsEditing] = useState(false)
@@ -54,12 +53,11 @@ export const Component = observer(function ({image, gallery}: Props) {
     () => ({
       ...(scale !== 1 ? {scale} : {}),
       ...(position !== undefined ? {position} : {}),
-      // TODO: doesn't seem to be working correctly with crop
-      // ...(rotation !== undefined ? {rotate: rotation} : {}),
+      ...(rotation !== undefined ? {rotate: rotation} : {}),
       ...(flipHorizontal !== undefined ? {flipHorizontal} : {}),
       ...(flipVertical !== undefined ? {flipVertical} : {}),
     }),
-    [flipHorizontal, flipVertical, position, scale],
+    [flipHorizontal, flipVertical, rotation, position, scale],
   )
 
   useEffect(() => {
@@ -110,26 +108,26 @@ export const Component = observer(function ({image, gallery}: Props) {
   const adjustments = useMemo(
     () =>
       [
-        // {
-        //   name: 'rotate-left',
-        //   label: 'Rotate left',
-        //   hint: 'Rotate image left',
-        //   onPress: () => {
-        //     const rotate = (rotation - 90) % 360
-        //     setRotation(rotate)
-        //     image.manipulate({rotate})
-        //   },
-        // },
-        // {
-        //   name: 'rotate-right',
-        //   label: 'Rotate right',
-        //   hint: 'Rotate image right',
-        //   onPress: () => {
-        //     const rotate = (rotation + 90) % 360
-        //     setRotation(rotate)
-        //     image.manipulate({rotate})
-        //   },
-        // },
+        {
+          name: 'rotate-left',
+          label: 'Rotate left',
+          hint: 'Rotate image left',
+          onPress: () => {
+            const rotate = (rotation - 90) % 360
+            setRotation(rotate)
+            image.manipulate({rotate})
+          },
+        },
+        {
+          name: 'rotate-right',
+          label: 'Rotate right',
+          hint: 'Rotate image right',
+          onPress: () => {
+            const rotate = (rotation + 90) % 360
+            setRotation(rotate)
+            image.manipulate({rotate})
+          },
+        },
         {
           name: 'flip',
           label: 'Flip horizontal',
@@ -143,7 +141,7 @@ export const Component = observer(function ({image, gallery}: Props) {
           onPress: onFlipVertical,
         },
       ] as const,
-    [onFlipHorizontal, onFlipVertical],
+    [image, rotation, onFlipHorizontal, onFlipVertical],
   )
 
   useEffect(() => {
