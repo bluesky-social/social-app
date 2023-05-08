@@ -194,6 +194,20 @@ export class ListModel {
     })
   }
 
+  async subscribe() {
+    await this.rootStore.agent.app.bsky.graph.subscribeMuteList({
+      list: this.list.uri,
+    })
+    await this.refresh()
+  }
+
+  async unsubscribe() {
+    await this.rootStore.agent.app.bsky.graph.unsubscribeMuteList({
+      list: this.list.uri,
+    })
+    await this.refresh()
+  }
+
   /**
    * Attempt to load more again after a failure
    */

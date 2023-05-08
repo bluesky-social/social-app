@@ -43,11 +43,12 @@ export const ProfileListScreen = withAuthRequired(
     const onToggleSubscribed = React.useCallback(async () => {
       try {
         if (list.list?.viewer?.muted) {
-          await store.agent.app.bsky.graph.unsubscribeMuteList({list: list.uri})
-          Toast.show('List unsubscribed')
+          await list.unsubscribe()
+          Toast.show('Unsubscribed from the mute list')
         } else {
+          await list.subscribe()
           await store.agent.app.bsky.graph.subscribeMuteList({list: list.uri})
-          Toast.show('List subscribed')
+          Toast.show('Subscribed to the mute list')
         }
       } catch (err) {
         Toast.show(
