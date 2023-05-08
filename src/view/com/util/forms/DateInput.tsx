@@ -71,7 +71,7 @@ export function DateInput(props: Props) {
         <DateTimePicker
           testID={props.testID ? `${props.testID}-datepicker` : undefined}
           mode="date"
-          display={isIOS ? 'spinner' : 'calendar'}
+          display="spinner"
           // @ts-ignore applies in iOS only -prf
           themeVariant={theme.colorScheme}
           value={props.value}
