@@ -401,7 +401,7 @@ const ProfileHeaderLoaded = observer(
                   </Text>
                 </TouchableOpacity>
                 <Text type="md" style={[s.bold, pal.text]}>
-                  {view.postsCount}{' '}
+                  {formatCount(view.postsCount)}{' '}
                   <Text type="md" style={[pal.textLight]}>
                     {pluralize(view.postsCount, 'post')}
                   </Text>

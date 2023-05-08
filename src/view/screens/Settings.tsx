@@ -36,6 +36,7 @@ import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {isDesktopWeb} from 'platform/detection'
 import {pluralize} from 'lib/strings/helpers'
+import {formatCount} from 'view/com/util/numeric/format'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -153,18 +154,22 @@ export const SettingsScreen = withAuthRequired(
           contentContainerStyle={!isDesktopWeb && pal.viewLight}
           scrollIndicatorInsets={{right: 1}}>
           <View style={styles.spacer20} />
-          <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Account
-          </Text>
-          <View style={[styles.infoLine]}>
-            <Text type="lg-medium" style={pal.text}>
-              Email:{' '}
-              <Text type="lg" style={pal.text}>
-                {store.session.currentSession.email}
+          {store.session.currentSession !== undefined ? (
+            <>
+              <Text type="xl-bold" style={[pal.text, styles.heading]}>
+                Account
               </Text>
-            </Text>
-          </View>
-          <View style={styles.spacer20} />
+              <View style={[styles.infoLine]}>
+                <Text type="lg-medium" style={pal.text}>
+                  Email:{' '}
+                  <Text type="lg" style={pal.text}>
+                    {store.session.currentSession?.email}
+                  </Text>
+                </Text>
+              </View>
+              <View style={styles.spacer20} />
+            </>
+          ) : null}
           <View style={[s.flexRow, styles.heading]}>
             <Text type="xl-bold" style={pal.text}>
               Signed in as
@@ -275,7 +280,7 @@ export const SettingsScreen = withAuthRequired(
             <Text
               type="lg"
               style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
-              {store.me.invitesAvailable} invite{' '}
+              {formatCount(store.me.invitesAvailable)} invite{' '}
               {pluralize(store.me.invitesAvailable, 'code')} available
             </Text>
           </TouchableOpacity>
