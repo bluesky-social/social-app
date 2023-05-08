@@ -156,7 +156,7 @@ export const ListItems = observer(
           }
           return <View />
         } else if (item === HEADER_ITEM) {
-          return list.hasLoaded ? (
+          return list.list ? (
             <ListHeader
               list={list.list}
               isOwner={list.isOwner}

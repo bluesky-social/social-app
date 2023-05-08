@@ -1,5 +1,6 @@
 import {
   AppBskyActorDefs,
+  AppBskyGraphDefs,
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedRecord,
   AppBskyEmbedImages,
@@ -127,11 +128,15 @@ export function getPostModeration(
 
   // muting
   if (postInfo.isMuted) {
+    let msg = 'Post from an account you muted.'
+    if (postInfo.mutedByList) {
+      msg = `Muted by ${postInfo.mutedByList.name}`
+    }
     return {
       avatar,
-      list: hide('Post from an account you muted.'),
-      thread: warn('Post from an account you muted.'),
-      view: warn('Post from an account you muted.'),
+      list: hide(msg),
+      thread: warn(msg),
+      view: warn(msg),
     }
   }
 
@@ -273,6 +278,7 @@ export function getProfileViewBasicLabelInfo(
     profileLabels: filterProfileLabels(profile.labels),
     isMuted: profile.viewer?.muted || false,
     isBlocking: !!profile.viewer?.blocking || false,
+    isBlockedBy: !!profile.viewer?.blockedBy || false,
   }
 }
 
@@ -300,6 +306,21 @@ export function getEmbedMuted(embed?: Embed): boolean {
     return !!embed.record.author.viewer?.muted
   }
   return false
+}
+
+export function getEmbedMutedByList(
+  embed?: Embed,
+): AppBskyGraphDefs.ListViewBasic | undefined {
+  if (!embed) {
+    return undefined
+  }
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyEmbedRecord.isViewRecord(embed.record)
+  ) {
+    return embed.record.author.viewer?.mutedByList
+  }
+  return undefined
 }
 
 export function getEmbedBlocking(embed?: Embed): boolean {

@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AtUri,
   ComAtprotoLabelDefs,
+  AppBskyGraphDefs,
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorProfile,
   RichText,
@@ -20,6 +21,7 @@ import {
 
 export class ProfileViewerModel {
   muted?: boolean
+  mutedByList?: AppBskyGraphDefs.ListViewBasic
   following?: string
   followedBy?: string
   blockedBy?: boolean
