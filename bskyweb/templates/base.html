@@ -134,30 +134,18 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png"/>
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png"/>
   <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png"/>
-  {% block head_page_meta -%}
-  <meta property="og:title" content="Bluesky Social"/>
-  <meta property="og:type" content="article"/>
-  <meta property="og:image" content="/static/default-social-card.png"/>
-  <meta name="twitter:title" content="Bluesky Social"/>
-  <meta name="twitter:description" content="See what&#x27;s next."/>
-  <meta name="twitter:image" content="/static/default-social-card.png"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:site" content="@bluesky"/>
-  {%- endblock %}
-	<!-- TODO: link rel=canonical -->
-	<!-- TODO: analytics code -->
-	<!-- TODO: could put <link rel="preload"> tags here -->
+  {% block html_head_extra -%}{%- endblock %}
+  <meta name="application-name" name="Bluesky">
   <meta name="generator" name="bskyweb">
-	{% block head_metadata %}{% endblock %}
 </head>
 <body>
 {%- block body_all %}
 	<div id="root"></div>
     <noscript>
-			{%- block noscript_extra %}{% endblock -%}
       <h1>Javascript Required</h1>
       <p>This is a heavily interactive web application, and Javascript is required. Simple HTML interfaces are possible, but that is not what this is.
       <p>Learn more about Bluesky at <a href="https://blueskyweb.xyz">blueskyweb.xyz</a> and <a href="https://atproto.com">atproto.com</a>.
+			{% block noscript_extra %}{% endblock %}
     </noscript>
 {% endblock -%}
 </body>

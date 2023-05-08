@@ -2,6 +2,18 @@
 
 {% block head_title %}Bluesky{% endblock %}
 
+{% block html_head_extra -%}
+  <meta property="og:title" content="Bluesky Social"/>
+  <meta property="og:description" content="See what's next."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:image" content="/static/default-social-card.png"/>
+  <meta name="twitter:title" content="Bluesky Social"/>
+  <meta name="twitter:description" content="See what&#x27;s next."/>
+  <meta name="twitter:image" content="/static/default-social-card.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@bluesky"/>
+{%- endblock %}
+
 {% block noscript_extra %}
 <p>This is the home page.
 {% endblock %}
