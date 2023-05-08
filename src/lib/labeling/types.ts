@@ -45,6 +45,7 @@ export enum ModerationBehaviorCode {
 
 export interface ModerationBehavior {
   behavior: ModerationBehaviorCode
+  isMute?: boolean
   noOverride?: boolean
   reason?: string
 }

@@ -17,6 +17,7 @@ import {
   Label,
   LabelValGroup,
   ModerationBehaviorCode,
+  ModerationBehavior,
   PostModeration,
   ProfileModeration,
   PostLabelInfo,
@@ -134,9 +135,9 @@ export function getPostModeration(
     }
     return {
       avatar,
-      list: hide(msg),
-      thread: warn(msg),
-      view: warn(msg),
+      list: isMute(hide(msg)),
+      thread: isMute(warn(msg)),
+      view: isMute(warn(msg)),
     }
   }
 
@@ -420,6 +421,11 @@ function warnContent(reason: string) {
     behavior: ModerationBehaviorCode.WarnContent,
     reason,
   }
+}
+
+function isMute(behavior: ModerationBehavior): ModerationBehavior {
+  behavior.isMute = true
+  return behavior
 }
 
 // TODO
