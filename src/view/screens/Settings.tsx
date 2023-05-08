@@ -440,6 +440,7 @@ export const SettingsScreen = withAuthRequired(
 
 function AccountDropdownBtn({handle}: {handle: string}) {
   const store = useStores()
+  const pal = usePalette('default')
   const items = [
     {
       label: 'Remove account',
@@ -452,7 +453,10 @@ function AccountDropdownBtn({handle}: {handle: string}) {
   return (
     <View style={s.pl10}>
       <DropdownButton type="bare" items={items}>
-        <FontAwesomeIcon icon="ellipsis-h" />
+        <FontAwesomeIcon
+          icon="ellipsis-h"
+          style={pal.textLight as FontAwesomeIconStyle}
+        />
       </DropdownButton>
     </View>
   )

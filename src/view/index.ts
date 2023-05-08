@@ -20,6 +20,7 @@ import {faBell} from '@fortawesome/free-solid-svg-icons/faBell'
 import {faBell as farBell} from '@fortawesome/free-regular-svg-icons/faBell'
 import {faBookmark} from '@fortawesome/free-solid-svg-icons/faBookmark'
 import {faBookmark as farBookmark} from '@fortawesome/free-regular-svg-icons/faBookmark'
+import {faCalendar as farCalendar} from '@fortawesome/free-regular-svg-icons/faCalendar'
 import {faCamera} from '@fortawesome/free-solid-svg-icons/faCamera'
 import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck'
 import {faCircleCheck} from '@fortawesome/free-regular-svg-icons/faCircleCheck'
@@ -97,6 +98,7 @@ export function setup() {
     farBell,
     faBookmark,
     farBookmark,
+    farCalendar,
     faCamera,
     faCheck,
     faCircleCheck,
