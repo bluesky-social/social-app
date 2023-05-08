@@ -26,6 +26,7 @@ import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
+import {formatCount} from '../util/numeric/format'
 
 const PARENT_REPLY_LINE_LENGTH = 8
 
@@ -247,7 +248,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   title={repostsTitle}>
                   <Text testID="repostCount" type="lg" style={pal.textLight}>
                     <Text type="xl-bold" style={pal.text}>
-                      {item.post.repostCount}
+                      {formatCount(item.post.repostCount)}
                     </Text>{' '}
                     {pluralize(item.post.repostCount, 'repost')}
                   </Text>
@@ -262,7 +263,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   title={likesTitle}>
                   <Text testID="likeCount" type="lg" style={pal.textLight}>
                     <Text type="xl-bold" style={pal.text}>
-                      {item.post.likeCount}
+                      {formatCount(item.post.likeCount)}
                     </Text>{' '}
                     {pluralize(item.post.likeCount, 'like')}
                   </Text>

@@ -34,6 +34,7 @@ import {
   getProfileModeration,
 } from 'lib/labeling/helpers'
 import {ProfileModeration} from 'lib/labeling/types'
+import {formatCount} from '../util/numeric/format'
 
 const MAX_AUTHORS = 5
 
@@ -218,7 +219,8 @@ export const FeedItem = observer(function ({
               <>
                 <Text style={[pal.text]}> and </Text>
                 <Text style={[pal.text, s.bold]}>
-                  {authors.length - 1} {pluralize(authors.length - 1, 'other')}
+                  {formatCount(authors.length - 1)}{' '}
+                  {pluralize(authors.length - 1, 'other')}
                 </Text>
               </>
             ) : undefined}
