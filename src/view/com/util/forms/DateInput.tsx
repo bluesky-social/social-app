@@ -8,8 +8,9 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {isIOS, isAndroid} from 'platform/detection'
-import {Button} from './Button'
+import {Button, ButtonType} from './Button'
 import {Text} from '../text/Text'
+import {TypographyVariant} from 'lib/ThemeContext'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 
@@ -17,9 +18,9 @@ interface Props {
   testID?: string
   value: Date
   onChange: (date: Date) => void
-  buttonType?: string
+  buttonType?: ButtonType
   buttonStyle?: StyleProp<ViewStyle>
-  buttonLabelType?: string
+  buttonLabelType?: TypographyVariant
   buttonLabelStyle?: StyleProp<TextStyle>
   accessibilityLabel: string
   accessibilityHint: string
@@ -32,9 +33,11 @@ export function DateInput(props: Props) {
   const pal = usePalette('default')
 
   const onChangeInternal = useCallback(
-    (event: DateTimePickerEvent, date: Date) => {
+    (event: DateTimePickerEvent, date: Date | undefined) => {
       setShow(false)
-      props.onChange(date)
+      if (date) {
+        props.onChange(date)
+      }
     },
     [setShow, props],
   )
@@ -50,7 +53,6 @@ export function DateInput(props: Props) {
           type={props.buttonType}
           style={props.buttonStyle}
           onPress={onPress}
-          accessibilityRole="button"
           accessibilityLabel={props.accessibilityLabel}
           accessibilityHint={props.accessibilityHint}
           accessibilityLabelledBy={props.accessibilityLabelledBy}>
