@@ -1,9 +1,12 @@
 import React, {
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useState,
 } from 'react'
+import {StyleSheet, View} from 'react-native'
 import {ReactRenderer} from '@tiptap/react'
 import tippy, {Instance as TippyInstance} from 'tippy.js'
 import {
@@ -12,6 +15,10 @@ import {
   SuggestionKeyDownProps,
 } from '@tiptap/suggestion'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
+import {usePalette} from 'lib/hooks/usePalette'
+import Graphemer from 'graphemer'
+import {Text} from 'view/com/util/text/Text'
+import {UserAvatar} from 'view/com/util/UserAvatar'
 
 interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
@@ -26,7 +33,7 @@ export function createSuggestion({
     async items({query}) {
       autocompleteView.setActive(true)
       await autocompleteView.setPrefix(query)
-      return autocompleteView.suggestions.slice(0, 8).map(s => s.handle)
+      return autocompleteView.suggestions.slice(0, 8)
     },
 
     render: () => {
@@ -91,12 +98,14 @@ export function createSuggestion({
 const MentionList = forwardRef<MentionListRef, SuggestionProps>(
   (props: SuggestionProps, ref) => {
     const [selectedIndex, setSelectedIndex] = useState(0)
+    const pal = usePalette('default')
+    const splitter = useMemo(() => new Graphemer(), [])
 
     const selectItem = (index: number) => {
       const item = props.items[index]
 
       if (item) {
-        props.command({id: item})
+        props.command({id: item.handle})
       }
     }
 
@@ -137,21 +146,106 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
       },
     }))
 
+    const {items} = props
+
+    const getDisplayedName = useCallback(
+      (name: string) => {
+        // Heuristic value based on max display name and handle lengths
+        const DISPLAY_LIMIT = 30
+        if (name.length > DISPLAY_LIMIT) {
+          const graphemes = splitter.splitGraphemes(name)
+
+          if (graphemes.length > DISPLAY_LIMIT) {
+            return graphemes.length > DISPLAY_LIMIT
+              ? `${graphemes.slice(0, DISPLAY_LIMIT).join('')}...`
+              : name.substring(0, DISPLAY_LIMIT)
+          }
+        }
+
+        return name
+      },
+      [splitter],
+    )
+
     return (
       <div className="items">
-        {props.items.length ? (
-          props.items.map((item, index) => (
-            <button
-              className={`item ${index === selectedIndex ? 'is-selected' : ''}`}
-              key={index}
-              onClick={() => selectItem(index)}>
-              {item}
-            </button>
-          ))
-        ) : (
-          <div className="item">No result</div>
-        )}
+        <View style={[pal.borderDark, pal.view, styles.container]}>
+          {items.length > 0 ? (
+            items.map((item, index) => {
+              const displayName = getDisplayedName(
+                item.displayName ?? item.handle,
+              )
+              const isSelected = selectedIndex === index
+
+              return (
+                <View
+                  key={item.handle}
+                  style={[
+                    isSelected ? pal.viewLight : undefined,
+                    pal.borderDark,
+                    styles.mentionContainer,
+                    index === 0
+                      ? styles.firstMention
+                      : index === items.length - 1
+                      ? styles.lastMention
+                      : undefined,
+                  ]}>
+                  <View style={styles.avatarAndDisplayName}>
+                    <UserAvatar avatar={item.avatar ?? null} size={26} />
+                    <Text style={pal.text} numberOfLines={1}>
+                      {displayName}
+                    </Text>
+                  </View>
+                  <Text type="xs" style={pal.textLight} numberOfLines={1}>
+                    {item.handle}
+                  </Text>
+                </View>
+              )
+            })
+          ) : (
+            <Text type="sm" style={[pal.text, styles.noResult]}>
+              No result
+            </Text>
+          )}
+        </View>
       </div>
     )
   },
 )
+
+const styles = StyleSheet.create({
+  container: {
+    width: 500,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    padding: 4,
+  },
+  mentionContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    gap: 4,
+  },
+  firstMention: {
+    borderTopLeftRadius: 2,
+    borderTopRightRadius: 2,
+  },
+  lastMention: {
+    borderBottomLeftRadius: 2,
+    borderBottomRightRadius: 2,
+  },
+  avatarAndDisplayName: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  noResult: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+})
