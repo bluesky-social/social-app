@@ -180,21 +180,35 @@ function AppPassword({
     )
   }, [store, name])
 
+  const {contentLanguages} = store.preferences
+
+  const primaryLocale =
+    contentLanguages.length > 0 ? contentLanguages[0] : 'en-US'
+
   return (
     <TouchableOpacity
       testID={testID}
       style={[styles.item, pal.border]}
       onPress={onDelete}
       accessibilityRole="button"
-      accessibilityLabel="Delete"
-      accessibilityHint="Deletes app password">
-      <Text type="md-bold" style={pal.text}>
-        {name}
-      </Text>
-      <View style={styles.flex1} />
-      <Text type="md" style={[pal.text, styles.pr10]}>
-        {new Date(createdAt).toDateString()}
-      </Text>
+      accessibilityLabel="Delete app password"
+      accessibilityHint="">
+      <View>
+        <Text type="md-bold" style={pal.text}>
+          {name}
+        </Text>
+        <Text type="md" style={[pal.text, styles.pr10]} numberOfLines={1}>
+          Created{' '}
+          {Intl.DateTimeFormat(primaryLocale, {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          }).format(new Date(createdAt))}
+        </Text>
+      </View>
       <FontAwesomeIcon icon={['far', 'trash-can']} style={styles.trashIcon} />
     </TouchableOpacity>
   )
@@ -246,6 +260,7 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     borderBottomWidth: 1,
     paddingHorizontal: 20,
     paddingVertical: 14,
