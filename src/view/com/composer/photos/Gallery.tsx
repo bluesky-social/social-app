@@ -50,7 +50,7 @@ export const Gallery = observer(function ({gallery}: Props) {
 
   const handleEditPhoto = useCallback(
     (image: ImageModel) => {
-      gallery.crop(image)
+      gallery.edit(image)
     },
     [gallery],
   )
@@ -121,10 +121,10 @@ export const Gallery = observer(function ({gallery}: Props) {
             </TouchableOpacity>
             <View style={imageControlsSubgroupStyle}>
               <TouchableOpacity
-                testID="cropPhotoButton"
+                testID="editPhotoButton"
                 accessibilityRole="button"
-                accessibilityLabel="Crop image"
-                accessibilityHint="Opens modal for cropping image"
+                accessibilityLabel="Edit image"
+                accessibilityHint=""
                 onPress={() => {
                   handleEditPhoto(image)
                 }}
