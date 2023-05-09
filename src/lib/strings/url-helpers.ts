@@ -66,6 +66,10 @@ export function isBskyAppUrl(url: string): boolean {
   return url.startsWith('https://bsky.app/')
 }
 
+export function isExternalUrl(url: string): boolean {
+  return !isBskyAppUrl(url) && url.startsWith('http')
+}
+
 export function isBskyPostUrl(url: string): boolean {
   if (isBskyAppUrl(url)) {
     try {
