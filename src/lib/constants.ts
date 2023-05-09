@@ -86,6 +86,16 @@ export function SUGGESTED_FOLLOWS(serviceUrl: string) {
   }
 }
 
+export function SEARCH_HOST(serviceUrl: string) {
+  if (serviceUrl.includes('localhost')) {
+    return 'http://localhost:2470'
+  } else if (serviceUrl.includes('staging.bsky.dev')) {
+    return 'https://search.staging.bsky.dev'
+  } else {
+    return 'https://search.bsky.social'
+  }
+}
+
 export const POST_IMG_MAX = {
   width: 2000,
   height: 2000,

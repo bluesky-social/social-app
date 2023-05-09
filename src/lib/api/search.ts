@@ -3,9 +3,7 @@
  * TODO removeme when we land this in proto!
  */
 import {AppBskyFeedPost} from '@atproto/api'
-
-const PROFILES_ENDPOINT = 'https://search.bsky.social/search/profiles'
-const POSTS_ENDPOINT = 'https://search.bsky.social/search/posts'
+import {SEARCH_HOST} from 'lib/constants'
 
 export interface ProfileSearchItem {
   $type: string
@@ -35,11 +33,15 @@ export interface PostSearchItem {
 export async function searchProfiles(
   query: string,
 ): Promise<ProfileSearchItem[]> {
-  return await doFetch<ProfileSearchItem[]>(PROFILES_ENDPOINT, query)
+  const host = SEARCH_HOST(this.rootStore.session.currentSession?.service || '')
+  const endpoint = `${host}/search/profiles`
+  return await doFetch<ProfileSearchItem[]>(endpoint, query)
 }
 
 export async function searchPosts(query: string): Promise<PostSearchItem[]> {
-  return await doFetch<PostSearchItem[]>(POSTS_ENDPOINT, query)
+  const host = SEARCH_HOST(this.rootStore.session.currentSession?.service || '')
+  const endpoint = `${host}/search/posts`
+  return await doFetch<PostSearchItem[]>(endpoint, query)
 }
 
 async function doFetch<T>(endpoint: string, query: string): Promise<T> {
