@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWindowDimensions} from 'react-native'
 import {gradients, s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {Text} from '../util/text/Text'
@@ -31,10 +32,11 @@ export const Component = observer(function ({image, gallery}: Props) {
   const store = useStores()
   const {shell} = store
   const theme = useTheme()
+  const winDim = useWindowDimensions()
 
   const [altText, setAltText] = useState(image.altText)
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>(
-    image.aspectRatio ?? '1:1',
+    image.aspectRatio ?? 'None',
   )
   const [flipHorizontal, setFlipHorizontal] = useState<boolean>(
     image.flipHorizontal ?? false,
@@ -49,6 +51,11 @@ export const Component = observer(function ({image, gallery}: Props) {
   const [position, setPosition] = useState<Position>()
   const [isEditing, setIsEditing] = useState(false)
   const editorRef = useRef<ImageEditor>(null)
+
+  const imgEditorStyles = useMemo(() => {
+    const dim = Math.min(425, winDim.width - 24)
+    return {width: dim, height: dim}
+  }, [winDim.width])
 
   const manipulationAttributes = useMemo(
     () => ({
@@ -213,105 +220,92 @@ export const Component = observer(function ({image, gallery}: Props) {
     return null
   }
 
-  const {width, height} = image.getDisplayDimensions(aspectRatio, 300)
+  const {width, height} = image.getDisplayDimensions(
+    aspectRatio,
+    imgEditorStyles.width,
+  )
 
   return (
     <View testID="editImageModal" style={[pal.view, styles.container, s.flex1]}>
       <Text style={[styles.title, pal.text]}>Edit image</Text>
-      <View style={[styles.section, styles.leftSection, s.flexRow]}>
-        <View>
-          <View style={[styles.imgContainer]}>
-            <ImageEditor
-              ref={editorRef}
-              style={styles.imgEditor}
-              image={isEditing ? image.compressed.path : image.path}
-              width={width}
-              height={height}
-              scale={scale}
-              border={0}
-              position={position}
-              onPositionChange={setPosition}
-            />
-          </View>
-          <Slider
-            value={scale}
-            onValueChange={(v: number | number[]) =>
-              setScale(Array.isArray(v) ? v[0] : v)
-            }
-            minimumValue={1}
-            maximumValue={3}
+      <View>
+        <View style={[styles.imgContainer, imgEditorStyles, pal.borderDark]}>
+          <ImageEditor
+            ref={editorRef}
+            style={styles.imgEditor}
+            image={isEditing ? image.compressed.path : image.path}
+            width={width}
+            height={height}
+            scale={scale}
+            border={0}
+            position={position}
+            onPositionChange={setPosition}
           />
         </View>
-        <View style={styles.section}>
-          <View style={styles.subsection}>
-            <Text type="sm-bold" style={[pal.text]}>
-              Ratios
-            </Text>
-            <View style={styles.imgControls}>
-              {getKeys(ratios).map(ratio => {
-                const {hint, Icon, ...props} = ratios[ratio]
-                const labelIconSize = getLabelIconSize(ratio)
-                const isSelected = aspectRatio === ratio
+        <Slider
+          value={scale}
+          onValueChange={(v: number | number[]) =>
+            setScale(Array.isArray(v) ? v[0] : v)
+          }
+          minimumValue={1}
+          maximumValue={3}
+        />
+        <View style={[s.flexRow, styles.gap18]}>
+          <View style={styles.imgControls}>
+            {getKeys(ratios).map(ratio => {
+              const {hint, Icon, ...props} = ratios[ratio]
+              const labelIconSize = getLabelIconSize(ratio)
+              const isSelected = aspectRatio === ratio
 
-                return (
-                  <Pressable
-                    key={ratio}
-                    onPress={() => {
-                      onPressRatio(ratio)
-                    }}
-                    accessibilityLabel={ratio}
-                    accessibilityHint={hint}>
-                    <Icon
-                      size={labelIconSize}
-                      style={[
-                        styles.imgControl,
-                        isSelected ? s.blue3 : pal.text,
-                      ]}
-                      color={(isSelected ? s.blue3 : pal.text).color}
-                      {...props}
-                    />
-
-                    <Text
-                      type={isSelected ? 'xs-bold' : 'xs-medium'}
-                      style={[isSelected ? s.blue3 : pal.text, s.textCenter]}>
-                      {ratio}
-                    </Text>
-                  </Pressable>
-                )
-              })}
-            </View>
-          </View>
-          <View style={styles.subsection}>
-            <Text type="sm-bold" style={[pal.text]}>
-              Adjustments
-            </Text>
-            <View style={styles.imgControls}>
-              {adjustments.map(({label, hint, name, onPress}) => (
+              return (
                 <Pressable
-                  key={label}
-                  onPress={onPress}
-                  accessibilityLabel={label}
+                  key={ratio}
+                  onPress={() => {
+                    onPressRatio(ratio)
+                  }}
+                  accessibilityLabel={ratio}
                   accessibilityHint={hint}>
-                  <MaterialIcons
-                    name={name}
-                    size={label.startsWith('Flip') ? 22 : 24}
-                    style={[
-                      pal.text,
-                      label === 'Flip vertically'
-                        ? styles.flipVertical
-                        : undefined,
-                    ]}
+                  <Icon
+                    size={labelIconSize}
+                    style={[styles.imgControl, isSelected ? s.blue3 : pal.text]}
+                    color={(isSelected ? s.blue3 : pal.text).color}
+                    {...props}
                   />
+
+                  <Text
+                    type={isSelected ? 'xs-bold' : 'xs-medium'}
+                    style={[isSelected ? s.blue3 : pal.text, s.textCenter]}>
+                    {ratio}
+                  </Text>
                 </Pressable>
-              ))}
-            </View>
+              )
+            })}
+          </View>
+          <View style={[styles.verticalSep, pal.border]} />
+          <View style={styles.imgControls}>
+            {adjustments.map(({label, hint, name, onPress}) => (
+              <Pressable
+                key={label}
+                onPress={onPress}
+                accessibilityLabel={label}
+                accessibilityHint={hint}
+                style={styles.flipBtn}>
+                <MaterialIcons
+                  name={name}
+                  size={label.startsWith('Flip') ? 22 : 24}
+                  style={[
+                    pal.text,
+                    label === 'Flip vertically'
+                      ? styles.flipVertical
+                      : undefined,
+                  ]}
+                />
+              </Pressable>
+            ))}
           </View>
         </View>
       </View>
-      <View style={[styles.section, styles.altTextSection, pal.border]}>
-        <Text type="sm-bold" style={[pal.text]}>
-          Accessibility
-        </Text>
+      <View style={[styles.gap18]}>
         <TextInput
           testID="altTextImageInput"
           style={[styles.textArea, pal.border, pal.text]}
@@ -319,6 +313,8 @@ export const Component = observer(function ({image, gallery}: Props) {
           multiline
           value={altText}
           onChangeText={text => setAltText(enforceLen(text, MAX_ALT_TEXT))}
+          placeholder="Image description"
+          placeholderTextColor={pal.colors.textLight}
           accessibilityLabel="Image alt text"
           accessibilityHint="Sets image alt text for screenreaders"
           accessibilityLabelledBy="imageAltText"
@@ -346,8 +342,6 @@ export const Component = observer(function ({image, gallery}: Props) {
   )
 })
 
-const LHS_DIMENSION = 300
-
 const styles = StyleSheet.create({
   container: {
     gap: 18,
@@ -356,20 +350,15 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  section: {
+  gap18: {
     gap: 18,
   },
-  subsection: {
-    gap: 10,
-  },
-  leftSection: {
-    gap: 12,
-    width: LHS_DIMENSION,
-  },
+
   title: {
     fontWeight: 'bold',
     fontSize: 24,
   },
+
   textArea: {
     borderWidth: 1,
     borderRadius: 6,
@@ -379,6 +368,7 @@ const styles = StyleSheet.create({
     height: 100,
     textAlignVertical: 'top',
   },
+
   btns: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -389,15 +379,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 24,
   },
-  img: {
-    height: LHS_DIMENSION,
-    width: LHS_DIMENSION,
+
+  verticalSep: {
+    borderLeftWidth: 1,
   },
-  altTextSection: {
-    borderTopWidth: 1,
-    flexDirection: 'column',
-    paddingTop: 24,
-  },
+
   imgControls: {
     flexDirection: 'row',
     gap: 5,
@@ -411,6 +397,10 @@ const styles = StyleSheet.create({
   flipVertical: {
     transform: [{rotate: '90deg'}],
   },
+  flipBtn: {
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+  },
   imgEditor: {
     maxWidth: '100%',
   },
@@ -418,9 +408,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 300,
-    width: 300,
+    height: 425,
+    width: 425,
     borderWidth: 1,
+    borderRadius: 8,
     borderStyle: 'solid',
+    overflow: 'hidden',
   },
 })
