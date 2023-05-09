@@ -18,7 +18,7 @@ import {toShareUrl} from 'lib/strings/url-helpers'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {isWeb} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 import {shareUrl} from 'lib/sharing'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
@@ -214,11 +214,14 @@ export function PostDropdownBtn({
       icon: 'circle-exclamation',
       label: 'Report post',
       onPress() {
-        store.shell.openModal({
-          name: 'report-post',
-          postUri: itemUri,
-          postCid: itemCid,
-        })
+        if (isNative) {
+          store.shell.openModal({
+            name: 'report-post',
+            postUri: itemUri,
+            postCid: itemCid,
+          })
+        } else {
+        }
       },
     },
     isAuthor && {
