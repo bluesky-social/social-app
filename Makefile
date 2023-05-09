@@ -11,7 +11,6 @@ help: ## Print info about all commands
 .PHONY: build-web
 build-web: ## Compile web bundle, copy to bskyweb directory
 	yarn build-web
-	cp ./web-build/static/js/*.* ./bskyweb/static/js/
 
 .PHONY: test
 test: ## Run all tests
