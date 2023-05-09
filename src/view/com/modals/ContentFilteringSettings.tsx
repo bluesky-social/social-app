@@ -24,10 +24,22 @@ export function Component({}: {}) {
     <View testID="contentModerationModal" style={[pal.view, styles.container]}>
       <Text style={[pal.text, styles.title]}>Content Moderation</Text>
       <ScrollView style={styles.scrollContainer}>
-        <ContentLabelPref group="nsfw" />
-        <ContentLabelPref group="nudity" />
-        <ContentLabelPref group="suggestive" />
-        <ContentLabelPref group="gore" />
+        <ContentLabelPref
+          group="nsfw"
+          disabled={!store.preferences.adultContentEnabled}
+        />
+        <ContentLabelPref
+          group="nudity"
+          disabled={!store.preferences.adultContentEnabled}
+        />
+        <ContentLabelPref
+          group="suggestive"
+          disabled={!store.preferences.adultContentEnabled}
+        />
+        <ContentLabelPref
+          group="gore"
+          disabled={!store.preferences.adultContentEnabled}
+        />
         <ContentLabelPref group="hate" />
         <ContentLabelPref group="spam" />
         <ContentLabelPref group="impersonation" />
@@ -55,7 +67,13 @@ export function Component({}: {}) {
 
 // TODO: Refactor this component to pass labels down to each tab
 const ContentLabelPref = observer(
-  ({group}: {group: keyof typeof CONFIGURABLE_LABEL_GROUPS}) => {
+  ({
+    group,
+    disabled,
+  }: {
+    group: keyof typeof CONFIGURABLE_LABEL_GROUPS
+    disabled?: boolean
+  }) => {
     const store = useStores()
     const pal = usePalette('default')
     return (
@@ -70,11 +88,17 @@ const ContentLabelPref = observer(
             </Text>
           )}
         </View>
-        <SelectGroup
-          current={store.preferences.contentLabels[group]}
-          onChange={v => store.preferences.setContentLabelPref(group, v)}
-          group={group}
-        />
+        {disabled ? (
+          <Text type="sm-bold" style={pal.textLight}>
+            Hide
+          </Text>
+        ) : (
+          <SelectGroup
+            current={store.preferences.contentLabels[group]}
+            onChange={v => store.preferences.setContentLabelPref(group, v)}
+            group={group}
+          />
+        )}
       </View>
     )
   },

@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   hideBtn: {
     position: 'absolute',
     left: 8,
-    bottom: isAndroid ? 32 : 20,
+    bottom: 20,
     paddingHorizontal: 8,
     paddingVertical: 6,
     borderRadius: 8,
