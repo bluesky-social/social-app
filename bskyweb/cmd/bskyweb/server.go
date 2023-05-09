@@ -92,6 +92,12 @@ func serve(cctx *cli.Context) error {
 	e.Renderer = NewRenderer("templates/", &bskyweb.TemplateFS, debug)
 	e.HTTPErrorHandler = customHTTPErrorHandler
 
+	// redirect trailing slash to non-trailing slash.
+	// all of our current endpoints have no trailing slash.
+	e.Use(middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
+		RedirectCode: http.StatusFound,
+	}))
+
 	// configure routes
 	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)))
