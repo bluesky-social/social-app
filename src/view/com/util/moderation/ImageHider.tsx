@@ -3,7 +3,6 @@ import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from '../text/Text'
 import {BlurView} from '../BlurView'
-import {colors} from 'lib/styles'
 import {ModerationBehavior, ModerationBehaviorCode} from 'lib/labeling/types'
 import {isAndroid} from 'platform/detection'
 
