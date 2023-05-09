@@ -6,7 +6,6 @@ export const ILLEGAL_LABEL_GROUP: LabelValGroup = {
   title: 'Illegal Content',
   warning: 'Illegal Content',
   values: ['csam', 'dmca-violation', 'nudity-nonconsentual'],
-  imagesOnly: false,
 }
 
 export const ALWAYS_FILTER_LABEL_GROUP: LabelValGroup = {
@@ -14,7 +13,6 @@ export const ALWAYS_FILTER_LABEL_GROUP: LabelValGroup = {
   title: 'Content Warning',
   warning: 'Content Warning',
   values: ['!filter'],
-  imagesOnly: false,
 }
 
 export const ALWAYS_WARN_LABEL_GROUP: LabelValGroup = {
@@ -22,7 +20,6 @@ export const ALWAYS_WARN_LABEL_GROUP: LabelValGroup = {
   title: 'Content Warning',
   warning: 'Content Warning',
   values: ['!warn'],
-  imagesOnly: false,
 }
 
 export const UNKNOWN_LABEL_GROUP: LabelValGroup = {
@@ -30,7 +27,6 @@ export const UNKNOWN_LABEL_GROUP: LabelValGroup = {
   title: 'Unknown Label',
   warning: 'Content Warning',
   values: [],
-  imagesOnly: false,
 }
 
 export const CONFIGURABLE_LABEL_GROUPS: Record<
@@ -43,7 +39,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     subtitle: 'i.e. Pornography',
     warning: 'Sexually Explicit',
     values: ['porn'],
-    imagesOnly: false, // apply to whole thing
+    isAdultImagery: true,
   },
   nudity: {
     id: 'nudity',
@@ -51,7 +47,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     subtitle: 'Including non-sexual and artistic',
     warning: 'Nudity',
     values: ['nudity'],
-    imagesOnly: true,
+    isAdultImagery: true,
   },
   suggestive: {
     id: 'suggestive',
@@ -59,7 +55,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     subtitle: 'Does not include nudity',
     warning: 'Sexually Suggestive',
     values: ['sexual'],
-    imagesOnly: true,
+    isAdultImagery: true,
   },
   gore: {
     id: 'gore',
@@ -67,14 +63,13 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     subtitle: 'Gore, self-harm, torture',
     warning: 'Violence',
     values: ['gore', 'self-harm', 'torture'],
-    imagesOnly: true,
+    isAdultImagery: true,
   },
   hate: {
     id: 'hate',
     title: 'Political Hate-Groups',
     warning: 'Hate',
     values: ['icon-kkk', 'icon-nazi', 'icon-intolerant', 'behavior-intolerant'],
-    imagesOnly: false,
   },
   spam: {
     id: 'spam',
@@ -82,7 +77,6 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     subtitle: 'Excessive low-quality posts',
     warning: 'Spam',
     values: ['spam'],
-    imagesOnly: false,
   },
   impersonation: {
     id: 'impersonation',
@@ -90,6 +84,5 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     subtitle: 'Accounts falsely claiming to be people or orgs',
     warning: 'Impersonation',
     values: ['impersonation'],
-    imagesOnly: false,
   },
 }
