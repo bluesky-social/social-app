@@ -23,6 +23,7 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/PostCtrls'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
+import {ImageHider} from '../util/moderation/ImageHider'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
@@ -258,7 +259,9 @@ const PostLoaded = observer(
                   />
                 </View>
               ) : undefined}
-              <PostEmbeds embed={item.post.embed} style={s.mb10} />
+              <ImageHider moderation={item.moderation.list} style={s.mb10}>
+                <PostEmbeds embed={item.post.embed} style={s.mb10} />
+              </ImageHider>
             </ContentHider>
             <PostCtrls
               itemUri={itemUri}

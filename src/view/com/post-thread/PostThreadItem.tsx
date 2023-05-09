@@ -24,6 +24,7 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/PostCtrls'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
+import {ImageHider} from '../util/moderation/ImageHider'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
@@ -234,7 +235,9 @@ export const PostThreadItem = observer(function PostThreadItem({
                 />
               </View>
             ) : undefined}
-            <PostEmbeds embed={item.post.embed} style={s.mb10} />
+            <ImageHider moderation={item.moderation.view} style={s.mb10}>
+              <PostEmbeds embed={item.post.embed} style={s.mb10} />
+            </ImageHider>
           </ContentHider>
           <View style={[s.mt2, s.mb10]}>
             <Text style={pal.textLight}>{niceDate(item.post.indexedAt)}</Text>
@@ -366,7 +369,9 @@ export const PostThreadItem = observer(function PostThreadItem({
                     />
                   </View>
                 ) : undefined}
-                <PostEmbeds embed={item.post.embed} style={s.mb10} />
+                <ImageHider style={s.mb10} moderation={item.moderation.thread}>
+                  <PostEmbeds embed={item.post.embed} style={s.mb10} />
+                </ImageHider>
               </ContentHider>
               <PostCtrls
                 itemUri={itemUri}
