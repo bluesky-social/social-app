@@ -6,7 +6,7 @@ import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {useGrapheme} from '../hooks/useDisplayName'
+import {useGrapheme} from '../hooks/useGrapheme'
 
 export const Autocomplete = observer(
   ({

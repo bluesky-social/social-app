@@ -8,18 +8,15 @@ export const useGrapheme = () => {
     (name: string, length: number) => {
       let remainingCharacters = 0
 
-      // Heuristic value based on max display name and handle lengths
       if (name.length > length) {
         const graphemes = splitter.splitGraphemes(name)
 
         if (graphemes.length > length) {
-          if (graphemes.length > length) {
-            remainingCharacters = 0
-            name = `${graphemes.slice(0, length).join('')}...`
-          } else {
-            remainingCharacters = length - graphemes.length
-            name = graphemes.join('')
-          }
+          remainingCharacters = 0
+          name = `${graphemes.slice(0, length).join('')}...`
+        } else {
+          remainingCharacters = length - graphemes.length
+          name = graphemes.join('')
         }
       } else {
         remainingCharacters = length - name.length
