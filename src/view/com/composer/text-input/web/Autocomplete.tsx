@@ -1,9 +1,7 @@
 import React, {
   forwardRef,
-  useCallback,
   useEffect,
   useImperativeHandle,
-  useMemo,
   useState,
 } from 'react'
 import {StyleSheet, View} from 'react-native'
@@ -16,9 +14,9 @@ import {
 } from '@tiptap/suggestion'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
-import Graphemer from 'graphemer'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
+import {useGrapheme} from '../hooks/useGrapheme'
 
 interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
@@ -99,7 +97,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
   (props: SuggestionProps, ref) => {
     const [selectedIndex, setSelectedIndex] = useState(0)
     const pal = usePalette('default')
-    const splitter = useMemo(() => new Graphemer(), [])
+    const {getGraphemeString} = useGrapheme()
 
     const selectItem = (index: number) => {
       const item = props.items[index]
@@ -148,32 +146,14 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
 
     const {items} = props
 
-    const getDisplayedName = useCallback(
-      (name: string) => {
-        // Heuristic value based on max display name and handle lengths
-        const DISPLAY_LIMIT = 30
-        if (name.length > DISPLAY_LIMIT) {
-          const graphemes = splitter.splitGraphemes(name)
-
-          if (graphemes.length > DISPLAY_LIMIT) {
-            return graphemes.length > DISPLAY_LIMIT
-              ? `${graphemes.slice(0, DISPLAY_LIMIT).join('')}...`
-              : name.substring(0, DISPLAY_LIMIT)
-          }
-        }
-
-        return name
-      },
-      [splitter],
-    )
-
     return (
       <div className="items">
         <View style={[pal.borderDark, pal.view, styles.container]}>
           {items.length > 0 ? (
             items.map((item, index) => {
-              const displayName = getDisplayedName(
+              const {name: displayName} = getGraphemeString(
                 item.displayName ?? item.handle,
+                30, // Heuristic value; can be modified
               )
               const isSelected = selectedIndex === index
 
@@ -197,7 +177,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
                     </Text>
                   </View>
                   <Text type="xs" style={pal.textLight} numberOfLines={1}>
-                    {item.handle}
+                    @{item.handle}
                   </Text>
                 </View>
               )
