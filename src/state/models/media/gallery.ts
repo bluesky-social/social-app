@@ -5,7 +5,7 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {openPicker} from 'lib/media/picker'
 import {getImageDim} from 'lib/media/manip'
 import {getDataUriSize} from 'lib/media/util'
-import {isDesktopWeb} from 'platform/detection'
+import {isNative} from 'platform/detection'
 
 export class GalleryModel {
   images: ImageModel[] = []
@@ -39,7 +39,7 @@ export class GalleryModel {
     if (!this.images.some(i => i.path === image_.path)) {
       const image = new ImageModel(this.rootStore, image_)
 
-      if (isDesktopWeb) {
+      if (!isNative) {
         await image.manipulate({})
       } else {
         await image.compress()
@@ -52,7 +52,7 @@ export class GalleryModel {
   }
 
   async edit(image: ImageModel) {
-    if (isDesktopWeb) {
+    if (!isNative) {
       this.rootStore.shell.openModal({
         name: 'edit-image',
         image,

@@ -52,14 +52,12 @@ export const Component = observer(function ({image, gallery}: Props) {
 
   const manipulationAttributes = useMemo(
     () => ({
-      ...(scale !== 1 ? {scale} : {}),
-      ...(position !== undefined ? {position} : {}),
       // TODO: doesn't seem to be working correctly with crop
       // ...(rotation !== undefined ? {rotate: rotation} : {}),
       ...(flipHorizontal !== undefined ? {flipHorizontal} : {}),
       ...(flipVertical !== undefined ? {flipVertical} : {}),
     }),
-    [flipHorizontal, flipVertical, position, scale],
+    [flipHorizontal, flipVertical],
   )
 
   useEffect(() => {
@@ -175,6 +173,8 @@ export const Component = observer(function ({image, gallery}: Props) {
               width: crop.width,
               height: crop.height,
             },
+            ...(scale !== 1 ? {scale} : {}),
+            ...(position !== undefined ? {position} : {}),
           }
         : {}),
       ...manipulationAttributes,
@@ -183,7 +183,15 @@ export const Component = observer(function ({image, gallery}: Props) {
 
     image.prevAttributes = manipulationAttributes
     onCloseModal()
-  }, [altText, aspectRatio, image, manipulationAttributes, onCloseModal])
+  }, [
+    altText,
+    aspectRatio,
+    image,
+    manipulationAttributes,
+    position,
+    scale,
+    onCloseModal,
+  ])
 
   const onPressRatio = useCallback((as: AspectRatio) => {
     setAspectRatio(as)
