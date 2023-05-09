@@ -16,9 +16,9 @@ const deviceLocales = getLocales()
 export type LabelPreference = 'show' | 'warn' | 'hide'
 
 export class LabelPreferencesModel {
-  nsfw: LabelPreference = 'warn'
-  nudity: LabelPreference = 'show'
-  suggestive: LabelPreference = 'show'
+  nsfw: LabelPreference = 'hide'
+  nudity: LabelPreference = 'warn'
+  suggestive: LabelPreference = 'warn'
   gore: LabelPreference = 'warn'
   hate: LabelPreference = 'hide'
   spam: LabelPreference = 'hide'
