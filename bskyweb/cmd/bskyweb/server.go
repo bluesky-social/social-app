@@ -185,7 +185,13 @@ func (srv *Server) WebPost(c echo.Context) error {
 			if err != nil {
 				log.Warnf("failed to fetch post: %s\t%v", uri, err)
 			} else {
-				data["postView"] = tpv.Thread.FeedDefs_ThreadViewPost.Post
+				req := c.Request()
+				postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
+				data["postView"] = postView
+				data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+				if postView.Embed != nil && postView.Embed.EmbedImages_View != nil {
+					data["imgThumbUrl"] = postView.Embed.EmbedImages_View.Images[0].Thumb
+				}
 			}
 		}
 
@@ -203,7 +209,9 @@ func (srv *Server) WebProfile(c echo.Context) error {
 		if err != nil {
 			log.Warnf("failed to fetch handle: %s\t%v", handle, err)
 		} else {
+			req := c.Request()
 			data["profileView"] = pv
+			data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 		}
 	}
 

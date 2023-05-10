@@ -1,24 +1,40 @@
 {% extends "base.html" %}
 
-{# TODO: "same as" indication with DID? #}
-{# TODO: could work in profileView.DisplayName here, conditionally? #}
+{% block head_title %}
+{%- if profileView -%}
+  @{{ profileView.Handle }} on Bluesky
+{%- else -%}
+  Bluesky
+{%- endif -%}
+{% endblock %}
+
 {% block html_head_extra -%}
 {%- if profileView -%}
-  <meta property="og:type" content="article"/>
-  <meta name="twitter:card" content="summary"/>
-  <meta property="og:title" content="{{ profileView.Handle }} - Bluesky"/>
-  <meta name="twitter:title" content="{{ profileView.Handle}} - Bluesky"/>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Bluesky Social">
+  {%- if requestURI %}
+  <meta property="og:url" content="{{ requestURI }}">
+  {% endif -%}
+  {%- if profileView.DisplayName %}
+  <meta property="og:title" content="{{ profileView.DisplayName }} (@{{ profileView.Handle }})">
+  {% else %}
+  <meta property="og:title" content="{{ profileView.Handle }}">
+  {% endif -%}
   {%- if profileView.Description %}
-  <meta property="og:description" content="{{ profileView.Description }}"/>
-  <meta name="twitter:description" content="{{ profileView.Description }}"/>
+  <meta name="description" content="{{ profileView.Description }}">
+  <meta property="og:description" content="{{ profileView.Description }}">
   {% endif -%}
-  {%- if profileView.Avatar %}
-  <meta property="og:image" content="{{ profileView.Avatar }}"/>
-  <meta name="twitter:image" content="{{ profileView.Avatar }}"/>
-  {% endif -%}
-  <meta name="twitter:label1" content="Author DID">
+  {%- if profileView.Banner %}
+  <meta property="og:image" content="{{ profileView.Banner }}">
+  <meta name="twitter:card" content="summary_large_image">
+  {%- elif profileView.Avatar -%}
+  {# Don't use avatar image in cards; usually looks bad #}
+  <meta name="twitter:card" content="summary">
+  {% endif %}
+  <meta name="twitter:label1" content="Account DID">
   <meta name="twitter:value1" content="{{ profileView.Did }}">
-{%- endif -%}
+  <meta name="twitter:site" content="@bluesky">
+{% endif -%}
 {%- endblock %}
 
 {% block noscript_extra -%}
