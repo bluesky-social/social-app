@@ -108,7 +108,7 @@ export const ComposePost = observer(function ComposePost({
         })
       }
     },
-    [store.shell, onClose],
+    [store, onClose],
   )
 
   useEffect(() => {
