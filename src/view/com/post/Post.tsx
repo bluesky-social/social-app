@@ -235,15 +235,19 @@ const PostLoaded = observer(
                   size={9}
                   style={[pal.textLight, s.mr5]}
                 />
-                <Text type="sm" style={[pal.textLight, s.mr2]} lineHeight={1.2}>
-                  Reply to
-                </Text>
-                <UserInfoText
+                <Text
                   type="sm"
-                  did={replyAuthorDid}
-                  attr="displayName"
-                  style={[pal.textLight]}
-                />
+                  style={[pal.textLight, s.mr2]}
+                  lineHeight={1.2}
+                  numberOfLines={1}>
+                  Reply to{' '}
+                  <UserInfoText
+                    type="sm"
+                    did={replyAuthorDid}
+                    attr="displayName"
+                    style={[pal.textLight]}
+                  />
+                </Text>
               </View>
             )}
             <ContentHider
