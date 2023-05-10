@@ -27,8 +27,8 @@ export class SearchUIModel {
     this.isProfilesLoading = true
 
     const [postsSearch, profilesSearch] = await Promise.all([
-      searchPosts(q).catch(_e => []),
-      searchProfiles(q).catch(_e => []),
+      searchPosts(this.rootStore, q).catch(_e => []),
+      searchProfiles(this.rootStore, q).catch(_e => []),
     ])
 
     let posts: AppBskyFeedDefs.PostView[] = []

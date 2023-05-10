@@ -4,6 +4,7 @@
  */
 import {AppBskyFeedPost} from '@atproto/api'
 import {SEARCH_HOST} from 'lib/constants'
+import {RootStoreModel} from 'state/index'
 
 export interface ProfileSearchItem {
   $type: string
@@ -31,15 +32,19 @@ export interface PostSearchItem {
 }
 
 export async function searchProfiles(
+  rootStore: RootStoreModel,
   query: string,
 ): Promise<ProfileSearchItem[]> {
-  const host = SEARCH_HOST(this.rootStore.session.currentSession?.service || '')
+  const host = SEARCH_HOST(rootStore.session.currentSession?.service || '')
   const endpoint = `${host}/search/profiles`
   return await doFetch<ProfileSearchItem[]>(endpoint, query)
 }
 
-export async function searchPosts(query: string): Promise<PostSearchItem[]> {
-  const host = SEARCH_HOST(this.rootStore.session.currentSession?.service || '')
+export async function searchPosts(
+  rootStore: RootStoreModel,
+  query: string,
+): Promise<PostSearchItem[]> {
+  const host = SEARCH_HOST(rootStore.session.currentSession?.service || '')
   const endpoint = `${host}/search/posts`
   return await doFetch<PostSearchItem[]>(endpoint, query)
 }
