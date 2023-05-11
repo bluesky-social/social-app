@@ -19,7 +19,7 @@ export const ALWAYS_WARN_LABEL_GROUP: LabelValGroup = {
   id: 'always-warn',
   title: 'Content Warning',
   warning: 'Content Warning',
-  values: ['!warn'],
+  values: ['!warn', 'account-security'],
 }
 
 export const UNKNOWN_LABEL_GROUP: LabelValGroup = {
