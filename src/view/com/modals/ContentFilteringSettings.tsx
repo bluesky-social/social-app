@@ -43,7 +43,6 @@ export function Component({}: {}) {
         <ContentLabelPref group="hate" />
         <ContentLabelPref group="spam" />
         <ContentLabelPref group="antisocial" subjective={true} />
-        <ContentLabelPref group="impersonation" />
         <View style={styles.bottomSpacer} />
       </ScrollView>
       <View style={[styles.btnContainer, pal.borderDark]}>

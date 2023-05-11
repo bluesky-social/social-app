@@ -23,7 +23,6 @@ export class LabelPreferencesModel {
   gore: LabelPreference = 'warn'
   hate: LabelPreference = 'hide'
   spam: LabelPreference = 'hide'
-  impersonation: LabelPreference = 'warn'
   antisocial: LabelPreference = 'warn'
 
   constructor() {

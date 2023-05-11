@@ -19,7 +19,7 @@ export const ALWAYS_WARN_LABEL_GROUP: LabelValGroup = {
   id: 'always-warn',
   title: 'Content Warning',
   warning: 'Content Warning',
-  values: ['!warn', 'account-security'],
+  values: ['!warn', 'account-security', 'impersonation'],
 }
 
 export const UNKNOWN_LABEL_GROUP: LabelValGroup = {
@@ -78,13 +78,6 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     subtitle: 'Excessive unwanted interactions',
     warning: 'Spam',
     values: ['spam'],
-  },
-  impersonation: {
-    id: 'impersonation',
-    title: 'Impersonation',
-    subtitle: 'Accounts falsely claiming to be people or orgs',
-    warning: 'Impersonation',
-    values: ['impersonation'],
   },
   antisocial: {
     id: 'antisocial',
