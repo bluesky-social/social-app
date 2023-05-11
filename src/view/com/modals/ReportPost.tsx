@@ -88,7 +88,7 @@ export function Component({
         label: (
           <View>
             <Text style={pal.text} type="md-bold">
-              Illegal and Urgent
+              🚨 Illegal and Urgent 🚨
             </Text>
             <Text style={pal.textLight}>
               Glaring violations of law or terms of service
