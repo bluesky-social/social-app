@@ -76,14 +76,14 @@ export function Component({
 
   const onPressSave = useCallback(async () => {
     track('CreateMuteList:Save')
+    const nameTrimmed = name.trim()
+    if (!nameTrimmed) {
+      setError('Name is required')
+      return
+    }
     setProcessing(true)
     if (error) {
       setError('')
-    }
-    const nameTrimmed = name.trim()
-    if (!nameTrimmed) {
-      setError('A name is required')
-      return
     }
     try {
       if (list) {
