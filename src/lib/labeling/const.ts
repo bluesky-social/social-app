@@ -38,7 +38,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     title: 'Explicit Sexual Images',
     subtitle: 'i.e. Pornography',
     warning: 'Sexually Explicit',
-    values: ['porn'],
+    values: ['porn', 'nsfl'],
     isAdultImagery: true,
   },
   nudity: {
@@ -62,7 +62,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     title: 'Violent / Bloody',
     subtitle: 'Gore, self-harm, torture',
     warning: 'Violence',
-    values: ['gore', 'self-harm', 'torture'],
+    values: ['gore', 'self-harm', 'torture', 'nsfl'],
     isAdultImagery: true,
   },
   hate: {
