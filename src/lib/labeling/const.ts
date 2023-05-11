@@ -5,7 +5,7 @@ export const ILLEGAL_LABEL_GROUP: LabelValGroup = {
   id: 'illegal',
   title: 'Illegal Content',
   warning: 'Illegal Content',
-  values: ['csam', 'dmca-violation', 'nudity-nonconsentual'],
+  values: ['csam', 'dmca-violation', 'nudity-nonconsensual'],
 }
 
 export const ALWAYS_FILTER_LABEL_GROUP: LabelValGroup = {
@@ -19,7 +19,7 @@ export const ALWAYS_WARN_LABEL_GROUP: LabelValGroup = {
   id: 'always-warn',
   title: 'Content Warning',
   warning: 'Content Warning',
-  values: ['!warn'],
+  values: ['!warn', 'account-security'],
 }
 
 export const UNKNOWN_LABEL_GROUP: LabelValGroup = {
@@ -38,7 +38,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     title: 'Explicit Sexual Images',
     subtitle: 'i.e. Pornography',
     warning: 'Sexually Explicit',
-    values: ['porn'],
+    values: ['porn', 'nsfl'],
     isAdultImagery: true,
   },
   nudity: {
@@ -62,7 +62,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     title: 'Violent / Bloody',
     subtitle: 'Gore, self-harm, torture',
     warning: 'Violence',
-    values: ['gore', 'self-harm', 'torture'],
+    values: ['gore', 'self-harm', 'torture', 'nsfl'],
     isAdultImagery: true,
   },
   hate: {
@@ -74,7 +74,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
   spam: {
     id: 'spam',
     title: 'Spam',
-    subtitle: 'Excessive low-quality posts',
+    subtitle: 'Excessive unwanted interactions',
     warning: 'Spam',
     values: ['spam'],
   },
