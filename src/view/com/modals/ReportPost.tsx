@@ -73,6 +73,17 @@ export function Component({
         ),
       },
       {
+        key: ComAtprotoModerationDefs.REASONRUDE,
+        label: (
+          <View>
+            <Text style={pal.text} type="md-bold">
+              Anti-Social Behavior
+            </Text>
+            <Text style={pal.textLight}>Harassment, trolling, or intolerance</Text>
+          </View>
+        ),
+      },
+      {
         key: ComAtprotoModerationDefs.REASONVIOLATION,
         label: (
           <View>
