@@ -94,6 +94,12 @@ export const DrawerContent = observer(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
 
+  const onPressModeration = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'Moderation'})
+    navigation.navigate('Moderation')
+    store.shell.closeDrawer()
+  }, [navigation, track, store.shell])
+
   const onPressSettings = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Settings'})
     navigation.navigate('Settings')
@@ -219,6 +225,19 @@ export const DrawerContent = observer(() => {
             count={notifications.unreadCountLabel}
             bold={isAtNotifications}
             onPress={onPressNotifications}
+          />
+          <MenuItem
+            icon={
+              <FontAwesomeIcon
+                icon={['far', 'hand']}
+                style={pal.text as FontAwesomeIconStyle}
+                size={20}
+              />
+            }
+            label="Moderation"
+            accessibilityLabel="Moderation"
+            accessibilityHint=""
+            onPress={onPressModeration}
           />
           <MenuItem
             icon={

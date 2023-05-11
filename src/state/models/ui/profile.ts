@@ -2,13 +2,19 @@ import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from '../root-store'
 import {ProfileModel} from '../content/profile'
 import {PostsFeedModel} from '../feeds/posts'
+import {ListsListModel} from '../lists/lists-list'
 
 export enum Sections {
   Posts = 'Posts',
   PostsWithReplies = 'Posts & replies',
+  Lists = 'Lists',
 }
 
-const USER_SELECTOR_ITEMS = [Sections.Posts, Sections.PostsWithReplies]
+const USER_SELECTOR_ITEMS = [
+  Sections.Posts,
+  Sections.PostsWithReplies,
+  Sections.Lists,
+]
 
 export interface ProfileUiParams {
   user: string
@@ -22,6 +28,7 @@ export class ProfileUiModel {
   // data
   profile: ProfileModel
   feed: PostsFeedModel
+  lists: ListsListModel
 
   // ui state
   selectedViewIndex = 0
@@ -43,14 +50,17 @@ export class ProfileUiModel {
       actor: params.user,
       limit: 10,
     })
+    this.lists = new ListsListModel(rootStore, params.user)
   }
 
-  get currentView(): PostsFeedModel {
+  get currentView(): PostsFeedModel | ListsListModel {
     if (
       this.selectedView === Sections.Posts ||
       this.selectedView === Sections.PostsWithReplies
     ) {
       return this.feed
+    } else if (this.selectedView === Sections.Lists) {
+      return this.lists
     }
     throw new Error(`Invalid selector value: ${this.selectedViewIndex}`)
   }
@@ -100,6 +110,12 @@ export class ProfileUiModel {
         } else if (this.feed.isEmpty) {
           arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
         }
+      } else if (this.selectedView === Sections.Lists) {
+        if (this.lists.hasContent) {
+          arr = this.lists.lists
+        } else if (this.lists.isEmpty) {
+          arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
+        }
       } else {
         arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
       }
@@ -113,6 +129,8 @@ export class ProfileUiModel {
       this.selectedView === Sections.PostsWithReplies
     ) {
       return this.feed.hasContent && this.feed.hasMore && this.feed.isLoading
+    } else if (this.selectedView === Sections.Lists) {
+      return this.lists.hasContent && this.lists.hasMore && this.lists.isLoading
     }
     return false
   }
@@ -133,6 +151,11 @@ export class ProfileUiModel {
         .setup()
         .catch(err => this.rootStore.log.error('Failed to fetch feed', err)),
     ])
+    // HACK: need to use the DID as a param, not the username -prf
+    this.lists.source = this.profile.did
+    this.lists
+      .loadMore()
+      .catch(err => this.rootStore.log.error('Failed to fetch lists', err))
   }
 
   async update() {

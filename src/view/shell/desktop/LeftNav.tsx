@@ -203,6 +203,24 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         }
         label="Notifications"
       />
+      <NavItem
+        href="/moderation"
+        icon={
+          <FontAwesomeIcon
+            icon={['far', 'hand']}
+            style={pal.text as FontAwesomeIconStyle}
+            size={20}
+          />
+        }
+        iconFilled={
+          <FontAwesomeIcon
+            icon="hand"
+            style={pal.text as FontAwesomeIconStyle}
+            size={20}
+          />
+        }
+        label="Moderation"
+      />
       {store.session.hasSession && (
         <NavItem
           href={`/profile/${store.me.handle}`}

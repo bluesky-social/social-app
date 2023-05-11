@@ -5,10 +5,15 @@ export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 export type CommonNavigatorParams = {
   NotFound: undefined
+  Moderation: undefined
+  ModerationMuteLists: undefined
+  ModerationMutedAccounts: undefined
+  ModerationBlockedAccounts: undefined
   Settings: undefined
   Profile: {name: string; hideBackButton?: boolean}
   ProfileFollowers: {name: string}
   ProfileFollows: {name: string}
+  ProfileList: {name: string; rkey: string}
   PostThread: {name: string; rkey: string}
   PostLikedBy: {name: string; rkey: string}
   PostRepostedBy: {name: string; rkey: string}
@@ -20,8 +25,6 @@ export type CommonNavigatorParams = {
   CommunityGuidelines: undefined
   CopyrightPolicy: undefined
   AppPasswords: undefined
-  MutedAccounts: undefined
-  BlockedAccounts: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {

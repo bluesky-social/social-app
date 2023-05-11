@@ -14,6 +14,7 @@ import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
 import {
   getEmbedLabels,
   getEmbedMuted,
+  getEmbedMutedByList,
   getEmbedBlocking,
   getEmbedBlockedBy,
   filterAccountLabels,
@@ -70,6 +71,9 @@ export class PostThreadItemModel {
         this.post.author.viewer?.muted ||
         getEmbedMuted(this.post.embed) ||
         false,
+      mutedByList:
+        this.post.author.viewer?.mutedByList ||
+        getEmbedMutedByList(this.post.embed),
       isBlocking:
         !!this.post.author.viewer?.blocking ||
         getEmbedBlocking(this.post.embed) ||

@@ -106,10 +106,12 @@ func serve(cctx *cli.Context) error {
 	// generic routes
 	e.GET("/search", server.WebGeneric)
 	e.GET("/notifications", server.WebGeneric)
+	e.GET("/moderation", server.WebGeneric)
+	e.GET("/moderation/mute-lists", server.WebGeneric)
+	e.GET("/moderation/muted-accounts", server.WebGeneric)
+	e.GET("/moderation/blocked-accounts", server.WebGeneric)
 	e.GET("/settings", server.WebGeneric)
 	e.GET("/settings/app-passwords", server.WebGeneric)
-	e.GET("/settings/muted-accounts", server.WebGeneric)
-	e.GET("/settings/blocked-accounts", server.WebGeneric)
 	e.GET("/sys/debug", server.WebGeneric)
 	e.GET("/sys/log", server.WebGeneric)
 	e.GET("/support", server.WebGeneric)
@@ -122,6 +124,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handle", server.WebProfile)
 	e.GET("/profile/:handle/follows", server.WebGeneric)
 	e.GET("/profile/:handle/followers", server.WebGeneric)
+	e.GET("/profile/:handle/lists/:rkey", server.WebGeneric)
 
 	// post endpoints; only first populates info
 	e.GET("/profile/:handle/post/:rkey", server.WebPost)

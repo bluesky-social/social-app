@@ -21,8 +21,8 @@ export function Component({}: {}) {
   }, [store])
 
   return (
-    <View testID="contentModerationModal" style={[pal.view, styles.container]}>
-      <Text style={[pal.text, styles.title]}>Content Moderation</Text>
+    <View testID="contentFilteringModal" style={[pal.view, styles.container]}>
+      <Text style={[pal.text, styles.title]}>Content Filtering</Text>
       <ScrollView style={styles.scrollContainer}>
         <ContentLabelPref
           group="nsfw"
@@ -50,7 +50,7 @@ export function Component({}: {}) {
           testID="sendReportBtn"
           onPress={onPressDone}
           accessibilityRole="button"
-          accessibilityLabel="Confirm content moderation settings"
+          accessibilityLabel="Confirm content filtering settings"
           accessibilityHint="">
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}

@@ -127,11 +127,6 @@ export const SettingsScreen = withAuthRequired(
       store.shell.openModal({name: 'invite-codes'})
     }, [track, store])
 
-    const onPressContentFiltering = React.useCallback(() => {
-      track('Settings:ContentfilteringButtonClicked')
-      store.shell.openModal({name: 'content-filtering-settings'})
-    }, [track, store])
-
     const onPressContentLanguages = React.useCallback(() => {
       track('Settings:ContentlanguagesButtonClicked')
       store.shell.openModal({name: 'content-languages-settings'})
@@ -252,7 +247,9 @@ export const SettingsScreen = withAuthRequired(
               Add account
             </Text>
           </TouchableOpacity>
+
           <View style={styles.spacer20} />
+
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Invite a friend
           </Text>
@@ -287,54 +284,6 @@ export const SettingsScreen = withAuthRequired(
 
           <View style={styles.spacer20} />
 
-          <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Moderation
-          </Text>
-          <TouchableOpacity
-            testID="contentFilteringBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressContentFiltering}
-            accessibilityHint="Content moderation"
-            accessibilityLabel="Opens configurable content moderation settings">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="eye"
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              Content moderation
-            </Text>
-          </TouchableOpacity>
-          <Link
-            testID="mutedAccountsBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            href="/settings/muted-accounts">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon={['far', 'eye-slash']}
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              Muted accounts
-            </Text>
-          </Link>
-          <Link
-            testID="blockedAccountsBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            href="/settings/blocked-accounts">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="ban"
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              Blocked accounts
-            </Text>
-          </Link>
-          <View style={styles.spacer20} />
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Advanced
           </Text>

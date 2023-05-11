@@ -33,11 +33,14 @@ import {useStores} from './state'
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
 import {NotificationsScreen} from './view/screens/Notifications'
+import {ModerationScreen} from './view/screens/Moderation'
+import {ModerationMuteListsScreen} from './view/screens/ModerationMuteLists'
 import {NotFoundScreen} from './view/screens/NotFound'
 import {SettingsScreen} from './view/screens/Settings'
 import {ProfileScreen} from './view/screens/Profile'
 import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
 import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
+import {ProfileListScreen} from './view/screens/ProfileList'
 import {PostThreadScreen} from './view/screens/PostThread'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
 import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
@@ -49,8 +52,8 @@ import {TermsOfServiceScreen} from './view/screens/TermsOfService'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
 import {AppPasswords} from 'view/screens/AppPasswords'
-import {MutedAccounts} from 'view/screens/MutedAccounts'
-import {BlockedAccounts} from 'view/screens/BlockedAccounts'
+import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
+import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
 import {getRoutingInstrumentation} from 'lib/sentry'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -70,6 +73,19 @@ function commonScreens(Stack: typeof HomeTab) {
   return (
     <>
       <Stack.Screen name="NotFound" component={NotFoundScreen} />
+      <Stack.Screen name="Moderation" component={ModerationScreen} />
+      <Stack.Screen
+        name="ModerationMuteLists"
+        component={ModerationMuteListsScreen}
+      />
+      <Stack.Screen
+        name="ModerationMutedAccounts"
+        component={ModerationMutedAccounts}
+      />
+      <Stack.Screen
+        name="ModerationBlockedAccounts"
+        component={ModerationBlockedAccounts}
+      />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen
@@ -77,6 +93,7 @@ function commonScreens(Stack: typeof HomeTab) {
         component={ProfileFollowersScreen}
       />
       <Stack.Screen name="ProfileFollows" component={ProfileFollowsScreen} />
+      <Stack.Screen name="ProfileList" component={ProfileListScreen} />
       <Stack.Screen name="PostThread" component={PostThreadScreen} />
       <Stack.Screen name="PostLikedBy" component={PostLikedByScreen} />
       <Stack.Screen name="PostRepostedBy" component={PostRepostedByScreen} />
@@ -91,8 +108,6 @@ function commonScreens(Stack: typeof HomeTab) {
       />
       <Stack.Screen name="CopyrightPolicy" component={CopyrightPolicyScreen} />
       <Stack.Screen name="AppPasswords" component={AppPasswords} />
-      <Stack.Screen name="MutedAccounts" component={MutedAccounts} />
-      <Stack.Screen name="BlockedAccounts" component={BlockedAccounts} />
     </>
   )
 }

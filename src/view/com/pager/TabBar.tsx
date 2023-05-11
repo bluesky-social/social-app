@@ -65,7 +65,7 @@ export function TabBar({
     ],
   }
 
-  const onLayout = () => {
+  const onLayout = React.useCallback(() => {
     const promises = []
     for (let i = 0; i < items.length; i++) {
       promises.push(
@@ -86,14 +86,17 @@ export function TabBar({
     Promise.all(promises).then((layouts: Layout[]) => {
       setItemLayouts(layouts)
     })
-  }
+  }, [containerRef, itemRefs, setItemLayouts, items.length])
 
-  const onPressItem = (index: number) => {
-    onSelect?.(index)
-    if (index === selectedPage) {
-      onPressSelected?.()
-    }
-  }
+  const onPressItem = React.useCallback(
+    (index: number) => {
+      onSelect?.(index)
+      if (index === selectedPage) {
+        onPressSelected?.()
+      }
+    },
+    [onSelect, onPressSelected, selectedPage],
+  )
 
   return (
     <View

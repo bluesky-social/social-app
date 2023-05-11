@@ -20,11 +20,13 @@ export const ViewHeader = observer(function ({
   canGoBack,
   hideOnScroll,
   showOnDesktop,
+  renderButton,
 }: {
   title: string
   canGoBack?: boolean
   hideOnScroll?: boolean
   showOnDesktop?: boolean
+  renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
   const store = useStores()
@@ -46,7 +48,7 @@ export const ViewHeader = observer(function ({
 
   if (isDesktopWeb) {
     if (showOnDesktop) {
-      return <DesktopWebHeader title={title} />
+      return <DesktopWebHeader title={title} renderButton={renderButton} />
     }
     return null
   } else {
@@ -79,13 +81,23 @@ export const ViewHeader = observer(function ({
             {title}
           </Text>
         </View>
-        <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
+        {renderButton ? (
+          renderButton()
+        ) : (
+          <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
+        )}
       </Container>
     )
   }
 })
 
-function DesktopWebHeader({title}: {title: string}) {
+function DesktopWebHeader({
+  title,
+  renderButton,
+}: {
+  title: string
+  renderButton?: () => JSX.Element
+}) {
   const pal = usePalette('default')
   return (
     <CenteredView style={[styles.header, styles.desktopHeader, pal.border]}>
@@ -94,6 +106,7 @@ function DesktopWebHeader({title}: {title: string}) {
           {title}
         </Text>
       </View>
+      {renderButton?.()}
     </CenteredView>
   )
 }

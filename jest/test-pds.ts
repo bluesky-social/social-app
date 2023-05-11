@@ -337,6 +337,32 @@ class Mocker {
       ])
       .execute()
   }
+
+  async createMuteList(user: string, name: string): Promise<string> {
+    const res = await this.users[user]?.agent.app.bsky.graph.list.create(
+      {repo: this.users[user]?.did},
+      {
+        purpose: 'app.bsky.graph.defs#modlist',
+        name,
+        createdAt: new Date().toISOString(),
+      },
+    )
+    await this.users[user]?.agent.app.bsky.graph.muteActorList({
+      list: res.uri,
+    })
+    return res.uri
+  }
+
+  async addToMuteList(owner: string, list: string, subject: string) {
+    await this.users[owner]?.agent.app.bsky.graph.listitem.create(
+      {repo: this.users[owner]?.did},
+      {
+        list,
+        subject,
+        createdAt: new Date().toISOString(),
+      },
+    )
+  }
 }
 
 const checkAvailablePort = (port: number) =>

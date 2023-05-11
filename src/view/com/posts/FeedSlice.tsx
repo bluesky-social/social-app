@@ -19,7 +19,9 @@ export function FeedSlice({
   ignoreMuteFor?: string
 }) {
   if (slice.moderation.list.behavior === ModerationBehaviorCode.Hide) {
-    return null
+    if (!ignoreMuteFor && !slice.moderation.list.noOverride) {
+      return null
+    }
   }
   if (slice.isThread && slice.items.length > 3) {
     const last = slice.items.length - 1
