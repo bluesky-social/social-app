@@ -80,11 +80,16 @@ export function Component({
     if (error) {
       setError('')
     }
+    const nameTrimmed = name.trim()
+    if (!nameTrimmed) {
+      setError('A name is required')
+      return
+    }
     try {
       if (list) {
         await list.updateMetadata({
-          name,
-          description,
+          name: nameTrimmed,
+          description: description.trim(),
           avatar: newAvatar,
         })
         Toast.show('Mute list updated')
@@ -125,7 +130,7 @@ export function Component({
     <KeyboardAvoidingView behavior="height">
       <ScrollView
         style={[pal.view, styles.container]}
-        testID="createMuteListModal">
+        testID="createOrEditMuteListModal">
         <Text style={[styles.title, pal.text]}>
           {list ? 'Edit Mute List' : 'New Mute List'}
         </Text>

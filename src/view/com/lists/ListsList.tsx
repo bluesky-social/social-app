@@ -145,7 +145,11 @@ export const ListsList = observer(
         } else if (item === LOADING_ITEM) {
           return <ProfileCardFeedLoadingPlaceholder />
         }
-        return renderItem ? renderItem(item) : <ListCard list={item} />
+        return renderItem ? (
+          renderItem(item)
+        ) : (
+          <ListCard list={item} testID={`list-${item.name}`} />
+        )
       },
       [
         listsList,

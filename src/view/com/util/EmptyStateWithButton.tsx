@@ -11,6 +11,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 
 interface Props {
+  testID?: string
   icon: IconProp
   message: string
   buttonLabel: string
@@ -21,12 +22,8 @@ export function EmptyStateWithButton(props: Props) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
 
-  const onPressCreateList = React.useCallback(() => {
-    // TODO
-  }, [])
-
   return (
-    <View style={styles.container}>
+    <View testID={props.testID} style={styles.container}>
       <View style={styles.iconContainer}>
         <FontAwesomeIcon
           icon={props.icon}
@@ -38,7 +35,11 @@ export function EmptyStateWithButton(props: Props) {
         {props.message}
       </Text>
       <View style={styles.btns}>
-        <Button type="inverted" style={styles.btn} onPress={props.onPress}>
+        <Button
+          testID={props.testID ? `${props.testID}-button` : undefined}
+          type="inverted"
+          style={styles.btn}
+          onPress={props.onPress}>
           <FontAwesomeIcon
             icon="plus"
             style={palInverted.text as FontAwesomeIconStyle}

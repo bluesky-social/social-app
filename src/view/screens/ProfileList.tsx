@@ -44,11 +44,8 @@ export const ProfileListScreen = withAuthRequired(
       try {
         if (list.list?.viewer?.muted) {
           await list.unsubscribe()
-          Toast.show('Unsubscribed from the mute list')
         } else {
           await list.subscribe()
-          await store.agent.app.bsky.graph.muteActorList({list: list.uri})
-          Toast.show('Subscribed to the mute list')
         }
       } catch (err) {
         Toast.show(
@@ -94,27 +91,39 @@ export const ProfileListScreen = withAuthRequired(
           {list?.isOwner && (
             <Button
               type="default"
-              label="Edit List"
-              onPress={onPressEditList}
+              label="Delete List"
+              testID="deleteListBtn"
+              accessibilityLabel="Delete list"
+              accessibilityHint="Deletes the mutelist"
+              onPress={onPressDeleteList}
             />
           )}
           {list?.isOwner && (
             <Button
               type="default"
-              label="Delete List"
-              onPress={onPressDeleteList}
+              label="Edit List"
+              testID="editListBtn"
+              accessibilityLabel="Edit list"
+              accessibilityHint="Opens a modal to edit the mutelist"
+              onPress={onPressEditList}
             />
           )}
           {list.list?.viewer?.muted ? (
             <Button
               type="inverted"
               label="Unsubscribe"
+              testID="unsubscribeListBtn"
+              accessibilityLabel="Unsubscribe from this list"
+              accessibilityHint="Stops muting the users included in this list"
               onPress={onToggleSubscribed}
             />
           ) : (
             <Button
               type="primary"
               label="Subscribe & Mute"
+              testID="subscribeListBtn"
+              accessibilityLabel="Subscribe to this list"
+              accessibilityHint="Mutes the users included in this list"
               onPress={onToggleSubscribed}
             />
           )}

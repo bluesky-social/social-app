@@ -44,8 +44,8 @@ export interface CreateOrEditMuteListModal {
   onSave?: (uri: string) => void
 }
 
-export interface ListAddUserModal {
-  name: 'list-add-user'
+export interface ListAddRemoveUserModal {
+  name: 'list-add-remove-user'
   subject: string
   displayName: string
   onUpdate?: () => void
@@ -113,7 +113,7 @@ export type Modal =
   | ReportAccountModal
   | ReportPostModal
   | CreateMuteListModal
-  | ListAddUserModal
+  | ListAddRemoveUserModal
 
   // Posts
   | AltTextImageModal

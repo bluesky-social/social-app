@@ -58,6 +58,7 @@ export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
   const renderEmptyState = React.useCallback(() => {
     return (
       <EmptyStateWithButton
+        testID="emptyMuteLists"
         icon="users-slash"
         message="You can subscribe to mute lists to automatically mute all of the users they include. Mute lists are public but your subscription to a mute list is private."
         buttonLabel="New Mute List"

@@ -118,7 +118,7 @@ export const ListItems = observer(
     const onPressEditMembership = React.useCallback(
       (profile: AppBskyActorDefs.ProfileViewBasic) => {
         store.shell.openModal({
-          name: 'list-add-user',
+          name: 'list-add-remove-user',
           subject: profile.did,
           displayName: profile.displayName || profile.handle,
           onUpdate() {
@@ -184,6 +184,9 @@ export const ListItems = observer(
         }
         return (
           <ProfileCard
+            testID={`user-${
+              (item as AppBskyGraphDefs.ListItemView).subject.handle
+            }`}
             profile={(item as AppBskyGraphDefs.ListItemView).subject}
             renderButton={renderMemberButton}
           />
@@ -264,7 +267,7 @@ const ListHeader = observer(
       <>
         <View style={[styles.header, pal.border]}>
           <View style={s.flex1}>
-            <Text type="title-xl" style={[pal.text, s.bold]}>
+            <Text testID="listName" type="title-xl" style={[pal.text, s.bold]}>
               {list.name}
             </Text>
             {list && (
@@ -283,6 +286,7 @@ const ListHeader = observer(
             )}
             {descriptionRT && (
               <RichTextCom
+                testID="listDescription"
                 style={[pal.text, styles.headerDescription]}
                 richText={descriptionRT}
               />
@@ -293,12 +297,16 @@ const ListHeader = observer(
                   <Button
                     type="inverted"
                     label="Unsubscribe"
+                    accessibilityLabel="Unsubscribe from this list"
+                    accessibilityHint="Stops muting the users included in this list"
                     onPress={onToggleSubscribed}
                   />
                 ) : (
                   <Button
                     type="primary"
                     label="Subscribe & Mute"
+                    accessibilityLabel="Subscribe to this list"
+                    accessibilityHint="Mutes the users included in this list"
                     onPress={onToggleSubscribed}
                   />
                 )}
@@ -306,6 +314,8 @@ const ListHeader = observer(
                   <Button
                     type="default"
                     label="Edit List"
+                    accessibilityLabel="Edit list"
+                    accessibilityHint="Opens a modal to edit the mutelist"
                     onPress={onPressEditList}
                   />
                 )}
@@ -313,6 +323,8 @@ const ListHeader = observer(
                   <Button
                     type="default"
                     label="Delete List"
+                    accessibilityLabel="Delete list"
+                    accessibilityHint="Deletes the mutelist"
                     onPress={onPressDeleteList}
                   />
                 )}

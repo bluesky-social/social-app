@@ -154,10 +154,10 @@ const ProfileHeaderLoaded = observer(
       shareUrl(url)
     }, [track, view])
 
-    const onPressAddToLists = React.useCallback(() => {
+    const onPressAddRemoveLists = React.useCallback(() => {
       track('ProfileHeader:AddToListsButtonClicked')
       store.shell.openModal({
-        name: 'list-add-user',
+        name: 'list-add-remove-user',
         subject: view.did,
         displayName: view.displayName || view.handle,
       })
@@ -247,7 +247,7 @@ const ProfileHeaderLoaded = observer(
         {
           testID: 'profileHeaderDropdownListAddRemoveBtn',
           label: 'Add to Lists',
-          onPress: onPressAddToLists,
+          onPress: onPressAddRemoveLists,
         },
       ]
       if (!isMe) {

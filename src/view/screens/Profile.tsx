@@ -130,13 +130,14 @@ export const ProfileScreen = withAuthRequired(
           } else if (item === ProfileUiModel.EMPTY_ITEM) {
             return (
               <EmptyState
+                testID="listsEmpty"
                 icon="list-ul"
                 message="No lists yet!"
                 style={styles.emptyState}
               />
             )
           } else {
-            return <ListCard list={item} />
+            return <ListCard testID={`list-${item.name}`} list={item} />
           }
         } else {
           if (item === ProfileUiModel.END_ITEM) {

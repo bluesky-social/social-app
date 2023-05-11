@@ -67,6 +67,7 @@ export function Component({
       store.log.error('Failed to update memberships', {err})
       return
     }
+    Toast.show('Lists updated')
     onUpdate?.()
     store.shell.closeModal()
   }, [store, selected])
@@ -96,6 +97,7 @@ export function Component({
       const isSelected = selected.includes(list.uri)
       return (
         <Pressable
+          testID={`toggleBtn-${list.name}`}
           style={[styles.listItem, pal.border]}
           onPress={() => onToggleSelected(list.uri)}>
           <View style={styles.listItemAvi}>
