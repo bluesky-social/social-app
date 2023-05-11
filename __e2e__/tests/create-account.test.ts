@@ -20,7 +20,6 @@ describe('Create account', () => {
     await element(by.id('nextBtn')).tap()
     await element(by.id('emailInput')).typeText('example@test.com')
     await element(by.id('passwordInput')).typeText('hunter2')
-    await element(by.id('is13Input')).tap()
     await device.takeScreenshot('4- entered account details')
     await element(by.id('nextBtn')).tap()
     await element(by.id('handleInput')).typeText('e2e-test')
