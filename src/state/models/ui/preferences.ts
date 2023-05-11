@@ -10,15 +10,16 @@ import {
   ALWAYS_FILTER_LABEL_GROUP,
   ALWAYS_WARN_LABEL_GROUP,
 } from 'lib/labeling/const'
+import {isIOS} from 'platform/detection'
 
 const deviceLocales = getLocales()
 
 export type LabelPreference = 'show' | 'warn' | 'hide'
 
 export class LabelPreferencesModel {
-  nsfw: LabelPreference = 'warn'
-  nudity: LabelPreference = 'show'
-  suggestive: LabelPreference = 'show'
+  nsfw: LabelPreference = 'hide'
+  nudity: LabelPreference = 'warn'
+  suggestive: LabelPreference = 'warn'
   gore: LabelPreference = 'warn'
   hate: LabelPreference = 'hide'
   spam: LabelPreference = 'hide'
@@ -30,6 +31,7 @@ export class LabelPreferencesModel {
 }
 
 export class PreferencesModel {
+  adultContentEnabled = !isIOS
   contentLanguages: string[] =
     deviceLocales?.map?.(locale => locale.languageCode) || []
   contentLabels = new LabelPreferencesModel()
@@ -102,7 +104,9 @@ export class PreferencesModel {
       } else if (group.id === 'always-filter') {
         return {pref: 'hide', desc: ALWAYS_FILTER_LABEL_GROUP}
       } else if (group.id === 'always-warn') {
-        return {pref: 'warn', desc: ALWAYS_WARN_LABEL_GROUP}
+        res.pref = 'warn'
+        res.desc = ALWAYS_WARN_LABEL_GROUP
+        continue
       } else if (group.id === 'unknown') {
         continue
       }
@@ -114,6 +118,9 @@ export class PreferencesModel {
         res.pref = 'warn'
         res.desc = group
       }
+    }
+    if (res.desc.isAdultImagery && !this.adultContentEnabled) {
+      res.pref = 'hide'
     }
     return res
   }

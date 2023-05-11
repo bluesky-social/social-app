@@ -30,7 +30,7 @@ import {ProfileHeaderWarnings} from '../util/moderation/ProfileHeaderWarnings'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {isDesktopWeb} from 'platform/detection'
+import {isDesktopWeb, isNative} from 'platform/detection'
 import {FollowState} from 'state/models/cache/my-follows'
 import {shareUrl} from 'lib/sharing'
 import {formatCount} from '../util/numeric/format'
@@ -367,7 +367,7 @@ const ProfileHeaderLoaded = observer(
                 </Text>
               </View>
             ) : undefined}
-            <Text style={pal.textLight}>@{view.handle}</Text>
+            <Text style={[pal.textLight, styles.handle]}>@{view.handle}</Text>
           </View>
           {!blockHide && (
             <>
@@ -401,7 +401,7 @@ const ProfileHeaderLoaded = observer(
                   </Text>
                 </TouchableOpacity>
                 <Text type="md" style={[s.bold, pal.text]}>
-                  {view.postsCount}{' '}
+                  {formatCount(view.postsCount)}{' '}
                   <Text type="md" style={[pal.textLight]}>
                     {pluralize(view.postsCount, 'post')}
                   </Text>
@@ -552,6 +552,15 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
   title: {lineHeight: 38},
+
+  // Word wrapping appears fine on
+  // mobile but overflows on desktop
+  handle: isNative
+    ? undefined
+    : {
+        // eslint-disable-next-line
+        wordBreak: 'break-all',
+      },
 
   handleLine: {
     flexDirection: 'row',

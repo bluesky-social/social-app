@@ -15,6 +15,7 @@ import * as DeleteAccountModal from './DeleteAccount'
 import * as RepostModal from './Repost'
 import * as CropImageModal from './crop-image/CropImage.web'
 import * as AltTextImageModal from './AltImage'
+import * as EditImageModal from './EditImage'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
@@ -47,7 +48,7 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   const onPressMask = () => {
-    if (modal.name === 'crop-image') {
+    if (modal.name === 'crop-image' || modal.name === 'edit-image') {
       return // dont close on mask presses during crop
     }
     store.shell.closeModal()
@@ -88,6 +89,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ContentLanguagesSettingsModal.Component />
   } else if (modal.name === 'alt-text-image') {
     element = <AltTextImageModal.Component {...modal} />
+  } else if (modal.name === 'edit-image') {
+    element = <EditImageModal.Component {...modal} />
   } else {
     return null
   }

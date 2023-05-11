@@ -392,7 +392,7 @@ const InviteCodes = observer(() => {
       <Text
         type="lg-medium"
         style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}>
-        {store.me.invitesAvailable} invite{' '}
+        {formatCount(store.me.invitesAvailable)} invite{' '}
         {pluralize(store.me.invitesAvailable, 'code')}
       </Text>
     </TouchableOpacity>

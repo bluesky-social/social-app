@@ -6,6 +6,9 @@ import {ComAtprotoServerCreateAccount} from '@atproto/api'
 import * as EmailValidator from 'email-validator'
 import {createFullHandle} from 'lib/strings/handles'
 import {cleanError} from 'lib/strings/errors'
+import {getAge} from 'lib/strings/time'
+
+const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
 
 export class CreateAccountModel {
   step: number = 1
@@ -21,7 +24,7 @@ export class CreateAccountModel {
   email = ''
   password = ''
   handle = ''
-  is13 = false
+  birthDate = DEFAULT_DATE
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {}, {autoBind: true})
@@ -32,6 +35,13 @@ export class CreateAccountModel {
 
   next() {
     this.error = ''
+    if (this.step === 2) {
+      if (getAge(this.birthDate) < 13) {
+        this.error =
+          'Unfortunately, you do not meet the requirements to create an account.'
+        return
+      }
+    }
     this.step++
   }
 
@@ -124,8 +134,7 @@ export class CreateAccountModel {
       return (
         (!this.isInviteCodeRequired || this.inviteCode) &&
         !!this.email &&
-        !!this.password &&
-        this.is13
+        !!this.password
       )
     }
     return !!this.handle
@@ -186,7 +195,7 @@ export class CreateAccountModel {
     this.handle = v
   }
 
-  setIs13(v: boolean) {
-    this.is13 = v
+  setBirthDate(v: Date) {
+    this.birthDate = v
   }
 }

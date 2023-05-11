@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native'
+import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
@@ -25,6 +19,12 @@ export function ContentHider({
 }>) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
+  const onPressShow = React.useCallback(() => {
+    setOverride(true)
+  }, [setOverride])
+  const onPressHide = React.useCallback(() => {
+    setOverride(false)
+  }, [setOverride])
 
   if (
     moderation.behavior === ModerationBehaviorCode.Show ||
@@ -44,7 +44,15 @@ export function ContentHider({
 
   return (
     <View style={[styles.container, pal.view, pal.border, containerStyle]}>
-      <View
+      <Pressable
+        onPress={override ? onPressHide : onPressShow}
+        accessibilityLabel={override ? 'Hide post' : 'Show post'}
+        // TODO: The text labelling should be split up so controls have unique roles
+        accessibilityHint={
+          override
+            ? 'Re-hide post'
+            : 'Shows post hidden based on your moderation settings'
+        }
         style={[
           styles.description,
           pal.viewLight,
@@ -53,21 +61,12 @@ export function ContentHider({
         <Text type="md" style={pal.textLight}>
           {moderation.reason || 'Content warning'}
         </Text>
-        <TouchableOpacity
-          style={styles.showBtn}
-          onPress={() => setOverride(v => !v)}
-          accessibilityLabel={override ? 'Hide post' : 'Show post'}
-          // TODO: The text labelling should be split up so controls have unique roles
-          accessibilityHint={
-            override
-              ? 'Re-hide post'
-              : 'Shows post hidden based on your moderation settings'
-          }>
-          <Text type="md" style={pal.link}>
+        <View style={styles.showBtn}>
+          <Text type="md-medium" style={pal.link}>
             {override ? 'Hide' : 'Show'}
           </Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </Pressable>
       {override && (
         <View style={[styles.childrenContainer, pal.border]}>
           <View testID={testID} style={addStyle(style, styles.child)}>

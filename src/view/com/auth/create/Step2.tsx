@@ -1,14 +1,9 @@
 import React from 'react'
-import {
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CreateAccountModel} from 'state/models/ui/create-account'
 import {Text} from 'view/com/util/text/Text'
+import {DateInput} from 'view/com/util/forms/DateInput'
 import {StepHeader} from './StepHeader'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -104,26 +99,20 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
             <Text
               type="md-medium"
               style={[pal.text, s.mb2]}
-              nativeID="legalCheck">
-              Legal check
+              nativeID="birthDate">
+              Your birth date
             </Text>
-            <TouchableOpacity
-              testID="is13Input"
-              style={[styles.toggleBtn, pal.border]}
-              onPress={() => model.setIs13(!model.is13)}
-              accessibilityRole="checkbox"
-              accessibilityLabel="Verify age"
-              accessibilityHint="Verifies that I am at least 13 years of age"
-              accessibilityLabelledBy="legalCheck">
-              <View style={[pal.borderDark, styles.checkbox]}>
-                {model.is13 && (
-                  <FontAwesomeIcon icon="check" style={s.blue3} size={16} />
-                )}
-              </View>
-              <Text type="md" style={[pal.text, styles.toggleBtnLabel]}>
-                I am 13 years old or older
-              </Text>
-            </TouchableOpacity>
+            <DateInput
+              testID="birthdayInput"
+              value={model.birthDate}
+              onChange={model.setBirthDate}
+              buttonType="default-light"
+              buttonStyle={[pal.border, styles.dateInputButton]}
+              buttonLabelType="lg"
+              accessibilityLabel="Birthday"
+              accessibilityHint="Enter your birth date"
+              accessibilityLabelledBy="birthDate"
+            />
           </View>
 
           {model.serviceDescription && (
@@ -144,26 +133,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  toggleBtn: {
-    flexDirection: 'row',
-    flex: 1,
-    alignItems: 'center',
+  dateInputButton: {
     borderWidth: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
     borderRadius: 6,
-  },
-  toggleBtnLabel: {
-    flex: 1,
-    paddingHorizontal: 10,
-  },
-
-  checkbox: {
-    borderWidth: 1,
-    borderRadius: 2,
-    width: 24,
-    height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingVertical: 14,
   },
 })

@@ -91,7 +91,13 @@ export const ComposePost = observer(function ComposePost({
   const onEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        store.shell.openModal({
+        const {shell} = store
+
+        if (shell.activeModals.some(modal => modal.name === 'confirm')) {
+          store.shell.closeModal()
+        }
+
+        shell.openModal({
           name: 'confirm',
           title: 'Cancel draft',
           onPressConfirm: onClose,
@@ -102,7 +108,7 @@ export const ComposePost = observer(function ComposePost({
         })
       }
     },
-    [store.shell, onClose],
+    [store, onClose],
   )
 
   useEffect(() => {

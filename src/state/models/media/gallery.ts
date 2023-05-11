@@ -5,6 +5,7 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {openPicker} from 'lib/media/picker'
 import {getImageDim} from 'lib/media/manip'
 import {getDataUriSize} from 'lib/media/util'
+import {isNative} from 'platform/detection'
 
 export class GalleryModel {
   images: ImageModel[] = []
@@ -37,11 +38,30 @@ export class GalleryModel {
     // Temporarily enforce uniqueness but can eventually also use index
     if (!this.images.some(i => i.path === image_.path)) {
       const image = new ImageModel(this.rootStore, image_)
-      await image.compress()
+
+      if (!isNative) {
+        await image.manipulate({})
+      } else {
+        await image.compress()
+      }
 
       runInAction(() => {
         this.images.push(image)
       })
+    }
+  }
+
+  async edit(image: ImageModel) {
+    if (!isNative) {
+      this.rootStore.shell.openModal({
+        name: 'edit-image',
+        image,
+        gallery: this,
+      })
+
+      return
+    } else {
+      this.crop(image)
     }
   }
 
@@ -65,8 +85,8 @@ export class GalleryModel {
     })
   }
 
-  setAltText(image: ImageModel) {
-    image.setAltText()
+  setAltText(image: ImageModel, altText: string) {
+    image.setAltText(altText)
   }
 
   crop(image: ImageModel) {
@@ -76,6 +96,10 @@ export class GalleryModel {
   remove(image: ImageModel) {
     const index = this.images.findIndex(image_ => image_.path === image.path)
     this.images.splice(index, 1)
+  }
+
+  async previous(image: ImageModel) {
+    image.previous()
   }
 
   async pick() {

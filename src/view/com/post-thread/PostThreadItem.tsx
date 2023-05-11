@@ -24,8 +24,10 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/PostCtrls'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
+import {ImageHider} from '../util/moderation/ImageHider'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
+import {formatCount} from '../util/numeric/format'
 
 const PARENT_REPLY_LINE_LENGTH = 8
 
@@ -233,7 +235,9 @@ export const PostThreadItem = observer(function PostThreadItem({
                 />
               </View>
             ) : undefined}
-            <PostEmbeds embed={item.post.embed} style={s.mb10} />
+            <ImageHider moderation={item.moderation.view} style={s.mb10}>
+              <PostEmbeds embed={item.post.embed} style={s.mb10} />
+            </ImageHider>
           </ContentHider>
           <View style={[s.mt2, s.mb10]}>
             <Text style={pal.textLight}>{niceDate(item.post.indexedAt)}</Text>
@@ -247,7 +251,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   title={repostsTitle}>
                   <Text testID="repostCount" type="lg" style={pal.textLight}>
                     <Text type="xl-bold" style={pal.text}>
-                      {item.post.repostCount}
+                      {formatCount(item.post.repostCount)}
                     </Text>{' '}
                     {pluralize(item.post.repostCount, 'repost')}
                   </Text>
@@ -262,7 +266,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   title={likesTitle}>
                   <Text testID="likeCount" type="lg" style={pal.textLight}>
                     <Text type="xl-bold" style={pal.text}>
-                      {item.post.likeCount}
+                      {formatCount(item.post.likeCount)}
                     </Text>{' '}
                     {pluralize(item.post.likeCount, 'like')}
                   </Text>
@@ -365,7 +369,9 @@ export const PostThreadItem = observer(function PostThreadItem({
                     />
                   </View>
                 ) : undefined}
-                <PostEmbeds embed={item.post.embed} style={s.mb10} />
+                <ImageHider style={s.mb10} moderation={item.moderation.thread}>
+                  <PostEmbeds embed={item.post.embed} style={s.mb10} />
+                </ImageHider>
               </ContentHider>
               <PostCtrls
                 itemUri={itemUri}

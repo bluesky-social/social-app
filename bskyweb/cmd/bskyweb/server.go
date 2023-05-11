@@ -92,6 +92,12 @@ func serve(cctx *cli.Context) error {
 	e.Renderer = NewRenderer("templates/", &bskyweb.TemplateFS, debug)
 	e.HTTPErrorHandler = customHTTPErrorHandler
 
+	// redirect trailing slash to non-trailing slash.
+	// all of our current endpoints have no trailing slash.
+	e.Use(middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
+		RedirectCode: http.StatusFound,
+	}))
+
 	// configure routes
 	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)))
@@ -179,7 +185,13 @@ func (srv *Server) WebPost(c echo.Context) error {
 			if err != nil {
 				log.Warnf("failed to fetch post: %s\t%v", uri, err)
 			} else {
-				data["postView"] = tpv.Thread.FeedDefs_ThreadViewPost.Post
+				req := c.Request()
+				postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
+				data["postView"] = postView
+				data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+				if postView.Embed != nil && postView.Embed.EmbedImages_View != nil {
+					data["imgThumbUrl"] = postView.Embed.EmbedImages_View.Images[0].Thumb
+				}
 			}
 		}
 
@@ -197,7 +209,9 @@ func (srv *Server) WebProfile(c echo.Context) error {
 		if err != nil {
 			log.Warnf("failed to fetch handle: %s\t%v", handle, err)
 		} else {
+			req := c.Request()
 			data["profileView"] = pv
+			data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 		}
 	}
 

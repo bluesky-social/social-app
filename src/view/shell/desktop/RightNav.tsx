@@ -12,6 +12,7 @@ import {useStores} from 'state/index'
 import {pluralize} from 'lib/strings/helpers'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {MoonIcon} from 'lib/icons'
+import {formatCount} from 'view/com/util/numeric/format'
 
 export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores()
@@ -112,7 +113,7 @@ const InviteCodes = observer(() => {
       <Text
         type="md-medium"
         style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}>
-        {store.me.invitesAvailable} invite{' '}
+        {formatCount(store.me.invitesAvailable)} invite{' '}
         {pluralize(store.me.invitesAvailable, 'code')} available
       </Text>
     </TouchableOpacity>
