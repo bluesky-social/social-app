@@ -1,7 +1,8 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {getLocales} from 'expo-localization'
 import {isObj, hasProp} from 'lib/type-guards'
-import {ComAtprotoLabelDefs} from '@atproto/api'
+import {RootStoreModel} from '../root-store'
+import {ComAtprotoLabelDefs, AppBskyActorDefs} from '@atproto/api'
 import {LabelValGroup} from 'lib/labeling/types'
 import {getLabelValueGroup} from 'lib/labeling/helpers'
 import {
@@ -15,6 +16,15 @@ import {isIOS} from 'platform/detection'
 const deviceLocales = getLocales()
 
 export type LabelPreference = 'show' | 'warn' | 'hide'
+const LABEL_GROUPS = [
+  'nsfw',
+  'nudity',
+  'suggestive',
+  'gore',
+  'hate',
+  'spam',
+  'impersonation',
+]
 
 export class LabelPreferencesModel {
   nsfw: LabelPreference = 'hide'
@@ -36,7 +46,7 @@ export class PreferencesModel {
     deviceLocales?.map?.(locale => locale.languageCode) || []
   contentLabels = new LabelPreferencesModel()
 
-  constructor() {
+  constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {}, {autoBind: true})
   }
 
@@ -65,6 +75,35 @@ export class PreferencesModel {
     }
   }
 
+  async sync() {
+    const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
+    runInAction(() => {
+      for (const pref of res.data.preferences) {
+        if (
+          AppBskyActorDefs.isAdultContentPref(pref) &&
+          AppBskyActorDefs.validateAdultContentPref(pref).success
+        ) {
+          this.adultContentEnabled = pref.enabled
+        } else if (
+          AppBskyActorDefs.isContentLabelPref(pref) &&
+          AppBskyActorDefs.validateAdultContentPref(pref).success
+        ) {
+          if (LABEL_GROUPS.includes(pref.label)) {
+            this.contentLabels[pref.label] = pref.visibility
+          }
+        }
+      }
+    })
+  }
+
+  async update(cb: (prefs: AppBskyActorDefs.Preferences) => void) {
+    const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
+    cb(res.data.preferences)
+    await this.rootStore.agent.app.bsky.actor.putPreferences({
+      preferences: res.data.preferences,
+    })
+  }
+
   hasContentLanguage(code2: string) {
     return this.contentLanguages.includes(code2)
   }
@@ -79,11 +118,48 @@ export class PreferencesModel {
     }
   }
 
-  setContentLabelPref(
+  async setContentLabelPref(
     key: keyof LabelPreferencesModel,
     value: LabelPreference,
   ) {
     this.contentLabels[key] = value
+
+    await this.update((prefs: AppBskyActorDefs.Preferences) => {
+      const existing = prefs.find(
+        pref =>
+          AppBskyActorDefs.isContentLabelPref(pref) &&
+          AppBskyActorDefs.validateAdultContentPref(pref).success &&
+          pref.label === key,
+      )
+      if (existing) {
+        existing.visibility = value
+      } else {
+        prefs.push({
+          $type: 'app.bsky.actor.defs#contentLabelPref',
+          label: key,
+          visibility: value,
+        })
+      }
+    })
+  }
+
+  async setAdultContentEnabled(v: boolean) {
+    this.adultContentEnabled = v
+    await this.update((prefs: AppBskyActorDefs.Preferences) => {
+      const existing = prefs.find(
+        pref =>
+          AppBskyActorDefs.isAdultContentPref(pref) &&
+          AppBskyActorDefs.validateAdultContentPref(pref).success,
+      )
+      if (existing) {
+        existing.enabled = v
+      } else {
+        prefs.push({
+          $type: 'app.bsky.actor.defs#adultContentPref',
+          enabled: v,
+        })
+      }
+    })
   }
 
   getLabelPreference(labels: ComAtprotoLabelDefs.Label[] | undefined): {
