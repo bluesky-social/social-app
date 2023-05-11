@@ -183,7 +183,7 @@ export const Component = observer(function ({image, gallery}: Props) {
   const imgControlStyles = {
     alignItems: 'center' as const,
     flexDirection: isDesktopWeb ? ('row' as const) : ('column' as const),
-    gap: 5,
+    gap: isDesktopWeb ? 5 : 0,
   }
 
   return (
@@ -242,11 +242,7 @@ export const Component = observer(function ({image, gallery}: Props) {
 
                   <Text
                     type={isSelected ? 'xs-bold' : 'xs-medium'}
-                    style={[
-                      isSelected ? s.blue3 : pal.text,
-                      s.textCenter,
-                      styles.imgControlMargin,
-                    ]}>
+                    style={[isSelected ? s.blue3 : pal.text, s.textCenter]}>
                     {ratio}
                   </Text>
                 </Pressable>
@@ -254,7 +250,7 @@ export const Component = observer(function ({image, gallery}: Props) {
             })}
           </View>
           {isDesktopWeb ? (
-            <Text type="sm-bold" style={pal.text}>
+            <Text type="sm-bold" style={[pal.text, styles.subsection]}>
               Transformations
             </Text>
           ) : null}
@@ -326,6 +322,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
+  subsection: {marginTop: 12},
   gap18: {gap: 18},
   title: {
     fontWeight: 'bold',
@@ -347,7 +344,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 40,
   },
-  imgControlMargin: {marginBottom: 12},
   imgEditor: {
     maxWidth: '100%',
   },
