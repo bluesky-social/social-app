@@ -1,23 +1,39 @@
 {% extends "base.html" %}
 
-{# TODO: link rel=canonical #}
-{# TODO: "same as" #}
+{% block head_title %}
+{%- if postView -%}
+  @{{ postView.Author.Handle }} on Bluesky
+{%- else -%}
+  Bluesky
+{%- endif -%}
+{% endblock %}
+
 {% block html_head_extra -%}
-{%- if postView %}
-  <meta property="og:type" content="article"/>
-  <meta name="twitter:card" content="summary"/>
-  <meta property="og:title" content="{{ postView.Author.Handle }} - Bluesky"/>
-  <meta name="twitter:title" content="{{ postView.Author.Handle }} - Bluesky"/>
-  {%- if postView.Author.Avatar %}
-  <meta property="og:image" content="{{ postView.Author.Avatar }}"/>
-  <meta name="twitter:image" content="{{ postView.Author.Avatar }}"/>
+{%- if postView -%}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Bluesky Social">
+  {%- if requestURI %}
+  <meta property="og:url" content="{{ requestURI }}">
   {% endif -%}
-  {%- if postView.Record.Text %}
-  <meta property="og:description" content="{{ postView.Record.Text }}"/>
-  <meta name="twitter:description" content="{{ postView.Record.Text }}"/>
+  {%- if postView.Author.DisplayName %}
+  <meta property="og:title" content="{{ postView.Author.DisplayName }} (@{{ postView.Author.Handle }})">
+  {% else %}
+  <meta property="og:title" content="@{{ postView.Author.Handle }}">
   {% endif -%}
-  <meta name="twitter:label1" content="Author DID">
-  <meta name="twitter:value1" content="{{ postView.Author.Did }}">
+  {%- if postView.Record.Val.Text %}
+  <meta name="description" content="{{ postView.Record.Val.Text }}">
+  <meta property="og:description" content="{{ postView.Record.Val.Text }}">
+  {% endif -%}
+  {%- if imgThumbUrl %}
+  <meta property="og:image" content="{{ imgThumbUrl }}">
+  <meta name="twitter:card" content="summary_large_image">
+  {%- elif postView.Author.Avatar %}
+  {# Don't use avatar image in cards; usually looks bad #}
+  <meta name="twitter:card" content="summary">
+  {% endif %}
+  <meta name="twitter:label1" content="Posted At">
+  <meta name="twitter:value1" content="{{ postView.CreatedAt }}">
+  <meta name="twitter:site" content="@bluesky">
 {% endif -%}
 {%- endblock %}
 
