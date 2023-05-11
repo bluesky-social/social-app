@@ -221,15 +221,19 @@ export const FeedItem = observer(function ({
                   s.mr5,
                 ]}
               />
-              <Text type="md" style={[pal.textLight, s.mr2]} lineHeight={1.2}>
-                Reply to
-              </Text>
-              <UserInfoText
+              <Text
                 type="md"
-                did={replyAuthorDid}
-                attr="displayName"
-                style={[pal.textLight, s.ml2]}
-              />
+                style={[pal.textLight, s.mr2]}
+                lineHeight={1.2}
+                numberOfLines={1}>
+                Reply to{' '}
+                <UserInfoText
+                  type="md"
+                  did={replyAuthorDid}
+                  attr="displayName"
+                  style={[pal.textLight, s.ml2]}
+                />
+              </Text>
             </View>
           )}
           <ContentHider
