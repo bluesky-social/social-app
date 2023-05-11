@@ -74,7 +74,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
   spam: {
     id: 'spam',
     title: 'Spam',
-    subtitle: 'Excessive low-quality posts',
+    subtitle: 'Excessive unwanted interactions',
     warning: 'Spam',
     values: ['spam'],
   },
