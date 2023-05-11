@@ -150,7 +150,9 @@ export function Component({
         </View>
         <View style={styles.form}>
           <View>
-            <Text style={[styles.label, pal.text]}>List Name</Text>
+            <Text style={[styles.label, pal.text]} nativeID="list-name">
+              List Name
+            </Text>
             <TextInput
               testID="editNameInput"
               style={[styles.textInput, pal.border, pal.text]}
@@ -160,11 +162,14 @@ export function Component({
               onChangeText={v => setName(enforceLen(v, MAX_NAME))}
               accessible={true}
               accessibilityLabel="Name"
-              accessibilityHint="Set the list's name"
+              accessibilityHint=""
+              accessibilityLabelledBy="list-name"
             />
           </View>
           <View style={s.pb10}>
-            <Text style={[styles.label, pal.text]}>Description</Text>
+            <Text style={[styles.label, pal.text]} nativeID="list-description">
+              Description
+            </Text>
             <TextInput
               testID="editDescriptionInput"
               style={[styles.textArea, pal.border, pal.text]}
@@ -176,7 +181,8 @@ export function Component({
               onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
               accessible={true}
               accessibilityLabel="Description"
-              accessibilityHint="Edit your list's description"
+              accessibilityHint=""
+              accessibilityLabelledBy="list-description"
             />
           </View>
           {isProcessing ? (
@@ -205,7 +211,7 @@ export function Component({
             style={s.mt5}
             onPress={onPressCancel}
             accessibilityRole="button"
-            accessibilityLabel="Cancel creating the mute list"
+            accessibilityLabel="Cancel"
             accessibilityHint=""
             onAccessibilityEscape={onPressCancel}>
             <View style={[styles.btn]}>

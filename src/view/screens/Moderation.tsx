@@ -51,8 +51,9 @@ export const ModerationScreen = withAuthRequired(
           testID="contentFilteringBtn"
           style={[styles.linkCard, pal.view]}
           onPress={onPressContentFiltering}
+          accessibilityRole="tab"
           accessibilityHint="Content filtering"
-          accessibilityLabel="Opens configurable content filtering settings">
+          accessibilityLabel="">
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="eye"

@@ -104,7 +104,7 @@ export const Component = observer(
             accessibilityLabel={`${isSelected ? 'Remove from' : 'Add to'} ${
               list.name
             }`}
-            accessibilityHint="Toggle their inclusion in this list"
+            accessibilityHint=""
             onPress={() => onToggleSelected(list.uri)}>
             <View style={styles.listItemAvi}>
               <UserAvatar size={40} avatar={list.avatar} />
@@ -172,8 +172,7 @@ export const Component = observer(
             type="default"
             onPress={onPressCancel}
             style={styles.footerBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel this modal"
+            accessibilityLabel="Cancel"
             accessibilityHint=""
             onAccessibilityEscape={onPressCancel}
             label="Cancel"
@@ -183,8 +182,7 @@ export const Component = observer(
             type="primary"
             onPress={onPressSave}
             style={styles.footerBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Save these changes"
+            accessibilityLabel="Save changes"
             accessibilityHint=""
             onAccessibilityEscape={onPressSave}
             label="Save Changes"

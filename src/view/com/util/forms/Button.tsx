@@ -38,6 +38,7 @@ export function Button({
   accessibilityLabel,
   accessibilityHint,
   accessibilityLabelledBy,
+  onAccessibilityEscape,
 }: React.PropsWithChildren<{
   type?: ButtonType
   label?: string
@@ -48,6 +49,7 @@ export function Button({
   accessibilityLabel?: string
   accessibilityHint?: string
   accessibilityLabelledBy?: string
+  onAccessibilityEscape?: () => void
 }>) {
   const theme = useTheme()
   const typeOuterStyle = choose<ViewStyle, Record<ButtonType, ViewStyle>>(
@@ -142,7 +144,8 @@ export function Button({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
-      accessibilityLabelledBy={accessibilityLabelledBy}>
+      accessibilityLabelledBy={accessibilityLabelledBy}
+      onAccessibilityEscape={onAccessibilityEscape}>
       {label ? (
         <Text type="button" style={[typeLabelStyle, labelStyle]}>
           {label}

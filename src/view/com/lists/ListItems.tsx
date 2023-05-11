@@ -306,16 +306,16 @@ const ListHeader = observer(
                   <Button
                     type="inverted"
                     label="Unsubscribe"
-                    accessibilityLabel="Unsubscribe from this list"
-                    accessibilityHint="Stops muting the users included in this list"
+                    accessibilityLabel="Unsubscribe"
+                    accessibilityHint=""
                     onPress={onToggleSubscribed}
                   />
                 ) : (
                   <Button
                     type="primary"
                     label="Subscribe & Mute"
-                    accessibilityLabel="Subscribe to this list"
-                    accessibilityHint="Mutes the users included in this list"
+                    accessibilityLabel="Subscribe and mute"
+                    accessibilityHint=""
                     onPress={onToggleSubscribed}
                   />
                 )}
@@ -324,7 +324,7 @@ const ListHeader = observer(
                     type="default"
                     label="Edit List"
                     accessibilityLabel="Edit list"
-                    accessibilityHint="Opens a modal to edit the mutelist"
+                    accessibilityHint=""
                     onPress={onPressEditList}
                   />
                 )}
@@ -333,7 +333,7 @@ const ListHeader = observer(
                     type="default"
                     label="Delete List"
                     accessibilityLabel="Delete list"
-                    accessibilityHint="Deletes the mutelist"
+                    accessibilityHint=""
                     onPress={onPressDeleteList}
                   />
                 )}

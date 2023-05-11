@@ -50,7 +50,7 @@ export function Component({}: {}) {
           testID="sendReportBtn"
           onPress={onPressDone}
           accessibilityRole="button"
-          accessibilityLabel="Confirm content filtering settings"
+          accessibilityLabel="Done"
           accessibilityHint="">
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
