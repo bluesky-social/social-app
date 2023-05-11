@@ -161,7 +161,7 @@ const ProfileHeaderLoaded = observer(
         subject: view.did,
         displayName: view.displayName || view.handle,
       })
-    })
+    }, [track, view, store])
 
     const onPressMuteAccount = React.useCallback(async () => {
       track('ProfileHeader:MuteAccountButtonClicked')
@@ -285,6 +285,7 @@ const ProfileHeaderLoaded = observer(
       onPressUnblockAccount,
       onPressBlockAccount,
       onPressReportAccount,
+      onPressAddRemoveLists,
     ])
 
     const blockHide = !isMe && (view.viewer.blocking || view.viewer.blockedBy)

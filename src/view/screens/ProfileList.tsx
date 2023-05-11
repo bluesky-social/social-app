@@ -37,7 +37,7 @@ export const ProfileListScreen = withAuthRequired(
       React.useCallback(() => {
         store.shell.setMinimalShellMode(false)
         list.loadMore(true)
-      }, [store]),
+      }, [store, list]),
     )
 
     const onToggleSubscribed = React.useCallback(async () => {
@@ -79,7 +79,7 @@ export const ProfileListScreen = withAuthRequired(
           }
         },
       })
-    }, [store, list])
+    }, [store, list, navigation])
 
     const renderEmptyState = React.useCallback(() => {
       return <EmptyState icon="users-slash" message="This list is empty!" />
@@ -129,7 +129,13 @@ export const ProfileListScreen = withAuthRequired(
           )}
         </View>
       )
-    }, [list?.isOwner, onPressDeleteList, onPressEditList, onToggleSubscribed])
+    }, [
+      list?.isOwner,
+      list.list?.viewer?.muted,
+      onPressDeleteList,
+      onPressEditList,
+      onToggleSubscribed,
+    ])
 
     return (
       <CenteredView

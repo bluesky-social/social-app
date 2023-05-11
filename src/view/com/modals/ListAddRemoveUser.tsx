@@ -54,7 +54,7 @@ export function Component({
         store.log.error('Failed to fetch memberships', {err})
       },
     )
-  }, [listsList])
+  }, [memberships, listsList, store, setSelected])
 
   const onPressCancel = useCallback(() => {
     store.shell.closeModal()
@@ -70,12 +70,12 @@ export function Component({
     Toast.show('Lists updated')
     onUpdate?.()
     store.shell.closeModal()
-  }, [store, selected])
+  }, [store, selected, memberships, onUpdate])
 
   const onPressNewMuteList = useCallback(() => {
     store.shell.openModal({
       name: 'create-or-edit-mute-list',
-      onCreate: (uri: string) => {
+      onCreate: (_uri: string) => {
         listsList.refresh()
       },
     })
@@ -99,6 +99,10 @@ export function Component({
         <Pressable
           testID={`toggleBtn-${list.name}`}
           style={[styles.listItem, pal.border]}
+          accessibilityLabel={`${isSelected ? 'Remove from' : 'Add to'} ${
+            list.name
+          }`}
+          accessibilityHint="Toggle their inclusion in this list"
           onPress={() => onToggleSelected(list.uri)}>
           <View style={styles.listItemAvi}>
             <UserAvatar size={40} avatar={list.avatar} />
@@ -134,7 +138,7 @@ export function Component({
         </Pressable>
       )
     },
-    [pal, palPrimary, palInverted, onToggleSelected],
+    [pal, palPrimary, palInverted, onToggleSelected, selected, store.me.did],
   )
 
   const renderEmptyState = React.useCallback(() => {

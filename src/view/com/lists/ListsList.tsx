@@ -87,6 +87,7 @@ export const ListsList = observer(
       listsList.isEmpty,
       listsList.lists,
       listsList.loadMoreError,
+      showAddBtns,
     ])
 
     // events
@@ -157,6 +158,7 @@ export const ListsList = observer(
         onPressRetryLoadMore,
         onPressCreateNew,
         renderItem,
+        renderEmptyState,
       ],
     )
 

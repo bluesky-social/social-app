@@ -23,7 +23,7 @@ type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'ModerationMuteLists'
 >
-export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
+export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
   const pal = usePalette('default')
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
@@ -37,7 +37,7 @@ export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
     React.useCallback(() => {
       store.shell.setMinimalShellMode(false)
       mutelists.refresh()
-    }, [store]),
+    }, [store, mutelists]),
   )
 
   const onPressNewMuteList = React.useCallback(() => {
@@ -53,7 +53,7 @@ export const ModerationMuteListsScreen = withAuthRequired(({route}: Props) => {
         } catch {}
       },
     })
-  }, [store])
+  }, [store, navigation])
 
   const renderEmptyState = React.useCallback(() => {
     return (

@@ -145,7 +145,7 @@ export const ListItems = observer(
           />
         )
       },
-      [list],
+      [list, onPressEditMembership],
     )
 
     const renderItem = React.useCallback(
@@ -192,7 +192,16 @@ export const ListItems = observer(
           />
         )
       },
-      [list, onPressTryAgain, onPressRetryLoadMore, renderMemberButton],
+      [
+        list,
+        onPressTryAgain,
+        onPressRetryLoadMore,
+        renderMemberButton,
+        onPressEditList,
+        onPressDeleteList,
+        onToggleSubscribed,
+        renderEmptyState,
+      ],
     )
 
     const Footer = React.useCallback(

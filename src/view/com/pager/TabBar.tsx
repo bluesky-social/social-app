@@ -4,7 +4,6 @@ import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
-import {CenteredView} from '../util/Views'
 
 interface Layout {
   x: number
@@ -87,7 +86,7 @@ export function TabBar({
     Promise.all(promises).then((layouts: Layout[]) => {
       setItemLayouts(layouts)
     })
-  }, [containerRef, itemRefs, setItemLayouts])
+  }, [containerRef, itemRefs, setItemLayouts, items.length])
 
   const onPressItem = React.useCallback(
     (index: number) => {

@@ -124,6 +124,7 @@ export function Component({
     name,
     description,
     newAvatar,
+    list,
   ])
 
   return (
