@@ -40,10 +40,10 @@
     tlds "^1.234.0"
     typed-emitter "^2.1.0"
 
-"@atproto/api@0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.3.1.tgz#98699479f8385c7494a853144657895be392c3f3"
-  integrity sha512-/AAZntrLUPCxw7q8FMtDsSYOjsAs5aAmllmArXyye5ITvbSw4pzWfJcBiKnQdmXpdwSrVWVEX7uwIp+GYWopqg==
+"@atproto/api@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.3.2.tgz#80d73a0a1980f5b6cdbf88b51616ab6bebd69789"
+  integrity sha512-QyGw9KA3h4HD5tP2FrxSFSeMgbV4AshIcthp3hOuB6a9RkxjqkzE5HdUphTvdWAaPex7GPOQTuwXR9KaZ8zx6A==
   dependencies:
     "@atproto/common-web" "*"
     "@atproto/uri" "*"
@@ -148,10 +148,10 @@
   resolved "https://registry.yarnpkg.com/@atproto/nsid/-/nsid-0.0.1.tgz#0cdc00cefe8f0b1385f352b9f57b3ad37fff09a4"
   integrity sha512-t5M6/CzWBVYoBbIvfKDpqPj/+ZmyoK9ydZSStcTXosJ27XXwOPhz0VDUGKK2SM9G5Y7TPes8S5KTAU0UdVYFCw==
 
-"@atproto/pds@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.1.6.tgz#2858355887eac06f5e2da8701231e5cb46004c18"
-  integrity sha512-bddIWH+OrEIxJ5HYst1mBS+95bNWC08FLaa3DVtJRHRCdfYaGDndZUVpOLLgzBRklDLicJyvva2JYEgp2mdgLA==
+"@atproto/pds@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.1.7.tgz#bc78a885f1af818f0b66c8cc2c82e992bc05477a"
+  integrity sha512-HbcWEqCcySi2nNL2/b9Q2+Ol9kys0G/P3Y3fy7SbOa2gFiPLMuYaYSKToFMsJHBu7yZiUXGv+khE6uu90EtBFw==
   dependencies:
     "@atproto/api" "*"
     "@atproto/common" "*"
