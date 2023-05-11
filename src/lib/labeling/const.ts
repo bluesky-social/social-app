@@ -5,7 +5,7 @@ export const ILLEGAL_LABEL_GROUP: LabelValGroup = {
   id: 'illegal',
   title: 'Illegal Content',
   warning: 'Illegal Content',
-  values: ['csam', 'dmca-violation', 'nudity-nonconsentual'],
+  values: ['csam', 'dmca-violation', 'nudity-nonconsensual'],
 }
 
 export const ALWAYS_FILTER_LABEL_GROUP: LabelValGroup = {
