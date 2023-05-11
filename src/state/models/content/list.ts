@@ -56,7 +56,7 @@ export class ListModel {
       },
       record,
     )
-    await rootStore.agent.app.bsky.graph.subscribeMuteList({list: res.uri})
+    await rootStore.agent.app.bsky.graph.muteActorList({list: res.uri})
     return res
   }
 
@@ -148,14 +148,12 @@ export class ListModel {
     } else if (avatar === null) {
       record.avatar = undefined
     }
-    // TODO: server doesn't accept puts for list records yet
-    throw new Error('TODO')
-    // return await this.rootStore.agent.app.bsky.graph.list.(
-    //   {
-    //     repo: this.rootStore.me.did,
-    //   },
-    //   record,
-    // )
+    return await this.rootStore.agent.com.atproto.repo.putRecord({
+      repo: this.rootStore.me.did,
+      collection: 'app.bsky.graph.list',
+      rkey,
+      record,
+    })
   }
 
   async delete() {
@@ -195,14 +193,14 @@ export class ListModel {
   }
 
   async subscribe() {
-    await this.rootStore.agent.app.bsky.graph.subscribeMuteList({
+    await this.rootStore.agent.app.bsky.graph.muteActorList({
       list: this.list.uri,
     })
     await this.refresh()
   }
 
   async unsubscribe() {
-    await this.rootStore.agent.app.bsky.graph.unsubscribeMuteList({
+    await this.rootStore.agent.app.bsky.graph.unmuteActorList({
       list: this.list.uri,
     })
     await this.refresh()

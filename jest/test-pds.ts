@@ -347,7 +347,7 @@ class Mocker {
         createdAt: new Date().toISOString(),
       },
     )
-    await this.users[user]?.agent.app.bsky.graph.subscribeMuteList({
+    await this.users[user]?.agent.app.bsky.graph.muteActorList({
       list: res.uri,
     })
     return res.uri

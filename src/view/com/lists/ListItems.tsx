@@ -302,14 +302,13 @@ const ListHeader = observer(
                     onPress={onToggleSubscribed}
                   />
                 )}
-                {isOwner &&
-                  false /*TODO disabled until we can edit records*/ && (
-                    <Button
-                      type="default"
-                      label="Edit List"
-                      onPress={onPressEditList}
-                    />
-                  )}
+                {isOwner && (
+                  <Button
+                    type="default"
+                    label="Edit List"
+                    onPress={onPressEditList}
+                  />
+                )}
                 {isOwner && (
                   <Button
                     type="default"

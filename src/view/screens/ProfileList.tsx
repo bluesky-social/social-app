@@ -47,7 +47,7 @@ export const ProfileListScreen = withAuthRequired(
           Toast.show('Unsubscribed from the mute list')
         } else {
           await list.subscribe()
-          await store.agent.app.bsky.graph.subscribeMuteList({list: list.uri})
+          await store.agent.app.bsky.graph.muteActorList({list: list.uri})
           Toast.show('Subscribed to the mute list')
         }
       } catch (err) {
@@ -91,14 +91,13 @@ export const ProfileListScreen = withAuthRequired(
     const renderHeaderBtn = React.useCallback(() => {
       return (
         <View style={styles.headerBtns}>
-          {list?.isOwner &&
-            false /*TODO disabled until we can edit records*/ && (
-              <Button
-                type="default"
-                label="Edit List"
-                onPress={onPressEditList}
-              />
-            )}
+          {list?.isOwner && (
+            <Button
+              type="default"
+              label="Edit List"
+              onPress={onPressEditList}
+            />
+          )}
           {list?.isOwner && (
             <Button
               type="default"
