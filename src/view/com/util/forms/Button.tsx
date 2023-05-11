@@ -35,6 +35,9 @@ export function Button({
   onPress,
   children,
   testID,
+  accessibilityLabel,
+  accessibilityHint,
+  accessibilityLabelledBy,
 }: React.PropsWithChildren<{
   type?: ButtonType
   label?: string
@@ -42,6 +45,9 @@ export function Button({
   labelStyle?: StyleProp<TextStyle>
   onPress?: () => void
   testID?: string
+  accessibilityLabel?: string
+  accessibilityHint?: string
+  accessibilityLabelledBy?: string
 }>) {
   const theme = useTheme()
   const typeOuterStyle = choose<ViewStyle, Record<ButtonType, ViewStyle>>(
@@ -133,7 +139,10 @@ export function Button({
       style={[typeOuterStyle, styles.outer, style]}
       onPress={onPressWrapped}
       testID={testID}
-      accessibilityRole="button">
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}
+      accessibilityLabelledBy={accessibilityLabelledBy}>
       {label ? (
         <Text type="button" style={[typeLabelStyle, labelStyle]}>
           {label}

@@ -11,7 +11,7 @@ export interface LabelValGroup {
     | 'always-warn'
     | 'unknown'
   title: string
-  imagesOnly: boolean
+  isAdultImagery?: boolean
   subtitle?: string
   warning: string
   values: string[]

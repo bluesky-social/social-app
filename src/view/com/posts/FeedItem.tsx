@@ -17,6 +17,7 @@ import {PostCtrls} from '../util/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
+import {ImageHider} from '../util/moderation/ImageHider'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
@@ -232,15 +233,19 @@ export const FeedItem = observer(function ({
                   s.mr5,
                 ]}
               />
-              <Text type="md" style={[pal.textLight, s.mr2]} lineHeight={1.2}>
-                Reply to
-              </Text>
-              <UserInfoText
+              <Text
                 type="md"
-                did={replyAuthorDid}
-                attr="displayName"
-                style={[pal.textLight, s.ml2]}
-              />
+                style={[pal.textLight, s.mr2]}
+                lineHeight={1.2}
+                numberOfLines={1}>
+                Reply to{' '}
+                <UserInfoText
+                  type="md"
+                  did={replyAuthorDid}
+                  attr="displayName"
+                  style={[pal.textLight, s.ml2]}
+                />
+              </Text>
             </View>
           )}
           <ContentHider
@@ -255,7 +260,9 @@ export const FeedItem = observer(function ({
                 />
               </View>
             ) : undefined}
-            <PostEmbeds embed={item.post.embed} style={styles.embed} />
+            <ImageHider moderation={item.moderation.list} style={styles.embed}>
+              <PostEmbeds embed={item.post.embed} style={styles.embed} />
+            </ImageHider>
           </ContentHider>
           <PostCtrls
             style={styles.ctrls}

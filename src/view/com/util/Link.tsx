@@ -1,4 +1,4 @@
-import React, {ComponentProps} from 'react'
+import React, {ComponentProps, useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   Linking,
@@ -21,7 +21,7 @@ import {TypographyVariant} from 'lib/ThemeContext'
 import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {useStores, RootStoreModel} from 'state/index'
-import {convertBskyAppUrlIfNeeded} from 'lib/strings/url-helpers'
+import {convertBskyAppUrlIfNeeded, isExternalUrl} from 'lib/strings/url-helpers'
 import {isDesktopWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 
@@ -132,6 +132,16 @@ export const TextLink = observer(function TextLink({
     },
     [store, navigation, href],
   )
+  const hrefAttrs = useMemo(() => {
+    const isExternal = isExternalUrl(href)
+    if (isExternal) {
+      return {
+        target: '_blank',
+        // rel: 'noopener noreferrer',
+      }
+    }
+    return {}
+  }, [href])
 
   return (
     <Text
@@ -142,6 +152,8 @@ export const TextLink = observer(function TextLink({
       lineHeight={lineHeight}
       // @ts-ignore web only -prf
       dataSet={dataSet}
+      // @ts-ignore web only -prf
+      hrefAttrs={hrefAttrs} // hack to get open in new tab to work on safari. without this, safari will open in a new window
       {...props}>
       {text}
     </Text>

@@ -6,6 +6,7 @@ import {isObj, hasProp} from 'lib/type-guards'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {ImageModel} from '../media/image'
 import {ListModel} from '../content/list'
+import {GalleryModel} from '../media/gallery'
 
 export interface ConfirmModal {
   name: 'confirm'
@@ -49,6 +50,12 @@ export interface ListAddRemoveUserModal {
   subject: string
   displayName: string
   onUpdate?: () => void
+}
+
+export interface EditImageModal {
+  name: 'edit-image'
+  image: ImageModel
+  gallery: GalleryModel
 }
 
 export interface CropImageModal {
@@ -118,6 +125,7 @@ export type Modal =
   // Posts
   | AltTextImageModal
   | CropImageModal
+  | EditImageModal
   | ServerInputModal
   | RepostModal
 

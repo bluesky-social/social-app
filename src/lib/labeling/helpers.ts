@@ -143,12 +143,12 @@ export function getPostModeration(
 
   // warning cases
   if (postPref.pref === 'warn') {
-    if (postPref.desc.imagesOnly) {
+    if (postPref.desc.isAdultImagery) {
       return {
         avatar,
-        list: warnContent(postPref.desc.warning), // TODO make warnImages when there's time
-        thread: warnContent(postPref.desc.warning), // TODO make warnImages when there's time
-        view: warnContent(postPref.desc.warning), // TODO make warnImages when there's time
+        list: warnImages(postPref.desc.warning),
+        thread: warnImages(postPref.desc.warning),
+        view: warnImages(postPref.desc.warning),
       }
     }
     return {
@@ -428,10 +428,9 @@ function isMute(behavior: ModerationBehavior): ModerationBehavior {
   return behavior
 }
 
-// TODO
-// function warnImages(reason: string) {
-//   return {
-//     behavior: ModerationBehaviorCode.WarnImages,
-//     reason,
-//   }
-// }
+function warnImages(reason: string) {
+  return {
+    behavior: ModerationBehaviorCode.WarnImages,
+    reason,
+  }
+}
