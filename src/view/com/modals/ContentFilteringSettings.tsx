@@ -42,6 +42,7 @@ export function Component({}: {}) {
         />
         <ContentLabelPref group="hate" />
         <ContentLabelPref group="spam" />
+        <ContentLabelPref group="antisocial" />
         <ContentLabelPref group="impersonation" />
         <View style={styles.bottomSpacer} />
       </ScrollView>

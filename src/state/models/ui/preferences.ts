@@ -24,6 +24,7 @@ export class LabelPreferencesModel {
   hate: LabelPreference = 'hide'
   spam: LabelPreference = 'hide'
   impersonation: LabelPreference = 'warn'
+  antisocial: LabelPreference = 'warn'
 
   constructor() {
     makeAutoObservable(this, {}, {autoBind: true})

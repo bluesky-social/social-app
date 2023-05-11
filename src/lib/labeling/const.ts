@@ -86,4 +86,11 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     warning: 'Impersonation',
     values: ['impersonation'],
   },
+  antisocial: {
+    id: 'antisocial',
+    title: 'Anti-Social Behavior',
+    subtitle: 'Harassment, trolling, intolerant behavior',
+    warning: 'Anti-Social',
+    values: ['troll', 'threat', 'intolerant', 'misleading', 'scam'],
+  },
 }
