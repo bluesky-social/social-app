@@ -42,7 +42,7 @@ export function Component({}: {}) {
         />
         <ContentLabelPref group="hate" />
         <ContentLabelPref group="spam" />
-        <ContentLabelPref group="antisocial" />
+        <ContentLabelPref group="antisocial" subjective={true} />
         <ContentLabelPref group="impersonation" />
         <View style={styles.bottomSpacer} />
       </ScrollView>
@@ -71,9 +71,11 @@ const ContentLabelPref = observer(
   ({
     group,
     disabled,
+    subjective,
   }: {
     group: keyof typeof CONFIGURABLE_LABEL_GROUPS
     disabled?: boolean
+    subjective?: boolean
   }) => {
     const store = useStores()
     const pal = usePalette('default')
@@ -98,6 +100,7 @@ const ContentLabelPref = observer(
             current={store.preferences.contentLabels[group]}
             onChange={v => store.preferences.setContentLabelPref(group, v)}
             group={group}
+            subjective={subjective}
           />
         )}
       </View>
@@ -109,15 +112,16 @@ interface SelectGroupProps {
   current: LabelPreference
   onChange: (v: LabelPreference) => void
   group: keyof typeof CONFIGURABLE_LABEL_GROUPS
+  subjective?: boolean
 }
 
-function SelectGroup({current, onChange, group}: SelectGroupProps) {
+function SelectGroup({current, onChange, group, subjective}: SelectGroupProps) {
   return (
     <View style={styles.selectableBtns}>
       <SelectableBtn
         current={current}
         value="hide"
-        label="Hide"
+        label={subjective ? 'Calm' : 'Hide'}
         left
         onChange={onChange}
         group={group}
@@ -125,14 +129,14 @@ function SelectGroup({current, onChange, group}: SelectGroupProps) {
       <SelectableBtn
         current={current}
         value="warn"
-        label="Warn"
+        label={subjective ? 'Default' : 'Warn'}
         onChange={onChange}
         group={group}
       />
       <SelectableBtn
         current={current}
         value="show"
-        label="Show"
+        label={subjective ? 'Unfiltered' : 'Show'}
         right
         onChange={onChange}
         group={group}
