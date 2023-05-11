@@ -94,7 +94,7 @@ export const ProfileListScreen = withAuthRequired(
               label="Delete List"
               testID="deleteListBtn"
               accessibilityLabel="Delete list"
-              accessibilityHint="Deletes the mutelist"
+              accessibilityHint=""
               onPress={onPressDeleteList}
             />
           )}
@@ -104,7 +104,7 @@ export const ProfileListScreen = withAuthRequired(
               label="Edit List"
               testID="editListBtn"
               accessibilityLabel="Edit list"
-              accessibilityHint="Opens a modal to edit the mutelist"
+              accessibilityHint=""
               onPress={onPressEditList}
             />
           )}
@@ -113,8 +113,8 @@ export const ProfileListScreen = withAuthRequired(
               type="inverted"
               label="Unsubscribe"
               testID="unsubscribeListBtn"
-              accessibilityLabel="Unsubscribe from this list"
-              accessibilityHint="Stops muting the users included in this list"
+              accessibilityLabel="Unsubscribe from list"
+              accessibilityHint=""
               onPress={onToggleSubscribed}
             />
           ) : (
