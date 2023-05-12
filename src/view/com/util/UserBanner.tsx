@@ -55,12 +55,10 @@ export function UserBanner({
         if (!(await requestPhotoAccessIfNeeded())) {
           return
         }
-        const items = await openPicker(store, {
-          mediaType: 'photo',
-          multiple: false,
-        })
+        const items = await openPicker()
+
         onSelectNewBanner?.(
-          await openCropper(store, {
+          await openCropper({
             mediaType: 'photo',
             path: items[0].path,
             width: 3000,
