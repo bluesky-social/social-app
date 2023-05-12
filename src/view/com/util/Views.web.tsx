@@ -22,7 +22,7 @@ import {
   View,
   ViewProps,
 } from 'react-native'
-import {addStyle, colors} from 'lib/styles'
+import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 
 interface AddedProps {
@@ -123,12 +123,6 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     marginLeft: 'auto',
     marginRight: 'auto',
-  },
-  containerLight: {
-    backgroundColor: colors.gray1,
-  },
-  containerDark: {
-    backgroundColor: colors.gray7,
   },
   fixedHeight: {
     height: '100vh',

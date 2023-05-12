@@ -61,7 +61,6 @@ export const Gallery = observer(function ({gallery}: Props) {
     borderRadius: 5,
     paddingHorizontal: 10,
     position: 'absolute' as const,
-    width: 46,
     zIndex: 1,
     ...(isOverflow
       ? {
@@ -112,11 +111,11 @@ export const Gallery = observer(function ({gallery}: Props) {
               testID="altTextButton"
               accessibilityRole="button"
               accessibilityLabel="Add alt text"
-              accessibilityHint="Opens modal for inputting image alt text"
+              accessibilityHint=""
               onPress={() => {
                 handleAddImageAltText(image)
               }}
-              style={[styles.imageControl, imageControlLabelStyle]}>
+              style={imageControlLabelStyle}>
               <Text style={styles.imageControlTextContent}>ALT</Text>
             </TouchableOpacity>
             <View style={imageControlsSubgroupStyle}>
@@ -187,9 +186,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imageControlTextContent: {
+    borderRadius: 6,
     color: 'white',
     fontSize: 12,
     fontWeight: 'bold',
     letterSpacing: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderWidth: 0.5,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
   },
 })

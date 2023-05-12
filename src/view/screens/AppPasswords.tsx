@@ -140,8 +140,8 @@ function AppPasswordsHeader() {
           pal.text,
           isDesktopWeb && styles.descriptionDesktop,
         ]}>
-        These passwords can be used to log onto Bluesky in other apps without
-        giving them full access to your account or your password.
+        Use app passwords to login to other Bluesky clients without giving full
+        access to your account or password.
       </Text>
     </>
   )
@@ -289,5 +289,6 @@ const styles = StyleSheet.create({
 
   trashIcon: {
     color: 'red',
+    minWidth: 16,
   },
 })

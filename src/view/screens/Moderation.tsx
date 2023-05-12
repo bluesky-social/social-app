@@ -16,7 +16,6 @@ import {Link} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
-import {isDesktopWeb} from 'platform/detection'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export const ModerationScreen = withAuthRequired(
@@ -39,11 +38,7 @@ export const ModerationScreen = withAuthRequired(
 
     return (
       <CenteredView
-        style={[
-          s.hContentRegion,
-          pal.border,
-          isDesktopWeb ? styles.desktopContainer : pal.viewLight,
-        ]}
+        style={[s.hContentRegion, pal.border, styles.desktopContainer]}
         testID="moderationScreen">
         <ViewHeader title="Moderation" showOnDesktop />
         <View style={styles.spacer} />
