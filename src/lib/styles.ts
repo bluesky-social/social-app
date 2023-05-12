@@ -1,4 +1,4 @@
-import {StyleProp, StyleSheet, TextStyle} from 'react-native'
+import {Dimensions, StyleProp, StyleSheet, TextStyle} from 'react-native'
 import {Theme, TypographyVariant} from './ThemeContext'
 import {isMobileWeb} from 'platform/detection'
 
@@ -169,6 +169,10 @@ export const s = StyleSheet.create({
   w100pct: {width: '100%'},
   h100pct: {height: '100%'},
   hContentRegion: isMobileWeb ? {flex: 1} : {height: '100%'},
+  window: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  },
 
   // text align
   textLeft: {textAlign: 'left'},
