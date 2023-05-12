@@ -290,6 +290,22 @@ export const SettingsScreen = withAuthRequired(
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Moderation
           </Text>
+          <Link
+            testID="bookmarkedAlgosBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            accessibilityHint="Custom Algorithms"
+            accessibilityLabel="Opens screen with all bookmarked custom algorithms"
+            href="/settings/custom-algorithms">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="rss"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Custom Algorithms
+            </Text>
+          </Link>
           <TouchableOpacity
             testID="contentFilteringBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}

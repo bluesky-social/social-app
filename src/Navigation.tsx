@@ -52,6 +52,7 @@ import {AppPasswords} from 'view/screens/AppPasswords'
 import {MutedAccounts} from 'view/screens/MutedAccounts'
 import {BlockedAccounts} from 'view/screens/BlockedAccounts'
 import {getRoutingInstrumentation} from 'lib/sentry'
+import CustomAlgorithms from 'view/screens/CustomAlgorithms'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -91,6 +92,7 @@ function commonScreens(Stack: typeof HomeTab) {
       />
       <Stack.Screen name="CopyrightPolicy" component={CopyrightPolicyScreen} />
       <Stack.Screen name="AppPasswords" component={AppPasswords} />
+      <Stack.Screen name="CustomAlgorithms" component={CustomAlgorithms} />
       <Stack.Screen name="MutedAccounts" component={MutedAccounts} />
       <Stack.Screen name="BlockedAccounts" component={BlockedAccounts} />
     </>
