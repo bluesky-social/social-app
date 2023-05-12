@@ -29,6 +29,7 @@ import {
   CogIcon,
   CogIconSolid,
   ComposeIcon2,
+  HandIcon,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
@@ -206,10 +207,10 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
       <NavItem
         href="/moderation"
         icon={
-          <FontAwesomeIcon
-            icon={['far', 'hand']}
+          <HandIcon
+            strokeWidth={5.5}
             style={pal.text as FontAwesomeIconStyle}
-            size={20}
+            size={24}
           />
         }
         iconFilled={

@@ -28,6 +28,7 @@ import {
   MagnifyingGlassIcon2Solid,
   MoonIcon,
   UserIconSolid,
+  HandIcon,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
@@ -228,10 +229,10 @@ export const DrawerContent = observer(() => {
           />
           <MenuItem
             icon={
-              <FontAwesomeIcon
-                icon={['far', 'hand']}
+              <HandIcon
+                strokeWidth={5}
                 style={pal.text as FontAwesomeIconStyle}
-                size={20}
+                size={24}
               />
             }
             label="Moderation"
