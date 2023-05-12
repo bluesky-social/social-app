@@ -79,7 +79,9 @@ export function Component({
             <Text style={pal.text} type="md-bold">
               Anti-Social Behavior
             </Text>
-            <Text style={pal.textLight}>Harassment, trolling, or intolerance</Text>
+            <Text style={pal.textLight}>
+              Harassment, trolling, or intolerance
+            </Text>
           </View>
         ),
       },
