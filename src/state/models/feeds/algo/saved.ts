@@ -110,7 +110,7 @@ export class SavedFeedsModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     for (const f of res.data.feeds) {
-      this.feeds.push(new AlgoItemModel(f))
+      this.feeds.push(new AlgoItemModel(this.rootStore, f))
     }
   }
 }

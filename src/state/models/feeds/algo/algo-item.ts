@@ -1,8 +1,7 @@
 import {AppBskyFeedDefs} from '@atproto/api'
-import {makeAutoObservable, makeObservable} from 'mobx'
+import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from 'state/models/root-store'
 
-// algoitemmodel implemented in mobx
 export class AlgoItemModel {
   // data
   data: AppBskyFeedDefs.GeneratorView
@@ -21,6 +20,8 @@ export class AlgoItemModel {
     )
   }
 
+  // local actions
+  // =
   set toggleSaved(value: boolean) {
     console.log('toggleSaved', this.data.viewer)
     if (this.data.viewer) {
@@ -28,12 +29,12 @@ export class AlgoItemModel {
     }
   }
 
+  // public apis
+  // =
   async save() {
     try {
-      // runInAction(() => {
       this.toggleSaved = true
-      // })
-      const res = await this.rootStore.agent.app.bsky.feed.saveFeed({
+      await this.rootStore.agent.app.bsky.feed.saveFeed({
         feed: this.data.uri,
       })
     } catch (e: any) {
@@ -43,10 +44,8 @@ export class AlgoItemModel {
 
   async unsave() {
     try {
-      // runInAction(() => {
       this.toggleSaved = false
-      // })
-      const res = await this.rootStore.agent.app.bsky.feed.unsaveFeed({
+      await this.rootStore.agent.app.bsky.feed.unsaveFeed({
         feed: this.data.uri,
       })
     } catch (e: any) {
