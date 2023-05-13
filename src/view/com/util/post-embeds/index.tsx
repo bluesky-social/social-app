@@ -13,6 +13,7 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedPost,
+  AppBskyFeedDefs,
 } from '@atproto/api'
 import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
@@ -24,6 +25,7 @@ import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import QuoteEmbed from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
+import AlgoItem from 'view/com/algos/AlgoItem'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -42,6 +44,8 @@ export function PostEmbeds({
   const pal = usePalette('default')
   const store = useStores()
 
+  // quote post with media
+  // =
   if (
     AppBskyEmbedRecordWithMedia.isView(embed) &&
     AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
@@ -65,6 +69,8 @@ export function PostEmbeds({
     )
   }
 
+  // quote post
+  // =
   if (AppBskyEmbedRecord.isView(embed)) {
     if (
       AppBskyEmbedRecord.isViewRecord(embed.record) &&
@@ -87,6 +93,8 @@ export function PostEmbeds({
     }
   }
 
+  // image embed
+  // =
   if (AppBskyEmbedImages.isView(embed)) {
     const {images} = embed
 
@@ -132,10 +140,11 @@ export function PostEmbeds({
           />
         </View>
       )
-      // }
     }
   }
 
+  // external link embed
+  // =
   if (AppBskyEmbedExternal.isView(embed)) {
     const link = embed.external
     const youtubeVideoId = getYoutubeVideoId(link.uri)
@@ -153,6 +162,21 @@ export function PostEmbeds({
       </Link>
     )
   }
+
+  // custom feed embed (i.e. generator view)
+  // =
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyFeedDefs.isGeneratorView(embed.record)
+  ) {
+    return (
+      <AlgoItem
+        item={embed.record}
+        style={[pal.view, pal.border, styles.extOuter]}
+      />
+    )
+  }
+
   return <View />
 }
 

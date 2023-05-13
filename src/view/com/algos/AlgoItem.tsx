@@ -1,15 +1,21 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {Text} from '../util/text/Text'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {UserAvatar} from '../util/UserAvatar'
 
-const AlgoItem = ({item}: {item: AppBskyFeedDefs.GeneratorView}) => {
+const AlgoItem = ({
+  item,
+  style,
+}: {
+  item: AppBskyFeedDefs.GeneratorView
+  style?: StyleProp<ViewStyle>
+}) => {
   const pal = usePalette('default')
   return (
-    <View style={[styles.container]} key={item.uri}>
+    <View style={[styles.container, style]} key={item.uri}>
       <View style={[styles.headerContainer]}>
         <View style={[s.mr20]}>
           <UserAvatar size={56} avatar={item.avatar} />
