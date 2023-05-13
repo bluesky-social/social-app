@@ -11,7 +11,7 @@ import {cleanError} from 'lib/strings/errors'
 
 const PAGE_SIZE = 30
 
-export class BookmarkedFeedsModel {
+export class ActorFeedsModel {
   // state
   isLoading = false
   isRefreshing = false
@@ -83,22 +83,6 @@ export class BookmarkedFeedsModel {
       this._xIdle(e)
     }
   })
-
-  async bookmark(feed: FeedDefs.GeneratorView) {
-    try {
-      await this.rootStore.agent.app.bsky.feed.bookmarkFeed({feed: feed.uri})
-    } catch (e: any) {
-      this.rootStore.log.error('Failed to bookmark feed', e)
-    }
-  }
-
-  async unbookmark(feed: FeedDefs.GeneratorView) {
-    try {
-      await this.rootStore.agent.app.bsky.feed.unbookmarkFeed({feed: feed.uri})
-    } catch (e: any) {
-      this.rootStore.log.error('Failed to unbookmark feed', e)
-    }
-  }
 
   // state transitions
   // =
