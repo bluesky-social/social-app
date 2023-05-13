@@ -2,13 +2,20 @@ import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from '../root-store'
 import {ProfileModel} from '../content/profile'
 import {PostsFeedModel} from '../feeds/posts'
+import {ActorFeedsModel} from '../feeds/actor'
+import {AppBskyFeedDefs} from '@atproto/api'
 
 export enum Sections {
   Posts = 'Posts',
   PostsWithReplies = 'Posts & replies',
+  CustomAlgorithms = 'Algos',
 }
 
-const USER_SELECTOR_ITEMS = [Sections.Posts, Sections.PostsWithReplies]
+const USER_SELECTOR_ITEMS = [
+  Sections.Posts,
+  Sections.PostsWithReplies,
+  Sections.CustomAlgorithms,
+]
 
 export interface ProfileUiParams {
   user: string
@@ -22,6 +29,7 @@ export class ProfileUiModel {
   // data
   profile: ProfileModel
   feed: PostsFeedModel
+  algos: ActorFeedsModel
 
   // ui state
   selectedViewIndex = 0
@@ -43,14 +51,18 @@ export class ProfileUiModel {
       actor: params.user,
       limit: 10,
     })
+    this.algos = new ActorFeedsModel(rootStore, {actor: params.user})
   }
 
-  get currentView(): PostsFeedModel {
+  get currentView(): PostsFeedModel | ActorFeedsModel {
     if (
       this.selectedView === Sections.Posts ||
       this.selectedView === Sections.PostsWithReplies
     ) {
       return this.feed
+    }
+    if (this.selectedView === Sections.CustomAlgorithms) {
+      return this.algos
     }
     throw new Error(`Invalid selector value: ${this.selectedViewIndex}`)
   }
@@ -71,12 +83,17 @@ export class ProfileUiModel {
   get selectedView() {
     return this.selectorItems[this.selectedViewIndex]
   }
+  isGeneratorView(v: any) {
+    return AppBskyFeedDefs.isGeneratorView(v)
+  }
 
   get uiItems() {
     let arr: any[] = []
+    // if loading, return loading item to show loading spinner
     if (this.isInitialLoading) {
       arr = arr.concat([ProfileUiModel.LOADING_ITEM])
     } else if (this.currentView.hasError) {
+      // if error, return error item to show error message
       arr = arr.concat([
         {
           _reactKey: '__error__',
@@ -84,12 +101,16 @@ export class ProfileUiModel {
         },
       ])
     } else {
+      // not loading, no error, show content
       if (
         this.selectedView === Sections.Posts ||
-        this.selectedView === Sections.PostsWithReplies
+        this.selectedView === Sections.PostsWithReplies ||
+        this.selectedView === Sections.CustomAlgorithms
       ) {
         if (this.feed.hasContent) {
-          if (this.selectedView === Sections.Posts) {
+          if (this.selectedView === Sections.CustomAlgorithms) {
+            arr = this.algos.feeds
+          } else if (this.selectedView === Sections.Posts) {
             arr = this.feed.nonReplyFeed
           } else {
             arr = this.feed.slices.slice()
@@ -101,6 +122,7 @@ export class ProfileUiModel {
           arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
         }
       } else {
+        // fallback, add empty item, to show empty message
         arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
       }
     }

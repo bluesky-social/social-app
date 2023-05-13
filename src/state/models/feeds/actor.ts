@@ -1,9 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 import {
-  AppBskyFeedGetBookmarkedFeeds as GetBookmarkedFeeds,
-  // AppBskyFeedBookmarkFeed as bookmarkedFeed,
-  // AppBskyFeedUnbookmarkFeed as unbookmarkFeed,
   AppBskyFeedDefs as FeedDefs,
+  AppBskyFeedGetActorFeeds as GetActorFeeds,
 } from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
@@ -23,7 +21,10 @@ export class ActorFeedsModel {
   // data
   feeds: FeedDefs.GeneratorView[] = []
 
-  constructor(public rootStore: RootStoreModel) {
+  constructor(
+    public rootStore: RootStoreModel,
+    public params: GetActorFeeds.QueryParams,
+  ) {
     makeAutoObservable(
       this,
       {
@@ -69,10 +70,11 @@ export class ActorFeedsModel {
     this._xLoading(replace)
     try {
       const res = await this.rootStore.agent.app.bsky.feed.getActorFeeds({
-        actor: 'did:plc:dpny6d4qwwxu5b6dp3qob5ok', // TODO: take this as input param
+        actor: this.params.actor,
         limit: PAGE_SIZE,
         cursor: replace ? undefined : this.loadMoreCursor,
       })
+      console.log('res', res.data.feeds)
       if (replace) {
         this._replaceAll(res)
       } else {
@@ -106,12 +108,12 @@ export class ActorFeedsModel {
   // helper functions
   // =
 
-  _replaceAll(res: GetBookmarkedFeeds.Response) {
+  _replaceAll(res: GetActorFeeds.Response) {
     this.feeds = []
     this._appendAll(res)
   }
 
-  _appendAll(res: GetBookmarkedFeeds.Response) {
+  _appendAll(res: GetActorFeeds.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     this.feeds = this.feeds.concat(res.data.feeds)

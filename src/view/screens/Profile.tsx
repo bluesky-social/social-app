@@ -21,6 +21,8 @@ import {FAB} from '../com/util/fab/FAB'
 import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
+import {AppBskyFeedDefs} from '@atproto/api'
+import AlgoItem from 'view/com/algos/AlgoItem'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
@@ -152,15 +154,14 @@ export const ProfileScreen = withAuthRequired(
           )
         } else if (item instanceof PostsFeedSliceModel) {
           return <FeedSlice slice={item} ignoreMuteFor={uiState.profile.did} />
+        } else if (item.creator) {
+          // TODO: this is a hack to see if it is a custom feed. fix it to something more robust
+          const typedItem = item as AppBskyFeedDefs.GeneratorView
+          return <AlgoItem item={typedItem} />
         }
         return <View />
       },
-      [
-        onPressTryAgain,
-        uiState.profile.did,
-        uiState.feed.isBlocking,
-        uiState.feed.isBlockedBy,
-      ],
+      [onPressTryAgain, uiState],
     )
 
     return (
