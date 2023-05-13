@@ -1,17 +1,13 @@
 import {makeAutoObservable} from 'mobx'
-import {
-  AppBskyFeedGetBookmarkedFeeds as GetBookmarkedFeeds,
-  // AppBskyFeedBookmarkFeed as bookmarkedFeed,
-  // AppBskyFeedUnbookmarkFeed as unbookmarkFeed,
-  AppBskyFeedDefs as FeedDefs,
-} from '@atproto/api'
-import {RootStoreModel} from '../root-store'
+import {AppBskyFeedGetSavedFeeds as GetSavedFeeds} from '@atproto/api'
+import {RootStoreModel} from '../../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
+import {AlgoItemModel} from './algo-item'
 
 const PAGE_SIZE = 30
 
-export class BookmarkedFeedsModel {
+export class SavedFeedsModel {
   // state
   isLoading = false
   isRefreshing = false
@@ -21,7 +17,7 @@ export class BookmarkedFeedsModel {
   loadMoreCursor?: string
 
   // data
-  feeds: FeedDefs.GeneratorView[] = []
+  feeds: AlgoItemModel[] = []
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -68,7 +64,7 @@ export class BookmarkedFeedsModel {
     }
     this._xLoading(replace)
     try {
-      const res = await this.rootStore.agent.app.bsky.feed.getBookmarkedFeeds({
+      const res = await this.rootStore.agent.app.bsky.feed.getSavedFeeds({
         limit: PAGE_SIZE,
         cursor: replace ? undefined : this.loadMoreCursor,
       })
@@ -82,22 +78,6 @@ export class BookmarkedFeedsModel {
       this._xIdle(e)
     }
   })
-
-  async bookmark(feed: FeedDefs.GeneratorView) {
-    try {
-      await this.rootStore.agent.app.bsky.feed.bookmarkFeed({feed: feed.uri})
-    } catch (e: any) {
-      this.rootStore.log.error('Failed to bookmark feed', e)
-    }
-  }
-
-  async unbookmark(feed: FeedDefs.GeneratorView) {
-    try {
-      await this.rootStore.agent.app.bsky.feed.unbookmarkFeed({feed: feed.uri})
-    } catch (e: any) {
-      this.rootStore.log.error('Failed to unbookmark feed', e)
-    }
-  }
 
   // state transitions
   // =
@@ -121,14 +101,16 @@ export class BookmarkedFeedsModel {
   // helper functions
   // =
 
-  _replaceAll(res: GetBookmarkedFeeds.Response) {
+  _replaceAll(res: GetSavedFeeds.Response) {
     this.feeds = []
     this._appendAll(res)
   }
 
-  _appendAll(res: GetBookmarkedFeeds.Response) {
+  _appendAll(res: GetSavedFeeds.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    this.feeds = this.feeds.concat(res.data.feeds)
+    for (const f of res.data.feeds) {
+      this.feeds.push(new AlgoItemModel(f))
+    }
   }
 }

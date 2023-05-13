@@ -2,7 +2,7 @@ import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from '../root-store'
 import {ProfileModel} from '../content/profile'
 import {PostsFeedModel} from '../feeds/posts'
-import {ActorFeedsModel} from '../feeds/actor'
+import {ActorFeedsModel} from '../feeds/algo/actor'
 import {AppBskyFeedDefs} from '@atproto/api'
 
 export enum Sections {

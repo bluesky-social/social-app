@@ -1,11 +1,9 @@
 import {makeAutoObservable} from 'mobx'
-import {
-  AppBskyFeedDefs as FeedDefs,
-  AppBskyFeedGetActorFeeds as GetActorFeeds,
-} from '@atproto/api'
-import {RootStoreModel} from '../root-store'
+import {AppBskyFeedGetActorFeeds as GetActorFeeds} from '@atproto/api'
+import {RootStoreModel} from '../../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
+import {AlgoItemModel} from './algo-item'
 
 const PAGE_SIZE = 30
 
@@ -19,7 +17,7 @@ export class ActorFeedsModel {
   loadMoreCursor?: string
 
   // data
-  feeds: FeedDefs.GeneratorView[] = []
+  feeds: AlgoItemModel[] = []
 
   constructor(
     public rootStore: RootStoreModel,
@@ -116,6 +114,8 @@ export class ActorFeedsModel {
   _appendAll(res: GetActorFeeds.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    this.feeds = this.feeds.concat(res.data.feeds)
+    for (const f of res.data.feeds) {
+      this.feeds.push(new AlgoItemModel(this.rootStore, f))
+    }
   }
 }
