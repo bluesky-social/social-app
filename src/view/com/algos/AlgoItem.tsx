@@ -11,6 +11,7 @@ import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
 const AlgoItem = observer(
   ({item, style}: {item: AlgoItemModel; style?: StyleProp<ViewStyle>}) => {
     const pal = usePalette('default')
+
     return (
       <View style={[styles.container, style]} key={item.data.uri}>
         <View style={[styles.headerContainer]}>
@@ -19,7 +20,7 @@ const AlgoItem = observer(
           </View>
           <View style={[styles.headerTextContainer]}>
             <Text style={[pal.text, s.bold]}>
-              {item.data.displayName ?? 'Feed name'}
+              {item.data.displayName ? item.data.displayName : 'Feed name'}
             </Text>
             <Text style={[pal.textLight, styles.description]}>
               {item.data.description ??

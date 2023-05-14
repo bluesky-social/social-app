@@ -44,45 +44,46 @@ const CustomAlgorithms = withAuthRequired(
     )
 
     return (
-      <CenteredView style={{flex: 1}}>
+      <CenteredView style={[s.flex1]}>
         <ViewHeader title="Custom Algorithms" showOnDesktop />
-        {!savedFeeds.hasContent || savedFeeds.isEmpty ? (
-          <View style={[pal.border, !isDesktopWeb && s.flex1]}>
-            <View style={[pal.viewLight]}>
+        <FlatList
+          style={[!isDesktopWeb && s.flex1]}
+          data={savedFeeds.feeds}
+          keyExtractor={item => item.data.uri}
+          refreshControl={
+            <RefreshControl
+              refreshing={savedFeeds.isRefreshing}
+              onRefresh={() => savedFeeds.refresh()}
+              tintColor={pal.colors.text}
+              titleColor={pal.colors.text}
+            />
+          }
+          onEndReached={() => savedFeeds.loadMore()}
+          renderItem={({item}) => <AlgoItem key={item.data.uri} item={item} />}
+          initialNumToRender={15}
+          ListFooterComponent={() => (
+            <View style={styles.footer}>
+              {savedFeeds.isLoading && <ActivityIndicator />}
+            </View>
+          )}
+          ListEmptyComponent={() => (
+            <View
+              style={[
+                pal.border,
+                !isDesktopWeb && s.flex1,
+                pal.viewLight,
+                styles.empty,
+              ]}>
               <Text type="lg" style={[pal.text]}>
                 You don't have any saved feeds. To save a feed, click the save
                 button when a custom feed or algorithm shows up.
               </Text>
             </View>
-          </View>
-        ) : (
-          <FlatList
-            style={[!isDesktopWeb && s.flex1]}
-            data={savedFeeds.feeds}
-            keyExtractor={item => item.data.uri}
-            refreshControl={
-              <RefreshControl
-                refreshing={savedFeeds.isRefreshing}
-                onRefresh={() => savedFeeds.refresh()}
-                tintColor={pal.colors.text}
-                titleColor={pal.colors.text}
-              />
-            }
-            onEndReached={() => savedFeeds.loadMore()}
-            renderItem={({item}) => (
-              <AlgoItem key={item.data.uri} item={item} />
-            )}
-            initialNumToRender={15}
-            ListFooterComponent={() => (
-              <View style={styles.footer}>
-                {savedFeeds.isLoading && <ActivityIndicator />}
-              </View>
-            )}
-            extraData={savedFeeds.isLoading}
-            // @ts-ignore our .web version only -prf
-            desktopFixedHeight
-          />
-        )}
+          )}
+          extraData={savedFeeds.isLoading}
+          // @ts-ignore our .web version only -prf
+          desktopFixedHeight
+        />
       </CenteredView>
     )
   }),
@@ -93,5 +94,12 @@ export default CustomAlgorithms
 const styles = StyleSheet.create({
   footer: {
     paddingVertical: 20,
+  },
+  empty: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 16,
+    marginHorizontal: 24,
+    marginTop: 10,
   },
 })
