@@ -424,6 +424,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingBottom: 50,
+    maxWidth: 300,
   },
   viewDarkMode: {
     backgroundColor: '#1B1919',

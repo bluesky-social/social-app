@@ -331,8 +331,8 @@ export const SettingsScreen = withAuthRequired(
                 style={pal.text as FontAwesomeIconStyle}
               />
             </View>
-            <Text type="lg" style={pal.text}>
-              Change my handle
+            <Text type="lg" style={pal.text} numberOfLines={1}>
+              Change handle
             </Text>
           </TouchableOpacity>
           <View style={styles.spacer20} />

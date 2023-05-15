@@ -339,7 +339,9 @@ const DropdownItems = ({
                     color={pal.text.color as string}
                   />
                 )}
-                <Text style={[styles.label, pal.text]}>{item.label}</Text>
+                <Text style={[styles.label, pal.text]} numberOfLines={1}>
+                  {item.label}
+                </Text>
               </TouchableOpacity>
             )
           } else if (isSep(item)) {
