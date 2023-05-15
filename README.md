@@ -1,34 +1,40 @@
 # Bluesky Social App
 
-Welcome friends! This is the codebase for the Bluesky Social app.
+Welcome friends! This is the codebase for the Bluesky Social app. It serves as a resource to engineers building on the [AT Protocol](https://atproto.com).
 
-- Web: [staging.bsky.app](https://staging.bsky.app)
-- iOS: [App Store](https://apps.apple.com/us/app/bluesky-social/id6444370199)
-- Android: [Play Store](https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&hl=en_US&gl=US)
+- **Web: [staging.bsky.app](https://staging.bsky.app)**
+- **iOS: [App Store](https://apps.apple.com/us/app/bluesky-social/id6444370199)**
+- **Android: [Play Store](https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&hl=en_US&gl=US)**
 
-Docs:
+Links:
 
 - [Build instructions](./docs/build.md)
+- [ATProto repo](https://github.com/bluesky-social/atproto)
+- [ATProto docs](https://atproto.com)
 
 ## Rules & guidelines
 
-We want this codebase to be a useful resource to engineers building on the [AT Protocol](https://atproto.com).
+--- 
 
-While we do accept issues and PRs, we are _completely_ slammed with tasks. Reviewing PRs is a full time job and we just don't have the resources to prioritize them. With that in mind, here's the deal:
+ℹ️ While we do accept issues and PRs, we are _completely_ slammed with tasks. Reviewing PRs is a full time job and we just don't have the resources to prioritize them.
+
+---
+
+**Rules:**
 
 - We may not respond to your issue or PR.
 - We may close an issue or PR without much feedback.
 - We may lock discussions or contributions if our attention is getting DDOSed.
 - We're not going to provide support for build issues.
 
-If you still want to contribute, here are some suggestions!
+**Suggestions:**
 
 - Check for existing issues before filing a new one please.
-- Open an issue and give some time for discussion before submitting a PR. (Bear in mind, we don't have a ton of time to discuss features.)
+- Open an issue and give some time for discussion before submitting a PR.
 - Stay away from PRs like...
-  - Changing "Post" to "Skeet." I know somebody's gonna do it. It's very funny. Please let us work.
-  - Refactoring the codebase, eg to replace mobx with redux or something. I'm sure your preferred framework is better but that kind of unsolicited change is not helpful.
-  - Adding entirely new features without prior discussion. You're basically rolling the dice on whether we agree with the feature, how you implemented it, or how the feature needs to integrate into the bigger picture.
+  - Changing "Post" to "Skeet."
+  - Refactoring the codebase, eg to replace mobx with redux or something.
+  - Adding entirely new features without prior discussion. 
 
 Remember, we serve a wide community of users. Our day to day involves us constantly asking "which top priority is our top priority." If you submit well-written PRs that solve problems concisely, that's an awesome contribution. Otherwise, as much as we'd love to accept your ideas and contributions, we really don't have the bandwidth. That's what forking is for!
 
@@ -38,7 +44,7 @@ You have our blessing 🪄✨ to fork this application! However, it's very impor
 
 Please be sure to:
 
-- Change all branding in the repository and UI to clearly different from Bluesky.
+- Change all branding in the repository and UI to clearly differentiate from Bluesky.
 - Change any support links (feedback, email, terms of service, etc) to your own systems.
 - Replace any analytics or error-collection systems with your own so we don't get super confused.
 
@@ -58,4 +64,4 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 ## P.S.
 
-We ❤️ you and all of the ways you support us. Thank you for making Bluesky a great project.
+We ❤️ you and all of the ways you support us. Thank you for making Bluesky a great place!
