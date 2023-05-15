@@ -52,16 +52,14 @@ export class GalleryModel {
   }
 
   async edit(image: ImageModel) {
-    if (!isNative) {
+    if (isNative) {
+      this.crop(image)
+    } else {
       this.rootStore.shell.openModal({
         name: 'edit-image',
         image,
         gallery: this,
       })
-
-      return
-    } else {
-      this.crop(image)
     }
   }
 
