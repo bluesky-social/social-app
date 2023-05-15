@@ -27,7 +27,7 @@ Links:
 - We may lock discussions or contributions if our attention is getting DDOSed.
 - We're not going to provide support for build issues.
 
-**Suggestions:**
+**Guidelines:**
 
 - Check for existing issues before filing a new one please.
 - Open an issue and give some time for discussion before submitting a PR.
