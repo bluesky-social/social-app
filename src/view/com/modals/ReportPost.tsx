@@ -19,7 +19,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 
 const DMCA_LINK = 'https://bsky.app/support/copyright'
 
-export const snapPoints = [500]
+export const snapPoints = [550]
 
 export function Component({
   postUri,
@@ -69,6 +69,19 @@ export function Component({
               Copyright Violation
             </Text>
             <Text style={pal.textLight}>Contains copyrighted material</Text>
+          </View>
+        ),
+      },
+      {
+        key: ComAtprotoModerationDefs.REASONRUDE,
+        label: (
+          <View>
+            <Text style={pal.text} type="md-bold">
+              Anti-Social Behavior
+            </Text>
+            <Text style={pal.textLight}>
+              Harassment, trolling, or intolerance
+            </Text>
           </View>
         ),
       },
