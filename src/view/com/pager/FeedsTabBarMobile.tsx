@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {Animated, StyleSheet, TouchableOpacity} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
@@ -32,6 +32,11 @@ export const FeedsTabBar = observer(
       store.shell.openDrawer()
     }, [store])
 
+    const items = useMemo(
+      () => ['Following', "What's hot", ...store.me.savedFeeds.listOfFeedNames],
+      [store.me.savedFeeds.listOfFeedNames],
+    )
+
     return (
       <Animated.View style={[pal.view, pal.border, styles.tabBar, transform]}>
         <TouchableOpacity
@@ -45,11 +50,7 @@ export const FeedsTabBar = observer(
         </TouchableOpacity>
         <TabBar
           {...props}
-          items={[
-            'Following',
-            "What's hot",
-            ...store.me.savedFeeds.listOfFeedNames,
-          ]}
+          items={items}
           indicatorPosition="bottom"
           indicatorColor={pal.colors.link}
         />

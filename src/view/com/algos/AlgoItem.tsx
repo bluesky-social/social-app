@@ -15,9 +15,11 @@ import {observer} from 'mobx-react-lite'
 import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
+import {useStores} from 'state/index'
 
 const AlgoItem = observer(
   ({item, style}: {item: AlgoItemModel; style?: StyleProp<ViewStyle>}) => {
+    const store = useStores()
     const pal = usePalette('default')
     const navigation = useNavigation<NavigationProp>()
 
@@ -64,8 +66,10 @@ const AlgoItem = observer(
               onPress={() => {
                 if (item.data.viewer?.saved) {
                   item.unsave()
+                  store.me.savedFeeds.removeFeed(item.data.uri)
                 } else {
                   item.save()
+                  store.me.savedFeeds.addFeed(item)
                 }
               }}
               label={item.data.viewer?.saved ? 'Unsave' : 'Save'}

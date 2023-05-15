@@ -89,6 +89,36 @@ export class SavedFeedsModel {
     }
   })
 
+  removeFeed(uri: string) {
+    this.feeds = this.feeds.filter(f => f.data.uri !== uri)
+  }
+
+  addFeed(algoItem: AlgoItemModel) {
+    this.feeds.push(new AlgoItemModel(this.rootStore, algoItem.data))
+  }
+
+  async save(algoItem: AlgoItemModel) {
+    try {
+      await this.rootStore.agent.app.bsky.feed.saveFeed({
+        feed: algoItem.getUri,
+      })
+      this.addFeed(algoItem)
+    } catch (e: any) {
+      this.rootStore.log.error('Failed to save feed', e)
+    }
+  }
+
+  async unsave(uri: string) {
+    try {
+      await this.rootStore.agent.app.bsky.feed.unsaveFeed({
+        feed: uri,
+      })
+      this.removeFeed(uri)
+    } catch (e: any) {
+      this.rootStore.log.error('Failed to unsanve feed', e)
+    }
+  }
+
   // state transitions
   // =
 
