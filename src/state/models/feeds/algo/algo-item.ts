@@ -29,6 +29,10 @@ export class AlgoItemModel {
     }
   }
 
+  get getUri() {
+    return this.data.uri
+  }
+
   // public apis
   // =
   async save() {
@@ -52,4 +56,20 @@ export class AlgoItemModel {
       this.rootStore.log.error('Failed to unsanve feed', e)
     }
   }
+
+  // async getFeedSkeleton() {
+  //   const res = await this.rootStore.agent.app.bsky.feed.getFeedSkeleton({
+  //     feed: this.data.uri,
+  //   })
+  //   const skeleton = res.data.feed
+  //   console.log('skeleton', skeleton)
+  //   return skeleton
+  // }
+  // async getFeed() {
+  //   const feed = await this.rootStore.agent.app.bsky.feed.getFeed({
+  //     feed: this.data.uri,
+  //   })
+  //   console.log('feed', feed)
+  //   return feed
+  // }
 }

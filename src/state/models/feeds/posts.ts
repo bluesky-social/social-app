@@ -4,6 +4,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
+  AppBskyFeedGetFeed as GetCustomFeed,
   RichText,
   jsonToLex,
 } from '@atproto/api'
@@ -305,8 +306,11 @@ export class PostsFeedModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public feedType: 'home' | 'author' | 'suggested' | 'goodstuff',
-    params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams,
+    public feedType: 'home' | 'author' | 'suggested' | 'goodstuff' | 'custom',
+    params:
+      | GetTimeline.QueryParams
+      | GetAuthorFeed.QueryParams
+      | GetCustomFeed.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -595,13 +599,15 @@ export class PostsFeedModel {
   // helper functions
   // =
 
-  async _replaceAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
+  async _replaceAll(
+    res: GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response,
+  ) {
     this.pollCursor = res.data.feed[0]?.post.uri
     return this._appendAll(res, true)
   }
 
   async _appendAll(
-    res: GetTimeline.Response | GetAuthorFeed.Response,
+    res: GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response,
     replace = false,
   ) {
     this.loadMoreCursor = res.data.cursor
@@ -640,7 +646,9 @@ export class PostsFeedModel {
     })
   }
 
-  _updateAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
+  _updateAll(
+    res: GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response,
+  ) {
     for (const item of res.data.feed) {
       const existingSlice = this.slices.find(slice =>
         slice.containsUri(item.post.uri),
@@ -657,8 +665,13 @@ export class PostsFeedModel {
   }
 
   protected async _getFeed(
-    params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams = {},
-  ): Promise<GetTimeline.Response | GetAuthorFeed.Response> {
+    params:
+      | GetTimeline.QueryParams
+      | GetAuthorFeed.QueryParams
+      | GetCustomFeed.QueryParams,
+  ): Promise<
+    GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response
+  > {
     params = Object.assign({}, this.params, params)
     if (this.feedType === 'suggested') {
       const responses = await getMultipleAuthorsPosts(
@@ -680,6 +693,10 @@ export class PostsFeedModel {
       }
     } else if (this.feedType === 'home') {
       return this.rootStore.agent.getTimeline(params as GetTimeline.QueryParams)
+    } else if (this.feedType === 'custom') {
+      return this.rootStore.agent.app.bsky.feed.getFeed(
+        params as GetCustomFeed.QueryParams,
+      )
     } else if (this.feedType === 'goodstuff') {
       const res = await getGoodStuff(
         this.rootStore.session.currentSession?.accessJwt || '',

@@ -15,6 +15,7 @@ export const router = new Router({
   Log: '/sys/log',
   AppPasswords: '/settings/app-passwords',
   SavedFeeds: '/settings/saved-feeds',
+  CustomFeed: '/profile/:name/feed/:rkey',
   MutedAccounts: '/settings/muted-accounts',
   BlockedAccounts: '/settings/blocked-accounts',
   Support: '/support',

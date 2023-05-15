@@ -1,5 +1,11 @@
 import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+  TouchableOpacity,
+} from 'react-native'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
@@ -7,13 +13,25 @@ import {UserAvatar} from '../util/UserAvatar'
 import {Button} from '../util/forms/Button'
 import {observer} from 'mobx-react-lite'
 import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
+import {useNavigation} from '@react-navigation/native'
+import {NavigationProp} from 'lib/routes/types'
 
 const AlgoItem = observer(
   ({item, style}: {item: AlgoItemModel; style?: StyleProp<ViewStyle>}) => {
     const pal = usePalette('default')
+    const navigation = useNavigation<NavigationProp>()
 
     return (
-      <View style={[styles.container, style]} key={item.data.uri}>
+      <TouchableOpacity
+        accessibilityRole="button"
+        style={[styles.container, style]}
+        onPress={() => {
+          navigation.navigate('CustomFeed', {
+            name: item.data.creator.did,
+            rkey: item.data.uri,
+          })
+        }}
+        key={item.data.uri}>
         <View style={[styles.headerContainer]}>
           <View style={[s.mr10]}>
             <UserAvatar size={36} avatar={item.data.avatar} />
@@ -54,7 +72,7 @@ const AlgoItem = observer(
             />
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     )
   },
 )

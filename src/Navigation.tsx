@@ -53,6 +53,7 @@ import {MutedAccounts} from 'view/screens/MutedAccounts'
 import {BlockedAccounts} from 'view/screens/BlockedAccounts'
 import {getRoutingInstrumentation} from 'lib/sentry'
 import {SavedFeeds} from './view/screens/SavedFeeds'
+import {CustomFeed} from './view/screens/CustomFeed'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -93,6 +94,7 @@ function commonScreens(Stack: typeof HomeTab) {
       <Stack.Screen name="CopyrightPolicy" component={CopyrightPolicyScreen} />
       <Stack.Screen name="AppPasswords" component={AppPasswords} />
       <Stack.Screen name="SavedFeeds" component={SavedFeeds} />
+      <Stack.Screen name="CustomFeed" component={CustomFeed} />
       <Stack.Screen name="MutedAccounts" component={MutedAccounts} />
       <Stack.Screen name="BlockedAccounts" component={BlockedAccounts} />
     </>
