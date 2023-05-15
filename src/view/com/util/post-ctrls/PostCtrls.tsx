@@ -20,17 +20,12 @@ import ReactNativeHapticFeedback, {
 // } from './anim/TriggerableAnimated'
 import {Text} from '../text/Text'
 import {PostDropdownBtn} from '../forms/DropdownButton'
-import {
-  HeartIcon,
-  HeartIconSolid,
-  RepostIcon,
-  CommentBottomArrow,
-} from 'lib/icons'
+import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
 import {s, colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {useStores} from 'state/index'
 import {isIOS, isNative} from 'platform/detection'
-import {RepostButton} from './RepostButton.web'
+import {RepostButton} from './RepostButton'
 
 interface PostCtrlsOpts {
   itemUri: string
@@ -157,17 +152,6 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     store.shell,
   ])
 
-  const onPressToggleRepostWrapper = useCallback(() => {
-    if (isNative) {
-      store.shell.openModal({
-        name: 'repost',
-        onRepost: onRepost,
-        onQuote: onQuote,
-        isReposted: opts.isReposted,
-      })
-    }
-  }, [onRepost, onQuote, opts.isReposted, store.shell])
-
   const onPressToggleLikeWrapper = async () => {
     if (!opts.isLiked) {
       ReactNativeHapticFeedback.trigger(hapticImpact)
@@ -208,43 +192,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           </Text>
         ) : undefined}
       </TouchableOpacity>
-      {isNative ? (
-        <TouchableOpacity
-          testID="repostBtn"
-          hitSlop={HITSLOP}
-          onPress={onPressToggleRepostWrapper}
-          style={styles.ctrl}
-          accessibilityRole="button"
-          accessibilityLabel={opts.isReposted ? 'Undo repost' : 'Repost'}
-          accessibilityHint={
-            opts.isReposted
-              ? `Remove your repost of ${opts.author}'s post`
-              : `Repost or quote post ${opts.author}'s post`
-          }>
-          <RepostIcon
-            style={
-              opts.isReposted
-                ? (styles.ctrlIconReposted as StyleProp<ViewStyle>)
-                : defaultCtrlColor
-            }
-            strokeWidth={2.4}
-            size={opts.big ? 24 : 20}
-          />
-          {typeof opts.repostCount !== 'undefined' ? (
-            <Text
-              testID="repostCount"
-              style={
-                opts.isReposted
-                  ? [s.bold, s.green3, s.f15, s.ml5]
-                  : [defaultCtrlColor, s.f15, s.ml5]
-              }>
-              {opts.repostCount}
-            </Text>
-          ) : undefined}
-        </TouchableOpacity>
-      ) : (
-        <RepostButton {...opts} onRepost={onRepost} onQuote={onQuote} />
-      )}
+      <RepostButton {...opts} onRepost={onRepost} onQuote={onQuote} />
       <TouchableOpacity
         testID="likeBtn"
         style={styles.ctrl}
@@ -253,9 +201,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         accessibilityRole="button"
         accessibilityLabel={opts.isLiked ? 'Unlike' : 'Like'}
         accessibilityHint={
-          opts.isReposted
-            ? `Removes like from ${opts.author}'s post`
-            : `Like ${opts.author}'s post`
+          opts.isReposted ? `Removes like from the post` : `Like the post`
         }>
         {opts.isLiked ? (
           <HeartIconSolid
@@ -327,9 +273,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 5,
     margin: -5,
-  },
-  ctrlIconReposted: {
-    color: colors.green3,
   },
   ctrlIconLiked: {
     color: colors.red3,

@@ -23,7 +23,7 @@ export const RepostButton = ({
 }: Props) => {
   const theme = useTheme()
 
-  const controlColor = React.useMemo(
+  const defaultControlColor = React.useMemo(
     () => ({
       color: theme.palette.default.postCtrl,
     }),
@@ -52,7 +52,9 @@ export const RepostButton = ({
       <View
         style={[
           styles.control,
-          (isReposted ? styles.reposted : controlColor) as StyleProp<ViewStyle>,
+          (isReposted
+            ? styles.reposted
+            : defaultControlColor) as StyleProp<ViewStyle>,
         ]}>
         <RepostIcon strokeWidth={2.4} size={big ? 24 : 20} />
         {typeof repostCount !== 'undefined' ? (
