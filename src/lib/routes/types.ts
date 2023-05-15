@@ -20,7 +20,7 @@ export type CommonNavigatorParams = {
   CommunityGuidelines: undefined
   CopyrightPolicy: undefined
   AppPasswords: undefined
-  CustomAlgorithms: undefined
+  SavedFeeds: undefined
   MutedAccounts: undefined
   BlockedAccounts: undefined
 }

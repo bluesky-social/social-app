@@ -22,9 +22,9 @@ import {Text} from 'view/com/util/text/Text'
 import {isDesktopWeb} from 'platform/detection'
 import {s} from 'lib/styles'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomAlgorithms'>
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 
-const CustomAlgorithms = withAuthRequired(
+export const SavedFeeds = withAuthRequired(
   observer(({}: Props) => {
     const pal = usePalette('default')
     const rootStore = useStores()
@@ -88,8 +88,6 @@ const CustomAlgorithms = withAuthRequired(
     )
   }),
 )
-
-export default CustomAlgorithms
 
 const styles = StyleSheet.create({
   footer: {

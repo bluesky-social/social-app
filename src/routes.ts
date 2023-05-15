@@ -14,7 +14,7 @@ export const router = new Router({
   Debug: '/sys/debug',
   Log: '/sys/log',
   AppPasswords: '/settings/app-passwords',
-  CustomAlgorithms: '/settings/custom-algorithms',
+  SavedFeeds: '/settings/saved-feeds',
   MutedAccounts: '/settings/muted-accounts',
   BlockedAccounts: '/settings/blocked-accounts',
   Support: '/support',
