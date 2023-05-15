@@ -43,7 +43,12 @@ export const RepostButton = ({
   )
 
   return (
-    <DropdownButton type="bare" items={items} bottomOffset={4} openToRight>
+    <DropdownButton
+      type="bare"
+      items={items}
+      bottomOffset={4}
+      openToRight
+      rightOffset={-40}>
       <View
         style={[
           styles.control,
