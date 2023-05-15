@@ -16,7 +16,7 @@ Links:
 
 --- 
 
-ℹ️ While we do accept issues and PRs, we are _completely_ slammed with tasks. Reviewing PRs is a full time job and we just don't have the resources to prioritize them.
+ℹ️ While we do accept contributions, we prioritize high quality issues and pull requests. Adhering to the below guidelines will ensure a more timely review.
 
 ---
 
