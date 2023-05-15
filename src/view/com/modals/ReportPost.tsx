@@ -19,7 +19,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 
 const DMCA_LINK = 'https://bsky.app/support/copyright'
 
-export const snapPoints = [500]
+export const snapPoints = [550]
 
 export function Component({
   postUri,
@@ -90,7 +90,7 @@ export function Component({
         label: (
           <View>
             <Text style={pal.text} type="md-bold">
-              🚨 Illegal and Urgent 🚨
+              Illegal and Urgent
             </Text>
             <Text style={pal.textLight}>
               Glaring violations of law or terms of service
