@@ -159,7 +159,7 @@ function ComposeBtn() {
         />
       </View>
       <Text type="button" style={styles.newPostBtnLabel}>
-        New Post
+        New Skeet
       </Text>
     </TouchableOpacity>
   )
