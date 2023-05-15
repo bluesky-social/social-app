@@ -18,8 +18,8 @@ import ReactNativeHapticFeedback, {
 //   TriggerableAnimated,
 //   TriggerableAnimatedRef,
 // } from './anim/TriggerableAnimated'
-import {Text} from './text/Text'
-import {PostDropdownBtn} from './forms/DropdownButton'
+import {Text} from '../text/Text'
+import {PostDropdownBtn} from '../forms/DropdownButton'
 import {
   HeartIcon,
   HeartIconSolid,
