@@ -4,6 +4,7 @@ import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
+import {ScrollView} from 'react-native-gesture-handler'
 
 interface Layout {
   x: number
@@ -102,26 +103,28 @@ export function TabBar({
       onLayout={onLayout}
       ref={containerRef}>
       <Animated.View style={[styles.indicator, indicatorStyle]} />
-      {items.map((item, i) => {
-        const selected = i === selectedPage
-        return (
-          <PressableWithHover
-            ref={itemRefs[i]}
-            key={item}
-            style={
-              indicatorPosition === 'top' ? styles.itemTop : styles.itemBottom
-            }
-            hoverStyle={pal.viewLight}
-            onPress={() => onPressItem(i)}>
-            <Text
-              type="xl-bold"
-              testID={testID ? `${testID}-${item}` : undefined}
-              style={selected ? pal.text : pal.textLight}>
-              {item}
-            </Text>
-          </PressableWithHover>
-        )
-      })}
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+        {items.map((item, i) => {
+          const selected = i === selectedPage
+          return (
+            <PressableWithHover
+              ref={itemRefs[i]}
+              key={item}
+              style={
+                indicatorPosition === 'top' ? styles.itemTop : styles.itemBottom
+              }
+              hoverStyle={pal.viewLight}
+              onPress={() => onPressItem(i)}>
+              <Text
+                type="xl-bold"
+                testID={testID ? `${testID}-${item}` : undefined}
+                style={selected ? pal.text : pal.textLight}>
+                {item}
+              </Text>
+            </PressableWithHover>
+          )
+        })}
+      </ScrollView>
     </View>
   )
 }

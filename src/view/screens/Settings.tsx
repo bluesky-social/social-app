@@ -295,7 +295,7 @@ export const SettingsScreen = withAuthRequired(
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             accessibilityHint="Custom Algorithms"
             accessibilityLabel="Opens screen with all bookmarked custom algorithms"
-            href="/settings/custom-algorithms">
+            href="/settings/saved-feeds">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="rss"

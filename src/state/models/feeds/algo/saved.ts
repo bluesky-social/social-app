@@ -41,6 +41,16 @@ export class SavedFeedsModel {
     return this.hasLoaded && !this.hasContent
   }
 
+  get numOfFeeds() {
+    return this.feeds.length
+  }
+
+  get listOfFeedNames() {
+    return this.feeds.map(
+      f => f.data.displayName ?? f.data.creator.displayName + "'s feed",
+    )
+  }
+
   // public api
   // =
 

@@ -112,6 +112,17 @@ export const HomeScreen = withAuthRequired(
           feed={algoFeed}
           renderEmptyState={renderWhatsHotEmptyState}
         />
+        {store.me.savedFeeds.feeds.map((f, index) => {
+          return (
+            <FeedPage
+              key={String(2 + index + 1)}
+              testID="customFeed"
+              isPageFocused={selectedPage === 2 + index}
+              feed={new PostsFeedModel(store, 'custom', {feed: f.getUri})}
+              renderEmptyState={renderFollowingEmptyState}
+            />
+          )
+        })}
       </Pager>
     )
   }),
