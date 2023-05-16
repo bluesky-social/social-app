@@ -11,6 +11,7 @@ import {PostsFeedModel} from 'state/models/feeds/posts'
 import {useCustomFeed} from 'view/com/algos/useCustomFeed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {Feed} from 'view/com/posts/Feed'
+import {Link} from 'view/com/util/Link'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {Button} from 'view/com/util/forms/Button'
@@ -48,9 +49,11 @@ export const CustomFeed = withAuthRequired(
                   size={30}
                   avatar={currentFeed?.data.creator.avatar}
                 />
-                <Text style={[pal.textLight]}>
-                  @{currentFeed?.data.creator.handle}
-                </Text>
+                <Link href={`/profile/${currentFeed?.data.creator.handle}`}>
+                  <Text style={[pal.textLight]}>
+                    @{currentFeed?.data.creator.handle}
+                  </Text>
+                </Link>
               </View>
               <Text style={[pal.text]}>{currentFeed?.data.description}</Text>
             </View>
@@ -109,7 +112,7 @@ export const CustomFeed = withAuthRequired(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: '100%',
+    paddingBottom: 12,
   },
   center: {alignItems: 'center', justifyContent: 'center', gap: 8},
   header: {
@@ -118,6 +121,7 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
   },
   buttonsContainer: {
