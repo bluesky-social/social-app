@@ -18,6 +18,7 @@
   - iOS: `yarn ios`
   - Android: `yarn android`
   - Web: `yarn web`
+- If you are cloning or forking this repo as an open source developer, please check the tips below as well
 - Run e2e tests
   - Start in various console tabs:
     - `yarn e2e:server`
@@ -25,6 +26,8 @@
   - Run once: `yarn e2e:build`
   - Each test run: `yarn e2e:run`
 - Tips
+  - Make sure you copy the `.env.example` to `.env` and add the appropiate tokens (e.g. `SENTRY_AUTH_TOKEN` can be created on the Sentry dashboard). If this is not required, you can remove it from `eas.json` and `package.json`, as well as any mentions in the code.
+  - If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` as well as `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
   - `npx react-native info` Checks what has been installed.
   - The android simulator won't be able to access localhost services unless you run `adb reverse tcp:{PORT} tcp:{PORT}`
     - For instance, the localhosted dev-wallet will need `adb reverse tcp:3001 tcp:3001`
