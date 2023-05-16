@@ -1,4 +1,4 @@
-import {AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from 'state/models/root-store'
 
@@ -38,12 +38,32 @@ export class AlgoItemModel {
   }
 
   get isLiked() {
-    return this.data.viewer?.liked
+    return this.data.viewer?.like
   }
 
-  set toggleLiked(value: boolean) {
+  private toggleLiked(s?: string) {
     if (this.data.viewer) {
-      this.data.viewer.liked = value
+      if (this.data.viewer.like) {
+        this.data.viewer.like = undefined
+      } else {
+        this.data.viewer.like = s
+      }
+    }
+  }
+
+  private incrementLike() {
+    if (this.data.likeCount) {
+      this.data.likeCount += 1
+    } else {
+      this.data.likeCount = 1
+    }
+  }
+
+  private decrementLike() {
+    if (this.data.likeCount) {
+      this.data.likeCount -= 1
+    } else {
+      this.data.likeCount = 0
     }
   }
 
@@ -73,8 +93,7 @@ export class AlgoItemModel {
 
   async like() {
     try {
-      this.toggleLiked = true
-      await this.rootStore.agent.app.bsky.feed.like.create(
+      const res = await this.rootStore.agent.app.bsky.feed.like.create(
         {
           repo: this.rootStore.me.did,
         },
@@ -83,11 +102,26 @@ export class AlgoItemModel {
             uri: this.data.uri,
             cid: this.data.cid,
           },
-          createdAt: new Date().toString(),
+          createdAt: new Date().toISOString(),
         },
       )
+      this.toggleLiked(res.uri)
+      this.incrementLike()
     } catch (e: any) {
       this.rootStore.log.error('Failed to like feed', e)
+    }
+  }
+
+  async unlike() {
+    try {
+      await this.rootStore.agent.app.bsky.feed.like.delete({
+        repo: this.rootStore.me.did,
+        rkey: new AtUri(this.data.uri).rkey,
+      })
+      this.toggleLiked()
+      this.decrementLike()
+    } catch (e: any) {
+      this.rootStore.log.error('Failed to unlike feed', e)
     }
   }
 

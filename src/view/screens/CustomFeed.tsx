@@ -1,6 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {usePalette} from 'lib/hooks/usePalette'
-import {HeartIcon} from 'lib/icons'
+import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {colors, s} from 'lib/styles'
 import {observer} from 'mobx-react-lite'
@@ -74,13 +74,21 @@ export const CustomFeed = withAuthRequired(
               <TouchableOpacity
                 accessibilityRole="button"
                 onPress={() => {
-                  currentFeed?.like()
+                  if (currentFeed?.isLiked) {
+                    currentFeed?.unlike()
+                  } else {
+                    currentFeed?.like()
+                  }
                 }}
                 style={[styles.likeButton]}>
                 <Text style={[pal.text, s.semiBold]}>
                   {currentFeed?.data.likeCount}
                 </Text>
-                <HeartIcon strokeWidth={3} size={18} style={styles.liked} />
+                {currentFeed?.isLiked ? (
+                  <HeartIconSolid size={18} style={styles.liked} />
+                ) : (
+                  <HeartIcon strokeWidth={3} size={18} style={styles.liked} />
+                )}
               </TouchableOpacity>
             </View>
           </View>
