@@ -21,7 +21,10 @@ import {getDataUriSize} from './util'
  * -prf
  */
 
-export async function openPicker(opts?: ImagePickerOptions) {
+export async function openPicker(
+  _store: RootStoreModel,
+  opts?: ImagePickerOptions,
+) {
   const response = await launchImageLibraryAsync({
     exif: false,
     mediaTypes: MediaTypeOptions.Images,
@@ -61,7 +64,10 @@ export async function openCamera(
   }
 }
 
-export async function openCropper(opts: CropperOptions) {
+export async function openCropper(
+  _store: RootStoreModel,
+  opts: CropperOptions,
+) {
   const item = await openCropperFn({
     ...opts,
     forceJpg: true, // ios only

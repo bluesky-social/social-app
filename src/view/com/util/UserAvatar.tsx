@@ -85,12 +85,12 @@ export function UserAvatar({
             return
           }
 
-          const items = await openPicker({
+          const items = await openPicker(store, {
             aspect: [1, 1],
           })
           const item = items[0]
 
-          const croppedImage = await openCropper({
+          const croppedImage = await openCropper(store, {
             mediaType: 'photo',
             cropperCircleOverlay: true,
             height: item.height,
