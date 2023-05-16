@@ -20,7 +20,7 @@
   - Web: `yarn web`
 - Run e2e tests
   - Start in various console tabs:
-    - `yarn e2e:server`
+    - `yarn e2e:mock-server`
     - `yarn e2e:metro`
   - Run once: `yarn e2e:build`
   - Each test run: `yarn e2e:run`
