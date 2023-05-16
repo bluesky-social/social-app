@@ -32,7 +32,7 @@
   - For some reason, the typescript compiler chokes on platform-specific files (e.g. `foo.native.ts`) but only when compiling for Web thus far. Therefore we always have one version of the file which doesn't use a platform specifier, and that should bee the Web version. ([More info](https://stackoverflow.com/questions/44001050/platform-specific-import-component-in-react-native-with-typescript).)
 
 ### Open-source developer specific instructions & tips
-1. Make sure you clone the `.env` and add the appropiate tokens (e.g. `SENTRY_AUTH_TOKEN` can be created on the Sentry dashboard. If this is not required, you can remove it from `eas.json` and `package.json`, as well as any mentions in the code.
+1. Make sure you clone the `.env` and add the appropiate tokens (e.g. `SENTRY_AUTH_TOKEN` can be created on the Sentry dashboard). If this is not required, you can remove it from `eas.json` and `package.json`, as well as any mentions in the code.
 2. If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` as well as `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
 
 ## Go-Server Build
