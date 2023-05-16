@@ -1,0 +1,12 @@
+diff --git a/node_modules/expo-image/ios/ExpoImage.podspec b/node_modules/expo-image/ios/ExpoImage.podspec
+index 7ad818a..5c9299b 100644
+--- a/node_modules/expo-image/ios/ExpoImage.podspec
++++ b/node_modules/expo-image/ios/ExpoImage.podspec
+@@ -19,6 +19,7 @@ Pod::Spec.new do |s|
+   s.dependency 'SDWebImage', '~> 5.15.0'
+   s.dependency 'SDWebImageWebPCoder', '~> 0.9.1'
+   s.dependency 'SDWebImageAVIFCoder', '~> 0.9.4'
++  s.dependency 'libavif', '= 0.10.1'
+   s.dependency 'SDWebImageSVGCoder', '~> 1.6.1'
+ 
+   # Swift/Objective-C compatibility
