@@ -14,7 +14,8 @@ export const BlurView = ({
   ...props
 }: React.PropsWithChildren<BlurViewProps>) => {
   // @ts-ignore using an RNW-specific attribute here -prf
-  style = addStyle(style, {backdropFilter: `blur(${blurAmount || 10}px`})
+  let blur = `blur(${blurAmount || 10}px`
+  style = addStyle(style, {backdropFilter: blur, WebkitBackdropFilter: blur})
   if (blurType === 'dark') {
     style = addStyle(style, styles.dark)
   } else {
