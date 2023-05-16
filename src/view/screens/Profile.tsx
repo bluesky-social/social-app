@@ -25,6 +25,8 @@ import {FAB} from '../com/util/fab/FAB'
 import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {combinedDisplayName} from 'lib/strings/display-names'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
@@ -41,6 +43,7 @@ export const ProfileScreen = withAuthRequired(
       () => new ProfileUiModel(store, {user: route.params.name}),
       [route.params.name, store],
     )
+    useSetTitle(combinedDisplayName(uiState.profile))
 
     useFocusEffect(
       React.useCallback(() => {

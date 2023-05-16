@@ -10,3 +10,18 @@ export function sanitizeDisplayName(str: string): string {
   }
   return ''
 }
+
+export function combinedDisplayName({
+  handle,
+  displayName,
+}: {
+  handle?: string
+  displayName?: string
+}): string {
+  if (!handle) {
+    return ''
+  }
+  return displayName
+    ? `${sanitizeDisplayName(displayName)} (@${handle})`
+    : `@${handle}`
+}

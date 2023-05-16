@@ -14,6 +14,7 @@ import * as Toast from 'view/com/util/Toast'
 import {ListModel} from 'state/models/content/list'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {NavigationProp} from 'lib/routes/types'
 import {isDesktopWeb} from 'platform/detection'
 
@@ -32,6 +33,7 @@ export const ProfileListScreen = withAuthRequired(
       )
       return model
     }, [store, name, rkey])
+    useSetTitle(list.list?.name)
 
     useFocusEffect(
       React.useCallback(() => {
