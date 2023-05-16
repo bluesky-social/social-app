@@ -98,7 +98,7 @@ export class AlgoItemModel {
     try {
       await this.rootStore.agent.app.bsky.feed.like.delete({
         repo: this.rootStore.me.did,
-        rkey: new AtUri(this.data.uri).rkey,
+        rkey: new AtUri(this.data.viewer?.like!).rkey,
       })
       this.toggleLiked()
       this.decrementLike()
