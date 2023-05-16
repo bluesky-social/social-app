@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {View, StyleSheet, TouchableOpacity} from 'react-native'
 import {useStores} from 'state/index'
@@ -14,10 +14,20 @@ import {RoutesContainer, FlatNavigator} from '../../Navigation'
 import {DrawerContent} from './Drawer'
 import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
+import {useNavigation} from '@react-navigation/native'
+import {NavigationProp} from 'lib/routes/types'
 
 const ShellInner = observer(() => {
   const store = useStores()
   const {isDesktop} = useWebMediaQueries()
+
+  const navigator = useNavigation<NavigationProp>()
+
+  useEffect(() => {
+    navigator.addListener('state', () => {
+      store.shell.closeAnyActiveElement()
+    })
+  }, [navigator, store.shell])
 
   return (
     <>
