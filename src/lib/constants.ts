@@ -38,6 +38,7 @@ export function TEAM_HANDLES(serviceUrl: string) {
 // it is used in the search interface if the user doesn't follow anybody
 // -prf
 export const PROD_SUGGESTED_FOLLOWS = [
+  'shl0ms.com',
   'bsky.app',
   'jay.bsky.team',
   'pfrazee.com',
