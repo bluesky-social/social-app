@@ -65,7 +65,7 @@ export function Component({
   }
   const onSelectNewAvatar = useCallback(
     async (img: RNImage | null) => {
-      if (!img) {
+      if (img === null) {
         setNewUserAvatar(null)
         setUserAvatar(null)
         return
@@ -81,6 +81,7 @@ export function Component({
     },
     [track, setNewUserAvatar, setUserAvatar, setError],
   )
+
   const onSelectNewBanner = useCallback(
     async (img: RNImage | null) => {
       if (!img) {
@@ -99,6 +100,7 @@ export function Component({
     },
     [track, setNewUserBanner, setUserBanner, setError],
   )
+
   const onPressSave = useCallback(async () => {
     track('EditProfile:Save')
     setProcessing(true)

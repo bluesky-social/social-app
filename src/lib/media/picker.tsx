@@ -1,12 +1,16 @@
 import {
-  openPicker as openPickerFn,
   openCamera as openCameraFn,
   openCropper as openCropperFn,
-  ImageOrVideo,
+  Image as RNImage,
 } from 'react-native-image-crop-picker'
 import {RootStoreModel} from 'state/index'
-import {PickerOpts, CameraOpts, CropperOptions} from './types'
-import {Image as RNImage} from 'react-native-image-crop-picker'
+import {CameraOpts, CropperOptions} from './types'
+import {
+  ImagePickerOptions,
+  launchImageLibraryAsync,
+  MediaTypeOptions,
+} from 'expo-image-picker'
+import {getDataUriSize} from './util'
 
 /**
  * NOTE
@@ -19,27 +23,22 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 
 export async function openPicker(
   _store: RootStoreModel,
-  opts?: PickerOpts,
-): Promise<RNImage[]> {
-  const items = await openPickerFn({
-    mediaType: 'photo', // TODO: eventually add other media types
-    multiple: opts?.multiple,
-    maxFiles: opts?.maxFiles,
-    forceJpg: true, // ios only
-    compressImageQuality: 0.8,
+  opts?: ImagePickerOptions,
+) {
+  const response = await launchImageLibraryAsync({
+    exif: false,
+    mediaTypes: MediaTypeOptions.Images,
+    quality: 1,
+    ...opts,
   })
 
-  const toMedia = (item: ImageOrVideo) => ({
-    path: item.path,
-    mime: item.mime,
-    size: item.size,
-    width: item.width,
-    height: item.height,
-  })
-  if (Array.isArray(items)) {
-    return items.map(toMedia)
-  }
-  return [toMedia(items)]
+  return (response.assets ?? []).map(image => ({
+    mime: 'image/jpeg',
+    height: image.height,
+    width: image.width,
+    path: image.uri,
+    size: getDataUriSize(image.uri),
+  }))
 }
 
 export async function openCamera(
@@ -55,6 +54,7 @@ export async function openCamera(
     forceJpg: true, // ios only
     compressImageQuality: 0.8,
   })
+
   return {
     path: item.path,
     mime: item.mime,
@@ -67,11 +67,10 @@ export async function openCamera(
 export async function openCropper(
   _store: RootStoreModel,
   opts: CropperOptions,
-): Promise<RNImage> {
+) {
   const item = await openCropperFn({
     ...opts,
     forceJpg: true, // ios only
-    compressImageQuality: 0.8,
   })
 
   return {
