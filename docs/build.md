@@ -18,7 +18,7 @@
   - iOS: `yarn ios`
   - Android: `yarn android`
   - Web: `yarn web`
-- If you are cloning or forking this repo as an open source developer, please check the intrsuctions below as well
+- If you are cloning or forking this repo as an open source developer, please check the tips below as well
 - Run e2e tests
   - Start in various console tabs:
     - `yarn e2e:server`
@@ -26,14 +26,12 @@
   - Run once: `yarn e2e:build`
   - Each test run: `yarn e2e:run`
 - Tips
+  - Make sure you clone the `.env` and add the appropiate tokens (e.g. `SENTRY_AUTH_TOKEN` can be created on the Sentry dashboard). If this is not required, you can remove it from `eas.json` and `package.json`, as well as any mentions in the code.
+  - If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` as well as `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
   - `npx react-native info` Checks what has been installed.
   - The android simulator won't be able to access localhost services unless you run `adb reverse tcp:{PORT} tcp:{PORT}`
     - For instance, the localhosted dev-wallet will need `adb reverse tcp:3001 tcp:3001`
   - For some reason, the typescript compiler chokes on platform-specific files (e.g. `foo.native.ts`) but only when compiling for Web thus far. Therefore we always have one version of the file which doesn't use a platform specifier, and that should bee the Web version. ([More info](https://stackoverflow.com/questions/44001050/platform-specific-import-component-in-react-native-with-typescript).)
-
-### Open-source developer specific instructions & tips
-1. Make sure you clone the `.env` and add the appropiate tokens (e.g. `SENTRY_AUTH_TOKEN` can be created on the Sentry dashboard). If this is not required, you can remove it from `eas.json` and `package.json`, as well as any mentions in the code.
-2. If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` as well as `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
 
 ## Go-Server Build
 
