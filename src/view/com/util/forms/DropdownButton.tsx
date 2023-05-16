@@ -209,7 +209,7 @@ export function PostDropdownBtn({
       },
     },
     {sep: true},
-    {
+    !isAuthor && {
       testID: 'postDropdownReportBtn',
       icon: 'circle-exclamation',
       label: 'Report post',
