@@ -13,7 +13,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {Button} from '../util/forms/Button'
 import {observer} from 'mobx-react-lite'
 import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
 import {HeartIconSolid} from 'lib/icons'
@@ -33,6 +33,11 @@ const AlgoItem = observer(
     const store = useStores()
     const pal = usePalette('default')
     const navigation = useNavigation<NavigationProp>()
+
+    // TODO: this is pretty hacky, but it works for now
+    useFocusEffect(() => {
+      item.reload()
+    })
 
     return (
       <TouchableOpacity
@@ -78,14 +83,12 @@ const AlgoItem = observer(
             </View>
             <View>
               <Button
-                type="inverted"
+                type={item.isSaved ? 'default' : 'inverted'}
                 onPress={() => {
                   if (item.data.viewer?.saved) {
-                    item.unsave()
-                    store.me.savedFeeds.removeFeed(item.data.uri)
+                    store.me.savedFeeds.unsave(item)
                   } else {
-                    item.save()
-                    store.me.savedFeeds.addFeed(item)
+                    store.me.savedFeeds.save(item)
                   }
                 }}
                 label={item.data.viewer?.saved ? 'Unsave' : 'Save'}

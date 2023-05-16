@@ -112,7 +112,7 @@ export const HomeScreen = withAuthRequired(
           feed={algoFeed}
           renderEmptyState={renderWhatsHotEmptyState}
         />
-        {store.me.savedFeeds.feeds.map((f, index) => {
+        {store.me.savedFeeds.pinned.map((f, index) => {
           return (
             <FeedPage
               key={String(2 + index + 1)}

@@ -67,30 +67,12 @@ export class AlgoItemModel {
     }
   }
 
+  private rewriteData(data: AppBskyFeedDefs.GeneratorView) {
+    this.data = data
+  }
+
   // public apis
   // =
-  async save() {
-    try {
-      this.toggleSaved = true
-      await this.rootStore.agent.app.bsky.feed.saveFeed({
-        feed: this.data.uri,
-      })
-    } catch (e: any) {
-      this.rootStore.log.error('Failed to save feed', e)
-    }
-  }
-
-  async unsave() {
-    try {
-      this.toggleSaved = false
-      await this.rootStore.agent.app.bsky.feed.unsaveFeed({
-        feed: this.data.uri,
-      })
-    } catch (e: any) {
-      this.rootStore.log.error('Failed to unsanve feed', e)
-    }
-  }
-
   async like() {
     try {
       const res = await this.rootStore.agent.app.bsky.feed.like.create(
@@ -151,7 +133,7 @@ export class AlgoItemModel {
     const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerator({
       feed: this.data.uri,
     })
-    this.data = res.data.view
+    this.rewriteData(res.data.view)
   }
 
   serialize() {

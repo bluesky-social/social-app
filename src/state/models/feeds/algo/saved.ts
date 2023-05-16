@@ -71,6 +71,12 @@ export class SavedFeedsModel {
     )
   }
 
+  get listOfPinnedFeedNames() {
+    return this.pinned.map(
+      f => f.data.displayName ?? f.data.creator.displayName + "'s feed",
+    )
+  }
+
   get savedFeedsWithoutPinned() {
     return this.feeds.filter(
       f => !this.pinned.find(p => p.data.uri === f.data.uri),
@@ -81,8 +87,12 @@ export class SavedFeedsModel {
     if (!this.isPinned(feed)) {
       this.pinned.push(feed)
     } else {
-      this.pinned = this.pinned.filter(f => f.data.uri !== feed.data.uri)
+      this.removePinnedFeed(feed.data.uri)
     }
+  }
+
+  removePinnedFeed(uri: string) {
+    this.pinned = this.pinned.filter(f => f.data.uri !== uri)
   }
 
   reorderPinnedFeeds(temp: AlgoItemModel[]) {
@@ -144,18 +154,22 @@ export class SavedFeedsModel {
       await this.rootStore.agent.app.bsky.feed.saveFeed({
         feed: algoItem.getUri,
       })
+      algoItem.toggleSaved = true
       this.addFeed(algoItem)
     } catch (e: any) {
       this.rootStore.log.error('Failed to save feed', e)
     }
   }
 
-  async unsave(uri: string) {
+  async unsave(algoItem: AlgoItemModel) {
+    const uri = algoItem.getUri
     try {
       await this.rootStore.agent.app.bsky.feed.unsaveFeed({
         feed: uri,
       })
+      algoItem.toggleSaved = false
       this.removeFeed(uri)
+      this.removePinnedFeed(uri)
     } catch (e: any) {
       this.rootStore.log.error('Failed to unsanve feed', e)
     }

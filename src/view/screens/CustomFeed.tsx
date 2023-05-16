@@ -64,11 +64,9 @@ export const CustomFeed = withAuthRequired(
                 style={[styles.saveButton]}
                 onPress={() => {
                   if (currentFeed?.data.viewer?.saved) {
-                    currentFeed?.unsave()
-                    rootStore.me.savedFeeds.removeFeed(currentFeed!.data.uri)
+                    rootStore.me.savedFeeds.unsave(currentFeed!)
                   } else {
-                    currentFeed!.save()
-                    rootStore.me.savedFeeds.addFeed(currentFeed!)
+                    rootStore.me.savedFeeds.save(currentFeed!)
                   }
                 }}
                 label={currentFeed?.data.viewer?.saved ? 'Unsave' : 'Save'}
