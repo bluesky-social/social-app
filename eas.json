@@ -11,29 +11,20 @@
         "simulator": true,
         "resourceClass": "medium"
       },
-      "channel": "development",
-      "env": {
-        "SENTRY_AUTH_TOKEN": "89c975413cd543fbb683b11bec984fc2163d9a77312c41c0b4480a570f3daa65"
-      }
+      "channel": "development"
     },
     "preview": {
       "distribution": "internal",
       "ios": {
         "resourceClass": "medium"
       },
-      "channel": "preview",
-      "env": {
-        "SENTRY_AUTH_TOKEN": "89c975413cd543fbb683b11bec984fc2163d9a77312c41c0b4480a570f3daa65"
-      }
+      "channel": "preview"
     },
     "production": {
       "ios": {
         "resourceClass": "medium"
       },
-      "channel": "production",
-      "env": {
-        "SENTRY_AUTH_TOKEN": "89c975413cd543fbb683b11bec984fc2163d9a77312c41c0b4480a570f3daa65"
-      }
+      "channel": "production"
     }
   },
   "submit": {
