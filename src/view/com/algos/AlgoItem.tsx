@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
+import {colors, s} from 'lib/styles'
 import {UserAvatar} from '../util/UserAvatar'
 import {Button} from '../util/forms/Button'
 import {observer} from 'mobx-react-lite'
@@ -16,6 +16,7 @@ import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
+import {HeartIconSolid} from 'lib/icons'
 
 const AlgoItem = observer(
   ({item, style}: {item: AlgoItemModel; style?: StyleProp<ViewStyle>}) => {
@@ -36,7 +37,7 @@ const AlgoItem = observer(
         key={item.data.uri}>
         <View style={[styles.headerContainer]}>
           <View style={[s.mr10]}>
-            <UserAvatar size={36} avatar={item.data.avatar} />
+            <UserAvatar size={36} avatar={item.data.avatar} s />
           </View>
           <View style={[styles.headerTextContainer]}>
             <Text style={[pal.text, s.bold]}>
@@ -56,6 +57,7 @@ const AlgoItem = observer(
               <UserAvatar size={24} avatar={item.data.avatar} />
             </View> */}
 
+            <HeartIconSolid size={16} style={[s.mr2, {color: colors.red3}]} />
             <Text style={[pal.text, pal.textLight]}>
               {item.data.likeCount && item.data.likeCount > 1
                 ? `Liked by ${item.data.likeCount} others`
