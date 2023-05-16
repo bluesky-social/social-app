@@ -33,6 +33,20 @@ export class AlgoItemModel {
     return this.data.uri
   }
 
+  get isSaved() {
+    return this.data.viewer?.saved
+  }
+
+  get isLiked() {
+    return this.data.viewer?.liked
+  }
+
+  set toggleLiked(value: boolean) {
+    if (this.data.viewer) {
+      this.data.viewer.liked = value
+    }
+  }
+
   // public apis
   // =
   async save() {
@@ -57,19 +71,52 @@ export class AlgoItemModel {
     }
   }
 
-  // async getFeedSkeleton() {
-  //   const res = await this.rootStore.agent.app.bsky.feed.getFeedSkeleton({
-  //     feed: this.data.uri,
-  //   })
-  //   const skeleton = res.data.feed
-  //   console.log('skeleton', skeleton)
-  //   return skeleton
-  // }
-  // async getFeed() {
-  //   const feed = await this.rootStore.agent.app.bsky.feed.getFeed({
-  //     feed: this.data.uri,
-  //   })
-  //   console.log('feed', feed)
-  //   return feed
-  // }
+  async like() {
+    try {
+      this.toggleLiked = true
+      await this.rootStore.agent.app.bsky.feed.like.create(
+        {
+          repo: this.rootStore.me.did,
+        },
+        {
+          subject: {
+            uri: this.data.uri,
+            cid: this.data.cid,
+          },
+          createdAt: new Date().toString(),
+        },
+      )
+    } catch (e: any) {
+      this.rootStore.log.error('Failed to like feed', e)
+    }
+  }
+
+  static async getView(store: RootStoreModel, uri: string) {
+    const res = await store.agent.app.bsky.feed.getFeedGenerator({
+      feed: uri,
+    })
+    const view = res.data.view
+    return view
+  }
+
+  async checkIsValid() {
+    const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerator({
+      feed: this.data.uri,
+    })
+    return res.data.isValid
+  }
+
+  async checkIsOnline() {
+    const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerator({
+      feed: this.data.uri,
+    })
+    return res.data.isOnline
+  }
+
+  async reload() {
+    const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerator({
+      feed: this.data.uri,
+    })
+    this.data = res.data.view
+  }
 }

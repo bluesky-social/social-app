@@ -240,7 +240,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         }>
         {opts.isLiked ? (
           <HeartIconSolid
-            style={styles.ctrlIconLiked as StyleProp<ViewStyle>}
+            style={styles.ctrlIconLiked}
             size={opts.big ? 22 : 16}
           />
         ) : (

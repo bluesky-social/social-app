@@ -29,7 +29,7 @@ const AlgoItem = observer(
         style={[styles.container, style]}
         onPress={() => {
           navigation.navigate('CustomFeed', {
-            name: item.data.creator.did,
+            name: item.data.displayName,
             rkey: item.data.uri,
           })
         }}
@@ -40,25 +40,27 @@ const AlgoItem = observer(
           </View>
           <View style={[styles.headerTextContainer]}>
             <Text style={[pal.text, s.bold]}>
-              {item.data.displayName ? item.data.displayName : 'Feed name'}
+              {item.data.displayName ?? 'Feed name'}
             </Text>
             <Text style={[pal.textLight, styles.description]}>
-              {item.data.description ??
-                'THIS IS A FEED DESCRIPTION, IT WILL TELL YOU WHAT THE FEED IS ABOUT. THIS IS A COOL FEED ABOUT COOL PEOPLE.'}
+              {item.data.description ?? 'Feed description'}
             </Text>
           </View>
         </View>
 
-        {/* TODO: this feed is like by *3* people UserAvatars and others */}
         <View style={styles.bottomContainer}>
           <View style={styles.likedByContainer}>
-            <View style={styles.likedByAvatars}>
+            {/* <View style={styles.likedByAvatars}>
               <UserAvatar size={24} avatar={item.data.avatar} />
               <UserAvatar size={24} avatar={item.data.avatar} />
               <UserAvatar size={24} avatar={item.data.avatar} />
-            </View>
+            </View> */}
 
-            <Text style={[pal.text, pal.textLight]}>Liked by 3 others</Text>
+            <Text style={[pal.text, pal.textLight]}>
+              {item.data.likeCount && item.data.likeCount > 1
+                ? `Liked by ${item.data.likeCount} others`
+                : 'Be the first to like this'}
+            </Text>
           </View>
           <View>
             <Button

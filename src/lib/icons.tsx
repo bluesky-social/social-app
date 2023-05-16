@@ -443,7 +443,7 @@ export function HeartIcon({
   size = 24,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<ViewStyle>
+  style?: StyleProp<TextStyle>
   size?: string | number
   strokeWidth: number
 }) {
@@ -464,7 +464,7 @@ export function HeartIconSolid({
   style,
   size = 24,
 }: {
-  style?: StyleProp<ViewStyle>
+  style?: StyleProp<TextStyle>
   size?: string | number
 }) {
   return (
