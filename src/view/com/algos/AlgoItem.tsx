@@ -17,6 +17,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
 import {HeartIconSolid} from 'lib/icons'
+import {pluralize} from 'lib/strings/helpers'
 
 const AlgoItem = observer(
   ({
@@ -80,8 +81,11 @@ const AlgoItem = observer(
 
               <HeartIconSolid size={16} style={[s.mr2, {color: colors.red3}]} />
               <Text style={[pal.text, pal.textLight]}>
-                {item.data.likeCount && item.data.likeCount > 1
-                  ? `Liked by ${item.data.likeCount} others`
+                {item.data.likeCount && item.data.likeCount > 0
+                  ? `Liked by ${item.data.likeCount} ${pluralize(
+                      item.data.likeCount,
+                      'other',
+                    )}`
                   : 'Be the first to like this'}
               </Text>
             </View>
