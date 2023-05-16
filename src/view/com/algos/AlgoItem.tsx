@@ -24,11 +24,13 @@ const AlgoItem = observer(
     style,
     showBottom = true,
     onLongPress,
+    reloadOnFocus = false,
   }: {
     item: AlgoItemModel
     style?: StyleProp<ViewStyle>
     showBottom?: boolean
     onLongPress?: () => void
+    reloadOnFocus?: boolean
   }) => {
     const store = useStores()
     const pal = usePalette('default')
@@ -36,7 +38,9 @@ const AlgoItem = observer(
 
     // TODO: this is pretty hacky, but it works for now
     useFocusEffect(() => {
-      item.reload()
+      if (reloadOnFocus) {
+        item.reload()
+      }
     })
 
     return (

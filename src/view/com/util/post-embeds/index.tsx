@@ -174,6 +174,7 @@ export function PostEmbeds({
       <AlgoItem
         item={new AlgoItemModel(store, embed.record)}
         style={[pal.view, pal.border, styles.extOuter]}
+        reloadOnFocus={true}
       />
     )
   }
