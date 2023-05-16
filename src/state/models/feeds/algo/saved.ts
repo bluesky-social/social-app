@@ -4,6 +4,7 @@ import {RootStoreModel} from '../../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
 import {AlgoItemModel} from './algo-item'
+import {hasProp, isObj} from 'lib/type-guards'
 
 const PAGE_SIZE = 30
 
@@ -18,6 +19,7 @@ export class SavedFeedsModel {
 
   // data
   feeds: AlgoItemModel[] = []
+  pinned: AlgoItemModel[] = []
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -27,6 +29,24 @@ export class SavedFeedsModel {
       },
       {autoBind: true},
     )
+  }
+
+  serialize() {
+    return {
+      pinned: this.pinned.map(f => f.serialize()),
+    }
+  }
+
+  hydrate(v: unknown) {
+    if (isObj(v)) {
+      if (hasProp(v, 'pinned')) {
+        const pinnedSerialized = (v as any).pinned as string[]
+        const pinnedDeserialized = pinnedSerialized.map(
+          (s: string) => new AlgoItemModel(this.rootStore, JSON.parse(s)),
+        )
+        this.pinned = pinnedDeserialized
+      }
+    }
   }
 
   get hasContent() {
@@ -49,6 +69,28 @@ export class SavedFeedsModel {
     return this.feeds.map(
       f => f.data.displayName ?? f.data.creator.displayName + "'s feed",
     )
+  }
+
+  get savedFeedsWithoutPinned() {
+    return this.feeds.filter(
+      f => !this.pinned.find(p => p.data.uri === f.data.uri),
+    )
+  }
+
+  togglePinnedFeed(feed: AlgoItemModel) {
+    if (!this.isPinned(feed)) {
+      this.pinned.push(feed)
+    } else {
+      this.pinned = this.pinned.filter(f => f.data.uri !== feed.data.uri)
+    }
+  }
+
+  reorderPinnedFeeds(temp: AlgoItemModel[]) {
+    this.pinned = temp
+  }
+
+  isPinned(feed: AlgoItemModel) {
+    return this.pinned.find(f => f.data.uri === feed.data.uri) ? true : false
   }
 
   // public api

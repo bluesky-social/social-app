@@ -3,8 +3,9 @@ import {
   RefreshControl,
   StyleSheet,
   View,
-  FlatList,
   ActivityIndicator,
+  FlatList,
+  TouchableOpacity,
 } from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -13,28 +14,28 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
-import {SavedFeedsModel} from 'state/models/feeds/algo/saved'
 import AlgoItem from 'view/com/algos/AlgoItem'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
 import {isDesktopWeb} from 'platform/detection'
-import {s} from 'lib/styles'
+import {colors, s} from 'lib/styles'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
+import {SavedFeedsModel} from 'state/models/feeds/algo/saved'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 
 export const SavedFeeds = withAuthRequired(
   observer(({}: Props) => {
+    // hooks for global items
     const pal = usePalette('default')
     const rootStore = useStores()
     const {screen} = useAnalytics()
 
-    const savedFeeds = useMemo(
-      () => new SavedFeedsModel(rootStore),
-      [rootStore],
-    )
-
+    // hooks for local
+    const savedFeeds = useMemo(() => rootStore.me.savedFeeds, [rootStore])
     useFocusEffect(
       useCallback(() => {
         screen('SavedFeeds')
@@ -42,14 +43,38 @@ export const SavedFeeds = withAuthRequired(
         savedFeeds.refresh()
       }, [screen, rootStore, savedFeeds]),
     )
+    const _ListEmptyComponent = () => {
+      return (
+        <View
+          style={[
+            pal.border,
+            !isDesktopWeb && s.flex1,
+            pal.viewLight,
+            styles.empty,
+          ]}>
+          <Text type="lg" style={[pal.text]}>
+            You don't have any saved feeds. To save a feed, click the save
+            button when a custom feed or algorithm shows up.
+          </Text>
+        </View>
+      )
+    }
+    const _ListFooterComponent = () => {
+      return (
+        <View style={styles.footer}>
+          {savedFeeds.isLoading && <ActivityIndicator />}
+        </View>
+      )
+    }
 
     return (
       <CenteredView style={[s.flex1]}>
-        <ViewHeader title="Custom Algorithms" showOnDesktop />
+        <ViewHeader title="Saved Feeds" showOnDesktop />
         <FlatList
           style={[!isDesktopWeb && s.flex1]}
           data={savedFeeds.feeds}
           keyExtractor={item => item.data.uri}
+          refreshing={savedFeeds.isRefreshing}
           refreshControl={
             <RefreshControl
               refreshing={savedFeeds.isRefreshing}
@@ -58,28 +83,12 @@ export const SavedFeeds = withAuthRequired(
               titleColor={pal.colors.text}
             />
           }
-          onEndReached={() => savedFeeds.loadMore()}
-          renderItem={({item}) => <AlgoItem key={item.data.uri} item={item} />}
-          initialNumToRender={15}
-          ListFooterComponent={() => (
-            <View style={styles.footer}>
-              {savedFeeds.isLoading && <ActivityIndicator />}
-            </View>
+          renderItem={({item}) => (
+            <SavedFeedItem item={item} savedFeeds={savedFeeds} />
           )}
-          ListEmptyComponent={() => (
-            <View
-              style={[
-                pal.border,
-                !isDesktopWeb && s.flex1,
-                pal.viewLight,
-                styles.empty,
-              ]}>
-              <Text type="lg" style={[pal.text]}>
-                You don't have any saved feeds. To save a feed, click the save
-                button when a custom feed or algorithm shows up.
-              </Text>
-            </View>
-          )}
+          initialNumToRender={10}
+          ListFooterComponent={_ListFooterComponent}
+          ListEmptyComponent={_ListEmptyComponent}
           extraData={savedFeeds.isLoading}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
@@ -87,6 +96,36 @@ export const SavedFeeds = withAuthRequired(
       </CenteredView>
     )
   }),
+)
+
+const SavedFeedItem = observer(
+  ({item, savedFeeds}: {item: AlgoItemModel; savedFeeds: SavedFeedsModel}) => {
+    const isPinned = savedFeeds.isPinned(item)
+
+    return (
+      <View style={styles.itemContainer}>
+        <AlgoItem
+          key={item.data.uri}
+          item={item}
+          showBottom={false}
+          style={styles.item}
+        />
+        <TouchableOpacity
+          accessibilityRole="button"
+          onPress={() => {
+            savedFeeds.togglePinnedFeed(item)
+            console.log('pinned', savedFeeds.pinned)
+            console.log('isPinned', savedFeeds.isPinned(item))
+          }}>
+          <FontAwesomeIcon
+            icon="thumb-tack"
+            size={20}
+            color={isPinned ? colors.blue3 : colors.gray3}
+          />
+        </TouchableOpacity>
+      </View>
+    )
+  },
 )
 
 const styles = StyleSheet.create({
@@ -99,5 +138,13 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginHorizontal: 24,
     marginTop: 10,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 18,
+  },
+  item: {
+    borderTopWidth: 0,
   },
 })

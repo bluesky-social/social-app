@@ -19,7 +19,7 @@ import {Text} from 'view/com/util/text/Text'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export const CustomFeed = withAuthRequired(
-  observer(({route, navigation}: Props) => {
+  observer(({route}: Props) => {
     const rootStore = useStores()
     const {rkey, name} = route.params
     const currentFeed = useCustomFeed(rkey)

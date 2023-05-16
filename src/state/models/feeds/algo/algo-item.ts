@@ -153,4 +153,8 @@ export class AlgoItemModel {
     })
     this.data = res.data.view
   }
+
+  serialize() {
+    return JSON.stringify(this.data)
+  }
 }

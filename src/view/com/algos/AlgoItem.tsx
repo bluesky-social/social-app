@@ -19,7 +19,17 @@ import {useStores} from 'state/index'
 import {HeartIconSolid} from 'lib/icons'
 
 const AlgoItem = observer(
-  ({item, style}: {item: AlgoItemModel; style?: StyleProp<ViewStyle>}) => {
+  ({
+    item,
+    style,
+    showBottom = true,
+    onLongPress,
+  }: {
+    item: AlgoItemModel
+    style?: StyleProp<ViewStyle>
+    showBottom?: boolean
+    onLongPress?: () => void
+  }) => {
     const store = useStores()
     const pal = usePalette('default')
     const navigation = useNavigation<NavigationProp>()
@@ -34,10 +44,11 @@ const AlgoItem = observer(
             rkey: item.data.uri,
           })
         }}
+        onLongPress={onLongPress}
         key={item.data.uri}>
         <View style={[styles.headerContainer]}>
           <View style={[s.mr10]}>
-            <UserAvatar size={36} avatar={item.data.avatar} s />
+            <UserAvatar size={36} avatar={item.data.avatar} />
           </View>
           <View style={[styles.headerTextContainer]}>
             <Text style={[pal.text, s.bold]}>
@@ -49,37 +60,39 @@ const AlgoItem = observer(
           </View>
         </View>
 
-        <View style={styles.bottomContainer}>
-          <View style={styles.likedByContainer}>
-            {/* <View style={styles.likedByAvatars}>
+        {showBottom ? (
+          <View style={styles.bottomContainer}>
+            <View style={styles.likedByContainer}>
+              {/* <View style={styles.likedByAvatars}>
               <UserAvatar size={24} avatar={item.data.avatar} />
               <UserAvatar size={24} avatar={item.data.avatar} />
               <UserAvatar size={24} avatar={item.data.avatar} />
             </View> */}
 
-            <HeartIconSolid size={16} style={[s.mr2, {color: colors.red3}]} />
-            <Text style={[pal.text, pal.textLight]}>
-              {item.data.likeCount && item.data.likeCount > 1
-                ? `Liked by ${item.data.likeCount} others`
-                : 'Be the first to like this'}
-            </Text>
+              <HeartIconSolid size={16} style={[s.mr2, {color: colors.red3}]} />
+              <Text style={[pal.text, pal.textLight]}>
+                {item.data.likeCount && item.data.likeCount > 1
+                  ? `Liked by ${item.data.likeCount} others`
+                  : 'Be the first to like this'}
+              </Text>
+            </View>
+            <View>
+              <Button
+                type="inverted"
+                onPress={() => {
+                  if (item.data.viewer?.saved) {
+                    item.unsave()
+                    store.me.savedFeeds.removeFeed(item.data.uri)
+                  } else {
+                    item.save()
+                    store.me.savedFeeds.addFeed(item)
+                  }
+                }}
+                label={item.data.viewer?.saved ? 'Unsave' : 'Save'}
+              />
+            </View>
           </View>
-          <View>
-            <Button
-              type="inverted"
-              onPress={() => {
-                if (item.data.viewer?.saved) {
-                  item.unsave()
-                  store.me.savedFeeds.removeFeed(item.data.uri)
-                } else {
-                  item.save()
-                  store.me.savedFeeds.addFeed(item)
-                }
-              }}
-              label={item.data.viewer?.saved ? 'Unsave' : 'Save'}
-            />
-          </View>
-        </View>
+        ) : null}
       </TouchableOpacity>
     )
   },

@@ -75,6 +75,7 @@ import {faX} from '@fortawesome/free-solid-svg-icons/faX'
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark'
 import {faPlay} from '@fortawesome/free-solid-svg-icons/faPlay'
 import {faPause} from '@fortawesome/free-solid-svg-icons/faPause'
+import {faThumbtack} from '@fortawesome/free-solid-svg-icons/faThumbtack'
 
 export function setup() {
   library.add(
@@ -149,6 +150,7 @@ export function setup() {
     faUserXmark,
     faTicket,
     faTrashCan,
+    faThumbtack,
     faX,
     faXmark,
     faPlay,

@@ -69,6 +69,7 @@ export class MeModel {
       displayName: this.displayName,
       description: this.description,
       avatar: this.avatar,
+      savedFeeds: this.savedFeeds.serialize(),
     }
   }
 
@@ -89,6 +90,9 @@ export class MeModel {
       }
       if (hasProp(v, 'avatar') && typeof v.avatar === 'string') {
         avatar = v.avatar
+      }
+      if (hasProp(v, 'savedFeeds') && isObj(v.savedFeeds)) {
+        this.savedFeeds.hydrate(v.savedFeeds)
       }
       if (did && handle) {
         this.did = did
