@@ -121,7 +121,7 @@ export const SearchScreen = withAuthRequired(
       <TouchableWithoutFeedback onPress={onPress} accessible={false}>
         <View style={[pal.view, styles.container]}>
           <HeaderWithInput
-            isInputFocused={true}
+            isInputFocused={isInputFocused}
             query={query}
             setIsInputFocused={setIsInputFocused}
             onChangeQuery={onChangeQuery}
