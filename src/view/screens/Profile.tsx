@@ -189,7 +189,7 @@ export const ProfileScreen = withAuthRequired(
               <FeedSlice slice={item} ignoreMuteFor={uiState.profile.did} />
             )
           } else if (item instanceof CustomFeedModel) {
-            return <CustomFeed item={item} showLikes />
+            return <CustomFeed item={item} showSaveBtn showLikes />
           }
         }
         return <View />

@@ -19,7 +19,12 @@ export const SavedFeedItem = observer(
 
     return (
       <View style={styles.itemContainer}>
-        <CustomFeed key={item.data.uri} item={item} style={styles.item} />
+        <CustomFeed
+          key={item.data.uri}
+          item={item}
+          style={styles.item}
+          showSaveBtn
+        />
         <TouchableOpacity
           accessibilityRole="button"
           onPress={() => {

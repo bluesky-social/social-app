@@ -24,11 +24,13 @@ export const CustomFeed = observer(
   ({
     item,
     style,
+    showSaveBtn = false,
     showLikes = false,
     reloadOnFocus = false,
   }: {
     item: CustomFeedModel
     style?: StyleProp<ViewStyle>
+    showSaveBtn?: boolean
     showLikes?: boolean
     reloadOnFocus?: boolean
   }) => {
@@ -66,21 +68,22 @@ export const CustomFeed = observer(
             <Text style={[pal.text, s.bold]}>
               {item.data.displayName ?? 'Feed name'}
             </Text>
-            <Text style={[pal.textLight]}>by @{item.data.creator.handle}</Text>
           </View>
-          <View>
-            <Button
-              type={item.isSaved ? 'default' : 'inverted'}
-              onPress={() => {
-                if (item.data.viewer?.saved) {
-                  store.me.savedFeeds.unsave(item)
-                } else {
-                  store.me.savedFeeds.save(item)
-                }
-              }}
-              label={item.data.viewer?.saved ? 'Unsave' : 'Save'}
-            />
-          </View>
+          {showSaveBtn && (
+            <View>
+              <Button
+                type={item.isSaved ? 'default' : 'inverted'}
+                onPress={() => {
+                  if (item.data.viewer?.saved) {
+                    store.me.savedFeeds.unsave(item)
+                  } else {
+                    store.me.savedFeeds.save(item)
+                  }
+                }}
+                label={item.data.viewer?.saved ? 'Unsave' : 'Save'}
+              />
+            </View>
+          )}
         </View>
 
         {item.data.description ? (
