@@ -21,7 +21,7 @@
 - If you are cloning or forking this repo as an open source developer, please check the tips below as well
 - Run e2e tests
   - Start in various console tabs:
-    - `yarn e2e:server`
+    - `yarn e2e:mock-server`
     - `yarn e2e:metro`
   - Run once: `yarn e2e:build`
   - Each test run: `yarn e2e:run`
