@@ -187,8 +187,6 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         component={AppPasswords}
         options={{title: title('App Passwords')}}
       />
-      <Stack.Screen name="CopyrightPolicy" component={CopyrightPolicyScreen} />
-      <Stack.Screen name="AppPasswords" component={AppPasswords} />
       <Stack.Screen name="SavedFeeds" component={SavedFeeds} />
       <Stack.Screen name="PinnedFeeds" component={PinnedFeeds} />
       <Stack.Screen name="CustomFeed" component={CustomFeed} />
