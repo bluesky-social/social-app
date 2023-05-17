@@ -170,18 +170,26 @@ export function PostEmbeds({
     AppBskyEmbedRecord.isView(embed) &&
     AppBskyFeedDefs.isGeneratorView(embed.record)
   ) {
-    // TODO memoize this?
-    return (
-      <CustomFeed
-        item={new CustomFeedModel(store, embed.record)}
-        style={[pal.view, pal.border, styles.customFeedOuter]}
-        reloadOnFocus
-        showLikes
-      />
-    )
+    return <CustomFeedEmbed record={embed.record} />
   }
 
   return <View />
+}
+
+function CustomFeedEmbed({record}: {record: AppBskyFeedDefs.GeneratorView}) {
+  const pal = usePalette('default')
+  const store = useStores()
+  const item = React.useMemo(
+    () => new CustomFeedModel(store, record),
+    [store, record],
+  )
+  return (
+    <CustomFeed
+      item={item}
+      style={[pal.view, pal.border, styles.customFeedOuter]}
+      showLikes
+    />
+  )
 }
 
 const styles = StyleSheet.create({

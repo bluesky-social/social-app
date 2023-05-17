@@ -13,12 +13,11 @@ import {UserAvatar} from '../util/UserAvatar'
 import {Button} from '../util/forms/Button'
 import {observer} from 'mobx-react-lite'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
 import {pluralize} from 'lib/strings/helpers'
 import {AtUri} from '@atproto/api'
-import {isWeb} from 'platform/detection'
 
 export const CustomFeed = observer(
   ({
@@ -26,25 +25,15 @@ export const CustomFeed = observer(
     style,
     showSaveBtn = false,
     showLikes = false,
-    reloadOnFocus = false,
   }: {
     item: CustomFeedModel
     style?: StyleProp<ViewStyle>
     showSaveBtn?: boolean
     showLikes?: boolean
-    reloadOnFocus?: boolean
   }) => {
     const store = useStores()
     const pal = usePalette('default')
     const navigation = useNavigation<NavigationProp>()
-
-    // TODO: this is pretty hacky, but it works for now
-    // causes issues on web
-    useFocusEffect(() => {
-      if (reloadOnFocus && !isWeb) {
-        item.reload()
-      }
-    })
 
     return (
       <TouchableOpacity
