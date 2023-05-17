@@ -81,7 +81,7 @@ export const CustomFeed = withAuthRequired(
                     currentFeed?.like()
                   }
                 }}
-                style={[styles.likeButton]}>
+                style={[styles.likeButton, pal.viewLight]}>
                 <Text style={[pal.text, s.semiBold]}>
                   {currentFeed?.data.likeCount}
                 </Text>
@@ -143,7 +143,6 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 24,
-    backgroundColor: colors.gray1,
     gap: 4,
   },
 })

@@ -19,7 +19,7 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
-import {isDesktopWeb} from 'platform/detection'
+import {isDesktopWeb, isWeb} from 'platform/detection'
 import {s} from 'lib/styles'
 import {SavedFeedsModel} from 'state/models/feeds/algo/saved'
 import {Link} from 'view/com/util/Link'
@@ -113,20 +113,23 @@ const ListHeaderComponent = observer(
     savedFeeds: SavedFeedsModel
     navigation: Props['navigation']
   }) => {
+    const pal = usePalette('default')
     return (
       <View style={styles.headerContainer}>
         {savedFeeds.pinned.length > 0 ? (
           <View style={styles.pinnedContainer}>
             <View style={styles.pinnedHeader}>
-              <Text type="lg-bold">Pinned Feeds</Text>
+              <Text type="lg-bold" style={[pal.text]}>
+                Pinned Feeds
+              </Text>
               <Link href="/settings/pinned-feeds">
-                <Text style={styles.editPinned}>Edit</Text>
+                <Text style={[styles.editPinned, pal.text]}>Edit</Text>
               </Link>
             </View>
 
             <ScrollView
               horizontal={true}
-              showsHorizontalScrollIndicator={false}>
+              showsHorizontalScrollIndicator={isWeb}>
               {savedFeeds.pinned.map(item => {
                 return (
                   <TouchableOpacity
@@ -140,7 +143,10 @@ const ListHeaderComponent = observer(
                     }}
                     style={styles.pinnedItem}>
                     <UserAvatar avatar={item.data.avatar} size={80} />
-                    <Text type="sm-medium" numberOfLines={1}>
+                    <Text
+                      type="sm-medium"
+                      numberOfLines={1}
+                      style={[pal.text, styles.pinnedItemName]}>
                       {item.data.displayName ??
                         `${item.data.creator.displayName}'s feed`}
                     </Text>
@@ -168,7 +174,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     marginTop: 10,
   },
-  headerContainer: {paddingHorizontal: 18},
+  headerContainer: {paddingHorizontal: 18, paddingTop: 18},
   pinnedContainer: {marginBottom: 18, gap: 18},
   pinnedHeader: {flexDirection: 'row', justifyContent: 'space-between'},
   pinnedItem: {
@@ -177,5 +183,6 @@ const styles = StyleSheet.create({
     marginRight: 18,
     maxWidth: 100,
   },
+  pinnedItemName: {marginTop: 8, textAlign: 'center'},
   editPinned: {textDecorationLine: 'underline'},
 })

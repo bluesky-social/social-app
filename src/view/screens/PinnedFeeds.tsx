@@ -91,7 +91,11 @@ export const PinnedFeeds = withAuthRequired(
                   accessibilityRole="button"
                   onLongPress={drag}
                   style={styles.itemContainer}>
-                  <FontAwesomeIcon icon="bars" size={20} style={styles.icon} />
+                  <FontAwesomeIcon
+                    icon="bars"
+                    size={20}
+                    style={[styles.icon, pal.text]}
+                  />
                   <SavedFeedItem item={item} savedFeeds={savedFeeds} />
                 </Pressable>
               </ShadowDecorator>
