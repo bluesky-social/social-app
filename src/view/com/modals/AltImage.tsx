@@ -1,4 +1,10 @@
-import React, {useCallback, useState, useEffect} from 'react'
+import React, {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {gradients, s} from 'lib/styles'
@@ -11,7 +17,8 @@ import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from 'state/index'
 import {isDesktopWeb} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
-import {ImageStyle, Keyboard} from 'react-native'
+import {ImageStyle} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 
 export const snapPoints = ['fullscreen']
 
@@ -24,32 +31,13 @@ export function Component({image}: Props) {
   const store = useStores()
   const theme = useTheme()
   const [altText, setAltText] = useState(image.altText)
-  const [keyboardVisible, setKeyboardVisible] = useState(false)
+  const altTextInputRef = useRef() as MutableRefObject<TextInput>
 
   useEffect(() => {
-    const keyboardActiveListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true) // or some other action
-      },
-    )
-    const keyboardInactiveListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false) // or some other action
-      },
-    )
-    return () => {
-      keyboardInactiveListener.remove()
-      keyboardActiveListener.remove()
+    if (altTextInputRef.current) {
+      altTextInputRef.current.focus()
     }
-  }, [])
-
-  const getImageSize = function () {
-    return {
-      maxHeight: keyboardVisible ? 100 : '100%',
-    }
-  }
+  }, [altTextInputRef])
 
   const onPressSave = useCallback(() => {
     image.setAltText(altText)
@@ -61,15 +49,17 @@ export function Component({image}: Props) {
   }
 
   return (
-    <View
+    <ScrollView
       testID="altTextImageModal"
       style={[pal.view, styles.container, s.flex1]}
-      nativeID="imageAltText">
+      nativeID="imageAltText"
+      automaticallyAdjustKeyboardInsets={true}
+      contentContainerStyle={styles.contentContainer}>
       <Text style={[styles.title, pal.text]}>Add alt text</Text>
       {image.compressed !== undefined && (
         <Image
           testID="selectedPhotoImage"
-          style={[styles.image, getImageSize()] as ImageStyle}
+          style={[styles.image] as ImageStyle}
           source={{
             uri: image.compressed.path,
           }}
@@ -79,6 +69,7 @@ export function Component({image}: Props) {
       )}
       <TextInput
         testID="altTextImageInput"
+        ref={altTextInputRef}
         style={[styles.textArea, pal.border, pal.text]}
         keyboardAppearance={theme.colorScheme}
         multiline
@@ -119,17 +110,18 @@ export function Component({image}: Props) {
           </View>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    gap: 18,
     paddingVertical: isDesktopWeb ? 0 : 18,
     paddingHorizontal: isDesktopWeb ? 0 : 12,
-    height: '100%',
-    width: '100%',
+  },
+  contentContainer: {
+    gap: 18,
+    paddingVertical: 18,
   },
   title: {
     textAlign: 'center',
@@ -139,8 +131,6 @@ const styles = StyleSheet.create({
   textArea: {
     borderWidth: 1,
     borderRadius: 6,
-    paddingTop: 10,
-    paddingHorizontal: 12,
     fontSize: 16,
     height: 100,
     textAlignVertical: 'top',
@@ -158,5 +148,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
+    width: '100%',
+    height: 400,
   },
 })
