@@ -13,6 +13,10 @@ const HEADER_ITEM = {_reactKey: '__header__'}
 const SELECTOR_ITEM = {_reactKey: '__selector__'}
 const STICKY_HEADER_INDICES = [1]
 
+export type ViewSelectorActions = {
+  scrollToTop: () => void
+}
+
 export const ViewSelector = React.forwardRef(
   (
     {
