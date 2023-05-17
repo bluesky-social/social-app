@@ -24,7 +24,7 @@ import DraggableFlatList, {
   ShadowDecorator,
   ScaleDecorator,
 } from 'react-native-draggable-flatlist'
-import {SavedFeedItem} from 'view/com/algos/SavedFeedItem'
+import {SavedFeedItem} from 'view/com/feeds/SavedFeedItem'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 

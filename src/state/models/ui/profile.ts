@@ -1,5 +1,4 @@
 import {makeAutoObservable} from 'mobx'
-import {AppBskyFeedDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {ProfileModel} from '../content/profile'
 import {PostsFeedModel} from '../feeds/posts'
@@ -89,9 +88,6 @@ export class ProfileUiModel {
 
   get selectedView() {
     return this.selectorItems[this.selectedViewIndex]
-  }
-  isGeneratorView(v: any) {
-    return AppBskyFeedDefs.isGeneratorView(v)
   }
 
   get uiItems() {

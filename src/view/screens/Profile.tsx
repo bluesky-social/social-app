@@ -25,7 +25,7 @@ import {FAB} from '../com/util/fab/FAB'
 import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
-import AlgoItem from 'view/com/algos/AlgoItem'
+import CustomFeed from 'view/com/feeds/CustomFeed'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
@@ -189,7 +189,7 @@ export const ProfileScreen = withAuthRequired(
               <FeedSlice slice={item} ignoreMuteFor={uiState.profile.did} />
             )
           } else if (item instanceof CustomFeedModel) {
-            return <AlgoItem item={item} />
+            return <CustomFeed item={item} />
           }
         }
         return <View />

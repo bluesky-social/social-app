@@ -24,7 +24,7 @@ import {s} from 'lib/styles'
 import {SavedFeedsModel} from 'state/models/ui/saved-feeds'
 import {Link} from 'view/com/util/Link'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {SavedFeedItem} from 'view/com/algos/SavedFeedItem'
+import {SavedFeedItem} from 'view/com/feeds/SavedFeedItem'
 import {AtUri} from '@atproto/api'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>

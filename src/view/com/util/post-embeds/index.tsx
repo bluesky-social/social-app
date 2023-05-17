@@ -25,7 +25,7 @@ import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import QuoteEmbed from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
-import AlgoItem from 'view/com/algos/AlgoItem'
+import CustomFeed from 'view/com/feeds/CustomFeed'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
 type Embed =
@@ -171,7 +171,7 @@ export function PostEmbeds({
     AppBskyFeedDefs.isGeneratorView(embed.record)
   ) {
     return (
-      <AlgoItem
+      <CustomFeed
         item={new CustomFeedModel(store, embed.record)}
         style={[pal.view, pal.border, styles.extOuter]}
         reloadOnFocus={true}

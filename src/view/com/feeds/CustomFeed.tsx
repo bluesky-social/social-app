@@ -21,7 +21,7 @@ import {pluralize} from 'lib/strings/helpers'
 import {AtUri} from '@atproto/api'
 import {isWeb} from 'platform/detection'
 
-const AlgoItem = observer(
+const CustomFeed = observer(
   ({
     item,
     style,
@@ -112,7 +112,7 @@ const AlgoItem = observer(
     )
   },
 )
-export default AlgoItem
+export default CustomFeed
 
 const styles = StyleSheet.create({
   container: {
