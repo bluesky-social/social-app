@@ -66,6 +66,7 @@ export function UserAvatar({
           if (!(await requestCameraAccessIfNeeded())) {
             return
           }
+
           onSelectNewAvatar?.(
             await openCamera(store, {
               width: 1000,
@@ -83,20 +84,21 @@ export function UserAvatar({
           if (!(await requestPhotoAccessIfNeeded())) {
             return
           }
+
           const items = await openPicker(store, {
+            aspect: [1, 1],
+          })
+          const item = items[0]
+
+          const croppedImage = await openCropper(store, {
             mediaType: 'photo',
-            multiple: false,
+            cropperCircleOverlay: true,
+            height: item.height,
+            width: item.width,
+            path: item.path,
           })
 
-          onSelectNewAvatar?.(
-            await openCropper(store, {
-              mediaType: 'photo',
-              path: items[0].path,
-              width: 1000,
-              height: 1000,
-              cropperCircleOverlay: true,
-            }),
-          )
+          onSelectNewAvatar?.(croppedImage)
         },
       },
       {

@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AtUri,
   ComAtprotoLabelDefs,
+  AppBskyGraphDefs,
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorProfile,
   RichText,
@@ -18,10 +19,9 @@ import {
   filterProfileLabels,
 } from 'lib/labeling/helpers'
 
-export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
-
 export class ProfileViewerModel {
   muted?: boolean
+  mutedByList?: AppBskyGraphDefs.ListViewBasic
   following?: string
   followedBy?: string
   blockedBy?: boolean

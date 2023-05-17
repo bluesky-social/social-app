@@ -210,6 +210,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 6,
     bottom: 6,
-    width: 46,
   },
 })

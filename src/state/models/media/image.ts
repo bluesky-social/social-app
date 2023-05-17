@@ -13,12 +13,12 @@ import {compressAndResizeImageForPost} from 'lib/media/manip'
 // Cases to consider: ExternalEmbed
 
 export interface ImageManipulationAttributes {
+  aspectRatio?: '4:3' | '1:1' | '3:4' | 'None'
   rotate?: number
   scale?: number
   position?: Position
   flipHorizontal?: boolean
   flipVertical?: boolean
-  aspectRatio?: '4:3' | '1:1' | '3:4' | 'None'
 }
 
 export class ImageModel implements RNImage {
@@ -34,14 +34,14 @@ export class ImageModel implements RNImage {
   scaledHeight: number = POST_IMG_MAX.height
 
   // Web manipulation
-  aspectRatio?: ImageManipulationAttributes['aspectRatio']
-  position?: Position = undefined
-  prev?: RNImage = undefined
-  rotation?: number = 0
-  scale?: number = 1
-  flipHorizontal?: boolean = false
-  flipVertical?: boolean = false
-
+  prev?: RNImage
+  attributes: ImageManipulationAttributes = {
+    aspectRatio: '1:1',
+    scale: 1,
+    flipHorizontal: false,
+    flipVertical: false,
+    rotate: 0,
+  }
   prevAttributes: ImageManipulationAttributes = {}
 
   constructor(public rootStore: RootStoreModel, image: RNImage) {
@@ -64,6 +64,25 @@ export class ImageModel implements RNImage {
   //     ? 1
   //     : MAX_IMAGE_SIZE_IN_BYTES / this.size
   // }
+
+  setRatio(aspectRatio: ImageManipulationAttributes['aspectRatio']) {
+    this.attributes.aspectRatio = aspectRatio
+  }
+
+  setRotate(degrees: number) {
+    this.attributes.rotate = degrees
+    this.manipulate({})
+  }
+
+  flipVertical() {
+    this.attributes.flipVertical = !this.attributes.flipVertical
+    this.manipulate({})
+  }
+
+  flipHorizontal() {
+    this.attributes.flipHorizontal = !this.attributes.flipHorizontal
+    this.manipulate({})
+  }
 
   get ratioMultipliers() {
     return {
@@ -116,7 +135,7 @@ export class ImageModel implements RNImage {
   // Only for mobile
   async crop() {
     try {
-      const cropped = await openCropper(this.rootStore, {
+      const cropped = await openCropper({
         mediaType: 'photo',
         path: this.path,
         freeStyleCropEnabled: true,
@@ -162,33 +181,19 @@ export class ImageModel implements RNImage {
       crop?: ActionCrop['crop']
     } & ImageManipulationAttributes,
   ) {
-    const {aspectRatio, crop, flipHorizontal, flipVertical, rotate, scale} =
-      attributes
+    const {aspectRatio, crop, position, scale} = attributes
     const modifiers = []
 
-    if (flipHorizontal !== undefined) {
-      this.flipHorizontal = flipHorizontal
-    }
-
-    if (flipVertical !== undefined) {
-      this.flipVertical = flipVertical
-    }
-
-    if (this.flipHorizontal) {
+    if (this.attributes.flipHorizontal) {
       modifiers.push({flip: FlipType.Horizontal})
     }
 
-    if (this.flipVertical) {
+    if (this.attributes.flipVertical) {
       modifiers.push({flip: FlipType.Vertical})
     }
 
-    // TODO: Fix rotation -- currently not functional
-    if (rotate !== undefined) {
-      this.rotation = rotate
-    }
-
-    if (this.rotation !== undefined) {
-      modifiers.push({rotate: this.rotation})
+    if (this.attributes.rotate !== undefined) {
+      modifiers.push({rotate: this.attributes.rotate})
     }
 
     if (crop !== undefined) {
@@ -203,18 +208,21 @@ export class ImageModel implements RNImage {
     }
 
     if (scale !== undefined) {
-      this.scale = scale
+      this.attributes.scale = scale
+    }
+
+    if (position !== undefined) {
+      this.attributes.position = position
     }
 
     if (aspectRatio !== undefined) {
-      this.aspectRatio = aspectRatio
+      this.attributes.aspectRatio = aspectRatio
     }
 
-    const ratioMultiplier = this.ratioMultipliers[this.aspectRatio ?? '1:1']
+    const ratioMultiplier =
+      this.ratioMultipliers[this.attributes.aspectRatio ?? '1:1']
 
-    // TODO: Ollie - should support up to 2000 but smaller images that scale
-    // up need an updated compression factor calculation. Use 1000 for now.
-    const MAX_SIDE = 1000
+    const MAX_SIDE = 2000
 
     const result = await ImageManipulator.manipulateAsync(
       this.path,
@@ -223,7 +231,7 @@ export class ImageModel implements RNImage {
         {resize: ratioMultiplier > 1 ? {width: MAX_SIDE} : {height: MAX_SIDE}},
       ],
       {
-        compress: 0.7, // TODO: revisit compression calculation
+        compress: 0.9,
         format: SaveFormat.JPEG,
       },
     )
@@ -238,16 +246,12 @@ export class ImageModel implements RNImage {
     })
   }
 
+  resetCompressed() {
+    this.manipulate({})
+  }
+
   previous() {
     this.compressed = this.prev
-
-    const {flipHorizontal, flipVertical, rotate, position, scale} =
-      this.prevAttributes
-
-    this.scale = scale
-    this.rotation = rotate
-    this.flipHorizontal = flipHorizontal
-    this.flipVertical = flipVertical
-    this.position = position
+    this.attributes = this.prevAttributes
   }
 }

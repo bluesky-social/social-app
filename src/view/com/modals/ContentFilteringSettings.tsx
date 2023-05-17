@@ -7,23 +7,66 @@ import {useStores} from 'state/index'
 import {LabelPreference} from 'state/models/ui/preferences'
 import {s, colors, gradients} from 'lib/styles'
 import {Text} from '../util/text/Text'
+import {TextLink} from '../util/Link'
+import {ToggleButton} from '../util/forms/ToggleButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CONFIGURABLE_LABEL_GROUPS} from 'lib/labeling/const'
-import {isDesktopWeb} from 'platform/detection'
+import {isDesktopWeb, isIOS} from 'platform/detection'
+import * as Toast from '../util/Toast'
 
 export const snapPoints = ['90%']
 
-export function Component({}: {}) {
+export const Component = observer(({}: {}) => {
   const store = useStores()
   const pal = usePalette('default')
+
+  React.useEffect(() => {
+    store.preferences.sync()
+  }, [store])
+
+  const onToggleAdultContent = React.useCallback(async () => {
+    if (isIOS) {
+      return
+    }
+    try {
+      await store.preferences.setAdultContentEnabled(
+        !store.preferences.adultContentEnabled,
+      )
+    } catch (e) {
+      Toast.show('There was an issue syncing your preferences with the server')
+      store.log.error('Failed to update preferences with server', {e})
+    }
+  }, [store])
+
   const onPressDone = React.useCallback(() => {
     store.shell.closeModal()
   }, [store])
 
   return (
-    <View testID="contentModerationModal" style={[pal.view, styles.container]}>
-      <Text style={[pal.text, styles.title]}>Content Moderation</Text>
+    <View testID="contentFilteringModal" style={[pal.view, styles.container]}>
+      <Text style={[pal.text, styles.title]}>Content Filtering</Text>
       <ScrollView style={styles.scrollContainer}>
+        <View style={s.mb10}>
+          {isIOS ? (
+            <Text type="md" style={pal.textLight}>
+              Adult content can only be enabled via the Web at{' '}
+              <TextLink
+                style={pal.link}
+                href="https://staging.bsky.app"
+                text="staging.bsky.app"
+              />
+              .
+            </Text>
+          ) : (
+            <ToggleButton
+              type="default-light"
+              label="Enable Adult Content"
+              isSelected={store.preferences.adultContentEnabled}
+              onPress={onToggleAdultContent}
+              style={styles.toggleBtn}
+            />
+          )}
+        </View>
         <ContentLabelPref
           group="nsfw"
           disabled={!store.preferences.adultContentEnabled}
@@ -50,7 +93,7 @@ export function Component({}: {}) {
           testID="sendReportBtn"
           onPress={onPressDone}
           accessibilityRole="button"
-          accessibilityLabel="Confirm content moderation settings"
+          accessibilityLabel="Done"
           accessibilityHint="">
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
@@ -63,7 +106,7 @@ export function Component({}: {}) {
       </View>
     </View>
   )
-}
+})
 
 // TODO: Refactor this component to pass labels down to each tab
 const ContentLabelPref = observer(
@@ -76,6 +119,21 @@ const ContentLabelPref = observer(
   }) => {
     const store = useStores()
     const pal = usePalette('default')
+
+    const onChange = React.useCallback(
+      async (v: LabelPreference) => {
+        try {
+          await store.preferences.setContentLabelPref(group, v)
+        } catch (e) {
+          Toast.show(
+            'There was an issue syncing your preferences with the server',
+          )
+          store.log.error('Failed to update preferences with server', {e})
+        }
+      },
+      [store, group],
+    )
+
     return (
       <View style={[styles.contentLabelPref, pal.border]}>
         <View style={s.flex1}>
@@ -95,7 +153,7 @@ const ContentLabelPref = observer(
         ) : (
           <SelectGroup
             current={store.preferences.contentLabels[group]}
-            onChange={v => store.preferences.setContentLabelPref(group, v)}
+            onChange={onChange}
             group={group}
           />
         )}
@@ -249,5 +307,8 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     padding: 14,
     backgroundColor: colors.gray1,
+  },
+  toggleBtn: {
+    paddingHorizontal: 0,
   },
 })

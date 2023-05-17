@@ -23,6 +23,7 @@ import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
+import {TextLink} from '../util/Link'
 import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
@@ -30,6 +31,7 @@ import {ProfileHeaderWarnings} from '../util/moderation/ProfileHeaderWarnings'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics'
 import {NavigationProp} from 'lib/routes/types'
+import {listUriToHref} from 'lib/strings/url-helpers'
 import {isDesktopWeb, isNative} from 'platform/detection'
 import {FollowState} from 'state/models/cache/my-follows'
 import {shareUrl} from 'lib/sharing'
@@ -146,11 +148,20 @@ const ProfileHeaderLoaded = observer(
       navigation.push('ProfileFollows', {name: view.handle})
     }, [track, navigation, view])
 
-    const onPressShare = React.useCallback(async () => {
+    const onPressShare = React.useCallback(() => {
       track('ProfileHeader:ShareButtonClicked')
       const url = toShareUrl(`/profile/${view.handle}`)
       shareUrl(url)
     }, [track, view])
+
+    const onPressAddRemoveLists = React.useCallback(() => {
+      track('ProfileHeader:AddToListsButtonClicked')
+      store.shell.openModal({
+        name: 'list-add-remove-user',
+        subject: view.did,
+        displayName: view.displayName || view.handle,
+      })
+    }, [track, view, store])
 
     const onPressMuteAccount = React.useCallback(async () => {
       track('ProfileHeader:MuteAccountButtonClicked')
@@ -233,6 +244,11 @@ const ProfileHeaderLoaded = observer(
           label: 'Share',
           onPress: onPressShare,
         },
+        {
+          testID: 'profileHeaderDropdownListAddRemoveBtn',
+          label: 'Add to Lists',
+          onPress: onPressAddRemoveLists,
+        },
       ]
       if (!isMe) {
         items.push({sep: true})
@@ -269,6 +285,7 @@ const ProfileHeaderLoaded = observer(
       onPressUnblockAccount,
       onPressBlockAccount,
       onPressReportAccount,
+      onPressAddRemoveLists,
     ])
 
     const blockHide = !isMe && (view.viewer.blocking || view.viewer.blockedBy)
@@ -422,31 +439,42 @@ const ProfileHeaderLoaded = observer(
             {view.viewer.blocking ? (
               <View
                 testID="profileHeaderBlockedNotice"
-                style={[styles.moderationNotice, pal.view, pal.border]}>
-                <FontAwesomeIcon icon="ban" style={[pal.text, s.mr5]} />
-                <Text type="md" style={[s.mr2, pal.text]}>
+                style={[styles.moderationNotice, pal.viewLight]}>
+                <FontAwesomeIcon icon="ban" style={[pal.text]} />
+                <Text type="lg-medium" style={pal.text}>
                   Account blocked
                 </Text>
               </View>
             ) : view.viewer.muted ? (
               <View
                 testID="profileHeaderMutedNotice"
-                style={[styles.moderationNotice, pal.view, pal.border]}>
+                style={[styles.moderationNotice, pal.viewLight]}>
                 <FontAwesomeIcon
                   icon={['far', 'eye-slash']}
-                  style={[pal.text, s.mr5]}
+                  style={[pal.text]}
                 />
-                <Text type="md" style={[s.mr2, pal.text]}>
-                  Account muted
+                <Text type="lg-medium" style={pal.text}>
+                  Account muted{' '}
+                  {view.viewer.mutedByList && (
+                    <Text type="lg-medium" style={pal.text}>
+                      by{' '}
+                      <TextLink
+                        type="lg-medium"
+                        style={pal.link}
+                        href={listUriToHref(view.viewer.mutedByList.uri)}
+                        text={view.viewer.mutedByList.name}
+                      />
+                    </Text>
+                  )}
                 </Text>
               </View>
             ) : undefined}
             {view.viewer.blockedBy && (
               <View
                 testID="profileHeaderBlockedNotice"
-                style={[styles.moderationNotice, pal.view, pal.border]}>
-                <FontAwesomeIcon icon="ban" style={[pal.text, s.mr5]} />
-                <Text type="md" style={[s.mr2, pal.text]}>
+                style={[styles.moderationNotice, pal.viewLight]}>
+                <FontAwesomeIcon icon="ban" style={[pal.text]} />
+                <Text type="lg-medium" style={pal.text}>
                   This account has blocked you
                 </Text>
               </View>
@@ -595,10 +623,10 @@ const styles = StyleSheet.create({
   moderationNotice: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
     borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    gap: 8,
   },
 
   br40: {borderRadius: 40},

@@ -94,6 +94,15 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
   return url
 }
 
+export function listUriToHref(url: string): string {
+  try {
+    const {hostname, rkey} = new AtUri(url)
+    return `/profile/${hostname}/lists/${rkey}`
+  } catch {
+    return ''
+  }
+}
+
 export function getYoutubeVideoId(link: string): string | undefined {
   let url
   try {

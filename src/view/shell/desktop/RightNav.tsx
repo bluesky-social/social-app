@@ -11,13 +11,14 @@ import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {pluralize} from 'lib/strings/helpers'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {MoonIcon} from 'lib/icons'
+import {MoonIcon, SunIcon} from 'lib/icons'
 import {formatCount} from 'view/com/util/numeric/format'
 
 export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores()
   const pal = usePalette('default')
   const mode = useColorSchemeStyle('Light', 'Dark')
+  const otherMode = mode === 'Dark' ? 'Light' : 'Dark'
 
   const onDarkmodePress = React.useCallback(() => {
     store.shell.setDarkMode(!store.shell.darkMode)
@@ -71,10 +72,14 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
               : 'Sets display to dark mode'
           }>
           <View style={[pal.viewLight, styles.darkModeToggleIcon]}>
-            <MoonIcon size={18} style={pal.textLight} />
+            {mode === 'Dark' ? (
+              <SunIcon size={18} style={pal.textLight} />
+            ) : (
+              <MoonIcon size={18} style={pal.textLight} />
+            )}
           </View>
           <Text type="sm" style={pal.textLight}>
-            {mode} mode
+            {otherMode} mode
           </Text>
         </TouchableOpacity>
       </View>

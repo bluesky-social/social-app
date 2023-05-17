@@ -24,8 +24,10 @@ import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
 import {isDesktopWeb, isMobileWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 
 const REPLY_PROMPT = {_reactKey: '__reply__', _isHighlightedPost: false}
 const DELETED = {_reactKey: '__deleted__', _isHighlightedPost: false}
@@ -59,6 +61,13 @@ export const PostThread = observer(function PostThread({
     }
     return []
   }, [view.thread])
+  useSetTitle(
+    view.thread?.postRecord &&
+      `${sanitizeDisplayName(
+        view.thread.post.author.displayName ||
+          `@${view.thread.post.author.handle}`,
+      )}: "${view.thread?.postRecord?.text}"`,
+  )
 
   // events
   // =

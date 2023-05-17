@@ -7,12 +7,16 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewSelector} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
-import {ProfileUiModel} from 'state/models/ui/profile'
+import {ProfileUiModel, Sections} from 'state/models/ui/profile'
 import {useStores} from 'state/index'
 import {PostsFeedSliceModel} from 'state/models/feeds/posts'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedSlice} from '../com/posts/FeedSlice'
-import {PostFeedLoadingPlaceholder} from '../com/util/LoadingPlaceholder'
+import {ListCard} from 'view/com/lists/ListCard'
+import {
+  PostFeedLoadingPlaceholder,
+  ProfileCardFeedLoadingPlaceholder,
+} from '../com/util/LoadingPlaceholder'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {EmptyState} from '../com/util/EmptyState'
@@ -23,6 +27,8 @@ import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import AlgoItem from 'view/com/algos/AlgoItem'
 import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {combinedDisplayName} from 'lib/strings/display-names'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
@@ -39,6 +45,7 @@ export const ProfileScreen = withAuthRequired(
       () => new ProfileUiModel(store, {user: route.params.name}),
       [route.params.name, store],
     )
+    useSetTitle(combinedDisplayName(uiState.profile))
 
     useFocusEffect(
       React.useCallback(() => {
@@ -113,53 +120,87 @@ export const ProfileScreen = withAuthRequired(
     }, [uiState.showLoadingMoreFooter])
     const renderItem = React.useCallback(
       (item: any) => {
-        if (item === ProfileUiModel.END_ITEM) {
-          return <Text style={styles.endItem}>- end of feed -</Text>
-        } else if (item === ProfileUiModel.LOADING_ITEM) {
-          return <PostFeedLoadingPlaceholder />
-        } else if (item._reactKey === '__error__') {
-          if (uiState.feed.isBlocking) {
+        if (uiState.selectedView === Sections.Lists) {
+          if (item === ProfileUiModel.LOADING_ITEM) {
+            return <ProfileCardFeedLoadingPlaceholder />
+          } else if (item._reactKey === '__error__') {
+            return (
+              <View style={s.p5}>
+                <ErrorMessage
+                  message={item.error}
+                  onPressTryAgain={onPressTryAgain}
+                />
+              </View>
+            )
+          } else if (item === ProfileUiModel.EMPTY_ITEM) {
             return (
               <EmptyState
-                icon="ban"
-                message="Posts hidden"
+                testID="listsEmpty"
+                icon="list-ul"
+                message="No lists yet!"
                 style={styles.emptyState}
               />
             )
+          } else {
+            return <ListCard testID={`list-${item.name}`} list={item} />
           }
-          if (uiState.feed.isBlockedBy) {
+        } else {
+          if (item === ProfileUiModel.END_ITEM) {
+            return <Text style={styles.endItem}>- end of feed -</Text>
+          } else if (item === ProfileUiModel.LOADING_ITEM) {
+            return <PostFeedLoadingPlaceholder />
+          } else if (item._reactKey === '__error__') {
+            if (uiState.feed.isBlocking) {
+              return (
+                <EmptyState
+                  icon="ban"
+                  message="Posts hidden"
+                  style={styles.emptyState}
+                />
+              )
+            }
+            if (uiState.feed.isBlockedBy) {
+              return (
+                <EmptyState
+                  icon="ban"
+                  message="Posts hidden"
+                  style={styles.emptyState}
+                />
+              )
+            }
+            return (
+              <View style={s.p5}>
+                <ErrorMessage
+                  message={item.error}
+                  onPressTryAgain={onPressTryAgain}
+                />
+              </View>
+            )
+          } else if (item === ProfileUiModel.EMPTY_ITEM) {
             return (
               <EmptyState
-                icon="ban"
-                message="Posts hidden"
+                icon={['far', 'message']}
+                message="No posts yet!"
                 style={styles.emptyState}
               />
             )
+          } else if (item instanceof PostsFeedSliceModel) {
+            return (
+              <FeedSlice slice={item} ignoreMuteFor={uiState.profile.did} />
+            )
+          } else if (item instanceof AlgoItemModel) {
+            return <AlgoItem item={item} />
           }
-          return (
-            <View style={s.p5}>
-              <ErrorMessage
-                message={item.error}
-                onPressTryAgain={onPressTryAgain}
-              />
-            </View>
-          )
-        } else if (item === ProfileUiModel.EMPTY_ITEM) {
-          return (
-            <EmptyState
-              icon={['far', 'message']}
-              message="No posts yet!"
-              style={styles.emptyState}
-            />
-          )
-        } else if (item instanceof PostsFeedSliceModel) {
-          return <FeedSlice slice={item} ignoreMuteFor={uiState.profile.did} />
-        } else if (item instanceof AlgoItemModel) {
-          return <AlgoItem item={item} />
         }
         return <View />
       },
-      [onPressTryAgain, uiState],
+      [
+        onPressTryAgain,
+        uiState.selectedView,
+        uiState.profile.did,
+        uiState.feed.isBlocking,
+        uiState.feed.isBlockedBy,
+      ],
     )
 
     return (

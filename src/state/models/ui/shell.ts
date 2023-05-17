@@ -5,6 +5,7 @@ import {ProfileModel} from '../content/profile'
 import {isObj, hasProp} from 'lib/type-guards'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {ImageModel} from '../media/image'
+import {ListModel} from '../content/list'
 import {GalleryModel} from '../media/gallery'
 
 export interface ConfirmModal {
@@ -36,6 +37,19 @@ export interface ReportPostModal {
 export interface ReportAccountModal {
   name: 'report-account'
   did: string
+}
+
+export interface CreateOrEditMuteListModal {
+  name: 'create-or-edit-mute-list'
+  list?: ListModel
+  onSave?: (uri: string) => void
+}
+
+export interface ListAddRemoveUserModal {
+  name: 'list-add-remove-user'
+  subject: string
+  displayName: string
+  onUpdate?: () => void
 }
 
 export interface EditImageModal {
@@ -102,9 +116,11 @@ export type Modal =
   | ContentFilteringSettingsModal
   | ContentLanguagesSettingsModal
 
-  // Reporting
+  // Moderation
   | ReportAccountModal
   | ReportPostModal
+  | CreateMuteListModal
+  | ListAddRemoveUserModal
 
   // Posts
   | AltTextImageModal

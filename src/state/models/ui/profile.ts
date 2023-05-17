@@ -1,20 +1,23 @@
 import {makeAutoObservable} from 'mobx'
+import {AppBskyFeedDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {ProfileModel} from '../content/profile'
 import {PostsFeedModel} from '../feeds/posts'
 import {ActorFeedsModel} from '../feeds/algo/actor'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {ListsListModel} from '../lists/lists-list'
 
 export enum Sections {
   Posts = 'Posts',
   PostsWithReplies = 'Posts & replies',
   CustomAlgorithms = 'Algos',
+  Lists = 'Lists',
 }
 
 const USER_SELECTOR_ITEMS = [
   Sections.Posts,
   Sections.PostsWithReplies,
   Sections.CustomAlgorithms,
+  Sections.Lists,
 ]
 
 export interface ProfileUiParams {
@@ -30,6 +33,7 @@ export class ProfileUiModel {
   profile: ProfileModel
   feed: PostsFeedModel
   algos: ActorFeedsModel
+  lists: ListsListModel
 
   // ui state
   selectedViewIndex = 0
@@ -52,14 +56,17 @@ export class ProfileUiModel {
       limit: 10,
     })
     this.algos = new ActorFeedsModel(rootStore, {actor: params.user})
+    this.lists = new ListsListModel(rootStore, params.user)
   }
 
-  get currentView(): PostsFeedModel | ActorFeedsModel {
+  get currentView(): PostsFeedModel | ActorFeedsModel | ListsListModel {
     if (
       this.selectedView === Sections.Posts ||
       this.selectedView === Sections.PostsWithReplies
     ) {
       return this.feed
+    } else if (this.selectedView === Sections.Lists) {
+      return this.lists
     }
     if (this.selectedView === Sections.CustomAlgorithms) {
       return this.algos
@@ -121,6 +128,12 @@ export class ProfileUiModel {
         } else if (this.feed.isEmpty) {
           arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
         }
+      } else if (this.selectedView === Sections.Lists) {
+        if (this.lists.hasContent) {
+          arr = this.lists.lists
+        } else if (this.lists.isEmpty) {
+          arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
+        }
       } else {
         // fallback, add empty item, to show empty message
         arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
@@ -135,6 +148,8 @@ export class ProfileUiModel {
       this.selectedView === Sections.PostsWithReplies
     ) {
       return this.feed.hasContent && this.feed.hasMore && this.feed.isLoading
+    } else if (this.selectedView === Sections.Lists) {
+      return this.lists.hasContent && this.lists.hasMore && this.lists.isLoading
     }
     return false
   }
@@ -155,6 +170,11 @@ export class ProfileUiModel {
         .setup()
         .catch(err => this.rootStore.log.error('Failed to fetch feed', err)),
     ])
+    // HACK: need to use the DID as a param, not the username -prf
+    this.lists.source = this.profile.did
+    this.lists
+      .loadMore()
+      .catch(err => this.rootStore.log.error('Failed to fetch lists', err))
   }
 
   async update() {

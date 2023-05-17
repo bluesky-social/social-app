@@ -38,6 +38,7 @@ export function Button({
   accessibilityLabel,
   accessibilityHint,
   accessibilityLabelledBy,
+  onAccessibilityEscape,
 }: React.PropsWithChildren<{
   type?: ButtonType
   label?: string
@@ -48,6 +49,7 @@ export function Button({
   accessibilityLabel?: string
   accessibilityHint?: string
   accessibilityLabelledBy?: string
+  onAccessibilityEscape?: () => void
 }>) {
   const theme = useTheme()
   const typeOuterStyle = choose<ViewStyle, Record<ButtonType, ViewStyle>>(
@@ -126,6 +128,7 @@ export function Button({
       },
     },
   )
+
   const onPressWrapped = React.useCallback(
     (event: Event) => {
       event.stopPropagation()
@@ -134,15 +137,30 @@ export function Button({
     },
     [onPress],
   )
+
+  const getStyle = React.useCallback(
+    state => {
+      const arr = [typeOuterStyle, styles.outer, style]
+      if (state.pressed) {
+        arr.push({opacity: 0.6})
+      } else if (state.hovered) {
+        arr.push({opacity: 0.8})
+      }
+      return arr
+    },
+    [typeOuterStyle, style],
+  )
+
   return (
     <Pressable
-      style={[typeOuterStyle, styles.outer, style]}
+      style={getStyle}
       onPress={onPressWrapped}
       testID={testID}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
-      accessibilityLabelledBy={accessibilityLabelledBy}>
+      accessibilityLabelledBy={accessibilityLabelledBy}
+      onAccessibilityEscape={onAccessibilityEscape}>
       {label ? (
         <Text type="button" style={[typeLabelStyle, labelStyle]}>
           {label}

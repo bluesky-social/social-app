@@ -91,6 +91,7 @@ async function main() {
             'always-warn-profile',
             'always-warn-posts',
             'muted-account',
+            'muted-by-list-account',
           ]) {
             await server.mocker.createUser(user)
             await server.mocker.follow('alice', user)
@@ -258,11 +259,32 @@ async function main() {
           await server.mocker.createPost('muted-account', 'muted post')
           await server.mocker.createQuotePost(
             'muted-account',
-            'account quote post',
+            'muted quote post',
             anchorPost,
           )
           await server.mocker.createReply(
             'muted-account',
+            'muted reply',
+            anchorPost,
+          )
+
+          const list = await server.mocker.createMuteList(
+            'alice',
+            'Muted Users',
+          )
+          await server.mocker.addToMuteList(
+            'alice',
+            list,
+            server.mocker.users['muted-by-list-account'].did,
+          )
+          await server.mocker.createPost('muted-by-list-account', 'muted post')
+          await server.mocker.createQuotePost(
+            'muted-by-list-account',
+            'account quote post',
+            anchorPost,
+          )
+          await server.mocker.createReply(
+            'muted-by-list-account',
             'account reply',
             anchorPost,
           )

@@ -28,6 +28,7 @@ import {
   MagnifyingGlassIcon2Solid,
   MoonIcon,
   UserIconSolid,
+  HandIcon,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
@@ -93,6 +94,12 @@ export const DrawerContent = observer(() => {
   const onPressProfile = React.useCallback(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
+
+  const onPressModeration = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'Moderation'})
+    navigation.navigate('Moderation')
+    store.shell.closeDrawer()
+  }, [navigation, track, store.shell])
 
   const onPressSettings = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Settings'})
@@ -215,10 +222,27 @@ export const DrawerContent = observer(() => {
             }
             label="Notifications"
             accessibilityLabel="Notifications"
-            accessibilityHint={`${store.me.notifications.unreadCountLabel} unread`}
+            accessibilityHint={
+              notifications.unreadCountLabel === ''
+                ? ''
+                : `${notifications.unreadCountLabel} unread`
+            }
             count={notifications.unreadCountLabel}
             bold={isAtNotifications}
             onPress={onPressNotifications}
+          />
+          <MenuItem
+            icon={
+              <HandIcon
+                strokeWidth={5}
+                style={pal.text as FontAwesomeIconStyle}
+                size={24}
+              />
+            }
+            label="Moderation"
+            accessibilityLabel="Moderation"
+            accessibilityHint=""
+            onPress={onPressModeration}
           />
           <MenuItem
             icon={
@@ -404,6 +428,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingBottom: 50,
+    maxWidth: 300,
   },
   viewDarkMode: {
     backgroundColor: '#1B1919',

@@ -8,7 +8,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "build-web": "expo export:web && node ./scripts/post-web-build.js",
+    "build-web": "expo export:web && node ./scripts/post-web-build.js && cp --verbose ./web-build/static/js/*.* ./bskyweb/static/js/",
     "start": "expo start --dev-client",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
     "test": "jest --forceExit --testTimeout=20000 --bail",
@@ -22,7 +22,7 @@
     "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all"
   },
   "dependencies": {
-    "@atproto/api": "0.2.11",
+    "@atproto/api": "0.3.3",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@expo/webpack-config": "^18.0.1",
@@ -73,9 +73,9 @@
     "expo-constants": "~14.2.1",
     "expo-dev-client": "~2.1.1",
     "expo-device": "~5.2.1",
-    "expo-image": "^1.2.1",
+    "expo-image": "^1.2.3",
     "expo-image-manipulator": "^11.1.1",
-    "expo-image-picker": "~14.1.1",
+    "expo-image-picker": "^14.1.1",
     "expo-localization": "~14.1.1",
     "expo-media-library": "~15.2.3",
     "expo-sharing": "~11.2.2",
@@ -141,7 +141,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/pds": "^0.1.5",
+    "@atproto/pds": "^0.1.8",
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",

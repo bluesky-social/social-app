@@ -32,7 +32,7 @@ export const ProfileCard = observer(
     noBorder?: boolean
     followers?: AppBskyActorDefs.ProfileView[] | undefined
     overrideModeration?: boolean
-    renderButton?: () => JSX.Element
+    renderButton?: (profile: AppBskyActorDefs.ProfileViewBasic) => JSX.Element
   }) => {
     const store = useStores()
     const pal = usePalette('default')
@@ -92,7 +92,7 @@ export const ProfileCard = observer(
             )}
           </View>
           {renderButton ? (
-            <View style={styles.layoutButton}>{renderButton()}</View>
+            <View style={styles.layoutButton}>{renderButton(profile)}</View>
           ) : undefined}
         </View>
         {profile.description ? (

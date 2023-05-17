@@ -52,16 +52,14 @@ export class GalleryModel {
   }
 
   async edit(image: ImageModel) {
-    if (!isNative) {
+    if (isNative) {
+      this.crop(image)
+    } else {
       this.rootStore.shell.openModal({
         name: 'edit-image',
         image,
         gallery: this,
       })
-
-      return
-    } else {
-      this.crop(image)
     }
   }
 
@@ -104,10 +102,14 @@ export class GalleryModel {
 
   async pick() {
     const images = await openPicker(this.rootStore, {
-      multiple: true,
-      maxFiles: 4 - this.images.length,
+      selectionLimit: 4 - this.size,
+      allowsMultipleSelection: true,
     })
 
-    await Promise.all(images.map(image => this.add(image)))
+    return await Promise.all(
+      images.map(image => {
+        this.add(image)
+      }),
+    )
   }
 }

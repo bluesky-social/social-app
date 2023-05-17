@@ -8,11 +8,12 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {PostsFeedItemModel} from 'state/models/feeds/posts'
+import {ModerationBehaviorCode} from 'lib/labeling/types'
 import {Link, DesktopWebTextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
-import {PostCtrls} from '../util/PostCtrls'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
@@ -31,13 +32,14 @@ export const FeedItem = observer(function ({
   isThreadChild,
   isThreadParent,
   showFollowBtn,
+  ignoreMuteFor,
 }: {
   item: PostsFeedItemModel
   isThreadChild?: boolean
   isThreadParent?: boolean
   showReplyLine?: boolean
   showFollowBtn?: boolean
-  ignoreMuteFor?: string // NOTE currently disabled, will be addressed in the next PR -prf
+  ignoreMuteFor?: string
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -142,12 +144,22 @@ export const FeedItem = observer(function ({
     isThreadParent ? styles.outerNoBottom : undefined,
   ]
 
+  // moderation override
+  let moderation = item.moderation.list
+  if (
+    ignoreMuteFor === item.post.author.did &&
+    moderation.isMute &&
+    !moderation.noOverride
+  ) {
+    moderation = {behavior: ModerationBehaviorCode.Show}
+  }
+
   return (
     <PostHider
       testID={`feedItem-by-${item.post.author.handle}`}
       style={outerStyles}
       href={itemHref}
-      moderation={item.moderation.list}>
+      moderation={moderation}>
       {isThreadChild && (
         <View
           style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
@@ -237,7 +249,7 @@ export const FeedItem = observer(function ({
             </View>
           )}
           <ContentHider
-            moderation={item.moderation.list}
+            moderation={moderation}
             containerStyle={styles.contentHider}>
             {item.richText?.text ? (
               <View style={styles.postTextContainer}>

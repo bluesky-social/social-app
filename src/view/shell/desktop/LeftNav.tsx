@@ -29,6 +29,7 @@ import {
   CogIcon,
   CogIconSolid,
   ComposeIcon2,
+  HandIcon,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
@@ -203,6 +204,24 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         }
         label="Notifications"
       />
+      <NavItem
+        href="/moderation"
+        icon={
+          <HandIcon
+            strokeWidth={5.5}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        }
+        iconFilled={
+          <FontAwesomeIcon
+            icon="hand"
+            style={pal.text as FontAwesomeIconStyle}
+            size={20}
+          />
+        }
+        label="Moderation"
+      />
       {store.session.hasSession && (
         <NavItem
           href={`/profile/${store.me.handle}`}
@@ -279,7 +298,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 138,
+    width: 140,
     borderRadius: 24,
     paddingVertical: 10,
     paddingHorizontal: 16,

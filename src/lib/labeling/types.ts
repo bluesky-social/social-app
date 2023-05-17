@@ -1,4 +1,4 @@
-import {ComAtprotoLabelDefs} from '@atproto/api'
+import {ComAtprotoLabelDefs, AppBskyGraphDefs} from '@atproto/api'
 import {LabelPreferencesModel} from 'state/models/ui/preferences'
 
 export type Label = ComAtprotoLabelDefs.Label
@@ -22,6 +22,7 @@ export interface PostLabelInfo {
   accountLabels: Label[]
   profileLabels: Label[]
   isMuted: boolean
+  mutedByList?: AppBskyGraphDefs.ListViewBasic
   isBlocking: boolean
   isBlockedBy: boolean
 }
@@ -44,6 +45,7 @@ export enum ModerationBehaviorCode {
 
 export interface ModerationBehavior {
   behavior: ModerationBehaviorCode
+  isMute?: boolean
   noOverride?: boolean
   reason?: string
 }

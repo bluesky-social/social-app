@@ -15,39 +15,45 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {CommonNavigatorParams} from 'lib/routes/types'
-import {MutedAccountsModel} from 'state/models/lists/muted-accounts'
+import {BlockedAccountsModel} from 'state/models/lists/blocked-accounts'
 import {useAnalytics} from 'lib/analytics'
 import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'MutedAccounts'>
-export const MutedAccounts = withAuthRequired(
+type Props = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'ModerationBlockedAccounts'
+>
+export const ModerationBlockedAccounts = withAuthRequired(
   observer(({}: Props) => {
     const pal = usePalette('default')
     const store = useStores()
     const {screen} = useAnalytics()
-    const mutedAccounts = useMemo(() => new MutedAccountsModel(store), [store])
+    const blockedAccounts = useMemo(
+      () => new BlockedAccountsModel(store),
+      [store],
+    )
 
     useFocusEffect(
       React.useCallback(() => {
-        screen('MutedAccounts')
+        screen('BlockedAccounts')
         store.shell.setMinimalShellMode(false)
-        mutedAccounts.refresh()
-      }, [screen, store, mutedAccounts]),
+        blockedAccounts.refresh()
+      }, [screen, store, blockedAccounts]),
     )
 
     const onRefresh = React.useCallback(() => {
-      mutedAccounts.refresh()
-    }, [mutedAccounts])
+      blockedAccounts.refresh()
+    }, [blockedAccounts])
     const onEndReached = React.useCallback(() => {
-      mutedAccounts
+      blockedAccounts
         .loadMore()
         .catch(err =>
-          store.log.error('Failed to load more muted accounts', err),
+          store.log.error('Failed to load more blocked accounts', err),
         )
-    }, [mutedAccounts, store])
+    }, [blockedAccounts, store])
 
     const renderItem = ({
       item,
@@ -57,7 +63,7 @@ export const MutedAccounts = withAuthRequired(
       index: number
     }) => (
       <ProfileCard
-        testID={`mutedAccount-${index}`}
+        testID={`blockedAccount-${index}`}
         key={item.did}
         profile={item}
         overrideModeration
@@ -71,8 +77,8 @@ export const MutedAccounts = withAuthRequired(
           pal.view,
           pal.border,
         ]}
-        testID="mutedAccountsScreen">
-        <ViewHeader title="Muted Accounts" showOnDesktop />
+        testID="blockedAccountsScreen">
+        <ViewHeader title="Blocked Accounts" showOnDesktop />
         <Text
           type="sm"
           style={[
@@ -80,27 +86,28 @@ export const MutedAccounts = withAuthRequired(
             pal.text,
             isDesktopWeb && styles.descriptionDesktop,
           ]}>
-          Muted accounts have their posts removed from your feed and from your
-          notifications. Mutes are completely private.
+          Blocked accounts cannot reply in your threads, mention you, or
+          otherwise interact with you. You will not see their content and they
+          will be prevented from seeing yours.
         </Text>
-        {!mutedAccounts.hasContent ? (
+        {!blockedAccounts.hasContent ? (
           <View style={[pal.border, !isDesktopWeb && styles.flex1]}>
             <View style={[styles.empty, pal.viewLight]}>
               <Text type="lg" style={[pal.text, styles.emptyText]}>
-                You have not muted any accounts yet. To mute an account, go to
-                their profile and selected "Mute account" from the menu on their
-                account.
+                You have not blocked any accounts yet. To block an account, go
+                to their profile and selected "Block account" from the menu on
+                their account.
               </Text>
             </View>
           </View>
         ) : (
           <FlatList
             style={[!isDesktopWeb && styles.flex1]}
-            data={mutedAccounts.mutes}
-            keyExtractor={item => item.did}
+            data={blockedAccounts.blocks}
+            keyExtractor={(item: ActorDefs.ProfileView) => item.did}
             refreshControl={
               <RefreshControl
-                refreshing={mutedAccounts.isRefreshing}
+                refreshing={blockedAccounts.isRefreshing}
                 onRefresh={onRefresh}
                 tintColor={pal.colors.text}
                 titleColor={pal.colors.text}
@@ -111,10 +118,10 @@ export const MutedAccounts = withAuthRequired(
             initialNumToRender={15}
             ListFooterComponent={() => (
               <View style={styles.footer}>
-                {mutedAccounts.isLoading && <ActivityIndicator />}
+                {blockedAccounts.isLoading && <ActivityIndicator />}
               </View>
             )}
-            extraData={mutedAccounts.isLoading}
+            extraData={blockedAccounts.isLoading}
             // @ts-ignore our .web version only -prf
             desktopFixedHeight
           />

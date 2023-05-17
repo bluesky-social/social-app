@@ -62,7 +62,7 @@ export const HomeScreen = withAuthRequired(
         setSelectedPage(index)
         store.shell.setIsDrawerSwipeDisabled(index > 0)
       },
-      [store],
+      [store, setSelectedPage],
     )
 
     const onPressSelected = React.useCallback(() => {

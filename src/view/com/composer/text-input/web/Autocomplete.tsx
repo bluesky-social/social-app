@@ -4,7 +4,7 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {ReactRenderer} from '@tiptap/react'
 import tippy, {Instance as TippyInstance} from 'tippy.js'
 import {
@@ -158,7 +158,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
               const isSelected = selectedIndex === index
 
               return (
-                <View
+                <Pressable
                   key={item.handle}
                   style={[
                     isSelected ? pal.viewLight : undefined,
@@ -169,7 +169,11 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
                       : index === items.length - 1
                       ? styles.lastMention
                       : undefined,
-                  ]}>
+                  ]}
+                  onPress={() => {
+                    selectItem(index)
+                  }}
+                  accessibilityRole="button">
                   <View style={styles.avatarAndDisplayName}>
                     <UserAvatar avatar={item.avatar ?? null} size={26} />
                     <Text style={pal.text} numberOfLines={1}>
@@ -179,7 +183,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
                   <Text type="xs" style={pal.textLight} numberOfLines={1}>
                     @{item.handle}
                   </Text>
-                </View>
+                </Pressable>
               )
             })
           ) : (

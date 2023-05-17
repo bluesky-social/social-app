@@ -10,17 +10,19 @@ import {UserGroupIcon} from 'lib/icons'
 import {usePalette} from 'lib/hooks/usePalette'
 
 export function EmptyState({
+  testID,
   icon,
   message,
   style,
 }: {
+  testID?: string
   icon: IconProp | 'user-group'
   message: string
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
   return (
-    <View style={[styles.container, style]}>
+    <View testID={testID} style={[styles.container, style]}>
       <View style={styles.iconContainer}>
         {icon === 'user-group' ? (
           <UserGroupIcon size="64" style={styles.icon} />
