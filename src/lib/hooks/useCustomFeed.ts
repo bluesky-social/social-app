@@ -2,9 +2,9 @@ import {useEffect, useState} from 'react'
 import {useStores} from 'state/index'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
-export function useCustomFeed(uri: string) {
+export function useCustomFeed(uri: string): CustomFeedModel | undefined {
   const store = useStores()
-  const [item, setItem] = useState<CustomFeedModel>()
+  const [item, setItem] = useState<CustomFeedModel | undefined>()
   useEffect(() => {
     async function fetchView() {
       const res = await store.agent.app.bsky.feed.getFeedGenerator({

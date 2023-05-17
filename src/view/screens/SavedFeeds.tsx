@@ -137,12 +137,9 @@ const ListHeaderComponent = observer(
                     key={item.data.uri}
                     accessibilityRole="button"
                     onPress={() => {
-                      navigation.navigate('CustomFeed', {
+                      navigation.navigate('ProfileCustomFeed', {
                         name: item.data.creator.did,
                         rkey: new AtUri(item.data.uri).rkey,
-                        displayName:
-                          item.data.displayName ??
-                          `${item.data.creator.displayName}'s feed`,
                       })
                     }}
                     style={styles.pinnedItem}>

@@ -40,6 +40,7 @@ import {SettingsScreen} from './view/screens/Settings'
 import {ProfileScreen} from './view/screens/Profile'
 import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
 import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
+import {ProfileCustomFeed} from './view/screens/ProfileCustomFeed'
 import {ProfileListScreen} from './view/screens/ProfileList'
 import {PostThreadScreen} from './view/screens/PostThread'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
@@ -56,7 +57,6 @@ import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
 import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
 import {getRoutingInstrumentation} from 'lib/sentry'
 import {SavedFeeds} from './view/screens/SavedFeeds'
-import {CustomFeed} from './view/screens/CustomFeed'
 import {PinnedFeeds} from 'view/screens/PinnedFeeds'
 import {bskyTitle} from 'lib/strings/headings'
 
@@ -127,6 +127,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
           title: title(`People followed by @${route.params.name}`),
         })}
       />
+      <Stack.Screen name="ProfileCustomFeed" component={ProfileCustomFeed} />
       <Stack.Screen
         name="ProfileList"
         component={ProfileListScreen}
@@ -189,7 +190,6 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       />
       <Stack.Screen name="SavedFeeds" component={SavedFeeds} />
       <Stack.Screen name="PinnedFeeds" component={PinnedFeeds} />
-      <Stack.Screen name="CustomFeed" component={CustomFeed} />
     </>
   )
 }
