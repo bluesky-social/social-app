@@ -222,7 +222,11 @@ export const DrawerContent = observer(() => {
             }
             label="Notifications"
             accessibilityLabel="Notifications"
-            accessibilityHint={`${store.me.notifications.unreadCountLabel} unread`}
+            accessibilityHint={
+              notifications.unreadCountLabel === ''
+                ? 'No new notifications'
+                : `${notifications.unreadCountLabel} unread`
+            }
             count={notifications.unreadCountLabel}
             bold={isAtNotifications}
             onPress={onPressNotifications}
