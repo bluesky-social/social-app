@@ -4,7 +4,7 @@ import {H3, H4, P, UL, LI, A, EM, OL} from 'view/com/util/Html'
 export default function () {
   return (
     <>
-      <H4>Last Updated:&nbsp;2023/04/06</H4>
+      <H4>Last Updated:&nbsp;April 6, 2023</H4>
       <P>
         The Bluesky app is built on a decentralized social networking protocol,
         the AT Protocol (atproto). Atproto is an open protocol that supports
