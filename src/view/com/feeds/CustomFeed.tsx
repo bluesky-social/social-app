@@ -54,9 +54,7 @@ export const CustomFeed = observer(
           navigation.navigate('CustomFeed', {
             name: item.data.creator.did,
             rkey: new AtUri(item.data.uri).rkey,
-            displayName:
-              item.data.displayName ??
-              `${item.data.creator.displayName}'s feed`,
+            displayName: item.displayName,
           })
         }}
         key={item.data.uri}>
@@ -65,8 +63,11 @@ export const CustomFeed = observer(
             <UserAvatar type="algo" size={36} avatar={item.data.avatar} />
           </View>
           <View style={[styles.headerTextContainer]}>
-            <Text style={[pal.text, s.bold]}>
-              {item.data.displayName ?? 'Feed name'}
+            <Text style={[pal.text, s.bold]} numberOfLines={3}>
+              {item.displayName}
+            </Text>
+            <Text style={[pal.textLight]} numberOfLines={3}>
+              by @{item.data.creator.handle}
             </Text>
           </View>
           {showSaveBtn && (

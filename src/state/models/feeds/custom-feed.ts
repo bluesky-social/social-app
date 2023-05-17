@@ -1,6 +1,7 @@
 import {AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from 'state/models/root-store'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 
 export class CustomFeedModel {
   // data
@@ -32,6 +33,13 @@ export class CustomFeedModel {
 
   get getUri() {
     return this.data.uri
+  }
+
+  get displayName() {
+    if (this.data.displayName) {
+      return sanitizeDisplayName(this.data.displayName)
+    }
+    return `Feed by @${this.data.creator.handle}`
   }
 
   get isSaved() {

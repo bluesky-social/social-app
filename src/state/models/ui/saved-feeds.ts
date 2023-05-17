@@ -66,15 +66,11 @@ export class SavedFeedsModel {
   }
 
   get listOfFeedNames() {
-    return this.feeds.map(
-      f => f.data.displayName ?? f.data.creator.displayName + "'s feed",
-    )
+    return this.feeds.map(f => f.displayName)
   }
 
   get listOfPinnedFeedNames() {
-    return this.pinned.map(
-      f => f.data.displayName ?? f.data.creator.displayName + "'s feed",
-    )
+    return this.pinned.map(f => f.displayName)
   }
 
   get savedFeedsWithoutPinned() {
