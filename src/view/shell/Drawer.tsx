@@ -294,35 +294,33 @@ export const DrawerContent = observer(() => {
         </View>
         <View style={s.flex1} />
         <View style={styles.footer}>
-          {!isWeb && (
-            <View>
-              <Text type="sm" style={[pal.textLight, styles.colorModeText]}>
-                Set color theme
-              </Text>
-              <View style={styles.selectableBtns}>
-                <SelectableBtn
-                  current={store.shell.colorMode}
-                  value="system"
-                  label="System"
-                  left
-                  onChange={onColorModePress}
-                />
-                <SelectableBtn
-                  current={store.shell.colorMode}
-                  value="light"
-                  label="Light"
-                  onChange={onColorModePress}
-                />
-                <SelectableBtn
-                  current={store.shell.colorMode}
-                  value="dark"
-                  label="Dark"
-                  right
-                  onChange={onColorModePress}
-                />
-              </View>
+          <View>
+            <Text type="sm" style={[pal.textLight, styles.colorModeText]}>
+              Set color theme
+            </Text>
+            <View style={styles.selectableBtns}>
+              <SelectableBtn
+                current={store.shell.colorMode}
+                value="system"
+                label="System"
+                left
+                onChange={onColorModePress}
+              />
+              <SelectableBtn
+                current={store.shell.colorMode}
+                value="light"
+                label="Light"
+                onChange={onColorModePress}
+              />
+              <SelectableBtn
+                current={store.shell.colorMode}
+                value="dark"
+                label="Dark"
+                right
+                onChange={onColorModePress}
+              />
             </View>
-          )}
+          </View>
           <TouchableOpacity
             accessibilityRole="link"
             accessibilityLabel="Send feedback"
@@ -596,7 +594,8 @@ const styles = StyleSheet.create({
   },
 
   footer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
+    rowGap: 10,
     justifyContent: 'space-between',
     paddingRight: 30,
     paddingTop: 20,
