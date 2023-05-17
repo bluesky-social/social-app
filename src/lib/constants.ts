@@ -77,6 +77,7 @@ export const PROD_SUGGESTED_FOLLOWS = [
   'kylierobison.com',
   'carnage4life.bsky.social',
   'lolennui.bsky.social',
+  'benguild.bsky.social',
 ]
 export const STAGING_SUGGESTED_FOLLOWS = ['arcalinea', 'paul', 'paul2'].map(
   handle => `${handle}.staging.bsky.dev`,
