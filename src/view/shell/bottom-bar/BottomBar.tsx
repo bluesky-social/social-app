@@ -145,7 +145,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         accessibilityLabel="Notifications"
         accessibilityHint={
           notifications.unreadCountLabel === ''
-            ? 'No new notifications'
+            ? ''
             : `${notifications.unreadCountLabel} unread`
         }
       />
