@@ -229,14 +229,19 @@ function onPressInner(
   } else if (
     !e.defaultPrevented && // onPress prevented default
     // @ts-ignore Web only -prf
-    !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
+    !(e.metaKey || e.altKey || e.shiftKey) && // ignore clicks with modifier keys
     // @ts-ignore Web only -prf
     (e.button == null || e.button === 0) && // ignore everything but left clicks
     // @ts-ignore Web only -prf
     [undefined, null, '', 'self'].includes(e.currentTarget?.target) // let browser handle "target=_blank" etc.
   ) {
     e.preventDefault()
-    shouldHandle = true
+    if (e.ctrlKey && Platform.OS === 'web') {
+      shouldHandle = false
+      window.open(href, '_blank')
+    } else {
+      shouldHandle = true
+    }
   }
 
   if (shouldHandle) {

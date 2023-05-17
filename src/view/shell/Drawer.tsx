@@ -1,6 +1,7 @@
 import React, {ComponentProps} from 'react'
 import {
   Linking,
+  Pressable,
   SafeAreaView,
   StyleProp,
   StyleSheet,
@@ -125,10 +126,13 @@ export const DrawerContent = observer(() => {
     Linking.openURL(FEEDBACK_FORM_URL)
   }, [track])
 
-  const onColorModePress = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: '#cycleColorMode'})
-    store.shell.setColorMode(nextColorMode())
-  }, [track, store])
+  const onColorModePress = React.useCallback(
+    (mode: string) => {
+      track('Menu:ItemClicked', {url: '#cycleColorMode'})
+      store.shell.setColorMode(mode)
+    },
+    [track, store],
+  )
 
   // rendering
   // =
@@ -291,23 +295,33 @@ export const DrawerContent = observer(() => {
         <View style={s.flex1} />
         <View style={styles.footer}>
           {!isWeb && (
-            <TouchableOpacity
-              accessibilityRole="button"
-              accessibilityLabel="Cycle color mode"
-              accessibilityHint={modeAccessibilityText[store.shell.colorMode]}
-              onPress={onColorModePress}
-              style={[
-                styles.footerBtn,
-                theme.colorScheme === 'light'
-                  ? pal.btn
-                  : styles.footerBtnDarkMode,
-              ]}>
-              <MoonIcon
-                size={22}
-                style={pal.text as StyleProp<ViewStyle>}
-                strokeWidth={2}
-              />
-            </TouchableOpacity>
+            <View>
+              <Text type="sm" style={[pal.textLight, styles.colorModeText]}>
+                Set color theme
+              </Text>
+              <View style={styles.selectableBtns}>
+                <SelectableBtn
+                  current={store.shell.colorMode}
+                  value="system"
+                  label="System"
+                  left
+                  onChange={onColorModePress}
+                />
+                <SelectableBtn
+                  current={store.shell.colorMode}
+                  value="light"
+                  label="Light"
+                  onChange={onColorModePress}
+                />
+                <SelectableBtn
+                  current={store.shell.colorMode}
+                  value="dark"
+                  label="Dark"
+                  right
+                  onChange={onColorModePress}
+                />
+              </View>
+            </View>
           )}
           <TouchableOpacity
             accessibilityRole="link"
@@ -428,6 +442,45 @@ const InviteCodes = observer(() => {
   )
 })
 
+interface SelectableBtnProps {
+  current: string
+  value: string
+  label: string
+  left?: boolean
+  right?: boolean
+  onChange: (v: string) => void
+}
+
+function SelectableBtn({
+  current,
+  value,
+  label,
+  left,
+  right,
+  onChange,
+}: SelectableBtnProps) {
+  const pal = usePalette('default')
+  const palPrimary = usePalette('inverted')
+  return (
+    <Pressable
+      style={[
+        styles.selectableBtn,
+        left && styles.selectableBtnLeft,
+        right && styles.selectableBtnRight,
+        pal.border,
+        current === value ? palPrimary.view : pal.view,
+      ]}
+      onPress={() => onChange(value)}
+      accessibilityRole="button"
+      accessibilityLabel={value}
+      accessibilityHint={`Set color theme to  ${value}`}>
+      <Text style={current === value ? palPrimary.text : pal.text}>
+        {label}
+      </Text>
+    </Pressable>
+  )
+}
+
 const styles = StyleSheet.create({
   view: {
     flex: 1,
@@ -500,6 +553,46 @@ const styles = StyleSheet.create({
   },
   inviteCodesIcon: {
     marginRight: 6,
+  },
+
+  colorModeText: {
+    marginLeft: 10,
+    marginBottom: 6,
+  },
+
+  selectableBtns: {
+    flexDirection: 'row',
+    marginLeft: 10,
+  },
+  selectableBtn: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+  selectableBtnLeft: {
+    borderTopLeftRadius: 8,
+    borderBottomLeftRadius: 8,
+    borderLeftWidth: 1,
+  },
+  selectableBtnRight: {
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    borderRadius: 32,
+    padding: 14,
+    backgroundColor: colors.gray1,
+  },
+  toggleBtn: {
+    paddingHorizontal: 0,
   },
 
   footer: {
