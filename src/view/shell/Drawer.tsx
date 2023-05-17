@@ -53,6 +53,19 @@ export const DrawerContent = observer(() => {
 
   const {notifications} = store.me
 
+  const colorModes = ['light', 'dark', 'system']
+  const modeAccessibilityText = {
+    light: 'Sets display to light mode',
+    dark: 'Sets display to dark mode',
+    system: 'Sets display to system default',
+  }
+
+  const nextColorMode = () => {
+    return colorModes[
+      (colorModes.indexOf(store.shell.colorMode) + 1) % colorModes.length
+    ]
+  }
+
   // events
   // =
 
@@ -112,9 +125,9 @@ export const DrawerContent = observer(() => {
     Linking.openURL(FEEDBACK_FORM_URL)
   }, [track])
 
-  const onDarkmodePress = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: '#darkmode'})
-    store.shell.setDarkMode(!store.shell.darkMode)
+  const onColorModePress = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: '#cycleColorMode'})
+    store.shell.setColorMode(nextColorMode())
   }, [track, store])
 
   // rendering
@@ -280,13 +293,9 @@ export const DrawerContent = observer(() => {
           {!isWeb && (
             <TouchableOpacity
               accessibilityRole="button"
-              accessibilityLabel="Toggle dark mode"
-              accessibilityHint={
-                theme.colorScheme === 'dark'
-                  ? 'Sets display to light mode'
-                  : 'Sets display to dark mode'
-              }
-              onPress={onDarkmodePress}
+              accessibilityLabel="Cycle color mode"
+              accessibilityHint={modeAccessibilityText[store.shell.colorMode]}
+              onPress={onColorModePress}
               style={[
                 styles.footerBtn,
                 theme.colorScheme === 'light'

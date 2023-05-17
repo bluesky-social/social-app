@@ -17,10 +17,26 @@ import {formatCount} from 'view/com/util/numeric/format'
 export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores()
   const pal = usePalette('default')
-  const mode = useColorSchemeStyle('Light', 'Dark')
+  const colorModes = ['light', 'dark', 'system']
+  const modeAccessibilityText = {
+    light: 'Sets display to light mode',
+    dark: 'Sets display to dark mode',
+    system: 'Sets display to system default',
+  }
+  const modeHelpText = {
+    light: 'Light Theme',
+    dark: 'Dark Theme',
+    system: 'System Default Theme',
+  }
 
-  const onDarkmodePress = React.useCallback(() => {
-    store.shell.setDarkMode(!store.shell.darkMode)
+  const nextColorMode = () => {
+    return colorModes[
+      (colorModes.indexOf(store.shell.colorMode) + 1) % colorModes.length
+    ]
+  }
+
+  const onModePress = React.useCallback(() => {
+    store.shell.setColorMode(nextColorMode())
   }, [store])
 
   return (
@@ -61,20 +77,16 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
       <InviteCodes />
       <View>
         <TouchableOpacity
-          style={[styles.darkModeToggle]}
-          onPress={onDarkmodePress}
+          style={[styles.cycleColorModeToggle]}
+          onPress={onModePress}
           accessibilityRole="button"
-          accessibilityLabel="Toggle dark mode"
-          accessibilityHint={
-            mode === 'Dark'
-              ? 'Sets display to light mode'
-              : 'Sets display to dark mode'
-          }>
-          <View style={[pal.viewLight, styles.darkModeToggleIcon]}>
+          accessibilityLabel="Cycle color mode"
+          accessibilityHint={modeAccessibilityText[nextColorMode()]}>
+          <View style={[pal.viewLight, styles.cycleColorModeToggleIcon]}>
             <MoonIcon size={18} style={pal.textLight} />
           </View>
           <Text type="sm" style={pal.textLight}>
-            {mode} mode
+            {modeHelpText[store.shell.colorMode]}
           </Text>
         </TouchableOpacity>
       </View>
@@ -148,13 +160,13 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
 
-  darkModeToggle: {
+  cycleColorModeToggle: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
     marginHorizontal: 12,
   },
-  darkModeToggleIcon: {
+  cycleColorModeToggleIcon: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
