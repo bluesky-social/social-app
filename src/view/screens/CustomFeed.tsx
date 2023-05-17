@@ -28,7 +28,6 @@ export const CustomFeed = withAuthRequired(
       [rkey, name],
     )
     const currentFeed = useCustomFeed(uri)
-    const pal = usePalette('default')
     const scrollElRef = useRef<FlatList>(null)
     const algoFeed: PostsFeedModel = useMemo(() => {
       const feed = new PostsFeedModel(rootStore, 'custom', {
@@ -38,59 +37,6 @@ export const CustomFeed = withAuthRequired(
       return feed
     }, [rootStore, uri])
 
-    const _ListHeaderComponent = () => {
-      return (
-        <View style={[styles.headerContainer]}>
-          <View style={[styles.header]}>
-            <View style={styles.avatarContainer}>
-              <UserAvatar size={28} avatar={currentFeed?.data.creator.avatar} />
-              <Link href={`/profile/${currentFeed?.data.creator.handle}`}>
-                <Text style={[pal.textLight]}>
-                  @{currentFeed?.data.creator.handle}
-                </Text>
-              </Link>
-            </View>
-            <Text style={[pal.text]}>{currentFeed?.data.description}</Text>
-          </View>
-
-          <View style={[styles.buttonsContainer]}>
-            <Button
-              type={currentFeed?.isSaved ? 'default' : 'inverted'}
-              style={[styles.saveButton]}
-              onPress={() => {
-                if (currentFeed?.data.viewer?.saved) {
-                  rootStore.me.savedFeeds.unsave(currentFeed!)
-                } else {
-                  rootStore.me.savedFeeds.save(currentFeed!)
-                }
-              }}
-              label={currentFeed?.data.viewer?.saved ? 'Unsave' : 'Save'}
-            />
-
-            <TouchableOpacity
-              accessibilityRole="button"
-              onPress={() => {
-                if (currentFeed?.isLiked) {
-                  currentFeed?.unlike()
-                } else {
-                  currentFeed?.like()
-                }
-              }}
-              style={[styles.likeButton, pal.viewLight]}>
-              <Text style={[pal.text, s.semiBold]}>
-                {currentFeed?.data.likeCount}
-              </Text>
-              {currentFeed?.isLiked ? (
-                <HeartIconSolid size={18} style={styles.liked} />
-              ) : (
-                <HeartIcon strokeWidth={3} size={18} style={styles.liked} />
-              )}
-            </TouchableOpacity>
-          </View>
-        </View>
-      )
-    }
-
     return (
       <View style={[styles.container]}>
         <ViewHeader
@@ -99,19 +45,75 @@ export const CustomFeed = withAuthRequired(
           }
           showOnDesktop
         />
-
         <Feed
           scrollElRef={scrollElRef}
           testID={'test-feed'}
           key="default"
           feed={algoFeed}
           headerOffset={12}
-          ListHeaderComponent={_ListHeaderComponent}
+          ListHeaderComponent={() => <ListHeaderComponent uri={uri} />}
+          extraData={uri}
         />
       </View>
     )
   }),
 )
+
+const ListHeaderComponent = observer(({uri}: {uri: string}) => {
+  const currentFeed = useCustomFeed(uri)
+  const pal = usePalette('default')
+  const rootStore = useStores()
+  return (
+    <View style={[styles.headerContainer]}>
+      <View style={[styles.header]}>
+        <View style={styles.avatarContainer}>
+          <UserAvatar size={28} avatar={currentFeed?.data.creator.avatar} />
+          <Link href={`/profile/${currentFeed?.data.creator.handle}`}>
+            <Text style={[pal.textLight]}>
+              @{currentFeed?.data.creator.handle}
+            </Text>
+          </Link>
+        </View>
+        <Text style={[pal.text]}>{currentFeed?.data.description}</Text>
+      </View>
+
+      <View style={[styles.buttonsContainer]}>
+        <Button
+          type={currentFeed?.isSaved ? 'default' : 'inverted'}
+          style={[styles.saveButton]}
+          onPress={() => {
+            if (currentFeed?.data.viewer?.saved) {
+              rootStore.me.savedFeeds.unsave(currentFeed!)
+            } else {
+              rootStore.me.savedFeeds.save(currentFeed!)
+            }
+          }}
+          label={currentFeed?.data.viewer?.saved ? 'Unsave' : 'Save'}
+        />
+
+        <TouchableOpacity
+          accessibilityRole="button"
+          onPress={() => {
+            if (currentFeed?.isLiked) {
+              currentFeed?.unlike()
+            } else {
+              currentFeed?.like()
+            }
+          }}
+          style={[styles.likeButton, pal.viewLight]}>
+          <Text style={[pal.text, s.semiBold]}>
+            {currentFeed?.data.likeCount}
+          </Text>
+          {currentFeed?.isLiked ? (
+            <HeartIconSolid size={18} style={styles.liked} />
+          ) : (
+            <HeartIcon strokeWidth={3} size={18} style={styles.liked} />
+          )}
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+})
 
 const styles = StyleSheet.create({
   container: {

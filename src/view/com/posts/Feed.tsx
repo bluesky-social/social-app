@@ -35,6 +35,7 @@ export const Feed = observer(function Feed({
   testID,
   headerOffset = 0,
   ListHeaderComponent,
+  extraData,
 }: {
   feed: PostsFeedModel
   style?: StyleProp<ViewStyle>
@@ -46,6 +47,7 @@ export const Feed = observer(function Feed({
   testID?: string
   headerOffset?: number
   ListHeaderComponent?: () => JSX.Element
+  extraData?: any
 }) {
   const pal = usePalette('default')
   const {track} = useAnalytics()
@@ -182,6 +184,7 @@ export const Feed = observer(function Feed({
           onEndReachedThreshold={0.6}
           removeClippedSubviews={true}
           contentOffset={{x: 0, y: headerOffset * -1}}
+          extraData={extraData}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
         />
