@@ -23,17 +23,20 @@ export const CustomFeed = withAuthRequired(
   observer(({route}: Props) => {
     const rootStore = useStores()
     const {rkey, name, displayName} = route.params
-    const currentFeed = useCustomFeed(rkey)
+    const uri = useMemo(
+      () => makeRecordUri(name, 'app.bsky.feed.generator', rkey),
+      [rkey, name],
+    )
+    const currentFeed = useCustomFeed(uri)
     const pal = usePalette('default')
     const scrollElRef = useRef<FlatList>(null)
     const algoFeed: PostsFeedModel = useMemo(() => {
-      const uri = makeRecordUri(name, 'app.bsky.feed.generator', rkey)
       const feed = new PostsFeedModel(rootStore, 'custom', {
         feed: uri,
       })
       feed.setup()
       return feed
-    }, [rkey, rootStore, name])
+    }, [rootStore, uri])
 
     console.log(currentFeed?.data.creator)
 
