@@ -5,7 +5,7 @@ import {colors} from 'lib/styles'
 import {observer} from 'mobx-react-lite'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {SavedFeedsModel} from 'state/models/ui/saved-feeds'
-import CustomFeed from './CustomFeed'
+import {CustomFeed} from './CustomFeed'
 
 export const SavedFeedItem = observer(
   ({
@@ -19,12 +19,7 @@ export const SavedFeedItem = observer(
 
     return (
       <View style={styles.itemContainer}>
-        <CustomFeed
-          key={item.data.uri}
-          item={item}
-          showBottom={false}
-          style={styles.item}
-        />
+        <CustomFeed key={item.data.uri} item={item} style={styles.item} />
         <TouchableOpacity
           accessibilityRole="button"
           onPress={() => {

@@ -25,7 +25,7 @@ import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import QuoteEmbed from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
-import CustomFeed from 'view/com/feeds/CustomFeed'
+import {CustomFeed} from 'view/com/feeds/CustomFeed'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
 type Embed =
@@ -173,8 +173,9 @@ export function PostEmbeds({
     return (
       <CustomFeed
         item={new CustomFeedModel(store, embed.record)}
-        style={[pal.view, pal.border, styles.extOuter]}
-        reloadOnFocus={true}
+        style={[pal.view, pal.border, styles.customFeedOuter]}
+        reloadOnFocus
+        showLikes
       />
     )
   }
@@ -197,6 +198,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     marginTop: 4,
+  },
+  customFeedOuter: {
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
   },
   alt: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',

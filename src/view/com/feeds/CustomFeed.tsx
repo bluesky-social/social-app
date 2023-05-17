@@ -16,21 +16,21 @@ import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
-import {HeartIconSolid} from 'lib/icons'
+import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {pluralize} from 'lib/strings/helpers'
 import {AtUri} from '@atproto/api'
 import {isWeb} from 'platform/detection'
 
-const CustomFeed = observer(
+export const CustomFeed = observer(
   ({
     item,
     style,
-    showBottom = true,
+    showLikes = false,
     reloadOnFocus = false,
   }: {
     item: CustomFeedModel
     style?: StyleProp<ViewStyle>
-    showBottom?: boolean
+    showLikes?: boolean
     reloadOnFocus?: boolean
   }) => {
     const store = useStores()
@@ -67,44 +67,36 @@ const CustomFeed = observer(
             <Text style={[pal.text, s.bold]}>
               {item.data.displayName ?? 'Feed name'}
             </Text>
-            <Text style={[pal.textLight, styles.description]} numberOfLines={5}>
-              {item.data.description ??
-                "Explore our Feed for the latest updates and insights! Dive into a world of intriguing articles, trending news, and exciting stories that cover a wide range of topics. From technology breakthroughs to lifestyle tips, there's something here for everyone. Stay informed and get inspired with us. Join the conversation now!"}
-            </Text>
+            <Text style={[pal.textLight]}>by @{item.data.creator.handle}</Text>
+          </View>
+          <View>
+            <Button
+              type={item.isSaved ? 'default' : 'inverted'}
+              onPress={() => {
+                if (item.data.viewer?.saved) {
+                  store.me.savedFeeds.unsave(item)
+                } else {
+                  store.me.savedFeeds.save(item)
+                }
+              }}
+              label={item.data.viewer?.saved ? 'Unsave' : 'Save'}
+            />
           </View>
         </View>
 
-        {showBottom ? (
+        {item.data.description ? (
+          <Text style={[pal.textLight, styles.description]} numberOfLines={3}>
+            {item.data.description}
+          </Text>
+        ) : null}
+
+        {showLikes ? (
           <View style={styles.bottomContainer}>
             <View style={styles.likedByContainer}>
-              {/* <View style={styles.likedByAvatars}>
-              <UserAvatar size={24} avatar={item.data.avatar} />
-              <UserAvatar size={24} avatar={item.data.avatar} />
-              <UserAvatar size={24} avatar={item.data.avatar} />
-            </View> */}
-
-              <HeartIconSolid size={16} style={[s.mr2, {color: colors.red3}]} />
-              <Text style={[pal.text, pal.textLight]}>
-                {item.data.likeCount && item.data.likeCount > 0
-                  ? `Liked by ${item.data.likeCount} ${pluralize(
-                      item.data.likeCount,
-                      'other',
-                    )}`
-                  : 'Be the first to like this'}
+              <Text type="sm-medium" style={[pal.text, pal.textLight]}>
+                Liked by {item.data.likeCount || 0}{' '}
+                {pluralize(item.data.likeCount || 0, 'user')}
               </Text>
-            </View>
-            <View>
-              <Button
-                type={item.isSaved ? 'default' : 'inverted'}
-                onPress={() => {
-                  if (item.data.viewer?.saved) {
-                    store.me.savedFeeds.unsave(item)
-                  } else {
-                    store.me.savedFeeds.save(item)
-                  }
-                }}
-                label={item.data.viewer?.saved ? 'Unsave' : 'Save'}
-              />
             </View>
           </View>
         ) : null}
@@ -112,7 +104,6 @@ const CustomFeed = observer(
     )
   },
 )
-export default CustomFeed
 
 const styles = StyleSheet.create({
   container: {
@@ -122,7 +113,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderTopWidth: 1,
     borderTopColor: '#E5E5E5',
-    gap: 18,
+    gap: 14,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -145,9 +136,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 2,
-  },
-  likedByAvatars: {
-    flexDirection: 'row',
-    gap: -12,
   },
 })
