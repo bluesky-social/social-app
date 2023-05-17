@@ -3,7 +3,7 @@ import {TextStyle, StyleProp} from 'react-native'
 import {RichText as RichTextObj, AppBskyRichtextFacet} from '@atproto/api'
 import {TextLink} from '../Link'
 import {Text} from './Text'
-import {lh} from 'lib/styles'
+import {lh, s} from 'lib/styles'
 import {toShortUrl} from 'lib/strings/url-helpers'
 import {useTheme, TypographyVariant} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -41,8 +41,11 @@ export function RichText({
         lineHeight: 30,
       }
       return (
-        // @ts-ignore web only -prf
-        <Text testID={testID} style={[style, pal.text]} dataSet={WORD_WRAP}>
+        <Text
+          testID={testID}
+          style={[style, pal.text, s.w100pct]}
+          // @ts-ignore web only -prf
+          dataSet={WORD_WRAP}>
           {text}
         </Text>
       )
@@ -51,7 +54,7 @@ export function RichText({
       <Text
         testID={testID}
         type={type}
-        style={[style, pal.text, lineHeightStyle]}
+        style={[style, pal.text, lineHeightStyle, s.w100pct]}
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
         {text}
@@ -100,7 +103,7 @@ export function RichText({
     <Text
       testID={testID}
       type={type}
-      style={[style, pal.text, lineHeightStyle]}
+      style={[style, pal.text, lineHeightStyle, s.w100pct]}
       numberOfLines={numberOfLines}
       // @ts-ignore web only -prf
       dataSet={WORD_WRAP}>
