@@ -18,6 +18,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
 import {HeartIconSolid} from 'lib/icons'
 import {pluralize} from 'lib/strings/helpers'
+import {AtUri} from '@atproto/api'
 
 const AlgoItem = observer(
   ({
@@ -48,8 +49,11 @@ const AlgoItem = observer(
         style={[styles.container, style]}
         onPress={() => {
           navigation.navigate('CustomFeed', {
-            name: item.data.displayName,
-            rkey: item.data.uri,
+            name: item.data.creator.did,
+            rkey: new AtUri(item.data.uri).rkey,
+            displayName:
+              item.data.displayName ??
+              `${item.data.creator.displayName}'s feed`,
           })
         }}
         key={item.data.uri}>

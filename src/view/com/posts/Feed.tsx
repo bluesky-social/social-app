@@ -34,6 +34,7 @@ export const Feed = observer(function Feed({
   renderEmptyState,
   testID,
   headerOffset = 0,
+  ListHeaderComponent,
 }: {
   feed: PostsFeedModel
   style?: StyleProp<ViewStyle>
@@ -44,6 +45,7 @@ export const Feed = observer(function Feed({
   renderEmptyState?: () => JSX.Element
   testID?: string
   headerOffset?: number
+  ListHeaderComponent?: () => JSX.Element
 }) {
   const pal = usePalette('default')
   const {track} = useAnalytics()
@@ -163,6 +165,7 @@ export const Feed = observer(function Feed({
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
           ListFooterComponent={FeedFooter}
+          ListHeaderComponent={ListHeaderComponent}
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}

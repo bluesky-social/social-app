@@ -25,6 +25,7 @@ import {SavedFeedsModel} from 'state/models/feeds/algo/saved'
 import {Link} from 'view/com/util/Link'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {SavedFeedItem} from 'view/com/algos/SavedFeedItem'
+import {AtUri} from '@atproto/api'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 
@@ -137,8 +138,11 @@ const ListHeaderComponent = observer(
                     accessibilityRole="button"
                     onPress={() => {
                       navigation.navigate('CustomFeed', {
-                        rkey: item.data.uri,
-                        name: item.data.displayName,
+                        name: item.data.creator.did,
+                        rkey: new AtUri(item.data.uri).rkey,
+                        displayName:
+                          item.data.displayName ??
+                          `${item.data.creator.displayName}'s feed`,
                       })
                     }}
                     style={styles.pinnedItem}>

@@ -2,6 +2,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {CommonNavigatorParams} from 'lib/routes/types'
+import {makeRecordUri} from 'lib/strings/url-helpers'
 import {colors, s} from 'lib/styles'
 import {observer} from 'mobx-react-lite'
 import React, {useMemo, useRef} from 'react'
@@ -21,79 +22,82 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export const CustomFeed = withAuthRequired(
   observer(({route}: Props) => {
     const rootStore = useStores()
-    const {rkey, name} = route.params
+    const {rkey, name, displayName} = route.params
     const currentFeed = useCustomFeed(rkey)
     const pal = usePalette('default')
-
     const scrollElRef = useRef<FlatList>(null)
-
     const algoFeed: PostsFeedModel = useMemo(() => {
+      const uri = makeRecordUri(name, 'app.bsky.feed.generator', rkey)
       const feed = new PostsFeedModel(rootStore, 'custom', {
-        feed: rkey,
+        feed: uri,
       })
       feed.setup()
       return feed
-    }, [rkey, rootStore])
+    }, [rkey, rootStore, name])
+
+    console.log(currentFeed?.data.creator)
+
+    const _ListHeaderComponent = () => {
+      return (
+        <View style={[styles.headerContainer]}>
+          <View style={[styles.header]}>
+            <View style={styles.avatarContainer}>
+              <UserAvatar size={28} avatar={currentFeed?.data.creator.avatar} />
+              <Link href={`/profile/${currentFeed?.data.creator.handle}`}>
+                <Text style={[pal.textLight]}>
+                  @{currentFeed?.data.creator.handle}
+                </Text>
+              </Link>
+            </View>
+            <Text style={[pal.text]}>{currentFeed?.data.description}</Text>
+          </View>
+
+          <View style={[styles.buttonsContainer]}>
+            <Button
+              type={currentFeed?.isSaved ? 'default' : 'inverted'}
+              style={[styles.saveButton]}
+              onPress={() => {
+                if (currentFeed?.data.viewer?.saved) {
+                  rootStore.me.savedFeeds.unsave(currentFeed!)
+                } else {
+                  rootStore.me.savedFeeds.save(currentFeed!)
+                }
+              }}
+              label={currentFeed?.data.viewer?.saved ? 'Unsave' : 'Save'}
+            />
+
+            <TouchableOpacity
+              accessibilityRole="button"
+              onPress={() => {
+                if (currentFeed?.isLiked) {
+                  currentFeed?.unlike()
+                } else {
+                  currentFeed?.like()
+                }
+              }}
+              style={[styles.likeButton, pal.viewLight]}>
+              <Text style={[pal.text, s.semiBold]}>
+                {currentFeed?.data.likeCount}
+              </Text>
+              {currentFeed?.isLiked ? (
+                <HeartIconSolid size={18} style={styles.liked} />
+              ) : (
+                <HeartIcon strokeWidth={3} size={18} style={styles.liked} />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      )
+    }
 
     return (
       <View style={[styles.container]}>
-        <View>
-          <ViewHeader
-            title={name ?? `${currentFeed?.data.creator.displayName}'s feed`}
-            showOnDesktop
-          />
-          <View style={[styles.center]}>
-            <View style={[styles.header]}>
-              <View style={styles.avatarContainer}>
-                <UserAvatar
-                  size={30}
-                  avatar={currentFeed?.data.creator.avatar}
-                />
-                <Link href={`/profile/${currentFeed?.data.creator.handle}`}>
-                  <Text style={[pal.textLight]}>
-                    @{currentFeed?.data.creator.handle}
-                  </Text>
-                </Link>
-              </View>
-              <Text style={[pal.text]}>{currentFeed?.data.description}</Text>
-            </View>
-
-            <View style={[styles.buttonsContainer]}>
-              <Button
-                type={currentFeed?.isSaved ? 'default' : 'inverted'}
-                style={[styles.saveButton]}
-                onPress={() => {
-                  if (currentFeed?.data.viewer?.saved) {
-                    rootStore.me.savedFeeds.unsave(currentFeed!)
-                  } else {
-                    rootStore.me.savedFeeds.save(currentFeed!)
-                  }
-                }}
-                label={currentFeed?.data.viewer?.saved ? 'Unsave' : 'Save'}
-              />
-
-              <TouchableOpacity
-                accessibilityRole="button"
-                onPress={() => {
-                  if (currentFeed?.isLiked) {
-                    currentFeed?.unlike()
-                  } else {
-                    currentFeed?.like()
-                  }
-                }}
-                style={[styles.likeButton, pal.viewLight]}>
-                <Text style={[pal.text, s.semiBold]}>
-                  {currentFeed?.data.likeCount}
-                </Text>
-                {currentFeed?.isLiked ? (
-                  <HeartIconSolid size={18} style={styles.liked} />
-                ) : (
-                  <HeartIcon strokeWidth={3} size={18} style={styles.liked} />
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+        <ViewHeader
+          title={
+            displayName ?? `${currentFeed?.data.creator.displayName}'s feed`
+          }
+          showOnDesktop
+        />
 
         <Feed
           scrollElRef={scrollElRef}
@@ -101,6 +105,7 @@ export const CustomFeed = withAuthRequired(
           key="default"
           feed={algoFeed}
           headerOffset={12}
+          ListHeaderComponent={_ListHeaderComponent}
         />
       </View>
     )
@@ -110,12 +115,16 @@ export const CustomFeed = withAuthRequired(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 12,
   },
-  center: {alignItems: 'center', justifyContent: 'center', gap: 8},
+  headerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginBottom: 12,
+  },
   header: {
     alignItems: 'center',
-    gap: 8,
+    gap: 4,
   },
   avatarContainer: {
     flexDirection: 'row',
