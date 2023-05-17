@@ -26,7 +26,7 @@ import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import QuoteEmbed from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import AlgoItem from 'view/com/algos/AlgoItem'
-import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -172,7 +172,7 @@ export function PostEmbeds({
   ) {
     return (
       <AlgoItem
-        item={new AlgoItemModel(store, embed.record)}
+        item={new CustomFeedModel(store, embed.record)}
         style={[pal.view, pal.border, styles.extOuter]}
         reloadOnFocus={true}
       />

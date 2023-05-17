@@ -2,14 +2,16 @@ import {AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from 'state/models/root-store'
 
-export class AlgoItemModel {
+export class CustomFeedModel {
   // data
+  _reactKey: string
   data: AppBskyFeedDefs.GeneratorView
 
   constructor(
     public rootStore: RootStoreModel,
     view: AppBskyFeedDefs.GeneratorView,
   ) {
+    this._reactKey = view.uri
     this.data = view
     makeAutoObservable(
       this,
@@ -23,7 +25,6 @@ export class AlgoItemModel {
   // local actions
   // =
   set toggleSaved(value: boolean) {
-    console.log('toggleSaved', this.data.viewer)
     if (this.data.viewer) {
       this.data.viewer.saved = value
     }

@@ -12,7 +12,7 @@ import {colors, s} from 'lib/styles'
 import {UserAvatar} from '../util/UserAvatar'
 import {Button} from '../util/forms/Button'
 import {observer} from 'mobx-react-lite'
-import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
@@ -28,7 +28,7 @@ const AlgoItem = observer(
     showBottom = true,
     reloadOnFocus = false,
   }: {
-    item: AlgoItemModel
+    item: CustomFeedModel
     style?: StyleProp<ViewStyle>
     showBottom?: boolean
     reloadOnFocus?: boolean

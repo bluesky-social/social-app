@@ -1,9 +1,9 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyFeedGetSavedFeeds as GetSavedFeeds} from '@atproto/api'
-import {RootStoreModel} from '../../root-store'
+import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
-import {AlgoItemModel} from './algo-item'
+import {CustomFeedModel} from '../feeds/custom-feed'
 import {hasProp, isObj} from 'lib/type-guards'
 
 const PAGE_SIZE = 30
@@ -18,8 +18,8 @@ export class SavedFeedsModel {
   loadMoreCursor?: string
 
   // data
-  feeds: AlgoItemModel[] = []
-  pinned: AlgoItemModel[] = []
+  feeds: CustomFeedModel[] = []
+  pinned: CustomFeedModel[] = []
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -42,7 +42,7 @@ export class SavedFeedsModel {
       if (hasProp(v, 'pinned')) {
         const pinnedSerialized = (v as any).pinned as string[]
         const pinnedDeserialized = pinnedSerialized.map(
-          (s: string) => new AlgoItemModel(this.rootStore, JSON.parse(s)),
+          (s: string) => new CustomFeedModel(this.rootStore, JSON.parse(s)),
         )
         this.pinned = pinnedDeserialized
       }
@@ -83,7 +83,7 @@ export class SavedFeedsModel {
     )
   }
 
-  togglePinnedFeed(feed: AlgoItemModel) {
+  togglePinnedFeed(feed: CustomFeedModel) {
     if (!this.isPinned(feed)) {
       this.pinned.push(feed)
     } else {
@@ -95,15 +95,15 @@ export class SavedFeedsModel {
     this.pinned = this.pinned.filter(f => f.data.uri !== uri)
   }
 
-  reorderPinnedFeeds(temp: AlgoItemModel[]) {
+  reorderPinnedFeeds(temp: CustomFeedModel[]) {
     this.pinned = temp
   }
 
-  isPinned(feed: AlgoItemModel) {
+  isPinned(feed: CustomFeedModel) {
     return this.pinned.find(f => f.data.uri === feed.data.uri) ? true : false
   }
 
-  movePinnedItem(item: AlgoItemModel, direction: 'up' | 'down') {
+  movePinnedItem(item: CustomFeedModel, direction: 'up' | 'down') {
     if (this.pinned.length < 2) {
       throw new Error('Array must have at least 2 items')
     }
@@ -182,11 +182,11 @@ export class SavedFeedsModel {
     this.feeds = this.feeds.filter(f => f.data.uri !== uri)
   }
 
-  addFeed(algoItem: AlgoItemModel) {
-    this.feeds.push(new AlgoItemModel(this.rootStore, algoItem.data))
+  addFeed(algoItem: CustomFeedModel) {
+    this.feeds.push(new CustomFeedModel(this.rootStore, algoItem.data))
   }
 
-  async save(algoItem: AlgoItemModel) {
+  async save(algoItem: CustomFeedModel) {
     try {
       await this.rootStore.agent.app.bsky.feed.saveFeed({
         feed: algoItem.getUri,
@@ -198,7 +198,7 @@ export class SavedFeedsModel {
     }
   }
 
-  async unsave(algoItem: AlgoItemModel) {
+  async unsave(algoItem: CustomFeedModel) {
     const uri = algoItem.getUri
     try {
       await this.rootStore.agent.app.bsky.feed.unsaveFeed({
@@ -243,7 +243,7 @@ export class SavedFeedsModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     for (const f of res.data.feeds) {
-      this.feeds.push(new AlgoItemModel(this.rootStore, f))
+      this.feeds.push(new CustomFeedModel(this.rootStore, f))
     }
   }
 }

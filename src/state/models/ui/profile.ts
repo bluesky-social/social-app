@@ -3,7 +3,7 @@ import {AppBskyFeedDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {ProfileModel} from '../content/profile'
 import {PostsFeedModel} from '../feeds/posts'
-import {ActorFeedsModel} from '../feeds/algo/actor'
+import {ActorFeedsModel} from '../lists/actor-feeds'
 import {ListsListModel} from '../lists/lists-list'
 
 export enum Sections {

@@ -26,7 +26,7 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist'
 import {SavedFeedItem} from 'view/com/algos/SavedFeedItem'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PinnedFeeds'>
 
@@ -101,7 +101,7 @@ export const PinnedFeeds = withAuthRequired(
 )
 
 const PinnedItem = observer(
-  ({item, drag}: {item: AlgoItemModel; drag: () => void}) => {
+  ({item, drag}: {item: CustomFeedModel; drag: () => void}) => {
     const pal = usePalette('default')
     const rootStore = useStores()
     const savedFeeds = useMemo(() => rootStore.me.savedFeeds, [rootStore])

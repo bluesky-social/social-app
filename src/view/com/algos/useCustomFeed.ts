@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react'
 import {useStores} from 'state/index'
-import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
 export function useCustomFeed(uri: string) {
   const store = useStores()
-  const [item, setItem] = useState<AlgoItemModel>()
+  const [item, setItem] = useState<CustomFeedModel>()
   useEffect(() => {
     async function fetchView() {
       const res = await store.agent.app.bsky.feed.getFeedGenerator({
@@ -16,7 +16,7 @@ export function useCustomFeed(uri: string) {
     async function buildFeedItem() {
       const view = await fetchView()
       if (view) {
-        const temp = new AlgoItemModel(store, view)
+        const temp = new CustomFeedModel(store, view)
         setItem(temp)
       }
     }

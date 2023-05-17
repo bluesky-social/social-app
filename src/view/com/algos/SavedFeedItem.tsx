@@ -3,12 +3,18 @@ import {View, TouchableOpacity, StyleSheet} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {colors} from 'lib/styles'
 import {observer} from 'mobx-react-lite'
-import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
-import {SavedFeedsModel} from 'state/models/feeds/algo/saved'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {SavedFeedsModel} from 'state/models/ui/saved-feeds'
 import AlgoItem from './AlgoItem'
 
 export const SavedFeedItem = observer(
-  ({item, savedFeeds}: {item: AlgoItemModel; savedFeeds: SavedFeedsModel}) => {
+  ({
+    item,
+    savedFeeds,
+  }: {
+    item: CustomFeedModel
+    savedFeeds: SavedFeedsModel
+  }) => {
     const isPinned = savedFeeds.isPinned(item)
 
     return (

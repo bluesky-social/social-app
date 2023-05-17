@@ -26,7 +26,7 @@ import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import AlgoItem from 'view/com/algos/AlgoItem'
-import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
 
@@ -188,7 +188,7 @@ export const ProfileScreen = withAuthRequired(
             return (
               <FeedSlice slice={item} ignoreMuteFor={uiState.profile.did} />
             )
-          } else if (item instanceof AlgoItemModel) {
+          } else if (item instanceof CustomFeedModel) {
             return <AlgoItem item={item} />
           }
         }
