@@ -53,7 +53,7 @@ export const FeedsTabBar = observer(
           <UserAvatar avatar={store.me.avatar} size={30} />
         </TouchableOpacity>
         <TabBar
-          key={store.me.savedFeeds.listOfPinnedFeedNames.join(',')}
+          key={items.join(',')}
           {...props}
           items={items}
           indicatorPosition="bottom"
