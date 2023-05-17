@@ -294,20 +294,19 @@ export const DrawerContent = observer(() => {
                   ? pal.btn
                   : styles.footerBtnDarkMode,
               ]}>
-                {
-                  theme.colorScheme === 'light' ?
-                  <MoonIcon
-                    size={22}
-                    style={pal.text as StyleProp<ViewStyle>}
-                    strokeWidth={2}
-                  />
-                  :
-                  <SunIcon
-                    size={22}
-                    style={pal.text as StyleProp<ViewStyle>}
-                    strokeWidth={2}
-                  />
-                }
+              {theme.colorScheme === 'light' ? (
+                <MoonIcon
+                  size={22}
+                  style={pal.text as StyleProp<ViewStyle>}
+                  strokeWidth={2}
+                />
+              ) : (
+                <SunIcon
+                  size={22}
+                  style={pal.text as StyleProp<ViewStyle>}
+                  strokeWidth={2}
+                />
+              )}
             </TouchableOpacity>
           )}
           <TouchableOpacity
