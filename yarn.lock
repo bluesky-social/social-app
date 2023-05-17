@@ -8738,10 +8738,10 @@ expo-image-picker@^14.1.1:
   dependencies:
     expo-image-loader "~4.1.0"
 
-expo-image@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/expo-image/-/expo-image-1.2.1.tgz#3f377cb3142de2107903f4e4f88a7f44785dee18"
-  integrity sha512-pYZFN0ctuIBA+sqUiw70rHQQ04WDyEcF549ObArdj0MNgSUCBJMFmu/jrWDmxOpEMF40lfLVIZKigJT7Bw+GYA==
+expo-image@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/expo-image/-/expo-image-1.2.3.tgz#f3582d725ffb7437f8ce946ad44fe33f0aa0603d"
+  integrity sha512-+Mnx6rcneWSUGfHkUDV3cQ3R4lVwoIDFs/tcXVqnlxyNJdNxpW2cge9pS2Hpj3UDoZVhZPLR8LHS8E9wEaC0NA==
 
 expo-json-utils@~0.5.0:
   version "0.5.1"
