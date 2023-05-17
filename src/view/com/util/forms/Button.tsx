@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {
   GestureResponderEvent,
   StyleProp,
@@ -52,7 +52,6 @@ export function Button({
   onAccessibilityEscape?: () => void
 }>) {
   const theme = useTheme()
-  const [opacity, setOpacity] = useState(1)
   const typeOuterStyle = choose<ViewStyle, Record<ButtonType, ViewStyle>>(
     type,
     {
@@ -129,6 +128,7 @@ export function Button({
       },
     },
   )
+
   const onPressWrapped = React.useCallback(
     (event: Event) => {
       event.stopPropagation()
@@ -137,13 +137,23 @@ export function Button({
     },
     [onPress],
   )
+
+  const getStyle = React.useCallback(
+    state => {
+      const arr = [typeOuterStyle, styles.outer, style]
+      if (state.pressed) {
+        arr.push({opacity: 0.6})
+      } else if (state.hovered) {
+        arr.push({opacity: 0.8})
+      }
+      return arr
+    },
+    [typeOuterStyle, style],
+  )
+
   return (
     <Pressable
-      style={[typeOuterStyle, styles.outer, {opacity}, style]}
-      onPressIn={() => setOpacity(0.6)}
-      onPressOut={() => setOpacity(1)}
-      onHoverIn={() => setOpacity(0.8)}
-      onHoverOut={() => setOpacity(1)}
+      style={getStyle}
       onPress={onPressWrapped}
       testID={testID}
       accessibilityRole="button"
