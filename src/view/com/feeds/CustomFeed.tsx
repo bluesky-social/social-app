@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {colors, s} from 'lib/styles'
+import {s} from 'lib/styles'
 import {UserAvatar} from '../util/UserAvatar'
 import {Button} from '../util/forms/Button'
 import {observer} from 'mobx-react-lite'
@@ -16,7 +16,6 @@ import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
-import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {pluralize} from 'lib/strings/helpers'
 import {AtUri} from '@atproto/api'
 import {isWeb} from 'platform/detection'
@@ -48,7 +47,7 @@ export const CustomFeed = observer(
     return (
       <TouchableOpacity
         accessibilityRole="button"
-        style={[styles.container, style]}
+        style={[styles.container, pal.border, style]}
         onPress={() => {
           navigation.navigate('CustomFeed', {
             name: item.data.creator.did,
@@ -112,7 +111,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     borderTopWidth: 1,
-    borderTopColor: '#E5E5E5',
     gap: 14,
   },
   headerContainer: {
