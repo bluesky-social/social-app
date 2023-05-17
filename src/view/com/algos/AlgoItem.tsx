@@ -24,13 +24,11 @@ const AlgoItem = observer(
     item,
     style,
     showBottom = true,
-    onLongPress,
     reloadOnFocus = false,
   }: {
     item: AlgoItemModel
     style?: StyleProp<ViewStyle>
     showBottom?: boolean
-    onLongPress?: () => void
     reloadOnFocus?: boolean
   }) => {
     const store = useStores()
@@ -54,7 +52,6 @@ const AlgoItem = observer(
             rkey: item.data.uri,
           })
         }}
-        onLongPress={onLongPress}
         key={item.data.uri}>
         <View style={[styles.headerContainer]}>
           <View style={[s.mr10]}>
@@ -64,8 +61,9 @@ const AlgoItem = observer(
             <Text style={[pal.text, s.bold]}>
               {item.data.displayName ?? 'Feed name'}
             </Text>
-            <Text style={[pal.textLight, styles.description]}>
-              {item.data.description ?? 'Feed description'}
+            <Text style={[pal.textLight, styles.description]} numberOfLines={5}>
+              {item.data.description ??
+                "Explore our Feed for the latest updates and insights! Dive into a world of intriguing articles, trending news, and exciting stories that cover a wide range of topics. From technology breakthroughs to lifestyle tips, there's something here for everyone. Stay informed and get inspired with us. Join the conversation now!"}
             </Text>
           </View>
         </View>

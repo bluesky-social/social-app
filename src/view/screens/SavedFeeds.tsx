@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   FlatList,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -14,21 +15,21 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
-import AlgoItem from 'view/com/algos/AlgoItem'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
 import {isDesktopWeb} from 'platform/detection'
-import {colors, s} from 'lib/styles'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
+import {s} from 'lib/styles'
 import {SavedFeedsModel} from 'state/models/feeds/algo/saved'
+import {Link} from 'view/com/util/Link'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import {SavedFeedItem} from 'view/com/algos/SavedFeedItem'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 
 export const SavedFeeds = withAuthRequired(
-  observer(({}: Props) => {
+  observer(({navigation}: Props) => {
     // hooks for global items
     const pal = usePalette('default')
     const rootStore = useStores()
@@ -87,6 +88,12 @@ export const SavedFeeds = withAuthRequired(
             <SavedFeedItem item={item} savedFeeds={savedFeeds} />
           )}
           initialNumToRender={10}
+          ListHeaderComponent={() => (
+            <ListHeaderComponent
+              savedFeeds={savedFeeds}
+              navigation={navigation}
+            />
+          )}
           ListFooterComponent={_ListFooterComponent}
           ListEmptyComponent={_ListEmptyComponent}
           extraData={savedFeeds.isLoading}
@@ -98,31 +105,53 @@ export const SavedFeeds = withAuthRequired(
   }),
 )
 
-const SavedFeedItem = observer(
-  ({item, savedFeeds}: {item: AlgoItemModel; savedFeeds: SavedFeedsModel}) => {
-    const isPinned = savedFeeds.isPinned(item)
-
+const ListHeaderComponent = observer(
+  ({
+    savedFeeds,
+    navigation,
+  }: {
+    savedFeeds: SavedFeedsModel
+    navigation: Props['navigation']
+  }) => {
     return (
-      <View style={styles.itemContainer}>
-        <AlgoItem
-          key={item.data.uri}
-          item={item}
-          showBottom={false}
-          style={styles.item}
-        />
-        <TouchableOpacity
-          accessibilityRole="button"
-          onPress={() => {
-            savedFeeds.togglePinnedFeed(item)
-            console.log('pinned', savedFeeds.pinned)
-            console.log('isPinned', savedFeeds.isPinned(item))
-          }}>
-          <FontAwesomeIcon
-            icon="thumb-tack"
-            size={20}
-            color={isPinned ? colors.blue3 : colors.gray3}
-          />
-        </TouchableOpacity>
+      <View style={styles.headerContainer}>
+        {savedFeeds.pinned.length > 0 ? (
+          <View style={styles.pinnedContainer}>
+            <View style={styles.pinnedHeader}>
+              <Text type="lg-bold">Pinned Feeds</Text>
+              <Link href="/settings/pinned-feeds">
+                <Text style={styles.editPinned}>Edit</Text>
+              </Link>
+            </View>
+
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              {savedFeeds.pinned.map(item => {
+                return (
+                  <TouchableOpacity
+                    key={item.data.uri}
+                    accessibilityRole="button"
+                    onPress={() => {
+                      navigation.navigate('CustomFeed', {
+                        rkey: item.data.uri,
+                        name: item.data.displayName,
+                      })
+                    }}
+                    style={styles.pinnedItem}>
+                    <UserAvatar avatar={item.data.avatar} size={80} />
+                    <Text type="sm-medium" numberOfLines={1}>
+                      {item.data.displayName ??
+                        `${item.data.creator.displayName}'s feed`}
+                    </Text>
+                  </TouchableOpacity>
+                )
+              })}
+            </ScrollView>
+          </View>
+        ) : null}
+
+        <Text type="lg-bold">All Saved Feeds</Text>
       </View>
     )
   },
@@ -139,12 +168,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     marginTop: 10,
   },
-  itemContainer: {
-    flexDirection: 'row',
+  headerContainer: {paddingHorizontal: 18},
+  pinnedContainer: {marginBottom: 18, gap: 18},
+  pinnedHeader: {flexDirection: 'row', justifyContent: 'space-between'},
+  pinnedItem: {
+    flex: 1,
     alignItems: 'center',
     marginRight: 18,
+    maxWidth: 100,
   },
-  item: {
-    borderTopWidth: 0,
-  },
+  editPinned: {textDecorationLine: 'underline'},
 })

@@ -21,6 +21,7 @@ export type CommonNavigatorParams = {
   CopyrightPolicy: undefined
   AppPasswords: undefined
   SavedFeeds: undefined
+  PinnedFeeds: undefined
   CustomFeed: {name?: string; rkey: string}
   MutedAccounts: undefined
   BlockedAccounts: undefined
