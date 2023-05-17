@@ -170,6 +170,7 @@ export function PostEmbeds({
     AppBskyEmbedRecord.isView(embed) &&
     AppBskyFeedDefs.isGeneratorView(embed.record)
   ) {
+    // TODO memoize this?
     return (
       <CustomFeed
         item={new CustomFeedModel(store, embed.record)}

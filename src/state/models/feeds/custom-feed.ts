@@ -1,5 +1,5 @@
-import {AppBskyFeedDefs, AtUri} from '@atproto/api'
-import {makeAutoObservable} from 'mobx'
+import {AppBskyFeedDefs} from '@atproto/api'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from 'state/models/root-store'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 
@@ -25,13 +25,8 @@ export class CustomFeedModel {
 
   // local actions
   // =
-  set toggleSaved(value: boolean) {
-    if (this.data.viewer) {
-      this.data.viewer.saved = value
-    }
-  }
 
-  get getUri() {
+  get uri() {
     return this.data.uri
   }
 
@@ -50,99 +45,65 @@ export class CustomFeedModel {
     return this.data.viewer?.like
   }
 
-  private toggleLiked(s?: string) {
-    if (this.data.viewer) {
-      if (this.data.viewer.like) {
-        this.data.viewer.like = undefined
-      } else {
-        this.data.viewer.like = s
-      }
-    }
-  }
-
-  private incrementLike() {
-    if (this.data.likeCount) {
-      this.data.likeCount += 1
-    } else {
-      this.data.likeCount = 1
-    }
-  }
-
-  private decrementLike() {
-    if (this.data.likeCount) {
-      this.data.likeCount -= 1
-    } else {
-      this.data.likeCount = 0
-    }
-  }
-
-  private rewriteData(data: AppBskyFeedDefs.GeneratorView) {
-    this.data = data
-  }
-
   // public apis
   // =
+
+  async save() {
+    await this.rootStore.agent.app.bsky.feed.saveFeed({
+      feed: this.uri,
+    })
+    runInAction(() => {
+      this.data.viewer = this.data.viewer || {}
+      this.data.viewer.saved = true
+    })
+  }
+
+  async unsave() {
+    await this.rootStore.agent.app.bsky.feed.unsaveFeed({
+      feed: this.uri,
+    })
+    runInAction(() => {
+      this.data.viewer = this.data.viewer || {}
+      this.data.viewer.saved = false
+    })
+  }
+
   async like() {
     try {
-      const res = await this.rootStore.agent.app.bsky.feed.like.create(
-        {
-          repo: this.rootStore.me.did,
-        },
-        {
-          subject: {
-            uri: this.data.uri,
-            cid: this.data.cid,
-          },
-          createdAt: new Date().toISOString(),
-        },
-      )
-      this.toggleLiked(res.uri)
-      this.incrementLike()
+      const res = await this.rootStore.agent.like(this.data.uri, this.data.cid)
+      runInAction(() => {
+        this.data.viewer = this.data.viewer || {}
+        this.data.viewer.like = res.uri
+        this.data.likeCount = (this.data.likeCount || 0) + 1
+      })
     } catch (e: any) {
       this.rootStore.log.error('Failed to like feed', e)
     }
   }
 
   async unlike() {
+    if (!this.data.viewer.like) {
+      return
+    }
     try {
-      await this.rootStore.agent.app.bsky.feed.like.delete({
-        repo: this.rootStore.me.did,
-        rkey: new AtUri(this.data.viewer?.like!).rkey,
+      await this.rootStore.agent.deleteLike(this.data.viewer.like!)
+      runInAction(() => {
+        this.data.viewer = this.data.viewer || {}
+        this.data.viewer.like = undefined
+        this.data.likeCount = (this.data.likeCount || 1) - 1
       })
-      this.toggleLiked()
-      this.decrementLike()
     } catch (e: any) {
       this.rootStore.log.error('Failed to unlike feed', e)
     }
-  }
-
-  static async getView(store: RootStoreModel, uri: string) {
-    const res = await store.agent.app.bsky.feed.getFeedGenerator({
-      feed: uri,
-    })
-    const view = res.data.view
-    return view
-  }
-
-  async checkIsValid() {
-    const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerator({
-      feed: this.data.uri,
-    })
-    return res.data.isValid
-  }
-
-  async checkIsOnline() {
-    const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerator({
-      feed: this.data.uri,
-    })
-    return res.data.isOnline
   }
 
   async reload() {
     const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerator({
       feed: this.data.uri,
     })
-    this.rewriteData(res.data.view)
+    runInAction(() => {
+      this.data = res.data.view
+    })
   }
 
   serialize() {

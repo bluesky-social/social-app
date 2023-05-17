@@ -118,7 +118,7 @@ export const HomeScreen = withAuthRequired(
               key={String(2 + index + 1)}
               testID="customFeed"
               isPageFocused={selectedPage === 2 + index}
-              feed={new PostsFeedModel(store, 'custom', {feed: f.getUri})}
+              feed={new PostsFeedModel(store, 'custom', {feed: f.uri})}
               renderEmptyState={renderFollowingEmptyState}
             />
           )

@@ -188,7 +188,7 @@ export function UserAvatar({
           accessibilityRole="image"
         />
       ) : (
-        <DefaultAvatar size={size} />
+        <DefaultAvatar type={type} size={size} />
       )}
       <View style={[styles.editButtonContainer, pal.btn]}>
         <FontAwesomeIcon

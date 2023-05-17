@@ -184,10 +184,7 @@ export class SavedFeedsModel {
 
   async save(algoItem: CustomFeedModel) {
     try {
-      await this.rootStore.agent.app.bsky.feed.saveFeed({
-        feed: algoItem.getUri,
-      })
-      algoItem.toggleSaved = true
+      await algoItem.save()
       this.addFeed(algoItem)
     } catch (e: any) {
       this.rootStore.log.error('Failed to save feed', e)
@@ -195,16 +192,13 @@ export class SavedFeedsModel {
   }
 
   async unsave(algoItem: CustomFeedModel) {
-    const uri = algoItem.getUri
+    const uri = algoItem.uri
     try {
-      await this.rootStore.agent.app.bsky.feed.unsaveFeed({
-        feed: uri,
-      })
-      algoItem.toggleSaved = false
+      await algoItem.unsave()
       this.removeFeed(uri)
       this.removePinnedFeed(uri)
     } catch (e: any) {
-      this.rootStore.log.error('Failed to unsanve feed', e)
+      this.rootStore.log.error('Failed to unsave feed', e)
     }
   }
 
