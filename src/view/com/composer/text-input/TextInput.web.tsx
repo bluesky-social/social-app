@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect, useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {RichText} from '@atproto/api'
 import {useEditor, EditorContent, JSONContent} from '@tiptap/react'
@@ -33,6 +33,23 @@ interface TextInputProps {
   onError: (err: string) => void
 }
 
+const useLatest = <A extends readonly any[]>(...args: A) => {
+  const [_, setCache] = useState(args)
+
+  useEffect(() => {
+    setCache(args)
+  }, args)
+
+  return useMemo(
+    () => (f: (...args: A) => void) =>
+      setCache(args => {
+        f(...args)
+        return args
+      }),
+    [setCache],
+  )
+}
+
 export const TextInput = React.forwardRef(
   (
     {
@@ -52,6 +69,8 @@ export const TextInput = React.forwardRef(
       'ProseMirror-light',
       'ProseMirror-dark',
     )
+
+    const withLatestProps = useLatest(richtext, onPressPublish)
 
     const editor = useEditor(
       {
@@ -90,11 +109,12 @@ export const TextInput = React.forwardRef(
           },
           handleKeyDown: (_, event) => {
             if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
+              event.preventDefault()
+
               // Workaround relying on previous state from `setRichText` to
               // get the updated text content during editor initialization
-              setRichText((state: RichText) => {
-                onPressPublish(state)
-                return state
+              withLatestProps((richtext, onPressPublish) => {
+                onPressPublish(richtext)
               })
             }
           },
