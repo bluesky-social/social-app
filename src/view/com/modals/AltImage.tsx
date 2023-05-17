@@ -1,15 +1,17 @@
-import React, {useCallback, useState} from 'react'
-import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {gradients, s} from 'lib/styles'
-import {enforceLen} from 'lib/strings/helpers'
-import {MAX_ALT_TEXT} from 'lib/constants'
-import {useTheme} from 'lib/ThemeContext'
-import {Text} from '../util/text/Text'
+import React, { useCallback, useState, useEffect } from 'react'
+import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import { usePalette } from 'lib/hooks/usePalette'
+import { gradients, s } from 'lib/styles'
+import { enforceLen } from 'lib/strings/helpers'
+import { MAX_ALT_TEXT } from 'lib/constants'
+import { useTheme } from 'lib/ThemeContext'
+import { Text } from '../util/text/Text'
+import { Image } from 'expo-image'
 import LinearGradient from 'react-native-linear-gradient'
-import {useStores} from 'state/index'
-import {isDesktopWeb} from 'platform/detection'
-import {ImageModel} from 'state/models/media/image'
+import { useStores } from 'state/index'
+import { isDesktopWeb } from 'platform/detection'
+import { ImageModel } from 'state/models/media/image'
+import { ImageStyle, Keyboard } from 'react-native'
 
 export const snapPoints = ['fullscreen']
 
@@ -17,11 +19,37 @@ interface Props {
   image: ImageModel
 }
 
-export function Component({image}: Props) {
+export function Component({ image }: Props) {
   const pal = usePalette('default')
   const store = useStores()
   const theme = useTheme()
   const [altText, setAltText] = useState(image.altText)
+  const [keyboardVisible, setKeyboardVisible] = useState(false)
+
+  useEffect(() => {
+    const keyboardActiveListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true) // or some other action
+      },
+    )
+    const keyboardInactiveListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false) // or some other action
+      },
+    )
+    return () => {
+      keyboardInactiveListener.remove()
+      keyboardActiveListener.remove()
+    }
+  }, [])
+
+  const getImageSize = function () {
+    return {
+      maxHeight: keyboardVisible ? 100 : '100%',
+    }
+  }
 
   const onPressSave = useCallback(() => {
     image.setAltText(altText)
@@ -38,6 +66,17 @@ export function Component({image}: Props) {
       style={[pal.view, styles.container, s.flex1]}
       nativeID="imageAltText">
       <Text style={[styles.title, pal.text]}>Add alt text</Text>
+      {image.compressed !== undefined && (
+        <Image
+          testID="selectedPhotoImage"
+          style={[styles.image, getImageSize()] as ImageStyle}
+          source={{
+            uri: image.compressed.path,
+          }}
+          accessible={true}
+          accessibilityIgnoresInvertColors
+        />
+      )}
       <TextInput
         testID="altTextImageInput"
         style={[styles.textArea, pal.border, pal.text]}
@@ -58,8 +97,8 @@ export function Component({image}: Props) {
           accessibilityRole="button">
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
             style={[styles.button]}>
             <Text type="button-lg" style={[s.white, s.bold]}>
               Save
@@ -116,5 +155,8 @@ const styles = StyleSheet.create({
   },
   buttonControls: {
     gap: 8,
+  },
+  image: {
+    flex: 1,
   },
 })
