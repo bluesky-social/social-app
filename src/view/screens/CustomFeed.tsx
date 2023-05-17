@@ -38,8 +38,6 @@ export const CustomFeed = withAuthRequired(
       return feed
     }, [rootStore, uri])
 
-    console.log(currentFeed?.data.creator)
-
     const _ListHeaderComponent = () => {
       return (
         <View style={[styles.headerContainer]}>

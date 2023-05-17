@@ -8,6 +8,7 @@ import {faAngleUp} from '@fortawesome/free-solid-svg-icons/faAngleUp'
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons/faArrowLeft'
 import {faArrowRight} from '@fortawesome/free-solid-svg-icons/faArrowRight'
 import {faArrowUp} from '@fortawesome/free-solid-svg-icons/faArrowUp'
+import {faArrowDown} from '@fortawesome/free-solid-svg-icons/faArrowDown'
 import {faArrowRightFromBracket} from '@fortawesome/free-solid-svg-icons/faArrowRightFromBracket'
 import {faArrowUpFromBracket} from '@fortawesome/free-solid-svg-icons/faArrowUpFromBracket'
 import {faArrowUpRightFromSquare} from '@fortawesome/free-solid-svg-icons/faArrowUpRightFromSquare'
@@ -87,6 +88,7 @@ export function setup() {
     faArrowLeft,
     faArrowRight,
     faArrowUp,
+    faArrowDown,
     faArrowRightFromBracket,
     faArrowUpFromBracket,
     faArrowUpRightFromSquare,

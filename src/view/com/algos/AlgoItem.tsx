@@ -19,6 +19,7 @@ import {useStores} from 'state/index'
 import {HeartIconSolid} from 'lib/icons'
 import {pluralize} from 'lib/strings/helpers'
 import {AtUri} from '@atproto/api'
+import {isWeb} from 'platform/detection'
 
 const AlgoItem = observer(
   ({
@@ -37,8 +38,9 @@ const AlgoItem = observer(
     const navigation = useNavigation<NavigationProp>()
 
     // TODO: this is pretty hacky, but it works for now
+    // causes issues on web
     useFocusEffect(() => {
-      if (reloadOnFocus) {
+      if (reloadOnFocus && !isWeb) {
         item.reload()
       }
     })

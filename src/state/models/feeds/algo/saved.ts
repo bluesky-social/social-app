@@ -1,4 +1,4 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyFeedGetSavedFeeds as GetSavedFeeds} from '@atproto/api'
 import {RootStoreModel} from '../../root-store'
 import {bundleAsync} from 'lib/async/bundle'
@@ -101,6 +101,43 @@ export class SavedFeedsModel {
 
   isPinned(feed: AlgoItemModel) {
     return this.pinned.find(f => f.data.uri === feed.data.uri) ? true : false
+  }
+
+  movePinnedItem(item: AlgoItemModel, direction: 'up' | 'down') {
+    if (this.pinned.length < 2) {
+      throw new Error('Array must have at least 2 items')
+    }
+    const index = this.pinned.indexOf(item)
+    if (index === -1) {
+      throw new Error('Item not found in array')
+    }
+
+    const len = this.pinned.length
+
+    runInAction(() => {
+      if (direction === 'up') {
+        if (index === 0) {
+          // Remove the item from the first place and put it at the end
+          this.pinned.push(this.pinned.shift()!)
+        } else {
+          // Swap the item with the one before it
+          const temp = this.pinned[index]
+          this.pinned[index] = this.pinned[index - 1]
+          this.pinned[index - 1] = temp
+        }
+      } else if (direction === 'down') {
+        if (index === len - 1) {
+          // Remove the item from the last place and put it at the start
+          this.pinned.unshift(this.pinned.pop()!)
+        } else {
+          // Swap the item with the one after it
+          const temp = this.pinned[index]
+          this.pinned[index] = this.pinned[index + 1]
+          this.pinned[index + 1] = temp
+        }
+      }
+      // this.pinned = [...this.pinned]
+    })
   }
 
   // public api

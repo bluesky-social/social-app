@@ -5,6 +5,7 @@ import {
   View,
   ActivityIndicator,
   Pressable,
+  TouchableOpacity,
 } from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -17,7 +18,7 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
-import {isDesktopWeb} from 'platform/detection'
+import {isDesktopWeb, isWeb} from 'platform/detection'
 import {s} from 'lib/styles'
 import DraggableFlatList, {
   ShadowDecorator,
@@ -25,6 +26,7 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist'
 import {SavedFeedItem} from 'view/com/algos/SavedFeedItem'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {AlgoItemModel} from 'state/models/feeds/algo/algo-item'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PinnedFeeds'>
 
@@ -73,7 +75,7 @@ export const PinnedFeeds = withAuthRequired(
         <ViewHeader title="Arrange Pinned Feeds" showOnDesktop />
         <DraggableFlatList
           containerStyle={[!isDesktopWeb && s.flex1]}
-          data={savedFeeds.pinned}
+          data={[...savedFeeds.pinned]} // make a copy so this FlatList re-renders when pinned changes
           keyExtractor={item => item.data.uri}
           refreshing={savedFeeds.isRefreshing}
           refreshControl={
@@ -84,23 +86,7 @@ export const PinnedFeeds = withAuthRequired(
               titleColor={pal.colors.text}
             />
           }
-          renderItem={({item, drag}) => (
-            <ScaleDecorator>
-              <ShadowDecorator>
-                <Pressable
-                  accessibilityRole="button"
-                  onLongPress={drag}
-                  style={styles.itemContainer}>
-                  <FontAwesomeIcon
-                    icon="bars"
-                    size={20}
-                    style={[styles.icon, pal.text]}
-                  />
-                  <SavedFeedItem item={item} savedFeeds={savedFeeds} />
-                </Pressable>
-              </ShadowDecorator>
-            </ScaleDecorator>
-          )}
+          renderItem={({item, drag}) => <PinnedItem item={item} drag={drag} />}
           initialNumToRender={10}
           ListFooterComponent={_ListFooterComponent}
           ListEmptyComponent={_ListEmptyComponent}
@@ -112,6 +98,58 @@ export const PinnedFeeds = withAuthRequired(
       </CenteredView>
     )
   }),
+)
+
+const PinnedItem = observer(
+  ({item, drag}: {item: AlgoItemModel; drag: () => void}) => {
+    const pal = usePalette('default')
+    const rootStore = useStores()
+    const savedFeeds = useMemo(() => rootStore.me.savedFeeds, [rootStore])
+    return (
+      <ScaleDecorator>
+        <ShadowDecorator>
+          <Pressable
+            accessibilityRole="button"
+            onLongPress={drag}
+            style={styles.itemContainer}>
+            {isWeb ? (
+              <View style={styles.webArrowButtonsContainer}>
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  onPress={() => {
+                    savedFeeds.movePinnedItem(item, 'up')
+                  }}>
+                  <FontAwesomeIcon
+                    icon="arrow-up"
+                    size={20}
+                    style={[styles.icon, pal.text, styles.webArrowUpButton]}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  onPress={() => {
+                    savedFeeds.movePinnedItem(item, 'down')
+                  }}>
+                  <FontAwesomeIcon
+                    icon="arrow-down"
+                    size={20}
+                    style={[styles.icon, pal.text]}
+                  />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <FontAwesomeIcon
+                icon="bars"
+                size={20}
+                style={[styles.icon, pal.text]}
+              />
+            )}
+            <SavedFeedItem item={item} savedFeeds={savedFeeds} />
+          </Pressable>
+        </ShadowDecorator>
+      </ScaleDecorator>
+    )
+  },
 )
 
 const styles = StyleSheet.create({
@@ -135,4 +173,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
   },
   icon: {marginRight: 10},
+  webArrowButtonsContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+  },
+  webArrowUpButton: {marginBottom: 10},
 })
