@@ -67,7 +67,11 @@ const ListHeaderComponent = observer(({uri}: {uri: string}) => {
     <View style={[styles.headerContainer]}>
       <View style={[styles.header]}>
         <View style={styles.avatarContainer}>
-          <UserAvatar size={28} avatar={currentFeed?.data.creator.avatar} />
+          <UserAvatar
+            type="algo"
+            size={28}
+            avatar={currentFeed?.data.creator.avatar}
+          />
           <Link href={`/profile/${currentFeed?.data.creator.handle}`}>
             <Text style={[pal.textLight]}>
               @{currentFeed?.data.creator.handle}

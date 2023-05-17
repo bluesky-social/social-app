@@ -61,7 +61,7 @@ const AlgoItem = observer(
         key={item.data.uri}>
         <View style={[styles.headerContainer]}>
           <View style={[s.mr10]}>
-            <UserAvatar size={36} avatar={item.data.avatar} />
+            <UserAvatar type="algo" size={36} avatar={item.data.avatar} />
           </View>
           <View style={[styles.headerTextContainer]}>
             <Text style={[pal.text, s.bold]}>

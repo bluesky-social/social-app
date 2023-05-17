@@ -146,7 +146,11 @@ const ListHeaderComponent = observer(
                       })
                     }}
                     style={styles.pinnedItem}>
-                    <UserAvatar avatar={item.data.avatar} size={80} />
+                    <UserAvatar
+                      type="algo"
+                      avatar={item.data.avatar}
+                      size={80}
+                    />
                     <Text
                       type="sm-medium"
                       numberOfLines={1}
