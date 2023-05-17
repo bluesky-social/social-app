@@ -33,6 +33,7 @@ export const ProfileScreen = withAuthRequired(
   observer(({route}: Props) => {
     const store = useStores()
     const {screen, track} = useAnalytics()
+    const viewSelectorRef = React.useRef<{scrollToTop: () => void}>(null)
 
     useEffect(() => {
       screen('Profile')
@@ -45,8 +46,13 @@ export const ProfileScreen = withAuthRequired(
     )
     useSetTitle(combinedDisplayName(uiState.profile))
 
+    const onSoftReset = React.useCallback(() => {
+      viewSelectorRef.current?.scrollToTop()
+    }, [])
+
     useFocusEffect(
       React.useCallback(() => {
+        const softResetSub = store.onScreenSoftReset(onSoftReset)
         let aborted = false
         store.shell.setMinimalShellMode(false)
         const feedCleanup = uiState.feed.registerListeners()
@@ -63,8 +69,9 @@ export const ProfileScreen = withAuthRequired(
         return () => {
           aborted = true
           feedCleanup()
+          softResetSub.remove()
         }
-      }, [hasSetup, uiState, store]),
+      }, [store, onSoftReset, uiState, hasSetup]),
     )
 
     // events
@@ -214,6 +221,7 @@ export const ProfileScreen = withAuthRequired(
           />
         ) : uiState.profile.hasLoaded ? (
           <ViewSelector
+            ref={viewSelectorRef}
             swipeEnabled={false}
             sections={uiState.selectorItems}
             items={uiState.uiItems}
