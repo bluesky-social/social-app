@@ -21,6 +21,9 @@ interface Img {
 
 export const Lightbox = observer(function Lightbox() {
   const store = useStores()
+
+  const onClose = useCallback(() => store.shell.closeLightbox(), [store.shell])
+
   if (!store.shell.isLightboxActive) {
     return null
   }
@@ -28,8 +31,6 @@ export const Lightbox = observer(function Lightbox() {
   const activeLightbox = store.shell.activeLightbox
   const initialIndex =
     activeLightbox instanceof models.ImagesLightbox ? activeLightbox.index : 0
-
-  const onClose = () => store.shell.closeLightbox()
 
   let imgs: Img[] | undefined
   if (activeLightbox instanceof models.ProfileImageLightbox) {
