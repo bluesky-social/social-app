@@ -39,6 +39,11 @@ export const ProfileScreen = withAuthRequired(
     }, [screen])
 
     const [hasSetup, setHasSetup] = useState<boolean>(false)
+
+    useEffect(() => {
+      setHasSetup(false)
+    }, [route.params.name])
+
     const uiState = React.useMemo(
       () => new ProfileUiModel(store, {user: route.params.name}),
       [route.params.name, store],

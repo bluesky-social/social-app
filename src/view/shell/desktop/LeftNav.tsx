@@ -1,4 +1,5 @@
 import React from 'react'
+import isEqual from 'lodash.isequal'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {PressableWithHover} from 'view/com/util/PressableWithHover'
@@ -88,15 +89,20 @@ const NavItem = observer(
   ({count, href, icon, iconFilled, label}: NavItemProps) => {
     const pal = usePalette('default')
     const store = useStores()
-    const [pathName] = React.useMemo(() => router.matchPath(href), [href])
-    const currentRouteName = useNavigationState(state => {
+    const [toScreenName, toParams] = React.useMemo(
+      () => router.matchPath(href),
+      [href],
+    )
+    const [fromScreenName, fromParams] = useNavigationState(state => {
       if (!state) {
-        return 'Home'
+        return ['Home', []]
       }
-      return getCurrentRoute(state).name
+      const route = getCurrentRoute(state)
+      return [route.name, route.params]
     })
 
-    const isCurrent = isTab(currentRouteName, pathName)
+    const isCurrent =
+      isTab(fromScreenName, toScreenName) && isEqual(fromParams, toParams)
     const {onPress} = useLinkProps({to: href})
     const onPressWrapped = React.useCallback(
       (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
