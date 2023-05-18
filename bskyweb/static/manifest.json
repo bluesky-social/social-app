@@ -56,9 +56,8 @@
 		}
 	],
 	"policies": {
-		"license": "/#license",
-    "privacy": "/support/privacy",
-    "terms": "/support/tos",
+		"privacy": "/support/privacy",
+    "usage": "/support/tos",
 		"support": "/support"
 	},
 	"handle_links": "all",
