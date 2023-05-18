@@ -4,6 +4,8 @@ export const FEEDBACK_FORM_URL =
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
 
+export const MAX_GRAPHEME_LENGTH = 300
+
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
 // but increasing limit per user feedback
 export const MAX_ALT_TEXT = 1000
