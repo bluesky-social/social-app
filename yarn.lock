@@ -29,10 +29,21 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@atproto/api@*", "@atproto/api@0.3.3":
+"@atproto/api@*":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.3.3.tgz#8c8d41567beb7b37217f76d2aacf2c280e9fd07e"
   integrity sha512-BlgpYbdPO0KSBypg2KgqHM0kS2Pk82P3X0w2rJs/vrdcMl72d2WeI9kQ5PPFiz80p6C6XcLcpnzzKKtQeFvh4A==
+  dependencies:
+    "@atproto/common-web" "*"
+    "@atproto/uri" "*"
+    "@atproto/xrpc" "*"
+    tlds "^1.234.0"
+    typed-emitter "^2.1.0"
+
+"@atproto/api@0.3.7":
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.3.7.tgz#5cc4b0ccc5c6690eb0e5a3ae138a84ce20697e2f"
+  integrity sha512-JHN3rHNGro4AaJWU64hsmpTUzd2+FbfMBiDkqyBmoKtj972ueBJeH8tz6WdnPcsIRfCj1kRthKFj2yJwgt6aSQ==
   dependencies:
     "@atproto/common-web" "*"
     "@atproto/uri" "*"
@@ -137,10 +148,10 @@
   resolved "https://registry.yarnpkg.com/@atproto/nsid/-/nsid-0.0.1.tgz#0cdc00cefe8f0b1385f352b9f57b3ad37fff09a4"
   integrity sha512-t5M6/CzWBVYoBbIvfKDpqPj/+ZmyoK9ydZSStcTXosJ27XXwOPhz0VDUGKK2SM9G5Y7TPes8S5KTAU0UdVYFCw==
 
-"@atproto/pds@^0.1.8":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.1.8.tgz#cf1a9bab2301c3fe1120c63576153ac5a20bf70d"
-  integrity sha512-I493U+/NNU9D8L8tVbM/OpD6gQ6/Mv7uE+/i4a1vfBGO6NqYJ6jKw3qeCy4jq3NVbTxcs+lSSpK27hgApx4PtA==
+"@atproto/pds@^0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.1.10.tgz#cde4a06982ec0ba7166e978afed78f58abc5c6b1"
+  integrity sha512-Yxnpv3mQNrIcR5GFPUUoffSSDpZHzXXHuk36wtPXm7dDSg+ACgtILPcDSpkjr27JwE5OcfgD2UbQwXt7az7OLA==
   dependencies:
     "@atproto/api" "*"
     "@atproto/common" "*"
