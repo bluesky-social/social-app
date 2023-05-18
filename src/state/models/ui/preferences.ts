@@ -11,6 +11,7 @@ import {
   ALWAYS_FILTER_LABEL_GROUP,
   ALWAYS_WARN_LABEL_GROUP,
 } from 'lib/labeling/const'
+import {DEFAULT_FEEDS} from 'lib/constants'
 import {isIOS} from 'platform/detection'
 
 const deviceLocales = getLocales()
@@ -95,6 +96,8 @@ export class PreferencesModel {
   }
 
   async sync() {
+    // fetch preferences
+    let hasSavedFeedsPref = false
     const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
     runInAction(() => {
       for (const pref of res.data.preferences) {
@@ -120,14 +123,41 @@ export class PreferencesModel {
         ) {
           this.savedFeeds = pref.saved
           this.pinnedFeeds = pref.pinned
+          hasSavedFeedsPref = true
         }
       }
     })
+
+    // set defaults on missing items
+    if (!hasSavedFeedsPref) {
+      const {saved, pinned} = await DEFAULT_FEEDS(
+        this.rootStore.agent.service.toString(),
+        (handle: string) =>
+          this.rootStore.agent
+            .resolveHandle({handle})
+            .then(({data}) => data.did),
+      )
+      runInAction(() => {
+        this.savedFeeds = saved
+        this.pinnedFeeds = pinned
+      })
+      res.data.preferences.push({
+        $type: 'app.bsky.actor.defs#savedFeedsPref',
+        saved,
+        pinned,
+      })
+      await this.rootStore.agent.app.bsky.actor.putPreferences({
+        preferences: res.data.preferences,
+      })
+      /* dont await */ this.rootStore.me.savedFeeds.refresh()
+    }
   }
 
-  async update(cb: (prefs: AppBskyActorDefs.Preferences) => void) {
+  async update(cb: (prefs: AppBskyActorDefs.Preferences) => boolean | void) {
     const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
-    cb(res.data.preferences)
+    if (cb(res.data.preferences) === false) {
+      return
+    }
     await this.rootStore.agent.app.bsky.actor.putPreferences({
       preferences: res.data.preferences,
     })
