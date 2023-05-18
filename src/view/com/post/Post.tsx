@@ -170,7 +170,9 @@ const PostLoaded = observer(
     const onOpenTranslate = React.useCallback(() => {
       Linking.openURL(
         encodeURI(
-          `https://translate.google.com/#auto|en|${record?.text || ''}`,
+          `https://translate.google.com/?sl=auto&tl=en&text=${
+            record?.text || ''
+          }`,
         ),
       )
     }, [record])
