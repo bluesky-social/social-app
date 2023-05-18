@@ -26,7 +26,6 @@ import {
   CogIcon,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
-  MoonIcon,
   UserIconSolid,
   HandIcon,
 } from 'lib/icons'
