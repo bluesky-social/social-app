@@ -71,8 +71,17 @@ export const SavedFeeds = withAuthRequired(
     }
 
     return (
-      <CenteredView style={[s.flex1]}>
-        <ViewHeader title="Edit My Feeds" showOnDesktop />
+      <CenteredView
+        style={[
+          s.hContentRegion,
+          pal.border,
+          isDesktopWeb && styles.desktopContainer,
+        ]}>
+        <ViewHeader
+          title="Edit My Feeds"
+          showOnDesktop
+          showBorder={!isDesktopWeb}
+        />
         <DraggableFlatList
           containerStyle={[!isDesktopWeb && s.flex1]}
           data={[...savedFeeds.pinned, ...savedFeeds.unpinned]} // make a copy so this FlatList re-renders when pinned changes
@@ -92,8 +101,6 @@ export const SavedFeeds = withAuthRequired(
           ListEmptyComponent={_ListEmptyComponent}
           extraData={savedFeeds.isLoading}
           onDragEnd={({data}) => savedFeeds.reorderPinnedFeeds(data)}
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight
         />
       </CenteredView>
     )
@@ -126,8 +133,8 @@ const ListItem = observer(
                   }}>
                   <FontAwesomeIcon
                     icon="arrow-up"
-                    size={20}
-                    style={[s.mr10, pal.text, styles.webArrowUpButton]}
+                    size={12}
+                    style={[pal.text, styles.webArrowUpButton]}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -137,8 +144,8 @@ const ListItem = observer(
                   }}>
                   <FontAwesomeIcon
                     icon="arrow-down"
-                    size={20}
-                    style={[s.mr10, pal.text]}
+                    size={12}
+                    style={[pal.text]}
                   />
                 </TouchableOpacity>
               </View>
@@ -173,6 +180,11 @@ const ListItem = observer(
 )
 
 const styles = StyleSheet.create({
+  desktopContainer: {
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    minHeight: '100vh',
+  },
   footer: {
     paddingVertical: 20,
   },
@@ -187,10 +199,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    borderTopWidth: 1,
+    borderBottomWidth: 1,
     paddingRight: 16,
   },
   webArrowButtonsContainer: {
+    paddingLeft: 16,
     flexDirection: 'column',
     justifyContent: 'space-around',
   },

@@ -20,12 +20,14 @@ export const ViewHeader = observer(function ({
   canGoBack,
   hideOnScroll,
   showOnDesktop,
+  showBorder,
   renderButton,
 }: {
   title: string
   canGoBack?: boolean
   hideOnScroll?: boolean
   showOnDesktop?: boolean
+  showBorder?: boolean
   renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
@@ -57,7 +59,7 @@ export const ViewHeader = observer(function ({
     }
 
     return (
-      <Container hideOnScroll={hideOnScroll || false}>
+      <Container hideOnScroll={hideOnScroll || false} showBorder={showBorder}>
         <TouchableOpacity
           testID="viewHeaderDrawerBtn"
           onPress={canGoBack ? onPressBack : onPressMenu}
@@ -115,9 +117,11 @@ const Container = observer(
   ({
     children,
     hideOnScroll,
+    showBorder,
   }: {
     children: React.ReactNode
     hideOnScroll: boolean
+    showBorder: boolean
   }) => {
     const store = useStores()
     const pal = usePalette('default')
@@ -145,11 +149,28 @@ const Container = observer(
     }
 
     if (!hideOnScroll) {
-      return <View style={[styles.header, pal.view]}>{children}</View>
+      return (
+        <View
+          style={[
+            styles.header,
+            pal.view,
+            pal.border,
+            showBorder && styles.border,
+          ]}>
+          {children}
+        </View>
+      )
     }
     return (
       <Animated.View
-        style={[styles.header, pal.view, styles.headerFloating, transform]}>
+        style={[
+          styles.header,
+          pal.view,
+          pal.border,
+          styles.headerFloating,
+          transform,
+          showBorder && styles.border,
+        ]}>
         {children}
       </Animated.View>
     )
@@ -171,6 +192,9 @@ const styles = StyleSheet.create({
   desktopHeader: {
     borderBottomWidth: 1,
     paddingVertical: 12,
+  },
+  border: {
+    borderBottomWidth: 1,
   },
 
   titleContainer: {

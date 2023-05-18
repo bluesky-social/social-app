@@ -107,11 +107,12 @@ const styles = isDesktopWeb
   ? StyleSheet.create({
       outer: {
         flexDirection: 'row',
-        paddingHorizontal: 18,
+        width: 598,
+        paddingHorizontal: 14,
       },
       item: {
         paddingTop: 14,
-        paddingBottom: 16,
+        paddingBottom: 12,
         paddingHorizontal: 12,
         borderBottomWidth: 3,
         borderBottomColor: 'transparent',

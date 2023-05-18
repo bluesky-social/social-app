@@ -1,10 +1,10 @@
 import React, {useEffect, useCallback} from 'react'
-import {FlatList, RefreshControl, StyleSheet, View} from 'react-native'
+import {RefreshControl, StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
-import {CenteredView} from 'view/com/util/Views'
+import {FlatList} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
 import {isDesktopWeb} from 'platform/detection'
 import {s} from 'lib/styles'
@@ -65,31 +65,29 @@ export const SavedFeeds = observer(
     )
 
     return (
-      <CenteredView style={[s.flex1]}>
-        <FlatList
-          style={[!isDesktopWeb && s.flex1, {paddingTop: headerOffset}]}
-          data={store.me.savedFeeds.feeds}
-          keyExtractor={item => item.data.uri}
-          refreshing={store.me.savedFeeds.isRefreshing}
-          refreshControl={
-            <RefreshControl
-              refreshing={store.me.savedFeeds.isRefreshing}
-              onRefresh={() => store.me.savedFeeds.refresh()}
-              tintColor={pal.colors.text}
-              titleColor={pal.colors.text}
-              progressViewOffset={headerOffset}
-            />
-          }
-          renderItem={renderItem}
-          initialNumToRender={10}
-          ListFooterComponent={renderListFooterComponent}
-          ListEmptyComponent={renderListEmptyComponent}
-          extraData={store.me.savedFeeds.isLoading}
-          contentOffset={{x: 0, y: headerOffset * -1}}
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight
-        />
-      </CenteredView>
+      <FlatList
+        style={[!isDesktopWeb && s.flex1, {paddingTop: headerOffset}]}
+        data={store.me.savedFeeds.feeds}
+        keyExtractor={item => item.data.uri}
+        refreshing={store.me.savedFeeds.isRefreshing}
+        refreshControl={
+          <RefreshControl
+            refreshing={store.me.savedFeeds.isRefreshing}
+            onRefresh={() => store.me.savedFeeds.refresh()}
+            tintColor={pal.colors.text}
+            titleColor={pal.colors.text}
+            progressViewOffset={headerOffset}
+          />
+        }
+        renderItem={renderItem}
+        initialNumToRender={10}
+        ListFooterComponent={renderListFooterComponent}
+        ListEmptyComponent={renderListEmptyComponent}
+        extraData={store.me.savedFeeds.isLoading}
+        contentOffset={{x: 0, y: headerOffset * -1}}
+        // @ts-ignore our .web version only -prf
+        desktopFixedHeight
+      />
     )
   },
 )
