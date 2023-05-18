@@ -38,6 +38,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
     useNavigationTabState()
 
   const {footerMinimalShellTransform} = useMinimalShellMode()
+  const {notifications} = store.me
 
   const onPressTab = React.useCallback(
     (tab: string) => {
@@ -138,11 +139,15 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
           )
         }
         onPress={onPressNotifications}
-        notificationCount={store.me.notifications.unreadCountLabel}
+        notificationCount={notifications.unreadCountLabel}
         accessible={true}
         accessibilityRole="tab"
         accessibilityLabel="Notifications"
-        accessibilityHint={`${store.me.notifications.unreadCountLabel} unread`}
+        accessibilityHint={
+          notifications.unreadCountLabel === ''
+            ? ''
+            : `${notifications.unreadCountLabel} unread`
+        }
       />
       <Btn
         testID="bottomBarProfileBtn"

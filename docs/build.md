@@ -21,7 +21,7 @@
 - If you are cloning or forking this repo as an open source developer, please check the tips below as well
 - Run e2e tests
   - Start in various console tabs:
-    - `yarn e2e:server`
+    - `yarn e2e:mock-server`
     - `yarn e2e:metro`
   - Run once: `yarn e2e:build`
   - Each test run: `yarn e2e:run`
@@ -31,7 +31,7 @@
   - `npx react-native info` Checks what has been installed.
   - The android simulator won't be able to access localhost services unless you run `adb reverse tcp:{PORT} tcp:{PORT}`
     - For instance, the localhosted dev-wallet will need `adb reverse tcp:3001 tcp:3001`
-  - For some reason, the typescript compiler chokes on platform-specific files (e.g. `foo.native.ts`) but only when compiling for Web thus far. Therefore we always have one version of the file which doesn't use a platform specifier, and that should bee the Web version. ([More info](https://stackoverflow.com/questions/44001050/platform-specific-import-component-in-react-native-with-typescript).)
+  - For some reason, the typescript compiler chokes on platform-specific files (e.g. `foo.native.ts`) but only when compiling for Web thus far. Therefore we always have one version of the file which doesn't use a platform specifier, and that should be the Web version. ([More info](https://stackoverflow.com/questions/44001050/platform-specific-import-component-in-react-native-with-typescript).)
 
 ## Go-Server Build
 

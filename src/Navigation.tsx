@@ -28,7 +28,6 @@ import {isNative} from 'platform/detection'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {router} from './routes'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useUnreadCountLabel} from 'lib/hooks/useUnreadCountLabel'
 import {useStores} from './state'
 
 import {HomeScreen} from './view/screens/Home'
@@ -296,9 +295,9 @@ const MyProfileTabNavigator = observer(() => {
  * The FlatNavigator is used by Web to represent the routes
  * in a single ("flat") stack.
  */
-function FlatNavigator() {
+const FlatNavigator = observer(() => {
   const pal = usePalette('default')
-  const unreadCountLabel = useUnreadCountLabel()
+  const unreadCountLabel = useStores().me.notifications.unreadCountLabel
   const title = (page: string) => bskyTitle(page, unreadCountLabel)
   return (
     <Flat.Navigator
@@ -327,7 +326,7 @@ function FlatNavigator() {
       {commonScreens(Flat as typeof HomeTab, unreadCountLabel)}
     </Flat.Navigator>
   )
-}
+})
 
 /**
  * The RoutesContainer should wrap all components which need access
