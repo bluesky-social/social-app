@@ -134,6 +134,33 @@ export const CustomFeedScreen = withAuthRequired(
                   )}
                 </Text>
               )}
+              {isDesktopWeb && (
+                <View style={styles.headerBtns}>
+                  <Button
+                    type={currentFeed?.isSaved ? 'default' : 'inverted'}
+                    onPress={onToggleSaved}
+                    accessibilityLabel={
+                      currentFeed?.isSaved
+                        ? 'Unsave this feed'
+                        : 'Save this feed'
+                    }
+                    accessibilityHint=""
+                    label={
+                      currentFeed?.isSaved
+                        ? 'Remove from My Feeds'
+                        : 'Add to My Feeds'
+                    }
+                  />
+
+                  <Button type="default" onPress={onToggleLiked}>
+                    {currentFeed?.isLiked ? (
+                      <HeartIconSolid size={18} style={styles.liked} />
+                    ) : (
+                      <HeartIcon strokeWidth={3} size={18} style={pal.icon} />
+                    )}
+                  </Button>
+                </View>
+              )}
             </View>
             <View>
               <UserAvatar
@@ -158,27 +185,6 @@ export const CustomFeedScreen = withAuthRequired(
                 'user',
               )}`}
             />
-            {isDesktopWeb && (
-              <View style={styles.headerBtns}>
-                <Button
-                  type={currentFeed?.isSaved ? 'default' : 'inverted'}
-                  onPress={onToggleSaved}
-                  accessibilityLabel={
-                    currentFeed?.isSaved ? 'Unsave this feed' : 'Save this feed'
-                  }
-                  accessibilityHint=""
-                  label={currentFeed?.isSaved ? 'Unsave' : 'Save'}
-                />
-
-                <Button type="default" onPress={onToggleLiked}>
-                  {currentFeed?.isLiked ? (
-                    <HeartIconSolid size={18} style={styles.liked} />
-                  ) : (
-                    <HeartIcon strokeWidth={3} size={18} style={pal.icon} />
-                  )}
-                </Button>
-              </View>
-            )}
           </View>
           <View style={[styles.fakeSelector, pal.border]}>
             <View
@@ -190,7 +196,15 @@ export const CustomFeedScreen = withAuthRequired(
           </View>
         </>
       )
-    }, [store.me.did, pal, currentFeed, onToggleLiked, onToggleSaved])
+    }, [
+      store.me.did,
+      pal,
+      currentFeed,
+      onToggleLiked,
+      onToggleSaved,
+      name,
+      rkey,
+    ])
 
     return (
       <View style={s.hContentRegion}>
@@ -207,10 +221,6 @@ export const CustomFeedScreen = withAuthRequired(
 )
 
 const styles = StyleSheet.create({
-  headerBtns: {
-    flexDirection: 'row',
-    gap: 8,
-  },
   header: {
     flexDirection: 'row',
     gap: 12,
@@ -218,6 +228,11 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 16,
     borderTopWidth: 1,
+  },
+  headerBtns: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 10,
   },
   headerDetails: {
     paddingHorizontal: 16,
