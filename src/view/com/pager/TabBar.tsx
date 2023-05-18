@@ -10,7 +10,7 @@ import {StyleSheet, View, ScrollView} from 'react-native'
 import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb, isWeb} from 'platform/detection'
+import {isDesktopWeb} from 'platform/detection'
 
 export interface TabBarProps {
   testID?: string

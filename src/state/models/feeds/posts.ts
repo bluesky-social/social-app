@@ -6,7 +6,6 @@ import {
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
   AppBskyFeedGetFeed as GetCustomFeed,
   RichText,
-  jsonToLex,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'

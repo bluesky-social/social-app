@@ -66,7 +66,6 @@ export class SavedFeedsModel {
     this._xLoading(!quietRefresh)
     try {
       let feeds: AppBskyFeedDefs.GeneratorView[] = []
-      let cursor
       for (
         let i = 0;
         i < this.rootStore.preferences.savedFeeds.length;
