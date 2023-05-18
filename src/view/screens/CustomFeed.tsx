@@ -1,5 +1,6 @@
 import React, {useMemo, useRef} from 'react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {CommonNavigatorParams} from 'lib/routes/types'
@@ -21,6 +22,8 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {isDesktopWeb} from 'platform/detection'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {shareUrl} from 'lib/sharing'
+import {toShareUrl} from 'lib/strings/url-helpers'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export const CustomFeedScreen = withAuthRequired(
@@ -73,10 +76,22 @@ export const CustomFeedScreen = withAuthRequired(
         store.log.error('Failed up toggle like', {err})
       }
     }, [store, currentFeed])
+    const onPressShare = React.useCallback(() => {
+      const url = toShareUrl(`/profile/${name}/feed/${rkey}`)
+      shareUrl(url)
+    }, [name, rkey])
 
     const renderHeaderBtns = React.useCallback(() => {
       return (
         <View style={styles.headerBtns}>
+          <Button
+            testID="shareBtn"
+            type="default"
+            accessibilityLabel="Share this feed"
+            accessibilityHint=""
+            onPress={onPressShare}>
+            <FontAwesomeIcon icon="share" size={18} color={pal.colors.icon} />
+          </Button>
           <Button
             type="default"
             testID="toggleLikeBtn"
@@ -108,6 +123,7 @@ export const CustomFeedScreen = withAuthRequired(
       currentFeed?.isLiked,
       onToggleSaved,
       onToggleLiked,
+      onPressShare,
     ])
 
     const renderListHeaderComponent = React.useCallback(() => {
@@ -151,13 +167,27 @@ export const CustomFeedScreen = withAuthRequired(
                         : 'Add to My Feeds'
                     }
                   />
-
-                  <Button type="default" onPress={onToggleLiked}>
+                  <Button
+                    type="default"
+                    accessibilityLabel="Like this feed"
+                    accessibilityHint=""
+                    onPress={onToggleLiked}>
                     {currentFeed?.isLiked ? (
                       <HeartIconSolid size={18} style={styles.liked} />
                     ) : (
                       <HeartIcon strokeWidth={3} size={18} style={pal.icon} />
                     )}
+                  </Button>
+                  <Button
+                    type="default"
+                    accessibilityLabel="Share this feed"
+                    accessibilityHint=""
+                    onPress={onPressShare}>
+                    <FontAwesomeIcon
+                      icon="share"
+                      size={18}
+                      color={pal.colors.icon}
+                    />
                   </Button>
                 </View>
               )}
@@ -202,6 +232,7 @@ export const CustomFeedScreen = withAuthRequired(
       currentFeed,
       onToggleLiked,
       onToggleSaved,
+      onPressShare,
       name,
       rkey,
     ])
