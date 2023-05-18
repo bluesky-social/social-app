@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {useNavigation} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -7,14 +8,21 @@ import {
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import {MagnifyingGlassIcon} from 'lib/icons'
+import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 
-export function WhatsHotEmptyState() {
+export function CustomFeedEmptyState() {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const store = useStores()
+  const navigation = useNavigation<NavigationProp>()
+
+  const onPressFindAccounts = React.useCallback(() => {
+    navigation.navigate('SearchTab')
+    navigation.popToTop()
+  }, [navigation])
 
   const onPressSettings = React.useCallback(() => {
     store.shell.openModal({name: 'content-languages-settings'})
@@ -26,9 +34,22 @@ export function WhatsHotEmptyState() {
         <MagnifyingGlassIcon style={[styles.emptyIcon, pal.text]} size={62} />
       </View>
       <Text type="xl-medium" style={[s.textCenter, pal.text]}>
-        Your What's Hot feed is empty! This is because there aren't enough users
-        posting in your selected language.
+        This feed is empty! You may need to follow more users or tune your
+        language settings.
       </Text>
+      <Button
+        type="inverted"
+        style={styles.emptyBtn}
+        onPress={onPressFindAccounts}>
+        <Text type="lg-medium" style={palInverted.text}>
+          Find accounts to follow
+        </Text>
+        <FontAwesomeIcon
+          icon="angle-right"
+          style={palInverted.text as FontAwesomeIconStyle}
+          size={14}
+        />
+      </Button>
       <Button type="inverted" style={styles.emptyBtn} onPress={onPressSettings}>
         <Text type="lg-medium" style={palInverted.text}>
           Update my settings

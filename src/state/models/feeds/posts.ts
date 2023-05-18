@@ -310,7 +310,7 @@ export class PostsFeedModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public feedType: 'home' | 'author' | 'suggested' | 'goodstuff' | 'custom',
+    public feedType: 'home' | 'author' | 'suggested' | 'custom',
     params:
       | GetTimeline.QueryParams
       | GetAuthorFeed.QueryParams
@@ -391,10 +391,9 @@ export class PostsFeedModel {
   }
 
   get feedTuners() {
-    if (this.feedType === 'goodstuff') {
+    if (this.feedType === 'custom') {
       return [
         FeedTuner.dedupReposts,
-        FeedTuner.likedRepliesOnly,
         FeedTuner.preferredLangOnly(
           this.rootStore.preferences.contentLanguages,
         ),
@@ -701,61 +700,10 @@ export class PostsFeedModel {
       return this.rootStore.agent.app.bsky.feed.getFeed(
         params as GetCustomFeed.QueryParams,
       )
-    } else if (this.feedType === 'goodstuff') {
-      const res = await getGoodStuff(
-        this.rootStore.session.currentSession?.accessJwt || '',
-        params as GetTimeline.QueryParams,
-      )
-      res.data.feed = (res.data.feed || []).filter(
-        item => !item.post.author.viewer?.muted,
-      )
-      return res
     } else {
       return this.rootStore.agent.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,
       )
     }
-  }
-}
-
-// HACK
-// temporary off-spec route to get the good stuff
-// -prf
-async function getGoodStuff(
-  accessJwt: string,
-  params: GetTimeline.QueryParams,
-): Promise<GetTimeline.Response> {
-  const controller = new AbortController()
-  const to = setTimeout(() => controller.abort(), 15e3)
-
-  const uri = new URL('https://bsky.social/xrpc/app.bsky.unspecced.getPopular')
-  let k: keyof GetTimeline.QueryParams
-  for (k in params) {
-    if (typeof params[k] !== 'undefined') {
-      uri.searchParams.set(k, String(params[k]))
-    }
-  }
-
-  const res = await fetch(String(uri), {
-    method: 'get',
-    headers: {
-      accept: 'application/json',
-      authorization: `Bearer ${accessJwt}`,
-    },
-    signal: controller.signal,
-  })
-
-  const resHeaders: Record<string, string> = {}
-  res.headers.forEach((value: string, key: string) => {
-    resHeaders[key] = value
-  })
-  let resBody = await res.json()
-
-  clearTimeout(to)
-
-  return {
-    success: res.status === 200,
-    headers: resHeaders,
-    data: jsonToLex(resBody),
   }
 }

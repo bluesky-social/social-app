@@ -11,7 +11,7 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
 import {Feed} from '../com/posts/Feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
-import {WhatsHotEmptyState} from 'view/com/posts/WhatsHotEmptyState'
+import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
@@ -34,15 +34,6 @@ export const HomeScreen = withAuthRequired(
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
     const [customFeeds, setCustomFeeds] = React.useState<PostsFeedModel[]>([])
-    const [initialLanguages] = React.useState(
-      store.preferences.contentLanguages,
-    )
-
-    const algoFeed: PostsFeedModel = React.useMemo(() => {
-      const feed = new PostsFeedModel(store, 'goodstuff', {})
-      feed.setup()
-      return feed
-    }, [store])
 
     React.useEffect(() => {
       const {pinned} = store.me.savedFeeds
@@ -65,13 +56,6 @@ export const HomeScreen = withAuthRequired(
       pagerRef.current?.setPage(0)
       setCustomFeeds(feeds)
     }, [store, store.me.savedFeeds.pinned, customFeeds, setCustomFeeds])
-
-    React.useEffect(() => {
-      // refresh whats hot when lang preferences change
-      if (initialLanguages !== store.preferences.contentLanguages) {
-        algoFeed.refresh()
-      }
-    }, [initialLanguages, store.preferences.contentLanguages, algoFeed])
 
     useFocusEffect(
       React.useCallback(() => {
@@ -113,8 +97,8 @@ export const HomeScreen = withAuthRequired(
       return <FollowingEmptyState />
     }, [])
 
-    const renderWhatsHotEmptyState = React.useCallback(() => {
-      return <WhatsHotEmptyState />
+    const renderCustomFeedEmptyState = React.useCallback(() => {
+      return <CustomFeedEmptyState />
     }, [])
 
     const initialPage = store.me.followsCount === 0 ? 1 : 0
@@ -133,26 +117,19 @@ export const HomeScreen = withAuthRequired(
           feed={store.me.mainFeed}
           renderEmptyState={renderFollowingEmptyState}
         />
-        <FeedPage
-          key="2"
-          testID="whatshotFeedPage"
-          isPageFocused={selectedPage === 1}
-          feed={algoFeed}
-          renderEmptyState={renderWhatsHotEmptyState}
-        />
         {customFeeds.map((f, index) => {
           return (
             <FeedPage
               key={(f.params as GetCustomFeed.QueryParams).feed}
               testID="customFeedPage"
-              isPageFocused={selectedPage === 2 + index}
+              isPageFocused={selectedPage === 1 + index}
               feed={f}
-              renderEmptyState={renderFollowingEmptyState}
+              renderEmptyState={renderCustomFeedEmptyState}
             />
           )
         })}
         <SavedFeeds
-          key={String(3 + store.me.savedFeeds.pinned.length)}
+          key={String(2 + store.me.savedFeeds.pinned.length)}
           headerOffset={HEADER_OFFSET}
           isPageFocused={selectedPage === 2 + store.me.savedFeeds.pinned.length}
         />
