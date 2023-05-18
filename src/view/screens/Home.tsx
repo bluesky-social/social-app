@@ -53,7 +53,6 @@ export const HomeScreen = withAuthRequired(
         model.setup()
         feeds.push(model)
       }
-      pagerRef.current?.setPage(0)
       setCustomFeeds(feeds)
     }, [store, store.me.savedFeeds.pinned, customFeeds, setCustomFeeds])
 

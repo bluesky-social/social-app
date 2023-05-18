@@ -9,24 +9,18 @@ import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import {MagnifyingGlassIcon} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 
 export function CustomFeedEmptyState() {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
-  const store = useStores()
   const navigation = useNavigation<NavigationProp>()
 
   const onPressFindAccounts = React.useCallback(() => {
     navigation.navigate('SearchTab')
     navigation.popToTop()
   }, [navigation])
-
-  const onPressSettings = React.useCallback(() => {
-    store.shell.openModal({name: 'content-languages-settings'})
-  }, [store])
 
   return (
     <View style={styles.emptyContainer}>
@@ -43,16 +37,6 @@ export function CustomFeedEmptyState() {
         onPress={onPressFindAccounts}>
         <Text type="lg-medium" style={palInverted.text}>
           Find accounts to follow
-        </Text>
-        <FontAwesomeIcon
-          icon="angle-right"
-          style={palInverted.text as FontAwesomeIconStyle}
-          size={14}
-        />
-      </Button>
-      <Button type="inverted" style={styles.emptyBtn} onPress={onPressSettings}>
-        <Text type="lg-medium" style={palInverted.text}>
-          Update my settings
         </Text>
         <FontAwesomeIcon
           icon="angle-right"
