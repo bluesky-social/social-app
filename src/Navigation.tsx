@@ -147,10 +147,19 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         component={PostRepostedByScreen}
         options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
       />
-      <Stack.Screen name="CustomFeed" component={CustomFeedScreen} />
+      <Stack.Screen
+        name="CustomFeed"
+        component={CustomFeedScreen}
+        options={({route}) => ({
+          title: title(`Custom feed by @${route.params.name}`),
+        })}
+      />
       <Stack.Screen
         name="CustomFeedLikedBy"
         component={CustomFeedLikedByScreen}
+        options={({route}) => ({
+          title: title(`Custom feed by @${route.params.name}`),
+        })}
       />
       <Stack.Screen
         name="Debug"
@@ -192,7 +201,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         component={AppPasswords}
         options={{title: title('App Passwords')}}
       />
-      <Stack.Screen name="SavedFeeds" component={SavedFeeds} />
+      <Stack.Screen
+        name="SavedFeeds"
+        component={SavedFeeds}
+        options={{title: title('Edit My Feeds')}}
+      />
     </>
   )
 }
