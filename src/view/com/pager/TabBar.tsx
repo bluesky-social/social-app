@@ -1,22 +1,21 @@
-import React, {createRef, useState, useMemo, useRef} from 'react'
-import {Animated, StyleSheet, View, ScrollView} from 'react-native'
+import React, {
+  useRef,
+  createRef,
+  useMemo,
+  useEffect,
+  useState,
+  useCallback,
+} from 'react'
+import {StyleSheet, View, ScrollView} from 'react-native'
 import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
 
-interface Layout {
-  x: number
-  width: number
-}
-
 export interface TabBarProps {
   testID?: string
   selectedPage: number
   items: string[]
-  position: Animated.Value
-  offset: Animated.Value
-  indicatorPosition?: 'top' | 'bottom'
   indicatorColor?: string
   onSelect?: (index: number) => void
   onPressSelected?: () => void
@@ -26,81 +25,27 @@ export function TabBar({
   testID,
   selectedPage,
   items,
-  position,
-  offset,
-  indicatorPosition = 'bottom',
   indicatorColor,
   onSelect,
   onPressSelected,
 }: TabBarProps) {
   const pal = usePalette('default')
-  const [itemLayouts, setItemLayouts] = useState<Layout[]>(
-    items.map(() => ({x: 0, width: 0})),
-  )
+  const scrollElRef = useRef<ScrollView>(null)
+  const [itemXs, setItemXs] = useState<number[]>([])
   const itemRefs = useMemo(
     () => Array.from({length: items.length}).map(() => createRef<View>()),
     [items.length],
   )
-  const panX = Animated.add(position, offset)
-  const containerRef = useRef<View>(null)
-  const [scrollX, setScrollX] = useState(0)
-
   const indicatorStyle = useMemo(
-    () => ({
-      backgroundColor: indicatorColor || pal.colors.link,
-      bottom:
-        indicatorPosition === 'bottom' ? (isDesktopWeb ? 0 : -1) : undefined,
-      top: indicatorPosition === 'top' ? (isDesktopWeb ? 0 : -1) : undefined,
-      transform: [
-        {
-          translateX: panX.interpolate({
-            inputRange: items.map((_item, i) => i),
-            outputRange: itemLayouts.map(l => l.x + l.width / 2 - scrollX),
-          }),
-        },
-        {
-          scaleX: panX.interpolate({
-            inputRange: items.map((_item, i) => i),
-            outputRange: itemLayouts.map(l => l.width),
-          }),
-        },
-      ],
-    }),
-    [
-      indicatorColor,
-      indicatorPosition,
-      itemLayouts,
-      items,
-      panX,
-      pal.colors.link,
-      scrollX,
-    ],
+    () => ({borderBottomColor: indicatorColor || pal.colors.link}),
+    [indicatorColor, pal],
   )
 
-  const onLayout = React.useCallback(() => {
-    const promises = []
-    for (let i = 0; i < items.length; i++) {
-      promises.push(
-        new Promise<Layout>(resolve => {
-          if (!containerRef.current || !itemRefs[i].current) {
-            return resolve({x: 0, width: 0})
-          }
+  useEffect(() => {
+    scrollElRef.current?.scrollTo({x: itemXs[selectedPage] || 0})
+  }, [scrollElRef, itemXs, selectedPage])
 
-          itemRefs[i].current?.measureLayout(
-            containerRef.current,
-            (x: number, _y: number, width: number) => {
-              resolve({x, width})
-            },
-          )
-        }),
-      )
-    }
-    Promise.all(promises).then((layouts: Layout[]) => {
-      setItemLayouts(layouts)
-    })
-  }, [containerRef, itemRefs, setItemLayouts, items.length])
-
-  const onPressItem = React.useCallback(
+  const onPressItem = useCallback(
     (index: number) => {
       onSelect?.(index)
       if (index === selectedPage) {
@@ -110,28 +55,38 @@ export function TabBar({
     [onSelect, onPressSelected, selectedPage],
   )
 
+  const onLayout = React.useCallback(() => {
+    const promises = []
+    for (let i = 0; i < items.length; i++) {
+      promises.push(
+        new Promise<number>(resolve => {
+          if (!itemRefs[i].current) {
+            return resolve(0)
+          }
+
+          itemRefs[i].current?.measure((x: number) => resolve(x))
+        }),
+      )
+    }
+    Promise.all(promises).then((Xs: number[]) => {
+      setItemXs(Xs)
+    })
+  }, [itemRefs, setItemXs, items.length])
+
   return (
-    <View
-      testID={testID}
-      style={[pal.view, styles.outer]}
-      onLayout={onLayout}
-      ref={containerRef}>
-      <Animated.View style={[styles.indicator, indicatorStyle]} />
+    <View testID={testID} style={[pal.view, styles.outer]}>
       <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        onScroll={({nativeEvent}) => {
-          setScrollX(nativeEvent.contentOffset.x)
-        }}>
+        ref={scrollElRef}
+        onLayout={onLayout}>
         {items.map((item, i) => {
           const selected = i === selectedPage
           return (
             <PressableWithHover
               ref={itemRefs[i]}
               key={item}
-              style={
-                indicatorPosition === 'top' ? styles.itemTop : styles.itemBottom
-              }
+              style={[styles.item, selected && indicatorStyle]}
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}>
               <Text
@@ -154,43 +109,25 @@ const styles = isDesktopWeb
         flexDirection: 'row',
         paddingHorizontal: 18,
       },
-      itemTop: {
-        paddingTop: 16,
-        paddingBottom: 14,
-        paddingHorizontal: 12,
-      },
-      itemBottom: {
+      item: {
         paddingTop: 14,
         paddingBottom: 16,
         paddingHorizontal: 12,
-      },
-      indicator: {
-        position: 'absolute',
-        left: 0,
-        width: 1,
-        height: 3,
-        zIndex: 1,
+        borderBottomWidth: 3,
+        borderBottomColor: 'transparent',
       },
     })
   : StyleSheet.create({
       outer: {
         flexDirection: 'row',
-        paddingHorizontal: 14,
+        paddingLeft: 14,
+        paddingRight: 24,
       },
-      itemTop: {
-        paddingTop: 10,
-        paddingBottom: 10,
-        marginRight: 24,
-      },
-      itemBottom: {
+      item: {
         paddingTop: 8,
         paddingBottom: 12,
         marginRight: 24,
-      },
-      indicator: {
-        position: 'absolute',
-        left: 0,
-        width: 1,
-        height: 3,
+        borderBottomWidth: 3,
+        borderBottomColor: 'transparent',
       },
     })

@@ -56,7 +56,6 @@ const FeedsTabBarDesktop = observer(
           {...props}
           key={items.join(',')}
           items={items}
-          indicatorPosition="bottom"
           indicatorColor={pal.colors.link}
         />
       </Animated.View>

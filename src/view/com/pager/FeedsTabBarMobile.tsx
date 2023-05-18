@@ -57,7 +57,6 @@ export const FeedsTabBar = observer(
           key={items.join(',')}
           {...props}
           items={items}
-          indicatorPosition="bottom"
           indicatorColor={pal.colors.link}
         />
       </Animated.View>
