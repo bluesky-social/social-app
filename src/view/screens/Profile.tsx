@@ -120,6 +120,7 @@ export const ProfileScreen = withAuthRequired(
     }, [uiState.showLoadingMoreFooter])
     const renderItem = React.useCallback(
       (item: any) => {
+        // if section is lists
         if (uiState.selectedView === Sections.Lists) {
           if (item === ProfileUiModel.LOADING_ITEM) {
             return <ProfileCardFeedLoadingPlaceholder />
@@ -144,6 +145,32 @@ export const ProfileScreen = withAuthRequired(
           } else {
             return <ListCard testID={`list-${item.name}`} list={item} />
           }
+          // if section is custom algorithms
+        } else if (uiState.selectedView === Sections.CustomAlgorithms) {
+          if (item === ProfileUiModel.LOADING_ITEM) {
+            return <ProfileCardFeedLoadingPlaceholder />
+          } else if (item._reactKey === '__error__') {
+            return (
+              <View style={s.p5}>
+                <ErrorMessage
+                  message={item.error}
+                  onPressTryAgain={onPressTryAgain}
+                />
+              </View>
+            )
+          } else if (item === ProfileUiModel.EMPTY_ITEM) {
+            return (
+              <EmptyState
+                testID="customAlgorithmsEmpty"
+                icon="list-ul"
+                message="No custom algorithms yet!"
+                style={styles.emptyState}
+              />
+            )
+          } else if (item instanceof CustomFeedModel) {
+            return <CustomFeed item={item} showSaveBtn showLikes />
+          }
+          // if section is posts or posts & replies
         } else {
           if (item === ProfileUiModel.END_ITEM) {
             return <Text style={styles.endItem}>- end of feed -</Text>
@@ -188,8 +215,6 @@ export const ProfileScreen = withAuthRequired(
             return (
               <FeedSlice slice={item} ignoreMuteFor={uiState.profile.did} />
             )
-          } else if (item instanceof CustomFeedModel) {
-            return <CustomFeed item={item} showSaveBtn showLikes />
           }
         }
         return <View />
