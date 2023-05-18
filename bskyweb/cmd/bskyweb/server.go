@@ -132,7 +132,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handle/post/:rkey/reposted-by", server.WebGeneric)
 
 	// Mailmodo
-	e.POST("/waitlist", func(c echo.Context) error {
+	e.POST("/api/waitlist", func(c echo.Context) error {
 		email := strings.TrimSpace(c.FormValue("email"))
 		if err := mailmodo.AddToList(c.Request().Context(), mailmodoListName, email); err != nil {
 			return err
