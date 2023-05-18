@@ -139,8 +139,8 @@ export class SavedFeedsModel {
   // public api
   // =
 
-  async refresh() {
-    return this.loadMore(true)
+  async refresh(quietRefresh = false) {
+    return this.loadMore(true, quietRefresh)
   }
 
   clear() {
@@ -153,26 +153,28 @@ export class SavedFeedsModel {
     this.feeds = []
   }
 
-  loadMore = bundleAsync(async (replace: boolean = false) => {
-    if (!replace && !this.hasMore) {
-      return
-    }
-    this._xLoading(replace)
-    try {
-      const res = await this.rootStore.agent.app.bsky.feed.getSavedFeeds({
-        limit: PAGE_SIZE,
-        cursor: replace ? undefined : this.loadMoreCursor,
-      })
-      if (replace) {
-        this._replaceAll(res)
-      } else {
-        this._appendAll(res)
+  loadMore = bundleAsync(
+    async (replace: boolean = false, quietRefresh = false) => {
+      if (!replace && !this.hasMore) {
+        return
       }
-      this._xIdle()
-    } catch (e: any) {
-      this._xIdle(e)
-    }
-  })
+      this._xLoading(replace && !quietRefresh)
+      try {
+        const res = await this.rootStore.agent.app.bsky.feed.getSavedFeeds({
+          limit: PAGE_SIZE,
+          cursor: replace ? undefined : this.loadMoreCursor,
+        })
+        if (replace) {
+          this._replaceAll(res)
+        } else {
+          this._appendAll(res)
+        }
+        this._xIdle()
+      } catch (e: any) {
+        this._xIdle(e)
+      }
+    },
+  )
 
   removeFeed(uri: string) {
     this.feeds = this.feeds.filter(f => f.data.uri !== uri)

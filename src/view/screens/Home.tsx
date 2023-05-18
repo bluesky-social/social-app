@@ -14,6 +14,7 @@ import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
 import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {FAB} from '../com/util/fab/FAB'
+import {SavedFeeds} from 'view/com/feeds/SavedFeeds'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
@@ -115,14 +116,19 @@ export const HomeScreen = withAuthRequired(
         {store.me.savedFeeds.pinned.map((f, index) => {
           return (
             <FeedPage
-              key={String(2 + index + 1)}
-              testID="customFeed"
+              key={String(3 + index)}
+              testID="customFeedPage"
               isPageFocused={selectedPage === 2 + index}
               feed={new PostsFeedModel(store, 'custom', {feed: f.uri})}
               renderEmptyState={renderFollowingEmptyState}
             />
           )
         })}
+        <SavedFeeds
+          key={String(3 + store.me.savedFeeds.pinned.length)}
+          headerOffset={HEADER_OFFSET}
+          isPageFocused={selectedPage === 2 + store.me.savedFeeds.pinned.length}
+        />
       </Pager>
     )
   }),

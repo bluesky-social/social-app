@@ -24,11 +24,13 @@ export const CustomFeed = observer(
     item,
     style,
     showSaveBtn = false,
+    showDescription = false,
     showLikes = false,
   }: {
     item: CustomFeedModel
     style?: StyleProp<ViewStyle>
     showSaveBtn?: boolean
+    showDescription?: boolean
     showLikes?: boolean
   }) => {
     const store = useStores()
@@ -75,7 +77,7 @@ export const CustomFeed = observer(
           )}
         </View>
 
-        {item.data.description ? (
+        {showDescription && item.data.description ? (
           <Text style={[pal.textLight, styles.description]} numberOfLines={3}>
             {item.data.description}
           </Text>

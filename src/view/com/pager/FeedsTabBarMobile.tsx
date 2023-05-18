@@ -37,6 +37,7 @@ export const FeedsTabBar = observer(
         'Following',
         "What's hot",
         ...store.me.savedFeeds.listOfPinnedFeedNames,
+        'My feeds',
       ],
       [store.me.savedFeeds.listOfPinnedFeedNames],
     )
