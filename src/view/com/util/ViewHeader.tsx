@@ -121,7 +121,7 @@ const Container = observer(
   }: {
     children: React.ReactNode
     hideOnScroll: boolean
-    showBorder: boolean
+    showBorder?: boolean
   }) => {
     const store = useStores()
     const pal = usePalette('default')

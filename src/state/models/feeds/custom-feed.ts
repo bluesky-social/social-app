@@ -38,7 +38,7 @@ export class CustomFeedModel {
   }
 
   get isSaved() {
-    return this.data.viewer?.saved
+    return this.rootStore.preferences.savedFeeds.includes(this.uri)
   }
 
   get isLiked() {
@@ -49,23 +49,11 @@ export class CustomFeedModel {
   // =
 
   async save() {
-    await this.rootStore.agent.app.bsky.feed.saveFeed({
-      feed: this.uri,
-    })
-    runInAction(() => {
-      this.data.viewer = this.data.viewer || {}
-      this.data.viewer.saved = true
-    })
+    await this.rootStore.preferences.addSavedFeed(this.uri)
   }
 
   async unsave() {
-    await this.rootStore.agent.app.bsky.feed.unsaveFeed({
-      feed: this.uri,
-    })
-    runInAction(() => {
-      this.data.viewer = this.data.viewer || {}
-      this.data.viewer.saved = false
-    })
+    await this.rootStore.preferences.removeSavedFeed(this.uri)
   }
 
   async like() {
@@ -82,7 +70,7 @@ export class CustomFeedModel {
   }
 
   async unlike() {
-    if (!this.data.viewer.like) {
+    if (!this.data.viewer?.like) {
       return
     }
     try {

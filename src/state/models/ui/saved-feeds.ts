@@ -5,8 +5,6 @@ import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
 import {CustomFeedModel} from '../feeds/custom-feed'
 
-const PAGE_SIZE = 100
-
 export class SavedFeedsModel {
   // state
   isLoading = false
@@ -69,16 +67,15 @@ export class SavedFeedsModel {
     try {
       let feeds: AppBskyFeedDefs.GeneratorView[] = []
       let cursor
-      for (let i = 0; i < 100; i++) {
-        const res = await this.rootStore.agent.app.bsky.feed.getSavedFeeds({
-          limit: PAGE_SIZE,
-          cursor,
+      for (
+        let i = 0;
+        i < this.rootStore.preferences.savedFeeds.length;
+        i += 25
+      ) {
+        const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerators({
+          feeds: this.rootStore.preferences.savedFeeds.slice(i, 25),
         })
         feeds = feeds.concat(res.data.feeds)
-        cursor = res.data.cursor
-        if (!cursor) {
-          break
-        }
       }
       runInAction(() => {
         this.feeds = feeds.map(f => new CustomFeedModel(this.rootStore, f))
@@ -127,7 +124,8 @@ export class SavedFeedsModel {
   }
 
   async reorderPinnedFeeds(feeds: CustomFeedModel[]) {
-    return this.rootStore.preferences.setPinnedFeeds(
+    return this.rootStore.preferences.setSavedFeeds(
+      this.rootStore.preferences.savedFeeds,
       feeds.filter(feed => this.isPinned(feed)).map(feed => feed.uri),
     )
   }
@@ -151,7 +149,10 @@ export class SavedFeedsModel {
       pinned[index] = pinned[index + 1]
       pinned[index + 1] = temp
     }
-    await this.rootStore.preferences.setPinnedFeeds(pinned)
+    await this.rootStore.preferences.setSavedFeeds(
+      this.rootStore.preferences.savedFeeds,
+      pinned,
+    )
   }
 
   // state transitions

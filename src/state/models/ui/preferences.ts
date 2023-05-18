@@ -46,6 +46,7 @@ export class PreferencesModel {
   contentLanguages: string[] =
     deviceLocales?.map?.(locale => locale.languageCode) || []
   contentLabels = new LabelPreferencesModel()
+  savedFeeds: string[] = []
   pinnedFeeds: string[] = []
 
   constructor(public rootStore: RootStoreModel) {
@@ -56,6 +57,7 @@ export class PreferencesModel {
     return {
       contentLanguages: this.contentLanguages,
       contentLabels: this.contentLabels,
+      savedFeeds: this.savedFeeds,
       pinnedFeeds: this.pinnedFeeds,
     }
   }
@@ -74,6 +76,13 @@ export class PreferencesModel {
       } else {
         // default to the device languages
         this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
+      }
+      if (
+        hasProp(v, 'savedFeeds') &&
+        Array.isArray(v.savedFeeds) &&
+        typeof v.savedFeeds.every(item => typeof item === 'string')
+      ) {
+        this.savedFeeds = v.savedFeeds
       }
       if (
         hasProp(v, 'pinnedFeeds') &&
@@ -106,10 +115,11 @@ export class PreferencesModel {
               pref.visibility as LabelPreference
           }
         } else if (
-          AppBskyActorDefs.isPinnedFeedsPref(pref) &&
-          AppBskyActorDefs.validatePinnedFeedsPref(pref).success
+          AppBskyActorDefs.isSavedFeedsPref(pref) &&
+          AppBskyActorDefs.validateSavedFeedsPref(pref).success
         ) {
-          this.pinnedFeeds = pref.feeds
+          this.savedFeeds = pref.saved
+          this.pinnedFeeds = pref.pinned
         }
       }
     })
@@ -220,38 +230,57 @@ export class PreferencesModel {
     return res
   }
 
-  async setPinnedFeeds(v: string[]) {
-    const old = this.pinnedFeeds
-    this.pinnedFeeds = v
+  async setSavedFeeds(saved: string[], pinned: string[]) {
+    const oldSaved = this.savedFeeds
+    const oldPinned = this.pinnedFeeds
+    this.savedFeeds = saved
+    this.pinnedFeeds = pinned
     try {
       await this.update((prefs: AppBskyActorDefs.Preferences) => {
         const existing = prefs.find(
           pref =>
-            AppBskyActorDefs.isPinnedFeedsPref(pref) &&
-            AppBskyActorDefs.validatePinnedFeedsPref(pref).success,
+            AppBskyActorDefs.isSavedFeedsPref(pref) &&
+            AppBskyActorDefs.validateSavedFeedsPref(pref).success,
         )
         if (existing) {
-          existing.feeds = v
+          existing.saved = saved
+          existing.pinned = pinned
         } else {
           prefs.push({
-            $type: 'app.bsky.actor.defs#pinnedFeedsPref',
-            feeds: v,
+            $type: 'app.bsky.actor.defs#savedFeedsPref',
+            saved,
+            pinned,
           })
         }
       })
     } catch (e) {
       runInAction(() => {
-        this.pinnedFeeds = old
+        this.savedFeeds = oldSaved
+        this.pinnedFeeds = oldPinned
       })
       throw e
     }
   }
 
+  async addSavedFeed(v: string) {
+    return this.setSavedFeeds([...this.savedFeeds, v], this.pinnedFeeds)
+  }
+
+  async removeSavedFeed(v: string) {
+    return this.setSavedFeeds(
+      this.savedFeeds.filter(uri => uri !== v),
+      this.pinnedFeeds.filter(uri => uri !== v),
+    )
+  }
+
   async addPinnedFeed(v: string) {
-    return this.setPinnedFeeds([...this.pinnedFeeds, v])
+    return this.setSavedFeeds(this.savedFeeds, [...this.pinnedFeeds, v])
   }
 
   async removePinnedFeed(v: string) {
-    return this.setPinnedFeeds(this.pinnedFeeds.filter(uri => uri !== v))
+    return this.setSavedFeeds(
+      this.savedFeeds,
+      this.pinnedFeeds.filter(uri => uri !== v),
+    )
   }
 }

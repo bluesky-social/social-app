@@ -40,7 +40,7 @@ export const CustomFeed = observer(
     const navigation = useNavigation<NavigationProp>()
 
     const onToggleSaved = React.useCallback(async () => {
-      if (item.data.viewer?.saved) {
+      if (item.isSaved) {
         store.shell.openModal({
           name: 'confirm',
           title: 'Remove from my feeds',
