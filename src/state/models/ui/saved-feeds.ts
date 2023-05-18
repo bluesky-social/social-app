@@ -61,22 +61,22 @@ export class SavedFeedsModel {
     return this.hasLoaded && !this.hasContent
   }
 
-  get numOfFeeds() {
+  get numFeeds() {
     return this.feeds.length
   }
 
-  get listOfFeedNames() {
-    return this.feeds.map(f => f.displayName)
-  }
-
-  get listOfPinnedFeedNames() {
-    return this.pinned.map(f => f.displayName)
-  }
-
-  get savedFeedsWithoutPinned() {
+  get unpinned() {
     return this.feeds.filter(
       f => !this.pinned.find(p => p.data.uri === f.data.uri),
     )
+  }
+
+  get feedNames() {
+    return this.feeds.map(f => f.displayName)
+  }
+
+  get pinnedFeedNames() {
+    return this.pinned.map(f => f.displayName)
   }
 
   togglePinnedFeed(feed: CustomFeedModel) {
@@ -92,7 +92,7 @@ export class SavedFeedsModel {
   }
 
   reorderPinnedFeeds(temp: CustomFeedModel[]) {
-    this.pinned = temp
+    this.pinned = temp.filter(item => this.isPinned(item))
   }
 
   isPinned(feed: CustomFeedModel) {

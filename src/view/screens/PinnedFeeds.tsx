@@ -72,10 +72,10 @@ export const PinnedFeeds = withAuthRequired(
 
     return (
       <CenteredView style={[s.flex1]}>
-        <ViewHeader title="Arrange Pinned Feeds" showOnDesktop />
+        <ViewHeader title="Edit My Feeds" showOnDesktop />
         <DraggableFlatList
           containerStyle={[!isDesktopWeb && s.flex1]}
-          data={[...savedFeeds.pinned]} // make a copy so this FlatList re-renders when pinned changes
+          data={[...savedFeeds.pinned, ...savedFeeds.unpinned]} // make a copy so this FlatList re-renders when pinned changes
           keyExtractor={item => item.data.uri}
           refreshing={savedFeeds.isRefreshing}
           refreshControl={
@@ -86,7 +86,7 @@ export const PinnedFeeds = withAuthRequired(
               titleColor={pal.colors.text}
             />
           }
-          renderItem={({item, drag}) => <PinnedItem item={item} drag={drag} />}
+          renderItem={({item, drag}) => <ListItem item={item} drag={drag} />}
           initialNumToRender={10}
           ListFooterComponent={_ListFooterComponent}
           ListEmptyComponent={_ListEmptyComponent}
@@ -100,19 +100,20 @@ export const PinnedFeeds = withAuthRequired(
   }),
 )
 
-const PinnedItem = observer(
+const ListItem = observer(
   ({item, drag}: {item: CustomFeedModel; drag: () => void}) => {
     const pal = usePalette('default')
     const rootStore = useStores()
     const savedFeeds = useMemo(() => rootStore.me.savedFeeds, [rootStore])
+    const isPinned = savedFeeds.isPinned(item)
     return (
       <ScaleDecorator>
         <ShadowDecorator>
           <Pressable
             accessibilityRole="button"
-            onLongPress={drag}
-            style={styles.itemContainer}>
-            {isWeb ? (
+            onLongPress={isPinned ? drag : undefined}
+            style={[styles.itemContainer, pal.border]}>
+            {isPinned && isWeb ? (
               <View style={styles.webArrowButtonsContainer}>
                 <TouchableOpacity
                   accessibilityRole="button"
@@ -122,7 +123,7 @@ const PinnedItem = observer(
                   <FontAwesomeIcon
                     icon="arrow-up"
                     size={20}
-                    style={[styles.icon, pal.text, styles.webArrowUpButton]}
+                    style={[s.mr10, pal.text, styles.webArrowUpButton]}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -133,18 +134,19 @@ const PinnedItem = observer(
                   <FontAwesomeIcon
                     icon="arrow-down"
                     size={20}
-                    style={[styles.icon, pal.text]}
+                    style={[s.mr10, pal.text]}
                   />
                 </TouchableOpacity>
               </View>
-            ) : (
+            ) : isPinned ? (
               <FontAwesomeIcon
                 icon="bars"
                 size={20}
-                style={[styles.icon, pal.text]}
+                color={pal.colors.text}
+                style={s.ml20}
               />
-            )}
-            <SavedFeedItem item={item} savedFeeds={savedFeeds} />
+            ) : null}
+            <SavedFeedItem item={item} savedFeeds={savedFeeds} showSaveBtn />
           </Pressable>
         </ShadowDecorator>
       </ScaleDecorator>
@@ -167,12 +169,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 18,
+    borderTopWidth: 1,
   },
-  item: {
-    borderTopWidth: 0,
-  },
-  icon: {marginRight: 10},
   webArrowButtonsContainer: {
     flexDirection: 'column',
     justifyContent: 'space-around',

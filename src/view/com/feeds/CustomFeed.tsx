@@ -1,16 +1,17 @@
 import React from 'react'
 import {
+  Pressable,
   StyleProp,
   StyleSheet,
   View,
   ViewStyle,
   TouchableOpacity,
 } from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {UserAvatar} from '../util/UserAvatar'
-import {Button} from '../util/forms/Button'
 import {observer} from 'mobx-react-lite'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {useNavigation} from '@react-navigation/native'
@@ -18,6 +19,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
 import {pluralize} from 'lib/strings/helpers'
 import {AtUri} from '@atproto/api'
+import * as Toast from 'view/com/util/Toast'
 
 export const CustomFeed = observer(
   ({
@@ -36,6 +38,23 @@ export const CustomFeed = observer(
     const store = useStores()
     const pal = usePalette('default')
     const navigation = useNavigation<NavigationProp>()
+
+    const onToggleSaved = React.useCallback(() => {
+      if (item.data.viewer?.saved) {
+        store.shell.openModal({
+          name: 'confirm',
+          title: 'Remove from my feeds',
+          message: `Remove ${item.displayName} from my feeds?`,
+          onPressConfirm: () => {
+            store.me.savedFeeds.unsave(item)
+            Toast.show('Removed from my feeds')
+          },
+        })
+      } else {
+        store.me.savedFeeds.save(item)
+        Toast.show('Added to my feeds')
+      }
+    }, [store, item])
 
     return (
       <TouchableOpacity
@@ -62,17 +81,28 @@ export const CustomFeed = observer(
           </View>
           {showSaveBtn && (
             <View>
-              <Button
-                type={item.isSaved ? 'default' : 'inverted'}
-                onPress={() => {
-                  if (item.data.viewer?.saved) {
-                    store.me.savedFeeds.unsave(item)
-                  } else {
-                    store.me.savedFeeds.save(item)
-                  }
-                }}
-                label={item.data.viewer?.saved ? 'Unsave' : 'Save'}
-              />
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={
+                  item.isSaved ? 'Remove from my feeds' : 'Add to my feeds'
+                }
+                accessibilityHint=""
+                onPress={onToggleSaved}
+                style={styles.btn}>
+                {item.isSaved ? (
+                  <FontAwesomeIcon
+                    icon={['far', 'trash-can']}
+                    size={19}
+                    color={pal.colors.icon}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon="plus"
+                    size={18}
+                    color={pal.colors.link}
+                  />
+                )}
+              </Pressable>
             </View>
           )}
         </View>
@@ -84,14 +114,10 @@ export const CustomFeed = observer(
         ) : null}
 
         {showLikes ? (
-          <View style={styles.bottomContainer}>
-            <View style={styles.likedByContainer}>
-              <Text type="sm-medium" style={[pal.text, pal.textLight]}>
-                Liked by {item.data.likeCount || 0}{' '}
-                {pluralize(item.data.likeCount || 0, 'user')}
-              </Text>
-            </View>
-          </View>
+          <Text type="sm-medium" style={[pal.text, pal.textLight]}>
+            Liked by {item.data.likeCount || 0}{' '}
+            {pluralize(item.data.likeCount || 0, 'user')}
+          </Text>
         ) : null}
       </TouchableOpacity>
     )
@@ -119,14 +145,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexWrap: 'wrap',
   },
-  bottomContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  likedByContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
+  btn: {
+    paddingVertical: 6,
   },
 })

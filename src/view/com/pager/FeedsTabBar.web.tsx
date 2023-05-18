@@ -28,12 +28,8 @@ const FeedsTabBarDesktop = observer(
   ) => {
     const store = useStores()
     const items = useMemo(
-      () => [
-        'Following',
-        "What's hot",
-        ...store.me.savedFeeds.listOfPinnedFeedNames,
-      ],
-      [store.me.savedFeeds.listOfPinnedFeedNames],
+      () => ['Following', "What's hot", ...store.me.savedFeeds.pinnedFeedNames],
+      [store.me.savedFeeds.pinnedFeedNames],
     )
     const pal = usePalette('default')
     const interp = useAnimatedValue(0)

@@ -1,24 +1,15 @@
 import React, {useEffect, useCallback} from 'react'
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {FlatList, RefreshControl, StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
-import {SavedFeedsModel} from 'state/models/ui/saved-feeds'
 import {CenteredView} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
 import {isDesktopWeb} from 'platform/detection'
-import {s, colors} from 'lib/styles'
+import {s} from 'lib/styles'
 import {Link} from 'view/com/util/Link'
-import {CustomFeed} from 'view/com/feeds/CustomFeed'
+import {CustomFeed} from './CustomFeed'
 
 export const SavedFeeds = observer(
   ({
@@ -69,14 +60,8 @@ export const SavedFeeds = observer(
     }, [pal])
 
     const renderItem = useCallback(
-      ({item}) => (
-        <SavedFeedItem
-          key={item.data.uri}
-          item={item}
-          savedFeeds={store.me.savedFeeds}
-        />
-      ),
-      [store.me.savedFeeds],
+      ({item}) => <CustomFeed key={item.data.uri} item={item} />,
+      [],
     )
 
     return (
@@ -109,35 +94,6 @@ export const SavedFeeds = observer(
   },
 )
 
-const SavedFeedItem = observer(
-  ({
-    item,
-    savedFeeds,
-  }: {
-    item: CustomFeedModel
-    savedFeeds: SavedFeedsModel
-  }) => {
-    const isPinned = savedFeeds.isPinned(item)
-    const onTogglePinned = useCallback(
-      () => savedFeeds.togglePinnedFeed(item),
-      [savedFeeds, item],
-    )
-
-    return (
-      <View style={styles.itemContainer}>
-        <CustomFeed key={item.data.uri} item={item} />
-        <TouchableOpacity accessibilityRole="button" onPress={onTogglePinned}>
-          <FontAwesomeIcon
-            icon="thumb-tack"
-            size={20}
-            color={isPinned ? colors.blue3 : colors.gray3}
-          />
-        </TouchableOpacity>
-      </View>
-    )
-  },
-)
-
 const styles = StyleSheet.create({
   footerLink: {
     flexDirection: 'row',
@@ -154,10 +110,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 18,
     marginTop: 10,
   },
-  itemContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 18,
+  feedItem: {
+    borderTopWidth: 1,
   },
 })

@@ -36,10 +36,10 @@ export const FeedsTabBar = observer(
       () => [
         'Following',
         "What's hot",
-        ...store.me.savedFeeds.listOfPinnedFeedNames,
+        ...store.me.savedFeeds.pinnedFeedNames,
         'My feeds',
       ],
-      [store.me.savedFeeds.listOfPinnedFeedNames],
+      [store.me.savedFeeds.pinnedFeedNames],
     )
 
     return (

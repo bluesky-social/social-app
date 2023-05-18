@@ -43,10 +43,10 @@ export const ProfileCustomFeed = withAuthRequired(
 
     const onToggleSaved = React.useCallback(async () => {
       try {
-        if (currentFeed.isSaved) {
-          await currentFeed.unsave()
+        if (currentFeed?.isSaved) {
+          await currentFeed?.unsave()
         } else {
-          await currentFeed.save()
+          await currentFeed?.save()
         }
       } catch (err) {
         Toast.show(
@@ -58,10 +58,10 @@ export const ProfileCustomFeed = withAuthRequired(
 
     const onToggleLiked = React.useCallback(async () => {
       try {
-        if (currentFeed.isLiked) {
-          await currentFeed.unlike()
+        if (currentFeed?.isLiked) {
+          await currentFeed?.unlike()
         } else {
-          await currentFeed.like()
+          await currentFeed?.like()
         }
       } catch (err) {
         Toast.show(
@@ -90,10 +90,12 @@ export const ProfileCustomFeed = withAuthRequired(
             type={currentFeed?.isSaved ? 'default' : 'inverted'}
             onPress={onToggleSaved}
             accessibilityLabel={
-              currentFeed?.isSaved ? 'Unsave this feed' : 'Save this feed'
+              currentFeed?.isSaved ? 'Remove from my feeds' : 'Add to my feeds'
             }
             accessibilityHint=""
-            label={currentFeed?.isSaved ? 'Unsave' : 'Save'}
+            label={
+              currentFeed?.isSaved ? 'Remove from My Feeds' : 'Add to My Feeds'
+            }
           />
         </View>
       )
