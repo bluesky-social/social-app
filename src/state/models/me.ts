@@ -69,7 +69,6 @@ export class MeModel {
       displayName: this.displayName,
       description: this.description,
       avatar: this.avatar,
-      savedFeeds: this.savedFeeds.serialize(),
     }
   }
 
@@ -90,9 +89,6 @@ export class MeModel {
       }
       if (hasProp(v, 'avatar') && typeof v.avatar === 'string') {
         avatar = v.avatar
-      }
-      if (hasProp(v, 'savedFeeds') && isObj(v.savedFeeds)) {
-        this.savedFeeds.hydrate(v.savedFeeds)
       }
       if (did && handle) {
         this.did = did
@@ -118,7 +114,7 @@ export class MeModel {
       /* dont await */ this.notifications.setup().catch(e => {
         this.rootStore.log.error('Failed to setup notifications model', e)
       })
-      /* dont await */ this.savedFeeds.refresh()
+      /* dont await */ this.savedFeeds.refresh(true)
       this.rootStore.emitSessionLoaded()
       await this.fetchInviteCodes()
       await this.fetchAppPasswords()
@@ -128,6 +124,7 @@ export class MeModel {
   }
 
   async updateIfNeeded() {
+    /* dont await */ this.savedFeeds.refresh(true)
     if (Date.now() - this.lastProfileStateUpdate > PROFILE_UPDATE_INTERVAL) {
       this.rootStore.log.debug('Updating me profile information')
       this.lastProfileStateUpdate = Date.now()

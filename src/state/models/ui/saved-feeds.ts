@@ -1,12 +1,11 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AppBskyFeedGetSavedFeeds as GetSavedFeeds} from '@atproto/api'
+import {AppBskyFeedDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
 import {CustomFeedModel} from '../feeds/custom-feed'
-import {hasProp, isObj} from 'lib/type-guards'
 
-const PAGE_SIZE = 30
+const PAGE_SIZE = 100
 
 export class SavedFeedsModel {
   // state
@@ -14,12 +13,9 @@ export class SavedFeedsModel {
   isRefreshing = false
   hasLoaded = false
   error = ''
-  hasMore = true
-  loadMoreCursor?: string
 
   // data
   feeds: CustomFeedModel[] = []
-  pinned: CustomFeedModel[] = []
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -29,24 +25,6 @@ export class SavedFeedsModel {
       },
       {autoBind: true},
     )
-  }
-
-  serialize() {
-    return {
-      pinned: this.pinned.map(f => f.serialize()),
-    }
-  }
-
-  hydrate(v: unknown) {
-    if (isObj(v)) {
-      if (hasProp(v, 'pinned')) {
-        const pinnedSerialized = (v as any).pinned as string[]
-        const pinnedDeserialized = pinnedSerialized.map(
-          (s: string) => new CustomFeedModel(this.rootStore, JSON.parse(s)),
-        )
-        this.pinned = pinnedDeserialized
-      }
-    }
   }
 
   get hasContent() {
@@ -61,147 +39,119 @@ export class SavedFeedsModel {
     return this.hasLoaded && !this.hasContent
   }
 
-  get numFeeds() {
-    return this.feeds.length
+  get pinned() {
+    return this.rootStore.preferences.pinnedFeeds
+      .map(uri => this.feeds.find(f => f.uri === uri) as CustomFeedModel)
+      .filter(Boolean)
   }
 
   get unpinned() {
-    return this.feeds.filter(
-      f => !this.pinned.find(p => p.data.uri === f.data.uri),
-    )
-  }
-
-  get feedNames() {
-    return this.feeds.map(f => f.displayName)
+    return this.feeds.filter(f => !this.isPinned(f))
   }
 
   get pinnedFeedNames() {
     return this.pinned.map(f => f.displayName)
   }
 
-  togglePinnedFeed(feed: CustomFeedModel) {
-    if (!this.isPinned(feed)) {
-      this.pinned = [...this.pinned, feed]
-    } else {
-      this.removePinnedFeed(feed.data.uri)
-    }
-  }
-
-  removePinnedFeed(uri: string) {
-    this.pinned = this.pinned.filter(f => f.data.uri !== uri)
-  }
-
-  reorderPinnedFeeds(temp: CustomFeedModel[]) {
-    this.pinned = temp.filter(item => this.isPinned(item))
-  }
-
-  isPinned(feed: CustomFeedModel) {
-    return this.pinned.find(f => f.data.uri === feed.data.uri) ? true : false
-  }
-
-  movePinnedItem(item: CustomFeedModel, direction: 'up' | 'down') {
-    if (this.pinned.length < 2) {
-      throw new Error('Array must have at least 2 items')
-    }
-    const index = this.pinned.indexOf(item)
-    if (index === -1) {
-      throw new Error('Item not found in array')
-    }
-
-    const len = this.pinned.length
-
-    runInAction(() => {
-      if (direction === 'up') {
-        if (index === 0) {
-          // Remove the item from the first place and put it at the end
-          this.pinned.push(this.pinned.shift()!)
-        } else {
-          // Swap the item with the one before it
-          const temp = this.pinned[index]
-          this.pinned[index] = this.pinned[index - 1]
-          this.pinned[index - 1] = temp
-        }
-      } else if (direction === 'down') {
-        if (index === len - 1) {
-          // Remove the item from the last place and put it at the start
-          this.pinned.unshift(this.pinned.pop()!)
-        } else {
-          // Swap the item with the one after it
-          const temp = this.pinned[index]
-          this.pinned[index] = this.pinned[index + 1]
-          this.pinned[index + 1] = temp
-        }
-      }
-      // this.pinned = [...this.pinned]
-    })
-  }
-
   // public api
   // =
-
-  async refresh(quietRefresh = false) {
-    return this.loadMore(true, quietRefresh)
-  }
 
   clear() {
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = false
     this.error = ''
-    this.hasMore = true
-    this.loadMoreCursor = undefined
     this.feeds = []
   }
 
-  loadMore = bundleAsync(
-    async (replace: boolean = false, quietRefresh = false) => {
-      if (!replace && !this.hasMore) {
-        return
-      }
-      this._xLoading(replace && !quietRefresh)
-      try {
+  refresh = bundleAsync(async (quietRefresh = false) => {
+    this._xLoading(!quietRefresh)
+    try {
+      let feeds: AppBskyFeedDefs.GeneratorView[] = []
+      let cursor
+      for (let i = 0; i < 100; i++) {
         const res = await this.rootStore.agent.app.bsky.feed.getSavedFeeds({
           limit: PAGE_SIZE,
-          cursor: replace ? undefined : this.loadMoreCursor,
+          cursor,
         })
-        if (replace) {
-          this._replaceAll(res)
-        } else {
-          this._appendAll(res)
+        feeds = feeds.concat(res.data.feeds)
+        cursor = res.data.cursor
+        if (!cursor) {
+          break
         }
-        this._xIdle()
-      } catch (e: any) {
-        this._xIdle(e)
       }
-    },
-  )
+      runInAction(() => {
+        this.feeds = feeds.map(f => new CustomFeedModel(this.rootStore, f))
+      })
+      this._xIdle()
+    } catch (e: any) {
+      this._xIdle(e)
+    }
+  })
 
-  removeFeed(uri: string) {
-    this.feeds = this.feeds.filter(f => f.data.uri !== uri)
-  }
-
-  addFeed(algoItem: CustomFeedModel) {
-    this.feeds.push(new CustomFeedModel(this.rootStore, algoItem.data))
-  }
-
-  async save(algoItem: CustomFeedModel) {
+  async save(feed: CustomFeedModel) {
     try {
-      await algoItem.save()
-      this.addFeed(algoItem)
+      await feed.save()
+      runInAction(() => {
+        this.feeds = [
+          ...this.feeds,
+          new CustomFeedModel(this.rootStore, feed.data),
+        ]
+      })
     } catch (e: any) {
       this.rootStore.log.error('Failed to save feed', e)
     }
   }
 
-  async unsave(algoItem: CustomFeedModel) {
-    const uri = algoItem.uri
+  async unsave(feed: CustomFeedModel) {
+    const uri = feed.uri
     try {
-      await algoItem.unsave()
-      this.removeFeed(uri)
-      this.removePinnedFeed(uri)
+      if (this.isPinned(feed)) {
+        await this.rootStore.preferences.removePinnedFeed(uri)
+      }
+      await feed.unsave()
+      runInAction(() => {
+        this.feeds = this.feeds.filter(f => f.data.uri !== uri)
+      })
     } catch (e: any) {
       this.rootStore.log.error('Failed to unsave feed', e)
     }
+  }
+
+  async togglePinnedFeed(feed: CustomFeedModel) {
+    if (!this.isPinned(feed)) {
+      return this.rootStore.preferences.addPinnedFeed(feed.uri)
+    } else {
+      return this.rootStore.preferences.removePinnedFeed(feed.uri)
+    }
+  }
+
+  async reorderPinnedFeeds(feeds: CustomFeedModel[]) {
+    return this.rootStore.preferences.setPinnedFeeds(
+      feeds.filter(feed => this.isPinned(feed)).map(feed => feed.uri),
+    )
+  }
+
+  isPinned(feed: CustomFeedModel) {
+    return this.rootStore.preferences.pinnedFeeds.includes(feed.uri)
+  }
+
+  async movePinnedFeed(item: CustomFeedModel, direction: 'up' | 'down') {
+    const pinned = this.rootStore.preferences.pinnedFeeds.slice()
+    const index = pinned.indexOf(item.uri)
+    if (index === -1) {
+      return
+    }
+    if (direction === 'up' && index !== 0) {
+      const temp = pinned[index]
+      pinned[index] = pinned[index - 1]
+      pinned[index - 1] = temp
+    } else if (direction === 'down' && index < pinned.length - 1) {
+      const temp = pinned[index]
+      pinned[index] = pinned[index + 1]
+      pinned[index + 1] = temp
+    }
+    await this.rootStore.preferences.setPinnedFeeds(pinned)
   }
 
   // state transitions
@@ -219,23 +169,7 @@ export class SavedFeedsModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch user followers', err)
-    }
-  }
-
-  // helper functions
-  // =
-
-  _replaceAll(res: GetSavedFeeds.Response) {
-    this.feeds = []
-    this._appendAll(res)
-  }
-
-  _appendAll(res: GetSavedFeeds.Response) {
-    this.loadMoreCursor = res.data.cursor
-    this.hasMore = !!this.loadMoreCursor
-    for (const f of res.data.feeds) {
-      this.feeds.push(new CustomFeedModel(this.rootStore, f))
+      this.rootStore.log.error('Failed to fetch user feeds', err)
     }
   }
 }

@@ -4,6 +4,7 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {AppBskyFeedGetFeed as GetCustomFeed} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
+import isEqual from 'lodash.isequal'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
@@ -44,15 +45,26 @@ export const HomeScreen = withAuthRequired(
     }, [store])
 
     React.useEffect(() => {
+      const {pinned} = store.me.savedFeeds
+      if (
+        isEqual(
+          pinned.map(p => p.uri),
+          customFeeds.map(f => (f.params as GetCustomFeed.QueryParams).feed),
+        )
+      ) {
+        // no changes
+        return
+      }
+
       const feeds = []
-      for (const feed of store.me.savedFeeds.pinned) {
+      for (const feed of pinned) {
         const model = new PostsFeedModel(store, 'custom', {feed: feed.uri})
         model.setup()
         feeds.push(model)
       }
       pagerRef.current?.setPage(0)
       setCustomFeeds(feeds)
-    }, [store, store.me.savedFeeds.pinned, setCustomFeeds])
+    }, [store, store.me.savedFeeds.pinned, customFeeds, setCustomFeeds])
 
     React.useEffect(() => {
       // refresh whats hot when lang preferences change

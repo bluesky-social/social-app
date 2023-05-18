@@ -29,6 +29,10 @@ export const SavedFeeds = observer(
       }
     }, [store, isPageFocused])
 
+    const onRefresh = useCallback(() => {
+      store.me.savedFeeds.refresh()
+    }, [store])
+
     const renderListEmptyComponent = useCallback(() => {
       return (
         <View
@@ -73,7 +77,7 @@ export const SavedFeeds = observer(
         refreshControl={
           <RefreshControl
             refreshing={store.me.savedFeeds.isRefreshing}
-            onRefresh={() => store.me.savedFeeds.refresh()}
+            onRefresh={onRefresh}
             tintColor={pal.colors.text}
             titleColor={pal.colors.text}
             progressViewOffset={headerOffset}

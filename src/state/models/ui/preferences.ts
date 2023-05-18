@@ -25,6 +25,7 @@ const LABEL_GROUPS = [
   'spam',
   'impersonation',
 ]
+const VISIBILITY_VALUES = ['show', 'warn', 'hide']
 
 export class LabelPreferencesModel {
   nsfw: LabelPreference = 'hide'
@@ -45,6 +46,7 @@ export class PreferencesModel {
   contentLanguages: string[] =
     deviceLocales?.map?.(locale => locale.languageCode) || []
   contentLabels = new LabelPreferencesModel()
+  pinnedFeeds: string[] = []
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {}, {autoBind: true})
@@ -54,6 +56,7 @@ export class PreferencesModel {
     return {
       contentLanguages: this.contentLanguages,
       contentLabels: this.contentLabels,
+      pinnedFeeds: this.pinnedFeeds,
     }
   }
 
@@ -72,6 +75,13 @@ export class PreferencesModel {
         // default to the device languages
         this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
       }
+      if (
+        hasProp(v, 'pinnedFeeds') &&
+        Array.isArray(v.pinnedFeeds) &&
+        typeof v.pinnedFeeds.every(item => typeof item === 'string')
+      ) {
+        this.pinnedFeeds = v.pinnedFeeds
+      }
     }
   }
 
@@ -88,9 +98,18 @@ export class PreferencesModel {
           AppBskyActorDefs.isContentLabelPref(pref) &&
           AppBskyActorDefs.validateAdultContentPref(pref).success
         ) {
-          if (LABEL_GROUPS.includes(pref.label)) {
-            this.contentLabels[pref.label] = pref.visibility
+          if (
+            LABEL_GROUPS.includes(pref.label) &&
+            VISIBILITY_VALUES.includes(pref.visibility)
+          ) {
+            this.contentLabels[pref.label as keyof LabelPreferencesModel] =
+              pref.visibility as LabelPreference
           }
+        } else if (
+          AppBskyActorDefs.isPinnedFeedsPref(pref) &&
+          AppBskyActorDefs.validatePinnedFeedsPref(pref).success
+        ) {
+          this.pinnedFeeds = pref.feeds
         }
       }
     })
@@ -199,5 +218,40 @@ export class PreferencesModel {
       res.pref = 'hide'
     }
     return res
+  }
+
+  async setPinnedFeeds(v: string[]) {
+    const old = this.pinnedFeeds
+    this.pinnedFeeds = v
+    try {
+      await this.update((prefs: AppBskyActorDefs.Preferences) => {
+        const existing = prefs.find(
+          pref =>
+            AppBskyActorDefs.isPinnedFeedsPref(pref) &&
+            AppBskyActorDefs.validatePinnedFeedsPref(pref).success,
+        )
+        if (existing) {
+          existing.feeds = v
+        } else {
+          prefs.push({
+            $type: 'app.bsky.actor.defs#pinnedFeedsPref',
+            feeds: v,
+          })
+        }
+      })
+    } catch (e) {
+      runInAction(() => {
+        this.pinnedFeeds = old
+      })
+      throw e
+    }
+  }
+
+  async addPinnedFeed(v: string) {
+    return this.setPinnedFeeds([...this.pinnedFeeds, v])
+  }
+
+  async removePinnedFeed(v: string) {
+    return this.setPinnedFeeds(this.pinnedFeeds.filter(uri => uri !== v))
   }
 }

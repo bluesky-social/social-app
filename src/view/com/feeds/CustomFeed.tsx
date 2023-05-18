@@ -39,20 +39,30 @@ export const CustomFeed = observer(
     const pal = usePalette('default')
     const navigation = useNavigation<NavigationProp>()
 
-    const onToggleSaved = React.useCallback(() => {
+    const onToggleSaved = React.useCallback(async () => {
       if (item.data.viewer?.saved) {
         store.shell.openModal({
           name: 'confirm',
           title: 'Remove from my feeds',
           message: `Remove ${item.displayName} from my feeds?`,
-          onPressConfirm: () => {
-            store.me.savedFeeds.unsave(item)
-            Toast.show('Removed from my feeds')
+          onPressConfirm: async () => {
+            try {
+              await store.me.savedFeeds.unsave(item)
+              Toast.show('Removed from my feeds')
+            } catch (e) {
+              Toast.show('There was an issue contacting your server')
+              store.log.error('Failed to unsave feed', {e})
+            }
           },
         })
       } else {
-        store.me.savedFeeds.save(item)
-        Toast.show('Added to my feeds')
+        try {
+          await store.me.savedFeeds.save(item)
+          Toast.show('Added to my feeds')
+        } catch (e) {
+          Toast.show('There was an issue contacting your server')
+          store.log.error('Failed to save feed', {e})
+        }
       }
     }, [store, item])
 

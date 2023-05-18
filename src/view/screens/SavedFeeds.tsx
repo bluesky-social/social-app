@@ -27,26 +27,26 @@ import DraggableFlatList, {
 import {CustomFeed} from 'view/com/feeds/CustomFeed'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import * as Toast from 'view/com/util/Toast'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 
 export const SavedFeeds = withAuthRequired(
   observer(({}: Props) => {
-    // hooks for global items
     const pal = usePalette('default')
-    const rootStore = useStores()
+    const store = useStores()
     const {screen} = useAnalytics()
 
-    // hooks for local
-    const savedFeeds = useMemo(() => rootStore.me.savedFeeds, [rootStore])
+    const savedFeeds = useMemo(() => store.me.savedFeeds, [store])
     useFocusEffect(
       useCallback(() => {
         screen('SavedFeeds')
-        rootStore.shell.setMinimalShellMode(false)
+        store.shell.setMinimalShellMode(false)
         savedFeeds.refresh()
-      }, [screen, rootStore, savedFeeds]),
+      }, [screen, store, savedFeeds]),
     )
-    const _ListEmptyComponent = () => {
+
+    const renderListEmptyComponent = useCallback(() => {
       return (
         <View
           style={[
@@ -56,19 +56,33 @@ export const SavedFeeds = withAuthRequired(
             styles.empty,
           ]}>
           <Text type="lg" style={[pal.text]}>
-            You don't have any pinned feeds. To pin a feed, go back to the Saved
-            Feeds screen and click the pin icon!
+            You don't have any saved feeds.
           </Text>
         </View>
       )
-    }
-    const _ListFooterComponent = () => {
+    }, [pal])
+
+    const renderListFooterComponent = useCallback(() => {
       return (
         <View style={styles.footer}>
           {savedFeeds.isLoading && <ActivityIndicator />}
         </View>
       )
-    }
+    }, [savedFeeds])
+
+    const onRefresh = useCallback(() => savedFeeds.refresh(), [savedFeeds])
+
+    const onDragEnd = useCallback(
+      async ({data}) => {
+        try {
+          await savedFeeds.reorderPinnedFeeds(data)
+        } catch (e) {
+          Toast.show('There was an issue contacting the server')
+          store.log.error('Failed to save pinned feed order', {e})
+        }
+      },
+      [savedFeeds, store],
+    )
 
     return (
       <CenteredView
@@ -90,17 +104,17 @@ export const SavedFeeds = withAuthRequired(
           refreshControl={
             <RefreshControl
               refreshing={savedFeeds.isRefreshing}
-              onRefresh={() => savedFeeds.refresh()}
+              onRefresh={onRefresh}
               tintColor={pal.colors.text}
               titleColor={pal.colors.text}
             />
           }
           renderItem={({item, drag}) => <ListItem item={item} drag={drag} />}
           initialNumToRender={10}
-          ListFooterComponent={_ListFooterComponent}
-          ListEmptyComponent={_ListEmptyComponent}
+          ListFooterComponent={renderListFooterComponent}
+          ListEmptyComponent={renderListEmptyComponent}
           extraData={savedFeeds.isLoading}
-          onDragEnd={({data}) => savedFeeds.reorderPinnedFeeds(data)}
+          onDragEnd={onDragEnd}
         />
       </CenteredView>
     )
@@ -110,13 +124,35 @@ export const SavedFeeds = withAuthRequired(
 const ListItem = observer(
   ({item, drag}: {item: CustomFeedModel; drag: () => void}) => {
     const pal = usePalette('default')
-    const rootStore = useStores()
-    const savedFeeds = useMemo(() => rootStore.me.savedFeeds, [rootStore])
+    const store = useStores()
+    const savedFeeds = useMemo(() => store.me.savedFeeds, [store])
     const isPinned = savedFeeds.isPinned(item)
+
     const onTogglePinned = useCallback(
-      () => savedFeeds.togglePinnedFeed(item),
-      [savedFeeds, item],
+      () =>
+        savedFeeds.togglePinnedFeed(item).catch(e => {
+          Toast.show('There was an issue contacting the server')
+          store.log.error('Failed to toggle pinned feed', {e})
+        }),
+      [savedFeeds, item, store],
     )
+    const onPressUp = useCallback(
+      () =>
+        savedFeeds.movePinnedFeed(item, 'up').catch(e => {
+          Toast.show('There was an issue contacting the server')
+          store.log.error('Failed to set pinned feed order', {e})
+        }),
+      [store, savedFeeds, item],
+    )
+    const onPressDown = useCallback(
+      () =>
+        savedFeeds.movePinnedFeed(item, 'down').catch(e => {
+          Toast.show('There was an issue contacting the server')
+          store.log.error('Failed to set pinned feed order', {e})
+        }),
+      [store, savedFeeds, item],
+    )
+
     return (
       <ScaleDecorator>
         <ShadowDecorator>
@@ -128,9 +164,7 @@ const ListItem = observer(
               <View style={styles.webArrowButtonsContainer}>
                 <TouchableOpacity
                   accessibilityRole="button"
-                  onPress={() => {
-                    savedFeeds.movePinnedItem(item, 'up')
-                  }}>
+                  onPress={onPressUp}>
                   <FontAwesomeIcon
                     icon="arrow-up"
                     size={12}
@@ -139,9 +173,7 @@ const ListItem = observer(
                 </TouchableOpacity>
                 <TouchableOpacity
                   accessibilityRole="button"
-                  onPress={() => {
-                    savedFeeds.movePinnedItem(item, 'down')
-                  }}>
+                  onPress={onPressDown}>
                   <FontAwesomeIcon
                     icon="arrow-down"
                     size={12}
