@@ -61,7 +61,7 @@ export const CustomFeed = observer(
         accessibilityRole="button"
         style={[styles.container, pal.border, style]}
         onPress={() => {
-          navigation.navigate('ProfileCustomFeed', {
+          navigation.navigate('CustomFeed', {
             name: item.data.creator.did,
             rkey: new AtUri(item.data.uri).rkey,
           })

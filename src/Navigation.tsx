@@ -40,7 +40,8 @@ import {SettingsScreen} from './view/screens/Settings'
 import {ProfileScreen} from './view/screens/Profile'
 import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
 import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
-import {ProfileCustomFeed} from './view/screens/ProfileCustomFeed'
+import {CustomFeedScreen} from './view/screens/CustomFeed'
+import {CustomFeedLikedByScreen} from './view/screens/CustomFeedLikedBy'
 import {ProfileListScreen} from './view/screens/ProfileList'
 import {PostThreadScreen} from './view/screens/PostThread'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
@@ -126,7 +127,6 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
           title: title(`People followed by @${route.params.name}`),
         })}
       />
-      <Stack.Screen name="ProfileCustomFeed" component={ProfileCustomFeed} />
       <Stack.Screen
         name="ProfileList"
         component={ProfileListScreen}
@@ -146,6 +146,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="PostRepostedBy"
         component={PostRepostedByScreen}
         options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
+      />
+      <Stack.Screen name="CustomFeed" component={CustomFeedScreen} />
+      <Stack.Screen
+        name="CustomFeedLikedBy"
+        component={CustomFeedLikedByScreen}
       />
       <Stack.Screen
         name="Debug"

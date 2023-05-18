@@ -21,8 +21,8 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {isDesktopWeb} from 'platform/detection'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileCustomFeed'>
-export const ProfileCustomFeed = withAuthRequired(
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
+export const CustomFeedScreen = withAuthRequired(
   observer(({route}: Props) => {
     const store = useStores()
     const pal = usePalette('default')
@@ -146,10 +146,15 @@ export const ProfileCustomFeed = withAuthRequired(
                 {currentFeed.data.description}
               </Text>
             ) : null}
-            <Text type="md-medium" style={pal.textLight}>
-              Liked by {currentFeed?.data.likeCount}{' '}
-              {pluralize(currentFeed?.data.likeCount || 0, 'user')}
-            </Text>
+            <TextLink
+              type="md-medium"
+              style={pal.textLight}
+              href={`/profile/${name}/feed/${rkey}/liked-by`}
+              text={`Liked by ${currentFeed?.data.likeCount} ${pluralize(
+                currentFeed?.data.likeCount || 0,
+                'user',
+              )}`}
+            />
             {isDesktopWeb && (
               <View style={styles.headerBtns}>
                 <Button
@@ -198,30 +203,6 @@ export const ProfileCustomFeed = withAuthRequired(
   }),
 )
 
-/*
-
-        <View style={[styles.headerContainer]}>
-          <View style={[styles.header]}>
-            <View style={styles.avatarContainer}>
-              <UserAvatar
-                type="algo"
-                size={28}
-                avatar={currentFeed?.data.avatar}
-              />
-              <Link href={`/profile/${currentFeed?.data.creator.handle}`}>
-                <Text style={[pal.textLight]}>
-                  @{currentFeed?.data.creator.handle}
-                </Text>
-              </Link>
-            </View>
-            <Text style={[pal.text]}>{currentFeed?.data.description}</Text>
-          </View>
-
-          <View style={[styles.buttonsContainer]}>
-          </View>
-        </View>
-        */
-
 const styles = StyleSheet.create({
   headerBtns: {
     flexDirection: 'row',
@@ -251,43 +232,4 @@ const styles = StyleSheet.create({
   liked: {
     color: colors.red3,
   },
-
-  /*  headerContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    marginBottom: 12,
-  },
-  header: {
-    alignItems: 'center',
-    gap: 4,
-  },
-  avatarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  saveButton: {
-    minWidth: 100,
-    alignItems: 'center',
-  },
-  liked: {
-    color: colors.red3,
-  },
-  notLiked: {
-    color: colors.gray3,
-  },
-  likeButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 24,
-    gap: 4,
-  },*/
 })
