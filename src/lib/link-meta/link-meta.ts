@@ -55,6 +55,7 @@ export async function getLinkMeta(
     const controller = new AbortController()
     const to = setTimeout(() => controller.abort(), timeout || 5e3)
     const httpRes = await fetch(url, {
+      mode: 'no-cors',
       headers: {accept: 'text/html'},
       signal: controller.signal,
     })
