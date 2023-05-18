@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 
-import {PickerOpts, CameraOpts} from './types'
+import {PickerOpts, CameraOpts, CropperOptions} from './types'
 import {RootStoreModel} from 'state/index'
 import {getImageDim} from 'lib/media/manip'
 import {extractDataUriMime} from './util'
@@ -38,8 +38,24 @@ export async function openCamera(
   throw new Error('TODO')
 }
 
-export async function openCropper() {
-  return null
+export async function openCropper(
+  store: RootStoreModel,
+  opts: CropperOptions,
+): Promise<RNImage> {
+  // TODO handle more opts
+  return new Promise((resolve, reject) => {
+    store.shell.openModal({
+      name: 'crop-image',
+      uri: opts.path,
+      onSelect: (img?: RNImage) => {
+        if (img) {
+          resolve(img)
+        } else {
+          reject(new Error('Canceled'))
+        }
+      },
+    })
+  })
 }
 
 /**

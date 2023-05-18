@@ -3,6 +3,7 @@ import {RootStoreModel} from '../root-store'
 import {makeAutoObservable} from 'mobx'
 import {ProfileModel} from '../content/profile'
 import {isObj, hasProp} from 'lib/type-guards'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 import {ImageModel} from '../media/image'
 import {ListModel} from '../content/list'
 import {GalleryModel} from '../media/gallery'
@@ -55,6 +56,12 @@ export interface EditImageModal {
   name: 'edit-image'
   image: ImageModel
   gallery: GalleryModel
+}
+
+export interface CropImageModal {
+  name: 'crop-image'
+  uri: string
+  onSelect: (img?: RNImage) => void
 }
 
 export interface AltTextImageModal {
@@ -117,6 +124,7 @@ export type Modal =
 
   // Posts
   | AltTextImageModal
+  | CropImageModal
   | EditImageModal
   | ServerInputModal
   | RepostModal
