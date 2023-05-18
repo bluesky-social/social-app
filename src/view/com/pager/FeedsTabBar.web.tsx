@@ -28,7 +28,7 @@ const FeedsTabBarDesktop = observer(
   ) => {
     const store = useStores()
     const items = useMemo(
-      () => ['Following', ...store.me.savedFeeds.pinnedFeedNames, 'My feeds'],
+      () => ['Following', ...store.me.savedFeeds.pinnedFeedNames, 'My Feeds'],
       [store.me.savedFeeds.pinnedFeedNames],
     )
     const pal = usePalette('default')

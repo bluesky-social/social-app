@@ -33,7 +33,7 @@ export const FeedsTabBar = observer(
     }, [store])
 
     const items = useMemo(
-      () => ['Following', ...store.me.savedFeeds.pinnedFeedNames, 'My feeds'],
+      () => ['Following', ...store.me.savedFeeds.pinnedFeedNames, 'My Feeds'],
       [store.me.savedFeeds.pinnedFeedNames],
     )
 

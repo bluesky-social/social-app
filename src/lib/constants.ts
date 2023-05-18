@@ -110,26 +110,20 @@ export async function DEFAULT_FEEDS(
     }
   } else if (serviceUrl.includes('staging')) {
     return {
-      pinned: [
-        STAGING_DEFAULT_FEED('skyline'),
-        STAGING_DEFAULT_FEED('whats-hot'),
-      ],
+      pinned: [STAGING_DEFAULT_FEED('whats-hot')],
       saved: [
         STAGING_DEFAULT_FEED('bsky-team'),
-        STAGING_DEFAULT_FEED('skyline'),
+        STAGING_DEFAULT_FEED('with-friends'),
         STAGING_DEFAULT_FEED('whats-hot'),
         STAGING_DEFAULT_FEED('hot-classic'),
       ],
     }
   } else {
     return {
-      pinned: [
-        STAGING_DEFAULT_FEED('skyline'),
-        STAGING_DEFAULT_FEED('whats-hot'),
-      ],
+      pinned: [STAGING_DEFAULT_FEED('whats-hot')],
       saved: [
         STAGING_DEFAULT_FEED('bsky-team'),
-        STAGING_DEFAULT_FEED('skyline'),
+        STAGING_DEFAULT_FEED('with-friends'),
         STAGING_DEFAULT_FEED('whats-hot'),
         STAGING_DEFAULT_FEED('hot-classic'),
       ],

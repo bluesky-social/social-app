@@ -8,7 +8,7 @@ import {FlatList} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
 import {isDesktopWeb} from 'platform/detection'
 import {s} from 'lib/styles'
-import {Link} from 'view/com/util/Link'
+import {Link, TextLink} from 'view/com/util/Link'
 import {CustomFeed} from './CustomFeed'
 
 export const SavedFeeds = observer(
@@ -52,14 +52,35 @@ export const SavedFeeds = observer(
 
     const renderListFooterComponent = useCallback(() => {
       return (
-        <Link
-          style={[styles.footerLink, pal.border]}
-          href="/settings/saved-feeds">
-          <FontAwesomeIcon icon="cog" size={18} color={pal.colors.icon} />
-          <Text type="lg-medium" style={pal.textLight}>
-            Settings
-          </Text>
-        </Link>
+        <>
+          <Link
+            style={[styles.footerLink, pal.border]}
+            href="/settings/saved-feeds">
+            <FontAwesomeIcon icon="cog" size={18} color={pal.colors.icon} />
+            <Text type="lg-medium" style={pal.textLight}>
+              Change Order
+            </Text>
+          </Link>
+          <View
+            style={[
+              pal.border,
+              !isDesktopWeb && s.flex1,
+              pal.viewLight,
+              styles.empty,
+            ]}>
+            <Text type="sm" style={[pal.text]}>
+              Feeds are custom algorithms that users build with a little coding
+              expertise.{' '}
+              <TextLink
+                type="sm"
+                style={pal.link}
+                href="https://github.com/bluesky-social/feed-generator"
+                text="See this guide"
+              />{' '}
+              for more information.
+            </Text>
+          </View>
+        </>
       )
     }, [pal])
 
