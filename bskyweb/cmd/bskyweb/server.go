@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/fs"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -132,10 +134,35 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handle/post/:rkey/reposted-by", server.WebGeneric)
 
 	// Mailmodo
-	e.POST("/waitlist", func(c echo.Context) error {
-		email := strings.TrimSpace(c.FormValue("email"))
-		if err := mailmodo.AddToList(c.Request().Context(), mailmodoListName, email); err != nil {
+	e.POST("/api/waitlist", func(c echo.Context) error {
+		type jsonError struct {
+			Error string `json:"error"`
+		}
+
+		// Read the API request.
+		type apiRequest struct {
+			Email string `json:"email"`
+		}
+
+		bodyReader := http.MaxBytesReader(c.Response(), c.Request().Body, 16*1024)
+		payload, err := ioutil.ReadAll(bodyReader)
+		if err != nil {
 			return err
+		}
+		var req apiRequest
+		if err := json.Unmarshal(payload, &req); err != nil {
+			return c.JSON(http.StatusBadRequest, jsonError{Error: "Invalid API request"})
+		}
+
+		if req.Email == "" {
+			return c.JSON(http.StatusBadRequest, jsonError{Error: "Please enter a valid email address."})
+		}
+
+		if err := mailmodo.AddToList(c.Request().Context(), mailmodoListName, req.Email); err != nil {
+			log.Errorf("adding email to waitlist failed: %s", err)
+			return c.JSON(http.StatusBadRequest, jsonError{
+				Error: "Storing email in waitlist failed. Please enter a valid email address.",
+			})
 		}
 		return c.JSON(http.StatusOK, map[string]bool{"success": true})
 	})
