@@ -19,12 +19,12 @@ import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
 import {isDesktopWeb, isWeb} from 'platform/detection'
-import {s} from 'lib/styles'
+import {s, colors} from 'lib/styles'
 import DraggableFlatList, {
   ShadowDecorator,
   ScaleDecorator,
 } from 'react-native-draggable-flatlist'
-import {SavedFeedItem} from 'view/com/feeds/SavedFeedItem'
+import {CustomFeed} from 'view/com/feeds/CustomFeed'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
@@ -106,6 +106,10 @@ const ListItem = observer(
     const rootStore = useStores()
     const savedFeeds = useMemo(() => rootStore.me.savedFeeds, [rootStore])
     const isPinned = savedFeeds.isPinned(item)
+    const onTogglePinned = useCallback(
+      () => savedFeeds.togglePinnedFeed(item),
+      [savedFeeds, item],
+    )
     return (
       <ScaleDecorator>
         <ShadowDecorator>
@@ -146,7 +150,21 @@ const ListItem = observer(
                 style={s.ml20}
               />
             ) : null}
-            <SavedFeedItem item={item} savedFeeds={savedFeeds} showSaveBtn />
+            <CustomFeed
+              key={item.data.uri}
+              item={item}
+              showSaveBtn
+              style={styles.noBorder}
+            />
+            <TouchableOpacity
+              accessibilityRole="button"
+              onPress={onTogglePinned}>
+              <FontAwesomeIcon
+                icon="thumb-tack"
+                size={20}
+                color={isPinned ? colors.blue3 : pal.colors.icon}
+              />
+            </TouchableOpacity>
           </Pressable>
         </ShadowDecorator>
       </ScaleDecorator>
@@ -170,10 +188,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderTopWidth: 1,
+    paddingRight: 16,
   },
   webArrowButtonsContainer: {
     flexDirection: 'column',
     justifyContent: 'space-around',
   },
-  webArrowUpButton: {marginBottom: 10},
+  webArrowUpButton: {
+    marginBottom: 10,
+  },
+  noBorder: {
+    borderTopWidth: 0,
+  },
 })
