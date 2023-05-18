@@ -150,16 +150,12 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="CustomFeed"
         component={CustomFeedScreen}
-        options={({route}) => ({
-          title: title(`Custom feed by @${route.params.name}`),
-        })}
+        options={{title: title('Feed')}}
       />
       <Stack.Screen
         name="CustomFeedLikedBy"
         component={CustomFeedLikedByScreen}
-        options={({route}) => ({
-          title: title(`Custom feed by @${route.params.name}`),
-        })}
+        options={{title: title('Liked by')}}
       />
       <Stack.Screen
         name="Debug"

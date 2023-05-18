@@ -20,6 +20,7 @@ import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {isDesktopWeb} from 'platform/detection'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export const CustomFeedScreen = withAuthRequired(
@@ -40,6 +41,8 @@ export const CustomFeedScreen = withAuthRequired(
       feed.setup()
       return feed
     }, [store, uri])
+
+    useSetTitle(currentFeed?.displayName)
 
     const onToggleSaved = React.useCallback(async () => {
       try {
