@@ -10,7 +10,7 @@ import {StyleSheet, View, ScrollView} from 'react-native'
 import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb} from 'platform/detection'
+import {isDesktopWeb, isWeb} from 'platform/detection'
 
 export interface TabBarProps {
   testID?: string
@@ -120,9 +120,9 @@ const styles = isDesktopWeb
     })
   : StyleSheet.create({
       outer: {
+        flex: 1,
         flexDirection: 'row',
         paddingLeft: 14,
-        paddingRight: 24,
       },
       item: {
         paddingTop: 8,

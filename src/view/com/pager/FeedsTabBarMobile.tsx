@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     top: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 18,
+    paddingLeft: 18,
     borderBottomWidth: 1,
   },
   tabBarAvi: {
