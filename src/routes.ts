@@ -21,7 +21,6 @@ export const router = new Router({
   Log: '/sys/log',
   AppPasswords: '/settings/app-passwords',
   SavedFeeds: '/settings/saved-feeds',
-  PinnedFeeds: '/settings/pinned-feeds',
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
   TermsOfService: '/support/tos',

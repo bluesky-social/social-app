@@ -27,7 +27,6 @@ export type CommonNavigatorParams = {
   CopyrightPolicy: undefined
   AppPasswords: undefined
   SavedFeeds: undefined
-  PinnedFeeds: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {

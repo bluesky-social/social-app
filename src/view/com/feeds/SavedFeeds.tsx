@@ -50,7 +50,7 @@ export const SavedFeeds = observer(
       return (
         <Link
           style={[styles.footerLink, pal.border]}
-          href="/settings/pinned-feeds">
+          href="/settings/saved-feeds">
           <FontAwesomeIcon icon="cog" size={18} color={pal.colors.icon} />
           <Text type="lg-medium" style={pal.textLight}>
             Settings

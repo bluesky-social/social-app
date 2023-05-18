@@ -4,9 +4,8 @@ import {
   StyleSheet,
   View,
   ActivityIndicator,
-  FlatList,
+  Pressable,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -21,16 +20,18 @@ import {CenteredView} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
 import {isDesktopWeb, isWeb} from 'platform/detection'
 import {s} from 'lib/styles'
-import {SavedFeedsModel} from 'state/models/ui/saved-feeds'
-import {Link} from 'view/com/util/Link'
-import {UserAvatar} from 'view/com/util/UserAvatar'
+import DraggableFlatList, {
+  ShadowDecorator,
+  ScaleDecorator,
+} from 'react-native-draggable-flatlist'
 import {SavedFeedItem} from 'view/com/feeds/SavedFeedItem'
-import {AtUri} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 
 export const SavedFeeds = withAuthRequired(
-  observer(({navigation}: Props) => {
+  observer(({}: Props) => {
     // hooks for global items
     const pal = usePalette('default')
     const rootStore = useStores()
@@ -55,8 +56,8 @@ export const SavedFeeds = withAuthRequired(
             styles.empty,
           ]}>
           <Text type="lg" style={[pal.text]}>
-            You don't have any saved feeds. To save a feed, click the save
-            button when a custom feed or algorithm shows up.
+            You don't have any pinned feeds. To pin a feed, go back to the Saved
+            Feeds screen and click the pin icon!
           </Text>
         </View>
       )
@@ -71,10 +72,10 @@ export const SavedFeeds = withAuthRequired(
 
     return (
       <CenteredView style={[s.flex1]}>
-        <ViewHeader title="Saved Feeds" showOnDesktop />
-        <FlatList
-          style={[!isDesktopWeb && s.flex1]}
-          data={savedFeeds.feeds}
+        <ViewHeader title="Edit My Feeds" showOnDesktop />
+        <DraggableFlatList
+          containerStyle={[!isDesktopWeb && s.flex1]}
+          data={[...savedFeeds.pinned, ...savedFeeds.unpinned]} // make a copy so this FlatList re-renders when pinned changes
           keyExtractor={item => item.data.uri}
           refreshing={savedFeeds.isRefreshing}
           refreshControl={
@@ -85,19 +86,12 @@ export const SavedFeeds = withAuthRequired(
               titleColor={pal.colors.text}
             />
           }
-          renderItem={({item}) => (
-            <SavedFeedItem item={item} savedFeeds={savedFeeds} />
-          )}
+          renderItem={({item, drag}) => <ListItem item={item} drag={drag} />}
           initialNumToRender={10}
-          ListHeaderComponent={() => (
-            <ListHeaderComponent
-              savedFeeds={savedFeeds}
-              navigation={navigation}
-            />
-          )}
           ListFooterComponent={_ListFooterComponent}
           ListEmptyComponent={_ListEmptyComponent}
           extraData={savedFeeds.isLoading}
+          onDragEnd={({data}) => savedFeeds.reorderPinnedFeeds(data)}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
         />
@@ -106,64 +100,56 @@ export const SavedFeeds = withAuthRequired(
   }),
 )
 
-const ListHeaderComponent = observer(
-  ({
-    savedFeeds,
-    navigation,
-  }: {
-    savedFeeds: SavedFeedsModel
-    navigation: Props['navigation']
-  }) => {
+const ListItem = observer(
+  ({item, drag}: {item: CustomFeedModel; drag: () => void}) => {
     const pal = usePalette('default')
+    const rootStore = useStores()
+    const savedFeeds = useMemo(() => rootStore.me.savedFeeds, [rootStore])
+    const isPinned = savedFeeds.isPinned(item)
     return (
-      <View style={styles.headerContainer}>
-        {savedFeeds.pinned.length > 0 ? (
-          <View style={styles.pinnedContainer}>
-            <View style={styles.pinnedHeader}>
-              <Text type="lg-bold" style={[pal.text]}>
-                Pinned Feeds
-              </Text>
-              <Link href="/settings/pinned-feeds">
-                <Text style={[styles.editPinned, pal.text]}>Edit</Text>
-              </Link>
-            </View>
-
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={isWeb}>
-              {savedFeeds.pinned.map(item => {
-                return (
-                  <TouchableOpacity
-                    key={item.data.uri}
-                    accessibilityRole="button"
-                    onPress={() => {
-                      navigation.navigate('ProfileCustomFeed', {
-                        name: item.data.creator.did,
-                        rkey: new AtUri(item.data.uri).rkey,
-                      })
-                    }}
-                    style={styles.pinnedItem}>
-                    <UserAvatar
-                      type="algo"
-                      avatar={item.data.avatar}
-                      size={80}
-                    />
-                    <Text
-                      type="sm-medium"
-                      numberOfLines={1}
-                      style={[pal.text, styles.pinnedItemName]}>
-                      {item.data.displayName ??
-                        `${item.data.creator.displayName}'s feed`}
-                    </Text>
-                  </TouchableOpacity>
-                )
-              })}
-            </ScrollView>
-          </View>
-        ) : null}
-
-        <Text type="lg-bold">All Saved Feeds</Text>
-      </View>
+      <ScaleDecorator>
+        <ShadowDecorator>
+          <Pressable
+            accessibilityRole="button"
+            onLongPress={isPinned ? drag : undefined}
+            style={[styles.itemContainer, pal.border]}>
+            {isPinned && isWeb ? (
+              <View style={styles.webArrowButtonsContainer}>
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  onPress={() => {
+                    savedFeeds.movePinnedItem(item, 'up')
+                  }}>
+                  <FontAwesomeIcon
+                    icon="arrow-up"
+                    size={20}
+                    style={[s.mr10, pal.text, styles.webArrowUpButton]}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  onPress={() => {
+                    savedFeeds.movePinnedItem(item, 'down')
+                  }}>
+                  <FontAwesomeIcon
+                    icon="arrow-down"
+                    size={20}
+                    style={[s.mr10, pal.text]}
+                  />
+                </TouchableOpacity>
+              </View>
+            ) : isPinned ? (
+              <FontAwesomeIcon
+                icon="bars"
+                size={20}
+                color={pal.colors.text}
+                style={s.ml20}
+              />
+            ) : null}
+            <SavedFeedItem item={item} savedFeeds={savedFeeds} showSaveBtn />
+          </Pressable>
+        </ShadowDecorator>
+      </ScaleDecorator>
     )
   },
 )
@@ -179,15 +165,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     marginTop: 10,
   },
-  headerContainer: {paddingHorizontal: 18, paddingTop: 18},
-  pinnedContainer: {marginBottom: 18, gap: 18},
-  pinnedHeader: {flexDirection: 'row', justifyContent: 'space-between'},
-  pinnedItem: {
+  itemContainer: {
     flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 18,
-    maxWidth: 100,
+    borderTopWidth: 1,
   },
-  pinnedItemName: {marginTop: 8, textAlign: 'center'},
-  editPinned: {textDecorationLine: 'underline'},
+  webArrowButtonsContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+  },
+  webArrowUpButton: {marginBottom: 10},
 })

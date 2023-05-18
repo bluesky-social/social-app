@@ -55,9 +55,8 @@ import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
 import {AppPasswords} from 'view/screens/AppPasswords'
 import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
 import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
+import {SavedFeeds} from 'view/screens/SavedFeeds'
 import {getRoutingInstrumentation} from 'lib/sentry'
-import {SavedFeeds} from './view/screens/SavedFeeds'
-import {PinnedFeeds} from 'view/screens/PinnedFeeds'
 import {bskyTitle} from 'lib/strings/headings'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -189,7 +188,6 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title('App Passwords')}}
       />
       <Stack.Screen name="SavedFeeds" component={SavedFeeds} />
-      <Stack.Screen name="PinnedFeeds" component={PinnedFeeds} />
     </>
   )
 }

@@ -284,23 +284,6 @@ export const SettingsScreen = withAuthRequired(
 
           <View style={styles.spacer20} />
 
-          <Link
-            testID="bookmarkedAlgosBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            accessibilityHint="Custom Algorithms"
-            accessibilityLabel="Opens screen with all bookmarked custom algorithms"
-            href="/settings/saved-feeds">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="rss"
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              Custom Algorithms
-            </Text>
-          </Link>
-
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Advanced
           </Text>
@@ -316,6 +299,22 @@ export const SettingsScreen = withAuthRequired(
             </View>
             <Text type="lg" style={pal.text}>
               App passwords
+            </Text>
+          </Link>
+          <Link
+            testID="savedFeedsBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            accessibilityHint="Saved Feeds"
+            accessibilityLabel="Opens screen with all saved feeds"
+            href="/settings/saved-feeds">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="satellite-dish"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Saved Feeds
             </Text>
           </Link>
           <TouchableOpacity
