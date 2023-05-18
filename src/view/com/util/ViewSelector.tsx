@@ -69,7 +69,7 @@ export const ViewSelector = React.forwardRef(
     }, [selectedIndex, onSelectView])
 
     React.useImperativeHandle(ref, () => ({
-      scrollToTop: async () => {
+      scrollToTop: () => {
         flatListRef.current?.scrollToOffset({offset: 0})
       },
     }))
