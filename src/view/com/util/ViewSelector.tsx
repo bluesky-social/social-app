@@ -13,11 +13,30 @@ const HEADER_ITEM = {_reactKey: '__header__'}
 const SELECTOR_ITEM = {_reactKey: '__selector__'}
 const STICKY_HEADER_INDICES = [1]
 
-export type ViewSelectorActions = {
+export type ViewSelectorHandle = {
   scrollToTop: () => void
 }
 
-export const ViewSelector = React.forwardRef(
+export const ViewSelector = React.forwardRef<
+  ViewSelectorHandle,
+  {
+    sections: string[]
+    items: any[]
+    refreshing?: boolean
+    swipeEnabled?: boolean
+    renderHeader?: () => JSX.Element
+    renderItem: (item: any) => JSX.Element
+    ListFooterComponent?:
+      | React.ComponentType<any>
+      | React.ReactElement
+      | null
+      | undefined
+    onSelectView?: (viewIndex: number) => void
+    onScroll?: OnScrollCb
+    onRefresh?: () => void
+    onEndReached?: (info: {distanceFromEnd: number}) => void
+  }
+>(
   (
     {
       sections,
@@ -30,22 +49,6 @@ export const ViewSelector = React.forwardRef(
       onScroll,
       onRefresh,
       onEndReached,
-    }: {
-      sections: string[]
-      items: any[]
-      refreshing?: boolean
-      swipeEnabled?: boolean
-      renderHeader?: () => JSX.Element
-      renderItem: (item: any) => JSX.Element
-      ListFooterComponent?:
-        | React.ComponentType<any>
-        | React.ReactElement
-        | null
-        | undefined
-      onSelectView?: (viewIndex: number) => void
-      onScroll?: OnScrollCb
-      onRefresh?: () => void
-      onEndReached?: (info: {distanceFromEnd: number}) => void
     },
     ref,
   ) => {

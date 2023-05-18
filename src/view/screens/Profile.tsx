@@ -4,7 +4,7 @@ import {observer} from 'mobx-react-lite'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {ViewSelector, ViewSelectorActions} from '../com/util/ViewSelector'
+import {ViewSelector, ViewSelectorHandle} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {ProfileUiModel, Sections} from 'state/models/ui/profile'
@@ -33,7 +33,7 @@ export const ProfileScreen = withAuthRequired(
   observer(({route}: Props) => {
     const store = useStores()
     const {screen, track} = useAnalytics()
-    const viewSelectorRef = React.useRef<ViewSelectorActions>(null)
+    const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
 
     useEffect(() => {
       screen('Profile')
