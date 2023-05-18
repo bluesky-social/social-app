@@ -81,7 +81,7 @@ export class SavedFeedsModel {
 
   togglePinnedFeed(feed: CustomFeedModel) {
     if (!this.isPinned(feed)) {
-      this.pinned.push(feed)
+      this.pinned = [...this.pinned, feed]
     } else {
       this.removePinnedFeed(feed.data.uri)
     }
