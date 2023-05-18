@@ -12,13 +12,6 @@ export enum Sections {
   Lists = 'Lists',
 }
 
-const USER_SELECTOR_ITEMS = [
-  Sections.Posts,
-  Sections.PostsWithReplies,
-  Sections.CustomAlgorithms,
-  Sections.Lists,
-]
-
 export interface ProfileUiParams {
   user: string
 }
@@ -83,7 +76,14 @@ export class ProfileUiModel {
   }
 
   get selectorItems() {
-    return USER_SELECTOR_ITEMS
+    const items = [Sections.Posts, Sections.PostsWithReplies]
+    if (this.algos.hasLoaded && !this.algos.isEmpty) {
+      items.push(Sections.CustomAlgorithms)
+    }
+    if (this.lists.hasLoaded && !this.lists.isEmpty) {
+      items.push(Sections.Lists)
+    }
+    return items
   }
 
   get selectedView() {
@@ -166,6 +166,7 @@ export class ProfileUiModel {
         .setup()
         .catch(err => this.rootStore.log.error('Failed to fetch feed', err)),
     ])
+    this.algos.refresh()
     // HACK: need to use the DID as a param, not the username -prf
     this.lists.source = this.profile.did
     this.lists
