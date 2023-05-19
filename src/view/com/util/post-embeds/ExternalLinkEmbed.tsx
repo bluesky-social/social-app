@@ -16,7 +16,7 @@ export const ExternalLinkEmbed = ({
   return (
     <>
       {link.thumb ? (
-        <AutoSizedImage uri={link.thumb} style={styles.extImage}>
+        <AutoSizedImage uri={link.thumb} style={[pal.border, styles.extImage]}>
           {imageChild}
         </AutoSizedImage>
       ) : undefined}
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
   extImage: {
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
+    borderBottomWidth: 1,
     width: '100%',
     maxHeight: 200,
   },

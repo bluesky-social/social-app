@@ -32,7 +32,10 @@ export const ExternalEmbed = ({
           <ActivityIndicator size="large" style={styles.spinner} />
         </View>
       ) : link.localThumb ? (
-        <AutoSizedImage uri={link.localThumb.path} style={styles.image} />
+        <AutoSizedImage
+          uri={link.localThumb.path}
+          style={[pal.border, styles.image]}
+        />
       ) : undefined}
       <View style={styles.inner}>
         {!!link.meta?.title && (
@@ -86,6 +89,7 @@ const styles = StyleSheet.create({
   image: {
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
+    borderBottomWidth: 1,
     width: '100%',
     maxHeight: 200,
   },

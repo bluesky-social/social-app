@@ -91,6 +91,7 @@ export const Link = observer(function Link({
   return (
     <TouchableOpacity
       testID={testID}
+      delayPressIn={130}
       style={style}
       onPress={onPress}
       accessible={accessible}
