@@ -39,8 +39,8 @@ export const FeedsTabBar = observer(
           style={styles.tabBarAvi}
           onPress={onPressAvi}
           accessibilityRole="button"
-          accessibilityLabel="Open navigation"
-          accessibilityHint="Access profile and other navigation links">
+          accessibilityLabel="Menu"
+          accessibilityHint="Access navigation links and settings">
           <UserAvatar avatar={store.me.avatar} size={30} />
         </TouchableOpacity>
         <TabBar

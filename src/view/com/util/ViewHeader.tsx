@@ -65,7 +65,9 @@ export const ViewHeader = observer(function ({
           style={canGoBack ? styles.backBtn : styles.backBtnWide}
           accessibilityRole="button"
           accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
-          accessibilityHint="">
+          accessibilityHint={
+            canGoBack ? '' : 'Access navigation links and settings'
+          }>
           {canGoBack ? (
             <FontAwesomeIcon
               size={18}

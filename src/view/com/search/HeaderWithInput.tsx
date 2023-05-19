@@ -56,8 +56,8 @@ export function HeaderWithInput({
         hitSlop={MENU_HITSLOP}
         style={styles.headerMenuBtn}
         accessibilityRole="button"
-        accessibilityLabel="Back"
-        accessibilityHint="">
+        accessibilityLabel="Menu"
+        accessibilityHint="Access navigation links and settings">
         <UserAvatar size={30} avatar={store.me.avatar} />
       </TouchableOpacity>
       <View
