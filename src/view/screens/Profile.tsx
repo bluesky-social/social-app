@@ -27,6 +27,7 @@ import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
+import { Link } from 'view/com/util/Link'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
@@ -144,7 +145,11 @@ export const ProfileScreen = withAuthRequired(
           }
         } else {
           if (item === ProfileUiModel.END_ITEM) {
-            return <Text style={styles.endItem}>- end of feed -</Text>
+            return(
+              <Link href={`/profile/${store.me.handle}`} style={styles.endItem}>
+                End of feed - Back to top
+              </Link>
+            ) 
           } else if (item === ProfileUiModel.LOADING_ITEM) {
             return <PostFeedLoadingPlaceholder />
           } else if (item._reactKey === '__error__') {
