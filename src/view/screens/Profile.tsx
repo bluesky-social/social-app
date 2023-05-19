@@ -45,6 +45,10 @@ export const ProfileScreen = withAuthRequired(
     )
     useSetTitle(combinedDisplayName(uiState.profile))
 
+    useEffect(() => {
+      setHasSetup(false);
+    }, [route.params.name])
+
     useFocusEffect(
       React.useCallback(() => {
         let aborted = false
