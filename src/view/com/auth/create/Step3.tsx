@@ -19,7 +19,7 @@ export const Step3 = observer(({model}: {model: CreateAccountModel}) => {
         <TextInput
           testID="handleInput"
           icon="at"
-          placeholder="eg alice"
+          placeholder="e.g. alice"
           value={model.handle}
           editable
           onChange={model.setHandle}

@@ -33,7 +33,7 @@ export const SplashScreen = ({
               accessibilityLabel="Create new account"
               accessibilityHint="Opens flow to create a new Bluesky account">
               <Text style={[s.white, styles.btnLabel]}>
-                Create a new account
+                Create a New Account
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -43,7 +43,7 @@ export const SplashScreen = ({
               accessibilityRole="button"
               accessibilityLabel="Sign in"
               accessibilityHint="Opens flow to sign into your existing Bluesky account">
-              <Text style={[pal.text, styles.btnLabel]}>Sign in</Text>
+              <Text style={[pal.text, styles.btnLabel]}>Sign In</Text>
             </TouchableOpacity>
           </View>
         </ErrorBoundary>

@@ -72,7 +72,7 @@ describe('Home screen', () => {
   })
 
   it('Can tap between feeds', async () => {
-    await element(by.id("homeScreenFeedTabs-What's hot")).tap()
+    await element(by.id("homeScreenFeedTabs-What's Hot")).tap()
     await expect(element(by.id('whatshotFeedPage'))).toBeVisible()
     await element(by.id('homeScreenFeedTabs-Following')).tap()
     await expect(element(by.id('followingFeedPage'))).toBeVisible()

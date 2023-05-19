@@ -49,7 +49,7 @@ const FeedsTabBarDesktop = observer(
       <Animated.View style={[pal.view, styles.tabBar, transform]}>
         <TabBar
           {...props}
-          items={['Following', "What's hot"]}
+          items={['Following', "What's Hot"]}
           indicatorPosition="bottom"
           indicatorColor={pal.colors.link}
         />

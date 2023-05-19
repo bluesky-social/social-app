@@ -47,7 +47,7 @@ export const SplashScreen = ({
               // TODO: web accessibility
               accessibilityRole="button">
               <Text style={[s.white, styles.btnLabel]}>
-                Create a new account
+                Create a New Account
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -56,7 +56,7 @@ export const SplashScreen = ({
               onPress={onPressSignin}
               // TODO: web accessibility
               accessibilityRole="button">
-              <Text style={[pal.text, styles.btnLabel]}>Sign in</Text>
+              <Text style={[pal.text, styles.btnLabel]}>Sign In</Text>
             </TouchableOpacity>
           </View>
           <Text

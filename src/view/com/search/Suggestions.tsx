@@ -60,7 +60,7 @@ export const Suggestions = observer(
               {
                 _reactKey: '__popular_heading__',
                 type: 'heading',
-                title: 'In your network',
+                title: 'In Your Network',
               },
             ])
             .concat(
@@ -77,7 +77,7 @@ export const Suggestions = observer(
               {
                 _reactKey: '__suggested_heading__',
                 type: 'heading',
-                title: 'Suggested follows',
+                title: 'Suggested Follows',
               },
             ])
             .concat(

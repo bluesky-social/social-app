@@ -67,13 +67,13 @@ export function Component({}: {}) {
       style={[styles.container, {backgroundColor: pal.colors.backgroundLight}]}>
       <View style={[styles.innerContainer, pal.view]}>
         <Text type="title-xl" style={[styles.title, pal.text]}>
-          Delete account
+          Delete Account
         </Text>
         {!isEmailSent ? (
           <>
             <Text type="lg" style={[styles.description, pal.text]}>
               For security reasons, we'll need to send a confirmation code to
-              your email.
+              your email address.
             </Text>
             {error ? (
               <View style={s.mt10}>
@@ -101,7 +101,7 @@ export function Component({}: {}) {
                     end={{x: 1, y: 1}}
                     style={[styles.btn]}>
                     <Text type="button-lg" style={[s.white, s.bold]}>
-                      Send email
+                      Send Email
                     </Text>
                   </LinearGradient>
                 </TouchableOpacity>

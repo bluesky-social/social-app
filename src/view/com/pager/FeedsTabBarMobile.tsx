@@ -45,7 +45,7 @@ export const FeedsTabBar = observer(
         </TouchableOpacity>
         <TabBar
           {...props}
-          items={['Following', "What's hot"]}
+          items={['Following', "What's Hot"]}
           indicatorPosition="bottom"
           indicatorColor={pal.colors.link}
         />
