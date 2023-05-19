@@ -397,6 +397,7 @@ export class PostsFeedModel {
       ]
     }
     if (this.feedType === 'home') {
+      // removing likedRepliesOnly will definitely show threads, but obviously it'll show unliked replies also
       return [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
     }
     return []

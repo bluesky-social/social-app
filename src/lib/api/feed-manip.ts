@@ -25,7 +25,7 @@ export class FeedViewPostsSlice {
     if (this.items[0].reason?.indexedAt) {
       return this.items[0].reason.indexedAt as string
     }
-    return this.items[0].post.indexedAt
+    return this.items[this.items.length-1].post.indexedAt // ordering should depend on the most recent item in a slice
   }
 
   get isThread() {
@@ -35,10 +35,6 @@ export class FeedViewPostsSlice {
         item => item.post.author.did === this.items[0].post.author.did,
       )
     )
-  }
-
-  get isFullThread() {
-    return this.isThread && !this.items[0].reply
   }
 
   get rootItem() {
@@ -183,7 +179,14 @@ export class FeedTuner {
   ): FeedViewPostsSlice[] {
     // remove any replies without at least 2 likes
     for (let i = slices.length - 1; i >= 0; i--) {
-      if (slices[i].isFullThread || !slices[i].isReply) {
+      // I can't figure out how to make this work when there's a *single* reply
+      // to an older post in a thread. It's not "a thread" because it doesn't
+      // have more than one item in the slice. But it is a reply. I'm not sure
+      // how to reliably determine if something is a thread.
+      //
+      // isFullThread was always problematic, because frequently you don't have
+      // a root on an old thread
+      if (slices[i].isThread || !slices[i].isReply) { // leave threads and root posts
         continue
       }
 
