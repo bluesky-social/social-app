@@ -1,8 +1,8 @@
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
-const MONTH = DAY * 28
-const YEAR = DAY * 365
+const WEEK = DAY * 7
+
 export function ago(date: number | string | Date): string {
   let ts: number
   if (typeof date === 'string') {
@@ -19,12 +19,10 @@ export function ago(date: number | string | Date): string {
     return `${Math.floor(diffSeconds / MINUTE)}m`
   } else if (diffSeconds < DAY) {
     return `${Math.floor(diffSeconds / HOUR)}h`
-  } else if (diffSeconds < MONTH) {
+  } else if (diffSeconds < WEEK) {
     return `${Math.floor(diffSeconds / DAY)}d`
-  } else if (diffSeconds < YEAR) {
-    return `${Math.floor(diffSeconds / MONTH)}mo`
   } else {
-    return new Date(ts).toLocaleDateString()
+    return new Date(ts).toLocaleDateString('en-us', {year: 'numeric', month: 'short', day: 'numeric'})
   }
 }
 
