@@ -5,6 +5,7 @@ import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {isDesktopWeb} from 'platform/detection'
+import {replyToPrompt} from '../../../lib/strings/prompts'
 
 export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
   const store = useStores()
@@ -24,7 +25,7 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
           pal.text,
           isDesktopWeb ? styles.labelDesktopWeb : styles.labelMobile,
         ]}>
-        Write your reply
+        {replyToPrompt()}
       </Text>
     </TouchableOpacity>
   )

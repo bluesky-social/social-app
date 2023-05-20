@@ -37,6 +37,7 @@ import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {isDesktopWeb, isAndroid} from 'platform/detection'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
+import {replyToPrompt} from '../../../lib/strings/prompts'
 
 const MAX_GRAPHEME_LENGTH = 300
 
@@ -200,7 +201,9 @@ export const ComposePost = observer(function ComposePost({
 
   const canPost = graphemeLength <= MAX_GRAPHEME_LENGTH
 
-  const selectTextInputPlaceholder = replyTo ? 'Write your reply' : "What's up?"
+  const selectTextInputPlaceholder = replyTo
+    ? replyToPrompt(replyTo.text)
+    : "What's up?"
 
   const canSelectImages = gallery.size < 4
   const viewStyles = {
