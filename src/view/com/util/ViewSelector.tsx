@@ -94,9 +94,7 @@ export function ViewSelector({
       ListFooterComponent={ListFooterComponent}
       // NOTE sticky header disabled on android due to major performance issues -prf
       stickyHeaderIndices={isAndroid ? undefined : STICKY_HEADER_INDICES}
-      refreshing={refreshing}
       onScroll={onScroll}
-      onRefresh={onRefresh}
       onEndReached={onEndReached}
       refreshControl={
         <RefreshControl
