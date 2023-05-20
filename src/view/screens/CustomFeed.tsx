@@ -146,6 +146,7 @@ export const CustomFeedScreen = withAuthRequired(
                     <TextLink
                       text={`@${currentFeed.data.creator.handle}`}
                       href={`/profile/${currentFeed.data.creator.did}`}
+                      style={[pal.textLight]}
                     />
                   )}
                 </Text>
