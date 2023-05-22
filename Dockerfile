@@ -36,7 +36,7 @@ RUN \. "$NVM_DIR/nvm.sh" && \
 RUN find ./bskyweb/static && find ./web-build/static
 
 #
-# Generate the bksyweb Go binary.
+# Generate the bskyweb Go binary.
 #
 RUN cd bskyweb/ && \
   go mod download && \
