@@ -247,7 +247,7 @@ export class SessionModel {
     const res = await agent.getProfile({actor: did}).catch(_e => undefined)
     if (res) {
       return {
-        dispayName: res.data.displayName,
+        displayName: res.data.displayName,
         aviUrl: res.data.avatar,
       }
     }
