@@ -188,7 +188,7 @@ const FeedPage = observer(
         }
       }, [store, doPoll, onSoftReset, screen, feed]),
     )
-    // fires when tab is actived/deactivated
+    // fires when tab is activated/deactivated
     // - check for latest
     useTabFocusEffect(
       'Home',
