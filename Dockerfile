@@ -17,7 +17,7 @@ ENV CGO_ENABLED=1
 COPY . .
 
 #
-# Generate the Javascript webpack.
+# Generate the JavaScript webpack.
 #
 RUN mkdir --parents $NVM_DIR && \
   wget \
