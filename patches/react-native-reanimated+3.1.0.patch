@@ -1,0 +1,19 @@
+diff --git a/node_modules/react-native-reanimated/src/reanimated2/index.ts b/node_modules/react-native-reanimated/src/reanimated2/index.ts
+index 28246eb..aa7215f 100644
+--- a/node_modules/react-native-reanimated/src/reanimated2/index.ts
++++ b/node_modules/react-native-reanimated/src/reanimated2/index.ts
+@@ -11,3 +11,4 @@ export * from './layoutReanimation';
+ export * from './utils';
+ export * from './commonTypes';
+ export * from './pluginUtils';
++export * from './jestUtils';
+diff --git a/node_modules/react-native-reanimated/src/reanimated2/jestUtils.web.ts b/node_modules/react-native-reanimated/src/reanimated2/jestUtils.web.ts
+new file mode 100644
+index 0000000..d36a09f
+--- /dev/null
++++ b/node_modules/react-native-reanimated/src/reanimated2/jestUtils.web.ts
+@@ -0,0 +1,4 @@
++/*
++ * Stubbed for web, where we don't use this file;
++ */
++export default {};
