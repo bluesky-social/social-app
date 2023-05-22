@@ -100,7 +100,7 @@ export function PostEmbeds({
         RNImage.prefetch(firstImageToShow)
         items.forEach(item => {
           if (firstImageToShow !== item.uri) {
-            // First image already prefeched above
+            // First image already prefetched above
             RNImage.prefetch(item.uri)
           }
         })
