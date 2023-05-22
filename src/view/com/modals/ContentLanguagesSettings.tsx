@@ -30,8 +30,12 @@ export function Component({}: {}) {
     langs.sort((a, b) => {
       const hasA = store.preferences.hasContentLanguage(a.code2)
       const hasB = store.preferences.hasContentLanguage(b.code2)
-      if (hasA === hasB) return a.name.localeCompare(b.name)
-      if (hasA) return -1
+      if (hasA === hasB) {
+        return a.name.localeCompare(b.name)
+      }
+      if (hasA) {
+        return -1
+      }
       return 1
     })
     return langs
