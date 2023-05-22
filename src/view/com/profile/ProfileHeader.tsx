@@ -586,7 +586,6 @@ const styles = StyleSheet.create({
   handle: isNative
     ? undefined
     : {
-        // eslint-disable-next-line
         wordBreak: 'break-all',
       },
 
