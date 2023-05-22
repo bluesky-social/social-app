@@ -5,6 +5,7 @@ module.exports = {
   plugins: ['@typescript-eslint', 'detox'],
   ignorePatterns: [
     '**/__mocks__/*.ts',
+    'src/platform/polyfills.ts',
     'src/third-party',
     'ios',
     'android',
