@@ -2,6 +2,7 @@ import {AppBskyFeedDefs} from '@atproto/api'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from 'state/models/root-store'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {updateDataOptimistically} from 'lib/async/revertible'
 
 export class CustomFeedModel {
   // data
@@ -58,12 +59,19 @@ export class CustomFeedModel {
 
   async like() {
     try {
-      const res = await this.rootStore.agent.like(this.data.uri, this.data.cid)
-      runInAction(() => {
-        this.data.viewer = this.data.viewer || {}
-        this.data.viewer.like = res.uri
-        this.data.likeCount = (this.data.likeCount || 0) + 1
-      })
+      await updateDataOptimistically(
+        this.data,
+        () => {
+          this.data.viewer = this.data.viewer || {}
+          this.data.viewer.like = 'pending'
+          this.data.likeCount = (this.data.likeCount || 0) + 1
+        },
+        () => this.rootStore.agent.like(this.data.uri, this.data.cid),
+        res => {
+          this.data.viewer = this.data.viewer || {}
+          this.data.viewer.like = res.uri
+        },
+      )
     } catch (e: any) {
       this.rootStore.log.error('Failed to like feed', e)
     }
@@ -74,12 +82,16 @@ export class CustomFeedModel {
       return
     }
     try {
-      await this.rootStore.agent.deleteLike(this.data.viewer.like!)
-      runInAction(() => {
-        this.data.viewer = this.data.viewer || {}
-        this.data.viewer.like = undefined
-        this.data.likeCount = (this.data.likeCount || 1) - 1
-      })
+      const likeUri = this.data.viewer.like
+      await updateDataOptimistically(
+        this.data,
+        () => {
+          this.data.viewer = this.data.viewer || {}
+          this.data.viewer.like = undefined
+          this.data.likeCount = (this.data.likeCount || 1) - 1
+        },
+        () => this.rootStore.agent.deleteLike(likeUri),
+      )
     } catch (e: any) {
       this.rootStore.log.error('Failed to unlike feed', e)
     }
