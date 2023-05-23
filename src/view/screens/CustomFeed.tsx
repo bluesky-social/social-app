@@ -24,6 +24,9 @@ import {isDesktopWeb} from 'platform/detection'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
+import { Haptics } from 'lib/haptics'
+
+const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export const CustomFeedScreen = withAuthRequired(
@@ -49,6 +52,7 @@ export const CustomFeedScreen = withAuthRequired(
 
     const onToggleSaved = React.useCallback(async () => {
       try {
+        Haptics.default()
         if (currentFeed?.isSaved) {
           await currentFeed?.unsave()
         } else {
@@ -63,6 +67,7 @@ export const CustomFeedScreen = withAuthRequired(
     }, [store, currentFeed])
 
     const onToggleLiked = React.useCallback(async () => {
+      Haptics.default()
       try {
         if (currentFeed?.isLiked) {
           await currentFeed?.unlike()

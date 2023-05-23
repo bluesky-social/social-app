@@ -28,6 +28,7 @@ import {CustomFeed} from 'view/com/feeds/CustomFeed'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import * as Toast from 'view/com/util/Toast'
+import {Haptics} from 'lib/haptics'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 
@@ -128,14 +129,13 @@ const ListItem = observer(
     const savedFeeds = useMemo(() => store.me.savedFeeds, [store])
     const isPinned = savedFeeds.isPinned(item)
 
-    const onTogglePinned = useCallback(
-      () =>
-        savedFeeds.togglePinnedFeed(item).catch(e => {
-          Toast.show('There was an issue contacting the server')
-          store.log.error('Failed to toggle pinned feed', {e})
-        }),
-      [savedFeeds, item, store],
-    )
+    const onTogglePinned = useCallback(() => {
+      Haptics.default()
+      savedFeeds.togglePinnedFeed(item).catch(e => {
+        Toast.show('There was an issue contacting the server')
+        store.log.error('Failed to toggle pinned feed', {e})
+      })
+    }, [savedFeeds, item, store])
     const onPressUp = useCallback(
       () =>
         savedFeeds.movePinnedFeed(item, 'up').catch(e => {
