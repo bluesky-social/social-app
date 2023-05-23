@@ -24,7 +24,7 @@ import {isDesktopWeb} from 'platform/detection'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
-import { Haptics } from 'lib/haptics'
+import {Haptics} from 'lib/haptics'
 
 const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
 
@@ -47,6 +47,7 @@ export const CustomFeedScreen = withAuthRequired(
       feed.setup()
       return feed
     }, [store, uri])
+    const isPinned = store.me.savedFeeds.isPinned(uri)
 
     useSetTitle(currentFeed?.displayName)
 
@@ -65,7 +66,6 @@ export const CustomFeedScreen = withAuthRequired(
         store.log.error('Failed up update feeds', {err})
       }
     }, [store, currentFeed])
-
     const onToggleLiked = React.useCallback(async () => {
       Haptics.default()
       try {
@@ -80,6 +80,13 @@ export const CustomFeedScreen = withAuthRequired(
         )
         store.log.error('Failed up toggle like', {err})
       }
+    }, [store, currentFeed])
+    const onTogglePinned = React.useCallback(async () => {
+      Haptics.default()
+      store.me.savedFeeds.togglePinnedFeed(currentFeed!).catch(e => {
+        Toast.show('There was an issue contacting the server')
+        store.log.error('Failed to toggle pinned feed', {e})
+      })
     }, [store, currentFeed])
     const onPressShare = React.useCallback(() => {
       const url = toShareUrl(`/profile/${name}/feed/${rkey}`)
@@ -212,15 +219,30 @@ export const CustomFeedScreen = withAuthRequired(
                 {currentFeed.data.description}
               </Text>
             ) : null}
-            <TextLink
-              type="md-medium"
-              style={pal.textLight}
-              href={`/profile/${name}/feed/${rkey}/liked-by`}
-              text={`Liked by ${currentFeed?.data.likeCount} ${pluralize(
-                currentFeed?.data.likeCount || 0,
-                'user',
-              )}`}
-            />
+            <View style={styles.headerDetailsFooter}>
+              <TextLink
+                type="md-medium"
+                style={pal.textLight}
+                href={`/profile/${name}/feed/${rkey}/liked-by`}
+                text={`Liked by ${currentFeed?.data.likeCount} ${pluralize(
+                  currentFeed?.data.likeCount || 0,
+                  'user',
+                )}`}
+              />
+              <Button
+                type={'default'}
+                accessibilityLabel={
+                  isPinned ? 'Unpin this feed' : 'Pin this feed'
+                }
+                accessibilityHint=""
+                onPress={onTogglePinned}>
+                <FontAwesomeIcon
+                  icon="thumb-tack"
+                  size={20}
+                  color={isPinned ? colors.blue3 : pal.colors.icon}
+                />
+              </Button>
+            </View>
           </View>
           <View style={[styles.fakeSelector, pal.border]}>
             <View
@@ -241,6 +263,7 @@ export const CustomFeedScreen = withAuthRequired(
       onPressShare,
       name,
       rkey,
+      isPinned,
     ])
 
     return (
@@ -250,7 +273,7 @@ export const CustomFeedScreen = withAuthRequired(
           scrollElRef={scrollElRef}
           feed={algoFeed}
           ListHeaderComponent={renderListHeaderComponent}
-          extraData={uri}
+          extraData={[uri, isPinned]}
         />
       </View>
     )
@@ -274,6 +297,11 @@ const styles = StyleSheet.create({
   headerDetails: {
     paddingHorizontal: 16,
     paddingBottom: 16,
+  },
+  headerDetailsFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   fakeSelector: {
     flexDirection: 'row',

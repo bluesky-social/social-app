@@ -129,8 +129,14 @@ export class SavedFeedsModel {
     )
   }
 
-  isPinned(feed: CustomFeedModel) {
-    return this.rootStore.preferences.pinnedFeeds.includes(feed.uri)
+  isPinned(feedOrUri: CustomFeedModel | string) {
+    let uri: string
+    if (typeof feedOrUri === 'string') {
+      uri = feedOrUri
+    } else {
+      uri = feedOrUri.uri
+    }
+    return this.rootStore.preferences.pinnedFeeds.includes(uri)
   }
 
   async movePinnedFeed(item: CustomFeedModel, direction: 'up' | 'down') {
