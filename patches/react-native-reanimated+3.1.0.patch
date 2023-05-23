@@ -1,3 +1,24 @@
+diff --git a/node_modules/react-native-reanimated/package.json b/node_modules/react-native-reanimated/package.json
+index d38bf9d..c8cfcf6 100644
+--- a/node_modules/react-native-reanimated/package.json
++++ b/node_modules/react-native-reanimated/package.json
+@@ -30,7 +30,7 @@
+     "plugin": "cd plugin && yarn && cd ..",
+     "app": "cd app && yarn && cd .."
+   },
+-  "main": "lib/commonjs/index",
++  "main": "lib/module/index",
+   "module": "lib/module/index",
+   "react-native": "src/index",
+   "source": "src/index",
+@@ -161,7 +161,6 @@
+     "source": "src",
+     "output": "lib",
+     "targets": [
+-      "commonjs",
+       "module",
+       [
+         "typescript",
 diff --git a/node_modules/react-native-reanimated/src/reanimated2/index.ts b/node_modules/react-native-reanimated/src/reanimated2/index.ts
 index 28246eb..aa7215f 100644
 --- a/node_modules/react-native-reanimated/src/reanimated2/index.ts
