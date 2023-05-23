@@ -258,7 +258,7 @@ const FeedPage = observer(
           headerOffset={HEADER_OFFSET}
         />
         {feed.hasNewLatest && !feed.isRefreshing && (
-          <LoadLatestBtn onPress={onPressLoadLatest} label="posts" />
+          <LoadLatestBtn onPress={onPressLoadLatest} label="Load new posts" />
         )}
         <FAB
           testID="composeFAB"

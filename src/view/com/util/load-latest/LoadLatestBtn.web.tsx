@@ -25,11 +25,11 @@ export const LoadLatestBtn = ({
       onPress={onPress}
       hitSlop={HITSLOP}
       accessibilityRole="button"
-      accessibilityLabel={`Load new ${label}`}
+      accessibilityLabel={label}
       accessibilityHint="">
       <Text type="md-bold" style={pal.text}>
         <UpIcon size={16} strokeWidth={1} style={[pal.text, styles.icon]} />
-        Load new {label}
+        {label}
       </Text>
     </TouchableOpacity>
   )

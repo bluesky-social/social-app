@@ -25,15 +25,15 @@ export const LoadLatestBtn = observer(
         onPress={onPress}
         hitSlop={HITSLOP}
         accessibilityRole="button"
-        accessibilityLabel={`Load new ${label}`}
-        accessibilityHint={`Loads new ${label}`}>
+        accessibilityLabel={label}
+        accessibilityHint={label}>
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={styles.loadLatestInner}>
           <Text type="md-bold" style={styles.loadLatestText}>
-            Load new {label}
+            {label}
           </Text>
         </LinearGradient>
       </TouchableOpacity>
