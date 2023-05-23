@@ -198,6 +198,7 @@ const ListItem = observer(
             />
             <TouchableOpacity
               accessibilityRole="button"
+              hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
               onPress={onTogglePinned}>
               <FontAwesomeIcon
                 icon="thumb-tack"
