@@ -1,4 +1,4 @@
-import React, {useMemo, useRef} from 'react'
+import React, {useMemo, useRef, useState} from 'react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -25,6 +25,8 @@ import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
+import { LoadLatestBtn } from 'view/com/util/load-latest/LoadLatestBtn'
+import { onMomentumScrollEndCb } from 'lib/hooks/useOnMainScroll'
 
 const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
 
@@ -48,7 +50,7 @@ export const CustomFeedScreen = withAuthRequired(
       return feed
     }, [store, uri])
     const isPinned = store.me.savedFeeds.isPinned(uri)
-
+    const [allowScrollToTop, setAllowScrollToTop] = useState(false)
     useSetTitle(currentFeed?.displayName)
 
     const onToggleSaved = React.useCallback(async () => {
@@ -266,15 +268,29 @@ export const CustomFeedScreen = withAuthRequired(
       isPinned,
     ])
 
+    const onMomentumScrollEnd: onMomentumScrollEndCb = React.useCallback((event) => {
+      if (event.nativeEvent.contentOffset.y > 200) {
+        setAllowScrollToTop(true)
+      } else {
+        setAllowScrollToTop(false)
+      }
+    }, [])
+
     return (
       <View style={s.hContentRegion}>
         <ViewHeader title="" renderButton={renderHeaderBtns} />
         <Feed
           scrollElRef={scrollElRef}
           feed={algoFeed}
+          onMomentumScrollEnd={onMomentumScrollEnd}
           ListHeaderComponent={renderListHeaderComponent}
           extraData={[uri, isPinned]}
         />
+       {allowScrollToTop ? <LoadLatestBtn onPress={() => {
+          scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
+        }}
+        label='Scroll to top'
+        /> : null}
       </View>
     )
   }),

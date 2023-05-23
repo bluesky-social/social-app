@@ -2,6 +2,9 @@ import {useState} from 'react'
 import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native'
 import {RootStoreModel} from 'state/index'
 
+export type onMomentumScrollEndCb = (
+  event: NativeSyntheticEvent<NativeScrollEvent>,
+) => void
 export type OnScrollCb = (
   event: NativeSyntheticEvent<NativeScrollEvent>,
 ) => void

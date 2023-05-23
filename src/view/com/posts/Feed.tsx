@@ -14,7 +14,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {FeedSlice} from './FeedSlice'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {OnScrollCb, onMomentumScrollEndCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -31,6 +31,8 @@ export const Feed = observer(function Feed({
   scrollElRef,
   onPressTryAgain,
   onScroll,
+  scrollEventThrottle,
+  onMomentumScrollEnd,
   renderEmptyState,
   testID,
   headerOffset = 0,
@@ -43,6 +45,8 @@ export const Feed = observer(function Feed({
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
+  scrollEventThrottle?: number
+  onMomentumScrollEnd?: onMomentumScrollEndCb
   renderEmptyState?: () => JSX.Element
   testID?: string
   headerOffset?: number
@@ -180,6 +184,8 @@ export const Feed = observer(function Feed({
           contentContainerStyle={s.contentContainer}
           style={{paddingTop: headerOffset}}
           onScroll={onScroll}
+          scrollEventThrottle={scrollEventThrottle}
+          onMomentumScrollEnd={onMomentumScrollEnd}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.6}
           removeClippedSubviews={true}
