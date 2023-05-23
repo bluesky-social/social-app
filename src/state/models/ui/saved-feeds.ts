@@ -47,6 +47,10 @@ export class SavedFeedsModel {
     return this.feeds.filter(f => !this.isPinned(f))
   }
 
+  get all() {
+    return this.pinned.concat(this.unpinned)
+  }
+
   get pinnedFeedNames() {
     return this.pinned.map(f => f.displayName)
   }

@@ -99,7 +99,7 @@ export const SavedFeeds = withAuthRequired(
         />
         <DraggableFlatList
           containerStyle={[!isDesktopWeb && s.flex1]}
-          data={[...savedFeeds.pinned, ...savedFeeds.unpinned]} // make a copy so this FlatList re-renders when pinned changes
+          data={savedFeeds.all}
           keyExtractor={item => item.data.uri}
           refreshing={savedFeeds.isRefreshing}
           refreshControl={
@@ -111,6 +111,11 @@ export const SavedFeeds = withAuthRequired(
             />
           }
           renderItem={({item, drag}) => <ListItem item={item} drag={drag} />}
+          getItemLayout={(data, index) => ({
+            length: 77,
+            offset: 77 * index,
+            index,
+          })}
           initialNumToRender={10}
           ListFooterComponent={renderListFooterComponent}
           ListEmptyComponent={renderListEmptyComponent}
@@ -198,7 +203,7 @@ const ListItem = observer(
             />
             <TouchableOpacity
               accessibilityRole="button"
-              hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+              hitSlop={10}
               onPress={onTogglePinned}>
               <FontAwesomeIcon
                 icon="thumb-tack"

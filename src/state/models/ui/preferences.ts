@@ -292,11 +292,15 @@ export class PreferencesModel {
     return res
   }
 
+  setFeeds(saved: string[], pinned: string[]) {
+    this.savedFeeds = saved
+    this.pinnedFeeds = pinned
+  }
+
   async setSavedFeeds(saved: string[], pinned: string[]) {
     const oldSaved = this.savedFeeds
     const oldPinned = this.pinnedFeeds
-    this.savedFeeds = saved
-    this.pinnedFeeds = pinned
+    this.setFeeds(saved, pinned)
     try {
       await this.update((prefs: AppBskyActorDefs.Preferences) => {
         const existing = prefs.find(
