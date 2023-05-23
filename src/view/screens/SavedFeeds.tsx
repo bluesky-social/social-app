@@ -159,6 +159,7 @@ const ListItem = observer(
           <Pressable
             accessibilityRole="button"
             onLongPress={isPinned ? drag : undefined}
+            delayLongPress={200}
             style={[styles.itemContainer, pal.border]}>
             {isPinned && isWeb ? (
               <View style={styles.webArrowButtonsContainer}>
