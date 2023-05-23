@@ -141,6 +141,11 @@ export const SettingsScreen = withAuthRequired(
       store.shell.openModal({name: 'delete-account'})
     }, [store])
 
+    const onPressResetPreferences = React.useCallback(async () => {
+      await store.preferences.reset()
+      Toast.show('Preferences reset')
+    }, [store])
+
     return (
       <View style={[s.hContentRegion]} testID="settingsScreen">
         <ViewHeader title="Settings" />
@@ -393,6 +398,16 @@ export const SettingsScreen = withAuthRequired(
               Storybook
             </Text>
           </Link>
+          {__DEV__ ? (
+            <Link
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={onPressResetPreferences}
+              title="Debug tools">
+              <Text type="lg" style={pal.text}>
+                Reset preferences state
+              </Text>
+            </Link>
+          ) : null}
           <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
             Build version {AppInfo.appVersion} ({AppInfo.buildVersion})
           </Text>

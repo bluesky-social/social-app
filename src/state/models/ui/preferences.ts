@@ -63,6 +63,11 @@ export class PreferencesModel {
     }
   }
 
+  /**
+   * The function hydrates an object with properties related to content languages, labels, saved feeds,
+   * and pinned feeds that it gets from the parameter `v` (probably local storage)
+   * @param {unknown} v - the data object to hydrate from
+   */
   hydrate(v: unknown) {
     if (isObj(v)) {
       if (
@@ -95,6 +100,9 @@ export class PreferencesModel {
     }
   }
 
+  /**
+   * This function fetches preferences and sets defaults for missing items.
+   */
   async sync() {
     // fetch preferences
     let hasSavedFeedsPref = false
@@ -153,6 +161,15 @@ export class PreferencesModel {
     }
   }
 
+  /**
+   * This function updates the preferences of a user and allows for a callback function to be executed
+   * before the update.
+   * @param cb - cb is a callback function that takes in a single parameter of type
+   * AppBskyActorDefs.Preferences and returns either a boolean or void. This callback function is used to
+   * update the preferences of the user. The function is called with the current preferences as an
+   * argument and if the callback returns false, the preferences are not updated.
+   * @returns void
+   */
   async update(cb: (prefs: AppBskyActorDefs.Preferences) => boolean | void) {
     const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
     if (cb(res.data.preferences) === false) {
@@ -160,6 +177,21 @@ export class PreferencesModel {
     }
     await this.rootStore.agent.app.bsky.actor.putPreferences({
       preferences: res.data.preferences,
+    })
+  }
+
+  /**
+   * This function resets the preferences to an empty array of no preferences.
+   */
+  async reset() {
+    runInAction(() => {
+      this.contentLabels = new LabelPreferencesModel()
+      this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
+      this.savedFeeds = []
+      this.pinnedFeeds = []
+    })
+    await this.rootStore.agent.app.bsky.actor.putPreferences({
+      preferences: [],
     })
   }
 
