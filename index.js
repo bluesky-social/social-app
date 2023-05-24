@@ -4,6 +4,7 @@ import {LogBox} from 'react-native'
 LogBox.ignoreLogs(['Require cycle:']) // suppress require-cycle warnings, it's fine
 
 import 'platform/polyfills'
+import './src/locale/i18n'
 import {registerRootComponent} from 'expo'
 
 import App from './src/App'

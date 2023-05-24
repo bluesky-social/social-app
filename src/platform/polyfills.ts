@@ -1,4 +1,5 @@
 import 'fast-text-encoding'
+import 'intl-pluralrules'
 import Graphemer from 'graphemer'
 export {}
 
