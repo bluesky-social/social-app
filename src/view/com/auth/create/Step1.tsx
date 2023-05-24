@@ -12,6 +12,7 @@ import {HelpTip} from '../util/HelpTip'
 import {TextInput} from '../util/TextInput'
 import {Button} from 'view/com/util/forms/Button'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
+import {useTranslation} from 'react-i18next'
 
 import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'state/index'
 import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
@@ -19,6 +20,7 @@ import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
 export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
   const pal = usePalette('default')
   const [isDefaultSelected, setIsDefaultSelected] = React.useState(true)
+  const {t} = useTranslation()
 
   const onPressDefault = React.useCallback(() => {
     setIsDefaultSelected(true)
@@ -55,30 +57,32 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
 
   return (
     <View>
-      <StepHeader step="1" title="Your hosting provider" />
+      <StepHeader step="1" title={t('auth:create.acc.step1.step.title')} />
       <Text style={[pal.text, s.mb10]}>
-        This is the service that keeps you online.
+        {t('auth:create.acc.step1.keep.you.online')}
       </Text>
       <Option
         testID="blueskyServerBtn"
         isSelected={isDefaultSelected}
-        label="Bluesky"
-        help="&nbsp;(default)"
+        label={t('glossary:bluesky')}
+        help={t('auth:create.acc.step1.option1.label')}
         onPress={onPressDefault}
       />
       <Option
         testID="otherServerBtn"
         isSelected={!isDefaultSelected}
-        label="Other"
+        label={t('common:other')}
         onPress={onPressOther}>
         <View style={styles.otherForm}>
           <Text nativeID="addressProvider" style={[pal.text, s.mb5]}>
-            Enter the address of your provider:
+            {t('auth:create.acc.step1.enter.provider.address')}
           </Text>
           <TextInput
             testID="customServerInput"
             icon="globe"
-            placeholder="Hosting provider address"
+            placeholder={t(
+              'auth:create.acc.step1.enter.provider.address.placeholder',
+            )}
             value={model.serviceUrl}
             editable
             onChange={onChangeServiceUrl}
@@ -108,7 +112,7 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
       {model.error ? (
         <ErrorMessage message={model.error} style={styles.error} />
       ) : (
-        <HelpTip text="You can change hosting providers at any time." />
+        <HelpTip text={t('auth:create.acc.step1.help.tip')} />
       )}
     </View>
   )

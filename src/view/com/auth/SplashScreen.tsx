@@ -5,6 +5,7 @@ import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from '../util/Views'
+import {useTranslation} from 'react-i18next'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -14,14 +15,17 @@ export const SplashScreen = ({
   onPressCreateAccount: () => void
 }) => {
   const pal = usePalette('default')
+  const {t} = useTranslation()
   return (
     <CenteredView style={[styles.container, pal.view]}>
       <SafeAreaView testID="noSessionView" style={styles.container}>
         <ErrorBoundary>
           <View style={styles.hero}>
-            <Text style={[styles.title, pal.link]}>Bluesky</Text>
+            <Text style={[styles.title, pal.link]}>
+              {t('glossary:bluesky')}
+            </Text>
             <Text style={[styles.subtitle, pal.textLight]}>
-              See what's next
+              {t('auth:splash.screen.see.what.next')}
             </Text>
           </View>
           <View testID="signinOrCreateAccount" style={styles.btns}>
@@ -33,7 +37,7 @@ export const SplashScreen = ({
               accessibilityLabel="Create new account"
               accessibilityHint="Opens flow to create a new Bluesky account">
               <Text style={[s.white, styles.btnLabel]}>
-                Create a new account
+                {t('auth:splash.screen.create.acc')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -43,7 +47,9 @@ export const SplashScreen = ({
               accessibilityRole="button"
               accessibilityLabel="Sign in"
               accessibilityHint="Opens flow to sign into your existing Bluesky account">
-              <Text style={[pal.text, styles.btnLabel]}>Sign in</Text>
+              <Text style={[pal.text, styles.btnLabel]}>
+                {t('auth:splash.screen.sign.in')}
+              </Text>
             </TouchableOpacity>
           </View>
         </ErrorBoundary>
