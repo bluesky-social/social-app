@@ -14,7 +14,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {FeedSlice} from './FeedSlice'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {OnScrollCb, onMomentumScrollEndCb} from 'lib/hooks/useOnMainScroll'
+import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -47,7 +47,6 @@ export const Feed = observer(function Feed({
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
   scrollEventThrottle?: number
-  onMomentumScrollEnd?: onMomentumScrollEndCb
   renderEmptyState?: () => JSX.Element
   testID?: string
   headerOffset?: number

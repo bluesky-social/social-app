@@ -20,13 +20,13 @@ import {ViewHeader} from 'view/com/util/ViewHeader'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
-import {isDesktopWeb, isWeb} from 'platform/detection'
+import {isDesktopWeb} from 'platform/detection'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {OnScrollCb, onMomentumScrollEndCb} from 'lib/hooks/useOnMainScroll'
+import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export const CustomFeedScreen = withAuthRequired(
@@ -48,7 +48,8 @@ export const CustomFeedScreen = withAuthRequired(
       return feed
     }, [store, uri])
     const isPinned = store.me.savedFeeds.isPinned(uri)
-    const [allowScrollToTop, setAllowScrollToTop] = useState(false)
+    const [onMainScroll, isScrolledDown, resetMainScroll] =
+      useOnMainScroll(store)
     useSetTitle(currentFeed?.displayName)
 
     const onToggleSaved = React.useCallback(async () => {
@@ -66,6 +67,7 @@ export const CustomFeedScreen = withAuthRequired(
         store.log.error('Failed up update feeds', {err})
       }
     }, [store, currentFeed])
+
     const onToggleLiked = React.useCallback(async () => {
       Haptics.default()
       try {
@@ -81,6 +83,7 @@ export const CustomFeedScreen = withAuthRequired(
         store.log.error('Failed up toggle like', {err})
       }
     }, [store, currentFeed])
+
     const onTogglePinned = React.useCallback(async () => {
       Haptics.default()
       store.me.savedFeeds.togglePinnedFeed(currentFeed!).catch(e => {
@@ -88,10 +91,16 @@ export const CustomFeedScreen = withAuthRequired(
         store.log.error('Failed to toggle pinned feed', {e})
       })
     }, [store, currentFeed])
+
     const onPressShare = React.useCallback(() => {
       const url = toShareUrl(`/profile/${name}/feed/${rkey}`)
       shareUrl(url)
     }, [name, rkey])
+
+    const onScrollToTop = React.useCallback(() => {
+      scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
+      resetMainScroll()
+    }, [scrollElRef, resetMainScroll])
 
     const renderHeaderBtns = React.useCallback(() => {
       return (
@@ -220,15 +229,17 @@ export const CustomFeedScreen = withAuthRequired(
               </Text>
             ) : null}
             <View style={styles.headerDetailsFooter}>
-              <TextLink
-                type="md-medium"
-                style={pal.textLight}
-                href={`/profile/${name}/feed/${rkey}/liked-by`}
-                text={`Liked by ${currentFeed?.data.likeCount} ${pluralize(
-                  currentFeed?.data.likeCount || 0,
-                  'user',
-                )}`}
-              />
+              {currentFeed ? (
+                <TextLink
+                  type="md-medium"
+                  style={pal.textLight}
+                  href={`/profile/${name}/feed/${rkey}/liked-by`}
+                  text={`Liked by ${currentFeed.data.likeCount} ${pluralize(
+                    currentFeed?.data.likeCount || 0,
+                    'user',
+                  )}`}
+                />
+              ) : null}
               <Button
                 type={'default'}
                 accessibilityLabel={
@@ -267,46 +278,19 @@ export const CustomFeedScreen = withAuthRequired(
       onTogglePinned,
     ])
 
-    const onMomentumScrollEnd: onMomentumScrollEndCb = React.useCallback(
-      event => {
-        console.log('onMomentumScrollEnd')
-        if (event.nativeEvent.contentOffset.y > s.window.height * 3) {
-          setAllowScrollToTop(true)
-        } else {
-          setAllowScrollToTop(false)
-        }
-      },
-      [],
-    )
-    const onScroll: OnScrollCb = React.useCallback(event => {
-      // since onMomentumScrollEnd is not supported in react-native-web, we have to use onScroll which fires more often so is not desirable on mobile
-      if (isWeb) {
-        if (event.nativeEvent.contentOffset.y > s.window.height * 2) {
-          setAllowScrollToTop(true)
-        } else {
-          setAllowScrollToTop(false)
-        }
-      }
-    }, [])
-
     return (
       <View style={s.hContentRegion}>
         <ViewHeader title="" renderButton={renderHeaderBtns} />
         <Feed
           scrollElRef={scrollElRef}
           feed={algoFeed}
-          onMomentumScrollEnd={onMomentumScrollEnd}
-          onScroll={onScroll} // same logic as onMomentumScrollEnd but for web
+          onScroll={onMainScroll}
+          scrollEventThrottle={100}
           ListHeaderComponent={renderListHeaderComponent}
           extraData={[uri, isPinned]}
         />
-        {allowScrollToTop ? (
-          <LoadLatestBtn
-            onPress={() => {
-              scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
-            }}
-            label="Scroll to top"
-          />
+        {isScrolledDown ? (
+          <LoadLatestBtn onPress={onScrollToTop} label="Scroll to top" />
         ) : null}
       </View>
     )

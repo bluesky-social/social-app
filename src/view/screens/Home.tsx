@@ -150,7 +150,8 @@ const FeedPage = observer(
     renderEmptyState?: () => JSX.Element
   }) => {
     const store = useStores()
-    const onMainScroll = useOnMainScroll(store)
+    const [onMainScroll, isScrolledDown, resetMainScroll] =
+      useOnMainScroll(store)
     const {screen, track} = useAnalytics()
     const scrollElRef = React.useRef<FlatList>(null)
     const {appState} = useAppState({
@@ -178,12 +179,13 @@ const FeedPage = observer(
 
     const scrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -HEADER_OFFSET})
-    }, [scrollElRef])
+      resetMainScroll()
+    }, [scrollElRef, resetMainScroll])
 
     const onSoftReset = React.useCallback(() => {
       if (isPageFocused) {
-        feed.refresh()
         scrollToTop()
+        feed.refresh()
       }
     }, [isPageFocused, scrollToTop, feed])
 
@@ -254,10 +256,11 @@ const FeedPage = observer(
           showPostFollowBtn
           onPressTryAgain={onPressTryAgain}
           onScroll={onMainScroll}
+          scrollEventThrottle={100}
           renderEmptyState={renderEmptyState}
           headerOffset={HEADER_OFFSET}
         />
-        {feed.hasNewLatest && !feed.isRefreshing && (
+        {isScrolledDown && (
           <LoadLatestBtn onPress={onPressLoadLatest} label="Load new posts" />
         )}
         <FAB

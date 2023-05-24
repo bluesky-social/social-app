@@ -25,7 +25,8 @@ type Props = NativeStackScreenProps<
 export const NotificationsScreen = withAuthRequired(
   observer(({}: Props) => {
     const store = useStores()
-    const onMainScroll = useOnMainScroll(store)
+    const [onMainScroll, isScrolledDown, resetMainScroll] =
+      useOnMainScroll(store)
     const scrollElRef = React.useRef<FlatList>(null)
     const {screen} = useAnalytics()
 
@@ -37,7 +38,8 @@ export const NotificationsScreen = withAuthRequired(
 
     const scrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: 0})
-    }, [scrollElRef])
+      resetMainScroll()
+    }, [scrollElRef, resetMainScroll])
 
     const onPressLoadLatest = React.useCallback(() => {
       scrollToTop()
@@ -96,10 +98,12 @@ export const NotificationsScreen = withAuthRequired(
           onScroll={onMainScroll}
           scrollElRef={scrollElRef}
         />
-        {store.me.notifications.hasNewLatest &&
-          !store.me.notifications.isRefreshing && (
-            <LoadLatestBtn onPress={onPressLoadLatest} label="Load new notifications" />
-          )}
+        {isScrolledDown && (
+          <LoadLatestBtn
+            onPress={onPressLoadLatest}
+            label="Load new notifications"
+          />
+        )}
       </View>
     )
   }),
