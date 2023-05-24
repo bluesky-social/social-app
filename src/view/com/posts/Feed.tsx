@@ -18,6 +18,7 @@ import {OnScrollCb, onMomentumScrollEndCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -54,6 +55,7 @@ export const Feed = observer(function Feed({
   extraData?: any
 }) {
   const pal = usePalette('default')
+  const theme = useTheme()
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
 
@@ -186,6 +188,7 @@ export const Feed = observer(function Feed({
           onScroll={onScroll}
           scrollEventThrottle={scrollEventThrottle}
           onMomentumScrollEnd={onMomentumScrollEnd}
+          indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.6}
           removeClippedSubviews={true}

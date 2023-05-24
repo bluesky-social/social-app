@@ -20,15 +20,13 @@ import {ViewHeader} from 'view/com/util/ViewHeader'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
-import {isDesktopWeb} from 'platform/detection'
+import {isDesktopWeb, isWeb} from 'platform/detection'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
-import { LoadLatestBtn } from 'view/com/util/load-latest/LoadLatestBtn'
-import { onMomentumScrollEndCb } from 'lib/hooks/useOnMainScroll'
-
-const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
+import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {OnScrollCb, onMomentumScrollEndCb} from 'lib/hooks/useOnMainScroll'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export const CustomFeedScreen = withAuthRequired(
@@ -257,22 +255,37 @@ export const CustomFeedScreen = withAuthRequired(
         </>
       )
     }, [
-      store.me.did,
       pal,
       currentFeed,
-      onToggleLiked,
+      store.me.did,
       onToggleSaved,
+      onToggleLiked,
       onPressShare,
       name,
       rkey,
       isPinned,
+      onTogglePinned,
     ])
 
-    const onMomentumScrollEnd: onMomentumScrollEndCb = React.useCallback((event) => {
-      if (event.nativeEvent.contentOffset.y > 200) {
-        setAllowScrollToTop(true)
-      } else {
-        setAllowScrollToTop(false)
+    const onMomentumScrollEnd: onMomentumScrollEndCb = React.useCallback(
+      event => {
+        console.log('onMomentumScrollEnd')
+        if (event.nativeEvent.contentOffset.y > s.window.height * 3) {
+          setAllowScrollToTop(true)
+        } else {
+          setAllowScrollToTop(false)
+        }
+      },
+      [],
+    )
+    const onScroll: OnScrollCb = React.useCallback(event => {
+      // since onMomentumScrollEnd is not supported in react-native-web, we have to use onScroll which fires more often so is not desirable on mobile
+      if (isWeb) {
+        if (event.nativeEvent.contentOffset.y > s.window.height * 2) {
+          setAllowScrollToTop(true)
+        } else {
+          setAllowScrollToTop(false)
+        }
       }
     }, [])
 
@@ -283,14 +296,18 @@ export const CustomFeedScreen = withAuthRequired(
           scrollElRef={scrollElRef}
           feed={algoFeed}
           onMomentumScrollEnd={onMomentumScrollEnd}
+          onScroll={onScroll} // same logic as onMomentumScrollEnd but for web
           ListHeaderComponent={renderListHeaderComponent}
           extraData={[uri, isPinned]}
         />
-       {allowScrollToTop ? <LoadLatestBtn onPress={() => {
-          scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
-        }}
-        label='Scroll to top'
-        /> : null}
+        {allowScrollToTop ? (
+          <LoadLatestBtn
+            onPress={() => {
+              scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
+            }}
+            label="Scroll to top"
+          />
+        ) : null}
       </View>
     )
   }),
