@@ -361,11 +361,13 @@ const LINKING = {
         return buildStateObject('NotificationsTab', 'Notifications', params)
       }
       if (name === 'Home') {
-        return buildStateObject('HomeTab', name, params)
-    } else {
-      return buildStateObject('Flat', name, params)
+        return buildStateObject('HomeTab', name, params) // Gai - I don't know if it should be ('HomeTab', 'Home', params)
+      }
+      else {
+        return buildStateObject('Flat', name, params)
+      }
     }
-  },
+  }
 }
 
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
