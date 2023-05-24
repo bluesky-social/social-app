@@ -1,4 +1,4 @@
-import React, {useMemo, useRef, useState} from 'react'
+import React, {useMemo, useRef} from 'react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -25,6 +25,8 @@ import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
+import {ComposeIcon2} from 'lib/icons'
+import {FAB} from '../com/util/fab/FAB'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 
@@ -101,6 +103,10 @@ export const CustomFeedScreen = withAuthRequired(
       scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
       resetMainScroll()
     }, [scrollElRef, resetMainScroll])
+
+    const onPressCompose = React.useCallback(() => {
+      store.shell.openComposer({})
+    }, [store])
 
     const renderHeaderBtns = React.useCallback(() => {
       return (
@@ -292,6 +298,14 @@ export const CustomFeedScreen = withAuthRequired(
         {isScrolledDown ? (
           <LoadLatestBtn onPress={onScrollToTop} label="Scroll to top" />
         ) : null}
+        <FAB
+          testID="composeFAB"
+          onPress={onPressCompose}
+          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          accessibilityRole="button"
+          accessibilityLabel="Compose post"
+          accessibilityHint=""
+        />
       </View>
     )
   }),
