@@ -11,6 +11,7 @@ import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
+import {DraggableScrollView} from './DraggableScrollView'
 
 export interface TabBarProps {
   testID?: string
@@ -75,7 +76,7 @@ export function TabBar({
 
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>
-      <ScrollView
+      <DraggableScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         ref={scrollElRef}
@@ -98,7 +99,7 @@ export function TabBar({
             </PressableWithHover>
           )
         })}
-      </ScrollView>
+      </DraggableScrollView>
     </View>
   )
 }
