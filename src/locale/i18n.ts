@@ -13,7 +13,7 @@ const languageDetector: LanguageDetectorAsyncModule = {
 }
 
 i18n.use(languageDetector).use(initReactI18next).init({
-  debug: true,
+  debug: __DEV__,
   fallbackLng: 'en',
   resources,
 })
