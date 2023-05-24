@@ -98,7 +98,10 @@ export const NotificationsScreen = withAuthRequired(
         />
         {store.me.notifications.hasNewLatest &&
           !store.me.notifications.isRefreshing && (
-            <LoadLatestBtn onPress={onPressLoadLatest} label="Load new notifications" />
+            <LoadLatestBtn
+              onPress={onPressLoadLatest}
+              label="Load new notifications"
+            />
           )}
       </View>
     )

@@ -102,13 +102,15 @@ export async function DEFAULT_FEEDS(
   serviceUrl: string,
   resolveHandle: (name: string) => Promise<string>,
 ) {
-  if (serviceUrl.includes('localhost')) { // local dev
+  if (serviceUrl.includes('localhost')) {
+    // local dev
     const aliceDid = await resolveHandle('alice.test')
     return {
       pinned: [`at://${aliceDid}/app.bsky.feed.generator/alice-favs`],
       saved: [`at://${aliceDid}/app.bsky.feed.generator/alice-favs`],
     }
-  } else if (serviceUrl.includes('staging')) { // staging
+  } else if (serviceUrl.includes('staging')) {
+    // staging
     return {
       pinned: [STAGING_DEFAULT_FEED('whats-hot')],
       saved: [
@@ -118,7 +120,8 @@ export async function DEFAULT_FEEDS(
         STAGING_DEFAULT_FEED('hot-classic'),
       ],
     }
-  } else { // production
+  } else {
+    // production
     return {
       pinned: [PROD_DEFAULT_FEED('whats-hot')],
       saved: [
