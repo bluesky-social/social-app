@@ -53,8 +53,8 @@ const FeedsTabBarDesktop = observer(
       // @ts-ignore the type signature for transform wrong here, translateX and translateY need to be in separate objects -prf
       <Animated.View style={[pal.view, styles.tabBar, transform]}>
         <TabBar
-          {...props}
           key={items.join(',')}
+          {...props}
           items={items}
           indicatorColor={pal.colors.link}
         />
