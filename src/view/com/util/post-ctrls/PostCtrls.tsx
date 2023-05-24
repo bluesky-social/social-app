@@ -21,7 +21,6 @@ import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
 import {s, colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {useStores} from 'state/index'
-import {isNative} from 'platform/detection'
 import {RepostButton} from './RepostButton'
 import {Haptics} from 'lib/haptics'
 
@@ -108,9 +107,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   const onRepost = useCallback(() => {
     store.shell.closeModal()
     if (!opts.isReposted) {
-      if (isNative) {
-        Haptics.default()
-      }
+      Haptics.default()
       opts.onPressToggleRepost().catch(_e => undefined)
       // DISABLED see #135
       // repostRef.current?.trigger(
@@ -136,10 +133,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         indexedAt: opts.indexedAt,
       },
     })
-
-    if (isNative) {
-      Haptics.default()
-    }
+    Haptics.default()
   }, [
     opts.author,
     opts.indexedAt,
@@ -151,9 +145,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
 
   const onPressToggleLikeWrapper = async () => {
     if (!opts.isLiked) {
-      if (isNative) {
-        Haptics.default()
-      }
+      Haptics.default()
       await opts.onPressToggleLike().catch(_e => undefined)
       // DISABLED see #135
       // likeRef.current?.trigger(
@@ -200,7 +192,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         accessibilityRole="button"
         accessibilityLabel={opts.isLiked ? 'Unlike' : 'Like'}
         accessibilityHint={
-          opts.isReposted ? `Removes like from the post` : `Like the post`
+          opts.isReposted ? 'Removes like from the post' : 'Like the post'
         }>
         {opts.isLiked ? (
           <HeartIconSolid
