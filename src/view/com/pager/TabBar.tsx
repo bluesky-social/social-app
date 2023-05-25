@@ -132,7 +132,7 @@ const styles = isDesktopWeb
       },
       contentContainer: {
         columnGap: 16,
-        marginLeft: 14,
+        marginLeft: 18,
         paddingRight: 28,
         backgroundColor: 'transparent',
       },
