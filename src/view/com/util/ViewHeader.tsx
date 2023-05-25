@@ -4,7 +4,6 @@ import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {CenteredView} from './Views'
-import {UserAvatar} from './UserAvatar'
 import {Text} from './text/Text'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -75,7 +74,11 @@ export const ViewHeader = observer(function ({
               style={[styles.backIcon, pal.text]}
             />
           ) : (
-            <UserAvatar size={30} avatar={store.me.avatar} />
+            <FontAwesomeIcon
+              size={18}
+              icon="bars"
+              style={[styles.backIcon, pal.icon]}
+            />
           )}
         </TouchableOpacity>
         <View style={styles.titleContainer} pointerEvents="none">
