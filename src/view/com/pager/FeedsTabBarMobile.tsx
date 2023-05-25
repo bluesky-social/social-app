@@ -54,7 +54,11 @@ export const FeedsTabBar = observer(
             </TouchableOpacity>
           </View>
           <View style={[pal.view]}>
-            <Link href="/settings/saved-feeds">
+            <Link
+              href="/settings/saved-feeds"
+              accessibilityRole="button"
+              accessibilityLabel="Edit Saved Feeds"
+              accessibilityHint="Opens screen to edit Saved Feeds">
               <FontAwesomeIcon
                 icon="satellite-dish"
                 size={24}
