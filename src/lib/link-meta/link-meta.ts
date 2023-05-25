@@ -54,7 +54,11 @@ export async function getLinkMeta(
     const controller = new AbortController()
     const to = setTimeout(() => controller.abort(), timeout || 5e3)
 
-    const response = await fetch(`${LINK_META_PROXY}${encodeURIComponent(url)}`)
+    const response = await fetch(
+      `${LINK_META_PROXY(
+        store.session.currentSession?.service || '',
+      )}${encodeURIComponent(url)}`,
+    )
 
     const body = await response.json()
     clearTimeout(to)
