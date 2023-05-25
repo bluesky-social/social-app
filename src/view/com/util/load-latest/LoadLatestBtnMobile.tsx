@@ -46,9 +46,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 20,
     bottom: 35,
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowOffset: {width: 0, height: 1},
   },
   loadLatestInner: {
     flexDirection: 'row',
