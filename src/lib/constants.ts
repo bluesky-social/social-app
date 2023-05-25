@@ -123,7 +123,10 @@ export async function DEFAULT_FEEDS(
   } else {
     // production
     return {
-      pinned: [PROD_DEFAULT_FEED('whats-hot')],
+      pinned: [
+        PROD_DEFAULT_FEED('whats-hot'),
+        PROD_DEFAULT_FEED('with-friends'),
+      ],
       saved: [
         PROD_DEFAULT_FEED('bsky-team'),
         PROD_DEFAULT_FEED('with-friends'),
