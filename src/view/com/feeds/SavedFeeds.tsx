@@ -75,14 +75,8 @@ export const SavedFeeds = observer(
               </Link>
             )}
           </View>
-          <View
-            style={[
-              pal.border,
-              !isDesktopWeb && s.flex1,
-              pal.viewLight,
-              styles.empty,
-            ]}>
-            <Text type="sm" style={[pal.text]}>
+          <View style={styles.footerText}>
+            <Text type="sm" style={pal.textLight}>
               Feeds are custom algorithms that users build with a little coding
               expertise.{' '}
               <TextLink
@@ -149,5 +143,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginHorizontal: 18,
     marginTop: 10,
+  },
+  footerText: {
+    paddingHorizontal: 26,
+    paddingVertical: 22,
   },
 })
