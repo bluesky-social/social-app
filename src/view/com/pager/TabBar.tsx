@@ -110,13 +110,16 @@ const styles = isDesktopWeb
       outer: {
         flexDirection: 'row',
         width: 598,
-        paddingHorizontal: 14,
       },
-      contentContainer: {},
+      contentContainer: {
+        columnGap: 14,
+        marginLeft: 14,
+        paddingRight: 14,
+        backgroundColor: 'transparent',
+      },
       item: {
         paddingTop: 14,
         paddingBottom: 12,
-        paddingHorizontal: 12,
         borderBottomWidth: 3,
         borderBottomColor: 'transparent',
       },
