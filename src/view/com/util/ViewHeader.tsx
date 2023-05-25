@@ -77,7 +77,7 @@ export const ViewHeader = observer(function ({
             <FontAwesomeIcon
               size={18}
               icon="bars"
-              style={[styles.backIcon, pal.icon]}
+              style={[styles.backIcon, pal.textLight]}
             />
           )}
         </TouchableOpacity>

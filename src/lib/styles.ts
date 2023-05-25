@@ -52,6 +52,7 @@ export const colors = {
   green5: '#082b03',
 
   unreadNotifBg: '#ebf6ff',
+  brandBlue: '#0066FF',
 }
 
 export const gradients = {
@@ -218,6 +219,8 @@ export const s = StyleSheet.create({
   green3: {color: colors.green3},
   green4: {color: colors.green4},
   green5: {color: colors.green5},
+
+  brandBlue: {color: colors.brandBlue},
 })
 
 export function lh(

@@ -131,14 +131,14 @@ const styles = isDesktopWeb
         backgroundColor: 'transparent',
       },
       contentContainer: {
-        columnGap: 14,
+        columnGap: 16,
         marginLeft: 14,
         paddingRight: 28,
         backgroundColor: 'transparent',
       },
       item: {
-        paddingTop: 8,
-        paddingBottom: 8,
+        paddingTop: 10,
+        paddingBottom: 10,
         borderBottomWidth: 3,
         borderBottomColor: 'transparent',
       },

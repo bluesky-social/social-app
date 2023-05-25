@@ -59,7 +59,7 @@ export const FeedsTabBar = observer(
               />
             </TouchableOpacity>
           </View>
-          <Text type="title" style={[pal.link, s.bold]}>
+          <Text type="title-lg" style={[s.brandBlue, s.bold]}>
             Bluesky
           </Text>
           <View style={[pal.view]}>
@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 18,
+    paddingTop: 8,
     paddingBottom: 2,
     width: '100%',
   },
