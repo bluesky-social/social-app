@@ -53,14 +53,28 @@ export const SavedFeeds = observer(
     const renderListFooterComponent = useCallback(() => {
       return (
         <>
-          <Link
-            style={[styles.footerLink, pal.border]}
-            href="/settings/saved-feeds">
-            <FontAwesomeIcon icon="cog" size={18} color={pal.colors.icon} />
-            <Text type="lg-medium" style={pal.textLight}>
-              Change Order
-            </Text>
-          </Link>
+          <View style={[styles.footerLinks, pal.border]}>
+            <Link style={[styles.footerLink, pal.border]} href="/search/feeds">
+              <FontAwesomeIcon
+                icon="search"
+                size={18}
+                color={pal.colors.icon}
+              />
+              <Text type="lg-medium" style={pal.textLight}>
+                Discover new feeds
+              </Text>
+            </Link>
+            {!store.me.savedFeeds.isEmpty && (
+              <Link
+                style={[styles.footerLink, pal.border]}
+                href="/settings/saved-feeds">
+                <FontAwesomeIcon icon="cog" size={18} color={pal.colors.icon} />
+                <Text type="lg-medium" style={pal.textLight}>
+                  Change Order
+                </Text>
+              </Link>
+            )}
+          </View>
           <View
             style={[
               pal.border,
@@ -82,7 +96,7 @@ export const SavedFeeds = observer(
           </View>
         </>
       )
-    }, [pal])
+    }, [pal, store.me.savedFeeds.isEmpty])
 
     const renderItem = useCallback(
       ({item}) => <CustomFeed key={item.data.uri} item={item} />,
@@ -118,14 +132,16 @@ export const SavedFeeds = observer(
 )
 
 const styles = StyleSheet.create({
+  footerLinks: {
+    marginTop: 8,
+    borderBottomWidth: 1,
+  },
   footerLink: {
     flexDirection: 'row',
     borderTopWidth: 1,
-    borderBottomWidth: 1,
     paddingHorizontal: 26,
     paddingVertical: 18,
     gap: 18,
-    marginTop: 8,
   },
   empty: {
     paddingHorizontal: 18,
@@ -133,8 +149,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginHorizontal: 18,
     marginTop: 10,
-  },
-  feedItem: {
-    borderTopWidth: 1,
   },
 })

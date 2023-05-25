@@ -220,7 +220,7 @@ export const CustomFeedScreen = withAuthRequired(
                 </Text>
               )}
               {isDesktopWeb && (
-                <View style={styles.headerBtns}>
+                <View style={[styles.headerBtns, styles.headerBtnsDesktop]}>
                   <Button
                     type={currentFeed?.isSaved ? 'default' : 'inverted'}
                     onPress={onToggleSaved}
@@ -365,6 +365,10 @@ const styles = StyleSheet.create({
   headerBtns: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  headerBtnsDesktop: {
+    marginTop: 8,
+    gap: 4,
   },
   headerAddBtn: {
     flexDirection: 'row',
