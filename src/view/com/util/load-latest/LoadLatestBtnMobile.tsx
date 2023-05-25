@@ -6,7 +6,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {clamp} from 'lodash'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {colors} from 'lib/styles'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
@@ -20,6 +19,7 @@ export const LoadLatestBtn = observer(
     onPress: () => void
     label: string
     showIndicator: boolean
+    minimalShellMode?: boolean // NOTE not used on mobile -prf
   }) => {
     const store = useStores()
     const pal = usePalette('default')

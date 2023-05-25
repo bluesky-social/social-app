@@ -266,6 +266,7 @@ const FeedPage = observer(
             onPress={onPressLoadLatest}
             label="Load new posts"
             showIndicator={hasNew}
+            minimalShellMode={store.shell.minimalShellMode}
           />
         )}
         <FAB
