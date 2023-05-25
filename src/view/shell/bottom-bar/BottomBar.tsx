@@ -20,14 +20,13 @@ import {
   MagnifyingGlassIcon2Solid,
   BellIcon,
   BellIconSolid,
-  UserIcon,
-  UserIconSolid,
 } from 'lib/icons'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getTabState, TabState} from 'lib/routes/helpers'
 import {styles} from './BottomBarStyles'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
+import {UserAvatar} from 'view/com/util/UserAvatar'
 
 export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const store = useStores()
@@ -154,17 +153,19 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         icon={
           <View style={styles.ctrlIconSizingWrapper}>
             {isAtMyProfile ? (
-              <UserIconSolid
-                size={28}
-                strokeWidth={1.5}
-                style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
-              />
+              <View
+                style={[
+                  styles.ctrlIcon,
+                  pal.text,
+                  styles.profileIcon,
+                  styles.onProfile,
+                ]}>
+                <UserAvatar avatar={store.me.avatar} size={27} />
+              </View>
             ) : (
-              <UserIcon
-                size={28}
-                strokeWidth={1.5}
-                style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
-              />
+              <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
+                <UserAvatar avatar={store.me.avatar} size={28} />
+              </View>
             )}
           </View>
         }

@@ -3,12 +3,12 @@ import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {Link} from '../util/Link'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {colors} from 'lib/styles'
 
 export const FeedsTabBar = observer(
   (
@@ -50,7 +50,7 @@ export const FeedsTabBar = observer(
               accessibilityRole="button"
               accessibilityLabel="Open navigation"
               accessibilityHint="Access profile and other navigation links">
-              <UserAvatar avatar={store.me.avatar} size={30} />
+              <FontAwesomeIcon icon="bars" size={24} color={colors.blue3} />
             </TouchableOpacity>
           </View>
           <View style={[pal.view]}>
