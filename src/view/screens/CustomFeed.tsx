@@ -338,7 +338,11 @@ export const CustomFeedScreen = withAuthRequired(
           extraData={[uri, isPinned]}
         />
         {isScrolledDown ? (
-          <LoadLatestBtn onPress={onScrollToTop} label="Scroll to top" />
+          <LoadLatestBtn
+            onPress={onScrollToTop}
+            label="Scroll to top"
+            showIndicator={false}
+          />
         ) : null}
         <FAB
           testID="composeFAB"
