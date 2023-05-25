@@ -205,6 +205,24 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         label="Notifications"
       />
       <NavItem
+        href="/settings/saved-feeds"
+        icon={
+          <FontAwesomeIcon
+            icon="satellite-dish"
+            style={pal.text as FontAwesomeIconStyle}
+            size={20}
+          />
+        }
+        iconFilled={
+          <FontAwesomeIcon
+            icon="satellite-dish"
+            style={pal.text as FontAwesomeIconStyle}
+            size={20}
+          />
+        }
+        label="My Feeds"
+      />
+      <NavItem
         href="/moderation"
         icon={
           <HandIcon

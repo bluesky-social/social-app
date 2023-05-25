@@ -8,7 +8,7 @@ import {ListsListModel} from '../lists/lists-list'
 export enum Sections {
   Posts = 'Posts',
   PostsWithReplies = 'Posts & replies',
-  CustomAlgorithms = 'Algos',
+  CustomAlgorithms = 'Feeds',
   Lists = 'Lists',
 }
 

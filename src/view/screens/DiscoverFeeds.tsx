@@ -72,6 +72,7 @@ export const DiscoverFeedsScreen = withAuthRequired(
           style={[!isDesktopWeb && s.flex1]}
           data={feeds.feeds}
           keyExtractor={item => item.data.uri}
+          contentContainerStyle={styles.contentContainer}
           refreshControl={
             <RefreshControl
               refreshing={feeds.isRefreshing}
@@ -93,7 +94,9 @@ export const DiscoverFeedsScreen = withAuthRequired(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: isDesktopWeb ? 0 : 100,
+  },
+  contentContainer: {
+    paddingBottom: 100,
   },
   containerDesktop: {
     borderLeftWidth: 1,

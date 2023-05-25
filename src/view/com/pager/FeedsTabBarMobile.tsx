@@ -58,7 +58,12 @@ export const FeedsTabBar = observer(
             Bluesky
           </Text>
           <View style={[pal.view]}>
-            <Link href="/settings/saved-feeds" hitSlop={10}>
+            <Link
+              href="/settings/saved-feeds"
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Edit Saved Feeds"
+              accessibilityHint="Opens screen to edit Saved Feeds">
               <FontAwesomeIcon
                 icon="satellite-dish"
                 size={19}

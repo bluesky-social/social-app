@@ -98,6 +98,7 @@ export const CustomFeed = observer(
                 }
                 accessibilityHint=""
                 onPress={onToggleSaved}
+                hitSlop={15}
                 style={styles.btn}>
                 {item.isSaved ? (
                   <FontAwesomeIcon
