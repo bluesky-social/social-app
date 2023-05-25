@@ -133,7 +133,7 @@ const styles = isDesktopWeb
       contentContainer: {
         columnGap: 16,
         marginLeft: 18,
-        paddingRight: 28,
+        paddingRight: 36,
         backgroundColor: 'transparent',
       },
       item: {
