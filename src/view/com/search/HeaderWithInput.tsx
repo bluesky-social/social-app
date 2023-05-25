@@ -87,6 +87,8 @@ export function HeaderWithInput({
           accessibilityRole="search"
           accessibilityLabel="Search"
           accessibilityHint=""
+          autoCorrect={false}
+          autoCapitalize="none"
         />
         {query ? (
           <TouchableOpacity
