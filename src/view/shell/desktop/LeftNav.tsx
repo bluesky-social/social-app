@@ -30,6 +30,8 @@ import {
   CogIconSolid,
   ComposeIcon2,
   HandIcon,
+  SatelliteDishIcon,
+  SatelliteDishIconSolid,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
@@ -207,17 +209,17 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
       <NavItem
         href="/settings/saved-feeds"
         icon={
-          <FontAwesomeIcon
-            icon="satellite-dish"
+          <SatelliteDishIcon
+            strokeWidth={1.75}
             style={pal.text as FontAwesomeIconStyle}
-            size={20}
+            size={24}
           />
         }
         iconFilled={
-          <FontAwesomeIcon
-            icon="satellite-dish"
+          <SatelliteDishIconSolid
+            strokeWidth={1.75}
             style={pal.text as FontAwesomeIconStyle}
-            size={20}
+            size={24}
           />
         }
         label="My Feeds"
