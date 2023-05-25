@@ -129,53 +129,57 @@ export const CustomFeedScreen = withAuthRequired(
       return (
         <View style={styles.headerBtns}>
           <Button
-            testID="shareBtn"
-            type="default"
-            accessibilityLabel="Share this feed"
-            accessibilityHint=""
-            onPress={onPressShare}>
-            <FontAwesomeIcon icon="share" size={18} color={pal.colors.icon} />
-          </Button>
-          <Button
-            type="default"
+            type="default-light"
             testID="toggleLikeBtn"
             accessibilityLabel="Like this feed"
             accessibilityHint=""
             onPress={onToggleLiked}>
             {currentFeed?.isLiked ? (
-              <HeartIconSolid size={18} style={styles.liked} />
+              <HeartIconSolid size={19} style={styles.liked} />
             ) : (
-              <HeartIcon strokeWidth={3} size={18} style={pal.textLight} />
+              <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
             )}
           </Button>
-          <Button
-            type="default"
-            accessibilityLabel={isPinned ? 'Unpin this feed' : 'Pin this feed'}
-            accessibilityHint=""
-            onPress={onTogglePinned}>
-            <FontAwesomeIcon
-              icon="thumb-tack"
-              size={16}
-              color={isPinned ? colors.blue3 : pal.colors.icon}
-              style={styles.top1}
-            />
-          </Button>
+          {currentFeed?.isSaved ? (
+            <Button
+              type="default-light"
+              accessibilityLabel={
+                isPinned ? 'Unpin this feed' : 'Pin this feed'
+              }
+              accessibilityHint=""
+              onPress={onTogglePinned}>
+              <FontAwesomeIcon
+                icon="thumb-tack"
+                size={17}
+                color={isPinned ? colors.blue3 : pal.colors.textLight}
+                style={styles.top1}
+              />
+            </Button>
+          ) : undefined}
           {currentFeed?.isSaved ? (
             <DropdownButton
               testID="feedHeaderDropdownBtn"
-              type="default"
+              type="default-light"
               items={dropdownItems}
               menuWidth={250}>
-              <FontAwesomeIcon icon="ellipsis" style={[pal.text]} />
+              <FontAwesomeIcon
+                icon="ellipsis"
+                color={pal.colors.textLight}
+                size={18}
+              />
             </DropdownButton>
           ) : (
             <Button
-              type="inverted"
+              type="default-light"
               onPress={onToggleSaved}
               accessibilityLabel="Add to my feeds"
               accessibilityHint=""
-              label="Add to My Feeds"
-            />
+              style={styles.headerAddBtn}>
+              <FontAwesomeIcon icon="plus" color={pal.colors.link} size={19} />
+              <Text type="xl-medium" style={pal.link}>
+                Add to My Feeds
+              </Text>
+            </Button>
           )}
         </View>
       )
@@ -187,7 +191,6 @@ export const CustomFeedScreen = withAuthRequired(
       onToggleSaved,
       onTogglePinned,
       onToggleLiked,
-      onPressShare,
       dropdownItems,
     ])
 
@@ -361,8 +364,13 @@ const styles = StyleSheet.create({
   },
   headerBtns: {
     flexDirection: 'row',
-    gap: 12,
-    marginTop: 10,
+    alignItems: 'center',
+  },
+  headerAddBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingLeft: 4,
   },
   headerDetails: {
     paddingHorizontal: 16,
