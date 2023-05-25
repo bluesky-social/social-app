@@ -290,7 +290,9 @@ export class NotificationsFeedModel {
   }
 
   get hasNewLatest() {
-    return this.queuedNotifications && this.queuedNotifications?.length > 0
+    return Boolean(
+      this.queuedNotifications && this.queuedNotifications?.length > 0,
+    )
   }
 
   get unreadCountLabel(): string {

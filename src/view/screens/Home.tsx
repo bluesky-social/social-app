@@ -240,6 +240,7 @@ const FeedPage = observer(
       feed.refresh()
     }, [feed, scrollToTop])
 
+    const hasNew = feed.hasNewLatest && !feed.isRefreshing
     return (
       <View testID={testID} style={s.h100pct}>
         <Feed
@@ -254,8 +255,13 @@ const FeedPage = observer(
           renderEmptyState={renderEmptyState}
           headerOffset={HEADER_OFFSET}
         />
-        {isScrolledDown && (
-          <LoadLatestBtn onPress={onPressLoadLatest} label="Load new posts" />
+        {(isScrolledDown || hasNew) && (
+          <LoadLatestBtn
+            onPress={onPressLoadLatest}
+            label="Load new posts"
+            showIndicator={hasNew}
+            minimalShellMode={store.shell.minimalShellMode}
+          />
         )}
         <FAB
           testID="composeFAB"

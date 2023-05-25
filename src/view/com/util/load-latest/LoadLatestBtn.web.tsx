@@ -3,7 +3,6 @@ import {StyleSheet, TouchableOpacity} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {UpIcon} from 'lib/icons'
 import {LoadLatestBtn as LoadLatestBtnMobile} from './LoadLatestBtnMobile'
 import {isMobileWeb} from 'platform/detection'
 
@@ -12,30 +11,60 @@ const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 export const LoadLatestBtn = ({
   onPress,
   label,
+  showIndicator,
+  minimalShellMode,
 }: {
   onPress: () => void
   label: string
+  showIndicator: boolean
+  minimalShellMode?: boolean
 }) => {
   const pal = usePalette('default')
   if (isMobileWeb) {
-    return <LoadLatestBtnMobile onPress={onPress} label={label} />
+    return (
+      <LoadLatestBtnMobile
+        onPress={onPress}
+        label={label}
+        showIndicator={showIndicator}
+      />
+    )
   }
   return (
-    <TouchableOpacity
-      style={[pal.view, pal.borderDark, styles.loadLatest]}
-      onPress={onPress}
-      hitSlop={HITSLOP}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      accessibilityHint="">
-      <Text type="md-bold" style={pal.text}>
-        <FontAwesomeIcon
-          icon="angle-up"
-          size={21}
-          style={[pal.text, styles.icon]}
-        />
-      </Text>
-    </TouchableOpacity>
+    <>
+      {showIndicator && (
+        <TouchableOpacity
+          style={[
+            pal.view,
+            pal.borderDark,
+            styles.loadLatestCentered,
+            minimalShellMode && styles.loadLatestCenteredMinimal,
+          ]}
+          onPress={onPress}
+          hitSlop={HITSLOP}
+          accessibilityRole="button"
+          accessibilityLabel={label}
+          accessibilityHint="">
+          <Text type="md-bold" style={pal.text}>
+            {label}
+          </Text>
+        </TouchableOpacity>
+      )}
+      <TouchableOpacity
+        style={[pal.view, pal.borderDark, styles.loadLatest]}
+        onPress={onPress}
+        hitSlop={HITSLOP}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        accessibilityHint="">
+        <Text type="md-bold" style={pal.text}>
+          <FontAwesomeIcon
+            icon="angle-up"
+            size={21}
+            style={[pal.text, styles.icon]}
+          />
+        </Text>
+      </TouchableOpacity>
+    </>
   )
 }
 
@@ -57,5 +86,22 @@ const styles = StyleSheet.create({
   icon: {
     position: 'relative',
     top: 2,
+  },
+  loadLatestCentered: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    left: '50vw',
+    // @ts-ignore web only -prf
+    transform: 'translateX(-50%)',
+    top: 60,
+    paddingHorizontal: 24,
+    paddingVertical: 14,
+    borderRadius: 30,
+    borderWidth: 1,
+  },
+  loadLatestCenteredMinimal: {
+    top: 20,
   },
 })

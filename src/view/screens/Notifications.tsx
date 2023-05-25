@@ -88,6 +88,9 @@ export const NotificationsScreen = withAuthRequired(
       ),
     )
 
+    const hasNew =
+      store.me.notifications.hasNewLatest &&
+      !store.me.notifications.isRefreshing
     return (
       <View testID="notificationsScreen" style={s.hContentRegion}>
         <ViewHeader title="Notifications" canGoBack={false} />
@@ -98,10 +101,12 @@ export const NotificationsScreen = withAuthRequired(
           onScroll={onMainScroll}
           scrollElRef={scrollElRef}
         />
-        {isScrolledDown && (
+        {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onPressLoadLatest}
             label="Load new notifications"
+            showIndicator={hasNew}
+            minimalShellMode={true}
           />
         )}
       </View>
