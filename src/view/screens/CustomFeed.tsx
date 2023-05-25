@@ -28,6 +28,7 @@ import {Haptics} from 'lib/haptics'
 import {ComposeIcon2} from 'lib/icons'
 import {FAB} from '../com/util/fab/FAB'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {DropdownButton, DropdownItem} from 'view/com/util/forms/DropdownButton'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
@@ -108,6 +109,22 @@ export const CustomFeedScreen = withAuthRequired(
       store.shell.openComposer({})
     }, [store])
 
+    const dropdownItems: DropdownItem[] = React.useMemo(() => {
+      let items: DropdownItem[] = [
+        {
+          testID: 'feedHeaderDropdownRemoveBtn',
+          label: 'Remove from my feeds',
+          onPress: onToggleSaved,
+        },
+        {
+          testID: 'feedHeaderDropdownShareBtn',
+          label: 'Share link',
+          onPress: onPressShare,
+        },
+      ]
+      return items
+    }, [onToggleSaved, onPressShare])
+
     const renderHeaderBtns = React.useCallback(() => {
       return (
         <View style={styles.headerBtns}>
@@ -132,25 +149,46 @@ export const CustomFeedScreen = withAuthRequired(
             )}
           </Button>
           <Button
-            type={currentFeed?.isSaved ? 'default' : 'inverted'}
-            onPress={onToggleSaved}
-            accessibilityLabel={
-              currentFeed?.isSaved ? 'Remove from my feeds' : 'Add to my feeds'
-            }
+            type="default"
+            accessibilityLabel={isPinned ? 'Unpin this feed' : 'Pin this feed'}
             accessibilityHint=""
-            label={
-              currentFeed?.isSaved ? 'Remove from My Feeds' : 'Add to My Feeds'
-            }
-          />
+            onPress={onTogglePinned}>
+            <FontAwesomeIcon
+              icon="thumb-tack"
+              size={16}
+              color={isPinned ? colors.blue3 : pal.colors.icon}
+              style={styles.top1}
+            />
+          </Button>
+          {currentFeed?.isSaved ? (
+            <DropdownButton
+              testID="feedHeaderDropdownBtn"
+              type="default"
+              items={dropdownItems}
+              menuWidth={250}>
+              <FontAwesomeIcon icon="ellipsis" style={[pal.text]} />
+            </DropdownButton>
+          ) : (
+            <Button
+              type="inverted"
+              onPress={onToggleSaved}
+              accessibilityLabel="Add to my feeds"
+              accessibilityHint=""
+              label="Add to My Feeds"
+            />
+          )}
         </View>
       )
     }, [
       pal,
       currentFeed?.isSaved,
       currentFeed?.isLiked,
+      isPinned,
       onToggleSaved,
+      onTogglePinned,
       onToggleLiked,
       onPressShare,
+      dropdownItems,
     ])
 
     const renderListHeaderComponent = React.useCallback(() => {
@@ -195,6 +233,20 @@ export const CustomFeedScreen = withAuthRequired(
                         : 'Add to My Feeds'
                     }
                   />
+                  <Button
+                    type="default"
+                    accessibilityLabel={
+                      isPinned ? 'Unpin this feed' : 'Pin this feed'
+                    }
+                    accessibilityHint=""
+                    onPress={onTogglePinned}>
+                    <FontAwesomeIcon
+                      icon="thumb-tack"
+                      size={15}
+                      color={isPinned ? colors.blue3 : pal.colors.icon}
+                      style={styles.top2}
+                    />
+                  </Button>
                   <Button
                     type="default"
                     accessibilityLabel="Like this feed"
@@ -246,19 +298,6 @@ export const CustomFeedScreen = withAuthRequired(
                   )}`}
                 />
               ) : null}
-              <Button
-                type={'default'}
-                accessibilityLabel={
-                  isPinned ? 'Unpin this feed' : 'Pin this feed'
-                }
-                accessibilityHint=""
-                onPress={onTogglePinned}>
-                <FontAwesomeIcon
-                  icon="thumb-tack"
-                  size={20}
-                  color={isPinned ? colors.blue3 : pal.colors.icon}
-                />
-              </Button>
             </View>
           </View>
           <View style={[styles.fakeSelector, pal.border]}>
@@ -286,7 +325,7 @@ export const CustomFeedScreen = withAuthRequired(
 
     return (
       <View style={s.hContentRegion}>
-        <ViewHeader title="" renderButton={renderHeaderBtns} />
+        <ViewHeader title="" renderButton={currentFeed && renderHeaderBtns} />
         <Feed
           scrollElRef={scrollElRef}
           feed={algoFeed}
@@ -322,7 +361,7 @@ const styles = StyleSheet.create({
   },
   headerBtns: {
     flexDirection: 'row',
-    gap: 8,
+    gap: 12,
     marginTop: 10,
   },
   headerDetails: {
@@ -345,5 +384,13 @@ const styles = StyleSheet.create({
   },
   liked: {
     color: colors.red3,
+  },
+  top1: {
+    position: 'relative',
+    top: 1,
+  },
+  top2: {
+    position: 'relative',
+    top: 2,
   },
 })

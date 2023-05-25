@@ -136,7 +136,12 @@ export function DropdownButton({
   }
   return (
     <View ref={ref2}>
-      <Button testID={testID} onPress={onPress} style={style} label={label}>
+      <Button
+        type={type}
+        testID={testID}
+        onPress={onPress}
+        style={style}
+        label={label}>
         {children}
       </Button>
     </View>
