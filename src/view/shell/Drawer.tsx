@@ -28,6 +28,7 @@ import {
   MagnifyingGlassIcon2Solid,
   MoonIcon,
   UserIconSolid,
+  SatelliteDishIcon,
   HandIcon,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -94,6 +95,12 @@ export const DrawerContent = observer(() => {
   const onPressProfile = React.useCallback(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
+
+  const onPressMyFeeds = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'MyFeeds'})
+    navigation.navigate('SavedFeeds')
+    store.shell.closeDrawer()
+  }, [navigation, track, store.shell])
 
   const onPressModeration = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Moderation'})
@@ -233,12 +240,19 @@ export const DrawerContent = observer(() => {
           />
           <MenuItem
             icon={
-              <HandIcon
-                strokeWidth={5}
+              <SatelliteDishIcon
+                strokeWidth={1.5}
                 style={pal.text as FontAwesomeIconStyle}
                 size={24}
               />
             }
+            label="My Feeds"
+            accessibilityLabel="My Feeds"
+            accessibilityHint=""
+            onPress={onPressMyFeeds}
+          />
+          <MenuItem
+            icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
             label="Moderation"
             accessibilityLabel="Moderation"
             accessibilityHint=""
