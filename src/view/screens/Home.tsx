@@ -16,7 +16,6 @@ import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {FAB} from '../com/util/fab/FAB'
-import {SavedFeeds} from 'view/com/feeds/SavedFeeds'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
@@ -24,7 +23,7 @@ import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import {isDesktopWeb} from 'platform/detection'
 
-const HEADER_OFFSET = isDesktopWeb ? 50 : 40
+const HEADER_OFFSET = isDesktopWeb ? 50 : 74
 const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
@@ -127,11 +126,6 @@ export const HomeScreen = withAuthRequired(
             />
           )
         })}
-        <SavedFeeds
-          key={String(2 + store.me.savedFeeds.pinned.length)}
-          headerOffset={HEADER_OFFSET}
-          isPageFocused={selectedPage === 2 + store.me.savedFeeds.pinned.length}
-        />
       </Pager>
     )
   }),

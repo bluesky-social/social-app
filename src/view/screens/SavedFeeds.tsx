@@ -29,6 +29,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import * as Toast from 'view/com/util/Toast'
 import {Haptics} from 'lib/haptics'
+import {Link, TextLink} from 'view/com/util/Link'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 
@@ -65,11 +66,36 @@ export const SavedFeeds = withAuthRequired(
 
     const renderListFooterComponent = useCallback(() => {
       return (
-        <View style={styles.footer}>
+        <>
+          <View style={[styles.footerLinks, pal.border]}>
+            <Link style={[styles.footerLink, pal.border]} href="/search/feeds">
+              <FontAwesomeIcon
+                icon="search"
+                size={18}
+                color={pal.colors.icon}
+              />
+              <Text type="lg-medium" style={pal.textLight}>
+                Discover new feeds
+              </Text>
+            </Link>
+          </View>
+          <View style={styles.footerText}>
+            <Text type="sm" style={pal.textLight}>
+              Feeds are custom algorithms that users build with a little coding
+              expertise.{' '}
+              <TextLink
+                type="sm"
+                style={pal.link}
+                href="https://github.com/bluesky-social/feed-generator"
+                text="See this guide"
+              />{' '}
+              for more information.
+            </Text>
+          </View>
           {savedFeeds.isLoading && <ActivityIndicator />}
-        </View>
+        </>
       )
-    }, [savedFeeds])
+    }, [pal, savedFeeds.isLoading])
 
     const onRefresh = useCallback(() => savedFeeds.refresh(), [savedFeeds])
 
@@ -224,9 +250,6 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     minHeight: '100vh',
   },
-  footer: {
-    paddingVertical: 20,
-  },
   empty: {
     paddingHorizontal: 20,
     paddingVertical: 20,
@@ -251,5 +274,20 @@ const styles = StyleSheet.create({
   },
   noBorder: {
     borderTopWidth: 0,
+  },
+  footerText: {
+    paddingHorizontal: 26,
+    paddingVertical: 22,
+  },
+  footerLinks: {
+    borderBottomWidth: 1,
+    borderTopWidth: 0,
+  },
+  footerLink: {
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    paddingHorizontal: 26,
+    paddingVertical: 18,
+    gap: 18,
   },
 })

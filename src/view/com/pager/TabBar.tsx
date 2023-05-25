@@ -80,6 +80,7 @@ export function TabBar({
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         ref={scrollElRef}
+        contentContainerStyle={styles.contentContainer}
         onLayout={onLayout}>
         {items.map((item, i) => {
           const selected = i === selectedPage
@@ -111,6 +112,7 @@ const styles = isDesktopWeb
         width: 598,
         paddingHorizontal: 14,
       },
+      contentContainer: {},
       item: {
         paddingTop: 14,
         paddingBottom: 12,
@@ -123,12 +125,14 @@ const styles = isDesktopWeb
       outer: {
         flex: 1,
         flexDirection: 'row',
-        paddingLeft: 14,
+      },
+      contentContainer: {
+        gap: 14,
+        paddingHorizontal: 18,
       },
       item: {
         paddingTop: 8,
         paddingBottom: 12,
-        marginRight: 24,
         borderBottomWidth: 3,
         borderBottomColor: 'transparent',
       },
