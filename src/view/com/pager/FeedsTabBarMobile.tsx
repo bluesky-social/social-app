@@ -7,8 +7,9 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {Link} from '../util/Link'
+import {Text} from '../util/text/Text'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {colors} from 'lib/styles'
+import {s} from 'lib/styles'
 
 export const FeedsTabBar = observer(
   (
@@ -45,24 +46,28 @@ export const FeedsTabBar = observer(
           <View style={[pal.view]}>
             <TouchableOpacity
               testID="viewHeaderDrawerBtn"
-              style={styles.tabBarAvi}
               onPress={onPressAvi}
               accessibilityRole="button"
               accessibilityLabel="Open navigation"
-              accessibilityHint="Access profile and other navigation links">
-              <FontAwesomeIcon icon="bars" size={24} color={colors.blue3} />
+              accessibilityHint="Access profile and other navigation links"
+              hitSlop={10}>
+              <FontAwesomeIcon icon="bars" size={18} color={pal.colors.icon} />
             </TouchableOpacity>
           </View>
+          <Text type="title" style={[pal.link, s.bold]}>
+            Bluesky
+          </Text>
           <View style={[pal.view]}>
             <Link
               href="/settings/saved-feeds"
+              hitSlop={10}
               accessibilityRole="button"
               accessibilityLabel="Edit Saved Feeds"
               accessibilityHint="Opens screen to edit Saved Feeds">
               <FontAwesomeIcon
                 icon="satellite-dish"
-                size={24}
-                color={pal.colors.link}
+                size={19}
+                color={pal.colors.icon}
               />
             </Link>
           </View>
@@ -79,13 +84,6 @@ export const FeedsTabBar = observer(
 )
 
 const styles = StyleSheet.create({
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 18,
-    width: '100%',
-  },
   tabBar: {
     position: 'absolute',
     zIndex: 1,
@@ -96,8 +94,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
   },
-  tabBarAvi: {
-    marginTop: 1,
-    marginRight: 18,
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 18,
+    paddingBottom: 2,
+    width: '100%',
   },
 })
