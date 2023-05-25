@@ -360,7 +360,8 @@ const LINKING = {
       if (name === 'Notifications') {
         return buildStateObject('NotificationsTab', 'Notifications', params)
       }
-      return buildStateObject('HomeTab', name, params)
+      if (name === 'Home') {
+        return buildStateObject('HomeTab', name, params)
     } else {
       return buildStateObject('Flat', name, params)
     }
