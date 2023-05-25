@@ -92,7 +92,7 @@ export function TabBar({
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}>
               <Text
-                type="xl-bold"
+                type="lg-bold"
                 testID={testID ? `${testID}-${item}` : undefined}
                 style={selected ? pal.text : pal.textLight}>
                 {item}
@@ -127,12 +127,12 @@ const styles = isDesktopWeb
         flexDirection: 'row',
       },
       contentContainer: {
-        gap: 14,
+        gap: 18,
         paddingHorizontal: 18,
       },
       item: {
         paddingTop: 8,
-        paddingBottom: 12,
+        paddingBottom: 8,
         borderBottomWidth: 3,
         borderBottomColor: 'transparent',
       },

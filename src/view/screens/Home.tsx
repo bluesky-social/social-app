@@ -23,7 +23,7 @@ import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import {isDesktopWeb} from 'platform/detection'
 
-const HEADER_OFFSET = isDesktopWeb ? 50 : 74
+const HEADER_OFFSET = isDesktopWeb ? 50 : 64
 const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
