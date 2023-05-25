@@ -1,16 +1,26 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {clamp} from 'lodash'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {colors} from 'lib/styles'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
 export const LoadLatestBtn = observer(
-  ({onPress, label}: {onPress: () => void; label: string}) => {
+  ({
+    onPress,
+    label,
+    showIndicator,
+  }: {
+    onPress: () => void
+    label: string
+    showIndicator: boolean
+  }) => {
     const store = useStores()
     const pal = usePalette('default')
     const safeAreaInsets = useSafeAreaInsets()
@@ -30,6 +40,7 @@ export const LoadLatestBtn = observer(
         accessibilityLabel={label}
         accessibilityHint="">
         <FontAwesomeIcon icon="angle-up" color={pal.colors.text} size={19} />
+        {showIndicator && <View style={[styles.indicator, pal.borderDark]} />}
       </TouchableOpacity>
     )
   },
@@ -47,5 +58,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  indicator: {
+    position: 'absolute',
+    top: 3,
+    right: 3,
+    backgroundColor: colors.blue3,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    borderWidth: 1,
   },
 })
