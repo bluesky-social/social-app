@@ -8,6 +8,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
+import {SatelliteDishIcon} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {s} from 'lib/styles'
 
@@ -51,7 +52,11 @@ export const FeedsTabBar = observer(
               accessibilityLabel="Open navigation"
               accessibilityHint="Access profile and other navigation links"
               hitSlop={10}>
-              <FontAwesomeIcon icon="bars" size={18} color={pal.colors.icon} />
+              <FontAwesomeIcon
+                icon="bars"
+                size={18}
+                color={pal.colors.textLight}
+              />
             </TouchableOpacity>
           </View>
           <Text type="title" style={[pal.link, s.bold]}>
@@ -64,10 +69,10 @@ export const FeedsTabBar = observer(
               accessibilityRole="button"
               accessibilityLabel="Edit Saved Feeds"
               accessibilityHint="Opens screen to edit Saved Feeds">
-              <FontAwesomeIcon
-                icon="satellite-dish"
-                size={19}
-                color={pal.colors.icon}
+              <SatelliteDishIcon
+                size={20}
+                strokeWidth={2}
+                style={pal.textLight}
               />
             </Link>
           </View>
