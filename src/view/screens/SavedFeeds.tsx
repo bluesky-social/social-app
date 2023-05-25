@@ -68,7 +68,7 @@ export const SavedFeeds = withAuthRequired(
       return (
         <>
           <View style={[styles.footerLinks, pal.border]}>
-            <Link style={[styles.footerLink, pal.border]} href="/search/feeds">
+            <Link style={styles.footerLink} href="/search/feeds">
               <FontAwesomeIcon
                 icon="search"
                 size={18}
@@ -118,11 +118,7 @@ export const SavedFeeds = withAuthRequired(
           pal.border,
           isDesktopWeb && styles.desktopContainer,
         ]}>
-        <ViewHeader
-          title="Edit My Feeds"
-          showOnDesktop
-          showBorder={!isDesktopWeb}
-        />
+        <ViewHeader title="My Feeds" showOnDesktop showBorder={!isDesktopWeb} />
         <DraggableFlatList
           containerStyle={[!isDesktopWeb && s.flex1]}
           data={savedFeeds.all}
@@ -277,7 +273,8 @@ const styles = StyleSheet.create({
   },
   footerText: {
     paddingHorizontal: 26,
-    paddingVertical: 22,
+    paddingTop: 22,
+    paddingBottom: 100,
   },
   footerLinks: {
     borderBottomWidth: 1,
@@ -285,7 +282,6 @@ const styles = StyleSheet.create({
   },
   footerLink: {
     flexDirection: 'row',
-    borderTopWidth: 1,
     paddingHorizontal: 26,
     paddingVertical: 18,
     gap: 18,
