@@ -99,15 +99,13 @@ export const HomeScreen = withAuthRequired(
       return <CustomFeedEmptyState />
     }, [])
 
-    const initialPage = store.me.followsCount === 0 ? 1 : 0
     return (
       <Pager
         ref={pagerRef}
         testID="homeScreen"
         onPageSelected={onPageSelected}
         renderTabBar={renderTabBar}
-        tabBarPosition="top"
-        initialPage={initialPage}>
+        tabBarPosition="top">
         <FeedPage
           key="1"
           testID="followingFeedPage"
