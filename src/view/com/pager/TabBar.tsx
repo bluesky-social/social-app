@@ -10,7 +10,7 @@ import {StyleSheet, View, ScrollView} from 'react-native'
 import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb} from 'platform/detection'
+import {isDesktopWeb, isMobileWeb} from 'platform/detection'
 import {DraggableScrollView} from './DraggableScrollView'
 
 export interface TabBarProps {
@@ -132,14 +132,15 @@ const styles = isDesktopWeb
         backgroundColor: 'transparent',
       },
       contentContainer: {
-        columnGap: 20,
-        marginLeft: 18,
-        paddingRight: 36,
+        columnGap: isMobileWeb ? 0 : 20,
+        marginLeft: isMobileWeb ? 0 : 18,
+        paddingRight: isMobileWeb ? 0 : 36,
         backgroundColor: 'transparent',
       },
       item: {
         paddingTop: 10,
         paddingBottom: 10,
+        paddingHorizontal: isMobileWeb ? 8 : 0,
         borderBottomWidth: 3,
         borderBottomColor: 'transparent',
       },
