@@ -8,13 +8,19 @@ export class CustomFeedModel {
   // data
   _reactKey: string
   data: AppBskyFeedDefs.GeneratorView
+  isOnline: boolean
+  isValid: boolean
 
   constructor(
     public rootStore: RootStoreModel,
     view: AppBskyFeedDefs.GeneratorView,
+    isOnline?: boolean,
+    isValid?: boolean,
   ) {
     this._reactKey = view.uri
     this.data = view
+    this.isOnline = isOnline ?? true
+    this.isValid = isValid ?? true
     makeAutoObservable(
       this,
       {
@@ -103,6 +109,8 @@ export class CustomFeedModel {
     })
     runInAction(() => {
       this.data = res.data.view
+      this.isOnline = res.data.isOnline
+      this.isValid = res.data.isValid
     })
   }
 
