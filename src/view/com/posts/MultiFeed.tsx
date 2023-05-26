@@ -49,7 +49,6 @@ export const MultiFeed = observer(function Feed({
   extraData?: any
 }) {
   const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
   const theme = useTheme()
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
@@ -130,15 +129,9 @@ export const MultiFeed = observer(function Feed({
         )
       } else if (item.type === 'footer') {
         return (
-          <Link
-            style={[styles.footerLink, palInverted.view]}
-            href="/search/feeds">
-            <FontAwesomeIcon
-              icon="search"
-              size={18}
-              color={palInverted.colors.text}
-            />
-            <Text type="lg-medium" style={palInverted.text}>
+          <Link style={[styles.footerLink, pal.viewLight]} href="/search/feeds">
+            <FontAwesomeIcon icon="search" size={18} color={pal.colors.text} />
+            <Text type="xl-medium" style={pal.text}>
               Discover new feeds
             </Text>
           </Link>
@@ -146,7 +139,7 @@ export const MultiFeed = observer(function Feed({
       }
       return null
     },
-    [showPostFollowBtn, pal, palInverted],
+    [showPostFollowBtn, pal],
   )
 
   const FeedFooter = React.useCallback(
@@ -181,11 +174,7 @@ export const MultiFeed = observer(function Feed({
             />
           }
           contentContainerStyle={s.contentContainer}
-          style={[
-            {paddingTop: headerOffset},
-            isDesktopWeb ? pal.view : pal.viewLight,
-            styles.container,
-          ]}
+          style={[{paddingTop: headerOffset}, pal.view, styles.container]}
           onScroll={onScroll}
           scrollEventThrottle={scrollEventThrottle}
           indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}

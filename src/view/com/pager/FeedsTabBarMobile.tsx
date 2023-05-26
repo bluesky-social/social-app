@@ -6,6 +6,7 @@ import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {CogIcon} from 'lib/icons'
@@ -31,6 +32,8 @@ export const FeedsTabBar = observer(
     const transform = {
       transform: [{translateY: Animated.multiply(interp, -100)}],
     }
+
+    const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
 
     const onPressAvi = React.useCallback(() => {
       store.shell.openDrawer()
@@ -59,9 +62,7 @@ export const FeedsTabBar = observer(
               />
             </TouchableOpacity>
           </View>
-          <Text type="title-lg" style={[s.brandBlue, s.bold]}>
-            Bluesky
-          </Text>
+          <Text style={[brandBlue, s.bold, styles.title]}>Bluesky</Text>
           <View style={[pal.view]}>
             <Link
               href="/settings/saved-feeds"
@@ -103,5 +104,8 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 2,
     width: '100%',
+  },
+  title: {
+    fontSize: 21,
   },
 })
