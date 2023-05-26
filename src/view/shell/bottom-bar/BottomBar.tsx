@@ -18,23 +18,24 @@ import {
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
+  SatelliteDishIcon,
+  SatelliteDishIconSolid,
   BellIcon,
   BellIconSolid,
-  UserIcon,
-  UserIconSolid,
 } from 'lib/icons'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getTabState, TabState} from 'lib/routes/helpers'
 import {styles} from './BottomBarStyles'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
+import {UserAvatar} from 'view/com/util/UserAvatar'
 
 export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const store = useStores()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile} =
+  const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
 
   const {footerMinimalShellTransform} = useMinimalShellMode()
@@ -58,6 +59,10 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
   const onPressSearch = React.useCallback(
     () => onPressTab('Search'),
+    [onPressTab],
+  )
+  const onPressFeeds = React.useCallback(
+    () => onPressTab('Feeds'),
     [onPressTab],
   )
   const onPressNotifications = React.useCallback(
@@ -122,6 +127,28 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         accessibilityHint=""
       />
       <Btn
+        testID="bottomBarFeedsBtn"
+        icon={
+          isAtFeeds ? (
+            <SatelliteDishIconSolid
+              size={25}
+              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+              strokeWidth={1.8}
+            />
+          ) : (
+            <SatelliteDishIcon
+              size={25}
+              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+              strokeWidth={1.8}
+            />
+          )
+        }
+        onPress={onPressFeeds}
+        accessibilityRole="tab"
+        accessibilityLabel="Feeds"
+        accessibilityHint=""
+      />
+      <Btn
         testID="bottomBarNotificationsBtn"
         icon={
           isAtNotifications ? (
@@ -154,17 +181,19 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         icon={
           <View style={styles.ctrlIconSizingWrapper}>
             {isAtMyProfile ? (
-              <UserIconSolid
-                size={28}
-                strokeWidth={1.5}
-                style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
-              />
+              <View
+                style={[
+                  styles.ctrlIcon,
+                  pal.text,
+                  styles.profileIcon,
+                  styles.onProfile,
+                ]}>
+                <UserAvatar avatar={store.me.avatar} size={27} />
+              </View>
             ) : (
-              <UserIcon
-                size={28}
-                strokeWidth={1.5}
-                style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
-              />
+              <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
+                <UserAvatar avatar={store.me.avatar} size={28} />
+              </View>
             )}
           </View>
         }

@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleProp, TextStyle, ViewStyle} from 'react-native'
-import Svg, {Path, Rect, Line, Ellipse} from 'react-native-svg'
+import Svg, {Path, Rect, Line, Ellipse, Circle} from 'react-native-svg'
 
 export function GridIcon({
   style,
@@ -472,7 +472,7 @@ export function HeartIcon({
   size = 24,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<ViewStyle>
+  style?: StyleProp<TextStyle>
   size?: string | number
   strokeWidth: number
 }) {
@@ -493,7 +493,7 @@ export function HeartIconSolid({
   style,
   size = 24,
 }: {
-  style?: StyleProp<ViewStyle>
+  style?: StyleProp<TextStyle>
   size?: string | number
 }) {
   return (
@@ -880,6 +880,80 @@ export function HandIcon({
       <Path d="M33.5 37V11.5C33.5 8.46243 31.0376 6 28 6V6C24.9624 6 22.5 8.46243 22.5 11.5V48V48C22.5 48.5802 21.8139 48.8874 21.3811 48.501L13.2252 41.2189C10.72 38.9821 6.81945 39.4562 4.92296 42.228L4.77978 42.4372C3.17708 44.7796 3.50863 47.9385 5.56275 49.897L16.0965 59.9409C20.9825 64.5996 26.7533 68.231 33.0675 70.6201V70.6201C38.8234 72.798 45.1766 72.798 50.9325 70.6201L51.9256 70.2444C57.4044 68.1713 61.8038 63.9579 64.1113 58.5735V58.5735C65.6874 54.8962 66.5 50.937 66.5 46.9362V22.5C66.5 19.4624 64.0376 17 61 17V17C57.9624 17 55.5 19.4624 55.5 22.5V36.5" />
       <Path d="M55.5 37V11.5C55.5 8.46243 53.0376 6 50 6V6C46.9624 6 44.5 8.46243 44.5 11.5V37" />
       <Path d="M44.5 37V8.5C44.5 5.46243 42.0376 3 39 3V3C35.9624 3 33.5 5.46243 33.5 8.5V37" />
+    </Svg>
+  )
+}
+
+export function SatelliteDishIconSolid({
+  style,
+  size,
+  strokeWidth = 1.5,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+  strokeWidth?: number
+}) {
+  return (
+    <Svg
+      width={size || 24}
+      height={size || 24}
+      viewBox="0 0 22 22"
+      style={style}
+      fill="none"
+      stroke="none">
+      <Path
+        d="M16 19.6622C14.5291 20.513 12.8214 21 11 21C5.47715 21 1 16.5229 1 11C1 9.17858 1.48697 7.47088 2.33782 6.00002C3.18867 4.52915 6 7.66219 6 7.66219L14.5 16.1622C14.5 16.1622 17.4709 18.8113 16 19.6622Z"
+        fill="currentColor"
+      />
+      <Path
+        d="M8 1.62961C9.04899 1.22255 10.1847 1 11.3704 1C16.6887 1 21 5.47715 21 11C21 12.0452 20.8456 13.053 20.5592 14"
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+      />
+      <Path
+        d="M9 5.38745C9.64553 5.13695 10.3444 5 11.0741 5C14.3469 5 17 7.75517 17 11.1538C17 11.797 16.905 12.4172 16.7287 13"
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+      />
+      <Circle cx="10" cy="12" r="2" fill="currentColor" />
+    </Svg>
+  )
+}
+
+export function SatelliteDishIcon({
+  style,
+  size,
+  strokeWidth = 1.5,
+}: {
+  style?: StyleProp<TextStyle>
+  size?: string | number
+  strokeWidth?: number
+}) {
+  return (
+    <Svg
+      fill="none"
+      viewBox="0 0 22 22"
+      strokeWidth={strokeWidth}
+      stroke="currentColor"
+      width={size}
+      height={size}
+      style={style}>
+      <Path d="M5.25593 8.3303L5.25609 8.33047L5.25616 8.33056L5.25621 8.33061L5.27377 8.35018L5.29289 8.3693L13.7929 16.8693L13.8131 16.8895L13.8338 16.908L13.834 16.9081L13.8342 16.9083L13.8342 16.9083L13.8345 16.9086L13.8381 16.9118L13.8574 16.9294C13.8752 16.9458 13.9026 16.9711 13.9377 17.0043C14.0081 17.0708 14.1088 17.1683 14.2258 17.2881C14.4635 17.5315 14.7526 17.8509 14.9928 18.1812C15.2067 18.4755 15.3299 18.7087 15.3817 18.8634C14.0859 19.5872 12.5926 20 11 20C6.02944 20 2 15.9706 2 11C2 9.4151 2.40883 7.9285 3.12619 6.63699C3.304 6.69748 3.56745 6.84213 3.89275 7.08309C4.24679 7.34534 4.58866 7.65673 4.84827 7.9106C4.97633 8.03583 5.08062 8.14337 5.152 8.21863C5.18763 8.25619 5.21487 8.28551 5.23257 8.30473L5.25178 8.32572L5.25571 8.33006L5.25593 8.3303ZM3.00217 6.60712C3.00217 6.6071 3.00267 6.6071 3.00372 6.60715C3.00271 6.60716 3.00218 6.60714 3.00217 6.60712Z" />
+      <Path
+        d="M8 1.62961C9.04899 1.22255 10.1847 1 11.3704 1C16.6887 1 21 5.47715 21 11C21 12.0452 20.8456 13.053 20.5592 14"
+        stroke-linecap="round"
+      />
+      <Path
+        d="M9 5.38745C9.64553 5.13695 10.3444 5 11.0741 5C14.3469 5 17 7.75517 17 11.1538C17 11.797 16.905 12.4172 16.7287 13"
+        stroke-linecap="round"
+      />
+      <Path
+        d="M12 12C12 12.7403 11.5978 13.3866 11 13.7324L8.26756 11C8.61337 10.4022 9.25972 10 10 10C11.1046 10 12 10.8954 12 12Z"
+        fill="currentColor"
+        stroke="none"
+      />
     </Svg>
   )
 }
