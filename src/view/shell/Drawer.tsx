@@ -30,6 +30,7 @@ import {
   MoonIcon,
   UserIconSolid,
   SatelliteDishIcon,
+  SatelliteDishIconSolid,
   HandIcon,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -50,7 +51,7 @@ export const DrawerContent = observer(() => {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile} =
+  const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
 
   const {notifications} = store.me
@@ -97,11 +98,10 @@ export const DrawerContent = observer(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
 
-  const onPressMyFeeds = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: 'MyFeeds'})
-    navigation.navigate('SavedFeeds')
-    store.shell.closeDrawer()
-  }, [navigation, track, store.shell])
+  const onPressMyFeeds = React.useCallback(
+    () => onPressTab('Feeds'),
+    [onPressTab],
+  )
 
   const onPressModeration = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Moderation'})
@@ -240,11 +240,19 @@ export const DrawerContent = observer(() => {
           />
           <MenuItem
             icon={
-              <SatelliteDishIcon
-                strokeWidth={1.5}
-                style={pal.text as FontAwesomeIconStyle}
-                size={24}
-              />
+              isAtFeeds ? (
+                <SatelliteDishIconSolid
+                  strokeWidth={1.5}
+                  style={pal.text as FontAwesomeIconStyle}
+                  size={24}
+                />
+              ) : (
+                <SatelliteDishIcon
+                  strokeWidth={1.5}
+                  style={pal.text as FontAwesomeIconStyle}
+                  size={24}
+                />
+              )
             }
             label="My Feeds"
             accessibilityLabel="My Feeds"

@@ -118,7 +118,11 @@ export const SavedFeeds = withAuthRequired(
           pal.border,
           isDesktopWeb && styles.desktopContainer,
         ]}>
-        <ViewHeader title="My Feeds" showOnDesktop showBorder={!isDesktopWeb} />
+        <ViewHeader
+          title="Edit My Feeds"
+          showOnDesktop
+          showBorder={!isDesktopWeb}
+        />
         <DraggableFlatList
           containerStyle={[!isDesktopWeb && s.flex1]}
           data={savedFeeds.all}

@@ -14,6 +14,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {
   HomeTabNavigatorParams,
   SearchTabNavigatorParams,
+  FeedsTabNavigatorParams,
   NotificationsTabNavigatorParams,
   FlatNavigatorParams,
   AllNavigatorParams,
@@ -32,6 +33,7 @@ import {useStores} from './state'
 
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
+import {FeedsScreen} from './view/screens/Feeds'
 import {NotificationsScreen} from './view/screens/Notifications'
 import {ModerationScreen} from './view/screens/Moderation'
 import {ModerationMuteListsScreen} from './view/screens/ModerationMuteLists'
@@ -65,6 +67,7 @@ const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
 const HomeTab = createNativeStackNavigator<HomeTabNavigatorParams>()
 const SearchTab = createNativeStackNavigator<SearchTabNavigatorParams>()
+const FeedsTab = createNativeStackNavigator<FeedsTabNavigatorParams>()
 const NotificationsTab =
   createNativeStackNavigator<NotificationsTabNavigatorParams>()
 const MyProfileTab = createNativeStackNavigator<MyProfileTabNavigatorParams>()
@@ -225,11 +228,12 @@ function TabsNavigator() {
       screenOptions={{headerShown: false}}
       tabBar={tabBar}>
       <Tab.Screen name="HomeTab" component={HomeTabNavigator} />
+      <Tab.Screen name="SearchTab" component={SearchTabNavigator} />
+      <Tab.Screen name="FeedsTab" component={FeedsTabNavigator} />
       <Tab.Screen
         name="NotificationsTab"
         component={NotificationsTabNavigator}
       />
-      <Tab.Screen name="SearchTab" component={SearchTabNavigator} />
       <Tab.Screen name="MyProfileTab" component={MyProfileTabNavigator} />
     </Tab.Navigator>
   )
@@ -266,6 +270,23 @@ function SearchTabNavigator() {
       <SearchTab.Screen name="Search" component={SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
     </SearchTab.Navigator>
+  )
+}
+
+function FeedsTabNavigator() {
+  const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
+  return (
+    <FeedsTab.Navigator
+      screenOptions={{
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+        animationDuration: 250,
+        contentStyle,
+      }}>
+      <FeedsTab.Screen name="Feeds" component={FeedsScreen} />
+      {commonScreens(FeedsTab as typeof HomeTab)}
+    </FeedsTab.Navigator>
   )
 }
 
@@ -341,6 +362,11 @@ const FlatNavigator = observer(() => {
         name="Search"
         component={SearchScreen}
         options={{title: title('Search')}}
+      />
+      <Flat.Screen
+        name="Feeds"
+        component={FeedsScreen}
+        options={{title: title('Feeds')}}
       />
       <Flat.Screen
         name="Notifications"

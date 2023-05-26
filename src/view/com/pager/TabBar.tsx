@@ -131,7 +131,7 @@ const styles = isDesktopWeb
         backgroundColor: 'transparent',
       },
       contentContainer: {
-        columnGap: 16,
+        columnGap: 20,
         marginLeft: 18,
         paddingRight: 28,
         backgroundColor: 'transparent',

@@ -207,7 +207,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         label="Notifications"
       />
       <NavItem
-        href="/settings/saved-feeds"
+        href="/feeds"
         icon={
           <SatelliteDishIcon
             strokeWidth={1.75}

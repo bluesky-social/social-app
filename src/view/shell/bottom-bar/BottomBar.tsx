@@ -18,6 +18,8 @@ import {
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
+  SatelliteDishIcon,
+  SatelliteDishIconSolid,
   BellIcon,
   BellIconSolid,
 } from 'lib/icons'
@@ -33,7 +35,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile} =
+  const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
 
   const {footerMinimalShellTransform} = useMinimalShellMode()
@@ -57,6 +59,10 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
   const onPressSearch = React.useCallback(
     () => onPressTab('Search'),
+    [onPressTab],
+  )
+  const onPressFeeds = React.useCallback(
+    () => onPressTab('Feeds'),
     [onPressTab],
   )
   const onPressNotifications = React.useCallback(
@@ -118,6 +124,28 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
         onPress={onPressSearch}
         accessibilityRole="search"
         accessibilityLabel="Search"
+        accessibilityHint=""
+      />
+      <Btn
+        testID="bottomBarFeedsBtn"
+        icon={
+          isAtFeeds ? (
+            <SatelliteDishIconSolid
+              size={25}
+              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+              strokeWidth={1.8}
+            />
+          ) : (
+            <SatelliteDishIcon
+              size={25}
+              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+              strokeWidth={1.8}
+            />
+          )
+        }
+        onPress={onPressFeeds}
+        accessibilityRole="tab"
+        accessibilityLabel="Feeds"
         accessibilityHint=""
       />
       <Btn

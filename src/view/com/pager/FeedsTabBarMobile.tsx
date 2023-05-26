@@ -8,7 +8,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
-import {SatelliteDishIcon} from 'lib/icons'
+import {CogIcon} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {s} from 'lib/styles'
 
@@ -69,11 +69,7 @@ export const FeedsTabBar = observer(
               accessibilityRole="button"
               accessibilityLabel="Edit Saved Feeds"
               accessibilityHint="Opens screen to edit Saved Feeds">
-              <SatelliteDishIcon
-                size={20}
-                strokeWidth={2}
-                style={pal.textLight}
-              />
+              <CogIcon size={21} strokeWidth={2} style={pal.textLight} />
             </Link>
           </View>
         </View>

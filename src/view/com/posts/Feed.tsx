@@ -33,7 +33,6 @@ export const Feed = observer(function Feed({
   onPressTryAgain,
   onScroll,
   scrollEventThrottle,
-  onMomentumScrollEnd,
   renderEmptyState,
   testID,
   headerOffset = 0,
@@ -186,7 +185,6 @@ export const Feed = observer(function Feed({
           style={{paddingTop: headerOffset}}
           onScroll={onScroll}
           scrollEventThrottle={scrollEventThrottle}
-          onMomentumScrollEnd={onMomentumScrollEnd}
           indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.6}

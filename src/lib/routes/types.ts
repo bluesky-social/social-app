@@ -34,6 +34,7 @@ export type CommonNavigatorParams = {
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
   HomeTab: undefined
   SearchTab: undefined
+  FeedsTab: undefined
   NotificationsTab: undefined
   MyProfileTab: undefined
 }
@@ -44,6 +45,10 @@ export type HomeTabNavigatorParams = CommonNavigatorParams & {
 
 export type SearchTabNavigatorParams = CommonNavigatorParams & {
   Search: {q?: string}
+}
+
+export type FeedsTabNavigatorParams = CommonNavigatorParams & {
+  Feeds: undefined
 }
 
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
@@ -65,6 +70,8 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Home: undefined
   SearchTab: undefined
   Search: {q?: string}
+  FeedsTab: undefined
+  Feeds: undefined
   NotificationsTab: undefined
   Notifications: undefined
   MyProfileTab: undefined
