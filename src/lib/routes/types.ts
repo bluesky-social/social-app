@@ -62,6 +62,7 @@ export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
 export type FlatNavigatorParams = CommonNavigatorParams & {
   Home: undefined
   Search: {q?: string}
+  Feeds: undefined
   Notifications: undefined
 }
 
