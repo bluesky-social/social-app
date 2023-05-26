@@ -4,7 +4,6 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
 import {MagnifyingGlassIcon} from 'lib/icons'
 import {useTheme} from 'lib/ThemeContext'
