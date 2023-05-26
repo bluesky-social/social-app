@@ -58,7 +58,7 @@ export function HeaderWithInput({
         accessibilityRole="button"
         accessibilityLabel="Back"
         accessibilityHint="">
-        <UserAvatar size={30} avatar={store.me.avatar} />
+        <FontAwesomeIcon icon="bars" size={18} color={pal.colors.textLight} />
       </TouchableOpacity>
       <View
         style={[
@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
@@ -128,7 +129,10 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 30,
-    marginHorizontal: 6,
+    marginRight: 6,
+    paddingBottom: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   headerSearchContainer: {
     flex: 1,
