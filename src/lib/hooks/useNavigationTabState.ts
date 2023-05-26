@@ -6,14 +6,16 @@ export function useNavigationTabState() {
     const res = {
       isAtHome: getTabState(state, 'Home') !== TabState.Outside,
       isAtSearch: getTabState(state, 'Search') !== TabState.Outside,
+      isAtFeeds: getTabState(state, 'Feeds') !== TabState.Outside,
       isAtNotifications:
         getTabState(state, 'Notifications') !== TabState.Outside,
       isAtMyProfile: getTabState(state, 'MyProfile') !== TabState.Outside,
     }
     if (
       !res.isAtHome &&
-      !res.isAtNotifications &&
       !res.isAtSearch &&
+      !res.isAtFeeds &&
+      !res.isAtNotifications &&
       !res.isAtMyProfile
     ) {
       // HACK for some reason useNavigationState will give us pre-hydration results

@@ -1,25 +1,56 @@
-import {useState} from 'react'
+import {useState, useCallback, useRef} from 'react'
 import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native'
 import {RootStoreModel} from 'state/index'
+import {s} from 'lib/styles'
+import {isDesktopWeb} from 'platform/detection'
+
+const DY_LIMIT = isDesktopWeb ? 30 : 10
 
 export type OnScrollCb = (
   event: NativeSyntheticEvent<NativeScrollEvent>,
 ) => void
+export type ResetCb = () => void
 
-export function useOnMainScroll(store: RootStoreModel) {
-  let [lastY, setLastY] = useState(0)
-  let isMinimal = store.shell.minimalShellMode
-  return function onMainScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
-    const y = event.nativeEvent.contentOffset.y
-    const dy = y - (lastY || 0)
-    setLastY(y)
+export function useOnMainScroll(
+  store: RootStoreModel,
+): [OnScrollCb, boolean, ResetCb] {
+  let lastY = useRef(0)
+  let [isScrolledDown, setIsScrolledDown] = useState(false)
+  return [
+    useCallback(
+      (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const y = event.nativeEvent.contentOffset.y
+        const dy = y - (lastY.current || 0)
+        lastY.current = y
 
-    if (!isMinimal && y > 10 && dy > 10) {
-      store.shell.setMinimalShellMode(true)
-      isMinimal = true
-    } else if (isMinimal && (y <= 10 || dy < -10)) {
+        if (!store.shell.minimalShellMode && y > 10 && dy > DY_LIMIT) {
+          store.shell.setMinimalShellMode(true)
+        } else if (
+          store.shell.minimalShellMode &&
+          (y <= 10 || dy < DY_LIMIT * -1)
+        ) {
+          store.shell.setMinimalShellMode(false)
+        }
+
+        if (
+          !isScrolledDown &&
+          event.nativeEvent.contentOffset.y > s.window.height
+        ) {
+          setIsScrolledDown(true)
+        } else if (
+          isScrolledDown &&
+          event.nativeEvent.contentOffset.y < s.window.height
+        ) {
+          setIsScrolledDown(false)
+        }
+      },
+      [store, isScrolledDown],
+    ),
+    isScrolledDown,
+    useCallback(() => {
+      setIsScrolledDown(false)
       store.shell.setMinimalShellMode(false)
-      isMinimal = false
-    }
-  }
+      lastY.current = 1e8 // NOTE we set this very high so that the onScroll logic works right -prf
+    }, [store, setIsScrolledDown]),
+  ]
 }
