@@ -30,6 +30,7 @@ import {FAB} from '../com/util/fab/FAB'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {DropdownButton, DropdownItem} from 'view/com/util/forms/DropdownButton'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {EmptyState} from 'view/com/util/EmptyState'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export const CustomFeedScreen = withAuthRequired(
@@ -326,6 +327,10 @@ export const CustomFeedScreen = withAuthRequired(
       onTogglePinned,
     ])
 
+    const renderEmptyState = React.useCallback(() => {
+      return <EmptyState icon="feed" message="This list is empty!" />
+    }, [])
+
     return (
       <View style={s.hContentRegion}>
         <ViewHeader title="" renderButton={currentFeed && renderHeaderBtns} />
@@ -335,6 +340,7 @@ export const CustomFeedScreen = withAuthRequired(
           onScroll={onMainScroll}
           scrollEventThrottle={100}
           ListHeaderComponent={renderListHeaderComponent}
+          renderEmptyState={renderEmptyState}
           extraData={[uri, isPinned]}
         />
         {isScrolledDown ? (
