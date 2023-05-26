@@ -22,6 +22,8 @@ import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
+import {isDesktopWeb} from 'platform/detection'
+import {CogIcon} from 'lib/icons'
 
 export const MultiFeed = observer(function Feed({
   multifeed,
@@ -81,6 +83,18 @@ export const MultiFeed = observer(function Feed({
   const renderItem = React.useCallback(
     ({item}: {item: MultiFeedItem}) => {
       if (item.type === 'header') {
+        if (isDesktopWeb) {
+          return (
+            <View style={[pal.view, pal.border, styles.headerDesktop]}>
+              <Text type="2xl-bold" style={pal.text}>
+                My Feeds
+              </Text>
+              <Link href="/settings/saved-feeds">
+                <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
+              </Link>
+            </View>
+          )
+        }
         return <View style={[styles.header, pal.border]} />
       } else if (item.type === 'feed-header') {
         return (
@@ -167,7 +181,11 @@ export const MultiFeed = observer(function Feed({
             />
           }
           contentContainerStyle={s.contentContainer}
-          style={[{paddingTop: headerOffset}, pal.viewLight, styles.container]}
+          style={[
+            {paddingTop: headerOffset},
+            isDesktopWeb ? pal.view : pal.viewLight,
+            styles.container,
+          ]}
           onScroll={onScroll}
           scrollEventThrottle={scrollEventThrottle}
           indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
@@ -191,6 +209,15 @@ const styles = StyleSheet.create({
   header: {
     borderTopWidth: 1,
     marginBottom: 4,
+  },
+  headerDesktop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    marginBottom: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   feedHeader: {
     flexDirection: 'row',

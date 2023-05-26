@@ -198,15 +198,6 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         label="Search"
       />
       <NavItem
-        href="/notifications"
-        count={store.me.notifications.unreadCountLabel}
-        icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
-        iconFilled={
-          <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />
-        }
-        label="Notifications"
-      />
-      <NavItem
         href="/feeds"
         icon={
           <SatelliteDishIcon
@@ -223,6 +214,15 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           />
         }
         label="My Feeds"
+      />
+      <NavItem
+        href="/notifications"
+        count={store.me.notifications.unreadCountLabel}
+        icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
+        iconFilled={
+          <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />
+        }
+        label="Notifications"
       />
       <NavItem
         href="/moderation"
