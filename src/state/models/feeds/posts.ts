@@ -436,6 +436,9 @@ export class PostsFeedModel {
     } else if (this.feedType === 'home') {
       return this.rootStore.agent.getTimeline(params as GetTimeline.QueryParams)
     } else if (this.feedType === 'custom') {
+      this.checkIfCustomFeedIsOnlineAndValid(
+        params as GetCustomFeed.QueryParams,
+      )
       return this.rootStore.agent.app.bsky.feed.getFeed(
         params as GetCustomFeed.QueryParams,
       )
@@ -443,6 +446,20 @@ export class PostsFeedModel {
       return this.rootStore.agent.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,
       )
+    }
+  }
+
+  private async checkIfCustomFeedIsOnlineAndValid(
+    params: GetCustomFeed.QueryParams,
+  ) {
+    const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerator({
+      feed: params.feed,
+    })
+    if (!res.data.isOnline || !res.data.isValid) {
+      runInAction(() => {
+        this.error =
+          'This custom feed is not online or may be experiencing issues.'
+      })
     }
   }
 }
