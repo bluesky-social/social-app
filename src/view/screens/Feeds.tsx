@@ -91,6 +91,7 @@ export const FeedsScreen = withAuthRequired(
           onScroll={onMainScroll}
           scrollEventThrottle={100}
           headerOffset={HEADER_OFFSET}
+          showPostFollowBtn
         />
         <ViewHeader
           title="My Feeds"
