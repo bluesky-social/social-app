@@ -108,7 +108,7 @@
     "react-avatar-editor": "^13.0.0",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.2.0",
-    "react-native": "0.71.7",
+    "react-native": "0.71.8",
     "react-native-appstate-hook": "^1.0.6",
     "react-native-background-fetch": "^4.1.8",
     "react-native-draggable-flatlist": "^4.0.1",
