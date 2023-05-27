@@ -108,7 +108,7 @@ func serve(cctx *cli.Context) error {
 	// static files
 	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)))
-	e.GET("/.well-known/assetlinks.json", echo.WrapHandler(staticHandler))
+	e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
 
 	// home
 	e.GET("/", server.WebHome)
