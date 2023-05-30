@@ -80,16 +80,13 @@ function LightboxInner({
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose()
-      }
-
-      else if (e.key == 'ArrowLeft') {
+      } else if (e.key === 'ArrowLeft') {
         onPressLeft()
-      }
-      else if (e.key == 'ArrowRight') {
+      } else if (e.key === 'ArrowRight') {
         onPressRight()
       }
     },
-    [onClose, index],
+    [onClose, index, onPressLeft, onPressRight],
   )
 
   useEffect(() => {
