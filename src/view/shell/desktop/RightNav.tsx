@@ -59,7 +59,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
           />
         </View>
       </View>
-      {store.session.hasSession && <InviteCodes />}
+      <InviteCodes />
       <View>
         <TouchableOpacity
           style={[styles.darkModeToggle]}
