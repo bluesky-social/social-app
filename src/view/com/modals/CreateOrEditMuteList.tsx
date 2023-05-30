@@ -143,6 +143,7 @@ export function Component({
         <Text style={[styles.label, pal.text]}>List Avatar</Text>
         <View style={[styles.avi, {borderColor: pal.colors.background}]}>
           <UserAvatar
+            type="list"
             size={80}
             avatar={avatar}
             onSelectNewAvatar={onSelectNewAvatar}

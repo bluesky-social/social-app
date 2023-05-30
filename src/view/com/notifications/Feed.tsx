@@ -154,6 +154,7 @@ export const Feed = observer(function Feed({
           onEndReached={onEndReached}
           onEndReachedThreshold={0.6}
           onScroll={onScroll}
+          scrollEventThrottle={100}
           contentContainerStyle={s.contentContainer}
         />
       ) : null}

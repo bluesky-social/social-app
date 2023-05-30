@@ -218,7 +218,7 @@ const ProfileHeaderLoaded = observer(
             onRefreshAll()
             Toast.show('Account unblocked')
           } catch (e: any) {
-            store.log.error('Failed to block unaccount', e)
+            store.log.error('Failed to block account', e)
             Toast.show(`There was an issue! ${e.toString()}`)
           }
         },

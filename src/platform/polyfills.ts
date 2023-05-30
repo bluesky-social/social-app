@@ -23,7 +23,7 @@ globalThis.atob = (str: string): string => {
     )
   }
 
-  // Adding the padding if missing, for semplicity
+  // Adding the padding if missing, for simplicity
   str += '=='.slice(2 - (str.length & 3))
   var bitmap,
     result = '',

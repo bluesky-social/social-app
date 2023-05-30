@@ -27,7 +27,7 @@ export function detectLinkables(text: string): DetectedLinkable[] {
       matchValue = matchValue.slice(1)
     }
 
-    // strip ending puncuation
+    // strip ending punctuation
     if (/[.,;!?]$/.test(matchValue)) {
       matchValue = matchValue.slice(0, -1)
     }
