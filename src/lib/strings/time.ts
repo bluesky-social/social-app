@@ -22,7 +22,11 @@ export function ago(date: number | string | Date): string {
   } else if (diffSeconds < WEEK) {
     return `${Math.floor(diffSeconds / DAY)}d`
   } else {
-    return new Date(ts).toLocaleDateString('en-us', {year: 'numeric', month: 'short', day: 'numeric'})
+    return new Date(ts).toLocaleDateString('en-us', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
   }
 }
 
