@@ -65,16 +65,16 @@ function LightboxInner({
 
   const canGoLeft = index >= 1
   const canGoRight = index < imgs.length - 1
-  const onPressLeft = () => {
+  const onPressLeft = useCallback(() => {
     if (canGoLeft) {
       setIndex(index - 1)
     }
-  }
-  const onPressRight = () => {
+  }, [index, canGoLeft])
+  const onPressRight = useCallback(() => {
     if (canGoRight) {
       setIndex(index + 1)
     }
-  }
+  }, [index, canGoRight])
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
