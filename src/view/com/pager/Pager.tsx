@@ -1,16 +1,17 @@
-import React from 'react'
+import React, {forwardRef} from 'react'
 import {Animated, View} from 'react-native'
 import PagerView, {PagerViewOnPageSelectedEvent} from 'react-native-pager-view'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {s} from 'lib/styles'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
+export interface PagerRef {
+  setPage: (index: number) => void
+}
+
 export interface RenderTabBarFnProps {
   selectedPage: number
-  position: Animated.Value
-  offset: Animated.Value
   onSelect?: (index: number) => void
 }
 export type RenderTabBarFn = (props: RenderTabBarFnProps) => JSX.Element
@@ -22,68 +23,60 @@ interface Props {
   onPageSelected?: (index: number) => void
   testID?: string
 }
-export const Pager = ({
-  children,
-  tabBarPosition = 'top',
-  initialPage = 0,
-  renderTabBar,
-  onPageSelected,
-  testID,
-}: React.PropsWithChildren<Props>) => {
-  const [selectedPage, setSelectedPage] = React.useState(0)
-  const position = useAnimatedValue(0)
-  const offset = useAnimatedValue(0)
-  const pagerView = React.useRef<PagerView>()
+export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
+  (
+    {
+      children,
+      tabBarPosition = 'top',
+      initialPage = 0,
+      renderTabBar,
+      onPageSelected,
+      testID,
+    }: React.PropsWithChildren<Props>,
+    ref,
+  ) => {
+    const [selectedPage, setSelectedPage] = React.useState(0)
+    const pagerView = React.useRef<PagerView>()
 
-  const onPageSelectedInner = React.useCallback(
-    (e: PageSelectedEvent) => {
-      setSelectedPage(e.nativeEvent.position)
-      onPageSelected?.(e.nativeEvent.position)
-    },
-    [setSelectedPage, onPageSelected],
-  )
+    React.useImperativeHandle(ref, () => ({
+      setPage: (index: number) => pagerView.current?.setPage(index),
+    }))
 
-  const onTabBarSelect = React.useCallback(
-    (index: number) => {
-      pagerView.current?.setPage(index)
-    },
-    [pagerView],
-  )
+    const onPageSelectedInner = React.useCallback(
+      (e: PageSelectedEvent) => {
+        setSelectedPage(e.nativeEvent.position)
+        onPageSelected?.(e.nativeEvent.position)
+      },
+      [setSelectedPage, onPageSelected],
+    )
 
-  return (
-    <View testID={testID}>
-      {tabBarPosition === 'top' &&
-        renderTabBar({
-          selectedPage,
-          position,
-          offset,
-          onSelect: onTabBarSelect,
-        })}
-      <AnimatedPagerView
-        ref={pagerView}
-        style={s.h100pct}
-        initialPage={initialPage}
-        onPageSelected={onPageSelectedInner}
-        onPageScroll={Animated.event(
-          [
-            {
-              nativeEvent: {
-                position: position,
-                offset: offset,
-              },
-            },
-          ],
-          {useNativeDriver: true},
-        )}>
-        {children}
-      </AnimatedPagerView>
-      {tabBarPosition === 'bottom' &&
-        renderTabBar({
-          selectedPage,
-          position,
-          offset,
-          onSelect: onTabBarSelect,
-        })}
-    </View>
-  )
-}
+    const onTabBarSelect = React.useCallback(
+      (index: number) => {
+        pagerView.current?.setPage(index)
+      },
+      [pagerView],
+    )
+
+    return (
+      <View testID={testID}>
+        {tabBarPosition === 'top' &&
+          renderTabBar({
+            selectedPage,
+            onSelect: onTabBarSelect,
+          })}
+        <AnimatedPagerView
+          ref={pagerView}
+          style={s.h100pct}
+          initialPage={initialPage}
+          onPageSelected={onPageSelectedInner}>
+          {children}
+        </AnimatedPagerView>
+        {tabBarPosition === 'bottom' &&
+          renderTabBar({
+            selectedPage,
+            onSelect: onTabBarSelect,
+          })}
+      </View>
+    )
+  },
+)

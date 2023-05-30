@@ -30,6 +30,8 @@ import {
   CogIconSolid,
   ComposeIcon2,
   HandIcon,
+  SatelliteDishIcon,
+  SatelliteDishIconSolid,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
@@ -194,6 +196,24 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           />
         }
         label="Search"
+      />
+      <NavItem
+        href="/feeds"
+        icon={
+          <SatelliteDishIcon
+            strokeWidth={1.75}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        }
+        iconFilled={
+          <SatelliteDishIconSolid
+            strokeWidth={1.75}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        }
+        label="My Feeds"
       />
       <NavItem
         href="/notifications"

@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/fs"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -62,6 +64,7 @@ func serve(cctx *cli.Context) error {
 
 	staticHandler := http.FileServer(func() http.FileSystem {
 		if debug {
+			log.Debugf("serving static file from the local file system")
 			return http.FS(os.DirFS("static"))
 		}
 		fsys, err := fs.Sub(bskyweb.StaticFS, "static")
@@ -98,13 +101,22 @@ func serve(cctx *cli.Context) error {
 		RedirectCode: http.StatusFound,
 	}))
 
+	//
 	// configure routes
+	//
+
+	// static files
 	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)))
+	e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
+
+	// home
 	e.GET("/", server.WebHome)
 
 	// generic routes
 	e.GET("/search", server.WebGeneric)
+	e.GET("/search/feeds", server.WebGeneric)
+	e.GET("/feeds", server.WebGeneric)
 	e.GET("/notifications", server.WebGeneric)
 	e.GET("/moderation", server.WebGeneric)
 	e.GET("/moderation/mute-lists", server.WebGeneric)
@@ -112,6 +124,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/moderation/blocked-accounts", server.WebGeneric)
 	e.GET("/settings", server.WebGeneric)
 	e.GET("/settings/app-passwords", server.WebGeneric)
+	e.GET("/settings/saved-feeds", server.WebGeneric)
 	e.GET("/sys/debug", server.WebGeneric)
 	e.GET("/sys/log", server.WebGeneric)
 	e.GET("/support", server.WebGeneric)
@@ -125,6 +138,8 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handle/follows", server.WebGeneric)
 	e.GET("/profile/:handle/followers", server.WebGeneric)
 	e.GET("/profile/:handle/lists/:rkey", server.WebGeneric)
+	e.GET("/profile/:handle/feed/:rkey", server.WebGeneric)
+	e.GET("/profile/:handle/feed/:rkey/liked-by", server.WebGeneric)
 
 	// post endpoints; only first populates info
 	e.GET("/profile/:handle/post/:rkey", server.WebPost)
@@ -132,10 +147,35 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handle/post/:rkey/reposted-by", server.WebGeneric)
 
 	// Mailmodo
-	e.POST("/waitlist", func(c echo.Context) error {
-		email := strings.TrimSpace(c.FormValue("email"))
-		if err := mailmodo.AddToList(c.Request().Context(), mailmodoListName, email); err != nil {
+	e.POST("/api/waitlist", func(c echo.Context) error {
+		type jsonError struct {
+			Error string `json:"error"`
+		}
+
+		// Read the API request.
+		type apiRequest struct {
+			Email string `json:"email"`
+		}
+
+		bodyReader := http.MaxBytesReader(c.Response(), c.Request().Body, 16*1024)
+		payload, err := ioutil.ReadAll(bodyReader)
+		if err != nil {
 			return err
+		}
+		var req apiRequest
+		if err := json.Unmarshal(payload, &req); err != nil {
+			return c.JSON(http.StatusBadRequest, jsonError{Error: "Invalid API request"})
+		}
+
+		if req.Email == "" {
+			return c.JSON(http.StatusBadRequest, jsonError{Error: "Please enter a valid email address."})
+		}
+
+		if err := mailmodo.AddToList(c.Request().Context(), mailmodoListName, req.Email); err != nil {
+			log.Errorf("adding email to waitlist failed: %s", err)
+			return c.JSON(http.StatusBadRequest, jsonError{
+				Error: "Storing email in waitlist failed. Please enter a valid email address.",
+			})
 		}
 		return c.JSON(http.StatusOK, map[string]bool{"success": true})
 	})

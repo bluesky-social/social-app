@@ -135,7 +135,7 @@ export class ImageModel implements RNImage {
   // Only for mobile
   async crop() {
     try {
-      const cropped = await openCropper({
+      const cropped = await openCropper(this.rootStore, {
         mediaType: 'photo',
         path: this.path,
         freeStyleCropEnabled: true,
