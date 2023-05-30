@@ -398,7 +398,7 @@ const ProfileHeaderLoaded = observer(
                   onPress={onPressFollowers}
                   accessibilityRole="button"
                   accessibilityLabel={`${followers} ${pluralizedFollowers}`}
-                  accessibilityHint={'Opens followers'}>
+                  accessibilityHint={'Opens followers list'}>
                   <Text type="md" style={[s.bold, s.mr2, pal.text]}>
                     {followers}
                   </Text>
