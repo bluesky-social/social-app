@@ -18,6 +18,7 @@ import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -31,9 +32,12 @@ export const Feed = observer(function Feed({
   scrollElRef,
   onPressTryAgain,
   onScroll,
+  scrollEventThrottle,
   renderEmptyState,
   testID,
   headerOffset = 0,
+  ListHeaderComponent,
+  extraData,
 }: {
   feed: PostsFeedModel
   style?: StyleProp<ViewStyle>
@@ -41,11 +45,15 @@ export const Feed = observer(function Feed({
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
+  scrollEventThrottle?: number
   renderEmptyState?: () => JSX.Element
   testID?: string
   headerOffset?: number
+  ListHeaderComponent?: () => JSX.Element
+  extraData?: any
 }) {
   const pal = usePalette('default')
+  const theme = useTheme()
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
 
@@ -163,6 +171,7 @@ export const Feed = observer(function Feed({
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
           ListFooterComponent={FeedFooter}
+          ListHeaderComponent={ListHeaderComponent}
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
@@ -175,10 +184,13 @@ export const Feed = observer(function Feed({
           contentContainerStyle={s.contentContainer}
           style={{paddingTop: headerOffset}}
           onScroll={onScroll}
+          scrollEventThrottle={scrollEventThrottle}
+          indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.6}
           removeClippedSubviews={true}
           contentOffset={{x: 0, y: headerOffset * -1}}
+          extraData={extraData}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
         />

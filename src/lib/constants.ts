@@ -94,6 +94,49 @@ export function SUGGESTED_FOLLOWS(serviceUrl: string) {
   }
 }
 
+export const STAGING_DEFAULT_FEED = (rkey: string) =>
+  `at://did:plc:wqzurwm3kmaig6e6hnc2gqwo/app.bsky.feed.generator/${rkey}`
+export const PROD_DEFAULT_FEED = (rkey: string) =>
+  `at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`
+export async function DEFAULT_FEEDS(
+  serviceUrl: string,
+  resolveHandle: (name: string) => Promise<string>,
+) {
+  if (serviceUrl.includes('localhost')) {
+    // local dev
+    const aliceDid = await resolveHandle('alice.test')
+    return {
+      pinned: [`at://${aliceDid}/app.bsky.feed.generator/alice-favs`],
+      saved: [`at://${aliceDid}/app.bsky.feed.generator/alice-favs`],
+    }
+  } else if (serviceUrl.includes('staging')) {
+    // staging
+    return {
+      pinned: [STAGING_DEFAULT_FEED('whats-hot')],
+      saved: [
+        STAGING_DEFAULT_FEED('bsky-team'),
+        STAGING_DEFAULT_FEED('with-friends'),
+        STAGING_DEFAULT_FEED('whats-hot'),
+        STAGING_DEFAULT_FEED('hot-classic'),
+      ],
+    }
+  } else {
+    // production
+    return {
+      pinned: [
+        PROD_DEFAULT_FEED('whats-hot'),
+        PROD_DEFAULT_FEED('with-friends'),
+      ],
+      saved: [
+        PROD_DEFAULT_FEED('bsky-team'),
+        PROD_DEFAULT_FEED('with-friends'),
+        PROD_DEFAULT_FEED('whats-hot'),
+        PROD_DEFAULT_FEED('hot-classic'),
+      ],
+    }
+  }
+}
+
 export const POST_IMG_MAX = {
   width: 2000,
   height: 2000,

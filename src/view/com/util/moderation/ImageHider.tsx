@@ -27,16 +27,16 @@ export function ImageHider({
     setOverride(false)
   }, [setOverride])
 
+  if (moderation.behavior === ModerationBehaviorCode.Hide) {
+    return null
+  }
+
   if (moderation.behavior !== ModerationBehaviorCode.WarnImages) {
     return (
       <View testID={testID} style={style}>
         {children}
       </View>
     )
-  }
-
-  if (moderation.behavior === ModerationBehaviorCode.Hide) {
-    return null
   }
 
   return (
