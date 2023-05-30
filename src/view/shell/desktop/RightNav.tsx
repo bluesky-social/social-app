@@ -59,7 +59,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
           />
         </View>
       </View>
-      <InviteCodes />
+      {store.session.hasSession && <InviteCodes />}
       <View>
         <TouchableOpacity
           style={[styles.darkModeToggle]}
@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     marginHorizontal: 12,
+    marginTop: 8,
   },
   darkModeToggleIcon: {
     flexDirection: 'row',

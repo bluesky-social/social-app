@@ -38,7 +38,7 @@ const ShellInner = observer(() => {
       </View>
       {isDesktop && (
         <>
-          <DesktopLeftNav />
+          {store.session.hasSession && <DesktopLeftNav />}
           <DesktopRightNav />
         </>
       )}
