@@ -86,7 +86,7 @@ function LightboxInner({
         onPressRight()
       }
     },
-    [onClose, index, onPressLeft, onPressRight],
+    [onClose, onPressLeft, onPressRight],
   )
 
   useEffect(() => {
