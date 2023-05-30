@@ -11,6 +11,7 @@ import {MagnifyingGlassIcon} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {isWeb} from 'platform/detection'
 
 export function FollowingEmptyState() {
   const pal = usePalette('default')
@@ -18,8 +19,12 @@ export function FollowingEmptyState() {
   const navigation = useNavigation<NavigationProp>()
 
   const onPressFindAccounts = React.useCallback(() => {
-    navigation.navigate('SearchTab')
-    navigation.popToTop()
+    if (isWeb) {
+      navigation.navigate('Search', {})
+    } else {
+      navigation.navigate('SearchTab')
+      navigation.popToTop()
+    }
   }, [navigation])
 
   return (
