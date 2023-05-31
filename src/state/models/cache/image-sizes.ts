@@ -16,6 +16,7 @@ export class ImageSizesCache {
     if (Dimensions) {
       return Dimensions
     }
+
     const prom =
       this.activeRequests.get(uri) ||
       new Promise<Dimensions>(resolve => {

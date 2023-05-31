@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, RefreshControl, StyleSheet, View} from 'react-native'
 import {FlatList} from './Views'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
@@ -41,6 +41,7 @@ export function ViewSelector({
   onRefresh?: () => void
   onEndReached?: (info: {distanceFromEnd: number}) => void
 }) {
+  const pal = usePalette('default')
   const [selectedIndex, setSelectedIndex] = useState<number>(0)
 
   // events
@@ -93,10 +94,15 @@ export function ViewSelector({
       ListFooterComponent={ListFooterComponent}
       // NOTE sticky header disabled on android due to major performance issues -prf
       stickyHeaderIndices={isAndroid ? undefined : STICKY_HEADER_INDICES}
-      refreshing={refreshing}
       onScroll={onScroll}
-      onRefresh={onRefresh}
       onEndReached={onEndReached}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing!}
+          onRefresh={onRefresh}
+          tintColor={pal.colors.text}
+        />
+      }
       onEndReachedThreshold={0.6}
       contentContainerStyle={s.contentContainer}
       removeClippedSubviews={true}

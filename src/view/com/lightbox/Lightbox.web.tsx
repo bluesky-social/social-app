@@ -65,30 +65,34 @@ function LightboxInner({
 
   const canGoLeft = index >= 1
   const canGoRight = index < imgs.length - 1
-  const onPressLeft = () => {
+  const onPressLeft = useCallback(() => {
     if (canGoLeft) {
       setIndex(index - 1)
     }
-  }
-  const onPressRight = () => {
+  }, [index, canGoLeft])
+  const onPressRight = useCallback(() => {
     if (canGoRight) {
       setIndex(index + 1)
     }
-  }
+  }, [index, canGoRight])
 
-  const onEscape = useCallback(
+  const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose()
+      } else if (e.key === 'ArrowLeft') {
+        onPressLeft()
+      } else if (e.key === 'ArrowRight') {
+        onPressRight()
       }
     },
-    [onClose],
+    [onClose, onPressLeft, onPressRight],
   )
 
   useEffect(() => {
-    window.addEventListener('keydown', onEscape)
-    return () => window.removeEventListener('keydown', onEscape)
-  }, [onEscape])
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [onKeyDown])
 
   return (
     <View style={styles.mask}>

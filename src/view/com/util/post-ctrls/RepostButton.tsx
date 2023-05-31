@@ -50,11 +50,7 @@ export const RepostButton = ({
       style={styles.control}
       accessibilityRole="button"
       accessibilityLabel={isReposted ? 'Undo repost' : 'Repost'}
-      accessibilityHint={
-        isReposted
-          ? `Remove your repost of the post`
-          : `Repost or quote post the post`
-      }>
+      accessibilityHint="">
       <RepostIcon
         style={
           isReposted

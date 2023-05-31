@@ -143,9 +143,6 @@ export class FeedTuner {
       }
     }
 
-    // sort by slice roots' timestamps
-    slices.sort((a, b) => b.ts.localeCompare(a.ts))
-
     for (const slice of slices) {
       for (const item of slice.items) {
         this.seenUris.add(item.post.uri)

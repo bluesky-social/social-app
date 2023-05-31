@@ -2,7 +2,7 @@ import {RootStoreModel} from 'state/index'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import RNFS from 'react-native-fs'
 import {CropperOptions} from './types'
-import {compressAndResizeImageForPost} from './manip'
+import {compressIfNeeded} from './manip'
 
 let _imageCounter = 0
 async function getFile() {
@@ -13,7 +13,7 @@ async function getFile() {
       .join('/'),
   )
   const file = files[_imageCounter++ % files.length]
-  return await compressAndResizeImageForPost({
+  return await compressIfNeeded({
     path: file.path,
     mime: 'image/jpeg',
     size: file.size,

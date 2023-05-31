@@ -1,18 +1,20 @@
 import React from 'react'
 import {FlatList, View} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {AppBskyFeedGetFeed as GetCustomFeed} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
+import isEqual from 'lodash.isequal'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
 import {Feed} from '../com/posts/Feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
-import {WhatsHotEmptyState} from 'view/com/posts/WhatsHotEmptyState'
+import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
-import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {FAB} from '../com/util/fab/FAB'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
@@ -21,30 +23,37 @@ import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import {isDesktopWeb} from 'platform/detection'
 
-const HEADER_OFFSET = isDesktopWeb ? 50 : 40
+const HEADER_OFFSET = isDesktopWeb ? 50 : 78
 const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired(
   observer((_opts: Props) => {
     const store = useStores()
+    const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
-    const [initialLanguages] = React.useState(
-      store.preferences.contentLanguages,
-    )
-
-    const algoFeed: PostsFeedModel = React.useMemo(() => {
-      const feed = new PostsFeedModel(store, 'goodstuff', {})
-      feed.setup()
-      return feed
-    }, [store])
+    const [customFeeds, setCustomFeeds] = React.useState<PostsFeedModel[]>([])
 
     React.useEffect(() => {
-      // refresh whats hot when lang preferences change
-      if (initialLanguages !== store.preferences.contentLanguages) {
-        algoFeed.refresh()
+      const {pinned} = store.me.savedFeeds
+      if (
+        isEqual(
+          pinned.map(p => p.uri),
+          customFeeds.map(f => (f.params as GetCustomFeed.QueryParams).feed),
+        )
+      ) {
+        // no changes
+        return
       }
-    }, [initialLanguages, store.preferences.contentLanguages, algoFeed])
+
+      const feeds = []
+      for (const feed of pinned) {
+        const model = new PostsFeedModel(store, 'custom', {feed: feed.uri})
+        model.setup()
+        feeds.push(model)
+      }
+      setCustomFeeds(feeds)
+    }, [store, store.me.savedFeeds.pinned, customFeeds, setCustomFeeds])
 
     useFocusEffect(
       React.useCallback(() => {
@@ -86,18 +95,17 @@ export const HomeScreen = withAuthRequired(
       return <FollowingEmptyState />
     }, [])
 
-    const renderWhatsHotEmptyState = React.useCallback(() => {
-      return <WhatsHotEmptyState />
+    const renderCustomFeedEmptyState = React.useCallback(() => {
+      return <CustomFeedEmptyState />
     }, [])
 
-    const initialPage = store.me.followsCount === 0 ? 1 : 0
     return (
       <Pager
+        ref={pagerRef}
         testID="homeScreen"
         onPageSelected={onPageSelected}
         renderTabBar={renderTabBar}
-        tabBarPosition="top"
-        initialPage={initialPage}>
+        tabBarPosition="top">
         <FeedPage
           key="1"
           testID="followingFeedPage"
@@ -105,13 +113,17 @@ export const HomeScreen = withAuthRequired(
           feed={store.me.mainFeed}
           renderEmptyState={renderFollowingEmptyState}
         />
-        <FeedPage
-          key="2"
-          testID="whatshotFeedPage"
-          isPageFocused={selectedPage === 1}
-          feed={algoFeed}
-          renderEmptyState={renderWhatsHotEmptyState}
-        />
+        {customFeeds.map((f, index) => {
+          return (
+            <FeedPage
+              key={(f.params as GetCustomFeed.QueryParams).feed}
+              testID="customFeedPage"
+              isPageFocused={selectedPage === 1 + index}
+              feed={f}
+              renderEmptyState={renderCustomFeedEmptyState}
+            />
+          )
+        })}
       </Pager>
     )
   }),
@@ -130,7 +142,8 @@ const FeedPage = observer(
     renderEmptyState?: () => JSX.Element
   }) => {
     const store = useStores()
-    const onMainScroll = useOnMainScroll(store)
+    const [onMainScroll, isScrolledDown, resetMainScroll] =
+      useOnMainScroll(store)
     const {screen, track} = useAnalytics()
     const scrollElRef = React.useRef<FlatList>(null)
     const {appState} = useAppState({
@@ -158,12 +171,13 @@ const FeedPage = observer(
 
     const scrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -HEADER_OFFSET})
-    }, [scrollElRef])
+      resetMainScroll()
+    }, [scrollElRef, resetMainScroll])
 
     const onSoftReset = React.useCallback(() => {
       if (isPageFocused) {
-        feed.refresh()
         scrollToTop()
+        feed.refresh()
       }
     }, [isPageFocused, scrollToTop, feed])
 
@@ -188,7 +202,7 @@ const FeedPage = observer(
         }
       }, [store, doPoll, onSoftReset, screen, feed]),
     )
-    // fires when tab is actived/deactivated
+    // fires when tab is activated/deactivated
     // - check for latest
     useTabFocusEffect(
       'Home',
@@ -224,6 +238,7 @@ const FeedPage = observer(
       feed.refresh()
     }, [feed, scrollToTop])
 
+    const hasNew = feed.hasNewLatest && !feed.isRefreshing
     return (
       <View testID={testID} style={s.h100pct}>
         <Feed
@@ -234,11 +249,17 @@ const FeedPage = observer(
           showPostFollowBtn
           onPressTryAgain={onPressTryAgain}
           onScroll={onMainScroll}
+          scrollEventThrottle={100}
           renderEmptyState={renderEmptyState}
           headerOffset={HEADER_OFFSET}
         />
-        {feed.hasNewLatest && !feed.isRefreshing && (
-          <LoadLatestBtn onPress={onPressLoadLatest} label="posts" />
+        {(isScrolledDown || hasNew) && (
+          <LoadLatestBtn
+            onPress={onPressLoadLatest}
+            label="Load new posts"
+            showIndicator={hasNew}
+            minimalShellMode={store.shell.minimalShellMode}
+          />
         )}
         <FAB
           testID="composeFAB"

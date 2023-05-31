@@ -30,6 +30,8 @@ import {
   CogIconSolid,
   ComposeIcon2,
   HandIcon,
+  SatelliteDishIcon,
+  SatelliteDishIconSolid,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
@@ -89,14 +91,17 @@ const NavItem = observer(
     const pal = usePalette('default')
     const store = useStores()
     const [pathName] = React.useMemo(() => router.matchPath(href), [href])
-    const currentRouteName = useNavigationState(state => {
+    const currentRouteInfo = useNavigationState(state => {
       if (!state) {
-        return 'Home'
+        return {name: 'Home'}
       }
-      return getCurrentRoute(state).name
+      return getCurrentRoute(state)
     })
-
-    const isCurrent = isTab(currentRouteName, pathName)
+    let isCurrent =
+      currentRouteInfo.name === 'Profile'
+        ? isTab(currentRouteInfo.name, pathName) &&
+          currentRouteInfo.params.name === store.me.handle
+        : isTab(currentRouteInfo.name, pathName)
     const {onPress} = useLinkProps({to: href})
     const onPressWrapped = React.useCallback(
       (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -194,6 +199,24 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           />
         }
         label="Search"
+      />
+      <NavItem
+        href="/feeds"
+        icon={
+          <SatelliteDishIcon
+            strokeWidth={1.75}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        }
+        iconFilled={
+          <SatelliteDishIconSolid
+            strokeWidth={1.75}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        }
+        label="My Feeds"
       />
       <NavItem
         href="/notifications"
