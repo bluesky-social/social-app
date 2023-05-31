@@ -571,6 +571,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   selectableBtn: {
+    flex: isDesktopWeb ? undefined : 1,
+    width: isDesktopWeb ? 100 : undefined,
     flexDirection: 'row',
     justifyContent: 'center',
     borderWidth: 1,
