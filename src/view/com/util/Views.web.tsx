@@ -126,5 +126,6 @@ const styles = StyleSheet.create({
   },
   fixedHeight: {
     height: '100vh',
+    scrollbarGutter: 'stable both-edges',
   },
 })

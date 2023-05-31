@@ -62,7 +62,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     title: 'Violent / Bloody',
     subtitle: 'Gore, self-harm, torture',
     warning: 'Violence',
-    values: ['gore', 'self-harm', 'torture', 'nsfl'],
+    values: ['gore', 'self-harm', 'torture', 'nsfl', 'corpse'],
     isAdultImagery: true,
   },
   hate: {

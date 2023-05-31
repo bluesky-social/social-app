@@ -27,6 +27,7 @@ function genId(): string {
 
 export class LogModel {
   entries: LogEntry[] = []
+  timers = new Map<string, number>()
 
   constructor() {
     makeAutoObservable(this)
@@ -73,6 +74,21 @@ export class LogModel {
       details,
       ts: Date.now(),
     })
+  }
+
+  time = (label = 'default') => {
+    this.timers.set(label, performance.now())
+  }
+
+  timeEnd = (label = 'default', warn = false) => {
+    const endTime = performance.now()
+    if (this.timers.has(label)) {
+      const elapsedTime = endTime - this.timers.get(label)!
+      console.log(`${label}: ${elapsedTime.toFixed(3)}ms`)
+      this.timers.delete(label)
+    } else {
+      warn && console.warn(`Timer with label '${label}' does not exist.`)
+    }
   }
 }
 

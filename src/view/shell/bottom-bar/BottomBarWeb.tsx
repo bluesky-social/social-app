@@ -15,6 +15,8 @@ import {
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
+  SatelliteDishIcon,
+  SatelliteDishIconSolid,
   UserIcon,
 } from 'lib/icons'
 import {Link} from 'view/com/util/Link'
@@ -52,6 +54,18 @@ export const BottomBarWeb = observer(() => {
           const Icon = isActive
             ? MagnifyingGlassIcon2Solid
             : MagnifyingGlassIcon2
+          return (
+            <Icon
+              size={25}
+              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+              strokeWidth={1.8}
+            />
+          )
+        }}
+      </NavItem>
+      <NavItem routeName="Feeds" href="/feeds">
+        {({isActive}) => {
+          const Icon = isActive ? SatelliteDishIconSolid : SatelliteDishIcon
           return (
             <Icon
               size={25}

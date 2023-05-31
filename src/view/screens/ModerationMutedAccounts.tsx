@@ -100,7 +100,7 @@ export const ModerationMutedAccounts = withAuthRequired(
           <FlatList
             style={[!isDesktopWeb && styles.flex1]}
             data={mutedAccounts.mutes}
-            keyExtractor={(item: ActorDefs.ProfileView) => item.did}
+            keyExtractor={item => item.did}
             refreshControl={
               <RefreshControl
                 refreshing={mutedAccounts.isRefreshing}
