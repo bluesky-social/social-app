@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     right: 'calc(50vw + 312px)',
     width: 220,
     maxHeight: 'calc(100vh - 10px)',
-    overflowY: 'scroll',
+    overflowY: 'auto',
   },
 
   profileCard: {
