@@ -409,7 +409,7 @@ export const SettingsScreen = withAuthRequired(
             </Link>
           ) : null}
           <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-            Build version {AppInfo.appVersion} ({AppInfo.buildVersion})
+            Build version {AppInfo.appVersion}
           </Text>
           <View style={s.footerSpacer} />
         </ScrollView>

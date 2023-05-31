@@ -32,7 +32,7 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
     model.setServiceDescription(undefined)
   }, [setIsDefaultSelected, model])
 
-  const fetchServiceDesription = React.useMemo(
+  const fetchServiceDescription = React.useMemo(
     () => debounce(() => model.fetchServiceDescription(), 1e3),
     [model],
   )
@@ -40,9 +40,9 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
   const onChangeServiceUrl = React.useCallback(
     (v: string) => {
       model.setServiceUrl(v)
-      fetchServiceDesription()
+      fetchServiceDescription()
     },
-    [model, fetchServiceDesription],
+    [model, fetchServiceDescription],
   )
 
   const onDebugChangeServiceUrl = React.useCallback(

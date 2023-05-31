@@ -48,7 +48,7 @@ describe('detectLinkables', () => {
     'Classic article https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/ ',
     'https://foo.com https://bar.com/whatever https://baz.com',
     'punctuation https://foo.com, https://bar.com/whatever; https://baz.com.',
-    'parenthentical (https://foo.com)',
+    'parenthetical (https://foo.com)',
     'except for https://foo.com/thing_(cool)',
   ]
   const outputs = [
@@ -112,7 +112,7 @@ describe('detectLinkables', () => {
       {link: 'https://baz.com'},
       '.',
     ],
-    ['parenthentical (', {link: 'https://foo.com'}, ')'],
+    ['parenthetical (', {link: 'https://foo.com'}, ')'],
     ['except for ', {link: 'https://foo.com/thing_(cool)'}],
   ]
   it('correctly handles a set of text inputs', () => {
@@ -176,16 +176,20 @@ describe('ago', () => {
     new Date().setMinutes(new Date().getMinutes() - 10),
     new Date().setHours(new Date().getHours() - 1),
     new Date().setDate(new Date().getDate() - 1),
+    new Date().setDate(new Date().getDate() - 6),
+    new Date().setDate(new Date().getDate() - 7),
     new Date().setMonth(new Date().getMonth() - 1),
   ]
   const outputs = [
-    new Date(1671461038).toLocaleDateString(),
-    new Date('04 Dec 1995 00:12:00 GMT').toLocaleDateString(),
+    new Date(1671461038).toLocaleDateString('en-us', {year: 'numeric', month: 'short', day: 'numeric'}),
+    new Date('04 Dec 1995 00:12:00 GMT').toLocaleDateString('en-us', {year: 'numeric', month: 'short', day: 'numeric'}),
     '0s',
     '10m',
     '1h',
     '1d',
-    '1mo',
+    '6d',
+    new Date(new Date().setDate(new Date().getDate() - 7)).toLocaleDateString('en-us', {year: 'numeric', month: 'short', day: 'numeric'}),
+    new Date(new Date().setMonth(new Date().getMonth() - 1)).toLocaleDateString('en-us', {year: 'numeric', month: 'short', day: 'numeric'}),
   ]
 
   it('correctly calculates how much time passed, in a string', () => {

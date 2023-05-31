@@ -4,6 +4,8 @@ export const FEEDBACK_FORM_URL =
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
 
+export const MAX_GRAPHEME_LENGTH = 300
+
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
 // but increasing limit per user feedback
 export const MAX_ALT_TEXT = 1000
@@ -141,4 +143,19 @@ export const POST_IMG_MAX = {
   width: 2000,
   height: 2000,
   size: 1000000,
+}
+
+export const STAGING_LINK_META_PROXY =
+  'https://cardyb.staging.bsky.dev/v1/extract?url='
+
+export const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
+
+export function LINK_META_PROXY(serviceUrl: string) {
+  if (serviceUrl.includes('localhost')) {
+    return STAGING_LINK_META_PROXY
+  } else if (serviceUrl.includes('staging')) {
+    return STAGING_LINK_META_PROXY
+  } else {
+    return PROD_LINK_META_PROXY
+  }
 }

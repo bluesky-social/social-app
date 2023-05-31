@@ -1,11 +1,5 @@
-import React from 'react'
-import {
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native'
+import React, {ComponentProps} from 'react'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Link} from '../Link'
@@ -13,18 +7,21 @@ import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
 import {ModerationBehaviorCode, ModerationBehavior} from 'lib/labeling/types'
 
+interface Props extends ComponentProps<typeof Link> {
+  // testID?: string
+  // href?: string
+  // style: StyleProp<ViewStyle>
+  moderation: ModerationBehavior
+}
+
 export function PostHider({
   testID,
   href,
   moderation,
   style,
   children,
-}: React.PropsWithChildren<{
-  testID?: string
-  href?: string
-  moderation: ModerationBehavior
-  style: StyleProp<ViewStyle>
-}>) {
+  ...props
+}: Props) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
   const bg = override ? pal.viewLight : pal.view
@@ -70,7 +67,14 @@ export function PostHider({
 
   // NOTE: any further label enforcement should occur in ContentContainer
   return (
-    <Link testID={testID} style={style} href={href} noFeedback>
+    <Link
+      testID={testID}
+      style={style}
+      href={href}
+      noFeedback
+      accessible={true}
+      accessibilityRole="none"
+      {...props}>
       {children}
     </Link>
   )

@@ -11,7 +11,7 @@ export function getCurrentRoute(state: State) {
 export function isStateAtTabRoot(state: State | undefined) {
   if (!state) {
     // NOTE
-    // if state is not defined it's because init is occuring
+    // if state is not defined it's because init is occurring
     // and therefore we can safely assume we're at root
     // -prf
     return true
