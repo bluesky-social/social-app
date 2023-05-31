@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback, useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
@@ -99,7 +99,11 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(
-      encodeURI(`https://translate.google.com/#auto|en|${record?.text || ''}`),
+      encodeURI(
+        `https://translate.google.com/?sl=auto&tl=en&text=${
+          record?.text || ''
+        }`,
+      ),
     )
   }, [record])
 
@@ -129,6 +133,40 @@ export const PostThreadItem = observer(function PostThreadItem({
     )
   }, [item, store])
 
+  const accessibilityActions = useMemo(
+    () => [
+      {
+        name: 'reply',
+        label: 'Reply',
+      },
+      {
+        name: 'repost',
+        label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
+      },
+      {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
+    ],
+    [item.post.viewer?.like, item.post.viewer?.repost],
+  )
+
+  const onAccessibilityAction = useCallback(
+    event => {
+      switch (event.nativeEvent.actionName) {
+        case 'like':
+          onPressToggleLike()
+          break
+        case 'reply':
+          onPressReply()
+          break
+        case 'repost':
+          onPressToggleRepost()
+          break
+        default:
+          break
+      }
+    },
+    [onPressReply, onPressToggleLike, onPressToggleRepost],
+  )
+
   if (!record) {
     return <ErrorMessage message="Invalid or unsupported post record" />
   }
@@ -150,7 +188,9 @@ export const PostThreadItem = observer(function PostThreadItem({
       <PostHider
         testID={`postThreadItem-by-${item.post.author.handle}`}
         style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
-        moderation={item.moderation.thread}>
+        moderation={item.moderation.thread}
+        accessibilityActions={accessibilityActions}
+        onAccessibilityAction={onAccessibilityAction}>
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
             <Link
@@ -320,7 +360,9 @@ export const PostThreadItem = observer(function PostThreadItem({
             pal.view,
             item._showParentReplyLine && styles.noTopBorder,
           ]}
-          moderation={item.moderation.thread}>
+          moderation={item.moderation.thread}
+          accessibilityActions={accessibilityActions}
+          onAccessibilityAction={onAccessibilityAction}>
           {item._showParentReplyLine && (
             <View
               style={[

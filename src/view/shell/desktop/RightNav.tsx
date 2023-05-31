@@ -10,19 +10,11 @@ import {FEEDBACK_FORM_URL} from 'lib/constants'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {pluralize} from 'lib/strings/helpers'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {MoonIcon, SunIcon} from 'lib/icons'
 import {formatCount} from 'view/com/util/numeric/format'
 
 export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores()
   const pal = usePalette('default')
-  const mode = useColorSchemeStyle('Light', 'Dark')
-  const otherMode = mode === 'Dark' ? 'Light' : 'Dark'
-
-  const onDarkmodePress = React.useCallback(() => {
-    store.shell.setDarkMode(!store.shell.darkMode)
-  }, [store])
 
   return (
     <View style={[styles.rightNav, pal.view]}>
@@ -60,29 +52,6 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
         </View>
       </View>
       <InviteCodes />
-      <View>
-        <TouchableOpacity
-          style={[styles.darkModeToggle]}
-          onPress={onDarkmodePress}
-          accessibilityRole="button"
-          accessibilityLabel="Toggle dark mode"
-          accessibilityHint={
-            mode === 'Dark'
-              ? 'Sets display to light mode'
-              : 'Sets display to dark mode'
-          }>
-          <View style={[pal.viewLight, styles.darkModeToggleIcon]}>
-            {mode === 'Dark' ? (
-              <SunIcon size={18} style={pal.textLight} />
-            ) : (
-              <MoonIcon size={18} style={pal.textLight} />
-            )}
-          </View>
-          <Text type="sm" style={pal.textLight}>
-            {otherMode} mode
-          </Text>
-        </TouchableOpacity>
-      </View>
     </View>
   )
 })
@@ -151,21 +120,5 @@ const styles = StyleSheet.create({
   },
   inviteCodesIcon: {
     marginRight: 6,
-  },
-
-  darkModeToggle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginHorizontal: 12,
-    marginTop: 8,
-  },
-  darkModeToggleIcon: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 26,
-    height: 26,
-    borderRadius: 15,
   },
 })

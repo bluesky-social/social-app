@@ -191,9 +191,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         onPress={onPressToggleLikeWrapper}
         accessibilityRole="button"
         accessibilityLabel={opts.isLiked ? 'Unlike' : 'Like'}
-        accessibilityHint={
-          opts.isReposted ? 'Removes like from the post' : 'Like the post'
-        }>
+        accessibilityHint="">
         {opts.isLiked ? (
           <HeartIconSolid
             style={styles.ctrlIconLiked}
