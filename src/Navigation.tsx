@@ -481,7 +481,6 @@ function reset() {
 }
 
 function handleLink(url: string) {
-  console.log('handleLink', url)
   let path
   if (url.startsWith('/')) {
     path = url
