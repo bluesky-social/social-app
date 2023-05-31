@@ -274,6 +274,8 @@ const styles = StyleSheet.create({
     top: 10,
     right: 'calc(50vw + 312px)',
     width: 220,
+    maxHeight: 'calc(100vh - 10px)',
+    overflowY: 'auto',
   },
 
   profileCard: {
