@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
@@ -158,12 +158,48 @@ export const FeedItem = observer(function ({
     moderation = {behavior: ModerationBehaviorCode.Show}
   }
 
+  const accessibilityActions = useMemo(
+    () => [
+      {
+        name: 'reply',
+        label: 'Reply',
+      },
+      {
+        name: 'repost',
+        label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
+      },
+      {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
+    ],
+    [item.post.viewer?.like, item.post.viewer?.repost],
+  )
+
+  const onAccessibilityAction = useCallback(
+    event => {
+      switch (event.nativeEvent.actionName) {
+        case 'like':
+          onPressToggleLike()
+          break
+        case 'reply':
+          onPressReply()
+          break
+        case 'repost':
+          onPressToggleRepost()
+          break
+        default:
+          break
+      }
+    },
+    [onPressReply, onPressToggleLike, onPressToggleRepost],
+  )
+
   return (
     <PostHider
       testID={`feedItem-by-${item.post.author.handle}`}
       style={outerStyles}
       href={itemHref}
-      moderation={moderation}>
+      moderation={moderation}
+      accessibilityActions={accessibilityActions}
+      onAccessibilityAction={onAccessibilityAction}>
       {isThreadChild && (
         <View
           style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
