@@ -62,7 +62,7 @@ function LightboxInner({
   initialIndex: number
   onClose: () => void
 }) {
-  const [index, setIndex] = React.useState<number>(initialIndex)
+  const [index, setIndex] = useState<number>(initialIndex)
   const [isAltExpanded, setAltExpanded] = useState(false)
 
   const canGoLeft = index >= 1
