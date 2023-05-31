@@ -123,7 +123,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
       snapPoints={snapPoints}
       index={store.shell.isModalActive ? 0 : -1}
       enablePanDownToClose
-      keyboardBehavior="extend"
+      android_keyboardInputMode="adjustResize"
       keyboardBlurBehavior="restore"
       backdropComponent={
         store.shell.isModalActive ? createCustomBackdrop(onClose) : undefined
