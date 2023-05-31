@@ -38,7 +38,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
             type="md"
             style={pal.link}
             href="/support/privacy"
-            text="Privacy policy"
+            text="Privacy Policy"
           />
           <Text type="md" style={pal.textLight}>
             &nbsp;&middot;&nbsp;
