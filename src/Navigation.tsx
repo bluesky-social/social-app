@@ -225,7 +225,7 @@ function TabsNavigator() {
     <Tab.Navigator
       initialRouteName="HomeTab"
       backBehavior="initialRoute"
-      screenOptions={{headerShown: false}}
+      screenOptions={{headerShown: false, lazy: true}}
       tabBar={tabBar}>
       <Tab.Screen name="HomeTab" component={HomeTabNavigator} />
       <Tab.Screen name="SearchTab" component={SearchTabNavigator} />
