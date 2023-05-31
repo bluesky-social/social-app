@@ -82,6 +82,18 @@ export function isBskyPostUrl(url: string): boolean {
   return false
 }
 
+export function isBskyCustomFeedUrl(url: string): boolean {
+  if (isBskyAppUrl(url)) {
+    try {
+      const urlp = new URL(url)
+      return /profile\/(?<name>[^/]+)\/feed\/(?<rkey>[^/]+)/i.test(
+        urlp.pathname,
+      )
+    } catch {}
+  }
+  return false
+}
+
 export function convertBskyAppUrlIfNeeded(url: string): string {
   if (isBskyAppUrl(url)) {
     try {

@@ -1,8 +1,7 @@
-import he from 'he'
 import {isBskyAppUrl} from '../strings/url-helpers'
 import {RootStoreModel} from 'state/index'
 import {extractBskyMeta} from './bsky'
-import {extractHtmlMeta} from './html'
+import {LINK_META_PROXY} from 'lib/constants'
 
 export enum LikelyType {
   HTML,
@@ -54,26 +53,29 @@ export async function getLinkMeta(
   try {
     const controller = new AbortController()
     const to = setTimeout(() => controller.abort(), timeout || 5e3)
-    const httpRes = await fetch(url, {
-      headers: {accept: 'text/html'},
-      signal: controller.signal,
-    })
-    const httpResBody = await httpRes.text()
+
+    const response = await fetch(
+      `${LINK_META_PROXY(
+        store.session.currentSession?.service || '',
+      )}${encodeURIComponent(url)}`,
+    )
+
+    const body = await response.json()
     clearTimeout(to)
-    const httpResMeta = extractHtmlMeta({
-      html: httpResBody,
-      hostname: urlp?.hostname,
-      pathname: urlp?.pathname,
-    })
-    meta.title = httpResMeta.title ? he.decode(httpResMeta.title) : undefined
-    meta.description = httpResMeta.description
-      ? he.decode(httpResMeta.description)
-      : undefined
-    meta.image = httpResMeta.image
+
+    const {description, error, image, title} = body
+
+    if (error !== '') {
+      throw new Error(error)
+    }
+
+    meta.description = description
+    meta.image = image
+    meta.title = title
   } catch (e) {
     // failed
     console.error(e)
-    meta.error = 'Failed to fetch link'
+    meta.error = e instanceof Error ? e.toString() : 'Failed to fetch link'
   }
 
   return meta

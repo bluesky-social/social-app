@@ -14,6 +14,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {
   HomeTabNavigatorParams,
   SearchTabNavigatorParams,
+  FeedsTabNavigatorParams,
   NotificationsTabNavigatorParams,
   FlatNavigatorParams,
   AllNavigatorParams,
@@ -28,19 +29,22 @@ import {isNative} from 'platform/detection'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {router} from './routes'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useUnreadCountLabel} from 'lib/hooks/useUnreadCountLabel'
 import {useStores} from './state'
 
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
+import {FeedsScreen} from './view/screens/Feeds'
 import {NotificationsScreen} from './view/screens/Notifications'
 import {ModerationScreen} from './view/screens/Moderation'
 import {ModerationMuteListsScreen} from './view/screens/ModerationMuteLists'
+import {DiscoverFeedsScreen} from 'view/screens/DiscoverFeeds'
 import {NotFoundScreen} from './view/screens/NotFound'
 import {SettingsScreen} from './view/screens/Settings'
 import {ProfileScreen} from './view/screens/Profile'
 import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
 import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
+import {CustomFeedScreen} from './view/screens/CustomFeed'
+import {CustomFeedLikedByScreen} from './view/screens/CustomFeedLikedBy'
 import {ProfileListScreen} from './view/screens/ProfileList'
 import {PostThreadScreen} from './view/screens/PostThread'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
@@ -55,6 +59,7 @@ import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
 import {AppPasswords} from 'view/screens/AppPasswords'
 import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
 import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
+import {SavedFeeds} from 'view/screens/SavedFeeds'
 import {getRoutingInstrumentation} from 'lib/sentry'
 import {bskyTitle} from 'lib/strings/headings'
 
@@ -62,6 +67,7 @@ const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
 const HomeTab = createNativeStackNavigator<HomeTabNavigatorParams>()
 const SearchTab = createNativeStackNavigator<SearchTabNavigatorParams>()
+const FeedsTab = createNativeStackNavigator<FeedsTabNavigatorParams>()
 const NotificationsTab =
   createNativeStackNavigator<NotificationsTabNavigatorParams>()
 const MyProfileTab = createNativeStackNavigator<MyProfileTabNavigatorParams>()
@@ -100,6 +106,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="ModerationBlockedAccounts"
         component={ModerationBlockedAccounts}
         options={{title: title('Blocked Accounts')}}
+      />
+      <Stack.Screen
+        name="DiscoverFeeds"
+        component={DiscoverFeedsScreen}
+        options={{title: title('Discover Feeds')}}
       />
       <Stack.Screen
         name="Settings"
@@ -146,6 +157,16 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
       />
       <Stack.Screen
+        name="CustomFeed"
+        component={CustomFeedScreen}
+        options={{title: title('Feed')}}
+      />
+      <Stack.Screen
+        name="CustomFeedLikedBy"
+        component={CustomFeedLikedByScreen}
+        options={{title: title('Liked by')}}
+      />
+      <Stack.Screen
         name="Debug"
         component={DebugScreen}
         options={{title: title('Debug')}}
@@ -185,6 +206,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         component={AppPasswords}
         options={{title: title('App Passwords')}}
       />
+      <Stack.Screen
+        name="SavedFeeds"
+        component={SavedFeeds}
+        options={{title: title('Edit My Feeds')}}
+      />
     </>
   )
 }
@@ -199,14 +225,15 @@ function TabsNavigator() {
     <Tab.Navigator
       initialRouteName="HomeTab"
       backBehavior="initialRoute"
-      screenOptions={{headerShown: false}}
+      screenOptions={{headerShown: false, lazy: true}}
       tabBar={tabBar}>
       <Tab.Screen name="HomeTab" component={HomeTabNavigator} />
+      <Tab.Screen name="SearchTab" component={SearchTabNavigator} />
+      <Tab.Screen name="FeedsTab" component={FeedsTabNavigator} />
       <Tab.Screen
         name="NotificationsTab"
         component={NotificationsTabNavigator}
       />
-      <Tab.Screen name="SearchTab" component={SearchTabNavigator} />
       <Tab.Screen name="MyProfileTab" component={MyProfileTabNavigator} />
     </Tab.Navigator>
   )
@@ -243,6 +270,23 @@ function SearchTabNavigator() {
       <SearchTab.Screen name="Search" component={SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
     </SearchTab.Navigator>
+  )
+}
+
+function FeedsTabNavigator() {
+  const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
+  return (
+    <FeedsTab.Navigator
+      screenOptions={{
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+        animationDuration: 250,
+        contentStyle,
+      }}>
+      <FeedsTab.Screen name="Feeds" component={FeedsScreen} />
+      {commonScreens(FeedsTab as typeof HomeTab)}
+    </FeedsTab.Navigator>
   )
 }
 
@@ -296,9 +340,9 @@ const MyProfileTabNavigator = observer(() => {
  * The FlatNavigator is used by Web to represent the routes
  * in a single ("flat") stack.
  */
-function FlatNavigator() {
+const FlatNavigator = observer(() => {
   const pal = usePalette('default')
-  const unreadCountLabel = useUnreadCountLabel()
+  const unreadCountLabel = useStores().me.notifications.unreadCountLabel
   const title = (page: string) => bskyTitle(page, unreadCountLabel)
   return (
     <Flat.Navigator
@@ -320,6 +364,11 @@ function FlatNavigator() {
         options={{title: title('Search')}}
       />
       <Flat.Screen
+        name="Feeds"
+        component={FeedsScreen}
+        options={{title: title('Feeds')}}
+      />
+      <Flat.Screen
         name="Notifications"
         component={NotificationsScreen}
         options={{title: title('Notifications')}}
@@ -327,7 +376,7 @@ function FlatNavigator() {
       {commonScreens(Flat as typeof HomeTab, unreadCountLabel)}
     </Flat.Navigator>
   )
-}
+})
 
 /**
  * The RoutesContainer should wrap all components which need access
@@ -361,7 +410,16 @@ const LINKING = {
       if (name === 'Notifications') {
         return buildStateObject('NotificationsTab', 'Notifications', params)
       }
-      return buildStateObject('HomeTab', name, params)
+      if (name === 'Home') {
+        return buildStateObject('HomeTab', 'Home', params)
+      }
+      // if the path is something else, like a post, profile, or even settings, we need to initialize the home tab as pre-existing state otherwise the back button will not work
+      return buildStateObject('HomeTab', name, params, [
+        {
+          name: 'Home',
+          params: {},
+        },
+      ])
     } else {
       return buildStateObject('Flat', name, params)
     }

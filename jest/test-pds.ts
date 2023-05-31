@@ -13,6 +13,7 @@ const ADMIN_PASSWORD = 'admin-pass'
 const SECOND = 1000
 const MINUTE = SECOND * 60
 const HOUR = MINUTE * 60
+const DAY = HOUR * 24
 
 export interface TestUser {
   email: string
@@ -66,6 +67,8 @@ export async function createServer(
     adminPassword: ADMIN_PASSWORD,
     inviteRequired,
     didPlcUrl: plcUrl,
+    didCacheMaxTTL: DAY,
+    didCacheStaleTTL: HOUR,
     jwtSecret: 'jwt-secret',
     availableUserDomains: ['.test'],
     appUrlPasswordReset: 'app://forgot-password',
