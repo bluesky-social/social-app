@@ -411,10 +411,17 @@ const LINKING = {
         return buildStateObject('NotificationsTab', 'Notifications', params)
       }
       if (name === 'Home') {
-        return buildStateObject('HomeTab', name, params) // Gai - I don't know if it should be ('HomeTab', 'Home', params)
-      } else {
-        return buildStateObject('Flat', name, params)
+        return buildStateObject('HomeTab', 'Home', params)
       }
+      // if the path is something else, like a post, profile, or even settings, we need to initialize the home tab as pre-existing state otherwise the back button will not work
+      return buildStateObject('HomeTab', name, params, [
+        {
+          name: 'Home',
+          params: {},
+        },
+      ])
+    } else {
+      return buildStateObject('Flat', name, params)
     }
   },
 }
@@ -474,6 +481,7 @@ function reset() {
 }
 
 function handleLink(url: string) {
+  console.log('handleLink', url)
   let path
   if (url.startsWith('/')) {
     path = url
