@@ -33,7 +33,7 @@ export const FollowButton = observer(
           store.me.follows.removeFollow(did)
           onToggleFollow?.(false)
         } catch (e: any) {
-          store.log.error('Failed fo delete follow', e)
+          store.log.error('Failed to delete follow', e)
           Toast.show('An issue occurred, please try again.')
         }
       } else if (updatedFollowState === FollowState.NotFollowing) {
@@ -42,7 +42,7 @@ export const FollowButton = observer(
           store.me.follows.addFollow(did, res.uri)
           onToggleFollow?.(true)
         } catch (e: any) {
-          store.log.error('Failed fo create follow', e)
+          store.log.error('Failed to create follow', e)
           Toast.show('An issue occurred, please try again.')
         }
       }

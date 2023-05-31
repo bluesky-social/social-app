@@ -1,11 +1,8 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AppBskyFeedGetTimeline as GetTimeline,
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
-  RichText,
-  jsonToLex,
+  AppBskyFeedGetFeed as GetCustomFeed,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
@@ -19,268 +16,10 @@ import {
   mergePosts,
 } from 'lib/api/build-suggested-posts'
 import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
-import {updateDataOptimistically} from 'lib/async/revertible'
-import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
-import {
-  getEmbedLabels,
-  getEmbedMuted,
-  getEmbedMutedByList,
-  getEmbedBlocking,
-  getEmbedBlockedBy,
-  getPostModeration,
-  mergePostModerations,
-  filterAccountLabels,
-  filterProfileLabels,
-} from 'lib/labeling/helpers'
-
-type FeedViewPost = AppBskyFeedDefs.FeedViewPost
-type ReasonRepost = AppBskyFeedDefs.ReasonRepost
-type PostView = AppBskyFeedDefs.PostView
+import {PostsFeedSliceModel} from './post'
 
 const PAGE_SIZE = 30
 let _idCounter = 0
-
-export class PostsFeedItemModel {
-  // ui state
-  _reactKey: string = ''
-
-  // data
-  post: PostView
-  postRecord?: AppBskyFeedPost.Record
-  reply?: FeedViewPost['reply']
-  reason?: FeedViewPost['reason']
-  richText?: RichText
-
-  constructor(
-    public rootStore: RootStoreModel,
-    reactKey: string,
-    v: FeedViewPost,
-  ) {
-    this._reactKey = reactKey
-    this.post = v.post
-    if (AppBskyFeedPost.isRecord(this.post.record)) {
-      const valid = AppBskyFeedPost.validateRecord(this.post.record)
-      if (valid.success) {
-        this.postRecord = this.post.record
-        this.richText = new RichText(this.postRecord, {cleanNewlines: true})
-      } else {
-        this.postRecord = undefined
-        this.richText = undefined
-        rootStore.log.warn(
-          'Received an invalid app.bsky.feed.post record',
-          valid.error,
-        )
-      }
-    } else {
-      this.postRecord = undefined
-      this.richText = undefined
-      rootStore.log.warn(
-        'app.bsky.feed.getTimeline or app.bsky.feed.getAuthorFeed served an unexpected record type',
-        this.post.record,
-      )
-    }
-    this.reply = v.reply
-    this.reason = v.reason
-    makeAutoObservable(this, {rootStore: false})
-  }
-
-  get rootUri(): string {
-    if (this.reply?.root.uri) {
-      return this.reply.root.uri
-    }
-    return this.post.uri
-  }
-
-  get isThreadMuted() {
-    return this.rootStore.mutedThreads.uris.has(this.rootUri)
-  }
-
-  get labelInfo(): PostLabelInfo {
-    return {
-      postLabels: (this.post.labels || []).concat(
-        getEmbedLabels(this.post.embed),
-      ),
-      accountLabels: filterAccountLabels(this.post.author.labels),
-      profileLabels: filterProfileLabels(this.post.author.labels),
-      isMuted:
-        this.post.author.viewer?.muted ||
-        getEmbedMuted(this.post.embed) ||
-        false,
-      mutedByList:
-        this.post.author.viewer?.mutedByList ||
-        getEmbedMutedByList(this.post.embed),
-      isBlocking:
-        !!this.post.author.viewer?.blocking ||
-        getEmbedBlocking(this.post.embed) ||
-        false,
-      isBlockedBy:
-        !!this.post.author.viewer?.blockedBy ||
-        getEmbedBlockedBy(this.post.embed) ||
-        false,
-    }
-  }
-
-  get moderation(): PostModeration {
-    return getPostModeration(this.rootStore, this.labelInfo)
-  }
-
-  copy(v: FeedViewPost) {
-    this.post = v.post
-    this.reply = v.reply
-    this.reason = v.reason
-  }
-
-  copyMetrics(v: FeedViewPost) {
-    this.post.replyCount = v.post.replyCount
-    this.post.repostCount = v.post.repostCount
-    this.post.likeCount = v.post.likeCount
-    this.post.viewer = v.post.viewer
-  }
-
-  get reasonRepost(): ReasonRepost | undefined {
-    if (this.reason?.$type === 'app.bsky.feed.defs#reasonRepost') {
-      return this.reason as ReasonRepost
-    }
-  }
-
-  async toggleLike() {
-    this.post.viewer = this.post.viewer || {}
-    if (this.post.viewer.like) {
-      const url = this.post.viewer.like
-      await updateDataOptimistically(
-        this.post,
-        () => {
-          this.post.likeCount = (this.post.likeCount || 0) - 1
-          this.post.viewer!.like = undefined
-        },
-        () => this.rootStore.agent.deleteLike(url),
-      )
-    } else {
-      await updateDataOptimistically(
-        this.post,
-        () => {
-          this.post.likeCount = (this.post.likeCount || 0) + 1
-          this.post.viewer!.like = 'pending'
-        },
-        () => this.rootStore.agent.like(this.post.uri, this.post.cid),
-        res => {
-          this.post.viewer!.like = res.uri
-        },
-      )
-    }
-  }
-
-  async toggleRepost() {
-    this.post.viewer = this.post.viewer || {}
-    if (this.post.viewer?.repost) {
-      const url = this.post.viewer.repost
-      await updateDataOptimistically(
-        this.post,
-        () => {
-          this.post.repostCount = (this.post.repostCount || 0) - 1
-          this.post.viewer!.repost = undefined
-        },
-        () => this.rootStore.agent.deleteRepost(url),
-      )
-    } else {
-      await updateDataOptimistically(
-        this.post,
-        () => {
-          this.post.repostCount = (this.post.repostCount || 0) + 1
-          this.post.viewer!.repost = 'pending'
-        },
-        () => this.rootStore.agent.repost(this.post.uri, this.post.cid),
-        res => {
-          this.post.viewer!.repost = res.uri
-        },
-      )
-    }
-  }
-
-  async toggleThreadMute() {
-    if (this.isThreadMuted) {
-      this.rootStore.mutedThreads.uris.delete(this.rootUri)
-    } else {
-      this.rootStore.mutedThreads.uris.add(this.rootUri)
-    }
-  }
-
-  async delete() {
-    await this.rootStore.agent.deletePost(this.post.uri)
-    this.rootStore.emitPostDeleted(this.post.uri)
-  }
-}
-
-export class PostsFeedSliceModel {
-  // ui state
-  _reactKey: string = ''
-
-  // data
-  items: PostsFeedItemModel[] = []
-
-  constructor(
-    public rootStore: RootStoreModel,
-    reactKey: string,
-    slice: FeedViewPostsSlice,
-  ) {
-    this._reactKey = reactKey
-    for (const item of slice.items) {
-      this.items.push(
-        new PostsFeedItemModel(rootStore, `item-${_idCounter++}`, item),
-      )
-    }
-    makeAutoObservable(this, {rootStore: false})
-  }
-
-  get uri() {
-    if (this.isReply) {
-      return this.items[1].post.uri
-    }
-    return this.items[0].post.uri
-  }
-
-  get isThread() {
-    return (
-      this.items.length > 1 &&
-      this.items.every(
-        item => item.post.author.did === this.items[0].post.author.did,
-      )
-    )
-  }
-
-  get isReply() {
-    return this.items.length > 1 && !this.isThread
-  }
-
-  get rootItem() {
-    if (this.isReply) {
-      return this.items[1]
-    }
-    return this.items[0]
-  }
-
-  get moderation() {
-    return mergePostModerations(this.items.map(item => item.moderation))
-  }
-
-  containsUri(uri: string) {
-    return !!this.items.find(item => item.post.uri === uri)
-  }
-
-  isThreadParentAt(i: number) {
-    if (this.items.length === 1) {
-      return false
-    }
-    return i < this.items.length - 1
-  }
-
-  isThreadChildAt(i: number) {
-    if (this.items.length === 1) {
-      return false
-    }
-    return i > 0
-  }
-}
 
 export class PostsFeedModel {
   // state
@@ -297,6 +36,7 @@ export class PostsFeedModel {
   loadMoreCursor: string | undefined
   pollCursor: string | undefined
   tuner = new FeedTuner()
+  pageSize = PAGE_SIZE
 
   // used to linearize async modifications to state
   lock = new AwaitLock()
@@ -309,8 +49,11 @@ export class PostsFeedModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public feedType: 'home' | 'author' | 'suggested' | 'goodstuff',
-    params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams,
+    public feedType: 'home' | 'author' | 'suggested' | 'custom',
+    params:
+      | GetTimeline.QueryParams
+      | GetAuthorFeed.QueryParams
+      | GetCustomFeed.QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -387,10 +130,9 @@ export class PostsFeedModel {
   }
 
   get feedTuners() {
-    if (this.feedType === 'goodstuff') {
+    if (this.feedType === 'custom') {
       return [
         FeedTuner.dedupReposts,
-        FeedTuner.likedRepliesOnly,
         FeedTuner.preferredLangOnly(
           this.rootStore.preferences.contentLanguages,
         ),
@@ -416,7 +158,7 @@ export class PostsFeedModel {
       this.tuner.reset()
       this._xLoading(isRefreshing)
       try {
-        const res = await this._getFeed({limit: PAGE_SIZE})
+        const res = await this._getFeed({limit: this.pageSize})
         await this._replaceAll(res)
         this._xIdle()
       } catch (e: any) {
@@ -455,7 +197,7 @@ export class PostsFeedModel {
       try {
         const res = await this._getFeed({
           cursor: this.loadMoreCursor,
-          limit: PAGE_SIZE,
+          limit: this.pageSize,
         })
         await this._appendAll(res)
         this._xIdle()
@@ -524,7 +266,7 @@ export class PostsFeedModel {
     if (this.hasNewLatest || this.feedType === 'suggested') {
       return
     }
-    const res = await this._getFeed({limit: PAGE_SIZE})
+    const res = await this._getFeed({limit: this.pageSize})
     const tuner = new FeedTuner()
     const slices = tuner.tune(res.data.feed, this.feedTuners)
     this.setHasNewLatest(slices[0]?.uri !== this.slices[0]?.uri)
@@ -599,13 +341,15 @@ export class PostsFeedModel {
   // helper functions
   // =
 
-  async _replaceAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
+  async _replaceAll(
+    res: GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response,
+  ) {
     this.pollCursor = res.data.feed[0]?.post.uri
     return this._appendAll(res, true)
   }
 
   async _appendAll(
-    res: GetTimeline.Response | GetAuthorFeed.Response,
+    res: GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response,
     replace = false,
   ) {
     this.loadMoreCursor = res.data.cursor
@@ -644,7 +388,9 @@ export class PostsFeedModel {
     })
   }
 
-  _updateAll(res: GetTimeline.Response | GetAuthorFeed.Response) {
+  _updateAll(
+    res: GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response,
+  ) {
     for (const item of res.data.feed) {
       const existingSlice = this.slices.find(slice =>
         slice.containsUri(item.post.uri),
@@ -661,8 +407,13 @@ export class PostsFeedModel {
   }
 
   protected async _getFeed(
-    params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams = {},
-  ): Promise<GetTimeline.Response | GetAuthorFeed.Response> {
+    params:
+      | GetTimeline.QueryParams
+      | GetAuthorFeed.QueryParams
+      | GetCustomFeed.QueryParams,
+  ): Promise<
+    GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response
+  > {
     params = Object.assign({}, this.params, params)
     if (this.feedType === 'suggested') {
       const responses = await getMultipleAuthorsPosts(
@@ -684,61 +435,31 @@ export class PostsFeedModel {
       }
     } else if (this.feedType === 'home') {
       return this.rootStore.agent.getTimeline(params as GetTimeline.QueryParams)
-    } else if (this.feedType === 'goodstuff') {
-      const res = await getGoodStuff(
-        this.rootStore.session.currentSession?.accessJwt || '',
-        params as GetTimeline.QueryParams,
+    } else if (this.feedType === 'custom') {
+      this.checkIfCustomFeedIsOnlineAndValid(
+        params as GetCustomFeed.QueryParams,
       )
-      res.data.feed = (res.data.feed || []).filter(
-        item => !item.post.author.viewer?.muted,
+      return this.rootStore.agent.app.bsky.feed.getFeed(
+        params as GetCustomFeed.QueryParams,
       )
-      return res
     } else {
       return this.rootStore.agent.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,
       )
     }
   }
-}
 
-// HACK
-// temporary off-spec route to get the good stuff
-// -prf
-async function getGoodStuff(
-  accessJwt: string,
-  params: GetTimeline.QueryParams,
-): Promise<GetTimeline.Response> {
-  const controller = new AbortController()
-  const to = setTimeout(() => controller.abort(), 15e3)
-
-  const uri = new URL('https://bsky.social/xrpc/app.bsky.unspecced.getPopular')
-  let k: keyof GetTimeline.QueryParams
-  for (k in params) {
-    if (typeof params[k] !== 'undefined') {
-      uri.searchParams.set(k, String(params[k]))
+  private async checkIfCustomFeedIsOnlineAndValid(
+    params: GetCustomFeed.QueryParams,
+  ) {
+    const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerator({
+      feed: params.feed,
+    })
+    if (!res.data.isOnline || !res.data.isValid) {
+      runInAction(() => {
+        this.error =
+          'This custom feed is not online or may be experiencing issues.'
+      })
     }
-  }
-
-  const res = await fetch(String(uri), {
-    method: 'get',
-    headers: {
-      accept: 'application/json',
-      authorization: `Bearer ${accessJwt}`,
-    },
-    signal: controller.signal,
-  })
-
-  const resHeaders: Record<string, string> = {}
-  res.headers.forEach((value: string, key: string) => {
-    resHeaders[key] = value
-  })
-  let resBody = await res.json()
-
-  clearTimeout(to)
-
-  return {
-    success: res.status === 200,
-    headers: resHeaders,
-    data: jsonToLex(resBody),
   }
 }

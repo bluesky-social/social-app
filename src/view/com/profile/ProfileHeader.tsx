@@ -218,7 +218,7 @@ const ProfileHeaderLoaded = observer(
             onRefreshAll()
             Toast.show('Account unblocked')
           } catch (e: any) {
-            store.log.error('Failed to block unaccount', e)
+            store.log.error('Failed to unblock account', e)
             Toast.show(`There was an issue! ${e.toString()}`)
           }
         },
@@ -289,6 +289,9 @@ const ProfileHeaderLoaded = observer(
     ])
 
     const blockHide = !isMe && (view.viewer.blocking || view.viewer.blockedBy)
+    const following = formatCount(view.followsCount)
+    const followers = formatCount(view.followersCount)
+    const pluralizedFollowers = pluralize(view.followersCount, 'follower')
 
     return (
       <View style={pal.view}>
@@ -394,13 +397,13 @@ const ProfileHeaderLoaded = observer(
                   style={[s.flexRow, s.mr10]}
                   onPress={onPressFollowers}
                   accessibilityRole="button"
-                  accessibilityLabel={`Show ${view.handle}'s followers`}
-                  accessibilityHint={`Shows folks following ${view.handle}`}>
+                  accessibilityLabel={`${followers} ${pluralizedFollowers}`}
+                  accessibilityHint={'Opens followers list'}>
                   <Text type="md" style={[s.bold, s.mr2, pal.text]}>
-                    {formatCount(view.followersCount)}
+                    {followers}
                   </Text>
                   <Text type="md" style={[pal.textLight]}>
-                    {pluralize(view.followersCount, 'follower')}
+                    {pluralizedFollowers}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -408,10 +411,10 @@ const ProfileHeaderLoaded = observer(
                   style={[s.flexRow, s.mr10]}
                   onPress={onPressFollows}
                   accessibilityRole="button"
-                  accessibilityLabel={`Show ${view.handle}'s follows`}
-                  accessibilityHint={`Shows folks followed by ${view.handle}`}>
+                  accessibilityLabel={`${following} following`}
+                  accessibilityHint={'Opens following list'}>
                   <Text type="md" style={[s.bold, s.mr2, pal.text]}>
-                    {formatCount(view.followsCount)}
+                    {following}
                   </Text>
                   <Text type="md" style={[pal.textLight]}>
                     following

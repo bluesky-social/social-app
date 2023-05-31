@@ -1,6 +1,5 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {Alert} from 'view/com/util/Alert'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ScrollView} from 'react-native-gesture-handler'
 import {Text} from '../com/util/text/Text'
@@ -160,24 +159,15 @@ function AppPassword({
   const store = useStores()
 
   const onDelete = React.useCallback(async () => {
-    Alert.alert(
-      'Delete App Password',
-      `Are you sure you want to delete the app password "${name}"?`,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            await store.me.deleteAppPassword(name)
-            Toast.show('App password deleted')
-          },
-        },
-      ],
-    )
+    store.shell.openModal({
+      name: 'confirm',
+      title: 'Delete App Password',
+      message: `Are you sure you want to delete the app password "${name}"?`,
+      async onPressConfirm() {
+        await store.me.deleteAppPassword(name)
+        Toast.show('App password deleted')
+      },
+    })
   }, [store, name])
 
   const {contentLanguages} = store.preferences

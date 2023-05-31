@@ -104,63 +104,61 @@ export const Gallery = observer(function ({gallery}: Props) {
 
   return !gallery.isEmpty ? (
     <View testID="selectedPhotosView" style={styles.gallery}>
-      {gallery.images.map(image =>
-        image.compressed !== undefined ? (
-          <View key={`selected-image-${image.path}`} style={[imageStyle]}>
+      {gallery.images.map(image => (
+        <View key={`selected-image-${image.path}`} style={[imageStyle]}>
+          <TouchableOpacity
+            testID="altTextButton"
+            accessibilityRole="button"
+            accessibilityLabel="Add alt text"
+            accessibilityHint=""
+            onPress={() => {
+              handleAddImageAltText(image)
+            }}
+            style={imageControlLabelStyle}>
+            <Text style={styles.imageControlTextContent}>ALT</Text>
+          </TouchableOpacity>
+          <View style={imageControlsSubgroupStyle}>
             <TouchableOpacity
-              testID="altTextButton"
+              testID="editPhotoButton"
               accessibilityRole="button"
-              accessibilityLabel="Add alt text"
+              accessibilityLabel="Edit image"
               accessibilityHint=""
               onPress={() => {
-                handleAddImageAltText(image)
+                handleEditPhoto(image)
               }}
-              style={imageControlLabelStyle}>
-              <Text style={styles.imageControlTextContent}>ALT</Text>
+              style={styles.imageControl}>
+              <FontAwesomeIcon
+                icon="pen"
+                size={12}
+                style={{color: colors.white}}
+              />
             </TouchableOpacity>
-            <View style={imageControlsSubgroupStyle}>
-              <TouchableOpacity
-                testID="editPhotoButton"
-                accessibilityRole="button"
-                accessibilityLabel="Edit image"
-                accessibilityHint=""
-                onPress={() => {
-                  handleEditPhoto(image)
-                }}
-                style={styles.imageControl}>
-                <FontAwesomeIcon
-                  icon="pen"
-                  size={12}
-                  style={{color: colors.white}}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                testID="removePhotoButton"
-                accessibilityRole="button"
-                accessibilityLabel="Remove image"
-                accessibilityHint=""
-                onPress={() => handleRemovePhoto(image)}
-                style={styles.imageControl}>
-                <FontAwesomeIcon
-                  icon="xmark"
-                  size={16}
-                  style={{color: colors.white}}
-                />
-              </TouchableOpacity>
-            </View>
-
-            <Image
-              testID="selectedPhotoImage"
-              style={[styles.image, imageStyle] as ImageStyle}
-              source={{
-                uri: image.compressed.path,
-              }}
-              accessible={true}
-              accessibilityIgnoresInvertColors
-            />
+            <TouchableOpacity
+              testID="removePhotoButton"
+              accessibilityRole="button"
+              accessibilityLabel="Remove image"
+              accessibilityHint=""
+              onPress={() => handleRemovePhoto(image)}
+              style={styles.imageControl}>
+              <FontAwesomeIcon
+                icon="xmark"
+                size={16}
+                style={{color: colors.white}}
+              />
+            </TouchableOpacity>
           </View>
-        ) : null,
-      )}
+
+          <Image
+            testID="selectedPhotoImage"
+            style={[styles.image, imageStyle] as ImageStyle}
+            source={{
+              uri: image.cropped?.path ?? image.path,
+            }}
+            accessible={true}
+            accessibilityIgnoresInvertColors
+          />
+        </View>
+      ))}
     </View>
   ) : null
 })

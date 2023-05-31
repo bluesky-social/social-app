@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   Linking,
@@ -170,7 +170,9 @@ const PostLoaded = observer(
     const onOpenTranslate = React.useCallback(() => {
       Linking.openURL(
         encodeURI(
-          `https://translate.google.com/#auto|en|${record?.text || ''}`,
+          `https://translate.google.com/?sl=auto&tl=en&text=${
+            record?.text || ''
+          }`,
         ),
       )
     }, [record])
@@ -203,11 +205,47 @@ const PostLoaded = observer(
       )
     }, [item, setDeleted, store])
 
+    const accessibilityActions = useMemo(
+      () => [
+        {
+          name: 'reply',
+          label: 'Reply',
+        },
+        {
+          name: 'repost',
+          label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
+        },
+        {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
+      ],
+      [item.post.viewer?.like, item.post.viewer?.repost],
+    )
+
+    const onAccessibilityAction = useCallback(
+      event => {
+        switch (event.nativeEvent.actionName) {
+          case 'like':
+            onPressToggleLike()
+            break
+          case 'reply':
+            onPressReply()
+            break
+          case 'repost':
+            onPressToggleRepost()
+            break
+          default:
+            break
+        }
+      },
+      [onPressReply, onPressToggleLike, onPressToggleRepost],
+    )
+
     return (
       <PostHider
         href={itemHref}
         style={[styles.outer, pal.view, pal.border, style]}
-        moderation={item.moderation.list}>
+        moderation={item.moderation.list}
+        accessibilityActions={accessibilityActions}
+        onAccessibilityAction={onAccessibilityAction}>
         {showReplyLine && <View style={styles.replyLine} />}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>

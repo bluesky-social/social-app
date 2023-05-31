@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   ActivityIndicator,
+  Pressable,
   StyleSheet,
   TextStyle,
   TouchableOpacity,
@@ -139,6 +140,11 @@ export const SettingsScreen = withAuthRequired(
 
     const onPressDeleteAccount = React.useCallback(() => {
       store.shell.openModal({name: 'delete-account'})
+    }, [store])
+
+    const onPressResetPreferences = React.useCallback(async () => {
+      await store.preferences.reset()
+      Toast.show('Preferences reset')
     }, [store])
 
     return (
@@ -283,6 +289,34 @@ export const SettingsScreen = withAuthRequired(
           </TouchableOpacity>
 
           <View style={styles.spacer20} />
+          <Text type="xl-bold" style={[pal.text, styles.heading]}>
+            Appearance
+          </Text>
+          <View>
+            <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
+              <SelectableBtn
+                current={store.shell.colorMode}
+                value="system"
+                label="System"
+                left
+                onChange={(v: string) => store.shell.setColorMode(v)}
+              />
+              <SelectableBtn
+                current={store.shell.colorMode}
+                value="light"
+                label="Light"
+                onChange={(v: string) => store.shell.setColorMode(v)}
+              />
+              <SelectableBtn
+                current={store.shell.colorMode}
+                value="dark"
+                label="Dark"
+                right
+                onChange={(v: string) => store.shell.setColorMode(v)}
+              />
+            </View>
+          </View>
+          <View style={styles.spacer20} />
 
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Advanced
@@ -299,6 +333,22 @@ export const SettingsScreen = withAuthRequired(
             </View>
             <Text type="lg" style={pal.text}>
               App passwords
+            </Text>
+          </Link>
+          <Link
+            testID="savedFeedsBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            accessibilityHint="Saved Feeds"
+            accessibilityLabel="Opens screen with all saved feeds"
+            href="/settings/saved-feeds">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="satellite-dish"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Saved Feeds
             </Text>
           </Link>
           <TouchableOpacity
@@ -377,8 +427,18 @@ export const SettingsScreen = withAuthRequired(
               Storybook
             </Text>
           </Link>
+          {__DEV__ ? (
+            <Link
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={onPressResetPreferences}
+              title="Debug tools">
+              <Text type="lg" style={pal.text}>
+                Reset preferences state
+              </Text>
+            </Link>
+          ) : null}
           <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-            Build version {AppInfo.appVersion} ({AppInfo.buildVersion})
+            Build version {AppInfo.appVersion}
           </Text>
           <View style={s.footerSpacer} />
         </ScrollView>
@@ -408,6 +468,45 @@ function AccountDropdownBtn({handle}: {handle: string}) {
         />
       </DropdownButton>
     </View>
+  )
+}
+
+interface SelectableBtnProps {
+  current: string
+  value: string
+  label: string
+  left?: boolean
+  right?: boolean
+  onChange: (v: string) => void
+}
+
+function SelectableBtn({
+  current,
+  value,
+  label,
+  left,
+  right,
+  onChange,
+}: SelectableBtnProps) {
+  const pal = usePalette('default')
+  const palPrimary = usePalette('inverted')
+  return (
+    <Pressable
+      style={[
+        styles.selectableBtn,
+        left && styles.selectableBtnLeft,
+        right && styles.selectableBtnRight,
+        pal.border,
+        current === value ? palPrimary.view : pal.view,
+      ]}
+      onPress={() => onChange(value)}
+      accessibilityRole="button"
+      accessibilityLabel={value}
+      accessibilityHint={`Set color theme to  ${value}`}>
+      <Text style={current === value ? palPrimary.text : pal.text}>
+        {label}
+      </Text>
+    </Pressable>
   )
 }
 
@@ -461,5 +560,46 @@ const styles = StyleSheet.create({
   buildInfo: {
     paddingVertical: 8,
     paddingHorizontal: 18,
+  },
+
+  colorModeText: {
+    marginLeft: 10,
+    marginBottom: 6,
+  },
+
+  selectableBtns: {
+    flexDirection: 'row',
+  },
+  selectableBtn: {
+    flex: isDesktopWeb ? undefined : 1,
+    width: isDesktopWeb ? 100 : undefined,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+  selectableBtnLeft: {
+    borderTopLeftRadius: 8,
+    borderBottomLeftRadius: 8,
+    borderLeftWidth: 1,
+  },
+  selectableBtnRight: {
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    borderRadius: 32,
+    padding: 14,
+    backgroundColor: colors.gray1,
+  },
+  toggleBtn: {
+    paddingHorizontal: 0,
   },
 })
