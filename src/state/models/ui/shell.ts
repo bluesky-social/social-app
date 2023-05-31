@@ -119,7 +119,7 @@ export type Modal =
   // Moderation
   | ReportAccountModal
   | ReportPostModal
-  | CreateMuteListModal
+  | CreateOrEditMuteListModal
   | ListAddRemoveUserModal
 
   // Posts

@@ -41,26 +41,26 @@ export function displayNotification(
 }
 
 export function displayNotificationFromModel(
-  notif: NotificationsFeedItemModel,
+  notification: NotificationsFeedItemModel,
 ) {
   let author = sanitizeDisplayName(
-    notif.author.displayName || notif.author.handle,
+    notification.author.displayName || notification.author.handle,
   )
   let title: string
   let body: string = ''
-  if (notif.isLike) {
+  if (notification.isLike) {
     title = `${author} liked your post`
-    body = notif.additionalPost?.thread?.postRecord?.text || ''
-  } else if (notif.isRepost) {
+    body = notification.additionalPost?.thread?.postRecord?.text || ''
+  } else if (notification.isRepost) {
     title = `${author} reposted your post`
-    body = notif.additionalPost?.thread?.postRecord?.text || ''
-  } else if (notif.isMention) {
+    body = notification.additionalPost?.thread?.postRecord?.text || ''
+  } else if (notification.isMention) {
     title = `${author} mentioned you`
-    body = notif.additionalPost?.thread?.postRecord?.text || ''
-  } else if (notif.isReply) {
+    body = notification.additionalPost?.thread?.postRecord?.text || ''
+  } else if (notification.isReply) {
     title = `${author} replied to your post`
-    body = notif.additionalPost?.thread?.postRecord?.text || ''
-  } else if (notif.isFollow) {
+    body = notification.additionalPost?.thread?.postRecord?.text || ''
+  } else if (notification.isFollow) {
     title = 'New follower!'
     body = `${author} has followed you`
   } else {
@@ -68,10 +68,12 @@ export function displayNotificationFromModel(
   }
   let image
   if (
-    AppBskyEmbedImages.isView(notif.additionalPost?.thread?.post.embed) &&
-    notif.additionalPost?.thread?.post.embed.images[0]?.thumb
+    AppBskyEmbedImages.isView(
+      notification.additionalPost?.thread?.post.embed,
+    ) &&
+    notification.additionalPost?.thread?.post.embed.images[0]?.thumb
   ) {
-    image = notif.additionalPost.thread.post.embed.images[0].thumb
+    image = notification.additionalPost.thread.post.embed.images[0].thumb
   }
   return displayNotification(title, body, image)
 }

@@ -8,6 +8,7 @@ import {faAngleUp} from '@fortawesome/free-solid-svg-icons/faAngleUp'
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons/faArrowLeft'
 import {faArrowRight} from '@fortawesome/free-solid-svg-icons/faArrowRight'
 import {faArrowUp} from '@fortawesome/free-solid-svg-icons/faArrowUp'
+import {faArrowDown} from '@fortawesome/free-solid-svg-icons/faArrowDown'
 import {faArrowRightFromBracket} from '@fortawesome/free-solid-svg-icons/faArrowRightFromBracket'
 import {faArrowUpFromBracket} from '@fortawesome/free-solid-svg-icons/faArrowUpFromBracket'
 import {faArrowUpRightFromSquare} from '@fortawesome/free-solid-svg-icons/faArrowUpRightFromSquare'
@@ -59,14 +60,17 @@ import {faPenNib} from '@fortawesome/free-solid-svg-icons/faPenNib'
 import {faPenToSquare} from '@fortawesome/free-solid-svg-icons/faPenToSquare'
 import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus'
 import {faQuoteLeft} from '@fortawesome/free-solid-svg-icons/faQuoteLeft'
+import {faReply} from '@fortawesome/free-solid-svg-icons/faReply'
+import {faRetweet} from '@fortawesome/free-solid-svg-icons/faRetweet'
+import {faRss} from '@fortawesome/free-solid-svg-icons/faRss'
+import {faSatelliteDish} from '@fortawesome/free-solid-svg-icons/faSatelliteDish'
 import {faShare} from '@fortawesome/free-solid-svg-icons/faShare'
 import {faShareFromSquare} from '@fortawesome/free-solid-svg-icons/faShareFromSquare'
 import {faShield} from '@fortawesome/free-solid-svg-icons/faShield'
 import {faSquarePlus} from '@fortawesome/free-regular-svg-icons/faSquarePlus'
 import {faSignal} from '@fortawesome/free-solid-svg-icons/faSignal'
-import {faReply} from '@fortawesome/free-solid-svg-icons/faReply'
-import {faRetweet} from '@fortawesome/free-solid-svg-icons/faRetweet'
-import {faRss} from '@fortawesome/free-solid-svg-icons/faRss'
+import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
+import {faTrashCan} from '@fortawesome/free-regular-svg-icons/faTrashCan'
 import {faUser} from '@fortawesome/free-regular-svg-icons/faUser'
 import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers'
 import {faUserCheck} from '@fortawesome/free-solid-svg-icons/faUserCheck'
@@ -74,12 +78,11 @@ import {faUserSlash} from '@fortawesome/free-solid-svg-icons/faUserSlash'
 import {faUserPlus} from '@fortawesome/free-solid-svg-icons/faUserPlus'
 import {faUserXmark} from '@fortawesome/free-solid-svg-icons/faUserXmark'
 import {faUsersSlash} from '@fortawesome/free-solid-svg-icons/faUsersSlash'
-import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
-import {faTrashCan} from '@fortawesome/free-regular-svg-icons/faTrashCan'
 import {faX} from '@fortawesome/free-solid-svg-icons/faX'
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark'
 import {faPlay} from '@fortawesome/free-solid-svg-icons/faPlay'
 import {faPause} from '@fortawesome/free-solid-svg-icons/faPause'
+import {faThumbtack} from '@fortawesome/free-solid-svg-icons/faThumbtack'
 
 export function setup() {
   library.add(
@@ -91,6 +94,7 @@ export function setup() {
     faArrowLeft,
     faArrowRight,
     faArrowUp,
+    faArrowDown,
     faArrowRightFromBracket,
     faArrowUpFromBracket,
     faArrowUpRightFromSquare,
@@ -145,6 +149,7 @@ export function setup() {
     faReply,
     faRetweet,
     faRss,
+    faSatelliteDish,
     faShare,
     faShareFromSquare,
     faShield,
@@ -159,6 +164,7 @@ export function setup() {
     faUsersSlash,
     faTicket,
     faTrashCan,
+    faThumbtack,
     faX,
     faXmark,
     faPlay,

@@ -41,8 +41,8 @@ export function Component({}: {}) {
     <View testID="contentLanguagesModal" style={[pal.view, styles.container]}>
       <Text style={[pal.text, styles.title]}>Content Languages</Text>
       <Text style={[pal.text, styles.description]}>
-        Which languages would you like to see in the What's Hot feed? (Leave
-        them all unchecked to see any language.)
+        Which languages would you like to see in the your feed? (Leave them all
+        unchecked to see any language.)
       </Text>
       <ScrollView style={styles.scrollContainer}>
         {languages.map(lang => (
