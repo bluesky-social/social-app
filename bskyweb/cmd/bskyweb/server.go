@@ -101,6 +101,9 @@ func serve(cctx *cli.Context) error {
 		RedirectCode: http.StatusFound,
 	}))
 
+	// enable gzip 
+	e.Use(middleware.Gzip())
+
 	//
 	// configure routes
 	//
