@@ -52,8 +52,8 @@ export const Component = observer(({}: {}) => {
               Adult content can only be enabled via the Web at{' '}
               <TextLink
                 style={pal.link}
-                href="https://staging.bsky.app"
-                text="staging.bsky.app"
+                href="https://bsky.app"
+                text="bsky.app"
               />
               .
             </Text>

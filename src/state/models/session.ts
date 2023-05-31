@@ -187,7 +187,7 @@ export class SessionModel {
       account => account.service === service && account.did === did,
     )
 
-    // fall back to any pre-existing access tokens
+    // fall back to any preexisting access tokens
     let refreshJwt = session?.refreshJwt || existingAccount?.refreshJwt
     let accessJwt = session?.accessJwt || existingAccount?.accessJwt
     if (event === 'expired') {
@@ -247,7 +247,7 @@ export class SessionModel {
     const res = await agent.getProfile({actor: did}).catch(_e => undefined)
     if (res) {
       return {
-        dispayName: res.data.displayName,
+        displayName: res.data.displayName,
         aviUrl: res.data.avatar,
       }
     }

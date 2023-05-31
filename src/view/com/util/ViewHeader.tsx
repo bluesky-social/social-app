@@ -4,7 +4,6 @@ import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {CenteredView} from './Views'
-import {UserAvatar} from './UserAvatar'
 import {Text} from './text/Text'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -20,12 +19,14 @@ export const ViewHeader = observer(function ({
   canGoBack,
   hideOnScroll,
   showOnDesktop,
+  showBorder,
   renderButton,
 }: {
   title: string
   canGoBack?: boolean
   hideOnScroll?: boolean
   showOnDesktop?: boolean
+  showBorder?: boolean
   renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
@@ -57,7 +58,7 @@ export const ViewHeader = observer(function ({
     }
 
     return (
-      <Container hideOnScroll={hideOnScroll || false}>
+      <Container hideOnScroll={hideOnScroll || false} showBorder={showBorder}>
         <TouchableOpacity
           testID="viewHeaderDrawerBtn"
           onPress={canGoBack ? onPressBack : onPressMenu}
@@ -65,7 +66,9 @@ export const ViewHeader = observer(function ({
           style={canGoBack ? styles.backBtn : styles.backBtnWide}
           accessibilityRole="button"
           accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
-          accessibilityHint="">
+          accessibilityHint={
+            canGoBack ? '' : 'Access navigation links and settings'
+          }>
           {canGoBack ? (
             <FontAwesomeIcon
               size={18}
@@ -73,7 +76,11 @@ export const ViewHeader = observer(function ({
               style={[styles.backIcon, pal.text]}
             />
           ) : (
-            <UserAvatar size={30} avatar={store.me.avatar} />
+            <FontAwesomeIcon
+              size={18}
+              icon="bars"
+              style={[styles.backIcon, pal.textLight]}
+            />
           )}
         </TouchableOpacity>
         <View style={styles.titleContainer} pointerEvents="none">
@@ -115,9 +122,11 @@ const Container = observer(
   ({
     children,
     hideOnScroll,
+    showBorder,
   }: {
     children: React.ReactNode
     hideOnScroll: boolean
+    showBorder?: boolean
   }) => {
     const store = useStores()
     const pal = usePalette('default')
@@ -145,11 +154,28 @@ const Container = observer(
     }
 
     if (!hideOnScroll) {
-      return <View style={[styles.header, pal.view]}>{children}</View>
+      return (
+        <View
+          style={[
+            styles.header,
+            pal.view,
+            pal.border,
+            showBorder && styles.border,
+          ]}>
+          {children}
+        </View>
+      )
     }
     return (
       <Animated.View
-        style={[styles.header, pal.view, styles.headerFloating, transform]}>
+        style={[
+          styles.header,
+          pal.view,
+          pal.border,
+          styles.headerFloating,
+          transform,
+          showBorder && styles.border,
+        ]}>
         {children}
       </Animated.View>
     )
@@ -171,6 +197,9 @@ const styles = StyleSheet.create({
   desktopHeader: {
     borderBottomWidth: 1,
     paddingVertical: 12,
+  },
+  border: {
+    borderBottomWidth: 1,
   },
 
   titleContainer: {

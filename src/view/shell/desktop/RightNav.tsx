@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     marginHorizontal: 12,
+    marginTop: 8,
   },
   darkModeToggleIcon: {
     flexDirection: 'row',

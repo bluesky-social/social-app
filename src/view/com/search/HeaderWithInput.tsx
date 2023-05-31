@@ -4,7 +4,6 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
 import {MagnifyingGlassIcon} from 'lib/icons'
 import {useTheme} from 'lib/ThemeContext'
@@ -56,9 +55,9 @@ export function HeaderWithInput({
         hitSlop={MENU_HITSLOP}
         style={styles.headerMenuBtn}
         accessibilityRole="button"
-        accessibilityLabel="Back"
-        accessibilityHint="">
-        <UserAvatar size={30} avatar={store.me.avatar} />
+        accessibilityLabel="Menu"
+        accessibilityHint="Access navigation links and settings">
+        <FontAwesomeIcon icon="bars" size={18} color={pal.colors.textLight} />
       </TouchableOpacity>
       <View
         style={[
@@ -87,6 +86,8 @@ export function HeaderWithInput({
           accessibilityRole="search"
           accessibilityLabel="Search"
           accessibilityHint=""
+          autoCorrect={false}
+          autoCapitalize="none"
         />
         {query ? (
           <TouchableOpacity
@@ -119,6 +120,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
@@ -126,7 +128,10 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 30,
-    marginHorizontal: 6,
+    marginRight: 6,
+    paddingBottom: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   headerSearchContainer: {
     flex: 1,

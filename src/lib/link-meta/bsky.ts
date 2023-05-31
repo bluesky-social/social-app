@@ -1,3 +1,4 @@
+import * as apilib from 'lib/api/index'
 import {LikelyType, LinkMeta} from './link-meta'
 // import {match as matchRoute} from 'view/routes'
 import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
@@ -125,6 +126,32 @@ export async function getPostAsQuote(
       handle: threadView.thread.post.author.handle,
       displayName: threadView.thread.post.author.displayName,
       avatar: threadView.thread.post.author.avatar,
+    },
+  }
+}
+
+export async function getFeedAsEmbed(
+  store: RootStoreModel,
+  url: string,
+): Promise<apilib.ExternalEmbedDraft> {
+  url = convertBskyAppUrlIfNeeded(url)
+  const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
+  const feed = makeRecordUri(user, 'app.bsky.feed.generator', rkey)
+  const res = await store.agent.app.bsky.feed.getFeedGenerator({feed})
+  return {
+    isLoading: false,
+    uri: feed,
+    meta: {
+      url: feed,
+      likelyType: LikelyType.AtpData,
+      title: res.data.view.displayName,
+    },
+    embed: {
+      $type: 'app.bsky.embed.record',
+      record: {
+        uri: res.data.view.uri,
+        cid: res.data.view.cid,
+      },
     },
   }
 }

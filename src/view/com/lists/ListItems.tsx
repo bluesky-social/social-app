@@ -341,7 +341,7 @@ const ListHeader = observer(
             )}
           </View>
           <View>
-            <UserAvatar avatar={list.avatar} size={64} />
+            <UserAvatar type="list" avatar={list.avatar} size={64} />
           </View>
         </View>
         <View style={[styles.fakeSelector, pal.border]}>

@@ -99,7 +99,11 @@ export const FeedItem = observer(function ({
 
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(
-      encodeURI(`https://translate.google.com/#auto|en|${record?.text || ''}`),
+      encodeURI(
+        `https://translate.google.com/?sl=auto&tl=en&text=${
+          record?.text || ''
+        }`,
+      ),
     )
   }, [record])
 

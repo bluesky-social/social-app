@@ -87,7 +87,7 @@ export const ProfileListScreen = withAuthRequired(
       return <EmptyState icon="users-slash" message="This list is empty!" />
     }, [])
 
-    const renderHeaderBtn = React.useCallback(() => {
+    const renderHeaderBtns = React.useCallback(() => {
       return (
         <View style={styles.headerBtns}>
           {list?.isOwner && (
@@ -148,7 +148,7 @@ export const ProfileListScreen = withAuthRequired(
           pal.border,
         ]}
         testID="moderationMutelistsScreen">
-        <ViewHeader title="" renderButton={renderHeaderBtn} />
+        <ViewHeader title="" renderButton={renderHeaderBtns} />
         <ListItems
           list={list}
           renderEmptyState={renderEmptyState}

@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {useNavigation} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -7,18 +8,24 @@ import {
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import {MagnifyingGlassIcon} from 'lib/icons'
-import {useStores} from 'state/index'
+import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {isWeb} from 'platform/detection'
 
-export function WhatsHotEmptyState() {
+export function CustomFeedEmptyState() {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
-  const store = useStores()
+  const navigation = useNavigation<NavigationProp>()
 
-  const onPressSettings = React.useCallback(() => {
-    store.shell.openModal({name: 'content-languages-settings'})
-  }, [store])
+  const onPressFindAccounts = React.useCallback(() => {
+    if (isWeb) {
+      navigation.navigate('Search', {})
+    } else {
+      navigation.navigate('SearchTab')
+      navigation.popToTop()
+    }
+  }, [navigation])
 
   return (
     <View style={styles.emptyContainer}>
@@ -26,12 +33,15 @@ export function WhatsHotEmptyState() {
         <MagnifyingGlassIcon style={[styles.emptyIcon, pal.text]} size={62} />
       </View>
       <Text type="xl-medium" style={[s.textCenter, pal.text]}>
-        Your What's Hot feed is empty! This is because there aren't enough users
-        posting in your selected language.
+        This feed is empty! You may need to follow more users or tune your
+        language settings.
       </Text>
-      <Button type="inverted" style={styles.emptyBtn} onPress={onPressSettings}>
+      <Button
+        type="inverted"
+        style={styles.emptyBtn}
+        onPress={onPressFindAccounts}>
         <Text type="lg-medium" style={palInverted.text}>
-          Update my settings
+          Find accounts to follow
         </Text>
         <FontAwesomeIcon
           icon="angle-right"
