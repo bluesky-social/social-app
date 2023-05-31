@@ -29,6 +29,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
 
+
 const PARENT_REPLY_LINE_LENGTH = 8
 
 export const PostThreadItem = observer(function PostThreadItem({
@@ -232,6 +233,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   type="post-text-lg"
                   richText={item.richText}
                   lineHeight={1.3}
+                  style={s.flex1}
                 />
               </View>
             ) : undefined}
@@ -364,7 +366,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                     <RichText
                       type="post-text"
                       richText={item.richText}
-                      style={pal.text}
+                      style={{...pal.text, ...s.flex1}}
                       lineHeight={1.3}
                     />
                   </View>
