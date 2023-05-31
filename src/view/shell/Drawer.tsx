@@ -2,6 +2,7 @@ import React, {ComponentProps} from 'react'
 import {
   Linking,
   SafeAreaView,
+  ScrollView,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -27,6 +28,8 @@ import {
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
   UserIconSolid,
+  SatelliteDishIcon,
+  SatelliteDishIconSolid,
   HandIcon,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -39,7 +42,7 @@ import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {isWeb} from 'platform/detection'
-import {formatCount} from 'view/com/util/numeric/format'
+import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
 
 export const DrawerContent = observer(() => {
   const theme = useTheme()
@@ -47,7 +50,7 @@ export const DrawerContent = observer(() => {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile} =
+  const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
 
   const {notifications} = store.me
@@ -93,6 +96,11 @@ export const DrawerContent = observer(() => {
   const onPressProfile = React.useCallback(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
+
+  const onPressMyFeeds = React.useCallback(
+    () => onPressTab('Feeds'),
+    [onPressTab],
+  )
 
   const onPressModeration = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Moderation'})
@@ -140,19 +148,18 @@ export const DrawerContent = observer(() => {
               type="xl"
               style={[pal.textLight, styles.profileCardFollowers]}>
               <Text type="xl-medium" style={pal.text}>
-                {formatCount(store.me.followersCount ?? 0)}
+                {formatCountShortOnly(store.me.followersCount ?? 0)}
               </Text>{' '}
               {pluralize(store.me.followersCount || 0, 'follower')} &middot;{' '}
               <Text type="xl-medium" style={pal.text}>
-                {formatCount(store.me.followsCount ?? 0)}
+                {formatCountShortOnly(store.me.followsCount ?? 0)}
               </Text>{' '}
               following
             </Text>
           </TouchableOpacity>
         </View>
         <InviteCodes />
-        <View style={s.flex1} />
-        <View style={styles.main}>
+        <ScrollView style={styles.main}>
           <MenuItem
             icon={
               isAtSearch ? (
@@ -226,12 +233,27 @@ export const DrawerContent = observer(() => {
           />
           <MenuItem
             icon={
-              <HandIcon
-                strokeWidth={5}
-                style={pal.text as FontAwesomeIconStyle}
-                size={24}
-              />
+              isAtFeeds ? (
+                <SatelliteDishIconSolid
+                  strokeWidth={1.5}
+                  style={pal.text as FontAwesomeIconStyle}
+                  size={24}
+                />
+              ) : (
+                <SatelliteDishIcon
+                  strokeWidth={1.5}
+                  style={pal.text as FontAwesomeIconStyle}
+                  size={24}
+                />
+              )
             }
+            label="My Feeds"
+            accessibilityLabel="My Feeds"
+            accessibilityHint=""
+            onPress={onPressMyFeeds}
+          />
+          <MenuItem
+            icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
             label="Moderation"
             accessibilityLabel="Moderation"
             accessibilityHint=""
@@ -271,8 +293,8 @@ export const DrawerContent = observer(() => {
             accessibilityHint=""
             onPress={onPressSettings}
           />
-        </View>
-        <View style={s.flex1} />
+          <View style={styles.smallSpacer} />
+        </ScrollView>
         <View style={styles.footer}>
           <TouchableOpacity
             accessibilityRole="link"
@@ -405,6 +427,10 @@ const styles = StyleSheet.create({
   },
   main: {
     paddingLeft: 20,
+    paddingTop: 20,
+  },
+  smallSpacer: {
+    height: 20,
   },
 
   profileCardDisplayName: {

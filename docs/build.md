@@ -26,12 +26,20 @@
   - Run once: `yarn e2e:build`
   - Each test run: `yarn e2e:run`
 - Tips
-  - Make sure you copy the `.env.example` to `.env` and add the appropiate tokens (e.g. `SENTRY_AUTH_TOKEN` can be created on the Sentry dashboard). If this is not required, you can remove it from `eas.json` and `package.json`, as well as any mentions in the code.
+  - Make sure you copy the `.env.example` to `.env` and add the appropriate tokens (e.g. `SENTRY_AUTH_TOKEN` can be created on the Sentry dashboard). If this is not required, you can remove it from `eas.json` and `package.json`, as well as any mentions in the code. Please check the section below on how to remove Sentry from the codebase
   - If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` as well as `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
   - `npx react-native info` Checks what has been installed.
   - The android simulator won't be able to access localhost services unless you run `adb reverse tcp:{PORT} tcp:{PORT}`
-    - For instance, the localhosted dev-wallet will need `adb reverse tcp:3001 tcp:3001`
+    - For instance, the locally-hosted dev-wallet will need `adb reverse tcp:3001 tcp:3001`
   - For some reason, the typescript compiler chokes on platform-specific files (e.g. `foo.native.ts`) but only when compiling for Web thus far. Therefore we always have one version of the file which doesn't use a platform specifier, and that should be the Web version. ([More info](https://stackoverflow.com/questions/44001050/platform-specific-import-component-in-react-native-with-typescript).)
+
+### Removing Sentry
+If you are part of the Bluesky team, you should have access to our Sentry dashboard, and you shouldn't need to remove Sentry. Even if you are not part of the Bluesky team, you can create your own Sentry account and add the `SENTRY_AUTH_TOKEN` env var and add your sentry account detials to `app.json` to make the app build and run successfully. However, if that is not possible, follow these steps to remove Sentry from the project (please don't commit this code in any PR):
+- `yarn remove sentry-expo @sentry/react-native`
+- Remove `sentry-expo` plugin in `app.json` and also remove the `postPublish` hook in `app.json`
+- Remove any mentions of `sentry` from the `App.native.tsx`, `App.web.tsx` and `Navigation.tsx` files. Also, delete `sentry.ts`
+- Run `rm -rf ios android` or delete the existing `android` and `ios` folders in the project (don't worry! `yarn prebuild` gets these back)
+- Run `yarn prebuild` and `yarn ios` and build the app!
 
 ## Go-Server Build
 

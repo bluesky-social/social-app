@@ -181,7 +181,7 @@ export class NotificationsFeedItemModel {
     return false
   }
 
-  get additionaDataUri(): string | undefined {
+  get additionalDataUri(): string | undefined {
     if (this.isReply || this.isQuote || this.isMention) {
       return this.uri
     } else if (this.isLike || this.isRepost) {
@@ -290,7 +290,9 @@ export class NotificationsFeedModel {
   }
 
   get hasNewLatest() {
-    return this.queuedNotifications && this.queuedNotifications?.length > 0
+    return Boolean(
+      this.queuedNotifications && this.queuedNotifications?.length > 0,
+    )
   }
 
   get unreadCountLabel(): string {
@@ -490,7 +492,7 @@ export class NotificationsFeedModel {
       'mostRecent',
       res.data.notifications[0],
     )
-    const addedUri = notif.additionaDataUri
+    const addedUri = notif.additionalDataUri
     if (addedUri) {
       const postsRes = await this.rootStore.agent.app.bsky.feed.getPosts({
         uris: [addedUri],
@@ -583,7 +585,7 @@ export class NotificationsFeedModel {
         `item-${_idCounter++}`,
         item,
       )
-      const uri = itemModel.additionaDataUri
+      const uri = itemModel.additionalDataUri
       if (uri) {
         const models = addedPostMap.get(uri) || []
         models.push(itemModel)

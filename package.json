@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.28.0",
+  "version": "1.29.0",
   "private": true,
   "scripts": {
     "postinstall": "patch-package",
@@ -22,7 +22,7 @@
     "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all"
   },
   "dependencies": {
-    "@atproto/api": "0.3.3",
+    "@atproto/api": "0.3.8",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@expo/webpack-config": "^18.0.1",
@@ -30,7 +30,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-native-fontawesome": "^0.3.0",
-    "@gorhom/bottom-sheet": "^4",
+    "@gorhom/bottom-sheet": "4.4.5",
     "@mattermost/react-native-paste-input": "^0.6.0",
     "@miblanchard/react-native-slider": "^2.2.0",
     "@notifee/react-native": "^7.4.0",
@@ -85,12 +85,10 @@
     "expo-updates": "~0.16.4",
     "fast-text-encoding": "^1.0.6",
     "graphemer": "^1.4.0",
-    "he": "^1.2.0",
     "history": "^5.3.0",
     "js-sha256": "^0.9.0",
     "lande": "^1.0.10",
     "lodash.chunk": "^4.2.0",
-    "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
     "lodash.omit": "^4.5.0",
@@ -108,9 +106,10 @@
     "react-avatar-editor": "^13.0.0",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.2.0",
-    "react-native": "0.71.7",
+    "react-native": "0.71.8",
     "react-native-appstate-hook": "^1.0.6",
     "react-native-background-fetch": "^4.1.8",
+    "react-native-draggable-flatlist": "^4.0.1",
     "react-native-drawer-layout": "^3.2.0",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "~2.9.0",
@@ -140,7 +139,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/pds": "^0.1.8",
+    "@atproto/pds": "^0.1.10",
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
@@ -152,7 +151,6 @@
     "@types/he": "^1.1.2",
     "@types/jest": "^29.4.0",
     "@types/lodash.chunk": "^4.2.7",
-    "@types/lodash.clonedeep": "^4.5.7",
     "@types/lodash.debounce": "^4.0.7",
     "@types/lodash.isequal": "^4.5.6",
     "@types/lodash.omit": "^4.5.7",

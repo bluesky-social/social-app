@@ -9,6 +9,7 @@ export type CommonNavigatorParams = {
   ModerationMuteLists: undefined
   ModerationMutedAccounts: undefined
   ModerationBlockedAccounts: undefined
+  DiscoverFeeds: undefined
   Settings: undefined
   Profile: {name: string; hideBackButton?: boolean}
   ProfileFollowers: {name: string}
@@ -17,6 +18,8 @@ export type CommonNavigatorParams = {
   PostThread: {name: string; rkey: string}
   PostLikedBy: {name: string; rkey: string}
   PostRepostedBy: {name: string; rkey: string}
+  CustomFeed: {name: string; rkey: string}
+  CustomFeedLikedBy: {name: string; rkey: string}
   Debug: undefined
   Log: undefined
   Support: undefined
@@ -25,11 +28,13 @@ export type CommonNavigatorParams = {
   CommunityGuidelines: undefined
   CopyrightPolicy: undefined
   AppPasswords: undefined
+  SavedFeeds: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
   HomeTab: undefined
   SearchTab: undefined
+  FeedsTab: undefined
   NotificationsTab: undefined
   MyProfileTab: undefined
 }
@@ -40,6 +45,10 @@ export type HomeTabNavigatorParams = CommonNavigatorParams & {
 
 export type SearchTabNavigatorParams = CommonNavigatorParams & {
   Search: {q?: string}
+}
+
+export type FeedsTabNavigatorParams = CommonNavigatorParams & {
+  Feeds: undefined
 }
 
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
@@ -53,6 +62,7 @@ export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
 export type FlatNavigatorParams = CommonNavigatorParams & {
   Home: undefined
   Search: {q?: string}
+  Feeds: undefined
   Notifications: undefined
 }
 
@@ -61,6 +71,8 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Home: undefined
   SearchTab: undefined
   Search: {q?: string}
+  FeedsTab: undefined
+  Feeds: undefined
   NotificationsTab: undefined
   Notifications: undefined
   MyProfileTab: undefined

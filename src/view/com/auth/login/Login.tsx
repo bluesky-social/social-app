@@ -420,6 +420,7 @@ const LoginForm = ({
             textContentType="oneTimeCode"
             value={password}
             onChangeText={setPassword}
+            onSubmitEditing={onPressNext}
             editable={!isProcessing}
             accessibilityLabel="Password"
             accessibilityHint={

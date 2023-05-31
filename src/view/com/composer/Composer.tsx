@@ -37,8 +37,7 @@ import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {isDesktopWeb, isAndroid} from 'platform/detection'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
-
-const MAX_GRAPHEME_LENGTH = 300
+import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
 
 type Props = ComposerOpts & {
   onClose: () => void
@@ -310,7 +309,7 @@ export const ComposePost = observer(function ComposePost({
               onError={setError}
               accessible={true}
               accessibilityLabel="Write post"
-              accessibilityHint="Compose posts up to 300 characters in length"
+              accessibilityHint={`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`}
             />
           </View>
 

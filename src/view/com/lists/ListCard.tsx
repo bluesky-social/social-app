@@ -60,7 +60,7 @@ export const ListCard = ({
       anchorNoUnderline>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <UserAvatar size={40} avatar={list.avatar} />
+          <UserAvatar type="list" size={40} avatar={list.avatar} />
         </View>
         <View style={styles.layoutContent}>
           <Text
