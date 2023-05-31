@@ -15,6 +15,7 @@ import * as RepostModal from './Repost'
 import * as CreateOrEditMuteListModal from './CreateOrEditMuteList'
 import * as ListAddRemoveUserModal from './ListAddRemoveUser'
 import * as AltImageModal from './AltImage'
+import * as EditImageModal from './AltImage'
 import * as ReportAccountModal from './ReportAccount'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
@@ -83,6 +84,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'alt-text-image') {
     snapPoints = AltImageModal.snapPoints
     element = <AltImageModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'edit-image') {
+    snapPoints = AltImageModal.snapPoints
+    element = <EditImageModal.Component {...activeModal} />
   } else if (activeModal?.name === 'change-handle') {
     snapPoints = ChangeHandleModal.snapPoints
     element = <ChangeHandleModal.Component {...activeModal} />
