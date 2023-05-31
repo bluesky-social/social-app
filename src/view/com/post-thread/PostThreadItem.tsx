@@ -29,7 +29,6 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
 
-
 const PARENT_REPLY_LINE_LENGTH = 8
 
 export const PostThreadItem = observer(function PostThreadItem({
