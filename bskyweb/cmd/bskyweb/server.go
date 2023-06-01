@@ -74,8 +74,8 @@ func serve(cctx *cli.Context) error {
 
 	// httpd
 	var (
-		httpTimeout          = 10 * time.Minute
-		httpMaxHeaderBytes   = 10 * (1024 * 1024)
+		httpTimeout          = 2 * time.Minute
+		httpMaxHeaderBytes   = 2 * (1024 * 1024)
 		gzipMinSizeBytes     = 1024 * 2
 		gzipCompressionLevel = gzip.BestSpeed
 		gzipExceptMIMETypes  = []string{"image/png"}
