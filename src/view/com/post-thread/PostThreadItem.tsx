@@ -97,15 +97,17 @@ export const PostThreadItem = observer(function PostThreadItem({
     Toast.show('Copied to clipboard')
   }, [record])
 
+  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(
       encodeURI(
-        `https://translate.google.com/?sl=auto&tl=en&text=${
+        `https://translate.google.com/?sl=auto&tl=${primaryLanguage}&text=${
           record?.text || ''
         }`,
       ),
     )
-  }, [record])
+  }, [record, primaryLanguage])
 
   const onToggleThreadMute = React.useCallback(async () => {
     try {
