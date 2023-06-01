@@ -20,7 +20,7 @@ import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {ComposeIcon2, CogIcon} from 'lib/icons'
 import {s} from 'lib/styles'
 
-const LOAD_NEW_PROMPT_TIME = 10e3 // 1 min
+const LOAD_NEW_PROMPT_TIME = 60e3 // 60 seconds
 const HEADER_OFFSET = isDesktopWeb ? 0 : 40
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
@@ -37,7 +37,6 @@ export const FeedsScreen = withAuthRequired(
       useOnMainScroll(store)
     const [loadPromptVisible, setLoadPromptVisible] = React.useState(false)
     const [resetPromptTimer] = useTimer(LOAD_NEW_PROMPT_TIME, () => {
-      console.log('timer fired')
       setLoadPromptVisible(true)
     })
 
