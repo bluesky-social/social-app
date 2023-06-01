@@ -1,5 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {getLocales} from 'expo-localization'
+import AwaitLock from 'await-lock'
+import isEqual from 'lodash.isequal'
 import {isObj, hasProp} from 'lib/type-guards'
 import {RootStoreModel} from '../root-store'
 import {ComAtprotoLabelDefs, AppBskyActorDefs} from '@atproto/api'
@@ -50,8 +52,11 @@ export class PreferencesModel {
   savedFeeds: string[] = []
   pinnedFeeds: string[] = []
 
+  // used to linearize async modifications to state
+  lock = new AwaitLock()
+
   constructor(public rootStore: RootStoreModel) {
-    makeAutoObservable(this, {}, {autoBind: true})
+    makeAutoObservable(this, {lock: false}, {autoBind: true})
   }
 
   serialize() {
@@ -103,62 +108,72 @@ export class PreferencesModel {
   /**
    * This function fetches preferences and sets defaults for missing items.
    */
-  async sync() {
-    // fetch preferences
-    let hasSavedFeedsPref = false
-    const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
-    runInAction(() => {
-      for (const pref of res.data.preferences) {
-        if (
-          AppBskyActorDefs.isAdultContentPref(pref) &&
-          AppBskyActorDefs.validateAdultContentPref(pref).success
-        ) {
-          this.adultContentEnabled = pref.enabled
-        } else if (
-          AppBskyActorDefs.isContentLabelPref(pref) &&
-          AppBskyActorDefs.validateAdultContentPref(pref).success
-        ) {
-          if (
-            LABEL_GROUPS.includes(pref.label) &&
-            VISIBILITY_VALUES.includes(pref.visibility)
-          ) {
-            this.contentLabels[pref.label as keyof LabelPreferencesModel] =
-              pref.visibility as LabelPreference
-          }
-        } else if (
-          AppBskyActorDefs.isSavedFeedsPref(pref) &&
-          AppBskyActorDefs.validateSavedFeedsPref(pref).success
-        ) {
-          this.savedFeeds = pref.saved
-          this.pinnedFeeds = pref.pinned
-          hasSavedFeedsPref = true
-        }
-      }
-    })
-
-    // set defaults on missing items
-    if (!hasSavedFeedsPref) {
-      const {saved, pinned} = await DEFAULT_FEEDS(
-        this.rootStore.agent.service.toString(),
-        (handle: string) =>
-          this.rootStore.agent
-            .resolveHandle({handle})
-            .then(({data}) => data.did),
-      )
+  async sync({clearCache}: {clearCache?: boolean} = {}) {
+    await this.lock.acquireAsync()
+    try {
+      // fetch preferences
+      let hasSavedFeedsPref = false
+      const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
       runInAction(() => {
-        this.savedFeeds = saved
-        this.pinnedFeeds = pinned
+        for (const pref of res.data.preferences) {
+          if (
+            AppBskyActorDefs.isAdultContentPref(pref) &&
+            AppBskyActorDefs.validateAdultContentPref(pref).success
+          ) {
+            this.adultContentEnabled = pref.enabled
+          } else if (
+            AppBskyActorDefs.isContentLabelPref(pref) &&
+            AppBskyActorDefs.validateAdultContentPref(pref).success
+          ) {
+            if (
+              LABEL_GROUPS.includes(pref.label) &&
+              VISIBILITY_VALUES.includes(pref.visibility)
+            ) {
+              this.contentLabels[pref.label as keyof LabelPreferencesModel] =
+                pref.visibility as LabelPreference
+            }
+          } else if (
+            AppBskyActorDefs.isSavedFeedsPref(pref) &&
+            AppBskyActorDefs.validateSavedFeedsPref(pref).success
+          ) {
+            if (!isEqual(this.savedFeeds, pref.saved)) {
+              this.savedFeeds = pref.saved
+            }
+            if (!isEqual(this.pinnedFeeds, pref.pinned)) {
+              this.pinnedFeeds = pref.pinned
+            }
+            hasSavedFeedsPref = true
+          }
+        }
       })
-      res.data.preferences.push({
-        $type: 'app.bsky.actor.defs#savedFeedsPref',
-        saved,
-        pinned,
-      })
-      await this.rootStore.agent.app.bsky.actor.putPreferences({
-        preferences: res.data.preferences,
-      })
-      /* dont await */ this.rootStore.me.savedFeeds.refresh()
+
+      // set defaults on missing items
+      if (!hasSavedFeedsPref) {
+        const {saved, pinned} = await DEFAULT_FEEDS(
+          this.rootStore.agent.service.toString(),
+          (handle: string) =>
+            this.rootStore.agent
+              .resolveHandle({handle})
+              .then(({data}) => data.did),
+        )
+        runInAction(() => {
+          this.savedFeeds = saved
+          this.pinnedFeeds = pinned
+        })
+        res.data.preferences.push({
+          $type: 'app.bsky.actor.defs#savedFeedsPref',
+          saved,
+          pinned,
+        })
+        await this.rootStore.agent.app.bsky.actor.putPreferences({
+          preferences: res.data.preferences,
+        })
+      }
+    } finally {
+      this.lock.release()
     }
+
+    await this.rootStore.me.savedFeeds.updateCache(clearCache)
   }
 
   /**
@@ -171,28 +186,38 @@ export class PreferencesModel {
    * @returns void
    */
   async update(cb: (prefs: AppBskyActorDefs.Preferences) => boolean | void) {
-    const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
-    if (cb(res.data.preferences) === false) {
-      return
+    await this.lock.acquireAsync()
+    try {
+      const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
+      if (cb(res.data.preferences) === false) {
+        return
+      }
+      await this.rootStore.agent.app.bsky.actor.putPreferences({
+        preferences: res.data.preferences,
+      })
+    } finally {
+      this.lock.release()
     }
-    await this.rootStore.agent.app.bsky.actor.putPreferences({
-      preferences: res.data.preferences,
-    })
   }
 
   /**
    * This function resets the preferences to an empty array of no preferences.
    */
   async reset() {
-    runInAction(() => {
-      this.contentLabels = new LabelPreferencesModel()
-      this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
-      this.savedFeeds = []
-      this.pinnedFeeds = []
-    })
-    await this.rootStore.agent.app.bsky.actor.putPreferences({
-      preferences: [],
-    })
+    await this.lock.acquireAsync()
+    try {
+      runInAction(() => {
+        this.contentLabels = new LabelPreferencesModel()
+        this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
+        this.savedFeeds = []
+        this.pinnedFeeds = []
+      })
+      await this.rootStore.agent.app.bsky.actor.putPreferences({
+        preferences: [],
+      })
+    } finally {
+      this.lock.release()
+    }
   }
 
   hasContentLanguage(code2: string) {
@@ -292,32 +317,31 @@ export class PreferencesModel {
     return res
   }
 
-  setFeeds(saved: string[], pinned: string[]) {
-    this.savedFeeds = saved
-    this.pinnedFeeds = pinned
-  }
-
   async setSavedFeeds(saved: string[], pinned: string[]) {
     const oldSaved = this.savedFeeds
     const oldPinned = this.pinnedFeeds
-    this.setFeeds(saved, pinned)
+    this.savedFeeds = saved
+    this.pinnedFeeds = pinned
     try {
       await this.update((prefs: AppBskyActorDefs.Preferences) => {
-        const existing = prefs.find(
+        let feedsPref = prefs.find(
           pref =>
             AppBskyActorDefs.isSavedFeedsPref(pref) &&
             AppBskyActorDefs.validateSavedFeedsPref(pref).success,
         )
-        if (existing) {
-          existing.saved = saved
-          existing.pinned = pinned
+        if (feedsPref) {
+          feedsPref.saved = saved
+          feedsPref.pinned = pinned
         } else {
-          prefs.push({
+          feedsPref = {
             $type: 'app.bsky.actor.defs#savedFeedsPref',
             saved,
             pinned,
-          })
+          }
         }
+        prefs = prefs
+          .filter(pref => !AppBskyActorDefs.isSavedFeedsPref(pref))
+          .concat([feedsPref])
       })
     } catch (e) {
       runInAction(() => {
