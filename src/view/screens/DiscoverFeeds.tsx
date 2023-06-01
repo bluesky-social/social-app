@@ -29,8 +29,8 @@ export const DiscoverFeedsScreen = withAuthRequired(
     )
 
     const onRefresh = React.useCallback(() => {
-      store.me.savedFeeds.refresh()
-    }, [store])
+      feeds.refresh()
+    }, [feeds])
 
     const renderListEmptyComponent = React.useCallback(() => {
       return (
