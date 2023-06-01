@@ -27,22 +27,16 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
         <View style={[s.flexRow]}>
           <TextLink
             type="md"
-            style={pal.link}
+            style={[pal.link, styles.rightNavLink]}
             href={FEEDBACK_FORM_URL}
             text="Send feedback"
           />
-          <Text type="md" style={pal.textLight}>
-            &nbsp;&middot;&nbsp;
-          </Text>
           <TextLink
             type="md"
-            style={pal.link}
+            style={[pal.link, styles.rightNavLink]}
             href="/support/privacy"
             text="Privacy Policy"
           />
-          <Text type="md" style={pal.textLight}>
-            &nbsp;&middot;&nbsp;
-          </Text>
           <TextLink
             type="md"
             style={pal.link}
@@ -100,6 +94,9 @@ const styles = StyleSheet.create({
     top: 20,
     left: 'calc(50vw + 330px)',
     width: 300,
+  },
+  rightNavLink: {
+    marginRight: 20,
   },
 
   message: {
