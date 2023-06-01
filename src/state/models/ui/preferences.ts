@@ -185,15 +185,20 @@ export class PreferencesModel {
    * argument and if the callback returns false, the preferences are not updated.
    * @returns void
    */
-  async update(cb: (prefs: AppBskyActorDefs.Preferences) => boolean | void) {
+  async update(
+    cb: (
+      prefs: AppBskyActorDefs.Preferences,
+    ) => AppBskyActorDefs.Preferences | false,
+  ) {
     await this.lock.acquireAsync()
     try {
       const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
-      if (cb(res.data.preferences) === false) {
+      const newPrefs = cb(res.data.preferences)
+      if (newPrefs === false) {
         return
       }
       await this.rootStore.agent.app.bsky.actor.putPreferences({
-        preferences: res.data.preferences,
+        preferences: newPrefs,
       })
     } finally {
       this.lock.release()
@@ -256,6 +261,7 @@ export class PreferencesModel {
           visibility: value,
         })
       }
+      return prefs
     })
   }
 
@@ -275,6 +281,7 @@ export class PreferencesModel {
           enabled: v,
         })
       }
+      return prefs
     })
   }
 
@@ -339,7 +346,7 @@ export class PreferencesModel {
             pinned,
           }
         }
-        prefs = prefs
+        return prefs
           .filter(pref => !AppBskyActorDefs.isSavedFeedsPref(pref))
           .concat([feedsPref])
       })
