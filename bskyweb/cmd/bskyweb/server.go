@@ -153,6 +153,9 @@ func serve(cctx *cli.Context) error {
 	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)))
 	e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
+	e.GET("/security.txt", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
+	})
 
 	// home
 	e.GET("/", server.WebHome)
