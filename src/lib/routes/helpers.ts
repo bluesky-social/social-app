@@ -11,7 +11,7 @@ export function getCurrentRoute(state: State) {
 export function isStateAtTabRoot(state: State | undefined) {
   if (!state) {
     // NOTE
-    // if state is not defined it's because init is occuring
+    // if state is not defined it's because init is occurring
     // and therefore we can safely assume we're at root
     // -prf
     return true
@@ -55,10 +55,15 @@ export function getTabState(state: State | undefined, tab: string): TabState {
   return TabState.Outside
 }
 
+type ExistingState = {
+  name: string
+  params?: RouteParams
+}
 export function buildStateObject(
   stack: string,
   route: string,
   params: RouteParams,
+  state: ExistingState[] = [],
 ) {
   if (stack === 'Flat') {
     return {
@@ -70,7 +75,7 @@ export function buildStateObject(
       {
         name: stack,
         state: {
-          routes: [{name: route, params}],
+          routes: [...state, {name: route, params}],
         },
       },
     ],

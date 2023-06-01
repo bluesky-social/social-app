@@ -110,6 +110,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     const images: AppBskyEmbedImages.Image[] = []
     for (const image of opts.images) {
       opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
+      await image.compress()
       const path = image.compressed?.path ?? image.path
       const res = await uploadBlob(store, path, 'image/jpeg')
       images.push({

@@ -52,6 +52,10 @@ export const ProfileScreen = withAuthRequired(
       viewSelectorRef.current?.scrollToTop()
     }, [])
 
+    useEffect(() => {
+      setHasSetup(false)
+    }, [route.params.name])
+
     useFocusEffect(
       React.useCallback(() => {
         const softResetSub = store.onScreenSoftReset(onSoftReset)

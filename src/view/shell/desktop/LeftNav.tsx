@@ -91,14 +91,17 @@ const NavItem = observer(
     const pal = usePalette('default')
     const store = useStores()
     const [pathName] = React.useMemo(() => router.matchPath(href), [href])
-    const currentRouteName = useNavigationState(state => {
+    const currentRouteInfo = useNavigationState(state => {
       if (!state) {
-        return 'Home'
+        return {name: 'Home'}
       }
-      return getCurrentRoute(state).name
+      return getCurrentRoute(state)
     })
-
-    const isCurrent = isTab(currentRouteName, pathName)
+    let isCurrent =
+      currentRouteInfo.name === 'Profile'
+        ? isTab(currentRouteInfo.name, pathName) &&
+          currentRouteInfo.params.name === store.me.handle
+        : isTab(currentRouteInfo.name, pathName)
     const {onPress} = useLinkProps({to: href})
     const onPressWrapped = React.useCallback(
       (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -271,6 +274,8 @@ const styles = StyleSheet.create({
     top: 10,
     right: 'calc(50vw + 312px)',
     width: 220,
+    maxHeight: 'calc(100vh - 10px)',
+    overflowY: 'auto',
   },
 
   profileCard: {

@@ -30,7 +30,7 @@ const App = observer(() => {
   }
 
   return (
-    <ThemeProvider theme={rootStore.shell.darkMode ? 'dark' : 'light'}>
+    <ThemeProvider theme={rootStore.shell.colorMode}>
       <RootSiblingParent>
         <analytics.Provider>
           <RootStoreProvider value={rootStore}>

@@ -78,7 +78,7 @@ export interface Theme {
 }
 
 export interface ThemeProviderProps {
-  theme?: ColorScheme
+  theme?: 'light' | 'dark' | 'system'
 }
 
 export const ThemeContext = createContext<Theme>(defaultTheme)
@@ -89,11 +89,14 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   theme,
   children,
 }) => {
-  const colorScheme = useColorScheme()
+  const colorSchemeFromRN = useColorScheme()
+
+  // if theme is 'system', use the device's configured color scheme
+  let colorScheme = theme === 'system' ? colorSchemeFromRN : theme
 
   const value = useMemo(
-    () => ((theme || colorScheme) === 'dark' ? darkTheme : defaultTheme),
-    [colorScheme, theme],
+    () => (colorScheme === 'dark' ? darkTheme : defaultTheme),
+    [colorScheme],
   )
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

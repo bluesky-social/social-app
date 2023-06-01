@@ -4,7 +4,7 @@ import {H2, H4, P, UL, LI, A} from 'view/com/util/Html'
 export default function () {
   return (
     <>
-      <H4>Last Updated:&nbsp;2023/02/02</H4>
+      <H4>Last Updated:&nbsp;February 2, 2023</H4>
       <P>
         This Privacy Policy is designed to help you understand how Bluesky,
         PBLLC d.b.a. Bluesky (“Bluesky,” &nbsp;“we,” “us,” or&nbsp;“our”)

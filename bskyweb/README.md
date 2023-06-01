@@ -2,7 +2,7 @@
 
 ### SPA Bundle (monolithic static javascript file)
 
-To build the SPA bundle (`bundle.web.js`), first get a Javascript development
+To build the SPA bundle (`bundle.web.js`), first get a JavaScript development
 environment set up. Either follow the top-level README, or something quick
 like:
 

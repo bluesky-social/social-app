@@ -189,7 +189,7 @@ export interface ComposerOpts {
 }
 
 export class ShellUiModel {
-  darkMode = false
+  colorMode = 'system'
   minimalShellMode = false
   isDrawerOpen = false
   isDrawerSwipeDisabled = false
@@ -210,20 +210,20 @@ export class ShellUiModel {
 
   serialize(): unknown {
     return {
-      darkMode: this.darkMode,
+      colorMode: this.colorMode,
     }
   }
 
   hydrate(v: unknown) {
     if (isObj(v)) {
-      if (hasProp(v, 'darkMode') && typeof v.darkMode === 'boolean') {
-        this.darkMode = v.darkMode
+      if (hasProp(v, 'colorMode') && typeof v.colorMode === 'string') {
+        this.colorMode = v.colorMode
       }
     }
   }
 
-  setDarkMode(v: boolean) {
-    this.darkMode = v
+  setColorMode(mode: string) {
+    this.colorMode = mode
   }
 
   setMinimalShellMode(v: boolean) {

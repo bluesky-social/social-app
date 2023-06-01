@@ -118,9 +118,9 @@ export const Component = observer(function ({image, gallery}: Props) {
   )
 
   useEffect(() => {
-    image.prev = image.compressed
+    image.prev = image.cropped
     image.prevAttributes = image.attributes
-    image.resetCompressed()
+    image.resetCropped()
   }, [image])
 
   const onCloseModal = useCallback(() => {
@@ -152,7 +152,7 @@ export const Component = observer(function ({image, gallery}: Props) {
         : {}),
     })
 
-    image.prev = image.compressed
+    image.prev = image.cropped
     image.prevAttributes = image.attributes
     onCloseModal()
   }, [altText, image, position, scale, onCloseModal])
@@ -168,8 +168,7 @@ export const Component = observer(function ({image, gallery}: Props) {
     }
   }, [])
 
-  // Prevents preliminary flash when transformations are being applied
-  if (image.compressed === undefined) {
+  if (image.cropped === undefined) {
     return null
   }
 
@@ -177,7 +176,7 @@ export const Component = observer(function ({image, gallery}: Props) {
     windowDimensions.width > 500 ? 410 : windowDimensions.width - 80
   const sideLength = isDesktopWeb ? 300 : computedWidth
 
-  const dimensions = image.getDisplayDimensions(aspectRatio, sideLength)
+  const dimensions = image.getResizedDimensions(aspectRatio, sideLength)
   const imgContainerStyles = {width: sideLength, height: sideLength}
 
   const imgControlStyles = {
@@ -196,7 +195,7 @@ export const Component = observer(function ({image, gallery}: Props) {
             <ImageEditor
               ref={editorRef}
               style={styles.imgEditor}
-              image={image.compressed.path}
+              image={image.cropped.path}
               scale={scale}
               border={0}
               position={position}
