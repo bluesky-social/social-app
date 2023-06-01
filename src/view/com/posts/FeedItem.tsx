@@ -7,7 +7,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {PostsFeedItemModel} from 'state/models/feeds/posts'
+import {PostsFeedItemModel} from 'state/models/feeds/post'
 import {ModerationBehaviorCode} from 'lib/labeling/types'
 import {Link, DesktopWebTextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -135,10 +135,6 @@ export const FeedItem = observer(function ({
     )
   }, [track, item, setDeleted, store])
 
-  if (!record || deleted) {
-    return <View />
-  }
-
   const isSmallTop = isThreadChild
   const outerStyles = [
     styles.outer,
@@ -191,6 +187,10 @@ export const FeedItem = observer(function ({
     },
     [onPressReply, onPressToggleLike, onPressToggleRepost],
   )
+
+  if (!record || deleted) {
+    return <View />
+  }
 
   return (
     <PostHider
