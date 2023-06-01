@@ -66,7 +66,7 @@
     "base64-js": "^1.5.1",
     "email-validator": "^2.0.4",
     "eslint-plugin-react-native-a11y": "^3.3.0",
-    "expo": "~48.0.15",
+    "expo": "~48.0.18",
     "expo-application": "~5.1.1",
     "expo-build-properties": "~0.5.1",
     "expo-camera": "~13.2.1",
