@@ -403,9 +403,17 @@ export class PostsFeedModel {
     if (this.feedType === 'home') {
       return this.rootStore.agent.getTimeline(params as GetTimeline.QueryParams)
     } else if (this.feedType === 'custom') {
-      return this.rootStore.agent.app.bsky.feed.getFeed(
+      const res = await this.rootStore.agent.app.bsky.feed.getFeed(
         params as GetCustomFeed.QueryParams,
       )
+      // NOTE
+      // some custom feeds fail to enforce the pagination limit
+      // so we manually truncate here
+      // -prf
+      if (params.limit && res.data.feed.length > params.limit) {
+        res.data.feed = res.data.feed.slice(0, params.limit)
+      }
+      return res
     } else {
       return this.rootStore.agent.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,
