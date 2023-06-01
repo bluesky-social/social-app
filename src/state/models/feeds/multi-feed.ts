@@ -148,6 +148,15 @@ export class PostsMultiFeedModel {
   }
 
   /**
+   * Load latest in the active feeds
+   */
+  loadLatest() {
+    for (const feed of this.feeds) {
+      /* dont await */ feed.refresh()
+    }
+  }
+
+  /**
    * Load more posts to the end of the feed
    */
   loadMore = bundleAsync(async (isRefreshing: boolean = false) => {
