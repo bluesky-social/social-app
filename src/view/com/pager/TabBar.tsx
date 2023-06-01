@@ -1,12 +1,5 @@
-import React, {
-  useRef,
-  createRef,
-  useMemo,
-  useEffect,
-  useState,
-  useCallback,
-} from 'react'
-import {StyleSheet, View, ScrollView} from 'react-native'
+import React, {useRef, useMemo, useEffect, useState, useCallback} from 'react'
+import {StyleSheet, View, ScrollView, LayoutChangeEvent} from 'react-native'
 import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -33,17 +26,16 @@ export function TabBar({
   const pal = usePalette('default')
   const scrollElRef = useRef<ScrollView>(null)
   const [itemXs, setItemXs] = useState<number[]>([])
-  const itemRefs = useMemo(
-    () => Array.from({length: items.length}).map(() => createRef<View>()),
-    [items.length],
-  )
   const indicatorStyle = useMemo(
     () => ({borderBottomColor: indicatorColor || pal.colors.link}),
     [indicatorColor, pal],
   )
 
+  // scrolls to the selected item when the page changes
   useEffect(() => {
-    scrollElRef.current?.scrollTo({x: itemXs[selectedPage] || 0})
+    scrollElRef.current?.scrollTo({
+      x: itemXs[selectedPage] || 0,
+    })
   }, [scrollElRef, itemXs, selectedPage])
 
   const onPressItem = useCallback(
@@ -53,26 +45,21 @@ export function TabBar({
         onPressSelected?.()
       }
     },
-    [onSelect, onPressSelected, selectedPage],
+    [onSelect, selectedPage, onPressSelected],
   )
 
-  const onLayout = React.useCallback(() => {
-    const promises = []
-    for (let i = 0; i < items.length; i++) {
-      promises.push(
-        new Promise<number>(resolve => {
-          if (!itemRefs[i].current) {
-            return resolve(0)
-          }
-
-          itemRefs[i].current?.measure((x: number) => resolve(x))
-        }),
-      )
-    }
-    Promise.all(promises).then((Xs: number[]) => {
-      setItemXs(Xs)
-    })
-  }, [itemRefs, setItemXs, items.length])
+  // calculates the x position of each item on mount and on layout change
+  const onItemLayout = React.useCallback(
+    (e: LayoutChangeEvent, index: number) => {
+      const x = e.nativeEvent.layout.x
+      setItemXs(prev => {
+        const Xs = [...prev]
+        Xs[index] = x
+        return Xs
+      })
+    },
+    [],
+  )
 
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>
@@ -80,14 +67,13 @@ export function TabBar({
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         ref={scrollElRef}
-        contentContainerStyle={styles.contentContainer}
-        onLayout={onLayout}>
+        contentContainerStyle={styles.contentContainer}>
         {items.map((item, i) => {
           const selected = i === selectedPage
           return (
             <PressableWithHover
-              ref={itemRefs[i]}
               key={item}
+              onLayout={e => onItemLayout(e, i)}
               style={[styles.item, selected && indicatorStyle]}
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}>
