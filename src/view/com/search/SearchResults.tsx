@@ -14,6 +14,7 @@ import {
 import {Text} from 'view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {isDesktopWeb} from 'platform/detection'
 
 const SECTIONS = ['Posts', 'Users']
 
@@ -134,6 +135,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   results: {
-    paddingTop: 42,
+    paddingTop: isDesktopWeb ? 50 : 42,
   },
 })
