@@ -6,7 +6,7 @@ import {CustomFeedModel} from './custom-feed'
 import {PostsFeedModel} from './posts'
 import {PostsFeedSliceModel} from './post'
 
-const FEED_PAGE_SIZE = 5
+const FEED_PAGE_SIZE = 10
 const FEEDS_PAGE_SIZE = 3
 
 export type MultiFeedItem =
