@@ -101,8 +101,19 @@ func serve(cctx *cli.Context) error {
 		RedirectCode: http.StatusFound,
 	}))
 
-	// enable gzip 
-	e.Use(middleware.Gzip())
+	// gzip transport compression for most responses.
+	// echo middleware is pretty naive, defaults to compressing every response,
+	// of any mimetype or size. we configure to skip some cases, but this is a
+	// pretty incomplete set of patterns.
+	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
+		Skipper: func(c echo.Context) bool {
+			// don't compress PNG files, specifically
+			return strings.HasSuffix(c.Request().URL.Path, ".png")
+		},
+		Level: -1, // default
+		// TODO: https://github.com/labstack/echo/pull/2267
+		//MinLength: 1024, // default is "0"
+	}))
 
 	//
 	// configure routes
