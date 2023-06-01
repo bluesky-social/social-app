@@ -14,13 +14,15 @@ type Mailmodo struct {
 	httpClient *http.Client
 	APIKey     string
 	BaseURL    string
+	ListName   string
 }
 
-func NewMailmodo(apiKey string) *Mailmodo {
+func NewMailmodo(apiKey, listName string) *Mailmodo {
 	return &Mailmodo{
 		APIKey:     apiKey,
 		BaseURL:    "https://api.mailmodo.com/api/v1",
 		httpClient: &http.Client{},
+		ListName:   listName,
 	}
 }
 
@@ -56,9 +58,9 @@ func (m *Mailmodo) request(ctx context.Context, httpMethod string, apiMethod str
 	return nil
 }
 
-func (m *Mailmodo) AddToList(ctx context.Context, listName, email string) error {
+func (m *Mailmodo) AddToList(ctx context.Context, email string) error {
 	return m.request(ctx, "POST", "addToList", map[string]any{
-		"listName": listName,
+		"listName": m.ListName,
 		"email":    email,
 		"data": map[string]any{
 			"email_hashed": fmt.Sprintf("%x", sha256.Sum256([]byte(email))),

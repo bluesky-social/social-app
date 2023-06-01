@@ -3,12 +3,16 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/fs"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
+	"time"
 
 	comatproto "github.com/bluesky-social/indigo/api/atproto"
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
@@ -17,13 +21,18 @@ import (
 	"github.com/bluesky-social/social-app/bskyweb"
 
 	"github.com/flosch/pongo2/v6"
+	"github.com/klauspost/compress/gzhttp"
+	"github.com/klauspost/compress/gzip"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/urfave/cli/v2"
 )
 
 type Server struct {
-	xrpcc *xrpc.Client
+	echo     *echo.Echo
+	httpd    *http.Server
+	mailmodo *Mailmodo
+	xrpcc    *xrpc.Client
 }
 
 func serve(cctx *cli.Context) error {
@@ -35,8 +44,11 @@ func serve(cctx *cli.Context) error {
 	mailmodoAPIKey := cctx.String("mailmodo-api-key")
 	mailmodoListName := cctx.String("mailmodo-list-name")
 
+	// Echo
+	e := echo.New()
+
 	// Mailmodo client.
-	mailmodo := NewMailmodo(mailmodoAPIKey)
+	mailmodo := NewMailmodo(mailmodoAPIKey, mailmodoListName)
 
 	// create a new session
 	// TODO: does this work with no auth at all?
@@ -60,21 +72,43 @@ func serve(cctx *cli.Context) error {
 	xrpcc.Auth.Did = auth.Did
 	xrpcc.Auth.Handle = auth.Handle
 
-	server := Server{xrpcc}
+	// httpd
+	var (
+		httpTimeout          = 2 * time.Minute
+		httpMaxHeaderBytes   = 2 * (1024 * 1024)
+		gzipMinSizeBytes     = 1024 * 2
+		gzipCompressionLevel = gzip.BestSpeed
+		gzipExceptMIMETypes  = []string{"image/png"}
+	)
 
-	staticHandler := http.FileServer(func() http.FileSystem {
-		if debug {
-			log.Debugf("serving static file from the local file system")
-			return http.FS(os.DirFS("static"))
-		}
-		fsys, err := fs.Sub(bskyweb.StaticFS, "static")
-		if err != nil {
-			log.Fatal(err)
-		}
-		return http.FS(fsys)
-	}())
+	// Wrap the server handler in a gzip handler to compress larger responses.
+	gzipHandler, err := gzhttp.NewWrapper(
+		gzhttp.MinSize(gzipMinSizeBytes),
+		gzhttp.CompressionLevel(gzipCompressionLevel),
+		gzhttp.ExceptContentTypes(gzipExceptMIMETypes),
+	)
+	if err != nil {
+		return err
+	}
 
-	e := echo.New()
+	//
+	// server
+	//
+	server := &Server{
+		echo:     e,
+		mailmodo: mailmodo,
+		xrpcc:    xrpcc,
+	}
+
+	// Create the HTTP server.
+	server.httpd = &http.Server{
+		Handler:        gzipHandler(server),
+		Addr:           httpAddress,
+		WriteTimeout:   httpTimeout,
+		ReadTimeout:    httpTimeout,
+		MaxHeaderBytes: httpMaxHeaderBytes,
+	}
+
 	e.HideBanner = true
 	// SECURITY: Do not modify without due consideration.
 	e.Use(middleware.SecureWithConfig(middleware.SecureConfig{
@@ -90,10 +124,9 @@ func serve(cctx *cli.Context) error {
 		Skipper: func(c echo.Context) bool {
 			return strings.HasPrefix(c.Request().URL.Path, "/static")
 		},
-		Format: "method=${method} path=${uri} status=${status} latency=${latency_human}\n",
 	}))
 	e.Renderer = NewRenderer("templates/", &bskyweb.TemplateFS, debug)
-	e.HTTPErrorHandler = customHTTPErrorHandler
+	e.HTTPErrorHandler = server.errorHandler
 
 	// redirect trailing slash to non-trailing slash.
 	// all of our current endpoints have no trailing slash.
@@ -106,9 +139,23 @@ func serve(cctx *cli.Context) error {
 	//
 
 	// static files
+	staticHandler := http.FileServer(func() http.FileSystem {
+		if debug {
+			log.Debugf("serving static file from the local file system")
+			return http.FS(os.DirFS("static"))
+		}
+		fsys, err := fs.Sub(bskyweb.StaticFS, "static")
+		if err != nil {
+			log.Fatal(err)
+		}
+		return http.FS(fsys)
+	}())
 	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)))
 	e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
+	e.GET("/security.txt", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
+	})
 
 	// home
 	e.GET("/", server.WebHome)
@@ -147,44 +194,54 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handle/post/:rkey/reposted-by", server.WebGeneric)
 
 	// Mailmodo
-	e.POST("/api/waitlist", func(c echo.Context) error {
-		type jsonError struct {
-			Error string `json:"error"`
-		}
+	e.POST("/api/waitlist", server.apiWaitlist)
 
-		// Read the API request.
-		type apiRequest struct {
-			Email string `json:"email"`
-		}
-
-		bodyReader := http.MaxBytesReader(c.Response(), c.Request().Body, 16*1024)
-		payload, err := ioutil.ReadAll(bodyReader)
-		if err != nil {
-			return err
-		}
-		var req apiRequest
-		if err := json.Unmarshal(payload, &req); err != nil {
-			return c.JSON(http.StatusBadRequest, jsonError{Error: "Invalid API request"})
-		}
-
-		if req.Email == "" {
-			return c.JSON(http.StatusBadRequest, jsonError{Error: "Please enter a valid email address."})
-		}
-
-		if err := mailmodo.AddToList(c.Request().Context(), mailmodoListName, req.Email); err != nil {
-			log.Errorf("adding email to waitlist failed: %s", err)
-			return c.JSON(http.StatusBadRequest, jsonError{
-				Error: "Storing email in waitlist failed. Please enter a valid email address.",
-			})
-		}
-		return c.JSON(http.StatusOK, map[string]bool{"success": true})
-	})
-
+	// Start the server.
 	log.Infof("starting server address=%s", httpAddress)
-	return e.Start(httpAddress)
+	go func() {
+		if err := server.httpd.ListenAndServe(); err != nil {
+			if !errors.Is(err, http.ErrServerClosed) {
+				log.Errorf("HTTP server shutting down unexpectedly: %s", err)
+			}
+		}
+	}()
+
+	// Wait for a signal to exit.
+	log.Info("registering OS exit signal handler")
+	quit := make(chan struct{})
+	exitSignals := make(chan os.Signal, 1)
+	signal.Notify(exitSignals, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		sig := <-exitSignals
+		log.Infof("received OS exit signal: %s", sig)
+
+		// Shut down the HTTP server.
+		if err := server.Shutdown(); err != nil {
+			log.Errorf("HTTP server shutdown error: %s", err)
+		}
+
+		// Trigger the return that causes an exit.
+		close(quit)
+	}()
+	<-quit
+	log.Infof("graceful shutdown complete")
+	return nil
 }
 
-func customHTTPErrorHandler(err error, c echo.Context) {
+func (srv *Server) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+	srv.echo.ServeHTTP(rw, req)
+}
+
+func (srv *Server) Shutdown() error {
+	log.Info("shutting down")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	return srv.httpd.Shutdown(ctx)
+}
+
+func (srv *Server) errorHandler(err error, c echo.Context) {
 	code := http.StatusInternalServerError
 	if he, ok := err.(*echo.HTTPError); ok {
 		code = he.Code
@@ -259,4 +316,37 @@ func (srv *Server) WebProfile(c echo.Context) error {
 	}
 
 	return c.Render(http.StatusOK, "profile.html", data)
+}
+
+func (srv *Server) apiWaitlist(c echo.Context) error {
+	type jsonError struct {
+		Error string `json:"error"`
+	}
+
+	// Read the API request.
+	type apiRequest struct {
+		Email string `json:"email"`
+	}
+
+	bodyReader := http.MaxBytesReader(c.Response(), c.Request().Body, 16*1024)
+	payload, err := ioutil.ReadAll(bodyReader)
+	if err != nil {
+		return err
+	}
+	var req apiRequest
+	if err := json.Unmarshal(payload, &req); err != nil {
+		return c.JSON(http.StatusBadRequest, jsonError{Error: "Invalid API request"})
+	}
+
+	if req.Email == "" {
+		return c.JSON(http.StatusBadRequest, jsonError{Error: "Please enter a valid email address."})
+	}
+
+	if err := srv.mailmodo.AddToList(c.Request().Context(), req.Email); err != nil {
+		log.Errorf("adding email to waitlist failed: %s", err)
+		return c.JSON(http.StatusBadRequest, jsonError{
+			Error: "Storing email in waitlist failed. Please enter a valid email address.",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]bool{"success": true})
 }
