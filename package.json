@@ -16,6 +16,7 @@
     "test-ci": "jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "jest --coverage",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "typecheck": "tsc --project ./tsconfig.check.json",
     "e2e:mock-server": "ts-node __e2e__/mock-server.ts",
     "e2e:metro": "RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
     "e2e:build": "detox build -c ios.sim.debug",

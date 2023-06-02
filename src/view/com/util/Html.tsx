@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from './text/Text'
@@ -9,6 +9,15 @@ import {isDesktopWeb} from 'platform/detection'
  * These utilities are used to define long documents in an html-like
  * DSL. See for instance /locale/en/privacy-policy.tsx
  */
+
+interface IsChildProps {
+  isChild?: boolean
+}
+
+// type ReactNodeWithIsChildProp =
+//   | React.ReactElement<IsChildProps>
+//   | React.ReactElement<IsChildProps>[]
+//   | React.ReactNode
 
 export function H1({children}: React.PropsWithChildren<{}>) {
   const pal = usePalette('default')
@@ -55,10 +64,7 @@ export function P({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function UL({
-  children,
-  isChild,
-}: React.PropsWithChildren<{isChild: boolean}>) {
+export function UL({children, isChild}: React.PropsWithChildren<IsChildProps>) {
   return (
     <View style={[styles.ul, isChild && styles.ulChild]}>
       {markChildProps(children)}
@@ -66,10 +72,7 @@ export function UL({
   )
 }
 
-export function OL({
-  children,
-  isChild,
-}: React.PropsWithChildren<{isChild: boolean}>) {
+export function OL({children, isChild}: React.PropsWithChildren<IsChildProps>) {
   return (
     <View style={[styles.ol, isChild && styles.olChild]}>
       {markChildProps(children)}
@@ -122,10 +125,13 @@ export function EM({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-function markChildProps(children) {
+function markChildProps(children: React.ReactNode) {
   return React.Children.map(children, child => {
     if (React.isValidElement(child)) {
-      return React.cloneElement(child, {isChild: true})
+      return React.cloneElement<IsChildProps>(
+        child as React.ReactElement<IsChildProps>,
+        {isChild: true},
+      )
     }
     return child
   })

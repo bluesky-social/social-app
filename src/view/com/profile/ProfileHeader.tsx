@@ -587,9 +587,9 @@ const styles = StyleSheet.create({
   // Word wrapping appears fine on
   // mobile but overflows on desktop
   handle: isNative
-    ? undefined
+    ? {}
     : {
-        // eslint-disable-next-line
+        // @ts-ignore web only -prf
         wordBreak: 'break-all',
       },
 

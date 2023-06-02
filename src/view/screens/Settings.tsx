@@ -38,6 +38,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {isDesktopWeb} from 'platform/detection'
 import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
+import {isColorMode} from 'state/models/ui/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -299,20 +300,26 @@ export const SettingsScreen = withAuthRequired(
                 value="system"
                 label="System"
                 left
-                onChange={(v: string) => store.shell.setColorMode(v)}
+                onChange={(v: string) =>
+                  store.shell.setColorMode(isColorMode(v) ? v : 'system')
+                }
               />
               <SelectableBtn
                 current={store.shell.colorMode}
                 value="light"
                 label="Light"
-                onChange={(v: string) => store.shell.setColorMode(v)}
+                onChange={(v: string) =>
+                  store.shell.setColorMode(isColorMode(v) ? v : 'system')
+                }
               />
               <SelectableBtn
                 current={store.shell.colorMode}
                 value="dark"
                 label="Dark"
                 right
-                onChange={(v: string) => store.shell.setColorMode(v)}
+                onChange={(v: string) =>
+                  store.shell.setColorMode(isColorMode(v) ? v : 'system')
+                }
               />
             </View>
           </View>
