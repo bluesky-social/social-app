@@ -6,15 +6,8 @@ import {
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
-import sampleSize from 'lodash.samplesize'
 import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
-import {SUGGESTED_FOLLOWS} from 'lib/constants'
-import {
-  getCombinedCursors,
-  getMultipleAuthorsPosts,
-  mergePosts,
-} from 'lib/api/build-suggested-posts'
 import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
 import {PostsFeedSliceModel} from './post'
 
@@ -49,7 +42,7 @@ export class PostsFeedModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public feedType: 'home' | 'author' | 'suggested' | 'custom',
+    public feedType: 'home' | 'author' | 'custom',
     params:
       | GetTimeline.QueryParams
       | GetAuthorFeed.QueryParams
@@ -119,14 +112,6 @@ export class PostsFeedModel {
     this.pollCursor = undefined
     this.slices = []
     this.tuner.reset()
-  }
-
-  switchFeedType(feedType: 'home' | 'suggested') {
-    if (this.feedType === feedType) {
-      return
-    }
-    this.feedType = feedType
-    return this.setup()
   }
 
   get feedTuners() {
@@ -263,7 +248,7 @@ export class PostsFeedModel {
    * Check if new posts are available
    */
   async checkForLatest() {
-    if (this.hasNewLatest || this.feedType === 'suggested') {
+    if (this.hasNewLatest) {
       return
     }
     const res = await this._getFeed({limit: this.pageSize})
@@ -415,30 +400,20 @@ export class PostsFeedModel {
     GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response
   > {
     params = Object.assign({}, this.params, params)
-    if (this.feedType === 'suggested') {
-      const responses = await getMultipleAuthorsPosts(
-        this.rootStore,
-        sampleSize(SUGGESTED_FOLLOWS(String(this.rootStore.agent.service)), 20),
-        params.cursor,
-        20,
-      )
-      const combinedCursor = getCombinedCursors(responses)
-      const finalData = mergePosts(responses, {bestOfOnly: true})
-      const lastHeaders = responses[responses.length - 1].headers
-      return {
-        success: true,
-        data: {
-          feed: finalData,
-          cursor: combinedCursor,
-        },
-        headers: lastHeaders,
-      }
-    } else if (this.feedType === 'home') {
+    if (this.feedType === 'home') {
       return this.rootStore.agent.getTimeline(params as GetTimeline.QueryParams)
     } else if (this.feedType === 'custom') {
-      return this.rootStore.agent.app.bsky.feed.getFeed(
+      const res = await this.rootStore.agent.app.bsky.feed.getFeed(
         params as GetCustomFeed.QueryParams,
       )
+      // NOTE
+      // some custom feeds fail to enforce the pagination limit
+      // so we manually truncate here
+      // -prf
+      if (params.limit && res.data.feed.length > params.limit) {
+        res.data.feed = res.data.feed.slice(0, params.limit)
+      }
+      return res
     } else {
       return this.rootStore.agent.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,

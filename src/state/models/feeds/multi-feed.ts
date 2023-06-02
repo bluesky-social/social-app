@@ -6,7 +6,7 @@ import {CustomFeedModel} from './custom-feed'
 import {PostsFeedModel} from './posts'
 import {PostsFeedSliceModel} from './post'
 
-const FEED_PAGE_SIZE = 5
+const FEED_PAGE_SIZE = 10
 const FEEDS_PAGE_SIZE = 3
 
 export type MultiFeedItem =
@@ -145,6 +145,15 @@ export class PostsMultiFeedModel {
   async refresh() {
     this.feedInfos = this.rootStore.me.savedFeeds.all.slice() // capture current feeds
     await this.loadMore(true)
+  }
+
+  /**
+   * Load latest in the active feeds
+   */
+  loadLatest() {
+    for (const feed of this.feeds) {
+      /* dont await */ feed.refresh()
+    }
   }
 
   /**
