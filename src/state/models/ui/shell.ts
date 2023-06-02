@@ -8,6 +8,12 @@ import {ImageModel} from '../media/image'
 import {ListModel} from '../content/list'
 import {GalleryModel} from '../media/gallery'
 
+export type ColorMode = 'system' | 'light' | 'dark'
+
+export function isColorMode(v: unknown): v is ColorMode {
+  return v === 'system' || v === 'light' || v === 'dark'
+}
+
 export interface ConfirmModal {
   name: 'confirm'
   title: string
@@ -189,7 +195,7 @@ export interface ComposerOpts {
 }
 
 export class ShellUiModel {
-  colorMode = 'system'
+  colorMode: ColorMode = 'system'
   minimalShellMode = false
   isDrawerOpen = false
   isDrawerSwipeDisabled = false
@@ -216,13 +222,13 @@ export class ShellUiModel {
 
   hydrate(v: unknown) {
     if (isObj(v)) {
-      if (hasProp(v, 'colorMode') && typeof v.colorMode === 'string') {
+      if (hasProp(v, 'colorMode') && isColorMode(v.colorMode)) {
         this.colorMode = v.colorMode
       }
     }
   }
 
-  setColorMode(mode: string) {
+  setColorMode(mode: ColorMode) {
     this.colorMode = mode
   }
 

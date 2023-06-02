@@ -70,7 +70,9 @@ export function UserInfoText({
         numberOfLines={1}
         href={`/profile/${profile.handle}`}
         text={`${prefix || ''}${sanitizeDisplayName(
-          profile[attr] || profile.handle,
+          typeof profile[attr] === 'string' && profile[attr]
+            ? (profile[attr] as string)
+            : profile.handle,
         )}`}
       />
     )
