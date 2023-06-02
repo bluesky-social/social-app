@@ -1,10 +1,24 @@
 import {resolveConfig} from 'detox/internals'
+import {execSync} from 'child_process'
 
 const platform = device.getPlatform()
 
 export async function openApp(opts: any) {
   opts = opts || {}
   const config = await resolveConfig()
+
+  if (device.getPlatform() === 'ios') {
+    // disable password autofill
+    execSync(
+      `plutil -replace restrictedBool.allowPasswordAutoFill.value -bool NO ~/Library/Developer/CoreSimulator/Devices/${device.id}/data/Containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles/UserSettings.plist`,
+    )
+    execSync(
+      `plutil -replace restrictedBool.allowPasswordAutoFill.value -bool NO ~/Library/Developer/CoreSimulator/Devices/${device.id}/data/Library/UserConfigurationProfiles/EffectiveUserSettings.plist`,
+    )
+    execSync(
+      `plutil -replace restrictedBool.allowPasswordAutoFill.value -bool NO ~/Library/Developer/CoreSimulator/Devices/${device.id}/data/Library/UserConfigurationProfiles/PublicInfo/PublicEffectiveUserSettings.plist`,
+    )
+  }
   if (config.configurationName.split('.').includes('debug')) {
     return await openAppForDebugBuild(platform, opts)
   } else {
