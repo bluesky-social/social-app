@@ -22,7 +22,7 @@ import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import {isDesktopWeb} from 'platform/detection'
-import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
+// import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
 
 const HEADER_OFFSET = isDesktopWeb ? 50 : 78
 const POLL_FREQ = 30e3 // 30sec
@@ -33,7 +33,7 @@ export const HomeScreen = withAuthRequired(
     const store = useStores()
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
-    useOTAUpdate() // hook to check for updates via a listener
+    // useOTAUpdate() // uncomment this hook to poll for OTA updates every few seconds
     const [customFeeds, setCustomFeeds] = React.useState<PostsFeedModel[]>([])
 
     React.useEffect(() => {
