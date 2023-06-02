@@ -36,7 +36,7 @@ export const Component = observer(
     const pal = usePalette('default')
     const palPrimary = usePalette('primary')
     const palInverted = usePalette('inverted')
-    const [selected, setSelected] = React.useState([])
+    const [selected, setSelected] = React.useState<string[]>([])
 
     const listsList: ListsListModel = React.useMemo(
       () => new ListsListModel(store, store.me.did),

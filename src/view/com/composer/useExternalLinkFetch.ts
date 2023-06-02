@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react'
 import {useStores} from 'state/index'
+import {ImageModel} from 'state/models/media/image'
 import * as apilib from 'lib/api/index'
 import {getLinkMeta} from 'lib/link-meta/link-meta'
 import {getPostAsQuote, getFeedAsEmbed} from 'lib/link-meta/bsky'
@@ -90,7 +91,9 @@ export function useExternalLinkFetch({
           setExtLink({
             ...extLink,
             isLoading: false, // done
-            localThumb,
+            localThumb: localThumb
+              ? new ImageModel(store, localThumb)
+              : undefined,
           })
         })
       return cleanup

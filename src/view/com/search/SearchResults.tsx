@@ -24,7 +24,7 @@ export const SearchResults = observer(({model}: {model: SearchUIModel}) => {
   const renderTabBar = React.useCallback(
     (props: RenderTabBarFnProps) => {
       return (
-        <CenteredView style={[pal.border, styles.tabBar]}>
+        <CenteredView style={[pal.border, pal.view, styles.tabBar]}>
           <TabBar
             items={SECTIONS}
             {...props}
@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
     top: 0,
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: 'white',
   },
   empty: {
     paddingHorizontal: 14,

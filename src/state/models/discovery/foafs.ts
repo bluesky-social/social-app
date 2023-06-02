@@ -1,4 +1,7 @@
-import {AppBskyActorDefs} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyGraphGetFollows as GetFollows,
+} from '@atproto/api'
 import {makeAutoObservable, runInAction} from 'mobx'
 import sampleSize from 'lodash.samplesize'
 import {bundleAsync} from 'lib/async/bundle'
@@ -43,11 +46,12 @@ export class FoafsModel {
       {
         let cursor
         for (let i = 0; i < 10; i++) {
-          const res = await this.rootStore.agent.getFollows({
-            actor: this.rootStore.me.did,
-            cursor,
-            limit: 100,
-          })
+          const res: GetFollows.Response =
+            await this.rootStore.agent.getFollows({
+              actor: this.rootStore.me.did,
+              cursor,
+              limit: 100,
+            })
           this.rootStore.me.follows.hydrateProfiles(res.data.follows)
           if (!res.data.cursor) {
             break

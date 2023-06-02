@@ -34,7 +34,7 @@ import {
   SatelliteDishIconSolid,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
-import {NavigationProp} from 'lib/routes/types'
+import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
 import {router} from '../../../routes'
 
 const ProfileCard = observer(() => {
@@ -100,7 +100,8 @@ const NavItem = observer(
     let isCurrent =
       currentRouteInfo.name === 'Profile'
         ? isTab(currentRouteInfo.name, pathName) &&
-          currentRouteInfo.params.name === store.me.handle
+          (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
+            store.me.handle
         : isTab(currentRouteInfo.name, pathName)
     const {onPress} = useLinkProps({to: href})
     const onPressWrapped = React.useCallback(
@@ -122,6 +123,7 @@ const NavItem = observer(
       <PressableWithHover
         style={styles.navItemWrapper}
         hoverStyle={pal.viewLight}
+        // @ts-ignore the function signature differs on web -prf
         onPress={onPressWrapped}
         // @ts-ignore web only -prf
         href={href}
