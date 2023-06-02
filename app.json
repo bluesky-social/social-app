@@ -5,6 +5,9 @@
     "scheme": "bluesky",
     "owner": "blueskysocial",
     "version": "1.29.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -63,9 +66,15 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "updates": {
+      "enabled": true,
+      "fallbackToCacheTimeout": 1000,
+      "url": "https://u.expo.dev/55bd077a-d905-4184-9c7f-94789ba0f302"
+    },
     "plugins": [
       "expo-localization",
       "react-native-background-fetch",
+      "sentry-expo",
       [
         "expo-build-properties",
         {
@@ -79,8 +88,7 @@
         {
           "username": "blueskysocial"
         }
-      ],
-      "sentry-expo"
+      ]
     ],
     "extra": {
       "eas": {
