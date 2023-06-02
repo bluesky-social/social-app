@@ -67,7 +67,7 @@ export function UserBanner({
         )
       },
     },
-    {
+    !!banner && {
       testID: 'changeBannerRemoveBtn',
       label: 'Remove',
       icon: ['far', 'trash-can'] as IconProp,

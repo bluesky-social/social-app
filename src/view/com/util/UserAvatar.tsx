@@ -163,7 +163,7 @@ export function UserAvatar({
           onSelectNewAvatar?.(croppedImage)
         },
       },
-      {
+      !!avatar && {
         testID: 'changeAvatarRemoveBtn',
         label: 'Remove',
         icon: ['far', 'trash-can'] as IconProp,
@@ -173,6 +173,7 @@ export function UserAvatar({
       },
     ],
     [
+      avatar,
       onSelectNewAvatar,
       requestCameraAccessIfNeeded,
       requestPhotoAccessIfNeeded,
