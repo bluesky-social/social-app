@@ -1,0 +1,11 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "xyz.blueskyweb.app",
+      "sha256_cert_fingerprints":
+        ["C1:4D:3C:6B:B5:D6:D9:AE:CF:C5:0B:BC:C1:9B:29:6D:D4:E6:87:46:36:D5:4C:1A:64:1C:14:08:BF:7E:F9:62", "FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C"]
+    }
+  }
+]

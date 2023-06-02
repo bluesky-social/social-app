@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   ActivityIndicator,
+  Pressable,
   StyleSheet,
   TextStyle,
   TouchableOpacity,
@@ -127,11 +128,6 @@ export const SettingsScreen = withAuthRequired(
       store.shell.openModal({name: 'invite-codes'})
     }, [track, store])
 
-    const onPressContentFiltering = React.useCallback(() => {
-      track('Settings:ContentfilteringButtonClicked')
-      store.shell.openModal({name: 'content-filtering-settings'})
-    }, [track, store])
-
     const onPressContentLanguages = React.useCallback(() => {
       track('Settings:ContentlanguagesButtonClicked')
       store.shell.openModal({name: 'content-languages-settings'})
@@ -144,6 +140,11 @@ export const SettingsScreen = withAuthRequired(
 
     const onPressDeleteAccount = React.useCallback(() => {
       store.shell.openModal({name: 'delete-account'})
+    }, [store])
+
+    const onPressResetPreferences = React.useCallback(async () => {
+      await store.preferences.reset()
+      Toast.show('Preferences reset')
     }, [store])
 
     return (
@@ -252,7 +253,9 @@ export const SettingsScreen = withAuthRequired(
               Add account
             </Text>
           </TouchableOpacity>
+
           <View style={styles.spacer20} />
+
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Invite a friend
           </Text>
@@ -286,55 +289,35 @@ export const SettingsScreen = withAuthRequired(
           </TouchableOpacity>
 
           <View style={styles.spacer20} />
-
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Moderation
+            Appearance
           </Text>
-          <TouchableOpacity
-            testID="contentFilteringBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressContentFiltering}
-            accessibilityHint="Content moderation"
-            accessibilityLabel="Opens configurable content moderation settings">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="eye"
-                style={pal.text as FontAwesomeIconStyle}
+          <View>
+            <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
+              <SelectableBtn
+                current={store.shell.colorMode}
+                value="system"
+                label="System"
+                left
+                onChange={(v: string) => store.shell.setColorMode(v)}
+              />
+              <SelectableBtn
+                current={store.shell.colorMode}
+                value="light"
+                label="Light"
+                onChange={(v: string) => store.shell.setColorMode(v)}
+              />
+              <SelectableBtn
+                current={store.shell.colorMode}
+                value="dark"
+                label="Dark"
+                right
+                onChange={(v: string) => store.shell.setColorMode(v)}
               />
             </View>
-            <Text type="lg" style={pal.text}>
-              Content moderation
-            </Text>
-          </TouchableOpacity>
-          <Link
-            testID="mutedAccountsBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            href="/settings/muted-accounts">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon={['far', 'eye-slash']}
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              Muted accounts
-            </Text>
-          </Link>
-          <Link
-            testID="blockedAccountsBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            href="/settings/blocked-accounts">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="ban"
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              Blocked accounts
-            </Text>
-          </Link>
+          </View>
           <View style={styles.spacer20} />
+
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Advanced
           </Text>
@@ -350,6 +333,22 @@ export const SettingsScreen = withAuthRequired(
             </View>
             <Text type="lg" style={pal.text}>
               App passwords
+            </Text>
+          </Link>
+          <Link
+            testID="savedFeedsBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            accessibilityHint="Saved Feeds"
+            accessibilityLabel="Opens screen with all saved feeds"
+            href="/settings/saved-feeds">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="satellite-dish"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Saved Feeds
             </Text>
           </Link>
           <TouchableOpacity
@@ -382,8 +381,8 @@ export const SettingsScreen = withAuthRequired(
                 style={pal.text as FontAwesomeIconStyle}
               />
             </View>
-            <Text type="lg" style={pal.text}>
-              Change my handle
+            <Text type="lg" style={pal.text} numberOfLines={1}>
+              Change handle
             </Text>
           </TouchableOpacity>
           <View style={styles.spacer20} />
@@ -428,9 +427,18 @@ export const SettingsScreen = withAuthRequired(
               Storybook
             </Text>
           </Link>
+          {__DEV__ ? (
+            <Link
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={onPressResetPreferences}
+              title="Debug tools">
+              <Text type="lg" style={pal.text}>
+                Reset preferences state
+              </Text>
+            </Link>
+          ) : null}
           <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-            Build version {AppInfo.appVersion} ({AppInfo.buildVersion}){' '}
-            {AppInfo.updateChannel}
+            Build version {AppInfo.appVersion} {AppInfo.updateChannel}
           </Text>
           <View style={s.footerSpacer} />
         </ScrollView>
@@ -460,6 +468,45 @@ function AccountDropdownBtn({handle}: {handle: string}) {
         />
       </DropdownButton>
     </View>
+  )
+}
+
+interface SelectableBtnProps {
+  current: string
+  value: string
+  label: string
+  left?: boolean
+  right?: boolean
+  onChange: (v: string) => void
+}
+
+function SelectableBtn({
+  current,
+  value,
+  label,
+  left,
+  right,
+  onChange,
+}: SelectableBtnProps) {
+  const pal = usePalette('default')
+  const palPrimary = usePalette('inverted')
+  return (
+    <Pressable
+      style={[
+        styles.selectableBtn,
+        left && styles.selectableBtnLeft,
+        right && styles.selectableBtnRight,
+        pal.border,
+        current === value ? palPrimary.view : pal.view,
+      ]}
+      onPress={() => onChange(value)}
+      accessibilityRole="button"
+      accessibilityLabel={value}
+      accessibilityHint={`Set color theme to  ${value}`}>
+      <Text style={current === value ? palPrimary.text : pal.text}>
+        {label}
+      </Text>
+    </Pressable>
   )
 }
 
@@ -513,5 +560,46 @@ const styles = StyleSheet.create({
   buildInfo: {
     paddingVertical: 8,
     paddingHorizontal: 18,
+  },
+
+  colorModeText: {
+    marginLeft: 10,
+    marginBottom: 6,
+  },
+
+  selectableBtns: {
+    flexDirection: 'row',
+  },
+  selectableBtn: {
+    flex: isDesktopWeb ? undefined : 1,
+    width: isDesktopWeb ? 100 : undefined,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+  selectableBtnLeft: {
+    borderTopLeftRadius: 8,
+    borderBottomLeftRadius: 8,
+    borderLeftWidth: 1,
+  },
+  selectableBtnRight: {
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    borderRadius: 32,
+    padding: 14,
+    backgroundColor: colors.gray1,
+  },
+  toggleBtn: {
+    paddingHorizontal: 0,
   },
 })

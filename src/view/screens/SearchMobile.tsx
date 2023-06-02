@@ -35,7 +35,7 @@ export const SearchScreen = withAuthRequired(
     const store = useStores()
     const scrollViewRef = React.useRef<ScrollView>(null)
     const flatListRef = React.useRef<FlatList>(null)
-    const onMainScroll = useOnMainScroll(store)
+    const [onMainScroll] = useOnMainScroll(store)
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
     const autocompleteView = React.useMemo<UserAutocompleteModel>(
@@ -121,7 +121,7 @@ export const SearchScreen = withAuthRequired(
       <TouchableWithoutFeedback onPress={onPress} accessible={false}>
         <View style={[pal.view, styles.container]}>
           <HeaderWithInput
-            isInputFocused={true}
+            isInputFocused={isInputFocused}
             query={query}
             setIsInputFocused={setIsInputFocused}
             onChangeQuery={onChangeQuery}

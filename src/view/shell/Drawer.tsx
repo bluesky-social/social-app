@@ -2,6 +2,7 @@ import React, {ComponentProps} from 'react'
 import {
   Linking,
   SafeAreaView,
+  ScrollView,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -26,8 +27,10 @@ import {
   CogIcon,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
-  MoonIcon,
   UserIconSolid,
+  SatelliteDishIcon,
+  SatelliteDishIconSolid,
+  HandIcon,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
@@ -39,7 +42,7 @@ import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {isWeb} from 'platform/detection'
-import {formatCount} from 'view/com/util/numeric/format'
+import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
 
 export const DrawerContent = observer(() => {
   const theme = useTheme()
@@ -47,7 +50,7 @@ export const DrawerContent = observer(() => {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile} =
+  const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
 
   const {notifications} = store.me
@@ -94,6 +97,17 @@ export const DrawerContent = observer(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
 
+  const onPressMyFeeds = React.useCallback(
+    () => onPressTab('Feeds'),
+    [onPressTab],
+  )
+
+  const onPressModeration = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'Moderation'})
+    navigation.navigate('Moderation')
+    store.shell.closeDrawer()
+  }, [navigation, track, store.shell])
+
   const onPressSettings = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Settings'})
     navigation.navigate('Settings')
@@ -104,12 +118,6 @@ export const DrawerContent = observer(() => {
     track('Menu:FeedbackClicked')
     Linking.openURL(FEEDBACK_FORM_URL)
   }, [track])
-
-  const onDarkmodePress = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: '#darkmode'})
-    store.shell.setDarkMode(!store.shell.darkMode)
-  }, [track, store])
-
   // rendering
   // =
 
@@ -140,19 +148,18 @@ export const DrawerContent = observer(() => {
               type="xl"
               style={[pal.textLight, styles.profileCardFollowers]}>
               <Text type="xl-medium" style={pal.text}>
-                {formatCount(store.me.followersCount ?? 0)}
+                {formatCountShortOnly(store.me.followersCount ?? 0)}
               </Text>{' '}
               {pluralize(store.me.followersCount || 0, 'follower')} &middot;{' '}
               <Text type="xl-medium" style={pal.text}>
-                {formatCount(store.me.followsCount ?? 0)}
+                {formatCountShortOnly(store.me.followsCount ?? 0)}
               </Text>{' '}
               following
             </Text>
           </TouchableOpacity>
         </View>
         <InviteCodes />
-        <View style={s.flex1} />
-        <View style={styles.main}>
+        <ScrollView style={styles.main}>
           <MenuItem
             icon={
               isAtSearch ? (
@@ -215,10 +222,42 @@ export const DrawerContent = observer(() => {
             }
             label="Notifications"
             accessibilityLabel="Notifications"
-            accessibilityHint={`${store.me.notifications.unreadCountLabel} unread`}
+            accessibilityHint={
+              notifications.unreadCountLabel === ''
+                ? ''
+                : `${notifications.unreadCountLabel} unread`
+            }
             count={notifications.unreadCountLabel}
             bold={isAtNotifications}
             onPress={onPressNotifications}
+          />
+          <MenuItem
+            icon={
+              isAtFeeds ? (
+                <SatelliteDishIconSolid
+                  strokeWidth={1.5}
+                  style={pal.text as FontAwesomeIconStyle}
+                  size={24}
+                />
+              ) : (
+                <SatelliteDishIcon
+                  strokeWidth={1.5}
+                  style={pal.text as FontAwesomeIconStyle}
+                  size={24}
+                />
+              )
+            }
+            label="My Feeds"
+            accessibilityLabel="My Feeds"
+            accessibilityHint=""
+            onPress={onPressMyFeeds}
+          />
+          <MenuItem
+            icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
+            label="Moderation"
+            accessibilityLabel="Moderation"
+            accessibilityHint=""
+            onPress={onPressModeration}
           />
           <MenuItem
             icon={
@@ -254,32 +293,9 @@ export const DrawerContent = observer(() => {
             accessibilityHint=""
             onPress={onPressSettings}
           />
-        </View>
-        <View style={s.flex1} />
+          <View style={styles.smallSpacer} />
+        </ScrollView>
         <View style={styles.footer}>
-          {!isWeb && (
-            <TouchableOpacity
-              accessibilityRole="button"
-              accessibilityLabel="Toggle dark mode"
-              accessibilityHint={
-                theme.colorScheme === 'dark'
-                  ? 'Sets display to light mode'
-                  : 'Sets display to dark mode'
-              }
-              onPress={onDarkmodePress}
-              style={[
-                styles.footerBtn,
-                theme.colorScheme === 'light'
-                  ? pal.btn
-                  : styles.footerBtnDarkMode,
-              ]}>
-              <MoonIcon
-                size={22}
-                style={pal.text as StyleProp<ViewStyle>}
-                strokeWidth={2}
-              />
-            </TouchableOpacity>
-          )}
           <TouchableOpacity
             accessibilityRole="link"
             accessibilityLabel="Send feedback"
@@ -404,12 +420,17 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingBottom: 50,
+    maxWidth: 300,
   },
   viewDarkMode: {
     backgroundColor: '#1B1919',
   },
   main: {
     paddingLeft: 20,
+    paddingTop: 20,
+  },
+  smallSpacer: {
+    height: 20,
   },
 
   profileCardDisplayName: {
@@ -484,9 +505,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     borderRadius: 25,
-  },
-  footerBtnDarkMode: {
-    backgroundColor: colors.black,
   },
   footerBtnFeedback: {
     paddingHorizontal: 24,

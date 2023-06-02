@@ -3,48 +3,44 @@ import {RootStoreModel} from 'state/index'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {POST_IMG_MAX} from 'lib/constants'
 import * as ImageManipulator from 'expo-image-manipulator'
-import {getDataUriSize, scaleDownDimensions} from 'lib/media/util'
+import {getDataUriSize} from 'lib/media/util'
 import {openCropper} from 'lib/media/picker'
 import {ActionCrop, FlipType, SaveFormat} from 'expo-image-manipulator'
 import {Position} from 'react-avatar-editor'
-import {compressAndResizeImageForPost} from 'lib/media/manip'
-
-// TODO: EXIF embed
-// Cases to consider: ExternalEmbed
+import {Dimensions} from 'lib/media/types'
 
 export interface ImageManipulationAttributes {
+  aspectRatio?: '4:3' | '1:1' | '3:4' | 'None'
   rotate?: number
   scale?: number
   position?: Position
   flipHorizontal?: boolean
   flipVertical?: boolean
-  aspectRatio?: '4:3' | '1:1' | '3:4' | 'None'
 }
 
-export class ImageModel implements RNImage {
+const MAX_IMAGE_SIZE_IN_BYTES = 976560
+
+export class ImageModel implements Omit<RNImage, 'size'> {
   path: string
   mime = 'image/jpeg'
   width: number
   height: number
-  size: number
   altText = ''
   cropped?: RNImage = undefined
   compressed?: RNImage = undefined
-  scaledWidth: number = POST_IMG_MAX.width
-  scaledHeight: number = POST_IMG_MAX.height
 
   // Web manipulation
-  aspectRatio?: ImageManipulationAttributes['aspectRatio']
-  position?: Position = undefined
-  prev?: RNImage = undefined
-  rotation?: number = 0
-  scale?: number = 1
-  flipHorizontal?: boolean = false
-  flipVertical?: boolean = false
-
+  prev?: RNImage
+  attributes: ImageManipulationAttributes = {
+    aspectRatio: '1:1',
+    scale: 1,
+    flipHorizontal: false,
+    flipVertical: false,
+    rotate: 0,
+  }
   prevAttributes: ImageManipulationAttributes = {}
 
-  constructor(public rootStore: RootStoreModel, image: RNImage) {
+  constructor(public rootStore: RootStoreModel, image: Omit<RNImage, 'size'>) {
     makeAutoObservable(this, {
       rootStore: false,
     })
@@ -52,18 +48,26 @@ export class ImageModel implements RNImage {
     this.path = image.path
     this.width = image.width
     this.height = image.height
-    this.size = image.size
-    this.calcScaledDimensions()
   }
 
-  // TODO: Revisit compression factor due to updated sizing with zoom
-  // get compressionFactor() {
-  //   const MAX_IMAGE_SIZE_IN_BYTES = 976560
+  setRatio(aspectRatio: ImageManipulationAttributes['aspectRatio']) {
+    this.attributes.aspectRatio = aspectRatio
+  }
 
-  //   return this.size < MAX_IMAGE_SIZE_IN_BYTES
-  //     ? 1
-  //     : MAX_IMAGE_SIZE_IN_BYTES / this.size
-  // }
+  setRotate(degrees: number) {
+    this.attributes.rotate = degrees
+    this.manipulate({})
+  }
+
+  flipVertical() {
+    this.attributes.flipVertical = !this.attributes.flipVertical
+    this.manipulate({})
+  }
+
+  flipHorizontal() {
+    this.attributes.flipHorizontal = !this.attributes.flipHorizontal
+    this.manipulate({})
+  }
 
   get ratioMultipliers() {
     return {
@@ -74,8 +78,24 @@ export class ImageModel implements RNImage {
     }
   }
 
-  getDisplayDimensions(
-    as: ImageManipulationAttributes['aspectRatio'] = '1:1',
+  getUploadDimensions(
+    dimensions: Dimensions,
+    maxDimensions: Dimensions = POST_IMG_MAX,
+    as: ImageManipulationAttributes['aspectRatio'] = 'None',
+  ) {
+    const {width, height} = dimensions
+    const {width: maxWidth, height: maxHeight} = maxDimensions
+
+    return width < maxWidth && height < maxHeight
+      ? {
+          width,
+          height,
+        }
+      : this.getResizedDimensions(as, POST_IMG_MAX.width)
+  }
+
+  getResizedDimensions(
+    as: ImageManipulationAttributes['aspectRatio'] = 'None',
     maxSide: number,
   ) {
     const ratioMultiplier = this.ratioMultipliers[as]
@@ -100,59 +120,70 @@ export class ImageModel implements RNImage {
     }
   }
 
-  calcScaledDimensions() {
-    const {width, height} = scaleDownDimensions(
-      {width: this.width, height: this.height},
-      POST_IMG_MAX,
-    )
-    this.scaledWidth = width
-    this.scaledHeight = height
-  }
-
   async setAltText(altText: string) {
     this.altText = altText
   }
 
-  // Only for mobile
+  // Only compress prior to upload
+  async compress() {
+    for (let i = 10; i > 0; i--) {
+      // Float precision
+      const factor = Math.round(i) / 10
+      const compressed = await ImageManipulator.manipulateAsync(
+        this.cropped?.path ?? this.path,
+        undefined,
+        {
+          compress: factor,
+          base64: true,
+          format: SaveFormat.JPEG,
+        },
+      )
+
+      if (compressed.base64 !== undefined) {
+        const size = getDataUriSize(compressed.base64)
+
+        if (size < MAX_IMAGE_SIZE_IN_BYTES) {
+          runInAction(() => {
+            this.compressed = {
+              mime: 'image/jpeg',
+              path: compressed.uri,
+              size,
+              ...compressed,
+            }
+          })
+          return
+        }
+      }
+    }
+
+    // Compression fails when removing redundant information is not possible.
+    // This can be tested with images that have high variance in noise.
+    throw new Error('Failed to compress image')
+  }
+
+  // Mobile
   async crop() {
     try {
+      // openCropper requires an output width and height hence
+      // getting upload dimensions before cropping is necessary.
+      const {width, height} = this.getUploadDimensions({
+        width: this.width,
+        height: this.height,
+      })
+
       const cropped = await openCropper(this.rootStore, {
         mediaType: 'photo',
         path: this.path,
         freeStyleCropEnabled: true,
-        width: this.scaledWidth,
-        height: this.scaledHeight,
-      })
-      runInAction(() => {
-        this.cropped = cropped
-        this.compress()
-      })
-    } catch (err) {
-      this.rootStore.log.error('Failed to crop photo', err)
-    }
-  }
-
-  async compress() {
-    try {
-      const {width, height} = scaleDownDimensions(
-        this.cropped
-          ? {width: this.cropped.width, height: this.cropped.height}
-          : {width: this.width, height: this.height},
-        POST_IMG_MAX,
-      )
-
-      // TODO: Revisit this - currently iOS uses this as well
-      const compressed = await compressAndResizeImageForPost({
-        ...(this.cropped === undefined ? this : this.cropped),
         width,
         height,
       })
 
       runInAction(() => {
-        this.compressed = compressed
+        this.cropped = cropped
       })
     } catch (err) {
-      this.rootStore.log.error('Failed to compress photo', err)
+      this.rootStore.log.error('Failed to crop photo', err)
     }
   }
 
@@ -162,92 +193,104 @@ export class ImageModel implements RNImage {
       crop?: ActionCrop['crop']
     } & ImageManipulationAttributes,
   ) {
-    const {aspectRatio, crop, flipHorizontal, flipVertical, rotate, scale} =
-      attributes
+    let uploadWidth: number | undefined
+    let uploadHeight: number | undefined
+
+    const {aspectRatio, crop, position, scale} = attributes
     const modifiers = []
 
-    if (flipHorizontal !== undefined) {
-      this.flipHorizontal = flipHorizontal
-    }
-
-    if (flipVertical !== undefined) {
-      this.flipVertical = flipVertical
-    }
-
-    if (this.flipHorizontal) {
+    if (this.attributes.flipHorizontal) {
       modifiers.push({flip: FlipType.Horizontal})
     }
 
-    if (this.flipVertical) {
+    if (this.attributes.flipVertical) {
       modifiers.push({flip: FlipType.Vertical})
     }
 
-    // TODO: Fix rotation -- currently not functional
-    if (rotate !== undefined) {
-      this.rotation = rotate
-    }
-
-    if (this.rotation !== undefined) {
-      modifiers.push({rotate: this.rotation})
+    if (this.attributes.rotate !== undefined) {
+      modifiers.push({rotate: this.attributes.rotate})
     }
 
     if (crop !== undefined) {
+      const croppedHeight = crop.height * this.height
+      const croppedWidth = crop.width * this.width
       modifiers.push({
         crop: {
           originX: crop.originX * this.width,
           originY: crop.originY * this.height,
-          height: crop.height * this.height,
-          width: crop.width * this.width,
+          height: croppedHeight,
+          width: croppedWidth,
         },
       })
+
+      const uploadDimensions = this.getUploadDimensions(
+        {width: croppedWidth, height: croppedHeight},
+        POST_IMG_MAX,
+        aspectRatio,
+      )
+
+      uploadWidth = uploadDimensions.width
+      uploadHeight = uploadDimensions.height
+    } else {
+      const uploadDimensions = this.getUploadDimensions(
+        {width: this.width, height: this.height},
+        POST_IMG_MAX,
+        aspectRatio,
+      )
+
+      uploadWidth = uploadDimensions.width
+      uploadHeight = uploadDimensions.height
     }
 
     if (scale !== undefined) {
-      this.scale = scale
+      this.attributes.scale = scale
+    }
+
+    if (position !== undefined) {
+      this.attributes.position = position
     }
 
     if (aspectRatio !== undefined) {
-      this.aspectRatio = aspectRatio
+      this.attributes.aspectRatio = aspectRatio
     }
 
-    const ratioMultiplier = this.ratioMultipliers[this.aspectRatio ?? '1:1']
-
-    // TODO: Ollie - should support up to 2000 but smaller images that scale
-    // up need an updated compression factor calculation. Use 1000 for now.
-    const MAX_SIDE = 1000
+    const ratioMultiplier =
+      this.ratioMultipliers[this.attributes.aspectRatio ?? '1:1']
 
     const result = await ImageManipulator.manipulateAsync(
       this.path,
       [
         ...modifiers,
-        {resize: ratioMultiplier > 1 ? {width: MAX_SIDE} : {height: MAX_SIDE}},
+        {
+          resize:
+            ratioMultiplier > 1 ? {width: uploadWidth} : {height: uploadHeight},
+        },
       ],
       {
-        compress: 0.7, // TODO: revisit compression calculation
+        base64: true,
         format: SaveFormat.JPEG,
       },
     )
 
     runInAction(() => {
-      this.compressed = {
+      this.cropped = {
         mime: 'image/jpeg',
         path: result.uri,
-        size: getDataUriSize(result.uri),
+        size:
+          result.base64 !== undefined
+            ? getDataUriSize(result.base64)
+            : MAX_IMAGE_SIZE_IN_BYTES + 999, // shouldn't hit this unless manipulation fails
         ...result,
       }
     })
   }
 
+  resetCropped() {
+    this.manipulate({})
+  }
+
   previous() {
-    this.compressed = this.prev
-
-    const {flipHorizontal, flipVertical, rotate, position, scale} =
-      this.prevAttributes
-
-    this.scale = scale
-    this.rotation = rotate
-    this.flipHorizontal = flipHorizontal
-    this.flipVertical = flipVertical
-    this.position = position
+    this.cropped = this.prev
+    this.attributes = this.prevAttributes
   }
 }

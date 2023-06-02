@@ -4,15 +4,19 @@ import {observer} from 'mobx-react-lite'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {ViewSelector} from '../com/util/ViewSelector'
+import {ViewSelector, ViewSelectorHandle} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
-import {ProfileUiModel} from 'state/models/ui/profile'
+import {ProfileUiModel, Sections} from 'state/models/ui/profile'
 import {useStores} from 'state/index'
-import {PostsFeedSliceModel} from 'state/models/feeds/posts'
+import {PostsFeedSliceModel} from 'state/models/feeds/post'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedSlice} from '../com/posts/FeedSlice'
-import {PostFeedLoadingPlaceholder} from '../com/util/LoadingPlaceholder'
+import {ListCard} from 'view/com/lists/ListCard'
+import {
+  PostFeedLoadingPlaceholder,
+  ProfileCardFeedLoadingPlaceholder,
+} from '../com/util/LoadingPlaceholder'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {EmptyState} from '../com/util/EmptyState'
@@ -21,12 +25,17 @@ import {FAB} from '../com/util/fab/FAB'
 import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
+import {CustomFeed} from 'view/com/feeds/CustomFeed'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {combinedDisplayName} from 'lib/strings/display-names'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
   observer(({route}: Props) => {
     const store = useStores()
     const {screen, track} = useAnalytics()
+    const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
 
     useEffect(() => {
       screen('Profile')
@@ -37,9 +46,19 @@ export const ProfileScreen = withAuthRequired(
       () => new ProfileUiModel(store, {user: route.params.name}),
       [route.params.name, store],
     )
+    useSetTitle(combinedDisplayName(uiState.profile))
+
+    const onSoftReset = React.useCallback(() => {
+      viewSelectorRef.current?.scrollToTop()
+    }, [])
+
+    useEffect(() => {
+      setHasSetup(false)
+    }, [route.params.name])
 
     useFocusEffect(
       React.useCallback(() => {
+        const softResetSub = store.onScreenSoftReset(onSoftReset)
         let aborted = false
         store.shell.setMinimalShellMode(false)
         const feedCleanup = uiState.feed.registerListeners()
@@ -56,8 +75,9 @@ export const ProfileScreen = withAuthRequired(
         return () => {
           aborted = true
           feedCleanup()
+          softResetSub.remove()
         }
-      }, [hasSetup, uiState, store]),
+      }, [store, onSoftReset, uiState, hasSetup]),
     )
 
     // events
@@ -111,52 +131,108 @@ export const ProfileScreen = withAuthRequired(
     }, [uiState.showLoadingMoreFooter])
     const renderItem = React.useCallback(
       (item: any) => {
-        if (item === ProfileUiModel.END_ITEM) {
-          return <Text style={styles.endItem}>- end of feed -</Text>
-        } else if (item === ProfileUiModel.LOADING_ITEM) {
-          return <PostFeedLoadingPlaceholder />
-        } else if (item._reactKey === '__error__') {
-          if (uiState.feed.isBlocking) {
+        // if section is lists
+        if (uiState.selectedView === Sections.Lists) {
+          if (item === ProfileUiModel.LOADING_ITEM) {
+            return <ProfileCardFeedLoadingPlaceholder />
+          } else if (item._reactKey === '__error__') {
+            return (
+              <View style={s.p5}>
+                <ErrorMessage
+                  message={item.error}
+                  onPressTryAgain={onPressTryAgain}
+                />
+              </View>
+            )
+          } else if (item === ProfileUiModel.EMPTY_ITEM) {
             return (
               <EmptyState
-                icon="ban"
-                message="Posts hidden"
+                testID="listsEmpty"
+                icon="list-ul"
+                message="No lists yet!"
                 style={styles.emptyState}
               />
             )
+          } else {
+            return <ListCard testID={`list-${item.name}`} list={item} />
           }
-          if (uiState.feed.isBlockedBy) {
+          // if section is custom algorithms
+        } else if (uiState.selectedView === Sections.CustomAlgorithms) {
+          if (item === ProfileUiModel.LOADING_ITEM) {
+            return <ProfileCardFeedLoadingPlaceholder />
+          } else if (item._reactKey === '__error__') {
+            return (
+              <View style={s.p5}>
+                <ErrorMessage
+                  message={item.error}
+                  onPressTryAgain={onPressTryAgain}
+                />
+              </View>
+            )
+          } else if (item === ProfileUiModel.EMPTY_ITEM) {
             return (
               <EmptyState
-                icon="ban"
-                message="Posts hidden"
+                testID="customAlgorithmsEmpty"
+                icon="list-ul"
+                message="No custom algorithms yet!"
                 style={styles.emptyState}
               />
             )
+          } else if (item instanceof CustomFeedModel) {
+            return <CustomFeed item={item} showSaveBtn showLikes />
           }
-          return (
-            <View style={s.p5}>
-              <ErrorMessage
-                message={item.error}
-                onPressTryAgain={onPressTryAgain}
+          // if section is posts or posts & replies
+        } else {
+          if (item === ProfileUiModel.END_ITEM) {
+            return <Text style={styles.endItem}>- end of feed -</Text>
+          } else if (item === ProfileUiModel.LOADING_ITEM) {
+            return <PostFeedLoadingPlaceholder />
+          } else if (item._reactKey === '__error__') {
+            if (uiState.feed.isBlocking) {
+              return (
+                <EmptyState
+                  icon="ban"
+                  message="Posts hidden"
+                  style={styles.emptyState}
+                />
+              )
+            }
+            if (uiState.feed.isBlockedBy) {
+              return (
+                <EmptyState
+                  icon="ban"
+                  message="Posts hidden"
+                  style={styles.emptyState}
+                />
+              )
+            }
+            return (
+              <View style={s.p5}>
+                <ErrorMessage
+                  message={item.error}
+                  onPressTryAgain={onPressTryAgain}
+                />
+              </View>
+            )
+          } else if (item === ProfileUiModel.EMPTY_ITEM) {
+            return (
+              <EmptyState
+                icon={['far', 'message']}
+                message="No posts yet!"
+                style={styles.emptyState}
               />
-            </View>
-          )
-        } else if (item === ProfileUiModel.EMPTY_ITEM) {
-          return (
-            <EmptyState
-              icon={['far', 'message']}
-              message="No posts yet!"
-              style={styles.emptyState}
-            />
-          )
-        } else if (item instanceof PostsFeedSliceModel) {
-          return <FeedSlice slice={item} ignoreMuteFor={uiState.profile.did} />
+            )
+          } else if (item instanceof PostsFeedSliceModel) {
+            return (
+              <FeedSlice slice={item} ignoreMuteFor={uiState.profile.did} />
+            )
+          }
         }
         return <View />
       },
       [
         onPressTryAgain,
+        uiState.selectedView,
         uiState.profile.did,
         uiState.feed.isBlocking,
         uiState.feed.isBlockedBy,
@@ -178,6 +254,7 @@ export const ProfileScreen = withAuthRequired(
           />
         ) : uiState.profile.hasLoaded ? (
           <ViewSelector
+            ref={viewSelectorRef}
             swipeEnabled={false}
             sections={uiState.selectorItems}
             items={uiState.uiItems}

@@ -144,8 +144,11 @@ export function Component({onChanged}: {onChanged: () => void}) {
             </Text>
           </TouchableOpacity>
         </View>
-        <Text type="2xl-bold" style={[styles.titleMiddle, pal.text]}>
-          Change my handle
+        <Text
+          type="2xl-bold"
+          style={[styles.titleMiddle, pal.text]}
+          numberOfLines={1}>
+          Change handle
         </Text>
         <View style={styles.titleRight}>
           {isProcessing ? (

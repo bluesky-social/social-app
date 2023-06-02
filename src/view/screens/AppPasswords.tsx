@@ -1,6 +1,5 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {Alert} from 'view/com/util/Alert'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ScrollView} from 'react-native-gesture-handler'
 import {Text} from '../com/util/text/Text'
@@ -140,8 +139,8 @@ function AppPasswordsHeader() {
           pal.text,
           isDesktopWeb && styles.descriptionDesktop,
         ]}>
-        These passwords can be used to log onto Bluesky in other apps without
-        giving them full access to your account or your password.
+        Use app passwords to login to other Bluesky clients without giving full
+        access to your account or password.
       </Text>
     </>
   )
@@ -160,24 +159,15 @@ function AppPassword({
   const store = useStores()
 
   const onDelete = React.useCallback(async () => {
-    Alert.alert(
-      'Delete App Password',
-      `Are you sure you want to delete the app password "${name}"?`,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            await store.me.deleteAppPassword(name)
-            Toast.show('App password deleted')
-          },
-        },
-      ],
-    )
+    store.shell.openModal({
+      name: 'confirm',
+      title: 'Delete App Password',
+      message: `Are you sure you want to delete the app password "${name}"?`,
+      async onPressConfirm() {
+        await store.me.deleteAppPassword(name)
+        Toast.show('App password deleted')
+      },
+    })
   }, [store, name])
 
   const {contentLanguages} = store.preferences
@@ -289,5 +279,6 @@ const styles = StyleSheet.create({
 
   trashIcon: {
     color: 'red',
+    minWidth: 16,
   },
 })

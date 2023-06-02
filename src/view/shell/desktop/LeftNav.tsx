@@ -29,6 +29,9 @@ import {
   CogIcon,
   CogIconSolid,
   ComposeIcon2,
+  HandIcon,
+  SatelliteDishIcon,
+  SatelliteDishIconSolid,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
@@ -88,14 +91,17 @@ const NavItem = observer(
     const pal = usePalette('default')
     const store = useStores()
     const [pathName] = React.useMemo(() => router.matchPath(href), [href])
-    const currentRouteName = useNavigationState(state => {
+    const currentRouteInfo = useNavigationState(state => {
       if (!state) {
-        return 'Home'
+        return {name: 'Home'}
       }
-      return getCurrentRoute(state).name
+      return getCurrentRoute(state)
     })
-
-    const isCurrent = isTab(currentRouteName, pathName)
+    let isCurrent =
+      currentRouteInfo.name === 'Profile'
+        ? isTab(currentRouteInfo.name, pathName) &&
+          currentRouteInfo.params.name === store.me.handle
+        : isTab(currentRouteInfo.name, pathName)
     const {onPress} = useLinkProps({to: href})
     const onPressWrapped = React.useCallback(
       (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -195,6 +201,24 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         label="Search"
       />
       <NavItem
+        href="/feeds"
+        icon={
+          <SatelliteDishIcon
+            strokeWidth={1.75}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        }
+        iconFilled={
+          <SatelliteDishIconSolid
+            strokeWidth={1.75}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        }
+        label="My Feeds"
+      />
+      <NavItem
         href="/notifications"
         count={store.me.notifications.unreadCountLabel}
         icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
@@ -202,6 +226,24 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />
         }
         label="Notifications"
+      />
+      <NavItem
+        href="/moderation"
+        icon={
+          <HandIcon
+            strokeWidth={5.5}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        }
+        iconFilled={
+          <FontAwesomeIcon
+            icon="hand"
+            style={pal.text as FontAwesomeIconStyle}
+            size={20}
+          />
+        }
+        label="Moderation"
       />
       {store.session.hasSession && (
         <NavItem
@@ -232,6 +274,8 @@ const styles = StyleSheet.create({
     top: 10,
     right: 'calc(50vw + 312px)',
     width: 220,
+    maxHeight: 'calc(100vh - 10px)',
+    overflowY: 'auto',
   },
 
   profileCard: {
@@ -279,7 +323,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 138,
+    width: 140,
     borderRadius: 24,
     paddingVertical: 10,
     paddingHorizontal: 16,

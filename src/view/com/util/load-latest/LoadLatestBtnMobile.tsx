@@ -1,23 +1,35 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import LinearGradient from 'react-native-linear-gradient'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {Text} from '../text/Text'
-import {colors, gradients} from 'lib/styles'
 import {clamp} from 'lodash'
 import {useStores} from 'state/index'
+import {usePalette} from 'lib/hooks/usePalette'
+import {colors} from 'lib/styles'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
 export const LoadLatestBtn = observer(
-  ({onPress, label}: {onPress: () => void; label: string}) => {
+  ({
+    onPress,
+    label,
+    showIndicator,
+  }: {
+    onPress: () => void
+    label: string
+    showIndicator: boolean
+    minimalShellMode?: boolean // NOTE not used on mobile -prf
+  }) => {
     const store = useStores()
+    const pal = usePalette('default')
     const safeAreaInsets = useSafeAreaInsets()
     return (
       <TouchableOpacity
         style={[
           styles.loadLatest,
+          pal.borderDark,
+          pal.view,
           !store.shell.minimalShellMode && {
             bottom: 60 + clamp(safeAreaInsets.bottom, 15, 30),
           },
@@ -25,17 +37,10 @@ export const LoadLatestBtn = observer(
         onPress={onPress}
         hitSlop={HITSLOP}
         accessibilityRole="button"
-        accessibilityLabel={`Load new ${label}`}
-        accessibilityHint={`Loads new ${label}`}>
-        <LinearGradient
-          colors={[gradients.blueLight.start, gradients.blueLight.end]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={styles.loadLatestInner}>
-          <Text type="md-bold" style={styles.loadLatestText}>
-            Load new {label}
-          </Text>
-        </LinearGradient>
+        accessibilityLabel={label}
+        accessibilityHint="">
+        <FontAwesomeIcon icon="angle-up" color={pal.colors.text} size={19} />
+        {showIndicator && <View style={[styles.indicator, pal.borderDark]} />}
       </TouchableOpacity>
     )
   },
@@ -44,19 +49,24 @@ export const LoadLatestBtn = observer(
 const styles = StyleSheet.create({
   loadLatest: {
     position: 'absolute',
-    left: 20,
+    left: 18,
     bottom: 35,
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowOffset: {width: 0, height: 1},
-  },
-  loadLatestInner: {
+    borderWidth: 1,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     flexDirection: 'row',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  loadLatestText: {
-    color: colors.white,
+  indicator: {
+    position: 'absolute',
+    top: 3,
+    right: 3,
+    backgroundColor: colors.blue3,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    borderWidth: 1,
   },
 })

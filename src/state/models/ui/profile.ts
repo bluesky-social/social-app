@@ -2,13 +2,15 @@ import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from '../root-store'
 import {ProfileModel} from '../content/profile'
 import {PostsFeedModel} from '../feeds/posts'
+import {ActorFeedsModel} from '../lists/actor-feeds'
+import {ListsListModel} from '../lists/lists-list'
 
 export enum Sections {
   Posts = 'Posts',
   PostsWithReplies = 'Posts & replies',
+  CustomAlgorithms = 'Feeds',
+  Lists = 'Lists',
 }
-
-const USER_SELECTOR_ITEMS = [Sections.Posts, Sections.PostsWithReplies]
 
 export interface ProfileUiParams {
   user: string
@@ -22,6 +24,8 @@ export class ProfileUiModel {
   // data
   profile: ProfileModel
   feed: PostsFeedModel
+  algos: ActorFeedsModel
+  lists: ListsListModel
 
   // ui state
   selectedViewIndex = 0
@@ -43,14 +47,21 @@ export class ProfileUiModel {
       actor: params.user,
       limit: 10,
     })
+    this.algos = new ActorFeedsModel(rootStore, {actor: params.user})
+    this.lists = new ListsListModel(rootStore, params.user)
   }
 
-  get currentView(): PostsFeedModel {
+  get currentView(): PostsFeedModel | ActorFeedsModel | ListsListModel {
     if (
       this.selectedView === Sections.Posts ||
       this.selectedView === Sections.PostsWithReplies
     ) {
       return this.feed
+    } else if (this.selectedView === Sections.Lists) {
+      return this.lists
+    }
+    if (this.selectedView === Sections.CustomAlgorithms) {
+      return this.algos
     }
     throw new Error(`Invalid selector value: ${this.selectedViewIndex}`)
   }
@@ -65,7 +76,14 @@ export class ProfileUiModel {
   }
 
   get selectorItems() {
-    return USER_SELECTOR_ITEMS
+    const items = [Sections.Posts, Sections.PostsWithReplies]
+    if (this.algos.hasLoaded && !this.algos.isEmpty) {
+      items.push(Sections.CustomAlgorithms)
+    }
+    if (this.lists.hasLoaded && !this.lists.isEmpty) {
+      items.push(Sections.Lists)
+    }
+    return items
   }
 
   get selectedView() {
@@ -74,9 +92,11 @@ export class ProfileUiModel {
 
   get uiItems() {
     let arr: any[] = []
+    // if loading, return loading item to show loading spinner
     if (this.isInitialLoading) {
       arr = arr.concat([ProfileUiModel.LOADING_ITEM])
     } else if (this.currentView.hasError) {
+      // if error, return error item to show error message
       arr = arr.concat([
         {
           _reactKey: '__error__',
@@ -84,12 +104,16 @@ export class ProfileUiModel {
         },
       ])
     } else {
+      // not loading, no error, show content
       if (
         this.selectedView === Sections.Posts ||
-        this.selectedView === Sections.PostsWithReplies
+        this.selectedView === Sections.PostsWithReplies ||
+        this.selectedView === Sections.CustomAlgorithms
       ) {
         if (this.feed.hasContent) {
-          if (this.selectedView === Sections.Posts) {
+          if (this.selectedView === Sections.CustomAlgorithms) {
+            arr = this.algos.feeds
+          } else if (this.selectedView === Sections.Posts) {
             arr = this.feed.nonReplyFeed
           } else {
             arr = this.feed.slices.slice()
@@ -100,7 +124,14 @@ export class ProfileUiModel {
         } else if (this.feed.isEmpty) {
           arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
         }
+      } else if (this.selectedView === Sections.Lists) {
+        if (this.lists.hasContent) {
+          arr = this.lists.lists
+        } else if (this.lists.isEmpty) {
+          arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
+        }
       } else {
+        // fallback, add empty item, to show empty message
         arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
       }
     }
@@ -113,6 +144,8 @@ export class ProfileUiModel {
       this.selectedView === Sections.PostsWithReplies
     ) {
       return this.feed.hasContent && this.feed.hasMore && this.feed.isLoading
+    } else if (this.selectedView === Sections.Lists) {
+      return this.lists.hasContent && this.lists.hasMore && this.lists.isLoading
     }
     return false
   }
@@ -133,6 +166,12 @@ export class ProfileUiModel {
         .setup()
         .catch(err => this.rootStore.log.error('Failed to fetch feed', err)),
     ])
+    this.algos.refresh()
+    // HACK: need to use the DID as a param, not the username -prf
+    this.lists.source = this.profile.did
+    this.lists
+      .loadMore()
+      .catch(err => this.rootStore.log.error('Failed to fetch lists', err))
   }
 
   async update() {

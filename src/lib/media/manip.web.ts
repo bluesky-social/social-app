@@ -1,25 +1,6 @@
 import {Dimensions} from './types'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {getDataUriSize, blobToDataUri} from './util'
-import {POST_IMG_MAX} from 'lib/constants'
-
-export async function compressAndResizeImageForPost({
-  path,
-  width,
-  height,
-}: {
-  path: string
-  width: number
-  height: number
-}): Promise<RNImage> {
-  // Compression is handled in `doResize` via `quality`
-  return await doResize(path, {
-    width,
-    height,
-    maxSize: POST_IMG_MAX.size,
-    mode: 'stretch',
-  })
-}
 
 export async function compressIfNeeded(
   img: RNImage,

@@ -39,4 +39,4 @@ check: ## Compile everything, checking syntax (does not output binaries)
 
 .PHONY: run-dev-bskyweb
 run-dev-bskyweb: .env ## Runs 'bskyweb' for local dev
-	GOLOG_LOG_LEVEL=info go run ./cmd/bskyweb serve
+	GOLOG_LOG_LEVEL=info go run ./cmd/bskyweb serve --debug

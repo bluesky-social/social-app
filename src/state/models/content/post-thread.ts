@@ -14,6 +14,7 @@ import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
 import {
   getEmbedLabels,
   getEmbedMuted,
+  getEmbedMutedByList,
   getEmbedBlocking,
   getEmbedBlockedBy,
   filterAccountLabels,
@@ -70,6 +71,9 @@ export class PostThreadItemModel {
         this.post.author.viewer?.muted ||
         getEmbedMuted(this.post.embed) ||
         false,
+      mutedByList:
+        this.post.author.viewer?.mutedByList ||
+        getEmbedMutedByList(this.post.embed),
       isBlocking:
         !!this.post.author.viewer?.blocking ||
         getEmbedBlocking(this.post.embed) ||
@@ -114,7 +118,7 @@ export class PostThreadItemModel {
 
   assignTreeModels(
     v: AppBskyFeedDefs.ThreadViewPost,
-    higlightedPostUri: string,
+    highlightedPostUri: string,
     includeParent = true,
     includeChildren = true,
   ) {
@@ -126,7 +130,12 @@ export class PostThreadItemModel {
         parentModel._showChildReplyLine = true
         if (v.parent.parent) {
           parentModel._showParentReplyLine = true
-          parentModel.assignTreeModels(v.parent, higlightedPostUri, true, false)
+          parentModel.assignTreeModels(
+            v.parent,
+            highlightedPostUri,
+            true,
+            false,
+          )
         }
         this.parent = parentModel
       } else if (AppBskyFeedDefs.isNotFoundPost(v.parent)) {
@@ -143,10 +152,10 @@ export class PostThreadItemModel {
           const itemModel = new PostThreadItemModel(this.rootStore, item)
           itemModel._depth = this._depth + 1
           itemModel._showParentReplyLine =
-            itemModel.parentUri !== higlightedPostUri && replies.length === 0
+            itemModel.parentUri !== highlightedPostUri && replies.length === 0
           if (item.replies?.length) {
             itemModel._showChildReplyLine = true
-            itemModel.assignTreeModels(item, higlightedPostUri, false, true)
+            itemModel.assignTreeModels(item, highlightedPostUri, false, true)
           }
           replies.push(itemModel)
         } else if (AppBskyFeedDefs.isNotFoundPost(item)) {

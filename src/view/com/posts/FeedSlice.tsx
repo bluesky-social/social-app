@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {PostsFeedSliceModel} from 'state/models/feeds/posts'
+import {PostsFeedSliceModel} from 'state/models/feeds/post'
 import {AtUri} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -19,7 +19,9 @@ export function FeedSlice({
   ignoreMuteFor?: string
 }) {
   if (slice.moderation.list.behavior === ModerationBehaviorCode.Hide) {
-    return null
+    if (!ignoreMuteFor && !slice.moderation.list.noOverride) {
+      return null
+    }
   }
   if (slice.isThread && slice.items.length > 3) {
     const last = slice.items.length - 1

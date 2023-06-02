@@ -61,7 +61,6 @@ export const Gallery = observer(function ({gallery}: Props) {
     borderRadius: 5,
     paddingHorizontal: 10,
     position: 'absolute' as const,
-    width: 46,
     zIndex: 1,
     ...(isOverflow
       ? {
@@ -105,63 +104,61 @@ export const Gallery = observer(function ({gallery}: Props) {
 
   return !gallery.isEmpty ? (
     <View testID="selectedPhotosView" style={styles.gallery}>
-      {gallery.images.map(image =>
-        image.compressed !== undefined ? (
-          <View key={`selected-image-${image.path}`} style={[imageStyle]}>
+      {gallery.images.map(image => (
+        <View key={`selected-image-${image.path}`} style={[imageStyle]}>
+          <TouchableOpacity
+            testID="altTextButton"
+            accessibilityRole="button"
+            accessibilityLabel="Add alt text"
+            accessibilityHint=""
+            onPress={() => {
+              handleAddImageAltText(image)
+            }}
+            style={imageControlLabelStyle}>
+            <Text style={styles.imageControlTextContent}>ALT</Text>
+          </TouchableOpacity>
+          <View style={imageControlsSubgroupStyle}>
             <TouchableOpacity
-              testID="altTextButton"
+              testID="editPhotoButton"
               accessibilityRole="button"
-              accessibilityLabel="Add alt text"
-              accessibilityHint="Opens modal for inputting image alt text"
+              accessibilityLabel="Edit image"
+              accessibilityHint=""
               onPress={() => {
-                handleAddImageAltText(image)
+                handleEditPhoto(image)
               }}
-              style={[styles.imageControl, imageControlLabelStyle]}>
-              <Text style={styles.imageControlTextContent}>ALT</Text>
+              style={styles.imageControl}>
+              <FontAwesomeIcon
+                icon="pen"
+                size={12}
+                style={{color: colors.white}}
+              />
             </TouchableOpacity>
-            <View style={imageControlsSubgroupStyle}>
-              <TouchableOpacity
-                testID="editPhotoButton"
-                accessibilityRole="button"
-                accessibilityLabel="Edit image"
-                accessibilityHint=""
-                onPress={() => {
-                  handleEditPhoto(image)
-                }}
-                style={styles.imageControl}>
-                <FontAwesomeIcon
-                  icon="pen"
-                  size={12}
-                  style={{color: colors.white}}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                testID="removePhotoButton"
-                accessibilityRole="button"
-                accessibilityLabel="Remove image"
-                accessibilityHint=""
-                onPress={() => handleRemovePhoto(image)}
-                style={styles.imageControl}>
-                <FontAwesomeIcon
-                  icon="xmark"
-                  size={16}
-                  style={{color: colors.white}}
-                />
-              </TouchableOpacity>
-            </View>
-
-            <Image
-              testID="selectedPhotoImage"
-              style={[styles.image, imageStyle] as ImageStyle}
-              source={{
-                uri: image.compressed.path,
-              }}
-              accessible={true}
-              accessibilityIgnoresInvertColors
-            />
+            <TouchableOpacity
+              testID="removePhotoButton"
+              accessibilityRole="button"
+              accessibilityLabel="Remove image"
+              accessibilityHint=""
+              onPress={() => handleRemovePhoto(image)}
+              style={styles.imageControl}>
+              <FontAwesomeIcon
+                icon="xmark"
+                size={16}
+                style={{color: colors.white}}
+              />
+            </TouchableOpacity>
           </View>
-        ) : null,
-      )}
+
+          <Image
+            testID="selectedPhotoImage"
+            style={[styles.image, imageStyle] as ImageStyle}
+            source={{
+              uri: image.cropped?.path ?? image.path,
+            }}
+            accessible={true}
+            accessibilityIgnoresInvertColors
+          />
+        </View>
+      ))}
     </View>
   ) : null
 })
@@ -187,9 +184,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imageControlTextContent: {
+    borderRadius: 6,
     color: 'white',
     fontSize: 12,
     fontWeight: 'bold',
     letterSpacing: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderWidth: 0.5,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
   },
 })

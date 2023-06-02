@@ -37,7 +37,7 @@ export class RootStoreModel {
   log = new LogModel()
   session = new SessionModel(this)
   shell = new ShellUiModel(this)
-  preferences = new PreferencesModel()
+  preferences = new PreferencesModel(this)
   me = new MeModel(this)
   invitedUsers = new InvitedUsers(this)
   profiles = new ProfilesCache(this)
@@ -126,6 +126,7 @@ export class RootStoreModel {
     this.log.debug('RootStoreModel:handleSessionChange')
     this.agent = agent
     this.me.clear()
+    /* dont await */ this.preferences.sync()
     await this.me.load()
     if (!hadSession) {
       resetNavigation()
@@ -161,6 +162,7 @@ export class RootStoreModel {
     }
     try {
       await this.me.updateIfNeeded()
+      await this.preferences.sync()
     } catch (e: any) {
       this.log.error('Failed to fetch latest state', e)
     }

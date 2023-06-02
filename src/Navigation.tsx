@@ -14,6 +14,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {
   HomeTabNavigatorParams,
   SearchTabNavigatorParams,
+  FeedsTabNavigatorParams,
   NotificationsTabNavigatorParams,
   FlatNavigatorParams,
   AllNavigatorParams,
@@ -32,12 +33,19 @@ import {useStores} from './state'
 
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
+import {FeedsScreen} from './view/screens/Feeds'
 import {NotificationsScreen} from './view/screens/Notifications'
+import {ModerationScreen} from './view/screens/Moderation'
+import {ModerationMuteListsScreen} from './view/screens/ModerationMuteLists'
+import {DiscoverFeedsScreen} from 'view/screens/DiscoverFeeds'
 import {NotFoundScreen} from './view/screens/NotFound'
 import {SettingsScreen} from './view/screens/Settings'
 import {ProfileScreen} from './view/screens/Profile'
 import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
 import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
+import {CustomFeedScreen} from './view/screens/CustomFeed'
+import {CustomFeedLikedByScreen} from './view/screens/CustomFeedLikedBy'
+import {ProfileListScreen} from './view/screens/ProfileList'
 import {PostThreadScreen} from './view/screens/PostThread'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
 import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
@@ -49,14 +57,17 @@ import {TermsOfServiceScreen} from './view/screens/TermsOfService'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
 import {AppPasswords} from 'view/screens/AppPasswords'
-import {MutedAccounts} from 'view/screens/MutedAccounts'
-import {BlockedAccounts} from 'view/screens/BlockedAccounts'
+import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
+import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
+import {SavedFeeds} from 'view/screens/SavedFeeds'
 import {getRoutingInstrumentation} from 'lib/sentry'
+import {bskyTitle} from 'lib/strings/headings'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
 const HomeTab = createNativeStackNavigator<HomeTabNavigatorParams>()
 const SearchTab = createNativeStackNavigator<SearchTabNavigatorParams>()
+const FeedsTab = createNativeStackNavigator<FeedsTabNavigatorParams>()
 const NotificationsTab =
   createNativeStackNavigator<NotificationsTabNavigatorParams>()
 const MyProfileTab = createNativeStackNavigator<MyProfileTabNavigatorParams>()
@@ -66,33 +77,140 @@ const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 /**
  * These "common screens" are reused across stacks.
  */
-function commonScreens(Stack: typeof HomeTab) {
+function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
+  const title = (page: string) => bskyTitle(page, unreadCountLabel)
+
   return (
     <>
-      <Stack.Screen name="NotFound" component={NotFoundScreen} />
-      <Stack.Screen name="Settings" component={SettingsScreen} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen
+        name="NotFound"
+        component={NotFoundScreen}
+        options={{title: title('Not Found')}}
+      />
+      <Stack.Screen
+        name="Moderation"
+        component={ModerationScreen}
+        options={{title: title('Moderation')}}
+      />
+      <Stack.Screen
+        name="ModerationMuteLists"
+        component={ModerationMuteListsScreen}
+        options={{title: title('Mute Lists')}}
+      />
+      <Stack.Screen
+        name="ModerationMutedAccounts"
+        component={ModerationMutedAccounts}
+        options={{title: title('Muted Accounts')}}
+      />
+      <Stack.Screen
+        name="ModerationBlockedAccounts"
+        component={ModerationBlockedAccounts}
+        options={{title: title('Blocked Accounts')}}
+      />
+      <Stack.Screen
+        name="DiscoverFeeds"
+        component={DiscoverFeedsScreen}
+        options={{title: title('Discover Feeds')}}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{title: title('Settings')}}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={({route}) => ({title: title(`@${route.params.name}`)})}
+      />
       <Stack.Screen
         name="ProfileFollowers"
         component={ProfileFollowersScreen}
+        options={({route}) => ({
+          title: title(`People following @${route.params.name}`),
+        })}
       />
-      <Stack.Screen name="ProfileFollows" component={ProfileFollowsScreen} />
-      <Stack.Screen name="PostThread" component={PostThreadScreen} />
-      <Stack.Screen name="PostLikedBy" component={PostLikedByScreen} />
-      <Stack.Screen name="PostRepostedBy" component={PostRepostedByScreen} />
-      <Stack.Screen name="Debug" component={DebugScreen} />
-      <Stack.Screen name="Log" component={LogScreen} />
-      <Stack.Screen name="Support" component={SupportScreen} />
-      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
-      <Stack.Screen name="TermsOfService" component={TermsOfServiceScreen} />
+      <Stack.Screen
+        name="ProfileFollows"
+        component={ProfileFollowsScreen}
+        options={({route}) => ({
+          title: title(`People followed by @${route.params.name}`),
+        })}
+      />
+      <Stack.Screen
+        name="ProfileList"
+        component={ProfileListScreen}
+        options={{title: title('Mute List')}}
+      />
+      <Stack.Screen
+        name="PostThread"
+        component={PostThreadScreen}
+        options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
+      />
+      <Stack.Screen
+        name="PostLikedBy"
+        component={PostLikedByScreen}
+        options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
+      />
+      <Stack.Screen
+        name="PostRepostedBy"
+        component={PostRepostedByScreen}
+        options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
+      />
+      <Stack.Screen
+        name="CustomFeed"
+        component={CustomFeedScreen}
+        options={{title: title('Feed')}}
+      />
+      <Stack.Screen
+        name="CustomFeedLikedBy"
+        component={CustomFeedLikedByScreen}
+        options={{title: title('Liked by')}}
+      />
+      <Stack.Screen
+        name="Debug"
+        component={DebugScreen}
+        options={{title: title('Debug')}}
+      />
+      <Stack.Screen
+        name="Log"
+        component={LogScreen}
+        options={{title: title('Log')}}
+      />
+      <Stack.Screen
+        name="Support"
+        component={SupportScreen}
+        options={{title: title('Support')}}
+      />
+      <Stack.Screen
+        name="PrivacyPolicy"
+        component={PrivacyPolicyScreen}
+        options={{title: title('Privacy Policy')}}
+      />
+      <Stack.Screen
+        name="TermsOfService"
+        component={TermsOfServiceScreen}
+        options={{title: title('Terms of Service')}}
+      />
       <Stack.Screen
         name="CommunityGuidelines"
         component={CommunityGuidelinesScreen}
+        options={{title: title('Community Guidelines')}}
       />
-      <Stack.Screen name="CopyrightPolicy" component={CopyrightPolicyScreen} />
-      <Stack.Screen name="AppPasswords" component={AppPasswords} />
-      <Stack.Screen name="MutedAccounts" component={MutedAccounts} />
-      <Stack.Screen name="BlockedAccounts" component={BlockedAccounts} />
+      <Stack.Screen
+        name="CopyrightPolicy"
+        component={CopyrightPolicyScreen}
+        options={{title: title('Copyright Policy')}}
+      />
+      <Stack.Screen
+        name="AppPasswords"
+        component={AppPasswords}
+        options={{title: title('App Passwords')}}
+      />
+      <Stack.Screen
+        name="SavedFeeds"
+        component={SavedFeeds}
+        options={{title: title('Edit My Feeds')}}
+      />
     </>
   )
 }
@@ -107,14 +225,15 @@ function TabsNavigator() {
     <Tab.Navigator
       initialRouteName="HomeTab"
       backBehavior="initialRoute"
-      screenOptions={{headerShown: false}}
+      screenOptions={{headerShown: false, lazy: true}}
       tabBar={tabBar}>
       <Tab.Screen name="HomeTab" component={HomeTabNavigator} />
+      <Tab.Screen name="SearchTab" component={SearchTabNavigator} />
+      <Tab.Screen name="FeedsTab" component={FeedsTabNavigator} />
       <Tab.Screen
         name="NotificationsTab"
         component={NotificationsTabNavigator}
       />
-      <Tab.Screen name="SearchTab" component={SearchTabNavigator} />
       <Tab.Screen name="MyProfileTab" component={MyProfileTabNavigator} />
     </Tab.Navigator>
   )
@@ -151,6 +270,23 @@ function SearchTabNavigator() {
       <SearchTab.Screen name="Search" component={SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
     </SearchTab.Navigator>
+  )
+}
+
+function FeedsTabNavigator() {
+  const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
+  return (
+    <FeedsTab.Navigator
+      screenOptions={{
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+        animationDuration: 250,
+        contentStyle,
+      }}>
+      <FeedsTab.Screen name="Feeds" component={FeedsScreen} />
+      {commonScreens(FeedsTab as typeof HomeTab)}
+    </FeedsTab.Navigator>
   )
 }
 
@@ -204,8 +340,10 @@ const MyProfileTabNavigator = observer(() => {
  * The FlatNavigator is used by Web to represent the routes
  * in a single ("flat") stack.
  */
-function FlatNavigator() {
+const FlatNavigator = observer(() => {
   const pal = usePalette('default')
+  const unreadCountLabel = useStores().me.notifications.unreadCountLabel
+  const title = (page: string) => bskyTitle(page, unreadCountLabel)
   return (
     <Flat.Navigator
       screenOptions={{
@@ -215,13 +353,30 @@ function FlatNavigator() {
         animationDuration: 250,
         contentStyle: [pal.view],
       }}>
-      <Flat.Screen name="Home" component={HomeScreen} />
-      <Flat.Screen name="Search" component={SearchScreen} />
-      <Flat.Screen name="Notifications" component={NotificationsScreen} />
-      {commonScreens(Flat as typeof HomeTab)}
+      <Flat.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{title: title('Home')}}
+      />
+      <Flat.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{title: title('Search')}}
+      />
+      <Flat.Screen
+        name="Feeds"
+        component={FeedsScreen}
+        options={{title: title('Feeds')}}
+      />
+      <Flat.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{title: title('Notifications')}}
+      />
+      {commonScreens(Flat as typeof HomeTab, unreadCountLabel)}
     </Flat.Navigator>
   )
-}
+})
 
 /**
  * The RoutesContainer should wrap all components which need access
@@ -255,7 +410,16 @@ const LINKING = {
       if (name === 'Notifications') {
         return buildStateObject('NotificationsTab', 'Notifications', params)
       }
-      return buildStateObject('HomeTab', name, params)
+      if (name === 'Home') {
+        return buildStateObject('HomeTab', 'Home', params)
+      }
+      // if the path is something else, like a post, profile, or even settings, we need to initialize the home tab as pre-existing state otherwise the back button will not work
+      return buildStateObject('HomeTab', name, params, [
+        {
+          name: 'Home',
+          params: {},
+        },
+      ])
     } else {
       return buildStateObject('Flat', name, params)
     }

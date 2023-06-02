@@ -42,6 +42,7 @@ export async function login(
     await device.takeScreenshot('2- opened service selector')
   }
   await element(by.id('customServerTextInput')).typeText(service)
+  await element(by.id('customServerTextInput')).tapReturnKey()
   await element(by.id('customServerSelectBtn')).tap()
   if (takeScreenshots) {
     await device.takeScreenshot('3- input custom service')

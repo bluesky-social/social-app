@@ -10,18 +10,11 @@ import {FEEDBACK_FORM_URL} from 'lib/constants'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {pluralize} from 'lib/strings/helpers'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {MoonIcon} from 'lib/icons'
 import {formatCount} from 'view/com/util/numeric/format'
 
 export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores()
   const pal = usePalette('default')
-  const mode = useColorSchemeStyle('Light', 'Dark')
-
-  const onDarkmodePress = React.useCallback(() => {
-    store.shell.setDarkMode(!store.shell.darkMode)
-  }, [store])
 
   return (
     <View style={[styles.rightNav, pal.view]}>
@@ -59,25 +52,6 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
         </View>
       </View>
       <InviteCodes />
-      <View>
-        <TouchableOpacity
-          style={[styles.darkModeToggle]}
-          onPress={onDarkmodePress}
-          accessibilityRole="button"
-          accessibilityLabel="Toggle dark mode"
-          accessibilityHint={
-            mode === 'Dark'
-              ? 'Sets display to light mode'
-              : 'Sets display to dark mode'
-          }>
-          <View style={[pal.viewLight, styles.darkModeToggleIcon]}>
-            <MoonIcon size={18} style={pal.textLight} />
-          </View>
-          <Text type="sm" style={pal.textLight}>
-            {mode} mode
-          </Text>
-        </TouchableOpacity>
-      </View>
     </View>
   )
 })
@@ -125,7 +99,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     left: 'calc(50vw + 330px)',
-    width: 300,
+    width: 304,
   },
 
   message: {
@@ -146,20 +120,5 @@ const styles = StyleSheet.create({
   },
   inviteCodesIcon: {
     marginRight: 6,
-  },
-
-  darkModeToggle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginHorizontal: 12,
-  },
-  darkModeToggleIcon: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 26,
-    height: 26,
-    borderRadius: 15,
   },
 })

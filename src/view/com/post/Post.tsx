@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   Linking,
@@ -20,7 +20,7 @@ import {Link} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
-import {PostCtrls} from '../util/PostCtrls'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {ImageHider} from '../util/moderation/ImageHider'
@@ -167,13 +167,17 @@ const PostLoaded = observer(
       Toast.show('Copied to clipboard')
     }, [record])
 
+    const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+
     const onOpenTranslate = React.useCallback(() => {
       Linking.openURL(
         encodeURI(
-          `https://translate.google.com/#auto|en|${record?.text || ''}`,
+          `https://translate.google.com/?sl=auto&tl=${primaryLanguage}&text=${
+            record?.text || ''
+          }`,
         ),
       )
-    }, [record])
+    }, [record, primaryLanguage])
 
     const onToggleThreadMute = React.useCallback(async () => {
       try {
@@ -203,11 +207,47 @@ const PostLoaded = observer(
       )
     }, [item, setDeleted, store])
 
+    const accessibilityActions = useMemo(
+      () => [
+        {
+          name: 'reply',
+          label: 'Reply',
+        },
+        {
+          name: 'repost',
+          label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
+        },
+        {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
+      ],
+      [item.post.viewer?.like, item.post.viewer?.repost],
+    )
+
+    const onAccessibilityAction = useCallback(
+      event => {
+        switch (event.nativeEvent.actionName) {
+          case 'like':
+            onPressToggleLike()
+            break
+          case 'reply':
+            onPressReply()
+            break
+          case 'repost':
+            onPressToggleRepost()
+            break
+          default:
+            break
+        }
+      },
+      [onPressReply, onPressToggleLike, onPressToggleRepost],
+    )
+
     return (
       <PostHider
         href={itemHref}
         style={[styles.outer, pal.view, pal.border, style]}
-        moderation={item.moderation.list}>
+        moderation={item.moderation.list}
+        accessibilityActions={accessibilityActions}
+        onAccessibilityAction={onAccessibilityAction}>
         {showReplyLine && <View style={styles.replyLine} />}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
