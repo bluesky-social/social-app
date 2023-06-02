@@ -66,9 +66,16 @@ export function Component({}: {}) {
     <View
       style={[styles.container, {backgroundColor: pal.colors.backgroundLight}]}>
       <View style={[styles.innerContainer, pal.view]}>
-        <Text type="title-xl" style={[styles.title, pal.text]}>
-          Delete account
-        </Text>
+        <View style={[styles.titleContainer, pal.view]}>
+          <Text type="title-xl" style={[styles.title, pal.text]}>
+            Delete account
+          </Text>
+          <Text
+            type="title-xl"
+            style={[styles.title, pal.text, s.bold, s.ml10]}>
+            {`"${store.me.displayName || store.me.handle}"`}
+          </Text>
+        </View>
         {!isEmailSent ? (
           <>
             <Text type="lg" style={[styles.description, pal.text]}>
@@ -202,6 +209,11 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     paddingBottom: 20,
+  },
+  titleContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   title: {
     textAlign: 'center',
