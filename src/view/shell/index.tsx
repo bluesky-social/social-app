@@ -18,9 +18,11 @@ import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
 import {isAndroid} from 'platform/detection'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
 
 const ShellInner = observer(() => {
   const store = useStores()
+  useOTAUpdate() // this hook polls for OTA updates every few seconds
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
   const containerPadding = React.useMemo(
