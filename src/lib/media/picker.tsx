@@ -5,12 +5,7 @@ import {
 } from 'react-native-image-crop-picker'
 import {RootStoreModel} from 'state/index'
 import {CameraOpts, CropperOptions} from './types'
-import {
-  ImagePickerOptions,
-  launchImageLibraryAsync,
-  MediaTypeOptions,
-} from 'expo-image-picker'
-import {getDataUriSize} from './util'
+export {openPicker} from './picker.shared'
 
 /**
  * NOTE
@@ -20,26 +15,6 @@ import {getDataUriSize} from './util'
  * used here.
  * -prf
  */
-
-export async function openPicker(
-  _store: RootStoreModel,
-  opts?: ImagePickerOptions,
-) {
-  const response = await launchImageLibraryAsync({
-    exif: false,
-    mediaTypes: MediaTypeOptions.Images,
-    quality: 1,
-    ...opts,
-  })
-
-  return (response.assets ?? []).map(image => ({
-    mime: 'image/jpeg',
-    height: image.height,
-    width: image.width,
-    path: image.uri,
-    size: getDataUriSize(image.uri),
-  }))
-}
 
 export async function openCamera(
   _store: RootStoreModel,

@@ -87,7 +87,7 @@ export class GalleryModel {
   }
 
   async pick() {
-    const images = await openPicker(this.rootStore, {
+    const images = await openPicker({
       selectionLimit: 4 - this.size,
       allowsMultipleSelection: true,
     })

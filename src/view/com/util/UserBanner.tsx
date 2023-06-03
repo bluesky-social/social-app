@@ -55,7 +55,7 @@ export function UserBanner({
         if (!(await requestPhotoAccessIfNeeded())) {
           return
         }
-        const items = await openPicker(store)
+        const items = await openPicker()
 
         onSelectNewBanner?.(
           await openCropper(store, {
