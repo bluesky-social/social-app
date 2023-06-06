@@ -10,7 +10,7 @@ import {
 import {observer} from 'mobx-react-lite'
 import {useAnalytics} from 'lib/analytics'
 import {Text} from '../../util/text/Text'
-import {s, colors} from 'lib/styles'
+import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {CreateAccountModel} from 'state/models/ui/create-account'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -126,119 +126,5 @@ const styles = StyleSheet.create({
   stepContainer: {
     paddingHorizontal: 20,
     paddingVertical: 20,
-  },
-
-  noTopBorder: {
-    borderTopWidth: 0,
-  },
-  logoHero: {
-    paddingTop: 30,
-    paddingBottom: 40,
-  },
-  group: {
-    borderWidth: 1,
-    borderRadius: 10,
-    marginBottom: 20,
-    marginHorizontal: 20,
-  },
-  groupLabel: {
-    paddingHorizontal: 20,
-    paddingBottom: 5,
-  },
-  groupContent: {
-    borderTopWidth: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  groupContentIcon: {
-    marginLeft: 10,
-  },
-  textInput: {
-    flex: 1,
-    width: '100%',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    fontSize: 17,
-    letterSpacing: 0.25,
-    fontWeight: '400',
-    borderRadius: 10,
-  },
-  textBtn: {
-    flexDirection: 'row',
-    flex: 1,
-    alignItems: 'center',
-  },
-  textBtnLabel: {
-    flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-  },
-  textBtnFakeInnerBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 6,
-    paddingVertical: 6,
-    paddingHorizontal: 8,
-    marginHorizontal: 6,
-  },
-  textBtnFakeInnerBtnIcon: {
-    marginRight: 4,
-  },
-  picker: {
-    flex: 1,
-    width: '100%',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    fontSize: 17,
-    borderRadius: 10,
-  },
-  pickerLabel: {
-    fontSize: 17,
-  },
-  checkbox: {
-    borderWidth: 1,
-    borderRadius: 2,
-    width: 16,
-    height: 16,
-    marginLeft: 16,
-  },
-  checkboxFilled: {
-    borderWidth: 1,
-    borderRadius: 2,
-    width: 16,
-    height: 16,
-    marginLeft: 16,
-  },
-  policies: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  error: {
-    backgroundColor: colors.red4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: -5,
-    marginHorizontal: 20,
-    marginBottom: 15,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-  },
-  errorFloating: {
-    marginBottom: 20,
-    marginHorizontal: 20,
-    borderRadius: 8,
-  },
-  errorIcon: {
-    borderWidth: 1,
-    borderColor: colors.white,
-    borderRadius: 30,
-    width: 16,
-    height: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 5,
   },
 })
