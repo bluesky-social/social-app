@@ -13,7 +13,7 @@ import {isDesktopWeb} from 'platform/detection'
 import {SendReportButton} from './SendReportButton'
 import {InputIssueDetails} from './InputIssueDetails'
 
-export const snapPoints = ['50%']
+export const snapPoints = [400]
 
 export function Component({did}: {did: string}) {
   const store = useStores()

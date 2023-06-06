@@ -14,7 +14,7 @@ import {InputIssueDetails} from './InputIssueDetails'
 
 const DMCA_LINK = 'https://bsky.app/support/copyright'
 
-export const snapPoints = ['70%']
+export const snapPoints = [575]
 
 export function Component({
   postUri,
