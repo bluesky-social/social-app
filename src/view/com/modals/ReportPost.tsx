@@ -196,6 +196,10 @@ const SelectIssue = ({
 
   const onSelectIssue = (v: string) => setIssue(v)
   const goToDetails = () => {
+    if (issue === '__copyright__') {
+      Linking.openURL(DMCA_LINK)
+      return
+    }
     setShowTextInput(true)
   }
 
