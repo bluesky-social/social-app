@@ -272,7 +272,8 @@ const InputIssueText = ({
         <TextInput
           accessibilityLabel="Text input field"
           accessibilityHint="Enter a reason for reporting this post."
-          placeholder="Enter a reason"
+          placeholder="Enter a reason or any other details here."
+          placeholderTextColor={pal.textLight.color}
           value={details}
           onChangeText={setDetails}
           autoFocus={true}
