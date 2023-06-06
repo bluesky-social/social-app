@@ -48,7 +48,7 @@ export function InputIssueDetails({
           multiline={true}
           textAlignVertical="top"
           maxLength={300}
-          style={[styles.detailsInput]}
+          style={[styles.detailsInput, pal.text]}
         />
         <View style={[styles.charProgress]}>
           <CharProgress count={details?.length || 0} />
