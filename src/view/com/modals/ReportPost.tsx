@@ -22,7 +22,7 @@ import {CharProgress} from '../composer/char-progress/CharProgress'
 
 const DMCA_LINK = 'https://bsky.app/support/copyright'
 
-export const snapPoints = ['65%']
+export const snapPoints = ['70%']
 
 export function Component({
   postUri,
