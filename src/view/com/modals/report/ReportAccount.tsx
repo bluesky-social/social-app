@@ -1,14 +1,8 @@
 import React, {useState, useMemo} from 'react'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {TouchableOpacity, StyleSheet, View} from 'react-native'
 import {ComAtprotoModerationDefs} from '@atproto/api'
-import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from 'state/index'
-import {s, colors, gradients} from 'lib/styles'
+import {s, colors} from 'lib/styles'
 import {RadioGroup, RadioGroupItem} from '../../util/forms/RadioGroup'
 import {Text} from '../../util/text/Text'
 import * as Toast from '../../util/Toast'
@@ -16,17 +10,88 @@ import {ErrorMessage} from '../../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
+import {SendReportButton} from './SendReportButton'
+import {InputIssueDetails} from './InputIssueDetails'
 
 export const snapPoints = ['50%']
 
 export function Component({did}: {did: string}) {
   const store = useStores()
   const pal = usePalette('default')
-  const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [error, setError] = useState<string>('')
-  const [issue, setIssue] = useState<string>('')
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [error, setError] = useState<string>()
+  const [issue, setIssue] = useState<string>()
   const onSelectIssue = (v: string) => setIssue(v)
+  const [details, setDetails] = useState<string>()
+  const [showDetailsInput, setShowDetailsInput] = useState(false)
 
+  const onPress = async () => {
+    setError('')
+    if (!issue) {
+      return
+    }
+    setIsProcessing(true)
+    try {
+      await store.agent.com.atproto.moderation.createReport({
+        reasonType: issue,
+        subject: {
+          $type: 'com.atproto.admin.defs#repoRef',
+          did,
+        },
+        reason: details,
+      })
+      Toast.show("Thank you for your report! We'll look into it promptly.")
+      store.shell.closeModal()
+      return
+    } catch (e: any) {
+      setError(cleanError(e))
+      setIsProcessing(false)
+    }
+  }
+  const goBack = () => {
+    setShowDetailsInput(false)
+  }
+  const goToDetails = () => {
+    setShowDetailsInput(true)
+  }
+
+  return (
+    <View testID="reportAccountModal" style={[styles.container, pal.view]}>
+      {showDetailsInput ? (
+        <InputIssueDetails
+          submitReport={onPress}
+          setDetails={setDetails}
+          details={details}
+          isProcessing={isProcessing}
+          goBack={goBack}
+        />
+      ) : (
+        <SelectIssue
+          onPress={onPress}
+          onSelectIssue={onSelectIssue}
+          error={error}
+          isProcessing={isProcessing}
+          goToDetails={goToDetails}
+        />
+      )}
+    </View>
+  )
+}
+
+const SelectIssue = ({
+  onPress,
+  onSelectIssue,
+  error,
+  isProcessing,
+  goToDetails,
+}: {
+  onPress: () => void
+  onSelectIssue: (v: string) => void
+  error: string | undefined
+  isProcessing: boolean
+  goToDetails: () => void
+}) => {
+  const pal = usePalette('default')
   const ITEMS: RadioGroupItem[] = useMemo(
     () => [
       {
@@ -58,31 +123,8 @@ export function Component({did}: {did: string}) {
     ],
     [pal],
   )
-
-  const onPress = async () => {
-    setError('')
-    if (!issue) {
-      return
-    }
-    setIsProcessing(true)
-    try {
-      await store.agent.com.atproto.moderation.createReport({
-        reasonType: issue,
-        subject: {
-          $type: 'com.atproto.admin.defs#repoRef',
-          did,
-        },
-      })
-      Toast.show("Thank you for your report! We'll look into it promptly.")
-      store.shell.closeModal()
-      return
-    } catch (e: any) {
-      setError(cleanError(e))
-      setIsProcessing(false)
-    }
-  }
   return (
-    <View testID="reportAccountModal" style={[styles.container, pal.view]}>
+    <>
       <Text type="title-xl" style={[pal.text, styles.title]}>
         Report account
       </Text>
@@ -102,28 +144,17 @@ export function Component({did}: {did: string}) {
           <ErrorMessage message={error} />
         </View>
       ) : undefined}
-      {isProcessing ? (
-        <View style={[styles.btn, s.mt10]}>
-          <ActivityIndicator />
-        </View>
-      ) : issue ? (
-        <TouchableOpacity
-          testID="sendReportBtn"
-          style={s.mt10}
-          onPress={onPress}
-          accessibilityRole="button"
-          accessibilityLabel="Report account"
-          accessibilityHint={`Reports account with reason ${issue}`}>
-          <LinearGradient
-            colors={[gradients.blueLight.start, gradients.blueLight.end]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
-            style={[styles.btn]}>
-            <Text style={[s.white, s.bold, s.f18]}>Send Report</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      ) : undefined}
-    </View>
+      <SendReportButton onPress={onPress} isProcessing={isProcessing} />
+      <TouchableOpacity
+        testID="addDetailsBtn"
+        style={[s.mt10, s.mb10, s.alignCenter]}
+        onPress={goToDetails}
+        accessibilityRole="button"
+        accessibilityLabel="Add details"
+        accessibilityHint="Add more details to your report">
+        <Text style={[pal.text, s.f18, pal.link]}>Add details to report</Text>
+      </TouchableOpacity>
+    </>
   )
 }
 
