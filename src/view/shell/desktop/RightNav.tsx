@@ -22,7 +22,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
       <View style={styles.message}>
         <Text type="md" style={[pal.textLight, styles.messageLine]}>
           Welcome to Bluesky! This is a beta application that's still in
-          development
+          development.
         </Text>
         <View style={[s.flexRow]}>
           <TextLink
