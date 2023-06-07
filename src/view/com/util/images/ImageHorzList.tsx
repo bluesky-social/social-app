@@ -1,50 +1,25 @@
 import React from 'react'
-import {
-  StyleProp,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-  ViewStyle,
-} from 'react-native'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
 
 interface Props {
   images: AppBskyEmbedImages.ViewImage[]
-  onPress?: (index: number) => void
   style?: StyleProp<ViewStyle>
 }
 
-export function ImageHorzList({images, onPress, style}: Props) {
-  const numImages = images.length
+export function ImageHorzList({images, style}: Props) {
   return (
     <View style={[styles.flexRow, style]}>
-      {images.map(({thumb, alt}, i) => (
-        <TouchableWithoutFeedback
-          key={i}
-          onPress={() => onPress?.(i)}
+      {images.map(({thumb, alt}) => (
+        <Image
+          source={{uri: thumb}}
+          style={styles.image}
           accessible={true}
-          accessibilityLabel={`Open image ${i} of ${numImages}`}
-          accessibilityHint="Opens image in viewer"
-          accessibilityActions={[{name: 'press', label: 'Press'}]}
-          onAccessibilityAction={action => {
-            switch (action.nativeEvent.actionName) {
-              case 'press':
-                onPress?.(0)
-                break
-              default:
-                break
-            }
-          }}>
-          <Image
-            source={{uri: thumb}}
-            style={styles.image}
-            accessible={true}
-            accessibilityIgnoresInvertColors
-            accessibilityHint={alt}
-            accessibilityLabel=""
-          />
-        </TouchableWithoutFeedback>
+          accessibilityIgnoresInvertColors
+          accessibilityHint={alt}
+          accessibilityLabel=""
+        />
       ))}
     </View>
   )
