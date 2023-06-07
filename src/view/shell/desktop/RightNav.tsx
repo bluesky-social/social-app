@@ -1,16 +1,16 @@
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {FEEDBACK_FORM_URL} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {pluralize} from 'lib/strings/helpers'
-import {s} from 'lib/styles'
-import {observer} from 'mobx-react-lite'
 import React from 'react'
+import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useStores} from 'state/index'
-import {TextLink} from 'view/com/util/Link'
-import {formatCount} from 'view/com/util/numeric/format'
-import {Text} from 'view/com/util/text/Text'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {usePalette} from 'lib/hooks/usePalette'
 import {DesktopSearch} from './Search'
+import {Text} from 'view/com/util/text/Text'
+import {TextLink} from 'view/com/util/Link'
+import {FEEDBACK_FORM_URL} from 'lib/constants'
+import {s} from 'lib/styles'
+import {useStores} from 'state/index'
+import {pluralize} from 'lib/strings/helpers'
+import {formatCount} from 'view/com/util/numeric/format'
 
 export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores()
@@ -22,7 +22,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
       <View style={styles.message}>
         <Text type="md" style={[pal.textLight, styles.messageLine]}>
           Welcome to Bluesky! This is a beta application that's still in
-          development.
+          development
         </Text>
         <View style={[s.flexRow]}>
           <TextLink
