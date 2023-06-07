@@ -147,12 +147,12 @@ const SelectIssue = ({
       <SendReportButton onPress={onPress} isProcessing={isProcessing} />
       <TouchableOpacity
         testID="addDetailsBtn"
-        style={[s.mt10, s.mb10, s.alignCenter]}
+        style={styles.addDetailsBtn}
         onPress={goToDetails}
         accessibilityRole="button"
         accessibilityLabel="Add details"
         accessibilityHint="Add more details to your report">
-        <Text style={[pal.text, s.f18, pal.link]}>Add details to report</Text>
+        <Text style={[s.f18, pal.link]}>Add details to report</Text>
       </TouchableOpacity>
     </>
   )
@@ -173,13 +173,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 22,
     marginBottom: 10,
   },
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    borderRadius: 32,
+  addDetailsBtn: {
     padding: 14,
-    backgroundColor: colors.gray1,
+    alignSelf: 'center',
   },
 })
