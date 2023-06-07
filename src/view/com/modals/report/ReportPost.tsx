@@ -1,25 +1,20 @@
 import React, {useState, useMemo} from 'react'
-import {
-  ActivityIndicator,
-  Linking,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ComAtprotoModerationDefs} from '@atproto/api'
-import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from 'state/index'
-import {s, colors, gradients} from 'lib/styles'
-import {RadioGroup, RadioGroupItem} from '../util/forms/RadioGroup'
-import {Text} from '../util/text/Text'
-import * as Toast from '../util/Toast'
-import {ErrorMessage} from '../util/error/ErrorMessage'
+import {s} from 'lib/styles'
+import {RadioGroup, RadioGroupItem} from '../../util/forms/RadioGroup'
+import {Text} from '../../util/text/Text'
+import * as Toast from '../../util/Toast'
+import {ErrorMessage} from '../../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
+import {SendReportButton} from './SendReportButton'
+import {InputIssueDetails} from './InputIssueDetails'
 
 const DMCA_LINK = 'https://bsky.app/support/copyright'
 
-export const snapPoints = [550]
+export const snapPoints = [575]
 
 export function Component({
   postUri,
@@ -30,11 +25,86 @@ export function Component({
 }) {
   const store = useStores()
   const pal = usePalette('default')
-  const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [error, setError] = useState<string>('')
-  const [issue, setIssue] = useState<string>('')
-  const onSelectIssue = (v: string) => setIssue(v)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [showTextInput, setShowTextInput] = useState(false)
+  const [error, setError] = useState<string>()
+  const [issue, setIssue] = useState<string>()
+  const [details, setDetails] = useState<string>()
 
+  const submitReport = async () => {
+    setError('')
+    if (!issue) {
+      return
+    }
+    setIsProcessing(true)
+    try {
+      if (issue === '__copyright__') {
+        Linking.openURL(DMCA_LINK)
+        return
+      }
+      await store.agent.createModerationReport({
+        reasonType: issue,
+        subject: {
+          $type: 'com.atproto.repo.strongRef',
+          uri: postUri,
+          cid: postCid,
+        },
+        reason: details,
+      })
+      Toast.show("Thank you for your report! We'll look into it promptly.")
+
+      store.shell.closeModal()
+      return
+    } catch (e: any) {
+      setError(cleanError(e))
+      setIsProcessing(false)
+    }
+  }
+
+  const goBack = () => {
+    setShowTextInput(false)
+  }
+
+  return (
+    <View testID="reportPostModal" style={[s.flex1, s.pl10, s.pr10, pal.view]}>
+      {showTextInput ? (
+        <InputIssueDetails
+          details={details}
+          setDetails={setDetails}
+          goBack={goBack}
+          submitReport={submitReport}
+          isProcessing={isProcessing}
+        />
+      ) : (
+        <SelectIssue
+          setShowTextInput={setShowTextInput}
+          error={error}
+          issue={issue}
+          setIssue={setIssue}
+          submitReport={submitReport}
+          isProcessing={isProcessing}
+        />
+      )}
+    </View>
+  )
+}
+
+const SelectIssue = ({
+  error,
+  setShowTextInput,
+  issue,
+  setIssue,
+  submitReport,
+  isProcessing,
+}: {
+  error: string | undefined
+  setShowTextInput: (v: boolean) => void
+  issue: string | undefined
+  setIssue: (v: string) => void
+  submitReport: () => void
+  isProcessing: boolean
+}) => {
+  const pal = usePalette('default')
   const ITEMS: RadioGroupItem[] = useMemo(
     () => [
       {
@@ -115,35 +185,17 @@ export function Component({
     [pal],
   )
 
-  const onPress = async () => {
-    setError('')
-    if (!issue) {
+  const onSelectIssue = (v: string) => setIssue(v)
+  const goToDetails = () => {
+    if (issue === '__copyright__') {
+      Linking.openURL(DMCA_LINK)
       return
     }
-    setIsProcessing(true)
-    try {
-      if (issue === '__copyright__') {
-        Linking.openURL(DMCA_LINK)
-      } else {
-        await store.agent.createModerationReport({
-          reasonType: issue,
-          subject: {
-            $type: 'com.atproto.repo.strongRef',
-            uri: postUri,
-            cid: postCid,
-          },
-        })
-        Toast.show("Thank you for your report! We'll look into it promptly.")
-      }
-      store.shell.closeModal()
-      return
-    } catch (e: any) {
-      setError(cleanError(e))
-      setIsProcessing(false)
-    }
+    setShowTextInput(true)
   }
+
   return (
-    <View testID="reportPostModal" style={[s.flex1, s.pl10, s.pr10, pal.view]}>
+    <>
       <Text style={[pal.text, styles.title]}>Report post</Text>
       <Text style={[pal.textLight, styles.description]}>
         What is the issue with this post?
@@ -158,28 +210,24 @@ export function Component({
           <ErrorMessage message={error} />
         </View>
       ) : undefined}
-      {isProcessing ? (
-        <View style={[styles.btn, s.mt10]}>
-          <ActivityIndicator />
-        </View>
-      ) : issue ? (
-        <TouchableOpacity
-          testID="sendReportBtn"
-          style={s.mt10}
-          onPress={onPress}
-          accessibilityRole="button"
-          accessibilityLabel="Report post"
-          accessibilityHint={`Reports post with reason ${issue}`}>
-          <LinearGradient
-            colors={[gradients.blueLight.start, gradients.blueLight.end]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
-            style={[styles.btn]}>
-            <Text style={[s.white, s.bold, s.f18]}>Send Report</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+      {issue ? (
+        <>
+          <SendReportButton
+            onPress={submitReport}
+            isProcessing={isProcessing}
+          />
+          <TouchableOpacity
+            testID="addDetailsBtn"
+            style={styles.addDetailsBtn}
+            onPress={goToDetails}
+            accessibilityRole="button"
+            accessibilityLabel="Add details"
+            accessibilityHint="Add more details to your report">
+            <Text style={[s.f18, pal.link]}>Add details to report</Text>
+          </TouchableOpacity>
+        </>
       ) : undefined}
-    </View>
+    </>
   )
 }
 
@@ -196,13 +244,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 22,
     marginBottom: 10,
   },
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    borderRadius: 32,
+  addDetailsBtn: {
     padding: 14,
-    backgroundColor: colors.gray1,
+    alignSelf: 'center',
   },
 })
