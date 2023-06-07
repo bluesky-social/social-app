@@ -35,67 +35,6 @@ export function TEAM_HANDLES(serviceUrl: string) {
   }
 }
 
-// NOTE
-// this is a temporary list that we periodically update
-// it is used in the search interface if the user doesn't follow anybody
-// -prf
-export const PROD_SUGGESTED_FOLLOWS = [
-  'bsky.app',
-  'jay.bsky.team',
-  'pfrazee.com',
-  'why.bsky.team',
-  'dholms.xyz',
-  'emily.bsky.team',
-  'rose.bsky.team',
-  'jack.bsky.social',
-  'faithlove.art',
-  'annaghughes.bsky.social',
-  'astrokatie.com',
-  'whysharksmatter.bsky.social',
-  'jamesgunn.bsky.social',
-  'seangunn.bsky.social',
-  'kumail.bsky.social',
-  'craignewmark.bsky.social',
-  'xychelsea.tv',
-  'catsofyore.bsky.social',
-  'mcq.bsky.social',
-  'mmasnick.bsky.social',
-  'kelseyhightower.com',
-  'aliafonzy.bsky.social',
-  'bradfitz.com',
-  'danabramov.bsky.social',
-  'shinyakato.dev',
-  'karpathy.bsky.social',
-  'lookitup.baby',
-  'pariss.blacktechpipeline.com',
-  'swiftonsecurity.com',
-  'ericajoy.astrel.la',
-  'b0rk.jvns.ca',
-  'vickiboykis.com',
-  'brooke.vibe.camp',
-  'amir.blue',
-  'moskov.bsky.social',
-  'neilhimself.bsky.social',
-  'kylierobison.com',
-  'carnage4life.bsky.social',
-  'lolennui.bsky.social',
-]
-export const STAGING_SUGGESTED_FOLLOWS = ['arcalinea', 'paul', 'paul2'].map(
-  handle => `${handle}.staging.bsky.dev`,
-)
-export const DEV_SUGGESTED_FOLLOWS = ['alice', 'bob', 'carla'].map(
-  handle => `${handle}.test`,
-)
-export function SUGGESTED_FOLLOWS(serviceUrl: string) {
-  if (serviceUrl.includes('localhost')) {
-    return DEV_SUGGESTED_FOLLOWS
-  } else if (serviceUrl.includes('staging')) {
-    return STAGING_SUGGESTED_FOLLOWS
-  } else {
-    return PROD_SUGGESTED_FOLLOWS
-  }
-}
-
 export const STAGING_DEFAULT_FEED = (rkey: string) =>
   `at://did:plc:wqzurwm3kmaig6e6hnc2gqwo/app.bsky.feed.generator/${rkey}`
 export const PROD_DEFAULT_FEED = (rkey: string) =>
