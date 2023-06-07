@@ -7,7 +7,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {PostsFeedItemModel} from 'state/models/feeds/posts'
+import {PostsFeedItemModel} from 'state/models/feeds/post'
 import {ModerationBehaviorCode} from 'lib/labeling/types'
 import {Link, DesktopWebTextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -97,15 +97,17 @@ export const FeedItem = observer(function ({
     Toast.show('Copied to clipboard')
   }, [record])
 
+  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(
       encodeURI(
-        `https://translate.google.com/?sl=auto&tl=en&text=${
+        `https://translate.google.com/?sl=auto&tl=${primaryLanguage}&text=${
           record?.text || ''
         }`,
       ),
     )
-  }, [record])
+  }, [record, primaryLanguage])
 
   const onToggleThreadMute = React.useCallback(async () => {
     track('FeedItem:ThreadMute')
@@ -134,10 +136,6 @@ export const FeedItem = observer(function ({
       },
     )
   }, [track, item, setDeleted, store])
-
-  if (!record || deleted) {
-    return <View />
-  }
 
   const isSmallTop = isThreadChild
   const outerStyles = [
@@ -191,6 +189,10 @@ export const FeedItem = observer(function ({
     },
     [onPressReply, onPressToggleLike, onPressToggleRepost],
   )
+
+  if (!record || deleted) {
+    return <View />
+  }
 
   return (
     <PostHider

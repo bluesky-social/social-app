@@ -1,5 +1,4 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AppBskyFeedDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
@@ -13,7 +12,7 @@ export class SavedFeedsModel {
   error = ''
 
   // data
-  feeds: CustomFeedModel[] = []
+  _feedModelCache: Record<string, CustomFeedModel> = {}
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -26,7 +25,7 @@ export class SavedFeedsModel {
   }
 
   get hasContent() {
-    return this.feeds.length > 0
+    return this.all.length > 0
   }
 
   get hasError() {
@@ -39,16 +38,19 @@ export class SavedFeedsModel {
 
   get pinned() {
     return this.rootStore.preferences.pinnedFeeds
-      .map(uri => this.feeds.find(f => f.uri === uri) as CustomFeedModel)
+      .map(uri => this._feedModelCache[uri] as CustomFeedModel)
       .filter(Boolean)
   }
 
   get unpinned() {
-    return this.feeds.filter(f => !this.isPinned(f))
+    return this.rootStore.preferences.savedFeeds
+      .filter(uri => !this.isPinned(uri))
+      .map(uri => this._feedModelCache[uri] as CustomFeedModel)
+      .filter(Boolean)
   }
 
   get all() {
-    return this.pinned.concat(this.unpinned)
+    return [...this.pinned, ...this.unpinned]
   }
 
   get pinnedFeedNames() {
@@ -58,31 +60,50 @@ export class SavedFeedsModel {
   // public api
   // =
 
-  clear() {
-    this.isLoading = false
-    this.isRefreshing = false
-    this.hasLoaded = false
-    this.error = ''
-    this.feeds = []
-  }
+  /**
+   * Syncs the cached models against the current state
+   * - Should only be called by the preferences model after syncing state
+   */
+  updateCache = bundleAsync(async (clearCache?: boolean) => {
+    let newFeedModels: Record<string, CustomFeedModel> = {}
+    if (!clearCache) {
+      newFeedModels = {...this._feedModelCache}
+    }
 
-  refresh = bundleAsync(async (quietRefresh = false) => {
-    this._xLoading(!quietRefresh)
-    try {
-      let feeds: AppBskyFeedDefs.GeneratorView[] = []
-      for (
-        let i = 0;
-        i < this.rootStore.preferences.savedFeeds.length;
-        i += 25
-      ) {
-        const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerators({
-          feeds: this.rootStore.preferences.savedFeeds.slice(i, 25),
-        })
-        feeds = feeds.concat(res.data.feeds)
+    // collect the feed URIs that havent been synced yet
+    const neededFeedUris = []
+    for (const feedUri of this.rootStore.preferences.savedFeeds) {
+      if (!(feedUri in newFeedModels)) {
+        neededFeedUris.push(feedUri)
       }
-      runInAction(() => {
-        this.feeds = feeds.map(f => new CustomFeedModel(this.rootStore, f))
+    }
+
+    // fetch the missing models
+    for (let i = 0; i < neededFeedUris.length; i += 25) {
+      const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerators({
+        feeds: neededFeedUris.slice(i, 25),
       })
+      for (const feedInfo of res.data.feeds) {
+        newFeedModels[feedInfo.uri] = new CustomFeedModel(
+          this.rootStore,
+          feedInfo,
+        )
+      }
+    }
+
+    // merge into the cache
+    runInAction(() => {
+      this._feedModelCache = newFeedModels
+    })
+  })
+
+  /**
+   * Refresh the preferences then reload all feed infos
+   */
+  refresh = bundleAsync(async () => {
+    this._xLoading(true)
+    try {
+      await this.rootStore.preferences.sync({clearCache: true})
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e)
@@ -92,12 +113,7 @@ export class SavedFeedsModel {
   async save(feed: CustomFeedModel) {
     try {
       await feed.save()
-      runInAction(() => {
-        this.feeds = [
-          ...this.feeds,
-          new CustomFeedModel(this.rootStore, feed.data),
-        ]
-      })
+      await this.updateCache()
     } catch (e: any) {
       this.rootStore.log.error('Failed to save feed', e)
     }
@@ -110,9 +126,6 @@ export class SavedFeedsModel {
         await this.rootStore.preferences.removePinnedFeed(uri)
       }
       await feed.unsave()
-      runInAction(() => {
-        this.feeds = this.feeds.filter(f => f.data.uri !== uri)
-      })
     } catch (e: any) {
       this.rootStore.log.error('Failed to unsave feed', e)
     }

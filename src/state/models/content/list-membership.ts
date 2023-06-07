@@ -9,6 +9,16 @@ interface Membership {
   value: AppBskyGraphListitem.Record
 }
 
+interface ListitemRecord {
+  uri: string
+  value: AppBskyGraphListitem.Record
+}
+
+interface ListitemListResponse {
+  cursor?: string
+  records: ListitemRecord[]
+}
+
 export class ListMembershipModel {
   // data
   memberships: Membership[] = []
@@ -32,13 +42,14 @@ export class ListMembershipModel {
     // it needs to be replaced with server side list membership queries
     // -prf
     let cursor
-    let records = []
+    let records: ListitemRecord[] = []
     for (let i = 0; i < 100; i++) {
-      const res = await this.rootStore.agent.app.bsky.graph.listitem.list({
-        repo: this.rootStore.me.did,
-        cursor,
-        limit: PAGE_SIZE,
-      })
+      const res: ListitemListResponse =
+        await this.rootStore.agent.app.bsky.graph.listitem.list({
+          repo: this.rootStore.me.did,
+          cursor,
+          limit: PAGE_SIZE,
+        })
       records = records.concat(
         res.records.filter(record => record.value.subject === this.subject),
       )
@@ -99,7 +110,7 @@ export class ListMembershipModel {
     })
   }
 
-  async updateTo(uris: string) {
+  async updateTo(uris: string[]) {
     for (const uri of uris) {
       await this.add(uri)
     }

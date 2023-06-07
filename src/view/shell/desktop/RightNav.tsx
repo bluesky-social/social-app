@@ -1,16 +1,16 @@
-import React from 'react'
-import {observer} from 'mobx-react-lite'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {usePalette} from 'lib/hooks/usePalette'
-import {DesktopSearch} from './Search'
-import {Text} from 'view/com/util/text/Text'
-import {TextLink} from 'view/com/util/Link'
 import {FEEDBACK_FORM_URL} from 'lib/constants'
-import {s} from 'lib/styles'
-import {useStores} from 'state/index'
+import {usePalette} from 'lib/hooks/usePalette'
 import {pluralize} from 'lib/strings/helpers'
+import {s} from 'lib/styles'
+import {observer} from 'mobx-react-lite'
+import React from 'react'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {useStores} from 'state/index'
+import {TextLink} from 'view/com/util/Link'
 import {formatCount} from 'view/com/util/numeric/format'
+import {Text} from 'view/com/util/text/Text'
+import {DesktopSearch} from './Search'
 
 export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores()
@@ -98,8 +98,8 @@ const styles = StyleSheet.create({
   rightNav: {
     position: 'absolute',
     top: 20,
-    left: 'calc(50vw + 315px)',
-    width: 300,
+    left: 'calc(50vw + 310px)',
+    width: 304,
   },
 
   message: {
