@@ -16,6 +16,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {resetToTab} from '../../../Navigation'
+import {isDesktopWeb} from 'platform/detection'
 
 export const snapPoints = ['60%']
 
@@ -63,18 +64,30 @@ export function Component({}: {}) {
     store.shell.closeModal()
   }
   return (
-    <View
-      style={[styles.container, {backgroundColor: pal.colors.backgroundLight}]}>
+    <View style={[styles.container, pal.view]}>
       <View style={[styles.innerContainer, pal.view]}>
         <View style={[styles.titleContainer, pal.view]}>
-          <Text type="title-xl" style={[styles.title, pal.text]}>
+          <Text type="title-xl" style={[s.textCenter, pal.text]}>
             Delete account
           </Text>
-          <Text
-            type="title-xl"
-            style={[styles.title, pal.text, s.bold, s.ml10]}>
-            {`"${store.me.displayName || store.me.handle}"`}
-          </Text>
+          <View style={[pal.view, s.flexRow]}>
+            <Text type="title-xl" style={[pal.text, s.bold]}>
+              {' "'}
+            </Text>
+            <Text
+              type="title-xl"
+              numberOfLines={1}
+              style={[
+                isDesktopWeb ? styles.titleDesktop : styles.titleMobile,
+                pal.text,
+                s.bold,
+              ]}>
+              {store.me.handle}
+            </Text>
+            <Text type="title-xl" style={[pal.text, s.bold]}>
+              {'"'}
+            </Text>
+          </View>
         </View>
         {!isEmailSent ? (
           <>
@@ -214,11 +227,21 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-  },
-  title: {
-    textAlign: 'center',
+    flexWrap: 'wrap',
     marginTop: 12,
     marginBottom: 12,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  titleMobile: {
+    textAlign: 'center',
+  },
+  titleDesktop: {
+    textAlign: 'center',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    maxWidth: '400px',
   },
   description: {
     textAlign: 'center',
