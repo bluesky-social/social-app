@@ -27,14 +27,14 @@ export const Lightbox = observer(function Lightbox() {
       }
 
       let altText = ''
-      let uri
+      let uri = ''
       if (lightbox.name === 'images') {
-        const opts = store.shell.activeLightbox as models.ImagesLightbox
+        const opts = lightbox as models.ImagesLightbox
         uri = opts.images[imageIndex].uri
-        altText = opts.images[imageIndex].alt
-      } else if (store.shell.activeLightbox.name === 'profile-image') {
-        const opts = store.shell.activeLightbox as models.ProfileImageLightbox
-        uri = opts.profileView.avatar
+        altText = opts.images[imageIndex].alt || ''
+      } else if (lightbox.name === 'profile-image') {
+        const opts = lightbox as models.ProfileImageLightbox
+        uri = opts.profileView.avatar || ''
       }
 
       return (

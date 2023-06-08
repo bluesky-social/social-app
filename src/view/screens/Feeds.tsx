@@ -14,11 +14,13 @@ import {PostsMultiFeedModel} from 'state/models/feeds/multi-feed'
 import {MultiFeed} from 'view/com/posts/MultiFeed'
 import {isDesktopWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTimer} from 'lib/hooks/useTimer'
 import {useStores} from 'state/index'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {ComposeIcon2, CogIcon} from 'lib/icons'
 import {s} from 'lib/styles'
 
+const LOAD_NEW_PROMPT_TIME = 60e3 // 60 seconds
 const HEADER_OFFSET = isDesktopWeb ? 0 : 40
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
@@ -33,11 +35,24 @@ export const FeedsScreen = withAuthRequired(
     )
     const [onMainScroll, isScrolledDown, resetMainScroll] =
       useOnMainScroll(store)
+    const [loadPromptVisible, setLoadPromptVisible] = React.useState(false)
+    const [resetPromptTimer] = useTimer(LOAD_NEW_PROMPT_TIME, () => {
+      setLoadPromptVisible(true)
+    })
 
     const onSoftReset = React.useCallback(() => {
       flatListRef.current?.scrollToOffset({offset: 0})
+      multifeed.loadLatest()
+      resetPromptTimer()
+      setLoadPromptVisible(false)
       resetMainScroll()
-    }, [flatListRef, resetMainScroll])
+    }, [
+      flatListRef,
+      resetMainScroll,
+      multifeed,
+      resetPromptTimer,
+      setLoadPromptVisible,
+    ])
 
     useFocusEffect(
       React.useCallback(() => {
@@ -99,11 +114,11 @@ export const FeedsScreen = withAuthRequired(
           hideOnScroll
           renderButton={renderHeaderBtn}
         />
-        {isScrolledDown ? (
+        {isScrolledDown || loadPromptVisible ? (
           <LoadLatestBtn
             onPress={onSoftReset}
-            label="Scroll to top"
-            showIndicator={false}
+            label="Load latest posts"
+            showIndicator={loadPromptVisible}
           />
         ) : null}
         <FAB

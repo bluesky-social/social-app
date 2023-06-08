@@ -165,7 +165,7 @@ export const FeedItem = observer(function ({
   }
 
   return (
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-native-a11y/no-nested-touchables
     <Link
       testID={`feedItem-by-${item.author.handle}`}
       style={[

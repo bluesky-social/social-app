@@ -44,11 +44,11 @@ export function Component({
   const {track} = useAnalytics()
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
-  const [name, setName] = useState<string>(list?.list.name || '')
+  const [name, setName] = useState<string>(list?.list?.name || '')
   const [description, setDescription] = useState<string>(
-    list?.list.description || '',
+    list?.list?.description || '',
   )
-  const [avatar, setAvatar] = useState<string | undefined>(list?.list.avatar)
+  const [avatar, setAvatar] = useState<string | undefined>(list?.list?.avatar)
   const [newAvatar, setNewAvatar] = useState<RNImage | undefined | null>()
 
   const onPressCancel = useCallback(() => {
@@ -59,7 +59,7 @@ export function Component({
     async (img: RNImage | null) => {
       if (!img) {
         setNewAvatar(null)
-        setAvatar(null)
+        setAvatar(undefined)
         return
       }
       track('CreateMuteList:AvatarSelected')

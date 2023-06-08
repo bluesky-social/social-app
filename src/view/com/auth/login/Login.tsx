@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -282,6 +282,7 @@ const LoginForm = ({
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [identifier, setIdentifier] = useState<string>(initialHandle)
   const [password, setPassword] = useState<string>('')
+  const passwordInputRef = useRef<TextInput>(null)
 
   const onPressSelectService = () => {
     store.shell.openModal({
@@ -294,6 +295,7 @@ const LoginForm = ({
   }
 
   const onPressNext = async () => {
+    Keyboard.dismiss()
     setError('')
     setIsProcessing(true)
 
@@ -391,6 +393,12 @@ const LoginForm = ({
             autoCapitalize="none"
             autoFocus
             autoCorrect={false}
+            autoComplete="username"
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              passwordInputRef.current?.focus()
+            }}
+            blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
             keyboardAppearance={theme.colorScheme}
             value={identifier}
             onChangeText={str => setIdentifier((str || '').toLowerCase())}
@@ -406,21 +414,23 @@ const LoginForm = ({
           />
           <TextInput
             testID="loginPasswordInput"
+            ref={passwordInputRef}
             style={[pal.text, styles.textInput]}
             placeholder="Password"
             placeholderTextColor={pal.colors.textLight}
             autoCapitalize="none"
             autoCorrect={false}
+            autoComplete="password"
+            returnKeyType="done"
+            enablesReturnKeyAutomatically={true}
             keyboardAppearance={theme.colorScheme}
-            secureTextEntry
-            // HACK
-            // mitigates a known issue where the secure password prompt interferes
-            // https://github.com/facebook/react-native/issues/21911
-            // prf
-            textContentType="oneTimeCode"
+            secureTextEntry={true}
+            textContentType="password"
+            clearButtonMode="while-editing"
             value={password}
             onChangeText={setPassword}
             onSubmitEditing={onPressNext}
+            blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
             editable={!isProcessing}
             accessibilityLabel="Password"
             accessibilityHint={

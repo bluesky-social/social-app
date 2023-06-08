@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     left: 'calc(50vw + 330px)',
-    width: 300,
+    width: 304,
   },
 
   message: {

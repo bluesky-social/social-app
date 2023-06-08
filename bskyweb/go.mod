@@ -7,6 +7,7 @@ require (
 	github.com/flosch/pongo2/v6 v6.0.0
 	github.com/ipfs/go-log v1.0.5
 	github.com/joho/godotenv v1.5.1
+	github.com/klauspost/compress v1.16.5
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/urfave/cli/v2 v2.25.3
 )

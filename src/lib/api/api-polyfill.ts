@@ -11,7 +11,7 @@ export function doPolyfill() {
 interface FetchHandlerResponse {
   status: number
   headers: Record<string, string>
-  body: ArrayBuffer | undefined
+  body: any
 }
 
 async function fetchHandler(

@@ -1,10 +1,8 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyActorDefs} from '@atproto/api'
-import shuffle from 'lodash.shuffle'
 import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
-import {SUGGESTED_FOLLOWS} from 'lib/constants'
 
 const PAGE_SIZE = 30
 
@@ -18,6 +16,7 @@ export class SuggestedActorsModel {
   isLoading = false
   isRefreshing = false
   hasLoaded = false
+  loadMoreCursor: string | undefined = undefined
   error = ''
   hasMore = false
 
@@ -57,33 +56,39 @@ export class SuggestedActorsModel {
   }
 
   loadMore = bundleAsync(async (replace: boolean = false) => {
-    if (this.suggestions.length && !replace) {
+    if (replace) {
+      this.hasMore = true
+      this.loadMoreCursor = undefined
+    }
+    if (!this.hasMore) {
       return
     }
     this._xLoading(replace)
     try {
-      // clone the array so we can mutate it
-      const actors = [
-        ...SUGGESTED_FOLLOWS(
-          this.rootStore.session.currentSession?.service || '',
-        ),
-      ]
-      const res = await this.rootStore.agent.getProfiles({
-        actors: shuffle(actors).splice(0, 25),
+      const res = await this.rootStore.agent.app.bsky.actor.getSuggestions({
+        limit: 25,
+        cursor: this.loadMoreCursor,
       })
-      const {profiles} = res.data
-      this.rootStore.me.follows.hydrateProfiles(profiles)
+      const {actors, cursor} = res.data
+      this.rootStore.me.follows.hydrateProfiles(actors)
 
       runInAction(() => {
-        this.suggestions = profiles.filter(profile => {
-          if (profile.viewer?.following) {
-            return false
-          }
-          if (profile.did === this.rootStore.me.did) {
-            return false
-          }
-          return true
-        })
+        if (replace) {
+          this.suggestions = []
+        }
+        this.loadMoreCursor = cursor
+        this.hasMore = !!cursor
+        this.suggestions = this.suggestions.concat(
+          actors.filter(actor => {
+            if (actor.viewer?.following) {
+              return false
+            }
+            if (actor.did === this.rootStore.me.did) {
+              return false
+            }
+            return true
+          }),
+        )
       })
       this._xIdle()
     } catch (e: any) {
