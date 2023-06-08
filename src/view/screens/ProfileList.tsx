@@ -18,6 +18,8 @@ import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {NavigationProp} from 'lib/routes/types'
 import {isDesktopWeb} from 'platform/detection'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {toShareUrl} from 'lib/strings/url-helpers'
+import {shareUrl} from 'lib/sharing'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
@@ -84,6 +86,11 @@ export const ProfileListScreen = withAuthRequired(
       })
     }, [store, list, navigation])
 
+    const onPressShareList = React.useCallback(() => {
+      const url = toShareUrl(`/profile/${name}/list/${rkey}`)
+      shareUrl(url)
+    }, [name, rkey])
+
     const renderEmptyState = React.useCallback(() => {
       return <EmptyState icon="users-slash" message="This list is empty!" />
     }, [])
@@ -91,6 +98,14 @@ export const ProfileListScreen = withAuthRequired(
     const renderHeaderBtns = React.useCallback(() => {
       return (
         <View style={styles.headerBtns}>
+          <Button
+            type="default"
+            testID="shareListBtn"
+            accessibilityLabel="Share list"
+            accessibilityHint=""
+            onPress={onPressShareList}>
+            <FontAwesomeIcon icon={'share'} style={[pal.text]} />
+          </Button>
           {list?.isOwner && (
             <Button
               type="default"
@@ -137,7 +152,9 @@ export const ProfileListScreen = withAuthRequired(
       list.list?.viewer?.muted,
       onPressDeleteList,
       onPressEditList,
+      onPressShareList,
       onToggleSubscribed,
+      pal.text,
     ])
 
     return (
