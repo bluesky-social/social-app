@@ -176,20 +176,16 @@ describe('ago', () => {
     new Date().setMinutes(new Date().getMinutes() - 10),
     new Date().setHours(new Date().getHours() - 1),
     new Date().setDate(new Date().getDate() - 1),
-    new Date().setDate(new Date().getDate() - 6),
-    new Date().setDate(new Date().getDate() - 7),
     new Date().setMonth(new Date().getMonth() - 1),
   ]
   const outputs = [
-    new Date(1671461038).toLocaleDateString('en-us', {year: 'numeric', month: 'short', day: 'numeric'}),
-    new Date('04 Dec 1995 00:12:00 GMT').toLocaleDateString('en-us', {year: 'numeric', month: 'short', day: 'numeric'}),
+    new Date(1671461038).toLocaleDateString(),
+    new Date('04 Dec 1995 00:12:00 GMT').toLocaleDateString(),
     '0s',
     '10m',
     '1h',
     '1d',
-    '6d',
-    new Date(new Date().setDate(new Date().getDate() - 7)).toLocaleDateString('en-us', {year: 'numeric', month: 'short', day: 'numeric'}),
-    new Date(new Date().setMonth(new Date().getMonth() - 1)).toLocaleDateString('en-us', {year: 'numeric', month: 'short', day: 'numeric'}),
+    '1mo',
   ]
 
   it('correctly calculates how much time passed, in a string', () => {
