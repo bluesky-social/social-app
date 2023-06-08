@@ -59,7 +59,6 @@ export const styles = StyleSheet.create({
     top: -4,
   },
   onProfile: {
-    borderColor: colors.black,
     borderWidth: 1,
     borderRadius: 100,
   },
