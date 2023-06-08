@@ -6,6 +6,7 @@ import {
   StyleSheet,
   View,
   ViewStyle,
+  FlatList,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {
@@ -13,7 +14,6 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {FlatList} from '../util/Views'
 import {ListCard} from './ListCard'
 import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -149,7 +149,11 @@ export const ListsList = observer(
         return renderItem ? (
           renderItem(item)
         ) : (
-          <ListCard list={item} testID={`list-${item.name}`} />
+          <ListCard
+            list={item}
+            testID={`list-${item.name}`}
+            style={styles.item}
+          />
         )
       },
       [
@@ -193,7 +197,7 @@ export const ListsList = observer(
                 progressViewOffset={headerOffset}
               />
             }
-            contentContainerStyle={s.contentContainer}
+            contentContainerStyle={[s.contentContainer]}
             style={{paddingTop: headerOffset}}
             onEndReached={onEndReached}
             onEndReachedThreshold={0.6}
@@ -237,4 +241,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   feedFooter: {paddingTop: 20},
+  item: {
+    paddingHorizontal: 18,
+  },
 })
