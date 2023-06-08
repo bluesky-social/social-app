@@ -6,10 +6,10 @@ import {
   StyleSheet,
   View,
   ViewStyle,
+  FlatList,
 } from 'react-native'
 import {AppBskyActorDefs, AppBskyGraphDefs, RichText} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
-import {FlatList} from '../util/Views'
 import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
