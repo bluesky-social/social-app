@@ -17,6 +17,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {NavigationProp} from 'lib/routes/types'
 import {isDesktopWeb} from 'platform/detection'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
@@ -71,7 +72,7 @@ export const ProfileListScreen = withAuthRequired(
       store.shell.openModal({
         name: 'confirm',
         title: 'Delete List',
-        message: 'Are you sure?',
+        message: 'Are you sure',
         async onPressConfirm() {
           await list.delete()
           if (navigation.canGoBack()) {
@@ -93,12 +94,12 @@ export const ProfileListScreen = withAuthRequired(
           {list?.isOwner && (
             <Button
               type="default"
-              label="Delete List"
               testID="deleteListBtn"
               accessibilityLabel="Delete list"
               accessibilityHint=""
-              onPress={onPressDeleteList}
-            />
+              onPress={onPressDeleteList}>
+              <FontAwesomeIcon icon={['far', 'trash-can']} style={[pal.text]} />
+            </Button>
           )}
           {list?.isOwner && (
             <Button
