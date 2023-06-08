@@ -25,8 +25,7 @@ import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import QuoteEmbed from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
-import {CustomFeed} from 'view/com/feeds/CustomFeed'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {CustomFeedEmbed} from './CustomFeedEmbed'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -176,22 +175,6 @@ export function PostEmbeds({
   return <View />
 }
 
-function CustomFeedEmbed({record}: {record: AppBskyFeedDefs.GeneratorView}) {
-  const pal = usePalette('default')
-  const store = useStores()
-  const item = React.useMemo(
-    () => new CustomFeedModel(store, record),
-    [store, record],
-  )
-  return (
-    <CustomFeed
-      item={item}
-      style={[pal.view, pal.border, styles.customFeedOuter]}
-      showLikes
-    />
-  )
-}
-
 const styles = StyleSheet.create({
   stackContainer: {
     gap: 6,
@@ -207,13 +190,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     marginTop: 4,
-  },
-  customFeedOuter: {
-    borderWidth: 1,
-    borderRadius: 8,
-    marginTop: 4,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
   },
   alt: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
