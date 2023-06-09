@@ -25,6 +25,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
+import {ListActions} from './ListActions'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const HEADER_ITEM = {_reactKey: '__header__'}
@@ -301,43 +302,13 @@ const ListHeader = observer(
               />
             )}
             {isDesktopWeb && (
-              <View style={styles.headerBtns}>
-                {list.viewer?.muted ? (
-                  <Button
-                    type="inverted"
-                    label="Unsubscribe"
-                    accessibilityLabel="Unsubscribe"
-                    accessibilityHint=""
-                    onPress={onToggleSubscribed}
-                  />
-                ) : (
-                  <Button
-                    type="primary"
-                    label="Subscribe & Mute"
-                    accessibilityLabel="Subscribe and mute"
-                    accessibilityHint=""
-                    onPress={onToggleSubscribed}
-                  />
-                )}
-                {isOwner && (
-                  <Button
-                    type="default"
-                    label="Edit List"
-                    accessibilityLabel="Edit list"
-                    accessibilityHint=""
-                    onPress={onPressEditList}
-                  />
-                )}
-                {isOwner && (
-                  <Button
-                    type="default"
-                    label="Delete List"
-                    accessibilityLabel="Delete list"
-                    accessibilityHint=""
-                    onPress={onPressDeleteList}
-                  />
-                )}
-              </View>
+              <ListActions
+                isOwner={isOwner}
+                muted={list.viewer?.muted}
+                onPressDeleteList={onPressDeleteList}
+                onPressEditList={onPressEditList}
+                onToggleSubscribed={onToggleSubscribed}
+              />
             )}
           </View>
           <View>

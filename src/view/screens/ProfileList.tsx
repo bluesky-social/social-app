@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
@@ -9,7 +9,6 @@ import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {ListItems} from 'view/com/lists/ListItems'
 import {EmptyState} from 'view/com/util/EmptyState'
-import {Button} from 'view/com/util/forms/Button'
 import * as Toast from 'view/com/util/Toast'
 import {ListModel} from 'state/models/content/list'
 import {useStores} from 'state/index'
@@ -17,9 +16,9 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {NavigationProp} from 'lib/routes/types'
 import {isDesktopWeb} from 'platform/detection'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
+import {ListActions} from 'view/com/lists/ListActions'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
@@ -87,7 +86,7 @@ export const ProfileListScreen = withAuthRequired(
     }, [store, list, navigation])
 
     const onPressShareList = React.useCallback(() => {
-      const url = toShareUrl(`/profile/${name}/list/${rkey}`)
+      const url = toShareUrl(`/profile/${name}/lists/${rkey}`)
       shareUrl(url)
     }, [name, rkey])
 
@@ -97,64 +96,23 @@ export const ProfileListScreen = withAuthRequired(
 
     const renderHeaderBtns = React.useCallback(() => {
       return (
-        <View style={styles.headerBtns}>
-          <Button
-            type="default"
-            testID="shareListBtn"
-            accessibilityLabel="Share list"
-            accessibilityHint=""
-            onPress={onPressShareList}>
-            <FontAwesomeIcon icon={'share'} style={[pal.text]} />
-          </Button>
-          {list?.isOwner && (
-            <Button
-              type="default"
-              testID="deleteListBtn"
-              accessibilityLabel="Delete list"
-              accessibilityHint=""
-              onPress={onPressDeleteList}>
-              <FontAwesomeIcon icon={['far', 'trash-can']} style={[pal.text]} />
-            </Button>
-          )}
-          {list?.isOwner && (
-            <Button
-              type="default"
-              label="Edit List"
-              testID="editListBtn"
-              accessibilityLabel="Edit list"
-              accessibilityHint=""
-              onPress={onPressEditList}
-            />
-          )}
-          {list.list?.viewer?.muted ? (
-            <Button
-              type="inverted"
-              label="Unsubscribe"
-              testID="unsubscribeListBtn"
-              accessibilityLabel="Unsubscribe from list"
-              accessibilityHint=""
-              onPress={onToggleSubscribed}
-            />
-          ) : (
-            <Button
-              type="primary"
-              label="Subscribe & Mute"
-              testID="subscribeListBtn"
-              accessibilityLabel="Subscribe to this list"
-              accessibilityHint="Mutes the users included in this list"
-              onPress={onToggleSubscribed}
-            />
-          )}
-        </View>
+        <ListActions
+          muted={list.list?.viewer?.muted}
+          isOwner={list.isOwner}
+          onPressDeleteList={onPressDeleteList}
+          onPressEditList={onPressEditList}
+          onToggleSubscribed={onToggleSubscribed}
+          onPressShareList={onPressShareList}
+          reversed={true}
+        />
       )
     }, [
-      list?.isOwner,
+      list.isOwner,
       list.list?.viewer?.muted,
       onPressDeleteList,
       onPressEditList,
       onPressShareList,
       onToggleSubscribed,
-      pal.text,
     ])
 
     return (
