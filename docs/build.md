@@ -26,7 +26,7 @@
   - Run once: `yarn e2e:build`
   - Each test run: `yarn e2e:run`
 - Tips
-  - Make sure you copy the `.env.example` to `.env` and add the appropriate tokens (e.g. `SENTRY_AUTH_TOKEN` can be created on the Sentry dashboard). If this is not required, you can remove it from `eas.json` and `package.json`, as well as any mentions in the code. Please check the section below on how to remove Sentry from the codebase
+  - Make sure you copy the `.env.example` to `.env` and add the appropriate tokens (e.g. `SENTRY_AUTH_TOKEN` can be created on the Sentry dashboard using [these instructions](https://docs.expo.dev/guides/using-sentry/#sign-up-for-a-sentry-account-and-create-a-project)). If this is not required, you can remove it from `eas.json` and `package.json`, as well as any mentions in the code. Please check the section below on how to remove Sentry from the codebase
   - If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` as well as `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
   - `npx react-native info` Checks what has been installed.
   - The android simulator won't be able to access localhost services unless you run `adb reverse tcp:{PORT} tcp:{PORT}`
