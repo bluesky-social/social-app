@@ -138,10 +138,6 @@ export const ProfileListScreen = withAuthRequired(
 )
 
 const styles = StyleSheet.create({
-  headerBtns: {
-    flexDirection: 'row',
-    gap: 8,
-  },
   container: {
     flex: 1,
     paddingBottom: isDesktopWeb ? 0 : 100,
