@@ -25,6 +25,7 @@ export const ListActions = ({
 
   let buttons = [
     <Button
+      key="subscribeButton"
       type={muted ? 'inverted' : 'primary'}
       label={muted ? 'Unsubscribe' : 'Subscribe & Mute'}
       accessibilityLabel={muted ? 'Unsubscribe' : 'Subscribe and mute'}
@@ -33,6 +34,7 @@ export const ListActions = ({
     />,
     isOwner && (
       <Button
+        key="editListButton"
         type="default"
         label="Edit List"
         accessibilityLabel="Edit list"
@@ -42,6 +44,7 @@ export const ListActions = ({
     ),
     isOwner && (
       <Button
+        key="deleteListButton"
         type="default"
         testID="deleteListBtn"
         accessibilityLabel="Delete list"
@@ -51,6 +54,7 @@ export const ListActions = ({
       </Button>
     ),
     <Button
+      key="shareListButton"
       type="default"
       testID="shareListBtn"
       accessibilityLabel="Share list"
