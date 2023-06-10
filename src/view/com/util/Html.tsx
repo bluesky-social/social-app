@@ -1,9 +1,16 @@
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 import {Text} from './text/Text'
 import {TextLink} from './Link'
 import {isDesktopWeb} from 'platform/detection'
+import {
+  H1 as ExpoH1,
+  H2 as ExpoH2,
+  H3 as ExpoH3,
+  H4 as ExpoH4,
+} from '@expo/html-elements'
 
 /**
  * These utilities are used to define long documents in an html-like
@@ -21,38 +28,26 @@ interface IsChildProps {
 
 export function H1({children}: React.PropsWithChildren<{}>) {
   const pal = usePalette('default')
-  return (
-    <Text type="title-xl" style={[pal.text, styles.h1]}>
-      {children}
-    </Text>
-  )
+  const typography = useTheme().typography['title-xl']
+  return <ExpoH1 style={[typography, pal.text, styles.h1]}>{children}</ExpoH1>
 }
 
 export function H2({children}: React.PropsWithChildren<{}>) {
   const pal = usePalette('default')
-  return (
-    <Text type="title-lg" style={[pal.text, styles.h2]}>
-      {children}
-    </Text>
-  )
+  const typography = useTheme().typography['title-lg']
+  return <ExpoH2 style={[typography, pal.text, styles.h2]}>{children}</ExpoH2>
 }
 
 export function H3({children}: React.PropsWithChildren<{}>) {
   const pal = usePalette('default')
-  return (
-    <Text type="title" style={[pal.text, styles.h3]}>
-      {children}
-    </Text>
-  )
+  const typography = useTheme().typography.title
+  return <ExpoH3 style={[typography, pal.text, styles.h3]}>{children}</ExpoH3>
 }
 
 export function H4({children}: React.PropsWithChildren<{}>) {
   const pal = usePalette('default')
-  return (
-    <Text type="title-sm" style={[pal.text, styles.h4]}>
-      {children}
-    </Text>
-  )
+  const typography = useTheme().typography['title-sm']
+  return <ExpoH4 style={[typography, pal.text, styles.h4]}>{children}</ExpoH4>
 }
 
 export function P({children}: React.PropsWithChildren<{}>) {
@@ -149,9 +144,11 @@ const styles = StyleSheet.create({
     letterSpacing: 0.8,
   },
   h3: {
+    marginTop: 0,
     marginBottom: 10,
   },
   h4: {
+    marginTop: 0,
     marginBottom: 10,
     fontWeight: 'bold',
   },
