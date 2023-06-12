@@ -213,6 +213,12 @@ export class FeedTuner {
             hasProp(item.post.record, 'text') &&
             typeof item.post.record.text === 'string'
           ) {
+            // Treat empty text the same as no text.
+            if (item.post.record.text.length === 0) {
+              hasPreferredLang = true
+              break
+            }
+
             const res = lande(item.post.record.text)
 
             if (langsCode3.includes(res[0][0])) {
