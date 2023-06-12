@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   ActivityIndicator,
+  Platform,
   Pressable,
   StyleSheet,
   TextStyle,
@@ -39,6 +40,7 @@ import {isDesktopWeb} from 'platform/detection'
 import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
 import {isColorMode} from 'state/models/ui/shell'
+import Clipboard from '@react-native-clipboard/clipboard'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -147,6 +149,13 @@ export const SettingsScreen = withAuthRequired(
       await store.preferences.reset()
       Toast.show('Preferences reset')
     }, [store])
+
+    const onPressBuildInfo = React.useCallback(() => {
+      Clipboard.setString(
+        `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
+      )
+      Toast.show('Copied build version to clipboard')
+    }, [])
 
     return (
       <View style={[s.hContentRegion]} testID="settingsScreen">
@@ -444,9 +453,13 @@ export const SettingsScreen = withAuthRequired(
               </Text>
             </Link>
           ) : null}
-          <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-            Build version {AppInfo.appVersion} {AppInfo.updateChannel}
-          </Text>
+          <TouchableOpacity
+            accessibilityRole="button"
+            onPress={onPressBuildInfo}>
+            <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
+              Build version {AppInfo.appVersion} {AppInfo.updateChannel}
+            </Text>
+          </TouchableOpacity>
           <View style={s.footerSpacer} />
         </ScrollView>
       </View>
