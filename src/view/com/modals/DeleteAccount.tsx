@@ -68,7 +68,7 @@ export function Component({}: {}) {
       <View style={[styles.innerContainer, pal.view]}>
         <View style={[styles.titleContainer, pal.view]}>
           <Text type="title-xl" style={[s.textCenter, pal.text]}>
-            Delete account
+            Delete Account
           </Text>
           <View style={[pal.view, s.flexRow]}>
             <Text type="title-xl" style={[pal.text, s.bold]}>
@@ -93,7 +93,7 @@ export function Component({}: {}) {
           <>
             <Text type="lg" style={[styles.description, pal.text]}>
               For security reasons, we'll need to send a confirmation code to
-              your email.
+              your email address.
             </Text>
             {error ? (
               <View style={s.mt10}>
@@ -121,7 +121,7 @@ export function Component({}: {}) {
                     end={{x: 1, y: 1}}
                     style={[styles.btn]}>
                     <Text type="button-lg" style={[s.white, s.bold]}>
-                      Send email
+                      Send Email
                     </Text>
                   </LinearGradient>
                 </TouchableOpacity>

@@ -148,7 +148,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
           type="2xl-bold"
           style={[styles.titleMiddle, pal.text]}
           numberOfLines={1}>
-          Change handle
+          Change Handle
         </Text>
         <View style={styles.titleRight}>
           {isProcessing ? (
@@ -253,7 +253,7 @@ function ProvidedHandleForm({
         <TextInput
           testID="setHandleInput"
           style={[pal.text, styles.textInput]}
-          placeholder="eg alice"
+          placeholder="e.g. alice"
           placeholderTextColor={pal.colors.textLight}
           autoCapitalize="none"
           keyboardAppearance={theme.colorScheme}
@@ -371,7 +371,7 @@ function CustomHandleForm({
         <TextInput
           testID="setHandleInput"
           style={[pal.text, styles.textInput]}
-          placeholder="eg alice.com"
+          placeholder="e.g. alice.com"
           placeholderTextColor={pal.colors.textLight}
           autoCapitalize="none"
           keyboardAppearance={theme.colorScheme}

@@ -157,7 +157,7 @@ export function Component({
             <TextInput
               testID="editNameInput"
               style={[styles.textInput, pal.border, pal.text]}
-              placeholder="e.g. Spammers"
+              placeholder="e.g. spammers"
               placeholderTextColor={colors.gray4}
               value={name}
               onChangeText={v => setName(enforceLen(v, MAX_NAME))}
@@ -174,7 +174,7 @@ export function Component({
             <TextInput
               testID="editDescriptionInput"
               style={[styles.textArea, pal.border, pal.text]}
-              placeholder="e.g. Users that repeatedly reply with ads."
+              placeholder="e.g. users that repeatedly reply with ads."
               placeholderTextColor={colors.gray4}
               keyboardAppearance={theme.colorScheme}
               multiline

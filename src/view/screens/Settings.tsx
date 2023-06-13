@@ -276,7 +276,7 @@ export const SettingsScreen = withAuthRequired(
           <View style={styles.spacer20} />
 
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Invite a friend
+            Invite a Friend
           </Text>
           <TouchableOpacity
             testID="inviteFriendBtn"
@@ -412,7 +412,7 @@ export const SettingsScreen = withAuthRequired(
           </TouchableOpacity>
           <View style={styles.spacer20} />
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Danger zone
+            Danger Zone
           </Text>
           <TouchableOpacity
             style={[pal.view, styles.linkCard]}
@@ -429,12 +429,12 @@ export const SettingsScreen = withAuthRequired(
               />
             </View>
             <Text type="lg" style={dangerText}>
-              Delete my account
+              Delete my account…
             </Text>
           </TouchableOpacity>
           <View style={styles.spacer20} />
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Developer tools
+            Developer Tools
           </Text>
           <Link
             style={[pal.view, styles.linkCardNoIcon]}
