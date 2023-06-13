@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   rightNav: {
     position: 'absolute',
     top: 20,
-    left: 'calc(50vw + 330px)',
+    left: 'calc(50vw + 310px)',
     width: 304,
   },
 

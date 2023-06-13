@@ -23,6 +23,11 @@ import {ImageSizesCache} from './cache/image-sizes'
 import {MutedThreads} from './muted-threads'
 import {reset as resetNavigation} from '../../Navigation'
 
+// TEMPORARY (APP-700)
+// remove after backend testing finishes
+// -prf
+import {applyDebugHeader} from 'lib/api/debug-appview-proxy-header'
+
 export const appInfo = z.object({
   build: z.string(),
   name: z.string(),
@@ -125,6 +130,7 @@ export class RootStoreModel {
   ) {
     this.log.debug('RootStoreModel:handleSessionChange')
     this.agent = agent
+    applyDebugHeader(this.agent)
     this.me.clear()
     /* dont await */ this.preferences.sync()
     await this.me.load()

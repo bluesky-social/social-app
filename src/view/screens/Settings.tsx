@@ -31,6 +31,7 @@ import {Text} from '../com/util/text/Text'
 import * as Toast from '../com/util/Toast'
 import {UserAvatar} from '../com/util/UserAvatar'
 import {DropdownButton} from 'view/com/util/forms/DropdownButton'
+import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {AccountData} from 'state/models/session'
@@ -42,6 +43,11 @@ import {formatCount} from 'view/com/util/numeric/format'
 import {isColorMode} from 'state/models/ui/shell'
 import Clipboard from '@react-native-clipboard/clipboard'
 
+// TEMPORARY (APP-700)
+// remove after backend testing finishes
+// -prf
+import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
   observer(function Settings({}: Props) {
@@ -50,6 +56,9 @@ export const SettingsScreen = withAuthRequired(
     const navigation = useNavigation<NavigationProp>()
     const {screen, track} = useAnalytics()
     const [isSwitching, setIsSwitching] = React.useState(false)
+    const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
+      store.agent,
+    )
 
     const primaryBg = useCustomPalette<ViewStyle>({
       light: {backgroundColor: colors.blue0},
@@ -435,23 +444,33 @@ export const SettingsScreen = withAuthRequired(
               System log
             </Text>
           </Link>
-          <Link
-            style={[pal.view, styles.linkCardNoIcon]}
-            href="/sys/debug"
-            title="Debug tools">
-            <Text type="lg" style={pal.text}>
-              Storybook
-            </Text>
-          </Link>
+          {isDesktopWeb ? (
+            <ToggleButton
+              type="default-light"
+              label="Experiment: Use AppView Proxy"
+              isSelected={debugHeaderEnabled}
+              onPress={toggleDebugHeader}
+            />
+          ) : null}
           {__DEV__ ? (
-            <Link
-              style={[pal.view, styles.linkCardNoIcon]}
-              onPress={onPressResetPreferences}
-              title="Debug tools">
-              <Text type="lg" style={pal.text}>
-                Reset preferences state
-              </Text>
-            </Link>
+            <>
+              <Link
+                style={[pal.view, styles.linkCardNoIcon]}
+                href="/sys/debug"
+                title="Debug tools">
+                <Text type="lg" style={pal.text}>
+                  Storybook
+                </Text>
+              </Link>
+              <Link
+                style={[pal.view, styles.linkCardNoIcon]}
+                onPress={onPressResetPreferences}
+                title="Debug tools">
+                <Text type="lg" style={pal.text}>
+                  Reset preferences state
+                </Text>
+              </Link>
+            </>
           ) : null}
           <TouchableOpacity
             accessibilityRole="button"
