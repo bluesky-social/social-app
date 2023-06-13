@@ -199,7 +199,9 @@ const FeedPage = observer(
       const isMobileWeb = global.window.matchMedia(
         isMobileWebMediaQuery,
       )?.matches
-      setHeaderOffset(isMobileWeb ? HEADER_OFFSET_MOBILE : HEADER_OFFSET)
+      setHeaderOffset(
+        isMobileWeb ? HEADER_OFFSET_MOBILE : HEADER_OFFSET_DESKTOP,
+      )
     }, [])
 
     // fires when screen is activated/deactivated
