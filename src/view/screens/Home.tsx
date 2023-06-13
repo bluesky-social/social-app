@@ -21,7 +21,7 @@ import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
-import {isDesktopWeb, isMobileWebMediaQuery} from 'platform/detection'
+import {isDesktopWeb, isMobileWebMediaQuery, isWeb} from 'platform/detection'
 
 const HEADER_OFFSET_MOBILE = 78
 const HEADER_OFFSET_DESKTOP = 50
@@ -245,9 +245,9 @@ const FeedPage = observer(
       if (isPageFocused && isScreenFocused) {
         feed.checkForLatest()
       }
-      window.addEventListener('resize', listenForResize)
+      isWeb && window.addEventListener('resize', listenForResize)
       return () => {
-        window.removeEventListener('resize', listenForResize)
+        isWeb && window.removeEventListener('resize', listenForResize)
       }
     }, [isPageFocused, isScreenFocused, feed, listenForResize])
 
