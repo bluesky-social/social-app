@@ -8,6 +8,7 @@ import {PostsFeedModel} from './feeds/posts'
 import {NotificationsFeedModel} from './feeds/notifications'
 import {MyFollowsCache} from './cache/my-follows'
 import {isObj, hasProp} from 'lib/type-guards'
+import {SavedFeedsModel} from './ui/saved-feeds'
 
 const PROFILE_UPDATE_INTERVAL = 10 * 60 * 1e3 // 10min
 const NOTIFS_UPDATE_INTERVAL = 30 * 1e3 // 30sec
@@ -21,6 +22,7 @@ export class MeModel {
   followsCount: number | undefined
   followersCount: number | undefined
   mainFeed: PostsFeedModel
+  savedFeeds: SavedFeedsModel
   notifications: NotificationsFeedModel
   follows: MyFollowsCache
   invites: ComAtprotoServerDefs.InviteCode[] = []
@@ -43,6 +45,7 @@ export class MeModel {
     })
     this.notifications = new NotificationsFeedModel(this.rootStore)
     this.follows = new MyFollowsCache(this.rootStore)
+    this.savedFeeds = new SavedFeedsModel(this.rootStore)
   }
 
   clear() {

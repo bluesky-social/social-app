@@ -61,7 +61,7 @@ export class ListsListModel {
     }
     this._xLoading(replace)
     try {
-      let res
+      let res: GetLists.Response
       if (this.source === 'my-modlists') {
         res = {
           success: true,
@@ -170,7 +170,7 @@ async function fetchAllUserLists(
 
   let cursor
   for (let i = 0; i < 100; i++) {
-    const res = await store.agent.app.bsky.graph.getLists({
+    const res: GetLists.Response = await store.agent.app.bsky.graph.getLists({
       actor: did,
       cursor,
       limit: 50,
@@ -199,10 +199,11 @@ async function fetchAllMyMuteLists(
 
   let cursor
   for (let i = 0; i < 100; i++) {
-    const res = await store.agent.app.bsky.graph.getListMutes({
-      cursor,
-      limit: 50,
-    })
+    const res: GetListMutes.Response =
+      await store.agent.app.bsky.graph.getListMutes({
+        cursor,
+        limit: 50,
+      })
     cursor = res.data.cursor
     acc.data.lists = acc.data.lists.concat(res.data.lists)
     if (!cursor) {

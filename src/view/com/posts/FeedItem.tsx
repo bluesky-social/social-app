@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
@@ -7,7 +7,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {PostsFeedItemModel} from 'state/models/feeds/posts'
+import {PostsFeedItemModel} from 'state/models/feeds/post'
 import {ModerationBehaviorCode} from 'lib/labeling/types'
 import {Link, DesktopWebTextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -97,11 +97,17 @@ export const FeedItem = observer(function ({
     Toast.show('Copied to clipboard')
   }, [record])
 
+  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(
-      encodeURI(`https://translate.google.com/#auto|en|${record?.text || ''}`),
+      encodeURI(
+        `https://translate.google.com/?sl=auto&tl=${primaryLanguage}&text=${
+          record?.text || ''
+        }`,
+      ),
     )
-  }, [record])
+  }, [record, primaryLanguage])
 
   const onToggleThreadMute = React.useCallback(async () => {
     track('FeedItem:ThreadMute')
@@ -131,10 +137,6 @@ export const FeedItem = observer(function ({
     )
   }, [track, item, setDeleted, store])
 
-  if (!record || deleted) {
-    return <View />
-  }
-
   const isSmallTop = isThreadChild
   const outerStyles = [
     styles.outer,
@@ -154,12 +156,52 @@ export const FeedItem = observer(function ({
     moderation = {behavior: ModerationBehaviorCode.Show}
   }
 
+  const accessibilityActions = useMemo(
+    () => [
+      {
+        name: 'reply',
+        label: 'Reply',
+      },
+      {
+        name: 'repost',
+        label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
+      },
+      {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
+    ],
+    [item.post.viewer?.like, item.post.viewer?.repost],
+  )
+
+  const onAccessibilityAction = useCallback(
+    event => {
+      switch (event.nativeEvent.actionName) {
+        case 'like':
+          onPressToggleLike()
+          break
+        case 'reply':
+          onPressReply()
+          break
+        case 'repost':
+          onPressToggleRepost()
+          break
+        default:
+          break
+      }
+    },
+    [onPressReply, onPressToggleLike, onPressToggleRepost],
+  )
+
+  if (!record || deleted) {
+    return <View />
+  }
+
   return (
     <PostHider
       testID={`feedItem-by-${item.post.author.handle}`}
       style={outerStyles}
       href={itemHref}
-      moderation={moderation}>
+      moderation={moderation}
+      accessibilityActions={accessibilityActions}
+      onAccessibilityAction={onAccessibilityAction}>
       {isThreadChild && (
         <View
           style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}

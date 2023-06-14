@@ -1,5 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {getLocales} from 'expo-localization'
+import AwaitLock from 'await-lock'
+import isEqual from 'lodash.isequal'
 import {isObj, hasProp} from 'lib/type-guards'
 import {RootStoreModel} from '../root-store'
 import {ComAtprotoLabelDefs, AppBskyActorDefs} from '@atproto/api'
@@ -11,6 +13,7 @@ import {
   ALWAYS_FILTER_LABEL_GROUP,
   ALWAYS_WARN_LABEL_GROUP,
 } from 'lib/labeling/const'
+import {DEFAULT_FEEDS} from 'lib/constants'
 import {isIOS} from 'platform/detection'
 
 const deviceLocales = getLocales()
@@ -25,6 +28,7 @@ const LABEL_GROUPS = [
   'spam',
   'impersonation',
 ]
+const VISIBILITY_VALUES = ['show', 'warn', 'hide']
 
 export class LabelPreferencesModel {
   nsfw: LabelPreference = 'hide'
@@ -45,18 +49,30 @@ export class PreferencesModel {
   contentLanguages: string[] =
     deviceLocales?.map?.(locale => locale.languageCode) || []
   contentLabels = new LabelPreferencesModel()
+  savedFeeds: string[] = []
+  pinnedFeeds: string[] = []
+
+  // used to linearize async modifications to state
+  lock = new AwaitLock()
 
   constructor(public rootStore: RootStoreModel) {
-    makeAutoObservable(this, {}, {autoBind: true})
+    makeAutoObservable(this, {lock: false}, {autoBind: true})
   }
 
   serialize() {
     return {
       contentLanguages: this.contentLanguages,
       contentLabels: this.contentLabels,
+      savedFeeds: this.savedFeeds,
+      pinnedFeeds: this.pinnedFeeds,
     }
   }
 
+  /**
+   * The function hydrates an object with properties related to content languages, labels, saved feeds,
+   * and pinned feeds that it gets from the parameter `v` (probably local storage)
+   * @param {unknown} v - the data object to hydrate from
+   */
   hydrate(v: unknown) {
     if (isObj(v)) {
       if (
@@ -72,36 +88,141 @@ export class PreferencesModel {
         // default to the device languages
         this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
       }
+      if (
+        hasProp(v, 'savedFeeds') &&
+        Array.isArray(v.savedFeeds) &&
+        typeof v.savedFeeds.every(item => typeof item === 'string')
+      ) {
+        this.savedFeeds = v.savedFeeds
+      }
+      if (
+        hasProp(v, 'pinnedFeeds') &&
+        Array.isArray(v.pinnedFeeds) &&
+        typeof v.pinnedFeeds.every(item => typeof item === 'string')
+      ) {
+        this.pinnedFeeds = v.pinnedFeeds
+      }
     }
   }
 
-  async sync() {
-    const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
-    runInAction(() => {
-      for (const pref of res.data.preferences) {
-        if (
-          AppBskyActorDefs.isAdultContentPref(pref) &&
-          AppBskyActorDefs.validateAdultContentPref(pref).success
-        ) {
-          this.adultContentEnabled = pref.enabled
-        } else if (
-          AppBskyActorDefs.isContentLabelPref(pref) &&
-          AppBskyActorDefs.validateAdultContentPref(pref).success
-        ) {
-          if (LABEL_GROUPS.includes(pref.label)) {
-            this.contentLabels[pref.label] = pref.visibility
+  /**
+   * This function fetches preferences and sets defaults for missing items.
+   */
+  async sync({clearCache}: {clearCache?: boolean} = {}) {
+    await this.lock.acquireAsync()
+    try {
+      // fetch preferences
+      let hasSavedFeedsPref = false
+      const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
+      runInAction(() => {
+        for (const pref of res.data.preferences) {
+          if (
+            AppBskyActorDefs.isAdultContentPref(pref) &&
+            AppBskyActorDefs.validateAdultContentPref(pref).success
+          ) {
+            this.adultContentEnabled = pref.enabled
+          } else if (
+            AppBskyActorDefs.isContentLabelPref(pref) &&
+            AppBskyActorDefs.validateAdultContentPref(pref).success
+          ) {
+            if (
+              LABEL_GROUPS.includes(pref.label) &&
+              VISIBILITY_VALUES.includes(pref.visibility)
+            ) {
+              this.contentLabels[pref.label as keyof LabelPreferencesModel] =
+                pref.visibility as LabelPreference
+            }
+          } else if (
+            AppBskyActorDefs.isSavedFeedsPref(pref) &&
+            AppBskyActorDefs.validateSavedFeedsPref(pref).success
+          ) {
+            if (!isEqual(this.savedFeeds, pref.saved)) {
+              this.savedFeeds = pref.saved
+            }
+            if (!isEqual(this.pinnedFeeds, pref.pinned)) {
+              this.pinnedFeeds = pref.pinned
+            }
+            hasSavedFeedsPref = true
           }
         }
+      })
+
+      // set defaults on missing items
+      if (!hasSavedFeedsPref) {
+        const {saved, pinned} = await DEFAULT_FEEDS(
+          this.rootStore.agent.service.toString(),
+          (handle: string) =>
+            this.rootStore.agent
+              .resolveHandle({handle})
+              .then(({data}) => data.did),
+        )
+        runInAction(() => {
+          this.savedFeeds = saved
+          this.pinnedFeeds = pinned
+        })
+        res.data.preferences.push({
+          $type: 'app.bsky.actor.defs#savedFeedsPref',
+          saved,
+          pinned,
+        })
+        await this.rootStore.agent.app.bsky.actor.putPreferences({
+          preferences: res.data.preferences,
+        })
       }
-    })
+    } finally {
+      this.lock.release()
+    }
+
+    await this.rootStore.me.savedFeeds.updateCache(clearCache)
   }
 
-  async update(cb: (prefs: AppBskyActorDefs.Preferences) => void) {
-    const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
-    cb(res.data.preferences)
-    await this.rootStore.agent.app.bsky.actor.putPreferences({
-      preferences: res.data.preferences,
-    })
+  /**
+   * This function updates the preferences of a user and allows for a callback function to be executed
+   * before the update.
+   * @param cb - cb is a callback function that takes in a single parameter of type
+   * AppBskyActorDefs.Preferences and returns either a boolean or void. This callback function is used to
+   * update the preferences of the user. The function is called with the current preferences as an
+   * argument and if the callback returns false, the preferences are not updated.
+   * @returns void
+   */
+  async update(
+    cb: (
+      prefs: AppBskyActorDefs.Preferences,
+    ) => AppBskyActorDefs.Preferences | false,
+  ) {
+    await this.lock.acquireAsync()
+    try {
+      const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
+      const newPrefs = cb(res.data.preferences)
+      if (newPrefs === false) {
+        return
+      }
+      await this.rootStore.agent.app.bsky.actor.putPreferences({
+        preferences: newPrefs,
+      })
+    } finally {
+      this.lock.release()
+    }
+  }
+
+  /**
+   * This function resets the preferences to an empty array of no preferences.
+   */
+  async reset() {
+    await this.lock.acquireAsync()
+    try {
+      runInAction(() => {
+        this.contentLabels = new LabelPreferencesModel()
+        this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
+        this.savedFeeds = []
+        this.pinnedFeeds = []
+      })
+      await this.rootStore.agent.app.bsky.actor.putPreferences({
+        preferences: [],
+      })
+    } finally {
+      this.lock.release()
+    }
   }
 
   hasContentLanguage(code2: string) {
@@ -140,6 +261,7 @@ export class PreferencesModel {
           visibility: value,
         })
       }
+      return prefs
     })
   }
 
@@ -159,6 +281,7 @@ export class PreferencesModel {
           enabled: v,
         })
       }
+      return prefs
     })
   }
 
@@ -199,5 +322,62 @@ export class PreferencesModel {
       res.pref = 'hide'
     }
     return res
+  }
+
+  async setSavedFeeds(saved: string[], pinned: string[]) {
+    const oldSaved = this.savedFeeds
+    const oldPinned = this.pinnedFeeds
+    this.savedFeeds = saved
+    this.pinnedFeeds = pinned
+    try {
+      await this.update((prefs: AppBskyActorDefs.Preferences) => {
+        let feedsPref = prefs.find(
+          pref =>
+            AppBskyActorDefs.isSavedFeedsPref(pref) &&
+            AppBskyActorDefs.validateSavedFeedsPref(pref).success,
+        )
+        if (feedsPref) {
+          feedsPref.saved = saved
+          feedsPref.pinned = pinned
+        } else {
+          feedsPref = {
+            $type: 'app.bsky.actor.defs#savedFeedsPref',
+            saved,
+            pinned,
+          }
+        }
+        return prefs
+          .filter(pref => !AppBskyActorDefs.isSavedFeedsPref(pref))
+          .concat([feedsPref])
+      })
+    } catch (e) {
+      runInAction(() => {
+        this.savedFeeds = oldSaved
+        this.pinnedFeeds = oldPinned
+      })
+      throw e
+    }
+  }
+
+  async addSavedFeed(v: string) {
+    return this.setSavedFeeds([...this.savedFeeds, v], this.pinnedFeeds)
+  }
+
+  async removeSavedFeed(v: string) {
+    return this.setSavedFeeds(
+      this.savedFeeds.filter(uri => uri !== v),
+      this.pinnedFeeds.filter(uri => uri !== v),
+    )
+  }
+
+  async addPinnedFeed(v: string) {
+    return this.setSavedFeeds(this.savedFeeds, [...this.pinnedFeeds, v])
+  }
+
+  async removePinnedFeed(v: string) {
+    return this.setSavedFeeds(
+      this.savedFeeds,
+      this.pinnedFeeds.filter(uri => uri !== v),
+    )
   }
 }

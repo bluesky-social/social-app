@@ -1,10 +1,11 @@
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {
   Image,
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
   View,
+  Pressable,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -61,34 +62,39 @@ function LightboxInner({
   initialIndex: number
   onClose: () => void
 }) {
-  const [index, setIndex] = React.useState<number>(initialIndex)
+  const [index, setIndex] = useState<number>(initialIndex)
+  const [isAltExpanded, setAltExpanded] = useState(false)
 
   const canGoLeft = index >= 1
   const canGoRight = index < imgs.length - 1
-  const onPressLeft = () => {
+  const onPressLeft = useCallback(() => {
     if (canGoLeft) {
       setIndex(index - 1)
     }
-  }
-  const onPressRight = () => {
+  }, [index, canGoLeft])
+  const onPressRight = useCallback(() => {
     if (canGoRight) {
       setIndex(index + 1)
     }
-  }
+  }, [index, canGoRight])
 
-  const onEscape = useCallback(
+  const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose()
+      } else if (e.key === 'ArrowLeft') {
+        onPressLeft()
+      } else if (e.key === 'ArrowRight') {
+        onPressRight()
       }
     },
-    [onClose],
+    [onClose, onPressLeft, onPressRight],
   )
 
   useEffect(() => {
-    window.addEventListener('keydown', onEscape)
-    return () => window.removeEventListener('keydown', onEscape)
-  }, [onEscape])
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [onKeyDown])
 
   return (
     <View style={styles.mask}>
@@ -136,7 +142,20 @@ function LightboxInner({
       </TouchableWithoutFeedback>
       {imgs[index].alt ? (
         <View style={styles.footer}>
-          <Text style={s.white}>{imgs[index].alt}</Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Expand alt text"
+            accessibilityHint="If alt text is long, toggles alt text expanded state"
+            onPress={() => {
+              setAltExpanded(!isAltExpanded)
+            }}>
+            <Text
+              style={s.white}
+              numberOfLines={isAltExpanded ? 0 : 3}
+              ellipsizeMode="tail">
+              {imgs[index].alt}
+            </Text>
+          </Pressable>
         </View>
       ) : null}
       <View style={styles.closeBtn}>

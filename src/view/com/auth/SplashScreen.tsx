@@ -43,7 +43,7 @@ export const SplashScreen = ({
               accessibilityRole="button"
               accessibilityLabel="Sign in"
               accessibilityHint="Opens flow to sign into your existing Bluesky account">
-              <Text style={[pal.text, styles.btnLabel]}>Sign in</Text>
+              <Text style={[pal.text, styles.btnLabel]}>Sign In</Text>
             </TouchableOpacity>
           </View>
         </ErrorBoundary>

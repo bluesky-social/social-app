@@ -184,9 +184,9 @@ export function Component({}: {}) {
         </Text>
       ) : (
         <Text type="xs" style={[pal.textLight, s.mb10, s.mt2]}>
-          Only contain letters, numbers, spaces, dashes, and underscores
-          allowed. Must be at least 4 characters long, but no more than 32
-          characters long.
+          Can only contain letters, numbers, spaces, dashes, and underscores.
+          Must be at least 4 characters long, but no more than 32 characters
+          long.
         </Text>
       )}
       <View style={styles.btnContainer}>

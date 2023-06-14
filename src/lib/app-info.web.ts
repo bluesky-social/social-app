@@ -1,3 +1,2 @@
-// TODO
-export const appVersion = 'TODO'
-export const buildVersion = 'TODO'
+import {version} from '../../package.json'
+export const appVersion = version

@@ -4,6 +4,7 @@ import {
   AppBskyGraphGetList as GetList,
   AppBskyGraphDefs as GraphDefs,
   AppBskyGraphList,
+  AppBskyGraphListitem,
 } from '@atproto/api'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {RootStoreModel} from '../root-store'
@@ -12,6 +13,16 @@ import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
 
 const PAGE_SIZE = 30
+
+interface ListitemRecord {
+  uri: string
+  value: AppBskyGraphListitem.Record
+}
+
+interface ListitemListResponse {
+  cursor?: string
+  records: ListitemRecord[]
+}
 
 export class ListModel {
   // state
@@ -33,7 +44,7 @@ export class ListModel {
       name,
       description,
       avatar,
-    }: {name: string; description: string; avatar: RNImage | undefined},
+    }: {name: string; description: string; avatar: RNImage | null | undefined},
   ) {
     const record: AppBskyGraphList.Record = {
       purpose: 'app.bsky.graph.defs#modlist',
@@ -124,6 +135,9 @@ export class ListModel {
     description: string
     avatar: RNImage | null | undefined
   }) {
+    if (!this.list) {
+      return
+    }
     if (!this.isOwner) {
       throw new Error('Cannot edit this list')
     }
@@ -157,15 +171,20 @@ export class ListModel {
   }
 
   async delete() {
+    if (!this.list) {
+      return
+    }
+
     // fetch all the listitem records that belong to this list
     let cursor
-    let records = []
+    let records: ListitemRecord[] = []
     for (let i = 0; i < 100; i++) {
-      const res = await this.rootStore.agent.app.bsky.graph.listitem.list({
-        repo: this.rootStore.me.did,
-        cursor,
-        limit: PAGE_SIZE,
-      })
+      const res: ListitemListResponse =
+        await this.rootStore.agent.app.bsky.graph.listitem.list({
+          repo: this.rootStore.me.did,
+          cursor,
+          limit: PAGE_SIZE,
+        })
       records = records.concat(
         res.records.filter(record => record.value.list === this.uri),
       )
@@ -193,6 +212,9 @@ export class ListModel {
   }
 
   async subscribe() {
+    if (!this.list) {
+      return
+    }
     await this.rootStore.agent.app.bsky.graph.muteActorList({
       list: this.list.uri,
     })
@@ -200,6 +222,9 @@ export class ListModel {
   }
 
   async unsubscribe() {
+    if (!this.list) {
+      return
+    }
     await this.rootStore.agent.app.bsky.graph.unmuteActorList({
       list: this.list.uri,
     })

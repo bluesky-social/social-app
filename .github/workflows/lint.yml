@@ -18,8 +18,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Yarn install
         run: yarn
-      - name: Typescript & Lint check
+      - name: Lint check
         run: yarn lint
+      - name: Type check
+        run: yarn typecheck
   testing:
     name: Run tests
     runs-on: ubuntu-latest

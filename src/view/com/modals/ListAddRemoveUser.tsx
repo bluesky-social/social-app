@@ -36,7 +36,7 @@ export const Component = observer(
     const pal = usePalette('default')
     const palPrimary = usePalette('primary')
     const palInverted = usePalette('inverted')
-    const [selected, setSelected] = React.useState([])
+    const [selected, setSelected] = React.useState<string[]>([])
 
     const listsList: ListsListModel = React.useMemo(
       () => new ListsListModel(store, store.me.did),
@@ -157,7 +157,7 @@ export const Component = observer(
 
     return (
       <View testID="listAddRemoveUserModal" style={s.hContentRegion}>
-        <Text style={[styles.title, pal.text]}>Add {displayName} to lists</Text>
+        <Text style={[styles.title, pal.text]}>Add {displayName} to Lists</Text>
         <ListsList
           listsList={listsList}
           showAddBtns

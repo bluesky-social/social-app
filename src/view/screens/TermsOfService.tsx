@@ -5,10 +5,10 @@ import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {useStores} from 'state/index'
 import {ScrollView} from 'view/com/util/Views'
-import {Text} from 'view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import Html from '../../locale/en/terms-of-service'
+import {H1} from '@expo/html-elements'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'TermsOfService'>
 export const TermsOfServiceScreen = (_props: Props) => {
@@ -26,9 +26,9 @@ export const TermsOfServiceScreen = (_props: Props) => {
       <ViewHeader title="Terms of Service" />
       <ScrollView style={[s.hContentRegion, pal.view]}>
         <View style={[s.p20]}>
-          <Text type="title-xl" style={[pal.text, s.bold, s.pb20]}>
+          <H1 style={[pal.text, s.bold, s.pb20, {marginVertical: 0}]}>
             Terms of Service
-          </Text>
+          </H1>
           <Html />
         </View>
         <View style={s.footerSpacer} />

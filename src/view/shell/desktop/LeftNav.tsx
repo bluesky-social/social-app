@@ -30,9 +30,11 @@ import {
   CogIconSolid,
   ComposeIcon2,
   HandIcon,
+  SatelliteDishIcon,
+  SatelliteDishIconSolid,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
-import {NavigationProp} from 'lib/routes/types'
+import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
 import {router} from '../../../routes'
 
 const ProfileCard = observer(() => {
@@ -89,14 +91,18 @@ const NavItem = observer(
     const pal = usePalette('default')
     const store = useStores()
     const [pathName] = React.useMemo(() => router.matchPath(href), [href])
-    const currentRouteName = useNavigationState(state => {
+    const currentRouteInfo = useNavigationState(state => {
       if (!state) {
-        return 'Home'
+        return {name: 'Home'}
       }
-      return getCurrentRoute(state).name
+      return getCurrentRoute(state)
     })
-
-    const isCurrent = isTab(currentRouteName, pathName)
+    let isCurrent =
+      currentRouteInfo.name === 'Profile'
+        ? isTab(currentRouteInfo.name, pathName) &&
+          (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
+            store.me.handle
+        : isTab(currentRouteInfo.name, pathName)
     const {onPress} = useLinkProps({to: href})
     const onPressWrapped = React.useCallback(
       (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -117,6 +123,7 @@ const NavItem = observer(
       <PressableWithHover
         style={styles.navItemWrapper}
         hoverStyle={pal.viewLight}
+        // @ts-ignore the function signature differs on web -prf
         onPress={onPressWrapped}
         // @ts-ignore web only -prf
         href={href}
@@ -196,6 +203,24 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         label="Search"
       />
       <NavItem
+        href="/feeds"
+        icon={
+          <SatelliteDishIcon
+            strokeWidth={1.75}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        }
+        iconFilled={
+          <SatelliteDishIconSolid
+            strokeWidth={1.75}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        }
+        label="My Feeds"
+      />
+      <NavItem
         href="/notifications"
         count={store.me.notifications.unreadCountLabel}
         icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
@@ -251,6 +276,8 @@ const styles = StyleSheet.create({
     top: 10,
     right: 'calc(50vw + 312px)',
     width: 220,
+    maxHeight: 'calc(100vh - 10px)',
+    overflowY: 'auto',
   },
 
   profileCard: {

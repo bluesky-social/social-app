@@ -8,6 +8,12 @@ import {ImageModel} from '../media/image'
 import {ListModel} from '../content/list'
 import {GalleryModel} from '../media/gallery'
 
+export type ColorMode = 'system' | 'light' | 'dark'
+
+export function isColorMode(v: unknown): v is ColorMode {
+  return v === 'system' || v === 'light' || v === 'dark'
+}
+
 export interface ConfirmModal {
   name: 'confirm'
   title: string
@@ -119,7 +125,7 @@ export type Modal =
   // Moderation
   | ReportAccountModal
   | ReportPostModal
-  | CreateMuteListModal
+  | CreateOrEditMuteListModal
   | ListAddRemoveUserModal
 
   // Posts
@@ -189,7 +195,7 @@ export interface ComposerOpts {
 }
 
 export class ShellUiModel {
-  darkMode = false
+  colorMode: ColorMode = 'system'
   minimalShellMode = false
   isDrawerOpen = false
   isDrawerSwipeDisabled = false
@@ -210,20 +216,20 @@ export class ShellUiModel {
 
   serialize(): unknown {
     return {
-      darkMode: this.darkMode,
+      colorMode: this.colorMode,
     }
   }
 
   hydrate(v: unknown) {
     if (isObj(v)) {
-      if (hasProp(v, 'darkMode') && typeof v.darkMode === 'boolean') {
-        this.darkMode = v.darkMode
+      if (hasProp(v, 'colorMode') && isColorMode(v.colorMode)) {
+        this.colorMode = v.colorMode
       }
     }
   }
 
-  setDarkMode(v: boolean) {
-    this.darkMode = v
+  setColorMode(mode: ColorMode) {
+    this.colorMode = mode
   }
 
   setMinimalShellMode(v: boolean) {

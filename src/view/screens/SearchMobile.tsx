@@ -35,7 +35,7 @@ export const SearchScreen = withAuthRequired(
     const store = useStores()
     const scrollViewRef = React.useRef<ScrollView>(null)
     const flatListRef = React.useRef<FlatList>(null)
-    const onMainScroll = useOnMainScroll(store)
+    const [onMainScroll] = useOnMainScroll(store)
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
     const autocompleteView = React.useMemo<UserAutocompleteModel>(
@@ -164,7 +164,7 @@ export const SearchScreen = withAuthRequired(
               ) : isInputFocused ? (
                 <View>
                   <Text style={[pal.textLight, styles.searchPrompt]}>
-                    Search for users on the network
+                    Search for users and posts on the network
                   </Text>
                 </View>
               ) : null}

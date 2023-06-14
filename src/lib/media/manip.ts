@@ -6,51 +6,7 @@ import * as RNFS from 'react-native-fs'
 import uuid from 'react-native-uuid'
 import * as Sharing from 'expo-sharing'
 import {Dimensions} from './types'
-import {POST_IMG_MAX} from 'lib/constants'
 import {isAndroid, isIOS} from 'platform/detection'
-
-export async function compressAndResizeImageForPost(
-  image: Image,
-): Promise<Image> {
-  const uri = `file://${image.path}`
-  let resized: Omit<Image, 'mime'>
-
-  for (let i = 0; i < 9; i++) {
-    const quality = 100 - i * 10
-
-    try {
-      resized = await ImageResizer.createResizedImage(
-        uri,
-        POST_IMG_MAX.width,
-        POST_IMG_MAX.height,
-        'JPEG',
-        quality,
-        undefined,
-        undefined,
-        undefined,
-        {mode: 'cover'},
-      )
-    } catch (err) {
-      throw new Error(`Failed to resize: ${err}`)
-    }
-
-    if (resized.size < POST_IMG_MAX.size) {
-      const path = await moveToPermanentPath(resized.path)
-
-      return {
-        path,
-        mime: 'image/jpeg',
-        size: resized.size,
-        height: resized.height,
-        width: resized.width,
-      }
-    }
-  }
-
-  throw new Error(
-    `This image is too big! We couldn't compress it down to ${POST_IMG_MAX.size} bytes`,
-  )
-}
 
 export async function compressIfNeeded(
   img: Image,

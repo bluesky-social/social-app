@@ -4,7 +4,7 @@ import {H3, H4, P, UL, LI, A} from 'view/com/util/Html'
 export default function () {
   return (
     <>
-      <H4>Last Updated:&nbsp;2023/04/06</H4>
+      <H4>Last Updated:&nbsp;April 6, 2023</H4>
       <P>Notification of Copyright Infringement</P>
       <P>
         Bluesky, PBLLC d.b.a. Bluesky (&ldquo;Bluesky&rdquo;) respects the

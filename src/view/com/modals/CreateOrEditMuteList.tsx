@@ -44,11 +44,11 @@ export function Component({
   const {track} = useAnalytics()
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
-  const [name, setName] = useState<string>(list?.list.name || '')
+  const [name, setName] = useState<string>(list?.list?.name || '')
   const [description, setDescription] = useState<string>(
-    list?.list.description || '',
+    list?.list?.description || '',
   )
-  const [avatar, setAvatar] = useState<string | undefined>(list?.list.avatar)
+  const [avatar, setAvatar] = useState<string | undefined>(list?.list?.avatar)
   const [newAvatar, setNewAvatar] = useState<RNImage | undefined | null>()
 
   const onPressCancel = useCallback(() => {
@@ -59,7 +59,7 @@ export function Component({
     async (img: RNImage | null) => {
       if (!img) {
         setNewAvatar(null)
-        setAvatar(null)
+        setAvatar(undefined)
         return
       }
       track('CreateMuteList:AvatarSelected')
@@ -143,6 +143,7 @@ export function Component({
         <Text style={[styles.label, pal.text]}>List Avatar</Text>
         <View style={[styles.avi, {borderColor: pal.colors.background}]}>
           <UserAvatar
+            type="list"
             size={80}
             avatar={avatar}
             onSelectNewAvatar={onSelectNewAvatar}
@@ -156,7 +157,7 @@ export function Component({
             <TextInput
               testID="editNameInput"
               style={[styles.textInput, pal.border, pal.text]}
-              placeholder="e.g. Spammers"
+              placeholder="e.g. spammers"
               placeholderTextColor={colors.gray4}
               value={name}
               onChangeText={v => setName(enforceLen(v, MAX_NAME))}
@@ -173,7 +174,7 @@ export function Component({
             <TextInput
               testID="editDescriptionInput"
               style={[styles.textArea, pal.border, pal.text]}
-              placeholder="e.g. Users that repeatedly reply with ads."
+              placeholder="e.g. users that repeatedly reply with ads."
               placeholderTextColor={colors.gray4}
               keyboardAppearance={theme.colorScheme}
               multiline

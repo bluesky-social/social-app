@@ -4,17 +4,20 @@
     "slug": "bluesky",
     "scheme": "bluesky",
     "owner": "blueskysocial",
-    "version": "1.28.0",
+    "version": "1.31.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/cloud-splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "buildNumber": "3",
+      "buildNumber": "1",
       "supportsTablet": false,
       "bundleIdentifier": "xyz.blueskyweb.app",
       "config": {
@@ -40,7 +43,7 @@
       "backgroundColor": "#ffffff"
     },
     "android": {
-      "versionCode": 14,
+      "versionCode": 17,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -63,9 +66,15 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "updates": {
+      "enabled": true,
+      "fallbackToCacheTimeout": 1000,
+      "url": "https://u.expo.dev/55bd077a-d905-4184-9c7f-94789ba0f302"
+    },
     "plugins": [
       "expo-localization",
       "react-native-background-fetch",
+      "sentry-expo",
       [
         "expo-build-properties",
         {
@@ -79,8 +88,7 @@
         {
           "username": "blueskysocial"
         }
-      ],
-      "sentry-expo"
+      ]
     ],
     "extra": {
       "eas": {

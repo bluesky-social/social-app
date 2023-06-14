@@ -10,12 +10,13 @@ import {usePalette} from 'lib/hooks/usePalette'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
-import * as ReportPostModal from './ReportPost'
+import * as ReportPostModal from './report/ReportPost'
 import * as RepostModal from './Repost'
 import * as CreateOrEditMuteListModal from './CreateOrEditMuteList'
 import * as ListAddRemoveUserModal from './ListAddRemoveUser'
 import * as AltImageModal from './AltImage'
-import * as ReportAccountModal from './ReportAccount'
+import * as EditImageModal from './AltImage'
+import * as ReportAccountModal from './report/ReportAccount'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
@@ -83,6 +84,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'alt-text-image') {
     snapPoints = AltImageModal.snapPoints
     element = <AltImageModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'edit-image') {
+    snapPoints = AltImageModal.snapPoints
+    element = <EditImageModal.Component {...activeModal} />
   } else if (activeModal?.name === 'change-handle') {
     snapPoints = ChangeHandleModal.snapPoints
     element = <ChangeHandleModal.Component {...activeModal} />
@@ -119,7 +123,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
       snapPoints={snapPoints}
       index={store.shell.isModalActive ? 0 : -1}
       enablePanDownToClose
-      keyboardBehavior="extend"
+      android_keyboardInputMode="adjustResize"
       keyboardBlurBehavior="restore"
       backdropComponent={
         store.shell.isModalActive ? createCustomBackdrop(onClose) : undefined

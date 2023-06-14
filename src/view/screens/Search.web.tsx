@@ -44,11 +44,11 @@ export const SearchScreen = withAuthRequired(
       }
     }, [foafs, suggestedActors, searchUIModel, params.q])
 
+    const {isDesktop} = useWebMediaQueries()
+
     if (searchUIModel) {
       return <SearchResults model={searchUIModel} />
     }
-
-    const {isDesktop} = useWebMediaQueries()
 
     if (!isDesktop) {
       return <Mobile.SearchScreen navigation={navigation} route={route} />

@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {AppBskyActorDefs} from '@atproto/api'
@@ -32,7 +32,9 @@ export const ProfileCard = observer(
     noBorder?: boolean
     followers?: AppBskyActorDefs.ProfileView[] | undefined
     overrideModeration?: boolean
-    renderButton?: (profile: AppBskyActorDefs.ProfileViewBasic) => JSX.Element
+    renderButton?: (
+      profile: AppBskyActorDefs.ProfileViewBasic,
+    ) => React.ReactNode
   }) => {
     const store = useStores()
     const pal = usePalette('default')

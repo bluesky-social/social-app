@@ -13,6 +13,7 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedPost,
+  AppBskyFeedDefs,
 } from '@atproto/api'
 import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
@@ -24,6 +25,8 @@ import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import QuoteEmbed from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
+import {CustomFeed} from 'view/com/feeds/CustomFeed'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -42,6 +45,8 @@ export function PostEmbeds({
   const pal = usePalette('default')
   const store = useStores()
 
+  // quote post with media
+  // =
   if (
     AppBskyEmbedRecordWithMedia.isView(embed) &&
     AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
@@ -65,6 +70,8 @@ export function PostEmbeds({
     )
   }
 
+  // quote post
+  // =
   if (AppBskyEmbedRecord.isView(embed)) {
     if (
       AppBskyEmbedRecord.isViewRecord(embed.record) &&
@@ -87,6 +94,8 @@ export function PostEmbeds({
     }
   }
 
+  // image embed
+  // =
   if (AppBskyEmbedImages.isView(embed)) {
     const {images} = embed
 
@@ -100,7 +109,7 @@ export function PostEmbeds({
         RNImage.prefetch(firstImageToShow)
         items.forEach(item => {
           if (firstImageToShow !== item.uri) {
-            // First image already prefeched above
+            // First image already prefetched above
             RNImage.prefetch(item.uri)
           }
         })
@@ -132,10 +141,11 @@ export function PostEmbeds({
           />
         </View>
       )
-      // }
     }
   }
 
+  // external link embed
+  // =
   if (AppBskyEmbedExternal.isView(embed)) {
     const link = embed.external
     const youtubeVideoId = getYoutubeVideoId(link.uri)
@@ -153,7 +163,33 @@ export function PostEmbeds({
       </Link>
     )
   }
+
+  // custom feed embed (i.e. generator view)
+  // =
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyFeedDefs.isGeneratorView(embed.record)
+  ) {
+    return <CustomFeedEmbed record={embed.record} />
+  }
+
   return <View />
+}
+
+function CustomFeedEmbed({record}: {record: AppBskyFeedDefs.GeneratorView}) {
+  const pal = usePalette('default')
+  const store = useStores()
+  const item = React.useMemo(
+    () => new CustomFeedModel(store, record),
+    [store, record],
+  )
+  return (
+    <CustomFeed
+      item={item}
+      style={[pal.view, pal.border, styles.customFeedOuter]}
+      showLikes
+    />
+  )
 }
 
 const styles = StyleSheet.create({
@@ -171,6 +207,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     marginTop: 4,
+  },
+  customFeedOuter: {
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
   },
   alt: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',

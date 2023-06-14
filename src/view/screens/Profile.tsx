@@ -4,12 +4,12 @@ import {observer} from 'mobx-react-lite'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {ViewSelector} from '../com/util/ViewSelector'
+import {ViewSelector, ViewSelectorHandle} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {ProfileUiModel, Sections} from 'state/models/ui/profile'
 import {useStores} from 'state/index'
-import {PostsFeedSliceModel} from 'state/models/feeds/posts'
+import {PostsFeedSliceModel} from 'state/models/feeds/post'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedSlice} from '../com/posts/FeedSlice'
 import {ListCard} from 'view/com/lists/ListCard'
@@ -25,6 +25,8 @@ import {FAB} from '../com/util/fab/FAB'
 import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics'
 import {ComposeIcon2} from 'lib/icons'
+import {CustomFeed} from 'view/com/feeds/CustomFeed'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
 
@@ -33,6 +35,7 @@ export const ProfileScreen = withAuthRequired(
   observer(({route}: Props) => {
     const store = useStores()
     const {screen, track} = useAnalytics()
+    const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
 
     useEffect(() => {
       screen('Profile')
@@ -45,8 +48,17 @@ export const ProfileScreen = withAuthRequired(
     )
     useSetTitle(combinedDisplayName(uiState.profile))
 
+    const onSoftReset = React.useCallback(() => {
+      viewSelectorRef.current?.scrollToTop()
+    }, [])
+
+    useEffect(() => {
+      setHasSetup(false)
+    }, [route.params.name])
+
     useFocusEffect(
       React.useCallback(() => {
+        const softResetSub = store.onScreenSoftReset(onSoftReset)
         let aborted = false
         store.shell.setMinimalShellMode(false)
         const feedCleanup = uiState.feed.registerListeners()
@@ -63,8 +75,9 @@ export const ProfileScreen = withAuthRequired(
         return () => {
           aborted = true
           feedCleanup()
+          softResetSub.remove()
         }
-      }, [hasSetup, uiState, store]),
+      }, [store, onSoftReset, uiState, hasSetup]),
     )
 
     // events
@@ -118,6 +131,7 @@ export const ProfileScreen = withAuthRequired(
     }, [uiState.showLoadingMoreFooter])
     const renderItem = React.useCallback(
       (item: any) => {
+        // if section is lists
         if (uiState.selectedView === Sections.Lists) {
           if (item === ProfileUiModel.LOADING_ITEM) {
             return <ProfileCardFeedLoadingPlaceholder />
@@ -142,6 +156,32 @@ export const ProfileScreen = withAuthRequired(
           } else {
             return <ListCard testID={`list-${item.name}`} list={item} />
           }
+          // if section is custom algorithms
+        } else if (uiState.selectedView === Sections.CustomAlgorithms) {
+          if (item === ProfileUiModel.LOADING_ITEM) {
+            return <ProfileCardFeedLoadingPlaceholder />
+          } else if (item._reactKey === '__error__') {
+            return (
+              <View style={s.p5}>
+                <ErrorMessage
+                  message={item.error}
+                  onPressTryAgain={onPressTryAgain}
+                />
+              </View>
+            )
+          } else if (item === ProfileUiModel.EMPTY_ITEM) {
+            return (
+              <EmptyState
+                testID="customAlgorithmsEmpty"
+                icon="list-ul"
+                message="No custom algorithms yet!"
+                style={styles.emptyState}
+              />
+            )
+          } else if (item instanceof CustomFeedModel) {
+            return <CustomFeed item={item} showSaveBtn showLikes />
+          }
+          // if section is posts or posts & replies
         } else {
           if (item === ProfileUiModel.END_ITEM) {
             return <Text style={styles.endItem}>- end of feed -</Text>
@@ -214,6 +254,7 @@ export const ProfileScreen = withAuthRequired(
           />
         ) : uiState.profile.hasLoaded ? (
           <ViewSelector
+            ref={viewSelectorRef}
             swipeEnabled={false}
             sections={uiState.selectorItems}
             items={uiState.uiItems}
