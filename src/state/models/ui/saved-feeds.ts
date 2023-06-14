@@ -78,17 +78,27 @@ export class SavedFeedsModel {
       }
     }
 
+    // early exit if no feeds need to be fetched
+    if (!neededFeedUris.length || neededFeedUris.length === 0) {
+      return
+    }
+
     // fetch the missing models
-    for (let i = 0; i < neededFeedUris.length; i += 25) {
-      const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerators({
-        feeds: neededFeedUris.slice(i, 25),
-      })
-      for (const feedInfo of res.data.feeds) {
-        newFeedModels[feedInfo.uri] = new CustomFeedModel(
-          this.rootStore,
-          feedInfo,
-        )
+    try {
+      for (let i = 0; i < neededFeedUris.length; i += 25) {
+        const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerators({
+          feeds: neededFeedUris.slice(i, 25),
+        })
+        for (const feedInfo of res.data.feeds) {
+          newFeedModels[feedInfo.uri] = new CustomFeedModel(
+            this.rootStore,
+            feedInfo,
+          )
+        }
       }
+    } catch (error) {
+      console.error('Failed to fetch feed models', error)
+      this.rootStore.log.error('Failed to fetch feed models', error)
     }
 
     // merge into the cache
