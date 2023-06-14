@@ -105,7 +105,7 @@ export class SessionModel {
     return this.accounts.filter(acct => acct.did !== this.data?.did)
   }
 
-  get isTestNetwork() {
+  get isSandbox() {
     if (!this.data) {
       return false
     }

@@ -4,14 +4,14 @@ import {Text} from './text/Text'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 
-export function PostTestnetWarning() {
+export function PostSandboxWarning() {
   const store = useStores()
   const pal = usePalette('default')
-  if (store.session.isTestNetwork) {
+  if (store.session.isSandbox) {
     return (
       <View style={styles.container}>
         <Text type="title-2xl" style={[pal.text, styles.text]}>
-          TESTNET
+          SANDBOX
         </Text>
       </View>
     )

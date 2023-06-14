@@ -21,10 +21,10 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
     <View style={[styles.rightNav, pal.view]}>
       {store.session.hasSession && <DesktopSearch />}
       <View style={styles.message}>
-        {store.session.isTestNetwork ? (
+        {store.session.isSandbox ? (
           <View style={[palError.view, styles.messageLine, s.p10]}>
             <Text type="md" style={[palError.text, s.bold]}>
-              TEST NETWORK. Posts and accounts are not permanent.
+              SANDBOX. Posts and accounts are not permanent.
             </Text>
           </View>
         ) : (

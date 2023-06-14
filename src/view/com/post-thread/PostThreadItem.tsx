@@ -25,7 +25,7 @@ import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {ImageHider} from '../util/moderation/ImageHider'
-import {PostTestnetWarning} from '../util/PostTestnetWarning'
+import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
@@ -194,7 +194,7 @@ export const PostThreadItem = observer(function PostThreadItem({
         moderation={item.moderation.thread}
         accessibilityActions={accessibilityActions}
         onAccessibilityAction={onAccessibilityAction}>
-        <PostTestnetWarning />
+        <PostSandboxWarning />
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
             <Link
@@ -383,7 +383,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               ]}
             />
           )}
-          <PostTestnetWarning />
+          <PostSandboxWarning />
           <View style={styles.layout}>
             <View style={styles.layoutAvi}>
               <Link href={authorHref} title={authorTitle} asAnchor>

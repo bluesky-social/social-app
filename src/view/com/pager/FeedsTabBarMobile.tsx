@@ -63,7 +63,7 @@ export const FeedsTabBar = observer(
             </TouchableOpacity>
           </View>
           <Text style={[brandBlue, s.bold, styles.title]}>
-            {store.session.isTestNetwork ? 'TEST NETWORK' : 'Bluesky'}
+            {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}
           </Text>
           <View style={[pal.view]}>
             <Link
