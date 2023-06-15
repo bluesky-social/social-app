@@ -15,15 +15,24 @@ import {formatCount} from 'view/com/util/numeric/format'
 export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores()
   const pal = usePalette('default')
+  const palError = usePalette('error')
 
   return (
     <View style={[styles.rightNav, pal.view]}>
       {store.session.hasSession && <DesktopSearch />}
       <View style={styles.message}>
-        <Text type="md" style={[pal.textLight, styles.messageLine]}>
-          Welcome to Bluesky! This is a beta application that's still in
-          development.
-        </Text>
+        {store.session.isSandbox ? (
+          <View style={[palError.view, styles.messageLine, s.p10]}>
+            <Text type="md" style={[palError.text, s.bold]}>
+              SANDBOX. Posts and accounts are not permanent.
+            </Text>
+          </View>
+        ) : (
+          <Text type="md" style={[pal.textLight, styles.messageLine]}>
+            Welcome to Bluesky! This is a beta application that's still in
+            development.
+          </Text>
+        )}
         <View style={[s.flexRow]}>
           <TextLink
             type="md"

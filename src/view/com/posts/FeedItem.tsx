@@ -19,6 +19,7 @@ import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {ImageHider} from '../util/moderation/ImageHider'
 import {RichText} from '../util/text/RichText'
+import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
@@ -245,6 +246,7 @@ export const FeedItem = observer(function ({
           </Text>
         </Link>
       )}
+      <PostSandboxWarning />
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Link href={authorHref} title={item.post.author.handle} asAnchor>
