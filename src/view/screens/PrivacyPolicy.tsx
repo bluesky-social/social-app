@@ -1,14 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
-import {H1} from '@expo/html-elements'
+import {Text} from 'view/com/util/text/Text'
+import {TextLink} from 'view/com/util/Link'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {useStores} from 'state/index'
 import {ScrollView} from 'view/com/util/Views'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
-import PrivacyPolicyHtml from '../../locale/en/privacy-policy'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PrivacyPolicy'>
 export const PrivacyPolicyScreen = (_props: Props) => {
@@ -26,10 +26,14 @@ export const PrivacyPolicyScreen = (_props: Props) => {
       <ViewHeader title="Privacy Policy" />
       <ScrollView style={[s.hContentRegion, pal.view]}>
         <View style={[s.p20]}>
-          <H1 style={[pal.text, s.bold, s.pb20, {marginVertical: 0}]}>
-            Privacy Policy
-          </H1>
-          <PrivacyPolicyHtml />
+          <Text style={pal.text}>
+            The Privacy Policy has been moved to{' '}
+            <TextLink
+              style={pal.link}
+              href="https://blueskyweb.xyz/support/privacy"
+              text="blueskyweb.xyz/support/privacy"
+            />
+          </Text>
         </View>
         <View style={s.footerSpacer} />
       </ScrollView>
