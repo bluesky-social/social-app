@@ -9,7 +9,7 @@ import {MagnifyingGlassIcon} from 'lib/icons'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 
 const MENU_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
 

@@ -14,7 +14,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import * as EmailValidator from 'email-validator'
 import {BskyAgent} from '@atproto/api'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {Text} from '../../util/text/Text'
 import {UserAvatar} from '../../util/UserAvatar'
 import {s, colors} from 'lib/styles'

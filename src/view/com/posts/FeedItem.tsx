@@ -25,7 +25,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 
 export const FeedItem = observer(function ({

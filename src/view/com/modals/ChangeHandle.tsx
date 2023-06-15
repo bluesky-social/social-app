@@ -18,7 +18,7 @@ import {s} from 'lib/styles'
 import {makeValidHandle, createFullHandle} from 'lib/strings/handles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {cleanError} from 'lib/strings/errors'
 
 export const snapPoints = ['100%']
