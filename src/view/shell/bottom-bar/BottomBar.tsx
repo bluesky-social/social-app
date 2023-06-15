@@ -30,7 +30,7 @@ import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 
-type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile'
+type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
 export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const store = useStores()

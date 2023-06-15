@@ -21,7 +21,7 @@ import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 import {ListsListModel} from 'state/models/lists/lists-list'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 

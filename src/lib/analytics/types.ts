@@ -35,6 +35,7 @@ interface TrackPropertiesMap {
   'FeedItem:PostRepost': {} // CAN BE SERVER
   'FeedItem:PostLike': {} // CAN BE SERVER
   'FeedItem:PostDelete': {} // CAN BE SERVER
+  'FeedItem:ThreadMute': {} // CAN BE SERVER
   // PROFILE HEADER events
   'ProfileHeader:EditProfileButtonClicked': {}
   'ProfileHeader:FollowersButtonClicked': {}
@@ -56,6 +57,7 @@ interface TrackPropertiesMap {
   'Settings:InvitecodesButtonClicked': {}
   'Settings:ContentfilteringButtonClicked': {}
   'Settings:SignOutButtonClicked': {}
+  'Settings:ContentlanguagesButtonClicked': {}
   // MENU events
   'Menu:ItemClicked': {url: string}
   'Menu:FeedbackClicked': {}
@@ -64,6 +66,17 @@ interface TrackPropertiesMap {
   'MobileShell:HomeButtonPressed': {}
   'MobileShell:SearchButtonPressed': {}
   'MobileShell:NotificationsButtonPressed': {}
+  'MobileShell:FeedsButtonPressed': {}
+  // LISTS events
+  'Lists:onRefresh': {}
+  'Lists:onEndReached': {}
+  'CreateMuteList:AvatarSelected': {}
+  'CreateMuteList:Save': {} // CAN BE SERVER
+  // CUSTOM FEED events
+  'MultiFeed:onEndReached': {}
+  'MultiFeed:onRefresh': {}
+  // MODERATION events
+  'Moderation:ContentfilteringButtonClicked': {}
 }
 
 interface ScreenPropertiesMap {
@@ -77,4 +90,9 @@ interface ScreenPropertiesMap {
   Notifications: {}
   Profile: {}
   Settings: {}
+  AppPasswords: {}
+  Moderation: {}
+  BlockedAccounts: {}
+  MutedAccounts: {}
+  SavedFeeds: {}
 }

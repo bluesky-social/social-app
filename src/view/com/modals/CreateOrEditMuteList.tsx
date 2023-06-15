@@ -21,7 +21,7 @@ import {compressIfNeeded} from 'lib/media/manip'
 import {UserAvatar} from '../util/UserAvatar'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
 import {isDesktopWeb} from 'platform/detection'
 
