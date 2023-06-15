@@ -46,6 +46,8 @@ interface TrackPropertiesMap {
   'ProfileHeader:AddToListsButtonClicked': {}
   'ProfileHeader:BlockAccountButtonClicked': {}
   'ProfileHeader:UnblockAccountButtonClicked': {}
+  'ProfileHeader:FollowButtonClicked': {}
+  'ProfileHeader:UnfollowButtonClicked': {}
   'ViewHeader:MenuButtonClicked': {}
   // SETTINGS events
   'Settings:SwitchAccountButtonClicked': {}

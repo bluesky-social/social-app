@@ -117,6 +117,11 @@ const ProfileHeaderLoaded = observer(
     }, [store, view])
 
     const onPressToggleFollow = React.useCallback(() => {
+      track(
+        view.viewer.following
+          ? 'ProfileHeader:FollowButtonClicked'
+          : 'ProfileHeader:UnfollowButtonClicked',
+      )
       view?.toggleFollowing().then(
         () => {
           Toast.show(
@@ -127,7 +132,7 @@ const ProfileHeaderLoaded = observer(
         },
         err => store.log.error('Failed to toggle follow', err),
       )
-    }, [view, store])
+    }, [track, view, store.log])
 
     const onPressEditProfile = React.useCallback(() => {
       track('ProfileHeader:EditProfileButtonClicked')
