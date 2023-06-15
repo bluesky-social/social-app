@@ -43,6 +43,9 @@ interface TrackPropertiesMap {
   'ProfileHeader:MuteAccountButtonClicked': {}
   'ProfileHeader:UnmuteAccountButtonClicked': {}
   'ProfileHeader:ReportAccountButtonClicked': {}
+  'ProfileHeader:AddToListsButtonClicked': {}
+  'ProfileHeader:BlockAccountButtonClicked': {}
+  'ProfileHeader:UnblockAccountButtonClicked': {}
   'ViewHeader:MenuButtonClicked': {}
   // SETTINGS events
   'Settings:SwitchAccountButtonClicked': {}
