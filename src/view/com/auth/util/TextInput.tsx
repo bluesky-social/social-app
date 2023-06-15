@@ -1,27 +1,17 @@
-import React from 'react'
+import React, {ComponentProps} from 'react'
 import {StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 
-export function TextInput({
-  testID,
-  icon,
-  value,
-  placeholder,
-  editable,
-  secureTextEntry,
-  onChange,
-}: {
+interface Props extends Omit<ComponentProps<typeof RNTextInput>, 'onChange'> {
   testID?: string
   icon: IconProp
-  value: string
-  placeholder: string
-  editable: boolean
-  secureTextEntry?: boolean
   onChange: (v: string) => void
-}) {
+}
+
+export function TextInput({testID, icon, onChange, ...props}: Props) {
   const theme = useTheme()
   const pal = usePalette('default')
   return (
@@ -30,15 +20,12 @@ export function TextInput({
       <RNTextInput
         testID={testID}
         style={[pal.text, styles.textInput]}
-        placeholder={placeholder}
         placeholderTextColor={pal.colors.textLight}
         autoCapitalize="none"
         autoCorrect={false}
         keyboardAppearance={theme.colorScheme}
-        secureTextEntry={secureTextEntry}
-        value={value}
         onChangeText={v => onChange(v)}
-        editable={editable}
+        {...props}
       />
     </View>
   )

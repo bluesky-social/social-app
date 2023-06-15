@@ -97,7 +97,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
           <UserAvatar
             avatar={opts.authorAvatar}
             size={16}
-            hasWarning={opts.authorHasWarning}
+            // TODO moderation
           />
         </View>
       )}

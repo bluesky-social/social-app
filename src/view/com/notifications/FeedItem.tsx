@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo, useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   Animated,
@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
-import {AtUri, ComAtprotoLabelDefs} from '@atproto/api'
+import {AtUri} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -26,8 +26,15 @@ import {UserAvatar} from '../util/UserAvatar'
 import {ImageHorzList} from '../util/images/ImageHorzList'
 import {Post} from '../post/Post'
 import {Link, TextLink} from '../util/Link'
+import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {
+  getProfileViewBasicLabelInfo,
+  getProfileModeration,
+} from 'lib/labeling/helpers'
+import {ProfileModeration} from 'lib/labeling/types'
+import {formatCount} from '../util/numeric/format'
 
 const MAX_AUTHORS = 5
 
@@ -38,17 +45,18 @@ interface Author {
   handle: string
   displayName?: string
   avatar?: string
-  labels?: ComAtprotoLabelDefs.Label[]
+  moderation: ProfileModeration
 }
 
-export const FeedItem = observer(function FeedItem({
+export const FeedItem = observer(function ({
   item,
 }: {
   item: NotificationsFeedItemModel
 }) {
+  const store = useStores()
   const pal = usePalette('default')
-  const [isAuthorsExpanded, setAuthorsExpanded] = React.useState<boolean>(false)
-  const itemHref = React.useMemo(() => {
+  const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
+  const itemHref = useMemo(() => {
     if (item.isLike || item.isRepost) {
       const urip = new AtUri(item.subjectUri)
       return `/profile/${urip.host}/post/${urip.rkey}`
@@ -60,7 +68,7 @@ export const FeedItem = observer(function FeedItem({
     }
     return ''
   }, [item])
-  const itemTitle = React.useMemo(() => {
+  const itemTitle = useMemo(() => {
     if (item.isLike || item.isRepost) {
       return 'Post'
     } else if (item.isFollow) {
@@ -74,6 +82,33 @@ export const FeedItem = observer(function FeedItem({
     setAuthorsExpanded(!isAuthorsExpanded)
   }
 
+  const authors: Author[] = useMemo(() => {
+    return [
+      {
+        href: `/profile/${item.author.handle}`,
+        handle: item.author.handle,
+        displayName: item.author.displayName,
+        avatar: item.author.avatar,
+        moderation: getProfileModeration(
+          store,
+          getProfileViewBasicLabelInfo(item.author),
+        ),
+      },
+      ...(item.additional?.map(({author}) => {
+        return {
+          href: `/profile/${author.handle}`,
+          handle: author.handle,
+          displayName: author.displayName,
+          avatar: author.avatar,
+          moderation: getProfileModeration(
+            store,
+            getProfileViewBasicLabelInfo(author),
+          ),
+        }
+      }) || []),
+    ]
+  }, [store, item.additional, item.author])
+
   if (item.additionalPost?.notFound) {
     // don't render anything if the target post was deleted or unfindable
     return <View />
@@ -85,7 +120,12 @@ export const FeedItem = observer(function FeedItem({
       return <View />
     }
     return (
-      <Link href={itemHref} title={itemTitle} noFeedback>
+      <Link
+        testID={`feedItem-by-${item.author.handle}`}
+        href={itemHref}
+        title={itemTitle}
+        noFeedback
+        accessible={false}>
         <Post
           uri={item.uri}
           initView={item.additionalPost}
@@ -121,32 +161,13 @@ export const FeedItem = observer(function FeedItem({
     icon = 'user-plus'
     iconStyle = [s.blue3 as FontAwesomeIconStyle]
   } else {
-    return <></>
+    return null
   }
 
-  const authors: Author[] = [
-    {
-      href: `/profile/${item.author.handle}`,
-      handle: item.author.handle,
-      displayName: item.author.displayName,
-      avatar: item.author.avatar,
-      labels: item.author.labels,
-    },
-    ...(item.additional?.map(
-      ({author: {avatar, labels, handle, displayName}}) => {
-        return {
-          href: `/profile/${handle}`,
-          handle,
-          displayName,
-          avatar,
-          labels,
-        }
-      },
-    ) || []),
-  ]
-
   return (
+    // eslint-disable-next-line react-native-a11y/no-nested-touchables
     <Link
+      testID={`feedItem-by-${item.author.handle}`}
       style={[
         styles.outer,
         pal.view,
@@ -160,8 +181,11 @@ export const FeedItem = observer(function FeedItem({
       ]}
       href={itemHref}
       title={itemTitle}
-      noFeedback>
+      noFeedback
+      accessible={(item.isLike && authors.length === 1) || item.isRepost}>
       <View style={styles.layoutIcon}>
+        {/* TODO: Prevent conditional rendering and move toward composable
+        notifications for clearer accessibility labeling */}
         {icon === 'HeartIconSolid' ? (
           <HeartIconSolid size={28} style={[styles.icon, ...iconStyle]} />
         ) : (
@@ -174,17 +198,18 @@ export const FeedItem = observer(function FeedItem({
       </View>
       <View style={styles.layoutContent}>
         <Pressable
-          onPress={authors.length > 1 ? onToggleAuthorsExpanded : () => {}}>
+          onPress={authors.length > 1 ? onToggleAuthorsExpanded : undefined}
+          accessible={false}>
           <CondensedAuthorsList
             visible={!isAuthorsExpanded}
             authors={authors}
             onToggleAuthorsExpanded={onToggleAuthorsExpanded}
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
-          <View style={styles.meta}>
+          <Text style={styles.meta}>
             <TextLink
               key={authors[0].href}
-              style={[pal.text, s.bold, styles.metaItem]}
+              style={[pal.text, s.bold]}
               href={authors[0].href}
               text={sanitizeDisplayName(
                 authors[0].displayName || authors[0].handle,
@@ -192,17 +217,16 @@ export const FeedItem = observer(function FeedItem({
             />
             {authors.length > 1 ? (
               <>
-                <Text style={[styles.metaItem, pal.text]}>and</Text>
-                <Text style={[styles.metaItem, pal.text, s.bold]}>
-                  {authors.length - 1} {pluralize(authors.length - 1, 'other')}
+                <Text style={[pal.text]}> and </Text>
+                <Text style={[pal.text, s.bold]}>
+                  {formatCount(authors.length - 1)}{' '}
+                  {pluralize(authors.length - 1, 'other')}
                 </Text>
               </>
             ) : undefined}
-            <Text style={[styles.metaItem, pal.text]}>{action}</Text>
-            <Text style={[styles.metaItem, pal.textLight]}>
-              {ago(item.indexedAt)}
-            </Text>
-          </View>
+            <Text style={[pal.text]}> {action}</Text>
+            <Text style={[pal.textLight]}> {ago(item.indexedAt)}</Text>
+          </Text>
         </Pressable>
         {item.isLike || item.isRepost || item.isQuote ? (
           <AdditionalPostText additionalPost={item.additionalPost} />
@@ -227,7 +251,10 @@ function CondensedAuthorsList({
       <View style={styles.avis}>
         <TouchableOpacity
           style={styles.expandedAuthorsCloseBtn}
-          onPress={onToggleAuthorsExpanded}>
+          onPress={onToggleAuthorsExpanded}
+          accessibilityRole="button"
+          accessibilityLabel="Hide user list"
+          accessibilityHint="Collapses list of users for a given notification">
           <FontAwesomeIcon
             icon="angle-up"
             size={18}
@@ -251,34 +278,39 @@ function CondensedAuthorsList({
           <UserAvatar
             size={35}
             avatar={authors[0].avatar}
-            hasWarning={!!authors[0].labels?.length}
+            moderation={authors[0].moderation.avatar}
           />
         </Link>
       </View>
     )
   }
   return (
-    <View style={styles.avis}>
-      {authors.slice(0, MAX_AUTHORS).map(author => (
-        <View key={author.href} style={s.mr5}>
-          <UserAvatar
-            size={35}
-            avatar={author.avatar}
-            hasWarning={!!author.labels?.length}
-          />
-        </View>
-      ))}
-      {authors.length > MAX_AUTHORS ? (
-        <Text style={[styles.aviExtraCount, pal.textLight]}>
-          +{authors.length - MAX_AUTHORS}
-        </Text>
-      ) : undefined}
-      <FontAwesomeIcon
-        icon="angle-down"
-        size={18}
-        style={[styles.expandedAuthorsCloseBtnIcon, pal.textLight]}
-      />
-    </View>
+    <TouchableOpacity
+      accessibilityLabel="Show users"
+      accessibilityHint="Opens an expanded list of users in this notification"
+      onPress={onToggleAuthorsExpanded}>
+      <View style={styles.avis}>
+        {authors.slice(0, MAX_AUTHORS).map(author => (
+          <View key={author.href} style={s.mr5}>
+            <UserAvatar
+              size={35}
+              avatar={author.avatar}
+              moderation={author.moderation.avatar}
+            />
+          </View>
+        ))}
+        {authors.length > MAX_AUTHORS ? (
+          <Text style={[styles.aviExtraCount, pal.textLight]}>
+            +{authors.length - MAX_AUTHORS}
+          </Text>
+        ) : undefined}
+        <FontAwesomeIcon
+          icon="angle-down"
+          size={18}
+          style={[styles.expandedAuthorsCloseBtnIcon, pal.textLight]}
+        />
+      </View>
+    </TouchableOpacity>
   )
 }
 
@@ -296,13 +328,14 @@ function ExpandedAuthorsList({
   const heightStyle = {
     height: Animated.multiply(heightInterp, targetHeight),
   }
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.timing(heightInterp, {
       toValue: visible ? 1 : 0,
       duration: 200,
       useNativeDriver: false,
     }).start()
   }, [heightInterp, visible])
+
   return (
     <Animated.View
       style={[
@@ -321,7 +354,7 @@ function ExpandedAuthorsList({
             <UserAvatar
               size={35}
               avatar={author.avatar}
-              hasWarning={!!author.labels?.length}
+              moderation={author.moderation.avatar}
             />
           </View>
           <View style={s.flex1}>
@@ -364,10 +397,7 @@ function AdditionalPostText({
     <>
       {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
       {images && images?.length > 0 && (
-        <ImageHorzList
-          uris={images?.map(img => img.thumb)}
-          style={styles.additionalPostImages}
-        />
+        <ImageHorzList images={images} style={styles.additionalPostImages} />
       )}
     </>
   )
@@ -409,9 +439,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingTop: 6,
     paddingBottom: 2,
-  },
-  metaItem: {
-    paddingRight: 3,
   },
   postText: {
     paddingBottom: 5,

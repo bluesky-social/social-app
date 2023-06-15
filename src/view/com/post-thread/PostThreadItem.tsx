@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback, useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
@@ -15,17 +15,20 @@ import {PostDropdownBtn} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
-import {ago} from 'lib/strings/time'
+import {ago, niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {pluralize} from 'lib/strings/helpers'
 import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
-import {PostCtrls} from '../util/PostCtrls'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
+import {ImageHider} from '../util/moderation/ImageHider'
+import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
+import {formatCount} from '../util/numeric/format'
 
 const PARENT_REPLY_LINE_LENGTH = 8
 
@@ -77,25 +80,49 @@ export const PostThreadItem = observer(function PostThreadItem({
       onPost: onPostReply,
     })
   }, [store, item, record, onPostReply])
+
   const onPressToggleRepost = React.useCallback(() => {
     return item
       .toggleRepost()
       .catch(e => store.log.error('Failed to toggle repost', e))
   }, [item, store])
+
   const onPressToggleLike = React.useCallback(() => {
     return item
       .toggleLike()
       .catch(e => store.log.error('Failed to toggle like', e))
   }, [item, store])
+
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')
     Toast.show('Copied to clipboard')
   }, [record])
+
+  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(
-      encodeURI(`https://translate.google.com/#auto|en|${record?.text || ''}`),
+      encodeURI(
+        `https://translate.google.com/?sl=auto&tl=${primaryLanguage}&text=${
+          record?.text || ''
+        }`,
+      ),
     )
-  }, [record])
+  }, [record, primaryLanguage])
+
+  const onToggleThreadMute = React.useCallback(async () => {
+    try {
+      await item.toggleThreadMute()
+      if (item.isThreadMuted) {
+        Toast.show('You will no longer received notifications for this thread')
+      } else {
+        Toast.show('You will now receive notifications for this thread')
+      }
+    } catch (e) {
+      store.log.error('Failed to toggle thread mute', e)
+    }
+  }, [item, store])
+
   const onDeletePost = React.useCallback(() => {
     item.delete().then(
       () => {
@@ -108,6 +135,40 @@ export const PostThreadItem = observer(function PostThreadItem({
       },
     )
   }, [item, store])
+
+  const accessibilityActions = useMemo(
+    () => [
+      {
+        name: 'reply',
+        label: 'Reply',
+      },
+      {
+        name: 'repost',
+        label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
+      },
+      {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
+    ],
+    [item.post.viewer?.like, item.post.viewer?.repost],
+  )
+
+  const onAccessibilityAction = useCallback(
+    event => {
+      switch (event.nativeEvent.actionName) {
+        case 'like':
+          onPressToggleLike()
+          break
+        case 'reply':
+          onPressReply()
+          break
+        case 'repost':
+          onPressToggleRepost()
+          break
+        default:
+          break
+      }
+    },
+    [onPressReply, onPressToggleLike, onPressToggleRepost],
+  )
 
   if (!record) {
     return <ErrorMessage message="Invalid or unsupported post record" />
@@ -127,21 +188,25 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   if (item._isHighlightedPost) {
     return (
-      <View
+      <PostHider
         testID={`postThreadItem-by-${item.post.author.handle}`}
-        style={[
-          styles.outer,
-          styles.outerHighlighted,
-          {borderTopColor: pal.colors.border},
-          pal.view,
-        ]}>
+        style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
+        moderation={item.moderation.thread}
+        accessibilityActions={accessibilityActions}
+        onAccessibilityAction={onAccessibilityAction}>
+        <PostSandboxWarning />
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
-            <Link href={authorHref} title={authorTitle} asAnchor>
+            <Link
+              href={authorHref}
+              title={authorTitle}
+              asAnchor
+              accessibilityLabel={`${item.post.author.handle}'s avatar`}
+              accessibilityHint="">
               <UserAvatar
                 size={52}
                 avatar={item.post.author.avatar}
-                hasWarning={!!item.post.author.labels?.length}
+                moderation={item.moderation.avatar}
               />
             </Link>
           </View>
@@ -169,19 +234,21 @@ export const PostThreadItem = observer(function PostThreadItem({
               <View style={s.flex1} />
               <PostDropdownBtn
                 testID="postDropdownBtn"
-                style={styles.metaItem}
+                style={[styles.metaItem, s.mt2, s.px5]}
                 itemUri={itemUri}
                 itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
                 isAuthor={item.post.author.did === store.me.did}
+                isThreadMuted={item.isThreadMuted}
                 onCopyPostText={onCopyPostText}
                 onOpenTranslate={onOpenTranslate}
+                onToggleThreadMute={onToggleThreadMute}
                 onDeletePost={onDeletePost}>
                 <FontAwesomeIcon
                   icon="ellipsis-h"
                   size={14}
-                  style={[s.mt2, s.mr5, pal.textLight]}
+                  style={[pal.textLight]}
                 />
               </PostDropdownBtn>
             </View>
@@ -198,9 +265,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           </View>
         </View>
         <View style={[s.pl10, s.pr10, s.pb10]}>
-          <ContentHider
-            isMuted={item.post.author.viewer?.muted === true}
-            labels={item.post.labels}>
+          <ContentHider moderation={item.moderation.view}>
             {item.richText?.text ? (
               <View
                 style={[
@@ -214,9 +279,14 @@ export const PostThreadItem = observer(function PostThreadItem({
                 />
               </View>
             ) : undefined}
-            <PostEmbeds embed={item.post.embed} style={s.mb10} />
+            <ImageHider moderation={item.moderation.view} style={s.mb10}>
+              <PostEmbeds embed={item.post.embed} style={s.mb10} />
+            </ImageHider>
           </ContentHider>
-          {item._isHighlightedPost && hasEngagement ? (
+          <View style={[s.mt2, s.mb10]}>
+            <Text style={pal.textLight}>{niceDate(item.post.indexedAt)}</Text>
+          </View>
+          {hasEngagement ? (
             <View style={[styles.expandedInfo, pal.border]}>
               {item.post.repostCount ? (
                 <Link
@@ -225,7 +295,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   title={repostsTitle}>
                   <Text testID="repostCount" type="lg" style={pal.textLight}>
                     <Text type="xl-bold" style={pal.text}>
-                      {item.post.repostCount}
+                      {formatCount(item.post.repostCount)}
                     </Text>{' '}
                     {pluralize(item.post.repostCount, 'repost')}
                   </Text>
@@ -240,7 +310,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   title={likesTitle}>
                   <Text testID="likeCount" type="lg" style={pal.textLight}>
                     <Text type="xl-bold" style={pal.text}>
-                      {item.post.likeCount}
+                      {formatCount(item.post.likeCount)}
                     </Text>{' '}
                     {pluralize(item.post.likeCount, 'like')}
                   </Text>
@@ -269,16 +339,18 @@ export const PostThreadItem = observer(function PostThreadItem({
               isAuthor={item.post.author.did === store.me.did}
               isReposted={!!item.post.viewer?.repost}
               isLiked={!!item.post.viewer?.like}
+              isThreadMuted={item.isThreadMuted}
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
               onPressToggleLike={onPressToggleLike}
               onCopyPostText={onCopyPostText}
               onOpenTranslate={onOpenTranslate}
+              onToggleThreadMute={onToggleThreadMute}
               onDeletePost={onDeletePost}
             />
           </View>
         </View>
-      </View>
+      </PostHider>
     )
   } else {
     return (
@@ -286,9 +358,15 @@ export const PostThreadItem = observer(function PostThreadItem({
         <PostHider
           testID={`postThreadItem-by-${item.post.author.handle}`}
           href={itemHref}
-          style={[styles.outer, {borderColor: pal.colors.border}, pal.view]}
-          isMuted={item.post.author.viewer?.muted === true}
-          labels={item.post.labels}>
+          style={[
+            styles.outer,
+            pal.border,
+            pal.view,
+            item._showParentReplyLine && styles.noTopBorder,
+          ]}
+          moderation={item.moderation.thread}
+          accessibilityActions={accessibilityActions}
+          onAccessibilityAction={onAccessibilityAction}>
           {item._showParentReplyLine && (
             <View
               style={[
@@ -305,13 +383,14 @@ export const PostThreadItem = observer(function PostThreadItem({
               ]}
             />
           )}
+          <PostSandboxWarning />
           <View style={styles.layout}>
             <View style={styles.layoutAvi}>
               <Link href={authorHref} title={authorTitle} asAnchor>
                 <UserAvatar
                   size={52}
                   avatar={item.post.author.avatar}
-                  hasWarning={!!item.post.author.labels?.length}
+                  moderation={item.moderation.avatar}
                 />
               </Link>
             </View>
@@ -325,7 +404,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 did={item.post.author.did}
               />
               <ContentHider
-                labels={item.post.labels}
+                moderation={item.moderation.thread}
                 containerStyle={styles.contentHider}>
                 {item.richText?.text ? (
                   <View style={styles.postTextContainer}>
@@ -337,7 +416,9 @@ export const PostThreadItem = observer(function PostThreadItem({
                     />
                   </View>
                 ) : undefined}
-                <PostEmbeds embed={item.post.embed} style={s.mb10} />
+                <ImageHider style={s.mb10} moderation={item.moderation.thread}>
+                  <PostEmbeds embed={item.post.embed} style={s.mb10} />
+                </ImageHider>
               </ContentHider>
               <PostCtrls
                 itemUri={itemUri}
@@ -357,11 +438,13 @@ export const PostThreadItem = observer(function PostThreadItem({
                 likeCount={item.post.likeCount}
                 isReposted={!!item.post.viewer?.repost}
                 isLiked={!!item.post.viewer?.like}
+                isThreadMuted={item.isThreadMuted}
                 onPressReply={onPressReply}
                 onPressToggleRepost={onPressToggleRepost}
                 onPressToggleLike={onPressToggleLike}
                 onCopyPostText={onCopyPostText}
                 onOpenTranslate={onOpenTranslate}
+                onToggleThreadMute={onToggleThreadMute}
                 onDeletePost={onDeletePost}
               />
             </View>
@@ -400,6 +483,9 @@ const styles = StyleSheet.create({
     paddingLeft: 6,
     paddingRight: 6,
   },
+  noTopBorder: {
+    borderTopWidth: 0,
+  },
   parentReplyLine: {
     position: 'absolute',
     left: 44,
@@ -418,10 +504,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   layoutAvi: {
-    width: 70,
     paddingLeft: 10,
     paddingTop: 10,
     paddingBottom: 10,
+    marginRight: 10,
   },
   layoutContent: {
     flex: 1,

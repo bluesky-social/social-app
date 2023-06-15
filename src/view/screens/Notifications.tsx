@@ -13,8 +13,10 @@ import {InvitedUsers} from '../com/notifications/InvitedUsers'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {useStores} from 'state/index'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {isWeb} from 'platform/detection'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -23,7 +25,8 @@ type Props = NativeStackScreenProps<
 export const NotificationsScreen = withAuthRequired(
   observer(({}: Props) => {
     const store = useStores()
-    const onMainScroll = useOnMainScroll(store)
+    const [onMainScroll, isScrolledDown, resetMainScroll] =
+      useOnMainScroll(store)
     const scrollElRef = React.useRef<FlatList>(null)
     const {screen} = useAnalytics()
 
@@ -35,7 +38,8 @@ export const NotificationsScreen = withAuthRequired(
 
     const scrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: 0})
-    }, [scrollElRef])
+      resetMainScroll()
+    }, [scrollElRef, resetMainScroll])
 
     const onPressLoadLatest = React.useCallback(() => {
       scrollToTop()
@@ -58,7 +62,35 @@ export const NotificationsScreen = withAuthRequired(
         }
       }, [store, screen, onPressLoadLatest]),
     )
+    useTabFocusEffect(
+      'Notifications',
+      React.useCallback(
+        isInside => {
+          // on mobile:
+          // fires with `isInside=true` when the user navigates to the root tab
+          // but not when the user goes back to the screen by pressing back
+          // on web:
+          // essentially equivalent to useFocusEffect because we dont used tabbed
+          // navigation
+          if (isInside) {
+            if (isWeb) {
+              store.me.notifications.syncQueue()
+            } else {
+              if (store.me.notifications.unreadCount > 0) {
+                store.me.notifications.refresh()
+              } else {
+                store.me.notifications.syncQueue()
+              }
+            }
+          }
+        },
+        [store],
+      ),
+    )
 
+    const hasNew =
+      store.me.notifications.hasNewLatest &&
+      !store.me.notifications.isRefreshing
     return (
       <View testID="notificationsScreen" style={s.hContentRegion}>
         <ViewHeader title="Notifications" canGoBack={false} />
@@ -69,10 +101,14 @@ export const NotificationsScreen = withAuthRequired(
           onScroll={onMainScroll}
           scrollElRef={scrollElRef}
         />
-        {store.me.notifications.hasNewLatest &&
-          !store.me.notifications.isRefreshing && (
-            <LoadLatestBtn onPress={onPressLoadLatest} label="notifications" />
-          )}
+        {(isScrolledDown || hasNew) && (
+          <LoadLatestBtn
+            onPress={onPressLoadLatest}
+            label="Load new notifications"
+            showIndicator={hasNew}
+            minimalShellMode={true}
+          />
+        )}
       </View>
     )
   }),

@@ -1,4 +1,4 @@
-import {AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import lande from 'lande'
 import {hasProp} from 'lib/type-guards'
 import {LANGUAGES_MAP_CODE2} from '../../locale/languages'
@@ -48,6 +48,13 @@ export class FeedViewPostsSlice {
     return this.items[0]
   }
 
+  get isReply() {
+    return (
+      AppBskyFeedPost.isRecord(this.rootItem.post.record) &&
+      !!this.rootItem.post.record.reply
+    )
+  }
+
   containsUri(uri: string) {
     return !!this.items.find(item => item.post.uri === uri)
   }
@@ -67,9 +74,12 @@ export class FeedViewPostsSlice {
   }
 
   flattenReplyParent() {
-    if (this.items[0].reply?.parent) {
-      this.isFlattenedReply = true
-      this.items.splice(0, 0, {post: this.items[0].reply?.parent})
+    if (this.items[0].reply) {
+      const reply = this.items[0].reply
+      if (AppBskyFeedDefs.isPostView(reply.parent)) {
+        this.isFlattenedReply = true
+        this.items.splice(0, 0, {post: reply.parent})
+      }
     }
   }
 }
@@ -123,21 +133,19 @@ export class FeedTuner {
 
     // turn non-threads with reply parents into threads
     for (const slice of slices) {
-      if (
-        !slice.isThread &&
-        !slice.items[0].reason &&
-        slice.items[0].reply?.parent &&
-        !this.seenUris.has(slice.items[0].reply?.parent.uri) &&
-        !soonToBeSeenUris.has(slice.items[0].reply?.parent.uri)
-      ) {
-        const uri = slice.items[0].reply?.parent.uri
-        slice.flattenReplyParent()
-        soonToBeSeenUris.add(uri)
+      if (!slice.isThread && !slice.items[0].reason && slice.items[0].reply) {
+        const reply = slice.items[0].reply
+        if (
+          AppBskyFeedDefs.isPostView(reply.parent) &&
+          !this.seenUris.has(reply.parent.uri) &&
+          !soonToBeSeenUris.has(reply.parent.uri)
+        ) {
+          const uri = reply.parent.uri
+          slice.flattenReplyParent()
+          soonToBeSeenUris.add(uri)
+        }
       }
     }
-
-    // sort by slice roots' timestamps
-    slices.sort((a, b) => b.ts.localeCompare(a.ts))
 
     for (const slice of slices) {
       for (const item of slice.items) {
@@ -176,9 +184,10 @@ export class FeedTuner {
   ): FeedViewPostsSlice[] {
     // remove any replies without at least 2 likes
     for (let i = slices.length - 1; i >= 0; i--) {
-      if (slices[i].isFullThread || !slices[i].rootItem.reply) {
+      if (slices[i].isFullThread || !slices[i].isReply) {
         continue
       }
+
       const item = slices[i].rootItem
       const isRepost = Boolean(item.reason)
       if (!isRepost && (item.post.likeCount || 0) < 2) {
@@ -194,7 +203,9 @@ export class FeedTuner {
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
     ): FeedViewPostsSlice[] => {
-      const origSlices = slices.concat()
+      if (!langsCode2.length) {
+        return slices
+      }
       for (let i = slices.length - 1; i >= 0; i--) {
         let hasPreferredLang = false
         for (const item of slices[i].items) {
@@ -202,29 +213,40 @@ export class FeedTuner {
             hasProp(item.post.record, 'text') &&
             typeof item.post.record.text === 'string'
           ) {
-            const res = lande(item.post.record.text)
-            const contentLangCode3 = res[0][0]
-            if (langsCode3.includes(contentLangCode3)) {
+            // Treat empty text the same as no text.
+            if (item.post.record.text.length === 0) {
               hasPreferredLang = true
               break
             }
+
+            const res = lande(item.post.record.text)
+
+            if (langsCode3.includes(res[0][0])) {
+              hasPreferredLang = true
+              break
+            }
+          } else {
+            // no text? roll with it
+            hasPreferredLang = true
+            break
           }
         }
         if (!hasPreferredLang) {
           slices.splice(i, 1)
         }
       }
-      if (slices.length) {
-        return slices
-      }
-      // fallback: give everything if the language filter left nothing
-      return origSlices
+      return slices
     }
   }
 }
 
 function getSelfReplyUri(item: FeedViewPost): string | undefined {
-  return item.reply?.parent.author.did === item.post.author.did
-    ? item.reply?.parent.uri
-    : undefined
+  if (item.reply) {
+    if (AppBskyFeedDefs.isPostView(item.reply.parent)) {
+      return item.reply.parent.author.did === item.post.author.did
+        ? item.reply.parent.uri
+        : undefined
+    }
+  }
+  return undefined
 }

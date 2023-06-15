@@ -10,6 +10,7 @@ import {isObj, hasProp} from 'lib/type-guards'
 import {networkRetry} from 'lib/async/retry'
 import {z} from 'zod'
 import {RootStoreModel} from './root-store'
+import {IS_PROD} from 'lib/constants'
 
 export type ServiceDescription = DescribeServer.OutputSchema
 
@@ -104,6 +105,13 @@ export class SessionModel {
     return this.accounts.filter(acct => acct.did !== this.data?.did)
   }
 
+  get isSandbox() {
+    if (!this.data) {
+      return false
+    }
+    return !IS_PROD(this.data.service)
+  }
+
   serialize(): unknown {
     return {
       data: this.data,
@@ -158,11 +166,12 @@ export class SessionModel {
    */
   async setActiveSession(agent: BskyAgent, did: string) {
     this._log('SessionModel:setActiveSession')
+    const hadSession = !!this.data
     this.data = {
       service: agent.service.toString(),
       did,
     }
-    await this.rootStore.handleSessionChange(agent)
+    await this.rootStore.handleSessionChange(agent, {hadSession})
   }
 
   /**
@@ -186,7 +195,7 @@ export class SessionModel {
       account => account.service === service && account.did === did,
     )
 
-    // fall back to any pre-existing access tokens
+    // fall back to any preexisting access tokens
     let refreshJwt = session?.refreshJwt || existingAccount?.refreshJwt
     let accessJwt = session?.accessJwt || existingAccount?.accessJwt
     if (event === 'expired') {
@@ -246,7 +255,7 @@ export class SessionModel {
     const res = await agent.getProfile({actor: did}).catch(_e => undefined)
     if (res) {
       return {
-        dispayName: res.data.displayName,
+        displayName: res.data.displayName,
         aviUrl: res.data.avatar,
       }
     }

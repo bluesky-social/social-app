@@ -3,189 +3,111 @@ import {
   LayoutChangeEvent,
   StyleProp,
   StyleSheet,
-  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native'
-import {Image, ImageStyle} from 'expo-image'
+import {ImageStyle} from 'expo-image'
 import {Dimensions} from 'lib/media/types'
+import {AppBskyEmbedImages} from '@atproto/api'
+import {GalleryItem} from './Gallery'
 
-export const DELAY_PRESS_IN = 500
-
-export type ImageLayoutGridType = number
-
-export function ImageLayoutGrid({
-  type,
-  uris,
-  onPress,
-  onLongPress,
-  onPressIn,
-  style,
-}: {
-  type: ImageLayoutGridType
-  uris: string[]
+interface ImageLayoutGridProps {
+  images: AppBskyEmbedImages.ViewImage[]
   onPress?: (index: number) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
   style?: StyleProp<ViewStyle>
-}) {
+}
+
+export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
   const [containerInfo, setContainerInfo] = useState<Dimensions | undefined>()
 
   const onLayout = (evt: LayoutChangeEvent) => {
+    const {width, height} = evt.nativeEvent.layout
     setContainerInfo({
-      width: evt.nativeEvent.layout.width,
-      height: evt.nativeEvent.layout.height,
+      width,
+      height,
     })
   }
 
   return (
     <View style={style} onLayout={onLayout}>
       {containerInfo ? (
-        <ImageLayoutGridInner
-          type={type}
-          uris={uris}
-          onPress={onPress}
-          onPressIn={onPressIn}
-          onLongPress={onLongPress}
-          containerInfo={containerInfo}
-        />
+        <ImageLayoutGridInner {...props} containerInfo={containerInfo} />
       ) : undefined}
     </View>
   )
 }
 
-function ImageLayoutGridInner({
-  type,
-  uris,
-  onPress,
-  onLongPress,
-  onPressIn,
-  containerInfo,
-}: {
-  type: ImageLayoutGridType
-  uris: string[]
+interface ImageLayoutGridInnerProps {
+  images: AppBskyEmbedImages.ViewImage[]
   onPress?: (index: number) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
   containerInfo: Dimensions
-}) {
+}
+
+function ImageLayoutGridInner({
+  containerInfo,
+  ...props
+}: ImageLayoutGridInnerProps) {
+  const count = props.images.length
   const size1 = useMemo<ImageStyle>(() => {
-    if (type === 3) {
+    if (count === 3) {
       const size = (containerInfo.width - 10) / 3
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     } else {
       const size = (containerInfo.width - 5) / 2
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     }
-  }, [type, containerInfo])
+  }, [count, containerInfo])
   const size2 = React.useMemo<ImageStyle>(() => {
-    if (type === 3) {
+    if (count === 3) {
       const size = ((containerInfo.width - 10) / 3) * 2 + 5
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     } else {
       const size = (containerInfo.width - 5) / 2
       return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
     }
-  }, [type, containerInfo])
+  }, [count, containerInfo])
 
-  if (type === 2) {
-    return (
-      <View style={styles.flexRow}>
-        <TouchableOpacity
-          delayPressIn={DELAY_PRESS_IN}
-          onPress={() => onPress?.(0)}
-          onPressIn={() => onPressIn?.(0)}
-          onLongPress={() => onLongPress?.(0)}>
-          <Image source={{uri: uris[0]}} style={size1} />
-        </TouchableOpacity>
-        <View style={styles.wSpace} />
-        <TouchableOpacity
-          delayPressIn={DELAY_PRESS_IN}
-          onPress={() => onPress?.(1)}
-          onPressIn={() => onPressIn?.(1)}
-          onLongPress={() => onLongPress?.(1)}>
-          <Image source={{uri: uris[1]}} style={size1} />
-        </TouchableOpacity>
-      </View>
-    )
-  }
-  if (type === 3) {
-    return (
-      <View style={styles.flexRow}>
-        <TouchableOpacity
-          delayPressIn={DELAY_PRESS_IN}
-          onPress={() => onPress?.(0)}
-          onPressIn={() => onPressIn?.(0)}
-          onLongPress={() => onLongPress?.(0)}>
-          <Image source={{uri: uris[0]}} style={size2} />
-        </TouchableOpacity>
-        <View style={styles.wSpace} />
-        <View>
-          <TouchableOpacity
-            delayPressIn={DELAY_PRESS_IN}
-            onPress={() => onPress?.(1)}
-            onPressIn={() => onPressIn?.(1)}
-            onLongPress={() => onLongPress?.(1)}>
-            <Image source={{uri: uris[1]}} style={size1} />
-          </TouchableOpacity>
-          <View style={styles.hSpace} />
-          <TouchableOpacity
-            delayPressIn={DELAY_PRESS_IN}
-            onPress={() => onPress?.(2)}
-            onPressIn={() => onPressIn?.(2)}
-            onLongPress={() => onLongPress?.(2)}>
-            <Image source={{uri: uris[2]}} style={size1} />
-          </TouchableOpacity>
+  switch (count) {
+    case 2:
+      return (
+        <View style={styles.flexRow}>
+          <GalleryItem index={0} {...props} imageStyle={size1} />
+          <GalleryItem index={1} {...props} imageStyle={size1} />
         </View>
-      </View>
-    )
-  }
-  if (type === 4) {
-    return (
-      <View style={styles.flexRow}>
-        <View>
-          <TouchableOpacity
-            delayPressIn={DELAY_PRESS_IN}
-            onPress={() => onPress?.(0)}
-            onPressIn={() => onPressIn?.(0)}
-            onLongPress={() => onLongPress?.(0)}>
-            <Image source={{uri: uris[0]}} style={size1} />
-          </TouchableOpacity>
-          <View style={styles.hSpace} />
-          <TouchableOpacity
-            delayPressIn={DELAY_PRESS_IN}
-            onPress={() => onPress?.(2)}
-            onPressIn={() => onPressIn?.(2)}
-            onLongPress={() => onLongPress?.(2)}>
-            <Image source={{uri: uris[2]}} style={size1} />
-          </TouchableOpacity>
+      )
+    case 3:
+      return (
+        <View style={styles.flexRow}>
+          <GalleryItem index={0} {...props} imageStyle={size2} />
+          <View style={styles.flexColumn}>
+            <GalleryItem index={1} {...props} imageStyle={size1} />
+            <GalleryItem index={2} {...props} imageStyle={size1} />
+          </View>
         </View>
-        <View style={styles.wSpace} />
-        <View>
-          <TouchableOpacity
-            delayPressIn={DELAY_PRESS_IN}
-            onPress={() => onPress?.(1)}
-            onPressIn={() => onPressIn?.(1)}
-            onLongPress={() => onLongPress?.(1)}>
-            <Image source={{uri: uris[1]}} style={size1} />
-          </TouchableOpacity>
-          <View style={styles.hSpace} />
-          <TouchableOpacity
-            delayPressIn={DELAY_PRESS_IN}
-            onPress={() => onPress?.(3)}
-            onPressIn={() => onPressIn?.(3)}
-            onLongPress={() => onLongPress?.(3)}>
-            <Image source={{uri: uris[3]}} style={size1} />
-          </TouchableOpacity>
+      )
+    case 4:
+      return (
+        <View style={styles.flexRow}>
+          <View style={styles.flexColumn}>
+            <GalleryItem index={0} {...props} imageStyle={size1} />
+            <GalleryItem index={2} {...props} imageStyle={size1} />
+          </View>
+          <View style={styles.flexColumn}>
+            <GalleryItem index={1} {...props} imageStyle={size1} />
+            <GalleryItem index={3} {...props} imageStyle={size1} />
+          </View>
         </View>
-      </View>
-    )
+      )
+    default:
+      return null
   }
-  return <View />
 }
 
 const styles = StyleSheet.create({
-  flexRow: {flexDirection: 'row'},
-  wSpace: {width: 5},
-  hSpace: {height: 5},
+  flexRow: {flexDirection: 'row', gap: 5},
+  flexColumn: {flexDirection: 'column', gap: 5},
 })

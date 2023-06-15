@@ -1,12 +1,9 @@
 import React from 'react'
-import {Animated, View} from 'react-native'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {View} from 'react-native'
 import {s} from 'lib/styles'
 
 export interface RenderTabBarFnProps {
   selectedPage: number
-  position: Animated.Value
-  offset: Animated.Value
   onSelect?: (index: number) => void
 }
 export type RenderTabBarFn = (props: RenderTabBarFnProps) => JSX.Element
@@ -17,53 +14,51 @@ interface Props {
   renderTabBar: RenderTabBarFn
   onPageSelected?: (index: number) => void
 }
-export const Pager = ({
-  children,
-  tabBarPosition = 'top',
-  initialPage = 0,
-  renderTabBar,
-  onPageSelected,
-}: React.PropsWithChildren<Props>) => {
-  const [selectedPage, setSelectedPage] = React.useState(initialPage)
-  const position = useAnimatedValue(0)
-  const offset = useAnimatedValue(0)
+export const Pager = React.forwardRef(
+  (
+    {
+      children,
+      tabBarPosition = 'top',
+      initialPage = 0,
+      renderTabBar,
+      onPageSelected,
+    }: React.PropsWithChildren<Props>,
+    ref,
+  ) => {
+    const [selectedPage, setSelectedPage] = React.useState(initialPage)
 
-  const onTabBarSelect = React.useCallback(
-    (index: number) => {
-      setSelectedPage(index)
-      onPageSelected?.(index)
-      Animated.timing(position, {
-        toValue: index,
-        duration: 200,
-        useNativeDriver: true,
-      }).start()
-    },
-    [setSelectedPage, onPageSelected, position],
-  )
+    React.useImperativeHandle(ref, () => ({
+      setPage: (index: number) => setSelectedPage(index),
+    }))
 
-  return (
-    <View>
-      {tabBarPosition === 'top' &&
-        renderTabBar({
-          selectedPage,
-          position,
-          offset,
-          onSelect: onTabBarSelect,
-        })}
-      {React.Children.map(children, (child, i) => (
-        <View
-          style={selectedPage === i ? undefined : s.hidden}
-          key={`page-${i}`}>
-          {child}
-        </View>
-      ))}
-      {tabBarPosition === 'bottom' &&
-        renderTabBar({
-          selectedPage,
-          position,
-          offset,
-          onSelect: onTabBarSelect,
-        })}
-    </View>
-  )
-}
+    const onTabBarSelect = React.useCallback(
+      (index: number) => {
+        setSelectedPage(index)
+        onPageSelected?.(index)
+      },
+      [setSelectedPage, onPageSelected],
+    )
+
+    return (
+      <View>
+        {tabBarPosition === 'top' &&
+          renderTabBar({
+            selectedPage,
+            onSelect: onTabBarSelect,
+          })}
+        {React.Children.map(children, (child, i) => (
+          <View
+            style={selectedPage === i ? undefined : s.hidden}
+            key={`page-${i}`}>
+            {child}
+          </View>
+        ))}
+        {tabBarPosition === 'bottom' &&
+          renderTabBar({
+            selectedPage,
+            onSelect: onTabBarSelect,
+          })}
+      </View>
+    )
+  },
+)

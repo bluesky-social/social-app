@@ -67,10 +67,18 @@ export const DesktopSearch = observer(function DesktopSearch() {
             onBlur={() => setIsInputFocused(false)}
             onChangeText={onChangeQuery}
             onSubmitEditing={onSubmit}
+            accessibilityRole="search"
+            accessibilityLabel="Search"
+            accessibilityHint=""
           />
           {query ? (
             <View style={styles.cancelBtn}>
-              <TouchableOpacity onPress={onPressCancelSearch}>
+              <TouchableOpacity
+                onPress={onPressCancelSearch}
+                accessibilityRole="button"
+                accessibilityLabel="Cancel search"
+                accessibilityHint="Exits inputting search query"
+                onAccessibilityEscape={onPressCancelSearch}>
                 <Text type="lg" style={[pal.link]}>
                   Cancel
                 </Text>
@@ -85,14 +93,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
           {autocompleteView.searchRes.length ? (
             <>
               {autocompleteView.searchRes.map((item, i) => (
-                <ProfileCard
-                  key={item.did}
-                  handle={item.handle}
-                  displayName={item.displayName}
-                  avatar={item.avatar}
-                  labels={item.labels}
-                  noBorder={i === 0}
-                />
+                <ProfileCard key={item.did} profile={item} noBorder={i === 0} />
               ))}
             </>
           ) : (

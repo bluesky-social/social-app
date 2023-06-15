@@ -13,11 +13,15 @@ import {DrawerContent} from './Drawer'
 import {Composer} from './Composer'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
+import * as backHandler from 'lib/routes/back-handler'
 import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
+import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
 
 const ShellInner = observer(() => {
   const store = useStores()
+  useOTAUpdate() // this hook polls for OTA updates every few seconds
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
   const containerPadding = React.useMemo(
@@ -34,6 +38,9 @@ const ShellInner = observer(() => {
     [store],
   )
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
+  React.useEffect(() => {
+    backHandler.init(store)
+  }, [store])
 
   return (
     <>
@@ -54,7 +61,6 @@ const ShellInner = observer(() => {
           </Drawer>
         </ErrorBoundary>
       </View>
-      <ModalsContainer />
       <Lightbox />
       <Composer
         active={store.shell.isComposerActive}
@@ -64,20 +70,23 @@ const ShellInner = observer(() => {
         onPost={store.shell.composerOpts?.onPost}
         quote={store.shell.composerOpts?.quote}
       />
+      <ModalsContainer />
     </>
   )
 })
 
 export const Shell: React.FC = observer(() => {
-  const theme = useTheme()
   const pal = usePalette('default')
+  const theme = useTheme()
   return (
-    <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
-      <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
-      <RoutesContainer>
-        <ShellInner />
-      </RoutesContainer>
-    </View>
+    <SafeAreaProvider style={pal.view}>
+      <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
+        <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
+        <RoutesContainer>
+          <ShellInner />
+        </RoutesContainer>
+      </View>
+    </SafeAreaProvider>
   )
 })
 

@@ -5,6 +5,7 @@ import {
   View,
   ViewStyle,
   Image as RNImage,
+  Text,
 } from 'react-native'
 import {
   AppBskyEmbedImages,
@@ -12,18 +13,20 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedPost,
+  AppBskyFeedDefs,
 } from '@atproto/api'
 import {Link} from '../Link'
-import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ImagesLightbox} from 'state/models/ui/shell'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {saveImageModal} from 'lib/media/manip'
 import {YoutubeEmbed} from './YoutubeEmbed'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import QuoteEmbed from './QuoteEmbed'
+import {AutoSizedImage} from '../images/AutoSizedImage'
+import {CustomFeed} from 'view/com/feeds/CustomFeed'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -42,6 +45,8 @@ export function PostEmbeds({
   const pal = usePalette('default')
   const store = useStores()
 
+  // quote post with media
+  // =
   if (
     AppBskyEmbedRecordWithMedia.isView(embed) &&
     AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
@@ -65,6 +70,8 @@ export function PostEmbeds({
     )
   }
 
+  // quote post
+  // =
   if (AppBskyEmbedRecord.isView(embed)) {
     if (
       AppBskyEmbedRecord.isViewRecord(embed.record) &&
@@ -87,55 +94,58 @@ export function PostEmbeds({
     }
   }
 
+  // image embed
+  // =
   if (AppBskyEmbedImages.isView(embed)) {
-    if (embed.images.length > 0) {
-      const uris = embed.images.map(img => img.fullsize)
+    const {images} = embed
+
+    if (images.length > 0) {
+      const items = embed.images.map(img => ({uri: img.fullsize, alt: img.alt}))
       const openLightbox = (index: number) => {
-        store.shell.openLightbox(new ImagesLightbox(uris, index))
-      }
-      const onLongPress = (index: number) => {
-        saveImageModal({uri: uris[index]})
+        store.shell.openLightbox(new ImagesLightbox(items, index))
       }
       const onPressIn = (index: number) => {
-        const firstImageToShow = uris[index]
+        const firstImageToShow = items[index].uri
         RNImage.prefetch(firstImageToShow)
-        uris.forEach(uri => {
-          if (firstImageToShow !== uri) {
-            // First image already prefeched above
-            RNImage.prefetch(uri)
+        items.forEach(item => {
+          if (firstImageToShow !== item.uri) {
+            // First image already prefetched above
+            RNImage.prefetch(item.uri)
           }
         })
       }
 
-      switch (embed.images.length) {
-        case 1:
-          return (
-            <View style={[styles.imagesContainer, style]}>
-              <AutoSizedImage
-                uri={embed.images[0].thumb}
-                onPress={() => openLightbox(0)}
-                onLongPress={() => onLongPress(0)}
-                onPressIn={() => onPressIn(0)}
-                style={styles.singleImage}
-              />
-            </View>
-          )
-        default:
-          return (
-            <View style={[styles.imagesContainer, style]}>
-              <ImageLayoutGrid
-                type={embed.images.length}
-                uris={embed.images.map(img => img.thumb)}
-                onPress={openLightbox}
-                onLongPress={onLongPress}
-                onPressIn={onPressIn}
-              />
-            </View>
-          )
+      if (images.length === 1) {
+        const {alt, thumb} = images[0]
+        return (
+          <View style={[styles.imagesContainer, style]}>
+            <AutoSizedImage
+              alt={alt}
+              uri={thumb}
+              onPress={() => openLightbox(0)}
+              onPressIn={() => onPressIn(0)}
+              style={styles.singleImage}>
+              {alt === '' ? null : <Text style={styles.alt}>ALT</Text>}
+            </AutoSizedImage>
+          </View>
+        )
       }
+
+      return (
+        <View style={[styles.imagesContainer, style]}>
+          <ImageLayoutGrid
+            images={embed.images}
+            onPress={openLightbox}
+            onPressIn={onPressIn}
+            style={embed.images.length === 1 ? styles.singleImage : undefined}
+          />
+        </View>
+      )
     }
   }
 
+  // external link embed
+  // =
   if (AppBskyEmbedExternal.isView(embed)) {
     const link = embed.external
     const youtubeVideoId = getYoutubeVideoId(link.uri)
@@ -153,7 +163,33 @@ export function PostEmbeds({
       </Link>
     )
   }
+
+  // custom feed embed (i.e. generator view)
+  // =
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyFeedDefs.isGeneratorView(embed.record)
+  ) {
+    return <CustomFeedEmbed record={embed.record} />
+  }
+
   return <View />
+}
+
+function CustomFeedEmbed({record}: {record: AppBskyFeedDefs.GeneratorView}) {
+  const pal = usePalette('default')
+  const store = useStores()
+  const item = React.useMemo(
+    () => new CustomFeedModel(store, record),
+    [store, record],
+  )
+  return (
+    <CustomFeed
+      item={item}
+      style={[pal.view, pal.border, styles.customFeedOuter]}
+      showLikes
+    />
+  )
 }
 
 const styles = StyleSheet.create({
@@ -171,5 +207,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     marginTop: 4,
+  },
+  customFeedOuter: {
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+  alt: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderRadius: 6,
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    position: 'absolute',
+    left: 6,
+    bottom: 6,
   },
 })

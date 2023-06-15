@@ -1,14 +1,19 @@
 import React from 'react'
 import {
+  GestureResponderEvent,
   StyleProp,
   StyleSheet,
   TextStyle,
-  TouchableOpacity,
+  Pressable,
   ViewStyle,
 } from 'react-native'
 import {Text} from '../text/Text'
 import {useTheme} from 'lib/ThemeContext'
 import {choose} from 'lib/functions'
+
+type Event =
+  | React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  | GestureResponderEvent
 
 export type ButtonType =
   | 'primary'
@@ -21,6 +26,7 @@ export type ButtonType =
   | 'secondary-light'
   | 'default-light'
 
+// TODO: Enforce that button always has a label
 export function Button({
   type = 'primary',
   label,
@@ -29,6 +35,10 @@ export function Button({
   onPress,
   children,
   testID,
+  accessibilityLabel,
+  accessibilityHint,
+  accessibilityLabelledBy,
+  onAccessibilityEscape,
 }: React.PropsWithChildren<{
   type?: ButtonType
   label?: string
@@ -36,6 +46,10 @@ export function Button({
   labelStyle?: StyleProp<TextStyle>
   onPress?: () => void
   testID?: string
+  accessibilityLabel?: string
+  accessibilityHint?: string
+  accessibilityLabelledBy?: string
+  onAccessibilityEscape?: () => void
 }>) {
   const theme = useTheme()
   const typeOuterStyle = choose<ViewStyle, Record<ButtonType, ViewStyle>>(
@@ -114,11 +128,39 @@ export function Button({
       },
     },
   )
+
+  const onPressWrapped = React.useCallback(
+    (event: Event) => {
+      event.stopPropagation()
+      event.preventDefault()
+      onPress?.()
+    },
+    [onPress],
+  )
+
+  const getStyle = React.useCallback(
+    state => {
+      const arr = [typeOuterStyle, styles.outer, style]
+      if (state.pressed) {
+        arr.push({opacity: 0.6})
+      } else if (state.hovered) {
+        arr.push({opacity: 0.8})
+      }
+      return arr
+    },
+    [typeOuterStyle, style],
+  )
+
   return (
-    <TouchableOpacity
-      style={[typeOuterStyle, styles.outer, style]}
-      onPress={onPress}
-      testID={testID}>
+    <Pressable
+      style={getStyle}
+      onPress={onPressWrapped}
+      testID={testID}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}
+      accessibilityLabelledBy={accessibilityLabelledBy}
+      onAccessibilityEscape={onAccessibilityEscape}>
       {label ? (
         <Text type="button" style={[typeLabelStyle, labelStyle]}>
           {label}
@@ -126,7 +168,7 @@ export function Button({
       ) : (
         children
       )}
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 

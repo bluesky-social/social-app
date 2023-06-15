@@ -66,11 +66,27 @@ export function isBskyAppUrl(url: string): boolean {
   return url.startsWith('https://bsky.app/')
 }
 
+export function isExternalUrl(url: string): boolean {
+  return !isBskyAppUrl(url) && url.startsWith('http')
+}
+
 export function isBskyPostUrl(url: string): boolean {
   if (isBskyAppUrl(url)) {
     try {
       const urlp = new URL(url)
       return /profile\/(?<name>[^/]+)\/post\/(?<rkey>[^/]+)/i.test(
+        urlp.pathname,
+      )
+    } catch {}
+  }
+  return false
+}
+
+export function isBskyCustomFeedUrl(url: string): boolean {
+  if (isBskyAppUrl(url)) {
+    try {
+      const urlp = new URL(url)
+      return /profile\/(?<name>[^/]+)\/feed\/(?<rkey>[^/]+)/i.test(
         urlp.pathname,
       )
     } catch {}
@@ -88,6 +104,15 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
     }
   }
   return url
+}
+
+export function listUriToHref(url: string): string {
+  try {
+    const {hostname, rkey} = new AtUri(url)
+    return `/profile/${hostname}/lists/${rkey}`
+  } catch {
+    return ''
+  }
 }
 
 export function getYoutubeVideoId(link: string): string | undefined {

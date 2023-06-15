@@ -7,34 +7,94 @@ import {useStores} from 'state/index'
 import {LabelPreference} from 'state/models/ui/preferences'
 import {s, colors, gradients} from 'lib/styles'
 import {Text} from '../util/text/Text'
+import {TextLink} from '../util/Link'
+import {ToggleButton} from '../util/forms/ToggleButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CONFIGURABLE_LABEL_GROUPS} from 'lib/labeling/const'
-import {isDesktopWeb} from 'platform/detection'
+import {isDesktopWeb, isIOS} from 'platform/detection'
+import * as Toast from '../util/Toast'
 
 export const snapPoints = ['90%']
 
-export function Component({}: {}) {
+export const Component = observer(({}: {}) => {
   const store = useStores()
   const pal = usePalette('default')
+
+  React.useEffect(() => {
+    store.preferences.sync()
+  }, [store])
+
+  const onToggleAdultContent = React.useCallback(async () => {
+    if (isIOS) {
+      return
+    }
+    try {
+      await store.preferences.setAdultContentEnabled(
+        !store.preferences.adultContentEnabled,
+      )
+    } catch (e) {
+      Toast.show('There was an issue syncing your preferences with the server')
+      store.log.error('Failed to update preferences with server', {e})
+    }
+  }, [store])
+
   const onPressDone = React.useCallback(() => {
     store.shell.closeModal()
   }, [store])
 
   return (
-    <View testID="reportPostModal" style={[pal.view, styles.container]}>
-      <Text style={[pal.text, styles.title]}>Content Moderation</Text>
+    <View testID="contentFilteringModal" style={[pal.view, styles.container]}>
+      <Text style={[pal.text, styles.title]}>Content Filtering</Text>
       <ScrollView style={styles.scrollContainer}>
-        <ContentLabelPref group="nsfw" />
-        <ContentLabelPref group="nudity" />
-        <ContentLabelPref group="suggestive" />
-        <ContentLabelPref group="gore" />
+        <View style={s.mb10}>
+          {isIOS ? (
+            <Text type="md" style={pal.textLight}>
+              Adult content can only be enabled via the Web at{' '}
+              <TextLink
+                style={pal.link}
+                href="https://bsky.app"
+                text="bsky.app"
+              />
+              .
+            </Text>
+          ) : (
+            <ToggleButton
+              type="default-light"
+              label="Enable Adult Content"
+              isSelected={store.preferences.adultContentEnabled}
+              onPress={onToggleAdultContent}
+              style={styles.toggleBtn}
+            />
+          )}
+        </View>
+        <ContentLabelPref
+          group="nsfw"
+          disabled={!store.preferences.adultContentEnabled}
+        />
+        <ContentLabelPref
+          group="nudity"
+          disabled={!store.preferences.adultContentEnabled}
+        />
+        <ContentLabelPref
+          group="suggestive"
+          disabled={!store.preferences.adultContentEnabled}
+        />
+        <ContentLabelPref
+          group="gore"
+          disabled={!store.preferences.adultContentEnabled}
+        />
         <ContentLabelPref group="hate" />
         <ContentLabelPref group="spam" />
         <ContentLabelPref group="impersonation" />
         <View style={styles.bottomSpacer} />
       </ScrollView>
       <View style={[styles.btnContainer, pal.borderDark]}>
-        <Pressable testID="sendReportBtn" onPress={onPressDone}>
+        <Pressable
+          testID="sendReportBtn"
+          onPress={onPressDone}
+          accessibilityRole="button"
+          accessibilityLabel="Done"
+          accessibilityHint="">
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}
@@ -46,12 +106,34 @@ export function Component({}: {}) {
       </View>
     </View>
   )
-}
+})
 
+// TODO: Refactor this component to pass labels down to each tab
 const ContentLabelPref = observer(
-  ({group}: {group: keyof typeof CONFIGURABLE_LABEL_GROUPS}) => {
+  ({
+    group,
+    disabled,
+  }: {
+    group: keyof typeof CONFIGURABLE_LABEL_GROUPS
+    disabled?: boolean
+  }) => {
     const store = useStores()
     const pal = usePalette('default')
+
+    const onChange = React.useCallback(
+      async (v: LabelPreference) => {
+        try {
+          await store.preferences.setContentLabelPref(group, v)
+        } catch (e) {
+          Toast.show(
+            'There was an issue syncing your preferences with the server',
+          )
+          store.log.error('Failed to update preferences with server', {e})
+        }
+      },
+      [store, group],
+    )
+
     return (
       <View style={[styles.contentLabelPref, pal.border]}>
         <View style={s.flex1}>
@@ -64,22 +146,29 @@ const ContentLabelPref = observer(
             </Text>
           )}
         </View>
-        <SelectGroup
-          current={store.preferences.contentLabels[group]}
-          onChange={v => store.preferences.setContentLabelPref(group, v)}
-        />
+        {disabled ? (
+          <Text type="sm-bold" style={pal.textLight}>
+            Hide
+          </Text>
+        ) : (
+          <SelectGroup
+            current={store.preferences.contentLabels[group]}
+            onChange={onChange}
+            group={group}
+          />
+        )}
       </View>
     )
   },
 )
 
-function SelectGroup({
-  current,
-  onChange,
-}: {
+interface SelectGroupProps {
   current: LabelPreference
   onChange: (v: LabelPreference) => void
-}) {
+  group: keyof typeof CONFIGURABLE_LABEL_GROUPS
+}
+
+function SelectGroup({current, onChange, group}: SelectGroupProps) {
   return (
     <View style={styles.selectableBtns}>
       <SelectableBtn
@@ -88,12 +177,14 @@ function SelectGroup({
         label="Hide"
         left
         onChange={onChange}
+        group={group}
       />
       <SelectableBtn
         current={current}
         value="warn"
         label="Warn"
         onChange={onChange}
+        group={group}
       />
       <SelectableBtn
         current={current}
@@ -101,9 +192,20 @@ function SelectGroup({
         label="Show"
         right
         onChange={onChange}
+        group={group}
       />
     </View>
   )
+}
+
+interface SelectableBtnProps {
+  current: string
+  value: LabelPreference
+  label: string
+  left?: boolean
+  right?: boolean
+  onChange: (v: LabelPreference) => void
+  group: keyof typeof CONFIGURABLE_LABEL_GROUPS
 }
 
 function SelectableBtn({
@@ -113,14 +215,8 @@ function SelectableBtn({
   left,
   right,
   onChange,
-}: {
-  current: string
-  value: LabelPreference
-  label: string
-  left?: boolean
-  right?: boolean
-  onChange: (v: LabelPreference) => void
-}) {
+  group,
+}: SelectableBtnProps) {
   const pal = usePalette('default')
   const palPrimary = usePalette('inverted')
   return (
@@ -132,7 +228,10 @@ function SelectableBtn({
         pal.border,
         current === value ? palPrimary.view : pal.view,
       ]}
-      onPress={() => onChange(value)}>
+      onPress={() => onChange(value)}
+      accessibilityRole="button"
+      accessibilityLabel={value}
+      accessibilityHint={`Set ${value} for ${group} content moderation policy`}>
       <Text style={current === value ? palPrimary.text : pal.text}>
         {label}
       </Text>
@@ -208,5 +307,8 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     padding: 14,
     backgroundColor: colors.gray1,
+  },
+  toggleBtn: {
+    paddingHorizontal: 0,
   },
 })

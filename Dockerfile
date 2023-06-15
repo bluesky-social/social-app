@@ -17,7 +17,7 @@ ENV CGO_ENABLED=1
 COPY . .
 
 #
-# Generate the Javascript webpack.
+# Generate the JavaScript webpack.
 #
 RUN mkdir --parents $NVM_DIR && \
   wget \
@@ -35,11 +35,8 @@ RUN \. "$NVM_DIR/nvm.sh" && \
 # DEBUG
 RUN find ./bskyweb/static && find ./web-build/static
 
-# Copy the bundle js files.
-RUN cp --verbose ./web-build/static/js/*.* ./bskyweb/static/js/
-
 #
-# Generate the bksyweb Go binary.
+# Generate the bskyweb Go binary.
 #
 RUN cd bskyweb/ && \
   go mod download && \

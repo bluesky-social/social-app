@@ -63,6 +63,232 @@ async function main() {
             },
           })
         }
+        if ('labels' in url.query) {
+          console.log('Generating naughty users with labels')
+
+          const anchorPost = await server.mocker.createPost(
+            'alice',
+            'Anchor post',
+          )
+
+          for (const user of [
+            'csam-account',
+            'csam-profile',
+            'csam-posts',
+            'porn-account',
+            'porn-profile',
+            'porn-posts',
+            'nudity-account',
+            'nudity-profile',
+            'nudity-posts',
+            'unknown-account',
+            'unknown-profile',
+            'unknown-posts',
+            'always-filter-account',
+            'always-filter-profile',
+            'always-filter-posts',
+            'always-warn-account',
+            'always-warn-profile',
+            'always-warn-posts',
+            'muted-account',
+            'muted-by-list-account',
+          ]) {
+            await server.mocker.createUser(user)
+            await server.mocker.follow('alice', user)
+            await server.mocker.follow(user, 'alice')
+            await server.mocker.createPost(user, `Unlabeled post from ${user}`)
+            await server.mocker.createReply(
+              user,
+              `Unlabeled reply from ${user}`,
+              anchorPost,
+            )
+            await server.mocker.like(user, anchorPost)
+          }
+
+          await server.mocker.labelAccount('csam', 'csam-account')
+          await server.mocker.labelProfile('csam', 'csam-profile')
+          await server.mocker.labelPost(
+            'csam',
+            await server.mocker.createPost('csam-posts', 'csam post'),
+          )
+          await server.mocker.labelPost(
+            'csam',
+            await server.mocker.createQuotePost(
+              'csam-posts',
+              'csam quote post',
+              anchorPost,
+            ),
+          )
+          await server.mocker.labelPost(
+            'csam',
+            await server.mocker.createReply(
+              'csam-posts',
+              'csam reply',
+              anchorPost,
+            ),
+          )
+
+          await server.mocker.labelAccount('porn', 'porn-account')
+          await server.mocker.labelProfile('porn', 'porn-profile')
+          await server.mocker.labelPost(
+            'porn',
+            await server.mocker.createPost('porn-posts', 'porn post'),
+          )
+          await server.mocker.labelPost(
+            'porn',
+            await server.mocker.createQuotePost(
+              'porn-posts',
+              'porn quote post',
+              anchorPost,
+            ),
+          )
+          await server.mocker.labelPost(
+            'porn',
+            await server.mocker.createReply(
+              'porn-posts',
+              'porn reply',
+              anchorPost,
+            ),
+          )
+
+          await server.mocker.labelAccount('nudity', 'nudity-account')
+          await server.mocker.labelProfile('nudity', 'nudity-profile')
+          await server.mocker.labelPost(
+            'nudity',
+            await server.mocker.createPost('nudity-posts', 'nudity post'),
+          )
+          await server.mocker.labelPost(
+            'nudity',
+            await server.mocker.createQuotePost(
+              'nudity-posts',
+              'nudity quote post',
+              anchorPost,
+            ),
+          )
+          await server.mocker.labelPost(
+            'nudity',
+            await server.mocker.createReply(
+              'nudity-posts',
+              'nudity reply',
+              anchorPost,
+            ),
+          )
+
+          await server.mocker.labelAccount(
+            'not-a-real-label',
+            'unknown-account',
+          )
+          await server.mocker.labelProfile(
+            'not-a-real-label',
+            'unknown-profile',
+          )
+          await server.mocker.labelPost(
+            'not-a-real-label',
+            await server.mocker.createPost('unknown-posts', 'unknown post'),
+          )
+          await server.mocker.labelPost(
+            'not-a-real-label',
+            await server.mocker.createQuotePost(
+              'unknown-posts',
+              'unknown quote post',
+              anchorPost,
+            ),
+          )
+          await server.mocker.labelPost(
+            'not-a-real-label',
+            await server.mocker.createReply(
+              'unknown-posts',
+              'unknown reply',
+              anchorPost,
+            ),
+          )
+
+          await server.mocker.labelAccount('!filter', 'always-filter-account')
+          await server.mocker.labelProfile('!filter', 'always-filter-profile')
+          await server.mocker.labelPost(
+            '!filter',
+            await server.mocker.createPost(
+              'always-filter-posts',
+              'always-filter post',
+            ),
+          )
+          await server.mocker.labelPost(
+            '!filter',
+            await server.mocker.createQuotePost(
+              'always-filter-posts',
+              'always-filter quote post',
+              anchorPost,
+            ),
+          )
+          await server.mocker.labelPost(
+            '!filter',
+            await server.mocker.createReply(
+              'always-filter-posts',
+              'always-filter reply',
+              anchorPost,
+            ),
+          )
+
+          await server.mocker.labelAccount('!warn', 'always-warn-account')
+          await server.mocker.labelProfile('!warn', 'always-warn-profile')
+          await server.mocker.labelPost(
+            '!warn',
+            await server.mocker.createPost(
+              'always-warn-posts',
+              'always-warn post',
+            ),
+          )
+          await server.mocker.labelPost(
+            '!warn',
+            await server.mocker.createQuotePost(
+              'always-warn-posts',
+              'always-warn quote post',
+              anchorPost,
+            ),
+          )
+          await server.mocker.labelPost(
+            '!warn',
+            await server.mocker.createReply(
+              'always-warn-posts',
+              'always-warn reply',
+              anchorPost,
+            ),
+          )
+
+          await server.mocker.users.alice.agent.mute('muted-account.test')
+          await server.mocker.createPost('muted-account', 'muted post')
+          await server.mocker.createQuotePost(
+            'muted-account',
+            'muted quote post',
+            anchorPost,
+          )
+          await server.mocker.createReply(
+            'muted-account',
+            'muted reply',
+            anchorPost,
+          )
+
+          const list = await server.mocker.createMuteList(
+            'alice',
+            'Muted Users',
+          )
+          await server.mocker.addToMuteList(
+            'alice',
+            list,
+            server.mocker.users['muted-by-list-account'].did,
+          )
+          await server.mocker.createPost('muted-by-list-account', 'muted post')
+          await server.mocker.createQuotePost(
+            'muted-by-list-account',
+            'account quote post',
+            anchorPost,
+          )
+          await server.mocker.createReply(
+            'muted-by-list-account',
+            'account reply',
+            anchorPost,
+          )
+        }
       }
       console.log('Ready')
       return res.writeHead(200).end(server.pdsUrl)

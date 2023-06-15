@@ -1,4 +1,4 @@
-import {StyleProp, StyleSheet, TextStyle} from 'react-native'
+import {Dimensions, StyleProp, StyleSheet, TextStyle} from 'react-native'
 import {Theme, TypographyVariant} from './ThemeContext'
 import {isMobileWeb} from 'platform/detection'
 
@@ -52,6 +52,7 @@ export const colors = {
   green5: '#082b03',
 
   unreadNotifBg: '#ebf6ff',
+  brandBlue: '#0066FF',
 }
 
 export const gradients = {
@@ -118,15 +119,19 @@ export const s = StyleSheet.create({
   mr2: {marginRight: 2},
   mr5: {marginRight: 5},
   mr10: {marginRight: 10},
+  mr20: {marginRight: 20},
   ml2: {marginLeft: 2},
   ml5: {marginLeft: 5},
   ml10: {marginLeft: 10},
+  ml20: {marginLeft: 20},
   mt2: {marginTop: 2},
   mt5: {marginTop: 5},
   mt10: {marginTop: 10},
+  mt20: {marginTop: 20},
   mb2: {marginBottom: 2},
   mb5: {marginBottom: 5},
   mb10: {marginBottom: 10},
+  mb20: {marginBottom: 20},
 
   // paddings
   p2: {padding: 2},
@@ -149,6 +154,7 @@ export const s = StyleSheet.create({
   pb5: {paddingBottom: 5},
   pb10: {paddingBottom: 10},
   pb20: {paddingBottom: 20},
+  px5: {paddingHorizontal: 5},
 
   // flex
   flexRow: {flexDirection: 'row'},
@@ -164,6 +170,10 @@ export const s = StyleSheet.create({
   w100pct: {width: '100%'},
   h100pct: {height: '100%'},
   hContentRegion: isMobileWeb ? {flex: 1} : {height: '100%'},
+  window: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  },
 
   // text align
   textLeft: {textAlign: 'left'},
@@ -209,6 +219,8 @@ export const s = StyleSheet.create({
   green3: {color: colors.green3},
   green4: {color: colors.green4},
   green5: {color: colors.green5},
+
+  brandBlue: {color: colors.brandBlue},
 })
 
 export function lh(

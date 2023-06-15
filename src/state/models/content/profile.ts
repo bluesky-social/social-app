@@ -1,6 +1,8 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
+  AtUri,
   ComAtprotoLabelDefs,
+  AppBskyGraphDefs,
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorProfile,
   RichText,
@@ -10,13 +12,20 @@ import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {FollowState} from '../cache/my-follows'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-
-export const ACTOR_TYPE_USER = 'app.bsky.system.actorUser'
+import {ProfileLabelInfo, ProfileModeration} from 'lib/labeling/types'
+import {
+  getProfileModeration,
+  filterAccountLabels,
+  filterProfileLabels,
+} from 'lib/labeling/helpers'
 
 export class ProfileViewerModel {
   muted?: boolean
+  mutedByList?: AppBskyGraphDefs.ListViewBasic
   following?: string
   followedBy?: string
+  blockedBy?: boolean
+  blocking?: string
 
   constructor() {
     makeAutoObservable(this)
@@ -73,6 +82,20 @@ export class ProfileModel {
 
   get isEmpty() {
     return this.hasLoaded && !this.hasContent
+  }
+
+  get labelInfo(): ProfileLabelInfo {
+    return {
+      accountLabels: filterAccountLabels(this.labels),
+      profileLabels: filterProfileLabels(this.labels),
+      isMuted: this.viewer?.muted || false,
+      isBlocking: !!this.viewer?.blocking || false,
+      isBlockedBy: !!this.viewer?.blockedBy || false,
+    }
+  }
+
+  get moderation(): ProfileModeration {
+    return getProfileModeration(this.rootStore, this.labelInfo)
   }
 
   // public api
@@ -164,6 +187,33 @@ export class ProfileModel {
   async unmuteAccount() {
     await this.rootStore.agent.unmute(this.did)
     this.viewer.muted = false
+    await this.refresh()
+  }
+
+  async blockAccount() {
+    const res = await this.rootStore.agent.app.bsky.graph.block.create(
+      {
+        repo: this.rootStore.me.did,
+      },
+      {
+        subject: this.did,
+        createdAt: new Date().toISOString(),
+      },
+    )
+    this.viewer.blocking = res.uri
+    await this.refresh()
+  }
+
+  async unblockAccount() {
+    if (!this.viewer.blocking) {
+      return
+    }
+    const {rkey} = new AtUri(this.viewer.blocking)
+    await this.rootStore.agent.app.bsky.graph.block.delete({
+      repo: this.rootStore.me.did,
+      rkey,
+    })
+    this.viewer.blocking = undefined
     await this.refresh()
   }
 

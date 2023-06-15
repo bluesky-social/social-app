@@ -2,7 +2,11 @@ import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {PressableWithHover} from 'view/com/util/PressableWithHover'
-import {useNavigation, useNavigationState} from '@react-navigation/native'
+import {
+  useLinkProps,
+  useNavigation,
+  useNavigationState,
+} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -25,9 +29,12 @@ import {
   CogIcon,
   CogIconSolid,
   ComposeIcon2,
+  HandIcon,
+  SatelliteDishIcon,
+  SatelliteDishIconSolid,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
-import {NavigationProp} from 'lib/routes/types'
+import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
 import {router} from '../../../routes'
 
 const ProfileCard = observer(() => {
@@ -59,7 +66,10 @@ function BackBtn() {
     <TouchableOpacity
       testID="viewHeaderBackOrMenuBtn"
       onPress={onPressBack}
-      style={styles.backBtn}>
+      style={styles.backBtn}
+      accessibilityRole="button"
+      accessibilityLabel="Go back"
+      accessibilityHint="">
       <FontAwesomeIcon
         size={24}
         icon="angle-left"
@@ -79,32 +89,59 @@ interface NavItemProps {
 const NavItem = observer(
   ({count, href, icon, iconFilled, label}: NavItemProps) => {
     const pal = usePalette('default')
+    const store = useStores()
     const [pathName] = React.useMemo(() => router.matchPath(href), [href])
-    const currentRouteName = useNavigationState(state => {
+    const currentRouteInfo = useNavigationState(state => {
       if (!state) {
-        return 'Home'
+        return {name: 'Home'}
       }
-      return getCurrentRoute(state).name
+      return getCurrentRoute(state)
     })
-    const isCurrent = isTab(currentRouteName, pathName)
+    let isCurrent =
+      currentRouteInfo.name === 'Profile'
+        ? isTab(currentRouteInfo.name, pathName) &&
+          (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
+            store.me.handle
+        : isTab(currentRouteInfo.name, pathName)
+    const {onPress} = useLinkProps({to: href})
+    const onPressWrapped = React.useCallback(
+      (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        if (e.ctrlKey || e.metaKey || e.altKey) {
+          return
+        }
+        e.preventDefault()
+        if (isCurrent) {
+          store.emitScreenSoftReset()
+        } else {
+          onPress()
+        }
+      },
+      [onPress, isCurrent, store],
+    )
 
     return (
       <PressableWithHover
         style={styles.navItemWrapper}
-        hoverStyle={pal.viewLight}>
-        <Link href={href} style={styles.navItem}>
-          <View style={[styles.navItemIconWrapper]}>
-            {isCurrent ? iconFilled : icon}
-            {typeof count === 'string' && count && (
-              <Text type="button" style={styles.navItemCount}>
-                {count}
-              </Text>
-            )}
-          </View>
-          <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
-            {label}
-          </Text>
-        </Link>
+        hoverStyle={pal.viewLight}
+        // @ts-ignore the function signature differs on web -prf
+        onPress={onPressWrapped}
+        // @ts-ignore web only -prf
+        href={href}
+        dataSet={{noUnderline: 1}}
+        accessibilityRole="tab"
+        accessibilityLabel={label}
+        accessibilityHint="">
+        <View style={[styles.navItemIconWrapper]}>
+          {isCurrent ? iconFilled : icon}
+          {typeof count === 'string' && count ? (
+            <Text type="button" style={styles.navItemCount}>
+              {count}
+            </Text>
+          ) : null}
+        </View>
+        <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
+          {label}
+        </Text>
       </PressableWithHover>
     )
   },
@@ -115,7 +152,12 @@ function ComposeBtn() {
   const onPressCompose = () => store.shell.openComposer({})
 
   return (
-    <TouchableOpacity style={[styles.newPostBtn]} onPress={onPressCompose}>
+    <TouchableOpacity
+      style={[styles.newPostBtn]}
+      onPress={onPressCompose}
+      accessibilityRole="button"
+      accessibilityLabel="Compose post"
+      accessibilityHint="">
       <View style={styles.newPostBtnIconWrapper}>
         <ComposeIcon2
           size={19}
@@ -161,6 +203,24 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         label="Search"
       />
       <NavItem
+        href="/feeds"
+        icon={
+          <SatelliteDishIcon
+            strokeWidth={1.75}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        }
+        iconFilled={
+          <SatelliteDishIconSolid
+            strokeWidth={1.75}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        }
+        label="My Feeds"
+      />
+      <NavItem
         href="/notifications"
         count={store.me.notifications.unreadCountLabel}
         icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
@@ -168,6 +228,24 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />
         }
         label="Notifications"
+      />
+      <NavItem
+        href="/moderation"
+        icon={
+          <HandIcon
+            strokeWidth={5.5}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        }
+        iconFilled={
+          <FontAwesomeIcon
+            icon="hand"
+            style={pal.text as FontAwesomeIconStyle}
+            size={20}
+          />
+        }
+        label="Moderation"
       />
       {store.session.hasSession && (
         <NavItem
@@ -198,11 +276,13 @@ const styles = StyleSheet.create({
     top: 10,
     right: 'calc(50vw + 312px)',
     width: 220,
+    maxHeight: 'calc(100vh - 10px)',
+    overflowY: 'auto',
   },
 
   profileCard: {
     marginVertical: 10,
-    width: 60,
+    width: 90,
     paddingLeft: 12,
   },
 
@@ -215,21 +295,18 @@ const styles = StyleSheet.create({
   },
 
   navItemWrapper: {
-    paddingHorizontal: 12,
-    borderRadius: 8,
-  },
-  navItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 12,
-    paddingBottom: 12,
+    paddingHorizontal: 12,
+    padding: 12,
+    borderRadius: 8,
+    gap: 10,
   },
   navItemIconWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
     width: 28,
     height: 28,
-    marginRight: 10,
     marginTop: 2,
   },
   navItemCount: {
@@ -248,7 +325,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 138,
+    width: 140,
     borderRadius: 24,
     paddingVertical: 10,
     paddingHorizontal: 16,

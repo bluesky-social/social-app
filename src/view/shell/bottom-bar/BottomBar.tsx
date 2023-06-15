@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ComponentProps} from 'react'
 import {
   Animated,
   GestureResponderEvent,
@@ -18,16 +18,17 @@ import {
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
+  SatelliteDishIcon,
+  SatelliteDishIconSolid,
   BellIcon,
   BellIconSolid,
-  UserIcon,
-  UserIconSolid,
 } from 'lib/icons'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getTabState, TabState} from 'lib/routes/helpers'
 import {styles} from './BottomBarStyles'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
+import {UserAvatar} from 'view/com/util/UserAvatar'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile'
 
@@ -36,10 +37,11 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile} =
+  const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
 
   const {footerMinimalShellTransform} = useMinimalShellMode()
+  const {notifications} = store.me
 
   const onPressTab = React.useCallback(
     (tab: TabOptions) => {
@@ -59,6 +61,10 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
   const onPressSearch = React.useCallback(
     () => onPressTab('Search'),
+    [onPressTab],
+  )
+  const onPressFeeds = React.useCallback(
+    () => onPressTab('Feeds'),
     [onPressTab],
   )
   const onPressNotifications = React.useCallback(
@@ -96,6 +102,9 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
           )
         }
         onPress={onPressHome}
+        accessibilityRole="tab"
+        accessibilityLabel="Home"
+        accessibilityHint=""
       />
       <Btn
         testID="bottomBarSearchBtn"
@@ -115,6 +124,31 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
           )
         }
         onPress={onPressSearch}
+        accessibilityRole="search"
+        accessibilityLabel="Search"
+        accessibilityHint=""
+      />
+      <Btn
+        testID="bottomBarFeedsBtn"
+        icon={
+          isAtFeeds ? (
+            <SatelliteDishIconSolid
+              size={25}
+              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+              strokeWidth={1.8}
+            />
+          ) : (
+            <SatelliteDishIcon
+              size={25}
+              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+              strokeWidth={1.8}
+            />
+          )
+        }
+        onPress={onPressFeeds}
+        accessibilityRole="tab"
+        accessibilityLabel="Feeds"
+        accessibilityHint=""
       />
       <Btn
         testID="bottomBarNotificationsBtn"
@@ -134,32 +168,60 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
           )
         }
         onPress={onPressNotifications}
-        notificationCount={store.me.notifications.unreadCountLabel}
+        notificationCount={notifications.unreadCountLabel}
+        accessible={true}
+        accessibilityRole="tab"
+        accessibilityLabel="Notifications"
+        accessibilityHint={
+          notifications.unreadCountLabel === ''
+            ? ''
+            : `${notifications.unreadCountLabel} unread`
+        }
       />
       <Btn
         testID="bottomBarProfileBtn"
         icon={
           <View style={styles.ctrlIconSizingWrapper}>
             {isAtMyProfile ? (
-              <UserIconSolid
-                size={28}
-                strokeWidth={1.5}
-                style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
-              />
+              <View
+                style={[
+                  styles.ctrlIcon,
+                  pal.text,
+                  styles.profileIcon,
+                  styles.onProfile,
+                ]}>
+                <UserAvatar avatar={store.me.avatar} size={27} />
+              </View>
             ) : (
-              <UserIcon
-                size={28}
-                strokeWidth={1.5}
-                style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
-              />
+              <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
+                <UserAvatar avatar={store.me.avatar} size={28} />
+              </View>
             )}
           </View>
         }
         onPress={onPressProfile}
+        accessibilityRole="tab"
+        accessibilityLabel="Profile"
+        accessibilityHint=""
       />
     </Animated.View>
   )
 })
+
+interface BtnProps
+  extends Pick<
+    ComponentProps<typeof TouchableOpacity>,
+    | 'accessible'
+    | 'accessibilityRole'
+    | 'accessibilityHint'
+    | 'accessibilityLabel'
+  > {
+  testID?: string
+  icon: JSX.Element
+  notificationCount?: string
+  onPress?: (event: GestureResponderEvent) => void
+  onLongPress?: (event: GestureResponderEvent) => void
+}
 
 function Btn({
   testID,
@@ -167,20 +229,20 @@ function Btn({
   notificationCount,
   onPress,
   onLongPress,
-}: {
-  testID?: string
-  icon: JSX.Element
-  notificationCount?: string
-  onPress?: (event: GestureResponderEvent) => void
-  onLongPress?: (event: GestureResponderEvent) => void
-}) {
+  accessible,
+  accessibilityHint,
+  accessibilityLabel,
+}: BtnProps) {
   return (
     <TouchableOpacity
       testID={testID}
       style={styles.ctrl}
       onPress={onLongPress ? onPress : undefined}
       onPressIn={onLongPress ? undefined : onPress}
-      onLongPress={onLongPress}>
+      onLongPress={onLongPress}
+      accessible={accessible}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}>
       {notificationCount ? (
         <View style={[styles.notificationCount]}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>

@@ -1,9 +1,8 @@
 <!DOCTYPE html>                                                                                          
 <html lang="en">
 <head>   
-  <meta charset="UTF-8" />
-  <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1.00001, viewport-fit=cover">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover">
   <meta name="referrer" content="origin-when-cross-origin">
   <title>{%- block head_title -%}Bluesky{%- endblock -%}</title>
 
@@ -57,16 +56,15 @@
       }
     }*/
 
-    /* Remove focus state on inputs */
-    *:focus {
-      outline: 0;
-    }
     /* Remove default link styling */
     a {
       color: inherit;
     }
     a[role="link"]:hover {
       text-decoration: underline;
+    }
+    a[role="link"][data-no-underline="1"]:hover {
+      text-decoration: none;
     }
 
     /* Styling hacks */
@@ -99,58 +97,35 @@
       color: #0085ff;
       cursor: pointer;
     }
+    /* OLLIE: TODO -- this is not accessible */
+    /* Remove focus state on inputs */
+    .ProseMirror-focused {
+      outline: 0;
+    }
+    textarea:focus,
+    input:focus {
+      outline: 0;
+    }
     .tippy-content .items {
-      border-radius: 6px;
-      background: #F3F3F8;
-      border: 1px solid #e0d9d9;
-      padding: 3px 3px;
-    }
-    .tippy-content .items .item {
-      display: block;
-      background: transparent;
-      color: #8a8c9a;
-      border: 0;
-      font: 17px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      padding: 7px 10px 8px;
-      width: 100%;
-      text-align: left;
-      box-sizing: border-box;
-      letter-spacing: 0.2px;
-    }
-    .tippy-content .items .item.is-selected {
-      background: #fff;
-      border-radius: 4px;
-      color: #333;
+      width: fit-content;
     }
   </style>
   {% include "scripts.html" %}
-  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png"/>
-  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png"/>
-  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png"/>
-  {% block head_page_meta -%}
-  <meta property="og:title" content="Bluesky Social"/>
-  <meta property="og:type" content="article"/>
-  <meta property="og:image" content="/static/default-social-card.png"/>
-  <meta name="twitter:title" content="Bluesky Social"/>
-  <meta name="twitter:description" content="See what&#x27;s next."/>
-  <meta name="twitter:image" content="/static/default-social-card.png"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:site" content="@bluesky"/>
-  {%- endblock %}
-	<!-- TODO: link rel=canonical -->
-	<!-- TODO: analytics code -->
-	<!-- TODO: could put <link rel="preload"> tags here -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+  {% block html_head_extra -%}{%- endblock %}
+  <meta name="application-name" name="Bluesky">
   <meta name="generator" name="bskyweb">
-	{% block head_metadata %}{% endblock %}
 </head>
 <body>
 {%- block body_all %}
 	<div id="root"></div>
     <noscript>
-			{%- block noscript_extra %}{% endblock -%}
-      <h1>Javascript Required</h1>
-      <p>This is a heavily interactive web application, and Javascript is required. Simple HTML interfaces are possible, but that is not what this is.
+      <h1>JavaScript Required</h1>
+      <p>This is a heavily interactive web application, and JavaScript is required. Simple HTML interfaces are possible, but that is not what this is.
       <p>Learn more about Bluesky at <a href="https://blueskyweb.xyz">blueskyweb.xyz</a> and <a href="https://atproto.com">atproto.com</a>.
+			{% block noscript_extra %}{% endblock %}
     </noscript>
 {% endblock -%}
 </body>

@@ -4,6 +4,28 @@ export const FEEDBACK_FORM_URL =
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
 
+export const MAX_GRAPHEME_LENGTH = 300
+
+// Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
+// but increasing limit per user feedback
+export const MAX_ALT_TEXT = 1000
+
+export function IS_LOCAL_DEV(url: string) {
+  return url.includes('localhost')
+}
+
+export function IS_STAGING(url: string) {
+  return !IS_LOCAL_DEV(url) && !IS_PROD(url)
+}
+
+export function IS_PROD(url: string) {
+  // NOTE
+  // until open federation, "production" is defined as the main server
+  // this definition will not work once federation is enabled!
+  // -prf
+  return url.startsWith('https://bsky.social')
+}
+
 export const PROD_TEAM_HANDLES = [
   'jay.bsky.social',
   'pfrazee.com',
@@ -29,135 +51,46 @@ export function TEAM_HANDLES(serviceUrl: string) {
   }
 }
 
-export const PROD_SUGGESTED_FOLLOWS = [
-  'christina',
-  'wesam',
-  'jim',
-  'ab',
-  'karalabe',
-  'clun',
-  'staltz',
-  'gillian',
-  'karpathy',
-  'zoink',
-  'john',
-  'round',
-  'vex',
-  'umang',
-  'atroyn',
-  'poisonivy',
-  'wongmjane',
-  'lari',
-  'arunwadhwa',
-  'trav',
-  'fred',
-  'offscript',
-  'satnam',
-  'ella',
-  'caspian',
-  'spencer',
-  'nickgrossman',
-  'koji',
-  'avy',
-  'seymourstein',
-  'joelg',
-  'stig',
-  'rabble',
-  'hunterwalk',
-  'evan',
-  'aviral',
-  'tami',
-  'generativist',
-  'gord',
-  'ninjapleasedj',
-  'robotics',
-  'noahjnelson',
-  'vijay',
-  'scottbeale',
-  'daybreakjung',
-  'shelby',
-  'joel',
-  'space',
-  'rish',
-  'simon',
-  'kelly',
-  'maxbittker',
-  'sylphrenetic',
-  'caleb',
-  'jik',
-  'james',
-  'neil',
-  'tippenein',
-  'mandel',
-  'sharding',
-  'tyler',
-  'raymond',
-  'visakanv',
-  'saz',
-  'steph',
-  'ratzlaff',
-  'beth',
-  'weisser',
-  'katherine',
-  'annagat',
-  'an',
-  'kunal',
-  'josh',
-  'lurkshark',
-  'amir',
-  'amyxzh',
-  'danielle',
-  'jack-frazee',
-  'daniellefong',
-  'dystopiabreaker',
-  'morgan',
-  'vibes',
-  'cat',
-  'yuriy',
-  'alvinreyes',
-  'skoot',
-  'patricia',
-  'ara4n',
-  'case',
-  'armand',
-  'ivan',
-  'nicholas',
-  'kelsey',
-  'ericlee',
-  'emily',
-  'jake',
-  'jennijuju',
-  'ian5v',
-  'bnewbold',
-  'jasmine',
-  'chris',
-  'mtclai',
-  'willscott',
-  'michael',
-  'kwkroeger',
-  'broox',
-  'iamrosewang',
-  'jack-morrison',
-  'pwang',
-  'martin',
-  'jack',
-  'jay',
-]
-  .map(handle => `${handle}.bsky.social`)
-  .concat(['pfrazee.com', 'divy.zone', 'dholms.xyz', 'why.bsky.world'])
-export const STAGING_SUGGESTED_FOLLOWS = ['arcalinea', 'paul', 'paul2'].map(
-  handle => `${handle}.staging.bsky.dev`,
-)
-export const DEV_SUGGESTED_FOLLOWS = ['alice', 'bob', 'carla'].map(
-  handle => `${handle}.test`,
-)
-export function SUGGESTED_FOLLOWS(serviceUrl: string) {
-  if (serviceUrl.includes('localhost')) {
-    return DEV_SUGGESTED_FOLLOWS
-  } else if (serviceUrl.includes('staging')) {
-    return STAGING_SUGGESTED_FOLLOWS
+export const STAGING_DEFAULT_FEED = (rkey: string) =>
+  `at://did:plc:wqzurwm3kmaig6e6hnc2gqwo/app.bsky.feed.generator/${rkey}`
+export const PROD_DEFAULT_FEED = (rkey: string) =>
+  `at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`
+export async function DEFAULT_FEEDS(
+  serviceUrl: string,
+  resolveHandle: (name: string) => Promise<string>,
+) {
+  if (IS_LOCAL_DEV(serviceUrl)) {
+    // local dev
+    const aliceDid = await resolveHandle('alice.test')
+    return {
+      pinned: [`at://${aliceDid}/app.bsky.feed.generator/alice-favs`],
+      saved: [`at://${aliceDid}/app.bsky.feed.generator/alice-favs`],
+    }
+  } else if (IS_STAGING(serviceUrl)) {
+    // staging
+    return {
+      pinned: [STAGING_DEFAULT_FEED('whats-hot')],
+      saved: [
+        STAGING_DEFAULT_FEED('bsky-team'),
+        STAGING_DEFAULT_FEED('with-friends'),
+        STAGING_DEFAULT_FEED('whats-hot'),
+        STAGING_DEFAULT_FEED('hot-classic'),
+      ],
+    }
   } else {
-    return PROD_SUGGESTED_FOLLOWS
+    // production
+    return {
+      pinned: [
+        PROD_DEFAULT_FEED('whats-hot'),
+        PROD_DEFAULT_FEED('with-friends'),
+      ],
+      saved: [
+        PROD_DEFAULT_FEED('bsky-team'),
+        PROD_DEFAULT_FEED('with-friends'),
+        PROD_DEFAULT_FEED('whats-hot'),
+        PROD_DEFAULT_FEED('hot-classic'),
+      ],
+    }
   }
 }
 
@@ -165,4 +98,19 @@ export const POST_IMG_MAX = {
   width: 2000,
   height: 2000,
   size: 1000000,
+}
+
+export const STAGING_LINK_META_PROXY =
+  'https://cardyb.staging.bsky.dev/v1/extract?url='
+
+export const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
+
+export function LINK_META_PROXY(serviceUrl: string) {
+  if (IS_LOCAL_DEV(serviceUrl)) {
+    return STAGING_LINK_META_PROXY
+  } else if (IS_STAGING(serviceUrl)) {
+    return STAGING_LINK_META_PROXY
+  } else {
+    return PROD_LINK_META_PROXY
+  }
 }

@@ -4,6 +4,7 @@ import {RootStoreModel} from './root-store'
 import {isObj, hasProp, isStrArray} from 'lib/type-guards'
 
 export class InvitedUsers {
+  copiedInvites: string[] = []
   seenDids: string[] = []
   profiles: AppBskyActorDefs.ProfileViewDetailed[] = []
 
@@ -20,12 +21,19 @@ export class InvitedUsers {
   }
 
   serialize() {
-    return {seenDids: this.seenDids}
+    return {seenDids: this.seenDids, copiedInvites: this.copiedInvites}
   }
 
   hydrate(v: unknown) {
     if (isObj(v) && hasProp(v, 'seenDids') && isStrArray(v.seenDids)) {
       this.seenDids = v.seenDids
+    }
+    if (
+      isObj(v) &&
+      hasProp(v, 'copiedInvites') &&
+      isStrArray(v.copiedInvites)
+    ) {
+      this.copiedInvites = v.copiedInvites
     }
   }
 
@@ -60,6 +68,16 @@ export class InvitedUsers {
           e,
         )
       }
+    }
+  }
+
+  isInviteCopied(invite: string) {
+    return this.copiedInvites.includes(invite)
+  }
+
+  setInviteCopied(invite: string) {
+    if (!this.isInviteCopied(invite)) {
+      this.copiedInvites.push(invite)
     }
   }
 

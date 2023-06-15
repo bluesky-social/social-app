@@ -10,13 +10,17 @@ import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {updateDataOptimistically} from 'lib/async/revertible'
-
-function* reactKeyGenerator(): Generator<string> {
-  let counter = 0
-  while (true) {
-    yield `item-${counter++}`
-  }
-}
+import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
+import {
+  getEmbedLabels,
+  getEmbedMuted,
+  getEmbedMutedByList,
+  getEmbedBlocking,
+  getEmbedBlockedBy,
+  filterAccountLabels,
+  filterProfileLabels,
+  getPostModeration,
+} from 'lib/labeling/helpers'
 
 export class PostThreadItemModel {
   // ui state
@@ -30,7 +34,10 @@ export class PostThreadItemModel {
   // data
   post: AppBskyFeedDefs.PostView
   postRecord?: FeedPost.Record
-  parent?: PostThreadItemModel | AppBskyFeedDefs.NotFoundPost
+  parent?:
+    | PostThreadItemModel
+    | AppBskyFeedDefs.NotFoundPost
+    | AppBskyFeedDefs.BlockedPost
   replies?: (PostThreadItemModel | AppBskyFeedDefs.NotFoundPost)[]
   richText?: RichText
 
@@ -42,12 +49,51 @@ export class PostThreadItemModel {
     return this.postRecord?.reply?.parent.uri
   }
 
+  get rootUri(): string {
+    if (this.postRecord?.reply?.root.uri) {
+      return this.postRecord.reply.root.uri
+    }
+    return this.uri
+  }
+
+  get isThreadMuted() {
+    return this.rootStore.mutedThreads.uris.has(this.rootUri)
+  }
+
+  get labelInfo(): PostLabelInfo {
+    return {
+      postLabels: (this.post.labels || []).concat(
+        getEmbedLabels(this.post.embed),
+      ),
+      accountLabels: filterAccountLabels(this.post.author.labels),
+      profileLabels: filterProfileLabels(this.post.author.labels),
+      isMuted:
+        this.post.author.viewer?.muted ||
+        getEmbedMuted(this.post.embed) ||
+        false,
+      mutedByList:
+        this.post.author.viewer?.mutedByList ||
+        getEmbedMutedByList(this.post.embed),
+      isBlocking:
+        !!this.post.author.viewer?.blocking ||
+        getEmbedBlocking(this.post.embed) ||
+        false,
+      isBlockedBy:
+        !!this.post.author.viewer?.blockedBy ||
+        getEmbedBlockedBy(this.post.embed) ||
+        false,
+    }
+  }
+
+  get moderation(): PostModeration {
+    return getPostModeration(this.rootStore, this.labelInfo)
+  }
+
   constructor(
     public rootStore: RootStoreModel,
-    reactKey: string,
     v: AppBskyFeedDefs.ThreadViewPost,
   ) {
-    this._reactKey = reactKey
+    this._reactKey = `thread-${v.post.uri}`
     this.post = v.post
     if (FeedPost.isRecord(this.post.record)) {
       const valid = FeedPost.validateRecord(this.post.record)
@@ -71,34 +117,30 @@ export class PostThreadItemModel {
   }
 
   assignTreeModels(
-    keyGen: Generator<string>,
     v: AppBskyFeedDefs.ThreadViewPost,
-    higlightedPostUri: string,
+    highlightedPostUri: string,
     includeParent = true,
     includeChildren = true,
   ) {
     // parents
     if (includeParent && v.parent) {
       if (AppBskyFeedDefs.isThreadViewPost(v.parent)) {
-        const parentModel = new PostThreadItemModel(
-          this.rootStore,
-          keyGen.next().value,
-          v.parent,
-        )
+        const parentModel = new PostThreadItemModel(this.rootStore, v.parent)
         parentModel._depth = this._depth - 1
         parentModel._showChildReplyLine = true
         if (v.parent.parent) {
-          parentModel._showParentReplyLine = true //parentModel.uri !== higlightedPostUri
+          parentModel._showParentReplyLine = true
           parentModel.assignTreeModels(
-            keyGen,
             v.parent,
-            higlightedPostUri,
+            highlightedPostUri,
             true,
             false,
           )
         }
         this.parent = parentModel
       } else if (AppBskyFeedDefs.isNotFoundPost(v.parent)) {
+        this.parent = v.parent
+      } else if (AppBskyFeedDefs.isBlockedPost(v.parent)) {
         this.parent = v.parent
       }
     }
@@ -107,23 +149,13 @@ export class PostThreadItemModel {
       const replies = []
       for (const item of v.replies) {
         if (AppBskyFeedDefs.isThreadViewPost(item)) {
-          const itemModel = new PostThreadItemModel(
-            this.rootStore,
-            keyGen.next().value,
-            item,
-          )
+          const itemModel = new PostThreadItemModel(this.rootStore, item)
           itemModel._depth = this._depth + 1
           itemModel._showParentReplyLine =
-            itemModel.parentUri !== higlightedPostUri
+            itemModel.parentUri !== highlightedPostUri && replies.length === 0
           if (item.replies?.length) {
             itemModel._showChildReplyLine = true
-            itemModel.assignTreeModels(
-              keyGen,
-              item,
-              higlightedPostUri,
-              false,
-              true,
-            )
+            itemModel.assignTreeModels(item, highlightedPostUri, false, true)
           }
           replies.push(itemModel)
         } else if (AppBskyFeedDefs.isNotFoundPost(item)) {
@@ -188,6 +220,14 @@ export class PostThreadItemModel {
     }
   }
 
+  async toggleThreadMute() {
+    if (this.isThreadMuted) {
+      this.rootStore.mutedThreads.uris.delete(this.rootUri)
+    } else {
+      this.rootStore.mutedThreads.uris.add(this.rootUri)
+    }
+  }
+
   async delete() {
     await this.rootStore.agent.deletePost(this.post.uri)
     this.rootStore.emitPostDeleted(this.post.uri)
@@ -206,6 +246,7 @@ export class PostThreadModel {
 
   // data
   thread?: PostThreadItemModel
+  isBlocked = false
 
   constructor(
     public rootStore: RootStoreModel,
@@ -222,12 +263,38 @@ export class PostThreadModel {
     this.params = params
   }
 
+  static fromPostView(
+    rootStore: RootStoreModel,
+    postView: AppBskyFeedDefs.PostView,
+  ) {
+    const model = new PostThreadModel(rootStore, {uri: postView.uri})
+    model.resolvedUri = postView.uri
+    model.hasLoaded = true
+    model.thread = new PostThreadItemModel(rootStore, {
+      post: postView,
+    })
+    return model
+  }
+
   get hasContent() {
     return typeof this.thread !== 'undefined'
   }
 
   get hasError() {
     return this.error !== ''
+  }
+
+  get rootUri(): string {
+    if (this.thread) {
+      if (this.thread.postRecord?.reply?.root.uri) {
+        return this.thread.postRecord.reply.root.uri
+      }
+    }
+    return this.resolvedUri
+  }
+
+  get isThreadMuted() {
+    return this.rootStore.mutedThreads.uris.has(this.rootUri)
   }
 
   // public api
@@ -279,6 +346,14 @@ export class PostThreadModel {
     this.refresh()
   }
 
+  async toggleThreadMute() {
+    if (this.isThreadMuted) {
+      this.rootStore.mutedThreads.uris.delete(this.rootUri)
+    } else {
+      this.rootStore.mutedThreads.uris.add(this.rootUri)
+    }
+  }
+
   // state transitions
   // =
 
@@ -320,6 +395,9 @@ export class PostThreadModel {
   }
 
   async _load(isRefreshing = false) {
+    if (this.hasLoaded && !isRefreshing) {
+      return
+    }
     this._xLoading(isRefreshing)
     try {
       const res = await this.rootStore.agent.getPostThread(
@@ -328,21 +406,24 @@ export class PostThreadModel {
       this._replaceAll(res)
       this._xIdle()
     } catch (e: any) {
+      console.log(e)
       this._xIdle(e)
     }
   }
 
   _replaceAll(res: GetPostThread.Response) {
+    this.isBlocked = AppBskyFeedDefs.isBlockedPost(res.data.thread)
+    if (this.isBlocked) {
+      return
+    }
+    pruneReplies(res.data.thread)
     sortThread(res.data.thread)
-    const keyGen = reactKeyGenerator()
     const thread = new PostThreadItemModel(
       this.rootStore,
-      keyGen.next().value,
       res.data.thread as AppBskyFeedDefs.ThreadViewPost,
     )
     thread._isHighlightedPost = true
     thread.assignTreeModels(
-      keyGen,
       res.data.thread as AppBskyFeedDefs.ThreadViewPost,
       thread.uri,
     )
@@ -353,7 +434,20 @@ export class PostThreadModel {
 type MaybePost =
   | AppBskyFeedDefs.ThreadViewPost
   | AppBskyFeedDefs.NotFoundPost
+  | AppBskyFeedDefs.BlockedPost
   | {[k: string]: unknown; $type: string}
+function pruneReplies(post: MaybePost) {
+  if (post.replies) {
+    post.replies = (post.replies as MaybePost[]).filter((reply: MaybePost) => {
+      if (reply.blocked) {
+        return false
+      }
+      pruneReplies(reply)
+      return true
+    })
+  }
+}
+
 function sortThread(post: MaybePost) {
   if (post.notFound) {
     return

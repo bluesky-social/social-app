@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import 'lib/sentry' // must be relatively on top
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import * as view from './view/index'
@@ -29,7 +30,7 @@ const App = observer(() => {
   }
 
   return (
-    <ThemeProvider theme={rootStore.shell.darkMode ? 'dark' : 'light'}>
+    <ThemeProvider theme={rootStore.shell.colorMode}>
       <RootSiblingParent>
         <analytics.Provider>
           <RootStoreProvider value={rootStore}>

@@ -1,5 +1,6 @@
 import React, {useRef, useEffect} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
 import BottomSheet from '@gorhom/bottom-sheet'
 import {useStores} from 'state/index'
@@ -9,14 +10,20 @@ import {usePalette} from 'lib/hooks/usePalette'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
-import * as ReportPostModal from './ReportPost'
+import * as ReportPostModal from './report/ReportPost'
 import * as RepostModal from './Repost'
-import * as ReportAccountModal from './ReportAccount'
+import * as CreateOrEditMuteListModal from './CreateOrEditMuteList'
+import * as ListAddRemoveUserModal from './ListAddRemoveUser'
+import * as AltImageModal from './AltImage'
+import * as EditImageModal from './AltImage'
+import * as ReportAccountModal from './report/ReportAccount'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
+import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
+import * as ContentLanguagesSettingsModal from './ContentLanguagesSettings'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 
@@ -62,12 +69,24 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'report-account') {
     snapPoints = ReportAccountModal.snapPoints
     element = <ReportAccountModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'create-or-edit-mute-list') {
+    snapPoints = CreateOrEditMuteListModal.snapPoints
+    element = <CreateOrEditMuteListModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'list-add-remove-user') {
+    snapPoints = ListAddRemoveUserModal.snapPoints
+    element = <ListAddRemoveUserModal.Component {...activeModal} />
   } else if (activeModal?.name === 'delete-account') {
     snapPoints = DeleteAccountModal.snapPoints
     element = <DeleteAccountModal.Component />
   } else if (activeModal?.name === 'repost') {
     snapPoints = RepostModal.snapPoints
     element = <RepostModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'alt-text-image') {
+    snapPoints = AltImageModal.snapPoints
+    element = <AltImageModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'edit-image') {
+    snapPoints = AltImageModal.snapPoints
+    element = <EditImageModal.Component {...activeModal} />
   } else if (activeModal?.name === 'change-handle') {
     snapPoints = ChangeHandleModal.snapPoints
     element = <ChangeHandleModal.Component {...activeModal} />
@@ -77,11 +96,25 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'invite-codes') {
     snapPoints = InviteCodesModal.snapPoints
     element = <InviteCodesModal.Component />
+  } else if (activeModal?.name === 'add-app-password') {
+    snapPoints = AddAppPassword.snapPoints
+    element = <AddAppPassword.Component />
   } else if (activeModal?.name === 'content-filtering-settings') {
     snapPoints = ContentFilteringSettingsModal.snapPoints
     element = <ContentFilteringSettingsModal.Component />
+  } else if (activeModal?.name === 'content-languages-settings') {
+    snapPoints = ContentLanguagesSettingsModal.snapPoints
+    element = <ContentLanguagesSettingsModal.Component />
   } else {
-    return <View />
+    return null
+  }
+
+  if (snapPoints[0] === 'fullscreen') {
+    return (
+      <SafeAreaView style={[styles.fullscreenContainer, pal.view]}>
+        {element}
+      </SafeAreaView>
+    )
   }
 
   return (
@@ -90,7 +123,8 @@ export const ModalsContainer = observer(function ModalsContainer() {
       snapPoints={snapPoints}
       index={store.shell.isModalActive ? 0 : -1}
       enablePanDownToClose
-      keyboardBehavior="fillParent"
+      android_keyboardInputMode="adjustResize"
+      keyboardBlurBehavior="restore"
       backdropComponent={
         store.shell.isModalActive ? createCustomBackdrop(onClose) : undefined
       }
@@ -106,5 +140,12 @@ const styles = StyleSheet.create({
   handle: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+  },
+  fullscreenContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
 })

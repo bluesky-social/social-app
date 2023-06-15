@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -195,7 +195,10 @@ const ChooseAccountForm = ({
           testID={`chooseAccountBtn-${account.handle}`}
           key={account.did}
           style={[pal.view, pal.border, styles.account]}
-          onPress={() => onTryAccount(account)}>
+          onPress={() => onTryAccount(account)}
+          accessibilityRole="button"
+          accessibilityLabel={`Sign in as ${account.handle}`}
+          accessibilityHint="Double tap to sign in">
           <View
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
             <View style={s.p10}>
@@ -220,7 +223,10 @@ const ChooseAccountForm = ({
       <TouchableOpacity
         testID="chooseNewAccountBtn"
         style={[pal.view, pal.border, styles.account, styles.accountLast]}
-        onPress={() => onSelectAccount(undefined)}>
+        onPress={() => onSelectAccount(undefined)}
+        accessibilityRole="button"
+        accessibilityLabel="Login to account that is not listed"
+        accessibilityHint="">
         <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
           <Text style={[styles.accountText, styles.accountTextOther]}>
             <Text type="lg" style={pal.text}>
@@ -235,7 +241,7 @@ const ChooseAccountForm = ({
         </View>
       </TouchableOpacity>
       <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-        <TouchableOpacity onPress={onPressBack}>
+        <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
           <Text type="xl" style={[pal.link, s.pl5]}>
             Back
           </Text>
@@ -276,6 +282,7 @@ const LoginForm = ({
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [identifier, setIdentifier] = useState<string>(initialHandle)
   const [password, setPassword] = useState<string>('')
+  const passwordInputRef = useRef<TextInput>(null)
 
   const onPressSelectService = () => {
     store.shell.openModal({
@@ -288,6 +295,7 @@ const LoginForm = ({
   }
 
   const onPressNext = async () => {
+    Keyboard.dismiss()
     setError('')
     setIsProcessing(true)
 
@@ -351,7 +359,10 @@ const LoginForm = ({
           <TouchableOpacity
             testID="loginSelectServiceButton"
             style={styles.textBtn}
-            onPress={onPressSelectService}>
+            onPress={onPressSelectService}
+            accessibilityRole="button"
+            accessibilityLabel="Select service"
+            accessibilityHint="Sets server for the Bluesky client">
             <Text type="xl" style={[pal.text, styles.textBtnLabel]}>
               {toNiceDomain(serviceUrl)}
             </Text>
@@ -382,10 +393,18 @@ const LoginForm = ({
             autoCapitalize="none"
             autoFocus
             autoCorrect={false}
+            autoComplete="username"
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              passwordInputRef.current?.focus()
+            }}
+            blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
             keyboardAppearance={theme.colorScheme}
             value={identifier}
             onChangeText={str => setIdentifier((str || '').toLowerCase())}
             editable={!isProcessing}
+            accessibilityLabel="Username or email address"
+            accessibilityHint="Input the username or email address you used at signup"
           />
         </View>
         <View style={[pal.borderDark, styles.groupContent]}>
@@ -395,21 +414,38 @@ const LoginForm = ({
           />
           <TextInput
             testID="loginPasswordInput"
+            ref={passwordInputRef}
             style={[pal.text, styles.textInput]}
             placeholder="Password"
             placeholderTextColor={pal.colors.textLight}
             autoCapitalize="none"
             autoCorrect={false}
+            autoComplete="password"
+            returnKeyType="done"
+            enablesReturnKeyAutomatically={true}
             keyboardAppearance={theme.colorScheme}
-            secureTextEntry
+            secureTextEntry={true}
+            textContentType="password"
+            clearButtonMode="while-editing"
             value={password}
             onChangeText={setPassword}
+            onSubmitEditing={onPressNext}
+            blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
             editable={!isProcessing}
+            accessibilityLabel="Password"
+            accessibilityHint={
+              identifier === ''
+                ? 'Input your password'
+                : `Input the password tied to ${identifier}`
+            }
           />
           <TouchableOpacity
             testID="forgotPasswordButton"
             style={styles.textInputInnerBtn}
-            onPress={onPressForgotPassword}>
+            onPress={onPressForgotPassword}
+            accessibilityRole="button"
+            accessibilityLabel="Forgot password"
+            accessibilityHint="Opens password reset form">
             <Text style={pal.link}>Forgot</Text>
           </TouchableOpacity>
         </View>
@@ -425,7 +461,7 @@ const LoginForm = ({
         </View>
       ) : undefined}
       <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-        <TouchableOpacity onPress={onPressBack}>
+        <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
           <Text type="xl" style={[pal.link, s.pl5]}>
             Back
           </Text>
@@ -434,7 +470,10 @@ const LoginForm = ({
         {!serviceDescription && error ? (
           <TouchableOpacity
             testID="loginRetryButton"
-            onPress={onPressRetryConnect}>
+            onPress={onPressRetryConnect}
+            accessibilityRole="button"
+            accessibilityLabel="Retry"
+            accessibilityHint="Retries login">
             <Text type="xl-bold" style={[pal.link, s.pr5]}>
               Retry
             </Text>
@@ -449,7 +488,12 @@ const LoginForm = ({
         ) : isProcessing ? (
           <ActivityIndicator />
         ) : isReady ? (
-          <TouchableOpacity testID="loginNextButton" onPress={onPressNext}>
+          <TouchableOpacity
+            testID="loginNextButton"
+            onPress={onPressNext}
+            accessibilityRole="button"
+            accessibilityLabel="Go to next"
+            accessibilityHint="Navigates to the next screen">
             <Text type="xl-bold" style={[pal.link, s.pr5]}>
               Next
             </Text>
@@ -539,7 +583,10 @@ const ForgotPasswordForm = ({
           <TouchableOpacity
             testID="forgotPasswordSelectServiceButton"
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}
-            onPress={onPressSelectService}>
+            onPress={onPressSelectService}
+            accessibilityRole="button"
+            accessibilityLabel="Hosting provider"
+            accessibilityHint="Sets hosting provider for password reset">
             <FontAwesomeIcon
               icon="globe"
               style={[pal.textLight, styles.groupContentIcon]}
@@ -572,6 +619,8 @@ const ForgotPasswordForm = ({
               value={email}
               onChangeText={setEmail}
               editable={!isProcessing}
+              accessibilityLabel="Email"
+              accessibilityHint="Sets email for password reset"
             />
           </View>
         </View>
@@ -586,7 +635,7 @@ const ForgotPasswordForm = ({
           </View>
         ) : undefined}
         <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-          <TouchableOpacity onPress={onPressBack}>
+          <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
             <Text type="xl" style={[pal.link, s.pl5]}>
               Back
             </Text>
@@ -599,7 +648,12 @@ const ForgotPasswordForm = ({
               Next
             </Text>
           ) : (
-            <TouchableOpacity testID="newPasswordButton" onPress={onPressNext}>
+            <TouchableOpacity
+              testID="newPasswordButton"
+              onPress={onPressNext}
+              accessibilityRole="button"
+              accessibilityLabel="Go to next"
+              accessibilityHint="Navigates to the next screen">
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 Next
               </Text>
@@ -649,8 +703,9 @@ const SetNewPasswordForm = ({
 
     try {
       const agent = new BskyAgent({service: serviceUrl})
+      const token = resetCode.replace(/\s/g, '')
       await agent.com.atproto.server.resetPassword({
-        token: resetCode,
+        token,
         password,
       })
       onPasswordSet()
@@ -699,6 +754,9 @@ const SetNewPasswordForm = ({
               value={resetCode}
               onChangeText={setResetCode}
               editable={!isProcessing}
+              accessible={true}
+              accessibilityLabel="Reset code"
+              accessibilityHint="Input code sent to your email for password reset"
             />
           </View>
           <View style={[pal.borderDark, styles.groupContent]}>
@@ -718,6 +776,9 @@ const SetNewPasswordForm = ({
               value={password}
               onChangeText={setPassword}
               editable={!isProcessing}
+              accessible={true}
+              accessibilityLabel="Password"
+              accessibilityHint="Input new password"
             />
           </View>
         </View>
@@ -732,7 +793,7 @@ const SetNewPasswordForm = ({
           </View>
         ) : undefined}
         <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-          <TouchableOpacity onPress={onPressBack}>
+          <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
             <Text type="xl" style={[pal.link, s.pl5]}>
               Back
             </Text>
@@ -747,7 +808,10 @@ const SetNewPasswordForm = ({
           ) : (
             <TouchableOpacity
               testID="setNewPasswordButton"
-              onPress={onPressNext}>
+              onPress={onPressNext}
+              accessibilityRole="button"
+              accessibilityLabel="Go to next"
+              accessibilityHint="Navigates to the next screen">
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 Next
               </Text>
@@ -783,7 +847,11 @@ const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
         </Text>
         <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
           <View style={s.flex1} />
-          <TouchableOpacity onPress={onPressNext}>
+          <TouchableOpacity
+            onPress={onPressNext}
+            accessibilityRole="button"
+            accessibilityLabel="Close alert"
+            accessibilityHint="Closes password update alert">
             <Text type="xl-bold" style={[pal.link, s.pr5]}>
               Okay
             </Text>

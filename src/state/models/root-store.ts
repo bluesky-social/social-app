@@ -20,6 +20,13 @@ import {InvitedUsers} from './invited-users'
 import {PreferencesModel} from './ui/preferences'
 import {resetToTab} from '../../Navigation'
 import {ImageSizesCache} from './cache/image-sizes'
+import {MutedThreads} from './muted-threads'
+import {reset as resetNavigation} from '../../Navigation'
+
+// TEMPORARY (APP-700)
+// remove after backend testing finishes
+// -prf
+import {applyDebugHeader} from 'lib/api/debug-appview-proxy-header'
 
 export const appInfo = z.object({
   build: z.string(),
@@ -35,12 +42,13 @@ export class RootStoreModel {
   log = new LogModel()
   session = new SessionModel(this)
   shell = new ShellUiModel(this)
-  preferences = new PreferencesModel()
+  preferences = new PreferencesModel(this)
   me = new MeModel(this)
   invitedUsers = new InvitedUsers(this)
   profiles = new ProfilesCache(this)
   linkMetas = new LinkMetasCache(this)
   imageSizes = new ImageSizesCache()
+  mutedThreads = new MutedThreads()
 
   constructor(agent: BskyAgent) {
     this.agent = agent
@@ -64,6 +72,7 @@ export class RootStoreModel {
       shell: this.shell.serialize(),
       preferences: this.preferences.serialize(),
       invitedUsers: this.invitedUsers.serialize(),
+      mutedThreads: this.mutedThreads.serialize(),
     }
   }
 
@@ -90,6 +99,9 @@ export class RootStoreModel {
       if (hasProp(v, 'invitedUsers')) {
         this.invitedUsers.hydrate(v.invitedUsers)
       }
+      if (hasProp(v, 'mutedThreads')) {
+        this.mutedThreads.hydrate(v.mutedThreads)
+      }
     }
   }
 
@@ -112,11 +124,19 @@ export class RootStoreModel {
   /**
    * Called by the session model. Refreshes session-oriented state.
    */
-  async handleSessionChange(agent: BskyAgent) {
+  async handleSessionChange(
+    agent: BskyAgent,
+    {hadSession}: {hadSession: boolean},
+  ) {
     this.log.debug('RootStoreModel:handleSessionChange')
     this.agent = agent
+    applyDebugHeader(this.agent)
     this.me.clear()
+    /* dont await */ this.preferences.sync()
     await this.me.load()
+    if (!hadSession) {
+      resetNavigation()
+    }
   }
 
   /**
@@ -148,6 +168,7 @@ export class RootStoreModel {
     }
     try {
       await this.me.updateIfNeeded()
+      await this.preferences.sync()
     } catch (e: any) {
       this.log.error('Failed to fetch latest state', e)
     }

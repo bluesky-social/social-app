@@ -48,7 +48,7 @@ describe('detectLinkables', () => {
     'Classic article https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/ ',
     'https://foo.com https://bar.com/whatever https://baz.com',
     'punctuation https://foo.com, https://bar.com/whatever; https://baz.com.',
-    'parenthentical (https://foo.com)',
+    'parenthetical (https://foo.com)',
     'except for https://foo.com/thing_(cool)',
   ]
   const outputs = [
@@ -112,7 +112,7 @@ describe('detectLinkables', () => {
       {link: 'https://baz.com'},
       '.',
     ],
-    ['parenthentical (', {link: 'https://foo.com'}, ')'],
+    ['parenthetical (', {link: 'https://foo.com'}, ')'],
     ['except for ', {link: 'https://foo.com/thing_(cool)'}],
   ]
   it('correctly handles a set of text inputs', () => {

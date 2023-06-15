@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ComponentProps, useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   Linking,
@@ -21,13 +21,24 @@ import {TypographyVariant} from 'lib/ThemeContext'
 import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {useStores, RootStoreModel} from 'state/index'
-import {convertBskyAppUrlIfNeeded} from 'lib/strings/url-helpers'
+import {convertBskyAppUrlIfNeeded, isExternalUrl} from 'lib/strings/url-helpers'
 import {isDesktopWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
   | GestureResponderEvent
+
+interface Props extends ComponentProps<typeof TouchableOpacity> {
+  testID?: string
+  style?: StyleProp<ViewStyle>
+  href?: string
+  title?: string
+  children?: React.ReactNode
+  noFeedback?: boolean
+  asAnchor?: boolean
+  anchorNoUnderline?: boolean
+}
 
 export const Link = observer(function Link({
   testID,
@@ -37,15 +48,10 @@ export const Link = observer(function Link({
   children,
   noFeedback,
   asAnchor,
-}: {
-  testID?: string
-  style?: StyleProp<ViewStyle>
-  href?: string
-  title?: string
-  children?: React.ReactNode
-  noFeedback?: boolean
-  asAnchor?: boolean
-}) {
+  accessible,
+  anchorNoUnderline,
+  ...props
+}: Props) {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
 
@@ -64,20 +70,34 @@ export const Link = observer(function Link({
         testID={testID}
         onPress={onPress}
         // @ts-ignore web only -prf
-        href={asAnchor ? sanitizeUrl(href) : undefined}>
+        href={asAnchor ? sanitizeUrl(href) : undefined}
+        accessible={accessible}
+        accessibilityRole="link"
+        {...props}>
         <View style={style}>
           {children ? children : <Text>{title || 'link'}</Text>}
         </View>
       </TouchableWithoutFeedback>
     )
   }
+
+  if (anchorNoUnderline) {
+    // @ts-ignore web only -prf
+    props.dataSet = props.dataSet || {}
+    // @ts-ignore web only -prf
+    props.dataSet.noUnderline = 1
+  }
+
   return (
     <TouchableOpacity
       testID={testID}
       style={style}
       onPress={onPress}
+      accessible={accessible}
+      accessibilityRole="link"
       // @ts-ignore web only -prf
-      href={asAnchor ? sanitizeUrl(href) : undefined}>
+      href={asAnchor ? sanitizeUrl(href) : undefined}
+      {...props}>
       {children ? children : <Text>{title || 'link'}</Text>}
     </TouchableOpacity>
   )
@@ -112,6 +132,16 @@ export const TextLink = observer(function TextLink({
     },
     [store, navigation, href],
   )
+  const hrefAttrs = useMemo(() => {
+    const isExternal = isExternalUrl(href)
+    if (isExternal) {
+      return {
+        target: '_blank',
+        // rel: 'noopener noreferrer',
+      }
+    }
+    return {}
+  }, [href])
 
   return (
     <Text
@@ -122,6 +152,8 @@ export const TextLink = observer(function TextLink({
       lineHeight={lineHeight}
       // @ts-ignore web only -prf
       dataSet={dataSet}
+      // @ts-ignore web only -prf
+      hrefAttrs={hrefAttrs} // hack to get open in new tab to work on safari. without this, safari will open in a new window
       {...props}>
       {text}
     </Text>

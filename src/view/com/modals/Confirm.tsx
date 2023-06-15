@@ -11,17 +11,20 @@ import {s, colors} from 'lib/styles'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
+import {isDesktopWeb} from 'platform/detection'
 
-export const snapPoints = [300]
+export const snapPoints = ['50%']
 
 export function Component({
   title,
   message,
   onPressConfirm,
+  onPressCancel,
 }: {
   title: string
   message: string | (() => JSX.Element)
   onPressConfirm: () => void | Promise<void>
+  onPressCancel?: () => void | Promise<void>
 }) {
   const pal = usePalette('default')
   const store = useStores()
@@ -65,8 +68,24 @@ export function Component({
         <TouchableOpacity
           testID="confirmBtn"
           onPress={onPress}
-          style={[styles.btn]}>
+          style={[styles.btn]}
+          accessibilityRole="button"
+          accessibilityLabel="Confirm"
+          accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>Confirm</Text>
+        </TouchableOpacity>
+      )}
+      {onPressCancel === undefined ? null : (
+        <TouchableOpacity
+          testID="cancelBtn"
+          onPress={onPressCancel}
+          style={[styles.btnCancel, s.mt10]}
+          accessibilityRole="button"
+          accessibilityLabel="Cancel"
+          accessibilityHint="">
+          <Text type="button-lg" style={pal.textLight}>
+            Cancel
+          </Text>
         </TouchableOpacity>
       )}
     </View>
@@ -77,7 +96,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    paddingBottom: 60,
+    paddingBottom: isDesktopWeb ? 0 : 60,
   },
   title: {
     textAlign: 'center',
@@ -97,5 +116,13 @@ const styles = StyleSheet.create({
     marginTop: 22,
     marginHorizontal: 44,
     backgroundColor: colors.blue3,
+  },
+  btnCancel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 32,
+    padding: 14,
+    marginHorizontal: 20,
   },
 })

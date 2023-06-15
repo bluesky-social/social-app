@@ -5,7 +5,6 @@ import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {Image} from 'expo-image'
 import {colors} from 'lib/styles'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
-import {Image as TImage} from 'lib/media/types'
 import {useStores} from 'state/index'
 import {
   usePhotoLibraryPermission,
@@ -13,14 +12,18 @@ import {
 } from 'lib/hooks/usePermissions'
 import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
+import {AvatarModeration} from 'lib/labeling/types'
+import {isWeb, isAndroid} from 'platform/detection'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 
 export function UserBanner({
   banner,
+  moderation,
   onSelectNewBanner,
 }: {
   banner?: string | null
-  onSelectNewBanner?: (img: TImage | null) => void
+  moderation?: AvatarModeration
+  onSelectNewBanner?: (img: RNImage | null) => void
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -52,10 +55,8 @@ export function UserBanner({
         if (!(await requestPhotoAccessIfNeeded())) {
           return
         }
-        const items = await openPicker(store, {
-          mediaType: 'photo',
-          multiple: false,
-        })
+        const items = await openPicker()
+
         onSelectNewBanner?.(
           await openCropper(store, {
             mediaType: 'photo',
@@ -66,7 +67,7 @@ export function UserBanner({
         )
       },
     },
-    {
+    !!banner && {
       testID: 'changeBannerRemoveBtn',
       label: 'Remove',
       icon: ['far', 'trash-can'] as IconProp,
@@ -91,6 +92,8 @@ export function UserBanner({
           testID="userBannerImage"
           style={styles.bannerImage}
           source={{uri: banner}}
+          accessible={true}
+          accessibilityIgnoresInvertColors
         />
       ) : (
         <View
@@ -107,12 +110,16 @@ export function UserBanner({
         />
       </View>
     </DropdownButton>
-  ) : banner ? (
+  ) : banner &&
+    !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <Image
       testID="userBannerImage"
       style={styles.bannerImage}
       resizeMode="cover"
       source={{uri: banner}}
+      blurRadius={moderation?.blur ? 100 : 0}
+      accessible={true}
+      accessibilityIgnoresInvertColors
     />
   ) : (
     <View
@@ -128,7 +135,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     bottom: 8,
-    right: 8,
+    right: 24,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',

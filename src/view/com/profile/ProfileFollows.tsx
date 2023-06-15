@@ -58,15 +58,7 @@ export const ProfileFollows = observer(function ProfileFollows({
   // loaded
   // =
   const renderItem = ({item}: {item: FollowItem}) => (
-    <ProfileCardWithFollowBtn
-      key={item.did}
-      did={item.did}
-      handle={item.handle}
-      displayName={item.displayName}
-      avatar={item.avatar}
-      labels={item.labels}
-      isFollowedBy={!!item.viewer?.followedBy}
-    />
+    <ProfileCardWithFollowBtn key={item.did} profile={item} />
   )
   return (
     <FlatList
@@ -89,6 +81,8 @@ export const ProfileFollows = observer(function ProfileFollows({
         </View>
       )}
       extraData={view.isLoading}
+      // @ts-ignore our .web version only -prf
+      desktopFixedHeight
     />
   )
 })

@@ -1,7 +1,8 @@
-import React from 'react'
+import React, {ComponentProps} from 'react'
 import {
   Linking,
   SafeAreaView,
+  ScrollView,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -26,8 +27,10 @@ import {
   CogIcon,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
-  MoonIcon,
   UserIconSolid,
+  SatelliteDishIcon,
+  SatelliteDishIconSolid,
+  HandIcon,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
@@ -39,6 +42,7 @@ import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {isWeb} from 'platform/detection'
+import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
 
 export const DrawerContent = observer(() => {
   const theme = useTheme()
@@ -46,8 +50,10 @@ export const DrawerContent = observer(() => {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile} =
+  const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
+
+  const {notifications} = store.me
 
   // events
   // =
@@ -91,6 +97,17 @@ export const DrawerContent = observer(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
 
+  const onPressMyFeeds = React.useCallback(
+    () => onPressTab('Feeds'),
+    [onPressTab],
+  )
+
+  const onPressModeration = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'Moderation'})
+    navigation.navigate('Moderation')
+    store.shell.closeDrawer()
+  }, [navigation, track, store.shell])
+
   const onPressSettings = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Settings'})
     navigation.navigate('Settings')
@@ -101,12 +118,6 @@ export const DrawerContent = observer(() => {
     track('Menu:FeedbackClicked')
     Linking.openURL(FEEDBACK_FORM_URL)
   }, [track])
-
-  const onDarkmodePress = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: '#darkmode'})
-    store.shell.setDarkMode(!store.shell.darkMode)
-  }, [track, store])
-
   // rendering
   // =
 
@@ -119,7 +130,11 @@ export const DrawerContent = observer(() => {
       ]}>
       <SafeAreaView style={s.flex1}>
         <View style={styles.main}>
-          <TouchableOpacity testID="profileCardButton" onPress={onPressProfile}>
+          <TouchableOpacity
+            testID="profileCardButton"
+            accessibilityLabel="Profile"
+            accessibilityHint="Navigates to your profile"
+            onPress={onPressProfile}>
             <UserAvatar size={80} avatar={store.me.avatar} />
             <Text
               type="title-lg"
@@ -133,19 +148,18 @@ export const DrawerContent = observer(() => {
               type="xl"
               style={[pal.textLight, styles.profileCardFollowers]}>
               <Text type="xl-medium" style={pal.text}>
-                {store.me.followersCount || 0}
+                {formatCountShortOnly(store.me.followersCount ?? 0)}
               </Text>{' '}
               {pluralize(store.me.followersCount || 0, 'follower')} &middot;{' '}
               <Text type="xl-medium" style={pal.text}>
-                {store.me.followsCount || 0}
+                {formatCountShortOnly(store.me.followsCount ?? 0)}
               </Text>{' '}
               following
             </Text>
           </TouchableOpacity>
         </View>
         <InviteCodes />
-        <View style={s.flex1} />
-        <View style={styles.main}>
+        <ScrollView style={styles.main}>
           <MenuItem
             icon={
               isAtSearch ? (
@@ -163,6 +177,8 @@ export const DrawerContent = observer(() => {
               )
             }
             label="Search"
+            accessibilityLabel="Search"
+            accessibilityHint=""
             bold={isAtSearch}
             onPress={onPressSearch}
           />
@@ -183,6 +199,8 @@ export const DrawerContent = observer(() => {
               )
             }
             label="Home"
+            accessibilityLabel="Home"
+            accessibilityHint=""
             bold={isAtHome}
             onPress={onPressHome}
           />
@@ -203,9 +221,43 @@ export const DrawerContent = observer(() => {
               )
             }
             label="Notifications"
-            count={store.me.notifications.unreadCountLabel}
+            accessibilityLabel="Notifications"
+            accessibilityHint={
+              notifications.unreadCountLabel === ''
+                ? ''
+                : `${notifications.unreadCountLabel} unread`
+            }
+            count={notifications.unreadCountLabel}
             bold={isAtNotifications}
             onPress={onPressNotifications}
+          />
+          <MenuItem
+            icon={
+              isAtFeeds ? (
+                <SatelliteDishIconSolid
+                  strokeWidth={1.5}
+                  style={pal.text as FontAwesomeIconStyle}
+                  size={24}
+                />
+              ) : (
+                <SatelliteDishIcon
+                  strokeWidth={1.5}
+                  style={pal.text as FontAwesomeIconStyle}
+                  size={24}
+                />
+              )
+            }
+            label="My Feeds"
+            accessibilityLabel="My Feeds"
+            accessibilityHint=""
+            onPress={onPressMyFeeds}
+          />
+          <MenuItem
+            icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
+            label="Moderation"
+            accessibilityLabel="Moderation"
+            accessibilityHint=""
+            onPress={onPressModeration}
           />
           <MenuItem
             icon={
@@ -224,6 +276,8 @@ export const DrawerContent = observer(() => {
               )
             }
             label="Profile"
+            accessibilityLabel="Profile"
+            accessibilityHint=""
             onPress={onPressProfile}
           />
           <MenuItem
@@ -235,28 +289,17 @@ export const DrawerContent = observer(() => {
               />
             }
             label="Settings"
+            accessibilityLabel="Settings"
+            accessibilityHint=""
             onPress={onPressSettings}
           />
-        </View>
-        <View style={s.flex1} />
+          <View style={styles.smallSpacer} />
+        </ScrollView>
         <View style={styles.footer}>
-          {!isWeb && (
-            <TouchableOpacity
-              onPress={onDarkmodePress}
-              style={[
-                styles.footerBtn,
-                theme.colorScheme === 'light'
-                  ? pal.btn
-                  : styles.footerBtnDarkMode,
-              ]}>
-              <MoonIcon
-                size={22}
-                style={pal.text as StyleProp<ViewStyle>}
-                strokeWidth={2}
-              />
-            </TouchableOpacity>
-          )}
           <TouchableOpacity
+            accessibilityRole="link"
+            accessibilityLabel="Send feedback"
+            accessibilityHint="Opens Google Forms feedback link"
             onPress={onPressFeedback}
             style={[
               styles.footerBtn,
@@ -280,25 +323,30 @@ export const DrawerContent = observer(() => {
   )
 })
 
-function MenuItem({
-  icon,
-  label,
-  count,
-  bold,
-  onPress,
-}: {
+interface MenuItemProps extends ComponentProps<typeof TouchableOpacity> {
   icon: JSX.Element
   label: string
   count?: string
   bold?: boolean
-  onPress: () => void
-}) {
+}
+
+function MenuItem({
+  icon,
+  label,
+  accessibilityLabel,
+  count,
+  bold,
+  onPress,
+}: MenuItemProps) {
   const pal = usePalette('default')
   return (
     <TouchableOpacity
       testID={`menuItemButton-${label}`}
       style={styles.menuItem}
-      onPress={onPress}>
+      onPress={onPress}
+      accessibilityRole="tab"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint="">
       <View style={[styles.menuItemIconWrapper]}>
         {icon}
         {count ? (
@@ -331,6 +379,7 @@ const InviteCodes = observer(() => {
   const {track} = useAnalytics()
   const store = useStores()
   const pal = usePalette('default')
+  const {invitesAvailable} = store.me
   const onPress = React.useCallback(() => {
     track('Menu:ItemClicked', {url: '#invite-codes'})
     store.shell.closeDrawer()
@@ -340,7 +389,14 @@ const InviteCodes = observer(() => {
     <TouchableOpacity
       testID="menuItemInviteCodes"
       style={[styles.inviteCodes]}
-      onPress={onPress}>
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={
+        invitesAvailable === 1
+          ? 'Invite codes: 1 available'
+          : `Invite codes: ${invitesAvailable} available`
+      }
+      accessibilityHint="Opens list of invite codes">
       <FontAwesomeIcon
         icon="ticket"
         style={[
@@ -352,7 +408,7 @@ const InviteCodes = observer(() => {
       <Text
         type="lg-medium"
         style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}>
-        {store.me.invitesAvailable} invite{' '}
+        {formatCount(store.me.invitesAvailable)} invite{' '}
         {pluralize(store.me.invitesAvailable, 'code')}
       </Text>
     </TouchableOpacity>
@@ -364,12 +420,17 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingBottom: 50,
+    maxWidth: 300,
   },
   viewDarkMode: {
     backgroundColor: '#1B1919',
   },
   main: {
     paddingLeft: 20,
+    paddingTop: 20,
+  },
+  smallSpacer: {
+    height: 20,
   },
 
   profileCardDisplayName: {
@@ -444,9 +505,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     borderRadius: 25,
-  },
-  footerBtnDarkMode: {
-    backgroundColor: colors.black,
   },
   footerBtnFeedback: {
     paddingHorizontal: 24,

@@ -1,10 +1,11 @@
 import {useState, useEffect} from 'react'
 import {useStores} from 'state/index'
+import {ImageModel} from 'state/models/media/image'
 import * as apilib from 'lib/api/index'
 import {getLinkMeta} from 'lib/link-meta/link-meta'
-import {getPostAsQuote} from 'lib/link-meta/bsky'
+import {getPostAsQuote, getFeedAsEmbed} from 'lib/link-meta/bsky'
 import {downloadAndResize} from 'lib/media/manip'
-import {isBskyPostUrl} from 'lib/strings/url-helpers'
+import {isBskyPostUrl, isBskyCustomFeedUrl} from 'lib/strings/url-helpers'
 import {ComposerOpts} from 'state/models/ui/shell'
 import {POST_IMG_MAX} from 'lib/constants'
 
@@ -41,6 +42,24 @@ export function useExternalLinkFetch({
             setExtLink(undefined)
           },
         )
+      } else if (isBskyCustomFeedUrl(extLink.uri)) {
+        getFeedAsEmbed(store, extLink.uri).then(
+          ({embed, meta}) => {
+            if (aborted) {
+              return
+            }
+            setExtLink({
+              uri: extLink.uri,
+              isLoading: false,
+              meta,
+              embed,
+            })
+          },
+          err => {
+            store.log.error('Failed to fetch feed for embedding', {err})
+            setExtLink(undefined)
+          },
+        )
       } else {
         getLinkMeta(store, extLink.uri).then(meta => {
           if (aborted) {
@@ -72,7 +91,9 @@ export function useExternalLinkFetch({
           setExtLink({
             ...extLink,
             isLoading: false, // done
-            localThumb,
+            localThumb: localThumb
+              ? new ImageModel(store, localThumb)
+              : undefined,
           })
         })
       return cleanup

@@ -1,10 +1,14 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {ComAtprotoServerDefs} from '@atproto/api'
+import {
+  ComAtprotoServerDefs,
+  ComAtprotoServerListAppPasswords,
+} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {PostsFeedModel} from './feeds/posts'
 import {NotificationsFeedModel} from './feeds/notifications'
 import {MyFollowsCache} from './cache/my-follows'
 import {isObj, hasProp} from 'lib/type-guards'
+import {SavedFeedsModel} from './ui/saved-feeds'
 
 const PROFILE_UPDATE_INTERVAL = 10 * 60 * 1e3 // 10min
 const NOTIFS_UPDATE_INTERVAL = 30 * 1e3 // 30sec
@@ -18,9 +22,11 @@ export class MeModel {
   followsCount: number | undefined
   followersCount: number | undefined
   mainFeed: PostsFeedModel
+  savedFeeds: SavedFeedsModel
   notifications: NotificationsFeedModel
   follows: MyFollowsCache
   invites: ComAtprotoServerDefs.InviteCode[] = []
+  appPasswords: ComAtprotoServerListAppPasswords.AppPassword[] = []
   lastProfileStateUpdate = Date.now()
   lastNotifsUpdate = Date.now()
 
@@ -37,8 +43,9 @@ export class MeModel {
     this.mainFeed = new PostsFeedModel(this.rootStore, 'home', {
       algorithm: 'reverse-chronological',
     })
-    this.notifications = new NotificationsFeedModel(this.rootStore, {})
+    this.notifications = new NotificationsFeedModel(this.rootStore)
     this.follows = new MyFollowsCache(this.rootStore)
+    this.savedFeeds = new SavedFeedsModel(this.rootStore)
   }
 
   clear() {
@@ -51,6 +58,7 @@ export class MeModel {
     this.description = ''
     this.avatar = ''
     this.invites = []
+    this.appPasswords = []
   }
 
   serialize(): unknown {
@@ -99,16 +107,15 @@ export class MeModel {
       this.handle = sess.currentSession?.handle || ''
       await this.fetchProfile()
       this.mainFeed.clear()
-      await Promise.all([
-        this.mainFeed.setup().catch(e => {
-          this.rootStore.log.error('Failed to setup main feed model', e)
-        }),
-        this.notifications.setup().catch(e => {
-          this.rootStore.log.error('Failed to setup notifications model', e)
-        }),
-      ])
+      /* dont await */ this.mainFeed.setup().catch(e => {
+        this.rootStore.log.error('Failed to setup main feed model', e)
+      })
+      /* dont await */ this.notifications.setup().catch(e => {
+        this.rootStore.log.error('Failed to setup notifications model', e)
+      })
       this.rootStore.emitSessionLoaded()
       await this.fetchInviteCodes()
+      await this.fetchAppPasswords()
     } else {
       this.clear()
     }
@@ -120,6 +127,7 @@ export class MeModel {
       this.lastProfileStateUpdate = Date.now()
       await this.fetchProfile()
       await this.fetchInviteCodes()
+      await this.fetchAppPasswords()
     }
     if (Date.now() - this.lastNotifsUpdate > NOTIFS_UPDATE_INTERVAL) {
       this.lastNotifsUpdate = Date.now()
@@ -171,6 +179,56 @@ export class MeModel {
         this.rootStore.log.error('Failed to fetch user invite codes', e)
       }
       await this.rootStore.invitedUsers.fetch(this.invites)
+    }
+  }
+
+  async fetchAppPasswords() {
+    if (this.rootStore.session) {
+      try {
+        const res =
+          await this.rootStore.agent.com.atproto.server.listAppPasswords({})
+        runInAction(() => {
+          this.appPasswords = res.data.passwords
+        })
+      } catch (e) {
+        this.rootStore.log.error('Failed to fetch user app passwords', e)
+      }
+    }
+  }
+
+  async createAppPassword(name: string) {
+    if (this.rootStore.session) {
+      try {
+        if (this.appPasswords.find(p => p.name === name)) {
+          // TODO: this should be handled by the backend but it's not
+          throw new Error('App password with this name already exists')
+        }
+        const res =
+          await this.rootStore.agent.com.atproto.server.createAppPassword({
+            name,
+          })
+        runInAction(() => {
+          this.appPasswords.push(res.data)
+        })
+        return res.data
+      } catch (e) {
+        this.rootStore.log.error('Failed to create app password', e)
+      }
+    }
+  }
+
+  async deleteAppPassword(name: string) {
+    if (this.rootStore.session) {
+      try {
+        await this.rootStore.agent.com.atproto.server.revokeAppPassword({
+          name: name,
+        })
+        runInAction(() => {
+          this.appPasswords = this.appPasswords.filter(p => p.name !== name)
+        })
+      } catch (e) {
+        this.rootStore.log.error('Failed to delete app password', e)
+      }
     }
   }
 }

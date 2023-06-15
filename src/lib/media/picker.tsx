@@ -1,12 +1,11 @@
 import {
-  openPicker as openPickerFn,
   openCamera as openCameraFn,
   openCropper as openCropperFn,
-  ImageOrVideo,
+  Image as RNImage,
 } from 'react-native-image-crop-picker'
 import {RootStoreModel} from 'state/index'
-import {PickerOpts, CameraOpts, CropperOptions} from './types'
-import {Image as RNImage} from 'react-native-image-crop-picker'
+import {CameraOpts, CropperOptions} from './types'
+export {openPicker} from './picker.shared'
 
 /**
  * NOTE
@@ -16,31 +15,6 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
  * used here.
  * -prf
  */
-
-export async function openPicker(
-  _store: RootStoreModel,
-  opts?: PickerOpts,
-): Promise<RNImage[]> {
-  const items = await openPickerFn({
-    mediaType: 'photo', // TODO: eventually add other media types
-    multiple: opts?.multiple,
-    maxFiles: opts?.maxFiles,
-    forceJpg: true, // ios only
-    compressImageQuality: 0.8,
-  })
-
-  const toMedia = (item: ImageOrVideo) => ({
-    path: item.path,
-    mime: item.mime,
-    size: item.size,
-    width: item.width,
-    height: item.height,
-  })
-  if (Array.isArray(items)) {
-    return items.map(toMedia)
-  }
-  return [toMedia(items)]
-}
 
 export async function openCamera(
   _store: RootStoreModel,
@@ -55,6 +29,7 @@ export async function openCamera(
     forceJpg: true, // ios only
     compressImageQuality: 0.8,
   })
+
   return {
     path: item.path,
     mime: item.mime,
@@ -67,11 +42,10 @@ export async function openCamera(
 export async function openCropper(
   _store: RootStoreModel,
   opts: CropperOptions,
-): Promise<RNImage> {
+) {
   const item = await openCropperFn({
     ...opts,
     forceJpg: true, // ios only
-    compressImageQuality: 0.8,
   })
 
   return {

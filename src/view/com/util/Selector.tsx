@@ -85,6 +85,8 @@ export function Selector({
     onSelect?.(index)
   }
 
+  const numItems = items.length
+
   return (
     <View
       style={[pal.view, styles.outer]}
@@ -94,7 +96,12 @@ export function Selector({
       {items.map((item, i) => {
         const selected = i === selectedIndex
         return (
-          <Pressable key={item} onPress={() => onPressItem(i)}>
+          <Pressable
+            testID={`selector-${i}`}
+            key={item}
+            onPress={() => onPressItem(i)}
+            accessibilityLabel={`Select ${item}`}
+            accessibilityHint={`Select option ${i} of ${numItems}`}>
             <View style={styles.item} ref={itemRefs[i]}>
               <Text
                 style={

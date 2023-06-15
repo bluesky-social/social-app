@@ -3,6 +3,8 @@ import {StyleSheet, View} from 'react-native'
 import {RichText} from '@atproto/api'
 import {useEditor, EditorContent, JSONContent} from '@tiptap/react'
 import {Document} from '@tiptap/extension-document'
+import History from '@tiptap/extension-history'
+import Hardbreak from '@tiptap/extension-hard-break'
 import {Link} from '@tiptap/extension-link'
 import {Mention} from '@tiptap/extension-mention'
 import {Paragraph} from '@tiptap/extension-paragraph'
@@ -24,9 +26,9 @@ interface TextInputProps {
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteModel
-  setRichText: (v: RichText) => void
+  setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => Promise<false | undefined>
+  onPressPublish: (richtext: RichText) => Promise<void>
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
 }
@@ -70,6 +72,8 @@ export const TextInput = React.forwardRef(
             placeholder,
           }),
           Text,
+          History,
+          Hardbreak,
         ],
         editorProps: {
           attributes: {
@@ -85,7 +89,7 @@ export const TextInput = React.forwardRef(
             getImageFromUri(items, onPhotoPasted)
           },
           handleKeyDown: (_, event) => {
-            if (event.metaKey && event.code === 'Enter') {
+            if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
               // Workaround relying on previous state from `setRichText` to
               // get the updated text content during editor initialization
               setRichText((state: RichText) => {
@@ -135,6 +139,8 @@ function editorJsonToText(json: JSONContent): string {
         text += editorJsonToText(node)
       }
     }
+    text += '\n'
+  } else if (json.type === 'hardBreak') {
     text += '\n'
   } else if (json.type === 'text') {
     text += json.text || ''

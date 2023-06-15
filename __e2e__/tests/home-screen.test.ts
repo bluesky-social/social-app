@@ -57,7 +57,9 @@ describe('Home screen', () => {
       .tap()
     await element(by.id('postDropdownReportBtn')).tap()
     await expect(element(by.id('reportPostModal'))).toBeVisible()
-    await element(by.id('reportPostRadios-spam')).tap()
+    await element(
+      by.id('reportPostRadios-com.atproto.moderation.defs#reasonSpam'),
+    ).tap()
     await element(by.id('sendReportBtn')).tap()
     await expect(element(by.id('reportPostModal'))).not.toBeVisible()
   })

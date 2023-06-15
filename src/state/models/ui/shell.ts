@@ -3,13 +3,23 @@ import {RootStoreModel} from '../root-store'
 import {makeAutoObservable} from 'mobx'
 import {ProfileModel} from '../content/profile'
 import {isObj, hasProp} from 'lib/type-guards'
-import {Image} from 'lib/media/types'
+import {Image as RNImage} from 'react-native-image-crop-picker'
+import {ImageModel} from '../media/image'
+import {ListModel} from '../content/list'
+import {GalleryModel} from '../media/gallery'
+
+export type ColorMode = 'system' | 'light' | 'dark'
+
+export function isColorMode(v: unknown): v is ColorMode {
+  return v === 'system' || v === 'light' || v === 'dark'
+}
 
 export interface ConfirmModal {
   name: 'confirm'
   title: string
   message: string | (() => JSX.Element)
   onPressConfirm: () => void | Promise<void>
+  onPressCancel?: () => void | Promise<void>
 }
 
 export interface EditProfileModal {
@@ -35,10 +45,34 @@ export interface ReportAccountModal {
   did: string
 }
 
+export interface CreateOrEditMuteListModal {
+  name: 'create-or-edit-mute-list'
+  list?: ListModel
+  onSave?: (uri: string) => void
+}
+
+export interface ListAddRemoveUserModal {
+  name: 'list-add-remove-user'
+  subject: string
+  displayName: string
+  onUpdate?: () => void
+}
+
+export interface EditImageModal {
+  name: 'edit-image'
+  image: ImageModel
+  gallery: GalleryModel
+}
+
 export interface CropImageModal {
   name: 'crop-image'
   uri: string
-  onSelect: (img?: Image) => void
+  onSelect: (img?: RNImage) => void
+}
+
+export interface AltTextImageModal {
+  name: 'alt-text-image'
+  image: ImageModel
 }
 
 export interface DeleteAccountModal {
@@ -65,23 +99,48 @@ export interface InviteCodesModal {
   name: 'invite-codes'
 }
 
+export interface AddAppPasswordModal {
+  name: 'add-app-password'
+}
+
 export interface ContentFilteringSettingsModal {
   name: 'content-filtering-settings'
 }
 
+export interface ContentLanguagesSettingsModal {
+  name: 'content-languages-settings'
+}
+
 export type Modal =
-  | ConfirmModal
-  | EditProfileModal
-  | ServerInputModal
-  | ReportPostModal
-  | ReportAccountModal
-  | CropImageModal
-  | DeleteAccountModal
-  | RepostModal
+  // Account
+  | AddAppPasswordModal
   | ChangeHandleModal
+  | DeleteAccountModal
+  | EditProfileModal
+
+  // Curation
+  | ContentFilteringSettingsModal
+  | ContentLanguagesSettingsModal
+
+  // Moderation
+  | ReportAccountModal
+  | ReportPostModal
+  | CreateOrEditMuteListModal
+  | ListAddRemoveUserModal
+
+  // Posts
+  | AltTextImageModal
+  | CropImageModal
+  | EditImageModal
+  | ServerInputModal
+  | RepostModal
+
+  // Bluesky access
   | WaitlistModal
   | InviteCodesModal
-  | ContentFilteringSettingsModal
+
+  // Generic
+  | ConfirmModal
 
 interface LightboxModel {}
 
@@ -92,9 +151,14 @@ export class ProfileImageLightbox implements LightboxModel {
   }
 }
 
+interface ImagesLightboxItem {
+  uri: string
+  alt?: string
+}
+
 export class ImagesLightbox implements LightboxModel {
   name = 'images'
-  constructor(public uris: string[], public index: number) {
+  constructor(public images: ImagesLightboxItem[], public index: number) {
     makeAutoObservable(this)
   }
   setIndex(index: number) {
@@ -131,14 +195,14 @@ export interface ComposerOpts {
 }
 
 export class ShellUiModel {
-  darkMode = false
+  colorMode: ColorMode = 'system'
   minimalShellMode = false
   isDrawerOpen = false
   isDrawerSwipeDisabled = false
   isModalActive = false
   activeModals: Modal[] = []
   isLightboxActive = false
-  activeLightbox: ProfileImageLightbox | ImagesLightbox | undefined
+  activeLightbox: ProfileImageLightbox | ImagesLightbox | null = null
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
 
@@ -152,24 +216,48 @@ export class ShellUiModel {
 
   serialize(): unknown {
     return {
-      darkMode: this.darkMode,
+      colorMode: this.colorMode,
     }
   }
 
   hydrate(v: unknown) {
     if (isObj(v)) {
-      if (hasProp(v, 'darkMode') && typeof v.darkMode === 'boolean') {
-        this.darkMode = v.darkMode
+      if (hasProp(v, 'colorMode') && isColorMode(v.colorMode)) {
+        this.colorMode = v.colorMode
       }
     }
   }
 
-  setDarkMode(v: boolean) {
-    this.darkMode = v
+  setColorMode(mode: ColorMode) {
+    this.colorMode = mode
   }
 
   setMinimalShellMode(v: boolean) {
     this.minimalShellMode = v
+  }
+
+  /**
+   * returns true if something was closed
+   * (used by the android hardware back btn)
+   */
+  closeAnyActiveElement(): boolean {
+    if (this.isLightboxActive) {
+      this.closeLightbox()
+      return true
+    }
+    if (this.isModalActive) {
+      this.closeModal()
+      return true
+    }
+    if (this.isComposerActive) {
+      this.closeComposer()
+      return true
+    }
+    if (this.isDrawerOpen) {
+      this.closeDrawer()
+      return true
+    }
+    return false
   }
 
   openDrawer() {
@@ -203,7 +291,7 @@ export class ShellUiModel {
 
   closeLightbox() {
     this.isLightboxActive = false
-    this.activeLightbox = undefined
+    this.activeLightbox = null
   }
 
   openComposer(opts: ComposerOpts) {

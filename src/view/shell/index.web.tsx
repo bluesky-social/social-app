@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {View, StyleSheet, TouchableOpacity} from 'react-native'
 import {useStores} from 'state/index'
@@ -14,12 +14,20 @@ import {RoutesContainer, FlatNavigator} from '../../Navigation'
 import {DrawerContent} from './Drawer'
 import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
-import {usePalette} from 'lib/hooks/usePalette'
+import {useNavigation} from '@react-navigation/native'
+import {NavigationProp} from 'lib/routes/types'
 
 const ShellInner = observer(() => {
   const store = useStores()
-  const pal = usePalette('default')
   const {isDesktop} = useWebMediaQueries()
+
+  const navigator = useNavigation<NavigationProp>()
+
+  useEffect(() => {
+    navigator.addListener('state', () => {
+      store.shell.closeAnyActiveElement()
+    })
+  }, [navigator, store.shell])
 
   return (
     <>
@@ -28,24 +36,10 @@ const ShellInner = observer(() => {
           <FlatNavigator />
         </ErrorBoundary>
       </View>
-      {isDesktop && (
+      {isDesktop && store.session.hasSession && (
         <>
           <DesktopLeftNav />
           <DesktopRightNav />
-          <View
-            style={[
-              styles.viewBorder,
-              {borderLeftColor: pal.colors.border},
-              styles.viewBorderLeft,
-            ]}
-          />
-          <View
-            style={[
-              styles.viewBorder,
-              {borderLeftColor: pal.colors.border},
-              styles.viewBorderRight,
-            ]}
-          />
         </>
       )}
       <Composer
@@ -62,7 +56,9 @@ const ShellInner = observer(() => {
       {!isDesktop && store.shell.isDrawerOpen && (
         <TouchableOpacity
           onPress={() => store.shell.closeDrawer()}
-          style={styles.drawerMask}>
+          style={styles.drawerMask}
+          accessibilityLabel="Close navigation footer"
+          accessibilityHint="Closes bottom navigation bar">
           <View style={styles.drawerContainer}>
             <DrawerContent />
           </View>
@@ -89,18 +85,6 @@ const styles = StyleSheet.create({
   },
   bgDark: {
     backgroundColor: colors.black, // TODO
-  },
-  viewBorder: {
-    position: 'absolute',
-    width: 1,
-    height: '100%',
-    borderLeftWidth: 1,
-  },
-  viewBorderLeft: {
-    left: 'calc(50vw - 300px)',
-  },
-  viewBorderRight: {
-    left: 'calc(50vw + 300px)',
   },
   drawerMask: {
     position: 'absolute',

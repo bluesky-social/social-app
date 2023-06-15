@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
@@ -7,16 +7,19 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {PostsFeedItemModel} from 'state/models/feeds/posts'
+import {PostsFeedItemModel} from 'state/models/feeds/post'
+import {ModerationBehaviorCode} from 'lib/labeling/types'
 import {Link, DesktopWebTextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
-import {PostCtrls} from '../util/PostCtrls'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
+import {ImageHider} from '../util/moderation/ImageHider'
 import {RichText} from '../util/text/RichText'
+import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
@@ -95,11 +98,31 @@ export const FeedItem = observer(function ({
     Toast.show('Copied to clipboard')
   }, [record])
 
+  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(
-      encodeURI(`https://translate.google.com/#auto|en|${record?.text || ''}`),
+      encodeURI(
+        `https://translate.google.com/?sl=auto&tl=${primaryLanguage}&text=${
+          record?.text || ''
+        }`,
+      ),
     )
-  }, [record])
+  }, [record, primaryLanguage])
+
+  const onToggleThreadMute = React.useCallback(async () => {
+    track('FeedItem:ThreadMute')
+    try {
+      await item.toggleThreadMute()
+      if (item.isThreadMuted) {
+        Toast.show('You will no longer receive notifications for this thread')
+      } else {
+        Toast.show('You will now receive notifications for this thread')
+      }
+    } catch (e) {
+      store.log.error('Failed to toggle thread mute', e)
+    }
+  }, [track, item, store])
 
   const onDeletePost = React.useCallback(() => {
     track('FeedItem:PostDelete')
@@ -115,30 +138,71 @@ export const FeedItem = observer(function ({
     )
   }, [track, item, setDeleted, store])
 
-  if (!record || deleted) {
-    return <View />
-  }
-
   const isSmallTop = isThreadChild
-  const isNoTop = false //isChild && !item._isThreadChild
-  const isMuted =
-    item.post.author.viewer?.muted && ignoreMuteFor !== item.post.author.did
   const outerStyles = [
     styles.outer,
     pal.view,
     {borderColor: pal.colors.border},
     isSmallTop ? styles.outerSmallTop : undefined,
-    isNoTop ? styles.outerNoTop : undefined,
     isThreadParent ? styles.outerNoBottom : undefined,
   ]
+
+  // moderation override
+  let moderation = item.moderation.list
+  if (
+    ignoreMuteFor === item.post.author.did &&
+    moderation.isMute &&
+    !moderation.noOverride
+  ) {
+    moderation = {behavior: ModerationBehaviorCode.Show}
+  }
+
+  const accessibilityActions = useMemo(
+    () => [
+      {
+        name: 'reply',
+        label: 'Reply',
+      },
+      {
+        name: 'repost',
+        label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
+      },
+      {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
+    ],
+    [item.post.viewer?.like, item.post.viewer?.repost],
+  )
+
+  const onAccessibilityAction = useCallback(
+    event => {
+      switch (event.nativeEvent.actionName) {
+        case 'like':
+          onPressToggleLike()
+          break
+        case 'reply':
+          onPressReply()
+          break
+        case 'repost':
+          onPressToggleRepost()
+          break
+        default:
+          break
+      }
+    },
+    [onPressReply, onPressToggleLike, onPressToggleRepost],
+  )
+
+  if (!record || deleted) {
+    return <View />
+  }
 
   return (
     <PostHider
       testID={`feedItem-by-${item.post.author.handle}`}
       style={outerStyles}
       href={itemHref}
-      isMuted={isMuted}
-      labels={item.post.labels}>
+      moderation={moderation}
+      accessibilityActions={accessibilityActions}
+      onAccessibilityAction={onAccessibilityAction}>
       {isThreadChild && (
         <View
           style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
@@ -146,11 +210,7 @@ export const FeedItem = observer(function ({
       )}
       {isThreadParent && (
         <View
-          style={[
-            styles.bottomReplyLine,
-            {borderColor: pal.colors.replyLine},
-            isNoTop ? styles.bottomReplyLineNoTop : undefined,
-          ]}
+          style={[styles.bottomReplyLine, {borderColor: pal.colors.replyLine}]}
         />
       )}
       {item.reasonRepost && (
@@ -186,13 +246,14 @@ export const FeedItem = observer(function ({
           </Text>
         </Link>
       )}
+      <PostSandboxWarning />
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Link href={authorHref} title={item.post.author.handle} asAnchor>
             <UserAvatar
               size={52}
               avatar={item.post.author.avatar}
-              hasWarning={!!item.post.author.labels?.length}
+              moderation={item.moderation.avatar}
             />
           </Link>
         </View>
@@ -216,19 +277,23 @@ export const FeedItem = observer(function ({
                   s.mr5,
                 ]}
               />
-              <Text type="md" style={[pal.textLight, s.mr2]} lineHeight={1.2}>
-                Reply to
-              </Text>
-              <UserInfoText
+              <Text
                 type="md"
-                did={replyAuthorDid}
-                attr="displayName"
-                style={[pal.textLight, s.ml2]}
-              />
+                style={[pal.textLight, s.mr2]}
+                lineHeight={1.2}
+                numberOfLines={1}>
+                Reply to{' '}
+                <UserInfoText
+                  type="md"
+                  did={replyAuthorDid}
+                  attr="displayName"
+                  style={[pal.textLight, s.ml2]}
+                />
+              </Text>
             </View>
           )}
           <ContentHider
-            labels={item.post.labels}
+            moderation={moderation}
             containerStyle={styles.contentHider}>
             {item.richText?.text ? (
               <View style={styles.postTextContainer}>
@@ -239,7 +304,9 @@ export const FeedItem = observer(function ({
                 />
               </View>
             ) : undefined}
-            <PostEmbeds embed={item.post.embed} style={styles.embed} />
+            <ImageHider moderation={item.moderation.list} style={styles.embed}>
+              <PostEmbeds embed={item.post.embed} style={styles.embed} />
+            </ImageHider>
           </ContentHider>
           <PostCtrls
             style={styles.ctrls}
@@ -260,11 +327,13 @@ export const FeedItem = observer(function ({
             likeCount={item.post.likeCount}
             isReposted={!!item.post.viewer?.repost}
             isLiked={!!item.post.viewer?.like}
+            isThreadMuted={item.isThreadMuted}
             onPressReply={onPressReply}
             onPressToggleRepost={onPressToggleRepost}
             onPressToggleLike={onPressToggleLike}
             onCopyPostText={onCopyPostText}
             onOpenTranslate={onOpenTranslate}
+            onToggleThreadMute={onToggleThreadMute}
             onDeletePost={onDeletePost}
           />
         </View>
@@ -279,10 +348,6 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingRight: 15,
     paddingBottom: 8,
-  },
-  outerNoTop: {
-    borderTopWidth: 0,
-    paddingTop: 0,
   },
   outerSmallTop: {
     borderTopWidth: 0,
@@ -304,7 +369,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     borderLeftWidth: 2,
   },
-  bottomReplyLineNoTop: {top: 64},
   includeReason: {
     flexDirection: 'row',
     paddingLeft: 50,

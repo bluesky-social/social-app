@@ -14,6 +14,7 @@ import {
 import {Text} from 'view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {isDesktopWeb} from 'platform/detection'
 
 const SECTIONS = ['Posts', 'Users']
 
@@ -23,8 +24,13 @@ export const SearchResults = observer(({model}: {model: SearchUIModel}) => {
   const renderTabBar = React.useCallback(
     (props: RenderTabBarFnProps) => {
       return (
-        <CenteredView style={[pal.border, styles.tabBar]}>
-          <TabBar {...props} items={SECTIONS} />
+        <CenteredView style={[pal.border, pal.view, styles.tabBar]}>
+          <TabBar
+            items={SECTIONS}
+            {...props}
+            key={SECTIONS.join()}
+            indicatorColor={pal.colors.link}
+          />
         </CenteredView>
       )
     },
@@ -33,8 +39,12 @@ export const SearchResults = observer(({model}: {model: SearchUIModel}) => {
 
   return (
     <Pager renderTabBar={renderTabBar} tabBarPosition="top" initialPage={0}>
-      <PostResults key="0" model={model} />
-      <Profiles key="1" model={model} />
+      <View style={[styles.results]}>
+        <PostResults key="0" model={model} />
+      </View>
+      <View style={[styles.results]}>
+        <Profiles key="1" model={model} />
+      </View>
     </Pager>
   )
 })
@@ -49,7 +59,7 @@ const PostResults = observer(({model}: {model: SearchUIModel}) => {
     )
   }
 
-  if (model.postUris.length === 0) {
+  if (model.posts.length === 0) {
     return (
       <CenteredView>
         <Text type="xl" style={[styles.empty, pal.text]}>
@@ -60,9 +70,14 @@ const PostResults = observer(({model}: {model: SearchUIModel}) => {
   }
 
   return (
-    <ScrollView style={pal.view}>
-      {model.postUris.map(uri => (
-        <Post key={uri} uri={uri} hideError />
+    <ScrollView style={[pal.view]}>
+      {model.posts.map(post => (
+        <Post
+          key={post.resolvedUri}
+          uri={post.resolvedUri}
+          initView={post}
+          hideError
+        />
       ))}
       <View style={s.footerSpacer} />
       <View style={s.footerSpacer} />
@@ -94,15 +109,7 @@ const Profiles = observer(({model}: {model: SearchUIModel}) => {
   return (
     <ScrollView style={pal.view}>
       {model.profiles.map(item => (
-        <ProfileCardWithFollowBtn
-          key={item.did}
-          did={item.did}
-          handle={item.handle}
-          displayName={item.displayName}
-          avatar={item.avatar}
-          description={item.description}
-          labels={item.labels}
-        />
+        <ProfileCardWithFollowBtn key={item.did} profile={item} />
       ))}
       <View style={s.footerSpacer} />
       <View style={s.footerSpacer} />
@@ -114,9 +121,19 @@ const Profiles = observer(({model}: {model: SearchUIModel}) => {
 const styles = StyleSheet.create({
   tabBar: {
     borderBottomWidth: 1,
+    position: 'absolute',
+    zIndex: 1,
+    left: 0,
+    right: 0,
+    top: 0,
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   empty: {
     paddingHorizontal: 14,
     paddingVertical: 16,
+  },
+  results: {
+    paddingTop: isDesktopWeb ? 50 : 42,
   },
 })

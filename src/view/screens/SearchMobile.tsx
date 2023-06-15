@@ -35,7 +35,7 @@ export const SearchScreen = withAuthRequired(
     const store = useStores()
     const scrollViewRef = React.useRef<ScrollView>(null)
     const flatListRef = React.useRef<FlatList>(null)
-    const onMainScroll = useOnMainScroll(store)
+    const [onMainScroll] = useOnMainScroll(store)
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
     const autocompleteView = React.useMemo<UserAutocompleteModel>(
@@ -118,7 +118,7 @@ export const SearchScreen = withAuthRequired(
     }, [])
 
     return (
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableWithoutFeedback onPress={onPress} accessible={false}>
         <View style={[pal.view, styles.container]}>
           <HeaderWithInput
             isInputFocused={isInputFocused}
@@ -146,19 +146,14 @@ export const SearchScreen = withAuthRequired(
               scrollEventThrottle={100}>
               {query && autocompleteView.searchRes.length ? (
                 <>
-                  {autocompleteView.searchRes.map(
-                    ({did, handle, displayName, labels, avatar}, index) => (
-                      <ProfileCard
-                        key={did}
-                        testID={`searchAutoCompleteResult-${handle}`}
-                        handle={handle}
-                        displayName={displayName}
-                        labels={labels}
-                        avatar={avatar}
-                        noBorder={index === 0}
-                      />
-                    ),
-                  )}
+                  {autocompleteView.searchRes.map((profile, index) => (
+                    <ProfileCard
+                      key={profile.did}
+                      testID={`searchAutoCompleteResult-${profile.handle}`}
+                      profile={profile}
+                      noBorder={index === 0}
+                    />
+                  ))}
                 </>
               ) : query && !autocompleteView.searchRes.length ? (
                 <View>
@@ -169,7 +164,7 @@ export const SearchScreen = withAuthRequired(
               ) : isInputFocused ? (
                 <View>
                   <Text style={[pal.textLight, styles.searchPrompt]}>
-                    Search for users on the network
+                    Search for users and posts on the network
                   </Text>
                 </View>
               ) : null}

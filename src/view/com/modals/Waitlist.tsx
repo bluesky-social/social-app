@@ -19,7 +19,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 
-export const snapPoints = ['60%']
+export const snapPoints = ['80%']
 
 export function Component({}: {}) {
   const pal = usePalette('default')
@@ -77,6 +77,9 @@ export function Component({}: {}) {
           keyboardAppearance={theme.colorScheme}
           value={email}
           onChangeText={setEmail}
+          accessible={true}
+          accessibilityLabel="Email"
+          accessibilityHint="Input your email to get on the Bluesky waitlist"
         />
         {error ? (
           <View style={s.mt10}>
@@ -99,7 +102,10 @@ export function Component({}: {}) {
           </View>
         ) : (
           <>
-            <TouchableOpacity onPress={onPressSignup}>
+            <TouchableOpacity
+              onPress={onPressSignup}
+              accessibilityRole="button"
+              accessibilityHint={`Confirms signing up ${email} to the waitlist`}>
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
                 start={{x: 0, y: 0}}
@@ -110,7 +116,13 @@ export function Component({}: {}) {
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.btn, s.mt10]} onPress={onCancel}>
+            <TouchableOpacity
+              style={[styles.btn, s.mt10]}
+              onPress={onCancel}
+              accessibilityRole="button"
+              accessibilityLabel="Cancel waitlist signup"
+              accessibilityHint={`Exits signing up for waitlist with ${email}`}
+              onAccessibilityEscape={onCancel}>
               <Text type="button-lg" style={pal.textLight}>
                 Cancel
               </Text>

@@ -2,11 +2,15 @@
   "expo": {
     "name": "Bluesky",
     "slug": "bluesky",
+    "scheme": "bluesky",
     "owner": "blueskysocial",
-    "version": "1.18.0",
+    "version": "1.32.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/cloud-splash.png",
       "resizeMode": "cover",
@@ -26,27 +30,51 @@
         ],
         "BGTaskSchedulerPermittedIdentifiers": [
           "com.transistorsoft.fetch"
-        ]
-      }
+        ],
+        "NSCameraUsageDescription": "Used for profile pictures, posts, and other kinds of content.",
+        "NSMicrophoneUsageDescription": "Used for posts and other kinds of content.",
+        "NSPhotoLibraryAddUsageDescription": "Used to save images to your library.",
+        "NSPhotoLibraryUsageDescription": "Used for profile pictures, posts, and other kinds of content"
+      },
+      "associatedDomains": ["applinks:bsky.app", "applinks:staging.bsky.app"]
     },
     "androidStatusBar": {
       "barStyle": "dark-content",
       "backgroundColor": "#ffffff"
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 18,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "xyz.blueskyweb.app"
+      "package": "xyz.blueskyweb.app",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "bsky.app"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "updates": {
+      "enabled": true,
+      "fallbackToCacheTimeout": 1000,
+      "url": "https://u.expo.dev/55bd077a-d905-4184-9c7f-94789ba0f302"
+    },
     "plugins": [
       "expo-localization",
       "react-native-background-fetch",
+      "sentry-expo",
       [
         "expo-build-properties",
         {
@@ -66,6 +94,17 @@
       "eas": {
         "projectId": "55bd077a-d905-4184-9c7f-94789ba0f302"
       }
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "blueskyweb",
+            "project": "react-native"
+          }
+        }
+      ]
     }
   }
 }

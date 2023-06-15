@@ -1,10 +1,24 @@
 import {resolveConfig} from 'detox/internals'
+import {execSync} from 'child_process'
 
 const platform = device.getPlatform()
 
 export async function openApp(opts: any) {
   opts = opts || {}
   const config = await resolveConfig()
+
+  if (device.getPlatform() === 'ios') {
+    // disable password autofill
+    execSync(
+      `plutil -replace restrictedBool.allowPasswordAutoFill.value -bool NO ~/Library/Developer/CoreSimulator/Devices/${device.id}/data/Containers/Shared/SystemGroup/systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles/UserSettings.plist`,
+    )
+    execSync(
+      `plutil -replace restrictedBool.allowPasswordAutoFill.value -bool NO ~/Library/Developer/CoreSimulator/Devices/${device.id}/data/Library/UserConfigurationProfiles/EffectiveUserSettings.plist`,
+    )
+    execSync(
+      `plutil -replace restrictedBool.allowPasswordAutoFill.value -bool NO ~/Library/Developer/CoreSimulator/Devices/${device.id}/data/Library/UserConfigurationProfiles/PublicInfo/PublicEffectiveUserSettings.plist`,
+    )
+  }
   if (config.configurationName.split('.').includes('debug')) {
     return await openAppForDebugBuild(platform, opts)
   } else {
@@ -42,6 +56,7 @@ export async function login(
     await device.takeScreenshot('2- opened service selector')
   }
   await element(by.id('customServerTextInput')).typeText(service)
+  await element(by.id('customServerTextInput')).tapReturnKey()
   await element(by.id('customServerSelectBtn')).tap()
   if (takeScreenshots) {
     await device.takeScreenshot('3- input custom service')

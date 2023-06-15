@@ -1,37 +1,36 @@
 import React from 'react'
-import {
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native'
-import {ComAtprotoLabelDefs} from '@atproto/api'
+import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
+import {ModerationBehavior, ModerationBehaviorCode} from 'lib/labeling/types'
 
 export function ContentHider({
   testID,
-  isMuted,
-  labels,
+  moderation,
   style,
   containerStyle,
   children,
 }: React.PropsWithChildren<{
   testID?: string
-  isMuted?: boolean
-  labels: ComAtprotoLabelDefs.Label[] | undefined
+  moderation: ModerationBehavior
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
-  const store = useStores()
-  const labelPref = store.preferences.getLabelPreference(labels)
+  const onPressShow = React.useCallback(() => {
+    setOverride(true)
+  }, [setOverride])
+  const onPressHide = React.useCallback(() => {
+    setOverride(false)
+  }, [setOverride])
 
-  if (!isMuted && labelPref.pref === 'show') {
+  if (
+    moderation.behavior === ModerationBehaviorCode.Show ||
+    moderation.behavior === ModerationBehaviorCode.Warn ||
+    moderation.behavior === ModerationBehaviorCode.WarnImages
+  ) {
     return (
       <View testID={testID} style={style}>
         {children}
@@ -39,33 +38,35 @@ export function ContentHider({
     )
   }
 
-  if (labelPref.pref === 'hide') {
+  if (moderation.behavior === ModerationBehaviorCode.Hide) {
     return null
   }
 
   return (
     <View style={[styles.container, pal.view, pal.border, containerStyle]}>
-      <View
+      <Pressable
+        onPress={override ? onPressHide : onPressShow}
+        accessibilityLabel={override ? 'Hide post' : 'Show post'}
+        // TODO: The text labelling should be split up so controls have unique roles
+        accessibilityHint={
+          override
+            ? 'Re-hide post'
+            : 'Shows post hidden based on your moderation settings'
+        }
         style={[
           styles.description,
           pal.viewLight,
           override && styles.descriptionOpen,
         ]}>
         <Text type="md" style={pal.textLight}>
-          {isMuted ? (
-            <>Post from an account you muted.</>
-          ) : (
-            <>Warning: {labelPref.desc.warning || labelPref.desc.title}</>
-          )}
+          {moderation.reason || 'Content warning'}
         </Text>
-        <TouchableOpacity
-          style={styles.showBtn}
-          onPress={() => setOverride(v => !v)}>
-          <Text type="md" style={pal.link}>
+        <View style={styles.showBtn}>
+          <Text type="md-medium" style={pal.link}>
             {override ? 'Hide' : 'Show'}
           </Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </Pressable>
       {override && (
         <View style={[styles.childrenContainer, pal.border]}>
           <View testID={testID} style={addStyle(style, styles.child)}>

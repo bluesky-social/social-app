@@ -10,15 +10,16 @@ import {
 import {AtUri} from '@atproto/api'
 import {RootStoreModel} from 'state/models/root-store'
 import {isNetworkError} from 'lib/strings/errors'
-import {Image} from 'lib/media/types'
 import {LinkMeta} from '../link-meta/link-meta'
 import {isWeb} from 'platform/detection'
+import {ImageModel} from 'state/models/media/image'
 
 export interface ExternalEmbedDraft {
   uri: string
   isLoading: boolean
   meta?: LinkMeta
-  localThumb?: Image
+  embed?: AppBskyEmbedRecord.Main
+  localThumb?: ImageModel
 }
 
 export async function resolveName(store: RootStoreModel, didOrHandle: string) {
@@ -61,7 +62,7 @@ interface PostOpts {
     cid: string
   }
   extLink?: ExternalEmbedDraft
-  images?: string[]
+  images?: ImageModel[]
   knownHandles?: Set<string>
   onStateChange?: (state: string) => void
 }
@@ -109,10 +110,12 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     const images: AppBskyEmbedImages.Image[] = []
     for (const image of opts.images) {
       opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
-      const res = await uploadBlob(store, image, 'image/jpeg')
+      await image.compress()
+      const path = image.compressed?.path ?? image.path
+      const res = await uploadBlob(store, path, 'image/jpeg')
       images.push({
         image: res.data.blob,
-        alt: '', // TODO supply alt text
+        alt: image.altText ?? '',
       })
     }
 
@@ -134,40 +137,54 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
   }
 
   if (opts.extLink && !opts.images?.length) {
-    let thumb
-    if (opts.extLink.localThumb) {
-      opts.onStateChange?.('Uploading link thumbnail...')
-      let encoding
-      if (opts.extLink.localThumb.mime) {
-        encoding = opts.extLink.localThumb.mime
-      } else if (opts.extLink.localThumb.path.endsWith('.png')) {
-        encoding = 'image/png'
-      } else if (
-        opts.extLink.localThumb.path.endsWith('.jpeg') ||
-        opts.extLink.localThumb.path.endsWith('.jpg')
-      ) {
-        encoding = 'image/jpeg'
-      } else {
-        store.log.warn(
-          'Unexpected image format for thumbnail, skipping',
-          opts.extLink.localThumb.path,
-        )
+    if (opts.extLink.embed) {
+      embed = opts.extLink.embed
+    } else {
+      let thumb
+      if (opts.extLink.localThumb) {
+        opts.onStateChange?.('Uploading link thumbnail...')
+        let encoding
+        if (opts.extLink.localThumb.mime) {
+          encoding = opts.extLink.localThumb.mime
+        } else if (opts.extLink.localThumb.path.endsWith('.png')) {
+          encoding = 'image/png'
+        } else if (
+          opts.extLink.localThumb.path.endsWith('.jpeg') ||
+          opts.extLink.localThumb.path.endsWith('.jpg')
+        ) {
+          encoding = 'image/jpeg'
+        } else {
+          store.log.warn(
+            'Unexpected image format for thumbnail, skipping',
+            opts.extLink.localThumb.path,
+          )
+        }
+        if (encoding) {
+          const thumbUploadRes = await uploadBlob(
+            store,
+            opts.extLink.localThumb.path,
+            encoding,
+          )
+          thumb = thumbUploadRes.data.blob
+        }
       }
-      if (encoding) {
-        const thumbUploadRes = await uploadBlob(
-          store,
-          opts.extLink.localThumb.path,
-          encoding,
-        )
-        thumb = thumbUploadRes.data.blob
-      }
-    }
 
-    if (opts.quote) {
-      embed = {
-        $type: 'app.bsky.embed.recordWithMedia',
-        record: embed,
-        media: {
+      if (opts.quote) {
+        embed = {
+          $type: 'app.bsky.embed.recordWithMedia',
+          record: embed,
+          media: {
+            $type: 'app.bsky.embed.external',
+            external: {
+              uri: opts.extLink.uri,
+              title: opts.extLink.meta?.title || '',
+              description: opts.extLink.meta?.description || '',
+              thumb,
+            },
+          } as AppBskyEmbedExternal.Main,
+        } as AppBskyEmbedRecordWithMedia.Main
+      } else {
+        embed = {
           $type: 'app.bsky.embed.external',
           external: {
             uri: opts.extLink.uri,
@@ -175,18 +192,8 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
             description: opts.extLink.meta?.description || '',
             thumb,
           },
-        } as AppBskyEmbedExternal.Main,
-      } as AppBskyEmbedRecordWithMedia.Main
-    } else {
-      embed = {
-        $type: 'app.bsky.embed.external',
-        external: {
-          uri: opts.extLink.uri,
-          title: opts.extLink.meta?.title || '',
-          description: opts.extLink.meta?.description || '',
-          thumb,
-        },
-      } as AppBskyEmbedExternal.Main
+        } as AppBskyEmbedExternal.Main
+      }
     }
   }
 

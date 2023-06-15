@@ -1,22 +1,39 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {getLocales} from 'expo-localization'
+import AwaitLock from 'await-lock'
+import isEqual from 'lodash.isequal'
 import {isObj, hasProp} from 'lib/type-guards'
-import {ComAtprotoLabelDefs} from '@atproto/api'
+import {RootStoreModel} from '../root-store'
+import {ComAtprotoLabelDefs, AppBskyActorDefs} from '@atproto/api'
+import {LabelValGroup} from 'lib/labeling/types'
 import {getLabelValueGroup} from 'lib/labeling/helpers'
 import {
-  LabelValGroup,
   UNKNOWN_LABEL_GROUP,
   ILLEGAL_LABEL_GROUP,
+  ALWAYS_FILTER_LABEL_GROUP,
+  ALWAYS_WARN_LABEL_GROUP,
 } from 'lib/labeling/const'
+import {DEFAULT_FEEDS} from 'lib/constants'
+import {isIOS} from 'platform/detection'
 
 const deviceLocales = getLocales()
 
 export type LabelPreference = 'show' | 'warn' | 'hide'
+const LABEL_GROUPS = [
+  'nsfw',
+  'nudity',
+  'suggestive',
+  'gore',
+  'hate',
+  'spam',
+  'impersonation',
+]
+const VISIBILITY_VALUES = ['show', 'warn', 'hide']
 
 export class LabelPreferencesModel {
-  nsfw: LabelPreference = 'warn'
-  nudity: LabelPreference = 'show'
-  suggestive: LabelPreference = 'show'
+  nsfw: LabelPreference = 'hide'
+  nudity: LabelPreference = 'warn'
+  suggestive: LabelPreference = 'warn'
   gore: LabelPreference = 'warn'
   hate: LabelPreference = 'hide'
   spam: LabelPreference = 'hide'
@@ -28,28 +45,34 @@ export class LabelPreferencesModel {
 }
 
 export class PreferencesModel {
-  _contentLanguages: string[] | undefined
+  adultContentEnabled = !isIOS
+  contentLanguages: string[] =
+    deviceLocales?.map?.(locale => locale.languageCode) || []
   contentLabels = new LabelPreferencesModel()
+  savedFeeds: string[] = []
+  pinnedFeeds: string[] = []
 
-  constructor() {
-    makeAutoObservable(this, {}, {autoBind: true})
-  }
+  // used to linearize async modifications to state
+  lock = new AwaitLock()
 
-  // gives an array of BCP 47 language tags without region codes
-  get contentLanguages() {
-    if (this._contentLanguages) {
-      return this._contentLanguages
-    }
-    return deviceLocales.map(locale => locale.languageCode)
+  constructor(public rootStore: RootStoreModel) {
+    makeAutoObservable(this, {lock: false}, {autoBind: true})
   }
 
   serialize() {
     return {
-      contentLanguages: this._contentLanguages,
+      contentLanguages: this.contentLanguages,
       contentLabels: this.contentLabels,
+      savedFeeds: this.savedFeeds,
+      pinnedFeeds: this.pinnedFeeds,
     }
   }
 
+  /**
+   * The function hydrates an object with properties related to content languages, labels, saved feeds,
+   * and pinned feeds that it gets from the parameter `v` (probably local storage)
+   * @param {unknown} v - the data object to hydrate from
+   */
   hydrate(v: unknown) {
     if (isObj(v)) {
       if (
@@ -57,19 +80,209 @@ export class PreferencesModel {
         Array.isArray(v.contentLanguages) &&
         typeof v.contentLanguages.every(item => typeof item === 'string')
       ) {
-        this._contentLanguages = v.contentLanguages
+        this.contentLanguages = v.contentLanguages
       }
       if (hasProp(v, 'contentLabels') && typeof v.contentLabels === 'object') {
         Object.assign(this.contentLabels, v.contentLabels)
+      } else {
+        // default to the device languages
+        this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
+      }
+      if (
+        hasProp(v, 'savedFeeds') &&
+        Array.isArray(v.savedFeeds) &&
+        typeof v.savedFeeds.every(item => typeof item === 'string')
+      ) {
+        this.savedFeeds = v.savedFeeds
+      }
+      if (
+        hasProp(v, 'pinnedFeeds') &&
+        Array.isArray(v.pinnedFeeds) &&
+        typeof v.pinnedFeeds.every(item => typeof item === 'string')
+      ) {
+        this.pinnedFeeds = v.pinnedFeeds
       }
     }
   }
 
-  setContentLabelPref(
+  /**
+   * This function fetches preferences and sets defaults for missing items.
+   */
+  async sync({clearCache}: {clearCache?: boolean} = {}) {
+    await this.lock.acquireAsync()
+    try {
+      // fetch preferences
+      let hasSavedFeedsPref = false
+      const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
+      runInAction(() => {
+        for (const pref of res.data.preferences) {
+          if (
+            AppBskyActorDefs.isAdultContentPref(pref) &&
+            AppBskyActorDefs.validateAdultContentPref(pref).success
+          ) {
+            this.adultContentEnabled = pref.enabled
+          } else if (
+            AppBskyActorDefs.isContentLabelPref(pref) &&
+            AppBskyActorDefs.validateAdultContentPref(pref).success
+          ) {
+            if (
+              LABEL_GROUPS.includes(pref.label) &&
+              VISIBILITY_VALUES.includes(pref.visibility)
+            ) {
+              this.contentLabels[pref.label as keyof LabelPreferencesModel] =
+                pref.visibility as LabelPreference
+            }
+          } else if (
+            AppBskyActorDefs.isSavedFeedsPref(pref) &&
+            AppBskyActorDefs.validateSavedFeedsPref(pref).success
+          ) {
+            if (!isEqual(this.savedFeeds, pref.saved)) {
+              this.savedFeeds = pref.saved
+            }
+            if (!isEqual(this.pinnedFeeds, pref.pinned)) {
+              this.pinnedFeeds = pref.pinned
+            }
+            hasSavedFeedsPref = true
+          }
+        }
+      })
+
+      // set defaults on missing items
+      if (!hasSavedFeedsPref) {
+        const {saved, pinned} = await DEFAULT_FEEDS(
+          this.rootStore.agent.service.toString(),
+          (handle: string) =>
+            this.rootStore.agent
+              .resolveHandle({handle})
+              .then(({data}) => data.did),
+        )
+        runInAction(() => {
+          this.savedFeeds = saved
+          this.pinnedFeeds = pinned
+        })
+        res.data.preferences.push({
+          $type: 'app.bsky.actor.defs#savedFeedsPref',
+          saved,
+          pinned,
+        })
+        await this.rootStore.agent.app.bsky.actor.putPreferences({
+          preferences: res.data.preferences,
+        })
+      }
+    } finally {
+      this.lock.release()
+    }
+
+    await this.rootStore.me.savedFeeds.updateCache(clearCache)
+  }
+
+  /**
+   * This function updates the preferences of a user and allows for a callback function to be executed
+   * before the update.
+   * @param cb - cb is a callback function that takes in a single parameter of type
+   * AppBskyActorDefs.Preferences and returns either a boolean or void. This callback function is used to
+   * update the preferences of the user. The function is called with the current preferences as an
+   * argument and if the callback returns false, the preferences are not updated.
+   * @returns void
+   */
+  async update(
+    cb: (
+      prefs: AppBskyActorDefs.Preferences,
+    ) => AppBskyActorDefs.Preferences | false,
+  ) {
+    await this.lock.acquireAsync()
+    try {
+      const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
+      const newPrefs = cb(res.data.preferences)
+      if (newPrefs === false) {
+        return
+      }
+      await this.rootStore.agent.app.bsky.actor.putPreferences({
+        preferences: newPrefs,
+      })
+    } finally {
+      this.lock.release()
+    }
+  }
+
+  /**
+   * This function resets the preferences to an empty array of no preferences.
+   */
+  async reset() {
+    await this.lock.acquireAsync()
+    try {
+      runInAction(() => {
+        this.contentLabels = new LabelPreferencesModel()
+        this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
+        this.savedFeeds = []
+        this.pinnedFeeds = []
+      })
+      await this.rootStore.agent.app.bsky.actor.putPreferences({
+        preferences: [],
+      })
+    } finally {
+      this.lock.release()
+    }
+  }
+
+  hasContentLanguage(code2: string) {
+    return this.contentLanguages.includes(code2)
+  }
+
+  toggleContentLanguage(code2: string) {
+    if (this.hasContentLanguage(code2)) {
+      this.contentLanguages = this.contentLanguages.filter(
+        lang => lang !== code2,
+      )
+    } else {
+      this.contentLanguages = this.contentLanguages.concat([code2])
+    }
+  }
+
+  async setContentLabelPref(
     key: keyof LabelPreferencesModel,
     value: LabelPreference,
   ) {
     this.contentLabels[key] = value
+
+    await this.update((prefs: AppBskyActorDefs.Preferences) => {
+      const existing = prefs.find(
+        pref =>
+          AppBskyActorDefs.isContentLabelPref(pref) &&
+          AppBskyActorDefs.validateAdultContentPref(pref).success &&
+          pref.label === key,
+      )
+      if (existing) {
+        existing.visibility = value
+      } else {
+        prefs.push({
+          $type: 'app.bsky.actor.defs#contentLabelPref',
+          label: key,
+          visibility: value,
+        })
+      }
+      return prefs
+    })
+  }
+
+  async setAdultContentEnabled(v: boolean) {
+    this.adultContentEnabled = v
+    await this.update((prefs: AppBskyActorDefs.Preferences) => {
+      const existing = prefs.find(
+        pref =>
+          AppBskyActorDefs.isAdultContentPref(pref) &&
+          AppBskyActorDefs.validateAdultContentPref(pref).success,
+      )
+      if (existing) {
+        existing.enabled = v
+      } else {
+        prefs.push({
+          $type: 'app.bsky.actor.defs#adultContentPref',
+          enabled: v,
+        })
+      }
+      return prefs
+    })
   }
 
   getLabelPreference(labels: ComAtprotoLabelDefs.Label[] | undefined): {
@@ -87,6 +300,12 @@ export class PreferencesModel {
       const group = getLabelValueGroup(label.val)
       if (group.id === 'illegal') {
         return {pref: 'hide', desc: ILLEGAL_LABEL_GROUP}
+      } else if (group.id === 'always-filter') {
+        return {pref: 'hide', desc: ALWAYS_FILTER_LABEL_GROUP}
+      } else if (group.id === 'always-warn') {
+        res.pref = 'warn'
+        res.desc = ALWAYS_WARN_LABEL_GROUP
+        continue
       } else if (group.id === 'unknown') {
         continue
       }
@@ -99,6 +318,66 @@ export class PreferencesModel {
         res.desc = group
       }
     }
+    if (res.desc.isAdultImagery && !this.adultContentEnabled) {
+      res.pref = 'hide'
+    }
     return res
+  }
+
+  async setSavedFeeds(saved: string[], pinned: string[]) {
+    const oldSaved = this.savedFeeds
+    const oldPinned = this.pinnedFeeds
+    this.savedFeeds = saved
+    this.pinnedFeeds = pinned
+    try {
+      await this.update((prefs: AppBskyActorDefs.Preferences) => {
+        let feedsPref = prefs.find(
+          pref =>
+            AppBskyActorDefs.isSavedFeedsPref(pref) &&
+            AppBskyActorDefs.validateSavedFeedsPref(pref).success,
+        )
+        if (feedsPref) {
+          feedsPref.saved = saved
+          feedsPref.pinned = pinned
+        } else {
+          feedsPref = {
+            $type: 'app.bsky.actor.defs#savedFeedsPref',
+            saved,
+            pinned,
+          }
+        }
+        return prefs
+          .filter(pref => !AppBskyActorDefs.isSavedFeedsPref(pref))
+          .concat([feedsPref])
+      })
+    } catch (e) {
+      runInAction(() => {
+        this.savedFeeds = oldSaved
+        this.pinnedFeeds = oldPinned
+      })
+      throw e
+    }
+  }
+
+  async addSavedFeed(v: string) {
+    return this.setSavedFeeds([...this.savedFeeds, v], this.pinnedFeeds)
+  }
+
+  async removeSavedFeed(v: string) {
+    return this.setSavedFeeds(
+      this.savedFeeds.filter(uri => uri !== v),
+      this.pinnedFeeds.filter(uri => uri !== v),
+    )
+  }
+
+  async addPinnedFeed(v: string) {
+    return this.setSavedFeeds(this.savedFeeds, [...this.pinnedFeeds, v])
+  }
+
+  async removePinnedFeed(v: string) {
+    return this.setSavedFeeds(
+      this.savedFeeds,
+      this.pinnedFeeds.filter(uri => uri !== v),
+    )
   }
 }

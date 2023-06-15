@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   Linking,
@@ -20,9 +20,10 @@ import {Link} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
-import {PostCtrls} from '../util/PostCtrls'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
+import {ImageHider} from '../util/moderation/ImageHider'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
@@ -166,13 +167,32 @@ const PostLoaded = observer(
       Toast.show('Copied to clipboard')
     }, [record])
 
+    const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+
     const onOpenTranslate = React.useCallback(() => {
       Linking.openURL(
         encodeURI(
-          `https://translate.google.com/#auto|en|${record?.text || ''}`,
+          `https://translate.google.com/?sl=auto&tl=${primaryLanguage}&text=${
+            record?.text || ''
+          }`,
         ),
       )
-    }, [record])
+    }, [record, primaryLanguage])
+
+    const onToggleThreadMute = React.useCallback(async () => {
+      try {
+        await item.toggleThreadMute()
+        if (item.isThreadMuted) {
+          Toast.show(
+            'You will no longer received notifications for this thread',
+          )
+        } else {
+          Toast.show('You will now receive notifications for this thread')
+        }
+      } catch (e) {
+        store.log.error('Failed to toggle thread mute', e)
+      }
+    }, [item, store])
 
     const onDeletePost = React.useCallback(() => {
       item.delete().then(
@@ -187,12 +207,47 @@ const PostLoaded = observer(
       )
     }, [item, setDeleted, store])
 
+    const accessibilityActions = useMemo(
+      () => [
+        {
+          name: 'reply',
+          label: 'Reply',
+        },
+        {
+          name: 'repost',
+          label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
+        },
+        {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
+      ],
+      [item.post.viewer?.like, item.post.viewer?.repost],
+    )
+
+    const onAccessibilityAction = useCallback(
+      event => {
+        switch (event.nativeEvent.actionName) {
+          case 'like':
+            onPressToggleLike()
+            break
+          case 'reply':
+            onPressReply()
+            break
+          case 'repost':
+            onPressToggleRepost()
+            break
+          default:
+            break
+        }
+      },
+      [onPressReply, onPressToggleLike, onPressToggleRepost],
+    )
+
     return (
       <PostHider
         href={itemHref}
         style={[styles.outer, pal.view, pal.border, style]}
-        isMuted={item.post.author.viewer?.muted === true}
-        labels={item.post.labels}>
+        moderation={item.moderation.list}
+        accessibilityActions={accessibilityActions}
+        onAccessibilityAction={onAccessibilityAction}>
         {showReplyLine && <View style={styles.replyLine} />}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
@@ -200,7 +255,7 @@ const PostLoaded = observer(
               <UserAvatar
                 size={52}
                 avatar={item.post.author.avatar}
-                hasWarning={!!item.post.author.labels?.length}
+                moderation={item.moderation.avatar}
               />
             </Link>
           </View>
@@ -220,30 +275,37 @@ const PostLoaded = observer(
                   size={9}
                   style={[pal.textLight, s.mr5]}
                 />
-                <Text type="sm" style={[pal.textLight, s.mr2]} lineHeight={1.2}>
-                  Reply to
-                </Text>
-                <UserInfoText
+                <Text
                   type="sm"
-                  did={replyAuthorDid}
-                  attr="displayName"
-                  style={[pal.textLight]}
-                />
+                  style={[pal.textLight, s.mr2]}
+                  lineHeight={1.2}
+                  numberOfLines={1}>
+                  Reply to{' '}
+                  <UserInfoText
+                    type="sm"
+                    did={replyAuthorDid}
+                    attr="displayName"
+                    style={[pal.textLight]}
+                  />
+                </Text>
               </View>
             )}
             <ContentHider
-              labels={item.post.labels}
+              moderation={item.moderation.list}
               containerStyle={styles.contentHider}>
               {item.richText?.text ? (
                 <View style={styles.postTextContainer}>
                   <RichText
+                    testID="postText"
                     type="post-text"
                     richText={item.richText}
                     lineHeight={1.3}
                   />
                 </View>
               ) : undefined}
-              <PostEmbeds embed={item.post.embed} style={s.mb10} />
+              <ImageHider moderation={item.moderation.list} style={s.mb10}>
+                <PostEmbeds embed={item.post.embed} style={s.mb10} />
+              </ImageHider>
             </ContentHider>
             <PostCtrls
               itemUri={itemUri}
@@ -263,11 +325,13 @@ const PostLoaded = observer(
               likeCount={item.post.likeCount}
               isReposted={!!item.post.viewer?.repost}
               isLiked={!!item.post.viewer?.like}
+              isThreadMuted={item.isThreadMuted}
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
               onPressToggleLike={onPressToggleLike}
               onCopyPostText={onCopyPostText}
               onOpenTranslate={onOpenTranslate}
+              onToggleThreadMute={onToggleThreadMute}
               onDeletePost={onDeletePost}
             />
           </View>

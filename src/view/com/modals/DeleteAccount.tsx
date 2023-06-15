@@ -16,6 +16,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {resetToTab} from '../../../Navigation'
+import {isDesktopWeb} from 'platform/detection'
 
 export const snapPoints = ['60%']
 
@@ -42,11 +43,13 @@ export function Component({}: {}) {
   const onPressConfirmDelete = async () => {
     setError('')
     setIsProcessing(true)
+    const token = confirmCode.replace(/\s/g, '')
+
     try {
       await store.agent.com.atproto.server.deleteAccount({
         did: store.me.did,
         password,
-        token: confirmCode,
+        token,
       })
       Toast.show('Your account has been deleted')
       resetToTab('HomeTab')
@@ -61,17 +64,36 @@ export function Component({}: {}) {
     store.shell.closeModal()
   }
   return (
-    <View
-      style={[styles.container, {backgroundColor: pal.colors.backgroundLight}]}>
+    <View style={[styles.container, pal.view]}>
       <View style={[styles.innerContainer, pal.view]}>
-        <Text type="title-xl" style={[styles.title, pal.text]}>
-          Delete account
-        </Text>
+        <View style={[styles.titleContainer, pal.view]}>
+          <Text type="title-xl" style={[s.textCenter, pal.text]}>
+            Delete Account
+          </Text>
+          <View style={[pal.view, s.flexRow]}>
+            <Text type="title-xl" style={[pal.text, s.bold]}>
+              {' "'}
+            </Text>
+            <Text
+              type="title-xl"
+              numberOfLines={1}
+              style={[
+                isDesktopWeb ? styles.titleDesktop : styles.titleMobile,
+                pal.text,
+                s.bold,
+              ]}>
+              {store.me.handle}
+            </Text>
+            <Text type="title-xl" style={[pal.text, s.bold]}>
+              {'"'}
+            </Text>
+          </View>
+        </View>
         {!isEmailSent ? (
           <>
             <Text type="lg" style={[styles.description, pal.text]}>
               For security reasons, we'll need to send a confirmation code to
-              your email.
+              your email address.
             </Text>
             {error ? (
               <View style={s.mt10}>
@@ -86,7 +108,10 @@ export function Component({}: {}) {
               <>
                 <TouchableOpacity
                   style={styles.mt20}
-                  onPress={onPressSendEmail}>
+                  onPress={onPressSendEmail}
+                  accessibilityRole="button"
+                  accessibilityLabel="Send email"
+                  accessibilityHint="Sends email with confirmation code for account deletion">
                   <LinearGradient
                     colors={[
                       gradients.blueLight.start,
@@ -96,13 +121,17 @@ export function Component({}: {}) {
                     end={{x: 1, y: 1}}
                     style={[styles.btn]}>
                     <Text type="button-lg" style={[s.white, s.bold]}>
-                      Send email
+                      Send Email
                     </Text>
                   </LinearGradient>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.btn, s.mt10]}
-                  onPress={onCancel}>
+                  onPress={onCancel}
+                  accessibilityRole="button"
+                  accessibilityLabel="Cancel account deletion"
+                  accessibilityHint=""
+                  onAccessibilityEscape={onCancel}>
                   <Text type="button-lg" style={pal.textLight}>
                     Cancel
                   </Text>
@@ -112,7 +141,11 @@ export function Component({}: {}) {
           </>
         ) : (
           <>
-            <Text type="lg" style={styles.description}>
+            {/* TODO: Update this label to be more concise */}
+            <Text
+              type="lg"
+              style={styles.description}
+              nativeID="confirmationCode">
               Check your inbox for an email with the confirmation code to enter
               below:
             </Text>
@@ -123,8 +156,11 @@ export function Component({}: {}) {
               keyboardAppearance={theme.colorScheme}
               value={confirmCode}
               onChangeText={setConfirmCode}
+              accessibilityLabelledBy="confirmationCode"
+              accessibilityLabel="Confirmation code"
+              accessibilityHint="Input confirmation code for account deletion"
             />
-            <Text type="lg" style={styles.description}>
+            <Text type="lg" style={styles.description} nativeID="password">
               Please enter your password as well:
             </Text>
             <TextInput
@@ -135,6 +171,9 @@ export function Component({}: {}) {
               secureTextEntry
               value={password}
               onChangeText={setPassword}
+              accessibilityLabelledBy="password"
+              accessibilityLabel="Password"
+              accessibilityHint="Input password for account deletion"
             />
             {error ? (
               <View style={styles.mt20}>
@@ -149,14 +188,21 @@ export function Component({}: {}) {
               <>
                 <TouchableOpacity
                   style={[styles.btn, styles.evilBtn, styles.mt20]}
-                  onPress={onPressConfirmDelete}>
+                  onPress={onPressConfirmDelete}
+                  accessibilityRole="button"
+                  accessibilityLabel="Confirm delete account"
+                  accessibilityHint="">
                   <Text type="button-lg" style={[s.white, s.bold]}>
                     Delete my account
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.btn, s.mt10]}
-                  onPress={onCancel}>
+                  onPress={onCancel}
+                  accessibilityRole="button"
+                  accessibilityLabel="Cancel account deletion"
+                  accessibilityHint="Exits account deletion process"
+                  onAccessibilityEscape={onCancel}>
                   <Text type="button-lg" style={pal.textLight}>
                     Cancel
                   </Text>
@@ -177,10 +223,25 @@ const styles = StyleSheet.create({
   innerContainer: {
     paddingBottom: 20,
   },
-  title: {
-    textAlign: 'center',
+  titleContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
     marginTop: 12,
     marginBottom: 12,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  titleMobile: {
+    textAlign: 'center',
+  },
+  titleDesktop: {
+    textAlign: 'center',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    maxWidth: '400px',
   },
   description: {
     textAlign: 'center',

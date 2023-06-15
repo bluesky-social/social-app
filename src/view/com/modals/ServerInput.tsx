@@ -41,7 +41,8 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               <TouchableOpacity
                 testID="localDevServerButton"
                 style={styles.btn}
-                onPress={() => doSelect(LOCAL_DEV_SERVICE)}>
+                onPress={() => doSelect(LOCAL_DEV_SERVICE)}
+                accessibilityRole="button">
                 <Text style={styles.btnText}>Local dev server</Text>
                 <FontAwesomeIcon
                   icon="arrow-right"
@@ -50,7 +51,8 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.btn}
-                onPress={() => doSelect(STAGING_SERVICE)}>
+                onPress={() => doSelect(STAGING_SERVICE)}
+                accessibilityRole="button">
                 <Text style={styles.btnText}>Staging</Text>
                 <FontAwesomeIcon
                   icon="arrow-right"
@@ -61,7 +63,10 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
           ) : undefined}
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => doSelect(PROD_SERVICE)}>
+            onPress={() => doSelect(PROD_SERVICE)}
+            accessibilityRole="button"
+            accessibilityLabel="Select Bluesky Social"
+            accessibilityHint="Sets Bluesky Social as your service provider">
             <Text style={styles.btnText}>Bluesky.Social</Text>
             <FontAwesomeIcon
               icon="arrow-right"
@@ -83,11 +88,23 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               keyboardAppearance={theme.colorScheme}
               value={customUrl}
               onChangeText={setCustomUrl}
+              accessibilityLabel="Custom domain"
+              // TODO: Simplify this wording further to be understandable by everyone
+              accessibilityHint="Use your domain as your Bluesky client service provider"
             />
             <TouchableOpacity
               testID="customServerSelectBtn"
               style={[pal.borderDark, pal.text, styles.textInputBtn]}
-              onPress={() => doSelect(customUrl)}>
+              onPress={() => doSelect(customUrl)}
+              accessibilityRole="button"
+              accessibilityLabel={`Confirm service. ${
+                customUrl === ''
+                  ? 'Button disabled. Input custom domain to proceed.'
+                  : ''
+              }`}
+              accessibilityHint=""
+              // TODO - accessibility: Need to inform state change on failure
+              disabled={customUrl === ''}>
               <FontAwesomeIcon
                 icon="check"
                 style={[pal.text as FontAwesomeIconStyle, styles.checkIcon]}

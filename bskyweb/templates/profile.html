@@ -1,25 +1,48 @@
 {% extends "base.html" %}
 
-{% block head_page_meta -%}
-<!-- TODO: "same as" indication with DID? -->
+{% block head_title %}
 {%- if profileView -%}
-	<meta property="og:type" content="article"/>
-	<meta name="twitter:card" content="summary"/>
-  {%- if profileView.DisplayName -%}
-	<meta property="og:title" content="{{ profileView.DisplayName }} / {{ profileView.Handle }}"/>
-	<meta name="twitter:title" content="{{ profileView.DisplayName }} / {{ profileView.Handle }}"/>
-  {%- else -%}
-	<meta property="og:title" content="{{ profileView.Handle }}"/>
-	<meta name="twitter:title" content="{{ profileView.Handle }}"/>
-  {%- endif -%}
-	<meta name="twitter:description" content="{{ profileView.Description }}"/>
-	{%- if profileView.Avatar -%}
-  <meta name="twitter:image" content="{{ profileView.Avatar }}"/>
-  {%- endif -%}
+  @{{ profileView.Handle }} on Bluesky
+{%- else -%}
+  Bluesky
 {%- endif -%}
+{% endblock %}
+
+{% block html_head_extra -%}
+{%- if profileView -%}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Bluesky Social">
+  {%- if requestURI %}
+  <meta property="og:url" content="{{ requestURI }}">
+  {% endif -%}
+  {%- if profileView.DisplayName %}
+  <meta property="og:title" content="{{ profileView.DisplayName }} (@{{ profileView.Handle }})">
+  {% else %}
+  <meta property="og:title" content="{{ profileView.Handle }}">
+  {% endif -%}
+  {%- if profileView.Description %}
+  <meta name="description" content="{{ profileView.Description }}">
+  <meta property="og:description" content="{{ profileView.Description }}">
+  {% endif -%}
+  {%- if profileView.Banner %}
+  <meta property="og:image" content="{{ profileView.Banner }}">
+  <meta name="twitter:card" content="summary_large_image">
+  {%- elif profileView.Avatar -%}
+  {# Don't use avatar image in cards; usually looks bad #}
+  <meta name="twitter:card" content="summary">
+  {% endif %}
+  <meta name="twitter:label1" content="Account DID">
+  <meta name="twitter:value1" content="{{ profileView.Did }}">
+  <meta name="twitter:site" content="@bluesky">
+{% endif -%}
 {%- endblock %}
 
 {% block noscript_extra -%}
-<p>{{ profileView.DisplayName }} / {{ profileView.Handle }}
-<p>{{ profileView.Description }}
+<div id="bsky_profile_summary">
+  <h3>Profile</h3>
+  <p id="bsky_display_name">{{ profileView.DisplayName }}</p>
+  <p id="bsky_handle">{{ profileView.Handle }}</p>
+  <p id="bsky_did">{{ profileView.Did }}</p>
+  <p id="bsky_profile_description">{{ profileView.Description }}</p>
+</div>
 {%- endblock %}

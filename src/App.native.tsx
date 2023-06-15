@@ -1,9 +1,10 @@
 import 'react-native-url-polyfill/auto'
 import React, {useState, useEffect} from 'react'
+import 'lib/sentry' // must be relatively on top
+import {withSentry} from 'lib/sentry'
 import {Linking} from 'react-native'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import * as SplashScreen from 'expo-splash-screen'
-import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {observer} from 'mobx-react-lite'
 import {ThemeProvider} from 'lib/ThemeContext'
@@ -15,6 +16,8 @@ import * as notifee from 'lib/notifee'
 import * as analytics from 'lib/analytics/analytics'
 import * as Toast from './view/com/util/Toast'
 import {handleLink} from './Navigation'
+
+SplashScreen.preventAutoHideAsync()
 
 const App = observer(() => {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -48,14 +51,12 @@ const App = observer(() => {
     return null
   }
   return (
-    <ThemeProvider theme={rootStore.shell.darkMode ? 'dark' : 'light'}>
+    <ThemeProvider theme={rootStore.shell.colorMode}>
       <RootSiblingParent>
         <analytics.Provider>
           <RootStoreProvider value={rootStore}>
             <GestureHandlerRootView style={s.h100pct}>
-              <SafeAreaProvider>
-                <Shell />
-              </SafeAreaProvider>
+              <Shell />
             </GestureHandlerRootView>
           </RootStoreProvider>
         </analytics.Provider>
@@ -64,4 +65,4 @@ const App = observer(() => {
   )
 })
 
-export default App
+export default withSentry(App)

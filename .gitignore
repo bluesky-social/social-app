@@ -93,3 +93,7 @@ web-build/
 # Android & iOS folders
 android/
 ios/
+
+# environment variables
+.env
+.env.*

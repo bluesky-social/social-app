@@ -4,7 +4,6 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
 import {MagnifyingGlassIcon} from 'lib/icons'
 import {useTheme} from 'lib/ThemeContext'
@@ -54,8 +53,11 @@ export function HeaderWithInput({
         testID="viewHeaderBackOrMenuBtn"
         onPress={onPressMenu}
         hitSlop={MENU_HITSLOP}
-        style={styles.headerMenuBtn}>
-        <UserAvatar size={30} avatar={store.me.avatar} />
+        style={styles.headerMenuBtn}
+        accessibilityRole="button"
+        accessibilityLabel="Menu"
+        accessibilityHint="Access navigation links and settings">
+        <FontAwesomeIcon icon="bars" size={18} color={pal.colors.textLight} />
       </TouchableOpacity>
       <View
         style={[
@@ -80,9 +82,19 @@ export function HeaderWithInput({
           onBlur={() => setIsInputFocused(false)}
           onChangeText={onChangeQuery}
           onSubmitEditing={onSubmitQuery}
+          autoFocus={true}
+          accessibilityRole="search"
+          accessibilityLabel="Search"
+          accessibilityHint=""
+          autoCorrect={false}
+          autoCapitalize="none"
         />
         {query ? (
-          <TouchableOpacity onPress={onPressClearQuery}>
+          <TouchableOpacity
+            onPress={onPressClearQuery}
+            accessibilityRole="button"
+            accessibilityLabel="Clear search query"
+            accessibilityHint="">
             <FontAwesomeIcon
               icon="xmark"
               size={16}
@@ -93,7 +105,9 @@ export function HeaderWithInput({
       </View>
       {query || isInputFocused ? (
         <View style={styles.headerCancelBtn}>
-          <TouchableOpacity onPress={onPressCancelSearchInner}>
+          <TouchableOpacity
+            onPress={onPressCancelSearchInner}
+            accessibilityRole="button">
             <Text style={pal.text}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -106,13 +120,18 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
   headerMenuBtn: {
-    width: 40,
+    width: 30,
     height: 30,
-    marginLeft: 6,
+    borderRadius: 30,
+    marginRight: 6,
+    paddingBottom: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   headerSearchContainer: {
     flex: 1,

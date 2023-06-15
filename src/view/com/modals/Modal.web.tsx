@@ -9,15 +9,21 @@ import {isMobileWeb} from 'platform/detection'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ServerInputModal from './ServerInput'
-import * as ReportPostModal from './ReportPost'
-import * as ReportAccountModal from './ReportAccount'
+import * as ReportPostModal from './report/ReportPost'
+import * as ReportAccountModal from './report/ReportAccount'
+import * as CreateOrEditMuteListModal from './CreateOrEditMuteList'
+import * as ListAddRemoveUserModal from './ListAddRemoveUser'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as RepostModal from './Repost'
 import * as CropImageModal from './crop-image/CropImage.web'
+import * as AltTextImageModal from './AltImage'
+import * as EditImageModal from './EditImage'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
+import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
+import * as ContentLanguagesSettingsModal from './ContentLanguagesSettings'
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
@@ -44,12 +50,13 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   const onPressMask = () => {
-    if (modal.name === 'crop-image') {
+    if (modal.name === 'crop-image' || modal.name === 'edit-image') {
       return // dont close on mask presses during crop
     }
     store.shell.closeModal()
   }
   const onInnerPress = () => {
+    // TODO: can we use prevent default?
     // do nothing, we just want to stop it from bubbling
   }
 
@@ -64,6 +71,10 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ReportPostModal.Component {...modal} />
   } else if (modal.name === 'report-account') {
     element = <ReportAccountModal.Component {...modal} />
+  } else if (modal.name === 'create-or-edit-mute-list') {
+    element = <CreateOrEditMuteListModal.Component {...modal} />
+  } else if (modal.name === 'list-add-remove-user') {
+    element = <ListAddRemoveUserModal.Component {...modal} />
   } else if (modal.name === 'crop-image') {
     element = <CropImageModal.Component {...modal} />
   } else if (modal.name === 'delete-account') {
@@ -76,21 +87,32 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <WaitlistModal.Component />
   } else if (modal.name === 'invite-codes') {
     element = <InviteCodesModal.Component />
+  } else if (modal.name === 'add-app-password') {
+    element = <AddAppPassword.Component />
   } else if (modal.name === 'content-filtering-settings') {
     element = <ContentFilteringSettingsModal.Component />
+  } else if (modal.name === 'content-languages-settings') {
+    element = <ContentLanguagesSettingsModal.Component />
+  } else if (modal.name === 'alt-text-image') {
+    element = <AltTextImageModal.Component {...modal} />
+  } else if (modal.name === 'edit-image') {
+    element = <EditImageModal.Component {...modal} />
   } else {
     return null
   }
 
   return (
+    // eslint-disable-next-line
     <TouchableWithoutFeedback onPress={onPressMask}>
       <View style={styles.mask}>
+        {/* eslint-disable-next-line */}
         <TouchableWithoutFeedback onPress={onInnerPress}>
           <View
             style={[
               styles.container,
               isMobileWeb && styles.containerMobile,
               pal.view,
+              pal.border,
             ]}>
             {element}
           </View>
@@ -118,6 +140,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 24,
     borderRadius: 8,
+    borderWidth: 1,
   },
   containerMobile: {
     borderRadius: 0,

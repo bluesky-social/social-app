@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import {AppBskyFeedDefs} from '@atproto/api'
 import {CenteredView, FlatList} from '../util/Views'
 import {
   PostThreadModel,
@@ -23,15 +24,23 @@ import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
 import {isDesktopWeb, isMobileWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 
 const REPLY_PROMPT = {_reactKey: '__reply__', _isHighlightedPost: false}
+const DELETED = {_reactKey: '__deleted__', _isHighlightedPost: false}
+const BLOCKED = {_reactKey: '__blocked__', _isHighlightedPost: false}
 const BOTTOM_COMPONENT = {
   _reactKey: '__bottom_component__',
   _isHighlightedPost: false,
 }
-type YieldedItem = PostThreadItemModel | typeof REPLY_PROMPT
+type YieldedItem =
+  | PostThreadItemModel
+  | typeof REPLY_PROMPT
+  | typeof DELETED
+  | typeof BLOCKED
 
 export const PostThread = observer(function PostThread({
   uri,
@@ -52,6 +61,13 @@ export const PostThread = observer(function PostThread({
     }
     return []
   }, [view.thread])
+  useSetTitle(
+    view.thread?.postRecord &&
+      `${sanitizeDisplayName(
+        view.thread.post.author.displayName ||
+          `@${view.thread.post.author.handle}`,
+      )}: "${view.thread?.postRecord?.text}"`,
+  )
 
   // events
   // =
@@ -103,6 +119,22 @@ export const PostThread = observer(function PostThread({
     ({item}: {item: YieldedItem}) => {
       if (item === REPLY_PROMPT) {
         return <ComposePrompt onPressCompose={onPressReply} />
+      } else if (item === DELETED) {
+        return (
+          <View style={[pal.border, pal.viewLight, styles.missingItem]}>
+            <Text type="lg-bold" style={pal.textLight}>
+              Deleted post.
+            </Text>
+          </View>
+        )
+      } else if (item === BLOCKED) {
+        return (
+          <View style={[pal.border, pal.viewLight, styles.missingItem]}>
+            <Text type="lg-bold" style={pal.textLight}>
+              Blocked post.
+            </Text>
+          </View>
+        )
       } else if (item === BOTTOM_COMPONENT) {
         // HACK
         // due to some complexities with how flatlist works, this is the easiest way
@@ -130,10 +162,16 @@ export const PostThread = observer(function PostThread({
 
   // loading
   // =
-  if ((view.isLoading && !view.isRefreshing) || view.params.uri !== uri) {
+  if (
+    !view.hasLoaded ||
+    (view.isLoading && !view.isRefreshing) ||
+    view.params.uri !== uri
+  ) {
     return (
       <CenteredView>
-        <ActivityIndicator />
+        <View style={s.p20}>
+          <ActivityIndicator size="large" />
+        </View>
       </CenteredView>
     )
   }
@@ -151,7 +189,11 @@ export const PostThread = observer(function PostThread({
             <Text type="md" style={[pal.text, s.mb10]}>
               The post may have been deleted.
             </Text>
-            <TouchableOpacity onPress={onPressBack}>
+            <TouchableOpacity
+              onPress={onPressBack}
+              accessibilityRole="button"
+              accessibilityLabel="Back"
+              accessibilityHint="">
               <Text type="2xl" style={pal.link}>
                 <FontAwesomeIcon
                   icon="angle-left"
@@ -168,6 +210,34 @@ export const PostThread = observer(function PostThread({
     return (
       <CenteredView>
         <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
+      </CenteredView>
+    )
+  }
+  if (view.isBlocked) {
+    return (
+      <CenteredView>
+        <View style={[pal.view, pal.border, styles.notFoundContainer]}>
+          <Text type="title-lg" style={[pal.text, s.mb5]}>
+            Post hidden
+          </Text>
+          <Text type="md" style={[pal.text, s.mb10]}>
+            You have blocked the author or you have been blocked by the author.
+          </Text>
+          <TouchableOpacity
+            onPress={onPressBack}
+            accessibilityRole="button"
+            accessibilityLabel="Back"
+            accessibilityHint="">
+            <Text type="2xl" style={pal.link}>
+              <FontAwesomeIcon
+                icon="angle-left"
+                style={[pal.link as FontAwesomeIconStyle, s.mr5]}
+                size={14}
+              />
+              Back
+            </Text>
+          </TouchableOpacity>
+        </View>
       </CenteredView>
     )
   }
@@ -202,8 +272,10 @@ function* flattenThread(
   isAscending = false,
 ): Generator<YieldedItem, void> {
   if (post.parent) {
-    if ('notFound' in post.parent && post.parent.notFound) {
-      // TODO render not found
+    if (AppBskyFeedDefs.isNotFoundPost(post.parent)) {
+      yield DELETED
+    } else if (AppBskyFeedDefs.isBlockedPost(post.parent)) {
+      yield BLOCKED
     } else {
       yield* flattenThread(post.parent as PostThreadItemModel, true)
     }
@@ -214,8 +286,8 @@ function* flattenThread(
   }
   if (post.replies?.length) {
     for (const reply of post.replies) {
-      if ('notFound' in reply && reply.notFound) {
-        // TODO render not found
+      if (AppBskyFeedDefs.isNotFoundPost(reply)) {
+        yield DELETED
       } else {
         yield* flattenThread(reply as PostThreadItemModel)
       }
@@ -231,6 +303,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 14,
     borderRadius: 6,
+  },
+  missingItem: {
+    borderTop: 1,
+    paddingHorizontal: 18,
+    paddingVertical: 18,
   },
   bottomBorder: {
     borderBottomWidth: 1,

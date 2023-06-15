@@ -142,9 +142,11 @@ export function ToggleButton({
             ]}
           />
         </View>
-        <Text type="button" style={[labelStyle, styles.label]}>
-          {label}
-        </Text>
+        {label === '' ? null : (
+          <Text type="button" style={[labelStyle, styles.label]}>
+            {label}
+          </Text>
+        )}
       </View>
     </Button>
   )
@@ -154,6 +156,7 @@ const styles = StyleSheet.create({
   outer: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 10,
   },
   circle: {
     width: 42,
@@ -161,7 +164,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 4,
     borderWidth: 1,
-    marginRight: 10,
   },
   circleFill: {
     width: 16,

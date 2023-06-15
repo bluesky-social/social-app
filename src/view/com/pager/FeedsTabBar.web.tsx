@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {Animated, StyleSheet} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
@@ -27,6 +27,10 @@ const FeedsTabBarDesktop = observer(
     props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
   ) => {
     const store = useStores()
+    const items = useMemo(
+      () => ['Following', ...store.me.savedFeeds.pinnedFeedNames],
+      [store.me.savedFeeds.pinnedFeedNames],
+    )
     const pal = usePalette('default')
     const interp = useAnimatedValue(0)
 
@@ -44,13 +48,14 @@ const FeedsTabBarDesktop = observer(
         {translateY: Animated.multiply(interp, -100)},
       ],
     }
+
     return (
       // @ts-ignore the type signature for transform wrong here, translateX and translateY need to be in separate objects -prf
       <Animated.View style={[pal.view, styles.tabBar, transform]}>
         <TabBar
+          key={items.join(',')}
           {...props}
-          items={['Following', "What's hot"]}
-          indicatorPosition="bottom"
+          items={items}
           indicatorColor={pal.colors.link}
         />
       </Animated.View>
@@ -63,11 +68,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
     left: '50%',
-    width: 640,
+    width: 598,
     top: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 18,
   },
   tabBarAvi: {
     marginTop: 1,

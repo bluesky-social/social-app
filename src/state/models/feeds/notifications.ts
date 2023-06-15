@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AppBskyNotificationListNotifications as ListNotifications,
   AppBskyActorDefs,
+  AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedRepost,
   AppBskyFeedLike,
@@ -9,10 +10,21 @@ import {
   ComAtprotoLabelDefs,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
+import chunk from 'lodash.chunk'
 import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from '../root-store'
 import {PostThreadModel} from '../content/post-thread'
 import {cleanError} from 'lib/strings/errors'
+import {
+  PostLabelInfo,
+  PostModeration,
+  ModerationBehaviorCode,
+} from 'lib/labeling/types'
+import {
+  getPostModeration,
+  filterAccountLabels,
+  filterProfileLabels,
+} from 'lib/labeling/helpers'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const PAGE_SIZE = 30
@@ -88,6 +100,29 @@ export class NotificationsFeedItemModel {
     }
   }
 
+  get labelInfo(): PostLabelInfo {
+    const addedInfo = this.additionalPost?.thread?.labelInfo
+    return {
+      postLabels: (this.labels || []).concat(addedInfo?.postLabels || []),
+      accountLabels: filterAccountLabels(this.author.labels).concat(
+        addedInfo?.accountLabels || [],
+      ),
+      profileLabels: filterProfileLabels(this.author.labels).concat(
+        addedInfo?.profileLabels || [],
+      ),
+      isMuted: this.author.viewer?.muted || addedInfo?.isMuted || false,
+      mutedByList: this.author.viewer?.mutedByList || addedInfo?.mutedByList,
+      isBlocking:
+        !!this.author.viewer?.blocking || addedInfo?.isBlocking || false,
+      isBlockedBy:
+        !!this.author.viewer?.blockedBy || addedInfo?.isBlockedBy || false,
+    }
+  }
+
+  get moderation(): PostModeration {
+    return getPostModeration(this.rootStore, this.labelInfo)
+  }
+
   get numUnreadInGroup(): number {
     if (this.additional?.length) {
       return (
@@ -146,6 +181,14 @@ export class NotificationsFeedItemModel {
     return false
   }
 
+  get additionalDataUri(): string | undefined {
+    if (this.isReply || this.isQuote || this.isMention) {
+      return this.uri
+    } else if (this.isLike || this.isRepost) {
+      return this.subjectUri
+    }
+  }
+
   get subjectUri(): string {
     if (this.reasonSubject) {
       return this.reasonSubject
@@ -158,6 +201,13 @@ export class NotificationsFeedItemModel {
       return record.subject.uri
     }
     return ''
+  }
+
+  get reasonSubjectRootUri(): string | undefined {
+    if (this.additionalPost) {
+      return this.additionalPost.rootUri
+    }
+    return undefined
   }
 
   toSupportedRecord(v: unknown): SupportedRecord | undefined {
@@ -186,28 +236,11 @@ export class NotificationsFeedItemModel {
     )
   }
 
-  async fetchAdditionalData() {
-    if (!this.needsAdditionalData) {
-      return
-    }
-    let postUri
-    if (this.isReply || this.isQuote || this.isMention) {
-      postUri = this.uri
-    } else if (this.isLike || this.isRepost) {
-      postUri = this.subjectUri
-    }
-    if (postUri) {
-      this.additionalPost = new PostThreadModel(this.rootStore, {
-        uri: postUri,
-        depth: 0,
-      })
-      await this.additionalPost.setup().catch(e => {
-        this.rootStore.log.error(
-          'Failed to load post needed by notification',
-          e,
-        )
-      })
-    }
+  setAdditionalData(additionalPost: AppBskyFeedDefs.PostView) {
+    this.additionalPost = PostThreadModel.fromPostView(
+      this.rootStore,
+      additionalPost,
+    )
   }
 }
 
@@ -227,7 +260,7 @@ export class NotificationsFeedModel {
 
   // data
   notifications: NotificationsFeedItemModel[] = []
-  queuedNotifications: undefined | ListNotifications.Notification[] = undefined
+  queuedNotifications: undefined | NotificationsFeedItemModel[] = undefined
   unreadCount = 0
 
   // this is used to help trigger push notifications
@@ -257,7 +290,9 @@ export class NotificationsFeedModel {
   }
 
   get hasNewLatest() {
-    return this.queuedNotifications && this.queuedNotifications?.length > 0
+    return Boolean(
+      this.queuedNotifications && this.queuedNotifications?.length > 0,
+    )
   }
 
   get unreadCountLabel(): string {
@@ -354,7 +389,13 @@ export class NotificationsFeedModel {
         queue.push(notif)
       }
 
-      this._setQueued(this._filterNotifications(queue))
+      // NOTE
+      // because filtering depends on the added information we have to fetch
+      // the full models here. this is *not* ideal performance and we need
+      // to update the notifications route to give all the info we need
+      // -prf
+      const queueModels = await this._fetchItemModels(queue)
+      this._setQueued(this._filterNotifications(queueModels))
       this._countUnread()
     } catch (e) {
       this.rootStore.log.error('NotificationsModel:syncQueue failed', {e})
@@ -451,8 +492,15 @@ export class NotificationsFeedModel {
       'mostRecent',
       res.data.notifications[0],
     )
-    await notif.fetchAdditionalData()
-    return notif
+    const addedUri = notif.additionalDataUri
+    if (addedUri) {
+      const postsRes = await this.rootStore.agent.app.bsky.feed.getPosts({
+        uris: [addedUri],
+      })
+      notif.setAdditionalData(postsRes.data.posts[0])
+    }
+    const filtered = this._filterNotifications([notif])
+    return filtered[0]
   }
 
   // state transitions
@@ -505,43 +553,78 @@ export class NotificationsFeedModel {
   }
 
   _filterNotifications(
-    items: ListNotifications.Notification[],
-  ): ListNotifications.Notification[] {
-    return items.filter(item => {
-      return (
-        this.rootStore.preferences.getLabelPreference(item.labels).pref !==
-        'hide'
-      )
-    })
+    items: NotificationsFeedItemModel[],
+  ): NotificationsFeedItemModel[] {
+    return items
+      .filter(item => {
+        const hideByLabel =
+          item.moderation.list.behavior === ModerationBehaviorCode.Hide
+        let mutedThread = !!(
+          item.reasonSubjectRootUri &&
+          this.rootStore.mutedThreads.uris.has(item.reasonSubjectRootUri)
+        )
+        return !hideByLabel && !mutedThread
+      })
+      .map(item => {
+        if (item.additional?.length) {
+          item.additional = this._filterNotifications(item.additional)
+        }
+        return item
+      })
   }
 
-  async _processNotifications(
+  async _fetchItemModels(
     items: ListNotifications.Notification[],
   ): Promise<NotificationsFeedItemModel[]> {
-    const promises = []
+    // construct item models and track who needs more data
     const itemModels: NotificationsFeedItemModel[] = []
-    items = this._filterNotifications(items)
-    for (const item of groupNotifications(items)) {
+    const addedPostMap = new Map<string, NotificationsFeedItemModel[]>()
+    for (const item of items) {
       const itemModel = new NotificationsFeedItemModel(
         this.rootStore,
         `item-${_idCounter++}`,
         item,
       )
-      if (itemModel.needsAdditionalData) {
-        promises.push(itemModel.fetchAdditionalData())
+      const uri = itemModel.additionalDataUri
+      if (uri) {
+        const models = addedPostMap.get(uri) || []
+        models.push(itemModel)
+        addedPostMap.set(uri, models)
       }
       itemModels.push(itemModel)
     }
-    await Promise.all(promises).catch(e => {
-      this.rootStore.log.error(
-        'Uncaught failure during notifications _processNotifications()',
-        e,
+
+    // fetch additional data
+    if (addedPostMap.size > 0) {
+      const uriChunks = chunk(Array.from(addedPostMap.keys()), 25)
+      const postsChunks = await Promise.all(
+        uriChunks.map(uris =>
+          this.rootStore.agent.app.bsky.feed
+            .getPosts({uris})
+            .then(res => res.data.posts),
+        ),
       )
-    })
+      for (const post of postsChunks.flat()) {
+        const models = addedPostMap.get(post.uri)
+        if (models?.length) {
+          for (const model of models) {
+            model.setAdditionalData(post)
+          }
+        }
+      }
+    }
+
     return itemModels
   }
 
-  _setQueued(queued: undefined | ListNotifications.Notification[]) {
+  async _processNotifications(
+    items: ListNotifications.Notification[],
+  ): Promise<NotificationsFeedItemModel[]> {
+    const itemModels = await this._fetchItemModels(groupNotifications(items))
+    return this._filterNotifications(itemModels)
+  }
+
+  _setQueued(queued: undefined | NotificationsFeedItemModel[]) {
     this.queuedNotifications = queued
   }
 
