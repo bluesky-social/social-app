@@ -220,7 +220,7 @@ export class FeedTuner {
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
     ): FeedViewPostsSlice[] => {
-      // remove any replies without at least 2 likes
+      // remove any replies without at least repliesThreshold likes
       for (let i = slices.length - 1; i >= 0; i--) {
         if (slices[i].isFullThread || !slices[i].isReply) {
           continue
