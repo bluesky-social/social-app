@@ -2,12 +2,11 @@ import React, {useState} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {Slider} from '@miblanchard/react-native-slider'
-
 import {Text} from '../util/text/Text'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb} from 'platform/detection'
+import {isWeb, isDesktopWeb} from 'platform/detection'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {ScrollView} from 'view/com/modals/util'
 
@@ -18,11 +17,7 @@ function RepliesThresholdInput({enabled}: {enabled: boolean}) {
   const [value, setValue] = useState(store.preferences.homeFeedRepliesThreshold)
 
   return (
-    <View
-      style={{
-        marginTop: 10,
-        opacity: enabled ? 1 : 0.3,
-      }}>
+    <View style={[s.mt10, !enabled && styles.dimmed]}>
       <Text type="xs">
         {value === 0
           ? `Show all replies`
@@ -39,7 +34,7 @@ function RepliesThresholdInput({enabled}: {enabled: boolean}) {
         }}
         minimumValue={0}
         maximumValue={25}
-        containerStyle={{flex: 1}}
+        containerStyle={isWeb ? undefined : s.flex1}
         disabled={!enabled}
         thumbTintColor={colors.blue3}
       />
@@ -55,7 +50,7 @@ export const Component = observer(function Component() {
     <View
       testID="preferencesHomeFeedModal"
       style={[pal.view, styles.container]}>
-      <View style={{padding: 20, paddingBottom: 30}}>
+      <View style={styles.titleSection}>
         <Text type="title-lg" style={[pal.text, styles.title]}>
           Home Feed Preferences
         </Text>
@@ -65,7 +60,7 @@ export const Component = observer(function Component() {
       </View>
 
       <ScrollView>
-        <View style={{paddingHorizontal: 20}}>
+        <View style={styles.cardsContainer}>
           <View style={[styles.card]}>
             <Text type="title-sm" style={[s.pb5]}>
               Show Replies
@@ -141,6 +136,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: isDesktopWeb ? 0 : 60,
   },
+  titleSection: {
+    padding: 20,
+    paddingBottom: 30,
+  },
   title: {
     textAlign: 'center',
     marginBottom: 5,
@@ -148,6 +147,9 @@ const styles = StyleSheet.create({
   description: {
     textAlign: 'center',
     paddingHorizontal: 32,
+  },
+  cardsContainer: {
+    paddingHorizontal: 20,
   },
   card: {
     padding: 16,
@@ -167,5 +169,8 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingHorizontal: 20,
     borderTopWidth: isDesktopWeb ? 0 : 1,
+  },
+  dimmed: {
+    opacity: 0.3,
   },
 })
