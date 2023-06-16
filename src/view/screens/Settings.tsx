@@ -396,7 +396,7 @@ export const SettingsScreen = withAuthRequired(
               />
             </View>
             <Text type="lg" style={pal.text}>
-              Preferences
+              Home Feed Preferences
             </Text>
           </TouchableOpacity>
           <TouchableOpacity

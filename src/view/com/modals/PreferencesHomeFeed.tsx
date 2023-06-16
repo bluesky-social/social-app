@@ -23,10 +23,12 @@ function RepliesThresholdInput({enabled}: {enabled: boolean}) {
         marginTop: 10,
         opacity: enabled ? 1 : 0.3,
       }}>
-      <Text>
+      <Text type="xs">
         {value === 0
           ? `Show all replies`
-          : `Show replies with greater than ${value} likes`}
+          : `Show replies with greater than ${value} ${
+              value > 1 ? `likes` : `like`
+            }`}
       </Text>
       <Slider
         value={value}
@@ -53,55 +55,67 @@ export const Component = observer(function Component() {
     <View
       testID="preferencesHomeFeedModal"
       style={[pal.view, styles.container]}>
-      <Text type="title-lg" style={[pal.text, styles.title]}>
-        Home Feed Preferences
-      </Text>
+      <View style={{padding: 20, paddingBottom: 30}}>
+        <Text type="title-lg" style={[pal.text, styles.title]}>
+          Home Feed Preferences
+        </Text>
+        <Text type="xl" style={[pal.textLight, styles.description]}>
+          Fine-tune the content you see on your home screen.
+        </Text>
+      </View>
 
       <ScrollView>
-        <View style={[styles.card]}>
-          <Text type="title-sm" style={[s.pb5]}>
-            Show Replies
-          </Text>
-          <Text style={[s.pb10]}>
-            Replies are shown in your home feed by default. If this setting is
-            disabled, you'll see only new posts and threads.
-          </Text>
-          <ToggleButton
-            type="default-light"
-            label={store.preferences.homeFeedRepliesEnabled ? 'Yes' : 'No'}
-            isSelected={store.preferences.homeFeedRepliesEnabled}
-            onPress={store.preferences.toggleHomeFeedRepliesEnabled}
-          />
+        <View style={{paddingHorizontal: 20}}>
+          <View style={[styles.card]}>
+            <Text type="title-sm" style={[s.pb5]}>
+              Show Replies
+            </Text>
+            <Text style={[s.pb10]}>
+              Adjust the number of likes a reply must have to be shown in your
+              feed.
+            </Text>
+            <ToggleButton
+              type="default-light"
+              label={store.preferences.homeFeedRepliesEnabled ? 'Yes' : 'No'}
+              isSelected={store.preferences.homeFeedRepliesEnabled}
+              onPress={store.preferences.toggleHomeFeedRepliesEnabled}
+            />
 
-          <RepliesThresholdInput
-            enabled={store.preferences.homeFeedRepliesEnabled}
-          />
-        </View>
+            <RepliesThresholdInput
+              enabled={store.preferences.homeFeedRepliesEnabled}
+            />
+          </View>
 
-        <View style={[styles.card]}>
-          <Text type="title-sm" style={[s.pb5]}>
-            Show Reposts
-          </Text>
-          <Text style={[s.pb10]}>Description</Text>
-          <ToggleButton
-            type="default-light"
-            label={store.preferences.homeFeedRepostsEnabled ? 'Yes' : 'No'}
-            isSelected={store.preferences.homeFeedRepostsEnabled}
-            onPress={store.preferences.toggleHomeFeedRepostsEnabled}
-          />
-        </View>
+          <View style={[styles.card]}>
+            <Text type="title-sm" style={[s.pb5]}>
+              Show Reposts
+            </Text>
+            <Text style={[s.pb10]}>
+              Disable this setting to hide all reposts from your feed.
+            </Text>
+            <ToggleButton
+              type="default-light"
+              label={store.preferences.homeFeedRepostsEnabled ? 'Yes' : 'No'}
+              isSelected={store.preferences.homeFeedRepostsEnabled}
+              onPress={store.preferences.toggleHomeFeedRepostsEnabled}
+            />
+          </View>
 
-        <View style={[styles.card]}>
-          <Text type="title-sm" style={[s.pb5]}>
-            Show Quote Posts
-          </Text>
-          <Text style={[s.pb10]}>Description</Text>
-          <ToggleButton
-            type="default-light"
-            label={store.preferences.homeFeedQuotePostsEnabled ? 'Yes' : 'No'}
-            isSelected={store.preferences.homeFeedQuotePostsEnabled}
-            onPress={store.preferences.toggleHomeFeedQuotePostsEnabled}
-          />
+          <View style={[styles.card]}>
+            <Text type="title-sm" style={[s.pb5]}>
+              Show Quote Posts
+            </Text>
+            <Text style={[s.pb10]}>
+              Disable this setting to hide all quote posts from your feed.
+              Reposts will still be visible.
+            </Text>
+            <ToggleButton
+              type="default-light"
+              label={store.preferences.homeFeedQuotePostsEnabled ? 'Yes' : 'No'}
+              isSelected={store.preferences.homeFeedQuotePostsEnabled}
+              onPress={store.preferences.toggleHomeFeedQuotePostsEnabled}
+            />
+          </View>
         </View>
       </ScrollView>
 
@@ -125,15 +139,18 @@ export const Component = observer(function Component() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     paddingBottom: isDesktopWeb ? 0 : 60,
   },
   title: {
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 5,
+  },
+  description: {
+    textAlign: 'center',
+    paddingHorizontal: 32,
   },
   card: {
-    ...s.p20,
+    padding: 16,
     backgroundColor: s.gray1.color,
     borderRadius: 10,
     marginBottom: 20,
@@ -147,8 +164,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blue3,
   },
   btnContainer: {
-    paddingTop: 10,
-    paddingHorizontal: 10,
+    paddingTop: 20,
+    paddingHorizontal: 20,
     borderTopWidth: isDesktopWeb ? 0 : 1,
   },
 })
