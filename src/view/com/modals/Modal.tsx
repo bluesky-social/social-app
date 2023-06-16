@@ -24,6 +24,7 @@ import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 import * as ContentLanguagesSettingsModal from './ContentLanguagesSettings'
+import * as PreferencesHomeFeed from './PreferencesHomeFeed'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 
@@ -105,6 +106,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'content-languages-settings') {
     snapPoints = ContentLanguagesSettingsModal.snapPoints
     element = <ContentLanguagesSettingsModal.Component />
+  } else if (activeModal?.name === 'preferences-home-feed') {
+    snapPoints = PreferencesHomeFeed.snapPoints
+    element = <PreferencesHomeFeed.Component />
   } else {
     return null
   }

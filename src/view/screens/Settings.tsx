@@ -166,6 +166,12 @@ export const SettingsScreen = withAuthRequired(
       Toast.show('Copied build version to clipboard')
     }, [])
 
+    const openPreferencesModal = React.useCallback(() => {
+      store.shell.openModal({
+        name: 'preferences-home-feed',
+      })
+    }, [store])
+
     return (
       <View style={[s.hContentRegion]} testID="settingsScreen">
         <ViewHeader title="Settings" />
@@ -376,6 +382,23 @@ export const SettingsScreen = withAuthRequired(
               Saved Feeds
             </Text>
           </Link>
+          <TouchableOpacity
+            testID="preferencesHomeFeedModalButton"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            onPress={openPreferencesModal}
+            accessibilityRole="button"
+            accessibilityHint="Open home feed preferences modal"
+            accessibilityLabel="Opens the home feed preferences modal">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="language"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Preferences
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             testID="contentLanguagesBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}

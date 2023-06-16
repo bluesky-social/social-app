@@ -51,6 +51,10 @@ export class PreferencesModel {
   contentLabels = new LabelPreferencesModel()
   savedFeeds: string[] = []
   pinnedFeeds: string[] = []
+  homeFeedRepliesEnabled: boolean = true
+  homeFeedRepliesThreshold: number = 2
+  homeFeedRepostsEnabled: boolean = true
+  homeFeedQuotePostsEnabled: boolean = true
 
   // used to linearize async modifications to state
   lock = new AwaitLock()
@@ -65,6 +69,10 @@ export class PreferencesModel {
       contentLabels: this.contentLabels,
       savedFeeds: this.savedFeeds,
       pinnedFeeds: this.pinnedFeeds,
+      homeFeedRepliesEnabled: this.homeFeedRepliesEnabled,
+      homeFeedRepliesThreshold: this.homeFeedRepliesThreshold,
+      homeFeedRepostsEnabled: this.homeFeedRepostsEnabled,
+      homeFeedQuotePostsEnabled: this.homeFeedQuotePostsEnabled,
     }
   }
 
@@ -101,6 +109,30 @@ export class PreferencesModel {
         typeof v.pinnedFeeds.every(item => typeof item === 'string')
       ) {
         this.pinnedFeeds = v.pinnedFeeds
+      }
+      if (
+        hasProp(v, 'homeFeedRepliesEnabled') &&
+        typeof v.homeFeedRepliesEnabled === 'boolean'
+      ) {
+        this.homeFeedRepliesEnabled = v.homeFeedRepliesEnabled
+      }
+      if (
+        hasProp(v, 'homeFeedRepliesThreshold') &&
+        typeof v.homeFeedRepliesThreshold === 'number'
+      ) {
+        this.homeFeedRepliesThreshold = v.homeFeedRepliesThreshold
+      }
+      if (
+        hasProp(v, 'homeFeedRepostsEnabled') &&
+        typeof v.homeFeedRepostsEnabled === 'boolean'
+      ) {
+        this.homeFeedRepostsEnabled = v.homeFeedRepostsEnabled
+      }
+      if (
+        hasProp(v, 'homeFeedQuotePostsEnabled') &&
+        typeof v.homeFeedQuotePostsEnabled === 'boolean'
+      ) {
+        this.homeFeedQuotePostsEnabled = v.homeFeedQuotePostsEnabled
       }
     }
   }
@@ -379,5 +411,21 @@ export class PreferencesModel {
       this.savedFeeds,
       this.pinnedFeeds.filter(uri => uri !== v),
     )
+  }
+
+  toggleHomeFeedRepliesEnabled() {
+    this.homeFeedRepliesEnabled = !this.homeFeedRepliesEnabled
+  }
+
+  setHomeFeedRepliesThreshold(threshold: number) {
+    this.homeFeedRepliesThreshold = threshold
+  }
+
+  toggleHomeFeedRepostsEnabled() {
+    this.homeFeedRepostsEnabled = !this.homeFeedRepostsEnabled
+  }
+
+  toggleHomeFeedQuotePostsEnabled() {
+    this.homeFeedQuotePostsEnabled = !this.homeFeedQuotePostsEnabled
   }
 }
