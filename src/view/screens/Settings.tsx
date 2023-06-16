@@ -352,6 +352,23 @@ export const SettingsScreen = withAuthRequired(
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Advanced
           </Text>
+          <TouchableOpacity
+            testID="preferencesHomeFeedModalButton"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            onPress={openPreferencesModal}
+            accessibilityRole="button"
+            accessibilityHint="Open home feed preferences modal"
+            accessibilityLabel="Opens the home feed preferences modal">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="sliders"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Home Feed Preferences
+            </Text>
+          </TouchableOpacity>
           <Link
             testID="appPasswordBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
@@ -382,23 +399,6 @@ export const SettingsScreen = withAuthRequired(
               Saved Feeds
             </Text>
           </Link>
-          <TouchableOpacity
-            testID="preferencesHomeFeedModalButton"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={openPreferencesModal}
-            accessibilityRole="button"
-            accessibilityHint="Open home feed preferences modal"
-            accessibilityLabel="Opens the home feed preferences modal">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="language"
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              Home Feed Preferences
-            </Text>
-          </TouchableOpacity>
           <TouchableOpacity
             testID="contentLanguagesBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
