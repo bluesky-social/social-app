@@ -1,4 +1,9 @@
-import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedRecord,
+} from '@atproto/api'
 import lande from 'lande'
 import {hasProp} from 'lib/type-guards'
 import {LANGUAGES_MAP_CODE2} from '../../locale/languages'
@@ -156,6 +161,38 @@ export class FeedTuner {
     return slices
   }
 
+  static removeReplies(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+    for (let i = slices.length - 1; i >= 0; i--) {
+      if (slices[i].isReply) {
+        slices.splice(i, 1)
+      }
+    }
+    return slices
+  }
+
+  static removeReposts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+    for (let i = slices.length - 1; i >= 0; i--) {
+      const reason = slices[i].rootItem.reason
+      if (AppBskyFeedDefs.isReasonRepost(reason)) {
+        slices.splice(i, 1)
+      }
+    }
+    return slices
+  }
+
+  static removeQuotePosts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+    for (let i = slices.length - 1; i >= 0; i--) {
+      const embed = slices[i].rootItem.post.embed
+      if (
+        AppBskyEmbedRecord.isView(embed) ||
+        AppBskyEmbedRecordWithMedia.isView(embed)
+      ) {
+        slices.splice(i, 1)
+      }
+    }
+    return slices
+  }
+
   static dedupReposts(
     tuner: FeedTuner,
     slices: FeedViewPostsSlice[],
@@ -178,23 +215,25 @@ export class FeedTuner {
     return slices
   }
 
-  static likedRepliesOnly(
-    tuner: FeedTuner,
-    slices: FeedViewPostsSlice[],
-  ): FeedViewPostsSlice[] {
-    // remove any replies without at least 2 likes
-    for (let i = slices.length - 1; i >= 0; i--) {
-      if (slices[i].isFullThread || !slices[i].isReply) {
-        continue
-      }
+  static likedRepliesOnly({repliesThreshold}: {repliesThreshold: number}) {
+    return (
+      tuner: FeedTuner,
+      slices: FeedViewPostsSlice[],
+    ): FeedViewPostsSlice[] => {
+      // remove any replies without at least repliesThreshold likes
+      for (let i = slices.length - 1; i >= 0; i--) {
+        if (slices[i].isFullThread || !slices[i].isReply) {
+          continue
+        }
 
-      const item = slices[i].rootItem
-      const isRepost = Boolean(item.reason)
-      if (!isRepost && (item.post.likeCount || 0) < 2) {
-        slices.splice(i, 1)
+        const item = slices[i].rootItem
+        const isRepost = Boolean(item.reason)
+        if (!isRepost && (item.post.likeCount || 0) < repliesThreshold) {
+          slices.splice(i, 1)
+        }
       }
+      return slices
     }
-    return slices
   }
 
   static preferredLangOnly(langsCode2: string[]) {

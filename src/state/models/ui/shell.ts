@@ -111,6 +111,10 @@ export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
 
+export interface PreferencesHomeFeed {
+  name: 'preferences-home-feed'
+}
+
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -121,6 +125,7 @@ export type Modal =
   // Curation
   | ContentFilteringSettingsModal
   | ContentLanguagesSettingsModal
+  | PreferencesHomeFeed
 
   // Moderation
   | ReportAccountModal

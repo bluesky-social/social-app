@@ -115,6 +115,12 @@ export class PostsFeedModel {
   }
 
   get feedTuners() {
+    const areRepliesEnabled = this.rootStore.preferences.homeFeedRepliesEnabled
+    const repliesThreshold = this.rootStore.preferences.homeFeedRepliesThreshold
+    const areRepostsEnabled = this.rootStore.preferences.homeFeedRepostsEnabled
+    const areQuotePostsEnabled =
+      this.rootStore.preferences.homeFeedQuotePostsEnabled
+
     if (this.feedType === 'custom') {
       return [
         FeedTuner.dedupReposts,
@@ -124,7 +130,13 @@ export class PostsFeedModel {
       ]
     }
     if (this.feedType === 'home') {
-      return [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
+      return [
+        areRepostsEnabled && FeedTuner.dedupReposts,
+        !areRepostsEnabled && FeedTuner.removeReposts,
+        areRepliesEnabled && FeedTuner.likedRepliesOnly({repliesThreshold}),
+        !areRepliesEnabled && FeedTuner.removeReplies,
+        !areQuotePostsEnabled && FeedTuner.removeQuotePosts,
+      ].filter(Boolean)
     }
     return []
   }
