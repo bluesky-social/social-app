@@ -6,6 +6,7 @@ import {
   TextStyle,
   Pressable,
   ViewStyle,
+  PressableStateCallbackType,
 } from 'react-native'
 import {Text} from '../text/Text'
 import {useTheme} from 'lib/ThemeContext'
@@ -25,6 +26,14 @@ export type ButtonType =
   | 'primary-light'
   | 'secondary-light'
   | 'default-light'
+
+// Augment type for react-native-web (see https://github.com/necolas/react-native-web/issues/1684#issuecomment-766451866)
+declare module 'react-native' {
+  interface PressableStateCallbackType {
+    hovered?: boolean
+    focused?: boolean
+  }
+}
 
 // TODO: Enforce that button always has a label
 export function Button({
@@ -139,7 +148,7 @@ export function Button({
   )
 
   const getStyle = React.useCallback(
-    state => {
+    (state: PressableStateCallbackType) => {
       const arr = [typeOuterStyle, styles.outer, style]
       if (state.pressed) {
         arr.push({opacity: 0.6})

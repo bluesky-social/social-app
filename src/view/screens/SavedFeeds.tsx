@@ -100,7 +100,7 @@ export const SavedFeeds = withAuthRequired(
     const onRefresh = useCallback(() => savedFeeds.refresh(), [savedFeeds])
 
     const onDragEnd = useCallback(
-      async ({data}) => {
+      async ({data}: {data: CustomFeedModel[]}) => {
         try {
           await savedFeeds.reorderPinnedFeeds(data)
         } catch (e) {

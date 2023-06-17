@@ -13,6 +13,7 @@ import {Text} from 'view/com/util/text/Text'
 import {isDesktopWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'DiscoverFeeds'>
 export const DiscoverFeedsScreen = withAuthRequired(
@@ -51,7 +52,7 @@ export const DiscoverFeedsScreen = withAuthRequired(
     }, [pal, feeds.isLoading])
 
     const renderItem = React.useCallback(
-      ({item}) => (
+      ({item}: {item: CustomFeedModel}) => (
         <CustomFeed
           key={item.data.uri}
           item={item}

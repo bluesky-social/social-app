@@ -133,8 +133,8 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const onPressPublish = useCallback(
-    async rt => {
-      if (isProcessing || rt.graphemeLength_ > MAX_GRAPHEME_LENGTH) {
+    async (rt: RichText) => {
+      if (isProcessing || rt.graphemeLength > MAX_GRAPHEME_LENGTH) {
         return
       }
 

@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {
+  AccessibilityActionEvent,
   ActivityIndicator,
   Linking,
   StyleProp,
@@ -223,7 +224,7 @@ const PostLoaded = observer(
     )
 
     const onAccessibilityAction = useCallback(
-      event => {
+      (event: AccessibilityActionEvent) => {
         switch (event.nativeEvent.actionName) {
           case 'like':
             onPressToggleLike()
