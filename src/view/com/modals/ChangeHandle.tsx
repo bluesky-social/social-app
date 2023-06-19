@@ -15,7 +15,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from 'state/index'
 import {ServiceDescription} from 'state/models/session'
 import {s} from 'lib/styles'
-import {makeValidHandle, createFullHandle} from 'lib/strings/handles'
+import {createFullHandle, makeValidHandle} from 'lib/strings/handles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics'
@@ -311,7 +311,7 @@ function CustomHandleForm({
   const theme = useTheme()
   const [isVerifying, setIsVerifying] = React.useState(false)
   const [error, setError] = React.useState<string>('')
-
+  const [isDNSForm, setDNSForm] = React.useState<boolean>(true)
   // events
   // =
   const onPressCopy = React.useCallback(() => {
@@ -332,7 +332,9 @@ function CustomHandleForm({
     try {
       setIsVerifying(true)
       setError('')
-      const res = await store.agent.com.atproto.identity.resolveHandle({handle})
+      const res = await store.agent.com.atproto.identity.resolveHandle({
+        handle,
+      })
       if (res.data.did === store.me.did) {
         setCanSave(true)
       } else {
@@ -355,6 +357,10 @@ function CustomHandleForm({
     store.log,
     store.agent,
   ])
+
+  const onToggleDNSForm = React.useCallback(() => {
+    setDNSForm(!isDNSForm)
+  }, [setDNSForm, isDNSForm])
 
   // rendering
   // =
@@ -384,35 +390,60 @@ function CustomHandleForm({
         />
       </View>
       <View style={styles.spacer} />
-      <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
-        Add the following record to your domain:
-      </Text>
-      <View style={[styles.dnsTable, pal.btn]}>
-        <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
-          Domain:
-        </Text>
-        <View style={[styles.dnsValue]}>
-          <Text type="mono" style={[styles.monoText, pal.text]}>
-            _atproto.{handle}
+      {isDNSForm ? (
+        <>
+          <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
+            Add the following record to your domain:
           </Text>
-        </View>
-        <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
-          Type:
-        </Text>
-        <View style={[styles.dnsValue]}>
-          <Text type="mono" style={[styles.monoText, pal.text]}>
-            TXT
+          <View style={[styles.dnsTable, pal.btn]}>
+            <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
+              Domain:
+            </Text>
+            <View style={[styles.dnsValue]}>
+              <Text type="mono" style={[styles.monoText, pal.text]}>
+                _atproto.{handle}
+              </Text>
+            </View>
+            <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
+              Type:
+            </Text>
+            <View style={[styles.dnsValue]}>
+              <Text type="mono" style={[styles.monoText, pal.text]}>
+                TXT
+              </Text>
+            </View>
+            <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
+              Value:
+            </Text>
+            <View style={[styles.dnsValue]}>
+              <Text type="mono" style={[styles.monoText, pal.text]}>
+                did={store.me.did}
+              </Text>
+            </View>
+          </View>
+        </>
+      ) : (
+        <>
+          <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
+            Add the following to a text file that can be accessed on
+            <br />
+            <Text type="mono" style={[styles.monoText, pal.text]}>
+              https://{handle}/.well-known/atproto-did
+            </Text>
           </Text>
-        </View>
-        <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
-          Value:
-        </Text>
-        <View style={[styles.dnsValue]}>
-          <Text type="mono" style={[styles.monoText, pal.text]}>
-            did={store.me.did}
-          </Text>
-        </View>
-      </View>
+          <View style={styles.spacer} />
+          <View style={[styles.dnsTable, pal.btn]}>
+            <View style={styles.spacer} />
+
+            <View style={[styles.dnsValue]}>
+              <Text type="mono" style={[styles.monoText, pal.text]}>
+                {store.me.did}
+              </Text>
+            </View>
+          </View>
+        </>
+      )}
+
       <View style={styles.spacer} />
       <Button type="default" style={[s.p20, s.mb10]} onPress={onPressCopy}>
         <Text type="xl" style={[pal.link, s.textCenter]}>
@@ -446,6 +477,16 @@ function CustomHandleForm({
         )}
       </Button>
       <View style={styles.spacer} />
+      <TouchableOpacity
+        onPress={onToggleDNSForm}
+        accessibilityLabel="Use default provider"
+        accessibilityHint="Use bsky.social as hosting provider">
+        <Text type="md-medium" style={[pal.link, s.pl10, s.pt5]}>
+          {isDNSForm
+            ? "I don't have access to my DNS Panel"
+            : 'I want to use DNS Panel'}
+        </Text>
+      </TouchableOpacity>
       <TouchableOpacity
         onPress={onToggleCustom}
         accessibilityLabel="Use default provider"
