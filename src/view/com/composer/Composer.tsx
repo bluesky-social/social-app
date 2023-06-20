@@ -72,6 +72,13 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const insets = useSafeAreaInsets()
+  const viewStyles = useMemo(
+    () => ({
+      paddingBottom: isAndroid ? insets.bottom : 0,
+      paddingTop: isAndroid ? insets.top : isDesktopWeb ? 0 : 15,
+    }),
+    [insets],
+  )
 
   // HACK
   // there's a bug with @mattermost/react-native-paste-input where if the input
@@ -88,6 +95,7 @@ export const ComposePost = observer(function ComposePost({
     autocompleteView.setup()
   }, [autocompleteView])
 
+  // listen to escape key on desktop web
   const onEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -110,7 +118,6 @@ export const ComposePost = observer(function ComposePost({
     },
     [store, onClose],
   )
-
   useEffect(() => {
     if (isDesktopWeb) {
       window.addEventListener('keydown', onEscape)
@@ -198,15 +205,15 @@ export const ComposePost = observer(function ComposePost({
     ],
   )
 
-  const canPost = graphemeLength <= MAX_GRAPHEME_LENGTH
-
-  const selectTextInputPlaceholder = replyTo ? 'Write your reply' : "What's up?"
-
-  const canSelectImages = gallery.size < 4
-  const viewStyles = {
-    paddingBottom: isAndroid ? insets.bottom : 0,
-    paddingTop: isAndroid ? insets.top : isDesktopWeb ? 0 : 15,
-  }
+  const canPost = useMemo(
+    () => graphemeLength <= MAX_GRAPHEME_LENGTH,
+    [graphemeLength],
+  )
+  const selectTextInputPlaceholder = useMemo(
+    () => (replyTo ? 'Write your reply' : "What's up?"),
+    [replyTo],
+  )
+  const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
 
   return (
     <KeyboardAvoidingView
