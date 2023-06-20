@@ -65,6 +65,7 @@ interface PostOpts {
   images?: ImageModel[]
   knownHandles?: Set<string>
   onStateChange?: (state: string) => void
+  langs?: string[]
 }
 
 export async function post(store: RootStoreModel, opts: PostOpts) {
@@ -222,6 +223,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
       facets: rt.facets,
       reply,
       embed,
+      langs: opts.langs,
     })
   } catch (e: any) {
     console.error(`Failed to create post: ${e.toString()}`)

@@ -165,6 +165,7 @@ export const ComposePost = observer(function ComposePost({
           extLink: extLink,
           onStateChange: setProcessingState,
           knownHandles: autocompleteView.knownHandles,
+          langs: ['en'],
         })
         track('Create Post', {
           imageCount: gallery.size,
