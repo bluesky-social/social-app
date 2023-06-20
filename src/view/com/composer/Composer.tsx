@@ -38,6 +38,7 @@ import {isDesktopWeb, isAndroid} from 'platform/detection'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
+import {SelectLangBtn} from './select-language/SelectLangBtn'
 
 type Props = ComposerOpts & {
   onClose: () => void
@@ -352,6 +353,7 @@ export const ComposePost = observer(function ComposePost({
             </>
           ) : null}
           <View style={s.flex1} />
+          <SelectLangBtn />
           <CharProgress count={graphemeLength} />
         </View>
       </View>
