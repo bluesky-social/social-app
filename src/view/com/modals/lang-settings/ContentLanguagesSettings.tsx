@@ -2,14 +2,14 @@ import React from 'react'
 import {StyleSheet, Pressable, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {observer} from 'mobx-react-lite'
-import {ScrollView} from './util'
+import {ScrollView} from '../util'
 import {useStores} from 'state/index'
-import {ToggleButton} from '../util/forms/ToggleButton'
+import {ToggleButton} from '../../util/forms/ToggleButton'
 import {s, colors, gradients} from 'lib/styles'
-import {Text} from '../util/text/Text'
+import {Text} from '../../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
-import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../locale/languages'
+import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
 
 export const snapPoints = ['100%']
 

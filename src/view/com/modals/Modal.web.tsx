@@ -23,7 +23,7 @@ import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
-import * as ContentLanguagesSettingsModal from './ContentLanguagesSettings'
+import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PreferencesHomeFeed from './PreferencesHomeFeed'
 
 export const ModalsContainer = observer(function ModalsContainer() {
