@@ -111,6 +111,10 @@ export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
 
+export interface PostLanguagesSettingsModal {
+  name: 'post-languages-settings'
+}
+
 export interface PreferencesHomeFeed {
   name: 'preferences-home-feed'
 }
@@ -125,6 +129,7 @@ export type Modal =
   // Curation
   | ContentFilteringSettingsModal
   | ContentLanguagesSettingsModal
+  | PostLanguagesSettingsModal
   | PreferencesHomeFeed
 
   // Moderation

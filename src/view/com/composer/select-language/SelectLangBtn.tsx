@@ -17,7 +17,7 @@ export function SelectLangBtn() {
     if (Keyboard.isVisible()) {
       Keyboard.dismiss()
     }
-    store.shell.openModal({name: 'content-languages-settings'})
+    store.shell.openModal({name: 'post-languages-settings'})
   }, [store])
 
   return (

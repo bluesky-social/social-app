@@ -165,7 +165,7 @@ export const ComposePost = observer(function ComposePost({
           extLink: extLink,
           onStateChange: setProcessingState,
           knownHandles: autocompleteView.knownHandles,
-          langs: store.preferences.contentLanguages,
+          langs: store.preferences.postLanguages,
         })
         track('Create Post', {
           imageCount: gallery.size,
@@ -210,10 +210,10 @@ export const ComposePost = observer(function ComposePost({
     () => graphemeLength <= MAX_GRAPHEME_LENGTH,
     [graphemeLength],
   )
-  const selectTextInputPlaceholder = useMemo(
-    () => (replyTo ? 'Write your reply' : "What's up?"),
-    [replyTo],
-  )
+  const selectTextInputPlaceholder = replyTo
+    ? 'Write your reply'
+    : `What's up? (your post will be in ${store.preferences.getReadablePostLanguages()})`
+
   const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
 
   return (

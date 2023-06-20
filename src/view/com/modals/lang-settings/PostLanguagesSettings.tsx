@@ -26,8 +26,8 @@ export function Component({}: {}) {
     )
     // sort so that selected languages are on top, then alphabetically
     langs.sort((a, b) => {
-      const hasA = store.preferences.hasContentLanguage(a.code2)
-      const hasB = store.preferences.hasContentLanguage(b.code2)
+      const hasA = store.preferences.hasPostLanguage(a.code2)
+      const hasB = store.preferences.hasPostLanguage(b.code2)
       if (hasA === hasB) return a.name.localeCompare(b.name)
       if (hasA) return -1
       return 1
@@ -37,24 +37,24 @@ export function Component({}: {}) {
 
   const onPress = React.useCallback(
     code2 => {
-      store.preferences.toggleContentLanguage(code2)
+      store.preferences.togglePostLanguage(code2)
     },
     [store],
   )
 
   return (
-    <View testID="contentLanguagesModal" style={[pal.view, styles.container]}>
-      <Text style={[pal.text, styles.title]}>Content Languages</Text>
+    <View testID="postLanguagesModal" style={[pal.view, styles.container]}>
+      <Text style={[pal.text, styles.title]}>Post Languages</Text>
       <Text style={[pal.text, styles.description]}>
-        Which languages would you like to see in the your feed? (Leave them all
-        unchecked to see any language.)
+        Which languages are used in this post? (This is different than the
+        Content Language preferences found in the Settings menu.)
       </Text>
       <ScrollView style={styles.scrollContainer}>
         {languages.map(lang => (
           <LanguageToggle
             key={lang.code2}
             code2={lang.code2}
-            langType="contentLanguages"
+            langType="postLanguages"
             name={lang.name}
             onPress={() => {
               onPress(lang.code2)

@@ -15,6 +15,7 @@ import {
 } from 'lib/labeling/const'
 import {DEFAULT_FEEDS} from 'lib/constants'
 import {isIOS} from 'platform/detection'
+import {LANGUAGES} from '../../../locale/languages'
 
 const deviceLocales = getLocales()
 
@@ -47,7 +48,9 @@ export class LabelPreferencesModel {
 export class PreferencesModel {
   adultContentEnabled = !isIOS
   contentLanguages: string[] =
-    deviceLocales?.map?.(locale => locale.languageCode) || []
+    deviceLocales.map(locale => locale.languageCode) || []
+  postLanguages: string[] =
+    deviceLocales.map(locale => locale.languageCode) || []
   contentLabels = new LabelPreferencesModel()
   savedFeeds: string[] = []
   pinnedFeeds: string[] = []
@@ -66,6 +69,7 @@ export class PreferencesModel {
   serialize() {
     return {
       contentLanguages: this.contentLanguages,
+      postLanguages: this.postLanguages,
       contentLabels: this.contentLabels,
       savedFeeds: this.savedFeeds,
       pinnedFeeds: this.pinnedFeeds,
@@ -83,19 +87,33 @@ export class PreferencesModel {
    */
   hydrate(v: unknown) {
     if (isObj(v)) {
+      // check if content languages in preferences exist, otherwise default to device languages
       if (
         hasProp(v, 'contentLanguages') &&
         Array.isArray(v.contentLanguages) &&
         typeof v.contentLanguages.every(item => typeof item === 'string')
       ) {
         this.contentLanguages = v.contentLanguages
-      }
-      if (hasProp(v, 'contentLabels') && typeof v.contentLabels === 'object') {
-        Object.assign(this.contentLabels, v.contentLabels)
       } else {
         // default to the device languages
         this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
       }
+      // check if post languages in preferences exist, otherwise default to device languages
+      if (
+        hasProp(v, 'postLanguages') &&
+        Array.isArray(v.postLanguages) &&
+        typeof v.postLanguages.every(item => typeof item === 'string')
+      ) {
+        this.postLanguages = v.postLanguages
+      } else {
+        // default to the device languages
+        this.postLanguages = deviceLocales.map(locale => locale.languageCode)
+      }
+      // check if content labels in preferences exist, then hydrate
+      if (hasProp(v, 'contentLabels') && typeof v.contentLabels === 'object') {
+        Object.assign(this.contentLabels, v.contentLabels)
+      }
+      // check if saved feeds in preferences, then hydrate
       if (
         hasProp(v, 'savedFeeds') &&
         Array.isArray(v.savedFeeds) &&
@@ -103,6 +121,7 @@ export class PreferencesModel {
       ) {
         this.savedFeeds = v.savedFeeds
       }
+      // check if pinned feeds in preferences exist, then hydrate
       if (
         hasProp(v, 'pinnedFeeds') &&
         Array.isArray(v.pinnedFeeds) &&
@@ -110,24 +129,28 @@ export class PreferencesModel {
       ) {
         this.pinnedFeeds = v.pinnedFeeds
       }
+      // check if home feed replies are enabled in preferences, then hydrate
       if (
         hasProp(v, 'homeFeedRepliesEnabled') &&
         typeof v.homeFeedRepliesEnabled === 'boolean'
       ) {
         this.homeFeedRepliesEnabled = v.homeFeedRepliesEnabled
       }
+      // check if home feed replies threshold is enabled in preferences, then hydrate
       if (
         hasProp(v, 'homeFeedRepliesThreshold') &&
         typeof v.homeFeedRepliesThreshold === 'number'
       ) {
         this.homeFeedRepliesThreshold = v.homeFeedRepliesThreshold
       }
+      // check if home feed reposts are enabled in preferences, then hydrate
       if (
         hasProp(v, 'homeFeedRepostsEnabled') &&
         typeof v.homeFeedRepostsEnabled === 'boolean'
       ) {
         this.homeFeedRepostsEnabled = v.homeFeedRepostsEnabled
       }
+      // check if home feed quote posts are enabled in preferences, then hydrate
       if (
         hasProp(v, 'homeFeedQuotePostsEnabled') &&
         typeof v.homeFeedQuotePostsEnabled === 'boolean'
@@ -246,6 +269,7 @@ export class PreferencesModel {
       runInAction(() => {
         this.contentLabels = new LabelPreferencesModel()
         this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
+        this.postLanguages = deviceLocales.map(locale => locale.languageCode)
         this.savedFeeds = []
         this.pinnedFeeds = []
       })
@@ -269,6 +293,26 @@ export class PreferencesModel {
     } else {
       this.contentLanguages = this.contentLanguages.concat([code2])
     }
+  }
+
+  hasPostLanguage(code2: string) {
+    return this.postLanguages.includes(code2)
+  }
+
+  togglePostLanguage(code2: string) {
+    if (this.hasPostLanguage(code2)) {
+      this.postLanguages = this.postLanguages.filter(lang => lang !== code2)
+    } else {
+      this.postLanguages = this.postLanguages.concat([code2])
+    }
+  }
+
+  getReadablePostLanguages() {
+    const all = this.postLanguages.map(code2 => {
+      const lang = LANGUAGES.find(l => l.code2 === code2)
+      return lang ? lang.name : code2
+    })
+    return all.join(', ')
   }
 
   async setContentLabelPref(
