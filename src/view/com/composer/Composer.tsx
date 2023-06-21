@@ -212,7 +212,7 @@ export const ComposePost = observer(function ComposePost({
   )
   const selectTextInputPlaceholder = replyTo
     ? 'Write your reply'
-    : `What's up? (your post will be in ${store.preferences.getReadablePostLanguages()})`
+    : `What's up? (posting in ${store.preferences.getReadablePostLanguages()})`
 
   const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
 
