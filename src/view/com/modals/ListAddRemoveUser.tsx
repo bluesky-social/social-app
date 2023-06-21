@@ -157,7 +157,7 @@ export const Component = observer(
 
     return (
       <View testID="listAddRemoveUserModal" style={s.hContentRegion}>
-        <Text style={[styles.title, pal.text]}>Add {displayName} to lists</Text>
+        <Text style={[styles.title, pal.text]}>Add {displayName} to Lists</Text>
         <ListsList
           listsList={listsList}
           showAddBtns

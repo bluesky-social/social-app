@@ -36,7 +36,7 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
   nsfw: {
     id: 'nsfw',
     title: 'Explicit Sexual Images',
-    subtitle: 'i.e. Pornography',
+    subtitle: 'i.e. pornography',
     warning: 'Sexually Explicit',
     values: ['porn', 'nsfl'],
     isAdultImagery: true,

@@ -16,7 +16,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import * as backHandler from 'lib/routes/back-handler'
 import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
-import {isAndroid} from 'platform/detection'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
 
@@ -53,7 +52,6 @@ const ShellInner = observer(() => {
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
             swipeEdgeWidth={winDim.width / 2}
-            useLegacyImplementation={isAndroid ? true : false} // we need to use legacy implementation on Android https://github.com/software-mansion/react-native-reanimated/issues/3049
             swipeEnabled={
               !canGoBack &&
               store.session.hasSession &&

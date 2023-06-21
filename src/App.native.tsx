@@ -13,7 +13,7 @@ import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from './view/shell'
 import * as notifee from 'lib/notifee'
-import * as analytics from 'lib/analytics'
+import * as analytics from 'lib/analytics/analytics'
 import * as Toast from './view/com/util/Toast'
 import {handleLink} from './Navigation'
 

@@ -164,7 +164,7 @@ export const SearchScreen = withAuthRequired(
               ) : isInputFocused ? (
                 <View>
                   <Text style={[pal.textLight, styles.searchPrompt]}>
-                    Search for users on the network
+                    Search for users and posts on the network
                   </Text>
                 </View>
               ) : null}

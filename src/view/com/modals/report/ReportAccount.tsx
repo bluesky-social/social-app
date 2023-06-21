@@ -126,7 +126,7 @@ const SelectIssue = ({
   return (
     <>
       <Text type="title-xl" style={[pal.text, styles.title]}>
-        Report account
+        Report Account
       </Text>
       <Text type="xl" style={[pal.text, styles.description]}>
         What is the issue with this account?

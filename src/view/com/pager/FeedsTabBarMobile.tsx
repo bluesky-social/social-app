@@ -62,7 +62,9 @@ export const FeedsTabBar = observer(
               />
             </TouchableOpacity>
           </View>
-          <Text style={[brandBlue, s.bold, styles.title]}>Bluesky</Text>
+          <Text style={[brandBlue, s.bold, styles.title]}>
+            {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}
+          </Text>
           <View style={[pal.view]}>
             <Link
               href="/settings/saved-feeds"

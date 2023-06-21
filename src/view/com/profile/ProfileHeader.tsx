@@ -29,7 +29,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {ProfileHeaderWarnings} from '../util/moderation/ProfileHeaderWarnings'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {listUriToHref} from 'lib/strings/url-helpers'
 import {isDesktopWeb, isNative} from 'platform/detection'
@@ -117,6 +117,11 @@ const ProfileHeaderLoaded = observer(
     }, [store, view])
 
     const onPressToggleFollow = React.useCallback(() => {
+      track(
+        view.viewer.following
+          ? 'ProfileHeader:FollowButtonClicked'
+          : 'ProfileHeader:UnfollowButtonClicked',
+      )
       view?.toggleFollowing().then(
         () => {
           Toast.show(
@@ -127,7 +132,7 @@ const ProfileHeaderLoaded = observer(
         },
         err => store.log.error('Failed to toggle follow', err),
       )
-    }, [view, store])
+    }, [track, view, store.log])
 
     const onPressEditProfile = React.useCallback(() => {
       track('ProfileHeader:EditProfileButtonClicked')

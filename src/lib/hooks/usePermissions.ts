@@ -4,10 +4,6 @@ import {Linking} from 'react-native'
 import {isWeb} from 'platform/detection'
 import {Alert} from 'view/com/util/Alert'
 
-const openSettings = () => {
-  Linking.openURL('app-settings:')
-}
-
 const openPermissionAlert = (perm: string) => {
   Alert.alert(
     'Permission needed',
@@ -17,7 +13,7 @@ const openPermissionAlert = (perm: string) => {
         text: 'Cancel',
         style: 'cancel',
       },
-      {text: 'Open Settings', onPress: () => openSettings()},
+      {text: 'Open Settings', onPress: () => Linking.openSettings()},
     ],
   )
 }

@@ -15,7 +15,7 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {Link} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {isDesktopWeb} from 'platform/detection'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>

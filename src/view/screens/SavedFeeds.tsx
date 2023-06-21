@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
