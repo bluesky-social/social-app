@@ -261,18 +261,22 @@ export class FeedTuner {
         let hasPreferredLang = false
         for (const item of slices[i].items) {
           // 3. check if the post has a `langs` property and if it is in the list of preferred languages
-          // if it is, set the flag to true and break out of the loop
+          // if it is, set the flag to true
+          // if language is declared, regardless of a match, break out of the loop
           if (
             hasProp(item.post.record, 'langs') &&
             Array.isArray(item.post.record.langs) &&
-            item.post.record.langs.some(
-              lang => preferredLangsCode2.includes(lang), // we check for code2 here because that is what the `langs` property contains
-            )
+
           ) {
-            hasPreferredLang = true
+            if (item.post.record.langs.some(
+              lang => preferredLangsCode2.includes(lang), // we check for code2 here because that is what the `langs` property contains
+            )) {
+              hasPreferredLang = true
+            }
             break
           }
-          // 4. Get the most likely language of the text in the post from the `lande` library and
+          // 4. FALLBACK if no language declared :
+          // Get the most likely language of the text in the post from the `lande` library and
           // check if it is in the list of preferred languages
           // if it is, set the flag to true and break out of the loop
           else if (
