@@ -210,9 +210,7 @@ export const ComposePost = observer(function ComposePost({
     () => graphemeLength <= MAX_GRAPHEME_LENGTH,
     [graphemeLength],
   )
-  const selectTextInputPlaceholder = replyTo
-    ? 'Write your reply'
-    : `What's up? (posting in ${store.preferences.getReadablePostLanguages()})`
+  const selectTextInputPlaceholder = replyTo ? 'Write your reply' : `What's up?`
 
   const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
 
