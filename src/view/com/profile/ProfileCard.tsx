@@ -100,7 +100,7 @@ export const ProfileCard = observer(
         {profile.description ? (
           <View style={styles.details}>
             <Text style={pal.text} numberOfLines={4}>
-              {profile.description}
+              {profile.description as string}
             </Text>
           </View>
         ) : undefined}

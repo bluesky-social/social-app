@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useMemo} from 'react'
+import React, {ReactNode, createContext, useContext, useMemo} from 'react'
 import {TextStyle, useColorScheme, ViewStyle} from 'react-native'
 import {darkTheme, defaultTheme} from './themes'
 
@@ -78,6 +78,7 @@ export interface Theme {
 }
 
 export interface ThemeProviderProps {
+  children?: ReactNode
   theme?: 'light' | 'dark' | 'system'
 }
 

@@ -10,7 +10,10 @@ import {
   DarkTheme,
 } from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import {
+  BottomTabBarProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs'
 import {
   HomeTabNavigatorParams,
   SearchTabNavigatorParams,
@@ -62,6 +65,7 @@ import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
 import {getRoutingInstrumentation} from 'lib/sentry'
 import {bskyTitle} from 'lib/strings/headings'
+import {JSX} from 'react/jsx-runtime'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -220,7 +224,12 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
  * in 3 distinct tab-stacks with a different root screen on each.
  */
 function TabsNavigator() {
-  const tabBar = React.useCallback(props => <BottomBar {...props} />, [])
+  const tabBar = React.useCallback(
+    (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
+      <BottomBar {...props} />
+    ),
+    [],
+  )
   return (
     <Tab.Navigator
       initialRouteName="HomeTab"

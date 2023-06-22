@@ -130,13 +130,25 @@ export class PostsFeedModel {
       ]
     }
     if (this.feedType === 'home') {
-      return [
-        areRepostsEnabled && FeedTuner.dedupReposts,
-        !areRepostsEnabled && FeedTuner.removeReposts,
-        areRepliesEnabled && FeedTuner.likedRepliesOnly({repliesThreshold}),
-        !areRepliesEnabled && FeedTuner.removeReplies,
-        !areQuotePostsEnabled && FeedTuner.removeQuotePosts,
-      ].filter(Boolean)
+      const feedTuners = []
+
+      if (areRepostsEnabled) {
+        feedTuners.push(FeedTuner.dedupReposts)
+      } else {
+        feedTuners.push(FeedTuner.removeReposts)
+      }
+
+      if (areRepliesEnabled) {
+        feedTuners.push(FeedTuner.likedRepliesOnly({repliesThreshold}))
+      } else {
+        feedTuners.push(FeedTuner.removeReplies)
+      }
+
+      if (!areQuotePostsEnabled) {
+        feedTuners.push(FeedTuner.removeQuotePosts)
+      }
+
+      return feedTuners
     }
     return []
   }
