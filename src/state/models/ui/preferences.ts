@@ -16,8 +16,11 @@ import {
 import {DEFAULT_FEEDS} from 'lib/constants'
 import {isIOS} from 'platform/detection'
 import {LANGUAGES} from '../../../locale/languages'
+import {dedupArray} from 'lib/functions'
 
-const deviceLocales = getLocales()
+const deviceLocales = dedupArray(
+  getLocales().map(locale => locale.languageCode),
+)
 
 export type LabelPreference = 'show' | 'warn' | 'hide'
 const LABEL_GROUPS = [
@@ -47,10 +50,8 @@ export class LabelPreferencesModel {
 
 export class PreferencesModel {
   adultContentEnabled = !isIOS
-  contentLanguages: string[] =
-    deviceLocales?.map?.(locale => locale.languageCode) || []
-  postLanguages: string[] =
-    deviceLocales?.map?.(locale => locale.languageCode) || []
+  contentLanguages: string[] = deviceLocales || []
+  postLanguages: string[] = deviceLocales || []
   contentLabels = new LabelPreferencesModel()
   savedFeeds: string[] = []
   pinnedFeeds: string[] = []
@@ -96,7 +97,7 @@ export class PreferencesModel {
         this.contentLanguages = v.contentLanguages
       } else {
         // default to the device languages
-        this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
+        this.contentLanguages = deviceLocales
       }
       // check if post languages in preferences exist, otherwise default to device languages
       if (
@@ -107,7 +108,7 @@ export class PreferencesModel {
         this.postLanguages = v.postLanguages
       } else {
         // default to the device languages
-        this.postLanguages = deviceLocales.map(locale => locale.languageCode)
+        this.postLanguages = deviceLocales
       }
       // check if content labels in preferences exist, then hydrate
       if (hasProp(v, 'contentLabels') && typeof v.contentLabels === 'object') {
@@ -268,8 +269,8 @@ export class PreferencesModel {
     try {
       runInAction(() => {
         this.contentLabels = new LabelPreferencesModel()
-        this.contentLanguages = deviceLocales.map(locale => locale.languageCode)
-        this.postLanguages = deviceLocales.map(locale => locale.languageCode)
+        this.contentLanguages = deviceLocales
+        this.postLanguages = deviceLocales
         this.savedFeeds = []
         this.pinnedFeeds = []
       })
