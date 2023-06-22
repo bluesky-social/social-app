@@ -36,7 +36,7 @@ export function Component({}: {}) {
   }, [store])
 
   const onPress = React.useCallback(
-    code2 => {
+    (code2: string) => {
       store.preferences.toggleContentLanguage(code2)
     },
     [store],
