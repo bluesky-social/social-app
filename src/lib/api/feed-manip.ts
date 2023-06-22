@@ -269,7 +269,6 @@ export class FeedTuner {
               lang => preferredLangsCode2.includes(lang), // we check for code2 here because that is what the `langs` property contains
             )
           ) {
-            console.log(item.post.record.langs)
             hasPreferredLang = true
             break
           }
