@@ -190,7 +190,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "resolutions": {
-    "@types/react": "^17"
+    "@types/react": "^18"
   },
   "jest": {
     "preset": "jest-expo/ios",

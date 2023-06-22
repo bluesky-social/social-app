@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
-import {Linking, StyleSheet, View} from 'react-native'
+import {AccessibilityActionEvent, Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '@atproto/api'
 import {
@@ -173,7 +173,7 @@ export const FeedItem = observer(function ({
   )
 
   const onAccessibilityAction = useCallback(
-    event => {
+    (event: AccessibilityActionEvent) => {
       switch (event.nativeEvent.actionName) {
         case 'like':
           onPressToggleLike()

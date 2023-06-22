@@ -59,7 +59,7 @@ export const ViewSelector = React.forwardRef<
     // events
     // =
 
-    const keyExtractor = React.useCallback(item => item._reactKey, [])
+    const keyExtractor = React.useCallback((item: any) => item._reactKey, [])
 
     const onPressSelection = React.useCallback(
       (index: number) => setSelectedIndex(clamp(index, 0, sections.length)),
