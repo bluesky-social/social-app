@@ -23,7 +23,7 @@ export const ListCard = ({
   noBg?: boolean
   noBorder?: boolean
   renderButton?: () => JSX.Element
-  style: StyleProp<ViewStyle>
+  style?: StyleProp<ViewStyle>
 }) => {
   const pal = usePalette('default')
   const store = useStores()
