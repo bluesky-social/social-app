@@ -4,6 +4,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedRecord,
 } from '@atproto/api'
+import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 import {hasProp} from 'lib/type-guards'
 import {LANGUAGES_MAP_CODE2} from '../../locale/languages'
@@ -268,9 +269,10 @@ export class FeedTuner {
             Array.isArray(item.post.record.langs)
           ) {
             if (
-              item.post.record.langs.some(
-                lang => preferredLangsCode2.includes(lang), // we check for code2 here because that is what the `langs` property contains
-              )
+              bcp47Match.basicFilter(
+                item.post.record.langs,
+                preferredLangsCode2,
+              ).length > 0
             ) {
               hasPreferredLang = true
             }

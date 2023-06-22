@@ -66,6 +66,7 @@
     "@zxing/text-encoding": "^0.9.0",
     "await-lock": "^2.2.2",
     "base64-js": "^1.5.1",
+    "bcp-47-match": "^2.0.3",
     "email-validator": "^2.0.4",
     "eslint-plugin-react-native-a11y": "^3.3.0",
     "expo": "~48.0.18",
