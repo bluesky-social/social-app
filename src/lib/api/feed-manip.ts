@@ -265,12 +265,13 @@ export class FeedTuner {
           // if language is declared, regardless of a match, break out of the loop
           if (
             hasProp(item.post.record, 'langs') &&
-            Array.isArray(item.post.record.langs) &&
-
+            Array.isArray(item.post.record.langs)
           ) {
-            if (item.post.record.langs.some(
-              lang => preferredLangsCode2.includes(lang), // we check for code2 here because that is what the `langs` property contains
-            )) {
+            if (
+              item.post.record.langs.some(
+                lang => preferredLangsCode2.includes(lang), // we check for code2 here because that is what the `langs` property contains
+              )
+            ) {
               hasPreferredLang = true
             }
             break
