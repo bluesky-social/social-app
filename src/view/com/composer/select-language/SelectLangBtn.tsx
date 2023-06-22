@@ -7,6 +7,7 @@ import {
 import {Text} from 'view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
+import {isNative} from 'platform/detection'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
@@ -15,8 +16,10 @@ export function SelectLangBtn() {
   const store = useStores()
 
   const onPress = useCallback(async () => {
-    if (Keyboard.isVisible()) {
-      Keyboard.dismiss()
+    if (isNative) {
+      if (Keyboard.isVisible()) {
+        Keyboard.dismiss()
+      }
     }
     store.shell.openModal({name: 'post-languages-settings'})
   }, [store])
