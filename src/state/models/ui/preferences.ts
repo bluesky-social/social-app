@@ -48,9 +48,9 @@ export class LabelPreferencesModel {
 export class PreferencesModel {
   adultContentEnabled = !isIOS
   contentLanguages: string[] =
-    deviceLocales.map(locale => locale.languageCode) || []
+    deviceLocales?.map?(locale => locale.languageCode) || []
   postLanguages: string[] =
-    deviceLocales.map(locale => locale.languageCode) || []
+    deviceLocales?.map?(locale => locale.languageCode) || []
   contentLabels = new LabelPreferencesModel()
   savedFeeds: string[] = []
   pinnedFeeds: string[] = []
