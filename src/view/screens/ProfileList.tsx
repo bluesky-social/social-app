@@ -131,6 +131,7 @@ export const ProfileListScreen = withAuthRequired(
           onToggleSubscribed={onToggleSubscribed}
           onPressEditList={onPressEditList}
           onPressDeleteList={onPressDeleteList}
+          onPressShareList={onPressShareList}
         />
       </CenteredView>
     )
