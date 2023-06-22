@@ -14,6 +14,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedPost,
   AppBskyFeedDefs,
+  AppBskyGraphDefs,
 } from '@atproto/api'
 import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
@@ -26,6 +27,7 @@ import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import QuoteEmbed from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {CustomFeedEmbed} from './CustomFeedEmbed'
+import {ListEmbed} from './ListEmbed'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -143,6 +145,23 @@ export function PostEmbeds({
     }
   }
 
+  // custom feed embed (i.e. generator view)
+  // =
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyFeedDefs.isGeneratorView(embed.record)
+  ) {
+    return <CustomFeedEmbed record={embed.record} />
+  }
+
+  // list embed (e.g. mute lists; i.e. ListView)
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyGraphDefs.isListView(embed.record)
+  ) {
+    return <ListEmbed item={embed.record} />
+  }
+
   // external link embed
   // =
   if (AppBskyEmbedExternal.isView(embed)) {
@@ -161,15 +180,6 @@ export function PostEmbeds({
         <ExternalLinkEmbed link={link} />
       </Link>
     )
-  }
-
-  // custom feed embed (i.e. generator view)
-  // =
-  if (
-    AppBskyEmbedRecord.isView(embed) &&
-    AppBskyFeedDefs.isGeneratorView(embed.record)
-  ) {
-    return <CustomFeedEmbed record={embed.record} />
   }
 
   return <View />
