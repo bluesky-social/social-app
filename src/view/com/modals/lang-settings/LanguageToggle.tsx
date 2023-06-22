@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   languageToggle: {
     borderTopWidth: 1,
     borderRadius: 0,
-    paddingHorizontal: 0,
+    paddingHorizontal: 6,
     paddingVertical: 12,
   },
 })

@@ -46,8 +46,7 @@ export function Component({}: {}) {
     <View testID="postLanguagesModal" style={[pal.view, styles.container]}>
       <Text style={[pal.text, styles.title]}>Post Languages</Text>
       <Text style={[pal.text, styles.description]}>
-        Which languages are used in this post? (This is different than the
-        Content Language preferences found in the Settings menu.)
+        Which languages are used in this post?
       </Text>
       <ScrollView style={styles.scrollContainer}>
         {languages.map(lang => (
