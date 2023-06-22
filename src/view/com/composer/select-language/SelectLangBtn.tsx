@@ -4,6 +4,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {Text} from 'view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 
@@ -29,11 +30,17 @@ export function SelectLangBtn() {
       accessibilityRole="button"
       accessibilityLabel="Language selection"
       accessibilityHint="Opens screen or modal to select language of post">
-      <FontAwesomeIcon
-        icon={'language'}
-        style={pal.link as FontAwesomeIconStyle}
-        size={26}
-      />
+      {store.preferences.postLanguages.length > 0 ? (
+        <Text type="lg-bold" style={pal.link}>
+          {store.preferences.postLanguages.join(', ')}
+        </Text>
+      ) : (
+        <FontAwesomeIcon
+          icon="language"
+          style={pal.link as FontAwesomeIconStyle}
+          size={26}
+        />
+      )}
     </TouchableOpacity>
   )
 }
