@@ -4,7 +4,7 @@ import {ScrollView} from '../util'
 import {useStores} from 'state/index'
 import {Text} from '../../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb} from 'platform/detection'
+import {isDesktopWeb, deviceLocales} from 'platform/detection'
 import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
 import {LanguageToggle} from './LanguageToggle'
 import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
@@ -24,10 +24,14 @@ export function Component({}: {}) {
         !!lang.code2.trim() &&
         LANGUAGES_MAP_CODE2[lang.code2].code3 === lang.code3,
     )
-    // sort so that selected languages are on top, then alphabetically
+    // sort so that device & selected languages are on top, then alphabetically
     langs.sort((a, b) => {
-      const hasA = store.preferences.hasContentLanguage(a.code2)
-      const hasB = store.preferences.hasContentLanguage(b.code2)
+      const hasA =
+        store.preferences.hasContentLanguage(a.code2) ||
+        deviceLocales.includes(a.code2)
+      const hasB =
+        store.preferences.hasContentLanguage(b.code2) ||
+        deviceLocales.includes(b.code2)
       if (hasA === hasB) return a.name.localeCompare(b.name)
       if (hasA) return -1
       return 1

@@ -1,5 +1,4 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {getLocales} from 'expo-localization'
 import AwaitLock from 'await-lock'
 import isEqual from 'lodash.isequal'
 import {isObj, hasProp} from 'lib/type-guards'
@@ -14,13 +13,8 @@ import {
   ALWAYS_WARN_LABEL_GROUP,
 } from 'lib/labeling/const'
 import {DEFAULT_FEEDS} from 'lib/constants'
-import {isIOS} from 'platform/detection'
+import {isIOS, deviceLocales} from 'platform/detection'
 import {LANGUAGES} from '../../../locale/languages'
-import {dedupArray} from 'lib/functions'
-
-const deviceLocales = dedupArray(
-  getLocales().map(locale => locale.languageCode),
-)
 
 export type LabelPreference = 'show' | 'warn' | 'hide'
 const LABEL_GROUPS = [
