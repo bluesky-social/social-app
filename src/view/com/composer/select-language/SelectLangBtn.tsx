@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, StyleSheet, Keyboard} from 'react-native'
+import {observer} from 'mobx-react-lite'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -11,7 +12,7 @@ import {isNative} from 'platform/detection'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
-export function SelectLangBtn() {
+export const SelectLangBtn = observer(function SelectLangBtn() {
   const pal = usePalette('default')
   const store = useStores()
 
@@ -46,7 +47,7 @@ export function SelectLangBtn() {
       )}
     </TouchableOpacity>
   )
-}
+})
 
 const styles = StyleSheet.create({
   button: {
