@@ -56,9 +56,10 @@ export const CreateAccount = observer(
       } else {
         try {
           await model.submit()
-          track('Create Account')
         } catch {
           // dont need to handle here
+        } finally {
+          track('Try Create Account')
         }
       }
     }, [model, track])

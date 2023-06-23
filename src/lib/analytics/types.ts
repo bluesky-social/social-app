@@ -11,6 +11,7 @@ interface TrackPropertiesMap {
   // LOGIN / SIGN UP events
   'Sign In': {resumedSession: boolean} // CAN BE SERVER
   'Create Account': {} // CAN BE SERVER
+  'Try Create Account': {}
   'Signin:PressedForgotPassword': {}
   'Signin:PressedSelectService': {}
   // COMPOSER / CREATE POST events
