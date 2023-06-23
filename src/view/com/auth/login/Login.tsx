@@ -327,7 +327,6 @@ const LoginForm = ({
         identifier: fullIdent,
         password,
       })
-      track('Sign In', {resumedSession: false})
     } catch (e: any) {
       const errMsg = e.toString()
       store.log.warn('Failed to login', e)
@@ -341,6 +340,8 @@ const LoginForm = ({
       } else {
         setError(cleanError(errMsg))
       }
+    } finally {
+      track('Sign In', {resumedSession: false})
     }
   }
 
