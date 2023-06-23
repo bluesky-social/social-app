@@ -14,5 +14,5 @@ export const isMobileWeb =
 export const isDesktopWeb = isWeb && !isMobileWeb
 
 export const deviceLocales = dedupArray(
-  getLocales().map(locale => locale.languageCode),
+  getLocales?.().map?.(locale => locale.languageCode),
 )
