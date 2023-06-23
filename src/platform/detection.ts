@@ -1,4 +1,6 @@
 import {Platform} from 'react-native'
+import {getLocales} from 'expo-localization'
+import {dedupArray} from 'lib/functions'
 
 export const isIOS = Platform.OS === 'ios'
 export const isAndroid = Platform.OS === 'android'
@@ -10,3 +12,7 @@ export const isMobileWeb =
   // @ts-ignore we know window exists -prf
   global.window.matchMedia(isMobileWebMediaQuery)?.matches
 export const isDesktopWeb = isWeb && !isMobileWeb
+
+export const deviceLocales = dedupArray(
+  getLocales?.().map?.(locale => locale.languageCode),
+)

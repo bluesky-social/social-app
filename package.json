@@ -66,6 +66,7 @@
     "@zxing/text-encoding": "^0.9.0",
     "await-lock": "^2.2.2",
     "base64-js": "^1.5.1",
+    "bcp-47-match": "^2.0.3",
     "email-validator": "^2.0.4",
     "eslint-plugin-react-native-a11y": "^3.3.0",
     "expo": "~48.0.18",
@@ -207,7 +208,7 @@
       "node"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",

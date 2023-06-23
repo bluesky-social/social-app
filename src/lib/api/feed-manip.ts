@@ -4,6 +4,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedRecord,
 } from '@atproto/api'
+import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 import {hasProp} from 'lib/type-guards'
 import {LANGUAGES_MAP_CODE2} from '../../locale/languages'
@@ -236,44 +237,84 @@ export class FeedTuner {
     }
   }
 
-  static preferredLangOnly(langsCode2: string[]) {
-    const langsCode3 = langsCode2.map(l => LANGUAGES_MAP_CODE2[l]?.code3 || l)
+  /**
+   * This function filters a list of FeedViewPostsSlice items based on whether they contain text in a
+   * preferred language.
+   * @param {string[]} preferredLangsCode2 - An array of prefered language codes in ISO 639-1 or ISO 639-2 format.
+   * @returns A function that takes in a `FeedTuner` and an array of `FeedViewPostsSlice` objects and
+   * returns an array of `FeedViewPostsSlice` objects.
+   */
+  static preferredLangOnly(preferredLangsCode2: string[]) {
+    const langsCode3 = preferredLangsCode2.map(
+      l => LANGUAGES_MAP_CODE2[l]?.code3 || l,
+    )
     return (
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
     ): FeedViewPostsSlice[] => {
-      if (!langsCode2.length) {
+      // 1. Early return if no languages have been specified
+      if (!preferredLangsCode2.length || preferredLangsCode2.length === 0) {
         return slices
       }
+
       for (let i = slices.length - 1; i >= 0; i--) {
+        // 2. Set a flag to indicate whether the item has text in a preferred language
         let hasPreferredLang = false
         for (const item of slices[i].items) {
+          // 3. check if the post has a `langs` property and if it is in the list of preferred languages
+          // if it is, set the flag to true
+          // if language is declared, regardless of a match, break out of the loop
           if (
+            hasProp(item.post.record, 'langs') &&
+            Array.isArray(item.post.record.langs)
+          ) {
+            if (
+              bcp47Match.basicFilter(
+                item.post.record.langs,
+                preferredLangsCode2,
+              ).length > 0
+            ) {
+              hasPreferredLang = true
+            }
+            break
+          }
+          // 4. FALLBACK if no language declared :
+          // Get the most likely language of the text in the post from the `lande` library and
+          // check if it is in the list of preferred languages
+          // if it is, set the flag to true and break out of the loop
+          else if (
             hasProp(item.post.record, 'text') &&
             typeof item.post.record.text === 'string'
           ) {
-            // Treat empty text the same as no text.
+            // Treat empty text the same as no text
             if (item.post.record.text.length === 0) {
               hasPreferredLang = true
               break
             }
+            const langsProbabilityMap = lande(item.post.record.text)
+            const mostLikelyLang = langsProbabilityMap[0][0]
+            // const secondMostLikelyLang = langsProbabilityMap[1][0]
+            // const thirdMostLikelyLang = langsProbabilityMap[2][0]
 
-            const res = lande(item.post.record.text)
-
-            if (langsCode3.includes(res[0][0])) {
+            // we check for code3 here because that is what the `lande` library returns
+            if (langsCode3.includes(mostLikelyLang)) {
               hasPreferredLang = true
               break
             }
-          } else {
-            // no text? roll with it
+          }
+          // 5. no text? roll with it (eg: image-only posts, reposts, etc.)
+          else {
             hasPreferredLang = true
             break
           }
         }
+
+        // 6. if item does not fit preferred language, remove it
         if (!hasPreferredLang) {
           slices.splice(i, 1)
         }
       }
+      // 7. return the filtered list of items
       return slices
     }
   }

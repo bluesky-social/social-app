@@ -23,7 +23,9 @@ import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
-import * as ContentLanguagesSettingsModal from './ContentLanguagesSettings'
+import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
+import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
+
 import * as PreferencesHomeFeed from './PreferencesHomeFeed'
 
 export const ModalsContainer = observer(function ModalsContainer() {
@@ -94,6 +96,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ContentFilteringSettingsModal.Component />
   } else if (modal.name === 'content-languages-settings') {
     element = <ContentLanguagesSettingsModal.Component />
+  } else if (modal.name === 'post-languages-settings') {
+    element = <PostLanguagesSettingsModal.Component />
   } else if (modal.name === 'alt-text-image') {
     element = <AltTextImageModal.Component {...modal} />
   } else if (modal.name === 'edit-image') {

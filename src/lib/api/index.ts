@@ -65,6 +65,7 @@ interface PostOpts {
   images?: ImageModel[]
   knownHandles?: Set<string>
   onStateChange?: (state: string) => void
+  langs?: string[]
 }
 
 export async function post(store: RootStoreModel, opts: PostOpts) {
@@ -96,6 +97,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     return true
   })
 
+  // add quote embed if present
   if (opts.quote) {
     embed = {
       $type: 'app.bsky.embed.record',
@@ -106,6 +108,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     } as AppBskyEmbedRecord.Main
   }
 
+  // add image embed if present
   if (opts.images?.length) {
     const images: AppBskyEmbedImages.Image[] = []
     for (const image of opts.images) {
@@ -136,6 +139,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     }
   }
 
+  // add external embed if present
   if (opts.extLink && !opts.images?.length) {
     if (opts.extLink.embed) {
       embed = opts.extLink.embed
@@ -197,6 +201,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     }
   }
 
+  // add replyTo if post is a reply to another post
   if (opts.replyTo) {
     const replyToUrip = new AtUri(opts.replyTo)
     const parentPost = await store.agent.getPost({
@@ -215,6 +220,12 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     }
   }
 
+  // add top 3 languages from user preferences if langs is provided
+  let langs = opts.langs
+  if (opts.langs) {
+    langs = opts.langs.slice(0, 3)
+  }
+
   try {
     opts.onStateChange?.('Posting...')
     return await store.agent.post({
@@ -222,6 +233,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
       facets: rt.facets,
       reply,
       embed,
+      langs,
     })
   } catch (e: any) {
     console.error(`Failed to create post: ${e.toString()}`)

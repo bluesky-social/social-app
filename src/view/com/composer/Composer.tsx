@@ -38,6 +38,7 @@ import {isDesktopWeb, isAndroid} from 'platform/detection'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
+import {SelectLangBtn} from './select-language/SelectLangBtn'
 
 type Props = ComposerOpts & {
   onClose: () => void
@@ -71,6 +72,13 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const insets = useSafeAreaInsets()
+  const viewStyles = useMemo(
+    () => ({
+      paddingBottom: isAndroid ? insets.bottom : 0,
+      paddingTop: isAndroid ? insets.top : isDesktopWeb ? 0 : 15,
+    }),
+    [insets],
+  )
 
   // HACK
   // there's a bug with @mattermost/react-native-paste-input where if the input
@@ -87,6 +95,7 @@ export const ComposePost = observer(function ComposePost({
     autocompleteView.setup()
   }, [autocompleteView])
 
+  // listen to escape key on desktop web
   const onEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -109,7 +118,6 @@ export const ComposePost = observer(function ComposePost({
     },
     [store, onClose],
   )
-
   useEffect(() => {
     if (isDesktopWeb) {
       window.addEventListener('keydown', onEscape)
@@ -157,6 +165,7 @@ export const ComposePost = observer(function ComposePost({
           extLink: extLink,
           onStateChange: setProcessingState,
           knownHandles: autocompleteView.knownHandles,
+          langs: store.preferences.postLanguages,
         })
         track('Create Post', {
           imageCount: gallery.size,
@@ -197,15 +206,13 @@ export const ComposePost = observer(function ComposePost({
     ],
   )
 
-  const canPost = graphemeLength <= MAX_GRAPHEME_LENGTH
+  const canPost = useMemo(
+    () => graphemeLength <= MAX_GRAPHEME_LENGTH,
+    [graphemeLength],
+  )
+  const selectTextInputPlaceholder = replyTo ? 'Write your reply' : `What's up?`
 
-  const selectTextInputPlaceholder = replyTo ? 'Write your reply' : "What's up?"
-
-  const canSelectImages = gallery.size < 4
-  const viewStyles = {
-    paddingBottom: isAndroid ? insets.bottom : 0,
-    paddingTop: isAndroid ? insets.top : isDesktopWeb ? 0 : 15,
-  }
+  const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
 
   return (
     <KeyboardAvoidingView
@@ -352,6 +359,7 @@ export const ComposePost = observer(function ComposePost({
             </>
           ) : null}
           <View style={s.flex1} />
+          <SelectLangBtn />
           <CharProgress count={graphemeLength} />
         </View>
       </View>
