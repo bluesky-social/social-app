@@ -17,7 +17,7 @@ export function ToggleButton({
   label: string
   isSelected: boolean
   style?: StyleProp<ViewStyle>
-  onPress: () => void
+  onPress?: () => void
 }) {
   const theme = useTheme()
   const circleStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(type, {
