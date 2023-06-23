@@ -20,12 +20,24 @@ export const LanguageToggle = observer(
     const pal = usePalette('default')
     const store = useStores()
 
+    const isSelected = store.preferences[langType].includes(code2)
+
+    // enforce a max of 3 selections for post languages
+    let isDisabled = false
+    if (
+      langType === 'postLanguages' &&
+      store.preferences[langType].length >= 3 &&
+      !isSelected
+    ) {
+      isDisabled = true
+    }
+
     return (
       <ToggleButton
         label={name}
-        isSelected={store.preferences[langType].includes(code2)}
-        onPress={onPress}
-        style={[pal.border, styles.languageToggle]}
+        isSelected={isSelected}
+        onPress={isDisabled ? undefined : onPress}
+        style={[pal.border, styles.languageToggle, isDisabled && styles.dimmed]}
       />
     )
   },
@@ -37,5 +49,8 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     paddingHorizontal: 6,
     paddingVertical: 12,
+  },
+  dimmed: {
+    opacity: 0.5,
   },
 })
