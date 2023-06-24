@@ -1,6 +1,6 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {ComposePost} from '../com/composer/Composer'
 import {ComposerOpts} from 'state/models/ui/shell'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -23,6 +23,10 @@ export const Composer = observer(
   }) => {
     const pal = usePalette('default')
 
+    const onInnerPress = () => {
+      // do nothing, we just want to stop it from bubbling
+    }
+
     // rendering
     // =
 
@@ -31,16 +35,22 @@ export const Composer = observer(
     }
 
     return (
-      <View style={styles.mask} aria-modal accessibilityViewIsModal>
-        <View style={[styles.container, pal.view, pal.border]}>
-          <ComposePost
-            replyTo={replyTo}
-            quote={quote}
-            onPost={onPost}
-            onClose={onClose}
-          />
+      // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.mask} aria-modal accessibilityViewIsModal>
+          {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
+          <TouchableWithoutFeedback onPress={onInnerPress}>
+            <View style={[styles.container, pal.view, pal.border]}>
+              <ComposePost
+                replyTo={replyTo}
+                quote={quote}
+                onPost={onPost}
+                onClose={onClose}
+              />
+            </View>
+          </TouchableWithoutFeedback>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     )
   },
 )
