@@ -74,6 +74,24 @@ interface TrackPropertiesMap {
   'CreateMuteList:AvatarSelected': {}
   'CreateMuteList:Save': {} // CAN BE SERVER
   // CUSTOM FEED events
+  'CustomFeed:Save': {}
+  'CustomFeed:Unsave': {}
+  'CustomFeed:Like': {}
+  'CustomFeed:Unlike': {}
+  'CustomFeed:Share': {}
+  'CustomFeed:Pin': {
+    uri: string
+    name: string
+  }
+  'CustomFeed:Unpin': {
+    uri: string
+    name: string
+  }
+  'CustomFeed:Reorder': {
+    uri: string
+    name: string
+    index: number
+  }
   'MultiFeed:onEndReached': {}
   'MultiFeed:onRefresh': {}
   // MODERATION events

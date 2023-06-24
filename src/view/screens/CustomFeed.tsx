@@ -31,12 +31,14 @@ import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {DropdownButton, DropdownItem} from 'view/com/util/forms/DropdownButton'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {EmptyState} from 'view/com/util/EmptyState'
+import {useAnalytics} from 'lib/analytics/analytics'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export const CustomFeedScreen = withAuthRequired(
   observer(({route}: Props) => {
     const store = useStores()
     const pal = usePalette('default')
+    const {track} = useAnalytics()
     const {rkey, name} = route.params
     const uri = useMemo(
       () => makeRecordUri(name, 'app.bsky.feed.generator', rkey),
@@ -99,7 +101,8 @@ export const CustomFeedScreen = withAuthRequired(
     const onPressShare = React.useCallback(() => {
       const url = toShareUrl(`/profile/${name}/feed/${rkey}`)
       shareUrl(url)
-    }, [name, rkey])
+      track('CustomFeed:Share')
+    }, [name, rkey, track])
 
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
