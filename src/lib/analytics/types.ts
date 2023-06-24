@@ -37,6 +37,13 @@ interface TrackPropertiesMap {
   'FeedItem:PostLike': {} // CAN BE SERVER
   'FeedItem:PostDelete': {} // CAN BE SERVER
   'FeedItem:ThreadMute': {} // CAN BE SERVER
+  // PROFILE events
+  'Profile:Follow': {
+    username: string
+  }
+  'Profile:Unfollow': {
+    username: string
+  }
   // PROFILE HEADER events
   'ProfileHeader:EditProfileButtonClicked': {}
   'ProfileHeader:FollowersButtonClicked': {}

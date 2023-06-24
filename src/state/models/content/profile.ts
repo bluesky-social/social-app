@@ -18,6 +18,7 @@ import {
   filterAccountLabels,
   filterProfileLabels,
 } from 'lib/labeling/helpers'
+import {track} from 'lib/analytics/analytics'
 
 export class ProfileViewerModel {
   muted?: boolean
@@ -127,18 +128,26 @@ export class ProfileModel {
     }
 
     if (followUri) {
+      // unfollow
       await this.rootStore.agent.deleteFollow(followUri)
       runInAction(() => {
         this.followersCount--
         this.viewer.following = undefined
         this.rootStore.me.follows.removeFollow(this.did)
       })
+      track('Profile:Unfollow', {
+        username: this.handle,
+      })
     } else {
+      // follow
       const res = await this.rootStore.agent.follow(this.did)
       runInAction(() => {
         this.followersCount++
         this.viewer.following = res.uri
         this.rootStore.me.follows.addFollow(this.did, res.uri)
+      })
+      track('Profile:Follow', {
+        username: this.handle,
       })
     }
   }
