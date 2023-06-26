@@ -9,7 +9,7 @@ import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
-import {PostsFeedSliceModel} from './post'
+import {PostsFeedSliceModel} from './posts-slice'
 
 const PAGE_SIZE = 30
 let _idCounter = 0

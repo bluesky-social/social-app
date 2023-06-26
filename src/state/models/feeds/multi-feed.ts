@@ -4,7 +4,7 @@ import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from '../root-store'
 import {CustomFeedModel} from './custom-feed'
 import {PostsFeedModel} from './posts'
-import {PostsFeedSliceModel} from './post'
+import {PostsFeedSliceModel} from './posts-slice'
 
 const FEED_PAGE_SIZE = 10
 const FEEDS_PAGE_SIZE = 3
