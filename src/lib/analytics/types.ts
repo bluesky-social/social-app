@@ -108,6 +108,7 @@ interface TrackPropertiesMap {
     name: string
     index: number
   }
+  'CustomFeed:LoadMore': {}
   'MultiFeed:onEndReached': {}
   'MultiFeed:onRefresh': {}
   // MODERATION events
