@@ -6,10 +6,10 @@ import {
   StyleSheet,
   View,
   ViewStyle,
+  FlatList,
 } from 'react-native'
 import {AppBskyActorDefs, AppBskyGraphDefs, RichText} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
-import {FlatList} from '../util/Views'
 import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -25,6 +25,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
+import {ListActions} from './ListActions'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const HEADER_ITEM = {_reactKey: '__header__'}
@@ -41,6 +42,7 @@ export const ListItems = observer(
     onToggleSubscribed,
     onPressEditList,
     onPressDeleteList,
+    onPressShareList,
     renderEmptyState,
     testID,
     headerOffset = 0,
@@ -49,9 +51,10 @@ export const ListItems = observer(
     style?: StyleProp<ViewStyle>
     scrollElRef?: MutableRefObject<FlatList<any> | null>
     onPressTryAgain?: () => void
-    onToggleSubscribed?: () => void
-    onPressEditList?: () => void
-    onPressDeleteList?: () => void
+    onToggleSubscribed: () => void
+    onPressEditList: () => void
+    onPressDeleteList: () => void
+    onPressShareList: () => void
     renderEmptyState?: () => JSX.Element
     testID?: string
     headerOffset?: number
@@ -163,6 +166,7 @@ export const ListItems = observer(
               onToggleSubscribed={onToggleSubscribed}
               onPressEditList={onPressEditList}
               onPressDeleteList={onPressDeleteList}
+              onPressShareList={onPressShareList}
             />
           ) : null
         } else if (item === ERROR_ITEM) {
@@ -193,14 +197,17 @@ export const ListItems = observer(
         )
       },
       [
-        list,
-        onPressTryAgain,
-        onPressRetryLoadMore,
         renderMemberButton,
+        renderEmptyState,
+        list.list,
+        list.isOwner,
+        list.error,
+        onToggleSubscribed,
         onPressEditList,
         onPressDeleteList,
-        onToggleSubscribed,
-        renderEmptyState,
+        onPressShareList,
+        onPressTryAgain,
+        onPressRetryLoadMore,
       ],
     )
 
@@ -257,12 +264,14 @@ const ListHeader = observer(
     onToggleSubscribed,
     onPressEditList,
     onPressDeleteList,
+    onPressShareList,
   }: {
     list: AppBskyGraphDefs.ListView
     isOwner: boolean
-    onToggleSubscribed?: () => void
-    onPressEditList?: () => void
-    onPressDeleteList?: () => void
+    onToggleSubscribed: () => void
+    onPressEditList: () => void
+    onPressDeleteList: () => void
+    onPressShareList: () => void
   }) => {
     const pal = usePalette('default')
     const store = useStores()
@@ -301,43 +310,14 @@ const ListHeader = observer(
               />
             )}
             {isDesktopWeb && (
-              <View style={styles.headerBtns}>
-                {list.viewer?.muted ? (
-                  <Button
-                    type="inverted"
-                    label="Unsubscribe"
-                    accessibilityLabel="Unsubscribe"
-                    accessibilityHint=""
-                    onPress={onToggleSubscribed}
-                  />
-                ) : (
-                  <Button
-                    type="primary"
-                    label="Subscribe & Mute"
-                    accessibilityLabel="Subscribe and mute"
-                    accessibilityHint=""
-                    onPress={onToggleSubscribed}
-                  />
-                )}
-                {isOwner && (
-                  <Button
-                    type="default"
-                    label="Edit List"
-                    accessibilityLabel="Edit list"
-                    accessibilityHint=""
-                    onPress={onPressEditList}
-                  />
-                )}
-                {isOwner && (
-                  <Button
-                    type="default"
-                    label="Delete List"
-                    accessibilityLabel="Delete list"
-                    accessibilityHint=""
-                    onPress={onPressDeleteList}
-                  />
-                )}
-              </View>
+              <ListActions
+                isOwner={isOwner}
+                muted={list.viewer?.muted}
+                onPressDeleteList={onPressDeleteList}
+                onPressEditList={onPressEditList}
+                onToggleSubscribed={onToggleSubscribed}
+                onPressShareList={onPressShareList}
+              />
             )}
           </View>
           <View>

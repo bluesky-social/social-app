@@ -13,6 +13,7 @@ export function ImageHorzList({images, style}: Props) {
     <View style={[styles.flexRow, style]}>
       {images.map(({thumb, alt}) => (
         <Image
+          key={thumb}
           source={{uri: thumb}}
           style={styles.image}
           accessible={true}

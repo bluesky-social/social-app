@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AtUri, AppBskyGraphDefs, RichText} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -16,12 +16,14 @@ export const ListCard = ({
   noBg,
   noBorder,
   renderButton,
+  style,
 }: {
   testID?: string
   list: AppBskyGraphDefs.ListView
   noBg?: boolean
   noBorder?: boolean
   renderButton?: () => JSX.Element
+  style?: StyleProp<ViewStyle>
 }) => {
   const pal = usePalette('default')
   const store = useStores()
@@ -53,6 +55,7 @@ export const ListCard = ({
         pal.border,
         noBorder && styles.outerNoBorder,
         !noBg && pal.view,
+        style,
       ]}
       href={`/profile/${list.creator.did}/lists/${rkey}`}
       title={list.name}

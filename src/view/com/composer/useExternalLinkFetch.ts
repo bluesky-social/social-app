@@ -3,9 +3,17 @@ import {useStores} from 'state/index'
 import {ImageModel} from 'state/models/media/image'
 import * as apilib from 'lib/api/index'
 import {getLinkMeta} from 'lib/link-meta/link-meta'
-import {getPostAsQuote, getFeedAsEmbed} from 'lib/link-meta/bsky'
+import {
+  getPostAsQuote,
+  getFeedAsEmbed,
+  getListAsEmbed,
+} from 'lib/link-meta/bsky'
 import {downloadAndResize} from 'lib/media/manip'
-import {isBskyPostUrl, isBskyCustomFeedUrl} from 'lib/strings/url-helpers'
+import {
+  isBskyPostUrl,
+  isBskyCustomFeedUrl,
+  isBskyListUrl,
+} from 'lib/strings/url-helpers'
 import {ComposerOpts} from 'state/models/ui/shell'
 import {POST_IMG_MAX} from 'lib/constants'
 
@@ -57,6 +65,24 @@ export function useExternalLinkFetch({
           },
           err => {
             store.log.error('Failed to fetch feed for embedding', {err})
+            setExtLink(undefined)
+          },
+        )
+      } else if (isBskyListUrl(extLink.uri)) {
+        getListAsEmbed(store, extLink.uri).then(
+          ({embed, meta}) => {
+            if (aborted) {
+              return
+            }
+            setExtLink({
+              uri: extLink.uri,
+              isLoading: false,
+              meta,
+              embed,
+            })
+          },
+          err => {
+            store.log.error('Failed to fetch list for embedding', {err})
             setExtLink(undefined)
           },
         )

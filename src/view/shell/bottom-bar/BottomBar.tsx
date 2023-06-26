@@ -189,6 +189,7 @@ export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
                   pal.text,
                   styles.profileIcon,
                   styles.onProfile,
+                  {borderColor: pal.text.color},
                 ]}>
                 <UserAvatar avatar={store.me.avatar} size={27} />
               </View>

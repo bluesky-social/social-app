@@ -97,6 +97,10 @@ export class ListModel {
     return this.list?.creator.did === this.rootStore.me.did
   }
 
+  get isSubscribed() {
+    return this.list?.viewer?.muted
+  }
+
   // public api
   // =
 
