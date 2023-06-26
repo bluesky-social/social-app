@@ -67,6 +67,7 @@ export function Component({image}: Props) {
       <ScrollView
         testID="altTextImageModal"
         style={styles.scrollContainer}
+        keyboardShouldPersistTaps="always"
         nativeID="imageAltText">
         <View style={styles.scrollInner}>
           <View style={[pal.viewLight, styles.imageContainer]}>
