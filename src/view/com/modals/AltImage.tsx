@@ -62,7 +62,7 @@ export function Component({image}: Props) {
 
   return (
     <KeyboardAvoidingView
-      behavior={isAndroid ? 'height ' : 'padding'}
+      behavior={isAndroid ? 'height' : 'padding'}
       style={[pal.view, styles.container]}>
       <ScrollView
         testID="altTextImageModal"
