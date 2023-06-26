@@ -23,3 +23,4 @@ index 1c8f8e0..090bda5 100644
 -  _lastStringStateWasUpdatedWith = _backedTextInputView.attributedText;
    [self textViewProbablyDidChangeSelection];
  }
+ 
