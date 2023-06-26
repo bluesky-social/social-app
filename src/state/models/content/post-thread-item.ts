@@ -18,6 +18,8 @@ import {
   getPostModeration,
 } from 'lib/labeling/helpers'
 
+type PostView = AppBskyFeedDefs.PostView
+
 export class PostThreadItemModel {
   // ui state
   _reactKey: string = ''
@@ -28,7 +30,7 @@ export class PostThreadItemModel {
   _hasMore = false
 
   // data
-  post: AppBskyFeedDefs.PostView
+  post: PostView
   postRecord?: FeedPost.Record
   parent?:
     | PostThreadItemModel
@@ -36,6 +38,33 @@ export class PostThreadItemModel {
     | AppBskyFeedDefs.BlockedPost
   replies?: (PostThreadItemModel | AppBskyFeedDefs.NotFoundPost)[]
   richText?: RichText
+
+  constructor(
+    public rootStore: RootStoreModel,
+    v: AppBskyFeedDefs.ThreadViewPost,
+  ) {
+    this._reactKey = `thread-${v.post.uri}`
+    this.post = v.post
+    if (FeedPost.isRecord(this.post.record)) {
+      const valid = FeedPost.validateRecord(this.post.record)
+      if (valid.success) {
+        this.postRecord = this.post.record
+        this.richText = new RichText(this.postRecord, {cleanNewlines: true})
+      } else {
+        rootStore.log.warn(
+          'Received an invalid app.bsky.feed.post record',
+          valid.error,
+        )
+      }
+    } else {
+      rootStore.log.warn(
+        'app.bsky.feed.getPostThread served an unexpected record type',
+        this.post.record,
+      )
+    }
+    // replies and parent are handled via assignTreeModels
+    makeAutoObservable(this, {rootStore: false})
+  }
 
   get uri() {
     return this.post.uri
@@ -83,33 +112,6 @@ export class PostThreadItemModel {
 
   get moderation(): PostModeration {
     return getPostModeration(this.rootStore, this.labelInfo)
-  }
-
-  constructor(
-    public rootStore: RootStoreModel,
-    v: AppBskyFeedDefs.ThreadViewPost,
-  ) {
-    this._reactKey = `thread-${v.post.uri}`
-    this.post = v.post
-    if (FeedPost.isRecord(this.post.record)) {
-      const valid = FeedPost.validateRecord(this.post.record)
-      if (valid.success) {
-        this.postRecord = this.post.record
-        this.richText = new RichText(this.postRecord, {cleanNewlines: true})
-      } else {
-        rootStore.log.warn(
-          'Received an invalid app.bsky.feed.post record',
-          valid.error,
-        )
-      }
-    } else {
-      rootStore.log.warn(
-        'app.bsky.feed.getPostThread served an unexpected record type',
-        this.post.record,
-      )
-    }
-    // replies and parent are handled via assignTreeModels
-    makeAutoObservable(this, {rootStore: false})
   }
 
   assignTreeModels(

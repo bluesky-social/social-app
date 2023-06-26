@@ -1,5 +1,9 @@
 import {makeAutoObservable} from 'mobx'
-import {AppBskyFeedDefs, AppBskyFeedPost, RichText} from '@atproto/api'
+import {
+  AppBskyFeedPost as FeedPost,
+  AppBskyFeedDefs,
+  RichText,
+} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {updateDataOptimistically} from 'lib/async/revertible'
 import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
@@ -9,9 +13,9 @@ import {
   getEmbedMutedByList,
   getEmbedBlocking,
   getEmbedBlockedBy,
-  getPostModeration,
   filterAccountLabels,
   filterProfileLabels,
+  getPostModeration,
 } from 'lib/labeling/helpers'
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
@@ -24,7 +28,7 @@ export class PostsFeedItemModel {
 
   // data
   post: PostView
-  postRecord?: AppBskyFeedPost.Record
+  postRecord?: FeedPost.Record
   reply?: FeedViewPost['reply']
   reason?: FeedViewPost['reason']
   richText?: RichText
@@ -36,8 +40,8 @@ export class PostsFeedItemModel {
   ) {
     this._reactKey = reactKey
     this.post = v.post
-    if (AppBskyFeedPost.isRecord(this.post.record)) {
-      const valid = AppBskyFeedPost.validateRecord(this.post.record)
+    if (FeedPost.isRecord(this.post.record)) {
+      const valid = FeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
         this.richText = new RichText(this.postRecord, {cleanNewlines: true})
@@ -60,6 +64,14 @@ export class PostsFeedItemModel {
     this.reply = v.reply
     this.reason = v.reason
     makeAutoObservable(this, {rootStore: false})
+  }
+
+  get uri() {
+    return this.post.uri
+  }
+
+  get parentUri() {
+    return this.postRecord?.reply?.parent.uri
   }
 
   get rootUri(): string {
