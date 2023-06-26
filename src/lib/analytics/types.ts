@@ -31,6 +31,14 @@ interface TrackPropertiesMap {
   // FEED events
   'Feed:onRefresh': {}
   'Feed:onEndReached': {}
+  // POST events
+  'Post:Like': {} // CAN BE SERVER
+  'Post:Unlike': {} // CAN BE SERVER
+  'Post:Repost': {} // CAN BE SERVER
+  'Post:Unrepost': {} // CAN BE SERVER
+  'Post:Delete': {} // CAN BE SERVER
+  'Post:ThreadMute': {} // CAN BE SERVER
+  'Post:ThreadUnmute': {} // CAN BE SERVER
   // FEED ITEM events
   'FeedItem:PostReply': {} // CAN BE SERVER
   'FeedItem:PostRepost': {} // CAN BE SERVER

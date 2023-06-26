@@ -17,6 +17,7 @@ import {
   filterProfileLabels,
   getPostModeration,
 } from 'lib/labeling/helpers'
+import {track} from 'lib/analytics/analytics'
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 type ReasonRepost = AppBskyFeedDefs.ReasonRepost
@@ -135,68 +136,94 @@ export class PostsFeedItemModel {
 
   async toggleLike() {
     this.post.viewer = this.post.viewer || {}
-    if (this.post.viewer.like) {
-      const url = this.post.viewer.like
-      await updateDataOptimistically(
-        this.post,
-        () => {
-          this.post.likeCount = (this.post.likeCount || 0) - 1
-          this.post.viewer!.like = undefined
-        },
-        () => this.rootStore.agent.deleteLike(url),
-      )
-    } else {
-      await updateDataOptimistically(
-        this.post,
-        () => {
-          this.post.likeCount = (this.post.likeCount || 0) + 1
-          this.post.viewer!.like = 'pending'
-        },
-        () => this.rootStore.agent.like(this.post.uri, this.post.cid),
-        res => {
-          this.post.viewer!.like = res.uri
-        },
-      )
+    try {
+      if (this.post.viewer.like) {
+        // unlike
+        const url = this.post.viewer.like
+        await updateDataOptimistically(
+          this.post,
+          () => {
+            this.post.likeCount = (this.post.likeCount || 0) - 1
+            this.post.viewer!.like = undefined
+          },
+          () => this.rootStore.agent.deleteLike(url),
+        )
+      } else {
+        // like
+        await updateDataOptimistically(
+          this.post,
+          () => {
+            this.post.likeCount = (this.post.likeCount || 0) + 1
+            this.post.viewer!.like = 'pending'
+          },
+          () => this.rootStore.agent.like(this.post.uri, this.post.cid),
+          res => {
+            this.post.viewer!.like = res.uri
+          },
+        )
+      }
+    } catch (error) {
+      this.rootStore.log.error('Failed to toggle like', error)
+    } finally {
+      track(this.post.viewer.like ? 'Post:Unlike' : 'Post:Like')
     }
   }
 
   async toggleRepost() {
     this.post.viewer = this.post.viewer || {}
-    if (this.post.viewer?.repost) {
-      const url = this.post.viewer.repost
-      await updateDataOptimistically(
-        this.post,
-        () => {
-          this.post.repostCount = (this.post.repostCount || 0) - 1
-          this.post.viewer!.repost = undefined
-        },
-        () => this.rootStore.agent.deleteRepost(url),
-      )
-    } else {
-      await updateDataOptimistically(
-        this.post,
-        () => {
-          this.post.repostCount = (this.post.repostCount || 0) + 1
-          this.post.viewer!.repost = 'pending'
-        },
-        () => this.rootStore.agent.repost(this.post.uri, this.post.cid),
-        res => {
-          this.post.viewer!.repost = res.uri
-        },
-      )
+    try {
+      if (this.post.viewer?.repost) {
+        const url = this.post.viewer.repost
+        await updateDataOptimistically(
+          this.post,
+          () => {
+            this.post.repostCount = (this.post.repostCount || 0) - 1
+            this.post.viewer!.repost = undefined
+          },
+          () => this.rootStore.agent.deleteRepost(url),
+        )
+      } else {
+        await updateDataOptimistically(
+          this.post,
+          () => {
+            this.post.repostCount = (this.post.repostCount || 0) + 1
+            this.post.viewer!.repost = 'pending'
+          },
+          () => this.rootStore.agent.repost(this.post.uri, this.post.cid),
+          res => {
+            this.post.viewer!.repost = res.uri
+          },
+        )
+      }
+    } catch (error) {
+      this.rootStore.log.error('Failed to toggle repost', error)
+    } finally {
+      track(this.post.viewer.repost ? 'Post:Unrepost' : 'Post:Repost')
     }
   }
 
   async toggleThreadMute() {
-    if (this.isThreadMuted) {
-      this.rootStore.mutedThreads.uris.delete(this.rootUri)
-    } else {
-      this.rootStore.mutedThreads.uris.add(this.rootUri)
+    try {
+      if (this.isThreadMuted) {
+        this.rootStore.mutedThreads.uris.delete(this.rootUri)
+      } else {
+        this.rootStore.mutedThreads.uris.add(this.rootUri)
+      }
+    } catch (error) {
+      this.rootStore.log.error('Failed to toggle thread mute', error)
+    } finally {
+      track(this.isThreadMuted ? 'Post:ThreadUnmute' : 'Post:ThreadMute')
     }
   }
 
   async delete() {
-    await this.rootStore.agent.deletePost(this.post.uri)
-    this.rootStore.emitPostDeleted(this.post.uri)
+    try {
+      await this.rootStore.agent.deletePost(this.post.uri)
+      this.rootStore.emitPostDeleted(this.post.uri)
+    } catch (error) {
+      this.rootStore.log.error('Failed to delete post', error)
+    } finally {
+      track('Post:Delete')
+    }
   }
 }
