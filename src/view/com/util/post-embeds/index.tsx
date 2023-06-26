@@ -126,7 +126,11 @@ export function PostEmbeds({
               onPress={() => openLightbox(0)}
               onPressIn={() => onPressIn(0)}
               style={styles.singleImage}>
-              {alt === '' ? null : <Text style={styles.alt}>ALT</Text>}
+              {alt === '' ? null : (
+                <View style={styles.altContainer}>
+                  <Text style={styles.alt}>ALT</Text>
+                </View>
+              )}
             </AutoSizedImage>
           </View>
         )
@@ -201,17 +205,18 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: 4,
   },
-  alt: {
+  altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderRadius: 6,
-    color: 'white',
-    fontSize: 12,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: 6,
     paddingVertical: 3,
     position: 'absolute',
     left: 6,
     bottom: 6,
+  },
+  alt: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
   },
 })
