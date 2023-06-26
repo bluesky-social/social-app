@@ -89,6 +89,8 @@ interface TrackPropertiesMap {
   'Lists:onEndReached': {}
   'CreateMuteList:AvatarSelected': {}
   'CreateMuteList:Save': {} // CAN BE SERVER
+  'Lists:Subscribe': {} // CAN BE SERVER
+  'Lists:Unsubscribe': {} // CAN BE SERVER
   // CUSTOM FEED events
   'CustomFeed:Save': {}
   'CustomFeed:Unsave': {}
