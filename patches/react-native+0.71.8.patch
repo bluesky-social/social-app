@@ -1,0 +1,26 @@
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.m b/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.m
+index 1c8f8e0..090bda5 100644
+--- a/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.m
++++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.m
+@@ -256,7 +256,7 @@ static void *TextFieldSelectionObservingContext = &TextFieldSelectionObservingCo
+ 
+ - (void)textViewDidChange:(__unused UITextView *)textView
+ {
+-  if (_ignoreNextTextInputCall) {
++  if (_ignoreNextTextInputCall && [_lastStringStateWasUpdatedWith isEqual:_backedTextInputView.attributedText]) {
+     _ignoreNextTextInputCall = NO;
+     return;
+   }
+@@ -266,11 +266,10 @@ static void *TextFieldSelectionObservingContext = &TextFieldSelectionObservingCo
+ 
+ - (void)textViewDidChangeSelection:(__unused UITextView *)textView
+ {
+-  if (_lastStringStateWasUpdatedWith && ![_lastStringStateWasUpdatedWith isEqual:_backedTextInputView.attributedText]) {
++  if (![_lastStringStateWasUpdatedWith isEqual:_backedTextInputView.attributedText]) {
+     [self textViewDidChange:_backedTextInputView];
+     _ignoreNextTextInputCall = YES;
+   }
+-  _lastStringStateWasUpdatedWith = _backedTextInputView.attributedText;
+   [self textViewProbablyDidChangeSelection];
+ }
+ 
