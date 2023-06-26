@@ -39,6 +39,7 @@ interface TrackPropertiesMap {
   'Post:Delete': {} // CAN BE SERVER
   'Post:ThreadMute': {} // CAN BE SERVER
   'Post:ThreadUnmute': {} // CAN BE SERVER
+  'Post:Reply': {} // CAN BE SERVER
   // FEED ITEM events
   'FeedItem:PostReply': {} // CAN BE SERVER
   'FeedItem:PostRepost': {} // CAN BE SERVER

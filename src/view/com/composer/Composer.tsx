@@ -182,6 +182,7 @@ export const ComposePost = observer(function ComposePost({
         track('Create Post', {
           imageCount: gallery.size,
         })
+        if (replyTo && replyTo.uri) track('Post:Reply')
       }
       if (!replyTo) {
         store.me.mainFeed.addPostToTop(createdPost.uri)
