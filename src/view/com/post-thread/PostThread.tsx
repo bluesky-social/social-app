@@ -9,10 +9,8 @@ import {
 } from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {CenteredView, FlatList} from '../util/Views'
-import {
-  PostThreadModel,
-  PostThreadItemModel,
-} from 'state/models/content/post-thread'
+import {PostThreadModel} from 'state/models/content/post-thread'
+import {PostThreadItemModel} from 'state/models/content/post-thread-item'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
