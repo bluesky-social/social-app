@@ -154,7 +154,8 @@ export const Gallery = observer(function ({gallery}: Props) {
           <FontAwesomeIcon icon="info" size={12} color={pal.colors.text} />
         </View>
         <Text type="sm" style={[pal.textLight, s.flex1]}>
-          Alt text describes images for vision-impaired users.
+          Alt text describes images for blind and low-vision users, and helps
+          give context to everyone.
         </Text>
       </View>
     </>
