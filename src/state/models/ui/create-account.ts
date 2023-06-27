@@ -7,6 +7,7 @@ import * as EmailValidator from 'email-validator'
 import {createFullHandle} from 'lib/strings/handles'
 import {cleanError} from 'lib/strings/errors'
 import {getAge} from 'lib/strings/time'
+import {track} from 'lib/analytics/analytics'
 
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
 
@@ -117,6 +118,8 @@ export class CreateAccountModel {
       this.setIsProcessing(false)
       this.setError(cleanError(errMsg))
       throw e
+    } finally {
+      track('Create Account')
     }
   }
 

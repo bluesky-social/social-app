@@ -3,6 +3,7 @@ import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
 import {CustomFeedModel} from '../feeds/custom-feed'
+import {track} from 'lib/analytics/analytics'
 
 export class SavedFeedsModel {
   // state
@@ -143,8 +144,16 @@ export class SavedFeedsModel {
 
   async togglePinnedFeed(feed: CustomFeedModel) {
     if (!this.isPinned(feed)) {
+      track('CustomFeed:Pin', {
+        name: feed.data.displayName,
+        uri: feed.uri,
+      })
       return this.rootStore.preferences.addPinnedFeed(feed.uri)
     } else {
+      track('CustomFeed:Unpin', {
+        name: feed.data.displayName,
+        uri: feed.uri,
+      })
       return this.rootStore.preferences.removePinnedFeed(feed.uri)
     }
   }
@@ -185,6 +194,11 @@ export class SavedFeedsModel {
       this.rootStore.preferences.savedFeeds,
       pinned,
     )
+    track('CustomFeed:Reorder', {
+      name: item.data.displayName,
+      uri: item.uri,
+      index: pinned.indexOf(item.uri),
+    })
   }
 
   // state transitions

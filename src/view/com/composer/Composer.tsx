@@ -169,9 +169,6 @@ export const ComposePost = observer(function ComposePost({
           knownHandles: autocompleteView.knownHandles,
           langs: store.preferences.postLanguages,
         })
-        track('Create Post', {
-          imageCount: gallery.size,
-        })
       } catch (e: any) {
         if (extLink) {
           setExtLink({
@@ -183,6 +180,11 @@ export const ComposePost = observer(function ComposePost({
         setError(cleanError(e.message))
         setIsProcessing(false)
         return
+      } finally {
+        track('Create Post', {
+          imageCount: gallery.size,
+        })
+        if (replyTo && replyTo.uri) track('Post:Reply')
       }
       if (!replyTo) {
         store.me.mainFeed.addPostToTop(createdPost.uri)

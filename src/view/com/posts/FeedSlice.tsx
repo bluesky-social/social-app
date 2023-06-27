@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {PostsFeedSliceModel} from 'state/models/feeds/post'
+import {PostsFeedSliceModel} from 'state/models/feeds/posts-slice'
 import {AtUri} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'

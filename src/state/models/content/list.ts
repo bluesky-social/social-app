@@ -11,6 +11,7 @@ import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
+import {track} from 'lib/analytics/analytics'
 
 const PAGE_SIZE = 30
 
@@ -222,6 +223,7 @@ export class ListModel {
     await this.rootStore.agent.app.bsky.graph.muteActorList({
       list: this.list.uri,
     })
+    track('Lists:Subscribe')
     await this.refresh()
   }
 
@@ -232,6 +234,7 @@ export class ListModel {
     await this.rootStore.agent.app.bsky.graph.unmuteActorList({
       list: this.list.uri,
     })
+    track('Lists:Unsubscribe')
     await this.refresh()
   }
 

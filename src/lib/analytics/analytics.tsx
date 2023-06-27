@@ -16,6 +16,8 @@ const segmentClient = createClient({
   trackAppLifecycleEvents: false,
 })
 
+export const track = segmentClient?.track?.bind?.(segmentClient) as TrackEvent
+
 export function useAnalytics() {
   const store = useStores()
   const methods: ClientMethods = useAnalyticsOrig()

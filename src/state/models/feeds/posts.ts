@@ -9,10 +9,16 @@ import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
-import {PostsFeedSliceModel} from './post'
+import {PostsFeedSliceModel} from './posts-slice'
+import {track} from 'lib/analytics/analytics'
 
 const PAGE_SIZE = 30
 let _idCounter = 0
+
+type QueryParams =
+  | GetTimeline.QueryParams
+  | GetAuthorFeed.QueryParams
+  | GetCustomFeed.QueryParams
 
 export class PostsFeedModel {
   // state
@@ -24,7 +30,7 @@ export class PostsFeedModel {
   isBlockedBy = false
   error = ''
   loadMoreError = ''
-  params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams
+  params: QueryParams
   hasMore = true
   loadMoreCursor: string | undefined
   pollCursor: string | undefined
@@ -43,10 +49,7 @@ export class PostsFeedModel {
   constructor(
     public rootStore: RootStoreModel,
     public feedType: 'home' | 'author' | 'custom',
-    params:
-      | GetTimeline.QueryParams
-      | GetAuthorFeed.QueryParams
-      | GetCustomFeed.QueryParams,
+    params: QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -218,6 +221,9 @@ export class PostsFeedModel {
       }
     } finally {
       this.lock.release()
+      if (this.feedType === 'custom') {
+        track('CustomFeed:LoadMore')
+      }
     }
   })
 
@@ -416,10 +422,7 @@ export class PostsFeedModel {
   }
 
   protected async _getFeed(
-    params:
-      | GetTimeline.QueryParams
-      | GetAuthorFeed.QueryParams
-      | GetCustomFeed.QueryParams,
+    params: QueryParams,
   ): Promise<
     GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response
   > {

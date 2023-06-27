@@ -3,6 +3,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from 'state/models/root-store'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {updateDataOptimistically} from 'lib/async/revertible'
+import {track} from 'lib/analytics/analytics'
 
 export class CustomFeedModel {
   // data
@@ -56,11 +57,23 @@ export class CustomFeedModel {
   // =
 
   async save() {
-    await this.rootStore.preferences.addSavedFeed(this.uri)
+    try {
+      await this.rootStore.preferences.addSavedFeed(this.uri)
+    } catch (error) {
+      this.rootStore.log.error('Failed to save feed', error)
+    } finally {
+      track('CustomFeed:Save')
+    }
   }
 
   async unsave() {
-    await this.rootStore.preferences.removeSavedFeed(this.uri)
+    try {
+      await this.rootStore.preferences.removeSavedFeed(this.uri)
+    } catch (error) {
+      this.rootStore.log.error('Failed to unsave feed', error)
+    } finally {
+      track('CustomFeed:Unsave')
+    }
   }
 
   async like() {
@@ -80,6 +93,8 @@ export class CustomFeedModel {
       )
     } catch (e: any) {
       this.rootStore.log.error('Failed to like feed', e)
+    } finally {
+      track('CustomFeed:Like')
     }
   }
 
@@ -100,6 +115,8 @@ export class CustomFeedModel {
       )
     } catch (e: any) {
       this.rootStore.log.error('Failed to unlike feed', e)
+    } finally {
+      track('CustomFeed:Unlike')
     }
   }
 

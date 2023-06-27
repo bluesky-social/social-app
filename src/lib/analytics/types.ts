@@ -11,6 +11,7 @@ interface TrackPropertiesMap {
   // LOGIN / SIGN UP events
   'Sign In': {resumedSession: boolean} // CAN BE SERVER
   'Create Account': {} // CAN BE SERVER
+  'Try Create Account': {}
   'Signin:PressedForgotPassword': {}
   'Signin:PressedSelectService': {}
   // COMPOSER / CREATE POST events
@@ -30,12 +31,28 @@ interface TrackPropertiesMap {
   // FEED events
   'Feed:onRefresh': {}
   'Feed:onEndReached': {}
+  // POST events
+  'Post:Like': {} // CAN BE SERVER
+  'Post:Unlike': {} // CAN BE SERVER
+  'Post:Repost': {} // CAN BE SERVER
+  'Post:Unrepost': {} // CAN BE SERVER
+  'Post:Delete': {} // CAN BE SERVER
+  'Post:ThreadMute': {} // CAN BE SERVER
+  'Post:ThreadUnmute': {} // CAN BE SERVER
+  'Post:Reply': {} // CAN BE SERVER
   // FEED ITEM events
   'FeedItem:PostReply': {} // CAN BE SERVER
   'FeedItem:PostRepost': {} // CAN BE SERVER
   'FeedItem:PostLike': {} // CAN BE SERVER
   'FeedItem:PostDelete': {} // CAN BE SERVER
   'FeedItem:ThreadMute': {} // CAN BE SERVER
+  // PROFILE events
+  'Profile:Follow': {
+    username: string
+  }
+  'Profile:Unfollow': {
+    username: string
+  }
   // PROFILE HEADER events
   'ProfileHeader:EditProfileButtonClicked': {}
   'ProfileHeader:FollowersButtonClicked': {}
@@ -72,7 +89,28 @@ interface TrackPropertiesMap {
   'Lists:onEndReached': {}
   'CreateMuteList:AvatarSelected': {}
   'CreateMuteList:Save': {} // CAN BE SERVER
+  'Lists:Subscribe': {} // CAN BE SERVER
+  'Lists:Unsubscribe': {} // CAN BE SERVER
   // CUSTOM FEED events
+  'CustomFeed:Save': {}
+  'CustomFeed:Unsave': {}
+  'CustomFeed:Like': {}
+  'CustomFeed:Unlike': {}
+  'CustomFeed:Share': {}
+  'CustomFeed:Pin': {
+    uri: string
+    name: string
+  }
+  'CustomFeed:Unpin': {
+    uri: string
+    name: string
+  }
+  'CustomFeed:Reorder': {
+    uri: string
+    name: string
+    index: number
+  }
+  'CustomFeed:LoadMore': {}
   'MultiFeed:onEndReached': {}
   'MultiFeed:onRefresh': {}
   // MODERATION events

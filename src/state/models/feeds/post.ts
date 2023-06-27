@@ -1,26 +1,27 @@
 import {makeAutoObservable} from 'mobx'
-import {AppBskyFeedDefs, AppBskyFeedPost, RichText} from '@atproto/api'
+import {
+  AppBskyFeedPost as FeedPost,
+  AppBskyFeedDefs,
+  RichText,
+} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {updateDataOptimistically} from 'lib/async/revertible'
 import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
-import {FeedViewPostsSlice} from 'lib/api/feed-manip'
 import {
   getEmbedLabels,
   getEmbedMuted,
   getEmbedMutedByList,
   getEmbedBlocking,
   getEmbedBlockedBy,
-  getPostModeration,
   filterAccountLabels,
   filterProfileLabels,
-  mergePostModerations,
+  getPostModeration,
 } from 'lib/labeling/helpers'
+import {track} from 'lib/analytics/analytics'
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 type ReasonRepost = AppBskyFeedDefs.ReasonRepost
 type PostView = AppBskyFeedDefs.PostView
-
-let _idCounter = 0
 
 export class PostsFeedItemModel {
   // ui state
@@ -28,7 +29,7 @@ export class PostsFeedItemModel {
 
   // data
   post: PostView
-  postRecord?: AppBskyFeedPost.Record
+  postRecord?: FeedPost.Record
   reply?: FeedViewPost['reply']
   reason?: FeedViewPost['reason']
   richText?: RichText
@@ -40,8 +41,8 @@ export class PostsFeedItemModel {
   ) {
     this._reactKey = reactKey
     this.post = v.post
-    if (AppBskyFeedPost.isRecord(this.post.record)) {
-      const valid = AppBskyFeedPost.validateRecord(this.post.record)
+    if (FeedPost.isRecord(this.post.record)) {
+      const valid = FeedPost.validateRecord(this.post.record)
       if (valid.success) {
         this.postRecord = this.post.record
         this.richText = new RichText(this.postRecord, {cleanNewlines: true})
@@ -64,6 +65,14 @@ export class PostsFeedItemModel {
     this.reply = v.reply
     this.reason = v.reason
     makeAutoObservable(this, {rootStore: false})
+  }
+
+  get uri() {
+    return this.post.uri
+  }
+
+  get parentUri() {
+    return this.postRecord?.reply?.parent.uri
   }
 
   get rootUri(): string {
@@ -127,139 +136,94 @@ export class PostsFeedItemModel {
 
   async toggleLike() {
     this.post.viewer = this.post.viewer || {}
-    if (this.post.viewer.like) {
-      const url = this.post.viewer.like
-      await updateDataOptimistically(
-        this.post,
-        () => {
-          this.post.likeCount = (this.post.likeCount || 0) - 1
-          this.post.viewer!.like = undefined
-        },
-        () => this.rootStore.agent.deleteLike(url),
-      )
-    } else {
-      await updateDataOptimistically(
-        this.post,
-        () => {
-          this.post.likeCount = (this.post.likeCount || 0) + 1
-          this.post.viewer!.like = 'pending'
-        },
-        () => this.rootStore.agent.like(this.post.uri, this.post.cid),
-        res => {
-          this.post.viewer!.like = res.uri
-        },
-      )
+    try {
+      if (this.post.viewer.like) {
+        // unlike
+        const url = this.post.viewer.like
+        await updateDataOptimistically(
+          this.post,
+          () => {
+            this.post.likeCount = (this.post.likeCount || 0) - 1
+            this.post.viewer!.like = undefined
+          },
+          () => this.rootStore.agent.deleteLike(url),
+        )
+      } else {
+        // like
+        await updateDataOptimistically(
+          this.post,
+          () => {
+            this.post.likeCount = (this.post.likeCount || 0) + 1
+            this.post.viewer!.like = 'pending'
+          },
+          () => this.rootStore.agent.like(this.post.uri, this.post.cid),
+          res => {
+            this.post.viewer!.like = res.uri
+          },
+        )
+      }
+    } catch (error) {
+      this.rootStore.log.error('Failed to toggle like', error)
+    } finally {
+      track(this.post.viewer.like ? 'Post:Unlike' : 'Post:Like')
     }
   }
 
   async toggleRepost() {
     this.post.viewer = this.post.viewer || {}
-    if (this.post.viewer?.repost) {
-      const url = this.post.viewer.repost
-      await updateDataOptimistically(
-        this.post,
-        () => {
-          this.post.repostCount = (this.post.repostCount || 0) - 1
-          this.post.viewer!.repost = undefined
-        },
-        () => this.rootStore.agent.deleteRepost(url),
-      )
-    } else {
-      await updateDataOptimistically(
-        this.post,
-        () => {
-          this.post.repostCount = (this.post.repostCount || 0) + 1
-          this.post.viewer!.repost = 'pending'
-        },
-        () => this.rootStore.agent.repost(this.post.uri, this.post.cid),
-        res => {
-          this.post.viewer!.repost = res.uri
-        },
-      )
+    try {
+      if (this.post.viewer?.repost) {
+        const url = this.post.viewer.repost
+        await updateDataOptimistically(
+          this.post,
+          () => {
+            this.post.repostCount = (this.post.repostCount || 0) - 1
+            this.post.viewer!.repost = undefined
+          },
+          () => this.rootStore.agent.deleteRepost(url),
+        )
+      } else {
+        await updateDataOptimistically(
+          this.post,
+          () => {
+            this.post.repostCount = (this.post.repostCount || 0) + 1
+            this.post.viewer!.repost = 'pending'
+          },
+          () => this.rootStore.agent.repost(this.post.uri, this.post.cid),
+          res => {
+            this.post.viewer!.repost = res.uri
+          },
+        )
+      }
+    } catch (error) {
+      this.rootStore.log.error('Failed to toggle repost', error)
+    } finally {
+      track(this.post.viewer.repost ? 'Post:Unrepost' : 'Post:Repost')
     }
   }
 
   async toggleThreadMute() {
-    if (this.isThreadMuted) {
-      this.rootStore.mutedThreads.uris.delete(this.rootUri)
-    } else {
-      this.rootStore.mutedThreads.uris.add(this.rootUri)
+    try {
+      if (this.isThreadMuted) {
+        this.rootStore.mutedThreads.uris.delete(this.rootUri)
+      } else {
+        this.rootStore.mutedThreads.uris.add(this.rootUri)
+      }
+    } catch (error) {
+      this.rootStore.log.error('Failed to toggle thread mute', error)
+    } finally {
+      track(this.isThreadMuted ? 'Post:ThreadUnmute' : 'Post:ThreadMute')
     }
   }
 
   async delete() {
-    await this.rootStore.agent.deletePost(this.post.uri)
-    this.rootStore.emitPostDeleted(this.post.uri)
-  }
-}
-
-export class PostsFeedSliceModel {
-  // ui state
-  _reactKey: string = ''
-
-  // data
-  items: PostsFeedItemModel[] = []
-
-  constructor(
-    public rootStore: RootStoreModel,
-    reactKey: string,
-    slice: FeedViewPostsSlice,
-  ) {
-    this._reactKey = reactKey
-    for (const item of slice.items) {
-      this.items.push(
-        new PostsFeedItemModel(rootStore, `slice-${_idCounter++}`, item),
-      )
+    try {
+      await this.rootStore.agent.deletePost(this.post.uri)
+      this.rootStore.emitPostDeleted(this.post.uri)
+    } catch (error) {
+      this.rootStore.log.error('Failed to delete post', error)
+    } finally {
+      track('Post:Delete')
     }
-    makeAutoObservable(this, {rootStore: false})
-  }
-
-  get uri() {
-    if (this.isReply) {
-      return this.items[1].post.uri
-    }
-    return this.items[0].post.uri
-  }
-
-  get isThread() {
-    return (
-      this.items.length > 1 &&
-      this.items.every(
-        item => item.post.author.did === this.items[0].post.author.did,
-      )
-    )
-  }
-
-  get isReply() {
-    return this.items.length > 1 && !this.isThread
-  }
-
-  get rootItem() {
-    if (this.isReply) {
-      return this.items[1]
-    }
-    return this.items[0]
-  }
-
-  get moderation() {
-    return mergePostModerations(this.items.map(item => item.moderation))
-  }
-
-  containsUri(uri: string) {
-    return !!this.items.find(item => item.post.uri === uri)
-  }
-
-  isThreadParentAt(i: number) {
-    if (this.items.length === 1) {
-      return false
-    }
-    return i < this.items.length - 1
-  }
-
-  isThreadChildAt(i: number) {
-    if (this.items.length === 1) {
-      return false
-    }
-    return i > 0
   }
 }
