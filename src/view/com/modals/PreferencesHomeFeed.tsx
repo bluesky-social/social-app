@@ -14,14 +14,15 @@ export const snapPoints = ['90%']
 
 function RepliesThresholdInput({enabled}: {enabled: boolean}) {
   const store = useStores()
+  const pal = usePalette('default')
   const [value, setValue] = useState(store.preferences.homeFeedRepliesThreshold)
 
   return (
     <View style={[s.mt10, !enabled && styles.dimmed]}>
-      <Text type="xs">
+      <Text type="xs" style={pal.text}>
         {value === 0
           ? `Show all replies`
-          : `Show replies with greater than ${value} ${
+          : `Show replies with at least ${value} ${
               value > 1 ? `likes` : `like`
             }`}
       </Text>
@@ -61,11 +62,11 @@ export const Component = observer(function Component() {
 
       <ScrollView>
         <View style={styles.cardsContainer}>
-          <View style={[styles.card]}>
-            <Text type="title-sm" style={[s.pb5]}>
+          <View style={[pal.viewLight, styles.card]}>
+            <Text type="title-sm" style={[pal.text, s.pb5]}>
               Show Replies
             </Text>
-            <Text style={[s.pb10]}>
+            <Text style={[pal.text, s.pb10]}>
               Adjust the number of likes a reply must have to be shown in your
               feed.
             </Text>
@@ -81,12 +82,12 @@ export const Component = observer(function Component() {
             />
           </View>
 
-          <View style={[styles.card]}>
-            <Text type="title-sm" style={[s.pb5]}>
+          <View style={[pal.viewLight, styles.card]}>
+            <Text type="title-sm" style={[pal.text, s.pb5]}>
               Show Reposts
             </Text>
-            <Text style={[s.pb10]}>
-              Disable this setting to hide all reposts from your feed.
+            <Text style={[pal.text, s.pb10]}>
+              Set this setting to "No" to hide all reposts from your feed.
             </Text>
             <ToggleButton
               type="default-light"
@@ -96,12 +97,12 @@ export const Component = observer(function Component() {
             />
           </View>
 
-          <View style={[styles.card]}>
-            <Text type="title-sm" style={[s.pb5]}>
+          <View style={[pal.viewLight, styles.card]}>
+            <Text type="title-sm" style={[pal.text, s.pb5]}>
               Show Quote Posts
             </Text>
-            <Text style={[s.pb10]}>
-              Disable this setting to hide all quote posts from your feed.
+            <Text style={[pal.text, s.pb10]}>
+              Set this setting to "No" to hide all quote posts from your feed.
               Reposts will still be visible.
             </Text>
             <ToggleButton
@@ -153,7 +154,6 @@ const styles = StyleSheet.create({
   },
   card: {
     padding: 16,
-    backgroundColor: s.gray1.color,
     borderRadius: 10,
     marginBottom: 20,
   },
