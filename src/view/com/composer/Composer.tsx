@@ -82,13 +82,34 @@ export const ComposePost = observer(function ComposePost({
 
   // HACK
   // there's a bug with @mattermost/react-native-paste-input where if the input
-  // is focused during unmount, an exception will throw (seems that a blur method isnt implemented)
+  // is focused during unmount, an exception will throw (seems that a blur method isn't implemented)
   // manually blurring before closing gets around that
   // -prf
   const hackfixOnClose = useCallback(() => {
     textInput.current?.blur()
     onClose()
   }, [textInput, onClose])
+
+  const onPressCancel = useCallback(() => {
+    if (graphemeLength > 0 || !gallery.isEmpty) {
+      if (store.shell.activeModals.some(modal => modal.name === 'confirm')) {
+        store.shell.closeModal()
+      }
+      store.shell.openModal({
+        name: 'confirm',
+        title: 'Discard draft',
+        onPressConfirm: hackfixOnClose,
+        onPressCancel: () => {
+          store.shell.closeModal()
+        },
+        message: "Are you sure you'd like to discard this draft?",
+        confirmBtnText: 'Discard',
+        confirmBtnStyle: {backgroundColor: colors.red4},
+      })
+    } else {
+      hackfixOnClose()
+    }
+  }, [store, hackfixOnClose, graphemeLength, gallery])
 
   // initial setup
   useEffect(() => {
@@ -99,26 +120,10 @@ export const ComposePost = observer(function ComposePost({
   const onEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        const {shell} = store
-
-        if (shell.activeModals.some(modal => modal.name === 'confirm')) {
-          store.shell.closeModal()
-        }
-
-        shell.openModal({
-          name: 'confirm',
-          title: 'Discard draft',
-          onPressConfirm: onClose,
-          onPressCancel: () => {
-            store.shell.closeModal()
-          },
-          message: "Are you sure you'd like to discard this draft?",
-          confirmBtnText: 'Discard',
-          confirmBtnStyle: {backgroundColor: colors.red4},
-        })
+        onPressCancel()
       }
     },
-    [store, onClose],
+    [onPressCancel],
   )
   useEffect(() => {
     if (isDesktopWeb) {
@@ -137,7 +142,7 @@ export const ComposePost = observer(function ComposePost({
   const onPhotoPasted = useCallback(
     async (uri: string) => {
       track('Composer:PastedPhotos')
-      gallery.paste(uri)
+      await gallery.paste(uri)
     },
     [gallery, track],
   )
@@ -187,7 +192,7 @@ export const ComposePost = observer(function ComposePost({
         if (replyTo && replyTo.uri) track('Post:Reply')
       }
       if (!replyTo) {
-        store.me.mainFeed.addPostToTop(createdPost.uri)
+        await store.me.mainFeed.addPostToTop(createdPost.uri)
       }
       onPost?.()
       hackfixOnClose()
@@ -227,8 +232,8 @@ export const ComposePost = observer(function ComposePost({
         <View style={styles.topbar}>
           <TouchableOpacity
             testID="composerDiscardButton"
-            onPress={hackfixOnClose}
-            onAccessibilityEscape={hackfixOnClose}
+            onPress={onPressCancel}
+            onAccessibilityEscape={onPressCancel}
             accessibilityRole="button"
             accessibilityLabel="Discard"
             accessibilityHint="Closes post composer and discards post draft">
