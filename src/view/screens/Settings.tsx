@@ -315,6 +315,17 @@ export const SettingsScreen = withAuthRequired(
 
           <View style={styles.spacer20} />
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
+            Accessibility
+          </Text>
+          <ToggleButton
+            type="default-light"
+            label="Require alt text on images"
+            isSelected={store.preferences.requireAltTextEnabled}
+            onPress={store.preferences.toggleRequireAltTextEnabled}
+          />
+          <View style={styles.spacer20} />
+
+          <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Appearance
           </Text>
           <View>
